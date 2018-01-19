@@ -226,14 +226,14 @@ $(function(){
             "apiPage":api.decoration.pageDecorationForDesigner,
             "pageBtn":["view","revie","line","price","scal","contract","extension","addminus","cal"],
             "postDataName": "designerPostData",
-            "nodes":[{type:"basic",opt:{btn:["customerInfosBtn","customerChangeBtn","villageChangeBtn"],show:["orderType","houseType","houseClass"]}},{type:"quotaion",opt:{btn:["btnPrintDefaultQuotationInfo"]}},{type:"picture",opt:{show:["designPictureUpload","projectPictureUpload","CADUpload"]}},{type:"material"},{type:"activity",opt:{btn:["joinActivityBtn","applyActivityItemBtn","applySpecialActivityItemBtn"]},wizard:{"activityBtnMethod":activityBtnMethod,"uiBtnMethod":uiBtnMethod} },{type:"payment",opt:{btn:["btnSetDecorationPaymentInfo","btnOtherPayment"]},wizard:{"isDesign":true}},{type:"belong"}, {type: "addreduce"}],
+            "nodes":[{type:"basic",opt:{btn:["customerInfosBtn"],show:["houseType","houseClass"]}},{type:"quotaion",opt:{btn:["btnPrintDefaultQuotationInfo"]}},{type:"picture",opt:{show:["designPictureUpload","projectPictureUpload","CADUpload"]}},{type:"material"},{type:"activity",opt:{btn:["joinActivityBtn","applyActivityItemBtn","applySpecialActivityItemBtn"]},wizard:{"activityBtnMethod":activityBtnMethod,"uiBtnMethod":uiBtnMethod} },{type:"payment",opt:{btn:["btnSetDecorationPaymentInfo","btnOtherPayment"]},wizard:{"isDesign":true}},{type:"belong"}, {type: "addreduce"}],
             "hasExport":true
         },
         "designermanager": {
             "apiPage":api.decoration.pageDecorationForDesignerManager,
             "pageBtn":["view","revie","line","price","scal","contract","extension","addminus","cal"],
             "postDataName": "designermanagerPostData",
-            "nodes":[{type:"basic",opt:{btn:["customerInfosBtn","customerChangeBtn","villageChangeBtn"],show:["orderType","houseType","houseClass","quoterId"]}},{type:"quotaion",opt:{btn:["btnPrintDefaultQuotationInfo"]}},{type:"picture",opt:{show:["designPictureUpload","projectPictureUpload","CADUpload"]}},{type:"material"},{type:"activity",opt:{btn:["joinActivityBtn","applyActivityItemBtn","applySpecialActivityItemBtn"]},wizard:{"activityBtnMethod":activityBtnMethod,"uiBtnMethod":uiBtnMethod} },{type:"payment",opt:{btn:["btnSetDecorationPaymentInfo","btnOtherPayment"]},wizard:{"isDesign":true}},{type:"belong"}, {type: "addreduce"}],
+            "nodes":[{type:"basic",opt:{btn:["customerInfosBtn"],show:["houseType","houseClass","quoterId"]}},{type:"quotaion",opt:{btn:["btnPrintDefaultQuotationInfo"]}},{type:"picture",opt:{show:["designPictureUpload","projectPictureUpload","CADUpload"]}},{type:"material"},{type:"activity",opt:{btn:["joinActivityBtn","applyActivityItemBtn","applySpecialActivityItemBtn"]},wizard:{"activityBtnMethod":activityBtnMethod,"uiBtnMethod":uiBtnMethod} },{type:"payment",opt:{btn:["btnSetDecorationPaymentInfo","btnOtherPayment"]},wizard:{"isDesign":true}},{type:"belong"}, {type: "addreduce"}],
             "hasExport":true
         },
         "directer": {

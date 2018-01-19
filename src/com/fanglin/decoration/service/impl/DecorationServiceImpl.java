@@ -946,14 +946,15 @@ public class DecorationServiceImpl implements DecorationService {
 		
 		decorationPO = decorationDao.queryDecorationByOrderId(oldOrderId);
 		
-		if(decorationPO != null){
-			
-			decorationBelongDao.changeOrderBelongInfoForOrderId(newOrderId, oldOrderId);
-			decorationPaymentDao.changeDecorationPaymentForOrderId(oldOrderId, newOrderId);
-			
-			decorationPO.setOrderId(newOrderId);
-			decorationDao.update(decorationPO);
+		if(decorationPO == null){
+			throw new FLException(140013, "订单不存在");
 		}
+			
+		decorationBelongDao.changeOrderBelongInfoForOrderId(newOrderId, oldOrderId);
+		decorationPaymentDao.changeDecorationPaymentForOrderId(oldOrderId, newOrderId);
+		
+		decorationPO.setOrderId(newOrderId);
+		decorationDao.changeDecorationForOrderId(newOrderId, oldOrderId);
 		
 		ServiceRecordPO serviceRecordPO = new ServiceRecordPO();
 		serviceRecordPO.setType(ServiceRecordPO.TYPE_TYPE_CHANGE_DECORATIONORDER_ORDERID_INT);
