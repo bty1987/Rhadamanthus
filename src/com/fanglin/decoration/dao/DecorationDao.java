@@ -58,6 +58,8 @@ public interface DecorationDao extends Dao<DecorationPO> {
 	
 	public void refreshDecoration(DecorationPO decorationPO);
 	
+	public void changeDecorationForOrderId(String newOrderId, String oldOrderId);
+	
 	public List<DecorationPO> checkDeoration(Paging paging, List<Filter> filters, int company);
 	
 }

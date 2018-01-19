@@ -319,38 +319,6 @@ public class MaterialServiceImpl implements MaterialService {
 		}
 		materialPO.setNo(msoNo.toString());
 		materialPO.setCompany(company);
-		UserPO userPO = userDao.queryUserByUserId(materialVO.getSalesman().getUserId());
-		
-		if(userPO != null){
-			
-			materialPO.setSalesman(userPO);
-			
-			if(userPO.getDept() != null){
-				materialPO.setDepartment(userPO.getDept());
-				
-				if(userPO.getDept().getFatherDept() != null){
-					materialPO.setDepartment(userPO.getDept().getFatherDept());
-				}
-			}
-		}else{
-			throw new FLException(180005, "业务人员信息获取失败");
-		}
-		
-		//UserPO materialer = userDao.queryUserByUserId(materialVO.getMaterialer().getUserId());
-		if(materialer != null){
-			materialPO.setMaterialer(materialer);
-		}
-		
-//		if(materialVO.getInstorer() != null){
-//			UserPO instorer = userDao.queryUserByUserId(materialVO.getInstorer().getUserId());
-//			if(instorer != null){
-//				materialPO.setInstorer(instorer);
-//			}
-//		}
-		
-		if(instorer != null){
-			materialPO.setInstorer(instorer);
-		}
 		
 		Timestamp cuttentTimestamp = DateUtil.getDateToTimestamp(new Date());
 		

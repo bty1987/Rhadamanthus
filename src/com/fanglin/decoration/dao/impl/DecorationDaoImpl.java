@@ -316,6 +316,14 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 	}
 	
 	@Override
+	public void changeDecorationForOrderId(String newOrderId, String oldOrderId) {
+		String sql = "update platform.decoration set orderId = :newOrderId where orderId = :oldOrderId";
+		
+		session().createSQLQuery(sql).setString("newOrderId", newOrderId).setString("oldOrderId", oldOrderId).executeUpdate();
+		
+	}
+	
+	@Override
 	public List<DecorationPO> checkDeoration(Paging paging,List<Filter> filters, int company) {
 		PagingQuery<DecorationPO> query = pagingQuery(paging, DecorationPO.class);
 
@@ -511,6 +519,8 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 			}
 		}
 	}
+
+
 
 	
 }

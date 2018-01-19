@@ -78,7 +78,7 @@ public class DecorationExportServiceImpl implements DecorationExportService {
 			decorationExportVO.setContractPrice(decorationPO.getOrderTotalPrice());
 			decorationExportVO.setUnpayPayment(decorationPO.getOrderTotalPrice());
 			decorationExportVO.setSalesmanType(decorationPO.getSalesmanType());
-			decorationExportVO.setHouseArea(decorationPO.getHouseArea());
+			decorationExportVO.setHouseArea(decorationPO.getHouse().getBuildArea());
 			
 			if(decorationPO.getSupervisor() != null){
 				decorationExportVO.setSupervisor(decorationPO.getSupervisor().getCurrentName());
