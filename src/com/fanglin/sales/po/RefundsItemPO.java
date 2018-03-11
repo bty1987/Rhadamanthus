@@ -1,17 +1,18 @@
 package com.fanglin.sales.po;
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import static javax.persistence.GenerationType.IDENTITY;
-import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="refundsitem",catalog = "inventory")
+@Table(name="refundsitem",catalog = "sales")
 public class RefundsItemPO  implements java.io.Serializable{
 
 	private static final long serialVersionUID = -8157873351014476905L;

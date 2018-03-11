@@ -20,8 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.communion.po.VillagePO;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.data.po.VillagePO;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.exports.service.PaymentExportService;
 import com.fanglin.exports.vo.DecorationPaymentExportVO;

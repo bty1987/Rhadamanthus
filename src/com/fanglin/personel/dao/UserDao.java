@@ -40,6 +40,6 @@ public interface UserDao extends Dao<UserPO> {
    	
 	public List<UserPO> queryUserByUserIds(List<String> userIds);
 	
-	public int countUserByRoleId(String roleId);
+	public int countUserByRoleId(Integer rid);
 	
 }

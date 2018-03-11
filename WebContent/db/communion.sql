@@ -28,6 +28,7 @@ CREATE TABLE `buildingnamerule` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `buildingNameRuleId` varchar(32) NOT NULL,
   `rule` varchar(128) NOT NULL,
+  `rulefill` varchar(64) DEFAULT '',
   `ruleExample` varchar(64) NOT NULL,
   `ruleContent` varchar(64) NOT NULL,
   PRIMARY KEY (`id`),
@@ -110,11 +111,11 @@ CREATE TABLE `counting` (
 
 DROP TABLE IF EXISTS `customer`;
 CREATE TABLE `customer` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `customerId` varchar(10) NOT NULL,
-  `customerName` varchar(32) NOT NULL,
-  `customerNamePYAll` varchar(50) NOT NULL,
-  `customerNamePYAB` varchar(50) NOT NULL,
+  `cid` int(11) NOT NULL AUTO_INCREMENT,
+  `no` varchar(10) NOT NULL,
+  `name` varchar(32) NOT NULL,
+  `pinyinAll` varchar(50) NOT NULL,
+  `pinyinAB` varchar(50) NOT NULL,
   `gender` varchar(2) NOT NULL,
   `phone` varchar(64) NOT NULL,
   `qq` varchar(15) NOT NULL,
@@ -122,11 +123,28 @@ CREATE TABLE `customer` (
   `email` varchar(32) NOT NULL,
   `address` varchar(128) NOT NULL,
   `relationshipType` varchar(40) NOT NULL,
-  `approveStatus` tinyint(2) DEFAULT '0'
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uniqueone` (`customerId`),
-  UNIQUE KEY `uniquetwo` (`phone`)
+  `officer` varchar(32) DEFAULT NULL,
+  `passport` varchar(32) DEFAULT NULL,
+  `identity` varchar(32) DEFAULT NULL,
+  PRIMARY KEY (`cid`),
+  UNIQUE KEY `uniqueone` (`no`),
+  KEY `indexone` (`name`),
+  KEY `indextwo` (`pinyinAB`),
+  KEY `indexthree` (`pinyinAll`)
+
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='客户表';
+
+DROP TABLE IF EXISTS `customerphone`;
+CREATE TABLE `customerphone` (
+  `cpid` int(11) NOT NULL AUTO_INCREMENT,
+  `cid` int(11) NOT NULL,
+  `phone` varchar(15) NOT NULL,
+  `status` tinyint(1) NOT NULL,
+  `defaults` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0:非默认,1:默认',
+  PRIMARY KEY (`cpid`),
+  KEY `indexone` (`phone`),
+  KEY `indextwo` (`cid`)
+) ENGINE=InnoDB AUTO_INCREMENT=134862 DEFAULT CHARSET=utf8 COMMENT='客户电话';
 
 DROP TABLE IF EXISTS `department`;
 CREATE TABLE `department` (
@@ -166,6 +184,32 @@ CREATE TABLE `duty` (
   PRIMARY KEY (`did`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='职位表';
 
+DROP TABLE IF EXISTS `house`;
+CREATE TABLE `house` (
+  `hid` int(11) NOT NULL AUTO_INCREMENT,
+  `vid` int(11) NOT NULL COMMENT '楼盘ID',
+  `houseNumber` varchar(32) NOT NULL COMMENT '楼牌号',
+  `orderId` varchar(15) DEFAULT '',
+  `built` varchar(32) DEFAULT NULL COMMENT '楼号',
+  `unit` varchar(32) DEFAULT NULL COMMENT '单元',
+  `floor` smallint(3) DEFAULT NULL COMMENT '楼层',
+  `door` smallint(3) DEFAULT NULL COMMENT '门号',
+  `type` tinyint(2) DEFAULT '0' COMMENT '房产类型',
+  `buildArea` decimal(10,2) NOT NULL COMMENT '建筑面积',
+  `maxFloor` smallint(3) DEFAULT '0' COMMENT '最高楼层',
+  `through` tinyint(1) DEFAULT '0' COMMENT '是否越层',
+  `roomNum` smallint(2) DEFAULT '1' COMMENT '房间数量',
+  `houseType` varchar(16) DEFAULT '0' COMMENT '户型',
+  `orientation` tinyint(2) DEFAULT '0' COMMENT '房屋朝向',
+  `feature` varchar(256) DEFAULT NULL COMMENT '三不',
+  `waterVapour` tinyint(1) DEFAULT '0' COMMENT '水气设施',
+  `parlourType` tinyint(1) DEFAULT '0' COMMENT '客厅类型',
+  `heatingType` tinyint(1) DEFAULT '0' COMMENT '供暖类型',
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`hid`),
+  KEY `indexone` (`vid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='房产';
+
 DROP TABLE IF EXISTS `logininfo`;
 CREATE TABLE `logininfo` (
   `liId` int(11) NOT NULL AUTO_INCREMENT,
@@ -193,6 +237,7 @@ CREATE TABLE `module` (
   `mId` int(10) NOT NULL AUTO_INCREMENT,
   `fatherModuleId` int(11) DEFAULT NULL,
   `name` varchar(32) NOT NULL DEFAULT '',
+  `alias` varchar(32) DEFAULT NULL,
   `icon` varchar(20) DEFAULT NULL,
   `url` varchar(256) DEFAULT NULL,
   `level` tinyint(4) NOT NULL,
@@ -401,9 +446,9 @@ CREATE TABLE `user` (
   `userName` varchar(32) NOT NULL COMMENT '真实姓名',
   `userNamePinYin` varchar(64) NOT NULL COMMENT '真实姓名全拼',
   `currentName` varchar(32) DEFAULT NULL COMMENT '现用名',
-  `status` varchar(10) NOT NULL COMMENT '人员状态(在职,离职..)',
+  `status` tinyint(1) NOT NULL COMMENT '0:在职,1:离职,2:停薪留职',
   `dtid` int(11) NOT NULL COMMENT '部门类型ID',
-  `did` int(11) NOT NULL COMMENT '职位ID',
+  `did` int(11) NOT NULL COMMENT '职位类型',
   `gender` varchar(2) NOT NULL COMMENT '性别',
   `birthday` date NOT NULL COMMENT '出生日期',
   `identity` varchar(21) NOT NULL COMMENT '身份证号',
@@ -498,7 +543,7 @@ DROP TABLE IF EXISTS `version`;
 CREATE TABLE `version` (
   `vid` int(11) NOT NULL AUTO_INCREMENT COMMENT '版本ID',
   `no` varchar(64) NOT NULL COMMENT '版本编号',
-  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '创建事件',
+  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建事件',
   `comment` text NOT NULL COMMENT '更新说明',
   `status` tinyint(2) NOT NULL DEFAULT '1' COMMENT '状态',
   PRIMARY KEY (`vid`)
@@ -506,27 +551,25 @@ CREATE TABLE `version` (
 
 DROP TABLE IF EXISTS `village`;
 CREATE TABLE `village` (
-  `vId` int(11) NOT NULL AUTO_INCREMENT,
-  `villageId` varchar(10) NOT NULL,
-  `buildingNameRuleId` varchar(10) NOT NULL,
-  `villageName` varchar(20) NOT NULL,
-  `villageNamePinYinAB` varchar(64) DEFAULT NULL,
-  `villageNamePinYinAll` varchar(64) DEFAULT NULL,
+  `vid` int(11) NOT NULL AUTO_INCREMENT,
+  `no` varchar(10) NOT NULL,
+  `name` varchar(20) NOT NULL,
+  `pinyinAB` varchar(64) DEFAULT NULL,
+  `pinyinAll` varchar(64) DEFAULT NULL,
   `cityProperId` varchar(10) NOT NULL,
   `developer` varchar(20) DEFAULT NULL,
   `salesPhone` varchar(15) DEFAULT NULL,
   `deliveryTime` date DEFAULT NULL,
-  `villageContent` varchar(512) DEFAULT NULL,
+  `content` varchar(128) DEFAULT NULL,
   `x` double NOT NULL DEFAULT '0',
   `y` double NOT NULL DEFAULT '0',
-  `count` int(11) NOT NULL DEFAULT '0',
   `status` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`vId`),
-  UNIQUE KEY `uniqueone` (`villageId`),
-  KEY `indexone` (`villageId`),
-  KEY `indextwo` (`villageName`),
-  KEY `indexthr` (`villageNamePinYinAB`),
-  KEY `indexfor` (`villageNamePinYinAll`),
+  UNIQUE KEY `uniqueone` (`no`),
+  KEY `indexone` (`no`),
+  KEY `indextwo` (`name`),
+  KEY `indexthr` (`pinyinAB`),
+  KEY `indexfor` (`pinyinAll`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='楼盘表';
 
 DROP TABLE IF EXISTS `worktype`;

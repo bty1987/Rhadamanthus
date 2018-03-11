@@ -13,4 +13,10 @@ public interface SystemConfigService {
 	
 	public int updateSystemConfig(SystemConfigVO systemConfigVO) throws FLException;
 	
+	public List<SystemConfigVO> querySystemConfigByCid(Integer company);
+	
+	public void addSystemConfig(SystemConfigVO systemConfigVO,String userId) throws FLException;
+	
+	public void deleteSystemConfig(SystemConfigVO systemConfigVO) throws FLException;
+	
 }

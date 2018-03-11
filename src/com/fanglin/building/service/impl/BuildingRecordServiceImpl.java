@@ -19,11 +19,10 @@ import com.fanglin.building.service.BuildingRecordService;
 import com.fanglin.building.vo.BuildingRecordVO;
 import com.fanglin.building.vo.CustomerSourceVO;
 import com.fanglin.building.vo.HouseSourceVO;
-import com.fanglin.core.vo.Authentication;
+import com.fanglin.communion.vo.CustomerVO;
+import com.fanglin.communion.vo.HouseVO;
+import com.fanglin.communion.vo.VillageVO;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.data.common.vo.CustomerVO;
-import com.fanglin.data.common.vo.HouseVO;
-import com.fanglin.data.common.vo.VillageVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserVO;
@@ -156,9 +155,9 @@ public class BuildingRecordServiceImpl implements BuildingRecordService{
 		
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int addBuildingRecord(BuildingRecordVO buildingRecordVO, Authentication authentication) {
+	public void addBuildingRecord(BuildingRecordVO buildingRecordVO, String userId) {
 		
-		UserPO oprateUser = userDao.queryUserByUserId(authentication.getUserId());
+		UserPO oprateUser = userDao.queryUserByUserId(userId);
 		HouseSourcePO houseSource = null;
 		CustomerSourcePO customerSourcePO = null;
 		
@@ -180,7 +179,6 @@ public class BuildingRecordServiceImpl implements BuildingRecordService{
 		
 		buildingRecordVO.setBrid(buildingRecordPO.getBrid());
 		
-		return 0;
 	}
 
 }

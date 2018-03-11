@@ -16,6 +16,7 @@ jQuery(function () {
         formatids: null,
         flag: false,
         sid: params.sid,
+        otherStatus:null,
     };
 
     com.post(api.inventory.querySalesBySid, {
@@ -32,6 +33,7 @@ jQuery(function () {
         $('#pretotals').val(res.sales.total);
         $('#comment').val(res.sales.comment);
         $('#orderAdd').val(res.sales.house.village.name + " " + res.sales.house.houseNumber);
+        sales.otherStatus = res.sales.otherStatus;
 
     }, null, false);
     /**销售项区 自动赋值 (校验同品牌)
@@ -293,7 +295,7 @@ jQuery(function () {
             var $lis = $('.list-group-item');
 
             //折让审批状态确定
-            var $otherStatus = 0;
+            var $otherStatus = sales.otherStatus;
             $lis && $lis.length && $.each($lis, function (i, v) {
                 var $v = $(v);
                 var $status = parseFloat($v.attr('data-otherStatus'));

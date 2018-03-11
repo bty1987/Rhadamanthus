@@ -21,7 +21,9 @@ import com.fanglin.utils.Paging;
 
 public interface GoodsService {
 	
-	public void pageGoods(Paging paging, List<Filter> filters,int company) throws FLException;
+	public void pageGoods(Paging paging, List<Filter> filters, String userId, int company) throws FLException;
+	
+	public void pageGoodsForAdvance(Paging paging, List<Filter> filters,int company) throws FLException;
 	
 	public List<GoodsVO> queryGoods(List<Filter> filters,int company) throws FLException;
 	

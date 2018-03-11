@@ -69,21 +69,21 @@ $(function () {
             //显示字段
             var propertyArr = [
                 //v.gid,
-                v.no,
-                v.name,
-                v.barcode,
-                v.category,
-                v.brand,
-                v.measurementUnit,
-                v.pieceNum,
-                v.accessoriesType.name,
-                v.type == "0" ? "商品" : "套餐",
-                v.status == "0" ? "启用" : "禁用"
+                [v.no,'blue'],
+                [v.name,'grey'],
+                [v.barcode,'blue'],
+                [v.category,'grey'],
+                [v.brand,'grey'],
+                [v.measurementUnit,'grey'],
+                [v.pieceNum,'blue'],
+                [v.accessoriesType.name,'grey'],
+                [v.type == "0" ? "商品" : "套餐",'red'],
+                [v.status == "0" ? "启用" : "禁用",'red']
             ];
 
 
             $.each(propertyArr, function (i, v) {
-                var $cell = $('<div></div>').addClass('cell').html(v);
+                var $cell = $('<div></div>').addClass('cell ' + v[1]).html(v[0]);
                 $cell.appendTo($contentWrap);
             });
 
@@ -95,7 +95,6 @@ $(function () {
             var $btnUl = $('<ul></ul>').addClass('dropdown-menu').addClass(lastFlag ? 'bottom-up' : '');
 
             //操作按钮下面的选项
-            var $btnEdit = $('<li></li>').append($('<a></a>').html('编辑'));
             var $btnColor = $('<li></li>').append($('<a></a>').html('颜色'));
             var $btnFormat = $('<li></li>').append($('<a></a>').html('规格'));
             var $btnPrice = $('<li></li>').append($('<a></a>').html('价格'));
@@ -105,7 +104,6 @@ $(function () {
 
             //添加操作按钮下面的选项
             $btnUl
-                .append($btnEdit)
                 .append($btnColor)
                 .append($btnFormat)
                 .append($btnPrice)
@@ -123,41 +121,7 @@ $(function () {
             $liLine.append($indexWrap)
                 .append($contentWrap)
                 .append($optionWrap);
-            //编辑点击事件
-            $btnEdit.click(function () {
 
-                editReadOnly();
-                var no = $('#layerAdd').find('input[name="no"]').val(v.no);
-                var type = $('#layerAdd').find('select[name="type"]').val(v.type);
-                var name = $('#layerAdd').find('input[name="name"]').val(v.name);
-                var barcode = $('#layerAdd').find('input[name="barcode"]').val(v.barcode);
-                var category = $('#layerAdd').find('select[name="category"]').val(v.category);
-                var brand = $('#layerAdd').find('input[name="brand"]').val(v.brand);
-                var measurementUnit = $('#layerAdd').find('select[name="measurementUnit"]').val(v.measurementUnit);
-                var pieceNum = $('#layerAdd').find('input[name="pieceNum"]').val(v.pieceNum);
-                var atid = $('#layerAdd').find('select[name="atid"]').val(v.accessoriesType.atid);
-
-                $('#layerAdd').attr('data-gid', v.gid);
-                openlayer(function () {
-                    var id = $('#layerAdd').attr('data-gid');
-                    if(com.validate('form1'))
-                        return;
-                    saveData(id, function () {
-                        com.clearValidator("#no", true);
-                        com.clearValidator("#type", true);
-                        com.clearValidator("#name", true);
-                        com.clearValidator("#barcode", true);
-                        com.clearValidator("#category", true);
-                        com.clearValidator("#brand", true);
-                        com.clearValidator("#measurementUnit", true);
-                        com.clearValidator("#pieceNum", true);
-                        com.clearValidator("#atid", true);
-                        com.clearValidator();
-                        layer.closeAll();
-                    });
-
-                });
-            });
             //颜色点击事件
             $btnColor.click(function () {
                 openLayerSwitch('goodsColorPopUp', v.gid, '颜色', 'views/manifest/color.html');
@@ -171,9 +135,9 @@ $(function () {
                 openLayerSwitch('goodsPricePopUp', v.gid, '价格', 'views/manifest/price.html');
             });
             //套装点击事件
-           /* $btnSuit.click(function () {
-                openLayerSwitch('goodsSuitPopUp', v.gid, '套餐', 'views/data/goodsSuit.html');
-            });*/
+            /* $btnSuit.click(function () {
+             openLayerSwitch('goodsSuitPopUp', v.gid, '套餐', 'views/data/goodsSuit.html');
+             });*/
             //状态启用事件
             $btnStart.click(function () {
                 layer.confirm('是否启用？', {
@@ -263,12 +227,14 @@ $(function () {
         }, matcher: function (item) {
             return true;
         }, callback: function (data) {
-            this.options.list = data["autoFillKeyValue"];
-            this.flprocess(this.options.list, ["key"], ["value"]);
+            this.options.list = data["brands"];
+            this.flprocess(this.options.list, ["bid"], ["brandName"]);
+
         },
 
         isResultTypeMap: true //必填值为true，获取key，value的标识，
         , flupdater: function (k, v) {//下拉列表选中时的一些处理，必填对选中项的key和value做处理
+            $('input[name="brand"]').attr('data-bid',k);
             return v;
         }
     });
@@ -281,17 +247,13 @@ $(function () {
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
-        var $addaImportGood = $('<a></a>').addClass('btn btn-minier btn-warning pull-left').attr('name', 'importGoods').css({'margin-top':'-2px','margin-left':'4px'});
-        var $addaGoodi = $('<i></i>').addClass('icon-cloud-upload bigger-110').appendTo($addaImportGood);
-        var $addaGoodspan = $('<span></span>').text('导入商品').appendTo($addaImportGood);
 
-        var $addaImportColor = $('<a></a>').addClass('btn btn-minier btn-danger pull-left').attr('name', 'importGoods').css({'margin-top':'-2px','margin-left':'4px'});
-        var $addaColori = $('<i></i>').addClass('icon-cloud-upload bigger-110').appendTo($addaImportColor);
-        var $addaColorspan = $('<span></span>').text('导入颜色').appendTo($addaImportColor);
 
-        var $addaImportFormat = $('<a></a>').addClass('btn btn-minier btn-purple pull-left').attr('name', 'importGoods').css({'margin-top':'-2px','margin-left':'4px'});
-        var $addaFormati = $('<i></i>').addClass('icon-cloud-upload bigger-110').appendTo($addaImportFormat);
-        var $addaFormatspan = $('<span></span>').text('导入规格').appendTo($addaImportFormat);
+
+
+
+
+
 
         var $addaExportGoods = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'importGoods').css('margin-top','-2px');
         var $addaExporti = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($addaExportGoods);
@@ -321,111 +283,19 @@ $(function () {
             });
         });
 
-        $addaImportGood.click(function(){
-
-            clearForm('form2');
-            $('#importSelectGoods').empty();
-
-            openlayerImportGoods();
-
-            $('#importSelectGoods').Huploadify({
-
-                'debug' : false, // 开启调试
-                'auto':true, // 是否自动上传
-                'successTimeout':config.uploadTimeout, // 超时时间
-                'formData':{
-                    'uploadType':4,
-                },
-                'buttonClass': 'btn btn-success col-sm-6',
-                'overrideEvents' : ['onDialogClose'], // 不执行默认的onSelect事件
-                'fileObjName':'strutsUploads', // 服务器端脚本使用的文件对象的名称 $_FILES个['upload']
-                'uploader': config.server + 'importGoods.do', // 上传处理程序
-                'height':'30', // 浏览按钮的高度
-                'fileTypeDesc':'支持的格式：',  // 在浏览窗口底部的文件类型下拉菜单中显示的文本
-                'fileTypeExts':'*.xls;*.xlsx', // 允许上传的文件后缀
-                'fileSizeLimit':'2MB', // 上传文件的大小限制
-                'queueSizeLimit' : 1, // 上传数量
-                'onUploadSuccess':function(file, data, response){ //上传到服务器，服务器返回相应信息到data里
-
-                    var dateObj = eval("("+data+")");
-                    goodsSeacher.doSearch();
-
-                }
-            });
-
-        });
-
-        $addaImportColor.click(function(){
-            clearForm('form3');
-            $('#importSelectColor').empty();
-
-            openlayerImportColor();
-
-            $('#importSelectColor').Huploadify({
-
-                'debug' : false, // 开启调试
-                'auto':true, // 是否自动上传
-                'successTimeout':config.uploadTimeout, // 超时时间
-                'formData':{
-                    'uploadType':4,
-                },
-                'buttonClass': 'btn btn-success col-sm-6',
-                'overrideEvents' : ['onDialogClose'], // 不执行默认的onSelect事件
-                'fileObjName':'strutsUploads', // 服务器端脚本使用的文件对象的名称 $_FILES个['upload']
-                'uploader': config.server + 'importColor.do', // 上传处理程序
-                'height':'30', // 浏览按钮的高度
-                'fileTypeDesc':'支持的格式：',  // 在浏览窗口底部的文件类型下拉菜单中显示的文本
-                'fileTypeExts':'*.xls;*.xlsx', // 允许上传的文件后缀
-                'fileSizeLimit':'2MB', // 上传文件的大小限制
-                'queueSizeLimit' : 1, // 上传数量
-                'onUploadSuccess':function(file, data, response){ //上传到服务器，服务器返回相应信息到data里
-
-                    var dateObj = eval("("+data+")");
-
-                }
-            });
-        });
-
-        $addaImportFormat.click(function(){
-
-            clearForm('form4');
-            $('#importSelectFormat').empty();
-
-            openlayerImportFormat();
-
-            $('#importSelectFormat').Huploadify({
-
-                'debug' : false, // 开启调试
-                'auto':true, // 是否自动上传
-                'successTimeout':config.uploadTimeout, // 超时时间
-                'formData':{
-                    'uploadType':4,
-                },
-                'buttonClass': 'btn btn-success col-sm-6',
-                'overrideEvents' : ['onDialogClose'], // 不执行默认的onSelect事件
-                'fileObjName':'strutsUploads', // 服务器端脚本使用的文件对象的名称 $_FILES个['upload']
-                'uploader': config.server + 'importFormat.do', // 上传处理程序
-                'height':'30', // 浏览按钮的高度
-                'fileTypeDesc':'支持的格式：',  // 在浏览窗口底部的文件类型下拉菜单中显示的文本
-                'fileTypeExts':'*.xls;*.xlsx', // 允许上传的文件后缀
-                'fileSizeLimit':'2MB', // 上传文件的大小限制
-                'queueSizeLimit' : 1, // 上传数量
-                'onUploadSuccess':function(file, data, response){ //上传到服务器，服务器返回相应信息到data里
-
-                    var dateObj = eval("("+data+")");
-
-                }
-            });
 
 
-        });
+
+
+
+
 
         $addaExportGoods.click(function(){
             pageGoodsExport();
         });
 
 
-        return [$addaExportGoods,$addaImportGood,$addaImportColor,$addaImportFormat,$adda];
+        return [$addaExportGoods,$adda];
 
     }, 'resultList');
 
@@ -473,68 +343,13 @@ $(function () {
         });
     }
 
-    function openlayerImportGoods() {
-        layer.closeAll();
-        layer.open({
-            type: 1,
-            //skin: 'layui-layer-lan',
-            title: "导入商品",
-            content: $('#importGoods'),
-            area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
-            maxmin: false,
-            zIndex: 9000,
-            btn: ['确定'],
-            zIndex: 9000,
-            success: function (layers, index) {
 
-            },
-            end: function () {
-                goodsSeacher.doSearch();
-            }
-        });
-    }
 
-    function openlayerImportColor() {
-        layer.closeAll();
-        layer.open({
-            type: 1,
-            //skin: 'layui-layer-lan',
-            title: "导入颜色",
-            content: $('#importColor'),
-            area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
-            maxmin: false,
-            zIndex: 9000,
-            btn: ['确定'],
-            zIndex: 9000,
-            success: function (layers, index) {
 
-            },
-            end: function () {
 
-            }
-        });
-    }
 
-    function openlayerImportFormat() {
-        layer.closeAll();
-        layer.open({
-            type: 1,
-            //skin: 'layui-layer-lan',
-            title: "导入规格",
-            content: $('#importFormat'),
-            area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
-            maxmin: false,
-            zIndex: 9000,
-            btn: ['确定'],
-            zIndex: 9000,
-            success: function (layers, index) {
 
-            },
-            end: function () {
 
-            }
-        });
-    }
 
     function openLayerSwitch(id, gid, title, url) {
         var $PopUp = $('#' + id);
@@ -615,7 +430,7 @@ $(function () {
                     required: "请填写单位."
                 },
                 pieceNum:{
-                	required: "请填写件数."
+                    required: "请填写件数."
                 },
             },
             success: function (label) {
@@ -672,38 +487,42 @@ $(function () {
         var barcode = $layer.find('input[name="barcode"]').val();
         var category = $layer.find('select[name="category"] option:selected').text();
         var brand = $layer.find('input[name="brand"]').val();
+        var bid = $layer.find('input[name="brand"]').attr('data-bid');
+        console.log(bid);
         var measurementUnit = $layer.find('select[name="measurementUnit"] option:selected').text();
         var pieceNum = $layer.find('input[name="pieceNum"]').val();
         var atid = $layer.find('select[name="atid"] option:selected').val();
         if (!id) {
             //if (checkRowValue($layer)) {
-                if(goodsType == 0){
-                    com.post(api.inventory.addGoods, {
-                        "goods.no": no,
-                        "goods.name": name,
-                        "goods.barcode": barcode,
-                        "goods.category": category,
-                        "goods.brand": brand,
-                        "goods.measurementUnit": measurementUnit,
-                        "goods.pieceNum": pieceNum,
-                        "goods.accessoriesType.atid": atid == null || atid == "" ? "" : atid
-                    }, function (res) {
-                        layer.closeAll()
-                        goodsSeacher.doSearch();
-                    });
-                }else{
-                    layer.closeAll();
-                    params["goods"] = {};
-                    params.goods["goods.no"] = no;
-                    params.goods["goods.name"] = name;
-                    params.goods["goods.barcode"] = barcode;
-                    params.goods["goods.category"] = category;
-                    params.goods["goods.brand"] = brand;
-                    params.goods["goods.measurementUnit"] = measurementUnit;
-                    params.goods["goods.pieceNum"] = pieceNum;
-                    params.goods["goods.accessoriesType.atid"] = atid == null || atid == "" ? "" : atid;
-                    openLayerSwitch('goodsSuitPopUp', null, '套餐', 'views/manifest/goodsSuit.html');
-                }
+            if(goodsType == 0){
+                com.post(api.inventory.addGoods, {
+                    "goods.no": no,
+                    "goods.name": name,
+                    "goods.barcode": barcode,
+                    "goods.category": category,
+                    "goods.brand": brand,
+                    "goods.bid": bid,
+                    "goods.measurementUnit": measurementUnit,
+                    "goods.pieceNum": pieceNum,
+                    "goods.accessoriesType.atid": atid == null || atid == "" ? "" : atid
+                }, function (res) {
+                    layer.closeAll()
+                    goodsSeacher.doSearch();
+                });
+            }else{
+                layer.closeAll();
+                params["goods"] = {};
+                params.goods["goods.no"] = no;
+                params.goods["goods.name"] = name;
+                params.goods["goods.barcode"] = barcode;s
+                params.goods["goods.category"] = category;
+                params.goods["goods.brand"] = brand;
+                params.goods["goods.bid"] = bid;
+                params.goods["goods.measurementUnit"] = measurementUnit;
+                params.goods["goods.pieceNum"] = pieceNum;
+                params.goods["goods.accessoriesType.atid"] = atid == null || atid == "" ? "" : atid;
+                openLayerSwitch('goodsSuitPopUp', null, '套餐', 'views/manifest/goodsSuit.html');
+            }
 
 
             //}

@@ -1,5 +1,4 @@
-/*
-
+/**
  * @File Name	: UserAction.java
  * @Package		：com.fanglin.action 
  * @Version		: 1.0
@@ -22,8 +21,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseListAction;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.system.service.RoleService;
 import com.fanglin.system.vo.RoleVO;
+import com.fanglin.utils.SystemConfig;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -37,9 +38,9 @@ public class RoleAction extends BaseListAction {
 
 	private RoleVO role;
 
-	private List<String> roleIds;
+	private Integer rid;
 
-	private List<RoleVO> roles;  
+	private List<RoleVO> roleList;
 
 	@Action(value = "pageRole", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageRole(){
@@ -52,15 +53,15 @@ public class RoleAction extends BaseListAction {
 	@Action(value = "queryRole", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryRole(){
 		
-		roles = roleService.queryRole();
+		roleList = roleService.querylRole();
 		
 		return SUCCESS;
 	}
 
-	@Action(value = "queryRoleById", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryRoleById(){
+	@Action(value = "queryRoleByRid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryRoleByRid(){
 		
-		role = roleService.queryRoleById(role);
+		role = roleService.queryRoleByRid(role);
 		
 		return SUCCESS;
 	}
@@ -73,6 +74,42 @@ public class RoleAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "addRole", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addRole() throws FLException{
+		
+		if(SystemConfig.getString("communion") == null){
+		    throw new FLException(-1, "无操作权限");
+		}
+		
+		roleService.addRole(role);
+		
+	    return SUCCESS;
+	}
+
+	@Action(value = "updateRole", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String editRole() throws FLException{
+		
+		if(SystemConfig.getString("communion") == null){
+		    throw new FLException(-1, "无操作权限");
+		}
+		
+		roleService.updateRole(role);
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "deleteRoleByRid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String deleteRoleByRid() throws FLException{
+		
+		if(SystemConfig.getString("communion") == null){
+		    throw new FLException(-1, "无操作权限");
+		}
+		
+		roleService.deleteRoleByRid(rid);
+		
+		return SUCCESS;
+	}
+
 	public RoleVO getRole(){
 		return role;
 	}
@@ -81,20 +118,21 @@ public class RoleAction extends BaseListAction {
 		this.role = role;
 	}
 
-	public List<RoleVO> getRoles() {
-		return roles;
+	public List<RoleVO> getRoleList(){
+		return roleList;
 	}
 
-	public void setRoles(List<RoleVO> roles) {
-		this.roles = roles;
+	public void setRoleList(List<RoleVO> roleList){
+		this.roleList = roleList;
 	}
 
-	public List<String> getRoleIds(){
-		return roleIds;
+	public Integer getRid() {
+		return rid;
 	}
 
-	public void setRoleIds(List<String> roleIds){
-		this.roleIds = roleIds;
+	public void setRid(Integer rid) {
+		this.rid = rid;
 	}
-
+	
+	
 }

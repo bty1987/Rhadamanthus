@@ -2,7 +2,6 @@ package com.fanglin.inventory.service.impl;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -13,11 +12,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.common.po.CountingPO;
 import com.fanglin.common.service.CountingService;
+import com.fanglin.communion.po.HousePO;
+import com.fanglin.communion.vo.HouseVO;
+import com.fanglin.communion.vo.VillageVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.data.common.vo.HouseVO;
-import com.fanglin.data.common.vo.VillageVO;
-import com.fanglin.data.po.HousePO;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.inventory.dao.AccessoriesDao;
@@ -161,7 +160,7 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 			throw new FLException(260023,"辅料单不存在");
 		}
 		
-		accessoriesPO.setStatus(AccessoriesPO.STATUS_REJECT_INT);
+		accessoriesPO.setStatus(accessoriesVO.getStatus());
 		accessoriesPO.setApprover(userPO);
 		accessoriesPO.setApproverTime(DateUtil.getDateToTimestamp(new Date()));
 		

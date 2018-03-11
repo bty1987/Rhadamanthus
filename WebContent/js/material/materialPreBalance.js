@@ -54,7 +54,7 @@ jQuery(function($) {
 
                         var $btnItem = $('<a></a>').addClass('btn btn-minier btn-yellow').html('子项');
                         //var $btnValue = $('<a></a>').addClass('btn btn-minier btn-success').html('结算值');
-                        var $btnMaling = $('<a></a>').addClass('btn btn-minier btn-danger').html('抹零');
+                        var $btnMaling = $('<a></a>').addClass('btn btn-minier btn-success').html('抹零');
                         var propertyArr = [
                             //侯骅峰于2017.4.7添加品牌 总价 券值 券信息 备注五个显示字段
                             ["楼盘地址:", v.house.village.name + " " + v.house.houseNumber, "grey"],
@@ -66,14 +66,14 @@ jQuery(function($) {
                             //["底价:", v.base, "blue"],
                             //添加总价字段
                             ["总价：",v.total,"blue"],
-                            ["抹零:", v.maling, "green"],
-                            ["厂商抹零:", v.venderMaling, "green"],
+                            ["抹零:", v.maling, "blue"],
+                            ["厂商抹零:", v.venderMaling, "blue"],
                             //添加券值
-                            ["券值: ",v.coupon,"grey"],
+                            ["券值: ",v.coupon,"blue"],
                             //添加券信息
                             ["券信息: ",v.couponInfo ? v.couponInfo : '---',"grey"],
-                            ["创建时间:", v.createTime, "grey"],
-                            ["补款时间:", v.fullpayTime , "grey"],
+                            ["创建时间:", v.createTime, "green"],
+                            ["补款时间:", v.fullpayTime , "green"],
                             //添加备注
                             ["备注：",v.comment ? v.comment : '---',"grey"],
                         ];

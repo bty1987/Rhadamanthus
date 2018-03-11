@@ -3,12 +3,10 @@ package com.fanglin.personel.vo;
 import java.io.Serializable;
 import java.util.Arrays;
 
-import com.fanglin.data.common.vo.DutyVO;
+import com.fanglin.communion.vo.DutyVO;
 import com.fanglin.department.vo.DepartmentVO;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.BeanUtil;
-
-
 
 public class UserBaseVO implements Serializable {
 

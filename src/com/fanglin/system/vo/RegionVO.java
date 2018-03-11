@@ -16,38 +16,39 @@ public class RegionVO implements Serializable {
 
 	private static final long serialVersionUID = -8574387881119439555L;
 	
-	private Integer rId;
+	private Integer rid;
 
-	private String regionId;
+	private String no;
 	
-	private String regionName;
+	private String name;
 
 	private Double x;
 	
 	private Double y;
 
-	public Integer getrId() {
-		return rId;
+	
+	public Integer getRid() {
+		return rid;
 	}
 
-	public void setrId(Integer rId) {
-		this.rId = rId;
+	public void setRid(Integer rid) {
+		this.rid = rid;
 	}
 
-	public String getRegionId(){
-		return regionId;
+	public String getNo() {
+		return no;
 	}
 
-	public void setRegionId(String regionId){
-		this.regionId = regionId;
+	public void setNo(String no) {
+		this.no = no;
 	}
 
-	public String getRegionName(){
-		return regionName;
+	public String getName() {
+		return name;
 	}
 
-	public void setRegionName(String regionName){
-		this.regionName = regionName;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public Double getX() {

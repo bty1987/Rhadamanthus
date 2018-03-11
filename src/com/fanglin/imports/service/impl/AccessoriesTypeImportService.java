@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fanglin.data.common.dao.WorkTypeDao;
-import com.fanglin.data.po.WorkTypePO;
+import com.fanglin.communion.dao.WorkTypeDao;
+import com.fanglin.communion.po.WorkTypePO;
 import com.fanglin.inventory.dao.AccessoriesTypeDao;
 import com.fanglin.inventory.po.AccessoriesTypePO;
 

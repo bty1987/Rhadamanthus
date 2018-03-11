@@ -45,10 +45,10 @@ jQuery(function ($) {
     com.post(api.department.queryDepartmentType, {}, function (res) {
         businessDept.items.departmenttype.bindData(res.departmentTypes, "dtid", "name", false);
     });//部门类型
-    com.post(api.system.queryCityProper, {}, function (res) {//"cityProperId", "cityProperName", true
-        businessDept.items.cityProperSel.bindData(res.cityPropers, "cityProperId", "cityProperName", true);
-    });//城市
 
+    com.post(api.system.queryCityProper, {}, function (res) {//"cityProperId", "cityProperName", true
+        businessDept.items.cityProperSel.bindData(res.cityPropers, "cpid", "name", true);
+    });//城区
     var displayFunc = (function () {
 
         var renderList = function (tableId, listData) {
@@ -68,12 +68,12 @@ jQuery(function ($) {
 
         var creatLine = function (v) {
 
-            var $liLine = $('<li></li>').addClass('item-blue clearfix');
+            var $liLine = $('<li></li>').addClass('item-orange clearfix');
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.deptName));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
-            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-info').html('编辑');
+            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
             var $btnDel = $('<input />').attr("type", "checkbox").addClass('ace ace-switch ace-switch-5').attr("checked", v.status == 0 ? false : true);
             var $btnSpan = $('<span></span>').addClass("lbl status-lbl");
 
@@ -82,9 +82,9 @@ jQuery(function ($) {
             var propertyArr = [
                 ["编号:", v.deptId ==null?'无': v.deptId, "grey"],
                 ["所属分区:", v.fatherDept ==null?'无':v.fatherDept.deptName, "grey"],
-                ["城区:", v.cityProper ==null?'无': v.cityProper.cityProperName, "grey"],
+                ["城区:", v.cityProper ==null?'无': v.cityProper.name, "grey"],
                 ["合同前缀:", v.contractPrefix ==null?'无': v.contractPrefix, "grey"],
-                ["创建时间:", v.createTime ==null?'无': v.createTime, "grey"],
+                ["创建时间:", v.createTime ==null?'无': v.createTime, "green"],
                 ["描述:", v.des ==null?'无': v.des, "grey"],
             ];
 
@@ -134,7 +134,7 @@ jQuery(function ($) {
         displayFunc.init('resultList', data);
     }, "pagenation", "designDeptPostData", null, false, null, function () {
 
-        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addBusinessDept').css("margin", "0px 3px");
+        var $adda = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'addBusinessDept').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
@@ -161,7 +161,7 @@ jQuery(function ($) {
             businessDept.items.businessDeptId.val(deptId).prop("disabled", true).css("display", "block");
             businessDept.items.businessDeptName.val(deptName);
             businessDept.items.fatherdept.val(fatherDeptId);
-            businessDept.items.cityProperSel.val(cityProper.cityProperId);
+            businessDept.items.cityProperSel.val(cityProper.cpid);
             if(cityProper.city !=null){
                 if(cityProper.city.region){
                     var cityProperIds=cityProper.cityProperId;
@@ -215,9 +215,10 @@ jQuery(function ($) {
 
         if(businessDept.items.cityProperSel.val() != null && businessDept.items.cityProperSel.val() != ""){
             $.extend(options,{
-                'dept.cityProper.cityProperId': businessDept.items.cityProperSel.val(),
+                'dept.cityProper.cpid': businessDept.items.cityProperSel.val(),
             })
         }
+
 
         if (editFlg) {
             url = api.department.updateDepartment;
@@ -226,6 +227,7 @@ jQuery(function ($) {
                 searcher.doSearch();
             });
         } else {
+
             url = api.department.addDepartment;
             com.post(url, options, function (res) {
                 searcher.doSearch();

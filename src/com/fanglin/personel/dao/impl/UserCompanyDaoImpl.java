@@ -24,6 +24,11 @@ public class UserCompanyDaoImpl extends DaoImpl<UserCompanyPO> implements UserCo
 	}
 
 	@Override
+	public UserCompanyPO queryUserCompany(int uid, int company) {
+		return (UserCompanyPO) session().createCriteria(UserCompanyPO.class).add(Restrictions.eq("uid", uid)).add(Restrictions.eq("company.cid", company)).uniqueResult();
+	}
+	
+	@Override
 	public int deleteUserCompany(int uid) {
 		
 		String sql="delete from communion.usercompany where uid= :uid";

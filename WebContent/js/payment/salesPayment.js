@@ -177,15 +177,15 @@ $(function () {
 
         var creatLine = function (v) {
 
-            var $liLine = $('<li></li>').addClass('item-blue clearfix');
+            var $liLine = $('<li></li>').addClass('item-orange clearfix');
             var $h3 = $('<h3></h3>').addClass('oid');
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
             var $btnCollect = $('<a></a>').addClass('btn btn-minier');
             var propertyArr = [
-                ["订单号:", v.sales.orderId, "grey"],
-                ["销售单:", v.sales.no, "grey"],
+                ["订单号:", v.sales.orderId, "blue"],
+                ["销售单:", v.sales.no, "blue"],
                 ["楼盘地址:", v.sales.house.village.name + " " + v.sales.house.houseNumber, "grey"],
                 ["客户:", v.sales.customer.name, "grey"],
                 ["品牌:", v.sales.brand, "grey"],
@@ -482,7 +482,7 @@ $(function () {
 
         var creatLine = function (v) {
 
-            var $liLine = $('<li></li>').addClass('item-blue clearfix');
+            var $liLine = $('<li></li>').addClass('item-orange clearfix');
             var $h3 = $('<h3></h3>').addClass('oid');
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $ulStyle = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
@@ -491,15 +491,15 @@ $(function () {
             var $btnPrint = $('<a></a>').addClass('btn btn-minier btn-info').html('打印');
 
             var propertyArr = [
-                ["订单号:", v.sales.orderId, "grey"],
-                ["销售单号:", v.sales.no, "grey"],
+                ["订单号:", v.sales.orderId, "blue"],
+                ["销售单号:", v.sales.no, "blue"],
                 ["楼盘地址:", v.sales.house.village.name + " " + v.sales.house.houseNumber, "grey"],
                 ["客户:", v.sales.customer.name, "grey"],
                 ["品牌:", v.sales.brand, "grey"],
                 ["操作人:", v.creater.currentName, "grey"],
                 ["应收金额:", v.referMoney, "blue"],
                 ["收款人:", v.salesReceipt.collecter.currentName, "grey"],
-                ["收款时间:", v.salesReceipt.collectTime, "grey"],
+                ["收款时间:", v.salesReceipt.collectTime, "green"],
                 ["状态:", v.status == 1 ? '待确认' : '已确认', "red"],
                 ["备注:", v.salesReceipt.comment, "grey"],
             ];
@@ -527,7 +527,7 @@ $(function () {
 
             var styleArr = [];
 
-            v.salesReceipt.cash != null && v.salesReceipt.cash != "0" ? styleArr.push(["现金:", v.salesReceipt.cash, "grey"]) : true;
+            v.salesReceipt.cash != null && v.salesReceipt.cash != "0" ? styleArr.push(["现金:", v.salesReceipt.cash, "blue"]) : true;
             v.salesReceipt.bank != null && v.salesReceipt.bank != "0" ? styleArr.push(["银行:", (function (bank, bankInfo) {
                 var info = bank + ", ";
                 var _s = bankInfo.split('#');
@@ -537,12 +537,12 @@ $(function () {
                 }
 
                 return info;
-            })(v.salesReceipt.bank, v.salesReceipt.bankInfo), "grey"]) : true;
-            v.salesReceipt.checkv != null && v.salesReceipt.checkv != "0" ? styleArr.push(["转账:", v.salesReceipt.checkv, "grey"]) : true;
-            v.salesReceipt.installment != null && v.salesReceipt.installment != "0" ? styleArr.push(["分期:", v.salesReceipt.installment, "grey"]) : true;
-            v.salesReceipt.accounts != null && v.salesReceipt.accounts != "0" ? styleArr.push(["对公帐户:", v.salesReceipt.accounts, "grey"]) : true;
-            v.salesReceipt.advance != null && v.salesReceipt.advance != "0" ? styleArr.push(["预付款:", v.salesReceipt.advance, "grey"]) : true;
-            v.salesReceipt.coupon != null && v.salesReceipt.coupon != "0" ? styleArr.push(["优惠券:", v.salesReceipt.coupon + v.salesReceipt.couponInfo.split('#').join(' '), "grey"]) : true;
+            })(v.salesReceipt.bank, v.salesReceipt.bankInfo), "blue"]) : true;
+            v.salesReceipt.checkv != null && v.salesReceipt.checkv != "0" ? styleArr.push(["转账:", v.salesReceipt.checkv, "blue"]) : true;
+            v.salesReceipt.installment != null && v.salesReceipt.installment != "0" ? styleArr.push(["分期:", v.salesReceipt.installment, "blue"]) : true;
+            v.salesReceipt.accounts != null && v.salesReceipt.accounts != "0" ? styleArr.push(["对公帐户:", v.salesReceipt.accounts, "blue"]) : true;
+            v.salesReceipt.advance != null && v.salesReceipt.advance != "0" ? styleArr.push(["预付款:", v.salesReceipt.advance, "blue"]) : true;
+            v.salesReceipt.coupon != null && v.salesReceipt.coupon != "0" ? styleArr.push(["优惠券:", v.salesReceipt.coupon + v.salesReceipt.couponInfo.split('#').join(' '), "blue"]) : true;
 
             $.each(styleArr, function (index, value) {
                 var $liProperty = $('<li></li>');

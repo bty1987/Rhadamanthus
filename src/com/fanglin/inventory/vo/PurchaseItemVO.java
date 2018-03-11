@@ -18,6 +18,8 @@ public class PurchaseItemVO  implements Serializable{
 	
 	private FormatVO format;
 	
+	private StorehouseVO storehouse;
+	
 	private Float unitPrice;
 	
 	private Float num; 
@@ -81,6 +83,14 @@ public class PurchaseItemVO  implements Serializable{
 
 	public void setFormat(FormatVO format) {
 		this.format = format;
+	}
+
+	public StorehouseVO getStorehouse() {
+		return storehouse;
+	}
+
+	public void setStorehouse(StorehouseVO storehouse) {
+		this.storehouse = storehouse;
 	}
 
 	public Float getUnitPrice() {

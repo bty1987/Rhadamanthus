@@ -13,7 +13,7 @@ import javax.persistence.Table;
 
 
 @Entity
-@Table(name = "decorationinclusive", catalog = "platform")
+@Table(name = "decorationinclusive", catalog = "decoration")
 public class DecorationInclusivePO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -301890437525155657L;

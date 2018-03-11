@@ -50,14 +50,13 @@ jQuery(function($) {
 
             if(listData && listData.length){
                 $.each(listData,function(i, v){
-                    var $liLine = $('<li></li>').addClass('item-blue clearfix');
+                    var $liLine = $('<li></li>').addClass('item-orange clearfix');
                     var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.name));
                     var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
                     var $divBtnBlock = $('<div></div>').addClass('clearfix col-sm-12');
                     var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-                    
-                    var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-primary').html('编辑');
 
+                    var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
 					var $managephone = $('<a></a>').addClass('btn btn-minier btn-success').html('管理电话');
 
                     var propertyArr = [
@@ -135,7 +134,7 @@ jQuery(function($) {
 
 	var searcher = new Searcher();
 	
-	searcher.init([ 'relationshipType'], "condList", api.data.pageCustomer, function(data){
+	searcher.init([ 'customerPhone','relationshipType'], "condList", api.data.pageCustomer, function(data){
 		displayFunc.init('resultList', data);
 	}, "pagenation", "customerPostData", null, false, null, function(){
     	
@@ -187,7 +186,7 @@ jQuery(function($) {
 		customer.modal.modal("hide");
 	}
 
-	//查询工人工费
+	//画电话的弹窗
 	function managephone(cid,name) {
 		if ($('#customerphoneList').children()) {
 			$('#customerphoneList').empty();
@@ -296,13 +295,15 @@ jQuery(function($) {
 			'display' : 'inline-block',
 			'margin-left' : '40px'
 		});
-		var $nameSpan = $('<b></b>').html(name);
-		var $valueSpan = $('<span></span>').text(value);
+		var $nameSpan = $('<strong></strong>').html(name);
+		var $valueSpan = $('<b></b>').text(value);
 
 		if (px == '40') {
-			return $40pxdiv.append($nameSpan).append($valueSpan);
+			var $blueb = $valueSpan.addClass("grey")
+			return $40pxdiv.append($nameSpan).append($blueb);
 		} else if (px == '10') {
-			return $10pxdiv.append($nameSpan).append($valueSpan);
+			var $greyb = $valueSpan.addClass("grey")
+			return $10pxdiv.append($nameSpan).append($greyb);
 		}
 	}
 

@@ -109,7 +109,7 @@ public class AdvanceReceiptPO implements java.io.Serializable {
 	}
 
 	@javax.persistence.ManyToOne(fetch = FetchType.LAZY)
-	@javax.persistence.JoinColumn(nullable = false, name = "collecterId", referencedColumnName = "userId")
+	@javax.persistence.JoinColumn(nullable = false, name = "cluid", referencedColumnName = "uid")
 	public UserPO getCollecter(){
 		return collecter;
 	}
@@ -146,7 +146,7 @@ public class AdvanceReceiptPO implements java.io.Serializable {
 	}
 
 	@javax.persistence.ManyToOne(fetch = FetchType.LAZY)
-	@javax.persistence.JoinColumn(name = "confirmerId", referencedColumnName = "userId")
+	@javax.persistence.JoinColumn(name = "cfuid", referencedColumnName = "uid")
 	public UserPO getConfirmer(){
 		return confirmer;
 	}

@@ -55,7 +55,7 @@ jQuery(function($) {
 
 		var creatLine = function(v){
 			var that = this;
-			var $liLine = $('<li></li>').addClass('item-blue clearfix');
+			var $liLine = $('<li></li>').addClass('item-orange clearfix');
 			var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.orderId));
 			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 			var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
@@ -75,8 +75,8 @@ jQuery(function($) {
 				["创建人:", v.createrName, "grey"],
 				["操作人:", v.operaterName, "grey"],
 				["等级:", levelInit(v.level), null],
-				["类型:", complaint.typeDict[v.type], "grey"],
-				["时间:", v.createTime, "grey"],
+				["类型:", complaint.typeDict[v.type], "red "],
+				["时间:", v.createTime, "green "],
 				["备注:", v.des, "grey"],
 				["状态:", disposeStatus, "grey"],
 				["处理信息:", v.handle, "grey"],

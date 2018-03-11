@@ -23,6 +23,10 @@ import com.fanglin.inventory.vo.PurchaseVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.sales.dao.SalesDao;
+import com.fanglin.sales.dao.SalesPurchaseDao;
+import com.fanglin.sales.po.SalesPO;
+import com.fanglin.sales.po.SalesPurchasePO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.Paging;
@@ -44,6 +48,12 @@ public class PurchaseServiceImpl  implements PurchaseService{
 	@Autowired
 	private UserDao userDao;
 	
+	@Autowired
+	private SalesDao salesDao;
+	
+	@Autowired
+	private SalesPurchaseDao salesPurchaseDao;
+	
 	@Override
 	public void pagePurchase(Paging paging, List<Filter> filters, int company) {
 		
@@ -58,7 +68,7 @@ public class PurchaseServiceImpl  implements PurchaseService{
 	@Override
 	public void pagePurchaseObDelivery(Paging paging, List<Filter> filters,int company) {
 		
-		List<PurchasePO> purchasePOs = purchaseDao.pagePurchaseObDelivery(paging, filters,company);
+		List<PurchasePO> purchasePOs = purchaseDao.pagePurchaseObDelivery(paging, filters, company);
 		
 		List<PurchaseVO> purchaseVOs = purchasePage(purchasePOs);
 		
@@ -70,7 +80,7 @@ public class PurchaseServiceImpl  implements PurchaseService{
 		
 		List<PurchaseVO> purchaseVOs = new ArrayList<PurchaseVO>();
 		
-		PurchaseVO purchaseVO;
+		PurchaseVO purchaseVO = null;
 		
 		for(PurchasePO purchasePO: purchasePOs){
 				
@@ -100,7 +110,7 @@ public class PurchaseServiceImpl  implements PurchaseService{
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int addPurchase(PurchaseVO purchaseVO,List<PurchaseItemVO> purchaseItemVOs,String userId,int company) throws FLException{
+	public int addPurchase(PurchaseVO purchaseVO,List<Long> sids,List<PurchaseItemVO> purchaseItemVOs, String userId,int company) throws FLException{
 		//PO作为编号前缀 , 之后由8位数字组成
 		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_PO_INT,"yyyyMMdd");
 		String manifestId = String.valueOf("PO") + FormatUtil.fillZero(count, "00000000");
@@ -138,11 +148,28 @@ public class PurchaseServiceImpl  implements PurchaseService{
 			purchaseItemDao.save(purchaseItemPO);			
 		}
 		
+		SalesPO salesPO;
+		SalesPurchasePO salesPurchasePO;
+		
+		if(sids != null && sids.size()!=0){
+			
+			for(Long sid : sids){
+				
+				salesPO = salesDao.get(sid);
+				
+				salesPurchasePO = new SalesPurchasePO(salesPO, purchasePO);
+				
+				salesPurchaseDao.save(salesPurchasePO);
+				
+			}
+			
+		}
+		
 		return 0;
 		
 	}
 	
-	@Override
+	@Override                                                                                                                                                                                                                                                                                                                                                                                        
 	@Transactional(rollbackFor=Exception.class)
 	public int updatePurchase(PurchaseVO purchaseVO) throws FLException{
 		

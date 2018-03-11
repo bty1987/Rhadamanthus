@@ -30,7 +30,7 @@ jQuery(function($) {
 					var $divBtnBlock = $('<div></div>').addClass('clearfix col-sm-12');
 					var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
-					var $btnSub = $('<a></a>').addClass('btn btn-minier btn-primary').html('子订单');
+					var $btnSub = $('<a></a>').addClass('btn btn-minier btn-yellow').html('子订单');
 					var $btnSale = $('<a></a>').addClass('btn btn-minier btn-success').html('销售订单');
 
 					var propertyArr = [

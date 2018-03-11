@@ -46,14 +46,16 @@ $(function(){
 
             var $liLine = $('<li></li>').addClass('line');
 
-            var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(i + 1));
+            var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index blue').html(i + 1));
             var $contentWrap = $('<div></div>').addClass('line-wrap  content col3');
             var propertyArr = [
-                v.name,
-                v.comment
+                [v.name,'grey'],
+                [v.comment,'grey']
+
+
             ];
             $.each(propertyArr, function (i, v) {
-                var $cell = $('<div></div>').addClass('cell col-xs-6').html(v);
+                var $cell = $('<div></div>').addClass('cell col-xs-6 '+ v[1]).html(v[0]);
                 $cell.appendTo($contentWrap);
             });
             var $cellOption = $('<div></div>').addClass('cell option');

@@ -1,5 +1,6 @@
 package com.fanglin.production.po;
 import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;

@@ -116,7 +116,7 @@ public class PurchasePO implements Serializable{
 	public void setUser(UserPO user) {
 		this.user = user;
 	}
-
+	
 	@Column(name="createTime")
 	public Timestamp getCreateTime() {
 		return createTime;

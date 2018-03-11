@@ -219,7 +219,7 @@ function printCustomerTable(subtype){
 		contentHtml += '</tr>';
 
 		$.each(v, function (j, qv){
-			if(subtype && subtype != -1 && qv.subtype!=subtype){
+			if(!subtype || subtype > 0 &&  qv.subtype!=subtype){
 				return true;
 			}
 			contentHtml += '<tr align="center" bgcolor="#FFFFFF">';
@@ -307,6 +307,78 @@ function printCustomerTable(subtype){
 	return contentHtml;
 }
 
+function printWorkTable(workType){
+	var index = 0;
+
+	var contentHtml = '';
+
+	contentHtml += '<table style="font-size: 12px" width="100%" bgcolor="#000000" border="1" cellpadding="1" cellspacing="0">';
+	contentHtml += '<tbody><tr bgcolor="#FFFFFF">';
+	contentHtml += '<td width="8%" align="center">序号</td>';
+	contentHtml += '<td width="22%" align="center">功能区</td>';
+	contentHtml += '<td width="30%" align="center">项目名称</td>';
+	contentHtml += '<td width="10%" align="center">单位</td>';
+	contentHtml += '<td width="10%" align="center">数量</td>';
+	contentHtml += '<td width="10%" align="center">增加量</td>';
+	contentHtml += '<td width="10%" align="center">减少量</td>';
+	contentHtml += '</tr>';
+	contentHtml += '</tbody></table>';
+
+	var quotationFunctionAreas = quotationUtils.quotationDetail.quotationFunctionAreaItemWs;;
+
+	contentHtml += '<table style="font-size: 12px" width="100%" bgcolor="#000000" border="1" cellpadding="1" cellspacing="0">';
+	contentHtml += '<tbody>';
+
+	$.each(quotationFunctionAreas, function (i, v){
+		if( !workType || workType!=i.split('-')[1]){
+			return true;
+		}
+		var itemIndex = 0;
+		contentHtml += '<tr bgcolor="#CCCCCC">';
+		contentHtml += '<td colspan="1">';
+		contentHtml += '<div align="center">' + utils.getBigNumber(index+1) + '</div></td>';
+		contentHtml += '<td colspan="8">';
+		contentHtml += '<div align="left">' + i.split('-')[1] + '';
+		contentHtml += '</div>';
+		contentHtml += '</td>';
+		contentHtml += '</tr>';
+
+		$.each(v, function (j, qv){
+
+
+			contentHtml += '<tr bgcolor="#FFFFFF">';
+			contentHtml += '<td width="8%" align="center">' + (itemIndex+1) + '</td>';
+			contentHtml += '<td width="22%" align="center">' + qv.areaName + '</td>';
+			contentHtml += '<td width="30%" align="center">' + qv.itemName+"("+qv.typestr+")" + '</td>';
+			contentHtml += '<td width="10%" align="center">' + qv.measurementUnit + '</td>';
+			contentHtml += '<td width="10%" align="center">' + qv.num + '</td>';
+			contentHtml += '<td width="10%" align="center"></td>';
+			contentHtml += '<td width="10%" align="left"></td>';
+			contentHtml += '</tr>';
+			itemIndex++;
+		})
+		index++;
+	})
+
+	contentHtml += '</tbody>';
+	contentHtml += '</table>';
+
+	contentHtml += '<table style="font-size: 12px" width="100%" border="0" cellpadding="1" cellspacing="0">';
+	contentHtml += '<tbody>';
+	contentHtml += '<tr>';
+	contentHtml += '<td height="10"></td>';
+	contentHtml += '</tr>';
+	contentHtml += '<tr>';
+	contentHtml += '<td><b>&nbsp;甲方签字:</b></td>';
+	contentHtml += '<td><b>监理签字:</b></td>';
+	contentHtml += '<td><b>质检签字:</b></td>';
+	contentHtml += '<td><b>日期:</b></td>';
+	contentHtml += '</tr><tr>';
+	contentHtml += '</tr></tbody></table>';
+
+	return contentHtml;
+
+}
 jQuery(function($) {
 
 	//Api().init('../../js/api/');
@@ -400,10 +472,11 @@ jQuery(function($) {
 
 	quotationUtils.quotationDetail.TotalPrice = quotationUtils.quotationTotal();
 
-	generatePrintPage(params.type, params.subtype);
+	generatePrintPage(params.type, params.subtype,params.workType);
+
 });
 
-function generatePrintPage(type,subtype){
+function generatePrintPage(type,subtype,workType){
 	var html = "";
 
 	if(type == '1'){
@@ -415,6 +488,9 @@ function generatePrintPage(type,subtype){
 	}else if(type == '3'){
 		html += printHeader(config.companyFullName + "家装项目单");
 		html += printCustomerTable(subtype);
+	}else if(type == "4"){
+		html += printHeader(config.companyFullName + "工种项目单");
+		html += printWorkTable(workType);
 	}
 	                                                                                                                                                                                                       
 	$("#quotationList").html(html);

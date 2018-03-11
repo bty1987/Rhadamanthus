@@ -18,12 +18,12 @@ $(function(){
 		};
 
 		var creatLine = function(v){
-			var $liLine = $('<li></li>').addClass('item-blue clearfix');
+			var $liLine = $('<li></li>').addClass('item-orange clearfix');
 			var $h3 = $('<h3></h3>');
 			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix').appendTo($h3);
 			var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
-			var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-primary').html('配置工程节点');
+			var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('配置工程节点');
 
 			var propertyArr = [
 				["公司: ", v.name, "grey"],

@@ -9,7 +9,7 @@ import com.fanglin.utils.Paging;
 
 public interface PurchaseService {
 	
-	public int addPurchase(PurchaseVO purchaseVO, List<PurchaseItemVO> purchaseItemVOs,String userId,int company) throws FLException;
+	public int addPurchase(PurchaseVO purchaseVO, List<Long> sids,List<PurchaseItemVO> purchaseItemVOs, String userId,int company) throws FLException;
 
 	public int updatePurchase(PurchaseVO purchaseVO) throws FLException;
 	

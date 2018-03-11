@@ -154,7 +154,7 @@ jQuery(function ($) {
             $('#comment').val(null);
         }, function (e) {
             btn.button('reset');
-            com.showAlert(com.info, e.errorMsg);
+            com.showAlert(com.error, e.errorMsg);
         });
 
     });
@@ -164,25 +164,25 @@ jQuery(function ($) {
 
         var _lineInfoSet = [];
 
-        _lineInfoSet[_lineInfoSet.length] = {cellClass: "no", value: v ? v.goods.no : null};                          //商品编号
+        _lineInfoSet[_lineInfoSet.length] = {cellClass: "no blue", value: v ? v.goods.no : null};                          //商品编号
 
-        _lineInfoSet[_lineInfoSet.length] = {cellClass: "name", value: v ? v.goods.name : null};                       //商品名称
+        _lineInfoSet[_lineInfoSet.length] = {cellClass: "name grey", value: v ? v.goods.name : null};                       //商品名称
 
-        _lineInfoSet[_lineInfoSet.length] = {cellClass: "category", value: v ? v.goods.category : null};               //商品类别
+        _lineInfoSet[_lineInfoSet.length] = {cellClass: "category grey", value: v ? v.goods.category : null};               //商品类别
 
-        _lineInfoSet[_lineInfoSet.length] = {cellClass: "brand", value: v ? v.goods.brand : null};                     //品牌
+        _lineInfoSet[_lineInfoSet.length] = {cellClass: "brand grey", value: v ? v.goods.brand : null};                     //品牌
 
-        _lineInfoSet[_lineInfoSet.length] = {cellClass: "measurementUnit", value: v ? v.goods.measurementUnit : null}; //单位
+        _lineInfoSet[_lineInfoSet.length] = {cellClass: "measurementUnit grey", value: v ? v.goods.measurementUnit : null}; //单位
 
-        _lineInfoSet[_lineInfoSet.length] = {cellClass: "color", value: v ? v.color.name : null};                      //颜色
+        _lineInfoSet[_lineInfoSet.length] = {cellClass: "color grey", value: v ? v.color.name : null};                      //颜色
 
-        _lineInfoSet[_lineInfoSet.length] = {cellClass: "format", value: v ? v.format.info : null};                    //规格
+        _lineInfoSet[_lineInfoSet.length] = {cellClass: "format grey", value: v ? v.format.info : null};                    //规格
 
         _lineInfoSet[_lineInfoSet.length] = {cellClass: "unitPrice", hasInput: !0, value: v ? v.unitPrice : null};   //单价
 
         _lineInfoSet[_lineInfoSet.length] = {cellClass: "number", hasInput: !0, value: v ? v.num : null};                //数量
 
-        _lineInfoSet[_lineInfoSet.length] = {cellClass: "pieceNum", value: v ? v.goods.pieceNum : null};               //件数
+        _lineInfoSet[_lineInfoSet.length] = {cellClass: "pieceNum blue", value: v ? v.goods.pieceNum : null};               //件数
 
         return _lineInfoSet;
     }
@@ -195,16 +195,16 @@ jQuery(function ($) {
         var $lineInfoWrap = $('<div></div>').addClass('line-wrap content col10');
         var $optWrap = $('<div></div>').addClass('line-wrap action');
         var _lineInfoSet = [
-            {cellClass: "no"},                         //商品编号
-            {cellClass: "name", hasInput: !0},        //商品名称
-            {cellClass: "category"},                   //商品类别
-            {cellClass: "brand"},                      //品牌
-            {cellClass: "measurementUnit"},            //单位
-            {cellClass: "color", hasSelectColor: !0},    //颜色
-            {cellClass: "format", hasSelectFormat: !0},  //规格
+            {cellClass: "no blue"},                         //商品编号
+            {cellClass: "name grey", hasInput: !0},        //商品名称
+            {cellClass: "category grey"},                   //商品类别
+            {cellClass: "brand grey"},                      //品牌
+            {cellClass: "measurementUnit grey"},            //单位
+            {cellClass: "color grey", hasSelectColor: !0},    //颜色
+            {cellClass: "format grey", hasSelectFormat: !0},  //规格
             {cellClass: "unitPrice", hasInput: !0},   //采购单价
             {cellClass: "number", hasInput: !0},         //数量
-            {cellClass: "pieceNum"}                   //件数
+            {cellClass: "pieceNum blue"}                   //件数
         ];
 
         var $btncheck = $('<a id="trueBtn" class="green" style="font-size: 18px"><i class="icon-ok"></i></a>');
@@ -595,7 +595,7 @@ jQuery(function ($) {
             layer.msg('修改成功', {icon: 1, time: 800});
         }, function (e) {
             btn.button('reset');
-            com.showAlert(com.info, e.errorMsg);
+            com.showAlert(com.error, e.errorMsg);
         });
     }
 
@@ -618,7 +618,7 @@ jQuery(function ($) {
             $(dataDivDom.childNodes[6]).html($(dataDivDom.childNodes[6]).find("option:selected").text());
         }, function (e) {
             btn.button('reset');
-            com.showAlert(com.info, e.errorMsg);
+            com.showAlert(com.error, e.errorMsg);
         });
     }
 

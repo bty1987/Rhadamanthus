@@ -1,0 +1,198 @@
+<div class="page-content" id="companyConfig">
+
+    <div id="fl-statement"></div>
+
+    <div class="row">
+        <div class="col-xs-12">
+
+            <div class="row-fluid">
+                <div class="span12">
+                    <div class="widget-box">
+
+                        <div style="border-bottom: 1px solid #DDD; "></div>
+
+                        <div class="widget-body">
+                            <div class="widget-main">
+                                <div id="fuelux-wizard" class="row-fluid" data-target="#step-container">
+                                    <ul class="wizard-steps">
+                                        <li data-target="#step1" class="active complete">
+                                            <span class="step">1</span>
+                                            <span class="title">报价版本</span>
+                                        </li>
+
+                                        <li data-target="#step2" class="complete">
+                                            <span class="step">2</span>
+                                            <span class="title">款项</span>
+                                        </li>
+
+                                        <li data-target="#step3" class="complete">
+                                            <span class="step">3</span>
+                                            <span class="title">工程节点</span>
+                                        </li>
+
+                                        <li data-target="#step4" class="complete">
+                                            <span class="step">4</span>
+                                            <span class="title">放线小组</span>
+                                        </li>
+
+                                        <li data-target="#step5" class="complete">
+                                            <span class="step">5</span>
+                                            <span class="title">收据类型</span>
+                                        </li>
+
+                                        <li data-target="#step6" class="complete">
+                                            <span class="step">6</span>
+                                            <span class="title">配置</span>
+                                        </li>
+
+                                    </ul>
+                                </div>
+
+                                <hr />
+                                <div class="step-content row-fluid position-relative" id="step-container">
+                                    <div class="step-pane active" id="step1">
+
+                                        <h3 class="lighter block green">创建报价版本</h3>
+                                        <!-- 1. -->
+                                        <div class="row">
+                                                <div class="col-xs-12">
+                                                    <div class="table-responsive" id="quotationVersion">
+
+
+                                                    </div>
+                                                </div>
+                                        </div>
+
+                                        <div id="quotationPagenation"></div>
+
+                                        <div class="form-group">
+                                               <a class="btn btn-primary pull-left" name="addQuotationVersion">
+                                                        <i class="icon-plus bigger-110"></i>
+                                                        <span>添加报价版本</span>
+                                               </a>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="step-pane" id="step2">
+
+                                        <h3 class="lighter block green">创建款项比例</h3>
+                                        <!-- 3. -->
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <div class="table-responsive" id="paymentScale">
+
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <a class="btn btn-primary pull-left" name="addPaymentScale">
+                                                <i class="icon-plus bigger-110"></i>
+                                                <span>添加款项比例</span>
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <div class="step-pane" id="step3">
+                                        <h3 class="lighter block green">创建工程节点</h3>
+                                        <!-- 4. -->
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <div class="table-responsive" id="constructionNode">
+
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div id="constructionPagenation"></div>
+
+                                    </div>
+
+                                    <div class="step-pane" id="step4">
+
+                                        <h3 class="lighter block green">创建放线小组</h3>
+                                        <!-- 5. -->
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <div class="table-responsive" id="drawlineGroup">
+
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div id="drawlineGroupPagenation"></div>
+
+                                        <div class="form-group">
+                                            <a class="btn btn-primary pull-left" name="addLineGroup">
+                                                <i class="icon-plus bigger-110"></i>
+                                                <span>添加放线小组</span>
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <div class="step-pane" id="step5">
+
+                                        <h3 class="lighter block green">创建收据类型</h3>
+                                        <!-- 6. -->
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <div class="table-responsive" id="receiptType">
+
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div id="receiptTypePagenation"></div>
+
+                                        <div class="form-group">
+                                            <a class="btn btn-primary pull-left" name="addReceiptType">
+
+                                                <i class="icon-plus bigger-110"></i>
+                                                <span>添加收据类型</span>
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <div class="step-pane" id="step6">
+
+                                        <h3 class="lighter block green">创建</h3>
+                                        <!-- 7. -->
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <div class="table-responsive" id="systemConfig">
+
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <hr />
+                                <div class="row-fluid wizard-actions">
+                                    <button class="btn btn-success btn-next" data-last="完成">
+                                        继续
+                                        <i class="icon-arrow-right icon-on-right"></i>
+                                    </button>
+                                </div>
+                            </div><!-- /widget-main -->
+                        </div><!-- /widget-body -->
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- /.col -->
+
+    </div><!-- /.row -->
+</div><!-- /.page-content -->
+
+<script type="text/javascript">
+    $.loadScript(['js/system/companyConfig.js']);
+</script>

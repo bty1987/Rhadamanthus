@@ -191,7 +191,7 @@ jQuery(function ($) {
                         $line.find('.storehouse select').remove();
                     }, function (e) {
                         btn.button('reset');
-                        com.showAlert(com.info, e.errorMsg);
+                        com.showAlert(com.error, e.errorMsg);
                     })
                 }
 
@@ -225,7 +225,7 @@ jQuery(function ($) {
                         layer.msg('更新成功', {icon: 1, time: 800});
                     }, function (e) {
                         btn.button('reset');
-                        com.showAlert(com.info, e.errorMsg)
+                        com.showAlert(com.error, e.errorMsg)
                     })
                 }
             }
@@ -254,7 +254,7 @@ jQuery(function ($) {
                         layer.msg('删除成功', {icon: 1});
                     }, function (e) {
                         btn.button('reset');
-                        com.showAlert(com.info, e.errorMsg);
+                        com.showAlert(com.error, e.errorMsg);
                     });
                 }
 

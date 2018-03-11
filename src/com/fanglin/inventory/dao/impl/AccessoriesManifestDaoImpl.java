@@ -1,5 +1,6 @@
 package com.fanglin.inventory.dao.impl;
 
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
@@ -11,6 +12,11 @@ public class AccessoriesManifestDaoImpl extends DaoImpl<AccessoriesManifestPO> i
 	
 	public AccessoriesManifestDaoImpl(){
 		super(AccessoriesManifestPO.class);
+	}
+
+	@Override
+	public AccessoriesManifestPO queryAccessoriesManifestByAid(long aid) {
+		return (AccessoriesManifestPO) session().createCriteria(AccessoriesManifestPO.class).createAlias("accessories", "accessories").add(Restrictions.eq(AccessoriesManifestPO.COLUMN_AID_STR, aid)).uniqueResult();
 	}
 	
 }

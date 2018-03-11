@@ -26,6 +26,7 @@ $.extend(api, {quotation: {
     queryQuotationVersionByVersionId: {url: "queryQuotationVersionByVersionId.do"},
     addQuotationVersion: {url: "addQuotationVersion.do"},
     updateQuotationVersion: {url: "updateQuotationVersion.do"},
+    updateQuotationForStatus: {url: "updateQuotationForStatus.do"},
     
     pageFunctionArea: {url: "pageFunctionArea.do", demo: true},
     queryFunctionAreaByIdAVersionId: {url: "queryFunctionAreaByIdAVersionId.do"},
@@ -63,6 +64,7 @@ $.extend(api, {quotation: {
     queryQuotationByOrderId: {url: "queryQuotationByOrderId.do", demo: true},
     queryQuotationForDefaultByOrderId: {url: "queryQuotationForDefaultByOrderId.do", demo: true},
     queryQuotationById: {url: "queryQuotationById.do", demo: true},
+    queryQuotationForPersonnel: {url: "queryQuotationForPersonnel.do"},
     queryQuotationForConfig: {url: "queryQuotationForConfig.do", demo: true},
     checkQuotationForStatusByOrderId: {url: "checkQuotationForStatusByOrderId.do"},
     addQuotation: {url: "addQuotation.do"},
@@ -82,6 +84,7 @@ $.extend(api, {quotation: {
     queryQuotationFunctionAreaItemByQuotationFunctionAreaId: {url: "queryQuotationFunctionAreaItemByQuotationFunctionAreaId.do"},
     updateQuotationFunctionAreaItem: {url: "updateQuotationFunctionAreaItem.do"},
     updateQuotationFunctionAreaItemForSpec: {url: "updateQuotationFunctionAreaItemForSpec.do"},
+    updateQuotationFunctionAreaItemForIndex: {url:"updateQuotationFunctionAreaItemForIndex.do"},
     deleteQuotationFunctionAreaItem: {url: "deleteQuotationFunctionAreaItem.do"},
     updateQuotationFunctionAreaItemByQuotationIdAType: {url: "updateQuotationFunctionAreaItemByQuotationIdAType.do"},
 

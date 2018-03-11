@@ -57,17 +57,18 @@ $(function () {
             if (listData && listData.length) {
                 $.each(listData, function (i, v) {
 
-                    var $liLine = $('<li></li>').addClass('item-blue clearfix');
+                    var $liLine = $('<li></li>').addClass('item-orange clearfix');
                     var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-                    var $h3 = $('<h3></h3>').css({color: 'grey', "font-weight": "bold"}).html(' ' + v.sales.no);
+                    var $h3 = $('<h3></h3>').addClass('oid');
+                    var $small = $('<small></small>').addClass('blue').html(v.sales.no);
                     var $btnDiv = $('<div></div>').addClass('action-buttons pull-right');
 
-                    var $btnVbalanceValue = $('<a></a>').css('margin-right','8px').addClass('btn btn-minier').html('厂商结算值');
-                    var $btnVbalance = $('<a></a>').css('margin-right','8px').addClass('btn btn-minier').html('厂商结算');
-                    var $btnBalanceValue = $('<a></a>').css('margin-right','8px').addClass('btn btn-minier').html('结算值');
-                    var $btnBalance = $('<a></a>').css('margin-right','8px').addClass('btn btn-minier').html('结算');
-                    var $btnPayment = $('<a></a>').css('margin-right','8px').addClass('btn btn-minier').html('款项');
-                    var $btnBalanceItem = $('<a></a>').css('margin-right','8px').addClass('btn btn-minier').html('子项');
+                    var $btnVbalanceValue = $('<a></a>').addClass('btn btn-minier btn-yellow').html('厂商结算值');
+                    var $btnVbalance = $('<a></a>').addClass('btn btn-minier btn-success').html('厂商结算');
+                    var $btnBalanceValue = $('<a></a>').addClass('btn btn-minier btn-warning').html('结算值');
+                    var $btnBalance = $('<a></a>').addClass('btn btn-minier btn-inverse').html('结算');
+                    var $btnPayment = $('<a></a>').addClass('btn btn-minier btn-danger').html('款项');
+                    var $btnBalanceItem = $('<a></a>').addClass('btn btn-minier btn-pink').html('子项');
 
                     var status = "";
                     var type = "";
@@ -98,35 +99,35 @@ $(function () {
 
                     }
                     var propertyArr = [
-                        ["订单编号:", v.sales.orderId, "grey"],
+                        ["订单编号:", v.sales.orderId, "blue"],
                         ["楼盘地址:", v.sales.house.village.name + " " + v.sales.house.houseNumber, "grey"],
                         ["品牌:", v.sales.brand, "grey"],
                         ["渠道:", v.sales.salesman.currentName, "grey"],
                         ["归属大区:", v.sales.region.deptName, "grey"],
                         ["归属部门:", v.sales.dept.deptName, "grey"],
-                        ["总价:", v.total, "grey"],
-                        ["券值:", v.sales.coupon, "grey"],
+                        ["总价:", v.total, "blue"],
+                        ["券值:", v.sales.coupon, "blue"],
                         ["券信息:", v.sales.couponInfo, "grey"],
                         ["驻店:", v.sales.instorer.currentName, "grey"],
-                        ["预结算值:", v.balance, "grey"],
-                        ["预结算时间:", v.createTime, "grey"],
+                        ["预结算值:", v.balance, "blue"],
+                        ["预结算时间:", v.createTime, "green"],
                         ["预结算人:", v.creater.currentName, "grey"],
-                        ["厂商结算:", v.vbalance, "grey"],
-                        ["厂商结算时间:", v.venderTime, "grey"],
-                        ["结算值:", v.pbalance, "grey"],
-                        ["结算时间:", v.postTime, "grey"],
+                        ["厂商结算:", v.vbalance, "blue"],
+                        ["厂商结算时间:", v.venderTime, "green"],
+                        ["结算值:", v.pbalance, "blue"],
+                        ["结算时间:", v.postTime, "green"],
                         ["结算人:", v.poster.currentName, "grey"],
-                        ["抹零:", v.sales.maling, "grey"],
-                        ["厂商抹零:", v.sales.venderMaling, "grey"],
-                        ["状态:", status, "grey"],
-                        ["类型:", type, "grey"],
+                        ["抹零:", v.sales.maling, "blue"],
+                        ["厂商抹零:", v.sales.venderMaling, "blue"],
+                        ["状态:", status, "red"],
+                        ["类型:", type, "red"],
 
                     ];
 
                     $.each(propertyArr, function (index, value) {
-                        var $liProperty = $('<li></li>').css({"border-bottom": "0px"});
+                        var $liProperty = $('<li></li>');
                         $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                        $('<b></b>').html(value[1]).css({color: value[2]}).appendTo($liProperty);
+                        $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
                         $liProperty.appendTo($ulProperty);
                     });
 
@@ -134,7 +135,7 @@ $(function () {
                     $liLine.append($h3).append($ulProperty);
 
                     $btnDiv.append($btnVbalanceValue).append($btnVbalance).append($btnBalanceValue).append($btnBalance).append($btnPayment).append($btnBalanceItem);
-
+                    $small.appendTo($h3);
                     $btnDiv.appendTo($h3);
 
                     $btnVbalanceValue.click(function (e) {
@@ -425,32 +426,33 @@ $(function () {
     //收款显示
     function viewSalesPaymentLine(tableId, listData) {
         var $tableWrap = $('#' + tableId);
-        var $ul = $('<ul></ul>').addClass('ui-sortable  fl-table-list');
+        var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
         if (listData && listData.salesPayments.length) {
             $.each(listData.salesPayments, function (i, v) {
-                var $liLine = $('<li></li>').addClass('clearfix').css("list-style-type", "none");
-                var $ulProperty = $('<ul></ul>').addClass('fl-inline-list clearfix');
-                var $h3 = $('<h3></h3>').html(salesCollection.salesPaymentType[v.type]);
+                var $liLine = $('<li></li>').addClass('item-orange clearfix');
+                var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+                var $h3 = $('<h3></h3>').addClass('oid');
+                var $small = $('<small></small>').addClass('blue').html(salesCollection.salesPaymentType[v.type]);
 
                 var propertyArr = [
-                    ["销售单号:", v.sales.no, "black"],
-                    ["品类：", v.category, "black"],
-                    ["品牌：", v.brand, "black"],
-                    ["应收额：", v.referMoney, "red"],
-                    ["收款时间：", v.salesReceipt.collectTime, "black"],
-                    ["确认时间：", v.salesReceipt.confirmTime, "black"],
-                    ["状态：", v.status == 0 ? '初始' : v.status == 1 ? '待确认' : '已确认', "black"]
+                    ["销售单号:", v.sales.no, "blue"],
+                    ["品类：", v.sales.category, "grey"],
+                    ["品牌：", v.sales.brand, "grey"],
+                    ["应收额：", v.referMoney, "blue"],
+                    ["收款时间：", v.salesReceipt.collectTime, "green"],
+                    ["确认时间：", v.salesReceipt.confirmTime, "green"],
+                    ["状态：", v.status == 0 ? '初始' : v.status == 1 ? '待确认' : '已确认', "red"]
                 ];
 
                 $.each(propertyArr, function (index, value) {
                     var $liProperty = $('<li></li>');
                     $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                    $('<b></b>').html(value[1]).css({color: value[2]}).appendTo($liProperty);
+                    $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
                     $liProperty.appendTo($ulProperty);
                 });
 
                 var addPropertyArr = [];
-                v.salesReceipt.cash != null && v.salesReceipt.cash != "0" ? addPropertyArr.push(["现金:", v.salesReceipt.cash, "grey"]) : true;
+                v.salesReceipt.cash != null && v.salesReceipt.cash != "0" ? addPropertyArr.push(["现金:", v.salesReceipt.cash, "blue"]) : true;
                 v.salesReceipt.bank != null && v.salesReceipt.bank != "0" ? addPropertyArr.push(["银行信息：", (function (bank, bankInfo) {
 
                     var info = bank + ", ";
@@ -461,12 +463,12 @@ $(function () {
                     }
 
                     return info
-                })(v.salesReceipt.bank, v.salesReceipt.bankInfo), "grey"]) : true;
-                v.salesReceipt.checkv != null && v.salesReceipt.checkv != "0" ? addPropertyArr.push(["转账:", v.salesReceipt.checkv, "grey"]) : true;
-                v.salesReceipt.installment != null && v.salesReceipt.installment != "0" ? addPropertyArr.push(["分期:", v.salesReceipt.installment, "grey"]) : true;
-                v.salesReceipt.accounts != null && v.salesReceipt.accounts != "0" ? addPropertyArr.push(["对公帐户:", v.salesReceipt.accounts, "grey"]) : true;
-                v.salesReceipt.advance != null && v.salesReceipt.advance != "0" ? addPropertyArr.push(["预付款:", v.salesReceipt.advance, "grey"]) : true;
-                v.salesReceipt.coupon != null && v.salesReceipt.coupon != "0" ? addPropertyArr.push(["优惠券:", v.salesReceipt.coupon + v.salesReceipt.couponInfo.split('#').join(' '), "grey"]) : true;
+                })(v.salesReceipt.bank, v.salesReceipt.bankInfo), "blue"]) : true;
+                v.salesReceipt.checkv != null && v.salesReceipt.checkv != "0" ? addPropertyArr.push(["转账:", v.salesReceipt.checkv, "blue"]) : true;
+                v.salesReceipt.installment != null && v.salesReceipt.installment != "0" ? addPropertyArr.push(["分期:", v.salesReceipt.installment, "blue"]) : true;
+                v.salesReceipt.accounts != null && v.salesReceipt.accounts != "0" ? addPropertyArr.push(["对公帐户:", v.salesReceipt.accounts, "blue"]) : true;
+                v.salesReceipt.advance != null && v.salesReceipt.advance != "0" ? addPropertyArr.push(["预付款:", v.salesReceipt.advance, "blue"]) : true;
+                v.salesReceipt.coupon != null && v.salesReceipt.coupon != "0" ? addPropertyArr.push(["优惠券:", v.salesReceipt.coupon + v.salesReceipt.couponInfo.split('#').join(' '), "blue"]) : true;
 
                 $.each(addPropertyArr, function (index, value) {
                     var $liPropertys = $('<li></li>');
@@ -474,7 +476,8 @@ $(function () {
                     $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liPropertys);
                     $liPropertys.appendTo($ulProperty);
                 });
-                $liLine.append($h3).append($ulProperty).appendTo($ul).css("border-bottom", "solid 1px lightskyblue");
+                $small.appendTo($h3);
+                $liLine.append($h3).append($ulProperty).appendTo($ul);
             });
 
             $ul.appendTo($tableWrap);
@@ -491,40 +494,34 @@ $(function () {
 
             if (listData && listData.length) {
                 $.each(listData, function (i, v) {
-                    var $liLine = $('<li></li>').addClass('clearfix');
+                    var $liLine = $('<li></li>').addClass('item-orange clearfix');
                     var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix')
-                    var $h3 = $('<h3></h3>').addClass('siid')
+                    var $h3 = $('<h3></h3>').addClass('oid');//.addClass('siid')
+                    var $small = $('<small></small>').addClass('blue').html(v.salesItem.goods.name)
                     var $btnDiv = $('<div></div>').addClass('action-buttons pull-right')
 
                     var propertyArr = [
                         ["商品品类:", v.salesItem.goods.category, "grey", "category"],
                         ["商品颜色:", v.salesItem.color.name, "grey", "color"],
                         ["商品规格:", v.salesItem.format.info, "grey", "format"],
-                        ["售价:", v.salesItem.selling, "grey", "selling"],
-                        ["折扣价:", v.salesItem.disPrice, "grey", "disPrice"],
-                        ["折让价:", v.salesItem.price, "grey", "price"],
-                        ["数量:", v.num, "grey", "num"],
-                        ["总价:", v.total, "grey", "total"],
-                        ["结算方式:", v.ctype==0?"底价":"点位", "grey", "ctype"],
-                        ["结算值:", v.cvalue, "grey", "cvalue"],
+                        ["售价:", v.salesItem.selling, "blue", "selling"],
+                        ["折扣价:", v.salesItem.disPrice, "blue", "disPrice"],
+                        ["折让价:", v.salesItem.price, "blue", "price"],
+                        ["数量:", v.num, "blue", "num"],
+                        ["总价:", v.total, "blue", "total"],
+                        ["结算方式:", v.ctype==0?"底价":"点位", "red", "ctype"],
+                        ["结算值:", v.cvalue, "blue", "cvalue"],
                         ["备注:", v.comment, "grey", "conment"],
                     ];
-
-                    var $label = $('<label></label>').addClass('control-label').css({
-                        'color': 'grey',
-                        'font-size': '20px',
-                        "font-weight": "bold"
-                    });
 
                     $.each(propertyArr, function (index, value) {
                         var $liProperty = $('<li></li>').css({"border-bottom": "0px"});
                         $('<strong></strong>').attr('name', value[3]).html(value[0]).appendTo($liProperty);
-                        $('<b></b>').html(value[1]).css({color: value[2]}).appendTo($liProperty);
+                        $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
                         $liProperty.appendTo($ulProperty);
                     });
 
-                    $label.append(v.salesItem.goods.name).appendTo($h3);
-
+                    $small.appendTo($h3);
                     $btnDiv.appendTo($h3);
 
                     $liLine.appendTo($ul);
@@ -556,9 +553,10 @@ $(function () {
         if (listData && listData.length) {
             $.each(listData, function (i, v) {
 
-                var $liLine = $('<li></li>').addClass('clearfix');
+                var $liLine = $('<li></li>').addClass('item-orange clearfix');
                 var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-                var $h3 = $('<h3></h3>').css({color:"grey","font-weight":"bold"}).html(' ' + v.salesItem.goods.name );
+                var $h3 = $('<h3></h3>').addClass('oid')
+                var $small = $('<small></small>').addClass('blue').html(v.salesItem.goods.name );
                 var $btnDiv = $('<div></div>').addClass('action-buttons pull-right');
 
                 var propertyArr = [
@@ -580,13 +578,13 @@ $(function () {
                 $.each(propertyArr, function (index, value) {
                     var $liProperty = $('<li></li>');
                     $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                    $('<b></b>').html(value[1]).css({color:value[2]}).appendTo($liProperty);
+                    $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
                     $liProperty.appendTo($ulProperty);
                 });
 
                 $liLine.appendTo($ul);
                 $liLine.append($h3).append($ulProperty);
-
+                $small.appendTo($h3);
                 $btnDiv.appendTo($h3);
 
 

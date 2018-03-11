@@ -50,21 +50,19 @@ $(function () {
         };
 
         var creatLine = function (v) {
-            var $liLine = $('<li></li>').addClass('item-blue clearfix');
+            var $liLine = $('<li></li>').addClass('item-orange clearfix');
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.no));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
-
-            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-success').html('编辑');
-            var $btnEnabled = $('<a></a>').addClass('btn btn-minier btn-primary').html('已启用');
-            var $btnDisabled = $('<a></a>').addClass('btn btn-minier btn-primary').html('已禁用');
-
-            var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
+            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
+            var $btnEnabled = $('<a></a>').addClass('btn btn-minier btn-success').html('已启用');
+            var $btnDisabled = $('<a></a>').addClass('btn btn-minier btn-success').html('已禁用');
+            var $btnDel = $('<a></a>').addClass('btn btn-minier btn-warning').html('删除');
 
             var propertyArr = [
                 ["创建时间:", v.createTime, "grey"],
-                ["更新内容:", v.comment, "grey"],
+                ["更新内容:", v.comment, "grey"]
             ];
 
             //循环出li中的属性
@@ -268,7 +266,7 @@ $(function () {
         }).prev().addClass("wysiwyg-style2");
         if ("undefined" !== typeof jQuery.ui && /applewebkit/.test(navigator.userAgent.toLowerCase())) {
             var a = function () {
-                    null != b && (b.resizable("destroy"), b.removeData("resizable"), b = null)
+                    null != b && (b.resizable("destroy"), b.removeData("resizable"), b = null);
                 },
                 b = null;
             (function () {
@@ -276,13 +274,13 @@ $(function () {
                     var d = $(a.target);
                     a.target instanceof HTMLImageElement && !d.data("resizable") && (d.resizable({
                         aspectRatio: a.target.width / a.target.height
-                    }), d.data("resizable", !0), null != b && (b.resizable("destroy"), b.removeData("resizable")), b = d)
+                    }), d.data("resizable", !0), null != b && (b.resizable("destroy"), b.removeData("resizable")), b = d);
                 }).on("click", function (c) {
                     null == b || c.target instanceof HTMLImageElement || a()
                 }).on("keydown", function () {
-                    a()
-                })
-            })()
+                    a();
+                });
+            })();
         }
     }
 
@@ -334,8 +332,8 @@ $(function () {
     }
 
     function clearModel(){
-        $('#versionNo').val("")
-        $('#createTime').val("")
-        $('#contents').html("")
+        $('#versionNo').val("");
+        $('#createTime').val("");
+        $('#contents').html("");
     }
 });

@@ -11,7 +11,7 @@ public class CompanyVO implements Serializable {
 	private Integer no;
 
 	private String name;
-
+	
 	private String fullname;
 	
 	private String address;
@@ -19,8 +19,17 @@ public class CompanyVO implements Serializable {
 	private String corporation;
 	
 	private String phone;
-	
+
 	private Short status;
+
+	public CompanyVO() {
+		super();
+	}
+
+	public CompanyVO(String cid) {
+		super();
+		this.cid = cid;
+	}
 
 	public String getCid() {
 		return cid;
@@ -85,6 +94,5 @@ public class CompanyVO implements Serializable {
 	public void setStatus(Short status) {
 		this.status = status;
 	}
-
 
 }

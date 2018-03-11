@@ -96,17 +96,18 @@ $(function () {
             if (listData && listData.length) {
                 $.each(listData, function (i, v) {
 
-                    var $liLine = $('<li></li>').addClass('item-blue clearfix');
+                    var $liLine = $('<li></li>').addClass('item-orange clearfix');
                     var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-                    var $h3 = $('<h3></h3>').css({'color': 'grey', "font-weight": "bold"}).html(' ' + v.no);
-                    var $btnDiv = $('<div></div>').addClass('action-buttons pull-right');
+                    var $h3 = $('<h3></h3>').addClass('oid');
+                    var $small = $('<small></small>').addClass('blue').html(v.no);
+                    var $btnDiv = $('<div></div>').addClass('pull-right action-buttons');
 
-                    var $btnAdd = $('<a></a>').addClass(' btn btn-minier').html('添项');
-                    var $btnSub = $('<a></a>').addClass(' btn btn-minier ').html('子项');
-                    var $btnMoney = $('<a></a>').addClass(' btn btn-minier ').html('款项');
-                    var $btnCollect = $('<a></a>').addClass(' btn btn-minier ').html('收款');
-                    var $btnRefund = $('<a></a>').addClass(' btn btn-minier ').html('退货');
-                    var $btnPrint = $('<a></a>').addClass(' btn btn-minier ').html('打印');
+                    var $btnAdd = $('<a></a>').addClass(' btn btn-minier btn-yellow').html('添项');
+                    var $btnSub = $('<a></a>').addClass(' btn btn-minier btn-success').html('子项');
+                    var $btnMoney = $('<a></a>').addClass(' btn btn-minier btn-warning').html('款项');
+                    var $btnCollect = $('<a></a>').addClass(' btn btn-minier btn-inverse').html('收款');
+                    var $btnRefund = $('<a></a>').addClass(' btn btn-minier btn-danger').html('退货');
+                    var $btnPrint = $('<a></a>').addClass(' btn btn-minier btn-pink').html('打印');
 
                     var status = "";
                     var balanceStatus = "";
@@ -146,7 +147,7 @@ $(function () {
 
                     }
                     var propertyArr = [
-                        ["订单编号:", v.orderId, "grey"],
+                        ["订单编号:", v.orderId, "blue"],
                         ["楼盘地址:", v.house.village.name + " " + v.house.houseNumber, "grey"],
                         ["客户名:", v.customer.name, "grey"],
                         ["渠道:", v.salesman.currentName, "grey"],
@@ -157,29 +158,29 @@ $(function () {
                         ["主材部:", v.guideDept.deptName, "grey"],
                         ["品类:", v.category, "grey"],
                         ["品牌:", v.brand, "grey"],
-                        ["创建时间:", v.createTime, "grey"],
-                        ["结算时间:", v.balanceTime, "grey"],
-                        ["补款时间:", v.fullpayTime, "grey"],
-                        ["状态:", status, "grey"],
-                        ["结算状态:", balanceStatus, "grey"],
-                        ["总额:", v.total, "grey"],
-                        ["抹零:", v.maling, "grey"],
-                        ["厂商抹零:", v.venderMaling, "grey"],
-                        ["券值:", v.coupon, "grey"],
+                        ["创建时间:", v.createTime, "green"],
+                        ["结算时间:", v.balanceTime, "green"],
+                        ["补款时间:", v.fullpayTime, "green"],
+                        ["状态:", status, "red"],
+                        ["结算状态:", balanceStatus, "red"],
+                        ["总额:", v.total, "blue"],
+                        ["抹零:", v.maling, "blue"],
+                        ["厂商抹零:", v.venderMaling, "blue"],
+                        ["券值:", v.coupon, "blue"],
                         ["券信息:", v.couponInfo, "grey"],
                         ["备注:", v.comment, "grey"]
                     ];
 
                     $.each(propertyArr, function (index, value) {
-                        var $liProperty = $('<li></li>').css({"border-bottom": "0px"});
+                        var $liProperty = $('<li></li>');
                         $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                        $('<b></b>').html(value[1]).css({color: value[2]}).appendTo($liProperty);
+                        $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
                         $liProperty.appendTo($ulProperty);
                     });
 
                     $liLine.appendTo($ul);
                     $liLine.append($h3).append($ulProperty);
-
+                    $small.appendTo($h3);
                     if (v.fullpayStatus == -1 && v.status != 4) {
                         $btnDiv.append($btnAdd);
                     }

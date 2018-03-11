@@ -74,19 +74,19 @@ $(function () {
 
 
             var propertyArr = [
-                v.code,
-                v.createTime,
-                v.createUser.currentName ? v.createUser.currentName : '---',
-                v.manifestTime,
-                v.total,
-                v.status == "0" ? "初始" : "已确认",
-                v.comment == null ? "":v.comment,
-                typeList[parseInt(v.type) - 1] ? typeList[parseInt(v.type) - 1] : '---',
+                [v.code,'blue'],
+                [v.createTime,'green'],
+                [v.createUser.currentName ? v.createUser.currentName : '---','grey'],
+                [v.manifestTime,'green'],
+                [v.total,'blue'],
+                [v.status == "0" ? "初始" : "已确认",'red'],
+                [v.comment == null ? "":v.comment,'grey'],
+                [typeList[parseInt(v.type) - 1] ? typeList[parseInt(v.type) - 1] : '---','red'],
             ];
 
 
             $.each(propertyArr, function (index, v) {
-                var $cell = $('<div></div>').addClass('cell').html(v);
+                var $cell = $('<div></div>').addClass('cell ' + v[1]).html(v[0]);
                 $cell.appendTo($contentWrap);
             });
 
@@ -172,7 +172,8 @@ $(function () {
             //货单出返
             $btnRO.click(function(){
                 if(v.status == 1){
-                    sendReturnManifest(v.mid, v.status);
+                    console.log(v.sid);
+                    sendReturnManifest(v.mid, v.status, v.sid);
                 }else{
                     layer.msg('订单没有确认,无法出返',{icon:2});
                 }
@@ -314,9 +315,10 @@ $(function () {
         });
     }
 
-    function sendReturnManifest(mid,status){
+    function sendReturnManifest(mid,status,sid){
+        console.log(sid);
         var $popup = $('#ROPopUp');
-        $popup.attr({'data-mid': mid,'data-status': status});
+        $popup.attr({'data-mid': mid,'data-status': status,'data-sid': sid});
         //弹出即全屏
         var index = layer.open({
             type: 1,

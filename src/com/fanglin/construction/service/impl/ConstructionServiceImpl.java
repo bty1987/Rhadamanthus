@@ -18,16 +18,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.communion.service.CustomerService;
+import com.fanglin.communion.vo.CustomerVO;
+import com.fanglin.communion.vo.DutyVO;
+import com.fanglin.communion.vo.HouseVO;
 import com.fanglin.construction.dao.ConstructionDao;
 import com.fanglin.construction.po.AcceptancePO;
 import com.fanglin.construction.po.ConstructionPO;
 import com.fanglin.construction.service.ConstructionService;
 import com.fanglin.construction.vo.ConstructionVO;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.data.common.service.CustomerService;
-import com.fanglin.data.common.vo.CustomerVO;
-import com.fanglin.data.common.vo.DutyVO;
-import com.fanglin.data.common.vo.HouseVO;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.vo.DecorationVO;
@@ -68,15 +69,17 @@ public class ConstructionServiceImpl implements ConstructionService {
 	}
 	
 	@Override
-	public void pageDecorationForSupervisionByUserId(Paging paging, List<Filter> filters, String userId, Integer company){
+	public void pageDecorationForSupervisionByUserId(Paging paging, List<Filter> filters, String userId, Integer company) throws FLException{
 		
 		UserPO userPO = userDao.queryUserByUserId(userId);
 		
-		if(userPO != null){
-			filters.add(new Filter(ConstructionPO.COLUMN_SUPERVISORQUALITYID_STR, userId, "eq"));
+		if(userPO == null){
+			throw new FLException(190005, "人员不存在");
 		}
 		
-		List<ConstructionPO> constructionSchedulePOs = constructionDao.pageConstructionForSupervision(paging, filters, company);
+		filters.add(new Filter(ConstructionPO.COLUMN_SUPERVISORQUALITYID_STR, userId, "eq"));
+		
+		List<ConstructionPO> constructionSchedulePOs = constructionDao.pageConstructionForSupervision(paging, filters);
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
 		
 		for(ConstructionPO constructionSchedulePO: constructionSchedulePOs){

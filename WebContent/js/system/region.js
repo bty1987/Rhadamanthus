@@ -26,8 +26,8 @@ jQuery(function($) {
 	
 	region.modal = $("#regionModal");
 	
-	region.regionItems.regionName = $("#regionName");
-	region.regionItems.regionId = $("#regionId");
+	region.regionItems.name = $("#regionName");
+	region.regionItems.no = $("#regionId");
 	
 	$.extend(com.validator, region.validator);
 	
@@ -50,24 +50,24 @@ jQuery(function($) {
 
         var creatLine = function(v){
         	
-            var $liLine = $('<li></li>').addClass('item-blue clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.regionId + " " + v.regionName));
+            var $liLine = $('<li></li>').addClass('item-orange clearfix');
+            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.no + " " + v.name));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
-            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-info').html('编辑');
-            var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
+            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
+            var $btnDel = $('<a></a>').addClass('btn btn-minier btn-success').html('删除');
 
             $divBtnWrap.append($btnEdit).append($btnDel).appendTo($h3);
             
             $liLine.append($h3).append($ulProperty);
             
             $btnEdit.click(function(){
-            	editRegion(v.regionId, v.regionName);
+            	editRegion(v.rid, v.no, v.name);
             });
             
             $btnDel.click(function(){
-            	deleteRegion(v.regionId);
+            	deleteRegion(v.rid);
             });
             
             return $liLine;
@@ -81,12 +81,12 @@ jQuery(function($) {
             drawLine : function(v){
                 return creatLine(v);
             }
-        }
+        };
     })();
 	
 	var searcher = new Searcher();
 	
-	searcher.init(["regionName"], "condList", api.system.pageRegion, function(data){
+	searcher.init(["regionName"], "condList", api.system.pageRegion, function(data){         
 		displayFunc.init('resultList', data);
 	}, "pagenation", "regionPostData", null, false, null, function(){
 		
@@ -101,28 +101,29 @@ jQuery(function($) {
 		editFlg = false;
 		
 		com.cleanItems(region.regionItems);
-		region.regionItems.regionId.prop("disabled", false).css("display", "none");
+		region.regionItems.no.prop("disabled", false).css("display", "none");
 		
 		region.modal.modal("show");  
     });
 	
-	function editRegion(regionId, regionName){
+	function editRegion(rid, no, name){
 		
 		editFlg = true;
 		
 		com.clearValidator();
 		com.clearValidator("#regionId", true);
 		
-		region.regionItems.regionId.val(regionId).prop("disabled", true).css("display", "block");
-		region.regionItems.regionName.val(regionName);
+		region.regionItems.rid = rid;
+		region.regionItems.no.val(no).prop("disabled", true).css("display", "block");
+		region.regionItems.name.val(name);
 		
 		region.modal.modal("show");
 	}
 	
-	function deleteRegion(regionId){
+	function deleteRegion(rid){
 		
 		var options = {
-			"regionIds[0]": regionId,
+			"rids[0]": rid,
 		};
 		
 		com.post(api.system.deleteRegion, options, function(res){
@@ -138,8 +139,9 @@ jQuery(function($) {
 		
 		var url;
 		var options = {
-			'region.regionId': region.regionItems.regionId.val(),
-			'region.regionName': region.regionItems.regionName.val(),
+			'region.rid': region.regionItems.rid,
+			'region.no': region.regionItems.no.val(),
+			'region.name': region.regionItems.name.val(),
 		};
 		
 		if(editFlg){

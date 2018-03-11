@@ -24,9 +24,11 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserVO;
+import com.fanglin.system.dao.ModuleDao;
 import com.fanglin.system.dao.OperationDao;
 import com.fanglin.system.dao.RoleDao;
 import com.fanglin.system.dao.RoleOperationDao;
+import com.fanglin.system.po.ModulePO;
 import com.fanglin.system.po.OperationPO;
 import com.fanglin.system.po.RoleOperationPO;
 import com.fanglin.system.po.RolePO;
@@ -51,7 +53,10 @@ public class OperationServiceImpl implements OperationService {
 	
 	@Autowired
 	private UserDao userDao;
-
+	
+	@Autowired
+	private ModuleDao moduleDao;
+	
 	@Override
 	public void pageOperation(Paging paging, List<Filter> filters) {
 		
@@ -91,13 +96,13 @@ public class OperationServiceImpl implements OperationService {
 	@Override
 	public List<OperationVO> queryOperationByUserId(OperationVO operationVO, UserVO userVO) throws FLException {
 		
-		UserPO userPO = userDao.queryUserByUserId(userVO.getUserId());
+		UserPO userPO = userDao.get(userVO.getUserId());
 		
 		if(userPO == null){
-			throw new FLException(220005, "员工不存在");
+			throw new FLException(190005, "人员不存在");
 		}
 		
-		List<RoleOperationPO> roleOperationPOs = roleOperationDao.queryRoleOperationByRId(userPO.getRole().getrId(), operationVO.getSystem());
+		List<RoleOperationPO> roleOperationPOs = roleOperationDao.queryRoleOperationByRid(userPO.getRole().getRid(), operationVO.getSystem());
 		List<OperationVO> operationVOs = new ArrayList<OperationVO>();
 		
 		for(RoleOperationPO roleOperationPO: roleOperationPOs){
@@ -110,17 +115,17 @@ public class OperationServiceImpl implements OperationService {
 		
 		return operationVOs;
 	}
-
+	
 	@Override
-	public List<OperationVO> queryOperationByRoleId(OperationVO operationVO, RoleVO roleVO) throws FLException {
+	public List<OperationVO> queryOperationByRid(OperationVO operationVO, RoleVO roleVO) throws FLException {
 		
-		RolePO rolePO = roleDao.get(roleVO.getRoleId());
+		RolePO rolePO = roleDao.get(roleVO.getRid());
 		
 		if(rolePO == null){
 			throw new FLException(230010, "角色不存在");
 		}
 		
-		List<RoleOperationPO> roleOperationPOs = roleOperationDao.queryRoleOperationByRId(rolePO.getrId(), operationVO.getSystem());
+		List<RoleOperationPO> roleOperationPOs = roleOperationDao.queryRoleOperationByRid(rolePO.getRid(), operationVO.getSystem());
 		List<OperationVO> operationVOs = new ArrayList<OperationVO>();
 		
 		for(RoleOperationPO roleOperationPO: roleOperationPOs){
@@ -149,31 +154,32 @@ public class OperationServiceImpl implements OperationService {
 		
 		if(operationPO != null){
 			
-			RoleOperationPO roleOperationPO = roleOperationDao.queryRoleOperationByRIdAOId(userPO.getRole().getrId(), operationPO.getOid());
+			RoleOperationPO roleOperationPO = roleOperationDao.queryRoleOperationByRidAOid(userPO.getRole().getRid(), operationPO.getOid());
 			
 			result = roleOperationPO != null;
 		}else{
 			result = true;
 		}
 		
-		return rollcall == 0 ? result : !result;
+		return rollcall == 0 ? result : !result; 
 	}
+
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int updateRoleOperationByRoleId(List<Integer> oIds, OperationVO operationVO, RoleVO roleVO) throws FLException {
+	public int updateRoleOperationByRid(List<Integer> oids, OperationVO operationVO, RoleVO roleVO) throws FLException {
 		
-		RolePO rolePO = roleDao.get(roleVO.getRoleId());
+		RolePO rolePO = roleDao.get(roleVO.getRid());
 		
 		if(rolePO == null){
 			throw new FLException(230010, "角色不存在");
 		}
 		
-		roleOperationDao.deleteRoleOperationByRId(rolePO.getrId(), operationVO.getSystem());
+		roleOperationDao.deleteRoleOperationByRid(rolePO.getRid(), operationVO.getSystem());
 		
-		if(oIds != null && oIds.size() > 0){
-			for(Integer oId: oIds){
-				RoleOperationPO roleOperationPO = new RoleOperationPO(new OperationPO(oId), rolePO.getrId());
+		if(oids != null && oids.size() > 0){
+			for(Integer oid: oids){
+				RoleOperationPO roleOperationPO = new RoleOperationPO(new OperationPO(oid), rolePO.getRid());
 				
 				roleOperationDao.save(roleOperationPO);
 			}
@@ -184,25 +190,54 @@ public class OperationServiceImpl implements OperationService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int updateRoleOperationByUserId(List<Integer> oIds, OperationVO operationVO, UserVO userVO) throws FLException {
+	public int updateRoleOperationByUserId(List<Integer> oids, OperationVO operationVO, UserVO userVO) throws FLException {
 		
 		UserPO userPO = userDao.queryUserByUserId(userVO.getUserId());
 		
 		if(userPO == null){
-			throw new FLException(220005, "员工不存在");
+			throw new FLException(190005, "人员不存在");
 		}
 		
-		roleOperationDao.deleteRoleOperationByRId(userPO.getRole().getrId(), operationVO.getSystem());
+		roleOperationDao.deleteRoleOperationByRid(userPO.getRole().getRid(), operationVO.getSystem());
 		
-		if(oIds != null && oIds.size() > 0){
-			for(Integer oId: oIds){
-				RoleOperationPO roleOperationPO = new RoleOperationPO(new OperationPO(oId), userPO.getRole().getrId());
+		if(oids != null && oids.size() > 0){
+			for(Integer oid: oids){
+				RoleOperationPO roleOperationPO = new RoleOperationPO(new OperationPO(oid), userPO.getRole().getRid());
 				
 				roleOperationDao.save(roleOperationPO);
 			}
 		}
 		
 		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public int deleteOperation(OperationVO operationVO) throws FLException {
+		
+		int oid = operationVO.getOid();
+		
+		if(roleOperationDao.countRoleOperationByOid(oid) > 0){
+			throw new FLException(230013, "操作已经被引用,不能被删除");
+		}
+		
+		operationDao.deleteById(oid);
+		
+		return 0;
+	}
+	
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public void addOperation(OperationVO operationVO) {
+		
+		OperationPO operationPO = new OperationPO(new ModulePO());
+		
+		BeanUtil.copyProperties(operationVO, operationPO, Arrays.asList("module"));
+		
+		ModulePO modulePO = moduleDao.get(operationVO.getModule().getMid()); 
+		operationPO.setModule(modulePO);
+		
+		operationDao.save(operationPO);
 	}
 
 }

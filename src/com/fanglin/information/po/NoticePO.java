@@ -38,7 +38,7 @@ public class NoticePO implements Serializable {
 	
 	private long nid;
 	
-	private UserPO user;
+	private UserPO creater;
 	
 	private String theme;
 	
@@ -65,6 +65,10 @@ public class NoticePO implements Serializable {
 	public NoticePO(){
 		super();
 	}
+	
+	public NoticePO(UserPO creater) {
+		this.creater = creater;
+	}
 
 	@Id
 	@GeneratedValue
@@ -78,13 +82,13 @@ public class NoticePO implements Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "userId", referencedColumnName = "userId")
-	public UserPO getUser(){
-		return user;
+	@JoinColumn(name = "cuid", referencedColumnName = "uid")
+	public UserPO getCreater() {
+		return creater;
 	}
 
-	public void setUser(UserPO user){
-		this.user = user;
+	public void setCreater(UserPO creater) {
+		this.creater = creater;
 	}
 
 	@Column(name="theme")

@@ -6,7 +6,7 @@ $(function(){
 
         var createLine = function(v){
 
-            var $liLine = $('<li></li>').addClass('item-blue clearfix');
+            var $liLine = $('<li></li>').addClass('item-orange clearfix');
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.name));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
@@ -16,8 +16,8 @@ $(function(){
             var propertyArr = [
                 ["等级:", v.level, "grey"],
                 ["图标:", v.icon, "grey"],
-                ["链接:", v.url ? v.url: "---", "blue"],
-                ["上级:", v.fatherModule ? v.fatherModule.name : "---", "grey"],
+                ["链接:", v.url ? v.url: "---", "grey"],
+                ["上级:", v.fatherModule ? v.fatherModule.name : "---", "grey"]
             ];
 
             $.each(propertyArr, function (index,value) {
@@ -34,7 +34,7 @@ $(function(){
             $liLine.append($h3).append($ulProperty);
 
             $btnDel.click(function(){
-                deleteModule(v.mid)
+                deleteModule(v.mid);
             });
 
             return $liLine;
@@ -45,11 +45,9 @@ $(function(){
             var menuArr = {
                 level1 : [],
                 level2 : [],
-                level3 : [],
+                level3 : []
             };
-
-            var arr ;
-
+            
             if(!listData || !listData.length){
                 return;
             }
@@ -73,7 +71,7 @@ $(function(){
                 var menuArr = sortData(listData);
                 var menuObj = {
                     level1 : {},
-                    level2 : {},
+                    level2 : {}
                 };
                 if(listData && listData.length){
 
@@ -113,8 +111,8 @@ $(function(){
 
                 return  {
                     level1 : result.level1,
-                    level2 : result.level2,
-                }
+                    level2 : result.level2
+                };
             }
         };
     })();
@@ -132,9 +130,10 @@ $(function(){
         modal : $('#moduleModal').on("show.bs.modal", function(a) {
             com.clearValidator();
             com.clearValidator("#materialModelName", !0);
-            com.clearValidator("#materialModelNo", !0)
+            com.clearValidator("#materialModelNo", !0);
         }),
         btnAdd : $('#addModule').click(function(){
+        	com.cleanItems(module.moduleModalItems);
             $('#moduleModal').modal("show");
         }),
         saveBtn: $("#saveBtn").on("click", saveData),
@@ -154,8 +153,6 @@ $(function(){
 
                 list: [],
                 source: function (query, process) {
-
-
                     var level = $('#level').val() - 1;
 
                     var result = $.map(fatherModuleArr['level' + level], function(val){
@@ -188,18 +185,18 @@ $(function(){
 
         var params = {
             "module.name": module.moduleModalItems.name.val(),
+            "module.alias": module.moduleModalItems.name.val(),
             "module.icon": module.moduleModalItems.icon.val(),
             "module.url": module.moduleModalItems.url.val(),
             "module.level": module.moduleModalItems.level.val(),
             "module.fatherModule.mid": module.moduleModalItems.fatherModule.attr('data-typeahead-key'),
-            "module.system": config.system,
+            "module.system": config.system
         };
 
         com.post(api.system.addModule, params,function(a) {
             module.modal.modal('hide');
             search();
-
-        })
+        });
     }
 
     function deleteModule(mid){

@@ -175,6 +175,13 @@
 		{"key":"3", "value":"季付"},
 		{"key":"6", "value":"半年付"},
 		{"key":"12", "value":"年付"}
+	],"buildrule" : [
+		{"key":"", "value":"选择"},
+		{"key":"#", "value":"#"},
+		{"key":"", "value":""},
+		{"key":"-", "value":"-"},
+		{"key":"座", "value":"座"},
+		{"key":"门", "value":"门"}
 	],
 	"errorCode": 0,
 	"errorMsg": null

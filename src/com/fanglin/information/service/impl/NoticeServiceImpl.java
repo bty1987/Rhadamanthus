@@ -77,7 +77,7 @@ public class NoticeServiceImpl implements NoticeService{
     }
     
     @Override
-    public void pageNoticeForSeenByType(Paging paging,NoticeVO noticeVO, Authentication authentication) throws FLException{
+    public void pageNoticeForSeenByType(Paging paging, List<Filter> filters, NoticeVO noticeVO, Authentication authentication) throws FLException{
     	
     	UserPO userPO = userDao.queryUserByUserId(authentication.getUserId());
     	
@@ -92,7 +92,7 @@ public class NoticeServiceImpl implements NoticeService{
     		nids.add(noticeDepartmentPO.getNid());
     	}
     	
-    	List<NoticePO> noticePOs = noticeDao.pageNoticeForSeenByType(paging, nids, noticeVO.getType(), authentication.getCompany());
+    	List<NoticePO> noticePOs = noticeDao.pageNoticeForSeenByType(paging, filters, nids, noticeVO.getType(), authentication.getCompany());
     	List<NoticeVO> noticeVOs = new ArrayList<NoticeVO>();
 
 		for(NoticePO noticePO: noticePOs){
@@ -112,16 +112,16 @@ public class NoticeServiceImpl implements NoticeService{
     		throw new FLException(190005, "人员不存在");
     	}
     	
-		NoticePO noticePO = new NoticePO();
+		NoticePO noticePO = new NoticePO(new UserPO());
 		
-		BeanUtil.copyProperties(noticeVO, noticePO, Arrays.asList("user", "dept"));
+		BeanUtil.copyProperties(noticeVO, noticePO, Arrays.asList("creater"));
 		
-		noticePO.setUser(userPO);
+		noticePO.setCreater(userPO);
 		
 		noticePO.setPublishTime(DateUtil.current("yyyy-MM-dd"));
 		noticePO.setCompany(authentication.getCompany());
 		
-		noticeDao.save(noticePO);	
+		noticeDao.save(noticePO);
 		
 		return 0;
 	}
@@ -138,15 +138,15 @@ public class NoticeServiceImpl implements NoticeService{
 			throw new FLException(160017, "公告不存在");
 		}
     	
-    	UserPO userPO = userDao.queryUserByUserId(noticeVO.getUser().getUserId());
+    	UserPO userPO = userDao.queryUserByUserId(noticeVO.getCreater().getUserId());
     	
     	if(userPO == null){
     		throw new FLException(190005, "人员不存在");
     	}
      	
-    	BeanUtil.copyProperties(noticeVO, noticePO, Arrays.asList("user", "dept"));
+    	BeanUtil.copyProperties(noticeVO, noticePO, Arrays.asList("creater"));
     	
-    	noticePO.setUser(userPO);
+    	noticePO.setCreater(userPO);
     	
 		noticeDao.update(noticePO);
 		
@@ -173,11 +173,11 @@ public class NoticeServiceImpl implements NoticeService{
     
     private NoticeVO convertBean(NoticePO noticePO){
     	
-        NoticeVO noticeVO = new NoticeVO();
+        NoticeVO noticeVO = new NoticeVO(new UserVO());
         
-        BeanUtil.copyProperties(noticePO, noticeVO, Arrays.asList("user", "dept"));
+        BeanUtil.copyProperties(noticePO, noticeVO, Arrays.asList("creater"));
         
-        noticeVO.setUser(new UserVO().setBaseInfo(noticePO.getUser()));
+        noticeVO.setCreater(new UserVO().setBaseInfo(noticePO.getCreater()));
         
         return noticeVO;
     }

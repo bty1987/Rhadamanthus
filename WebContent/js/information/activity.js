@@ -46,7 +46,7 @@ $(function(){
 
         var creatLine = function(v){
             var $liLine = $('<li></li>').addClass('item-blue clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.activityName));
+            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.name));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
@@ -55,7 +55,7 @@ $(function(){
 
 
             var propertyArr = [
-                ["创建人:", v.createUserName, "grey"],
+                ["创建人:", v.creater.currentName, "grey"],
                 ["开始时间:", v.startTime, "grey"],
                 ["结束时间:", v.endTime, "grey"],
                 ["状态:", statusDict[v.status][0], statusDict[v.status][1]],
@@ -77,7 +77,7 @@ $(function(){
             $btnEdit.click(function(){
                 activity.editFlg = !0;
                 var a = v;
-                void 0 != a && (activity.items.aid = a.aid, activity.items.status = a.status, activity.items.activityName.val(a.activityName).attr("disabled", "disabled"), activity.items.startTime.val(a.startTime).attr("disabled", "disabled"), activity.items.endTime.val(a.endTime), activity.modal.modal("show"))
+                void 0 != a && (activity.items.aid = a.aid, activity.items.status = a.status, activity.items.activityName.val(a.name).attr("disabled", "disabled"), activity.items.startTime.val(a.startTime).attr("disabled", "disabled"), activity.items.endTime.val(a.endTime), activity.modal.modal("show"))
             });
 
             $btnView.click(function(){
@@ -123,7 +123,7 @@ $(function(){
 
     function viewActivityItemIndex(v) {
     	params.aid = v.aid;
-    	params.activityName = v.activityName;
+    	params.activityName = v.name;
         $("#activityPageContent").load(api.index.activityItemIndex.url)
     }
     function saveData() {
@@ -131,7 +131,7 @@ $(function(){
             var a = activity.items.startTime.val(),
                 b = activity.items.endTime.val();
             a > b ? com.showAlert(com.warning, "\u5f00\u59cb\u65f6\u95f4\u4e0d\u80fd\u5927\u4e8e\u7ed3\u675f\u65f6\u95f4") : (b = {
-                "activity.activityName": activity.items.activityName.val(),
+                "activity.name": activity.items.activityName.val(),
                 "activity.startTime": activity.items.startTime.val() + " 00:00:00",
                 "activity.endTime": activity.items.endTime.val() + " 23:59:59",
                 "activity.content": ""

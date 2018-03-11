@@ -6,7 +6,7 @@ $(function(){
 
         var createLine = function(v){
 
-            var $liLine = $('<li></li>').addClass('item-blue clearfix');
+            var $liLine = $('<li></li>').addClass('item-orange clearfix');
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.operation));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
@@ -16,7 +16,7 @@ $(function(){
             var propertyArr = [
                 ["编号:", v.oid, "grey"],
                 ["操作说明:", v.name, "grey"],
-                ["模块:", v.module  ? v.module.name : "---", "blue"],
+                ["模块:", v.module  ? v.module.name : "---", "grey"],
             ];
 
             $.each(propertyArr, function (index,value) {
@@ -100,7 +100,7 @@ $(function(){
                 }, matcher: function (item) {
                     return true;
                 }, callback: function(data){
-                    this.flprocess(data ,'mId', 'name');
+                    this.flprocess(data ,'mid', 'name');
                 },
                 isResultTypeMap : true //必填值为true,获取key,value的标识,
                 , flupdater: function(k,v){//下拉列表选中时的一些处理,必填对选中项的key和value做处理
@@ -120,8 +120,8 @@ $(function(){
         var params = {
             "operation.name": operation.operationModalItems.operationName.val(),
             "operation.operation": operation.operationModalItems.operation.val(),
-            "operation.module.mId": operation.operationModalItems.fatherModule.attr('data-typeahead-key'),
-            "operation.system": config.system,
+            "operation.module.mid": operation.operationModalItems.fatherModule.attr('data-typeahead-key'),
+            "operation.system": config.system
         };
 
         com.post(api.system.addOperation, params,function(a) {

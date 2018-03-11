@@ -51,6 +51,18 @@ public class ModuleDaoImpl extends DaoImpl<ModulePO> implements ModuleDao {
 		return session().createCriteria(ModulePO.class).add(Restrictions.eq("system", system)).list();
 	}
 	
+	@Override
+	public int deleteModuleForSubByMid(int mId) {
+		
+		String sql = "delete from communion.module where fatherModuleId in ((select o.mId from (select * from communion.module where fatherModuleId = :mId) o))";
+		session().createSQLQuery(sql).setInteger("mId", mId).executeUpdate();
+		
+		sql = "delete from communion.module where fatherModuleId = :mId";
+		session().createSQLQuery(sql).setInteger("mId", mId).executeUpdate();
+		
+		return 0;
+	}
+	
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){
 		
 	}

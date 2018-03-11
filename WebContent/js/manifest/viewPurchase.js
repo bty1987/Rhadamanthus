@@ -56,20 +56,20 @@ $(function(){
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(i + 1));
             var $contentWrap = $('<div></div>').addClass('line-wrap  content col11');
             var propertyArr = [
-                v.goods.no,
-                v.goods.name,
-                v.goods.category,
-                v.goods.brand,
-                v.goods.measurementUnit,
-                v.color.name,
-                v.format.info,
-                v.unitPrice,
-                v.num,
-                v.goods.pieceNum,
-                v.surplus
+                [v.goods.no,'blue'],
+                [v.goods.name,'grey'],
+                [v.goods.category,'grey'],
+                [v.goods.brand,'grey'],
+                [v.goods.measurementUnit,'grey'],
+                [v.color.name,'grey'],
+                [v.format.info,'grey'],
+                [v.unitPrice,'blue'],
+                [v.num,'blue'],
+                [v.goods.pieceNum,'blue'],
+                [v.surplus,'blue']
             ];
             $.each(propertyArr, function (i, v) {
-                var $cell = $('<div></div>').addClass('cell').html(v);
+                var $cell = $('<div></div>').addClass('cell ' + v[1]).html(v[0]);
                 $cell.appendTo($contentWrap);
             });
             var $cellOption = $('<div></div>').addClass('cell option');

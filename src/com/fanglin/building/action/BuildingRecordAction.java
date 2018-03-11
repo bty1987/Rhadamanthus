@@ -49,7 +49,7 @@ public class BuildingRecordAction extends BaseListAction{
 	@Action(value="addBuildingRecord", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String addBuildingRecord() throws FLException{
 		
-		buildingRecordService.addBuildingRecord(buildingRecord,authentication());
+		buildingRecordService.addBuildingRecord(buildingRecord, queryUserId());
 		
 		return SUCCESS;
 		

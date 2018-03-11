@@ -16,31 +16,32 @@
         if (listData && listData.length) {
             $.each(listData, function (i, v) {
 
-                var $liLine = $('<li></li>').addClass('clearfix item-blue');
-                var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-                var $h3 = $('<h3></h3>').css({color: "grey", "font-weight": "bold"}).html( v.name);
+                var $liLine = $('<li></li>').addClass('clearfix item-orange');
+                var $h3 = $('<h3></h3>').addClass('oid');
+                var $title = $('<small></small>').addClass('blue').html( v.name);
                 var $btnDiv = $('<div></div>').addClass('action-buttons pull-right');
+                var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 
-                var $btnAdd = $('<a></a>').addClass('btn btn-minier').html('添加');
-                var $btnItem = $('<a></a>').addClass('btn btn-minier').html('子项');
-                var $btnDis = $('<a></a>').addClass('btn btn-minier').html('折让');
-                var $btnDelete = $('<a></a>').addClass('btn btn-minier').html('删除');
-                var $btnStatus = $('<a></a>').addClass('btn btn-minier').html('状态');
-                var $btnEdit = $('<a></a>').addClass('btn btn-minier').html('编辑');
+                var $btnAdd = $('<a></a>').addClass('btn btn-minier btn-yellow').html('添加');
+                var $btnItem = $('<a></a>').addClass('btn btn-minier btn-success').html('子项');
+                var $btnDis = $('<a></a>').addClass('btn btn-minier btn-warning').html('折让');
+                var $btnDelete = $('<a></a>').addClass('btn btn-minier btn-inverse').html('删除');
+                var $btnStatus = $('<a></a>').addClass('btn btn-minier btn-danger').html('状态');
+                var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-pink').html('编辑');
 
                 var propertyArr = [
-                    ["创建人:", v.creater.userName , "color-grey"],
-                    ["创建时间:", v.createTime , "color-grey"],
-                    ["折让:", v.discount, "color-grey"],
-                    ["总价:", v.total, "color-grey"],
-                    ["类型:", v.status == 0 ? "未使用" : "正使用", "color-red"],
-                    ["说明:", v.comment, "color-grey"],
+                    ["创建人:", v.creater.userName , "grey"],
+                    ["创建时间:", v.createTime , "green"],
+                    ["折让:", v.discount, "blue"],
+                    ["总价:", v.total, "blue"],
+                    ["类型:", v.status == 0 ? "未使用" : "正使用", "red"],
+                    ["说明:", v.comment, "grey"],
                 ];
 
                 $.each(propertyArr, function (index, value) {
-                    var $liProperty = $('<li></li>').css({"border-bottom": "0px"});
+                    var $liProperty = $('<li></li>');
                     $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                    $('<b></b>').html(value[1]).css({color: value[2]}).appendTo($liProperty);
+                    $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
                     $liProperty.appendTo($ulProperty);
                 });
 
@@ -57,7 +58,7 @@
                     $btnDiv.append($btnItem);
                 };
 
-                $btnDiv.appendTo($h3);
+                $h3.append($title).append($btnDiv);
 
                 $btnAdd.click(function () {
                     params["qid"] = v.qid;
@@ -68,12 +69,14 @@
 
                     com.switchPage(api.index.addPuotationItemIndex.url);
                 });
+
                 $btnItem.click(function () {
                     params["qid"] = v.qid;
                     params["status"] = status;
                     params["use"] = v.status ;
                   com.switchPage(api.index.puotationItemIndex.url);
                 });
+
                 $btnDelete.click(function (e) {
                     e.stopPropagation();
                     layer.confirm('确定要删除吗？', {

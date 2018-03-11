@@ -112,27 +112,27 @@ jQuery(function ($) {
                     var $divBtnBlock = $('<div></div>').addClass('clearfix col-sm-12');
                     var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
-                    var $btnAdd = $('<a></a>').addClass('btn btn-minier btn-inverse').html('添项');
-                    var $btnSub = $('<a></a>').addClass('btn btn-minier btn-purple').html('子项');
-                    var $btnMoney = $('<a></a>').addClass('btn btn-minier btn-primary').html('款项');
-                    var $btnCollect = $('<a></a>').addClass('btn btn-minier btn-info').html('收款');
-                    var $btnMend = $('<a></a>').addClass('btn btn-minier btn-yellow').html('补货');
-                    var $btnRefund = $('<a></a>').addClass('btn btn-minier btn-danger').html('退货');
+                    var $btnAdd = $('<a></a>').addClass('btn btn-minier btn-yellow').html('添项');
+                    var $btnSub = $('<a></a>').addClass('btn btn-minier btn-success').html('子项');
+                    var $btnMoney = $('<a></a>').addClass('btn btn-minier btn-warning').html('款项');
+                    var $btnCollect = $('<a></a>').addClass('btn btn-minier btn-inverse').html('收款');
+                    var $btnMend = $('<a></a>').addClass('btn btn-minier btn-danger').html('补货');
+                    var $btnRefund = $('<a></a>').addClass('btn btn-minier btn-pink').html('退货');
                     //var $btnSend = $('<a></a>').addClass('btn btn-minier btn-grey').html('送货');
-                    var $btnPrint = $('<a></a>').addClass('btn btn-minier btn-success').html('打印');
-                    var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
+                    var $btnPrint = $('<a></a>').addClass('btn btn-minier btn-purple').html('打印');
+                    var $btnDel = $('<a></a>').addClass('btn btn-minier btn-yellow').html('删除');
 
                     var propertyArr = [
                         ["品类:", v.category, "grey"],
                         ["品牌:", v.brand, "grey"],
                         ["类型:", material.materialSaleOrderTypeData[v.type], "red"],
                         ["总价:", v.total, "blue"],
-                        ["折扣总价：", v.distotal, "grey"],
+                        ["折扣总价：", v.distotal, "blue"],
                         ["定金:", v.depositPayment, "blue"],
                         ["补款:", v.fullPayment, "blue"],
-                        ["抹零:", v.maling, "green"],
-                        ["厂商抹零:", v.venderMaling, "green"],
-                        ["券额:", v.coupon, "green"],
+                        ["抹零:", v.maling, "blue"],
+                        ["厂商抹零:", v.venderMaling, "blue"],
+                        ["券额:", v.coupon, "blue"],
                         ["券信息:", v.couponInfo, "grey"],
                         ["状态:", material.materialStatus[v.status], "red"],
                         ["备注:", v.comment, "grey"],

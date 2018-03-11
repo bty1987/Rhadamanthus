@@ -8,26 +8,27 @@ $(function(){
         var renderList = function(tableId,listData){
 
             var $tableWrap = $('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list ui-sortable  fl-table-list');
+            var $ul = $('<ul></ul>').addClass('item-list ui-sortable fl-table-list');
 
                 listData && listData.length && ($.each(listData,function(i, v){
 
-                    var $liLine = $('<li></li>').addClass('clearfix item-blue');
+                    var $liLine = $('<li></li>').addClass('clearfix item-orange');
+                    var $h3 = $('<h3></h3>').addClass('oid')
+                    var $title = $('<small></small>').addClass('blue').html(' ' + v.pno);
+                    var $btnDiv = $('<div></div>').addClass('pull-right action-buttons');
                     var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-                    var $h3 = $('<h3></h3>').addClass('blue').css({"font-weight":"bold"}).html(' ' + v.pno);
-                    var $btnDiv = $('<div></div>').addClass('action-buttons pull-right');
 
-                    var $btnsigned = $('<a></a>').addClass(' btn btn-minier btn-grey ').html('签约');
+                    var $btnsigned = $('<a></a>').addClass(' btn btn-minier btn-yellow').html('签约');
                     var $btndeliver = $('<a></a>').addClass(' btn btn-minier btn-success').html('送货');
                     var $btnAfter = $('<a></a>').addClass(' btn btn-minier btn-warning').html('售后');
-                    var $btnconfirm = $('<a></a>').addClass(' btn btn-minier btn-danger').html('核对');
-                    var $btnquote = $('<a></a>').addClass(' btn btn-minier btn-info').html('报价');
-                    var $btnPlan = $('<a></a>').addClass(' btn btn-minier btn-purple').html('计划');
-                    var $btnHard = $('<a></a>').addClass(' btn btn-minier btn-pink').html('五金');
+                    var $btnconfirm = $('<a></a>').addClass(' btn btn-minier btn-inverse').html('核对');
+                    var $btnquote = $('<a></a>').addClass(' btn btn-minier btn-danger').html('报价');
+                    var $btnPlan = $('<a></a>').addClass(' btn btn-minier btn-pink').html('计划');
+                    var $btnHard = $('<a></a>').addClass(' btn btn-minier btn-purple').html('五金');
                     var $btnOut = $('<a></a>').addClass(' btn btn-minier btn-yellow').html('外协');
-                    var $btnBind = $('<a></a>').addClass(' btn btn-minier btn-inverse').html('绑定');
-                    var $btnAbandon = $('<a></a>').addClass(' btn btn-minier btn-danger').html('废弃');
-                    var $btnPicture = $('<a></a>').addClass(' btn btn-minier btn-primary').html('图纸');
+                    var $btnBind = $('<a></a>').addClass(' btn btn-minier btn-success').html('绑定');
+                    var $btnAbandon = $('<a></a>').addClass(' btn btn-minier btn-warning').html('废弃');
+                    var $btnPicture = $('<a></a>').addClass(' btn btn-minier btn-inverse').html('图纸');
 
                     var status = "";
                     var diliverystatus = "";
@@ -64,27 +65,27 @@ $(function(){
                     }
 
                     var propertyArr = [
-                        ["订单编号:", v.orderId, "grey"],
-                        ["楼盘地址:", v.house.village.name + " " + v.house.houseNumber, "grey"],
+                        ["订单编号:", v.orderId, "blue"],
+                        ["楼盘地址:", v.house.village.name + " " + v.house.houseNumber, "blue"],
                         ["创建人:", v.creater.userName, "grey"],
-                        ["创建时间:", v.createTime , "grey"],
+                        ["创建时间:", v.createTime , "green"],
                         ["设计师:", v.designer.userName, "grey"],
-                        ["确认时间:", v.confirmTime , "grey"],
-                        ["拆单时间:", v.diliveryTime , "grey"],
-                        ["订单状态:", status, "grey"],
-                        ["送货状态:", diliverystatus, "grey"],
-                        ["送货时间:", v.diliveryTime , "grey"],
-                        ["总额:", v.total, "grey"],
-                        ["工期:", v.timeLimit, "grey"],
-                        ["订单类型:", _type, "grey"],
-                        ["父级生产单号:", (v.spid == 0 ? null: v.spid) , "grey"],
-                        ["订单剩余时间:",remainDay,(remainDate < 5 ? "red":"grey")]
+                        ["确认时间:", v.confirmTime , "green"],
+                        ["拆单时间:", v.diliveryTime , "green"],
+                        ["订单状态:", status, "red"],
+                        ["送货状态:", diliverystatus, "red"],
+                        ["送货时间:", v.diliveryTime , "green"],
+                        ["总额:", v.total, "blue"],
+                        ["工期:", v.timeLimit, "green"],
+                        ["订单类型:", _type, "red"],
+                        ["父级生产单号:", (v.spid == 0 ? null: v.spid) , "blue"],
+                        ["订单剩余时间:",remainDay,(remainDate < 5 ? "red":"green")]
                     ];
 
                     $.each(propertyArr,function (index,value) {
-                        var $liProperty = $('<li></li>').css({"border-bottom":"0px"});
+                        var $liProperty = $('<li></li>');
                         $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                        $('<b></b>').html(value[1]).css({color:value[2]}).appendTo($liProperty);
+                        $('<b></b>').addClass(value[2]).html(value[1]).appendTo($liProperty);
                         $liProperty.appendTo($ulProperty);
                     });
 
@@ -106,7 +107,7 @@ $(function(){
                         $btnDiv.append($btnAfter).append($btnAbandon);
                     }
 
-                    $btnDiv.appendTo($h3);
+                    $h3.append($title).append($btnDiv);
 
                     $btnsigned.click(function(){
                         var options = {};
@@ -193,7 +194,7 @@ $(function(){
 
                                 $layerAdd.find("input[name='orderAddr']").val(data.decoration.house.village.name+"  "+data.decoration.house.houseNumber);
 
-                               // productionOptions["production.village.villageId"] = data.decorationOrder.village.villageId;
+                                //productionOptions["production.village.villageId"] = data.decorationOrder.village.villageId;
 
                             });
 
@@ -202,7 +203,7 @@ $(function(){
                             if(!com.validate("layerAdd",null)){
 
                                 productionOptions["production.orderId"] = v.orderId;
-                              //productionOptions["production.houseNumber"] = v.houseNumber;
+                                //productionOptions["production.houseNumber"] = v.houseNumber;
                                 productionOptions["production.house.hid"] = v.house.hid;
                                 productionOptions["production.designer.userId"] = v.designer.userId;
                                 productionOptions["production.type"] = 1;
@@ -220,7 +221,6 @@ $(function(){
                         });
 
                     });
-
 
                     $btnconfirm.click(function(){
 
@@ -304,7 +304,7 @@ $(function(){
 
     }, "pagenation", "salesPostData", null, false, null,function(){
 
-        var $adda = $('<a></a>').addClass('btn btn-xs pull-left').attr('name', 'addProductionVersion').css('margin-top', '-2px').html('添加');
+        var $adda = $('<a></a>').addClass('btn btn-xs btn-info pull-left').attr('name', 'addProductionVersion').css('margin-top', '-2px').html('添加');
 
         $adda.click(function (){
             productionUtils.clearForm("form1");

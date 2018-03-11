@@ -28,23 +28,21 @@ public class CityPO implements Serializable {
 
 	private static final long serialVersionUID = -5885986511194210020L;
 
-	public static final String CITY_ID = "cityId";
+	public static final String COLUMN_NO_STR = "no";
 	
-	public static final String CITY_NAME = "cityName";
+	public static final String COLUMN_NAME_STR = "name";
 	
-	public static final String CITY_REGION_ID = "cityRegionId";
-	
-	public static final String REGION_ID = "regionId";
+	public static final String COLUMN_RID_STR = "rid";
 	
 	public static final String COLUMN_PINYIN_STR = "pinyin";
 	
-	private int cId;
+	private int cid;
 	
 	private RegionPO region;
 
-	private String cityId;
+	private String no;
 
-	private String cityName;
+	private String name;
 	
 	private String pinyin;
 
@@ -52,18 +50,19 @@ public class CityPO implements Serializable {
 	
 	private double y;
 	
+	@Id
 	@GeneratedValue
-	@Column(name = "cId")
-	public int getcId() {
-		return cId;
+	@Column(name = "cid")
+	public int getCid() {
+		return cid;
 	}
 
-	public void setcId(int cId) {
-		this.cId = cId;
+	public void setCid(int cid) {
+		this.cid = cid;
 	}
 	
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(nullable = false, name = CITY_REGION_ID, referencedColumnName="regionId")
+	@JoinColumn(nullable = false, name = "rid", referencedColumnName="rid")
 	public RegionPO getRegion(){
 		return region;
 	}
@@ -72,26 +71,25 @@ public class CityPO implements Serializable {
 		this.region = region;
 	}
 	
-	@Id
-	@Column(name = CITY_ID)
-	public String getCityId(){
-		return cityId;
+	@Column(name = "no")
+	public String getNo() {
+		return no;
 	}
 
-	public void setCityId(String cityId){
-		this.cityId = cityId;
+	public void setNo(String no) {
+		this.no = no;
 	}
 
-	@Column(name = CITY_NAME)
-	public String getCityName(){
-		return cityName;
+	@Column(name = "name")
+	public String getName() {
+		return name;
 	}
 
-	public void setCityName(String cityName){
-		this.cityName = cityName;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	@Column(name = COLUMN_PINYIN_STR)
+	@Column(name = "pinyin")
 	public String getPinyin() {
 		return pinyin;
 	}

@@ -2,7 +2,7 @@ package com.fanglin.inventory.vo;
 
 import java.io.Serializable;
 
-import com.fanglin.data.common.vo.WorkTypeVO;
+import com.fanglin.communion.vo.WorkTypeVO;
 
 public class AccessoriesTypeVO implements Serializable{
 

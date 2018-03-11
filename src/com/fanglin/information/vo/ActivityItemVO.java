@@ -4,13 +4,13 @@ public class ActivityItemVO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 2606014203338812720L;
 
-	private Long aiId;
+	private Long aiid;
 	
 	private Long aid;
 	
 	private String activityName;
 	
-	private String activityItemName;
+	private String name;
 	
 	private Integer num;
 	
@@ -18,12 +18,12 @@ public class ActivityItemVO implements java.io.Serializable {
 	
 	private Float money;
 
-	public Long getAiId() {
-		return aiId;
+	public Long getAiid() {
+		return aiid;
 	}
 
-	public void setAiId(Long aiId) {
-		this.aiId = aiId;
+	public void setAiid(Long aiid) {
+		this.aiid = aiid;
 	}
 
 	public Long getAid() {
@@ -42,12 +42,12 @@ public class ActivityItemVO implements java.io.Serializable {
 		this.activityName = activityName;
 	}
 
-	public String getActivityItemName() {
-		return activityItemName;
+	public String getName() {
+		return name;
 	}
 
-	public void setActivityItemName(String activityItemName) {
-		this.activityItemName = activityItemName;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public Integer getNum() {

@@ -1,19 +1,16 @@
-
-
 <div class="page-content">
     <div class="row">
         <div class="col-xs-12">
             <div id="list" style="margin-left:10px"></div>
-            <div>
-                <h3 class="clearfix" >
-                    <a  class="btn btn-minier pull-left" id="importBtn"><i class="icon-download-alt bigger-110 "></i>导出</a>
-                    <a  class="btn btn-minier pull-left" id="refundBtn" ><i class="icon-shopping-cart "></i>退货</a>
-                    <a  class="btn btn-minier pull-left hide" id="refundCommitBtn"><i class="icon-ok "></i>确认</a>
-                    <a  class="btn btn-minier pull-left hide" id="refundCancelBtn"><i class="icon-remove  "></i>取消</a>
-                    <a  class="btn btn-minier pull-left" id="fullRefundBtn"><i class="icon-shopping-cart "></i>全退</a>
-                    <a  class="btn btn-minier pull-left" id="reOrderBtn"><i class="icon-shopping-cart "></i>倒单</a>
-                    <a  class="btn btn-minier pull-left" id="backBtn"><i class="icon-mail-forward "></i>返回</a>
-                </h3>
+            <div class="action-buttons" style="margin-top: 5px">
+                <a class="btn btn-minier pull-left btn-yellow" id="importBtn"><i
+                        class="icon-download-alt bigger-110 "></i>导出</a>
+                <a class="btn btn-minier pull-left btn-success" id="refundBtn"><i class="icon-shopping-cart "></i>退货</a>
+                <a class="btn btn-minier pull-left btn-warning hide" id="refundCommitBtn"><i class="icon-ok "></i>确认</a>
+                <a class="btn btn-minier pull-left btn-inverse hide" id="refundCancelBtn"><i class="icon-remove  "></i>取消</a>
+                <a class="btn btn-minier pull-left btn-danger" id="fullRefundBtn"><i class="icon-shopping-cart "></i>全退</a>
+                <a class="btn btn-minier pull-left btn-pink" id="reOrderBtn"><i class="icon-shopping-cart "></i>倒单</a>
+                <a class="btn btn-minier pull-left btn-purple" id="backBtn"><i class="icon-mail-forward "></i>返回</a>
             </div>
         </div>
     </div>
@@ -26,7 +23,7 @@
             <div class="form-group" style="margin-right: 0">
                 <label class="col-xs-3 control-label " for="num">数量</label>
                 <div class="col-xs-9">
-                    <input type="text" id="num" class=" col-xs-4 v_required v_float" />
+                    <input type="text" id="num" class=" col-xs-4 v_required v_float"/>
                 </div>
             </div>
             <div class="space5"></div>
@@ -42,7 +39,7 @@
             <div class="form-group" style="margin-right: 0">
                 <label class="col-xs-3 control-label " for="comment">备注</label>
                 <div class="col-xs-9">
-                    <textarea maxlength="128" id="comment" class="col-xs-4" rows="3" style="margin-left: 0%" ></textarea>
+                    <textarea maxlength="128" id="comment" class="col-xs-4" rows="3" style="margin-left: 0%"></textarea>
                 </div>
             </div>
             <div class="space5"></div>
@@ -55,7 +52,7 @@
     <div class="row-fluid">
         <form class="form-horizontal">
             <div class="form-group" style="margin-right: 0">
-                <label class="col-xs-3 control-label " for="refundTotal" >退货总额</label>
+                <label class="col-xs-3 control-label " for="refundTotal">退货总额</label>
                 <div class="col-xs-9">
                     <input type="text" id="refundTotal" class=" col-xs-4" readonly/>
                 </div>
@@ -65,7 +62,7 @@
             <div class="form-group" style="margin-right: 0">
                 <label class="col-xs-3 control-label " for="refund">实际退款额</label>
                 <div class="col-xs-9">
-                    <input type="text" id="refund" class=" col-xs-4 v_required v_float" />
+                    <input type="text" id="refund" class=" col-xs-4 v_required v_float"/>
                 </div>
             </div>
             <div class="space5"></div>
@@ -73,7 +70,7 @@
             <div class="form-group" style="margin-right: 0">
                 <label class="col-xs-3 control-label " for="refundDes">备注信息</label>
                 <div class="col-xs-9">
-                    <textarea maxlength="128" id="refundDes" class="col-xs-4 v_required" rows="3" ></textarea>
+                    <textarea maxlength="128" id="refundDes" class="col-xs-4 v_required" rows="3"></textarea>
                 </div>
             </div>
             <div class="space5"></div>
@@ -90,5 +87,5 @@
 </div>
 
 <script type="text/javascript">
-    $.loadScript(['js/sales/salesItemDetial.js','js/utils/approvalUtils.js']);
+    $.loadScript(['js/sales/salesItemDetial.js', 'js/utils/approvalUtils.js']);
 </script>

@@ -23,6 +23,7 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.department.service.DepartmentService;
 import com.fanglin.department.vo.DepartmentVO;
 import com.fanglin.department.vo.DepartmentTypeVO;
+import com.fanglin.utils.SystemConfig;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -84,6 +85,41 @@ public class DepartmentAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
+	@Action(value = "updateDepartment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateDepartment() throws FLException{
+		
+		if(SystemConfig.getString("communion") == null){
+		    throw new FLException(-1, "无操作权限");
+		}		
+		
+		departmentService.updateDepartment(dept);
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "addDepartment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addDepartment() throws FLException{
+		
+		if(SystemConfig.getString("communion") == null){
+		    throw new FLException(-1, "无操作权限");
+		}
+		
+		departmentService.addDepartment(dept, queryUserId(), queryCompany());
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "deleteDepartment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String deleteDepartment() throws FLException{
+		
+		if(SystemConfig.getString("communion") == null){
+		    throw new FLException(-1, "无操作权限");
+		}		
+		
+		departmentService.deleteDepartment(dept);
+		
+		return SUCCESS;
+	}
 	
 	public DepartmentVO getDept() {
 		return dept;

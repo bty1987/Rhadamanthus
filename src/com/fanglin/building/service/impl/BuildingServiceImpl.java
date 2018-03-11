@@ -26,13 +26,13 @@ import com.fanglin.building.vo.CustomerSourceVO;
 import com.fanglin.building.vo.HouseSourceVO;
 import com.fanglin.common.po.CountingPO;
 import com.fanglin.common.service.CountingService;
+import com.fanglin.communion.dao.CustomerDao;
+import com.fanglin.communion.po.CustomerPO;
+import com.fanglin.communion.vo.CustomerVO;
+import com.fanglin.communion.vo.HouseVO;
+import com.fanglin.communion.vo.VillageVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.data.common.dao.CustomerDao;
-import com.fanglin.data.common.vo.CustomerVO;
-import com.fanglin.data.common.vo.HouseVO;
-import com.fanglin.data.common.vo.VillageVO;
-import com.fanglin.data.po.CustomerPO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserVO;
@@ -134,7 +134,9 @@ public class BuildingServiceImpl implements BuildingService {
 			customerSourceAgentPO = customerDao.get(cacid);
 		}
 		
-		BuildingNodePO buildingNodePO = buildingNodeDao.queryBuildingNodeByType(buildingVO.getPayType(), BuildingNodePO.COLUMN_SORE_ONE);
+		List<BuildingNodePO> buildingNodePOs = buildingNodeDao.queryBuildingNodeByType(buildingVO.getPayType(), BuildingNodePO.COLUMN_SORE_ONE);
+		
+		BuildingNodePO buildingNodePO = buildingNodePOs.get(0);
 		
 		BuildingPO buildingPO = new BuildingPO(houseSourcePO, customerSourcePO, houseSourceAgentPO, customerSourceAgentPO, createPO, buildingNodePO);
 		BeanUtil.copyProperties(buildingVO, buildingPO, Arrays.asList("houseSource", "customerSource", "houseSourceAgent", "customerSourceAgent", "creater", "buildingNode"));
@@ -144,8 +146,6 @@ public class BuildingServiceImpl implements BuildingService {
 		buildingSchedulePO.setName(buildingNodePO.getName());
 		
 		buildingSchedulePO.setStatus(BuildingSchedulePO.STATUS_INIT_SHORT);
-		
-		buildingSchedulePO.setOperatTime(new Timestamp(System.currentTimeMillis()));
 		
 		//NO
 		String currentDate = DateUtil.current("yyyyMMdd").toString().substring(2);

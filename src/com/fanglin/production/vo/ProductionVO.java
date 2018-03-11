@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 
 import org.apache.struts2.json.annotations.JSON;
 
-import com.fanglin.data.common.vo.HouseVO;
+import com.fanglin.communion.vo.HouseVO;
 import com.fanglin.personel.vo.UserBaseVO;
 
 

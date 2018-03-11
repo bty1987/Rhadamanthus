@@ -30,97 +30,132 @@ import com.fanglin.utils.FormatUtil;
 @Service("userDDService")
 @Transactional(readOnly = true)
 public class UserService {
-	
+
 	@Autowired
-	private  AuthService authDDService ;
-	
+	private AuthService authDDService;
+
 	@Autowired
 	private SystemConfigDao systemConfigDao;
-	
-	public  User getUserInfo(String code, String company){
-		
+
+	public User getUserInfo(String code, String company) throws FLException {
+
 		String accessToken = authDDService.getAccessToken(company);
-		
+
 		SystemConfigPO oapiHost = systemConfigDao.querySystemConfig("oapiHost");
-		
+
 		String url = String.format(DDApi.DDAPI_GET_USER_INFO_STR, oapiHost.getValue(), accessToken, code);
-		
+
 		JSONObject json = HttpHelper.httpGet(url);
-		
+
+		if (json == null) {
+			throw new FLException(270003, "获取人员信息失败");
+		}else if(json.getInteger("errcode") != 0){
+			System.out.println(url);
+			System.out.println(String.format("%d-%s", json.getInteger("errcode"), json.getString("errmsg")));
+		}
+
 		return JSON.parseObject(json.toJSONString(), User.class);
 	}
-	
-	public  User getUser(String userid,Integer company) {
-	
+
+	public User getUser(String userid, Integer company) throws FLException {
+
 		String accessToken = authDDService.getAccessToken(FormatUtil.encodeCompany(company));
-		
+
 		SystemConfigPO oapiHost = systemConfigDao.querySystemConfig("oapiHost");
-		
+
 		String url = String.format(DDApi.DDAPI_GET_USER_STR, oapiHost.getValue(), accessToken, userid);
-		
+
 		JSONObject json = HttpHelper.httpGet(url);
-		
+
+		if (json == null) {
+			throw new FLException(270003, "获取人员信息失败");
+		}else if(json.getInteger("errcode") != 0){
+			System.out.println(url);
+			System.out.println(String.format("%d-%s", json.getInteger("errcode"), json.getString("errmsg")));
+		}
+
 		return JSON.parseObject(json.toJSONString(), User.class);
 	}
-	
-	public  int addDDUser(User usera,List<Long> dids,Integer company) throws FLException {
-	
-		String accessToken = authDDService.getAccessToken(FormatUtil.encodeCompany(company));	
-		  
-		User user = new User() ;
+
+	public int addDDUser(User usera, List<Long> dids, Integer company) throws FLException {
+
+		String accessToken = authDDService.getAccessToken(FormatUtil.encodeCompany(company));
+
+		User user = new User();
 		user.setMobile(usera.getMobile());
 		user.setName(usera.getName());
 		user.setUserid(usera.getUserid());
 		user.setPosition(usera.getPosition());
 		user.setDepartment(dids);
 		user.setJobnumber(usera.getUserid());
-		
+
 		SystemConfigPO oapiHost = systemConfigDao.querySystemConfig("oapiHost");
-						
-		String url = String.format(DDApi.DDAPI_ADD_USER_STR, oapiHost.getValue(),accessToken,  user);
-						
+
+		String url = String.format(DDApi.DDAPI_ADD_USER_STR, oapiHost.getValue(), accessToken, user);
+
 		JSONObject json = HttpHelper.httpPost(url, user);
-						 
-		int errcode=json.getInteger("errcode");
-		 	
-		return errcode; 
+
+		if (json == null) {
+			throw new FLException(270004, "添加人员信息失败");
+		}else if(json.getInteger("errcode") != 0){
+			System.out.println(url);
+			System.out.println(String.format("%d-%s", json.getInteger("errcode"), json.getString("errmsg")));
+		}
+
+		int errcode = json.getInteger("errcode");
+
+		return errcode;
 	}
-		
-	public  int  updateDDUser(User usera,List<Long> dids,Integer company) throws FLException {
-	    	
+
+	public int updateDDUser(User usera, List<Long> dids, Integer company) throws FLException {
+
 		String accessToken = authDDService.getAccessToken(FormatUtil.encodeCompany(company));
-		
-		User user = getUser(usera.getUserid(),company);
+
+		User user = getUser(usera.getUserid(), company);
 		user.setMobile(usera.getMobile());
 		user.setName(usera.getName());
 		user.setPosition(usera.getPosition());
 		user.setDepartment(dids);
 		user.setJobnumber(usera.getUserid());
-		
+
 		SystemConfigPO oapiHost = systemConfigDao.querySystemConfig("oapiHost");
-			
-		String url = String.format(DDApi.DDAPI_UPDATE_USER_STR, oapiHost.getValue(),accessToken,  user);
-			
+
+		String url = String.format(DDApi.DDAPI_UPDATE_USER_STR, oapiHost.getValue(), accessToken, user);
+
 		JSONObject json = HttpHelper.httpPost(url, user);
-	
-		int errcode=json.getInteger("errcode");
-			
-		return errcode; 
-	}
-     
-	public  int  deleteDDUser(User user,Integer company)throws FLException {
-		   
-		String accessToken =authDDService.getAccessToken(FormatUtil.encodeCompany(company));
-			
-		SystemConfigPO oapiHost = systemConfigDao.querySystemConfig("oapiHost");
 		
-		String url = String.format(DDApi.DDAPI_DELETE_USER_STR,oapiHost.getValue(), accessToken, user.getUserid());
-		
-		JSONObject json = HttpHelper.httpGet(url);
-		
-		int errcode=json.getInteger("errcode");
-		  		
+		if (json == null) {
+			throw new FLException(270005, "更新人员信息失败");
+		}else if(json.getInteger("errcode") != 0){
+			System.out.println(url);
+			System.out.println(String.format("%d-%s", json.getInteger("errcode"), json.getString("errmsg")));
+		}
+
+		int errcode = json.getInteger("errcode");
+
 		return errcode;
 	}
-	
+
+	public int deleteDDUser(User user, Integer company) throws FLException {
+
+		String accessToken = authDDService.getAccessToken(FormatUtil.encodeCompany(company));
+
+		SystemConfigPO oapiHost = systemConfigDao.querySystemConfig("oapiHost");
+
+		String url = String.format(DDApi.DDAPI_DELETE_USER_STR, oapiHost.getValue(), accessToken, user.getUserid());
+
+		JSONObject json = HttpHelper.httpGet(url);
+		
+		if (json == null) {
+			throw new FLException(270006, "删除人员信息失败");
+		}else if(json.getInteger("errcode") != 0){
+			System.out.println(url);
+			System.out.println(String.format("%d-%s", json.getInteger("errcode"), json.getString("errmsg")));
+		}
+
+		int errcode = json.getInteger("errcode");
+
+		return errcode;
+	}
+
 }

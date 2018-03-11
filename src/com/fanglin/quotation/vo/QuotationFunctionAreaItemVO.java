@@ -33,6 +33,8 @@ public class QuotationFunctionAreaItemVO implements Serializable{
 	private Long quotationItemId;
 	
 	private String content;
+	
+	private Integer index;
 
 	public Long getQfaiId() {
 		return qfaiId;
@@ -146,4 +148,11 @@ public class QuotationFunctionAreaItemVO implements Serializable{
 		this.content = content;
 	}
 
+	public Integer getIndex() {
+		return index;
+	}
+
+	public void setIndex(Integer index) {
+		this.index = index;
+	}
 }

@@ -21,6 +21,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fanglin.communion.po.BrandPO;
+import com.fanglin.communion.po.MeasurementUnitPO;
+
 
 @Entity
 @Table(name="materialmodel", catalog = "platform")

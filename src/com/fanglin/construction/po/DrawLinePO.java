@@ -56,7 +56,7 @@ public class DrawLinePO implements Serializable {
 	private String drawLineGroupName;
 	
 	private UserPO drawLineUser;
-	
+
 	@Id
 	@GeneratedValue
 	@Column(name = "dlId")
@@ -79,7 +79,7 @@ public class DrawLinePO implements Serializable {
 	}
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = true, name = "applayUserId", referencedColumnName = "userId")
+	@JoinColumn(nullable = true, name = "auid", referencedColumnName = "uid")
 	public UserPO getApplayUser(){
 		return applayUser;
 	}
@@ -162,7 +162,7 @@ public class DrawLinePO implements Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = true, name = "drawLineUserId", referencedColumnName = "userId")
+	@JoinColumn(nullable = true, name = "dluid", referencedColumnName = "uid")
 	public UserPO getDrawLineUser(){
 		return drawLineUser;
 	}
@@ -170,5 +170,6 @@ public class DrawLinePO implements Serializable {
 	public void setDrawLineUser(UserPO drawLineUser){
 		this.drawLineUser = drawLineUser;
 	}
-
+	
+	
 }

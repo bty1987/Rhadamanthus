@@ -24,17 +24,17 @@ public class RegionPO implements Serializable {
 
 	private static final long serialVersionUID = -3881595135226541201L;
 	
-	public static final String REGION_ID = "regionId";
+	public static final String COLUMN_NO_STR = "no";
 	
-	public static final String REGION_NAME = "regionName";
+	public static final String COLUMN_NAME_STR = "name";
 	
 	public static final String COLUMN_PINYIN_STR = "pinyin";
 	
-	private int rId;
+	private int rid;
 
-	private String regionId;
+	private String no;
 	
-	private String regionName;
+	private String name;
 	
 	private String pinyin;
 	
@@ -46,45 +46,43 @@ public class RegionPO implements Serializable {
 		super();
 	}
 
-	public RegionPO(String regionId) {
+	public RegionPO(int rid) {
 		super();
-		this.regionId = regionId;
+		this.rid = rid;
 	}
 
+	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "rId") 
-	public int getrId() {
-		return rId;
+	@Column(name = "rid") 
+	public int getRid() {
+		return rid;
 	}
-
-	public void setrId(int rId) {
-		this.rId = rId;
+	public void setRid(int rid) {
+		this.rid = rid;
 	}
 	
-	@Id
-	@Column(name = REGION_ID)
-	public String getRegionId(){
-		return regionId;
+	@Column(name = COLUMN_NO_STR)
+	public String getNo() {
+		return no;
+	}
+	public void setNo(String no) {
+		this.no = no;
+	}
+	
+	@Column(name = COLUMN_NAME_STR)
+	public String getName() {
+		return name;
 	}
 
-	public void setRegionId(String regionId){
-		this.regionId = regionId;
-	}
-
-	@Column(name = REGION_NAME)
-	public String getRegionName(){
-		return regionName;
-	}
-
-	public void setRegionName(String regionName){
-		this.regionName = regionName;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	@Column(name = COLUMN_PINYIN_STR)
 	public String getPinyin() {
 		return pinyin;
 	}
-
+	
 	public void setPinyin(String pinyin) {
 		this.pinyin = pinyin;
 	}

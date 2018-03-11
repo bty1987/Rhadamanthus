@@ -26,6 +26,9 @@ $.extend(api.index, {
     },
     manifestPrintIndex: {
         url: "/views/manifest/manifestPrint.html"
+    },
+    accessoriesPrintIndex:{
+        url: "/views/manifest/accessoriesPrint.html"
     }
 });
 
@@ -63,6 +66,9 @@ $.extend(api, {
 
         pageGoods: {
             url: "pageGoods.do",
+        },
+		pageGoodsForAdvance: {
+            url: "pageGoodsForAdvance.do",
         },
         queryGoods: {
             url: "queryGoods.do",
@@ -346,6 +352,9 @@ $.extend(api, {
         },
         deleteAccessoriesItem: {
             url: "deleteAccessoriesItem.do",
+        },
+        queryAccessoriesManifestByAid:{
+            url:"queryAccessoriesManifestByAid.do"
         },
 
         addSales: {

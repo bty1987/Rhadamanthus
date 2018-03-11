@@ -934,7 +934,7 @@ jQuery(function($) {
                     break;
                 case "picture":
                     if(!$.isEmptyObject(params.viewNode[curstep].wizard)) $.extend(true,wizard,params.viewNode[curstep].wizard);
-                    decorationUtils.initDecorationPicture("designPictures", "projectPictures", "CADProjectPicture", decorationDetail.decorationOrderId,wizard["editPicture"]);
+                    decorationUtils.initDecorationPicture("designPictures", "projectPictures", "CADProjectPicture", "ContractPictures",decorationDetail.decorationOrderId,wizard["editPicture"]);
                     break;
                 case "material":
                     decorationUtils.initMaterial(decorationDetail);
@@ -968,7 +968,7 @@ jQuery(function($) {
                     break;
                 case "picture":
                     if(!$.isEmptyObject(params.viewNode[info.step-1].wizard)) $.extend(true,wizard,params.viewNode[info.step-1].wizard);
-                    decorationUtils.initDecorationPicture("designPictures", "projectPictures", "CADProjectPicture", decorationDetail.decorationOrderId,wizard["editPicture"]);
+                    decorationUtils.initDecorationPicture("designPictures", "projectPictures", "CADProjectPicture", "ContractPictures", decorationDetail.decorationOrderId,wizard["editPicture"]);
                     break;
                 case "material":
                     decorationUtils.initMaterial(decorationDetail);

@@ -8,6 +8,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.fanglin.communion.po.ReceiptTypePO;
+
 @Entity
 @Table(name = "subject", catalog = "finance")
 public class SubjectPO implements java.io.Serializable {
@@ -187,6 +189,10 @@ public class SubjectPO implements java.io.Serializable {
 
 	public void setAssistant(String assistant) {
 		this.assistant = assistant;
+	}
+	
+	public SubjectPO toSubjectPO(ReceiptTypePO receiptTypePO){
+		return new SubjectPO(receiptTypePO.getOneCode(), receiptTypePO.getTwoCode(), receiptTypePO.getThrCode(), receiptTypePO.getSubjectName(), receiptTypePO.getDirection());
 	}
 
 }

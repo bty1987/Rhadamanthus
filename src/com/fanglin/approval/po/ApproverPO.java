@@ -30,7 +30,7 @@ public class ApproverPO implements Serializable{
 
     public static final String COLUMN_TYPE_STR = "type";
     
-    private int auid;
+    private int aid;
     
     private UserPO  user;
    
@@ -49,17 +49,17 @@ public class ApproverPO implements Serializable{
 
     @Id
     @GeneratedValue
-    @Column(name = "auid")
-    public int getAuid(){
-        return auid;
-    }
+    @Column(name = "aid")
+    public int getAid() {
+		return aid;
+	}
 
-    public void setAuid(int auid){
-        this.auid = auid;
-    }
+	public void setAid(int aid) {
+		this.aid = aid;
+	}
 
-    @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(nullable=false, name="userId", referencedColumnName="userId")
+	@ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(nullable=false, name="auid", referencedColumnName="uid")
     public UserPO getUser(){
         return user;
     }

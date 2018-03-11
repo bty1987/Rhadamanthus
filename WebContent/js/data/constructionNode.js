@@ -44,7 +44,7 @@ jQuery(function($) {
 
 		var creatLine = function(v){
 
-			var $liLine = $('<li></li>').addClass('item-blue clearfix');
+			var $liLine = $('<li></li>').addClass('item-orange clearfix');
 			var $h3 = $('<h3></h3>').append($('<small></small>').addClass('blue').html(v.cnid + "  " + v.name));
 			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 			var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
@@ -86,7 +86,7 @@ jQuery(function($) {
 		displayFunc.init('resultList', data);
 	}, "pagenation", "constructionNodePostData",null, false, null, function(){
 
-		var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addConstructionNode').css("margin", "0px 3px");
+		var $adda = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'addConstructionNode').css("margin", "0px 3px");
 		var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
 		var $addspan = $('<span></span>').text('添加').appendTo($adda);
 

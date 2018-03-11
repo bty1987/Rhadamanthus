@@ -26,18 +26,6 @@ CREATE TABLE `refundsitem` (
   PRIMARY KEY (`riid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='退货单';
 
-DROP TABLE IF EXISTS `salesmanifestitem`;
-CREATE TABLE `salesmanifestitem` (
-  `smiid` int(11) NOT NULL AUTO_INCREMENT,
-  `siid` int(11) NOT NULL,
-  `miid` int(11) NOT NULL,
-  `num` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `surplus` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '余额',
-  `type` tinyint(2) NOT NULL,
-  `status` tinyint(1) NOT NULL,
-  PRIMARY KEY (`smiid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='销售采购项';
-
 DROP TABLE IF EXISTS `sales`;
 CREATE TABLE `sales` (
   `sid` int(11) NOT NULL AUTO_INCREMENT,
@@ -45,8 +33,7 @@ CREATE TABLE `sales` (
   `orderId` varchar(15) NOT NULL,
   `company` tinyint(2) NOT NULL DEFAULT '0',
   `dompany` int(11) NOT NULL,
-  `vid` int(11) NOT NULL COMMENT '楼盘ID',
-  `houseNumber` varchar(30) NOT NULL COMMENT '楼号',
+  `hid` int(11) NOT NULL COMMENT '房产ID',
   `cid` int(11) DEFAULT NULL COMMENT '客户ID',
   `suid` int(11) NOT NULL COMMENT '业务员ID',
   `did` int(11) NOT NULL COMMENT '业务部门ID',
@@ -72,6 +59,27 @@ CREATE TABLE `sales` (
   `couponInfo` varchar(64) NOT NULL DEFAULT '',
   PRIMARY KEY (`sid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='销售单';
+
+DROP TABLE IF EXISTS `salesbalance`;
+CREATE TABLE `salesbalance` (
+  `sbid` int(11) NOT NULL AUTO_INCREMENT,
+  `sid` int(11) NOT NULL COMMENT '销售单',
+  `rid` int(11) DEFAULT NULL COMMENT '退货单',
+  `cuid` varchar(32) NOT NULL COMMENT '创建人',
+  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `puid` varchar(32) DEFAULT NULL COMMENT '结算人',
+  `postTime` timestamp NULL DEFAULT NULL COMMENT '结算时间',
+  `venderTime` timestamp NULL DEFAULT NULL COMMENT '厂商结算时间',
+  `total` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '总额',
+  `balance` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '预结算值',
+  `difference` decimal(10,3) DEFAULT '0.000' COMMENT '差值',
+  `vbalance` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '厂商结算',
+  `pbalance` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '结算值',
+  `type` tinyint(2) NOT NULL COMMENT '类型,0:购货,1:预结算退货,2:结算退货',
+  `status` tinyint(2) NOT NULL COMMENT '状态,0:预结算,1:厂商结算,2:结算',
+  `comment` varchar(128) DEFAULT NULL COMMENT '备注',
+  PRIMARY KEY (`sbid`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='销售结算';
 
 DROP TABLE IF EXISTS `salesbalanceitem`;
 CREATE TABLE `salesbalanceitem` (
@@ -110,23 +118,15 @@ CREATE TABLE `salesitem` (
   PRIMARY KEY (`siid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='销售项';
 
-DROP TABLE IF EXISTS `salesbalance`;
-CREATE TABLE `salesbalance` (
-  `sbid` int(11) NOT NULL AUTO_INCREMENT,
-  `sid` int(11) NOT NULL COMMENT '销售单',
-  `rid` int(11) DEFAULT NULL COMMENT '退货单',
-  `cuid` varchar(32) NOT NULL COMMENT '创建人',
-  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `puid` varchar(32) DEFAULT NULL COMMENT '结算人',
-  `postTime` timestamp NULL DEFAULT NULL COMMENT '结算时间',
-  `venderTime` timestamp NULL DEFAULT NULL COMMENT '厂商结算时间',
-  `total` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '总额',
-  `balance` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '预结算值',
-  `difference` decimal(10,3) DEFAULT '0.000' COMMENT '差值',
-  `vbalance` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '厂商结算',
-  `pbalance` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '结算值',
-  `type` tinyint(2) NOT NULL COMMENT '类型,0:购货,1:预结算退货,2:结算退货',
-  `status` tinyint(2) NOT NULL COMMENT '状态,0:预结算,1:厂商结算,2:结算',
-  `comment` varchar(128) DEFAULT NULL COMMENT '备注',
-  PRIMARY KEY (`sbid`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='销售结算';
+DROP TABLE IF EXISTS `salesmanifestitem`;
+CREATE TABLE `salesmanifestitem` (
+  `smiid` int(11) NOT NULL AUTO_INCREMENT,
+  `siid` int(11) NOT NULL,
+  `miid` int(11) NOT NULL,
+  `num` decimal(10,3) NOT NULL DEFAULT '0.000',
+  `surplus` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '余额',
+  `type` tinyint(2) NOT NULL,
+  `status` tinyint(1) NOT NULL,
+  PRIMARY KEY (`smiid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='销售采购项';
+

@@ -103,7 +103,9 @@ jQuery(function($) {
 		$line.appendTo('#list');
 	});
 
-	$('#submitSaleOrder').click(function(){
+	$('#submitSaleOrder').bindClick(addmaterial);
+
+	function addmaterial(){
 
 		com.clearValidator("#salesmanName", true);
 
@@ -203,7 +205,7 @@ jQuery(function($) {
 			return false;
 		}
 
-		var btn = $(this);
+		var btn = $('#submitSaleOrder');
 		btn.button('loading');
 
 		com.post(api.material.addMaterial, options, function(){
@@ -216,7 +218,7 @@ jQuery(function($) {
 		}, function(){
 			btn.button('reset');
 		});
-	});
+	};
 
 	$("#backBtn").on("click", function(){
 		com.switchPage(params.historyOrderPage);

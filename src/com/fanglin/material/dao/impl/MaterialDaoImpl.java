@@ -50,6 +50,10 @@ public class MaterialDaoImpl extends DaoImpl<MaterialPO> implements MaterialDao 
 	public List<MaterialPO> pageMaterialByOrderId(Paging paging, List<Filter> filters, String orderId,String userId){
 		PagingQuery<MaterialPO> query = pagingQuery(paging, MaterialPO.class);
 		
+		query.alias("salesman", "salesman");
+		query.alias("instorer", "instorer");
+		query.alias("materialer", "materialer");
+		
 		query.add(query.getCriterion(MaterialPO.COLUMN_ORDERID_STR, orderId, "eq"));
 		query.add(query.getCriterion(MaterialPO.COLUMN_STATUS_STR, MaterialPO.STATUS_TYPE_DELETE_INT, "ne"));
 		query.add(Restrictions.or(Restrictions.or(query.getCriterion(MaterialPO.COLUMN_SALESMANID_STR,userId,"eq"),query.getCriterion(MaterialPO.COLUMN_INSTOREID_STR,userId,"eq")),query.getCriterion(MaterialPO.COLUMN_MATERIALID_STR,userId,"eq")));

@@ -43,25 +43,25 @@ jQuery(function($) {
 		};
 
 		var creatLine = function(v) {
-			var $liLine = $('<li></li>').addClass('item-blue clearfix');
-			var $h3 = $('<h3></h3>').addClass('oid').append(
-							$('<small></small>').addClass('blue').html(v.no));
+			var $liLine = $('<li></li>').addClass('item-orange clearfix');
+			var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.no));
 			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 			var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
-			var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger')
-					.html('删除');
+			var $btnDel = $('<a></a>').addClass('btn btn-minier btn-yellow').html('删除');
 
-			var propertyArr = [ [ "最新版本:", v.no, "grey" ],
-					[ "适用版本:", v.trialno, "green" ],
+			var propertyArr = [ 
+			        [ "最新版本:", v.no, "grey" ],
+					[ "适用版本:", v.trialno, "grey" ],
 					[ "创建时间:", v.createTime, "grey" ],
-					[ "版本说明:", v.content, "pink" ], [ "路径:", v.path, "blue" ], ];
+					[ "版本说明:", v.content, "grey" ], 
+					[ "路径:", v.path, "grey" ]
+			];
 
 			$.each(propertyArr, function(index, value) {
 				var $liProperty = $('<li></li>');
 				$('<strong></strong>').html(value[0]).appendTo($liProperty);
-				$('<b></b>').html(value[1]).addClass(value[2]).appendTo(
-						$liProperty);
+				$('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
 				$liProperty.appendTo($ulProperty);
 			});
 
@@ -76,7 +76,7 @@ jQuery(function($) {
 							"upgrade.ugid" : v.ugid
 						}, function() {
 							upgradeSeacher.doSearch();
-						})
+						});
 					}
 				});
 			});

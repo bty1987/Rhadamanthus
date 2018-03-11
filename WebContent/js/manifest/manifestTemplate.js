@@ -61,14 +61,14 @@ $(function(){
 
             var propertyArr = [
 
-                v.name,
-                v.comment,
-                v.status == "0" ? "启用" : "禁用"
+                [v.name,'grey'],
+                [v.comment,'grey'],
+                [v.status == "0" ? "启用" : "禁用",'red']
             ];
 
 
             $.each(propertyArr, function (i, v) {
-                var $cell = $('<div></div>').addClass('cell').html(v);
+                var $cell = $('<div></div>').addClass('cell ' + v[1]).html(v[0]);
                 $cell.appendTo($contentWrap);
             });
 

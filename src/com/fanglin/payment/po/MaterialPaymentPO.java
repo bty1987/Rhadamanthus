@@ -79,6 +79,8 @@ public class MaterialPaymentPO implements java.io.Serializable {
 	public static final short ADVANCETYPE_TYPE_MATERIAL_INT = 1;
 	
 	public static final short ADVANCETYPE_TYPE_ZATERIAL_INT = 2;
+	
+	public static final short PAYMENTSTATUS_PAY_STR = 1;
 
 	private long mpId;
 	
@@ -168,7 +170,7 @@ public class MaterialPaymentPO implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "createrId", referencedColumnName = "userId")
+	@JoinColumn(name = "cuid", referencedColumnName = "uid")
 	public UserPO getCreater(){
 		return creater;
 	}

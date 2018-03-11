@@ -30,10 +30,6 @@ $.extend(api, {data: {
     updateBrand: {url: "updateBrand.do", server: "communion"},
     deleteBrandByBIds: {url: "deleteBrandByBIds.do", server: "communion"},
 
-    queryBrandUserRightForUserId: {url: "queryBrandUserRightForUserId.do"},
-    queryBrandUserRightForLogin: {url: "queryBrandUserRightForLogin.do"},
-    updateBrandUserRight: {url: "updateBrandUserRight.do", server: "communion"},
-
     pageCategory: {url: "pageCategory.do", demo: true},
     queryCategory: {url: "queryCategory.do", demo: true},
     queryCategoryByCId: {url: "queryCategoryByCId.do"},
@@ -53,7 +49,7 @@ $.extend(api, {data: {
     updateCustomerPhoneForStatus:{url:"updateCustomerPhoneForStatus.do", server: "communion"},
     updateCustomerNameAPhone:{url:"updateCustomerNameAPhone.do", server: "communion"},
     updateCustomerPhoneForDstatus:{url:"updateCustomerPhoneForDstatus.do", server: "communion"},
-    
+	
     pageVillage: {url: "pageVillage.do", demo: true},
     queryVillage: {url: "queryVillage.do"},
     queryVillageById: {url: "queryVillageById.do"},

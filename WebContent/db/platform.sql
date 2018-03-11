@@ -28,7 +28,7 @@ DROP TABLE IF EXISTS `auditscale`;
 CREATE TABLE `auditscale` (
   `asid` int(11) NOT NULL AUTO_INCREMENT,
   `arid` int(11) NOT NULL,
-  `cuid` int(11) NOT NULL,
+  `cuid` int(11) NOT NULL COMMENT '创建人ID',
   `buid` int(11) NOT NULL COMMENT '归属人ID',
   `bdid` int(11) NOT NULL COMMENT '归属人部门',
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -60,6 +60,54 @@ CREATE TABLE `chainpage` (
   PRIMARY KEY (`cpid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='外链';
 
+DROP TABLE IF EXISTS `decoration`;
+CREATE TABLE `decoration` (
+  `doid` int(11) NOT NULL AUTO_INCREMENT,
+  `orderId` varchar(15) NOT NULL DEFAULT '',
+  `customerId` int(11) NOT NULL COMMENT '客户编号',
+  `villageId` varchar(10) DEFAULT NULL COMMENT '楼盘编号',
+  `houseNumber` varchar(30) DEFAULT NULL COMMENT '门牌号',
+  `hid` int(11) NOT NULL DEFAULT '0' COMMENT '房产ID',
+  `houseType` varchar(15) NOT NULL DEFAULT ' 现房' COMMENT '期房 , 现房 . ',
+  `houseClass` varchar(10) DEFAULT NULL COMMENT '清水 , 二手 , 别墅 , 阁楼 , 地下 . ',
+  `apartmentType` varchar(45) DEFAULT NULL COMMENT '举例:一室一厅,两室一厅,三室两厅,三室一厅,阁楼,别墅',
+  `houseArea` decimal(10,2) DEFAULT '0.00' COMMENT '建筑面积',
+  `freeArea` decimal(10,2) DEFAULT '0.00' COMMENT '赠送面积',
+  `designerId` varchar(15) DEFAULT NULL COMMENT '设计师编号',
+  `salesmanId` varchar(15) DEFAULT NULL COMMENT '业务员编号',
+  `supervisorId` varchar(15) DEFAULT NULL COMMENT '监理编号',
+  `quoterId` varchar(15) DEFAULT NULL COMMENT '报价员编号',
+  `escorterId` varchar(15) DEFAULT NULL COMMENT '跟单员编号',
+  `notSalesmanRate` decimal(10,3) NOT NULL DEFAULT '0.000',
+  `contractCode` varchar(25) DEFAULT NULL COMMENT '合同号',
+  `contractUserId` varchar(15) DEFAULT NULL COMMENT '签约操作人',
+  `contractTime` timestamp NULL DEFAULT NULL COMMENT '签订合同时间',
+  `depositTime` timestamp NULL DEFAULT NULL COMMENT '定金时间',
+  `measureTime` timestamp NULL DEFAULT NULL,
+  `createTime` timestamp NULL DEFAULT NULL COMMENT '订单创建时间',
+  `createUser` varchar(15) DEFAULT NULL COMMENT '订单创建人',
+  `status` varchar(10) DEFAULT NULL COMMENT '咨询、量房、已报价、定金、已签约、废单、已完工、合同终止',
+  `type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '半包0, 全包1, 半价2',
+  `projectStatus` varchar(10) DEFAULT NULL COMMENT '等待施工、放线申请、放线失败、放线成功、水电申请、水电、水电验收、瓦工申请、瓦工、瓦工验收、木工申请、木工、木工验收、油工申请、油工、油工验收、保洁申请、保洁、保洁验收、',
+  `orderType` int(11) DEFAULT '1' COMMENT '1 装修订单 2 主材订单',
+  `versionId` varchar(11) NOT NULL COMMENT '订单使用报价版本号',
+  `orderTotalPrice` decimal(10,3) DEFAULT '0.000' COMMENT '折后合同额',
+  `quotationPrice` decimal(10,3) DEFAULT '0.000',
+  `salesmanType` varchar(10) NOT NULL DEFAULT '守园',
+  `otherStatus` tinyint(4) DEFAULT '0' COMMENT '1合尺, 2设计费',
+  `company` int(4) NOT NULL COMMENT '订单所属公司',
+  `quotationTimeLimit` int(11) NOT NULL DEFAULT '0',
+  `resourceType` tinyint(1) DEFAULT '0' COMMENT '资源类型',
+  PRIMARY KEY (`doid`),
+  KEY `indexone` (`orderId`),
+  KEY `indexthr` (`houseArea`),
+  KEY `indexfou` (`customerId`),
+  KEY `indexsix` (`designerId`),
+  KEY `indexsev` (`salesmanId`),
+  KEY `indexeig` (`status`),
+  KEY `indexnig` (`company`),
+  KEY `indextwo` (`hid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='装修单';
 DROP TABLE IF EXISTS `decorationactivity`;
 CREATE TABLE `decorationactivity` (
   `daId` int(11) NOT NULL AUTO_INCREMENT,
@@ -103,9 +151,18 @@ CREATE TABLE `decorationcontract` (
   KEY `indexone` (`orderId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='装修合同表';
 
+DROP TABLE IF EXISTS `decorationdesigndepartmentright`;
+CREATE TABLE `decorationdesigndepartmentright` (
+  `doddrId` int(20) NOT NULL AUTO_INCREMENT,
+  `uId` int(11) NOT NULL,
+  `dId` int(11) NOT NULL,
+  `company` int(11) NOT NULL,
+  PRIMARY KEY (`doddrId`),
+  KEY `indexone` (`uId`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='订单设计部权限';
 DROP TABLE IF EXISTS `decorationholonomy`;
 CREATE TABLE `decorationholonomy` (
-  `dhid` int(11) NOT NULL AUTO_INCREMENT COMMENT '半价ID',
+  `dhid` int(11) NOT NULL AUTO_INCREMENT,
   `orderId` varchar(15) NOT NULL COMMENT '订单编号',
   `name` varchar(32) DEFAULT NULL COMMENT '名称',
   `maching` decimal(10,3) NOT NULL COMMENT '主材配比',
@@ -124,7 +181,7 @@ CREATE TABLE `decorationholonomy` (
 
 DROP TABLE IF EXISTS `decorationinclusive`;
 CREATE TABLE `decorationinclusive` (
-  `diid` int(11) NOT NULL AUTO_INCREMENT COMMENT '半价ID',
+  `diid` int(11) NOT NULL AUTO_INCREMENT,
   `orderId` varchar(15) NOT NULL COMMENT '订单编号',
   `contractPrice` decimal(10,3) NOT NULL COMMENT '合同额',
   `projectPrice` decimal(10,3) NOT NULL COMMENT '工程总额',
@@ -136,6 +193,18 @@ CREATE TABLE `decorationinclusive` (
   PRIMARY KEY (`diid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='装修单套餐信息';
 
+DROP TABLE IF EXISTS `decorationinfo`;
+CREATE TABLE `decorationinfo` (
+  `diid` int(11) NOT NULL AUTO_INCREMENT COMMENT '信息ID',
+  `orderId` varchar(15) DEFAULT NULL COMMENT '订单编号',
+  `notSalesmanName` varchar(20) DEFAULT NULL COMMENT '非业务员名',
+  `notSalesmanPhone` varchar(45) DEFAULT NULL COMMENT '非业务员电话',
+  `notSalesmanContent` varchar(100) DEFAULT NULL COMMENT '非业务员备注',
+  `backOrderName` varchar(20) DEFAULT NULL COMMENT '返单人员名',
+  `backOrderPhone` varchar(45) DEFAULT NULL COMMENT '返单人员电话',
+  `backOrderContent` varchar(100) DEFAULT NULL COMMENT '返单人员备注',
+  PRIMARY KEY (`diid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 DROP TABLE IF EXISTS `decorationoperate`;
 CREATE TABLE `decorationoperate` (
   `doId` int(11) NOT NULL AUTO_INCREMENT,
@@ -152,70 +221,6 @@ CREATE TABLE `decorationoperate` (
   KEY `indexone` (`orderId`),
   KEY `indextwo` (`operateTime`,`type`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='装修单操作';
-
-DROP TABLE IF EXISTS `decorationorder`;
-CREATE TABLE `decorationorder` (
-  `autoId` bigint(20) NOT NULL AUTO_INCREMENT,
-  `orderId` varchar(15) NOT NULL DEFAULT '',
-  `customerId` int(11) NOT NULL COMMENT '客户编号',
-  `villageId` varchar(10) NOT NULL COMMENT '楼盘编号',
-  `houseNumber` varchar(30) NOT NULL COMMENT '门牌号',
-  `houseType` varchar(15) NOT NULL DEFAULT ' 现房' COMMENT '期房 , 现房 . ',
-  `houseClass` varchar(10) DEFAULT NULL COMMENT '清水 , 二手 , 别墅 , 阁楼 , 地下 . ',
-  `apartmentType` varchar(45) DEFAULT NULL COMMENT '举例:一室一厅,两室一厅,三室两厅,三室一厅,阁楼,别墅',
-  `houseArea` decimal(10,2) DEFAULT '0.00' COMMENT '建筑面积',
-  `freeArea` decimal(10,2) DEFAULT '0.00' COMMENT '赠送面积',
-  `designerId` varchar(15) DEFAULT NULL COMMENT '设计师编号',
-  `salesmanId` varchar(15) DEFAULT NULL COMMENT '业务员编号',
-  `supervisorId` varchar(15) DEFAULT NULL COMMENT '监理编号',
-  `quoterId` varchar(15) DEFAULT NULL COMMENT '报价员编号',
-  `escorterId` varchar(15) DEFAULT NULL COMMENT '跟单员编号',
-  `notSalesmanName` varchar(10) DEFAULT NULL COMMENT '非业务信息',
-  `notSalesmanPhone` varchar(15) DEFAULT NULL,
-  `notSalesmanContent` varchar(100) DEFAULT NULL,
-  `notSalesmanRate` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `backOrderName` varchar(20) DEFAULT NULL COMMENT '返单信息',
-  `backOrderPhone` varchar(45) DEFAULT NULL,
-  `backOrderContent` varchar(128) DEFAULT NULL,
-  `contractCode` varchar(25) DEFAULT NULL COMMENT '合同号',
-  `contractUserId` varchar(15) DEFAULT NULL COMMENT '签约操作人',
-  `contractTime` timestamp NULL DEFAULT NULL COMMENT '签订合同时间',
-  `depositTime` timestamp NULL DEFAULT NULL COMMENT '定金时间',
-  `measureTime` timestamp NULL DEFAULT NULL,
-  `createTime` timestamp NULL DEFAULT NULL COMMENT '订单创建时间',
-  `createUser` varchar(15) DEFAULT NULL COMMENT '订单创建人',
-  `status` varchar(10) DEFAULT NULL COMMENT '初始,已报价,定金,已签约,废单,已完工,合同终止',
-  `type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '半包0, 全包1, 半价2',
-  `projectStatus` varchar(10) DEFAULT NULL COMMENT '等待施工,放线申请,放线失败,放线成功,水电申请,水电,水电验收,瓦工申请,瓦工,瓦工验收,木工申请,木工,木工验收,油工申请,油工,油工验收,保洁申请,保洁,保洁验收,',
-  `versionId` varchar(11) NOT NULL COMMENT '订单使用报价版本号',
-  `orderTotalPrice` decimal(10,3) DEFAULT '0.000' COMMENT '折后合同额',
-  `salesmanType` varchar(10) NOT NULL DEFAULT '守园',
-  `otherStatus` tinyint(4) DEFAULT '0' COMMENT '1合尺, 2设计费',
-  `company` tinyint(4) NOT NULL COMMENT '订单所属公司',
-  `quotationTimeLimit` int(11) NOT NULL DEFAULT '0',
-  `resourceType` tinyint(1) DEFAULT '0' COMMENT '资源类型:咨询0,量房1',
-  PRIMARY KEY (`autoId`),
-  UNIQUE KEY `uniqueone` (`orderId`),
-  KEY `indexone` (`orderId`),
-  KEY `indextwo` (`houseNumber`),
-  KEY `indexthr` (`houseArea`),
-  KEY `indexfou` (`customerId`),
-  KEY `indexfiv` (`villageId`),
-  KEY `indexsix` (`designerId`),
-  KEY `indexsev` (`salesmanId`),
-  KEY `indexeig` (`status`),
-  KEY `indexnig` (`company`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='装修单表';
-
-DROP TABLE IF EXISTS `decorationorderdesigndepartmentright`;
-CREATE TABLE `decorationorderdesigndepartmentright` (
-  `doddrId` int(20) NOT NULL AUTO_INCREMENT,
-  `uId` int(11) NOT NULL,
-  `dId` int(11) NOT NULL,
-  `company` int(11) NOT NULL,
-  PRIMARY KEY (`doddrId`),
-  KEY `indexone` (`uId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='订单设计部权限';
 
 DROP TABLE IF EXISTS `decorationorderdrawline`;
 CREATE TABLE `decorationorderdrawline` (
@@ -236,26 +241,6 @@ CREATE TABLE `decorationorderdrawline` (
   KEY `indexthr` (`status`,`actualStartTime`,`actualEndTime`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='订单放线表';
 
-DROP TABLE IF EXISTS `decorationordersalesmandepartmentright`;
-CREATE TABLE `decorationordersalesmandepartmentright` (
-  `dosdrId` int(20) NOT NULL AUTO_INCREMENT,
-  `uId` int(11) NOT NULL,
-  `dId` int(11) NOT NULL,
-  `company` int(11) NOT NULL,
-  PRIMARY KEY (`dosdrId`),
-  KEY `indexone` (`uId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='订单业务部权限';
-
-DROP TABLE IF EXISTS `decorationorderstatusright`;
-CREATE TABLE `decorationorderstatusright` (
-  `dosrId` int(20) NOT NULL AUTO_INCREMENT,
-  `uId` int(11) NOT NULL,
-  `status` varchar(10) NOT NULL,
-  `company` int(11) NOT NULL,
-  PRIMARY KEY (`dosrId`),
-  KEY `indexone` (`uId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='订单状态权限';
-
 DROP TABLE IF EXISTS `decorationpicture`;
 CREATE TABLE `decorationpicture` (
   `dpId` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -270,6 +255,27 @@ CREATE TABLE `decorationpicture` (
   PRIMARY KEY (`dpId`),
   KEY `indexone` (`orderId`,`uploadTime`,`type`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='设计图纸';
+DROP TABLE IF EXISTS `decorationsalesmandepartmentright`;
+CREATE TABLE `decorationsalesmandepartmentright` (
+  `dsdrId` int(20) NOT NULL AUTO_INCREMENT,
+  `uId` int(11) NOT NULL,
+  `dId` int(11) NOT NULL,
+  `company` int(11) NOT NULL,
+  PRIMARY KEY (`dsdrId`),
+  KEY `indexone` (`uId`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='订单业务部权限';
+
+DROP TABLE IF EXISTS `decorationstatusright`;
+CREATE TABLE `decorationstatusright` (
+  `dsrId` int(20) NOT NULL AUTO_INCREMENT,
+  `uId` int(11) NOT NULL,
+  `status` varchar(10) NOT NULL,
+  `company` int(11) NOT NULL,
+  PRIMARY KEY (`dsrId`),
+  KEY `indexone` (`uId`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='订单状态权限';
+
+
 
 DROP TABLE IF EXISTS `drawlinegroup`;
 CREATE TABLE `drawlinegroup` (

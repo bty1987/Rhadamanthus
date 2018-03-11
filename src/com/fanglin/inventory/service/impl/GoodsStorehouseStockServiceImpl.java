@@ -208,25 +208,24 @@ public class GoodsStorehouseStockServiceImpl implements GoodsStorehouseStockServ
 		return inGoodsStorehouseStockPO.getStorehouse();
 	}
 	
-	public StorehousePO outstorehouse(long gid, long cid, long fid, long shId,
-			float num) throws FLException{
+	public StorehousePO outstorehouse(long gid, long cid, long fid, long shId, float num) throws FLException{
 		
-		if(goodsDao.get(gid) == null){
+		GoodsStorehouseStockPO outGoodsStorehouseStockPO = goodsStorehouseStockDao.queryGoodsStorehouseStockByShIdAGId(gid, cid, fid, shId);
+
+		if(outGoodsStorehouseStockPO == null){
+			throw new FLException(260011, "商品库存不存在");
+		}
+		
+		if(outGoodsStorehouseStockPO.getGoods() == null){
 			throw new FLException(260004, "商品不存在");
 		}
 		
-		if(storehouseDao.get(shId) == null){
+		if(outGoodsStorehouseStockPO.getStorehouse() == null){
 			throw new FLException(260005, "仓库不存在");
 		}
 	
-		GoodsStorehouseStockPO outGoodsStorehouseStockPO = goodsStorehouseStockDao.queryGoodsStorehouseStockByShIdAGId(gid, cid, fid, shId);
-		
-		if(outGoodsStorehouseStockPO == null){
-			throw new FLException(260008, "商品库存不足");
-		}
-		
 		if(outGoodsStorehouseStockPO.getNum() < num){
-			throw new FLException(260008, "商品库存不足");
+			throw new FLException(260008, outGoodsStorehouseStockPO.getGoods().getName() + "商品库存不足");
 		}
 		
 		outGoodsStorehouseStockPO.setNum(Arith.sub(outGoodsStorehouseStockPO.getNum(), num));

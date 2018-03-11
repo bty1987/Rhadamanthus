@@ -121,32 +121,30 @@ jQuery(function($) {
 		var creatLine = function(v){
 
 			var that = this;
-			var $liLine = $('<li></li>').addClass('item-blue clearfix');
+			var $liLine = $('<li></li>').addClass('item-orange clearfix');
 			var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.no));
 			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 			var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
-			var $btnAll = $('<a></a>').addClass('btn btn-minier btn-primary').html("查看");
-			var $btnFollow = $('<a></a>').addClass('btn btn-minier btn-danger').html("转移房源");
-			var $btnBind = $('<a></a>').addClass('btn btn-minier btn-yellow').html("绑定客源");
+			var $btnAll = $('<a></a>').addClass('btn btn-minier btn-yellow').html("查看");
+			var $btnFollow = $('<a></a>').addClass('btn btn-minier btn-success').html("转移房源");
+			var $btnBind = $('<a></a>').addClass('btn btn-minier btn-warning').html("绑定客源");
 			var $btnRecord = $('<a></a>').addClass('btn btn-minier btn-inverse').html("跟进记录");
 			var $btnStatus = $('<input />').attr("type","checkbox").addClass('ace ace-switch ace-switch-5').prop("id", v.hsid).attr("checked", v.status == 0 ? true : false);
 			var $btnSpan = $('<span></span>').addClass("lbl status-lbl");
 
 			var propertyArr = [
-				//["房主:", v.customer.name, "grey"],
-				["房源类型:", houseSource.hsType[v.type], "blue"],
-				["房屋类型:", houseSource.houseType[v.house.type], "blue"],
-				["楼盘地址:", v.house.village.name, "blue"],
+				["房源类型:", houseSource.hsType[v.type], "red"],
+				["房屋类型:", houseSource.houseType[v.house.type], "red"],
+				["楼盘地址:", v.house.village.name, "grey"],
 				["面积:", v.house.buildArea  + "平", "blue"],
 				["总价:", toMoney(v.totalPrice) + "元", "blue"],
-				["装修程度:", houseSource.decorateDegree[v.decorateDegree], "blue"],
-				["户型:", v.house.houseType, "blue"],
-				["房屋朝向:", houseSource.orientation[v.house.orientation], "blue"],
+				["装修程度:", houseSource.decorateDegree[v.decorateDegree], "grey"],
+				["户型:", v.house.houseType, "grey"],
+				["房屋朝向:", houseSource.orientation[v.house.orientation], "grey"],
 				["商议类型:", houseSource.discussType[v.discussType], "red"],
-				["交租方式:", houseSource.rentType[v.rentType], "blue"],
-				["房源等级:", v.housingGrade, "red"]
-				//["备注:", v.comment, "red"]
+				["交租方式:", houseSource.rentType[v.rentType], "grey"],
+				["房源等级:", v.housingGrade, "grey"]
 			];
 
 			$.each(propertyArr, function (index, value) {

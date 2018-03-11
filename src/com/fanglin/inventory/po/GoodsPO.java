@@ -11,6 +11,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+
 @Entity
 @Table(name = "goods", catalog = "inventory")
 public class GoodsPO implements java.io.Serializable {
@@ -28,6 +29,8 @@ public class GoodsPO implements java.io.Serializable {
 	public static final String COLUMN_BARCODE_STR = "barcode";
 	
 	public static final String COLUMN_CATEGORY_STR = "category";
+	
+	public static final String COLUMN_BID_STR = "bid";
 	
 	public static final String COLUMN_BRAND_STR = "brand";
 	
@@ -56,6 +59,8 @@ public class GoodsPO implements java.io.Serializable {
 	private String barcode;
 	
 	private String category;
+	
+	private long bid;
 	
 	private String brand;
 	
@@ -138,10 +143,19 @@ public class GoodsPO implements java.io.Serializable {
 	public void setCategory(String category) {
 		this.category = category;
 	}
+	
+	@Column(name = "bid")
+	public long getBid() {
+		return bid;
+	}
+
+	public void setBid(long bid) {
+		this.bid = bid;
+	}
 
 	@Column(name = "brand")
 	public String getBrand() {
-		return this.brand;
+		return brand;
 	}
 
 	public void setBrand(String brand) {

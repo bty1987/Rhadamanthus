@@ -17,9 +17,12 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.inventory.po.ManifestItemPO;
 import com.fanglin.inventory.po.ManifestPO;
+import com.fanglin.inventory.vo.AccessoriesItemVO;
+import com.fanglin.inventory.vo.AccessoriesVO;
 import com.fanglin.inventory.vo.ManifestItemVO;
 import com.fanglin.inventory.vo.ManifestVO;
 import com.fanglin.inventory.vo.PurchaseItemVO;
+import com.fanglin.inventory.vo.PurchaseVO;
 import com.fanglin.utils.Paging;
 
 public interface ManifestService {
@@ -30,15 +33,15 @@ public interface ManifestService {
 	
 	public int addManifestForCG(ManifestVO manifestVO,List<ManifestItemVO> manifestItemVOs,String userId,int company) throws FLException;
 	
-	public int addManifestForXG(ManifestVO manifestVO,List<ManifestItemVO> manifestItemVOs,String userId,int company) throws FLException;
+	public int addManifestForXG(ManifestVO manifestVO,List<Long> sids,List<ManifestItemVO> manifestItemVOs, String userId,int company) throws FLException;
 	
 	public int addManifestForCR(ManifestVO manifestVO,List<ManifestItemVO> manifestItemVOs,String userId,int company) throws FLException;
 	
 	public int addManifestForXB(ManifestVO manifestVO,List<ManifestItemVO> manifestItemVOs,String userId,int company) throws FLException;
 	
-	public int addManifestForPU(ManifestVO manifestVO, List<Long> pids,List<PurchaseItemVO> purchaseItemVOs,List<ManifestItemVO> manifestItemVOs, String uid,int company) throws FLException;
+	public int addManifestForPU(List<PurchaseVO> purchaseVOs,List<PurchaseItemVO> purchaseItemVOs,String uid,int company) throws FLException;
 	
-	public int addManifestForAS(ManifestVO manifestVO,List<ManifestItemVO> manifestItemVOs,List<Long> aids, String userId,int company) throws FLException;
+	public int addManifestForAS(List<AccessoriesVO> accessoriesVOs,List<AccessoriesItemVO> accessoriesItemVOs,String userId,int company) throws FLException;
 	
 	public int addManifestForPS(List<ManifestItemPO> manifestItemPOs,String userId,int company) throws FLException;
 	

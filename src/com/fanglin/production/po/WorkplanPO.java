@@ -13,8 +13,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fanglin.production.po.WorkshopPO;
-
 @Entity
 @Table(name = "workplan", catalog = "production")
 public class WorkplanPO  implements Serializable{

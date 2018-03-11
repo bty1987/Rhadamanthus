@@ -59,6 +59,8 @@ public class QuotationFunctionAreaItemPO2 extends QuotationFunctionAreaItemPO  i
 	
 	private String content;
 	
+	private int index;
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "qfaiId") 
@@ -186,5 +188,13 @@ public class QuotationFunctionAreaItemPO2 extends QuotationFunctionAreaItemPO  i
 
 	public void setContent(String content) {
 		this.content = content;
+	}	
+	@Column(name = "index")
+	public int getIndex() {
+		return index;
+	}
+
+	public void setIndex(int index) {
+		this.index = index;
 	}
 }

@@ -24,13 +24,14 @@
 
         var creatLine = function(v){   //页面中的一条数据
 
-			var $liLine = $('<li></li>').addClass('item-blue clearfix');
+			var $liLine = $('<li></li>').addClass('item-orange clearfix');
 			var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.no + " "+ v.name));
 			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 			var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
-			var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-info').html('编辑');
-			var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
+			var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
+			var $btnDel = $('<a></a>').addClass('btn btn-minier btn-success').html('删除');
+
 			var propertyArr = [
 			   	["编号:", v.no, "grey"],
 			   	["全名:", v.fullname, "grey"],
@@ -90,8 +91,12 @@
     	var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addCompany').css("margin", "0px 3px");
     	var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
     	var $addspan = $('<span></span>').text('添加').appendTo($adda);
+
+        var $config = $('<a></a>').addClass('btn btn-minier btn-warning pull-left').attr('name', 'companyConfig').css("margin", "0px 3px");
+        var $configi = $('<i></i>').addClass('icon-eye-open bigger-110').appendTo($config);
+        var $configspan = $('<span></span>').text('配置').appendTo($config);
     	
-    	return [$adda];
+    	return [$adda,$config];
     });
     
     //定义全局变量  json
@@ -106,7 +111,7 @@
 				type: "v_company",
 				regex: /^([1-9]\d|\d)$/,
 				errorMsg: "请输入0~99数字 (如:1)."
-			},
+			}
 		},
 		editFlg: false,
 		repeatFlg:false
@@ -207,5 +212,9 @@
     	//$('button.btn-search','#condList').click();//调用成功后,执行查询操作  
 		companySeacher.doSearch();//调用成功后,执行com.Seacher中的doSeach方法
     }
-    
+
+    //配置公司
+	$('[name="companyConfig"]',"#pagenation").on('click',function () {
+        com.switchPage(api.index.companyConfig.url);
+    });
 });

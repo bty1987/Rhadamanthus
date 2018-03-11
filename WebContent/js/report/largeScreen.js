@@ -42,7 +42,7 @@ $(function () {
                         {
                             "range": {
                                 "@timestamp": {
-                                    "gte": 1510452005607,
+                                    "gte": Date.parse(new Date())-5412506000,//1510452005607,
                                     "lte": Date.parse(new Date()),
                                     "format": "epoch_millis"
                                 }
@@ -329,7 +329,7 @@ $(function () {
                         {
                             "range": {
                                 "@timestamp": {
-                                    "gte": 1510452822303,
+                                    "gte": Date.parse(new Date())-5412506000,//1510452822303,8145924000
                                     "lte": Date.parse(new Date()),
                                     "format": "epoch_millis"
                                 }
@@ -398,7 +398,7 @@ $(function () {
                         {
                             "range": {
                                 "@timestamp": {
-                                    "gte": 1510452822303,
+                                    "gte": Date.parse(new Date())-2733418000,//1510452822303,
                                     "lte": Date.parse(new Date()),
                                     "format": "epoch_millis"
                                 }
@@ -467,7 +467,7 @@ $(function () {
                         {
                             "range": {
                                 "@timestamp": {
-                                    "gte": 1510452822303,
+                                    "gte": Date.parse(new Date())-2733418000,//1510452822303,
                                     "lte": Date.parse(new Date()),
                                     "format": "epoch_millis"
                                 }
@@ -691,6 +691,7 @@ $(function () {
         })
 
         ajax(largeScreen.elasticUrl.logstash, InterfaceRequestsForDayByUserId, function (res) {
+            console.log(res)
             var data = [];
             var _temp = [];
             var userId = [];

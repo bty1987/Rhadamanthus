@@ -17,19 +17,19 @@ public class CityProperPO implements Serializable {
 
 	private static final long serialVersionUID = -187946615003407460L;
 	
-	public static final String CITY_PROPER_ID ="cityProperId";
+	public static final String COLUMN_NO_STR = "no";
 	
-	public static final String CITY_PROPER_NAME = "cityProperName";
+	public static final String COLUMN_NAME_STR = "name";
 	
 	public static final String COLUMN_PINYIN_STR = "pinyin";
 	
-	private int cpId;
+	private int cpid;
 	
 	private CityPO city;
 	
-	private String cityProperId;
+	private String no;
 	
-	private String cityProperName;
+	private String name;
 	
 	private String pinyin;
 	
@@ -40,22 +40,23 @@ public class CityProperPO implements Serializable {
 	public CityProperPO(){
 	}
 	
-	public CityProperPO(String cityProperId){
-		this.cityProperId = cityProperId;
+	public CityProperPO(int cpid){
+		this.cpid = cpid;
 	}
 
+	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "cpId") 
-	public int getCpId() {
-		return cpId;
+	@Column(name = "cpid") 
+	public int getCpid() {
+		return cpid;
 	}
 
-	public void setCpId(int cpId) {
-		this.cpId = cpId;
+	public void setCpid(int cpid) {
+		this.cpid = cpid;
 	}
 	
-	@javax.persistence.ManyToOne(fetch=FetchType.EAGER)
-	@javax.persistence.JoinColumn(nullable=false, name="cityId", referencedColumnName="cityId")
+	@javax.persistence.ManyToOne(fetch = FetchType.EAGER)
+	@javax.persistence.JoinColumn(nullable = false, name = "cid", referencedColumnName = "cid")
 	public CityPO getCity(){
 		return city;
 	}
@@ -63,24 +64,23 @@ public class CityProperPO implements Serializable {
 	public void setCity(CityPO city){
 		this.city = city;
 	}
-
-	@Id
-	@Column(name = CITY_PROPER_ID)
-	public String getCityProperId(){
-		return cityProperId;
+	
+	@Column(name = "no")
+	public String getNo() {
+		return no;
 	}
 
-	public void setCityProperId(String cityProperId){
-		this.cityProperId = cityProperId;
+	public void setNo(String no) {
+		this.no = no;
 	}
 
-	@Column(name = CITY_PROPER_NAME)
-	public String getCityProperName(){
-		return cityProperName;
+	@Column(name = "name")
+	public String getName() {
+		return name;
 	}
 
-	public void setCityProperName(String cityProperName){
-		this.cityProperName = cityProperName;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	@Column(name = COLUMN_PINYIN_STR)

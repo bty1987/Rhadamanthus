@@ -13,7 +13,6 @@ import com.fanglin.building.dao.BuildingDrawingDao;
 import com.fanglin.building.po.BuildingDrawingPO;
 import com.fanglin.building.service.BuildingDrawingService;
 import com.fanglin.building.vo.BuildingDrawingVO;
-import com.fanglin.core.vo.Authentication;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserVO;
@@ -53,12 +52,12 @@ public class BuildingDrawingServiceImpl implements BuildingDrawingService {
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int addBuildingDrawing(BuildingDrawingVO buildingDrawingVO,  Authentication authentication) {
+	public void addBuildingDrawing(BuildingDrawingVO buildingDrawingVO, String userId) {
 		
 		BuildingDrawingPO buildingDrawingPO = new BuildingDrawingPO();
 		BeanUtil.copyProperties(buildingDrawingVO, buildingDrawingPO, Arrays.asList("creater"));
 		
-		UserPO userPO = userDao.queryUserByUserId(authentication.getUserId());
+		UserPO userPO = userDao.queryUserByUserId(userId);
 	
 		buildingDrawingPO.setCreater(userPO);
 		
@@ -70,12 +69,11 @@ public class BuildingDrawingServiceImpl implements BuildingDrawingService {
 		
 		buildingDrawingVO.setBdid(buildingDrawingPO.getBdid());
 		
-		return 0;
 	}
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int deleteBuildingDrawing(BuildingDrawingVO buildingDrawingVO) {
+	public void deleteBuildingDrawing(BuildingDrawingVO buildingDrawingVO) {
 		
 		BuildingDrawingPO buildingDrawingPO = buildingDrawingDao.get(buildingDrawingVO.getBdid());
 		
@@ -87,7 +85,6 @@ public class BuildingDrawingServiceImpl implements BuildingDrawingService {
 		
 		buildingDrawingDao.update(buildingDrawingPO);
 		
-		return 0;
 	}
 
 }

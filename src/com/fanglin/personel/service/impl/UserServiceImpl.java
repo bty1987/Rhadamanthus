@@ -15,28 +15,29 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.fastjson.JSONObject;
 import com.fanglin.common.po.CountingPO;
 import com.fanglin.common.service.CountingService;
+import com.fanglin.communion.dao.DutyDao;
+import com.fanglin.communion.po.DutyPO;
+import com.fanglin.communion.vo.DutyVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.security.AESHelper;
 import com.fanglin.core.security.MD5Helper;
 import com.fanglin.core.security.SecurityCodeHelper;
 import com.fanglin.core.security.SecurityCodeHelper.SecurityCodeLevel;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.data.common.dao.DutyDao;
-import com.fanglin.data.common.vo.DutyVO;
-import com.fanglin.data.po.DutyPO;
 import com.fanglin.department.dao.DepartmentDao;
 import com.fanglin.department.po.DepartmentPO;
 import com.fanglin.department.vo.DepartmentTypeVO;
 import com.fanglin.department.vo.DepartmentVO;
 import com.fanglin.information.po.MessagePO;
-import com.fanglin.information.service.AssassinService;
-import com.fanglin.information.service.MessageService;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.dao.UserInfoDao;
 import com.fanglin.personel.po.UserExperiencePO;
@@ -47,12 +48,15 @@ import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.personel.vo.UserInfoVO;
 import com.fanglin.personel.vo.UserVO;
 import com.fanglin.system.dao.CompanyDao;
+import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.system.po.CompanyPO;
 import com.fanglin.system.po.RolePO;
 import com.fanglin.system.vo.RoleVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
+import com.fanglin.utils.HttpUtil;
+import com.fanglin.utils.LogUtils;
 import com.fanglin.utils.Paging;
 import com.fanglin.utils.PinYin4Util;
 import com.fanglin.utils.SystemConfig;
@@ -60,7 +64,9 @@ import com.fanglin.utils.SystemConfig;
 @Service("userService")
 @Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
-
+	
+	protected Logger logger = LoggerFactory.getLogger(getClass());
+	
 	@Autowired
 	private CompanyDao companyDao;
 
@@ -83,11 +89,8 @@ public class UserServiceImpl implements UserService {
 	private CountingService countingService;
 	
 	@Autowired
-	private AssassinService  assassinService;
+	private SystemConfigDao systemConfigDao;
 	
-	@Autowired
-	private  MessageService  messageService;
-
 	@Override
 	public void pageUser(Paging paging, List<Filter> filters, UserVO userVO, Integer company) throws FLException{
 		
@@ -115,7 +118,7 @@ public class UserServiceImpl implements UserService {
 			throw new FLException(190005, "人员不存在");
 		}
 		
-		if(userPO != null && !userPO.getRole().getRoleId().equals(RolePO.SUPER_ROLEID_STR)){
+		if(userPO != null && !userPO.getRole().getNo().equals(RolePO.SUPER_NO_STR) ){
 			userVO = convertBean(userPO);
 		}
 		
@@ -311,7 +314,7 @@ public class UserServiceImpl implements UserService {
 		userPO.setPassword(MD5Helper.MD5(SystemConfig.getString("defaultPassword", "fanglin")));
 		userPO.setLoginId(userVO.getLoginId());
 		
-		userPO.setRole(new RolePO("R_35"));
+		userPO.setRole(new RolePO(82));
 		userPO.setIsLogin((short) 0);
 		userPO.setCompany(company);
 		
@@ -497,7 +500,7 @@ public class UserServiceImpl implements UserService {
 		} catch (Exception e) {
 			throw new FLException(230017, "公司获取失败");
 		}
-		userPO.setRole(new RolePO(userVO.getRole().getRoleId()));
+		userPO.setRole(new RolePO(userVO.getRole().getRid()));
 		userPO.setExtranet(userVO.getExtranet());
 
 		userDao.update(userPO);
@@ -540,7 +543,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	@Transactional
 	public int resetPassword(UserVO userVO,Integer company) throws FLException{
-	
+		
 		UserPO userPO = userDao.queryUserByUserId(userVO.getUserId());
 		
 		if(userPO == null){
@@ -549,23 +552,46 @@ public class UserServiceImpl implements UserService {
 
 		String newPassword=SecurityCodeHelper.getSecurityCode(8, SecurityCodeLevel.Medium,false).toUpperCase();
 		
-		String EncryptPassword;
+		String api = "sendMessage.do";
 		
-		try {
-			 EncryptPassword= AESHelper.encryptToString(newPassword,SystemConfig.getString("encryptKey"));
-		} catch (Exception e) {
-			throw new FLException(230015 , "公司不存在");
+		String params =String.format("message.receiver.userId=%s&message.sender.userId=%s&message.type=%s&message.contents=%s&company=%s",
+				       userVO.getUserId(),"", MessagePO.MESSAGE_TYPE_SEND_PERSONEL_STR,"修改密码为:"+newPassword,company);
+		
+		String communion = systemConfigDao.querySystemConfig("communion").getValue();
+		String code = systemConfigDao.querySystemConfig("tokenkey").getValue();
+		String secret = systemConfigDao.querySystemConfig("tokensecret").getValue();
+		
+		String server = systemConfigDao.querySystemConfig("localHost").getValue();
+
+		String str = String.format("%s/requestAuthCode.do?userId=%s&code=%s&secret=%s", communion, userPO.getUserId(), code, secret);
+		
+		JSONObject result  = HttpUtil.httpGet(str);
+
+		String authentication;
+
+		if(result != null && result.containsKey("authentication")){
+			authentication = result.get("authentication").toString();
+		}else{
+			throw new FLException(110010, "请求失败");
 		}
 		
-		String api = "resetPassword.do";
+		String url = String.format("%s/%s?authentication=%s&%s",server, api, authentication, params);
 		
-		String params = String.format("user.userId=%s&password=%s&rePassword=%s",userVO.getUserId(),newPassword,EncryptPassword);
-		
-		String content = String.format("修改密码用户的id为:%s&密码明文=%s&密码密文=%s",userVO.getUserId(),newPassword,EncryptPassword);
-		
-		assassinService.proxy("communion", api, params, content, userPO);
+		JSONObject results  = HttpUtil.httpGet(url);
 
-		messageService.sendMessage(userVO.getUserId(),"", "修改密码为:"+newPassword,MessagePO.MESSAGE_TYPE_SEND_PERSONEL_STR,company);
+		int errorCode = results.getInteger("errorCode");
+		String errorMsg = results.getString("errorMsg");
+		
+		if(errorCode == 0){
+			
+			userPO.setPassword(MD5Helper.MD5(newPassword));
+			
+			userDao.update(userPO);
+		
+		}else{
+			LogUtils.logging(logger, server, results.getString("errorMsg"), api);
+			throw new FLException(errorCode, errorMsg);
+		}
 		
 		return 0;
 	}

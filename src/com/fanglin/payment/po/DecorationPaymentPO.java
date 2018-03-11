@@ -170,7 +170,7 @@ public class DecorationPaymentPO implements Serializable {
 	}
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "createrId", referencedColumnName = "userId")
+	@JoinColumn(name = "cuid", referencedColumnName = "uid")
 	public UserPO getCreater(){
 		return creater;
 	}

@@ -59,25 +59,25 @@ jQuery(function ($) {
 
         var creatLine = function (v) {
 
-            var $liLine = $('<li></li>').addClass('item-blue clearfix');
+            var $liLine = $('<li></li>').addClass('item-orange clearfix');
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.user.userName));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-            var $adopt = $('<a></a>').addClass('btn btn-minier btn-primary').html('通过');
-            var $btnrefuse = $('<a></a>').addClass('btn btn-minier btn-danger').html('驳回');
-            var $btnDel = $('<a></a>').addClass('btn btn-minier btn-inverse').html('删除');
+            var $adopt = $('<a></a>').addClass('btn btn-minier btn-yellow').html('通过');
+            var $btnrefuse = $('<a></a>').addClass('btn btn-minier btn-success').html('驳回');
+            var $btnDel = $('<a></a>').addClass('btn btn-minier btn-warning').html('删除');
 
             var propertyArr = [
                 ["创建人:", v.creater.userName, "grey"],
-                ["创建时间:", v.createTime, "grey"],
+                ["创建时间:", v.createTime, "green"],
                 ["审批人:", v.approver.userName == null ? "无" : v.approver.userName, "grey"],
-                ["审批时间:", v.approveTime == null ? "无" : v.approveTime, "grey"],
-                ["订单号:", v.decoration == null ? "无" : v.decoration.orderId, "grey"],
+                ["审批时间:", v.approveTime == null ? "无" : v.approveTime, "green"],
+                ["订单号:", v.decoration == null ? "无" : v.decoration.orderId, "blue"],
                 ["楼盘地址:", (v.decoration.house) == null ? "无" : (v.decoration.house.village.name + " " + v.decoration.house.houseNumber), "grey"],
                 ["监理:", v.decoration.supervisor == null ? "无" : v.decoration.supervisor.userName, "grey"],
                 ["类型：", v.type == 0 ? "工费" : "扣款", "red"],
-                ["金额:", v.salary, "grey"],
-                ["状态:", v.status == 0 ? "初始" : (v.status == 1 ? "已通过" : "已驳回"), "grey"]
+                ["金额:", v.salary, "blue"],
+                ["状态:", v.status == 0 ? "初始" : (v.status == 1 ? "已通过" : "已驳回"), "red"]
             ];
 
             var $label = $('<label></label>');
@@ -142,7 +142,7 @@ jQuery(function ($) {
     }, "pagenation", "workersalaryPostData", null, false, null, function () {
 
 
-        var $selecta = $('<a></a>').addClass('btn btn-minier btn-warning pull-left').attr('name', 'select').css("margin", "0px 3px");
+        var $selecta = $('<a></a>').addClass('btn btn-minier btn-yellow').attr('name', 'select').css("margin", "0px 3px");
         var $selecti = $('<i></i>').addClass('icon-plus bigger-110').appendTo($selecta);
         var $selectspan = $('<span></span>').text('全选').appendTo($selecta);
 
@@ -150,19 +150,19 @@ jQuery(function ($) {
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('创建').appendTo($adda);
 
-        var $exporta = $('<a></a>').addClass('btn btn-minier ').attr('name', 'export').css("margin", "0px 3px");
+        var $exporta = $('<a></a>').addClass('btn btn-minier btn-inverse').attr('name', 'export').css("margin", "0px 3px");
         var $exporti = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($exporta);
         var $exportspan = $('<span></span>').text('导出').appendTo($exporta);
 
-        var $importa = $('<a></a>').addClass('btn btn-minier btn-warning pull-left').attr('name', 'import').css("margin", "0px 3px");
+        var $importa = $('<a></a>').addClass('btn btn-minier btn-danger').attr('name', 'import').css("margin", "0px 3px");
         var $importi = $('<i></i>').addClass('icon-upload bigger-110').appendTo($importa);
         var $importspan = $('<span></span>').text('导入').appendTo($importa);
 
-        var $adopta = $('<a></a>').addClass('btn btn-minier btn-primary').attr('name', 'adopt').css("margin", "0px 3px");
+        var $adopta = $('<a></a>').addClass('btn btn-minier btn-warning').attr('name', 'adopt').css("margin", "0px 3px");
         var $adopti = $('<i></i>').addClass('icon-add bigger-110').appendTo($adopta);
         var $adoptspan = $('<span></span>').text('通过').appendTo($adopta);
 
-        var $batchImporta = $('<a></a>').addClass('btn btn-minier btn-warning pull-left').attr('name', 'batchImport').css("margin", "0px 3px");
+        var $batchImporta = $('<a></a>').addClass('btn btn-minier btn-pink').attr('name', 'batchImport').css("margin", "0px 3px");
         var $batchImporti = $('<i></i>').addClass('icon-upload bigger-110').appendTo($batchImporta);
         var $batchImportspan = $('<span></span>').text('批量更新').appendTo($batchImporta);
 
@@ -367,7 +367,7 @@ jQuery(function ($) {
         'buttonClass': 'btn btn-success col-sm-12',
         'overrideEvents' : ['onDialogClose'], // 不执行默认的onSelect事件
         'fileObjName':'strutsUploads', // 服务器端脚本使用的文件对象的名称 $_FILES个['upload']
-        'uploader': config.host + 'importWorkerSalary.do', // 上传处理程序
+        'uploader': config.server + 'importWorkerSalary.do', // 上传处理程序
         'height':'30', // 浏览按钮的高度
         'fileTypeDesc':'支持的格式：',  // 在浏览窗口底部的文件类型下拉菜单中显示的文本
         'fileTypeExts':'*.xls;*.xlsx', // 允许上传的文件后缀
@@ -392,7 +392,7 @@ jQuery(function ($) {
         'buttonClass': 'btn btn-success col-sm-12',
         'overrideEvents' : ['onDialogClose'], // 不执行默认的onSelect事件
         'fileObjName':'strutsUploads', // 服务器端脚本使用的文件对象的名称 $_FILES个['upload']
-        'uploader': config.host + 'batchImportWorkerSalary.do', // 上传处理程序
+        'uploader': config.server + 'batchImportWorkerSalary.do', // 上传处理程序
         'height':'30', // 浏览按钮的高度
         'fileTypeDesc':'支持的格式：',  // 在浏览窗口底部的文件类型下拉菜单中显示的文本
         'fileTypeExts':'*.xls;*.xlsx', // 允许上传的文件后缀

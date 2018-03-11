@@ -126,7 +126,7 @@ jQuery(function($) {
 
 		var creatLine = function(v){
 
-			var $liLine = $('<li></li>').addClass('item-blue clearfix');
+			var $liLine = $('<li></li>').addClass('item-orange clearfix');
 			var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html('服务款'));
 			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 			var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
@@ -136,7 +136,7 @@ jQuery(function($) {
             var $btnRefunds = $('<a></a>').addClass('btn btn-minier');
 
 			var propertyArr = [
-				["订单号:", v.decoration.orderId, "grey"],
+				["订单号:", v.decoration.orderId, "blue"],
 				["楼盘地址:", v.decoration.house.village.name + ''+v.decoration.house.houseNumber, "grey"],
 				["客户:", v.decoration.customer.name, "grey"],
 				["设计师:", v.decoration.designer.currentName, "grey"],
@@ -226,7 +226,7 @@ jQuery(function($) {
 
         var creatLine = function(v){
 
-            var $liLine = $('<li></li>').addClass('item-blue clearfix');
+            var $liLine = $('<li></li>').addClass('item-orange clearfix');
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html('服务款'));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
@@ -234,7 +234,7 @@ jQuery(function($) {
             var $btnPrint = $('<a></a>').addClass('btn btn-minier');
 
             var propertyArr = [
-                ["订单号:", v.decoration.orderId, "grey"],
+                ["订单号:", v.decoration.orderId, "blue"],
                 ["楼盘地址:", v.decoration.house.village.name + ''+v.decoration.house.houseNumber, "grey"],
                 ["客户:", v.decoration.customer.name, "grey"],
                 ["设计师:", v.decoration.designer.currentName, "grey"],
@@ -242,7 +242,7 @@ jQuery(function($) {
                 ["应收金额:", v.advanceMoney, "blue"],
                 ["服务费:", v.serviceMoney, "blue"],
                 ["收款人:", v.serviceReceipt.collecter.currentName, "grey"],
-                ["收款时间:", v.serviceReceipt.collectTime, "grey"],
+                ["收款时间:", v.serviceReceipt.collectTime, "green"],
                 ["状态:", v.status == "1" ? "已收款" : "", "red"],
                 ["备注:", v.comment, "grey"],
             ];

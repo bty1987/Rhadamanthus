@@ -3,7 +3,7 @@ package com.fanglin.building.vo;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
-import com.fanglin.data.common.vo.CustomerVO;
+import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.personel.vo.UserVO;
 
 public class CustomerSourceVO implements Serializable{

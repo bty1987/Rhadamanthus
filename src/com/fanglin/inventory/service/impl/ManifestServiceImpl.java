@@ -46,12 +46,19 @@ import com.fanglin.inventory.po.StorehousePO;
 import com.fanglin.inventory.service.GoodsStorehouseStockService;
 import com.fanglin.inventory.service.ManifestService;
 import com.fanglin.inventory.service.StorehouseStockService;
+import com.fanglin.inventory.vo.AccessoriesItemVO;
+import com.fanglin.inventory.vo.AccessoriesVO;
 import com.fanglin.inventory.vo.ManifestItemVO;
 import com.fanglin.inventory.vo.ManifestVO;
 import com.fanglin.inventory.vo.PurchaseItemVO;
+import com.fanglin.inventory.vo.PurchaseVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.sales.dao.SalesDao;
+import com.fanglin.sales.dao.SalesManifestDao;
+import com.fanglin.sales.po.SalesManifestPO;
+import com.fanglin.sales.po.SalesPO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
@@ -95,7 +102,14 @@ public class ManifestServiceImpl implements ManifestService {
 	@Autowired
 	private CountingService countingService;
 	
-	@Autowired StorehouseDao storehouseDao;
+	@Autowired 
+	private StorehouseDao storehouseDao;
+	
+	@Autowired
+	private SalesDao salesDao;
+	
+	@Autowired
+	private SalesManifestDao salesManifestDao;
 	
 	@Override
 	public void pageManifest(Paging paging, List<Filter> filters,int company) {
@@ -202,7 +216,7 @@ public class ManifestServiceImpl implements ManifestService {
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int addManifestForXG(ManifestVO manifestVO,List<ManifestItemVO> manifestItemVOs, String userId,int company) throws FLException {
+	public int addManifestForXG(ManifestVO manifestVO,List<Long> sids, List<ManifestItemVO> manifestItemVOs, String userId, int company) throws FLException {
 		if(manifestItemVOs == null || manifestItemVOs.size() < 0){
 			throw new FLException(260007,"货单无商品信息");
 		}
@@ -219,7 +233,6 @@ public class ManifestServiceImpl implements ManifestService {
 		String manifestId = String.valueOf(word) + FormatUtil.fillZero(count, "00000000");
 		
 		ManifestPO manifestPO = new ManifestPO(manifestId);
-		
 		BeanUtil.copyProperties(manifestVO, manifestPO, Arrays.asList("createUser"));
 		
 		manifestPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
@@ -264,7 +277,25 @@ public class ManifestServiceImpl implements ManifestService {
 		
 		manifestDao.update(manifestPO);
 		
+		SalesPO salesPO;
+		SalesManifestPO salesManifestPO;
+		
+		if(sids != null && sids.size()!=0){
+			
+			for(Long sid : sids){
+				
+				salesPO = salesDao.get(sid);
+				
+				salesManifestPO = new SalesManifestPO(salesPO, manifestPO);
+				
+				salesManifestDao.save(salesManifestPO);
+				
+			}
+			
+		}
+		
 		return 0;
+		
 	}
 	
 	@Override
@@ -456,11 +487,11 @@ public class ManifestServiceImpl implements ManifestService {
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int addManifestForPU(ManifestVO manifestVO, List<Long> pids,List<PurchaseItemVO> purchaseItemVOs, List<ManifestItemVO> manifestItemVOs, String uid,int company) throws FLException{
+	public int addManifestForPU(List<PurchaseVO> purchaseVOs,List<PurchaseItemVO> purchaseItemVOs,String uid,int company) throws FLException{
 		
 		// type 1: 进货 , 2: 进退 , 3: 出货 , 4: 出返 , 5: 调拨 , 6:采购 , 7:辅类
 		
-		if(pids == null || pids.size() <= 0){
+		if(purchaseVOs == null || purchaseVOs.size() <= 0){
 			throw new FLException(260017, "采购单不存在");
 		}
 		
@@ -479,14 +510,13 @@ public class ManifestServiceImpl implements ManifestService {
 		
 		ManifestPO manifestPO = new ManifestPO(manifestId);
 		
-		BeanUtil.copyProperties(manifestVO, manifestPO, Arrays.asList("createUser"));	
-		
 		manifestPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		manifestPO.setManifestTime(DateUtil.getDateToTimestamp(new Date()));
-		
+		manifestPO.setAttachment("");
+		manifestPO.setComment(comment);
 		manifestPO.setCreateUser(userPO);
 		manifestPO.setTotal(ManifestPO.COLUMN_TOTAL_STR);
-		manifestPO.setType(ManifestPO.COLUMN_TYPE_STR);
+		manifestPO.setType(ManifestPO.TYPE_PU_INT);
 		manifestPO.setStatus(ManifestPO.COLUMN_CONFIRMEDSTATUS_STR);	
 		manifestPO.setCompany(company);
 		
@@ -498,46 +528,33 @@ public class ManifestServiceImpl implements ManifestService {
 			
 			PurchaseItemPO purchaseItemPO = purchaseItemDao.get(purchaseItemVO.getPiId());
 			
-			purchaseItemPO.setSurplus(purchaseItemVO.getSurplus());
+			purchaseItemPO.setSurplus(Arith.sub(purchaseItemPO.getSurplus(), purchaseItemVO.getNum()));
 			
-			purchaseItemDao.update(purchaseItemPO);
+			long gid = purchaseItemPO.getGoods().getGid();
+			long cid = purchaseItemPO.getColor().getCid();
+			long fid = purchaseItemPO.getFormat().getFid();
 			
-		}
-		
-		for(ManifestItemVO manifestItemVO: manifestItemVOs){
+			manifestItemPO = new ManifestItemPO(new GoodsPO(gid),new ColorPO(cid),new FormatPO(fid));
+			manifestItemPO.setNum(purchaseItemVO.getNum());
 			
-			manifestItemPO = new ManifestItemPO(new GoodsPO(),new ColorPO(),new FormatPO());
-			
-			long gid = manifestItemVO.getGoods().getGid();
-			long cid = manifestItemVO.getColor().getCid();
-			long fid = manifestItemVO.getFormat().getFid();
-			float num = manifestItemVO.getNum();
-			
-			comment = manifestItemVO.getComment();
-			
-			BeanUtil.copyProperties(manifestItemVO, manifestItemPO, Arrays.asList("goods","color","format","instorehouse", "outstorehouse"));
-			BeanUtil.copyProperties(manifestItemVO.getGoods(), manifestItemPO.getGoods(),Arrays.asList("workType"));
-			BeanUtil.copyProperties(manifestItemVO.getColor(), manifestItemPO.getColor());
-			BeanUtil.copyProperties(manifestItemVO.getFormat(), manifestItemPO.getFormat());
-			
-			if(manifestItemVO.getInstorehouse() != null){
+			if(purchaseItemVO.getStorehouse() != null){
 				
-				long ishId = manifestItemVO.getInstorehouse().getShId();
+				long ishId = purchaseItemVO.getStorehouse().getShId();
 				
-				manifestItemPO.setInstorehouse(goodsStorehouseStockService.instorehouse(gid,cid, fid,ishId, num));
-				storehouseStockService.updateStorehouseStock(ishId, month, num);
+				manifestItemPO.setInstorehouse(goodsStorehouseStockService.instorehouse(gid,cid, fid,ishId, purchaseItemVO.getNum()));
+				storehouseStockService.updateStorehouseStock(ishId, month, purchaseItemVO.getNum());
 				
 				float _total = Arith.add(total, manifestItemPO.getUnitPrice());
-				totals = Arith.add(totals,Arith.mul(_total, num));
-			}			
+				totals = Arith.add(totals,Arith.mul(_total, purchaseItemVO.getNum()));
+			}	
 			
 			manifestItemPO.setMid(manifestPO.getMid());
 			
 			manifestItemDao.save(manifestItemPO);
+			purchaseItemDao.update(purchaseItemPO);
 			
 		}
 		
-		manifestPO.setComment(comment);
 		manifestPO.setTotal(totals);
 		
 		manifestDao.update(manifestPO);
@@ -545,9 +562,9 @@ public class ManifestServiceImpl implements ManifestService {
 		PurchasePO purchasePO;
 		PurchaseManifestPO purchaseManifestPO;
 		
-		for(Long pid :pids){
+		for(PurchaseVO purchaseVO :purchaseVOs){
 			
-			purchasePO = purchaseDao.get(pid);
+			purchasePO = purchaseDao.get(purchaseVO.getPid());
 			
 			purchasePO.setStatus(PurchasePO.COLUMN_SECTIONSTATUS_STR);
 			
@@ -565,11 +582,11 @@ public class ManifestServiceImpl implements ManifestService {
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int addManifestForAS(ManifestVO manifestVO,List<ManifestItemVO> manifestItemVOs,List<Long> aids, String userId,int company)throws FLException {
+	public int addManifestForAS(List<AccessoriesVO> accessoriesVOs,List<AccessoriesItemVO> accessoriesItemVOs,String userId,int company)throws FLException {
 		
 		// type 1: 进货 , 2: 进退 , 3: 出货 , 4: 出返 , 5: 调拨 , 6:采购 , 7:辅类
 		
-		if(aids == null || aids.size() <= 0){
+		if(accessoriesVOs == null || accessoriesVOs.size() <= 0){
 			throw new FLException(260023, "辅料单不存在");
 		}
 		
@@ -587,8 +604,11 @@ public class ManifestServiceImpl implements ManifestService {
 		
 		ManifestPO manifestPO = new ManifestPO(manifestId);
 		
-		BeanUtil.copyProperties(manifestVO, manifestPO, Arrays.asList("createUser"));
-		
+		manifestPO.setAttachment("");
+		manifestPO.setComment(comment);
+		manifestPO.setCreateUser(userPO);
+		manifestPO.setTotal(ManifestPO.COLUMN_TOTAL_STR);
+		manifestPO.setType(ManifestPO.TYPE_AS_INT);
 		manifestPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		manifestPO.setManifestTime(DateUtil.getDateToTimestamp(new Date()));
 		manifestPO.setCreateUser(userPO);
@@ -598,23 +618,18 @@ public class ManifestServiceImpl implements ManifestService {
 		manifestDao.save(manifestPO);
 		
 		ManifestItemPO manifestItemPO;
-		for(ManifestItemVO manifestItemVO: manifestItemVOs){
-			manifestItemPO = new ManifestItemPO(new GoodsPO(),new ColorPO(),new FormatPO());
+		for(AccessoriesItemVO accessoriesItemVO: accessoriesItemVOs){
 			
-			long gid = manifestItemVO.getGoods().getGid();
-			long cid = manifestItemVO.getColor().getCid();
-			long fid = manifestItemVO.getFormat().getFid();
-			float num = manifestItemVO.getNum();
-			comment = manifestItemVO.getComment();
+			long gid = accessoriesItemVO.getGoods().getGid();
+			long cid = accessoriesItemVO.getColor().getCid();
+			long fid = accessoriesItemVO.getFormat().getFid();
+			float num = accessoriesItemVO.getNum();
 			
-			BeanUtil.copyProperties(manifestItemVO, manifestItemPO, Arrays.asList("goods","color","format","instorehouse", "outstorehouse"));
-			BeanUtil.copyProperties(manifestItemVO.getGoods(), manifestItemPO.getGoods());
-			BeanUtil.copyProperties(manifestItemVO.getColor(), manifestItemPO.getColor());
-			BeanUtil.copyProperties(manifestItemVO.getFormat(), manifestItemPO.getFormat());
+			manifestItemPO = new ManifestItemPO(new GoodsPO(gid),new ColorPO(cid),new FormatPO(fid));
 			
-			if(manifestItemVO.getOutstorehouse() != null){
+			if(accessoriesItemVO.getStorehouse() != null){
 				
-				long oshId = manifestItemVO.getOutstorehouse().getShId();
+				long oshId = accessoriesItemVO.getStorehouse().getShId();
 				
 				manifestItemPO.setOutstorehouse(goodsStorehouseStockService.outstorehouse(gid,cid,fid, oshId, num));
 				storehouseStockService.updateStorehouseStock(oshId, month, -num);
@@ -630,15 +645,14 @@ public class ManifestServiceImpl implements ManifestService {
 		}
 		
 		manifestPO.setTotal(totals);
-		manifestPO.setComment(comment);
 		
 		manifestDao.update(manifestPO);
 		
 		AccessoriesPO accessoriesPO;
 		AccessoriesManifestPO accessoriesManifestPO;
-		for(Long aid : aids){
+		for(AccessoriesVO accessoriesVO : accessoriesVOs){
 			
-			accessoriesPO = accessoriesDao.get(aid);
+			accessoriesPO = accessoriesDao.get(accessoriesVO.getAid());
 			
 			accessoriesPO.setStatus(AccessoriesPO.STATUS_DISABLE_INT);
 			accessoriesPO.setApprover(userPO);

@@ -9,22 +9,22 @@
             if(listData && listData.length){
 
                 $.each(listData,function(i, v){
-                    var $liLine = $('<li></li>').addClass('item-blue clearfix');
+                    var $liLine = $('<li></li>').addClass('item-orange clearfix');
                     var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.userName));
                     var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
                     var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-                    var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-primary').html('编辑');
-                    var $addDD=$('<a></a>').addClass('btn btn-minier btn-danger').html('添加到钉钉');
-                    var $updateDD=$('<a></a>').addClass('btn btn-minier btn-inverse').html('同步钉钉信息');
-                    var $deleteDD=$('<a></a>').addClass('btn btn-minier btn-pink').html('从钉钉删除');
-                    var $userexception=$('<a></a>').addClass('btn btn-minier btn-success').html('工作经历');
+                    var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
+                    var $addDD=$('<a></a>').addClass('btn btn-minier btn-success').html('添加到钉钉');
+                    var $updateDD=$('<a></a>').addClass('btn btn-minier btn-warning').html('同步钉钉信息');
+                    var $deleteDD=$('<a></a>').addClass('btn btn-minier btn-inverse').html('从钉钉删除');
+                    var $userexception=$('<a></a>').addClass('btn btn-minier btn-danger').html('工作经历');
 
                     var propertyArr = [
                         ["员工编号:", v.userId, "grey"],
                         ["用户名:", v.loginId, "grey"],
                         ["部门:", v.dept.deptName, "grey"],
                         ["职位:", v.duty.name, "grey"],
-                        ["角色:", v.role.roleName, "grey"],
+                        ["角色:", v.role.name, "grey"],
                         ["联系方式:", v.phone, "grey"]
                     ];
 
@@ -243,9 +243,9 @@
                                 var $h2 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + val.type));
 
                                 var ecperienceArr = [
-                                    ["类型:", val.type, "grey"],
+                                    ["类型:", val.type, "red"],
                                     ["备注:", val.comment, "grey"],
-                                    ["调动时间:",val.createTime,"grey"]
+                                    ["调动时间:",val.createTime,"green"]
                                 ];
                                 $.each(ecperienceArr, function (index,value) {
                                     var $liPro = $('<li></li>');

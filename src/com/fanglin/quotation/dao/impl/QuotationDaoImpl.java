@@ -33,7 +33,7 @@ public class QuotationDaoImpl extends DaoImpl<QuotationPO> implements QuotationD
 	@SuppressWarnings("unchecked")
 	public List<QuotationPO> queryQuotationByOrderId(String orderId){
 		return createCriteria(QuotationPO.class)
-				.add(Restrictions.eq("decoration.orderId", orderId))
+				.add(Restrictions.eq("orderId", orderId))
 				.addOrder(Order.desc("createTime"))
 				.list();
 	}
@@ -41,15 +41,22 @@ public class QuotationDaoImpl extends DaoImpl<QuotationPO> implements QuotationD
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<QuotationPO> queryQuotationForDefaultByOrderIds(List<String> orderIds) {
-		return session().createCriteria(QuotationPO.class).add(Restrictions.eq("status", QuotationPO.STATUS_DEFAULT_INT)).add(Restrictions.in("decoration.orderId", orderIds)).list();
+		return session().createCriteria(QuotationPO.class).add(Restrictions.eq("defaults", QuotationPO.DEFAULTS_DEFAULT_SHORT)).add(Restrictions.in("orderId", orderIds)).list();
 	}
 
 	@Override
 	public QuotationPO queryQuotationForDefaultByOrderId(String orderId){
 		return (QuotationPO) createCriteria(QuotationPO.class)
-				.add(Restrictions.eq("decoration.orderId", orderId))
-				.add(Restrictions.eq("status", QuotationPO.STATUS_DEFAULT_INT))
+				.add(Restrictions.eq("orderId", orderId))
+				.add(Restrictions.eq("defaults", QuotationPO.DEFAULTS_DEFAULT_SHORT))
 				.uniqueResult();
+	}
+
+	@Override
+	public int updateQuotationForStatusByOrderId(String orderId, short status) {
+		String hql = "update  QuotationPO set status = :status where orderId = :orderId";
+		session().createQuery(hql).setShort("status", status).setString("orderId", orderId).executeUpdate();
+		return 0;
 	}
 
 	@Override
@@ -63,8 +70,7 @@ public class QuotationDaoImpl extends DaoImpl<QuotationPO> implements QuotationD
 
 	@Override
 	public int clearQuotationForDefaultByOrderId(String orderId){
-		String sql = "update quotation.quotation q set q.status = 0 where q.orderId = :orderId";
+		String sql = "update quotation.quotation q set q.defaults = 0 where q.orderId = :orderId";
 		return session().createSQLQuery(sql).setString("orderId", orderId).executeUpdate();
 	}
-
 }

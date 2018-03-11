@@ -3,11 +3,17 @@
  */
 jQuery(function ($) {
 
-    $('#viewPurchaseItemsPopUp').css({'margin': '0 auto', 'margin-top': '3%', 'width': '97%','max-height':'500px','overflow':'hidden','overflow-y':'scroll'});
+    $('#viewPurchaseItemsPopUp').css({
+        'margin': '0 auto',
+        'margin-top': '3%',
+        'width': '97%',
+        'max-height': '500px',
+        'overflow': 'hidden',
+        'overflow-y': 'scroll'
+    });
 
     var purchase = {
         createTime: $('#viewPurchaseItemsPopUp').attr('data-createTime'),
-        mtype: 6,
         saveBtn: $("#saveBtn"),
         cancellBtn: $("#cancelBtn"),
         manifestItems: {
@@ -21,8 +27,8 @@ jQuery(function ($) {
     com.post(api.inventory.queryStorehouseForSelf, {}, function (res) {
         var storehousesStatus = [];
 
-        $.each(res.storehouses,function(i,v){
-            if(v.status==0){
+        $.each(res.storehouses, function (i, v) {
+            if (v.status == 0) {
                 storehousesStatus.push(v);
             }
         })
@@ -38,7 +44,10 @@ jQuery(function ($) {
     }).css({'margin-left': '120px', 'margin-top': '12px'}).text('入库');
 
 
-    var $btnCancel = $('<a></a>').addClass('btn btn-sm').attr({'name': 'cancelbtn', 'href': 'javascript:void(0);'}).css({'margin-left': '17px', 'margin-top': '12px'}).text('取消');
+    var $btnCancel = $('<a></a>').addClass('btn btn-sm').attr({
+        'name': 'cancelbtn',
+        'href': 'javascript:void(0);'
+    }).css({'margin-left': '17px', 'margin-top': '12px'}).text('取消');
     var $condList1 = $('#viewPurchaseItemsPopUp').parents('.layui-layer.layui-anim.layui-layer-page.layui-layer-lan');
     var $div = $('<div class="layui-layer-btn0" style="position: relative;top:-10%;left:77%;"></div>');
     $div.append($btnConfirm).append($btnCancel).appendTo($condList1);
@@ -48,55 +57,40 @@ jQuery(function ($) {
     });
 
     //选择框操作
-    function savePurchaseChange(){
+    function savePurchaseChange() {
 
         var options = {};
-        var type = purchase.mtype;             //– 类型
-        var comment = $('#comment').val();     //– 备注
 
-        options = {
-            "manifest.type": type,
-            "manifest.comment": comment,
-            "manifest.attachment": "",         //– 附件路径
-        };
-
-        var _paramsPurchase = $.extend(options,params.pids);
-        var $list = $('input[type="checkbox"]:checked',"#list");
+        var $list = $('input[type="checkbox"]:checked', "#list");
         var flag = false;
-
+        $.extend(options,params["purchases.pids"]);
         $list.length && $list.each(function (i) {
 
             var $this = $(this);
-            var surplus = parseInt($(this).parents('div.line-wrap.order').next().find('.surplus').text())-parseInt($(this).parents('div.line-wrap.order').next().find('.rnum input').val());
+            var surplus = parseInt($(this).parents('div.line-wrap.order').next().find('.surplus').text()) - parseInt($(this).parents('div.line-wrap.order').next().find('.rnum input').val());
             var rnum = $(this).parents('div.line-wrap.order').next().find('.rnum input').val();
-            var ishid =  $(this).parents('div.line-wrap.order').next().find('.storehouse select').val();
-            options["manifestItems[" + i + "].goods.gid"] = $this.parents('li.line').attr('data-gid'); //– 商品id
-            options["manifestItems[" + i + "].color.cid"] = $this.parents('li.line').attr('data-cid'); //– 商品颜色id
-            options["manifestItems[" + i + "].format.fid"] = $this.parents('li.line').attr('data-fid');//– 商品规格id
-            options["manifestItems[" + i + "].instorehouse.shId"] = ishid;    //– 仓库ID
-            options["manifestItems[" + i + "].num"] = rnum;                   //– 入库数量
-            options["manifestItems[" + i + "].unitPrice"] = $this.parents('li.line').attr('data-unitPrice');          //– 单价
-            options["manifestItems[" + i + "].comment"] = $('#comment').val();// – 说明
+            var ishid = $(this).parents('div.line-wrap.order').next().find('.storehouse select').val();
 
-            if(surplus<0){
+            if (surplus < 0) {
                 flag = false;
                 return false;
-            }else if(surplus>=0){
-                options["purchaseItems[" + i + "].piId"]  = $(this).parents('li.line').attr('data-piid');
-                options["purchaseItems[" + i + "].surplus"] = surplus;
+            } else if (surplus >= 0) {
+
+                options["purchaseItems[" + i + "].piId"] = $(this).parents('li.line').attr('data-piid');
+                options["purchaseItems[" + i + "].storehouse.shId"] = ishid;
+                options["purchaseItems[" + i + "].num"] = rnum;
                 flag = true;
             }
 
-            if($this.parents('li.line').attr('data-cid')==null||$this.parents('li.line').attr('data-fid')==null||ishid==null){
+            if ($this.parents('li.line').attr('data-cid') == null || $this.parents('li.line').attr('data-fid') == null || ishid == null) {
                 flag = false;
             }
         });
 
-        if($list.length!=0 && flag){
+        if ($list.length != 0 && flag) {
 
-            if(checkRowValue($list)){
+            if (checkRowValue($list)) {
                 com.post(api.inventory.addManifestForPU, options, function (data) {
-
 
                     layer.closeAll();
                     layer.msg("入库成功", {icon: 1});
@@ -106,9 +100,9 @@ jQuery(function ($) {
                 });
             }
 
-        }else if($list.length!=0 && !flag){
+        } else if ($list.length != 0 && !flag) {
             layer.msg('入库数量不正确!');
-        }else{
+        } else {
             layer.msg('请选择入库商品!');
         }
     }
@@ -128,27 +122,27 @@ jQuery(function ($) {
 
         var $input = $('<input>').attr({
             "type": "checkbox",
-        }).css('width','0px').addClass('ace ace-checkbox-2');
+        }).css('width', '0px').addClass('ace ace-checkbox-2');
 
-        var _span = $('<span></span>').addClass('lbl grey bigger-150').css('font-weight','bold');
+        var _span = $('<span></span>').addClass('lbl grey bigger-150').css('font-weight', 'bold');
 
         _label.append($input).append(_span)
 
         var $indexWrap = $('<div></div>').addClass('line-wrap order').append($('<div></div>').addClass('cell index').html(_label));
         var $lineInfoWrap = $('<div></div>').addClass('line-wrap content col12');
         var _lineInfoSet = [
-            {cellClass: "no"},                          //编号
-            {cellClass: "name"},                        //名称
-            {cellClass: "category"},                    //类别
-            {cellClass: "brand"},                       //品牌
-            {cellClass: "measurementUnit"},             //单位
-            {cellClass: "color"},                       //颜色
-            {cellClass: "format"},                      //规格
-            {cellClass: "unitPrice"},                   //单价
-            {cellClass: "number"},                         //总数量
-            {cellClass: "surplus"},                     //剩余数量
+            {cellClass: "no blue"},                          //编号
+            {cellClass: "name grey"},                        //名称
+            {cellClass: "category grey"},                    //类别
+            {cellClass: "brand grey"},                       //品牌
+            {cellClass: "measurementUnit grey"},             //单位
+            {cellClass: "color grey"},                       //颜色
+            {cellClass: "format grey"},                      //规格
+            {cellClass: "unitPrice blue"},                   //单价
+            {cellClass: "number blue"},                         //总数量
+            {cellClass: "surplus blue"},                     //剩余数量
             {cellClass: "storehouse", hasSelect: !0},   //仓库
-            {cellClass: "rnum", hasInput : !0},         //入库数量
+            {cellClass: "rnum", hasInput: !0},         //入库数量
         ];
 
         $.each(_lineInfoSet, function (i, v) {
@@ -179,16 +173,17 @@ jQuery(function ($) {
     function purchaseAdd() {
         var _params = params.pids;
         var index = $('.line', '#list').length;
-        com.post(api.inventory.queryPurchaseItemByPids , _params , function (res) {
+        com.post(api.inventory.queryPurchaseItemByPids, _params, function (res) {
             for (var i = 0; i < res.purchaseItems.length; i++) {
                 index = $('.line', '#list').length;
                 autoAddline(index);
             }
+
             function autoAddline(index) {
                 index = $('.line', '#list').length;
                 addline(1 + index).appendTo('#list');
                 var $lineInfoWrap1 = $('#list li:nth-of-type(' + (index + 1) + ') div.content');
-                $('#list li:nth-of-type(' + (index + 1) + ')').attr('data-gid', res.purchaseItems[i].goods.gid).attr('data-cid',res.purchaseItems[i].color.cid).attr('data-fid',res.purchaseItems[i].format.fid).attr('data-piid',res.purchaseItems[i].piId);
+                $('#list li:nth-of-type(' + (index + 1) + ')').attr('data-gid', res.purchaseItems[i].goods.gid).attr('data-cid', res.purchaseItems[i].color.cid).attr('data-fid', res.purchaseItems[i].format.fid).attr('data-piid', res.purchaseItems[i].piId);
                 $lineInfoWrap1.find('div.no').text(res.purchaseItems[i].goods.no);
                 $lineInfoWrap1.find('div.name').text(res.purchaseItems[i].goods.name);
                 $lineInfoWrap1.find('div.category').text(res.purchaseItems[i].goods.category);
@@ -212,7 +207,7 @@ jQuery(function ($) {
 
         var flag = true;
 
-        $.each($line,function(i,v){
+        $.each($line, function (i, v) {
             var num = $(v).parents('li').find('.rnum input');
 
             var numRex = /^\d+$/;

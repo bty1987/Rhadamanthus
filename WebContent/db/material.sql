@@ -1,117 +1,53 @@
 CREATE DATABASE  IF NOT EXISTS `material`;
 USE `material`;
 
-DROP TABLE IF EXISTS `materialinside`;
-CREATE TABLE `materialinside` (
-  `miId` int(11) NOT NULL AUTO_INCREMENT,
-  `orderAddr` varchar(128) NOT NULL,
-  `customerId` varchar(15) NOT NULL,
-  `customerName` varchar(32) NOT NULL,
-  `designerId` varchar(15) NOT NULL,
-  `designerName` varchar(32) NOT NULL,
-  `materialGuideId` varchar(15) NOT NULL,
-  `materialGuideName` varchar(32) NOT NULL,
-  `materialTypeId` int(11) NOT NULL,
-  `materialType` varchar(32) NOT NULL,
-  `materialBrandId` int(11) NOT NULL,
-  `materialBrand` varchar(32) NOT NULL,
-  `createTime` date NOT NULL,
-  `sales` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `profit` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `status` tinyint(4) NOT NULL DEFAULT '0',
-  `des` varchar(256) NOT NULL DEFAULT '',
+DROP TABLE IF EXISTS `material`;
+CREATE TABLE `material` (
+  `mid` int(11) NOT NULL AUTO_INCREMENT,
+  `no` varchar(15) NOT NULL,
   `orderId` varchar(15) NOT NULL,
-  PRIMARY KEY (`miId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材场内信息';
-
-DROP TABLE IF EXISTS `materialoutside`;
-CREATE TABLE `materialoutside` (
-  `moId` int(11) NOT NULL AUTO_INCREMENT,
-  `orderId` varchar(15) NOT NULL,
-  `orderAddr` varchar(128) NOT NULL,
-  `customerName` varchar(32) NOT NULL,
+  `hid` int(11) NOT NULL,
+  `customerId` int(11) NOT NULL,
   `salesmanId` varchar(15) NOT NULL,
-  `salesmanName` varchar(32) NOT NULL,
-  `deptId` varchar(10) NOT NULL,
-  `deptName` varchar(32) NOT NULL,
-  `regionId` varchar(10) NOT NULL,
-  `regionName` varchar(32) NOT NULL,
-  `createUserId` varchar(15) NOT NULL,
-  `createUserName` varchar(32) NOT NULL,
-  `materialType` varchar(32) NOT NULL,
-  `materialBrand` varchar(32) NOT NULL,
-  `createTime` timestamp NULL DEFAULT NULL,
-  `sales` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `profit` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `status` tinyint(4) NOT NULL DEFAULT '0',
-  `des` varchar(256) NOT NULL DEFAULT '',
-  PRIMARY KEY (`moId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材场外信息';
-
-DROP TABLE IF EXISTS `materialsuborder`;
-CREATE TABLE `materialsuborder` (
-  `msoId` int(11) NOT NULL AUTO_INCREMENT,
-  `msoNo` varchar(15) NOT NULL,
-  `orderId` varchar(15) NOT NULL,
-  `orderAddr` varchar(128) NOT NULL,
-  `customerId` varchar(15) NOT NULL,
-  `customerName` varchar(32) NOT NULL,
-  `salesmanId` varchar(15) NOT NULL,
-  `salesmanName` varchar(32) NOT NULL,
   `materialerId` varchar(15) NOT NULL,
-  `materialerName` varchar(32) NOT NULL,
   `instoreId` varchar(15) DEFAULT NULL,
-  `instoreName` varchar(32) DEFAULT NULL,
-  `materialType` varchar(32) NOT NULL DEFAULT '',
-  `materialBrand` varchar(32) NOT NULL DEFAULT '',
+  `category` varchar(32) NOT NULL DEFAULT '',
+  `brand` varchar(32) NOT NULL DEFAULT '',
   `packageFlag` tinyint(4) NOT NULL DEFAULT '0',
   `regionId` varchar(10) NOT NULL,
-  `regionName` varchar(32) NOT NULL,
   `departmentId` varchar(10) NOT NULL,
-  `departmentName` varchar(32) NOT NULL,
   `materialDeptId` varchar(10) NOT NULL,
-  `materialDeptName` varchar(32) NOT NULL,
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `preBalanceTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `postBalanceTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `msoType` tinyint(4) DEFAULT '0',
+  `type` tinyint(4) DEFAULT '0',
   `status` tinyint(4) DEFAULT '0' COMMENT '初始, 删除',
   `depositPayment` decimal(10,3) NOT NULL DEFAULT '0.000',
   `depositStatus` tinyint(4) NOT NULL DEFAULT '0',
   `fullPayment` decimal(10,3) NOT NULL DEFAULT '0.000',
   `fullStatus` tinyint(4) NOT NULL DEFAULT '0',
-  `deliveryStatus` tinyint(4) DEFAULT '0' COMMENT '送货状态',
   `balanceStatus` tinyint(4) NOT NULL DEFAULT '0',
-  `base` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `point` decimal(10,3) NOT NULL DEFAULT '0.000',
   `total` decimal(10,3) NOT NULL DEFAULT '0.000',
   `distotal` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '折扣总价',
   `maling` decimal(10,3) NOT NULL DEFAULT '0.000',
   `venderMaling` decimal(10,3) NOT NULL DEFAULT '0.000',
   `coupon` decimal(10,3) NOT NULL DEFAULT '0.000',
   `couponInfo` varchar(64) NOT NULL DEFAULT '',
-  `des` varchar(256) NOT NULL DEFAULT '',
-  `profit` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `deliveryTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `deliveryUserId` varchar(15) NOT NULL DEFAULT '',
-  `fullCollectTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `postProfit` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `custProfit` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `otherStatus` int(11) NOT NULL DEFAULT '0',
+  `comment` varchar(256) NOT NULL DEFAULT '',
+  `fullpayTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `otherStatus` tinyint(2) NOT NULL DEFAULT '0',
   `company` int(11) NOT NULL,
-  PRIMARY KEY (`msoId`),
+  PRIMARY KEY (`mid`),
   KEY `indexone` (`orderId`,`status`),
   KEY `indextwo` (`balanceStatus`,`fullStatus`),
-  KEY `indexthr` (`msoNo`),
-  KEY `indexfor` (`orderAddr`),
-  KEY `indexfiv` (`salesmanName`),
+  KEY `indexthr` (`no`),
   KEY `indexsix` (`status`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材子订单表';
 
-DROP TABLE IF EXISTS `materialsuborderbalance`;
-CREATE TABLE `materialsuborderbalance` (
-  `msobId` int(11) NOT NULL AUTO_INCREMENT,
-  `msoId` int(11) NOT NULL,
+DROP TABLE IF EXISTS `materialbalance`;
+CREATE TABLE `materialbalance` (
+  `mbid` int(11) NOT NULL AUTO_INCREMENT,
+  `mid` int(11) NOT NULL,
   `createrId` varchar(15) NOT NULL,
   `instorerId` varchar(15) DEFAULT NULL,
   `posterId` varchar(15) DEFAULT NULL,
@@ -127,23 +63,23 @@ CREATE TABLE `materialsuborderbalance` (
   `type` tinyint(4) NOT NULL DEFAULT '0',
   `ident` int(11) NOT NULL DEFAULT '0',
   `mpid` int(11) DEFAULT NULL,
-  PRIMARY KEY (`msobId`),
-  KEY `indexone` (`msoId`),
+  PRIMARY KEY (`mbid`),
+  KEY `indexone` (`mid`),
   KEY `indextwo` (`instorerId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材子订单结算表';
 
-DROP TABLE IF EXISTS `materialsuborderitem`;
-CREATE TABLE `materialsuborderitem` (
-  `msoiId` int(11) NOT NULL AUTO_INCREMENT,
-  `msoId` int(11) NOT NULL,
-  `materialModelNo` varchar(64) NOT NULL,
-  `materialModelName` varchar(64) NOT NULL,
-  `materialTypeName` varchar(32) NOT NULL DEFAULT '',
-  `materialBrandName` varchar(32) NOT NULL DEFAULT '',
-  `measurementUnitName` varchar(10) NOT NULL,
+DROP TABLE IF EXISTS `materialitem`;
+CREATE TABLE `materialitem` (
+  `miid` int(11) NOT NULL AUTO_INCREMENT,
+  `mid` int(11) NOT NULL,
+  `no` varchar(64) NOT NULL,
+  `name` varchar(64) NOT NULL,
+  `category` varchar(32) NOT NULL DEFAULT '',
+  `brand` varchar(32) NOT NULL DEFAULT '',
+  `measurementUnit` varchar(10) NOT NULL,
   `packageName` varchar(10) NOT NULL DEFAULT '',
-  `materialUnitPrice` decimal(10,3) NOT NULL,
-  `materialPurchasePrice` decimal(10,3) NOT NULL,
+  `unitPrice` decimal(10,3) NOT NULL,
+  `purchasePrice` decimal(10,3) NOT NULL,
   `salePrice` decimal(10,3) NOT NULL DEFAULT '0.000',
   `price` decimal(10,3) NOT NULL DEFAULT '0.000',
   `discount` decimal(10,3) NOT NULL DEFAULT '1.000',
@@ -158,55 +94,27 @@ CREATE TABLE `materialsuborderitem` (
   `postPoint` decimal(10,3) NOT NULL DEFAULT '0.000',
   `rawCalcType` tinyint(4) NOT NULL DEFAULT '0',
   `rawPoint` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `des` varchar(256) DEFAULT '',
-  PRIMARY KEY (`msoiId`),
-  KEY `indextwo` (`msoId`,`status`,`refundStatus`)
+  `comment` varchar(256) DEFAULT '',
+  PRIMARY KEY (`miid`),
+  KEY `indextwo` (`mid`,`status`,`refundStatus`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材子订单项表';
 
-DROP TABLE IF EXISTS `materialsuborderpostbalance`;
-CREATE TABLE `materialsuborderpostbalance` (
-  `msopobId` int(11) NOT NULL AUTO_INCREMENT,
-  `msoId` int(11) NOT NULL,
-  `msoNo` varchar(15) NOT NULL,
-  `userId` varchar(15) NOT NULL,
-  `userName` varchar(32) NOT NULL,
-  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `postBalance` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `status` tinyint(4) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`msopobId`),
-  KEY `indexone` (`msoId`,`status`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材子订单结算表';
 
-DROP TABLE IF EXISTS `materialsuborderprebalance`;
-CREATE TABLE `materialsuborderprebalance` (
-  `msoprbId` int(11) NOT NULL AUTO_INCREMENT,
-  `msoId` int(11) NOT NULL,
-  `msoNo` varchar(15) NOT NULL,
-  `userId` varchar(15) NOT NULL,
-  `userName` varchar(32) NOT NULL,
-  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `preBalance` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `status` tinyint(4) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`msoprbId`),
-  KEY `indexone` (`msoId`,`status`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材子订单预结算表';
-
-DROP TABLE IF EXISTS `materialsuborderrefund`;
-CREATE TABLE `materialsuborderrefund` (
-  `msorId` int(11) NOT NULL AUTO_INCREMENT,
-  `msoId` int(11) NOT NULL,
-  `msoiId` int(11) NOT NULL,
-  `dpbsId` int(11) NOT NULL,
+DROP TABLE IF EXISTS `materialrefund`;
+CREATE TABLE `materialrefund` (
+  `mrid` int(11) NOT NULL AUTO_INCREMENT,
+  `mid` int(11) NOT NULL,
+  `miid` int(11) NOT NULL,
   `mpId` int(11) NOT NULL,
   `ident` int(11) NOT NULL,
-  `materialModelNo` varchar(64) NOT NULL,
-  `materialModelName` varchar(64) NOT NULL,
-  `materialTypeName` varchar(32) NOT NULL DEFAULT '',
-  `materialBrandName` varchar(32) NOT NULL DEFAULT '',
-  `measurementUnitName` varchar(10) NOT NULL,
+  `no` varchar(64) NOT NULL,
+  `name` varchar(64) NOT NULL,
+  `category` varchar(32) NOT NULL DEFAULT '',
+  `brand` varchar(32) NOT NULL DEFAULT '',
+  `measurementUnit` varchar(10) NOT NULL,
   `packageName` varchar(10) NOT NULL DEFAULT '',
-  `materialUnitPrice` decimal(10,3) NOT NULL,
-  `materialPurchasePrice` decimal(10,3) NOT NULL,
+  `unitPrice` decimal(10,3) NOT NULL,
+  `purchasePrice` decimal(10,3) NOT NULL,
   `salePrice` decimal(10,3) NOT NULL DEFAULT '0.000',
   `price` decimal(10,3) NOT NULL DEFAULT '0.000',
   `discount` decimal(10,3) NOT NULL DEFAULT '1.000',
@@ -215,12 +123,11 @@ CREATE TABLE `materialsuborderrefund` (
   `total` decimal(10,3) NOT NULL DEFAULT '0.000',
   `status` tinyint(4) NOT NULL DEFAULT '0',
   `balanceType` tinyint(4) NOT NULL DEFAULT '0',
-  `calcType` tinyint(4) NOT NULL DEFAULT '0',
   `prePoint` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `postPoint` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `des` varchar(256) DEFAULT '',
-  `refundDes` varchar(256) NOT NULL DEFAULT '',
-  PRIMARY KEY (`msorId`),
-  KEY `indexone` (`msoId`,`status`),
+  `comment` varchar(256) DEFAULT '',
+  PRIMARY KEY (`mrid`),
+  KEY `indexone` (`mid`,`status`),
   KEY `indextwo` (`mpId`,`status`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材子订单退款信息表';
+
+

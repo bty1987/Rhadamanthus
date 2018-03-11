@@ -8,10 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.communion.po.WorkTypePO;
+import com.fanglin.communion.vo.WorkTypeVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.data.common.vo.WorkTypeVO;
-import com.fanglin.data.po.WorkTypePO;
 import com.fanglin.inventory.dao.AccessoriesTypeDao;
 import com.fanglin.inventory.po.AccessoriesTypePO;
 import com.fanglin.inventory.service.AccessoriesTypeService;

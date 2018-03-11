@@ -10,10 +10,11 @@ $(function(){
 
             if (listData && listData.length) {
                 $.each(listData, function (i, v) {
-                    var $liLine = $('<li></li>').addClass('clearfix');
+                    var $liLine = $('<li></li>').addClass('item-orange clearfix');
                     var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix')
-                    var $h3 = $('<h3></h3>').addClass('siid')
-                    var $btnDiv = $('<div></div>').addClass('action-buttons pull-right').css('font-size','14px');
+                    var $h3 = $('<h3></h3>').addClass('oid')
+                    var $small = $('<small></small>').addClass('blue').html(v.goods.name);
+                    var $btnDiv = $('<div></div>').addClass('action-buttons pull-right');
 
                     var $selectCtype = $('<select></select>').css({'margin-right':'5px'}).addClass('hide');
 
@@ -30,28 +31,22 @@ $(function(){
                         ["商品品类:", v.goods.category, "grey", "category"],
                         ["商品颜色:", v.color.name, "grey", "color"],
                         ["商品规格:", v.format.info, "grey", "format"],
-                        ["售价:", v.selling, "grey", "selling"],
-                        ["折扣价:", v.disPrice, "grey", "disPrice"],
-                        ["折让价:", v.price, "grey", "price"],
-                        ["数量:", v.num, "grey", "num"],
-                        ["总价:", v.total, "grey", "total"],
-                        ["原结算方式:", v.rawCtype==0?"底价":"点位", "grey", "rawCtype"],
-                        ["原结算值:", v.rawCvalue, "grey", "rawCvalue"],
-                        ["结算方式:", v.ctype==0?"底价":"点位", "grey", "ctype"],
-                        ["结算值:", v.cvalue, "grey", "cvalue"],
+                        ["售价:", v.selling, "blue", "selling"],
+                        ["折扣价:", v.disPrice, "blue", "disPrice"],
+                        ["折让价:", v.price, "blue", "price"],
+                        ["数量:", v.num, "blue", "num"],
+                        ["总价:", v.total, "blue", "total"],
+                        ["原结算方式:", v.rawCtype==0?"底价":"点位", "red", "rawCtype"],
+                        ["原结算值:", v.rawCvalue, "blue", "rawCvalue"],
+                        ["结算方式:", v.ctype==0?"底价":"点位", "red", "ctype"],
+                        ["结算值:", v.cvalue, "blue", "cvalue"],
                         ["备注:", v.comment, "grey", "conment"],
                     ];
-
-                    var $label = $('<label></label>').addClass('control-label').css({
-                        'color': 'grey',
-                        'font-size': '20px',
-                        "font-weight": "bold"
-                    });
 
                     $.each(propertyArr, function (index, value) {
                         var $liProperty = $('<li></li>').css({"border-bottom": "0px"});
                         $('<strong></strong>').attr('name', value[3]).html(value[0]).appendTo($liProperty);
-                        $('<b></b>').html(value[1]).css({color: value[2]}).appendTo($liProperty);
+                        $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
                         $liProperty.appendTo($ulProperty);
                     });
 
@@ -101,8 +96,7 @@ $(function(){
                         $btnInput.popover('destroy')
                     })
 
-
-                    $label.append(v.goods.name).appendTo($h3);
+                    $small.appendTo($h3)
 
                     $btnDiv.append($selectCtype).append($btnInput).append($btnCheck).append($btnQCheck).append($btnCtype).appendTo($h3);
 

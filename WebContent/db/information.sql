@@ -162,6 +162,6 @@ CREATE TABLE `upgrade` (
   `createtime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `content` varchar(255) NOT NULL,
   `path` varchar(255) NOT NULL,
-  `filesize` bigint(20) NOT NULL,
+  `filesize` bigint(64) NOT NULL,
   PRIMARY KEY (`ugid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='升级表'; 

@@ -31,8 +31,21 @@ public class GoodsDaoImpl extends DaoImpl<GoodsPO> implements GoodsDao {
 	}
 	
 	@Override
-	public List<GoodsPO> pageGoods(Paging paging, List<Filter> filters,int company) {
+	public List<GoodsPO> pageGoods(Paging paging, List<Filter> filters, List<Long> bids, int company) {
 		
+		PagingQuery<GoodsPO> query = pagingQuery(paging, GoodsPO.class);
+		
+		query.add(query.getCriterion(GoodsPO.COLUMN_BID_STR, bids, "in"));
+		query.add(query.getCriterion(GoodsPO.COLUMN_COMPANY_STR, company, "eq"));
+		
+		queryFilterExcute(query, filters);
+		
+		return query.list();
+	}
+
+	@Override
+	public List<GoodsPO> pageGoodsForAdvance(Paging paging, List<Filter> filters, int company) {
+
 		PagingQuery<GoodsPO> query = pagingQuery(paging, GoodsPO.class);
 		
 		query.add(query.getCriterion(GoodsPO.COLUMN_COMPANY_STR, company, "eq"));
@@ -118,5 +131,7 @@ public class GoodsDaoImpl extends DaoImpl<GoodsPO> implements GoodsDao {
 			}
 		}
 	}
+
+	
 
 }

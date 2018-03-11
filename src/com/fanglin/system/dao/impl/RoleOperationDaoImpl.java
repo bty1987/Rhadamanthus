@@ -11,6 +11,7 @@
 
 package com.fanglin.system.dao.impl;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import org.hibernate.criterion.Restrictions;
@@ -29,7 +30,7 @@ public class RoleOperationDaoImpl extends DaoImpl<RoleOperationPO> implements Ro
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<RoleOperationPO> queryRoleOperationByRId(int rId, short system) {
+	public List<RoleOperationPO> queryRoleOperationByRid(int rId, short system) {
 		return session().createCriteria(RoleOperationPO.class).createAlias("operation", "operation").add(Restrictions.eq("rid", rId)).add(Restrictions.eq("operation.system", system)).list();
 	}
 
@@ -39,20 +40,47 @@ public class RoleOperationDaoImpl extends DaoImpl<RoleOperationPO> implements Ro
 	}
 
 	@Override
-	public RoleOperationPO queryRoleOperationByOperationARId(String operation, int rId, short system) {
-		return (RoleOperationPO) session().createCriteria(RoleOperationPO.class).createAlias("operation", "operation").add(Restrictions.eq("rid", rId)).add(Restrictions.eq("operation.operation", operation)).add(Restrictions.eq("operation.system", system)).uniqueResult();
+	public RoleOperationPO queryRoleOperationByOperationARid(String operation, int rid, short system) {
+		return (RoleOperationPO) session().createCriteria(RoleOperationPO.class).createAlias("operation", "operation").add(Restrictions.eq("rid", rid)).add(Restrictions.eq("operation.operation", operation)).add(Restrictions.eq("operation.system", system)).uniqueResult();
 	}
 
 	@Override
-	public RoleOperationPO queryRoleOperationByRIdAOId(int rId, int oId) {
-		return (RoleOperationPO) session().createCriteria(RoleOperationPO.class).createAlias("operation", "operation").add(Restrictions.eq("rid", rId)).add(Restrictions.eq("operation.oid", oId)).uniqueResult();
+	public RoleOperationPO queryRoleOperationByRidAOid(int rid, int oid) {
+		return (RoleOperationPO) session().createCriteria(RoleOperationPO.class).createAlias("operation", "operation").add(Restrictions.eq("rid", rid)).add(Restrictions.eq("operation.oid", oid)).uniqueResult();
 	}
 
 	@Override
-	public int deleteRoleOperationByRId(int rId, short system) {
+	public int deleteRoleOperationByRid(int rid, short system) {
 		
-		String sql = "delete from communion.roleoperation where rId = :rId and oId in (select oId from communion.operation where system = :system)";
-		session().createSQLQuery(sql).setInteger("rId", rId).setShort("system", system).executeUpdate();
+		String sql = "delete from communion.roleoperation where rid = :rid and oid in (select oid from communion.operation where system = :system)";
+		session().createSQLQuery(sql).setInteger("rid", rid).setShort("system", system).executeUpdate();
+		
+		return 0;
+	}
+	
+	@Override
+	public int countRoleOperationByOid(int oid) {
+		
+		String sql = "select count(*) from communion.roleoperation where oid = :oid";
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setInteger("oid", oid).uniqueResult();
+		
+		return count.intValue();
+	}
+	
+	@Override
+	public int deleteRoleOperationByRid(int rid) {
+		
+		String sql = "delete from communion.roleoperation where rid = :rid";
+		session().createSQLQuery(sql).setInteger("rid", rid).executeUpdate();
+		
+		return 0;
+	}
+	
+	@Override
+	public int deleteRoleOperationByOId(int oid) {
+		
+		String sql = "delete from communion.roleoperation where oid = :oid";
+		session().createSQLQuery(sql).setInteger("oid", oid).executeUpdate();
 		
 		return 0;
 	}

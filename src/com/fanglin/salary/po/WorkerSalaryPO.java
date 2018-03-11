@@ -62,6 +62,8 @@ public class WorkerSalaryPO  implements Serializable{
 	
 	public static final String COLUMN_USER_USERDUTY = "user.duty.name";
 	
+	public static final int COLUMN_CONSTRUCTION_STATUS = 1;
+	
 	private long wsId;
 	
 	private long cid;
@@ -137,7 +139,7 @@ public class WorkerSalaryPO  implements Serializable{
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "userId", referencedColumnName = "userId")
+	@JoinColumn(name = "wuid", referencedColumnName = "uid")
 	public UserPO getUser() {
 		return user;
 	}
@@ -229,7 +231,7 @@ public class WorkerSalaryPO  implements Serializable{
 	}
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "createrId", referencedColumnName = "userId")
+	@JoinColumn(name = "cuid", referencedColumnName = "uid")
 	public UserPO getCreater() {
 		return creater;
 	}
@@ -239,7 +241,7 @@ public class WorkerSalaryPO  implements Serializable{
 	}
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "approverId", referencedColumnName = "userId")
+	@JoinColumn(name = "auid", referencedColumnName = "uid")
 	public UserPO getApprover() {
 		return approver;
 	}

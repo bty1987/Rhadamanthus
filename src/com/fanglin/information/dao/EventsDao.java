@@ -24,8 +24,8 @@ public interface EventsDao extends Dao<EventsPO> {
 	
 	public List<EventsPO> queryEvents(List<Filter> filters) throws ParseException;
 	
-	public List<EventsPO> queryEvents(String userId, String beginDate, String endDate) throws HibernateException, ParseException;
+	public List<EventsPO> queryEvents(int uid, String beginDate, String endDate) throws HibernateException, ParseException;
 	
-	public int countEvents(String userId, String showDate) throws ParseException;
+	public int countEvents(int uid, String showDate) throws ParseException;
 	
 }

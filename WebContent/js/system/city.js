@@ -22,8 +22,8 @@ jQuery(function($) {
 	city.saveBtn = $("#saveBtn").on("click", saveData);
 	city.cancelBtn = $("#cancelBtn");
 	
-	city.cityItems.cityId = $("#cityId");
-	city.cityItems.cityName = $("#cityName");
+	city.cityItems.no = $("#cityId");
+	city.cityItems.name = $("#cityName");
 	city.cityItems.regionSel = $("#regionSel");
 	
 	city.modal = $("#cityModal");
@@ -31,7 +31,7 @@ jQuery(function($) {
 	$.extend(com.validator, city.validator);
 	
 	com.post(api.system.queryRegion, {}, function(res){
-		city.cityItems.regionSel.bindData(res.regions, "regionId", "regionName");
+		city.cityItems.regionSel.bindData(res.regions, "rid", "name");
 	});
 	
 	var displayFunc  = (function(){
@@ -53,17 +53,17 @@ jQuery(function($) {
 
         var creatLine = function(v){
         	
-            var $liLine = $('<li></li>').addClass('item-blue clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.cityName));
+            var $liLine = $('<li></li>').addClass('item-orange clearfix');
+            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.name));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
-            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-info').html('编辑');
-            var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
+            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
+            var $btnDel = $('<a></a>').addClass('btn btn-minier btn-success').html('删除');
             
             var propertyArr = [
-               ["编号:", v.cityId, "grey"],
-               ["所属大区:", v.region.regionName, "grey"],
+               ["编号:", v.no, "grey"],
+               ["所属大区:", v.region.name, "grey"],
            ];
 
            $.each(propertyArr, function (index,value) {
@@ -78,11 +78,11 @@ jQuery(function($) {
             $liLine.append($h3).append($ulProperty);
             
             $btnEdit.click(function(){
-            	editCity(v.cityId, v.cityName, v.region.regionId);
+            	editCity(v.cid, v.no, v.name, v.region.rid);
             });
             
             $btnDel.click(function(){
-            	deleteCity(v.cityId);
+            	deleteCity(v.cid);
             });
             
             return $liLine;
@@ -118,20 +118,21 @@ jQuery(function($) {
 		
 		com.cleanItems(city.cityItems);
 		
-		city.cityItems.cityId.prop("disabled", false).css("display", "none");
+		city.cityItems.no.prop("disabled", false).css("display", "none");
 		city.cityItems.regionSel.find("option:first").prop("selected", true);	
 		
 		city.modal.modal("show");   
     });
 	
-	function editCity(cityId, cityName, regionId){
+	function editCity(cid, no, name, regionId){
 		com.clearValidator();
 		com.clearValidator("#cityId", true);
 		
 		editFlg = true;
 		
-		city.cityItems.cityId.val(cityId).prop("disabled", true).css("display", "block");
-		city.cityItems.cityName.val(cityName);
+		city.cityItems.cid = cid;
+		city.cityItems.no.val(no).prop("disabled", true).css("display", "block");
+		city.cityItems.name.val(name);
 		city.cityItems.regionSel.val(regionId);
 		
 		city.modal.modal("show");
@@ -139,9 +140,9 @@ jQuery(function($) {
 	
 	function deleteCity(cityId){
 		var options = {
-			"cityIds[0]": cityId,
+			"cids[0]": cityId,
 		};
-		com.post(api.system.deleteCityByIds, options, function(res){
+		com.post(api.system.deleteCityByCids, options, function(res){
 			searcher.doSearch();
 		});
 	}
@@ -154,9 +155,10 @@ jQuery(function($) {
 		
 		var url;
 		var options = {
-			'city.cityId': city.cityItems.cityId.val(),
-			'city.cityName': city.cityItems.cityName.val(),
-			'city.region.regionId': city.cityItems.regionSel.val()
+			'city.cid': city.cityItems.cid,
+			'city.no': city.cityItems.no.val(),
+			'city.name': city.cityItems.name.val(),
+			'city.region.rid': city.cityItems.regionSel.val()
 		};
 		
 		if(editFlg){

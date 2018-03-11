@@ -19,14 +19,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.approval.dao.ApprovalDao;
 import com.fanglin.approval.dao.ApprovalDecorationHouseDao;
-import com.fanglin.approval.po.ApprovalPO;
 import com.fanglin.approval.po.ApprovalDecorationHousePO;
+import com.fanglin.approval.po.ApprovalPO;
 import com.fanglin.approval.service.ApprovalDecorationHouseService;
-import com.fanglin.approval.vo.ApprovalVO;
 import com.fanglin.approval.vo.ApprovalDecorationHouseVO;
+import com.fanglin.approval.vo.ApprovalVO;
+import com.fanglin.communion.dao.HouseDao;
+import com.fanglin.communion.po.HousePO;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.data.common.dao.HouseDao;
-import com.fanglin.data.po.HousePO;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.information.po.MessagePO;

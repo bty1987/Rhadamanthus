@@ -77,18 +77,18 @@ $(function () {
 
             var propertyArr = [
                 //v.gid,
-                v.no,
-                v.orderId,
-                v.creater.userName,
-                v.createTime,
-                v.approver.userName,
-                v.approverTime,
-                v.status == "0" ? "初始" : (v.status == "1" ? "出货" : "拒绝"),
+                [v.no,'blue'],
+                [v.orderId,'blue'],
+                [v.creater.userName,'grey'],
+                [v.createTime,'green'],
+                [v.approver.userName,'grey'],
+                [v.approverTime,'green'],
+                [v.status == "0" ? "初始" : (v.status == "1" ? "出货" : (v.status == "2" ? "拒绝":"撤销")),'red'],
             ];
 
 
             $.each(propertyArr, function (i, v) {
-                var $cell = $('<div></div>').addClass('cell').html(v);
+                var $cell = $('<div></div>').addClass('cell ' + v[1]).html(v[0]);
                 $cell.appendTo($contentWrap);
             });
 
@@ -101,6 +101,7 @@ $(function () {
 
             var $btnView = $('<li></li>').append($('<a></a>').html('出货'));
             var $btnEdit = $('<li></li>').append($('<a></a>').html('修改'));
+            var $btnPrint = $('<li></li>').append($('<a></a>').html('打印'));
 
             $btnUl
                 .append($btnView)
@@ -116,6 +117,10 @@ $(function () {
             $liLine.append($indexWrap)
                 .append($contentWrap)
                 .append($optionWrap);
+
+            if(v.status == 1){
+                $btnPrint.appendTo($btnUl);
+            }
 
             $btnView.click(function () {
                 if (v.status == 1) {
@@ -151,6 +156,19 @@ $(function () {
 
             });
 
+            $btnPrint.click(function(){
+
+                params["accessories.no"] = v.no;
+                params["accessories.orderId"] = v.orderId;
+                params["accessories.createTime"] = v.createTime
+                params["accessories.creater"] = v.creater.userName;
+                params["accessories.aid"] = v.aid;
+                params["accessories.manifestTime"] = v.approverTime;
+
+                printAccessoriesItem(v.aid,v.no);
+
+            })
+
             return $liLine;
 
         };
@@ -181,7 +199,7 @@ $(function () {
             saveOptionChange();
         });
 
-        return [$adda];
+        return [];
     }, 'resultList');
 
 
@@ -191,7 +209,7 @@ $(function () {
         //弹出即全屏
         var index = layer.open({
             type: 1,
-            skin: 'layui-layer-molv',
+            skin: 'layui-layer-lan',
             title: "辅料订单" + no,
             content: $popup,
             area: ["1200px", ( $(window).height() * 0.84 < 700 ? $(window).height() * 0.84 : 700 ) + "px"],
@@ -257,6 +275,7 @@ $(function () {
 
     function saveOptionChange() {
         var _params = {};
+        var _accessories = {};
         var flag = true;
         var $menus = $('input[type="checkbox"]:checked', '.line');
         var $aid = [];
@@ -268,14 +287,17 @@ $(function () {
         $menus.length && $menus.each(function (i) {
             if ($aid[i][1] == 0 && flag) {
                 _params["aids[" + i + "]"] = $aid[i][0];
+                _accessories["accessories[" + i + "].aid"] = $aid[i][0];
             } else {
                 _params = {};
+                _accessories ={};
                 flag = false;
             }
         });
 
         if ($menus.length > 0 && flag == true) {
             params.aids = _params;
+            params["accessories.aids"] = _accessories;
             var createTime = getNowFormatDate();
             batchAccessoriesItem(createTime);
         } else if ($menus.length == 0 && flag == true) {
@@ -302,6 +324,16 @@ $(function () {
             + " " + date.getHours() + seperator2 + date.getMinutes()
             + seperator2 + date.getSeconds();
         return currentdate;
+    }
+
+    //打印货单项
+    function printAccessoriesItem(aid,no){
+
+        com.popup("辅料单编号" + no, api.index.accessoriesPrintIndex.url, function () {
+            parent.layer.getFrameIndex(window.name);
+        }, null, true);
+
+
     }
 
 });

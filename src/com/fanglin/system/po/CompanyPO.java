@@ -28,7 +28,7 @@ public class CompanyPO implements Serializable {
 	private static final long serialVersionUID = -5885986511194210020L;
 
 	public static final int TYPE_HEADQUARTER_INT = 0;//总部
-	
+
 	public static final String COLUMN_CID_STR = "cid";
 	
 	public static final String COLUMN_NAME_STR = "name";
@@ -52,7 +52,7 @@ public class CompanyPO implements Serializable {
 	private String corporation;
 	
 	private String phone;
-	
+
 	private short status;
 
 	public CompanyPO() {
@@ -93,14 +93,6 @@ public class CompanyPO implements Serializable {
 		this.name = name;
 	}
 	
-	@Column(name = "status")
-	public short getStatus() {
-		return status;
-	}
-
-	public void setStatus(short status) {
-		this.status = status;
-	}
 	@Column(name = "fullname")
 	public String getFullname() {
 		return fullname;
@@ -109,6 +101,7 @@ public class CompanyPO implements Serializable {
 	public void setFullname(String fullname) {
 		this.fullname = fullname;
 	}
+
 	@Column(name = "address")
 	public String getAddress() {
 		return address;
@@ -117,6 +110,7 @@ public class CompanyPO implements Serializable {
 	public void setAddress(String address) {
 		this.address = address;
 	}
+
 	@Column(name = "corporation")
 	public String getCorporation() {
 		return corporation;
@@ -125,6 +119,7 @@ public class CompanyPO implements Serializable {
 	public void setCorporation(String corporation) {
 		this.corporation = corporation;
 	}
+
 	@Column(name = "phone")
 	public String getPhone() {
 		return phone;
@@ -133,6 +128,14 @@ public class CompanyPO implements Serializable {
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
-	
+
+	@Column(name = "status")
+	public short getStatus() {
+		return status;
+	}
+
+	public void setStatus(short status) {
+		this.status = status;
+	}
 	
 }

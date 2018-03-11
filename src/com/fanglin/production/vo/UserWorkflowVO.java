@@ -2,8 +2,6 @@ package com.fanglin.production.vo;
 
 import java.io.Serializable;
 
-import com.fanglin.production.vo.WorkflowVO;
-
 public class UserWorkflowVO implements Serializable{
 
 	private static final long serialVersionUID = -5416324484664173951L;

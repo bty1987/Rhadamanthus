@@ -14,7 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fanglin.data.po.HousePO;
+import com.fanglin.communion.po.HousePO;
 import com.fanglin.personel.po.UserPO;
 
 @Entity
@@ -48,6 +48,8 @@ public class AccessoriesPO implements Serializable{
 	public static final short STATUS_DISABLE_INT = 1;
 	
 	public static final short STATUS_REJECT_INT = 2;
+	
+	public static final short STATUS_UNDO_INT = 3;
 	
 	private long aid;	
 	

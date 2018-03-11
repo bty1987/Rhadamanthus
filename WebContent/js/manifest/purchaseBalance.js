@@ -81,19 +81,19 @@ $(function(){
             var $contentWrap = $('<div></div>').addClass('line-wrap  content col9');
 
             var propertyArr = [
-                v.no,
-                v.user.userName,
-                v.createTime,
-                v.balanceTime,
-                v.deliveryTime,
-                v.status == "0" ? "初始" :  (v.status == "1"? "部分入库" : "全部入库") ,
-                v.balanceStatus == "0" ? "初始" :  (v.balanceStatus == "1" ? "已结算" : "已完结"),
-                v.comment
+                [v.no,'blue'],
+                [v.user.userName,'grey'],
+                [v.createTime,'green'],
+                [v.balanceTime,'green'],
+                [v.deliveryTime,'green'],
+                [v.status == "0" ? "初始" :  (v.status == "1"? "部分入库" : "全部入库"),'red'],
+                [v.balanceStatus == "0" ? "初始" :  (v.balanceStatus == "1" ? "已结算" : "已完结"),'red'],
+                [v.comment,'grey']
             ];
 
 
             $.each(propertyArr, function (i, v) {
-                var $cell = $('<div></div>').addClass('cell').html(v);
+                var $cell = $('<div></div>').addClass('cell ' + v[1]).html(v[0]);
                 $cell.appendTo($contentWrap);
             });
 

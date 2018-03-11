@@ -16,10 +16,10 @@ $(function () {
             if (listData && listData.length) {
                 $.each(listData, function (i, v) {
 
-                    var $liLine = $('<li></li>').addClass('item-blue clearfix');
+                    var $liLine = $('<li></li>').addClass('item-orange clearfix');
                     var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-                    var $h3 = $('<h3></h3>').addClass('sid');
-                    var $btnDiv = $('<div></div>').addClass('action-buttons pull-right').css('margin-right', '2%');
+                    var $h3 = $('<h3></h3>').addClass('oid');
+                    var $btnDiv = $('<div></div>').addClass('action-buttons pull-right');
 
                     var status = "";
                     var balanceStatus = "";
@@ -60,11 +60,11 @@ $(function () {
                     }
 
 
-                    var $btnSwitch = $('<a></a>').addClass('btn btn-minier').html('查看');
-                    var $btnPre = $('<a></a>').css('margin-left', '3px').addClass('btn btn-minier').html('预结算');
+                    var $btnSwitch = $('<a></a>').addClass('btn btn-minier btn-yellow').html('查看');
+                    var $btnPre = $('<a></a>').addClass('btn btn-minier btn-success').html('预结算');
 
                     var propertyArr = [
-                        ["订单编号:", v.orderId, "grey"],
+                        ["订单编号:", v.orderId, "blue"],
                         ["楼盘地址:", v.house.village.name + " " + v.house.houseNumber, "grey"],
                         ["客户名:", v.customer.name, "grey"],
                         ["渠道:", v.salesman.currentName, "grey"],
@@ -74,13 +74,13 @@ $(function () {
                         ["驻店:",v.instorer.currentName,"grey"],
                         ["品牌:", v.brand, "grey"],
                         ["总额:", v.total, "grey"],
-                        ["抹零:", v.maling, "grey"],
-                        ["厂商抹零:", v.venderMaling, "grey"],
-                        ["券值:", v.coupon, "grey"],
+                        ["抹零:", v.maling, "blue"],
+                        ["厂商抹零:", v.venderMaling, "blue"],
+                        ["券值:", v.coupon, "blue"],
                         ["券信息:", v.couponInfo, "grey"],
-                        ["创建时间:", v.createTime, "grey"],
-                        ["结算时间:", v.balanceTime, "grey"],
-                        ["补款时间:", v.fullpayTime, "grey"],
+                        ["创建时间:", v.createTime, "green"],
+                        ["结算时间:", v.balanceTime, "green"],
+                        ["补款时间:", v.fullpayTime, "green"],
                         ["备注:", v.comment, "grey"]
                     ];
 
@@ -108,9 +108,9 @@ $(function () {
                     _label.append($input).append(_span).appendTo($label)
 
                     $.each(propertyArr, function (index, value) {
-                        var $liProperty = $('<li></li>').css({"border-bottom": "0px"});
+                        var $liProperty = $('<li></li>');
                         $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                        $('<b></b>').html(value[1]).css({color: value[2]}).appendTo($liProperty);
+                        $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
                         $liProperty.appendTo($ulProperty);
                     });
 

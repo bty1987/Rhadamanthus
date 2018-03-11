@@ -31,64 +31,64 @@ import com.fanglin.dingding.service.UserService;
 @Namespace("/")
 @Controller
 public class DDAction extends BaseListAction {
-	
-	private static final long serialVersionUID = -6593413211279089778L;	
-	
+
+	private static final long serialVersionUID = -6593413211279089778L;
+
 	@Autowired
-    private DepartmentService departmentDDService; 
-    
+	private DepartmentService departmentDDService;
+
 	@Autowired
-    private UserService userDDService;
-    
+	private UserService userDDService;
+
 	private User user;
-	
+
 	private String code;
-	
+
 	private List<Long> dids;
-	
+
 	private List<Department> departments;
-	
+
 	private Department department;
-     
+
 	private int errcode;
-	
-	@Action(value = "queryDDUser", results = { @Result(name = "success", type = "json", params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" })
-	public String queryUser() throws FLException{
-		
-		user = userDDService.getUser(user.getUserid(),queryCompany());
-		
+
+	@Action(value = "queryDDUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryUser() throws FLException {
+
+		user = userDDService.getUser(user.getUserid(), queryCompany());
+
 		return SUCCESS;
 	}
-	
-	@Action(value = "queryDDDepartment", results = { @Result(name = "success", type = "json", params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" })
-	public String queryDDDepartment() throws FLException{
-		
+
+	@Action(value = "queryDDDepartment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryDDDepartment() throws FLException {
+
 		departments = departmentDDService.queryDepartment(queryCompany());
-		
-	  	return SUCCESS;
+
+		return SUCCESS;
 	}
 
-	@Action(value = "addDDUser", results = { @Result(name = "success", type = "json", params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" })
-	public String addUser2() throws FLException{
-		
-		 errcode =userDDService.addDDUser(user,dids,queryCompany());
-		
-		 return SUCCESS;
+	@Action(value = "addDDUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addDDUser() throws FLException {
+
+		errcode = userDDService.addDDUser(user, dids, queryCompany());
+
+		return SUCCESS;
 	}
-	
-	@Action(value = "updateDDUser", results = { @Result(name = "success", type = "json", params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" })
-	public String updateUser() throws FLException{
-		
-		 errcode = userDDService.updateDDUser(user,dids,queryCompany());
-		
-		 return SUCCESS;
+
+	@Action(value = "updateDDUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateUser() throws FLException {
+
+		errcode = userDDService.updateDDUser(user, dids, queryCompany());
+
+		return SUCCESS;
 	}
-	
-	@Action(value = "deleteDDUser", results = { @Result(name = "success", type = "json", params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" })
-	public String deleteDDUser()throws FLException{
-		
-		 errcode= userDDService.deleteDDUser(user,queryCompany());
-		
+
+	@Action(value = "deleteDDUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String deleteDDUser() throws FLException {
+
+		errcode = userDDService.deleteDDUser(user, queryCompany());
+
 		return SUCCESS;
 	}
 
@@ -139,5 +139,5 @@ public class DDAction extends BaseListAction {
 	public void setErrcode(int errcode) {
 		this.errcode = errcode;
 	}
-	
+
 }

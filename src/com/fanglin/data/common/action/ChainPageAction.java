@@ -17,49 +17,49 @@ import com.fanglin.data.common.vo.ChainPageVO;
 @ParentPackage("base")
 @Namespace("/")
 @Controller
-public class ChainPageAction  extends BaseListAction{
+public class ChainPageAction extends BaseListAction {
 
 	private static final long serialVersionUID = -2241083409399632053L;
 
 	@Autowired
 	private ChainPageService chainPageService;
-	
+
 	private ChainPageVO chainPage;
-	
+
 	private List<ChainPageVO> chainPages;
-	
+
 	@Action(value = "queryChainPage", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryChainPage()throws FLException{
-		
-		chainPages=chainPageService.queryChainPage();
-		
+	public String queryChainPage() throws FLException {
+
+		chainPages = chainPageService.queryChainPage();
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "queryChainPageForSelf", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryChainPageForSelf() throws FLException{
-		
-		chainPages=chainPageService.queryChainPageForSelf(queryRoleId(),queryCompany());
-		
+	public String queryChainPageForSelf() throws FLException {
+
+		chainPages = chainPageService.queryChainPageForSelf(queryRoleId(), queryCompany());
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "addChainPage", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addChainPage() throws FLException{
-		
+	public String addChainPage() throws FLException {
+
 		chainPageService.addChainPage(chainPage);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "deleteChainPage", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String deleteChainPage() throws FLException{
-		
+	public String deleteChainPage() throws FLException {
+
 		chainPageService.deleteChainPage(chainPage);
-		
+
 		return SUCCESS;
 	}
-	 
+
 	public ChainPageVO getChainPage() {
 		return chainPage;
 	}
@@ -75,7 +75,5 @@ public class ChainPageAction  extends BaseListAction{
 	public void setChainPages(List<ChainPageVO> chainPages) {
 		this.chainPages = chainPages;
 	}
-	
-	
-	
+
 }

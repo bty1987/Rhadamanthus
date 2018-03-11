@@ -1,8 +1,8 @@
 package com.fanglin.data.common.service.impl;
 
 import java.util.ArrayList;
-import java.util.List;       
-import sun.misc.BASE64Encoder;   
+import java.util.List;
+import sun.misc.BASE64Encoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,75 +19,76 @@ import com.fanglin.system.po.RolePO;
 import com.fanglin.utils.BeanUtil;
 
 @Service("chainPageService")
-@Transactional(readOnly=true)
-public class ChainPageServiceImpl implements ChainPageService{
-	
+@Transactional(readOnly = true)
+public class ChainPageServiceImpl implements ChainPageService {
+
 	@Autowired
 	private ChainPageDao chainPageDao;
-	
+
 	@Autowired
 	private RoleChainPageDao roleChainPageDao;
-	
+
 	@Autowired
 	private RoleDao roleDao;
-	
+
 	@Override
 	public List<ChainPageVO> queryChainPage() throws FLException {
 		List<ChainPagePO> chainPagePOs = chainPageDao.list();
 		List<ChainPageVO> chainPageVOs = new ArrayList<ChainPageVO>();
 		for (ChainPagePO chainPagePO : chainPagePOs) {
 			ChainPageVO chainPageVO = new ChainPageVO();
-			BeanUtil.copyProperties(chainPagePO,chainPageVO);
-			
+			BeanUtil.copyProperties(chainPagePO, chainPageVO);
+
 			chainPageVOs.add(chainPageVO);
 		}
-		
+
 		return chainPageVOs;
 	}
 
 	@Override
-	public List<ChainPageVO> queryChainPageForSelf(String roleId,int company) throws FLException {
-		
-		BASE64Encoder encoder = new BASE64Encoder();  
+	public List<ChainPageVO> queryChainPageForSelf(Integer rid, int company) throws FLException {
+
+		BASE64Encoder encoder = new BASE64Encoder();
 		String encode = encoder.encode(String.valueOf(company).getBytes());
-		String url= "&company="+encode;
-		
-		RolePO rolePO = roleDao.get(roleId);
-	
-		List<RoleChainPagePO> roleChainPagePOs =roleChainPageDao.queryRoleChainPageByRid(rolePO.getrId());
+		String url = "&company=" + encode;
+
+		RolePO rolePO = roleDao.get(rid);
+
+		List<RoleChainPagePO> roleChainPagePOs = roleChainPageDao.queryRoleChainPageByRid(rolePO.getRid());
 		List<ChainPageVO> chainPageVOs = new ArrayList<ChainPageVO>();
 
 		for (RoleChainPagePO roleChainPagePO : roleChainPagePOs) {
 			ChainPageVO chainPageVO = new ChainPageVO();
-			BeanUtil.copyProperties(roleChainPagePO.getChainPage(),chainPageVO);
+			BeanUtil.copyProperties(roleChainPagePO.getChainPage(), chainPageVO);
 			if (roleChainPagePO.getChainPage().getCompanymark() == 0) {
-				chainPageVO.setUrl(roleChainPagePO.getChainPage().getUrl()+url);
-			};
+				chainPageVO.setUrl(roleChainPagePO.getChainPage().getUrl() + url);
+			}
+			;
 			chainPageVOs.add(chainPageVO);
 		}
-		
+
 		return chainPageVOs;
-	
+
 	}
-	
+
 	@Override
-	@Transactional(rollbackFor=Exception.class)
+	@Transactional(rollbackFor = Exception.class)
 	public void addChainPage(ChainPageVO chainPageVO) throws FLException {
-		
+
 		ChainPagePO chainPagePO = new ChainPagePO();
-		BeanUtil.copyProperties(chainPageVO,chainPagePO);
+		BeanUtil.copyProperties(chainPageVO, chainPagePO);
 		chainPageDao.save(chainPagePO);
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
+	@Transactional(rollbackFor = Exception.class)
 	public void deleteChainPage(ChainPageVO chainPageVO) throws FLException {
-		
+
 		ChainPagePO chainPagePO = chainPageDao.get(chainPageVO.getCpid());
-		
+
 		List<RoleChainPagePO> RoleChainPagePOs = roleChainPageDao.queryRoleChainPageByCpid(chainPageVO.getCpid());
 		for (RoleChainPagePO roleChainPagePO : RoleChainPagePOs) {
-			if (roleChainPagePO.getChainPage()!=null) {
+			if (roleChainPagePO.getChainPage() != null) {
 				throw new FLException(130013, "外链已使用");
 			}
 		}
@@ -95,5 +96,4 @@ public class ChainPageServiceImpl implements ChainPageService{
 		chainPageDao.delete(chainPagePO);
 	}
 
-	
 }

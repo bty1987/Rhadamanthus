@@ -13,6 +13,6 @@ public interface ConstructerDao extends Dao<ConstructerPO>{
 
 	public ConstructerPO queryConstructerByCrId(long crid);
 	
-	public int countConstructer(long cid, String userId, int schedule, short status);
+	public int countConstructer(long cid, int wuid, int schedule, short status);
 
 }

@@ -43,7 +43,7 @@ public class BuildingScheduleAction extends BaseListAction {
 	@Action(value="nextBuildingSchedule", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String nextBuildingSchedule() throws FLException{
 		
-		buildingScheduleService.nextBuildingSchedule(buildingSchedule,authentication());
+		buildingSchedule = buildingScheduleService.nextBuildingSchedule(buildingSchedule, queryUserId());
 		
 		return SUCCESS;
 		
@@ -52,7 +52,7 @@ public class BuildingScheduleAction extends BaseListAction {
 	@Action(value="updateBuildingSchedule", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String updateBuildingSchedule() throws FLException{
 		
-		buildingScheduleService.updateBuildingSchedule(buildingSchedule);
+		buildingSchedule = buildingScheduleService.updateBuildingSchedule(buildingSchedule);
 		
 		return SUCCESS;
 		
@@ -61,7 +61,7 @@ public class BuildingScheduleAction extends BaseListAction {
 	@Action(value="updateBuildingScheduleForStatus", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String updateBuildingScheduleForStatus() throws FLException{
 		
-		buildingScheduleService.updateBuildingScheduleForStatus(buildingSchedule);
+		buildingSchedule = buildingScheduleService.updateBuildingScheduleForStatus(buildingSchedule);
 		
 		return SUCCESS;
 		

@@ -41,23 +41,23 @@ $(function(){
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(i + 1));
             var $contentWrap = $('<div></div>').addClass('line-wrap  content col14');
             var propertyArr = [
-                v.createUser.userName?v.createUser.userName:"---",
-                v.createTime,
-                v.storehouse.name,
-                v.goods.no,
-                v.goods.name,
-                v.goods.barcode,
-                v.goods.category,
-                v.goods.brand,
-                v.color.name,
-                v.format.info,
-                v.goods.measurementUnit,
-                v.num,
-                v.goods.pieceNum,
-                v.type==0?"盘盈":"盘亏"
+                [v.createUser.userName?v.createUser.userName:"---",'grey'],
+                [v.createTime,'green'],
+                [v.storehouse.name,'grey'],
+                [v.goods.no,'blue'],
+                [v.goods.name,'grey'],
+                [v.goods.barcode,'blue'],
+                [v.goods.category,'grey'],
+                [v.goods.brand,'grey'],
+                [v.color.name,'grey'],
+                [v.format.info,'grey'],
+                [v.goods.measurementUnit,'grey'],
+                [v.num,'blue'],
+                [v.goods.pieceNum,'blue'],
+                [v.type==0?"盘盈":"盘亏",'red']
             ];
             $.each(propertyArr, function (i, v) {
-                var $cell = $('<div></div>').addClass('cell').html(v);
+                var $cell = $('<div></div>').addClass('cell ' + v[1]).html(v[0]);
                 $cell.appendTo($contentWrap);
             });
             var $cellOption = $('<div></div>').addClass('cell option');

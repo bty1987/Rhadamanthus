@@ -1,7 +1,6 @@
 package com.fanglin.production.vo;
 
 import java.io.Serializable;
-import com.fanglin.production.vo.WorkshopVO;;
 
 public class WorkplanVO implements Serializable{
 

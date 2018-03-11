@@ -56,11 +56,9 @@ public class DesignerSalaryPO  implements Serializable{
 		
 		private short status;
 
-		
 		public DesignerSalaryPO(){
 			super();
 		}
-		
 		
 		public  DesignerSalaryPO(UserPO  duser, UserPO cuser,UserPO auser){
 			
@@ -69,12 +67,10 @@ public class DesignerSalaryPO  implements Serializable{
 			this.auser = auser;
 		}
 		
-		
 		public  DesignerSalaryPO(UserPO  duser, UserPO cuser){
 			
 			this.duser = duser;
 			this.cuser = cuser;
-			
 		}
 
 		@Id
@@ -84,11 +80,9 @@ public class DesignerSalaryPO  implements Serializable{
 			return dsid;
 		}
 
-
 		public void setDsid(int dsid) {
 			this.dsid = dsid;
 		}
-
 
 		@Column(name="approveTime")
 		public Timestamp getApproveTime() {
@@ -101,17 +95,15 @@ public class DesignerSalaryPO  implements Serializable{
 			return duser;
 		}
 
-
 		public void setDuser(UserPO duser) {
 			this.duser = duser;
 		}
 
 		@ManyToOne(fetch = FetchType.LAZY)
-		@JoinColumn(name = "cuid", referencedColumnName = "userId")
+		@JoinColumn(name = "cuid", referencedColumnName = "uid")
 		public UserPO getCuser() {
 			return cuser;
 		}
-
 
 		public void setCuser(UserPO cuser) {
 			this.cuser = cuser;
@@ -122,22 +114,19 @@ public class DesignerSalaryPO  implements Serializable{
 			return createTime;
 		}
 
-
 		public void setCreateTime(Timestamp createTime) {
 			this.createTime = createTime;
 		}
 
 		@ManyToOne(fetch = FetchType.LAZY)
-		@JoinColumn(name = "auid", referencedColumnName = "userId")
+		@JoinColumn(name = "auid", referencedColumnName = "uid")
 		public UserPO getAuser() {
 			return auser;
 		}
 
-
 		public void setAuser(UserPO auser) {
 			this.auser = auser;
 		}
-
 
 		public void setApproveTime(Timestamp approveTime) {
 			this.approveTime = approveTime;
@@ -148,7 +137,6 @@ public class DesignerSalaryPO  implements Serializable{
 			return balanceTime;
 		}
 
-
 		public void setBalanceTime(Timestamp balanceTime) {
 			this.balanceTime = balanceTime;
 		}
@@ -157,7 +145,6 @@ public class DesignerSalaryPO  implements Serializable{
 		public float getSalary() {
 			return salary;
 		}
-
 
 		public void setSalary(float salary) {
 			this.salary = salary;
@@ -168,11 +155,7 @@ public class DesignerSalaryPO  implements Serializable{
 			return status;
 		}
 
-
 		public void setStatus(short status) {
 			this.status = status;
 		}
-		
-		
-		
 	}

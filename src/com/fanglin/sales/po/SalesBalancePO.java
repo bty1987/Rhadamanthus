@@ -17,7 +17,7 @@ import javax.persistence.Table;
 import com.fanglin.personel.po.UserPO;
 
 @Entity
-@Table(name = "salesbalance", catalog = "inventory")
+@Table(name = "salesbalance", catalog = "sales")
 public class SalesBalancePO implements Serializable{
 
 	private static final long serialVersionUID = -334568283189550919L;

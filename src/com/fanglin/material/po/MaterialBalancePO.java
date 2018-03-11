@@ -112,7 +112,7 @@ public class MaterialBalancePO implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "createrId", referencedColumnName="userId")
+	@JoinColumn(name = "cuid", referencedColumnName="uid")
 	public UserPO getCreater() {
 		return creater;
 	}
@@ -122,7 +122,7 @@ public class MaterialBalancePO implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "instorerId", referencedColumnName="userId")
+	@JoinColumn(name = "iuid", referencedColumnName="uid")
 	public UserPO getInstorer() {
 		return instorer;
 	}
@@ -132,7 +132,7 @@ public class MaterialBalancePO implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "posterId", referencedColumnName="userId")
+	@JoinColumn(name = "puid", referencedColumnName="uid")
 	public UserPO getPoster() {
 		return poster;
 	}

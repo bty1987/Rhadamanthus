@@ -4,13 +4,13 @@ jQuery(function ($) {
 
     var purchase = {
         pid: $('#warehousingPopUp').attr('data-pid'),
-        mtype: 6,
         saveBtn: $("#saveBtn"),
         cancellBtn: $("#cancelBtn"),
         purchaseItems: {
             pid: $("#pId"),
         },
         record: {},
+        sid: $('#warehousingPopUp').attr('data-sid'),
     };
 
     var $btnSave = $('<a></a>').addClass('btn btn-info btn-sm').attr({
@@ -85,41 +85,36 @@ jQuery(function ($) {
     //选择框操作
     function saveOptionChange() {
 
-        var options = {
-            "manifest.type": purchase.mtype,
-            "manifest.comment": "",
-            "manifest.attachment": "",//– 附件路径
-            "pids[0]": purchase.pid,
-        };
+        var options = {};
         var $menus = $('input[type="checkbox"]:checked', "#list");
         var flag = false;
         var rnum = "";
         var ishid = "";
+        options["purchases[0].pid"] = purchase.pid;
         //options = $.extend(options,params.pids);
         $menus.length && $menus.each(function (i) {
 
-            var surplus = parseInt($(this).parent().parent().parent().next().find('.surplus').text()) - parseInt($(this).parent().parent().parent().next().find('.rnum input').val());
+            var surplus = parseInt($(this).parents('li.line.current').find('.surplus').text()) - parseInt($(this).parents('li.line.current').find('.rnum input').val());
 
-            rnum = $(this).parent().parent().parent().next().find('.rnum input').val();
+            rnum = $(this).parents('li.line.current').find('.rnum input').val();
 
-            ishid = $(this).parent().parent().parent().next().find('.storehouses select').val();
+            ishid = $(this).parents('li.line.current').find('.storehouses select').val();
+
+
 
             if (surplus < 0) {
                 flag = false;
                 return false;
             } else if (surplus >= 0) {
-                options["purchaseItems[" + i + "].piId"] = $(this).parent().parent().parent().parent().attr('data-piid');
-                options["purchaseItems[" + i + "].surplus"] = surplus;
+                options["purchaseItems[" + i + "].piId"] = $(this).parents('li.line.current').attr('data-piid');
+                options["purchaseItems[" + i + "].storehouse.shId"] = ishid;                                           //入库仓库
+                options["purchaseItems[" + i + "].num"] = rnum;
                 flag = true;
             }
 
-            options["manifestItems[" + i + "].goods.gid"] = $(this).parent().parent().parent().parent().attr('data-gid');     //商品ID
-            options["manifestItems[" + i + "].color.cid"] = $(this).parent().parent().parent().parent().attr('data-cid');     //颜色ID
-            options["manifestItems[" + i + "].format.fid"] = $(this).parent().parent().parent().parent().attr('data-fid');    //规格ID
-            options["manifestItems[" + i + "].instorehouse.shId"] = ishid;                                           //入库仓库
-            options["manifestItems[" + i + "].num"] = rnum;                                                          //– 数量
-            options["manifestItems[" + i + "].unitPrice"] = $(this).parent().parent().parent().parent().attr('data-unitPrice');       //– 单价
-            options["manifestItems[" + i + "].comment"] = "";                                                        // – 说明
+            if ($(this).parents('li.line').attr('data-cid') == null || $(this).parents('li.line').attr('data-fid') == null || ishid == null) {
+                flag = false;
+            }
 
         });
 
@@ -152,25 +147,25 @@ jQuery(function ($) {
 
         var _lineInfoSet = [];
 
-        _lineInfoSet[_lineInfoSet.length] = {cellClass: "no", value: v ? v.goods.no : null};                           //商品编号
+        _lineInfoSet[_lineInfoSet.length] = {cellClass: "no blue", value: v ? v.goods.no : null};                           //商品编号
 
-        _lineInfoSet[_lineInfoSet.length] = {cellClass: "name", value: v ? v.goods.name : null};                       //商品名称
+        _lineInfoSet[_lineInfoSet.length] = {cellClass: "name grey", value: v ? v.goods.name : null};                       //商品名称
 
-        _lineInfoSet[_lineInfoSet.length] = {cellClass: "category", value: v ? v.goods.category : null};               //商品类别
+        _lineInfoSet[_lineInfoSet.length] = {cellClass: "category grey", value: v ? v.goods.category : null};               //商品类别
 
-        _lineInfoSet[_lineInfoSet.length] = {cellClass: "brand", value: v ? v.goods.brand : null};                     //品牌
+        _lineInfoSet[_lineInfoSet.length] = {cellClass: "brand grey", value: v ? v.goods.brand : null};                     //品牌
 
-        _lineInfoSet[_lineInfoSet.length] = {cellClass: "measurementUnit", value: v ? v.goods.measurementUnit : null}; //单位
+        _lineInfoSet[_lineInfoSet.length] = {cellClass: "measurementUnit grey", value: v ? v.goods.measurementUnit : null}; //单位
 
-        _lineInfoSet[_lineInfoSet.length] = {cellClass: "color", value: v ? v.color.name : null};                      //颜色
+        _lineInfoSet[_lineInfoSet.length] = {cellClass: "color grey", value: v ? v.color.name : null};                      //颜色
 
-        _lineInfoSet[_lineInfoSet.length] = {cellClass: "format", value: v ? v.format.info : null};                    //规格
+        _lineInfoSet[_lineInfoSet.length] = {cellClass: "format grey", value: v ? v.format.info : null};                    //规格
 
-        _lineInfoSet[_lineInfoSet.length] = {cellClass: "unitPrice", value: v ? v.unitPrice : null};                    //单价
+        _lineInfoSet[_lineInfoSet.length] = {cellClass: "unitPrice blue", value: v ? v.unitPrice : null};                    //单价
 
-        _lineInfoSet[_lineInfoSet.length] = {cellClass: "number", value: v ? v.num : null};                               //数量
+        _lineInfoSet[_lineInfoSet.length] = {cellClass: "number blue", value: v ? v.num : null};                               //数量
 
-        _lineInfoSet[_lineInfoSet.length] = {cellClass: "surplus", value: v.surplus + ""};                              //剩余数量
+        _lineInfoSet[_lineInfoSet.length] = {cellClass: "surplus blue", value: v.surplus + ""};                              //剩余数量
 
         _lineInfoSet[_lineInfoSet.length] = {cellClass: "storehouses", hasSelect: !0};                                //仓库
 

@@ -13,6 +13,7 @@ package com.fanglin.system.service;
 
 import java.util.List;
 
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.system.vo.CityProperVO;
 import com.fanglin.utils.Paging;
@@ -23,10 +24,18 @@ public interface CityProperService {
 	
 	public List<CityProperVO> queryCityProper();
 	
-	public CityProperVO queryCityProperById(CityProperVO cityProperVO);
+	public CityProperVO queryCityProperByCpid(CityProperVO cityProperVO);
 	
-	public List<CityProperVO> queryCityProperByCityId(CityProperVO cityProperVO);
+	public List<CityProperVO> queryCityProperByCid(CityProperVO cityProperVO);
 	
 	public List<CityProperVO> queryCityProperByName(CityProperVO cityProperVO);
+	
+	public void addCityProper(CityProperVO cityProperVO) throws FLException;
+	
+	public void updateCityProper(CityProperVO cityProperVO) throws FLException;
+	
+	public void deleteCityProperByCpid(Integer cpid);
+	
+	public String deleteCityProper(List<Integer> cpids);
 	
 }

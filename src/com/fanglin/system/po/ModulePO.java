@@ -1,17 +1,18 @@
 package com.fanglin.system.po;
 
-import java.io.Serializable;
+import static javax.persistence.GenerationType.IDENTITY;
 
+import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
 
 @Entity
 @Table(name = "module", catalog = "communion")
@@ -47,8 +48,8 @@ public class ModulePO implements Serializable {
 	}
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "mId")
+	@GeneratedValue(strategy = IDENTITY)
+	@Column(name="mid")
 	public int getMid() {
 		return mid;
 	}
@@ -58,7 +59,7 @@ public class ModulePO implements Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "fatherModuleId", referencedColumnName = "mId")
+	@JoinColumn(name = "fatherModuleId", referencedColumnName = "mid")
 	public ModulePO getFatherModule() {
 		return fatherModule;
 	}
@@ -121,7 +122,7 @@ public class ModulePO implements Serializable {
 		this.system = system;
 	}
 
-	@Column(name = "order")
+	@Column(name = "`order`")
 	public short getOrder() {
 		return order;
 	}

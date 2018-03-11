@@ -163,13 +163,13 @@ jQuery(function($) {
         	}
         	
         	var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable').appendTo($tableWrap);
-            var $liLine = $('<li></li>').addClass('item-blue clearfix').appendTo($ul);
+            var $liLine = $('<li></li>').addClass('item-orange clearfix').appendTo($ul);
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.orderId));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
             var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-blue').html('编辑');
-            var $btnDeplory = $('<a></a>').addClass('btn btn-minier btn-primary').html('人员部署');
+            var $btnDeplory = $('<a></a>').addClass('btn btn-minier btn-yellow').html('人员部署');
             var $btnReset = $('<a></a>').addClass('btn btn-minier btn-yellow').html('重置');
             
             var propertyArr = [
@@ -179,9 +179,9 @@ jQuery(function($) {
               // ["折扣:", v.discount, "blue"],
                ["申请人:", v.applayUser, "grey"],
                ["监理:", v.supervisor, "grey"],
-               ["放线时间:", v.actualDate, "grey"],
-               ["开始时间:", v.startTime, "grey"],
-               ["结束时间:", v.endTime, "grey"],
+               ["放线时间:", v.actualDate, "green"],
+               ["开始时间:", v.startTime, "green"],
+               ["结束时间:", v.endTime, "green"],
                ["报价版本:", v.versionName, "green"],
                ["状态:", v.status, "red"],
                ["描述:", v.applayDes, "grey"],

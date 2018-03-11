@@ -26,37 +26,37 @@ jQuery(function ($) {
             if(listData && listData.length){
                 $.each(listData,function(i,v){
                   
-                    var $liLine = $('<li></li>').addClass('item-blue clearfix');
-                    var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-                    var $h3 = $('<h3></h3>').css({color:'grey',"font-weight":"bold"}).html(' ' + v.no);
+                    var $liLine = $('<li></li>').addClass('item-orange clearfix');
+                    var $h3 = $('<h3></h3>').addClass('oid');
+                    var $title = $('<small></small>').addClass('blue').html(' ' + v.no);
                     var $btnDiv = $('<div></div>').addClass('action-buttons pull-right');
+                    var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 
-                    var $btnSub = $('<a></a>').addClass('btn btn-minier').html('子项');
-                    var $btnPrograss = $('<a></a>').addClass('btn btn-minier').html('生产进度');
-                    var $btnUpload = $('<a></a>').addClass('btn btn-minier').html('上传');
-                    var $product = $('<a></a>').addClass('btn btn-minier').html('开始生产');
-                    var $btnStorehouse = $('<a></a>').addClass('btn btn-minier').html('入库');
-                    var $btnEdit = $('<a></a>').addClass('btn btn-minier').html('编辑');
-                    var $btnDelivery = $('<a></a>').addClass('btn btn-minier').html('送货');
+                    var $btnSub = $('<a></a>').addClass('btn btn-minier btn-yellow').html('子项');
+                    var $btnPrograss = $('<a></a>').addClass('btn btn-minier btn-success').html('生产进度');
+                    var $btnUpload = $('<a></a>').addClass('btn btn-minier btn-warning').html('上传');
+                    var $product = $('<a></a>').addClass('btn btn-minier btn-inverse').html('开始生产');
+                    var $btnStorehouse = $('<a></a>').addClass('btn btn-minier btn-danger').html('入库');
+                    var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-pink').html('编辑');
+                    var $btnDelivery = $('<a></a>').addClass('btn btn-minier btn-purple').html('送货');
                     var propertyArr = [
-
-                        ["投料时间:", v.startTime, "grey"],
-                        ["出货时间:", v.endTime, "grey"],
-                        ["状态:", v.status == 0 ? '初始' : v.status == 1 ? '入库' : v.status == 2 ? '送货' : '生产中', "grey"],
+                        ["投料时间:", v.startTime, "green"],
+                        ["出货时间:", v.endTime, "green"],
+                        ["状态:", v.status == 0 ? '初始' : v.status == 1 ? '入库' : v.status == 2 ? '送货' : '生产中', "red"],
                         ["备注:",v.comment,"grey"]
                     ];
 
                     $.each(propertyArr, function (index,value) {
-                        var $liProperty = $('<li></li>').css({"border-bottom":"0px"});
+                        var $liProperty = $('<li></li>');
                         $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                        $('<b></b>').html(value[1]).css({color:value[2]}).appendTo($liProperty);
+                        $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
                         $liProperty.appendTo($ulProperty);
                     });
-
 
                     if($productionStatus == 4 || $productionStatus == 5){
                         $btnDiv.append($btnSub).append($btnPrograss).append($btnUpload);
                     }else{
+
                         if(v.status == 0){//状态为初始
                             $btnDiv.append($btnSub).append($btnPrograss).append($btnUpload).append($product).append($btnEdit);
                         }
@@ -74,7 +74,7 @@ jQuery(function ($) {
                         }
                     }
 
-                    $btnDiv.appendTo($h3);
+                    $h3.append($title).append($btnDiv);
                     $liLine.appendTo($ul);
                     $liLine.append($h3).append($ulProperty);
                     
@@ -235,9 +235,7 @@ jQuery(function ($) {
         displayFunc.init('resultList', data);
     },"pagenation","productionPlanPostData",{"production.pid" : pid},false,null,function () {
 
-        var $adda = $('<a></a>').addClass('btn btn-xs btn-info pull-left').attr('name', 'add').css("margin", "0px 3px");
-        var $addi = $('<i></i>').addClass('icon-plus').appendTo($adda);
-        var $addspan = $('<span></span>').text('添加').appendTo($adda);
+        var $adda = $('<a></a>').addClass('btn btn-xs btn-info pull-left').attr('name', 'add').css("margin", "0px 3px").html('添加');
 
         hidBtn($adda,0);
 

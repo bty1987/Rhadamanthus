@@ -14,6 +14,7 @@ package com.fanglin.construction.service;
 import java.util.List;
 
 import com.fanglin.construction.vo.ConstructionVO;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.Paging;
 
@@ -21,7 +22,7 @@ public interface ConstructionService {
 	
 	public void pageDecorationForConstruction(Paging paging, List<Filter> filters, Integer company);
 	
-	public void pageDecorationForSupervisionByUserId(Paging paging, List<Filter> filters, String userId, Integer company);
+	public void pageDecorationForSupervisionByUserId(Paging paging, List<Filter> filters, String userId, Integer company) throws FLException;
 
 	public void pageDecorationForAcceptance(Paging paging, List<Filter> filters, Integer company);
 	

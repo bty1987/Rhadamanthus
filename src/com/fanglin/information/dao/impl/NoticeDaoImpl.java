@@ -32,10 +32,10 @@ public class NoticeDaoImpl extends DaoImpl<NoticePO> implements NoticeDao {
 		
 		PagingQuery<NoticePO> query = pagingQuery(paging, NoticePO.class);
 		
-		query.alias("user", "user");
+		query.alias("creater", "creater");
 		
 		query.add(Restrictions.eq("company", company));
-		query.add(Restrictions.eq("user.userId", userId));
+		query.add(Restrictions.eq("creater.userId", userId));
 		
 		queryFilterExcute(query, filters);
 		
@@ -45,7 +45,7 @@ public class NoticeDaoImpl extends DaoImpl<NoticePO> implements NoticeDao {
 	}
 	
 	@Override
-	public List<NoticePO> pageNoticeForSeenByType(Paging paging, List<Long> nids, Short type, Integer company){
+	public List<NoticePO> pageNoticeForSeenByType(Paging paging, List<Filter> filters, List<Long> nids, Short type, Integer company){
 
 		PagingQuery<NoticePO> query = pagingQuery(paging, NoticePO.class);
 		
@@ -60,6 +60,8 @@ public class NoticeDaoImpl extends DaoImpl<NoticePO> implements NoticeDao {
 		query.add(Restrictions.eq("type", type));
 		query.add(Restrictions.le("startTime", DateUtil.current("yyyy-MM-dd")));
 		query.add(Restrictions.ge("endTime", DateUtil.current("yyyy-MM-dd")));
+		
+		queryFilterExcute(query, filters);
 		
 		query.desc("publishTime");
 		

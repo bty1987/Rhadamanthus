@@ -79,16 +79,16 @@ jQuery(function($) {
 		}
 	});
 
-	$("#saveBtn").click(function(){
-		
+	var save = function save(){
+
 		if(com.validate()){
 			return;
 		}
-		
+
 		for(var i = 1; i <= acceptanceDetail.ratyLength; i ++){
 			acceptanceDetail.options["acceptance." + acceptanceDetail.ratyIds[i-1]] = $("#raty" + i + "-score").attr("value");
 		};
-		
+
 		for(var i = 0; i < acceptanceDetail.desIds.length; i++){
 			var desId = acceptanceDetail.desIds[i];
 			if($("#"+desId).val()){
@@ -97,14 +97,15 @@ jQuery(function($) {
 				acceptanceDetail.options["acceptance." + desId] = "";
 			}
 		}
-		
+
 		acceptanceDetail.options["acceptance.orderId"] = params.orderId;
-		
+
 		com.post(api.construction.updateAcceptance, acceptanceDetail.options, function(res){
 			com.showAlert(com.info, "提交成功!");
 		});
-	});
-	
+	}
+
+	$("#saveBtn").bindClick(save);
 	$('.date-picker').datepicker({autoclose:true});
 	
 	$("#backBtn").click(function(){

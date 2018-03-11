@@ -14,9 +14,9 @@ import com.fanglin.utils.Paging;
 @Repository("companyDao")
 public class CompanyDaoImpl extends DaoImpl<CompanyPO> implements CompanyDao{
 
-	public CompanyDaoImpl(){
-		super(CompanyPO.class);
-	}
+	  public CompanyDaoImpl(){
+	        super(CompanyPO.class);
+	    }
 	  
 	@Override
 	public List<CompanyPO> pageCompany(Paging paging, List<Filter> filters) {
@@ -52,12 +52,9 @@ public class CompanyDaoImpl extends DaoImpl<CompanyPO> implements CompanyDao{
 	}
 
 	@Override
-	public CompanyPO queryCompanyByCid(int cid) {
-		return (CompanyPO)session().createCriteria(CompanyPO.class).add(Restrictions.eq(CompanyPO.COLUMN_CID_STR , cid)).uniqueResult();
-	}
-
-	@Override
 	public CompanyPO queryCompanyByNo(int no) {
 		return (CompanyPO)session().createCriteria(CompanyPO.class).add(Restrictions.eq(CompanyPO.COLUMN_NO_STR , no)).uniqueResult();
 	}
+	
+	
 }

@@ -70,13 +70,13 @@ $(function(){
 
             var propertyArr = [
                 //v.gid,
-                v.name,
-                v.status =="0" ? "启用" : "禁用"
+                [v.name,'grey'],
+                [v.status =="0" ? "启用" : "禁用",'red']
             ];
 
 
             $.each(propertyArr, function (i, v) {
-                var $cell = $('<div></div>').addClass('cell').html(v);
+                var $cell = $('<div></div>').addClass('cell ' + v[1]).html(v[0]);
                 $cell.appendTo($contentWrap);
             });
 
@@ -240,7 +240,7 @@ $(function(){
                     doSearcher();
                 })
             },function(e){
-                com.showAlert(com.info, e.errorMsg);
+                com.showAlert(com.error, e.errorMsg);
             })
 
 

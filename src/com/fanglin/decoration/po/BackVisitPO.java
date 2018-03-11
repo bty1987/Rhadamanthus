@@ -23,7 +23,7 @@ import javax.persistence.Table;
 import com.fanglin.personel.po.UserPO;
 
 @Entity
-@Table(name = "backVisit", catalog = "platform")
+@Table(name = "backVisit", catalog = "decoration")
 public class BackVisitPO implements Serializable {
 
 	private static final long serialVersionUID = 1000000000011112L;
@@ -65,7 +65,7 @@ public class BackVisitPO implements Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = true, name = "senderId", referencedColumnName = "userId")
+	@JoinColumn(nullable = true, name = "suid", referencedColumnName = "uId")
 	public UserPO getSender() {
 		return sender;
 	}

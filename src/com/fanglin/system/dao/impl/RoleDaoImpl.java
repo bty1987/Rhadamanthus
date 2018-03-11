@@ -35,8 +35,8 @@ public class RoleDaoImpl extends DaoImpl<RolePO> implements RoleDao {
 	}
 	
 	@Override
-	public RolePO queryRoleByRoleName(String roleName){
-		return (RolePO) session().createCriteria(RolePO.class).add(Restrictions.eq("roleName", roleName)).uniqueResult();
+	public RolePO queryRoleByName(String name){
+		return (RolePO)session().createCriteria(RolePO.class).add(Restrictions.eq("name", name)).uniqueResult();
 	}
 	
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){
@@ -49,7 +49,7 @@ public class RoleDaoImpl extends DaoImpl<RolePO> implements RoleDao {
 				String op = filter.getOp();
 				
 				if("roleName".equals(field)){
-					query.add(query.getCriterion("roleName", data, op));
+					query.add(query.getCriterion("name", data, op));
 				}
 			}
 		}

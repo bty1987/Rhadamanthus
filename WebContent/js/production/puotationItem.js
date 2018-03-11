@@ -1,5 +1,3 @@
-
-
 $(function () {
     var backBtn = $('#backBtn');
     var qid =params["qid"] ;
@@ -12,32 +10,33 @@ $(function () {
         if (listData && listData.length) {
             $.each(listData, function (i, v) {
 
-                var $liLine = $('<li></li>').addClass('clearfix item-blue');
-                var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-                var $h3 = $('<h3></h3>').css({color: "grey", "font-weight": "bold"}).html( v.name);
+                var $liLine = $('<li></li>').addClass('clearfix item-orange');
+                var $h3 = $('<h3></h3>').addClass('oid');
+                var $title = $('<small></small>').addClass('blue').html( v.name);
                 var $btnDiv = $('<div></div>').addClass('action-buttons pull-right');
+                var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 
-                var $btnDelete = $('<a></a>').addClass('btn btn-minier').html('删除');
+                var $btnDelete = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
 
                 var propertyArr = [
-                    ["规格:", v.format, "color-grey"],
-                    ["高度:", v.height , "color-grey"],
-                    ["宽度:", v.width, "color-grey"],
-                    ["厚度:", v.thick, "color-grey"],
-                    ["面积:", utils.accMul(v.width,v.height), "color-grey"],
-                    ["数量:", v.num, "color-red"],
-                    ["单位:", v.measurementUnit, "color-grey"],
-                    ["单价:", v.unitPrice, "color-red"],
-                    ["总价:", v.total, "color-red"],
-                    ["类型:", v.quoteType, "color-red"],
-                    ["备注:", v.comment, "color-red"],
-                    ["特型:", v.specil, "color-red"],
+                    ["规格:", v.format, "grey"],
+                    ["高度:", v.height , "blue"],
+                    ["宽度:", v.width, "blue"],
+                    ["厚度:", v.thick, "blue"],
+                    ["面积:", utils.accMul(v.width,v.height), "blue"],
+                    ["数量:", v.num, "blue"],
+                    ["单位:", v.measurementUnit, "grey"],
+                    ["单价:", v.unitPrice, "blue"],
+                    ["总价:", v.total, "blue"],
+                    ["类型:", v.quoteType, "red"],
+                    ["备注:", v.comment, "grey"],
+                    ["特型:", v.specil, "grey"],
                 ];
 
                 $.each(propertyArr, function (index, value) {
-                    var $liProperty = $('<li></li>').css({"border-bottom": "0px"});
+                    var $liProperty = $('<li></li>');
                     $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                    $('<b></b>').html(value[1]).css({color: value[2]}).appendTo($liProperty);
+                    $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
                     $liProperty.appendTo($ulProperty);
                 });
 
@@ -46,8 +45,8 @@ $(function () {
                 if(status != 3 && status != 4 && status != 5 && use != 1){
                     $btnDiv.append($btnDelete);
                 }
-               
-                $btnDiv.appendTo($h3);    
+
+                $h3.append($title).append($btnDiv);
                 
                 $btnDelete.click(function (e) {
                     e.stopPropagation();

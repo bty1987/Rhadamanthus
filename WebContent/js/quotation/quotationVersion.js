@@ -23,16 +23,16 @@ $(function(){
         };
 
         var creatLine = function(v){
-            var $liLine = $('<li></li>').addClass('item-blue clearfix');
+            var $liLine = $('<li></li>').addClass('item-orange clearfix');
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.versionName));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
-            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-primary').html('编辑');
+            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
 
 
             var propertyArr = [
-                ["编号:", v.versionId, "grey"],
+                ["编号:", v.versionId, "blue"],
                 ["车运费比例:", v.trafficRate, "blue"],
                 ["车运费折扣:", v.trafficDiscount == 0 ? '不打折' : v.trafficDiscount == 1 ?  '打折' : '-', "red"],
                 ["管理费比例:", v.manageRate, "blue"],
@@ -77,7 +77,7 @@ $(function(){
         displayFunc.init('resultList', data);
     }, "pagenation", "quotationVersionPostData", null, false, null, function(){
     	
-    	var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addQuotationVersion').css("margin", "0px 3px");
+    	var $adda = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'addQuotationVersion').css("margin", "0px 3px");
     	var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
     	var $addspan = $('<span></span>').text('添加').appendTo($adda);
     	

@@ -18,8 +18,10 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.quotation.dao.QuotationFunctionAreaItemDao;
 import com.fanglin.quotation.po.QuotationFunctionAreaItemPO;
+import com.fanglin.quotation.vo.QuotationFunctionAreaItemVO;
 
 
 @Repository("quotationFunctionAreaItemDao")
@@ -51,6 +53,13 @@ public class QuotationFunctionAreaItemDaoImpl extends DaoImpl<QuotationFunctionA
 	}
 
 	@Override
+	public int updateQuotationFunctionAreaItemForIndex(String table,QuotationFunctionAreaItemVO QuotationFunctionAreaItemVO)throws FLException {
+		String hql = String.format("update %s  set index = :index where qfaiId = :qfaiId",table);
+		session().createQuery(hql).setInteger("index", QuotationFunctionAreaItemVO.getIndex()).setLong("qfaiId", QuotationFunctionAreaItemVO.getQfaiId()).executeUpdate();
+		return 0;
+	}
+
+	@Override
 	public int deleteQuotationFunctionAreaItemByFunctionAreaId(String table,  long functionAreaId) {
 		String hql = String.format("delete %s  q where q.quotationFunctionArea.qfaId = :quotationFunctionAreaId",table);
 		int deletedEntities = session().createQuery(hql).setLong("quotationFunctionAreaId", functionAreaId).executeUpdate();
@@ -65,6 +74,4 @@ public class QuotationFunctionAreaItemDaoImpl extends DaoImpl<QuotationFunctionA
 		
 		return deletedEntities;
 	}
-
-
 }

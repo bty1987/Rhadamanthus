@@ -7,9 +7,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
-
 import com.fanglin.production.dao.ProductionSalesDao;
-
 import com.fanglin.production.po.ProductionSalesPO;
 
 @Repository("productionsalesDao")

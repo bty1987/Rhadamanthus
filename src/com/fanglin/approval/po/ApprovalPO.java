@@ -110,7 +110,7 @@ public class ApprovalPO implements java.io.Serializable {
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "aId")
+	@Column(name = "aid")
 	public int getAid() {
 		return this.aid;
 	}
@@ -120,7 +120,7 @@ public class ApprovalPO implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = true, name = "receiverId", referencedColumnName = "userId")
+	@JoinColumn(nullable = true, name = "ruid", referencedColumnName = "uid")
 	public UserPO getReceiver() {
 		return receiver;
 	}
@@ -130,7 +130,7 @@ public class ApprovalPO implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = true, name = "senderId", referencedColumnName = "userId")
+	@JoinColumn(nullable = true, name = "suid", referencedColumnName = "uid")
 	public UserPO getSender() {
 		return sender;
 	}

@@ -14,6 +14,7 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.personel.service.UserCompanyService;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.personel.vo.UserCompanyVO;
+import com.fanglin.utils.SystemConfig;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -39,9 +40,13 @@ public class UserCompanyAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-	//@Action(value = "updateUserCompany", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	@Action(value = "updateUserCompany", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateUserCompany() throws FLException{
       
+		if(SystemConfig.getString("communion") == null){
+		    throw new FLException(-1, "无操作权限");
+		}
+		
 		 userCompanyService.updateUserCompany(user,cids);
 		
 		return SUCCESS;

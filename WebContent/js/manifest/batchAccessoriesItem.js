@@ -18,7 +18,6 @@ jQuery(function ($) {
 
     var accessories = {
         createTime: $('#shipmentPopUp').attr('data-createTime'),
-        mtype: 7,
         saveBtn: $("#saveBtn"),
         cancellBtn: $("#cancelBtn"),
         manifestItems: {
@@ -59,34 +58,16 @@ jQuery(function ($) {
 
         var options = {};
 
-        var manifestTime = accessories.createTime;//– 货单时间
-        var type = accessories.mtype;//– 类型
-        var comment = $('#comment').val();//– 备注
-
-        options = {
-            "manifest.manifestTime": manifestTime,
-            "manifest.total": "0",
-            "manifest.type": type,
-            "manifest.comment": comment,
-            "manifest.attachment": "",//– 附件路径
-        };
-
-        options = $.extend(options, params.aids);
+        options = $.extend(options, params["accessories.aids"]);
 
         var $list = $('li.line', '#list');
         $list.length && $list.each(function (i) {
             var $this = $(this);
-
-
-            options["manifestItems[" + i + "].goods.gid"] = $this.attr('data-gid');//– 商品id
-            options["manifestItems[" + i + "].color.cid"] = $this.find('.color select').val();//– 商品编号
-            options["manifestItems[" + i + "].format.fid"] = $this.find('.format select').val();//– 商品名
-
-            options["manifestItems[" + i + "].outstorehouse.shId"] = $this.find('.storehouse select').val();//– 仓库ID
-
-            options["manifestItems[" + i + "].num"] = $this.find('.number').text();//– 数量
-            options["manifestItems[" + i + "].unitPrice"] = "0";//– 进货价
-            options["manifestItems[" + i + "].comment"] = $this.find('.des input').val();// – 说明
+            options["accessoriesItems[" + i + "].goods.gid"] = $this.attr('data-gid');//– 商品id
+            options["accessoriesItems[" + i + "].color.cid"] = $this.find('.color select').val();//– 商品编号
+            options["accessoriesItems[" + i + "].format.fid"] = $this.find('.format select').val();//– 商品名
+            options["accessoriesItems[" + i + "].storehouse.shId"] = $this.find('.storehouse select').val();//– 仓库ID
+            options["accessoriesItems[" + i + "].num"] = $this.find('.number').text();//– 数量
 
         });
 
@@ -97,7 +78,7 @@ jQuery(function ($) {
                 $('#list').empty();
             });
         }, function (e) {
-            com.showAlert(com.info, e.errorMsg);
+            com.showAlert(com.error, e.errorMsg);
         });
     });
 
@@ -112,13 +93,13 @@ jQuery(function ($) {
         var $indexWrap = $('<div></div>').addClass('line-wrap order').append($('<div></div>').addClass('cell index').text(lineindex));
         var $lineInfoWrap = $('<div></div>').addClass('line-wrap content col8');
         var _lineInfoSet = [
-            {cellClass: "no"},//编号
-            {cellClass: "name"},//名称
+            {cellClass: "no blue"},//编号
+            {cellClass: "name grey"},//名称
             {cellClass: "color", hasColorSelect: !0},//颜色
             {cellClass: "format", hasFormatSelect: !0},//规格
-            {cellClass: "measurementUnit"},//单位
+            {cellClass: "measurementUnit grey"},//单位
             {cellClass: "storehouse", hasSelect: !0},//仓库
-            {cellClass: "number"},//数量
+            {cellClass: "number blue"},//数量
             {cellClass: "des", hasInput: !0},//备注
         ];
 

@@ -2,12 +2,15 @@ package com.fanglin.quotation.dao.impl;
 
 
 import java.util.List;
+
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.quotation.dao.ExtensionItemDao;
 import com.fanglin.quotation.po.ExtensionItemPO;
+import com.fanglin.quotation.po.QuotationFunctionAreaPO;
 
 @Repository("extensionItemDao")
 public class ExtensionItemDaoImpl extends DaoImpl<ExtensionItemPO> implements ExtensionItemDao{
@@ -30,10 +33,8 @@ public class ExtensionItemDaoImpl extends DaoImpl<ExtensionItemPO> implements Ex
 	}
 	
 	@Override
-	@SuppressWarnings("unchecked")
-	public List<Integer> queryQuotationFunctionAreaIdByEids(List<Long> extensionItemIDs){
-		String sql = "select distinct quotationFunctionAreaId from quotation.extensionitem where eId in :eId ";
-		return session().createSQLQuery(sql).setParameterList("eId", extensionItemIDs).list();
-	};
+	public long countQuotationFunctionAreaByEids(List<QuotationFunctionAreaPO> quotationFunctionAreas){
+		return (Long)createCriteria(ExtensionItemPO.class).add(Restrictions.in("quotationFunctionArea", quotationFunctionAreas)).setProjection(Projections.rowCount()).uniqueResult();
+	}
 	
 }

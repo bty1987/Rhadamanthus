@@ -256,7 +256,6 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 			orderBelongInfoPO.setBelongRate(approvalDecorationBelongItemPO.getBelongRate());
 			orderBelongInfoPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 			orderBelongInfoPO.setOperateUserPO(approvalPO.getReceiver());
-			orderBelongInfoPO.setChangeReason(orderBelongInfoPO.getChangeReason());
 			orderBelongInfoPO.setDecorationPO(decorationPO);
 			orderBelongInfoPO.setDefaultFlag(approvalDecorationBelongItemPO.getDefaultFlag());
 			

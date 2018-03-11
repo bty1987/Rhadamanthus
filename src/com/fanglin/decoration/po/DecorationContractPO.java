@@ -23,7 +23,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "decorationContract", catalog = "platform")
+@Table(name = "decorationContract", catalog = "decoration")
 public class DecorationContractPO implements Serializable {
 
 	private static final long serialVersionUID = -5971474052433501162L;

@@ -12,6 +12,10 @@ public class AccessoriesManifestVO implements Serializable{
 	
 	private ManifestVO manifest;
 	
+	public AccessoriesManifestVO() {
+		super();
+	}
+
 	public AccessoriesManifestVO(AccessoriesVO accessories, ManifestVO manifest) {
 		super();
 		this.accessories = accessories;

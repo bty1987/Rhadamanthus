@@ -57,8 +57,6 @@ public class HttpHelper {
         RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(SOCKET_TIMEOUT_INT).setConnectTimeout(CONNECT_TIMEOUT_INT).build();
         httpGet.setConfig(requestConfig);
         
-        System.out.println(url);
-
         try {
             response = httpClient.execute(httpGet, new BasicHttpContext());
             
@@ -72,8 +70,6 @@ public class HttpHelper {
             if (entity != null) {
                 String resultStr = EntityUtils.toString(entity, "utf-8");
                 
-                System.out.println(resultStr);
-
                 JSONObject result = JSON.parseObject(resultStr);
                 
                 Integer errcode = result.getInteger("errcode");
@@ -109,9 +105,6 @@ public class HttpHelper {
         httpPost.setConfig(requestConfig);
         httpPost.addHeader("Content-Type", "application/json");
         
-        System.out.println(url);
-        System.out.println(data.toString());
-
         try {
         	StringEntity requestEntity = new StringEntity(JSON.toJSONString(data), "utf-8");
             httpPost.setEntity(requestEntity);
@@ -129,8 +122,6 @@ public class HttpHelper {
                 String resultStr = EntityUtils.toString(entity, "utf-8");
 
                 JSONObject result = JSON.parseObject(resultStr);
-                
-                System.out.println(resultStr);
                 
                 if (result.getInteger("errcode") == RESPONSE_ERRCODE_SUCCESS_INT) {
                     return result;

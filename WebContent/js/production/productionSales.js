@@ -51,12 +51,12 @@ $(function(){
                            // ["主材部:", data.guideDept.deptName, "grey"],
                             ["品类:", data.category, "grey"],
                             ["品牌:", data.brand, "grey"],
-                            ["创建时间:", data.createTime , "grey"],
+                            ["创建时间:", data.createTime , "green"],
                             //["结算时间:", data.balanceTime, "grey"],
                             //["全款时间:", data.fullpayTime, "grey"],
                             //["状态:", status, "grey"],
                             //["结算状态:", balanceStatus, "grey"],
-                            ["总价:", data.total, "grey"],
+                            ["总价:", data.total, "blue"],
                             //["抹零:", data.maling , "grey"],
                             //["厂商抹零:", data.venderMaling, "grey"],
                             //["券值:", data.coupon, "grey"],
@@ -100,9 +100,9 @@ $(function(){
                             ["客户名:", data.customer.name, "grey"],
                             ["品类:", data.category, "grey"],
                             ["品牌:", data.brand, "grey"],
-                            ["创建时间:", data.createTime, "grey"],
+                            ["创建时间:", data.createTime, "green"],
                             //["类型:", data.createTime, "grey"],
-                            ["总价:", data.total, "grey"],
+                            ["总价:", data.total, "blue"],
                             //["折扣总价：",data.distotal,"grey"],
                             //["定金:", data.depositPayment, "grey"],
                             //["补款:", data.fullPayment, "grey"],
@@ -117,7 +117,7 @@ $(function(){
 
                     },function (e) {
                        layer.msg("未查询到此订单！",{icon: 2,time:2e3});
-                        propertyArr = {};
+                       propertyArr = {};
                     });
                 }
 
@@ -132,25 +132,24 @@ $(function(){
     //写入每条绑定信息
     function creatureRow(propertyArr,v,$ul,data){
 
-        var $liLine = $('<li></li>').addClass('clearfix item-blue');
-        var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-        var $h3 = $('<h3></h3>').css({color:"grey","font-weight":"bold"}).html(v.type == 1 ? '销售单  ' + data.no : '主材单  ' + data.no);
-
+        var $liLine = $('<li></li>').addClass('clearfix item-orange');
+        var $h3 = $('<h3></h3>').addClass('oid');
+        var $title = $('<small></small>').addClass('blue').html(v.type == 1 ? '销售单  ' + data.no : '主材单  ' + data.no);
         var $btnDiv = $('<div></div>').addClass('action-buttons pull-right');
+        var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 
         $.each(propertyArr, function (index, value) {
 
             var $liProperty = $('<li></li>');
             $('<strong></strong>').html(value[0]).appendTo($liProperty);
-            $('<b></b>').html(value[1]).css({color:value[2]}).appendTo($liProperty);
+            $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
             $liProperty.appendTo($ulProperty);
 
         });
 
         $liLine.appendTo($ul);
         $liLine.append($h3).append($ulProperty);
-
-        $btnDiv.appendTo($h3);
+        $h3.append($title).append($btnDiv);
 
         return  $ul;
     }
@@ -233,7 +232,7 @@ $(function(){
                    layer.msg("此主材单与生产单非同一装修订单,无法绑定",{icon: 2,time:2e3});
                     return false;
                 }
-                
+
                 if(data.material.fullStatus == 0 || data.material.fullStatus == 1){
                    layer.msg("此主材订单未提交补款,无法绑定",{icon: 2,time:2e3});
                     return false;

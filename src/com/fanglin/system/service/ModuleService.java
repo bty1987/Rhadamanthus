@@ -28,12 +28,16 @@ public interface ModuleService {
 	
 	public List<ModuleVO> queryModuleBySystem(ModuleVO moduleVO);
 	
-	public List<ModuleVO> queryModuleByRoleId(ModuleVO moduleVO, RoleVO roleVO) throws FLException;
+	public List<ModuleVO> queryModuleByRid(ModuleVO moduleVO, RoleVO roleVO) throws FLException;
 	
-	public int updateRoleModuleByRoleId(List<Integer> mIds, ModuleVO moduleVO, RoleVO roleVO) throws FLException;
+	public int updateRoleModuleByRid(ModuleVO moduleVO, RoleVO roleVO, List<Integer> mids) throws FLException;
 	
 	public List<ModuleVO> queryModuleByUserId(ModuleVO moduleVO, UserVO userVO) throws FLException;
 	
-	public int updateUserModuleByUserId(List<Integer> mIds, ModuleVO moduleVO, UserVO userVO) throws FLException;
+	public int addModule(ModuleVO moduleVO) throws FLException;
+	
+	public int updateUserModuleByUserId(List<Integer> mids, ModuleVO moduleVO, UserVO userVO) throws FLException;
+	
+	public int deleteModule(ModuleVO moduleVO) throws FLException;
 	
 }

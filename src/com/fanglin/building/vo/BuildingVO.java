@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 
 import org.apache.struts2.json.annotations.JSON;
 
-import com.fanglin.data.common.vo.CustomerVO;
+import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.personel.vo.UserVO;
 
 public class BuildingVO implements Serializable{
@@ -16,7 +16,7 @@ public class BuildingVO implements Serializable{
 	
 	private String no;
 	
-	private HouseSourceVO  houseSource ;
+	private HouseSourceVO  houseSource;
 	
 	private CustomerSourceVO customerSource;
 	

@@ -44,16 +44,16 @@ $(function () {
         /*表格体*/
         var creatLine = function (i, v, lastFlag) {
             var $liLine = $('<li></li>').addClass('line');
-            var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(i + 1));
+            var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index blue').html(i + 1));
             var $contentWrap = $('<div></div>').addClass('line-wrap content col3');
             var propertyArr = [
-                v.qtid,
-                v.name,
-                v.status == 0 ? "启用" : "禁用"
+                [v.qtid,'blue'],
+                [v.name,'grey'],
+                [v.status == 0 ? "启用" : "禁用",'red']
             ];
 
             $.each(propertyArr, function (i, v) {
-                var $cell = $('<div></div>').addClass('cell col-xs-4').html(v);
+                var $cell = $('<div></div>').addClass('cell col-xs-4 '+v[1]+'').html(v[0]);
                 $cell.appendTo($contentWrap);
             });
 
@@ -145,7 +145,7 @@ $(function () {
 
         }, "pagenation", "quoteTypePostData", null, false, null, function () {
 
-            var $adda = $('<a></a>').addClass('btn btn-minier btn-danger pull-left').attr('name', 'add').css("margin", "0px 3px");
+            var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'add').css("margin", "0px 3px");
             var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
             var $addspan = $('<span></span>').text('添加').appendTo($adda);
 

@@ -94,7 +94,7 @@ $(function(){
             var propertyArr = [
                 ["类型:", noticeType[v.type], "grey"],
                 ["优先级:", noticePriority[v.priority], "green"],
-                ["发布人:", v.user.currentName, "grey"],
+                ["发布人:", v.creater.currentName, "grey"],
                 ["开始时间:", v.startTime, "grey"],
                 ["结束时间:", v.endTime, "grey"],
                 ["公开:", noticeIsPublic[v.isPublic], "blue"],
@@ -138,7 +138,7 @@ $(function(){
             $btnEdit.click(function(){
                 notice.editFlg = !0;
                 var a = v;
-                void 0 != a && (notice.items.nid = a.nid,notice.items.noticeId = a.noticeId, notice.items.userId = a.user.userId, notice.items.theme.val(a.theme), notice.items.typeSel.val(a.type), notice.items.prioritySel.val(a.priority),  notice.items.startTime.val(a.startTime), notice.items.endTime.val(a.endTime), notice.items.isPublic.prop("checked", a.isPublic == 0), notice.items.contents.html(a.contents), notice.modal.modal("show"))});
+                void 0 != a && (notice.items.nid = a.nid,notice.items.noticeId = a.noticeId, notice.items.userId = a.creater.userId, notice.items.theme.val(a.theme), notice.items.typeSel.val(a.type), notice.items.prioritySel.val(a.priority),  notice.items.startTime.val(a.startTime), notice.items.endTime.val(a.endTime), notice.items.isPublic.prop("checked", a.isPublic == 0), notice.items.contents.html(a.contents), notice.modal.modal("show"))});
 
             $management.unbind().bind('click',function(){
                      showDepaermentModal()
@@ -220,7 +220,7 @@ $(function(){
                         "notice.theme": notice.items.theme.val(),
                         "notice.type": notice.items.typeSel.val(),
                         "notice.priority": notice.items.prioritySel.val(),
-                        "notice.user.userId": notice.items.userId,
+                        "notice.creater.userId": notice.items.userId,
                         "notice.startTime": notice.items.startTime.val(),
                         "notice.endTime": notice.items.endTime.val(),
                         "notice.isPublic": notice.items.isPublic.prop("checked") ? 0 : 1,

@@ -51,6 +51,21 @@ public class SystemConfigDaoImpl extends DaoImpl<SystemConfigPO> implements Syst
 			}				
 		}	
 	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<SystemConfigPO> querySystemConfigByCid(Integer company) {
+		
+		 return session().createCriteria(SystemConfigPO.class).add(Restrictions.eq("company",company)).list();
+
+	}
+
+	@Override
+	public SystemConfigPO querySystemConfigById(long scid) {
+		return (SystemConfigPO)createCriteria(SystemConfigPO.class).add(Restrictions.eq(SystemConfigPO.COLUMN_SCID_STR , scid)).uniqueResult();
+	}
+	
+	
 }
 
 

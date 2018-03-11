@@ -68,7 +68,7 @@ public class ActivityItemServiceImpl implements ActivityItemService {
 		BeanUtil.copyProperties(activityItemVO, activityItemPO);
 		
 		activityItemPO.setAid(activityPO.getAid());
-		activityItemPO.setActivityName(activityPO.getActivityName());
+		activityItemPO.setActivityName(activityPO.getName());
 		
 		activityItemDao.save(activityItemPO);
 		
@@ -81,13 +81,13 @@ public class ActivityItemServiceImpl implements ActivityItemService {
 	@Transactional(rollbackFor=Exception.class)
 	public int updateActivityItem(ActivityVO activityVO, ActivityItemVO activityItemVO) throws FLException {
 		
-		ActivityItemPO activityItemPO = activityItemDao.get(activityItemVO.getAiId());
+		ActivityItemPO activityItemPO = activityItemDao.get(activityItemVO.getAiid());
 		
 		if(activityItemPO == null){
 			throw new FLException(160013, "活动物品不存在");
 		}
 		
-		activityItemPO.setActivityItemName(activityItemVO.getActivityItemName());
+		activityItemPO.setName(activityItemVO.getName());
 		activityItemPO.setType(activityItemVO.getType());
 		activityItemPO.setMoney(activityItemVO.getMoney());
 		
@@ -100,7 +100,7 @@ public class ActivityItemServiceImpl implements ActivityItemService {
 	@Transactional(rollbackFor=Exception.class)
 	public int deleteActivityItemByAiId(ActivityVO activityVO, ActivityItemVO activityItemVO) {
 		
-		activityItemDao.deleteById(activityItemVO.getAiId());
+		activityItemDao.deleteById(activityItemVO.getAiid());
 		
 		return 0;
 	}

@@ -40,7 +40,7 @@ public class BuildingDrawingAction extends BaseListAction{
 	@Action(value="addBuildingDrawing", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String addBuildingDrawing() throws FLException{
 		
-		buildingDrawingService.addBuildingDrawing(buildingDrawing, authentication());
+		buildingDrawingService.addBuildingDrawing(buildingDrawing, queryUserId());
 		
 		return SUCCESS;
 		

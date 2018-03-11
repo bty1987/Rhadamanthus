@@ -43,22 +43,28 @@ public class BuildingNodeServiceImpl implements BuildingNodeService{
 	}
 
 	@Override
-	public BuildingNodeVO queryBuildingNodeByType(BuildingNodeVO buildingNodeVO) {
+	public List<BuildingNodeVO> queryBuildingNodeByType(BuildingNodeVO buildingNodeVO) {
 		
-		BuildingNodePO buildingNodePO = buildingNodeDao.queryBuildingNodeByType(buildingNodeVO.getType(), buildingNodeVO.getSore());
+		List<BuildingNodePO> buildingNodePOs = buildingNodeDao.queryBuildingNodeByType(buildingNodeVO.getType(), buildingNodeVO.getSore());
+		List<BuildingNodeVO> buildingNodeVOs = new ArrayList<BuildingNodeVO>();
 		
-		BuildingNodeVO buildingNode =  new BuildingNodeVO();
+		for (BuildingNodePO buildingNodePO : buildingNodePOs) {
+			
+			BuildingNodeVO buildingNode =  new BuildingNodeVO();
+			
+			BeanUtil.copyProperties(buildingNodePO, buildingNode);
+			
+			buildingNodeVOs.add(buildingNode);
+			
+		}
 		
-		BeanUtil.copyProperties(buildingNodePO, buildingNode);
-		
-		
-		return buildingNode;
+		return buildingNodeVOs;
 	}
 
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int addBuildingNode(BuildingNodeVO buildingNodeVO) {
+	public void addBuildingNode(BuildingNodeVO buildingNodeVO) {
 		
 		BuildingNodePO buildingNodePO = new BuildingNodePO();
 		
@@ -67,18 +73,16 @@ public class BuildingNodeServiceImpl implements BuildingNodeService{
 		
 		buildingNodeDao.save(buildingNodePO);
 		
-		return 0;
 	}
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int updateBuildingNode(BuildingNodeVO buildingNodeVO) {
+	public void updateBuildingNode(BuildingNodeVO buildingNodeVO) {
 		
 		BuildingNodePO buildingNodePO = buildingNodeDao.get(buildingNodeVO.getBnid());
 		
 		buildingNodePO.setName(buildingNodeVO.getName());
 		
-		return 0;
 	}
 
 	@Override

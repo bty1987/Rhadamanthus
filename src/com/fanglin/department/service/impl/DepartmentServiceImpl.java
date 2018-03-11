@@ -204,7 +204,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 				
 		if(departmentVO.getCityProper() != null){
 			departmentPO.setCityProper(new CityProperPO());
-			BeanUtil.copyProperties(cityProperDao.get(departmentVO.getCityProper().getCityProperId()), departmentPO.getCityProper(),Arrays.asList( "city"));
+			BeanUtil.copyProperties(cityProperDao.get(Integer.valueOf(departmentVO.getCityProper().getCpid())), departmentPO.getCityProper(),Arrays.asList( "city"));
 		}
 		
 		List<String> pinyins = PinYin4Util.getPinyin(departmentVO.getDeptName());

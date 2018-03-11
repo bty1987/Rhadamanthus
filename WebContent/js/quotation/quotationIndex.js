@@ -201,7 +201,7 @@ function initQuotationList(){
 				var statusInput = $('<input></input>').attr('id', 'id-button-borders_'+qid).addClass('ace ace-switch ace-switch-5').attr('data', qid).attr('type', 'checkbox');
 				var statusSpan = $('<span></span>').addClass('lbl');
 				
-				if($q.status == 1){
+				if($q.defaults == 1){
 					statusInput.attr('checked', 'checked');
 				}
 				

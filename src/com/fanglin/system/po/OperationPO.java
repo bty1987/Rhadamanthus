@@ -38,9 +38,14 @@ public class OperationPO implements java.io.Serializable {
 		this.oid = oid;
 	}
 
+	public OperationPO(ModulePO module) {
+		super();
+		this.module = module;
+	}
+
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "oId")
+	@Column(name = "oid")
 	public int getOid() {
 		return oid;
 	}
@@ -50,7 +55,7 @@ public class OperationPO implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "moduleId", referencedColumnName = "mId")
+	@JoinColumn(name = "moduleId", referencedColumnName = "mid")
 	public ModulePO getModule() {
 		return module;
 	}

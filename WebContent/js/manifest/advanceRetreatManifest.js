@@ -82,7 +82,7 @@ jQuery(function ($) {
                 layer.msg('保存成功!', {icon: 1});
                 $('#list').empty();
             }, function (e) {
-                com.showAlert(com.info, e.errorMsg);
+                com.showAlert(com.error, e.errorMsg);
             });
         }
     });
@@ -130,16 +130,16 @@ jQuery(function ($) {
         }));
         var $lineInfoWrap = $('<div></div>').addClass('line-wrap content col10');
         var _lineInfoSet = [
-            {cellClass: "no"},//编号
-            {cellClass: "name"},//名称
-            {cellClass: "color",},//颜色
-            {cellClass: "format",},//规格
-            {cellClass: "measurementUnit"},//单位
-            {cellClass: "storehouse"},//仓库
-            {cellClass: "number"},//数量
-            {cellClass: "pieceNum"},//件数
+            {cellClass: "no blue"},//编号
+            {cellClass: "name grey"},//名称
+            {cellClass: "color grey"},//颜色
+            {cellClass: "format grey"},//规格
+            {cellClass: "measurementUnit grey"},//单位
+            {cellClass: "storehouse grey"},//仓库
+            {cellClass: "number blue"},//数量
+            {cellClass: "pieceNum blue"},//件数
             {cellClass: "aarNum", hasInput: !0},
-            {cellClass: "des"},//备注
+            {cellClass: "des grey"},//备注
         ];
 
         $.each(_lineInfoSet, function (i, v) {

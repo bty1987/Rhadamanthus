@@ -10,7 +10,6 @@ jQuery(function ($) {
         aid: $('#viewPopUp').attr('data-aid'),
         createTime: $('#viewPopUp').attr('data-createTime'),
         status: $('#viewPopUp').attr('data-status'),
-        mtype: 7,
         saveBtn: $("#saveBtn"),
         cancellBtn: $("#cancelBtn"),
         manifestItems: {
@@ -24,25 +23,9 @@ jQuery(function ($) {
     com.post(api.decoration.queryDecorationForCommonByOrderId, {
         "decoration.orderId": accessories.orderId
     }, function (res) {
-        var $table = $('table.table');
-        $table.css({'margin-top': '12%'});
-        var $td = $('table.table td');
-        $td.css('text-align', 'right');
-        var $th = $('table.table th');
-        $th.css('text-align', 'center');
-        var v = res.decoration;
-        $table.find('#villageName').next().text(v.house.village.name + " " + v.house.houseNumber);
-        $table.find('#designDepartment').next().text(v.designer.dept.deptName);
-        $table.find('#businessDepartment').next().text(v.salesman.dept.deptName);
-        $table.find('#houseArea').next().text(v.houseArea + "m²");
-        $table.find('#measureTime').next().text(v.measureTime == null || "" ? "----" : v.measureTime);
-        $table.find('#status').next().text(v.status);
 
-        $table.find('#customerName').next().text(v.customer.name);
-        $table.find('#designer').next().text(v.designer.currentName);
-        $table.find('#salesman').next().text(v.salesman.currentName);
-        $table.find('#orderTotalPrice').next().text(v.orderTotalPrice);
-        $table.find('#contractTime').next().text(v.contractTime == null || "" ? "----" : v.contractTime);
+        orderInfo('orderInfo', res.decoration);
+
     });
 
     com.post(api.inventory.queryStorehouseForSelf, {}, function (res) {
@@ -70,12 +53,12 @@ jQuery(function ($) {
         'name': 'cancelbtn',
         'href': 'javascript:void(0);'
     }).css({'margin-left': '3px', 'margin-top': '12px'}).text('取消');
-    var $condList1 = $('#viewPopUp').parents('.layui-layer.layui-anim.layui-layer-page.layui-layer-molv');
+    var $condList1 = $('#viewPopUp').parents('.layui-layer.layui-anim.layui-layer-page.layui-layer-lan');
     var $div = $('<div class="layui-layer-btn0" style="position: relative;top:-10%;left:73%;"></div>');
     $div.append($btnConfirm).append($btnRefuse).append($btnCancel).appendTo($condList1);
 
     $btnConfirm.click(function () {
-        if(com.validate('list','bottom')){
+        if (com.validate('list', 'bottom')) {
             return;
         }
         var $lines = $('li.line', '#list');
@@ -87,36 +70,18 @@ jQuery(function ($) {
 
         var options = {};
 
-        var manifestTime = accessories.createTime;//– 货单时间
-        var type = accessories.mtype;//– 类型
-        var comment = $('#comment').val();//– 备注
-        var aid = accessories.aid;
-
-        options = {
-            "manifest.manifestTime": manifestTime,
-            "manifest.total": "0",
-            "manifest.type": type,
-            "manifest.comment": comment,
-            "manifest.attachment": "",//– 附件路径
-            "aids[0]": aid,
-        };
-
         var $list = $('li.line', '#list');
 
+        options["accessories[0].aid"] = accessories.aid
 
         $list.length && $list.each(function (i) {
             var $this = $(this);
 
-            options["manifestItems[" + i + "].goods.gid"] = $this.attr('data-gid');//– 商品id
-            options["manifestItems[" + i + "].color.cid"] = $this.find('.color select').val();
-            options["manifestItems[" + i + "].format.fid"] = $this.find('.format select').val();
-
-            options["manifestItems[" + i + "].outstorehouse.shId"] = $this.find('.storehouse select').val();//– 仓库ID
-
-            options["manifestItems[" + i + "].num"] = $this.find('.number').text();//– 数量
-            options["manifestItems[" + i + "].unitPrice"] = "0";//– 进货价
-            options["manifestItems[" + i + "].comment"] = $this.find('.des input').val();// – 说明
-
+            options["accessoriesItems[" + i + "].goods.gid"] = $this.attr('data-gid');//– 商品id
+            options["accessoriesItems[" + i + "].color.cid"] = $this.find('.color select').val();
+            options["accessoriesItems[" + i + "].format.fid"] = $this.find('.format select').val();
+            options["accessoriesItems[" + i + "].storehouse.shId"] = $this.find('.storehouse select').val();//– 仓库ID
+            options["accessoriesItems[" + i + "].num"] = $this.find('.number').text();//– 数量
 
         });
 
@@ -127,20 +92,21 @@ jQuery(function ($) {
                 $('#list').empty();
             });
         }, function (e) {
-            com.showAlert(com.info, e.errorMsg);
+            com.showAlert(com.error, e.errorMsg);
         });
 
     });
 
     $btnRefuse.click(function () {
         com.post(api.inventory.updateAccessoriesForStatus, {
-            "accessories.aid": accessories.aid
+            "accessories.aid": accessories.aid,
+            "accessories.status": 2
         }, function (data) {
             layer.closeAll();
             layer.msg('拒绝成功', {icon: 1}, function () {
             });
         }, function (e) {
-            com.showAlert(com.info, e.errorMsg);
+            com.showAlert(com.error, e.errorMsg);
         });
     });
 
@@ -156,14 +122,14 @@ jQuery(function ($) {
         var $indexWrap = $('<div></div>').addClass('line-wrap order').append($('<div></div>').addClass('cell index').text(lineindex));
         var $lineInfoWrap = $('<div></div>').addClass('line-wrap content col8');
         var _lineInfoSet = [
-            {cellClass: "no"},//编号
-            {cellClass: "name"},//名称
+            {cellClass: "no blue"},//编号
+            {cellClass: "name grey"},//名称
             {cellClass: "color", hasColorSelect: !0},//颜色
             {cellClass: "format", hasFormatSelect: !0},//规格
-            {cellClass: "measurementUnit"},//单位
-            {cellClass: "storehouse", hasSelect: !0},//仓库
-            {cellClass: "number"},//数量
-            {cellClass: "des", hasInput: !0},//备注
+            {cellClass: "measurementUnit grey"},//单位
+            {cellClass: "storehouse grey", hasSelect: !0},//仓库
+            {cellClass: "number blue"},//数量
+            {cellClass: "des grey", hasInput: !0},//备注
         ];
 
         $.each(_lineInfoSet, function (i, v) {
@@ -171,7 +137,7 @@ jQuery(function ($) {
             var $cell = $('<div></div>').addClass('cell ' + v.cellClass);
             if (v.hasInput) {
                 $input = $('<input>').prop({'type': 'text', 'autocomplete': 'off'}).addClass('editable');
-                if(v.cellClass == "des"){
+                if (v.cellClass == "des") {
                     $input.attr('maxlength', '128');
                 }
                 $cell.append($input);
@@ -247,6 +213,36 @@ jQuery(function ($) {
 
         })
 
+
+    }
+
+    function orderInfo(tableId, v) {
+
+        $('#' + tableId).html(null);
+        var $tableWrap = $('#' + tableId);
+        var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+
+        var propertyArr = [
+            ["楼盘地址:", v.house.village.name + " " + v.house.houseNumber, "grey"],
+            ["客户名:", v.customer.name, "grey"],
+            ["设计部:", v.designer.dept.deptName, "grey"],
+            ["设计师:", v.designer.currentName, "grey"],
+            ["业务部:", v.salesman.dept.deptName, "grey"],
+            ["业务员:", v.salesman.currentName, "grey"],
+            ["面积:", v.house.buildArea + "m²", "blue"],
+            ["合同报价:", v.orderTotalPrice, "blue"],
+            ["签单时间:", v.contractTime == null || "" ? "----" : v.contractTime, "green"],
+            ["量房时间:", v.measureTime == null || "" ? "----" : v.measureTime, "green"],
+            ["状态:", v.status, "red"]
+        ];
+        $.each(propertyArr, function (index, value) {
+            var $liProperty = $('<li></li>').css({"border-bottom": "0px"});
+            $('<strong></strong>').html(value[0]).appendTo($liProperty);
+            $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+            $liProperty.appendTo($ulProperty);
+        });
+
+        $ulProperty.appendTo($tableWrap);
 
     }
 

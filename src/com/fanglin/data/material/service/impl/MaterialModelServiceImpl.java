@@ -19,19 +19,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.communion.po.BrandPO;
+import com.fanglin.communion.po.CategoryPO;
+import com.fanglin.communion.po.MeasurementUnitPO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.data.material.dao.MaterialBrandRightDao;
 import com.fanglin.data.material.dao.MaterialModelDao;
 import com.fanglin.data.material.service.MaterialModelService;
 import com.fanglin.data.material.vo.MaterialModelVO;
-import com.fanglin.data.po.BrandPO;
-import com.fanglin.data.po.CategoryPO;
-import com.fanglin.data.po.MaterialBrandRightPO;
 import com.fanglin.data.po.MaterialModelPO;
-import com.fanglin.data.po.MeasurementUnitPO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.right.dao.BrandUserRightDao;
+import com.fanglin.right.po.BrandUserRightPO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
 
@@ -48,22 +48,22 @@ public class MaterialModelServiceImpl implements MaterialModelService{
 	private UserDao userDao;
 	
 	@Autowired
-	private MaterialBrandRightDao materialBrandRightDao;
+	private BrandUserRightDao brandUserRightDao;
 	
 	public void pageMaterialModel(Paging paging, List<Filter> filters, String userId,int company) throws FLException{
 		
 		UserPO userPO = userDao.queryUserByUserId(userId);
 		List<MaterialModelPO> materialModelPOs = new ArrayList<MaterialModelPO>();
 		
-		MaterialBrandRightPO materialBrandRightPO = materialBrandRightDao.querymateriBrandRightByUserId(userPO.getUserId());
+		BrandUserRightPO brandUserRightPO = brandUserRightDao.queryBrandUserRightByUid(userPO.getUid());
 		
-		if(materialBrandRightPO == null){
+		if(brandUserRightPO == null){
 			throw new FLException(180020, "无主材型号操作权限");
 		}
 		
-		if(!"".equals(materialBrandRightPO.getBrandId())){
+		if(!"".equals(brandUserRightPO.getBrandId())){
 			List<Long> brandIDs = new ArrayList<Long>();
-			String[] brandIds = materialBrandRightPO.getBrandId().split("#");
+			String[] brandIds = brandUserRightPO.getBrandId().split("#");
 			for(String id : brandIds){
 				brandIDs.add(Long.parseLong(id));
 			}

@@ -43,13 +43,13 @@ $(function(){
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(i + 1));
             var $contentWrap = $('<div></div>').addClass('line-wrap  content col4');
             var propertyArr = [
-                v.name,
-                v.workType.name,
-                v.comment,
-                v.status=="0"?"启用":"禁用"
+                [v.name,'grey'],
+                [v.workType.name,'grey'],
+                [v.comment,'grey'],
+                [v.status=="0"?"启用":"禁用",'red']
             ];
             $.each(propertyArr, function (i, v) {
-                var $cell = $('<div></div>').addClass('cell').html(v);
+                var $cell = $('<div></div>').addClass('cell ' + v[1]).html(v[0]);
                 $cell.appendTo($contentWrap);
             });
             var $optionWrap = $('<div></div>').addClass('line-wrap action');

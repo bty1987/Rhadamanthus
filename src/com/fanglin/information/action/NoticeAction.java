@@ -54,7 +54,7 @@ public class NoticeAction extends BaseListAction {
 	@Action(value="pageNoticeForSeenByType", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
     public String pageNoticeForSeenByType() throws FLException{
 		
-        noticeService.pageNoticeForSeenByType(getPaging(), notice, authentication());
+        noticeService.pageNoticeForSeenByType(getPaging(), getFilters(), notice, authentication());
         
         return SUCCESS;
     }

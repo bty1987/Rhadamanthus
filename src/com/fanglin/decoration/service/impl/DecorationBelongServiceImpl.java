@@ -42,11 +42,6 @@ public class DecorationBelongServiceImpl implements DecorationBelongService {
 		
 		for(DecorationBelongInfoPO orderBelongInfoPO : orderBelongInfoPOs){
 			DecorationBelongVO orderBelongInfoVO = new DecorationBelongVO();
-			if(orderBelongInfoPO.getApprovalUserPO() != null){
-				orderBelongInfoVO.setApprovalUser(orderBelongInfoPO.getApprovalUserPO().getCurrentName());
-				orderBelongInfoVO.setApprovalTime(orderBelongInfoPO.getApprovalTime());
-				orderBelongInfoVO.setApprovalUserId(orderBelongInfoPO.getApprovalUserPO().getUserId());
-			}
 			
 			if(orderBelongInfoPO.getOperateUserPO() != null){
 				orderBelongInfoVO.setOperateUser(orderBelongInfoPO.getOperateUserPO().getCurrentName());
@@ -96,12 +91,6 @@ public class DecorationBelongServiceImpl implements DecorationBelongService {
 		for(DecorationBelongInfoPO orderBelongInfoPO: orderBelongInfoPOs){
 			DecorationBelongVO orderBelongInfoVO = new DecorationBelongVO();
 			
-			if(orderBelongInfoPO.getApprovalUserPO() != null){
-				orderBelongInfoVO.setApprovalUser(orderBelongInfoPO.getApprovalUserPO().getCurrentName());
-				orderBelongInfoVO.setApprovalTime(orderBelongInfoPO.getApprovalTime());
-				orderBelongInfoVO.setApprovalUserId(orderBelongInfoPO.getApprovalUserPO().getUserId());
-			}
-			
 			if(orderBelongInfoPO.getOperateUserPO() != null){
 				orderBelongInfoVO.setOperateUser(orderBelongInfoPO.getOperateUserPO().getCurrentName());
 				orderBelongInfoVO.setOperateUserId(orderBelongInfoPO.getOperateUserPO().getUserId());
@@ -139,12 +128,6 @@ public class DecorationBelongServiceImpl implements DecorationBelongService {
 		
 		for(DecorationBelongInfoPO orderBelongInfoPO: orderBelongInfoPOs){
 			DecorationBelongVO _orderBelongInfoVO = new DecorationBelongVO();
-			
-			if(orderBelongInfoPO.getApprovalUserPO() != null){
-				_orderBelongInfoVO.setApprovalUser(orderBelongInfoPO.getApprovalUserPO().getCurrentName());
-				_orderBelongInfoVO.setApprovalTime(orderBelongInfoPO.getApprovalTime());
-				_orderBelongInfoVO.setApprovalUserId(orderBelongInfoPO.getApprovalUserPO().getUserId());
-			}
 			
 			if(orderBelongInfoPO.getOperateUserPO() != null){
 				_orderBelongInfoVO.setOperateUser(orderBelongInfoPO.getOperateUserPO().getCurrentName());

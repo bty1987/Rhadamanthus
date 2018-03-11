@@ -16,18 +16,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.fanglin.common.dao.ServiceRecordDao;
 import com.fanglin.common.po.ServiceRecordPO;
+import com.fanglin.communion.dao.CustomerDao;
+import com.fanglin.communion.po.CustomerPO;
+import com.fanglin.communion.vo.CustomerVO;
+import com.fanglin.communion.vo.HouseVO;
+import com.fanglin.communion.vo.VillageVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.data.common.dao.CustomerDao;
-import com.fanglin.data.common.vo.CustomerVO;
-import com.fanglin.data.common.vo.HouseVO;
-import com.fanglin.data.common.vo.VillageVO;
-import com.fanglin.data.po.CustomerPO;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.vo.DecorationActivityItemVO;
@@ -831,7 +833,11 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int updateMaterialPayment(MaterialPaymentVO materialPaymentVO, String userId) throws FLException{
+	public int updateMaterialPayment(MaterialPaymentVO materialPaymentVO,MaterialReceiptVO materialReceiptVO) throws FLException{
+		
+		float realMoney = 0;
+		
+		float receiptRealMoney = 0;
 
 		MaterialPaymentPO materialPaymentPO = materialPaymentDao.get(materialPaymentVO.getMpId());
 
@@ -841,60 +847,104 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 
 		MaterialReceiptPO materialReceiptPO = materialPaymentPO.getMaterialReceipt();
 
-		if(materialPaymentPO != null && materialPaymentPO.getPaymentStatus() == MaterialPaymentPO.PAYMENTSTATUS_TYPE_COLLECT_INT){
-
-			if(!materialReceiptPO.getCollecter().getUserId().equals(userId)){
-				throw new FLException(150014, "收款人不匹配");
-			}
-
-			if(materialPaymentVO.getCash() != 0){
-				materialReceiptPO.setCash(materialPaymentVO.getCash());
-				materialReceiptPO.setCashInfo(materialPaymentVO.getCashInfo());
-			}else{
-				materialReceiptPO.setCash(0);
-				materialReceiptPO.setCashInfo("");
-			}
-			if(materialPaymentVO.getBank() != 0){
-				materialReceiptPO.setBank(materialPaymentVO.getBank());
-				materialReceiptPO.setBankInfo(materialPaymentVO.getBankInfo());
-			}else{
-				materialReceiptPO.setBank(0);
-				materialReceiptPO.setBankInfo("");
-			}
-			if(materialPaymentVO.getCheckv() != 0){
-				materialReceiptPO.setCheckv(materialPaymentVO.getCheckv());
-				materialReceiptPO.setCheckvBank(materialPaymentVO.getCheckvBank());
-			}else{
-				materialReceiptPO.setCheckv(0);
-				materialReceiptPO.setCheckvBank("");
-			}
-			if(materialPaymentVO.getInstallment() != 0){
-				materialReceiptPO.setInstallment(materialPaymentVO.getInstallment());
-				materialReceiptPO.setInstallmentBank(materialPaymentVO.getInstallmentBank());
-			}else{
-				materialReceiptPO.setInstallment(0);
-				materialReceiptPO.setInstallmentBank("");
-			}
-			if(materialPaymentVO.getAccounts() != 0){
-				materialReceiptPO.setAccounts(materialPaymentVO.getAccounts());
-				materialReceiptPO.setAccountsBank(materialPaymentVO.getAccountsBank());
-			}else{
-				materialReceiptPO.setAccounts(0);
-				materialReceiptPO.setAccountsBank("");
-			}
-			if(materialPaymentVO.getCoupon() != 0){
-				materialReceiptPO.setCoupon(materialPaymentVO.getCoupon());
-				materialReceiptPO.setCouponInfo(materialPaymentVO.getCouponInfo());
-			}else{
-				materialReceiptPO.setCoupon(0);
-				materialReceiptPO.setCouponInfo("");
-			}
-
-			materialReceiptPO.setComment(materialPaymentVO.getComment());
-
-			materialReceiptDao.update(materialReceiptPO);
-			materialPaymentDao.update(materialPaymentPO);
+		if(MaterialPaymentPO.PAYMENTSTATUS_PAY_STR != materialPaymentPO.getPaymentStatus()){
+			throw new FLException(150036, "款项状态不可操作");
 		}
+		
+		Float cash = materialReceiptVO.getCash();
+		Float bank = materialReceiptVO.getBank();
+		Float checkv = materialReceiptVO.getCheckv();
+		Float accounts = materialReceiptVO.getAccounts();
+		Float installment = materialReceiptVO.getInstallment();
+		Float coupon = materialReceiptVO.getCoupon();
+		Float advance = materialReceiptVO.getAdvance();
+		
+		//判断弹窗实收累加金额
+		if(cash != null && cash.floatValue() != 0f){
+			materialReceiptPO.setCash(cash);
+			materialReceiptPO.setCashInfo(materialReceiptVO.getCashInfo());
+			realMoney = Arith.add(cash, realMoney);
+		}else{
+			materialReceiptPO.setCash(0f);
+			materialReceiptPO.setCashInfo("");
+		}
+		if(bank != null && bank.floatValue() != 0f){
+			materialReceiptPO.setBank(bank);
+			materialReceiptPO.setBankInfo(materialReceiptVO.getBankInfo());
+			realMoney = Arith.add(bank,realMoney);
+		}else{
+			materialReceiptPO.setBank(0f);
+			materialReceiptPO.setBankInfo("");
+		}
+		if(checkv != null && checkv.floatValue() != 0f){
+			materialReceiptPO.setCheckv(checkv);
+			materialReceiptPO.setCheckvBank(materialReceiptVO.getCheckvBank());
+			realMoney = Arith.add(checkv,realMoney);
+		}else{
+			materialReceiptPO.setCheckv(0f);
+			materialReceiptPO.setCheckvBank("");
+		}
+		if(accounts != null && accounts.floatValue() != 0f){
+			materialReceiptPO.setAccounts(accounts);
+			materialReceiptPO.setAccountsBank(materialReceiptVO.getAccountsBank());
+			realMoney = Arith.add(accounts,realMoney);
+		}else{
+			materialReceiptPO.setAccounts(0f);
+			materialReceiptPO.setAccountsBank("");
+		}
+		if(installment != null && installment.floatValue() != 0f){
+			materialReceiptPO.setInstallment(installment);
+			materialReceiptPO.setInstallmentBank(materialReceiptVO.getInstallmentBank());
+			realMoney = Arith.add(installment,realMoney);
+		}else{
+			materialReceiptPO.setInstallment(0f);
+			materialReceiptPO.setInstallmentBank("");
+		}
+		if(coupon != null && coupon.floatValue() != 0f){
+			realMoney = Arith.add(coupon,realMoney);
+		}
+		if(advance != null && advance.floatValue() != 0f){
+			realMoney = Arith.add(advance,realMoney);
+		}
+		
+		Float cashHistory = materialReceiptPO.getCash();
+		Float bankHistory = materialReceiptPO.getBank();
+		Float checkvHistory = materialReceiptPO.getCheckv();
+		Float accountsHistory = materialReceiptPO.getAccounts();
+		Float installmentHistory = materialReceiptPO.getInstallment();
+		Float couponHistory = materialReceiptPO.getCoupon();
+		Float advanceHistory = materialReceiptPO.getAdvance();
+		
+		//判断收据各项累加金额
+		if(cashHistory != null && cashHistory.floatValue() != 0f){
+			receiptRealMoney = Arith.add(cash, receiptRealMoney);
+		}
+		if(bankHistory != null && bankHistory.floatValue() != 0f){
+			receiptRealMoney = Arith.add(bank,receiptRealMoney);
+		}
+		if(checkvHistory != null && checkvHistory.floatValue() != 0f){
+			receiptRealMoney = Arith.add(checkv,receiptRealMoney);
+		}
+		if(accountsHistory != null && accountsHistory.floatValue() != 0f){
+			receiptRealMoney = Arith.add(accounts,receiptRealMoney);
+		}
+		if(installmentHistory != null && installmentHistory.floatValue() != 0f){
+			receiptRealMoney = Arith.add(installment,receiptRealMoney);
+		}
+		if(couponHistory != null && couponHistory.floatValue() != 0f){
+			receiptRealMoney = Arith.add(coupon,receiptRealMoney);
+		}
+		if(advanceHistory != null && advanceHistory.floatValue() != 0f){
+			receiptRealMoney = Arith.add(advance,receiptRealMoney);
+		}
+		
+		if(receiptRealMoney != realMoney){
+			throw new FLException(150025, "款项金额不正确");
+		}
+		
+		materialPaymentVO.setMrId(materialReceiptPO.getMrId());
+
+		materialReceiptDao.update(materialReceiptPO);
 
 		return 0;
 	}

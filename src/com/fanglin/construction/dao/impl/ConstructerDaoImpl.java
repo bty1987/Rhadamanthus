@@ -60,10 +60,9 @@ public class ConstructerDaoImpl extends DaoImpl<ConstructerPO> implements Constr
 	}
 
 	@Override
-	public int countConstructer(long cid, String userId, int schedule, short status) {
-		
-		String sql = "select count(*) from construction.constructer where cid = :cid and userId = :userId and schedule = :schedule and status = :status";
-		BigInteger count = (BigInteger) session().createSQLQuery(sql).setLong("cid", cid).setString("userId", userId).setInteger("schedule", schedule).setShort("status", status).uniqueResult();
+	public int countConstructer(long cid, int wuid, int schedule, short status) {
+		String sql = "select count(*) from construction.constructer where cid = :cid and wuid = :wuid and schedule = :schedule and status = :status";
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setLong("cid", cid).setInteger("wuid", wuid).setInteger("schedule", schedule).setShort("status", status).uniqueResult();
 		
 		return count.intValue();
 		

@@ -102,8 +102,8 @@ public class LogServiceImpl implements LogService {
 		logVO.setCreateUserId(actionLogPO.getCreateUserPO().getUserId());
 		logVO.setCreateUserName(actionLogPO.getCreateUserPO().getCurrentName());
 		logVO.setDuty(actionLogPO.getCreateUserPO().getDuty().getName());
-		logVO.setRoleId(actionLogPO.getCreateUserPO().getRole().getRoleId());
-		logVO.setRoleName(actionLogPO.getCreateUserPO().getRole().getRoleName());
+		logVO.setRoleId(actionLogPO.getCreateUserPO().getRole().getNo());
+		logVO.setRoleName(actionLogPO.getCreateUserPO().getRole().getName());
 		
 		return logVO;
 	}

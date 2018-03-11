@@ -41,7 +41,7 @@ public class Authentication {
 	
 	private String userName;
 	
-	private String roleId;
+	private Integer roleId;
 	
 	private Long updateTime;
 	
@@ -55,7 +55,7 @@ public class Authentication {
 		super();
 	}
 
-	public Authentication(String userId, String userName, String roleId, long updateTime, boolean isMobile, int company, short freedom) {
+	public Authentication(String userId, String userName, Integer roleId, long updateTime, boolean isMobile, int company, short freedom) {
 		super();
 		this.userId = userId;
 		this.userName = userName;
@@ -90,7 +90,7 @@ public class Authentication {
 				
 				try{
 					this.userId = authentication[0].substring(COOKIE_AUTHENTICATION_USERID.length());
-					this.roleId = authentication[1].substring(COOKIE_AUTHENTICATION_ROLEID.length());
+					this.roleId = Integer.valueOf(authentication[1].substring(COOKIE_AUTHENTICATION_ROLEID.length()));
 					this.userName = authentication[2].substring(COOKIE_AUTHENTICATION_USERNAME.length());
 					this.updateTime = Long.parseLong(authentication[3].substring(COOKIE_AUTHENTICATION_UPDATETIME.length()));
 					this.company = Integer.valueOf(authentication[4].substring(COOKIE_AUTHENTICATION_COMPANY.length()));
@@ -180,11 +180,11 @@ public class Authentication {
 		this.userName = userName;
 	}
 
-	public String getRoleId(){
+	public Integer getRoleId(){
 		return roleId;
 	}
 
-	public void setRoleId(String roleId){
+	public void setRoleId(Integer roleId){
 		this.roleId = roleId;
 	}
 

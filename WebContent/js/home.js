@@ -15,20 +15,20 @@ jQuery(function(){
         $('.breadcrumb .nav3').hide();
     });
     
-    layer.open({
-        type: 1,
-        title: false,
-        closeBtn: false,
-        area: '300px;',
-        shade: 0.8,
-        id: 'LAY_layuipro',
-        btn: ['了解了'],
-        moveType: 1,
-        content: '<div style="padding:50px;line-height:22px;background-color:#136194;color:#fff;font-weight:300;text-align:center;"><span style="font-size:20px;">关注我</span><br><span style="font-size:15px;">全新家装体验</span><img src="/images/publicsubscriptio.png" style="height: 200px;padding-top: 15px;"></div>',
-        success: function(layero){
-            layero.find('.layui-layer-btn').css('text-align', 'center');
-        }
-    });
+//    layer.open({
+//        type: 1,
+//        title: false,
+//        closeBtn: false,
+//        area: '300px;',
+//        shade: 0.8,
+//        id: 'LAY_layuipro',
+//        btn: ['了解了'],
+//        moveType: 1,
+//        content: '<div style="padding:50px;line-height:22px;background-color:#136194;color:#fff;font-weight:300;text-align:center;"><span style="font-size:20px;">关注我</span><br><span style="font-size:15px;">全新家装体验</span><img src="/images/publicsubscriptio.png" style="height: 200px;padding-top: 15px;"></div>',
+//        success: function(layero){
+//            layero.find('.layui-layer-btn').css('text-align', 'center');
+//        }
+//    });
 
     com.post(api.common.wmCode, {}, function(res){
         var img = new Image();

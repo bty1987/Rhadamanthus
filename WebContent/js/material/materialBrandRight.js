@@ -58,12 +58,12 @@ jQuery(function($) {
 
         var creatLine = function(v){
         	
-            var $liLine = $('<li></li>').addClass('item-blue clearfix');
+            var $liLine = $('<li></li>').addClass('item-orange clearfix');
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.userName));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
-            var $btnConfig = $('<a></a>').addClass('btn btn-minier btn-inverse').html('型号权限');
+            var $btnConfig = $('<a></a>').addClass('btn btn-minier btn-yellow').html('品牌权限');
             
             var propertyArr = [
                ["编号:", v.userId, "grey"],
@@ -82,7 +82,7 @@ jQuery(function($) {
             $liLine.append($h3).append($ulProperty);
             
             $btnConfig.click(function(){
-            	dialogMaterialBrandRight(v.userId);
+            	dialogMaterialBrandRight(v.uid);
             });
             
             return $liLine;
@@ -105,11 +105,11 @@ jQuery(function($) {
 		displayFunc.init('resultList', data);
 	}, "pagenation", "materialBrandRightPostData", materialBrandRight.postParam);
 	
-	function dialogMaterialBrandRight(userId){
+	function dialogMaterialBrandRight(uid){
 
-		materialBrandRight.userId = userId;
+		materialBrandRight.userId = uid;
 
-		com.post(api.material.queryMaterialBrandRight, {"materialBrandRight.userId": userId}, function(res){
+		com.post(api.data.queryBrandUserRightByUid, {"brandUserRight.uid": uid}, function(res){
 
 			var _tag = $('#brandright').data('tag');
 
@@ -117,8 +117,8 @@ jQuery(function($) {
 				_tag.remove(0)
 			}
 
-			if(res.materialBrandRight.brands.length){
-				$.each(res.materialBrandRight.brands, function(i, v){
+			if(res.brandUserRight.brands.length){
+				$.each(res.brandUserRight.brands, function(i, v){
 					_tag.fladd(v.bid.toString(), v.brandName);
 				});
 
@@ -147,10 +147,10 @@ jQuery(function($) {
 			brandright = brandIds.join('#');
 		}
 		
-		options["materialBrandRight.userId"] = materialBrandRight.userId;
-		options["materialBrandRight.brandId"] = brandright;
+		options["brandUserRight.uid"] = materialBrandRight.userId;
+		options["brandUserRight.brandId"] = brandright;
 		
-		com.post(api.material.updateMaterialBrandRight, options);
+		com.post(api.data.updateBrandUserRight, options);
 		
 		materialBrandRight.modal.modal("hide");   
 	}

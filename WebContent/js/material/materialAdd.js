@@ -207,8 +207,10 @@ jQuery(function($) {
 		var $line = addline(num + 1);
 		$line.appendTo('#list');
 	});
-	
-	$('#submitSubOrderItem').click(function(){
+
+	$('#submitSubOrderItem').bindClick(addmaterialitem);
+
+	function addmaterialitem(){
 		
 		com.clearValidator("#salesmanName", true);
 		
@@ -289,7 +291,7 @@ jQuery(function($) {
 			return false;
 		}
 		
-		var btn = $(this);
+		var btn = $('#submitSubOrderItem');
 		btn.button('loading');
 		
 		if(i > 0){
@@ -308,7 +310,7 @@ jQuery(function($) {
 			btn.button('reset');
 			com.showAlert(com.error, "当前没有添加型号信息");
 		}
-	});
+	};
 	
 	$("#backBtn").on("click", function(){
 		params.orderId = materialSubOrderAddPostData.material.orderId;

@@ -30,11 +30,11 @@ $(function () {
 
             var $div = $('<div></div>').appendTo($('#' + tableId));
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable').appendTo($div);
-            var $liLine = $('<li></li>').addClass('item-blue clearfix').appendTo($ul);
+            var $liLine = $('<li></li>').addClass('item-orange clearfix').appendTo($ul);
             var $h3 = $('<h3 ></h3>').addClass('oid').append($('<small style="font-size:22px;"></small>').addClass('blue')).appendTo($liLine);var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix').css({'margin-top': '10px'}).appendTo($h3);
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons').appendTo($ulProperty);
             var $btnshow = $('<a></a>').addClass('btn btn-minier btn-yellow').html('查看').appendTo($divBtnWrap);
-            var $btnDel = $('<a></a>').addClass('btn btn-minier btn-inverse ').html('删除').appendTo($divBtnWrap);
+            var $btnDel = $('<a></a>').addClass('btn btn-minier btn-success ').html('删除').appendTo($divBtnWrap);
 
 
              var propertyArr = [

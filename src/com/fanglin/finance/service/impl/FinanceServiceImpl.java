@@ -24,8 +24,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.common.po.CountingPO;
 import com.fanglin.common.service.CountingService;
+import com.fanglin.communion.dao.ReceiptTypeDao;
+import com.fanglin.communion.po.ReceiptTypePO;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.data.common.dao.ReceiptTypeDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.finance.dao.AccountDao;
 import com.fanglin.finance.dao.AssistantDao;
@@ -635,9 +636,11 @@ public class FinanceServiceImpl implements FinanceService {
 	@Transactional(rollbackFor=Exception.class)
 	private void convertCashToAccount(Map<String, SubjectPO> subjectPOs, Map<String, List<Float>> subjectBalances, VoucherPO voucherPO, AccountVO accountVO, AssistantPO assistantPO, boolean relat, String sId, float cash, int company){
 		
-		SubjectPO subjectPO = receiptTypeDao.queryReceiptTypeByNo(sId, company).toSubjectPO();
+		ReceiptTypePO receiptTypePO = receiptTypeDao.queryReceiptTypeByNo(sId, company);
 		
-		if(subjectPO != null){
+		if(receiptTypePO != null){
+			
+			SubjectPO subjectPO = new SubjectPO().toSubjectPO(receiptTypePO);
 			
 			AccountPO accountPO = saveAccount(voucherPO, accountVO, subjectPO, assistantPO, relat, cash);
 			
@@ -647,9 +650,12 @@ public class FinanceServiceImpl implements FinanceService {
 	
 	@Transactional(rollbackFor=Exception.class)
 	private void convertBankToAccount(Map<String, SubjectPO> subjectPOs, Map<String, List<Float>> subjectBalances, VoucherPO voucherPO, AccountVO accountVO, AssistantPO assistantPO, boolean relat, String sId, float bank, int company){
-		SubjectPO subjectPO = receiptTypeDao.queryReceiptTypeByNo(sId, company).toSubjectPO();
+
+		ReceiptTypePO receiptTypePO = receiptTypeDao.queryReceiptTypeByNo(sId, company);
 		
-		if(subjectPO != null){
+		if(receiptTypePO != null){
+			
+			SubjectPO subjectPO = new SubjectPO().toSubjectPO(receiptTypePO);
 			
 			AccountPO accountPO = saveAccount(voucherPO, accountVO, subjectPO, assistantPO, relat, bank);
 			
@@ -659,9 +665,12 @@ public class FinanceServiceImpl implements FinanceService {
 	
 	@Transactional(rollbackFor=Exception.class)
 	private void convertCheckvToAccount(Map<String, SubjectPO> subjectPOs, Map<String, List<Float>> subjectBalances, VoucherPO voucherPO, AccountVO accountVO, AssistantPO assistantPO, boolean relat, String sId, float checkv, int company){
-		SubjectPO subjectPO = receiptTypeDao.queryReceiptTypeByNo(sId, company).toSubjectPO();
 		
-		if(subjectPO != null){
+		ReceiptTypePO receiptTypePO = receiptTypeDao.queryReceiptTypeByNo(sId, company);
+		
+		if(receiptTypePO != null){
+			
+			SubjectPO subjectPO = new SubjectPO().toSubjectPO(receiptTypePO);
 			
 			AccountPO accountPO = saveAccount(voucherPO, accountVO, subjectPO, assistantPO, relat, checkv);
 			
@@ -671,9 +680,12 @@ public class FinanceServiceImpl implements FinanceService {
 	
 	@Transactional(rollbackFor=Exception.class)
 	private void convertInstallmentToAccount(Map<String, SubjectPO> subjectPOs, Map<String, List<Float>> subjectBalances, VoucherPO voucherPO, AccountVO accountVO, AssistantPO assistantPO, boolean relat, String sId, float installment, int company){
-		SubjectPO subjectPO = receiptTypeDao.queryReceiptTypeByNo(sId, company).toSubjectPO();
 		
-		if(subjectPO != null){
+		ReceiptTypePO receiptTypePO = receiptTypeDao.queryReceiptTypeByNo(sId, company);
+		
+		if(receiptTypePO != null){
+			
+			SubjectPO subjectPO = new SubjectPO().toSubjectPO(receiptTypePO);
 			
 			AccountPO accountPO = saveAccount(voucherPO, accountVO, subjectPO, assistantPO, relat, installment);
 			
@@ -683,9 +695,12 @@ public class FinanceServiceImpl implements FinanceService {
 	
 	@Transactional(rollbackFor=Exception.class)
 	private void convertAccountsToAccount(Map<String, SubjectPO> subjectPOs, Map<String, List<Float>> subjectBalances, VoucherPO voucherPO, AccountVO accountVO, AssistantPO assistantPO, boolean relat, String sId, float accounts, int company){
-		SubjectPO subjectPO = receiptTypeDao.queryReceiptTypeByNo(sId, company).toSubjectPO();
+
+		ReceiptTypePO receiptTypePO = receiptTypeDao.queryReceiptTypeByNo(sId, company);
 		
-		if(subjectPO != null){
+		if(receiptTypePO != null){
+			
+			SubjectPO subjectPO = new SubjectPO().toSubjectPO(receiptTypePO);
 			
 			AccountPO accountPO = saveAccount(voucherPO, accountVO, subjectPO, assistantPO, relat, accounts);
 			
@@ -717,9 +732,11 @@ public class FinanceServiceImpl implements FinanceService {
 	@Transactional(rollbackFor=Exception.class)
 	private void convertCouponToAccount(Map<String, SubjectPO> subjectPOs, Map<String, List<Float>> subjectBalances, VoucherPO voucherPO, AccountVO accountVO, AssistantPO assistantPO, boolean relat, String sId, float coupon, int company){
 		
-		SubjectPO subjectPO = receiptTypeDao.queryReceiptTypeByNo(sId, company).toSubjectPO();
+		ReceiptTypePO receiptTypePO = receiptTypeDao.queryReceiptTypeByNo(sId, company);
 		
-		if(subjectPO != null){
+		if(receiptTypePO != null){
+			
+			SubjectPO subjectPO = new SubjectPO().toSubjectPO(receiptTypePO);
 			
 			AccountPO accountPO = saveAccount(voucherPO, accountVO, subjectPO, assistantPO, relat, coupon);
 			
@@ -805,5 +822,5 @@ public class FinanceServiceImpl implements FinanceService {
 		
 		return 0;
 	}
-
+	
 }

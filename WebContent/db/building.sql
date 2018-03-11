@@ -20,7 +20,7 @@ CREATE TABLE `buildingSchedule` (
   `planTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '计划时间',
   `status` tinyint(1) NOT NULL COMMENT '状态, 0初始 , 1失效',
   `ouid` int(11) NOT NULL COMMENT '操作人',
-  `operatTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '操作时间',
+  `operatTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '操作时间',
   `comment` varchar(256) NULL COMMENT '备注',
   PRIMARY KEY (`bsid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='房产流转';
@@ -37,7 +37,7 @@ CREATE TABLE `houseSource` (
   `deedValue` decimal(10,2) NULL COMMENT '契证原值',
   `unitPrice` decimal(10,2) NOT NULL COMMENT '单价',
   `totalPrice` decimal(10,2) NOT NULL COMMENT '总价',
-  `decorateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '装修时间',
+  `decorateTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '装修时间',
   `decorateDegree` tinyint(2) NOT NULL COMMENT '装修程度',
   `discussType` tinyint(1) NOT NULL COMMENT '商议类型',
   `rentType` tinyint(2) NOT NULL DEFAULT '0' COMMENT '交租方式',
@@ -46,7 +46,7 @@ CREATE TABLE `houseSource` (
   `propertyFee` decimal(10,2) NULL COMMENT '物业费',
   `elevator` tinyint(1) NOT NULL COMMENT '电梯',
   `onlyHousing` tinyint(1) NOT NULL COMMENT '唯一住房',
-  `documentsDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '下证日期',
+  `documentsDate` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '下证日期',
   `allowLoan` tinyint(1) NOT NULL COMMENT '允许贷款',
   `beingLoan` tinyint(1) NOT NULL COMMENT '有无贷款',
   `checkingTime` varchar(256) NOT NULL COMMENT '看房时间',

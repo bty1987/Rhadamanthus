@@ -48,7 +48,7 @@ public interface MaterialPaymentService {
 	
 	public int collectMaterialPaymentForRefund(MaterialPaymentVO materialPaymentVO, String userId) throws FLException;
 	
-	public int updateMaterialPayment(MaterialPaymentVO materialPaymentVO, String userId) throws FLException;
+	public int updateMaterialPayment(MaterialPaymentVO materialPaymentVO,MaterialReceiptVO materialReceiptVO) throws FLException;
 	
 	public void confirmMaterialPayment(List<Long> mpIds, String userId) throws FLException;
 	

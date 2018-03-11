@@ -15,16 +15,17 @@ $(function(){
             if(listData && listData.length){
                 $.each(listData,function(i, v){
 
-                    var $liLine = $('<li></li>').addClass('item-blue clearfix');
-                    var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-                    var $h3 = $('<h3></h3>').css({color:'grey',"font-weight":"bold"}).html(v.comment);
+                    var $liLine = $('<li></li>').addClass('item-orange clearfix');
+                    var $h3 = $('<h3></h3>').addClass('oid');
+                    var $title = $('<small></small>').addClass('blue') .html(v.comment);
                     var $btnDiv = $('<div></div>').addClass('action-buttons pull-right');
+                    var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 
-                    var $btnimport = $('<a></a>').addClass(' btn btn-minier').html('图表');
-                    var $btnChild = $('<a></a>').addClass(' btn btn-minier ').html('外协项');
-                    var $btnReceipt = $('<a></a>').addClass(' btn btn-minier ').html('收货');
-                    var $btnaBolition = $('<a></a>').addClass(' btn btn-minier ').html('废除');
-                    var $btnEdit = $('<a></a>').addClass(' btn btn-minier ').html('编辑');
+                    var $btnimport = $('<a></a>').addClass(' btn btn-minier btn-yellow').html('图表');
+                    var $btnChild = $('<a></a>').addClass(' btn btn-minier btn-success').html('外协项');
+                    var $btnReceipt = $('<a></a>').addClass(' btn btn-minier btn-warning').html('收货');
+                    var $btnaBolition = $('<a></a>').addClass(' btn btn-minier btn-inverse').html('废除');
+                    var $btnEdit = $('<a></a>').addClass(' btn btn-minier btn-danger').html('编辑');
 
 
                     var propertyArr = [
@@ -32,19 +33,22 @@ $(function(){
                     ];
 
                     $.each(propertyArr, function (index,value) {
-                        var $liProperty = $('<li></li>').css({"border-bottom":"0px"});
+                        var $liProperty = $('<li></li>');
                         $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                        $('<b></b>').html(value[1]).css({color:value[2]}).appendTo($liProperty);
+                        $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
                         $liProperty.appendTo($ulProperty);
                     });
+
                     if (v.status ==0 && ($status != 4 && $status != 5)){
-                        $btnDiv.append($btnChild).append($btnimport).append($btnEdit).append($btnReceipt).append($btnaBolition).appendTo($h3);
+                        $btnDiv.append($btnChild).append($btnimport).append($btnEdit).append($btnReceipt).append($btnaBolition);
 
                     }else{
-                        $btnDiv.append($btnChild).append($btnimport).appendTo($h3);
+                        $btnDiv.append($btnChild).append($btnimport);
                     }
 
+                    $h3.append($title).append($btnDiv);
                     $liLine.append($h3).append($ulProperty).appendTo($ul);
+
 
                     $btnimport.click(function () {
 
@@ -120,7 +124,6 @@ $(function(){
 
                         });
 
-
                     });
 
                     $btnaBolition.click(function () {
@@ -136,14 +139,12 @@ $(function(){
                         });
                     });
 
-
                     $btnChild.click(function () {
                         params["oid"] = v.oid;
                         params.outsourceStatus = v.status;
                         params.productionStatus = $status;
                         com.switchPage(api.index.outsourceItemIndex.url);
                     });
-
 
                 });
 

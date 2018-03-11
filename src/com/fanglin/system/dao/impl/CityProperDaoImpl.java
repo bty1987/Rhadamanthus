@@ -1,5 +1,6 @@
 package com.fanglin.system.dao.impl;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import org.hibernate.criterion.MatchMode;
@@ -15,64 +16,72 @@ import com.fanglin.utils.Paging;
 @Repository("cityProperDao")
 public class CityProperDaoImpl extends DaoImpl<CityProperPO> implements CityProperDao {
 
-	public CityProperDaoImpl(){
+	public CityProperDaoImpl() {
 		super(CityProperPO.class);
 	}
 
 	@Override
-	public List<CityProperPO> pageCityProper(Paging paging, List<Filter> filters){
-		
+	public List<CityProperPO> pageCityProper(Paging paging, List<Filter> filters) {
+
 		PagingQuery<CityProperPO> query = pagingQuery(paging, CityProperPO.class);
 
 		queryFilterExcute(query, filters);
-		
+
 		return query.list();
 	}
-	
+
 	@Override
 	public List<CityProperPO> pageCityProperByName(Paging paging, String name) {
-		
+
 		PagingQuery<CityProperPO> query = pagingQuery(paging, CityProperPO.class);
-		
-		query.add(Restrictions.or(Restrictions.ilike(CityProperPO.CITY_PROPER_NAME, name, MatchMode.ANYWHERE), Restrictions.ilike(CityProperPO.COLUMN_PINYIN_STR, name, MatchMode.ANYWHERE)));
-		
+
+		query.add(Restrictions.or(Restrictions.ilike(CityProperPO.COLUMN_NAME_STR, name, MatchMode.ANYWHERE), Restrictions.ilike(CityProperPO.COLUMN_PINYIN_STR, name, MatchMode.ANYWHERE)));
+
 		return query.list();
-	}
-	
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<CityProperPO> queryCityProperByCityId(String cityId){
-		return session().createCriteria(CityProperPO.class).add(Restrictions.eq("city.cityId",cityId)).list();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<CityProperPO> queryCityProperByCityIds(List<String> cityIds) {
-		return  session().createCriteria(CityProperPO.class).add(Restrictions.in("city.cityId",cityIds)).list();
+	public List<CityProperPO> queryCityProperByCid(Integer cid) {
+		return session().createCriteria(CityProperPO.class).add(Restrictions.eq("city.cid", cid)).list();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<CityProperPO> queryCityProperByCids(List<Integer> cids) {
+		return session().createCriteria(CityProperPO.class).add(Restrictions.in("city.cid", cids)).list();
 	}
 	
-	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){
-		
-		if(filters != null){
-			
+	@Override
+	public int countCityProperByCid(Integer cid) {
+	    String sql = "select count(*) from communion.cityProper where cid = :cid";
+	    BigInteger count = (BigInteger)session().createSQLQuery(sql).setInteger("cid", cid.intValue()).uniqueResult();
+
+	    return count.intValue();
+	  }
+
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
+
+		if (filters != null) {
+
 			query.alias("city", "city");
-			
-			for(Filter filter: filters){
-					
+
+			for (Filter filter : filters) {
+
 				String field = filter.getField();
 				String data = filter.getData();
 				String op = filter.getOp();
-				
-				if(CityProperPO.CITY_PROPER_NAME.equals(field))
-					query.add(query.getCriterion(CityProperPO.CITY_PROPER_NAME, data, op));
-				else if("cityId".equals(field)){
-					query.add(query.getCriterion("city.cityId", data, op));
+
+				if(CityProperPO.COLUMN_NAME_STR.equals(field)){
+					query.add(query.getCriterion(CityProperPO.COLUMN_NAME_STR, data, op));
+				}else if("cityId".equals(field)){
+					query.add(query.getCriterion("city.cid", Integer.valueOf(data), op));
 				}else if("regionId".equals(field)){
 					query.alias("city.region", "region");
-					query.add(query.getCriterion("region.regionId", data, op));
+					query.add(query.getCriterion("region.rid", Integer.valueOf(data), op));
 				}
 			}
 		}
 	}
-	
+
 }

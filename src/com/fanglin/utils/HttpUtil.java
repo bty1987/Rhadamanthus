@@ -61,7 +61,7 @@ public class HttpUtil {
         httpGet.setConfig(requestConfig);
         
         System.out.println(url);
-
+        
         try {
             response = httpClient.execute(httpGet, new BasicHttpContext());
             
@@ -75,9 +75,9 @@ public class HttpUtil {
             if (entity != null) {
                 String resultStr = EntityUtils.toString(entity, "utf-8");
                 
-                System.out.println(resultStr);
-
                 JSONObject result = JSON.parseObject(resultStr);
+                
+                System.out.println(resultStr.substring(0, 128));
                 
                 return result;
             }
@@ -105,8 +105,7 @@ public class HttpUtil {
         httpPost.addHeader("Content-Type", "application/json");
         
         System.out.println(url);
-        System.out.println(data.toString());
-
+        
         try {
         	StringEntity requestEntity = new StringEntity(JSON.toJSONString(data), "utf-8");
             httpPost.setEntity(requestEntity);
@@ -125,7 +124,7 @@ public class HttpUtil {
 
                 JSONObject result = JSON.parseObject(resultStr);
                 
-                System.out.println(resultStr);
+                System.out.println(resultStr.substring(0, 128));
                 
                 return result;
             }
@@ -152,9 +151,6 @@ public class HttpUtil {
         httpPut.setConfig(requestConfig);
         httpPut.addHeader("Content-Type", "application/json");
         
-        System.out.println(url);
-        System.out.println(data.toString());
-
         try {
         	StringEntity requestEntity = new StringEntity(JSON.toJSONString(data), "utf-8");
             httpPut.setEntity(requestEntity);
@@ -172,8 +168,6 @@ public class HttpUtil {
                 String resultStr = EntityUtils.toString(entity, "utf-8");
 
                 JSONObject result = JSON.parseObject(resultStr);
-                
-                System.out.println(resultStr);
                 
                 return result;
             }

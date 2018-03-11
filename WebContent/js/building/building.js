@@ -1,6 +1,7 @@
 
 jQuery(function($) {
 
+	var buildingPayType;
 	var building = {
 		boid: null,
 		saveBtn: null,
@@ -25,7 +26,7 @@ jQuery(function($) {
 
 	building.saveBtn = $("#saveBtn").on("click", saveData);
 	building.cancelBtn = $("#cancelBtn").on("click", deleteData);
-	building.deployedBtn = $("#deployedBtn").on("click", updatePayTypeFun);
+	building.deployedBtn = $("#deployedBtn").unbind("click").on("click", updatePayTypeFun);
 	building.createCustomerSaveBtn = $("#createCustomerSaveBtn").on("click", createCustomer);
 
 	$("#cardType").bindData(building.cardType);
@@ -160,15 +161,15 @@ jQuery(function($) {
 		var creatLine = function(v){
 
 			var that = this;
-			var $liLine = $('<li></li>').addClass('item-blue clearfix');
+			var $liLine = $('<li></li>').addClass('item-orange clearfix');
 			var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.no));
 			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 			var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
-			var $btnView = $('<a></a>').addClass('btn btn-minier btn-primary').html("查看");
-			var $btnType= $('<a></a>').addClass('btn btn-minier btn-yellow').html("更改支付方式");
-			var $btnMoney= $('<a></a>').addClass('btn btn-minier btn-inverse').html("生成款项");
-			var $btnEnd= $('<a></a>').addClass('btn btn-minier btn-danger').html("合同终止");
+			var $btnView = $('<a></a>').addClass('btn btn-minier btn-yellow').html("查看");
+			var $btnType= $('<a></a>').addClass('btn btn-minier btn-success').html("更改支付方式");
+			var $btnMoney= $('<a></a>').addClass('btn btn-minier btn-warning').html("生成款项");
+			var $btnEnd= $('<a></a>').addClass('btn btn-minier btn-inverse').html("合同终止");
 
 			var propertyArr = [
 				["楼盘地址:", v.houseSource.house.village.name + " " + v.houseSource.house.houseNumber , "grey"],
@@ -176,11 +177,11 @@ jQuery(function($) {
 				["客源姓名:", v.customerSource.customer.name, "grey"],
 				["房源代理人:", v.houseSourceAgent.name, "grey"],
 				["客源代理人:", v.customerSourceAgent.name, "grey"],
-				["签约时间:", v.signingTime, "grey"],
-				["成交价格:", v.tradePrice, "grey"],
-				["首付款", v.downpayment, "blue"],
+				["签约时间:", v.signingTime, "green"],
+				["成交价格:", v.tradePrice, "blue"],
+				["首付款:", v.downpayment, "blue"],
 				["贷款金额:", v.loanPrice, "blue"],
-				["支付方式:", building.payType[v.payType], "blue"],
+				["支付方式:", building.payType[v.payType], "grey"],
 				["结算状态:", building.balanceStatus[v.balanceStatus], "red"]
 			];
 
@@ -200,6 +201,7 @@ jQuery(function($) {
 			});
 
 			//更改支付方式
+			$btnType.unbind("click");
 			$btnType.click(function(){
 				//这里目前关于支付方式更改是涉及到的贷款服务费没有处理，页面用该有一个生成款项的入口
 				updatePayType(v.boid);
@@ -271,6 +273,7 @@ jQuery(function($) {
 		//这里目前有一个问题，就是款项，如果是全款转贷款，或者贷款转全款的时候，涉及到的贷款服务费的问题
 		building.boid = boid;
 		com.post(api.building.queryBuildingByBoid, {"building.boid" : boid}, function(res){
+			buildingPayType = res.building.payType;
 			building.items.payTypes.val(res.building.payType);
 		}, null, false);
 		$("#buildingPayTypeModal").modal("show");
@@ -315,6 +318,11 @@ jQuery(function($) {
 
 	//更改支付方式
 	function updatePayTypeFun(){
+		if(buildingPayType == $("#payTypes").val()){
+			com.showAlert(com.warning, "两次支付方式不能相同！");
+			return;
+		}
+
 		var options = {
 			'building.boid': building.boid,
 			'building.payType': building.items.payTypes.val(),

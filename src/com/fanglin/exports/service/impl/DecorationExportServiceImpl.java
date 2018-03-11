@@ -106,7 +106,7 @@ public class DecorationExportServiceImpl implements DecorationExportService {
 		
 		for(QuotationPO quotationPO: quotationPOs){
 		    	
-			DecorationExportVO decorationExportVO = decorationExportMap.get(quotationPO.getDecoration().getOrderId());
+			DecorationExportVO decorationExportVO = decorationExportMap.get(quotationPO.getOrderId());
 			
 			decorationExportVO.setDiscount(quotationPO.getDiscount());
 			decorationExportVO.setManageRate(quotationPO.getManageRate());
