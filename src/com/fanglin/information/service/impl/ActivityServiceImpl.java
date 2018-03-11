@@ -12,6 +12,7 @@
 package com.fanglin.information.service.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -25,6 +26,9 @@ import com.fanglin.information.dao.ActivityDao;
 import com.fanglin.information.po.ActivityPO;
 import com.fanglin.information.service.ActivityService;
 import com.fanglin.information.vo.ActivityVO;
+import com.fanglin.personel.dao.UserDao;
+import com.fanglin.personel.po.UserPO;
+import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
@@ -35,6 +39,9 @@ public class ActivityServiceImpl implements ActivityService {
 	
 	@Autowired
 	private ActivityDao activityDao;
+	
+	@Autowired
+	private UserDao userDao;
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
@@ -50,8 +57,9 @@ public class ActivityServiceImpl implements ActivityService {
 				activityPO.setStatus(ActivityPO.STATUS_UNVALID_INT);
 			}
 			
-			ActivityVO activityVO = new ActivityVO();
-			BeanUtil.copyProperties(activityPO, activityVO);
+			ActivityVO activityVO = new ActivityVO(new UserBaseVO());
+			BeanUtil.copyProperties(activityPO, activityVO, Arrays.asList("creater"));
+			BeanUtil.copyProperties(activityPO.getCreater(), activityVO.getCreater(), Arrays.asList("dept", "duty"));
 			
 			activityVOs.add(activityVO);
 		}
@@ -70,8 +78,9 @@ public class ActivityServiceImpl implements ActivityService {
 			if(activityPO.getEndTime().getTime() < new Date().getTime()){
 				activityPO.setStatus(ActivityPO.STATUS_UNVALID_INT);
 			}else{
-				ActivityVO activityVO = new ActivityVO();
-				BeanUtil.copyProperties(activityPO, activityVO);
+				ActivityVO activityVO = new ActivityVO(new UserBaseVO());
+				BeanUtil.copyProperties(activityPO, activityVO,Arrays.asList("creater"));
+				BeanUtil.copyProperties(activityPO.getCreater(), activityVO.getCreater(), Arrays.asList("dept", "duty"));
 				
 				activityVOs.add(activityVO);
 			}
@@ -84,12 +93,15 @@ public class ActivityServiceImpl implements ActivityService {
 	@Transactional(rollbackFor=Exception.class)
 	public void addActivity(ActivityVO activityVO, String userId, String userName,int company){
 		
+		UserPO user = userDao.queryUserByUserId(userId);
+		
 		ActivityPO activityPO = new ActivityPO();
 		BeanUtil.copyProperties(activityVO, activityPO);
 		
 		activityPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-		activityPO.setCreateUserId(userId);
-		activityPO.setCreateUserName(userName);
+//		activityPO.setCreateUserId(userId);
+//		activityPO.setCreateUserName(userName);
+		activityPO.setCreater(user);
 		activityPO.setCompany(company);
 		
 		activityDao.save(activityPO);

@@ -1,5 +1,6 @@
 package com.fanglin.inventory.vo;
 
+
 public class GoodsVO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 5543447445422987680L;
@@ -16,6 +17,8 @@ public class GoodsVO implements java.io.Serializable {
 	
 	private String category;
 	
+	private Long bid;
+ 
 	private String brand;
 	
 	private String measurementUnit;
@@ -77,8 +80,16 @@ public class GoodsVO implements java.io.Serializable {
 		this.category = category;
 	}
 
+	public Long getBid() {
+		return bid;
+	}
+
+	public void setBid(Long bid) {
+		this.bid = bid;
+	}
+
 	public String getBrand() {
-		return this.brand;
+		return brand;
 	}
 
 	public void setBrand(String brand) {

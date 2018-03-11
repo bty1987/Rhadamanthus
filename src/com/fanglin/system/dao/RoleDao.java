@@ -13,6 +13,6 @@ public interface RoleDao extends Dao<RolePO> {
 
 	public List<RolePO> queryRole();
 	
-	public RolePO queryRoleByRoleName(String roleName);
+	public RolePO queryRoleByName(String name);
 	
 }

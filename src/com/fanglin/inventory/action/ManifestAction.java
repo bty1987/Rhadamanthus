@@ -24,9 +24,12 @@ import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.inventory.service.ManifestItemService;
 import com.fanglin.inventory.service.ManifestService;
+import com.fanglin.inventory.vo.AccessoriesItemVO;
+import com.fanglin.inventory.vo.AccessoriesVO;
 import com.fanglin.inventory.vo.ManifestItemVO;
 import com.fanglin.inventory.vo.ManifestVO;
 import com.fanglin.inventory.vo.PurchaseItemVO;
+import com.fanglin.inventory.vo.PurchaseVO;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -43,15 +46,23 @@ public class ManifestAction extends BaseListAction {
 	
 	private ManifestVO manifest;
 	
+	private List<Long> sids;
+	
 	private List<Long> siids;
 	
 	private List<Long> aids;
 	
 	private List<Long> pids;
 	
+	private List<PurchaseVO> purchases;
+	
 	private List<PurchaseItemVO> purchaseItems;
 	
 	private List<ManifestItemVO> manifestItems;
+	
+	private List<AccessoriesVO> accessories;
+	
+	private List<AccessoriesItemVO> accessoriesItems;
 	
 	private ManifestItemVO manifestItem;
 	
@@ -98,7 +109,7 @@ public class ManifestAction extends BaseListAction {
 	@Action(value = "addManifestForXG", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addManifestForXG() throws FLException{
 		
-		manifestService.addManifestForXG(manifest, manifestItems, queryUserId(),queryCompany());
+		manifestService.addManifestForXG(manifest, sids,manifestItems, queryUserId(),queryCompany());
 		
 		return SUCCESS;
 	}
@@ -122,7 +133,7 @@ public class ManifestAction extends BaseListAction {
 	@Action(value = "addManifestForPU", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addManifestForPU() throws FLException{
 		
-		manifestService.addManifestForPU(manifest, pids,purchaseItems, manifestItems, queryUserId(),queryCompany());
+		manifestService.addManifestForPU(purchases,purchaseItems, queryUserId(), queryCompany());
 		
 		return SUCCESS;
 	}
@@ -130,7 +141,7 @@ public class ManifestAction extends BaseListAction {
 	@Action(value = "addManifestForAS", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addManifestForAS() throws FLException{
 		
-		manifestService.addManifestForAS(manifest, manifestItems, aids ,queryUserId(),queryCompany());
+		manifestService.addManifestForAS(accessories, accessoriesItems,queryUserId(),queryCompany());
 		
 		return SUCCESS;
 	}
@@ -229,6 +240,38 @@ public class ManifestAction extends BaseListAction {
 
 	public void setSiids(List<Long> siids) {
 		this.siids = siids;
+	}
+
+	public List<Long> getSids() {
+		return sids;
+	}
+
+	public void setSids(List<Long> sids) {
+		this.sids = sids;
+	}
+
+	public List<PurchaseVO> getPurchases() {
+		return purchases;
+	}
+
+	public void setPurchases(List<PurchaseVO> purchases) {
+		this.purchases = purchases;
+	}
+
+	public List<AccessoriesVO> getAccessories() {
+		return accessories;
+	}
+
+	public void setAccessories(List<AccessoriesVO> accessories) {
+		this.accessories = accessories;
+	}
+
+	public List<AccessoriesItemVO> getAccessoriesItems() {
+		return accessoriesItems;
+	}
+
+	public void setAccessoriesItems(List<AccessoriesItemVO> accessoriesItems) {
+		this.accessoriesItems = accessoriesItems;
 	}
 
 }

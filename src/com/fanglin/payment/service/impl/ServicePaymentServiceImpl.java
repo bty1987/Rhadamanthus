@@ -7,9 +7,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.data.po.CustomerPO;
 import com.fanglin.decoration.dao.DecorationHolonomyDao;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationHolonomyPO;
@@ -151,7 +152,6 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 		for(ServicePaymentPO servicePaymentPO: servicePaymentPOs){
 			ServicePaymentVO _servicePaymentVO = new ServicePaymentVO(new UserBaseVO(),new UserBaseVO(),new UserBaseVO(),new DecorationVO(),new ServiceReceiptVO());
 			BeanUtil.copyProperties(servicePaymentPO, _servicePaymentVO, Arrays.asList("decoration","creater","collecter","confirmer","serviceReceipt"));
-			BeanUtil.copyProperties(servicePaymentPO.getDecoration(), _servicePaymentVO.getDecoration(), Arrays.asList("house","customer","designer","salesman","supervisor","version","createUser","quoter","escorter"));
 			servicePaymentPO.getDecoration().ptvcascade(servicePaymentVO.getDecoration());
 			BeanUtil.copyProperties(servicePaymentPO.getServiceReceipt(), _servicePaymentVO.getServiceReceipt(), Arrays.asList("collecter","confirmer"));
 			
@@ -224,7 +224,6 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 		payment.setRecharge(servicePaymentPO.getAdvanceMoney());
 		payment.setType(PaymentPO.PAYMENT_TYPE_COLLECTION_STR);
 		payment.setPaymentType(PaymentPO.PAYMENT_PAYMENTTYPE_MATERIAL_STR);
-		payment.setComment(servicePaymentPO.getComment());
 		payment.setStatus(PaymentPO.PAYMENT_STATUS_PAID_STR);
 		payment.setOrderId(servicePaymentPO.getDecoration().getOrderId());
 		payment.setCompany(decoration.getCompany());

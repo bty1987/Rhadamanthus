@@ -39,6 +39,8 @@ public class WorkerSalaryVO  implements Serializable{
 	private Timestamp balanceTime;
 	
 	private String comment ;
+	
+	private int csid;
 
 	public WorkerSalaryVO() {
 		super();
@@ -165,6 +167,14 @@ public class WorkerSalaryVO  implements Serializable{
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public int getCsid() {
+		return csid;
+	}
+
+	public void setCsid(int csid) {
+		this.csid = csid;
 	} 
 	
 }

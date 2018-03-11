@@ -23,6 +23,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.communion.dao.ConstructionNodeDao;
+import com.fanglin.communion.po.ConstructionNodeCompanyPO;
 import com.fanglin.construction.dao.ConstructionDao;
 import com.fanglin.construction.dao.ConstructionScheduleDao;
 import com.fanglin.construction.dao.DrawLineDao;
@@ -34,8 +36,8 @@ import com.fanglin.construction.vo.DrawLineVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.data.common.dao.DrawLineGroupDao;
-import com.fanglin.data.construction.dao.ConstructionNodeDao;
-import com.fanglin.data.po.ConstructionNodeCompanyPO;
+//import com.fanglin.data.construction.dao.ConstructionNodeDao;
+//import com.fanglin.data.po.ConstructionNodeCompanyPO;
 import com.fanglin.data.po.DrawLineGroupPO;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
@@ -103,7 +105,7 @@ public class DrawLineServiceImpl implements DrawLineService {
 			drawLineVO.setVersionId(decorationPO.getVersion().getVersionId());
 			drawLineVO.setVersionName(decorationPO.getVersion().getVersionName());
 			drawLineVO.setVillage(decorationPO.getHouse().getVillage().getName());
-			drawLineVO.setCityProper(decorationPO.getHouse().getVillage().getCityProper().getCityProperName());
+			drawLineVO.setCityProper(decorationPO.getHouse().getVillage().getCityProper().getName());
 			drawLineVO.setHouseNumber(decorationPO.getHouse().getHouseNumber());
 			drawLineVO.setHouseArea(decorationPO.getHouse().getBuildArea());
 			drawLineVO.setContractTime(decorationPO.getContractTime());
@@ -176,7 +178,7 @@ public class DrawLineServiceImpl implements DrawLineService {
 			drawLineVO.setVersionId(decorationPO.getVersion().getVersionId());
 			drawLineVO.setVersionName(decorationPO.getVersion().getVersionName());
 			drawLineVO.setVillage(decorationPO.getHouse().getVillage().getName());
-			drawLineVO.setCityProper(decorationPO.getHouse().getVillage().getCityProper().getCityProperName());
+			drawLineVO.setCityProper(decorationPO.getHouse().getVillage().getCityProper().getName());
 			drawLineVO.setHouseNumber(decorationPO.getHouse().getHouseNumber());
 			drawLineVO.setHouseArea(decorationPO.getHouse().getBuildArea());
 			drawLineVO.setContractTime(decorationPO.getContractTime());
@@ -315,7 +317,7 @@ public class DrawLineServiceImpl implements DrawLineService {
 				}else{
 					
 					ConstructionSchedulePO ConstructionSchedulePOO = new ConstructionSchedulePO(cid,orderId,currentTime,currentTime,(short)constructionNodeCompanyPO.getConstructionNode().getCnid());
-					ConstructionSchedulePOO.setStatus((short)1);
+					ConstructionSchedulePOO.setStatus((short)0);
 					constructionScheduleDao.save(ConstructionSchedulePOO);
 					
 				}			

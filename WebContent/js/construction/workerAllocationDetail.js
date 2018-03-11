@@ -1,5 +1,6 @@
 jQuery(function($) {
 	var constructionNode = {};
+
 	var workerAllocationDetail = {
 
 		controlCondition: false,
@@ -21,27 +22,34 @@ jQuery(function($) {
 				circuitDuty: "电工",
 				powerDuty: "力工",
 				waterwayCircuitDuty: "水电工",
+				setStatusUrl: api.construction.setConstructionScheduleForStatus,
 			}, "4": {
 				name: "bricklay",
 				duty: "瓦工",
+				setStatusUrl: api.construction.setConstructionScheduleForStatus,
 			}, "5": {
 				name: "groundLeveling",
 				duty: "地面找平",
+				setStatusUrl: api.construction.setConstructionScheduleForStatus,
 			}, "6": {
 				name: "carpent",
 				duty: "木工",
+				setStatusUrl: api.construction.setConstructionScheduleForStatus,
 			}, "7": {
 				name: "oil",
 				duty: "油工",
+				setStatusUrl: api.construction.setConstructionScheduleForStatus,
 			}, "8": {
 				name: "waterwayCircuitCheck",
 				waterwayDuty: "水暖工",
 				circuitDuty: "电工",
 				powerDuty: "力工",
 				waterwayCircuitDuty: "水电工",
+				setStatusUrl: api.construction.setConstructionScheduleForStatus,
 			}, "9": {
 				name: "cleaning",
 				duty: "保洁工",
+				setStatusUrl: api.construction.setConstructionScheduleForStatus,
 			},
 		},
 
@@ -125,8 +133,6 @@ jQuery(function($) {
 				var chanStatus = element[0].status;
 				var chanSuccessBtn = $("#chanSuccess");
 				var chanFailBtn = $("#chanFail");
-				var chanDelayBtn = $("#chanDelay");
-				var chanPassBtn = $("#chanPass");
 
 				chanSuccessBtn.click(function(){
 					var options = {};
@@ -136,13 +142,11 @@ jQuery(function($) {
 					options["constructionSchedule.status"] = 1;
 
 					com.post(operate.setStatusUrl, options, function(res){
-						com.showAlert(com.info, "铲大白成功!");
+						com.showAlert(com.info, "完结成功!");
 						chanSuccessBtn.attr("disabled", "disabled");
 						chanFailBtn.attr("disabled", "disabled");
-						chanDelayBtn.attr("disabled", "disabled");
-						chanPassBtn.attr("disabled", "disabled");
 
-						changeChanStatus(1);
+						updatastatusDiv(1,"chan");
 					});
 					return false;
 				});
@@ -152,64 +156,24 @@ jQuery(function($) {
 
 					options["constructionSchedule.csId"] = element[0].csId;
 					options["constructionSchedule.orderId"] = orderId;
-					options["constructionSchedule.status"] = 2;
+					options["constructionSchedule.status"] = 0;
 
 					com.post(operate.setStatusUrl, options, function(res){
 						com.showAlert(com.warning, "铲大白失败!");
 						chanSuccessBtn.attr("disabled", "disabled");
 						chanFailBtn.attr("disabled", "disabled");
-						chanDelayBtn.attr("disabled", "disabled");
-						chanPassBtn.attr("disabled", "disabled");
 
-						changeChanStatus(2);
+						updatastatusDiv(0,"chan");
 					});
 					return false;
 				});
 
-				chanDelayBtn.click(function(){
-					var options = {};
-					options["constructionSchedule.csId"] = element[0].csId;
-					options["constructionSchedule.orderId"] = orderId;
-					options["constructionSchedule.status"] = 3;
 
-					com.post(operate.setStatusUrl, options, function(res){
-						com.showAlert(com.warning, "铲大白延迟!");
-						chanFailBtn.attr("disabled", "disabled");
-						chanDelayBtn.attr("disabled", "disabled");
+				updatastatusDiv(chanStatus,"chan");
 
-						changeChanStatus(3);
-					});
-					return false;
-				});
-
-				chanPassBtn.click(function(){
-					var options = {};
-					options["constructionSchedule.csId"] = element[0].csId;
-					options["constructionSchedule.orderId"] = orderId;
-					options["constructionSchedule.status"] = 4;
-
-					com.post(operate.setStatusUrl, options, function(res){
-						com.showAlert(com.info, "铲大白通过!");
-						chanSuccessBtn.attr("disabled", "disabled");
-						chanFailBtn.attr("disabled", "disabled");
-						chanDelayBtn.attr("disabled", "disabled");
-						chanPassBtn.attr("disabled", "disabled");
-
-						changeChanStatus(4);
-					});
-					return false;
-				});
-
-				changeChanStatus(chanStatus);
-
-				if(chanStatus == 1 || chanStatus == 2 || chanStatus == 4){
+				if(chanStatus == 1){
 					chanSuccessBtn.attr("disabled", "disabled");
 					chanFailBtn.attr("disabled", "disabled");
-					chanDelayBtn.attr("disabled", "disabled");
-					chanPassBtn.attr("disabled", "disabled");
-				}else if( chanStatus == 3){
-					chanFailBtn.attr("disabled", "disabled");
-					chanDelayBtn.attr("disabled", "disabled");
 				}
 
 				var options = {};
@@ -254,6 +218,7 @@ jQuery(function($) {
 						workerAllocationDetail.controlCondition = true;
 					}
 				}
+
 			}else if(schedule == 2){
 
 				$("#" + operate.name + "StartTime").val( element[0].startTime).attr("disabled", "disabled");
@@ -291,9 +256,9 @@ jQuery(function($) {
 				var putlineSuccessBtn = $("#putlineSuccess");
 				var putlineFailBtn = $("#putlineFail");
 
-				changeFangStatus(putlineStatus);
+				updatastatusDiv(putlineStatus,"putline");
 
-				if(putlineStatus == 2 || putlineStatus == 1){
+				if(putlineStatus == 1){
 					putlineSuccessBtn.attr("disabled", "disabled");
 					putlineFailBtn.attr("disabled", "disabled");
 				}
@@ -306,11 +271,11 @@ jQuery(function($) {
 					options["constructionSchedule.status"] = 1;
 
 					com.post(operate.setStatusUrl, options, function(res){
-						com.showAlert(com.info, "成功放线!");
+						com.showAlert(com.info, "完结成功!");
 						putlineSuccessBtn.attr("disabled", "disabled");
 						putlineFailBtn.attr("disabled", "disabled");
 
-						changeFangStatus(1);
+						updatastatusDiv(1,"putline");
 					});
 
 					return false;
@@ -321,18 +286,19 @@ jQuery(function($) {
 					var options = {};
 					options["constructionSchedule.csId"] = element[0].csId;
 					options["constructionSchedule.orderId"] = orderId;
-					options["constructionSchedule.status"] = 2;
+					options["constructionSchedule.status"] = 0;
 
 					com.post(operate.setStatusUrl, options, function(res){
-						com.showAlert(com.warning, "放线失败!");
+						com.showAlert(com.warning, "放线初始!");
 						putlineSuccessBtn.attr("disabled", "disabled");
 						putlineFailBtn.attr("disabled", "disabled");
 
-						changeFangStatus(2);
+						updatastatusDiv(0,"putline");
 					});
 
 					return false;
 				});
+
 			}else{
 				if(schedule == 3 || schedule == 8){
 					com.initChosen(operate.name + "WorkerName", api.personel.queryUserForNameByDutysAO, "pinyinName", {"dutysO[0]":operate.waterwayDuty, "dutysO[1]":operate.circuitDuty, "dutysO[2]":operate.powerDuty, "dutysO[3]":operate.waterwayCircuitDuty}, "autoFillKeyValue", "key", "value");
@@ -342,6 +308,51 @@ jQuery(function($) {
 
 				$("#" + operate.name + "StartTime").val(element[0].startTime);
 				$("#" + operate.name + "EndTime").val(element[0].endTime);
+
+				var otherename = workerAllocationDetail.operateDict[schedule].name;
+				var otherStatus = res.constructionSchedules[0].status;
+
+				var otherSuccessBtn = $("#"+ otherename +"Success");
+				var othereFailBtn = $("#"+otherename+"Fail");
+
+				updatastatusDiv(otherStatus,otherename);
+
+				if( otherStatus == 1){
+					otherSuccessBtn.attr("disabled", "disabled");
+					othereFailBtn.attr("disabled", "disabled");
+				}
+
+				otherSuccessBtn.click(function(){
+					var options = {};
+					options["constructionSchedule.csId"] = element[0].csId;
+					options["constructionSchedule.orderId"] = orderId;
+					options["constructionSchedule.status"] = 1;
+
+					com.post(operate.setStatusUrl, options, function(res){
+						com.showAlert(com.info, "完结成功!");
+						otherSuccessBtn.attr("disabled", "disabled");
+						othereFailBtn.attr("disabled", "disabled");
+						updatastatusDiv(1,otherename);
+					});
+					return false;
+				});
+
+				othereFailBtn.click(function(){
+					var options = {};
+
+					options["constructionSchedule.csId"] = element[0].csId;
+					options["constructionSchedule.orderId"] = orderId;
+					options["constructionSchedule.status"] = 0;
+
+					com.post(operate.setStatusUrl, options, function(res){
+						com.showAlert(com.warning, "初始!");
+						otherSuccessBtn.attr("disabled", "disabled");
+						othereFailBtn.attr("disabled", "disabled");
+
+						updatastatusDiv(0,otherename);
+					});
+					return false;
+				});
 
 				var options = {};
 				options["constructer.orderId"] = params.orderId;
@@ -388,33 +399,17 @@ jQuery(function($) {
 		});
 	}
 
-	function changeChanStatus(chanStatus){
-		var statusDiv = $("#chanStatus").html("");
 
-		if(chanStatus == 1){
-			$("<span></span>").addClass("label label-success col-sm-4").text("成功").appendTo(statusDiv);
-		}else if(chanStatus == 2){
-			$("<span></span>").addClass("label label-danger col-sm-4").text("失败").appendTo(statusDiv);
-		}else if(chanStatus == 3){
-			$("<span></span>").addClass("label label-warning col-sm-4").text("延迟").appendTo(statusDiv);
-		}else if(chanStatus == 4){
-			$("<span></span>").addClass("label label-info col-sm-4").text("通过").appendTo(statusDiv);
+	function updatastatusDiv(Status, statusDiv){
+
+		var statusDiv = $("#"+statusDiv+"Status").html("");
+		if(Status == 1){
+			$("<span></span>").addClass("label label-success col-sm-1").text("完结").appendTo(statusDiv);
 		}else{
-			$("<span></span>").addClass("label col-sm-4").text("待处理").appendTo(statusDiv);
+			$("<span></span>").addClass("label label-grey col-sm-1").text("初始").appendTo(statusDiv);
 		}
 	}
 
-	function changeFangStatus(fangStatus){
-		var putlineStatusDiv = $("#putlineStatus").html("");
-
-		if(fangStatus == 1){
-			$("<span></span>").addClass("label label-success").text("成功").appendTo(putlineStatusDiv);
-		}else if(fangStatus == 2){
-			$("<span></span>").addClass("label label-danger").text("失败").appendTo(putlineStatusDiv);
-		}else{
-			$("<span></span>").addClass("label label-warning").text("等待").appendTo(putlineStatusDiv);
-		}
-	}
 
 	//查询
 	function queryWorkerUrl(operate, res){
@@ -534,22 +529,16 @@ jQuery(function($) {
 			var paneWorkerSpaceTwo = $("<div></div>").addClass("space-4").appendTo(paneWorkerGroupTwo);
 		}
 
-		//铲大白放线状态
-		if(schedule == 1 || schedule == 2){
-			var paneWorkerGroupF = $("<div></div>").addClass("form-group").appendTo(paneWorkerGroup);
-			var paneWorkerLab = $("<label></label>").addClass("col-sm-2 control-label no-padding-right").attr("for", name + "Status").html(constructionNode[schedule] + "状态").appendTo(paneWorkerGroupF);
-			var paneWorkerLabDiv = $("<div></div>").attr("id", name + "Status").addClass("col-sm-6").appendTo(paneWorkerGroupF);
-			var paneWorkerSpaceTh = $("<div></div>").addClass("space-4").appendTo(paneWorkerGroupF);
+			//铲大白放线状态
+		var paneWorkerGroupF = $("<div></div>").addClass("form-group").appendTo(paneWorkerGroup);
+		var paneWorkerLab = $("<label></label>").addClass("col-sm-2 control-label no-padding-right").attr("for", name + "Status").html(constructionNode[schedule] + "状态").appendTo(paneWorkerGroupF);
+		var paneWorkerLabDiv = $("<div></div>").attr("id", name + "Status").addClass("col-sm-6").appendTo(paneWorkerGroupF);
+		var paneWorkerSpaceTh = $("<div></div>").addClass("space-4").appendTo(paneWorkerGroupF);
 
-			var paneWorkerGroupFive = $("<div></div>").addClass("form-group").attr("id", name + "Operate").appendTo(paneWorkerGroup);
-			var paneWorkerSmFive = $("<div></div>").addClass("col-sm-offset-2").appendTo(paneWorkerGroupFive);
-			var paneWorkerBtnS = $("<button></button>").attr("id", name + "Success").addClass("btn btn-xs btn-success").html("成功").attr("style","margin-right:5px").appendTo(paneWorkerSmFive);
-			var paneWorkerBtnD = $("<button></button>").attr("id", name + "Fail").addClass("btn btn-xs btn-danger").html("失败").attr("style","margin-right:5px").appendTo(paneWorkerSmFive);
-			if(schedule == 1){
-				var paneWorkerBtnW = $("<button></button>").attr("id", name + "Delay").addClass("btn btn-xs btn-warning").html("延迟").attr("style","margin-right:5px").appendTo(paneWorkerSmFive);
-				var paneWorkerBtnI = $("<button></button>").attr("id", name + "Pass").addClass("btn btn-xs btn-info").html("通过").attr("style","margin-right:5px").appendTo(paneWorkerSmFive);
-			}
-		}
+		var paneWorkerGroupFive = $("<div></div>").addClass("form-group").attr("id", name + "Operate").appendTo(paneWorkerGroup);
+		var paneWorkerSmFive = $("<div></div>").addClass("col-sm-offset-2").appendTo(paneWorkerGroupFive);
+
+		var paneWorkerBtnS = $("<button></button>").attr("id", name + "Success").addClass("btn btn-xs btn-success").html("完结").attr("style","margin-right:5px").appendTo(paneWorkerSmFive);
 		var paneWorkerGroupS = $("<div></div>").addClass("form-group").appendTo(paneWorkerForm);
 		var paneWorkerSmS = $("<div></div>").addClass("col-sm-12").appendTo(paneWorkerGroupS);
 		var paneWorkerHTh = $("<h3></h3>").addClass("header smaller lighter blue").appendTo(paneWorkerSmS);

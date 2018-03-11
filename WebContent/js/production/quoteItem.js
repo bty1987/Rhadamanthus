@@ -44,19 +44,19 @@ $(function(){
         //绘制表体
         function createLine(i, v, lastFlag) {
             var $liLine = $('<li></li>').addClass('line');
-            var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(i + 1));
+            var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index blue').html(i + 1));
             var $contentWrap = $('<div></div>').addClass('line-wrap content col7');
             //显示字段
             var propertyArr = [
-                v.name,
-                v.format,
-                v.measurementunit,
-                v.unitprice,
-                v.quoteType.name,
-                v.status == 0 ? '启用' : '禁用'
+                [v.name,'grey'],
+                [v.format,'blue'],
+                [v.measurementunit,'grey'],
+                [v.unitprice,'blue'],
+                [v.quoteType.name,'red'],
+                [v.status == 0 ? "启用" : "禁用",'red']
             ];
             $.each(propertyArr,function (i,v) {
-                var $cell = $('<div></div>').addClass('cell col-xs-2').html(v);
+                var $cell = $('<div></div>').addClass('cell col-xs-2 '+v[1]+'').html(v[0]);
                 $cell.appendTo($contentWrap);
             });
             var $optionWrap = $('<div></div>').addClass('line-wrap action');
@@ -145,7 +145,7 @@ $(function(){
 
     },"pagenation", "quoteItemPostData", null, false, null,function () {
 
-        var $adda = $('<a></a>').addClass('btn btn-minier btn-danger pull-left').attr('name', 'add').css("margin", "0px 3px");
+        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'add').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
 

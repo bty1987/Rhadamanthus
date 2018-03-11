@@ -1,6 +1,7 @@
 CREATE DATABASE  IF NOT EXISTS `salary`;
 USE `salary`;
 
+DROP TABLE IF EXISTS `workersalary`;
 CREATE TABLE `workersalary` (
   `wsid` int(11) NOT NULL AUTO_INCREMENT,
   `orderId` varchar(15) DEFAULT NULL,
@@ -16,6 +17,7 @@ CREATE TABLE `workersalary` (
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `approverId` varchar(15) DEFAULT NULL COMMENT '审批人',
   `approveTime` timestamp NULL DEFAULT NULL,
+  `company` int(11) NOT NULL,
   PRIMARY KEY (`wsid`),
   KEY `indexone` (`userId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='工人工费';

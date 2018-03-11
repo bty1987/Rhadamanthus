@@ -14,7 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="salesbalanceitem",catalog = "inventory")
+@Table(name="salesbalanceitem",catalog = "sales")
 public class SalesBalanceItemPO implements Serializable{
 
 	private static final long serialVersionUID = 5810856768343688079L;

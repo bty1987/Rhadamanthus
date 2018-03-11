@@ -20,15 +20,19 @@ public class QuotationFunctionAreaItemPO implements Serializable {
 	
 	private static final long serialVersionUID = 3077313706873385773L;
 	
-	public static final short TYPE_QUOTATION_COMMON_INT = 0;
+	public static final short SUBTYPE_QUOTATION_ENGINEERING_SHORT = 0;
 	
-	public static final short TYPE_QUOTATION_CUSTOMER_INT = 1;
+	public static final short SUBTYPE_QUOTATION_MATERIAL_SHORT = 1;
 	
-	public static final short TYPE_QUOTATION_TRAFFIC_INT = 2;
+	public static final short TYPE_QUOTATION_COMMON_SHORT = 0;
 	
-	public static final short TYPE_QUOTATION_MANAGE_INT = 3;
+	public static final short TYPE_QUOTATION_CUSTOMER_SHORT = 1;
 	
-	public static final short TYPE_QUOTATION_FIX_INT = 4;
+	public static final short TYPE_QUOTATION_TRAFFIC_SHORT = 2;
+	
+	public static final short TYPE_QUOTATION_MANAGE_SHORT= 3;
+	
+	public static final short TYPE_QUOTATION_FIX_SHORT= 4;
 
 	private long qfaiId;
 
@@ -51,12 +55,14 @@ public class QuotationFunctionAreaItemPO implements Serializable {
 	private short subtype;
 	
 	private short discount;
-	
+
 	private QuotationFunctionAreaPO quotationFunctionArea;
 	
 	private QuotationItemPO quotationItem;
 	
 	private String content;
+	
+	private int index;
 	
 	public QuotationFunctionAreaItemPO() {
 		super();
@@ -186,7 +192,14 @@ public class QuotationFunctionAreaItemPO implements Serializable {
 		this.content = content;
 	}
 	
-	
+	public int getIndex() {
+		return index;
+	}
+
+	public void setIndex(int index) {
+		this.index = index;
+	}
+
 	public static String quotationFunctionAreaItemTable(Long quotationFunctionAreaId,Integer div) {
 		
 		int index = (int)(quotationFunctionAreaId/div);

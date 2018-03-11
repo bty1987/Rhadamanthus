@@ -19,7 +19,7 @@ public class NoticeVO implements Serializable {
 
 	private Long nid;
 	
-	private UserVO user;
+	private UserVO creater;
 	
 	private String theme;
 	
@@ -45,8 +45,8 @@ public class NoticeVO implements Serializable {
 		super();
 	}
 
-	public NoticeVO(UserVO user) {
-		this.user = user;
+	public NoticeVO(UserVO creater) {
+		this.creater = creater;
 	}
 
 	public Long getNid() {
@@ -57,12 +57,12 @@ public class NoticeVO implements Serializable {
 		this.nid = nid;
 	}
 
-	public UserVO getUser() {
-		return user;
+	public UserVO getCreater() {
+		return creater;
 	}
 
-	public void setUser(UserVO user) {
-		this.user = user;
+	public void setCreater(UserVO creater) {
+		this.creater = creater;
 	}
 
 	public String getTheme() {

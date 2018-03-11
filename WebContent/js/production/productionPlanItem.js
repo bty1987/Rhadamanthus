@@ -5,7 +5,7 @@ jQuery(function ($) {
 
     var ppid = params["productionPlan.ppid"];
     var $productionStatus = params["production"];
-    var $productionPlanStatus = params["productionPlan.status"]
+    var $productionPlanStatus = params["productionPlan.status"];
 
     var displayFunc = (function () {
         var renderList = function(tableId,listData){
@@ -15,37 +15,39 @@ jQuery(function ($) {
             if(listData && listData.length){
                 $.each(listData,function(i,v){
 
-                    var $liLine = $('<li></li>').addClass('item-blue clearfix');
-                    var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-                    var $h3 = $('<h3></h3>').css({color:'grey',"font-weight":"bold"}).html(' ' + v.name);
+                    var $liLine = $('<li></li>').addClass('item-orange clearfix');
+                    var $h3 = $('<h3></h3>').addClass('oid');
+                    var $title = $('<small></small>').addClass('blue').html(' ' + v.name);
                     var $btnDiv = $('<div></div>').addClass('action-buttons pull-right');
+                    var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 
-                    var $btnDel = $('<a></a>').addClass(' btn btn-minier').html('删除');
+                    var $btnDel = $('<a></a>').addClass(' btn btn-minier btn-danger').html('删除');
 
                     var propertyArr = [
-                        ["类型编号:", v.typeno, "grey"],
-                        ["高:",v.height,"grey"],
-                        ["宽:",v.width,"grey"],
-                        ["厚:",v.thick,"grey"],
+                        ["类型编号:", v.typeno, "blue"],
+                        ["高:",v.height,"blue"],
+                        ["宽:",v.width,"blue"],
+                        ["厚:",v.thick,"blue"],
                         //["面积(平方米):",utils.accMul(parseFloat(utils.accDiv(v.height,100)),parseFloat(utils.accDiv(v.width,100))),"grey"],
                         ["颜色:",v.color,"grey"],
                         //["单价:",v.unitprice,"grey"],
-                        ["数量:",v.num,"grey"],
+                        ["数量:",v.num,"blue"],
                         //["总价:",v.total,"grey"],
                         ["说明:",v.comment,"grey"],
                     ];
 
                     $.each(propertyArr, function (index,value) {
-                        var $liProperty = $('<li></li>').css({"border-bottom":"0px"});
+                        var $liProperty = $('<li></li>');
                         $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                        $('<b></b>').html(value[1]).css({color:value[2]}).appendTo($liProperty);
+                        $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
                         $liProperty.appendTo($ulProperty);
                     });
 
                     $btnDiv.append($btnDel);
-                    $btnDiv.appendTo($h3);
+                    $h3.append($title).append($btnDiv);
                     $liLine.appendTo($ul);
                     $liLine.append($h3).append($ulProperty);
+
                     hidBtn($btnDel,$productionPlanStatus);
 
                     $btnDel.click(function () {
@@ -76,9 +78,8 @@ jQuery(function ($) {
         displayFunc.init('resultList', data);
     },"pagenation","productionPlanItemPostData",{"productionPlanItem.productionPlan.ppid" :ppid},false,null,function () {
 
-        var $adda = $('<a></a>').addClass('btn btn-xs btn-info pull-left').attr('name', 'add').css("margin", "0px 3px");
-        var $addi = $('<i></i>').addClass('icon-plus').appendTo($adda);
-        var $addspan = $('<span></span>').text('添加').appendTo($adda);
+        var $adda = $('<a></a>').addClass('btn btn-xs btn-primary pull-left').attr('name', 'add').css("margin", "0px 3px").html("添加");
+
         hidBtn($adda,$productionPlanStatus);
 
         $adda.click(function () {

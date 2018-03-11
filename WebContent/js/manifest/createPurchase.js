@@ -138,7 +138,7 @@ jQuery(function($) {
 
         }, function(e){
         	
-            com.showAlert(com.info, e.errorMsg);
+            com.showAlert(com.error, e.errorMsg);
             
         });
 

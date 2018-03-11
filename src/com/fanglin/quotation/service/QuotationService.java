@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.quotation.po.QuotationPO;
 import com.fanglin.quotation.vo.QuotationVO;
 
 public interface QuotationService {
@@ -28,17 +27,17 @@ public interface QuotationService {
 	
 	public Map<String, List<String>> queryQuotationForConfig(int company);
 	
-	public int checkQuotationForStatusByOrderId(QuotationVO quotationVO, QuotationPO quotationPO, boolean priceFlag) throws FLException;
-	
 	public int addQuotation(QuotationVO quotationVO, String userId) throws FLException;
 	
 	public int updateQuotation(QuotationVO quotationVO) throws FLException;
 	
-	public int updateQuotationForDefault(QuotationVO quotationVO) throws FLException;
+	public int changeQuotationForDefault(QuotationVO quotationVO) throws FLException;
 	
 	public int updateQuotationForAdvance(QuotationVO quotationVO) throws FLException;
 	
-	public int replicaQuotation(QuotationVO quotationVO) throws FLException;
+	public int updateQuotationForStatus(QuotationVO quotationVO) throws FLException;
+	
+	public int replicaQuotation(QuotationVO quotationVO, String userId) throws FLException;
 	
 	public int copyQuotation(QuotationVO quotationVO, String userId) throws FLException;
 	

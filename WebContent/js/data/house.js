@@ -8,29 +8,20 @@ $(function() {
         heatingType:[],
         through:[],
         status:[],
-        saveBtn: null,
-        cancellBtn: null,
+        saveHouseBtn: null,
+        cancelHouselBtn: null,
         modal: null,
         items: {},
-        editFlag: false,
-        repeatFlg: false,
         houseFlag:false,
-        validator: {
-            houseNumber: {
-                type: "",
-                regex: "",
-                errorMsg: ""
-            }
-        },
-        nameRuleList: {},
-        rulefill: null,
-        rulenum:[],
-        humFlag:true,
-        houseNumber:null,
+        editFlag: false,
+        valideteresult :null
     };
 
     house.items.no = $("#no").on("change",function(e){
         deleteVillageData("no");
+        com.post(api.data.queryVillageById, {"village.no" : house.items.no.val()},function(res){
+            house.items.rule.html("推荐楼牌号规则："+(res.village.rule ? res.village.rule :"暂无推荐规则") );
+        },null,false)
     });
 
     house.items.built = $("#built").on("change",function(e){
@@ -44,41 +35,10 @@ $(function() {
     });
 
    house.items.door = $("#door").on("blur", function(e){
-        if(document.getElementById("door").attributes["readonly"] != undefined){
-            return ;
-        }
-        buildruleval();
-        if($("#no").val() == "" ){
-            com.showPopover($("#no"),{errorMsg: "请先选择楼盘!"}, "right");
-        }else{
-            $("#no").css("border", "1px solid #d5d5d5").popover("destroy")
-        }
-
-        //合成楼牌号
-        house.rulenum=[house.items.built.val().trim(),house.items.unit.val().trim(),house.items.floor.val().trim(),house.items.door.val().trim()];
-        house.houseNumber = house.rulefill;
-        $.each(house.rulenum,function(i,val){
-            house.houseNumber = changetohousenum (house.houseNumber,val) ;
-        })
-        //验证楼牌号是否符合正则
-       houseNumbervali(house.houseNumber,house.validator.houseNumber.regex,house.validator.houseNumber.errorMsg)
-       //验证房产是否存在
-        validatehouse(house.items.no.val(),house.houseNumber)
+       validatehouse()
     });
-
-    house.items.buildingRuleContent=$("#buildingRuleContent");
-
-    house.items.nameRuleSel =$("#nameRuleSel");
-
-    com.post(api.common.queryBuildingNameRule, {}, function(res) {
-        house.items.nameRuleList = res.buildingNameRules;
-        house.items.nameRuleSel.bindData(house.items.nameRuleList, "id", "ruleContent", !1);
-    });
-    house.items.nameRuleSel.on("change", function(e){
-        buildruleval()
-        deleteVillageData("no");
-    })
-
+    house.items.rule = $("#rule");
+    house.items.oldhouseNumber = $("#oldhouseNumber");
     house.items.type = $("#type");
     house.items.buildArea = $("#buildArea");
     house.items.maxFloor = $("#maxFloor");
@@ -93,9 +53,28 @@ $(function() {
     house.items.waterVapour = $("#waterVapour");
     house.items.parlourType = $("#parlourType");
     house.items.heatingType = $("#heatingType");
+    house.items.errMsg = $("#errMsg");
 
-    house.items.saveHouseBtn = $("#saveHouseBtn").on("click", saveHouse);
-    house.items.cancelHouselBtn = $("#cancelHouselBtn").on("click", inithouse);
+    house.saveHouseBtn = $("#saveHouseBtn").on("click", saveHouse);
+    house.cancelHouselBtn = $("#cancelHouselBtn").on("click", inithouse);
+    house.items.builtrule = $("#builtrule");
+    house.items.unitrule = $("#unitrule");
+    house.items.floorrule = $("#floorrule");
+    house.items.doorrule = $("#doorrule");
+
+    house.items.builtrule.on("change",function(e){
+        validatehouse()
+    });
+    house.items.unitrule.on("change",function(e){
+        validatehouse()
+    });
+    house.items.floorrule.on("change",function(e){
+        validatehouse()
+    });
+    house.items.doorrule.on("blur",function(e){
+        validatehouse()
+    });
+
 
     com.post(api.ds.building, {}, function(res){
         house.items.type.bindData(res.houseType,"key", "value");
@@ -104,34 +83,38 @@ $(function() {
         house.items.waterVapour.bindData(res.waterVapour,"key", "value");
         house.items.parlourType.bindData(res.parlourType,"key", "value");
         house.items.heatingType.bindData(res.heatingType,"key", "value");
+        house.items.builtrule.bindData(res.buildrule,"key", "value");
+        house.items.unitrule.bindData(res.buildrule,"key", "value");
+        house.items.floorrule.bindData(res.buildrule,"key", "value");
+        house.items.doorrule.bindData(res.buildrule,"key", "value");
 
-       $.each(res.houseType,function (i,v) {
-         house.houseType[i] = v.value;//房产类型
+       $.each(res.houseType,function (i,val) {
+         house.houseType[val.key] = val.value;//房产类型
         });
-        $.each(res.orientation,function (i,va) {
-            house.orientation[i] = va.value;//房屋朝向
+        $.each(res.orientation,function (i,val) {
+            house.orientation[val.key] = val.value;//房屋朝向
         });
         $.each(res.waterVapour,function (i,val) {
-            house.waterVapour[i] = val.value;//水气设施
+            house.waterVapour[val.key] = val.value;//水气设施
         });
         $.each(res.parlourType,function (i,val) {
-            house.parlourType[i] = val.value;//客厅类型
+            house.parlourType[val.key] = val.value;//客厅类型
         });
         $.each(res.heatingType,function (i,val) {
-            house.heatingType[i] = val.value;//供暖类型
+            house.heatingType[val.key] = val.value;//供暖类型
         });
         $.each(res.through,function (i,val) {
-            house.through[i] = val.value;//是否越层
+            house.through[val.key] = val.value;//是否越层
         });
-        $.each(res.status,function (i,k) {
-            house.status[i] = k.value;
+        $.each(res.status,function (i,val) {
+            house.status[val.key] = val.value;
         });
 
     },null,false);
 
     $.extend(com.validator, house.validator);
 
-  house.modal=$("#houseModal").on("show.bs.modal",function(a) {
+    house.modal=$("#houseModal").on("show.bs.modal",function(a) {
         com.clearValidator();
     });
 
@@ -155,25 +138,26 @@ $(function() {
         };
 
         var creatLine = function (v) {
-            var $liLine = $('<li></li>').addClass('item-blue clearfix');
+
+            var $liLine = $('<li></li>').addClass('item-orange clearfix');
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.village.name));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-primary').html('编辑');
+            var $btnEdit = $('<a></a>').addClass('btn btn-minier  btn-yellow').html('编辑');
 
             var propertyArr = [
                 ["楼牌号:", v.houseNumber, "grey"],
-                ["房产类型:", house.houseType[v.type], "grey"],
-                ["建筑面积:", v.buildArea, "grey"],
-                ["最高楼层:", v.maxFloor, "grey"],
+                ["房产类型:", house.houseType[v.type], "red"],
+                ["建筑面积:", v.buildArea, "blue"],
+                ["最高楼层:", v.maxFloor, "blue"],
                 ["是否越层:", house.through[v.through], "grey"],
                 ["户型:",  v.houseType, "grey"],
                 ["房屋朝向:",  house.orientation[v.orientation], "grey"],
                 ["三不:", v.feature, "grey"],
                 ["水气设施:", house.waterVapour[v.waterVapour], "grey"],
-                ["客厅类型:",house.parlourType[v.parlourType], "grey"],
-                ["供暖类型:", house.heatingType[v.heatingType], "grey"],
-                ["状态:",  house.status[v.status], "grey"]
+                ["客厅类型:",house.parlourType[v.parlourType], "red"],
+                ["供暖类型:", house.heatingType[v.heatingType], "red"],
+                ["状态:",  house.status[v.status], "red"]
             ];
 
             $.each(propertyArr, function (index, value) {
@@ -224,14 +208,13 @@ $(function() {
     $('a[name="addHouse"]','#pagenation').click(function(){
         house.editFlag = false;
         inithouse();
-        buildruleval()
         addTypeclass()
-        $("#buildingRuleContent").css({"display":"block"});
-        $("#rulename").css({"display":"block"});
         $("#ohousetype").css({"display":"none"});
+        $("#ohouseNumber").css({"display":"none"});
+        $("#nhouseNumber").css({"display":"block"});
 
         house.items.no.prop("disabled", false);
-        house.items.cancelHouselBtn.prop("disabled", false)
+        house.cancelHouselBtn.prop("disabled", false)
         house.modal.modal("show");
         $("#errMsg").css("border","0px");
     });
@@ -239,27 +222,21 @@ $(function() {
     //编辑按钮
      function editHouse(b) {
          inithouse()
-
          house.editFlag = true;
-         house.humFlag = true;
          house.houseFlag = false;
 
          house.modal.modal("show");
          removeTypeclass()
-         $("#buildingRuleContent").css({"display":"none"});
-         $("#rulename").css({"display":"none"});
+         $("#nhouseNumber").css({"display":"none"});
          $("#ohousetype").css({"display":"block"});
-
-         house.items.cancelHouselBtn.prop("disabled", true);
+         $("#ohouseNumber").css({"display":"block"});
+         house.cancelHouselBtn.prop("disabled", true);
          house.items.no.prop("disabled", true);
          com.updateChosen('no',b.village.no,b.village.name);
 
          house.items.hid = b.hid;
-         house.houseNumber = b.houseNumber;
-         house.items.built.val(b.built).attr("readonly","readonly");
-         house.items.unit .val(b.unit).attr("readonly","readonly");
-         house.items.floor.val(b.floor).attr("readonly","readonly");
-         house.items.door .val(b.door).attr("readonly","readonly");
+         house.items.houseNumber = b.houseNumber;
+         house.items.oldhouseNumber.val(b.houseNumber);
          house.items.type.val(b.type);
          house.items.buildArea.val(b.buildArea);
          house.items.maxFloor.val(b.maxFloor);
@@ -275,19 +252,15 @@ $(function() {
 //保存
     function saveHouse(){
 //增加验证,或是取消验证v_required v_number
+
         if(house.editFlag &&(house.items.houseTypeOne.val() != "" || house.items.houseTypeTwo.val() != "" || house.items.houseTypeThr.val() != "" || house.items.houseTypeFour.val() != "")) {
             addTypeclass()
         }else if(house.editFlag &&(house.items.houseTypeOne.val() == "" && house.items.houseTypeTwo.val() == "" && house.items.houseTypeThr.val() == "" && house.items.houseTypeFour.val() == "") ){
             removeTypeclass()
         }
 
-        if(com.validate(null,"top") || house.items.no.val()== "" ||  !house.humFlag ||house.houseFlag){
-
-          if(document.getElementById("door").attributes["readonly"] == undefined){
-                houseNumbervali(house.houseNumber,house.validator.houseNumber.regex,house.validator.houseNumber.errorMsg)
-                validatehouse(house.items.no.val(),house.houseNumber)
-            }
-
+        if(com.validate(null,"right") ||house.houseFlag ){
+            validatehouse()
             return;
         }
 
@@ -326,47 +299,32 @@ $(function() {
         }else {
             url = api.data.addHouse;
             houseOptions["house.status"] =  0;
-            houseOptions["house.houseNumber"] =house.houseNumber;
+            houseOptions["house.houseNumber"] =house.items.houseNumber;
             houseOptions["house.village.no"] = house.items.no.val();
             houseOptions["house.roomNum"] =  house.items.houseTypeOne.val();
             houseOptions["house.houseType"] = house.items.houseTypeOne.val() + "室" + house.items.houseTypeTwo.val() + "厅" +  house.items.houseTypeThr.val() + "厨" + house.items.houseTypeFour.val()+"卫";
-
         }
-
         btn.button('loading');
-        com.post(url,houseOptions, function(){
-            com.showAlert(com.info, "操作成功");
 
-            btn.button('reset');
-            house.modal.modal("hide");
-            inithouse();
-            searcher.doSearch();
+         com.post(url,houseOptions, function(){
+         com.showAlert(com.info, "操作成功");
 
-        }, function(){
-            btn.button('reset');
-        });
+         btn.button('reset');
+         house.modal.modal("hide");
+         inithouse();
+         searcher.doSearch();
+
+         }, function(){
+         btn.button('reset');
+         });
     }
 //清空
   function inithouse(){
-
-        house.items.nameRuleSel.get(0).selectedIndex = 0;
-        house.items.nameRuleSel.trigger("change");
+        house.items.rule.html("");
         house.items.no.prop("disabled", false);
         house.items.no.get(0).selectedIndex = 0;
-        house.items.type.get(0).selectedIndex = 0;
-        house.items.buildArea.val("");
-        house.items.maxFloor.val("");
-        house.items.through.get(0).selectedIndex = 0;
-        house.items.houseTypeOne.val("");
-        house.items.houseTypeTwo.val("");
-        house.items.houseTypeThr.val("");
-        house.items.houseTypeFour.val("");
-        house.items.orientation.get(0).selectedIndex = 0;
-        house.items.feature.val("");
-        house.items.waterVapour.get(0).selectedIndex = 0;
-        house.items.parlourType.get(0).selectedIndex = 0;
-        house.items.heatingType.get(0).selectedIndex = 0;
-        house.repeatFlg= false;
+
+        com.cleanItems( house.items)
         house.items.built.val("").removeAttr("readonly","readonly");
         house.items.unit .val("").removeAttr("readonly","readonly");
         house.items.floor.val("").removeAttr("readonly","readonly");
@@ -376,69 +334,7 @@ $(function() {
       $("#errMsg").css("border","0px");
 
     }
-//rulefill改为楼牌号
-    function changetohousenum( temp,arr){
-        var str =temp;
-        if(arr.trim() != "" && arr.trim() != "0" ){
-            if(temp.indexOf("{}") != -1){
-                var num=temp.indexOf("{}");
-                str=temp.substring(0,num)+ arr +temp.substring(num+2);
-            }
-            else{
-                str =str+"-"+arr;
-            }
-        }
-        return str;
-    }
-//验证房产是否存在
-    function validatehouse(no,houseNumber){
-        if( no== "" || houseNumber == ""){
-            house.houseFlag =true;
-            return;
-        }
-        var options = {
-            "house.village.no": no,
-            "house.houseNumber": houseNumber,
-            "house.status" : null,
-        };
 
-        com.post(api.data.queryHouseByNoAHnum, options, function(res){
-            house.houseFlag =true
-            com.showPopover($("#door"),{errorMsg: "该房产已存在"}, "top");
-        }, function(res){
-            house.houseFlag =false
-            $("#door").css("border", "1px solid #d5d5d5").popover("destroy")
-        }, false);
-
-    }
-//楼牌号数据规则的限定
-    function buildruleval(){
-
-            com.post(api.common.queryBuildingNameRuleById, {"buildingNameRule.id":house.items.nameRuleSel.val()}, function(res){
-
-                house.validator.houseNumber["regex"] = eval("/^"+res.buildingNameRule.rule+"$/g");
-                house.validator.houseNumber["errorMsg"] =  "楼盘名称规则("+res.buildingNameRule.ruleContent+")";
-
-                $("#buildingRuleContent").html("说明："+res.buildingNameRule.ruleContent+";eg."+res.buildingNameRule.ruleExample+"! 楼牌号参数项无数据值时请填0!");
-                house.rulefill=res.buildingNameRule.rulefill
-            }, null, false);
-    }
-//验证楼牌号的是否符合正则
-    function houseNumbervali(houseNumber,regex,errorMsg){
-        if (new RegExp(regex).test(houseNumber)) {
-            $("#errMsg").popover("destroy")
-            house.humFlag =true
-        }else{
-            house.humFlag =false
-            $("#errMsg").focus().select();
-            $("#errMsg").removeAttr("data-placement").attr({
-                "data-rel":"popover",
-                "data-placement": "right",
-                "data-content": errorMsg
-            }).removeAttr("data-toggle").popover('show');
-
-        }
-    }
     function removeTypeclass(){
         house.items.houseTypeOne.removeClass("v_required v_number");
         house.items.houseTypeTwo.removeClass("v_required v_number");
@@ -473,10 +369,25 @@ $(function() {
                 house.items.unit.val("");
                 house.items.floor.val("");
                 house.items.door.val("");
+                house.items.builtrule.get(0).selectedIndex = 0;
+                house.items.unitrule.get(0).selectedIndex = 0;
+                house.items.floorrule.get(0).selectedIndex = 0;
+                house.items.doorrule.get(0).selectedIndex = 0;
                 $("#door").css("border", "1px solid #d5d5d5").popover("destroy");
                 $("#errMsg").popover("destroy");
                 break;
         }
     }
+
+     function  validatehouse(){
+
+         house.valideteresult = houseUtils.anytimevalidate(house.items,null,true)
+         
+         if(house.valideteresult.prehouse != undefined){
+             house.houseFlag = house.valideteresult.prehouse.Flag
+         }
+         house.items.houseNumber = house.valideteresult.houseNumber;
+     }
+
 
 })

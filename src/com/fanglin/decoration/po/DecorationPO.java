@@ -24,12 +24,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fanglin.data.common.vo.CustomerVO;
-import com.fanglin.data.common.vo.DutyVO;
-import com.fanglin.data.common.vo.HouseVO;
-import com.fanglin.data.common.vo.VillageVO;
-import com.fanglin.data.po.CustomerPO;
-import com.fanglin.data.po.HousePO;
+import com.fanglin.communion.po.CustomerPO;
+import com.fanglin.communion.po.HousePO;
+import com.fanglin.communion.vo.CustomerVO;
+import com.fanglin.communion.vo.DutyVO;
+import com.fanglin.communion.vo.HouseVO;
+import com.fanglin.communion.vo.VillageVO;
 import com.fanglin.data.po.QuotationVersionPO;
 import com.fanglin.data.quotation.vo.QuotationVersionVO;
 import com.fanglin.decoration.vo.DecorationVO;
@@ -41,7 +41,7 @@ import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.SystemConfig;
 
 @Entity
-@Table(name = "decoration", catalog = "platform")
+@Table(name = "decoration", catalog = "decoration")
 public class DecorationPO implements Serializable {
 
 	private static final long serialVersionUID = -5971474052433500262L;
@@ -138,7 +138,7 @@ public class DecorationPO implements Serializable {
 	
 	private String contractCode;
 	
-	private String contractUserId;
+	private UserPO contractUserId;
 	
 	private float orderTotalPrice;
 	
@@ -247,7 +247,7 @@ public class DecorationPO implements Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = true, name = "designerId", referencedColumnName="userId")
+	@JoinColumn(nullable = true, name = "dsuid", referencedColumnName="uId")
 	public UserPO getDesigner(){
 		return designer;
 	}
@@ -257,7 +257,7 @@ public class DecorationPO implements Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = true, name = "salesmanId", referencedColumnName="userId")
+	@JoinColumn(nullable = true, name = "smuid", referencedColumnName="uId")
 	public UserPO getSalesman(){
 		return salesman;
 	}
@@ -267,7 +267,7 @@ public class DecorationPO implements Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = true, name = "supervisorId", referencedColumnName="userId")
+	@JoinColumn(nullable = true, name = "svuid", referencedColumnName="uId")
 	public UserPO getSupervisor(){
 		return supervisor;
 	}
@@ -284,11 +284,13 @@ public class DecorationPO implements Serializable {
 		this.contractCode = contractCode;
 	}
 
-	public String getContractUserId() {
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = true, name = "ctuid", referencedColumnName="uId")
+	public UserPO getContractUserId() {
 		return contractUserId;
 	}
 
-	public void setContractUserId(String contractUserId) {
+	public void setContractUserId(UserPO contractUserId) {
 		this.contractUserId = contractUserId;
 	}
 
@@ -349,7 +351,7 @@ public class DecorationPO implements Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = true, name = "createUser", referencedColumnName="userId")
+	@JoinColumn(nullable = true, name = "cuid", referencedColumnName="uId")
 	public UserPO getCreateUser(){
 		return createUser;
 	}
@@ -425,7 +427,7 @@ public class DecorationPO implements Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = true, name = "quoterId", referencedColumnName="userId")
+	@JoinColumn(nullable = true, name = "quId", referencedColumnName="uId")
 	public UserPO getQuoter() {
 		return quoter;
 	}
@@ -435,7 +437,7 @@ public class DecorationPO implements Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = true, name = "escorterId", referencedColumnName="userId")
+	@JoinColumn(nullable = true, name = "euId", referencedColumnName="uId")
 	public UserPO getEscorter() {
 		return escorter;
 	}
@@ -461,7 +463,7 @@ public class DecorationPO implements Serializable {
 	}
 
 	private void ptv(DecorationVO decorationVO){
-		BeanUtil.copyProperties(this, decorationVO, Arrays.asList("house","customer","designer","salesman","supervisor","version","createUser","quoter","escorter"));
+		BeanUtil.copyProperties(this, decorationVO, Arrays.asList("house","customer","designer","salesman","supervisor","version","createUser","quoter","escorter","contractUserId"));
 		
 		if(decorationVO.getOrderTotalPrice() == null){
 			decorationVO.setOrderTotalPrice(new Float(0));

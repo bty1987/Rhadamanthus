@@ -30,10 +30,10 @@ jQuery(function($) {
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
-            var $btnView = $('<a></a>').addClass('btn btn-minier btn-primary').html('查看');
-            var $btnPrice = $('<a></a>').addClass('btn btn-minier btn-default').html('扣款');
-            var $btnAddMinus = $('<a></a>').addClass('btn btn-minier btn-success').html('信息轴');
-            var $btnInfo = $('<a></a>').addClass('btn btn-minier btn-danger').html('申请审核');
+            var $btnView = $('<a></a>').addClass('btn btn-minier btn-yellow').html('查看');
+            var $btnPrice = $('<a></a>').addClass('btn btn-minier btn-success').html('扣款');
+            var $btnAddMinus = $('<a></a>').addClass('btn btn-minier btn-warning').html('信息轴');
+            var $btnInfo = $('<a></a>').addClass('btn btn-minier btn-inverse').html('申请审核');
 
 
             var propertyArr = [
@@ -42,17 +42,17 @@ jQuery(function($) {
                 ["客户:", v.decoration.customer.customerName, "grey"],
                 ["设计师:", v.decoration.designer.currentName, "grey"],
                 ["设计部:", v.decoration.designer.dept.deptName, "grey"],
-                ["面积:", v.decoration.house.buildArea, "grey"],
-                ["量房时间:", v.decoration.measureTime , "grey"],
-                ["签单时间:", v.decoration.contractTime, "grey"],
+                ["面积:", v.decoration.house.buildArea, "blue "],
+                ["量房时间:", v.decoration.measureTime , "green"],
+                ["签单时间:", v.decoration.contractTime, "green"],
                 ["类型:", v.decoration.type == 0 ? '半包' : (v.type == 1 ? '全包' : '半价'), "red"],
                 ["状态:", v.decoration.status, "red"],
                 ["审核状态:", v.auditer?'已审核':'未审核', "red"],
             ];
             if(v.auditer){
                 $btnInfo = null;
-                propertyArr.push(["审核人:", v.auditer.currentName, "red"]);
-                propertyArr.push(["审核时间:", v.auditTime, "red"]);
+                propertyArr.push(["审核人:", v.auditer.currentName, "grey"]);
+                propertyArr.push(["审核时间:", v.auditTime, "green"]);
 
             }
             $.each(propertyArr, function (index, value) {

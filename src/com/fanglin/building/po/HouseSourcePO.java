@@ -12,8 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fanglin.data.po.CustomerPO;
-import com.fanglin.data.po.HousePO;
+import com.fanglin.communion.po.CustomerPO;
+import com.fanglin.communion.po.HousePO;
 import com.fanglin.personel.po.UserPO;
 
 @Entity

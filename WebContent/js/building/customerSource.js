@@ -180,29 +180,29 @@ jQuery(function($) {
 		var creatLine = function(v){
 
 			var that = this;
-			var $liLine = $('<li></li>').addClass('item-blue clearfix');
+			var $liLine = $('<li></li>').addClass('item-orange clearfix');
 			var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.no));
 			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 			var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
-			var $btnView = $('<a></a>').addClass('btn btn-minier btn-primary').html("编辑");
-			var $btnBind = $('<a></a>').addClass('btn btn-minier btn-yellow').html("绑定房源");
+			var $btnView = $('<a></a>').addClass('btn btn-minier btn-yellow').html("编辑");
+			var $btnBind = $('<a></a>').addClass('btn btn-minier btn-success').html("绑定房源");
 			var $btnStatus = $('<input />').attr("type","checkbox").addClass('ace ace-switch ace-switch-5').prop("id", v.csid).attr("checked", v.status == 0 ? true : false);
 			var $btnSpan = $('<span></span>').addClass("lbl status-lbl");
-			var $btnRecord = $('<a></a>').addClass('btn btn-minier btn-inverse').html("跟进记录");
+			var $btnRecord = $('<a></a>').addClass('btn btn-minier btn-warning').html("跟进记录");
 
 			var propertyArr = [
+				["客户类型:", customerSource.csType[v.type], "red"],
 				["客户名:", v.customer.name, "grey"],
 				["联系电话:", v.customer.phone, "grey"],
-				["客户类型:", customerSource.csType[v.type], "grey"],
-				["目的:", v.purpose, "blue"],
+				["目的:", v.purpose, "grey"],
 				["需求总价:", v.price, "blue"],
 				["需求面积:", v.area, "blue"],
-				["需求户型:", v.familyType + "室", "blue"],
-				["朝向:", customerSource.orientation[v.orientation], "blue"],
-				["意向备注:", v.conditions, "blue"],
-				["客户等级:", v.grade, "red"],
-				["备注:", v.comment, "red"]
+				["需求户型:", v.familyType + "室", "grey"],
+				["朝向:", customerSource.orientation[v.orientation], "grey"],
+				["意向备注:", v.conditions, "grey"],
+				["客户等级:", v.grade, "grey"],
+				["备注:", v.comment, "grey"]
 			];
 
 			$.each(propertyArr, function (index, value) {

@@ -62,21 +62,21 @@ $(function(){
             var $contentWrap = $('<div></div>').addClass('line-wrap  content col10');
 
             var propertyArr = [
-                v.manifestTemplate.name,
-                v.manifestTemplate.comment,
-                v.goods.no,
-                v.goods.name,
-                v.goods.barcode,
-                v.goods.category,
-                v.goods.brand,
-                v.goods.measurementUnit,
-                v.goods.type==0?"商品":"套餐",
-                v.goods.pieceNum
+                [v.manifestTemplate.name,'grey'],
+                [v.manifestTemplate.comment,'grey'],
+                [v.goods.no,'blue'],
+                [v.goods.name,'grey'],
+                [v.goods.barcode,'blue'],
+                [v.goods.category,'grey'],
+                [v.goods.brand,'grey'],
+                [v.goods.measurementUnit,'grey'],
+                [v.goods.type==0?"商品":"套餐",'red'],
+                [v.goods.pieceNum,'blue']
             ];
 
 
             $.each(propertyArr, function (i, v) {
-                var $cell = $('<div></div>').addClass('cell').html(v);
+                var $cell = $('<div></div>').addClass('cell ' + v[1]).html(v[0]);
                 $cell.appendTo($contentWrap);
             });
 

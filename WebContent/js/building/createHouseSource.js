@@ -10,6 +10,7 @@ jQuery(function($) {
 		modal: null,
 		nameRuleList: [],
 		rulenum: [],
+		valideteresult: {},
 		rulefill: null,
 		items: {},
 		editFlg: false,
@@ -25,20 +26,11 @@ jQuery(function($) {
 		buildingJson:null,
 		repeatFlg: false,
 		editFlag: false,
-		houseFlag:false,
-		humFlag:true,
+		HFlag: false,
+		houseFlag: false,
 		repeatCustomerFlg: false,
 		cardFlag: false,
-		validator: {
-			houseNumber: {
-				type: "v_houseNumber",
-				regex: /^D_\d{3}$/g,
-				errorMsg: "楼盘名称规则"
-			},
-		},
 	};
-
-	$.extend(com.validator, createHouseSource.validator);
 
 	var tag_input = $("#indoores");
 	var tag_inputTwo = $("#feature");
@@ -76,7 +68,7 @@ jQuery(function($) {
 	$(".date-picker").datepicker({autoclose: !0}).on("show",function() {
 		setTimeout(function() {
 			$(".dropdown-menu").css("z-index", 1060)
-		},0)
+		}, 0)
 	}).next().on(ace.click_event,function() {
 		a(this).prev().focus()
 	});
@@ -88,7 +80,7 @@ jQuery(function($) {
 
 	createHouseSource.items.gender = $("#gender").switchBtn("gender");
 
-	createHouseSource.saveBtn = $("#saveBtn").on("click", addHouseSource);
+	createHouseSource.saveBtn = $("#saveBtn").bindClick(addHouseSource);
 	createHouseSource.cancelBtn = $("#cancelBtn").on("click", deleteDate);
 	createHouseSource.createCustomerSaveBtn = $("#createCustomerSaveBtn").on("click", createCustomer);
 
@@ -128,14 +120,15 @@ jQuery(function($) {
 	createHouseSource.customerItems.phone = $("#phone");
 
 	createHouseSource.houseItems.no = $("#no");
-	createHouseSource.houseItems.nameRuleSel = $("#nameRuleSel").on("change", function(e){
-		buildruleval();
-	});
-	createHouseSource.houseItems.buildingRuleContent = $("#buildingRuleContent");
+	createHouseSource.houseItems.rule = $("#rule");
 	createHouseSource.houseItems.built = $("#built");
 	createHouseSource.houseItems.unit = $("#unit");
 	createHouseSource.houseItems.floor = $("#floor");
 	createHouseSource.houseItems.door = $("#door");
+	createHouseSource.houseItems.builtrule = $("#builtrule");
+	createHouseSource.houseItems.unitrule = $("#unitrule");
+	createHouseSource.houseItems.floorrule = $("#floorrule");
+	createHouseSource.houseItems.doorrule = $("#doorrule");
 	createHouseSource.houseItems.type = $("#type");
 	createHouseSource.houseItems.buildArea = $("#buildArea");
 	createHouseSource.houseItems.maxFloor = $("#maxFloor");
@@ -150,13 +143,6 @@ jQuery(function($) {
 	createHouseSource.houseItems.parlourType = $("#parlourType");
 	createHouseSource.houseItems.heatingType = $("#heatingType");
 	createHouseSource.houseItems.oldhousetype = $("#oldhousetype");
-
-	//楼号规则
-	buildruleval();
-	com.post(api.common.queryBuildingNameRule, {}, function(res) {
-		createHouseSource.nameRuleList = res.buildingNameRules;
-		createHouseSource.houseItems.nameRuleSel.bindData(res.buildingNameRules, "id", "ruleContent", !1).trigger("change");
-	}, null, false);
 
 	com.post(api.ds.building, {}, function(res){
 		createHouseSource.items.hsType.bindData(res.hsType, "key", "value");
@@ -177,6 +163,10 @@ jQuery(function($) {
 		createHouseSource.houseItems.heatingType.bindData(res.heatingType, "key", "value");
 		createHouseSource.houseItems.through.bindData(res.through, "key", "value");
 		createHouseSource.houseItems.parlourType.bindData(res.parlourType, "key", "value");
+		createHouseSource.houseItems.builtrule.bindData(res.buildrule,"key", "value");
+		createHouseSource.houseItems.unitrule.bindData(res.buildrule,"key", "value");
+		createHouseSource.houseItems.floorrule.bindData(res.buildrule,"key", "value");
+		createHouseSource.houseItems.doorrule.bindData(res.buildrule,"key", "value");
 	}, null, false);
 
 	com.post(api.ds.data, {}, function(res){
@@ -201,86 +191,45 @@ jQuery(function($) {
 	//清空数据
 	createHouseSource.houseItems.no = $("#no").on("change",function(e){
 		deleteVillageData("no");
-		deleteVillageData("nameRuleSel");
 		houseItemsReadOnlyFlag(false);
+
+		com.post(api.data.queryVillageById, {"village.no" : createHouseSource.houseItems.no.val()}, function(res){
+			createHouseSource.houseItems.rule.html("推荐楼牌号规则：" + res.village.rule);
+		}, null, false)
 	});
-	createHouseSource.houseItems.nameRuleSel = $("#nameRuleSel").on("change",function(e){
-		deleteVillageData("nameRuleSel");
-		houseItemsReadOnlyFlag(false);
-	});
-	createHouseSource.houseItems.built = $("#built").on("change",function(e){
+
+	createHouseSource.houseItems.built = $("#built").on("change", function(e){
 		deleteVillageData("built");
 		houseItemsReadOnlyFlag(false);
 	});
-	createHouseSource.houseItems.unit = $("#unit").on("change",function(e){
+	createHouseSource.houseItems.unit = $("#unit").on("change", function(e){
 		deleteVillageData("unit");
 		houseItemsReadOnlyFlag(false);
 	});
-	createHouseSource.houseItems.floor = $("#floor").on("change",function(e){
+	createHouseSource.houseItems.floor = $("#floor").on("change", function(e){
 		deleteVillageData("floor");
 		houseItemsReadOnlyFlag(false);
 	});
 
-	//判断房源是否存在  房产存在的情况下自动添加房产信息
+	createHouseSource.houseItems.builtrule.on("change", function(e){
+		checkHouseAndHouseSource("builtrule");
+	});
+	createHouseSource.houseItems.unitrule.on("change", function(e){
+		checkHouseAndHouseSource("unitrule");
+	});
+	createHouseSource.houseItems.floorrule.on("change",function(e){
+		checkHouseAndHouseSource("floorrule");
+	});
+	createHouseSource.houseItems.doorrule.on("change",function(e){
+		checkHouseAndHouseSource("doorrule");
+	});
+
+	createHouseSource.items.hsType.on("change", function(e){
+		checkHouseAndHouseSource("hsType");
+	});
+
 	createHouseSource.houseItems.door = $("#door").on("blur", function(e){
-
-		buildruleval();
-
-		if($("#no").val() == ""){
-			com.showPopover($("#no"),{errorMsg: "请填写楼盘名！"}, "right");
-			createHouseSource.houseItems.door.val("");
-		}else{
-			$("#no").css("border", "1px solid #d5d5d5").popover("destroy");
-		}
-
-		if($(this).val() == "" || $("#no").val() == ""){
-			return;
-		}
-
-		//合成楼牌号
-		createHouseSource.rulenum = [createHouseSource.houseItems.built.val(), createHouseSource.houseItems.unit.val(), createHouseSource.houseItems.floor.val(), createHouseSource.houseItems.door.val()];
-		var houseNumber = createHouseSource.rulefill;
-
-		$.each(createHouseSource.rulenum, function(i,val){
-			houseNumber = changetohousenum(houseNumber, val) ;
-			createHouseSource.houseNumber = houseNumber;
-		}, null, false);
-
-		//验证楼牌号是否符合正则
-		createHouseSource.humFlag = houseNumbervali(houseNumber,createHouseSource.validator.houseNumber.regex,createHouseSource.validator.houseNumber.errorMsg);
-
-		var options = {
-			"house.village.no": $("#no").val(),
-			"house.houseNumber": houseNumber,
-			"house.status": 0,
-		};
-
-		com.post(api.data.queryHouseByNoAHnum, options, function(res){
-			var houses = res.house;
-			createHouseSource.houseId = houses.hid;
-
-			var hsOptions = {
-				"houseSource.house.hid": res.house.hid,
-				"houseSource.type": $("#hsType").val(),
-			};
-
-			com.post(api.building.checkHouseSource, hsOptions, function(data){
-				createHouseSource.houseFlag = false;
-				com.showPopover($("#door"),{errorMsg: "该房源已存在"}, "right");
-			}, function(res){
-				createHouseSource.houseFlag = false;
-				//绑定房产数据
-				bindHouseData(houses);
-				houseItemsReadOnlyFlag(true);
-				$("#door").css("border", "1px solid #d5d5d5").popover("destroy");
-			}, false);
-
-		}, function(e){
-			createHouseSource.houseFlag = true;
-			deleteHouseData();
-			houseItemsReadOnlyFlag(false);
-			$("#door").css("border", "1px solid #d5d5d5").popover("destroy");
-		}, false);
+		checkHouseAndHouseSource("door");
 	});
 
 	//检查电话号是否已存在
@@ -325,8 +274,7 @@ jQuery(function($) {
 	//编辑OR添加
 	function addHouseSource(){
 
-		if(com.validate() || createHouseSource.repeatFlg || !createHouseSource.humFlag){
-			houseNumbervali(createHouseSource.houseNumber,createHouseSource.validator.houseNumber.regex,createHouseSource.validator.houseNumber.errorMsg);
+		if(com.validate() || createHouseSource.repeatFlg){
 			return;
 		}
 		var options = {};
@@ -452,10 +400,7 @@ jQuery(function($) {
 		com.updateChosen("followId", "", "");
 
 		$(".tag").remove();
-		createHouseSource.houseItems.buildingRuleContent.html("");
-		createHouseSource.validator.houseNumber.type="v_houseNumber";
-		createHouseSource.validator.houseNumber.regex="";
-		createHouseSource.validator.houseNumber.errorMsg="";
+		createHouseSource.houseItems.rule.html("");
 		$("#ohousetype").css("display", "none");
 		$("#nhousetype").removeAttr("style");
 		com.cleanItems(createHouseSource.items);
@@ -485,6 +430,38 @@ jQuery(function($) {
 		createHouseSource.houseItems.heatingType.val(0);
 	}
 
+	//检查房产以及房源是否存在
+	function checkHouseAndHouseSource(inputId){
+		validatehouse();
+
+		if(createHouseSource.HFlag){
+			var houses = createHouseSource.valideteresult.prehouse.house;
+			createHouseSource.houseId = houses.hid;
+
+			var hsOptions = {
+				"houseSource.house.hid": houses.hid,
+				"houseSource.type": createHouseSource.items.hsType.val(),
+			};
+
+			com.post(api.building.checkHouseSource, hsOptions, function(data){
+				createHouseSource.houseFlag = false;
+				com.showPopover($("#door"),{errorMsg: "该房源已存在"}, "bottom");
+			}, function(res){
+				createHouseSource.houseFlag = false;
+				//绑定房产数据
+				bindHouseData(houses);
+				houseItemsReadOnlyFlag(true);
+				$("#door").css("border", "1px solid #d5d5d5").popover("destroy");
+			}, false);
+		}else{
+			createHouseSource.houseFlag = true;
+			//deleteHouseData();
+			houseItemsReadOnlyFlag(false);
+			$("#" + inputId).css("border", "1px solid #d5d5d5").popover("destroy");
+		}
+	}
+
+	//绑定房产数据
 	function bindHouseData(houses){
 		com.updateChosen("no", houses.village.no, houses.village.name);
 		$("#nhousetype").css("display", "none");
@@ -501,48 +478,7 @@ jQuery(function($) {
 		createHouseSource.houseItems.heatingType.val(houses.heatingType);
 	}
 
-	//楼牌号数据规则的限定
-	function buildruleval(){
-		if(createHouseSource.houseItems.nameRuleSel.val() == null || createHouseSource.houseItems.nameRuleSel.val() == ""){
-			return;
-		}
-
-		com.post(api.common.queryBuildingNameRuleById, {"buildingNameRule.id":createHouseSource.houseItems.nameRuleSel.val()}, function(res){
-
-			createHouseSource.validator.houseNumber["regex"] = eval("/^" + res.buildingNameRule.rule+"$/g");
-			createHouseSource.validator.houseNumber["errorMsg"] = "楼盘名称规则(" + res.buildingNameRule.ruleContent+")";
-
-			$("#buildingRuleContent").html("说明："+ res.buildingNameRule.ruleContent + ";eg." + res.buildingNameRule.ruleExample + "! 楼牌号参数项无数据值时请填0!");
-			createHouseSource.rulefill = res.buildingNameRule.rulefill
-		}, null, false);
-	}
-
-	//rulefill改为楼牌号
-	function changetohousenum(temp, arr){
-		var str = temp;
-		if(arr != "" && arr != "0" ){
-			if(temp.indexOf("{}") != -1){
-				var num = temp.indexOf("{}");
-				str = temp.substring(0, num) + arr + temp.substring(num + 2);
-			}else{
-				str = str + "-" + arr;
-			}
-		}
-		return str;
-	}
-
-	//验证楼牌号的是否符合正则
-	function houseNumbervali(houseNumber, regex, errorMsg){
-		var re = new RegExp(regex);
-		if (re.test(houseNumber)) {
-			$("#built").css("border", "1px solid #d5d5d5").popover("destroy")
-			return true;
-		}else{
-			com.showPopover($("#built"),{errorMsg: errorMsg}, "top");
-			return false;
-		}
-	}
-
+	//验证证件号码
 	function regCard(cardParam, reg){
 		if( cardParam.val() != "" ){
 			if(reg.test(cardParam.val()) == false){
@@ -558,7 +494,7 @@ jQuery(function($) {
 		}
 	}
 
-	//删除数据
+	//删除楼牌号数据
 	function deleteVillageData(paramFlag){
 		switch(paramFlag)
 		{
@@ -574,15 +510,16 @@ jQuery(function($) {
 			case "floor":
 				createHouseSource.houseItems.door.val("");
 				break;
-			case "nameRuleSel":
+			case "no":
 				createHouseSource.houseItems.built.val("");
 				createHouseSource.houseItems.unit.val("");
 				createHouseSource.houseItems.floor.val("");
 				createHouseSource.houseItems.door.val("");
-				$("#door").css("border", "1px solid #d5d5d5").popover("destroy");
-				$("#built").popover("destroy");
-				break;
-			case "no":
+				createHouseSource.houseItems.builtrule.get(0).selectedIndex = 0;
+				createHouseSource.houseItems.unitrule.get(0).selectedIndex = 0;
+				createHouseSource.houseItems.floorrule.get(0).selectedIndex = 0;
+				createHouseSource.houseItems.doorrule.get(0).selectedIndex = 0;
+				$("#door").popover("destroy");
 				deleteHouseData();
 				break;
 		}
@@ -603,6 +540,16 @@ jQuery(function($) {
 		createHouseSource.houseItems.heatingType.prop("disabled", flag);
 		createHouseSource.houseItems.waterVapour.prop("disabled", flag);
 		createHouseSource.houseItems.feature.prop("disabled", flag);
+	}
+
+	function  validatehouse(){
+		createHouseSource.valideteresult = houseUtils.anytimevalidate(createHouseSource.houseItems, null, false);
+
+		if(createHouseSource.valideteresult.prehouse != undefined){
+			createHouseSource.HFlag = createHouseSource.valideteresult.prehouse.Flag;
+		}
+
+		createHouseSource.houseNumber = createHouseSource.valideteresult.houseNumber;
 	}
 
 });

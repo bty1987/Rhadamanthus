@@ -55,7 +55,7 @@ public class ConstructerPO implements java.io.Serializable {
 	private Timestamp createTime;
 	
 	private short status;
-	
+
 	public ConstructerPO() {
 		super();
 	}
@@ -129,7 +129,7 @@ public class ConstructerPO implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "createrId", referencedColumnName="userId")
+	@JoinColumn(name = "cuid", referencedColumnName="uid")
 	public UserPO getCreater() {
 		return creater;
 	}
@@ -157,7 +157,7 @@ public class ConstructerPO implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "userId", referencedColumnName="userId")
+	@JoinColumn(name = "wuid", referencedColumnName="uid")
 	public UserPO getUser() {
 		return user;
 	}
@@ -166,4 +166,5 @@ public class ConstructerPO implements java.io.Serializable {
 	public void setUser(UserPO user) {
 		this.user = user;
 	}
+	
 }

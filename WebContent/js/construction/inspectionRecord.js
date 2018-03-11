@@ -49,7 +49,7 @@ jQuery(function($) {
 
 		var creatLine = function(v){
 			var that = this;
-			var $liLine = $('<li></li>').addClass('item-blue clearfix');
+			var $liLine = $('<li></li>').addClass('item-orange clearfix');
 			var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.orderId));
 			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 			var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
@@ -60,8 +60,8 @@ jQuery(function($) {
 			var propertyArr = [
 				["楼盘地址:", v.orderAddr, "grey"],
 				["操作人:", v.operaterName, "grey"],
-				["开始时间:", v.startTime, "grey"],
-				["结束时间:", v.endTime, "grey"],
+				["开始时间:", v.startTime, "green "],
+				["结束时间:", v.endTime, "green"],
 				["备注:", v.recordDes, "grey"],
 			];
 

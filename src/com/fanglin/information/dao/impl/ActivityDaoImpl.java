@@ -34,7 +34,7 @@ public class ActivityDaoImpl extends DaoImpl<ActivityPO> implements ActivityDao 
 		
 		PagingQuery<ActivityPO> query = pagingQuery(paging, ActivityPO.class);
 		query.add(Restrictions.eq("company", company));
-		
+		query.alias("creater", "creater");
 		
 		if(filters != null){
 			for(Filter filter: filters){

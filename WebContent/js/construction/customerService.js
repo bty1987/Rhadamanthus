@@ -20,15 +20,15 @@ jQuery(function($) {
 
 		var creatLine = function(v){
 			var that = this;
-			var $liLine = $('<li></li>').addClass('item-blue clearfix');
+			var $liLine = $('<li></li>').addClass('item-orange clearfix');
 			var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.orderId));
 			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 			var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
 			var $btnView = $('<a></a>').addClass('btn btn-minier btn-yellow').html("查看");
 			var $btnComplain = $('<a></a>').addClass('btn btn-minier btn-success').html("投诉");
-			var $btnRepair = $('<a></a>').addClass('btn btn-minier').html("保修");
-			var $btnRevisit = $('<a></a>').addClass('btn btn-minier btn-danger').html("回访");
+			var $btnRepair = $('<a></a>').addClass('btn btn-minier btn-warning').html("保修");
+			var $btnRevisit = $('<a></a>').addClass('btn btn-minier btn-inverse').html("回访");
 
 			var propertyArr = [
 				["楼盘名:", v.house.village.name, "grey"],

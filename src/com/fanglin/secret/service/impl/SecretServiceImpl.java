@@ -18,12 +18,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fanglin.data.common.dao.CustomerDao;
-import com.fanglin.data.common.dao.CustomerPhoneDao;
-import com.fanglin.data.common.vo.HouseVO;
-import com.fanglin.data.common.vo.VillageVO;
-import com.fanglin.data.po.CustomerPO;
-import com.fanglin.data.po.CustomerPhonePO;
+import com.fanglin.communion.dao.CustomerDao;
+import com.fanglin.communion.dao.CustomerPhoneDao;
+import com.fanglin.communion.po.CustomerPO;
+import com.fanglin.communion.po.CustomerPhonePO;
+import com.fanglin.communion.vo.HouseVO;
+import com.fanglin.communion.vo.VillageVO;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.vo.DecorationVO;

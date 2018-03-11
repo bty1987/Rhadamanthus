@@ -34,8 +34,8 @@ jQuery(function($) {
 	cityProper.items.cityProperName = $("#cityProperName");
 	cityProper.items.citySel =$("#citySel");
 	cityProper.items.regionSel=$("#regionSel").on("change", function(e, callback){
-		com.post(api.system.queryCityByRegionId, {"city.region.regionId":$(this).val()}, function(res){
-			cityProper.items.citySel.bindData(res.citys, "cityId", "cityName", false);
+		com.post(api.system.queryCityByRid, {"city.region.rid":$(this).val()}, function(res){
+			cityProper.items.citySel.bindData(res.citys, "cid", "name", false);
 			if(callback) callback();
 		});
 	});
@@ -48,7 +48,7 @@ jQuery(function($) {
 	$.extend(com.validator, cityProper.validator);
 	
 	com.post(api.system.queryRegion, {}, function(res){
-		cityProper.items.regionSel.bindData(res.regions, "regionId", "regionName", false).trigger("change");
+		cityProper.items.regionSel.bindData(res.regions, "rid", "name", false).trigger("change");
 	});
 	
 	var displayFunc  = (function(){
@@ -70,18 +70,18 @@ jQuery(function($) {
 
         var creatLine = function(v){
         	
-            var $liLine = $('<li></li>').addClass('item-blue clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.cityProperName));
+            var $liLine = $('<li></li>').addClass('item-orange clearfix');
+            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.name));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
-            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-info').html('编辑');
-            var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
+            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
+            var $btnDel = $('<a></a>').addClass('btn btn-minier btn-success').html('删除');
             
             var propertyArr = [
-               ["编号:", v.cityProperId, "grey"],
-               ["所属大区:", v.city.region.regionName, "grey"],
-               ["所属城市:", v.city.cityName, "grey"],
+               ["编号:", v.no, "grey"],
+               ["所属大区:", v.city.region.name, "grey"],
+               ["所属城市:", v.city.name, "grey"],
            ];
             
            $.each(propertyArr, function (index,value) {
@@ -96,11 +96,11 @@ jQuery(function($) {
             $liLine.append($h3).append($ulProperty);
             
             $btnEdit.click(function(){
-            	editCityProper(v.cityProperId, v.cityProperName, v.city.region.regionId, v.city.cityId);
+            	editCityProper(v.cpid, v.no, v.name, v.city.region.rid, v.city.cid);
             });
             
             $btnDel.click(function(){
-            	deleteCityProper(v.cityProperId);
+            	deleteCityProper(v.cpid);
             });
             
             return $liLine;
@@ -114,7 +114,7 @@ jQuery(function($) {
             drawLine : function(v){
                 return creatLine(v);
             }
-        }
+        };
     })();
 	
 	var searcher = new Searcher();
@@ -141,9 +141,10 @@ jQuery(function($) {
 		cityProper.modal.modal("show");   
     });
 	
-	function editCityProper(cityProperId, cityProperName, regionId, cityId){
+	function editCityProper(cpid, cityProperId, cityProperName, regionId, cityId){
 		
 		editFlg = true;
+		cityProper.items.cpid = cpid;
 		
 		cityProper.items.cityProperId.prop("disabled", true).css("display", "block");
 		
@@ -158,7 +159,7 @@ jQuery(function($) {
 	function deleteCityProper(cityProperId){
 		
 		var options = {
-			"cityProperIds[0]": cityProperId,
+			"cpids[0]": cityProperId,
 		};
 		
 		com.post(api.system.deleteCityProper, options, function(res){
@@ -174,13 +175,14 @@ jQuery(function($) {
 		
 		var url;
 		var options = {
-			'cityProper.cityProperId': cityProper.items.cityProperId.val(),
-			'cityProper.cityProperName': cityProper.items.cityProperName.val(),
-			'cityProper.city.cityId': cityProper.items.citySel.val()
+			'cityProper.no': cityProper.items.cityProperId.val(),
+			'cityProper.name': cityProper.items.cityProperName.val(),
+			'cityProper.city.cid' : cityProper.items.citySel.val()
 		};
-		
+	
 		if(editFlg){
-			url = api.system.updateCityProper;
+			url = api.system.updateCityProper,
+			options['cityProper.cpid']= cityProper.items.cpid;
 		}else{
 			url = api.system.addCityProper;
 		}

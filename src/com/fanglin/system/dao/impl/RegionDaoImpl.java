@@ -44,7 +44,7 @@ public class RegionDaoImpl extends DaoImpl<RegionPO> implements RegionDao {
 		
 		PagingQuery<RegionPO> query = pagingQuery(paging, RegionPO.class);
 		
-		query.add(Restrictions.or(Restrictions.ilike(RegionPO.REGION_NAME, name, MatchMode.ANYWHERE), Restrictions.ilike(RegionPO.COLUMN_PINYIN_STR, name, MatchMode.ANYWHERE)));
+		query.add(Restrictions.or(Restrictions.ilike(RegionPO.COLUMN_NAME_STR, name, MatchMode.ANYWHERE), Restrictions.ilike(RegionPO.COLUMN_PINYIN_STR, name, MatchMode.ANYWHERE)));
 		
 		return query.list();
 	}
@@ -63,12 +63,13 @@ public class RegionDaoImpl extends DaoImpl<RegionPO> implements RegionDao {
 				String field = filter.getField();
 				String data = filter.getData();
 				String op = filter.getOp();
-				
-				if("regionName".equals(field)){
+
+				if(RegionPO.COLUMN_NAME_STR.equals(field)){
 					query.add(query.getCriterion(field, data, op));
 				}
 			}
 		}
 	}
+
 
 }

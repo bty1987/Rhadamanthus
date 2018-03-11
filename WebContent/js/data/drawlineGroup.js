@@ -45,12 +45,12 @@ $(function(){
         };
 
         var creatLine = function(v){
-            var $liLine = $('<li></li>').addClass('item-blue clearfix');
+            var $liLine = $('<li></li>').addClass('item-orange clearfix');
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.name));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
-            var $btnPosition = $('<a></a>').addClass('btn btn-minier btn-warning').html('编辑');
+            var $btnPosition = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
             var $btnStatus = $('<div></div>').addClass('pull-right');
             var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({"type" : "checkbox"});
             var $span = $('<span></span>').addClass('lbl');

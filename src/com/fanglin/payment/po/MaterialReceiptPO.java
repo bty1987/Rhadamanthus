@@ -123,7 +123,7 @@ public class MaterialReceiptPO implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "collecterId", referencedColumnName = "userId")
+	@JoinColumn(name = "cluid", referencedColumnName = "uid")
 	public UserPO getCollecter(){
 		return collecter;
 	}
@@ -133,7 +133,7 @@ public class MaterialReceiptPO implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "confirmerId", referencedColumnName = "userId")
+	@JoinColumn(name = "cfuid", referencedColumnName = "uid")
 	public UserPO getConfirmer(){
 		return confirmer;
 	}

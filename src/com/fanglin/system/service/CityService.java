@@ -4,13 +4,15 @@
  * @Version		: 1.0
  * @Date		: 2014-8-2
  * @Copyright	: Copyright Decoration 2014
- * @Author		: bty1987
+ * @Author		: Howard
  * @Describing	: 
  */
+
 package com.fanglin.system.service;
 
 import java.util.List;
 
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.system.vo.CityVO;
 import com.fanglin.utils.Paging;
@@ -21,10 +23,16 @@ public interface CityService {
 	
 	public List<CityVO> queryCity();
 	
-	public CityVO queryCityById(CityVO cityVO);
+	public CityVO queryCityByCid(CityVO cityVO) throws FLException;
 	
-	public List<CityVO> queryCityByRegionId(CityVO cityVO);
+	public List<CityVO> queryCityByRid(CityVO cityVO);
 	
 	public List<CityVO> queryCityByName(CityVO cityVO);
 	
+	public void addCity(CityVO cityVO);
+
+	public void updateCity(CityVO cityVO) throws FLException;
+	
+	public int deleteCityByCids(List<Integer> cids) throws FLException;
+
 }

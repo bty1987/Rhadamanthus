@@ -28,7 +28,7 @@ public interface PaymentService {
 
 	public int confirmPayment(List<Long> pids, String userId)  throws FLException;
 	
-	public int updatePayment(PaymentVO paymentVO);
+	public int updatePayment(PaymentVO paymentVO) throws FLException;
 	
 	public int payPayment(PaymentVO paymentVO, String userId) throws FLException;
 	

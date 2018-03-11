@@ -58,7 +58,7 @@ public class ConstructionDrawingPO implements Serializable{
 	private Timestamp createTime;
 	
 	private short schedule;
-	
+
 	@Id
 	@GeneratedValue(strategy=IDENTITY)
 	@Column(name = "cdId")
@@ -116,7 +116,7 @@ public class ConstructionDrawingPO implements Serializable{
 	}
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "createrId", referencedColumnName="userId")
+	@JoinColumn(name = "cuid", referencedColumnName="uid")
 	public UserPO getCreater() {
 		return creater;
 	}
@@ -142,5 +142,6 @@ public class ConstructionDrawingPO implements Serializable{
 	public void setSchedule(short schedule) {
 		this.schedule = schedule;
 	}
-
+	
+	
 }

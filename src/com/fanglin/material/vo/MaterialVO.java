@@ -16,10 +16,8 @@ import java.sql.Timestamp;
 
 import org.apache.struts2.json.annotations.JSON;
 
-
-
-import com.fanglin.data.common.vo.CustomerVO;
-import com.fanglin.data.common.vo.HouseVO;
+import com.fanglin.communion.vo.CustomerVO;
+import com.fanglin.communion.vo.HouseVO;
 import com.fanglin.department.vo.DepartmentVO;
 import com.fanglin.personel.vo.UserBaseVO;
 

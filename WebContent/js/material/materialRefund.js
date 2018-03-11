@@ -59,8 +59,8 @@ jQuery(function($) {
 							["单位:", v.measurementUnit, "grey"],
 							["折扣价:", v.salePrice, "blue"],
 							["售价:", v.price, "blue"],
-							["数量:", v.num, "green"],
-							["总价:", v.total, "green"],
+							["数量:", v.num, "blue"],
+							["总价:", v.total, "blue"],
 							//["预结算值:", v.prePoint, "grey"],
 							//["结算值:", v.postPoint, "grey"],
 							["说明:", v.comment, "grey"],
@@ -73,7 +73,7 @@ jQuery(function($) {
 						$h3.append($('<small></small>').addClass('blue').html("套餐 " + v.packageName));
 
 						propertyArr = [
-							["总价:", v.total, "green"],
+							["总价:", v.total, "blue"],
 							//["预结算值:", v.prePoint, "grey"],
 							//["结算值:", v.postPoint, "grey"],
 						];
@@ -88,7 +88,7 @@ jQuery(function($) {
 							["单位:", v.measurementUnit, "grey"],
 							["折扣价:", v.salePrice, "blue"],
 							["售价:", v.price, "blue"],
-							["数量:", v.num, "green"],
+							["数量:", v.num, "blue"],
 							["说明:", v.comment, "grey"],
 						];
 					}

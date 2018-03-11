@@ -47,7 +47,9 @@ public class EventsServiceImpl implements EventsService {
 	@Override
 	public List<EventsVO> queryEvents(EventsVO eventsVO, String userId) throws HibernateException, ParseException {
 		
-		List<EventsPO> eventsPOs = eventsDao.queryEvents(userId, eventsVO.getBeginDate(), eventsVO.getEndDate());
+		UserPO user = userDao.queryUserByUserId(userId);
+		
+		List<EventsPO> eventsPOs = eventsDao.queryEvents(user.getUid(), eventsVO.getBeginDate(), eventsVO.getEndDate());
 		List<EventsVO> eventsVOs = new ArrayList<EventsVO>();
 		
 		for(EventsPO eventsPO: eventsPOs){
@@ -70,14 +72,14 @@ public class EventsServiceImpl implements EventsService {
 	@Transactional(rollbackFor=Exception.class)
 	public int addEvents(EventsVO eventsVO, String userId) throws ParseException, FLException {
 		
-		if(eventsDao.countEvents(userId, DateUtil.getDateToDateString(eventsVO.getShowDate(), "yyyy-MM-dd")) >= 5){
-			throw new FLException(160014, "事件数量到达上限");
-		}
-		
 		UserPO userPO = userDao.queryUserByUserId(userId);
 		
 		if(userPO == null){
 			throw new FLException(190005, "人员不存在");
+		}
+		
+		if(eventsDao.countEvents(userPO.getUid(), DateUtil.getDateToDateString(eventsVO.getShowDate(), "yyyy-MM-dd")) >= 5){
+			throw new FLException(160014, "事件数量到达上限");
 		}
 		
 		EventsPO eventsPO = new EventsPO();

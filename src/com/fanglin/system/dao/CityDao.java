@@ -7,7 +7,6 @@
  * @Author		: bty1987
  * @Describing	: 
  */
-
 package com.fanglin.system.dao;
 
 import java.util.List;
@@ -23,6 +22,6 @@ public interface CityDao extends Dao<CityPO> {
 	
 	public List<CityPO> pageCityByName(Paging paging, String name);
 
-	public List<CityPO> queryCityByRegionId(String regionId);
+	public List<CityPO> queryCityByRid(Integer rid);
 	
 }

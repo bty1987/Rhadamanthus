@@ -15,5 +15,9 @@ $.extend(api, {right: {
     
     queryRoleChainPageByRid: {url:"queryRoleChainPageByRid.do"},
     updateRoleChainPage: {url:"updateRoleChainPage.do"},
+    
+    queryBrandUserRightByUid: {url: "queryBrandUserRightByUid.do", demo: true},
+    queryBrandUserRightForLogin: {url: "queryBrandUserRightForLogin.do", demo: true},
+    updateBrandUserRight: {url: "updateBrandUserRight.do"},
 
 }});

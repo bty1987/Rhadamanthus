@@ -26,6 +26,7 @@ import com.fanglin.personel.service.UserService;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.personel.vo.UserInfoVO;
 import com.fanglin.personel.vo.UserVO;
+import com.fanglin.utils.SystemConfig;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -141,50 +142,75 @@ public class UserAction extends BaseListAction {
 	@Action(value = "resetPassword", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String resetPassword() throws FLException{
 		
+		if(SystemConfig.getString("communion") == null){
+		    throw new FLException(-1, "无操作权限");
+		}
+		
 		userService.resetPassword(user,queryCompany());
 	
 		return SUCCESS;
 	}
 	
-	//@Action(value = "addUser", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
+	@Action(value = "addUser", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
 	public String addUser() throws FLException {
+		
+		if(SystemConfig.getString("communion") == null){
+		    throw new FLException(-1, "无操作权限");
+		}
 
 		userService.addUser(userInfo, queryCompany());
 
 		return SUCCESS;
 	}
 
-	//@Action(value = "updateUser", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
+	@Action(value = "updateUser", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
 	public String updateUser() throws FLException {
+		
+		if(SystemConfig.getString("communion") == null){
+		    throw new FLException(-1, "无操作权限");
+		}
 		
 		userService.updateUser(userInfo, queryCompany());
 
 		return SUCCESS;
 	}
 
-	//@Action(value = "updateUserForAdvance", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
+	@Action(value = "updateUserForAdvance", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
 	public String updateUserForAdvance() throws FLException {
+		
+		if(SystemConfig.getString("communion") == null){
+		    throw new FLException(-1, "无操作权限");
+		}
 		
 		userService.updateUserForAdvance(user);
 
 		return SUCCESS;
 	}
 
-	//@Action(value = "changePassword", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
+	@Action(value = "changePassword", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
 	public String changePassword() throws FLException {
+		
+		if(SystemConfig.getString("communion") == null){
+		    throw new FLException(-1, "无操作权限");
+		}
 		
 		userService.checkUserForPassword(queryUserId(), password, rePassword);
 
 		return SUCCESS;
 	}
 
-	//@Action(value = "updateUserForBaseInfo", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
+	@Action(value = "updateUserForBaseInfo", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
 	public String updateUserForBaseInfo() throws FLException {
 	
+		if(SystemConfig.getString("communion") == null){
+		    throw new FLException(-1, "无操作权限");
+		}
+		
 		userService.updateUserForBaseInfo(userInfo);
 
 		return SUCCESS;
 	}
+	
 	private void packageUserName(List<UserBaseVO> users){
 		for(UserBaseVO userBaseVO: users){
 			KeyValueVO keyValueVO = new KeyValueVO();

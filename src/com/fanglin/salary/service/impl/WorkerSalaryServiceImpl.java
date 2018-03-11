@@ -8,11 +8,15 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.fanglin.communion.vo.DutyVO;
 import com.fanglin.construction.dao.ConstructionDao;
+import com.fanglin.construction.dao.ConstructionScheduleDao;
 import com.fanglin.construction.po.ConstructionPO;
+import com.fanglin.construction.po.ConstructionSchedulePO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.data.common.vo.DutyVO;
+
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.personel.dao.UserDao;
@@ -37,6 +41,9 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 
 	@Autowired
 	private ConstructionDao constructionDao;
+	
+	@Autowired
+	private ConstructionScheduleDao constructionScheduleDao;
 	
 	@Override
 	public void pageWorkerSalary(Paging paging, List<Filter> filters, int company) {
@@ -75,8 +82,8 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public List<WorkerSalaryVO> queryWorkerSalary(WorkerSalaryVO workerSalaryVO) {
-		
-		List<WorkerSalaryPO> workerSalaryPOs = workerSalaryDao.queryWorkerSalary(workerSalaryVO.getUser().getUserId(),workerSalaryVO.getCid());
+
+		List<WorkerSalaryPO> workerSalaryPOs = workerSalaryDao.queryWorkerSalary(workerSalaryVO.getUser().getUserId(),constructionScheduleDao.get(workerSalaryVO.getCsid()).getCid());
 		List<WorkerSalaryVO> workerSalarys = new ArrayList<WorkerSalaryVO>();
 		
 		for (WorkerSalaryPO workerSalaryPO : workerSalaryPOs) {
@@ -98,10 +105,16 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 	
 		UserPO	userpo = userdao.queryUserByUserId(userId);
 		WorkerSalaryPO workerSalaryPO = new WorkerSalaryPO(user,userpo);
-		
-		if(workerSalaryVO.getCid() != null){
+
+		if(workerSalaryVO.getCsid() != 0){
 			
-			long cid = workerSalaryVO.getCid();
+			ConstructionSchedulePO  constructionSchedulePO = constructionScheduleDao.get(workerSalaryVO.getCsid());
+			
+			if(constructionSchedulePO.getStatus() != WorkerSalaryPO.COLUMN_CONSTRUCTION_STATUS){
+				throw new FLException( 280003, "施工环节未完工");
+			}
+			
+			long cid = constructionSchedulePO.getCid();
 			ConstructionPO constructionPO = constructionDao.queryConstructionByCid(cid);
 			
 		    if(constructionPO == null){

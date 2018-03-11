@@ -9,13 +9,12 @@ CREATE TABLE `assismanifest` (
   PRIMARY KEY (`amid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='辅料货单';
 
-DROP TABLE IF EXISTS `assisorder`;
-CREATE TABLE `assisorder` (
-  `aoid` int(11) NOT NULL AUTO_INCREMENT,
+DROP TABLE IF EXISTS `accessories`;
+CREATE TABLE `accessories` (
+  `aid` int(11) NOT NULL AUTO_INCREMENT,
   `no` varchar(15) NOT NULL,
   `orderId` varchar(15) NOT NULL,
-  `vid` int(11) NOT NULL,
-  `houseNumber` varchar(30) NOT NULL,
+  `hid` int(11) NOT NULL,
   `supervisorId` int(11),
   `createrId` int(11) NOT NULL,
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -23,21 +22,28 @@ CREATE TABLE `assisorder` (
   `approverTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `fetchTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `status` tinyint(2) NOT NULL DEFAULT '0',
-  `company` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`aoid`)
+  `company` int(11) NOT NULL,
+  PRIMARY KEY (`aid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='辅料订单';
 
-DROP TABLE IF EXISTS `assisorderitem`;
-CREATE TABLE `assisorderitem` (
-  `aoiid` int(11) NOT NULL AUTO_INCREMENT,
-  `aoid` int(11) NOT NULL,
+DROP TABLE IF EXISTS `accessoriesitem`;
+CREATE TABLE `accessoriesitem` (
+  `aiid` int(11) NOT NULL AUTO_INCREMENT,
+  `aid` int(11) NOT NULL,
   `gid` int(11) NOT NULL COMMENT '商品ID',
   `num` decimal(10,3) NOT NULL DEFAULT '0.000',
   PRIMARY KEY (`aoiid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='辅料项';
 
-DROP TABLE IF EXISTS `assistype`;
-CREATE TABLE `assistype` (
+DROP TABLE IF EXISTS `accessoriesmanifest`;
+CREATE TABLE `accessoriesmanifest` (
+  `amid` int(11) NOT NULL AUTO_INCREMENT,
+  `aid` int(11) NOT NULL COMMENT '辅料单ID',
+  `mid` int(11) NOT NULL COMMENT '货单ID',
+  PRIMARY KEY (`amid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='辅料货单';
+DROP TABLE IF EXISTS `accessoriestype`;
+CREATE TABLE `accessoriestype` (
   `atid` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(32) NOT NULL,
   `wtid` int(11) NOT NULL COMMENT '工种ID',
@@ -92,7 +98,7 @@ CREATE TABLE `goods` (
   `atid` int(11) DEFAULT NULL COMMENT '辅类ID',
   `type` tinyint(2) NOT NULL DEFAULT '0',
   `status` tinyint(2) NOT NULL DEFAULT '0',
-  `company` int(11) NOT NULL DEFAULT '0',
+  `company` int(11) NOT NULL,
   PRIMARY KEY (`gid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='商品';
 
@@ -115,7 +121,8 @@ CREATE TABLE `goodsstorehousestock` (
   `fid` int(11) NOT NULL COMMENT '规格ID',
   `shid` int(11) NOT NULL COMMENT '仓库ID',
   `num` decimal(10,3) NOT NULL DEFAULT '0.000',
-  PRIMARY KEY (`gshsid`)
+  PRIMARY KEY (`gshsid`),
+  UNIQUE KEY `uniqueone` (`gid`,`cid`,`fid`,`shid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='商品仓库存量';
 
 DROP TABLE IF EXISTS `manifest`;
@@ -135,23 +142,6 @@ CREATE TABLE `manifest` (
   PRIMARY KEY (`mid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='货单';
 
-DROP TABLE IF EXISTS `manifesttemplate`;
-CREATE TABLE `manifesttemplate` (
-  `mtid` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(32) NOT NULL,
-  `comment` varchar(128) NOT NULL DEFAULT '',
-  `status` tinyint(4) NOT NULL DEFAULT '0',
-  `company` int(11) NOT NULL,
-  PRIMARY KEY (`mtid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='货单模版';
-
-DROP TABLE IF EXISTS `manifesttemplateitem`;
-CREATE TABLE `manifesttemplateitem` (
-  `mtiId` int(11) NOT NULL AUTO_INCREMENT,
-  `mtid` int(11) NOT NULL,
-  `gid` int(11) NOT NULL,
-  PRIMARY KEY (`mtiId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='货单模版项';
 
 DROP TABLE IF EXISTS `manifestitem`;
 CREATE TABLE `manifestitem` (
@@ -169,6 +159,23 @@ CREATE TABLE `manifestitem` (
   PRIMARY KEY (`miid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='货单项';
 
+DROP TABLE IF EXISTS `manifesttemplate`;
+CREATE TABLE `manifesttemplate` (
+  `mtid` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(32) NOT NULL,
+  `comment` varchar(128) NOT NULL DEFAULT '',
+  `status` tinyint(4) NOT NULL DEFAULT '0',
+  `company` int(11) NOT NULL,
+  PRIMARY KEY (`mtid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='货单模版';
+
+DROP TABLE IF EXISTS `manifesttemplateitem`;
+CREATE TABLE `manifesttemplateitem` (
+  `mtiId` int(11) NOT NULL AUTO_INCREMENT,
+  `mtid` int(11) NOT NULL,
+  `gid` int(11) NOT NULL,
+  PRIMARY KEY (`mtiId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='货单模版项';
 DROP TABLE IF EXISTS `price`;
 CREATE TABLE `price` (
   `pid` int(11) NOT NULL AUTO_INCREMENT,
@@ -178,7 +185,8 @@ CREATE TABLE `price` (
   `selling` decimal(10,3) NOT NULL DEFAULT '0.000',
   `ctype` tinyint(2) NOT NULL DEFAULT '0',
   `cvalue` decimal(10,3) NOT NULL DEFAULT '0.000',
-  PRIMARY KEY (`pid`)
+  PRIMARY KEY (`pid`),
+  KEY `indexone` (`gid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='商品价格';
 
 DROP TABLE IF EXISTS `purchase`;
@@ -238,6 +246,15 @@ CREATE TABLE `purchasemanifest` (
   `mid` int(11) NOT NULL COMMENT '货单ID',
   PRIMARY KEY (`pmid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='采购货单';
+
+DROP TABLE IF EXISTS `storehouse`;
+CREATE TABLE `storehouse` (
+  `shid` int(11) NOT NULL AUTO_INCREMENT,
+  `code` varchar(32) NOT NULL,
+  `name` varchar(64) NOT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`shid`)
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8 COMMENT='仓库';
 
 DROP TABLE IF EXISTS `storehousestock`;
 CREATE TABLE `storehousestock` (

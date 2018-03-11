@@ -23,13 +23,13 @@ $(function(){
         };
 
         var creatLine = function(v){
-            var $liLine = $('<li></li>').addClass('item-blue clearfix');
+            var $liLine = $('<li></li>').addClass('item-orange clearfix');
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.materialModelName));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
-            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-primary').html('编辑');
-            var $btnDelete = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
+            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
+            var $btnDelete = $('<a></a>').addClass('btn btn-minier btn-success').html('删除');
 
             var propertyArr = [
                 ["编号:", v.materialModelNo, "grey"],
@@ -39,7 +39,7 @@ $(function(){
                 ["进价:", v.materialPurchasePrice, "blue"],
                 ["标价:", v.materialUnitPrice, "blue"],
                 ["折扣:", v.discount, "blue"],
-                ["状态:", v.status == 0 ? '启用' : '禁用' , v.status == 0 ? 'green' : "red"],
+                ["状态:", v.status == 0 ? '启用' : '禁用' , v.status == 0 ? 'red' : "red"],
 //                ["计算方式:", "1" == v.calcType ? "点位" : "0" == v.calcType ? "底价" : "", "1" == v.calcType ? "label label-success arrowed" : "0" == v.calcType ? "label label-danger arrowed" : ""],
 //                ["计算值:", "1" == v.calcType ? v.point: "0" == v.calcType ? v.base : "", "blue"]
             ];
@@ -158,17 +158,17 @@ $(function(){
         $("#measurementUnitId").bindData(materialModel.data.measurementUnitData, "id", "name")
     });
 
-    com.post(api.material.queryMaterialBrandRightForLogin, {}, function(c) {
+    com.post(api.right.queryBrandUserRightForLogin, {}, function(c) {
 
     	var $brands = [];
-    	var brands = c.materialBrandRight.brands;
+    	var brands = c.brandUserRight.brands;
     	
     	$.each(brands, function(i, v){
     		v.name = v.brandName + "-" + v.categoryName;
     	});
     	
     	
-        $("#materialBrandId").bindData(c.materialBrandRight.brands, "bid", "name");
+        $("#materialBrandId").bindData(c.brandUserRight.brands, "bid", "name");
     });
 
     //添加按钮

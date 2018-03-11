@@ -107,8 +107,8 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 		return userId;
 	}
 	
-	public String queryRoleId() throws FLException{
-		String roleId = null;
+	public Integer queryRoleId() throws FLException{
+		Integer roleId = null;
 		
 		try{
 			String authentication = getAuthentication();

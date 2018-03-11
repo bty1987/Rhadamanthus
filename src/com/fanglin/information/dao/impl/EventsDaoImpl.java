@@ -48,19 +48,19 @@ public class EventsDaoImpl extends DaoImpl<EventsPO> implements EventsDao {
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<EventsPO> queryEvents(String userId, String beginDate, String endDate) throws HibernateException, ParseException {
+	public List<EventsPO> queryEvents(int uid, String beginDate, String endDate) throws HibernateException, ParseException {
 		return session().createCriteria(EventsPO.class).createAlias("holder", "holder")
-				.add(Restrictions.eq(EventsPO.COLUMN_HODERID_STR, userId))
+				.add(Restrictions.eq("holder.uid", uid))
 				.add(Restrictions.ge(EventsPO.COLUMN_SHOWDATE_STR, new SimpleDateFormat("yyyy-MM-dd").parse(beginDate)))
 				.add(Restrictions.le(EventsPO.COLUMN_SHOWDATE_STR, new SimpleDateFormat("yyyy-MM-dd").parse(endDate)))
 				.list();
 	}
 
 	@Override
-	public int countEvents(String userId, String showDate) throws ParseException {
+	public int countEvents(int uid, String showDate) throws ParseException {
 		
-		String sql = "select count(*) from information.events where holderId = :holderId and showDate = :showDate";
-		BigInteger count = (BigInteger) session().createSQLQuery(sql).setString("holderId", userId).setString("showDate", showDate).uniqueResult();
+		String sql = "select count(*) from information.events where huid = :huid and showDate = :showDate";
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setInteger("huid", uid).setString("showDate", showDate).uniqueResult();
 		
 		return count.intValue();
 	}
@@ -89,7 +89,6 @@ public class EventsDaoImpl extends DaoImpl<EventsPO> implements EventsDao {
 				query.add(query.getCriterion(EventsPO.COLUMN_SHOWDATE_STR, sTimestamp, "ge"));
 			}
 		}
-		
 	}
 
 }

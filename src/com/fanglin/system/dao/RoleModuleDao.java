@@ -18,10 +18,16 @@ import com.fanglin.system.po.RoleModulePO;
 
 public interface RoleModuleDao extends Dao<RoleModulePO> {
 	
-	public List<RoleModulePO> queryRoleModuleByRId(int rId, short system);
+	public List<RoleModulePO> queryRoleModuleByRid(int rid, short system);
 	
-	public List<RoleModulePO> queryRoleModuleByRIdALevel(int rId, int level, short system);
+	public List<RoleModulePO> queryRoleModuleByRidALevel(int rid, int level, short system);
 	
-	public int deleteRoleModuleByRId(int rId, short system);
+	public int countRoleModuleByMid(int mid);
+	
+	public int deleteRoleModuleByRid(int rid);
+	
+	public int deleteRoleModuleByRid(int rid, short system);
+	
+	public int deleteRoleModuleByMid(int mid);
 
 }

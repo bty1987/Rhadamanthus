@@ -13,6 +13,7 @@ import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.system.service.SystemConfigService;
 import com.fanglin.system.vo.SystemConfigVO;
+import com.fanglin.utils.SystemConfig;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -26,23 +27,47 @@ public class SystemConfigAction extends BaseListAction {
 	
 	private SystemConfigVO systemConfig;
 	
-	private List<SystemConfigVO> systemConfigs;
+	private List<SystemConfigVO> systemConfigVOs;
 
 	@Action(value = "pageSystemConfig", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageCityProper(){
 		
-		systemConfigs = systemConfigService.pageSystemConfig(getPaging(), getFilters());
-		 
-   		return SUCCESS;
-	}
-	
-	@Action(value = "updateSystemConfig", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateSystemConfig() throws FLException{
-		
-		systemConfigService.updateSystemConfig(systemConfig);
+		 systemConfigVOs = systemConfigService.pageSystemConfig(getPaging(), getFilters());
 		
 		return SUCCESS;
 	}
+	
+	@Action(value = "addSystemConfig", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addCityProper() throws FLException{
+		
+		if(SystemConfig.getString("communion") == null){
+		    throw new FLException(-1, "无操作权限");
+		}
+		
+		 systemConfigService.addSystemConfig(systemConfig,queryUserId());
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "querySystemConfigByCid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String querySystemConfigByCid() throws FLException{
+		
+		systemConfigVOs = systemConfigService.querySystemConfigByCid(queryCompany());
+		
+		return SUCCESS;
+	}
+	
+	@Action(value="updateSystemConfig", results = { @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String updateSystemConfig() throws FLException {
+		
+		if(SystemConfig.getString("communion") == null){
+		    throw new FLException(-1, "无操作权限");
+		}
+		
+	    systemConfigService.updateSystemConfig(systemConfig);
+
+	    return SUCCESS;
+	  }
 
 	public SystemConfigVO getSystemConfig() {
 		return systemConfig;
@@ -52,12 +77,12 @@ public class SystemConfigAction extends BaseListAction {
 		this.systemConfig = systemConfig;
 	}
 
-	public List<SystemConfigVO> getSystemConfigs() {
-		return systemConfigs;
+	public List<SystemConfigVO> getSystemConfigVOs() {
+		return systemConfigVOs;
 	}
 
-	public void setSystemConfigs(List<SystemConfigVO> systemConfigs) {
-		this.systemConfigs = systemConfigs;
+	public void setSystemConfigVOs(List<SystemConfigVO> systemConfigVOs) {
+		this.systemConfigVOs = systemConfigVOs;
 	}
 
 }

@@ -173,6 +173,14 @@ public class MaterialPaymentAction extends BaseListAction{
 		return SUCCESS;
 	}
 	
+	@Action(value = "updateMaterialPayment", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateMaterialPayment() throws FLException{
+		
+		materialPaymentService.updateMaterialPayment(materialPayment,materialReceipt);
+		
+		return SUCCESS;
+	}
+	
 	@Action(value="confirmMaterialPayment", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String confirmMaterialPayment() throws FLException{
 		

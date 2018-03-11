@@ -27,7 +27,7 @@ import com.fanglin.department.po.DepartmentPO;
 import com.fanglin.personel.po.UserPO;
 
 @Entity
-@Table(name = "orderbelonginfo", catalog = "platform")
+@Table(name = "orderbelonginfo", catalog = "decoration")
 public class DecorationBelongInfoPO implements Serializable {
 
 	private static final long serialVersionUID = 11111344461146L;
@@ -68,12 +68,6 @@ public class DecorationBelongInfoPO implements Serializable {
 	
 	private String status;
 	
-	private String changeReason;
-	
-	private UserPO approvalUserPO;
-	
-	private Timestamp approvalTime;
-	
 	private String defaultFlag;
 
 	@Id
@@ -106,7 +100,7 @@ public class DecorationBelongInfoPO implements Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "belongUserId", referencedColumnName = "userId")
+	@JoinColumn(name = "buid", referencedColumnName = "uId")
 	public UserPO getBelongUserPO(){
 		return belongUserPO;
 	}
@@ -134,7 +128,7 @@ public class DecorationBelongInfoPO implements Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "operateUserId", referencedColumnName = "userId")
+	@JoinColumn(name = "ouid", referencedColumnName = "uId")
 	public UserPO getOperateUserPO(){
 		return operateUserPO;
 	}
@@ -157,32 +151,6 @@ public class DecorationBelongInfoPO implements Serializable {
 
 	public void setStatus(String status){
 		this.status = status;
-	}
-
-	public String getChangeReason(){
-		return changeReason;
-	}
-
-	public void setChangeReason(String changeReason){
-		this.changeReason = changeReason;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "approvalUserId", referencedColumnName = "userId")
-	public UserPO getApprovalUserPO(){
-		return approvalUserPO;
-	}
-
-	public void setApprovalUserPO(UserPO approvalUserPO){
-		this.approvalUserPO = approvalUserPO;
-	}
-
-	public Timestamp getApprovalTime(){
-		return approvalTime;
-	}
-
-	public void setApprovalTime(Timestamp approvalTime){
-		this.approvalTime = approvalTime;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)

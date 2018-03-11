@@ -34,16 +34,16 @@ $(function () {
         var $lineInfoWrap = $('<div></div>').addClass('line-wrap content col10');
         var $optWrap = $('<div></div>').addClass('line-wrap action');
         var _lineInfoSet = [
-            {cellClass: "no",value:data.no},//编号
-            {cellClass: "name",value:data.name},//名称
-            {cellClass: "barcode",value:data.barcode},//条形码
-            {cellClass: "category",value:data.category},//品类
-            {cellClass: "brand",value:data.brand},//品牌
-            {cellClass: "color", value:colorName},//颜色
-            {cellClass: "format",value:formatInfo},//规格
-            {cellClass: "measurementUnit", value:data.measurementUnit},//单位
-            {cellClass: "number" , value:num},//数量
-            {cellClass: "status",value:data.status==0?'启用':'禁用'},//状态
+            {cellClass: "no blue",value:data.no},//编号
+            {cellClass: "name grey",value:data.name},//名称
+            {cellClass: "barcode grey",value:data.barcode},//条形码
+            {cellClass: "category grey",value:data.category},//品类
+            {cellClass: "brand grey",value:data.brand},//品牌
+            {cellClass: "color grey", value:colorName},//颜色
+            {cellClass: "format grey",value:formatInfo},//规格
+            {cellClass: "measurementUnit grey", value:data.measurementUnit},//单位
+            {cellClass: "number blue" , value:num},//数量
+            {cellClass: "status red",value:data.status==0?'启用':'禁用'},//状态
         ];
         var $btndel = $('<a class="color-red red" style="font-size: 18px"><i class=" icon-remove"></i></a>');
         $.each(_lineInfoSet, function (i, v) {
@@ -206,7 +206,7 @@ $(function () {
                     addline(1).addClass('current').appendTo('#list');
                     addlinePackge(data.goods, cid, colorName, fid, formatInfo, num).addClass('current').appendTo('#showList');
                 }, function (e) {
-                    com.showAlert(com.info, e.errorMsg);
+                    com.showAlert(com.error, e.errorMsg);
                 })
             }
 

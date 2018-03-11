@@ -35,6 +35,8 @@ public class PurchaseAction extends BaseListAction {
 	
 	private List<PurchaseVO> purchases;
 	
+	private List<Long> sids;
+	
 	private List<Long> pids;
 	
 	private List<Long> siids;
@@ -74,7 +76,7 @@ public class PurchaseAction extends BaseListAction {
 	@Action(value = "addPurchase", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addPurchase() throws FLException{
 		
-		purchaseService.addPurchase(purchase, purchaseItems, queryUserId(),queryCompany());
+		purchaseService.addPurchase(purchase, sids,purchaseItems, queryUserId(),queryCompany());
 		
 		return SUCCESS;
 	}
@@ -175,7 +177,7 @@ public class PurchaseAction extends BaseListAction {
 	public void setPurchases(List<PurchaseVO> purchases) {
 		this.purchases = purchases;
 	}
-	
+
 	public List<Long> getPids() {
 		return pids;
 	}
@@ -190,6 +192,14 @@ public class PurchaseAction extends BaseListAction {
 
 	public void setSiids(List<Long> siids) {
 		this.siids = siids;
+	}
+
+	public List<Long> getSids() {
+		return sids;
+	}
+
+	public void setSids(List<Long> sids) {
+		this.sids = sids;
 	}
 	
 }

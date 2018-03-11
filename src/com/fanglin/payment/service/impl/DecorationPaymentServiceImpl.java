@@ -16,15 +16,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.fanglin.common.dao.ServiceRecordDao;
 import com.fanglin.common.po.ServiceRecordPO;
+import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.data.common.dao.PaymentScaleItemDao;
-import com.fanglin.data.po.CustomerPO;
 import com.fanglin.data.po.PaymentScaleItemPO;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
@@ -327,6 +329,8 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public int updateDecorationPayment(DecorationPaymentVO decorationPaymentVO) throws FLException{
+		
+		float realMoney = 0;
 
 		DecorationPaymentPO decorationPaymentPO = decorationPaymentDao.get(decorationPaymentVO.getDpid());
 
@@ -337,7 +341,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		DecorationReceiptPO decorationReceiptPO = decorationPaymentPO.getDecorationReceipt();
 
 		if(!DecorationPaymentPO.PAYMENTSTATUS_PAY_STR.equals(decorationPaymentPO.getPaymentStatus())){
-			throw new FLException(150008, "款项不能进行收款");
+			throw new FLException(150036, "款项状态不可操作");
 		}
 
 		Float cash = decorationPaymentVO.getCash();
@@ -346,10 +350,12 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		Float accounts = decorationPaymentVO.getAccounts();
 		Float installment = decorationPaymentVO.getInstallment();
 		Float coupon = decorationPaymentVO.getCoupon();
+		Float advance = decorationPaymentVO.getAdvance();
 
 		if(cash != null && cash.floatValue() != 0f){
 			decorationReceiptPO.setCash(cash);
 			decorationReceiptPO.setCashInfo(decorationPaymentVO.getCashInfo());
+			realMoney = Arith.add(cash, realMoney);
 		}else{
 			decorationReceiptPO.setCash(0f);
 			decorationReceiptPO.setCashInfo("");
@@ -357,6 +363,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		if(bank != null && bank.floatValue() != 0f){
 			decorationReceiptPO.setBank(bank);
 			decorationReceiptPO.setBankInfo(decorationPaymentVO.getBankInfo());
+			realMoney = Arith.add(bank,realMoney);
 		}else{
 			decorationReceiptPO.setBank(0f);
 			decorationReceiptPO.setBankInfo("");
@@ -364,6 +371,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		if(checkv != null && checkv.floatValue() != 0f){
 			decorationReceiptPO.setCheckv(checkv);
 			decorationReceiptPO.setCheckvBank(decorationPaymentVO.getCheckvBank());
+			realMoney = Arith.add(checkv,realMoney);
 		}else{
 			decorationReceiptPO.setCheckv(0f);
 			decorationReceiptPO.setCheckvBank("");
@@ -371,6 +379,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		if(accounts != null && accounts.floatValue() != 0f){
 			decorationReceiptPO.setAccounts(accounts);
 			decorationReceiptPO.setAccountsBank(decorationPaymentVO.getAccountsBank());
+			realMoney = Arith.add(accounts,realMoney);
 		}else{
 			decorationReceiptPO.setAccounts(0f);
 			decorationReceiptPO.setAccountsBank("");
@@ -378,26 +387,25 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		if(installment != null && installment.floatValue() != 0f){
 			decorationReceiptPO.setInstallment(installment);
 			decorationReceiptPO.setInstallmentBank(decorationPaymentVO.getInstallmentBank());
+			realMoney = Arith.add(installment,realMoney);
 		}else{
 			decorationReceiptPO.setInstallment(0f);
 			decorationReceiptPO.setInstallmentBank("");
 		}
 		if(coupon != null && coupon.floatValue() != 0f){
-			decorationReceiptPO.setCoupon(coupon);
-			decorationReceiptPO.setCouponInfo(decorationPaymentVO.getCouponInfo());
-		}else{
-			decorationReceiptPO.setCoupon(0f);
-			decorationReceiptPO.setCouponInfo("");
+			realMoney = Arith.add(coupon,realMoney);
+		}
+		if(advance != null && advance.floatValue() != 0f){
+			realMoney = Arith.add(advance,realMoney);
+		}
+		
+		if(decorationPaymentPO.getReferMoney()!=realMoney){
+			throw new FLException(150025, "款项金额不正确");
 		}
 
-		decorationReceiptPO.setCollectTime(DateUtil.getDateToTimestamp(new Date()));
-		UserPO user = userDao.queryUserByUserId(decorationPaymentVO.getCollecter().getUserId());
-		decorationReceiptPO.setCollecter(user);
-		decorationReceiptPO.setCollecterName(user.getCurrentName());
-		decorationReceiptPO.setComment(decorationPaymentVO.getComment());
+		decorationPaymentVO.setDrId(decorationReceiptPO.getDrId());
 
 		decorationReceiptDao.update(decorationReceiptPO);
-		decorationPaymentDao.saveOrUpdate(decorationPaymentPO);
 
 		return 0;
 	}
@@ -645,17 +653,15 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 
 		if(decorationReceiptPO != null){
 			BeanUtil.copyProperties(decorationReceiptPO, decorationPaymentVO, Arrays.asList("collecter","confirmer","creater"));
-			decorationPaymentVO.setCollecter(new UserBaseVO());
-			BeanUtil.copyProperties(decorationReceiptPO.getCollecter(), decorationPaymentVO.getCollecter(), Arrays.asList("duty","dept"));
 
 			if(decorationReceiptPO.getCollecter() != null){
-				UserPO collectUser = decorationReceiptPO.getCollecter();
-				BeanUtil.copyProperties(collectUser, decorationPaymentVO, Arrays.asList("duty","dept"));
+				decorationPaymentVO.setCollecter(new UserBaseVO());
+				BeanUtil.copyProperties(decorationReceiptPO.getCollecter(), decorationPaymentVO.getCollecter(), Arrays.asList("duty","dept"));
 			}
-
+			
 			if(decorationReceiptPO.getConfirmer() != null){
-				UserPO confirmUser = decorationReceiptPO.getConfirmer();
-				BeanUtil.copyProperties(confirmUser, decorationPaymentVO, Arrays.asList("duty","dept"));
+				decorationPaymentVO.setConfirmer(new UserBaseVO());
+				BeanUtil.copyProperties(decorationReceiptPO.getConfirmer(), decorationPaymentVO.getConfirmer(), Arrays.asList("duty","dept"));
 			}
 		}
 

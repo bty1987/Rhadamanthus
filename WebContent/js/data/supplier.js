@@ -38,7 +38,7 @@ $(function(){
         isStaticResource : false,
         flsource: {
             url : api.personel.queryUserForNameByDuty,
-            postData : {duty: '驻店'},
+            postData : {duty: '驻店',"user.status":"0"},
             resultList : "autoFillKeyValue",
             keyPath : "key",
             valuePath : "value",
@@ -69,13 +69,13 @@ $(function(){
         };
 
         var creatLine = function(v){
-            var $liLine = $('<li></li>').addClass('item-blue clearfix');
+            var $liLine = $('<li></li>').addClass('item-orange clearfix');
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.name));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
-            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-primary').html('编辑');
-            var $btnUser = $('<a></a>').addClass('btn btn-minier btn-warning').html('驻店');
+            var $btnUser = $('<a></a>').addClass('btn btn-minier btn-yellow').html('驻店');
+            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-success').html('编辑');
 
             //启用禁用
             var $btnStatus = $('<div></div>').addClass('pull-right');
@@ -83,9 +83,9 @@ $(function(){
             var $span = $('<span></span>').addClass('lbl');
 
             var propertyArr = [
-                ["厂商ID:", v.sid , "grey"],
+                ["厂商ID:", v.sid , "blue "],
                 ["登陆名:", v.loginId , "grey"],
-                ["登陆状态:", v.isLogin == 0 ? "禁用" : "启用", "grey"]
+                ["登陆状态:", v.isLogin == 0 ? "禁用" : "启用", "red "]
             ];
 
             $.each(propertyArr, function (index,value) {

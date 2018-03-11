@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.fanglin.core.interceptor.FLException;
@@ -33,34 +32,40 @@ import com.fanglin.utils.FormatUtil;
 @Service("departmentDDService")
 @Transactional(readOnly = true)
 public class DepartmentService {
-	
+
 	@Autowired
-	private   AuthService authDDService ;
-	
+	private AuthService authDDService;
+
 	@Autowired
 	private SystemConfigDao systemConfigDao;
-	
+
 	@Autowired
 	private CompanyDao companyDao;
-	
-	public  List<Department> queryDepartment(Integer company) throws FLException{
+
+	public List<Department> queryDepartment(Integer company) throws FLException {
 
 		String accessToken = authDDService.getAccessToken(FormatUtil.encodeCompany(company));
-		
+
 		SystemConfigPO oapiHost = systemConfigDao.querySystemConfig("oapiHost");
-	
+
 		CompanyPO companyPO = companyDao.get(company);
-		
-		 if(companyPO == null){
-			   
-			   throw new FLException(230015 , "公司不存在");
-		   }
-		
+
+		if (companyPO == null) {
+			throw new FLException(230015, "公司不存在");
+		}
+
 		String url = String.format(DDApi.DDAPI_LIST_DEPARTMENT_STR, oapiHost.getValue(), accessToken, companyPO.getNo());
-		
+
 		JSONObject json = HttpHelper.httpGet(url);
-	
+		
+		if(json == null){
+			throw new FLException(270007, "获取部门信息失败");
+		}else if(json.getInteger("errcode") != 0){
+			System.out.println(url);
+			System.out.println(String.format("%d-%s", json.getInteger("errcode"), json.getString("errmsg")));
+		}
+
 		return JSON.parseArray(json.getJSONArray("department").toJSONString(), Department.class);
 	}
-	
+
 }

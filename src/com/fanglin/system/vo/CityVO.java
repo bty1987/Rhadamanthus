@@ -15,11 +15,11 @@ public class CityVO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
-	private Integer cId;
+	private Integer cid;
 
-	private String cityId;
+	private String no;
 	
-	private String cityName;
+	private String name;
 	
 	private RegionVO region;
 	
@@ -31,33 +31,33 @@ public class CityVO implements Serializable {
 		super();
 	}
 	
-	public CityVO(String cityId) {
+	public CityVO(String no) {
 		super();
-		this.cityId = cityId;
+		this.no = no;
+	}
+	
+	public Integer getCid() {
+		return cid;
 	}
 
-	public Integer getcId() {
-		return cId;
+	public void setCid(Integer cid) {
+		this.cid = cid;
 	}
 
-	public void setcId(Integer cId) {
-		this.cId = cId;
+	public String getNo() {
+		return no;
 	}
 
-	public String getCityId(){
-		return cityId;
+	public void setNo(String no) {
+		this.no = no;
 	}
 
-	public void setCityId(String cityId){
-		this.cityId = cityId;
+	public String getName() {
+		return name;
 	}
 
-	public String getCityName(){
-		return cityName;
-	}
-
-	public void setCityName(String cityName){
-		this.cityName = cityName;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public RegionVO getRegion(){

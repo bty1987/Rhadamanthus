@@ -143,16 +143,16 @@ $(function () {
                     var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
                     var $btnView = $('<a>人员扣款<i class="icon-arrow-right icon-on-right"></i></a>').addClass('btn btn-minier btn-primary');
-                    var $btnChange = $('<a></a>').addClass('btn btn-minier btn-success').html('修改');
-                    var $btnMake = $('<a></a>').addClass('btn btn-minier btn-warning').html('生成扣款');
+                    var $btnChange = $('<a></a>').addClass('btn btn-minier btn-yellow').html('修改');
+                    var $btnMake = $('<a></a>').addClass('btn btn-minier btn-success').html('生成扣款');
 
                     var total = utils.changeThrDecimal(utils.accMul(utils.accMul(v.unitprice,v.num),v.discount/10));
                     
                     var propertyArr = [
                         ["单价:",v.unitprice, "grey"],
-                        ["数量:",v.num, "grey"],
-                        ["折扣:",v.discount, "grey"],
-                        ["总价:",total, "grey"],
+                        ["数量:",v.num, "blue"],
+                        ["折扣:",v.discount, "blue"],
+                        ["总价:",total, "blue"],
                         ["状态:",type[v.status],"red"],
                     ];
 

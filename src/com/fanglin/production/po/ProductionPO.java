@@ -1,5 +1,7 @@
 package com.fanglin.production.po;
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
 
@@ -11,9 +13,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import static javax.persistence.GenerationType.IDENTITY;
 
-import com.fanglin.data.po.HousePO;
+import com.fanglin.communion.po.HousePO;
 import com.fanglin.personel.po.UserPO;
 
 @Entity

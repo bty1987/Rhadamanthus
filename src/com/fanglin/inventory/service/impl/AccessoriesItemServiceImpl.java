@@ -2,15 +2,14 @@ package com.fanglin.inventory.service.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.communion.vo.WorkTypeVO;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.data.common.vo.WorkTypeVO;
 import com.fanglin.inventory.dao.AccessoriesDao;
 import com.fanglin.inventory.dao.AccessoriesItemDao;
 import com.fanglin.inventory.po.AccessoriesItemPO;
@@ -18,8 +17,8 @@ import com.fanglin.inventory.po.AccessoriesPO;
 import com.fanglin.inventory.po.GoodsPO;
 import com.fanglin.inventory.service.AccessoriesItemService;
 import com.fanglin.inventory.vo.AccessoriesItemVO;
-import com.fanglin.inventory.vo.AccessoriesVO;
 import com.fanglin.inventory.vo.AccessoriesTypeVO;
+import com.fanglin.inventory.vo.AccessoriesVO;
 import com.fanglin.inventory.vo.GoodsVO;
 import com.fanglin.utils.BeanUtil;
 

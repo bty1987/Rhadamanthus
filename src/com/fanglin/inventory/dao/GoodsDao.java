@@ -20,7 +20,9 @@ import com.fanglin.utils.Paging;
 
 public interface GoodsDao extends Dao<GoodsPO>{
 	
-	public List<GoodsPO> pageGoods(Paging paging, List<Filter> filters,int company);
+	public List<GoodsPO> pageGoods(Paging paging, List<Filter> filters, List<Long> bids ,int company);
+	
+	public List<GoodsPO> pageGoodsForAdvance(Paging paging, List<Filter> filters,int company);
 	
 	public List<GoodsPO> queryGoods(List<Filter> filters,int company);
 	
@@ -37,5 +39,7 @@ public interface GoodsDao extends Dao<GoodsPO>{
 	public GoodsPO queryGoodsByNo(String no,int company);
 	
 	public GoodsPO queryGoodsByBarcode(String barcode,int company);
+	
+	
 	
 }

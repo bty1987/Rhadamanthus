@@ -20,6 +20,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.fanglin.communion.po.MeasurementUnitPO;
+import com.fanglin.communion.po.QuotationBigCategoryPO;
+import com.fanglin.communion.po.WorkTypePO;
+
 
 @Entity
 @Table(name = "systemDefineitem", catalog = "quotation")

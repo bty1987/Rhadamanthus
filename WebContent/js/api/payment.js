@@ -34,6 +34,7 @@ $.extend(api, {payment: {
 	queryPaymentByPaymentId: {url: "queryPaymentByPaymentId.do"},
 	collectPayment: {url: "collectPayment.do"},
 	confirmPayment: {url: "confirmPayment.do"},
+	updatePayment: {url: "updatePayment.do"},
 	withdrawPayment: {url: "withdrawPayment.do"},
 	
 
@@ -48,6 +49,7 @@ $.extend(api, {payment: {
 	checkDecorationPayment: {url: "checkDecorationPayment.do"},
 	addDecorationPayment: {url: "addDecorationPayment.do"},
 	makeDecorationPayment: {url: "makeDecorationPayment.do"},
+	updateDecorationPayment: {url: "updateDecorationPayment.do"},
 	collectDecorationPayment: {url: "collectDecorationPayment.do"},
 	refundDecorationPayment: {url: "refundDecorationPayment.do"},
 	confirmDecorationPayment: {url: "confirmDecorationPayment.do"},
@@ -68,6 +70,7 @@ $.extend(api, {payment: {
 	collectMaterialPayments: {url: "collectMaterialPayments.do"},
 	collectMaterialPaymentForRefund: {url: "collectMaterialPaymentForRefund.do"},
 	collectMaterialInsidePayments: {url: "collectMaterialInsidePayments.do"},
+	updateMaterialPayment: {url: "updateMaterialPayment.do"},
 	confirmMaterialPayment: {url: "confirmMaterialPayment.do"},
 	cancelMaterialPayment: {url: "cancelMaterialPayment.do"},
 	refundMaterialPayment: {url: "refundMaterialPayment.do"},

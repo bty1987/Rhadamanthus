@@ -25,19 +25,19 @@ $(function(){
         };
 
         var creatLine = function(v){
-            var $liLine = $('<li></li>').addClass('item-blue clearfix');
+            var $liLine = $('<li></li>').addClass('item-orange clearfix');
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.functionAreaName));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
-            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-primary').html('编辑');
-            var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
-            var $btnAssign = $('<a></a>').addClass('btn btn-minier btn-success').html('分配报价项');
+            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
+            var $btnDel = $('<a></a>').addClass('btn btn-minier btn-success').html('删除');
+            var $btnAssign = $('<a></a>').addClass('btn btn-minier btn-warning').html('分配报价项');
 
             var propertyArr = [
-                ["编号:", v.functionAreaId, "grey"],
-                ["报价版本:", v.version, "grey"],
-                ["类型:", v.functionAreaType, "grey"],
+                ["编号:", v.functionAreaId, "blue"],
+                ["报价版本:", v.version, "blue"],
+                ["类型:", v.functionAreaType, "red"],
                 ["排序:", v.functionAreaOrder, "blue"],
             ];
 
@@ -86,7 +86,7 @@ $(function(){
         displayFunc.init('resultList', data);
     }, "pagenation", "functionAreaPostData", null, false, null, function(){
     	
-    	var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addFunctionArea').css("margin", "0px 3px");
+    	var $adda = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'addFunctionArea').css("margin", "0px 3px");
     	var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
     	var $addspan = $('<span></span>').text('添加').appendTo($adda);
     	

@@ -122,7 +122,6 @@ public class ApprovalDecorationActivityServiceImpl implements ApprovalDecoration
 			decorationActivityItemPO.setAid(approvalDecorationActivityPO.getActivityId());
 			decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_VAILD_INT);
 			decorationActivityItemPO.setTotal(approvalDecorationActivityItemPO.getNum());
-			decorationActivityItemPO.setReceiveUserId("");
 			decorationActivityItemPO.setReceiveUserName("");
 			
 			decorationActivityItemDao.save(decorationActivityItemPO);

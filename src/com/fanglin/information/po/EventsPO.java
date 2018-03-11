@@ -25,7 +25,7 @@ public class EventsPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 6821683708554610678L;
 	
-	public static final String COLUMN_HODERID_STR = "holder.userId";
+	public static final String COLUMN_HODERID_STR = "holder.uid";
 	
 	public static final String COLUMN_SHOWDATE_STR = "showDate";
 	
@@ -61,7 +61,7 @@ public class EventsPO implements java.io.Serializable {
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "eId")
+	@Column(name = "eid")
 	public long getEid() {
 		return this.eid;
 	}
@@ -89,7 +89,7 @@ public class EventsPO implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = true, name = "createrId", referencedColumnName="userId")
+	@JoinColumn(nullable = true, name = "cuid", referencedColumnName="uid")
 	public UserPO getCreater() {
 		return creater;
 	}
@@ -99,7 +99,7 @@ public class EventsPO implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = true, name = "holderId", referencedColumnName="userId")
+	@JoinColumn(nullable = true, name = "huid", referencedColumnName="uid")
 	public UserPO getHolder() {
 		return holder;
 	}
@@ -109,7 +109,7 @@ public class EventsPO implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = true, name = "deptId", referencedColumnName="deptId")
+	@JoinColumn(nullable = true, name = "did", referencedColumnName="did")
 	public DepartmentPO getDepartment() {
 		return department;
 	}
@@ -119,7 +119,7 @@ public class EventsPO implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = true, name = "regionId", referencedColumnName="deptId")
+	@JoinColumn(nullable = true, name = "rid", referencedColumnName="did")
 	public DepartmentPO getRegion() {
 		return region;
 	}

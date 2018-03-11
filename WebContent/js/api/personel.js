@@ -20,13 +20,13 @@ $.extend(api, {personel: {
     queryUserForNameByDutysADept: {url: "queryUserForNameByDutysADept.do"},
     queryUserForNameByDutysAO: {url: "queryUserForNameByDutysAO.do"},
     queryUserForNameByDutysAODept: {url: "queryUserForNameByDutysAODept.do"},
+   
     addUser: {url: "addUser.do", server: "communion"},
     updateUserForBaseInfo: {url: "updateUserForBaseInfo.do", server: "communion"},
     updateUser: {url: "updateUser.do", server: "communion"},
   
     updateUserForAdvance: {url: "updateUserForAdvance.do", server: "communion"},
-    resetPassword: {url: "resetPassword.do"},
-    
+    resetPassword: {url: "resetPassword.do", server: "communion"},
     changePassword: {url: "changePassword.do", server: "communion"},
     deleteUserByIds: {url: "deleteUserByIds.do", server: "communion"},
 
@@ -44,7 +44,6 @@ $.extend(api, {personel: {
     deleteUserSalary: {url: "deleteUserSalary.do"},
     
     queryUserCompany: {url: "queryUserCompany.do"},
-    
     updateUserCompany: {url: "updateUserCompany.do", server: "communion"},
   
 

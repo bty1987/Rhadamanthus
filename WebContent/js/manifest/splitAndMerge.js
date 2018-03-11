@@ -98,21 +98,20 @@ $(function(){
             var $contentWrap = $('<div></div>').addClass('line-wrap  content col9');
 
             var propertyArr = [
-
-                v.goods.name,
-                v.goods.no,
-                v.goods.barcode,
-                v.color.name,
-                v.format.info,
-                v.goods.measurementUnit,
-                v.num,
-                _goodsStorehouseStock.storehouse.name,
-                storehouseNum
+                [v.goods.name,'grey'],
+                [v.goods.no,'blue'],
+                [v.goods.barcode,'blue'],
+                [v.color.name,'grey'],
+                [v.format.info,'grey'],
+                [v.goods.measurementUnit,'grey'],
+                [v.num,'blue'],
+                [_goodsStorehouseStock.storehouse.name,'grey'],
+                [storehouseNum,'blue']
             ];
 
 
             $.each(propertyArr, function (i, v) {
-                var $cell = $('<div></div>').addClass('cell').html(v);
+                var $cell = $('<div></div>').addClass('cell ' + v[1]).html(v[0]);
                 $cell.appendTo($contentWrap);
             });
 
@@ -163,17 +162,17 @@ $(function(){
         var $indexWrap = $('<div></div>').addClass('line-wrap order').append($('<div></div>').addClass('cell index').text(lineindex));
         var $lineInfoWrap = $('<div></div>').addClass('line-wrap content col12');
         var _lineInfoSet = [
-            {cellClass : "name" ,value:_goodsStorehouseStock.goods.name},
-            {cellClass : "no" ,value:_goodsStorehouseStock.goods.no},
-            {cellClass : "barcode",value:_goodsStorehouseStock.goods.barcode},
-            {cellClass : "category",value:_goodsStorehouseStock.goods.category},
-            {cellClass : "brand",value:_goodsStorehouseStock.goods.brand},
-            {cellClass : "color",value:_goodsStorehouseStock.color.name},
-            {cellClass : "format",value:_goodsStorehouseStock.format.info},
-            {cellClass : "measurementUnit",value:_goodsStorehouseStock.goods.measurementUnit},
-            {cellClass : "pieceNum",value:_goodsStorehouseStock.goods.pieceNum},
-            {cellClass : "number",value:_goodsStorehouseStock.num},
-            {cellClass : "storehouse",value:_goodsStorehouseStock.storehouse.name},
+            {cellClass : "name grey" ,value:_goodsStorehouseStock.goods.name},
+            {cellClass : "no blue" ,value:_goodsStorehouseStock.goods.no},
+            {cellClass : "barcode blue",value:_goodsStorehouseStock.goods.barcode},
+            {cellClass : "category grey",value:_goodsStorehouseStock.goods.category},
+            {cellClass : "brand grey",value:_goodsStorehouseStock.goods.brand},
+            {cellClass : "color grey",value:_goodsStorehouseStock.color.name},
+            {cellClass : "format grey",value:_goodsStorehouseStock.format.info},
+            {cellClass : "measurementUnit grey",value:_goodsStorehouseStock.goods.measurementUnit},
+            {cellClass : "pieceNum blue",value:_goodsStorehouseStock.goods.pieceNum},
+            {cellClass : "number blue",value:_goodsStorehouseStock.num},
+            {cellClass : "storehouse grey",value:_goodsStorehouseStock.storehouse.name},
             {cellClass : "inputNum",hasInput:!0},
         ];
 

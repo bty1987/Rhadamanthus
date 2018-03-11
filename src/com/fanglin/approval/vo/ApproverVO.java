@@ -17,7 +17,7 @@ public class ApproverVO implements Serializable{
 
     private static final long serialVersionUID = 7304236208034674601L;
 
-    private Integer auid;
+    private Integer aid;
     
     private UserBaseVO  userBase;
     
@@ -34,16 +34,15 @@ public class ApproverVO implements Serializable{
 		this.userBase = userBase;
 	}
 
-	public Integer getAuid(){
-        return auid;
-    }
+    public Integer getAid() {
+		return aid;
+	}
 
-    public void setAuid(Integer auid){
-        this.auid = auid;
-    }
+	public void setAid(Integer aid) {
+		this.aid = aid;
+	}
 
-
-    public UserBaseVO getUserBase() {
+	public UserBaseVO getUserBase() {
 		return userBase;
 	}
 

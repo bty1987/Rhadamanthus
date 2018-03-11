@@ -12,8 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fanglin.data.po.CustomerPO;
-import com.fanglin.data.po.HousePO;
+import com.fanglin.communion.po.CustomerPO;
+import com.fanglin.communion.po.HousePO;
 import com.fanglin.department.po.DepartmentPO;
 import com.fanglin.personel.po.UserPO;
 
@@ -259,7 +259,7 @@ public class MaterialPO implements java.io.Serializable {
 	}
 
 	@ManyToOne
-	@JoinColumn(name = "salesmanId", referencedColumnName = "userId")
+	@JoinColumn(name = "smuid", referencedColumnName = "uid")
 	public UserPO getSalesman() {
 		return salesman;
 	}
@@ -269,7 +269,7 @@ public class MaterialPO implements java.io.Serializable {
 	}
 
 	@ManyToOne
-	@JoinColumn(name = "materialerId", referencedColumnName = "userId")
+	@JoinColumn(name = "muid", referencedColumnName = "uid")
 	public UserPO getMaterialer() {
 		return materialer;
 	}
@@ -279,7 +279,7 @@ public class MaterialPO implements java.io.Serializable {
 	}
 
 	@ManyToOne
-	@JoinColumn(name = "instoreId", referencedColumnName = "userId")
+	@JoinColumn(name = "iuid", referencedColumnName = "uid")
 	public UserPO getInstorer() {
 		return instorer;
 	}

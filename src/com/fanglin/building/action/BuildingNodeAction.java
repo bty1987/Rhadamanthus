@@ -40,7 +40,7 @@ public class BuildingNodeAction extends BaseListAction{
 	@Action(value="queryBuildingNodeByType", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String queryBuildingNodeByType() throws FLException{
 		
-		buildingNode = buildingNodeService.queryBuildingNodeByType(buildingNode);
+		buildingNodes = buildingNodeService.queryBuildingNodeByType(buildingNode);
 		
 		return SUCCESS;
 		

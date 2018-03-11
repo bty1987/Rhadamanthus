@@ -600,15 +600,18 @@ var decorationUtils = {
                     decorationUtils.addPicture($("#" + eId), res.decorationPicture);
                 } else if (type == 2) {
                     decorationUtils.addPicture($("#" + eId), res.decorationPicture);
+                } else if (type == 3) {
+                    decorationUtils.addPicture($("#" + eId), res.decorationPicture);
                 }
             });
         } else {
             com.showAlert(com.error, dateObj.errorMsg);
         }
-    }, initDecorationPicture: function (designId, pictureId, cadId, orderId, dFlag) {
+    }, initDecorationPicture: function (designId, pictureId, cadId, contractId,orderId, dFlag) {
 
         var $desgin = $("#" + designId).html("");
         var $picture = $("#" + pictureId).html("");
+        var $contract = $("#" + contractId).html("");
         var $cad = $("#" + cadId).html("");
 
         com.post(api.decoration.queryDecorationPictureByOrderId, {"decorationPicture.orderId": orderId}, function (res) {
@@ -624,6 +627,8 @@ var decorationUtils = {
                     decorationUtils.addPicture($desgin, decorationPicture, dFlag);
                 } else if (decorationPicture.type == 2) {
                     decorationUtils.addPicture($picture, decorationPicture, dFlag);
+                } else if (decorationPicture.type == 3) {
+                    decorationUtils.addPicture($contract, decorationPicture, dFlag);
                 }
             }
 

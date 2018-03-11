@@ -46,7 +46,7 @@ jQuery(function($) {
 
 		var creatLine = function(v){
 			var that = this;
-			var $liLine = $('<li></li>').addClass('item-blue clearfix');
+			var $liLine = $('<li></li>').addClass('item-orange clearfix');
 			var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.orderId));
 			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 			var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
@@ -57,8 +57,8 @@ jQuery(function($) {
 			var propertyArr = [
 				["楼盘地址:", v.orderAddr, "grey"],
 				["客户名:", v.customerName, "grey"],
-				["时间:", v.backVisitTime, "grey"],
-				["类型:", typeInit(v), "grey"],
+				["时间:", v.backVisitTime, "green"],
+				["类型:", typeInit(v), "red "],
 				["备注:", v.backVisitDes, "grey"],
 			];
 

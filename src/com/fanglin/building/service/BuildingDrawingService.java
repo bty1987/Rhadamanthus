@@ -3,13 +3,12 @@ package com.fanglin.building.service;
 import java.util.List;
 
 import com.fanglin.building.vo.BuildingDrawingVO;
-import com.fanglin.core.vo.Authentication;
 
 public interface BuildingDrawingService {
 
 	public List<BuildingDrawingVO> queryBuildingDrawing(BuildingDrawingVO buildingDrawingVO);
 	
-	public int addBuildingDrawing(BuildingDrawingVO buildingDrawingVO, Authentication authentication);
+	public void addBuildingDrawing(BuildingDrawingVO buildingDrawingVO, String userId);
 	
-	public int deleteBuildingDrawing(BuildingDrawingVO buildingDrawingVO);
+	public void deleteBuildingDrawing(BuildingDrawingVO buildingDrawingVO);
 }

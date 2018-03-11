@@ -57,10 +57,10 @@ $(function () {
                 var balanceStatus = v.status == 0 ? "初始" : "已付款";
 
                 var propertyArr = [
-                    ["创建时间:", v.createTime, "grey"],
+                    ["创建时间:", v.createTime, "green"],
                     ["创建人:", v.creater.userName, "grey"],
-                    ["结算值:", v.balance, "grey"],
-                    ["状态:", balanceStatus, "grey"],
+                    ["结算值:", v.balance, "blue"],
+                    ["状态:", balanceStatus, "red"],
                     ["说明:", v.comment, "grey"]
 
                 ];
@@ -68,7 +68,7 @@ $(function () {
                 $.each(propertyArr, function (index, value) {
                     var $liProperty = $('<li></li>').css({"border-bottom": "0px"});
                     $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                    $('<b></b>').html(value[1]).css({color: value[2]}).appendTo($liProperty);
+                    $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
                     $liProperty.appendTo($ulProperty);
                 });
 

@@ -172,6 +172,7 @@ public class MaterialPaymentDaoImpl extends DaoImpl<MaterialPaymentPO> implement
 		query.alias("material", "material");
 		query.alias("material.house", "house");
 		query.alias("house.village", "village");
+		query.alias("material.salesman", "salesman");
 		
 		if(filters != null){
 			for(Filter filter: filters){
@@ -189,7 +190,7 @@ public class MaterialPaymentDaoImpl extends DaoImpl<MaterialPaymentPO> implement
 				}else if(MaterialPaymentPO.COLUMN_NO_STR.equals(field)){
 					query.add(query.getCriterion(field, data, op));
 				}else if("designer".equals(field)){
-					query.add(query.getCriterion("material.salesman.userId", filter.getData(), filter.getOp()));
+					query.add(query.getCriterion("salesman.userId", filter.getData(), filter.getOp()));
 				}else if(MaterialPaymentPO.COLUMN_PAYMENTSTATUS_STR.equals(field)){
 					query.add(query.getCriterion(MaterialPaymentPO.COLUMN_PAYMENTSTATUS_STR, Integer.parseInt(data), op));
 				}else if(MaterialPaymentPO.COLUMN_COLLECTTIME_STR.equals(field)){

@@ -79,12 +79,8 @@ public class QuotationFunctionAreaItemServiceImpl implements QuotationFunctionAr
 	@Transactional(rollbackFor=Exception.class)
 	public QuotationFunctionAreaItemVO updateQuotationFunctionAreaItem(QuotationFunctionAreaItemVO quotationFunctionAreaItemVO, QuotationVO quotationVO) throws FLException {
 		
-		QuotationPO quotationPO = quotationDao.get(quotationVO.getQid());
+		QuotationPO quotationPO = checkQuotationForStatusByEnabled(quotationVO.getQid(),null);
 		
-		if(quotationPO == null){
-			throw new FLException(200003, "报价不存在");
-		}
-
 		QuotationServiceImpl.convertQuotationVOToPOForAdvance(quotationVO, quotationPO);
 		
 		Long qfaiId = quotationFunctionAreaItemVO.getQfaiId();
@@ -131,9 +127,13 @@ public class QuotationFunctionAreaItemServiceImpl implements QuotationFunctionAr
 	@Transactional(rollbackFor=Exception.class)
 	public int updateQuotationFunctionAreaItemForSpec(QuotationFunctionAreaItemVO quotationFunctionAreaItemVO) throws FLException {
 		
-		List<Short> types = Arrays.asList(QuotationFunctionAreaItemPO.TYPE_QUOTATION_COMMON_INT, QuotationFunctionAreaItemPO.TYPE_QUOTATION_CUSTOMER_INT,QuotationFunctionAreaItemPO.TYPE_QUOTATION_FIX_INT);
+		List<Short> types = Arrays.asList(QuotationFunctionAreaItemPO.TYPE_QUOTATION_COMMON_SHORT, QuotationFunctionAreaItemPO.TYPE_QUOTATION_CUSTOMER_SHORT,QuotationFunctionAreaItemPO.TYPE_QUOTATION_FIX_SHORT);
 		
 		Integer divisor = Integer.parseInt(systemConfigDao.querySystemConfig("quotationFunctionArea").getValue());
+		
+		QuotationFunctionAreaPO quotationFunctionAreaPO = quotationFunctionAreaDao.get(quotationFunctionAreaItemVO.getQuotationFunctionAreaId());
+		
+		checkQuotationForStatusByEnabled(null,quotationFunctionAreaPO.getQuotation());
 		
 		QuotationFunctionAreaItemPO quotationFunctionAreaItemPO = quotationFunctionAreaItemDao.queryQuotationFunctionAreaItemByQfaiId(QuotationFunctionAreaItemPO.factoryToClazz(quotationFunctionAreaItemVO.getQuotationFunctionAreaId(), divisor),quotationFunctionAreaItemVO.getQfaiId());
 		
@@ -157,9 +157,11 @@ public class QuotationFunctionAreaItemServiceImpl implements QuotationFunctionAr
 	@Transactional(rollbackFor=Exception.class)
 	public int updateQuotationFunctionAreaItemByQuotationIdAType(QuotationVO quotationVO, QuotationFunctionAreaItemVO quotationFunctionAreaItemVO) throws FLException {
 		
-		List<Short> types = Arrays.asList(QuotationFunctionAreaItemPO.TYPE_QUOTATION_COMMON_INT, QuotationFunctionAreaItemPO.TYPE_QUOTATION_CUSTOMER_INT,QuotationFunctionAreaItemPO.TYPE_QUOTATION_FIX_INT);
+		List<Short> types = Arrays.asList(QuotationFunctionAreaItemPO.TYPE_QUOTATION_COMMON_SHORT, QuotationFunctionAreaItemPO.TYPE_QUOTATION_CUSTOMER_SHORT,QuotationFunctionAreaItemPO.TYPE_QUOTATION_FIX_SHORT);
 		
 		QuotationFunctionAreaPO quotationFunctionAreaPO = quotationFunctionAreaDao.queryQuotationFunctionAreaForTypeByQuotationId(quotationVO.getQid(),QuotationFunctionAreaPO.TYPE_MANAGEMENT_INT);
+		
+		checkQuotationForStatusByEnabled(null,quotationFunctionAreaPO.getQuotation());
 		
 		Integer divisor = Integer.parseInt(systemConfigDao.querySystemConfig("quotationFunctionArea").getValue());
 		
@@ -179,16 +181,25 @@ public class QuotationFunctionAreaItemServiceImpl implements QuotationFunctionAr
 		
 		return 0;
 	}
+	
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public int updateQuotationFunctionAreaItemForIndex(List<QuotationFunctionAreaItemVO> QuotationFunctionAreaItemVOs,QuotationFunctionAreaVO quotationFunctionAreaVO) throws FLException {
+		
+		Integer divisor = Integer.parseInt(systemConfigDao.querySystemConfig("quotationFunctionArea").getValue());
+		String table= QuotationFunctionAreaItemPO.quotationFunctionAreaItemTable(quotationFunctionAreaVO.getQfaId(), divisor);
+		for(QuotationFunctionAreaItemVO quotationFunctionAreaItemVO : QuotationFunctionAreaItemVOs){
+			quotationFunctionAreaItemDao.updateQuotationFunctionAreaItemForIndex(table,quotationFunctionAreaItemVO);
+		}
+		
+		return 0;
+	}	
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public int deleteQuotationFunctionAreaItem(List<Long> qfaiIds, QuotationVO quotationVO,QuotationFunctionAreaVO quotationFunctionAreaVO) throws FLException {
 		
-		QuotationPO quotationPO = quotationDao.get(quotationVO.getQid());
-		
-		if(quotationPO == null){
-			throw new FLException(200003, "报价不存在");
-		}
+		QuotationPO quotationPO = checkQuotationForStatusByEnabled(quotationVO.getQid(),null);
 		
 		QuotationFunctionAreaPO quotationFunctionAreaPO = quotationFunctionAreaDao.get(quotationFunctionAreaVO.getQfaId());
 		
@@ -209,5 +220,21 @@ public class QuotationFunctionAreaItemServiceImpl implements QuotationFunctionAr
 		quotationDao.update(quotationPO);
 		
 		return 0;
+	}
+	private QuotationPO checkQuotationForStatusByEnabled(Long qid,QuotationPO quotationPO)throws FLException{
+		
+		if(quotationPO == null){
+			quotationPO = quotationDao.get(qid);
+		}
+		
+		if(quotationPO == null){
+			throw new FLException(200003, "报价不存在");
+		}
+		
+		if(quotationPO.getStatus() == QuotationPO.STATUS_DISABLED_SHORT){
+			throw new FLException(200030, "报价状态不可操作");
+		}
+		
+		return quotationPO;
 	}
 }

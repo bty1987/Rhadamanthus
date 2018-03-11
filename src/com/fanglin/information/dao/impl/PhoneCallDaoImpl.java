@@ -25,8 +25,6 @@ public class PhoneCallDaoImpl extends DaoImpl<PhoneCallPO> implements PhoneCallD
 		
 		queryFilterExcute(query, filters);
 		
-		query.asc("operater");
-		
 		return query.list();
 	}
 	
@@ -44,7 +42,7 @@ public class PhoneCallDaoImpl extends DaoImpl<PhoneCallPO> implements PhoneCallD
 		
 		if(filters != null){
 			
-			query.alias("operater", "userId");
+			query.alias("operater", "operater");
 			
 			for(Filter filter: filters){
 				

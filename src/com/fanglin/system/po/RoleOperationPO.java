@@ -17,7 +17,7 @@ public class RoleOperationPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -5001643145007685798L;
 
-	private int roId;
+	private int roid;
 	
 	private int rid;
 	
@@ -35,13 +35,13 @@ public class RoleOperationPO implements java.io.Serializable {
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "roId")
-	public int getRoId() {
-		return this.roId;
+	@Column(name = "roid")
+	public int getRoid() {
+		return roid;
 	}
 
-	public void setRoId(int roId) {
-		this.roId = roId;
+	public void setRoid(int roid) {
+		this.roid = roid;
 	}
 	
 	public int getRid() {
@@ -53,7 +53,7 @@ public class RoleOperationPO implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "oId", referencedColumnName = "oId")
+	@JoinColumn(name = "oid", referencedColumnName = "oid")
 	public OperationPO getOperation() {
 		return operation;
 	}

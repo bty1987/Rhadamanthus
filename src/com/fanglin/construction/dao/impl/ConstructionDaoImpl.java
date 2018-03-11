@@ -45,11 +45,9 @@ public class ConstructionDaoImpl extends DaoImpl<ConstructionPO> implements Cons
 	}
 
 	@Override
-	public List<ConstructionPO> pageConstructionForSupervision(Paging paging, List<Filter> filters, Integer company){
+	public List<ConstructionPO> pageConstructionForSupervision(Paging paging, List<Filter> filters){
 		
 		PagingQuery<ConstructionPO> query = pagingQuery(paging, ConstructionPO.class);
-		
-		query.add(query.getCriterion("decoration.company", company, "eq"));
 		
 		queryFilterExcute(query, filters);
 		

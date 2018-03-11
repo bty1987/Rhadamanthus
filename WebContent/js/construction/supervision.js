@@ -22,14 +22,14 @@ $(function(){
 
 		var creatLine = function(v){
 			var that = this;
-			var $liLine = $('<li></li>').addClass('item-blue clearfix');
+			var $liLine = $('<li></li>').addClass('item-orange clearfix');
 			var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.orderId));
 			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 			var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
 			var $btnView = $('<a></a>').addClass('btn btn-minier btn-yellow').html("查看");
-			var $btnAddReduce = $('<a></a>').addClass('btn btn-minier btn-purple').html('增减项');
-			var $btnRe = $('<a></a>').addClass('btn btn-minier btn-primary').html('返工');
+			var $btnAddReduce = $('<a></a>').addClass('btn btn-minier btn-success').html('增减项');
+			var $btnRe = $('<a></a>').addClass('btn btn-minier btn-warning').html('返工');
 			var $btnMoney = $('<a></a>').addClass('btn btn-minier btn-inverse').html('扣款');
 
 			var propertyArr = [

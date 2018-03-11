@@ -12,6 +12,12 @@ public class AccessoriesItemVO implements Serializable{
 	
 	private GoodsVO goods;
 	
+	private ColorVO color;
+	
+	private FormatVO format;
+	
+	private StorehouseVO storehouse;
+	
 	private Float num;
 
 	public AccessoriesItemVO() {
@@ -45,6 +51,30 @@ public class AccessoriesItemVO implements Serializable{
 
 	public void setGoods(GoodsVO goods) {
 		this.goods = goods;
+	}
+
+	public ColorVO getColor() {
+		return color;
+	}
+
+	public void setColor(ColorVO color) {
+		this.color = color;
+	}
+
+	public FormatVO getFormat() {
+		return format;
+	}
+
+	public void setFormat(FormatVO format) {
+		this.format = format;
+	}
+
+	public StorehouseVO getStorehouse() {
+		return storehouse;
+	}
+
+	public void setStorehouse(StorehouseVO storehouse) {
+		this.storehouse = storehouse;
 	}
 
 	public Float getNum() {

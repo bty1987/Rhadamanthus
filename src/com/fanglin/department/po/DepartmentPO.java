@@ -187,7 +187,7 @@ public class DepartmentPO implements Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "cityProperId", referencedColumnName = "cityProperId")
+	@JoinColumn(name = "cityProperId", referencedColumnName = "cpid")
 	public CityProperPO getCityProper() {
 		return cityProper;
 	}

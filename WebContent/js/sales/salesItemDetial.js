@@ -215,33 +215,31 @@ $(function () {
         if (listData && listData.length) {
             $.each(listData, function (i, v) {
 
-                var $liLine = $('<li></li>').addClass('clearfix');
+                var $liLine = $('<li></li>').addClass('item-orange clearfix');
                 var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-                var $h3 = $('<h3></h3>').css({
-                    color: "grey",
-                    "font-weight": "bold"
-                }).html(v.goods.name + ' ' + v.goods.no);
+                var $h3 = $('<h3></h3>').addClass('oid');
+                var $small = $('<small></small>').addClass('blue').html(v.goods.name + ' ' + v.goods.no);
                 var $btnDiv = $('<div></div>').addClass('action-buttons pull-right').attr('data-num', v.num).attr('data-selling', v.price).attr('data-siid', v.siid);
 
-                var $btnEdit = $('<a></a>').addClass('btn btn-minier').html('编辑');
-                var $btnDelete = $('<a></a>').addClass('btn btn-minier').html('删除');
+                var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
+                var $btnDelete = $('<a></a>').addClass('btn btn-minier btn-success').html('删除');
 
                 var propertyArr = [
                     ["商品品类:", v.goods.category, "grey"],
                     ["商品颜色:", v.color.name, "grey"],
                     ["商品规格:", v.format.info, "grey"],
-                    ["售价:", v.selling, "grey"],
-                    ["折扣价:", v.disPrice, "grey"],
-                    ["折让价:", v.price, "grey"],
-                    ["数量:", v.num, "grey"],
-                    ["总价:", v.total, "grey"],
+                    ["售价:", v.selling, "blue"],
+                    ["折扣价:", v.disPrice, "blue"],
+                    ["折让价:", v.price, "blue"],
+                    ["数量:", v.num, "blue"],
+                    ["总价:", v.total, "blue"],
                     ["备注:", v.comment, "grey"],
                 ];
 
                 $.each(propertyArr, function (index, value) {
-                    var $liProperty = $('<li></li>').css({"border-bottom": "0px"});
+                    var $liProperty = $('<li></li>');
                     $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                    $('<b></b>').html(value[1]).css({color: value[2]}).appendTo($liProperty);
+                    $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
                     $liProperty.appendTo($ulProperty);
                 });
 
@@ -252,7 +250,7 @@ $(function () {
                 if (fullpayStatus == -1 && status != 4) {
                     $btnDiv.append($btnEdit).append($btnDelete);
                 }
-
+                $small.appendTo($h3);
                 $btnDiv.appendTo($h3);
 
                 $btnDelete.click(function (e) {
@@ -553,18 +551,11 @@ $(function () {
                     ['品牌系列', 'goods.category'],
                     ['产品名称', 'goods.name'],
                     ['产品编码', 'goods.no'],
-                    //['商品颜色', 'color.name'],
                     ['产品规格', 'format.info'],
-                    //['售价', 'selling'],
-                    //['折扣价', 'disPrice'],
                     ['单价', 'price'],
                     ['数量', 'num'],
                     ['金额', 'total'],
-                    //["原结算方式:", 'rawCtype'],
-                    //["原结算值:", 'rawCvalue'],
-                    //["结算方式:", 'ctype'],
-                    // ["结算值:", 'cvalue'],
-                    ["备注:", 'comment'],
+                    ["备注", 'comment'],
                 ],
                 list: data.salesItems
             });

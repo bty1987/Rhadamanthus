@@ -19,6 +19,6 @@ public interface NoticeDao extends Dao<NoticePO> {
 
 	public List<NoticePO> pageNotice(Paging paging, List<Filter> filters, String userId, Integer company);
 	
-	public List<NoticePO> pageNoticeForSeenByType(Paging paging, List<Long> dids, Short type, Integer company);
+	public List<NoticePO> pageNoticeForSeenByType(Paging paging, List<Filter> filters, List<Long> dids, Short type, Integer company);
 	
 }

@@ -35,7 +35,7 @@
 
         var creatLine = function(v){
 
-            var $liLine = $('<li></li>').addClass('item-blue clearfix');
+            var $liLine = $('<li></li>').addClass('item-orange clearfix');
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('red').html('KEY :')).append($('<span>&nbsp;&nbsp;</span>'))
                 .append($('<small></small>').addClass('blue').html(v.key)).append($('<span>&nbsp;&nbsp;&nbsp;&nbsp;</span>'))
                 .append($('<small></small>').addClass('red').html('Value :')).append($('<span>&nbsp;&nbsp;</span>'))
@@ -43,7 +43,7 @@
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
-            var $btnDraw = $('<a></a>').addClass('btn btn-minier btn-info').html('更新');
+            var $btnDraw = $('<a></a>').addClass('btn btn-minier btn-yellow').html('更新');
           
             var propertyArr = [
                 ["创建人:", v.createName, "grey"],

@@ -4,6 +4,8 @@ import java.sql.Timestamp;
 
 import org.apache.struts2.json.annotations.JSON;
 
+import com.fanglin.personel.vo.UserBaseVO;
+
 public class DecorationActivityItemVO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1820529592422543989L;
@@ -28,7 +30,7 @@ public class DecorationActivityItemVO implements java.io.Serializable {
 	
 	private String content;
 	
-	private String receiveUserId;
+	private UserBaseVO receiveUserId;
 	
 	private String receiveUserName;
 	
@@ -114,11 +116,11 @@ public class DecorationActivityItemVO implements java.io.Serializable {
 		this.content = content;
 	}
 
-	public String getReceiveUserId() {
+	public UserBaseVO getReceiveUserId() {
 		return receiveUserId;
 	}
 
-	public void setReceiveUserId(String receiveUserId) {
+	public void setReceiveUserId(UserBaseVO receiveUserId) {
 		this.receiveUserId = receiveUserId;
 	}
 

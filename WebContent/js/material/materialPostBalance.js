@@ -54,21 +54,21 @@ $(function(){
         };
 
         var creatLine = function(v){
-            var $liLine = $('<li></li>').addClass('item-blue clearfix');
+            var $liLine = $('<li></li>').addClass('item-orange clearfix');
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.material.no   ));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-            var $btnSupBalance = $('<a></a>').addClass('btn btn-minier btn-warning').html('厂商结算值');
-            var $btnSupPost = $('<a></a>').addClass('btn btn-minier btn-purple').html('厂商结算');
-            var $btnBalance = $('<a></a>').addClass('btn btn-minier btn-primary').html('结算值');
-            var $btnPost = $('<a></a>').addClass('btn btn-minier btn-danger').html('结算');
+            var $btnSupBalance = $('<a></a>').addClass('btn btn-minier btn-yellow').html('厂商结算值');
+            var $btnSupPost = $('<a></a>').addClass('btn btn-minier btn-success').html('厂商结算');
+            var $btnBalance = $('<a></a>').addClass('btn btn-minier btn-warning').html('结算值');
+            var $btnPost = $('<a></a>').addClass('btn btn-minier btn-inverse').html('结算');
             //var $btnSub = $('<a></a>').addClass('btn btn-minier btn-success').html('子项');
             var lable = v.type == 0 ? '收款' : '退款';
-            var $btnCharge = $('<a></a>').addClass('btn btn-minier').html(lable);
+            var $btnCharge = $('<a></a>').addClass('btn btn-minier btn-danger').html(lable);
             //侯骅峰于4.7日增加楼盘地址、业务员、品牌、总价、券值、券信息显示字段
             var propertyArr = [
                 //增加订单号
-                ["订单编号：",v.material.orderId,"grey"],
+                ["订单编号：",v.material.orderId,"blue"],
                 //增加楼盘地址
                 ["楼盘地址：",v.material.house.village.name + " " + v.material.house.houseNumber,"grey"],
                 //创建品牌字段
@@ -81,26 +81,26 @@ $(function(){
                 //增加总价字段
                 ["总价：",v.total,"blue"],
                 //过度数据
-                ["子订单总价：",v.material.total,"grey"],
+                ["子订单总价：",v.material.total,"blue"],
                 //增加券值
-                ["券值：",v.material.coupon,"grey"],
+                ["券值：",v.material.coupon,"blue"],
                 //增加券信息
                 ["券信息：",v.material.couponInfo ? v.material.couponInfo : '---',"grey"],
                 ["主材驻店:", v.instorer.currentName ?  v.instorer.currentName : '---' , "grey"],
                 //预结算值
-                ["预结算值：",v.balance,"grey"],
-                ["预结算时间 :", v.balanceTime , "grey"],
+                ["预结算值：",v.balance,"blue"],
+                ["预结算时间 :", v.balanceTime , "green"],
                 ["预结算人:", v.creater.currentName , "grey"],
-                ["厂商结算:", v.vbalance , "grey"],
-                ["厂商结算时间:", v.vbalanceTime , "grey"],
-                ["结算值：",v.post,"grey"],
-                ["结算时间：",v.postTime ? v.postTime : '---',"grey"],
+                ["厂商结算:", v.vbalance , "blue"],
+                ["厂商结算时间:", v.vbalanceTime , "green"],
+                ["结算值：",v.post,"blue"],
+                ["结算时间：",v.postTime ? v.postTime : '---',"green"],
                 ["结算人  :", v.poster.currentName ? v.poster.currentName : '---' , "grey"],
                 //新增抹零和厂商抹零
-                ["抹零：",v.material.maling,"grey"],
-                ["厂商抹零：",v.material.venderMaling,"grey"],
-                ["状态:", v.status == 0 ? '预结算': v.status== 1 ? '厂商结算' : v.status== 2 ? '结算' : '---' , "blue"],
-                ["类型:", v.type == 0 ? '购货' : v.type == 1 ? '预结算退货' : '结算退货' , "blue"],
+                ["抹零：",v.material.maling,"blue"],
+                ["厂商抹零：",v.material.venderMaling,"blue"],
+                ["状态:", v.status == 0 ? '预结算': v.status== 1 ? '厂商结算' : v.status== 2 ? '结算' : '---' , "red"],
+                ["类型:", v.type == 0 ? '购货' : v.type == 1 ? '预结算退货' : '结算退货' , "red"],
 
             ];
 
@@ -184,7 +184,7 @@ $(function(){
                     com.switchPage('views/material/materialPostBalanceDetail.html');
                 });
             }else{
-                var $btnSub = $('<a></a>').addClass('btn btn-minier btn-success').html('子项');
+                var $btnSub = $('<a></a>').addClass('btn btn-minier btn-purple').html('子项');
                 $divBtnWrap.append($btnSub);
                 $btnSub.click(function(){
                     params['materialOrderPostBalance.type'] = 0;

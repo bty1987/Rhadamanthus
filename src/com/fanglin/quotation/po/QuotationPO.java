@@ -23,8 +23,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-
-import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.personel.po.UserPO;
 
 @Entity
@@ -33,11 +31,17 @@ public class QuotationPO implements Serializable {
 
 	private static final long serialVersionUID = 3361405245563596740L;
 
-	public static final int STATUS_DEFAULT_INT = 1;
+	public static final short 	DEFAULTS_NONDEFAULT_SHORT = 0;
+	
+	public static final short 	DEFAULTS_DEFAULT_SHORT = 1;
+	
+	public static final short STATUS_DISABLED_SHORT = 1;
+	
+	public static final short STATUS_ENABLED_SHORT = 0;
 
 	private long qid;
 	
-	private DecorationPO decoration;
+	private String orderId;
 	
 	private String quotationName;
 	
@@ -45,7 +49,7 @@ public class QuotationPO implements Serializable {
 	
 	private Timestamp createTime;
 	
-	private UserPO createUser;
+	private UserPO creater;
 	
 	private String content;
 
@@ -57,11 +61,9 @@ public class QuotationPO implements Serializable {
 	
 	private float totalPrice;
 	
-	private int status;
+	private short defaults;
 	
-	private int saveStatus;
-	
-	private int calFlag = 1;
+	private short status;
 	
 	private float managePrice;
 	
@@ -89,26 +91,26 @@ public class QuotationPO implements Serializable {
 		this.qid = qid;
 	}
 
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(nullable = false, name = "orderId", referencedColumnName = "orderId")
-	public DecorationPO getDecoration(){
-		return decoration;
+	@Column(name = "orderId")
+	public String getOrderId() {
+		return orderId;
 	}
 
-	public void setDecoration(DecorationPO decoration){
-		this.decoration = decoration;
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = true, name = "createUserId", referencedColumnName = "userId")
-	public UserPO getCreateUser(){
-		return createUser;
+	@JoinColumn(nullable = true, name = "cuid", referencedColumnName = "uid")
+	public UserPO getCreater() {
+		return creater;
 	}
 
-	public void setCreateUser(UserPO createUser){
-		this.createUser = createUser;
+	public void setCreater(UserPO creater) {
+		this.creater = creater;
 	}
-	
+
+
 	@Column(name = "quotationName")
 	public String getQuotationName(){
 		return quotationName;
@@ -154,15 +156,25 @@ public class QuotationPO implements Serializable {
 		this.discount = discount;
 	}
 	
+	@Column(name = "defaults")
+	public short getDefaults() {
+		return defaults;
+	}
+
+	public void setDefaults(short defaults) {
+		this.defaults = defaults;
+	}
+	
+	
 	@Column(name = "status")
-	public int getStatus(){
+	public short getStatus() {
 		return status;
 	}
 
-	public void setStatus(int status){
+	public void setStatus(short status) {
 		this.status = status;
 	}
-	
+
 	@Column(name = "totalPrice")
 	public float getTotalPrice(){
 		return totalPrice;
@@ -170,24 +182,6 @@ public class QuotationPO implements Serializable {
 
 	public void setTotalPrice(float totalPrice){
 		this.totalPrice = totalPrice;
-	}
-	
-	@Column(name = "saveStatus")
-	public int getSaveStatus(){
-		return saveStatus;
-	}
-	
-	public void setSaveStatus(int saveStatus){
-		this.saveStatus = saveStatus;
-	}
-	
-	@Column(name = "calFlag")
-	public int getCalFlag(){
-		return calFlag;
-	}
-
-	public void setCalFlag(int calFlag){
-		this.calFlag = calFlag;
 	}
 	
 	@Column(name = "managePrice")
@@ -242,5 +236,4 @@ public class QuotationPO implements Serializable {
 	public void setTrafficRate(float trafficRate) {
 		this.trafficRate = trafficRate;
 	}
-
 }

@@ -23,13 +23,13 @@ $(function(){
         };
 
         var creatLine = function(v){   //页面中的一条数据
-            var $liLine = $('<li></li>').addClass('item-blue clearfix');
+            var $liLine = $('<li></li>').addClass('item-orange clearfix');
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.itemName));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
-            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-primary').html('编辑');
-            var $btnDelete = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
+            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
+			var $btnDelete = $('<a></a>').addClass('btn btn-minier btn-success').html('删除');
 
 			//启用禁用
 			var $btnStatus = $('<div></div>').addClass('pull-right');
@@ -41,11 +41,11 @@ $(function(){
 			var $dspan = $('<span></span>').addClass('lbl');
 
             var propertyArr = [
-                ["编号:", v.itemId, "grey"],
-                ["大类:", v.quotationBigCategory, "grey"],
-                ["单位:", v.measurementUnit, "grey"],
-                ["工种:", v.itemWorkType, "grey"],
-                ["单价:", v.unitPrice, "grey"],
+                ["编号:", v.itemId, "blue"],
+                ["大类:", v.quotationBigCategory, "red"],
+                ["单位:", v.measurementUnit, "red"],
+                ["工种:", v.itemWorkType, "red"],
+                ["单价:", v.unitPrice, "blue"],
             ];
 
             $.each(propertyArr, function (index,value) {
@@ -59,7 +59,7 @@ $(function(){
 			$btnStatus.append($statusSwitch).append($span);
 			$btnDiscount.append($discountSwitch).append($dspan);
 
-			$divBtnWrap.append($btnEdit).append($btnDelete).append($btnEdit).append($btnDiscount).append($btnStatus).appendTo($h3);
+			$divBtnWrap.append($btnEdit).append($btnDelete).append($btnDiscount).append($btnStatus).appendTo($h3);
 
             $liLine.append($h3).append($ulProperty);
 
@@ -105,7 +105,7 @@ $(function(){
         displayFunc.init('resultList', data);
     }, "pagenation", "SystemDefineItemPostData", null, false, null, function(){
     	
-    	var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addSystemDefineItem').css("margin", "0px 3px");
+    	var $adda = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'addSystemDefineItem').css("margin", "0px 3px");
     	var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
     	var $addspan = $('<span></span>').text('添加').appendTo($adda);
     	

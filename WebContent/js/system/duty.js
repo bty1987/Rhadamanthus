@@ -24,12 +24,12 @@
 
         var creatLine = function(v){   //页面中的一条数据
 
-			var $liLine = $('<li></li>').addClass('item-blue clearfix');
+			var $liLine = $('<li></li>').addClass('item-orange clearfix');
 			var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html( v.name));
 			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 			var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
-			var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-info').html('编辑');
+			var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
 
 
 			//启用禁用
@@ -74,9 +74,9 @@
         displayFunc.init('resultList', data);
     }, "pagenation", "dutyPostData", null, false, null, function(){
 
-    	var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addDuty').css("margin", "0px 3px");
+    	var $adda = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'addDuty').css("margin", "0px 3px");
     	var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
-    	var $addspan = $('<span></span>').text('添加').appendTo($adda);
+    	var $addspan = $('<span ></span>').text('添加').appendTo($adda);
 
     	return [$adda];
     });

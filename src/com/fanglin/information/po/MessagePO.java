@@ -81,7 +81,7 @@ public class MessagePO implements Serializable {
 	}
 
 	@javax.persistence.ManyToOne(fetch = FetchType.LAZY)
-	@javax.persistence.JoinColumn(nullable = false, name = "receiverId", referencedColumnName = "userId")
+	@javax.persistence.JoinColumn(nullable = false, name = "ruid", referencedColumnName = "uid")
 	public UserPO getReceiver(){
 		return receiver;
 	}
@@ -91,7 +91,7 @@ public class MessagePO implements Serializable {
 	}
 
 	@javax.persistence.ManyToOne(fetch = FetchType.LAZY)
-	@javax.persistence.JoinColumn(name = "senderId", referencedColumnName = "userId")
+	@javax.persistence.JoinColumn(name = "suid", referencedColumnName = "uid")
 	public UserPO getSender(){
 		return sender;
 	}

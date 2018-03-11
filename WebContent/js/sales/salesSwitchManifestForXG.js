@@ -34,10 +34,10 @@ $(function () {
             if (listData && listData.length) {
                 $.each(listData, function (i, v) {
 
-                    var $liLine = $('<li></li>').addClass('item-blue clearfix');
+                    var $liLine = $('<li></li>').addClass('item-orange clearfix');
                     var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-                    var $h3 = $('<h3></h3>').addClass('sid');
-                    var $btnDiv = $('<div></div>').addClass('action-buttons pull-right').css('margin-right', '2%');
+                    var $h3 = $('<h3></h3>').addClass('oid');
+                    var $btnDiv = $('<div></div>').addClass('action-buttons pull-right');
 
                     var status = "";
                     var balanceStatus = "";
@@ -78,10 +78,10 @@ $(function () {
                     }
 
 
-                    var $btnSwitch = $('<a></a>').addClass('btn btn-minier').html('转出库单');
+                    var $btnSwitch = $('<a></a>').addClass('btn btn-minier btn-yellow').html('转出库单');
 
                     var propertyArr = [
-                        ["订单编号:", v.orderId, "grey"],
+                        ["订单编号:", v.orderId, "blue"],
                         ["楼盘地址:", v.house.village.name + " " + v.house.houseNumber, "grey"],
                         ["客户名:", v.customer.customerName, "grey"],
                         ["渠道:", v.salesman.currentName, "grey"],
@@ -92,15 +92,15 @@ $(function () {
                         ["主材部:", v.guideDept.deptName, "grey"],
                         ["品类:", v.category, "grey"],
                         ["品牌:", v.brand, "grey"],
-                        ["创建时间:", v.createTime, "grey"],
-                        ["结算时间:", v.balanceTime, "grey"],
-                        ["全款时间:", v.fullpayTime, "grey"],
-                        ["状态:", status, "grey"],
-                        ["结算状态:", balanceStatus, "grey"],
-                        ["总额:", v.total, "grey"],
-                        ["抹零:", v.maling, "grey"],
-                        ["厂商抹零:", v.venderMaling, "grey"],
-                        ["券值:", v.coupon, "grey"],
+                        ["创建时间:", v.createTime, "green"],
+                        ["结算时间:", v.balanceTime, "green"],
+                        ["全款时间:", v.fullpayTime, "green"],
+                        ["状态:", status, "red"],
+                        ["结算状态:", balanceStatus, "red"],
+                        ["总额:", v.total, "blue"],
+                        ["抹零:", v.maling, "blue"],
+                        ["厂商抹零:", v.venderMaling, "blue"],
+                        ["券值:", v.coupon, "blue"],
                         ["券信息:", v.couponInfo, "grey"],
                         ["备注:", v.comment, "grey"]
                     ];
@@ -123,14 +123,14 @@ $(function () {
                         "data-fullPayStatus": v.fullpayStatus
                     }).addClass('ace ace-checkbox-2');
 
-                    var _span = $('<span></span>').addClass('lbl grey bigger-150').css('font-weight', 'bold').html(v.no)
+                    var _span = $('<span></span>').addClass('lbl blue bigger-150').css('font-weight', 'bold').html(v.no)
 
                     _label.append($input).append(_span).appendTo($label)
 
                     $.each(propertyArr, function (index, value) {
-                        var $liProperty = $('<li></li>').css({"border-bottom": "0px"});
+                        var $liProperty = $('<li></li>');
                         $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                        $('<b></b>').html(value[1]).css({color: value[2]}).appendTo($liProperty);
+                        $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
                         $liProperty.appendTo($ulProperty);
                     });
 
@@ -142,11 +142,16 @@ $(function () {
                     $liLine.append($h3).append($ulProperty);
 
                     $btnSwitch.click(function () {
+
+                        var _params = {};
+
+                        _params["sids[0]"] = v.sid;
+
                         if (v.fullpayStatus == 2) {
                             viewSalesItems(v.sid)
                             openlayer($btnSwitch.html(), function () {
-                                savePurchase();
-                            })
+                                savePurchase(_params);
+                            },v.sid)
                         } else {
                             layer.msg('此销售单补款未确认,无法转出库单', {time: 2e3})
                         }
@@ -180,7 +185,7 @@ $(function () {
 
         displayFunc.init('resultList', data)
     }, 'pagenation', 'salesSwitchManifestForXGPostData', null, false, null, function () {
-        var $adda = $('<a></a>').addClass('btn btn-minier pull-left').attr('name', 'collects').css("margin", "0px 3px");
+        var $adda = $('<a></a>').addClass('btn btn-minier pull-left btn-info').attr('name', 'collects').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-money bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('批量转出库单').appendTo($adda);
 
@@ -211,7 +216,7 @@ $(function () {
                     if (fullPayStatusFlag && flag) {
                         viewSalessItems(_params)
                         openlayer($addspan.text(), function () {
-                            savePurchase()
+                            savePurchase(_params)
                         })
                     } else if (fullPayStatusFlag == false && flag == true || fullPayStatusFlag == false && flag == false) {
                         layer.msg('销售单中有补款未确认,无法转出库单', {time: 2e3})
@@ -223,7 +228,7 @@ $(function () {
 
             }
         )
-        return [$adda]
+        return []
 
     }, 'resultList')
 
@@ -243,7 +248,7 @@ $(function () {
         })
     }
 
-    function savePurchase() {
+    function savePurchase(sids) {
 
         if (com.validate('layerAdd', 'right')) return;
 
@@ -256,8 +261,11 @@ $(function () {
             "manifest.attachment": "",
             "manifest.type": 3,
         }
+
+        $.extend(options,sids)
+
         var checkList = $('input[name="siids"]:checked', '#resultListItem')
-        var $liline = checkList.parents('.siid');
+        var $liline = checkList.parents('.oid');
         $siids = [];
         $.each(checkList, function (i, v) {
             var $this = $(v);
@@ -266,9 +274,9 @@ $(function () {
             options["manifestItems[" + i + "].goods.gid"] = $this.attr('data-gid');            //– 商品编号
             options["manifestItems[" + i + "].color.cid"] = $this.attr('data-cid');  //– 颜色
             options["manifestItems[" + i + "].format.fid"] = $this.attr('data-fid');//– 规格
-            options["manifestItems[" + i + "].outstorehouse.shId"] = $this.parents('.siid').find('select.outStroehouse').val();//– 仓库
-            options["manifestItems[" + i + "].unitPrice"] = $this.parents('.siid').find('input.unitPrice').val();  //单价
-            options["manifestItems[" + i + "].num"] = $this.parents('.siid').find('input.inputNumber').val();           //– 数量
+            options["manifestItems[" + i + "].outstorehouse.shId"] = $this.parents('.oid').find('select.outStroehouse').val();//– 仓库
+            options["manifestItems[" + i + "].unitPrice"] = $this.parents('.oid').find('input.unitPrice').val();  //单价
+            options["manifestItems[" + i + "].num"] = $this.parents('.oid').find('input.inputNumber').val();           //– 数量
         })
 
         if (checkList.length != 0) {
@@ -296,34 +304,35 @@ $(function () {
 
             if (listData && listData.length) {
                 $.each(listData, function (i, v) {
-                    var $liLine = $('<li></li>').addClass('clearfix');
-                    var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix col-xs-12').attr({
+                    var $liLine = $('<li></li>').addClass('item-orange clearfix');
+                    var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix').attr({
                         'data-discount': v.discount,
                         'data-postDis': v.postDis
                     });
-                    var $h3 = $('<h3></h3>').addClass('siid')
+                    var $h3 = $('<h3></h3>').addClass('oid')
                     var $btnDiv = $('<div></div>').addClass('action-buttons pull-right').attr('data-num', v.num).attr('data-selling', v.price).attr('data-siid', v.siid);
 
                     var propertyArr = [
                         ["商品品类:", v.goods.category, "grey", "category"],
                         ["商品颜色:", v.color.name, "grey", "color"],
                         ["商品规格:", v.format.info, "grey", "format"],
-                        ["售价:", v.selling, "grey", "selling"],
-                        ["折扣价:", v.disPrice, "grey", "disPrice"],
-                        ["折让价:", v.price, "grey", "price"],
-                        ["数量:", v.num, "grey", "num"],
-                        ["总价:", v.total, "grey", "total"],
-                        ["原结算方式:", v.rawCtype == 0 ? "底价" : "点位", "grey", "rawCtype"],
-                        ["原结算值:", v.rawCvalue, "grey", "rawCvalue"],
-                        ["结算方式:", v.ctype == 0 ? "底价" : "点位", "grey", "ctype"],
-                        ["结算值:", v.cvalue, "grey", "cvalue"],
+                        ["售价:", v.selling, "blue", "selling"],
+                        ["折扣价:", v.disPrice, "blue", "disPrice"],
+                        ["折让价:", v.price, "blue", "price"],
+                        ["数量:", v.num, "blue", "num"],
+                        ["总价:", v.total, "blue", "total"],
+                        ["原结算方式:", v.rawCtype == 0 ? "底价" : "点位", "red", "rawCtype"],
+                        ["原结算值:", v.rawCvalue, "blue", "rawCvalue"],
+                        ["结算方式:", v.ctype == 0 ? "底价" : "点位", "red", "ctype"],
+                        ["结算值:", v.cvalue, "blue", "cvalue"],
                         ["备注:", v.comment, "grey", "conment"],
                     ];
 
-                    var $label = $('<label></label>').addClass('control-label col-xs-12').css({
+                    var $label = $('<label></label>').addClass('control-label').css({
                         'color': 'grey',
                         'font-size': '20px',
-                        "font-weight": "bold"
+                        "font-weight": "bold",
+                        "width":"100%"
                     });
 
                     var inputSpan = $('<label></label>').addClass('pull-right').css({
@@ -378,14 +387,14 @@ $(function () {
                         "data-num": v.num,
                     }).addClass('ace ace-checkbox-2');
 
-                    var _span = $('<span></span>').addClass('lbl grey bigger-150').css('font-weight', 'bold').html(v.goods.name + ' ' + v.goods.no);
+                    var _span = $('<span></span>').addClass('lbl blue bigger-150').css('font-weight', 'bold').html(v.goods.name + ' ' + v.goods.no);
 
                     _label.append($input).append(_span).appendTo($label)
 
                     $.each(propertyArr, function (index, value) {
                         var $liProperty = $('<li></li>').css({"border-bottom": "0px"});
                         $('<strong></strong>').attr('name', value[3]).html(value[0]).appendTo($liProperty);
-                        $('<b></b>').html(value[1]).css({color: value[2]}).appendTo($liProperty);
+                        $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
                         $liProperty.appendTo($ulProperty);
                     });
 
@@ -438,7 +447,8 @@ $(function () {
     })();
 
 
-    function openlayer(title, callback) {
+    function openlayer(title, callback,sid) {
+    	$('#layerAdd').attr({'data-sid': sid});
         layer.closeAll();
         layer.open({
             type: 1,
@@ -523,8 +533,8 @@ $(function () {
         var $list = $('.checked', '#resultListItem');
         $list.length && $list.each(function () {
             var $this = $(this);
-            if ($this.parents('.siid').find('input.unitPrice').val()) {
-                _total = utils.accAdd(utils.accMul(parseFloat($this.parents('.siid').find('input.unitPrice').val() + ''), $this.parents('.siid').find('input.inputNumber').val()), _total);
+            if ($this.parents('.oid').find('input.unitPrice').val()) {
+                _total = utils.accAdd(utils.accMul(parseFloat($this.parents('.oid').find('input.unitPrice').val() + ''), $this.parents('.oid').find('input.inputNumber').val()), _total);
             }
         });
 

@@ -17,7 +17,7 @@ import com.fanglin.department.po.DepartmentPO;
 import com.fanglin.personel.po.UserPO;
 
 @Entity
-@Table(name = "auditScale", catalog = "platform")
+@Table(name = "auditScale", catalog = "decoration")
 public class AuditScalePO implements Serializable {
 
 	private static final long serialVersionUID = -6192527565100234860L;

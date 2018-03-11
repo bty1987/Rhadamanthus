@@ -11,6 +11,7 @@ package com.fanglin.system.service;
 
 import java.util.List;
 
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.system.vo.RegionVO;
 import com.fanglin.utils.Paging;
@@ -21,8 +22,16 @@ public interface RegionService {
 	
 	public List<RegionVO> queryRegion();
 	
-	public RegionVO queryRegionById(RegionVO regionVO);
+	public RegionVO queryRegionByRid(RegionVO regionVO);
 	
 	public List<RegionVO> queryRegionByName(RegionVO regionVO);
+	
+	public void addRegion(RegionVO regionVO);
+
+	public void updateRegion(RegionVO regionVO) throws FLException;
+
+	public String deleteRegion(List<Integer> rids);
+
+	public void deleteRegionByRid(Integer rid);
 
 }

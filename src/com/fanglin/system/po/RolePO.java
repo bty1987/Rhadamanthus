@@ -15,66 +15,66 @@ public class RolePO implements Serializable {
 
 	private static final long serialVersionUID = 8111974803190366547L;
 	
-	public static final String SUPER_ROLEID_STR = "1";
+	public static final String SUPER_NO_STR = "1";
 	
-	private int rId;
+	private int rid;
 
-	private String roleId;
+	private String no;
 
-	private String roleName;
+	private String name;
 
-	private String roleDes;
+	private String content;
 	
 	public RolePO(){
 		super();
 	}
 	
-	public RolePO(int rId) {
+	public RolePO(int rid) {
 		super();
-		this.rId = rId;
+		this.rid = rid;
 	}
 
-	public RolePO(String roleId){
+	public RolePO(String no){
 		super();
-		this.roleId = roleId;
+		this.no = no;
 	}
 	
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "rId") 
-	public int getrId() {
-		return rId;
-	}
-
-	public void setrId(int rId) {
-		this.rId = rId;
-	}
-
 	@Id
-	@Column(name = "roleId", nullable = false)
-	public String getRoleId(){
-		return roleId;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "rid") 
+	public int getRid() {
+		return rid;
 	}
 
-	public void setRoleId(String roleId){
-		this.roleId = roleId;
+	public void setRid(int rid) {
+		this.rid = rid;
 	}
 
-	@Column(name = "roleName", nullable = false)
-	public String getRoleName(){
-		return roleName;
+	@Column(name = "no")
+	public String getNo() {
+		return no;
 	}
 
-	public void setRoleName(String roleName){
-		this.roleName = roleName;
+	public void setNo(String no) {
+		this.no = no;
 	}
 
-	@Column(name = "roleDes", nullable = true)
-	public String getRoleDes(){
-		return roleDes;
+	@Column(name = "name")
+	public String getName() {
+		return name;
 	}
 
-	public void setRoleDes(String roleDes){
-		this.roleDes = roleDes;
+	public void setName(String name) {
+		this.name = name;
 	}
-	
+
+	@Column(name = "content")
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+
 }

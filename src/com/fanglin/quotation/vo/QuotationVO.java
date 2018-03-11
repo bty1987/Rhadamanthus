@@ -36,9 +36,7 @@ public class QuotationVO implements Serializable {
 	
 	private Float houseArea;
 	
-	private Float orderTotalPrice;
-	
-	private Float notSalesmanRate = 0f;
+	private Float notSalesmanRate;
 	
 	private String versionId;
 
@@ -46,7 +44,7 @@ public class QuotationVO implements Serializable {
 	
 	private String decorationStyle;
 	
-	private String createrId;
+	private Integer creater;
 	
 	private String createrName;
 	
@@ -56,7 +54,9 @@ public class QuotationVO implements Serializable {
 	
 	private Float totalPrice;
 	
-	private Integer status;
+	private Short defaults;
+	
+	private Short status;
 	
 	private Short type;
 	
@@ -163,12 +163,12 @@ public class QuotationVO implements Serializable {
 		this.decorationStyle = decorationStyle;
 	}
 
-	public String getCreaterId() {
-		return createrId;
+	public Integer getCreater() {
+		return creater;
 	}
 
-	public void setCreaterId(String createrId) {
-		this.createrId = createrId;
+	public void setCreater(Integer creater) {
+		this.creater = creater;
 	}
 
 	public String getCreaterName() {
@@ -196,11 +196,19 @@ public class QuotationVO implements Serializable {
 		this.discount = discount;
 	}
 
-	public Integer getStatus(){
+	public Short getDefaults() {
+		return defaults;
+	}
+
+	public void setDefaults(Short defaults) {
+		this.defaults = defaults;
+	}
+
+	public Short getStatus() {
 		return status;
 	}
 
-	public void setStatus(Integer status){
+	public void setStatus(Short status) {
 		this.status = status;
 	}
 
@@ -218,14 +226,6 @@ public class QuotationVO implements Serializable {
 
 	public String getVersionId(){
 		return versionId;
-	}
-
-	public Float getOrderTotalPrice(){
-		return orderTotalPrice;
-	}
-
-	public void setOrderTotalPrice(Float orderTotalPrice){
-		this.orderTotalPrice = orderTotalPrice;
 	}
 
 	public Float getNotSalesmanRate() {
@@ -299,5 +299,4 @@ public class QuotationVO implements Serializable {
 	public void setTrafficRate(Float trafficRate) {
 		this.trafficRate = trafficRate;
 	}
-
 }

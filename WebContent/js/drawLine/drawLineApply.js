@@ -58,7 +58,7 @@ jQuery(function($) {
 
         var creatLine = function(v){
         	
-            var $liLine = $('<li></li>').addClass('item-blue clearfix');
+            var $liLine = $('<li></li>').addClass('item-orange clearfix');
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.orderId));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
@@ -70,7 +70,7 @@ jQuery(function($) {
                ["设计师:", v.designer, "grey"],
                ["面积:", v.houseArea, "blue"],
                ["申请人:", v.applayUser, "grey"],
-               ["申请时间:", v.applayTime, "grey"],
+               ["申请时间:", v.applayTime, "green"],
                ["放线次数:", v.applayCount, "blue"],
                ["描述:", v.applayDes, "grey"],
            ];

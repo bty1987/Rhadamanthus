@@ -4,13 +4,19 @@ import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
 import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.fanglin.personel.po.UserPO;
+
 @Entity
-@Table(name = "decorationactivityitem", catalog = "platform")
+@Table(name = "decorationactivityitem", catalog = "decoration")
 public class DecorationActivityItemPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -2215251113218795219L;
@@ -55,7 +61,7 @@ public class DecorationActivityItemPO implements java.io.Serializable {
 	
 	private String content;
 	
-	private String receiveUserId;
+	private UserPO receiveUserId;
 	
 	private String receiveUserName;
 	
@@ -162,12 +168,13 @@ public class DecorationActivityItemPO implements java.io.Serializable {
 		this.content = content;
 	}
 
-	@Column(name = "receiveUserId")
-	public String getReceiveUserId() {
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = true, name = "ruid",referencedColumnName="uId")
+	public UserPO getReceiveUserId() {
 		return receiveUserId;
 	}
 
-	public void setReceiveUserId(String receiveUserId) {
+	public void setReceiveUserId(UserPO receiveUserId) {
 		this.receiveUserId = receiveUserId;
 	}
 

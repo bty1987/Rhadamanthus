@@ -70,7 +70,7 @@ jQuery(function($) {
 	
 	function addActivityItemForDiv(_activityItems, _activityItem){
 		
-		var pricingSpan = $("<div></div>").addClass("pricing-span").css("margin-right", "10px").attr("id", "pricing_" + _activityItem.aiId).prependTo(_activityItems);
+		var pricingSpan = $("<div></div>").addClass("pricing-span").css("margin-right", "10px").attr("id", "pricing_" + _activityItem.aiid).prependTo(_activityItems);
 		var widgetBox = $("<div></div>").addClass("widget-box pricing-box-small").appendTo(pricingSpan);
 		
 		var widgetHeader = $("<div></div>").addClass("widget-header").appendTo(widgetBox);
@@ -88,20 +88,20 @@ jQuery(function($) {
 		var widgetMain = $("<div></div>").addClass("widget-main no-padding").appendTo(widgetBody);
 		var ul = $("<ul></ul>").addClass("list-unstyled list-striped pricing-table").appendTo(widgetMain);
 		var nameLi = $("<li></li>").appendTo(ul);
-		var nameSpan = $("<span></span>").attr("id", "activityItemName_" + _activityItem.aiId).text(_activityItem.activityItemName).appendTo(nameLi);
+		var nameSpan = $("<span></span>").attr("id", "activityItemName_" + _activityItem.aiid).text(_activityItem.name).appendTo(nameLi);
 		var moneyLi = $("<li></li>").text("金额:").appendTo(ul);
-		var moneySpan = $("<span></span>").attr("id", "money_" + _activityItem.aiId).text(_activityItem.money).appendTo(moneyLi);
+		var moneySpan = $("<span></span>").attr("id", "money_" + _activityItem.aiid).text(_activityItem.money).appendTo(moneyLi);
 		
 		var uiPgDiv = $("<div></div>").addClass("ui-pg-div").appendTo(widgetBody);
-		var editBtn = $("<span></span>").addClass("ui-icon icon-pencil blue").attr("id", "edit_" + _activityItem.aiId).appendTo(uiPgDiv);
-		var deleteBtn = $("<span></span>").addClass("ui-icon ui-icon-trash").attr("id", "delete_" + _activityItem.aiId).appendTo(uiPgDiv);
+		var editBtn = $("<span></span>").addClass("ui-icon icon-pencil blue").attr("id", "edit_" + _activityItem.aiid).appendTo(uiPgDiv);
+		var deleteBtn = $("<span></span>").addClass("ui-icon ui-icon-trash").attr("id", "delete_" + _activityItem.aiid).appendTo(uiPgDiv);
 		
 		editBtn.on("click", function(){
-			updateActivityItem(_activityItem.aid, _activityItem.aiId, _activityItem.activityItemName, _activityItem.type, _activityItem.money);
+			updateActivityItem(_activityItem.aid, _activityItem.aiid, _activityItem.name, _activityItem.type, _activityItem.money);
 		});
 		
 		deleteBtn.on("click", function(){
-			deleteActivityItem(_activityItem.aiId, _activityItem.activityItemName);
+			deleteActivityItem(_activityItem.aiid, _activityItem.name);
 		})
 	}
 
@@ -115,7 +115,7 @@ jQuery(function($) {
 		var options = {
 			"activity.aid": activityItemPostData.aid,
 			"activityItem.activityName": activityItemPostData.activityName,
-			"activityItem.activityItemName": activityItem.items.activityItemName.val(),
+			"activityItem.name": activityItem.items.activityItemName.val(),
 			"activityItem.type": activityItem.items.type.val(),
 		}
 		
@@ -127,7 +127,7 @@ jQuery(function($) {
 		
 		if(activityItem.editFlag){
 			url = api.information.updateActivityItem;
-			options["activityItem.aiId"] = activityItemPostData.aiId;
+			options["activityItem.aiid"] = activityItemPostData.aiid;
 		}else{
 			url = api.information.addActivityItem;
 		}
@@ -136,7 +136,7 @@ jQuery(function($) {
 			com.showAlert(com.info, "操作成功");
 			
 			if(activityItem.editFlag){
-				$("#pricing_" + activityItemPostData.aiId).remove();
+				$("#pricing_" + activityItemPostData.aiid).remove();
 			}
 			
 			addActivityItemForDiv(activityItem.items.activityItems, res.activityItem);
@@ -157,7 +157,7 @@ jQuery(function($) {
 			activityItem.items.moneyInfo.css("display", "none");
 		}
 		
-		activityItemPostData.aiId = aiId;
+		activityItemPostData.aiid = aiId;
 		
 		activityItem.editFlag = true;
 		
@@ -170,7 +170,7 @@ jQuery(function($) {
 			if(result){
 				
 				var options = {
-					"activityItem.aiId": aiId,
+					"activityItem.aiid": aiId,
 				}
 				
 				com.post(api.information.deleteActivityItemByAiId, options, function(res){

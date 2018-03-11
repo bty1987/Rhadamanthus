@@ -13,6 +13,7 @@ import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.system.service.CompanyService;
 import com.fanglin.system.vo.CompanyVO;
+import com.fanglin.utils.SystemConfig;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -51,7 +52,43 @@ public class CompanyAction extends BaseListAction{
 		
 		return SUCCESS;
 	}
-
+	
+	@Action(value = "addCompany", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addCompany() throws FLException{
+		
+		if(SystemConfig.getString("communion") == null){
+		    throw new FLException(-1, "无操作权限");
+		}
+	
+		companyService.addCompany(company);
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "updateCompanyForStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateCompanyForStatus() throws FLException{
+		
+		if(SystemConfig.getString("communion") == null){
+		    throw new FLException(-1, "无操作权限");
+		}
+		
+		companyService.updateCompanyForStatus(company);
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "updateCompany", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateCompany() throws FLException{
+		
+		if(SystemConfig.getString("communion") == null){
+		    throw new FLException(-1, "无操作权限");
+		}
+		
+		companyService.updateCompany(company);
+		
+		return SUCCESS;
+	}
+	
 	public CompanyVO getCompany() {
 		return company;
 	}
@@ -67,9 +104,5 @@ public class CompanyAction extends BaseListAction{
 	public void setCompanys(List<CompanyVO> companys) {
 		this.companys = companys;
 	}
-
-	
-
-	
 
 }

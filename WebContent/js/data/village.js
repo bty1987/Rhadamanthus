@@ -28,8 +28,8 @@ $(function(){
                         0 < a.village.no ? (com.showTips($this, "\u8be5\u697c\u76d8\u7f16\u53f7\u5df2\u7ecf\u5b58\u5728", !0), village.repeatFlg = !0) : (com.clearValidator("#no", !0), village.repeatFlg = !1)
                     })
             }),
-
-            name : $("#name"),
+            nameRuleSel : $("#nameRuleSel"),
+            name : $("#villagename"),
             cityProperSel : $("#cityProperSel"),
             citySel : $("#citySel").on("change",function(b, c) {
                 bindCityProper($(this).val(), village.items.cityProperSel, !1, c)
@@ -50,13 +50,12 @@ $(function(){
         editFlag: !1,
         repeatFlg: !1,
         cityList: {},
-        cityKey: "cityId",
-        cityValue: "cityName",
+        cityKey: "cid",
+        cityValue: "name",
         cityProperList: {},
-        cityProperKey: "cityProperId",
-        cityProperValue: "cityProperName",
+        cityProperKey: "cpid",
+        cityProperValue: "name",
         nameRuleList: {},
-        nameRuleKey: "id",
         nameRuleValue: "ruleContent"
     };
 
@@ -67,6 +66,12 @@ $(function(){
         village.cityList = a.citys;
         village.items.citySel.bindData(village.cityList, village.cityKey, village.cityValue, !1).trigger("change")
     });
+
+    com.post(api.common.queryBuildingNameRule, {}, function(a) {
+        village.nameRuleList = a.buildingNameRules;
+      },null,false);
+
+    village.items.nameRuleSel.bindData(village.nameRuleList, village.nameRuleValue, village.nameRuleValue, !1).trigger("change")
 
     var displayFunc  = (function(){
 
@@ -86,14 +91,13 @@ $(function(){
         };
 
         var creatLine = function(v){
-            var $liLine = $('<li></li>').addClass('item-blue clearfix');
+            var $liLine = $('<li></li>').addClass('item-orange clearfix');
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.name));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
-            var $btnPosition = $('<a></a>').addClass('btn btn-minier btn-warning').html('位置');
-
-            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-primary').html('编辑');
+            var $btnPosition = $('<a></a>').addClass('btn btn-minier btn-yellow').html('位置');
+            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-success').html('编辑');
 
             var $btnStatus = $('<div></div>').addClass('pull-right');
             var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({"type" : "checkbox"});
@@ -101,11 +105,11 @@ $(function(){
 
             var propertyArr = [
                 ["楼盘编号:", v.no, "grey"],
-                ["所在城市:", v.cityProper.city.cityName, "grey"],
-                ["所在城区:", v.cityProper.cityProperName, "grey"],
+                ["所在城市:", v.cityProper.city.name, "grey"],
+                ["所在城区:", v.cityProper.name, "grey"],
                 ["开发商:", v.developer ? v.developer : "-", "grey"],
                 ["售楼电话:", v.salesPhone ? v.salesPhone : "-", "grey"],
-                ["交房时间:", v.deliveryTime, "grey"],
+                ["交房时间:", v.deliveryTime, "green"],
                 ["说明:", v.content, "grey"],
             ];
 
@@ -149,7 +153,7 @@ $(function(){
         }
     })();
 
-    var _condArr = ['villageName', 'cityId'];
+    var _condArr = ['villageName', 'datacity'];
 
     var searcher = new Searcher();
     searcher.init( _condArr, "condList", api.data.pageVillage, function(data){
@@ -174,7 +178,6 @@ $(function(){
     $('a[name="addVillage"]','#pagenation').click(function(){
         village.editFlg = false;
         com.cleanItems(village.items);
-        //village.items.no.css("display", "none");
         $("#nodiv").css({"display":"none"});
         village.items.citySel.trigger("change");
         village.modal.modal("show")
@@ -185,40 +188,49 @@ $(function(){
         if (com.validate() || village.repeatFlg){
             return false;
         }
+
         var option = {
             "village.no": village.items.no.val(),
             "village.name": village.items.name.val(),
-            "village.cityProper.cityProperId": village.items.cityProperSel.val(),
+            "village.cityProper.cpid": village.items.cityProperSel.val(),
             "village.developer": village.items.developer.val(),
             "village.salesPhone": village.items.salesPhone.val(),
             "village.deliveryTime": "" == village.items.deliveryTime.val() ? void 0 : village.items.deliveryTime.val(),
-            "village.content": village.items.content.val()
+            "village.content": village.items.content.val(),
+            "village.rule" : village.items.nameRuleSel.val()
         };
         var url ;
-        village.editFlg ? (url=api.data.updateVillage ): (url=api.data.addVillage);
+        if(village.editFlg) {
+            url=api.data.updateVillage;
+        }else{
+            url=api.data.addVillage
+        }
 
         com.post(url,option, function(res){
             village.modal.modal("hide");
             searcher.doSearch();
         });
 
-
     }
 
     //编辑按钮
     function editVillage(b) {
+
         village.editFlg = true;
+        village.items.cpid = b.cityProper.cpid;
+
         $("#nodiv").css({"display":"block"});
         village.items.no.val(b.no).prop("disabled", !0).css("display", "block");
         village.items.name.val(b.name);
-        village.items.citySel.val(b.cityProper.city.cityId).trigger("change",
+        village.items.citySel.val(b.cityProper.city.cid).trigger("change",
             function() {
-                village.items.cityProperSel.val(b.cityProper.cityProperId)
+                village.items.cityProperSel.val(b.cityProper.cpid)
             });
         village.items.developer.val(b.developer);
         village.items.salesPhone.val(b.salesPhone);
         village.items.deliveryTime.val(b.deliveryTime);
         village.items.content.val(b.content);
+        village.items.nameRuleSel.val(b.rule)
         village.modal.modal("show")
     }
 
@@ -387,12 +399,13 @@ $(function(){
     }
 
     function bindCityProper(a, b, d, c) {
-        "" != a ? com.post(api.system.queryCityProperByCityId, {
-                "cityProper.city.cityId": a
-            },
-            function(a) {
 
-                b.bindData(a.cityPropers, village.cityProperKey, village.cityProperValue, d);
+        "" != a ? com.post(api.system.queryCityProperByCid, {
+                "cityProper.city.cid": a
+            },
+            function(res) {
+
+                b.bindData(res.cityPropers, village.cityProperKey, village.cityProperValue, d);
                 c && c()
             }) : b.bindData([], "", "", d)
     }

@@ -13,8 +13,8 @@ public interface Dao<T> extends GenericDao {
 
 	public T get(Serializable id);
 
-	public void deleteById(Serializable id);
-
 	public List<T> list();
+	
+	public void deleteById(Serializable id);
 
 }

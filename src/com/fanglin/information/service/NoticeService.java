@@ -21,7 +21,7 @@ public interface NoticeService {
 	
 	public void pageNotice(Paging paging, List<Filter> filters, Authentication authentication);
 
-	public void pageNoticeForSeenByType(Paging paging, NoticeVO noticeVO, Authentication authentication) throws FLException;
+	public void pageNoticeForSeenByType(Paging paging, List<Filter> filters, NoticeVO noticeVO, Authentication authentication) throws FLException;
 	
 	public NoticeVO queryNoticeByNid(NoticeVO noticeVO) throws FLException;
 	

@@ -49,7 +49,10 @@ jQuery(function($) {
 
 		var creatLine = function(v){
 			var that = this;
-			var $liLine = $('<li></li>').addClass('item-blue clearfix');
+			var $liLine = $('<li></li>').addClass('item-orange clearfix');
+			var noVal;
+			params.flag == true ? noVal = v.houseSource.no :  noVal = v.customerSource.no;
+			var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(noVal));
 			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 			//var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
@@ -61,13 +64,13 @@ jQuery(function($) {
 			v.houseSource.house.houseNumber == null ? h_number = "" : h_number = v.houseSource.house.houseNumber;
 
 			var propertyArr = [
+				["记录类型:", buildingRecord.recordType[v.type], "red"],
 				["楼盘名:", v_name + " " + h_number, "grey"],
 				["客户名:", v.customerSource.customer.name, "grey"],
-				["记录类型:", buildingRecord.recordType[v.type], "grey"],
 				["联系方式:", buildingRecord.pattern[v.pattern], "grey"],
-				["记录时间:", v.operatTime, "grey"],
-				["记录信息:", v.comment, "blue"],
-				["操作人:", v.operater.userName, "blue"],
+				["记录时间:", v.operatTime, "green"],
+				["记录信息:", v.comment, "grey"],
+				["操作人:", v.operater.userName, "grey"],
 			];
 
 			$.each(propertyArr, function (index,value) {
@@ -79,7 +82,7 @@ jQuery(function($) {
 
 			//$divBtnWrap.append($btnView);
 
-			$liLine.append($ulProperty);
+			$liLine.append($h3).append($ulProperty);
 
 			//$btnView.click(function(){
 			//	//暂时没写
@@ -118,7 +121,6 @@ jQuery(function($) {
 
 	var searcher = new Searcher();
 	searcher.init([], "condList", api.building.pageBuildingRecord, function(data){
-		console.log(data);
 		displayFunc.init('resultList', data);
 	}, "pagenation", "buildingRecordPostData",{"filters[0].data":brOptionId, "filters[0].field":brField,"filters[0].op":"eq"}, false, null, function(){
 

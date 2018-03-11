@@ -6,51 +6,58 @@ public class RoleVO implements Serializable {
 
 	private static final long serialVersionUID = 9045008682677539729L;
 	
-	private Integer rId;
+	private Integer rid;
 
-	private String roleId;
+	private String no;
 	
-	private String roleName;
+	private String name;
 
-	protected String roleDes;
+	protected String content;
 	
+	public RoleVO(Integer rid) {
+		super();
+		this.rid = rid;
+	}
+
+	public RoleVO(String no) {
+		super();
+		this.no = no;
+	}
+
 	public RoleVO(){
 		super();
 	}
 
-	public Integer getrId() {
-		return rId;
+	public Integer getRid() {
+		return rid;
 	}
 
-	public void setrId(Integer rId) {
-		this.rId = rId;
+	public void setRid(Integer rid) {
+		this.rid = rid;
 	}
 
-	public RoleVO(String roleId){
-		this.roleId = roleId;
+	public String getNo() {
+		return no;
 	}
 
-	public String getRoleId(){
-		return roleId;
+	public void setNo(String no) {
+		this.no = no;
 	}
 
-	public void setRoleId(String roleId){
-		this.roleId = roleId;
+	public String getName() {
+		return name;
 	}
 
-	public String getRoleName(){
-		return roleName;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public void setRoleName(String roleName){
-		this.roleName = roleName;
+	public String getContent() {
+		return content;
 	}
 
-	public String getRoleDes(){
-		return roleDes;
+	public void setContent(String content) {
+		this.content = content;
 	}
 
-	public void setRoleDes(String roleDes){
-		this.roleDes = roleDes;
-	}
 }

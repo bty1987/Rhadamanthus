@@ -20,10 +20,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.communion.dao.CustomerDao;
+import com.fanglin.communion.po.CustomerPO;
+import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.data.common.dao.CustomerDao;
-import com.fanglin.data.common.vo.CustomerVO;
-import com.fanglin.data.po.CustomerPO;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.vo.DecorationVO;

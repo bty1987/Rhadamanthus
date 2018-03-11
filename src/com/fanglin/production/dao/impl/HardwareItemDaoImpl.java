@@ -2,7 +2,6 @@ package com.fanglin.production.dao.impl;
 
 import java.util.List;
 
-
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 

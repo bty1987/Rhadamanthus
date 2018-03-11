@@ -12,14 +12,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fanglin.data.po.CustomerPO;
-import com.fanglin.data.po.HousePO;
+import com.fanglin.communion.po.CustomerPO;
+import com.fanglin.communion.po.HousePO;
 import com.fanglin.department.po.DepartmentPO;
 import com.fanglin.personel.po.UserPO;
 
 
 @Entity
-@Table(name = "sales", catalog = "inventory")
+@Table(name = "sales", catalog = "sales")
 public class SalesPO implements Serializable {
 	
 	private static final long serialVersionUID = -2322385203203862761L;

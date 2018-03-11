@@ -82,7 +82,7 @@ $(function () {
             var $liTitle = $('<li></li>').addClass('line table-title');
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>'));
             var $contentWrap = $('<div></div>').addClass('line-wrap  content col12');
-            var titleName = '仓库名称,商品编号,商品名称,条形码,品类,品牌,颜色,规格,单位,套餐,件数,数量';
+            var titleName = '仓库名称,商品编号,商品名称,条形码,品类,品牌,颜色,规格,单位,类型,件数,数量';
             $.each(titleName.split(','), function (i, v) {
                 var $cell = $('<div></div>').addClass('cell').html(v);
                 $cell.appendTo($contentWrap);
@@ -102,21 +102,21 @@ $(function () {
             var $contentWrap = $('<div></div>').addClass('line-wrap  content col12');
             var propertyArr = [
                 //v.storehouse.code,
-                v.storehouse.name,
-                v.goods.no,
-                v.goods.name,
-                v.goods.barcode,
-                v.goods.category,
-                v.goods.brand,
-                v.color.name,
-                v.format.info,
-                v.goods.measurementUnit,
-                v.goods.type == 0 ? "商品" : "套餐",
-                v.goods.pieceNum,
-                v.num
+                [v.storehouse.name,'grey'],
+                [v.goods.no,'blue'],
+                [v.goods.name,'grey'],
+                [v.goods.barcode,'blue'],
+                [v.goods.category,'grey'],
+                [v.goods.brand,'grey'],
+                [v.color.name,'grey'],
+                [v.format.info,'grey'],
+                [v.goods.measurementUnit,'grey'],
+                [v.goods.type == 0 ? "商品" : "套餐",'red'],
+                [v.goods.pieceNum,'blue'],
+                [v.num,'blue']
             ];
             $.each(propertyArr, function (i, v) {
-                var $cell = $('<div></div>').addClass('cell').html(v);
+                var $cell = $('<div></div>').addClass('cell ' + v[1]).html(v[0]);
                 $cell.appendTo($contentWrap);
             });
             var $optionWrap = $('<div></div>').addClass('line-wrap action');
@@ -275,7 +275,7 @@ $(function () {
             return false;
         }
 
-        com.post(api.inventory.pageGoodsStorehouseStock, $.extend({}, params.GoodsStorehouseStockPostData, {"paging.noPage": 1}), function (res) {
+        com.post(api.inventory.pageGoodsStorehouseStock, $.extend({}, params.goodsStorehouseStockPostData, {"paging.noPage": 1}), function (res) {
             $.exceler({
                 column: [
                     ['仓库名称', 'storehouse.name'],

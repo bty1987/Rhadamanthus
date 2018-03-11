@@ -5,6 +5,7 @@ jQuery(function($) {
 	var constructionScheduleWorkers;
 	var constructionNodes = {};
 
+	var temp;
 	var supervisionDetail = {
 
 		controlCondition: false,
@@ -133,25 +134,14 @@ jQuery(function($) {
 		com.post(api.construction.queryConstructionScheduleByOrderId, elementPostData, function(res){
 
 			var element = res.constructionSchedules;
-
+			temp=res.constructionSchedules[0].csId;
 			supervisionDetail["constructionSchedule.csId"] = element[0].csId;
 
 			if(schedule == 1){
 				$("#" + operate.name + "StartTime").val(element[0].startTime);
 				$("#" + operate.name + "EndTime").val(element[0].endTime);
-
-				var statusDiv = $("#" + operate.name + "Status").html("");
-				if(element[0].status == 1){
-					$("<span></span>").addClass("label label-success").text("成功").appendTo(statusDiv);
-				}else if(element[0].status == 2){
-					$("<span></span>").addClass("label label-danger").text("失败").appendTo(statusDiv);
-				}else if(element[0].status == 3){
-					$("<span></span>").addClass("label label-warning").text("延迟").appendTo(statusDiv);
-				}else if(element[0].status == 4){
-					$("<span></span>").addClass("label label-info").text("通过").appendTo(statusDiv);
-				}else{
-					$("<span></span>").addClass("label").text("待处理").appendTo(statusDiv);
-				}
+				var chanStatus = element[0].status;
+				updatastatusDiv(chanStatus,"chan");
 
 				var options = {};
 				options["constructer.orderId"] = params.orderId;
@@ -203,23 +193,19 @@ jQuery(function($) {
 					workerInfoCondition = queryConstructer(operate, res);
 				}, null, false);
 
-				if(element[0].status == 1){
-					if(workerInfoCondition){
-						supervisionDetail.controlCondition = true;
-					}
+				var putlineStatus = element[0].status;
+				updatastatusDiv(putlineStatus,"putline");
 
-					$("<span></span>").addClass("label label-success").text("成功").appendTo(putlineStatusDiv);
-				}else if(element[0].status == 2){
-					$("<span></span>").addClass("label label-danger").text("失败").appendTo(putlineStatusDiv);
-				}else{
-					$("<span></span>").addClass("label label-warning").text("等待").appendTo(putlineStatusDiv);
-				}
 			}else{
 				//这里是3-9
 				if(schedule == element[0].schedule){
 					$("#" + operate.name + "StartTime").val(element[0].startTime);
 					$("#" + operate.name + "EndTime").val(element[0].endTime);
 
+					var otherename = supervisionDetail.operateDict[schedule].name;
+					var otherStatus = res.constructionSchedules[0].status;
+
+					updatastatusDiv(otherStatus,otherename);
 					var options = {};
 					options["constructer.orderId"] = params.orderId;
 					options["constructer.schedule"] = schedule;
@@ -335,8 +321,9 @@ jQuery(function($) {
 	function _show_WorkerSalary(_index){
 		//获得对应位置的工人
 		var workerInfo = constructionScheduleWorkers[_index];
+
 		var options = {
-			"workerSalary.cid": workerInfo.cid,
+			"workerSalary.csid": temp,
 			"workerSalary.user.userId": workerInfo.user.userId,
 		};
 		queryConstructerSalary(options);
@@ -553,14 +540,13 @@ jQuery(function($) {
 			var paneETInput = $("<input/>").attr("id", scheduleNamePinyin + "EndTime").attr("type","text").addClass("col-sm-12").attr("readonly","readonly").attr("data-toggle","popover").attr("data-trigge","manual").appendTo(paneETFour);
 		}
 		//铲大白状态
-		if(schedule == 1 || schedule == 2){
 			var paneSpace = $("<div></div>").addClass("space-4").appendTo(paneTabForm);
 			var paneStatus = $("<div></div>").addClass("form-group").appendTo(paneTabForm);
 			var paneStatusTwo = $("<div></div>").addClass("col-sm-12").appendTo(paneStatus);
 			var paneStatusLable = $("<label></label>").addClass("col-sm-1 control-label no-padding-right").attr("for",scheduleNamePinyin + "Status").html(constructionNodes[schedule]  + "状态").appendTo(paneStatusTwo);
 			var paaneStatusTh = $("<div></div>").attr("id",scheduleNamePinyin + "Status").addClass("col-sm-6").appendTo(paneStatusTwo);
 			var paneSpaceTwo = $("<div></div>").addClass("space-4").appendTo(paneTabForm);
-		}
+
 		//工人信息
 		var paneWorker = $("<div></div>").addClass("form-group").appendTo(paneTabForm);
 		var paneWorkerH3 = $("<h3></h3>").addClass("header smaller lighter blue").appendTo(paneWorker);
@@ -601,4 +587,15 @@ jQuery(function($) {
 		$("#step" + schedule).removeClass("step-pane");
 		$("#step" + schedule).addClass("active");
 	}
+
+	function updatastatusDiv(Status, statusDiv){
+
+		var statusDiv = $("#"+statusDiv+"Status").html("");
+		if(Status == 1){
+			$("<span></span>").addClass("label label-success col-sm-1").text("完结").appendTo(statusDiv);
+		}else{
+			$("<span></span>").addClass("label label-grey col-sm-1").text("初始").appendTo(statusDiv);
+		}
+	}
+
 });

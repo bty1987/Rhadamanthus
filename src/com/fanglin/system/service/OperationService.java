@@ -28,12 +28,16 @@ public interface OperationService {
 	
 	public List<OperationVO> queryOperationByUserId(OperationVO operationVO, UserVO userVO) throws FLException;
 	
-	public List<OperationVO> queryOperationByRoleId(OperationVO operationVO, RoleVO roleVO) throws FLException;
+	public List<OperationVO> queryOperationByRid(OperationVO operationVO, RoleVO roleVO) throws FLException;
 	
-	public boolean checkOperationByUserId(String userId, String operation, short rollcall) throws FLException;
+	public abstract boolean checkOperationByUserId(String paramString1, String paramString2, short paramShort) throws FLException;
 	
-	public int updateRoleOperationByRoleId(List<Integer> oIds, OperationVO operationVO, RoleVO roleVO) throws FLException;
+	public int updateRoleOperationByRid(List<Integer> oids, OperationVO operationVO, RoleVO roleVO) throws FLException;
 	
-	public int updateRoleOperationByUserId(List<Integer> oIds, OperationVO operationVO, UserVO userVO) throws FLException;
+	public int updateRoleOperationByUserId(List<Integer> oids, OperationVO operationVO, UserVO userVO) throws FLException;
+	
+	public int deleteOperation(OperationVO operationVO) throws FLException;
+	
+	public void addOperation(OperationVO operationVO) throws FLException;
 
 }

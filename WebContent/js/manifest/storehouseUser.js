@@ -83,14 +83,14 @@ $(function(){
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(i + 1));
             var $contentWrap = $('<div></div>').addClass('line-wrap  content col4');
             var propertyArr = [
-                v.userId,
-                v.userName,
-                v.currentName,
-                v.duty.name
+                [v.userId,'grey'],
+                [v.userName,'grey'],
+                [v.currentName,'grey'],
+                [v.duty.name,'grey']
             ];
 
             $.each(propertyArr, function (i, v) {
-                var $cell = $('<div></div>').addClass('cell').html(v);
+                var $cell = $('<div></div>').addClass('cell ' + v[1]).html(v[0]);
                 $cell.appendTo($contentWrap);
             });
 

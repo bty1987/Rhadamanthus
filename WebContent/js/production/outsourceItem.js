@@ -18,36 +18,38 @@ $(function () {
             if (listData && listData.length) {
                 $.each(listData, function (i, v) {
 
-                    var $liLine = $('<li></li>').addClass('clearfix item-blue');
-                    var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-                    var $h3 = $('<h3></h3>').css({color: "grey", "font-weight": "bold"}).html(' ' + v.name);
+                    var $liLine = $('<li></li>').addClass('clearfix item-orange');
+                    var $h3 = $('<h3></h3>').addClass('oid');
+                    var $title = $('<small></small>').addClass('blue').html(' ' + v.name);
                     var $btnDiv = $('<div></div>').addClass('action-buttons pull-right');
+                    var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 
-                    var $btnDelete = $('<a></a>').addClass('btn btn-minier').html('删除');
+                    var $btnDelete = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
 
                    // var total = utils.accMul(v.unitprice,v.num);
 
                     var propertyArr = [
-                        ["高:", v.height, "grey"],
-                        ["宽:", v.width, "grey"],
-                        ["厚:", v.thick, "grey"],
+                        ["高:", v.height, "blue"],
+                        ["宽:", v.width, "blue"],
+                        ["厚:", v.thick, "blue"],
                         ["造型:", v.modelling, "grey"],
-                        ["数量:", v.num, "grey"],
-                        ["单价:", v.unitprice, "grey"],
-                        ["总价:", v.total, "grey"],
+                        ["数量:", v.num, "blue"],
+                        ["单价:", v.unitprice, "blue"],
+                        ["总价:", v.total, "blue"],
                         ["说明:", v.comment, "grey"]
                     ];
 
                     $.each(propertyArr, function (index, value) {
-                        var $liProperty = $('<li></li>').css({"border-bottom": "0px"});
+                        var $liProperty = $('<li></li>');
                         $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                        $('<b></b>').html(value[1]).css({color: value[2]}).appendTo($liProperty);
+                        $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
                         $liProperty.appendTo($ulProperty);
                     });
 
                     $liLine.appendTo($ul);
                     $liLine.append($h3).append($ulProperty);
-                    $btnDiv.append($btnDelete).appendTo($h3);
+                    $btnDiv.append($btnDelete);
+                    $h3.append($title).append($btnDiv);
 
                     hidBtn($btnDelete,outsourceStatus);
 

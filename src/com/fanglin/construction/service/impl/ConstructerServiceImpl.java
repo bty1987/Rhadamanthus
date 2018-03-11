@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.communion.vo.DutyVO;
 import com.fanglin.construction.dao.ConstructerDao;
 import com.fanglin.construction.dao.ConstructionDao;
 import com.fanglin.construction.po.ConstructerPO;
@@ -16,7 +17,6 @@ import com.fanglin.construction.po.ConstructionPO;
 import com.fanglin.construction.service.ConstructerService;
 import com.fanglin.construction.vo.ConstructerVO;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.data.common.vo.DutyVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserVO;
@@ -94,19 +94,19 @@ public class ConstructerServiceImpl implements ConstructerService {
 		}
 		
 		long cid = constructerVO.getCid();
-		String userId = constructerVO.getUser().getUserId();
-		int schedule = constructerVO.getSchedule();
-		
-		if(constructerDao.countConstructer(cid, userId, schedule,ConstructerPO.STATUS_ENABLE_SHORT) > 0){
-			throw new FLException(120001, "当前工人已经添加,不能重复添加同一工人");
-		}
-		
 		UserPO userPO = userDao.queryUserByUserId(constructerVO.getUser().getUserId());
-		UserPO userC = userDao.queryUserByUserId(createrId);
-		
+
 		if(userPO == null){
 			throw new FLException(220005,"员工不存在");
 		}
+		
+		int schedule = constructerVO.getSchedule();
+		
+		if(constructerDao.countConstructer(cid, userPO.getUid(), schedule,ConstructerPO.STATUS_ENABLE_SHORT) > 0){
+			throw new FLException(120001, "当前工人已经添加,不能重复添加同一工人");
+		}
+		
+		UserPO userC = userDao.queryUserByUserId(createrId);
 		
 		ConstructerPO constructerPO = new ConstructerPO(userPO, userC);
 		BeanUtil.copyProperties(constructerVO, constructerPO, Arrays.asList("user", "creater"));

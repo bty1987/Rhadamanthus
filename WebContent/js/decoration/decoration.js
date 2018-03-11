@@ -215,18 +215,18 @@ $(function(){
 					var btnView = $('<a></a>').addClass('btn btn-minier btn-yellow').html('查看');
 					var btnRevie = $('<a></a>').addClass('btn btn-minier btn-success').html('回访');
 					var btnLine = $('<a></a>').addClass('btn btn-minier btn-warning').html('放线');
-					var btnContract = $('<a></a>').addClass('btn btn-minier btn-danger').html('合同');
-					var btnScal = $('<a></a>').addClass('btn btn-minier btn-inverse').html('扣款');
-					var btnPrice = $('<a></a>').addClass('btn btn-minier btn-default').html('报价');
+					var btnContract = $('<a></a>').addClass('btn btn-minier btn-inverse').html('合同');
+					var btnScal = $('<a></a>').addClass('btn btn-minier btn-danger').html('扣款');
+					var btnPrice = $('<a></a>').addClass('btn btn-minier btn-pink').html('报价');
 					var btnAddMinus = $('<a></a>').addClass('btn btn-minier btn-purple').html('增减项');
-					var btnExtension = $('<a></a>').addClass('btn btn-minier btn-pink').html('扩展项');
-					var btnInfo = $('<a></a>').addClass('btn btn-minier btn-primary').html('信息轴');
-					var btnCal = $('<a></a>').addClass('btn btn-minier btn-danger').html('决算');
-					var btnActivity = $('<a></a>').addClass('btn btn-minier btn-yellow').html('活动物品');
-					var btnDelete = $('<a></a>').addClass('btn btn-minier btn-primary').html('废单');
-					var btnSign = $('<a></a>').addClass('btn btn-minier').html('签订合同');
+					var btnExtension = $('<a></a>').addClass('btn btn-minier btn-yellow').html('扩展项');
+					var btnInfo = $('<a></a>').addClass('btn btn-minier btn-success').html('信息轴');
+					var btnCal = $('<a></a>').addClass('btn btn-minier btn-warning').html('决算');
+					var btnActivity = $('<a></a>').addClass('btn btn-minier btn-inverse').html('活动物品');
+					var btnDelete = $('<a></a>').addClass('btn btn-minier btn-danger').html('废单');
+					var btnSign = $('<a></a>').addClass('btn btn-minier btn-pink').html('签订合同');
 					var btnTerminal = $('<a></a>').addClass('btn btn-minier btn-purple').html('合同终止');
-					var btnResign = $('<a></a>').addClass('btn btn-minier').html('重签合同');
+					var btnResign = $('<a></a>').addClass('btn btn-minier btn-yellow').html('重签合同');
 
 					var propertyArr = [];
 					$.each(pageConfig.propertyArr,function (pi,pv) {
@@ -262,13 +262,13 @@ $(function(){
 								propertyArr.push(["报价金额:", v.quotationPrice, "grey"]);
 								break;
 							case "量房时间":
-								propertyArr.push(["量房时间:", v.measureTime, "grey"]);
+								propertyArr.push(["量房时间:", v.measureTime, "green"]);
 								break;
 							case "签单时间":
-								propertyArr.push(["签单时间:", v.contractTime, "grey"]);
+								propertyArr.push(["签单时间:", v.contractTime, "green"]);
 								break;
 							case "定金时间":
-								propertyArr.push(["定金时间:", v.depositTime, "grey"]);
+								propertyArr.push(["定金时间:", v.depositTime, "green"]);
 								break;
 							case "类型":
 								propertyArr.push(["类型:", order.type[v.type], "red"]);

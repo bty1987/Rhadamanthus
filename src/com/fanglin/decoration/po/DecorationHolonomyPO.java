@@ -13,7 +13,7 @@ import javax.persistence.Table;
 
 
 @Entity
-@Table(name = "decorationholonomy", catalog = "platform")
+@Table(name = "decorationholonomy", catalog = "decoration")
 public class DecorationHolonomyPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -301890437525155657L;

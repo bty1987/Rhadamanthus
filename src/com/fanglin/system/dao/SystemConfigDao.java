@@ -16,4 +16,8 @@ public interface SystemConfigDao extends Dao<SystemConfigPO>{
 	
 	public SystemConfigPO querySystemConfig(String key, int company);
 	
+	public List<SystemConfigPO> querySystemConfigByCid(Integer company);
+	
+	public SystemConfigPO querySystemConfigById(long scid);
+	
 }

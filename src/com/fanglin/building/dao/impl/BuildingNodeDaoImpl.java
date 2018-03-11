@@ -2,6 +2,7 @@ package com.fanglin.building.dao.impl;
 
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -39,9 +40,16 @@ public class BuildingNodeDaoImpl extends DaoImpl<BuildingNodePO> implements Buil
 	}
 
 	@Override
-	public BuildingNodePO queryBuildingNodeByType(Short type, Short sore) {
+	@SuppressWarnings("unchecked")
+	public List<BuildingNodePO> queryBuildingNodeByType(Short type, Short sore) {
 		
-		return (BuildingNodePO) session().createCriteria(BuildingNodePO.class).add(Restrictions.eq("type", type)).add(Restrictions.eq("sore", sore)).uniqueResult();
+		Criteria criteria = session().createCriteria(BuildingNodePO.class).add(Restrictions.eq("type", type));
+		
+		if(sore != null){
+			criteria.add(Restrictions.eq("sore", sore));
+		}
+		
+		return criteria.list();
 	}
 
 }

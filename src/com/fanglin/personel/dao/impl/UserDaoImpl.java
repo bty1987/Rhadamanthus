@@ -3,14 +3,14 @@ package com.fanglin.personel.dao.impl;
 import java.math.BigInteger;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.Hibernate;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
+
+import com.fanglin.communion.po.DutyPO;
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.data.po.DutyPO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.system.po.RolePO;
@@ -28,11 +28,13 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 		
 		PagingQuery<UserPO> query = pagingQuery(paging, UserPO.class);
 		
+		query.alias("role", "role");
+		
 		queryFilterExcute(query, filters);
 		
 		query.add(Restrictions.eq("company", company));
 		
-		query.add(Restrictions.ne("role.roleId", RolePO.SUPER_ROLEID_STR));
+		query.add(Restrictions.ne("role.no", RolePO.SUPER_NO_STR));
 		
 		query.asc("userId");
 		
@@ -55,10 +57,11 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 	}
 	
 	@Override
-	@SuppressWarnings("deprecation")
 	public List<UserPO> pageUserForNameByPinyinName(Paging paging, String pinyinName,Short status, Integer company){
 
 		PagingQuery<UserPO> query = pagingQuery(paging, UserPO.class);
+		
+		query.alias("role", "role");
 		
 		query.add(Restrictions.eq("company", company));
 		
@@ -66,22 +69,24 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 			query.add(Restrictions.or(Restrictions.like("userName", pinyinName, MatchMode.START), Restrictions.like("userNamePinYin", pinyinName, MatchMode.START)));
 		}
 		
-		query.add(Restrictions.sqlRestriction("roleId <> ?", RolePO.SUPER_ROLEID_STR, Hibernate.STRING));
+		query.add(Restrictions.ne("role.no", RolePO.SUPER_NO_STR));
 	
 		if(status != null ){
 			query.add(Restrictions.eq("status", status));
 		}
+		
 		return query.list();
 
 	}
 	
 	@Override
-	@SuppressWarnings("deprecation")
 	public List<UserPO> pageUserForNameByPinyinNameADuty(Paging paging, String pinyinName,Short status, String duty){
 
 		PagingQuery<UserPO> query = pagingQuery(paging, UserPO.class);
 		
 		query.alias("duty", "duty");
+		
+		query.alias("role", "role");
 		
 		if(StringUtils.isNotEmpty(pinyinName)){
 			
@@ -94,18 +99,20 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 		if(status != null ){
 			query.add(Restrictions.eq("status", status));
 		}
-		query.add(Restrictions.sqlRestriction("roleId <> ?", RolePO.SUPER_ROLEID_STR, Hibernate.STRING));
+		
+		query.add(Restrictions.ne("role.no", RolePO.SUPER_NO_STR));
 
 		return query.list();
 	}
 	
 	@Override
-	@SuppressWarnings("deprecation")
 	public List<UserPO> pageUserForNameByPinyinNameADutysAO(Paging paging, String pinyinName, List<String> dutysA, List<String> dutysO){
 
 		PagingQuery<UserPO> query = pagingQuery(paging, UserPO.class);
 		
 		query.alias("duty", "duty");
+		
+		query.alias("role", "role");
 		
 		if(StringUtils.isNotEmpty(pinyinName)){
 			
@@ -147,7 +154,7 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 	
 		query.add(Restrictions.eq("status", UserPO.STATUS_ENABLE_INT));
 		
-		query.add(Restrictions.sqlRestriction("roleId <> ?", RolePO.SUPER_ROLEID_STR, Hibernate.STRING));
+		query.add(Restrictions.ne("role.no", RolePO.SUPER_NO_STR));
 		
 		return query.list();
 	}
@@ -185,9 +192,9 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 	}
 
 	@Override
-	public int countUserByRoleId(String roleId){
+	public int countUserByRoleId(Integer rid){
 		String sql = "select count(*) from communion.user where roleId = :roleId";
-		BigInteger count = (BigInteger) session().createSQLQuery(sql).setString("roleId", roleId).uniqueResult();
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setInteger("roleId", rid).uniqueResult();
 		
 		return count.intValue();
 	}
@@ -207,7 +214,7 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 				}else if("userName".equals(field)){
 					query.add(query.getCriterion("userId", filter));
 				}else if("roleId".equals(field)){
-					query.add(query.getCriterion("role.roleId", filter));
+					query.add(Restrictions.eq("role.rid",Integer.valueOf(filter.getData())));
 				}else if("deptId".equals(field)){
 					query.add(query.getCriterion("dept.deptId", filter));
 				}else if("status".equals(field)){

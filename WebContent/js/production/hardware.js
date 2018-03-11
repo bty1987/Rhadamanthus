@@ -20,16 +20,17 @@ $(function(){
             if(listData && listData.length){
                 $.each(listData,function(i, v){
 
-                    var $liLine = $('<li></li>').addClass('item-blue clearfix');
-                    var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-                    var $h3 = $('<h3></h3>').css({color:'grey',"font-weight":"bold"}).html(' ' + v.comment);
+                    var $liLine = $('<li></li>').addClass('item-orange clearfix');
+                    var $h3 = $('<h3></h3>').addClass('oid')
+                    var $title = $('<small></small>').addClass('blue').html(' ' + v.comment);
                     var $btnDiv = $('<div></div>').addClass('action-buttons pull-right');
+                    var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 
-                    var $btnEdit = $('<a></a>').addClass(' btn btn-minier').html('编辑');
-                    var $btnUpload = $('<a></a>').addClass(' btn btn-minier').html('图表');
-                    var $btnHr = $('<a></a>').addClass(' btn btn-minier ').html('五金项');
-                    var $btnArrival = $('<a></a>').addClass(' btn btn-minier ').html('到货');
-                    var $btnDestory = $('<a></a>').addClass(' btn btn-minier ').html('废弃');
+                    var $btnEdit = $('<a></a>').addClass(' btn btn-minier btn-yellow').html('编辑');
+                    var $btnUpload = $('<a></a>').addClass(' btn btn-minier btn-success').html('图表');
+                    var $btnHr = $('<a></a>').addClass(' btn btn-minier btn-warning').html('五金项');
+                    var $btnArrival = $('<a></a>').addClass(' btn btn-minier btn-inverse').html('到货');
+                    var $btnDestory = $('<a></a>').addClass(' btn btn-minier btn-danger').html('废弃');
 
                     var status = "";
 
@@ -39,27 +40,27 @@ $(function(){
                         case 2: status = "废除";   break;
                     }
                     var propertyArr = [
-                        ["状态:", status, "grey"]
+                        ["状态:", status, "red"]
                     ];
 
                     $.each(propertyArr, function (index,value) {
-                        var $liProperty = $('<li></li>').css({"border-bottom":"0px"});
+                        var $liProperty = $('<li></li>');
                         $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                        $('<b></b>').html(value[1]).css({color:value[2]}).appendTo($liProperty);
+                        $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
                         $liProperty.appendTo($ulProperty);
                     });
 
                     $liLine.appendTo($ul);
                     $liLine.append($h3).append($ulProperty);
 
+                    $h3.append($title).append($btnDiv);
+
                     if(v.status == 0 && ($status != 4 && $status != 5)){
                         $btnDiv.append($btnEdit)
                                .append($btnUpload).append($btnHr)
                                .append($btnArrival).append($btnDestory)
-                               .appendTo($h3);
                     }else{
                         $btnDiv.append($btnUpload).append($btnHr)
-                            .appendTo($h3);
                     }
 
                     //编辑按钮

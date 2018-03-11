@@ -172,7 +172,7 @@ jQuery(function($) {
 
             }, function(e){
                 btn.button('reset');
-                com.showAlert(com.info, e.errorMsg);
+                com.showAlert(com.error, e.errorMsg);
             });
         }else if(type == 3){
             com.post(api.inventory.addManifestForXG, options, function(data){

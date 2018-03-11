@@ -25,12 +25,10 @@ import com.fanglin.data.po.FunctionAreaPO;
 import com.fanglin.data.po.QuotationItemPO;
 import com.fanglin.data.quotation.dao.FunctionAreaDao;
 import com.fanglin.data.quotation.dao.FunctionAreaItemDao;
-import com.fanglin.quotation.dao.ExtensionDao;
 import com.fanglin.quotation.dao.ExtensionItemDao;
 import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.dao.QuotationFunctionAreaDao;
 import com.fanglin.quotation.dao.QuotationFunctionAreaItemDao;
-import com.fanglin.quotation.po.ExtensionPO;
 import com.fanglin.quotation.po.QuotationFunctionAreaItemPO;
 import com.fanglin.quotation.po.QuotationFunctionAreaPO;
 import com.fanglin.quotation.po.QuotationPO;
@@ -47,16 +45,13 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 	
 	@Autowired
 	private FunctionAreaDao functionAreaDao;
-	
+
 	@Autowired
 	private FunctionAreaItemDao functionAreaItemDao;
 	
 	@Autowired
 	private QuotationDao quotationDao;
-	
-	@Autowired
-	private ExtensionDao extensionDao;
-	
+
 	@Autowired
 	private ExtensionItemDao extensionItemDao;
 	
@@ -146,11 +141,7 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 	@Transactional(rollbackFor=Exception.class)
 	public List<QuotationFunctionAreaVO> addQuotationFuctionAreaByFunctionAreaIds(List<Long> functionAreaIds, QuotationVO quotationVO) throws FLException {
 		
-		QuotationPO quotationPO = quotationDao.get(quotationVO.getQid());
-		
-		if(quotationPO == null){
-			throw new FLException(200003, "报价不存在");
-		}
+		QuotationPO quotationPO = checkQuotationForStatusByEnabled(quotationVO.getQid());
 		
 		QuotationServiceImpl.convertQuotationVOToPOForAdvance(quotationVO, quotationPO);
 		
@@ -179,13 +170,13 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 			
 			
 			for(FunctionAreaItemPO functionAreaItemPO: functionAreaItemPOs){
-				short itemType = QuotationFunctionAreaItemPO.TYPE_QUOTATION_COMMON_INT;
+				short itemType = QuotationFunctionAreaItemPO.TYPE_QUOTATION_COMMON_SHORT;
 				QuotationFunctionAreaItemVO quotationFunctionAreaItemVO = new QuotationFunctionAreaItemVO();
 				
 				QuotationItemPO quotationItemPO = functionAreaItemPO.getQuotationItem();
 				
 				if(functionAreaItemPO.getFunctionArea().getType() == FunctionAreaPO.TYPE_AI_INT){
-					 itemType = QuotationFunctionAreaItemPO.TYPE_QUOTATION_FIX_INT;
+					 itemType = QuotationFunctionAreaItemPO.TYPE_QUOTATION_FIX_SHORT;
 				}
 				quotationFunctionAreaItemVO.setContent(quotationItemPO.getQuotationItemDes());
 				quotationFunctionAreaItemVO.setSubtype((short)functionAreaItemPO.getQuotationItem().getQuotationType().getId());
@@ -217,12 +208,8 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 	@Transactional(rollbackFor=Exception.class)
 	public int updateQuotationFunctionArea(QuotationFunctionAreaVO quotationFunctionAreaVO, QuotationVO quotationVO) throws FLException {
 		
-		QuotationPO quotationPO = quotationDao.get(quotationVO.getQid());
-		
-		if(quotationPO == null){
-			throw new FLException(200003, "报价不存在");
-		}
-		
+		QuotationPO quotationPO = checkQuotationForStatusByEnabled(quotationVO.getQid());
+	
 		QuotationServiceImpl.convertQuotationVOToPOForAdvance(quotationVO, quotationPO);
 		
 		QuotationFunctionAreaPO quotationFunctionAreaPO = quotationFunctionAreaDao.get(quotationFunctionAreaVO.getQfaId());
@@ -245,24 +232,14 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 	@Transactional(rollbackFor=Exception.class)
 	public int deleteQuotationFunctionArea(QuotationFunctionAreaVO quotationFunctionAreaVO, QuotationVO quotationVO) throws FLException {
 		
-		QuotationPO quotationPO = quotationDao.get(quotationVO.getQid());
+		QuotationPO quotationPO = checkQuotationForStatusByEnabled(quotationVO.getQid());
 		
-		if(quotationPO == null){
-			throw new FLException(200003, "报价不存在");
-		}
+		List<QuotationFunctionAreaPO> quotationFunctionAreas =new ArrayList<QuotationFunctionAreaPO>(Arrays.asList(new QuotationFunctionAreaPO(quotationFunctionAreaVO.getQfaId())));
 		
-		List<ExtensionPO> extensionPOs = extensionDao.queryExtensionByOrderId(quotationPO.getDecoration().getOrderId());
-		if(extensionPOs != null && extensionPOs.size()>0){
-			List<Long> extensionIds =new ArrayList<Long>();
-			for (ExtensionPO extensionPO:extensionPOs) {
-				extensionIds.add(extensionPO.getEid());
-			}
-			List<Integer> distincts = extensionItemDao.queryQuotationFunctionAreaIdByEids(extensionIds);
-				for(int distinct : distincts){
-					if(distinct == quotationFunctionAreaVO.getQfaId()){
-						throw new FLException(200028, "功能区存在拓展项");
-					}
-				}
+		long extensionItemNum = extensionItemDao.countQuotationFunctionAreaByEids(quotationFunctionAreas);
+		
+		if(extensionItemNum>0){
+			throw new FLException(200028, "功能区存在拓展项");
 		}
 		
 		QuotationServiceImpl.convertQuotationVOToPOForAdvance(quotationVO, quotationPO);
@@ -283,5 +260,17 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 		
 		return 0;
 	}
-	
+	private QuotationPO checkQuotationForStatusByEnabled(long qid)throws FLException{
+		QuotationPO quotationPO = quotationDao.get(qid);
+		
+		if(quotationPO == null){
+			throw new FLException(200003, "报价不存在");
+		}
+		
+		if(quotationPO.getStatus() == QuotationPO.STATUS_DISABLED_SHORT){
+			throw new FLException(200030, "报价状态不可操作");
+		}
+		
+		return quotationPO;
+	}	
 }

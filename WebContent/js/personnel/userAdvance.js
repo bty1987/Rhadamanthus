@@ -321,7 +321,7 @@ jQuery(function($) {
 	userAdvance.userAdvanceItems.advanceCancelBtn = $("#advanceCancelBtn");
 
 	com.post(api.system.queryRole, {"timestamp": new Date().getTime()}, function(res){
-		userAdvance.roleList = res.roles;
+		userAdvance.roleList = res.roleList;
 	}, null, false);
 
 	com.post(api.system.queryCompany,{},function(res){
@@ -336,22 +336,22 @@ jQuery(function($) {
 
 			if(listData && listData.length){
 				$.each(listData,function(i, v){
-					var $liLine = $('<li></li>').addClass('item-blue clearfix');
+					var $liLine = $('<li></li>').addClass('item-orange clearfix');
 					var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.userName));
 					var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 					var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
 					var $company = $('<a></a>').addClass('btn btn-minier btn-yellow').html('公司');
-					var $btnRight = $('<a></a>').addClass('btn btn-minier btn-primary').html('权配');
-					var $btnDesigne = $('<a></a>').addClass('btn btn-minier btn-danger').html('订单设计')
+					var $btnRight = $('<a></a>').addClass('btn btn-minier btn-success').html('权配');
+					var $btnDesigne = $('<a></a>').addClass('btn btn-minier btn-warning').html('订单设计')
 					var $btnSales = $('<a></a>').addClass('btn btn-minier btn-inverse').html('订单业务')
-					var $btnStatus = $('<a></a>').addClass('btn btn-minier btn-pink').html('订单状态')
+					var $btnStatus = $('<a></a>').addClass('btn btn-minier btn-danger').html('订单状态')
 					var propertyArr = [
 						["员工编号:", v.userId, "grey"],
 						["用户名:", v.loginId, "grey"],
 						["部门:", v.dept.deptName, "grey"],
 						["职位:", v.duty.name, "grey"],
-						["角色:", v.role.roleName, "grey"],
+						["角色:", v.role.name, "grey"],
 						["联系方式:", v.phone, "grey"]
 					];
 
@@ -570,13 +570,13 @@ function dialogUserAdvanceIndex(userId){
 		var user = res.user;
 
 		userAdvance.userAdvanceItems.company.bindData(userAdvance.companysel , "cid", "name");
-		userAdvance.userAdvanceItems.roleSel.bindData(userAdvance.roleList, "roleId", "roleName");
+		userAdvance.userAdvanceItems.roleSel.bindData(userAdvance.roleList, "rid", "name");
 		userAdvance.userAdvanceItems.isLogin.prop("checked", (user.isLogin & 1) == 1 ? true : false);
 		userAdvance.userAdvanceItems.extranet.prop("checked", user.extranet == 1 ? true : false);
 
 		userAdvance.userAdvanceItems.oldcompany.val(user.companys)
 		userAdvance.userAdvanceItems.company.val();
-		userAdvance.userAdvanceItems.roleSel.val(user.role.roleId);
+		userAdvance.userAdvanceItems.roleSel.val(user.role.rid);
 		userAdvance.userAdvanceModal.modal("show");
 	}, null, false);
 }
@@ -585,7 +585,7 @@ function saveData(){
 		"user.userId": userAdvance.postData.userId,
 		"user.isLogin": userAdvance.userAdvanceItems.isLogin.prop("checked") ? 1 : -1,
 		"user.extranet": userAdvance.userAdvanceItems.extranet.prop("checked") ? 1 : 0,
-		"user.role.roleId": userAdvance.userAdvanceItems.roleSel.val(),
+		"user.role.rid": userAdvance.userAdvanceItems.roleSel.val(),
 		"user.companys": userAdvance.userAdvanceItems.company.val(),
 	}
 	com.post(api.personel.updateUserForAdvance, options, function(res){

@@ -1,6 +1,7 @@
 package com.fanglin.payment.vo;
 
-import com.fanglin.data.common.vo.CustomerVO;
+import com.fanglin.communion.vo.CustomerVO;
+
 
 public class AdvancePaymentVO implements java.io.Serializable {
 

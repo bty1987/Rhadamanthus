@@ -11,6 +11,7 @@
 
 package com.fanglin.system.dao.impl;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import org.hibernate.criterion.Restrictions;
@@ -29,21 +30,48 @@ public class RoleModuleDaoImpl extends DaoImpl<RoleModulePO> implements RoleModu
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<RoleModulePO> queryRoleModuleByRId(int rId, short system) {
-		return session().createCriteria(RoleModulePO.class).createAlias("module", "module").add(Restrictions.eq("rid", rId)).add(Restrictions.eq("module.system", system)).list();
+	public List<RoleModulePO> queryRoleModuleByRid(int rid, short system) {
+		return session().createCriteria(RoleModulePO.class).createAlias("module", "module").add(Restrictions.eq("rid", rid)).add(Restrictions.eq("module.system", system)).list();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<RoleModulePO> queryRoleModuleByRIdALevel(int rId, int level, short system) {
-		return session().createCriteria(RoleModulePO.class).createAlias("module", "module").add(Restrictions.eq("rid", rId)).add(Restrictions.eq("module.level", level)).add(Restrictions.eq("module.system", system)).list();
+	public List<RoleModulePO> queryRoleModuleByRidALevel(int rid, int level, short system) {
+		return session().createCriteria(RoleModulePO.class).createAlias("module", "module").add(Restrictions.eq("rid", rid)).add(Restrictions.eq("module.level", level)).add(Restrictions.eq("module.system", system)).list();
 	}
 
 	@Override
-	public int deleteRoleModuleByRId(int rId, short system) {
+	public int countRoleModuleByMid(int mid) {
 		
-		String sql = "delete from communion.rolemodule where rId = :rId and mid in (select mid from communion.module where system = :system)";
-		session().createSQLQuery(sql).setInteger("rId", rId).setShort("system", system).executeUpdate();
+		String sql = "select count(*) from communion.rolemodule where mid = :mid";
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setInteger("mid", mid).uniqueResult();
+		
+		return count.intValue();
+	}
+	
+	@Override
+	public int deleteRoleModuleByRid(int rid) {
+		
+		String sql = "delete from communion.rolemodule where rid = :rid";
+		session().createSQLQuery(sql).setInteger("rid", rid).executeUpdate();
+		
+		return 0;
+	}
+
+	@Override
+	public int deleteRoleModuleByRid(int rid, short system) {
+		
+		String sql = "delete from communion.rolemodule where rid = :rid and mid in (select mid from communion.module where system = :system)";
+		session().createSQLQuery(sql).setInteger("rid", rid).setShort("system", system).executeUpdate();
+		
+		return 0;
+	}
+
+	@Override
+	public int deleteRoleModuleByMid(int mid) {
+		
+		String sql = "delete from communion.rolemodule where mid = :mid";
+		session().createSQLQuery(sql).setInteger("mid", mid).executeUpdate();
 		
 		return 0;
 	}

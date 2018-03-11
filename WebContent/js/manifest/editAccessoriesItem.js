@@ -41,13 +41,13 @@ jQuery(function ($) {
         var $lineInfoWrap = $('<div></div>').addClass('line-wrap content col7');
         var $optWrap = $('<div></div>').addClass('line-wrap action');
         var _lineInfoSet = [
-            {cellClass: "no"},//编号
-            {cellClass: "name", hasInput: !0},//名称
-            {cellClass: "category"},//品类
-            {cellClass: "brand"},//品牌
-            {cellClass: "measurementUnit"},//单位
+            {cellClass: "no blue"},//编号
+            {cellClass: "name grey", hasInput: !0},//名称
+            {cellClass: "category grey"},//品类
+            {cellClass: "brand grey"},//品牌
+            {cellClass: "measurementUnit grey"},//单位
             {cellClass: "number", hasInput: !0},//数量
-            {cellClass: "pieceNum"},//件数
+            {cellClass: "pieceNum blue"},//件数
         ];
         var $btncheck = $('<a class="green" style="font-size: 18px"><i class="icon-ok"></i></a>');
         var $btndel = $('<a class="red" style="font-size: 18px"><i class=" icon-remove"></i></a>');
@@ -127,7 +127,7 @@ jQuery(function ($) {
                         layer.msg('添加成功!', {icon: 1});
                         $line.find('.name').html($line.attr('data-name'));
                     }, function (e) {
-                        com.showAlert(com.info, e.errorMsg);
+                        com.showAlert(com.error, e.errorMsg);
                     });
                 }
 
@@ -139,7 +139,7 @@ jQuery(function ($) {
                     }, function (data) {
                         layer.msg('更新成功!', {icon: 1});
                     }, function (e) {
-                        com.showAlert(com.info, e.errorMsg);
+                        com.showAlert(com.error, e.errorMsg);
                     });
                 }
             }
@@ -163,7 +163,7 @@ jQuery(function ($) {
                 layer.msg('删除成功!', {icon: 1});
                 $line.remove();
             }, function (e) {
-                com.showAlert(com.info, e.errorMsg);
+                com.showAlert(com.error, e.errorMsg);
             });
 
 

@@ -82,14 +82,15 @@ $(function () {
 
             var propertyArr = [
                 // v.gid,
-                v.name,
-                v.purchase,
-                v.selling,
-                v.ctype == "0" ? "底价" : "点位",
-                v.cvalue,];
+                [v.name,'grey'],
+                [v.purchase,'blue'],
+                [v.selling,'blue'],
+                [v.ctype == "0" ? "底价" : "点位",'red'],
+                [v.cvalue,'blue']
+            ];
 
             $.each(propertyArr, function (i, v) {
-                var $cell = $('<div></div>').addClass('cell').html(v);
+                var $cell = $('<div></div>').addClass('cell '+ v[1]).html(v[0]);
                 $cell.appendTo($contentWrap);
             });
 
@@ -229,7 +230,7 @@ $(function () {
                         doSearcher();
                     })
                 },function(e){
-                    com.showAlert(com.info, e.errorMsg);
+                    com.showAlert(com.error, e.errorMsg);
                 })
             //}
 

@@ -10,7 +10,7 @@ jQuery(function($) {
 	
 	decorationActivityItem.items.decorationActivityItems = $("#decorationActivityItems");
 	decorationActivityItem.items.backBtn = $("#backBtn").on("click", function(){
-		$("#decorationActivityItemPageContent").load(api.index.decorationActivityIndex.url);
+		com.switchPage(params.historyPage);
 	});
 	
 	decorationUtils.decorationActivityItemInfo(decorationActivityItem.items.decorationActivityItems, uiBtnMethod, decorationActivityItemPostData.decorationOrderID);
@@ -33,18 +33,18 @@ function uiBtnMethod(uiPgDiv, activityItem){
 }
 
 function receiveDecorationActivityItem(daiId, activityItemName){
-	
+
 	bootbox.confirm("是否确认领取" + activityItemName + "活动物品?", function(result) {
 		if(result){
-			
+
 			var options = {
 				"decorationActivityItem.daiId": daiId,
 			}
-			
+
 			com.post(api.decoration.receiveDecorationActivityItem, options, function(res){
-				
+
 				var daiId = res.decorationActivityItem.daiId;
-				
+
 				$("#convert_" + daiId).unbind();
 				$("#abate_" + daiId).unbind();
 				$("#widgetHeader_" + daiId).addClass("header-color-orange");

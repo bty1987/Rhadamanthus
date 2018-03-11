@@ -20,13 +20,13 @@ public class ActivityItemPO implements java.io.Serializable {
 	
 	public static final String COLUMN_AID_STR = "aid";
 
-	private long aiId;
+	private long aiid;
 	
 	private long aid;
 	
 	private String activityName;
 	
-	private String activityItemName;
+	private String name;
 	
 	private int num;
 	
@@ -36,13 +36,13 @@ public class ActivityItemPO implements java.io.Serializable {
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "aiId")
-	public long getAiId() {
-		return this.aiId;
+	@Column(name = "aiid")
+	public long getAiid() {
+		return aiid;
 	}
 
-	public void setAiId(long aiId) {
-		this.aiId = aiId;
+	public void setAiid(long aiid) {
+		this.aiid = aiid;
 	}
 
 	@Column(name = "aId")
@@ -63,13 +63,13 @@ public class ActivityItemPO implements java.io.Serializable {
 		this.activityName = activityName;
 	}
 
-	@Column(name = "activityItemName")
-	public String getActivityItemName() {
-		return this.activityItemName;
+	@Column(name = "name")
+	public String getName() {
+		return name;
 	}
 
-	public void setActivityItemName(String activityItemName) {
-		this.activityItemName = activityItemName;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	@Column(name = "num")

@@ -153,11 +153,12 @@ $(function(){
         return [row];
     }
     function drawPicture(conf) {
-        var row1 = createDiv("row").append(createDiv("col-md-12").append(createDiv("col-md-1","designPictureUpload"),createDiv("col-md-1","projectPictureUpload"),createDiv("col-md-1","CADUpload")));
+        var row1 = createDiv("row").append(createDiv("col-md-12").append(createDiv("col-md-1","designPictureUpload"),createDiv("col-md-1","projectPictureUpload"),createDiv("col-md-1","CADUpload"),createDiv("col-md-1","ContractUpload")));
         var row2 = createDiv("row").append(
             createDiv("col-xs-12").append(createLabel("control-label","效果图:").attr("style","margin-left: 20px;margin-top: 20px;"),createDiv("col-md-12 hr"),createDiv("row-fluid").append(createUl("designPictures","ace-thumbnails")))
             ,createDiv("col-xs-12").append(createLabel("control-label","工程图:").attr("style","margin-left: 20px;margin-top: 20px;"),createDiv("col-md-12 hr"),createDiv("row-fluid").append(createUl("projectPictures","ace-thumbnails")))
             ,createDiv("col-xs-12").append(createLabel("control-label","工程文件:").attr("style","margin-left: 20px;margin-top: 20px;"),createDiv("col-md-12 hr"),createDiv("row-fluid").append(createDiv("col-sm-7 infobox-container","CADProjectPicture")))
+            ,createDiv("col-xs-12").append(createLabel("control-label","合同图:").attr("style","margin-left: 20px;margin-top: 20px;"),createDiv("col-md-12 hr"),createDiv("row-fluid").append(createUl("ContractPictures","ace-thumbnails")))
         );
         return [row1,row2]
     }
@@ -215,6 +216,12 @@ $(function(){
     }
 
     var decorationPage = {
+        "activity": {
+            "apiPage":api.decoration.pageDecorationForCommon,
+            "pageBtn":["activity"],
+            "postDataName": "decorationActivityPostData",
+            "hasExport":false
+        },
         "common": {
             "apiPage":api.decoration.pageDecorationForCommon,
             "pageBtn":["view","revie","line"],
@@ -226,21 +233,21 @@ $(function(){
             "apiPage":api.decoration.pageDecorationForDesigner,
             "pageBtn":["view","revie","line","price","scal","contract","extension","addminus","cal"],
             "postDataName": "designerPostData",
-            "nodes":[{type:"basic",opt:{btn:["customerInfosBtn"],show:["houseType","houseClass"]}},{type:"quotaion",opt:{btn:["btnPrintDefaultQuotationInfo"]}},{type:"picture",opt:{show:["designPictureUpload","projectPictureUpload","CADUpload"]}},{type:"material"},{type:"activity",opt:{btn:["joinActivityBtn","applyActivityItemBtn","applySpecialActivityItemBtn"]},wizard:{"activityBtnMethod":activityBtnMethod,"uiBtnMethod":uiBtnMethod} },{type:"payment",opt:{btn:["btnSetDecorationPaymentInfo","btnOtherPayment"]},wizard:{"isDesign":true}},{type:"belong"}, {type: "addreduce"}],
+            "nodes":[{type:"basic",opt:{btn:["customerInfosBtn"],show:["houseType","houseClass"]}},{type:"quotaion",opt:{btn:["btnPrintDefaultQuotationInfo"]}},{type:"picture",opt:{show:["designPictureUpload","projectPictureUpload","CADUpload","ContractUpload"]}},{type:"material"},{type:"activity",opt:{btn:["joinActivityBtn","applyActivityItemBtn","applySpecialActivityItemBtn"]},wizard:{"activityBtnMethod":activityBtnMethod,"uiBtnMethod":uiBtnMethod} },{type:"payment",opt:{btn:["btnSetDecorationPaymentInfo","btnOtherPayment"]},wizard:{"isDesign":true}},{type:"belong"}, {type: "addreduce"}],
             "hasExport":true
         },
         "designermanager": {
             "apiPage":api.decoration.pageDecorationForDesignerManager,
             "pageBtn":["view","revie","line","price","scal","contract","extension","addminus","cal"],
             "postDataName": "designermanagerPostData",
-            "nodes":[{type:"basic",opt:{btn:["customerInfosBtn"],show:["houseType","houseClass","quoterId"]}},{type:"quotaion",opt:{btn:["btnPrintDefaultQuotationInfo"]}},{type:"picture",opt:{show:["designPictureUpload","projectPictureUpload","CADUpload"]}},{type:"material"},{type:"activity",opt:{btn:["joinActivityBtn","applyActivityItemBtn","applySpecialActivityItemBtn"]},wizard:{"activityBtnMethod":activityBtnMethod,"uiBtnMethod":uiBtnMethod} },{type:"payment",opt:{btn:["btnSetDecorationPaymentInfo","btnOtherPayment"]},wizard:{"isDesign":true}},{type:"belong"}, {type: "addreduce"}],
+            "nodes":[{type:"basic",opt:{btn:["customerInfosBtn"],show:["houseType","houseClass","quoterId"]}},{type:"quotaion",opt:{btn:["btnPrintDefaultQuotationInfo"]}},{type:"picture",opt:{show:["designPictureUpload","projectPictureUpload","CADUpload","ContractUpload"]}},{type:"material"},{type:"activity",opt:{btn:["joinActivityBtn","applyActivityItemBtn","applySpecialActivityItemBtn"]},wizard:{"activityBtnMethod":activityBtnMethod,"uiBtnMethod":uiBtnMethod} },{type:"payment",opt:{btn:["btnSetDecorationPaymentInfo","btnOtherPayment"]},wizard:{"isDesign":true}},{type:"belong"}, {type: "addreduce"}],
             "hasExport":true
         },
         "directer": {
             "apiPage":api.decoration.pageDecorationForDesignerManager,
             "pageBtn":["view","revie","contract"],
             "postDataName": "directerPostData",
-            "nodes":[{type:"basic",opt:{btn:["customerInfosBtn","customerChangeBtn","villageChangeBtn"],show:["orderType","houseType","houseClass","notSalesmanRate","notSalesmanName","notSalesmanPhone","notSalesmanContent","quoterId","escorterId"]}},{type:"quotaion"},{type:"picture"},{type:"material"},{type:"activity"},{type:"payment"},{type:"belong"}, {type: "addreduce"}],
+            "nodes":[{type:"basic",opt:{btn:["customerInfosBtn","customerChangeBtn","villageChangeBtn"],show:["orderType","houseType","houseClass","notSalesmanRate","notSalesmanName","notSalesmanPhone","notSalesmanContent","quoterId","escorterId"]}},{type:"quotaion"},{type:"picture"},{type:"material"},{type:"activity"},{type:"payment",opt:{btn:["btnSetDecorationPaymentInfo","btnOtherPayment"]}},{type:"belong"}, {type: "addreduce"}],
             "hasExport":false
         },
         "quoter": {
@@ -287,14 +294,14 @@ $(function(){
             "apiPage":api.decoration.pageDecorationForDesigner,
             "pageBtn":["view","revie"],
             "postDataName": "planPostData",
-            "nodes":[{type:"basic",opt:{btn:["customerInfosBtn","customerChangeBtn","villageChangeBtn"],show:["orderType","houseType","houseClass"]}},{type:"quotaion",opt:{btn:["btnPrintDefaultQuotationInfo"]}},{type:"picture",opt:{show:["designPictureUpload","projectPictureUpload","CADUpload"]}},{type:"material"},{type:"activity",opt:{btn:["joinActivityBtn","applyActivityItemBtn","applySpecialActivityItemBtn"]},wizard:{"activityBtnMethod":activityBtnMethod,"uiBtnMethod":uiBtnMethod} },{type:"payment",opt:{btn:["btnSetDecorationPaymentInfo","btnOtherPayment"]}},{type:"belong"}, {type: "addreduce"}],
+            "nodes":[{type:"basic",opt:{btn:["customerInfosBtn","customerChangeBtn","villageChangeBtn"],show:["orderType","houseType","houseClass"]}},{type:"quotaion",opt:{btn:["btnPrintDefaultQuotationInfo"]}},{type:"picture",opt:{show:["designPictureUpload","projectPictureUpload","CADUpload","ContractUpload"]}},{type:"material"},{type:"activity",opt:{btn:["joinActivityBtn","applyActivityItemBtn","applySpecialActivityItemBtn"]},wizard:{"activityBtnMethod":activityBtnMethod,"uiBtnMethod":uiBtnMethod} },{type:"payment",opt:{btn:["btnSetDecorationPaymentInfo","btnOtherPayment"]}},{type:"belong"}, {type: "addreduce"}],
             "hasExport":false
         },
         "escorter": {
             "apiPage":api.decoration.pageDecorationForEscorter,
             "pageBtn":["view","revie"],
             "postDataName": "escorterPostData",
-            "nodes":[{type:"basic",opt:{btn:["customerInfosBtn","customerChangeBtn","villageChangeBtn"],show:["orderType","houseType","houseClass"]}},{type:"quotaion",opt:{btn:["btnPrintDefaultQuotationInfo"]}},{type:"picture",opt:{show:["designPictureUpload","projectPictureUpload","CADUpload"]}},{type:"material"},{type:"activity",opt:{btn:["joinActivityBtn","applyActivityItemBtn","applySpecialActivityItemBtn"]},wizard:{"activityBtnMethod":activityBtnMethod,"uiBtnMethod":uiBtnMethod} },{type:"payment",opt:{btn:["btnSetDecorationPaymentInfo","btnOtherPayment"]}},{type:"belong"}, {type: "addreduce"}],
+            "nodes":[{type:"basic",opt:{btn:["customerInfosBtn","customerChangeBtn","villageChangeBtn"],show:["orderType","houseType","houseClass"]}},{type:"quotaion",opt:{btn:["btnPrintDefaultQuotationInfo"]}},{type:"picture",opt:{show:["designPictureUpload","projectPictureUpload","CADUpload","ContractUpload"]}},{type:"material"},{type:"activity",opt:{btn:["joinActivityBtn","applyActivityItemBtn","applySpecialActivityItemBtn"]},wizard:{"activityBtnMethod":activityBtnMethod,"uiBtnMethod":uiBtnMethod} },{type:"payment",opt:{btn:["btnSetDecorationPaymentInfo","btnOtherPayment"]}},{type:"belong"}, {type: "addreduce"}],
             "hasExport":false
         },
         "customerPhone": {
@@ -385,6 +392,7 @@ $(function(){
             var isdesignPictureUpload = false;
             var isprojectPictureUpload = false;
             var isCADUpload = false;
+            var isContractUpload = false;
 
             var title = {"basic":"基本信息","quotaion":"报价信息","picture":"图纸信息","material":"主材信息","activity":"活动信息","payment":"款项信息","belong":"归属信息","addreduce":"增减项"};
 
@@ -448,6 +456,9 @@ $(function(){
                             case "CADUpload":
                                 isCADUpload = true;
                                 break;
+                            case "ContractUpload":
+                                isContractUpload = true;
+                                break;
 
                         }
                     }
@@ -469,6 +480,11 @@ $(function(){
                     decorationUtils.addDecorationPicture(data, 0, "CADProjectPicture");
                 }, "btn btn-warning");
             }
+            if(isContractUpload){
+                decorationUtils.loadHuploadify("ContractUpload", "上传合同图片", "*.jpg;*.jpge;*.gif;*.png", true, function(data){
+                    decorationUtils.addDecorationPicture(data, 3, "ContractPictures");
+                }, "btn btn-inverse");
+            }
         },getConfig:function (page) {
             var pageConfig = {};
             pageConfig.condArr = ['orderId', 'village', 'houseNumber', 'houseArea', 'designer', 'salesman','orderType','salesmanType','quoter','escorter','designerRegionId','designerDepartmentId','salesmanRegionId','salesmanDepartmentId','measureTimeDateRange','depositTimeDateRange','signTimeDateRange','houseClass','status'];
@@ -483,7 +499,7 @@ $(function(){
                 ['设计师', 'designer.currentName'],
                 ['业务部', 'salesman.dept.deptName'],
                 ['业务员', 'salesman.currentName'],
-                ['面积', 'houseArea'],
+                ['面积', 'house.buildArea'],
                 ['合同报价', 'orderTotalPrice'],
                 ['量房时间', 'createTime'],
                 ['签单时间', 'contractTime'],

@@ -14,6 +14,15 @@ public class OperationVO implements java.io.Serializable {
 	
 	private Short system;
 	
+	public OperationVO(Integer oid) {
+		super();
+		this.oid = oid;
+	}
+
+	public OperationVO() {
+		super();
+	}
+
 	public Integer getOid() {
 		return oid;
 	}

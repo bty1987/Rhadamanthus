@@ -71,7 +71,7 @@ public class BuildingScheduleVO implements java.io.Serializable {
 		this.name = name;
 	}
 
-	@JSON(format = "yyyy-MM-dd HH:mm:ss")
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getPlanTime() {
 		return planTime;
 	}

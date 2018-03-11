@@ -16,7 +16,7 @@ import com.fanglin.inventory.po.FormatPO;
 import com.fanglin.inventory.po.GoodsPO;
 
 @Entity
-@Table(name = "salesitem", catalog = "inventory")
+@Table(name = "salesitem", catalog = "sales")
 public class SalesItemPO implements Serializable {
 
 	private static final long serialVersionUID = 317677385751139684L;

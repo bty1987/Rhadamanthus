@@ -33,6 +33,10 @@ import com.fanglin.inventory.service.GoodsService;
 import com.fanglin.inventory.vo.AccessoriesTypeVO;
 import com.fanglin.inventory.vo.GoodsPackageVO;
 import com.fanglin.inventory.vo.GoodsVO;
+import com.fanglin.personel.dao.UserDao;
+import com.fanglin.personel.po.UserPO;
+import com.fanglin.right.dao.BrandUserRightDao;
+import com.fanglin.right.po.BrandUserRightPO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
 import com.fanglin.utils.PinYin4Util;
@@ -50,10 +54,63 @@ public class GoodsServiceImpl implements GoodsService {
 	@Autowired
 	private GoodsPackageDao goodsPackageDao;
 	
+	@Autowired
+	private UserDao userDao;
+	
+	@Autowired
+	private BrandUserRightDao brandUserRightDao;
+	
+	
 	@Override
-	public void pageGoods(Paging paging, List<Filter> filters,int company) throws FLException{
+	public void pageGoods(Paging paging, List<Filter> filters,	String userId, int company) throws FLException{
+
+		UserPO userPO = userDao.queryUserByUserId(userId);
 		
-		List<GoodsPO> goodsPOs = goodsDao.pageGoods(paging, filters,company);
+		BrandUserRightPO brandUserRightPO = brandUserRightDao.queryBrandUserRightByUid(userPO.getUid());
+		
+		if(brandUserRightPO != null){
+			
+			if(!"".equals(brandUserRightPO.getBrandId())){
+				
+				List<String> brandId = Arrays.asList(brandUserRightPO.getBrandId().split("#"));
+				List<Long> brandIds = new ArrayList<Long>();
+				
+				for (int i = 0; i < brandId.size(); i++) {
+					
+					brandIds.add(Long.parseLong(brandId.get(i)));
+					
+				}
+				
+				List<GoodsPO> goodsPOs = goodsDao.pageGoods(paging, filters, brandIds, company);
+				
+				List<GoodsVO> goodsVOs = new ArrayList<GoodsVO>();
+			
+				GoodsVO goodsVO;
+			
+				for(GoodsPO goodsPO: goodsPOs){
+					
+					goodsVO = new GoodsVO(new AccessoriesTypeVO());
+						
+					BeanUtil.copyProperties(goodsPO, goodsVO , Arrays.asList("accessoriesType"));
+					BeanUtil.copyProperties(goodsPO.getAccessoriesType(), goodsVO.getAccessoriesType(), Arrays.asList("workType"));
+						
+					goodsVOs.add(goodsVO);
+					
+				}
+
+				paging.setData(goodsVOs);
+				
+			}
+			
+		}
+		
+		
+	}
+
+	@Override
+	public void pageGoodsForAdvance(Paging paging, List<Filter> filters,int company) throws FLException {
+		
+		List<GoodsPO> goodsPOs = goodsDao.pageGoodsForAdvance(paging, filters,company);
 		List<GoodsVO> goodsVOs = new ArrayList<GoodsVO>();
 		
 		GoodsVO goodsVO;
@@ -70,8 +127,9 @@ public class GoodsServiceImpl implements GoodsService {
 		}
 
 		paging.setData(goodsVOs);
+		
 	}
-
+	
 	@Override
 	public List<GoodsVO> queryGoods(List<Filter> filters,int company) throws FLException{
 		
@@ -133,7 +191,7 @@ public class GoodsServiceImpl implements GoodsService {
 	
 	@Override
 	public List<GoodsVO> queryGoodsByAtid(GoodsVO goodsVO){
-		System.out.println(goodsVO.getAccessoriesType().getAtid());
+		
 		List<GoodsPO> goodsPOs = goodsDao.queryGoodsByAtid(goodsVO.getAccessoriesType().getAtid());
 		List<GoodsVO> goodsVOs = new ArrayList<GoodsVO>();
 		
@@ -316,5 +374,7 @@ public class GoodsServiceImpl implements GoodsService {
 		
 		return 0;
 	}
+
+	
 
 }

@@ -21,7 +21,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fanglin.data.po.DutyPO;
+import com.fanglin.communion.po.DutyPO;
 import com.fanglin.department.po.DepartmentPO;
 import com.fanglin.system.po.RolePO;
 
@@ -141,7 +141,7 @@ public class UserPO implements Serializable {
     }
     
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "roleId", referencedColumnName = "roleId", nullable = false)
+	@JoinColumn(name = "roleId", referencedColumnName = "rid", nullable = false)
 	public RolePO getRole(){
 		return role;
 	}

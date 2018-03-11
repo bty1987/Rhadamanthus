@@ -16,7 +16,7 @@ import javax.persistence.Table;
 import com.fanglin.personel.po.UserPO;
 
 @Entity
-@Table(name = "decorationoperate", catalog = "platform")
+@Table(name = "decorationoperate", catalog = "decoration")
 public class DecorationOperatePO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 5505808285022334255L;
@@ -87,7 +87,7 @@ public class DecorationOperatePO implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = true, name = "sourcerId", referencedColumnName="userId")
+	@JoinColumn(nullable = true, name = "suid", referencedColumnName="uId")
 	public UserPO getSourcer() {
 		return sourcer;
 	}
@@ -97,7 +97,7 @@ public class DecorationOperatePO implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = true, name = "targerId", referencedColumnName="userId")
+	@JoinColumn(nullable = true, name = "tuid", referencedColumnName="uId")
 	public UserPO getTarger() {
 		return targer;
 	}
@@ -107,7 +107,7 @@ public class DecorationOperatePO implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = true, name = "operaterId", referencedColumnName="userId")
+	@JoinColumn(nullable = true, name = "ouid", referencedColumnName="uId")
 	public UserPO getOperater() {
 		return operater;
 	}

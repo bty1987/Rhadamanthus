@@ -6,9 +6,14 @@ import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.fanglin.personel.po.UserPO;
 
 @Entity
 @Table(name = "activity", catalog = "information")
@@ -22,17 +27,15 @@ public class ActivityPO implements java.io.Serializable {
 	
 	public static final String COLUMN_AID_STR = "aid";
 	
-	public static final String COLUMN_CREATEUSERID_STR = "createUserId";
+	public static final String COLUMN_CREATEUSERID_STR = "creater.userId";
 	
 	public static final String COLUMN_STATUS_STR = "status";
 
 	private long aid;
 	
-	private String activityName;
+	private String name;
 	
-	private String createUserId;
-	
-	private String createUserName;
+	private UserPO creater;
 	
 	private short status;
 	
@@ -48,7 +51,7 @@ public class ActivityPO implements java.io.Serializable {
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "aId")
+	@Column(name = "aid")
 	public long getAid() {
 		return this.aid;
 	}
@@ -57,34 +60,26 @@ public class ActivityPO implements java.io.Serializable {
 		this.aid = aid;
 	}
 
-	@Column(name = "activityName")
-	public String getActivityName() {
-		return this.activityName;
+	@Column(name = "name")
+	public String getName() {
+		return name;
 	}
 
-	public void setActivityName(String activityName) {
-		this.activityName = activityName;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	@Column(name = "createUserId")
-	public String getCreateUserId() {
-		return this.createUserId;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = false, name = "cuid",referencedColumnName="uid")
+	public UserPO getCreater() {
+		return creater;
 	}
 
-	public void setCreateUserId(String createUserId) {
-		this.createUserId = createUserId;
+	public void setCreater(UserPO creater) {
+		this.creater = creater;
 	}
 
-	@Column(name = "createUserName")
-	public String getCreateUserName() {
-		return this.createUserName;
-	}
-
-	public void setCreateUserName(String createUserName) {
-		this.createUserName = createUserName;
-	}
-
-	@Column(name = "status", nullable = false)
+	@Column(name = "status")
 	public short getStatus() {
 		return this.status;
 	}

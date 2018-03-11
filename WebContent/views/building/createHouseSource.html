@@ -35,24 +35,28 @@
 								</div>
 							</div>
 
-							<div class="form-group">
-								<label class="col-sm-2 control-label no-padding-right" for="nameRuleSel">楼号规则</label>
+							<div class="form-group" id="nhouseNumber">
+								<label for="built" class="col-sm-2 control-label no-padding-right">楼牌号</label>
 								<div class="col-sm-10">
-									<select class="col-xs-10 col-sm-7 v_required" id="nameRuleSel" data-toggle="popover" ></select>
+									<input type="text" class="v_required" maxlength="7" style="width: 6.5%;" id="built">
+									<select id="builtrule" style="padding: 0px;font-size: 1px; width: 7%!important; height: 25px; vertical-align: bottom"></select>
+									<input type="text" class="v_required" maxlength="3" style="width: 6.5%;" id="unit">
+									<select id="unitrule" style="padding: 0px;font-size: 1px; width: 7%!important; height: 25px; vertical-align: bottom"></select>
+									<input type="text" class="v_required" maxlength="3" style="width: 6.5%;" id="floor">
+									<select id="floorrule" style="padding: 0px;font-size: 1px; width: 7%!important; height: 25px; vertical-align: bottom"></select>
+									<input type="text" class="v_required" maxlength="3" style="width: 6.5%;" id="door" data-placement="bottom">
+									<select id="doorrule" style="padding: 0px;font-size: 1px; width: 7%!important; height: 25px; vertical-align: bottom"></select>
+									<span class='icon-asterisk'></span>
+									<div class="col-md-12" style="padding: 0px;" >
+										<span id="rule" class="red"></span>
+									</div>
 								</div>
 							</div>
 
 							<div class="form-group">
-								<label for="built" class="col-sm-2 control-label no-padding-right">楼牌号</label>
+								<label class="col-sm-2 control-label no-padding-right" for="type">房产类型</label>
 								<div class="col-sm-10">
-									<input type="text" class="v_required" style="width:9%" maxlength="4" data-toggle="popover" data-placement="top"   id="built" /> 栋
-									<input type="text" class="v_required" style="width:9%" maxlength="2" data-toggle="popover" data-placement="top"  id="unit" /> 单元
-									<input type="text" class="v_required" style="width:9%" maxlength="2" data-toggle="popover" data-placement="top"  id="floor" /> 层
-									<input type="text" class="v_required" style="width:9%" maxlength="2" data-toggle="popover" data-placement="top"   id="door" /> 门
-
-									<div class="col-sm-12">
-										<span id="buildingRuleContent" class="red"></span>
-									</div>
+									<select class="col-xs-10 col-sm-7 v_required" id="type" data-toggle="popover" ></select>
 								</div>
 							</div>
 
@@ -70,13 +74,6 @@
 								<label class="col-sm-2 control-label no-padding-right" for="oldhousetype">户型</label>
 								<div class="col-sm-10">
 									<input type="text" id="oldhousetype" maxlength="3" class="col-xs-10 col-sm-7" readonly="readonly"/>
-								</div>
-							</div>
-
-							<div class="form-group">
-								<label class="col-sm-2 control-label no-padding-right" for="type">房产类型</label>
-								<div class="col-sm-10">
-									<select class="col-xs-10 col-sm-7 v_required" id="type" data-toggle="popover" ></select>
 								</div>
 							</div>
 
@@ -172,7 +169,7 @@
 							<div class="form-group">
 								<label class="col-sm-2 control-label no-padding-right" for="deedValue">契证原值</label>
 								<div class="col-sm-2">
-									<input type="text" id="deedValue" maxlength="15" class="col-xs-10 col-sm-10 v_amount" data-toggle="popover" />
+									<input type="text" id="deedValue" maxlength="15" class="col-xs-10 col-sm-9 v_amount" data-toggle="popover" />
 								</div>
 								<label class="col-sm-2 control-label no-padding-right" for="propertyFee">物业费</label>
 								<div class="col-sm-2">
@@ -183,7 +180,7 @@
 							<div class="form-group">
 								<label class="col-sm-2 control-label no-padding-left" for="totalPrice">总价</label>
 								<div class="col-sm-2">
-									<input type="text" id="totalPrice" maxlength="32" class="col-xs-10 col-sm-10 v_required v_amount" data-toggle="popover" />
+									<input type="text" id="totalPrice" maxlength="32" class="col-xs-10 col-sm-9 v_required v_amount" data-toggle="popover" />
 									<i class='icon-asterisk'></i>
 								</div>
 
@@ -273,8 +270,7 @@
 								</div>
 							</div>
 						</div>
-
-
+						
 					</div>
 				</div>
 				<div class="modal-footer" style="text-align: center">
@@ -388,5 +384,5 @@
 </div>
 
 <script type="text/javascript">
-	$.loadScript(['js/building/createHouseSource.js']);
+	$.loadScript(['js/building/createHouseSource.js', 'js/utils/houseUtils.js']);
 </script>

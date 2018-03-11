@@ -20,7 +20,6 @@ import com.fanglin.building.vo.BuildingNodeVO;
 import com.fanglin.building.vo.BuildingScheduleVO;
 import com.fanglin.building.vo.BuildingVO;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.vo.Authentication;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserVO;
@@ -50,26 +49,19 @@ public class BuildingScheduleServiceImpl implements BuildingScheduleService{
 		
 		for (BuildingSchedulePO buildingSchedulePO : buildingSchedulePOs) {
 			
-			
-			BuildingScheduleVO buildingSchedule = new BuildingScheduleVO(new BuildingNodeVO(), new BuildingVO(), new UserVO());
-			
-			BeanUtil.copyProperties(buildingSchedulePO, buildingSchedule, Arrays.asList("building","buildingNode", "operater"));
-			
-			BeanUtil.copyProperties(buildingSchedulePO.getBuildingNode(), buildingSchedule.getBuildingNode());
-			
-			UserPO operater = userDao.queryUserByUserId(buildingSchedulePO.getOperater().getUserId());
-			
-			BeanUtil.copyProperties(operater, buildingSchedule.getOperater(), Arrays.asList("role", "dept", "duty"));
+			BuildingScheduleVO buildingSchedule = buildingSchedulePOToVO(buildingSchedulePO);
 			
 			buildingScheduleVOs.add(buildingSchedule);
+			
 		}		
 		
 		return buildingScheduleVOs;
+		
 	}
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int nextBuildingSchedule(BuildingScheduleVO buildingScheduleVO, Authentication authentication) {
+	public BuildingScheduleVO nextBuildingSchedule(BuildingScheduleVO buildingScheduleVO, String userId) {
 		
 		if(buildingScheduleVO.getBsid() != null){
 			
@@ -79,6 +71,12 @@ public class BuildingScheduleServiceImpl implements BuildingScheduleService{
 				
 				buildingSchedulePO.setStatus(BuildingSchedulePO.STATUS_END_SHORT);
 				
+				buildingSchedulePO.setPlanTime(buildingScheduleVO.getPlanTime());
+				
+				buildingSchedulePO.setOperatTime(new Timestamp(System.currentTimeMillis()));
+				
+				buildingSchedulePO.setComment(buildingScheduleVO.getComment());
+				
 				buildingScheduleDao.update(buildingSchedulePO);
 			}
 			
@@ -86,9 +84,11 @@ public class BuildingScheduleServiceImpl implements BuildingScheduleService{
 		
 		BuildingSchedulePO nextBuildingSchedulePO = new BuildingSchedulePO();
 		
-		UserPO operater = userDao.queryUserByUserId(authentication.getUserId());
+		UserPO operater = userDao.queryUserByUserId(userId);
 		
-		BuildingNodePO buildingNodePO = buildingNodeDao.queryBuildingNodeByType(buildingScheduleVO.getBuildingNode().getType(), buildingScheduleVO.getBuildingNode().getSore());
+		List<BuildingNodePO> buildingNodePOs = buildingNodeDao.queryBuildingNodeByType(buildingScheduleVO.getBuildingNode().getType(), buildingScheduleVO.getBuildingNode().getSore());
+		
+		BuildingNodePO buildingNodePO = buildingNodePOs.get(0);
 		
 		BuildingPO buildingPO = buildingDao.get(buildingScheduleVO.getBuilding().getBoid());
 		
@@ -102,16 +102,17 @@ public class BuildingScheduleServiceImpl implements BuildingScheduleService{
 		
 		nextBuildingSchedulePO.setStatus(BuildingSchedulePO.STATUS_INIT_SHORT);
 		
-		nextBuildingSchedulePO.setOperatTime(new Timestamp(System.currentTimeMillis()));
-		
 		buildingScheduleDao.save(nextBuildingSchedulePO);
 		
-		return 0;
+		BuildingScheduleVO nextBuildingScheduleVO = buildingSchedulePOToVO(nextBuildingSchedulePO);
+		
+		return nextBuildingScheduleVO;
+		
 	}
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int updateBuildingSchedule(BuildingScheduleVO buildingScheduleVO) {
+	public BuildingScheduleVO updateBuildingSchedule(BuildingScheduleVO buildingScheduleVO) {
 		
 		BuildingSchedulePO buildingSchedulePO = buildingScheduleDao.get(buildingScheduleVO.getBsid());
 		
@@ -127,20 +128,30 @@ public class BuildingScheduleServiceImpl implements BuildingScheduleService{
 			
 		}
 		
+		buildingSchedulePO.setOperatTime(new Timestamp(System.currentTimeMillis()));
+		
 		buildingScheduleDao.update(buildingSchedulePO);
 		
-		return 0;
+		BuildingScheduleVO newBuildingScheduleVO = buildingSchedulePOToVO(buildingSchedulePO);
+		
+		return newBuildingScheduleVO;
+		
 	}
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int updateBuildingScheduleForStatus(BuildingScheduleVO buildingScheduleVO) {
+	public BuildingScheduleVO updateBuildingScheduleForStatus(BuildingScheduleVO buildingScheduleVO) {
 
 		BuildingSchedulePO buildingSchedulePO = buildingScheduleDao.get(buildingScheduleVO.getBsid());
 		
 		buildingSchedulePO.setStatus(BuildingSchedulePO.STATUS_END_SHORT);
 		
-		return 0;
+		buildingScheduleDao.update(buildingSchedulePO);
+		
+		BuildingScheduleVO newBuildingScheduleVO = buildingSchedulePOToVO(buildingSchedulePO);
+		
+		return newBuildingScheduleVO;
+		
 	}
 
 	@Override
@@ -167,7 +178,9 @@ public class BuildingScheduleServiceImpl implements BuildingScheduleService{
 		buildingScheduleDao.resetBuildingSchedule(buildingVO.getBoid(), operaterPO.getUid());
 		
 		//生成新的房产单流转节点	
-		BuildingNodePO buildingNodePO = buildingNodeDao.queryBuildingNodeByType(buildingVO.getPayType(), BuildingNodePO.COLUMN_SORE_ONE);
+		List<BuildingNodePO> buildingNodePOs = buildingNodeDao.queryBuildingNodeByType(buildingVO.getPayType(), BuildingNodePO.COLUMN_SORE_ONE);
+		
+		BuildingNodePO buildingNodePO = buildingNodePOs.get(0);
 		
 		BuildingSchedulePO buildingSchedulePO = new BuildingSchedulePO(buildingNodePO, buildingPO, operaterPO);
 		
@@ -175,9 +188,20 @@ public class BuildingScheduleServiceImpl implements BuildingScheduleService{
 		
 		buildingSchedulePO.setStatus(BuildingSchedulePO.STATUS_INIT_SHORT);
 		
-		buildingSchedulePO.setOperatTime(new Timestamp(System.currentTimeMillis()));
-		
 		buildingScheduleDao.save(buildingSchedulePO);
 		
+	}
+	
+	public BuildingScheduleVO buildingSchedulePOToVO(BuildingSchedulePO buildingSchedulePO){
+		
+		BuildingScheduleVO buildingScheduleVO = new BuildingScheduleVO(new BuildingNodeVO(), new BuildingVO(), new UserVO());
+		
+		BeanUtil.copyProperties(buildingSchedulePO, buildingScheduleVO, Arrays.asList("building","buildingNode", "operater"));
+		
+		BeanUtil.copyProperties(buildingSchedulePO.getBuildingNode(), buildingScheduleVO.getBuildingNode());
+		
+		BeanUtil.copyProperties(buildingSchedulePO.getOperater(), buildingScheduleVO.getOperater(), Arrays.asList("role", "dept", "duty"));
+		
+		return buildingScheduleVO;
 	}
 }

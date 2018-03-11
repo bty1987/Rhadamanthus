@@ -4,17 +4,17 @@ import java.sql.Timestamp;
 
 import org.apache.struts2.json.annotations.JSON;
 
+import com.fanglin.personel.vo.UserBaseVO;
+
 public class ActivityVO implements java.io.Serializable {
 	
 	private static final long serialVersionUID = -8833128747186236841L;
 
 	private Long aid;
 	
-	private String activityName;
+	private String name;
 	
-	private String createUserId;
-	
-	private String createUserName;
+	private UserBaseVO creater;
 	
 	private Short status;
 	
@@ -25,6 +25,15 @@ public class ActivityVO implements java.io.Serializable {
 	private Timestamp endTime;
 	
 	private String content;
+	
+	public ActivityVO(){
+		super();
+	}
+	
+	public ActivityVO(UserBaseVO creater){
+		super();
+		this.creater = creater;
+	}
 
 	public Long getAid() {
 		return aid;
@@ -34,28 +43,20 @@ public class ActivityVO implements java.io.Serializable {
 		this.aid = aid;
 	}
 
-	public String getActivityName() {
-		return activityName;
+	public String getName() {
+		return name;
 	}
 
-	public void setActivityName(String activityName) {
-		this.activityName = activityName;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public String getCreateUserId() {
-		return createUserId;
+	public UserBaseVO getCreater() {
+		return creater;
 	}
 
-	public void setCreateUserId(String createUserId) {
-		this.createUserId = createUserId;
-	}
-
-	public String getCreateUserName() {
-		return createUserName;
-	}
-
-	public void setCreateUserName(String createUserName) {
-		this.createUserName = createUserName;
+	public void setCreater(UserBaseVO creater) {
+		this.creater = creater;
 	}
 
 	public Short getStatus() {

@@ -39,7 +39,9 @@ public class ManifestPO implements java.io.Serializable {
 	
 	public static final Short TYPE_XB_INT = 4;
 	
-	public static final Short COLUMN_TYPE_STR = 6;
+	public static final Short TYPE_PU_INT = 6;
+	
+	public static final Short TYPE_AS_INT = 7;
 	
 	public static final Short TYPE_PM_INT = 8;
 	
@@ -119,7 +121,7 @@ public class ManifestPO implements java.io.Serializable {
 	public void setCode(String code) {
 		this.code = code;
 	}
-
+	
 	@Column(name = "createTime")
 	public Timestamp getCreateTime() {
 		return this.createTime;

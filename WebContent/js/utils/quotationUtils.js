@@ -38,6 +38,12 @@ var quotationUtils = {
                 params.subtype = 2;
                 com.popup("打印报价",api.index.quotationOutputIndex.url,null,null,true);
             });
+            $("#printWorkBtn").click(function(){
+                params.quotationId = quotationId;
+                params.type = 4;
+                params.subtype = -1;
+                com.popup("打印报价",api.index.quotationOutputIndex.url,null,null,true);
+            })
 
 
             com.post(api.quotation.queryQuotationFunctionAreaByQuotationId, {"quotation.qid": quotationId}, function (res) {
@@ -251,10 +257,12 @@ var quotationUtils = {
                     quotationFunctionAreaItem.num = quotation.trafficPrice;
                     quotationFunctionAreaItem.dcpt = quotationFunctionAreaItem.discount == 1 || $decorationtype == 2 ? utils.changeThrDecimal(utils.accMul(quotation.trafficPrice,utils.accDiv(discount, 10))) : quotation.trafficPrice;
                     quotationFunctionAreaItem.dcp = quotationFunctionAreaItem.unitPrice;
+                    quotationFunctionAreaItem.measurementUnit = "车运费";
                     quotationFunctionAreaItem.quotationTotalPrice = quotation.trafficPrice;
                 } else if (quotationFunctionAreaItem.type == 3) {
                     quotationUtils.quotationDetail.manageDiscount = quotationFunctionAreaItem.discount;
                     quotationFunctionAreaItem.num = quotation.managePrice;
+                    quotationFunctionAreaItem.measurementUnit = "管理费";
                     quotationFunctionAreaItem.dcpt = quotationFunctionAreaItem.discount == 1 ? utils.changeThrDecimal(utils.accMul(quotation.managePrice,utils.accDiv(discount, 10))) : quotation.managePrice;
                     quotationFunctionAreaItem._discountNum = quotationFunctionAreaItem.discount == 1 ? _discountNum : 10;
                     quotationFunctionAreaItem.dcp = utils.changeThrDecimal(utils.accAdd(quotationFunctionAreaItem.unitPrice,quotation.notSalesmanRate));
@@ -373,7 +381,6 @@ var quotationUtils = {
         } else {
             _data = quotationUtils.quotationDetail.quotationFunctionAreaItemWs;
         }
-
         _data && $.each(_data, function (i, v) {
 
             var $dcpts = 0.0;
@@ -425,7 +432,19 @@ var quotationUtils = {
 
             var $totalInner = $("<span></span>").addClass('fl-quo-total').text("总额:" + utils.changeTwoDecimal($dcpts));
             var $total = $('<div></div>').addClass("pull-right inline").append($totalInner);
-            var $item = $('<li></li>').append($total).appendTo($list);
+            var $printWork = $('<a class ="btn btn-minier btn-info" >打印</a>');
+            var $item = $('<li></li>');
+            if($("#showWay").val() != 0){
+                $item.append($printWork);
+                $printWork.click(function(){
+                    params.quotationId = quotationUtils.quotationDetail.quotation.qid;
+                    params.type = 4;
+                    params.subtype = -1;
+                    params.workType = i.split('-')[1];
+                    com.popup("报价工种打印",api.index.quotationOutputIndex.url,null,null,true);
+                })
+            }
+            $item.append($total).appendTo($list);
 
             $domain.appendTo(quotationItemListDiv);
         });
@@ -438,7 +457,7 @@ var quotationUtils = {
         var quotationFunctionAreaItemWs = {};
         var index = 0;
         $.each(quotationFunctionAreaItemCs, function (i, v) {
-
+            var areaName = i.split('-')[1];
             $.each(v, function (j, qv) {
                 if((qv.arId && [0, 1, 2].indexOf(qv.type) != -1) || !qv.arId ) {
 
@@ -450,15 +469,15 @@ var quotationUtils = {
                     if (!quotationFunctionAreaItemWs["-"+qv.workType]) {
                         quotationFunctionAreaItemWs["-"+qv.workType] = {};
                     }
-
-                    if (quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId] && qv.quotationItemId != 0 && qv.quotationItemId) {
+                    qv["areaName"] = areaName;
+                   /* if (quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId] && qv.quotationItemId != 0 && qv.quotationItemId) {
                         quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId].num = utils.changeThrDecimal(utils.accAdd(quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId].num, qv.num));
                         quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId].dcp = utils.changeThrDecimal(utils.accAdd(quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId].dcp, qv.dcp));
                         quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId].dcpt = utils.changeThrDecimal(utils.accAdd(quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId].dcpt, qv.dcpt));
-                    }else if(qv.quotationItemId == 0 || !qv.quotationItemId){
+                    }else*/ if(qv.quotationItemId == 0 || !qv.quotationItemId){
                         quotationFunctionAreaItemWs["-"+qv.workType]["customize"+index++] = $.extend({}, qv);
                     } else {
-                        quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId] = $.extend({}, qv);
+                        quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId+"-"+index++] = $.extend({}, qv);
                     }
 
                     if (qv.ariId && reduceNums.ariId[qv.ariId]) {

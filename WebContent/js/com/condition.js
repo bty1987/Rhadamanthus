@@ -216,7 +216,7 @@ var Condition = function (api) {
             label: "大区名称",
             type: "text",
             submitConfig: {
-                name: "regionName",
+                name: "name",
                 op: "cn",
                 validate: null
             }
@@ -234,7 +234,7 @@ var Condition = function (api) {
             label: "城市名称",
             type: "text",
             submitConfig: {
-                name: "cityName",
+                name: "name",
                 op: "cn",
                 validate: null
             }
@@ -261,7 +261,7 @@ var Condition = function (api) {
             label: "城区名称",
             type: "text",
             submitConfig: {
-                name: "cityProperName",
+                name: "name",
                 op: "cn",
                 validate: null
             }
@@ -296,8 +296,8 @@ var Condition = function (api) {
                 url: api.system.queryRegion,
                 postData: {},
                 listPath: "regions",
-                keyPath: "regionId",
-                valuePath: "regionName"
+                keyPath: "rid",
+                valuePath: "name"
             }
         },
         city: {
@@ -312,8 +312,8 @@ var Condition = function (api) {
                 url: api.system.queryCity,
                 postData: {},
                 listPath: "citys",
-                keyPath: "cityId",
-                valuePath: "cityName"
+                keyPath: "cid",
+                valuePath: "name"
             }
         },
         //-------部门
@@ -359,7 +359,7 @@ var Condition = function (api) {
             label: "名称", //中文名
             type: "text", // 类型
             submitConfig: { // 向后台提交的配置
-                name: "activityName", // 接口中的参数名
+                name: "name", // 接口中的参数名
                 op: "cn", // 查询方式
                 validate: null // 校验规则
             }
@@ -526,7 +526,7 @@ var Condition = function (api) {
                 validate: null
             }
         },
-        cityId: {
+        datacity: {
             label: "所属城市",
             type: "select",
             submitConfig: {
@@ -538,8 +538,8 @@ var Condition = function (api) {
                 url: api.system.queryCity,
                 postData: {},
                 listPath: "citys",
-                keyPath: "cityId",
-                valuePath: "cityName"
+                keyPath: "cid",
+                valuePath: "name"
             }
         },
         cityProperId: null,
@@ -733,9 +733,9 @@ var Condition = function (api) {
             dataSource: {//从后台取数据的各种配置
                 url: api.system.queryRole,
                 postData: {},
-                listPath: "roles",
-                keyPath: "roleId",
-                valuePath: "roleName"
+                listPath: "roleList",
+                keyPath: "rid",
+                valuePath: "name"
             }
         },
         deptType: {

@@ -26,7 +26,7 @@ $(function(){
             var $liTitle = $('<li></li>').addClass('line table-title');
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index'));
             var $contentWrap = $('<div></div>').addClass('line-wrap  content col9');
-            var titleName = '编号,商品名,条形码,品类,品牌,单位,套餐,件数,状态';
+            var titleName = '编号,商品名,条形码,品类,品牌,单位,类型,件数,状态';
             $.each(titleName.split(','), function (i, v) {
                 var $cell = $('<div></div>').addClass('cell').html(v);
                 $cell.appendTo($contentWrap);
@@ -51,18 +51,18 @@ $(function(){
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html($divChecker).attr({"value" : v.gid}));
             var $contentWrap = $('<div></div>').addClass('line-wrap  content col9');
             var propertyArr = [
-                v.no,
-                v.name,
-                v.barcode,
-                v.category,
-                v.brand,
-                v.measurementUnit,
-                v.type==0?"商品":"套餐",
-                v.pieceNum,
-                v.status=="0"?"启用":"禁用"
+                [v.no,'blue'],
+                [v.name,'grey'],
+                [v.barcode,'blue'],
+                [v.category,'grey'],
+                [v.brand,'grey'],
+                [v.measurementUnit,'grey'],
+                [v.type==0?"商品":"套餐",'red'],
+                [v.pieceNum,'blue'],
+                [v.status=="0"?"启用":"禁用",'red']
             ];
             $.each(propertyArr, function (i, v) {
-                var $cell = $('<div></div>').addClass('cell').html(v);
+                var $cell = $('<div></div>').addClass('cell ' + v[1]).html(v[0]);
                 $cell.appendTo($contentWrap);
             });
             var $cellOption = $('<div></div>').addClass('cell option');

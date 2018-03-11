@@ -75,7 +75,7 @@ $(function(){
             if(listData && listData.length){
 
                 $.each(listData,function(i, v){
-                    var $liLine = $('<li></li>').addClass('item-blue clearfix');
+                    var $liLine = $('<li></li>').addClass('item-orange clearfix');
                     var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.userName));
                     var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 
@@ -84,7 +84,7 @@ $(function(){
                         ["用户名:", v.loginId, "grey"],
                         ["部门:", v.dept.deptName, "grey"],
                         ["职位:", v.duty.name, "grey"],
-                        ["角色:", v.role.roleName, "grey"],
+                        ["角色:", v.role.name, "grey"],
                         ["联系方式:", v.phone, "grey"]
                     ];
 

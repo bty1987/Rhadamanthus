@@ -21,7 +21,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fanglin.data.po.CustomerPO;
+import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.personel.po.UserPO;
 
 @Entity
@@ -47,10 +47,6 @@ public class PaymentPO implements Serializable {
 	public static final String PAYMENT_TYPE_PAYMENT_STR = "付款"; //减
 	
 	public static final String PAYMENT_TYPE_CONVERT_STR = "转换款项";
-	
-	public static final String PAYMENT_CONVERT_IN_STR = "预付款转入";
-	
-	public static final String PAYMENT_CONVERT_OUT_STR = "预付款转出";
 	
 	public static final String PAYMENT_STATUS_PAID_STR = "已付款";
 	
@@ -85,8 +81,6 @@ public class PaymentPO implements Serializable {
 	private UserPO creater;
 	
 	private Timestamp createTime;
-	
-	private String comment;
 	
 	public PaymentPO(){
 		super();
@@ -193,7 +187,7 @@ public class PaymentPO implements Serializable {
 	}
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "createrId", referencedColumnName = "userId")
+	@JoinColumn(name = "cuid", referencedColumnName = "uid")
 	public UserPO getCreater(){
 		return creater;
 	}
@@ -209,15 +203,6 @@ public class PaymentPO implements Serializable {
 
 	public void setCreateTime(Timestamp createTime){
 		this.createTime = createTime;
-	}
-	
-	@Column(name="comment")
-	public String getComment() {
-		return comment;
-	}
-
-	public void setComment(String comment) {
-		this.comment = comment;
 	}
 	
 }

@@ -217,30 +217,19 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 			throw new FLException(140008, "订单没有报价信息");
 		}
 		
+		quotationDao.updateQuotationForStatusByOrderId(orderId, QuotationPO.STATUS_DISABLED_SHORT);
+		
 		if(DecorationPO.STATUS_RESIGNED_STR.equals(decorationPO.getStatus())){
 			resignFlag = true;
 		}
 		
-		//更新归属信息的部门和大区
-		List<DecorationBelongInfoPO> designerOrderBelongInfoPOs = orderBelongInfoDao.queryOrderBelongInfoForCurrentByOrderIdAType(decorationContractVO.getOrderId(), DecorationBelongInfoPO.BELONGTYPE_DESIGN_STR);
-		for(DecorationBelongInfoPO orderBelongInfoPO: designerOrderBelongInfoPOs){
-			orderBelongInfoPO.setBelongDeptPO(orderBelongInfoPO.getBelongUserPO().getDept());
-			orderBelongInfoPO.setBelongRegionPO(orderBelongInfoPO.getBelongUserPO().getDept().getFatherDept());
-			
-			orderBelongInfoDao.update(orderBelongInfoPO);
-		}
-		
-		List<DecorationBelongInfoPO> salemsanOrderBelongInfoPOs = orderBelongInfoDao.queryOrderBelongInfoForCurrentByOrderIdAType(decorationContractVO.getOrderId(), DecorationBelongInfoPO.BELONGTYPE_SALESMAN_STR);
-		for(DecorationBelongInfoPO orderBelongInfoPO: salemsanOrderBelongInfoPOs){
-			orderBelongInfoPO.setBelongDeptPO(orderBelongInfoPO.getBelongUserPO().getDept());
-			orderBelongInfoPO.setBelongRegionPO(orderBelongInfoPO.getBelongUserPO().getDept().getFatherDept());
-			
-			orderBelongInfoDao.update(orderBelongInfoPO);
-		}
-		
 		decorationPO.setStatus(DecorationPO.STATUS_SIGNED_STR);
 		decorationPO.setContractCode(decorationContractPO.getContractCode());
-		decorationPO.setContractUserId(userId);
+		decorationPO.setContractUserId(userDao.queryUserByOldUserId(userId));
+		
+		List<DecorationBelongInfoPO> designerOrderBelongInfoPOs = orderBelongInfoDao.queryOrderBelongInfoForCurrentByOrderIdAType(decorationContractVO.getOrderId(), DecorationBelongInfoPO.BELONGTYPE_DESIGN_STR);
+		List<DecorationBelongInfoPO> salemsanOrderBelongInfoPOs = orderBelongInfoDao.queryOrderBelongInfoForCurrentByOrderIdAType(decorationContractVO.getOrderId(), DecorationBelongInfoPO.BELONGTYPE_SALESMAN_STR);
+		
 		
 		if(!resignFlag){
 			decorationPO.setContractTime(DateUtil.getDateToTimestamp(new Date()));
@@ -290,6 +279,21 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 			
 			String notCountDesignDepartmentId = SystemConfig.getString("notCountDesignDepartmentId", "");
 			String notCountDecorationContractUserId = SystemConfig.getString("notCountDecorationContractUserId", "");
+			
+			//更新归属信息的部门和大区
+			for(DecorationBelongInfoPO orderBelongInfoPO: designerOrderBelongInfoPOs){
+				orderBelongInfoPO.setBelongDeptPO(orderBelongInfoPO.getBelongUserPO().getDept());
+				orderBelongInfoPO.setBelongRegionPO(orderBelongInfoPO.getBelongUserPO().getDept().getFatherDept());
+				
+				orderBelongInfoDao.update(orderBelongInfoPO);
+			}
+			
+			for(DecorationBelongInfoPO orderBelongInfoPO: salemsanOrderBelongInfoPOs){
+				orderBelongInfoPO.setBelongDeptPO(orderBelongInfoPO.getBelongUserPO().getDept());
+				orderBelongInfoPO.setBelongRegionPO(orderBelongInfoPO.getBelongUserPO().getDept().getFatherDept());
+				
+				orderBelongInfoDao.update(orderBelongInfoPO);
+			}
 			
 			if(notCountDesignDepartmentId.indexOf(designerId) == -1 && notCountDecorationContractUserId.indexOf(userId) == -1){ // 部分部门不参与业绩统计
 				decorationRankService.updateDecorationDesignerRank(designerId, designerName, rank, currentTimeStr, decorationCompany);

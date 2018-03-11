@@ -98,7 +98,7 @@ public class LoginAction extends BaseListAction {
 				    	throw new FLException(110007, "网络问题");
 				    }
 				    
-				    Authentication authenticationUtil = new Authentication(user.getUserId(), user.getCurrentName(), user.getRole().getRoleId(), (new Date()).getTime(), false, Integer.parseInt(user.getCompanys()), user.getFreedom());
+				    Authentication authenticationUtil = new Authentication(user.getUserId(), user.getCurrentName(), user.getRole().getRid(), (new Date()).getTime(), false, Integer.parseInt(user.getCompanys()), user.getFreedom());
 				    
 				    authentication = AESHelper.encryptToString(authenticationUtil.getAuthenticationStr(), SystemConfig.getString("encryptKey"));
 					

@@ -35,6 +35,7 @@ jQuery(function ($) {
             des: $("#comment"),
         },
         record: {},
+        sid: $('#ROPopUp').attr('data-sid')
 
     };
 
@@ -86,11 +87,13 @@ jQuery(function ($) {
         var status = manifest.status;
         var type = manifest.mtype;//– 类型
         var comment = $('#comment').val();//– 备注
-
+        var sid = manifest.sid;
+        console.log(manifest.sid);
         var options = {
             "manifest.mid": mid,
             "manifest.status":status,
             "manifest.comment":comment,
+            "manifest.sid":sid
         };
         
         options = $.extend(options, _params);
@@ -103,7 +106,7 @@ jQuery(function ($) {
                 layer.msg('保存成功!', {icon: 1})
                 $('#list').empty();
             }, function (e) {
-                com.showAlert(com.info, e.errorMsg);
+                com.showAlert(com.error, e.errorMsg);
             });
         }
     });
@@ -150,15 +153,15 @@ jQuery(function ($) {
         }));
         var $lineInfoWrap = $('<div></div>').addClass('line-wrap content col9');
         var _lineInfoSet = [
-            {cellClass: "no"},//编号
-            {cellClass: "name"},//名称
-            {cellClass: "color",},//颜色
-            {cellClass: "format",},//规格
-            {cellClass: "measurementUnit"},//单位
-            {cellClass: "storehouse"},//仓库
-            {cellClass: "number"},//数量
+            {cellClass: "no blue"},//编号
+            {cellClass: "name grey"},//名称
+            {cellClass: "color grey",},//颜色
+            {cellClass: "format grey",},//规格
+            {cellClass: "measurementUnit grey"},//单位
+            {cellClass: "storehouse grey"},//仓库
+            {cellClass: "number blue"},//数量
             {cellClass: "roNum", hasInput: !0},
-            {cellClass: "des"},//备注
+            {cellClass: "des grey"},//备注
         ];
 
         $.each(_lineInfoSet, function (i, v) {

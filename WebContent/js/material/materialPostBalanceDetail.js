@@ -94,9 +94,9 @@ jQuery(function($) {
 							["单位:", v.measurementUnit, "grey"],
 							["折扣价:", v.salePrice, "blue"],
 							["售价:", v.price, "blue"],
-							["数量:", v.num, "green"],
-							["总价:", v.total, "green"],
-							["结算值:", v.prePoint, "grey"],
+							["数量:", v.num, "blue"],
+							["总价:", v.total, "blue"],
+							["结算值:", v.prePoint, "blue"],
 							["说明:", v.comment, "grey"],
 						];
 					//}else if(v.level == 0 && v.isLeaf == false){
@@ -104,12 +104,12 @@ jQuery(function($) {
 						$h3.append($('<small></small>').addClass('blue').html("套餐 " + v.packageName));
 						if(v.prePoint!=null){
                             propertyArr = [
-                                ["总价:", v.total, "green"],
-                                ["结算值:", v.prePoint, "grey"],
+                                ["总价:", v.total, "blue"],
+                                ["结算值:", v.prePoint, "blue"],
                             ];
 						}else if(v.prePoint == null){
                             propertyArr = [
-                                ["总价:", v.total, "green"],
+                                ["总价:", v.total, "blue"],
                             ];
 						}
 
@@ -124,8 +124,8 @@ jQuery(function($) {
 							["单位:", v.measurementUnit, "grey"],
 							["折扣价:", v.salePrice, "blue"],
 							["售价:", v.price, "blue"],
-							["数量:", v.num, "green"],
-                            ["结算值:", v.prePoint, "grey"],
+							["数量:", v.num, "blue"],
+                            ["结算值:", v.prePoint, "blue"],
 							["说明:", v.comment, "grey"],
 						];
 					}

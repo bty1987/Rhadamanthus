@@ -21,7 +21,7 @@ import javax.persistence.Table;
 
 
 @Entity
-@Table(name = "decorationInfo", catalog = "platform")
+@Table(name = "decorationInfo", catalog = "decoration")
 public class DecorationInfoPO implements Serializable {
 
 	private static final long serialVersionUID = -7484137001624425538L;

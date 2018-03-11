@@ -9,9 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.communion.vo.DutyVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.data.common.vo.DutyVO;
 import com.fanglin.data.quotation.vo.QuotationVersionVO;
 import com.fanglin.decoration.dao.AuditDao;
 import com.fanglin.decoration.po.AuditPO;
@@ -64,8 +64,6 @@ public class AuditServiceImpl implements AuditService{
 			auditVO.getDecoration().getVersion().setVersionId(auditPO.getDecoration().getVersion().getVersionId());			
 			auditVO.getDecoration().getVersion().setVersionName(auditPO.getDecoration().getVersion().getVersionName());
 
-
-			
 			UserPO designer = auditPO.getDecoration().getDesigner();
 			auditVO.getDecoration().getDesigner().setDuty(new DutyVO());
 			auditVO.getDecoration().getDesigner().setDept(new DepartmentVO());

@@ -26,7 +26,7 @@ import javax.persistence.Table;
 import com.fanglin.personel.po.UserPO;
 
 @Entity
-@Table(name = "decorationpicture", catalog = "platform")
+@Table(name = "decorationpicture", catalog = "decoration")
 public class DecorationPicturePO implements Serializable {
 
 	private static final long serialVersionUID = 8022061676288156331L;
@@ -87,7 +87,7 @@ public class DecorationPicturePO implements Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "userId", referencedColumnName = "userId")
+	@JoinColumn(name = "cuid", referencedColumnName = "uId")
 	public UserPO getUserPO(){
 		return userPO;
 	}

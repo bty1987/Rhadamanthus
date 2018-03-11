@@ -13,7 +13,7 @@ public interface MessageService {
 
 	public List<MessageVO> queryMessageForUnRead(String userId,int company);
 	
-	public int countMessage(String userId,int company);
+	public int countMessage(String userId,int company) throws FLException;
 	
 	public void sendMessage(MessageVO messageVO,int company) throws FLException;
 	

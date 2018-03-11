@@ -24,7 +24,7 @@ public class WorkerSalaryAction extends BaseListAction{
 	private WorkerSalaryVO workerSalary;
   
 	private List<WorkerSalaryVO> workerSalarys; 
-  
+	
 	@Action(value="pageWorkerSalary", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String pageWorkerSalary() throws FLException{
 	  
@@ -44,7 +44,7 @@ public class WorkerSalaryAction extends BaseListAction{
 	@Action(value="addWorkerSalary", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String addWorkerSalary() throws FLException{
 	  
-	  workerSalaryService.addWorkerSalary(workerSalary, queryUserId(),queryCompany());
+	  workerSalaryService.addWorkerSalary(workerSalary, queryUserId(), queryCompany());
     
 	  return "success";
 	}
@@ -96,5 +96,6 @@ public class WorkerSalaryAction extends BaseListAction{
 	public void setWorkerSalarys(List<WorkerSalaryVO> workerSalarys) {
 		this.workerSalarys = workerSalarys;
 	}
-	
+
+
 }

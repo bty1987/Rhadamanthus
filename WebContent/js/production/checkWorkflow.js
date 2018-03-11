@@ -41,20 +41,20 @@ jQuery(function ($) {
     function addline(lineindex) {
 
         var $line = $('<li></li>').addClass('line');
-        var $indexWrap = $('<div></div>').addClass('line-wrap order').append($('<div></div>').addClass('cell index').text(lineindex));
+        var $indexWrap = $('<div></div>').addClass('line-wrap order').append($('<div></div>').addClass('cell index blue').text(lineindex));
         var $lineInfoWrap = $('<div></div>').addClass('line-wrap content col2');
         var $optWrap = $('<div></div>').addClass('line-wrap action');
         var _lineInfoSet = [
 
-            {cellClass: "name", hasInput: !0},//名称
-            {cellClass: "status"},             //编号
+            {cellClass: "name", hasInput: !0,color:'grey'},//名称
+            {cellClass: "status",color:'red'},             //编号
 
         ];
         var $btncheck = $('<a class="green" style="font-size: 18px"><i class="icon-ok"></i></a>');
         var $btndel = $('<a class="red" style="font-size: 18px"><i class=" icon-remove"></i></a>');
 
         $.each(_lineInfoSet, function (i, v) {
-            var $cell = $('<div></div>').addClass('cell ' + v.cellClass);
+            var $cell = $('<div></div>').addClass(v.color + ' cell ' + v.cellClass);
             if (v.hasInput) {
                 var $select = $('<select></select>');
                 $select.bindData(workflowItem.workflows,"wfid","name");

@@ -17,8 +17,8 @@ import java.util.Arrays;
 
 import org.apache.struts2.json.annotations.JSON;
 
-import com.fanglin.data.common.vo.CustomerVO;
-import com.fanglin.data.common.vo.HouseVO;
+import com.fanglin.communion.vo.CustomerVO;
+import com.fanglin.communion.vo.HouseVO;
 import com.fanglin.data.quotation.vo.QuotationVersionVO;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.personel.vo.UserBaseVO;
@@ -70,7 +70,7 @@ public class DecorationVO implements Serializable {
 	
 	private String contractCode;
 	
-	private String contractUserId;
+	private UserBaseVO contractUserId;
 	
 	
 	
@@ -211,11 +211,11 @@ public class DecorationVO implements Serializable {
 		this.contractTime = contractTime;
 	}
 
-	public String getContractUserId() {
+	public UserBaseVO getContractUserId() {
 		return contractUserId;
 	}
 
-	public void setContractUserId(String contractUserId) {
+	public void setContractUserId(UserBaseVO contractUserId) {
 		this.contractUserId = contractUserId;
 	}
 
@@ -367,7 +367,7 @@ public class DecorationVO implements Serializable {
 	}
 
 	public void vtp(DecorationPO decorationPO){
-		BeanUtil.copyProperties(this, decorationPO, Arrays.asList("house","customer","designer","salesman","supervisor","version","createUser","quoter","escorter"));
+		BeanUtil.copyProperties(this, decorationPO, Arrays.asList("house","customer","designer","salesman","supervisor","version","createUser","quoter","escorter","contractUserId"));
 	}
 
 }

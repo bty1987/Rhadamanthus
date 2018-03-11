@@ -14,7 +14,7 @@ import javax.persistence.Table;
 import com.fanglin.information.po.ActivityPO;
 
 @Entity
-@Table(name = "decorationactivity", catalog = "platform")
+@Table(name = "decorationactivity", catalog = "decoration")
 public class DecorationActivityPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 5426521470719770019L;

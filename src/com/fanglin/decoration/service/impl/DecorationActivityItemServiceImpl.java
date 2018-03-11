@@ -12,6 +12,7 @@
 package com.fanglin.decoration.service.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -25,6 +26,8 @@ import com.fanglin.decoration.po.DecorationActivityItemPO;
 import com.fanglin.decoration.service.DecorationActivityItemService;
 import com.fanglin.decoration.vo.DecorationActivityItemVO;
 import com.fanglin.decoration.vo.DecorationVO;
+import com.fanglin.personel.dao.UserDao;
+import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 
@@ -34,6 +37,9 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 	
 	@Autowired
 	private DecorationActivityItemDao decorationActivityItemDao;
+	
+	@Autowired
+	private UserDao userDao;
 
 	@Override
 	public List<DecorationActivityItemVO> queryDecorationActivityItemByOrderId(DecorationVO decorationVO) {
@@ -43,7 +49,10 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		
 		for(DecorationActivityItemPO decorationActivityItemPO: decorationActivityItemPOs){
 			DecorationActivityItemVO decorationActivityItemVO = new DecorationActivityItemVO();
-			BeanUtil.copyProperties(decorationActivityItemPO, decorationActivityItemVO);
+			BeanUtil.copyProperties(decorationActivityItemPO, decorationActivityItemVO, Arrays.asList("receiveUserId"));
+			decorationActivityItemVO.setReceiveUserId(new UserBaseVO());
+			BeanUtil.copyProperties(decorationActivityItemPO.getReceiveUserId(), decorationActivityItemVO.getReceiveUserId(),Arrays.asList("dept","duty"));
+			
 			
 			decorationActivityItemVOs.add(decorationActivityItemVO);
 		}
@@ -59,7 +68,10 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		
 		for(DecorationActivityItemPO decorationActivityItemPO: decorationActivityItemPOs){
 			DecorationActivityItemVO decorationActivityItemVO = new DecorationActivityItemVO();
-			BeanUtil.copyProperties(decorationActivityItemPO, decorationActivityItemVO);
+			BeanUtil.copyProperties(decorationActivityItemPO, decorationActivityItemVO, Arrays.asList("receiveUserId"));
+			
+			decorationActivityItemVO.setReceiveUserId(new UserBaseVO());
+			BeanUtil.copyProperties(decorationActivityItemPO.getReceiveUserId(), decorationActivityItemVO.getReceiveUserId(),Arrays.asList("dept","duty"));
 			
 			decorationActivityItemVOs.add(decorationActivityItemVO);
 		}
@@ -132,7 +144,7 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		}
 		
 		decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_RECEIVE_INT);
-		decorationActivityItemPO.setReceiveUserId(userId);
+		decorationActivityItemPO.setReceiveUserId(userDao.queryUserByUserId(userId));
 		decorationActivityItemPO.setReceiveUserName(userName);
 		decorationActivityItemPO.setReceiveTime(DateUtil.getDateToTimestamp(new Date()));
 		

@@ -12,7 +12,7 @@ $(function(){
         })
     }else{
         com.post(api.decoration.queryDecorationForCommonByOrderId,{
-            "decorationOrder.orderId": orderId
+            "decoration.orderId": orderId
         },function(res){
             var $table = $('table.table');
             $table.css({'margin-top':'6%'})
@@ -22,15 +22,15 @@ $(function(){
             $th.css('text-align','center');
             var v = res.decoration;
             $table.find('#villageName').next().text(v.house.village.name+" "+ v.house.houseNumber);
-            $table.find('#designDepartment').next().text(v.designDepartment);
-            $table.find('#businessDepartment').next().text(v.businessDepartment);
+            $table.find('#designDepartment').next().text(v.designer.dept.deptName);
+            $table.find('#businessDepartment').next().text(v.salesman.dept.deptName);
             $table.find('#houseArea').next().text(v.houseArea+"m²");
             $table.find('#measureTime').next().text(v.measureTime==null||""?"----":v.measureTime);
             $table.find('#status').next().text(v.status);
 
             $table.find('#customerName').next().text(v.customer.name);
-            $table.find('#designer').next().text(v.designer);
-            $table.find('#salesman').next().text(v.salesman);
+            $table.find('#designer').next().text(v.designer.currentName);
+            $table.find('#salesman').next().text(v.salesman.currentName);
             $table.find('#orderTotalPrice').next().text(v.orderTotalPrice);
             $table.find('#contractTime').next().text(v.contractTime==null||""?"----":v.contractTime);
         },function(){

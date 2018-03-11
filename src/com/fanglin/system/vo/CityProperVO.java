@@ -17,11 +17,11 @@ public class CityProperVO implements Serializable {
 
 	private static final long serialVersionUID = 20145246885240346L;
 	
-	private Integer cpId;
+	private Integer cpid;
 	
-	private String cityProperId;
+	private String no;
 	
-	private String cityProperName;
+	private String name;
 	
 	private CityVO city;
 	
@@ -29,28 +29,32 @@ public class CityProperVO implements Serializable {
 	
 	private Double y;
 	
-	public Integer getCpId() {
-		return cpId;
+	public CityProperVO() {
+		super();
 	}
 
-	public void setCpId(Integer cpId) {
-		this.cpId = cpId;
+	public Integer getCpid() {
+		return cpid;
 	}
 
-	public String getCityProperId(){
-		return cityProperId;
+	public void setCpid(Integer cpid) {
+		this.cpid = cpid;
 	}
 
-	public void setCityProperId(String cityProperId){
-		this.cityProperId = cityProperId;
+	public String getNo() {
+		return no;
 	}
 
-	public String getCityProperName(){
-		return cityProperName;
+	public void setNo(String no) {
+		this.no = no;
 	}
 
-	public void setCityProperName(String cityProperName){
-		this.cityProperName = cityProperName;
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public CityVO getCity(){

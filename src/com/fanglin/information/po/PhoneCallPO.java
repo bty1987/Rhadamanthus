@@ -77,7 +77,7 @@ public class PhoneCallPO implements java.io.Serializable {
 	}
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "operater", referencedColumnName = "userId", nullable = false)
+	@JoinColumn(name = "ouid", referencedColumnName = "uid", nullable = false)
 	public UserPO getOperater() {
 		return operater;
 	}
