@@ -59,6 +59,7 @@ $.extend(api, {data: {
     updateVillage: {url: "updateVillage.do", server: "communion"},
     updateVillageForStatus: {url: "updateVillageForStatus.do", server: "communion"},
     updateVillageForPosition: {url: "updateVillageForPosition.do", server: "communion"},
+    updateVillageForUrl : {url:"updateVillageForUrl.do",server: "communion"},
     
     pageHouse:{url:"pageHouse.do"},
     queryHouseByHid:{url:"queryHouseByHid.do"},

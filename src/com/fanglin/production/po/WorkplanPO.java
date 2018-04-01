@@ -15,37 +15,36 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "workplan", catalog = "production")
-public class WorkplanPO  implements Serializable{
+public class WorkplanPO implements Serializable {
 
 	private static final long serialVersionUID = -6815708248960675583L;
 
 	public static final String COLUMN_WPID_STR = "wpid";
-	
+
 	public static final String COLUMN_NAME_STR = "name";
-	
+
 	public static final String COLUMN_COMPANY_STR = "company";
-	
+
 	public static final short COLUMN_STATUS_SHORT = 0;
-	
+
 	private long wpid;
-	
+
 	private String name;
-	
+
 	private short status;
-	
+
 	private String comment;
-	
-	private WorkshopPO workshop ;
-	
+
+	private WorkshopPO workshop;
+
 	private int company;
 
-
-	
 	public WorkplanPO(long wpid) {
 		super();
-		this.wpid = wpid ;
+		this.wpid = wpid;
 	}
-	public WorkplanPO (){
+
+	public WorkplanPO() {
 		super();
 	}
 
@@ -59,6 +58,7 @@ public class WorkplanPO  implements Serializable{
 	public void setWpid(long wpid) {
 		this.wpid = wpid;
 	}
+
 	@Column(name = "name")
 	public String getName() {
 		return name;
@@ -67,7 +67,7 @@ public class WorkplanPO  implements Serializable{
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	@Column(name = "status")
 	public short getStatus() {
 		return status;
@@ -76,7 +76,7 @@ public class WorkplanPO  implements Serializable{
 	public void setStatus(short status) {
 		this.status = status;
 	}
-	
+
 	@Column(name = "comment")
 	public String getComment() {
 		return comment;
@@ -85,9 +85,9 @@ public class WorkplanPO  implements Serializable{
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="wsid", referencedColumnName="wsid")
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "wsid", referencedColumnName = "wsid")
 	public WorkshopPO getWorkshop() {
 		return workshop;
 	}
@@ -104,6 +104,5 @@ public class WorkplanPO  implements Serializable{
 	public void setCompany(int company) {
 		this.company = company;
 	}
-	
-	
+
 }

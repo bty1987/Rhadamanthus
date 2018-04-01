@@ -7,9 +7,9 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.production.po.HardwareItemPO;
 import com.fanglin.utils.Paging;
 
-public interface HardwareItemDao extends Dao<HardwareItemPO>{
+public interface HardwareItemDao extends Dao<HardwareItemPO> {
 
 	public List<HardwareItemPO> pageHardwareItemByHid(Paging paging, List<Filter> filters, long hid);
-	
+
 	public List<HardwareItemPO> queryHardwareItemByHid(long hid);
 }

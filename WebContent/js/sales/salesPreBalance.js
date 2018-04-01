@@ -6,6 +6,15 @@ $(function () {
      * result.list 列表的json数组
      * */
 
+    var url = api.inventory.pageSalesForBalance;
+    var postData = "salesPreBalancePostData";
+
+    if(params['urlLoadParams'].type == "dompany"){
+        url = api.inventory.pageSalesForDompany;
+        postData = "salesPreBalanceForDompanyPostData";
+    }
+
+
     var displayFunc = (function () {
 
         var renderList = function (tableId, listData) {
@@ -116,14 +125,22 @@ $(function () {
 
                     $label.appendTo($h3);
 
-                    $btnDiv.append($btnSwitch).append($btnPre).appendTo($h3);
+                    if(params['urlLoadParams'].type == "dompany"){
+                        $btnDiv.append($btnSwitch).append($btnPre).appendTo($h3);
+                    }else{
+                        $btnDiv.append($btnSwitch).appendTo($h3);
+                    }
+
 
                     $liLine.appendTo($ul);
                     $liLine.append($h3).append($ulProperty);
 
                     $btnSwitch.click(function () {
-
-                        openlayerView(v.sid, v.no);
+                        var flag = false;
+                        if(params['urlLoadParams'].type == "dompany"){
+                            flag = true
+                        }
+                        openlayerView(v.sid, v.no,flag);
 
                     })
 
@@ -172,11 +189,11 @@ $(function () {
 
     var salesPreBalance = new Searcher();
 
-    salesPreBalance.init(_condArr, 'condList', api.inventory.pageSalesForBalance, function (data) {
+    salesPreBalance.init(_condArr, 'condList', url, function (data) {
 
         displayFunc.init('resultList', data)
 
-    }, 'pagenation', 'salesPreBalancePostData', null, false, null, function () {
+    }, 'pagenation', postData, null, false, null, function () {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-info pull-left').attr('name', 'collects').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-ok bigger-110').appendTo($adda);
@@ -275,16 +292,21 @@ $(function () {
 
 
         })
-        return [$adda, $addaEnd]
+
+        if(params['urlLoadParams'].type == "dompany"){
+            return [$adda, $addaEnd]
+        }else{
+            return[]
+        }
 
     }, 'resultList')
 
 
     //查看弹窗
-    function openlayerView(sid, no) {
+    function openlayerView(sid, no,flag) {
         layer.closeAll();
         var $popup = $('#viewPopUp');
-        $popup.attr({'data-sid': sid});
+        $popup.attr({'data-sid': sid,'data-dompany':flag});
         //弹出即全屏
         var index = layer.open({
             type: 1,

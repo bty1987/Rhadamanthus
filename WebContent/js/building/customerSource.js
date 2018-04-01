@@ -332,14 +332,15 @@ jQuery(function($) {
 				customerSource.buildItems.csNo.val(v.no);
 				customerSource.csid = v.csid;
 				customerSource.buildItems.csNo.prop("readOnly", true);
-				com.initChosen('hsAUser', api.data.queryCustomerForName, "customer.name", {}, "autoFillCustomer", "key", "value");
-				com.initChosen('csAUser', api.data.queryCustomerForName, "customer.name", {}, "autoFillCustomer", "key", "value");
+				com.initChosen('hsAUser', api.data.queryCustomerForName, "pinyinName", {}, "autoFillCustomer", "key", "value");
+				com.initChosen('csAUser', api.data.queryCustomerForName, "pinyinName", {}, "autoFillCustomer", "key", "value");
 				$("#buildingModal").modal("show");
 			});
 
 			//跟进记录
 			$btnRecord.click(function(){
 				params.flag = false;
+				params.page = "customerSource";
 				params.csid = v.csid;
 				params.csNo = v.no;
 				com.switchPage(api.index.buildingRecord.url);

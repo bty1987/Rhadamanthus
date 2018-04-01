@@ -12,9 +12,12 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fanglin.building.dao.BuildingDao;
 import com.fanglin.building.dao.HouseSourceDao;
 import com.fanglin.building.po.BuildingPO;
+import com.fanglin.building.po.BuildingRecordPO;
 import com.fanglin.building.po.CustomerSourcePO;
 import com.fanglin.building.po.HouseSourcePO;
+import com.fanglin.building.service.BuildingRecordService;
 import com.fanglin.building.service.HouseSourceService;
+import com.fanglin.building.vo.BuildingRecordVO;
 import com.fanglin.building.vo.HouseSourceVO;
 import com.fanglin.common.po.CountingPO;
 import com.fanglin.common.service.CountingService;
@@ -23,8 +26,10 @@ import com.fanglin.communion.dao.CustomerPhoneDao;
 import com.fanglin.communion.dao.HouseDao;
 import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.communion.po.CustomerPhonePO;
+import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.communion.po.HousePO;
 import com.fanglin.communion.vo.CustomerVO;
+import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.communion.vo.HouseVO;
 import com.fanglin.communion.vo.VillageVO;
 import com.fanglin.core.interceptor.FLException;
@@ -32,6 +37,8 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserVO;
+import com.fanglin.right.dao.HouseSourceRightDao;
+import com.fanglin.right.po.HouseSourceDepartmentRightPO;
 import com.fanglin.system.vo.CityProperVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
@@ -63,10 +70,72 @@ public class HouseSourceServiceImpl implements HouseSourceService {
 	@Autowired
 	private BuildingDao buildingDao;
 	
+	@Autowired
+	private HouseSourceRightDao houseSourceRightDao;
+	
+	@Autowired
+	private BuildingRecordService buildingRecordService;
+	
 	@Override
 	public void pageHouseSource(Paging paging, List<Filter> filters) {
 		
-		List<HouseSourcePO> houseSourcePOs = houseSourceDao.pageHouseSource(paging, filters);
+		if(filters.size() == 0) return;
+		
+		List<HouseSourcePO> houseSourcePOs = houseSourceDao.pageHouseSource(paging, filters, null);
+		List<HouseSourceVO> houseSourceVOs = new ArrayList<HouseSourceVO>();
+		
+		for (HouseSourcePO houseSourcePO : houseSourcePOs) {
+			HouseSourceVO houseSourceVO = houseSourcePOToVO(houseSourcePO);
+			houseSourceVOs.add(houseSourceVO);
+		}
+		
+		paging.setData(houseSourceVOs);
+
+	}
+	
+	@Override
+	public void pageHouseSourceForFollower(Paging paging, List<Filter> filters, String userId) {
+		
+		if(filters.size() == 0) return;
+		
+		UserPO userPO = userDao.queryUserByUserId(userId);
+		
+		Filter filter = new Filter();
+		filter.setData(String.valueOf(userPO.getUid()));
+		filter.setField("followUser");
+		filter.setOp("eq");
+		filters.add(filter);
+		
+		List<HouseSourcePO> houseSourcePOs = houseSourceDao.pageHouseSource(paging, filters, null);
+		List<HouseSourceVO> houseSourceVOs = new ArrayList<HouseSourceVO>();
+		
+		for (HouseSourcePO houseSourcePO : houseSourcePOs) {
+			HouseSourceVO houseSourceVO = houseSourcePOToVO(houseSourcePO);
+			houseSourceVOs.add(houseSourceVO);
+		}
+		
+		paging.setData(houseSourceVOs);
+
+	}
+	
+	@Override
+	public void pageHouseSourceForAdvance(Paging paging, List<Filter> filters, String userId) {
+		
+		if(filters.size() == 0) return;
+		
+		UserPO userPO = userDao.queryUserByUserId(userId);
+		List<HouseSourceDepartmentRightPO> houseSourceDepartmentRightPOs = houseSourceRightDao.queryHouseSourceDepartmentRightByUid(userPO.getUid(), userPO.getCompany());
+		List<Integer> dids = new ArrayList<Integer>();
+		
+		for (HouseSourceDepartmentRightPO houseSourceDepartmentRightPO : houseSourceDepartmentRightPOs) {
+			dids.add(houseSourceDepartmentRightPO.getDid());
+		}
+		
+		if(dids.size() == 1 && dids.get(0) == HouseSourceDepartmentRightPO.DEPARTMENT_ALL_ENABLE_INT){
+			dids = null;
+		}
+		
+		List<HouseSourcePO> houseSourcePOs = houseSourceDao.pageHouseSource(paging, filters, dids);
 		List<HouseSourceVO> houseSourceVOs = new ArrayList<HouseSourceVO>();
 		
 		for (HouseSourcePO houseSourcePO : houseSourcePOs) {
@@ -130,8 +199,16 @@ public class HouseSourceServiceImpl implements HouseSourceService {
 		HousePO housePO = houseDao.get(houseSourceVO.getHouse().getHid());
 		CustomerPO customerPO = customerDao.get(houseSourceVO.getCustomer().getCid());
 		
-		HouseSourcePO houseSourcePO = new HouseSourcePO(housePO, customerPO, createPO, followPO);
-		BeanUtil.copyProperties(houseSourceVO, houseSourcePO, Arrays.asList("house", "customer", "create", "followUser"));
+		UserPO keyer = null;
+		DepartmentPO department = createPO.getDept();
+		DepartmentPO region = createPO.getDept().getFatherDept();
+		
+		if(houseSourceVO.getKeyer() != null){
+			keyer = userDao.queryUserByUserId(houseSourceVO.getKeyer().getUserId());
+		}
+		
+		HouseSourcePO houseSourcePO = new HouseSourcePO(housePO, customerPO, createPO, followPO, keyer, department, region);
+		BeanUtil.copyProperties(houseSourceVO, houseSourcePO, Arrays.asList("house", "customer", "create", "followUser", "keyer", "department", "region"));
 		
 		houseSourcePO.setCreateTime(new Timestamp(System.currentTimeMillis()));
 		houseSourcePO.setStatus(HouseSourcePO.STATUS_INIT_SHORT);
@@ -144,6 +221,32 @@ public class HouseSourceServiceImpl implements HouseSourceService {
 		houseSourcePO.setNo(no);
 		
 		houseSourceDao.save(houseSourcePO);
+		
+		if(houseSourceVO.getKeyer() != null){
+			keyerRecord(houseSourcePO, houseSourceVO.getKeyer().getUserId());
+		}
+	}
+	
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public void takeHouseSource(HouseSourceVO houseSourceVO, String userId) throws FLException {
+		
+		HouseSourcePO houseSourcePO = houseSourceDao.get(houseSourceVO.getHsid());
+		
+		if(houseSourcePO == null){
+			throw new FLException(320005, "房源不存在");
+		}
+		
+		if(houseSourcePO.getFollowUser() != null){
+			throw new FLException(320006, "房源状态不可操作");
+		}
+		
+		UserPO taker = userDao.queryUserByUserId(userId);
+		
+		houseSourcePO.setFollowUser(taker);
+		
+		houseSourceDao.update(houseSourcePO);
+		
 	}
 
 	@Override
@@ -160,7 +263,11 @@ public class HouseSourceServiceImpl implements HouseSourceService {
 			throw new FLException(320006, "房源状态不可操作");
 		}
 		
-		BeanUtil.copyProperties(houseSourceVO, houseSourcePO, Arrays.asList("house", "customer", "create", "followUser"));
+		UserPO keyer = userDao.queryUserByUserId(houseSourceVO.getKeyer().getUserId());
+		
+		BeanUtil.copyProperties(houseSourceVO, houseSourcePO, Arrays.asList("house", "customer", "create", "followUser", "keyer", "department", "region"));
+		
+		houseSourcePO.setKeyer(keyer);
 		
 		houseSourceDao.update(houseSourcePO);
 
@@ -187,10 +294,10 @@ public class HouseSourceServiceImpl implements HouseSourceService {
 		houseSourceDao.update(houseSourcePO);
 
 	}
-
+	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public void updateHouseSourceForStatus(HouseSourceVO houseSourceVO) throws FLException {
+	public void updateHouseSourceForKeyer(HouseSourceVO houseSourceVO) throws FLException {
 		
 		HouseSourcePO houseSourcePO = houseSourceDao.get(houseSourceVO.getHsid());
 		
@@ -200,6 +307,28 @@ public class HouseSourceServiceImpl implements HouseSourceService {
 		
 		if(houseSourcePO.getStatus() == 2){
 			throw new FLException(320006, "房源状态不可操作");
+		}
+		
+		String keyerId = houseSourceVO.getKeyer().getUserId();
+		
+		UserPO keyerPO = userDao.queryUserByUserId(keyerId);
+		
+		houseSourcePO.setKeyer(keyerPO);
+		
+		houseSourceDao.update(houseSourcePO);
+		
+		keyerRecord(houseSourcePO, keyerId);
+
+	}
+
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public void updateHouseSourceForStatus(HouseSourceVO houseSourceVO) throws FLException {
+		
+		HouseSourcePO houseSourcePO = houseSourceDao.get(houseSourceVO.getHsid());
+		
+		if(houseSourcePO == null){
+			throw new FLException(320005, "房源不存在");
 		}
 		
 		if(houseSourceVO.getStatus() == 0){
@@ -216,17 +345,51 @@ public class HouseSourceServiceImpl implements HouseSourceService {
 
 	}
 	
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public void updateHouseSourceForPath(HouseSourceVO houseSourceVO) throws FLException {
+		
+		HouseSourcePO houseSourcePO = houseSourceDao.get(houseSourceVO.getHsid());
+		
+		if(houseSourcePO == null){
+			throw new FLException(320005, "房源不存在");
+		}
+		
+		houseSourcePO.setPath(houseSourceVO.getPath());
+		
+		houseSourceDao.update(houseSourcePO);
+		
+	}
+	
 	public HouseSourceVO houseSourcePOToVO(HouseSourcePO houseSourcePO){
 		
 		VillageVO villageVO = new VillageVO(new CityProperVO());
-		HouseSourceVO houseSourceVO = new HouseSourceVO(new HouseVO(villageVO), new CustomerVO(), new UserVO(), new UserVO());
-		BeanUtil.copyProperties(houseSourcePO, houseSourceVO, Arrays.asList("house", "customer", "create", "followUser"));
+		HouseSourceVO houseSourceVO = new HouseSourceVO(new HouseVO(villageVO), new CustomerVO(), new UserVO(), new UserVO(), new UserVO(), new DepartmentVO(), new DepartmentVO());
+		BeanUtil.copyProperties(houseSourcePO, houseSourceVO, Arrays.asList("house", "customer", "create", "followUser", "keyer", "department", "region"));
 		BeanUtil.copyProperties(houseSourcePO.getHouse(), houseSourceVO.getHouse(), Arrays.asList("village"));
 		BeanUtil.copyProperties(houseSourcePO.getHouse().getVillage(), houseSourceVO.getHouse().getVillage(), Arrays.asList("cityProper"));
 		BeanUtil.copyProperties(houseSourcePO.getHouse().getVillage().getCityProper(), houseSourceVO.getHouse().getVillage().getCityProper(), Arrays.asList("city"));
 		BeanUtil.copyProperties(houseSourcePO.getCustomer(), houseSourceVO.getCustomer());
-		BeanUtil.copyProperties(houseSourcePO.getCreate(), houseSourceVO.getCreate(), Arrays.asList("role", "dept", "duty"));
-		BeanUtil.copyProperties(houseSourcePO.getFollowUser(), houseSourceVO.getFollowUser(), Arrays.asList("role", "dept", "duty"));
+		
+		if(houseSourcePO.getCreate() != null){
+			BeanUtil.copyProperties(houseSourcePO.getCreate(), houseSourceVO.getCreate(), Arrays.asList("role", "dept", "duty"));
+		}
+		
+		if(houseSourcePO.getFollowUser() != null){
+			BeanUtil.copyProperties(houseSourcePO.getFollowUser(), houseSourceVO.getFollowUser(), Arrays.asList("role", "dept", "duty"));
+		}
+		
+		if(houseSourcePO.getKeyer() != null){
+			BeanUtil.copyProperties(houseSourcePO.getKeyer(), houseSourceVO.getKeyer(), Arrays.asList("role", "dept", "duty"));
+		}
+		
+		if(houseSourcePO.getDepartment() != null){
+			BeanUtil.copyProperties(houseSourcePO.getDepartment(), houseSourceVO.getDepartment(), Arrays.asList("type", "fatherDept", "cityProper"));
+		}
+		
+		if(houseSourcePO.getRegion() != null){
+			BeanUtil.copyProperties(houseSourcePO.getRegion(), houseSourceVO.getRegion(), Arrays.asList("type", "fatherDept", "cityProper"));
+		}
 		
 		//customer
 		BeanUtil.copyProperties(houseSourcePO.getCustomer(), houseSourceVO.getCustomer());
@@ -236,10 +399,23 @@ public class HouseSourceServiceImpl implements HouseSourceService {
 			houseSourceVO.getCustomer().setPhone(customerPhones.get(0).getPhone());
 		}
 		
-		BeanUtil.copyProperties(houseSourcePO.getCreate(), houseSourceVO.getCreate(), Arrays.asList("role", "dept", "duty"));
-		BeanUtil.copyProperties(houseSourcePO.getFollowUser(), houseSourceVO.getFollowUser(), Arrays.asList("role", "dept", "duty"));
-		
 		return houseSourceVO;
 	}
-
+	
+	//生成钥匙记录
+	public void keyerRecord(HouseSourcePO houseSourcePO, String keyerId){
+		
+		BuildingRecordVO buildingRecordVO = new BuildingRecordVO(new HouseSourceVO(), new UserVO());
+		
+		BeanUtil.copyPropertie(houseSourcePO, buildingRecordVO.getHouseSource(), Arrays.asList("house", "customer", "create", "followUser", "keyer", "department", "region"));
+		
+		buildingRecordVO.setType(BuildingRecordPO.COLUMN_TYPE_SHORT_THR);
+		
+		buildingRecordVO.setPattern(BuildingRecordPO.COLUMN_PATTERN_SHORT_FOUR);
+		
+		buildingRecordVO.setComment("收钥匙");
+		
+		buildingRecordService.addBuildingRecord(buildingRecordVO, keyerId);
+	}
+	
 }

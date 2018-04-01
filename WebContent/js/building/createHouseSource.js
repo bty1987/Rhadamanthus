@@ -105,6 +105,7 @@ jQuery(function($) {
 	createHouseSource.items.beingLoan = $("#beingLoan");
 	createHouseSource.items.checkingTime = $("#checkingTime");
 	createHouseSource.items.followId = $("#followId");
+	createHouseSource.items.keyerId = $("#keyerId");
 	createHouseSource.items.housingGrade = $("#housingGrade");
 	createHouseSource.items.comment = $("#comment");
 
@@ -174,6 +175,7 @@ jQuery(function($) {
 	}, null, false);
 
 	com.initChosen('followId', api.personel.queryUserForNameByDuty, "pinyinName", {"duty":"", "user.status":0}, "autoFillKeyValue", "key", "value");
+	com.initChosen('keyerId', api.personel.queryUserForNameByDuty, "pinyinName", {"duty":"", "user.status":0}, "autoFillKeyValue", "key", "value");
 	com.initChosen('customerId', api.data.queryCustomerForName, "pinyinName", {}, "autoFillCustomer", "key", "value").on("change", function(e){
 		if($(this).val() == "" || $("#customerId").val() == "") {
 			com.clearValidator("#customerId", true);
@@ -194,7 +196,7 @@ jQuery(function($) {
 		houseItemsReadOnlyFlag(false);
 
 		com.post(api.data.queryVillageById, {"village.no" : createHouseSource.houseItems.no.val()}, function(res){
-			createHouseSource.houseItems.rule.html("推荐楼牌号规则：" + res.village.rule);
+			createHouseSource.houseItems.rule.html("推荐楼牌号规则：" + res.village.rule ? res.village.rule :"暂无推荐规则");
 		}, null, false)
 	});
 
@@ -279,7 +281,7 @@ jQuery(function($) {
 		}
 		var options = {};
 		var houseOptions = {};
-
+		
 		options["houseSource.type"] = createHouseSource.items.hsType.val();
 		options["houseSource.sourceType"] = createHouseSource.items.sourceType.val();
 		options["houseSource.customer.cid"] = createHouseSource.items.customerId.val();
@@ -301,6 +303,7 @@ jQuery(function($) {
 		options["houseSource.beingLoan"] = createHouseSource.items.beingLoan.val();
 		options["houseSource.checkingTime"] = createHouseSource.items.checkingTime.val();
 		options["houseSource.followUser.userId"] = createHouseSource.items.followId.val();
+		options["houseSource.keyer.userId"] = createHouseSource.items.keyerId.val();
 		options["houseSource.housingGrade"] = createHouseSource.items.housingGrade.val();
 		options["houseSource.comment"] = createHouseSource.items.comment.val();
 
@@ -322,8 +325,6 @@ jQuery(function($) {
 		houseOptions["house.parlourType"] =  createHouseSource.houseItems.parlourType.val();
 		houseOptions["house.heatingType"] =  createHouseSource.houseItems.heatingType.val();
 		houseOptions["house.status"] =  0;
-
-		options["houseSource.type"] = createHouseSource.items.hsType.val();
 
 		if(createHouseSource.houseFlag){
 			com.post(api.data.addHouse, houseOptions, function(res){
@@ -398,6 +399,7 @@ jQuery(function($) {
 		com.updateChosen("customerId", "", "");
 		com.updateChosen("no", "", "");
 		com.updateChosen("followId", "", "");
+		com.updateChosen("keyerId", "", "");
 
 		$(".tag").remove();
 		createHouseSource.houseItems.rule.html("");

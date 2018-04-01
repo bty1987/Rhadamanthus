@@ -13,6 +13,7 @@ import com.fanglin.communion.service.MeasurementUnitService;
 import com.fanglin.communion.vo.MeasurementUnitVO;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.utils.SystemConfig;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -47,6 +48,10 @@ public class MeasurementUnitAction extends BaseListAction {
 	@Action(value="addMeasurementUnit", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String addMeasurementUnit() throws FLException{
 		
+		if(SystemConfig.getString("communion") == null){
+		    throw new FLException(-1, "无操作权限");
+		}
+		
 		measurementUnitService.addMeasurementUnit(measurementUnit);
 		
 		return SUCCESS;
@@ -54,6 +59,10 @@ public class MeasurementUnitAction extends BaseListAction {
 	
 	@Action(value="updateMeasurementUnit", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String updateMeasurementUnit() throws FLException{
+		
+		if(SystemConfig.getString("communion") == null){
+		    throw new FLException(-1, "无操作权限");
+		}
 		
 		measurementUnitService.updateMeasurementUnit(measurementUnit);
 		

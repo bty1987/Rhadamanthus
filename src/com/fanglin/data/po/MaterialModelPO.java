@@ -24,9 +24,8 @@ import javax.persistence.Table;
 import com.fanglin.communion.po.BrandPO;
 import com.fanglin.communion.po.MeasurementUnitPO;
 
-
 @Entity
-@Table(name="materialmodel", catalog = "platform")
+@Table(name="materialmodel", catalog = "data")
 public class MaterialModelPO implements Serializable {
 
 	private static final long serialVersionUID = 7005034712246904666L;

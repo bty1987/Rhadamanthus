@@ -21,7 +21,7 @@ public class BuildingPO implements Serializable{
 
 	private static final long serialVersionUID = -4319485351492418004L;
 	
-	public static final String COLUMN_BOID_STR = "boid";
+	public static final String COLUMN_BID_STR = "bid";
 	
 	public static final String COLUMN_NO_STR = "no";
 	
@@ -33,7 +33,7 @@ public class BuildingPO implements Serializable{
 	
 	public static final short STATUS_DISABLE_SHORT  = 1;
 	
-	private long boid;
+	private long bid;
 	
 	private String no;
 	
@@ -81,13 +81,13 @@ public class BuildingPO implements Serializable{
 	
 	@Id
 	@GeneratedValue
-	@Column(name="boid")
-	public long getBoid() {
-		return boid;
+	@Column(name="bid")
+	public long getBid() {
+		return bid;
 	}
 
-	public void setBoid(long boid) {
-		this.boid = boid;
+	public void setBid(long bid) {
+		this.bid = bid;
 	}
 
 	@Column(name="no")

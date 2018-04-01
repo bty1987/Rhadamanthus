@@ -1,14 +1,3 @@
-/**
- * @File Name		: MaterialModelServiceImpl.java
- * @Package   	: com.fanglin.service.impl.material
- * @Version		: 1.0
- * @Date			: 2014-8-15
- * @Copyright	: Copyright Creators 2014
- * @Author		: baity
- * @Email			: bty1987@163.com
- * @Describing	: 
- */
-
 package com.fanglin.data.material.service.impl;
 
 import java.util.ArrayList;
@@ -19,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.communion.dao.BrandDao;
+import com.fanglin.communion.dao.CategoryDao;
 import com.fanglin.communion.po.BrandPO;
 import com.fanglin.communion.po.CategoryPO;
 import com.fanglin.communion.po.MeasurementUnitPO;
@@ -43,6 +34,12 @@ public class MaterialModelServiceImpl implements MaterialModelService{
 
 	@Autowired
 	private MaterialModelDao materialModelDao;
+	
+	@Autowired
+	private BrandDao brandDao;
+	
+	@Autowired
+	private CategoryDao categoryDao;
 	
 	@Autowired
 	private UserDao userDao;
@@ -126,6 +123,10 @@ public class MaterialModelServiceImpl implements MaterialModelService{
 		
 		MaterialModelPO materialModelPO = materialModelDao.queryMaterialModelByNoBrand(materialModelVO.getMaterialModelNo(), materialModelVO.getMaterialBrandId());
 		
+		BrandPO brandPO = brandDao.queryBrandByBId(materialModelVO.getMaterialBrandId());
+		
+		CategoryPO categoryPO = categoryDao.queryCategoryByCId(brandPO.getCategory().getCid());
+		
 		if(materialModelPO != null){
 			throw new FLException(180002, "型号信息已经存在");
 		}
@@ -139,6 +140,8 @@ public class MaterialModelServiceImpl implements MaterialModelService{
 		materialModelPO.setBase(0);
 		materialModelPO.setPoint(0);
 		materialModelPO.setStatus(MaterialModelPO.TYPE_DISABLE_INT);
+		materialModelPO.setMaterialTypeName(categoryPO.getCategoryName());
+		materialModelPO.setMaterialBrandName(brandPO.getBrandName());
 		
 		materialModelDao.save(materialModelPO);
 		

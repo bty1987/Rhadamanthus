@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
+import com.fanglin.common.service.LoginService;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.security.AESHelper;
@@ -51,9 +52,16 @@ public class LoginAction extends BaseListAction {
 	private UserService userService;
 	
 	@Autowired
+	private LoginService loginService;
+	
+	@Autowired
 	private LoginLogService loginLogService;
 	
 	private String authentication;
+	
+	private UserVO user;
+	
+	private String company;
 	
 	@Action(value = "doLogin", results = { @Result(name = "success", type = "json", params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" })
 	public String doLogin() {
@@ -128,6 +136,57 @@ public class LoginAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
+	@Action(value = "requestAuthCode", results = { @Result(name = "success", type = "json", params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" })
+	public String requestAuthCode() throws FLException{
+		
+		try {
+			String userId = request.getParameter("userId");
+			String code = request.getParameter("code");
+			String secret = request.getParameter("secret");
+			
+			setAuthentication(loginService.requestAuthCode(userId, code, secret));
+		} catch (FLException e) {
+			setErrorCode(e.getCode());
+			setErrorMsg(e.getErrorMessage());
+		}
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "changeAuthCode", results = { @Result(name = "success", type = "json", params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" })
+	public String changeAuthCode() throws FLException{
+		
+		try {
+			if(getAuthentication() == null){
+				throw new FLException(110008, "验证信息错误");
+			}
+			
+			setAuthentication(loginService.changeAuthCode(getAuthentication(), getCompany()));
+		} catch (FLException e) {
+			setErrorCode(e.getCode());
+			setErrorMsg(e.getErrorMessage());
+		}
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "updateAuthCode", results = { @Result(name = "success", type = "json", params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" })
+	public String updateAuthCode(){
+		
+		try {
+			if(getAuthentication() == null){
+				throw new FLException(110008, "验证信息错误");
+			}
+			
+			setAuthentication(loginService.updateAuthCode(getAuthentication(), user.getPassword()));
+		} catch (FLException e) {
+			setErrorCode(e.getCode());
+			setErrorMsg(e.getErrorMessage());
+		}
+		
+		return SUCCESS;
+	}
+	
 	@Action(value = "behead", results = { @Result(name = "success", type = "json", params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" })
 	public String behead() throws FLException{
 		
@@ -155,6 +214,22 @@ public class LoginAction extends BaseListAction {
 
 	public void setAuthentication(String authentication) {
 		this.authentication = authentication;
+	}
+
+	public UserVO getUser() {
+		return user;
+	}
+
+	public void setUser(UserVO user) {
+		this.user = user;
+	}
+
+	public String getCompany() {
+		return company;
+	}
+
+	public void setCompany(String company) {
+		this.company = company;
 	}
 
 }

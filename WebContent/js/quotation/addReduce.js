@@ -106,6 +106,10 @@ jQuery(function($) {
 	$('#btnBack').click(function(){
 		com.switchPage(params.historyPage);
 	});
+	//刷新按钮
+	$('#updated').click(function(){
+		search.doSearch();
+	});
 
 	//添加按钮
 	$('#add').click(function(){

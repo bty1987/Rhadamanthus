@@ -12,6 +12,7 @@
 package com.fanglin.construction.service.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.communion.service.CustomerService;
 import com.fanglin.communion.vo.CustomerVO;
+import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.communion.vo.DutyVO;
 import com.fanglin.communion.vo.HouseVO;
 import com.fanglin.construction.dao.ConstructionDao;
@@ -32,7 +34,6 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.vo.DecorationVO;
-import com.fanglin.department.vo.DepartmentVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
@@ -56,12 +57,13 @@ public class ConstructionServiceImpl implements ConstructionService {
 	private CustomerService customerService;
 	
 	@Override
-	public void pageDecorationForConstruction(Paging paging, List<Filter> filters, Integer company){
+	public void pageConstruction(Paging paging, List<Filter> filters, Integer company){
 		
 		List<ConstructionPO> constructionPOs = constructionDao.pageConstruction(paging, filters, company);
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
 		
 		for(ConstructionPO constructionPO: constructionPOs){
+			
 			decorationVOs.add(decorationPOToVO(constructionPO.getDecoration()));
 		}
 		
@@ -69,7 +71,7 @@ public class ConstructionServiceImpl implements ConstructionService {
 	}
 	
 	@Override
-	public void pageDecorationForSupervisionByUserId(Paging paging, List<Filter> filters, String userId, Integer company) throws FLException{
+	public void pageConstructionForSupervision(Paging paging, List<Filter> filters, String userId) throws FLException {
 		
 		UserPO userPO = userDao.queryUserByUserId(userId);
 		
@@ -77,9 +79,7 @@ public class ConstructionServiceImpl implements ConstructionService {
 			throw new FLException(190005, "人员不存在");
 		}
 		
-		filters.add(new Filter(ConstructionPO.COLUMN_SUPERVISORQUALITYID_STR, userId, "eq"));
-		
-		List<ConstructionPO> constructionSchedulePOs = constructionDao.pageConstructionForSupervision(paging, filters);
+		List<ConstructionPO> constructionSchedulePOs = constructionDao.pageConstructionForSupervision(paging, filters, userPO.getUid());
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
 		
 		for(ConstructionPO constructionSchedulePO: constructionSchedulePOs){
@@ -87,11 +87,13 @@ public class ConstructionServiceImpl implements ConstructionService {
 			decorationVOs.add(decorationPOToVO(constructionSchedulePO.getDecoration()));
 		}
 		
+		
+		
 		paging.setData(decorationVOs);
 	}
 	
 	@Override
-	public void pageDecorationForAcceptance(Paging paging, List<Filter> filters, Integer company){
+	public void pageConstructionForAcceptance(Paging paging, List<Filter> filters, Integer company){
 		
 		String acceptanceFlagOp = null;
 	
@@ -123,7 +125,7 @@ public class ConstructionServiceImpl implements ConstructionService {
 	public ConstructionVO queryConstructionById(int cid){
 		
 		ConstructionPO constructionPO = constructionDao.get(cid);
-		ConstructionVO constructionVO = new ConstructionVO();
+		ConstructionVO constructionVO = new ConstructionVO(new UserBaseVO());
 		
 		BeanUtil.copyProperties(constructionPO, constructionVO);
 		
@@ -135,7 +137,10 @@ public class ConstructionServiceImpl implements ConstructionService {
 		
 		ConstructionPO constructionPO = constructionDao.queryConstructionByOrderId(constructionVO.getOrderId());
 		
-		BeanUtil.copyProperties(constructionPO, constructionVO);
+		BeanUtil.copyProperties(constructionPO, constructionVO,Arrays.asList("decoration", "supervisor"));
+		
+		constructionVO.setSupervisor(new UserBaseVO());
+		BeanUtil.copyProperties(constructionPO.getSupervisor(), constructionVO.getSupervisor(), Arrays.asList("duty", "dept"));
 		
 		return constructionVO;
 	}
@@ -144,20 +149,17 @@ public class ConstructionServiceImpl implements ConstructionService {
 	public ConstructionVO queryConstructionForWorkerNameByOrderId(ConstructionVO constructionVO){
 		
 		ConstructionPO constructionPO = constructionDao.queryConstructionByOrderId(constructionVO.getOrderId());
-		
+		ConstructionVO _constructionVO = new ConstructionVO();
 		if(constructionPO != null){
-		
-			BeanUtil.copyProperties(constructionPO, constructionVO);
-			
-			if(constructionPO.getSupervisorQualityId() != null && !"".equals(constructionPO.getSupervisorQualityId())){
-				UserPO supervisonQualityUser =  userDao.queryUserByUserId(constructionPO.getSupervisorQualityId());
-				if(supervisonQualityUser != null){
-					constructionVO.setSupervisorQualityName(supervisonQualityUser.getCurrentName());
-				}
+			BeanUtil.copyProperties(constructionPO, _constructionVO,Arrays.asList("decoration", "supervisor"));
+			if(constructionPO.getSupervisor() != null){
+				_constructionVO.setSupervisor(new UserBaseVO());
+				BeanUtil.copyProperties(constructionPO.getSupervisor(),_constructionVO.getSupervisor(),Arrays.asList("duty", "dept"));
 			}
+			
 		}
 		
-		return constructionVO;
+		return _constructionVO;
 	}
 	
 	//这个方法 看一下，没有用的地方可以删除了
@@ -168,11 +170,12 @@ public class ConstructionServiceImpl implements ConstructionService {
 		ConstructionPO constructionPO = null;
 		
 		if(constructionVO.getCid() == 0){
-			constructionPO = new ConstructionPO();
+			constructionPO = new ConstructionPO(new DecorationPO(), new UserPO());
 		}else{
 			constructionPO = constructionDao.get(constructionVO.getCid());
 		}
-		BeanUtil.copyProperties(constructionVO, constructionPO);
+		
+		BeanUtil.copyProperties(constructionVO, constructionPO, Arrays.asList("decoration", "supervisorQuality"));
 		constructionDao.saveOrUpdate(constructionPO);
 	}
 	
@@ -182,18 +185,24 @@ public class ConstructionServiceImpl implements ConstructionService {
 		ConstructionPO constructionPO = constructionDao.queryConstructionByOrderId(constructionVO.getOrderId());
 		
 		if(constructionPO == null){
-			constructionPO = new ConstructionPO();
-			constructionPO.setDecoration(new DecorationPO(constructionVO.getOrderId()));
+			DecorationPO decorationPO = decorationDao.get(constructionVO.getOrderId());
+			constructionPO = new ConstructionPO(decorationPO, new UserPO());
+			//constructionPO.setDecoration(new DecorationPO());
 			constructionPO.setSchedule(ConstructionPO.SCHEDULE_TYPE_CHAN_INT);
 		}
 		
-		BeanUtil.copyProperties(constructionVO, constructionPO);
+		BeanUtil.copyProperties(constructionVO, constructionPO, Arrays.asList("decoration", "supervisor"));
+
+		if(constructionVO.getSupervisor() != null){
+			constructionPO.setSupervisor(userDao.queryUserByUserId(constructionVO.getSupervisor().getUserId()));
+		}
+		
 		constructionDao.saveOrUpdate(constructionPO);
 		
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(constructionVO.getOrderId());
 		if(decorationPO != null){
-			if(constructionVO.getSupervisorQualityId() != null){
-				UserPO userPO = userDao.queryUserByUserId(constructionVO.getSupervisorQualityId());
+			if(constructionVO.getSupervisor() != null){
+				UserPO userPO = userDao.queryUserByUserId(constructionVO.getSupervisor().getUserId());
 				decorationPO.setSupervisor(userPO);
 			}else{
 				decorationPO.setSupervisor(null);
@@ -206,7 +215,6 @@ public class ConstructionServiceImpl implements ConstructionService {
 	private DecorationVO decorationPOToVO(DecorationPO decorationPO){
 		
 		DecorationVO decorationVO = new DecorationVO();
-		
 		decorationVO.setHouse(new HouseVO());
 		decorationVO.setDesigner(new UserBaseVO(null, new DepartmentVO()));
 		decorationVO.setSalesman(new UserBaseVO(null, new DepartmentVO()));

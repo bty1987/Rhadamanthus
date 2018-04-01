@@ -2,14 +2,14 @@ package com.fanglin.production.vo;
 
 import java.io.Serializable;
 
-public class ProductionWorkFlowVO implements Serializable{
+public class ProductionWorkFlowVO implements Serializable {
 
 	private static final long serialVersionUID = 7769360077315654875L;
-	
+
 	private long pwfid;
-	
+
 	private long pwpid;
-	
+
 	private WorkflowVO workflow;
 
 	public ProductionWorkFlowVO() {

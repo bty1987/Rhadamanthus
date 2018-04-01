@@ -28,14 +28,13 @@ import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.Paging;
 
-
 @Service("productionService")
-@Transactional(readOnly=true)
+@Transactional(readOnly = true)
 public class ProductionServiceImpl implements ProductionService {
-	
+
 	@Autowired
 	private ProductionDao productionDao;
-	
+
 	@Autowired
 	private UserDao userDao;
 
@@ -44,113 +43,113 @@ public class ProductionServiceImpl implements ProductionService {
 
 	@Override
 	public void pageProduction(Paging paging, List<Filter> filters, int company) {
-		
+
 		List<ProductionPO> productionPOs = productionDao.pageProduction(paging, filters, company);
 		List<ProductionVO> productionVOs = new ArrayList<ProductionVO>();
-		
+
 		ProductionVO productionVO;
-		
-		for(ProductionPO productionPO:productionPOs){
-			
+
+		for (ProductionPO productionPO : productionPOs) {
+
 			productionVO = new ProductionVO(new HouseVO(new VillageVO()), new UserBaseVO(), new UserBaseVO());
-			
-			BeanUtil.copyProperties(productionPO, productionVO, Arrays.asList("house","creater","designer"));
-			BeanUtil.copyProperties(productionPO.getHouse(), productionVO.getHouse(),Arrays.asList("village"));
+
+			BeanUtil.copyProperties(productionPO, productionVO, Arrays.asList("house", "creater", "designer"));
+			BeanUtil.copyProperties(productionPO.getHouse(), productionVO.getHouse(), Arrays.asList("village"));
 			BeanUtil.copyProperties(productionPO.getHouse().getVillage(), productionVO.getHouse().getVillage(), Arrays.asList("cityProper"));
-			BeanUtil.copyProperties(productionPO.getCreater(),productionVO.getCreater(),Arrays.asList("duty","dept"));
-			BeanUtil.copyProperties(productionPO.getDesigner(),productionVO.getDesigner(),Arrays.asList("duty","dept"));
-	
+			BeanUtil.copyProperties(productionPO.getCreater(), productionVO.getCreater(), Arrays.asList("duty", "dept"));
+			BeanUtil.copyProperties(productionPO.getDesigner(), productionVO.getDesigner(), Arrays.asList("duty", "dept"));
+
 			productionVOs.add(productionVO);
 		}
-		
+
 		paging.setData(productionVOs);
-		
+
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public int addProduction(ProductionVO productionVO,String userId,int company) throws FLException{
-		
+	@Transactional(rollbackFor = Exception.class)
+	public int addProduction(ProductionVO productionVO, String userId, int company) throws FLException {
+
 		ProductionPO productionPO = new ProductionPO(new HousePO(), new UserPO(), new UserPO());
-		
+
 		String currentDate = DateUtil.current("yyMMdd").toString();
-		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_SO_INT , currentDate);
-		
-		String no = "P"+currentDate + FormatUtil.fillZero(FormatUtil.offset(count), "0000");
-		
+		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_SO_INT, currentDate);
+
+		String no = "P" + currentDate + FormatUtil.fillZero(FormatUtil.offset(count), "0000");
+
 		UserPO designer = userDao.queryUserByUserId(productionVO.getDesigner().getUserId());
 		UserPO creater = userDao.queryUserByUserId(userId);
-		
-		BeanUtil.copyProperties(productionVO, productionPO, Arrays.asList("house","creater","designer"));
-		BeanUtil.copyProperties(designer, productionPO.getDesigner(),Arrays.asList("role","dept","duty"));
-		BeanUtil.copyProperties(creater, productionPO.getCreater(),Arrays.asList("role","dept","duty"));
-		BeanUtil.copyProperties(new HousePO(productionVO.getHouse().getHid()), productionPO.getHouse(),Arrays.asList("village"));
-		
+
+		BeanUtil.copyProperties(productionVO, productionPO, Arrays.asList("house", "creater", "designer"));
+		BeanUtil.copyProperties(designer, productionPO.getDesigner(), Arrays.asList("role", "dept", "duty"));
+		BeanUtil.copyProperties(creater, productionPO.getCreater(), Arrays.asList("role", "dept", "duty"));
+		BeanUtil.copyProperties(new HousePO(productionVO.getHouse().getHid()), productionPO.getHouse(), Arrays.asList("village"));
+
 		productionPO.setCompany(company);
 		productionPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		productionPO.setPno(no);
-	
+
 		productionDao.save(productionPO);
-		
+
 		return 0;
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public int updateProductionForStatus(ProductionVO productionVO) throws FLException{
-		
+	@Transactional(rollbackFor = Exception.class)
+	public int updateProductionForStatus(ProductionVO productionVO) throws FLException {
+
 		ProductionPO productionPO = productionDao.get(productionVO.getPid());
-		
-		if(productionPO == null){
-			throw new FLException(220001,"生产单不存在");
+
+		if (productionPO == null) {
+			throw new FLException(220001, "生产单不存在");
 		}
-		
-		if(productionPO.getStatus() == ProductionPO.STATUS_DESTORY_SHORT || productionPO.getStatus() == ProductionPO.STATUS_END_SHORT){
-			throw new FLException(220002,"生产单状态不可操作");
+
+		if (productionPO.getStatus() == ProductionPO.STATUS_DESTORY_SHORT || productionPO.getStatus() == ProductionPO.STATUS_END_SHORT) {
+			throw new FLException(220002, "生产单状态不可操作");
 		}
-		
-		if(productionVO.getStatus() == ProductionPO.STATUS_CONFIRM_SHORT){
+
+		if (productionVO.getStatus() == ProductionPO.STATUS_CONFIRM_SHORT) {
 			productionPO.setConfirmTime(DateUtil.getDateToTimestamp(new Date()));
 		}
-		
-		if(productionVO.getStatus() == ProductionPO.STATUS_PRODUCT_SHORT ){
-			
-			if(productionPO.getStatus() != 2){
-				throw new FLException(220002,"生产单状态不可操作");
+
+		if (productionVO.getStatus() == ProductionPO.STATUS_PRODUCT_SHORT) {
+
+			if (productionPO.getStatus() != 2) {
+				throw new FLException(220002, "生产单状态不可操作");
 			}
-			
+
 			productionPO.setDivideTime(DateUtil.getDateToTimestamp(new Date()));
 		}
-		
+
 		productionPO.setStatus(productionVO.getStatus());
-		
+
 		productionDao.update(productionPO);
-		
+
 		return 0;
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public int updateProductionForDeliveryStatus(ProductionVO productionVO) throws FLException{
-		
+	@Transactional(rollbackFor = Exception.class)
+	public int updateProductionForDeliveryStatus(ProductionVO productionVO) throws FLException {
+
 		ProductionPO productionPO = productionDao.get(productionVO.getPid());
-		
-		if(productionPO == null){
-			
-			throw new FLException(220001,"生产单不存在");
+
+		if (productionPO == null) {
+
+			throw new FLException(220001, "生产单不存在");
 		}
-		
-		if(productionVO.getDiliverystatus() == ProductionPO.DELIVERSTATUS_DELIVERED_SHORT){
-			
+
+		if (productionVO.getDiliverystatus() == ProductionPO.DELIVERSTATUS_DELIVERED_SHORT) {
+
 			productionPO.setStatus(ProductionPO.STATUS_END_SHORT);
-			
+
 		}
-		
+
 		productionPO.setDiliverystatus(productionVO.getDiliverystatus());
 		productionPO.setDiliveryTime(DateUtil.getDateToTimestamp(new Date()));
-	
+
 		productionDao.update(productionPO);
-		
+
 		return 0;
 	}
 

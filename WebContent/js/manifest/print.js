@@ -32,7 +32,7 @@ $(function(){
     ];
 
     //获取货单信息
-    var df1 = com.post(api.inventory.queryManifestByMId, {"manifest.mid": id}, function(res){
+    var df1 = com.post(api.inventory.queryManifestByMid, {"manifest.mid": id}, function(res){
         var typeTxt = mtypeList[parseInt(res.manifest.type) -1];
         $('#mcode').text(res.manifest.code);
         $('#mtype').text(typeTxt); //– 类型
@@ -42,7 +42,7 @@ $(function(){
         //res.total;
     });
     //获取货单下商品
-    var df2 = com.post(api.inventory.queryManifestItemByMId, {"manifest.mid": id}, function(res){
+    var df2 = com.post(api.inventory.queryManifestItemByMid, {"manifest.mid": id}, function(res){
 
         if(res.manifestItems.length){
             $.each(res.manifestItems, function(i, v){

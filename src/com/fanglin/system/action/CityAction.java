@@ -106,14 +106,14 @@ public class CityAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-	@Action(value = "deleteCityByCids", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String deleteCityByCids() throws FLException{
+	@Action(value = "deleteCity", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String deleteCity() throws FLException{
 		
 		if(SystemConfig.getString("communion") == null){
 		    throw new FLException(-1, "无操作权限");
 		}
 		
-		cityService.deleteCityByCids(cids);
+		cityService.deleteCity(cids);
 		
 		return SUCCESS;
 	}

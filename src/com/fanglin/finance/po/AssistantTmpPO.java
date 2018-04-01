@@ -13,8 +13,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fanglin.department.po.DepartmentPO;
-import com.fanglin.department.vo.DepartmentVO;
+import com.fanglin.communion.po.DepartmentPO;
+import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.finance.vo.AssistantVO;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserVO;

@@ -22,7 +22,7 @@ public interface ConstructionDao extends Dao<ConstructionPO> {
 	
 	public List<ConstructionPO> pageConstruction(Paging paging, List<Filter> filters, Integer company);
 	
-	public List<ConstructionPO> pageConstructionForSupervision(Paging paging, List<Filter> filters);
+	public List<ConstructionPO> pageConstructionForSupervision(Paging paging, List<Filter> filters, int suid);
 	
 	public List<ConstructionPO> pageConstructionForSupervisionByUserId(Paging paging, List<Filter> filters, String workTypeQuality, String userId);
 	

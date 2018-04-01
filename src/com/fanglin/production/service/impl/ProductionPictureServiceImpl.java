@@ -23,68 +23,68 @@ import com.fanglin.utils.DateUtil;
 @Service("productionPictureService")
 @Transactional(readOnly = true)
 public class ProductionPictureServiceImpl implements ProductionPictureService {
-	
+
 	@Autowired
 	private ProductionPictureDao productionPictureDao;
-	
+
 	@Autowired
 	private UserDao userDao;
 
 	@Override
 	public List<ProductionPictureVO> queryProductionPictureByPid(ProductionPictureVO productionPictureVO) {
-		
+
 		List<ProductionPicturePO> productionPicturePOs = new ArrayList<ProductionPicturePO>();
 		List<ProductionPictureVO> productionPictureVOs = new ArrayList<ProductionPictureVO>();
-		
+
 		productionPicturePOs = productionPictureDao.queryProductionPictureByPid(productionPictureVO.getPid());
-		
+
 		ProductionPictureVO _productionPictureVO;
-		
-		for(ProductionPicturePO productionPicturePO:productionPicturePOs){
-			
-			_productionPictureVO = new ProductionPictureVO(new UserBaseVO()); 
-			
+
+		for (ProductionPicturePO productionPicturePO : productionPicturePOs) {
+
+			_productionPictureVO = new ProductionPictureVO(new UserBaseVO());
+
 			BeanUtil.copyProperties(productionPicturePO, _productionPictureVO, Arrays.asList("creater"));
-			BeanUtil.copyProperties(productionPicturePO.getCreater(),_productionPictureVO.getCreater(),Arrays.asList("duty","dept"));
-			
+			BeanUtil.copyProperties(productionPicturePO.getCreater(), _productionPictureVO.getCreater(), Arrays.asList("duty", "dept"));
+
 			productionPictureVOs.add(_productionPictureVO);
-			
+
 		}
-		
+
 		return productionPictureVOs;
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public int addProductionPicture(ProductionPictureVO productionPictureVO,String userId) throws FLException{
-		
+	@Transactional(rollbackFor = Exception.class)
+	public int addProductionPicture(ProductionPictureVO productionPictureVO, String userId) throws FLException {
+
 		ProductionPicturePO productionPicturePO = new ProductionPicturePO(new UserPO());
-		
+
 		UserPO creater = userDao.queryUserByUserId(userId);
-		
+
 		BeanUtil.copyProperties(productionPictureVO, productionPicturePO, Arrays.asList("creater"));
-		BeanUtil.copyProperties(creater, productionPicturePO.getCreater(), Arrays.asList("role","dept","duty"));
-		
+		BeanUtil.copyProperties(creater, productionPicturePO.getCreater(), Arrays.asList("role", "dept", "duty"));
+
 		productionPicturePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		productionPicturePO.setStatus(productionPictureVO.getStatus());
-		
+
 		productionPictureDao.save(productionPicturePO);
-		
+
 		return 0;
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public int deleteProductionPicture(ProductionPictureVO productionPictureVO) throws FLException{
-		
+	@Transactional(rollbackFor = Exception.class)
+	public int deleteProductionPicture(ProductionPictureVO productionPictureVO) throws FLException {
+
 		ProductionPicturePO productionPicturePO = productionPictureDao.get(productionPictureVO.getPpid());
-		
-		if(productionPicturePO == null){
-			throw new FLException(220003 ,"图纸不存在");
+
+		if (productionPicturePO == null) {
+			throw new FLException(220003, "图纸不存在");
 		}
-		
-		productionPictureDao.delete(productionPicturePO);	
-		
+
+		productionPictureDao.delete(productionPicturePO);
+
 		return 0;
 	}
 

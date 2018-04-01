@@ -29,7 +29,7 @@ public class ManifestItemDaoImpl extends DaoImpl<ManifestItemPO> implements Mani
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<ManifestItemPO> queryManifestItemByMId(long mId) {
+	public List<ManifestItemPO> queryManifestItemByMid(long mId) {
 		return session().createCriteria(ManifestItemPO.class).add(Restrictions.eq(ManifestItemPO.COLUMN_MID_STR, mId)).list();
 	}
 

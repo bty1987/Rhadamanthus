@@ -21,6 +21,7 @@ import com.fanglin.personel.po.UserContractPO;
 import com.fanglin.personel.service.UserContractService;
 import com.fanglin.personel.vo.UserContractVO;
 import com.fanglin.utils.BeanUtil;
+import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
 @Service("userContractService")
@@ -63,5 +64,43 @@ public class UserContractServiceImpl implements UserContractService {
 		}
 		return userContractVOs;
 	}
+	
+	@Transactional
+	  public void saveOrUpdateUserContract(UserContractVO userContractVO) {
+	    
+		UserContractPO userContractPO = new UserContractPO();
+
+	    BeanUtil.copyProperties(userContractVO, userContractPO);
+	    
+	    userContractPO.setCreateTime(DateUtil.current("yyyy-MM-dd HH:mm:ss"));
+
+	    userContractDao.saveOrUpdate(userContractPO);
+	  
+	}
+
+	  @Transactional
+	  public void saveOrUpdateUserContract(List<UserContractVO> userContractVOs){
+	   
+		  for (UserContractVO userContractVO : userContractVOs)
+			  
+			  saveOrUpdateUserContract(userContractVO);
+	  
+	  }
+
+	  @Transactional
+	  public void deleteUserContractById(String id){
+	    
+		  userContractDao.deleteById(id);
+	  
+	  }
+
+	  @Transactional
+	  public void deleteUserContract(List<String> ids){
+	   
+		  for (String id : ids)
+	      
+			  userContractDao.deleteById(id);
+	 
+	  }
 
 }

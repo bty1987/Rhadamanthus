@@ -17,18 +17,17 @@ import javax.persistence.Table;
 import com.fanglin.personel.po.UserPO;
 
 @Entity
-@Table(name="productionuserworkflow",catalog= "production")
-public class ProductionUserWorkFlowPO implements Serializable{
+@Table(name = "productionuserworkflow", catalog = "production")
+public class ProductionUserWorkFlowPO implements Serializable {
 
 	private static final long serialVersionUID = -7296398551060429237L;
-	
-	
+
 	private long puwfid;
-	
-	private ProductionWorkFlowPO  productionworkflow;
-	
+
+	private ProductionWorkFlowPO productionworkflow;
+
 	private UserPO operator;
-	
+
 	private Timestamp operateTime;
 
 	public ProductionUserWorkFlowPO() {
@@ -40,9 +39,10 @@ public class ProductionUserWorkFlowPO implements Serializable{
 		this.productionworkflow = productionworkflow;
 		this.operator = operator;
 	}
+
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name="puwfid")
+	@Column(name = "puwfid")
 	public long getPuwfid() {
 		return puwfid;
 	}
@@ -50,7 +50,7 @@ public class ProductionUserWorkFlowPO implements Serializable{
 	public void setPuwfid(long puwfid) {
 		this.puwfid = puwfid;
 	}
-			
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "pwfid", referencedColumnName = "pwfid")
 	public ProductionWorkFlowPO getProductionworkflow() {
@@ -60,27 +60,24 @@ public class ProductionUserWorkFlowPO implements Serializable{
 	public void setProductionworkflow(ProductionWorkFlowPO productionworkflow) {
 		this.productionworkflow = productionworkflow;
 	}
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ouid", referencedColumnName = "uid")
 	public UserPO getOperator() {
 		return operator;
 	}
-		
+
 	public void setOperator(UserPO operator) {
 		this.operator = operator;
 	}
-	
+
 	@Column(name = "operateTime")
 	public Timestamp getOperateTime() {
 		return operateTime;
 	}
-	
+
 	public void setOperateTime(Timestamp operateTime) {
 		this.operateTime = operateTime;
 	}
-	
-	
-	
 
 }

@@ -5,18 +5,21 @@ jQuery(function($) {
 	var buildingNode = {
 		saveBtn: null,
 		cancelBtn: null,
+		viewDeployedBtn: null,
 		modal: null,
-
 		items:{},
-
 		editFlg: false,
+		nodeId: null,
 	};
 
 	buildingNode.saveBtn = $("#saveBtn").on("click", saveData);
 	buildingNode.cancelBtn = $("#cancelBtn");
+	buildingNode.viewDeployedBtn = $("#viewDeployedBtn").on("click", updateNodeName);
 
 	buildingNode.items.buildingNodeName = $("#buildingNodeName");
 	buildingNode.items.buildingNodeType = $("#buildingNodeType");
+
+	buildingNode.items.nodeName = $("#nodeName");
 
 	buildingNode.modal = $("#buildingNodeModal");
 	buildingNode.modal.on('show.bs.modal',function(e){
@@ -55,6 +58,7 @@ jQuery(function($) {
 			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 			var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
+			var $btnView = $('<a></a>').addClass('btn btn-minier btn-yellow').html("编辑");
 			var $btnDel = $('<input />').attr("type", "checkbox").addClass('ace ace-switch ace-switch-5').attr("checked", v.status == 0 ? true : false);
 			var $btnSpan = $('<span></span>').addClass("lbl status-lbl");
 
@@ -70,9 +74,17 @@ jQuery(function($) {
                 $liProperty.appendTo($ulProperty);
             });
 			
-			$divBtnWrap.append($btnDel).append($btnSpan).appendTo($h3);
+			$divBtnWrap.append($btnView).append($btnDel).append($btnSpan).appendTo($h3);
 			$liLine.append($h3).append($ulProperty);
 
+			//编辑
+			$btnView.click(function(){
+				buildingNode.nodeId = v.bnid;
+				com.cleanItems(buildingNode.items);
+				$("#viewBuildingNodeModal").modal("show");
+			});
+
+			//启禁用
 			$btnDel.click(function(){
 				var cvalue = $btnDel.prop("checked");
 				if(cvalue){
@@ -80,7 +92,7 @@ jQuery(function($) {
 				}else{
 					cvalue = 1;
 				}
-				updateBN(v.bnid, cvalue);
+				updateNodeStatus(v.bnid, cvalue);
 			});
 
 			return $liLine;
@@ -114,12 +126,11 @@ jQuery(function($) {
 
 	//添加
 	$('a[name="addBuildingNode"]', '#pagenation').click(function(){
-		$("#buildingNodeName").val("");
-		$("#buildingNodeType").val("");
+		com.cleanItems(buildingNode.items);
 		$("#buildingNodeModal").modal("show");
 	});
 
-	function updateBN(bnId, cvalue){
+	function updateNodeStatus(bnId, cvalue){
 		var options = {};
 		options["buildingNode.bnid"] = bnId;
 		options["buildingNode.status"] = cvalue;
@@ -147,5 +158,19 @@ jQuery(function($) {
 		});
 
 		buildingNode.modal.modal("hide");
+	}
+
+	function updateNodeName(){
+		if(com.validate()){
+			return;
+		}
+
+		var options = {};
+		options["buildingNode.bnid"] = buildingNode.nodeId;
+		options["buildingNode.name"] = buildingNode.items.nodeName.val();
+		com.post(api.building.updateBuildingNode, options, function(res){
+			searcher.doSearch();
+			$("#viewBuildingNodeModal").modal("hide");
+		});
 	}
 });

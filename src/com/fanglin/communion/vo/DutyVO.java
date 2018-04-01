@@ -2,8 +2,6 @@ package com.fanglin.communion.vo;
 
 import java.io.Serializable;
 
-import com.fanglin.department.vo.DepartmentTypeVO;
-
 public class DutyVO implements Serializable {
 
 	private static final long serialVersionUID = 2137362794687628843L;

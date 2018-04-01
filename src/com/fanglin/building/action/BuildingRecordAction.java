@@ -28,19 +28,10 @@ public class BuildingRecordAction extends BaseListAction{
 	
 	private List<BuildingRecordVO> buildingRecords;
 	
-	@Action(value="pageBuildingRecord", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String pageBuildingRecord() throws FLException{
-		
-		buildingRecordService.pageBuildingRecord(getPaging(), getFilters());
-		
-		return SUCCESS;
-		
-	}
-	
 	@Action(value="queryBuildingRecord", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String queryBuildingRecord() throws FLException{
 		
-		buildingRecords = buildingRecordService.queryBuildingRecord(buildingRecord);
+		buildingRecords = buildingRecordService.queryBuildingRecord(getFilters());
 		
 		return SUCCESS;
 		
@@ -70,6 +61,5 @@ public class BuildingRecordAction extends BaseListAction{
 	public void setBuildingRecords(List<BuildingRecordVO> buildingRecords) {
 		this.buildingRecords = buildingRecords;
 	}
-
 	
 }

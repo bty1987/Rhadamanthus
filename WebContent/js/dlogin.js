@@ -14,7 +14,7 @@ jQuery(function(a){
     verifyCode();
     
     var initQRCode = function(){
-        $.ajax(config.communion + QRCode + "?timestamp=" + new  Date().getTime() + "&loginInfo.company=" + config.company + "&prefix=" + config.prefix).done(function(data){
+        $.ajax(config.communion + QRCode + "?timestamp=" + new  Date().getTime() + "&prefix=" + config.prefix).done(function(data){
             $('#qrcode img').prop('src', data.QRCode);
         }).fail(function(){alert("获取二维码失败!");}).done(function(data){
         	var _flag = data.loginInfo.loginFlag;

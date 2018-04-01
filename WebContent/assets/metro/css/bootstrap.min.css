@@ -3956,7 +3956,7 @@ button.btn.btn-mini, input[type="submit"].btn.btn-mini {
 }
 
 .navbar-fixed-top, .navbar-fixed-bottom {
-    position: fixed;
+    /*position: fixed;*/
     right: 0;
     left: 0;
     z-index: 1030;
@@ -5654,7 +5654,7 @@ a.label:hover, a.label:focus, a.badge:hover, a.badge:focus {
 }
 
 .form-group {
-    margin-bottom: 15px
+    margin-bottom: 10px
 }
 
 .radio, .checkbox {
@@ -5780,10 +5780,6 @@ textarea.input-lg, textarea.form-group-lg .form-control, select[multiple].input-
     .form-horizontal .form-group-sm .control-label {
         padding-top: 6px
     }
-}
-
-.form-group {
-    margin-bottom: 15px
 }
 
 .radio, .checkbox {

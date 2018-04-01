@@ -23,48 +23,48 @@ public class PuoteItemAction extends BaseListAction {
 
 	@Autowired
 	private PuoteItemService quoteItemService;
-	
+
 	private PuoteItemVO quoteItem;
-	
+
 	private List<PuoteItemVO> quoteItems;
-	
+
 	@Action(value = "pageQuoteItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageQuoteItem(){
-		
+	public String pageQuoteItem() {
+
 		quoteItemService.pageQuoteItem(getPaging(), getFilters());
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "queryQuoteItemByPinyin", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryQuoteItemByPinyin() throws FLException{
-		quoteItems = quoteItemService.queryQuoteItemByPinyin(quoteItem,queryCompany());
+	public String queryQuoteItemByPinyin() throws FLException {
+		quoteItems = quoteItemService.queryQuoteItemByPinyin(quoteItem, queryCompany());
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "addQuoteItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addQuoteItem() throws FLException{
-		quoteItemService.addQuoteItem(quoteItem,queryCompany());
+	public String addQuoteItem() throws FLException {
+		quoteItemService.addQuoteItem(quoteItem, queryCompany());
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "updateQuoteItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateQuoteItem() throws FLException{
+	public String updateQuoteItem() throws FLException {
 		quoteItemService.updateQuoteItem(quoteItem);
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "updateQuoteItemForStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateQuoteItemForStatus() throws FLException{
+	public String updateQuoteItemForStatus() throws FLException {
 		quoteItemService.updateQuoteItemForStatus(quoteItem);
 		return SUCCESS;
 	}
-	
-	public PuoteItemVO getQuoteItem(){
+
+	public PuoteItemVO getQuoteItem() {
 		return quoteItem;
 	}
-	
-	public List<PuoteItemVO> getQuoteItems(){
+
+	public List<PuoteItemVO> getQuoteItems() {
 		return quoteItems;
 	}
 
@@ -75,7 +75,5 @@ public class PuoteItemAction extends BaseListAction {
 	public void setQuoteItems(List<PuoteItemVO> quoteItems) {
 		this.quoteItems = quoteItems;
 	}
-	
-	
-	
+
 }

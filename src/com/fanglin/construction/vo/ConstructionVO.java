@@ -13,6 +13,8 @@ package com.fanglin.construction.vo;
 
 import java.io.Serializable;
 
+import com.fanglin.personel.vo.UserBaseVO;
+
 public class ConstructionVO implements Serializable{
 
 	private static final long serialVersionUID = -6183413787236101280L;
@@ -21,11 +23,28 @@ public class ConstructionVO implements Serializable{
 	
 	private String orderId;
 	
-	private String supervisorQualityId;
+	private UserBaseVO supervisor;
 	
 	private String supervisorQualityName;
 	
 	private Integer schedule;
+	
+	public ConstructionVO() {
+		super();
+	}
+
+	public ConstructionVO(UserBaseVO supervisor) {
+		super();
+		this.supervisor = supervisor;
+	}
+	
+	public UserBaseVO getSupervisor() {
+		return supervisor;
+	}
+
+	public void setSupervisor(UserBaseVO supervisor) {
+		this.supervisor = supervisor;
+	}
 
 	public Long getCid() {
 		return cid;
@@ -41,14 +60,6 @@ public class ConstructionVO implements Serializable{
 
 	public void setOrderId(String orderId){
 		this.orderId = orderId;
-	}
-
-	public String getSupervisorQualityId(){
-		return supervisorQualityId;
-	}
-
-	public void setSupervisorQualityId(String supervisorQualityId){
-		this.supervisorQualityId = supervisorQualityId;
 	}
 
 	public Integer getSchedule(){

@@ -12,6 +12,7 @@ $.extend(api, {information: {
     pageMessage: {url: "pageMessage.do", demo: true},
     queryMessageForUnRead: {url: "queryMessageForUnRead.do"},
     countMessage: {url: "countMessage.do", demo: true},
+    queryMessageByMid : {url:"queryMessageByMid.do",demo:true},
     sendMessage: {url: "sendMessage.do"},
     updateMessageForRead: {url: "updateMessageForRead.do"},
     deleteMessageById: {url: "deleteMessageById.do"},

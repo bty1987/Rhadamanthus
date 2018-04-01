@@ -4,18 +4,18 @@ import java.io.Serializable;
 
 import com.fanglin.personel.vo.UserBaseVO;
 
-public class ProductionWorkPlanVO implements Serializable{
+public class ProductionWorkPlanVO implements Serializable {
 
 	private static final long serialVersionUID = 3365713667618947626L;
-	
+
 	private long pwpid;
-	
+
 	private long ppid;
-	
+
 	private WorkplanVO workplan;
-	
+
 	private UserBaseVO creater;
-	
+
 	private short status;
 
 	public ProductionWorkPlanVO() {
@@ -67,7 +67,5 @@ public class ProductionWorkPlanVO implements Serializable{
 	public void setStatus(short status) {
 		this.status = status;
 	}
-	
-	
-	
+
 }

@@ -11,8 +11,8 @@ package com.fanglin.personel.vo;
 
 import java.io.Serializable;
 
+import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.communion.vo.DutyVO;
-import com.fanglin.department.vo.DepartmentVO;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.system.vo.RoleVO;
 

@@ -132,7 +132,7 @@ public class ManifestServiceImpl implements ManifestService {
 	}
 
 	@Override
-	public ManifestVO queryManifestByMId(ManifestVO manifestVO) {
+	public ManifestVO queryManifestByMid(ManifestVO manifestVO) {
 		
 		ManifestPO manifestPO = manifestDao.get(manifestVO.getMid());
 		
@@ -536,6 +536,8 @@ public class ManifestServiceImpl implements ManifestService {
 			
 			manifestItemPO = new ManifestItemPO(new GoodsPO(gid),new ColorPO(cid),new FormatPO(fid));
 			manifestItemPO.setNum(purchaseItemVO.getNum());
+			manifestItemPO.setSiid(purchaseItemPO.getSiid());
+			manifestItemPO.setUnitPrice(purchaseItemPO.getUnitPrice());
 			
 			if(purchaseItemVO.getStorehouse() != null){
 				
@@ -626,6 +628,7 @@ public class ManifestServiceImpl implements ManifestService {
 			float num = accessoriesItemVO.getNum();
 			
 			manifestItemPO = new ManifestItemPO(new GoodsPO(gid),new ColorPO(cid),new FormatPO(fid));
+			manifestItemPO.setNum(num);
 			
 			if(accessoriesItemVO.getStorehouse() != null){
 				
@@ -653,6 +656,10 @@ public class ManifestServiceImpl implements ManifestService {
 		for(AccessoriesVO accessoriesVO : accessoriesVOs){
 			
 			accessoriesPO = accessoriesDao.get(accessoriesVO.getAid());
+			
+			if(accessoriesPO.getStatus() != 0){
+				throw new FLException(260024, "辅料单状态不可操作");
+			}
 			
 			accessoriesPO.setStatus(AccessoriesPO.STATUS_DISABLE_INT);
 			accessoriesPO.setApprover(userPO);

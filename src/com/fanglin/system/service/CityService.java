@@ -33,6 +33,6 @@ public interface CityService {
 
 	public void updateCity(CityVO cityVO) throws FLException;
 	
-	public int deleteCityByCids(List<Integer> cids) throws FLException;
+	public int deleteCity(List<Integer> cids) throws FLException;
 
 }

@@ -12,7 +12,7 @@ public class BuildingVO implements Serializable{
 
 	private static final long serialVersionUID = -4319485351492418005L;
 	
-	private Long boid;
+	private Long bid;
 	
 	private String no;
 	
@@ -58,12 +58,12 @@ public class BuildingVO implements Serializable{
 		this.buildingNode = buildingNode;
 	}
 
-	public Long getBoid() {
-		return boid;
+	public Long getBid() {
+		return bid;
 	}
 
-	public void setBoid(Long boid) {
-		this.boid = boid;
+	public void setBid(Long bid) {
+		this.bid = bid;
 	}
 
 	public String getNo() {

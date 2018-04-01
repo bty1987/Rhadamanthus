@@ -42,7 +42,7 @@ public class HouseVO implements Serializable{
 	
 	private Short heatingType;
 	
-	private Short status;
+	private Integer company;
 	
 	public HouseVO() {
 		super();
@@ -202,13 +202,12 @@ public class HouseVO implements Serializable{
 		this.heatingType = heatingType;
 	}
 
-	public Short getStatus() {
-		return status;
+	public Integer getCompany() {
+		return company;
 	}
 
-	public void setStatus(Short status) {
-		this.status = status;
+	public void setCompany(Integer company) {
+		this.company = company;
 	}
 
-	
 }

@@ -61,7 +61,6 @@ public class MessageDaoImpl extends DaoImpl<MessagePO> implements MessageDao {
 
 	@Override
 	public int updateMessageForRead(List<Integer> mids) {
-
 		String sql = "update information.message set status = :status where mid in :mids";
 		session().createSQLQuery(sql).setInteger("status", MessagePO.MESSAGE_STATUS_READED_STR).setParameterList("mids", mids).executeUpdate();
 
@@ -89,7 +88,7 @@ public class MessageDaoImpl extends DaoImpl<MessagePO> implements MessageDao {
 		for (Filter filter : filters) {
 
 			if ("status".equals(filter.getField())) {
-				query.add(query.getCriterion("status", filter));
+				query.add(query.getCriterion(filter.getField(), Short.valueOf(filter.getData()), filter.getOp()));
 			} else if ("type".equals(filter.getField())) {
 				query.add(query.getCriterion("type", filter));
 			} else if ("dateRange".equals(filter.getField())) {

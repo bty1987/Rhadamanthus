@@ -13,6 +13,7 @@ import com.fanglin.communion.service.DutyService;
 import com.fanglin.communion.vo.DutyVO;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.utils.SystemConfig;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -56,6 +57,10 @@ public class DutyAction extends BaseListAction{
 	@Action(value = "addDuty", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addDuty() throws FLException{
 		
+		if(SystemConfig.getString("communion") == null){
+		    throw new FLException(-1, "无操作权限");
+		}
+		
 		dutyService.addDuty(duty);
 		
 		return SUCCESS;
@@ -64,6 +69,10 @@ public class DutyAction extends BaseListAction{
 	@Action(value = "updateDuty", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateDuty() throws FLException{
 		
+		if(SystemConfig.getString("communion") == null){
+		    throw new FLException(-1, "无操作权限");
+		}
+		
 		dutyService.updateDuty(duty);
 		
 		return SUCCESS;
@@ -71,6 +80,10 @@ public class DutyAction extends BaseListAction{
 	
 	@Action(value = "updateDutyForStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateDutyForStatus() throws FLException{
+		
+		if(SystemConfig.getString("communion") == null){
+		    throw new FLException(-1, "无操作权限");
+		}
 		
 		dutyService.updateDutyForStatus(duty);
 		

@@ -2,27 +2,26 @@ package com.fanglin.production.vo;
 
 import java.io.Serializable;
 
-public class PuoteItemVO implements Serializable{
-	
-	
+public class PuoteItemVO implements Serializable {
+
 	private static final long serialVersionUID = -551178681762616111L;
 
 	private Long qiid;
-	
+
 	private String name;
-	
+
 	private String pinyin;
-	
+
 	private String format;
-	
+
 	private String measurementunit;
-	
+
 	private Float unitprice;
-	
+
 	private Short status;
-	
+
 	private Integer company;
-	
+
 	private QuoteTypeVO quoteType;
 
 	public PuoteItemVO() {
@@ -31,7 +30,7 @@ public class PuoteItemVO implements Serializable{
 
 	public PuoteItemVO(QuoteTypeVO quoteType) {
 		super();
-		
+
 		this.quoteType = quoteType;
 	}
 
@@ -107,6 +106,4 @@ public class PuoteItemVO implements Serializable{
 		this.quoteType = quoteType;
 	}
 
-	
-	
 }

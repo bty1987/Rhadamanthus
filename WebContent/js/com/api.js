@@ -28,13 +28,13 @@ var Api = function(){
 
             var dtd = $.Deferred();
 
-            fillApi(path + 'addReduce.js');
+            /*fillApi(path + 'addReduce.js');*/
             fillApi(path + 'approval.js');
             fillApi(path + 'common.js');
             fillApi(path + 'construction.js');
             fillApi(path + 'data.js');
             fillApi(path + 'decoration.js');
-            fillApi(path + 'department.js');
+            /*fillApi(path + 'department.js');*/
             fillApi(path + 'dingding.js');
             fillApi(path + 'drawline.js');
             fillApi(path + 'information.js');
@@ -53,7 +53,8 @@ var Api = function(){
 			fillApi(path + 'production.js');
             fillApi(path + 'ds.js');
             fillApi(path + 'building.js');
-
+            fillApi(path + 'communion.js');
+            fillApi(path + 'customer.js');
             return dtd.promise();
         }
     }

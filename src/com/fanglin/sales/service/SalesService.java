@@ -16,6 +16,8 @@ public interface SalesService {
 	
 	public void pageSalesForBalance(Paging paging,List<Filter> filter,String userId,int company);
 	
+	public void pageSalesForDompany(Paging paging,List<Filter> filter,String userId,int dompany);
+	
 	public SalesVO querySalesBySid(SalesVO salesVO) throws FLException;
 	
 	public SalesVO querySalesByNo(SalesVO salesVO) throws FLException;

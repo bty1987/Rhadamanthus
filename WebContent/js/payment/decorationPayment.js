@@ -305,6 +305,8 @@ jQuery(function($) {
 
 			if(v.paymentStatus == "已确认" && v.oneType == 0){
 				$divBtnWrap.append($btnPrint).append($btnRefund).appendTo($h3);
+			}else if(v.paymentType.search('退款') != -1 || v.paymentType.search('历史') != -1){
+				$divBtnWrap.append($btnPrint).appendTo($h3);
 			}else{
 				$divBtnWrap.append($btnPrint).append($btnUpdate).appendTo($h3);
 			}

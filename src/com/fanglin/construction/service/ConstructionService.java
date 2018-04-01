@@ -20,11 +20,11 @@ import com.fanglin.utils.Paging;
 
 public interface ConstructionService {
 	
-	public void pageDecorationForConstruction(Paging paging, List<Filter> filters, Integer company);
+	public void pageConstruction(Paging paging, List<Filter> filters, Integer company);
 	
-	public void pageDecorationForSupervisionByUserId(Paging paging, List<Filter> filters, String userId, Integer company) throws FLException;
+	public void pageConstructionForSupervision(Paging paging, List<Filter> filters, String userId)throws FLException;
 
-	public void pageDecorationForAcceptance(Paging paging, List<Filter> filters, Integer company);
+	public void pageConstructionForAcceptance(Paging paging, List<Filter> filters, Integer company);
 	
 	public ConstructionVO queryConstructionById(int cid);
 	

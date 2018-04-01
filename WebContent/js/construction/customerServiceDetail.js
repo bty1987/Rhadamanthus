@@ -1,200 +1,200 @@
+jQuery(function ($) {
 
-jQuery(function($) {
+    var constructionNode = {};
+    var customerServiceDetail = {
 
-	var constructionNode = {};
-	var customerServiceDetail = {
+        constructionSchedules: {},
+        constructionNodeName: [
+            "chan", "putline", "waterwayCircuitPower", "bricklay", "groundLeveling",
+            "carpent", "oil", "waterwayCircuitCheck", "cleaning",
+        ],
 
-		constructionSchedules:{},
-		constructionNodeName:[
-			"chan", "putline", "waterwayCircuitPower", "bricklay", "groundLeveling",
-			"carpent", "oil", "waterwayCircuitCheck", "cleaning",
-		],
+        wizardSept: {
+            "1": false,
+            "2": false,
+            "3": false,
+            "4": false,
+            "5": false,
+            "6": false,
+            "7": false,
+        },
 
-		wizardSept: {
-			"1": false,
-			"2": false,
-			"3": false,
-			"4": false,
-			"5": false,
-			"6": false,
-			"7": false,
-		},
+    };
 
-	};
+    var orderId = params;
+    var commitFlag = false;
+    var workerIdsData = [];
 
-	var orderId = params;
-	var commitFlag = false;
-	var workerIdsData = [];
+    //获取所有节点
+    com.post(api.data.queryConstructionNode, {}, function (res) {
+        $.each(res.constructionNodes, function (i, v) {
+            constructionNode[v.cnid] = v.name;
+        })
+    }, null, false);
 
-	//获取所有节点
-	com.post(api.data.queryConstructionNode, {}, function(res){
-		$.each(res.constructionNodes, function(i, v){
-			constructionNode[v.cnid] = v.name;
-		})
-	}, null, false);
+    //动态获取节点轴
+    com.post(api.construction.queryConstructionScheduleByOrderId, {"constructionSchedule.orderId": params.orderId}, function (res) {
 
-	//动态获取节点轴
-	com.post(api.construction.queryConstructionScheduleByOrderId,{"constructionSchedule.orderId":params.orderId},function(res){
+        var constructionSchedule = res.constructionSchedules;
 
-		var constructionSchedule = res.constructionSchedules;
+        customerServiceDetail.constructionSchedules = res.constructionSchedules;
 
-		customerServiceDetail.constructionSchedules = res.constructionSchedules;
+        $.each(constructionSchedule, function (i, v) {
+            customerServiceNode("#stepId", v.schedule);
 
-		$.each(constructionSchedule, function(i, v){
-			customerServiceNode("#stepId", v.schedule);
-			customerServicePane("#step-container", v.schedule, customerServiceDetail.constructionNodeName[v.schedule-1]);
-		});
+            customerServicePane("#step-container", v.schedule, customerServiceDetail.constructionNodeName[v.schedule - 3]);
+        });
 
-		var stepnum = constructionSchedule[0].schedule;
-		initWizardSept(stepnum);
+        var stepnum = constructionSchedule[0].schedule;
+        initWizardSept(stepnum);
 
-		$('#fuelux-wizard').ace_wizard({status:true}).on('finished', function(e) {
-			com.showAlert(com.info, "工程已经结束,之后可以进行验收工作!");
-		}).on('stepclick', function(e, info){
-			var stepId = $("[flag]").eq(info.step-1).attr("id");
-			var sd = stepId.substring(4);
-			if(!customerServiceDetail.wizardSept[sd]){
-				initWizardSept(sd);
-			}
-		});
+        $('#fuelux-wizard').ace_wizard({status: true}).on('finished', function (e) {
+            com.showAlert(com.info, "工程已经结束,之后可以进行验收工作!");
+        }).on('stepclick', function (e, info) {
+            var stepId = $("[flag]").eq(info.step - 1).attr("id");
+            var sd = stepId.substring(4);
+            if (!customerServiceDetail.wizardSept[sd]) {
+                initWizardSept(sd);
+            }
+        });
 
-	},null,false);
+    }, null, false);
 
-	$('#modal-wizard .modal-header').ace_wizard();
-	$('#modal-wizard .wizard-actions .btn[data-dismiss=modal]').removeAttr('disabled');
+    $('#modal-wizard .modal-header').ace_wizard();
+    $('#modal-wizard .wizard-actions .btn[data-dismiss=modal]').removeAttr('disabled');
 
-	$('#btnBack').on(ace.click_event, function(){
-		com.switchPage(api.index.customerServiceIndex.url);
-	});
+    $('#btnBack').on(ace.click_event, function () {
+        com.switchPage(api.index.customerServiceIndex.url);
+    });
 
-	function initWizardSept(schedule){
+    function initWizardSept(schedule) {
 
-		addActive(schedule)
+        addActive(schedule)
 
-		var elementPostData = {};
-		elementPostData["constructer.orderId"] = params.orderId;
-		elementPostData["constructer.schedule"] = schedule;
+        var elementPostData = {};
+        elementPostData["constructer.orderId"] = params.orderId;
+        elementPostData["constructer.schedule"] = schedule;
 
-		//得到全部的施工人员
-		com.post(api.construction.queryConstructerByOrderId, elementPostData, function(res){
-			constructers = res.constructers;
+        //得到全部的施工人员
+        com.post(api.construction.queryConstructerByOrderId, elementPostData, function (res) {
+            constructers = res.constructers;
+            $("#btnSave").unbind("click");
 
-			$("#btnSave").unbind("click");
+            if (schedule) {
+                workerIdsData = [];
+                commitFlag = false;
+                $("#" + customerServiceDetail.constructionNodeName[schedule - 3] + "WorkerInfos").html("");
 
-			if(schedule){
-				workerIdsData = [];
-				commitFlag = false;
-				$("#" + customerServiceDetail.constructionNodeName[schedule-1] + "WorkerInfos").html("");
+                if (constructers.length != 0) {
+                    for (var i = 0; i < constructers.length; i++) {
 
-				if(constructers.length != 0 ){
-					for(var i=0;i<constructers.length;i++){
-						var workerInfo =  constructers[i];
-						var profileDiv = $('<div class="profile-picture col-sm-4" style="padding-top: 10px;"></div>');
+                        var workerInfo = constructers[i];
 
-						var imgDiv = $('<div class="col-sm-6 workerImg"></div>').css("width", "49%").appendTo(profileDiv);
-						var img = $('<img />').attr("alt", workerInfo.user.userId +"'s photo").attr("id", workerInfo.user.userId +"WorkerImg").appendTo(imgDiv);
+                        var profileDiv = $('<div class="profile-picture col-sm-4" style="padding-top: 10px;"></div>');
+                        var imgDiv = $('<div class="col-sm-6 workerImg"></div>').css("width", "49%").appendTo(profileDiv);
+                        var img = $('<img />').attr("alt", workerInfo.user.userId + "'s photo").attr("id", workerInfo.user.userId + "WorkerImg").appendTo(imgDiv);
 
-						if(workerInfo.user.userPhoto != null && workerInfo.user.userPhoto != ""){
-							img.attr("src", config.media + api.common.showImg.url + '?imgBasePath='+workerInfo.user.userPhoto+'&divFlag=1&width=150&height=150&timestamp='+ new Date().getTime());
-						}
+                        if (workerInfo.user.userPhoto != null && workerInfo.user.userPhoto != "") {
+                            img.attr("src", config.media + api.common.showImg.url + '?imgBasePath=' + workerInfo.user.userPhoto + '&divFlag=1&width=150&height=150&timestamp=' + new Date().getTime());
+                        }
 
-						var horizontalDiv = $('<div class="form-horizontal col-sm-6">').appendTo(profileDiv);
-						var workerNameGroupDiv = $('<div class="form-group">').appendTo(horizontalDiv);
-						var workerNameSpan = $('<span id="workerNameSpan"></span>').text(workerInfo.user.userName).appendTo(workerNameGroupDiv);
+                        var horizontalDiv = $('<div class="form-horizontal col-sm-6">').appendTo(profileDiv);
+                        var workerNameGroupDiv = $('<div class="form-group">').appendTo(horizontalDiv);
+                        var workerNameSpan = $('<span id="workerNameSpan"></span>').text(workerInfo.user.userName).appendTo(workerNameGroupDiv);
 
-						var workerRatyGroupDiv = $('<div class="form-group">').appendTo(horizontalDiv);
-						var workerRatyDiv = $('<div></div>').attr("id", workerInfo.crid+"workerRaty").appendTo(workerRatyGroupDiv);
+                        var workerRatyGroupDiv = $('<div class="form-group">').appendTo(horizontalDiv);
+                        var workerRatyDiv = $('<div></div>').attr("id", workerInfo.crid + "workerRaty").appendTo(workerRatyGroupDiv);
 
-						var workerDesGroupDiv = $('<div class="form-group">').appendTo(horizontalDiv);
-						var workerDesTextarea = $('<textarea rows="3"></textarea>').attr("id", workerInfo.crid+"workerRatyDes").val(workerInfo.assessment).appendTo(workerDesGroupDiv);
+                        var workerDesGroupDiv = $('<div class="form-group">').appendTo(horizontalDiv);
+                        var workerDesTextarea = $('<textarea rows="3"></textarea>').attr("id", workerInfo.crid + "workerRatyDes").val(workerInfo.assessment).appendTo(workerDesGroupDiv);
 
-						profileDiv.appendTo($("#" + customerServiceDetail.constructionNodeName[schedule-1] + "WorkerInfos"));
+                        profileDiv.appendTo($("#" + customerServiceDetail.constructionNodeName[schedule - 3] + "WorkerInfos"));
 
-						setWorkerRaty('#'+workerInfo.crid+"workerRaty", workerInfo.rate);
-						setWorkerDes("#"+workerInfo.crid+"workerRatyDes", workerInfo.assessment);
+                        setWorkerRaty('#' + workerInfo.crid + "workerRaty", workerInfo.rate);
+                        setWorkerDes("#" + workerInfo.crid + "workerRatyDes", workerInfo.assessment);
 
-						workerIdsData.push(constructers[i].crid);
-					}
+                        workerIdsData.push(constructers[i].crid);
+                    }
 
-					commitFlag = true;
-				}else{
-					$('<div class="alert alert-info">').text("当前进度没有分配工人!").appendTo($("#" + customerServiceDetail.constructionNodeName[schedule-1] + "WorkerInfos"));
-				}
+                    commitFlag = true;
+                } else {
+                    $('<div class="alert alert-info">').text("当前进度没有分配工人!").appendTo($("#" + customerServiceDetail.constructionNodeName[schedule - 3] + "WorkerInfos"));
+                }
 
-				$("#btnSave").click(function(){
-					var successFlag = false;
-					for(var i=0;i<workerIdsData.length;i++){
-						successFlag = false;
-						var options = {};
-						options["constructer.crid"] = workerIdsData[i];
-						options["constructer.rate"] = $("#"+workerIdsData[i] + "workerRaty-score").val();
-						options["constructer.assessment"] = $("#"+workerIdsData[i] + "workerRatyDes").val();
+                $("#btnSave").click(function () {
+                    var successFlag = false;
+                    for (var i = 0; i < workerIdsData.length; i++) {
+                        successFlag = false;
+                        var options = {};
+                        options["constructer.crid"] = workerIdsData[i];
+                        options["constructer.rate"] = $("#" + workerIdsData[i] + "workerRaty-score").val();
+                        options["constructer.assessment"] = $("#" + workerIdsData[i] + "workerRatyDes").val();
 
-						if(commitFlag){
-							com.post(api.construction.updateConstructerForRate, options, function(res){
-								successFlag = true;
-							}, null, false);
-						}
-					}
-					
-					if(successFlag){
-						com.showAlert(com.info, "保存成功!");
-					}
-				});
-			}
+                        if (commitFlag) {
+                            com.post(api.construction.updateConstructerForRate, options, function (res) {
+                                successFlag = true;
+                            }, null, false);
+                        }
+                    }
 
-			return false;
+                    if (successFlag) {
+                        com.showAlert(com.info, "保存成功!");
+                    }
+                });
+            }
 
-			for (var i = 0; i < constructers.length; i++){
-				var workerInfo = constructers[i];
-				if(workerInfo.cid == 0){
-					customerServiceDetail["constructer.crid"] = 0;
-				}
-			}
-		});
-	}
+            return false;
 
-	function setWorkerDes(id, des){
-		$(id).val(des);
-	}
+            for (var i = 0; i < constructers.length; i++) {
+                var workerInfo = constructers[i];
+                if (workerInfo.cid == 0) {
+                    customerServiceDetail["constructer.crid"] = 0;
+                }
+            }
+        });
+    }
 
-	function setWorkerRaty(id, raty){
-		$(id).raty({
-			path: './assets/altogether/images/',
-			start: raty,
-		});
-	}
+    function setWorkerDes(id, des) {
+        $(id).val(des);
+    }
 
-	//画节点信息轴
-	function customerServiceNode(stepul, schedule){
-		var stepLi = $("<li></li>").attr("data-targe", "#step" + schedule).addClass("complete").appendTo(stepul);
-		var stepSpan = $("<span></span>").addClass("step").html(schedule).appendTo(stepLi);
-		var stepSpan = $("<span></span>").addClass("title").html(constructionNode[schedule]).appendTo(stepLi);
-	}
+    function setWorkerRaty(id, raty) {
+        $(id).raty({
+            path: './assets/altogether/images/',
+            start: raty,
+        });
+    }
 
-	//画面板
-	function customerServicePane(paneId, schedule,scheduleNodeNamePinyin){
-		var paneCus = $("<div></div>").addClass("step-pane").attr("id","step" + schedule).attr("flag","step").appendTo(paneId);
-		var paneCusRow = $("<div></div>").addClass("row").appendTo(paneCus);
-		var paneCusForm = $("<form></form>").addClass("form-horizontal").appendTo(paneCusRow);
-		var paneCusGroup = $("<div></div>").addClass("form-group").appendTo(paneCusForm);
-		var paneCusSm = $("<div></div>").addClass("col-sm-12").appendTo(paneCusGroup);
-		var paneCusCent = $("<div></div>").addClass("text-center").appendTo(paneCusSm);
-		var paneCusH3 = $("<h3></h3>").addClass("header smaller lighter green").appendTo(paneCusCent);
-		var paneCusI = $("<i></i>").addClass("icon-group").appendTo(paneCusH3);
-		var paneCusSpan = $("<span></span>").html(constructionNode[schedule] + "工人信息").appendTo(paneCusH3);
-		var paneCusInfo = $("<div></div>").attr("id",scheduleNodeNamePinyin + "WorkerInfos").appendTo(paneCusCent);
-		var paneCusSpace = $("<div></div>").addClass("space-4").appendTo(paneCusForm);
-	}
+    //画节点信息轴
+    function customerServiceNode(stepul, schedule) {
+        var stepLi = $("<li></li>").attr("data-targe", "#step" + schedule).addClass("complete").appendTo(stepul);
+        var stepSpan = $("<span></span>").addClass("step").html(schedule).appendTo(stepLi);
+        var stepSpan = $("<span></span>").addClass("title").html(constructionNode[schedule]).appendTo(stepLi);
+    }
 
-	function addActive(schedule){
-		var con = customerServiceDetail.constructionSchedules;
-		$.each(con,function(i, v){
-			$("#step" + v.schedule).removeClass("active");
-			$("#step" +  v.schedule).addClass("step-pane");
-		});
-		$("#step" + schedule).removeClass("step-pane");
-		$("#step" + schedule).addClass("active");
-	}
+    //画面板
+    function customerServicePane(paneId, schedule, scheduleNodeNamePinyin) {
+        var paneCus = $("<div></div>").addClass("step-pane").attr("id", "step" + schedule).attr("flag", "step").appendTo(paneId);
+        var paneCusRow = $("<div></div>").addClass("row").appendTo(paneCus);
+        var paneCusForm = $("<form></form>").addClass("form-horizontal").appendTo(paneCusRow);
+        var paneCusGroup = $("<div></div>").addClass("form-group").appendTo(paneCusForm);
+        var paneCusSm = $("<div></div>").addClass("col-sm-12").appendTo(paneCusGroup);
+        var paneCusCent = $("<div></div>").addClass("text-center").appendTo(paneCusSm);
+        var paneCusH3 = $("<h3></h3>").addClass("header smaller lighter green").appendTo(paneCusCent);
+        var paneCusI = $("<i></i>").addClass("icon-group").appendTo(paneCusH3);
+        var paneCusSpan = $("<span></span>").html(constructionNode[schedule] + "工人信息").appendTo(paneCusH3);
+        var paneCusInfo = $("<div></div>").attr("id", scheduleNodeNamePinyin + "WorkerInfos").appendTo(paneCusCent);
+        var paneCusSpace = $("<div></div>").addClass("space-4").appendTo(paneCusForm);
+    }
+
+    function addActive(schedule) {
+        var con = customerServiceDetail.constructionSchedules;
+        $.each(con, function (i, v) {
+            $("#step" + v.schedule).removeClass("active");
+            $("#step" + v.schedule).addClass("step-pane");
+        });
+        $("#step" + schedule).removeClass("step-pane");
+        $("#step" + schedule).addClass("active");
+    }
 
 });

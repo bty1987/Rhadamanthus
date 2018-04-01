@@ -18,91 +18,90 @@ import com.fanglin.production.vo.PuotationVO;
 @ParentPackage("base")
 @Namespace("/")
 @Controller
-public class PuotationAction  extends BaseListAction {
+public class PuotationAction extends BaseListAction {
 
 	private static final long serialVersionUID = 556765449865257L;
-	
+
 	@Autowired
 	private PuotationService puotationService;
-	
+
 	private PuotationVO puotation;
 
 	private List<PuotationVO> puotations;
-	
+
 	private PuotationItemVO puotationItem;
 
 	private List<PuotationItemVO> puotationItems;
-	
-	
+
 	@Action(value = "queryPuotationByPid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryPuotationByPid(){
-		
+	public String queryPuotationByPid() {
+
 		puotations = puotationService.queryPuotationByPid(puotation);
-		
+
 		return SUCCESS;
 	}
 
 	@Action(value = "queryPuotationItemByQid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryPuotationItemByQid(){
-		
+	public String queryPuotationItemByQid() {
+
 		puotationItems = puotationService.queryPuotationItemByQid(puotation);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "addPuotation", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addPuotation() throws FLException{
-		
+	public String addPuotation() throws FLException {
+
 		puotationService.addPuotation(puotation, puotationItems, queryUserId());
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "addPuotationItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addPuotationItem() throws FLException{
-		
+	public String addPuotationItem() throws FLException {
+
 		puotationService.addPuotationItem(puotationItem);
-		
+
 		return SUCCESS;
 	}
 
 	@Action(value = "updatePuotation", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updatePuotation() throws FLException{
-		
+	public String updatePuotation() throws FLException {
+
 		puotationService.updatePuotation(puotation);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "updatePuotationForAdvance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updatePuotationForAdvance() throws FLException{
-		
+	public String updatePuotationForAdvance() throws FLException {
+
 		puotationService.updatePuotationForAdvance(puotation);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "updatePuotationForDefault", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updatePuotationForDefault() throws FLException{
-		
+	public String updatePuotationForDefault() throws FLException {
+
 		puotationService.updatePuotationForDefault(puotation);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "deletePuotation", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String deletePuotation() throws FLException{
-		
+	public String deletePuotation() throws FLException {
+
 		puotationService.deletePuotation(puotation);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "deletePuotationItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String deletePuotationItem() throws FLException{
-		
+	public String deletePuotationItem() throws FLException {
+
 		puotationService.deletePuotationItem(puotationItem);
-		
+
 		return SUCCESS;
 	}
 
@@ -137,6 +136,5 @@ public class PuotationAction  extends BaseListAction {
 	public void setPuotationItems(List<PuotationItemVO> puotationItems) {
 		this.puotationItems = puotationItems;
 	}
-	
-	
+
 }

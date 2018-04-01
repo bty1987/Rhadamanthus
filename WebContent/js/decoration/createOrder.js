@@ -205,7 +205,7 @@ jQuery(function($) {
 			clearHouse();
 			com.clearValidator("#houseNumber", true);
 			com.updateChosen('no', orderEntry.orderItems.villageId.val(), $("#villageId" + " option:selected").text())
-			orderEntry.houseItems.no.trigger("change")
+			orderEntry.houseItems.no.trigger("change");
 			$("#houseModal").modal("show");
 		}, false);
 

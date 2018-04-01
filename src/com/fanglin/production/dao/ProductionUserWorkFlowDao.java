@@ -8,4 +8,7 @@ import com.fanglin.production.po.ProductionUserWorkFlowPO;
 public interface ProductionUserWorkFlowDao extends Dao<ProductionUserWorkFlowPO>{
 	
 	public List<ProductionUserWorkFlowPO> queryProductionUserWorkFlowByPwfid(long pwfid);
+	
+	public List<ProductionUserWorkFlowPO> queryProductionUserWorkFlowByPwfids(List<Long> pwfids);
+	
 }

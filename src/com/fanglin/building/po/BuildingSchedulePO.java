@@ -19,7 +19,7 @@ public class BuildingSchedulePO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -6825561633675570876L;
 	
-	public static final String COLUMN_BOID_STR = "building.boid";
+	public static final String COLUMN_BID_STR = "building.bid";
 	
 	public static final String COLUMN_STATUS_STR = "status";
 	
@@ -80,7 +80,7 @@ public class BuildingSchedulePO implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "boid", referencedColumnName = "boid")
+	@JoinColumn(name = "bid", referencedColumnName = "bid")
 	public BuildingPO getBuilding() {
 		return building;
 	}

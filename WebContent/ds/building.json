@@ -138,8 +138,11 @@
 		{"key":"5", "value":"五室"},
 		{"key":"6", "value":"五室以上"}
 	], "status":[
-		{"key":"0", "value":"初始"},
-		{"key":"1", "value":"失效"}
+		{"key":"0", "value":"待审核"},
+		{"key":"1", "value":"签约"},
+		{"key":"2", "value":"失效"},
+		{"key":"3", "value":"通过"},
+		{"key":"4", "value":"驳回"}
 	],"pattern":[
 		{"key":"0", "value":"店内洽谈"},
 		{"key":"1", "value":"网上联系"},

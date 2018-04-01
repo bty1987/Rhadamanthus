@@ -14,60 +14,59 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.production.service.QuoteTypeService;
 import com.fanglin.production.vo.QuoteTypeVO;
 
-
 @ParentPackage("base")
 @Namespace("/")
 @Controller
-public class QuoteTypeAction extends BaseListAction{
-	
+public class QuoteTypeAction extends BaseListAction {
+
 	private static final long serialVersionUID = 239041271108700059L;
-	
+
 	@Autowired
 	private QuoteTypeService quoteTypeService;
-	
-	private List<QuoteTypeVO> quoteTypes; 
-	
+
+	private List<QuoteTypeVO> quoteTypes;
+
 	private QuoteTypeVO quoteType;
-	
+
 	@Action(value = "pageQuoteType", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageQuoteType(){
-		
+	public String pageQuoteType() {
+
 		quoteTypeService.pageQuoteType(getPaging(), getFilters());
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "queryQuoteType", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryQuoteType(){
-		
+	public String queryQuoteType() {
+
 		quoteTypes = quoteTypeService.queryQuoteType();
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "addQuoteType", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addQuoteType() throws FLException{
-		
+	public String addQuoteType() throws FLException {
+
 		quoteTypeService.addQuoteType(quoteType);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "updateQuoteType", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateQuoteType() throws FLException{
-		
+	public String updateQuoteType() throws FLException {
+
 		quoteTypeService.updateQuoteType(quoteType);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "updateQuoteTypeForStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateQuoteTypeForStatus() throws FLException{
-		
+	public String updateQuoteTypeForStatus() throws FLException {
+
 		quoteTypeService.updateQuoteTypeForStatus(quoteType);
 		return SUCCESS;
 	}
-	
+
 	public List<QuoteTypeVO> getQuoteTypes() {
 		return quoteTypes;
 	}

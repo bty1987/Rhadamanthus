@@ -19,7 +19,7 @@ import com.fanglin.inventory.vo.ManifestVO;
 
 public interface ManifestItemService {
 	
-	public List<ManifestItemVO> queryManifestItemByMId(ManifestVO manifestVO);
+	public List<ManifestItemVO> queryManifestItemByMid(ManifestVO manifestVO);
 	
 	public List<ManifestItemVO> queryManifestItemBySiids(List<Long> siids);
 	

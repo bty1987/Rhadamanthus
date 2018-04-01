@@ -369,6 +369,9 @@ $.extend(api, {
         pageSalesForBalance:{
           url:"pageSalesForBalance.do",
         },
+        pageSalesForDompany:{
+            url:"pageSalesForDompany.do",
+        },
         querySalesBySid: {
             url: "querySalesBySid.do",
         },
@@ -409,6 +412,9 @@ $.extend(api, {
         },
         pageSalesBalance:{
             url:"pageSalesBalance.do",
+        },
+        pageSalesBalanceForDompany:{
+            url:"pageSalesBalanceForDompany.do",
         },
         updateSalesBalanceForVBalance:{
             url:"updateSalesBalanceForVBalance.do",

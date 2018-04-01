@@ -46,6 +46,30 @@ public class UserContractAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	 @Action(value="addUserContract", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	  public String addUserContract()
+	  {
+	    userContractService.saveOrUpdateUserContract(getUserContractList());
+
+	    return "success";
+	  }
+
+	  @Action(value="updateUserContract", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	  public String updateUserContract()
+	  {
+	    userContractService.saveOrUpdateUserContract(getUserContractList());
+
+	    return "success";
+	  }
+
+	  @Action(value="deleteUserContract", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	  public String deleteUserContract()
+	  {
+	    userContractService.deleteUserContract(getUserContractIds());
+
+	    return "success";
+	  }
+	
 	public List<UserContractVO> getUserContractList(){
 		return userContractList;
 	}

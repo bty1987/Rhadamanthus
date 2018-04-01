@@ -1,7 +1,7 @@
 jQuery(function($) {
-	var buildingNodes = {};
+	var buildingNodes = [];
 	var buildingSchedules = {};
-	var buildingNodeLen;
+	var buildingSores = [];
 	
 	var colorboxArgs = {
 		reposition:true,
@@ -16,34 +16,27 @@ jQuery(function($) {
 	};
 
 	//获取所有节点
-	com.post(api.building.queryBuildingNodeByType, {"buildingNode.type":params.type}, function(res){
-		var len;
+	com.post(api.building.queryBuildingNodeByType, {"buildingNode.type":params.type, "buildingNode.status":0}, function(res){
 		$.each(res.buildingNodes, function(i, v){
-			buildingNodes[v.sore] = v.name;
-			len = i
+			buildingNodes[i] = (v.sore);
 		});
-		buildingNodeLen = len + 1;
 	}, null, false);
 
 	//动态获取节点轴
-	com.post(api.building.queryBuildingScheduleByBoid, {"buildingSchedule.building.boid":params.boid}, function(res){
-		buildingSchedules = res.buildingSchedules;
-
-		$.each(buildingSchedules, function(i, v){
+	com.post(api.building.queryBuildingScheduleByBid, {"buildingSchedule.building.bid":params.bid}, function(res){
+		$.each(res.buildingSchedules, function(i, v){
+			buildingSchedules[v.buildingNode.sore] = v;
+			buildingSores[i] = v.buildingNode.sore;
 			showBuildingNode("#stepId", v.buildingNode.sore);
 			buildingPane("#step-container", v.buildingNode.sore);
 		});
-
-		var stepnum = buildingSchedules[0].buildingNode.sore;
-
-		initWizardSept(stepnum);
 
 		$('#fuelux-wizard').ace_wizard({status:true}).on('finished', function(e) {
 			com.showAlert(com.info, "当前房产单流转已完成！");
 		}).on('stepclick', function(e, info){
 			var stepId = $("[flag]").eq(info.step-1).attr("id");
 			var sd = stepId.substring(4);
-				initWizardSept(sd);
+			initWizardSept(sd);
 		});
 	},null,false);
 
@@ -53,7 +46,7 @@ jQuery(function($) {
 	$('[data-rel=popover]').popover({html:true});
 
 	//显示初始页面是最后一个
-	initWizardSept(buildingSchedules.length);
+	initWizardSept(buildingSores[buildingSores.length-1]);
 
 	//当前面板显示内容
 	function initWizardSept(sore){
@@ -62,7 +55,7 @@ jQuery(function($) {
 		scheduleStatus(sore);
 
 		var options = {};
-		options["buildingDrawing.sid"] = buildingSchedules[sore-1].bsid;
+		options["buildingDrawing.sid"] = buildingSchedules[sore].bsid;
 		options["buildingDrawing.type"] = 3;
 
 		com.post(api.building.queryBuildingDrawing, options, function(res){
@@ -75,7 +68,7 @@ jQuery(function($) {
 			};
 		});
 
-		initUploadBtn(sore, buildingSchedules[sore-1].bsid, buildingSchedules[sore-1].buildingNode.name);
+		initUploadBtn(sore, buildingSchedules[sore].bsid, buildingSchedules[sore].buildingNode.name);
 
 		$('#'+ sore + "Drawing").removeClass("active");
 
@@ -86,76 +79,86 @@ jQuery(function($) {
 		//点击更新按钮  更新计划时间和备注信息(计划时间可能没有)
 		$("#" + sore + "btnUpdate").unbind("click");
 		$("#" + sore + "btnUpdate").on("click", function(){
+			if(buildingSchedules[sore].status == 2){
+				com.showAlert(com.warning, "当前节点已完成，不能修改节点信息！");
+				return;
+			}
 
-		var options = {};
-		options["buildingSchedule.bsid"] = buildingSchedules[sore-1].bsid;
-		options["buildingSchedule.comment"] = $("#" + sore + "Record").val();
-		options["buildingSchedule.planTime"] = $("#" + sore + "PlanTime").val();
+			var options = {};
+			options["buildingSchedule.bsid"] = buildingSchedules[sore].bsid;
+			options["buildingSchedule.comment"] = $("#" + sore + "Record").val();
+			options["buildingSchedule.planTime"] = $("#" + sore + "PlanTime").val();
 
-		com.post(api.building.updateBuildingSchedule, options, function(res){
-			buildingSchedules[sore-1] = res.buildingSchedule;
-			buildingSchedules[sore-1].operatTime = getCurrentDate();
-			scheduleStatus(sore);
-			scheduleMessage(sore);
-			com.showAlert(com.info, "更新成功！");
-		});
+			com.post(api.building.updateBuildingSchedule, options, function(res){
+				buildingSchedules[sore] = res.buildingSchedule;
+				buildingSchedules[sore].operatTime = getCurrentDate();
+				scheduleStatus(sore);
+				scheduleMessage(sore);
+				com.showAlert(com.info, "更新成功！");
+			});
 		});
 
 		//点击下一步
 		$("#" + sore + "btnNext").unbind("click");
 		$("#" + sore + "btnNext").on("click", function(){
+			var nodeSore = buildingNodes.indexOf(parseInt(sore));
+			var nextNodeSore = buildingNodes[parseInt(nodeSore)+1];
 
-			if(sore == buildingSchedules.length){
-
-				if(sore == buildingNodeLen){
-					var options = {};
-					options["buildingSchedule.bsid"] = buildingSchedules[sore-1].bsid;
-
-					com.post(api.building.updateBuildingScheduleForStatus, options, function(res){
-						$("#sstep" + sore).addClass("complete");
-						com.showAlert(com.info, "当前房产单流转已完成！");
-					});
-
-					var datas = {};
-					datas["buildingSchedule.bsid"] = buildingSchedules[sore-1].bsid;
-					datas["buildingSchedule.comment"] = $("#" + sore + "Record").val();
-					datas["buildingSchedule.planTime"] = $("#" + sore + "PlanTime").val();
-
-					com.post(api.building.updateBuildingSchedule, datas, function(res){
-						buildingSchedules[sore-1] = res.buildingSchedule;
-						$("#" + sore + "OperatTime").val(getCurrentDate());
-						buildingSchedules[sore-1].operatTime = getCurrentDate();
-						scheduleStatus(sore);
-						com.showAlert(com.info, "更新成功！");
-					});
-				}else{
+			if((buildingNodes).indexOf(parseInt(nextNodeSore)) > 0){
+				if(buildingSores.indexOf(parseInt(nextNodeSore)) < 0){
 					//更新节点状态、生成下一节点
 					var bsDate = {};
-					bsDate["buildingSchedule.bsid"] = buildingSchedules[sore-1].bsid;
+					bsDate["buildingSchedule.bsid"] = buildingSchedules[sore].bsid;
 					bsDate["buildingSchedule.comment"] = $("#" + sore + "Record").val();
 					bsDate["buildingSchedule.planTime"] = $("#" + sore + "PlanTime").val();
-					bsDate["buildingSchedule.buildingNode.type"] = params.type;
-					bsDate["buildingSchedule.building.boid"] = params.boid;
-					bsDate["buildingSchedule.buildingNode.sore"] = sore + 1;
+					bsDate["buildingSchedule.buildingNode.sore"] = nextNodeSore;
 
 					com.post(api.building.nextBuildingSchedule, bsDate, function(res){
-						buildingSchedules[sore-1].status = 2;
-						buildingSchedules[sore-1].planTime = $("#" + sore + "PlanTime").val();
-						buildingSchedules[sore-1].operatTime = getCurrentDate();
-						buildingSchedules[sore-1].comment = $("#" + sore + "Record").val();
-						buildingSchedules.push(res.buildingSchedule);
+						buildingSchedules[sore].status = 2;
+						buildingSchedules[sore].planTime = $("#" + sore + "PlanTime").val();
+						buildingSchedules[sore].operatTime = getCurrentDate();
+						buildingSchedules[sore].comment = $("#" + sore + "Record").val();
+						var num = res.buildingSchedule.buildingNode.sore;
+						buildingSchedules[num] = res.buildingSchedule;
+						buildingSores.push(num);
 						$("#sstep" + sore).addClass("complete");
 
-						showBuildingNode("#stepId", parseInt(sore)+1);
-						buildingPane("#step-container", parseInt(sore)+1);
-						$("#step" + parseInt(sore) + 1).removeClass("step-pane").addClass("active complete");
+						showBuildingNode("#stepId", nextNodeSore);
+						buildingPane("#step-container", nextNodeSore);
+						$("#step" + nextNodeSore).removeClass("step-pane").addClass("active complete");
 
-						initWizardSept(parseInt(sore) + 1);
+						initWizardSept(nextNodeSore);
 					});
+				}else{
+					initWizardSept(nextNodeSore);
 				}
 
-			}else{
-				initWizardSept(parseInt(sore) + 1);
+			}else if(sore == buildingNodes[buildingNodes.length-1]){
+				if(buildingSchedules[sore].status == 2){
+					com.showAlert(com.warning, "当前房产单流转已完成！");
+					return;
+				}
+
+				var datas = {};
+				datas["buildingSchedule.bsid"] = buildingSchedules[sore].bsid;
+				datas["buildingSchedule.comment"] = $("#" + sore + "Record").val();
+				datas["buildingSchedule.planTime"] = $("#" + sore + "PlanTime").val();
+
+				com.post(api.building.updateBuildingSchedule, datas, function(res){
+					buildingSchedules[sore] = res.buildingSchedule;
+					$("#" + sore + "OperatTime").val(getCurrentDate());
+					buildingSchedules[sore].operatTime = getCurrentDate();
+				});
+
+				var options = {};
+				options["buildingSchedule.bsid"] = buildingSchedules[sore].bsid;
+
+				com.post(api.building.updateBuildingScheduleForStatus, options, function(res){
+					buildingSchedules[sore].status = 2;
+					$("#sstep" + sore).addClass("complete");
+					scheduleStatus(sore);
+					com.showAlert(com.info, "当前房产单流转已完成！");
+				});
 			}
 
 		});
@@ -231,9 +234,9 @@ jQuery(function($) {
 	function showBuildingNode(stepul, schedule){
 		var stepLi = $("<li></li>").attr("id", "sstep" + schedule).appendTo(stepul);
 		var stepSpan = $("<span></span>").addClass("step").html(schedule).appendTo(stepLi);
-		var stepSpan = $("<span></span>").addClass("title").html(buildingSchedules[schedule-1].buildingNode.name).appendTo(stepLi);
+		var stepSpan = $("<span></span>").addClass("title").html(buildingSchedules[schedule].buildingNode.name).appendTo(stepLi);
 
-		if(buildingSchedules[schedule-1].status == 2){
+		if(buildingSchedules[schedule].status == 2){
 			stepLi.addClass("complete");
 		}
 	}
@@ -242,7 +245,7 @@ jQuery(function($) {
 	function buildingPane(paneId, sore){
 		var statusFlag;
 
-		if(buildingSchedules[sore-1].status == 2){
+		if(buildingSchedules[sore].status == 2){
 			statusFlag = false;
 		}else{
 			statusFlag = true;
@@ -263,7 +266,7 @@ jQuery(function($) {
 		var paneTabThree = $("<div></div>").addClass("form-group").appendTo(paneTabForm);
 		var paneTabH3 = $("<h3></h3>").addClass("header smaller lighter blue").appendTo(paneTabThree);
 		var paneTabH3I = $("<i></i>").addClass("icon-edit").appendTo(paneTabH3);
-		var paneTabSpan = $("<span></span>").html(buildingSchedules[sore-1].buildingNode.name + "信息").appendTo(paneTabH3);
+		var paneTabSpan = $("<span></span>").html(buildingSchedules[sore].buildingNode.name + "信息").appendTo(paneTabH3);
 
 		var panePlanTime = $("<div></div>").addClass("form-group").appendTo(paneTabForm);
 		var panePlanTimeTwo = $("<div></div>").addClass("col-sm-12").appendTo(panePlanTime);
@@ -272,7 +275,7 @@ jQuery(function($) {
 		var panePTInput = $("<input/>").attr("id", sore + "OperatTime").attr("type","text").addClass("col-sm-12").attr("readonly","readonly").attr("data-toggle","popover").attr("data-trigge","manual").appendTo(panePTThree);
 
 		var thisPayType = params.type;
-		var thisNodeSore = buildingSchedules[sore-1].buildingNode.sore;
+		var thisNodeSore = buildingSchedules[sore].buildingNode.sore;
 
 		if(thisPayType == 1){
 			if(thisNodeSore == 8){
@@ -299,12 +302,12 @@ jQuery(function($) {
 
 		var paneSpaceTwo = $("<div></div>").addClass("space-4").appendTo(paneTabForm);
 
-		var paneStatusLable = $("<label></label>").addClass("col-sm-1 control-label no-padding-right").attr("for", sore + "Status").html(buildingSchedules[sore-1].buildingNode.name + "状态").appendTo(paneStatusTwo);
+		var paneStatusLable = $("<label></label>").addClass("col-sm-1 control-label no-padding-right").attr("for", sore + "Status").html(buildingSchedules[sore].buildingNode.name + "状态").appendTo(paneStatusTwo);
 		var paaneStatusTh = $("<div></div>").attr("id", sore + "Status").addClass("col-sm-2").appendTo(paneStatusTwo);
 
 		var paneRecordContent = $("<div></div>").addClass("form-group").appendTo(paneTabForm);
 		var paneRecordOne = $("<div></div>").addClass("col-sm-14").appendTo(paneRecordContent);
-		var paneRecordLable = $("<label></label>").addClass("col-sm-1 control-label no-padding-right").attr("for", sore + "Record").html(buildingSchedules[sore-1].buildingNode.name + "备注").appendTo(paneRecordOne);
+		var paneRecordLable = $("<label></label>").addClass("col-sm-1 control-label no-padding-right").attr("for", sore + "Record").html(buildingSchedules[sore].buildingNode.name + "备注").appendTo(paneRecordOne);
 		var paneRecordTwo = $("<div></div>").addClass("col-sm-10").appendTo(paneRecordOne);
 		var paneRecordInfo = $("<textarea/>").addClass("col-sm-8").attr("id", sore + "Record").attr("type","text").appendTo(paneRecordTwo);
 
@@ -320,7 +323,7 @@ jQuery(function($) {
 		var panePicContent = $("<div></div>").addClass("form-group").appendTo(paneTabForm);
 		var panePicInfo = $("<div></div>").addClass("tab-pane in active").attr("id", sore + "PicInfos").appendTo(panePicContent);
 		var paneSpaceTh = $("<div></div>").addClass("space-4").appendTo(paneTabForm);
-		
+
 		//附件图片信息内容
 		var paneDrawing = $("<div></div>").addClass("tab-pane in").attr("id", sore + "Drawing").appendTo(panePicContent);
 		var paneDrawingRow = $("<div></div>").addClass("row").appendTo(paneDrawing);
@@ -336,8 +339,7 @@ jQuery(function($) {
 		var paneDrawingRowInp = $("<input />").attr("type","text").addClass("hidden").attr("id", sore + "picture").appendTo(paneDrawingRowTh);
 
 		//上传按钮
-		var paneDrawingBtn = $("<input />").attr("id", sore + "select_btn_1").addClass("selectbtn").attr("style","display:none").attr("type","file").attr("name","fileselect[]").attr("multiple","").attr("accept","image/jpeg,image/gif,image/png").appendTo(paneDrawingRowTTwo);
-		var paneDrawingA = $("<a></a>").attr("id","file_upload_1-button").attr("href","javascript:void(0)").addClass("uploadify-button btn btn-success").html("上传").appendTo(paneDrawingRowFour);
+		var paneDrawingA = $("<a></a>").attr("id","file_upload_1-button").attr("href","javascript:void(0)").addClass("uploadify-button btn btn-success").appendTo(paneDrawingRowFour);
 		var paneDrawingUpDiv = $("<div></div>").attr("id","file_upload_1-queue").addClass("uploadify-queue").attr("style","width: 300px;").appendTo(paneDrawingRowFour);
 
 		//三个按钮
@@ -381,18 +383,18 @@ jQuery(function($) {
 
 	//设置节点信息、节点状态
 	function scheduleMessage(sore){
-		$("#" + sore + "PlanTime").val(buildingSchedules[sore-1].planTime);
-		$("#" + sore + "Record").val(buildingSchedules[sore-1].comment);
-		$("#" + sore + "OperatTime").val(buildingSchedules[sore-1].operatTime);
-		$("#" + sore + "Operater").val(buildingSchedules[sore-1].operater.currentName);
+		$("#" + sore + "PlanTime").val(buildingSchedules[sore].planTime);
+		$("#" + sore + "Record").val(buildingSchedules[sore].comment);
+		$("#" + sore + "OperatTime").val(buildingSchedules[sore].operatTime);
+		$("#" + sore + "Operater").val(buildingSchedules[sore].operater.currentName);
 	}
 
 	function scheduleStatus(sore){
 		var statusDiv = $("#" + sore + "Status").html("");
 
-		if(buildingSchedules[sore-1].status == 0){
+		if(buildingSchedules[sore].status == 0){
 			$("<span></span>").addClass("label label-success").text("初始").appendTo(statusDiv);
-		}else if(buildingSchedules[sore-1].status == 2){
+		}else if(buildingSchedules[sore].status == 2){
 			$("<span></span>").addClass("label").text("完结").appendTo(statusDiv);
 		};
 	}

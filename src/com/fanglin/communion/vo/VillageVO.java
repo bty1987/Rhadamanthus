@@ -32,6 +32,10 @@ public class VillageVO implements Serializable {
 	
 	private Short status;
 	
+	private String url;
+	
+	private Integer company;
+	
 	public VillageVO() {
 		super();
 	}
@@ -137,5 +141,22 @@ public class VillageVO implements Serializable {
 		this.status = status;
 	}
 
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public Integer getCompany() {
+		return company;
+	}
+
+	public void setCompany(Integer company) {
+		this.company = company;
+	}
 	
+	
+
 }

@@ -2,13 +2,16 @@ package com.fanglin.communion.dao.impl;
 
 import java.math.BigInteger;
 import java.util.List;
+
 import org.hibernate.Criteria;
+import org.hibernate.SQLQuery;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.communion.dao.CustomerPhoneDao;
 import com.fanglin.communion.po.CustomerPhonePO;
 import com.fanglin.core.dao.impl.DaoImpl;
+import com.fanglin.utils.Constant;
 
 @Repository("customerPhoneDao")
 public class CustomerPhoneDaoImpl extends DaoImpl<CustomerPhonePO> implements CustomerPhoneDao {
@@ -41,12 +44,33 @@ public class CustomerPhoneDaoImpl extends DaoImpl<CustomerPhonePO> implements Cu
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<CustomerPhonePO> queryCustomerPhoneByPhone(String phone,Short status){
+	public List<CustomerPhonePO> queryCustomerPhoneByPhone(String phone,Short status,Integer company){
 			
-		Criteria query = session().createCriteria(CustomerPhonePO.class).add(Restrictions.eq("phone", phone));
-	
+		StringBuffer sql = new StringBuffer();
+
+		sql.append("select cp.* ");
+		sql.append("from communion.customer c left join communion.customerphone cp on c.cid = cp.cid ");
+		sql.append("where cp.phone =:phone ");
+		sql.append("group by cp.cpid ");
+		
+		if(Integer.valueOf(Constant.COMPANY_COMMUNION_SWITCH_INT) > 0){
+			sql.append("and c.company =:company ");
+		}
+		
 		if(status != null){
-			query.add(Restrictions.eq(CustomerPhonePO.COLUMN_STATUS_STR, status));
+			sql.append("and cp.status =:status");
+		}
+		
+		SQLQuery query = session().createSQLQuery(sql.toString()).addEntity(CustomerPhonePO.class);
+		
+		query.setString("phone", phone);
+		
+		if(Integer.valueOf(Constant.COMPANY_COMMUNION_SWITCH_INT) > 0){
+			query.setInteger("company", company);
+		}
+		
+		if(status != null){
+			query.setShort("status", status);
 		}
 		
 		return query.list();

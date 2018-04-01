@@ -9,7 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "chainpage", catalog = "platform")
+@Table(name = "chainpage", catalog = "data")
 public class ChainPagePO  implements java.io.Serializable {
 
 	private static final long serialVersionUID = 6637157649679178006L;

@@ -21,33 +21,33 @@ import com.fanglin.utils.BeanUtil;
 public class ProductionUserWorkFlowServiceImpl implements ProductionUserWorkFlowService {
 	@Autowired
 	private ProductionUserWorkFlowDao productionUserWorkFlowDao;
-	
+
 	@Override
-	public List<ProductionUserWorkFlowVO> queryProductionUserWorkFlowsByPwfids(List<ProductionUserWorkFlowVO> productionUserWorkFlowVOs){
-		
+	public List<ProductionUserWorkFlowVO> queryProductionUserWorkFlowsByPwfids(List<ProductionUserWorkFlowVO> productionUserWorkFlowVOs) {
+
 		List<ProductionUserWorkFlowVO> _productionUserWorkFlowVOs = new ArrayList<ProductionUserWorkFlowVO>();
-		
-		for(ProductionUserWorkFlowVO productionUserWorkFlowVO : productionUserWorkFlowVOs){
-			
+
+		for (ProductionUserWorkFlowVO productionUserWorkFlowVO : productionUserWorkFlowVOs) {
+
 			List<ProductionUserWorkFlowPO> productionUserWorkFlowPOs = productionUserWorkFlowDao.queryProductionUserWorkFlowByPwfid(productionUserWorkFlowVO.getProductionworkflow().getPwfid());
-			
-			if(productionUserWorkFlowPOs.size() != 0){
-		
-				for(ProductionUserWorkFlowPO productionUserWorkFlowPO : productionUserWorkFlowPOs){
+
+			if (productionUserWorkFlowPOs.size() != 0) {
+
+				for (ProductionUserWorkFlowPO productionUserWorkFlowPO : productionUserWorkFlowPOs) {
 					productionUserWorkFlowVO = new ProductionUserWorkFlowVO(new ProductionWorkFlowVO(), new UserBaseVO());
-					BeanUtil.copyProperties(productionUserWorkFlowPO, productionUserWorkFlowVO, Arrays.asList("productionworkflow","operator"));
+					BeanUtil.copyProperties(productionUserWorkFlowPO, productionUserWorkFlowVO, Arrays.asList("productionworkflow", "operator"));
 					BeanUtil.copyProperties(productionUserWorkFlowPO.getProductionworkflow(), productionUserWorkFlowVO.getProductionworkflow(), Arrays.asList("workflow"));
-					
-					BeanUtil.copyProperties(productionUserWorkFlowPO.getOperator(),productionUserWorkFlowPO.getOperator(),Arrays.asList("duty","dept"));
+
+					BeanUtil.copyProperties(productionUserWorkFlowPO.getOperator(), productionUserWorkFlowPO.getOperator(), Arrays.asList("duty", "dept"));
 					_productionUserWorkFlowVOs.add(productionUserWorkFlowVO);
-				}			
-				
+				}
+
 			}
-			
+
 		}
-		
+
 		return _productionUserWorkFlowVOs;
-		
+
 	}
 
 }

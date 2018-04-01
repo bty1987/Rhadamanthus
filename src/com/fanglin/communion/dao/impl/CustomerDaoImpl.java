@@ -21,6 +21,7 @@ import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.communion.po.CustomerPhonePO;
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.utils.Constant;
 import com.fanglin.utils.Paging;
 
 @Repository("customerDao")
@@ -31,7 +32,7 @@ public class CustomerDaoImpl extends DaoImpl<CustomerPO> implements CustomerDao 
 	}
 	
 	@Override
-	public List<CustomerPO> pageCustomer(Paging paging, List<Filter> filters,HashSet<Long> cids){
+	public List<CustomerPO> pageCustomer(Paging paging, List<Filter> filters,HashSet<Long> cids,Integer company){
 
 		PagingQuery<CustomerPO> query = pagingQuery(paging, CustomerPO.class);
 		
@@ -39,6 +40,12 @@ public class CustomerDaoImpl extends DaoImpl<CustomerPO> implements CustomerDao 
 		
 		if(cids.size() > 0){
 			query.add(Restrictions.in("cid", cids));
+		}
+	
+		if(Integer.valueOf(Constant.COMPANY_COMMUNION_SWITCH_INT) > 0){
+			
+			query.add(Restrictions.eq("company",company));
+			
 		}
 		
 		query.asc("cid");
@@ -48,7 +55,7 @@ public class CustomerDaoImpl extends DaoImpl<CustomerPO> implements CustomerDao 
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<CustomerPO> queryCustomerByPinyin(String pinyinName, int limit){
+	public List<CustomerPO> queryCustomerByPinyin(String pinyinName, int limit,Integer company){
 	
 		String likestr = String.format("%s%%", pinyinName);
 		
@@ -60,9 +67,17 @@ public class CustomerDaoImpl extends DaoImpl<CustomerPO> implements CustomerDao 
 		sql.append("group by c.cid ");
 		sql.append("limit :limit ");
 
+		if(Integer.valueOf(Constant.COMPANY_COMMUNION_SWITCH_INT) > 0){
+			sql.append("and c.company =:company ");
+		}
+		
 		SQLQuery query = session().createSQLQuery(sql.toString()).addEntity(CustomerPO.class);
 		query.setString("pinyinAll", likestr).setString("pinyinAB", likestr).setString("name", likestr).setString("phone", likestr).setShort("status", CustomerPhonePO.STATUS_ENABLE_INT).setInteger("limit", limit);
 	
+		if(Integer.valueOf(Constant.COMPANY_COMMUNION_SWITCH_INT) > 0){
+			query.setInteger("company", company);
+		}
+		
 		return query.list();
 	}
 	

@@ -9,32 +9,32 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="outsourceitem",catalog= "production")
+@Table(name = "outsourceitem", catalog = "production")
 public class OutsourceItemPO {
 
-	public static final String COLUMN_OID =	 "oid" ;
-	
+	public static final String COLUMN_OID = "oid";
+
 	private long oiid;
-	
+
 	private long oid;
-	
+
 	private String name;
-	
+
 	private float height;
-	
+
 	private float width;
-	
+
 	private float thick;
-	
-	private String  modelling;
-	
+
+	private String modelling;
+
 	private float num;
-	
+
 	private float unitprice;
-	
+
 	private long total;
-	
-	private String  comment;
+
+	private String comment;
 
 	public OutsourceItemPO() {
 		super();
@@ -42,7 +42,7 @@ public class OutsourceItemPO {
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name="oiid")
+	@Column(name = "oiid")
 	public long getOiid() {
 		return oiid;
 	}
@@ -51,7 +51,7 @@ public class OutsourceItemPO {
 		this.oiid = oiid;
 	}
 
-	@Column(name="oid")
+	@Column(name = "oid")
 	public long getOid() {
 		return oid;
 	}
@@ -59,8 +59,8 @@ public class OutsourceItemPO {
 	public void setOid(long oid) {
 		this.oid = oid;
 	}
-	
-	@Column(name="name")
+
+	@Column(name = "name")
 	public String getName() {
 		return name;
 	}
@@ -69,7 +69,7 @@ public class OutsourceItemPO {
 		this.name = name;
 	}
 
-	@Column(name="height")
+	@Column(name = "height")
 	public float getHeight() {
 		return height;
 	}
@@ -78,7 +78,7 @@ public class OutsourceItemPO {
 		this.height = height;
 	}
 
-	@Column(name="width")
+	@Column(name = "width")
 	public float getWidth() {
 		return width;
 	}
@@ -87,7 +87,7 @@ public class OutsourceItemPO {
 		this.width = width;
 	}
 
-	@Column(name="thick")
+	@Column(name = "thick")
 	public float getThick() {
 		return thick;
 	}
@@ -96,7 +96,7 @@ public class OutsourceItemPO {
 		this.thick = thick;
 	}
 
-	@Column(name="modelling")
+	@Column(name = "modelling")
 	public String getModelling() {
 		return modelling;
 	}
@@ -105,7 +105,7 @@ public class OutsourceItemPO {
 		this.modelling = modelling;
 	}
 
-	@Column(name="num")
+	@Column(name = "num")
 	public float getNum() {
 		return num;
 	}
@@ -114,7 +114,7 @@ public class OutsourceItemPO {
 		this.num = num;
 	}
 
-	@Column(name="unitprice")
+	@Column(name = "unitprice")
 	public float getUnitprice() {
 		return unitprice;
 	}
@@ -122,8 +122,8 @@ public class OutsourceItemPO {
 	public void setUnitprice(float unitprice) {
 		this.unitprice = unitprice;
 	}
-	
-	@Column(name="total")
+
+	@Column(name = "total")
 	public long getTotal() {
 		return total;
 	}
@@ -131,8 +131,8 @@ public class OutsourceItemPO {
 	public void setTotal(long total) {
 		this.total = total;
 	}
-	
-	@Column(name="comment")
+
+	@Column(name = "comment")
 	public String getComment() {
 		return comment;
 	}

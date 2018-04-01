@@ -167,14 +167,14 @@ var Condition = function (api) {
         //select
         designerRegionId: {
             label: "设计中心",
-            type: "select",
+            type: "selectCaching",
             submitConfig: {
                 name: "designerRegionId",
                 op: "eq",
                 validate: null
             },
             dataSource: {//从后台取数据的各种配置
-                url: api.department.queryDepartment,
+                url: api.communion.queryDepartment,
                 postData: {"dept.type.name": "设计大区"},
                 listPath: "deptList",
                 keyPath: "deptId",
@@ -747,7 +747,7 @@ var Condition = function (api) {
                 validate: null
             },
             dataSource: {
-                url: api.department.queryDepartmentType,
+                url: api.communion.queryDepartmentType,
                 postData: {},
                 listPath: "departmentTypes",
                 keyPath: "dtid",
@@ -756,14 +756,14 @@ var Condition = function (api) {
         },
         deptId: {
             label: "部门",
-            type: "select",
+            type: "selectCaching",
             submitConfig: {
                 name: "deptId",
                 op: "eq",
                 validate: null
             },
             dataSource: {//从后台取数据的各种配置
-                url: api.department.queryDepartment,
+                url: api.communion.queryDepartment,
                 postData: {},
                 listPath: "deptList",
                 keyPath: "deptId",
@@ -913,14 +913,14 @@ var Condition = function (api) {
         },
         designerDepartmentId: {
             label: "设计部",
-            type: "select",
+            type: "selectCaching",
             submitConfig: {
                 name: "designerDepartmentId",
                 op: "eq",
                 validate: null
             },
             dataSource: {
-                url: api.department.queryDepartment,
+                url: api.communion.queryDepartment,
                 postData: {"dept.type.name": "设计部"},
                 listPath: "deptList",
                 keyPath: "deptId",
@@ -929,14 +929,14 @@ var Condition = function (api) {
         },
         salesmanRegionId: {
             label: "业务中心",
-            type: "select",
+            type: "selectCaching",
             submitConfig: {
                 name: "salesmanRegionId",
                 op: "eq",
                 validate: null
             },
             dataSource: {
-                url: api.department.queryDepartment,
+                url: api.communion.queryDepartment,
                 postData: {"dept.type.name": "业务大区"},
                 listPath: "deptList",
                 keyPath: "deptId",
@@ -945,14 +945,14 @@ var Condition = function (api) {
         },
         salesmanDepartmentId: {
             label: "业务部",
-            type: "select",
+            type: "selectCaching",
             submitConfig: {
                 name: "salesmanDepartmentId",
                 op: "eq",
                 validate: null
             },
             dataSource: {
-                url: api.department.queryDepartment,
+                url: api.communion.queryDepartment,
                 postData: {},
                 listPath: "deptList",
                 keyPath: "deptId",
@@ -2341,6 +2341,22 @@ var Condition = function (api) {
                 valuePath: "value"
             }
         },
+        b_status: {
+            label: "状态",
+            type: "select",
+            submitConfig: {
+                name: "status",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {
+                url: api.ds.building,
+                postData: {},
+                listPath: "status",
+                keyPath: "key",
+                valuePath: "value"
+            }
+        },
         
         /*-------房产building : end----*/
 
@@ -2406,14 +2422,14 @@ var Condition = function (api) {
 
         sales_deptName: {
             label: "部门",
-            type: "select",
+            type: "selectCaching",
             submitConfig: {
                 name: "dept.deptName",
                 op: "eq",
                 validate: null
             },
             dataSource: {// 从后台取数据的各种配置
-                url: api.department.queryDepartment,
+                url: api.communion.queryDepartment,
                 postData: {},
                 listPath: "deptList",
                 keyPath: "deptName",
@@ -2756,6 +2772,19 @@ var Condition = function (api) {
             }
         },
         /*-------工程construction : end----*/
+        
+        /*-------客户customer : start----*/
+        cu_name : {
+            label:"客户名称",
+            type:"text",
+            submitConfig : {
+                name : "name",
+                op : "eq",
+                validate:null
+            }
+        },
+        /*-------客户customer : end----*/
+        
     };
     return {
         getRuleByCondName: function (condName) {

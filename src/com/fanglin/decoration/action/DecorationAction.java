@@ -118,14 +118,6 @@ public class DecorationAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-	@Action(value = "queryDecorationByVillageIdAHouseNumber", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryDecorationByVillageIdAHouseNumber() throws FLException{
-
-		decoration = decorationService.queryDecorationByVillageIdAHouseNumber(decoration, authentication());
-		
-		return SUCCESS;
-	}
-	
 	@Action(value = "queryDecorationByCustomerId", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryDecorationByCustomerId() throws FLException{
 

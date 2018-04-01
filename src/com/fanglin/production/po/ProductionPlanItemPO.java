@@ -12,35 +12,35 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "productionplanitem" , catalog = "production")
-public class ProductionPlanItemPO implements Serializable{
+@Table(name = "productionplanitem", catalog = "production")
+public class ProductionPlanItemPO implements Serializable {
 
 	private static final long serialVersionUID = -1204202140506616437L;
-	
+
 	public static final String COLUMN_PPID_STR = "productionPlan.ppid";
-	
+
 	private long ppiid;
-	
+
 	private ProductionPlanPO productionPlan;
-	
+
 	private String typeno;
-	
+
 	private String name;
-	
+
 	private float height;
-	
+
 	private float width;
-	
+
 	private float thick;
-	
+
 	private String color;
-	
+
 	private float unitprice;
-	
+
 	private float num;
-	
+
 	private float total;
-	
+
 	private String comment;
 
 	public ProductionPlanItemPO() {
@@ -55,7 +55,7 @@ public class ProductionPlanItemPO implements Serializable{
 
 	@Id
 	@GeneratedValue
-	@Column(name="ppiid")
+	@Column(name = "ppiid")
 	public long getPpiid() {
 		return ppiid;
 	}
@@ -63,9 +63,9 @@ public class ProductionPlanItemPO implements Serializable{
 	public void setPpiid(long ppiid) {
 		this.ppiid = ppiid;
 	}
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, name = "ppid", referencedColumnName="ppid")
+	@JoinColumn(nullable = false, name = "ppid", referencedColumnName = "ppid")
 	public ProductionPlanPO getProductionPlan() {
 		return productionPlan;
 	}
@@ -73,7 +73,8 @@ public class ProductionPlanItemPO implements Serializable{
 	public void setProductionPlan(ProductionPlanPO productionPlan) {
 		this.productionPlan = productionPlan;
 	}
-	@Column(name="typeno")
+
+	@Column(name = "typeno")
 	public String getTypeno() {
 		return typeno;
 	}
@@ -81,7 +82,8 @@ public class ProductionPlanItemPO implements Serializable{
 	public void setTypeno(String typeno) {
 		this.typeno = typeno;
 	}
-	@Column(name="name")
+
+	@Column(name = "name")
 	public String getName() {
 		return name;
 	}
@@ -89,7 +91,8 @@ public class ProductionPlanItemPO implements Serializable{
 	public void setName(String name) {
 		this.name = name;
 	}
-	@Column(name="height")
+
+	@Column(name = "height")
 	public float getHeight() {
 		return height;
 	}
@@ -97,7 +100,8 @@ public class ProductionPlanItemPO implements Serializable{
 	public void setHeight(float height) {
 		this.height = height;
 	}
-	@Column(name="width")
+
+	@Column(name = "width")
 	public float getWidth() {
 		return width;
 	}
@@ -105,7 +109,8 @@ public class ProductionPlanItemPO implements Serializable{
 	public void setWidth(float width) {
 		this.width = width;
 	}
-	@Column(name="thick")
+
+	@Column(name = "thick")
 	public float getThick() {
 		return thick;
 	}
@@ -113,7 +118,8 @@ public class ProductionPlanItemPO implements Serializable{
 	public void setThick(float thick) {
 		this.thick = thick;
 	}
-	@Column(name="color")
+
+	@Column(name = "color")
 	public String getColor() {
 		return color;
 	}
@@ -121,7 +127,8 @@ public class ProductionPlanItemPO implements Serializable{
 	public void setColor(String color) {
 		this.color = color;
 	}
-	@Column(name="unitprice")
+
+	@Column(name = "unitprice")
 	public float getUnitprice() {
 		return unitprice;
 	}
@@ -129,7 +136,8 @@ public class ProductionPlanItemPO implements Serializable{
 	public void setUnitprice(float unitprice) {
 		this.unitprice = unitprice;
 	}
-	@Column(name="num")
+
+	@Column(name = "num")
 	public float getNum() {
 		return num;
 	}
@@ -137,7 +145,8 @@ public class ProductionPlanItemPO implements Serializable{
 	public void setNum(float num) {
 		this.num = num;
 	}
-	@Column(name="total")
+
+	@Column(name = "total")
 	public float getTotal() {
 		return total;
 	}
@@ -145,7 +154,8 @@ public class ProductionPlanItemPO implements Serializable{
 	public void setTotal(float total) {
 		this.total = total;
 	}
-	@Column(name="comment")
+
+	@Column(name = "comment")
 	public String getComment() {
 		return comment;
 	}
@@ -153,7 +163,5 @@ public class ProductionPlanItemPO implements Serializable{
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	
-	
 
 }

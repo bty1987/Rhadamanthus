@@ -35,26 +35,26 @@ public class ConstructionAction extends BaseListAction{
 	
 	private ConstructionVO construction;
 	
-	@Action(value = "pageDecorationForConstruction", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageDecorationForConstruction() throws FLException{
+	@Action(value = "pageConstruction", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageConstruction() throws FLException{
 		
-		constructionService.pageDecorationForConstruction(getPaging(), getFilters(), queryCompany());
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "pageDecorationForSupervisionByUserId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageDecorationForSupervisionByUserId() throws FLException{
-		
-		constructionService.pageDecorationForSupervisionByUserId(getPaging(), getFilters(), queryUserId(), queryCompany());
+		constructionService.pageConstruction(getPaging(), getFilters(), queryCompany());
 		
 		return SUCCESS;
 	}
 	
-	@Action(value = "pageDecorationForAcceptance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageDecorationForAcceptance() throws FLException{
+	@Action(value = "pageConstructionForSupervision", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageConstructionForSupervision() throws FLException{
 		
-		constructionService.pageDecorationForAcceptance(getPaging(), getFilters(), queryCompany());
+		constructionService.pageConstructionForSupervision(getPaging(), getFilters(), queryUserId());
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "pageConstructionForAcceptance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageConstructionForAcceptance() throws FLException{
+		
+		constructionService.pageConstructionForAcceptance(getPaging(), getFilters(), queryCompany());
 		
 		return SUCCESS;
 	}

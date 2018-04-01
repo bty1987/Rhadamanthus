@@ -20,4 +20,7 @@ $.extend(api, {right: {
     queryBrandUserRightForLogin: {url: "queryBrandUserRightForLogin.do", demo: true},
     updateBrandUserRight: {url: "updateBrandUserRight.do"},
 
+    queryHouseSourceDepartmentRightByUserId: {url: "queryHouseSourceDepartmentRightByUserId.do"},
+    updateHouseSourceDepartmentRight: {url: "updateHouseSourceDepartmentRight.do"},
+
 }});

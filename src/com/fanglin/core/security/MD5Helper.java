@@ -50,7 +50,7 @@ public class MD5Helper {
 	}
 
 	public static void main(String[] args){
-		System.out.println(MD5Helper.MD5("fanglin"));
+		System.out.println(MD5Helper.MD5("fanglin").equals("35FD596186101F2733C1DD2DD6FBFC6C"));
 		System.out.println(MD5Helper.MD5("加密"));
 	}
 

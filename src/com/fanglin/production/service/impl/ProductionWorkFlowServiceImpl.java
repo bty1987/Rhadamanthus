@@ -28,24 +28,30 @@ import com.fanglin.utils.DateUtil;
 
 @Service("ProductionWorkFlowService")
 @Transactional(readOnly = true)
-public class ProductionWorkFlowServiceImpl  implements ProductionWorkFlowService {
+public class ProductionWorkFlowServiceImpl implements ProductionWorkFlowService {
+
 	@Autowired
 	private ProductionWorkFlowDao productionworkflowDao;
+
 	@Autowired
 	private ProductionWorkPlanDao productionworkPlanDao;
+
 	@Autowired
 	private UserDao userDao;
+
 	@Autowired
 	private ProductionPlanDao productionPlanDao;
+
 	@Autowired
 	private ProductionUserWorkFlowDao productionUserWorkFlowDao;
+
 	@Override
 	public List<ProductionWorkFlowVO> queryProductionWorkFlowByPwpid(ProductionWorkFlowVO productionworkflowVO) {
-		
+
 		List<ProductionWorkFlowPO> productionworkflowPOs = productionworkflowDao.queryProductionWorkFlowByPwpid(productionworkflowVO.getPwpid());
 		List<ProductionWorkFlowVO> productionworkflowVOs = new ArrayList<ProductionWorkFlowVO>();
-		
-		for(ProductionWorkFlowPO productionWorkFlowPO : productionworkflowPOs){
+
+		for (ProductionWorkFlowPO productionWorkFlowPO : productionworkflowPOs) {
 			productionworkflowVO = new ProductionWorkFlowVO(new WorkflowVO());
 			BeanUtil.copyProperties(productionWorkFlowPO, productionworkflowVO, Arrays.asList("workflow"));
 			BeanUtil.copyProperties(productionWorkFlowPO.getWorkflow(), productionworkflowVO.getWorkflow());
@@ -53,51 +59,53 @@ public class ProductionWorkFlowServiceImpl  implements ProductionWorkFlowService
 		}
 		return productionworkflowVOs;
 	}
-	
+
 	@Override
 	public ProductionWorkFlowVO queryProductionWorkFlowByPwpidAWfid(ProductionWorkFlowVO productionworkflowVO) throws FLException {
-		ProductionWorkFlowPO productionWorkFlowPO = productionworkflowDao.queryProductionWorkFlowByPwpidAWfid(productionworkflowVO.getPwpid(), productionworkflowVO.getWorkflow().getWfid());
 		
-		if(productionWorkFlowPO == null){
+		ProductionWorkFlowPO productionWorkFlowPO = productionworkflowDao.queryProductionWorkFlowByPwpidAWfid(productionworkflowVO.getPwpid(), productionworkflowVO.getWorkflow().getWfid());
+
+		if (productionWorkFlowPO == null) {
 			throw new FLException(220012, "计划工序不存在");
 		}
-		
+
 		ProductionWorkFlowVO productionWorkFlowVO = new ProductionWorkFlowVO(new WorkflowVO());
 		BeanUtil.copyProperties(productionWorkFlowPO, productionWorkFlowVO, Arrays.asList("workflow"));
 		BeanUtil.copyProperties(productionWorkFlowPO.getWorkflow(), productionWorkFlowVO.getWorkflow());
-		
+
 		return productionWorkFlowVO;
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public int operateProductionWorkFlow(String no,int uid,ProductionWorkFlowVO productionworkflowVO) throws FLException{
-		
+	@Transactional(rollbackFor = Exception.class)
+	public int operateProductionWorkFlow(String no, int uid, ProductionWorkFlowVO productionworkflowVO) throws FLException {
+
 		ProductionPlanPO productionPlanPO = productionPlanDao.queryProductionPlanByNo(no);
-		
-		if(productionPlanPO == null){
-			throw new FLException(220008, "计划单不存在");		
+
+		if (productionPlanPO == null) {
+			throw new FLException(220008, "计划单不存在");
 		}
-		
+
 		List<ProductionWorkPlanPO> productionworkplans = productionworkPlanDao.queryProductionWorkPlanByPpid(productionPlanPO.getPpid());
 		ProductionWorkFlowPO productionworkflowPO = null;
-		for(ProductionWorkPlanPO productionWorkPlanPO : productionworkplans){
+		for (ProductionWorkPlanPO productionWorkPlanPO : productionworkplans) {
+			
 			productionworkflowPO = productionworkflowDao.queryProductionWorkFlowByPwpidAWfid(productionWorkPlanPO.getPwpid(), productionworkflowVO.getWorkflow().getWfid());
-			if(productionworkflowPO == null){
+			
+			if (productionworkflowPO == null) {
 				continue;
 			}
-			
-			ProductionUserWorkFlowPO productionUserWorkFlowPO = new ProductionUserWorkFlowPO(new ProductionWorkFlowPO(),new UserPO());
+
+			ProductionUserWorkFlowPO productionUserWorkFlowPO = new ProductionUserWorkFlowPO(new ProductionWorkFlowPO(), new UserPO());
 			productionUserWorkFlowPO.setProductionworkflow(productionworkflowPO);
 			productionUserWorkFlowPO.setOperator(userDao.get(uid));
 			productionUserWorkFlowPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
-			
+
 			productionUserWorkFlowDao.save(productionUserWorkFlowPO);
-			
+
 		}
-				
+
 		return 0;
 	}
 
-	
 }

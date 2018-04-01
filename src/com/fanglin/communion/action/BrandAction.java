@@ -15,6 +15,7 @@ import com.fanglin.communion.service.BrandService;
 import com.fanglin.communion.vo.BrandVO;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.utils.SystemConfig;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -113,13 +114,21 @@ public class BrandAction extends BaseListAction {
 	@Action(value="addBrand", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String addBrand() throws FLException{
 	
+		if(SystemConfig.getString("communion") == null){
+		    throw new FLException(-1, "无操作权限");
+		}
+		
 		brandService.addBrand(brand, queryCompany());
 		
 		return SUCCESS;
 	}
 	
 	@Action(value="updateBrand", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String updateBrand(){
+	public String updateBrand() throws FLException{
+		
+		if(SystemConfig.getString("communion") == null){
+		    throw new FLException(-1, "无操作权限");
+		}
 		
 		brandService.updateBrand(brand);
 		
@@ -127,7 +136,11 @@ public class BrandAction extends BaseListAction {
 	}
 	
 	@Action(value="deleteBrandByBIds", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String deleteBrandByBIds(){
+	public String deleteBrandByBIds() throws FLException{
+		
+		if(SystemConfig.getString("communion") == null){
+		    throw new FLException(-1, "无操作权限");
+		}
 		
 		brandService.deleteBrandByBIds(bIds);
 		

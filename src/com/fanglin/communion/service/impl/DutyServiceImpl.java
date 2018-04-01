@@ -8,15 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.communion.dao.DepartmentTypeDao;
 import com.fanglin.communion.dao.DutyDao;
+import com.fanglin.communion.po.DepartmentTypePO;
 import com.fanglin.communion.po.DutyPO;
 import com.fanglin.communion.service.DutyService;
+import com.fanglin.communion.vo.DepartmentTypeVO;
 import com.fanglin.communion.vo.DutyVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.department.dao.DepartmentTypeDao;
-import com.fanglin.department.po.DepartmentTypePO;
-import com.fanglin.department.vo.DepartmentTypeVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
 

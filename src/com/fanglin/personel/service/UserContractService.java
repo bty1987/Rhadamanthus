@@ -20,4 +20,11 @@ public interface UserContractService {
 	
 	public List<UserContractVO> queryUserContractByUserId(String userId);
 
+    public abstract void saveOrUpdateUserContract(UserContractVO paramUserContractVO);
+
+    public abstract void saveOrUpdateUserContract(List<UserContractVO> paramList);
+
+    public abstract void deleteUserContractById(String paramString);
+
+    public abstract void deleteUserContract(List<String> paramList);
 }

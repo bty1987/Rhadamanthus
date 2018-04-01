@@ -2,26 +2,26 @@ package com.fanglin.production.vo;
 
 import java.io.Serializable;
 
-public class WorkplanVO implements Serializable{
+public class WorkplanVO implements Serializable {
 
 	private static final long serialVersionUID = 78906200111284042L;
 
 	private Long wpid;
-	
+
 	private String name;
-	
+
 	private Short status;
-	
+
 	private String comment;
-	
-	private WorkshopVO workshop ;
-	
+
+	private WorkshopVO workshop;
+
 	private Integer company;
 
 	public WorkplanVO() {
 		super();
-		
 	}
+
 	public WorkplanVO(WorkshopVO workshop) {
 		super();
 		this.workshop = workshop;
@@ -66,14 +66,13 @@ public class WorkplanVO implements Serializable{
 	public void setWorkshop(WorkshopVO workshop) {
 		this.workshop = workshop;
 	}
-	
+
 	public Integer getCompany() {
 		return company;
 	}
-	
+
 	public void setCompany(Integer company) {
 		this.company = company;
 	}
 
-	
 }

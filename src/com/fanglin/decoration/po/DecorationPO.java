@@ -27,13 +27,13 @@ import javax.persistence.Table;
 import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.communion.po.HousePO;
 import com.fanglin.communion.vo.CustomerVO;
+import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.communion.vo.DutyVO;
 import com.fanglin.communion.vo.HouseVO;
 import com.fanglin.communion.vo.VillageVO;
 import com.fanglin.data.po.QuotationVersionPO;
 import com.fanglin.data.quotation.vo.QuotationVersionVO;
 import com.fanglin.decoration.vo.DecorationVO;
-import com.fanglin.department.vo.DepartmentVO;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.system.vo.CityProperVO;
@@ -66,7 +66,11 @@ public class DecorationPO implements Serializable {
 	
 	public static final String STATUS_TERMINATION_STR = "合同终止";
 	
-	public static final String PROJECTSTATUS_WAITING_STR = "等待施工";
+	public static final Short PROJECTSTATUS_INITIAL_INT = 0;	//工程初始
+	
+	public static final Short PROJECTSTATUS_START_INT = 1;		//开工
+	
+	public static final Short PROJECTSTATUS_FINISH_INT = 2;		//完工
 	
 	public static final String PROJECTSTATUS_FANG_APPLY_STR = "放线申请";
 	
@@ -158,7 +162,7 @@ public class DecorationPO implements Serializable {
 	
 	private String status;
 	
-	private String projectStatus;
+	private short projectStatus;
 	
 	private int otherStatus;
 	
@@ -172,6 +176,10 @@ public class DecorationPO implements Serializable {
 	
 	
 	private int company;
+	
+	private short paySacle;
+	
+	private float discount;
 	
 	
 	public DecorationPO(){}
@@ -333,15 +341,15 @@ public class DecorationPO implements Serializable {
 	public void setType(short type) {
 		this.type = type;
 	}
-
-	public String getProjectStatus(){
+	
+	public short getProjectStatus() {
 		return projectStatus;
 	}
 
-	public void setProjectStatus(String projectStatus){
+	public void setProjectStatus(short projectStatus) {
 		this.projectStatus = projectStatus;
 	}
-	
+
 	public Timestamp getContractTime(){
 		return contractTime;
 	}
@@ -460,6 +468,22 @@ public class DecorationPO implements Serializable {
 
 	public void setQuotationPrice(float quotationPrice) {
 		this.quotationPrice = quotationPrice;
+	}
+	
+	public short getPaySacle() {
+		return paySacle;
+	}
+
+	public void setPaySacle(short paySacle) {
+		this.paySacle = paySacle;
+	}
+
+	public float getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(float discount) {
+		this.discount = discount;
 	}
 
 	private void ptv(DecorationVO decorationVO){

@@ -9,7 +9,6 @@ import com.fanglin.communion.dao.DutyDao;
 import com.fanglin.communion.po.DutyPO;
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
-
 import com.fanglin.utils.Paging;
 
 @Repository("dutyDao")

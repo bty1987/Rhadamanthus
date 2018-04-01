@@ -46,6 +46,10 @@ public class SalesBalancePO implements Serializable{
 	
 	public static final String COLUMN_POSTTIME_STR = "postTime";
 	
+	public static final String COLUMN_SALESCOMPANY_STR = "sales.company";
+			
+	public static final String COLUMN_SALESDOMPANY_STR = "sales.dompany";
+	
 	public static final short STATUS_PREBALANCE_INT = 0;
 	
 	public static final short STATUS_VENDORBALANCE_INT = 1;

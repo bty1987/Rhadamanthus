@@ -3,24 +3,24 @@ USE `communion`;
 
 DROP TABLE IF EXISTS `brand`;
 CREATE TABLE `brand` (
-  `bId` int(11) NOT NULL AUTO_INCREMENT,
-  `cId` int(11) NOT NULL,
+  `bid` int(11) NOT NULL AUTO_INCREMENT,
+  `cid` int(11) NOT NULL,
   `brandId` varchar(10) NOT NULL,
   `brandName` varchar(30) NOT NULL,
   `brandNamePinyin` varchar(216) NOT NULL,
   `company` int(11) NOT NULL,
-  PRIMARY KEY (`bId`),
-  KEY `indexone` (`cId`),
+  PRIMARY KEY (`bid`),
+  KEY `indexone` (`cid`),
   KEY `indextwo` (`brandName`,`brandNamePinyin`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='品牌表';
 
 DROP TABLE IF EXISTS `branduserright`;
 CREATE TABLE `branduserright` (
-  `burId` int(11) NOT NULL AUTO_INCREMENT,
-  `userId` varchar(15) NOT NULL,
-  `bid` int(11) NOT NULL,
-  PRIMARY KEY (`burId`),
-  KEY `indexone` (`userId`)
+  `burid` int(11) NOT NULL AUTO_INCREMENT,
+  `uid` int(11) NOT NULL,
+  `brandId` varchar(128) NOT NULL COMMENT '品牌 , 格式bid#bid',
+  PRIMARY KEY (`burid`),
+  KEY `indexone` (`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='品牌用户权限表';
 
 DROP TABLE IF EXISTS `buildingnamerule`;
@@ -37,37 +37,37 @@ CREATE TABLE `buildingnamerule` (
 
 DROP TABLE IF EXISTS `category`;
 CREATE TABLE `category` (
-  `cId` int(11) NOT NULL AUTO_INCREMENT,
+  `cid` int(11) NOT NULL AUTO_INCREMENT,
   `categoryId` varchar(10) NOT NULL,
   `categoryName` varchar(32) NOT NULL,
-  PRIMARY KEY (`cId`)
+  PRIMARY KEY (`cid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='品类表';
 
 DROP TABLE IF EXISTS `city`;
 CREATE TABLE `city` (
-  `cId` int(11) NOT NULL AUTO_INCREMENT,
-  `cityRegionId` varchar(10) NOT NULL,
-  `cityId` varchar(10) NOT NULL,
-  `cityName` varchar(64) NOT NULL,
+  `cid` int(11) NOT NULL AUTO_INCREMENT,
+  `rid` int(11) NOT NULL COMMENT '大区ID',
+  `no` varchar(10) NOT NULL,
+  `name` varchar(64) NOT NULL,
   `pinyin` varchar(128) NOT NULL,
   `x` double NOT NULL DEFAULT '0',
   `y` double NOT NULL DEFAULT '0',
-  PRIMARY KEY (`cId`),
-  UNIQUE KEY `uniqueone` (`cityId`)
+  PRIMARY KEY (`cid`),
+  UNIQUE KEY `uniqueone` (`no`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='城市表';
 
 DROP TABLE IF EXISTS `cityproper`;
 CREATE TABLE `cityproper` (
-  `cpId` int(11) NOT NULL AUTO_INCREMENT,
-  `cityId` varchar(10) NOT NULL,
-  `cityProperId` varchar(10) NOT NULL,
-  `cityProperName` varchar(64) NOT NULL,
+  `cpid` int(11) NOT NULL AUTO_INCREMENT,
+  `cid` int(11) NOT NULL,
+  `no` varchar(10) NOT NULL,
+  `name` varchar(64) NOT NULL,
   `pinyin` varchar(128) NOT NULL,
   `x` double NOT NULL DEFAULT '0',
   `y` double NOT NULL DEFAULT '0',
-  PRIMARY KEY (`cpId`),
-  UNIQUE KEY `uniqueone` (`cityProperId`),
-  KEY `indexone` (`cityProperId`)
+  PRIMARY KEY (`cpid`),
+  UNIQUE KEY `uniqueone` (`no`),
+  KEY `indexone` (`no`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='城市表';
 
 DROP TABLE IF EXISTS `company`;
@@ -107,17 +107,17 @@ CREATE TABLE `counting` (
   `count` int(11) NOT NULL,
   PRIMARY KEY (`date`,`type`),
   KEY `indexone` (`date`,`type`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='统计数表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='统计数表';
 
 DROP TABLE IF EXISTS `customer`;
 CREATE TABLE `customer` (
   `cid` int(11) NOT NULL AUTO_INCREMENT,
   `no` varchar(10) NOT NULL,
   `name` varchar(32) NOT NULL,
-  `pinyinAll` varchar(50) NOT NULL,
   `pinyinAB` varchar(50) NOT NULL,
+  `pinyinAll` varchar(50) NOT NULL,
   `gender` varchar(2) NOT NULL,
-  `phone` varchar(64) NOT NULL,
+  `phone` varchar(64) DEFAULT NULL,
   `qq` varchar(15) NOT NULL,
   `wechat` varchar(15) NOT NULL,
   `email` varchar(32) NOT NULL,
@@ -148,10 +148,10 @@ CREATE TABLE `customerphone` (
 
 DROP TABLE IF EXISTS `department`;
 CREATE TABLE `department` (
-  `dId` int(11) NOT NULL AUTO_INCREMENT,
+  `did` int(11) NOT NULL AUTO_INCREMENT,
   `deptId` varchar(10) NOT NULL COMMENT '部门ID',
   `fatherDeptId` varchar(10) DEFAULT NULL COMMENT '上级部门ID',
-  `cityProperId` varchar(10) DEFAULT NULL COMMENT '所属城区',
+  `cityProperId` int(11) DEFAULT NULL COMMENT '所属城区ID',
   `deptName` varchar(32) NOT NULL COMMENT '部门名称',
   `pinyin` varchar(128) NOT NULL,
   `type` varchar(10) NOT NULL COMMENT '部门类型',
@@ -161,7 +161,7 @@ CREATE TABLE `department` (
   `company` int(11) NOT NULL,
   `status` tinyint(4) NOT NULL DEFAULT '1',
   `des` varchar(128) DEFAULT NULL COMMENT '表述',
-  PRIMARY KEY (`dId`),
+  PRIMARY KEY (`did`),
   UNIQUE KEY `uniqueone` (`deptId`),
   KEY `indexone` (`deptId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='部门表';
@@ -169,16 +169,16 @@ CREATE TABLE `department` (
 DROP TABLE IF EXISTS `departmenttype`;
 CREATE TABLE `departmenttype` (
   `dtid` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) NOT NULL,
+  `name` varchar(32) NOT NULL,
   PRIMARY KEY (`dtid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `duty`;
 CREATE TABLE `duty` (
   `did` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) NOT NULL,
+  `name` varchar(32) NOT NULL,
   `status` tinyint(1) NOT NULL DEFAULT '0',
-  `departmentType` int(11) NOT NULL,
+  `departmentType` int(11),
   `type` int(11) NOT NULL,
   `lead` tinyint(1) NOT NULL,
   PRIMARY KEY (`did`)
@@ -189,18 +189,17 @@ CREATE TABLE `house` (
   `hid` int(11) NOT NULL AUTO_INCREMENT,
   `vid` int(11) NOT NULL COMMENT '楼盘ID',
   `houseNumber` varchar(32) NOT NULL COMMENT '楼牌号',
-  `orderId` varchar(15) DEFAULT '',
   `built` varchar(32) DEFAULT NULL COMMENT '楼号',
   `unit` varchar(32) DEFAULT NULL COMMENT '单元',
   `floor` smallint(3) DEFAULT NULL COMMENT '楼层',
   `door` smallint(3) DEFAULT NULL COMMENT '门号',
-  `type` tinyint(2) DEFAULT '0' COMMENT '房产类型',
+  `type` tinyint(1) DEFAULT '0' COMMENT '房产类型',
   `buildArea` decimal(10,2) NOT NULL COMMENT '建筑面积',
   `maxFloor` smallint(3) DEFAULT '0' COMMENT '最高楼层',
   `through` tinyint(1) DEFAULT '0' COMMENT '是否越层',
-  `roomNum` smallint(2) DEFAULT '1' COMMENT '房间数量',
+  `roomNum` tinyint(1) DEFAULT '1' COMMENT '房间数量',
   `houseType` varchar(16) DEFAULT '0' COMMENT '户型',
-  `orientation` tinyint(2) DEFAULT '0' COMMENT '房屋朝向',
+  `orientation` tinyint(1) DEFAULT '0' COMMENT '房屋朝向',
   `feature` varchar(256) DEFAULT NULL COMMENT '三不',
   `waterVapour` tinyint(1) DEFAULT '0' COMMENT '水气设施',
   `parlourType` tinyint(1) DEFAULT '0' COMMENT '客厅类型',
@@ -212,7 +211,7 @@ CREATE TABLE `house` (
 
 DROP TABLE IF EXISTS `logininfo`;
 CREATE TABLE `logininfo` (
-  `liId` int(11) NOT NULL AUTO_INCREMENT,
+  `liid` int(11) NOT NULL AUTO_INCREMENT,
   `loginFlag` varchar(32) NOT NULL,
   `code` int(11) NOT NULL DEFAULT '-1' COMMENT '-1 无确认, 0 成功 , 其他错误码',
   `message` varchar(64) NOT NULL DEFAULT '',
@@ -220,7 +219,7 @@ CREATE TABLE `logininfo` (
   `optime` bigint(20) NOT NULL,
   `x` double NOT NULL DEFAULT '0',
   `y` double NOT NULL DEFAULT '0',
-  PRIMARY KEY (`liId`),
+  PRIMARY KEY (`liid`),
   KEY `indexone` (`loginFlag`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='二维码登陆信息';
 
@@ -234,16 +233,16 @@ CREATE TABLE `measurementunit` (
 
 DROP TABLE IF EXISTS `module`;
 CREATE TABLE `module` (
-  `mId` int(10) NOT NULL AUTO_INCREMENT,
+  `mid` int(10) NOT NULL AUTO_INCREMENT,
   `fatherModuleId` int(11) DEFAULT NULL,
   `name` varchar(32) NOT NULL DEFAULT '',
   `alias` varchar(32) DEFAULT NULL,
   `icon` varchar(20) DEFAULT NULL,
   `url` varchar(256) DEFAULT NULL,
-  `level` tinyint(4) NOT NULL,
-  `system` tinyint(4) NOT NULL,
+  `level` tinyint(1) NOT NULL,
+  `system` tinyint(1) NOT NULL,
   `order` tinyint(2) NOT NULL DEFAULT '99',
-  PRIMARY KEY (`mId`),
+  PRIMARY KEY (`mid`),
   KEY `indexone` (`fatherModuleId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='模块表';
 
@@ -263,19 +262,19 @@ CREATE TABLE `monitor` (
 
 DROP TABLE IF EXISTS `operation`;
 CREATE TABLE `operation` (
-  `oId` int(11) NOT NULL AUTO_INCREMENT,
+  `oid` int(11) NOT NULL AUTO_INCREMENT,
   `moduleId` int(11) DEFAULT NULL,
   `name` varchar(32) NOT NULL DEFAULT '',
   `operation` varchar(128) NOT NULL,
   `system` tinyint(4) NOT NULL,
-  PRIMARY KEY (`oId`),
+  PRIMARY KEY (`oid`),
   KEY `indexone` (`operation`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='操作';
 
 DROP TABLE IF EXISTS `quotationbigcategory`;
 CREATE TABLE `quotationbigcategory` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(32) DEFAULT NULL,
+  `name` varchar(32) NOT NULL,
   `quotationType` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='报价项大类表';
@@ -283,14 +282,14 @@ CREATE TABLE `quotationbigcategory` (
 DROP TABLE IF EXISTS `quotationclassification`;
 CREATE TABLE `quotationclassification` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(32) DEFAULT NULL,
+  `name` varchar(32) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='报价项分类表';
 
 DROP TABLE IF EXISTS `quotationsmallcategory`;
 CREATE TABLE `quotationsmallcategory` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(32) DEFAULT '',
+  `name` varchar(32) NOT NULL,
   `quotationType` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='报价项小类表';
@@ -298,13 +297,13 @@ CREATE TABLE `quotationsmallcategory` (
 DROP TABLE IF EXISTS `quotationtype`;
 CREATE TABLE `quotationtype` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(32) DEFAULT NULL,
+  `name` varchar(32) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='报价项类型表';
 
 DROP TABLE IF EXISTS `receipttype`;
 CREATE TABLE `receipttype` (
-  `rtId` int(11) NOT NULL AUTO_INCREMENT,
+  `rtid` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(36) NOT NULL,
   `no` varchar(36) NOT NULL,
   `subjectName` varchar(64) NOT NULL,
@@ -315,30 +314,30 @@ CREATE TABLE `receipttype` (
   `type` tinyint(1) NOT NULL,
   `status` tinyint(4) NOT NULL DEFAULT '0',
   `company` int(11) NOT NULL,
-  PRIMARY KEY (`rtId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`rtid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='收据类型表';
 
 DROP TABLE IF EXISTS `region`;
 CREATE TABLE `region` (
   `rId` int(11) NOT NULL AUTO_INCREMENT,
-  `regionId` varchar(10) NOT NULL,
-  `regionName` varchar(64) DEFAULT NULL,
+  `no` varchar(10) NOT NULL,
+  `name` varchar(64) DEFAULT NULL,
   `pinyin` varchar(128) NOT NULL,
   `x` double NOT NULL DEFAULT '0',
   `y` double NOT NULL DEFAULT '0',
   PRIMARY KEY (`rId`),
-  UNIQUE KEY `uniqueone` (`regionId`)
+  UNIQUE KEY `uniqueone` (`no`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='大区表';
 
 DROP TABLE IF EXISTS `role`;
 CREATE TABLE `role` (
-  `rId` int(11) NOT NULL AUTO_INCREMENT,
-  `roleId` varchar(10) NOT NULL,
-  `roleName` varchar(8) NOT NULL,
-  `roleDes` varchar(20) DEFAULT NULL,
-  PRIMARY KEY (`rId`),
-  UNIQUE KEY `uniqueone` (`roleId`),
-  KEY `indexone` (`roleId`)
+  `rid` int(11) NOT NULL AUTO_INCREMENT,
+  `no` varchar(10) NOT NULL,
+  `name` varchar(8) NOT NULL,
+  `content` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`rid`),
+  UNIQUE KEY `uniqueone` (`no`),
+  KEY `indexone` (`no`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='角色表';
 
 DROP TABLE IF EXISTS `roleaction`;
@@ -348,7 +347,7 @@ CREATE TABLE `roleaction` (
   `actionId` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `index` (`roleId`,`actionId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='角色-操作表';
 
 DROP TABLE IF EXISTS `rolemodule`;
 CREATE TABLE `rolemodule` (
@@ -357,7 +356,7 @@ CREATE TABLE `rolemodule` (
   `mId` int(11) NOT NULL,
   PRIMARY KEY (`rmId`),
   KEY `indexone` (`rId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='角色模块';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='角色-模块表';
 
 DROP TABLE IF EXISTS `roleoperation`;
 CREATE TABLE `roleoperation` (
@@ -383,22 +382,22 @@ CREATE TABLE `server` (
 
 DROP TABLE IF EXISTS `supplier`;
 CREATE TABLE `supplier` (
-  `sId` int(11) NOT NULL AUTO_INCREMENT,
+  `sid` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(32) NOT NULL,
   `loginId` varchar(64) NOT NULL,
   `password` varchar(32) NOT NULL,
   `isLogin` tinyint(4) DEFAULT NULL COMMENT '是否允许登陆',
-  PRIMARY KEY (`sId`),
+  PRIMARY KEY (`sid`),
   KEY `indexone` (`loginId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='供应商';
 
 DROP TABLE IF EXISTS `supplieruserright`;
 CREATE TABLE `supplieruserright` (
-  `surId` int(11) NOT NULL AUTO_INCREMENT,
-  `sId` int(11) NOT NULL,
-  `userId` varchar(64) NOT NULL,
-  PRIMARY KEY (`surId`),
-  KEY `indexone` (`sId`)
+  `surid` int(11) NOT NULL AUTO_INCREMENT,
+  `sid` int(11) NOT NULL,
+  `uid` int(11) NOT NULL,
+  PRIMARY KEY (`surid`),
+  KEY `indexone` (`sid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='供应商用户权限';
 
 DROP TABLE IF EXISTS `systemconfig`;
@@ -435,10 +434,10 @@ CREATE TABLE `trackpoint` (
 
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
-  `uId` int(11) NOT NULL AUTO_INCREMENT,
+  `uid` int(11) NOT NULL AUTO_INCREMENT,
   `userId` varchar(15) NOT NULL COMMENT '员工号',
   `oldUserId` varchar(32) DEFAULT NULL COMMENT '旧员工号',
-  `roleId` varchar(10) DEFAULT NULL COMMENT '角色ID',
+  `roleId` int(11) DEFAULT NULL COMMENT '角色ID',
   `deptId` varchar(10) NOT NULL COMMENT '部门ID',
   `company` int(11) NOT NULL COMMENT '公司ID',
   `loginId` varchar(32) NOT NULL COMMENT '登录用户名',
@@ -457,7 +456,7 @@ CREATE TABLE `user` (
   `isLogin` tinyint(4) DEFAULT NULL COMMENT '是否允许登陆',
   `extranet` tinyint(4) NOT NULL DEFAULT '0' COMMENT '外网登陆权限',
   `freedom` tinyint(4) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`uId`),
+  PRIMARY KEY (`uid`),
   UNIQUE KEY `uniqueone` (`loginId`),
   UNIQUE KEY `uniquetwo` (`userId`),
   KEY `indexone` (`userId`,`company`),
@@ -475,14 +474,14 @@ CREATE TABLE `usercompany` (
 
 DROP TABLE IF EXISTS `usercontract`;
 CREATE TABLE `usercontract` (
-  `ucId` int(11) NOT NULL AUTO_INCREMENT,
+  `ucid` int(11) NOT NULL AUTO_INCREMENT,
   `userId` varchar(15) NOT NULL,
   `contractId` varchar(32) NOT NULL,
   `startTime` date NOT NULL,
   `endTime` date NOT NULL,
   `createTime` datetime NOT NULL,
   `des` varchar(128) DEFAULT NULL,
-  PRIMARY KEY (`ucId`)
+  PRIMARY KEY (`ucid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户合同表';
 
 DROP TABLE IF EXISTS `userexperience`;
@@ -556,10 +555,11 @@ CREATE TABLE `village` (
   `name` varchar(20) NOT NULL,
   `pinyinAB` varchar(64) DEFAULT NULL,
   `pinyinAll` varchar(64) DEFAULT NULL,
-  `cityProperId` varchar(10) NOT NULL,
+  `cityProperId` int(11) NOT NULL,
   `developer` varchar(20) DEFAULT NULL,
   `salesPhone` varchar(15) DEFAULT NULL,
   `deliveryTime` date DEFAULT NULL,
+  `rule` varchar(64) DEFAULT NULL,
   `content` varchar(128) DEFAULT NULL,
   `x` double NOT NULL DEFAULT '0',
   `y` double NOT NULL DEFAULT '0',

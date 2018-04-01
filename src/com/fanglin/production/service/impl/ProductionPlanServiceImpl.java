@@ -26,100 +26,117 @@ public class ProductionPlanServiceImpl implements ProductionPlanService {
 
 	@Autowired
 	private ProductionPlanDao productionPlanDao;
+
 	@Autowired
 	private CountingService countingService;
+
 	@Override
-	public void pageProductionPlan(Paging paging, List<Filter> filter,long pid) {
-		List<ProductionPlanPO> productionPlanPOs = productionPlanDao.pageProductionPlan(paging, filter,pid);
+	public void pageProductionPlan(Paging paging, List<Filter> filter, long pid) {
+
+		List<ProductionPlanPO> productionPlanPOs = productionPlanDao.pageProductionPlan(paging, filter, pid);
 		List<ProductionPlanVO> productionPlanVOs = new ArrayList<ProductionPlanVO>();
-		
-		for(ProductionPlanPO productionPlanPO : productionPlanPOs){
+
+		for (ProductionPlanPO productionPlanPO : productionPlanPOs) {
 			ProductionPlanVO productionPlanVO = new ProductionPlanVO();
 			BeanUtil.copyProperties(productionPlanPO, productionPlanVO);
 			productionPlanVOs.add(productionPlanVO);
 		}
+
 		paging.setData(productionPlanVOs);
 
 	}
 
-	
 	@Override
 	public List<ProductionPlanVO> queryProductionPlanByPid(ProductionPlanVO productionPlanVO) {
-		List<ProductionPlanPO> productionPlanPOs =  productionPlanDao.queryProductionPlanByPid(productionPlanVO.getPid());
+
+		List<ProductionPlanPO> productionPlanPOs = productionPlanDao.queryProductionPlanByPid(productionPlanVO.getPid());
 		List<ProductionPlanVO> productionPlanVOs = new ArrayList<ProductionPlanVO>();
-		
-		for(ProductionPlanPO productionPlanPO : productionPlanPOs){
+
+		for (ProductionPlanPO productionPlanPO : productionPlanPOs) {
 			productionPlanVO = new ProductionPlanVO();
 			BeanUtil.copyProperties(productionPlanPO, productionPlanVO);
 			productionPlanVOs.add(productionPlanVO);
 		}
+
 		return productionPlanVOs;
 	}
-	
+
 	@Override
 	public ProductionPlanVO queryProductionPlanByNo(ProductionPlanVO productionPlanVO) throws FLException {
-		
+
 		ProductionPlanPO productionPlanPO = productionPlanDao.queryProductionPlanByNo(productionPlanVO.getNo());
-		if(productionPlanPO == null){
+
+		if (productionPlanPO == null) {
 			throw new FLException(220008, "计划单不存在");
 		}
-	     productionPlanVO = new ProductionPlanVO();
-	     BeanUtil.copyProperties(productionPlanPO, productionPlanVO);		
+
+		productionPlanVO = new ProductionPlanVO();
+		BeanUtil.copyProperties(productionPlanPO, productionPlanVO);
+
 		return productionPlanVO;
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public int addProductionPlan(ProductionPlanVO productionPlanVO) throws FLException{
-		
+	@Transactional(rollbackFor = Exception.class)
+	public int addProductionPlan(ProductionPlanVO productionPlanVO) throws FLException {
+
 		ProductionPlanPO productionPlanPO = new ProductionPlanPO();
+
 		String currentDate = DateUtil.current("yyyyMMdd").toString();
-		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_SO_INT , currentDate);
+		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_SO_INT, currentDate);
 		String no = currentDate + FormatUtil.fillZero(FormatUtil.offset(count), "000000");
+
 		BeanUtil.copyProperties(productionPlanVO, productionPlanPO);
+
 		productionPlanPO.setNo(no);
 		productionPlanPO.setPath("");
+
 		productionPlanDao.save(productionPlanPO);
 		return 0;
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
+	@Transactional(rollbackFor = Exception.class)
 	public int updateProductionPlan(ProductionPlanVO productionPlanVO) throws FLException {
+
 		ProductionPlanPO productionPlanPO = productionPlanDao.get(productionPlanVO.getPpid());
-		
-		if(productionPlanPO == null){
+
+		if (productionPlanPO == null) {
 			throw new FLException(220008, "计划单不存在");
 		}
-		if(productionPlanVO.getPath() != null){
+		if (productionPlanVO.getPath() != null) {
 			productionPlanPO.setPath(productionPlanVO.getPath());
 		}
-		if(productionPlanVO.getStartTime()!=null){
+		if (productionPlanVO.getStartTime() != null) {
 			productionPlanPO.setStartTime(productionPlanVO.getStartTime());
 		}
-		if(productionPlanVO.getEndTime()!=null){
+		if (productionPlanVO.getEndTime() != null) {
 			productionPlanPO.setEndTime(productionPlanVO.getEndTime());
 		}
-		if(productionPlanVO.getComment()!=null){
+		if (productionPlanVO.getComment() != null) {
 			productionPlanPO.setComment(productionPlanVO.getComment());
 		}
+
 		productionPlanDao.update(productionPlanPO);
+
 		return 0;
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
+	@Transactional(rollbackFor = Exception.class)
 	public int updateProductionPlanForStatus(ProductionPlanVO productionPlanVO) throws FLException {
-		
+
 		ProductionPlanPO productionPlanPO = productionPlanDao.get(productionPlanVO.getPpid());
-		if(productionPlanPO == null){
+
+		if (productionPlanPO == null) {
 			throw new FLException(220008, "计划单不存在");
 		}
+
 		productionPlanPO.setStatus(productionPlanVO.getStatus());
-		
+
 		productionPlanDao.update(productionPlanPO);
+
 		return 0;
 	}
-
 
 }

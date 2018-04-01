@@ -15,31 +15,31 @@ import javax.persistence.Table;
 import com.fanglin.personel.po.UserPO;
 
 @Entity
-@Table(name="productionworkplan" , catalog = "production")
-public class ProductionWorkPlanPO implements Serializable{
+@Table(name = "productionworkplan", catalog = "production")
+public class ProductionWorkPlanPO implements Serializable {
 
 	private static final long serialVersionUID = -8932739669037360188L;
-	
+
 	public static final String COLUMN_PPID_STR = "ppid";
-	
+
 	public static final String COLUMN_WFID_STR = "workplan.wpid";
-	
+
 	public static final String COLUMN_STATUS_STR = "status";
-	
+
 	public static final Short STATUS_INIT_INT = 0;
-	
+
 	public static final Short STATUS_OPERATED_INT = 1;
-	
+
 	private Long pwpid;
-	
+
 	private Long ppid;
-	
+
 	private WorkplanPO workplan;
-	
+
 	private UserPO creater;
-	
+
 	private Timestamp createTime;
-	
+
 	private Short status;
 
 	public ProductionWorkPlanPO() {
@@ -51,14 +51,15 @@ public class ProductionWorkPlanPO implements Serializable{
 		this.workplan = workplan;
 		this.creater = creater;
 	}
-	
+
 	public ProductionWorkPlanPO(WorkplanPO workplan) {
 		super();
 		this.workplan = workplan;
 	}
+
 	@Id
 	@GeneratedValue
-	@Column(name="pwpid")
+	@Column(name = "pwpid")
 	public Long getPwpid() {
 		return pwpid;
 	}
@@ -66,7 +67,7 @@ public class ProductionWorkPlanPO implements Serializable{
 	public void setPwpid(Long pwpid) {
 		this.pwpid = pwpid;
 	}
-	
+
 	@Column(name = "ppid")
 	public Long getPpid() {
 		return ppid;
@@ -75,9 +76,9 @@ public class ProductionWorkPlanPO implements Serializable{
 	public void setPpid(Long ppid) {
 		this.ppid = ppid;
 	}
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false ,name = "wpid", referencedColumnName="wpid")
+	@JoinColumn(nullable = false, name = "wpid", referencedColumnName = "wpid")
 	public WorkplanPO getWorkplan() {
 		return workplan;
 	}
@@ -85,9 +86,9 @@ public class ProductionWorkPlanPO implements Serializable{
 	public void setWorkplan(WorkplanPO workplan) {
 		this.workplan = workplan;
 	}
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false ,name = "cuid", referencedColumnName="uid")
+	@JoinColumn(nullable = false, name = "cuid", referencedColumnName = "uid")
 	public UserPO getCreater() {
 		return creater;
 	}
@@ -95,7 +96,7 @@ public class ProductionWorkPlanPO implements Serializable{
 	public void setCreater(UserPO creater) {
 		this.creater = creater;
 	}
-	
+
 	@Column(name = "createTime")
 	public Timestamp getCreateTime() {
 		return createTime;
@@ -104,6 +105,7 @@ public class ProductionWorkPlanPO implements Serializable{
 	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
 	}
+
 	@Column(name = "status")
 	public Short getStatus() {
 		return status;
@@ -112,7 +114,5 @@ public class ProductionWorkPlanPO implements Serializable{
 	public void setStatus(Short status) {
 		this.status = status;
 	}
-	
-	
-	
+
 }

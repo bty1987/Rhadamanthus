@@ -88,13 +88,13 @@ public class PaymentExportServiceImpl implements PaymentExportService {
 	@Override
 	public List<MaterialPaymentExportVO> queryMaterialPaymentExport(List<Filter> filters) {
 		
-		Map<Integer, String> types = new HashMap<Integer, String>();
-		types.put(2, MaterialPaymentPO.PAYMENTTYPE_TYPE_DEPOSIT_STR);
-		types.put(3, MaterialPaymentPO.PAYMENTTYPE_TYPE_FULL_STR);
-		types.put(4, MaterialPaymentPO.PAYMENTTYPE_TYPE_REJECT_STR);
-		types.put(5, MaterialPaymentPO.PAYMENTTYPE_TYPE_FULL_REFUND_STR);
-		types.put(6, MaterialPaymentPO.PAYMENTTYPE_TYPE_COUPON_REFUND_STR);
-		types.put(7, MaterialPaymentPO.PAYMENTTYPE_TYPE_DEPOSIT_REFUND_STR);
+		Map<Short, String> types = new HashMap<Short, String>();
+		types.put(MaterialPaymentPO.PAYMENTTYPE_TYPE_DEPOSIT_INT, MaterialPaymentPO.PAYMENTTYPE_TYPE_DEPOSIT_STR);
+		types.put(MaterialPaymentPO.PAYMENTTYPE_TYPE_FULL_INT, MaterialPaymentPO.PAYMENTTYPE_TYPE_FULL_STR);
+		types.put(MaterialPaymentPO.PAYMENTTYPE_TYPE_REJECT_INT, MaterialPaymentPO.PAYMENTTYPE_TYPE_REJECT_STR);
+		types.put(MaterialPaymentPO.PAYMENTTYPE_TYPE_FULL_REFUND_INT, MaterialPaymentPO.PAYMENTTYPE_TYPE_FULL_REFUND_STR);
+		types.put(MaterialPaymentPO.PAYMENTTYPE_TYPE_COUPON_REFUND_INT, MaterialPaymentPO.PAYMENTTYPE_TYPE_COUPON_REFUND_STR);
+		types.put(MaterialPaymentPO.PAYMENTTYPE_TYPE_DEPOSIT_REFUND_INT, MaterialPaymentPO.PAYMENTTYPE_TYPE_DEPOSIT_REFUND_STR);
 		
 		List<MaterialPaymentPO> materialPaymentPOs = materialPaymentDao.queryMaterialPayment(filters);
 		List<MaterialPaymentExportVO> materialPaymentExportVOs = new ArrayList<MaterialPaymentExportVO>();

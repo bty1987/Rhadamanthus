@@ -7,24 +7,23 @@ import org.apache.struts2.json.annotations.JSON;
 
 import com.fanglin.personel.vo.UserBaseVO;
 
-public class ProductionUserWorkFlowVO implements Serializable{
+public class ProductionUserWorkFlowVO implements Serializable {
 
 	private static final long serialVersionUID = 1063970618132213943L;
-	
+
 	private Long puwfid;
-	
+
 	private ProductionWorkFlowVO productionworkflow;
-	
+
 	private UserBaseVO operator;
-	
+
 	private Timestamp operateTime;
 
 	public ProductionUserWorkFlowVO() {
 		super();
 	}
 
-	public ProductionUserWorkFlowVO(ProductionWorkFlowVO productionworkflow,
-			UserBaseVO operator) {
+	public ProductionUserWorkFlowVO(ProductionWorkFlowVO productionworkflow, UserBaseVO operator) {
 		super();
 		this.productionworkflow = productionworkflow;
 		this.operator = operator;
@@ -53,7 +52,8 @@ public class ProductionUserWorkFlowVO implements Serializable{
 	public void setOperator(UserBaseVO operator) {
 		this.operator = operator;
 	}
-	@JSON(format="yyyy-MM-dd HH:mm:ss")
+
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getOperateTime() {
 		return operateTime;
 	}
@@ -61,6 +61,5 @@ public class ProductionUserWorkFlowVO implements Serializable{
 	public void setOperateTime(Timestamp operateTime) {
 		this.operateTime = operateTime;
 	}
-
 
 }

@@ -15,6 +15,7 @@ import com.fanglin.communion.service.VillageService;
 import com.fanglin.communion.vo.VillageVO;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.utils.SystemConfig;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -37,9 +38,9 @@ public class VillageAction extends BaseListAction {
 	private String pinyinName;
 	
 	@Action(value="pageVillage", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String pageVillage(){
+	public String pageVillage() throws FLException{
 		
-		villageService.pageVillage(getPaging(), getFilters());
+		villageService.pageVillage(getPaging(), getFilters(),queryCompany());
 		
 		return SUCCESS;
 	}
@@ -53,9 +54,9 @@ public class VillageAction extends BaseListAction {
 	}
 	
 	@Action(value="queryVillageForNameByPinyin", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryVillageForNameByPinyin(){
+	public String queryVillageForNameByPinyin() throws FLException{
 	
-		villages = villageService.queryVillageForNameByPinyin(pinyinName);
+		villages = villageService.queryVillageForNameByPinyin(pinyinName,queryCompany());
 		
 		for(VillageVO villageVO: villages){
 			KeyValueVO keyValueVO = new KeyValueVO();
@@ -71,7 +72,11 @@ public class VillageAction extends BaseListAction {
 	@Action(value="addVillage", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String addVillage() throws FLException{
 		 
-	    villageService.addVillage(village);
+		if(SystemConfig.getString("communion") == null){
+		    throw new FLException(-1, "无操作权限");
+		}
+		
+	    villageService.addVillage(village,queryCompany());
 	
 	    return SUCCESS;
 	  }
@@ -79,26 +84,51 @@ public class VillageAction extends BaseListAction {
 	@Action(value="updateVillage", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String updateVillage() throws FLException{
 	    
-		  villageService.updateVillage(village);
-	
-		  return SUCCESS;
+		if(SystemConfig.getString("communion") == null){
+		    throw new FLException(-1, "无操作权限");
+		}
+		
+	    villageService.updateVillage(village,queryCompany());
+
+	    return SUCCESS;
 	  }
 
 	@Action(value="updateVillageForStatus", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String updateVillageForStatus() throws FLException{
 		  
-		  villageService.updateVillageForStatus(village);
+		if(SystemConfig.getString("communion") == null){
+		    throw new FLException(-1, "无操作权限");
+		}
+		
+		villageService.updateVillageForStatus(village);
 
-		  return SUCCESS;
+		return SUCCESS;
 	  }
 	
 	@Action(value="updateVillageForPosition", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String updateVillageForPosition() throws FLException {
 	   
-		  villageService.updateVillageForPosition(village);
+		if(SystemConfig.getString("communion") == null){
+		    throw new FLException(-1, "无操作权限");
+		}
+		
+		villageService.updateVillageForPosition(village);
 	
-		  return SUCCESS;
+		return SUCCESS;
 	  }
+	
+	@Action(value="updateVillageForUrl", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String updateVillageForUrl() throws FLException {
+	   
+		if(SystemConfig.getString("communion") == null){
+		    throw new FLException(-1, "无操作权限");
+		}
+		
+		villageService.updateVillageForUrl(village);
+	
+		return SUCCESS;
+	  }
+	
 	public VillageVO getVillage() {
 		return village;
 	}

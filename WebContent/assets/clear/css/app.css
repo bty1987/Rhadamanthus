@@ -3227,7 +3227,7 @@ tbody.collapse.in {
   left: auto; }
 
 .chosen-single div b:before {
-  content:"\f0d7";
+  /*content:"\f0d7";*/
   display:inline-block;
   color:#888;
   font-family:FontAwesome;
@@ -7718,6 +7718,10 @@ input.ace.ace-switch.ace-switch-5[type="checkbox"] + .lbl.gender:before {
 .calcType::before {
   content: "\a0点\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0底" !important;
 }
+
+input[type=checkbox].ace.ace-switch.ace-switch-2+.lbl::before {
+  content:"是\a0\a0\a0\a0\a0\a0\a0\a0否"
+}
 input[type=checkbox].ace,input[type=radio].ace {
   opacity:0;
   position:absolute;
@@ -7771,7 +7775,7 @@ input[type=checkbox].ace+.lbl::before,input[type=radio].ace+.lbl::before {
   width: 20px;
   line-height:20px;
   min-width:16px;
-  /*margin-right:5px;*/
+  margin-right:5px;!important;
   margin-top:3px;
 }
 input[type=checkbox].ace:checked+.lbl::before,input[type=radio].ace:checked+.lbl::before {
@@ -7818,11 +7822,6 @@ input[type=radio].ace:checked+.lbl::before {
 input[type=checkbox].ace.ace-switch {
   width:55px;
   height:25px
-}
-#resultList input[type=checkbox].ace.ace-switch+.lbl {
-  margin-top:3px;
-  margin-left: 3px;
-  min-height:24px
 }
 input[type=checkbox].ace.ace-switch+.lbl {
   margin-left: 3px;
@@ -7952,8 +7951,15 @@ input[type=checkbox].ace.ace-switch.ace-switch-4:checked+.lbl::after,input[type=
   background-color:#FFF
 }
 input[type=checkbox].ace.ace-switch.ace-switch-5+.lbl::before {
-  content: "yes\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0no";
+  content: "yes\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0no";
   padding-left: 1px;
+}
+input[type=checkbox].ace.ace-switch.ace-switch-5+.lbl.status-lbl::before {
+  content: "\a0启\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0禁";
+  padding-left: 1px;
+}
+.discount-lbl:before {
+  content: "\a0折\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0否" !important;
 }
 input[type=checkbox].ace.ace-switch.ace-switch-5:checked+.lbl::before {
   text-indent:8px
@@ -8709,7 +8715,7 @@ input[type=checkbox].ace.ace-switch.ace-switch-5+.calcType::before {
   color:#595c66
 }
 .timeline-item .transparent.widget-box {
-  border-left:3px solid #dae1e5
+ /* border-left:3px solid #dae1e5*/
 }
 .timeline-item .transparent .widget-header {
   background-color:#ecf1f4;

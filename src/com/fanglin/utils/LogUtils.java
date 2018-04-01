@@ -39,7 +39,11 @@ public class LogUtils {
 	}
 	
 	public static void logging(Logger logger, String server, String errormsg, String api){
-		logger.error(String.format("%s|%s|%s|%s|%s", "AI", "I", api, server, errormsg));
+		logger.error(String.format("%s|%s|%s|%s %s", "AI", "I", api, server, errormsg));
+	}
+	
+	public static void logging(Logger logger, String api, int errorcode, String errormsg){
+		logger.error(String.format("%s|%s|%s|%d-%s", "AI", "E", api, errorcode, errormsg));
 	}
 	
 	public static void logging(Logger logger, String userId, String actionName){

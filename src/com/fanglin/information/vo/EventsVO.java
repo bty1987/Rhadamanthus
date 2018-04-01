@@ -5,7 +5,7 @@ import java.util.Date;
 
 import org.apache.struts2.json.annotations.JSON;
 
-import com.fanglin.department.vo.DepartmentVO;
+import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.personel.vo.UserVO;
 
 public class EventsVO implements java.io.Serializable {

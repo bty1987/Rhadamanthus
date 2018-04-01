@@ -506,7 +506,7 @@ $(function(){
                 ['状态', 'status'],
             ];
 
-            pageConfig.propertyArr = ["楼盘地址","客户名","设计部","设计师","业务部","业务员","面积","折扣","签单额","报价金额","量房时间","签单时间","定金时间","类型","状态"];
+            pageConfig.propertyArr = ["楼盘地址","客户名","设计部","设计师","业务部","业务员","面积","折扣","签单额","报价金额","量房时间","签单时间","定金时间","类型","状态","工程状态"];
 
             pageConfig.apiPage = decorationPage[page]["apiPage"];
             pageConfig.pageBtn = decorationPage[page]["pageBtn"];

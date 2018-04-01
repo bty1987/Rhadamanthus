@@ -25,6 +25,10 @@ public class BuildingRecordPO implements java.io.Serializable{
 	
 	public static final String COLUMN_HSID_STR = "houseSource.hsid";
 	
+	public static final short COLUMN_TYPE_SHORT_THR = 3;
+	
+	public static final short COLUMN_PATTERN_SHORT_FOUR = 4;
+	
 	private long brid;
 	
 	private HouseSourcePO houseSource;

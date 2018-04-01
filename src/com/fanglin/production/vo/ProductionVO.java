@@ -8,46 +8,45 @@ import org.apache.struts2.json.annotations.JSON;
 import com.fanglin.communion.vo.HouseVO;
 import com.fanglin.personel.vo.UserBaseVO;
 
-
 public class ProductionVO implements Serializable {
-	
+
 	private static final long serialVersionUID = 8400949857779897876L;
 
 	private Long pid;
-	
+
 	private Long orderId;
-	
+
 	private String pno;
-	
+
 	private HouseVO house;
-	
+
 	private Float total;
-	
+
 	private UserBaseVO creater;
-	
+
 	private UserBaseVO designer;
-	
+
 	private Short status;
-	
-	private Timestamp createTime; 
-	
+
+	private Timestamp createTime;
+
 	private Timestamp divideTime;
-	
+
 	private Timestamp confirmTime;
-	
-	private Short diliverystatus; 
-	
-	private Timestamp diliveryTime; 
-	
+
+	private Short diliverystatus;
+
+	private Timestamp diliveryTime;
+
 	private Float timeLimit;
-	
+
 	private String spid;
-	
+
 	private Short type;
-	
+
 	private Integer company;
-	
-	public ProductionVO(){
+
+	public ProductionVO() {
 		super();
 	}
 
@@ -114,7 +113,7 @@ public class ProductionVO implements Serializable {
 		this.status = status;
 	}
 
-	@JSON(format="yyyy-MM-dd")
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getCreateTime() {
 		return createTime;
 	}
@@ -123,7 +122,7 @@ public class ProductionVO implements Serializable {
 		this.createTime = createTime;
 	}
 
-	@JSON(format="yyyy-MM-dd")
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getDivideTime() {
 		return divideTime;
 	}
@@ -131,7 +130,7 @@ public class ProductionVO implements Serializable {
 	public void setDivideTime(Timestamp divideTime) {
 		this.divideTime = divideTime;
 	}
-	
+
 	public Short getDiliverystatus() {
 		return diliverystatus;
 	}
@@ -140,7 +139,7 @@ public class ProductionVO implements Serializable {
 		this.diliverystatus = diliverystatus;
 	}
 
-	@JSON(format="yyyy-MM-dd")
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getDiliveryTime() {
 		return diliveryTime;
 	}
@@ -181,7 +180,7 @@ public class ProductionVO implements Serializable {
 		this.company = company;
 	}
 
-	@JSON(format="yyyy-MM-dd")
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getConfirmTime() {
 		return confirmTime;
 	}
@@ -197,6 +196,5 @@ public class ProductionVO implements Serializable {
 	public void setPno(String pno) {
 		this.pno = pno;
 	}
-	
-	
+
 }

@@ -1,9 +1,10 @@
 package com.fanglin.communion.po;
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -13,7 +14,7 @@ public class CategoryPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -8704336558286265464L;
 	
-	public static final String COLUMN_CID_STR = "cId";
+	public static final String COLUMN_CID_STR = "cid";
 	
 	public static final String COLUMN_CATEGORYID_STR = "categoryId";
 	

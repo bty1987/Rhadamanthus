@@ -3,13 +3,13 @@ package com.fanglin.production.vo;
 public class OutsourceVO {
 
 	private Long oid;
-	
+
 	private Long pid;
-	
+
 	private Short status;
-	
+
 	private String path;
-	
+
 	private String comment;
 
 	public OutsourceVO() {
@@ -55,5 +55,5 @@ public class OutsourceVO {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	
+
 }

@@ -6,6 +6,7 @@ import java.sql.Timestamp;
 import org.apache.struts2.json.annotations.JSON;
 
 import com.fanglin.communion.vo.CustomerVO;
+import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.communion.vo.HouseVO;
 import com.fanglin.personel.vo.UserVO;
 
@@ -65,6 +66,12 @@ public class HouseSourceVO implements Serializable{
 	
 	private UserVO followUser;
 	
+	private DepartmentVO department;
+	
+	private DepartmentVO region;
+	
+	private UserVO keyer;
+	
 	private String housingGrade;
 	
 	private Short status;
@@ -77,14 +84,22 @@ public class HouseSourceVO implements Serializable{
 		super();
 	}
 	
-	public HouseSourceVO(HouseVO house, CustomerVO customer, UserVO create, UserVO followUser) {
+	public HouseSourceVO(HouseVO house) {
+		super();
+		this.house = house;
+	}
+	
+	public HouseSourceVO(HouseVO house, CustomerVO customer, UserVO create, UserVO followUser, UserVO keyer, DepartmentVO department, DepartmentVO region) {
 		super();
 		this.house = house;
 		this.customer = customer;
 		this.create = create;
 		this.followUser = followUser;
+		this.keyer = keyer;
+		this.department = department;
+		this.region = region;
 	}
-	
+
 	public Long getHsid() {
 		return hsid;
 	}
@@ -317,6 +332,30 @@ public class HouseSourceVO implements Serializable{
 
 	public void setPath(String path) {
 		this.path = path;
+	}
+	
+	public UserVO getKeyer() {
+		return keyer;
+	}
+
+	public void setKeyer(UserVO keyer) {
+		this.keyer = keyer;
+	}
+
+	public DepartmentVO getDepartment() {
+		return department;
+	}
+
+	public void setDepartment(DepartmentVO department) {
+		this.department = department;
+	}
+
+	public DepartmentVO getRegion() {
+		return region;
+	}
+
+	public void setRegion(DepartmentVO region) {
+		this.region = region;
 	}
 
 	public String getComment() {

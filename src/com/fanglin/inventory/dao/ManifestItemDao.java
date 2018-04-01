@@ -18,7 +18,7 @@ import com.fanglin.inventory.po.ManifestItemPO;
 
 public interface ManifestItemDao extends Dao<ManifestItemPO> {
 	
-	public List<ManifestItemPO> queryManifestItemByMId(long mId);
+	public List<ManifestItemPO> queryManifestItemByMid(long mId);
 	
 	public List<ManifestItemPO> queryManifestItemBySiids(List<Long> siids);
 	

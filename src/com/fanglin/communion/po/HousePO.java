@@ -65,7 +65,7 @@ public class HousePO implements Serializable{
 	
 	private short heatingType;
 	
-	private short status;
+	private int company;
 	
 	public HousePO() {
 		super();
@@ -246,18 +246,19 @@ public class HousePO implements Serializable{
 		this.heatingType = heatingType;
 	}
 
-	@Column(name="status")
-	public short getStatus() {
-		return status;
-	}
-
-	public void setStatus(short status) {
-		this.status = status;
-	}
-	
 	public String address(){
 		return String.format("%s %s", this.village.getName(), this.houseNumber);
 	}
+	
+	@Column(name="company")
+	public int getCompany() {
+		return company;
+	}
+
+	public void setCompany(int company) {
+		this.company = company;
+	}
+	
 	
 	
 }

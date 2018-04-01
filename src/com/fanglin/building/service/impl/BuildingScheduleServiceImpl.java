@@ -42,9 +42,9 @@ public class BuildingScheduleServiceImpl implements BuildingScheduleService{
 	private BuildingDao buildingDao;
 	
 	@Override
-	public List<BuildingScheduleVO> queryBuildingScheduleByBoid(BuildingScheduleVO buildingScheduleVO) {
+	public List<BuildingScheduleVO> queryBuildingScheduleByBid(BuildingScheduleVO buildingScheduleVO) {
 		
-		List<BuildingSchedulePO> buildingSchedulePOs = buildingScheduleDao.queryBuildingScheduleByBoid(buildingScheduleVO.getBuilding().getBoid());
+		List<BuildingSchedulePO> buildingSchedulePOs = buildingScheduleDao.queryBuildingScheduleByBid(buildingScheduleVO.getBuilding().getBid());
 		List<BuildingScheduleVO> buildingScheduleVOs = new ArrayList<BuildingScheduleVO>();
 		
 		for (BuildingSchedulePO buildingSchedulePO : buildingSchedulePOs) {
@@ -63,9 +63,11 @@ public class BuildingScheduleServiceImpl implements BuildingScheduleService{
 	@Transactional(rollbackFor=Exception.class)
 	public BuildingScheduleVO nextBuildingSchedule(BuildingScheduleVO buildingScheduleVO, String userId) {
 		
+		BuildingSchedulePO buildingSchedulePO = null;
+		
 		if(buildingScheduleVO.getBsid() != null){
 			
-			BuildingSchedulePO buildingSchedulePO = buildingScheduleDao.get(buildingScheduleVO.getBsid());
+			buildingSchedulePO = buildingScheduleDao.get(buildingScheduleVO.getBsid());
 			
 			if(buildingSchedulePO != null && buildingSchedulePO.getStatus() == BuildingSchedulePO.STATUS_INIT_SHORT){
 				
@@ -86,15 +88,13 @@ public class BuildingScheduleServiceImpl implements BuildingScheduleService{
 		
 		UserPO operater = userDao.queryUserByUserId(userId);
 		
-		List<BuildingNodePO> buildingNodePOs = buildingNodeDao.queryBuildingNodeByType(buildingScheduleVO.getBuildingNode().getType(), buildingScheduleVO.getBuildingNode().getSore());
+		List<BuildingNodePO> buildingNodePOs = buildingNodeDao.queryBuildingNodeByType(buildingSchedulePO.getBuildingNode().getType(), buildingScheduleVO.getBuildingNode().getSore(), BuildingNodePO.STATUS_ENABLE_SHORT);
 		
 		BuildingNodePO buildingNodePO = buildingNodePOs.get(0);
 		
-		BuildingPO buildingPO = buildingDao.get(buildingScheduleVO.getBuilding().getBoid());
-		
 		nextBuildingSchedulePO.setName(buildingNodePO.getName());
 		
-		nextBuildingSchedulePO.setBuilding(buildingPO);
+		nextBuildingSchedulePO.setBuilding(buildingSchedulePO.getBuilding());
 		
 		nextBuildingSchedulePO.setBuildingNode(buildingNodePO);
 		
@@ -116,17 +116,9 @@ public class BuildingScheduleServiceImpl implements BuildingScheduleService{
 		
 		BuildingSchedulePO buildingSchedulePO = buildingScheduleDao.get(buildingScheduleVO.getBsid());
 		
-		if(buildingScheduleVO.getComment() != null){
-			
-			buildingSchedulePO.setComment(buildingScheduleVO.getComment());
-			
-		}
+		buildingSchedulePO.setPlanTime(buildingScheduleVO.getPlanTime());
 		
-		if(buildingScheduleVO.getPlanTime() != null){
-			
-			buildingSchedulePO.setPlanTime(buildingScheduleVO.getPlanTime());
-			
-		}
+		buildingSchedulePO.setComment(buildingScheduleVO.getComment());
 		
 		buildingSchedulePO.setOperatTime(new Timestamp(System.currentTimeMillis()));
 		
@@ -158,7 +150,7 @@ public class BuildingScheduleServiceImpl implements BuildingScheduleService{
 	@Transactional(rollbackFor=Exception.class)
 	public void resetBuildingSchedule(BuildingVO buildingVO, String userId) throws FLException {
 		
-		BuildingPO buildingPO = buildingDao.get(buildingVO.getBoid());
+		BuildingPO buildingPO = buildingDao.get(buildingVO.getBid());
 		
 		if(buildingPO == null){
 			throw new FLException(320010, "房产单不存在");
@@ -175,10 +167,10 @@ public class BuildingScheduleServiceImpl implements BuildingScheduleService{
 		//修改当前房产单的房产流转
 		UserPO operaterPO = userDao.queryUserByUserId(userId);
 		
-		buildingScheduleDao.resetBuildingSchedule(buildingVO.getBoid(), operaterPO.getUid());
+		buildingScheduleDao.resetBuildingSchedule(buildingVO.getBid(), operaterPO.getUid());
 		
 		//生成新的房产单流转节点	
-		List<BuildingNodePO> buildingNodePOs = buildingNodeDao.queryBuildingNodeByType(buildingVO.getPayType(), BuildingNodePO.COLUMN_SORE_ONE);
+		List<BuildingNodePO> buildingNodePOs = buildingNodeDao.queryBuildingNodeByType(buildingVO.getPayType(), null, BuildingNodePO.STATUS_ENABLE_SHORT);
 		
 		BuildingNodePO buildingNodePO = buildingNodePOs.get(0);
 		

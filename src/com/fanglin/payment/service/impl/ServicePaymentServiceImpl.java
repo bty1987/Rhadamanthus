@@ -82,7 +82,6 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 			servicePaymentVO = new ServicePaymentVO(new UserBaseVO(),new UserBaseVO(),new UserBaseVO(),new DecorationVO(),new ServiceReceiptVO(new UserBaseVO(),new UserBaseVO()));
 			BeanUtil.copyProperties(servicePaymentPO, servicePaymentVO, Arrays.asList("creater","collecter","confirmer","decoration","serviceReceipt"));
 			servicePaymentVO.getCreater().setBaseInfo(servicePaymentPO.getCreater());
-			BeanUtil.copyProperties(servicePaymentPO.getDecoration(), servicePaymentVO.getDecoration(), Arrays.asList("house","customer","designer","salesman","supervisor","version","createUser","quoter","escorter"));
 			servicePaymentPO.getDecoration().ptvcascade(servicePaymentVO.getDecoration());
 			BeanUtil.copyProperties(servicePaymentPO.getServiceReceipt(), servicePaymentVO.getServiceReceipt(), Arrays.asList("collecter","confirmer"));
 			BeanUtil.copyProperties(servicePaymentPO.getServiceReceipt().getCollecter(), servicePaymentVO.getServiceReceipt().getCollecter(), Arrays.asList("dept","duty"));
@@ -113,7 +112,6 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 			servicePaymentVO = new ServicePaymentVO(new UserBaseVO(),new UserBaseVO(),new UserBaseVO(),new DecorationVO(),new ServiceReceiptVO(new UserBaseVO(),new UserBaseVO()));
 			BeanUtil.copyProperties(servicePaymentPO, servicePaymentVO, Arrays.asList("creater","collecter","confirmer","decoration","serviceReceipt"));
 			servicePaymentVO.getCreater().setBaseInfo(servicePaymentPO.getCreater());
-			BeanUtil.copyProperties(servicePaymentPO.getDecoration(), servicePaymentVO.getDecoration(), Arrays.asList("house","customer","designer","salesman","supervisor","version","createUser","quoter","escorter"));
 			servicePaymentPO.getDecoration().ptvcascade(servicePaymentVO.getDecoration());
 			BeanUtil.copyProperties(servicePaymentPO.getServiceReceipt(), servicePaymentVO.getServiceReceipt(), Arrays.asList("collecter","confirmer"));
 			BeanUtil.copyProperties(servicePaymentPO.getServiceReceipt().getCollecter(), servicePaymentVO.getServiceReceipt().getCollecter(), Arrays.asList("dept","duty"));

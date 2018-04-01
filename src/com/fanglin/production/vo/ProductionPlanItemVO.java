@@ -2,33 +2,32 @@ package com.fanglin.production.vo;
 
 import java.io.Serializable;
 
-
-public class ProductionPlanItemVO implements Serializable{
+public class ProductionPlanItemVO implements Serializable {
 
 	private static final long serialVersionUID = 4002225185325794754L;
-	
+
 	private Long ppiid;
-	
+
 	private ProductionPlanVO productionPlan;
-	
+
 	private String typeno;
-	
+
 	private String name;
-	
+
 	private Float height;
-	
+
 	private Float width;
-	
+
 	private Float thick;
-	
+
 	private String color;
-	
+
 	private Float unitprice;
-	
+
 	private Float num;
-	
+
 	private Float total;
-	
+
 	private String comment;
 
 	public ProductionPlanItemVO() {
@@ -135,8 +134,5 @@ public class ProductionPlanItemVO implements Serializable{
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	
-	
-	
 
 }

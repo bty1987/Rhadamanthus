@@ -22,8 +22,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.department.vo.DepartmentVO;
 import com.fanglin.information.dao.EventsDao;
 import com.fanglin.information.po.EventsPO;
 import com.fanglin.information.service.EventsService;

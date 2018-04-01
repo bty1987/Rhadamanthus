@@ -22,6 +22,7 @@ import com.fanglin.communion.service.HouseService;
 import com.fanglin.communion.vo.HouseVO;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.utils.SystemConfig;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -38,7 +39,7 @@ public class HouseAction extends BaseListAction{
 	@Action(value = "pageHouse", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageHouse() throws FLException{
 	
-		houseService.pageHouse(getPaging(), getFilters());
+		houseService.pageHouse(getPaging(), getFilters(),queryCompany());
 		
 		return SUCCESS;
 	}
@@ -54,7 +55,7 @@ public class HouseAction extends BaseListAction{
 	@Action(value = "queryHouseByNoAHnum", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryHouseByNoAHnum() throws FLException{
 		
-		house = houseService.queryHouseByNoAHnum(house);
+		house = houseService.queryHouseByNoAHnum(house,queryCompany());
 		
 		return SUCCESS;
 	}
@@ -62,13 +63,21 @@ public class HouseAction extends BaseListAction{
 	@Action(value = "addHouse", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addHouse() throws FLException{
 		
-		houseService.addHouse(house);
+		if(SystemConfig.getString("communion") == null){
+		    throw new FLException(-1, "无操作权限");
+		}
+		
+		houseService.addHouse(house,queryCompany());
 		
 		return SUCCESS;
 	}
 	
 	@Action(value = "updateHouse", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateHouse() throws FLException{
+		
+		if(SystemConfig.getString("communion") == null){
+		    throw new FLException(-1, "无操作权限");
+		}
 		
 		houseService.updateHouse(house);
 		

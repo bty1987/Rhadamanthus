@@ -2,6 +2,14 @@ $(function () {
 
     var salesPaymentForStatus = {};
 
+    var url = api.inventory.pageSalesBalance;
+    var postData = "salesBalancePostData";
+
+    if(params['urlLoadParams'].type == "dompany"){
+        url = api.inventory.pageSalesBalanceForDompany;
+        postData = "salesBalanceForDompanyPostData";
+    }
+
     com.post(api.common.queryReceiptType, {}, function (res) {
         salesPaymentForStatus.cash = [];
         salesPaymentForStatus.bank = [];
@@ -134,7 +142,11 @@ $(function () {
                     $liLine.appendTo($ul);
                     $liLine.append($h3).append($ulProperty);
 
-                    $btnDiv.append($btnVbalanceValue).append($btnVbalance).append($btnBalanceValue).append($btnBalance).append($btnPayment).append($btnBalanceItem);
+                    if(params['urlLoadParams'].type == "dompany") {
+                        $btnDiv.append($btnVbalanceValue).append($btnVbalance).append($btnBalanceValue).append($btnBalance).append($btnPayment).append($btnBalanceItem);
+                    }else{
+                        $btnDiv.append($btnPayment).append($btnBalanceItem);
+                    }
                     $small.appendTo($h3);
                     $btnDiv.appendTo($h3);
 
@@ -321,11 +333,11 @@ $(function () {
 
     var salesBalanceSearcher = new Searcher();
 
-    salesBalanceSearcher.init(_condArr, 'condList', api.inventory.pageSalesBalance, function (data) {
+    salesBalanceSearcher.init(_condArr, 'condList', url, function (data) {
 
         displayFunc.init('resultList', data)
 
-    }, 'pagenation', 'salesBalancePostData', null, false, null, function () {
+    }, 'pagenation', postData , null, false, null, function () {
 
 
     }, 'resultList')

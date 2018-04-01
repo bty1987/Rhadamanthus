@@ -29,6 +29,8 @@ public class ServiceRecordPO implements java.io.Serializable {
 	public static final short TYPE_TYPE_CHANGE_MATERIALPAYMENT_TIME_INT = 7;
 	
 	public static final short TYPE_TYPE_REFUND_DECORATIONPAYMENT_INT = 8;
+	
+	public static final short TYPE_TYPE_CHANGE_QUOTATION_STATUS_INT = 9;
 
 	private Long srId;
 	

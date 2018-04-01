@@ -33,9 +33,25 @@ public class HouseSourceAction extends BaseListAction{
 	private List<String> autoFillList;
 	
 	@Action(value = "pageHouseSource", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageHouseSource() {
+	public String pageHouseSource() throws FLException {
 		
 		houseSourceService.pageHouseSource(getPaging(), getFilters());
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "pageHouseSourceForFollower", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageHouseSourceForFollower() throws FLException {
+		
+		houseSourceService.pageHouseSourceForFollower(getPaging(), getFilters(), queryUserId());
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "pageHouseSourceForAdvance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageHouseSourceForAdvance() throws FLException {
+		
+		houseSourceService.pageHouseSourceForAdvance(getPaging(), getFilters(), queryUserId());
 		
 		return SUCCESS;
 	}
@@ -72,6 +88,14 @@ public class HouseSourceAction extends BaseListAction{
 		return SUCCESS;
 	}
 	
+	@Action(value = "takeHouseSource", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String takeHouseSource() throws FLException{
+		
+		houseSourceService.takeHouseSource(houseSource, queryUserId());
+		
+		return SUCCESS;
+	}
+	
 	@Action(value = "updateHouseSource", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateHouseSource() throws FLException{
 		
@@ -88,10 +112,26 @@ public class HouseSourceAction extends BaseListAction{
 		return SUCCESS;
 	}
 	
+	@Action(value = "updateHouseSourceForKeyer", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateHouseSourceForKeyer() throws FLException{
+		
+		houseSourceService.updateHouseSourceForKeyer(houseSource);
+		
+		return SUCCESS;
+	}
+	
 	@Action(value = "updateHouseSourceForStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateHouseSourceForStatus() throws FLException{
 		
 		houseSourceService.updateHouseSourceForStatus(houseSource);
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "updateHouseSourceForPath", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateHouseSourceForPath() throws FLException{
+		
+		houseSourceService.updateHouseSourceForPath(houseSource);
 		
 		return SUCCESS;
 	}

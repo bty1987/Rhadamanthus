@@ -63,7 +63,7 @@ public class QuotationAction extends BaseListAction {
 	@Action(value = "queryQuotationById", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryQuotationById(){
 		
-		quotation=quotationService.queryQuotationById(quotation.getQid());
+		quotation=quotationService.queryQuotationByQid(quotation.getQid());
 
 		return SUCCESS;
 	}
@@ -103,7 +103,7 @@ public class QuotationAction extends BaseListAction {
 	@Action(value = "updateQuotationForStatus", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateQuotationForStatus() throws FLException{ 
 		
-		quotationService.updateQuotationForStatus(quotation);
+		quotationService.updateQuotationForStatus(quotation, queryUserId());
 	    
 		return SUCCESS;
 	}

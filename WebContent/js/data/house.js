@@ -7,7 +7,6 @@ $(function() {
         parlourType:[],
         heatingType:[],
         through:[],
-        status:[],
         saveHouseBtn: null,
         cancelHouselBtn: null,
         modal: null,
@@ -106,9 +105,6 @@ $(function() {
         $.each(res.through,function (i,val) {
             house.through[val.key] = val.value;//是否越层
         });
-        $.each(res.status,function (i,val) {
-            house.status[val.key] = val.value;
-        });
 
     },null,false);
 
@@ -156,8 +152,7 @@ $(function() {
                 ["三不:", v.feature, "grey"],
                 ["水气设施:", house.waterVapour[v.waterVapour], "grey"],
                 ["客厅类型:",house.parlourType[v.parlourType], "red"],
-                ["供暖类型:", house.heatingType[v.heatingType], "red"],
-                ["状态:",  house.status[v.status], "red"]
+                ["供暖类型:", house.heatingType[v.heatingType], "red"]
             ];
 
             $.each(propertyArr, function (index, value) {
@@ -298,7 +293,6 @@ $(function() {
 
         }else {
             url = api.data.addHouse;
-            houseOptions["house.status"] =  0;
             houseOptions["house.houseNumber"] =house.items.houseNumber;
             houseOptions["house.village.no"] = house.items.no.val();
             houseOptions["house.roomNum"] =  house.items.houseTypeOne.val();

@@ -13,6 +13,7 @@ import com.fanglin.communion.service.ReceiptTypeService;
 import com.fanglin.communion.vo.ReceiptTypeVO;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.utils.SystemConfig;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -55,6 +56,10 @@ public class ReceiptTypeAction extends BaseListAction {
 	@Action(value="addReceiptType", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String addReceiptType() throws FLException{
 		
+		if(SystemConfig.getString("communion") == null){
+		    throw new FLException(-1, "无操作权限");
+		}
+		
 		 receiptTypeService.addReceiptType(receiptType,queryCompany());
 		
 		return SUCCESS;
@@ -63,6 +68,10 @@ public class ReceiptTypeAction extends BaseListAction {
 	@Action(value="updateReceiptType", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String updateReceiptType() throws FLException{
 			
+		if(SystemConfig.getString("communion") == null){
+		    throw new FLException(-1, "无操作权限");
+		}
+		
 		 receiptTypeService.updateReceiptType(receiptType,queryCompany());
 		
 		return SUCCESS;
@@ -70,6 +79,10 @@ public class ReceiptTypeAction extends BaseListAction {
 	
 	@Action(value="updateReceiptTypeForStatus", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String updateDrawLineGroupForStatus() throws FLException{
+		
+		if(SystemConfig.getString("communion") == null){
+		    throw new FLException(-1, "无操作权限");
+		}
 		
 		receiptTypeService.updateReceiptTypeForStatus(receiptType);
 		

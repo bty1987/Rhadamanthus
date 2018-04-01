@@ -21,8 +21,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.communion.po.DutyPO;
-import com.fanglin.department.po.DepartmentPO;
 import com.fanglin.system.po.RolePO;
 
 @Entity

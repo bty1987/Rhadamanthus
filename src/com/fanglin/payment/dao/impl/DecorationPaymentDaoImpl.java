@@ -43,14 +43,8 @@ public class DecorationPaymentDaoImpl extends DaoImpl<DecorationPaymentPO> imple
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<DecorationPaymentPO> queryDecorationPaymentByIds(List<Long> ids) {
-		return session().createCriteria(DecorationPaymentPO.class).add(Restrictions.in("dpid", ids)).list();
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<DecorationPaymentPO> queryDecorationPaymentByOrderIds(List<String> orderIds) {
-		return session().createCriteria(DecorationPaymentPO.class).add(Restrictions.in("decoration.orderId", orderIds)).list();
+	public List<DecorationPaymentPO> queryDecorationPaymentByDpids(List<Long> dpids) {
+		return session().createCriteria(DecorationPaymentPO.class).add(Restrictions.in("dpid", dpids)).list();
 	}
 
 	@Override
@@ -74,17 +68,6 @@ public class DecorationPaymentDaoImpl extends DaoImpl<DecorationPaymentPO> imple
 		return query.list();
 	}
 
-	@Override
-	public List<DecorationPaymentPO> queryDecorationPaymentForCollect(Paging paging, List<Filter> filters){
-		
-		PagingQuery<DecorationPaymentPO> query = pagingQuery(paging, DecorationPaymentPO.class);
-		
-		queryFilterExcute(query, filters);
-		query.asc("createTime");
-		
-		return query.allList();
-	}
-	
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<DecorationPaymentPO> queryDecorationPaymentByOrderId(String orderId){
@@ -113,8 +96,8 @@ public class DecorationPaymentDaoImpl extends DaoImpl<DecorationPaymentPO> imple
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<DecorationPaymentPO> queryDecorationPaymentByReceiptId(long drId) {
-		return session().createCriteria(DecorationPaymentPO.class).createAlias("decorationReceipt", "decorationReceipt").add(Restrictions.eq("decorationReceipt.drId", drId)).list();
+	public List<DecorationPaymentPO> queryDecorationPaymentByDrid(long drid) {
+		return session().createCriteria(DecorationPaymentPO.class).createAlias("decorationReceipt", "decorationReceipt").add(Restrictions.eq("decorationReceipt.drid", drid)).list();
 	}
 
 	@Override

@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.communion.po.DepartmentPO;
+import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.decoration.dao.AuditRecordDao;
 import com.fanglin.decoration.dao.AuditScaleDao;
@@ -16,8 +18,6 @@ import com.fanglin.decoration.po.AuditRecordPO;
 import com.fanglin.decoration.po.AuditScalePO;
 import com.fanglin.decoration.service.AuditScaleService;
 import com.fanglin.decoration.vo.AuditScaleVO;
-import com.fanglin.department.po.DepartmentPO;
-import com.fanglin.department.vo.DepartmentVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;

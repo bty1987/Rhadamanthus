@@ -9,6 +9,8 @@ import com.fanglin.utils.Paging;
 
 public interface SalesBalanceDao extends Dao<SalesBalancePO>{
 	
-	public List<SalesBalancePO> pageSalesBalance(Paging paging, List<Filter> filter);
+	public List<SalesBalancePO> pageSalesBalance(Paging paging, List<Filter> filter,int company);
+	
+	public List<SalesBalancePO> pageSalesBalanceForDompany(Paging paging, List<Filter> filter,int dompany);
 	
 }

@@ -95,7 +95,7 @@ $(function(){
     })();
     var $popup = $('#viewPopUp');
     var mid =  $popup.attr('data-mid');
-    com.post(api.inventory.queryManifestItemByMId,{
+    com.post(api.inventory.queryManifestItemByMid,{
         "manifest.mid": mid
     },function(res){
         displayFunc.init('resultList1',res.manifestItems);

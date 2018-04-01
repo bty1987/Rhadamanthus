@@ -11,6 +11,10 @@ $.extend(api.index, {
     quotationWholeIndex: {url: "/views/quotation/quotationWhole.html"},
     quotationOutputIndex: {url: "/views/quotation/quotationOutput.html"},
 
+    addReduceIndex: {url: "/views/quotation/addReduce.html"},
+    addReduceDetailIndex: {url: "/views/quotation/addReduceDetail.html"},
+    addReduceOutputIndex: {url: "/views/quotation/addReduceOutput.html"},
+
     extensionIndex: {url: "/views/quotation/extension.html"},
     extensionDetailIndex: {url: "/views/quotation/extensionDetail.html"},
 });
@@ -102,4 +106,22 @@ $.extend(api, {quotation: {
     deleteExtensionItem:{url:"deleteExtensionItem.do"},
 
 
+}});
+
+$.extend(api, {addReduce: {
+    pageAddReduceByOrderId: {url: "pageAddReduceByOrderId.do"},
+    queryAddReduceByOrderId: {url: "queryAddReduceByOrderId.do", demo: true},
+    queryAddReduceForPayedByOrderId: {url: "queryAddReduceForPayedByOrderId.do", demo: true},
+    queryAddReduceByDecorationPaymentId: {url: "queryAddReduceByDecorationPaymentId.do", demo: true},
+    addAddReduce: {url: "addAddReduce.do"},
+    updateAddReduce: {url: "updateAddReduce.do"},
+    updateAddReduceForAdvance: {url: "updateAddReduceForAdvance.do"},
+    deleteAddReduce: {url: "deleteAddReduce.do"},
+
+    submitAddReduce: {url: "submitAddReduce.do"},
+
+    queryAddReduceItemByAddReduceId: {url: "queryAddReduceItemByAddReduceId.do", demo: true},
+    queryAddReduceItemByAddReduceIds: {url: "queryAddReduceItemByAddReduceIds.do", demo: true},
+    updateAddReduceItem: {url: "updateAddReduceItem.do"},
+    deleteAddReduceItem: {url: "deleteAddReduceItem.do"}
 }});

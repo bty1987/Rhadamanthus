@@ -19,7 +19,6 @@ import com.fanglin.communion.dao.BuildingNameRuleDao;
 import com.fanglin.communion.po.BuildingNameRulePO;
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
-
 import com.fanglin.utils.Paging;
 
 @Repository("buildNameRuleDao")

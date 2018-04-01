@@ -139,13 +139,25 @@ public class ApprovalQuotationDiscountServiceImpl implements ApprovalQuotationDi
 			approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_REFUSE_INT);
 			approvalPO.setComment(String.format("%s 订单状态:%s,不支持该操作通过.", approvalPO.getComment(), decorationPO.getStatus()));
 		}else{
-				QuotationPO quotationPO = quotationDao.get(approvalQuotationDiscountPO.getQuotationId());
+			QuotationPO quotationPO = quotationDao.get(approvalQuotationDiscountPO.getQuotationId());
+			
+			if(quotationPO == null){
+				throw new FLException(200003, "报价不存在");
+			}
+			
+			if(!status.contains(decorationPO.getStatus())){
+				throw new FLException(200005, "报价不能修改");
+			}
+			
+			quotationPO.setDiscount(approvalQuotationDiscountPO.getNewDiscount());
+			
+			if(quotationPO.getDefaults() == QuotationPO.DEFAULTS_DEFAULT_SHORT){
+				decorationPO.setDiscount(quotationPO.getDiscount());
 				
-				if(quotationPO == null){
-					throw new FLException(200003, "报价不存在");
-				}	
-				quotationPO.setDiscount(approvalQuotationDiscountPO.getNewDiscount());
-				quotationDao.update(quotationPO);
+				decorationDao.update(decorationPO);
+			}
+			
+			quotationDao.update(quotationPO);
 		}		
 		return 0;
 	}

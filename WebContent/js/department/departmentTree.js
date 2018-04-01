@@ -1,10 +1,8 @@
-/**
- * Created by Administrator on 2018/1/1.
- */
+
 jQuery(function ($) {
 
-	com.post(api.department.queryDepartment, { }, function (res) {
-		com.post(api.department.queryDepartmentType, {}, function (ret) {
+	com.post(api.communion.queryDepartment, { }, function (res) {
+		com.post(api.communion.queryDepartmentType, {}, function (ret) {
 			var data = {
 				children: [],
 				name: "部门类型"
@@ -124,14 +122,9 @@ jQuery(function ($) {
 				.style({
 					stroke: '#A9BCD3'
 				});
-
 			// 渲染树图
 			tree.render();
 			/**/
-
-
-
 		});
 	});
-
 })

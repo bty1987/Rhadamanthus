@@ -10,21 +10,22 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
 @Entity
-@Table(name = "productionworkflow" , catalog = "production")
-public class ProductionWorkFlowPO implements Serializable{
+@Table(name = "productionworkflow", catalog = "production")
+public class ProductionWorkFlowPO implements Serializable {
 
 	private static final long serialVersionUID = 1030940835934617143L;
-	
+
 	public static final String COLUMN_PWPID_STR = "pwpid";
-	
+
 	public static final String COLUMN_WORKFLOW_STR = "workflow.wfid";
-	
+
 	private Long pwfid;
-	
-	private Long pwpid;//productionworkplan 计划工序组
-	
-	private WorkflowPO workflow; //工序
+
+	private Long pwpid;// productionworkplan 计划工序组
+
+	private WorkflowPO workflow; // 工序
 
 	public ProductionWorkFlowPO() {
 		super();
@@ -34,9 +35,10 @@ public class ProductionWorkFlowPO implements Serializable{
 		super();
 		this.workflow = workflow;
 	}
+
 	@Id
 	@GeneratedValue
-	@Column(name="pwfid")
+	@Column(name = "pwfid")
 	public Long getPwfid() {
 		return pwfid;
 	}
@@ -44,6 +46,7 @@ public class ProductionWorkFlowPO implements Serializable{
 	public void setPwfid(Long pwfid) {
 		this.pwfid = pwfid;
 	}
+
 	@Column(name = "pwpid")
 	public Long getPwpid() {
 		return pwpid;
@@ -54,7 +57,7 @@ public class ProductionWorkFlowPO implements Serializable{
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "wfid", referencedColumnName="wfid")
+	@JoinColumn(name = "wfid", referencedColumnName = "wfid")
 	public WorkflowPO getWorkflow() {
 		return workflow;
 	}
@@ -63,6 +66,4 @@ public class ProductionWorkFlowPO implements Serializable{
 		this.workflow = workflow;
 	}
 
-	
-	
 }

@@ -31,10 +31,10 @@ public class BuildingScheduleAction extends BaseListAction {
 	
 	private BuildingVO building;
 	
-	@Action(value="queryBuildingScheduleByBoid", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryBuildingScheduleByBoid() throws FLException{
+	@Action(value="queryBuildingScheduleByBid", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String queryBuildingScheduleByBid() throws FLException{
 		
-		buildingSchedules = buildingScheduleService.queryBuildingScheduleByBoid(buildingSchedule);
+		buildingSchedules = buildingScheduleService.queryBuildingScheduleByBid(buildingSchedule);
 		
 		return SUCCESS;
 		

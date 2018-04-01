@@ -1,8 +1,8 @@
 package com.fanglin.communion.po;
 
-import java.io.Serializable;
-
 import static javax.persistence.GenerationType.IDENTITY;
+
+import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

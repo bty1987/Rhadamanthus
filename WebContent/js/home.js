@@ -15,20 +15,25 @@ jQuery(function(){
         $('.breadcrumb .nav3').hide();
     });
     
-//    layer.open({
-//        type: 1,
-//        title: false,
-//        closeBtn: false,
-//        area: '300px;',
-//        shade: 0.8,
-//        id: 'LAY_layuipro',
-//        btn: ['了解了'],
-//        moveType: 1,
-//        content: '<div style="padding:50px;line-height:22px;background-color:#136194;color:#fff;font-weight:300;text-align:center;"><span style="font-size:20px;">关注我</span><br><span style="font-size:15px;">全新家装体验</span><img src="/images/publicsubscriptio.png" style="height: 200px;padding-top: 15px;"></div>',
-//        success: function(layero){
-//            layero.find('.layui-layer-btn').css('text-align', 'center');
-//        }
-//    });
+    /*layer.open({
+        type: 1,
+        title: false,
+        closeBtn: false,
+        area: ['300px','330px'],
+        shade: 0.8,
+        id: 'LAY_layuipro',
+        btn: ['了解了'],
+        moveType: 1,
+        content:
+        '<div class="home-layer-content">' +
+        '<div>' +
+        '<div class="home-layer-img"><img src="/images/v20.png" style="padding-top: 15px;height: 250px;"></div> ' +
+        '</div>' +
+        '</div>',
+        success: function(layero){
+            layero.find('.layui-layer-btn').css('text-align', 'center');
+        }
+    });*/
 
     com.post(api.common.wmCode, {}, function(res){
         var img = new Image();
@@ -374,7 +379,7 @@ function getNoticeDOM(notice){
         + notice.contentsText+'</div><abbr title="' + notice.contentsText+'"></abbr></div>');
     var $bottomInfo = $('<small><div class="pull-right"><span><i class="icon-time bigger-110"></i>&nbsp;'
         + notice.startTime + ' 至 ' + notice.endTime + '</span>&nbsp;&nbsp;<span><i class="icon-user bigger-110"></i>&nbsp;'
-        + notice.user.userName + '</span>&nbsp;&nbsp;</div></small>');
+        + notice.creater.userName + '</span>&nbsp;&nbsp;</div></small>');
     if(notice.filePath!=undefined && notice.filePath != null && notice.filePath != ""){
         $(".pull-right", $bottomInfo).append('<span><i class="icon-download-alt bigger-110"></i>&nbsp;<a href=' + config.media + notice.filePath + "?t=" + new Date().getTime()+' onclick="window.open(this.href); return false;">下载附件</a></span>');
     }

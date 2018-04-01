@@ -7,30 +7,30 @@ import org.apache.struts2.json.annotations.JSON;
 
 import com.fanglin.personel.vo.UserBaseVO;
 
-public class ProductionPictureVO implements Serializable{
+public class ProductionPictureVO implements Serializable {
 
 	private static final long serialVersionUID = -1014561970960194371L;
-	
+
 	private Long ppid;
-	
+
 	private Long pid;
-	
+
 	private String name;
-	
+
 	private UserBaseVO creater;
-	
+
 	private Timestamp createTime;
-	
+
 	private String path;
-	
+
 	private Short status;
-	
+
 	private String comment;
 
 	public ProductionPictureVO() {
 		super();
 	}
-	
+
 	public ProductionPictureVO(UserBaseVO creater) {
 		super();
 		this.creater = creater;
@@ -68,7 +68,7 @@ public class ProductionPictureVO implements Serializable{
 		this.creater = creater;
 	}
 
-	@JSON(format="yyyy-MM-dd")
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getCreateTime() {
 		return createTime;
 	}
@@ -100,5 +100,5 @@ public class ProductionPictureVO implements Serializable{
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	
+
 }

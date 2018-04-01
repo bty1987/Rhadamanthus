@@ -51,14 +51,6 @@ public class BuildingNameRuleAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-	@Action(value="queryBuildingNameRuleById", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryBuildingNameRuleById(){
-		
-		buildingNameRule = buildingNameRuleService.queryBuildingNameRuleById(buildingNameRule.getId());
-		
-		return SUCCESS;
-	}
-
 	public BuildingNameRuleVO getBuildingNameRule(){
 		return buildingNameRule;
 	}

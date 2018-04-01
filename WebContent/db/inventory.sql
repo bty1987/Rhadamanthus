@@ -92,6 +92,7 @@ CREATE TABLE `goods` (
   `pinyin` varchar(128) NOT NULL,
   `barcode` varchar(128) NOT NULL DEFAULT '' COMMENT '条形码',
   `category` varchar(32) NOT NULL,
+  `bid` int(11) NOT NULL COMMENT '品牌ID',
   `brand` varchar(32) NOT NULL,
   `measurementUnit` varchar(10) NOT NULL,
   `pieceNum` int(5) NOT NULL,
@@ -254,7 +255,7 @@ CREATE TABLE `storehouse` (
   `name` varchar(64) NOT NULL,
   `status` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`shid`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8 COMMENT='仓库';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='仓库';
 
 DROP TABLE IF EXISTS `storehousestock`;
 CREATE TABLE `storehousestock` (

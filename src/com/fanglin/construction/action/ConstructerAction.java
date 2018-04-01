@@ -54,13 +54,17 @@ public class ConstructerAction extends BaseListAction{
 	
 	@Action(value = "updateConstructerForRate", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateConstructerForRate() throws FLException{
+		
 		constructerService.updateConstructerForRate(constructer);
+		
 		return SUCCESS;
 	}
 	
 	@Action(value = "deleteConstructer", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteConstructer() throws FLException{
+		
 		constructerService.deleteConstructer(constructer);
+		
 		return SUCCESS;
 	}
 	

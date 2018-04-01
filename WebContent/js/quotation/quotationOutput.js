@@ -382,7 +382,6 @@ function printWorkTable(workType){
 jQuery(function($) {
 
 	//Api().init('../../js/api/');
-
 	var params = {};
 
 	api = parent.api;
@@ -466,7 +465,7 @@ jQuery(function($) {
 
 	quotationUtils.statisticalQuotationItem(quotationUtils.quotationDetail.quotationFunctionAreas,quotationUtils.quotationDetail.addReduceItems,quotationUtils.quotationDetail.extensions);
 
-	quotationUtils.initQuotationDetailItem(quotationUtils.quotationDetail.quotation,quotationUtils.quotationDetail.quotationFunctionAreas,quotationUtils.quotationDetail.addReduceItems,quotationUtils.quotationDetail.extensions,params.orderType);
+	quotationUtils.initQuotationDetailItem(quotationUtils.quotationDetail.quotation,quotationUtils.quotationDetail.quotationFunctionAreas,quotationUtils.quotationDetail.addReduceItems,quotationUtils.quotationDetail.extensions,params.orderType,false);
 
 	quotationUtils.quotationDetail.UndisPrice = quotationUtils.quotationCalculator(quotationUtils.quotationDetail.quotation.discount,params.orderType);
 
