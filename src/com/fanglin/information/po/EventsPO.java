@@ -16,7 +16,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import com.fanglin.department.po.DepartmentPO;
+import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.personel.po.UserPO;
 
 @Entity

@@ -36,8 +36,6 @@ import com.fanglin.construction.vo.DrawLineVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.data.common.dao.DrawLineGroupDao;
-//import com.fanglin.data.construction.dao.ConstructionNodeDao;
-//import com.fanglin.data.po.ConstructionNodeCompanyPO;
 import com.fanglin.data.po.DrawLineGroupPO;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
@@ -51,51 +49,51 @@ import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
 @Service("decorationDrawLineService")
-@Transactional(readOnly=true)
+@Transactional(readOnly = true)
 public class DrawLineServiceImpl implements DrawLineService {
 
 	@Autowired
 	private DecorationDao decorationDao;
-	
+
 	@Autowired
 	private DrawLineDao drawlineDao;
-	
+
 	@Autowired
 	private QuotationDao quotationDao;
-	
+
 	@Autowired
 	private MessageService messageService;
-	
+
 	@Autowired
 	private DrawLineGroupDao drawLineGroupDao;
-	
+
 	@Autowired
 	private ConstructionDao constructionDao;
 
 	@Autowired
 	private ConstructionScheduleDao constructionScheduleDao;
-	
+
 	@Autowired
 	private ConstructionNodeDao constructionNodeDao;
-	
+
 	@Autowired
 	private UserDao userDao;
-	
+
 	@Override
-	public List<DrawLineVO>  pageDrawLine(Paging paging,List<Filter> filters, Integer company){
+	public List<DrawLineVO> pageDrawLine(Paging paging, List<Filter> filters, Integer company) {
 
 		List<DrawLinePO> drawLinePOs = drawlineDao.pageDrawLine(paging, filters, company);
 
 		List<DrawLineVO> drawLineVOs = new ArrayList<DrawLineVO>();
-		
-		for(DrawLinePO drawLinePO: drawLinePOs){
+
+		for (DrawLinePO drawLinePO : drawLinePOs) {
 
 			DrawLineVO drawLineVO = new DrawLineVO();
 
 			BeanUtil.copyProperties(drawLinePO, drawLineVO, Arrays.asList("decoration", "applayUser", "drawLineGroup", "drawLineUser"));
 
 			DecorationPO decorationPO = drawLinePO.getDecoration();
-			
+
 			drawLineVO.setOrderTotalPrice(decorationPO.getOrderTotalPrice());
 
 			drawLineVO.setOrderId(decorationPO.getOrderId());
@@ -109,38 +107,38 @@ public class DrawLineServiceImpl implements DrawLineService {
 			drawLineVO.setHouseNumber(decorationPO.getHouse().getHouseNumber());
 			drawLineVO.setHouseArea(decorationPO.getHouse().getBuildArea());
 			drawLineVO.setContractTime(decorationPO.getContractTime());
-			
+
 			drawLineVO.setApplayUser(drawLinePO.getApplayUser().getCurrentName());
 			drawLineVO.setApplayUserId(drawLinePO.getApplayUser().getUserId());
-			
-			SimpleDateFormat  dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-			SimpleDateFormat  dateFormath = new SimpleDateFormat("HH:mm");
 
-			if(drawLinePO.getActualStartTime() != null){
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			SimpleDateFormat dateFormath = new SimpleDateFormat("HH:mm");
+
+			if (drawLinePO.getActualStartTime() != null) {
 				drawLineVO.setActualDate(dateFormat.format(drawLinePO.getActualEndTime()));
 				drawLineVO.setEndTime((dateFormath.format(drawLinePO.getActualEndTime())));
 				drawLineVO.setStartTime(dateFormath.format(drawLinePO.getActualStartTime()));
 			}
-			
-			if(drawLinePO.getDrawLineGroup()!=null){
+
+			if (drawLinePO.getDrawLineGroup() != null) {
 				drawLineVO.setGid(drawLinePO.getDrawLineGroup().getGid());
 				drawLineVO.setDrawLineGroupName(drawLinePO.getDrawLineGroup().getName());
 			}
 
-			if(drawLinePO.getDrawLineUser()!=null){
+			if (drawLinePO.getDrawLineUser() != null) {
 				drawLineVO.setDrawLineUser(drawLinePO.getDrawLineUser().getCurrentName());
 				drawLineVO.setDrawLineUserId(drawLinePO.getDrawLineUser().getUserId());
 			}
 
 			QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(decorationPO.getOrderId());
 
-			if(quotationPO == null){
+			if (quotationPO == null) {
 				drawLineVO.setDiscount((float) 10);
-			}else{
+			} else {
 				drawLineVO.setDiscount(quotationPO.getDiscount());
 			}
 
-			if(decorationPO.getSupervisor() != null){
+			if (decorationPO.getSupervisor() != null) {
 				drawLineVO.setSupervisor(decorationPO.getSupervisor().getCurrentName());
 			}
 
@@ -148,20 +146,30 @@ public class DrawLineServiceImpl implements DrawLineService {
 		}
 
 		paging.setData(drawLineVOs);
-		
+
 		return drawLineVOs;
 	}
-	
+
 	@Override
-	public List<DrawLineVO> queryDrawLine(List<Filter> filters, Integer company) {
+	public List<DrawLineVO> queryDrawLine(List<Filter> filters, Integer company) throws FLException {
 		
 		List<DrawLineVO> drawLineVOs = new ArrayList<DrawLineVO>();
-
-		if(filters.size() == 0) return drawLineVOs;
-
-		List<DrawLinePO> drawLinePOs = drawlineDao.queryDrawLine(filters, company);
 		
-		for(DrawLinePO drawLinePO: drawLinePOs){
+		if (filters.size() == 0)
+			return drawLineVOs;
+		
+		List<String> files = new ArrayList<String>();
+		for (Filter filter: filters) {
+			files.add(filter.getField());
+		}
+		
+		if(!files.contains("actualDate")){
+			return drawLineVOs;
+		}
+		
+		List<DrawLinePO> drawLinePOs = drawlineDao.queryDrawLine(filters, company);
+
+		for (DrawLinePO drawLinePO : drawLinePOs) {
 
 			DrawLineVO drawLineVO = new DrawLineVO();
 
@@ -182,185 +190,169 @@ public class DrawLineServiceImpl implements DrawLineService {
 			drawLineVO.setHouseNumber(decorationPO.getHouse().getHouseNumber());
 			drawLineVO.setHouseArea(decorationPO.getHouse().getBuildArea());
 			drawLineVO.setContractTime(decorationPO.getContractTime());
-			
+
 			drawLineVO.setApplayUser(drawLinePO.getApplayUser().getCurrentName());
 			drawLineVO.setApplayUserId(drawLinePO.getApplayUser().getUserId());
-			
+
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 			SimpleDateFormat dateFormath = new SimpleDateFormat("HH:mm");
-			
-			if(drawLinePO.getActualStartTime() != null){
+
+			if (drawLinePO.getActualStartTime() != null) {
 				drawLineVO.setActualDate(dateFormat.format(drawLinePO.getActualEndTime()));
 				drawLineVO.setEndTime((dateFormath.format(drawLinePO.getActualEndTime())));
 				drawLineVO.setStartTime(dateFormath.format(drawLinePO.getActualStartTime()));
 			}
-			
-			if(drawLinePO.getDrawLineGroup()!=null){
+
+			if (drawLinePO.getDrawLineGroup() != null) {
 				drawLineVO.setGid(drawLinePO.getDrawLineGroup().getGid());
 				drawLineVO.setDrawLineGroupName(drawLinePO.getDrawLineGroup().getName());
 			}
 
-			if(drawLinePO.getDrawLineUser()!=null){
+			if (drawLinePO.getDrawLineUser() != null) {
 				drawLineVO.setDrawLineUser(drawLinePO.getDrawLineUser().getCurrentName());
 				drawLineVO.setDrawLineUserId(drawLinePO.getDrawLineUser().getUserId());
 			}
 
-			if(decorationPO.getSupervisor() != null){
+			if (decorationPO.getSupervisor() != null) {
 				drawLineVO.setSupervisor(decorationPO.getSupervisor().getCurrentName());
 			}
 
 			drawLineVOs.add(drawLineVO);
 		}
-		
+
 		return drawLineVOs;
 	}
 
 	@Override
-	public HashMap<String, HashMap<String,Integer>> countDrawLineByDate(DrawLineVO drawLineVO, Integer company){
-		
+	public HashMap<String, HashMap<String, Integer>> countDrawLineByDate(DrawLineVO drawLineVO, Integer company) {
+
 		Timestamp startTime = DateUtil.getDateToTimestamp(DateUtil.getFirstDay(DateUtil.parseDate(drawLineVO.getStartTime(), "yyyy-MM-dd HH:mm:ss")));
 		Timestamp endTime = DateUtil.getDateToTimestamp(DateUtil.getLastDay(DateUtil.parseDate(drawLineVO.getEndTime(), "yyyy-MM-dd HH:mm:ss")));
-		
-		HashMap<String, HashMap<String,Integer>> drawLineInfos = new HashMap<String, HashMap<String,Integer>>();
+
+		HashMap<String, HashMap<String, Integer>> drawLineInfos = new HashMap<String, HashMap<String, Integer>>();
 
 		List<DrawLinePO> drawLinePOs = drawlineDao.queryDrawLine(startTime, endTime, company);
-		
-		for(DrawLinePO drawLinePO: drawLinePOs){
+
+		for (DrawLinePO drawLinePO : drawLinePOs) {
 
 			String d = DateUtil.getDateToDateString(drawLinePO.getActualStartTime(), "yyyy-MM-dd");
-			
-			if(drawLineInfos.get(d) != null){
 
-				HashMap<String,Integer> groupCount = drawLineInfos.get(d);
+			if (drawLineInfos.get(d) != null) {
 
-				if(groupCount.get(drawLinePO.getDrawLineGroup().getName())!=null){
-					groupCount.put(drawLinePO.getDrawLineGroup().getName(), groupCount.get(drawLinePO.getDrawLineGroup().getName()).intValue()+1);
-				}else{
+				HashMap<String, Integer> groupCount = drawLineInfos.get(d);
+
+				if (groupCount.get(drawLinePO.getDrawLineGroup().getName()) != null) {
+					groupCount.put(drawLinePO.getDrawLineGroup().getName(), groupCount.get(drawLinePO.getDrawLineGroup().getName()).intValue() + 1);
+				} else {
 
 					groupCount.put(drawLinePO.getDrawLineGroup().getName(), 1);
 				}
-			}else{
+			} else {
 
-				HashMap<String,Integer> groupCount = new HashMap<String, Integer>();
+				HashMap<String, Integer> groupCount = new HashMap<String, Integer>();
 				groupCount.put(drawLinePO.getDrawLineGroup().getName(), 1);
 				drawLineInfos.put(d, groupCount);
 			}
 		}
-		
+
 		return drawLineInfos;
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public int applayDrawLine(DrawLineVO drawLineVO, String userId) throws FLException{
+	@Transactional(rollbackFor = Exception.class)
+	public int applayDrawLine(DrawLineVO drawLineVO, String userId) throws FLException {
 
 		String orderId = drawLineVO.getOrderId();
 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 
 		List<DrawLinePO> drawLinePOs = drawlineDao.queryDrawLineByOrderId(orderId);
-		
+
 		DrawLinePO decorationDrawLinePO = null;
 		DrawLinePO newDrawLine = new DrawLinePO();
 
 		newDrawLine.setApplayCount(0);
 
-		if(drawLinePOs != null && drawLinePOs.size() > 0){
+		if (drawLinePOs != null && drawLinePOs.size() > 0) {
 
 			decorationDrawLinePO = drawLinePOs.get(0);
 
-			if(!decorationDrawLinePO.getStatus().equals("放线失败")){
+			if (!decorationDrawLinePO.getStatus().equals("放线失败")) {
 				throw new FLException(120013, "已经在队列中,不可重复提交");
 			}
 
-			newDrawLine.setApplayCount(decorationDrawLinePO.getApplayCount()+1);
+			newDrawLine.setApplayCount(decorationDrawLinePO.getApplayCount() + 1);
 		}
 
 		newDrawLine.setApplayTime(drawLineVO.getApplayTime());
-
 		newDrawLine.setDecoration(decorationPO);
-
 		newDrawLine.setApplayUser(userDao.queryUserByUserId(userId));
-
 		newDrawLine.setStatus("排队");
-
 		newDrawLine.setApplayDes(drawLineVO.getApplayDes());
 
 		drawlineDao.saveOrUpdate(newDrawLine);
 
-		//设置装修订单的初始进度
+		// 设置装修订单的初始进度
 		List<ConstructionNodeCompanyPO> constructionNodeCompanyPOs = constructionNodeDao.queryConstructionNodeCompanyByCid(decorationPO.getCompany());
-		String nodeName = constructionNodeCompanyPOs.get(0).getConstructionNode().getName();
-		decorationPO.setProjectStatus(nodeName);
-
-		decorationDao.update(decorationPO);
 
 		String currentTime = DateUtil.current(ConstructionSchedulePO.CURRENT_TIME_FORMAT_STR);
 
 		ConstructionPO constructionPO = constructionDao.queryConstructionByOrderId(orderId);
-		if(constructionPO == null){
-			
-			constructionPO = new ConstructionPO();
-			constructionPO.setDecoration(new DecorationPO(orderId));
-			constructionPO.setSchedule((int)constructionNodeCompanyPOs.get(0).getConstructionNode().getCnid());
+
+		if (constructionPO == null) {
+			constructionPO = new ConstructionPO(decorationPO);
 			constructionDao.save(constructionPO);
-			
+
 			long cid = constructionPO.getCid();
-			
-			for (ConstructionNodeCompanyPO constructionNodeCompanyPO : constructionNodeCompanyPOs) {				
-				
-				if(constructionNodeCompanyPO.getConstructionNode().getCnid() == 1 || constructionNodeCompanyPO.getConstructionNode().getCnid() == 2){
-					
-					ConstructionSchedulePO ConstructionSchedulePOO = new ConstructionSchedulePO(cid,orderId,currentTime,currentTime,(short)constructionNodeCompanyPO.getConstructionNode().getCnid());
-					constructionScheduleDao.save(ConstructionSchedulePOO);
-				
-				}else{
-					
-					ConstructionSchedulePO ConstructionSchedulePOO = new ConstructionSchedulePO(cid,orderId,currentTime,currentTime,(short)constructionNodeCompanyPO.getConstructionNode().getCnid());
-					ConstructionSchedulePOO.setStatus((short)0);
-					constructionScheduleDao.save(ConstructionSchedulePOO);
-					
-				}			
-			}			
+
+			for (ConstructionNodeCompanyPO constructionNodeCompanyPO : constructionNodeCompanyPOs) {
+
+				ConstructionSchedulePO constructionSchedulePO = new ConstructionSchedulePO(cid, orderId, currentTime, currentTime, (short) constructionNodeCompanyPO.getConstructionNode().getCnid());
+				constructionScheduleDao.save(constructionSchedulePO);
+			}
 		}
-		
+
+		decorationPO.setProjectStatus(DecorationPO.PROJECTSTATUS_START_INT);
+
+		decorationDao.update(decorationPO);
+
 		return 0;
 	}
-	
+
 	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public int resetDrawLine(DrawLineVO drawLineVO, Integer company) throws FLException{
-		
+	@Transactional(rollbackFor = Exception.class)
+	public int resetDrawLine(DrawLineVO drawLineVO, Integer company) throws FLException {
+
 		DrawLinePO drawLinePO = drawlineDao.get(drawLineVO.getDlId());
 
-		if(drawLinePO == null){
+		if (drawLinePO == null) {
 			throw new FLException(120014, "不存在该放线信息");
 		}
 
-		Date date = DateUtil.parseDate(drawLineVO.getActualDate() + " " + drawLineVO.getEndTime() , "yyyy-MM-dd HH:mm");
+		Date date = DateUtil.parseDate(drawLineVO.getActualDate() + " " + drawLineVO.getEndTime(), "yyyy-MM-dd HH:mm");
 
 		Timestamp end = DateUtil.getDateToTimestamp(date);
 
-		date = DateUtil.parseDate(drawLineVO.getActualDate() + " " + drawLineVO.getStartTime() , "yyyy-MM-dd HH:mm");
+		date = DateUtil.parseDate(drawLineVO.getActualDate() + " " + drawLineVO.getStartTime(), "yyyy-MM-dd HH:mm");
 
 		Timestamp start = DateUtil.getDateToTimestamp(date);
 
 		List<DrawLinePO> drawLinePOs = drawlineDao.queryDrawLineByGroupATime(drawLineVO.getGid(), start, end, company);
-		
-		if(drawLinePOs != null && drawLinePOs.size() > 0){
-			
-			if(!(drawLinePOs.size() == 1 && drawLinePOs.get(0).getDecoration().getOrderId().equals(drawLinePO.getDecoration().getOrderId()))){
+
+		if (drawLinePOs != null && drawLinePOs.size() > 0) {
+
+			if (!(drawLinePOs.size() == 1 && drawLinePOs.get(0).getDecoration().getOrderId().equals(drawLinePO.getDecoration().getOrderId()))) {
 				throw new FLException(120015, "时间重叠不能申请放线计划");
 			}
-			
+
 		}
-		
+
 		DrawLineGroupPO drawLineGroupPO = drawLineGroupDao.get(drawLineVO.getGid());
-		
-		if(drawLineGroupPO == null){
+
+		if (drawLineGroupPO == null) {
 			throw new FLException(120016, "不存在放线小组");
 		}
-		
+
 		drawLinePO.setStatus("申请放线");
 		drawLinePO.setActualEndTime(end);
 		drawLinePO.setActualStartTime(start);
@@ -368,17 +360,17 @@ public class DrawLineServiceImpl implements DrawLineService {
 		drawLinePO.setDrawLineGroupName(drawLineGroupPO.getName());
 
 		drawlineDao.saveOrUpdate(drawLinePO);
-		
+
 		return 0;
 	}
-	
+
 	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public int updateDrawLineForStatus(DrawLineVO drawLineVO, String userId, Integer company) throws FLException{
+	@Transactional(rollbackFor = Exception.class)
+	public int updateDrawLineForStatus(DrawLineVO drawLineVO, String userId, Integer company) throws FLException {
 
 		DrawLinePO drawLinePO = drawlineDao.get(drawLineVO.getDlId());
 
-		if(drawLinePO == null){
+		if (drawLinePO == null) {
 			throw new FLException(120014, "不存在该放线信息");
 		}
 
@@ -386,27 +378,23 @@ public class DrawLineServiceImpl implements DrawLineService {
 
 		String statusForVO = drawLineVO.getStatus();
 
-		if(("分配工人".equals(statusForVO) && "申请放线".equals(statusForPO)) || 
-				("放线失败".equals(statusForVO) && "申请放线".equals(statusForPO)) || 
-				("排队".equals(statusForVO) && "放线失败".equals(statusForPO)) || 
-				("放线成功".equals(statusForVO) && "分配工人".equals(statusForPO)) || 
-				("放线失败".equals(statusForVO) && "分配工人".equals(statusForPO))){
-		
+		if (("分配工人".equals(statusForVO) && "申请放线".equals(statusForPO)) || ("放线失败".equals(statusForVO) && "申请放线".equals(statusForPO)) || ("排队".equals(statusForVO) && "放线失败".equals(statusForPO)) || ("放线成功".equals(statusForVO) && "分配工人".equals(statusForPO)) || ("放线失败".equals(statusForVO) && "分配工人".equals(statusForPO))) {
+
 			drawLinePO.setStatus(statusForVO);
-	
-			if(statusForVO.equals("放线失败")){
+
+			if (statusForVO.equals("放线失败")) {
 				messageService.sendMessage(drawLinePO.getDecoration().getDesigner().getUserId(), userId, (String.format("订单:%s,放线失败!请重新申请放线.", drawLinePO.getDecoration().getOrderId())), MessagePO.MESSAGE_TYPE_SEND_CONSTRUCTION_STR, company);
 			}
-		
-		}else{
-			
+
+		} else {
+
 			throw new FLException(120017, "订单放线状态错误");
-			
+
 		}
-		
+
 		drawlineDao.saveOrUpdate(drawLinePO);
-		
+
 		return 0;
 	}
-	
+
 }

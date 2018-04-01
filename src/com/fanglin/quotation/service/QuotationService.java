@@ -19,7 +19,7 @@ import com.fanglin.quotation.vo.QuotationVO;
 
 public interface QuotationService {
 	
-	public QuotationVO queryQuotationById(long qId);
+	public QuotationVO queryQuotationByQid(long qId);
 
 	public QuotationVO queryQuotationForDefaultByOrderId(QuotationVO quotationVO) throws FLException;
 	
@@ -35,7 +35,7 @@ public interface QuotationService {
 	
 	public int updateQuotationForAdvance(QuotationVO quotationVO) throws FLException;
 	
-	public int updateQuotationForStatus(QuotationVO quotationVO) throws FLException;
+	public int updateQuotationForStatus(QuotationVO quotationVO, String userId) throws FLException;
 	
 	public int replicaQuotation(QuotationVO quotationVO, String userId) throws FLException;
 	

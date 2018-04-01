@@ -55,7 +55,6 @@ public class DrawLineDaoImpl extends DaoImpl<DrawLinePO> implements DrawLineDao 
 		PagingQuery<DrawLinePO> query = pagingQuery(new Paging(), DrawLinePO.class);
 		
 		query.add(query.getCriterion("decoration.company", company, "eq"));
-
 		queryFilterExcute(query, filters);
 
 		query.notPaging();

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 
@@ -17,14 +17,16 @@
 
     <script type="text/javascript">
 
+        window.notOperate = false;
+
         var isF5 = false;
         document.onkeydown = function (e) {
-            var ev = window.event || e;
+          var ev = window.event || e;
             var code = ev.keyCode || ev.which;
             if (code == 116) {
                 isF5 = true;
             }
-        }
+        };
         window.onbeforeunload = onclose;
         function onclose(){
             if(!isF5){
@@ -33,7 +35,7 @@
             }
         }
 
-        var server = './'
+        var server = './';
         var versionCode = '';
         var cookies = document.cookie.split(";");
 
@@ -47,6 +49,12 @@
             }else if(cookie.indexOf("loginTime") != -1){
                 window.loginTime = cookie.split("=")[1];
             }
+        }
+
+        // 登录超时
+        if(window.loginTime == undefined ){
+            isF5 = true;
+            window.location.href = "/";
         }
 
         var csses = "";
@@ -78,8 +86,12 @@
 
         /* altogether */
         csses += '<link rel="stylesheet" href="assets/altogether/css/font-awesome.min.css?version=' + versionCode + '" />';
+
         csses += '<link rel="stylesheet" href="assets/altogether/css/layer.css?version=' + versionCode + '" />';
+
         csses += '<link rel="stylesheet" href="assets/altogether/css/iconfont.css?version=' + versionCode + '" />'; /*  iconfont  */
+
+        csses += '<link rel="stylesheet" href="assets/altogether/css/locking.css?version=' + versionCode + '" />'; /*  lockscreen */
         /* altogether end */
 
         csses += '<link rel="stylesheet" href="' + server + 'css/main.css?version=' + versionCode + '" />';
@@ -98,7 +110,31 @@
 </head>
 
 <body class="navbar-fixed">
+<!--  lock bringins  -->
+<div id="outLockingContent" class="bringins-content" style="display: none; left: 0px; top: 25px; position: fixed; margin: 50px; width: 100%; height: 100%; transition: 1s; overflow-y: scroll;">
+
+    <div class="login-form-sub fadeInUp">
+        <div class="lock-pic">
+            <img id="personalPicLock" class="editable img-responsive" alt="PersonalPic" src="#" />
+        </div>
+
+        <div class="flex-row">
+            <span  class='lf--input' placeholder='用户名' id="userNameLock" type='text' readonly></span>
+        </div>
+
+        <div class="form-group">
+            <span class="block input-icon input-icon-right">
+				<input type="text" class="width-100" name="lockPassword" id="lockPassword" autocomplete="new-password" placeholder="请输入密码" onfocus="this.type='password'" />
+			</span>
+        </div>
+        <button value="登录" class="btn submit-btn" id="lockSubmit"> 登录 </button>
+    </div>
+
+</div>
+<!--  lock bringins end -->
+
 <div class="navbar navbar-default navbar-fixed-top" id="navbar" style='display:none;height: 0px;'>
+
     <script type="text/javascript">
         try{ace.settings.check('navbar' , 'fixed')}catch(e){}
     </script>
@@ -169,6 +205,7 @@
                     <ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
                         <li><a id="changePassword" class='changePassword' href="#"><i class="icon-cog"></i>修改密码</a></li>
                         <li><a id="userProfile" class='userProfile' href="#"><i class="icon-user"></i>个人资料</a></li>
+                        <li><a id="userLock" class='userLock' href="#"><i class="icon-lock"></i>锁屏</a></li>
                         <li class="divider"></li>
                         <li><a id="logout" class='logout' href="#"><i class="icon-off"></i>退出</a></li>
                     </ul>
@@ -225,7 +262,6 @@
         </div>
     </div>
 </div>
-
 
 <div class="main-container" id="main-container" style='display:none;'>
     <script type="text/javascript">
@@ -300,6 +336,8 @@
     <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse" style="position: fixed;">
         <i class="icon-double-angle-up icon-only bigger-110"></i>
     </a>
+
+
 </div>
 
 <script type="text/javascript">
@@ -367,10 +405,16 @@
     jses += '<script src="assets/altogether/js/fuelux/fuelux.spinner.min.js?version=' + versionCode + '"><\/script>';
     jses += '<script src="assets/altogether/js/fuelux/fuelux.tree.js?version=' + versionCode + '"><\/script>';
     jses += '<script src="assets/altogether/js/layer.js?version=' + versionCode + '"><\/script>';
+    jses += '<script src="assets/altogether/js/bringins.js?version=' + versionCode + '"><\/script>'; /*  bringins */
+    jses += '<script src="assets/altogether/js/data-set.min.js?version=' + versionCode + '"><\/script>'; /*  data-set */
+    jses += '<script src="assets/altogether/js/g2.min.js?version=' + versionCode + '"><\/script>'; /*  g2 */
+    jses += '<script src="assets/altogether/js/g6.min.js?version=' + versionCode + '"><\/script>'; /*  g6 */
     /* altogether end */
 
-    jses += '<script src="js/com/api.js?version=' + versionCode + '"><\/script>';
+    jses += '<script src="assets/altogether/js/load.js?version=' + versionCode + '"><\/script>';
+
     jses += '<script src="js/com/config.js?version=' + versionCode + '"><\/script>';
+    jses += '<script src="js/com/api.js?version=' + versionCode + '"><\/script>';
     jses += '<script src="js/com/server.js?version=' + versionCode + '"><\/script>';
     jses += '<script src="js/com/params.js?version=' + versionCode + '"><\/script>';
     jses += '<script src="js/com/utils.js?version=' + versionCode + '"><\/script>';

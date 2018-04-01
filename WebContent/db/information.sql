@@ -3,25 +3,24 @@ USE `information`;
 
 DROP TABLE IF EXISTS `activity`;
 CREATE TABLE `activity` (
-  `aId` int(11) NOT NULL AUTO_INCREMENT,
-  `activityName` varchar(32) NOT NULL,
-  `createUserId` varchar(15) NOT NULL,
-  `createUserName` varchar(32) NOT NULL,
+  `aid` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(32) NOT NULL,
+  `cuid` int(11) DEFAULT NULL,
   `status` tinyint(4) NOT NULL,
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `startTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `endTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `content` varchar(32) NOT NULL DEFAULT '',
   `company` int(11) NOT NULL,
-  PRIMARY KEY (`aId`)
+  PRIMARY KEY (`aid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='活动表';
 
 DROP TABLE IF EXISTS `activityitem`;
 CREATE TABLE `activityitem` (
-  `aiId` int(11) NOT NULL AUTO_INCREMENT,
-  `aId` int(11) NOT NULL,
+  `aiid` int(11) NOT NULL AUTO_INCREMENT,
+  `aid` int(11) NOT NULL,
   `activityName` varchar(32) NOT NULL,
-  `activityItemName` varchar(32) NOT NULL,
+  `name` varchar(32) NOT NULL,
   `num` int(11) NOT NULL DEFAULT '0',
   `type` tinyint(4) NOT NULL,
   `money` decimal(10,3) NOT NULL DEFAULT '0.000',
@@ -43,18 +42,18 @@ CREATE TABLE `assassin` (
 
 DROP TABLE IF EXISTS `events`;
 CREATE TABLE `events` (
-  `eId` int(11) NOT NULL AUTO_INCREMENT,
+  `eid` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(64) NOT NULL, 
   `content` varchar(256) NOT NULL DEFAULT '',
-  `createrId` varchar(15) DEFAULT NULL,
-  `holderId` varchar(15) NOT NULL,
+  `cuid` int(11) NOT NULL COMMENT '创建人ID',
+  `huid` int(11) NOT NULL COMMENT '持有人ID',
   `createTime` timestamp NULL DEFAULT NULL,
-  `deptId` varchar(10) DEFAULT NULL,
-  `regionId` varchar(10) DEFAULT NULL,
+  `did` int(11) DEFAULT NULL COMMENT '归属部门ID',
+  `rid` int(11) DEFAULT NULL COMMENT '归属分区ID',
   `showDate` date NOT NULL,
   `type` tinyint(4) NOT NULL,
-  PRIMARY KEY (`eId`),
-  KEY `indexone` (`holderId`,`showDate`)
+  PRIMARY KEY (`eid`),
+  KEY `indexone` (`huid`,`showDate`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='事件表';
 
 DROP TABLE IF EXISTS `membercard`;
@@ -88,8 +87,8 @@ CREATE TABLE `memberdetail` (
 DROP TABLE IF EXISTS `message`;
 CREATE TABLE `message` (
   `mid` int(11) NOT NULL AUTO_INCREMENT,
-  `receiverId` varchar(15) NOT NULL,
-  `senderId` varchar(15) DEFAULT NULL,
+  `ruid` int(11) NOT NULL COMMENT '接收人ID',
+  `suid` int(11) DEFAULT NULL COMMENT '发送人ID',
   `type` tinyint(1) NOT NULL COMMENT '类别',
   `contents` varchar(256) NOT NULL,
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -98,13 +97,13 @@ CREATE TABLE `message` (
   `company` int(11) NOT NULL,
   `dresult` tinyint(1) NOT NULL,
   PRIMARY KEY (`mid`),
-  KEY `indexone` (`receiverId`,`status`,`type`,`createTime`)
+  KEY `indexone` (`ruid`,`status`,`type`,`createTime`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='信息';
 
 DROP TABLE IF EXISTS `notice`;
 CREATE TABLE `notice` (
   `nid` int(11) NOT NULL AUTO_INCREMENT,
-  `userId` varchar(15) NOT NULL,
+  `cuid` int(11) NOT NULL COMMENT '创建人ID',
   `deptId` varchar(10) NOT NULL DEFAULT '',
   `theme` varchar(64) NOT NULL,
   `type` tinyint(1) NOT NULL COMMENT '1: 通知, 2: 活动',
@@ -134,6 +133,7 @@ CREATE TABLE `phonecall` (
   `pcid` int(11) NOT NULL AUTO_INCREMENT,
   `orderId` varchar(15) DEFAULT NULL COMMENT '订单编号',
   `operater` varchar(15) NOT NULL COMMENT '操作人',
+  `ouid` int(11) NOT NULL COMMENT '操作人ID',
   `operateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '操作时间',
   `callbackId` varchar(32) DEFAULT NULL COMMENT '通话信息id',
   `caller` varchar(32) NOT NULL COMMENT '主叫号码',

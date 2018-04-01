@@ -6,7 +6,6 @@ import com.fanglin.communion.vo.ConstructionNodeCompanyVO;
 import com.fanglin.communion.vo.ConstructionNodeVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
-
 import com.fanglin.utils.Paging;
 
 public interface ConstructionNodeService {

@@ -158,7 +158,7 @@ function drawTable(discount) {
 
 }
 function  drawBase(divid,decorationDetail) {
-    var mainDiv = $('#' + divid);console.log(decorationDetail)
+    var mainDiv = $('#' + divid);
 
     var holonomyDiv = $("<div></div>").addClass('row');
     var holonomyHeader = $("<div></div>").addClass('widget-header').append($("<h4></h4>").append($('<strong></strong>').html("半价款项信息")));

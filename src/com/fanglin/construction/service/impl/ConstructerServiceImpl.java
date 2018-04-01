@@ -145,9 +145,9 @@ public class ConstructerServiceImpl implements ConstructerService {
 		}
 
 		Long cid = Long.valueOf(constructerPO.getCid());
-		String userId = constructerPO.getUser().getUserId();
-
-		Integer workerSalaryCount = workerSalaryDao.countWorkerSalary(cid,userId);
+		int uid = constructerPO.getUser().getUid();
+		
+		Integer workerSalaryCount = workerSalaryDao.countWorkerSalary(cid,uid);
 
 		if(workerSalaryCount > 0){
 			throw new FLException(120023, "施工人员存在工费,不可删除");

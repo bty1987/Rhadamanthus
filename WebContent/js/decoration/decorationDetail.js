@@ -105,68 +105,38 @@ jQuery(function($) {
     },null,false);
 
     decorationDetail.houseItems.no = $("#no");
-    decorationDetail.houseItems.nameRuleSel = $("#nameRuleSel");
-
-    decorationDetail.houseItems.nameRuleSel.on('change',function () {
-        buildruleval()
-        decorationDetail.houseItems.built.val("");
-        decorationDetail.houseItems.unit.val("");
-        decorationDetail.houseItems.floor.val("");
-        decorationDetail.houseItems.door.val("");
+    decorationDetail.houseItems.rule = $("#rule");
+    decorationDetail.houseItems.errMsg = $("#errMsg");
+    decorationDetail.houseItems.no.on('change', function () {
+        deleteVillageData("no",decorationDetail.houseItems);
+        com.post(api.data.queryVillageById, {"village.no": decorationDetail.houseItems.no.val()}, function (res) {
+            decorationDetail.houseItems.rule.html("推荐楼牌号规则：" + res.village.rule);
+        }, null, false)
     });
-    decorationDetail.houseItems.no.on('change',function () {
-        decorationDetail.houseItems.built.val("");
-        decorationDetail.houseItems.unit.val("");
-        decorationDetail.houseItems.floor.val("");
-        decorationDetail.houseItems.door.val("");
+    decorationDetail.houseItems.built = $("#built").on("blur", function (e) {
+        deleteVillageData("built",decorationDetail.houseItems);
     });
-    decorationDetail.houseItems.built = $("#built").on("blur", function(e){
-
-        decorationDetail.houseItems.unit.val("");
-        decorationDetail.houseItems.floor.val("");
-        decorationDetail.houseItems.door.val("");
-
+    decorationDetail.houseItems.unit = $("#unit").on("blur", function (e) {
+        deleteVillageData("unit",decorationDetail.houseItems);
     });
-    decorationDetail.houseItems.unit = $("#unit").on("blur", function(e){
-
-            decorationDetail.houseItems.floor.val("");
-            decorationDetail.houseItems.door.val("");
-
+    decorationDetail.houseItems.floor = $("#floor").on("blur", function (e) {
+        deleteVillageData("floor",decorationDetail.houseItems);
     });
-    decorationDetail.houseItems.floor = $("#floor").on("blur", function(e){
-
-        decorationDetail.houseItems.door.val("");
-
-    });
-    decorationDetail.houseItems.door = $("#door").on("blur", function(e){
-
-        buildruleval();
-        if($("#no").val() == "" ){
-            com.showPopover($("#no"),{errorMsg: "请先选择楼盘"}, "right");
-            decorationDetail.houseItems.built.val("");
-            decorationDetail.houseItems.unit.val("");
-            decorationDetail.houseItems.floor.val("");
-            decorationDetail.houseItems.door.val("");
-        }else{
-            $("#no").css("border", "1px solid #d5d5d5").popover("destroy")
-        }
-
-        //合成楼牌号
-        decorationDetail.houseItems.rulenum=[decorationDetail.houseItems.built.val(),decorationDetail.houseItems.unit.val(),decorationDetail.houseItems.floor.val(),decorationDetail.houseItems.door.val()];
-        decorationDetail.houseItems.buildName = decorationDetail.houseItems.rulefill;
-        $.each(decorationDetail.houseItems.rulenum,function(i,val){
-            decorationDetail.houseItems.buildName = changetohousenum (decorationDetail.houseItems.buildName,val) ;
-        })
-        //验证楼牌号是否符合正则
-        if(!houseNumbervali( decorationDetail.houseItems.buildName, decorationDetail.houseItems.regex, decorationDetail.houseItems.errorMsg)) return;
+    decorationDetail.houseItems.door = $("#door").on("blur", function (e) {
         //验证房产是否存在
-        validatehouse(decorationDetail.houseItems.no.val(),decorationDetail.houseItems.buildName);
+        validatehouse(decorationDetail.houseItems.no.val(),houseUtils.anytimevalidate(decorationDetail.houseItems, 0 ,false));
     });
+    decorationDetail.houseItems.builtrule = $("#builtrule");
+    decorationDetail.houseItems.unitrule = $("#unitrule");
+    decorationDetail.houseItems.floorrule = $("#floorrule");
+    decorationDetail.houseItems.doorrule = $("#doorrule");
 
-    com.post(api.common.queryBuildingNameRule, {}, function(res) {
-        decorationDetail.houseItems.nameRuleList = res.buildingNameRules;
-        decorationDetail.houseItems.nameRuleSel.bindData(decorationDetail.houseItems.nameRuleList, "id", "ruleContent")
-    });
+    com.post(api.ds.building, {}, function (res) {
+        decorationDetail.houseItems.builtrule.bindData(res.buildrule, "key", "value");
+        decorationDetail.houseItems.unitrule.bindData(res.buildrule, "key", "value");
+        decorationDetail.houseItems.floorrule.bindData(res.buildrule, "key", "value");
+        decorationDetail.houseItems.doorrule.bindData(res.buildrule, "key", "value");
+    }, null, false);
 
     decorationDetail.printQuotationModal = $("#printQuotationModal");
     
@@ -188,9 +158,9 @@ jQuery(function($) {
                 var _activityItem = _[i];
 
                 if(_activityItem.type == 0){
-                    _coupons.push({aiId:_activityItem.aiId, activityItemName:_activityItem.activityItemName + " 金额:" + _activityItem.money});
+                    _coupons.push({aiId:_activityItem.aiId, activityItemName:_activityItem.name + " 金额:" + _activityItem.money});
                 }else if(_activityItem.type == 1){
-                    _things.push({aiId:_activityItem.aiId, activityItemName:_activityItem.activityItemName});
+                    _things.push({aiId:_activityItem.aiId, activityItemName:_activityItem.name});
                 }
             }
 
@@ -467,7 +437,7 @@ jQuery(function($) {
             for(var i=0;i<activitys.length;i++){
                 var _activity = activitys[i];
 
-                _activitys.push({aid:_activity.aid, activityName:_activity.activityName});
+                _activitys.push({aid:_activity.aid, activityName:_activity.name});
             }
 
             decorationDetail.activity.activityInfo.bindData(_activitys, "aid", "activityName", false);
@@ -501,7 +471,7 @@ jQuery(function($) {
             for(var i=0;i<decorationActivitys.length;i++){
                 var _decorationActivity = decorationActivitys[i];
 
-                _activitys.push({aid:_decorationActivity.activity.aid, activityName:_decorationActivity.activity.activityName})
+                _activitys.push({aid:_decorationActivity.activity.aid, activityName:_decorationActivity.activity.name})
             }
 
             decorationDetail.activity.activity.bindData(_activitys, "aid", "activityName", false);
@@ -564,20 +534,7 @@ jQuery(function($) {
 
     $('#villageChangeBtn').on("click", function(){
         com.clearValidator();
-        decorationDetail.houseItems.nameRuleSel.get(0).selectedIndex = 0;
-        decorationDetail.houseItems.nameRuleSel.trigger("change");
-
-        decorationDetail.houseItems.no.prop("disabled", false);
-        decorationDetail.houseItems.no.get(0).selectedIndex = 0;
-        decorationDetail.houseItems.built.val("");
-        decorationDetail.houseItems.unit.val("");
-        decorationDetail.houseItems.floor.val("");
-        decorationDetail.houseItems.door.val("");
-
-        decorationDetail.houseItems.regex="";
-        decorationDetail.houseItems.errorMsg="";
-        $("#door").css("border", "1px solid #d5d5d5").popover("destroy")
-        com.updateChosen("no", '', '');
+        clearHouse();
         $("#villageChangeModal").modal("show");
     });
 
@@ -1086,18 +1043,6 @@ jQuery(function($) {
         }
     }
 
-    function buildruleval(){
-
-        com.post(api.common.queryBuildingNameRuleById, {"buildingNameRule.id":decorationDetail.houseItems.nameRuleSel.val()}, function(res){
-
-            decorationDetail.houseItems.regex = eval("/^"+res.buildingNameRule.rule+"$/g");
-            decorationDetail.houseItems.errorMsg =  "楼盘名称规则("+res.buildingNameRule.ruleContent+")";
-
-            $("#buildingRuleContent").html("说明："+res.buildingNameRule.ruleContent+";eg."+res.buildingNameRule.ruleExample+"空出来的输入框添0");
-            decorationDetail.houseItems.rulefill=res.buildingNameRule.rulefill
-        }, null, false);
-    }
-
     function changetohousenum( temp,arr){
         var str =temp;
         if(arr.trim() != "" && arr.trim() != "0" ){
@@ -1119,9 +1064,9 @@ jQuery(function($) {
         }
         var options = {
             "house.village.no": no,
-            "house.houseNumber": houseNumber,
-            "house.status" : 0,
-        }
+            "house.houseNumber": houseNumber.houseNumber,
+            "house.status" : 0
+        };
 
         com.post(api.data.queryHouseByNoAHnum,options,function (res) {
             com.post(api.decoration.checkDecoration, {"filters[0].data":res.house.hid,"filters[0].field":"houseId","filters[0].op":"eq"}, function(des){
@@ -1312,6 +1257,42 @@ jQuery(function($) {
             $("#customerChangeModal").modal("hide");
         });
 
+    }
+    function clearHouse() {
+        decorationDetail.houseItems.no.prop("disabled", false);
+        decorationDetail.houseItems.no.get(0).selectedIndex = 0;
+        com.cleanItems(decorationDetail.houseItems);
+        com.updateChosen("no", '', '');
+        com.clearValidator();
+        $("#errMsg").css("border", "0px");
+    }
+    function deleteVillageData(paramFlag,items) {
+        switch (paramFlag) {
+            case "built":
+                decorationDetail.houseItems.unit.val("");
+                decorationDetail.houseItems.floor.val("");
+                decorationDetail.houseItems.door.val("");
+                break;
+            case "unit":
+                decorationDetail.houseItems.floor.val("");
+                decorationDetail.houseItems.door.val("");
+                break;
+            case "floor":
+                decorationDetail.houseItems.door.val("");
+                break;
+            case "no":
+                decorationDetail.houseItems.built.val("");
+                decorationDetail.houseItems.unit.val("");
+                decorationDetail.houseItems.floor.val("");
+                decorationDetail.houseItems.door.val("");
+                decorationDetail.houseItems.builtrule.get(0).selectedIndex = 0;
+                decorationDetail.houseItems.unitrule.get(0).selectedIndex = 0;
+                decorationDetail.houseItems.floorrule.get(0).selectedIndex = 0;
+                decorationDetail.houseItems.doorrule.get(0).selectedIndex = 0;
+                $("#door").css("border", "1px solid #d5d5d5").popover("destroy");
+                $("#errMsg").popover("destroy");
+                break;
+        }
     }
 
 });

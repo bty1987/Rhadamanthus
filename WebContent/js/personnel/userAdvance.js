@@ -7,11 +7,11 @@ var $wrap=null;
 
 jQuery(function($) {
 
-	function showDepaermentModal() {
+	function showDepaermentModal(value) {
 
 			$wrap = $('#moduleModal').find('.modal-body').empty();
 
-			com.post(api.department.queryDepartment, {}, function (res) {
+			com.post(api.communion.queryDepartment, {"dept.type.name": value}, function (res) {
 				var tree = res.deptList;
 
 				var childtree=[];
@@ -41,7 +41,7 @@ jQuery(function($) {
 								return false;
 							}
 						})
-					}else {
+					}else if(va.fatherDept.did != null&& va.fatherDept.did !=0){
 						aa = false;
 						menuArr.level2.push(va.fatherDept);
 					}
@@ -156,154 +156,6 @@ jQuery(function($) {
 
 		}
 
-	function showDesignDepartment(){
-		$wrap = $('#moduleModal').find('.modal-body').empty();
-
-		com.post(api.department.queryDepartment, {"dept.type.name": "设计部"}, function (res) {
-			var tree = res.deptList;
-			var childtree=[];
-			if (!tree || !tree.length) {
-				return;
-			}
-			var menuArr = {
-				level1 : [],
-				level2 : [],
-				level3 : [],
-			};
-			var menuObj = {
-				level1:{},
-				level2 : {},
-				level3 : {},
-			};
-			var $tree = $('<ol class="dd-list"></ol>');
-			$wrap.append($tree);
-			menuArr.level1=[{did: -1, deptName: "全部"}];
-
-			$.each(tree,function(i, va){
-					var aa = true ;
-					if(menuArr.level2.length>0) {
-						$.each(menuArr.level2, function (j, vl) {
-							if(va.fatherDept.deptId == vl.deptId){
-								aa = false;
-								return false;
-							}
-						})
-					}else{
-						aa = false;
-						menuArr.level2.push(va.fatherDept);
-					}
-					if(aa){
-						if(va.fatherDept.did != null && va.fatherDept.did !=0)
-							menuArr.level2.push(va.fatherDept);
-					}
-
-					if(va.fatherDept.did == null || va.fatherDept.did ==0){
-						childtree.push(va)
-					}
-			})
-
-			$.each(childtree, function (j, vb) {
-				var bb = true ;
-				$.each(menuArr.level2, function (j, vl) {
-					if(vb.deptId == vl.deptId){
-						bb = false;
-						return false;
-					}
-				})
-				if(bb){
-					menuArr.level2.push(vb);
-				}
-
-			})
-
-			$.each(menuArr.level2,function(i,va){
-				$.each(tree,function(index,value){
-					if (value.fatherDept.deptId == va.deptId) {
-							menuArr.level3.push(value)
-					}
-				})
-			})
-			if (menuArr.level1.length) {
-				$.each(menuArr.level1, function (i, va) {
-					var $li = $('<li></li>').addClass('dd-item');
-					var $div = $('<div></div>').addClass('dd-handle clearfix').text(va.deptName);
-					var $input = $('<input>').
-					attr({type: 'checkbox', name: 'module'}).addClass('ace').val(va.did);
-					var $indexCheck = $('<div></div>').addClass('checkbox pull-right').css({'margin-bottom': '0', 'margin-top': '-5px'});
-					var $label = $('<label></label>').append($input).append('<span class="lbl"></span>');
-					$indexCheck.append($label).appendTo($div);
-					$li.append($div).appendTo($tree);
-					menuObj.level1[va.did] = $li;
-				});
-			}
-
-			if (menuArr.level2.length) {
-				$.each(menuArr.level2, function (i, va) {
-					var $li = $('<li></li>').addClass('dd-item');
-					var $div = $('<div></div>').addClass('dd-handle clearfix').text(va.deptName);
-					var $indexCheck = $('<div></div>').addClass('checkbox pull-right').css({'margin-bottom': '0', 'margin-top': '-5px'});
-					var $label = $('<label></label>').append('<span class="lbl"></span>');
-					$indexCheck.append($label).appendTo($div);
-					menuObj.level2[va.did] = $li;
-					$li.append($div);
-
-					var $parent = menuObj.level1[-1]
-					$parent.children('div').hasClass('btn-default') || $parent.children('div').addClass('btn-default');
-					if (!$parent.children('button').length) {
-						var $title = $parent.children('div');
-						$('<button type="button" data-action="collapse" class="minus hide">Collapse</button>').insertBefore($title);
-						$('<button type="button" data-action="expand" class="plus">Expand</button>').insertBefore($title);
-					}
-
-					var $pol = $parent.children('ol').length ? $parent.children('ol') : $('<ol></ol>').addClass('dd-list hide').appendTo($parent).attr("id","one");
-					$li.appendTo($pol);
-				});
-			}
-
-			if (menuArr.level3.length) {
-				$.each(menuArr.level3, function (i, va) {
-					var $li = $('<li></li>').addClass('dd-item');
-					var $div = $('<div></div>').addClass('dd-handle clearfix').text(va.deptName);
-					var $input = $('<input>').attr({type: 'checkbox', name: 'module'}).addClass('ace').val(va.did)
-					var $indexCheck = $('<div></div>').addClass('checkbox pull-right').css({'margin-bottom': '0', 'margin-top': '-5px'});
-					var $label = $('<label></label>').append($input).append('<span class="lbl"></span>');
-					$indexCheck.append($label).appendTo($div);
-					menuObj.level3[va.did] = $li;
-					$li.append($div);
-
-					var $parent = menuObj.level2[va.fatherDept.did];
-					$parent.children('div').hasClass('btn-default') || $parent.children('div').addClass('btn-default');
-					if (!$parent.children('button').length) {
-						var $title = $parent.children('div');
-						// 减号
-						$('<button type="button" data-action="collapse" class="minus ">Collapse</button>').insertBefore($title);
-
-						$('<button type="button" data-action="expand" class="plus">Expand</button>').insertBefore($title);
-					}
-
-					var $pol = $parent.children('ol').length ? $parent.children('ol') : $('<ol></ol>').addClass('dd-list hide').appendTo($parent).attr("id","two");
-					$li.appendTo($pol);
-				});
-			}
-			$('button[data-action="collapse"]').click(function () {
-				var $this = $(this);
-				$this.siblings('ol').addClass('hide');
-				$this.parent().find('.plus').toggleClass('hide');
-				$this.parent().find('.minus').removeClass('hide');
-				$this.siblings('ol').find('.dd-list').addClass('hide');
-				$this.toggleClass('hide');
-			});
-			 $('button[data-action="expand"]').click(function () {
-				 var $this = $(this);
-				 $this.siblings('ol').removeClass('hide');
-				 $this.parent().find('.minus').toggleClass('hide');
-				 $this.parent().find('.plus').removeClass('hide');
-				 $this.toggleClass('hide');
-			 });
-
-		}, null, false);
-
-	}
 
 	userAdvance.userAdvanceModal = $("#userAdvanceModal");
 	userAdvance.userCompanyModal=$("#companyModal");
@@ -345,7 +197,8 @@ jQuery(function($) {
 					var $btnRight = $('<a></a>').addClass('btn btn-minier btn-success').html('权配');
 					var $btnDesigne = $('<a></a>').addClass('btn btn-minier btn-warning').html('订单设计')
 					var $btnSales = $('<a></a>').addClass('btn btn-minier btn-inverse').html('订单业务')
-					var $btnStatus = $('<a></a>').addClass('btn btn-minier btn-danger').html('订单状态')
+					var $btnStatus = $('<a></a>').addClass('btn btn-minier btn-danger').html('订单状态');
+					var $btnHouse = $('<a></a>').addClass('btn btn-minier btn-pink').html('房源权配');
 					var propertyArr = [
 						["员工编号:", v.userId, "grey"],
 						["用户名:", v.loginId, "grey"],
@@ -433,7 +286,11 @@ jQuery(function($) {
 						binding.openOrderDialog(v.userId);
 					});
 
-					$divBtnWrap.append($company).append($btnRight).append($btnDesigne).append($btnSales).append($btnStatus).appendTo($h3);
+					$btnHouse.click(function(){
+						binding.openHouseDialog(v.userId);
+					});
+
+					$divBtnWrap.append($company).append($btnRight).append($btnDesigne).append($btnSales).append($btnStatus).append($btnHouse).appendTo($h3);
 
 					$liLine.append($h3).append($ulProperty).appendTo($ul);
 				});
@@ -452,7 +309,7 @@ jQuery(function($) {
 			//设计权限配置
 			openDesignDialog : function(userId){
 				var $dialog = this.$dialog;
-				showDesignDepartment();
+				showDepaermentModal("设计部");
 				com.post(api.right.queryDecorationDesignDepartmentRightByUserId, { "user.userId" :  userId}, function(data){
 					if(data.dids.length){
 						$.each(data.dids, function(i, v){
@@ -468,7 +325,7 @@ jQuery(function($) {
 			//业务权限配置
 			openSalesDialog : function(userId) {
 				var $dialog = this.$dialog;
-				showDepaermentModal();
+				showDepaermentModal("");
 				com.post(api.right.queryDecorationSalesmanDepartmentRightByUserId, { "user.userId" :  userId}, function(data){
 					if(data.dids.length){
 						$.each(data.dids, function(i, v){
@@ -515,6 +372,23 @@ jQuery(function($) {
 				this.postConf.name = "statuses";
 				this.postConf["user.userId"] = userId;
 
+			},
+
+			//房源权配
+			openHouseDialog : function(userId) {
+				var $dialog = this.$dialog;
+				showDepaermentModal("置业房产");
+				com.post(api.right.queryHouseSourceDepartmentRightByUserId, {"user.userId" :  userId}, function(data){
+					if(data.dids.length){
+						$.each(data.dids, function(i, v){
+							$wrap.find('input[value="'+ v +'"]').prop('checked', true);
+						});
+					}
+				}, null, false);
+				$dialog.modal("show");
+				this.postConf.path = api.right.updateHouseSourceDepartmentRight;
+				this.postConf.name = "dids";
+				this.postConf["user.userId"] = userId;
 			},
 			setAdvance : function(){
 				var $dialog = this.$dialog;

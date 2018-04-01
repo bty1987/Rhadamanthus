@@ -187,7 +187,7 @@ public class CityServiceImpl implements CityService {
 
 	@Override
 	@Transactional
-	public int deleteCityByCids(List<Integer> cids) throws FLException {
+	public int deleteCity(List<Integer> cids) throws FLException {
 		
 		for(int cid: cids){
 			

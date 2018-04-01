@@ -58,7 +58,7 @@ public class DecorationActivityServiceImpl implements DecorationActivityService 
 			BeanUtil.copyProperties(decorationActivityPO, _decorationActivityVO, Arrays.asList("activity"));
 			
 			_decorationActivityVO.setActivity(new ActivityVO());
-			BeanUtil.copyProperties(decorationActivityPO.getActivity(), _decorationActivityVO.getActivity());
+			BeanUtil.copyProperties(decorationActivityPO.getActivity(), _decorationActivityVO.getActivity(), Arrays.asList("creater"));
 			
 			decorationActivityVOs.add(_decorationActivityVO);
 		}
@@ -96,7 +96,7 @@ public class DecorationActivityServiceImpl implements DecorationActivityService 
 		BeanUtil.copyProperties(decorationActivityPO, decorationActivityVO, Arrays.asList("activity"));
 		
 		decorationActivityVO.setActivity(new ActivityVO());
-		BeanUtil.copyProperties(decorationActivityPO.getActivity(), decorationActivityVO.getActivity());
+		BeanUtil.copyProperties(decorationActivityPO.getActivity(), decorationActivityVO.getActivity(), Arrays.asList("creater"));
 		
 		return 0;
 	}

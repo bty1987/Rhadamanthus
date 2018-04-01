@@ -1,5 +1,5 @@
-CREATE DATABASE  IF NOT EXISTS `inventory` ;
-USE `inventory`;
+CREATE DATABASE  IF NOT EXISTS `sales` ;
+USE `sales`;
 
 DROP TABLE IF EXISTS `refunds`;
 CREATE TABLE `refunds` (
@@ -118,15 +118,18 @@ CREATE TABLE `salesitem` (
   PRIMARY KEY (`siid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='销售项';
 
-DROP TABLE IF EXISTS `salesmanifestitem`;
-CREATE TABLE `salesmanifestitem` (
-  `smiid` int(11) NOT NULL AUTO_INCREMENT,
-  `siid` int(11) NOT NULL,
-  `miid` int(11) NOT NULL,
-  `num` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `surplus` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '余额',
-  `type` tinyint(2) NOT NULL,
-  `status` tinyint(1) NOT NULL,
-  PRIMARY KEY (`smiid`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='销售采购项';
+DROP TABLE IF EXISTS `salesmanifest`;
+CREATE TABLE `salesmanifest` (
+  `smid` int(11) NOT NULL AUTO_INCREMENT,
+  `sid` int(11) NOT NULL,
+  `mid` int(11) NOT NULL,
+  PRIMARY KEY (`smid`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='销售货单';
 
+DROP TABLE IF EXISTS `salespurchase`;
+CREATE TABLE `salespurchase` (
+  `spid` int(11) NOT NULL AUTO_INCREMENT,
+  `sid` int(11) NOT NULL,
+  `pid` int(11) NOT NULL,
+  PRIMARY KEY (`spid`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='销售采购单';

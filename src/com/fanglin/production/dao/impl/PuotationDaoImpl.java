@@ -10,21 +10,20 @@ import com.fanglin.production.dao.PuotationDao;
 import com.fanglin.production.po.PuotationPO;
 
 @Repository("puotationDao")
-public class PuotationDaoImpl  extends DaoImpl<PuotationPO> implements PuotationDao {
+public class PuotationDaoImpl extends DaoImpl<PuotationPO> implements PuotationDao {
 
-	public PuotationDaoImpl(){
+	public PuotationDaoImpl() {
 		super(PuotationPO.class);
 	}
+
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<PuotationPO> queryPuotationByPid(long pid) {
-
-		return  session().createCriteria(PuotationPO.class).add(Restrictions.eq(PuotationPO.COLUMN_PID_STR, pid)).list();
-	    
+		return session().createCriteria(PuotationPO.class).add(Restrictions.eq(PuotationPO.COLUMN_PID_STR, pid)).list();
 	}
+
 	@Override
 	public PuotationPO queryPuotationByQid(long qid) {
-	
 		return (PuotationPO) createCriteria(PuotationPO.class).add(Restrictions.eq(PuotationPO.COLUMN_QID_STR, qid)).uniqueResult();
 	}
 

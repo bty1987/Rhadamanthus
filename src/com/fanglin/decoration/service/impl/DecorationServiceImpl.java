@@ -29,8 +29,10 @@ import com.fanglin.common.po.ServiceRecordPO;
 import com.fanglin.common.service.CountingService;
 import com.fanglin.communion.dao.HouseDao;
 import com.fanglin.communion.po.CustomerPO;
+import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.communion.po.HousePO;
 import com.fanglin.communion.vo.CustomerVO;
+import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.communion.vo.DutyVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.security.AESHelper;
@@ -51,8 +53,6 @@ import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.service.DecorationService;
 import com.fanglin.decoration.vo.DecorationInfoVO;
 import com.fanglin.decoration.vo.DecorationVO;
-import com.fanglin.department.po.DepartmentPO;
-import com.fanglin.department.vo.DepartmentVO;
 import com.fanglin.payment.dao.DecorationPaymentDao;
 import com.fanglin.payment.dao.DecorationReceiptDao;
 import com.fanglin.payment.po.DecorationPaymentPO;
@@ -224,21 +224,9 @@ public class DecorationServiceImpl implements DecorationService {
 			
 			decorationPO.ptvcascade(decorationVO);
 			
-			QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(decorationPO.getOrderId());
+			decorationVO.setOrderTotalPrice(decorationPO.getOrderTotalPrice());
 			
-			if(decorationPO.getOrderTotalPrice() != 0){
-				decorationVO.setOrderTotalPrice(decorationPO.getOrderTotalPrice());
-			}else if(quotationPO != null){
-				decorationVO.setOrderTotalPrice(quotationPO.getTotalPrice());
-			}else{
-				decorationVO.setOrderTotalPrice(0f);
-			}
-			
-			if(quotationPO == null){
-				decorationVO.setDiscount(0f);
-			}else{
-				decorationVO.setDiscount(quotationPO.getDiscount());
-			}
+			decorationVO.setDiscount(decorationPO.getDiscount());
 			
 			List<DecorationBelongInfoPO> orderBelongInfoPOs = decorationBelongDao.queryOrderBelongInfoByOrderId(decorationPO.getOrderId());
 			
@@ -306,6 +294,8 @@ public class DecorationServiceImpl implements DecorationService {
 			decorationVO.setSupervisor(new UserBaseVO());
 			decorationPO.ptvcascade(decorationVO);
 			
+			decorationVO.setDiscount(decorationPO.getDiscount());
+			
 			List<DecorationBelongInfoPO> orderBelongInfoPOs = decorationBelongDao.queryOrderBelongInfoByOrderId(decorationPO.getOrderId());
 			
 			for(DecorationBelongInfoPO orderBelongInfoPO: orderBelongInfoPOs){
@@ -349,21 +339,13 @@ public class DecorationServiceImpl implements DecorationService {
 				decorationVO.setOrderTotalPrice(new Float(0));
 			}
 			
-			QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(decorationPO.getOrderId());
-			
 			if(decorationPO.getOrderTotalPrice() != 0){
 				decorationVO.setOrderTotalPrice(decorationPO.getOrderTotalPrice());
-			}else if(quotationPO != null){
-				decorationVO.setOrderTotalPrice(quotationPO.getTotalPrice());
 			}else{
 				decorationVO.setOrderTotalPrice(0f);
 			}
 			
-			if(quotationPO == null){
-				decorationVO.setDiscount(0f);
-			}else{
-				decorationVO.setDiscount(quotationPO.getDiscount());
-			}
+			decorationVO.setDiscount(decorationPO.getDiscount());
 			
 			decorationVOs.add(decorationVO);
 		}
@@ -393,21 +375,13 @@ public class DecorationServiceImpl implements DecorationService {
 			
 			decorationPO.ptvcascade(decorationVO);
 			
-			QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(decorationPO.getOrderId());
-			
 			if(decorationPO.getOrderTotalPrice() != 0){
 				decorationVO.setOrderTotalPrice(decorationPO.getOrderTotalPrice());
-			}else if(quotationPO != null){
-				decorationVO.setOrderTotalPrice(quotationPO.getTotalPrice());
 			}else{
 				decorationVO.setOrderTotalPrice(0f);
 			}
 			
-			if(quotationPO == null){
-				decorationVO.setDiscount(0f);
-			}else{
-				decorationVO.setDiscount(quotationPO.getDiscount());
-			}
+			decorationVO.setDiscount(decorationPO.getDiscount());
 			
 			List<DecorationBelongInfoPO> orderBelongInfoPOs = decorationBelongDao.queryOrderBelongInfoByOrderId(decorationPO.getOrderId());
 			
@@ -450,22 +424,10 @@ public class DecorationServiceImpl implements DecorationService {
 			
 			decorationPO.ptvcascade(decorationVO);
 			
-			QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(decorationPO.getOrderId());
+			decorationVO.setOrderTotalPrice(decorationPO.getOrderTotalPrice());
 			
-			if(decorationPO.getOrderTotalPrice() != 0){
-				decorationVO.setOrderTotalPrice(decorationPO.getOrderTotalPrice());
-			}else if(quotationPO != null){
-				decorationVO.setOrderTotalPrice(quotationPO.getTotalPrice());
-			}else{
-				decorationVO.setOrderTotalPrice(0f);
-			}
-			
-			if(quotationPO == null){
-				decorationVO.setDiscount(0f);
-			}else{
-				decorationVO.setDiscount(quotationPO.getDiscount());
-			}
-			
+			decorationVO.setDiscount(decorationPO.getDiscount());
+		
 			List<DecorationBelongInfoPO> orderBelongInfoPOs = decorationBelongDao.queryOrderBelongInfoByOrderId(decorationPO.getOrderId());
 			
 			for(DecorationBelongInfoPO orderBelongInfoPO: orderBelongInfoPOs){
@@ -538,21 +500,9 @@ public class DecorationServiceImpl implements DecorationService {
 			decorationVO.setSupervisor(new UserBaseVO());
 			decorationPO.ptvcascade(decorationVO);
 			
-			QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(decorationPO.getOrderId());
+			decorationVO.setOrderTotalPrice(decorationPO.getOrderTotalPrice());
 			
-			if(decorationPO.getOrderTotalPrice() != 0){
-				decorationVO.setOrderTotalPrice(decorationPO.getOrderTotalPrice());
-			}else if(quotationPO != null){
-				decorationVO.setOrderTotalPrice(quotationPO.getTotalPrice());
-			}else{
-				decorationVO.setOrderTotalPrice(0f);
-			}
-			
-			if(quotationPO == null){
-				decorationVO.setDiscount(0f);
-			}else{
-				decorationVO.setDiscount(quotationPO.getDiscount());
-			}
+			decorationVO.setDiscount(decorationPO.getDiscount());
 			
 			List<DecorationBelongInfoPO> orderBelongInfoPOs = decorationBelongDao.queryOrderBelongInfoByOrderId(decorationPO.getOrderId());
 			
@@ -627,21 +577,9 @@ public class DecorationServiceImpl implements DecorationService {
 			decorationVO.setSupervisor(new UserBaseVO());
 			decorationPO.ptvcascade(decorationVO);
 			
-			QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(decorationPO.getOrderId());
+			decorationVO.setOrderTotalPrice(decorationPO.getOrderTotalPrice());
 			
-			if(decorationPO.getOrderTotalPrice() != 0){
-				decorationVO.setOrderTotalPrice(decorationPO.getOrderTotalPrice());
-			}else if(quotationPO != null){
-				decorationVO.setOrderTotalPrice(quotationPO.getTotalPrice());
-			}else{
-				decorationVO.setOrderTotalPrice(0f);
-			}
-			
-			if(quotationPO == null){
-				decorationVO.setDiscount(0f);
-			}else{
-				decorationVO.setDiscount(quotationPO.getDiscount());
-			}
+			decorationVO.setDiscount(decorationPO.getDiscount());
 			
 			decorationVOs.add(decorationVO);
 		}
@@ -667,12 +605,8 @@ public class DecorationServiceImpl implements DecorationService {
 		
 		if(decorationVO.getOrderTotalPrice() == null || decorationVO.getOrderTotalPrice() == 0){
 			
-			QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(decorationPO.getOrderId());
-			if(quotationPO == null){
-				decorationVO.setOrderTotalPrice(new Float(0));
-			}else{
-				decorationVO.setOrderTotalPrice(quotationPO.getTotalPrice());
-			}
+			decorationVO.setOrderTotalPrice(decorationPO.getOrderTotalPrice());
+			
 		}
 		
 		try {
@@ -710,23 +644,6 @@ public class DecorationServiceImpl implements DecorationService {
 
 		decorationVO = queryDecorationById(decorationVO.getOrderId());
 
-		return decorationVO;
-	}
-	
-	@Override
-	public DecorationVO queryDecorationByVillageIdAHouseNumber(DecorationVO decorationVO, Authentication authentication){
-		
-		DecorationPO decorationPO = decorationDao.queryDecorationByVillageIdAHouseNumber(decorationVO.getHouse().getVillage().getName(), decorationVO.getHouse().getHouseNumber(),authentication.getCompany());
-		
-		if(decorationPO == null){
-			return null;
-		}
-		
-		decorationVO.setEscorter(new UserBaseVO());
-		decorationVO.setQuoter(new UserBaseVO());
-		
-		decorationPO.ptvcascade(decorationVO);
-		
 		return decorationVO;
 	}
 	
@@ -1087,11 +1004,16 @@ public class DecorationServiceImpl implements DecorationService {
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public void createDecoration(DecorationVO decorationVO, DecorationInfoVO decorationInfoVO, Authentication authentication) throws FLException{
-		DecorationPO decorationPO = new DecorationPO();
 		
-		if(decorationDao.queryDecorationByHid(decorationVO.getHouse().getHid(), authentication.getCompany()) != null){
+		List<String> unstatus = Arrays.asList(DecorationPO.STATUS_WASTE_STR, DecorationPO.STATUS_TERMINATION_STR);
+		
+		DecorationPO decorationPO = decorationDao.queryDecorationByHid(decorationVO.getHouse().getHid(), authentication.getCompany());
+		
+		if(decorationPO != null && !unstatus.contains(decorationPO.getStatus())){
 			throw new FLException(140034, "订单楼盘,楼号已存在");
 		}
+		
+		decorationPO = new DecorationPO();
 		
 		String userId = authentication.getUserId();
 		int company = authentication.getCompany();
@@ -1121,6 +1043,7 @@ public class DecorationServiceImpl implements DecorationService {
 		decorationPO.setOrderTotalPrice((float) 0);
 		decorationPO.setSalesmanType(decorationVO.getSalesmanType());
 		decorationPO.setCompany(company);
+		decorationPO.setPaySacle((short) 0);
 		
 		decorationPO.setCustomer(new CustomerPO(decorationVO.getCustomer().getCid()));
 		decorationPO.setHouse(new HousePO(decorationVO.getHouse().getHid()));
@@ -1148,7 +1071,7 @@ public class DecorationServiceImpl implements DecorationService {
 		UserPO operater = userDao.queryUserByUserId(authentication.getUserId());
 		decorationPO.setCreateUser(operater);
 		
-		decorationPO.setProjectStatus(DecorationPO.PROJECTSTATUS_WAITING_STR);
+		decorationPO.setProjectStatus(DecorationPO.PROJECTSTATUS_INITIAL_INT);
 		
 		decorationPO.setOtherStatus(0);
 		decorationPO.setType(decorationVO.getType());

@@ -8,37 +8,40 @@
 		</div>
 	</div>
 
-	<div class="modal fade" id="businessDeptModal" tabindex="-1">
+	<div class="modal fade" id="deptModal" tabindex="-1">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
-					<h4 class="modal-title" id="myModalLabel">部门或大区</h4>
+					<button type="button" class="close" data-dismiss="modal">
+						<span>&times;</span>
+						<span class="sr-only">Close</span>
+					</button>
+					<h4 class="modal-title" >部门或大区</h4>
 				</div>
 				<div class="modal-body">
 					<form class="form-horizontal">
-						<div class="form-group">
-							<label class="col-sm-3 control-label no-padding-right" for="businessDeptId">部门编号</label>
+						<div class="form-group" id="ndeptId">
+							<label class="col-sm-3 control-label no-padding-right" for="deptId">部门编号</label>
 							<div class="col-sm-9">
-								<input type="text" maxlength="10" id="businessDeptId" class="col-xs-10 col-sm-6 v_businessDept v_required" data-toggle="popover" data-trigger='manual'/>
+								<input type="text" maxlength="10" id="deptId" class="col-xs-10 col-sm-6 " readonly="readonly"/>
 								<span class='star'></span>
 							</div>
 						</div>
 						<div class="space-4"></div>
 
 						<div class="form-group">
-							<label class="col-sm-3 control-label no-padding-right" for="businessDeptName">部门名称</label>
+							<label class="col-sm-3 control-label no-padding-right" for="deptName">部门名称</label>
 							<div class="col-sm-9">
-								<input type="text" maxlength="64" id="businessDeptName" class="col-xs-10 col-sm-6 v_name v_required" data-toggle="popover" data-trigger='manual'/>
+								<input type="text" maxlength="64" id="deptName" class="col-xs-10 col-sm-6 v_name v_required" data-toggle="popover" data-trigger='manual'/>
 								<span class='star'></span>
 							</div>
 						</div>
 						<div class="space-4"></div>
 
 						<div class="form-group">
-							<label class="col-sm-3 control-label no-padding-right" for="departmenttype">部门类型</label>
+							<label class="col-sm-3 control-label no-padding-right" for="deptype">部门类型</label>
 							<div class="col-sm-9">
-								<select id="departmenttype" class="col-xs-10 col-sm-6 v_required" data-toggle="popover" data-trigger='manual'></select>
+								<select id="deptype" class="col-xs-10 col-sm-6 v_required" data-toggle="popover" data-trigger='manual'></select>
 								<span class='star'></span>
 							</div>
 						</div>

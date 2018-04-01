@@ -72,42 +72,30 @@ public class MessageServiceImpl implements MessageService {
 	}
 
 	@Override
+	public MessageVO queryMessageByMid(MessageVO message){
+		
+		MessagePO messagePO = messageDao.get(message.getMid());
+		
+		MessageVO messageVO = convertBean(messagePO);
+		
+		return messageVO;
+	}
+	
+	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void sendMessage(MessageVO messageVO, int company) throws FLException {
 
-		MessagePO messagePO = new MessagePO();
-
-		messagePO.setReceiver(userDao.queryUserByUserId(messageVO.getReceiver().getUserId()));
-		messagePO.setType(messageVO.getType());
-		messagePO.setContents(messageVO.getContents());
-		messagePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-		messagePO.setStatus(MessagePO.MESSAGE_STATUS_UNREAD_STR);
-		messagePO.setCompany(company);
-
-		int error;
-		short errorCode = MessagePO.MESSAGE_DRESULT_FAIL_STR;
-
 		if (messageVO.getSender() != null) {
-			UserPO send = userDao.queryUserByUserId(messageVO.getSender().getUserId());
-			messagePO.setSender(send);
-			error = messageDDService.sendMessage(messageVO.getReceiver().getUserId(), send.getUserName(), messageVO.getContents(), company);
-		} else {
-			error = messageDDService.sendMessage(messageVO.getReceiver().getUserId(), "", messageVO.getContents(), company);
+		 sendMessage(messageVO.getReceiver().getUserId(),messageVO.getSender().getUserId(),messageVO.getContents(),messageVO.getType(),company);		
+		}else{
+			sendMessage(messageVO.getReceiver().getUserId(),"",messageVO.getContents(),messageVO.getType(),company);
 		}
-
-		if (error == 0) {
-			errorCode = MessagePO.MESSAGE_DRESULT_SUCCESS_STR;
-		}
-
-		messagePO.setDresult(errorCode);
-
-		messageDao.save(messagePO);
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void sendMessage(String receiver, String sender, String contents, short type, int company) throws FLException {
-
+	public void sendMessage(String receiver, String sender, String contents, short type,int company) throws FLException {
+		
 		MessagePO messagePO = new MessagePO();
 
 		messagePO.setReceiver(userDao.queryUserByUserId(receiver));
@@ -116,31 +104,25 @@ public class MessageServiceImpl implements MessageService {
 		messagePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		messagePO.setStatus(MessagePO.MESSAGE_STATUS_UNREAD_STR);
 		messagePO.setCompany(company);
-
-		int error;
+		
 		String userName = "";
-		short errorCode = MessagePO.MESSAGE_DRESULT_FAIL_STR;
-		UserPO userPO = userDao.queryUserByUserId(sender);
-
-		if (userPO != null) {
+	   
+		if (!sender.equals("") && sender !=null) {
+			UserPO userPO = userDao.queryUserByUserId(sender);
 			userName = userPO.getUserName();
 			messagePO.setSender(userPO);
 		}
 
-		error = messageDDService.sendMessage(receiver, userName, contents, company);
-
-		if (error == 0) {
-			errorCode = MessagePO.MESSAGE_DRESULT_SUCCESS_STR;
-		}
-
-		messagePO.setDresult(errorCode);
 		messageDao.save(messagePO);
+		
+		messageDDService.sendMessage(receiver, userName, contents,messagePO.getMid(),company);
+
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void updateMessageForRead(List<Integer> ids) {
-
+	
 		messageDao.updateMessageForRead(ids);
 	}
 

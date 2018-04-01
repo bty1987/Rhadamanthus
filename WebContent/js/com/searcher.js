@@ -17,7 +17,7 @@ var Searcher = function(){
         extraParams : {},//额外的查询参数
         noPagingFlag : false,
         resultListName : null,
-        resultListId: null, // 显示内容标签id
+        resultListId: null // 显示内容标签id
     };
 
     /*查询条件各种操作*/
@@ -99,6 +99,19 @@ var Searcher = function(){
                 var _rpostParam = condRule['dataSource']["postData"];//autofill和select取值时调用接口时传的参数
                 var _rresult = condRule['dataSource']["listPath"];//autofill和select取值时调用接口后取值用的eg:data.deptList
             }
+
+            var setOption = function(data){
+                data && data.length &&(
+                    $.each(data,function(i,v){
+                        if("object" !== typeof v){
+                            $('<option></option>').attr("value" , v).html(v).appendTo($showItem);
+                        }else{
+                            $('<option></option>').attr("value" , v[_rkey]).html(v[_rvalue]).appendTo($showItem);
+                        }
+
+                    })
+                );
+            };
 
             $label.text(_rlabel + ':').appendTo($item);
 
@@ -191,17 +204,9 @@ var Searcher = function(){
                 if(_rurl){
                     com.post(_rurl, _rpostParam, function(result){
                         var data = result[_rresult];
-                        data && data.length &&(
-                            $.each(data,function(i,v){
-                                if("object" !== typeof v){
-                                    $('<option></option>').attr("value" , v).html(v).appendTo($showItem);
-                                }else{
-                                    $('<option></option>').attr("value" , v[_rkey]).html(v[_rvalue]).appendTo($showItem);
-                                }
-
-                            })
-                        );
+                        setOption(data);
                     }, null, false);
+
                 }else{
                     $.each(_rresult, function(i, v){
                         if("object" !== typeof v){
@@ -213,6 +218,28 @@ var Searcher = function(){
                 }
             }
 
+            if(_rtype == "selectCaching") {
+                $showItem = $('<select></select>').attr({
+                    "name": condCode,
+                    "data-rqs": _rname,
+                    "data-op": _rop,
+                    "data-type": _rtype
+                }).append('<option value="">全部</option>').appendTo($item);
+
+                var data = {};
+                if (_rurl) {
+                    if (!jQuery.isEmptyObject(params.selectCaching[condCode])) {
+                        data = params.selectCaching[condCode];
+                    } else {
+                        com.post(_rurl, _rpostParam, function (result) {
+                            data = result[_rresult];
+                            params.selectCaching[condCode] = data;
+                        }, null, false);
+
+                    }
+                }
+                setOption(data);
+            }
             return $item;
         }
     };
@@ -389,7 +416,7 @@ var Searcher = function(){
         var $zone = $('<div></div>').addClass('dropzone dz-clickable').css('margin', '20px').css('border', '0px').appendTo($resultList);
         var $mesg = $('<div></div>').addClass('dz-default dz-message').appendTo($zone);
         var $span = $('<span></span>').text('无可用数据提供').appendTo($mesg);
-    }
+    };
 
     var queryData = function(_params){
         com.post(basicConf.url, _params, $.proxy(function(result){
@@ -526,7 +553,7 @@ var Searcher = function(){
          * 根据当前条件查询分页信息
          * */
         doSearch : function () {
-            searchByPresentParams();
+            setTimeout(function(){ searchByPresentParams() }, 500);
         }
     }
 };

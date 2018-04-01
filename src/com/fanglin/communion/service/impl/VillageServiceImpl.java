@@ -37,9 +37,10 @@ public class VillageServiceImpl implements VillageService {
 	private CountingService countingService;
 	
 	@Override
-	public void pageVillage(Paging paging, List<Filter> filters){
+	public void pageVillage(Paging paging, List<Filter> filters,Integer company){
 
-		List<VillagePO> villagePOs = villageDao.pageVillage(paging, filters);
+		List<VillagePO> villagePOs = villageDao.pageVillage(paging, filters,company);
+		
 		List<VillageVO> villageVOs = new ArrayList<VillageVO>();
 		
 		for(VillagePO villagePO: villagePOs){
@@ -64,14 +65,14 @@ public class VillageServiceImpl implements VillageService {
 	}
 	
 	@Override
-	public List<VillageVO> queryVillageForNameByPinyin(String pinyinName) {
+	public List<VillageVO> queryVillageForNameByPinyin(String pinyinName,Integer company) {
 		
 		Paging paging = new Paging(0, 20);
 		
 		List<VillageVO> villageVOs = new ArrayList<VillageVO>();
-		List<VillagePO> villagePOs = villageDao.queryVillageByPinyin(paging, pinyinName);
 		
-	
+		List<VillagePO> villagePOs = villageDao.queryVillageByPinyin(paging, pinyinName,company);
+		
 		for(VillagePO villagePO: villagePOs){
 			villageVOs.add(covertBean(villagePO));
 		}
@@ -81,9 +82,9 @@ public class VillageServiceImpl implements VillageService {
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int addVillage(VillageVO villageVO)throws FLException{
+	public int addVillage(VillageVO villageVO , Integer company)throws FLException{
 		
-		if(villageDao.countVillageByNameACpid(villageVO.getName(),villageVO.getCityProper().getCpid()) > 0){
+		if(villageDao.countVillageByNameACpid(villageVO.getName(),villageVO.getCityProper().getCpid(),company) > 0){
 			throw new FLException(130020, "楼盘已存在");
 		}
 		
@@ -102,16 +103,19 @@ public class VillageServiceImpl implements VillageService {
 	    villagePO.setCityProper(new CityProperPO(villageVO.getCityProper().getCpid()));
 
 	    villagePO.setPinyinAB((String)PinYin4Util.getPinYinHeadChar(villageVO.getName()).get(0));
+	   
 	    villagePO.setPinyinAll((String)PinYin4Util.getPinyin(villageVO.getName()).get(0));
 
-	    villageDao.save(villagePO);
+	    villagePO.setCompany(company);
+	    
+	   villageDao.save(villagePO);
 	    
 	    return 0;
 	}
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int updateVillage(VillageVO villageVO) throws FLException{
+	public int updateVillage(VillageVO villageVO,Integer company) throws FLException{
 		
 		VillagePO villagePO = villageDao.get(villageVO.getNo());
 
@@ -121,14 +125,14 @@ public class VillageServiceImpl implements VillageService {
 		
 		if(!(villagePO.getName()).equals(villageVO.getName()) || ((villagePO.getCityProper().getCpid()) != (villageVO.getCityProper().getCpid())) ){
 			    
-			 if(villageDao.countVillageByNameACpid(villageVO.getName(),villageVO.getCityProper().getCpid()) > 0){
+			 if(villageDao.countVillageByNameACpid(villageVO.getName(),villageVO.getCityProper().getCpid(),company) > 0){
 					throw new FLException(130020, "楼盘已存在");
 				}
 		 } 
 		
 	    villageVO.setVid(villagePO.getVid());
 
-	    BeanUtil.copyProperties(villageVO, villagePO, Arrays.asList("no", "x", "y", "cityProper" ));
+	    BeanUtil.copyProperties(villageVO, villagePO, Arrays.asList("no", "x", "y", "cityProper","company"));
 
 	    villagePO.setCityProper(new CityProperPO(villageVO.getCityProper().getCpid()));
 
@@ -162,7 +166,7 @@ public class VillageServiceImpl implements VillageService {
 	@Transactional(rollbackFor=Exception.class)
 	public int updateVillageForPosition(VillageVO villageVO) throws FLException{
 		 
-		VillagePO villagePO = (VillagePO)this.villageDao.get(villageVO.getNo());
+		VillagePO villagePO = villageDao.get(villageVO.getNo());
 
 	    if (villagePO == null) {
 	      throw new FLException(130003, "楼盘信息不存在");
@@ -176,6 +180,18 @@ public class VillageServiceImpl implements VillageService {
 	    return 0;
 	}
 	
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public int updateVillageForUrl(VillageVO villageVO) throws FLException{
+		
+		VillagePO villagePO = villageDao.get(villageVO.getNo());
+		
+		villagePO.setUrl(villageVO.getUrl());
+		
+		villageDao.update(villagePO);
+		
+		return 0;
+	}
 	
 	public VillageVO covertBean(VillagePO villagePO){
 		VillageVO villageVO = new VillageVO();

@@ -19,10 +19,10 @@ CREATE TABLE `advancereceipt` (
   `arId` int(11) NOT NULL AUTO_INCREMENT,
   `type` tinyint(4) NOT NULL,
   `apId` int(11) DEFAULT NULL,
-  `collecterId` varchar(15) NOT NULL DEFAULT '',
+  `cluid` int(11) DEFAULT NULL COMMENT '收款人ID',
   `collecterName` varchar(32) NOT NULL DEFAULT '',
   `collectTime` timestamp NULL DEFAULT NULL,
-  `confirmerId` varchar(15) DEFAULT '',
+  `cfuid` int(11) DEFAULT NULL COMMENT '确认人ID',
   `confirmerName` varchar(32) NOT NULL DEFAULT '',
   `confirmTime` timestamp NULL DEFAULT NULL,
   `status` tinyint(4) NOT NULL DEFAULT '0',
@@ -44,20 +44,21 @@ CREATE TABLE `advancereceipt` (
 DROP TABLE IF EXISTS `decorationpayment`;
 CREATE TABLE `decorationpayment` (
   `dpid` int(11) NOT NULL AUTO_INCREMENT,
-  `drId` int(11) DEFAULT NULL,
+  `drid` int(11) DEFAULT NULL,
   `orderId` varchar(15) NOT NULL,
   `onetype` tinyint(1) NOT NULL,
   `twotype` tinyint(1) NOT NULL,
   `paymentType` varchar(10) NOT NULL COMMENT '预付款、设计费、定金、首付款、首付二期款、二期款、尾款、增项款、减项款、退款、违约金',
   `paymentStatus` varchar(10) NOT NULL DEFAULT '未提交' COMMENT '申请审批,审批未通过,未提交 , 未付款 , 已付款,已确认',
-  `createrId` varchar(15) DEFAULT NULL,
+  `cuid` int(11) DEFAULT NULL COMMENT '创建人ID',
   `createTime` timestamp NULL DEFAULT NULL,
   `referMoney` decimal(10,3) NOT NULL DEFAULT '0.000',
   `realMoney` decimal(10,3) NOT NULL DEFAULT '0.000',
   PRIMARY KEY (`dpid`),
   KEY `indexone` (`orderId`),
   KEY `indextwo` (`createrId`),
-  KEY `indexfor` (`orderId`,`paymentType`,`paymentStatus`)
+  KEY `indexfor` (`orderId`,`paymentType`,`paymentStatus`),
+  KEY `indexthr` (`drId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='装修款表';
 
 DROP TABLE IF EXISTS `decorationreceipt`;
@@ -65,10 +66,10 @@ CREATE TABLE `decorationreceipt` (
   `drId` int(11) NOT NULL AUTO_INCREMENT,
   `type` tinyint(4) NOT NULL,
   `status` tinyint(4) NOT NULL DEFAULT '0',
-  `collecterId` varchar(15) DEFAULT NULL,
+  `cluid` int(11) DEFAULT NULL COMMENT '收款人ID',
   `collecterName` varchar(32) DEFAULT NULL,
   `collectTime` timestamp NULL DEFAULT NULL,
-  `confirmerId` varchar(15) DEFAULT NULL,
+  `cfuid` int(11) DEFAULT NULL COMMENT '确认人ID',
   `confirmerName` varchar(32) DEFAULT NULL,
   `confirmTime` timestamp NULL DEFAULT NULL,
   `cash` decimal(10,3) NOT NULL DEFAULT '0.000',
@@ -91,28 +92,29 @@ CREATE TABLE `decorationreceipt` (
 
 DROP TABLE IF EXISTS `materialpayment`;
 CREATE TABLE `materialpayment` (
-  `mpId` int(11) NOT NULL AUTO_INCREMENT,
-  `mrId` int(11) DEFAULT NULL,
+  `mpid` int(11) NOT NULL AUTO_INCREMENT,
+  `mrid` int(11) DEFAULT NULL,
   `mid` int(11) NOT NULL,
   `paymentType` tinyint(4) NOT NULL DEFAULT '0',
   `paymentStatus` tinyint(4) NOT NULL DEFAULT '0',
   `category` varchar(32) NOT NULL DEFAULT '',
   `brand` varchar(32) NOT NULL DEFAULT '',
-  `createrId` varchar(15) NOT NULL DEFAULT '',
+  `cuid` int(11) NOT NULL COMMENT '创建人ID',
   `createTime` timestamp NULL DEFAULT NULL,
   `referMoney` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `comment` varchar(256) DEFAULT '',
-  PRIMARY KEY (`mpId`),
+  PRIMARY KEY (`mpid`),
   KEY `indexone` (`mid`,`paymentStatus`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材款表';
 
 DROP TABLE IF EXISTS `materialreceipt`;
 CREATE TABLE `materialreceipt` (
   `mrId` int(11) NOT NULL AUTO_INCREMENT,
-  `collecterId` varchar(15) NOT NULL DEFAULT '',
+
+  `cluid` int(11) NOT NULL COMMENT '收款人ID',
   `collecterName` varchar(32) NOT NULL DEFAULT '',
   `collectTime` timestamp NULL DEFAULT NULL,
-  `confirmerId` varchar(15) DEFAULT '',
+
+  `cfuid` int(11) DEFAULT NULL COMMENT '确认人ID',
   `confirmerName` varchar(32) NOT NULL DEFAULT '',
   `confirmTime` timestamp NULL DEFAULT NULL,
   `realMoney` decimal(10,3) NOT NULL DEFAULT '0.000',
@@ -140,11 +142,11 @@ CREATE TABLE `materialreceipt` (
 DROP TABLE IF EXISTS `payment`;
 CREATE TABLE `payment` (
   `pid` int(11) NOT NULL AUTO_INCREMENT,
-  `arId` int(11) DEFAULT NULL,
+  `arid` int(11) DEFAULT NULL,
   `customerId` int(11) NOT NULL,
   `orderId` varchar(15) DEFAULT NULL,
   `company` int(11) NOT NULL,
-  `createrId` varchar(15) DEFAULT NULL,
+  `cuid` int(11) DEFAULT NULL COMMENT '创建人ID',
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `balance` decimal(10,3) NOT NULL,
   `recharge` decimal(10,3) NOT NULL,

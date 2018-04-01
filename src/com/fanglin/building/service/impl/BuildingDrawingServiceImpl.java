@@ -40,9 +40,7 @@ public class BuildingDrawingServiceImpl implements BuildingDrawingService {
 			
 			BeanUtil.copyProperties(buildingDrawingPO, buildingDrawing, Arrays.asList("creater"));
 			
-			UserPO userPO = userDao.queryUserByUserId(buildingDrawingPO.getCreater().getUserId());
-			
-			BeanUtil.copyProperties(userPO, buildingDrawing.getCreater(), Arrays.asList("role", "dept", "duty"));
+			BeanUtil.copyProperties(buildingDrawingPO.getCreater(), buildingDrawing.getCreater(), Arrays.asList("role", "dept", "duty"));
 			
 			buildingDrawingVOs.add(buildingDrawing);
 		}
@@ -54,16 +52,15 @@ public class BuildingDrawingServiceImpl implements BuildingDrawingService {
 	@Transactional(rollbackFor=Exception.class)
 	public void addBuildingDrawing(BuildingDrawingVO buildingDrawingVO, String userId) {
 		
-		BuildingDrawingPO buildingDrawingPO = new BuildingDrawingPO();
-		BeanUtil.copyProperties(buildingDrawingVO, buildingDrawingPO, Arrays.asList("creater"));
+		UserPO createrPO = userDao.queryUserByUserId(userId);
 		
-		UserPO userPO = userDao.queryUserByUserId(userId);
-	
-		buildingDrawingPO.setCreater(userPO);
+		BuildingDrawingPO buildingDrawingPO = new BuildingDrawingPO(createrPO);
+		
+		BeanUtil.copyProperties(buildingDrawingVO, buildingDrawingPO, Arrays.asList("creater"));
 		
 		buildingDrawingPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
 		
-		buildingDrawingPO.setStatus(BuildingDrawingPO.STATUS_INIT_INT);
+		buildingDrawingPO.setStatus(BuildingDrawingPO.STATUS_INIT_SHORT);
 		
 		buildingDrawingDao.save(buildingDrawingPO);
 		
@@ -77,11 +74,7 @@ public class BuildingDrawingServiceImpl implements BuildingDrawingService {
 		
 		BuildingDrawingPO buildingDrawingPO = buildingDrawingDao.get(buildingDrawingVO.getBdid());
 		
-		if(buildingDrawingPO.getStatus() == BuildingDrawingPO.STATUS_INIT_INT){
-			buildingDrawingPO.setStatus(BuildingDrawingPO.STATUS_DISABLE_INT);
-		}else if(buildingDrawingPO.getStatus() == BuildingDrawingPO.STATUS_DISABLE_INT){
-			buildingDrawingPO.setStatus(BuildingDrawingPO.STATUS_INIT_INT);
-		}
+		buildingDrawingPO.setStatus(BuildingDrawingPO.STATUS_DISABLE_SHORT);
 		
 		buildingDrawingDao.update(buildingDrawingPO);
 		

@@ -48,4 +48,6 @@ public interface Constant {
 	public static final String SEMICOLON = ";";
 	public static final String SLASH = "/";
 	
+	public static final int COMPANY_COMMUNION_SWITCH_INT = 0;
+	
 }

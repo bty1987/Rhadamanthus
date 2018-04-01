@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "paymentscale", catalog = "platform")
+@Table(name = "paymentscale", catalog = "data")
 public class PaymentScalePO implements Serializable{
 
 	private static final long serialVersionUID = 770443296071471774L;

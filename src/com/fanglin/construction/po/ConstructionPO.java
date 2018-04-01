@@ -25,6 +25,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fanglin.decoration.po.DecorationPO;
+import com.fanglin.personel.po.UserPO;
 
 @Entity
 @Table(name="construction", catalog = "construction")
@@ -36,7 +37,7 @@ public class ConstructionPO implements Serializable{
 	
 	public static final String COLUMN_SCHEDULE_STR = "schedule";
 	
-	public static final String COLUMN_SUPERVISORQUALITYID_STR = "supervisorQualityId";
+	public static final String COLUMN_SUPERVISORQUALITYID_STR = "supervisor";
 	
 	public static final String COLUMN_CHANSTATUS_STR = "chanStatus";
 	
@@ -68,14 +69,35 @@ public class ConstructionPO implements Serializable{
 	
 	private DecorationPO decoration;
 	
-	private String supervisorQualityId;
+	private UserPO supervisor;
 	
 	private int schedule;
-	
-	private int chanStatus;
-	
-	private int allocationWorkerFlag;
 
+	public ConstructionPO() {
+		super();
+	}
+	
+	public ConstructionPO(DecorationPO decoration) {
+		super();
+		this.decoration = decoration;
+	}
+
+	public ConstructionPO(DecorationPO decoration, UserPO supervisor) {
+		super();
+		this.decoration = decoration;
+		this.supervisor = supervisor;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "suid", referencedColumnName="uid")	
+	public UserPO getSupervisor() {
+		return supervisor;
+	}
+
+	public void setSupervisor(UserPO supervisor) {
+		this.supervisor = supervisor;
+	}
+	
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name="cid")
@@ -97,14 +119,6 @@ public class ConstructionPO implements Serializable{
 		this.decoration = decoration;
 	}
 
-	@Column(name="supervisorQualityId")
-	public String getSupervisorQualityId(){
-		return supervisorQualityId;
-	}
-
-	public void setSupervisorQualityId(String supervisorQualityId){
-		this.supervisorQualityId = supervisorQualityId;
-	}
 
 	@Column(name="schedule")
 	public int getSchedule(){
@@ -113,23 +127,5 @@ public class ConstructionPO implements Serializable{
 
 	public void setSchedule(int schedule){
 		this.schedule = schedule;
-	}
-
-	@Column(name = "chanStatus")
-	public int getChanStatus(){
-		return chanStatus;
-	}
-
-	public void setChanStatus(int chanStatus){
-		this.chanStatus = chanStatus;
-	}
-
-	@Column(name = "allocationWorkerFlag")
-	public int getAllocationWorkerFlag() {
-		return allocationWorkerFlag;
-	}
-
-	public void setAllocationWorkerFlag(int allocationWorkerFlag) {
-		this.allocationWorkerFlag = allocationWorkerFlag;
 	}
 }

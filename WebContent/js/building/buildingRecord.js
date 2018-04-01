@@ -120,23 +120,12 @@ jQuery(function($) {
 	}
 
 	var searcher = new Searcher();
-	searcher.init([], "condList", api.building.pageBuildingRecord, function(data){
+	searcher.init([], "condList", api.building.queryBuildingRecord, function(data){
 		displayFunc.init('resultList', data);
-	}, "pagenation", "buildingRecordPostData",{"filters[0].data":brOptionId, "filters[0].field":brField,"filters[0].op":"eq"}, false, null, function(){
-
-		var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addBuildingRecord').css("margin", "0px 3px");
-		var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
-		var $addspan = $('<span></span>').text('添加').appendTo($adda);
-
-		var $addb = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'back').css("margin", "0px 3px");
-		var $addi = $('<i></i>').addClass('icon-mail-forward bigger-110').appendTo($addb);
-		var $addspan = $('<span></span>').text('返回').appendTo($addb);
-
-		return [$addb, $adda];
-	});
+	}, "pagenation", "buildingRecordPostData",{"filters[0].data":brOptionId, "filters[0].field":brField}, true, "buildingRecords", null);
 
 	//添加
-	$('a[name="addBuildingRecord"]', '#pagenation').click(function(){
+	$("#addBuildingRecord").click(function(){
 		com.cleanItems(buildingRecord.items);
 
 		if(params.flag){
@@ -151,15 +140,20 @@ jQuery(function($) {
 	});
 
 	//返回
-	if(params.flag){
-		$('a[name="back"]', '#pagenation').click(function(){
-			com.switchPage(api.index.houseSource.url);
-		});
-	}else{
-		$('a[name="back"]', '#pagenation').click(function(){
-			com.switchPage(api.index.customerSource.url);
-		});
-	}
+	$("#back").click(function(){
+		switch(params.page)
+		{
+			case "houseSource":
+				com.switchPage(api.index.houseSource.url);
+				break;
+			case "advance":
+				com.switchPage(api.index.houseSourceAdvance.url);
+				break;
+			case "customerSource":
+				com.switchPage(api.index.customerSource.url);
+				break;
+		}
+	});
 
 	function saveData(){
 
@@ -197,6 +191,8 @@ jQuery(function($) {
 
 		com.post(api.building.addBuildingRecord, options, function(){
 			com.showAlert(com.info, "添加成功！");
+			buildingRecord.hsid = null;
+			buildingRecord.csid = null;
 			searcher.doSearch();
 		});
 

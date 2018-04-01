@@ -12,22 +12,22 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "quotetype", catalog = "production")
-public class QuoteTypePO implements Serializable{
+public class QuoteTypePO implements Serializable {
 
 	private static final long serialVersionUID = -3131366859922020943L;
-	
+
 	public static final String COLUMN_NAME_STR = "name";
-	
+
 	public static final String COLUMN_STATUS_STR = "status";
-	
+
 	public static final short STATUS_ENABLE_SHORT = 0;
-	
+
 	public static final short STATUS_DISABLE_SHORT = 1;
 
 	private long qtid;
-	
+
 	private String name;
-	
+
 	private short status;
 
 	@Id
@@ -58,8 +58,5 @@ public class QuoteTypePO implements Serializable{
 	public void setStatus(short status) {
 		this.status = status;
 	}
-	
-	
 
-	
 }

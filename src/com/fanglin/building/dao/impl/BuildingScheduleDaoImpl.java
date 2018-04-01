@@ -20,23 +20,23 @@ public class BuildingScheduleDaoImpl extends DaoImpl<BuildingSchedulePO> impleme
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<BuildingSchedulePO> queryBuildingScheduleByBoid(long boid) {
+	public List<BuildingSchedulePO> queryBuildingScheduleByBid(Long bid) {
 		
 		Criteria query = session().createCriteria(BuildingSchedulePO.class);
 		
-		query.add(Restrictions.ne(BuildingSchedulePO.COLUMN_STATUS_STR, BuildingSchedulePO.STATUS_DISABLE_SHORT));
+		query.add(Restrictions.eq(BuildingSchedulePO.COLUMN_BID_STR, bid));
 		
-		query.add(Restrictions.eq(BuildingSchedulePO.COLUMN_BOID_STR, boid));
+		query.add(Restrictions.ne(BuildingSchedulePO.COLUMN_STATUS_STR, BuildingSchedulePO.STATUS_DISABLE_SHORT));
 		
 		return query.list();
 	}
 
 	@Override
-	public void resetBuildingSchedule(Long boid, Integer uid) {
+	public void resetBuildingSchedule(Long bid, Integer uid) {
 		
-		String sql = "UPDATE building.buildingSchedule SET status = :status, ouid = :ouid, operatTime = :operatTime WHERE boid = :boid";
+		String sql = "UPDATE building.buildingSchedule SET status = :status, ouid = :ouid, operatTime = :operatTime WHERE bid = :bid";
 
-		session().createSQLQuery(sql).setShort("status", BuildingSchedulePO.STATUS_DISABLE_SHORT).setInteger("ouid", uid).setTimestamp("operatTime", new Timestamp(System.currentTimeMillis())).setLong("boid", boid).executeUpdate();
+		session().createSQLQuery(sql).setShort("status", BuildingSchedulePO.STATUS_DISABLE_SHORT).setInteger("ouid", uid).setTimestamp("operatTime", new Timestamp(System.currentTimeMillis())).setLong("bid", bid).executeUpdate();
 		
 	}
 

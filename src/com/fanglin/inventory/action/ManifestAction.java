@@ -74,18 +74,18 @@ public class ManifestAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-	@Action(value = "queryManifestByMId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryManifestByMId(){
+	@Action(value = "queryManifestByMid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryManifestByMid(){
 		
-		manifest = manifestService.queryManifestByMId(manifest);
+		manifest = manifestService.queryManifestByMid(manifest);
 		
 		return SUCCESS;
 	}
 	
-	@Action(value = "queryManifestItemByMId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryManifestItemByMId(){
+	@Action(value = "queryManifestItemByMid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryManifestItemByMid(){
 		
-		manifestItems = manifestItemService.queryManifestItemByMId(manifest);
+		manifestItems = manifestItemService.queryManifestItemByMid(manifest);
 		
 		return SUCCESS;
 	}

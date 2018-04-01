@@ -9,7 +9,9 @@ import com.fanglin.utils.Paging;
 
 public interface SalesBalanceService {
 
-	public void pageSalesBalance(Paging paging,List<Filter> filter);
+	public void pageSalesBalance(Paging paging,List<Filter> filter,int company);
+	
+	public void pageSalesBalanceForDompany(Paging paging,List<Filter> filter,int dompany);
 	
 	public int updateSalesBalanceForVBalance(SalesBalanceVO salesBalanceVO) throws FLException;
 	

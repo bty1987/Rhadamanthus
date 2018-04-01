@@ -16,29 +16,30 @@ import com.fanglin.production.vo.ProductionUserWorkFlowVO;
 @ParentPackage("base")
 @Namespace("/")
 @Controller
-public class ProductionUserWorkFlowAction extends BaseAction{
+public class ProductionUserWorkFlowAction extends BaseAction {
 
 	private static final long serialVersionUID = -7874328185037942418L;
-	
+
 	@Autowired
 	private ProductionUserWorkFlowService productionUserWorkFlowService;
-	
+
 	private List<ProductionUserWorkFlowVO> ProductionUserWorkFlows;
-	
+
 	private ProductionUserWorkFlowVO productionUserWorkFlow;
-	
+
 	@Action(value = "queryProductionUserWorkFlowsByPwfids", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryProductionUserWorkFlowByPwfid(){
+	public String queryProductionUserWorkFlowByPwfid() {
+		
 		ProductionUserWorkFlows = productionUserWorkFlowService.queryProductionUserWorkFlowsByPwfids(ProductionUserWorkFlows);
+		
 		return SUCCESS;
 	}
- 
+
 	public List<ProductionUserWorkFlowVO> getProductionUserWorkFlows() {
 		return ProductionUserWorkFlows;
 	}
 
-	public void setProductionUserWorkFlows(
-			List<ProductionUserWorkFlowVO> productionUserWorkFlows) {
+	public void setProductionUserWorkFlows(List<ProductionUserWorkFlowVO> productionUserWorkFlows) {
 		ProductionUserWorkFlows = productionUserWorkFlows;
 	}
 
@@ -46,13 +47,8 @@ public class ProductionUserWorkFlowAction extends BaseAction{
 		return productionUserWorkFlow;
 	}
 
-	public void setProductionUserWorkFlow(
-			ProductionUserWorkFlowVO productionUserWorkFlow) {
+	public void setProductionUserWorkFlow(ProductionUserWorkFlowVO productionUserWorkFlow) {
 		this.productionUserWorkFlow = productionUserWorkFlow;
 	}
 
-
-	
-	
- 
 }

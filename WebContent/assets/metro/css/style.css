@@ -442,7 +442,7 @@ Page container
 
 .page-header-fixed .page-container {
     /*margin-top: 42px;*/
-    margin-top: 22px;
+    /*margin-top: 22px;*/
 }
 
 /***
@@ -6750,7 +6750,7 @@ Datatables Plugin(in v1.3)
 }
 
 .top-table .topName {
-    width: 40%;
+    width: 32%;
     padding-left: 10px;
 }
 .top-table .userPic img {
@@ -6802,13 +6802,13 @@ input[type=checkbox].ace+.lbl,input[type=radio].ace+.lbl {
     position:relative;
     z-index:11;
     display:inline-block;
-    margin:0;
     line-height:20px;
     min-height:18px;
     min-width:18px;
     font-weight:normal;
     vertical-align: middle;
     font-size: 16px;
+    margin-left: 5px;
 }
 input[type=checkbox].ace+.lbl.padding-16::before,input[type=radio].ace+.lbl.padding-16::before {
     margin-right:16px
@@ -6832,7 +6832,7 @@ input[type=checkbox].ace+.lbl::before,input[type=radio].ace+.lbl::before {
     color: #908d8d;
     content:"\a0";
     background-color:#fafafa;
-    border:1px solid #c8c8c8;
+    /*border:1px solid #c8c8c8;*/
     box-shadow:0 1px 2px rgba(0,0,0,0.05);
     border-radius:0;
     display:inline-block;
@@ -6896,7 +6896,7 @@ input[type=checkbox].ace.ace-switch {
     min-height:24px
 }
 input[type=checkbox].ace+.lbl.status-lbl::before, input[type=radio].ace+.lbl.status-lbl::before{
-border: 0px!important;}
+    border: 0px!important;
 }
 input[type=checkbox].ace.ace-switch+.lbl {
     margin-left: 3px;
@@ -6985,7 +6985,7 @@ input[type=checkbox].ace.ace-switch.ace-switch-4+.lbl::before,input[type=checkbo
     background-color:#8b9aa3;
    /* border:1px solid #8b9aa3;*/
     color:#FFF;
-    width:59px;
+    width:54px;
     text-indent:-35px;
     text-indent:-28px\9;
     display:inline-block;
@@ -7007,8 +7007,8 @@ input[type=checkbox].ace.ace-switch.ace-switch-4+.lbl::after,input[type=checkbox
     color:#5b6a73;
     top:3px;
     left:1px;
-    width:24px;
-    height:23px;
+    width:22px;
+    height:22px;
     line-height:18px;
     background-color:#FFF;
     -webkit-transition:all .4s ease;
@@ -7016,16 +7016,15 @@ input[type=checkbox].ace.ace-switch.ace-switch-4+.lbl::after,input[type=checkbox
 }
 input[type=checkbox].ace.ace-switch.ace-switch-4:checked+.lbl::before,input[type=checkbox].ace.ace-switch.ace-switch-5:checked+.lbl::before {
     text-indent:9px;
-    background-color: #908d8d;
+    background-color: #ababab;
     border: 0px;
 }
 input[type=checkbox].ace.ace-switch.ace-switch-4:checked+.lbl::after,input[type=checkbox].ace.ace-switch.ace-switch-5:checked+.lbl::after {
-    left:36px;
+    left:31px;
     background-color:#FFF
 }
 input[type=checkbox].ace.ace-switch.ace-switch-5+.lbl::before {
-    content: "\a0\a0\a0是\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0否";
-    padding-left: 1px;
+    content: "\a0\a0启\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0禁";
 }
 input[type=checkbox].ace.ace-switch.ace-switch-5:checked+.lbl::before {
     text-indent:4px
@@ -9644,4 +9643,8 @@ img.editable-click:hover {
     margin: 0;
     text-align: center;
 }
+[class^="icon-"]{
+    padding-left: 5px;
+}
+
 

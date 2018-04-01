@@ -514,7 +514,7 @@ $(function () {
                 params["goods"] = {};
                 params.goods["goods.no"] = no;
                 params.goods["goods.name"] = name;
-                params.goods["goods.barcode"] = barcode;s
+                params.goods["goods.barcode"] = barcode;
                 params.goods["goods.category"] = category;
                 params.goods["goods.brand"] = brand;
                 params.goods["goods.bid"] = bid;

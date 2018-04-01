@@ -1,0 +1,216 @@
+<div id="houseSource" class="page-content">
+	<div class="row">
+		<div class="col-xs-12">
+			<div id="condList" class="fl_search clearfix"></div>
+			<div id="resultList" class="clearfix tab-pane active"></div> <!--查询结果-->
+			<div id="pagenation" class="fl-page-wrap clearfix"></div> <!--分页-->
+		</div>
+	</div>
+
+	<div class="modal fade" id="houseSourceBelongModal" tabindex="-1">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span>&times;</span><span class="sr-only">Close</span>
+					</button>
+					<h4 class="modal-title" id="houseSourceBelongDialog">转移房源</h4>
+				</div>
+
+				<div class="modal-body">
+					<form class="form-horizontal">
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="belongUser">跟进人</label>
+							<div class="col-sm-9">
+								<select id="belongUser" class="chosen-select col-sm-5 v_required" data-placeholder="请输入跟进人名称" data-toggle="popover" data-trigger='manual'	 style="display: none;">
+									<option value="">&nbsp;</option>
+								</select>
+							</div>
+						</div>
+						<div class="space-4"></div>
+					</form>
+				</div>
+
+				<div class="modal-footer">
+					<button type="button" id="deployedBtn" class="btn btn-primary">保存</button>
+					<button type="button" id="belongCancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="buildingModal" tabindex="-1">
+		<div class="modal-dialog">
+			<div class="modal-content" style="width:900px;margin-left:-30%">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+					<h4 class="modal-title" id="myModalLabel">房产单</h4>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-xs-12">
+							<form class="form-horizontal">
+								<div class="row">
+									<div class="col-md-12">
+										<div class="col-md-6">
+											<div class="form-group">
+												<label class="col-sm-3 control-label no-padding-right" for="hsNo">房源编号</label>
+												<div class="col-sm-9">
+													<input type="text" id="hsNo" maxlength="15" class="col-xs-10 col-sm-6 v_required" data-toggle="popover" data-trigger='manual'/>
+													<i class='icon-asterisk'></i>
+												</div>
+											</div>
+
+											<div class="form-group">
+												<label class="col-sm-3 control-label no-padding-right" for="csNo">客源编号</label>
+												<div class="col-sm-9">
+													<input type="text" id="csNo" maxlength="15" class="col-xs-10 col-sm-6 v_required" data-toggle="popover" data-trigger='manual'/>
+													<i class='icon-asterisk'></i>
+												</div>
+											</div>
+
+											<div class="form-group">
+												<label for="hsAUser" class="col-sm-3 control-label no-padding-right">房源代理人</label>
+												<div class="col-md-9">
+													<select class="chosen-select col-md-4" id="hsAUser" data-placeholder="请输入房源代理人姓名" data-toggle="popover" style="display: none;">
+														<option value="">&nbsp;</option>
+													</select>
+												</div>
+											</div>
+
+											<div class="form-group">
+												<label for="csAUser" class="col-sm-3 control-label no-padding-right">客源代理人</label>
+												<div class="col-md-9">
+													<select class="chosen-select col-md-4" id="csAUser" data-placeholder="请输入客源代理人姓名" data-toggle="popover" style="display: none;">
+														<option value="">&nbsp;</option>
+													</select>
+												</div>
+											</div>
+
+											<div class="form-group">
+												<label class="col-sm-3 control-label no-padding-right" for="signingTime">签约时间</label>
+												<div class="col-sm-9">
+													<div class="input-group col-sm-6 col-xs-10 no-padding">
+														<input class="form-control date-picker v_required" id="signingTime" type="text" data-date-format="yyyy-mm-dd">
+													</div>
+												</div>
+											</div>
+
+										</div>
+
+										<div class="col-md-6">
+											<div class="form-group">
+												<label class="col-sm-3 control-label no-padding-right" for="tradePrice">成交价格</label>
+												<div class="col-sm-9">
+													<input type="text" id="tradePrice" maxlength="18" class="col-xs-10 col-sm-6 v_required v_amount" data-toggle="popover" data-trigger='manual'/>
+												</div>
+											</div>
+
+											<div class="form-group">
+												<label class="col-sm-3 control-label no-padding-right" for="downpayment">首付款</label>
+												<div class="col-sm-9">
+													<input type="text" id="downpayment" maxlength="18" class="col-xs-10 col-sm-6 v_amount" data-toggle="popover" data-trigger='manual'/>
+												</div>
+											</div>
+
+											<div class="form-group">
+												<label class="col-sm-3 control-label no-padding-right" for="loanPrice">贷款金额</label>
+												<div class="col-sm-9">
+													<input type="text" id="loanPrice" maxlength="18" class="col-xs-10 col-sm-6 v_amount" data-toggle="popover" data-trigger='manual'/>
+												</div>
+											</div>
+
+
+											<div class="form-group">
+												<label for="payType" class="col-sm-3 control-label no-padding-right">支付方式</label>
+												<div class="col-sm-9">
+													<select class='col-xs-10 col-sm-6' id='payType' data-toggle="popover"></select>
+												</div>
+											</div>
+
+											<div class="form-group">
+												<label for="balanceStatus" class="col-sm-3 control-label no-padding-right">结算状态</label>
+												<div class="col-sm-9">
+													<select class='col-xs-10 col-sm-6' id='balanceStatus' data-toggle="popover"></select>
+												</div>
+											</div>
+
+										</div>
+									</div>
+								</div>
+
+							</form>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer" style="text-align: center">
+					<button type="button" id="bsaveBtn" class="btn btn-primary">保存</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="houseHouseDrawingPage"  tabindex="-1">
+		<div class="modal-dialog" style="width: 50%;">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span>&times;</span><span class="sr-only">Close</span>
+					</button>
+					<h4 class="modal-title">房源图片信息</h4>
+				</div>
+				<div class="modal-body">
+					<div class="row" style="padding-top: 10px;">
+						<div class="col-xs-12">
+							<div class="row-fluid">
+								<ul class="ace-thumbnails" id="houseSourceDrawing">
+
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="modal-footer" style="text-align: center">
+					<a class="form-group" id = "houseSourceUpload"></a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="houseSourceKeyerModal" tabindex="-1">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span>&times;</span><span class="sr-only">Close</span>
+					</button>
+					<h4 class="modal-title" id="houseSourceKeyerDialog">修改收钥匙人员</h4>
+				</div>
+
+				<div class="modal-body">
+					<form class="form-horizontal">
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="keyer">收钥匙人</label>
+							<div class="col-sm-9">
+								<select id="keyer" class="chosen-select col-sm-5 v_required" data-placeholder="请输入收钥匙人名称" data-toggle="popover" data-trigger='manual'	 style="display: none;">
+									<option value="">&nbsp;</option>
+								</select>
+							</div>
+						</div>
+						<div class="space-4"></div>
+					</form>
+				</div>
+
+				<div class="modal-footer">
+					<button type="button" id="keySaveBtn" class="btn btn-primary">保存</button>
+					<button type="button" id="keyerCancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$.loadScript(['js/building/houseSourceAdvance.js']);
+</script>

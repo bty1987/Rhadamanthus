@@ -14,9 +14,9 @@ $.extend(api, {common: {
     logout: {url: "logout.do"},
 
     pageBuildingNameRule: {url: "pageBuildingNameRule.do"},
-    queryBuildingNameRule: {url: "queryBuildingNameRule.do", demo: true},
-    queryBuildingNameRuleById:{url: "queryBuildingNameRuleById.do"},
     
+    queryBuildingNameRule: {url: "queryBuildingNameRule.do", demo: true},
+   
     queryMeasurementUnit: {url: "queryMeasurementUnit.do", demo: true},
 
     queryWorkType: {url: "queryWorkType.do", demo: true},
@@ -24,9 +24,9 @@ $.extend(api, {common: {
     pageReceiptType: {url: "pageReceiptType.do"},
     queryReceiptType: {url: "queryReceiptType.do", demo: true},
     queryReceiptTypeByType: {url: "queryReceiptTypeByType.do"},
-    addReceiptType: {url: "addReceiptType.do"},
-    updateReceiptType: {url: "updateReceiptType.do"},
-    updateReceiptTypeForStatus: {url: "updateReceiptTypeForStatus.do"},
+    addReceiptType: {url: "addReceiptType.do",server:'communion'},
+    updateReceiptType: {url: "updateReceiptType.do",server:'communion'},
+    updateReceiptTypeForStatus: {url: "updateReceiptTypeForStatus.do",server:'communion'},
 
     updateAuthCode:{url: "updateAuthCode.do",server:'communion'},
     

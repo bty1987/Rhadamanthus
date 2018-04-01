@@ -535,8 +535,6 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 			realMoney = Arith.add(coupon, realMoney);
 		}
 
-		decorationDao.update(decorationPO);
-
 		decorationPaymentPO.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_PAY_STR);
 
 		Float cash = decorationPaymentVO.getCash();
@@ -581,10 +579,19 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		}
 
 		decorationReceiptPO.setCollectTime(DateUtil.getDateToTimestamp(new Date()));
+		
 		UserPO user = userDao.queryUserByUserId(userId);
+		
 		decorationReceiptPO.setCollecter(user);
 		decorationReceiptPO.setCollecterName(user.getCurrentName());
 		decorationReceiptPO.setComment(decorationPaymentVO.getComment());
+		
+		if(decorationPaymentPO.getOneType() == DecorationPaymentPO.ONETYPE_ADD_INT && decorationPaymentPO.getTwoType() == DecorationPaymentPO.TWOTYPE_DEAL_INT){
+			
+			Short.valueOf(String.format("%.0f", Arith.add(realMoney / decorationPO.getOrderTotalPrice() * 100, decorationPO.getPaySacle())));
+			
+			decorationDao.update(decorationPO);
+		}
 
 		if(coupon != null && coupon.floatValue() != 0f){
 			realMoney = Arith.sub(realMoney, coupon);
@@ -603,11 +610,12 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		}
 
 		decorationPaymentVO.setDrId(decorationReceiptPO.getDrId());
+		
 		if(decorationPO.getSupervisor() != null){
 			short num = MessagePO.MESSAGE_TYPE_PAYMENT_STR;
 			messageService.sendMessage(decorationPO.getSupervisor().getUserId(), "", String.format("订单:%s,地址:%s %s,款项金额:%s,%s完成收款", decorationPO.getOrderId(), decorationPO.getHouse().getVillage().getName(), decorationPO.getHouse().getHouseNumber(), decorationPaymentPO.getReferMoney(),decorationPaymentPO.getPaymentType()),num,decorationPO.getCompany());
 		}
-
+		
 		return 0;
 	}
 
@@ -615,7 +623,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 	@Transactional(rollbackFor=Exception.class)
 	public int confirmDecorationPayment(List<Long> ids, String confirmUserId) throws FLException{
 
-		List<DecorationPaymentPO> decorationPaymentPOs = decorationPaymentDao.queryDecorationPaymentByIds(ids);
+		List<DecorationPaymentPO> decorationPaymentPOs = decorationPaymentDao.queryDecorationPaymentByDpids(ids);
 
 		for(DecorationPaymentPO decorationPaymentPO: decorationPaymentPOs){
 			if(DecorationPaymentPO.PAYMENTSTATUS_PAY_STR.equals(decorationPaymentPO.getPaymentStatus())){
@@ -741,6 +749,19 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 			decorationReceiptPO.setCouponInfo(decorationPaymentVO.getCouponInfo());
 			real = Arith.add(real, coupon);
 		}
+		
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationPaymentPO.getDecoration().getOrderId());
+		short paySacle = 0;
+		paySacle = (short) (real/decorationPO.getOrderTotalPrice()*100);
+		if(Arith.sub(decorationPO.getPaySacle(),paySacle)<0){
+			paySacle = 0;
+			decorationPO.setPaySacle(paySacle);
+		}else{
+			decorationPO.setPaySacle((short) Arith.sub(decorationPO.getPaySacle(),paySacle));
+		}
+		
+		
+		decorationDao.update(decorationPO);
 
 		if(!(Math.abs(Arith.sub(decorationPaymentPO.getReferMoney(), real)) < 0.00000001)){
 			throw new FLException(150013, "款项实收金额不等于应收金额");

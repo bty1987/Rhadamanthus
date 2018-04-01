@@ -23,7 +23,7 @@ public interface DrawLineService {
 	
 	public List<DrawLineVO> pageDrawLine(Paging paging, List<Filter> filters, Integer company);
 	
-	public List<DrawLineVO> queryDrawLine(List<Filter> filters, Integer company);
+	public List<DrawLineVO> queryDrawLine(List<Filter> filters, Integer company) throws FLException;
 	
 	public HashMap<String, HashMap<String, Integer>> countDrawLineByDate(DrawLineVO decorationOrderDrawLineVO, Integer company);
 

@@ -80,7 +80,7 @@ var quotationUtils = {
             }, null, false);
             quotationUtils.statisticalQuotationItem(quotationUtils.quotationDetail.quotationFunctionAreas,quotationUtils.quotationDetail.addReduceItems, quotationUtils.quotationDetail.extensions);
 
-            quotationUtils.initQuotationDetailItem(quotationUtils.quotationDetail.quotation,quotationUtils.quotationDetail.quotationFunctionAreas,quotationUtils.quotationDetail.addReduceItems, quotationUtils.quotationDetail.extensions,params.orderType);
+            quotationUtils.initQuotationDetailItem(quotationUtils.quotationDetail.quotation,quotationUtils.quotationDetail.quotationFunctionAreas,quotationUtils.quotationDetail.addReduceItems, quotationUtils.quotationDetail.extensions,params.orderType,true);
 
             quotationUtils.initQuotationDetail();
 
@@ -193,7 +193,7 @@ var quotationUtils = {
         quotationUtils.quotationDetail.minusExtensionTotalPrice = $minusExtensionTotalPrice;//减项中的扩展项总额
         quotationUtils.quotationDetail.extensionItemTotalPrice = $addExtensionItemTotalPrice;//扩展项总额
 
-    }, initQuotationDetailItem: function (quotation, quotationFunctionAreas, addReduceItems, extensionItems,orderType) {
+    }, initQuotationDetailItem: function (quotation, quotationFunctionAreas, addReduceItems, extensionItems,orderType,dataProcessing) {
         var addReduceItemtypeDict = {"0": "普通", "1": "系统", "2": "自定义", "3": "报价中", "4": "增项", "5": "扩展项"};
         var extensionItemtypeDict = {"0" :"扩展项 增项","1":"扩展项增项 自定义","2":"扩展项 减项","3":"扩展项减项 自定义"};
 
@@ -370,7 +370,7 @@ var quotationUtils = {
             }
         }
 
-        quotationUtils.quotationDataProcessing(quotationFunctionAreaItemCs,reduceNums);
+        quotationUtils.quotationDataProcessing(quotationFunctionAreaItemCs,reduceNums,dataProcessing);
 
     }, initQuotationDetail: function () {
 
@@ -452,7 +452,7 @@ var quotationUtils = {
         $domain = $('<div></div>').addClass('widget-box transparent').css({"margin-bottom": "20px"}).appendTo(quotationItemListDiv);
         $dhead = $('<div></div>').addClass('widget-header').appendTo($domain);
         $dname = $('<h4></h4>').append($('<strong></strong>').css('color', '#E2737D').html("总额: " + $total)).appendTo($dhead);
-    },quotationDataProcessing : function (quotationFunctionAreaItemCs,reduceNums){
+    },quotationDataProcessing : function (quotationFunctionAreaItemCs,reduceNums,dataProcessing){
 
         var quotationFunctionAreaItemWs = {};
         var index = 0;
@@ -470,14 +470,27 @@ var quotationUtils = {
                         quotationFunctionAreaItemWs["-"+qv.workType] = {};
                     }
                     qv["areaName"] = areaName;
-                   /* if (quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId] && qv.quotationItemId != 0 && qv.quotationItemId) {
-                        quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId].num = utils.changeThrDecimal(utils.accAdd(quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId].num, qv.num));
-                        quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId].dcp = utils.changeThrDecimal(utils.accAdd(quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId].dcp, qv.dcp));
-                        quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId].dcpt = utils.changeThrDecimal(utils.accAdd(quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId].dcpt, qv.dcpt));
-                    }else*/ if(qv.quotationItemId == 0 || !qv.quotationItemId){
-                        quotationFunctionAreaItemWs["-"+qv.workType]["customize"+index++] = $.extend({}, qv);
-                    } else {
-                        quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId+"-"+index++] = $.extend({}, qv);
+                    if(dataProcessing){
+                        if (quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId] && qv.quotationItemId != 0 && qv.quotationItemId) {
+                            quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId].num = utils.changeThrDecimal(utils.accAdd(quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId].num, qv.num));
+                            quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId].dcp = utils.changeThrDecimal(utils.accAdd(quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId].dcp, qv.dcp));
+                            quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId].dcpt = utils.changeThrDecimal(utils.accAdd(quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId].dcpt, qv.dcpt));
+                        }else if(qv.quotationItemId == 0 || !qv.quotationItemId){
+                            quotationFunctionAreaItemWs["-"+qv.workType]["customize"+index++] = $.extend({}, qv);
+                        }else {
+                            quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId] = $.extend({}, qv);
+                        }
+                    }else {
+                        /* if (quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId] && qv.quotationItemId != 0 && qv.quotationItemId) {
+                         quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId].num = utils.changeThrDecimal(utils.accAdd(quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId].num, qv.num));
+                         quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId].dcp = utils.changeThrDecimal(utils.accAdd(quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId].dcp, qv.dcp));
+                         quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId].dcpt = utils.changeThrDecimal(utils.accAdd(quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId].dcpt, qv.dcpt));
+                         }else*/
+                        if (qv.quotationItemId == 0 || !qv.quotationItemId) {
+                            quotationFunctionAreaItemWs["-" + qv.workType]["customize" + index++] = $.extend({}, qv);
+                        } else {
+                            quotationFunctionAreaItemWs["-" + qv.workType][qv.quotationItemId + "-" + index++] = $.extend({}, qv);
+                        }
                     }
 
                     if (qv.ariId && reduceNums.ariId[qv.ariId]) {

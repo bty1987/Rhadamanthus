@@ -6,6 +6,7 @@ import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.information.service.MemberCardService;

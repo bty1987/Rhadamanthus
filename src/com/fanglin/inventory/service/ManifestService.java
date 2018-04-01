@@ -29,7 +29,7 @@ public interface ManifestService {
 	
 	public void pageManifest(Paging paging, List<Filter> filters,int company);
 	
-	public ManifestVO queryManifestByMId(ManifestVO manifestVO);
+	public ManifestVO queryManifestByMid(ManifestVO manifestVO);
 	
 	public int addManifestForCG(ManifestVO manifestVO,List<ManifestItemVO> manifestItemVOs,String userId,int company) throws FLException;
 	

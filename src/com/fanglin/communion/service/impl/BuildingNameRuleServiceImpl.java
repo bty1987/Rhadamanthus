@@ -74,17 +74,6 @@ public class BuildingNameRuleServiceImpl implements BuildingNameRuleService {
 	}
 
 	@Override
-	public BuildingNameRuleVO queryBuildingNameRuleById(int id){
-		
-		BuildingNameRulePO buildingNameRulePO = buildingNameRuleDao.get(id);
-		BuildingNameRuleVO buildingNameRuleVO = new BuildingNameRuleVO();
-		
-		BeanUtil.copyProperties(buildingNameRulePO, buildingNameRuleVO);
-		
-		return buildingNameRuleVO;
-	}
-
-	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public void deleteBuildingNameRule(BuildingNameRuleVO buildingNameRuleVO){
 		

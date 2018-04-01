@@ -12,7 +12,7 @@ public class ConstructerVO implements java.io.Serializable {
 	
 	private Long crid;
 	
-	private Long cid;	//工程id
+	private Long cid;	
 	
 	private String orderId;
 	

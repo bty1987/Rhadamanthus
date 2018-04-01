@@ -22,6 +22,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.common.dao.ServiceRecordDao;
+import com.fanglin.common.po.ServiceRecordPO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.po.QuotationVersionPO;
 import com.fanglin.decoration.dao.DecorationDao;
@@ -62,13 +64,16 @@ public class QuotationServiceImpl implements QuotationService {
 	private SystemConfigDao systemConfigDao;
 	
 	@Autowired
+	private ServiceRecordDao serviceRecordDao;
+	
+	@Autowired
 	private ExtensionItemDao extensionItemDao;
 	
 	@Autowired
 	private UserDao userDao;
 	
 	@Override
-	public QuotationVO queryQuotationById(long qId){
+	public QuotationVO queryQuotationByQid(long qId){
 		QuotationPO quotationPO = quotationDao.get(qId);
 		QuotationVO quotationVO = new QuotationVO();
 		handleQuotation(quotationVO,quotationPO);
@@ -101,7 +106,6 @@ public class QuotationServiceImpl implements QuotationService {
 		config.put("manageRates", Arrays.asList(systemConfigDao.querySystemConfig("manageRate", company).getValue().split(",")));
 		config.put("trafficRates", Arrays.asList(systemConfigDao.querySystemConfig("trafficRate", company).getValue().split(",")));
 		
-	
 		/*config.put("manageRates", Arrays.asList(SystemConfig.getString("manageRate").split(",")));
 		config.put("trafficRates", Arrays.asList(SystemConfig.getString("trafficRate").split(",")));*/
 		
@@ -198,14 +202,21 @@ public class QuotationServiceImpl implements QuotationService {
 			throw new FLException(200003, "报价不存在");
 		}
 		
-		checkQuotationForDefaultByOrderId(quotationPO.getOrderId());
+		DecorationPO decorationPO = checkQuotationForDefaultByOrderId(quotationPO.getOrderId());
 		
 		if(quotationPO.getDefaults() == QuotationPO.DEFAULTS_NONDEFAULT_SHORT){
+			
+			decorationPO.setQuotationPrice(quotationPO.getTotalPrice());
+			decorationPO.setDiscount(quotationPO.getDiscount());
+			
 			quotationPO.setDefaults(QuotationPO.DEFAULTS_DEFAULT_SHORT);
 			
 			quotationDao.clearQuotationForDefaultByOrderId(quotationVO.getOrderId());
+			
 			quotationDao.update(quotationPO);
+			decorationDao.update(decorationPO);
 		}
+		
 		return 0;
 	}
 	
@@ -219,9 +230,15 @@ public class QuotationServiceImpl implements QuotationService {
 		
 		convertQuotationVOToPOForAdvance(quotationVO, quotationPO);
 		
-		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(quotationPO.getOrderId());
-		decorationPO.setQuotationPrice(quotationPO.getTotalPrice());
-		decorationDao.update(decorationPO);
+		if(quotationPO.getDefaults() == QuotationPO.DEFAULTS_DEFAULT_SHORT){
+			
+			DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(quotationPO.getOrderId());
+			
+			decorationPO.setQuotationPrice(quotationPO.getTotalPrice());
+			decorationPO.setDiscount(quotationPO.getDiscount());
+			
+			decorationDao.update(decorationPO);
+		}
 		
 		quotationDao.update(quotationPO);
 		
@@ -230,13 +247,26 @@ public class QuotationServiceImpl implements QuotationService {
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int updateQuotationForStatus(QuotationVO quotationVO)throws FLException {
+	public int updateQuotationForStatus(QuotationVO quotationVO, String userId)throws FLException {
+		
 		QuotationPO quotationPO = quotationDao.get(quotationVO.getQid());
+		
 		if(quotationPO == null){
 			throw new FLException(200003, "报价不存在");
 		}
+		
 		quotationPO.setStatus(quotationVO.getStatus());
+		
 		quotationDao.update(quotationPO);
+		
+		ServiceRecordPO serviceRecordPO = new ServiceRecordPO();
+		serviceRecordPO.setType(ServiceRecordPO.TYPE_TYPE_CHANGE_QUOTATION_STATUS_INT);
+		serviceRecordPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
+		serviceRecordPO.setOperateUserId(userId);
+		serviceRecordPO.setInfo(String.format("装修单:%s,报价ID%d,更新状态", quotationPO.getOrderId(), quotationPO.getQid()));
+		
+		serviceRecordDao.save(serviceRecordPO);
+		
 		return 0;
 	}
 

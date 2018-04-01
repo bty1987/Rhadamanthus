@@ -34,12 +34,7 @@ public class PriceImportService implements com.fanglin.imports.service.PriceImpo
 			
 			Float selling = Float.valueOf(_salary.get(3));
 			
-			short ctype = 0;
-			if(_salary.get(4) == "底价"){ 
-				ctype = 0;
-			}else if(_salary.get(4) == "点位"){
-				ctype = 1;
-			}
+			short ctype = Short.parseShort(_salary.get(4));
 			
 			Float cvalue = Float.valueOf(_salary.get(5));
 			

@@ -45,7 +45,7 @@ public class BuildingNodeServiceImpl implements BuildingNodeService{
 	@Override
 	public List<BuildingNodeVO> queryBuildingNodeByType(BuildingNodeVO buildingNodeVO) {
 		
-		List<BuildingNodePO> buildingNodePOs = buildingNodeDao.queryBuildingNodeByType(buildingNodeVO.getType(), buildingNodeVO.getSore());
+		List<BuildingNodePO> buildingNodePOs = buildingNodeDao.queryBuildingNodeByType(buildingNodeVO.getType(), buildingNodeVO.getSore(), BuildingNodePO.STATUS_ENABLE_SHORT);
 		List<BuildingNodeVO> buildingNodeVOs = new ArrayList<BuildingNodeVO>();
 		
 		for (BuildingNodePO buildingNodePO : buildingNodePOs) {
@@ -68,8 +68,11 @@ public class BuildingNodeServiceImpl implements BuildingNodeService{
 		
 		BuildingNodePO buildingNodePO = new BuildingNodePO();
 		
-		buildingNodePO.setName(buildingNodeVO.getName());
-		buildingNodePO.setType(buildingNodeVO.getType());
+		BeanUtil.copyProperties(buildingNodeVO, buildingNodePO);
+		
+		List<BuildingNodePO> buildingNodePOs = buildingNodeDao.queryBuildingNodeByType(buildingNodeVO.getType(), null, null);
+		
+		buildingNodePO.setSore((short) (buildingNodePOs.size()+1));
 		
 		buildingNodeDao.save(buildingNodePO);
 		
@@ -82,6 +85,8 @@ public class BuildingNodeServiceImpl implements BuildingNodeService{
 		BuildingNodePO buildingNodePO = buildingNodeDao.get(buildingNodeVO.getBnid());
 		
 		buildingNodePO.setName(buildingNodeVO.getName());
+		
+		buildingNodeDao.update(buildingNodePO);
 		
 	}
 

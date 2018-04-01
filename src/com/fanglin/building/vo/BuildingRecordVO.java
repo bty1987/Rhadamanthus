@@ -26,15 +26,21 @@ public class BuildingRecordVO implements java.io.Serializable {
 	
 	private Timestamp operatTime;
 	
+	public BuildingRecordVO() {
+		super();
+	}
+	
+	public BuildingRecordVO(HouseSourceVO houseSource, UserVO operater) {
+		super();
+		this.houseSource = houseSource;
+		this.operater = operater;
+	}
+	
 	public BuildingRecordVO(HouseSourceVO houseSource, CustomerSourceVO customerSource, UserVO operater) {
 		super();
 		this.houseSource = houseSource;
 		this.customerSource = customerSource;
 		this.operater = operater;
-	}
-
-	public BuildingRecordVO() {
-		super();
 	}
 
 	public Long getBrid() {

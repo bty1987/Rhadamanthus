@@ -24,6 +24,18 @@ jQuery(function($) {
 		validator: null,
 	};
 
+	var colorboxArgs = {
+		reposition:true,
+		scalePhotos:true,
+		scrolling:false,
+		previous:'<i class="icon-arrow-left"></i>',
+		next:'<i class="icon-arrow-right"></i>',
+		close:'&times;',
+		current:'{current} of {total}',
+		maxWidth:'100%',
+		maxHeight:'100%'
+	};
+
 	$(".date-picker").datepicker({autoclose: !0}).on("show",function() {
 		setTimeout(function() {
 			$(".dropdown-menu").css("z-index", 1060)
@@ -32,7 +44,6 @@ jQuery(function($) {
 		a(this).prev().focus()
 	});
 
-	houseSource.deployedBtn = $("#deployedBtn").on("click", updateFollowUser);
 	houseSource.bsaveBtn = $("#bsaveBtn").on("click", saveBuildingData);
 
 	houseSource.modal = $("#houseSourceModal");
@@ -110,7 +121,6 @@ jQuery(function($) {
 			if(listData && listData.length){
 				$.each(listData,function(i, v){
 					var $liLine = creatLine(v);
-
 					$liLine.appendTo($ul);
 				});
 
@@ -126,11 +136,17 @@ jQuery(function($) {
 			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 			var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
-			var $btnAll = $('<a></a>').addClass('btn btn-minier btn-yellow').html("查看");
-			var $btnFollow = $('<a></a>').addClass('btn btn-minier btn-success').html("转移房源");
-			var $btnBind = $('<a></a>').addClass('btn btn-minier btn-warning').html("绑定客源");
-			var $btnRecord = $('<a></a>').addClass('btn btn-minier btn-inverse').html("跟进记录");
-			var $btnStatus = $('<input />').attr("type","checkbox").addClass('ace ace-switch ace-switch-5').prop("id", v.hsid).attr("checked", v.status == 0 ? true : false);
+			var $btnCheck = $('<a></a>').addClass('btn btn-minier btn-yellow').html("申请审核");
+			var $btnDrawing = $('<a></a>').addClass('btn btn-minier btn-success').html("图片");
+			var $btnAll = $('<a></a>').addClass('btn btn-minier btn-warning').html("查看");
+			var $btnBind = $('<a></a>').addClass('btn btn-minier btn-inverse').html("绑定客源");
+			var $btnRecord = $('<a></a>').addClass('btn btn-minier btn-danger').html("跟进记录");
+			var $btnStatus = $('<input />').attr("type","checkbox").addClass('ace ace-switch ace-switch-5').prop("id", v.hsid);
+			if(v.status == 0 || v.status == 3 || v.status == 4){
+				$btnStatus.attr("checked", true);
+			}else if(v.status == 1 || v.status == 2){
+				$btnStatus.attr("checked", false);
+			}
 			var $btnSpan = $('<span></span>').addClass("lbl status-lbl");
 
 			var propertyArr = [
@@ -154,50 +170,82 @@ jQuery(function($) {
 				$liProperty.appendTo($ulProperty);
 			});
 
-			$divBtnWrap.append($btnAll).append($btnFollow).append($btnBind).append($btnRecord).append($btnStatus).append($btnSpan).appendTo($h3);
+			if(v.status == 4){
+				$divBtnWrap.append($btnCheck);
+			}
+			$divBtnWrap.append($btnDrawing).append($btnAll);
+			if(v.status == 3){
+				$divBtnWrap.append($btnBind);
+			}
+			if(v.status == 1 || v.status == 3){
+				$divBtnWrap.append($btnRecord);
+			}
+			if(v.status != 0 && v.status != 1){
+				$divBtnWrap.append($btnStatus).append($btnSpan);
+			}
+			$divBtnWrap.appendTo($h3);
 
 			$liLine.append($h3).append($ulProperty);
+
+			//申请审核
+			$btnCheck.click(function(){
+				if(v.status == 4){
+					var options = {};
+					options["houseSource.hsid"] = v.hsid;
+					options["houseSource.status"] = 0;
+					com.post(api.building.updateHouseSourceForStatus, options, function(res){
+						com.showAlert(com.info, "申请成功！");
+						searcher.doSearch();
+					});
+				}else{
+					com.showAlert(com.warning, "当前房源信息状态不符合！");
+				}
+			});
+
+			//图片
+			$btnDrawing.click(function(){
+				$("#houseSourceDrawing").html("");
+				com.post(api.building.queryBuildingDrawing, {"buildingDrawing.sid" : v.hsid, "buildingDrawing.type":0}, function(data){
+					var houseSourcePics = data.buildingDrawings;
+					if(houseSourcePics && houseSourcePics.length){
+						$.each(houseSourcePics, function(i, d){
+							appendGalleryElement("houseSourceDrawing", d.bdid, d.drawingUrl, d.drawingType, "", api.building.deleteBuildingDrawing, v.hsid, api.building.updateHouseSourceForPath);
+						});
+					}
+				}, null, false);
+
+				initUploadBtn(v.hsid);
+				$("#houseHouseDrawingPage").modal("show");
+			});
 
 			//查看   可以看见房源的所有信息  包括图片  和上传图片
 			$btnAll.click(function(){
 				params.hsStatus = v.status;
 				params.drawingId = v.hsid;
 				params.type = v.type;
+				params.page = "houseSource";
 				com.switchPage(api.index.houseSourceDetail.url)
-			});
-
-			//转移房源
-			$btnFollow.click(function(){
-				if(v.status != 0){
-					com.showAlert(com.warning, "当前房源已签约或已失效，不能转移房源！");
-					return;
-				}
-				houseSource.houseSourceId = v.hsid;
-				com.post(api.building.queryHouseSourceByHsid, {"houseSource.hsid" : v.hsid}, function(res){
-					var houseSourceData = res.houseSource;
-					com.updateChosen("belongUser", houseSourceData.followUser.userId, houseSourceData.followUser.userName);
-				}, null, false);
-				$("#houseSourceBelongModal").modal("show");
 			});
 
 			//绑定客源
 			$btnBind.click(function(){
-				if(v.status != 0){
-					com.showAlert(com.warning, "当前房源已签约或已失效，不能绑定客源！");
+				if(v.status != 3 ){
+					com.showAlert(com.warning, "当前房源状态不符合，不能绑定客源！");
 					return;
 				}
 				deleteData();
 				houseSource.buildItems.hsNo.val(v.no);
 				houseSource.hsid = v.hsid;
 				houseSource.buildItems.hsNo.prop("readOnly", true);
-				com.initChosen('hsAUser', api.data.queryCustomerForName, "customer.name", {}, "autoFillCustomer", "key", "value");
-				com.initChosen('csAUser', api.data.queryCustomerForName, "customer.name", {}, "autoFillCustomer", "key", "value");
+				com.initChosen('hsAUser', api.data.queryCustomerForName, "pinyinName", {}, "autoFillCustomer", "key", "value");
+				com.initChosen('csAUser', api.data.queryCustomerForName, "pinyinName", {}, "autoFillCustomer", "key", "value");
 				$("#buildingModal").modal("show");
 			});
 
 			//跟进记录
 			$btnRecord.click(function(){
 				params.flag = true;
+				params.page = "houseSource";
 				params.hsid = v.hsid;
 				params.hsNo = v.no;
 				com.switchPage(api.index.buildingRecord.url);
@@ -205,20 +253,17 @@ jQuery(function($) {
 
 			//启用禁用
 			$btnStatus.click(function(){
-				var cvalue = $btnStatus.prop("checked");
-				if(cvalue){
-					cvalue = 0;
-				}else{
-					cvalue = 1;
-				}
-
-				if(cvalue == 0){
+				var checkedFlag = $btnStatus.prop("checked");
+				if(checkedFlag){
 					$("#" + v.hsid).prop("checked", false);
-					updateHouseSourceStatus(v.hsid, cvalue);
-				}else if(cvalue == 1){
-					updateHouseSourceStatus(v.hsid, cvalue);
+					updateHouseSourceStatus(v.hsid, 2);
+				}else{;
+					if(v.status != 1){
+						updateHouseSourceStatus(v.hsid, 0);
+					}else{
+						com.showAlert(com.warning, "当前房源已签约不能修改状态！");
+					}
 				}
-
 			});
 
 			return $liLine;
@@ -236,26 +281,11 @@ jQuery(function($) {
 	})();
 
 	var searcher = new Searcher();
-	var conditionList = ["houseSourceNo", "houseType", "b_houseSourceType", "b_villageName", "buildingArea", "b_totalPrice", "roomNum", "orientation", "b_decorateDegree", "b_allowLoan", "b_housingGrade", "b_rentType"];
+	var conditionList = ["houseSourceNo", "houseType", "b_houseSourceType", "b_villageName", "buildingArea", "b_totalPrice", "roomNum", "orientation", "b_decorateDegree", "b_allowLoan", "b_housingGrade", "b_rentType", "b_status"];
 
-	searcher.init(conditionList, "condList", api.building.pageHouseSource, function(data){
+	searcher.init(conditionList, "condList", api.building.pageHouseSourceForFollower, function(data){
 		displayFunc.init('resultList', data);
-	}, "pagenation", "houseSourcePostData",null, false, null, null);
-
-	//更新房源归属
-	function updateFollowUser(){
-
-		var options = {};
-		options["houseSource.hsid"] = houseSource.houseSourceId;
-		options["houseSource.followUser.userId"] = $("#belongUser").val();
-
-		com.post(api.building.updateHouseSourceForBelong, options, function(res){
-			com.showAlert(info, "房源转移成功！")
-		});
-		$("#houseSourceBelongModal").modal("hide");
-
-		com.updateChosen("belongUser", "", "");
-	}
+	}, "pagenation", "houseSourcePostData", {"filter[0].field":"houseSource"}, false, null, null);
 
 	//更新房源状态
 	function updateHouseSourceStatus(hsid, cvalue){
@@ -311,4 +341,77 @@ jQuery(function($) {
 		num = num.toLocaleString();
 		return num;
 	}
+
+	function initUploadBtn(hsid){
+
+		$("#houseSourceUpload").html("").Huploadify({
+			'debug' : false, // 开启调试
+			'auto':true, // 是否自动上传
+			'successTimeout':150, // 超时时间
+			'formData':{ // 附带值
+				'uploadType':0,
+				'username':'用户名',
+				'rnd':'加密密文'
+			},
+			'multi': true, // 批量上传
+			'buttonClass': 'btn btn-success',
+			'buttonText': '上传图片',
+			'overrideEvents' : ['onDialogClose'],  // 不执行默认的onSelect事件
+			'fileObjName': 'strutsUploads', // 服务器端脚本使用的文件对象的名称 $_FILES个['upload']
+			'uploader':config.media + api.common.uploadImg.url, // 上传处理程序
+			'height': '45', // 浏览按钮的高度
+			'fileTypeDesc': '支持的格式:', // 在浏览窗口底部的文件类型下拉菜单中显示的文本
+			'fileTypeExts': '*.jpg;*.jpge;*.gif;*.png', // 允许上传的文件后缀
+			'fileSizeLimit': '5MB', // 上传文件的大小限制
+			'queueSizeLimit' : 10, // 上传数量
+			'onUploadSuccess':function(file, data, response){ //上传到服务器,服务器返回相应信息到data里
+				var dateObj=eval("("+data+")");
+				if(dateObj.errorCode == 0){
+					var options = {};
+
+					options["buildingDrawing.sid"] = hsid;
+					options["buildingDrawing.name"] = "";
+					options["buildingDrawing.drawingUrl"] = dateObj.resUrl;
+					options["buildingDrawing.drawingType"] = 0;
+					options["buildingDrawing.type"] = 0;
+
+					com.post(api.building.addBuildingDrawing, options, function(res){
+						var drawing = res.buildingDrawing;
+						appendGalleryElement("houseSourceDrawing", drawing.bdid, dateObj.resUrl, 0, "", api.building.deleteBuildingDrawing, hsid, api.building.updateHouseSourceForPath);
+					});
+				}else{
+					console.log(data);
+				}
+			}
+		});
+	}
+
+	function appendGalleryElement(galleryId, imgId, imgUrl, type, editUrl, deleteUrl, hsid, defaultUrl){
+		var gallery = $("#" + galleryId);
+		var imgLi = $("<li></li>").attr("id", "gallery_li"+imgId).addClass("text-center").css("border-color", "#ddd").appendTo(gallery);
+		var img = $('<img />');
+		var imgA = $("<a></a>").attr("href", com.showImg(img, imgUrl, 150, 150, '150x150', null, type)).attr("data-rel", "colorbox").css("height", "150px").append(img).appendTo(imgLi);
+		var toolsDiv = $("<div></div>").addClass("tools tools-bottom").appendTo(imgLi);
+		var toolsA = $("<a></a>").attr("href", "#").on("click", function(){
+			var options = {};
+			options["buildingDrawing.bdid"] = imgId;
+
+			com.post(deleteUrl, options, function(res){
+				$("#gallery_li"+imgId).remove();
+			});
+		}).appendTo(toolsDiv);
+		$("<i></i>").addClass("icon-remove red").appendTo(toolsA);
+
+		var toolsB = $("<a></a>").attr("href", "#").on("click", function(){
+			var options = {};
+			options["houseSource.hsid"] = hsid;
+			options["houseSource.path"] = imgUrl;
+
+			com.post(defaultUrl, options, function(res){
+				com.showAlert(com.info, "图片设置成功！");
+			});
+		}).appendTo(toolsDiv);
+		$("<i></i>").addClass("icon-ok green").appendTo(toolsB);
+		imgA.colorbox(colorboxArgs);
+	};
 });

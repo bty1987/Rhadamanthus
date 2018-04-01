@@ -114,7 +114,7 @@ jQuery(function(a) {
     user.items.lover = a("#lover");
     user.items.company = a("#company");
     //获取部门类型
-    com.post(api.department.queryDepartmentType, {},function(a) {
+    com.post(api.communion.queryDepartmentType, {},function(a) {
         user.deptType = a.departmentTypes
     },null, false);
 
@@ -129,7 +129,7 @@ jQuery(function(a) {
                 user.items.dutySel.bindData(user.dutyTypeMap,"did","name");
             },null,false)
 
-            com.post(api.department.queryDepartmentByDtid, {"dept.type.dtid": a(this).val()}, function(res) {
+            com.post(api.communion.queryDepartmentByDtid, {"dept.type.dtid": a(this).val()}, function(res) {
                     user.items.deptSel.bindData(res.deptList, "deptId", "deptName");
                     d && d();
                 },null,false)

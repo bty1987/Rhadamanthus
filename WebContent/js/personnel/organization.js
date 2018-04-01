@@ -5,7 +5,7 @@
 $(function(){
 
     var deptList = null;
-    com.post(api.department.queryDepartment, {}, function(res){
+    com.post(api.communion.queryDepartment, {}, function(res){
         deptList = res.deptList;
     }, null, false);
 

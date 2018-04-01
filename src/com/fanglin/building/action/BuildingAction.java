@@ -33,10 +33,10 @@ public class BuildingAction extends BaseListAction{
 		
 	}
 	
-	@Action(value="queryBuildingByBoid", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryBuildingByBoid(){
+	@Action(value="queryBuildingByBid", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String queryBuildingByBid(){
 		
-		building = buildingService.queryBuildingByBoid(building);
+		building = buildingService.queryBuildingByBid(building);
 		
 		return SUCCESS;
 	}

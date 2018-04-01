@@ -41,8 +41,6 @@ public interface DecorationService {
 	
 	public void pageDecorationForSalesmanManager(Paging paging, List<Filter> filters, Authentication authentication);
 	
-	public DecorationVO queryDecorationByVillageIdAHouseNumber(DecorationVO decorationVO, Authentication authentication);
-	
 	public DecorationVO queryDecorationForCommonByOrderId(DecorationVO decorationVO, String userId) throws FLException;
 
 	public DecorationVO queryDecorationForDesignerByOrderId(DecorationVO decorationVO, String userId) throws FLException;

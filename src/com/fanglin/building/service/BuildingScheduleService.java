@@ -8,7 +8,7 @@ import com.fanglin.core.interceptor.FLException;
 
 public interface BuildingScheduleService {
 
-	public List<BuildingScheduleVO> queryBuildingScheduleByBoid(BuildingScheduleVO buildingScheduleVO);
+	public List<BuildingScheduleVO> queryBuildingScheduleByBid(BuildingScheduleVO buildingScheduleVO);
 	
 	public BuildingScheduleVO nextBuildingSchedule(BuildingScheduleVO buildingScheduleVO, String userId);
 	

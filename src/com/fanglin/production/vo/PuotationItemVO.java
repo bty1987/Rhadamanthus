@@ -2,39 +2,37 @@ package com.fanglin.production.vo;
 
 import java.io.Serializable;
 
-public class PuotationItemVO implements Serializable{
+public class PuotationItemVO implements Serializable {
 
 	private static final long serialVersionUID = -6219874712653382408L;
-	
-	private Long qiid;
-	
-	private Long qid;
-	
-	private String name; 
-	
-	private String format;
-	
-	private Float height;
-	
-	private Float width;
-	
-	private Float thick;
-	
-	private Float unitPrice;
-	
-	private Float num;
-	
-	private Float total;
-	
-	private String measurementUnit;
-	
-	private String comment;
-	
-	private String specil;
-	
-	private String quoteType;
 
-	
+	private Long qiid;
+
+	private Long qid;
+
+	private String name;
+
+	private String format;
+
+	private Float height;
+
+	private Float width;
+
+	private Float thick;
+
+	private Float unitPrice;
+
+	private Float num;
+
+	private Float total;
+
+	private String measurementUnit;
+
+	private String comment;
+
+	private String specil;
+
+	private String quoteType;
 
 	public Long getQiid() {
 		return qiid;
@@ -148,5 +146,4 @@ public class PuotationItemVO implements Serializable{
 		this.quoteType = quoteType;
 	}
 
-	
 }

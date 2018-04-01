@@ -30,7 +30,7 @@ jQuery(function ($) {
             commonInfo["supervisor"] = data.decoration.supervisor.userName == null?"---":data.decoration.supervisor.userName;
         }, null, false)
 
-        com.post(api.inventory.queryManifestItemByMId, {"manifest.mid":accessoriesManifest.manifest.mid}, function(res){
+        com.post(api.inventory.queryManifestItemByMid, {"manifest.mid":accessoriesManifest.manifest.mid}, function(res){
             createReceiptTable(commonInfo, res.manifestItems);
         }, null, false);
 

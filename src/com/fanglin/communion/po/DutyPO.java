@@ -13,8 +13,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fanglin.department.po.DepartmentTypePO;
-
 @Entity
 @Table(name = "duty", catalog = "communion")
 public class DutyPO implements Serializable {

@@ -1,3 +1,3 @@
 var params = {
-	
+    selectCaching : {}
 };

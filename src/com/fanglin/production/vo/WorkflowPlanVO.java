@@ -2,33 +2,31 @@ package com.fanglin.production.vo;
 
 import java.io.Serializable;
 
-
-
-public class WorkflowPlanVO implements Serializable{
+public class WorkflowPlanVO implements Serializable {
 
 	private static final long serialVersionUID = 78906200111284042L;
 
 	private Long wfpid;
-	
-	private WorkflowVO workflow; 
-	
+
+	private WorkflowVO workflow;
+
 	private WorkplanVO workplan;
-	
-	public WorkflowPlanVO (){
-	super();
+
+	public WorkflowPlanVO() {
+		super();
 	}
-	
-	public WorkflowPlanVO (WorkflowVO workflow,WorkplanVO workplan,WorkshopVO workshopVO){
+
+	public WorkflowPlanVO(WorkflowVO workflow, WorkplanVO workplan, WorkshopVO workshopVO) {
 		super();
 		this.workflow = workflow;
 		this.workplan = workplan;
 		this.workplan.setWorkshop(workshopVO);
-		}
-	
-	public WorkflowPlanVO (WorkflowVO workflow,WorkplanVO workplan){
+	}
+
+	public WorkflowPlanVO(WorkflowVO workflow, WorkplanVO workplan) {
 		super();
 		this.workflow = workflow;
-		this.workplan = workplan ;
+		this.workplan = workplan;
 	}
 
 	public Long getWfpid() {
@@ -54,6 +52,5 @@ public class WorkflowPlanVO implements Serializable{
 	public void setWorkplan(WorkplanVO workplan) {
 		this.workplan = workplan;
 	}
-	
 
 }

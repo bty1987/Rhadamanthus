@@ -18,37 +18,37 @@ import com.fanglin.personel.po.UserPO;
 
 @Entity
 @Table(name = "productionpicture", catalog = "production")
-public class ProductionPicturePO implements Serializable{
+public class ProductionPicturePO implements Serializable {
 
 	private static final long serialVersionUID = -3678116968740956122L;
-	
+
 	public static final String COLUMN_PID_STR = "pid";
-	
+
 	private long ppid;
-	
+
 	private long pid;
-	
+
 	private String name;
-	
+
 	private UserPO creater;
-	
+
 	private Timestamp createTime;
-	
+
 	private String path;
-	
+
 	private short status;
-	
+
 	private String comment;
 
-	public ProductionPicturePO(){
+	public ProductionPicturePO() {
 		super();
 	}
-	
-	public ProductionPicturePO(UserPO creater){
+
+	public ProductionPicturePO(UserPO creater) {
 		super();
 		this.creater = creater;
 	}
-	
+
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "ppid")
@@ -68,12 +68,11 @@ public class ProductionPicturePO implements Serializable{
 	public void setPid(long pid) {
 		this.pid = pid;
 	}
-	
+
 	@Column(name = "name")
 	public String getName() {
 		return name;
 	}
-
 
 	public void setName(String name) {
 		this.name = name;
@@ -124,8 +123,5 @@ public class ProductionPicturePO implements Serializable{
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	
-	
-	                                     	
 
 }

@@ -23,64 +23,63 @@ import com.fanglin.utils.BeanUtil;
 @Transactional(readOnly = true)
 public class WorkflowPlanServiceImpl implements WorkFlowPlanService {
 
-	@Autowired 
-	private  WorkflowPlanDao workflowPlanDao;
-	
+	@Autowired
+	private WorkflowPlanDao workflowPlanDao;
+
 	@Override
 	public List<WorkflowPlanVO> queryWorkflowPlanByWfid(WorkflowPlanVO workflowPlanVO) {
+
+		List<WorkflowPlanPO> WorkflowPlanPOS = workflowPlanDao.queryWorkflowPlanByWfid(workflowPlanVO.getWorkflow().getWfid());
+		List<WorkflowPlanVO> workflowPlans = new ArrayList<WorkflowPlanVO>();
 		
-		List<WorkflowPlanPO> WorkflowPlanPOS =	workflowPlanDao.queryWorkflowPlanByWfid(workflowPlanVO.getWorkflow().getWfid());
-		
-		List<WorkflowPlanVO> workflowPlans  =new ArrayList<WorkflowPlanVO>();
 		for (WorkflowPlanPO workflowPlanPO : WorkflowPlanPOS) {
-			workflowPlanVO = new WorkflowPlanVO(new WorkflowVO(), new WorkplanVO(),new WorkshopVO());
-			
-			BeanUtil.copyProperties(workflowPlanPO, workflowPlanVO,Arrays.asList("workflow","workplan"));
+			workflowPlanVO = new WorkflowPlanVO(new WorkflowVO(), new WorkplanVO(), new WorkshopVO());
+
+			BeanUtil.copyProperties(workflowPlanPO, workflowPlanVO, Arrays.asList("workflow", "workplan"));
 			BeanUtil.copyProperties(workflowPlanPO.getWorkflow(), workflowPlanVO.getWorkflow());
-			BeanUtil.copyProperties(workflowPlanPO.getWorkplan(), workflowPlanVO.getWorkplan(),Arrays.asList("workshop"));
+			BeanUtil.copyProperties(workflowPlanPO.getWorkplan(), workflowPlanVO.getWorkplan(), Arrays.asList("workshop"));
 			BeanUtil.copyProperties(workflowPlanPO.getWorkplan().getWorkshop(), workflowPlanVO.getWorkplan().getWorkshop());
-			
+
 			workflowPlans.add(workflowPlanVO);
 		}
-		
+
 		return workflowPlans;
 	}
 
 	@Override
 	public List<WorkflowPlanVO> queryWorkflowPlanByWpid(WorkflowPlanVO workflowPlanVO) {
+
+		List<WorkflowPlanPO> WorkflowPlanPOS = workflowPlanDao.queryWorkflowPlanByWpid(workflowPlanVO.getWorkplan().getWpid());
+		List<WorkflowPlanVO> workflowPlans = new ArrayList<WorkflowPlanVO>();
 		
-		List<WorkflowPlanPO> WorkflowPlanPOS =	workflowPlanDao.queryWorkflowPlanByWpid(workflowPlanVO.getWorkplan().getWpid());
-		
-		List<WorkflowPlanVO> workflowPlans  = new ArrayList<WorkflowPlanVO>();
 		for (WorkflowPlanPO workflowPlanPO : WorkflowPlanPOS) {
 			workflowPlanVO = new WorkflowPlanVO(new WorkflowVO(), new WorkplanVO());
-			
-			BeanUtil.copyProperties(workflowPlanPO, workflowPlanVO,Arrays.asList("workflow","workplan"));
+
+			BeanUtil.copyProperties(workflowPlanPO, workflowPlanVO, Arrays.asList("workflow", "workplan"));
 			BeanUtil.copyProperties(workflowPlanPO.getWorkflow(), workflowPlanVO.getWorkflow());
-			BeanUtil.copyProperties(workflowPlanPO.getWorkplan(), workflowPlanVO.getWorkplan(),Arrays.asList("workshop"));
-			
+			BeanUtil.copyProperties(workflowPlanPO.getWorkplan(), workflowPlanVO.getWorkplan(), Arrays.asList("workshop"));
+
 			workflowPlans.add(workflowPlanVO);
 		}
-		
+
 		return workflowPlans;
 	}
 
-		@Override
-		@Transactional(rollbackFor = Exception.class)
-		public int updateWorkflowPlan(WorkflowPlanVO workflowPlanVO,List<Long> wfids)throws Exception {
-			long wpid = workflowPlanVO.getWorkplan().getWpid();
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int updateWorkflowPlan(WorkflowPlanVO workflowPlanVO, List<Long> wfids) throws Exception {
+		
+		long wpid = workflowPlanVO.getWorkplan().getWpid();
 
-			workflowPlanDao.deleteWorkflowPlan(wpid);
-			
-			if(wfids !=null){
-				for(long wfid: wfids) {
-					workflowPlanDao.save(new WorkflowPlanPO(new WorkflowPO(wfid),new WorkplanPO(wpid)));
-				}
-			}	
-				return 0;
+		workflowPlanDao.deleteWorkflowPlan(wpid);
+
+		if (wfids != null) {
+			for (long wfid : wfids) {
+				workflowPlanDao.save(new WorkflowPlanPO(new WorkflowPO(wfid), new WorkplanPO(wpid)));
+			}
 		}
+		
+		return 0;
+	}
 
 }
-
-
-	

@@ -124,6 +124,7 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 		return query.list();
 	}
 
+
 	@Override
 	public List<DecorationPO> pageDecorationForPutline(Paging paging, List<Filter> filters, int company){
 		PagingQuery<DecorationPO> query = pagingQuery(paging, DecorationPO.class);
@@ -288,19 +289,6 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 	}
 	
 	@Override
-	public DecorationPO queryDecorationByVillageIdAHouseNumber(String villageId, String hoseNumber, int company){
-		
-		List<String> status = Arrays.asList(new String[]{DecorationPO.STATUS_WASTE_STR, DecorationPO.STATUS_COMPLETED_STR, DecorationPO.STATUS_TERMINATION_STR});
-		
-		return (DecorationPO)session().createCriteria(DecorationPO.class)
-				.add(Restrictions.eq("company", company))
-				.add(Restrictions.eq("house.village.no", villageId))
-				.add(Restrictions.eq("house.houseNumber", hoseNumber))
-				.add(Restrictions.not(Restrictions.in("status", status)))
-				.uniqueResult();
-	}
-	
-	@Override
 	public double countDecorationForTotalPrice(List<Filter> filters) {
 		
 		PagingQuery<DecorationPO> query  = pagingQuery(new Paging(), DecorationPO.class);
@@ -328,7 +316,10 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 		PagingQuery<DecorationPO> query = pagingQuery(paging, DecorationPO.class);
 
 		query.add(query.getCriterion("company", company, "eq"));
+		
 		queryFilterExcute(query, filters);
+		
+		queryFilterExcute(query, filters, company);
 		
 		query.desc("doid");
 		
@@ -400,11 +391,6 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 					query.add(query.getCriterion("orderId", data, op));
 				}else if("customerId".equals(field)){
 					query.add(query.getCriterion("customer.no", data, op));
-				}else if("customerPhone".equals(field)){
-					Long cid = (long) -1;
-					List<CustomerPhonePO> customerPhones = customerPhoneDao.queryCustomerPhoneByPhone(data,(short)0);
-					if(!customerPhones.isEmpty()) cid = customerPhones.get(0).getCid();
-					query.add(query.getCriterion("customer.cid", cid, op));
 				}else if("houseNumber".equals(field)){
 					query.add(query.getCriterion("house.houseNumber", data, op));
 				}else if("houseId".equals(field)){
@@ -518,9 +504,26 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 		        }
 			}
 		}
+		
+		
 	}
 
-
-
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters, int company){
+			
+		if(filters != null){
+			for(Filter filter: filters){
+						
+				String field = filter.getField();
+				String data = filter.getData();
+				String op = filter.getOp();
+				if("customerPhone".equals(field)){
+					Long cid = (long) -1;
+					List<CustomerPhonePO> customerPhones = customerPhoneDao.queryCustomerPhoneByPhone(data,(short)0,company);
+					if(!customerPhones.isEmpty()) cid = customerPhones.get(0).getCid();
+					query.add(query.getCriterion("customer.cid", cid, op));
+				}
+			}
+		}
+	}
 	
 }

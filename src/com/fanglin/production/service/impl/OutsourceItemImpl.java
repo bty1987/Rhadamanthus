@@ -21,66 +21,66 @@ import com.fanglin.utils.Paging;
 
 @Service("outsourceItemService")
 @Transactional(readOnly = true)
-public class OutsourceItemImpl implements OutsourceItemService{
+public class OutsourceItemImpl implements OutsourceItemService {
 
 	@Autowired
 	private OutsourceItemDao outsourceItemDao;
-	
+
 	@Autowired
-	private OutsourceDao  outsourceDao;
-	
+	private OutsourceDao outsourceDao;
+
 	@Override
-	public void pageOutsourceItemByOid(Paging paging, List<Filter> filters ,OutsourceItemVO outsourceItemVO) {
-		
+	public void pageOutsourceItemByOid(Paging paging, List<Filter> filters, OutsourceItemVO outsourceItemVO) {
+
 		List<OutsourceItemPO> outsourceItemPOs = outsourceItemDao.pageoutsourceItem(paging, filters, outsourceItemVO.getOid());
 		List<OutsourceItemVO> outsourceItemVOs = new ArrayList<OutsourceItemVO>();
-		
+
 		OutsourceItemVO outsourceItemVo;
-		
-		for(OutsourceItemPO outsourceItemPO: outsourceItemPOs){
-			
-			 outsourceItemVo = new OutsourceItemVO();
-			
+
+		for (OutsourceItemPO outsourceItemPO : outsourceItemPOs) {
+
+			outsourceItemVo = new OutsourceItemVO();
+
 			BeanUtil.copyProperties(outsourceItemPO, outsourceItemVo);
-			
+
 			outsourceItemVOs.add(outsourceItemVo);
 		}
-		
+
 		paging.setData(outsourceItemVOs);
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void addOutsourceItem(List<OutsourceItemVO> outsourceItems,OutsourceVO outsource) throws FLException {
+	public void addOutsourceItem(List<OutsourceItemVO> outsourceItems, OutsourceVO outsource) throws FLException {
+
+		OutsourcePO outsourcePO = (OutsourcePO) outsourceDao.get(outsource.getOid());
+
+		if (outsourcePO == null) {
+			throw new FLException(220004, "外协单不存在");
+		}
 		
-		OutsourcePO  outsourcePO = (OutsourcePO)outsourceDao.get(outsource.getOid());
-		
-		    if (outsourcePO == null) {
-		      throw new FLException(220004, "外协单不存在");
-		    }
-		    for (OutsourceItemVO outsourceItemVO : outsourceItems)
-		    {
-		    	OutsourceItemPO OutsourceItemPO = new OutsourceItemPO();
-		      
-		      BeanUtil.copyProperties(outsourceItemVO, OutsourceItemPO);
-		      OutsourceItemPO.setOid(outsource.getOid());
-		      
-		      outsourceDao.save(OutsourceItemPO);
-		    }
-		
+		for (OutsourceItemVO outsourceItemVO : outsourceItems) {
+			OutsourceItemPO OutsourceItemPO = new OutsourceItemPO();
+
+			BeanUtil.copyProperties(outsourceItemVO, OutsourceItemPO);
+			OutsourceItemPO.setOid(outsource.getOid());
+
+			outsourceDao.save(OutsourceItemPO);
+		}
+
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int deleteOutsourceItem(OutsourceItemVO outsourceItem) throws FLException {
-		
-		OutsourceItemPO	 outsourceItemPO = outsourceItemDao.get(outsourceItem.getOiid());
-		
-		if (outsourceItemPO == null){
+
+		OutsourceItemPO outsourceItemPO = outsourceItemDao.get(outsourceItem.getOiid());
+
+		if (outsourceItemPO == null) {
 			throw new FLException(220006, "外协单不存在");
 		}
 		outsourceItemDao.delete(outsourceItemPO);
-		
+
 		return 0;
 	}
 

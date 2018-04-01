@@ -39,6 +39,8 @@ public class CustomerVO implements Serializable {
 	private Float projectBalance;
 	
 	private String phone;
+	
+	private Integer company;
 
 	public CustomerVO() {
 		super();
@@ -185,6 +187,14 @@ public class CustomerVO implements Serializable {
 		this.phone = phone;
 	}
 	
+	public Integer getCompany() {
+		return company;
+	}
+
+	public void setCompany(Integer company) {
+		this.company = company;
+	}
+
 	public void setConfidentialInfo(){
 		this.email = "-";
 		this.qq = "-";

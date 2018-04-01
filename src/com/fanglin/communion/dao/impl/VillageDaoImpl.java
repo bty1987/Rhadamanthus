@@ -4,14 +4,16 @@ import java.math.BigInteger;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.SQLQuery;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
+
 import com.fanglin.communion.dao.VillageDao;
 import com.fanglin.communion.po.VillagePO;
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
-
+import com.fanglin.utils.Constant;
 import com.fanglin.utils.Paging;
 
 @Repository("villageDao")
@@ -22,11 +24,15 @@ public class VillageDaoImpl extends DaoImpl<VillagePO> implements VillageDao {
 	}
 
 	@Override
-	public List<VillagePO> pageVillage(Paging paging, List<Filter> filters){
+	public List<VillagePO> pageVillage(Paging paging, List<Filter> filters,Integer company){
 
 		PagingQuery<VillagePO> query = pagingQuery(paging, VillagePO.class);
 
 		queryFilterExcute(query, filters);
+	
+		if(Integer.valueOf(Constant.COMPANY_COMMUNION_SWITCH_INT) > 0){
+			query.add(Restrictions.eq("company", company));
+		}
 		
 		query.asc("vid");
 
@@ -34,11 +40,16 @@ public class VillageDaoImpl extends DaoImpl<VillagePO> implements VillageDao {
 	}
 	
 	@Override
-	public List<VillagePO> queryVillageByPinyin(Paging paging, String pinyinName){
+	public List<VillagePO> queryVillageByPinyin(Paging paging, String pinyinName,Integer company){
+		
 		PagingQuery<VillagePO> query = pagingQuery(paging, VillagePO.class);
 		
 		if(StringUtils.isNotEmpty(pinyinName)){
 			query.add(Restrictions.eq(VillagePO.COLUMN_STATUS_STR, VillagePO.STATUS_ENABLE_INT)).add(Restrictions.or(Restrictions.ilike("name", pinyinName, MatchMode.ANYWHERE), Restrictions.ilike("pinyinAB", pinyinName, MatchMode.ANYWHERE)));
+		}
+		
+		if(Integer.valueOf(Constant.COMPANY_COMMUNION_SWITCH_INT) > 0){
+			query.add(Restrictions.eq("company", company));
 		}
 		
 		return query.list();
@@ -60,12 +71,28 @@ public class VillageDaoImpl extends DaoImpl<VillagePO> implements VillageDao {
 	}
 	
 	@Override
-	public int countVillageByNameACpid(String name, Integer cpid) {
+	public int countVillageByNameACpid(String name, Integer cpid,Integer company ) {
 
-		String sql = "select count(*) from communion.village where name = :name and cityProperId = :cityProperId";
-		BigInteger count = (BigInteger) session().createSQLQuery(sql).setString("name", name).setInteger("cityProperId", cpid).uniqueResult();
+		StringBuffer sql = new StringBuffer();
 		
-		return count.intValue();
+		sql.append("select count(*) from communion.village where name = :name and cityProperId = :cityProperId");
+		
+		if(Integer.valueOf(Constant.COMPANY_COMMUNION_SWITCH_INT) > 0){
+			
+			sql.append("and company =:company ");
+		}
+		
+		SQLQuery query = session().createSQLQuery(sql.toString());
+		
+		query.setString("name", name).setInteger("cityProperId", cpid);
+	
+		if(Integer.valueOf(Constant.COMPANY_COMMUNION_SWITCH_INT) > 0){
+			
+			query.setInteger("company", company);
+		
+		}
+	
+		return ((BigInteger) query.uniqueResult()).intValue();
 	}
 	
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){

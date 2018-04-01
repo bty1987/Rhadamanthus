@@ -13,8 +13,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fanglin.communion.po.CustomerPO;
+import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.communion.po.HousePO;
-import com.fanglin.department.po.DepartmentPO;
 import com.fanglin.personel.po.UserPO;
 
 

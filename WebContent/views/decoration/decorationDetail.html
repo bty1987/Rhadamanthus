@@ -351,31 +351,23 @@
                         </div>
                         <div class="space-4"></div>
 
-
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right" for="nameRuleSel">楼号规则</label>
-                            <div class="col-sm-9">
-                                <select class="col-xs-10 col-sm-6 v_required" id="nameRuleSel" ></select>
-                            </div>
+                        <div class="form-group" id="nameRuleSel">
+                              <label for="built" class="col-sm-3 control-label no-padding-right">楼牌号</label>
+                              <div class="col-md-9">
+                                        <input type="text" class="v_required col-sm-1" maxlength="7" style="float: none;"  id="built">
+                                        <select id="builtrule" style="padding: 0px;font-size: 1px; height: 25px; vertical-align: bottom"></select>
+                                        <input type="text" class="v_required col-sm-1" maxlength="3"  style="float: none;"  id="unit">
+                                        <select  id="unitrule" style="padding: 0px;font-size: 1px; height: 25px; vertical-align: bottom"></select>
+                                        <input type="text" class="v_required col-sm-1" maxlength="3"  style="float: none;" id="floor">
+                                        <select id="floorrule" style="padding: 0px;font-size: 1px; height: 25px; vertical-align: bottom"></select>
+                                        <input type="text" class="v_required col-sm-1" maxlength="3"  style="float: none;"  id="door">
+                                        <select id="doorrule" style="padding: 0px;font-size: 1px; height: 25px; vertical-align: bottom"></select>
+                                        <span class='star' id="errMsg"></span>
+                                        <div class="col-md-12" style="padding: 0px;" >
+                                            <span id="rule" class="red"></span>
+                                        </div>
+                              </div>
                         </div>
-                        <div class="space-4"></div>
-
-                        <div class="form-group">
-                            <label  class="col-sm-3 control-label no-padding-right">楼牌号</label>
-                            <div class="col-sm-9">
-                                <input type="text" class="v_required " maxlength="7" style="width:30px"  data-placement="top"   id="built" />栋
-                                <input type="text" class="v_required" maxlength="3" style="width:30px"  data-placement="top"  id="unit" />单元
-                                <input type="text" class="v_required" maxlength="3" style="width:30px" data-placement="top"  id="floor" />层
-                                <input type="text" class="v_required" maxlength="3" style="width:30px" data-placement="top"   id="door" />门
-                                <span class='star' id="errMsg"></span>
-
-                                <div class="col-md-12">
-                                    <span id="buildingRuleContent" class="red"></span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="space-4"></div>
-
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -634,5 +626,5 @@
 </div>
 
 <script type="text/javascript">
-    $.loadScript(['js/utils/decorationPageUtils.js','js/utils/decorationUtils.js','js/utils/materialUtils.js','js/utils/approvalUtils.js','js/utils/quotationUtils.js','js/decoration/decorationDetail.js']);
+    $.loadScript(['js/utils/decorationPageUtils.js','js/utils/decorationUtils.js','js/utils/materialUtils.js','js/utils/approvalUtils.js','js/utils/quotationUtils.js','js/decoration/decorationDetail.js','js/utils/houseUtils.js']);
 </script>

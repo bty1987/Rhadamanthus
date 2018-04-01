@@ -11,6 +11,7 @@
 
 package com.fanglin.construction.service.impl;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +24,6 @@ import com.fanglin.construction.service.AcceptanceService;
 import com.fanglin.construction.vo.AcceptanceVO;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
-import com.fanglin.personel.dao.UserDao;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 
@@ -36,9 +36,6 @@ public class AcceptanceServiceImpl implements AcceptanceService{
 	
 	@Autowired
 	private DecorationDao decorationDao;
-	
-	@Autowired
-	private UserDao userDao;
 	
 	@Autowired
 	private ConstructionDao constructionDao;
@@ -76,11 +73,12 @@ public class AcceptanceServiceImpl implements AcceptanceService{
 		ConstructionPO constructionPO = constructionDao.queryConstructionByOrderId(orderId);
 		
 		if(constructionPO != null){
-			if(constructionPO.getSupervisorQualityId() != null && !constructionPO.getSupervisorQualityId().equals("")){
-				acceptanceVO.setSupervisName(userDao.queryUserByUserId(constructionPO.getSupervisorQualityId()).getCurrentName());
+			if(constructionPO.getSupervisor() != null){
+				
+				acceptanceVO.setSupervisName(constructionPO.getSupervisor().getCurrentName());
+				
 			}
 		}
-		
 		return acceptanceVO;
 	}
 	
@@ -95,14 +93,6 @@ public class AcceptanceServiceImpl implements AcceptanceService{
 			acceptancePO.setAcceptanceTime(DateUtil.current(AcceptancePO.CURRENT_TIME_FORMAT_STR));
 		}
 		
-		ConstructionPO constructionPO = constructionDao.queryConstructionByOrderId(acceptanceVO.getOrderId());
-		
-		if(constructionPO != null && (constructionPO.getAllocationWorkerFlag() & AcceptancePO.ACCEPTANCE_ALLOCATION_WORKER_FLAG_INT) == 0){
-			constructionPO.setAllocationWorkerFlag(constructionPO.getAllocationWorkerFlag() + AcceptancePO.ACCEPTANCE_ALLOCATION_WORKER_FLAG_INT);
-			
-			constructionDao.update(constructionPO);
-		}
-		
 		if(acceptancePO.getAcceptanceTime() == null){
 			acceptancePO.setAcceptanceTime(DateUtil.current(AcceptancePO.CURRENT_TIME_FORMAT_STR));
 		}
@@ -114,7 +104,7 @@ public class AcceptanceServiceImpl implements AcceptanceService{
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(acceptanceVO.getOrderId());
 		
 		if(decorationPO != null){
-			decorationPO.setProjectStatus("已完工");
+			decorationPO.setProjectStatus((short)DecorationPO.PROJECTSTATUS_FINISH_INT);
 			decorationDao.update(decorationPO);
 		}
 	}

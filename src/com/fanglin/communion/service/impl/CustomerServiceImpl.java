@@ -48,7 +48,7 @@ public class CustomerServiceImpl implements CustomerService {
 	private CountingService countingService;
 	
 	@Override
-	public void pageCustomer(Paging paging, List<Filter> filters){
+	public void pageCustomer(Paging paging, List<Filter> filters,Integer company){
 
 		List<CustomerVO> customerVOs = new ArrayList<CustomerVO>();
 		List<CustomerPO> customerPOs;
@@ -60,7 +60,7 @@ public class CustomerServiceImpl implements CustomerService {
     		for(Filter filter: filters){
     			if("customerPhone".equals(filter.getField())){
     				
-    				List<CustomerPhonePO> customerPhonePOs = customerPhoneDao.queryCustomerPhoneByPhone(filter.getData(),null);
+    				List<CustomerPhonePO> customerPhonePOs = customerPhoneDao.queryCustomerPhoneByPhone(filter.getData(),null,company);
     				
     		    	if( customerPhonePOs.size() == 0){
     		    		
@@ -72,7 +72,7 @@ public class CustomerServiceImpl implements CustomerService {
 	    		    			cids.add(customerPhonePO.getCid());
 	    		    		}
         		    		
-        					customerPOs = customerDao.pageCustomer(paging, filters,cids);
+        					customerPOs = customerDao.pageCustomer(paging, filters,cids,company);
         					
         					for(CustomerPO customerPO : customerPOs){
         						
@@ -93,7 +93,7 @@ public class CustomerServiceImpl implements CustomerService {
     		
     		}
     
-    		customerPOs = customerDao.pageCustomer(paging, filters,cids);
+    		customerPOs = customerDao.pageCustomer(paging, filters,cids,company);
 			
 			for(CustomerPO customerPO : customerPOs){
 				CustomerVO customerVO = new CustomerVO();
@@ -140,11 +140,11 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 	
 	@Override
-	public List<CustomerVO> queryCustomerForName(String pinyinName){
+	public List<CustomerVO> queryCustomerForName(String pinyinName,Integer company){
 
 		List<CustomerVO> customerVOs = new ArrayList<CustomerVO>();
 		
-		List<CustomerPO> customerPOs = customerDao.queryCustomerByPinyin(pinyinName,10);
+		List<CustomerPO> customerPOs = customerDao.queryCustomerByPinyin(pinyinName,10,company);
 		
 		for(CustomerPO customerPO: customerPOs){
 			
@@ -159,9 +159,9 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 	
 	@Override
-	public List<CustomerVO> checkCustomerForPhone(CustomerPhoneVO customerPhone) throws FLException{
+	public List<CustomerVO> checkCustomerForPhone(CustomerPhoneVO customerPhone,Integer company) throws FLException{
 		
-		List<CustomerPhonePO>  customerPhonePOs = customerPhoneDao.queryCustomerPhoneByPhone(customerPhone.getPhone(),customerPhone.getStatus());
+		List<CustomerPhonePO>  customerPhonePOs = customerPhoneDao.queryCustomerPhoneByPhone(customerPhone.getPhone(),customerPhone.getStatus(),company);
 		
 		if(customerPhonePOs.size() == 0){
 			throw new FLException(130002, "客户信息不存在");
@@ -178,6 +178,7 @@ public class CustomerServiceImpl implements CustomerService {
 			BeanUtil.copyProperties(customerPO, customerVO);
 			
 			customerVOs.add(customerVO);
+			
 		}
 		
 		return customerVOs;
@@ -208,27 +209,31 @@ public class CustomerServiceImpl implements CustomerService {
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int addCustomer(CustomerVO customerVO)throws FLException{
+	public int addCustomer(CustomerVO customerVO,Integer company)throws FLException{
 	  
-		if (customerPhoneDao.queryCustomerPhoneByPhone(customerVO.getPhone(),CustomerPhonePO.STATUS_ENABLE_INT).size() != 0) {
+		if (customerPhoneDao.queryCustomerPhoneByPhone(customerVO.getPhone(),CustomerPhonePO.STATUS_ENABLE_INT,company).size() != 0) {
 	      
 			throw new FLException(130006, "客户电话已存在");
 	    }
 
 	    CustomerPO customerPO = new CustomerPO();
 
+	    BeanUtil.copyProperties(customerVO, customerPO);
+	    
 	    String currentDate = DateUtil.current("yyyyMMdd").toString().substring(2);
 	  
 		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_CUSTOMER_INT, currentDate);
 		
 	    String no = currentDate + FormatUtil.fillZero(FormatUtil.offset(count), "0000");
+	    
 	    customerPO.setNo(no);
 
-	    BeanUtil.copyProperties(customerVO, customerPO);
-
 	    customerPO.setPinyinAB(PinYin4Util.getPinYinHeadChar(customerVO.getName()).get(0));
+	    
 	    customerPO.setPinyinAll(PinYin4Util.getPinyin(customerVO.getName()).get(0));
-	   
+	    
+	    customerPO.setCompany(company);
+	    
 	    customerDao.save(customerPO);
 	    
 	    CustomerPhonePO customerPhonePO = new CustomerPhonePO();
@@ -288,9 +293,9 @@ public class CustomerServiceImpl implements CustomerService {
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int addCustomerPhone(CustomerPhoneVO customerPhoneVO) throws FLException{
+	public int addCustomerPhone(CustomerPhoneVO customerPhoneVO,Integer company) throws FLException{
 		 
-		if (customerPhoneDao.queryCustomerPhoneByPhone(customerPhoneVO.getPhone(),CustomerPhonePO.STATUS_ENABLE_INT) .size() != 0) {
+		if (customerPhoneDao.queryCustomerPhoneByPhone(customerPhoneVO.getPhone(),CustomerPhonePO.STATUS_ENABLE_INT,company) .size() != 0) {
 		      
 			throw new FLException(130006, "客户电话已存在");
 	    }
@@ -320,9 +325,9 @@ public class CustomerServiceImpl implements CustomerService {
 	    
 	    if(customerPhonePO.getDefaults() == CustomerPhonePO.DEFAULTS_DISABLE_INT){
 	    	
+	    	customerPhoneDao.clearCustomerPhoneForDefault(customerPhoneVO.getCid());
+	    	
 	    	customerPhonePO.setDefaults(customerPhoneVO.getDefaults());
-		 	
-		 	customerPhoneDao.clearCustomerPhoneForDefault(customerPhoneVO.getCid());
 		 	
 		    customerDao.update(customerPhonePO);
 	    }

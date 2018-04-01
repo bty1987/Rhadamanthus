@@ -27,9 +27,9 @@ jQuery(function($) {
 			approve.approvalTypeData[_["key"]] = _["value"];
 		}
 	}, null, false);
-	
-	com.initChosen('userSel', api.personel.queryUserForNameByPinyinName, "pinyinName", {"user.status":"0"}, "userBases", "userId", "userName");
-	
+
+	com.initChosen('userSel', api.personel.queryUserForNameByPinyinName, "pinyinName", {"user.status":"0"}, "autoFillKeyValue", "key", "value");
+
 	approve.items.type = $("#type").bindData(approve.approvalType, "key", "value", false);
 	
 	var displayFunc  = (function(){
@@ -79,7 +79,7 @@ jQuery(function($) {
 
 
             $btnDel.bindClick(function(){
-            	deleteApprovalUser(v.auid);
+            	deleteApprovalUser(v.aid);
             });
             
             return $liLine;
@@ -125,6 +125,7 @@ jQuery(function($) {
 		};
 		
 		com.post(api.approval.deleteApprover, options, function(){
+			com.showAlert(com.info, "操作成功");
 			searcher.doSearch();
 		},null,false);
 	}

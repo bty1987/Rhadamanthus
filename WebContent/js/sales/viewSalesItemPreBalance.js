@@ -2,6 +2,8 @@ $(function(){
 
     var _sid = $('#viewPopUp').attr('data-sid');
 
+    var dompanyFlag = $('#viewPopUp').attr('data-dompany');
+
     var initList = (function () {
 
         var renderList = function (tableId, listData) {
@@ -98,7 +100,9 @@ $(function(){
 
                     $small.appendTo($h3)
 
-                    $btnDiv.append($selectCtype).append($btnInput).append($btnCheck).append($btnQCheck).append($btnCtype).appendTo($h3);
+                    if(dompanyFlag=='true'){
+                        $btnDiv.append($selectCtype).append($btnInput).append($btnCheck).append($btnQCheck).append($btnCtype).appendTo($h3);
+                    }
 
                     $liLine.appendTo($ul);
                     $liLine.append($h3).append($ulProperty);

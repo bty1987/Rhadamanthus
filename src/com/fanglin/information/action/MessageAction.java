@@ -47,6 +47,14 @@ public class MessageAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
+	@Action(value="queryMessageByMid", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String queryMessageByMid() throws FLException{
+		
+		message = messageService.queryMessageByMid(message);
+		
+		return SUCCESS;
+	}
+	
 	@Action(value="sendMessage", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String sendMessage() throws FLException{
 		

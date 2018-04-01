@@ -11,6 +11,7 @@ import com.fanglin.communion.dao.HouseDao;
 import com.fanglin.communion.po.HousePO;
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.utils.Constant;
 import com.fanglin.utils.Paging;
 
 @Repository("houseDao")
@@ -21,11 +22,15 @@ public class HouseDaoImpl extends DaoImpl<HousePO> implements HouseDao {
 	}
 	
 	@Override
-	public List<HousePO> pageHouse(Paging paging, List<Filter> filters){
+	public List<HousePO> pageHouse(Paging paging, List<Filter> filters,Integer company){
 	
 		PagingQuery<HousePO> query = pagingQuery(paging, HousePO.class);
 
 		queryFilterExcute(query, filters);
+		
+		if(Integer.valueOf(Constant.COMPANY_COMMUNION_SWITCH_INT) > 0){
+			query.add(Restrictions.eq("company", company));
+		}
 
 		query.asc("hid");
 
@@ -33,7 +38,7 @@ public class HouseDaoImpl extends DaoImpl<HousePO> implements HouseDao {
 	}
 	
 	@Override
-	public HousePO queryHouseByNoAHnum(String no, String houseNumber, Short status){
+	public HousePO queryHouseByNoAHnum(String no, String houseNumber,Integer company){
 		
 		Criteria criteria =  session()
 		        .createCriteria(HousePO.class)
@@ -41,8 +46,8 @@ public class HouseDaoImpl extends DaoImpl<HousePO> implements HouseDao {
 		        .add(Restrictions.eq(HousePO.COLUMN_VILLAGE_NO_STR , no))
 		        .add(Restrictions.eq(HousePO.COLUMN_HOUSENUMBER_STR, houseNumber));
 		
-		if(status != null){
-			criteria.add(Restrictions.eq(HousePO.COLUMN_STATUS_STR, status));
+		if(Integer.valueOf(Constant.COMPANY_COMMUNION_SWITCH_INT) > 0){
+			criteria.add(Restrictions.eq("company", company));
 		}
 		
 		return (HousePO) criteria.uniqueResult();

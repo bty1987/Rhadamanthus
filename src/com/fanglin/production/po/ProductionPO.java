@@ -18,77 +18,77 @@ import com.fanglin.communion.po.HousePO;
 import com.fanglin.personel.po.UserPO;
 
 @Entity
-@Table(name = "production",catalog = "production")
-public class ProductionPO implements Serializable{
+@Table(name = "production", catalog = "production")
+public class ProductionPO implements Serializable {
 
 	private static final long serialVersionUID = 5030560348335871591L;
-	
+
 	public static final String COLUMN_COMPANY_STR = "company";
-	
+
 	public static final String COLUMN_PNO_STR = "pno";
-	
+
 	public static final String COLUMN_ORDERID_STR = "orderId";
-	
+
 	public static final String COLUMN_STATUS_STR = "status";
 
-	public static final short  STATUS_INIT_SHORT = 0;//初始
-	
-	public static final short  STATUS_SIGNED_SHORT = 1;//签约
-	
-	public static final short  STATUS_CONFIRM_SHORT = 2;//已审核
-	
-	public static final short  STATUS_PRODUCT_SHORT = 3;//生产
-	
-	public static final short  STATUS_DESTORY_SHORT = 4;//废单
-	
-	public static final short  STATUS_END_SHORT = 5;//完结
-	
-	public static final short  DELIVERSTATUS_UNDELIVER_SHORT = 0;//未送货
-	
-	public static final short  DELIVERSTATUS_DELIVERED_SHORT = 1;//已送货
-	
-	public static final short  TYPE_PRODUCTION_SHORT = 0;//生产单
-	
-	public static final short  TYPE_AFTERSERVICE_SHORT = 1;//售后单
-	
+	public static final short STATUS_INIT_SHORT = 0;// 初始
+
+	public static final short STATUS_SIGNED_SHORT = 1;// 签约
+
+	public static final short STATUS_CONFIRM_SHORT = 2;// 已审核
+
+	public static final short STATUS_PRODUCT_SHORT = 3;// 生产
+
+	public static final short STATUS_DESTORY_SHORT = 4;// 废单
+
+	public static final short STATUS_END_SHORT = 5;// 完结
+
+	public static final short DELIVERSTATUS_UNDELIVER_SHORT = 0;// 未送货
+
+	public static final short DELIVERSTATUS_DELIVERED_SHORT = 1;// 已送货
+
+	public static final short TYPE_PRODUCTION_SHORT = 0;// 生产单
+
+	public static final short TYPE_AFTERSERVICE_SHORT = 1;// 售后单
+
 	private long pid;
-	
+
 	private long orderId;
-	
+
 	private String pno;
-	
+
 	private HousePO house;
-	
+
 	private float total;
-	
+
 	private UserPO creater;
-	
+
 	private UserPO designer;
-	
+
 	private short status;
-	
-	private Timestamp createTime; 
-	
-	private Timestamp divideTime; 
-	
+
+	private Timestamp createTime;
+
+	private Timestamp divideTime;
+
 	private Timestamp confirmTime;
-	
-	private short diliverystatus; 
-	
-	private Timestamp diliveryTime; 
-	
+
+	private short diliverystatus;
+
+	private Timestamp diliveryTime;
+
 	private float timeLimit;
-	
+
 	private String spid;
-	
+
 	private short type;
-	
+
 	private int company;
-	
-	public ProductionPO(){
+
+	public ProductionPO() {
 		super();
 	}
-	
+
 	public ProductionPO(HousePO house, UserPO creater, UserPO designer) {
 		super();
 		this.house = house;
@@ -98,7 +98,7 @@ public class ProductionPO implements Serializable{
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name="pid")
+	@Column(name = "pid")
 	public long getPid() {
 		return pid;
 	}
@@ -107,7 +107,7 @@ public class ProductionPO implements Serializable{
 		this.pid = pid;
 	}
 
-	@Column(name="orderId")
+	@Column(name = "orderId")
 	public long getOrderId() {
 		return orderId;
 	}
@@ -115,8 +115,8 @@ public class ProductionPO implements Serializable{
 	public void setOrderId(long orderId) {
 		this.orderId = orderId;
 	}
-	
-	@Column(name="pno")
+
+	@Column(name = "pno")
 	public String getPno() {
 		return pno;
 	}
@@ -135,7 +135,7 @@ public class ProductionPO implements Serializable{
 		this.house = house;
 	}
 
-	@Column(name="total")
+	@Column(name = "total")
 	public float getTotal() {
 		return total;
 	}
@@ -143,7 +143,7 @@ public class ProductionPO implements Serializable{
 	public void setTotal(float total) {
 		this.total = total;
 	}
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false, name = "cuid", referencedColumnName = "uid")
 	public UserPO getCreater() {
@@ -164,8 +164,7 @@ public class ProductionPO implements Serializable{
 		this.designer = designer;
 	}
 
-	
-	@Column(name="status")
+	@Column(name = "status")
 	public short getStatus() {
 		return status;
 	}
@@ -174,7 +173,7 @@ public class ProductionPO implements Serializable{
 		this.status = status;
 	}
 
-	@Column(name="createTime")
+	@Column(name = "createTime")
 	public Timestamp getCreateTime() {
 		return createTime;
 	}
@@ -183,7 +182,7 @@ public class ProductionPO implements Serializable{
 		this.createTime = createTime;
 	}
 
-	@Column(name="divideTime")
+	@Column(name = "divideTime")
 	public Timestamp getDivideTime() {
 		return divideTime;
 	}
@@ -192,7 +191,7 @@ public class ProductionPO implements Serializable{
 		this.divideTime = divideTime;
 	}
 
-	@Column(name="diliverystatus")
+	@Column(name = "diliverystatus")
 	public short getDiliverystatus() {
 		return diliverystatus;
 	}
@@ -201,7 +200,7 @@ public class ProductionPO implements Serializable{
 		this.diliverystatus = diliverystatus;
 	}
 
-	@Column(name="diliveryTime")
+	@Column(name = "diliveryTime")
 	public Timestamp getDiliveryTime() {
 		return diliveryTime;
 	}
@@ -210,7 +209,7 @@ public class ProductionPO implements Serializable{
 		this.diliveryTime = diliveryTime;
 	}
 
-	@Column(name="timeLimit")
+	@Column(name = "timeLimit")
 	public float getTimeLimit() {
 		return timeLimit;
 	}
@@ -219,7 +218,7 @@ public class ProductionPO implements Serializable{
 		this.timeLimit = timeLimit;
 	}
 
-	@Column(name="spid")
+	@Column(name = "spid")
 	public String getSpid() {
 		return spid;
 	}
@@ -228,7 +227,7 @@ public class ProductionPO implements Serializable{
 		this.spid = spid;
 	}
 
-	@Column(name="type")
+	@Column(name = "type")
 	public short getType() {
 		return type;
 	}
@@ -237,7 +236,7 @@ public class ProductionPO implements Serializable{
 		this.type = type;
 	}
 
-	@Column(name="company")
+	@Column(name = "company")
 	public int getCompany() {
 		return company;
 	}
@@ -246,7 +245,7 @@ public class ProductionPO implements Serializable{
 		this.company = company;
 	}
 
-	@Column(name="confirmTime")
+	@Column(name = "confirmTime")
 	public Timestamp getConfirmTime() {
 		return confirmTime;
 	}
@@ -255,5 +254,4 @@ public class ProductionPO implements Serializable{
 		this.confirmTime = confirmTime;
 	}
 
-	
 }

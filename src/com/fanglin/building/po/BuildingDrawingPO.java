@@ -23,11 +23,11 @@ public class BuildingDrawingPO implements java.io.Serializable {
 	
 	public static final String COLUMN_TYPE_STR = "type";
 	
-	public static final short STATUS_INIT_INT = 0;
+	public static final short STATUS_INIT_SHORT = 0;
 	
-	public static final short STATUS_DISABLE_INT = 1;
+	public static final short STATUS_DISABLE_SHORT = 1;
 	
-	public static final short TYPE_HSDRAWING_INT = 0;
+	public static final short TYPE_HSDRAWING_SHORT = 0;
 	
 	private long bdid;
 	

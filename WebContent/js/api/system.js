@@ -22,7 +22,7 @@ $.extend(api, {system: {
     queryCityByRid: {url: "queryCityByRid.do", demo: true},
     addCity: {url: "addCity.do", server: "communion"},
     updateCity: {url: "updateCity.do", server: "communion"},
-    deleteCityByCids: {url: "deleteCityByCids.do", server: "communion"},
+    deleteCity: {url: "deleteCity.do", server: "communion"},
 
     pageCityProper: {url: "pageCityProper.do", demo: true},
     queryCityProper: {url: "queryCityProper.do"},

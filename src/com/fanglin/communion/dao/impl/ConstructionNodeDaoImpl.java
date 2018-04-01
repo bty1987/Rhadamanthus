@@ -11,7 +11,6 @@ import com.fanglin.communion.po.ConstructionNodeCompanyPO;
 import com.fanglin.communion.po.ConstructionNodePO;
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
-
 import com.fanglin.utils.Paging;
 
 @Repository("constructionNodeDao")

@@ -15,24 +15,23 @@ import com.fanglin.communion.vo.CustomerPhoneVO;
 import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
-
 import com.fanglin.utils.Paging;
 
 public interface CustomerService {
 	
-	public void pageCustomer(Paging paging, List<Filter> filters);
+	public void pageCustomer(Paging paging, List<Filter> filters,Integer company);
 	
 	public CustomerVO queryCustomerById(CustomerVO customerVO);
 	
-	public List<CustomerVO> queryCustomerForName(String pinyinName);
+	public List<CustomerVO> queryCustomerForName(String pinyinName,Integer company);
 	
-	public List<CustomerVO> checkCustomerForPhone(CustomerPhoneVO customerPhone) throws FLException;
+	public List<CustomerVO> checkCustomerForPhone(CustomerPhoneVO customerPhone,Integer company) throws FLException;
 	
 	public List<CustomerPhoneVO> queryCustomerPhoneByCid(CustomerPhoneVO customerPhoneVO)throws FLException;
 	
-	public int addCustomer(CustomerVO paramCustomerVO)throws FLException;
+	public int addCustomer(CustomerVO paramCustomerVO,Integer company)throws FLException;
 	
-	public int addCustomerPhone(CustomerPhoneVO customerPhoneVO) throws FLException;
+	public int addCustomerPhone(CustomerPhoneVO customerPhoneVO,Integer company) throws FLException;
 
 	public int updateCustomer(CustomerVO customerVO)throws FLException;
 

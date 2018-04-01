@@ -2,24 +2,24 @@ package com.fanglin.production.vo;
 
 import java.io.Serializable;
 
-public class UserWorkflowVO implements Serializable{
+public class UserWorkflowVO implements Serializable {
 
 	private static final long serialVersionUID = -5416324484664173951L;
-	
+
 	private Long uwid;
-	
+
 	private Long uid;
-	
+
 	private WorkflowVO workflow;
-	
+
 	public UserWorkflowVO() {
 		super();
-		
 	}
+
 	public UserWorkflowVO(WorkflowVO workflow) {
 		super();
-		this.workflow = workflow ;
-		
+		this.workflow = workflow;
+
 	}
 
 	public Long getUwid() {
@@ -45,6 +45,5 @@ public class UserWorkflowVO implements Serializable{
 	public void setWorkflow(WorkflowVO workflow) {
 		this.workflow = workflow;
 	}
-	
-	
+
 }

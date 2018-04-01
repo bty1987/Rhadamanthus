@@ -50,6 +50,8 @@ public class CustomerPO implements Serializable{
 	
 	private String relationshipType;
 	
+	private int company;
+	
 	public CustomerPO() {
 		super();
 	}
@@ -186,7 +188,15 @@ public class CustomerPO implements Serializable{
 	public void setRelationshipType(String relationshipType) {
 		this.relationshipType = relationshipType;
 	}
-	
+
+	@Column(name="company")
+	public int getCompany() {
+		return company;
+	}
+
+	public void setCompany(int company) {
+		this.company = company;
+	}
 }	
 	
 	

@@ -19,7 +19,7 @@ var decorationUtils = {
 
         if (materialPayments && materialPayments.length) {
             $.each(materialPayments, function (i, v) {
-                console.log(v)
+
                 if (v.paymentStatus == 0) return true;
 
                 var $liLine = $('<li></li>').addClass('item-orange clearfix');
@@ -241,7 +241,7 @@ var decorationUtils = {
         var widgetMain = $("<div></div>").addClass("widget-main no-padding").appendTo(widgetBody);
         var ul = $("<ul></ul>").addClass("list-unstyled list-striped pricing-table").appendTo(widgetMain);
         var nameLi = $("<li></li>").appendTo(ul);
-        var nameSpan = $("<span></span>").text(_decorationActivity.activity.activityName).appendTo(nameLi);
+        var nameSpan = $("<span></span>").text(_decorationActivity.activity.name).appendTo(nameLi);
 
         var uiPgDiv = $("<div></div>").addClass("ui-pg-div").appendTo(widgetBody);
 
@@ -310,7 +310,7 @@ var decorationUtils = {
         var widgetMain = $("<div></div>").addClass("widget-main no-padding").appendTo(widgetBody);
         var ul = $("<ul></ul>").addClass("list-unstyled list-striped pricing-table").appendTo(widgetMain);
         var nameLi = $("<li></li>").appendTo(ul);
-        var nameSpan = $("<span></span>").attr("id", "activityItemName_" + _activityItem.daiId).text(_activityItem.activityItemName).appendTo(nameLi);
+        var nameSpan = $("<span></span>").attr("id", "activityItemName_" + _activityItem.daiId).text(_activityItem.name).appendTo(nameLi);
         var moneyLi = $("<li></li>").text("金额:").appendTo(ul);
         var moneySpan = $("<span></span>").attr("id", "money_" + _activityItem.daiId).text(_activityItem.money).appendTo(moneyLi);
         var numLi = $("<li></li>").text("数量:").appendTo(ul);
@@ -322,7 +322,7 @@ var decorationUtils = {
             uiBtnMethod(uiPgDiv, _activityItem);
         }
     }, initPayment: function (decorationDetail, isDesign) {
-        console.log(decorationDetail)
+
         var totalMoney = 0;
         var receiveMoney = 0;
         var addMoney = 0;

@@ -29,6 +29,7 @@ import com.fanglin.common.service.CountingService;
 import com.fanglin.communion.dao.CustomerDao;
 import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.communion.vo.CustomerVO;
+import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.communion.vo.HouseVO;
 import com.fanglin.communion.vo.VillageVO;
 import com.fanglin.core.interceptor.FLException;
@@ -85,9 +86,9 @@ public class BuildingServiceImpl implements BuildingService {
 	}
 
 	@Override
-	public BuildingVO queryBuildingByBoid(BuildingVO building) {
+	public BuildingVO queryBuildingByBid(BuildingVO building) {
 		
-		BuildingPO buildingPO = buildingDao.get(building.getBoid());
+		BuildingPO buildingPO = buildingDao.get(building.getBid());
 		
 		BuildingVO buildingVO = buildingPOToVO(buildingPO);
 		
@@ -101,7 +102,7 @@ public class BuildingServiceImpl implements BuildingService {
 		//判断房源状态
 		HouseSourcePO houseSourcePO = houseSourceDao.get(buildingVO.getHouseSource().getHsid());
 		
-		if(houseSourcePO.getStatus() != 0){
+		if(houseSourcePO.getStatus() != 3){
 			throw new FLException(320006, "房源状态不可操作");
 		}
 		
@@ -134,7 +135,7 @@ public class BuildingServiceImpl implements BuildingService {
 			customerSourceAgentPO = customerDao.get(cacid);
 		}
 		
-		List<BuildingNodePO> buildingNodePOs = buildingNodeDao.queryBuildingNodeByType(buildingVO.getPayType(), BuildingNodePO.COLUMN_SORE_ONE);
+		List<BuildingNodePO> buildingNodePOs = buildingNodeDao.queryBuildingNodeByType(buildingVO.getPayType(), null, BuildingNodePO.STATUS_ENABLE_SHORT);
 		
 		BuildingNodePO buildingNodePO = buildingNodePOs.get(0);
 		
@@ -169,7 +170,7 @@ public class BuildingServiceImpl implements BuildingService {
 	public void unbindBuilding(BuildingVO buildingVO) throws FLException {
 		
 		//判断房产单是否存在
-		BuildingPO buildingPO = buildingDao.get(buildingVO.getBoid());
+		BuildingPO buildingPO = buildingDao.get(buildingVO.getBid());
 		
 		if(buildingPO == null){
 			throw new FLException(320010, "房产单不存在");
@@ -196,7 +197,7 @@ public class BuildingServiceImpl implements BuildingService {
 	public void updateBuildingForBalanceStatus(BuildingVO buildingVO) throws FLException {
 		
 		//判断房产单是否存在
-		BuildingPO buildingPO = buildingDao.get(buildingVO.getBoid());
+		BuildingPO buildingPO = buildingDao.get(buildingVO.getBid());
 		
 		if(buildingPO == null){
 			throw new FLException(320010, "房产单不存在");
@@ -215,24 +216,42 @@ public class BuildingServiceImpl implements BuildingService {
 	public BuildingVO buildingPOToVO(BuildingPO buildingPO){
 		
 		HouseVO houseVO = new HouseVO(new VillageVO(new CityProperVO()));
-		HouseSourceVO houseSourceVO = new HouseSourceVO(houseVO, new CustomerVO(), new UserVO(), new UserVO());
+		HouseSourceVO houseSourceVO = new HouseSourceVO(houseVO, new CustomerVO(), new UserVO(), new UserVO(), new UserVO(), new DepartmentVO(), new DepartmentVO());
 		CustomerSourceVO customerSourceVO = new CustomerSourceVO(new CustomerVO(), new UserVO());
-		BuildingVO buildingVO = new BuildingVO(houseSourceVO, customerSourceVO, new CustomerVO(), new CustomerVO(), new UserVO(), new BuildingNodeVO());
-		BeanUtil.copyProperties(buildingPO, buildingVO, Arrays.asList("houseSource", "customerSource", "houseSourceAgent", "customerSourceAgent", "creater", "buildingNode"));
 		
 		//houseSource
-		BeanUtil.copyProperties(buildingPO.getHouseSource(), buildingVO.getHouseSource(), Arrays.asList("house", "customer", "create", "followUser"));
-		BeanUtil.copyProperties(buildingPO.getHouseSource().getHouse(), buildingVO.getHouseSource().getHouse(), Arrays.asList("village"));
-		BeanUtil.copyProperties(buildingPO.getHouseSource().getHouse().getVillage(), buildingVO.getHouseSource().getHouse().getVillage(), Arrays.asList("cityProper"));
-		BeanUtil.copyProperties(buildingPO.getHouseSource().getHouse().getVillage().getCityProper(), buildingVO.getHouseSource().getHouse().getVillage().getCityProper(), Arrays.asList("city"));
-		BeanUtil.copyProperties(buildingPO.getHouseSource().getCustomer(), buildingVO.getHouseSource().getCustomer());
-		BeanUtil.copyProperties(buildingPO.getHouseSource().getCreate(), buildingVO.getHouseSource().getCreate(), Arrays.asList("role", "dept", "duty"));
-		BeanUtil.copyProperties(buildingPO.getHouseSource().getFollowUser(), buildingVO.getHouseSource().getFollowUser(), Arrays.asList("role", "dept", "duty"));
+		HouseSourcePO houseSourcePO = buildingPO.getHouseSource();
+		BeanUtil.copyProperties(houseSourcePO, houseSourceVO, Arrays.asList("house", "customer", "create", "followUser", "keyer", "department", "region"));
+		BeanUtil.copyProperties(houseSourcePO.getHouse(), houseSourceVO.getHouse(), Arrays.asList("village"));
+		BeanUtil.copyProperties(houseSourcePO.getHouse().getVillage(), houseSourceVO.getHouse().getVillage(), Arrays.asList("cityProper"));
+		BeanUtil.copyProperties(houseSourcePO.getHouse().getVillage().getCityProper(), houseSourceVO.getHouse().getVillage().getCityProper(), Arrays.asList("city"));
+		BeanUtil.copyProperties(houseSourcePO.getCustomer(), houseSourceVO.getCustomer());
+		BeanUtil.copyProperties(houseSourcePO.getCreate(), houseSourceVO.getCreate(), Arrays.asList("role", "dept", "duty"));
+		
+		if(houseSourcePO.getFollowUser() != null){
+			BeanUtil.copyProperties(houseSourcePO.getFollowUser(), houseSourceVO.getFollowUser(), Arrays.asList("role", "dept", "duty"));
+		}
+		
+		if(houseSourcePO.getKeyer() != null){
+			BeanUtil.copyProperties(houseSourcePO.getKeyer(), houseSourceVO.getKeyer(), Arrays.asList("role", "dept", "duty"));
+		}
+		
+		if(houseSourcePO.getDepartment() != null){
+			BeanUtil.copyProperties(houseSourcePO.getDepartment(), houseSourceVO.getDepartment(), Arrays.asList("type", "fatherDept", "cityProper"));
+		}
+
+		if(houseSourcePO.getRegion() != null){
+			BeanUtil.copyProperties(houseSourcePO.getRegion(), houseSourceVO.getRegion(), Arrays.asList("type", "fatherDept", "cityProper"));
+		}
 		
 		//customerSource
-		BeanUtil.copyProperties(buildingPO.getCustomerSource(), buildingVO.getCustomerSource(), Arrays.asList("customer", "create"));
-		BeanUtil.copyProperties(buildingPO.getCustomerSource().getCustomer(), buildingVO.getCustomerSource().getCustomer());
-		BeanUtil.copyProperties(buildingPO.getCustomerSource().getCreate(), buildingVO.getCustomerSource().getCreate(), Arrays.asList("role", "dept", "duty"));
+		CustomerSourcePO customerSourcePO = buildingPO.getCustomerSource();
+		BeanUtil.copyProperties(customerSourcePO, customerSourceVO, Arrays.asList("customer", "create"));
+		BeanUtil.copyProperties(customerSourcePO.getCustomer(), customerSourceVO.getCustomer());
+		BeanUtil.copyProperties(customerSourcePO.getCreate(), customerSourceVO.getCreate(), Arrays.asList("role", "dept", "duty"));
+		
+		BuildingVO buildingVO = new BuildingVO(houseSourceVO, customerSourceVO, new CustomerVO(), new CustomerVO(), new UserVO(), new BuildingNodeVO());
+		BeanUtil.copyProperties(buildingPO, buildingVO, Arrays.asList("houseSource", "customerSource", "houseSourceAgent", "customerSourceAgent", "creater", "buildingNode"));
 		
 		//houseSourceAgent
 		if(buildingPO.getHouseSourceAgent() != null){

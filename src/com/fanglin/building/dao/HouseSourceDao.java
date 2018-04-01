@@ -9,7 +9,7 @@ import com.fanglin.utils.Paging;
 
 public interface HouseSourceDao extends Dao<HouseSourcePO> {
 
-	public List<HouseSourcePO> pageHouseSource(Paging paging, List<Filter> filters);
+	public List<HouseSourcePO> pageHouseSource(Paging paging, List<Filter> filters, List<Integer> dids);
 	
 	public HouseSourcePO queryHouseSourceByNo(String no);
 

@@ -86,7 +86,7 @@ public class DecorationVO implements Serializable {
 	
 	private String status;
 	
-	private String projectStatus;
+	private Short projectStatus;
 	
 	private Integer otherStatus;
 	
@@ -103,8 +103,9 @@ public class DecorationVO implements Serializable {
 	private Float discount;
 
 	
-	
 	private String dompany;
+	
+	private Short paySacle;
 
 	public Long getDoid() {
 		return doid;
@@ -262,11 +263,11 @@ public class DecorationVO implements Serializable {
 		this.type = type;
 	}
 
-	public String getProjectStatus() {
+	public Short getProjectStatus() {
 		return projectStatus;
 	}
 
-	public void setProjectStatus(String projectStatus) {
+	public void setProjectStatus(Short projectStatus) {
 		this.projectStatus = projectStatus;
 	}
 
@@ -364,6 +365,14 @@ public class DecorationVO implements Serializable {
 
 	public void setQuotationPrice(Float quotationPrice) {
 		this.quotationPrice = quotationPrice;
+	}
+
+	public Short getPaySacle() {
+		return paySacle;
+	}
+
+	public void setPaySacle(Short paySacle) {
+		this.paySacle = paySacle;
 	}
 
 	public void vtp(DecorationPO decorationPO){

@@ -13,6 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fanglin.communion.po.CustomerPO;
+import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.communion.po.HousePO;
 import com.fanglin.personel.po.UserPO;
 
@@ -90,6 +91,12 @@ public class HouseSourcePO implements Serializable{
 	
 	private UserPO followUser;
 	
+	private DepartmentPO department;
+	
+	private DepartmentPO region;
+	
+	private UserPO keyer;
+	
 	private String housingGrade;
 	
 	private short status;
@@ -102,14 +109,22 @@ public class HouseSourcePO implements Serializable{
 		super();
 	}
 	
-	public HouseSourcePO(HousePO house, CustomerPO customer, UserPO create, UserPO followUser) {
+	public HouseSourcePO(HousePO house) {
+		super();
+		this.house = house;
+	}
+
+	public HouseSourcePO(HousePO house, CustomerPO customer, UserPO create, UserPO followUser, UserPO keyer, DepartmentPO department, DepartmentPO region) {
 		super();
 		this.house = house;
 		this.customer = customer;
 		this.create = create;
 		this.followUser = followUser;
+		this.keyer = keyer;
+		this.department = department;
+		this.region = region;
 	}
-	
+
 	@Id
 	@GeneratedValue
 	@Column(name="hsid")
@@ -376,6 +391,36 @@ public class HouseSourcePO implements Serializable{
 	public void setPath(String path) {
 		this.path = path;
 	}
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "keyer", referencedColumnName="uid")
+	public UserPO getKeyer() {
+		return keyer;
+	}
+
+	public void setKeyer(UserPO keyer) {
+		this.keyer = keyer;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "did", referencedColumnName="did")
+	public DepartmentPO getDepartment() {
+		return department;
+	}
+
+	public void setDepartment(DepartmentPO department) {
+		this.department = department;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "rid", referencedColumnName="did")
+	public DepartmentPO getRegion() {
+		return region;
+	}
+
+	public void setRegion(DepartmentPO region) {
+		this.region = region;
+	}
 
 	@Column(name="comment")
 	public String getComment() {
@@ -385,5 +430,9 @@ public class HouseSourcePO implements Serializable{
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
+
+	
+	
+	
 	
 }

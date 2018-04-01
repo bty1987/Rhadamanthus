@@ -52,8 +52,6 @@ public interface DecorationDao extends Dao<DecorationPO> {
 	
 	public List<DecorationPO> queryDecorationByCustomer(Long cid, String customerId, int company);
 	
-	public DecorationPO queryDecorationByVillageIdAHouseNumber(String villageId, String hoseNumber,int company);
-	
 	public double countDecorationForTotalPrice(List<Filter> filters);
 	
 	public void refreshDecoration(DecorationPO decorationPO);

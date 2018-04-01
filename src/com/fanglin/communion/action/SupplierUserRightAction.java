@@ -13,6 +13,7 @@ import com.fanglin.communion.service.SupplierUserRightService;
 import com.fanglin.communion.vo.SupplierUserRightVO;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.utils.SystemConfig;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -40,6 +41,10 @@ public class SupplierUserRightAction extends BaseListAction {
 	
 	@Action(value="updateSupplierUserRight", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String updateSupplierUserRight() throws FLException{
+		
+		if(SystemConfig.getString("communion") == null){
+		    throw new FLException(-1, "无操作权限");
+		}
 		
 		supplierUserRightService.updateSupplierUserRight(supplierUserRight, userIds);
 		

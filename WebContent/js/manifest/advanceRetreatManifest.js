@@ -161,7 +161,7 @@ jQuery(function ($) {
 
     function accessoriesAdd() {
         var index = $('.line', '#list').length;
-        com.post(api.inventory.queryManifestItemByMId, {
+        com.post(api.inventory.queryManifestItemByMid, {
             "manifest.mid": manifest.mid
         }, function (res) {
             for (var i = 0; i < res.manifestItems.length; i++) {

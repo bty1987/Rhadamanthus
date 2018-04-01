@@ -17,31 +17,31 @@ import com.fanglin.production.vo.ProductionWorkPlanVO;
 @ParentPackage("base")
 @Namespace("/")
 @Controller
-public class ProductionWorkPlanAction extends BaseListAction{
+public class ProductionWorkPlanAction extends BaseListAction {
 
 	private static final long serialVersionUID = -8248271434725718610L;
-	
+
 	@Autowired
 	private ProductionWorkPlanService productionworkplanservice;
-	
+
 	private ProductionWorkPlanVO productionWorkPlan;
-	
+
 	private List<ProductionWorkPlanVO> productionWorkPlans;
-	
+
 	@Action(value = "queryProductionWorkPlanByPpid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryProductionWorkPlanByPpid(){
+	public String queryProductionWorkPlanByPpid() {
 		productionWorkPlans = productionworkplanservice.queryProductionWorkPlanByPpid(productionWorkPlan.getPpid());
 		return SUCCESS;
 	}
 
 	@Action(value = "addProductionWorkPlan", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addProductionWorkPlan() throws FLException{
-		productionworkplanservice.addProductionWorkPlan(productionWorkPlan,queryUserId());
+	public String addProductionWorkPlan() throws FLException {
+		productionworkplanservice.addProductionWorkPlan(productionWorkPlan, queryUserId());
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "deleteProductionWorkPlan", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String deleteProductionWorkPlan() throws FLException{
+	public String deleteProductionWorkPlan() throws FLException {
 		productionworkplanservice.deleteProductionWorkPlan(productionWorkPlan);
 		return SUCCESS;
 	}
@@ -58,10 +58,8 @@ public class ProductionWorkPlanAction extends BaseListAction{
 		return productionWorkPlans;
 	}
 
-	public void setProductionWorkPlans(
-			List<ProductionWorkPlanVO> productionWorkPlans) {
+	public void setProductionWorkPlans(List<ProductionWorkPlanVO> productionWorkPlans) {
 		this.productionWorkPlans = productionWorkPlans;
 	}
-	
-	
+
 }

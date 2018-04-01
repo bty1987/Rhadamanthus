@@ -57,9 +57,9 @@ public class ManifestItemServiceImpl implements ManifestItemService {
 	private StorehouseStockService storehouseStockService;
 
 	@Override
-	public List<ManifestItemVO> queryManifestItemByMId(ManifestVO manifestVO) {
+	public List<ManifestItemVO> queryManifestItemByMid(ManifestVO manifestVO) {
 
-		List<ManifestItemPO> manifestItemPOs = manifestItemDao.queryManifestItemByMId(manifestVO.getMid());
+		List<ManifestItemPO> manifestItemPOs = manifestItemDao.queryManifestItemByMid(manifestVO.getMid());
 		List<ManifestItemVO> manifestItemVOs = new ArrayList<ManifestItemVO>();
 
 		ManifestItemVO manifestItemVO;

@@ -2,14 +2,14 @@ package com.fanglin.production.vo;
 
 import java.io.Serializable;
 
-public class QuoteTypeVO implements Serializable{
+public class QuoteTypeVO implements Serializable {
 
 	private static final long serialVersionUID = -8102867602759630189L;
 
 	private Long qtid;
-	
+
 	private String name;
-	
+
 	private Short status;
 
 	public Long getQtid() {
@@ -35,6 +35,5 @@ public class QuoteTypeVO implements Serializable{
 	public void setStatus(Short status) {
 		this.status = status;
 	}
-	
-	
+
 }

@@ -13,15 +13,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-
 @Entity
 @Table(name = "userWorkflow", catalog = "production")
-public class UserWorkflowPO  implements Serializable{
+public class UserWorkflowPO implements Serializable {
 
 	private static final long serialVersionUID = -412416657174336405L;
-	
+
 	public static final String COLUMN_UID_STR = "uid";
-	
+
 	private long uwid;
 
 	private long uid;
@@ -32,11 +31,12 @@ public class UserWorkflowPO  implements Serializable{
 		super();
 	}
 
-	public UserWorkflowPO(long uid,WorkflowPO workflow) {
+	public UserWorkflowPO(long uid, WorkflowPO workflow) {
 		super();
 		this.uid = uid;
 		this.workflow = workflow;
 	}
+
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "uwid")
@@ -47,7 +47,7 @@ public class UserWorkflowPO  implements Serializable{
 	public void setUwid(long uwid) {
 		this.uwid = uwid;
 	}
-	
+
 	@Column(name = "uid")
 	public long getUid() {
 		return uid;
@@ -56,8 +56,9 @@ public class UserWorkflowPO  implements Serializable{
 	public void setUid(long uid) {
 		this.uid = uid;
 	}
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="wfid", referencedColumnName="wfid")
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "wfid", referencedColumnName = "wfid")
 	public WorkflowPO getWorkflow() {
 		return workflow;
 	}
@@ -65,7 +66,5 @@ public class UserWorkflowPO  implements Serializable{
 	public void setWorkflow(WorkflowPO workflow) {
 		this.workflow = workflow;
 	}
-	
-	
 
 }

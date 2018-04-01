@@ -24,6 +24,7 @@ import com.fanglin.communion.service.CategoryService;
 import com.fanglin.communion.vo.CategoryVO;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.utils.SystemConfig;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -66,7 +67,11 @@ public class CategoryAction extends BaseListAction {
 	}
 	
 	@Action(value="addCategory", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String addCategory(){
+	public String addCategory() throws FLException{
+		
+		if(SystemConfig.getString("communion") == null){
+		    throw new FLException(-1, "无操作权限");
+		}
 		
 		categoryService.addCategory(category);
 		
@@ -74,7 +79,11 @@ public class CategoryAction extends BaseListAction {
 	}
 	
 	@Action(value="updateCategory", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String updateCategory(){
+	public String updateCategory() throws FLException{
+		
+		if(SystemConfig.getString("communion") == null){
+		    throw new FLException(-1, "无操作权限");
+		}
 		
 		categoryService.updateCategory(category);
 		

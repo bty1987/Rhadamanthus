@@ -11,7 +11,7 @@ public interface BuildingService {
 
 	public void pageBuilding(Paging paging, List<Filter> filters);
 
-	public BuildingVO queryBuildingByBoid(BuildingVO building);
+	public BuildingVO queryBuildingByBid(BuildingVO building);
 
 	public void bindBuilding(BuildingVO building, String userId) throws FLException;
 

@@ -10,22 +10,22 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "workshop", catalog = "production")
-public class WorkshopPO implements Serializable{
+public class WorkshopPO implements Serializable {
 
 	private static final long serialVersionUID = 2653901827862236789L;
 
 	public static final String COLUMN_NAME_STR = "name";
-	
+
 	public static final String COLUMN_COMPANY_STR = "company";
-	
+
 	public static final short STATUS_ENABLE_SHORT = 0;
-	
+
 	private long wsid;
-	
+
 	private String name;
-	
+
 	private short status;
-	
+
 	private int company;
 
 	@Id
@@ -56,7 +56,7 @@ public class WorkshopPO implements Serializable{
 	public void setStatus(short status) {
 		this.status = status;
 	}
-	
+
 	@Column(name = "company")
 	public int getCompany() {
 		return company;

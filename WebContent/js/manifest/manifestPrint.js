@@ -11,7 +11,7 @@ jQuery(function($) {
     params.server = window.server;
     params.authentication = parent.params.authentication;
 
-    com.post(api.inventory.queryManifestByMId, {"manifest.mid":params.manifestMid}, function(res){
+    com.post(api.inventory.queryManifestByMid, {"manifest.mid":params.manifestMid}, function(res){
         var manifest = res.manifest;
 
         var commonInfo = {};
@@ -25,7 +25,7 @@ jQuery(function($) {
         commonInfo["status"] = manifest.status;
         commonInfo["type"] = manifest.type;
 
-        com.post(api.inventory.queryManifestItemByMId, {"manifest.mid":manifest.mid}, function(res){
+        com.post(api.inventory.queryManifestItemByMid, {"manifest.mid":manifest.mid}, function(res){
             createReceiptTable(commonInfo, res.manifestItems);
         }, null, false);
     }, null, false);

@@ -10,6 +10,7 @@ import com.fanglin.communion.service.SupplierService;
 import com.fanglin.communion.vo.SupplierVO;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.utils.SystemConfig;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -36,6 +37,10 @@ public class SupplierAction extends BaseListAction {
 	@Action(value="addSupplier", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String addSupplier() throws FLException{
 		
+		if(SystemConfig.getString("communion") == null){
+		    throw new FLException(-1, "无操作权限");
+		}
+		
 		supplierService.addSupplier(supplier);
 		
 		return SUCCESS;
@@ -43,6 +48,10 @@ public class SupplierAction extends BaseListAction {
 	
 	@Action(value="updateSupplier", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String updateSupplier() throws FLException{
+		
+		if(SystemConfig.getString("communion") == null){
+		    throw new FLException(-1, "无操作权限");
+		}
 		
 		supplierService.updateSupplier(supplier);
 		
@@ -52,6 +61,10 @@ public class SupplierAction extends BaseListAction {
 	@Action(value="updateSupplierForLogin", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String updateSupplierForLogin() throws FLException{
 		
+		if(SystemConfig.getString("communion") == null){
+		    throw new FLException(-1, "无操作权限");
+		}
+		
 		supplierService.updateSupplierForLogin(supplier);
 		
 		return SUCCESS;
@@ -59,6 +72,10 @@ public class SupplierAction extends BaseListAction {
 	
 	@Action(value="updateSupplierForPassword", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String updateSupplierForPassword() throws FLException{
+		
+		if(SystemConfig.getString("communion") == null){
+		    throw new FLException(-1, "无操作权限");
+		}
 		
 		supplierService.updateSupplierForPassword(supplier, password);
 		

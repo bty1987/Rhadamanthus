@@ -26,14 +26,16 @@ public class BuildingNodeDaoImpl extends DaoImpl<BuildingNodePO> implements Buil
 		
 		if (filters != null) {
 			for (Filter filter : filters) {
-
-		        if (BuildingNodePO.COLUMN_TYPE_STR.equals(filter.getField())) {
-		        	query.add(query.getCriterion(filter.getField(), Short.valueOf(filter.getData()), filter.getOp()));
-		        }else{
-		        	query.add(query.getCriterion(filter.getField(), filter.getData(), filter.getOp()));
+				String field = filter.getField();
+				String data = filter.getData();
+				String op = filter.getOp();
+				
+		        if (BuildingNodePO.COLUMN_TYPE_STR.equals(field)) {
+		        	query.add(query.getCriterion(field, Short.valueOf(data), op));
 		        }
 			}
 		}
+		
 		query.asc("type");
 		query.asc("sore");
 		return query.list();
@@ -41,12 +43,16 @@ public class BuildingNodeDaoImpl extends DaoImpl<BuildingNodePO> implements Buil
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<BuildingNodePO> queryBuildingNodeByType(Short type, Short sore) {
+	public List<BuildingNodePO> queryBuildingNodeByType(Short type, Short sore, Short status) {
 		
 		Criteria criteria = session().createCriteria(BuildingNodePO.class).add(Restrictions.eq("type", type));
 		
 		if(sore != null){
 			criteria.add(Restrictions.eq("sore", sore));
+		}
+		
+		if(status != null){
+			criteria.add(Restrictions.eq("status", BuildingNodePO.STATUS_ENABLE_SHORT));
 		}
 		
 		return criteria.list();

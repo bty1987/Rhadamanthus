@@ -34,9 +34,9 @@ public class HouseServiceImpl implements HouseService {
 	private VillageDao villageDao;
 	
 	@Override
-	public void pageHouse(Paging paging, List<Filter> filters) throws FLException{
+	public void pageHouse(Paging paging, List<Filter> filters,Integer company) throws FLException{
 		
-		List<HousePO> housePOs = houseDao.pageHouse(paging, filters);
+		List<HousePO> housePOs = houseDao.pageHouse(paging, filters,company);
 		List<HouseVO> houseVOs = new ArrayList<HouseVO>();
 		
 		for (HousePO housePO : housePOs) {
@@ -61,9 +61,9 @@ public class HouseServiceImpl implements HouseService {
 	}
 
 	@Override
-	public HouseVO queryHouseByNoAHnum(HouseVO houseVO)throws FLException {
+	public HouseVO queryHouseByNoAHnum(HouseVO houseVO,Integer company)throws FLException {
 		
-		HousePO housePO = houseDao.queryHouseByNoAHnum(houseVO.getVillage().getNo(),houseVO.getHouseNumber(),houseVO.getStatus());
+		HousePO housePO = houseDao.queryHouseByNoAHnum(houseVO.getVillage().getNo(),houseVO.getHouseNumber(),company);
 		
 		if(housePO == null){
 			throw new FLException(320002, "房产不存在");
@@ -76,9 +76,9 @@ public class HouseServiceImpl implements HouseService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int addHouse(HouseVO houseVO) throws FLException{
+	public int addHouse(HouseVO houseVO,Integer company) throws FLException{
 		
-		HousePO housePO = houseDao.queryHouseByNoAHnum(houseVO.getVillage().getNo(),houseVO.getHouseNumber(),null);
+		HousePO housePO = houseDao.queryHouseByNoAHnum(houseVO.getVillage().getNo(),houseVO.getHouseNumber(),company);
 		
 		if(housePO != null){
 			throw new FLException(320001, "楼牌号已存在");
@@ -91,6 +91,8 @@ public class HouseServiceImpl implements HouseService {
 		VillagePO villagePO = villageDao.get(houseVO.getVillage().getNo());
 		
 		housePO.setVillage(villagePO);
+		
+		housePO.setCompany(company);
 		
 		houseDao.save(housePO);
 		
@@ -109,7 +111,7 @@ public class HouseServiceImpl implements HouseService {
 			throw new FLException(320002, "房产不存在");
 		}
 		
-		BeanUtil.copyProperties(houseVO, housePO, Arrays.asList("village","hid"));
+		BeanUtil.copyProperties(houseVO, housePO, Arrays.asList("village","hid","company"));
 		
 		houseDao.update(housePO);
 		

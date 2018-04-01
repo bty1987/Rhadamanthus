@@ -65,7 +65,7 @@ public class SecretServiceImpl implements SecretService {
 		
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
 		
-		List<CustomerPhonePO> customerPhonePOs = customerPhoneDao.queryCustomerPhoneByPhone(FAKKGDAZ, CustomerPhonePO.STATUS_ENABLE_INT);
+		List<CustomerPhonePO> customerPhonePOs = customerPhoneDao.queryCustomerPhoneByPhone(FAKKGDAZ, CustomerPhonePO.STATUS_ENABLE_INT, null);
 		
 		if(customerPhonePOs != null && customerPhonePOs.size() > 0){
 

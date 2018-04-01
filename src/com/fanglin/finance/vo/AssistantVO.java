@@ -1,7 +1,7 @@
 package com.fanglin.finance.vo;
 
-import com.fanglin.department.po.DepartmentPO;
-import com.fanglin.department.vo.DepartmentVO;
+import com.fanglin.communion.po.DepartmentPO;
+import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.finance.po.AssistantPO;
 import com.fanglin.finance.po.AssistantTmpPO;
 import com.fanglin.personel.po.UserPO;

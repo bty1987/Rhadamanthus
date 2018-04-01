@@ -9,34 +9,34 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="outsource",catalog= "production")
+@Table(name = "outsource", catalog = "production")
 public class OutsourcePO {
-	
-	public static final short COLMU_STATUS =0;
-	
-	public static final String  COLMU_PATH ="";
-	
-	public static final String  COLMU_STATUSTR ="status";
-	
-	public static final String  COLMU_PID ="pid";
-	
+
+	public static final short COLMU_STATUS = 0;
+
+	public static final String COLMU_PATH = "";
+
+	public static final String COLMU_STATUSTR = "status";
+
+	public static final String COLMU_PID = "pid";
+
 	private long oid;
-	
+
 	private long pid;
-	
+
 	private short status;
-	
+
 	private String path;
-	
+
 	private String comment;
-	
+
 	public OutsourcePO() {
 		super();
 	}
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name="oid")
+	@Column(name = "oid")
 	public long getOid() {
 		return oid;
 	}
@@ -44,8 +44,8 @@ public class OutsourcePO {
 	public void setOid(long oid) {
 		this.oid = oid;
 	}
-	
-	@Column(name="pid")
+
+	@Column(name = "pid")
 	public long getPid() {
 		return pid;
 	}
@@ -53,8 +53,8 @@ public class OutsourcePO {
 	public void setPid(long pid) {
 		this.pid = pid;
 	}
-	
-	@Column(name="status")
+
+	@Column(name = "status")
 	public short getStatus() {
 		return status;
 	}
@@ -62,8 +62,8 @@ public class OutsourcePO {
 	public void setStatus(short status) {
 		this.status = status;
 	}
-	
-	@Column(name="path")
+
+	@Column(name = "path")
 	public String getPath() {
 		return path;
 	}
@@ -71,14 +71,14 @@ public class OutsourcePO {
 	public void setPath(String path) {
 		this.path = path;
 	}
-	
-	@Column(name="comment")
+
+	@Column(name = "comment")
 	public String getComment() {
 		return comment;
 	}
 
 	public void setComment(String comment) {
 		this.comment = comment;
-	} 
-	
+	}
+
 }

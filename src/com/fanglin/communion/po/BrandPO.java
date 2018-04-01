@@ -1,14 +1,14 @@
 package com.fanglin.communion.po;
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-
-import static javax.persistence.GenerationType.IDENTITY;
-import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
@@ -17,7 +17,7 @@ public class BrandPO implements java.io.Serializable {
 	
 	private static final long serialVersionUID = -1250639697212151929L;
 	
-	public static final String COLUMN_BID_STR = "bId";
+	public static final String COLUMN_BID_STR = "bid";
 	
 	public static final String COLUMN_BRANDID_STR = "brandId";
 	

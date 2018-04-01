@@ -73,7 +73,7 @@ public class AuditDaoImpl extends DaoImpl<AuditPO> implements AuditDao{
 						query.alias("auditer","auditer");
 						query.add(query.getCriterion("auditer.userId", data, op));
 					}else if("designerDepartmentId".equals(field)){
-						query.alias("decoration.designerPO", "designer");
+						query.alias("decoration.designer", "designer");
 						query.alias("designer.dept", "designerDept");
 						query.add(query.getCriterion("designerDept.deptId", data, op));
 					}else if("createTimeDateRange".equals(field)){

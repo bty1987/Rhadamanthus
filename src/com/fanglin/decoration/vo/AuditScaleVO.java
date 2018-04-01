@@ -3,7 +3,7 @@ package com.fanglin.decoration.vo;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
-import com.fanglin.department.vo.DepartmentVO;
+import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.personel.vo.UserBaseVO;
 
 public class AuditScaleVO implements Serializable {

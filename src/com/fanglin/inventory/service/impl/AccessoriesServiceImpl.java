@@ -160,6 +160,10 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 			throw new FLException(260023,"辅料单不存在");
 		}
 		
+		if(accessoriesPO.getStatus() != 0){
+			throw new FLException(260024,"辅料单状态不可操作");
+		}
+		
 		accessoriesPO.setStatus(accessoriesVO.getStatus());
 		accessoriesPO.setApprover(userPO);
 		accessoriesPO.setApproverTime(DateUtil.getDateToTimestamp(new Date()));

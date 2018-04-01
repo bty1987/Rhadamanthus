@@ -13,8 +13,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fanglin.communion.po.CustomerPO;
+import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.communion.po.HousePO;
-import com.fanglin.department.po.DepartmentPO;
 import com.fanglin.personel.po.UserPO;
 
 
@@ -73,6 +73,8 @@ public class SalesPO implements Serializable {
 	public static final String COLUMN_BRAND_STR = "brand";
 	
 	public static final String COLUMN_COMPANY_STR = "company";
+	
+	public static final String COLUMN_DOMPANY_STR = "dompany";
 	
 	public static final String COLUMN_ORDERID_STR = "orderId";
 	

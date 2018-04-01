@@ -23,55 +23,59 @@ import com.fanglin.utils.Paging;
 @Service("ProductionPlanItemService")
 @Transactional(readOnly = true)
 public class ProductionPlanItemServiceImpl implements ProductionPlanItemService {
-	
+
 	@Autowired
 	private ProductionPlanItemDao productionPlanItemDao;
 	@Autowired
 	private ProductionPlanDao productionPlanDao;
 
 	@Override
-	public void pageProductionPlanItemByPpid(Paging paging, List<Filter> filters,long ppid) {
-		List<ProductionPlanItemPO> productionPlanItemPOs = productionPlanItemDao.pageProductionPlanItemByPpid(paging,filters,ppid);
-		List<ProductionPlanItemVO> productionPlanItemVOs = new ArrayList<ProductionPlanItemVO>();
+	public void pageProductionPlanItemByPpid(Paging paging, List<Filter> filters, long ppid) {
 		
-		for(ProductionPlanItemPO productionPlanItemPO : productionPlanItemPOs){
+		List<ProductionPlanItemPO> productionPlanItemPOs = productionPlanItemDao.pageProductionPlanItemByPpid(paging, filters, ppid);
+		List<ProductionPlanItemVO> productionPlanItemVOs = new ArrayList<ProductionPlanItemVO>();
+
+		for (ProductionPlanItemPO productionPlanItemPO : productionPlanItemPOs) {
 			ProductionPlanItemVO productionPlanItemVO = new ProductionPlanItemVO(new ProductionPlanVO());
-			BeanUtil.copyProperties(productionPlanItemPO, productionPlanItemVO,Arrays.asList("productionPlan"));
-			BeanUtil.copyProperties(productionPlanItemPO.getProductionPlan(), productionPlanItemVO.getProductionPlan());			
+			BeanUtil.copyProperties(productionPlanItemPO, productionPlanItemVO, Arrays.asList("productionPlan"));
+			BeanUtil.copyProperties(productionPlanItemPO.getProductionPlan(), productionPlanItemVO.getProductionPlan());
 			productionPlanItemVOs.add(productionPlanItemVO);
 		}
+		
 		paging.setData(productionPlanItemVOs);
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
+	@Transactional(rollbackFor = Exception.class)
 	public int addProductionPlanItem(ProductionPlanItemVO productionPlanItemVO) throws FLException {
-		
+
 		ProductionPlanPO productionPlanPO = productionPlanDao.get(productionPlanItemVO.getProductionPlan().getPpid());
-		
-		if(productionPlanPO == null){
+
+		if (productionPlanPO == null) {
 			throw new FLException(220008, "该生产计划单不存在");
 		}
-		
+
 		ProductionPlanItemPO productionPlanItemPO = new ProductionPlanItemPO(new ProductionPlanPO());
-		BeanUtil.copyProperties(productionPlanItemVO, productionPlanItemPO,Arrays.asList("productionPlan"));
+		BeanUtil.copyProperties(productionPlanItemVO, productionPlanItemPO, Arrays.asList("productionPlan"));
 		BeanUtil.copyPropertie(productionPlanItemVO.getProductionPlan(), productionPlanItemPO.getProductionPlan());
+		
 		productionPlanItemDao.save(productionPlanItemPO);
+		
 		return 0;
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
+	@Transactional(rollbackFor = Exception.class)
 	public int deleteProductionPlanItem(ProductionPlanItemVO productionPlanItemVO) throws FLException {
-	
+
 		ProductionPlanItemPO productionPlanItemPO = productionPlanItemDao.get(productionPlanItemVO.getPpiid());
-		
-		if(productionPlanItemPO == null){
+
+		if (productionPlanItemPO == null) {
 			throw new FLException(220008, "该生产计划项不存在");
 		}
-		
+
 		productionPlanItemDao.delete(productionPlanItemPO);
-		
+
 		return 0;
 	}
 

@@ -72,7 +72,10 @@ jQuery(function($) {
 	$("#history").bindData(houseSourceDetail.history);
 	$("#housingGrade").bindData(houseSourceDetail.housingGrade);
 
-	initUploadBtn();
+	if(!(params.page == "query")){
+		var $btnSave = $("<a>保存</a>").addClass("btn btn-primary icon-ok").prop("id", "saveBtn").css("padding", "4px 8px");
+		$("#btnDiv").append($btnSave);
+	}
 
 	houseSourceDetail.saveBtn = $("#saveBtn").on("click", updateHouseSource);
 	houseSourceDetail.backBtn = $("#backBtn");
@@ -81,7 +84,21 @@ jQuery(function($) {
 	});
 
 	$('#backBtn').on(ace.click_event, function(){
-		com.switchPage(api.index.houseSource.url);
+		switch(params.page)
+		{
+			case "houseSource":
+				com.switchPage(api.index.houseSource.url);
+				break;
+			case "advance":
+				com.switchPage(api.index.houseSourceAdvance.url);
+				break;
+			case "pool":
+				com.switchPage(api.index.houseSourcePool.url);
+				break;
+			case "query":
+				com.switchPage(api.index.houseSourceQuery.url);
+				break;
+		}
 	});
 
 	houseSourceDetail.items.customerId = $("#customerId");
@@ -108,9 +125,11 @@ jQuery(function($) {
 	houseSourceDetail.items.beingLoan = $("#beingLoan");
 	houseSourceDetail.items.checkingTime = $("#checkingTime");
 	houseSourceDetail.items.followId = $("#followId");
+	houseSourceDetail.items.keyerId = $("#keyerId");
 	houseSourceDetail.items.housingGrade = $("#housingGrade");
 	houseSourceDetail.items.comment = $("#comment");
 
+	houseSourceDetail.houseItems.village = $("#village");
 	houseSourceDetail.houseItems.no = $("#no");
 	houseSourceDetail.houseItems.houseNumber = $("#houseNumber");
 	houseSourceDetail.houseItems.type = $("#type");
@@ -123,16 +142,6 @@ jQuery(function($) {
 	houseSourceDetail.houseItems.waterVapour = $("#waterVapour");
 	houseSourceDetail.houseItems.parlourType = $("#parlourType");
 	houseSourceDetail.houseItems.heatingType = $("#heatingType");
-
-	//查询房源图片  不能删除
-	com.post(api.building.queryBuildingDrawing, {"buildingDrawing.sid" : params.drawingId, "buildingDrawing.type":0}, function(data){
-		var houseSourcePics = data.buildingDrawings;
-		if(houseSourcePics && houseSourcePics.length){
-			$.each(houseSourcePics, function(i, v){
-				appendGalleryElement("houseSourceDrawing", v.bdid, v.drawingUrl, v.drawingType, "", api.building.deleteBuildingDrawing);
-			});
-		}
-	}, null, false);
 
 	com.post(api.ds.building, {}, function(res){
 		houseSourceDetail.items.discussType.bindData(res.discussType, "key", "value");
@@ -215,8 +224,8 @@ jQuery(function($) {
 
 	//编辑
 	function updateHouseSource(){
-		if(params.hsStatus != 0){
-			com.showAlert(com.warning, "当前房源已签约或已失效，不能修改房源信息！");
+		if(params.hsStatus != 3){
+			com.showAlert(com.warning, "只有已通过房源可以修改房源信息！");
 			return;
 		}
 
@@ -226,6 +235,7 @@ jQuery(function($) {
 
 		var options = {};
 		options["houseSource.hsid"] = params.drawingId;
+		options["houseSource.keyer.userId"] = houseSourceDetail.items.keyerId.val();
 		options["houseSource.sourceType"] = houseSourceDetail.items.sourceType.val();
 		options["houseSource.deedNum"] = houseSourceDetail.items.deedNum.val();
 		options["houseSource.deedValue"] = houseSourceDetail.items.deedValue.val();
@@ -257,6 +267,7 @@ jQuery(function($) {
 	}
 
 	function bindHouseData(houses){
+		houseSourceDetail.houseItems.village.val(houses.village.name);
 		houseSourceDetail.houseItems.no.val(houses.village.name + " " + houses.houseNumber);
 		houseSourceDetail.houseItems.type.val(houseSourceDetail.houseType[houses.type]);
 		houseSourceDetail.houseItems.buildArea.val(houses.buildArea);
@@ -291,7 +302,12 @@ jQuery(function($) {
 		houseSourceDetail.items.hsType.val(houseSourceDetail.hsType[houseSources.type]);
 		houseSourceDetail.items.customerId.val(houseSources.customer.name);
 		houseSourceDetail.items.customerPhone.val(houseSources.customer.phone);
-		houseSourceDetail.items.followId.val(houseSources.followUser.userName);
+		if(houseSources.followUser.userName != null){
+			houseSourceDetail.items.followId.val(houseSources.followUser.userName);
+		}
+		if(houseSources.keyer.userName != null){
+			houseSourceDetail.items.keyerId.val(houseSources.keyer.userName);
+		}
 		houseSourceDetail.items.sourceType.val(houseSources.sourceType);
 		houseSourceDetail.items.customerId.val(houseSources.customer.name);
 		houseSourceDetail.items.deedNum.val(houseSources.deedNum);
@@ -313,67 +329,4 @@ jQuery(function($) {
 		houseSourceDetail.items.housingGrade.val(houseSources.housingGrade);
 		houseSourceDetail.items.comment.val(houseSources.comment);
 	}
-
-	function initUploadBtn(){
-
-		$("#houseSourceUpload").html("").Huploadify({
-			'debug' : false, // 开启调试
-			'auto':true, // 是否自动上传
-			'successTimeout':150, // 超时时间
-			'formData':{ // 附带值
-				'uploadType':0,
-				'username':'用户名',
-				'rnd':'加密密文'
-			},
-			'multi': true, // 批量上传
-			'buttonClass': 'btn btn-success',
-			'buttonText': '上传图片',
-			'overrideEvents' : ['onDialogClose'],  // 不执行默认的onSelect事件
-			'fileObjName': 'strutsUploads', // 服务器端脚本使用的文件对象的名称 $_FILES个['upload']
-			'uploader':config.media + api.common.uploadImg.url, // 上传处理程序
-			'height': '45', // 浏览按钮的高度
-			'fileTypeDesc': '支持的格式:', // 在浏览窗口底部的文件类型下拉菜单中显示的文本
-			'fileTypeExts': '*.jpg;*.jpge;*.gif;*.png', // 允许上传的文件后缀
-			'fileSizeLimit': '5MB', // 上传文件的大小限制
-			'queueSizeLimit' : 10, // 上传数量
-			'onUploadSuccess':function(file, data, response){ //上传到服务器,服务器返回相应信息到data里
-				var dateObj=eval("("+data+")");
-				if(dateObj.errorCode == 0){
-					var options = {};
-
-					options["buildingDrawing.sid"] = params.drawingId;
-					options["buildingDrawing.name"] = "";
-					options["buildingDrawing.drawingUrl"] = dateObj.resUrl;
-					options["buildingDrawing.drawingAddUrl"] = "";
-					options["buildingDrawing.drawingType"] = 0;
-					options["buildingDrawing.type"] = 0;
-
-					com.post(api.building.addBuildingDrawing, options, function(res){
-						var drawing = res.buildingDrawing;
-						appendGalleryElement("houseSourceDrawing", drawing.bdid, dateObj.resUrl, 0, "", api.building.deleteBuildingDrawing);
-					});
-				}else{
-					console.log(data);
-				}
-			}
-		});
-	}
-
-	function appendGalleryElement(galleryId, imgId, imgUrl, type, editUrl, deleteUrl){
-		var gallery = $("#" + galleryId);
-		var imgLi = $("<li></li>").attr("id", "gallery_li"+imgId).addClass("col-xs-2 text-center").css("border-color", "#ddd").appendTo(gallery);
-		var img = $('<img />');
-		var imgA = $("<a></a>").attr("href", com.showImg(img, imgUrl, 150, 150, '150x150', null, type)).attr("data-rel", "colorbox").css("height", "150px").append(img).appendTo(imgLi);
-		var toolsDiv = $("<div></div>").addClass("tools tools-bottom").appendTo(imgLi);
-		var toolsA = $("<a></a>").attr("href", "#").on("click", function(){
-			var options = {};
-			options["buildingDrawing.bdid"] = imgId;
-
-			com.post(deleteUrl, options, function(res){
-				$("#gallery_li"+imgId).remove();
-			});
-		}).appendTo(toolsDiv);
-		$("<i></i>").addClass("icon-remove red").appendTo(toolsA);
-		imgA.colorbox(colorboxArgs);
-	};
 });

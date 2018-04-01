@@ -23,12 +23,12 @@ public class OutsourceDaoImpl extends DaoImpl<OutsourcePO> implements OutsourceD
 		PagingQuery<OutsourcePO> query = pagingQuery(paging, OutsourcePO.class);
 
 		queryFilterExcute(query, filter);
-		
+
 		return query.list();
 
 	}
 
-	public void queryFilterExcute(PagingQuery<OutsourcePO> query,List<Filter> filter) {
+	public void queryFilterExcute(PagingQuery<OutsourcePO> query, List<Filter> filter) {
 
 		if (filter != null) {
 			for (Filter filters : filter) {
@@ -37,15 +37,15 @@ public class OutsourceDaoImpl extends DaoImpl<OutsourcePO> implements OutsourceD
 				String field = filters.getField();
 
 				if (OutsourcePO.COLMU_PID.equals(field)) {
-					query.add(query.getCriterion(OutsourcePO.COLMU_PID,Long.valueOf(data), op));
+					query.add(query.getCriterion(OutsourcePO.COLMU_PID, Long.valueOf(data), op));
 
 				}
-				if (OutsourcePO.COLMU_STATUSTR.equals(field) ){
-					query.add(query.getCriterion(OutsourcePO.COLMU_STATUSTR,Short.parseShort(data), op));
-					
+				if (OutsourcePO.COLMU_STATUSTR.equals(field)) {
+					query.add(query.getCriterion(OutsourcePO.COLMU_STATUSTR, Short.parseShort(data), op));
+
 				}
 			}
 		}
 	}
-	
+
 }

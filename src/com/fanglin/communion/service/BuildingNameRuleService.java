@@ -25,8 +25,6 @@ public interface BuildingNameRuleService {
 	
 	public List<BuildingNameRuleVO> queryBuildNameRule();
 	
-	public BuildingNameRuleVO queryBuildingNameRuleById(int id);
-	
 	public void deleteBuildingNameRule(BuildingNameRuleVO buildingNameRuleVO);
 	
 	public void deleteBuildNameRuleById(int id);

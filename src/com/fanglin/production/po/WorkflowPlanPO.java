@@ -14,36 +14,36 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="workflowplan",catalog= "production")
-public class WorkflowPlanPO implements Serializable{
-	
+@Table(name = "workflowplan", catalog = "production")
+public class WorkflowPlanPO implements Serializable {
+
 	private static final long serialVersionUID = -6551143213986337841L;
-	
-	public  static final String  WORKFLOW_WFID = "workflow.wfid";
-	
-	public  static final String  WORKFLOWPLAN_WPID = "workplan.wpid";
-	
-	public  static final String  WORKFLOWPLAN_WFPID = "wfpid";
-	
-	private long wfpid ;
-	
-	private WorkflowPO  workflow;
-	
-	private WorkplanPO  workplan;
-	
-	public WorkflowPlanPO (){
+
+	public static final String WORKFLOW_WFID = "workflow.wfid";
+
+	public static final String WORKFLOWPLAN_WPID = "workplan.wpid";
+
+	public static final String WORKFLOWPLAN_WFPID = "wfpid";
+
+	private long wfpid;
+
+	private WorkflowPO workflow;
+
+	private WorkplanPO workplan;
+
+	public WorkflowPlanPO() {
 		super();
 	}
-	
-	public WorkflowPlanPO (WorkflowPO  workflow ,WorkplanPO  workplan){
+
+	public WorkflowPlanPO(WorkflowPO workflow, WorkplanPO workplan) {
 		super();
-		this.workflow = workflow ;
-		this.workplan = workplan ;
+		this.workflow = workflow;
+		this.workplan = workplan;
 	}
-	
+
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name="wfpid")
+	@Column(name = "wfpid")
 	public long getWfpid() {
 		return wfpid;
 	}
@@ -51,7 +51,7 @@ public class WorkflowPlanPO implements Serializable{
 	public void setWfpid(long wfpid) {
 		this.wfpid = wfpid;
 	}
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "wfid", referencedColumnName = "wfid")
 	public WorkflowPO getWorkflow() {
@@ -61,7 +61,7 @@ public class WorkflowPlanPO implements Serializable{
 	public void setWorkflow(WorkflowPO workflow) {
 		this.workflow = workflow;
 	}
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "wpid", referencedColumnName = "wpid")
 	public WorkplanPO getWorkplan() {
@@ -71,5 +71,5 @@ public class WorkflowPlanPO implements Serializable{
 	public void setWorkplan(WorkplanPO workplan) {
 		this.workplan = workplan;
 	}
-	
+
 }

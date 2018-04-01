@@ -117,7 +117,7 @@ public class ModuleServiceImpl implements ModuleService {
 			throw new FLException(230010, "角色不存在");
 		}
 		
-		if("1".equals(roleVO.getNo())){
+		if("1".equals(rolePO.getNo())){
 			List<ModulePO> modulePOs = moduleDao.queryModuleBySystem(moduleVO.getSystem());
 			List<ModuleVO> moduleVOs = new ArrayList<ModuleVO>();
 			

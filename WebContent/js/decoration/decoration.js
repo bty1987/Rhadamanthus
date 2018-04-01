@@ -1,19 +1,23 @@
-
-
+﻿
 $(function(){
 
 	var order = {
-		saveBtn: null,
-		cancellBtn: null,
-		modal: null,
-		orderItems: {},
-		type:{0:"半包",1:"套餐",2:"半价"},
+        saveBtn: null,
+        cancellBtn: null,
+        modal: null,
+        orderItems: {},
+        type: {0: "半包", 1: "套餐", 2: "半价"},
 
-		orderStatus: [],
-		businessDepartments:[],
-		postParam:{},
+        orderStatus: [],
+        businessDepartments: [],
+        postParam: {},
 
-		editFlag: false
+        editFlag: false,
+        projectStatusArr: {
+			0: '初始',
+			1: '开工',
+			2: '已完工'
+		}
 	};
 
 	order.cancelBtn = $("#cancelBtn");
@@ -24,11 +28,11 @@ $(function(){
 	order.customerInfoModal = $("#customerInfoModal");
 
 	var contract = {
-		decorationOrderId:null,
+		decorationOrderId:null
 	};
 
 	var decorationAdvance = {
-		items: {},
+		items: {}
 	};
 
 	decorationAdvance.items.customerName = $('#customerName');
@@ -44,7 +48,7 @@ $(function(){
 			if(res){
 				var options ={
 					"drawLine.applayDes":$("#applayDes").val(),
-					"drawLine.applayTime":$("#applayTime").val(),
+					"drawLine.applayTime":$("#applayTime").val()+" 00:00:00",
 					"drawLine.orderId":$("#decorationOrderId").val(),
 				};
 
@@ -88,11 +92,12 @@ $(function(){
 				var options ={
 					"decorationContract.orderId":contract.decorationOrderId,
 					"decorationContract.workingDuration":$("#workingDuration").val(),
-					"decorationContract.startTime":$("#startTime").val(),
-					"decorationContract.endTime":$("#endTime").val(),
 					"decorationContract.additionalInfo":$("#additionalInfo").html()
 				};
-
+				
+				$("#startTime").val() && (options["decorationContract.startTime"] = $("#startTime").val()+" 00:00:00");
+				$("#endTime").val() && (options["decorationContract.endTime"] = $("#endTime").val()+" 00:00:00");
+				
 				com.post(api.decoration.saveDecorationContract, options, function(res){
 					if(res.errorCode == 0){
 						com.showAlert(com.info, "保存成功");
@@ -193,6 +198,12 @@ $(function(){
 		$(this).prev().focus();
 	});
 
+    com.post(api.data.queryConstructionNode, {}, function (res) {
+        $.each(res.constructionNodes,function(i,v){
+            order.projectStatusArr[v.cnid] = v.name;
+        })
+    }, null, false);
+
 	/**
 	 * 回调函数比速提供 init(tableId, result.list)方法
 	 * tableId ,用来显示的div的id
@@ -241,13 +252,13 @@ $(function(){
 								propertyArr.push(["设计部:", v.designer.dept.deptName, "grey"]);
 								break;
 							case "设计师":
-								propertyArr.push(["设计师:", v.designer.currentName, "grey"]);
+								propertyArr.push(["设计师:", v.designer.userName, "grey"]);
 								break;
 							case "业务部":
 								propertyArr.push(["业务部:", v.salesman.dept.deptName, "grey"]);
 								break;
 							case "业务员":
-								propertyArr.push(["业务员:", v.salesman.currentName, "grey"]);
+								propertyArr.push(["业务员:", v.salesman.userName, "grey"]);
 								break;
 							case "面积":
 								propertyArr.push(["面积:", v.house.buildArea, "blue"]);
@@ -276,8 +287,11 @@ $(function(){
 							case "状态":
 								propertyArr.push(["状态:", v.status, "red"]);
 								break;
+							case "工程状态":
+								propertyArr.push(["工程状态:", order.projectStatusArr[v.projectStatus], "red"]);
+								break;
 						}
-					})
+					});
 
 					$.each(propertyArr, function (index,value) {
 						var $liProperty = $('<li></li>');
@@ -719,7 +733,7 @@ $(function(){
 		}
 		$('<div class="alert"> <button type="button" class="close" data-dismiss="alert">&times;</button><strong>File upload error</strong> ' + msg + ' </div>').prependTo('#alerts');
 	}
-	
+
 });
 
 

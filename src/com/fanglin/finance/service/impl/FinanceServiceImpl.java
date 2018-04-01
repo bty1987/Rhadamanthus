@@ -311,7 +311,7 @@ public class FinanceServiceImpl implements FinanceService {
 		
 		AccountVO accountVO = new AccountVO(word, abstracts, currentTime, currentPeriod, decorationReceiptPO.getCollectTime());
 		
-		List<DecorationPaymentPO> decorationPaymentPOs = decorationPaymentDao.queryDecorationPaymentByReceiptId(decorationReceiptPO.getDrId());
+		List<DecorationPaymentPO> decorationPaymentPOs = decorationPaymentDao.queryDecorationPaymentByDrid(decorationReceiptPO.getDrId());
 		
 		for(DecorationPaymentPO decorationPaymentPO: decorationPaymentPOs){
 

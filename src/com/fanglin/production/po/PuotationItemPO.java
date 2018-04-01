@@ -10,45 +10,43 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-
 @Entity
-@Table(name = "quotationItem" , catalog = "production")
-public class PuotationItemPO  implements Serializable {
+@Table(name = "quotationItem", catalog = "production")
+public class PuotationItemPO implements Serializable {
 
 	private static final long serialVersionUID = 522706962469078583L;
-	
+
 	public static final String COLUMN_QID_STR = "qid";
-	
+
 	public static final String COLUMN_QIID_STR = "qiid";
-	
+
 	private long qiid;
-	
+
 	private long qid;
-	
-	private String name; 
-	
+
+	private String name;
+
 	private String format;
-	
+
 	private float height;
-	
+
 	private float width;
-	
+
 	private float thick;
-	
+
 	private float unitPrice;
-	
+
 	private float num;
-	
+
 	private float total;
-	
+
 	private String measurementUnit;
-	
+
 	private String comment;
-	
+
 	private String specil;
-	
+
 	private String quoteType;
-	
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -177,5 +175,5 @@ public class PuotationItemPO  implements Serializable {
 	public void setQuoteType(String quoteType) {
 		this.quoteType = quoteType;
 	}
-	
+
 }

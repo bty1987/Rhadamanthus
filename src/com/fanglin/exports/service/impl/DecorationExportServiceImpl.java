@@ -20,12 +20,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.decoration.dao.DecorationBelongDao;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationBelongInfoPO;
 import com.fanglin.decoration.po.DecorationPO;
-import com.fanglin.department.po.DepartmentPO;
 import com.fanglin.exports.service.DecorationExportService;
 import com.fanglin.exports.vo.DecorationExportVO;
 import com.fanglin.payment.dao.AdvancePaymentDao;

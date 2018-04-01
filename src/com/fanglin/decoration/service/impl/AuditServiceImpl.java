@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.communion.vo.DutyVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
@@ -18,7 +19,6 @@ import com.fanglin.decoration.po.AuditPO;
 import com.fanglin.decoration.service.AuditService;
 import com.fanglin.decoration.vo.AuditVO;
 import com.fanglin.decoration.vo.DecorationVO;
-import com.fanglin.department.vo.DepartmentVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;

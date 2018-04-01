@@ -15,7 +15,7 @@ DROP TABLE IF EXISTS `buildingSchedule`;
 CREATE TABLE `buildingSchedule` (
   `bsid` int(11) NOT NULL AUTO_INCREMENT,
   `bnid` int(11) NOT NULL COMMENT '房产节点ID',
-  `boid` int(11) NOT NULL COMMENT '房产单ID',
+  `bid` int(11) NOT NULL COMMENT '房产单ID',
   `name` varchar(32) NOT NULL COMMENT '名称',
   `planTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '计划时间',
   `status` tinyint(1) NOT NULL COMMENT '状态, 0初始 , 1失效',
@@ -52,7 +52,10 @@ CREATE TABLE `houseSource` (
   `checkingTime` varchar(256) NOT NULL COMMENT '看房时间',
   `cuid` int(11) NOT NULL COMMENT '创建人',
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `fuid` int(11) NOT NULL COMMENT '跟进人',
+  `fuid` int(11) NULL COMMENT '跟进人',
+  `keyer` int(11) NULL COMMENT '收钥匙人',
+  `did` int(11) NULL COMMENT '跟进人部门',
+  `rid` int(11) NULL COMMENT '跟进人分区',
   `housingGrade` varchar(2) NOT NULL COMMENT '房源等级',
   `status` tinyint(1) NOT NULL COMMENT '状态',
   `path` varchar(256) NULL COMMENT '图片默认路径',
@@ -83,7 +86,7 @@ CREATE TABLE `customerSource` (
 
 DROP TABLE IF EXISTS `building`;
 CREATE TABLE `building` (
-  `boid` int(11) NOT NULL AUTO_INCREMENT,
+  `bid` int(11) NOT NULL AUTO_INCREMENT,
   `no` varchar(15) NOT NULL COMMENT '编号',
   `hsid` int(11) NOT NULL COMMENT '房源',
   `csid` int(11) NOT NULL COMMENT '客源',
@@ -99,7 +102,7 @@ CREATE TABLE `building` (
   `status` tinyint(1) NOT NULL COMMENT '房产单状态',
   `bnid` int(11) NOT NULL COMMENT '流转状态',
   `balanceStatus` tinyint(1) NOT NULL COMMENT '结算状态',
-  PRIMARY KEY (`boId`)
+  PRIMARY KEY (`bid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='房产单';
 
 DROP TABLE IF EXISTS `buildingdrawing`;
@@ -132,7 +135,7 @@ CREATE TABLE `buildingRecord` (
 DROP TABLE IF EXISTS `buildingPayment`;
 CREATE TABLE `buildingPayment` (
   `bpid` int(11) NOT NULL AUTO_INCREMENT,
-  `boid` int(11) NOT NULL COMMENT '房产单ID',
+  `bid` int(11) NOT NULL COMMENT '房产单ID',
   `brid` int(11) NOT NULL COMMENT '收据ID',
   `paymentType` tinyint(1) NOT NULL COMMENT '款项类型',
   `paymentStatus` tinyint(1) NOT NULL COMMENT '状态',

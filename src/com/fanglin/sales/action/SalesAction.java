@@ -61,6 +61,14 @@ public class SalesAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
+	@Action(value = "pageSalesForDompany", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageSalesForDompany() throws FLException{
+		
+		salesService.pageSalesForDompany(getPaging(), getFilters(),queryUserId(),queryCompany());
+		
+		return SUCCESS;
+	}
+	
 	@Action(value = "querySalesBySid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String querySalesBySid() throws FLException{
 		

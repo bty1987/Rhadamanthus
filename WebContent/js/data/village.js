@@ -3,7 +3,6 @@ $(function(){
     var village = {
         saveBtn: $("#saveBtn").on("click", saveData),
         cancellBtn: $("#cancelBtn"),
-
         saveMapBtn : $("#saveMapBtn").on("click", saveMap),
         modal: $("#villageModal").on("show.bs.modal",function(a) {
             com.clearValidator();
@@ -12,7 +11,9 @@ $(function(){
         mapModal : $('#mapModal').on("hide.bs.modal",function(a) {
             $('#mapContainer').removeClass('changing-point');
         }).on("shown.bs.modal", drawMap),
-
+        drawingModal : $('#drawingModal').on("show.bs.modal",function(a) {
+            com.clearValidator();
+        }),
         mapItems: {
             no : $("#mapForm [name='no']"),
             name : $('#mapForm [name="name"]'),
@@ -56,13 +57,13 @@ $(function(){
         cityProperKey: "cpid",
         cityProperValue: "name",
         nameRuleList: {},
-        nameRuleValue: "ruleContent"
+        nameRuleValue: "ruleContent",
+        url :null,
+        vid : null,
+        no : null,
     };
 
-    $.extend(com.validator, village.validator);
-
     com.post(api.system.queryCity, {},function(a) {
-
         village.cityList = a.citys;
         village.items.citySel.bindData(village.cityList, village.cityKey, village.cityValue, !1).trigger("change")
     });
@@ -73,31 +74,36 @@ $(function(){
 
     village.items.nameRuleSel.bindData(village.nameRuleList, village.nameRuleValue, village.nameRuleValue, !1).trigger("change")
 
+    initUploadBtn()
+
     var displayFunc  = (function(){
 
         var renderList = function(tableId,listData){
             var $tableWrap = $('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
-
             if(listData && listData.length){
                 $.each(listData,function(i, v){
                     var $liLine = creatLine(v);
-
                     $liLine.appendTo($ul);
                 });
-
                 $ul.appendTo($tableWrap);
             }
         };
 
         var creatLine = function(v){
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
+
+            var $urldiv = $('<div style = "float :left"></div>');
+            var imgUrl = config.media + '/showImg.do' + '?imgBasePath=' + v.url + '&divFlag=1&width=' + 75 + '&height=' + 75 + '&timestamp='+ new Date().getTime();
+            var $photo = $('<img onerror="javascript:this.src=\'./assets/altogether/images/avatar2.png\';" />').attr("src",imgUrl).css("margin-right", "10px");
+
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.name));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
             var $btnPosition = $('<a></a>').addClass('btn btn-minier btn-yellow').html('位置');
             var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-success').html('编辑');
+            var $drawingedit = $('<a></a>').addClass('btn btn-minier btn-warning').html('管理图片');
 
             var $btnStatus = $('<div></div>').addClass('pull-right');
             var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({"type" : "checkbox"});
@@ -122,9 +128,11 @@ $(function(){
 
             $btnStatus.append($statusSwitch).append($span);
 
-            $divBtnWrap.append($btnPosition).append($btnEdit).append($btnStatus).appendTo($h3);
+            $divBtnWrap.append($btnPosition).append($btnEdit).append($drawingedit).append($btnStatus).appendTo($h3);
 
-            $liLine.append($h3).append($ulProperty);
+            $urldiv.append($photo)
+
+            $liLine.append($urldiv).append($h3).append($ulProperty);
 
             $btnEdit.click(function(){
                 editVillage(v);
@@ -132,6 +140,13 @@ $(function(){
 
             $btnPosition.click(function(){
                 editPosition(v);
+            });
+
+            $drawingedit.click(function(){
+                village.vid=v.vid;
+                village.url = v.url;
+                village.no = v.no;
+                managedrawing(v.vid);
             });
 
             !v.status && $statusSwitch.prop("checked", true);
@@ -188,7 +203,6 @@ $(function(){
         if (com.validate() || village.repeatFlg){
             return false;
         }
-
         var option = {
             "village.no": village.items.no.val(),
             "village.name": village.items.name.val(),
@@ -205,21 +219,18 @@ $(function(){
         }else{
             url=api.data.addVillage
         }
-
         com.post(url,option, function(res){
             village.modal.modal("hide");
             searcher.doSearch();
         });
 
     }
-
     //编辑按钮
     function editVillage(b) {
-
+        village.modal.modal("show")
         village.editFlg = true;
-        village.items.cpid = b.cityProper.cpid;
-
         $("#nodiv").css({"display":"block"});
+        village.items.cpid = b.cityProper.cpid;
         village.items.no.val(b.no).prop("disabled", !0).css("display", "block");
         village.items.name.val(b.name);
         village.items.citySel.val(b.cityProper.city.cid).trigger("change",
@@ -231,7 +242,110 @@ $(function(){
         village.items.deliveryTime.val(b.deliveryTime);
         village.items.content.val(b.content);
         village.items.nameRuleSel.val(b.rule)
-        village.modal.modal("show")
+
+    }
+//显示图片
+    function managedrawing(vid){
+        village.drawingModal.modal("show");
+        $('#villageDrawing').html("");
+        com.post(api.communion.queryDataDrawing, {"dataDrawing.sid" : vid, "dataDrawing.type":0}, function(data){
+            var villageSourcePics = data.dataDrawings;
+            if(villageSourcePics && villageSourcePics.length){
+                $.each(villageSourcePics, function(i, value){
+                    appendGalleryElement("villageDrawing",value);
+                });
+            }
+        }, null, false);
+
+        $('.ace-thumbnails [data-rel="colorbox"]').colorbox({
+            reposition: true,
+            scalePhotos: true,
+            scrolling: false,
+            previous: '<i class="icon-arrow-left"></i>',
+            next: '<i class="icon-arrow-right"></i>',
+            close: '&times;',
+            current: '{current} of {total}',
+            maxWidth: '100%',
+            maxHeight: '100%'
+        });
+    }
+    //上传图片
+    function initUploadBtn(){
+
+        $("#villageUpload").html("").Huploadify({
+            'debug' : false, // 开启调试
+            'auto':true, // 是否自动上传
+            'successTimeout':150, // 超时时间
+            'formData':{ // 附带值
+                'uploadType':0,
+                'username':'用户名',
+                'rnd':'加密密文'
+            },
+            'multi': true, // 批量上传
+            'buttonClass': 'btn btn-success',
+            'buttonText': '上传图片',
+            'overrideEvents' : ['onDialogClose'],  // 不执行默认的onSelect事件
+            'fileObjName': 'strutsUploads', // 服务器端脚本使用的文件对象的名称 $_FILES个['upload']
+            'uploader':config.media + api.common.uploadImg.url, // 上传处理程序
+            'height': '45', // 浏览按钮的高度
+            'fileTypeDesc': '支持的格式:', // 在浏览窗口底部的文件类型下拉菜单中显示的文本
+            'fileTypeExts': '*.jpg;*.jpge;*.gif;*.png', // 允许上传的文件后缀
+            'fileSizeLimit': '5MB', // 上传文件的大小限制
+            'queueSizeLimit' : 10, // 上传数量
+            'onUploadSuccess':function(file, data, response){ //上传到服务器,服务器返回相应信息到data里
+                var dateObj=eval("("+data+")");
+                if(dateObj.errorCode == 0){
+                    var options = {};
+                    options["dataDrawing.sid"] = params.vid;
+                    options["dataDrawing.name"] = dateObj.strutsUploadsFileName;
+                    options["dataDrawing.drawingUrl"] = dateObj.resUrl;
+                    options["dataDrawing.drawingType"] = 0;
+                    options["dataDrawing.type"] = 0;
+
+                    com.post(api.communion.addDataDrawing, options, function(res){
+                        var drawing = res.dataDrawing;
+                        appendGalleryElement("villageDrawing",drawing);
+                        if(village.url == null){
+                            updateVillageUrl(village.no,drawing.drawingUrl)
+                        }
+                    });
+                    searcher.doSearch();
+                }else{
+                    console.log(data);
+                }
+            }
+        });
+    }
+
+    function appendGalleryElement(galleryId,value){
+        var gallery = $("#" + galleryId);
+        var imgLi = $("<li></li>").attr("id", "gallery_li"+value.ddid).addClass("text-center col-sm-4").css("border" , "0px").css("border-color", "white").css("padding","0px").css("height","150px").css("width","150px").appendTo(gallery);
+        var img = $('<img></img>');
+        var imgA = $("<a></a>").attr("data-rel", "colorbox").addClass('cboxElement').attr("href", com.showImg(img, value.drawingUrl, 150, 150, '150x150', null, value.type)).attr("target","_blank").css("height", "150px").append(img).appendTo(imgLi);
+
+        var toolsDiv = $("<div></div>").addClass("tools tools-bottom").appendTo(imgLi)
+        var toolsA = $("<a></a>").attr("href", "#").on("click", function(){
+           com.post(api.communion.deleteDataDrawing, {"dataDrawing.ddid":value.ddid}, function(res){
+                $("#gallery_li"+value.ddid).remove();
+            });
+        }).appendTo(toolsDiv);
+        $("<i></i>").addClass("icon-remove red").appendTo(toolsA);
+
+        var toolok = $("<a></a>").attr("href", "#").on("click", function(){
+            updateVillageUrl(village.no, value.drawingUrl);
+        }).appendTo(toolsDiv);
+        $("<i></i>").addClass("icon-ok green").appendTo(toolok);
+
+    };
+
+    function updateVillageUrl(no,url){
+        var options = {};
+        options["village.no"] = no;
+        options["village.url"] = url;
+        com.post(api.data.updateVillageForUrl,options,function(res){
+           village.url = url;
+        },null,false);
+        searcher.doSearch();
     }
 
     //初始化地图 创建地图函数

@@ -51,7 +51,11 @@ public class VillagePO implements Serializable {
 	private double y;
 	
 	private short status;
+	
+	private String url;
 
+	private int company;
+	
 	public VillagePO(){
 		super();
 	}
@@ -195,4 +199,24 @@ public class VillagePO implements Serializable {
 		this.status = status;
 	}
 
+	@Column(name = "url")
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	@Column(name = "company")
+	public int getCompany() {
+		return company;
+	}
+
+	public void setCompany(int company) {
+		this.company = company;
+	}
+
+	
+	
 }

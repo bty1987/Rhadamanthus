@@ -180,7 +180,7 @@ $(function () {
             });
 
             $btnImport.click(function(){
-                queryManifestItemByMid(v.mid);
+            	queryManifestItemByMid(v.mid);
             });
 
 
@@ -341,7 +341,7 @@ $(function () {
 
     //导出货单项事件
     function queryManifestItemByMid(mid){
-        com.post(api.inventory.queryManifestItemByMId, {"manifest.mid": mid}, function(res){
+        com.post(api.inventory.queryManifestItemByMid, {"manifest.mid": mid}, function(res){
 
             $.exceler({
                 column: [

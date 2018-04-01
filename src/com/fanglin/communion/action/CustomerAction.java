@@ -24,6 +24,7 @@ import com.fanglin.communion.vo.CustomerPhoneVO;
 import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.utils.SystemConfig;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -52,15 +53,15 @@ public class CustomerAction extends BaseListAction {
 	private String pinyinName;
 	
 	@Action(value = "pageCustomer", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageCustomer(){
+	public String pageCustomer() throws FLException{
 		
-		customerService.pageCustomer(getPaging(), getFilters());
+		customerService.pageCustomer(getPaging(), getFilters(),queryCompany());
 		
 		return SUCCESS;
 	}
 
 	@Action(value = "queryCustomerById", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryCustomerById(){
+	public String queryCustomerById() throws FLException{
 		
 		customer = customerService.queryCustomerById(customer);
 		
@@ -68,9 +69,9 @@ public class CustomerAction extends BaseListAction {
 	}
 
 	@Action(value = "queryCustomerForName", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryCustomerForName(){
+	public String queryCustomerForName() throws FLException{
 		
-		customers = customerService.queryCustomerForName(pinyinName);
+		customers = customerService.queryCustomerForName(pinyinName,queryCompany());
 		
 		for(CustomerVO customerVO : customers){
 			KeyValueVO keyValueVO = new KeyValueVO();
@@ -86,7 +87,7 @@ public class CustomerAction extends BaseListAction {
 	@Action(value = "checkCustomerForPhone", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String checkCustomerForPhone() throws FLException{
 		
-		customers = customerService.checkCustomerForPhone(customerPhone);
+		customers = customerService.checkCustomerForPhone(customerPhone,queryCompany());
 		
 		return SUCCESS;
 	}
@@ -102,7 +103,11 @@ public class CustomerAction extends BaseListAction {
 	@Action(value="addCustomer", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String addCustomer() throws FLException{
 		
-		customerService.addCustomer(customer);
+		if(SystemConfig.getString("communion") == null){
+		    throw new FLException(-1, "无操作权限");
+		}
+		
+		customerService.addCustomer(customer,queryCompany());
 		
 		return "success";
 	}
@@ -110,6 +115,10 @@ public class CustomerAction extends BaseListAction {
 	@Action(value="updateCustomer", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String updateCustomer() throws FLException{
 	
+		if(SystemConfig.getString("communion") == null){
+		    throw new FLException(-1, "无操作权限");
+		}
+		
 		customerService.updateCustomer(customer);
 	
 		return "success";
@@ -118,6 +127,10 @@ public class CustomerAction extends BaseListAction {
 	@Action(value="updateCustomerPhoneForStatus", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String updateCustomerPhoneForStatus() throws FLException{
 
+		if(SystemConfig.getString("communion") == null){
+		    throw new FLException(-1, "无操作权限");
+		}
+		
 		customerService.updateCustomerPhoneForStatus(customerPhone);
 
 		return "success";
@@ -126,7 +139,11 @@ public class CustomerAction extends BaseListAction {
 	@Action(value="addCustomerPhone", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String addCustomerPhone() throws FLException{
 
-		customerService.addCustomerPhone(customerPhone);
+		if(SystemConfig.getString("communion") == null){
+		    throw new FLException(-1, "无操作权限");
+		}
+		
+		customerService.addCustomerPhone(customerPhone,queryCompany());
 
 		return "success";
 	}
@@ -134,6 +151,10 @@ public class CustomerAction extends BaseListAction {
 	@Action(value="updateCustomerPhoneForDstatus", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String updateCustomerPhoneForDstatus() throws FLException{
 
+		if(SystemConfig.getString("communion") == null){
+		    throw new FLException(-1, "无操作权限");
+		}
+		
 		customerService.updateCustomerPhoneForDstatus(customerPhone);
 
 		return "success";

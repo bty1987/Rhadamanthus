@@ -3,27 +3,27 @@ package com.fanglin.production.vo;
 public class OutsourceItemVO {
 
 	private Long oiid;
-	
+
 	private Long oid;
-	
+
 	private String name;
-	
+
 	private Float height;
-	
+
 	private Float width;
-	
+
 	private Float thick;
-	
-	private String  modelling;
-	
+
+	private String modelling;
+
 	private Float num;
-	
+
 	private Float unitprice;
-	
+
 	private Long total;
-	
-	private String  comment;
-	
+
+	private String comment;
+
 	public OutsourceItemVO() {
 		super();
 	}
@@ -115,5 +115,5 @@ public class OutsourceItemVO {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	
+
 }

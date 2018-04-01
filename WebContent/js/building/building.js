@@ -3,7 +3,7 @@ jQuery(function($) {
 
 	var buildingPayType;
 	var building = {
-		boid: null,
+		bid: null,
 		saveBtn: null,
 		cancelBtn: null,
 		deployedBtn: null,
@@ -197,14 +197,14 @@ jQuery(function($) {
 			$liLine.append($h3).append($ulProperty);
 
 			$btnView.click(function(){
-				buildingDetail(v.boid, v.payType);
+				buildingDetail(v.bid, v.payType);
 			});
 
 			//更改支付方式
 			$btnType.unbind("click");
 			$btnType.click(function(){
 				//这里目前关于支付方式更改是涉及到的贷款服务费没有处理，页面用该有一个生成款项的入口
-				updatePayType(v.boid);
+				updatePayType(v.bid);
 			});
 
 			//生成款项
@@ -215,7 +215,7 @@ jQuery(function($) {
 			//合同终止
 			$btnEnd.click(function(){
 				//这里应该弹出退款框，合同终止的情况下将中介费，贷款服务费退还
-				buildingEnd(v.boid);
+				buildingEnd(v.bid);
 			});
 
 			return $liLine;
@@ -252,8 +252,8 @@ jQuery(function($) {
 	//添加
 	$('a[name="addBuilding"]', '#pagenation').click(function(){
 		deleteData();
-		com.initChosen('hsAUser', api.data.queryCustomerForName, "customer.name", {}, "autoFillCustomer", "key", "value");
-		com.initChosen('csAUser', api.data.queryCustomerForName, "customer.name", {}, "autoFillCustomer", "key", "value");
+		com.initChosen('hsAUser', api.data.queryCustomerForName, "pinyinName", {}, "autoFillCustomer", "key", "value");
+		com.initChosen('csAUser', api.data.queryCustomerForName, "pinyinName", {}, "autoFillCustomer", "key", "value");
 		$("#buildingModal").modal("show");
 	});
 
@@ -264,15 +264,15 @@ jQuery(function($) {
 	});
 
 	function buildingDetail(buildingId, type){
-		params.boid = buildingId;
+		params.bid = buildingId;
 		params.type = type;
 		com.switchPage(api.index.buildingSchedule.url);
 	}
 
-	function updatePayType(boid){
+	function updatePayType(bid){
 		//这里目前有一个问题，就是款项，如果是全款转贷款，或者贷款转全款的时候，涉及到的贷款服务费的问题
-		building.boid = boid;
-		com.post(api.building.queryBuildingByBoid, {"building.boid" : boid}, function(res){
+		building.bid = bid;
+		com.post(api.building.queryBuildingByBid, {"building.bid" : bid}, function(res){
 			buildingPayType = res.building.payType;
 			building.items.payTypes.val(res.building.payType);
 		}, null, false);
@@ -282,7 +282,7 @@ jQuery(function($) {
 	//没想到合适的地方  所以在页面上没有体现
 	function updateBuilding(buildingId, cvalue){
 		var options = {};
-		options["building.boid"] = buildingId;
+		options["building.bid"] = buildingId;
 		options["building.balanceStatus"] = cvalue;
 
 		com.post(api.building.updateBuildingForBalanceStatus(), options, function(res){
@@ -324,7 +324,7 @@ jQuery(function($) {
 		}
 
 		var options = {
-			'building.boid': building.boid,
+			'building.bid': building.bid,
 			'building.payType': building.items.payTypes.val(),
 		};
 
@@ -336,7 +336,7 @@ jQuery(function($) {
 	}
 
 	//合同终止
-	function buildingEnd(boid){
+	function buildingEnd(bid){
 		//因为涉及到款项(中介费和贷款服务费)，所以还没有写
 	}
 

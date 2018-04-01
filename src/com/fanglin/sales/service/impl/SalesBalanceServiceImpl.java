@@ -10,11 +10,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.communion.vo.CustomerVO;
+import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.communion.vo.HouseVO;
 import com.fanglin.communion.vo.VillageVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.department.vo.DepartmentVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
@@ -55,11 +55,45 @@ public class SalesBalanceServiceImpl implements SalesBalanceService{
 	private SalesBalanceItemDao salesBalanceItemDao; 
 	
 	@Override
-	public void pageSalesBalance(Paging paging, List<Filter> filters) {
+	public void pageSalesBalance(Paging paging, List<Filter> filters,int company) {
 		
 		if(filters.size() == 0) return;
 		
-		List<SalesBalancePO> salesBalancePOs = salesBalanceDao.pageSalesBalance(paging, filters);
+		List<SalesBalancePO> salesBalancePOs = salesBalanceDao.pageSalesBalance(paging, filters,company);
+		List<SalesBalanceVO> salesBalanceVOs = new ArrayList<SalesBalanceVO>();
+		
+		for(SalesBalancePO salesBalancePO:salesBalancePOs){
+			
+			SalesBalanceVO salesBalanceVO = new SalesBalanceVO(new SalesVO(new HouseVO(new VillageVO()),new CustomerVO(),new UserBaseVO(),new DepartmentVO(),new DepartmentVO(),new UserBaseVO(),new DepartmentVO(),new UserBaseVO()), new RefundsVO(), new UserBaseVO(), new UserBaseVO());
+			
+			BeanUtil.copyPropertie(salesBalancePO, salesBalanceVO, Arrays.asList("sales","refunds","creater","poster"));
+			BeanUtil.copyPropertie(salesBalancePO.getSales(), salesBalanceVO.getSales(), Arrays.asList("salesman","dept","region","guider","instorer","guideDept","house","customer"));
+			BeanUtil.copyProperties(salesBalancePO.getSales().getSalesman(), salesBalanceVO.getSales().getSalesman(),Arrays.asList("dept","duty"));
+			BeanUtil.copyProperties(salesBalancePO.getSales().getDept(), salesBalanceVO.getSales().getDept(),Arrays.asList("fatherDept","cityProper","type"));
+			BeanUtil.copyProperties(salesBalancePO.getSales().getRegion(), salesBalanceVO.getSales().getRegion(),Arrays.asList("fatherDept","cityProper","type"));
+			BeanUtil.copyProperties(salesBalancePO.getSales().getInstorer(), salesBalanceVO.getSales().getInstorer(),Arrays.asList("dept","duty"));
+			BeanUtil.copyProperties(salesBalancePO.getSales().getGuider(), salesBalanceVO.getSales().getGuider(),Arrays.asList("dept","duty"));
+			BeanUtil.copyProperties(salesBalancePO.getSales().getGuideDept(), salesBalanceVO.getSales().getGuideDept(),Arrays.asList("fatherDept","cityProper","type"));
+			BeanUtil.copyProperties(salesBalancePO.getSales().getHouse(), salesBalanceVO.getSales().getHouse(),Arrays.asList("village"));
+			BeanUtil.copyProperties(salesBalancePO.getSales().getHouse().getVillage(), salesBalanceVO.getSales().getHouse().getVillage(),Arrays.asList("cityProper"));
+			BeanUtil.copyProperties(salesBalancePO.getSales().getCustomer(), salesBalanceVO.getSales().getCustomer());
+			BeanUtil.copyPropertie(salesBalancePO.getRefunds(), salesBalanceVO.getRefunds(), Arrays.asList("creater"));
+			BeanUtil.copyPropertie(salesBalancePO.getCreater(), salesBalanceVO.getCreater(), Arrays.asList("dept","duty"));
+			BeanUtil.copyPropertie(salesBalancePO.getPoster(), salesBalanceVO.getPoster(), Arrays.asList("dept","duty"));
+			
+			salesBalanceVOs.add(salesBalanceVO);
+		}
+		
+		paging.setData(salesBalanceVOs); 
+		
+	}
+	
+	@Override
+	public void pageSalesBalanceForDompany(Paging paging, List<Filter> filters,int dompany) {
+		
+		if(filters.size() == 0) return;
+		
+		List<SalesBalancePO> salesBalancePOs = salesBalanceDao.pageSalesBalanceForDompany(paging, filters, dompany);
 		List<SalesBalanceVO> salesBalanceVOs = new ArrayList<SalesBalanceVO>();
 		
 		for(SalesBalancePO salesBalancePO:salesBalancePOs){
@@ -168,7 +202,11 @@ public class SalesBalanceServiceImpl implements SalesBalanceService{
 				throw new FLException(260021, "销售单不存在");
 			}
 			
-			if(salesPO.getStatus()==SalesPO.STATUS_END_SHORT){
+			if(salesPO.getStatus()!=SalesPO.STATUS_INIT_SHORT){
+				throw new FLException(260022, "销售单状态不可操作");
+			}
+			
+			if(salesPO.getBalanceStatus() != SalesPO.BALANCESTATUS_INIT_SHORT){
 				throw new FLException(260022, "销售单状态不可操作");
 			}
 			

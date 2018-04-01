@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.communion.dao.ConstructionNodeDao;
+import com.fanglin.communion.po.ConstructionNodePO;
 import com.fanglin.construction.dao.ConstructionDao;
 import com.fanglin.construction.dao.ConstructionScheduleDao;
 import com.fanglin.construction.dao.DrawLineDao;
@@ -15,11 +17,19 @@ import com.fanglin.construction.po.ConstructionSchedulePO;
 import com.fanglin.construction.po.DrawLinePO;
 import com.fanglin.construction.service.ConstructionScheduleService;
 import com.fanglin.construction.vo.ConstructionScheduleVO;
+import com.fanglin.decoration.dao.DecorationDao;
+import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.utils.BeanUtil;
 
 @Service("constructionScheduleService")
 @Transactional(readOnly=true)
 public class ConstructionScheduleServiceImpl implements ConstructionScheduleService {
+	
+	@Autowired
+	private DecorationDao decorationDao;
+	
+	@Autowired
+	private ConstructionNodeDao constructionNodeDao;
 	
 	@Autowired
 	private ConstructionScheduleDao constructionScheduleDao;
@@ -70,7 +80,9 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 		return constructionScheduleVOs;
 	}
 	
+	
 	@Override
+	@SuppressWarnings("static-access")
 	@Transactional(rollbackFor=Exception.class)
 	public void setConstructionScheduleForStatus(ConstructionScheduleVO constructionScheduleVO) {
 
@@ -78,14 +90,28 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 		
 		ConstructionSchedulePO constructionSchedulePO = constructionScheduleDao.get(constructionScheduleVO.getCsId());
 		
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(constructionSchedulePO.getOrderId());
+		
+		Short projectStatus = decorationPO.getProjectStatus();
+		Short schedule = constructionSchedulePO.getSchedule();
+		
+		ConstructionNodePO _constructionNodePO = constructionNodeDao.get((long)(constructionSchedulePO.getSchedule()));
+		
+		if(projectStatus != decorationPO.PROJECTSTATUS_FINISH_INT){
+			if(projectStatus < _constructionNodePO.getSort()){
+				
+					decorationPO.setProjectStatus((short)schedule);
+					decorationDao.update(decorationPO);
+			}
+		}
+		
 		if(constructionSchedulePO != null){
 			constructionSchedulePO.setStatus(status);
 			
 			if(constructionSchedulePO.getSchedule() == ConstructionSchedulePO.COLUMN_SCHEDULE_ONE){
 				ConstructionPO constructionPO = constructionDao.get(constructionSchedulePO.getCid());
 				if(constructionPO != null){
-					constructionPO.setChanStatus(status);
-					constructionDao.update(constructionSchedulePO);
+					constructionScheduleDao.update(constructionSchedulePO);
 				}
 				
 				if(status == ConstructionSchedulePO.STATUS_TYPE_FAIL_INT){
@@ -107,8 +133,6 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 					if(constructionScheduleVO.getStatus() == ConstructionSchedulePO.STATUS_TYPE_SUCCESS_INT){
 						drawLinePO.setStatus("放线成功");
 						
-						//List<String> dutys = new ArrayList<String>();
-						//dutys.add("前台咨询师");
 					}else if(constructionScheduleVO.getStatus() == ConstructionSchedulePO.STATUS_TYPE_FAIL_INT){
 						drawLinePO.setStatus("放线失败");
 					}

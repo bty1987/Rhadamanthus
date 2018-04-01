@@ -21,9 +21,25 @@ public class SalesBalanceDaoImpl extends DaoImpl<SalesBalancePO> implements Sale
 	}
 
 	@Override
-	public List<SalesBalancePO> pageSalesBalance(Paging paging,List<Filter> filters) {
+	public List<SalesBalancePO> pageSalesBalance(Paging paging,List<Filter> filters,int company) {
 		
 		PagingQuery<SalesBalancePO> query = pagingQuery(paging, SalesBalancePO.class);
+		
+		query.alias("sales", "sales").add(query.getCriterion(SalesBalancePO.COLUMN_SALESCOMPANY_STR,company,"eq"));
+		
+		queryFilterExcute(query, filters);
+		
+		query.desc("sbid");
+		
+		return query.list();
+	}
+	
+	@Override
+	public List<SalesBalancePO> pageSalesBalanceForDompany(Paging paging,List<Filter> filters, int dompany) {
+		
+		PagingQuery<SalesBalancePO> query = pagingQuery(paging, SalesBalancePO.class);
+		
+		query.alias("sales", "sales").add(query.getCriterion(SalesBalancePO.COLUMN_SALESDOMPANY_STR,dompany,"eq"));
 		
 		queryFilterExcute(query, filters);
 		
@@ -124,4 +140,5 @@ public class SalesBalanceDaoImpl extends DaoImpl<SalesBalancePO> implements Sale
 			}
 		}
 	}
+
 }

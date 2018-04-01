@@ -30,10 +30,11 @@ public class UserWorkflowServiceImpl implements UserWorkflowService {
 		List<UserWorkflowPO> userWorkflowPOs = userWorkflowDao.queryUserWorkflowByUid(userWorkflowVO.getUid());
 
 		List<UserWorkflowVO> userWorkflowVOs = new ArrayList<UserWorkflowVO>();
+
 		for (UserWorkflowPO userWorkflowPO : userWorkflowPOs) {
 			userWorkflowVO = new UserWorkflowVO(new WorkflowVO());
-			BeanUtil.copyProperties(userWorkflowPO, userWorkflowVO,Arrays.asList("workflow"));
-			BeanUtil.copyProperties(userWorkflowPO.getWorkflow(),userWorkflowVO.getWorkflow());
+			BeanUtil.copyProperties(userWorkflowPO, userWorkflowVO, Arrays.asList("workflow"));
+			BeanUtil.copyProperties(userWorkflowPO.getWorkflow(), userWorkflowVO.getWorkflow());
 
 			userWorkflowVOs.add(userWorkflowVO);
 		}
@@ -42,16 +43,18 @@ public class UserWorkflowServiceImpl implements UserWorkflowService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int updateUserWorkflow(UserWorkflowVO userWorkflowVO,List<Long> wfids) throws FLException {
+	public int updateUserWorkflow(UserWorkflowVO userWorkflowVO, List<Long> wfids) throws FLException {
+
 		long uid = userWorkflowVO.getUid();
 
 		userWorkflowDao.deleteUserWorkflowByUId(uid);
-		
-		if(wfids !=null){
-			for(long wfid: wfids) {
-				userWorkflowDao.save(new UserWorkflowPO(uid,new WorkflowPO(wfid)));
+
+		if (wfids != null) {
+			for (long wfid : wfids) {
+				userWorkflowDao.save(new UserWorkflowPO(uid, new WorkflowPO(wfid)));
 			}
-		}	
+		}
+
 		return 0;
 	}
 

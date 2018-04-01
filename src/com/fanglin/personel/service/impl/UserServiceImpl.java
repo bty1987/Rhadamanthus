@@ -24,8 +24,12 @@ import org.springframework.transaction.annotation.Transactional;
 import com.alibaba.fastjson.JSONObject;
 import com.fanglin.common.po.CountingPO;
 import com.fanglin.common.service.CountingService;
+import com.fanglin.communion.dao.DepartmentDao;
 import com.fanglin.communion.dao.DutyDao;
+import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.communion.po.DutyPO;
+import com.fanglin.communion.vo.DepartmentTypeVO;
+import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.communion.vo.DutyVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.security.AESHelper;
@@ -33,10 +37,6 @@ import com.fanglin.core.security.MD5Helper;
 import com.fanglin.core.security.SecurityCodeHelper;
 import com.fanglin.core.security.SecurityCodeHelper.SecurityCodeLevel;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.department.dao.DepartmentDao;
-import com.fanglin.department.po.DepartmentPO;
-import com.fanglin.department.vo.DepartmentTypeVO;
-import com.fanglin.department.vo.DepartmentVO;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.dao.UserInfoDao;
@@ -561,7 +561,7 @@ public class UserServiceImpl implements UserService {
 		String code = systemConfigDao.querySystemConfig("tokenkey").getValue();
 		String secret = systemConfigDao.querySystemConfig("tokensecret").getValue();
 		
-		String server = systemConfigDao.querySystemConfig("localHost").getValue();
+		String server = systemConfigDao.querySystemConfig("platform").getValue();
 
 		String str = String.format("%s/requestAuthCode.do?userId=%s&code=%s&secret=%s", communion, userPO.getUserId(), code, secret);
 		

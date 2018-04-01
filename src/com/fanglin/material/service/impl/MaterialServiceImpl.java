@@ -27,18 +27,16 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fanglin.common.dao.ServiceRecordDao;
 import com.fanglin.common.po.ServiceRecordPO;
 import com.fanglin.communion.po.CustomerPO;
+import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.communion.po.HousePO;
 import com.fanglin.communion.vo.CustomerVO;
+import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.communion.vo.HouseVO;
 import com.fanglin.communion.vo.VillageVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
-
-
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
-import com.fanglin.department.po.DepartmentPO;
-import com.fanglin.department.vo.DepartmentVO;
 import com.fanglin.material.dao.MaterialBalanceDao;
 import com.fanglin.material.dao.MaterialDao;
 import com.fanglin.material.dao.MaterialItemDao;

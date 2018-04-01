@@ -10,41 +10,41 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "productionplan" , catalog = "production")
-public class ProductionPlanPO implements Serializable{
+@Table(name = "productionplan", catalog = "production")
+public class ProductionPlanPO implements Serializable {
 
 	private static final long serialVersionUID = 6565378267211756040L;
-	
-	public  static final String COLUMN_PID_STR = "pid";
-	
+
+	public static final String COLUMN_PID_STR = "pid";
+
 	public static final String COLUMN_NO_STR = "no";
-	
-	public  static final short STATUS_INIT_INT = 0;
-	
-	public  static final short STATUS_STOREHOUSE_INT = 1;
-	
-	public  static final short STATUS_DILIVERY_INT = 2;
-	
+
+	public static final short STATUS_INIT_INT = 0;
+
+	public static final short STATUS_STOREHOUSE_INT = 1;
+
+	public static final short STATUS_DILIVERY_INT = 2;
+
 	public static final String COLUMN_STATUS_STR = "status";
-	
+
 	public static final String COLUMN_STRATTIME_STR = "startTime";
-	
+
 	public static final String COLUMN_ENDTIME_STR = "endTime";
-	
+
 	private long ppid;
-	
+
 	private long pid;
-	
+
 	private String no;
-	
+
 	private String path;
-	
+
 	private Timestamp startTime;
-	
+
 	private Timestamp endTime;
-	
+
 	private short status;
-	
+
 	private String comment;
 
 	public ProductionPlanPO() {
@@ -56,10 +56,9 @@ public class ProductionPlanPO implements Serializable{
 		this.ppid = ppid;
 	}
 
-
 	@Id
 	@GeneratedValue
-	@Column(name="ppid")
+	@Column(name = "ppid")
 	public long getPpid() {
 		return ppid;
 	}
@@ -67,7 +66,7 @@ public class ProductionPlanPO implements Serializable{
 	public void setPpid(long ppid) {
 		this.ppid = ppid;
 	}
-	
+
 	@Column(name = "pid")
 	public long getPid() {
 		return pid;
@@ -85,6 +84,7 @@ public class ProductionPlanPO implements Serializable{
 	public void setNo(String no) {
 		this.no = no;
 	}
+
 	@Column(name = "path")
 	public String getPath() {
 		return path;
@@ -93,6 +93,7 @@ public class ProductionPlanPO implements Serializable{
 	public void setPath(String path) {
 		this.path = path;
 	}
+
 	@Column(name = "startTime")
 	public Timestamp getStartTime() {
 		return startTime;
@@ -101,6 +102,7 @@ public class ProductionPlanPO implements Serializable{
 	public void setStartTime(Timestamp startTime) {
 		this.startTime = startTime;
 	}
+
 	@Column(name = "endTime")
 	public Timestamp getEndTime() {
 		return endTime;
@@ -109,6 +111,7 @@ public class ProductionPlanPO implements Serializable{
 	public void setEndTime(Timestamp endTime) {
 		this.endTime = endTime;
 	}
+
 	@Column(name = "status")
 	public short getStatus() {
 		return status;
@@ -117,6 +120,7 @@ public class ProductionPlanPO implements Serializable{
 	public void setStatus(short status) {
 		this.status = status;
 	}
+
 	@Column(name = "comment")
 	public String getComment() {
 		return comment;
@@ -125,6 +129,5 @@ public class ProductionPlanPO implements Serializable{
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	
-	
+
 }

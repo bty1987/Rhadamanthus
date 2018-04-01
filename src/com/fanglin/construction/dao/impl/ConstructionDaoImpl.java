@@ -28,6 +28,7 @@ import com.fanglin.utils.Paging;
 @Repository("constructionDao")
 public class ConstructionDaoImpl extends DaoImpl<ConstructionPO> implements ConstructionDao {
 
+	
 	public ConstructionDaoImpl(){
 		super(ConstructionPO.class);
 	}
@@ -36,7 +37,7 @@ public class ConstructionDaoImpl extends DaoImpl<ConstructionPO> implements Cons
 	public List<ConstructionPO> pageConstruction(Paging paging, List<Filter> filters, Integer company) {
 		
 		PagingQuery<ConstructionPO> query = pagingQuery(paging, ConstructionPO.class);
-		
+
 		query.add(query.getCriterion("decoration.company", company, "eq"));
 		
 		queryFilterExcute(query, filters);
@@ -45,9 +46,11 @@ public class ConstructionDaoImpl extends DaoImpl<ConstructionPO> implements Cons
 	}
 
 	@Override
-	public List<ConstructionPO> pageConstructionForSupervision(Paging paging, List<Filter> filters){
+	public List<ConstructionPO> pageConstructionForSupervision(Paging paging, List<Filter> filters, int suid){
 		
 		PagingQuery<ConstructionPO> query = pagingQuery(paging, ConstructionPO.class);
+		
+		query.alias("supervisor", "supervisor").add(query.getCriterion("supervisor.uid", suid, "eq"));
 		
 		queryFilterExcute(query, filters);
 		
@@ -116,11 +119,6 @@ public class ConstructionDaoImpl extends DaoImpl<ConstructionPO> implements Cons
 				String field = filter.getField();
 				String data = filter.getData();
 				String op = filter.getOp();
-				
-				//pageConstructionForSupervision监理控制
-				if(ConstructionPO.COLUMN_SUPERVISORQUALITYID_STR.equals(field)){
-					query.add(Restrictions.eq(field, data));
-				}
 				
 				//pageConstructionForAcceptance工程验收
 				if(ConstructionPO.COLUMN_ALLOCATIONWORKERFLAG_STR.equals(field)){

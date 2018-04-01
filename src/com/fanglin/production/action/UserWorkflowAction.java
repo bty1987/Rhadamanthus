@@ -17,32 +17,32 @@ import com.fanglin.production.vo.UserWorkflowVO;
 @ParentPackage("base")
 @Namespace("/")
 @Controller
-public class UserWorkflowAction  extends BaseListAction{
+public class UserWorkflowAction extends BaseListAction {
 
 	private static final long serialVersionUID = 7612506924299780280L;
 
 	@Autowired
 	private UserWorkflowService userWorkflowService;
-	
+
 	private UserWorkflowVO userWorkflow;
 
-	private List<UserWorkflowVO> userWorkflows; 
-	
+	private List<UserWorkflowVO> userWorkflows;
+
 	private List<Long> wfids;
-	
+
 	@Action(value = "queryUserWorkflowByUid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryUserWorkflowByUid(){
-		
+	public String queryUserWorkflowByUid() {
+
 		userWorkflows = userWorkflowService.queryUserWorkflowByUid(userWorkflow);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "updateUserWorkflow", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateUserWorkflow() throws FLException{
-		
+	public String updateUserWorkflow() throws FLException {
+
 		userWorkflowService.updateUserWorkflow(userWorkflow, wfids);
-		
+
 		return SUCCESS;
 	}
 
@@ -69,5 +69,5 @@ public class UserWorkflowAction  extends BaseListAction{
 	public void setWfids(List<Long> wfids) {
 		this.wfids = wfids;
 	}
-	
+
 }
