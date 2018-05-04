@@ -279,7 +279,7 @@ $(function(){
             $('.widget-box', '#payment').removeClass('flloading');
         }
     }, null, false);
-    
+
 
 
     initProject();

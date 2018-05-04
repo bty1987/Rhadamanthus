@@ -131,6 +131,8 @@ public class HouseSourceServiceImpl implements HouseSourceService {
 			dids.add(houseSourceDepartmentRightPO.getDid());
 		}
 		
+		if(dids.size() == 0) return;
+		
 		if(dids.size() == 1 && dids.get(0) == HouseSourceDepartmentRightPO.DEPARTMENT_ALL_ENABLE_INT){
 			dids = null;
 		}
@@ -200,10 +202,10 @@ public class HouseSourceServiceImpl implements HouseSourceService {
 		CustomerPO customerPO = customerDao.get(houseSourceVO.getCustomer().getCid());
 		
 		UserPO keyer = null;
-		DepartmentPO department = createPO.getDept();
-		DepartmentPO region = createPO.getDept().getFatherDept();
+		DepartmentPO department = followPO.getDept();
+		DepartmentPO region = followPO.getDept().getFatherDept();
 		
-		if(houseSourceVO.getKeyer() != null){
+		if(!houseSourceVO.getKeyer().getUserId().equals("")){
 			keyer = userDao.queryUserByUserId(houseSourceVO.getKeyer().getUserId());
 		}
 		
@@ -222,7 +224,7 @@ public class HouseSourceServiceImpl implements HouseSourceService {
 		
 		houseSourceDao.save(houseSourcePO);
 		
-		if(houseSourceVO.getKeyer() != null){
+		if(!houseSourceVO.getKeyer().getUserId().equals("")){
 			keyerRecord(houseSourcePO, houseSourceVO.getKeyer().getUserId());
 		}
 	}
@@ -244,6 +246,10 @@ public class HouseSourceServiceImpl implements HouseSourceService {
 		UserPO taker = userDao.queryUserByUserId(userId);
 		
 		houseSourcePO.setFollowUser(taker);
+		
+		houseSourcePO.setDepartment(taker.getDept());
+		
+		houseSourcePO.setRegion(taker.getDept().getFatherDept());
 		
 		houseSourceDao.update(houseSourcePO);
 		
@@ -290,6 +296,10 @@ public class HouseSourceServiceImpl implements HouseSourceService {
 		UserPO followUserPO = userDao.queryUserByUserId(houseSourceVO.getFollowUser().getUserId());
 		
 		houseSourcePO.setFollowUser(followUserPO);
+		
+		houseSourcePO.setDepartment(followUserPO.getDept());
+		
+		houseSourcePO.setRegion(followUserPO.getDept().getFatherDept());
 		
 		houseSourceDao.update(houseSourcePO);
 

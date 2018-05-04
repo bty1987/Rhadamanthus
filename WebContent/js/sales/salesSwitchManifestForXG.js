@@ -7,8 +7,6 @@ $(function () {
         });
     }
 
-    var $siids = [];
-
     var manifest = {
         total: null,
     };
@@ -266,10 +264,8 @@ $(function () {
 
         var checkList = $('input[name="siids"]:checked', '#resultListItem')
         var $liline = checkList.parents('.oid');
-        $siids = [];
         $.each(checkList, function (i, v) {
             var $this = $(v);
-            $siids.push($this.attr('data-siid'));
             options["manifestItems[" + i + "].siid"] = $this.attr('data-siid');
             options["manifestItems[" + i + "].goods.gid"] = $this.attr('data-gid');            //– 商品编号
             options["manifestItems[" + i + "].color.cid"] = $this.attr('data-cid');  //– 颜色
@@ -280,7 +276,7 @@ $(function () {
         })
 
         if (checkList.length != 0) {
-            if (checkRowValue($liline, $siids)) {
+            if (checkRowValue($liline)) {
                 com.post(api.inventory.addManifestForXG, options, function () {
                     layer.closeAll();
                     layer.msg('添加成功')
@@ -320,6 +316,7 @@ $(function () {
                         ["折扣价:", v.disPrice, "blue", "disPrice"],
                         ["折让价:", v.price, "blue", "price"],
                         ["数量:", v.num, "blue", "num"],
+                        ["可出库数量:", v.xgnum, "blue", "xgnum"],
                         ["总价:", v.total, "blue", "total"],
                         ["原结算方式:", v.rawCtype == 0 ? "底价" : "点位", "red", "rawCtype"],
                         ["原结算值:", v.rawCvalue, "blue", "rawCvalue"],
@@ -385,6 +382,7 @@ $(function () {
                         "data-fid": v.format.fid,
                         "data-gid": v.goods.gid,
                         "data-num": v.num,
+                        "data-xgnum" : v.xgnum
                     }).addClass('ace ace-checkbox-2');
 
                     var _span = $('<span></span>').addClass('lbl blue bigger-150').css('font-weight', 'bold').html(v.goods.name + ' ' + v.goods.no);
@@ -477,46 +475,34 @@ $(function () {
         });
     }
 
-    function checkRowValue($line, siids) {
+    function checkRowValue($line) {
 
         var flag = true;
 
-        var _option = {};
-
-        $.each(siids, function (i, v) {
-            _option["siids[" + i + "]"] = v;
-        })
-
-        var flags = {};
-
-        com.post(api.inventory.queryManifestItemBySiids, _option, function (res) {
-            $.each(res.manifestItems, function (i, v) {
-                if (!flags[v.siid]) {
-                    flags[v.siid] = 0;
-                    flags[v.siid] += v.num;
-                } else {
-                    flags[v.siid] += v.num;
-                }
-
-            })
-        }, null, false);
-
         $.each($line, function (i, v) {
             var num = $(v).find('input.inputNumber');
-            var Tnum = $(v).next().find('[name="num"]').next().text();
-            var subnum = flags[$(v).find('input[name="siids"]').attr('data-siid')];
-            var numRex = /^\d+$/;
-            if (!(numRex.test(num.val()) && parseFloat(num.val()) > 0 && parseFloat(Tnum) >= parseFloat(num.val()) && parseFloat(num.val()) <= parseFloat(subnum == undefined ? Tnum : parseFloat(Tnum - subnum)))) {
+            var xgnum = $(v).find('input[name="siids"]');
+            if (num.val() > xgnum.attr('data-xgnum')) {
                 num.focus().select();
                 num.addClass('tooltip-info').attr({
                     "data-rel": "popover",
                     "data-placement": "top",
                     "data-original-title": "",
                     "title": "",
-                    "data-content": "数量输入不正确!"
+                    "data-content": "出库数量大于可出库数量!"
                 }).popover('show');
                 flag = false;
-            } else {
+            } else if (num.val()<=0){
+                num.focus().select();
+                num.addClass('tooltip-info').attr({
+                    "data-rel": "popover",
+                    "data-placement": "top",
+                    "data-original-title": "",
+                    "title": "",
+                    "data-content": "出库数量需大于0!"
+                }).popover('show');
+                flag = false;
+            }else {
                 num.popover('destroy');
             }
 

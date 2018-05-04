@@ -129,7 +129,7 @@ jQuery(function($) {
 			var option = {
 				"upgrade.no" : upgrade.items.upgradeNumber.val(),
 				"upgrade.trialno" : upgrade.items.trialUpgrade.val(),
-				"upgrade.createTime" : upgrade.items.createTime.val(),
+				"upgrade.createTime" : upgrade.items.createTime.val()+" 00:00:00",
 				"upgrade.content" : upgrade.items.content.val(),
 				"upgrade.path" : upgrade.items.path.val(),
 				"upgrade.fileSize" : upgrade.items.fileSize.val(),

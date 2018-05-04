@@ -120,8 +120,7 @@ public class SalesDaoImpl extends DaoImpl<SalesPO> implements SalesDao {
 				}else if(SalesPO.COLUMN_ORDERID_STR.equals(field)){
 					query.add(query.getCriterion(field, data, op));
 					
-				}
-				else if("instorer".equals(field)){
+				}else if("instorer".equals(field)){
 					query.add(query.getCriterion(SalesPO.COLUMN_INSTORERID_STR, data, op));
 				}else if("salesman".equals(field)){
 					query.add(query.getCriterion(SalesPO.COLUMN_SALESMANUSERID_STR, data, op));

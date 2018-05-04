@@ -1,0 +1,88 @@
+<div class="page-content" >
+    <a href="#0" class="btn" id="bigScreen">全&nbsp;&nbsp;屏</a>
+    <button id="close" class="btn" style="left: 0px;">退出全屏</button>
+    <div class="login-area" style="heigth:950px;text-align: center">
+        <ul class="flex-table">
+            <li class="line">
+               <sapn class="common" style="font-size: 25px; top: 10px">日期:</sapn>
+                <input type="text" id="riqi" placeholder="请选择日期范围" class="common input"  style="margin: 0px; top: 0px">
+            </li>
+            <li class="line">
+                <sapn class="common" style="font-size: 25px; top: 10px">姓名:</sapn>
+                <input id="usernames" type="text" placeholder="请输入您姓名拼音"  class="common input"  style="margin: 0px; top: 0px ">
+            </li>
+        </ul>
+        <!--<input id="phone" type="text" placeholder="电话(暂时无效)"  class="common input psw-height" class="common input" style="margin: 0px ">-->
+        <button id="cmtbtn" class="common login-btn" style="left: 25px;top: 100px;">工费查询</button>
+    </div>
+
+    <div id="jianpan" style="left: 37%;text-align: center;top: 65%">
+        <div class="title" style="text-align:center;">
+            <span id="jptitle"></span>
+            <span class="jianpan_hide" id="xjianpan">×</span>
+        </div>
+
+        <table id="xfjp" class="jianpan" cellspacing="0" cellpadding="0">
+            <tr>
+                <td>1</td>
+                <td>2</td>
+                <td>3</td>
+                <td>4</td>
+                <td>5</td>
+                <td>6</td>
+                <td>7</td>
+                <td>8</td>
+                <td>9</td>
+                <td>0</td>
+            </tr>
+            <tr>
+                <td>q</td>
+                <td>w</td>
+                <td>e</td>
+                <td>r</td>
+                <td>t</td>
+                <td>y</td>
+                <td>u</td>
+                <td>i</td>
+                <td>o</td>
+                <td>p</td>
+            </tr>
+            <tr>
+                <td>a</td>
+                <td>s</td>
+                <td>d</td>
+                <td>f</td>
+                <td>g</td>
+                <td>h</td>
+                <td>j</td>
+                <td>k</td>
+                <td>l</td>
+                <td>空格</td>
+            </tr>
+            <tr>
+                <td id="shift">shift</td>
+                <td>z</td>
+                <td>x</td>
+                <td>c</td>
+                <td>v</td>
+                <td>b</td>
+                <td>n</td>
+                <td>m</td>
+                <td>back</td>
+                <td>清空</td>
+                <!--<td colspan="2">清空</td>-->
+            </tr>
+        </table>
+    </div>
+
+    <div id="list"></div>
+
+
+</div>
+<div id="viewPopUp" class="portlet box"></div>
+
+
+<script type="text/javascript">
+
+    $.loadScript(['js/salary/queryWorkerSalary.js']);
+</script>

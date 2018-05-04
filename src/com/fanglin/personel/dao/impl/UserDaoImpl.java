@@ -199,6 +199,32 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 		return count.intValue();
 	}
 	
+	@Override
+	public List<UserPO> pageUserForNameByPinyinNameADepeType(Paging paging, String pinyinName,Short status, Integer dtid, Integer company){
+		
+		PagingQuery<UserPO> query = pagingQuery(paging, UserPO.class);
+		
+		query.alias("role", "role");
+		
+		query.add(Restrictions.eq("company", company));
+		
+		if(StringUtils.isNotEmpty(pinyinName)){
+			query.add(Restrictions.or(Restrictions.like("userName", pinyinName, MatchMode.START), Restrictions.like("userNamePinYin", pinyinName, MatchMode.START)));
+		}
+		
+		query.add(Restrictions.ne("role.no", RolePO.SUPER_NO_STR));
+		
+		query.add(Restrictions.eq("dtid", dtid));
+	
+		if(status != null ){
+			query.add(Restrictions.eq("status", status));
+		}
+		
+		return query.list();
+
+	}
+
+	
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){
 		
 		if(filters != null){
@@ -232,5 +258,6 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 			}
 		}
 	}
+
 	
 }

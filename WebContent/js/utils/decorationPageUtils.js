@@ -212,8 +212,10 @@ $(function(){
         return [row];
     }
     function drawAddreuce(conf) {
-        return [createDiv("row","resLists")];
+        return [createDiv("row", "resLists")];
     }
+
+    var _propertyArr = ["楼盘地址","客户名","设计部","设计师","业务部","业务员","面积","签单额","报价金额","量房时间","签单时间","定金时间","创建时间","类型","状态","工程状态","折扣"];
 
     var decorationPage = {
         "activity": {
@@ -226,7 +228,8 @@ $(function(){
             "apiPage":api.decoration.pageDecorationForCommon,
             "pageBtn":["view","revie","line"],
             "postDataName": "commonPostData",
-            "nodes":[{type:"basic",opt:{btn:["customerInfosBtn",],show:["orderType","houseType","houseClass"]}},{type:"quotaion"},{type:"picture"},{type:"material"},{type:"activity"},{type:"payment"},{type:"belong"}, {type: "addreduce"}],
+            "nodes":[{type:"basic",opt:{btn:["customerInfosBtn"],show:["orderType","houseType","houseClass"]}},{type:"quotaion"},{type:"picture"},{type:"material"},{type:"activity"},{type:"payment"},{type:"belong"}, {type: "addreduce"}],
+            "propertyArr": _propertyArr,
             "hasExport":false
         },
         "designer": {
@@ -248,6 +251,7 @@ $(function(){
             "pageBtn":["view","revie","contract"],
             "postDataName": "directerPostData",
             "nodes":[{type:"basic",opt:{btn:["customerInfosBtn","customerChangeBtn","villageChangeBtn"],show:["orderType","houseType","houseClass","notSalesmanRate","notSalesmanName","notSalesmanPhone","notSalesmanContent","quoterId","escorterId"]}},{type:"quotaion"},{type:"picture"},{type:"material"},{type:"activity"},{type:"payment",opt:{btn:["btnSetDecorationPaymentInfo","btnOtherPayment"]}},{type:"belong"}, {type: "addreduce"}],
+            "propertyArr": _propertyArr,
             "hasExport":false
         },
         "quoter": {
@@ -255,6 +259,7 @@ $(function(){
             "pageBtn":["view","revie","price","scal","addminus","extension"],
             "postDataName": "quoterPostData",
             "nodes":[{type:"basic",opt:{btn:["customerInfosBtn","customerChangeBtn","villageChangeBtn"],show:["orderType","houseType","houseClass"]}},{type:"quotaion",opt:{btn:["btnPrintDefaultQuotationInfo"]}},{type:"picture"},{type:"material"},{type:"activity",wizard:{"activityBtnMethod":activityBtnMethod,"uiBtnMethod":uiBtnMethod}},{type:"payment"},{type:"addreduce"}],
+            "propertyArr": _propertyArr,
             "hasExport":false
         },
         "finance": {
@@ -262,6 +267,7 @@ $(function(){
             "pageBtn":["view","delete","sign","terminal","resign"],
             "postDataName": "financePostData",
             "nodes":[{type:"basic",opt:{btn:["customerInfosBtn",],show:["orderType","houseType","houseClass"]}},{type:"quotaion"},{type:"picture"},{type:"material"},{type:"activity"},{type:"payment"},{type:"belong"}, {type: "addreduce"}],
+            "propertyArr": _propertyArr,
             "hasExport":true
         },
         "salesmanmanager": {
@@ -282,6 +288,7 @@ $(function(){
             "pageBtn":["view"],
             "postDataName": "constructionPostData",
             "nodes":[{type:"basic",opt:{btn:["customerInfosBtn"],show:["orderType","houseType","houseClass"]}},{type:"quotaion"},{type:"material"},{type:"payment",opt:{btn:["btnSetDecorationPaymentInfo","btnOtherPayment"]}}],
+            "propertyArr": _propertyArr,
             "hasExport":false
         },
         "material": {
@@ -302,6 +309,7 @@ $(function(){
             "pageBtn":["view","revie"],
             "postDataName": "escorterPostData",
             "nodes":[{type:"basic",opt:{btn:["customerInfosBtn","customerChangeBtn","villageChangeBtn"],show:["orderType","houseType","houseClass"]}},{type:"quotaion",opt:{btn:["btnPrintDefaultQuotationInfo"]}},{type:"picture",opt:{show:["designPictureUpload","projectPictureUpload","CADUpload","ContractUpload"]}},{type:"material"},{type:"activity",opt:{btn:["joinActivityBtn","applyActivityItemBtn","applySpecialActivityItemBtn"]},wizard:{"activityBtnMethod":activityBtnMethod,"uiBtnMethod":uiBtnMethod} },{type:"payment",opt:{btn:["btnSetDecorationPaymentInfo","btnOtherPayment"]}},{type:"belong"}, {type: "addreduce"}],
+            "propertyArr": _propertyArr,
             "hasExport":false
         },
         "customerPhone": {
@@ -487,7 +495,7 @@ $(function(){
             }
         },getConfig:function (page) {
             var pageConfig = {};
-            pageConfig.condArr = ['orderId', 'village', 'houseNumber', 'houseArea', 'designer', 'salesman','orderType','salesmanType','quoter','escorter','designerRegionId','designerDepartmentId','salesmanRegionId','salesmanDepartmentId','measureTimeDateRange','depositTimeDateRange','signTimeDateRange','houseClass','status'];
+            pageConfig.condArr = ['orderId', 'village', 'houseNumber', 'houseArea', 'designer', 'salesman','orderType','salesmanType','quoter','escorter','designerRegionId','designerDepartmentId','salesmanRegionId','salesmanDepartmentId','measureTimeDateRange','depositTimeDateRange','signTimeDateRange','createTimeDateRange','houseClass','status'];
 
             pageConfig.postDataName = "";
 
@@ -501,12 +509,12 @@ $(function(){
                 ['业务员', 'salesman.currentName'],
                 ['面积', 'house.buildArea'],
                 ['合同报价', 'orderTotalPrice'],
-                ['量房时间', 'createTime'],
+                ['量房时间', 'measureTime'],
                 ['签单时间', 'contractTime'],
-                ['状态', 'status'],
+                ['状态', 'status']
             ];
 
-            pageConfig.propertyArr = ["楼盘地址","客户名","设计部","设计师","业务部","业务员","面积","折扣","签单额","报价金额","量房时间","签单时间","定金时间","类型","状态","工程状态"];
+            pageConfig.propertyArr = ["楼盘地址","客户名","设计部","设计师","业务部","业务员","面积","签单额","报价金额","量房时间","签单时间","定金时间","创建时间","类型","状态","工程状态"];
 
             pageConfig.apiPage = decorationPage[page]["apiPage"];
             pageConfig.pageBtn = decorationPage[page]["pageBtn"];

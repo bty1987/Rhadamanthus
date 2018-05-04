@@ -5,6 +5,6 @@ import com.fanglin.core.dao.Dao;
 
 public interface ApprovalSalesRefundDao extends Dao<ApprovalSalesRefundPO>{
 	
-	public ApprovalSalesRefundPO queryApprovalSalesRefundByAId(int aId);
+	public ApprovalSalesRefundPO queryApprovalSalesRefundByAId(long aId);
 
 }

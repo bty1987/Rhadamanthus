@@ -12,6 +12,7 @@
 package com.fanglin.approval.service.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -68,27 +69,21 @@ public class ApprovalMaterialRefundServiceImpl implements ApprovalMaterialRefund
 	@Autowired
 	private ApprovalMaterialRefundItemDao approvalMaterialRefundItemDao;
 	
-	// 主材订单信息DAO接口
 	@Autowired
 	private MaterialDao materialDao;
 	
-	// 主材订单型号信息DAO接口
 	@Autowired
 	private MaterialItemDao materialItemDao;
 	
-	// 主材分批次退款类DAO接口(用于主材订单型号信息管理)
 	@Autowired
 	private MaterialRefundDao materialRefundDao;
 	
-	// 主材订单结算功能DAO接口
 	@Autowired
 	private MaterialBalanceDao materialBalanceDao;
 	
-	// 主材付款DAO接口
 	@Autowired
 	private MaterialPaymentDao materialPaymentDao;
 	
-	// 消息Service接口
 	@Autowired
 	private MessageService messageService;
 	
@@ -164,9 +159,9 @@ public class ApprovalMaterialRefundServiceImpl implements ApprovalMaterialRefund
 		}
 		
 		approvalPO = new ApprovalPO();
-		BeanUtil.copyProperties(approvalVO, approvalPO);
+		BeanUtil.copyProperties(approvalVO, approvalPO,Arrays.asList("receiver","sender"));
 		
-		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiverId());
+		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiver().getUserId());
 		UserPO sender = userDao.queryUserByUserId(userId);
 		
 		String refundType = approvalMaterialRefundVO.getType() == MaterialPO.STATUS_TYPE_FULLREFUND_INT ? "全退" : approvalMaterialRefundVO.getType() == MaterialPO.STATUS_TYPE_DAODAN_INT ? "倒单" : "退货";

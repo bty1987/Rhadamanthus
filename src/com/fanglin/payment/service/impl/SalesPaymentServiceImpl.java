@@ -532,7 +532,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService{
 			
 			paymentVO.setOrderId(sales.getOrderId());
 			paymentVO.setPaymentType(paymentType);
-			paymentVO.setComment("InventoryPayPayment");
+			paymentVO.setComment(String.format("销售单:%d", sales.getSid()));
 			paymentVO.setCash(salesPaymentVO.getAdvance());
 			
 			paymentService.payPayment(paymentVO, userId);
@@ -681,7 +681,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService{
 			
 			paymentVO.setOrderId(sales.getOrderId());
 			paymentVO.setPaymentType(paymentType);
-			paymentVO.setComment("InventoryPayPayment");
+			paymentVO.setComment(String.format("销售单:%d", sales.getSid()));
 			paymentVO.setCash(salesPaymentVO.getAdvance());
 			
 			paymentService.payPayment(paymentVO, userId);

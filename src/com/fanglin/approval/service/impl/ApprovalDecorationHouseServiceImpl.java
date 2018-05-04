@@ -11,6 +11,7 @@
 
 package com.fanglin.approval.service.impl;
 
+import java.util.Arrays;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,9 +91,9 @@ public class ApprovalDecorationHouseServiceImpl implements ApprovalDecorationHou
 			throw new FLException(320004, "房源已存在");//130019 房产已存在
 		}
 		approvalPO = new ApprovalPO();
-		BeanUtil.copyProperties(approvalVO, approvalPO);
+		BeanUtil.copyProperties(approvalVO, approvalPO,Arrays.asList("receiver","sender"));
 		
-		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiverId());
+		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiver().getUserId());
 		UserPO sender = userDao.queryUserByUserId(userId);
 		
 		approvalPO.setType(ApprovalPO.APPROVAL_TYPE_VILLAGE_INT);

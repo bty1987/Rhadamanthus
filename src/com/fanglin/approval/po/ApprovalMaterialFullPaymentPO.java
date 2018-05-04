@@ -17,9 +17,9 @@ public class ApprovalMaterialFullPaymentPO implements java.io.Serializable {
 
 	private int amfpId;
 	
-	private int aid;
+	private long aid;
 	
-	private long msoId;
+	private long mid;
 	
 	private float referMoney;
 
@@ -35,21 +35,21 @@ public class ApprovalMaterialFullPaymentPO implements java.io.Serializable {
 	}
 
 	@Column(name = "aId")
-	public int getAid() {
+	public long getAid() {
 		return this.aid;
 	}
 
-	public void setAid(int aid) {
+	public void setAid(long aid) {
 		this.aid = aid;
 	}
 
-	@Column(name = "msoId")
-	public long getMsoId() {
-		return this.msoId;
+	@Column(name = "mid")
+	public long getMid() {
+		return mid;
 	}
 
-	public void setMsoId(long msoId) {
-		this.msoId = msoId;
+	public void setMid(long mid) {
+		this.mid = mid;
 	}
 
 	@Column(name = "referMoney")

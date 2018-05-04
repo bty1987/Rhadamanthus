@@ -304,7 +304,6 @@ public class SalesServiceImpl implements SalesService {
 				BeanUtil.copyProperties(salesItemVO.getGoods(), salesItemPO.getGoods(),Arrays.asList("accessoriesType"));
 				BeanUtil.copyProperties(salesItemVO.getColor(), salesItemPO.getColor());
 				BeanUtil.copyProperties(salesItemVO.getFormat(), salesItemPO.getFormat());
-				
 				salesItemPO.setSid(salesPO.getSid());
 				
 				salesItemDao.save(salesItemPO);
@@ -343,6 +342,7 @@ public class SalesServiceImpl implements SalesService {
 			throw new FLException(260021, "销售单不存在");
 		}
 		
+		salesPO.setMaling(salesVO.getMaling());
 		salesPO.setVenderMaling(salesVO.getVenderMaling());
 		
 		salesDao.update(salesPO);

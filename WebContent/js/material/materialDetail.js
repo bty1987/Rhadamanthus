@@ -692,7 +692,7 @@ jQuery(function($) {
 			return ;
 		}
 		options["approvalMaterialRefund.mid"] = materialSubOrderItemPostData["materialSubOrder.msoId"];
-        options["approval.receiverId"] = $('#approvalUser').find('input:checked').attr('userid');
+        options["approval.receiver.userId"] = $('#approvalUser').find('input:checked').attr('userid');
 		options["approval.comment"] = refundDes.val();
 		options["approvalMaterialRefund.type"] = materialSubOrderDetail.refundType;
 		options["approvalMaterialRefund.refund"] = refund.val();

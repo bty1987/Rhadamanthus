@@ -74,6 +74,8 @@ $.extend(api, {salary: {
     updatedesignerSalary: {url: "updatedesignerSalary.do"},
     adoptdesignerSalary:{url:"adoptdesignerSalary.do"},
     rejectdesignerSalary:{url:"rejectdesignerSalary.do"},
-    deletedesignerSalary:{url: "deletedesignerSalary.do"}
+    deletedesignerSalary:{url: "deletedesignerSalary.do"},
+
+    pageSalaryWorkerForUser: {url: "pageSalaryWorkerForUser.do"}
     
 }});

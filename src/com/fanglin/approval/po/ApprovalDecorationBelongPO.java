@@ -17,11 +17,11 @@ public class ApprovalDecorationBelongPO implements java.io.Serializable {
 
 	private int adbId;
 	
-	private int aid;
+	private long aid;
 	
 	private String orderId;
 	
-	private String belongType;
+	private short belongType;
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -35,11 +35,11 @@ public class ApprovalDecorationBelongPO implements java.io.Serializable {
 	}
 
 	@Column(name = "aId")
-	public int getAid() {
+	public long getAid() {
 		return this.aid;
 	}
 
-	public void setAid(int aid) {
+	public void setAid(long aid) {
 		this.aid = aid;
 	}
 
@@ -53,11 +53,11 @@ public class ApprovalDecorationBelongPO implements java.io.Serializable {
 	}
 
 	@Column(name = "belongType")
-	public String getBelongType() {
+	public short getBelongType() {
 		return this.belongType;
 	}
 
-	public void setBelongType(String belongType) {
+	public void setBelongType(short belongType) {
 		this.belongType = belongType;
 	}
 

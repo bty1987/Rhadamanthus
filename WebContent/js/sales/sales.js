@@ -21,11 +21,6 @@ $(function () {
         fullPaymentRefund: 5,
     };
 
-    var salesPayment = {
-        depositPaymentMoney: "",
-        fullPaymentMoney: ""
-    };
-
     var salesPostDataString = {
         sid: "sales.sid",
         coupon: "sales.coupon",
@@ -90,7 +85,6 @@ $(function () {
         var renderList = function (tableId, listData) {
 
             var $tableWrap = $('#' + tableId);
-            //var $ul = $('<ul></ul>').addClass('item-list ui-sortable  fl-table-list');
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if (listData && listData.length) {
@@ -460,7 +454,6 @@ $(function () {
 
                         var radios = _approval.find('input:checked').attr('userid');
 
-                        //checkApproval(approver, "审批人不能为空", "right")
                         if (com.validate('layerSubmit','right')) {
                             return;
                         }
@@ -471,7 +464,7 @@ $(function () {
                         }
 
                         var _options = {};
-                        _options['approval.receiverId'] = radios
+                        _options['approval.receiver.userId'] = radios
                         _options['approval.comment'] = approvalComment.val();
                         _options['approvalSalesDiscount.sid'] = sales.sid;
                         _options['approvalSalesDiscount.referMoney'] = fullPaymentTotal.val();
@@ -905,8 +898,8 @@ $(function () {
         var couponVal = parseFloat(checkVal(querySales.coupon.val()));
         var malingVal = parseFloat(checkVal(querySales.maling.val()));
 
-        var fullpaymentVal = total - depositPaymentVal - couponVal - malingVal;
-
+        var fullpaymentVal = utils.accSub(utils.accSub(utils.accSub(total,depositPaymentVal),couponVal),malingVal);
+        console.log(fullpaymentVal);
         querySales.fullPayment.val(fullpaymentVal);
 
         $('#fullPaymentTotal').val(fullpaymentVal);

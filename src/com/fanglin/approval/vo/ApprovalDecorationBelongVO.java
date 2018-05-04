@@ -6,11 +6,11 @@ public class ApprovalDecorationBelongVO implements java.io.Serializable {
 
 	private Integer adbId;
 	
-	private Integer aid;
+	private Long aid;
 	
 	private String orderId;
 	
-	private String belongType;
+	private Short belongType;
 
 	public Integer getAdbId() {
 		return adbId;
@@ -20,11 +20,11 @@ public class ApprovalDecorationBelongVO implements java.io.Serializable {
 		this.adbId = adbId;
 	}
 
-	public Integer getAid() {
+	public Long getAid() {
 		return this.aid;
 	}
 
-	public void setAid(Integer aid) {
+	public void setAid(Long aid) {
 		this.aid = aid;
 	}
 
@@ -36,11 +36,11 @@ public class ApprovalDecorationBelongVO implements java.io.Serializable {
 		this.orderId = orderId;
 	}
 
-	public String getBelongType() {
+	public Short getBelongType() {
 		return this.belongType;
 	}
 
-	public void setBelongType(String belongType) {
+	public void setBelongType(Short belongType) {
 		this.belongType = belongType;
 	}
 

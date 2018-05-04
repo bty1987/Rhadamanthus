@@ -141,9 +141,9 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 	
 		approvalPO = new ApprovalPO();
 		
-		BeanUtil.copyProperties(approvalVO, approvalPO);
+		BeanUtil.copyProperties(approvalVO, approvalPO,Arrays.asList("receiver","sender"));
 		
-		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiverId());
+		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiver().getUserId());
 		UserPO sender = userDao.queryUserByUserId(userId);
 		
 		String refundType = approvalSalesRefundVO.getType() == SalesPO.STATUS_ALLBACK_SHORT ? "全退" : approvalSalesRefundVO.getType() == SalesPO.STATUS_DBACKORDER_SHORT ? "倒单" : "退货";
@@ -244,7 +244,7 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 				
 		salesBalancePO.setSales(salesPO);
 		salesBalancePO.setRefunds(refundsPO);
-		salesBalancePO.setCreater(approvalPO.getSender());
+		salesBalancePO.setCreater(approvalPO.getReceiver());
 		salesBalancePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		salesBalancePO.setTotal(Arith.sub(0, approvalSalesRefundPO.getRefund()));
 		salesBalancePO.setBalance(refundMoney);

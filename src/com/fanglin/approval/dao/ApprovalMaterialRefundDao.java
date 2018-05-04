@@ -16,6 +16,6 @@ import com.fanglin.core.dao.Dao;
 
 public interface ApprovalMaterialRefundDao extends Dao<ApprovalMaterialRefundPO> {
 	
-	public ApprovalMaterialRefundPO queryApprovalMaterialRefundByAId(int aId);
+	public ApprovalMaterialRefundPO queryApprovalMaterialRefundByAId(long aId);
 
 }

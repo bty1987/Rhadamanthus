@@ -5,6 +5,6 @@ import com.fanglin.core.dao.Dao;
 
 public interface ApprovalManifestDBDao extends Dao<ApprovalManifestDBPO>{
 	
-	public ApprovalManifestDBPO queryApprovalManifestDBByAId(int aId);
+	public ApprovalManifestDBPO queryApprovalManifestDBByAId(long aId);
 	
 }

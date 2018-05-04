@@ -14,17 +14,17 @@ package com.fanglin.decoration.dao;
 import java.util.List;
 
 import com.fanglin.core.dao.Dao;
-import com.fanglin.decoration.po.DecorationBelongInfoPO;
+import com.fanglin.decoration.po.DecorationBelongPO;
 
-public interface DecorationBelongDao extends Dao<DecorationBelongInfoPO> {
+public interface DecorationBelongDao extends Dao<DecorationBelongPO> {
 	
-	public List<DecorationBelongInfoPO> queryOrderBelongInfoByOrderIdAType(String orderId, String belongType);
+	public List<DecorationBelongPO> queryOrderBelongInfoByOrderIdAType(String orderId, Short belongType);
 
-	public List<DecorationBelongInfoPO> queryOrderBelongInfoForCurrentByOrderIdAType(String orderId, String belongType);
+	public List<DecorationBelongPO> queryOrderBelongInfoForCurrentByOrderIdAType(String orderId, Short belongType);
 	
-	public List<DecorationBelongInfoPO> queryOrderBelongInfoByOrderId(String orderId);
+	public List<DecorationBelongPO> queryOrderBelongInfoByOrderId(String orderId);
 	
-	public List<DecorationBelongInfoPO> queryOrderBelongInfoByOrderIds(List<String> orderIds);
+	public List<DecorationBelongPO> queryOrderBelongInfoByOrderIds(List<String> orderIds);
 	
 	public int changeOrderBelongInfoForOrderId(String newOrderId, String oldOrderId);
 	

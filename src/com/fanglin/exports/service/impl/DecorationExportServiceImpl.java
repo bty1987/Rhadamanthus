@@ -24,7 +24,7 @@ import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.decoration.dao.DecorationBelongDao;
 import com.fanglin.decoration.dao.DecorationDao;
-import com.fanglin.decoration.po.DecorationBelongInfoPO;
+import com.fanglin.decoration.po.DecorationBelongPO;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.exports.service.DecorationExportService;
 import com.fanglin.exports.vo.DecorationExportVO;
@@ -122,16 +122,16 @@ public class DecorationExportServiceImpl implements DecorationExportService {
 			}
 		}
 		
-		List<DecorationBelongInfoPO> orderBelongInfoPOs = decorationBelongDao.queryOrderBelongInfoByOrderIds(orderIds);
+		List<DecorationBelongPO> decorationBelongPOs = decorationBelongDao.queryOrderBelongInfoByOrderIds(orderIds);
 		
-		for(DecorationBelongInfoPO orderBelongInfoPO: orderBelongInfoPOs){
+		for(DecorationBelongPO decorationBelongPO: decorationBelongPOs){
 			
 			try {
-				DecorationExportVO decorationExportVO = (DecorationExportVO) decorationExportMap.get(orderBelongInfoPO.getDecorationPO().getOrderId()).clone();
+				DecorationExportVO decorationExportVO = (DecorationExportVO) decorationExportMap.get(decorationBelongPO.getOrderId()).clone();
 				
-				UserPO belongUserPO = orderBelongInfoPO.getBelongUserPO();
-				DepartmentPO departmentPO = orderBelongInfoPO.getBelongDeptPO();
-				DepartmentPO regionPO = orderBelongInfoPO.getBelongRegionPO();
+				UserPO belongUserPO = decorationBelongPO.getBelonger();
+				DepartmentPO departmentPO = decorationBelongPO.getDepartment();
+				DepartmentPO regionPO = decorationBelongPO.getRegion();
 				
 				decorationExportVO.setUserId(belongUserPO.getUserId());
 				decorationExportVO.setOperateUserId(belongUserPO.getOldUserId());
@@ -153,10 +153,10 @@ public class DecorationExportServiceImpl implements DecorationExportService {
 					decorationExportVO.setRegion("");
 				}
 				
-				decorationExportVO.setRate(orderBelongInfoPO.getBelongRate());
-				decorationExportVO.setOperateType(orderBelongInfoPO.getBelongType());
+				decorationExportVO.setRate(decorationBelongPO.getRate());
+				decorationExportVO.setOperateType(decorationBelongPO.getType() == DecorationBelongPO.BELONGTYPE_DESIGN_INT ? "设计" : "业务");
 				
-				if(orderBelongInfoPO.getBelongRate() < 1){
+				if(decorationBelongPO.getRate() < 1){
 					decorationExportVO.setMerge("合尺");
 				}else{
 					decorationExportVO.setMerge("");

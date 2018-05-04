@@ -74,7 +74,7 @@ public class ApprovalManifestDBServiceImpl implements ApprovalManifestDBService 
 	@Autowired
 	private StorehouseStockService storehouseStockService;
 	
-//	获取商品库存调拨
+
 	@Override
 	public List<ApprovalManifestDBItemVO> queryApprovalManifestDBItem (ApprovalVO approvalVO) throws FLException {
 		
@@ -110,7 +110,7 @@ public class ApprovalManifestDBServiceImpl implements ApprovalManifestDBService 
 			return approvalManifestDBItemVOs;
 		
 	}
-//	提交商品库存调拨审批
+
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public int submitApprovalForManifestDB(ApprovalVO approvalVO,ApprovalManifestDBVO approvalManifestDBVO ,List<ApprovalManifestDBItemVO> approvalManifestDBItemVOs,String userId, int company) throws FLException {
@@ -118,12 +118,12 @@ public class ApprovalManifestDBServiceImpl implements ApprovalManifestDBService 
 
         ApprovalPO approvalPO = new ApprovalPO();
 		
-		BeanUtil.copyProperties(approvalVO, approvalPO);
+        BeanUtil.copyProperties(approvalVO, approvalPO,Arrays.asList("receiver","sender"));
 	
-		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiverId());
+        UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiver().getUserId());
 		UserPO sender = userDao.queryUserByUserId(userId);
 		
-		approvalPO.setType(ApprovalPO.APPROVAL_TYPE_MANIFESTDB_INT);//调拨
+		approvalPO.setType(ApprovalPO.APPROVAL_TYPE_MANIFESTDB_INT);
 		approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_INIT_INT);  
 		approvalPO.setIdent("");
 		approvalPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));

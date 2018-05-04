@@ -35,7 +35,7 @@ import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.dao.DecorationBelongDao;
 import com.fanglin.decoration.po.DecorationOperatePO;
 import com.fanglin.decoration.po.DecorationPO;
-import com.fanglin.decoration.po.DecorationBelongInfoPO;
+import com.fanglin.decoration.po.DecorationBelongPO;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.MessageService;
 import com.fanglin.personel.dao.UserDao;
@@ -61,7 +61,7 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 	private DecorationDao decorationDao;
 	
 	@Autowired
-	private DecorationBelongDao orderBelongInfoDao;
+	private DecorationBelongDao decorationBelongDao;
 	
 	@Autowired
 	private DecorationOperateDao decorationOperateDao;
@@ -85,7 +85,7 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 		int defaultCount = 0;
 		
 		String orderId = approvalDecorationBelongVO.getOrderId();
-		String belongType = approvalDecorationBelongVO.getBelongType();
+		Short belongType = approvalDecorationBelongVO.getBelongType();
 		
 		ApprovalPO approvalPO = approvalDao.queryApproval(ApprovalPO.APPROVAL_STATUS_INIT_INT,ApprovalPO.APPROVAL_TYPE_ORDER_BELONG_INT, orderId);
 		
@@ -93,14 +93,14 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 			throw new FLException(240004, "正在审批中,不能提交新审批");
 		}
 		
-		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
+ 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 		
 		if(decorationPO == null){
 			throw new FLException(140013, "订单不存在");
 		}
 		
 		List<String> unstatus = Arrays.asList(new String[]{DecorationPO.STATUS_INIT_STR, DecorationPO.STATUS_QUOTATION_STR, DecorationPO.STATUS_DEPOSIT_STR, DecorationPO.STATUS_RESIGNED_STR});
-		List<String> belongTypes = Arrays.asList(new String[]{DecorationBelongInfoPO.BELONGTYPE_DESIGN_STR, DecorationBelongInfoPO.BELONGTYPE_SALESMAN_STR});
+		List<Short> belongTypes = Arrays.asList(new Short[]{DecorationBelongPO.BELONGTYPE_DESIGN_INT, DecorationBelongPO.BELONGTYPE_SALESMAN_INT});
 		
 		if(!unstatus.contains(decorationPO.getStatus())){
 			throw new FLException(140011, "订单已签订不可修改归属信息");
@@ -110,20 +110,21 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 			throw new FLException(140014, "订单归属类型错误");
 		}
 		
-		List<DecorationBelongInfoPO> orderBelongInfoPOs = orderBelongInfoDao.queryOrderBelongInfoForCurrentByOrderIdAType(orderId, belongType);
+		List<DecorationBelongPO> decorationBelongPOs = decorationBelongDao.queryOrderBelongInfoByOrderIdAType(orderId, belongType);
 		
-		for(DecorationBelongInfoPO orderBelongInfoPO: orderBelongInfoPOs){
-			UserPO belongUserPO = orderBelongInfoPO.getBelongUserPO();
+		for(DecorationBelongPO decorationBelongPO: decorationBelongPOs){
+			UserPO belongUserPO = decorationBelongPO.getBelonger();
 			
 			oldBelongUserName.append(belongUserPO.getCurrentName());
 			oldBelongUserName.append(",");
 			
-			oldBelongRate.append(orderBelongInfoPO.getBelongRate());
+			oldBelongRate.append(decorationBelongPO.getRate());
 			oldBelongRate.append(",");
 		}
 		
 		for(ApprovalDecorationBelongItemVO approvalDecorationBelongItemVO: approvalDecorationBelongItemVOs){
-			UserPO userPO = userDao.queryUserByUserId(approvalDecorationBelongItemVO.getBelongUserId());
+			
+			UserPO userPO = userDao.queryUserByUserId(approvalDecorationBelongItemVO.getUserId());
 			
 			if(userPO == null){
 				throw new FLException(190005 , "人员不存在");
@@ -132,12 +133,12 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 			newBelongUserName.append(userPO.getCurrentName());
 			newBelongUserName.append(",");
 			
-			newBelongRate.append(approvalDecorationBelongItemVO.getBelongRate());
+			newBelongRate.append(approvalDecorationBelongItemVO.getRate());
 			newBelongRate.append(",");
 			
-			rateCount = Arith.add(rateCount, approvalDecorationBelongItemVO.getBelongRate());
+			rateCount = Arith.add(rateCount, approvalDecorationBelongItemVO.getRate());
 			
-			if(DecorationBelongInfoPO.DEFAULTFLAG_TRUE_STR.equals(approvalDecorationBelongItemVO.getDefaultFlag())){
+			if(DecorationBelongPO.DEFAULTFLAG_TRUE_INT == approvalDecorationBelongItemVO.getDefaultFlag()){
 				defaultCount++;
 			}
 		}
@@ -151,9 +152,10 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 		}
 		
 		approvalPO = new ApprovalPO();
-		BeanUtil.copyProperties(approvalVO, approvalPO);
 		
-		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiverId());
+		BeanUtil.copyProperties(approvalVO, approvalPO,Arrays.asList("receiver","sender"));
+		
+		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiver().getUserId());
 		UserPO sender = userDao.queryUserByUserId(userId);
 		
 		approvalPO.setType(ApprovalPO.APPROVAL_TYPE_ORDER_BELONG_INT);
@@ -174,9 +176,12 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 		approvalDecorationBelongDao.save(approvalDecorationBelongPO);
 		
 		for(ApprovalDecorationBelongItemVO approvalDecorationBelongItemVO: approvalDecorationBelongItemVOs){
+			
 			ApprovalDecorationBelongItemPO approvalDecorationBelongItemPO = new ApprovalDecorationBelongItemPO();
+			
 			BeanUtil.copyProperties(approvalDecorationBelongItemVO, approvalDecorationBelongItemPO);
 			
+			approvalDecorationBelongItemPO.setBuid(userDao.queryUserByUserId(approvalDecorationBelongItemVO.getUserId()).getUid());
 			approvalDecorationBelongItemPO.setAdbId(approvalDecorationBelongPO.getAdbId());
 			
 			approvalDecorationBelongItemDao.save(approvalDecorationBelongItemPO);
@@ -197,10 +202,9 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 			throw new FLException(240003, "审批信息不完整");
 		}
 		
-		String defaultUser = "";
 		String orderId = approvalDecorationBelongPO.getOrderId();
-		String belongType = approvalDecorationBelongPO.getBelongType();
-		String reverseType = DecorationBelongInfoPO.BELONGTYPE_DESIGN_STR.equals(belongType) ? DecorationBelongInfoPO.BELONGTYPE_SALESMAN_STR : DecorationBelongInfoPO.BELONGTYPE_DESIGN_STR;
+		Short belongType = approvalDecorationBelongPO.getBelongType();
+		Short reverseType = DecorationBelongPO.BELONGTYPE_DESIGN_INT == belongType ? DecorationBelongPO.BELONGTYPE_SALESMAN_INT : DecorationBelongPO.BELONGTYPE_DESIGN_INT;
 		
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 		
@@ -208,84 +212,78 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 			throw new FLException(140013, "订单不存在");
 		}
 		
-		List<DecorationBelongInfoPO> orderBelongInfoPOs = orderBelongInfoDao.queryOrderBelongInfoForCurrentByOrderIdAType(orderId, belongType);
-		List<DecorationBelongInfoPO> reverseBelongInfoPOs = orderBelongInfoDao.queryOrderBelongInfoForCurrentByOrderIdAType(orderId, reverseType);
+		List<DecorationBelongPO> orderBelongInfoPOs = decorationBelongDao.queryOrderBelongInfoForCurrentByOrderIdAType(orderId, belongType);
+		List<DecorationBelongPO> reverseBelongInfoPOs = decorationBelongDao.queryOrderBelongInfoForCurrentByOrderIdAType(orderId, reverseType);
 		
-		for(DecorationBelongInfoPO orderBelongInfoPO: orderBelongInfoPOs){
-			orderBelongInfoPO.setStatus(DecorationBelongInfoPO.STATUS_REPLACE_STR);
-			orderBelongInfoDao.update(orderBelongInfoPO);
+		for(DecorationBelongPO orderBelongInfoPO: orderBelongInfoPOs){
+			orderBelongInfoPO.setStatus(DecorationBelongPO.STATUS_EFFCTIVE_INT);
+			decorationBelongDao.update(orderBelongInfoPO);
 			
-			for(DecorationBelongInfoPO reverseBelongInfoPO: reverseBelongInfoPOs){
+			for(DecorationBelongPO reverseBelongInfoPO: reverseBelongInfoPOs){
 				
 				DecorationOperatePO decorationOperatePO = new DecorationOperatePO();
 				
-				decorationOperatePO.setDecoration(decorationPO);
-				decorationOperatePO.setSourcer(reverseBelongInfoPO.getBelongUserPO());
-				decorationOperatePO.setTarger(orderBelongInfoPO.getBelongUserPO());
+				decorationOperatePO.setOrderId(decorationPO.getOrderId());
+				decorationOperatePO.setDsuid(reverseBelongInfoPO.getBelonger().getUid());
+				decorationOperatePO.setDsrid(orderBelongInfoPO.getBelonger().getUid());
+				
 				decorationOperatePO.setOperater(approvalPO.getReceiver());
 				decorationOperatePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
-				decorationOperatePO.setType(DecorationBelongInfoPO.BELONGTYPE_DESIGN_STR.equals(belongType) ? DecorationOperatePO.TYPE_DESIGNER_DECORATION_ORDER_INT : DecorationOperatePO.TYPE_SALESMAN_DECORATION_ORDER_INT);
-				decorationOperatePO.setValue(Arith.mul(reverseBelongInfoPO.getBelongRate(), Arith.sub(0f, orderBelongInfoPO.getBelongRate())));
+				decorationOperatePO.setType(DecorationBelongPO.BELONGTYPE_DESIGN_INT == belongType ? DecorationOperatePO.TYPE_DESIGNER_DECORATION_ORDER_INT : DecorationOperatePO.TYPE_SALESMAN_DECORATION_ORDER_INT);
+				decorationOperatePO.setValue(Arith.mul(reverseBelongInfoPO.getRate(), Arith.sub(0f, orderBelongInfoPO.getRate())));
 				decorationOperatePO.setStatus(DecorationOperatePO.STATUS_DISABLED_INT);
-				decorationOperatePO.setDes("订单归属");
-				
+				decorationOperatePO.setComment("订单归属");
 				decorationOperateDao.save(decorationOperatePO);
 			}
 		}
 		
 		List<ApprovalDecorationBelongItemPO> approvalDecorationBelongItemPOs = approvalDecorationBelongItemDao.queryApprovalDecorationBelongItemByAobId(approvalDecorationBelongPO.getAdbId());
 		for(ApprovalDecorationBelongItemPO approvalDecorationBelongItemPO: approvalDecorationBelongItemPOs){
-			UserPO userPO = userDao.queryUserByUserId(approvalDecorationBelongItemPO.getBelongUserId());
+			
+			UserPO userPO = userDao.get(approvalDecorationBelongItemPO.getbuid());
 			
 			if(userPO == null){
 				throw new FLException(190005 , "人员不存在");
 			}
 			
-			DecorationBelongInfoPO orderBelongInfoPO = new DecorationBelongInfoPO();
-			orderBelongInfoPO.setBelongDeptPO(userPO.getDept());
+			DecorationBelongPO decorationBelongPO = new DecorationBelongPO();
+			decorationBelongPO.setDepartment(userPO.getDept());
 			if(userPO.getDept().getFatherDept() != null){
-				orderBelongInfoPO.setBelongRegionPO(userPO.getDept().getFatherDept());
+				decorationBelongPO.setRegion(userPO.getDept().getFatherDept());
 			}
 			
-			if(DecorationBelongInfoPO.DEFAULTFLAG_TRUE_STR.equals(approvalDecorationBelongItemPO.getDefaultFlag())){
-				defaultUser = approvalDecorationBelongItemPO.getBelongUserId();
-				
+			if(DecorationBelongPO.DEFAULTFLAG_TRUE_INT.equals(approvalDecorationBelongItemPO.getDefaultFlag())){
+				if(DecorationBelongPO.BELONGTYPE_DESIGN_INT == belongType){
+					decorationPO.setDesigner(userPO);
+				}else if(DecorationBelongPO.BELONGTYPE_SALESMAN_INT == belongType){
+					decorationPO.setSalesman(userPO);
+				}
 			}
+			decorationBelongPO.setOrderId(decorationPO.getOrderId());
+			decorationBelongPO.setBelonger(userPO);
+			decorationBelongPO.setRate(approvalDecorationBelongItemPO.getRate());
+			decorationBelongPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
+			decorationBelongPO.setOperater(approvalPO.getReceiver());
+			decorationBelongPO.setDefaultFlag(approvalDecorationBelongItemPO.getDefaultFlag());
 			
-			orderBelongInfoPO.setBelongUserPO(userPO);
-			orderBelongInfoPO.setBelongRate(approvalDecorationBelongItemPO.getBelongRate());
-			orderBelongInfoPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
-			orderBelongInfoPO.setOperateUserPO(approvalPO.getReceiver());
-			orderBelongInfoPO.setDecorationPO(decorationPO);
-			orderBelongInfoPO.setDefaultFlag(approvalDecorationBelongItemPO.getDefaultFlag());
+			decorationBelongPO.setType(approvalDecorationBelongPO.getBelongType());
+			decorationBelongPO.setStatus(DecorationBelongPO.STATUS_INVALID_INT);
 			
-			orderBelongInfoPO.setBelongType(approvalDecorationBelongPO.getBelongType());
-			orderBelongInfoPO.setStatus(DecorationBelongInfoPO.STATUS_PASS_STR);
-			orderBelongInfoDao.save(orderBelongInfoPO);
+			decorationBelongDao.save(decorationBelongPO);
 			
-			for(DecorationBelongInfoPO reverseBelongInfoPO: reverseBelongInfoPOs){
+			for(DecorationBelongPO reverseBelongInfoPO: reverseBelongInfoPOs){
 				
 				DecorationOperatePO decorationOperatePO = new DecorationOperatePO();
 				
-				decorationOperatePO.setDecoration(decorationPO);
-				decorationOperatePO.setSourcer(reverseBelongInfoPO.getBelongUserPO());
-				decorationOperatePO.setTarger(orderBelongInfoPO.getBelongUserPO());
+				decorationOperatePO.setOrderId(decorationPO.getOrderId());
 				decorationOperatePO.setOperater(approvalPO.getReceiver());
 				decorationOperatePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
-				decorationOperatePO.setType(DecorationBelongInfoPO.BELONGTYPE_DESIGN_STR.equals(belongType) ? DecorationOperatePO.TYPE_DESIGNER_DECORATION_ORDER_INT : DecorationOperatePO.TYPE_SALESMAN_DECORATION_ORDER_INT);
-				decorationOperatePO.setValue(Arith.mul(reverseBelongInfoPO.getBelongRate(), orderBelongInfoPO.getBelongRate()));
+				decorationOperatePO.setType(DecorationBelongPO.BELONGTYPE_DESIGN_INT == belongType ? DecorationOperatePO.TYPE_DESIGNER_DECORATION_ORDER_INT : DecorationOperatePO.TYPE_SALESMAN_DECORATION_ORDER_INT);
+				decorationOperatePO.setValue(Arith.mul(reverseBelongInfoPO.getRate(), decorationBelongPO.getRate()));
 				decorationOperatePO.setStatus(DecorationOperatePO.STATUS_DISABLED_INT);
-				decorationOperatePO.setDes("订单归属");
-				
+				decorationOperatePO.setComment("订单归属");
 				decorationOperateDao.save(decorationOperatePO);
 			}
-		}
-		 UserPO attribution = userDao.queryUserByUserId(defaultUser);
-		if(DecorationBelongInfoPO.BELONGTYPE_DESIGN_STR.equals(belongType)){
-			decorationPO.setDesigner(attribution);
-			
-		}else{
-			decorationPO.setSalesman(attribution);
 		}
 		
 		decorationPO.setMeasureTime(DateUtil.getDateToTimestamp(new Date()));

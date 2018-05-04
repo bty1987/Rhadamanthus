@@ -67,7 +67,7 @@ public class AccessInterceptor extends AbstractInterceptor {
 				
 				if(authentication.getUserId() != null){
 					
-					LogUtils.logging(logger, authentication.getUserId(), actionName);
+					LogUtils.logging(logger, authentication.getUserId(), actionName, authentication.getCompany());
 					
 					if(authentication.getUpdateTime() == -1){
 						CookieUtil.delCookie(request, response, Constant.COOKIE_AUTHENTICATION);

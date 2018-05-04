@@ -8,13 +8,9 @@ public class DecorationOperateVO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 3315950278291481859L;
 	
-	private Long doId;
+	private Long doid;
 	
-	private DecorationVO decoration;
-	
-	private UserVO targer;
-	
-	private UserVO sourcer;
+	private String orderId;
 	
 	private UserVO operater;
 	
@@ -26,38 +22,22 @@ public class DecorationOperateVO implements java.io.Serializable {
 	
 	private Short status;
 	
-	private String des;
+	private String comment;
 
-	public Long getDoId() {
-		return doId;
+	public Long getDoid() {
+		return doid;
 	}
 
-	public void setDoId(Long doId) {
-		this.doId = doId;
+	public void setDoid(Long doid) {
+		this.doid = doid;
 	}
 
-	public DecorationVO getDecoration() {
-		return decoration;
+	public String getOrderId() {
+		return orderId;
 	}
 
-	public void setDecoration(DecorationVO decoration) {
-		this.decoration = decoration;
-	}
-
-	public UserVO getSourcer() {
-		return sourcer;
-	}
-
-	public void setSourcer(UserVO sourcer) {
-		this.sourcer = sourcer;
-	}
-
-	public UserVO getTarger() {
-		return targer;
-	}
-
-	public void setTarger(UserVO targer) {
-		this.targer = targer;
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
 	}
 
 	public UserVO getOperater() {
@@ -100,12 +80,12 @@ public class DecorationOperateVO implements java.io.Serializable {
 		this.status = status;
 	}
 
-	public String getDes() {
-		return des;
+	public String getComment() {
+		return comment;
 	}
 
-	public void setDes(String des) {
-		this.des = des;
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
 }

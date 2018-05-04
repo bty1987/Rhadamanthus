@@ -10,6 +10,8 @@ public interface WorkerSalaryService {
 	
 	public void pageWorkerSalary(Paging paging,List<Filter> filters,int company);
 	
+	public void pageSalaryWorkerForUser(Paging paging,List<Filter> filters);
+	
 	public List<WorkerSalaryVO> queryWorkerSalary(WorkerSalaryVO workerSalary);
 	
 	public void addWorkerSalary(WorkerSalaryVO workerSalaryVO,String userId,int company)throws FLException;

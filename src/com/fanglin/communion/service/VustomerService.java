@@ -19,4 +19,6 @@ public interface VustomerService {
 	
 	public void updateVustomer(VustomerVO vustomerVO) throws FLException;
 
+	public void deleteVustomer(VustomerVO vustomerVO);
+
 }

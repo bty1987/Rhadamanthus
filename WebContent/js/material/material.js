@@ -84,9 +84,9 @@ jQuery(function ($) {
         }
 
         var options = {
-            "approval.receiverId": $('#approveManSel').find('input:checked').attr('userid'),
+            "approval.receiver.userId": $('#approveManSel').find('input:checked').attr('userid'),
             "approval.comment": "",
-            "approvalMaterialFullPayment.msoId": materialSubOrderPostData["approvalMaterialFullPayemnt.msoId"],
+            "approvalMaterialFullPayment.mid": materialSubOrderPostData["approvalMaterialFullPayemnt.msoId"],
             "approvalMaterialFullPayment.referMoney": materialSubOrderPostData["approvalMaterialFullPayment.referMoney"],
         }
 

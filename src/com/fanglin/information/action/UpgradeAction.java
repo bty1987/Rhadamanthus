@@ -28,6 +28,8 @@ public class UpgradeAction extends BaseListAction{
 	
 	private List<UpgradeVO> upgrades;
 	
+	private String maxNo;
+	
 	@Action(value = "pageUpgrade", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageUpgrade(){
 		
@@ -48,6 +50,7 @@ public class UpgradeAction extends BaseListAction{
 	public String matchUpgrade(){
 		
 		upgrade = upgradeService.matchUpgrade(upgrade);
+		maxNo = upgradeService.maxUpgrade();
 		
 		return SUCCESS;
 	}
@@ -82,6 +85,14 @@ public class UpgradeAction extends BaseListAction{
 
 	public void setUpgrades(List<UpgradeVO> upgrades) {
 		this.upgrades = upgrades;
+	}
+
+	public String getMaxNo() {
+		return maxNo;
+	}
+
+	public void setMaxNo(String maxNo) {
+		this.maxNo = maxNo;
 	}
 
 }

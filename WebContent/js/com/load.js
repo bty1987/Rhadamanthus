@@ -7,11 +7,11 @@ $.extend($,{
 
         var filename = '';
 
-        if (config.isPC && config.isEncryption) {
+        if (parent.window.isPC && parent.window.isEncryption) {
             filename = filenames.shift();
             filename = filename.substring(0, filename.lastIndexOf('.')) + '.bin';
 
-            require('nw.gui').Window.get().evalNWBin(null, filename);
+            win.evalNWBin(null, filename);
 
             $.loadScript(filenames);
 

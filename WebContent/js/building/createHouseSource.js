@@ -25,11 +25,11 @@ jQuery(function($) {
 		houseId: null,
 		buildingJson:null,
 		repeatFlg: false,
-		editFlag: false,
 		HFlag: false,
 		houseFlag: false,
 		repeatCustomerFlg: false,
 		cardFlag: false,
+		isAddHouseSource: true,
 	};
 
 	var tag_input = $("#indoores");
@@ -329,18 +329,21 @@ jQuery(function($) {
 		if(createHouseSource.houseFlag){
 			com.post(api.data.addHouse, houseOptions, function(res){
 				options["houseSource.house.hid"] = res.house.hid;
+				createHouseSource.isAddHouseSource == true;
 			}, function(e){
+				createHouseSource.isAddHouseSource == false;
 				com.showAlert(com.error, "房产已存在！");
 			}, false);
 		}else{
 			options["houseSource.house.hid"]= createHouseSource.houseId;
 		}
 
-		com.post(api.building.addHouseSource, options, function(res){
-			com.showAlert(com.info, "房源创建成功！");
-			deleteDate();
-		});
-
+		if(createHouseSource.isAddHouseSource){
+			com.post(api.building.addHouseSource, options, function(res){
+				com.showAlert(com.info, "房源创建成功！");
+				deleteDate();
+			});
+		}
 	}
 
 	//创建客户

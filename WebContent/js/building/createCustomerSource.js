@@ -8,7 +8,6 @@ jQuery(function($) {
 		createCustomerSaveBtn: null,
 		modal: null,
 		items: {},
-		editFlg: false,
 		priceFlag: false,
 		areaFlag: false,
 		customerItems: {},
@@ -17,9 +16,7 @@ jQuery(function($) {
 		grade: ["A", "B", "C", "D"],
 		buildingJson:null,
 		repeatFlg: null,
-		editFlag: false,
 		cardFlag: false,
-		customerFlag: false,
 		repeatCustomerFlg: false,
 		customerRepeatFlg: false,
 	};

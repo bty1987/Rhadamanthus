@@ -31,12 +31,28 @@ public class WorkerSalaryDaoImpl extends DaoImpl<WorkerSalaryPO> implements Work
 		
 		return query.list();
 	}
-
+	
+	public List<WorkerSalaryPO> pageSalaryWorkerForUser(Paging paging,List<Filter> filters) {
+		
+		PagingQuery<WorkerSalaryPO> query = pagingQuery(paging,WorkerSalaryPO.class);
+		
+		queryFilterExcuteForWorker(query, filters);
+		
+		return query.list();
+	}
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<WorkerSalaryPO> queryWorkerSalary(String userId, Long cid) {
 		
 		return session().createCriteria(WorkerSalaryPO.class).createAlias("user", "user").add(Restrictions.eq(WorkerSalaryPO.COLUMN_USER_USERID_STR,userId)).add(Restrictions.eq(WorkerSalaryPO.COLUMN_CSID_STR, cid)).list();
+	}
+	
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<WorkerSalaryPO> queryWorkerSalaryByuid(int wuid) {
+		
+		return session().createCriteria(WorkerSalaryPO.class).createAlias("user", "user").add(Restrictions.eq("user.uid",wuid)).list();
 	}
 	
 	public int countWorkerSalary(Long cid, Integer wuid){
@@ -46,7 +62,7 @@ public class WorkerSalaryDaoImpl extends DaoImpl<WorkerSalaryPO> implements Work
 	    
 	    return count.intValue();
 	  }
-
+		
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 		
 		if (filters != null) {
@@ -108,4 +124,32 @@ public class WorkerSalaryDaoImpl extends DaoImpl<WorkerSalaryPO> implements Work
 			}
 		}
 	}
+	
+	private void queryFilterExcuteForWorker(PagingQuery<?> query, List<Filter> filters) {
+		
+		if (filters != null) {
+			for (Filter filter : filters) {
+				
+				String filet = filter.getField();
+				String data = filter.getData();
+				
+				 if ("wuid".equals(filet)) {
+						query.alias("user", "user");
+						query.add(Restrictions.eq("user.uid", Integer.valueOf(data)));
+				  }
+				 
+				 if ("startTime".equals(filet)) {
+					 query.add(Restrictions.ge("createTime", Timestamp.valueOf(data)));
+				 }
+				 
+				 if ("endTime".equals(filet)) {
+					 query.add(Restrictions.le("createTime", Timestamp.valueOf(data)));
+				 }
+				 
+			}
+		}
+		
+	}
+
+
 }

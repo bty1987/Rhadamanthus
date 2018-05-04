@@ -11,6 +11,7 @@
 
 package com.fanglin.approval.service.impl;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -68,9 +69,10 @@ public class ApprovalDecorationActivityServiceImpl implements ApprovalDecoration
 		}
 		
 		approvalPO = new ApprovalPO();
-		BeanUtil.copyProperties(approvalVO, approvalPO);
 		
-		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiverId());
+		BeanUtil.copyProperties(approvalVO, approvalPO,Arrays.asList("receiver","sender"));
+		
+		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiver().getUserId());
 		UserPO sender = userDao.queryUserByUserId(userId);
 
 		approvalPO.setType(ApprovalPO.APPROVAL_TYPE_DECORATION_ACTIVITY_INT);

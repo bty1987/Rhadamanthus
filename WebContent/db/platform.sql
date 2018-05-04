@@ -89,8 +89,14 @@ CREATE TABLE `servicerecord` (
   KEY `indexone` (`operateUserId`,`type`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='服务记录';
 
-
-
+DROP TABLE IF EXISTS platform.`customersourceright`;
+CREATE TABLE platform.`customersourceright` (
+  `csdrid` int(11) NOT NULL AUTO_INCREMENT,
+  `uid` int(11) NOT NULL,
+  `did` int(11) NOT NULL,
+  `company` int(5) NOT NULL,
+  PRIMARY KEY (`csdrid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 
 

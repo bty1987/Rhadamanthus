@@ -47,7 +47,8 @@ jQuery(function($) {
 
 
 			var propertyArr = [
-				[ "审批人:", v.receiverName, "grey" ],
+
+				[ "审批人:", v.receiver.userName, "grey" ],
 				[ "提交时间:", v.createTime, "grey" ],
 				[ "审批时间:", v.approvalTime, "grey" ],
 				["状态:", v.status == 0 ? "等待" : (v.status == 1 ? "通过" : "拒绝"), "red" ]

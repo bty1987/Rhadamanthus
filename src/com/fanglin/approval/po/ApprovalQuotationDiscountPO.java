@@ -15,13 +15,13 @@ public class ApprovalQuotationDiscountPO implements java.io.Serializable {
 	
 	public static final String COLUMN_AID_STR = "aid";
 
-	private int aqdId;
+	private int aqdid;
 	
-	private int aid;
+	private long aid;
 	
 	private String orderId;
 	
-	private long quotationId;
+	private long qid;
 	
 	private float oldDiscount;
 	
@@ -29,21 +29,21 @@ public class ApprovalQuotationDiscountPO implements java.io.Serializable {
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "aqdId")
-	public int getAqdId() {
-		return this.aqdId;
+	@Column(name = "aqdid")
+	public int getAqdid() {
+		return this.aqdid;
 	}
 
-	public void setAqdId(int aqdId) {
-		this.aqdId = aqdId;
+	public void setAqdid(int aqdid) {
+		this.aqdid = aqdid;
 	}
 
 	@Column(name = "aId")
-	public int getAid() {
+	public long getAid() {
 		return this.aid;
 	}
 
-	public void setAid(int aid) {
+	public void setAid(long aid) {
 		this.aid = aid;
 	}
 
@@ -56,13 +56,13 @@ public class ApprovalQuotationDiscountPO implements java.io.Serializable {
 		this.orderId = orderId;
 	}
 
-	@Column(name = "quotationId")
-	public long getQuotationId() {
-		return this.quotationId;
+	@Column(name = "qid")
+	public long getQid() {
+		return qid;
 	}
 
-	public void setQuotationId(long quotationId) {
-		this.quotationId = quotationId;
+	public void setQid(long qid) {
+		this.qid = qid;
 	}
 
 	@Column(name = "oldDiscount")

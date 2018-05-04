@@ -389,7 +389,7 @@ jQuery(function($) {
 	server = parent.server;
 	utils = parent.utils;
 	com = parent.com;
-
+	company = parent.company;
 
 	params.server = window.server;
 	params.authentication = parent.params.authentication;
@@ -470,25 +470,25 @@ jQuery(function($) {
 	quotationUtils.quotationDetail.UndisPrice = quotationUtils.quotationCalculator(quotationUtils.quotationDetail.quotation.discount,params.orderType);
 
 	quotationUtils.quotationDetail.TotalPrice = quotationUtils.quotationTotal();
-
-	generatePrintPage(params.type, params.subtype,params.workType);
+	
+	generatePrintPage(params.type, params.subtype,params.workType, params.company.name);
 
 });
 
-function generatePrintPage(type,subtype,workType){
+function generatePrintPage(type,subtype,workType, company){
 	var html = "";
 
 	if(type == '1'){
-		html += printHeader(config.companyFullName + "家装预算(工程)");
+		html += printHeader(company + "家装预算(工程)");
 		html += printProjectTable();
 	}else if(type == '2'){
-		html += printHeader(config.companyFullName + "家装预算(财务)");
+		html += printHeader(company + "家装预算(财务)");
 		html += printFinanceTable();
 	}else if(type == '3'){
-		html += printHeader(config.companyFullName + "家装项目单");
+		html += printHeader(company + "家装项目单");
 		html += printCustomerTable(subtype);
 	}else if(type == "4"){
-		html += printHeader(config.companyFullName + "工种项目单");
+		html += printHeader(company + "工种项目单");
 		html += printWorkTable(workType);
 	}
 	                                                                                                                                                                                                       

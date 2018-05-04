@@ -17,11 +17,11 @@ import com.fanglin.decoration.vo.DecorationBelongVO;
 
 public interface DecorationBelongService {
 	
-	public List<DecorationBelongVO> queryOrderBelongInfoForCurrentByOrderIdAType(String decorationOrderId, String belongType);
+	public List<DecorationBelongVO> queryOrderBelongInfoForCurrentByOrderIdAType(String decorationOrderId, Short belongType);
 
-	public List<DecorationBelongVO> queryOrderBelongInfoForChangeByOrderIdAType(String decorationOrderId, String belongType);
+	public List<DecorationBelongVO> queryOrderBelongInfoForChangeByOrderIdAType(String decorationOrderId, Short belongType);
 
-	public List<DecorationBelongVO> queryApprovalingOrderBelongInfosByOrderIdAndBelongType(String decorationOrderId, String belongType);
+	public List<DecorationBelongVO> queryApprovalingOrderBelongInfosByOrderIdAndBelongType(String decorationOrderId, Short belongType);
 	
 	public List<DecorationBelongVO> queryOrderBelongInfoByOrderId(DecorationBelongVO orderBelongInfoVO);
 

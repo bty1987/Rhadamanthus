@@ -4,19 +4,17 @@ import java.sql.Timestamp;
 
 import org.apache.struts2.json.annotations.JSON;
 
+import com.fanglin.personel.vo.UserBaseVO;
+
 public class ApprovalVO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -1448433204227173452L;
 
-	private Integer aid;
+	private Long aid;
 	
-	private String receiverId;
+	private UserBaseVO receiver;
 	
-	private String receiverName;
-	
-	private String senderId;
-	
-	private String senderName;
+	private UserBaseVO sender;
 	
 	private Short type;
 	
@@ -30,28 +28,38 @@ public class ApprovalVO implements java.io.Serializable {
 	
 	private String comment;
 
-	public Integer getAid() {
+	public ApprovalVO(){
+		super();
+	}
+	
+	public ApprovalVO(UserBaseVO receiver, UserBaseVO sender) {
+		super();
+		this.receiver = receiver;
+		this.sender = sender;
+	}
+	
+	public Long getAid() {
 		return this.aid;
 	}
 
-	public void setAid(Integer aid) {
+	public void setAid(Long aid) {
 		this.aid = aid;
 	}
 
-	public String getReceiverId() {
-		return this.receiverId;
+	public UserBaseVO getReceiver() {
+		return receiver;
 	}
 
-	public void setReceiverId(String receiverId) {
-		this.receiverId = receiverId;
+	public void setReceiver(UserBaseVO receiver) {
+		this.receiver = receiver;
 	}
 
-	public String getSenderId() {
-		return this.senderId;
+	public UserBaseVO getSender() {
+		return sender;
 	}
 
-	public void setSenderId(String senderId) {
-		this.senderId = senderId;
+	public void setSender(UserBaseVO sender) {
+		this.sender = sender;
 	}
 
 	public Short getType() {
@@ -102,22 +110,6 @@ public class ApprovalVO implements java.io.Serializable {
 
 	public void setComment(String comment) {
 		this.comment = comment;
-	}
-
-	public String getReceiverName() {
-		return receiverName;
-	}
-
-	public void setReceiverName(String receiverName) {
-		this.receiverName = receiverName;
-	}
-
-	public String getSenderName() {
-		return senderName;
-	}
-
-	public void setSenderName(String senderName) {
-		this.senderName = senderName;
 	}
 
 }

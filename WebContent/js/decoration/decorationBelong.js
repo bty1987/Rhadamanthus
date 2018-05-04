@@ -97,13 +97,13 @@ function viewdecorationBelongDetail(decorationOrderId){
 
 function changedecorationBelongDesigner(decorationOrderId){
 	params.orderId = decorationOrderId;
-	params.orderBelongType = "设计";
+	params.orderBelongType = 0;
 	com.switchPage(api.index.decorationBelongDetailIndex.url);
 }
 
 function changedecorationBelongBussiness(decorationOrderId){
 	params.orderId = decorationOrderId;
-	params.orderBelongType = "业务";
+	params.orderBelongType = 1;
 	com.switchPage(api.index.decorationBelongDetailIndex.url);
 }
 

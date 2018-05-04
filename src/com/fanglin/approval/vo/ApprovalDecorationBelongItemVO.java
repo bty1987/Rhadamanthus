@@ -10,12 +10,11 @@ public class ApprovalDecorationBelongItemVO implements java.io.Serializable {
 	
 	private String orderId;
 	
-	private String belongUserId;
+	private String userId;
 	
-	private Float belongRate;
+	private Float rate;
 	
-	private String defaultFlag;
-
+	private Short defaultFlag;
 
 	public Integer getAdbiId() {
 		return adbiId;
@@ -41,27 +40,27 @@ public class ApprovalDecorationBelongItemVO implements java.io.Serializable {
 		this.orderId = orderId;
 	}
 
-	public String getBelongUserId() {
-		return this.belongUserId;
+	public String getUserId() {
+		return userId;
 	}
 
-	public void setBelongUserId(String belongUserId) {
-		this.belongUserId = belongUserId;
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
-	public Float getBelongRate() {
-		return this.belongRate;
+	public Float getRate() {
+		return rate;
 	}
 
-	public void setBelongRate(Float belongRate) {
-		this.belongRate = belongRate;
+	public void setRate(Float rate) {
+		this.rate = rate;
 	}
 
-	public String getDefaultFlag() {
+	public Short getDefaultFlag() {
 		return this.defaultFlag;
 	}
 
-	public void setDefaultFlag(String defaultFlag) {
+	public void setDefaultFlag(Short defaultFlag) {
 		this.defaultFlag = defaultFlag;
 	}
 

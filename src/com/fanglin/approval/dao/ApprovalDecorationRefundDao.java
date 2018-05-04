@@ -16,6 +16,6 @@ import com.fanglin.core.dao.Dao;
 
 public interface ApprovalDecorationRefundDao extends Dao<ApprovalDecorationRefundPO> {
 	
-	public ApprovalDecorationRefundPO queryApprovalDecorationRefundByAId(int aId);
+	public ApprovalDecorationRefundPO queryApprovalDecorationRefundByAId(long aId);
 
 }

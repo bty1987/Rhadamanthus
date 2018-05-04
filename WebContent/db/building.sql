@@ -97,7 +97,7 @@ CREATE TABLE `building` (
   `signingTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '签约时间',
   `tradePrice` decimal(10,2) NOT NULL COMMENT '成交价格',
   `downpayment` decimal(10,2) NULL  DEFAULT '0' COMMENT '首付款',
-  `loanPrice` decimal(10,0) NULL  DEFAULT '0' COMMENT '贷款金额',
+  `loanPrice` decimal(10,2) NULL  DEFAULT '0' COMMENT '贷款金额',
   `payType` tinyint(1) NOT NULL COMMENT '支付方式',
   `status` tinyint(1) NOT NULL COMMENT '房产单状态',
   `bnid` int(11) NOT NULL COMMENT '流转状态',

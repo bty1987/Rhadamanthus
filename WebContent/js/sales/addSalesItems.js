@@ -164,7 +164,7 @@ jQuery(function () {
 
             var $otherStatus = 0;
 
-            if ($selling != $disPrice || $purchase * $discount != $disPrice) {
+            if ($selling != $disPrice) {
                 $otherStatus = 1;
             }
 
@@ -322,6 +322,8 @@ jQuery(function () {
                 options["salesItems[" + i + "].disPrice"] = parseFloat($v.find('.s_countSelling').find('.b_countSelling').text());
                 options["salesItems[" + i + "].postDis"] = parseFloat($v.attr('data-postDis'));
                 options["salesItems[" + i + "].price"] = parseFloat($v.find('.s_price').find('.b_price').text());
+                options["salesItems[" + i + "].xgnum"] = parseFloat($v.find('.s_number').find('.b_number').text());
+                options["salesItems[" + i + "].punum"] = parseFloat($v.find('.s_number').find('.b_number').text());
                 options["salesItems[" + i + "].num"] = parseFloat($v.find('.s_number').find('.b_number').text());
                 options["salesItems[" + i + "].total"] = parseFloat($v.find('.s_total').find('.b_total').text());
                 options["salesItems[" + i + "].comment"] = $v.find('.s_remark').find('.b_remark').text();
@@ -350,6 +352,7 @@ jQuery(function () {
         var flag = true;
         var $_brand = $('#brands');
         var _brand = $_brand.attr('data-brand').split('-')[0];
+        _brand = _brand.trim();
         if (_brand == "") {
             flag = false;
             $_brand.focus().select();
@@ -366,7 +369,7 @@ jQuery(function () {
             var $_lis = $('.list-group-item');
             $.each($_lis, function (i, v) {
                 var $v = $(v);
-                if (_brand != $v.find('.s_brand').find('.b_brand').text()) {
+                if (_brand != $v.find('.s_brand').find('.b_brand').text().trim()) {
                     $v.css("border", "solid red 2px");
                     var r = i + 1;
                     com.showAlert(null, "销售项第" + r + "项中品牌与主材品牌不符,请检查");

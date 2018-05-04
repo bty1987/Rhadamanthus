@@ -17,7 +17,7 @@ public class ApprovalMaterialRefundPO implements java.io.Serializable {
 
 	private int amrId;
 	
-	private int aid;
+	private long aid;
 	
 	private long mid;
 	
@@ -37,11 +37,11 @@ public class ApprovalMaterialRefundPO implements java.io.Serializable {
 	}
 
 	@Column(name = "aId")
-	public int getAid() {
+	public long getAid() {
 		return this.aid;
 	}
 
-	public void setAid(int aid) {
+	public void setAid(long aid) {
 		this.aid = aid;
 	}
 

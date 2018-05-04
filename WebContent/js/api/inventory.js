@@ -207,11 +207,11 @@ $.extend(api, {
         pageManifest: {
             url: "pageManifest.do",
         },
-        queryManifestByMId: {
-            url: "queryManifestByMId.do",
+        queryManifestByMid: {
+            url: "queryManifestByMid.do",
         },
-        queryManifestItemByMId: {
-            url: "queryManifestItemByMId.do",
+        queryManifestItemByMid: {
+            url: "queryManifestItemByMid.do",
         },
         addManifestForCG: {
             url: "addManifestForCG.do",
@@ -341,6 +341,9 @@ $.extend(api, {
         addAccessories: {
             url: "addAccessories.do",
         },
+		refundAccessories: {
+            url: "refundAccessories.do",
+        },
         updateAccessoriesForStatus: {
             url: "updateAccessoriesForStatus.do",
         },
@@ -436,8 +439,16 @@ $.extend(api, {
         },
         querySalesBalanceItemBySbid:{
             url:"querySalesBalanceItemBySbid.do",
+        },
+        queryManifestForPUByPids : {
+            url:"queryManifestForPUByPids.do"
+        },
+        queryManifestForXGBySid : {
+            url:"queryManifestForXGBySid.do"
+        },
+        queryPurchaseBySid:{
+            url:"queryPurchaseBySid.do"
         }
-
     }
 });
 

@@ -7,38 +7,38 @@ jQuery(function ($) {
         modal: null,
         items: {},
         validator: {
-               
+
             workersalary: {
                 type: "v_salary",
                 regex: /^-?(([1-9]\d{0,6})|(([1-9]\d{0,6}\.\d{1,3})|(0\.[1-9]{1,3})))$/,
                 errorMsg: "请正确输入工人工费，小数点后最多保留3位"
             },
 
-            
+
         },
-        repeatFlg :false
+        repeatFlg: false
 
     };
 
     var salaryType = [];
-    
+
     salary.saveBtn = $("#saveBtn").on("click", saveData);
     salary.cancelBtn = $("#cancelBtn");
     salary.modal = $("#workersalaryModal");
-    salary.items.workersalary= $("#workersalary");
+    salary.items.workersalary = $("#workersalary");
     salary.items.workersalaryuser = $("#workersalaryuser");
     salary.items.workersalarycomment = $("#workersalarycomment");
 
     $.extend(com.validator, salary.validator);
 
-    com.post(api.ds.salary,{},function (data) {
+    com.post(api.ds.salary, {}, function (data) {
         var SalaryType = data.SalaryType;
 
-        $.each(SalaryType,function (i,y) {
+        $.each(SalaryType, function (i, y) {
             salaryType[y.key] = y.name;
 
         });
-    },null,false);
+    }, null, false);
 
     var displayFunc = (function () {
 
@@ -113,6 +113,7 @@ jQuery(function ($) {
                 adopt(v.wsId);
 
             });
+
             $btnrefuse.click(function () {
 
                 refuse(v.wsId);
@@ -131,14 +132,15 @@ jQuery(function ($) {
                 return creatLine(v);
             }
         };
+
     })();
 
     var searcher = new Searcher();
-    var _condArr = ['orderId','salaryWorkduty', 'jober','salarystatus','cerateTime', 'approveTime'];
+    var _condArr = ['orderId', 'salaryWorkduty', 'jober', 'salarystatus', 'cerateTime', 'approveTime'];
 
     searcher.init(_condArr, "condList", api.salary.pageWorkerSalary, function (data) {
         displayFunc.init('resultList', data);
-        
+
     }, "pagenation", "workersalaryPostData", null, false, null, function () {
 
 
@@ -166,7 +168,7 @@ jQuery(function ($) {
         var $batchImporti = $('<i></i>').addClass('icon-upload bigger-110').appendTo($batchImporta);
         var $batchImportspan = $('<span></span>').text('批量更新').appendTo($batchImporta);
 
-        return [$selecta, $adda, $adopta, $exporta, $importa,$batchImporta];
+        return [$selecta, $adda, $adopta, $exporta, $importa, $batchImporta];
     });
 
     $('a[name="select"]').on("click", function () {
@@ -186,7 +188,10 @@ jQuery(function ($) {
 
         com.cleanItems(salary.items);
         $('#workersalaryModal').modal("show");
-        com.initChosen('workersalaryuser', api.personel.queryUserForNameByPinyinName, "pinyinName", {"userNamePinYin": $("#workersalaryuser").val(),"user.status":"0"}, "autoFillKeyValue", "key", "value");
+        com.initChosen('workersalaryuser', api.personel.queryUserForNameByPinyinName, "pinyinName", {
+            "userNamePinYin": $("#workersalaryuser").val(),
+            "user.status": "0"
+        }, "autoFillKeyValue", "key", "value");
 
     });
 
@@ -201,7 +206,7 @@ jQuery(function ($) {
     });
 
     $('a[name="export"]', '#pagenation').on("click", function () {
-    	
+
 
         if ($('span[name="totalRecords"]').text() == 0) {
             com.showAlert(com.warning, "请通过条件进行查询");
@@ -212,12 +217,12 @@ jQuery(function ($) {
             com.showAlert(com.warning, "查询结果大于阀值 , 不能完成导出动作");
             return false;
         }
-        
+
         com.post(api.salary.pageWorkerSalary, $.extend({}, params.workersalaryPostData, {"paging.noPage": 1}), function (res) {
-            
+
             $.exceler({
                 column: [
-                    ["工费Id","wsId"],
+                    ["工费Id", "wsId"],
                     ["工人姓名", "user.userName"],
                     ["工人工号", "user.userId"],
                     ["创建人", "creater.userName"],
@@ -225,13 +230,13 @@ jQuery(function ($) {
                     ["审批人", 'approver.userName'],
                     ["审批时间", "approveTime"],
                     ["订单号", "decoration.orderId"],
-                    ['楼盘地址',"decoration.house"],
+                    ['楼盘地址', "decoration.house"],
                     ['监理', 'decoration.supervisor'],
                     ['金额', 'salary'],
                     ['工种', 'user.duty.name'],
                     ['类型', 'subtype'],
                     ['备注', 'comment'],
-                    ['状态',"status"]
+                    ['状态', "status"]
                 ],
                 list: res.paging.data
 
@@ -243,9 +248,9 @@ jQuery(function ($) {
                 v.decoration.supervisor = (v.decoration.supervisor == null ? "" : v.decoration.supervisor.userName);
                 v.decoration.orderId = (v.decoration.orderId == null ? "" : v.decoration.orderId);
 
-                v.decoration.house = (v.decoration.house == null ? "" : v.decoration.house.houseNumber +""+ v.decoration.house.village.name);
+                v.decoration.house = (v.decoration.house == null ? "" : v.decoration.house.village.name + "" + v.decoration.house.houseNumber);
 
-                v.status =  v.status == 0 ? "初始" : (v.status == 1 ? "已通过" : "已驳回") ;
+                v.status = v.status == 0 ? "初始" : (v.status == 1 ? "已通过" : "已驳回");
                 v.subtype = salaryType[v.subtype];
 
             });
@@ -286,32 +291,33 @@ jQuery(function ($) {
 
     function saveData(options) {
 
-       if( !com.validate("workersalaryModal")) {
+        if (!com.validate("workersalaryModal")) {
 
-           var url = api.salary.addWorkerSalary;
-           var options = {};
+            var url = api.salary.addWorkerSalary;
+            var options = {};
 
-           if ($("#workersalarySubtype").val() == 1 || $("#workersalarySubtype").val() == 2 || $("#workersalarySubtype").val() == 3
-               || $("#workersalarySubtype").val() == 10 || $("#workersalarySubtype").val() == 11 || $("#workersalarySubtype").val() == 12
-               || $("#workersalarySubtype").val() == 13
+            if ($("#workersalarySubtype").val() == 1 || $("#workersalarySubtype").val() == 2 || $("#workersalarySubtype").val() == 3
+                || $("#workersalarySubtype").val() == 10 || $("#workersalarySubtype").val() == 11 || $("#workersalarySubtype").val() == 12
+                || $("#workersalarySubtype").val() == 13
 
-           ) {
-               options["workerSalary.type"] = 0;
-           } else if ($("#workersalarySubtype").val() == 4 && $('#workersalary').val() > 0) {
-               options["workerSalary.type"] = 0;
-           } else {
-               options["workerSalary.type"] = 1;
-           }
-           options["workerSalary.user.userId"] = $('#workersalaryuser').val();
-           options["workerSalary.salary"] = $('#workersalary').val();
-           options["workerSalary.subtype"] = $("#workersalarySubtype").val();
-           options["workerSalary.comment"] = $("#workersalarycomment").val();
-           com.post(url, options, function () {
-               searcher.doSearch();
-           });
+            ) {
+                options["workerSalary.type"] = 0;
+            } else if ($("#workersalarySubtype").val() == 4 && $('#workersalary').val() > 0) {
+                options["workerSalary.type"] = 0;
+            } else {
+                options["workerSalary.type"] = 1;
+            }
+            options["workerSalary.user.userId"] = $('#workersalaryuser').val();
+            options["workerSalary.salary"] = $('#workersalary').val();
+            options["workerSalary.subtype"] = $("#workersalarySubtype").val();
+            options["workerSalary.comment"] = $("#workersalarycomment").val();
 
-           $('#workersalaryModal').modal('hide');
-       }
+            com.post(url, options, function () {
+                searcher.doSearch();
+            });
+
+            $('#workersalaryModal').modal('hide');
+        }
 
     }
 
@@ -358,24 +364,24 @@ jQuery(function ($) {
 
     $('#import').Huploadify({
 
-        'debug' : false, // 开启调试
-        'auto':true, // 是否自动上传
-        'successTimeout':config.uploadTimeout, // 超时时间
-        'formData':{
-            'uploadType':4
+        'debug': false, // 开启调试
+        'auto': true, // 是否自动上传
+        'successTimeout': config.uploadTimeout, // 超时时间
+        'formData': {
+            'uploadType': 4
         },
         'buttonClass': 'btn btn-success col-sm-12',
-        'overrideEvents' : ['onDialogClose'], // 不执行默认的onSelect事件
-        'fileObjName':'strutsUploads', // 服务器端脚本使用的文件对象的名称 $_FILES个['upload']
+        'overrideEvents': ['onDialogClose'], // 不执行默认的onSelect事件
+        'fileObjName': 'strutsUploads', // 服务器端脚本使用的文件对象的名称 $_FILES个['upload']
         'uploader': config.server + 'importWorkerSalary.do', // 上传处理程序
-        'height':'30', // 浏览按钮的高度
-        'fileTypeDesc':'支持的格式：',  // 在浏览窗口底部的文件类型下拉菜单中显示的文本
-        'fileTypeExts':'*.xls;*.xlsx', // 允许上传的文件后缀
-        'fileSizeLimit':'2MB', // 上传文件的大小限制
-        'queueSizeLimit' : 1, // 上传数量
-        'onUploadSuccess':function(file, data, response){ //上传到服务器，服务器返回相应信息到data里
+        'height': '30', // 浏览按钮的高度
+        'fileTypeDesc': '支持的格式：',  // 在浏览窗口底部的文件类型下拉菜单中显示的文本
+        'fileTypeExts': '*.xls;*.xlsx', // 允许上传的文件后缀
+        'fileSizeLimit': '2MB', // 上传文件的大小限制
+        'queueSizeLimit': 1, // 上传数量
+        'onUploadSuccess': function (file, data, response) { //上传到服务器，服务器返回相应信息到data里
 
-            var dateObj = eval("("+data+")");
+            var dateObj = eval("(" + data + ")");
             searcher.doSearch();
 
         }
@@ -383,24 +389,24 @@ jQuery(function ($) {
 
     $('#batchImport').Huploadify({
 
-        'debug' : false, // 开启调试
-        'auto':true, // 是否自动上传
-        'successTimeout':config.uploadTimeout, // 超时时间
-        'formData':{
-            'uploadType':4
+        'debug': false, // 开启调试
+        'auto': true, // 是否自动上传
+        'successTimeout': config.uploadTimeout, // 超时时间
+        'formData': {
+            'uploadType': 4
         },
         'buttonClass': 'btn btn-success col-sm-12',
-        'overrideEvents' : ['onDialogClose'], // 不执行默认的onSelect事件
-        'fileObjName':'strutsUploads', // 服务器端脚本使用的文件对象的名称 $_FILES个['upload']
+        'overrideEvents': ['onDialogClose'], // 不执行默认的onSelect事件
+        'fileObjName': 'strutsUploads', // 服务器端脚本使用的文件对象的名称 $_FILES个['upload']
         'uploader': config.server + 'batchImportWorkerSalary.do', // 上传处理程序
-        'height':'30', // 浏览按钮的高度
-        'fileTypeDesc':'支持的格式：',  // 在浏览窗口底部的文件类型下拉菜单中显示的文本
-        'fileTypeExts':'*.xls;*.xlsx', // 允许上传的文件后缀
-        'fileSizeLimit':'2MB', // 上传文件的大小限制
-        'queueSizeLimit' : 1, // 上传数量
-        'onUploadSuccess':function(file, data, response){ //上传到服务器，服务器返回相应信息到data里
+        'height': '30', // 浏览按钮的高度
+        'fileTypeDesc': '支持的格式：',  // 在浏览窗口底部的文件类型下拉菜单中显示的文本
+        'fileTypeExts': '*.xls;*.xlsx', // 允许上传的文件后缀
+        'fileSizeLimit': '2MB', // 上传文件的大小限制
+        'queueSizeLimit': 1, // 上传数量
+        'onUploadSuccess': function (file, data, response) { //上传到服务器，服务器返回相应信息到data里
 
-            var dateObj = eval("("+data+")");
+            var dateObj = eval("(" + data + ")");
 
         }
     });

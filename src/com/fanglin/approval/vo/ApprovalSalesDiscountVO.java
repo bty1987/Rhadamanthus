@@ -6,7 +6,7 @@ public class ApprovalSalesDiscountVO implements java.io.Serializable {
 	
 	private Integer asdid;
 	
-	private Integer aid;
+	private Long aid;
 
 	private Long sid;
 
@@ -28,12 +28,12 @@ public class ApprovalSalesDiscountVO implements java.io.Serializable {
 	}
 
 
-	public Integer getAid() {
+	public Long getAid() {
 		return aid;
 	}
 
 
-	public void setAid(Integer aid) {
+	public void setAid(Long aid) {
 		this.aid = aid;
 	}
 

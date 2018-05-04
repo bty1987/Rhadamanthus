@@ -6,7 +6,7 @@ public class ApprovalDecorationCustomerVO implements java.io.Serializable {
 
 	private Integer acId;
 	
-	private Integer aid;
+	private Long aid;
 	
 	private Integer customerId;
 	
@@ -22,11 +22,11 @@ public class ApprovalDecorationCustomerVO implements java.io.Serializable {
 		this.acId = acId;
 	}
 
-	public Integer getAid() {
+	public Long getAid() {
 		return this.aid;
 	}
 
-	public void setAid(Integer aid) {
+	public void setAid(Long aid) {
 		this.aid = aid;
 	}
 

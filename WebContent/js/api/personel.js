@@ -11,7 +11,7 @@ $.extend(api, {personel: {
     queryUserByLoginId: {url: "queryUserByLoginId.do"},
     queryUserByUserId: {url: "queryUserByUserId.do", demo: true},
     queryUserInfoByUserId: {url: "queryUserInfoByUserId.do",},
-    queryUserForSelfByUserId: {url: "queryUserForSelfByUserId.do", demo: true},
+    queryUserForSelfByUserId: {url: "queryUserForSelfByUserId.do", demo: true ,server:"communion"},
     queryUserByOldUserId: {url: "queryUserByOldUserId.do"},
     queryUserForNameByPinyinName: {url: "queryUserForNameByPinyinName.do"},
     queryUserForNameByDuty: {url: "queryUserForNameByDuty.do", demo: true},
@@ -20,7 +20,8 @@ $.extend(api, {personel: {
     queryUserForNameByDutysADept: {url: "queryUserForNameByDutysADept.do"},
     queryUserForNameByDutysAO: {url: "queryUserForNameByDutysAO.do"},
     queryUserForNameByDutysAODept: {url: "queryUserForNameByDutysAODept.do"},
-   
+    queryUserByDtid: {url: "queryUserByDtid.do"},
+    
     addUser: {url: "addUser.do", server: "communion"},
     updateUserForBaseInfo: {url: "updateUserForBaseInfo.do", server: "communion"},
     updateUser: {url: "updateUser.do", server: "communion"},

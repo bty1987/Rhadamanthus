@@ -1,0 +1,122 @@
+
+<div class="page-content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="condList" class="fl_search clearfix"></div> <!-- 查询条件-->
+            <div id="resultList" class="clearfix tab-pane active"></div> <!--查询结果-->
+            <div id="pagenation" class="fl-page-wrap clearfix"></div> <!--分页-->
+        </div>
+    </div>
+
+    <div class="modal fade" id="vpaymentModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content" style="width:900px;margin-left:-30%">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabel">添加</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <form class="form-horizontal">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="mno" class="col-sm-3 control-label no-padding-right">会员号</label>
+                                            <div class="col-md-9">
+                                                <input type="text" id="mno" maxlength="15" class="col-xs-10 col-sm-6 v_required"/>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="collecter" class="col-sm-3 control-label no-padding-right">收款人</label>
+                                            <div class="col-md-9">
+                                                <select class="chosen-select col-md-4 v_required" id="collecter" name="collecter" data-placeholder="请输入收款人"  style="display: none;">
+                                                    <option value="">&nbsp;</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label no-padding-right" for="type">类型</label>
+                                            <div class="col-sm-9">
+                                                <select id="type" name="type" maxlength="256" class="col-xs-10 col-sm-6 v_required"></select>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label no-padding-right" for="type">收款方式</label>
+                                            <div class="col-sm-9">
+                                                <select id="way" name="way" maxlength="256" class="col-xs-10 col-sm-6 v_required"></select>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label no-padding-right" for="brand">品牌</label>
+                                            <div class="col-sm-9">
+                                                <input type="text" id="brand" name="brand" maxlength="32" class="col-xs-10 col-sm-6 v_required">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label no-padding-right" for="brand">收据号</label>
+                                            <div class="col-sm-9">
+                                                <input type="text" id="receipt" name="receipt" maxlength="32" class="col-xs-10 col-sm-6">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label no-padding-right" for="money">金额</label>
+                                            <div class="col-sm-9">
+                                                <input type="text" id="money" maxlength="256" class="col-xs-10 col-sm-6 v_required v_float">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="text-align: center">
+                    <button type="button" id="saveBtn" class="btn btn-primary">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--<div class="modal fade" id="bindOrderModal" tabindex="-1">-->
+        <!--<div class="modal-dialog">-->
+            <!--<div class="modal-content" style="width:900px;margin-left:-30%">-->
+                <!--<div class="modal-header">-->
+                    <!--<button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>-->
+                    <!--<h4 class="modal-title" id="myBindModal">绑定装修单</h4>-->
+                <!--</div>-->
+                <!--<div class="modal-body">-->
+                    <!--<div class="row">-->
+                        <!--<div class="col-xs-12">-->
+                            <!--<form class="form-horizontal">-->
+                                <!--<div class="row">-->
+                                    <!--<div class="col-md-12">-->
+                                        <!--<div class="form-group">-->
+                                            <!--<label for="orderId" class="col-sm-3 control-label no-padding-right">订单号</label>-->
+                                            <!--<div class="col-md-9">-->
+                                                <!--<input type="text" id="orderId" class="col-xs-10 col-sm-6 v_required v-num" data-toggle="popover" data-trigger='manual'/>-->
+                                            <!--</div>-->
+                                        <!--</div>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                            <!--</form>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--<div class="modal-footer" style="text-align: center">-->
+                    <!--<button type="button" id="bindSaveBtn" class="btn btn-primary">保存</button>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+</div>
+
+<script type="text/javascript">
+    $.loadScript(['js/information/vpayment.js']);
+</script>

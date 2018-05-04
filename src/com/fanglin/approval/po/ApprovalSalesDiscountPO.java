@@ -19,7 +19,7 @@ public class ApprovalSalesDiscountPO implements java.io.Serializable {
 
 	private int asdid;
 	
-	private int aid;
+	private long aid;
 	
 	private long sid;
 	
@@ -37,11 +37,11 @@ public class ApprovalSalesDiscountPO implements java.io.Serializable {
 	}
 
 	@Column(name = "aid")
-	public int getAid() {
+	public long getAid() {
 		return this.aid;
 	}
 
-	public void setAid(int aid) {
+	public void setAid(long aid) {
 		this.aid = aid;
 	}
 

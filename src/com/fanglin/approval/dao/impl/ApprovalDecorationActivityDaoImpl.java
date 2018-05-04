@@ -26,7 +26,7 @@ public class ApprovalDecorationActivityDaoImpl extends DaoImpl<ApprovalDecoratio
 	}
 	
 	@Override
-	public ApprovalDecorationActivityPO queryApprovalDecorationActivityByAId(int aId) {
+	public ApprovalDecorationActivityPO queryApprovalDecorationActivityByAId(long aId) {
 		return (ApprovalDecorationActivityPO) session().createCriteria(ApprovalDecorationActivityPO.class).add(Restrictions.eq(ApprovalDecorationActivityPO.COLUMN_AID_STR, aId)).uniqueResult();
 	}
 

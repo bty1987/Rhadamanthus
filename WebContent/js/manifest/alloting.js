@@ -143,7 +143,7 @@ jQuery(function($) {
             //}
 
             options = {
-                "approval.receiverId":radios,
+                "approval.receiver.userId":radios,
                 "approval.comment": comment,
                 "approvalManifestDB.manifestTime": manifestTime,
                 "approvalManifestDB.comment":comment,

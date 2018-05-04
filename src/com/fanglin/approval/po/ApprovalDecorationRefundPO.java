@@ -17,7 +17,7 @@ public class ApprovalDecorationRefundPO implements java.io.Serializable {
 	
 	private int adrId;
 	
-	private int aid;
+	private long aid;
 	
 	private long paymentId;
 
@@ -33,11 +33,11 @@ public class ApprovalDecorationRefundPO implements java.io.Serializable {
 	}
 
 	@Column(name = "aId")
-	public int getAid() {
+	public long getAid() {
 		return this.aid;
 	}
 
-	public void setAid(int aid) {
+	public void setAid(long aid) {
 		this.aid = aid;
 	}
 

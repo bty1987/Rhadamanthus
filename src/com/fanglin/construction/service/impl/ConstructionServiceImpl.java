@@ -25,7 +25,6 @@ import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.communion.vo.DutyVO;
 import com.fanglin.communion.vo.HouseVO;
 import com.fanglin.construction.dao.ConstructionDao;
-import com.fanglin.construction.po.AcceptancePO;
 import com.fanglin.construction.po.ConstructionPO;
 import com.fanglin.construction.service.ConstructionService;
 import com.fanglin.construction.vo.ConstructionVO;
@@ -95,22 +94,6 @@ public class ConstructionServiceImpl implements ConstructionService {
 	@Override
 	public void pageConstructionForAcceptance(Paging paging, List<Filter> filters, Integer company){
 		
-		String acceptanceFlagOp = null;
-	
-		for(Filter filter: filters){
-			if(ConstructionPO.COLUMN_ACCEPTANCEFLAG_STR.equals(filter.getField())){
-				String _flag = filter.getData();
-				
-				if("notAcceptanced".equals(_flag)){
-					acceptanceFlagOp = "nand";
-				}else{
-					acceptanceFlagOp = "and";
-				}
-			}
-		}
-		
-		filters.add(new Filter(ConstructionPO.COLUMN_ALLOCATIONWORKERFLAG_STR, String.valueOf(AcceptancePO.ACCEPTANCE_ALLOCATION_WORKER_FLAG_INT), acceptanceFlagOp));
-		
 		List<ConstructionPO> constructionPOs = constructionDao.pageConstructionForAcceptance(paging, filters, company);
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
 		
@@ -162,23 +145,6 @@ public class ConstructionServiceImpl implements ConstructionService {
 		return _constructionVO;
 	}
 	
-	//这个方法 看一下，没有用的地方可以删除了
-	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public void saveOrUpdateConstruction(ConstructionVO constructionVO){
-		
-		ConstructionPO constructionPO = null;
-		
-		if(constructionVO.getCid() == 0){
-			constructionPO = new ConstructionPO(new DecorationPO(), new UserPO());
-		}else{
-			constructionPO = constructionDao.get(constructionVO.getCid());
-		}
-		
-		BeanUtil.copyProperties(constructionVO, constructionPO, Arrays.asList("decoration", "supervisorQuality"));
-		constructionDao.saveOrUpdate(constructionPO);
-	}
-	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public void saveOrUpdateConstructionByOrderId(ConstructionVO constructionVO){
@@ -187,7 +153,6 @@ public class ConstructionServiceImpl implements ConstructionService {
 		if(constructionPO == null){
 			DecorationPO decorationPO = decorationDao.get(constructionVO.getOrderId());
 			constructionPO = new ConstructionPO(decorationPO, new UserPO());
-			//constructionPO.setDecoration(new DecorationPO());
 			constructionPO.setSchedule(ConstructionPO.SCHEDULE_TYPE_CHAN_INT);
 		}
 		

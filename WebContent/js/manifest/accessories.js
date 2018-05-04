@@ -83,7 +83,7 @@ $(function () {
                 [v.createTime,'green'],
                 [v.approver.userName,'grey'],
                 [v.approverTime,'green'],
-                [v.status == "0" ? "初始" : (v.status == "1" ? "出货" : (v.status == "2" ? "拒绝":"撤销")),'red'],
+                [v.status == "0" ? "初始" : (v.status == "1" ? "出货" : (v.status == "2" ? "拒绝":(v.status == "3") ? "撤销":"退回")),'red'],
             ];
 
 
@@ -99,13 +99,16 @@ $(function () {
             var $btn = $('<button></button>').addClass('btn btn-info dropdown-toggle').attr('data-toggle', 'dropdown').append('操作').append('<i class="icon-angle-down"></i>');
             var $btnUl = $('<ul></ul>').addClass('dropdown-menu').addClass(lastFlag ? 'bottom-up' : '');
 
+
             var $btnView = $('<li></li>').append($('<a></a>').html('出货'));
             var $btnEdit = $('<li></li>').append($('<a></a>').html('修改'));
+            var $btnReturn = $('<li></li>').append($('<a></a>').html('退回'));
             var $btnPrint = $('<li></li>').append($('<a></a>').html('打印'));
 
-            $btnUl
-                .append($btnView)
-                .append($btnEdit);
+            $btnUl.append($btnEdit);
+
+            v.status == 0 && ($btnUl.append($btnView));//初始：出货，修改
+            v.status == 1 && ($btnUl.append($btnView).append($btnEdit).append($btnReturn).append($btnPrint));//出货：出货 修改 退回 打印
 
             $btnGroup
                 .append($btn)
@@ -118,22 +121,29 @@ $(function () {
                 .append($contentWrap)
                 .append($optionWrap);
 
-            if(v.status == 1){
-                $btnPrint.appendTo($btnUl);
-            }
-
             $btnView.click(function () {
                 if (v.status == 1) {
                     layer.alert('辅料已经审批,无法再次出货', {
                         icon: 0,
                         skin: 'layer-ext-moon' //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
                     });
-                } else if (v.status == 2) {
+                }else if(v.status == 2){
                     layer.alert('辅料已被拒绝,无法再次出货', {
                         icon: 0,
                         skin: 'layer-ext-moon' //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
                     });
-                } else {
+                }else if(v.status == 3){
+                    layer.alert('辅料已被撤销,无法再次出货', {
+                        icon: 0,
+                        skin: 'layer-ext-moon' //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
+                    });
+                }else if(v.status == 4){
+                    layer.alert('辅料已被退回,无法再次出货', {
+                        icon: 0,
+                        skin: 'layer-ext-moon' //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
+                    });
+                }
+                else {
                     viewAccessoriesItemAndOrder(v.orderId, v.aid, v.no, v.createTime, v.status);
                 }
             });
@@ -145,15 +155,30 @@ $(function () {
                         icon: 0,
                         skin: 'layer-ext-moon' //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
                     });
-                } else if (v.status == 2) {
-                    layer.alert('辅料已被拒绝,无法修改', {
+                }else if(v.status == 2){
+                    layer.alert('辅料已被拒绝,无法再次修改', {
                         icon: 0,
                         skin: 'layer-ext-moon' //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
                     });
-                } else {
+                }else if(v.status == 3){
+                    layer.alert('辅料已被撤销,无法再次修改', {
+                        icon: 0,
+                        skin: 'layer-ext-moon' //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
+                    });
+                }else if(v.status == 4){
+                    layer.alert('辅料已被退回,无法再次修改', {
+                        icon: 0,
+                        skin: 'layer-ext-moon' //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
+                    });
+                }
+                else {
                     editAccessoriesItem(v.aid, v.no);
                 }
 
+            });
+
+            $btnReturn.click(function(){
+                refundAccessories(v.orderId, v.aid, v.no, v.createTime, v.status);
             });
 
             $btnPrint.click(function(){
@@ -201,7 +226,6 @@ $(function () {
 
         return [];
     }, 'resultList');
-
 
     function viewAccessoriesItemAndOrder(orderId, aid, no, createTime, status) {
         var $popup = $('#viewPopUp');
@@ -336,4 +360,28 @@ $(function () {
 
     }
 
+
+    function refundAccessories(orderId, aid, no, createTime, status){
+        var $popup = $('#refundPopUp');
+        $popup.attr({'data-orderId': orderId, 'data-aid': aid, 'data-createTime': createTime, 'data-status': status});
+        //弹出即全屏
+        var index = layer.open({
+            type: 1,
+            skin: 'layui-layer-lan',
+            title: "辅料订单" + no,
+            content: $popup,
+            area: ["1200px", ( $(window).height() * 0.84 < 700 ? $(window).height() * 0.84 : 700 ) + "px"],
+            maxmin: false,
+            zIndex: 9000,
+            success: function (layer, index) {
+                $popup.load("views/manifest/viewRefundAccessoriesItem.html");
+            },
+            end: function () {
+                $popup.attr({'data-orderId': null, 'data-aid': null, 'data-createTime': null, 'data-status': null});
+                $popup.empty();
+                accessoriesSeacher.doSearch();
+            }
+        });
+
+    }
 });

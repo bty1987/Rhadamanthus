@@ -30,6 +30,7 @@ import com.fanglin.inventory.vo.ManifestItemVO;
 import com.fanglin.inventory.vo.ManifestVO;
 import com.fanglin.inventory.vo.PurchaseItemVO;
 import com.fanglin.inventory.vo.PurchaseVO;
+import com.fanglin.sales.vo.SalesVO;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -56,6 +57,8 @@ public class ManifestAction extends BaseListAction {
 	
 	private List<PurchaseVO> purchases;
 	
+	private List<ManifestVO> manifests;
+	
 	private List<PurchaseItemVO> purchaseItems;
 	
 	private List<ManifestItemVO> manifestItems;
@@ -65,6 +68,8 @@ public class ManifestAction extends BaseListAction {
 	private List<AccessoriesItemVO> accessoriesItems;
 	
 	private ManifestItemVO manifestItem;
+	
+	private SalesVO sales;
 	
 	@Action(value = "pageManifest", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageManifest() throws FLException{
@@ -94,6 +99,22 @@ public class ManifestAction extends BaseListAction {
 	public String queryManifestItemBySiids(){
 		
 		manifestItems = manifestItemService.queryManifestItemBySiids(siids);
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "queryManifestForPUByPids", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryManifestForPUByPids(){
+		
+		manifests = manifestService.queryManifestForPUByPids(pids);
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "queryManifestForXGBySid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryManifestForXGBySid(){
+		
+		manifests = manifestService.queryManifestForXGBySid(sales);
 		
 		return SUCCESS;
 	}
@@ -272,6 +293,22 @@ public class ManifestAction extends BaseListAction {
 
 	public void setAccessoriesItems(List<AccessoriesItemVO> accessoriesItems) {
 		this.accessoriesItems = accessoriesItems;
+	}
+
+	public List<ManifestVO> getManifests() {
+		return manifests;
+	}
+
+	public void setManifests(List<ManifestVO> manifests) {
+		this.manifests = manifests;
+	}
+
+	public SalesVO getSales() {
+		return sales;
+	}
+
+	public void setSales(SalesVO sales) {
+		this.sales = sales;
 	}
 
 }

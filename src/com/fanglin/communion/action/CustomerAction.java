@@ -87,7 +87,7 @@ public class CustomerAction extends BaseListAction {
 	@Action(value = "checkCustomerForPhone", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String checkCustomerForPhone() throws FLException{
 		
-		customers = customerService.checkCustomerForPhone(customerPhone,queryCompany());
+		 customerService.checkCustomerForPhone(customerPhone,queryCompany());
 		
 		return SUCCESS;
 	}

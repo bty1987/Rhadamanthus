@@ -4,31 +4,31 @@ public class ApprovalQuotationDiscountVO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 6220700622327921672L;
 
-	private Integer aqdId;
+	private Long aqdid;
 	
-	private Integer aid;
+	private Long aid;
 	
 	private String orderId;
 	
-	private Long quotationId;
+	private Long qid;
 	
 	private Float oldDiscount;
 	
 	private Float newDiscount;
 
-	public Integer getAqdId() {
-		return this.aqdId;
+	public Long getAqdid() {
+		return this.aqdid;
 	}
 
-	public void setAqdId(Integer aqdId) {
-		this.aqdId = aqdId;
+	public void setAqdid(Long aqdid) {
+		this.aqdid = aqdid;
 	}
 
-	public Integer getAid() {
+	public Long getAid() {
 		return this.aid;
 	}
 
-	public void setAid(Integer aid) {
+	public void setAid(Long aid) {
 		this.aid = aid;
 	}
 
@@ -40,12 +40,12 @@ public class ApprovalQuotationDiscountVO implements java.io.Serializable {
 		this.orderId = orderId;
 	}
 
-	public Long getQuotationId() {
-		return this.quotationId;
+	public Long getQid() {
+		return qid;
 	}
 
-	public void setQuotationId(Long quotationId) {
-		this.quotationId = quotationId;
+	public void setQid(Long qid) {
+		this.qid = qid;
 	}
 
 	public Float getOldDiscount() {

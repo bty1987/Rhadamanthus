@@ -1,6 +1,6 @@
 jQuery(function ($) {
 
-	var $pageDiv = $('.pageDiv');
+    var $pageDiv = $('.pageDiv');
     var ppid = params["productionPlan.ppid"];
     var workstatus = params["productionPlan.status"];
     var $productionStatus = params["production.status"];
@@ -17,7 +17,7 @@ jQuery(function ($) {
 
                 $.each(workFlowsArr,function (index,val) {
                     var $workshopDiv = $('<li></li>').addClass('lab')
-                        .append($('<span></span>').html('车'+'&nbsp;&nbsp;&nbsp;&nbsp;'+'间：'))
+                        .append($('<span></span>').html('车'+'&nbsp;&nbsp;&nbsp;&nbsp;'+'间:'))
                         .append($('<span></span>').html(v.workplan.workshop.name));
                     $workshopDiv.appendTo(workFlowsArr[index].find('.target'));
 
@@ -62,21 +62,21 @@ jQuery(function ($) {
             var $workflowli = $('<li></li>').addClass('workflowList item-blue clearfix');
             var $detailul = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix target');
             var $workflowDiv = $('<li></li>').addClass('lab')
-                .append($('<span></span>').html('工'+'&nbsp;&nbsp;&nbsp;&nbsp'+'序：'))
+                .append($('<span></span>').html('工'+'&nbsp;&nbsp;&nbsp;&nbsp'+'序:'))
                 .append($('<span></span>').html(val.workflow.name));
             $workflowDiv.appendTo($detailul);
             var $operateStatus = $('<li></li>').addClass('lab')
-                .append($('<span></span>').attr('style','color:black;margin-left:10px;').html('操作状态：'));
+                .append($('<span></span>').attr('style','color:black;margin-left:10px;').html('操作状态:'));
 
             if(productionUserWorkFlows.length != 0){
 
                 $.each(productionUserWorkFlows,function (i,v) {
 
-                    var imgUrl = config.media + '/showImg.do' + '?imgBasePath=' + v.userPhoto + '&divFlag=1&width=' + 150 + '&height=' + 150 + '&timestamp='+ new Date().getTime();
+                    var $photo = $('<div Style="border: 1px solid #ccc ; display : contents;"></div>').css("width", "50px").css("height","50px").css("margin-bottom", "10px").css("margin", "10px 10px");
+                    var img = $('<img />').appendTo($photo);
+                    var url =com.showImg(img, v.userPhoto, 50, 50, '', null, 0);
 
-                    var $photo = $('<img onerror="javascript:this.src=\'./assets/altogether/images/avatar2.png\';" />').attr("src",imgUrl).css("margin", "10px 10px").css("width", "50px").css("height", "50px").css("margin-bottom", "10px");
-
-                    var $operator = $('<span></span>').html('操作人：');
+                    var $operator = $('<span></span>').html('操作人:');
                     var $workflowSpan = $('<span></span>').html(v.operator.currentName != null ? v.operator.currentName : '暂无').addClass('workflowSpan').css('font-size','150%');
 
                     $workflowli.append($photo).append($operator).append($workflowSpan)
@@ -96,7 +96,7 @@ jQuery(function ($) {
     }
 
     function createDiv(data) {
-    	
+
         var $topspan = $('<div></div>').addClass('col-xs-6 col-sm-6').attr('name','portlet');
         var $top = $('<div></div>').addClass('widget-box transparent');
         var $title = $('<div></div>').addClass('widget-header');

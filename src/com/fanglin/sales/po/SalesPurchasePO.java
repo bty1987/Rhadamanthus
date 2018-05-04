@@ -19,6 +19,8 @@ public class SalesPurchasePO implements Serializable{
 
 	private static final long serialVersionUID = 3635723788185082605L;
 	
+	public static final String COLUMN_SALESSID_STR = "sales.sid";
+	
 	private long spid;
 	
 	private SalesPO sales;

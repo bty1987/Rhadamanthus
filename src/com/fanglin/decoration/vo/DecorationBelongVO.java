@@ -14,203 +14,121 @@ package com.fanglin.decoration.vo;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
-import org.apache.struts2.json.annotations.JSON;
-
+import com.fanglin.communion.vo.DepartmentVO;
+import com.fanglin.personel.vo.UserBaseVO;
 
 public class DecorationBelongVO implements Serializable {
 
 	private static final long serialVersionUID = -62258203481876631L;
 
-	private Long autoId;
+	private Long dbid;
 	
 	private String orderId;
 	
-	private String belongType;
+	private short type;
 	
-	private String belongUser;
+	private UserBaseVO belonger;
 	
-	private String belongUserId;
+	private DepartmentVO department;
 	
-	private String belongDept;
+	private DepartmentVO region;
 	
-	private String belongDeptId;
+	private Float rate;
 	
-	private String belongRegion;
-	
-	private String belongRegionId;
-	
-	private Float belongRate;
-	
-	private String operateUser;
-	
-	private String operateUserId;
+	private UserBaseVO operater;
 	
 	private Timestamp operateTime;
 	
-	private String status;
+	private Short status;
 	
-	private String changeReason;
-	
-	private String approvalUserId;
-	
-	private String approvalUser;
-	
-	private Timestamp approvalTime;
-	
-	private String defaultFlag;
-	
-	public Long getAutoId(){
-		return autoId;
+	private Short defaultFlag;
+
+	public Long getDbid() {
+		return dbid;
 	}
 
-	public void setAutoId(Long autoId){
-		this.autoId = autoId;
+	public void setDbid(Long dbid) {
+		this.dbid = dbid;
 	}
 
-	public String getOrderId(){
+	public String getOrderId() {
 		return orderId;
 	}
 
-	public void setOrderId(String orderId){
+	public void setOrderId(String orderId) {
 		this.orderId = orderId;
 	}
 
-	public String getBelongType(){
-		return belongType;
+	public short getType() {
+		return type;
 	}
 
-	public void setBelongType(String belongType){
-		this.belongType = belongType;
+	public void setType(short type) {
+		this.type = type;
 	}
 
-	public String getBelongUser(){
-		return belongUser;
+	public UserBaseVO getBelonger() {
+		return belonger;
 	}
 
-	public void setBelongUser(String belongUser){
-		this.belongUser = belongUser;
+	public void setBelonger(UserBaseVO belonger) {
+		this.belonger = belonger;
 	}
 
-	public String getBelongUserId(){
-		return belongUserId;
+	public DepartmentVO getDepartment() {
+		return department;
 	}
 
-	public void setBelongUserId(String belongUserId){
-		this.belongUserId = belongUserId;
+	public void setDepartment(DepartmentVO department) {
+		this.department = department;
 	}
 
-	public String getBelongDept(){
-		return belongDept;
+	public DepartmentVO getRegion() {
+		return region;
 	}
 
-	public void setBelongDept(String belongDept){
-		this.belongDept = belongDept;
+	public void setRegion(DepartmentVO region) {
+		this.region = region;
 	}
 
-	public String getBelongDeptId(){
-		return belongDeptId;
+	public Float getRate() {
+		return rate;
 	}
 
-	public void setBelongDeptId(String belongDeptId){
-		this.belongDeptId = belongDeptId;
+	public void setRate(Float rate) {
+		this.rate = rate;
 	}
 
-	public String getBelongRegion(){
-		return belongRegion;
+	public UserBaseVO getOperater() {
+		return operater;
 	}
 
-	public void setBelongRegion(String belongRegion){
-		this.belongRegion = belongRegion;
+	public void setOperater(UserBaseVO operater) {
+		this.operater = operater;
 	}
 
-	public String getBelongRegionId(){
-		return belongRegionId;
-	}
-
-	public void setBelongRegionId(String belongRegionId){
-		this.belongRegionId = belongRegionId;
-	}
-
-	public Float getBelongRate(){
-		return belongRate;
-	}
-
-	public void setBelongRate(Float belongRate){
-		this.belongRate = belongRate;
-	}
-
-	public String getOperateUser(){
-		return operateUser;
-	}
-
-	public void setOperateUser(String operateUser){
-		this.operateUser = operateUser;
-	}
-
-	public String getOperateUserId(){
-		return operateUserId;
-	}
-
-	public void setOperateUserId(String operateUserId){
-		this.operateUserId = operateUserId;
-	}
-
-	@JSON(format="yyyy-MM-dd")
-	public Timestamp getOperateTime(){
+	public Timestamp getOperateTime() {
 		return operateTime;
 	}
 
-	public void setOperateTime(Timestamp operateTime){
+	public void setOperateTime(Timestamp operateTime) {
 		this.operateTime = operateTime;
 	}
 
-	public String getStatus(){
+	public Short getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status){
+	public void setStatus(Short status) {
 		this.status = status;
 	}
 
-	public String getChangeReason(){
-		return changeReason;
-	}
-
-	public void setChangeReason(String changeReason){
-		this.changeReason = changeReason;
-	}
-
-	public String getApprovalUserId(){
-		return approvalUserId;
-	}
-
-	public void setApprovalUserId(String approvalUserId){
-		this.approvalUserId = approvalUserId;
-	}
-
-	public String getApprovalUser(){
-		return approvalUser;
-	}
-
-	public void setApprovalUser(String approvalUser){
-		this.approvalUser = approvalUser;
-	}
-
-	@JSON(format="yyyy-MM-dd")
-	public Timestamp getApprovalTime(){
-		return approvalTime;
-	}
-
-	public void setApprovalTime(Timestamp approvalTime){
-		this.approvalTime = approvalTime;
-	}
-
-	public void setDefaultFlag(String defaultFlag){
-		this.defaultFlag = defaultFlag;
-	}
-
-	public String getDefaultFlag(){
+	public Short getDefaultFlag() {
 		return defaultFlag;
+	}
+
+	public void setDefaultFlag(Short defaultFlag) {
+		this.defaultFlag = defaultFlag;
 	}
 
 }

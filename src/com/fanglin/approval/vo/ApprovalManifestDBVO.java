@@ -10,7 +10,7 @@ public class ApprovalManifestDBVO implements java.io.Serializable {
 	
 	private Long amdbid;
 	
-	private Integer aid;
+	private Long aid;
 	
 	private Timestamp manifestTime;
 	
@@ -26,11 +26,11 @@ public class ApprovalManifestDBVO implements java.io.Serializable {
 		this.amdbid = amdbid;
 	}
 
-	public Integer getAid() {
+	public Long getAid() {
 		return aid;
 	}
 
-	public void setAid(Integer aid) {
+	public void setAid(Long aid) {
 		this.aid = aid;
 	}
 

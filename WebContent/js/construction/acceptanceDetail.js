@@ -36,7 +36,7 @@ jQuery(function ($) {
         acceptanceDetail.options["acceptance.actId"] = acceptanceInfo.actId;
 
         for (var i = 0; i < acceptanceDetail.baseInfos.length; i++) {
-            infoName = acceptanceDetail.baseInfos[i]
+            infoName = acceptanceDetail.baseInfos[i];
             $("#" + infoName).val(acceptanceInfo[infoName]);
         }
 
@@ -47,7 +47,6 @@ jQuery(function ($) {
                 start: acceptanceInfo[acceptanceDetail.ratyIds[i - 1]],
             });
         }
-        ;
 
         for (var i = 0; i < acceptanceDetail.desIds.length; i++) {
             var desId = acceptanceDetail.desIds[i];
@@ -115,10 +114,15 @@ jQuery(function ($) {
 
     //工程图片 名字 工种
     function constructerImg(imgPath, name, duty, schedule) {
-        var pane = $("<div></div>").addClass("col-xs-3 col-md-3 widget-container-span ui-sortable").appendTo($("#" + constructionScheName[schedule]));
-        var imgUrl = config.media + '/showImg.do' + '?imgBasePath=' + imgPath + '&divFlag=1&width=' + 150 + '&height=' + 150 + '&timestamp=' + new Date().getTime();
-        var paneImg = $('<img onerror="javascript:this.src=\'./assets/altogether/images/avatar2.png\';" />').attr("src", imgUrl).css("margin-right", "20px").css("width", "50px").css("height", "50px").css("margin-bottom", "10px").appendTo(pane);
-        var constructerName = $("<span></span>").css("margin-right", "20px").html(name).appendTo(pane);
+
+        var pane = $("<div ></div>").addClass("col-xs-3 col-md-3 widget-container-span ui-sortable").appendTo($("#" + constructionScheName[schedule]));
+
+        var imgDiv = $('<div></div>').css({"border": "1px solid #ccc","width": "50px","float":"left","height":"50px","margin-right":"20px","margin-bottom":"10px"}).appendTo(pane);
+        var img = $('<img />').css("margin-right", "20px").css("margin-bottom", "10px").appendTo(imgDiv);
+        var url = com.showImg(img, imgPath, 50, 50, '', null, 0);
+
+        var constructerName = $("<span></span>").css({"margin-right":"20px","line-height":"50px"}).html(name).appendTo(pane);
         var constructerDuty = $("<span></span>").html(duty).appendTo(pane);
     }
+
 });

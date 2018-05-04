@@ -11,6 +11,7 @@
 
 package com.fanglin.approval.dao.impl;
 
+
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -26,8 +27,10 @@ public class ApprovalDecorationBelongDaoImpl extends DaoImpl<ApprovalDecorationB
 	}
 
 	@Override
-	public ApprovalDecorationBelongPO queryApprovalDecorationBelongByAId(int aId) {
+	public ApprovalDecorationBelongPO queryApprovalDecorationBelongByAId(long aId) {
+		
 		return (ApprovalDecorationBelongPO) session().createCriteria(ApprovalDecorationBelongPO.class).add(Restrictions.eq(ApprovalDecorationBelongPO.COLUMN_AID_STR, aId)).uniqueResult();
+	
 	}
 	
 }

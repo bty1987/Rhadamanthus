@@ -165,3 +165,36 @@ CREATE TABLE `upgrade` (
   `filesize` bigint(64) NOT NULL,
   PRIMARY KEY (`ugid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='升级表'; 
+
+DROP TABLE IF EXISTS `vticket`;
+CREATE TABLE `vticket` (
+`vtid`  int(11) NOT NULL AUTO_INCREMENT COMMENT '活动票ID' ,
+`tno`  varchar(15) NOT NULL COMMENT '活动票号' ,
+`cuid`  int(11) NOT NULL COMMENT '创建人' ,
+`createTime`  timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间' ,
+`buid`  int(11) NOT NULL COMMENT '归属人' ,
+`did`  int(11) NOT NULL COMMENT '归属部门' ,
+`rid`  int(11) NOT NULL COMMENT '归属分区' ,
+`orderId`  varchar(15) NULL COMMENT '装修单号' ,
+`name`  varchar(15) NOT NULL COMMENT '姓名' ,
+`phone`  varchar(32) NOT NULL COMMENT '电话' ,
+`address`  varchar(128) NOT NULL COMMENT '地址' ,
+`isregist`  tinyint(1) NOT NULL COMMENT '是否注册' ,
+`iscome`  tinyint(1) NOT NULL COMMENT '是否到场' ,
+PRIMARY KEY (`vtid`),
+UNIQUE KEY `indexone` (`tno`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='活动票表';
+
+DROP TABLE IF EXISTS `vpayment`;
+CREATE TABLE `vpayment` (
+  `vpid` int(11) NOT NULL AUTO_INCREMENT,
+  `mno` varchar(15) NOT NULL,
+  `createrId` int(11) NOT NULL,
+  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `collecterId` int(11) NOT NULL,
+  `collectTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `type` tinyint(2) NOT NULL,
+  `brand` varchar(32) DEFAULT NULL,
+  `money` decimal(10,3) NOT NULL,
+  PRIMARY KEY (`vpid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;

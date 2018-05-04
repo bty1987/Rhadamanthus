@@ -46,7 +46,7 @@ import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.dao.DecorationInfoDao;
 import com.fanglin.decoration.dao.DecorationOperateDao;
 import com.fanglin.decoration.po.AuditPO;
-import com.fanglin.decoration.po.DecorationBelongInfoPO;
+import com.fanglin.decoration.po.DecorationBelongPO;
 import com.fanglin.decoration.po.DecorationInfoPO;
 import com.fanglin.decoration.po.DecorationOperatePO;
 import com.fanglin.decoration.po.DecorationPO;
@@ -228,15 +228,17 @@ public class DecorationServiceImpl implements DecorationService {
 			
 			decorationVO.setDiscount(decorationPO.getDiscount());
 			
-			List<DecorationBelongInfoPO> orderBelongInfoPOs = decorationBelongDao.queryOrderBelongInfoByOrderId(decorationPO.getOrderId());
+			List<DecorationBelongPO> orderBelongInfoPOs = decorationBelongDao.queryOrderBelongInfoByOrderId(decorationPO.getOrderId());
 			
-			for(DecorationBelongInfoPO orderBelongInfoPO: orderBelongInfoPOs){
-				if(DecorationBelongInfoPO.BELONGTYPE_DESIGN_STR.equals(orderBelongInfoPO.getBelongType()) && !orderBelongInfoPO.getBelongUserPO().getUserId().equals(decorationPO.getDesigner().getUserId())){ // 设计归属
-					decorationVO.getDesigner().setUserName(decorationVO.getDesigner().getUserName() + Constant.SLASH + orderBelongInfoPO.getBelongUserPO().getUserName());
-					decorationVO.getDesigner().getDept().setDeptName(decorationVO.getDesigner().getDept().getDeptName() + Constant.SLASH + orderBelongInfoPO.getBelongUserPO().getDept().getDeptName());
-				}else if(DecorationBelongInfoPO.BELONGTYPE_SALESMAN_STR.equals(orderBelongInfoPO.getBelongType()) && !orderBelongInfoPO.getBelongUserPO().getUserId().equals(decorationPO.getSalesman().getUserId())){ // 业务归属
-					decorationVO.getSalesman().setUserName(decorationVO.getSalesman().getUserName() + Constant.SLASH + orderBelongInfoPO.getBelongUserPO().getUserName());
-					decorationVO.getSalesman().getDept().setDeptName(decorationVO.getSalesman().getDept().getDeptName() + Constant.SLASH + orderBelongInfoPO.getBelongUserPO().getDept().getDeptName());
+			for(DecorationBelongPO orderBelongInfoPO: orderBelongInfoPOs){
+				if(DecorationBelongPO.BELONGTYPE_DESIGN_INT.equals(orderBelongInfoPO.getType()) && !orderBelongInfoPO.getBelonger().getUserId().equals(decorationPO.getDesigner().getUserId())){ // 设计归属
+					decorationVO.getDesigner().setUserName(decorationVO.getDesigner().getUserName() + Constant.SLASH + orderBelongInfoPO.getBelonger().getUserName());
+					decorationVO.getDesigner().getDept().setDeptName(decorationVO.getDesigner().getDept().getDeptName() + Constant.SLASH + orderBelongInfoPO.getBelonger().getDept().getDeptName());
+					decorationVO.getDesigner().setCurrentName(decorationVO.getDesigner().getCurrentName() + Constant.SLASH + orderBelongInfoPO.getBelonger().getCurrentName());
+				}else if(DecorationBelongPO.BELONGTYPE_SALESMAN_INT.equals(orderBelongInfoPO.getType()) && !orderBelongInfoPO.getBelonger().getUserId().equals(decorationPO.getSalesman().getUserId())){ // 业务归属
+					decorationVO.getSalesman().setUserName(decorationVO.getSalesman().getUserName() + Constant.SLASH + orderBelongInfoPO.getBelonger().getUserName());
+					decorationVO.getSalesman().getDept().setDeptName(decorationVO.getSalesman().getDept().getDeptName() + Constant.SLASH + orderBelongInfoPO.getBelonger().getDept().getDeptName());
+					decorationVO.getSalesman().setCurrentName(decorationVO.getSalesman().getCurrentName() + Constant.SLASH + orderBelongInfoPO.getBelonger().getCurrentName());
 				}
 			}
 			
@@ -296,15 +298,17 @@ public class DecorationServiceImpl implements DecorationService {
 			
 			decorationVO.setDiscount(decorationPO.getDiscount());
 			
-			List<DecorationBelongInfoPO> orderBelongInfoPOs = decorationBelongDao.queryOrderBelongInfoByOrderId(decorationPO.getOrderId());
+			List<DecorationBelongPO> orderBelongInfoPOs = decorationBelongDao.queryOrderBelongInfoByOrderId(decorationPO.getOrderId());
 			
-			for(DecorationBelongInfoPO orderBelongInfoPO: orderBelongInfoPOs){
-				if(DecorationBelongInfoPO.BELONGTYPE_DESIGN_STR.equals(orderBelongInfoPO.getBelongType()) && !orderBelongInfoPO.getBelongUserPO().getUserId().equals(decorationPO.getDesigner().getUserId())){ // 设计归属
-					decorationVO.getDesigner().setUserName(decorationVO.getDesigner().getUserName() + Constant.SLASH + orderBelongInfoPO.getBelongUserPO().getUserName());
-					decorationVO.getDesigner().getDept().setDeptName(decorationVO.getDesigner().getDept().getDeptName() + Constant.SLASH + orderBelongInfoPO.getBelongUserPO().getDept().getDeptName());
-				}else if(DecorationBelongInfoPO.BELONGTYPE_SALESMAN_STR.equals(orderBelongInfoPO.getBelongType()) && !orderBelongInfoPO.getBelongUserPO().getUserId().equals(decorationPO.getSalesman().getUserId())){ // 业务归属
-					decorationVO.getSalesman().setUserName(decorationVO.getSalesman().getUserName() + Constant.SLASH + orderBelongInfoPO.getBelongUserPO().getUserName());
-					decorationVO.getSalesman().getDept().setDeptName(decorationVO.getSalesman().getDept().getDeptName() + Constant.SLASH + orderBelongInfoPO.getBelongUserPO().getDept().getDeptName());
+			for(DecorationBelongPO orderBelongInfoPO: orderBelongInfoPOs){
+				if(DecorationBelongPO.BELONGTYPE_DESIGN_INT.equals(orderBelongInfoPO.getType()) && !orderBelongInfoPO.getBelonger().getUserId().equals(decorationPO.getDesigner().getUserId())){ // 设计归属
+					decorationVO.getDesigner().setUserName(decorationVO.getDesigner().getUserName() + Constant.SLASH + orderBelongInfoPO.getBelonger().getUserName());
+					decorationVO.getDesigner().getDept().setDeptName(decorationVO.getDesigner().getDept().getDeptName() + Constant.SLASH + orderBelongInfoPO.getBelonger().getDept().getDeptName());
+					decorationVO.getDesigner().setCurrentName(decorationVO.getDesigner().getCurrentName() + Constant.SLASH + orderBelongInfoPO.getBelonger().getCurrentName());
+				}else if(DecorationBelongPO.BELONGTYPE_SALESMAN_INT.equals(orderBelongInfoPO.getType()) && !orderBelongInfoPO.getBelonger().getUserId().equals(decorationPO.getSalesman().getUserId())){ // 业务归属
+					decorationVO.getSalesman().setUserName(decorationVO.getSalesman().getUserName() + Constant.SLASH + orderBelongInfoPO.getBelonger().getUserName());
+					decorationVO.getSalesman().getDept().setDeptName(decorationVO.getSalesman().getDept().getDeptName() + Constant.SLASH + orderBelongInfoPO.getBelonger().getDept().getDeptName());
+					decorationVO.getSalesman().setCurrentName(decorationVO.getSalesman().getCurrentName() + Constant.SLASH + orderBelongInfoPO.getBelonger().getCurrentName());
 				}
 			}
 			
@@ -383,15 +387,17 @@ public class DecorationServiceImpl implements DecorationService {
 			
 			decorationVO.setDiscount(decorationPO.getDiscount());
 			
-			List<DecorationBelongInfoPO> orderBelongInfoPOs = decorationBelongDao.queryOrderBelongInfoByOrderId(decorationPO.getOrderId());
+			List<DecorationBelongPO> orderBelongInfoPOs = decorationBelongDao.queryOrderBelongInfoByOrderId(decorationPO.getOrderId());
 			
-			for(DecorationBelongInfoPO orderBelongInfoPO: orderBelongInfoPOs){
-				if(DecorationBelongInfoPO.BELONGTYPE_DESIGN_STR.equals(orderBelongInfoPO.getBelongType()) && !orderBelongInfoPO.getBelongUserPO().getUserId().equals(decorationPO.getDesigner().getUserId())){ // 设计归属
-					decorationVO.getDesigner().setUserName(decorationVO.getDesigner().getUserName() + Constant.SLASH + orderBelongInfoPO.getBelongUserPO().getUserName());
-					decorationVO.getDesigner().getDept().setDeptName(decorationVO.getDesigner().getDept().getDeptName() + Constant.SLASH + orderBelongInfoPO.getBelongUserPO().getDept().getDeptName());
-				}else if(DecorationBelongInfoPO.BELONGTYPE_SALESMAN_STR.equals(orderBelongInfoPO.getBelongType()) && !orderBelongInfoPO.getBelongUserPO().getUserId().equals(decorationPO.getSalesman().getUserId())){ // 业务归属
-					decorationVO.getSalesman().setUserName(decorationVO.getSalesman().getUserName() + Constant.SLASH + orderBelongInfoPO.getBelongUserPO().getUserName());
-					decorationVO.getSalesman().getDept().setDeptName(decorationVO.getSalesman().getDept().getDeptName() + Constant.SLASH + orderBelongInfoPO.getBelongUserPO().getDept().getDeptName());
+			for(DecorationBelongPO orderBelongInfoPO: orderBelongInfoPOs){
+				if(DecorationBelongPO.BELONGTYPE_DESIGN_INT.equals(orderBelongInfoPO.getType()) && !orderBelongInfoPO.getBelonger().getUserId().equals(decorationPO.getDesigner().getUserId())){ // 设计归属
+					decorationVO.getDesigner().setUserName(decorationVO.getDesigner().getUserName() + Constant.SLASH + orderBelongInfoPO.getBelonger().getUserName());
+					decorationVO.getDesigner().getDept().setDeptName(decorationVO.getDesigner().getDept().getDeptName() + Constant.SLASH + orderBelongInfoPO.getBelonger().getDept().getDeptName());
+					decorationVO.getDesigner().setCurrentName(decorationVO.getDesigner().getCurrentName() + Constant.SLASH + orderBelongInfoPO.getBelonger().getCurrentName());
+				}else if(DecorationBelongPO.BELONGTYPE_SALESMAN_INT.equals(orderBelongInfoPO.getType()) && !orderBelongInfoPO.getBelonger().getUserId().equals(decorationPO.getSalesman().getUserId())){ // 业务归属
+					decorationVO.getSalesman().setUserName(decorationVO.getSalesman().getUserName() + Constant.SLASH + orderBelongInfoPO.getBelonger().getUserName());
+					decorationVO.getSalesman().getDept().setDeptName(decorationVO.getSalesman().getDept().getDeptName() + Constant.SLASH + orderBelongInfoPO.getBelonger().getDept().getDeptName());
+					decorationVO.getSalesman().setCurrentName(decorationVO.getSalesman().getCurrentName() + Constant.SLASH + orderBelongInfoPO.getBelonger().getCurrentName());
 				}
 			}
 			
@@ -428,15 +434,17 @@ public class DecorationServiceImpl implements DecorationService {
 			
 			decorationVO.setDiscount(decorationPO.getDiscount());
 		
-			List<DecorationBelongInfoPO> orderBelongInfoPOs = decorationBelongDao.queryOrderBelongInfoByOrderId(decorationPO.getOrderId());
+			List<DecorationBelongPO> orderBelongInfoPOs = decorationBelongDao.queryOrderBelongInfoByOrderId(decorationPO.getOrderId());
 			
-			for(DecorationBelongInfoPO orderBelongInfoPO: orderBelongInfoPOs){
-				if(DecorationBelongInfoPO.BELONGTYPE_DESIGN_STR.equals(orderBelongInfoPO.getBelongType()) && !orderBelongInfoPO.getBelongUserPO().getUserId().equals(decorationPO.getDesigner().getUserId())){ // 设计归属
-					decorationVO.getDesigner().setUserName(decorationVO.getDesigner().getUserName() + Constant.SLASH + orderBelongInfoPO.getBelongUserPO().getUserName());
-					decorationVO.getDesigner().getDept().setDeptName(decorationVO.getDesigner().getDept().getDeptName() + Constant.SLASH + orderBelongInfoPO.getBelongUserPO().getDept().getDeptName());
-				}else if(DecorationBelongInfoPO.BELONGTYPE_SALESMAN_STR.equals(orderBelongInfoPO.getBelongType()) && !orderBelongInfoPO.getBelongUserPO().getUserId().equals(decorationPO.getSalesman().getUserId())){ // 业务归属
-					decorationVO.getSalesman().setUserName(decorationVO.getSalesman().getUserName() + Constant.SLASH + orderBelongInfoPO.getBelongUserPO().getUserName());
-					decorationVO.getSalesman().getDept().setDeptName(decorationVO.getSalesman().getDept().getDeptName() + Constant.SLASH + orderBelongInfoPO.getBelongUserPO().getDept().getDeptName());
+			for(DecorationBelongPO orderBelongInfoPO: orderBelongInfoPOs){
+				if(DecorationBelongPO.BELONGTYPE_DESIGN_INT.equals(orderBelongInfoPO.getType()) && !orderBelongInfoPO.getBelonger().getUserId().equals(decorationPO.getDesigner().getUserId())){ // 设计归属
+					decorationVO.getDesigner().setUserName(decorationVO.getDesigner().getUserName() + Constant.SLASH + orderBelongInfoPO.getBelonger().getUserName());
+					decorationVO.getDesigner().getDept().setDeptName(decorationVO.getDesigner().getDept().getDeptName() + Constant.SLASH + orderBelongInfoPO.getBelonger().getDept().getDeptName());
+					decorationVO.getDesigner().setCurrentName(decorationVO.getDesigner().getCurrentName() + Constant.SLASH + orderBelongInfoPO.getBelonger().getCurrentName());
+				}else if(DecorationBelongPO.BELONGTYPE_SALESMAN_INT.equals(orderBelongInfoPO.getType()) && !orderBelongInfoPO.getBelonger().getUserId().equals(decorationPO.getSalesman().getUserId())){ // 业务归属
+					decorationVO.getSalesman().setUserName(decorationVO.getSalesman().getUserName() + Constant.SLASH + orderBelongInfoPO.getBelonger().getUserName());
+					decorationVO.getSalesman().getDept().setDeptName(decorationVO.getSalesman().getDept().getDeptName() + Constant.SLASH + orderBelongInfoPO.getBelonger().getDept().getDeptName());
+					decorationVO.getSalesman().setCurrentName(decorationVO.getSalesman().getCurrentName() + Constant.SLASH + orderBelongInfoPO.getBelonger().getCurrentName());
 				}
 			}
 			
@@ -504,15 +512,17 @@ public class DecorationServiceImpl implements DecorationService {
 			
 			decorationVO.setDiscount(decorationPO.getDiscount());
 			
-			List<DecorationBelongInfoPO> orderBelongInfoPOs = decorationBelongDao.queryOrderBelongInfoByOrderId(decorationPO.getOrderId());
+			List<DecorationBelongPO> orderBelongInfoPOs = decorationBelongDao.queryOrderBelongInfoByOrderId(decorationPO.getOrderId());
 			
-			for(DecorationBelongInfoPO orderBelongInfoPO: orderBelongInfoPOs){
-				if(DecorationBelongInfoPO.BELONGTYPE_DESIGN_STR.equals(orderBelongInfoPO.getBelongType()) && !orderBelongInfoPO.getBelongUserPO().getUserId().equals(decorationPO.getDesigner().getUserId())){ // 设计归属
-					decorationVO.getDesigner().setUserName(decorationVO.getDesigner().getUserName() + Constant.SLASH + orderBelongInfoPO.getBelongUserPO().getUserName());
-					decorationVO.getDesigner().getDept().setDeptName(decorationVO.getDesigner().getDept().getDeptName() + Constant.SLASH + orderBelongInfoPO.getBelongUserPO().getDept().getDeptName());
-				}else if(DecorationBelongInfoPO.BELONGTYPE_SALESMAN_STR.equals(orderBelongInfoPO.getBelongType()) && !orderBelongInfoPO.getBelongUserPO().getUserId().equals(decorationPO.getSalesman().getUserId())){ // 业务归属
-					decorationVO.getSalesman().setUserName(decorationVO.getSalesman().getUserName() + Constant.SLASH + orderBelongInfoPO.getBelongUserPO().getUserName());
-					decorationVO.getSalesman().getDept().setDeptName(decorationVO.getSalesman().getDept().getDeptName() + Constant.SLASH + orderBelongInfoPO.getBelongUserPO().getDept().getDeptName());
+			for(DecorationBelongPO orderBelongInfoPO: orderBelongInfoPOs){
+				if(DecorationBelongPO.BELONGTYPE_DESIGN_INT.equals(orderBelongInfoPO.getType()) && !orderBelongInfoPO.getBelonger().getUserId().equals(decorationPO.getDesigner().getUserId())){ // 设计归属
+					decorationVO.getDesigner().setUserName(decorationVO.getDesigner().getUserName() + Constant.SLASH + orderBelongInfoPO.getBelonger().getUserName());
+					decorationVO.getDesigner().getDept().setDeptName(decorationVO.getDesigner().getDept().getDeptName() + Constant.SLASH + orderBelongInfoPO.getBelonger().getDept().getDeptName());
+					decorationVO.getDesigner().setCurrentName(decorationVO.getDesigner().getCurrentName() + Constant.SLASH + orderBelongInfoPO.getBelonger().getCurrentName());
+				}else if(DecorationBelongPO.BELONGTYPE_SALESMAN_INT.equals(orderBelongInfoPO.getType()) && !orderBelongInfoPO.getBelonger().getUserId().equals(decorationPO.getSalesman().getUserId())){ // 业务归属
+					decorationVO.getSalesman().setUserName(decorationVO.getSalesman().getUserName() + Constant.SLASH + orderBelongInfoPO.getBelonger().getUserName());
+					decorationVO.getSalesman().getDept().setDeptName(decorationVO.getSalesman().getDept().getDeptName() + Constant.SLASH + orderBelongInfoPO.getBelonger().getDept().getDeptName());
+					decorationVO.getSalesman().setCurrentName(decorationVO.getSalesman().getCurrentName() + Constant.SLASH + orderBelongInfoPO.getBelonger().getCurrentName());
 				}
 			}
 			
@@ -751,9 +761,9 @@ public class DecorationServiceImpl implements DecorationService {
 		
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 		
-		List<String> status = Arrays.asList(new String[]{DecorationPO.STATUS_INIT_STR, DecorationPO.STATUS_QUOTATION_STR, DecorationPO.STATUS_DEPOSIT_STR, DecorationPO.STATUS_RESIGNED_STR}); // 咨询, 量房, 已报价, 定金, 重签合同
+		List<String> status = Arrays.asList(new String[]{DecorationPO.STATUS_INIT_STR, DecorationPO.STATUS_QUOTATION_STR, DecorationPO.STATUS_DEPOSIT_STR, DecorationPO.STATUS_RESIGNED_STR, DecorationPO.STATUS_SIGNED_STR}); // 咨询, 量房, 已报价, 定金, 重签合同, 已签约
 		
-		if(decorationPO == null){
+		if(decorationPO == null){ 
 			throw new FLException(140013, "订单不存在");
 		}
 		
@@ -1088,59 +1098,62 @@ public class DecorationServiceImpl implements DecorationService {
 		decorationInfoDao.save(decorationInfo);
 		
 		//创建订单归属信息
-		DecorationBelongInfoPO belongDesignerInfo = new DecorationBelongInfoPO();
-		belongDesignerInfo.setBelongDeptPO(decorationPO.getDesigner().getDept());
-		belongDesignerInfo.setBelongRate((float) 1);
-		belongDesignerInfo.setBelongRegionPO(decorationPO.getDesigner().getDept().getFatherDept());
-		belongDesignerInfo.setBelongUserPO(decorationPO.getDesigner());
-		belongDesignerInfo.setBelongType(DecorationBelongInfoPO.BELONGTYPE_DESIGN_STR);
-		belongDesignerInfo.setDefaultFlag(DecorationBelongInfoPO.DEFAULTFLAG_TRUE_STR);
-		belongDesignerInfo.setOperateUserPO(operater);
+		DecorationBelongPO belongDesignerInfo = new DecorationBelongPO();
+		belongDesignerInfo.setDepartment(decorationPO.getDesigner().getDept());
+		belongDesignerInfo.setRate((float) 1);
+		belongDesignerInfo.setRegion(decorationPO.getDesigner().getDept().getFatherDept());
+		belongDesignerInfo.setBelonger(decorationPO.getDesigner());
+		belongDesignerInfo.setType(DecorationBelongPO.BELONGTYPE_DESIGN_INT);
+		belongDesignerInfo.setDefaultFlag(DecorationBelongPO.DEFAULTFLAG_TRUE_INT);
+		belongDesignerInfo.setOperater(operater);
 		belongDesignerInfo.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
-		belongDesignerInfo.setStatus(DecorationBelongInfoPO.STATUS_PASS_STR);
-		belongDesignerInfo.setDecorationPO(decorationPO);
+		belongDesignerInfo.setStatus(DecorationBelongPO.STATUS_INVALID_INT);
+		belongDesignerInfo.setOrderId(decorationPO.getOrderId());
 		decorationBelongDao.save(belongDesignerInfo);
 		
-		DecorationBelongInfoPO belongsalesmanInfo = new DecorationBelongInfoPO();
-		belongsalesmanInfo.setBelongDeptPO(decorationPO.getSalesman().getDept());
-		belongsalesmanInfo.setBelongRate((float) 1);
+		DecorationBelongPO belongsalesmanInfo = new DecorationBelongPO();
+		belongsalesmanInfo.setDepartment(decorationPO.getSalesman().getDept());
+		belongsalesmanInfo.setRate((float) 1);
 		
 		if(decorationPO.getSalesman().getDept().getFatherDept() == null){
-			belongsalesmanInfo.setBelongRegionPO(null);
+			belongsalesmanInfo.setRegion(null);
 		}else{
-			belongsalesmanInfo.setBelongRegionPO(decorationPO.getSalesman().getDept().getFatherDept());
+			belongsalesmanInfo.setRegion(decorationPO.getSalesman().getDept().getFatherDept());
 		}
 		
-		belongsalesmanInfo.setBelongUserPO(decorationPO.getSalesman());
-		belongsalesmanInfo.setBelongType(DecorationBelongInfoPO.BELONGTYPE_SALESMAN_STR);
-		belongsalesmanInfo.setDefaultFlag(DecorationBelongInfoPO.DEFAULTFLAG_TRUE_STR);
-		belongsalesmanInfo.setOperateUserPO(operater);
+		belongsalesmanInfo.setBelonger(decorationPO.getSalesman());
+		belongsalesmanInfo.setType(DecorationBelongPO.BELONGTYPE_SALESMAN_INT);
+		belongsalesmanInfo.setDefaultFlag(DecorationBelongPO.DEFAULTFLAG_TRUE_INT);
+		belongsalesmanInfo.setOperater(operater);
 		belongsalesmanInfo.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
-		belongsalesmanInfo.setStatus(DecorationBelongInfoPO.STATUS_PASS_STR);
-		belongsalesmanInfo.setDecorationPO(decorationPO);
+		belongsalesmanInfo.setStatus(DecorationBelongPO.STATUS_INVALID_INT);
+		belongsalesmanInfo.setOrderId(decorationPO.getOrderId());
 		
 		decorationBelongDao.save(belongsalesmanInfo);
 		
 		DecorationOperatePO decorationOperatePO = new DecorationOperatePO();
-		decorationOperatePO.setDecoration(decorationPO);
+		decorationOperatePO.setOrderId(decorationPO.getOrderId());
 		decorationOperatePO.setOperater(userDao.queryUserByUserId(userId));
 		decorationOperatePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 		decorationOperatePO.setType(DecorationOperatePO.TYPE_CREATE_DECORATION_ORDER_INT);
 		decorationOperatePO.setStatus(DecorationOperatePO.STATUS_INIT_INT);
-		decorationOperatePO.setDes("创建订单");
+		decorationOperatePO.setComment("创建订单");
 		
 		decorationOperateDao.save(decorationOperatePO);
 		
 		DecorationOperatePO belongDecorationOperatePO = new DecorationOperatePO();
-		belongDecorationOperatePO.setDecoration(decorationPO);
+		belongDecorationOperatePO.setOrderId(decorationPO.getOrderId());
 		belongDecorationOperatePO.setOperater(userDao.queryUserByUserId(userId));
 		belongDecorationOperatePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
-		belongDecorationOperatePO.setSourcer(decorationPO.getSalesman());
-		belongDecorationOperatePO.setTarger(decorationPO.getDesigner());
+		belongDecorationOperatePO.setDsuid(decorationPO.getSalesman().getUid());
+		belongDecorationOperatePO.setSmuid(decorationPO.getDesigner().getUid());
+		
 		belongDecorationOperatePO.setType(DecorationOperatePO.TYPE_DESIGNER_DECORATION_ORDER_INT);
 		belongDecorationOperatePO.setValue(1f);
 		belongDecorationOperatePO.setStatus(DecorationOperatePO.STATUS_INIT_INT);
-		belongDecorationOperatePO.setDes("订单归属");
+		belongDecorationOperatePO.setComment("订单归属");
+		
+		decorationOperateDao.save(belongDecorationOperatePO);
 		
 		AuditPO auditPO = new AuditPO();
 	    auditPO.setDecoration(decorationPO);
@@ -1184,12 +1197,12 @@ public class DecorationServiceImpl implements DecorationService {
 		decorationDao.update(decorationPO);
 		
 		DecorationOperatePO decorationOperatePO = new DecorationOperatePO();
-		decorationOperatePO.setDecoration(decorationPO);
+		decorationOperatePO.setOrderId(decorationPO.getOrderId());
 		decorationOperatePO.setOperater(userDao.queryUserByUserId(userId));
 		decorationOperatePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 		decorationOperatePO.setType(DecorationOperatePO.TYPE_WASTE_DECORATION_ORDER_INT);
 		decorationOperatePO.setStatus(DecorationOperatePO.STATUS_INIT_INT);
-		decorationOperatePO.setDes("废弃订单");
+		decorationOperatePO.setComment("废弃订单");
 		
 		decorationOperateDao.save(decorationOperatePO);
 		
@@ -1271,12 +1284,13 @@ public class DecorationServiceImpl implements DecorationService {
 			}
 			
 			DecorationOperatePO decorationOperatePO = new DecorationOperatePO();
-			decorationOperatePO.setDecoration(decorationPO);
+			decorationOperatePO.setOrderId(decorationPO.getOrderId());
 			decorationOperatePO.setOperater(userDao.queryUserByUserId(userId));
 			decorationOperatePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 			decorationOperatePO.setType(DecorationOperatePO.TYPE_TERMINATION_DECORATION_ORDER_INT);
 			decorationOperatePO.setStatus(DecorationOperatePO.STATUS_INIT_INT);
-			decorationOperatePO.setDes("订单合同终止");
+			
+			decorationOperatePO.setComment("订单合同终止");
 			
 			decorationOperateDao.save(decorationOperatePO);
 			
@@ -1302,12 +1316,13 @@ public class DecorationServiceImpl implements DecorationService {
 			decorationDao.update(DecorationPO);
 			
 			DecorationOperatePO decorationOperatePO = new DecorationOperatePO();
-			decorationOperatePO.setDecoration(DecorationPO);
+			decorationOperatePO.setOrderId(DecorationPO.getOrderId());
 			decorationOperatePO.setOperater(userDao.queryUserByUserId(userId));
 			decorationOperatePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 			decorationOperatePO.setType(DecorationOperatePO.TYPE_SUB_DECORATION_QUOTATION_NUM_INT);
 			decorationOperatePO.setStatus(DecorationOperatePO.STATUS_INIT_INT);
-			decorationOperatePO.setDes("订单报价限制次数减少");
+			
+			decorationOperatePO.setComment("订单报价限制次数减少");
 			
 			decorationOperateDao.save(decorationOperatePO);
 		}

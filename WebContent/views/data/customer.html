@@ -119,7 +119,7 @@
 
 <div class="modal fade" id="customerphoneModal" tabindex="-1"  >
 	<div class="modal-dialog">
-		<div class="modal-content" style="width:900px;margin-left:-30%">
+		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal">
 					<span>&times;</span>
@@ -128,13 +128,22 @@
 				<h4 class="modal-title" id="customerphoneInfo">客户电话</h4>
 			</div>
 
-			<div class="modal-body" id="customerphoneList"></div>
+			<div class="modal-body" >
+				<div id="customerphoneList"></div>
+				<div class="form-group">
+					<label class="col-sm-3 control-label "  for="addphone"><b>添加电话:</b></label>
+					<input class="col-xs-10 col-sm-4 " id="addphone"  data-placement="bottom">
+					<button class="btn btn-sm btn-primary" style="margin-left: 20px"  id="phonesaveBtn">保存</button>
+				</div>
 
-			<div class="modal-footer"id="phoneModalfoot" style="margin-top: 0px;"></div>
+			</div>
+			<div class="modal-footer" style="text-align: center;">
+				<button class="btn btn-sm btn-default" data-dismiss="modal">关闭</button>
+			</div>
 		</div>
 	</div>
 </div>
 
 <script type="text/javascript">
-	$.getScript('js/data/customer.js?version=' + versionCode);
+	$.loadScript(['js/data/customer.js']);
 </script>

@@ -21,15 +21,26 @@ import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.inventory.dao.AccessoriesDao;
 import com.fanglin.inventory.dao.AccessoriesItemDao;
+import com.fanglin.inventory.dao.AccessoriesManifestDao;
+import com.fanglin.inventory.dao.ManifestDao;
+import com.fanglin.inventory.dao.ManifestItemDao;
 import com.fanglin.inventory.po.AccessoriesItemPO;
+import com.fanglin.inventory.po.AccessoriesManifestPO;
 import com.fanglin.inventory.po.AccessoriesPO;
+import com.fanglin.inventory.po.ColorPO;
+import com.fanglin.inventory.po.FormatPO;
 import com.fanglin.inventory.po.GoodsPO;
+import com.fanglin.inventory.po.ManifestItemPO;
+import com.fanglin.inventory.po.ManifestPO;
 import com.fanglin.inventory.service.AccessoriesService;
+import com.fanglin.inventory.service.GoodsStorehouseStockService;
+import com.fanglin.inventory.service.StorehouseStockService;
 import com.fanglin.inventory.vo.AccessoriesItemVO;
 import com.fanglin.inventory.vo.AccessoriesVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
@@ -52,7 +63,22 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 	private DecorationDao decorationDao;
 	
 	@Autowired
+	private ManifestDao manifestDao;
+	
+	@Autowired
+	private ManifestItemDao manifestItemDao;
+	
+	@Autowired
+	private AccessoriesManifestDao accessoriesManifestDao;
+	
+	@Autowired
 	private CountingService countingService;
+	
+	@Autowired
+	private GoodsStorehouseStockService goodsStorehouseStockService;
+	
+	@Autowired
+	private StorehouseStockService storehouseStockService;
 	
 	@Override
 	public void pageAccessories(Paging paging, List<Filter> filters,int company) {
@@ -91,7 +117,7 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int addAccessories(AccessoriesVO accessoriesVO,List<AccessoriesItemVO> accessoriesItemVOs, String creater,String approver,int company) {
+	public int addAccessories(AccessoriesVO accessoriesVO,List<AccessoriesItemVO> accessoriesItemVOs, String creater,String approver,int company) throws FLException {
 		
 		String word = "AO";
 		
@@ -104,9 +130,13 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 		AccessoriesPO accessoriesPO = new AccessoriesPO(no);
 		
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(accessoriesVO.getOrderId());
+		
+		if(decorationPO == null){
+			throw new FLException(140013, "订单不存在");
+		}
+		
 		HousePO housePO = decorationPO.getHouse();
 		
-//		HousePO housePO = houseDao.get(accessoriesVO.getHouse().getHouseNumber());
 		if(accessoriesVO.getSupervisor()!= null){
 			UserPO supervisorPO = userDao.queryUserByUserId(accessoriesVO.getSupervisor().getUserId());
 			accessoriesPO.setSupervisor(supervisorPO);
@@ -147,6 +177,133 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 
 		return 0;
 	}
+	
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public int refundAccessories(AccessoriesVO accessoriesVO,List<AccessoriesItemVO> accessoriesItemVOs, String creater,String approver, int company) throws FLException {
+		//创建一条辅料单
+		String word = "AO";
+		
+		String currentDate = DateUtil.current("yyMMdd").toString();
+		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_AO_INT,currentDate);
+		String endNo = FormatUtil.fillZero(FormatUtil.offset(count), "0000");
+		
+		String no = String.valueOf(word) + currentDate + endNo;
+		
+		AccessoriesPO accessoriesPO = new AccessoriesPO(no);
+		
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(accessoriesVO.getOrderId());
+		
+		if(decorationPO == null){
+			throw new FLException(140013, "订单不存在");
+		}
+		
+		HousePO housePO = decorationPO.getHouse();
+		
+		if(accessoriesVO.getSupervisor()!= null){
+			UserPO supervisorPO = userDao.queryUserByUserId(accessoriesVO.getSupervisor().getUserId());
+			accessoriesPO.setSupervisor(supervisorPO);
+		}
+		
+		UserPO createrPO = userDao.queryUserByUserId(creater);
+		UserPO approverPO = userDao.queryUserByUserId(approver);
+		
+		BeanUtil.copyProperties(accessoriesVO, accessoriesPO, Arrays.asList("house","supervisor","creater","approver","fetchTime"));
+		accessoriesPO.setOrderId(accessoriesVO.getOrderId());
+		accessoriesPO.setHouse(housePO);
+		
+		accessoriesPO.setCreater(createrPO);
+		accessoriesPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+		accessoriesPO.setApprover(approverPO);
+		accessoriesPO.setApproverTime(DateUtil.getDateToTimestamp(new Date()));
+
+		Date date = DateUtil.parseDate(accessoriesVO.getFetchTime(), "yyyy-MM-dd");
+		Timestamp end = DateUtil.getDateToTimestamp(date);
+		accessoriesPO.setFetchTime(end);
+		accessoriesPO.setCompany(company);
+		accessoriesPO.setStatus(AccessoriesPO.STATUS_RETURN_INT);
+		accessoriesDao.save(accessoriesPO);
+		
+		//创建一条辅料类型的货单
+		float total = 0f;
+		float totals = 0f;
+		String month = DateUtil.getDateToDateString(new Date(), "yyyyMM");
+		
+		String wordAS = "AS";
+		String comment = "";
+		
+		UserPO userPO = userDao.queryUserByUserId(creater);
+		
+		int countAS = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_AS_INT, CountingPO.COUNTING_DATE_SILNLE_STR);
+		String manifestId = String.valueOf(wordAS) + FormatUtil.fillZero(countAS, "00000000");
+		
+		ManifestPO manifestPO = new ManifestPO(manifestId);
+		
+		manifestPO.setAttachment("");
+		manifestPO.setComment(comment);
+		manifestPO.setCreateUser(userPO);
+		manifestPO.setTotal(ManifestPO.COLUMN_TOTAL_STR);
+		manifestPO.setType(ManifestPO.TYPE_AS_INT);
+		manifestPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+		manifestPO.setManifestTime(DateUtil.getDateToTimestamp(new Date()));
+		manifestPO.setCreateUser(userPO);
+		manifestPO.setStatus(ManifestPO.STATUS_DISABLE_INT);
+		manifestPO.setCompany(company);
+		
+		manifestDao.save(manifestPO);
+		
+		
+		//创建一条上方辅料单对应的货单项
+		//创建一条上方辅料货单对应的货单项
+		AccessoriesItemPO accessoriesItemPO;
+		ManifestItemPO manifestItemPO;
+		
+		for(AccessoriesItemVO accessoriesItemVO: accessoriesItemVOs){
+			
+			accessoriesItemPO = new AccessoriesItemPO(new GoodsPO());
+			
+			BeanUtil.copyProperties(accessoriesItemVO, accessoriesItemPO,Arrays.asList("goods","color","format"));
+			BeanUtil.copyProperties(accessoriesItemVO.getGoods(), accessoriesItemPO.getGoods(),Arrays.asList("accessoriesType"));
+			
+			accessoriesItemPO.setAid(accessoriesPO.getAid());
+			
+			accessoriesItemDao.save(accessoriesItemPO);
+			
+			long gid = accessoriesItemPO.getGoods().getGid();
+			long cid = accessoriesItemVO.getColor().getCid();
+			long fid = accessoriesItemVO.getFormat().getFid();
+			float num = accessoriesItemPO.getNum();//负数
+			
+			manifestItemPO = new ManifestItemPO(new GoodsPO(gid),new ColorPO(cid),new FormatPO(fid));
+			manifestItemPO.setNum(-num);
+			
+			if(accessoriesItemVO.getStorehouse() != null){
+				
+				long oshId = accessoriesItemVO.getStorehouse().getShId();//仓库
+				
+				manifestItemPO.setInstorehouse(goodsStorehouseStockService.instorehouse(gid,cid,fid, oshId, -num));
+				storehouseStockService.updateStorehouseStock(oshId, month, -num);
+				
+				float _total = Arith.sub(total, manifestItemPO.getUnitPrice());
+				totals = Arith.add(totals,Arith.mul(_total, num));
+			}
+			
+			manifestItemPO.setMid(manifestPO.getMid());
+			
+			manifestItemDao.save(manifestItemPO);
+		}
+		
+		manifestPO.setTotal(totals);
+		
+		manifestDao.update(manifestPO);
+		
+		AccessoriesManifestPO accessoriesManifestPO = new AccessoriesManifestPO(accessoriesPO,manifestPO);
+		
+		accessoriesManifestDao.save(accessoriesManifestPO);
+		
+		
+		return 0;
+	}
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
@@ -172,5 +329,7 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 		
 		return 0;
 	}
+
+	
 
 }

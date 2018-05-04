@@ -11,6 +11,7 @@
 
 package com.fanglin.approval.service.impl;
 
+import java.util.Arrays;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +58,7 @@ public class ApprovalMaterialFullPaymentServiceImpl implements ApprovalMaterialF
 	@Transactional(rollbackFor=Exception.class)
 	public int submitApprovalForDecorationRefund(ApprovalVO approvalVO, ApprovalMaterialFullPaymentVO approvalMaterialFullPaymentVO, String userId, int company) throws FLException {
 		
-		long msoId = approvalMaterialFullPaymentVO.getMsoId();
+		long msoId = approvalMaterialFullPaymentVO.getMid();
 		
 		ApprovalPO approvalPO = approvalDao.queryApproval(ApprovalPO.APPROVAL_STATUS_INIT_INT,ApprovalPO.APPROVAL_TYPE_MATERIAL_FULL_PAYMENT_INT, String.valueOf(msoId));
 		
@@ -79,9 +80,9 @@ public class ApprovalMaterialFullPaymentServiceImpl implements ApprovalMaterialF
 		materialDao.update(materialPO);
 		
 		approvalPO = new ApprovalPO();
-		BeanUtil.copyProperties(approvalVO, approvalPO);
+		BeanUtil.copyProperties(approvalVO, approvalPO,Arrays.asList("receiver","sender"));
 		
-		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiverId());
+		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiver().getUserId());
 		UserPO sender = userDao.queryUserByUserId(userId);
 		
 		approvalPO.setType(ApprovalPO.APPROVAL_TYPE_MATERIAL_FULL_PAYMENT_INT);
@@ -97,7 +98,7 @@ public class ApprovalMaterialFullPaymentServiceImpl implements ApprovalMaterialF
 		
 		ApprovalMaterialFullPaymentPO approvalMaterialFullPaymentPO = new ApprovalMaterialFullPaymentPO();
 		approvalMaterialFullPaymentPO.setAid(approvalPO.getAid());
-		approvalMaterialFullPaymentPO.setMsoId(msoId);
+		approvalMaterialFullPaymentPO.setMid(msoId);
 		approvalMaterialFullPaymentPO.setReferMoney(approvalMaterialFullPaymentVO.getReferMoney());
 		
 		approvalMaterialFullPaymentDao.save(approvalMaterialFullPaymentPO);
@@ -115,7 +116,7 @@ public class ApprovalMaterialFullPaymentServiceImpl implements ApprovalMaterialF
 			throw new FLException(240003, "审批信息不完整");
 		}
 		
-		long msoId = approvalMaterialFullPaymentPO.getMsoId();
+		long msoId = approvalMaterialFullPaymentPO.getMid();
 		
 		MaterialPO materialPO = materialDao.get(msoId);
 		
@@ -164,7 +165,7 @@ public class ApprovalMaterialFullPaymentServiceImpl implements ApprovalMaterialF
 			throw new FLException(240003, "审批信息不完整");
 		}
 		
-		long msoId = approvalMaterialFullPaymentPO.getMsoId();
+		long msoId = approvalMaterialFullPaymentPO.getMid();
 		
 		MaterialPO materialPO = materialDao.get(msoId);
 		

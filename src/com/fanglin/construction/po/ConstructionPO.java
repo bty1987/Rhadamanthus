@@ -41,8 +41,6 @@ public class ConstructionPO implements Serializable{
 	
 	public static final String COLUMN_CHANSTATUS_STR = "chanStatus";
 	
-	public static final String COLUMN_ALLOCATIONWORKERFLAG_STR = "allocationWorkerFlag";
-	
 	public static final String COLUMN_ACCEPTANCEFLAG_STR = "acceptanceFlag";
 	
 	public static final int SCHEDULE_TYPE_CHAN_INT = 1;
@@ -69,7 +67,7 @@ public class ConstructionPO implements Serializable{
 	
 	private DecorationPO decoration;
 	
-	private UserPO supervisor;
+	private UserPO	supervisor;
 	
 	private int schedule;
 

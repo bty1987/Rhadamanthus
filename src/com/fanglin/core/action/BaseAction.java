@@ -21,12 +21,8 @@ import java.util.ResourceBundle;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.struts2.convention.annotation.ExceptionMapping;
-import org.apache.struts2.convention.annotation.ExceptionMappings;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
-import org.apache.struts2.convention.annotation.Result;
-import org.apache.struts2.convention.annotation.Results;
 import org.apache.struts2.interceptor.ServletRequestAware;
 import org.apache.struts2.interceptor.ServletResponseAware;
 import org.apache.struts2.json.annotations.JSON;
@@ -43,10 +39,10 @@ import com.opensymphony.xwork2.ActionSupport;
 @ParentPackage("login")
 @Namespace("/")
 @Controller
-@Results({ 
+/*@Results({ 
 	@Result(name = BaseAction.BACKVALUE_LOGIN_STR, location = "login", type = "chain")
 })
-@ExceptionMappings({ @ExceptionMapping(exception = "java.lange.RuntimeException", result = "error") })
+@ExceptionMappings({ @ExceptionMapping(exception = "java.lange.RuntimeException", result = "error") }) */
 public class BaseAction extends ActionSupport implements ServletRequestAware, ServletResponseAware {
 
 	private static final long serialVersionUID = 1638203239536571772L;

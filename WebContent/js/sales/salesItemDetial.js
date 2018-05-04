@@ -6,7 +6,6 @@ $(function () {
 
     var sid = params.sid;
     var fullpayStatus = params.fullpayStatus;
-    var depositpayStatus = params.depositpayStatus;
     var status = params.status;
 
     var refundBtn = $('#refundBtn');
@@ -22,7 +21,7 @@ $(function () {
     var refundDes = $('#refundDes');
 
     var approvalStr = {
-        receiverId: "approval.receiverId",
+        receiverId: "approval.receiver.userId",
         comment: "approval.comment"
     };
 

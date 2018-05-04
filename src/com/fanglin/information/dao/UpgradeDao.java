@@ -15,4 +15,6 @@ public interface UpgradeDao extends Dao<UpgradePO>{
 	
 	public List<UpgradePO> matchUpgrade(String trialno);
 	
+	public String maxUpgrade();
+	
 }

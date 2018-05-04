@@ -199,6 +199,8 @@ jQuery(function($) {
 					var $btnSales = $('<a></a>').addClass('btn btn-minier btn-inverse').html('订单业务')
 					var $btnStatus = $('<a></a>').addClass('btn btn-minier btn-danger').html('订单状态');
 					var $btnHouse = $('<a></a>').addClass('btn btn-minier btn-pink').html('房源权配');
+					var $btnCustomer = $('<a></a>').addClass('btn btn-minier btn-purple').html('客源权配');
+
 					var propertyArr = [
 						["员工编号:", v.userId, "grey"],
 						["用户名:", v.loginId, "grey"],
@@ -290,7 +292,10 @@ jQuery(function($) {
 						binding.openHouseDialog(v.userId);
 					});
 
-					$divBtnWrap.append($company).append($btnRight).append($btnDesigne).append($btnSales).append($btnStatus).append($btnHouse).appendTo($h3);
+					$btnCustomer.click(function(){
+						binding.openCustomerDialog(v.userId);
+					})
+					$divBtnWrap.append($company).append($btnRight).append($btnDesigne).append($btnSales).append($btnStatus).append($btnHouse).append($btnCustomer).appendTo($h3);
 
 					$liLine.append($h3).append($ulProperty).appendTo($ul);
 				});
@@ -387,6 +392,23 @@ jQuery(function($) {
 				}, null, false);
 				$dialog.modal("show");
 				this.postConf.path = api.right.updateHouseSourceDepartmentRight;
+				this.postConf.name = "dids";
+				this.postConf["user.userId"] = userId;
+			},
+
+			//客源权配
+			openCustomerDialog : function(userId) {
+				var $dialog = this.$dialog;
+				showDepaermentModal("");
+				com.post(api.right.queryCustomerSourceDepartmentRightByUserId, {"user.userId" :  userId}, function(data){
+					if(data.dids.length){
+						$.each(data.dids, function(i, v){
+							$wrap.find('input[value="'+ v +'"]').prop('checked', true);
+						});
+					}
+				}, null, false);
+				$dialog.modal("show");
+				this.postConf.path = api.right.updateCustomerSourceDepartmentRight;
 				this.postConf.name = "dids";
 				this.postConf["user.userId"] = userId;
 			},

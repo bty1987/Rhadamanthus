@@ -50,7 +50,6 @@ jQuery(function ($) {
         'auto': true, // 是否自动上传
         'successTimeout': 150, // 超时时间
         'formData': { // 附带值
-            'uploadType': 5,
             'username': '用户名',
             'rnd': '加密密文'
         },
@@ -75,9 +74,6 @@ jQuery(function ($) {
                     "reworkDrawing.rwdUrl": dateObj.resUrl,
                     "reworkDrawing.rwdAddUrl": "",
                 };
-
-                var imgAddUrl = config.media + api.common.showImg.url + '?imgBasePath=' + dateObj.resUrl + '&divFlag=1&width=150&height=150&timestamp=' + new Date().getTime();
-                var imgUrl = config.media + api.common.showImg.url + '?imgBasePath=' + dateObj.resUrl + '&timestamp=' + new Date().getTime();
 
                 com.post(api.construction.addReworkDrawing, options, function (res) {
                     var reworkDrawing = res.reworkDrawing;

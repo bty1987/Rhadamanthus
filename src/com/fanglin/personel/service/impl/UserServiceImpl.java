@@ -25,6 +25,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.fanglin.common.po.CountingPO;
 import com.fanglin.common.service.CountingService;
 import com.fanglin.communion.dao.DepartmentDao;
+import com.fanglin.communion.dao.DepartmentTypeDao;
 import com.fanglin.communion.dao.DutyDao;
 import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.communion.po.DutyPO;
@@ -91,6 +92,9 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private SystemConfigDao systemConfigDao;
 	
+	@Autowired
+	private DepartmentTypeDao departmentTypeDao;
+
 	@Override
 	public void pageUser(Paging paging, List<Filter> filters, UserVO userVO, Integer company) throws FLException{
 		
@@ -290,6 +294,27 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
+	public List<UserBaseVO> queryUserByDtid(String pinyinName,UserVO userVO,String departmentTypeName,Integer company) throws FLException{
+		
+		List<UserBaseVO> userBaseVOs = new ArrayList<UserBaseVO>();
+		
+		Paging paging = new Paging(0, 10);
+		
+		int dtid = departmentTypeDao.queryDepartmentTypeByName(departmentTypeName).getDtid();
+		
+		List<UserPO> userPOs = userDao.pageUserForNameByPinyinNameADepeType(paging, pinyinName,userVO.getStatus(),dtid, company);
+		
+		for(UserPO userPO: userPOs){
+			
+			userBaseVOs.add(convertBaseBean(userPO));
+			
+		}
+		
+		return userBaseVOs;
+		
+	}
+	
+	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public void addUser(UserInfoVO userInfoVO, int company) throws FLException {
 		
@@ -302,6 +327,12 @@ public class UserServiceImpl implements UserService {
 		}
 		
 		UserPO userPO = new UserPO();
+	
+		DepartmentPO departmentPO =departmentDao.queryDepartmentByDeptId(userVO.getDept().getDeptId());
+		
+		if(departmentPO.getFatherDept() == null){
+			throw new FLException(310002, "部门不可添加人员");
+		}
 		
 		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_USER_INT, CountingPO.COUNTING_DATE_SILNLE_STR);
 		
@@ -319,8 +350,6 @@ public class UserServiceImpl implements UserService {
 		userPO.setCompany(company);
 		
 		BeanUtil.copyProperties(userVO, userPO, Arrays.asList("role", "dept","duty", "uId", "userId", "loginId", "password", "role", "isLogin", "company", "extranet"));
-		
-		DepartmentPO departmentPO =departmentDao.queryDepartmentByDeptId(userVO.getDept().getDeptId());
 		
 		userPO.setDept(departmentPO);
 		
@@ -367,6 +396,12 @@ public class UserServiceImpl implements UserService {
 		}
 		
 		UserPO userPO = userInfoPO.getUser();
+		
+		DepartmentPO departmentPO =departmentDao.queryDepartmentByDeptId(userVO.getDept().getDeptId());
+		
+		if(departmentPO.getFatherDept() == null){
+			throw new FLException(310002, "部门不可添加人员");
+		}
 		
 		short newstatus = userInfoVO.getUser().getStatus();
 		short oldstatus = userPO.getStatus();
@@ -638,6 +673,8 @@ public class UserServiceImpl implements UserService {
 
 		return userBaseVO;
 	}
+
+	
 	
 	
 }

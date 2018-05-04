@@ -19,6 +19,8 @@ public class SalesManifestPO implements Serializable{
 
 	private static final long serialVersionUID = -1613255669850984436L;
 	
+	public static final String COLUMN_SALESSID_STR = "sales.sid";
+	
 	private long smid;
 	
 	private SalesPO sales;

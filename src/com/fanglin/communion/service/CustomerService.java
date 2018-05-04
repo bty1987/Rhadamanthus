@@ -25,7 +25,7 @@ public interface CustomerService {
 	
 	public List<CustomerVO> queryCustomerForName(String pinyinName,Integer company);
 	
-	public List<CustomerVO> checkCustomerForPhone(CustomerPhoneVO customerPhone,Integer company) throws FLException;
+	public int checkCustomerForPhone(CustomerPhoneVO customerPhone,Integer company) throws FLException;
 	
 	public List<CustomerPhoneVO> queryCustomerPhoneByCid(CustomerPhoneVO customerPhoneVO)throws FLException;
 	

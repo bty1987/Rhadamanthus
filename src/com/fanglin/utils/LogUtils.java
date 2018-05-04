@@ -32,7 +32,29 @@ public class LogUtils {
 	
 	public static void logging(Logger logger, Exception e, String actionName){
 		if(SystemConfig.DEBUG_TRUE_STR.equals(SystemConfig.getString("debug", SystemConfig.DEBUG_FALSE_STR))){
-			e.printStackTrace();
+			
+			System.out.println();
+			System.out.println(String.format("Exception Time: %s", e.getMessage()));
+			System.out.println(String.format("Exception Message: %s", e.getMessage()));
+			
+			StackTraceElement[] elements = e.getStackTrace();
+			
+			for(StackTraceElement element: elements){
+				
+				String className = element.getClassName();
+				
+				if(!className.contains("com.fanglin")) continue;
+				
+				String file = element.getFileName();
+				int line = element.getLineNumber();
+				String method = element.getMethodName();
+				
+				System.out.println(String.format("Exception Stack: %s.%s(%s:%d)", className, method, file, line));
+			}
+			
+			System.out.println();
+			
+			logger.error(String.format("%s|%s|%s|%s", "AI", "E", actionName, e.getMessage()));
 		}else{
 			logger.error(String.format("%s|%s|%s|%s", "AI", "E", actionName, e.getMessage()));
 		}
@@ -46,8 +68,8 @@ public class LogUtils {
 		logger.error(String.format("%s|%s|%s|%d-%s", "AI", "E", api, errorcode, errormsg));
 	}
 	
-	public static void logging(Logger logger, String userId, String actionName){
-		logger.error(String.format("%s|%s|%s|%s", "AI", "I", actionName, userId));
+	public static void logging(Logger logger, String userId, String actionName, int company){
+		logger.error(String.format("%s|%s|%s|%s|%d", "AI", "I", actionName, userId, company));
 	}
 	
 	public static void logging(Logger logger, String actionName, Long runTime){
