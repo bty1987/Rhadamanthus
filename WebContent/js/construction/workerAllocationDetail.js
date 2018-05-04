@@ -3,55 +3,7 @@ jQuery(function ($) {
 
     var workerAllocationDetail = {
 
-        controlCondition: false,
-
         constructionSchedules: {},
-
-        operateDict: {
-            "3": {
-                name: "chan",
-                setStatusUrl: api.construction.setConstructionScheduleForStatus,
-                duty: "铲大白工人",
-            }, "4": {
-                name: "putline",
-                setStatusUrl: api.construction.setConstructionScheduleForStatus,
-                duty: "放线小组",
-            }, "5": {
-                name: "waterwayCircuitPower",
-                waterwayDuty: "水暖工",
-                circuitDuty: "电工",
-                powerDuty: "力工",
-                waterwayCircuitDuty: "水电工",
-                setStatusUrl: api.construction.setConstructionScheduleForStatus,
-            }, "6": {
-                name: "bricklay",
-                duty: "瓦工",
-                setStatusUrl: api.construction.setConstructionScheduleForStatus,
-            }, "7": {
-                name: "groundLeveling",
-                duty: "地面找平",
-                setStatusUrl: api.construction.setConstructionScheduleForStatus,
-            }, "8": {
-                name: "carpent",
-                duty: "木工",
-                setStatusUrl: api.construction.setConstructionScheduleForStatus,
-            }, "9": {
-                name: "oil",
-                duty: "油工",
-                setStatusUrl: api.construction.setConstructionScheduleForStatus,
-            }, "10": {
-                name: "waterwayCircuitCheck",
-                waterwayDuty: "水暖工",
-                circuitDuty: "电工",
-                powerDuty: "力工",
-                waterwayCircuitDuty: "水电工",
-                setStatusUrl: api.construction.setConstructionScheduleForStatus,
-            }, "11": {
-                name: "cleaning",
-                duty: "保洁工",
-                setStatusUrl: api.construction.setConstructionScheduleForStatus,
-            },
-        },
 
         wizardSept: {
             "1": false,
@@ -84,10 +36,11 @@ jQuery(function ($) {
 
         $.each(constructionSchedule, function (i, v) {
             constructerNode("#stepId", v.schedule);
-            constructerPane("#step-container", v.schedule, workerAllocationDetail.operateDict[v.schedule].name);
+            constructerPane("#step-container", v.schedule, v.schedule);
         });
+
         var stepnum = constructionSchedule[0].schedule;
-        initWizardSept(workerAllocationDetail.operateDict[stepnum], stepnum);
+        initWizardSept(stepnum, stepnum);
 
         $('#fuelux-wizard').ace_wizard({status: true}).on('finished', function (e) {
             com.showAlert(com.info, "工程已经结束,之后可以进行验收工作!");
@@ -95,9 +48,10 @@ jQuery(function ($) {
             var stepId = $("[flag]").eq(info.step - 1).attr("id");
             var sd = stepId.substring(4);
             if (!workerAllocationDetail.wizardSept[sd]) {
-                initWizardSept(workerAllocationDetail.operateDict[sd], sd);
+                initWizardSept(sd, sd);
             }
         });
+
     }, null, false);
 
     $('#modal-wizard .modal-header').ace_wizard();
@@ -113,34 +67,29 @@ jQuery(function ($) {
         addActive(schedule);
 
         var elementPostData = {};
-        var workerInfoCondition = false;
 
         var orderId = params.orderId;
         elementPostData["constructionSchedule.orderId"] = params.orderId;
         elementPostData["constructionSchedule.schedule"] = schedule;
-        workerAllocationDetail.controlCondition = false;
 
         com.post(api.construction.queryConstructionScheduleByOrderId, elementPostData, function (res) {
 
             var element = res.constructionSchedules;
-
             if (schedule == 5 || schedule == 10) {
-                com.initChosen(operate.name + "WorkerName", api.personel.queryUserForNameByDutysAO, "pinyinName", {
-                    "dutysO[0]": operate.waterwayDuty,
-                    "dutysO[1]": operate.circuitDuty,
-                    "dutysO[2]": operate.powerDuty,
-                    "dutysO[3]": operate.waterwayCircuitDuty
+                com.initChosen(operate + "WorkerName", api.personel.queryUserForNameByDutysAO, "pinyinName", {
+                    "dutysO[0]": "水暖工", "dutysO[1]": "电工", "dutysO[2]": "力工", "dutysO[3]": "水电工",
                 }, "autoFillKeyValue", "key", "value");
             } else {
-                com.initChosen(operate.name + "WorkerName", api.personel.queryUserForNameByDuty, "pinyinName", {
-                    "duty": operate.duty,
+                var dutyName = constructionNode[schedule];
+                com.initChosen(operate + "WorkerName", api.personel.queryUserForNameByDuty, "pinyinName", {
+                    "duty": dutyName,
                     "user.status": 0
                 }, "autoFillKeyValue", "key", "value");
             }
-            $("#" + operate.name + "StartTime").val(element[0].startTime);
-            $("#" + operate.name + "EndTime").val(element[0].endTime);
+            $("#" + operate + "StartTime").val(element[0].startTime);
+            $("#" + operate + "EndTime").val(element[0].endTime);
 
-            var otherename = workerAllocationDetail.operateDict[schedule].name;
+            var otherename = schedule;
             var otherStatus = res.constructionSchedules[0].status;
 
             var otherSuccessBtn = $("#" + otherename + "Success");
@@ -159,7 +108,7 @@ jQuery(function ($) {
                 options["constructionSchedule.orderId"] = orderId;
                 options["constructionSchedule.status"] = 1;
 
-                com.post(operate.setStatusUrl, options, function (res) {
+                com.post(api.construction.setConstructionScheduleForStatus, options, function (res) {
                     com.showAlert(com.info, "完结成功!");
                     otherSuccessBtn.attr("disabled", "disabled");
                     othereFailBtn.attr("disabled", "disabled");
@@ -175,7 +124,7 @@ jQuery(function ($) {
                 options["constructionSchedule.orderId"] = orderId;
                 options["constructionSchedule.status"] = 0;
 
-                com.post(operate.setStatusUrl, options, function (res) {
+                com.post(api.construction.setConstructionScheduleForStatus, options, function (res) {
                     com.showAlert(com.warning, "初始!");
                     otherSuccessBtn.attr("disabled", "disabled");
                     othereFailBtn.attr("disabled", "disabled");
@@ -193,10 +142,11 @@ jQuery(function ($) {
                 queryWorkerUrl(operate, res);
             }, null, false);
 
-            $("#" + operate.name + "WorkerSubmit").unbind("click");
-            $("#" + operate.name + "WorkerSubmit").on("click", function () {
+            $("#" + operate + "WorkerSubmit").unbind("click");
 
-                if ($("#" + operate.name + "WorkerName_chosen span")[0].textContent.replace(/\s+/g, "") == "") {
+            $("#" + operate + "WorkerSubmit").on("click", function () {
+
+                if ($("#" + operate + "WorkerName_chosen span")[0].textContent.replace(/\s+/g, "") == "") {
                     com.showAlert(com.error, "工人名称不能为空!");
                     return false;
                 }
@@ -204,7 +154,7 @@ jQuery(function ($) {
                 var args = {};
                 args["constructer.cid"] = element[0].cid;
                 args["constructer.schedule"] = schedule;
-                args["constructer.user.userId"] = $('#' + operate.name + "WorkerName").val();
+                args["constructer.user.userId"] = $('#' + operate + "WorkerName").val();
 
                 com.post(api.construction.addConstructer, args, function (res) {
                     setWorkerUrl(operate, res);
@@ -213,18 +163,7 @@ jQuery(function ($) {
                 return false;
             });
 
-            if (workerInfoCondition) {
-                if (element[0].status != undefined && ( element[0].status == 0 || element[0].status == 2)) {
-                    workerAllocationDetail.controlCondition = false;
-                } else if (element[0].status != undefined && element[0].status == 1) {
-                    workerAllocationDetail.controlCondition = true;
-                } else {
-                    workerAllocationDetail.controlCondition = true;
-                }
-            }
-            //}
-
-            $('#' + operate.name + "Drawing").removeClass("active");
+            $('#' + operate + "Drawing").removeClass("active");
 
             return false;
 
@@ -242,12 +181,11 @@ jQuery(function ($) {
         }
     }
 
-
     //查询
     function queryWorkerUrl(operate, res) {
 
         constructers = res.constructers;
-        $("#" + operate.name + "WorkerInfos").html("");
+        $("#" + operate + "WorkerInfos").html("");
 
         if (constructers.length != 0) {
             for (var i = 0; i < constructers.length; i++) {
@@ -277,12 +215,11 @@ jQuery(function ($) {
                 }).appendTo(buttonsDiv);
                 var removeI = $('<i></i>').addClass("icon-remove bigger-130").appendTo(removeBtn);
 
-                profileDiv.appendTo($("#" + operate.name + "WorkerInfos"));
+                profileDiv.appendTo($("#" + operate + "WorkerInfos"));
             }
 
-            workerInfoCondition = true;
         } else {
-            $('<div class="alert alert-info">').text("当前进度没有分配工人!").appendTo($("#" + operate.name + "WorkerInfos"));
+            $('<div class="alert alert-info">').text("当前进度没有分配工人!").appendTo($("#" + operate + "WorkerInfos"));
         }
     }
 
@@ -316,7 +253,7 @@ jQuery(function ($) {
 
         var removeI = $('<i></i>').addClass("icon-remove bigger-130").appendTo(removeBtn);
 
-        var workerInfos = $("#" + operate.name + "WorkerInfos");
+        var workerInfos = $("#" + operate + "WorkerInfos");
 
         if (workerInfos.children(".profile-picture").length == 0) {
             workerInfos.html("");

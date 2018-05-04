@@ -57,9 +57,9 @@ public class ApprovalPO implements java.io.Serializable {
 	public static final String COLUMN_STATUS_STR = "status";
 
 	public static final String COLUMN_RECEIVER_STR = "receiver";
-	// 提交时间
+
 	public static final String COLUMN_CREATETIME_STR = "createTime";
-	// 审批时间
+
 	public static final String COLUMN_APPROVALTIME_STR = "approvalTime";
 
 	public static final String APPROVAL_CONTENTS_CUSTOMER_STR = "客户名:%s,修改为客户名:%s,新增电话:%s";
@@ -86,7 +86,7 @@ public class ApprovalPO implements java.io.Serializable {
 	
 	public static final String APPROVAL_CONTENTS_SALES_DISCOUNT_STR ="订单号:%s,销售单号:%s,应收金额:%s";
 
-	private int aid;
+	private long aid;
 
 	private UserPO receiver;
 
@@ -111,11 +111,11 @@ public class ApprovalPO implements java.io.Serializable {
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "aid")
-	public int getAid() {
+	public long getAid() {
 		return this.aid;
 	}
 
-	public void setAid(int aid) {
+	public void setAid(long aid) {
 		this.aid = aid;
 	}
 

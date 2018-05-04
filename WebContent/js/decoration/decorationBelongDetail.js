@@ -2,27 +2,27 @@
 jQuery(function($) {
 	
 	var decorationBelong = {
-		belongType:null,
+		type:null,
+
 		decorationOrderID:null,
 		
 		decorationBelongs:null,
 		
-		lastEditId:-1,
+		lastEditId:-1
 	};
 	
 	$('#fl-statement').statement("订单归属", "归属详细信息");
 	
 	decorationBelong.decorationOrderID = params.orderId;
-	decorationBelong.belongType = params.orderBelongType;
+	decorationBelong.type = params.orderBelongType;
 	
-	//com.initChosen('approveManSel', api.system.queryApproveUserForNameByType, "user.userNamePinYin", {"approveUser.type": 3}, "autoFillKeyValue", "key", "value");
 	com.initChosen('belongUserId', api.personel.queryUserForNameByDuty, "pinyinName", {"duty" : "", "user.status":0}, "autoFillKeyValue", "key", "value").on("change",function(e){
 		if($("#belongUserId").val() == null || $("#belongUserId").val() == ""){
 			return;
 		}
 		
 		com.post(api.personel.queryUserByUserId, {"user.userId":$("#belongUserId").val()}, function(res){
-			$("#belongUser").val(res.user.userName);
+			$("#belongUser").val(res.user.currentName);
 			$("#belongDept").val(res.user.dept.deptName);
 			$("#belongRegion").val(res.user.dept.fatherDept.deptName);
 			$("#belongDeptId").val(res.user.dept.deptId);
@@ -47,16 +47,19 @@ jQuery(function($) {
 		
 		var addRow = {};
 
-		addRow.belongUserId = $("#belongUserId").val();
-		addRow.belongUser= $("#belongUser").val();
-		addRow.belongDept= $("#belongDept").val();
-		addRow.belongRegion = $("#belongRegion").val();
-		addRow.belongRate= $("#belongRate").val();
-		addRow.belongDeptId= $("#belongDeptId").val();
-		addRow.belongRegionId= $("#belongRegionId").val();
+		addRow.belonger = {};
+		addRow.department = {};
+        addRow.region = {};
+		addRow.belonger.userId = $("#belongUserId").val();
+		addRow.belonger.currentName = $("#belongUser").val();
+		addRow.department.deptName = $("#belongDept").val();
+		addRow.region.deptName = $("#belongRegion").val();
+		addRow.rate = $("#belongRate").val();
+		addRow.department.deptId = $("#belongDeptId").val();
+		addRow.region.deptId = $("#belongRegionId").val();
 		addRow.defaultFlag = com.isOrNotType[$("#defaultFlag").prop("checked")];
 		
-		if(!/^(0\.\d{1,2})|1|0$/.test(addRow.belongRate)){
+		if(!/^(0\.\d{1,2})|1|0$/.test(addRow.rate)){
 			bootbox.alert("分配比例输入错误 , 为0到1之间的小数");
 			return false;
 		}
@@ -66,8 +69,8 @@ jQuery(function($) {
 		for(var i=0;i<belongInfos.length;i++){
 			var $v = $(belongInfos[i]);
 			
-			if($v.attr('belongUserId') == addRow.belongUserId){
-				bootbox.alert("该员工编号("+addRow.belongUserId+")已存在不能重复添加");
+			if($v.attr('belongUserId') == addRow.belonger.userId){
+				bootbox.alert("该员工编号("+addRow.belonger.userId+")已存在不能重复添加");
 				return false;
 			}
 		}
@@ -105,11 +108,11 @@ jQuery(function($) {
 			
 			var $belongRate = utils.changeTwoDecimal($v.attr('belongRate'));
 			var $defaultFlag = $v.attr('defaultFlag');
-			
+
 			options["approvalDecorationBelongItems["+num+"].orderId"] = decorationBelong.decorationOrderID;
-			options["approvalDecorationBelongItems["+num+"].belongUserId"] = $v.attr('belongUserId');
-			options["approvalDecorationBelongItems["+num+"].belongRate"] = $belongRate;
-			options["approvalDecorationBelongItems["+num+"].defaultFlag"] = $defaultFlag;
+			options["approvalDecorationBelongItems["+num+"].userId"] = $v.attr('belongUserId');
+			options["approvalDecorationBelongItems["+num+"].rate"] = $belongRate;
+			options["approvalDecorationBelongItems["+num+"].defaultFlag"] = $defaultFlag == '是' ? 1 : 0;
 			
 			if($defaultFlag == '是'){
 				defaultCount++;
@@ -130,9 +133,9 @@ jQuery(function($) {
 		}
 			
 		options["approvalDecorationBelong.orderId"] = decorationBelong.decorationOrderID;
-		options["approvalDecorationBelong.belongType"] = decorationBelong.belongType;
+		options["approvalDecorationBelong.belongType"] = decorationBelong.type;
 		
-		options["approval.receiverId"] = receiverId;
+		options["approval.receiver.userId"] = receiverId;
 		options["approval.comment"] = $("#changeReason").val();
 		
 		com.post(api.approval.submitApprovalForDecorationBelong, options, function(res){
@@ -159,7 +162,7 @@ jQuery(function($) {
 		}
 		
 		var $e = $('#' + decorationBelong.belongUserId);
-		
+
 		$e.attr('belongrate', rate);
 		$e.attr('defaultflag', flag);
 		
@@ -171,7 +174,7 @@ jQuery(function($) {
 	
 	function displayFunc(v){
 		var $liLine = $('<li></li>').addClass('item-orange clearfix');
-		var $h4 = $('<h4></h4>').addClass('oid').append($('<b></b>').html(v.belongUser));
+		var $h4 = $('<h4></h4>').addClass('oid').append($('<b></b>').html(v.belonger.currentName));
 		var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 		var $ulStyle = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 		var $divBtnBlock = $('<div></div>').addClass('clearfix col-sm-12');
@@ -181,11 +184,11 @@ jQuery(function($) {
 		var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
 		
 		var propertyArr = [
-			["员工编号:", v.belongUserId, "grey"],
-			["所属部门:", v.belongDept, "grey"],
-			["所属大区:", v.belongRegion, "grey"],
-			["分配比例:", v.belongRate, "blue"],
-			["默认:", v.defaultFlag, "red"],
+			["员工编号:", v.belonger.userId, "grey"],
+			["所属部门:", v.department.deptName, "grey"],
+			["所属大区:", v.region.deptName, "grey"],
+			["分配比例:", v.rate, "blue"],
+			["默认:", v.defaultFlag == 1 ? '是' : '否', "red"]
 		];
 		
 		$.each(propertyArr, function (index, value) {
@@ -196,16 +199,16 @@ jQuery(function($) {
 		});
 		
 		$btnUpdate.click(function(){
-			dialogUpdate(v.belongUserId);
+			dialogUpdate(v.belonger.userId);
 		});
 		
 		$btnDel.click(function(){
-			delRow(v.belongUserId);
+			delRow(v.belonger.userId);
 		});
 		
 		$divBtnWrap.append($btnUpdate).append($btnDel).appendTo($h4);
 		
-		$liLine.attr('id', v.belongUserId).attr('belongUserId', v.belongUserId).attr('belongRate', v.belongRate).attr('defaultFlag', v.defaultFlag);
+		$liLine.attr('id', v.belonger.userId).attr('belongUserId', v.belonger.userId).attr('belongRate', v.rate).attr('defaultFlag', v.defaultFlag);
 		$liLine.append($h4).append($ulProperty).append($ulStyle).append($divBtnBlock);
 		
 		return $liLine;
@@ -238,7 +241,7 @@ jQuery(function($) {
 		$("#approveModal").modal("show");	
 	}
 	
-	var url = decorationBelong.belongType == '设计' ? api.decoration.queryDecorationBelongForDesignAChangeByOrderId : api.decoration.queryDecorationBelongForBusinessnAChangeByOrderId;
+	var url = decorationBelong.type == 0 ? api.decoration.queryDecorationBelongForDesignAChangeByOrderId : api.decoration.queryDecorationBelongForBusinessnAChangeByOrderId;
 	
 	com.post(url, {"decorationBelong.orderId":decorationBelong.decorationOrderID}, function(res){
 

@@ -70,6 +70,7 @@ $(function () {
 
 
                     var $btnSwitch = $('<a></a>').addClass('btn btn-minier btn-yellow').html('查看');
+                    var $btnWipeZero = $('<a></a>').addClass('btn btn-minier btn-warning').html('抹零');
                     var $btnPre = $('<a></a>').addClass('btn btn-minier btn-success').html('预结算');
 
                     var propertyArr = [
@@ -126,7 +127,7 @@ $(function () {
                     $label.appendTo($h3);
 
                     if(params['urlLoadParams'].type == "dompany"){
-                        $btnDiv.append($btnSwitch).append($btnPre).appendTo($h3);
+                        $btnDiv.append($btnSwitch).append($btnWipeZero).append($btnPre).appendTo($h3);
                     }else{
                         $btnDiv.append($btnSwitch).appendTo($h3);
                     }
@@ -141,6 +142,32 @@ $(function () {
                             flag = true
                         }
                         openlayerView(v.sid, v.no,flag);
+
+                    })
+
+                    $btnWipeZero.click(function(){
+
+                        $('#maling').val(utils.accAdd(v.maling,v.venderMaling));
+                        $('#originalMaling').val(v.maling);
+                        $('#venderMaling').val(v.venderMaling);
+                        $('#editVenderMaling').val(0)
+
+                        editLayer(function(){
+
+                            if(!checkRowValue()){
+                                return;
+                            }
+
+                            com.post(api.inventory.updateSalesForMaling,{
+                                "sales.sid":v.sid,
+                                "sales.maling":utils.accSub($('#maling').val(),$('#editVenderMaling').val()),
+                                "sales.venderMaling":$('#editVenderMaling').val()
+                            },function(){
+                                salesPreBalance.doSearch();
+                                layer.closeAll();
+                            })
+
+                        })
 
                     })
 
@@ -185,7 +212,7 @@ $(function () {
 
     })();
 
-    var _condArr = ['sales_no', 'sales_orderId', 'sales_instorer', 'sales_salesman', 'sales_deptName', 'sales_fullpayTimeRange'];
+    var _condArr = ['sales_no', 'sales_orderId', 'sales_brade','sales_instorer', 'sales_salesman', 'sales_deptName', 'sales_fullpayTimeRange'];
 
     var salesPreBalance = new Searcher();
 
@@ -327,6 +354,52 @@ $(function () {
                 salesPreBalance.doSearch();
             }
         })
+    }
+
+    function editLayer(callback) {
+        layer.closeAll();
+        layer.open({
+            type: 1,
+            title: "修改抹零",
+            content: $('#editLayer'),
+            area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
+            maxmin: false,
+            zIndex: 9000,
+            btn: ['确定', '取消'],
+            yes: function (index, layero) {
+                callback(index, layero);
+            },
+            btn2: function (index, layero) {
+                com.clearValidator();
+            },
+            cancel: function () {
+            }
+        });
+    }
+
+    function checkRowValue() {
+
+        var flag = true;
+
+        if($('#editVenderMaling').val()>$('#maling').val()){
+
+            $('#editVenderMaling').focus().select();
+
+            $('#editVenderMaling').addClass('popover-notitle').attr({
+                "data-rel": "popover",
+                "data-placement": "right",
+                "data-original-title": "",
+                "title": "",
+                "data-content": "修改厂商抹零数据不能超过抹零总数!"
+
+            }).popover('show');
+
+            flag = false;
+        }else {
+            $('#editVenderMaling').popover('destroy');
+        }
+
+        return flag;
     }
 
 })

@@ -41,5 +41,7 @@ public interface UserDao extends Dao<UserPO> {
 	public List<UserPO> queryUserByUserIds(List<String> userIds);
 	
 	public int countUserByRoleId(Integer rid);
-	
+
+	public List<UserPO> pageUserForNameByPinyinNameADepeType(Paging paging, String pinyinName,Short status, Integer dtid, Integer company);
+
 }

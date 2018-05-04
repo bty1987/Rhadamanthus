@@ -13,6 +13,7 @@ import com.fanglin.inventory.service.PurchaseItemService;
 import com.fanglin.inventory.service.PurchaseService;
 import com.fanglin.inventory.vo.PurchaseItemVO;
 import com.fanglin.inventory.vo.PurchaseVO;
+import com.fanglin.sales.vo.SalesVO;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -41,13 +42,7 @@ public class PurchaseAction extends BaseListAction {
 	
 	private List<Long> siids;
 	
-	@Action(value = "queryPurchaseItemByPids", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryPurchaseItemByPids(){
-		
-		purchaseItems = purchaseItemService.queryPurchaseItemByPids(pids);
-		
-		return SUCCESS;
-	}
+	private SalesVO sales;
 	
 	@Action(value = "pagePurchase", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pagePurchase() throws FLException{
@@ -65,26 +60,10 @@ public class PurchaseAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-	@Action(value = "queryPurchaseItemBySiids", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryPurchaseItemBySiids(){
+	@Action(value = "queryPurchaseItemByPids", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryPurchaseItemByPids(){
 		
-		purchaseItems = purchaseItemService.queryPurchaseItemBySiids(siids);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "addPurchase", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addPurchase() throws FLException{
-		
-		purchaseService.addPurchase(purchase, sids,purchaseItems, queryUserId(),queryCompany());
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "addPurchaseItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addPurchaseItem() throws FLException{
-		
-		purchaseItemService.addPurchaseItem(purchase,purchaseItem);
+		purchaseItems = purchaseItemService.queryPurchaseItemByPids(pids);
 		
 		return SUCCESS;
 	}
@@ -101,6 +80,38 @@ public class PurchaseAction extends BaseListAction {
 	public String queryPurchaseByPid(){
 		
 		purchase = purchaseService.queryPurchaseByPid(purchase);
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "queryPurchaseItemBySiids", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryPurchaseItemBySiids(){
+		
+		purchaseItems = purchaseItemService.queryPurchaseItemBySiids(siids);
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "queryPurchaseBySid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryPurchaseBySid(){
+		
+		purchases = purchaseService.queryPurchaseBySid(sales);
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "addPurchase", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addPurchase() throws FLException{
+		
+		purchaseService.addPurchase(purchase, sids,purchaseItems, queryUserId(),queryCompany());
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "addPurchaseItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addPurchaseItem() throws FLException{
+		
+		purchaseItemService.addPurchaseItem(purchase,purchaseItem);
 		
 		return SUCCESS;
 	}
@@ -200,6 +211,14 @@ public class PurchaseAction extends BaseListAction {
 
 	public void setSids(List<Long> sids) {
 		this.sids = sids;
+	}
+
+	public SalesVO getSales() {
+		return sales;
+	}
+
+	public void setSales(SalesVO sales) {
+		this.sales = sales;
 	}
 	
 }

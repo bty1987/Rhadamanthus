@@ -50,6 +50,13 @@ public class UpgradeDaoImpl extends DaoImpl<UpgradePO> implements UpgradeDao {
 
 		return session().createCriteria(UpgradePO.class).add(Restrictions.eq(UpgradePO.COLUMN_TRIALNO_STR,trialno)).list();
 	}
+	
+	@Override
+	public String maxUpgrade() {
+		String sql = "select max(no) from information.upgrade";
+		String maxNo = (String) session().createSQLQuery(sql).uniqueResult();
+		return maxNo;
+	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 		if (filters != null && filters.size() > 0) {

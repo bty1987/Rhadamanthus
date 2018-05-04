@@ -142,7 +142,7 @@ jQuery(function($) {
 		var options = {
 			"cids[0]": cityId,
 		};
-		com.post(api.system.deleteCityByCids, options, function(res){
+		com.post(api.system.deleteCity, options, function(res){
 			searcher.doSearch();
 		});
 	}

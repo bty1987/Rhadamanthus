@@ -12,16 +12,20 @@
 package com.fanglin.decoration.service.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.decoration.dao.DecorationBelongDao;
-import com.fanglin.decoration.po.DecorationBelongInfoPO;
+import com.fanglin.decoration.po.DecorationBelongPO;
 import com.fanglin.decoration.service.DecorationBelongService;
 import com.fanglin.decoration.vo.DecorationBelongVO;
+import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.utils.BeanUtil;
 
 @Service("orderBelongInfoService")
 @Transactional(readOnly=true)
@@ -31,38 +35,40 @@ public class DecorationBelongServiceImpl implements DecorationBelongService {
 	private DecorationBelongDao orderBelongInfoDao;
 	
 	@Override
-	public List<DecorationBelongVO> queryApprovalingOrderBelongInfosByOrderIdAndBelongType(String decorationOrderId,String belongType){
+	public List<DecorationBelongVO> queryApprovalingOrderBelongInfosByOrderIdAndBelongType(String decorationOrderId,Short belongType){
 		
 		List<DecorationBelongVO> orderBelongInfoVOs = new ArrayList<DecorationBelongVO>();
-		List<DecorationBelongInfoPO> orderBelongInfoPOs = orderBelongInfoDao.queryOrderBelongInfoByOrderIdAType(decorationOrderId, belongType);
+		List<DecorationBelongPO> orderBelongInfoPOs = orderBelongInfoDao.queryOrderBelongInfoByOrderIdAType(decorationOrderId, belongType);
 		
 		if(orderBelongInfoPOs == null) {
 			return null;
 		}
 		
-		for(DecorationBelongInfoPO orderBelongInfoPO : orderBelongInfoPOs){
+		for(DecorationBelongPO orderBelongInfoPO : orderBelongInfoPOs){
 			DecorationBelongVO orderBelongInfoVO = new DecorationBelongVO();
 			
-			if(orderBelongInfoPO.getOperateUserPO() != null){
-				orderBelongInfoVO.setOperateUser(orderBelongInfoPO.getOperateUserPO().getCurrentName());
-				orderBelongInfoVO.setOperateUserId(orderBelongInfoPO.getOperateUserPO().getUserId());
+			if(orderBelongInfoPO.getOperater() != null){
+				orderBelongInfoVO.setOperater(new UserBaseVO());
+				BeanUtil.copyProperties(orderBelongInfoPO.getOperater(), orderBelongInfoVO.getOperater(), Arrays.asList("dept", "duty"));
+				
 				orderBelongInfoVO.setOperateTime(orderBelongInfoPO.getOperateTime());
 			}
 			
-			orderBelongInfoVO.setBelongDept(orderBelongInfoPO.getBelongDeptPO().getDeptName());
-			orderBelongInfoVO.setBelongDeptId(orderBelongInfoPO.getBelongDeptPO().getDeptId());
-			if(orderBelongInfoPO.getBelongRegionPO() != null){
-				orderBelongInfoVO.setBelongRegion(orderBelongInfoPO.getBelongRegionPO().getDeptName());
-				orderBelongInfoVO.setBelongRegionId(orderBelongInfoPO.getBelongRegionPO().getDeptId());
+			orderBelongInfoVO.setDepartment(new DepartmentVO());
+			BeanUtil.copyProperties(orderBelongInfoPO.getDepartment(), orderBelongInfoVO.getDepartment(), Arrays.asList("type", "fatherDept", "cityProper"));
+			
+			orderBelongInfoVO.setRegion(new DepartmentVO());
+			if(orderBelongInfoPO.getBelonger() != null){
+				BeanUtil.copyProperties(orderBelongInfoPO.getRegion(), orderBelongInfoVO.getRegion(), Arrays.asList("type", "fatherDept", "cityProper"));
 			}else{
-				orderBelongInfoVO.setBelongRegion("");
-				orderBelongInfoVO.setBelongRegionId("");
+				BeanUtil.copyProperties("", orderBelongInfoVO.getRegion());
 			}
-			orderBelongInfoVO.setBelongUser(orderBelongInfoPO.getBelongUserPO().getCurrentName());
-			orderBelongInfoVO.setBelongUserId(orderBelongInfoPO.getBelongUserPO().getUserId());
-			orderBelongInfoVO.setBelongRate(orderBelongInfoPO.getBelongRate());
-			orderBelongInfoVO.setBelongType(orderBelongInfoPO.getBelongType());
-			orderBelongInfoVO.setAutoId(orderBelongInfoPO.getAutoId());
+			orderBelongInfoVO.setBelonger(new UserBaseVO());
+			BeanUtil.copyProperties(orderBelongInfoPO.getBelonger(), orderBelongInfoVO.getBelonger(), Arrays.asList("dept", "duty"));
+			
+			orderBelongInfoVO.setRate(orderBelongInfoPO.getRate());
+			orderBelongInfoVO.setType(orderBelongInfoPO.getType());
+			orderBelongInfoVO.setDbid(orderBelongInfoPO.getDbid());
 			orderBelongInfoVO.setDefaultFlag(orderBelongInfoPO.getDefaultFlag());
 			
 			orderBelongInfoVOs.add(orderBelongInfoVO);
@@ -72,7 +78,7 @@ public class DecorationBelongServiceImpl implements DecorationBelongService {
 	}
 	
 	@Override
-	public List<DecorationBelongVO> queryOrderBelongInfoForChangeByOrderIdAType(String decorationOrderId,String belongType){
+	public List<DecorationBelongVO> queryOrderBelongInfoForChangeByOrderIdAType(String decorationOrderId,Short belongType){
 		
 		List<DecorationBelongVO> orderBelongInfoVOs = queryApprovalingOrderBelongInfosByOrderIdAndBelongType(decorationOrderId, belongType);
 		
@@ -84,34 +90,35 @@ public class DecorationBelongServiceImpl implements DecorationBelongService {
 	}
 	
 	@Override
-	public List<DecorationBelongVO> queryOrderBelongInfoForCurrentByOrderIdAType(String decorationOrderId,String belongType){
+	public List<DecorationBelongVO> queryOrderBelongInfoForCurrentByOrderIdAType(String decorationOrderId,Short belongType){
 		List<DecorationBelongVO> orderBelongInfoVOs = new ArrayList<DecorationBelongVO>();
-		List<DecorationBelongInfoPO> orderBelongInfoPOs =  orderBelongInfoDao.queryOrderBelongInfoForCurrentByOrderIdAType(decorationOrderId, belongType);
+		List<DecorationBelongPO> orderBelongInfoPOs =  orderBelongInfoDao.queryOrderBelongInfoForCurrentByOrderIdAType(decorationOrderId, belongType);
 		
-		for(DecorationBelongInfoPO orderBelongInfoPO: orderBelongInfoPOs){
+		for(DecorationBelongPO orderBelongInfoPO: orderBelongInfoPOs){
 			DecorationBelongVO orderBelongInfoVO = new DecorationBelongVO();
 			
-			if(orderBelongInfoPO.getOperateUserPO() != null){
-				orderBelongInfoVO.setOperateUser(orderBelongInfoPO.getOperateUserPO().getCurrentName());
-				orderBelongInfoVO.setOperateUserId(orderBelongInfoPO.getOperateUserPO().getUserId());
+			if(orderBelongInfoPO.getOperater() != null){
+				orderBelongInfoVO.setOperater(new UserBaseVO());
+				BeanUtil.copyProperties(orderBelongInfoPO.getOperater(), orderBelongInfoVO.getOperater(), Arrays.asList("dept", "duty"));
+				
 				orderBelongInfoVO.setOperateTime(orderBelongInfoPO.getOperateTime());
 			}
 			
-			orderBelongInfoVO.setBelongDept(orderBelongInfoPO.getBelongDeptPO().getDeptName());
-			orderBelongInfoVO.setBelongDeptId(orderBelongInfoPO.getBelongDeptPO().getDeptId());
+			orderBelongInfoVO.setDepartment(new DepartmentVO());
+			BeanUtil.copyProperties(orderBelongInfoPO.getDepartment(), orderBelongInfoVO.getDepartment(), Arrays.asList("type", "fatherDept", "cityProper"));
 			
-			if(orderBelongInfoPO.getBelongRegionPO() != null){
-				orderBelongInfoVO.setBelongRegion(orderBelongInfoPO.getBelongRegionPO().getDeptName());
-				orderBelongInfoVO.setBelongRegionId(orderBelongInfoPO.getBelongRegionPO().getDeptId());
+			orderBelongInfoVO.setRegion(new DepartmentVO());
+			if(orderBelongInfoPO.getRegion() != null){
+				BeanUtil.copyProperties(orderBelongInfoPO.getRegion(), orderBelongInfoVO.getRegion(), Arrays.asList("type", "fatherDept", "cityProper"));
 			}else{
-				orderBelongInfoVO.setBelongRegion("");
-				orderBelongInfoVO.setBelongRegionId("");
+				BeanUtil.copyProperties("", orderBelongInfoVO.getRegion());
 			}
-			orderBelongInfoVO.setBelongUser(orderBelongInfoPO.getBelongUserPO().getCurrentName());
-			orderBelongInfoVO.setBelongUserId(orderBelongInfoPO.getBelongUserPO().getUserId());
-			orderBelongInfoVO.setBelongRate(orderBelongInfoPO.getBelongRate());
-			orderBelongInfoVO.setBelongType(orderBelongInfoPO.getBelongType());
-			orderBelongInfoVO.setAutoId(orderBelongInfoPO.getAutoId());
+			orderBelongInfoVO.setBelonger(new UserBaseVO());
+			BeanUtil.copyProperties(orderBelongInfoPO.getBelonger(), orderBelongInfoVO.getBelonger(), Arrays.asList("dept", "duty"));
+			
+			orderBelongInfoVO.setRate(orderBelongInfoPO.getRate());
+			orderBelongInfoVO.setType(orderBelongInfoPO.getType());
+			orderBelongInfoVO.setDbid(orderBelongInfoPO.getDbid());
 			orderBelongInfoVO.setDefaultFlag(orderBelongInfoPO.getDefaultFlag());
 			
 			orderBelongInfoVOs.add(orderBelongInfoVO);
@@ -124,32 +131,33 @@ public class DecorationBelongServiceImpl implements DecorationBelongService {
 	public List<DecorationBelongVO> queryOrderBelongInfoByOrderId(DecorationBelongVO orderBelongInfoVO) {
 		
 		List<DecorationBelongVO> orderBelongInfoVOs = new ArrayList<DecorationBelongVO>();
-		List<DecorationBelongInfoPO> orderBelongInfoPOs =  orderBelongInfoDao.queryOrderBelongInfoByOrderId(orderBelongInfoVO.getOrderId());
+		List<DecorationBelongPO> orderBelongInfoPOs =  orderBelongInfoDao.queryOrderBelongInfoByOrderId(orderBelongInfoVO.getOrderId());
 		
-		for(DecorationBelongInfoPO orderBelongInfoPO: orderBelongInfoPOs){
+		for(DecorationBelongPO orderBelongInfoPO: orderBelongInfoPOs){
 			DecorationBelongVO _orderBelongInfoVO = new DecorationBelongVO();
 			
-			if(orderBelongInfoPO.getOperateUserPO() != null){
-				_orderBelongInfoVO.setOperateUser(orderBelongInfoPO.getOperateUserPO().getCurrentName());
-				_orderBelongInfoVO.setOperateUserId(orderBelongInfoPO.getOperateUserPO().getUserId());
+			if(orderBelongInfoPO.getOperater() != null){
+				_orderBelongInfoVO.setOperater(new UserBaseVO());
+				BeanUtil.copyProperties(orderBelongInfoPO.getOperater(), _orderBelongInfoVO.getOperater(), Arrays.asList("dept", "duty"));
+				
 				_orderBelongInfoVO.setOperateTime(orderBelongInfoPO.getOperateTime());
 			}
 			
-			_orderBelongInfoVO.setBelongDept(orderBelongInfoPO.getBelongDeptPO().getDeptName());
-			_orderBelongInfoVO.setBelongDeptId(orderBelongInfoPO.getBelongDeptPO().getDeptId());
+			_orderBelongInfoVO.setDepartment(new DepartmentVO());
+			BeanUtil.copyProperties(orderBelongInfoPO.getDepartment(), _orderBelongInfoVO.getDepartment(), Arrays.asList("type", "fatherDept", "cityProper"));
 			
-			if(orderBelongInfoPO.getBelongRegionPO() != null){
-				_orderBelongInfoVO.setBelongRegion(orderBelongInfoPO.getBelongRegionPO().getDeptName());
-				_orderBelongInfoVO.setBelongRegionId(orderBelongInfoPO.getBelongRegionPO().getDeptId());
+			_orderBelongInfoVO.setRegion(new DepartmentVO());
+			if(orderBelongInfoPO.getRegion() != null){
+				BeanUtil.copyProperties(orderBelongInfoPO.getRegion(), _orderBelongInfoVO.getRegion(), Arrays.asList("type", "fatherDept", "cityProper"));
 			}else{
-				_orderBelongInfoVO.setBelongRegion("");
-				_orderBelongInfoVO.setBelongRegionId("");
+				BeanUtil.copyProperties("", _orderBelongInfoVO.getRegion());
 			}
-			_orderBelongInfoVO.setBelongUser(orderBelongInfoPO.getBelongUserPO().getCurrentName());
-			_orderBelongInfoVO.setBelongUserId(orderBelongInfoPO.getBelongUserPO().getUserId());
-			_orderBelongInfoVO.setBelongRate(orderBelongInfoPO.getBelongRate());
-			_orderBelongInfoVO.setBelongType(orderBelongInfoPO.getBelongType());
-			_orderBelongInfoVO.setAutoId(orderBelongInfoPO.getAutoId());
+			_orderBelongInfoVO.setBelonger(new UserBaseVO());
+			BeanUtil.copyProperties(orderBelongInfoPO.getBelonger(), _orderBelongInfoVO.getBelonger(), Arrays.asList("dept", "duty"));
+			
+			_orderBelongInfoVO.setRate(orderBelongInfoPO.getRate());
+			_orderBelongInfoVO.setType(orderBelongInfoPO.getType());
+			_orderBelongInfoVO.setDbid(orderBelongInfoPO.getDbid());
 			_orderBelongInfoVO.setDefaultFlag(orderBelongInfoPO.getDefaultFlag());
 			
 			orderBelongInfoVOs.add(_orderBelongInfoVO);

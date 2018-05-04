@@ -9,8 +9,12 @@ import java.util.List;
 public  interface WorkerSalaryDao extends Dao<WorkerSalaryPO>{
 	
 	public  List<WorkerSalaryPO> pageWorkerSalary(Paging paging, List<Filter> filters, int company);
+	
+	public  List<WorkerSalaryPO> pageSalaryWorkerForUser(Paging paging, List<Filter> filters);
   
 	public  List<WorkerSalaryPO> queryWorkerSalary(String userId, Long cid);
+	
+	public  List<WorkerSalaryPO> queryWorkerSalaryByuid(int wuid);
   
 	public  int countWorkerSalary(Long cid, Integer wuid);
 

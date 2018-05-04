@@ -32,8 +32,6 @@ public interface ConstructionService {
 	
 	public ConstructionVO queryConstructionForWorkerNameByOrderId(ConstructionVO constructionVO);
 	
-	public void saveOrUpdateConstruction(ConstructionVO constructionVO);
-	
 	public void saveOrUpdateConstructionByOrderId(ConstructionVO constructionVO);
 
 }

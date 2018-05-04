@@ -47,7 +47,7 @@ jQuery(function($) {
 			var $btnRefuse = $('<a></a>').addClass('btn btn-minier btn-danger').html('拒绝').prepend($('<i></i>'));
 
 			var propertyArr = [
-				[ "申请人:", v.senderName, "grey" ],
+				[ "申请人:", v.sender.userName, "grey" ],
 				[ "提交时间:", v.createTime, "grey" ],
 				[ "审批时间:", v.approvalTime, "grey" ],
 				["状态:", v.status == 0 ? "等待" : (v.status == 1 ? "通过" : "拒绝"), "red" ]

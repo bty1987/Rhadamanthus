@@ -18,54 +18,54 @@ import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.decoration.dao.DecorationBelongDao;
-import com.fanglin.decoration.po.DecorationBelongInfoPO;
+import com.fanglin.decoration.po.DecorationBelongPO;
 
 @Repository("orderBelongInfoDao")
-public class DecorationBelongDaoImpl extends DaoImpl<DecorationBelongInfoPO> implements DecorationBelongDao {
+public class DecorationBelongDaoImpl extends DaoImpl<DecorationBelongPO> implements DecorationBelongDao {
 
 	public DecorationBelongDaoImpl(){
-		super(DecorationBelongInfoPO.class);
+		super(DecorationBelongPO.class);
 	}
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<DecorationBelongInfoPO> queryOrderBelongInfoByOrderIdAType(String orderId,String belongType){
-		 return createCriteria(DecorationBelongInfoPO.class)
-				 .add(Restrictions.eq("decorationPO.orderId", orderId))
-				 .add(Restrictions.eq("belongType", belongType))
-				 .add(Restrictions.eq("status", DecorationBelongInfoPO.STATUS_APPLY_STR))
+	public List<DecorationBelongPO> queryOrderBelongInfoByOrderIdAType(String orderId,Short belongType){
+		 return createCriteria(DecorationBelongPO.class)
+				 .add(Restrictions.eq("orderId", orderId))
+				 .add(Restrictions.eq("type", belongType))
+				 .add(Restrictions.eq("status", DecorationBelongPO.STATUS_INVALID_INT))
 				 .list();
 	}
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<DecorationBelongInfoPO> queryOrderBelongInfoForCurrentByOrderIdAType(String orderId,String belongType){
-		 return createCriteria(DecorationBelongInfoPO.class)
-				 .add(Restrictions.eq("decorationPO.orderId", orderId))
-				 .add(Restrictions.eq("belongType", belongType))
-				 .add(Restrictions.eq("status", DecorationBelongInfoPO.STATUS_PASS_STR))
+	public List<DecorationBelongPO> queryOrderBelongInfoForCurrentByOrderIdAType(String orderId,Short belongType){
+		 return createCriteria(DecorationBelongPO.class)
+				 .add(Restrictions.eq("orderId", orderId))
+				 .add(Restrictions.eq("type", belongType))
+				 .add(Restrictions.eq("status", DecorationBelongPO.STATUS_INVALID_INT))
 				 .list();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<DecorationBelongInfoPO> queryOrderBelongInfoByOrderId(String orderId){
-		return createCriteria(DecorationBelongInfoPO.class)
-				 .add(Restrictions.eq("decorationPO.orderId", orderId))
-				 .add(Restrictions.eq("status", DecorationBelongInfoPO.STATUS_PASS_STR))
+	public List<DecorationBelongPO> queryOrderBelongInfoByOrderId(String orderId){
+		return createCriteria(DecorationBelongPO.class)
+				 .add(Restrictions.eq("orderId", orderId))
+				 .add(Restrictions.eq("status", DecorationBelongPO.STATUS_INVALID_INT))
 				 .list();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<DecorationBelongInfoPO> queryOrderBelongInfoByOrderIds(List<String> orderIds) {
-		return session().createCriteria(DecorationBelongInfoPO.class).add(Restrictions.in("decorationPO.orderId", orderIds)).add(Restrictions.ne("status", DecorationBelongInfoPO.STATUS_REPLACE_STR)).list();
+	public List<DecorationBelongPO> queryOrderBelongInfoByOrderIds(List<String> orderIds) {
+		return session().createCriteria(DecorationBelongPO.class).add(Restrictions.in("orderId", orderIds)).add(Restrictions.ne("status", DecorationBelongPO.STATUS_EFFCTIVE_INT)).list();
 	}
 
 	@Override
 	public int changeOrderBelongInfoForOrderId(String newOrderId, String oldOrderId) {
 		
-		String sql = "update platform.orderbelonginfo set orderId=:newOrderId where orderId=:oldOrderId";
+		String sql = "update decoration.decorationbelong set orderId=:newOrderId where orderId=:oldOrderId";
 	    
 	    session().createSQLQuery(sql).setString("newOrderId", newOrderId).setString("oldOrderId", oldOrderId).executeUpdate();
 		

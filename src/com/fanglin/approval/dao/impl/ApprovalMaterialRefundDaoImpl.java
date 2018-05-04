@@ -26,7 +26,7 @@ public class ApprovalMaterialRefundDaoImpl extends DaoImpl<ApprovalMaterialRefun
 	}
 
 	@Override
-	public ApprovalMaterialRefundPO queryApprovalMaterialRefundByAId(int aId) {
+	public ApprovalMaterialRefundPO queryApprovalMaterialRefundByAId(long aId) {
 		return (ApprovalMaterialRefundPO) session().createCriteria(ApprovalMaterialRefundPO.class).add(Restrictions.eq(ApprovalMaterialRefundPO.COLUMN_AID_STR, aId)).uniqueResult();
 	}
 

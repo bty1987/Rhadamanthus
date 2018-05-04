@@ -33,12 +33,7 @@
         }
 
         var $ct = new Date();
-        var timeout = "";
-        if(parent.config.isPC){
-            timeout = parent.config.timeout;
-        }else{
-            timeout = config.timeout;
-        }
+        var timeout = config.timeout;
         if(!params.loginTime || (params.loginTime + timeout * 60 * 1000) < $ct.getTime()){
             $("#userLock").click();
         }else{
@@ -91,10 +86,10 @@
                         return res;
                     }
                 }else if(res.errorCode == 110005){
-                    if(config.isPC){
+                    if(parent.window.isPC){
                         document.getElementById('myiframe').contentWindow.document.getElementById("userLock").click();
                     }else{
-                       $("#userLock").click();
+                        $("#userLock").click();
                     }
                 }else{
                     if(failCallback){
@@ -150,6 +145,17 @@
                 if(toString.apply(obj.val()) === '[object Array]')
                     return obj.val().toString().trim().length == 0 ? true : false;
                 return obj.val().trim().length == 0 ? true : false;
+            }
+        },
+        typeahead:{
+            type: "v_typeahead",
+            errorMsg: "请使用匹配数据",
+            func: function(obj){
+                if(obj.attr('data-typeahead-key') == null || obj.attr('data-typeahead-key') == undefined)
+                    return true;
+                if(toString.apply(obj.attr('data-typeahead-key')) === '[object Array]')
+                    return obj.attr('data-typeahead-key').toString().trim().length == 0 ? true : false;
+                return obj.attr('data-typeahead-key').trim().length == 0 ? true : false;
             }
         },
         number: {
@@ -209,18 +215,18 @@
         },
         identity: {
             type: "v_identity",
-            /*
-            * xxxxxx yyyy MM dd 375 0     十八位
-            * xxxxxx   yy MM dd  75 0     十五位
-            * 地区： [1-9]\d{5}
-            * 年的前两位： (18|19|([23]\d))        1800-2399
-            * 年的后两位： \d{2}
-            * 月份： ((0[1-9])|(10|11|12))
-            * 天数： (([0-2][1-9])|10|20|30|31)    闰年不能禁止29+
-            * 三位顺序码： \d{3}
-            * 两位顺序码： \d{2}
-            * 校验码： [0-9Xx]
-            * */
+			/*
+             * xxxxxx yyyy MM dd 375 0     十八位
+             * xxxxxx   yy MM dd  75 0     十五位
+             * 地区： [1-9]\d{5}
+             * 年的前两位： (18|19|([23]\d))        1800-2399
+             * 年的后两位： \d{2}
+             * 月份： ((0[1-9])|(10|11|12))
+             * 天数： (([0-2][1-9])|10|20|30|31)    闰年不能禁止29+
+             * 三位顺序码： \d{3}
+             * 两位顺序码： \d{2}
+             * 校验码： [0-9Xx]
+             * */
             regex: /^\s*$|(^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$)|(^[1-9]\d{5}\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{2}[0-9Xx]$)/,
             errorMsg: "请输入正确的身份证号码."
         },
@@ -251,102 +257,46 @@
         }
 
     },
-    validate: function (scopeID,placement) {
+    validate: function (scopeID, placement) {
 
-        var _scopeID = scopeID == "" || scopeID == null || scopeID == undefined ? $("#fl-container") : $("#" + scopeID);
-        var _placement = placement == "" || placement == null || placement == undefined ? 'right': placement;
+        var _scopeID = scopeID == "" || scopeID == null || scopeID == undefined ? "#fl-container" : "#" + scopeID;
+        var _placement = placement == "" || placement == null || placement == undefined ? 'right' : placement;
 
         var _count = 0;
 
-        var _popovers = _scopeID.find('[class*="v_"]:visible');
+        $.each(com.validator, function (k, value) {
 
-        var _popover = $('#'+scopeID+'[class*="v_"]:visible');
+            $(_scopeID + " ." + value.type + ":visible").each(function (i, v) {
 
-        if(_popover.length!=0){
+                var $this = $(v);
 
-            var __classes = _popover.attr('class').split(' ');
-
-            if(_popover.hasClass('v_required')){
-
-                var _regex = com.validator.required.func(_popover);
-
-                if (_regex) {
-                    com.showPopover(_popover,com.validator.required,_placement);
-                    _count++;
-                } else {
-                    _popover.css('border-color', "#b5b5b5");
-                    _popover.popover('destroy')
-                }
-
-            }else{
-
-                $.each(com.validator,function(k,v){
-
-                    if ($.inArray("v_" + k, __classes) != -1) {
-
-                        var _regex = v.regex;
-
-                        if (!(_regex.test(_popover.val()) && _popover.val() != "")) {
-                            com.showPopover(_popover,v,_placement);
-                            _count++;
-                        } else {
-                            _popover.css('border-color', "#b5b5b5");
-                            _popover.popover('destroy')
-                        }
-                    }
-
-                })
-
-            }
-
-        }
-
-        $.each(_popovers, function (i, v) {
-
-            var $this = $(v);
-
-            var _class = $this.attr('class');
-
-            var _classes = _class.split(' ');
-
-            $.each(com.validator, function (k, value) {
-
-                if(!$this.prop("disabled")) {
+                if (!$this.prop("disabled")) {
 
                     var $datafor = $this;
 
-                    if($this.data("for")){
-                        $datafor = $("#"+$this.data("for"));
+                    if ($this.data("for")) {
+                        $datafor = $("#" + $this.data("for"));
                     }
-
-                    if ($.inArray("v_" + k, _classes) != -1) {
-
-                        if (k == "required") {
-
-                            var _regex = value.func($datafor);
-
-                            if (_regex) {
-                                com.showPopover($this, value, _placement);
-                                _count++;
-                            } else {
-                                $this.css('border-color', "#b5b5b5");
-                                $this.popover('destroy')
-                            }
-
+                    
+                    if (value.func) {
+                        if (value.func($datafor)) {
+                            com.showPopover($this, value, _placement);
+                            _count++;
                         } else {
-
-                            var _regex = value.regex;
-
-                            if (!( _regex.test($datafor.val()))) {
-                                com.showPopover($this, value, _placement);
-                                _count++;
-                            }
+                            $this.css('border-color', "#b5b5b5");
+                            $this.popover('destroy')
                         }
+                        return true;
+                    } else {
+                        var _regex = value.regex;
 
+                        if (!( _regex.test($datafor.val()))) {
+                            com.showPopover($this, value, _placement);
+                            _count++;
+                        }
                     }
                 }
             })
-
         });
 
         return _count == 0 ? false : true;

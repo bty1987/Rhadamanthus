@@ -33,6 +33,8 @@ import com.fanglin.payment.vo.ServiceReceiptVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.system.dao.SystemConfigDao;
+import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
@@ -64,6 +66,9 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 
 	@Autowired
 	private PaymentDao paymentDao;
+	
+	@Autowired
+	private SystemConfigDao systemConfigDao;
 	
 	@Override
 	public void pageServicePaymentForCollect(Paging paging, List<Filter> filters) {
@@ -178,9 +183,13 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 		servicePaymentPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
 		servicePaymentPO.setStatus(ServicePaymentPO.COLUMN_PAIDFORSTATUS_INT);
 		servicePaymentPO.setType(ServicePaymentPO.COLUMN_STYPE_INT);
+		
+		SystemConfigPO servicePaymentRatio = systemConfigDao.querySystemConfig("servicePaymentRatio", decoration.getCompany());
+		
+		float ratio = servicePaymentRatio != null ? Float.parseFloat(servicePaymentRatio.getValue()) : 1.1f;
 
 		Float money = servicePaymentVO.getReferMoney();
-		servicePaymentPO.setAdvanceMoney((float)(int)Arith.div(money, ServicePaymentPO.COLUMN_RATIO_INT));
+		servicePaymentPO.setAdvanceMoney((float)(int)Arith.div(money, ratio));
 		servicePaymentPO.setServiceMoney(Arith.sub(money, servicePaymentPO.getAdvanceMoney()));
 
 		if(Arith.add(servicePaymentPO.getServiceMoney(), decorationHolonomy.getServicePaidup())>decorationHolonomy.getServicePrice()){

@@ -16,18 +16,23 @@ import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.type.StringType;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.construction.dao.ConstructionDao;
 import com.fanglin.construction.po.ConstructionPO;
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.decoration.po.DecorationPO;
+import com.fanglin.personel.dao.UserDao;
+import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.Paging;
 
 @Repository("constructionDao")
 public class ConstructionDaoImpl extends DaoImpl<ConstructionPO> implements ConstructionDao {
-
+	
+	@Autowired
+	private UserDao userDao;
 	
 	public ConstructionDaoImpl(){
 		super(ConstructionPO.class);
@@ -120,13 +125,11 @@ public class ConstructionDaoImpl extends DaoImpl<ConstructionPO> implements Cons
 				String data = filter.getData();
 				String op = filter.getOp();
 				
-				//pageConstructionForAcceptance工程验收
-				if(ConstructionPO.COLUMN_ALLOCATIONWORKERFLAG_STR.equals(field)){
-					if("and".equals(op)){
-						query.add(Restrictions.sqlRestriction(ConstructionPO.COLUMN_ALLOCATIONWORKERFLAG_STR + " & ?", data.toString(), StringType.INSTANCE));
-					}else if("nand".equals(op)){
-						query.add(Restrictions.not(Restrictions.sqlRestriction(ConstructionPO.COLUMN_ALLOCATIONWORKERFLAG_STR + " & ?", data.toString(), StringType.INSTANCE)));
-					}
+				//监理控制查询条件
+				if(ConstructionPO.COLUMN_SUPERVISORQUALITYID_STR.equals(field)){
+					UserPO userPO = userDao.queryUserByUserId(data);
+					query.add(query.getCriterion("supervisor.uid", userPO.getUid(), "eq"));
+					query.add(Restrictions.eq(field, data));
 				}
 				
 				if(field.startsWith("design")){
@@ -156,9 +159,9 @@ public class ConstructionDaoImpl extends DaoImpl<ConstructionPO> implements Cons
 					query.add(Restrictions.eq(field, Integer.valueOf(data)));
 				}else if("projectStatus".equals(field) && !"other".equals(data)){
 					if("未完工".equals(data)){
-						query.add(query.getCriterion("decoration.projectStatus", "已完工", "ne"));
+						query.add(query.getCriterion("decoration.projectStatus",DecorationPO.PROJECTSTATUS_START_INT, "ne"));
 					}else{
-						query.add(query.getCriterion("decoration.projectStatus", "已完工", "eq"));
+						query.add(query.getCriterion("decoration.projectStatus", DecorationPO.PROJECTSTATUS_FINISH_INT, "eq"));
 					}
 				}
 			}

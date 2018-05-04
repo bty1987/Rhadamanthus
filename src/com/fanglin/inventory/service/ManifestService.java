@@ -23,6 +23,7 @@ import com.fanglin.inventory.vo.ManifestItemVO;
 import com.fanglin.inventory.vo.ManifestVO;
 import com.fanglin.inventory.vo.PurchaseItemVO;
 import com.fanglin.inventory.vo.PurchaseVO;
+import com.fanglin.sales.vo.SalesVO;
 import com.fanglin.utils.Paging;
 
 public interface ManifestService {
@@ -30,6 +31,10 @@ public interface ManifestService {
 	public void pageManifest(Paging paging, List<Filter> filters,int company);
 	
 	public ManifestVO queryManifestByMid(ManifestVO manifestVO);
+	
+	public List<ManifestVO> queryManifestForPUByPids(List<Long> pids);
+	
+	public List<ManifestVO> queryManifestForXGBySid(SalesVO salesVO);
 	
 	public int addManifestForCG(ManifestVO manifestVO,List<ManifestItemVO> manifestItemVOs,String userId,int company) throws FLException;
 	

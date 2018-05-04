@@ -110,7 +110,7 @@
 	$.extend(com.validator, duty.validator); //将多个对象合并成一个对象
 
 
-	com.post(api.department.queryDepartmentType,{}, function(res){
+	com.post(api.communion.queryDepartmentType,{}, function(res){
 		duty.dutyItems.depttype.bindData(res.departmentTypes ,"dtid","name", false);
 	});
 

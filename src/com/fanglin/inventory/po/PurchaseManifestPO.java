@@ -17,12 +17,18 @@ import javax.persistence.Table;
 public class PurchaseManifestPO implements Serializable{
 
 	private static final long serialVersionUID = -2903868492084166519L;
+	
+	public static final String COLUMN_PID_STR = "purchase.pid"; 
 
 	private long pmid;
 	
 	private PurchasePO purchase;
 	
 	private ManifestPO manifest;
+	
+	public PurchaseManifestPO() {
+		super();
+	}
 
 	public PurchaseManifestPO(PurchasePO purchase, ManifestPO manifest) {
 		super();

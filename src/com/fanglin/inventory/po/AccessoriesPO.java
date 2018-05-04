@@ -51,6 +51,8 @@ public class AccessoriesPO implements Serializable{
 	
 	public static final short STATUS_UNDO_INT = 3;
 	
+	public static final short STATUS_RETURN_INT = 4;//退回
+	
 	private long aid;	
 	
 	private String no;

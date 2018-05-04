@@ -6,9 +6,9 @@ public class ApprovalMaterialFullPaymentVO implements java.io.Serializable {
 
 	private Integer amfpId;
 	
-	private Integer aid;
+	private Long aid;
 	
-	private Long msoId;
+	private Long mid;
 	
 	private Float referMoney;
 
@@ -20,20 +20,20 @@ public class ApprovalMaterialFullPaymentVO implements java.io.Serializable {
 		this.amfpId = amfpId;
 	}
 
-	public Integer getAid() {
+	public Long getAid() {
 		return aid;
 	}
 
-	public void setAid(Integer aid) {
+	public void setAid(Long aid) {
 		this.aid = aid;
 	}
 
-	public Long getMsoId() {
-		return msoId;
+	public Long getMid() {
+		return mid;
 	}
 
-	public void setMsoId(Long msoId) {
-		this.msoId = msoId;
+	public void setMid(Long mid) {
+		this.mid = mid;
 	}
 
 	public Float getReferMoney() {

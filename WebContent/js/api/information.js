@@ -45,5 +45,16 @@ $.extend(api, {information: {
     pagePhoneCall:{url:"pagePhoneCall.do"},
     phoneCall:{url:"phoneCall.do"},
     updatePhoneCallForInfo:{url:"updatePhoneCallForInfo.do"},
-    updatePhoneCallForRecord:{url:"updatePhoneCallForRecord.do"}
+    updatePhoneCallForRecord:{url:"updatePhoneCallForRecord.do"},
+    
+    pageVticket: {url: "pageVticket.do"},
+    pageVticketForBelonger: {url: "pageVticketForBelonger.do"},
+    countVticket:{url:"countVticket.do"},
+    createVticket:{url:"createVticket.do"},
+    updateVticket:{url:"updateVticket.do"},
+    
+    //大活动—活动款
+    pageVpayment:{url:"pageVpayment.do"},
+    countVpayment:{url:"countVpayment.do"},
+    createVpayment:{url:"createVpayment.do"}
 }});

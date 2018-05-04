@@ -30,13 +30,13 @@ public class PriceImportService implements com.fanglin.imports.service.PriceImpo
 			
 			String name = _salary.get(1);
 			
-			Float purchase = Float.valueOf(_salary.get(2));
+			float purchase = Float.valueOf(_salary.get(2));
 			
-			Float selling = Float.valueOf(_salary.get(3));
+			float selling = Float.valueOf(_salary.get(3));
 			
-			short ctype = Short.parseShort(_salary.get(4));
+			short ctype = (short)Float.parseFloat(_salary.get(4));
 			
-			Float cvalue = Float.valueOf(_salary.get(5));
+			float cvalue = Float.valueOf(_salary.get(5));
 			
 			PricePO pricePO = new PricePO();
 					
@@ -49,8 +49,8 @@ public class PriceImportService implements com.fanglin.imports.service.PriceImpo
 					
 			priceDao.save(pricePO);
 			
-			index++;				
-					
+			index++;
+			
 			if(index % 100 == 0) {
 				
 				priceDao.flush();

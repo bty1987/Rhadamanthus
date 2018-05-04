@@ -29,6 +29,14 @@ $(function(){
                     var $btnQCheck = $('<a></a>').addClass('btn btn-minier hide').html('取消');
                     var $btnCtype = $('<a></a>').addClass('btn btn-minier btn-success').html(v.ctype==0?"底价":"点位");
 
+                    var profit = 0;
+
+                    if(v.ctype==1){
+                        profit = utils.accMul(utils.accSub(v.price, utils.accMul(v.disPrice, utils.accSub(1, v.cvalue))), v.num);
+                    }else{
+                        profit = utils.accMul(utils.accSub(v.price, v.cvalue),v.num);
+                    }
+
                     var propertyArr = [
                         ["商品品类:", v.goods.category, "grey", "category"],
                         ["商品颜色:", v.color.name, "grey", "color"],
@@ -42,6 +50,7 @@ $(function(){
                         ["原结算值:", v.rawCvalue, "blue", "rawCvalue"],
                         ["结算方式:", v.ctype==0?"底价":"点位", "red", "ctype"],
                         ["结算值:", v.cvalue, "blue", "cvalue"],
+                        ["利润:", profit, "blue", "profit"],
                         ["备注:", v.comment, "grey", "conment"],
                     ];
 

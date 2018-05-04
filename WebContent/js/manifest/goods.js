@@ -247,14 +247,6 @@ $(function () {
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
-
-
-
-
-
-
-
-
         var $addaExportGoods = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'importGoods').css('margin-top','-2px');
         var $addaExporti = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($addaExportGoods);
         var $addaExportspan = $('<span></span>').text('商品导出').appendTo($addaExportGoods);
@@ -395,6 +387,7 @@ $(function () {
                     ['商品名称', 'name'],
                     ['条形码', 'barcode'],
                     ['品类', 'category'],
+                    ['品牌ID', 'bid'],
                     ['品牌', 'brand'],
                     ['单位', 'measurementUnit'],
                     ['件数', 'pieceNum'],

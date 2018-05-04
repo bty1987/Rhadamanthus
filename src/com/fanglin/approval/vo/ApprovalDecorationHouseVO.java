@@ -6,7 +6,7 @@ public class ApprovalDecorationHouseVO implements java.io.Serializable {
 
 	private Integer adhid;
 	
-	private Integer aid;
+	private Long aid;
 	
 	private String orderId;
 	
@@ -23,11 +23,11 @@ public class ApprovalDecorationHouseVO implements java.io.Serializable {
 		this.adhid = adhid;
 	}
 
-	public Integer getAid() {
+	public Long getAid() {
 		return aid;
 	}
 
-	public void setAid(Integer aid) {
+	public void setAid(Long aid) {
 		this.aid = aid;
 	}
 

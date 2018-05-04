@@ -94,10 +94,10 @@ $(function(){
 					"decorationContract.workingDuration":$("#workingDuration").val(),
 					"decorationContract.additionalInfo":$("#additionalInfo").html()
 				};
-				
-				$("#startTime").val() && (options["decorationContract.startTime"] = $("#startTime").val()+" 00:00:00");
-				$("#endTime").val() && (options["decorationContract.endTime"] = $("#endTime").val()+" 00:00:00");
-				
+
+                $("#startTime").val() && (options["decorationContract.startTime"] = $("#startTime").val()+" 00:00:00");
+                $("#endTime").val() && (options["decorationContract.endTime"] = $("#endTime").val()+" 00:00:00");
+
 				com.post(api.decoration.saveDecorationContract, options, function(res){
 					if(res.errorCode == 0){
 						com.showAlert(com.info, "保存成功");
@@ -156,16 +156,11 @@ $(function(){
 			"decorationContract.orderId": params["decoration.orderId"],
 		}
 
-		com.post(api.data.checkCustomerForPhone, {"customerPhone.phone": $("#phone").val(),
-			"customerPhone.status": 0}, function(res){
+		com.post(api.data.checkCustomerForPhone, {"customerPhone.phone": $("#phone").val(), "customerPhone.status": 0}, function(res){
 
-			if(res.customer.cid != cId){
-				com.showAlert(com.error, "客户电话已经存在");
-				return false;
-			}
-
-		}, function () {
-			return;
+		}, function (res) {
+			com.showAlert(com.error, "客户电话已经存在");
+			return false;
 		}, false);
 
 		com.post(api.quotation.queryQuotationForDefaultByOrderId,{"quotation.orderId":params["decoration.orderId"]},function (res) {
@@ -252,13 +247,13 @@ $(function(){
 								propertyArr.push(["设计部:", v.designer.dept.deptName, "grey"]);
 								break;
 							case "设计师":
-								propertyArr.push(["设计师:", v.designer.userName, "grey"]);
+								propertyArr.push(["设计师:", v.designer.currentName, "grey"]);
 								break;
 							case "业务部":
 								propertyArr.push(["业务部:", v.salesman.dept.deptName, "grey"]);
 								break;
 							case "业务员":
-								propertyArr.push(["业务员:", v.salesman.userName, "grey"]);
+								propertyArr.push(["业务员:", v.salesman.currentName, "grey"]);
 								break;
 							case "面积":
 								propertyArr.push(["面积:", v.house.buildArea, "blue"]);
@@ -280,6 +275,9 @@ $(function(){
 								break;
 							case "定金时间":
 								propertyArr.push(["定金时间:", v.depositTime, "green"]);
+								break;
+							case "创建时间":
+								propertyArr.push(["创建时间:", v.createTime, "green"]);
 								break;
 							case "类型":
 								propertyArr.push(["类型:", order.type[v.type], "red"]);

@@ -2,7 +2,7 @@ package com.fanglin.sales.vo;
 
 import java.io.Serializable;
 
-import com.fanglin.inventory.vo.ManifestVO;
+import com.fanglin.inventory.vo.PurchaseVO;
 
 public class SalesPurchaseVO implements Serializable{
 
@@ -12,17 +12,16 @@ public class SalesPurchaseVO implements Serializable{
 	
 	private SalesVO sales;
 	
-	private ManifestVO manifest;
+	private PurchaseVO purchase;
 	
 	public SalesPurchaseVO() {
 		super();
 	}
 
-	public SalesPurchaseVO(Long spid, SalesVO sales, ManifestVO manifest) {
+	public SalesPurchaseVO(SalesVO sales, PurchaseVO purchase) {
 		super();
-		this.spid = spid;
 		this.sales = sales;
-		this.manifest = manifest;
+		this.purchase = purchase;
 	}
 
 	public Long getSpid() {
@@ -41,12 +40,13 @@ public class SalesPurchaseVO implements Serializable{
 		this.sales = sales;
 	}
 
-	public ManifestVO getManifest() {
-		return manifest;
+	public PurchaseVO getPurchase() {
+		return purchase;
 	}
 
-	public void setManifest(ManifestVO manifest) {
-		this.manifest = manifest;
+
+	public void setPurchase(PurchaseVO purchase) {
+		this.purchase = purchase;
 	}
-	
+
 }

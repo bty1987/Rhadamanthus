@@ -23,35 +23,31 @@ public class DecorationOperatePO implements java.io.Serializable {
 	
 	public static final short STATUS_INIT_INT = 0;
 	
-	public static final short STATUS_DISABLED_INT = 1;
+	public static final short STATUS_DISABLED_INT = 1;	
 	
-	public static final short TYPE_CREATE_DECORATION_ORDER_INT = 1;
+	public static final short TYPE_CREATE_DECORATION_ORDER_INT = 1; 
 	
-	public static final short TYPE_WASTE_DECORATION_ORDER_INT = 2;
+	public static final short TYPE_WASTE_DECORATION_ORDER_INT = 2;	
 	
-	public static final short TYPE_TERMINATION_DECORATION_ORDER_INT = 3;
+	public static final short TYPE_TERMINATION_DECORATION_ORDER_INT = 3;	
 	
-	public static final short TYPE_SUB_DECORATION_QUOTATION_NUM_INT = 4;
+	public static final short TYPE_SUB_DECORATION_QUOTATION_NUM_INT = 4;	
 	
-	public static final short TYPE_SIGN_DECORATION_ORDER_INT = 5;
+	public static final short TYPE_SIGN_DECORATION_ORDER_INT = 5;		
 	
-	public static final short TYPE_RESIGN_DECORATION_ORDER_INT = 6;
+	public static final short TYPE_RESIGN_DECORATION_ORDER_INT = 6;		
 	
-	public static final short TYPE_SIGNED_DECORATION_ORDER_INT = 7;
+	public static final short TYPE_SIGNED_DECORATION_ORDER_INT = 7;		
 	
-	public static final short TYPE_DESIGNER_DECORATION_ORDER_INT = 8;
+	public static final short TYPE_DESIGNER_DECORATION_ORDER_INT = 8;	
 	
-	public static final short TYPE_SALESMAN_DECORATION_ORDER_INT = 9;
+	public static final short TYPE_SALESMAN_DECORATION_ORDER_INT = 9;	
 	
-	public static final short TYPE_CONTRACT_DECORATION_ORDER_INT = 10;
+	public static final short TYPE_CONTRACT_DECORATION_ORDER_INT = 10;	
 	
-	private long doId;
+	private long doid;
 	
-	private DecorationPO decoration;
-	
-	private UserPO sourcer;
-	
-	private UserPO targer;
+	private String orderId;
 	
 	private UserPO operater;
 	
@@ -63,47 +59,42 @@ public class DecorationOperatePO implements java.io.Serializable {
 	
 	private short status;
 	
-	private String des;
+	private String comment;
+
+	private long dsuid;
+	
+	private long smuid;
+	
+	private long dsdid;
+	
+	private long dsrid;
+	
+	private long smdid;
+	
+	private long smrid;
+	
+	private float drate;
+	
+	private float srate;
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "doId")
-	public long getDoId(){
-		return this.doId;
+	@Column(name = "doid")
+	public long getDoid(){
+		return this.doid;
 	}
 
-	public void setDoId(long doId){
-		this.doId = doId;
+	public void setDoid(long doid){
+		this.doid = doid;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = true, name = "orderId", referencedColumnName="orderId")
-	public DecorationPO getDecoration() {
-		return decoration;
+	@Column(name = "orderId")
+	public String getOrderId() {
+		return orderId;
 	}
 
-	public void setDecoration(DecorationPO decoration) {
-		this.decoration = decoration;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = true, name = "suid", referencedColumnName="uId")
-	public UserPO getSourcer() {
-		return sourcer;
-	}
-
-	public void setSourcer(UserPO sourcer) {
-		this.sourcer = sourcer;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = true, name = "tuid", referencedColumnName="uId")
-	public UserPO getTarger() {
-		return targer;
-	}
-
-	public void setTarger(UserPO targer) {
-		this.targer = targer;
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -116,6 +107,7 @@ public class DecorationOperatePO implements java.io.Serializable {
 		this.operater = operater;
 	}
 
+	@Column(name = "operateTime")
 	public Timestamp getOperateTime() {
 		return operateTime;
 	}
@@ -124,6 +116,7 @@ public class DecorationOperatePO implements java.io.Serializable {
 		this.operateTime = operateTime;
 	}
 
+	@Column(name = "value")
 	public float getValue() {
 		return value;
 	}
@@ -132,6 +125,7 @@ public class DecorationOperatePO implements java.io.Serializable {
 		this.value = value;
 	}
 
+	@Column(name = "type")
 	public short getType() {
 		return type;
 	}
@@ -140,6 +134,7 @@ public class DecorationOperatePO implements java.io.Serializable {
 		this.type = type;
 	}
 
+	@Column(name = "status")
 	public short getStatus() {
 		return status;
 	}
@@ -148,12 +143,85 @@ public class DecorationOperatePO implements java.io.Serializable {
 		this.status = status;
 	}
 
-	public String getDes() {
-		return des;
+	@Column(name = "comment")
+	public String getComment() {
+		return comment;
 	}
 
-	public void setDes(String des) {
-		this.des = des;
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
+	@Column(name = "dsuid")
+	public long getDsuid() {
+		return dsuid;
+	}
+
+	public void setDsuid(long dsuid) {
+		this.dsuid = dsuid;
+	}
+
+	@Column(name = "smuid")
+	public long getSmuid() {
+		return smuid;
+	}
+
+	public void setSmuid(long smuid) {
+		this.smuid = smuid;
+	}
+
+	@Column(name = "dsdid")
+	public long getDsdid() {
+		return dsdid;
+	}
+
+	public void setDsdid(long dsdid) {
+		this.dsdid = dsdid;
+	}
+
+	@Column(name = "dsrid")
+	public long getDsrid() {
+		return dsrid;
+	}
+
+	public void setDsrid(long dsrid) {
+		this.dsrid = dsrid;
+	}
+
+	@Column(name = "smdid")
+	public long getSmdid() {
+		return smdid;
+	}
+
+	public void setSmdid(long smdid) {
+		this.smdid = smdid;
+	}
+
+	@Column(name = "smrid")
+	public long getSmrid() {
+		return smrid;
+	}
+
+	public void setSmrid(long smrid) {
+		this.smrid = smrid;
+	}
+
+	@Column(name = "drate")
+	public float getDrate() {
+		return drate;
+	}
+
+	public void setDrate(float drate) {
+		this.drate = drate;
+	}
+
+	@Column(name = "srate")
+	public float getSrate() {
+		return srate;
+	}
+
+	public void setSrate(float srate) {
+		this.srate = srate;
+	}
+	
 }

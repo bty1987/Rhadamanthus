@@ -37,7 +37,7 @@ public class ApprovalDecorationRefundAction extends BaseListAction {
 	private ApprovalVO approval;
 	
 	private ApprovalDecorationRefundVO approvalDecorationRefund;
-//	提交装修款项退款审批
+
 	@Action(value = "submitApprovalForDecorationRefund", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String submitApprovalForDecorationRefund() throws FLException{
 		

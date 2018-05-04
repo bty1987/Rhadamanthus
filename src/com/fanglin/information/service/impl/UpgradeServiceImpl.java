@@ -93,6 +93,15 @@ public class UpgradeServiceImpl implements UpgradeService {
 	}
 	
 	@Override
+	public String maxUpgrade() {
+		
+		String maxNo = upgradeDao.maxUpgrade();
+		
+		return maxNo;
+		
+	}
+	
+	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public int addUpgrade(UpgradeVO upgradeVO) throws FLException{
 		

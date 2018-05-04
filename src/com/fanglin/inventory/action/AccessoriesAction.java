@@ -53,6 +53,14 @@ public class AccessoriesAction extends BaseListAction{
 		return SUCCESS;
 	}
 	
+	@Action(value = "refundAccessories", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String refundAccessories() throws FLException{
+		
+		accessoriesService.refundAccessories(accessories, accessoriesItems, queryUserId() ,"",queryCompany());
+		
+		return SUCCESS;
+	}
+	
 	@Action(value = "updateAccessoriesForStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateAccessoriesForStatus() throws FLException{
 		

@@ -25,7 +25,7 @@ public class HouseSourceDaoImpl extends DaoImpl<HouseSourcePO> implements HouseS
 		//条件：城区(楼盘) , 单价 , 面积 , 朝向 , 户型(房间数), 房源类型, 装修程度, 房产类型
 		PagingQuery<HouseSourcePO> query = pagingQuery(paging, HouseSourcePO.class);
 		
-		if(dids != null){
+		if(dids != null && dids.size() > 0){
 			query.alias("department", "department").add(query.getCriterion("department.did", dids, "in"));
 		}
 		

@@ -21,7 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseListAction;
-import com.fanglin.decoration.po.DecorationBelongInfoPO;
+import com.fanglin.decoration.po.DecorationBelongPO;
 import com.fanglin.decoration.service.DecorationBelongService;
 import com.fanglin.decoration.vo.DecorationBelongVO;
 
@@ -42,7 +42,7 @@ public class DecorationBelongAction extends BaseListAction {
 	@Action(value = "queryDecorationBelongForDesignAChangeByOrderId", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryDecorationBelongForDesignAChangeByOrderId(){
 
-		String belongType = DecorationBelongInfoPO.BELONGTYPE_DESIGN_STR;
+		Short belongType = DecorationBelongPO.BELONGTYPE_DESIGN_INT;
 		
 		decorationBelongs = decorationBelongService.queryOrderBelongInfoForChangeByOrderIdAType(decorationBelong.getOrderId(), belongType);
 
@@ -52,7 +52,7 @@ public class DecorationBelongAction extends BaseListAction {
 	@Action(value = "queryDecorationBelongForDesignByOrderId", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryOrderBelongInfoForDesignByOrderId(){
 
-		String belongType = DecorationBelongInfoPO.BELONGTYPE_DESIGN_STR;
+		Short belongType = DecorationBelongPO.BELONGTYPE_DESIGN_INT;
 		
 		decorationBelongs = decorationBelongService.queryOrderBelongInfoForCurrentByOrderIdAType(decorationBelong.getOrderId(), belongType);
 
@@ -62,7 +62,7 @@ public class DecorationBelongAction extends BaseListAction {
 	@Action(value = "queryDecorationBelongForBusinessnAChangeByOrderId", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryDecorationBelongForBusinessnAChangeByOrderId(){
 
-		String belongType = DecorationBelongInfoPO.BELONGTYPE_SALESMAN_STR;
+		Short belongType = DecorationBelongPO.BELONGTYPE_SALESMAN_INT;
 		
 		decorationBelongs = decorationBelongService.queryOrderBelongInfoForChangeByOrderIdAType(decorationBelong.getOrderId(), belongType);
 	    
@@ -72,7 +72,7 @@ public class DecorationBelongAction extends BaseListAction {
 	@Action(value = "queryDecorationBelongForBusinessnByOrderId", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryOrderBelongInfoForBusinessnByOrderId(){
 
-		String belongType = DecorationBelongInfoPO.BELONGTYPE_SALESMAN_STR;
+		Short belongType = DecorationBelongPO.BELONGTYPE_SALESMAN_INT;
 		
 		decorationBelongs = decorationBelongService.queryOrderBelongInfoForCurrentByOrderIdAType(decorationBelong.getOrderId(), belongType);
 	    

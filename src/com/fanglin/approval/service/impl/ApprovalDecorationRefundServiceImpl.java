@@ -11,6 +11,7 @@
 
 package com.fanglin.approval.service.impl;
 
+import java.util.Arrays;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,9 +89,9 @@ public class ApprovalDecorationRefundServiceImpl implements ApprovalDecorationRe
 		decorationPaymentDao.update(decorationPaymentPO);
 		
 		approvalPO = new ApprovalPO();
-		BeanUtil.copyProperties(approvalVO, approvalPO);
+		BeanUtil.copyProperties(approvalVO, approvalPO,Arrays.asList("receiver","sender"));
 		
-		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiverId());
+		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiver().getUserId());
 		UserPO sender = userDao.queryUserByUserId(userId);
 		
 		approvalPO.setType(ApprovalPO.APPROVAL_TYPE_DECORATION_REFUND_INT);

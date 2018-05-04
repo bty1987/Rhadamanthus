@@ -29,7 +29,7 @@ public class VustomerAction extends BaseListAction {
 	private List<VustomerVO> vustomers;
 	
 	@Action(value="pageVustomer", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String pageVustomer() throws FLException{
+	public String pageVustomer(){
 		
 		vustomerService.pageVustomer(getPaging(), getFilters());
 		
@@ -37,7 +37,7 @@ public class VustomerAction extends BaseListAction {
 	}
 	
 	@Action(value="queryVustomer", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryVustomer() throws FLException{
+	public String queryVustomer(){
 		
 		vustomers = vustomerService.queryVustomer();
 		
@@ -45,7 +45,7 @@ public class VustomerAction extends BaseListAction {
 	}
 	
 	@Action(value="queryVustomerByIdent", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryVustomerByIdent() throws FLException{
+	public String queryVustomerByIdent(){
 		
 		vustomers = vustomerService.queryVustomerByIdent(vustomer);
 		
@@ -64,6 +64,14 @@ public class VustomerAction extends BaseListAction {
 	public String updateVustomer() throws FLException{
 		
 		vustomerService.updateVustomer(vustomer);
+		
+		return SUCCESS;
+	}
+	
+	@Action(value="deleteVustomer", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String deleteVustomer(){
+		
+		vustomerService.deleteVustomer(vustomer);
 		
 		return SUCCESS;
 	}

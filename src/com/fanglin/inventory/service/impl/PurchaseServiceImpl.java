@@ -24,9 +24,13 @@ import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.sales.dao.SalesDao;
+import com.fanglin.sales.dao.SalesItemDao;
 import com.fanglin.sales.dao.SalesPurchaseDao;
+import com.fanglin.sales.po.SalesItemPO;
 import com.fanglin.sales.po.SalesPO;
 import com.fanglin.sales.po.SalesPurchasePO;
+import com.fanglin.sales.vo.SalesVO;
+import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.Paging;
@@ -53,6 +57,9 @@ public class PurchaseServiceImpl  implements PurchaseService{
 	
 	@Autowired
 	private SalesPurchaseDao salesPurchaseDao;
+	
+	@Autowired
+	private SalesItemDao salesItemDao;
 	
 	@Override
 	public void pagePurchase(Paging paging, List<Filter> filters, int company) {
@@ -109,6 +116,27 @@ public class PurchaseServiceImpl  implements PurchaseService{
 	}
 	
 	@Override
+	public List<PurchaseVO> queryPurchaseBySid(SalesVO salesVO) {
+		
+		List<SalesPurchasePO> salesPurchasePOs = salesPurchaseDao.querySalesPurchaseBySid(salesVO.getSid());
+		
+		List<PurchaseVO> purchaseVOs = new ArrayList<PurchaseVO>();
+		
+		for(SalesPurchasePO salesPurchasePO : salesPurchasePOs){
+			
+			PurchaseVO purchaseVO = new PurchaseVO(new UserBaseVO());
+			
+			BeanUtil.copyProperties(salesPurchasePO.getPurchase(), purchaseVO, Arrays.asList("user"));
+			BeanUtil.copyProperties(salesPurchasePO.getPurchase().getUser(), purchaseVO.getUser(), Arrays.asList("duty","dept"));
+			
+			purchaseVOs.add(purchaseVO);
+		}
+		
+		
+		return purchaseVOs;
+	}
+	
+	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public int addPurchase(PurchaseVO purchaseVO,List<Long> sids,List<PurchaseItemVO> purchaseItemVOs, String userId,int company) throws FLException{
 		//PO作为编号前缀 , 之后由8位数字组成
@@ -134,6 +162,20 @@ public class PurchaseServiceImpl  implements PurchaseService{
 		
 		for(PurchaseItemVO purchaseItemVO:purchaseItemVOs){
 			
+			if(purchaseItemVO.getSiid() != null){
+				
+				SalesItemPO salesItemPO = salesItemDao.get(purchaseItemVO.getSiid());
+				
+				if(salesItemPO.getPunum() < purchaseItemVO.getNum()){
+					throw new FLException(260048, "可采购数量不足");
+				}
+				
+				salesItemPO.setPunum(Arith.sub(salesItemPO.getPunum(), purchaseItemVO.getNum()));
+				
+				salesItemDao.update(salesItemPO);
+			}
+			
+			
 			purchaseItemPO = new PurchaseItemPO(new GoodsPO(),new ColorPO(),new FormatPO());
 			
 			purchaseItemPO.setPid(purchasePO.getPid());
@@ -144,7 +186,7 @@ public class PurchaseServiceImpl  implements PurchaseService{
 			BeanUtil.copyProperties(purchaseItemVO.getFormat(), purchaseItemPO.getFormat());
 			
 			purchaseItemPO.setSurplus(purchaseItemVO.getNum());
-			//插入采购单下的采购项信息
+			
 			purchaseItemDao.save(purchaseItemPO);			
 		}
 		

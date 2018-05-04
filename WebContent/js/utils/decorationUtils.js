@@ -527,18 +527,18 @@ var decorationUtils = {
         if (decorationBelongs && decorationBelongs.length) {
             $.each(decorationBelongs, function (i, v) {
                 var $liLine = $('<li></li>').addClass('item-orange clearfix');
-                var $h4 = $('<h4></h4>').addClass('oid').append($('<b></b>').html(v.belongUser));
+                var $h4 = $('<h4></h4>').addClass('oid').append($('<b></b>').html(v.belonger.currentName));
                 var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
                 var $ulStyle = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
                 var $divBtnBlock = $('<div></div>').addClass('clearfix col-sm-12');
                 var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
                 var propertyArr = [
-                    ["员工号:", v.belongUserId, "grey"],
-                    ["所属部门:", v.belongDept, "grey"],
-                    ["所属大区:", v.belongRegion, "grey"],
-                    ["分配比例:", v.belongRate, "grey"],
-                    ["默认:", v.defaultFlag, "grey"]
+                    ["员工号:", v.belonger.userId, "grey"],
+                    ["所属部门:", v.department.deptName, "grey"],
+                    ["所属大区:", v.region.deptName, "grey"],
+                    ["分配比例:", v.rate, "grey"],
+                    ["默认:", v.defaultFlag == 1 ? '是' : '否', "grey"]
                 ];
 
                 $.each(propertyArr, function (index, value) {
@@ -550,7 +550,7 @@ var decorationUtils = {
 
                 $liLine.append($h4).append($ulProperty).append($ulStyle).append($divBtnBlock);
 
-                v.belongType == "设计" ? $liLine.appendTo($designul) : $liLine.appendTo($salesmanul);
+                v.type == 0 ? $liLine.appendTo($designul) : $liLine.appendTo($salesmanul);
             });
         }
     }, loadHuploadify: function (eId, ename, fileType, multi, callback, btnstyle) {

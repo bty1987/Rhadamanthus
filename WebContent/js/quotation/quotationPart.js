@@ -532,9 +532,9 @@ var QuotationDetail = (function(){
 						}
 						var options = {
 							"approval.comment": $('#customerDes').val(),
-							"approval.receiverId": receiverId,
+							"approval.receiver.userId": receiverId,
 							"approvalQuotationDiscount.orderId": quo.orderid,
-							"approvalQuotationDiscount.quotationId": quo.quotationid,
+							"approvalQuotationDiscount.qid": quo.quotationid,
 							"approvalQuotationDiscount.newDiscount": dis,
 						}
 

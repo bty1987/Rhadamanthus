@@ -12,6 +12,7 @@
 package com.fanglin.approval.service.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -36,6 +37,7 @@ import com.fanglin.approval.service.ApprovalService;
 import com.fanglin.approval.vo.ApprovalVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
@@ -87,15 +89,7 @@ public class ApprovalServiceImpl implements ApprovalService {
 		List<ApprovalVO> approvalVOs = new ArrayList<ApprovalVO>();
 		
 		for(ApprovalPO approvalPO: approvalPOs){
-			ApprovalVO approvalVO = new ApprovalVO();
-			BeanUtil.copyProperties(approvalPO, approvalVO);
-			
-			approvalVO.setReceiverId(approvalPO.getReceiver().getUserId());
-			approvalVO.setReceiverName(approvalPO.getReceiver().getCurrentName());
-			approvalVO.setSenderId(approvalPO.getSender().getUserId());
-			approvalVO.setSenderName(approvalPO.getSender().getCurrentName());
-			
-			approvalVOs.add(approvalVO);
+			approvalVOs.add(convertBean(approvalPO));
 		}
 		
 		paging.setData(approvalVOs);
@@ -108,16 +102,9 @@ public class ApprovalServiceImpl implements ApprovalService {
 		List<ApprovalVO> approvalVOs = new ArrayList<ApprovalVO>();
 		
 		for(ApprovalPO approvalPO: approvalPOs){
-			ApprovalVO approvalVO = new ApprovalVO();
-			BeanUtil.copyProperties(approvalPO, approvalVO);
-			
-			approvalVO.setReceiverId(approvalPO.getReceiver().getUserId());
-			approvalVO.setReceiverName(approvalPO.getReceiver().getCurrentName());
-			approvalVO.setSenderId(approvalPO.getSender().getUserId());
-			approvalVO.setSenderName(approvalPO.getSender().getCurrentName());
-			
-			approvalVOs.add(approvalVO);
+			approvalVOs.add(convertBean(approvalPO));
 		}	
+		
 		paging.setData(approvalVOs);
 	}
 	
@@ -126,24 +113,23 @@ public class ApprovalServiceImpl implements ApprovalService {
 		
 		ApprovalPO approvalPO = approvalDao.get(approvalVO.getAid());
 		
+		ApprovalVO approval = new ApprovalVO(new UserBaseVO(),new UserBaseVO());
+		
 		if(approvalPO == null){
 			throw new FLException(240009, "审批信息不存在");
 		}
 		
-		BeanUtil.copyProperties(approvalPO, approvalVO);
+		BeanUtil.copyProperties(approvalPO, approvalVO,Arrays.asList("receiver", "sender"));
+		BeanUtil.copyProperties(approvalPO.getReceiver(), approval.getReceiver(),Arrays.asList("dept", "duty"));
+		BeanUtil.copyProperties(approvalPO.getSender(), approval.getSender(),Arrays.asList("dept", "duty"));
 		
-		approvalVO.setReceiverId(approvalPO.getReceiver().getUserId());
-		approvalVO.setReceiverName(approvalPO.getReceiver().getCurrentName());		
-		approvalVO.setSenderId(approvalPO.getSender().getUserId());
-		approvalVO.setSenderName(approvalPO.getSender().getUserName());
-		
-		return approvalVO;
+		return approval;
 	}
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public int approve(ApprovalVO approvalVO) throws FLException {
-		
+	
 		ApprovalPO approvalPO = approvalDao.get(approvalVO.getAid());
 		
 		if(approvalPO == null){
@@ -160,37 +146,37 @@ public class ApprovalServiceImpl implements ApprovalService {
 		short type = approvalPO.getType();
 		
 		switch (type) {
-			case ApprovalPO.APPROVAL_TYPE_CUSTOMER_INT://1
+			case ApprovalPO.APPROVAL_TYPE_CUSTOMER_INT:
 //				approvalDecorationCustomerService.approvalForCustomer(approvalPO);
 				break;
-			case ApprovalPO.APPROVAL_TYPE_VILLAGE_INT://2
+			case ApprovalPO.APPROVAL_TYPE_VILLAGE_INT:
 //				aprovalDecorationHouseService.approvalDecorationHouse(approvalPO);
 				break;
-			case ApprovalPO.APPROVAL_TYPE_ORDER_BELONG_INT://3
+			case ApprovalPO.APPROVAL_TYPE_ORDER_BELONG_INT:
 				approvalDecorationBelongService.approvalForDecorationBelong(approvalPO);
 				break;
-			case ApprovalPO.APPROVAL_TYPE_QUOTATION_DISCOUNT_INT://4
+			case ApprovalPO.APPROVAL_TYPE_QUOTATION_DISCOUNT_INT:
 				approvalQuotationDiscountService.approvalForQuotationDiscount(approvalPO);
 				break;
-			case ApprovalPO.APPROVAL_TYPE_DECORATION_REFUND_INT://5
+			case ApprovalPO.APPROVAL_TYPE_DECORATION_REFUND_INT:
 				approvalDecorationRefundService.approvalForDecorationRefund(approvalPO);
 				break;
-			case ApprovalPO.APPROVAL_TYPE_MATERIAL_REFUND_INT://6
+			case ApprovalPO.APPROVAL_TYPE_MATERIAL_REFUND_INT:
 				approvalMaterialRefundService.approvalForMaterialRefund(approvalPO);
 				break;
-			case ApprovalPO.APPROVAL_TYPE_DECORATION_ACTIVITY_INT://8
+			case ApprovalPO.APPROVAL_TYPE_DECORATION_ACTIVITY_INT:
 				approvalDecorationActivityService.approvalForDecorationActivity(approvalPO);
 				break;
-			case ApprovalPO.APPROVAL_TYPE_MATERIAL_FULL_PAYMENT_INT://9
+			case ApprovalPO.APPROVAL_TYPE_MATERIAL_FULL_PAYMENT_INT:
 				approvalMaterialFullPaymentService.approvalForMaterialFullPayment(approvalPO);
 				break;
-			case ApprovalPO.APPROVAL_TYPE_SALESREFUND_PAYMENT_INT://10
+			case ApprovalPO.APPROVAL_TYPE_SALESREFUND_PAYMENT_INT:
 				approvalSalesRefundService.approvalForSalesRefund(approvalPO);
 				break;	
-			case ApprovalPO.APPROVAL_TYPE_MANIFESTDB_INT://11
+			case ApprovalPO.APPROVAL_TYPE_MANIFESTDB_INT:
 				approvalManifestDBService.approvalManifestDB(approvalPO);
 				break;
-			case ApprovalPO.APPROVAL_TYPE_SALES_DIACOUNT_INT://12
+			case ApprovalPO.APPROVAL_TYPE_SALES_DIACOUNT_INT:
 				approvalSalesDiscountService.approvalForSalesDiscount(approvalPO);
 			    break;
 			default:
@@ -218,22 +204,22 @@ public class ApprovalServiceImpl implements ApprovalService {
 		short type = approvalPO.getType();
 		
 		switch (type) {
-			case ApprovalPO.APPROVAL_TYPE_MATERIAL_FULL_PAYMENT_INT://9
+			case ApprovalPO.APPROVAL_TYPE_MATERIAL_FULL_PAYMENT_INT:
 				approvalMaterialFullPaymentService.refuseForMaterialFullPayment(approvalPO);
 				break;
-			case ApprovalPO.APPROVAL_TYPE_MATERIAL_REFUND_INT://6
+			case ApprovalPO.APPROVAL_TYPE_MATERIAL_REFUND_INT:
 				approvalMaterialRefundService.refuseForMaterialRefund(approvalPO);
 				break;
-			case ApprovalPO.APPROVAL_TYPE_DECORATION_REFUND_INT://5
+			case ApprovalPO.APPROVAL_TYPE_DECORATION_REFUND_INT:
 				approvalDecorationRefundService.refuseForDecorationRefund(approvalPO);
 				break;
-			case ApprovalPO.APPROVAL_TYPE_SALESREFUND_PAYMENT_INT://10
+			case ApprovalPO.APPROVAL_TYPE_SALESREFUND_PAYMENT_INT:
 				approvalSalesRefundService.refuseForSalesRefund(approvalPO);
 				break;
-			case ApprovalPO.APPROVAL_TYPE_MANIFESTDB_INT://11
+			case ApprovalPO.APPROVAL_TYPE_MANIFESTDB_INT:
 				approvalManifestDBService.refuseManifestDB(approvalPO);
 				break;
-			case ApprovalPO.APPROVAL_TYPE_SALES_DIACOUNT_INT://12
+			case ApprovalPO.APPROVAL_TYPE_SALES_DIACOUNT_INT:
 				approvalSalesDiscountService.refuseForSalesDiscount(approvalPO);
 				break;
 			default:
@@ -246,6 +232,17 @@ public class ApprovalServiceImpl implements ApprovalService {
 		approvalDao.update(approvalPO);
 		
 		return 0;
+	}
+	
+	private ApprovalVO convertBean(ApprovalPO approvalPO) {
+		
+		ApprovalVO approvalVO = new ApprovalVO(new UserBaseVO(),new UserBaseVO());
+		
+		BeanUtil.copyProperties(approvalPO, approvalVO,Arrays.asList("receiver", "sender"));
+		BeanUtil.copyProperties(approvalPO.getReceiver(), approvalVO.getReceiver(),Arrays.asList("dept", "duty"));
+		BeanUtil.copyProperties(approvalPO.getSender(), approvalVO.getSender(),Arrays.asList("dept", "duty"));
+
+		return approvalVO;
 	}
 
 }

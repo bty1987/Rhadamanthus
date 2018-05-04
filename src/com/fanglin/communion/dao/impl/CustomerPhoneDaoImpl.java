@@ -51,15 +51,16 @@ public class CustomerPhoneDaoImpl extends DaoImpl<CustomerPhonePO> implements Cu
 		sql.append("select cp.* ");
 		sql.append("from communion.customer c left join communion.customerphone cp on c.cid = cp.cid ");
 		sql.append("where cp.phone =:phone ");
-		sql.append("group by cp.cpid ");
-		
+	
 		if(Integer.valueOf(Constant.COMPANY_COMMUNION_SWITCH_INT) > 0){
 			sql.append("and c.company =:company ");
 		}
 		
 		if(status != null){
-			sql.append("and cp.status =:status");
+			sql.append("and cp.status =:status ");
 		}
+		
+		sql.append(" group by cp.cpid ");
 		
 		SQLQuery query = session().createSQLQuery(sql.toString()).addEntity(CustomerPhonePO.class);
 		

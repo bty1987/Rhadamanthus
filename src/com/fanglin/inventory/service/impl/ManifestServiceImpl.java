@@ -56,9 +56,12 @@ import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.sales.dao.SalesDao;
+import com.fanglin.sales.dao.SalesItemDao;
 import com.fanglin.sales.dao.SalesManifestDao;
+import com.fanglin.sales.po.SalesItemPO;
 import com.fanglin.sales.po.SalesManifestPO;
 import com.fanglin.sales.po.SalesPO;
+import com.fanglin.sales.vo.SalesVO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
@@ -111,6 +114,9 @@ public class ManifestServiceImpl implements ManifestService {
 	@Autowired
 	private SalesManifestDao salesManifestDao;
 	
+	@Autowired
+	private SalesItemDao salesItemDao;
+	
 	@Override
 	public void pageManifest(Paging paging, List<Filter> filters,int company) {
 		
@@ -142,6 +148,53 @@ public class ManifestServiceImpl implements ManifestService {
 		manifestVO.getCreateUser().setBaseInfo(manifestPO.getCreateUser());
 		
 		return manifestVO;
+	}
+	
+	@Override
+	public List<ManifestVO> queryManifestForPUByPids(List<Long> pids) {
+		
+		List<ManifestVO> manifestVOs = new ArrayList<ManifestVO>();
+		
+		if(pids == null || pids.size()==0){
+			return manifestVOs;
+		}
+		
+		List<PurchaseManifestPO> purchaseManifestPOs = purchaseManifestDao.queryPurchaseManifestByPids(pids);
+		
+		
+		
+		for(PurchaseManifestPO purchaseManifestPO : purchaseManifestPOs){
+			
+			ManifestVO manifestVO = new ManifestVO(new UserBaseVO());
+			
+			BeanUtil.copyProperties(purchaseManifestPO.getManifest(), manifestVO, Arrays.asList("createUser","quoteManifest"));
+			BeanUtil.copyProperties(purchaseManifestPO.getManifest().getCreateUser(), manifestVO.getCreateUser(), Arrays.asList("duty","dept"));
+			
+			manifestVOs.add(manifestVO);
+		}
+		
+		return manifestVOs;
+	}
+
+	@Override
+	public List<ManifestVO> queryManifestForXGBySid(SalesVO salesVO) {
+		
+		List<SalesManifestPO> salesManifestVOs = salesManifestDao.querySalesManifestBySid(salesVO.getSid());
+		
+		List<ManifestVO> manifestVOs = new ArrayList<ManifestVO>();
+		
+		for(SalesManifestPO salesManifestPO : salesManifestVOs){
+			
+			ManifestVO manifestVO = new ManifestVO(new UserBaseVO());
+			
+			BeanUtil.copyProperties(salesManifestPO.getManifest(), manifestVO, Arrays.asList("createUser","quoteManifest"));
+			BeanUtil.copyProperties(salesManifestPO.getManifest().getCreateUser(), manifestVO.getCreateUser(), Arrays.asList("duty","dept"));
+			
+			manifestVOs.add(manifestVO);
+		}
+		
+		return manifestVOs;
+		
 	}
 
 	@Override
@@ -244,6 +297,22 @@ public class ManifestServiceImpl implements ManifestService {
 		ManifestItemPO manifestItemPO;
 		
 		for(ManifestItemVO manifestItemVO: manifestItemVOs){
+			
+			if(manifestItemVO.getSiid()!=null){
+				
+				SalesItemPO salesItemPO = salesItemDao.get(manifestItemVO.getSiid());
+				
+				if(salesItemPO.getXgnum() < manifestItemVO.getNum()){
+					throw new FLException(260047, "可出库数量不足");
+				}
+				
+				salesItemPO.setXgnum(Arith.sub(salesItemPO.getXgnum(), manifestItemVO.getNum()));
+				
+				salesItemDao.update(salesItemPO);
+				
+			}
+			
+			
 			manifestItemPO = new ManifestItemPO(new GoodsPO(),new ColorPO(),new FormatPO());
 			
 			long gid = manifestItemVO.getGoods().getGid();
@@ -824,7 +893,5 @@ public class ManifestServiceImpl implements ManifestService {
 		
 		return 0;
 	}
-
-	
 
 }

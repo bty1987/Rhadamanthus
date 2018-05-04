@@ -1,5 +1,8 @@
 package com.fanglin.sales.dao.impl;
 
+import java.util.List;
+
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
@@ -11,6 +14,12 @@ public class SalesPurchaseDaoImpl extends DaoImpl<SalesPurchasePO> implements Sa
 
 	public SalesPurchaseDaoImpl(){
 		super(SalesPurchasePO.class);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<SalesPurchasePO> querySalesPurchaseBySid(long sid) {
+		return createCriteria(SalesPurchasePO.class).createAlias("sales", "sales").add(Restrictions.eq(SalesPurchasePO.COLUMN_SALESSID_STR, sid)).list();
 	}
 	
 }

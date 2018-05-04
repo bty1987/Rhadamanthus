@@ -21,11 +21,11 @@ public class ApprovalDecorationBelongItemPO implements java.io.Serializable {
 	
 	private String orderId;
 	
-	private String belongUserId;
+	private int buid;
 	
-	private float belongRate;
+	private float rate;
 	
-	private String defaultFlag;
+	private short defaultFlag;
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -56,30 +56,30 @@ public class ApprovalDecorationBelongItemPO implements java.io.Serializable {
 		this.orderId = orderId;
 	}
 
-	@Column(name = "belongUserId")
-	public String getBelongUserId() {
-		return this.belongUserId;
+	@Column(name = "buid")
+	public int getbuid() {
+		return this.buid;
 	}
 
-	public void setBelongUserId(String belongUserId) {
-		this.belongUserId = belongUserId;
+	public void setBuid(int buid) {
+		this.buid = buid;
 	}
 
-	@Column(name = "belongRate")
-	public float getBelongRate() {
-		return this.belongRate;
+	@Column(name = "rate")
+	public float getRate() {
+		return this.rate;
 	}
 
-	public void setBelongRate(float belongRate) {
-		this.belongRate = belongRate;
+	public void setRate(float rate) {
+		this.rate = rate;
 	}
 
 	@Column(name = "defaultFlag")
-	public String getDefaultFlag() {
+	public short getDefaultFlag() {
 		return this.defaultFlag;
 	}
 
-	public void setDefaultFlag(String defaultFlag) {
+	public void setDefaultFlag(short defaultFlag) {
 		this.defaultFlag = defaultFlag;
 	}
 

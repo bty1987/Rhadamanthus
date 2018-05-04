@@ -52,6 +52,17 @@
     {"key":"2","value":"线上"},
     {"key":"3","value":"失败"}
   ],
+  "vpayment":[
+    {"key":"0","value":"装修款"},
+    {"key":"1","value":"装修定金"},
+    {"key":"2","value":"主材款 "},
+    {"key":"3","value":"主材定金"}
+  ],
+  "ways":[
+    {"key":"0","value":"现金"},
+    {"key":"1","value":"POS1"},
+    {"key":"2","value":"POS2 "}
+  ],
   "errorCode": 0,
   "errorMsg": null
 }

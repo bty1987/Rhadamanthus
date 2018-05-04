@@ -4,10 +4,6 @@ jQuery(function ($) {
     var customerServiceDetail = {
 
         constructionSchedules: {},
-        constructionNodeName: [
-            "chan", "putline", "waterwayCircuitPower", "bricklay", "groundLeveling",
-            "carpent", "oil", "waterwayCircuitCheck", "cleaning",
-        ],
 
         wizardSept: {
             "1": false,
@@ -41,8 +37,7 @@ jQuery(function ($) {
 
         $.each(constructionSchedule, function (i, v) {
             customerServiceNode("#stepId", v.schedule);
-
-            customerServicePane("#step-container", v.schedule, customerServiceDetail.constructionNodeName[v.schedule - 3]);
+            customerServicePane("#step-container", v.schedule, v.schedule);
         });
 
         var stepnum = constructionSchedule[0].schedule;
@@ -68,8 +63,7 @@ jQuery(function ($) {
     });
 
     function initWizardSept(schedule) {
-
-        addActive(schedule)
+        addActive(schedule);
 
         var elementPostData = {};
         elementPostData["constructer.orderId"] = params.orderId;
@@ -79,24 +73,21 @@ jQuery(function ($) {
         com.post(api.construction.queryConstructerByOrderId, elementPostData, function (res) {
             constructers = res.constructers;
             $("#btnSave").unbind("click");
-
             if (schedule) {
                 workerIdsData = [];
                 commitFlag = false;
-                $("#" + customerServiceDetail.constructionNodeName[schedule - 3] + "WorkerInfos").html("");
+                $("#" + schedule + "WorkerInfos").html("");
 
                 if (constructers.length != 0) {
-                    for (var i = 0; i < constructers.length; i++) {
 
-                        var workerInfo = constructers[i];
+                    $.each(constructers, function (i, val) {
+                        var workerInfo = val;
 
                         var profileDiv = $('<div class="profile-picture col-sm-4" style="padding-top: 10px;"></div>');
                         var imgDiv = $('<div class="col-sm-6 workerImg"></div>').css("width", "49%").appendTo(profileDiv);
-                        var img = $('<img />').attr("alt", workerInfo.user.userId + "'s photo").attr("id", workerInfo.user.userId + "WorkerImg").appendTo(imgDiv);
 
-                        if (workerInfo.user.userPhoto != null && workerInfo.user.userPhoto != "") {
-                            img.attr("src", config.media + api.common.showImg.url + '?imgBasePath=' + workerInfo.user.userPhoto + '&divFlag=1&width=150&height=150&timestamp=' + new Date().getTime());
-                        }
+                        var img = $('<img />').attr("id", workerInfo.user.userId + "WorkerImg").appendTo(imgDiv);
+                        var url = com.showImg(img, workerInfo.user.userPhoto, 150, 150, '', null, 0);
 
                         var horizontalDiv = $('<div class="form-horizontal col-sm-6">').appendTo(profileDiv);
                         var workerNameGroupDiv = $('<div class="form-group">').appendTo(horizontalDiv);
@@ -108,17 +99,17 @@ jQuery(function ($) {
                         var workerDesGroupDiv = $('<div class="form-group">').appendTo(horizontalDiv);
                         var workerDesTextarea = $('<textarea rows="3"></textarea>').attr("id", workerInfo.crid + "workerRatyDes").val(workerInfo.assessment).appendTo(workerDesGroupDiv);
 
-                        profileDiv.appendTo($("#" + customerServiceDetail.constructionNodeName[schedule - 3] + "WorkerInfos"));
+                        profileDiv.appendTo($("#" + schedule + "WorkerInfos"));
 
                         setWorkerRaty('#' + workerInfo.crid + "workerRaty", workerInfo.rate);
                         setWorkerDes("#" + workerInfo.crid + "workerRatyDes", workerInfo.assessment);
 
                         workerIdsData.push(constructers[i].crid);
-                    }
+                    })
 
                     commitFlag = true;
                 } else {
-                    $('<div class="alert alert-info">').text("当前进度没有分配工人!").appendTo($("#" + customerServiceDetail.constructionNodeName[schedule - 3] + "WorkerInfos"));
+                    $('<div class="alert alert-info">').text("当前进度没有分配工人!").appendTo($("#" + schedule + "WorkerInfos"));
                 }
 
                 $("#btnSave").click(function () {

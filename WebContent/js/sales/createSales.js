@@ -63,10 +63,8 @@ jQuery(function () {
             //赋值售价信息
             com.post(api.inventory.queryPriceByGid, {"price.gid": k}, function (priceData) {
                 if (priceData.prices.length != 0) {
-                    var purchase;
-                    var $purchase = $('#purchase');
+
                     $('#purchase').bindData(priceData.prices, "pid", "selling");
-                    purchase = parseFloat($purchase.find('option:selected').text());
                     var pid = $('#purchase').val();
                     com.post(api.inventory.queryPriceByPid, {
                         "price.pid": pid
@@ -147,7 +145,7 @@ jQuery(function () {
 
             var $otherStatus = 0;
 
-            if ($selling != $disPrice || $purchase * $discount != $disPrice) {
+            if ($selling != $disPrice) {
                 $otherStatus = 1;
             }
 
@@ -468,6 +466,8 @@ jQuery(function () {
                 _option["salesItems[" + i + "].disPrice"] = parseFloat($v.find('.b_countSelling').text());
                 _option["salesItems[" + i + "].postDis"] = parseFloat($v.attr('data-postDis'));
                 _option["salesItems[" + i + "].price"] = parseFloat($v.find('.b_price').text());
+                _option["salesItems[" + i + "].xgnum"] = parseFloat($v.find('.b_number').text());
+                _option["salesItems[" + i + "].punum"] = parseFloat($v.find('.b_number').text());
                 _option["salesItems[" + i + "].num"] = parseFloat($v.find('.b_number').text());
                 _option["salesItems[" + i + "].total"] = parseFloat($v.find('.b_total').text());
                 _option["salesItems[" + i + "].comment"] = $v.find('.b_remark').text();
@@ -506,13 +506,14 @@ jQuery(function () {
         var _brand = ""
         if ($_brand.attr('data-brand')) {
             _brand = $_brand.attr('data-brand').split('-')[0];
+            _brand = _brand.trim();
         }
 
         //判断品牌差异
         var $_lis = $('.list-group-item');
         $.each($_lis, function (i, v) {
             var $v = $(v);
-            if (_brand != $v.find('.b_brand').text()) {
+            if (_brand != $v.find('.b_brand').text().trim()) {
                 $v.css("border", "solid red 2px");
                 var r = i + 1;
                 com.showAlert(null, "销售项第" + r + "项中品牌与主材品牌不符,请检查");

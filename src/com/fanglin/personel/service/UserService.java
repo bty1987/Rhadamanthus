@@ -40,6 +40,8 @@ public interface UserService {
 		
 	public UserVO validateUser(String loginId, String password) throws FLException;
 	
+	public List<UserBaseVO> queryUserByDtid(String pinyinName,UserVO userVO,String departmentTypeName,Integer company) throws FLException;
+	
 	public int resetPassword(UserVO userVO,Integer company) throws FLException;
 	
 	public void addUser(UserInfoVO userInfoVO, int company) throws FLException;

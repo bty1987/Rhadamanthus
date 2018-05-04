@@ -6660,3 +6660,13 @@ input[readonly].lock-error-input{
 	height: 25px; 
 	vertical-align: bottom;
 }
+.salary-Screen{
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    background-color: #ffffff;
+    z-index:9990;
+    overflow: auto;
+}

@@ -35,10 +35,19 @@
 
 		document.write(csses);
 	</script>
+	<style>
+		#winTop {
+			-webkit-app-region: drag;
+		}
+
+		button {
+			-webkit-app-region: no-drag;
+		}
+	</style>
 
 </head>
 
-<body class="login-layout" >
+<body class="login-layout" style="display: none">
 <div class="main-container">
 	<div style="position: fixed; display: inline-block; color: rgb(255, 255, 255); font-size: 72px; left: 20px; bottom: 20px; opacity:0.5">
 		<i class="icon-chrome"></i>
@@ -59,16 +68,16 @@
 								<div class="clearfix" style="margin: 60px 10px 10px 10px;overflow-y: hidden;">
 									<label id="errorMsg" class="block clearfix red center"></label>
 									<div class="col-md-3 input-icon input-icon-right  no-padding-right">
-										<input type="text" class="form-control" id="userId" placeholder="登陆ID">
+										<input type="text" class="form-control" id="userId" placeholder="登陆ID" maxlength="32">
 										<span id="userIdIcon" class="icon-user" data-rel="popover" data-trigger="hover" data-placement="top" data-content=""></span>
 									</div>
 									<div class="col-md-3 input-icon input-icon-right no-padding-right">
-										<input type="password" class="form-control" id="password" placeholder="密码">
+										<input type="password" class="form-control" id="password" placeholder="密码" maxlength="32">
 										<span id="passwordIcon" class="icon-lock" data-rel="popover" data-trigger="hover" data-placement="top" data-content=""></span>
 									</div>
 
 									<div class="col-md-2 input-icon input-icon-right  no-padding-right">
-										<input type="text" class="form-control" id="nowCode" placeholder="验证码">
+										<input type="text" class="form-control" id="nowCode" placeholder="验证码" maxlength="8">
 										<span id="newCodeIcon" class="" data-rel="popover" data-trigger="hover" data-placement="top" data-content=""></span>
 									</div>
 									<div class="col-md-1">
@@ -126,38 +135,39 @@
         <div id="canvas"></div>
     </div>
 </div>
-
+<script src="assets/altogether/js/jquery-2.0.3.min.js"></script>
 <script type="text/javascript">
 
-	var jses = "";
-
-	if(!window.jQuery){
-	    /* altogether */
-		jses += '<script src="' + hostServer + 'assets/altogether/js/jquery-2.0.3.min.js"><\/script>';
+	if(parent.window.isPC){
+        var gui = require('nw.gui');
+        var win = gui.Window.get();
 	}
 
-	if("ontouchend" in document){
-	    /* ace */
-		jses += '<script src="' + hostServer + 'assets/ace/js/jquery.mobile.custom.min.js"><\/script>';
-	}
+    var jses = "";
+
+    if("ontouchend" in document){
+        /* ace */
+        jses += '<script src="' + hostServer + 'assets/ace/js/jquery.mobile.custom.min.js"><\/script>';
+    }
 
     /* ace */
-	jses += '<script src="' + hostServer + 'assets/ace/js/bootstrap.min.js"><\/script>';
-	jses += '<script src="' + hostServer + 'assets/ace/js/ace.js"><\/script>';
-	jses += '<script src="' + hostServer + 'assets/ace/js/ace-elements.js"><\/script>';
-	jses += '<script src="' + hostServer + 'assets/ace/js/ace-extra.min.js"><\/script>';
-	jses += '<script src="' + hostServer + 'assets/ace/js/jquery.fullscreenBackground.min.js"><\/script>';
-	jses += '<script src="' + hostServer + 'assets/ace/js/cav.js"><\/script>';
-	jses += '<script src="' + hostServer + 'assets/ace/js/shaking.js"><\/script>';
-	/* ace end */
+    jses += '<script src="' + hostServer + 'assets/ace/js/bootstrap.min.js"><\/script>';
+    jses += '<script src="' + hostServer + 'assets/ace/js/ace.js"><\/script>';
+    jses += '<script src="' + hostServer + 'assets/ace/js/ace-elements.js"><\/script>';
+    jses += '<script src="' + hostServer + 'assets/ace/js/ace-extra.min.js"><\/script>';
+    jses += '<script src="' + hostServer + 'assets/ace/js/jquery.fullscreenBackground.min.js"><\/script>';
+    jses += '<script src="' + hostServer + 'assets/ace/js/cav.js"><\/script>';
+    jses += '<script src="' + hostServer + 'assets/ace/js/shaking.js"><\/script>';
+    /* ace end */
+	if(!parent.window.isEncryption){
+        jses += '<script src="' + hostServer + 'js/com/config.js"><\/script>';
+        jses += '<script src="' + hostServer + 'js/dlogin.js"><\/script>';
+	}else if(parent.window.isPC && parent.window.isEncryption){
+        win.evalNWBin(null, 'js/com/config.bin');
+        win.evalNWBin(null, 'js/dlogin.bin');
+	}
 
-    jses += '<script src="' + hostServer + 'js/com/config.js"><\/script>';
-	jses += '<script src="' + hostServer + 'js/com/api.js"><\/script>';
-	jses += '<script src="' + hostServer + 'js/com/server.js"><\/script>';
-	jses += '<script src="' + hostServer + 'js/com/params.js"><\/script>';
-	jses += '<script src="' + hostServer + 'js/dlogin.js"><\/script>';
-
-	document.write(jses);
+    document.write(jses);
 </script>
 
 </body>

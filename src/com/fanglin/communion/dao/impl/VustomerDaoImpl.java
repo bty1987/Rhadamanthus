@@ -34,17 +34,13 @@ public class VustomerDaoImpl extends DaoImpl<VustomerPO> implements VustomerDao{
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<VustomerPO> queryVustomer() {
-		
-		return session().createCriteria(VustomerPO.class).list();
-		
+		return session().createCriteria(VustomerPO.class).add(Restrictions.eq(VustomerPO.COLUMN_STATUS_STR, VustomerPO.STATUS_INIT_INT)).list();
 	}
 	
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<VustomerPO> queryVustomerByIdent(String ident) {
-		
-		return session().createCriteria(VustomerPO.class).add(Restrictions.eq(VustomerPO.COLUMN_IDENT_STR, ident)).list();
-		
+		return session().createCriteria(VustomerPO.class).add(Restrictions.eq(VustomerPO.COLUMN_IDENT_STR, ident)).add(Restrictions.eq(VustomerPO.COLUMN_STATUS_STR, VustomerPO.STATUS_INIT_INT)).list();
 	}
 	
 	public void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){

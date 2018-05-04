@@ -511,30 +511,32 @@ jQuery(function($) {
 	}
 
 	function checkPhone($id) {
-		var reg = /^((1[3|4|5|7|8][0-9]{9})|(0[0-9]{10}))((#((1[3|4|5|7|8][0-9]{9})|(0[0-9]{10})))){0,4}$/;
-		if ($id.val() == "" || $id.val() == 0) {
-			orderEntry.customerRepeatFlg = true
-			com.showPopover($id, {errorMsg: "电话号码不能为空"}, "right")
-		} else {
-			if (reg.test($id.val()) == false) {
-				orderEntry.customerRepeatFlg = true
-				com.showPopover($id, {errorMsg: "请输入正确的手机号或固定电话!!"}, "right");
-			} else {
-				com.post(api.data.checkCustomerForPhone, {
-					"customerPhone.phone": $id.val(),
-					"customerPhone.status": 0
-				}, function (res) {
-					orderEntry.customerRepeatFlg = true
-					com.showPopover($id, {errorMsg: "电话号码已存在"}, "right");
-				}, function (res) {
-					orderEntry.customerRepeatFlg = false
-					$id.css("border", "1px solid #d5d5d5").popover("destroy")
 
-				}, false);
+        var reg = /^((1[0-9]{10})|(0[0-9]{10}))((#((1[0-9]{10})|(0[0-9]{10})))){0,4}$/;
+        if ($id.val() == "" || $id.val() == 0) {
+            orderEntry.customerRepeatFlg = true;
+            com.showPopover($id, {errorMsg: "电话号码不能为空"}, "bottom")
+        } else {
+            if (reg.test($id.val()) == false) {
+                orderEntry.customerRepeatFlg = true;
+                com.showPopover($id, {errorMsg: "请输入正确的手机号或固定电话!!"}, "bottom");
 
-			}
-		}
-	}
+            } else {
+                com.post(api.data.checkCustomerForPhone, {
+                    "customerPhone.cid": null,
+                    "customerPhone.phone": $id.val(),
+                    "customerPhone.status": null
+                }, function (res) {
+                	orderEntry.customerRepeatFlg = true;
+                    com.showPopover($id, {errorMsg: "电话信息已存在"}, "bottom");
+                }, function (res) {
+                    orderEntry.customerRepeatFlg = false;
+                    $id.css("border", "1px solid #d5d5d5").popover("destroy");
+                }, false);
+
+            }
+        }
+    }
 
 	function validatehouse(no, houseNumber) {
 

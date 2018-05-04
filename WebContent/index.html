@@ -48,6 +48,8 @@
                 window.authentication = cookie.split("=")[1];
             }else if(cookie.indexOf("loginTime") != -1){
                 window.loginTime = cookie.split("=")[1];
+            }else if(cookie.indexOf("communion") != -1){
+                window.communion = cookie.split("=")[1];
             }
         }
 
@@ -60,38 +62,25 @@
         var csses = "";
         /* ace */
         csses += '<link rel="stylesheet" href="assets/ace/css/bootstrap.min.css?version=' + versionCode + '" />'; // basic styles
-
         csses += '<link rel="stylesheet" href="assets/ace/css/font-awesome-fa.min.css?version=' + versionCode + '" />';
-
         csses += '<link rel="stylesheet" href="assets/ace/css/jquery.gritter.css?version=' + versionCode + '" />';
-
         csses += '<link rel="stylesheet" href="assets/ace/css/jquery-ui-1.10.3.full.min.css?version=' + versionCode + '" />'; // page specific plugin styles
-
         csses += '<link rel="stylesheet" href="assets/ace/css/fullcalendar.css?version=' + versionCode + '" />';
-
         csses += '<link rel="stylesheet" href="assets/ace/css/chosen.min.css?version=' + versionCode + '" />';
-
         csses += '<link rel="stylesheet" href="assets/ace/css/datepicker.css?version=' + versionCode + '" />';
-
         csses += '<link rel="stylesheet" href="assets/ace/css/daterangepicker.css?version=' + versionCode + '" />';
-
         csses += '<link rel="stylesheet" href="assets/ace/css/bootstrap-timepicker.css?version=' + versionCode + '" />';
-
         csses += '<link rel="stylesheet" href="assets/ace/css/huploadify.css?version=' + versionCode + '" />';
-
         csses += '<link rel="stylesheet" href="assets/ace/css/colorbox.css?version=' + versionCode + '" />';
-
         csses += '<link rel="stylesheet" href="assets/ace/css/ace.css?version=' + versionCode + '" />';
         /* ace end */
 
         /* altogether */
         csses += '<link rel="stylesheet" href="assets/altogether/css/font-awesome.min.css?version=' + versionCode + '" />';
-
         csses += '<link rel="stylesheet" href="assets/altogether/css/layer.css?version=' + versionCode + '" />';
-
         csses += '<link rel="stylesheet" href="assets/altogether/css/iconfont.css?version=' + versionCode + '" />'; /*  iconfont  */
-
         csses += '<link rel="stylesheet" href="assets/altogether/css/locking.css?version=' + versionCode + '" />'; /*  lockscreen */
+		csses += '<link rel="stylesheet" href="assets/altogether/css/keyboard.css?version=' + versionCode + '" />'; /*  keyboard */
         /* altogether end */
 
         csses += '<link rel="stylesheet" href="' + server + 'css/main.css?version=' + versionCode + '" />';
@@ -110,329 +99,343 @@
 </head>
 
 <body class="navbar-fixed">
-<!--  lock bringins  -->
-<div id="outLockingContent" class="bringins-content" style="display: none; left: 0px; top: 25px; position: fixed; margin: 50px; width: 100%; height: 100%; transition: 1s; overflow-y: scroll;">
+    <!--  lock bringins  -->
+    <div id="outLockingContent" class="bringins-content" style="display: none; left: 0px; top: 25px; position: fixed; margin: 50px; width: 100%; height: 100%; transition: 1s; overflow-y: scroll;">
 
-    <div class="login-form-sub fadeInUp">
-        <div class="lock-pic">
-            <img id="personalPicLock" class="editable img-responsive" alt="PersonalPic" src="#" />
-        </div>
-
-        <div class="flex-row">
-            <span  class='lf--input' placeholder='用户名' id="userNameLock" type='text' readonly></span>
-        </div>
-
-        <div class="form-group">
-            <span class="block input-icon input-icon-right">
-				<input type="text" class="width-100" name="lockPassword" id="lockPassword" autocomplete="new-password" placeholder="请输入密码" onfocus="this.type='password'" />
-			</span>
-        </div>
-        <button value="登录" class="btn submit-btn" id="lockSubmit"> 登录 </button>
-    </div>
-
-</div>
-<!--  lock bringins end -->
-
-<div class="navbar navbar-default navbar-fixed-top" id="navbar" style='display:none;height: 0px;'>
-
-    <script type="text/javascript">
-        try{ace.settings.check('navbar' , 'fixed')}catch(e){}
-    </script>
-
-    <div class="navbar-container" id="navbar-container">
-        <div class="navbar-header pull-left">
-            <!-- @Date:9.27 删除 Information Platform 字体 -->
-        </div>
-
-        <!-- 设置皮肤 隐藏-->
-        <div class="navbar-header pull-right hide">
-            <ul style="margin: 0px 10px">
-                <li class="dropdown" style="height: 45px;">
-                    <a data-toggle="dropdown" class="dropdown-toggle clear-menu-nav" id="clearButton" href="#">
-                        <i class="icon-cog"></i>
-                    </a>
-                    <ul class="pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
-                        <li>
-                            <a href="index-clear.html">
-                                <span class="mail-tag badge badge-grey"></span>
-                                clear
-                            </a>
-                        </li>
-                        <li>
-                            <a href="index-metro.html">
-                                <span class="mail-tag badge badge-danger"></span>
-                                metro
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
-
-        <div class="navbar-header pull-right">
-            <ul class="nav ace-nav">
-                <li class="purple hide ">
-                    <a href="#" id="called">
-                        <i class="icon-phone" ></i>
-                        <span class="dropdown-toggle">拨打电话</span>
-                    </a>
-                </li>
-                <li class="dark">
-                    <a data-toggle="dropdown" href="#" class="dropdown-toggle">
-                        <span class="companyinfo"><small></small><span class="companyName"></span></span>
-                        <i class="icon-caret-down"></i>
-                    </a>
-                    <ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close" id="companysel"></ul>
-                </li>
-                <li class="red">
-                    <a href="#" id="faqInfo">
-                        <i class="icon-key"></i>
-                        <span class="dropdown-toggle">帮助</span>
-                    </a>
-                </li>
-                <li class="green">
-                    <a href="#" id="versionInfo">
-                        <i class="icon-bookmark"></i>
-                        <span class="user-info"><small>版本</small><small><span id="versionCode"></span></small></span>
-                    </a>
-                </li>
-                <li class="light-blue">
-                    <a data-toggle="dropdown" href="#" class="dropdown-toggle">
-                        <img class="nav-user-photo" alt="" src="assets/altogether/images/avatar2.png" id="userImg">
-                        <span class="user-info"><small>您好,</small><span class="user-name"></span></span>
-                        <i class="icon-caret-down"></i>
-                    </a>
-                    <ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
-                        <li><a id="changePassword" class='changePassword' href="#"><i class="icon-cog"></i>修改密码</a></li>
-                        <li><a id="userProfile" class='userProfile' href="#"><i class="icon-user"></i>个人资料</a></li>
-                        <li><a id="userLock" class='userLock' href="#"><i class="icon-lock"></i>锁屏</a></li>
-                        <li class="divider"></li>
-                        <li><a id="logout" class='logout' href="#"><i class="icon-off"></i>退出</a></li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="phonecallModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title">拨打电话</h4>
-            </div>
-            <div class="modal-body">
-                <form class="form-horizontal">
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right" for="username">姓名</label>
-
-                        <div class="col-sm-9">
-                            <input id="username" type="text" class=" " data-toggle="popover" readonly data-trigger='manual' maxlength="32">
-                        </div>
-                    </div>
-
-                    <div class="space-4"></div>
-
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right" for="caller">主叫号码</label>
-
-                        <div class="col-sm-9">
-                            <input id="caller" type="text" class="" data-toggle="popover" readonly data-trigger='manual' >
-                        </div>
-                    </div>
-
-                    <div class="space-4"></div>
-
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right" for="callee">被叫号码</label>
-
-                        <div class="col-sm-9">
-                            <input id="callee" type="text" class=" v_required v_phone" data-toggle="popover" data-trigger='manual' maxlength="11">
-                        </div>
-                    </div>
-
-                </form>
+        <div class="login-form-sub fadeInUp">
+            <div class="lock-pic">
+                <img id="personalPicLock" class="editable img-responsive" alt="PersonalPic" src="#" />
             </div>
 
-            <div class="modal-footer ">
-                <button class="btn btn-success" type="button" id="save"><i class="icon-phone bigger-110"></i>拨打电话</button>
-                <button type="button" name="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+            <div class="flex-row">
+                <span  class='lf--input' placeholder='用户名' id="userNameLock" type='text' readonly></span>
+            </div>
+
+            <div class="form-group">
+                <span class="block input-icon input-icon-right">
+                    <input type="text" class="width-100" name="lockPassword" id="lockPassword" autocomplete="new-password" placeholder="请输入密码" onfocus="this.type='password'" />
+                </span>
+            </div>
+            <button value="登录" class="btn submit-btn" id="lockSubmit"> 登录 </button>
+        </div>
+
+    </div>
+    <!--  lock bringins end -->
+
+    <div class="navbar navbar-default navbar-fixed-top" id="navbar" style='display:none;height: 0px;'>
+
+        <script type="text/javascript">
+            try{ace.settings.check('navbar' , 'fixed')}catch(e){}
+        </script>
+
+        <div class="navbar-container" id="navbar-container">
+            <div class="navbar-header pull-left">
+                <!-- @Date:9.27 删除 Information Platform 字体 -->
+            </div>
+
+            <!-- 设置皮肤 隐藏-->
+            <div class="navbar-header pull-right hide">
+                <ul style="margin: 0px 10px">
+                    <li class="dropdown" style="height: 45px;">
+                        <a data-toggle="dropdown" class="dropdown-toggle clear-menu-nav" id="clearButton" href="#">
+                            <i class="icon-cog"></i>
+                        </a>
+                        <ul class="pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
+                            <li>
+                                <a href="index-clear.html">
+                                    <span class="mail-tag badge badge-grey"></span>
+                                    clear
+                                </a>
+                            </li>
+                            <li>
+                                <a href="index-metro.html">
+                                    <span class="mail-tag badge badge-danger"></span>
+                                    metro
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="navbar-header pull-right">
+                <ul class="nav ace-nav">
+                    <li class="purple hide ">
+                        <a href="#" id="called">
+                            <i class="icon-phone" ></i>
+                            <span class="dropdown-toggle">拨打电话</span>
+                        </a>
+                    </li>
+                    <li class="dark">
+                        <a data-toggle="dropdown" href="#" class="dropdown-toggle">
+                            <span class="companyinfo"><small></small><span class="companyName"></span></span>
+                            <i class="icon-caret-down"></i>
+                        </a>
+                        <ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close" id="companysel"></ul>
+                    </li>
+                    <li class="red">
+                        <a href="#" id="faqInfo">
+                            <i class="icon-key"></i>
+                            <span class="dropdown-toggle">帮助</span>
+                        </a>
+                    </li>
+                    <li class="green">
+                        <a href="#" id="versionInfo">
+                            <i class="icon-bookmark"></i>
+                            <span class="user-info"><small>版本</small><small><span id="versionCode"></span></small></span>
+                        </a>
+                    </li>
+                    <li class="light-blue">
+                        <a data-toggle="dropdown" href="#" class="dropdown-toggle">
+                            <img class="nav-user-photo" alt="" src="assets/altogether/images/avatar2.png" id="userImg">
+                            <span class="user-info"><small>您好,</small><span class="user-name"></span></span>
+                            <i class="icon-caret-down"></i>
+                        </a>
+                        <ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
+                            <li><a id="changePassword" class='changePassword' href="#"><i class="icon-cog"></i>修改密码</a></li>
+                            <li><a id="userProfile" class='userProfile' href="#"><i class="icon-user"></i>个人资料</a></li>
+                            <li><a id="userLock" class='userLock' href="#"><i class="icon-lock"></i>锁屏</a></li>
+                            <li class="divider"></li>
+                            <li><a id="logout" class='logout' href="#"><i class="icon-off"></i>退出</a></li>
+                        </ul>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>
-</div>
 
-<div class="main-container" id="main-container" style='display:none;'>
-    <script type="text/javascript">
-        try{ace.settings.check('main-container' , 'fixed')}catch(e){}
-    </script>
+    <div class="modal fade" id="phonecallModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">拨打电话</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="username">姓名</label>
 
-    <div class="main-container-inner">
-        <a class="menu-toggler" id="menu-toggler" href="#">
-            <span class="menu-text"></span>
-        </a>
+                            <div class="col-sm-9">
+                                <input id="username" type="text" class=" " data-toggle="popover" readonly data-trigger='manual' maxlength="32">
+                            </div>
+                        </div>
 
-        <div class="sidebar sidebar-fixed" id="sidebar">
-            <script type="text/javascript">
-                try{ace.settings.check('sidebar' , 'fixed')}catch(e){}
-            </script>
+                        <div class="space-4"></div>
 
-            <div class="sidebar-shortcuts" id="sidebar-shortcuts">
-                <div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
-                    <button id="indexBtn" class="btn btn-success">
-                        <i class="icon-bookmark bigger-130"></i>
-                    </button>
-                    <button id="messageBtn" class="btn btn-info messageList">
-                        <i class="icon-envelope bigger-130"></i>
-                        <span id='messageCount' class="badge badge-pink messageCount"></span>
-                    </button>
-                    <button class="btn btn-warning changePassword">
-                        <i class="icon-user bigger-130"></i>
-                        <span class='hidden'>修改密码</span>
-                    </button>
-                    <button class="btn btn-danger userProfile">
-                        <i class="icon-cogs bigger-130"></i>
-                        <span class='hidden'>个人信息</span>
-                    </button>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="caller">主叫号码</label>
+
+                            <div class="col-sm-9">
+                                <input id="caller" type="text" class="" data-toggle="popover" readonly data-trigger='manual' >
+                            </div>
+                        </div>
+
+                        <div class="space-4"></div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="callee">被叫号码</label>
+
+                            <div class="col-sm-9">
+                                <input id="callee" type="text" class=" v_required v_phone" data-toggle="popover" data-trigger='manual' maxlength="11">
+                            </div>
+                        </div>
+
+                    </form>
                 </div>
 
-                <div class="sidebar-shortcuts-mini" id="sidebar-shortcuts-mini">
-                    <span class="btn btn-success"></span>
-                    <span class="btn btn-info"></span>
-                    <span class="btn btn-warning"></span>
-                    <span class="btn btn-danger"></span>
+                <div class="modal-footer ">
+                    <button class="btn btn-success" type="button" id="save"><i class="icon-phone bigger-110"></i>拨打电话</button>
+                    <button type="button" name="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
                 </div>
-            </div><!-- #sidebar-shortcuts -->
-
-            <ul class="nav nav-list"></ul><!-- /.nav-list -->
-
-            <div class="sidebar-collapse" id="sidebar-collapse">
-                <i class="icon-double-angle-left" data-icon1="icon-double-angle-left" data-icon2="icon-double-angle-right"></i>
             </div>
-
-            <script type="text/javascript">
-                try{ace.settings.check('sidebar' , 'collapsed')}catch(e){}
-            </script>
         </div>
+    </div>
 
-        <div class="main-content">
-            <div class="breadcrumbs" id="breadcrumbs">
+    <div class="main-container" id="main-container" style='display:none;'>
+        <script type="text/javascript">
+            try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+        </script>
+
+        <div class="main-container-inner">
+            <a class="menu-toggler" id="menu-toggler" href="#">
+                <span class="menu-text"></span>
+            </a>
+
+            <div class="sidebar sidebar-fixed" id="sidebar">
                 <script type="text/javascript">
-                    try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
+                    try{ace.settings.check('sidebar' , 'fixed')}catch(e){}
                 </script>
 
-                <ul class="breadcrumb">
-                    <li class='nav1'><i class="icon-home home-icon"></i> 首页</li>
-                    <li class='nav2' style='display:none'></li>
-                    <li class="nav3 active" style='display:none'></li>
-                </ul><!-- .breadcrumb -->
+                <div class="sidebar-shortcuts" id="sidebar-shortcuts">
+                    <div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
+                        <button id="indexBtn" class="btn btn-success">
+                            <i class="icon-bookmark bigger-130"></i>
+                        </button>
+                        <button id="messageBtn" class="btn btn-info messageList">
+                            <i class="icon-envelope bigger-130"></i>
+                            <span id='messageCount' class="badge badge-pink messageCount"></span>
+                        </button>
+                        <button class="btn btn-warning changePassword">
+                            <i class="icon-user bigger-130"></i>
+                            <span class='hidden'>修改密码</span>
+                        </button>
+                        <button class="btn btn-danger userProfile">
+                            <i class="icon-cogs bigger-130"></i>
+                            <span class='hidden'>个人信息</span>
+                        </button>
+                    </div>
+
+                    <div class="sidebar-shortcuts-mini" id="sidebar-shortcuts-mini">
+                        <span class="btn btn-success"></span>
+                        <span class="btn btn-info"></span>
+                        <span class="btn btn-warning"></span>
+                        <span class="btn btn-danger"></span>
+                    </div>
+                </div><!-- #sidebar-shortcuts -->
+
+                <ul class="nav nav-list"></ul><!-- /.nav-list -->
+
+                <div class="sidebar-collapse" id="sidebar-collapse">
+                    <i class="icon-double-angle-left" data-icon1="icon-double-angle-left" data-icon2="icon-double-angle-right"></i>
+                </div>
+
+                <script type="text/javascript">
+                    try{ace.settings.check('sidebar' , 'collapsed')}catch(e){}
+                </script>
             </div>
 
-            <div id="fl-container"></div>
+            <div class="main-content">
+                <div class="breadcrumbs" id="breadcrumbs">
+                    <script type="text/javascript">
+                        try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
+                    </script>
+
+                    <ul class="breadcrumb">
+                        <li class='nav1'><i class="icon-home home-icon"></i> 首页</li>
+                        <li class='nav2' style='display:none'></li>
+                        <li class="nav3 active" style='display:none'></li>
+                    </ul><!-- .breadcrumb -->
+                </div>
+
+                <div id="fl-container"></div>
+            </div>
+        </div>
+
+        <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse" style="position: fixed;">
+            <i class="icon-double-angle-up icon-only bigger-110"></i>
+        </a>
+    </div>
+
+    <div id="layerAdd" class="hide" style="padding: 40px 0;">
+        <div class="row-fluid">
+            <div class="progress" data-percent="0%">
+                <div class="progress-bar" style="width:0%;"></div>
+            </div>
         </div>
     </div>
 
-    <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse" style="position: fixed;">
-        <i class="icon-double-angle-up icon-only bigger-110"></i>
-    </a>
+    <script src="assets/altogether/js/jquery-2.0.3.min.js"></script>
+    <script src="assets/ace/js/jquery.mobile.custom.min.js"></script>
+    <script src="assets/ace/js/bootbox.min.js"></script>
+    <script src="assets/ace/js/ace.js"></script>
 
+    <script src="assets/ace/js/bootstrap.min.js"></script>
+    <script src="assets/ace/js/jquery.slimscroll.min.js"></script>
 
-</div>
+    <script src="assets/ace/js/jquery.inputlimiter.1.3.1.min.js"></script>
+    <script src="assets/ace/js/jquery.nestable.min.js"></script>
+    <script src="assets/ace/js/jquery.maskedinput.min.js"></script>
+    <script src="assets/ace/js/jquery.gritter.min.js"></script>
+    <script src="assets/ace/js/jquery.raty.min.js"></script>
+    <script src="assets/ace/js/jquery-ui-1.10.3.custom.min.js"></script>
+    <script src="assets/ace/js/jquery.colorbox-min.js"></script>
+    <script src="assets/ace/js/chosen.jquery.min.js"></script>
 
-<script type="text/javascript">
+    <script src="assets/ace/js/date-time/bootstrap-datepicker.min.js"></script>
+    <script src="assets/ace/js/date-time/bootstrap-timepicker.min.js"></script>
+    <script src="assets/ace/js/date-time/daterangepicker.min.js"></script>
+    <script src="assets/ace/js/date-time/moment.min.js"></script>
 
-    var jses = "";
+    <script src="assets/ace/js/jquery.ui.touch-punch.min.js"></script>
+    <script src="assets/ace/js/fullcalendar.min.js"></script>
+    <script src="assets/ace/js/jquery.easing.1.3.min.js"></script>
+    <script src="assets/ace/js/spin.min.js"></script>
 
-    if(!window.jQuery){
-        /* altogether */
-        jses += '<script src="' + server + 'assets/altogether/js/jquery-2.0.3.min.js?version=' + versionCode + '"><\/script>';
-    }
+    <script src="assets/ace/js/typeahead-bs2.min.js"></script>
+    <script src="assets/ace/js/tag.js"></script>
+    <script src="assets/ace/js/base64.js"></script>
+    <script src="assets/ace/js/html2canvas.js"></script>
 
-    if("ontouchend" in document){
-        /* ace */
-        jses += '<script src="' + server + 'assets/ace/js/jquery.mobile.custom.min.js?version=' + versionCode + '"><\/script>';
-    }
+    <script src="assets/ace/js/ztree/jquery.ztree.core-3.5.min.js"></script>
+    <script src="assets/ace/js/ztree/jquery.ztree.excheck-3.5.min.js"></script>
 
-    jses += '<script src="assets/ace/js/bootstrap.min.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="assets/ace/js/jquery.slimscroll.min.js?version=' + versionCode + '"><\/script>';
+    <script src="assets/ace/js/jquery.huploadify.js"></script>
+    <script src="assets/ace/js/highcharts.js"></script>
 
-    jses += '<script src="assets/ace/js/jquery.inputlimiter.1.3.1.min.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="assets/ace/js/jquery.nestable.min.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="assets/ace/js/jquery.maskedinput.min.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="assets/ace/js/jquery.gritter.min.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="assets/ace/js/jquery.raty.min.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="assets/ace/js/jquery-ui-1.10.3.custom.min.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="assets/ace/js/jquery.colorbox-min.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="assets/ace/js/chosen.jquery.min.js?version=' + versionCode + '"><\/script>';
+    <script src="assets/ace/js/jquery.hotkeys.min.js"></script>
+    <script src="assets/ace/js/bootstrap-wysiwyg.min.js"></script>
 
-    /* ace > date-time */
-    jses += '<script src="assets/ace/js/date-time/bootstrap-datepicker.min.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="assets/ace/js/date-time/bootstrap-timepicker.min.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="assets/ace/js/date-time/daterangepicker.min.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="assets/ace/js/date-time/moment.min.js?version=' + versionCode + '"><\/script>'; // page specific plugin scripts
-    /* ace > date-time end */
+    <script src="assets/ace/js/ace-elements.js"></script>
+    <script src="assets/ace/js/ace-extra.min.js"></script>
 
-    jses += '<script src="assets/ace/js/jquery.ui.touch-punch.min.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="assets/ace/js/fullcalendar.min.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="assets/ace/js/jquery.easing.1.3.min.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="assets/ace/js/bootbox.min.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="assets/ace/js/spin.min.js?version=' + versionCode + '"><\/script>';
+    <script src="assets/altogether/js/fuelux/fuelux.wizard.min.js"></script>
+    <script src="assets/altogether/js/fuelux/fuelux.spinner.min.js"></script>
+    <script src="assets/altogether/js/fuelux/fuelux.tree.js"></script>
+    <script src="assets/altogether/js/layer.js"></script>
+    <script src="assets/altogether/js/bringins.js"></script>
+    <script src="assets/altogether/js/data-set.min.js"></script>
+    <script src="assets/altogether/js/g2.min.js"></script>
+    <script src="assets/altogether/js/g6.min.js"></script>
+    <script type="text/javascript">
 
-    jses += '<script src="assets/ace/js/typeahead-bs2.min.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="assets/ace/js/tag.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="assets/ace/js/base64.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="assets/ace/js/html2canvas.js?version=' + versionCode + '"><\/script>';
+        if(parent.window.isPC){
+            var gui = require('nw.gui');
+            var win = gui.Window.get();
+        }
 
-    /* ace > ztree */
-    jses += '<script src="assets/ace/js/ztree/jquery.ztree.core-3.5.min.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="assets/ace/js/ztree/jquery.ztree.excheck-3.5.min.js?version=' + versionCode + '"><\/script>';
-    /* ace > ztree */
+        var jses = "";
 
-    jses += '<script src="assets/ace/js/jquery.huploadify.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="assets/ace/js/highcharts.js?version=' + versionCode + '"><\/script>';
+        jses += '<script src="js/com/config.js?version=' + versionCode + '"><\/script>';
+        jses += '<script src="js/com/server.js?version=' + versionCode + '"><\/script>';
+        jses += '<script src="js/com/api.js?version=' + versionCode + '"><\/script>';
+        jses += '<script src="js/com/load.js?version=' + versionCode + '"><\/script>';
+        jses += '<script src="js/com/version.js?version=' + versionCode + '"><\/script>';
+        jses += '<script src="js/com/params.js?version=' + versionCode + '"><\/script>';
+        jses += '<script src="js/com/utils.js?version=' + versionCode + '"><\/script>';
+        jses += '<script src="js/com/error.js?version=' + versionCode + '"><\/script>';
+        jses += '<script src="js/com/core.js?version=' + versionCode + '"><\/script>';
+        jses += '<script src="js/com/condition.js?version=' + versionCode + '"><\/script>';
+        jses += '<script src="js/com/searcher.js?version=' + versionCode + '"><\/script>';
+        jses += '<script src="js/com/exporter.js?version=' + versionCode + '"><\/script>';
+        jses += '<script src="js/index.js?version=' + versionCode + '"><\/script>';
 
-    jses += '<script src="assets/ace/js/jquery.hotkeys.min.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="assets/ace/js/bootstrap-wysiwyg.min.js?version=' + versionCode + '"><\/script>';
+        if(!parent.window.isPC && !parent.window.isEncryption){
+            document.write(jses);
+        }else if(parent.window.isPC && !parent.window.isEncryption){
+            jses += '<script src="js/com/nw.js?version=' + versionCode + '"><\/script>';
+            document.write(jses);
+        }else if(parent.window.isPC && parent.window.isEncryption){
 
-    jses += '<script src="assets/ace/js/ace.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="assets/ace/js/ace-elements.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="assets/ace/js/ace-extra.min.js?version=' + versionCode + '"><\/script>';
-    /* ace end */
+            win.evalNWBin(null, 'js/com/config.bin');
+            win.evalNWBin(null, 'js/com/load.bin');
+            win.evalNWBin(null, 'js/com/version.bin');
+            win.evalNWBin(null, 'js/com/api.bin');
+            win.evalNWBin(null, 'js/com/params.bin');
+            win.evalNWBin(null, 'js/com/utils.bin');
+            win.evalNWBin(null, 'js/com/core.bin');
+            win.evalNWBin(null, 'js/com/condition.bin');
+            win.evalNWBin(null, 'js/com/searcher.bin');
+            win.evalNWBin(null, 'js/com/exporter.bin');
+            win.evalNWBin(null, 'js/index.bin');
+            win.evalNWBin(null, 'js/com/nw.bin');
+        }
 
-    /* altogether */
-    jses += '<script src="assets/altogether/js/fuelux/fuelux.wizard.min.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="assets/altogether/js/fuelux/fuelux.spinner.min.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="assets/altogether/js/fuelux/fuelux.tree.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="assets/altogether/js/layer.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="assets/altogether/js/bringins.js?version=' + versionCode + '"><\/script>'; /*  bringins */
-    jses += '<script src="assets/altogether/js/data-set.min.js?version=' + versionCode + '"><\/script>'; /*  data-set */
-    jses += '<script src="assets/altogether/js/g2.min.js?version=' + versionCode + '"><\/script>'; /*  g2 */
-    jses += '<script src="assets/altogether/js/g6.min.js?version=' + versionCode + '"><\/script>'; /*  g6 */
-    /* altogether end */
-
-    jses += '<script src="assets/altogether/js/load.js?version=' + versionCode + '"><\/script>';
-
-    jses += '<script src="js/com/config.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="js/com/api.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="js/com/server.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="js/com/params.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="js/com/utils.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="js/com/error.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="js/com/core.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="js/com/condition.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="js/com/searcher.js?version=' + versionCode + '"><\/script>';
-    jses += '<script src="js/com/exporter.js?version=' + versionCode + '"><\/script>';
-
-    jses += '<script src="js/index.js?version=' + versionCode + '"><\/script>';
-
-    document.write(jses);
-
-    //$(function(){
-    //	$('.pricing-span-body').slideDown(2000, 'easeOutBounce');
-    //	$('.declare').fadeIn(2000)
-    //});
-</script>
+        //$(function(){
+        //	$('.pricing-span-body').slideDown(2000, 'easeOutBounce');
+        //	$('.declare').fadeIn(2000)
+        //});
+    </script>
 
 </body>
 </html>

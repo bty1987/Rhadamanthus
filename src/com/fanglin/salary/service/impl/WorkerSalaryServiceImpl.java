@@ -16,7 +16,6 @@ import com.fanglin.construction.po.ConstructionPO;
 import com.fanglin.construction.po.ConstructionSchedulePO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
-
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.personel.dao.UserDao;
@@ -80,10 +79,48 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 	}
 
 	@Override
+	public void pageSalaryWorkerForUser(Paging paging, List<Filter> filters) {
+		
+		List<WorkerSalaryPO> WorkerSalaryPOs = workerSalaryDao.pageSalaryWorkerForUser(paging,filters);
+		
+		List<WorkerSalaryVO> WorkerSalaryVOs = new ArrayList<WorkerSalaryVO>();
+		
+		for (WorkerSalaryPO workerSalaryPO : WorkerSalaryPOs){
+			
+			WorkerSalaryVO workerSalaryVO = new WorkerSalaryVO(new DecorationVO(),new UserBaseVO(new DutyVO()),new UserBaseVO(),new UserBaseVO());
+
+			if(workerSalaryPO.getDecoration() != null){
+				
+				workerSalaryVO.setDecoration(new DecorationVO());
+				workerSalaryPO.getDecoration().ptvcascade(workerSalaryVO.getDecoration());
+				if(workerSalaryPO.getDecoration().getSupervisor() != null){
+					
+					UserBaseVO supervisorVO = new UserBaseVO();
+					supervisorVO.setUserName(workerSalaryPO.getDecoration().getSupervisor().getUserName());
+					workerSalaryVO.getDecoration().setSupervisor(supervisorVO);
+				}
+				
+			}
+			BeanUtil.copyProperties(workerSalaryPO.getApprover(), workerSalaryVO.getApprover(),Arrays.asList("dept", "role","duty"));
+			BeanUtil.copyProperties(workerSalaryPO.getCreater(), workerSalaryVO.getCreater(),Arrays.asList("dept", "role","duty"));
+			BeanUtil.copyProperties(workerSalaryPO, workerSalaryVO, Arrays.asList("decoration","user","creater","approver"));
+			BeanUtil.copyProperties(workerSalaryPO.getUser(), workerSalaryVO.getUser(),Arrays.asList("dept", "role","duty"));
+			BeanUtil.copyProperties(workerSalaryPO.getUser().getDuty(), workerSalaryVO.getUser().getDuty(),Arrays.asList("departmentType"));
+		
+			WorkerSalaryVOs.add(workerSalaryVO);
+		}
+		paging.setData(WorkerSalaryVOs);
+	}
+	
+	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public List<WorkerSalaryVO> queryWorkerSalary(WorkerSalaryVO workerSalaryVO) {
-
-		List<WorkerSalaryPO> workerSalaryPOs = workerSalaryDao.queryWorkerSalary(workerSalaryVO.getUser().getUserId(),constructionScheduleDao.get(workerSalaryVO.getCsid()).getCid());
+		
+		List<WorkerSalaryPO> workerSalaryPOs = new ArrayList<WorkerSalaryPO>();;
+		
+		workerSalaryPOs = workerSalaryDao.queryWorkerSalary(workerSalaryVO.getUser().getUserId(),constructionScheduleDao.get(workerSalaryVO.getCsid()).getCid());
+		
+		
 		List<WorkerSalaryVO> workerSalarys = new ArrayList<WorkerSalaryVO>();
 		
 		for (WorkerSalaryPO workerSalaryPO : workerSalaryPOs) {
@@ -96,7 +133,7 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 		}
 		return workerSalarys;
 	}
-
+	
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void addWorkerSalary(WorkerSalaryVO workerSalaryVO,String userId, int company) throws FLException {

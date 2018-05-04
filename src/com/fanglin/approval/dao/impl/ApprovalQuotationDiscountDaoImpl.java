@@ -26,7 +26,7 @@ public class ApprovalQuotationDiscountDaoImpl extends DaoImpl<ApprovalQuotationD
 	}
 
 	@Override
-	public ApprovalQuotationDiscountPO queryApprovalQuotationDiscountByAId(int aId) {
+	public ApprovalQuotationDiscountPO queryApprovalQuotationDiscountByAId(long aId) {
 		return (ApprovalQuotationDiscountPO) session().createCriteria(ApprovalQuotationDiscountPO.class).add(Restrictions.eq(ApprovalQuotationDiscountPO.COLUMN_AID_STR, aId)).uniqueResult();
 	}
 

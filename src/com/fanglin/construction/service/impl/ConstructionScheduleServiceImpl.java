@@ -89,6 +89,7 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 		short status = constructionScheduleVO.getStatus();
 		
 		ConstructionSchedulePO constructionSchedulePO = constructionScheduleDao.get(constructionScheduleVO.getCsId());
+		ConstructionPO _constructionPO = constructionDao.queryConstructionByOrderId(constructionScheduleVO.getOrderId());
 		
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(constructionSchedulePO.getOrderId());
 		
@@ -102,6 +103,12 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 				
 					decorationPO.setProjectStatus((short)schedule);
 					decorationDao.update(decorationPO);
+					
+					if(_constructionPO != null){
+						_constructionPO.setSchedule(schedule);
+						constructionDao.update(_constructionPO);
+					}
+					
 			}
 		}
 		
@@ -112,6 +119,7 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 				ConstructionPO constructionPO = constructionDao.get(constructionSchedulePO.getCid());
 				if(constructionPO != null){
 					constructionScheduleDao.update(constructionSchedulePO);
+					
 				}
 				
 				if(status == ConstructionSchedulePO.STATUS_TYPE_FAIL_INT){

@@ -6,10 +6,48 @@ $(function(){
 
     params.authentication = window.authentication;
     params.loginTime = window.loginTime;
+    
+    if(!config.intranet) config.communion = window.communion;
+
+    com.post(api.personel.queryUserForSelfByUserId, {}, function(res){
+    	
+    	if(!config.intranet){
+	        com.post(api.system.queryServer, {"user.userId":res.userInfo.user.userId},function(res){
+	            $.each(res.servers,function(i,v){
+	                config[v.name] = v.host;
+	            });
+	        }, null, false);
+    	}
+
+        params.userInfo = res.userInfo;
+
+        $(".user-info-dropmenu .user-name").text(res.userInfo.user.currentName);
+        $(".user-info-dropmenu #userId").text(res.userInfo.user.currentName);
+        $(".user-name").text(res.userInfo.user.currentName);
+
+        $("#userInfoId").text(res.userInfo.user.currentName);
+        $("#userLeftId").text(res.userInfo.user.currentName);
+
+        window.userLockName = res.userInfo.user.currentName;
+        window.userLockPhoto = res.userInfo.user.userPhoto;
+
+        com.showImg($("#userImg"), res.userInfo.user.userPhoto, 30, 30, '');
+        com.showImg($("#userImgleft"), res.userInfo.user.userPhoto, 30, 30, '');
+        com.showImg($("#userImgtop"), res.userInfo.user.userPhoto, 60, 60, '');
+
+        com.post(api.system.queryCompanyByCid,{"company.cid": res.userInfo.user.companys},function(data){
+
+            params.company = data.company;
+
+            $(".companyinfo .companyName").text(data.company.name)
+
+        }, null, false);
+
+    }, null, false);
 
     com.post(api.system.queryModuleForLogin, {"module.system": 1}, createMenu);
 
-    if(config.isPC == true){ $("#logout").remove(); $(".divider").remove(); }
+    if(parent.window.isPC){ $("#logout").remove(); $(".divider").remove(); }
 
     $("#versionCode").text(config.versionCode);
 
@@ -39,38 +77,7 @@ $(function(){
         document.cookie = cname + "=" + cvalue + "; " + expires;
     };
 
-    var companysel = null;
-
-    params.loginTime = window.loginTime;
     params.userCompany = window.userCompany;
-
-    com.post(api.personel.queryUserForSelfByUserId, {}, function(res){
-
-        params.userInfo = res.userInfo;
-
-        $(".user-info-dropmenu .user-name").text(res.userInfo.user.currentName);
-        $(".user-info-dropmenu #userId").text(res.userInfo.user.currentName);
-        $(".user-name").text(res.userInfo.user.currentName);
-
-        $("#userInfoId").text(res.userInfo.user.currentName);
-        $("#userLeftId").text(res.userInfo.user.currentName);
-
-        window.userLockName = res.userInfo.user.currentName;
-        window.userLockPhoto = res.userInfo.user.userPhoto;
-
-        com.showImg($("#userImg"), res.userInfo.user.userPhoto, 30, 30, '');
-        com.showImg($("#userImgleft"), res.userInfo.user.userPhoto, 30, 30, '');
-        com.showImg($("#userImgtop"), res.userInfo.user.userPhoto, 60, 60, '');
-
-        com.post(api.system.queryCompanyByCid,{"company.cid": res.userInfo.user.companys},function(data){
-
-            params.company = data.company;
-
-            $(".companyinfo .companyName").text(data.company.name)
-
-        }, null, false);
-
-    }, null, false);
 
     com.post(api.personel.queryUserCompany, {"user.uid": params.userInfo.user.uid}, function (res) {
 
@@ -80,6 +87,8 @@ $(function(){
             var $li = $('<li></li>').appendTo(companysel);
             var $a = $('<a></a>').attr('data-cid',v.company.cid).text(v.company.name).appendTo($li);
             $a.click(function(e){
+                params.selectCaching = {};
+
                 com.post(api.common.changeAuthCode,{"company": v.company.cid },function(res){
 
                     for(var key in params){
@@ -287,6 +296,12 @@ $(function(){
         var $tree = $("ul.nav-list");
         var $main = $('<li class="active"><a href="#"><i class="icon-home"></i><span class="menu-text">首页</span><b class="selected"></b></a></li>').appendTo($tree);
         var arr;
+        
+        $tree.slimscroll({
+            height: '100vh',
+            size: '5px',
+            opacity: 0.2
+        });
 
         $main.click(function(){
             $('li',$tree).removeClass('open').removeClass('active');
@@ -511,7 +526,7 @@ $(function(){
 
                     if (errorLockCount == 2) {
 
-                        if (config.isPC == true) {
+                        if (parent.window.isPC) {
                             $(".block").parent().empty();
                             $('#lockSubmit').remove();
                             var $container = $("<div style='font-family: 幼圆;font-size: 20px;'></div>");
@@ -539,13 +554,10 @@ $(function(){
                                 }
                             };
                         }
-
                     }
                 }
             }
-
         });
-
     }
 
     // 收起全部菜单
@@ -553,6 +565,5 @@ $(function(){
         $('li','ul.nav-list').removeClass('open').removeClass('active');
         $('ul.nav-list li').first().addClass('active');
     }
-
 
 });

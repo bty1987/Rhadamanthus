@@ -15,6 +15,8 @@ public interface UpgradeService {
 	
 	public UpgradeVO matchUpgrade(UpgradeVO upgradeVO);
 	
+	public String maxUpgrade();
+	
 	public int addUpgrade(UpgradeVO upgradeVO) throws FLException;
 	
 	public int deleteUpgrade(UpgradeVO upgradeVO) throws FLException;

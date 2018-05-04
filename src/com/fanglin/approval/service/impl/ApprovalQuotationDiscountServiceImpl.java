@@ -67,7 +67,8 @@ public class ApprovalQuotationDiscountServiceImpl implements ApprovalQuotationDi
 		List<String> status = Arrays.asList(new String[]{DecorationPO.STATUS_INIT_STR, DecorationPO.STATUS_QUOTATION_STR, DecorationPO.STATUS_DEPOSIT_STR, DecorationPO.STATUS_RESIGNED_STR, DecorationPO.STATUS_RESIGNED_STR});
 		
 		String orderId = approvalQuotationDiscountVO.getOrderId();
-		Long quotationId = approvalQuotationDiscountVO.getQuotationId();
+		
+		Long quotationId = approvalQuotationDiscountVO.getQid();
 		
 		ApprovalPO approvalPO = approvalDao.queryApproval(ApprovalPO.APPROVAL_STATUS_INIT_INT,ApprovalPO.APPROVAL_TYPE_QUOTATION_DISCOUNT_INT, String.valueOf(quotationId));
 		
@@ -88,9 +89,10 @@ public class ApprovalQuotationDiscountServiceImpl implements ApprovalQuotationDi
 		}
 		
 		approvalPO = new ApprovalPO();
-		BeanUtil.copyProperties(approvalVO, approvalPO);
 		
-		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiverId());
+		BeanUtil.copyProperties(approvalVO, approvalPO,Arrays.asList("receiver","sender"));
+		
+		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiver().getUserId());
 		UserPO sender = userDao.queryUserByUserId(userId);
 
 		approvalPO.setType(ApprovalPO.APPROVAL_TYPE_QUOTATION_DISCOUNT_INT);
@@ -139,7 +141,7 @@ public class ApprovalQuotationDiscountServiceImpl implements ApprovalQuotationDi
 			approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_REFUSE_INT);
 			approvalPO.setComment(String.format("%s 订单状态:%s,不支持该操作通过.", approvalPO.getComment(), decorationPO.getStatus()));
 		}else{
-			QuotationPO quotationPO = quotationDao.get(approvalQuotationDiscountPO.getQuotationId());
+			QuotationPO quotationPO = quotationDao.get(approvalQuotationDiscountPO.getQid());
 			
 			if(quotationPO == null){
 				throw new FLException(200003, "报价不存在");

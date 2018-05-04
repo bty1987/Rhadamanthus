@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.decoration.dao.DecorationOperateDao;
-import com.fanglin.decoration.po.DecorationBelongInfoPO;
+import com.fanglin.decoration.po.DecorationBelongPO;
 import com.fanglin.decoration.po.DecorationOperatePO;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.service.DecorationOperateService;
@@ -39,21 +39,29 @@ public class DecorationOperateServiceImpl implements DecorationOperateService {
 	}
 	
 	@Transactional(rollbackFor=Exception.class)
-	public static int makeDecorationOperateForDecorationContract(DecorationOperateDao decorationOperateDao, DecorationPO decorationPO, List<DecorationBelongInfoPO> salesmans, List<DecorationBelongInfoPO> designers, UserPO operater, float value, int flag, short type){
+	public static int makeDecorationOperateForDecorationContract(DecorationOperateDao decorationOperateDao, DecorationPO decorationPO, List<DecorationBelongPO> salesmans, List<DecorationBelongPO> designers, UserPO operater, float value, int flag, short type){
 		
-		for(DecorationBelongInfoPO salesman: salesmans){
-			for(DecorationBelongInfoPO designer: designers){
+		for(DecorationBelongPO salesman: salesmans){
+			for(DecorationBelongPO designer: designers){
 				
 				DecorationOperatePO decorationOperatePO = new DecorationOperatePO();
-				decorationOperatePO.setDecoration(decorationPO);
-				decorationOperatePO.setSourcer(salesman.getBelongUserPO());
-				decorationOperatePO.setTarger(designer.getBelongUserPO());
+				decorationOperatePO.setOrderId(decorationPO.getOrderId());
+				decorationOperatePO.setDsuid(salesman.getBelonger().getUid());
+				decorationOperatePO.setSmuid(designer.getBelonger().getUid());
 				decorationOperatePO.setOperater(operater);
 				decorationOperatePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 				decorationOperatePO.setStatus(DecorationOperatePO.STATUS_DISABLED_INT);
-				decorationOperatePO.setDes("签订合同");
-				decorationOperatePO.setValue(Arith.mul(flag, Arith.mul(Arith.mul(salesman.getBelongRate(), designer.getBelongRate()), value)));
+				decorationOperatePO.setComment("签订合同");
+				decorationOperatePO.setValue(Arith.mul(flag, Arith.mul(Arith.mul(salesman.getRate(), designer.getRate()), value)));
 				decorationOperatePO.setType(type);
+				
+				decorationOperatePO.setDsdid(designer.getBelonger().getDept().getDid());
+				decorationOperatePO.setDsrid(designer.getBelonger().getDept().getFatherDept().getDid());
+				decorationOperatePO.setSmdid(salesman.getBelonger().getDept().getDid());
+				decorationOperatePO.setSmrid(salesman.getBelonger().getDept().getFatherDept().getDid());
+				
+				decorationOperatePO.setDrate(designer.getRate());
+				decorationOperatePO.setSrate(salesman.getRate());
 				
 				decorationOperateDao.save(decorationOperatePO);
 			}

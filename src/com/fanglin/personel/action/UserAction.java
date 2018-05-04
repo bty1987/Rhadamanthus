@@ -59,6 +59,8 @@ public class UserAction extends BaseListAction {
 	private String password;
 
 	private String rePassword;
+	
+	private String departmentTypename;
 
 	@Action(value = "pageUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageUser() throws FLException{
@@ -139,6 +141,14 @@ public class UserAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "queryUserByDtid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryUserByDtid() throws FLException{
+		
+		userBases = userService.queryUserByDtid(pinyinName,user,departmentTypename,queryCompany());
+		
+		return SUCCESS;
+	}
+	
 	@Action(value = "resetPassword", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String resetPassword() throws FLException{
 		
@@ -322,4 +332,13 @@ public class UserAction extends BaseListAction {
 		this.rePassword = rePassword;
 	}
 
+	public String getDepartmentTypename() {
+		return departmentTypename;
+	}
+
+	public void setDepartmentTypename(String departmentTypename) {
+		this.departmentTypename = departmentTypename;
+	}
+
+	
 }

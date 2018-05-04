@@ -17,7 +17,6 @@ import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.communion.po.HousePO;
 import com.fanglin.personel.po.UserPO;
 
-
 @Entity
 @Table(name = "sales", catalog = "sales")
 public class SalesPO implements Serializable {

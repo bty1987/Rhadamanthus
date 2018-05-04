@@ -6,7 +6,7 @@ public class ApprovalDecorationActivityVO implements java.io.Serializable {
 
 	private Long adaId;
 	
-	private Integer aid;
+	private Long aid;
 	
 	private Long activityId;
 	
@@ -22,11 +22,11 @@ public class ApprovalDecorationActivityVO implements java.io.Serializable {
 		this.adaId = adaId;
 	}
 
-	public Integer getAid() {
+	public Long getAid() {
 		return aid;
 	}
 
-	public void setAid(Integer aid) {
+	public void setAid(Long aid) {
 		this.aid = aid;
 	}
 

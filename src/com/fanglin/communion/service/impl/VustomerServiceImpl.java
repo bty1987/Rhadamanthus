@@ -13,6 +13,8 @@ import com.fanglin.communion.service.VustomerService;
 import com.fanglin.communion.vo.VustomerVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.decoration.dao.DecorationDao;
+import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
 
@@ -22,6 +24,9 @@ public class VustomerServiceImpl implements VustomerService {
 
 	@Autowired
 	private VustomerDao vustomerDao;
+	
+	@Autowired
+	private DecorationDao decorationDao;
 
 	@Override
 	public void pageVustomer(Paging paging, List<Filter> filters) {
@@ -104,12 +109,42 @@ public class VustomerServiceImpl implements VustomerService {
 		
 		VustomerPO vustomerPO = vustomerDao.get(vustomerVO.getVid());
 		
-		if(vustomerPO == null) throw new FLException(111111, "返单记录不存在");
+		if(vustomerPO == null) throw new FLException(330003, "客户信息不存在");
 		
-		if(vustomerPO.getOrderId() != null) throw new FLException(111111, "返单已绑定");
+		if(vustomerPO.getOrderId() != null) throw new FLException(330004, "客户已绑装修单");
 		
-		vustomerPO.setOrderId(vustomerVO.getOrderId());
-		vustomerPO.setContractPrice(vustomerVO.getContractPrice());
+		String orderId = vustomerVO.getOrderId();
+		
+		List<VustomerPO> vustomers = vustomerDao.queryVustomer();
+		List<String> orderIds = new ArrayList<String>();
+		
+		for (VustomerPO vustomer : vustomers) {
+			orderIds.add(vustomer.getOrderId());
+		}
+		
+		if(orderIds.contains(orderId)) throw new FLException(330005, "装修单已被绑定");
+		
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
+		
+		if(decorationPO == null) throw new FLException(140013, "订单不存在");
+		
+		if(decorationPO.getOrderTotalPrice() == 0) throw new FLException(330006, "装修单未签约");
+		
+		vustomerPO.setOrderId(orderId);
+		
+		vustomerPO.setContractPrice(decorationPO.getOrderTotalPrice());
+		
+		vustomerDao.update(vustomerPO);
+		
+	}
+
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public void deleteVustomer(VustomerVO vustomerVO) {
+		
+		VustomerPO vustomerPO = vustomerDao.get(vustomerVO.getVid());
+		
+		vustomerPO.setStatus(VustomerPO.STATUS_DISABLE_INT);
 		
 		vustomerDao.update(vustomerPO);
 		

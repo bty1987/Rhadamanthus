@@ -7,8 +7,6 @@ $(function () {
         });
     }
 
-    var $siids = [];
-
     var displayFunc = (function () {
 
         var renderList = function (tableId, listData) {
@@ -105,7 +103,8 @@ $(function () {
                         "data-sid": v.sid,
                         "data-no": v.no,
                         "data-orderId": v.orderId,
-                        "data-fullPayStatus": v.fullpayStatus
+                        "data-fullPayStatus": v.fullpayStatus,
+                        "data-punum":v.punum
                     }).addClass('ace ace-checkbox-2');
 
                     var _span = $('<span></span>').addClass('lbl blue bigger-150').css('font-weight', 'bold').html(v.no)
@@ -247,11 +246,9 @@ $(function () {
 
         var checkList = $('input[name="siids"]:checked', '#resultListItem')
         var $liline = checkList.parents('.oid');
-        $siids = [];
 
         $.each(checkList, function (i, v) {
             var $this = $(v);
-            $siids.push($this.attr('data-siid'));
             options["purchaseItems[" + i + "].siid"] = $this.attr('data-siid');
             options["purchaseItems[" + i + "].goods.gid"] = $this.attr('data-gid');            //– 商品编号
             options["purchaseItems[" + i + "].color.cid"] = $this.attr('data-cid');  //– 颜色
@@ -261,7 +258,7 @@ $(function () {
         })
 
         if (checkList.length != 0) {
-            if (checkRowValue($liline, $siids)) {
+            if (checkRowValue($liline)) {
                 com.post(api.inventory.addPurchase, options, function () {
                     layer.closeAll();
                     layer.msg('添加成功')
@@ -301,6 +298,7 @@ $(function () {
                         ["折扣价:", v.disPrice, "blue", "disPrice"],
                         ["折让价:", v.price, "blue", "price"],
                         ["数量:", v.num, "blue", "num"],
+                        ["可采购数量:", v.punum, "blue", "punum"],
                         ["总价:", v.total, "blue", "total"],
                         ["原结算方式:", v.rawCtype == 0 ? "底价" : "点位", "red", "rawCtype"],
                         ["原结算值:", v.rawCvalue, "blue", "rawCvalue"],
@@ -440,48 +438,35 @@ $(function () {
         });
     }
 
-    function checkRowValue($line, siids) {
+    function checkRowValue($line) {
         var flag = true;
-
-        var _option = {};
-
-        $.each(siids, function (i, v) {
-            _option["siids[" + i + "]"] = v;
-        })
-
-        var flags = {};
-
-        com.post(api.inventory.queryPurchaseItemBySiids, _option, function (res) {
-            $.each(res.purchaseItems, function (i, v) {
-                if (!flags[v.siid]) {
-                    flags[v.siid] = 0;
-                    flags[v.siid] += v.num;
-                } else {
-                    flags[v.siid] += v.num;
-                }
-
-            })
-        }, null, false);
-
 
         $.each($line, function (i, v) {
 
             var num = $(v).find('input.inputNumber');
-            var Tnum = $(v).next().find('[name="num"]').next().text();
-            var subnum = flags[$(v).find('input[name="siids"]').attr('data-siid')];
-            var numRex = /^\d+$/;
+            var punum = $(v).find('input[name="siids"]');
 
-            if (!(numRex.test(num.val()) && parseFloat(num.val()) > 0 && parseFloat(Tnum) >= parseFloat(num.val()) && parseFloat(num.val()) <= parseFloat(subnum == undefined ? Tnum : parseFloat(Tnum - subnum)))) {
+            if (num>punum.attr('data-punum')) {
                 num.focus().select();
                 num.addClass('tooltip-info').attr({
                     "data-rel": "popover",
                     "data-placement": "top",
                     "data-original-title": "",
                     "title": "",
-                    "data-content": "数量输入不正确!"
+                    "data-content": "采购数量大于可采购数量!"
                 }).popover('show');
                 flag = false;
-            } else {
+            } else if (num.val()<=0){
+                num.focus().select();
+                num.addClass('tooltip-info').attr({
+                    "data-rel": "popover",
+                    "data-placement": "top",
+                    "data-original-title": "",
+                    "title": "",
+                    "data-content": "采购数量需大于0!"
+                }).popover('show');
+                flag = false;
+            }else {
                 num.popover('destroy');
             }
 

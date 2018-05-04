@@ -28,7 +28,7 @@ import com.fanglin.decoration.dao.DecorationBelongDao;
 import com.fanglin.decoration.dao.DecorationContractDao;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.dao.DecorationOperateDao;
-import com.fanglin.decoration.po.DecorationBelongInfoPO;
+import com.fanglin.decoration.po.DecorationBelongPO;
 import com.fanglin.decoration.po.DecorationContractPO;
 import com.fanglin.decoration.po.DecorationOperatePO;
 import com.fanglin.decoration.po.DecorationPO;
@@ -227,8 +227,8 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		decorationPO.setContractCode(decorationContractPO.getContractCode());
 		decorationPO.setContractUserId(userDao.queryUserByOldUserId(userId));
 		
-		List<DecorationBelongInfoPO> designerOrderBelongInfoPOs = orderBelongInfoDao.queryOrderBelongInfoForCurrentByOrderIdAType(decorationContractVO.getOrderId(), DecorationBelongInfoPO.BELONGTYPE_DESIGN_STR);
-		List<DecorationBelongInfoPO> salemsanOrderBelongInfoPOs = orderBelongInfoDao.queryOrderBelongInfoForCurrentByOrderIdAType(decorationContractVO.getOrderId(), DecorationBelongInfoPO.BELONGTYPE_SALESMAN_STR);
+		List<DecorationBelongPO> designerOrderBelongInfoPOs = orderBelongInfoDao.queryOrderBelongInfoForCurrentByOrderIdAType(decorationContractVO.getOrderId(), DecorationBelongPO.BELONGTYPE_DESIGN_INT);
+		List<DecorationBelongPO> salemsanOrderBelongInfoPOs = orderBelongInfoDao.queryOrderBelongInfoForCurrentByOrderIdAType(decorationContractVO.getOrderId(), DecorationBelongPO.BELONGTYPE_SALESMAN_INT);
 		
 		
 		if(!resignFlag){
@@ -240,11 +240,11 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		UserPO operater = userDao.queryUserByUserId(userId);
 		
 		DecorationOperatePO decorationOperatePO = new DecorationOperatePO();
-		decorationOperatePO.setDecoration(decorationPO);
+		decorationOperatePO.setOrderId(decorationPO.getOrderId());
 		decorationOperatePO.setOperater(operater);
 		decorationOperatePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 		decorationOperatePO.setStatus(DecorationOperatePO.STATUS_INIT_INT);
-		decorationOperatePO.setDes("签订合同");
+		decorationOperatePO.setComment("签订合同");
 		decorationOperatePO.setValue(decorationPO.getOrderTotalPrice());
 		
 		if(!resignFlag){
@@ -281,16 +281,16 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 			String notCountDecorationContractUserId = SystemConfig.getString("notCountDecorationContractUserId", "");
 			
 			//更新归属信息的部门和大区
-			for(DecorationBelongInfoPO orderBelongInfoPO: designerOrderBelongInfoPOs){
-				orderBelongInfoPO.setBelongDeptPO(orderBelongInfoPO.getBelongUserPO().getDept());
-				orderBelongInfoPO.setBelongRegionPO(orderBelongInfoPO.getBelongUserPO().getDept().getFatherDept());
+			for(DecorationBelongPO orderBelongInfoPO: designerOrderBelongInfoPOs){
+				orderBelongInfoPO.setDepartment(orderBelongInfoPO.getBelonger().getDept());
+				orderBelongInfoPO.setRegion(orderBelongInfoPO.getBelonger().getDept().getFatherDept());
 				
 				orderBelongInfoDao.update(orderBelongInfoPO);
 			}
 			
-			for(DecorationBelongInfoPO orderBelongInfoPO: salemsanOrderBelongInfoPOs){
-				orderBelongInfoPO.setBelongDeptPO(orderBelongInfoPO.getBelongUserPO().getDept());
-				orderBelongInfoPO.setBelongRegionPO(orderBelongInfoPO.getBelongUserPO().getDept().getFatherDept());
+			for(DecorationBelongPO orderBelongInfoPO: salemsanOrderBelongInfoPOs){
+				orderBelongInfoPO.setDepartment(orderBelongInfoPO.getBelonger().getDept());
+				orderBelongInfoPO.setRegion(orderBelongInfoPO.getBelonger().getDept().getFatherDept());
 				
 				orderBelongInfoDao.update(orderBelongInfoPO);
 			}
@@ -345,18 +345,19 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		UserPO operater = userDao.queryUserByUserId(userId);
 		
 		DecorationOperatePO decorationOperatePO = new DecorationOperatePO();
-		decorationOperatePO.setDecoration(decorationPO);
+		decorationOperatePO.setOrderId(decorationPO.getOrderId());
 		decorationOperatePO.setOperater(operater);
 		decorationOperatePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 		decorationOperatePO.setType(DecorationOperatePO.TYPE_RESIGN_DECORATION_ORDER_INT);
 		decorationOperatePO.setStatus(DecorationOperatePO.STATUS_INIT_INT);
 		decorationOperatePO.setValue(-decorationPO.getOrderTotalPrice());
-		decorationOperatePO.setDes("重签合同");
+		
+		decorationOperatePO.setComment("重签合同");
 		
 		decorationOperateDao.save(decorationOperatePO);
 		
-		List<DecorationBelongInfoPO> designerOrderBelongInfoPOs = orderBelongInfoDao.queryOrderBelongInfoForCurrentByOrderIdAType(decorationContractVO.getOrderId(), DecorationBelongInfoPO.BELONGTYPE_DESIGN_STR);
-		List<DecorationBelongInfoPO> salemsanOrderBelongInfoPOs = orderBelongInfoDao.queryOrderBelongInfoForCurrentByOrderIdAType(decorationContractVO.getOrderId(), DecorationBelongInfoPO.BELONGTYPE_SALESMAN_STR);
+		List<DecorationBelongPO> designerOrderBelongInfoPOs = orderBelongInfoDao.queryOrderBelongInfoForCurrentByOrderIdAType(decorationContractVO.getOrderId(), DecorationBelongPO.BELONGTYPE_DESIGN_INT);
+		List<DecorationBelongPO> salemsanOrderBelongInfoPOs = orderBelongInfoDao.queryOrderBelongInfoForCurrentByOrderIdAType(decorationContractVO.getOrderId(), DecorationBelongPO.BELONGTYPE_SALESMAN_INT);
 		
 		DecorationOperateServiceImpl.makeDecorationOperateForDecorationContract(decorationOperateDao, decorationPO, salemsanOrderBelongInfoPOs, designerOrderBelongInfoPOs, operater, decorationPO.getOrderTotalPrice(), -1, decorationOperatePO.getType());
 		

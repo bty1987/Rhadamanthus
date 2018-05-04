@@ -51,6 +51,10 @@ public class SalesItemPO implements Serializable {
 	
 	private	float price;
 	
+	private float xgnum;
+	
+	private float punum;
+	
 	private	float num;
 	
 	private	float total;
@@ -180,7 +184,25 @@ public class SalesItemPO implements Serializable {
 	public void setPrice(float price) {
 		this.price = price;
 	}
-	
+
+	@Column(name="xgnum")
+	public float getXgnum() {
+		return xgnum;
+	}
+
+	public void setXgnum(float xgnum) {
+		this.xgnum = xgnum;
+	}
+
+	@Column(name="punum")
+	public float getPunum() {
+		return punum;
+	}
+
+	public void setPunum(float punum) {
+		this.punum = punum;
+	}
+
 	@Column(name="num")
 	public float getNum() {
 		return num;

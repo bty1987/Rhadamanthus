@@ -297,6 +297,10 @@ $(function () {
         var $addaPricei = $('<i></i>').addClass('icon-cloud-upload bigger-110').appendTo($addaImportPrice);
         var $addaPricespan = $('<span></span>').text('导入价格').appendTo($addaImportPrice);
 
+        var $deleteImportPrice = $('<a></a>').addClass('btn btn-minier btn-inverse pull-left').attr('name', 'importGoods').css({'margin-top':'-2px','margin-left':'4px'});
+        var $deletePricei = $('<i></i>').addClass('icon-cloud-upload bigger-110').appendTo($deleteImportPrice);
+        var $deletePricespan = $('<span></span>').text('删除价格').appendTo($deleteImportPrice);
+
         var $addaExportGoods = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'importGoods').css('margin-top','-2px');
         var $addaExporti = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($addaExportGoods);
         var $addaExportspan = $('<span></span>').text('商品导出').appendTo($addaExportGoods);
@@ -457,12 +461,45 @@ $(function () {
 
         });
 
+        $deleteImportPrice.click(function(){
+
+            clearForm('form6');
+            $('#deleteImportSelectPrice').empty();
+
+            openlayerImportDeletePrice();
+
+            $('#deleteImportSelectPrice').Huploadify({
+
+                'debug' : false, // 开启调试
+                'auto':true, // 是否自动上传
+                'successTimeout':config.uploadTimeout, // 超时时间
+                'formData':{
+                    'uploadType':4,
+                },
+                'buttonClass': 'btn btn-success col-sm-6',
+                'overrideEvents' : ['onDialogClose'], // 不执行默认的onSelect事件
+                'fileObjName':'strutsUploads', // 服务器端脚本使用的文件对象的名称 $_FILES个['upload']
+                'uploader': config.server + 'importDeletePrice.do', // 上传处理程序
+                'height':'30', // 浏览按钮的高度
+                'fileTypeDesc':'支持的格式：',  // 在浏览窗口底部的文件类型下拉菜单中显示的文本
+                'fileTypeExts':'*.xls;*.xlsx', // 允许上传的文件后缀
+                'fileSizeLimit':'2MB', // 上传文件的大小限制
+                'queueSizeLimit' : 1, // 上传数量
+                'onUploadSuccess':function(file, data, response){ //上传到服务器，服务器返回相应信息到data里
+
+                    var dateObj = eval("("+data+")");
+
+                }
+            });
+
+        });
+
         $addaExportGoods.click(function(){
             pageGoodsExport();
         });
 
 
-        return [$addaExportGoods,$addaImportGood,$addaImportColor,$addaImportFormat,$addaImportPrice,$adda];
+        return [$addaExportGoods,$addaImportGood,$addaImportColor,$addaImportFormat,$addaImportPrice,$deleteImportPrice,$adda];
 
     }, 'resultList');
 
@@ -594,6 +631,27 @@ $(function () {
         });
     }
 
+    function openlayerImportDeletePrice() {
+        layer.closeAll();
+        layer.open({
+            type: 1,
+            //skin: 'layui-layer-lan',
+            title: "删除价格",
+            content: $('#deleteImportPrice'),
+            area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
+            maxmin: false,
+            zIndex: 9000,
+            btn: ['确定'],
+            zIndex: 9000,
+            success: function (layers, index) {
+
+            },
+            end: function () {
+
+            }
+        });
+    }
+
     function openLayerSwitch(id, gid, title, url) {
         var $PopUp = $('#' + id);
         $PopUp.attr({'data-gid': gid});
@@ -638,6 +696,7 @@ $(function () {
                     ['商品名称', 'name'],
                     ['条形码', 'barcode'],
                     ['品类', 'category'],
+                    ['品牌ID','bid'],
                     ['品牌', 'brand'],
                     ['单位', 'measurementUnit'],
                     ['件数', 'pieceNum'],

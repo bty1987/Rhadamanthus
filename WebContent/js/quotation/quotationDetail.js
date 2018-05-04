@@ -386,7 +386,7 @@ var QuotationDetail = (function(){
 							var options = {
 								"approval.comment": res,
 								"approvalQuotationDiscount.orderId": quo.orderid,
-								"approvalQuotationDiscount.quotationId": quo.quotationid,
+								"approvalQuotationDiscount.qid": quo.quotationid,
 								"approvalQuotationDiscount.newDiscount": dis,
 							}
 

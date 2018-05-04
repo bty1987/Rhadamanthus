@@ -37,7 +37,7 @@ public class ApprovalQuotationDiscountAction extends BaseListAction {
 	private ApprovalVO approval;
 	
 	private ApprovalQuotationDiscountVO approvalQuotationDiscount;
-//	提交报价折扣修改
+
 	@Action(value = "submitApprovalForQuotationDiscount", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String submitApprovalForQuotationDiscount() throws FLException{
 		

@@ -16,6 +16,6 @@ import com.fanglin.core.dao.Dao;
 
 public interface ApprovalMaterialFullPaymentDao extends Dao<ApprovalMaterialFullPaymentPO> {
 	
-	public ApprovalMaterialFullPaymentPO queryApprovalMaterialFullPaymentByAId(int aId);
+	public ApprovalMaterialFullPaymentPO queryApprovalMaterialFullPaymentByAId(long aId);
 
 }

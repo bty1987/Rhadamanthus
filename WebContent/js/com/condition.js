@@ -380,6 +380,67 @@ var Condition = function (api) {
                 valuePath: "value" // 用来在页面显示的字段的json路径
             }
         },
+        inf_tno: {
+            label: "活动票号",
+            type: "text",
+            submitConfig: {
+                name: "tno",
+                op: "eq",
+                validate: null
+            }
+        },
+        inf_userName: {
+            label: "姓名",
+            type: "text",
+            submitConfig: {
+                name: "name",
+                op: "eq",
+                validate: null
+            }
+        },
+        inf_orderId: {
+            label: "订单编号",
+            type: "text",
+            submitConfig: {
+                name: "orderId",
+                op: "eq",
+                validate: {
+                    "reg": /^[0-9]*$/,
+                    "msg": "请输入数字"
+                }
+            }
+        },
+
+        //大活动--活动款
+        vp_mno: {
+            label: "会员号",
+            type: "text",
+            submitConfig: {
+                name: "mno",
+                op: "eq",
+                validate: {
+                    "reg": /^[0-9]*$/,
+                    "msg": "请输入数字"
+                }
+            }
+        },
+        vp_brand: {
+            label: "品牌",
+            type: "autofill",
+            submitConfig: {
+                name: "brand",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {//从后台取数据的各种配置
+                url: api.data.queryBrandForPinYinName,//获取数据要调用的接口
+                postData: {},//获取数据时的请求参数
+                listPath: "autoFillKeyValue",//响应list的json路径
+                keyPath: "value",//用来向后台提交的字段的json路径
+                valuePath: "value"//用来在页面显示的字段的json路径
+            }
+        },
+
         //-------数据-报价-报价版本
         versionName: {
             label: "版本名称",
@@ -2437,6 +2498,24 @@ var Condition = function (api) {
             }
         },
 
+
+        sales_brade:{
+            label: "品牌",
+            type: "autofill",
+            submitConfig: {
+                name: "brand",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {
+                url: api.data.queryBrandForPinYinName,
+                postData: {},
+                listPath: "autoFillKeyValue",
+                keyPath: "value",
+                valuePath: "value"
+            }
+        },
+
         sales_balanceOrderId:{
             label: "订单编号",
             type: "text",
@@ -2784,6 +2863,18 @@ var Condition = function (api) {
             }
         },
         /*-------客户customer : end----*/
+		 customerSourcePhone :{
+                label: "客源电话",
+                type: "text",
+                submitConfig: {
+                    name: "customerSourcePhone",
+                    op: "eq",
+                    validate: {
+                        "reg": /^[0-9]*$/,
+                        "msg": "请输入数字"
+                    }
+                }
+        },
         
     };
     return {

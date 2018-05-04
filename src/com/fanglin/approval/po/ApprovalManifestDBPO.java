@@ -20,7 +20,7 @@ public class ApprovalManifestDBPO implements java.io.Serializable {
 
 	private long amdbid;
 	
-	private int aid;
+	private long aid;
 	
 	private Timestamp manifestTime;
 	
@@ -40,11 +40,11 @@ public class ApprovalManifestDBPO implements java.io.Serializable {
 	}
 
 	@Column(name = "aid")
-	public int getAid() {
+	public long getAid() {
 		return aid;
 	}
 
-	public void setAid(int aid) {
+	public void setAid(long aid) {
 		this.aid = aid;
 	}
 

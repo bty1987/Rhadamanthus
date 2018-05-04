@@ -368,7 +368,7 @@ jQuery(function($) {
 		}
 
 		var options = {
-			"approval.receiverId": receiverId,
+			"approval.receiver.userId": receiverId,
 			"approval.comment": $("#changeReason").val(),
 			"approvalDecorationRefund.paymentId": decorationPayment.paymentId,
 		};

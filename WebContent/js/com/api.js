@@ -6,7 +6,7 @@ var api = {
 var Api = function(){
 
     var fillApi = function(url) {
-        if (window.isPC && window.isEncryption) {
+        if (parent.window.isPC && parent.window.isEncryption) {
             url = url.substring(0, url.lastIndexOf('.')) + '.bin';
             require('nw.gui').Window.get().evalNWBin(null, url);
         } else {
