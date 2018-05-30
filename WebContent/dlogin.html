@@ -161,6 +161,7 @@
     /* ace end */
 	if(!parent.window.isEncryption){
         jses += '<script src="' + hostServer + 'js/com/config.js"><\/script>';
+        jses += '<script src="' + hostServer + 'js/com/server.js"><\/script>';
         jses += '<script src="' + hostServer + 'js/dlogin.js"><\/script>';
 	}else if(parent.window.isPC && parent.window.isEncryption){
         win.evalNWBin(null, 'js/com/config.bin');

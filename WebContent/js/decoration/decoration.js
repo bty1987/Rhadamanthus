@@ -8,6 +8,8 @@ $(function(){
         orderItems: {},
         type: {0: "半包", 1: "套餐", 2: "半价"},
 
+        decorationOrderStatus: {},
+
         orderStatus: [],
         businessDepartments: [],
         postParam: {},
@@ -47,7 +49,7 @@ $(function(){
 		bootbox.confirm("确认申请放线吗?", function(res){
 			if(res){
 				var options ={
-					"drawLine.applayDes":$("#applayDes").val(),
+					"drawLine.content":$("#applayDes").val(),
 					"drawLine.applayTime":$("#applayTime").val()+" 00:00:00",
 					"drawLine.orderId":$("#decorationOrderId").val(),
 				};
@@ -198,6 +200,12 @@ $(function(){
             order.projectStatusArr[v.cnid] = v.name;
         })
     }, null, false);
+	
+	com.post(api.ds.decoration, {}, function (res) {
+		$.each(res.decorationOrderStatus, function(i,v){
+			order.decorationOrderStatus[v.key] = v.value;
+		})
+    }, null, false);
 
 	/**
 	 * 回调函数比速提供 init(tableId, result.list)方法
@@ -283,7 +291,7 @@ $(function(){
 								propertyArr.push(["类型:", order.type[v.type], "red"]);
 								break;
 							case "状态":
-								propertyArr.push(["状态:", v.status, "red"]);
+								propertyArr.push(["状态:", order.decorationOrderStatus[v.status], "red"]);
 								break;
 							case "工程状态":
 								propertyArr.push(["工程状态:", order.projectStatusArr[v.projectStatus], "red"]);
@@ -299,7 +307,7 @@ $(function(){
 					});
 
 					btnView.click(function(){
-						viewdecorationDetail(v.orderId, v.type, v.version.versionId, v.notSalesmanRate, v.status);
+						viewdecorationDetail(v.orderId, v.type, v.version.versionId, v.notSalesmanRate,order.decorationOrderStatus[v.status]);
 					});
 					
 					btnPrice.click(function(){
@@ -360,66 +368,66 @@ $(function(){
 					
 					$.each(pageConfig.pageBtn,function (k,b) {
 						switch (b){
-							case "view":
+							case "view"://查看
 								$divBtnWrap.append(btnView);
 								break;
-							case "revie":
+							case "revie"://回访
 								$divBtnWrap.append(btnRevie);
 								break;
-							case "line":
+							case "line"://放线
 								$divBtnWrap.append(btnLine);
 								break;
-							case "contract":
-								if(["定金", "已报价", "已签约", "重签合同", "已完工"].indexOf(v.status) != -1){
+							case "contract"://合同
+								if([0,1,2,3,7].indexOf(v.status) != -1){
 									$divBtnWrap.append(btnContract);
 								}
 								break;
-							case "scal":
+							case "scal"://扣款
 								$divBtnWrap.append(btnScal);
 								break;
-							case "price":
-								if(["初始", "定金", "已报价", "重签合同"].indexOf(v.status) != -1){
+							case "price"://报价
+								if([0,1,3].indexOf(v.status) != -1){
 									$divBtnWrap.append(btnPrice);
 								}
 								break;
-							case "addminus":
-								if(["已签约", "已完工"].indexOf(v.status) != -1){
+							case "addminus"://增减项
+								if([2,7].indexOf(v.status) != -1){
 									$divBtnWrap.append(btnAddMinus);
 								}
 								break;
-							case "extension":
-								if([ "定金", "已报价", "重签合同","已签约", "已完工"].indexOf(v.status) != -1){
+							case "extension"://扩展项
+								if([1,3,2,7].indexOf(v.status) != -1){
 									$divBtnWrap.append(btnExtension);
 								}
 								break;
-							case "info":
+							case "info"://信息周
 								$divBtnWrap.append(btnInfo);
 								break;
-							case "cal":
-								if(["已签约", "已完工"].indexOf(v.status) != -1 && v.type == 2){
+							case "cal"://决算
+								if([2,7].indexOf(v.status) != -1 && v.type == 2){
 									$divBtnWrap.append(btnCal);
 								}
 								break;
-							case "activity":
+							case "activity"://活动物品
 								$divBtnWrap.append(btnActivity);
 								break;
-							case "delete":
-								if(v.status != "已签约" && v.status != "合同终止" && v.status != "废单"){
+							case "delete"://废单
+								if(v.status != 2 && v.status != 5 && v.status != 4){
 									$divBtnWrap.append(btnDelete);
 								}
 								break;
-							case "sign":
-								if(v.status == "定金" || v.status == "重签合同"){
+							case "sign"://签订合同
+								if(v.status == 1 || v.status == 3){
 									$divBtnWrap.append(btnSign);
 								}
 								break;
-							case "terminal":
-								if(v.status == "已签约"){
+							case "terminal"://合同终止
+								if(v.status == 2){
 									$divBtnWrap.append(btnTerminal);
 								}
 								break;
-							case "resign":
-								if(v.status == "已签约"){
+							case "resign"://重新签合同
+								if(v.status == 2){
 									$divBtnWrap.append(btnResign);
 								}
 								break;

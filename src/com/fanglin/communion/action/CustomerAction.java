@@ -148,14 +148,14 @@ public class CustomerAction extends BaseListAction {
 		return "success";
 	}
 	
-	@Action(value="updateCustomerPhoneForDstatus", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String updateCustomerPhoneForDstatus() throws FLException{
+	@Action(value="updateCustomerPhoneForDefault", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String updateCustomerPhoneForDefault() throws FLException{
 
 		if(SystemConfig.getString("communion") == null){
 		    throw new FLException(-1, "无操作权限");
 		}
 		
-		customerService.updateCustomerPhoneForDstatus(customerPhone);
+		customerService.updateCustomerPhoneForDefault(customerPhone);
 
 		return "success";
 	}

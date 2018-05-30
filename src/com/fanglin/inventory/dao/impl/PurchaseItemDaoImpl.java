@@ -28,13 +28,5 @@ public class PurchaseItemDaoImpl extends DaoImpl<PurchaseItemPO> implements Purc
 		return session().createCriteria(PurchaseItemPO.class).add(Restrictions.in(PurchaseItemPO.COLUMN_PID_STR, pids)).list();
 		
 	}
-	
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<PurchaseItemPO> queryPurchaseItemBySiids(List<Long> siids) {
-		
-		return session().createCriteria(PurchaseItemPO.class).add(Restrictions.in(PurchaseItemPO.COLUMN_SIID_STR, siids)).list();
-		
-	}
 
 }

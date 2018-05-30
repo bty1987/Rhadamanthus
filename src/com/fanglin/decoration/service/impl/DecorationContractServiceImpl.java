@@ -138,7 +138,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 	@Transactional(rollbackFor=Exception.class)
 	public int saveDecorationContract(DecorationContractVO decorationContractVO) throws FLException{
 		
-		List<String> noUpdateStatus = Arrays.asList(new String[]{DecorationPO.STATUS_SIGNED_STR, DecorationPO.STATUS_COMPLETED_STR, DecorationPO.STATUS_WASTE_STR, DecorationPO.STATUS_TERMINATION_STR}); // 已签约, 已完工, 废单, 合同终止
+		List<Short> noUpdateStatus = Arrays.asList(new Short[]{DecorationPO.STATUS_SIGNED_INT, DecorationPO.STATUS_COMPLETED_INT, DecorationPO.STATUS_WASTE_INT, DecorationPO.STATUS_TERMINATION_INT}); // 已签约, 已完工, 废单, 合同终止
 		
 		DecorationContractPO decorationContractPO = decorationContractDao.queryDecorationContractByOrderId(decorationContractVO.getOrderId());
 		
@@ -175,7 +175,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 	@Transactional(rollbackFor=Exception.class)
 	public int signDecorationContract(DecorationContractVO decorationContractVO, Authentication authentication) throws FLException{
 		
-		List<String> noUpdateStatus = Arrays.asList(new String[]{DecorationPO.STATUS_SIGNED_STR, DecorationPO.STATUS_COMPLETED_STR, DecorationPO.STATUS_WASTE_STR, DecorationPO.STATUS_TERMINATION_STR}); // 已签约, 已完工, 废单, 合同终止
+		List<Short> noUpdateStatus = Arrays.asList(new Short[]{DecorationPO.STATUS_SIGNED_INT, DecorationPO.STATUS_COMPLETED_INT, DecorationPO.STATUS_WASTE_INT, DecorationPO.STATUS_TERMINATION_INT}); // 已签约, 已完工, 废单, 合同终止
 		String[] paymentStatus = new String[]{DecorationPaymentPO.PAYMENTSTATUS_PAY_STR,DecorationPaymentPO.PAYMENTSTATUS_CONFIRM_STR};
 		
 		boolean resignFlag = false;
@@ -219,11 +219,11 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		
 		quotationDao.updateQuotationForStatusByOrderId(orderId, QuotationPO.STATUS_DISABLED_SHORT);
 		
-		if(DecorationPO.STATUS_RESIGNED_STR.equals(decorationPO.getStatus())){
+		if(DecorationPO.STATUS_RESIGNED_INT == decorationPO.getStatus()){
 			resignFlag = true;
 		}
 		
-		decorationPO.setStatus(DecorationPO.STATUS_SIGNED_STR);
+		decorationPO.setStatus(DecorationPO.STATUS_SIGNED_INT);
 		decorationPO.setContractCode(decorationContractPO.getContractCode());
 		decorationPO.setContractUserId(userDao.queryUserByOldUserId(userId));
 		
@@ -326,7 +326,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 			throw new FLException(140013, "订单不存在");
 		}
 		
-		if(!DecorationPO.STATUS_SIGNED_STR.equals(decorationPO.getStatus())){
+		if(DecorationPO.STATUS_SIGNED_INT != (decorationPO.getStatus())){
 			throw new FLException(140027, "订单状态不能重签合同");
 		}
 		
@@ -338,7 +338,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 			throw new FLException(140041, "订单存在增减项,不能重新签单");
 		}
 		
-		decorationPO.setStatus(DecorationPO.STATUS_RESIGNED_STR);
+		decorationPO.setStatus(DecorationPO.STATUS_RESIGNED_INT);
 		
 		decorationDao.update(decorationPO);
 		

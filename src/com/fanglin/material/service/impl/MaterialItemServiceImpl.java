@@ -395,35 +395,6 @@ public class MaterialItemServiceImpl implements MaterialItemService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public void updateMaterialItemForPrePT(List<Long> miids, MaterialItemVO materialItemVO){
-		
-		for(Long miid: miids){
-			MaterialItemPO materialItemPO = materialItemDao.get(miid);
-			if(materialItemPO != null && materialItemPO.getBalanceStatus() == MaterialItemPO.BALANCESTATUS_TYPE_INIT_INT){
-				materialItemPO.setPrePoint(materialItemVO.getPrePoint());
-				
-				materialItemDao.update(materialItemPO);
-			}
-		}
-	}
-	
-	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public void updateMaterialItemForPostPT(List<Long> miids, MaterialItemVO materialItemVO){
-		
-		for(Long miid: miids){
-			MaterialItemPO materialItemPO = materialItemDao.get(miid);
-			
-			if(materialItemPO != null && materialItemPO.getBalanceStatus() == MaterialItemPO.BALANCESTATUS_TYPE_PREBALANCE_INT){
-				materialItemPO.setPostPoint(materialItemVO.getPostPoint());
-				
-				materialItemDao.update(materialItemPO);
-			}
-		}
-	}
-	
-	@Override
-	@Transactional(rollbackFor=Exception.class)
 	public int changeMaterialItemForCaclType(MaterialItemVO materialItemVO, String userId) throws FLException{
 		
 		MaterialItemPO materialItemPO = materialItemDao.get(materialItemVO.getMiid());
@@ -451,6 +422,20 @@ public class MaterialItemServiceImpl implements MaterialItemService {
 		}
 		
 		return 0;
+	}
+	
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public void updateMaterialItemForPrePT(List<Long> miids, MaterialItemVO materialItemVO){
+		
+		for(Long miid: miids){
+			MaterialItemPO materialItemPO = materialItemDao.get(miid);
+			if(materialItemPO != null && materialItemPO.getBalanceStatus() == MaterialItemPO.BALANCESTATUS_TYPE_INIT_INT){
+				materialItemPO.setPrePoint(materialItemVO.getPrePoint());
+				
+				materialItemDao.update(materialItemPO);
+			}
+		}
 	}
 
 	@Override

@@ -40,7 +40,7 @@ public class WorkerSalaryVO  implements Serializable{
 	
 	private String comment ;
 	
-	private int csid;
+	private Long csid;
 
 	public WorkerSalaryVO() {
 		super();
@@ -169,12 +169,12 @@ public class WorkerSalaryVO  implements Serializable{
 		this.comment = comment;
 	}
 
-	public int getCsid() {
+	public Long getCsid() {
 		return csid;
 	}
 
-	public void setCsid(int csid) {
+	public void setCsid(Long csid) {
 		this.csid = csid;
-	} 
-	
+	}
+
 }

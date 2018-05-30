@@ -32,8 +32,6 @@ public interface DepartmentService {
 
 	public void updateDepartmentForStatus(DepartmentVO departmentVO) throws FLException;
 
-	public void deleteDepartment(DepartmentVO departmentVO) throws FLException;
-	
 	public List<DepartmentVO> queryDepartmentByDtid(DepartmentVO departmentVO,int Company);
 	
 	

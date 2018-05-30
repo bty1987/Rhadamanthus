@@ -91,10 +91,10 @@ public class DecorationExportServiceImpl implements DecorationExportService {
 				decorationExportVO.setAdvancePayment(0f);
 			}
 			
-			if(DecorationPO.STATUS_WASTE_STR.equals(decorationPO.getStatus())){
+			if(DecorationPO.STATUS_WASTE_INT == decorationPO.getStatus()){
 				decorationExportVO.setGiveup(decorationPO.getStatus());
 			}else{
-				decorationExportVO.setGiveup("");
+				decorationExportVO.setGiveup(DecorationPO.STATUS_INIT_INT);
 			}
 			
 			orderIds.add(orderId);

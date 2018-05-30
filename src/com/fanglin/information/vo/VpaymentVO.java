@@ -33,6 +33,8 @@ public class VpaymentVO implements Serializable{
 	
 	private String receipt;
 	
+	private String comment;
+	
 	public VpaymentVO() {
 		super();
 	}
@@ -131,6 +133,14 @@ public class VpaymentVO implements Serializable{
 
 	public void setReceipt(String receipt) {
 		this.receipt = receipt;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 	
 }

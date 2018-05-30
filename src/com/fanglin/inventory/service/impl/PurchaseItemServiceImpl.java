@@ -97,30 +97,6 @@ public class PurchaseItemServiceImpl  implements PurchaseItemService{
 	}
 	
 	@Override
-	public List<PurchaseItemVO> queryPurchaseItemBySiids(List<Long> siids) {
-		
-		List<PurchaseItemPO> purchaseItemPOs = purchaseItemDao.queryPurchaseItemBySiids(siids);
-		List<PurchaseItemVO> purchaseItemVOs = new ArrayList<PurchaseItemVO>();
-
-		PurchaseItemVO purchaseItemVO;
-		
-		for(PurchaseItemPO purchaseItemPO: purchaseItemPOs){
-			
-			purchaseItemVO = new PurchaseItemVO(new GoodsVO(),new ColorVO(),new FormatVO());
-			
-			BeanUtil.copyProperties(purchaseItemPO, purchaseItemVO, Arrays.asList("goods","color","format"));
-			BeanUtil.copyProperties(purchaseItemPO.getGoods(), purchaseItemVO.getGoods(),Arrays.asList("accessoriesType"));
-			BeanUtil.copyProperties(purchaseItemPO.getColor(), purchaseItemVO.getColor());
-			BeanUtil.copyProperties(purchaseItemPO.getFormat(), purchaseItemVO.getFormat());
-			
-			purchaseItemVOs.add(purchaseItemVO);
-			
-		}
-
-		return purchaseItemVOs;
-	}
-	
-	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public int deletePurchaseItem(PurchaseVO purchaseVO,PurchaseItemVO purchaseItemVOs) throws FLException{
 		

@@ -21,5 +21,5 @@
     server: '',
     media: '',
     dmedia: '',
-
+    library: ''
 };

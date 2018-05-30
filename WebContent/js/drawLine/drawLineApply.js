@@ -70,8 +70,8 @@ jQuery(function ($) {
                 ["面积:", v.houseArea, "blue"],
                 ["申请人:", v.applayUser, "grey"],
                 ["申请时间:", v.applayTime, "green"],
-                ["放线次数:", v.applayCount, "blue"],
-                ["描述:", v.applayDes, "grey"],
+                ["放线次数:", v.count, "blue"],
+                ["描述:", v.content, "grey"],
             ];
 
             $.each(propertyArr, function (index, value) {

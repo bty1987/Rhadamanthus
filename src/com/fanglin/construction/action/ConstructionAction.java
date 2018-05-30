@@ -67,14 +67,6 @@ public class ConstructionAction extends BaseListAction{
 		return SUCCESS;
 	}
 	
-	@Action(value = "queryConstructionForWorkerNameByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryConstructionForWorkerNameByOrderId(){
-		
-		construction = constructionService.queryConstructionForWorkerNameByOrderId(construction);
-		
-		return SUCCESS;
-	}
-	
 	@Action(value = "updateConstructionByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateConstructionByOrderId(){
 		

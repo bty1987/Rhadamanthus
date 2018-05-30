@@ -84,7 +84,9 @@ public class DecorationVO implements Serializable {
 	
 	
 	
-	private String status;
+	private Short status;
+	
+	private Short quotationStatus;
 	
 	private Short projectStatus;
 	
@@ -247,12 +249,20 @@ public class DecorationVO implements Serializable {
 		this.createTime = createTime;
 	}
 
-	public String getStatus() {
+	public Short getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(Short status) {
 		this.status = status;
+	}
+
+	public Short getQuotationStatus() {
+		return quotationStatus;
+	}
+
+	public void setQuotationStatus(Short quotationStatus) {
+		this.quotationStatus = quotationStatus;
 	}
 
 	public Short getType() {

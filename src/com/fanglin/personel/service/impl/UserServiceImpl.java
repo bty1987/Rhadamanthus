@@ -239,39 +239,6 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public List<UserBaseVO> queryUserForNameByDuty(String pinyinName,UserVO userVO, String duty) throws FLException{
-		List<UserBaseVO> userBaseVOs = new ArrayList<UserBaseVO>();
-		
-		Paging paging = new Paging(0, 10);
-		
-		List<UserPO> userPOs = userDao.pageUserForNameByPinyinNameADuty(paging, pinyinName,userVO.getStatus(), duty);
-		
-		for(UserPO userPO: userPOs){
-			
-			userBaseVOs.add(convertBaseBean(userPO));
-			
-		}
-		return userBaseVOs;
-	}
-
-	@Override
-	public List<UserBaseVO> queryUserForNameByDutysAO(String pinyinName, List<String> dutysA, List<String> dutysO) throws FLException{
-		
-		List<UserBaseVO> userBaseVOs = new ArrayList<UserBaseVO>();
-		
-		Paging paging = new Paging(0, 10);
-		
-		List<UserPO> userPOs = userDao.pageUserForNameByPinyinNameADutysAO(paging, pinyinName, dutysA, dutysO);
-
-		for(UserPO userPO: userPOs){
-			
-			userBaseVOs.add(convertBaseBean(userPO));
-			
-		}
-		return userBaseVOs;
-	}
-	
-	@Override
 	public UserVO validateUser(String loginId, String password) throws FLException{
 		
 		UserPO userPO = userDao.queryUserByLoginId(loginId);
@@ -294,15 +261,21 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
-	public List<UserBaseVO> queryUserByDtid(String pinyinName,UserVO userVO,String departmentTypeName,Integer company) throws FLException{
+	public List<UserBaseVO> queryUserByDepartmentType(String pinyinName,UserVO userVO,DepartmentTypeVO departmentType) throws FLException{
 		
 		List<UserBaseVO> userBaseVOs = new ArrayList<UserBaseVO>();
 		
 		Paging paging = new Paging(0, 10);
 		
-		int dtid = departmentTypeDao.queryDepartmentTypeByName(departmentTypeName).getDtid();
+		int dtid = 0;
 		
-		List<UserPO> userPOs = userDao.pageUserForNameByPinyinNameADepeType(paging, pinyinName,userVO.getStatus(),dtid, company);
+		if(departmentType.getName() != null && departmentType.getName().length() !=0){
+			
+			dtid = departmentTypeDao.queryDepartmentTypeByName(departmentType.getName()).getDtid();
+		
+		}
+		
+		List<UserPO> userPOs = userDao.pageUserForNameByPinyinNameAType(paging, pinyinName,userVO.getStatus(),dtid);
 		
 		for(UserPO userPO: userPOs){
 			
@@ -312,6 +285,22 @@ public class UserServiceImpl implements UserService {
 		
 		return userBaseVOs;
 		
+	}
+	
+	@Override
+	public List<UserBaseVO> queryUserByUids(List<Integer> uids) throws FLException{
+		
+		List<UserBaseVO> userBaseVOs = new ArrayList<UserBaseVO>();
+		
+		List<UserPO> userPOs = userDao.queryUserByUids(uids);
+		
+		for(UserPO userPO: userPOs){
+			
+			userBaseVOs.add(convertBaseBean(userPO));
+			
+		}
+		
+		return userBaseVOs;
 	}
 	
 	@Override
@@ -355,9 +344,9 @@ public class UserServiceImpl implements UserService {
 		
 		userPO.setDuty(new DutyPO(userVO.getDuty().getDid()));
 		
-		List<String> pinyins = PinYin4Util.getPinyin(userVO.getUserName());
+		List<String> pinyins = PinYin4Util.getPinyin(userVO.getCurrentName());
 		
-		userPO.setUserNamePinYin(pinyins.get(0));
+		userPO.setPinYin(pinyins.get(0));
 		
 		userDao.save(userPO);
 		
@@ -416,13 +405,17 @@ public class UserServiceImpl implements UserService {
 		userVO.setUid(userPO.getUid());
 		
 		BeanUtil.copyProperties(userInfoVO, userInfoPO, Arrays.asList("user"));
-		BeanUtil.copyProperties(userVO, userPO, Arrays.asList("role", "dept","duty","uId", "userId", "userName","userNamePinYin","loginId", "password", "role", "isLogin", "company", "extranet"));
+		BeanUtil.copyProperties(userVO, userPO, Arrays.asList("role", "dept","duty","uId", "userId", "userName","loginId", "password", "role", "isLogin", "company", "extranet"));
 		
 		userPO.setDept(new DepartmentPO(userVO.getDept().getDeptId()));
 		BeanUtil.copyProperties(userVO.getDept(), userPO.getDept(), Arrays.asList("fatherDept", "cityProper"));
 		
 		userPO.setDuty(new DutyPO(userVO.getDuty().getDid()));
 		BeanUtil.copyProperties(userVO.getDept(), userPO.getDept(), Arrays.asList("departmentType"));
+		
+		List<String> pinyins = PinYin4Util.getPinyin(userVO.getCurrentName());
+		
+		userPO.setPinYin(pinyins.get(0));
 		
 		userDao.update(userPO);
 		
@@ -629,6 +622,24 @@ public class UserServiceImpl implements UserService {
 		}
 		
 		return 0;
+	}
+	
+	@Override
+	@Transactional
+	public void updateUserForProfiles(UserInfoVO userInfoVO) throws FLException{
+		
+		UserVO userVO = userInfoVO.getUser();
+		
+		UserInfoPO userInfoPO = userInfoDao.queryUserInfoByUserId(userVO.getUserId());
+		
+		if(userInfoPO == null){
+			throw new FLException(190005, "人员不存在");
+		}
+		
+		userInfoPO.setProfiles(userInfoVO.getProfiles());
+		
+		userInfoDao.update(userInfoPO);
+		
 	}
 	
 	private UserVO convertBean(UserPO userPO) throws FLException{

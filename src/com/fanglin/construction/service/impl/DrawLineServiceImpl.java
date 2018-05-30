@@ -271,36 +271,38 @@ public class DrawLineServiceImpl implements DrawLineService {
 		DrawLinePO decorationDrawLinePO = null;
 		DrawLinePO newDrawLine = new DrawLinePO();
 
-		newDrawLine.setApplayCount(0);
+		newDrawLine.setCount(0);
 
 		if (drawLinePOs != null && drawLinePOs.size() > 0) {
 
 			decorationDrawLinePO = drawLinePOs.get(0);
-
-			if (!decorationDrawLinePO.getStatus().equals("放线失败")) {
+			if (decorationDrawLinePO.getStatus() != DrawLinePO.DRAWLINE_STATUS_FAIL_SHORT) {
 				throw new FLException(120013, "已经在队列中,不可重复提交");
 			}
 
-			newDrawLine.setApplayCount(decorationDrawLinePO.getApplayCount() + 1);
+			newDrawLine.setCount(decorationDrawLinePO.getCount() + 1);
 		}
 
 		newDrawLine.setApplayTime(drawLineVO.getApplayTime());
 		newDrawLine.setDecoration(decorationPO);
 		newDrawLine.setApplayUser(userDao.queryUserByUserId(userId));
-		newDrawLine.setStatus("排队");
-		newDrawLine.setApplayDes(drawLineVO.getApplayDes());
+		newDrawLine.setStatus(DrawLinePO.DRAWLINE_STATUS_QUEUE_SHORT);
+		newDrawLine.setContent(drawLineVO.getContent());
 
 		drawlineDao.saveOrUpdate(newDrawLine);
 
 		// 设置装修订单的初始进度
 		List<ConstructionNodeCompanyPO> constructionNodeCompanyPOs = constructionNodeDao.queryConstructionNodeCompanyByCid(decorationPO.getCompany());
-
+		
 		String currentTime = DateUtil.current(ConstructionSchedulePO.CURRENT_TIME_FORMAT_STR);
 
 		ConstructionPO constructionPO = constructionDao.queryConstructionByOrderId(orderId);
 
 		if (constructionPO == null) {
+			
 			constructionPO = new ConstructionPO(decorationPO);
+			constructionPO.setStartTime(drawLineVO.getApplayTime());
+			
 			constructionDao.save(constructionPO);
 
 			long cid = constructionPO.getCid();
@@ -315,7 +317,7 @@ public class DrawLineServiceImpl implements DrawLineService {
 		decorationPO.setProjectStatus(DecorationPO.PROJECTSTATUS_START_INT);
 
 		decorationDao.update(decorationPO);
-
+		
 		return 0;
 	}
 
@@ -324,7 +326,7 @@ public class DrawLineServiceImpl implements DrawLineService {
 	public int resetDrawLine(DrawLineVO drawLineVO, Integer company) throws FLException {
 
 		DrawLinePO drawLinePO = drawlineDao.get(drawLineVO.getDlId());
-
+		
 		if (drawLinePO == null) {
 			throw new FLException(120014, "不存在该放线信息");
 		}
@@ -338,7 +340,7 @@ public class DrawLineServiceImpl implements DrawLineService {
 		Timestamp start = DateUtil.getDateToTimestamp(date);
 
 		List<DrawLinePO> drawLinePOs = drawlineDao.queryDrawLineByGroupATime(drawLineVO.getGid(), start, end, company);
-
+		
 		if (drawLinePOs != null && drawLinePOs.size() > 0) {
 
 			if (!(drawLinePOs.size() == 1 && drawLinePOs.get(0).getDecoration().getOrderId().equals(drawLinePO.getDecoration().getOrderId()))) {
@@ -353,14 +355,13 @@ public class DrawLineServiceImpl implements DrawLineService {
 			throw new FLException(120016, "不存在放线小组");
 		}
 
-		drawLinePO.setStatus("申请放线");
+		drawLinePO.setStatus(DrawLinePO.DRAWLINE_STATUS_APPLICATION_SHORT);
 		drawLinePO.setActualEndTime(end);
 		drawLinePO.setActualStartTime(start);
 		drawLinePO.setDrawLineGroup(drawLineGroupPO);
-		drawLinePO.setDrawLineGroupName(drawLineGroupPO.getName());
 
 		drawlineDao.saveOrUpdate(drawLinePO);
-
+		
 		return 0;
 	}
 
@@ -368,21 +369,21 @@ public class DrawLineServiceImpl implements DrawLineService {
 	@Transactional(rollbackFor = Exception.class)
 	public int updateDrawLineForStatus(DrawLineVO drawLineVO, String userId, Integer company) throws FLException {
 
-		DrawLinePO drawLinePO = drawlineDao.get(drawLineVO.getDlId());
+		DrawLinePO drawLinePO = drawlineDao.get((long)drawLineVO.getDlId());
 
 		if (drawLinePO == null) {
 			throw new FLException(120014, "不存在该放线信息");
 		}
 
-		String statusForPO = drawLinePO.getStatus();
+		short statusForPO = drawLinePO.getStatus();
 
-		String statusForVO = drawLineVO.getStatus();
-
-		if (("分配工人".equals(statusForVO) && "申请放线".equals(statusForPO)) || ("放线失败".equals(statusForVO) && "申请放线".equals(statusForPO)) || ("排队".equals(statusForVO) && "放线失败".equals(statusForPO)) || ("放线成功".equals(statusForVO) && "分配工人".equals(statusForPO)) || ("放线失败".equals(statusForVO) && "分配工人".equals(statusForPO))) {
+		short statusForVO = drawLineVO.getStatus();
+		
+		if ((statusForPO == DrawLinePO.DRAWLINE_STATUS_APPLICATION_SHORT) || (DrawLinePO.DRAWLINE_STATUS_FAIL_SHORT == statusForVO && DrawLinePO.DRAWLINE_STATUS_APPLICATION_SHORT == statusForPO) || (DrawLinePO.DRAWLINE_STATUS_QUEUE_SHORT == statusForVO && DrawLinePO.DRAWLINE_STATUS_FAIL_SHORT == statusForPO) || (DrawLinePO.DRAWLINE_STATUS_SUCCESS_SHORT == statusForVO) || (DrawLinePO.DRAWLINE_STATUS_FAIL_SHORT == statusForVO)) {
 
 			drawLinePO.setStatus(statusForVO);
-
-			if (statusForVO.equals("放线失败")) {
+			
+			if (statusForVO == DrawLinePO.DRAWLINE_STATUS_FAIL_SHORT) {
 				messageService.sendMessage(drawLinePO.getDecoration().getDesigner().getUserId(), userId, (String.format("订单:%s,放线失败!请重新申请放线.", drawLinePO.getDecoration().getOrderId())), MessagePO.MESSAGE_TYPE_SEND_CONSTRUCTION_STR, company);
 			}
 

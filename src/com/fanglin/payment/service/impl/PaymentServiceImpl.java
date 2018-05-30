@@ -235,10 +235,9 @@ public class PaymentServiceImpl implements PaymentService {
 		paymentVO.setPid(paymentPO.getPid());
 
 		if(PaymentPO.PAYMENT_PAYMENTTYPE_BALANCE_STR.equals(paymentType)){
-			List<String> status = Arrays.asList(new String[]{DecorationPO.STATUS_INIT_STR, DecorationPO.STATUS_QUOTATION_STR});
 
-			if(status.contains(decorationPO.getStatus())){
-				decorationPO.setStatus(DecorationPO.STATUS_DEPOSIT_STR);
+			if(decorationPO.getStatus() == DecorationPO.STATUS_INIT_INT){
+				decorationPO.setStatus(DecorationPO.STATUS_DEPOSIT_INT);
 				decorationPO.setDepositTime(DateUtil.getDateToTimestamp(new Date()));
 			}
 

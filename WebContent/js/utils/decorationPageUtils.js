@@ -79,8 +79,7 @@ $(function(){
             if(v == id) {
                 flag = true;
                 if(id = "houseType"){
-                    var statuses = ["初始", "已报价", "定金"];
-
+                    var statuses = ["初始","定金"];
                     if(statuses.indexOf(params.orederStatus)){
                         button.prop("disabled", false);
                     }else{

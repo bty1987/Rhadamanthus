@@ -1,5 +1,15 @@
 
 jQuery(function($) {
+	
+	var audit = {
+		decorationOrderStatus: {}
+	};
+	
+	com.post(api.ds.decoration, {}, function (res) {
+		$.each(res.decorationOrderStatus, function(i,v){
+			audit.decorationOrderStatus[v.key] = v.value;
+		})
+    }, null, false);
 
 
     var displayFunc = (function () {
@@ -35,7 +45,6 @@ jQuery(function($) {
             var $btnAddMinus = $('<a></a>').addClass('btn btn-minier btn-warning').html('信息轴');
             var $btnInfo = $('<a></a>').addClass('btn btn-minier btn-inverse').html('申请审核');
 
-
             var propertyArr = [
                 //显示的信息类型,显示信息的数据,显示信息的颜色
                 ["楼盘地址:", v.decoration.house.village.name + ' ' + v.decoration.house.houseNumber, "grey"],
@@ -46,7 +55,7 @@ jQuery(function($) {
                 ["量房时间:", v.decoration.measureTime , "green"],
                 ["签单时间:", v.decoration.contractTime, "green"],
                 ["类型:", v.decoration.type == 0 ? '半包' : (v.type == 1 ? '全包' : '半价'), "red"],
-                ["状态:", v.decoration.status, "red"],
+                ["状态:", audit.decorationOrderStatus[v.decoration.status], "red"],
                 ["审核状态:", v.auditer?'已审核':'未审核', "red"],
             ];
             if(v.auditer){

@@ -115,7 +115,6 @@ public class QuotationServiceImpl implements QuotationService {
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public int addQuotation(QuotationVO quotationVO, String userId) throws FLException{
-		List<String> status = Arrays.asList(new String[]{DecorationPO.STATUS_INIT_STR});
 		
 		String orderId = quotationVO.getOrderId();
 		
@@ -150,14 +149,8 @@ public class QuotationServiceImpl implements QuotationService {
 			quotationPO.setDefaults(QuotationPO.DEFAULTS_NONDEFAULT_SHORT);
 		}
 		
-		if(status.contains(decorationPO.getStatus())){
-			decorationPO.setStatus(DecorationPO.STATUS_QUOTATION_STR);
-			decorationDao.saveOrUpdate(decorationPO);
-		}
-		
 		quotationDao.save(quotationPO);
 		
-	
 		QuotationFunctionAreaPO autogeneration = new QuotationFunctionAreaPO(quotationPO, "生成项目", 9999, QuotationFunctionAreaPO.TYPE_MANAGEMENT_INT);
 		
 		quotationFunctionAreaDao.save(autogeneration);
@@ -276,8 +269,6 @@ public class QuotationServiceImpl implements QuotationService {
 		
 		long replicaQId = quotationVO.getQid();
 		
-		List<String> status = Arrays.asList(new String[]{DecorationPO.STATUS_INIT_STR});
-		
 		QuotationPO quotationPO = new QuotationPO();
 		
 		String orderId = quotationVO.getOrderId();
@@ -333,11 +324,6 @@ public class QuotationServiceImpl implements QuotationService {
 		quotationDao.save(quotationPO);
 		
 		copyQuotation(replicaQId, quotationPO.getQid());
-		
-		if(status.contains(decorationPO.getStatus())){
-			decorationPO.setStatus("已报价");
-			decorationDao.saveOrUpdate(decorationPO);
-		}
 		
 		return 0;
 	}
@@ -533,7 +519,7 @@ public class QuotationServiceImpl implements QuotationService {
 		
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 		
-		List<String> status = Arrays.asList(new String[]{DecorationPO.STATUS_INIT_STR, DecorationPO.STATUS_QUOTATION_STR, DecorationPO.STATUS_DEPOSIT_STR, DecorationPO.STATUS_RESIGNED_STR});
+		List<Short> status = Arrays.asList(new Short[]{DecorationPO.STATUS_INIT_INT, DecorationPO.STATUS_DEPOSIT_INT, DecorationPO.STATUS_RESIGNED_INT});
 		
 		if(decorationPO == null){
 			throw new FLException(140013, "订单不存在");

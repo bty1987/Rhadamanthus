@@ -20,7 +20,7 @@ import com.fanglin.utils.Paging;
 
 public interface DecorationDao extends Dao<DecorationPO> {
 	
-	public List<DecorationPO> pageDecoration(Paging paging, List<Filter> filters, List<Integer> designDepartmentIds, List<String> statuses, int company);
+	public List<DecorationPO> pageDecoration(Paging paging, List<Filter> filters, List<Integer> designDepartmentIds, List<Short> statuses, int company);
 	
 	public List<DecorationPO> pageDecorationForGeneral(Paging paging, List<Filter> filters, int company);
 	
@@ -34,9 +34,9 @@ public interface DecorationDao extends Dao<DecorationPO> {
 	
 	public List<DecorationPO> pageDecorationByOrderIds(Paging paging, List<Filter> filters, List<String> orderIds);
 	
-	public List<DecorationPO> pageDecorationForDesignerManager(Paging paging, List<Filter> filters, List<Integer> designDepartmentIds, List<String> statuses, int company);
+	public List<DecorationPO> pageDecorationForDesignerManager(Paging paging, List<Filter> filters, List<Integer> designDepartmentIds, List<Short> statuses, int company);
 	
-	public List<DecorationPO> pageDecorationForSalesmanManager(Paging paging, List<Filter> filters, List<Integer> salesmanDepartmentIds, List<String> statuses, int company);
+	public List<DecorationPO> pageDecorationForSalesmanManager(Paging paging, List<Filter> filters, List<Integer> salesmanDepartmentIds, List<Short> statuses, int company);
 	
 	public List<DecorationPO> queryDecoration(List<Filter> filters);
 	

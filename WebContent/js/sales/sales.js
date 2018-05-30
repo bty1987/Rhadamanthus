@@ -12,6 +12,9 @@ $(function () {
     if(params['urlLoadParams'].type == "advance"){
         url = api.inventory.pageSalesForAdvance;
         postData = "salesForAdvancePostData";
+    }else if(params['urlLoadParams'].type == "dompany"){
+        url = api.inventory.pageSalesForDompany;
+        postData = "salesForDompanyPostData";
     }
 
     var type = {
@@ -175,18 +178,21 @@ $(function () {
                     $liLine.appendTo($ul);
                     $liLine.append($h3).append($ulProperty);
                     $small.appendTo($h3);
-                    if (v.fullpayStatus == -1 && v.status != 4) {
-                        $btnDiv.append($btnAdd);
-                    }
+                    if(params['urlLoadParams'].type == "dompany"){
+                        $btnDiv.append($btnSub).append($btnCollect).append($btnRefund).appendTo($h3);
+                    }else{
+                        if (v.fullpayStatus == -1 && v.status != 4) {
+                            $btnDiv.append($btnAdd);
+                        }
 
-                    if (v.status != 4) {
-                        $btnDiv.append($btnSub).append($btnMoney)
-                            .append($btnCollect).append($btnRefund).append($btnPrint).appendTo($h3);
-                    } else {
-                        $btnDiv.append($btnSub)
-                            .append($btnCollect).append($btnRefund).appendTo($h3);
+                        if (v.status != 4) {
+                            $btnDiv.append($btnSub).append($btnMoney)
+                                .append($btnCollect).append($btnRefund).append($btnPrint).appendTo($h3);
+                        } else {
+                            $btnDiv.append($btnSub)
+                                .append($btnCollect).append($btnRefund).appendTo($h3);
+                        }
                     }
-
 
                     $btnAdd.click(function () {
                         params["sid"] = v.sid;
@@ -199,6 +205,7 @@ $(function () {
                         params["fullpayStatus"] = v.fullpayStatus;
                         params["status"] = v.status;
                         params["depositpayStatus"] = v.depositpayStatus;
+                        params["dompany"] = params['urlLoadParams'].type
 
                         com.switchPage(api.index.salesItemDetialIndex.url);
                     });
@@ -519,11 +526,13 @@ $(function () {
                 com.post(api.payment.cancelSalesPayment, {"salesPayment.spid": fuspid}, function () {
 
                     hideButtons([querySales.fullCancelBtn]);
+                    removeReadonly([querySales.depositPayment]);
                     hideDiv([querySales.couponInfoDiv, querySales.malingInfoDiv]);
                     showButtons([querySales.fullPaymentBtn, querySales.couponBtn, querySales.malingBtn]);
                     querySales.realFullPayment.val(0);
                     controlSpan(querySales.fullPaymentInfo, "clear", "");
                     calcFullpayment(sales.total);
+
 
                     if (sales.depositpayStatus == -1) {
                         showButtons([querySales.depositPaymentBtn]);
@@ -899,7 +908,6 @@ $(function () {
         var malingVal = parseFloat(checkVal(querySales.maling.val()));
 
         var fullpaymentVal = utils.accSub(utils.accSub(utils.accSub(total,depositPaymentVal),couponVal),malingVal);
-        console.log(fullpaymentVal);
         querySales.fullPayment.val(fullpaymentVal);
 
         $('#fullPaymentTotal').val(fullpaymentVal);

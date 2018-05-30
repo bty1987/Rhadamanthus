@@ -10,6 +10,8 @@ import org.springframework.stereotype.Controller;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.inventory.service.AccessoriesManifestService;
 import com.fanglin.inventory.vo.AccessoriesManifestVO;
+import com.fanglin.inventory.vo.AccessoriesVO;
+import com.fanglin.inventory.vo.ManifestVO;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -23,10 +25,14 @@ public class AccessoriesManifestAction extends BaseListAction{
 	
 	private AccessoriesManifestVO accessoriesManifest;
 	
-	@Action(value = "queryAccessoriesManifestByAid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryAccessoriesManifestByAid(){
+	private AccessoriesVO accessories;
+	
+	private ManifestVO manifest;
+	
+	@Action(value = "queryManifestByAid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryManifestByAid(){
 		
-		accessoriesManifest = accessoriesManifestService.queryAccessoriesManifestByAid(accessoriesManifest);
+		manifest = accessoriesManifestService.queryManifestByAid(accessories);
 		
 		return SUCCESS;
 	}
@@ -37,6 +43,22 @@ public class AccessoriesManifestAction extends BaseListAction{
 
 	public void setAccessoriesManifest(AccessoriesManifestVO accessoriesManifest) {
 		this.accessoriesManifest = accessoriesManifest;
+	}
+
+	public AccessoriesVO getAccessories() {
+		return accessories;
+	}
+
+	public void setAccessories(AccessoriesVO accessories) {
+		this.accessories = accessories;
+	}
+
+	public ManifestVO getManifest() {
+		return manifest;
+	}
+
+	public void setManifest(ManifestVO manifest) {
+		this.manifest = manifest;
 	}
 	
 }

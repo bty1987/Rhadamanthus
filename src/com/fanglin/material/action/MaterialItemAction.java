@@ -94,14 +94,6 @@ public class MaterialItemAction extends BaseListAction{
 		return SUCCESS;
 	}
 	
-	@Action(value="updateMaterialItemForModel", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String updateMaterialItemForModel() throws FLException{
-		
-		materialItemService.updateMaterialItemForModel(material, materialItem);
-		
-		return SUCCESS;
-	}
-	
 	@Action(value="updateMaterialItemForPackage", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String updateMaterialItemForPackage() throws FLException{
 		
@@ -114,14 +106,6 @@ public class MaterialItemAction extends BaseListAction{
 	public String updateMaterialItemForPrePT(){
 		
 		materialItemService.updateMaterialItemForPrePT(miids, materialItem);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value="updateMaterialItemForPostPT", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String updateMaterialItemForPostPT(){
-		
-		materialItemService.updateMaterialItemForPostPT(miids, materialItem);
 		
 		return SUCCESS;
 	}

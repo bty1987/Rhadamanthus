@@ -277,9 +277,6 @@ $.extend(api, {
         queryPurchaseByPid: {
             url: "queryPurchaseByPid.do",
         },
-        queryPurchaseItemBySiids: {
-            url: "queryPurchaseItemBySiids.do",
-        },
         updatePurchase: {
             url: "updatePurchase.do",
         },
@@ -341,7 +338,7 @@ $.extend(api, {
         addAccessories: {
             url: "addAccessories.do",
         },
-		refundAccessories: {
+        refundAccessories: {
             url: "refundAccessories.do",
         },
         updateAccessoriesForStatus: {
@@ -356,8 +353,8 @@ $.extend(api, {
         deleteAccessoriesItem: {
             url: "deleteAccessoriesItem.do",
         },
-        queryAccessoriesManifestByAid:{
-            url:"queryAccessoriesManifestByAid.do"
+        queryManifestByAid:{
+            url:"queryManifestByAid.do"
         },
 
         addSales: {
@@ -374,6 +371,9 @@ $.extend(api, {
         },
         pageSalesForDompany:{
             url:"pageSalesForDompany.do",
+        },
+		pageSalesForBalanceByDompany:{
+            url:"pageSalesForBalanceByDompany.do",
         },
         querySalesBySid: {
             url: "querySalesBySid.do",
@@ -440,7 +440,7 @@ $.extend(api, {
         querySalesBalanceItemBySbid:{
             url:"querySalesBalanceItemBySbid.do",
         },
-        queryManifestForPUByPids : {
+		queryManifestForPUByPids : {
             url:"queryManifestForPUByPids.do"
         },
         queryManifestForXGBySid : {
@@ -449,6 +449,7 @@ $.extend(api, {
         queryPurchaseBySid:{
             url:"queryPurchaseBySid.do"
         }
+
     }
 });
 

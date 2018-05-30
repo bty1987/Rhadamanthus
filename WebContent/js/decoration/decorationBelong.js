@@ -1,6 +1,15 @@
-var decorationBelong = {};
 
 jQuery(function($) {
+	
+	var decorationBelong = {
+		decorationOrderStatus: {}
+	};
+	
+	com.post(api.ds.decoration, {}, function (res) {
+		$.each(res.decorationOrderStatus, function(i,v){
+			decorationBelong.decorationOrderStatus[v.key] = v.value;
+		})
+    }, null, false);
 	
 	var displayFunc  = (function(){
 
@@ -40,9 +49,9 @@ jQuery(function($) {
                 ["合同报价:", v.orderTotalPrice, "blue"],
                 ["量房时间:", v.measureTime, "green"],
                 ["类型:", v.type == 0 ? '半包' : (v.type == 1 ? '全包' : '半价'), "red"],
-                ["状态:", v.status, "red"]
+                ["状态:", decorationBelong.decorationOrderStatus[v.status], "red"]
             ];
-
+            
             $.each(propertyArr, function (index,value) {
                 var $liProperty = $('<li></li>');
                 $('<strong></strong>').html(value[0]).appendTo($liProperty);
@@ -88,22 +97,22 @@ jQuery(function($) {
 		displayFunc.init('resultList', data);
 	}, "pagenation", "decorationBelongPostData");
 	
+	function viewdecorationBelongDetail(decorationOrderId){
+		params.orderId = decorationOrderId;
+		com.switchPage(api.index.decorationBelongInfoIndex.url);
+	}
+
+	function changedecorationBelongDesigner(decorationOrderId){
+		params.orderId = decorationOrderId;
+		params.orderBelongType = 0;
+		com.switchPage(api.index.decorationBelongDetailIndex.url);
+	}
+
+	function changedecorationBelongBussiness(decorationOrderId){
+		params.orderId = decorationOrderId;
+		params.orderBelongType = 1;
+		com.switchPage(api.index.decorationBelongDetailIndex.url);
+	}
+	
 });
-
-function viewdecorationBelongDetail(decorationOrderId){
-	params.orderId = decorationOrderId;
-	com.switchPage(api.index.decorationBelongInfoIndex.url);
-}
-
-function changedecorationBelongDesigner(decorationOrderId){
-	params.orderId = decorationOrderId;
-	params.orderBelongType = 0;
-	com.switchPage(api.index.decorationBelongDetailIndex.url);
-}
-
-function changedecorationBelongBussiness(decorationOrderId){
-	params.orderId = decorationOrderId;
-	params.orderBelongType = 1;
-	com.switchPage(api.index.decorationBelongDetailIndex.url);
-}
 

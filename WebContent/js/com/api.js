@@ -55,6 +55,7 @@ var Api = function(){
             fillApi(path + 'building.js');
             fillApi(path + 'communion.js');
             fillApi(path + 'customer.js');
+			fillApi(path + 'store.js');
             return dtd.promise();
         }
     }

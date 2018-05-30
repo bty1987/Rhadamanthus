@@ -5,7 +5,9 @@ $.extend(api.index, {
     customerIndex: {url: "/views/data/customer.html"},
     villageIndex: {url: "/views/data/village.html"},
 	PaymentScale: {url: "/views/data/paymentScale.html"},
-    houseIndex:{url: "/views/data/house.html"}
+    houseIndex:{url: "/views/data/house.html"},
+    checkUser: {url: "/views/data/checkUser.html"},
+    userLabel: {url: "/views/data/userLabel.html"},
 });
 
 $.extend(api, {data: {
@@ -48,7 +50,7 @@ $.extend(api, {data: {
     addCustomerPhone: {url:"addCustomerPhone.do", server: "communion"},
     updateCustomerPhoneForStatus:{url:"updateCustomerPhoneForStatus.do", server: "communion"},
     updateCustomerNameAPhone:{url:"updateCustomerNameAPhone.do", server: "communion"},
-    updateCustomerPhoneForDstatus:{url:"updateCustomerPhoneForDstatus.do", server: "communion"},
+    updateCustomerPhoneForDefault:{url:"updateCustomerPhoneForDefault.do", server: "communion"},
 	
     pageVillage: {url: "pageVillage.do", demo: true},
     queryVillage: {url: "queryVillage.do"},
@@ -97,6 +99,20 @@ $.extend(api, {data: {
     queryChainPage: {url:"queryChainPage.do"},
     queryChainPageForSelf: {url:"queryChainPageForSelf.do"},
     addChainPage: {url:"addChainPage.do"},
-    deleteChainPage: {url:"deleteChainPage.do"}
+    deleteChainPage: {url:"deleteChainPage.do"},
+
+    querylabel :{url : "querylabel.do"},
+    updatelabelling :{url : "updatelabelling.do"},
+    querylabelByuid :{url : "querylabelByuid.do"},
+    pageLabel :{url : "pageLabel.do"},
+    updataForStatus :{url : "updataForStatus.do"},
+    addLabel :{url : "addLabel.do"},
+    queryUserlabel :{url : "queryUserlabel.do"},
+    sevalabelling : {url : "sevalabelling.do"},
+    deletelabelling : {url : "deletelabelling.do"},
+    querylabelBytype : {url : "querylabelBytype.do"},
+    queryByranking : {url : "queryByranking.do"},
+    queryUserLbaelBylids : {url : "queryUserLbaelBylids.do"},
+    queryUserLabelByUidValue : {url : "queryUserLabelByUidValue.do"}
 
 }});

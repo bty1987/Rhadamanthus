@@ -1,9 +1,11 @@
 package com.fanglin.inventory.service;
 
-import com.fanglin.inventory.vo.AccessoriesManifestVO;
+
+import com.fanglin.inventory.vo.AccessoriesVO;
+import com.fanglin.inventory.vo.ManifestVO;
 
 public interface AccessoriesManifestService {
 	
-	public AccessoriesManifestVO queryAccessoriesManifestByAid(AccessoriesManifestVO accessoriesManifestVO);
+	public ManifestVO queryManifestByAid(AccessoriesVO accessoriesVO);
 
 }

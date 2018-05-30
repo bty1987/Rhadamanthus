@@ -125,7 +125,7 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 				if(status == ConstructionSchedulePO.STATUS_TYPE_FAIL_INT){
 					List<DrawLinePO> drawLinePOs  = drawLineDao.queryDrawLineByOrderId(constructionSchedulePO.getOrderId());
 					if(drawLinePOs != null && drawLinePOs .size() > 0){
-						drawLinePOs.get(0).setStatus("放线失败");
+						drawLinePOs.get(0).setStatus(DrawLinePO.DRAWLINE_STATUS_FAIL_SHORT);
 						drawLineDao.update(drawLinePOs.get(0));
 					}
 				}
@@ -139,10 +139,10 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 					DrawLinePO drawLinePO = drawLinePOs.get(0);
 					
 					if(constructionScheduleVO.getStatus() == ConstructionSchedulePO.STATUS_TYPE_SUCCESS_INT){
-						drawLinePO.setStatus("放线成功");
+						drawLinePO.setStatus(DrawLinePO.DRAWLINE_STATUS_SUCCESS_SHORT);
 						
 					}else if(constructionScheduleVO.getStatus() == ConstructionSchedulePO.STATUS_TYPE_FAIL_INT){
-						drawLinePO.setStatus("放线失败");
+						drawLinePO.setStatus(DrawLinePO.DRAWLINE_STATUS_FAIL_SHORT);
 					}
 					
 					drawLineDao.update(drawLinePO);

@@ -26,7 +26,7 @@ public class DecorationExportVO implements Serializable, Cloneable{
 	
 	private String merge;
 	
-	private String giveup;
+	private Short giveup;
 	
 	private String activity;
 	
@@ -135,11 +135,11 @@ public class DecorationExportVO implements Serializable, Cloneable{
 		this.merge = merge;
 	}
 
-	public String getGiveup() {
+	public Short getGiveup() {
 		return giveup;
 	}
 
-	public void setGiveup(String giveup) {
+	public void setGiveup(Short giveup) {
 		this.giveup = giveup;
 	}
 

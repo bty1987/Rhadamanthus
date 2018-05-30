@@ -51,6 +51,12 @@ jQuery(function ($) {
 
     drawLineDeployment.drawLineApplyModal = $("#drawLineApplyModal");
 
+    var drawLineStatus;
+
+    com.post(api.ds.construction,{},function(res){
+        drawLineStatus = res.drawLineStatus;
+    },null,false);
+
     com.post(api.data.queryDrawlineGroup, {}, function (res) {
         if (res.drawLineGroups == null || res.drawLineGroups == "") {
             drawLineDeployment.up = true;
@@ -106,10 +112,11 @@ jQuery(function ($) {
         var options = {};
 
         if (qualityName == "supervisor") {
-            options["duty"] = qualityInfo[qualityName];
+            options["departmentType.name"] = "工程部";
             options["user.status"] = 0;
-            queryUserNameUrl = api.personel.queryUserForNameByDuty;
+            queryUserNameUrl = api.personel.queryUserByDepartmentType;
         }
+
         com.initChosen(qualityName + 'Quality', queryUserNameUrl, "pinyinName", options, "autoFillKeyValue", "key", "value");
     }
 
@@ -124,7 +131,6 @@ jQuery(function ($) {
         };
 
         var creatLine = function (v) {
-
             var drawLineGroup = v.drawLineGroupName;
             var nub = 0;
             var boo = true;
@@ -169,9 +175,18 @@ jQuery(function ($) {
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
-            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-blue').html('编辑');
-            var $btnDeplory = $('<a></a>').addClass('btn btn-minier btn-yellow').html('人员部署');
-            var $btnReset = $('<a></a>').addClass('btn btn-minier btn-yellow').html('重置');
+            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
+            var $btnDeplory = $('<a></a>').addClass('btn btn-minier btn-success').html('人员部署');
+            var $btnReset = $('<a></a>').addClass('btn btn-minier btn-warning').html('重置');
+            var $DrawLine = $('<a></a>').addClass('btn btn-minier btn-inverse').html('放线');
+
+            statusName = "无";
+
+            $.each(drawLineStatus,function(i,statusNum){
+                if(statusNum.key== v.status){
+                    statusName=statusNum.value
+                }
+            });
 
             var propertyArr = [
                 ["楼盘地址:", v.village + ' ' + v.houseNumber, "grey"],
@@ -184,8 +199,8 @@ jQuery(function ($) {
                 ["开始时间:", v.startTime, "green"],
                 ["结束时间:", v.endTime, "green"],
                 ["报价版本:", v.versionName, "green"],
-                ["状态:", v.status, "red"],
-                ["描述:", v.applayDes, "grey"],
+                ["状态:", statusName, "red"],
+                ["描述:", v.content, "grey"],
             ];
 
             $.each(propertyArr, function (index, value) {
@@ -195,8 +210,8 @@ jQuery(function ($) {
                 $liProperty.appendTo($ulProperty);
             });
 
-            if (v.status == '申请放线') {
-                $divBtnWrap.append($btnEdit).append($btnDeplory).append($btnReset).appendTo($h3);
+            if (v.status == 1) {
+                $divBtnWrap.append($btnEdit).append($btnDeplory).append($btnReset).append($DrawLine).appendTo($h3);
             }
 
             $liLine.append($h3).append($ulProperty);
@@ -216,6 +231,11 @@ jQuery(function ($) {
                 reset(v.dlId);
             });
 
+            $DrawLine.click(function () {
+
+                DrawLine(v);
+            });
+
         };
 
         return {
@@ -230,7 +250,7 @@ jQuery(function ($) {
     })();
 
     var searcher = new Searcher();
-    searcher.init(["c_drawLineStatus", "c_actualDate"], "condList", api.drawline.queryDrawLine, function (data) {
+    searcher.init(["c_orderId", "c_drawLineStatus", "c_actualDate"], "condList", api.drawline.queryDrawLine, function (data) {
         $("#resultList").html("");
         displayFunc.init('resultList', data);
 
@@ -263,10 +283,17 @@ jQuery(function ($) {
             var queryUserNameUrl = "";
 
             for (var qualityName in qualityInfo) {
+
                 if (res.construction.supervisor == null) {
+
                     com.updateChosen('supervisorQuality', '', '');
                 } else {
-                    com.updateChosen('supervisorQuality', res.construction.supervisor.userId, res.construction.supervisor.userName);
+
+                    userName = res.construction.supervisor.userName;
+                    if (userName == null) {
+                        userName = "无"
+                    }
+                    com.updateChosen('supervisorQuality', res.construction.supervisor.userId, userName);
                 }
             }
         });
@@ -338,6 +365,16 @@ jQuery(function ($) {
         });
 
         drawLineDeployment.drawLineDeploymentModal.modal("hide");
+    }
+
+    function DrawLine(v) {
+
+        var option = {"drawLine.dlId": v.dlId}
+
+        com.post(api.drawline.setDrawLineForSuccess, option, function (res) {
+            com.showAlert(com.info, "放线成功");
+            searcher.doSearch();
+        });
     }
 
     drawLineDeployment.drawLineDeploymentModal.on('hide.bs.modal', function () {

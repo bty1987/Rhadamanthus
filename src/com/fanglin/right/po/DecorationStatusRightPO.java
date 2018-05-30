@@ -14,7 +14,7 @@ public class DecorationStatusRightPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 6652444709974531640L;
 	
-	public static final String STATUS_ALL_ENABLE_STR = "全部";
+	public static final Short STATUS_ALL_ENABLE_INT = -1;//全部
 	
 	public static final String COLUMN_UID_STR = "uid";
 	
@@ -24,7 +24,7 @@ public class DecorationStatusRightPO implements java.io.Serializable {
 	
 	private int uid;
 	
-	private String status;
+	private short status;
 	
 	private int company;
 	
@@ -32,7 +32,7 @@ public class DecorationStatusRightPO implements java.io.Serializable {
 		super();
 	}
 
-	public DecorationStatusRightPO(int uid, String status, int company) {
+	public DecorationStatusRightPO(int uid, short status, int company) {
 		super();
 		this.uid = uid;
 		this.status = status;
@@ -60,11 +60,11 @@ public class DecorationStatusRightPO implements java.io.Serializable {
 	}
 
 	@Column(name = "status")
-	public String getStatus() {
+	public short getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(short status) {
 		this.status = status;
 	}
 

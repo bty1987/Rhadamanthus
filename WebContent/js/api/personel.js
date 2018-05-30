@@ -14,18 +14,13 @@ $.extend(api, {personel: {
     queryUserForSelfByUserId: {url: "queryUserForSelfByUserId.do", demo: true ,server:"communion"},
     queryUserByOldUserId: {url: "queryUserByOldUserId.do"},
     queryUserForNameByPinyinName: {url: "queryUserForNameByPinyinName.do"},
-    queryUserForNameByDuty: {url: "queryUserForNameByDuty.do", demo: true},
-    queryUserForNameByDutys: {url: "queryUserForNameByDutys.do", demo: true},
-    queryUserForNameByDutyADept: {url: "queryUserForNameByDutyADept.do"},
-    queryUserForNameByDutysADept: {url: "queryUserForNameByDutysADept.do"},
-    queryUserForNameByDutysAO: {url: "queryUserForNameByDutysAO.do"},
-    queryUserForNameByDutysAODept: {url: "queryUserForNameByDutysAODept.do"},
-    queryUserByDtid: {url: "queryUserByDtid.do"},
-    
+    queryUserByDepartmentType: {url: "queryUserByDepartmentType.do"},
+    queryUserByUids:{url:"queryUserByUids.do" },
     addUser: {url: "addUser.do", server: "communion"},
     updateUserForBaseInfo: {url: "updateUserForBaseInfo.do", server: "communion"},
     updateUser: {url: "updateUser.do", server: "communion"},
-  
+    updateUserForProfiles: {url: "updateUserForProfiles.do" ,server: "communion"},
+    
     updateUserForAdvance: {url: "updateUserForAdvance.do", server: "communion"},
     resetPassword: {url: "resetPassword.do", server: "communion"},
     changePassword: {url: "changePassword.do", server: "communion"},

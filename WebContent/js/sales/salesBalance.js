@@ -102,7 +102,7 @@ $(function () {
                             type = "预结算退货";
                             break;
                         case 2:
-                            type = " 结算退货";
+                            type = "结算退货";
                             break;
 
                     }
@@ -339,6 +339,15 @@ $(function () {
 
     }, 'pagenation', postData , null, false, null, function () {
 
+        var $addaExportSales = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'importSalesBalance').css('margin-top','-2px');
+        var $addaExporti = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($addaExportSales);
+        var $addaExportspan = $('<span></span>').text('导出').appendTo($addaExportSales);
+
+        $addaExportSales.click(function(){
+            pageSalesBalanceExport();
+        });
+
+        return [$addaExportSales];
 
     }, 'resultList')
 
@@ -557,55 +566,57 @@ $(function () {
 
     })();
 
-    //退货显示
-    var salesRefundsList = function(tableId,listData) {
-        var $tableWrap = $('#'+tableId);
-        var $ul = $('<ul></ul>').addClass('item-list ui-sortable  fl-table-list');
+    function pageSalesBalanceExport(){
 
-        if (listData && listData.length) {
-            $.each(listData, function (i, v) {
+        if ($('span[name="totalRecords"]').text() == 0) {
+            com.showAlert(com.warning, "请通过条件进行查询");
+            return false;
+        }
 
-                var $liLine = $('<li></li>').addClass('item-orange clearfix');
-                var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-                var $h3 = $('<h3></h3>').addClass('oid')
-                var $small = $('<small></small>').addClass('blue').html(v.salesItem.goods.name );
-                var $btnDiv = $('<div></div>').addClass('action-buttons pull-right');
+        if ($('span[name="totalRecords"]').text() > 1000) {
+            com.showAlert(com.warning, "查询结果大于阀值 , 不能完成导出动作");
+            return false;
+        }
 
-                var propertyArr = [
-                    ["商品品类:", v.salesItem.goods.category, "grey"],
-                    ["商品颜色:", v.salesItem.color.name, "grey"],
-                    ["商品规格:", v.salesItem.format.info, "grey"],
-                    ["售价:", v.salesItem.selling, "grey"],
-                    ["折扣价:", v.salesItem.disPrice, "grey"],
-                    ["折让价:", v.salesItem.price, "grey"],
-                    ["数量:", v.num, "grey"],
-                    ["总价:", v.total, "grey"],
-                    ["原结算方式:", v.salesItem.rawCtype==0?"底价":"点位", "grey"],
-                    ["原结算值:", v.salesItem.rawCvalue, "grey"],
-                    ["结算方式:", v.salesItem.ctype==0?"底价":"点位", "grey"],
-                    ["结算值:", v.salesItem.cvalue, "grey"],
-                    ["备注:", v.salesItem.comment, "grey"],
-                ];
+        com.post(url, $.extend({}, params['urlLoadParams'].type == "dompany"?params.salesBalanceForDompanyPostData:params.salesBalancePostData, {"paging.noPage": 1}), function (res) {
+            $.exceler({
+                column: [
+                    ['订单编号', 'sales.orderId'],
+                    ['楼盘地址',['sales.house.village.name','sales.house.houseNumber']],
+                    ['品牌', 'sales.brand'],
+                    ['渠道', 'sales.salesman.currentName'],
+                    ['渠道ID', 'sales.salesman.userId'],
+                    ['归属大区', 'sales.region.deptName'],
+                    ['归属部门', 'sales.dept.deptName'],
+                    ['总价', 'total'],
+                    ["券值:", 'sales.coupon'],
+                    ["券信息:", 'sales.couponInfo'],
+                    ["驻店:", 'sales.instorer.currentName'],
+                    ["预结算值:", 'balance'],
+                    ["预结算时间:", 'createTime'],
+                    ["预结算人:", 'creater.currentName'],
+                    ["厂商结算:", 'vbalance'],
+                    ["厂商结算时间:", 'venderTime'],
+                    ["结算值:", 'pbalance'],
+                    ["结算时间:", 'postTime'],
+                    ["结算人:", 'poster.currentName'],
+                    ["抹零:", 'sales.maling'],
+                    ["厂商抹零:", 'sales.venderMaling'],
+                    ["状态:", 'status'],
+                    ["类型:", 'type']
+                ],
+                list: res.paging.data,
 
-                $.each(propertyArr, function (index, value) {
-                    var $liProperty = $('<li></li>');
-                    $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                    $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                    $liProperty.appendTo($ulProperty);
-                });
-
-                $liLine.appendTo($ul);
-                $liLine.append($h3).append($ulProperty);
-                $small.appendTo($h3);
-                $btnDiv.appendTo($h3);
-
-
-
+            },function(v){
+                v.venderTime = v.venderTime == null? '':v.venderTime;
+                v.postTime = v.postTime == null? '':v.postTime;
+                v.poster.currentName = v.poster.currentName==null? '':v.poster.currentName;
+                v.status = v.status == 0 ? '预结算' : v.status == 1 ? "厂商结算" : "结算" ;
+                v.type = v.type == 0 ? "购货" : v.type == 1 ? "预结算退货" : "结算退货"
             });
 
-            $ul.appendTo($tableWrap);
-        }
-    };
+        });
+    }
 
     $('#resultListItem').css({'width': '96%', 'margin': '0 auto'});
 

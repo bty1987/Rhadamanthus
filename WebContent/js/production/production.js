@@ -326,7 +326,7 @@ $(function(){
             type: 1,
             title:"添加" ,
             content:$('#layerAdd'),
-            area: ( $(window).width()*0.6 < 620 ?  $(window).height()*0.6 : 620 )+"px",
+            area: ( $(window).width()*0.6 < 620 ?  $(window).height()*0.6 : 620 ) + "px",
             maxmin: false,
             zIndex:9000,
             btn: ['确定', '取消'],
@@ -334,7 +334,7 @@ $(function(){
                 callback(index,layero);
             },
             btn2: function(index, layero){
-                //按钮【按钮二】的回调
+                //按钮[按钮二]的回调
             },
             cancel: function(){
                 //右上角关闭回调
@@ -344,9 +344,9 @@ $(function(){
 
     //设计师人员查询
     $layerAdd.find('input[name="designer"]').typeahead({
-        url: api.personel.queryUserForNameByDuty,//获取下拉列表的接口
+        url: api.personel.queryUserByDepartmentType,//获取下拉列表的接口
         list: [],
-        postData: {"duty" : "设计师","user.status":"0"},//获取下拉列表的参数
+        postData: {"departmentType.name": "设计部", "user.status":"0"},//获取下拉列表的参数
         source: function (query, process) {
             var options = $.extend({pinyinName: query}, this.options.postData);
             com.post(this.options.url, options, $.proxy(this.options.callback, this));

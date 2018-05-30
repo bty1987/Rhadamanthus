@@ -11,6 +11,7 @@ package com.fanglin.personel.service;
 
 import java.util.List;
 
+import com.fanglin.communion.vo.DepartmentTypeVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.personel.vo.UserBaseVO;
@@ -33,14 +34,12 @@ public interface UserService {
 	public UserVO queryUserByOldUserId(UserVO userVO) throws FLException;
 	
 	public List<UserBaseVO> queryUserForNameByPinyinName(String pinyinName,UserVO userVO,Integer company) throws FLException ;
-	
-	public List<UserBaseVO> queryUserForNameByDuty(String pinyinName,UserVO userVO, String duty) throws FLException;
-	
-	public List<UserBaseVO> queryUserForNameByDutysAO(String pinyinName, List<String> dutysA, List<String> dutysO)throws FLException ;
-		
+			
 	public UserVO validateUser(String loginId, String password) throws FLException;
 	
-	public List<UserBaseVO> queryUserByDtid(String pinyinName,UserVO userVO,String departmentTypeName,Integer company) throws FLException;
+	public List<UserBaseVO> queryUserByDepartmentType(String pinyinName,UserVO userVO,DepartmentTypeVO departmentType) throws FLException;
+	
+	public List<UserBaseVO> queryUserByUids(List<Integer> uids) throws FLException;
 	
 	public int resetPassword(UserVO userVO,Integer company) throws FLException;
 	
@@ -56,6 +55,7 @@ public interface UserService {
 	
 	public void checkUserForPassword(String userId, String password, String rePassword) throws FLException;
 	
+	public void updateUserForProfiles(UserInfoVO userInfoVO) throws FLException;
 	
 	
 }

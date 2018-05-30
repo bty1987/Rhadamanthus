@@ -1,4 +1,3 @@
-
 $(function(){
 
     console.log("server config");
@@ -20,9 +19,7 @@ $(function(){
         config.server = 'http://192.168.5.21/';
         config.media = 'http://192.168.5.21/Demeter/';
         config.dmedia = 'http://static.dingtalk.com/media/';
+        config.library = 'http://192.168.5.22:5000/';
     }
 
 });
-
-
-

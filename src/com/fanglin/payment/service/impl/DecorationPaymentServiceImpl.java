@@ -248,12 +248,12 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		String orderId = decorationPaymentVO.getDecoration().getOrderId();
 		float sumMoney = decorationPaymentVO.getReferMoney();
 
-		List<String> status = Arrays.asList(new String[]{DecorationPO.STATUS_INIT_STR, DecorationPO.STATUS_QUOTATION_STR, DecorationPO.STATUS_DEPOSIT_STR, DecorationPO.STATUS_RESIGNED_STR});
+		List<Short> status = Arrays.asList(new Short[]{DecorationPO.STATUS_INIT_INT, DecorationPO.STATUS_DEPOSIT_INT, DecorationPO.STATUS_RESIGNED_INT});
 		String[] paymentStatus = new String[]{DecorationPaymentPO.PAYMENTSTATUS_PAY_STR,DecorationPaymentPO.PAYMENTSTATUS_CONFIRM_STR,DecorationPaymentPO.PAYMENTSTATUS_APPLY_STR};
 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 
-		String decorationStatus = decorationPO.getStatus();
+		short decorationStatus = decorationPO.getStatus();
 
 		if(status.contains(decorationStatus)){
 
@@ -477,9 +477,8 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 
 		String paymentType = decorationPaymentPO.getPaymentType();
 
-		List<String> status = Arrays.asList(new String[]{DecorationPO.STATUS_INIT_STR, DecorationPO.STATUS_QUOTATION_STR});
-		if(status.contains(decorationPO.getStatus())){
-			decorationPO.setStatus(DecorationPO.STATUS_DEPOSIT_STR);
+		if(decorationPO.getStatus() == DecorationPO.STATUS_INIT_INT){
+			decorationPO.setStatus(DecorationPO.STATUS_DEPOSIT_INT);
 			decorationPO.setDepositTime(DateUtil.getDateToTimestamp(new Date()));
 		}
 		

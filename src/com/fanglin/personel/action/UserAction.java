@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import com.fanglin.common.vo.KeyValueVO;
+import com.fanglin.communion.vo.DepartmentTypeVO;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.personel.service.UserService;
@@ -60,7 +61,9 @@ public class UserAction extends BaseListAction {
 
 	private String rePassword;
 	
-	private String departmentTypename;
+	private DepartmentTypeVO departmentType;
+	
+	private List<Integer> uids;
 
 	@Action(value = "pageUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageUser() throws FLException{
@@ -121,30 +124,22 @@ public class UserAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "queryUserForNameByDuty", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryUserForNameByDuty() throws FLException{
-	
-		userBases = userService.queryUserForNameByDuty(pinyinName,user, duty);
-	
+	@Action(value = "queryUserByDepartmentType", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryUserByDepartmentType() throws FLException{
+		
+		userBases = userService.queryUserByDepartmentType(pinyinName,user,departmentType);
+		
 		packageUserName(userBases);
 		
 		return SUCCESS;
 	}
-
-	@Action(value = "queryUserForNameByDutysAO", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryUserForNameByDutysAO() throws FLException{
-		
-		userBases = userService.queryUserForNameByDutysAO(pinyinName,dutys, dutysO);
 	
+	@Action(value = "queryUserByUids", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryUserByUids() throws FLException{
+		
+		userBases = userService.queryUserByUids(uids);
+		
 		packageUserName(userBases);
-		
-		return SUCCESS;
-	}
-
-	@Action(value = "queryUserByDtid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryUserByDtid() throws FLException{
-		
-		userBases = userService.queryUserByDtid(pinyinName,user,departmentTypename,queryCompany());
 		
 		return SUCCESS;
 	}
@@ -217,6 +212,18 @@ public class UserAction extends BaseListAction {
 		}
 		
 		userService.updateUserForBaseInfo(userInfo);
+
+		return SUCCESS;
+	}
+	
+	@Action(value = "updateUserForProfiles", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
+	public String updateUserForProfiles() throws FLException {
+	
+		if(SystemConfig.getString("communion") == null){
+		    throw new FLException(-1, "无操作权限");
+		}
+		
+		userService.updateUserForProfiles(userInfo);
 
 		return SUCCESS;
 	}
@@ -332,12 +339,20 @@ public class UserAction extends BaseListAction {
 		this.rePassword = rePassword;
 	}
 
-	public String getDepartmentTypename() {
-		return departmentTypename;
+	public DepartmentTypeVO getDepartmentType() {
+		return departmentType;
 	}
 
-	public void setDepartmentTypename(String departmentTypename) {
-		this.departmentTypename = departmentTypename;
+	public void setDepartmentType(DepartmentTypeVO departmentType) {
+		this.departmentType = departmentType;
+	}
+
+	public List<Integer> getUids() {
+		return uids;
+	}
+
+	public void setUids(List<Integer> uids) {
+		this.uids = uids;
 	}
 
 	

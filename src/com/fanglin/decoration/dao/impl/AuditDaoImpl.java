@@ -27,7 +27,7 @@ public class AuditDaoImpl extends DaoImpl<AuditPO> implements AuditDao{
 
 	@Override
 	public List<AuditPO> pageAudit(Paging paging, List<Filter> filters, int company) {
-		List<String> status = Arrays.asList(new String[]{DecorationPO.STATUS_INIT_STR,DecorationPO.STATUS_QUOTATION_STR});
+		List<Short> status = Arrays.asList(new Short[]{DecorationPO.STATUS_INIT_INT});
 		
 		PagingQuery<AuditPO> query = pagingQuery(paging,AuditPO.class);
 		
@@ -101,7 +101,7 @@ public class AuditDaoImpl extends DaoImpl<AuditPO> implements AuditDao{
 						query.add(query.getCriterion("decoration.contractTime", eTimestamp, "le"));
 						query.add(query.getCriterion("decoration.contractTime", sTimestamp, "ge"));
 					}else if("status".equals(field)){
-						query.add(query.getCriterion("decoration.status", data, op));
+						query.add(query.getCriterion("decoration.status", Short.valueOf(data), op));
 					}else if("auditStatus".equals(field)){
 						if(data.equals("已审批")){
 							query.add(Restrictions.isNotNull("auditer"));

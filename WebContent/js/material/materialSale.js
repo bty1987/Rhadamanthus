@@ -65,9 +65,9 @@ jQuery(function($) {
 	if(params.saleType == "add"){
 		
 	}else{
-		com.initChosen('salesmanName', api.personel.queryUserForNameByDuty, "pinyinName", {"duty":"","user.status":"0"}, "autoFillKeyValue", "key", "value");
-		com.initChosen('materialerName', api.personel.queryUserForNameByDutysAO, "pinyinName", {"dutysO[0]":"主材组长", "dutysO[1]":"主材导购"}, "autoFillKeyValue", "key", "value");
-		com.initChosen('instoreName', api.personel.queryUserForNameByDuty, "pinyinName", {"duty":"驻店","user.status":"0"}, "autoFillKeyValue", "key", "value");
+		com.initChosen('salesmanName', api.personel.queryUserByDepartmentType, "pinyinName", {"departmentType.name":"", "user.status":"0"}, "autoFillKeyValue", "key", "value");
+		com.initChosen('materialerName', api.personel.queryUserByDepartmentType, "pinyinName", {"departmentType.name":"主材部", "user.status":"0"}, "autoFillKeyValue", "key", "value");
+		com.initChosen('instoreName', api.personel.queryUserByDepartmentType, "pinyinName", {"departmentType.name":"主材部", "user.status":"0"}, "autoFillKeyValue", "key", "value");
 		com.initChosen('materialBrand', api.data.queryBrandForPinYinNameACategoryName, "pinyinName", {}, "autoFillKeyValue", "key", "value");
 
 		com.updateChosen("salesmanName", materialSaleOrderPostData["materialSubOrder.designerId"], materialSaleOrderPostData["materialSubOrder.designerName"]);

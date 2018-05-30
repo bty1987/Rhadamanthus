@@ -50,21 +50,25 @@ public class DecorationPO implements Serializable {
 	
 	public static final int RESOURCETYPE_AMOUNT_STR = 1;
 	
-	public static final String STATUS_INIT_STR = "初始";
+	public static final Short QUOTATIONSTATUS_UNDONE_INT = 0;//未报价
 	
-	public static final String STATUS_QUOTATION_STR = "已报价";
+	public static final Short QUOTATIONSTATUS_ALREADY_INT = 1;//已报价
 	
-	public static final String STATUS_DEPOSIT_STR = "定金";
+	public static final Short STATUS_INIT_INT = 0;//初始
 	
-	public static final String STATUS_RESIGNED_STR = "重签合同";
+	public static final Short STATUS_DEPOSIT_INT = 1;//定金
 	
-	public static final String STATUS_SIGNED_STR = "已签约";
+	public static final Short STATUS_SIGNED_INT = 2;//已签约
 	
-	public static final String STATUS_WASTE_STR = "废单";
+	public static final Short STATUS_RESIGNED_INT = 3;//重签合同
 	
-	public static final String STATUS_COMPLETED_STR = "已完工";
+	public static final Short STATUS_WASTE_INT = 4;//废单
 	
-	public static final String STATUS_TERMINATION_STR = "合同终止";
+	public static final Short STATUS_TERMINATION_INT = 5;//合同终止
+	
+	public static final Short STATUS_FINAL_INT = 6;//决算
+	
+	public static final Short STATUS_COMPLETED_INT = 7;//已完工
 	
 	public static final Short PROJECTSTATUS_INITIAL_INT = 0;	//工程初始
 	
@@ -148,6 +152,8 @@ public class DecorationPO implements Serializable {
 	
 	private float quotationPrice;
 	
+	private short quotationStatus;
+	
 	
 	
 	private Timestamp contractTime;
@@ -160,7 +166,7 @@ public class DecorationPO implements Serializable {
 	
 	
 	
-	private String status;
+	private short status;
 	
 	private short projectStatus;
 	
@@ -326,11 +332,20 @@ public class DecorationPO implements Serializable {
 		this.createTime = createTime;
 	}
 
-	public String getStatus(){
+	public short getQuotationStatus() {
+		return quotationStatus;
+	}
+
+	public void setQuotationStatus(short quotationStatus) {
+		this.quotationStatus = quotationStatus;
+	}
+	
+
+	public Short getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status){
+	public void setStatus(short status) {
 		this.status = status;
 	}
 

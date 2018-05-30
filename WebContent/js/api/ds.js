@@ -13,4 +13,5 @@ $.extend(api, {ds: {
     quotation:{url:"ds/quotation.json",demo: true},
     building:{url: "ds/building.json", demo: true},
     production:{url: "ds/production.json", demo: true},
+    store:{url: "ds/store.json", demo: true},
 }});

@@ -12,6 +12,8 @@
 package com.fanglin.construction.service.impl;
 
 
+import java.sql.Timestamp;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -106,6 +108,17 @@ public class AcceptanceServiceImpl implements AcceptanceService{
 		if(decorationPO != null){
 			decorationPO.setProjectStatus((short)DecorationPO.PROJECTSTATUS_FINISH_INT);
 			decorationDao.update(decorationPO);
+		}
+		
+		//跟新construction结束时间
+		ConstructionPO constructionPO = constructionDao.queryConstructionByOrderId(acceptanceVO.getOrderId());
+		
+		if(constructionPO != null){
+			
+			String endtTime = acceptanceVO.getAcceptanceTime()+" 00:00:00";
+			constructionPO.setEndTime(Timestamp.valueOf(endtTime));
+			
+			constructionDao.update(constructionPO);
 		}
 	}
 

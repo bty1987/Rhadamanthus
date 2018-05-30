@@ -39,7 +39,7 @@ public class DecorationRightAction extends BaseListAction {
 	
 	private List<Integer> dids;
 	
-	private List<String> statuses;
+	private List<Short> statuses;
 	
 	@Action(value="queryDecorationDesignDepartmentRightByUserId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String queryDecorationDesignDepartmentRightByUserId() throws FLException{
@@ -107,11 +107,11 @@ public class DecorationRightAction extends BaseListAction {
 		this.dids = dids;
 	}
 
-	public List<String> getStatuses() {
+	public List<Short> getStatuses() {
 		return statuses;
 	}
 
-	public void setStatuses(List<String> statuses) {
+	public void setStatuses(List<Short> statuses) {
 		this.statuses = statuses;
 	}
 

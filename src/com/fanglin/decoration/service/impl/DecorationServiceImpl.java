@@ -186,7 +186,7 @@ public class DecorationServiceImpl implements DecorationService {
 		if(userPO == null) return;
 		
 		List<Integer> designDepartmentIds = null;
-		List<String> statuses = null;
+		List<Short> statuses = null;
 		
 		List<DecorationDesignDepartmentRightPO> decorationDesignDepartmentRightPOs = decorationDesignDepartmentRightDao.queryDecorationDesignDepartmentRightByUId(userPO.getUid(),company);
 		
@@ -198,7 +198,7 @@ public class DecorationServiceImpl implements DecorationService {
 		
 		List<DecorationStatusRightPO> decorationStatusRightPOs = decorationStatusRightDao.queryDecorationStatusRightByUId(userPO.getUid(),company);
 		
-		statuses = new ArrayList<String>();
+		statuses = new ArrayList<Short>();
 		
 		for(DecorationStatusRightPO decorationStatusRightPO: decorationStatusRightPOs){
 			statuses.add(decorationStatusRightPO.getStatus());
@@ -212,7 +212,7 @@ public class DecorationServiceImpl implements DecorationService {
 			designDepartmentIds = null;
 		}
 		
-		if(statuses.size() == 1 && DecorationStatusRightPO.STATUS_ALL_ENABLE_STR.equals(statuses.get(0))){
+		if(statuses.size() == 1 && DecorationStatusRightPO.STATUS_ALL_ENABLE_INT == statuses.get(0)){
 			statuses = null;
 		}
 		
@@ -257,11 +257,9 @@ public class DecorationServiceImpl implements DecorationService {
 		
 		if(userPO == null) return;
 		
-		List<String> statuses = Arrays.asList(DecorationPO.STATUS_SIGNED_STR, DecorationPO.STATUS_WASTE_STR, DecorationPO.STATUS_TERMINATION_STR, DecorationPO.STATUS_COMPLETED_STR);
+		List<Short> statuses = Arrays.asList(DecorationPO.STATUS_INIT_INT,DecorationPO.STATUS_DEPOSIT_INT);
 		
-		filters.add(new Filter("statuses", statuses, "ni"));
-		
-		List<DecorationPO> decorationPOs = decorationDao.pageDecoration(paging, filters, null, null, authentication.getCompany());
+		List<DecorationPO> decorationPOs = decorationDao.pageDecoration(paging, filters, null, statuses, authentication.getCompany());
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
 		
 		for(DecorationPO decorationPO: decorationPOs){
@@ -369,7 +367,7 @@ public class DecorationServiceImpl implements DecorationService {
 		filters.add(new Filter("quoterId", userPO.getUserId(), "eq"));
 		
 		List<Integer> designDepartmentIds = null;
-		List<String> statuses = null;
+		List<Short> statuses = null;
 		
 		List<DecorationPO> decorationPOs = decorationDao.pageDecoration(paging, filters, designDepartmentIds, statuses, company);
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
@@ -420,7 +418,7 @@ public class DecorationServiceImpl implements DecorationService {
 		filters.add(new Filter("escorterId", userPO.getUserId(), "eq"));
 		
 		List<Integer> designDepartmentIds = null;
-		List<String> statuses = null;
+		List<Short> statuses = null;
 		
 		List<DecorationPO> decorationPOs = decorationDao.pageDecoration(paging, filters, designDepartmentIds, statuses, company);
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
@@ -467,7 +465,7 @@ public class DecorationServiceImpl implements DecorationService {
 		if(filters.size() == 0 ) return;
 		
 		List<Integer> designDepartmentIds = null;
-		List<String> statuses = null;
+		List<Short> statuses = null;
 		
 		
 		List<DecorationDesignDepartmentRightPO> decorationDesignDepartmentRightPOs = decorationDesignDepartmentRightDao.queryDecorationDesignDepartmentRightByUId(userPO.getUid(),company);
@@ -480,7 +478,7 @@ public class DecorationServiceImpl implements DecorationService {
 		
 		List<DecorationStatusRightPO> decorationStatusRightPOs = decorationStatusRightDao.queryDecorationStatusRightByUId(userPO.getUid(),company);
 		
-		statuses = new ArrayList<String>();
+		statuses = new ArrayList<Short>();
 		
 		for(DecorationStatusRightPO decorationStatusRightPO: decorationStatusRightPOs){
 			statuses.add(decorationStatusRightPO.getStatus());
@@ -494,7 +492,7 @@ public class DecorationServiceImpl implements DecorationService {
 			designDepartmentIds = null;
 		}
 		
-		if(statuses.size() == 1 && DecorationStatusRightPO.STATUS_ALL_ENABLE_STR.equals(statuses.get(0))){
+		if(statuses.size() == 1 && DecorationStatusRightPO.STATUS_ALL_ENABLE_INT == statuses.get(0)){
 			statuses = null;
 		}
 		
@@ -544,7 +542,7 @@ public class DecorationServiceImpl implements DecorationService {
 		if(userPO == null) return;
 		
 		List<Integer> salesmanDepartmentIds = null;
-		List<String> statuses = null;
+		List<Short> statuses = null;
 		
 	
 		List<DecorationSalesmanDepartmentRightPO> decoratoinOrderSalesmanDepartmentRightPOs = decorationSalesmanDepartmentRightDao.queryDecorationSalesmanDepartmentRightByUId(userPO.getUid(),company);
@@ -559,7 +557,7 @@ public class DecorationServiceImpl implements DecorationService {
 		
 		List<DecorationStatusRightPO> decorationStatusRightPOs = decorationStatusRightDao.queryDecorationStatusRightByUId(userPO.getUid(),company);
 		
-		statuses = new ArrayList<String>();
+		statuses = new ArrayList<Short>();
 		
 		for(DecorationStatusRightPO decorationStatusRightPO: decorationStatusRightPOs){
 			statuses.add(decorationStatusRightPO.getStatus());
@@ -573,7 +571,7 @@ public class DecorationServiceImpl implements DecorationService {
 			salesmanDepartmentIds = null;
 		}
 		
-		if(statuses.size() == 1 && DecorationStatusRightPO.STATUS_ALL_ENABLE_STR.equals(statuses.get(0))){
+		if(statuses.size() == 1 && DecorationStatusRightPO.STATUS_ALL_ENABLE_INT == statuses.get(0)){
 			statuses = null;
 		}
 		
@@ -631,11 +629,11 @@ public class DecorationServiceImpl implements DecorationService {
 	@Override
 	public DecorationVO queryDecorationForCommonByOrderId(DecorationVO decorationVO, String userId) throws FLException{
 		
-		List<String> unstatus = Arrays.asList(new String[]{DecorationPO.STATUS_SIGNED_STR, DecorationPO.STATUS_TERMINATION_STR, DecorationPO.STATUS_COMPLETED_STR});
+		List<Short> unstatus = Arrays.asList(new Short[]{DecorationPO.STATUS_SIGNED_INT, DecorationPO.STATUS_TERMINATION_INT, DecorationPO.STATUS_COMPLETED_INT});
 		
 		decorationVO = queryDecorationById(decorationVO.getOrderId());
 		
-		String status = decorationVO.getStatus();
+		Short status = decorationVO.getStatus();
 		
 		if(!unstatus.contains(status)){
 			
@@ -761,7 +759,7 @@ public class DecorationServiceImpl implements DecorationService {
 		
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 		
-		List<String> status = Arrays.asList(new String[]{DecorationPO.STATUS_INIT_STR, DecorationPO.STATUS_QUOTATION_STR, DecorationPO.STATUS_DEPOSIT_STR, DecorationPO.STATUS_RESIGNED_STR, DecorationPO.STATUS_SIGNED_STR}); // 咨询, 量房, 已报价, 定金, 重签合同, 已签约
+		List<Short> status = Arrays.asList(new Short[]{DecorationPO.STATUS_INIT_INT, DecorationPO.STATUS_DEPOSIT_INT, DecorationPO.STATUS_RESIGNED_INT, DecorationPO.STATUS_SIGNED_INT}); // 咨询, 量房, 已报价, 定金, 重签合同, 已签约
 		
 		if(decorationPO == null){ 
 			throw new FLException(140013, "订单不存在");
@@ -810,7 +808,7 @@ public class DecorationServiceImpl implements DecorationService {
 		String orderId = decorationVO.getOrderId();
 		String versionId = decorationVO.getVersion().getVersionId();
 		
-		List<String> status = Arrays.asList(new String[]{DecorationPO.STATUS_SIGNED_STR, DecorationPO.STATUS_COMPLETED_STR, DecorationPO.STATUS_WASTE_STR, DecorationPO.STATUS_TERMINATION_STR}); // 已签约, 已完工, 废单, 合同终止
+		List<Short> status = Arrays.asList(new Short[]{DecorationPO.STATUS_SIGNED_INT, DecorationPO.STATUS_COMPLETED_INT, DecorationPO.STATUS_WASTE_INT, DecorationPO.STATUS_TERMINATION_INT}); // 已签约, 已完工, 废单, 合同终止
 		
 		String oldVersionId = "";
 		DecorationPO DecorationPO = decorationDao.queryDecorationByOrderId(orderId);
@@ -937,9 +935,9 @@ public class DecorationServiceImpl implements DecorationService {
 	public void changeDecorationForStatus(DecorationVO decorationVO, String userId){
 		
 		String orderId = decorationVO.getOrderId();
-		String status = decorationVO.getStatus();
+		Short status = decorationVO.getStatus();
 		
-		String oldStatus = "";
+		Short oldStatus = 0;
 		DecorationPO DecorationPO = decorationDao.queryDecorationByOrderId(orderId);
 		
 		if(DecorationPO != null){
@@ -1015,7 +1013,7 @@ public class DecorationServiceImpl implements DecorationService {
 	@Transactional(rollbackFor=Exception.class)
 	public void createDecoration(DecorationVO decorationVO, DecorationInfoVO decorationInfoVO, Authentication authentication) throws FLException{
 		
-		List<String> unstatus = Arrays.asList(DecorationPO.STATUS_WASTE_STR, DecorationPO.STATUS_TERMINATION_STR);
+		List<Short> unstatus = Arrays.asList(DecorationPO.STATUS_WASTE_INT, DecorationPO.STATUS_TERMINATION_INT);
 		
 		DecorationPO decorationPO = decorationDao.queryDecorationByHid(decorationVO.getHouse().getHid(), authentication.getCompany());
 		
@@ -1048,7 +1046,7 @@ public class DecorationServiceImpl implements DecorationService {
 		decorationPO.setFreeArea((float) 0);
 		decorationPO.setHouseClass(decorationVO.getHouseClass());
 		decorationPO.setHouseType(decorationVO.getHouseType());
-		decorationPO.setStatus(DecorationPO.STATUS_INIT_STR);
+		decorationPO.setStatus(DecorationPO.STATUS_INIT_INT);
 		decorationPO.setResourceType(decorationVO.getResourceType());
 		decorationPO.setOrderTotalPrice((float) 0);
 		decorationPO.setSalesmanType(decorationVO.getSalesmanType());
@@ -1170,29 +1168,29 @@ public class DecorationServiceImpl implements DecorationService {
 			throw new FLException(140013, "订单不存在");
 		}
 		
-		String status = decorationPO.getStatus();
+		Short status = decorationPO.getStatus();
 		
-		if(DecorationPO.STATUS_WASTE_STR.equals(status)){ // 废单
+		if(DecorationPO.STATUS_WASTE_INT == status){ // 废单
 			throw new FLException(140021, "订单已处于废单状态");
 		}
 		
-		if(DecorationPO.STATUS_SIGNED_STR.equals(status)){ // 签约
+		if(DecorationPO.STATUS_SIGNED_INT == status){ // 签约
 			throw new FLException(140022, "订单已签约,不可废单");
 		}
 		
-		if(DecorationPO.STATUS_COMPLETED_STR.equals(status)){ // 完工
+		if(DecorationPO.STATUS_COMPLETED_INT == status){ // 完工
 			throw new FLException(140023, "订单已完工,不可废单");
 		}
 		
-		if(DecorationPO.STATUS_TERMINATION_STR.equals(status)){ // 终止
+		if(DecorationPO.STATUS_TERMINATION_INT == status){ // 终止
 			throw new FLException(140024, "订单合同终止,不可废单");
 		}
 		
-		if(DecorationPO.STATUS_RESIGNED_STR.equals(status)){
+		if(DecorationPO.STATUS_RESIGNED_INT == status){
 			throw new FLException(140026, "订单重新签约,不能终止合同"); // 重新签约
 		}
 		
-		decorationPO.setStatus(DecorationPO.STATUS_WASTE_STR);
+		decorationPO.setStatus(DecorationPO.STATUS_WASTE_INT);
 		
 		decorationDao.update(decorationPO);
 		
@@ -1218,9 +1216,9 @@ public class DecorationServiceImpl implements DecorationService {
 		String userId = authentication.getUserId();
 		int company = authentication.getCompany();
 		
-		if(DecorationPO.STATUS_SIGNED_STR.equals(decorationPO.getStatus())){ // 签约
+		if(DecorationPO.STATUS_SIGNED_INT.equals(decorationPO.getStatus())){ // 签约
 
-			decorationPO.setStatus(DecorationPO.STATUS_TERMINATION_STR);
+			decorationPO.setStatus(DecorationPO.STATUS_TERMINATION_INT);
 			decorationDao.update(decorationPO);
 			
 			DecorationPaymentPO decorationPaymentPO = new DecorationPaymentPO();

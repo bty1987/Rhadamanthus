@@ -143,7 +143,7 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 		UserPO	userpo = userdao.queryUserByUserId(userId);
 		WorkerSalaryPO workerSalaryPO = new WorkerSalaryPO(user,userpo);
 
-		if(workerSalaryVO.getCsid() != 0){
+		if(workerSalaryVO.getCsid()!= null && workerSalaryVO.getCsid() != 0){
 			
 			ConstructionSchedulePO  constructionSchedulePO = constructionScheduleDao.get(workerSalaryVO.getCsid());
 			
@@ -160,9 +160,14 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 		    workerSalaryPO.setDecoration(new DecorationPO());
 		    workerSalaryPO.getDecoration().setOrderId(constructionPO.getDecoration().getOrderId());
 		    workerSalaryPO.setCid(cid);
+		    
+		    
+		    workerSalaryPO.setCsid(workerSalaryVO.getCsid());
 		}else{
-		    workerSalaryPO.setCid(WorkerSalaryPO.CSID_INIT_STR);
+		    workerSalaryPO.setCid(WorkerSalaryPO.CID_INIT_STR);
+		    workerSalaryPO.setCsid(WorkerSalaryPO.CSID_INIT_STR);
 		}
+		
 		workerSalaryPO.setCompany(company);
 		workerSalaryPO.setSubtype(workerSalaryVO.getSubtype());
 		workerSalaryPO.setComment(workerSalaryVO.getComment());

@@ -14,15 +14,18 @@
 		{"key": "期房", "value":"期房"},
 		{"key": "现房", "value":"现房"}
 	], "decorationOrderStatus": [
-		{"key":"初始", "value":"初始"},
-		{"key":"已报价", "value":"已报价"},
-		{"key":"定金", "value":"定金"},
-		{"key":"重签合同", "value":"重签合同"},
-		{"key":"已签约", "value":"已签约"},
-		{"key":"废单", "value":"废单"},
-		{"key":"已完工", "value":"已完工"},
-		{"key":"合同终止", "value":"合同终止"}
-    ], "salesmanType": [
+		{"key":"0", "value":"初始"},
+		{"key":"1", "value":"定金"},
+		{"key":"2", "value":"签约"},
+		{"key":"3", "value":"重签"},
+		{"key":"4", "value":"废单"},
+		{"key":"5", "value":"终止"},
+		{"key":"6", "value":"决算"},
+		{"key":"7", "value":"完结"}
+    ], "decorationQuotationStatus": [
+		{"key":"0", "value":"未报价"},
+		{"key":"1", "value":"已报价"}
+	], "salesmanType": [
 		{"key":"守园","value":"守园"},
 		{"key":"资源","value":"资源"},
 		{"key":"监理","value":"监理"},

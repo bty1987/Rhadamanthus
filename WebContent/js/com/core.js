@@ -65,7 +65,6 @@
             url = server + url.url;
             opts["authentication"] = params.authentication;
         }
-
         $.ajax({
             url: url,
             data: opts,
@@ -210,7 +209,7 @@
         },
         phones2: {
             type: "v_phones2",
-            regex: /^((1[0-9]{10})|(0[0-9]{10}))((#((1[0-9]{10})|(0[0-9]{10})))){0,4}$/,
+            regex: /^((1[0-9]{10})|(0[0-9]{10}))((#(([0-9]{11})))){0,4}$/,
             errorMsg: "请输入正确的手机号或固定电话 (如:13619181918#02425601918).如果为多条号码请用#号分隔"
         },
         identity: {
@@ -538,8 +537,89 @@
     },
     checkNull:function(obj,rep){
         return obj == null || obj == undefined || obj == "" ? rep : obj;
+    },
+	esPost : function(url, data, callback, failcallback) {
+        if(url == null){
+            return;
+        }
+        var server = "";
+        if(url.elastic){
+            server = config.elastic;
+            server = server + 'decoration-' + url.elastic + '-*/_search';
+        }else{
+            com.showAlert(com.warning, "ES请求地址错误");
+            return;
+        }
+        if(config.demo){
+            if(!url.demo){
+                com.showAlert(com.warning, "Demo状态不能完成此操作");
+                return;
+            }
+            url = 'result/' + url.url.split('.')[0] + '.json';
+        }else{
+            url = server;
+        }
+        $.ajax({
+            url: url,
+            data: JSON.stringify(data),
+            type: "post",
+            dataType: "json",
+            async: false, // false:同步请求
+            success: function (res) {
+                callback(res)
+            }, error: function (msg) {
+                failcallback(msg)
+            }
+        });
+    },
+    flaskPost: function(method, options, callback, failcallback){
+      if(url == null){
+            return;
+        }
+    
+        $.ajax({
+            url: config.flask + method + options,
+            type: "get",
+            dataType: "json",
+            success: function (res) {
+                callback(res);
+            }, error: function (msg) {
+                failcallback(msg);
+            }
+        });
+    },
+	_post_: function(url, data, callback, failcallback){
+    	if(url == null){
+            return;
+        }
+    	var server = "";
+    	if(url.library){
+    		server = config.library + url;
+    	}else{
+    		com.showAlert(com.warning, "Flask请求地址错误");
+            return;
+    	}
+    	if(config.demo){
+            if(!url.demo){
+                com.showAlert(com.warning, "Demo状态不能完成此操作");
+                return;
+            }
+            url = 'result/' + url.url.split('.')[0] + '.json';
+        }else{
+            url = server;
+        }
+        $.ajax({
+            url: url,
+            data: data,
+            type: "get",
+            dataType: "json",
+            success: function (res) {
+                callback(res);
+            }, error: function (msg) {
+                failcallback(msg);
+            }
+        });
     }
-
 };
 
 Array.prototype.formatArrayMapToStr = function(k, v){
