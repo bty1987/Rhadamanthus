@@ -92,6 +92,8 @@ public class UserInfoPO implements java.io.Serializable {
 	private String wechat;
 	
 	private String email;
+	
+	private String profiles;
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -436,6 +438,15 @@ public class UserInfoPO implements java.io.Serializable {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	
+	@Column(name = "profiles")
+	public String getProfiles() {
+		return profiles;
+	}
+
+	public void setProfiles(String profiles) {
+		this.profiles = profiles;
 	}
 
 }

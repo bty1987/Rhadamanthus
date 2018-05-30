@@ -1,0 +1,35 @@
+<div>
+    <div class="flex-wrap" id="form">
+
+        <div class="stay-bottom">
+            <button class="btn btn-yellow" id="addWorkPlan" >贴一条标签</button>
+        </div>
+
+    </div>
+
+    <ul class="flex-table">
+        <li class="line table-title">
+
+            <div class="line-wrap order">
+                <div class="cell index"></div>
+            </div>
+
+            <div class="line-wrap content col2">
+                <div class="cell">标签名</div>
+                <div class="cell">分值</div>
+            </div>
+
+            <div class="line-wrap action">
+                <div class="cell option">操作</div>
+            </div>
+
+        </li>
+    </ul>
+
+    <ul class="flex-table" id="list"></ul>
+
+</div>
+
+<script type="text/javascript">
+    $.loadScript(['js/data/checkLabel.js']);
+</script>

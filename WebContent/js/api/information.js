@@ -56,5 +56,6 @@ $.extend(api, {information: {
     //大活动—活动款
     pageVpayment:{url:"pageVpayment.do"},
     countVpayment:{url:"countVpayment.do"},
-    createVpayment:{url:"createVpayment.do"}
+    createVpayment:{url:"createVpayment.do"},
+    deleteVpaymentId:{url:"deleteVpaymentId.do"},
 }});

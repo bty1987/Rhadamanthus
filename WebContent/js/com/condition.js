@@ -62,8 +62,8 @@ var Condition = function (api) {
                 validate: null//校验规则
             },
             dataSource: {//从后台取数据的各种配置
-                url: api.personel.queryUserForNameByDuty,//获取数据要调用的接口
-                postData: {"duty":"","user.status":""},//获取数据时的请求参数
+                url: api.personel.queryUserByDepartmentType,//获取数据要调用的接口
+                postData: {"user.status":0,"departmentType.name":""},//获取数据时的请求参数
                 listPath: "autoFillKeyValue",//响应list的json路径
                 keyPath: "key",//用来向后台提交的字段的json路径
                 valuePath: "value"//用来在页面显示的字段的json路径
@@ -94,8 +94,8 @@ var Condition = function (api) {
                 validate: null//校验规则
             },
             dataSource: {//从后台取数据的各种配置
-                url: api.personel.queryUserForNameByDuty,//获取数据要调用的接口
-                postData: {"duty": "","user.status":""},//获取数据时的请求参数
+                url: api.personel.queryUserByDepartmentType,//获取数据要调用的接口
+                postData: {"user.status":0,"departmentType.name":""},//获取数据时的请求参数
                 listPath: "autoFillKeyValue",//响应list的json路径
                 keyPath: "key",//用来向后台提交的字段的json路径
                 valuePath: "value"//用来在页面显示的字段的json路径
@@ -144,8 +144,8 @@ var Condition = function (api) {
                 validate: null//校验规则
             },
             dataSource: {//从后台取数据的各种配置
-                url: api.personel.queryUserForNameByDuty,//获取数据要调用的接口
-                postData: {"duty":"","user.status":""},//获取数据时的请求参数
+                url: api.personel.queryUserByDepartmentType,//获取数据要调用的接口
+                postData: {"user.status":0,"departmentType.name":""},//获取数据时的请求参数
                 listPath: "autoFillKeyValue",//响应list的json路径
                 keyPath: "key",//用来向后台提交的字段的json路径
                 valuePath: "value"//用来在页面显示的字段的json路径
@@ -647,8 +647,8 @@ var Condition = function (api) {
                 op: "cn",
                 validate: null
             }, dataSource: {
-                url: api.personel.queryUserForNameByDuty,
-                postData: {"duty": "驻店导购","user.status":"" },
+                url: api.personel.queryUserByDepartmentType,
+                postData: {"user.status":0,"departmentType.name":"主材部"},
                 listPath: "autoFillKeyValue",
                 keyPath: "key",
                 valuePath: "value"
@@ -933,8 +933,8 @@ var Condition = function (api) {
                 validate: null
             },
             dataSource: {//从后台取数据的各种配置
-                url: api.personel.queryUserForNameByDuty,//获取数据要调用的接口
-                postData: {"duty": "","user.status":""},//获取数据时的请求参数
+                url: api.personel.queryUserByDepartmentType,//获取数据要调用的接口
+                postData: {"user.status":0,"departmentType.name":""},//获取数据时的请求参数
                 listPath: "autoFillKeyValue",//响应list的json路径
                 keyPath: "key",//用来向后台提交的字段的json路径
                 valuePath: "value"//用来在页面显示的字段的json路径
@@ -949,8 +949,8 @@ var Condition = function (api) {
                 validate: null
             },
             dataSource: {//从后台取数据的各种配置
-                url: api.personel.queryUserForNameByDuty,//获取数据要调用的接口
-                postData: {"duty": "","user.status":""},//获取数据时的请求参数
+                url: api.personel.queryUserByDepartmentType,//获取数据要调用的接口
+                postData: {"user.status":0,"departmentType.name":""},//获取数据时的请求参数
                 listPath: "autoFillKeyValue",//响应list的json路径
                 keyPath: "key",//用来向后台提交的字段的json路径
                 valuePath: "value"//用来在页面显示的字段的json路径
@@ -965,8 +965,8 @@ var Condition = function (api) {
                 validate: null
             },
             dataSource: {//从后台取数据的各种配置
-                url: api.personel.queryUserForNameByDuty,//获取数据要调用的接口
-                postData: {"duty": "","user.status":""},//获取数据时的请求参数
+                url: api.personel.queryUserByDepartmentType,//获取数据要调用的接口
+                postData: {"user.status":0,"departmentType.name":""},//获取数据时的请求参数
                 listPath: "autoFillKeyValue",//响应list的json路径
                 keyPath: "key",//用来向后台提交的字段的json路径
                 valuePath: "value"//用来在页面显示的字段的json路径
@@ -1072,8 +1072,8 @@ var Condition = function (api) {
                 validate: null//校验规则
             },
             dataSource: {//从后台取数据的各种配置
-                url: api.personel.queryUserForNameByDuty,//获取数据要调用的接口
-                postData: {"duty": "预算审核专员","user.status":""},//获取数据时的请求参数
+                url: api.personel.queryUserByDepartmentType,//获取数据要调用的接口
+                postData: {"user.status":0,"departmentType.name":"职能部"},//获取数据时的请求参数
                 listPath: "autoFillKeyValue",//响应list的json路径
                 keyPath: "key",//用来向后台提交的字段的json路径
                 valuePath: "value"//用来在页面显示的字段的json路径
@@ -1265,8 +1265,8 @@ var Condition = function (api) {
                 validate: null//校验规则
             },
             dataSource: {//从后台取数据的各种配置
-                url: api.personel.queryUserForNameByDuty,//获取数据要调用的接口
-                postData: {"duty": "","user.status":""},//获取数据时的请求参数
+                url: api.personel.queryUserByDepartmentType,//获取数据要调用的接口
+                postData: {"user.status":0,"departmentType.name":""},//获取数据时的请求参数
                 listPath: "autoFillKeyValue",//响应list的json路径
                 keyPath: "key",//用来向后台提交的字段的json路径
                 valuePath: "value"//用来在页面显示的字段的json路径
@@ -1785,8 +1785,8 @@ var Condition = function (api) {
                 validate: null
             },
             dataSource: {//从后台取数据的各种配置
-                url: api.personel.queryUserForNameByDuty,//获取数据要调用的接口
-                postData: { "duty" : "","user.status":""},//获取数据时的请求参数
+                url: api.personel.queryUserByDepartmentType,//获取数据要调用的接口
+                postData: {"user.status":0,"departmentType.name":""},//获取数据时的请求参数
                 listPath: "autoFillKeyValue",//响应list的json路径
                 keyPath: "key",//用来向后台提交的字段的json路径
                 valuePath: "value"//用来在页面显示的字段的json路径
@@ -2456,8 +2456,8 @@ var Condition = function (api) {
                 validate: null
             },
             dataSource: {//从后台取数据的各种配置
-                url: api.personel.queryUserForNameByDuty,//获取数据要调用的接口
-                postData: {"duty" : "","user.status":""},//获取数据时的请求参数
+                url: api.personel.queryUserByDepartmentType,//获取数据要调用的接口
+                postData: {"user.status":0,"departmentType.name":""},//获取数据时的请求参数
                 listPath: "autoFillKeyValue",//响应list的json路径
                 keyPath: "key",//用来向后台提交的字段的json路径
                 valuePath: "value"//用来在页面显示的字段的json路径
@@ -2473,8 +2473,8 @@ var Condition = function (api) {
                 validate: null
             },
             dataSource: {//从后台取数据的各种配置
-                url: api.personel.queryUserForNameByDuty,//获取数据要调用的接口
-                postData: { "duty" : "","user.status":""},//获取数据时的请求参数
+                url: api.personel.queryUserByDepartmentType,//获取数据要调用的接口
+                postData: { "user.status":0,"departmentType.name":""},//获取数据时的请求参数
                 listPath: "autoFillKeyValue",//响应list的json路径
                 keyPath: "key",//用来向后台提交的字段的json路径
                 valuePath: "value"//用来在页面显示的字段的json路径
@@ -2719,8 +2719,8 @@ var Condition = function (api) {
                 validate: null//校验规则
             },
             dataSource: {//从后台取数据的各种配置
-                url: api.personel.queryUserForNameByDuty,//获取数据要调用的接口
-                postData: {"duty":"","user.status":""},//获取数据时的请求参数
+                url: api.personel.queryUserByDepartmentType,//获取数据要调用的接口
+                postData: {"user.status":0,"departmentType.name":""},//获取数据时的请求参数
                 listPath: "autoFillKeyValue",//响应list的json路径
                 keyPath: "key",//用来向后台提交的字段的json路径
                 valuePath: "value"//用来在页面显示的字段的json路径
@@ -2770,8 +2770,8 @@ var Condition = function (api) {
                 validate: null//校验规则
             },
             dataSource: {//从后台取数据的各种配置
-                url: api.personel.queryUserForNameByDuty,//获取数据要调用的接口
-                postData: {"duty": "监理","user.status":""},//获取数据时的请求参数
+                url: api.personel.queryUserByDepartmentType,//获取数据要调用的接口
+                postData: {"user.status":0,"departmentType.name":"工程部"},//获取数据时的请求参数
                 listPath: "autoFillKeyValue",//响应list的json路径
                 keyPath: "key",//用来向后台提交的字段的json路径
                 valuePath: "value"//用来在页面显示的字段的json路径
@@ -2805,8 +2805,8 @@ var Condition = function (api) {
                 validate: null
             },
             dataSource: {//从后台取数据的各种配置
-                url: api.personel.queryUserForNameByDuty,//获取数据要调用的接口
-                postData: {"duty": "","user.status":""},//获取数据时的请求参数
+                url: api.personel.queryUserByDepartmentType,//获取数据要调用的接口
+                postData: {"user.status":0,"departmentType.name":""},//获取数据时的请求参数
                 listPath: "autoFillKeyValue",//响应list的json路径
                 keyPath: "key",//用来向后台提交的字段的json路径
                 valuePath: "value"//用来在页面显示的字段的json路径
@@ -2833,9 +2833,9 @@ var Condition = function (api) {
                 url: null,
                 postData: null,
                 listPath: [
-                    {"key": "申请放线", "value": "申请放线"},
-                    {"key": "放线失败", "value": "放线失败"},
-                    {"key": "放线成功", "value": "放线成功"}
+                    {"key": "1", "value": "申请放线"},
+                    {"key": "3", "value": "放线失败"},
+                    {"key": "2", "value": "放线成功"}
                 ],
                 keyPath: "key",
                 valuePath: "value"
@@ -2875,7 +2875,143 @@ var Condition = function (api) {
                     }
                 }
         },
+		
+		/*-------商城store : start----*/
+        mgoodsNo: {
+            label: "商品编号",
+            type: "text",
+            submitConfig: {
+                name: "no",
+                op: "cn",
+                validate: null
+            }
+        },
+        mgoodsNames: {
+            label: "商品名称",
+            type: "text",
+            submitConfig: {
+                name: "name",
+                op: "eq",
+                validate: null
+            }
+        },
+
+        mgoodsBarcodes: {
+            label: "商品条形码",
+            type: "text",
+            submitConfig: {
+                name: "barcode",
+                op: "eq",
+                validate: null
+            }
+        },
+
+        mgoodsBrands: {
+            label: "商品品牌",
+            type: "autofill",
+            submitConfig: {
+                name: "mbrand.bid",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {
+                url: api.store.queryMbrandByName,
+                postData: {},
+                listPath: "autoFillKeyValue",
+                keyPath: "key",
+                valuePath: "value"
+            }
+        },
+
+        mcategory : {
+            label:"品类名称",
+            type:"text",
+            submitConfig : {
+                name : "name",
+                op : "eq",
+                validate:null
+            }
+        },
+		
+		mbrandName : {
+            label:"品牌名称",
+            type:"text",
+            submitConfig : {
+                name : "name",
+                op : "eq",
+                validate:null
+            }
+        },
         
+        muserName : {
+            label:"用户名称",
+            type:"text",
+            submitConfig : {
+                name : "name",
+                op : "eq",
+                validate:null
+            }
+        },
+		
+		morderNo:{
+            label:"订单编号",
+            type:"text",
+            submitConfig : {
+                name : "no",
+                op : "eq",
+                validate:null
+            }
+        },
+
+        morderUserName: {
+            label: "用户名",
+            type: "autofill",
+            submitConfig: {
+                name: "name",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {
+                url: api.store.queryMuserByPinyinName,
+                postData: {},
+                listPath: "autoFillKeyValue",
+                keyPath: "key",
+                valuePath: "value"
+            }
+        },
+
+        morderByStatus: {
+            label: "状态",
+            type: "select",
+            submitConfig: {
+                name: "status",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {
+                url: api.ds.store,
+                postData: {},
+                listPath: "status",
+                keyPath: "key",
+                valuePath: "value"
+            }
+        },
+
+        /*-------商城store : end----*/
+		
+		 labelname : {
+            label:"名称",
+            type:"text",
+            submitConfig : {
+                name : "name",
+                op : "eq",
+                validate:null
+            }
+        },
+		
+
+        /*-------标签label----*/
+		
     };
     return {
         getRuleByCondName: function (condName) {

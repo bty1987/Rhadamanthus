@@ -11,9 +11,9 @@ jQuery(function ($) {
     _params.server = window.server;
     _params.authentication = parent.params.authentication;
 
-    com.post(api.inventory.queryAccessoriesManifestByAid, {"accessoriesManifest.accessories.aid": _params["accessories.aid"]}, function (res) {
+    com.post(api.inventory.queryManifestByAid, {"accessories.aid": _params["accessories.aid"]}, function (res) {
 
-        var accessoriesManifest = res.accessoriesManifest;
+        var manifest = res.manifest;
 
         var commonInfo = {};
 
@@ -25,12 +25,11 @@ jQuery(function ($) {
         commonInfo["manifestTime"] = _params["accessories.manifestTime"];
 
         com.post(api.decoration.queryDecorationForCommonByOrderId, {"decoration.orderId": commonInfo["orderId"]}, function (data) {
-            console.log(data)
             commonInfo["address"] = data.decoration.house.village.name + " " + data.decoration.house.houseNumber;
             commonInfo["supervisor"] = data.decoration.supervisor.userName == null?"---":data.decoration.supervisor.userName;
         }, null, false)
 
-        com.post(api.inventory.queryManifestItemByMid, {"manifest.mid":accessoriesManifest.manifest.mid}, function(res){
+        com.post(api.inventory.queryManifestItemByMid, {"manifest.mid":manifest.mid}, function(res){
             createReceiptTable(commonInfo, res.manifestItems);
         }, null, false);
 

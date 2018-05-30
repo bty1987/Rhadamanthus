@@ -10,7 +10,7 @@ $(function () {
     var postData = "salesPreBalancePostData";
 
     if(params['urlLoadParams'].type == "dompany"){
-        url = api.inventory.pageSalesForDompany;
+        url = api.inventory.pageSalesForBalanceByDompany;
         postData = "salesPreBalanceForDompanyPostData";
     }
 
@@ -127,9 +127,9 @@ $(function () {
                     $label.appendTo($h3);
 
                     if(params['urlLoadParams'].type == "dompany"){
-                        $btnDiv.append($btnSwitch).append($btnWipeZero).append($btnPre).appendTo($h3);
-                    }else{
                         $btnDiv.append($btnSwitch).appendTo($h3);
+                    }else{
+                        $btnDiv.append($btnSwitch).append($btnWipeZero).append($btnPre).appendTo($h3);
                     }
 
 
@@ -137,9 +137,9 @@ $(function () {
                     $liLine.append($h3).append($ulProperty);
 
                     $btnSwitch.click(function () {
-                        var flag = false;
+                        var flag = true;
                         if(params['urlLoadParams'].type == "dompany"){
-                            flag = true
+                            flag = false
                         }
                         openlayerView(v.sid, v.no,flag);
 
@@ -321,9 +321,9 @@ $(function () {
         })
 
         if(params['urlLoadParams'].type == "dompany"){
-            return [$adda, $addaEnd]
-        }else{
             return[]
+        }else{
+            return [$adda, $addaEnd]
         }
 
     }, 'resultList')

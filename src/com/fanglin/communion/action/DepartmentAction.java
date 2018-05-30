@@ -121,17 +121,6 @@ public class DepartmentAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-	@Action(value = "deleteDepartment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String deleteDepartment() throws FLException{
-		
-		if(SystemConfig.getString("communion") == null){
-		    throw new FLException(-1, "无操作权限");
-		}
-		
-		departmentService.deleteDepartment(dept);
-		
-		return SUCCESS;
-	}
 	
 	public DepartmentVO getDept() {
 		return dept;

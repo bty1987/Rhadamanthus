@@ -24,7 +24,7 @@ jQuery(function($) {
         com.clearValidator("#vpayment.item", true);
     });
 
-    com.initChosen('collecter', api.personel.queryUserForNameByDuty, "pinyinName", {"duty":"", "user.status":0}, "autoFillKeyValue", "key", "value");
+    com.initChosen('collecter', api.personel.queryUserByDepartmentType, "pinyinName", {"departmentType.name":"", "user.status":0}, "autoFillKeyValue", "key", "value");
 
     com.post(api.ds.information,{},function(res){
         $("#type").bindData(res.vpayment,"key","value");
@@ -64,6 +64,8 @@ jQuery(function($) {
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
+            var $btnAdd = $('<a></a>').addClass('btn btn-minier btn-yellow').html('删除');
+
             var brand="";
             if(v.type == 1){
                 brand= v.brand
@@ -81,7 +83,8 @@ jQuery(function($) {
                 ["收款方式:", way[v.way], "grey"],
                 ["收据号:", v.receipt == null ? "---" : v.receipt, "grey"],
                 ["品牌:", brand , "grey"],
-                ["金额:", v.money, "blue"]
+                ["金额:", v.money, "blue"],
+                ["备注:", v.comment , "grey"]
             ];
 
             $.each(propertyArr, function (index, value) {
@@ -91,11 +94,19 @@ jQuery(function($) {
                 $liProperty.appendTo($ulProperty);
             });
 
-            $divBtnWrap.appendTo($h3);
+            $divBtnWrap.append($btnAdd).appendTo($h3);
 
             $liLine.append($h3).append($ulProperty);
 
+            $btnAdd.click(function(){
+                    delect(v.vpid)
+            });
+
+
             return $liLine;
+
+
+
         };
 
         return {
@@ -122,6 +133,31 @@ jQuery(function($) {
 
         return [$adda];
     });
+
+    //删除
+    function delect(id){
+        var btn=$(this);
+        var span=btn.find('span');
+        btn.find('i').remove();
+        var  loading=$('<i></i>').addClass('icon-spinner icon-spin white bigger-125');
+        span.prepend(loading);
+        var totle="<p>确定删除活动款么?</p>";
+        bootbox.confirm(totle , function(result){
+            if(result){
+                var option={
+                    "vpayment.vpid":id
+                };
+                com.post(api.information.deleteVpaymentId,option,function(res){
+                    searcher.doSearch();
+                    com.showAlert(com.info,'删除成功');
+                });
+            }else{
+                btn.find('i').remove();
+                var prepared = $('<i></i>').addClass('icon-ok bigger-110');
+                span.prepend(prepared);
+            }
+        })
+    }
 
     //添加
     $('a[name="createVpayment"]', '#pagenation').click(function(){
@@ -163,6 +199,7 @@ jQuery(function($) {
         var brand = $_modalBody.find('input[name="brand"]').val();
         var receipt=$("#receipt").val();
         var money = $("#money").val();
+        var comment=$("#comment").val();
         var options = {
             'vpayment.mno': mno,
             'vpayment.collecter.userId': collecter,
@@ -170,7 +207,8 @@ jQuery(function($) {
             'vpayment.way': way,
             'vpayment.brand':brand,
             'vpayment.receipt':receipt,
-            'vpayment.money': money
+            'vpayment.money': money,
+            'vpayment.comment': comment
         };
         com.post(api.information.createVpayment, options, function(res){
             searcher.doSearch();
@@ -181,6 +219,7 @@ jQuery(function($) {
             com.clearValidator("#way", true);
             com.clearValidator("#brand", true);
             com.clearValidator("#money", true);
+            com.clearValidator("#comment", true);
             com.clearValidator();
 
             com.showAlert(com.info, "操作成功");

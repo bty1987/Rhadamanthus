@@ -14,4 +14,6 @@ public interface VpaymentService {
 	public List<?> countVpayment();
 	
 	public int createVpayment(VpaymentVO vpaymentVO,String userId);
+	
+	public int deleteVpaymentId(VpaymentVO vpaymentVO);
 }

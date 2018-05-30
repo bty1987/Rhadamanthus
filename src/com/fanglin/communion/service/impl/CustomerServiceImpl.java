@@ -260,10 +260,10 @@ public class CustomerServiceImpl implements CustomerService {
 	@Transactional(rollbackFor=Exception.class)
 	public int updateCustomerPhoneForStatus(CustomerPhoneVO customerPhoneVO) throws FLException{
 	
-		CustomerPhonePO customerPhonePO = customerPhoneDao.queryCustomerPhone(customerPhoneVO.getCid(),customerPhoneVO.getPhone());
+		CustomerPhonePO customerPhonePO = customerPhoneDao.get(customerPhoneVO.getCpid());
 		
 	    if (customerPhonePO == null) {
-	    	throw new FLException(130002, "客户信息不存在");
+	    	throw new FLException(130021, "客户电话不存在");
 	    }
 	    
 	 	customerPhonePO.setStatus(customerPhoneVO.getStatus());
@@ -299,17 +299,25 @@ public class CustomerServiceImpl implements CustomerService {
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int updateCustomerPhoneForDstatus(CustomerPhoneVO customerPhoneVO) throws FLException{
+	public int updateCustomerPhoneForDefault(CustomerPhoneVO customerPhoneVO) throws FLException{
 	
-		CustomerPhonePO customerPhonePO = customerPhoneDao.queryCustomerPhone(customerPhoneVO.getCid(),customerPhoneVO.getPhone());
+		CustomerPhonePO customerPhonePO = customerPhoneDao.get(customerPhoneVO.getCpid());
 		
 	    if (customerPhonePO == null) {
-	    	throw new FLException(130002, "客户信息不存在");
+	    	throw new FLException(130021, "客户电话不存在");
+	    }
+
+	    if(customerPhonePO.getDefaults() == CustomerPhonePO.DEFAULTS_ENABLE_INT){
+	    	throw new FLException(130022, "客户电话已使用");
+	    }
+	    
+	    if(customerPhonePO.getStatus() == CustomerPhonePO.STATUS_DISABLE_INT){
+	    	throw new FLException(130023, "客户电话未启用");
 	    }
 	    
 	    if(customerPhonePO.getDefaults() == CustomerPhonePO.DEFAULTS_DISABLE_INT){
 	    	
-	    	customerPhoneDao.clearCustomerPhoneForDefault(customerPhoneVO.getCid());
+	    	customerPhoneDao.clearCustomerPhoneForDefault(customerPhonePO.getCid());
 	    	
 	    	customerPhonePO.setDefaults(customerPhoneVO.getDefaults());
 		 	

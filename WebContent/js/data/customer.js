@@ -196,11 +196,11 @@ jQuery(function($) {
 					.append(addspan('40', '电话号码  : ', v.phone));
 
 				var $btnStatus =$('<div style="float: right;"></div>')
-				var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({"type" : "checkbox"}).attr("id", "deleteBtn" + i);
+				var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({"type" : "checkbox"}).attr("id", v.cpid);
 				var $span = $('<span></span>').addClass('lbl status-lbl');
 
 				var $btnDStatus =$('<div style="float: right;"></div>')
-				var $DstatusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({"type" : "checkbox"}).attr("id", "deleteBtn" + i);
+				var $DstatusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({"type" : "checkbox"}).attr("id", v.cpid);
 				var $Dspan = $('<span></span>').addClass('lbl default-lbl');
 
 				var $hr= $('<hr/>');
@@ -214,7 +214,7 @@ jQuery(function($) {
 						}
 						//先查询该电话是否被被人启用
                          com.post(api.data.checkCustomerForPhone,option,function(res){
-							 updateCustomerPhoneForStatus(v.phone, 0, function(){$this.removeAttr("checked")})
+							 updateCustomerPhoneForStatus(v.cpid, 0, function(){$statusSwitch.prop("checked", false);})
 						 },function(res){
 							 com.showAlert(com.warning, "该电话已经被其他客户启用");
 							 $statusSwitch.prop("checked", false);
@@ -224,7 +224,7 @@ jQuery(function($) {
 							 com.showAlert(com.warning, "默认电话不能禁用");
 							 $statusSwitch.prop("checked", true);
 						 }else{
-							 updateCustomerPhoneForStatus(v.phone, 1,function(){$this.prop("checked")})
+							 updateCustomerPhoneForStatus(v.cpid, 1,function(){ $statusSwitch.prop("checked", true);})
 						 }
 						}
 				})
@@ -236,7 +236,7 @@ jQuery(function($) {
 							$DstatusSwitch.prop("checked", false);
 							com.showAlert(com.warning, "禁用电话不能选为默认电话");
 						}else{
-							updateCustomerPhoneForDstatus(v.phone, 1,function(){$this.prop("checked")})
+							updateCustomerPhoneForDefault(v.cpid, 1,function(){$this.prop("checked")})
 						 }
 					}else{
 						$DstatusSwitch.prop("checked", true);
@@ -292,16 +292,21 @@ jQuery(function($) {
 	}
 
 	//启用禁用功能
-	function updateCustomerPhoneForStatus(phone, status, failcallBack){
-		com.post(api.data.updateCustomerPhoneForStatus, {"customerPhone.cid":customer.items.cid,"customerPhone.phone" : phone,"customerPhone.status" : status}, function(){
-			managephone()
+	function updateCustomerPhoneForStatus(cpid, status, failcallBack){
+		com.post(api.data.updateCustomerPhoneForStatus, {"customerPhone.cpid":cpid,"customerPhone.status" : status}, function(res){
+
+			if(res.errorCode != 0){
+				failcallBack;
+			}else{
+				managephone()
+			}
 		},function(res){
-			failcallBack && failcallBack();
+			failcallBack;
 		},null,false);
 	}
   //客户电话是否是默认的
-	function updateCustomerPhoneForDstatus(phone, defaults, failcallBack){
-		com.post(api.data.updateCustomerPhoneForDstatus, {"customerPhone.cid":customer.items.cid,"customerPhone.phone" : phone,"customerPhone.defaults" : defaults}, function(){
+	function updateCustomerPhoneForDefault(cpid, defaults, failcallBack){
+		com.post(api.data.updateCustomerPhoneForDefault, {"customerPhone.cpid":cpid,"customerPhone.defaults" : defaults}, function(){
 			managephone()
 		},function(res){
 			failcallBack && failcallBack();
@@ -336,11 +341,11 @@ jQuery(function($) {
 
 			} else {
 				com.post(api.data.checkCustomerForPhone,{"customerPhone.cid" :cid,"customerPhone.phone": $id.val(), "customerPhone.status":null}, function(res) {
-					num ? customer.repeatFlg = true : customer.phoneflag = true;
-					com.showPopover($id,{errorMsg: "电话信息已存在"}, "bottom");
-				}, function(res){
 					num ? customer.repeatFlg = false : customer.phoneflag = false;
 					$id.css("border", "1px solid #d5d5d5").popover("destroy");
+				}, function(res){
+					num ? customer.repeatFlg = true : customer.phoneflag = true;
+					com.showPopover($id,{errorMsg: "电话信息已存在"}, "bottom");
 				}, false);
 			}
 		}

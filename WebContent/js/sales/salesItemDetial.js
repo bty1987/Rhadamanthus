@@ -7,6 +7,7 @@ $(function () {
     var sid = params.sid;
     var fullpayStatus = params.fullpayStatus;
     var status = params.status;
+    var dompany = params.dompany;
 
     var refundBtn = $('#refundBtn');
     var refundCommitBtn = $('#refundCommitBtn');
@@ -31,7 +32,7 @@ $(function () {
         type: "approvalSalesRefund.type"
     };
 
-    if (fullpayStatus != 2 && status != 4) {
+    if ((fullpayStatus != 2 && status != 4) || dompany == "dompany") {
         hideButtons([refundBtn, refundCancelBtn, refundCommitBtn, fullRefundBtn, reOrderBtn]);
     }
 
@@ -245,10 +246,12 @@ $(function () {
                 $liLine.appendTo($ul);
                 $liLine.append($h3).append($ulProperty);
 
-
-                if (fullpayStatus == -1 && status != 4) {
-                    $btnDiv.append($btnEdit).append($btnDelete);
+                if(dompany!="dompany"){
+                    if (fullpayStatus == -1 && status != 4) {
+                        $btnDiv.append($btnEdit).append($btnDelete);
+                    }
                 }
+
                 $small.appendTo($h3);
                 $btnDiv.appendTo($h3);
 

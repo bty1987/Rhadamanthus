@@ -56,7 +56,6 @@ $(function () {
 
         var creatLine = function (i, v, lastFlag) {
 
-
             var $liLine = $('<li></li>').addClass('line');
 
             var _label = $('<label></label>');
@@ -99,17 +98,17 @@ $(function () {
             var $btn = $('<button></button>').addClass('btn btn-info dropdown-toggle').attr('data-toggle', 'dropdown').append('操作').append('<i class="icon-angle-down"></i>');
             var $btnUl = $('<ul></ul>').addClass('dropdown-menu').addClass(lastFlag ? 'bottom-up' : '');
 
-
+            var $btnCheck = $('<li></li>').append($('<a></a>').html('查看'));
             var $btnView = $('<li></li>').append($('<a></a>').html('出货'));
             var $btnEdit = $('<li></li>').append($('<a></a>').html('修改'));
             var $btnReturn = $('<li></li>').append($('<a></a>').html('退回'));
             var $btnPrint = $('<li></li>').append($('<a></a>').html('打印'));
 
-            $btnUl.append($btnEdit);
+            v.status != 4 && ($btnUl.append($btnEdit));
 
             v.status == 0 && ($btnUl.append($btnView));//初始：出货，修改
-            v.status == 1 && ($btnUl.append($btnView).append($btnEdit).append($btnReturn).append($btnPrint));//出货：出货 修改 退回 打印
-
+            v.status == 1 && ($btnUl.append($btnCheck).append($btnView).append($btnEdit).append($btnReturn).append($btnPrint));//出货：出货 修改 退回 打印
+            v.status == 4 && ($btnUl.append($btnCheck));
             $btnGroup
                 .append($btn)
                 .append($btnUl)
@@ -120,6 +119,10 @@ $(function () {
             $liLine.append($indexWrap)
                 .append($contentWrap)
                 .append($optionWrap);
+
+            $btnCheck.click(function(){
+                queryAccessoriesItem(v.aid, v.no);
+            });
 
             $btnView.click(function () {
                 if (v.status == 1) {
@@ -226,6 +229,29 @@ $(function () {
 
         return [];
     }, 'resultList');
+
+    function queryAccessoriesItem(aid, no){
+        var $popup = $('#checkPupUp');
+        $popup.attr({'data-aid': aid});
+        //弹出即全屏
+        var index = layer.open({
+            type: 1,
+            skin: 'layui-layer-lan',
+            title: "辅料订单" + no,
+            content: $popup,
+            area: [($(window).width() * 0.7 < 1000 ? $(window).width() * 0.7 : 1000) + "px", ($(window).height() * 0.84 < 620 ? $(window).height() * 0.84 : 620) + "px"],
+            maxmin: false,
+            zIndex: 9000,
+            success: function (layer, index) {
+                $popup.load("views/manifest/viewAccessories.html");
+            },
+            end: function () {
+                $popup.attr({'data-aid': null});
+                //$popup.empty();
+                //accessoriesSeacher.doSearch();
+            }
+        });
+    }
 
     function viewAccessoriesItemAndOrder(orderId, aid, no, createTime, status) {
         var $popup = $('#viewPopUp');

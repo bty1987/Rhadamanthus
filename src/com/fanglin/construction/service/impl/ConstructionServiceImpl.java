@@ -129,23 +129,6 @@ public class ConstructionServiceImpl implements ConstructionService {
 	}
 	
 	@Override
-	public ConstructionVO queryConstructionForWorkerNameByOrderId(ConstructionVO constructionVO){
-		
-		ConstructionPO constructionPO = constructionDao.queryConstructionByOrderId(constructionVO.getOrderId());
-		ConstructionVO _constructionVO = new ConstructionVO();
-		if(constructionPO != null){
-			BeanUtil.copyProperties(constructionPO, _constructionVO,Arrays.asList("decoration", "supervisor"));
-			if(constructionPO.getSupervisor() != null){
-				_constructionVO.setSupervisor(new UserBaseVO());
-				BeanUtil.copyProperties(constructionPO.getSupervisor(),_constructionVO.getSupervisor(),Arrays.asList("duty", "dept"));
-			}
-			
-		}
-		
-		return _constructionVO;
-	}
-	
-	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public void saveOrUpdateConstructionByOrderId(ConstructionVO constructionVO){
 		ConstructionPO constructionPO = constructionDao.queryConstructionByOrderId(constructionVO.getOrderId());

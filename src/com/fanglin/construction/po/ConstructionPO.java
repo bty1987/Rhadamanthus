@@ -14,6 +14,7 @@ package com.fanglin.construction.po;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -70,6 +71,10 @@ public class ConstructionPO implements Serializable{
 	private UserPO	supervisor;
 	
 	private int schedule;
+	
+	private Timestamp startTime;
+	
+	private Timestamp endTime;
 
 	public ConstructionPO() {
 		super();
@@ -125,5 +130,23 @@ public class ConstructionPO implements Serializable{
 
 	public void setSchedule(int schedule){
 		this.schedule = schedule;
+	}
+	
+	@Column(name="startTime")
+	public Timestamp getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(Timestamp startTime) {
+		this.startTime = startTime;
+	}
+	
+	@Column(name="endTime")
+	public Timestamp getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(Timestamp endTime) {
+		this.endTime = endTime;
 	}
 }

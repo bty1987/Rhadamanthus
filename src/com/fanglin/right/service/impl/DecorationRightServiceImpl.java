@@ -133,7 +133,7 @@ public class DecorationRightServiceImpl implements DecorationRightService {
 	}
 
 	@Override
-	public List<String> queryDecorationStatusRightByUserId(UserBaseVO userBaseVO, int company) throws FLException {
+	public List<Short> queryDecorationStatusRightByUserId(UserBaseVO userBaseVO, int company) throws FLException {
 		
 		UserPO userPO = userDao.queryUserByUserId(userBaseVO.getUserId());
 		
@@ -141,7 +141,7 @@ public class DecorationRightServiceImpl implements DecorationRightService {
 			throw new FLException(190005, "人员不存在");
 		}
 		
-		List<String> statuses = new ArrayList<String>();
+		List<Short> statuses = new ArrayList<Short>();
 		
 		List<DecorationStatusRightPO> decorationStatusRightPOs = decorationStatusRightDao.queryDecorationStatusRightByUId(userPO.getUid(), company);
 		
@@ -154,7 +154,7 @@ public class DecorationRightServiceImpl implements DecorationRightService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int updateDecorationStatusRight(UserBaseVO userBaseVO, List<String> statuses, int company) throws FLException {
+	public int updateDecorationStatusRight(UserBaseVO userBaseVO, List<Short> statuses, int company) throws FLException {
 		
 		UserPO userPO = userDao.queryUserByUserId(userBaseVO.getUserId());
 		
@@ -167,7 +167,7 @@ public class DecorationRightServiceImpl implements DecorationRightService {
 		decorationStatusRightDao.deleteDecorationStatusRightByUId(uId, company);
 		
 		if(statuses != null){
-			for(String status: statuses){
+			for(Short status: statuses){
 				decorationStatusRightDao.save(new DecorationStatusRightPO(uId, status, company));
 			}
 		}

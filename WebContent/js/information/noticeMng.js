@@ -72,11 +72,11 @@ $(function(){
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
 
-            var $btnDown = $('<a></a>').addClass('btn btn-minier btn-success').html('下载');
-            var $management = $('<a></a>').addClass('btn btn-minier btn-primary').html('管理');
+            var $btnDown = $('<a></a>').addClass('btn btn-minier btn-yellow').html('下载');
+            var $management = $('<a></a>').addClass('btn btn-minier btn-success').html('管理');
 
 
-            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-primary').html('编辑');
+            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-warning').html('编辑');
             var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
 
             var myDate= new Date();
@@ -368,7 +368,7 @@ $(function(){
 
     function showDepaermentModal() {
         $wrap = $('#managements').find('.modal-body').empty();
-        com.post(api.department.queryDepartment, {}, function (res) {
+        com.post(api.communion.queryDepartment, {}, function (res) {
             var treeData = res.deptList;
             if (!treeData || !treeData.length) {
                 return;

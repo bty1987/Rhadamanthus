@@ -87,14 +87,9 @@ $(function(){
 	function editConstructionNodeCompany(row){
 
 		com.post(api.data.queryConstructionNode,{"constructionNode.status":0},function(res){
-			constructionNodeCompany.nodeNames = res.constructionNodes;
+            constructionNodeCompany.constructionNodeCompanyItems.nodeName.bindData(res.constructionNodes, "cnid", "name");
 		},null,false);
 
-		if(constructionNodeCompany.nodeNames && constructionNodeCompany.nodeNames.length > 0){
-			$.each(constructionNodeCompany, function(i, v){
-				constructionNodeCompany.constructionNodeCompanyItems.nodeName.bindData(v, "cnid", "name");
-			});
-		}
 		$("#companyName").val(row.name);
 		constructionNodeCompany.modal.modal("show");
 		var options = {
@@ -146,5 +141,5 @@ $(function(){
 			return;
 		});
 	}
-	
+
 });

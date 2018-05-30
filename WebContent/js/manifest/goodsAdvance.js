@@ -168,7 +168,7 @@ $(function () {
             });
             //价格点击事件
             $btnPrice.click(function () {
-                openLayerSwitch('goodsPricePopUp', v.gid, '价格', 'views/manifest/price.html');
+                openLayerSwitch('goodsPricePopUp', v.gid, '价格', 'views/manifest/priceAdvance.html');
             });
             //套装点击事件
            /* $btnSuit.click(function () {
@@ -263,12 +263,13 @@ $(function () {
         }, matcher: function (item) {
             return true;
         }, callback: function (data) {
-            this.options.list = data["autoFillKeyValue"];
-            this.flprocess(this.options.list, ["key"], ["value"]);
+            this.options.list = data["brands"];
+            this.flprocess(this.options.list, ["bid"], ["brandName"]);
         },
 
         isResultTypeMap: true //必填值为true，获取key，value的标识，
         , flupdater: function (k, v) {//下拉列表选中时的一些处理，必填对选中项的key和value做处理
+            $('input[name="brand"]').attr('data-bid',k);
             return v;
         }
     });
@@ -789,6 +790,7 @@ $(function () {
         var barcode = $layer.find('input[name="barcode"]').val();
         var category = $layer.find('select[name="category"] option:selected').text();
         var brand = $layer.find('input[name="brand"]').val();
+        var bid = $layer.find('input[name="brand"]').attr('data-bid');
         var measurementUnit = $layer.find('select[name="measurementUnit"] option:selected').text();
         var pieceNum = $layer.find('input[name="pieceNum"]').val();
         var atid = $layer.find('select[name="atid"] option:selected').val();
@@ -801,6 +803,7 @@ $(function () {
                         "goods.barcode": barcode,
                         "goods.category": category,
                         "goods.brand": brand,
+                        "goods.bid": bid,
                         "goods.measurementUnit": measurementUnit,
                         "goods.pieceNum": pieceNum,
                         "goods.accessoriesType.atid": atid == null || atid == "" ? "" : atid

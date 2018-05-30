@@ -1,0 +1,97 @@
+$.extend(api.index, {
+	morders: {url: "/views/store/morderitem.html"},
+	mordersitem: {url: "/views/store/morder.html"},
+});
+
+$.extend(api, {store: {
+	queryAddressByUid: {url: "queryAddressByUid.do"},
+	addAddress: {url: "addAddress.do"},
+	updateAddress: {url: "updateAddress.do"},
+	updateAddressForStatus: {url: "updateAddressForStatus.do"},
+	deleteAddress: {url: "deleteAddress.do"},
+	
+	queryCartByUid: {url: "queryCartByUid.do"},
+	queryCartByUnion: {url: "queryCartByUnion.do"},
+	addOrUpdateCart: {url: "addOrUpdateCart.do"},
+	updateCart: {url: "updateCart.do"},
+	deleteCartByCid: {url: "deleteCartByCid.do"},
+	
+	pageMbrand: {url: "pageMbrand.do"},
+	queryMbrandByCid: {url: "queryMbrandByCid.do"},
+	queryMbrandByName: {url: "queryMbrandByName.do"},
+	addMbrand: {url: "addMbrand.do"},
+	updateMbrand: {url: "updateMbrand.do"},
+	updateMbrandForStatus: {url: "updateMbrandForStatus.do"},
+	
+	pageMcategory: {url: "pageMcategory.do"},
+	queryMcategory: {url: "queryMcategory.do"},
+	queryMcategoryByIsShow: {url: "queryMcategoryByIsShow.do"},
+	queryMcategoryByCid: {url: "queryMcategoryByCid.do"},
+	addMcategory: {url: "addMcategory.do"},
+	updateMcategory: {url: "updateMcategory.do"},
+	updateMcategoryForIsShow: {url: "updateMcategoryForIsShow.do"},
+	
+	queryMcolorByGid: {url: "queryMcolorByGid.do"},
+	queryMcolorByGidAndStatus: {url: "queryMcolorByGidAndStatus.do"},
+	addMcolor: {url: "addMcolor.do"},
+	updateMcolor: {url: "updateMcolor.do"},
+	updateMcolorForStatus: {url: "updateMcolorForStatus.do"},
+	
+	queryMformatByGid: {url: "queryMformatByGid.do"},
+	queryMformatByGidAndStatus: {url: "queryMformatByGidAndStatus.do"},
+	addMformat: {url: "addMformat.do"},
+	updateMformat: {url: "updateMformat.do"},
+	updateMformatForStatus: {url: "updateMformatForStatus.do"},
+	
+	pageMgoods: {url: "pageMgoods.do"},
+	queryMgoodsByPinyinName: {url: "queryMgoodsByPinyinName.do"},
+	queryMgoodsByBid: {url: "queryMgoodsByBid.do"},
+	queryMgoodsByStatus: {url: "queryMgoodsByStatus.do"},
+	queryMgoodsByGid: {url: "queryMgoodsByGid.do"},
+	addMgoods: {url: "addMgoods.do"},
+	updateMgoods: {url: "updateMgoods.do"},
+	updateMgoodsForDefaultImg: {url: "updateMgoodsForDefaultImg.do"},
+	updateMgoodsForStatus: {url: "updateMgoodsForStatus.do"},
+	
+	pageMorder: {url: "pageMorder.do"},
+	queryMorderByUid: {url: "queryMorderByUid.do"},
+	queryMorderByStatus: {url: "queryMorderByStatus.do"},
+	addMorder: {url: "addMorder.do"},
+	updateMorderForStatus: {url: "updateMorderForStatus.do"},
+	deleteMorder: {url: "deleteMorder.do"},
+	
+	queryMorderItemByUidAndStatus: {url: "queryMorderItemByUidAndStatus.do"},
+	queryMorderItemByOid: {url: "queryMorderItemByOid.do"},
+	updateMorderItemForStatus: {url: "updateMorderItemForStatus.do"},
+
+	queryMprice: {url: "queryMprice.do"},
+	queryMpriceByGid: {url: "queryMpriceByGid.do"},
+	queryMpriceByBid: { url: "queryMpriceByBid.do",},
+    queryMpriceByPinyinName: {url: "queryMpriceByPinyinName.do"},
+	queryMpriceByStatus: {url: "queryMpriceByStatus.do"},
+	queryMpriceByGidAndCid: {url: "queryMpriceByGidAndCid.do"},
+	queryMpriceByGidAndFid: {url: "queryMpriceByGidAndFid.do"},
+	addMprice: {url: "addMprice.do"},
+	updateMpriceForStatus: {url: "updateMpriceForStatus.do"},
+	
+	pageMuser: {url: "pageMuser.do"},
+	queryMuserByPinyinName: {url: "queryMuserByPinyinName.do"},
+	queryMuserByUid: {url: "queryMuserByUid.do"},
+	queryMuserByUnion: {url: "queryMuserByUnion.do"},
+	addMuser: {url: "addMuser.do"},
+	updateMuser: {url: "updateMuser.do"},
+	
+	queryPictureByGid: {url: "queryPictureByGid.do"},
+	queryPictureByType: {url: "queryPictureByType.do"},
+	addPicture: {url: "addPicture.do"},
+	updatePicture: {url: "updatePicture.do"},
+	updatePictureForSort: {url: "updatePictureForSort.do"},
+	deletePicture: {url: "deletePicture.do"},
+	
+	querySlide: {url: "querySlide.do"},
+	querySlideByGid: {url: "querySlideByGid.do"},
+	addSlide: {url: "addSlide.do"},
+	updateSlide: {url: "updateSlide.do"},
+	updateSlideForStatus: {url: "updateSlideForStatus.do"},
+
+}});

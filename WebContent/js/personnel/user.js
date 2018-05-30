@@ -13,11 +13,13 @@
                     var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.userName));
                     var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
                     var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-                    var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
-                    var $addDD=$('<a></a>').addClass('btn btn-minier btn-success').html('添加到钉钉');
-                    var $updateDD=$('<a></a>').addClass('btn btn-minier btn-warning').html('同步钉钉信息');
-                    var $deleteDD=$('<a></a>').addClass('btn btn-minier btn-inverse').html('从钉钉删除');
-                    var $userexception=$('<a></a>').addClass('btn btn-minier btn-danger').html('工作经历');
+
+                    var $qrcode = $('<a></a>').addClass('btn btn-minier btn-yellow').html('二维码');
+                    var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-success').html('编辑');
+                    var $addDD=$('<a></a>').addClass('btn btn-minier btn-warning').html('添加到钉钉');
+                    var $updateDD=$('<a></a>').addClass('btn btn-minier btn-inverse').html('同步钉钉信息');
+                    var $deleteDD=$('<a></a>').addClass('btn btn-minier btn-danger').html('从钉钉删除');
+                    var $userexception=$('<a></a>').addClass('btn btn-minier btn-pink').html('工作经历');
 
                     var propertyArr = [
                         ["员工编号:", v.userId, "grey"],
@@ -34,6 +36,17 @@
                         $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
                         $liProperty.appendTo($ulProperty);
                     });
+
+                    $qrcode.click(function(){
+                        $('#qrcodeModal').modal('show');
+                        $('#Qrcode').html("");
+                        $('#Qrcode').qrcode({
+                            render: "canvas", //也可以替换为table
+                            width: 150,
+                            height: 150,
+                            text: "fanglinserver:"+v.userId,
+                        });
+                    })
 
                     $btnEdit.click(function(){
                         params.tempUserId = v.userId;
@@ -261,7 +274,7 @@
                             $uli.appendTo($('#userException'));
                     });
 
-                    $divBtnWrap.append($btnEdit).append($addDD).append($updateDD).append($deleteDD).append($userexception).appendTo($h3);
+                    $divBtnWrap.append($qrcode).append($btnEdit).append($addDD).append($updateDD).append($deleteDD).append($userexception).appendTo($h3);
 
                     $liLine.append($h3).append($ulProperty).appendTo($ul);
                 });

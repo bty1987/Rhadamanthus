@@ -72,7 +72,21 @@ public class SalesDaoImpl extends DaoImpl<SalesPO> implements SalesDao {
 	}
 	
 	@Override
-	public List<SalesPO> pageSalesForDompany(Paging paging,List<Filter> filters, int dompany) {
+	public List<SalesPO> pageSalesForDompany(Paging paging, List<Filter> filters,int dompany) {
+		
+		PagingQuery<SalesPO> query = pagingQuery(paging, SalesPO.class);
+		
+		query.add(query.getCriterion(SalesPO.COLUMN_DOMPANY_STR,dompany,"eq"));
+		
+		queryFilterExcute(query, filters);
+		
+		query.desc("sid");
+		
+		return query.list();
+	}
+	
+	@Override
+	public List<SalesPO> pageSalesForBalanceByDompany(Paging paging,List<Filter> filters, int dompany) {
 		
 		PagingQuery<SalesPO> query = pagingQuery(paging, SalesPO.class);
 		

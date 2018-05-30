@@ -19,8 +19,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseListAction;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.personel.service.UserContractService;
 import com.fanglin.personel.vo.UserContractVO;
+import com.fanglin.utils.SystemConfig;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -47,24 +49,36 @@ public class UserContractAction extends BaseListAction {
 	}
 
 	 @Action(value="addUserContract", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	  public String addUserContract()
-	  {
+	  public String addUserContract() throws FLException{
+		 
+		if(SystemConfig.getString("communion") == null){
+		    throw new FLException(-1, "无操作权限");
+		}
+		
 	    userContractService.saveOrUpdateUserContract(getUserContractList());
 
 	    return "success";
 	  }
 
 	  @Action(value="updateUserContract", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	  public String updateUserContract()
-	  {
+	  public String updateUserContract() throws FLException{
+		  
+	    if(SystemConfig.getString("communion") == null){
+		    throw new FLException(-1, "无操作权限");
+		}
+	    
 	    userContractService.saveOrUpdateUserContract(getUserContractList());
 
 	    return "success";
 	  }
 
 	  @Action(value="deleteUserContract", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	  public String deleteUserContract()
-	  {
+	  public String deleteUserContract() throws FLException{
+		  
+		if(SystemConfig.getString("communion") == null){
+			throw new FLException(-1, "无操作权限");
+		}
+		
 	    userContractService.deleteUserContract(getUserContractIds());
 
 	    return "success";

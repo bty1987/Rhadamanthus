@@ -24,7 +24,7 @@ jQuery(function($) {
 		postParmas: {"paging.rows":100, "paging.page":1},
 		listgrid: actionLog.listgrid,
 		items: [
-	        {label:"操作人",id:"createUserSearch",name:"createUser",type:"autoFillPinyinText", url:api.personel.queryUserForNameByDuty,postData:{"duty":""}}, 
+	        {label:"操作人",id:"createUserSearch",name:"createUser",type:"autoFillPinyinText", url:api.personel.queryUserByDepartmentType,postData:{"departmentType.name":"", "user.status": 0}}, 
 	        {label:"操作名称", id:"actionNameSearch", name:"actionName",type:"text",op:"cn"},
 //		    {label:"操作时间", id:"createTimeSearch", name:"createTime",type:"dateRangePicker",op:"between"},
 		]

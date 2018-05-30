@@ -231,8 +231,8 @@ jQuery(function($) {
         decorationDetail.items.houseClass.bindData(res.houseClass, 'key', 'value');
     }, null, false);
 
-    com.initChosen('quoterId', api.personel.queryUserForNameByDuty, "pinyinName", {"duty": "", "user.status":0}, "autoFillKeyValue", "key", "value");
-    com.initChosen('escorterId', api.personel.queryUserForNameByDuty, "pinyinName", {"duty": "", "user.status":0}, "autoFillKeyValue", "key", "value");
+    com.initChosen('quoterId', api.personel.queryUserByDepartmentType, "pinyinName", {"user.status":0,"departmentType.name":""}, "autoFillKeyValue", "key", "value");
+    com.initChosen('escorterId', api.personel.queryUserByDepartmentType, "pinyinName", {"user.status":0,"departmentType.name":""}, "autoFillKeyValue", "key", "value");
     com.initChosen('no', api.data.queryVillageForNameByPinyin, "pinyinName", {}, "autoFillKeyValue", "key", "value")
 
     if(decorationDetail.orderType == decorationDetail.type["半价"]){
@@ -1128,17 +1128,18 @@ jQuery(function($) {
                 var option = {
                     "customerPhone.phone":v.phone,
                     "customerPhone.status":0,
-                    "customerPhone.cid":v.cid
+                    "customerPhone.cid":v.cid,
+                    "customerPhone.cpid":v.cpid
                 }
                 //先查询该电话是否被被人启用
                 com.post(api.data.checkCustomerForPhone, option, function(res){
+                    updateCustomerPhoneForStatus(v.cpid, 0, function(){$this.removeAttr("checked")})
+                },function(res){
                     com.showAlert(com.warning, "该电话已经被其他客户启用");
                     $btnStauts.prop("checked", false);
-                },function(res){
-                    updateCustomerPhoneForStatus(decorationDetail.customer.cid,v.phone, 0, function(){$this.removeAttr("checked")})
                 },false);
             }else{
-                updateCustomerPhoneForStatus(decorationDetail.customer.cid,v.phone, 1,function(){$this.prop("checked")})
+                updateCustomerPhoneForStatus(v.cpid, 1,function(){$this.prop("checked")})
             }
 
         });
@@ -1146,8 +1147,8 @@ jQuery(function($) {
         $liLine.appendTo($ul);
     }
 
-    function updateCustomerPhoneForStatus(cid,phone, status, callBack){
-        com.post(api.data.updateCustomerPhoneForStatus, {"customerPhone.cid":cid,"customerPhone.phone" : phone,"customerPhone.status" : status}, function(){
+    function updateCustomerPhoneForStatus(cpid, status, callBack){
+        com.post(api.data.updateCustomerPhoneForStatus, {"customerPhone.cpid":cpid,"customerPhone.status" : status}, function(){
         },function(res){
             callBack && callBack();
 
@@ -1205,11 +1206,11 @@ jQuery(function($) {
                     "customerPhone.phone": $id.val(),
                     "customerPhone.status": null
                 }, function (res) {
-                    decorationDetail.customer.repeatFlg = true;
-                    com.showPopover($id, {errorMsg: "电话信息已存在"}, "bottom");
-                }, function (res) {
                 	decorationDetail.customer.repeatFlg = false;
                     $id.css("border", "1px solid #d5d5d5").popover("destroy");
+                }, function (res) {
+                    decorationDetail.customer.repeatFlg = true;
+                    com.showPopover($id, {errorMsg: "电话信息已存在"}, "bottom");
                 }, false);
             }
         }

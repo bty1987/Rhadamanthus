@@ -1,6 +1,7 @@
 jQuery(function ($) {
 
     var constructionNodes = {};
+    var decorationOrderStatus = {};
 
     com.post(api.data.queryConstructionNode, {}, function (res) {
         $.each(res.constructionNodes, function (i, v) {
@@ -9,6 +10,10 @@ jQuery(function ($) {
         constructionNodes[0] = "初始";
         constructionNodes[1] = "开工";
         constructionNodes[2] = "完工";
+    }, null, false);
+
+    com.post(api.ds.decoration, {}, function (res) {
+        decorationOrderStatus = res.decorationOrderStatus
     }, null, false);
 
     var personInfo = {
@@ -38,9 +43,9 @@ jQuery(function ($) {
         var options = {};
 
         if (qualityName == "supervisor") {
-            options["duty"] = qualityInfo[qualityName];
+            options["departmentType.name"] = "工程部";
             options["user.status"] = 0;
-            queryUserNameUrl = api.personel.queryUserForNameByDuty;
+            queryUserNameUrl = api.personel.queryUserByDepartmentType;
         }
         com.initChosen(qualityName + 'Quality', queryUserNameUrl, "pinyinName", options, "autoFillKeyValue", "key", "value");
     }
@@ -75,6 +80,14 @@ jQuery(function ($) {
 
             var $btnDeploy = $('<a></a>').addClass('btn btn-minier btn-yellow').html('人员部署');
 
+            var statusName = "";
+
+            $.each(decorationOrderStatus, function (i, statusNum) {
+                if (statusNum.key == v.status) {
+                    statusName = statusNum.value
+                }
+            });
+
             var propertyArr = [
                 ["楼盘地址:", v.house.village.name + ' ' + v.house.houseNumber, "grey"],
                 ["客户:", v.customer.name, "grey"],
@@ -83,7 +96,7 @@ jQuery(function ($) {
                 ["创建时间:", v.createTime, "green"],
                 ["进度:", constructionNodes[v.projectStatus], "red"],
                 //v.contractPrefix ==null?'无': v.contractPrefix
-                ["状态:", v.status, "red"],
+                ["状态:", statusName, "red"],
             ];
 
             $.each(propertyArr, function (index, value) {
@@ -134,12 +147,10 @@ jQuery(function ($) {
             var queryUserNameUrl = "";
 
             for (var qualityName in qualityInfo) {
-
                 if (res.construction.supervisor == null) {
                     com.updateChosen('supervisor', '', '');
                 } else {
-
-                    com.updateChosen('supervisorQuality', res.construction.supervisor.userId, res.construction.supervisor.userName);
+                    com.updateChosen('supervisorQuality', res.construction.supervisor.userId, (res.construction.supervisor.userName == null ? "无" : res.construction.supervisor.userName));
                 }
             }
             personInfoPostData.orderId = v.orderId;

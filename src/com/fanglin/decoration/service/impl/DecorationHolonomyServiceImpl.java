@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.dao.DecorationHolonomyDao;
 import com.fanglin.decoration.po.DecorationHolonomyPO;
 import com.fanglin.decoration.po.DecorationPO;
@@ -21,6 +22,8 @@ import com.fanglin.payment.po.DecorationPaymentPO;
 import com.fanglin.payment.service.DecorationPaymentService;
 import com.fanglin.payment.vo.DecorationPaymentVO;
 import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.system.dao.SystemConfigDao;
+import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
@@ -30,13 +33,19 @@ import com.fanglin.utils.Paging;
 public class DecorationHolonomyServiceImpl implements DecorationHolonomyService {
 	
 	@Autowired
-	private DecorationHolonomyDao decorationHolonomyDao; 
+	private DecorationHolonomyDao decorationHolonomyDao;
+	
+	@Autowired
+	private DecorationDao decorationDao;
 	
 	@Autowired
 	private DecorationPaymentDao decorationPaymentDao;
 	
 	@Autowired
 	private DecorationPaymentService decorationPaymentService;
+	
+	@Autowired
+	private SystemConfigDao systemConfigDao;
 	
 	@Override
 	public void pageDecorationHolonomy(Paging paging, List<Filter> filters, int company) {
@@ -90,9 +99,15 @@ public class DecorationHolonomyServiceImpl implements DecorationHolonomyService 
 	public void makeDecorationHolonomy(DecorationHolonomyVO decorationHolonomyVO, String userId) throws FLException {
 		
 		String orderId = decorationHolonomyVO.getDecoration().getOrderId();
-		
+
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 		DecorationHolonomyPO decorationHolonomyPO = decorationHolonomyDao.queryDecorationHolonomyByOrderId(orderId);
+		
 		String[] paymentStatus = new String[]{DecorationPaymentPO.PAYMENTSTATUS_PAY_STR,DecorationPaymentPO.PAYMENTSTATUS_CONFIRM_STR};
+		
+		SystemConfigPO servicePaymentRatio = systemConfigDao.querySystemConfig("servicePaymentRatio", decorationPO.getCompany());
+		
+		float ratio = Arith.sub(servicePaymentRatio != null ? Float.parseFloat(servicePaymentRatio.getValue()) : 1.1f, 1f);
 		
 		if(decorationHolonomyPO != null){
 			if(decorationHolonomyPO.getStatus() != DecorationHolonomyPO.STATUS_INIT_SHORT || !Float.valueOf(DecorationHolonomyPO.MONEY_SERVICEPAIDUP_FLOAT).equals(decorationHolonomyPO.getServicePaidup())){
@@ -106,7 +121,7 @@ public class DecorationHolonomyServiceImpl implements DecorationHolonomyService 
 			}
 			BeanUtil.copyProperties(decorationHolonomyVO, decorationHolonomyPO,Arrays.asList("decoration","dhid"));
 		}else{
-			decorationHolonomyPO = new DecorationHolonomyPO(new DecorationPO(orderId));
+			decorationHolonomyPO = new DecorationHolonomyPO(decorationPO);
 			BeanUtil.copyProperties(decorationHolonomyVO, decorationHolonomyPO,Arrays.asList("decoration"));
 		}
 		
@@ -116,12 +131,13 @@ public class DecorationHolonomyServiceImpl implements DecorationHolonomyService 
 
 		Float managePrice = (float) Math.floor(Arith.mul(projectPrice, manageRate));
 		Float materialPrice = (float) Math.ceil(Arith.mul(decorationHolonomyVO.getProjectPrice(), decorationHolonomyVO.getMaching()));
-		Float servicePrice = (float) Math.floor(Arith.mul(materialPrice, decorationHolonomyVO.getServiceRate()));
+		Float servicePrice = (float) Math.floor(Arith.mul(materialPrice, ratio));
 		
 		decorationHolonomyPO.setProjectPrice(disprojectPrice);
 		decorationHolonomyPO.setManagePrice(managePrice);
 		decorationHolonomyPO.setMaterialPrice(materialPrice);
 		decorationHolonomyPO.setServicePrice(servicePrice);
+		decorationHolonomyPO.setServiceRate(ratio);
 		
 		decorationHolonomyPO.setMaterialPaidup(DecorationHolonomyPO.MONEY_SERVICEPAIDUP_FLOAT);
 		decorationHolonomyPO.setServicePaidup(DecorationHolonomyPO.MONEY_SERVICEPAIDUP_FLOAT);

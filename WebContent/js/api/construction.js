@@ -39,7 +39,6 @@ $.extend(api, {construction: {
     pageConstructionForSupervision: {url: "pageConstructionForSupervision.do", demo: true},
     pageConstructionForAcceptance: {url: "pageConstructionForAcceptance.do", demo: true},
     queryConstructionByOrderId: {url: "queryConstructionByOrderId.do", demo: true},
-    queryConstructionForWorkerNameByOrderId: {url: "queryConstructionForWorkerNameByOrderId.do", demo: true},
     updateConstructionByOrderId: {url: "updateConstructionByOrderId.do"},
     nextConstructionByOrderId: {url: "nextConstructionByOrderId.do"},
 

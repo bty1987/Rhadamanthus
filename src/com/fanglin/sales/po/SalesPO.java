@@ -2,6 +2,7 @@ package com.fanglin.sales.po;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,6 +17,8 @@ import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.communion.po.HousePO;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.sales.vo.SalesVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "sales", catalog = "sales")
@@ -448,6 +451,21 @@ public class SalesPO implements Serializable {
 
 	public void setOtherStatus(short otherStatus) {
 		this.otherStatus = otherStatus;
+	}
+	
+	public void ptv(SalesVO salesVO){
+		
+		BeanUtil.copyProperties(this, salesVO, Arrays.asList("salesman","dept","region","guider","instorer","guideDept","house","customer"));
+		BeanUtil.copyProperties(this.getSalesman(), salesVO.getSalesman(),Arrays.asList("dept","duty"));
+		BeanUtil.copyProperties(this.getDept(), salesVO.getDept(),Arrays.asList("fatherDept","cityProper","type"));
+		BeanUtil.copyProperties(this.getRegion(), salesVO.getRegion(),Arrays.asList("fatherDept","cityProper","type"));
+		BeanUtil.copyProperties(this.getGuider(), salesVO.getGuider(),Arrays.asList("dept","duty"));
+		BeanUtil.copyProperties(this.getInstorer(), salesVO.getInstorer(),Arrays.asList("dept","duty"));
+		BeanUtil.copyProperties(this.getGuideDept(), salesVO.getGuideDept(),Arrays.asList("fatherDept","cityProper","type"));
+		BeanUtil.copyProperties(this.getHouse(), salesVO.getHouse(),Arrays.asList("village"));
+		BeanUtil.copyProperties(this.getHouse().getVillage(), salesVO.getHouse().getVillage(),Arrays.asList("cityProper"));
+		BeanUtil.copyProperties(this.getCustomer(), salesVO.getCustomer());
+		
 	}
 	
 }

@@ -44,7 +44,7 @@ public class FormatUtil {
 	
 	public static void main(String[] args){
 		System.out.println(fillZero(offset(3), "0000"));
-		System.out.println(encodeCompany(11));
-		System.out.println(decodeCompany(String.valueOf(encodeCompany(6))));
+		System.out.println(encodeCompany(12));
+		System.out.println(decodeCompany("19833631"));
 	}
 }

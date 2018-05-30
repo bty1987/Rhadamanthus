@@ -320,11 +320,11 @@ jQuery(function () {
 
     //业务员发生改变
     $('#salesmanName').typeahead({
-        url: api.personel.queryUserForNameByDuty,//获取下拉列表的接口
+        url: api.personel.queryUserByDepartmentType,//获取下拉列表的接口
         list: [],
         postData: {},//获取下拉列表的参数
         source: function (query, process) {
-            var options = $.extend({pinyinName: query, duty: "","user.status":0}, this.options.postData);
+            var options = $.extend({pinyinName: query,"user.status":0,"departmentType.name":""}, this.options.postData);
             com.post(this.options.url, options, $.proxy(this.options.callback, this));
         }, matcher: function (item) {
             return true;
@@ -339,11 +339,11 @@ jQuery(function () {
     });
     //主材驻店
     $('#instorer').typeahead({
-        url: api.personel.queryUserForNameByDuty,//获取下拉列表的接口
+        url: api.personel.queryUserByDepartmentType,//获取下拉列表的接口
         list: [],
         postData: {},//获取下拉列表的参数
         source: function (query, process) {
-            var options = $.extend({pinyinName: query, duty: "","user.status":0}, this.options.postData);
+            var options = $.extend({pinyinName: query,"user.status":0,"departmentType.name":""}, this.options.postData);
             com.post(this.options.url, options, $.proxy(this.options.callback, this));
         }, matcher: function (item) {
             return true;
@@ -358,11 +358,11 @@ jQuery(function () {
     });
     //主材导购
     $('#guider').typeahead({
-        url: api.personel.queryUserForNameByDuty,
+        url: api.personel.queryUserByDepartmentType,
         list: [],
         postData: {},//获取下拉列表的参数
         source: function (query, process) {
-            var options = $.extend({pinyinName: query, duty: "","user.status":0}, this.options.postData);
+            var options = $.extend({pinyinName: query,"user.status":0,"departmentType.name":""}, this.options.postData);
             com.post(this.options.url, options, $.proxy(this.options.callback, this));
         }, matcher: function (item) {
             return true;

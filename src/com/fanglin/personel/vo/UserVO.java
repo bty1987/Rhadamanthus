@@ -38,7 +38,7 @@ public class UserVO implements Serializable {
 	
 	private String userName;
 	
-	private String userNamePinYin;
+	private String pinYin;
 	
 	private String currentName;
 	
@@ -65,7 +65,7 @@ public class UserVO implements Serializable {
 	private Short freedom;
 	
 	private String dutyName;
-
+	
 	public UserVO(){
 		super();
 	}
@@ -159,12 +159,12 @@ public class UserVO implements Serializable {
 		this.userName = userName;
 	}
 
-	public String getUserNamePinYin(){
-		return userNamePinYin;
+	public String getPinYin() {
+		return pinYin;
 	}
 
-	public void setUserNamePinYin(String userNamePinYin){
-		this.userNamePinYin = userNamePinYin;
+	public void setPinYin(String pinYin) {
+		this.pinYin = pinYin;
 	}
 
 	public String getCurrentName(){

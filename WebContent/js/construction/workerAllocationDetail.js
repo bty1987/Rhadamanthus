@@ -75,17 +75,12 @@ jQuery(function ($) {
         com.post(api.construction.queryConstructionScheduleByOrderId, elementPostData, function (res) {
 
             var element = res.constructionSchedules;
-            if (schedule == 5 || schedule == 10) {
-                com.initChosen(operate + "WorkerName", api.personel.queryUserForNameByDutysAO, "pinyinName", {
-                    "dutysO[0]": "水暖工", "dutysO[1]": "电工", "dutysO[2]": "力工", "dutysO[3]": "水电工",
-                }, "autoFillKeyValue", "key", "value");
-            } else {
-                var dutyName = constructionNode[schedule];
-                com.initChosen(operate + "WorkerName", api.personel.queryUserForNameByDuty, "pinyinName", {
-                    "duty": dutyName,
-                    "user.status": 0
-                }, "autoFillKeyValue", "key", "value");
-            }
+
+            com.initChosen(operate + "WorkerName", api.personel.queryUserByDepartmentType, "pinyinName", {
+                "departmentType.name": "工程部",
+                "user.status": 0
+            }, "autoFillKeyValue", "key", "value");
+
             $("#" + operate + "StartTime").val(element[0].startTime);
             $("#" + operate + "EndTime").val(element[0].endTime);
 

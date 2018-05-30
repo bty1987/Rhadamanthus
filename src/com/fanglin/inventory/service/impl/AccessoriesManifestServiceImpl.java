@@ -8,8 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.inventory.dao.AccessoriesManifestDao;
 import com.fanglin.inventory.po.AccessoriesManifestPO;
+import com.fanglin.inventory.po.ManifestPO;
 import com.fanglin.inventory.service.AccessoriesManifestService;
-import com.fanglin.inventory.vo.AccessoriesManifestVO;
 import com.fanglin.inventory.vo.AccessoriesVO;
 import com.fanglin.inventory.vo.ManifestVO;
 import com.fanglin.utils.BeanUtil;
@@ -23,17 +23,17 @@ public class AccessoriesManifestServiceImpl implements AccessoriesManifestServic
 	private AccessoriesManifestDao accessoriesManifestDao;
 
 	@Override
-	public AccessoriesManifestVO queryAccessoriesManifestByAid(AccessoriesManifestVO accessoriesManifestVO) {
+	public ManifestVO queryManifestByAid(AccessoriesVO accessoriesVO) {
 		
-		AccessoriesManifestPO accessoriesManifestPO = accessoriesManifestDao.queryAccessoriesManifestByAid(accessoriesManifestVO.getAccessories().getAid());
+		AccessoriesManifestPO accessoriesManifestPO = accessoriesManifestDao.queryManifestByAid(accessoriesVO.getAid());
 		
-		accessoriesManifestVO = new AccessoriesManifestVO(new AccessoriesVO(),new ManifestVO());
+		ManifestPO manifestPO = accessoriesManifestPO.getManifest();
 		
-		BeanUtil.copyProperties(accessoriesManifestPO, accessoriesManifestVO, Arrays.asList("accessories","manifest"));
-		BeanUtil.copyProperties(accessoriesManifestPO.getAccessories(), accessoriesManifestVO.getAccessories(), Arrays.asList("house","creater","approver","supervisor","fetchTime","company"));
-		BeanUtil.copyProperties(accessoriesManifestPO.getManifest(), accessoriesManifestVO.getManifest(), Arrays.asList("createUser","quoteManifest"));
+		ManifestVO manifestVO = new ManifestVO();
 		
-		return accessoriesManifestVO;
+		BeanUtil.copyProperties(manifestPO, manifestVO, Arrays.asList("createUser","quoteManifest"));
+		
+		return manifestVO;
 				
 	}
 

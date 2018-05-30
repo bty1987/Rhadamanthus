@@ -32,28 +32,34 @@ import com.fanglin.personel.po.UserPO;
 public class DrawLinePO implements Serializable {
 
 	private static final long serialVersionUID = 1344461146L;
-
+	
+	public static final short DRAWLINE_STATUS_QUEUE_SHORT = 0;
+	
+	public static final short DRAWLINE_STATUS_APPLICATION_SHORT = 1; 
+	
+	public static final short DRAWLINE_STATUS_SUCCESS_SHORT = 2; 
+	
+	public static final short DRAWLINE_STATUS_FAIL_SHORT = 3; 
+	
 	private long dlId;
 	
 	private DecorationPO decoration;
 
 	private Timestamp  applayTime;
 	
-	private String applayDes;
+	private String content;
 	
 	private Timestamp actualStartTime;
 	
 	private Timestamp actualEndTime;
 	
-	private String status;
+	private short status;
 	
-	private Integer applayCount;
+	private Integer count;
 	
 	private UserPO applayUser;
 	
 	private DrawLineGroupPO drawLineGroup;
-	
-	private String drawLineGroupName;
 	
 	private UserPO drawLineUser;
 
@@ -97,13 +103,13 @@ public class DrawLinePO implements Serializable {
 		this.applayTime = applayTime;
 	}
 
-	@Column(name = "applayDes")
-	public String getApplayDes(){
-		return applayDes;
+	@Column(name = "content")
+	public String getContent() {
+		return content;
 	}
 
-	public void setApplayDes(String applayDes){
-		this.applayDes = applayDes;
+	public void setContent(String content) {
+		this.content = content;
 	}
 
 	@Column(name = "actualStartTime")
@@ -125,21 +131,21 @@ public class DrawLinePO implements Serializable {
 	}
 
 	@Column(name = "status")
-	public String getStatus(){
+	public short getStatus(){
 		return status;
 	}
 
-	public void setStatus(String status){
+	public void setStatus(short status){
 		this.status = status;
 	}
 
-	@Column(name = "applayCount")
-	public Integer getApplayCount(){
-		return applayCount;
+	@Column(name = "count")
+	public Integer getCount() {
+		return count;
 	}
 
-	public void setApplayCount(Integer applayCount){
-		this.applayCount = applayCount;
+	public void setCount(Integer count) {
+		this.count = count;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -150,15 +156,6 @@ public class DrawLinePO implements Serializable {
 
 	public void setDrawLineGroup(DrawLineGroupPO drawLineGroup) {
 		this.drawLineGroup = drawLineGroup;
-	}
-
-	@Column(name = "drawLineGroup")
-	public String getDrawLineGroupName() {
-		return drawLineGroupName;
-	}
-
-	public void setDrawLineGroupName(String drawLineGroupName) {
-		this.drawLineGroupName = drawLineGroupName;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)

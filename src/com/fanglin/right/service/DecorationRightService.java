@@ -26,8 +26,8 @@ public interface DecorationRightService {
 	
 	public int updateDecorationSalesmanDepartmentRight(UserBaseVO userBaseVO, List<Integer> dIds, int company) throws FLException;
 	
-	public List<String> queryDecorationStatusRightByUserId(UserBaseVO userBaseVO, int company) throws FLException;
+	public List<Short> queryDecorationStatusRightByUserId(UserBaseVO userBaseVO, int company) throws FLException;
 	
-	public int updateDecorationStatusRight(UserBaseVO userBaseVO, List<String> statuses, int company) throws FLException;
+	public int updateDecorationStatusRight(UserBaseVO userBaseVO, List<Short> statuses, int company) throws FLException;
 	
 }

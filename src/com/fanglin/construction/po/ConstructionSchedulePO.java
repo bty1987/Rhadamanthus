@@ -109,7 +109,7 @@ public class ConstructionSchedulePO implements Serializable{
 	
 	public static final String CURRENT_TIME_FORMAT_STR = "yyyy-MM-dd";
 	
-	private int csId;
+	private long csId;
 	
 	private long cid;
 	
@@ -139,11 +139,11 @@ public class ConstructionSchedulePO implements Serializable{
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "csid")
-	public int getCsId() {
+	public long getCsId() {
 		return csId;
 	}
 
-	public void setCsId(int csId) {
+	public void setCsId(long csId) {
 		this.csId = csId;
 	}
 

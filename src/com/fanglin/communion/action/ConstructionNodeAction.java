@@ -14,6 +14,7 @@ import com.fanglin.communion.vo.ConstructionNodeCompanyVO;
 import com.fanglin.communion.vo.ConstructionNodeVO;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.utils.SystemConfig;
 
 
 @ParentPackage("base")
@@ -61,6 +62,10 @@ public class ConstructionNodeAction extends BaseListAction {
 	@Action(value = "addConstructionNode", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addConstructionNode() throws FLException{
 		
+		if(SystemConfig.getString("communion") == null){
+		    throw new FLException(-1, "无操作权限");
+		}
+		
 		constructionNodeService.addConstructionNode(constructionNode);
 		
 		return SUCCESS;
@@ -68,6 +73,10 @@ public class ConstructionNodeAction extends BaseListAction {
 	
 	@Action(value = "updateConstructionNodeForStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateConstructionNodeForStatus() throws FLException{
+
+		if(SystemConfig.getString("communion") == null){
+		    throw new FLException(-1, "无操作权限");
+		}
 		
 		constructionNodeService.updateConstructionNodeForStatus(constructionNode);
 		
@@ -76,6 +85,10 @@ public class ConstructionNodeAction extends BaseListAction {
 	
 	@Action(value = "updateConstructionNodeCompany", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateConstructionNodeCompany() throws FLException{
+
+		if(SystemConfig.getString("communion") == null){
+		    throw new FLException(-1, "无操作权限");
+		}
 		
 		constructionNodeService.updateConstructionNodeCompany(constructionNodeCompany, cnids);
 		

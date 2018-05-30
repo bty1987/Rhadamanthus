@@ -49,6 +49,8 @@ public class VpaymentPO implements Serializable{
 	
 	private String receipt;
 	
+	private String comment;
+	
 	public VpaymentPO() {
 		super();
 	}
@@ -160,6 +162,15 @@ public class VpaymentPO implements Serializable{
 
 	public void setReceipt(String receipt) {
 		this.receipt = receipt;
+	}
+
+	@Column(name = "comment")
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 	
 	

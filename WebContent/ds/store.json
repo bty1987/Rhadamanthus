@@ -1,0 +1,18 @@
+{
+  "status":[
+    {"key":"0","value":"待付款"},
+    {"key":"1","value":"待发货"},
+    {"key":"2","value":"待收货 "},
+    {"key":"3","value":"已收货"},
+    {"key":"4","value":"已删除"}
+  ],
+
+  "statusItem":[
+    {"key":"0","value":"初始"},
+    {"key":"1","value":"退款中"},
+    {"key":"2","value":"已退款 "}
+  ],
+  "errorCode": 0,
+  "errorMsg": null
+}
+

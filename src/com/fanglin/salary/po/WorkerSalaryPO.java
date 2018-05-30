@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.personel.po.UserPO;
 
@@ -47,6 +48,8 @@ public class WorkerSalaryPO  implements Serializable{
 	public static final short STATUS_INIT_STRTWO = 2;                     
 	
 	public static final String STATUS_INIT_STRA = "status";                      
+	
+	public static final Long CID_INIT_STR = 0L; 
 	
 	public static final Long CSID_INIT_STR = 0L; 
 	
@@ -93,7 +96,9 @@ public class WorkerSalaryPO  implements Serializable{
 	private String comment ;
 	
 	private int company;
-
+	
+	private long csid;
+	
 	public WorkerSalaryPO() {
 		super();
 	}
@@ -112,6 +117,7 @@ public class WorkerSalaryPO  implements Serializable{
 		this.user = user;
 		this.creater = creater;
 	}
+	
 	public WorkerSalaryPO(UserPO user ,UserPO creater) {
 		super();
 		this.user = user;
@@ -258,5 +264,13 @@ public class WorkerSalaryPO  implements Serializable{
 	public void setCompany(int company) {
 		this.company = company;
 	}
+	
+	@Column(name = "csid")
+	public long getCsid() {
+		return csid;
+	}
 
+	public void setCsid(long csid) {
+		this.csid = csid;
+	}
 }

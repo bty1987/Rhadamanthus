@@ -64,7 +64,7 @@ public class ApprovalQuotationDiscountServiceImpl implements ApprovalQuotationDi
 	@Transactional(rollbackFor=Exception.class)
 	public int submitApprovalForQuotationDiscount(ApprovalVO approvalVO, ApprovalQuotationDiscountVO approvalQuotationDiscountVO, String userId, int company) throws FLException {
 		
-		List<String> status = Arrays.asList(new String[]{DecorationPO.STATUS_INIT_STR, DecorationPO.STATUS_QUOTATION_STR, DecorationPO.STATUS_DEPOSIT_STR, DecorationPO.STATUS_RESIGNED_STR, DecorationPO.STATUS_RESIGNED_STR});
+		List<Short> status = Arrays.asList(new Short[]{DecorationPO.STATUS_INIT_INT, DecorationPO.STATUS_DEPOSIT_INT, DecorationPO.STATUS_RESIGNED_INT, DecorationPO.STATUS_RESIGNED_INT});
 		
 		String orderId = approvalQuotationDiscountVO.getOrderId();
 		
@@ -135,7 +135,7 @@ public class ApprovalQuotationDiscountServiceImpl implements ApprovalQuotationDi
 			throw new FLException(140013, "订单不存在");
 		}
 		
-		List<String> status = Arrays.asList(DecorationPO.STATUS_INIT_STR, DecorationPO.STATUS_QUOTATION_STR, DecorationPO.STATUS_DEPOSIT_STR);
+		List<Short> status = Arrays.asList(DecorationPO.STATUS_INIT_INT, DecorationPO.STATUS_DEPOSIT_INT);
 		
 		if(!status.contains(decorationPO.getStatus())){
 			approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_REFUSE_INT);

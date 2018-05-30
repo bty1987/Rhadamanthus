@@ -113,17 +113,11 @@ public class ApprovalServiceImpl implements ApprovalService {
 		
 		ApprovalPO approvalPO = approvalDao.get(approvalVO.getAid());
 		
-		ApprovalVO approval = new ApprovalVO(new UserBaseVO(),new UserBaseVO());
-		
 		if(approvalPO == null){
 			throw new FLException(240009, "审批信息不存在");
 		}
 		
-		BeanUtil.copyProperties(approvalPO, approvalVO,Arrays.asList("receiver", "sender"));
-		BeanUtil.copyProperties(approvalPO.getReceiver(), approval.getReceiver(),Arrays.asList("dept", "duty"));
-		BeanUtil.copyProperties(approvalPO.getSender(), approval.getSender(),Arrays.asList("dept", "duty"));
-		
-		return approval;
+		return convertBean(approvalPO);
 	}
 
 	@Override

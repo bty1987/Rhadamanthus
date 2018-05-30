@@ -15,7 +15,7 @@ public class AccessoriesManifestDaoImpl extends DaoImpl<AccessoriesManifestPO> i
 	}
 
 	@Override
-	public AccessoriesManifestPO queryAccessoriesManifestByAid(long aid) {
+	public AccessoriesManifestPO queryManifestByAid(long aid) {
 		return (AccessoriesManifestPO) session().createCriteria(AccessoriesManifestPO.class).createAlias("accessories", "accessories").add(Restrictions.eq(AccessoriesManifestPO.COLUMN_AID_STR, aid)).uniqueResult();
 	}
 	

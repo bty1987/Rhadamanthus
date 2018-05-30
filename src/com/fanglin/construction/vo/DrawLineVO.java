@@ -34,7 +34,7 @@ public class DrawLineVO implements Serializable {
 	
 	private float houseArea;
 	
-	private String orderStatus;
+	private short orderStatus;
 	
 	private Float orderTotalPrice;
 	
@@ -52,7 +52,7 @@ public class DrawLineVO implements Serializable {
 	
 	private Timestamp  applayTime;
 	
-	private String applayDes;
+	private String content;
 	
 	private String actualDate;
 	
@@ -60,9 +60,9 @@ public class DrawLineVO implements Serializable {
 	
 	private String endTime;
 	
-	private String status;
+	private short status;
 	
-	private Integer applayCount;
+	private Integer count;
 	
 	private String applayUser;
 	
@@ -92,11 +92,11 @@ public class DrawLineVO implements Serializable {
 		this.orderId = orderId;
 	}
 
-	public String getOrderStatus(){
+	public short getOrderStatus() {
 		return orderStatus;
 	}
 
-	public void setOrderStatus(String orderStatus){
+	public void setOrderStatus(short orderStatus) {
 		this.orderStatus = orderStatus;
 	}
 
@@ -181,20 +181,20 @@ public class DrawLineVO implements Serializable {
 		this.endTime = endTime;
 	}
 
-	public String getStatus(){
+	public short getStatus(){
 		return status;
 	}
 
-	public void setStatus(String status){
+	public void setStatus(short status){
 		this.status = status;
 	}
 
-	public Integer getApplayCount(){
-		return applayCount;
+	public Integer getCount() {
+		return count;
 	}
 
-	public void setApplayCount(Integer applayCount){
-		this.applayCount = applayCount;
+	public void setCount(Integer count) {
+		this.count = count;
 	}
 
 	public String getApplayUser(){
@@ -222,12 +222,12 @@ public class DrawLineVO implements Serializable {
 		this.contractTime = contractTime;
 	}
 
-	public void setApplayDes(String applayDes){
-		this.applayDes = applayDes;
+	public String getContent() {
+		return content;
 	}
 
-	public String getApplayDes(){
-		return applayDes;
+	public void setContent(String content) {
+		this.content = content;
 	}
 
 	public void setHouseArea(float houseArea){

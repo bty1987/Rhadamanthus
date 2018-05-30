@@ -28,10 +28,6 @@ public interface UserDao extends Dao<UserPO> {
 	
 	public List<UserPO> pageUserForNameByPinyinName(Paging paging, String pinyinName,Short status, Integer company);
 	
-	public List<UserPO> pageUserForNameByPinyinNameADuty(Paging paging, String pinyinName,Short status, String duty);
-	
-	public List<UserPO> pageUserForNameByPinyinNameADutysAO(Paging paging, String pinyinName, List<String> dutysA, List<String> dutysO);
-
 	public List<UserPO> queryUserByPhoneAIdent(String phone, String ident);
 	
 	public List<UserPO> queryUserByDeptIdADuty(String deptId, String duty);
@@ -40,8 +36,10 @@ public interface UserDao extends Dao<UserPO> {
    	
 	public List<UserPO> queryUserByUserIds(List<String> userIds);
 	
+	public List<UserPO> queryUserByUids(List<Integer> uids);
+	
 	public int countUserByRoleId(Integer rid);
 
-	public List<UserPO> pageUserForNameByPinyinNameADepeType(Paging paging, String pinyinName,Short status, Integer dtid, Integer company);
+	public List<UserPO> pageUserForNameByPinyinNameAType(Paging paging, String pinyinName,Short status, Integer dtid);
 
 }

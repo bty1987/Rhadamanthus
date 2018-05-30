@@ -20,8 +20,6 @@ import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
 
-
-
 @Service("vpaymentService")
 @Transactional(readOnly=true)
 public class VpaymentServiceImpl implements VpaymentService{
@@ -50,7 +48,7 @@ public class VpaymentServiceImpl implements VpaymentService{
 			
 			vpaymentVOs.add(vpaymentVO);
 		}
-	
+		
 		paging.setData(vpaymentVOs);
 	}
 	
@@ -81,6 +79,17 @@ public class VpaymentServiceImpl implements VpaymentService{
 		vpaymentPO.setCollectTime(new Timestamp(System.currentTimeMillis()));
 		
 		vpaymentDao.save(vpaymentPO);
+		
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public int deleteVpaymentId(VpaymentVO vpaymentVO) {
+		VpaymentPO vpaymentPO=vpaymentDao.get(vpaymentVO.getVpid());
+		
+		
+		vpaymentDao.delete(vpaymentPO);
 		
 		return 0;
 	}

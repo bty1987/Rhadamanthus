@@ -222,21 +222,6 @@ public class DepartmentServiceImpl implements DepartmentService {
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public void deleteDepartment(DepartmentVO departmentVO) throws FLException{
-		 
-		DepartmentPO departmentPO = departmentDao.queryDepartmentByDeptId(departmentVO.getDeptId());
-		
-		if(departmentPO == null){
-			throw new FLException(310001, "部门不存在");
-		}
-		
-		departmentPO.setStatus(DepartmentPO.STATUS_DISABLE_INT);
-		
-		departmentDao.update(departmentPO);
-	}
-
-	@Override
 	public List<DepartmentVO> queryDepartmentByDtid(DepartmentVO departmentVO,int Company) {
 		
 		List<DepartmentPO> departmentPOs = departmentDao.queryDepartmentBytype(String.valueOf(departmentVO.getType().getDtid()),Company);

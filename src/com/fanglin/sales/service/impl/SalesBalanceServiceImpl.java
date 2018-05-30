@@ -55,15 +55,12 @@ public class SalesBalanceServiceImpl implements SalesBalanceService{
 	private SalesBalanceItemDao salesBalanceItemDao; 
 	
 	@Override
-	public void pageSalesBalance(Paging paging, List<Filter> filters,int company) {
+	public List<SalesBalanceVO> pageSalesBalance(List<SalesBalancePO> salesBalancePOs) {
 		
-		if(filters.size() == 0) return;
-		
-		List<SalesBalancePO> salesBalancePOs = salesBalanceDao.pageSalesBalance(paging, filters,company);
 		List<SalesBalanceVO> salesBalanceVOs = new ArrayList<SalesBalanceVO>();
 		
 		for(SalesBalancePO salesBalancePO:salesBalancePOs){
-			
+					
 			SalesBalanceVO salesBalanceVO = new SalesBalanceVO(new SalesVO(new HouseVO(new VillageVO()),new CustomerVO(),new UserBaseVO(),new DepartmentVO(),new DepartmentVO(),new UserBaseVO(),new DepartmentVO(),new UserBaseVO()), new RefundsVO(), new UserBaseVO(), new UserBaseVO());
 			
 			BeanUtil.copyPropertie(salesBalancePO, salesBalanceVO, Arrays.asList("sales","refunds","creater","poster"));
@@ -83,6 +80,18 @@ public class SalesBalanceServiceImpl implements SalesBalanceService{
 			
 			salesBalanceVOs.add(salesBalanceVO);
 		}
+		
+		return salesBalanceVOs;
+	}
+	
+	@Override
+	public void pageSalesBalance(Paging paging, List<Filter> filters,int company) {
+		
+		if(filters.size() == 0) return;
+		
+		List<SalesBalancePO> salesBalancePOs = salesBalanceDao.pageSalesBalance(paging, filters,company);
+		
+		List<SalesBalanceVO> salesBalanceVOs = pageSalesBalance(salesBalancePOs);
 		
 		paging.setData(salesBalanceVOs); 
 		
@@ -94,29 +103,8 @@ public class SalesBalanceServiceImpl implements SalesBalanceService{
 		if(filters.size() == 0) return;
 		
 		List<SalesBalancePO> salesBalancePOs = salesBalanceDao.pageSalesBalanceForDompany(paging, filters, dompany);
-		List<SalesBalanceVO> salesBalanceVOs = new ArrayList<SalesBalanceVO>();
 		
-		for(SalesBalancePO salesBalancePO:salesBalancePOs){
-			
-			SalesBalanceVO salesBalanceVO = new SalesBalanceVO(new SalesVO(new HouseVO(new VillageVO()),new CustomerVO(),new UserBaseVO(),new DepartmentVO(),new DepartmentVO(),new UserBaseVO(),new DepartmentVO(),new UserBaseVO()), new RefundsVO(), new UserBaseVO(), new UserBaseVO());
-			
-			BeanUtil.copyPropertie(salesBalancePO, salesBalanceVO, Arrays.asList("sales","refunds","creater","poster"));
-			BeanUtil.copyPropertie(salesBalancePO.getSales(), salesBalanceVO.getSales(), Arrays.asList("salesman","dept","region","guider","instorer","guideDept","house","customer"));
-			BeanUtil.copyProperties(salesBalancePO.getSales().getSalesman(), salesBalanceVO.getSales().getSalesman(),Arrays.asList("dept","duty"));
-			BeanUtil.copyProperties(salesBalancePO.getSales().getDept(), salesBalanceVO.getSales().getDept(),Arrays.asList("fatherDept","cityProper","type"));
-			BeanUtil.copyProperties(salesBalancePO.getSales().getRegion(), salesBalanceVO.getSales().getRegion(),Arrays.asList("fatherDept","cityProper","type"));
-			BeanUtil.copyProperties(salesBalancePO.getSales().getInstorer(), salesBalanceVO.getSales().getInstorer(),Arrays.asList("dept","duty"));
-			BeanUtil.copyProperties(salesBalancePO.getSales().getGuider(), salesBalanceVO.getSales().getGuider(),Arrays.asList("dept","duty"));
-			BeanUtil.copyProperties(salesBalancePO.getSales().getGuideDept(), salesBalanceVO.getSales().getGuideDept(),Arrays.asList("fatherDept","cityProper","type"));
-			BeanUtil.copyProperties(salesBalancePO.getSales().getHouse(), salesBalanceVO.getSales().getHouse(),Arrays.asList("village"));
-			BeanUtil.copyProperties(salesBalancePO.getSales().getHouse().getVillage(), salesBalanceVO.getSales().getHouse().getVillage(),Arrays.asList("cityProper"));
-			BeanUtil.copyProperties(salesBalancePO.getSales().getCustomer(), salesBalanceVO.getSales().getCustomer());
-			BeanUtil.copyPropertie(salesBalancePO.getRefunds(), salesBalanceVO.getRefunds(), Arrays.asList("creater"));
-			BeanUtil.copyPropertie(salesBalancePO.getCreater(), salesBalanceVO.getCreater(), Arrays.asList("dept","duty"));
-			BeanUtil.copyPropertie(salesBalancePO.getPoster(), salesBalanceVO.getPoster(), Arrays.asList("dept","duty"));
-			
-			salesBalanceVOs.add(salesBalanceVO);
-		}
+		List<SalesBalanceVO> salesBalanceVOs = pageSalesBalance(salesBalancePOs);
 		
 		paging.setData(salesBalanceVOs); 
 		

@@ -67,7 +67,7 @@ public class UserPO implements Serializable {
 	
 	private String userName;
 	
-	private String userNamePinYin;
+	private String pinYin;
 	
 	private String currentName;
 	
@@ -187,13 +187,13 @@ public class UserPO implements Serializable {
 		this.userName = userName;
 	}
 
-	@Column(name = "userNamePinYin")
-	public String getUserNamePinYin(){
-		return userNamePinYin;
+	@Column(name = "pinYin")
+	public String getPinYin() {
+		return pinYin;
 	}
 
-	public void setUserNamePinYin(String userNamePinYin){
-		this.userNamePinYin = userNamePinYin;
+	public void setPinYin(String pinYin) {
+		this.pinYin = pinYin;
 	}
 
 	@Column(name = "currentName")

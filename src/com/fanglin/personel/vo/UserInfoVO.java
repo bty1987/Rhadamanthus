@@ -79,6 +79,8 @@ public class UserInfoVO implements java.io.Serializable {
 	private String wechat;
 	
 	private String email;
+	
+	private String profiles;
 
 	public UserInfoVO() {
 		super();
@@ -391,6 +393,14 @@ public class UserInfoVO implements java.io.Serializable {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public String getProfiles() {
+		return profiles;
+	}
+
+	public void setProfiles(String profiles) {
+		this.profiles = profiles;
 	}
 
 }

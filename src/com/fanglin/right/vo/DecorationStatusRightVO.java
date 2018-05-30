@@ -8,7 +8,7 @@ public class DecorationStatusRightVO implements java.io.Serializable {
 	
 	private Integer uid;
 	
-	private String status;
+	private Short status;
 	
 	public Integer getDosrId() {
 		return this.dosrId;
@@ -26,12 +26,13 @@ public class DecorationStatusRightVO implements java.io.Serializable {
 		this.uid = uid;
 	}
 
-	public String getStatus() {
+	public Short getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(Short status) {
 		this.status = status;
 	}
 
+	
 }

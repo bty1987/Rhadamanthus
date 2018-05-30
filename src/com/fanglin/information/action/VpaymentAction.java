@@ -29,7 +29,7 @@ public class VpaymentAction extends BaseListAction{
 	
 	private List<?> counts;
 	
-	@Action(value="pageVpayment", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	@Action(value = "pageVpayment", results = {@Result (name = "success", type = "json", params = {"ignoreHierarchy", "false"})}, params = {"contentType", "text/html"})
 	public String pageVpayment() throws FLException{
 		
 		vpaymentService.pageVpayment(getPaging(), getFilters());
@@ -37,15 +37,15 @@ public class VpaymentAction extends BaseListAction{
 		return SUCCESS;
 	}
 	
-//	@Action(value="countVpayment", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-//	public String countVpayment() throws FLException{
-//		
-//		counts = vpaymentService.countVpayment();
-//		
-//		return SUCCESS;
-//	}
+	@Action(value="deleteVpaymentId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String deleteVpaymentId() throws FLException{
+		
+		vpaymentService.deleteVpaymentId(vpayment);
+		
+		return SUCCESS;
+	}
 	
-	@Action(value="createVpayment", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	@Action(value = "createVpayment", results = {@Result (name = "success", type = "json", params = {"ignoreHierarchy", "false"})}, params = {"contentType", "text/html"})
 	public String createVpayment() throws FLException{
 		
 		vpaymentService.createVpayment(vpayment, queryUserId());
@@ -68,7 +68,6 @@ public class VpaymentAction extends BaseListAction{
 	public void setCounts(List<?> counts) {
 		this.counts = counts;
 	}
-	
 	
 
 }

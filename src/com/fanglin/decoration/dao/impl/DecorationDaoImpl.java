@@ -42,7 +42,7 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 	private CustomerPhoneDao customerPhoneDao;
 	
 	@Override
-	public List<DecorationPO> pageDecoration(Paging paging, List<Filter> filters, List<Integer> designDepartmentIds, List<String> statuses, int company){
+	public List<DecorationPO> pageDecoration(Paging paging, List<Filter> filters, List<Integer> designDepartmentIds, List<Short> statuses, int company){
 		PagingQuery<DecorationPO> query = pagingQuery(paging, DecorationPO.class);
 		
 		query.add(query.getCriterion("company", company, "eq"));
@@ -71,7 +71,7 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 		
 		query.add(query.getCriterion("company", company, "eq"));
 		
-		List<String> nostatus = Arrays.asList(DecorationPO.STATUS_TERMINATION_STR, DecorationPO.STATUS_WASTE_STR);
+		List<Short> nostatus = Arrays.asList(DecorationPO.STATUS_TERMINATION_INT, DecorationPO.STATUS_WASTE_INT);
 		
 		query.add(Restrictions.not(Restrictions.in("status", nostatus)));
 		
@@ -117,7 +117,7 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 		
 		queryFilterExcute(query, filters);
 		
-		query.add(Restrictions.not(Restrictions.in("status", Arrays.asList(new String[]{DecorationPO.STATUS_TERMINATION_STR, DecorationPO.STATUS_WASTE_STR}))));
+		query.add(Restrictions.not(Restrictions.in("status", Arrays.asList(new Short[]{DecorationPO.STATUS_TERMINATION_INT, DecorationPO.STATUS_WASTE_INT}))));
 		
 		query.desc("doid");
 
@@ -135,7 +135,7 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 		
 		queryFilterExcute(query, filters);
 		
-		query.add(Restrictions.in("status", Arrays.asList(new String[]{DecorationPO.STATUS_SIGNED_STR, DecorationPO.STATUS_COMPLETED_STR})));
+		query.add(Restrictions.in("status", Arrays.asList(new Short[]{DecorationPO.STATUS_SIGNED_INT, DecorationPO.STATUS_COMPLETED_INT})));
 		query.add(Restrictions.eq("putlineConstructionSchedule.putlineStatus", 1));
 		
 		query.desc("doid");
@@ -157,7 +157,7 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 	}
 	
 	@Override
-	public List<DecorationPO> pageDecorationForDesignerManager(Paging paging, List<Filter> filters, List<Integer> designDepartmentIds, List<String> statuses, int company) {
+	public List<DecorationPO> pageDecorationForDesignerManager(Paging paging, List<Filter> filters, List<Integer> designDepartmentIds, List<Short> statuses, int company) {
 		
 		PagingQuery<DecorationPO> query = pagingQuery(paging, DecorationPO.class);
 		
@@ -181,7 +181,7 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 	}
 
 	@Override
-	public List<DecorationPO> pageDecorationForSalesmanManager(Paging paging, List<Filter> filters, List<Integer> salesmanDepartmentIds, List<String> statuses, int company) {
+	public List<DecorationPO> pageDecorationForSalesmanManager(Paging paging, List<Filter> filters, List<Integer> salesmanDepartmentIds, List<Short> statuses, int company) {
 		
 		PagingQuery<DecorationPO> query = pagingQuery(paging, DecorationPO.class);
 
@@ -230,7 +230,7 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 	public List<DecorationPO> queryDecorationForBackVisit(List<Filter> filters){
 		PagingQuery<DecorationPO> query = pagingQuery(new Paging(), DecorationPO.class);
 		
-		List<String> status = Arrays.asList(new String[]{DecorationPO.STATUS_WASTE_STR, DecorationPO.STATUS_COMPLETED_STR, DecorationPO.STATUS_TERMINATION_STR});
+		List<Short> status = Arrays.asList(new Short[]{DecorationPO.STATUS_WASTE_INT, DecorationPO.STATUS_COMPLETED_INT, DecorationPO.STATUS_TERMINATION_INT});
 		
 		Criteria criteria = session().createCriteria(DecorationPO.class)
 				.add(Restrictions.not(Restrictions.in("status", status)));
@@ -275,7 +275,7 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 	@SuppressWarnings("unchecked")
 	public List<DecorationPO> queryDecorationByCustomer(Long cid, String customerId, int company){
 		
-		List<String> status = Arrays.asList(new String[]{DecorationPO.STATUS_WASTE_STR, DecorationPO.STATUS_COMPLETED_STR, DecorationPO.STATUS_TERMINATION_STR});
+		List<Short> status = Arrays.asList(new Short[]{DecorationPO.STATUS_WASTE_INT, DecorationPO.STATUS_COMPLETED_INT, DecorationPO.STATUS_TERMINATION_INT});
 		
 		Criteria criteria = session().createCriteria(DecorationPO.class).add(Restrictions.eq("company", company)).createAlias("customer", "customer").add(Restrictions.not(Restrictions.in("status", status)));
 		
@@ -398,9 +398,11 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 				}else if("houseClass".equals(field)){
 					query.add(query.getCriterion("houseClass", data, op));
 				}else if("status".equals(field)){
-					query.add(query.getCriterion("status", data, op));
+					query.add(query.getCriterion("status", Short.valueOf(data), op));
+				}else if("quotationStatus".equals(field)){
+					query.add(query.getCriterion("quotationStatus", Short.valueOf(data), op));
 				}else if("statuses".equals(field)){
-					query.add(query.getCriterion("status", filter.getRange(), op));
+					query.add(query.getCriterion("status",filter.getRange(), op));	
 				}else if("otherStatus".equals(field)){
 					query.add(query.getCriterion("otherStatus", data, "and"));
 				}else if("designerId".equals(field)){

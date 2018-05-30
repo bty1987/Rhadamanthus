@@ -37,8 +37,6 @@ public interface MaterialItemService {
 	
 	public void updateMaterialItemForPrePT(List<Long> miids, MaterialItemVO materialItemVO);
 	
-	public void updateMaterialItemForPostPT(List<Long> miids, MaterialItemVO materialItemVO);
-	
 	public int changeMaterialItemForCaclType(MaterialItemVO materialItemVO, String userId) throws FLException;
 	
 	public int deleteMaterialItem(List<Long> miids, long mid) throws FLException;

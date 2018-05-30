@@ -62,24 +62,26 @@ public class DrawLineDaoImpl extends DaoImpl<DrawLinePO> implements DrawLineDao 
 		return query.list();
 	}
 
+	
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<DrawLinePO> queryDrawLine(Timestamp startTime, Timestamp endTime, Integer company){
-		List<String> status = Arrays.asList(new String[]{"放线失败", "排队"});
 		
-		return (List<DrawLinePO>)createCriteria(DrawLinePO.class)
-				
-				.createAlias("decoration", "decoration")
-				
-				.add(Restrictions.eq("decoration.company", company))
-
-				.add(Restrictions.not(Restrictions.in("status", status)))
-
-				.add(Restrictions.ge("actualStartTime", startTime))
-
-				.add(Restrictions.le("actualStartTime", endTime))
-				
-				.list();
+		List<Short> status = Arrays.asList(new Short[]{DrawLinePO.DRAWLINE_STATUS_FAIL_SHORT, DrawLinePO.DRAWLINE_STATUS_QUEUE_SHORT});
+			
+			return (List<DrawLinePO>)createCriteria(DrawLinePO.class)
+					
+					.createAlias("decoration", "decoration")
+					
+					.add(Restrictions.eq("decoration.company", company))
+		
+					.add(Restrictions.not(Restrictions.in("status", status)))
+		
+					.add(Restrictions.ge("actualStartTime", startTime))
+		
+					.add(Restrictions.le("actualStartTime", endTime))
+					
+					.list();
 	}
 	
 	@Override
@@ -98,8 +100,8 @@ public class DrawLineDaoImpl extends DaoImpl<DrawLinePO> implements DrawLineDao 
 	@SuppressWarnings("unchecked")
 	public List<DrawLinePO> queryDrawLineByGroupATime(long gid, Timestamp startTime,Timestamp endTime, Integer company){
 		
-		List<String> status = Arrays.asList(new String[]{"放线失败", "排队"});
-	
+		List<Short> status = Arrays.asList(new Short[]{DrawLinePO.DRAWLINE_STATUS_FAIL_SHORT, DrawLinePO.DRAWLINE_STATUS_QUEUE_SHORT});
+		
 		return (List<DrawLinePO>)createCriteria(DrawLinePO.class)
 				.createAlias("decoration", "decoration")
 				.createAlias("drawLineGroup", "drawLineGroup")
@@ -155,7 +157,8 @@ public class DrawLineDaoImpl extends DaoImpl<DrawLinePO> implements DrawLineDao 
 					}else if("designer".equals(filter.getField())){
 						query.add(query.getCriterion("designer.userId", (filter.getData()), filter.getOp()));
 					}else if("status".equals(filter.getField())){
-						query.add(query.getCriterion("status", (filter.getData()), filter.getOp()));
+						query.add(query.getCriterion("status", ((short)Integer.parseInt(filter.getData())), filter.getOp()));
+						
 					}else if("actualDate".equals(filter.getField())){
 						
 						if("between".equals(filter.getOp())){

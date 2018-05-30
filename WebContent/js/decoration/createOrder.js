@@ -162,10 +162,10 @@ jQuery(function($) {
 
 	com.initChosen('villageId', api.data.queryVillageForNameByPinyin, "pinyinName", {}, "autoFillKeyValue", "key", "value")
 
-	com.initChosen('designerId', api.personel.queryUserForNameByDuty, "pinyinName", {"duty": "", "user.status":0}, "autoFillKeyValue", "key", "value");
-	com.initChosen('salesmanId', api.personel.queryUserForNameByDuty, "pinyinName", {"duty": "", "user.status":0}, "autoFillKeyValue", "key", "value");
-	com.initChosen('quoterId', api.personel.queryUserForNameByDuty, "pinyinName", {"duty": "", "user.status":0}, "autoFillKeyValue", "key", "value");
-	com.initChosen('escorterId', api.personel.queryUserForNameByDuty, "pinyinName", {"duty": "", "user.status":0}, "autoFillKeyValue", "key", "value");
+	com.initChosen('designerId', api.personel.queryUserByDepartmentType, "pinyinName", {"user.status":0,"departmentType.name":""}, "autoFillKeyValue", "key", "value");
+	com.initChosen('salesmanId', api.personel.queryUserByDepartmentType, "pinyinName", {"user.status":0,"departmentType.name":""}, "autoFillKeyValue", "key", "value");
+	com.initChosen('quoterId', api.personel.queryUserByDepartmentType, "pinyinName", {"user.status":0,"departmentType.name":""}, "autoFillKeyValue", "key", "value");
+	com.initChosen('escorterId', api.personel.queryUserByDepartmentType, "pinyinName", {"user.status":0,"departmentType.name":""}, "autoFillKeyValue", "key", "value");
 
 	com.initChosen('no', api.data.queryVillageForNameByPinyin, "pinyinName", {}, "autoFillKeyValue", "key", "value")
 
@@ -182,7 +182,7 @@ jQuery(function($) {
 		}
 
 		com.post(api.data.queryHouseByNoAHnum, housePostData, function (res) {
-			com.post(api.decoration.checkDecoration, {"filters[0].data": res.house.hid,"filters[0].field": "houseId","filters[0].op": "eq","filters[1].data": "废单","filters[1].field": "status","filters[1].op": "ne","filters[2].data": "已完工","filters[2].field": "status","filters[2].op": "ne","filters[3].data": "合同终止","filters[3].field": "status","filters[3].op": "ne"}, function (des) {
+			com.post(api.decoration.checkDecoration, {"filters[0].data": res.house.hid,"filters[0].field": "houseId","filters[0].op": "eq","filters[1].data": "4","filters[1].field": "status","filters[1].op": "ne","filters[2].data": "7","filters[2].field": "status","filters[2].op": "ne","filters[3].data": "5","filters[3].field": "status","filters[3].op": "ne"}, function (des) {
 				if (des.decoration && des.decoration.orderId) {
 					com.showTips($("#houseNumber"), "订单已存在：订单号：" + des.decoration.orderId + " 订单所属设计师:" + des.decoration.designer.currentName, true);
 					orderEntry.repeatFlg = true;
@@ -527,11 +527,11 @@ jQuery(function($) {
                     "customerPhone.phone": $id.val(),
                     "customerPhone.status": null
                 }, function (res) {
-                	orderEntry.customerRepeatFlg = true;
-                    com.showPopover($id, {errorMsg: "电话信息已存在"}, "bottom");
-                }, function (res) {
                     orderEntry.customerRepeatFlg = false;
                     $id.css("border", "1px solid #d5d5d5").popover("destroy");
+                }, function (res) {
+                    orderEntry.customerRepeatFlg = true;
+                    com.showPopover($id, {errorMsg: "电话信息已存在"}, "bottom");
                 }, false);
 
             }

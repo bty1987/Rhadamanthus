@@ -346,13 +346,15 @@ jQuery(function($) {
 			//订单权限配置
 			openOrderDialog : function(userId){
 				var $dialog = this.$dialog;
-				var list=[{key: "全部", value: "全部"}], userList;
+				var list=[{key: "-1", value: "全部"}], userList;
 				var $list = $('.modal-body', $dialog);
 				$list.empty();
 				com.post(api.ds.decoration, {}, function(data){
 					list = list.concat(data.decorationOrderStatus);
 				}, null, false);
+
 				com.post(api.right.queryDecorationStatusRightByUserId, { "user.userId" : userId}, function(data){
+
 					userList = data.statuses;
 				}, null, false);
 
@@ -427,9 +429,9 @@ jQuery(function($) {
 							params[postConf.name + "[" + i + "]"] = $v;
 							if($v == -1 || $v == '全部') return false;
 						}),
-							com.post(postConf.path, params, function(data){
-								$dialog.modal("hide");
-							})
+						com.post(postConf.path, params, function(data){
+							$dialog.modal("hide");
+						})
 					);
 				});
 			}

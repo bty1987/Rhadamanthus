@@ -37,8 +37,8 @@ $(function(){
         //enable typeahead by specifying the source array
         isStaticResource : false,
         flsource: {
-            url : api.personel.queryUserForNameByDuty,
-            postData : {duty: '驻店',"user.status":"0"},
+            url : api.personel.queryUserByDepartmentType,
+            postData : {"departmentType.name": '主材部', "user.status": 0},
             resultList : "autoFillKeyValue",
             keyPath : "key",
             valuePath : "value",
