@@ -114,23 +114,24 @@ jQuery(function ($) {
 
                 $("#btnSave").click(function () {
                     var successFlag = false;
-                    for (var i = 0; i < workerIdsData.length; i++) {
-                        successFlag = false;
-                        var options = {};
-                        options["constructer.crid"] = workerIdsData[i];
-                        options["constructer.rate"] = $("#" + workerIdsData[i] + "workerRaty-score").val();
-                        options["constructer.assessment"] = $("#" + workerIdsData[i] + "workerRatyDes").val();
 
-                        if (commitFlag) {
-                            com.post(api.construction.updateConstructerForRate, options, function (res) {
-                                successFlag = true;
-                            }, null, false);
-                        }
+                    var options = {};
+                    for (var i = 0; i < workerIdsData.length; i++) {
+                        options["constructers["+i+"].crid"] = workerIdsData[i];
+                        options["constructers["+i+"].rate"] = $("#" + workerIdsData[i] + "workerRaty-score").val();
+                        options["constructers["+i+"].assessment"] = $("#" + workerIdsData[i] + "workerRatyDes").val();
+                    }
+
+                    if (commitFlag) {
+                        com.post(api.construction.updateConstructerForRate, options, function (res) {
+                            successFlag = true;
+                        },null,false);
                     }
 
                     if (successFlag) {
                         com.showAlert(com.info, "保存成功!");
                     }
+
                 });
             }
 

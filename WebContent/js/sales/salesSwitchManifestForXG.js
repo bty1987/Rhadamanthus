@@ -316,7 +316,6 @@ $(function () {
                         ["折扣价:", v.disPrice, "blue", "disPrice"],
                         ["折让价:", v.price, "blue", "price"],
                         ["数量:", v.num, "blue", "num"],
-                        ["可出库数量:", v.xgnum, "blue", "xgnum"],
                         ["总价:", v.total, "blue", "total"],
                         ["原结算方式:", v.rawCtype == 0 ? "底价" : "点位", "red", "rawCtype"],
                         ["原结算值:", v.rawCvalue, "blue", "rawCvalue"],
@@ -382,7 +381,6 @@ $(function () {
                         "data-fid": v.format.fid,
                         "data-gid": v.goods.gid,
                         "data-num": v.num,
-                        "data-xgnum" : v.xgnum
                     }).addClass('ace ace-checkbox-2');
 
                     var _span = $('<span></span>').addClass('lbl blue bigger-150').css('font-weight', 'bold').html(v.goods.name + ' ' + v.goods.no);
@@ -478,21 +476,11 @@ $(function () {
     function checkRowValue($line) {
 
         var flag = true;
-
+        var priceRex = /^\d{1,8}(\.\d{1,2})?$/
         $.each($line, function (i, v) {
             var num = $(v).find('input.inputNumber');
-            var xgnum = $(v).find('input[name="siids"]');
-            if (num.val() > xgnum.attr('data-xgnum')) {
-                num.focus().select();
-                num.addClass('tooltip-info').attr({
-                    "data-rel": "popover",
-                    "data-placement": "top",
-                    "data-original-title": "",
-                    "title": "",
-                    "data-content": "出库数量大于可出库数量!"
-                }).popover('show');
-                flag = false;
-            } else if (num.val()<=0){
+
+            if (!(priceRex.test(num.val()) && parseFloat(num.val()) > 0 )){
                 num.focus().select();
                 num.addClass('tooltip-info').attr({
                     "data-rel": "popover",
@@ -507,7 +495,6 @@ $(function () {
             }
 
         })
-
 
         return flag;
     }

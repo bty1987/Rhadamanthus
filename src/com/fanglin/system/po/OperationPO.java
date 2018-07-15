@@ -18,7 +18,13 @@ public class OperationPO implements java.io.Serializable {
 	private static final long serialVersionUID = 6057537266407674722L;
 	
 	public static final String COLUMN_OPERATION_STR = "operation";
-
+	
+	public static final String COLUMN_STATUS_STR = "status";
+	
+	public static final short STATUS_ENABLE_INT = 0;
+	
+	public static final short THROUGH_PASS_INT = 1;
+	
 	private int oid;
 	
 	private ModulePO module;
@@ -27,7 +33,9 @@ public class OperationPO implements java.io.Serializable {
 	
 	private String operation;
 	
-	private short system;
+	private short status;
+	
+	private short through;
 
 	public OperationPO() {
 		super();
@@ -82,13 +90,22 @@ public class OperationPO implements java.io.Serializable {
 		this.operation = operation;
 	}
 
-	@Column(name = "system")
-	public short getSystem() {
-		return system;
+	@Column(name = "status")
+	public short getStatus() {
+		return status;
 	}
 
-	public void setSystem(short system) {
-		this.system = system;
+	public void setStatus(short status) {
+		this.status = status;
+	}
+
+	@Column(name = "through")
+	public short getThrough() {
+		return through;
+	}
+
+	public void setThrough(short through) {
+		this.through = through;
 	}
 
 }

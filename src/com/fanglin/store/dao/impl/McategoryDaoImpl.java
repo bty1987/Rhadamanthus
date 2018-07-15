@@ -47,13 +47,8 @@ public class McategoryDaoImpl extends DaoImpl<McategoryPO> implements McategoryD
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<McategoryPO> queryMcategoryByIsShow(Short isShow) {
-		return session().createCriteria(McategoryPO.class).add(Restrictions.eq("isShow", McategoryPO.SHOW_DISPLAY_SHORT)).list();
-	}
-
-	@Override
-	public McategoryPO queryMcategoryByCid(Long cid) {
-		return (McategoryPO) session().createCriteria(McategoryPO.class).add(Restrictions.eq(McategoryPO.COLUMN_CID_STR, cid)).uniqueResult();
+	public List<McategoryPO> queryMcategoryForShow() {
+		return session().createCriteria(McategoryPO.class).add(Restrictions.eq("isShow", McategoryPO.SHOW_INIT_SHORT)).list();
 	}
 
 }

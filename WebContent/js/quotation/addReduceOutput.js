@@ -51,6 +51,7 @@ jQuery(function($) {
 
 
 	var $addReduceIds = {};
+	//通过订单编号获取增减项信息
 	url = api.addReduce.queryAddReduceByOrderId;
 	com.post(url, {"addReduce.orderId":_orderId}, function (res) {
 		var addReduces = res.addReduces;
@@ -59,18 +60,19 @@ jQuery(function($) {
 		});
 	}, null, false);
 
+	//通过增减项ID列表获取增减项中包含的报价项信息
 	url = api.addReduce.queryAddReduceItemByAddReduceIds;
 	com.post(url, $addReduceIds, function (res) {
 		$addReduceItems = res.addReduceItems;
 	}, null, false);
-	
+
 	calAddReduceSum();
 	generatePrintPage();
 	
 	function printHeader(headStr){
 		return headHtml;
 	}
-	
+	//从所有的增减项中的报价详情中筛选出合适的报价并进行计算和处理
 	function calAddReduceSum(){
 
 		var addReduceItems = $addReduceItems;
@@ -93,7 +95,8 @@ jQuery(function($) {
 			if([1, 3].indexOf(addReduceItem.type) != -1){
 				_dcp = utils.changeTwoDecimal(utils.accMul( _dcp, (addReduceItem.discount == 1 || $decorationType == 2 ? utils.accDiv(discount, 10) : 1)));
 			}else if([0, 2, 4].indexOf(addReduceItem.type) != -1 && $decorationType == 2){
-				_dcp =  utils.changeTwoDecimal(utils.changeTwoDecimal(utils.accMul(_dcp,utils.accDiv(config.addreduceDiscount, 10))));
+				//_dcp =  utils.changeTwoDecimal(utils.changeTwoDecimal(utils.accMul(_dcp,utils.accDiv(config.addreduceDiscount, 10))));
+				
 			}
 
 			/*if(addReduceItem.quotationFunctionAreaType == 3 && [3].indexOf(addReduceItem.type) != -1){
@@ -124,7 +127,7 @@ jQuery(function($) {
 		}
 
 	}
-
+//画每个报价详情的信息
 	function generateAddReduceItem(addReduceItems){
 		var addReduceTotalPrice = 0;
 		var html = "";
@@ -172,14 +175,14 @@ jQuery(function($) {
 		$("#labSumMoney").html("工程最终增减合计金额:" + utils.changeThrDecimal(addReduceTotalPrice) + "元");
 		return html;
 	}
-
+//画页面 主
 	function generatePrintPage(){
 		html = "";
-		
-		$("#orderId").html("订单编号:" + addReduceDetail.quotation.orderId);
-		$("#orderAddr").html("楼盘地址:" + addReduceDetail.quotation.orderAddr);
-		$("#supervisor").html("监理:" + addReduceDetail.quotation.supervisorName ? addReduceDetail.quotation.supervisorName : "-");
-		$("#designer").html("设计师:" + addReduceDetail.quotation.designerName ? addReduceDetail.quotation.designerName : "-");
+
+		$("#orderId").html("订单编号: " + addReduceDetail.quotation.orderId);
+		$("#orderAddr").html("楼盘地址: " + addReduceDetail.quotation.orderAddr);
+		$("#supervisor").html("监理: " + (addReduceDetail.quotation.supervisorName != null ? addReduceDetail.quotation.supervisorName : "--"));
+		$("#designer").html("设计师: " + (addReduceDetail.quotation.designerName != null ? addReduceDetail.quotation.designerName : "--"));
 
 		html += generateAddReduceItem(addReduceDetail.addItems);
 

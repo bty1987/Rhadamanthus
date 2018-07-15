@@ -159,14 +159,14 @@
     jses += '<script src="' + hostServer + 'assets/ace/js/cav.js"><\/script>';
     jses += '<script src="' + hostServer + 'assets/ace/js/shaking.js"><\/script>';
     /* ace end */
-	if(!parent.window.isEncryption){
+    if(!parent.window.isEncryption){
         jses += '<script src="' + hostServer + 'js/com/config.js"><\/script>';
         jses += '<script src="' + hostServer + 'js/com/server.js"><\/script>';
         jses += '<script src="' + hostServer + 'js/dlogin.js"><\/script>';
-	}else if(parent.window.isPC && parent.window.isEncryption){
+    }else if(parent.window.isPC && parent.window.isEncryption){
         win.evalNWBin(null, 'js/com/config.bin');
         win.evalNWBin(null, 'js/dlogin.bin');
-	}
+    }
 
     document.write(jses);
 </script>

@@ -13,8 +13,6 @@ public interface McategoryDao extends Dao<McategoryPO> {
 
 	public List<McategoryPO> queryMcategory();
 	
-	public List<McategoryPO> queryMcategoryByIsShow(Short isShow);
-
-	public McategoryPO queryMcategoryByCid(Long cid);
+	public List<McategoryPO> queryMcategoryForShow();
 	
 }

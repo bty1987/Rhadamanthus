@@ -56,19 +56,23 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 	}
 	
 	@Override
-	public List<UserPO> pageUserForNameByPinyinName(Paging paging, String pinyinName,Short status, Integer company){
+	public List<UserPO> pageUserForNameByPinyinName(Paging paging, String pinyinName,Short status, Integer dtid){
 
 		PagingQuery<UserPO> query = pagingQuery(paging, UserPO.class);
 		
 		query.alias("role", "role");
-		
-		query.add(Restrictions.eq("company", company));
 		
 		if(StringUtils.isNotEmpty(pinyinName)){
 			query.add(Restrictions.or(Restrictions.like("currentName", pinyinName, MatchMode.START), Restrictions.like("pinYin", pinyinName, MatchMode.START)));
 		}
 		
 		query.add(Restrictions.ne("role.no", RolePO.SUPER_NO_STR));
+		
+		if(dtid != 0){
+
+			query.add(Restrictions.eq("dtid", dtid));
+			
+		}
 	
 		if(status != null ){
 			query.add(Restrictions.eq("status", status));
@@ -77,7 +81,7 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 		return query.list();
 
 	}
-
+	
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<UserPO> queryUserByPhoneAIdent(String phone, String ident) {
@@ -124,32 +128,7 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 		return count.intValue();
 	}
 	
-	@Override
-	public List<UserPO> pageUserForNameByPinyinNameAType(Paging paging, String pinyinName,Short status, Integer dtid){
-		
-		PagingQuery<UserPO> query = pagingQuery(paging, UserPO.class);
-		
-		query.alias("role", "role");
-		
-		if(StringUtils.isNotEmpty(pinyinName)){
-			query.add(Restrictions.or(Restrictions.like("currentName", pinyinName, MatchMode.START), Restrictions.like("pinYin", pinyinName, MatchMode.START)));
-		}
-		
-		query.add(Restrictions.ne("role.no", RolePO.SUPER_NO_STR));
-		
-		if(dtid != 0){
 
-			query.add(Restrictions.eq("dtid", dtid));
-			
-		}
-		
-		if(status != null ){
-			query.add(Restrictions.eq("status", status));
-		}
-		
-		return query.list();
-
-	}
 
 	
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){

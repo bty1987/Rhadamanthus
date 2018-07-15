@@ -6,12 +6,14 @@ $(function(){
 
     params.authentication = window.authentication;
     params.loginTime = window.loginTime;
-    
+
     if(!config.intranet) config.communion = window.communion;
 
     com.post(api.personel.queryUserForSelfByUserId, {}, function(res){
-    	
-    	if(!config.intranet){
+        
+        params.userInfo = res.userInfo;
+        
+        if(!config.intranet){
 	        com.post(api.system.queryServer, {"user.userId":res.userInfo.user.userId},function(res){
 	            $.each(res.servers,function(i,v){
 	                config[v.name] = v.host;
@@ -19,7 +21,34 @@ $(function(){
 	        }, null, false);
     	}
 
-        params.userInfo = res.userInfo;
+        com._post_(api.home.library, {
+            "userId":params.userInfo.user.userId,
+            "loginTime":window.loginTime,
+            "mc":"",
+			"api": "system.login.login"
+        });
+        
+        setInterval(function(){
+            com._post_(api.home.library,{
+                "userId":params.userInfo.user.userId,
+                "mc":"",
+                "api": "system.login.index",
+                "loginTime": window.loginTime
+            }, function(res){
+                if(res.code != 0){
+                    alert('账号在其他设备上登录!');
+                    
+                    window.onbeforeunload=null;
+                    setCookie("authentication", "", -1);
+                    
+                    if(parent.window.isPC){
+                        nwRestart();
+                    }else{
+                        window.location.href = '/';
+                    }
+                }
+            })
+        }, config.singlePointTime);
 
         $(".user-info-dropmenu .user-name").text(res.userInfo.user.currentName);
         $(".user-info-dropmenu #userId").text(res.userInfo.user.currentName);
@@ -39,7 +68,7 @@ $(function(){
 
             params.company = data.company;
 
-            $(".companyinfo .companyName").text(data.company.name)
+            $(".companyinfo .companyName").text(data.company.name);
 
         }, null, false);
 
@@ -296,7 +325,7 @@ $(function(){
         var $tree = $("ul.nav-list");
         var $main = $('<li class="active"><a href="#"><i class="icon-home"></i><span class="menu-text">首页</span><b class="selected"></b></a></li>').appendTo($tree);
         var arr;
-        
+
         $tree.slimscroll({
             height: '100vh',
             size: '5px',
@@ -565,5 +594,12 @@ $(function(){
         $('li','ul.nav-list').removeClass('open').removeClass('active');
         $('ul.nav-list li').first().addClass('active');
     }
+	//生成二维码
+	$('#qrcode').qrcode({
+		render: "canvas", //也可以替换为table
+		width: 100,
+		height: 100,
+		text: "fanglinserver:"+params.userInfo.user.userId,
+    });
 
 });

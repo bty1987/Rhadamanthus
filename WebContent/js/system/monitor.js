@@ -2,37 +2,36 @@
 $(function(){
 
     $.ajax({
-        url: "../../countVpayment.do",
+        url: "http://61.161.185.22:30001/queryMonitor.do",
         data: null,
         type: "post",
         dataType: "json",
         success: function(res) {
-            var counts = res.counts;
-            counts.sort(sortNumber);
-            addLine($("#table"), counts)
+            var monitors = res.monitors;
+            monitors.sort(sortNumber);
+            addLine($("#table"), monitors)
         }
     });
 
-    function addLine(tableId, lists){
+    function addLine(tableId, monitors){
         var price = 0;
 
-        for(var i = 0; i < lists.length; i++){
+        for(var i = 0; i < monitors.length; i++){
             var $tr = $('<tr></tr>');
-            var $tdOne = $('<td style="text-align: center"></td>').html(i+1);
-            var list = lists[i];
-            price = price + lists[i][1];
-            for(var j = 0; j < list.length; j++){
-                var $tdTwo = $('<td  style="text-align: center"></td>').html(list[0]);
-                var $tdThr = $('<td style="text-align: center"></td>').html(list[1]);
-
-            }
-            $tr.append($tdOne).append($tdTwo).append($tdThr).appendTo(tableId);
+            var monitor = monitors[i];
+            
+            var $name = $('<td  style="text-align: center"></td>').html(monitor["name"]);
+            var $host = $('<td style="text-align: center"></td>').html(monitor["host"]);
+            var $type = $('<td style="text-align: center"></td>').html(monitor["type"]);
+            var $count = $('<td style="text-align: center"></td>').html(monitor["count"]);
+            var $updateTime = $('<td style="text-align: center"></td>').html(monitor["updateTime"]);
+            
+            $tr.append($name).append($host).append($type).append($count).append($updateTime).appendTo(tableId);
         }
-        //var total = $('#total').html('总金额:' + price + "元");
     }
 
     function sortNumber(a,b){
-        return b[1] - a[1];
+        return b["count"] - a["count"];
     }
 
 });

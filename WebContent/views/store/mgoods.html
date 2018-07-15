@@ -1,0 +1,87 @@
+<div class="page-content">
+    <div class="row">
+        <div class="col-xs-12">
+            <!-- 查询条件-->
+            <div id="condList" class="fl_search clearfix"></div>
+            <!--查询结果-->
+            <div id="resultList" class="clearfix tab-pane active"></div>
+            <!--分页-->
+            <div id="pagenation" class="fl-page-wrap clearfix"></div>
+        </div>
+    </div>
+</div>
+
+<div id="layerAdd" style="padding: 40px 0;display: none;">
+    <div class="row-fluid">
+        <form class="form-horizontal" novalidate="novalidate" id="form1">
+            <div class="widget-main">
+                <div class="row" style="margin: 0px;">
+                    <div class="col-md-11">
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label no-padding-right">商品品牌</label>
+                            <div class="col-md-8">
+                                <input type="text" class="col-xs-10 col-sm-5 v_required" id="mbrand" name="mbrand" data-required="1" data-toggle="popover" data-trigger='manual' rules="{required:true}">
+                                <span class="required"><i class='icon-asterisk'></i></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label no-padding-right">商品编号</label>
+                            <div class="col-md-8">
+                                <input type="text" class="col-xs-10 col-sm-5 v_required" id="no" name="no" data-required="1" data-toggle="popover" data-trigger='manual' rules="{required:true}">
+                                <span class="required"><i class='icon-asterisk'></i></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label no-padding-right">商品条形码</label>
+                            <div class="col-md-8">
+                                <input type="text" class="col-xs-10 col-sm-5 v_required" id="barcode" name="barcode" data-required="1" data-toggle="popover" data-trigger='manual' rules="{required:true}">
+                                <span class="required"><i class='icon-asterisk'></i></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label no-padding-right">商品名称</label>
+                            <div class="col-md-8">
+                                <input type="text" class="col-xs-10 col-sm-5 v_required" id="name" name="name" data-required="1" data-toggle="popover" data-trigger='manual' rules="{required:true}">
+                                <span class="required"><i class='icon-asterisk'></i></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label no-padding-right">商品标题</label>
+                            <div class="col-md-8">
+                                <input type="text" class="col-xs-10 col-sm-5 v_required" id="title" name="title" data-required="1" data-toggle="popover" data-trigger='manual' rules="{required:true}" maxlength="64">
+                                <span class="required"><i class='icon-asterisk'></i></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label no-padding-right">价格</label>
+                            <div class="col-md-8">
+                                <input type="text" class="col-xs-10 col-sm-5 v_required v_price" id="price" name="price" data-required="1" data-toggle="popover" data-trigger='manual' rules="{required:true}">
+                                <span class="required"><i class='icon-asterisk'></i></span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+<div id="goodsColorPopUp" class="portlet box"></div>
+
+<div id="goodsFormatPopUp" class="portlet box"></div>
+
+<div id="goodsPicturePopUp" class="portlet box"></div>
+
+<div id="goodsPricePopUp" class="portlet box"></div>
+
+<script type="text/javascript">
+    $.loadScript(['js/store/mgoods.js']);
+</script>

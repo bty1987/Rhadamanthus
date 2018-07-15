@@ -19,6 +19,8 @@ public class PriceVO implements Serializable{
 	private Short ctype; //结算类型,0:底价,1:点位
 	
 	private Float cvalue; //结算值 , 点位结算对应结算值为0~1之前三位小数 , 底价结算对应结算值为浮点数
+	
+	private String content;
 
 	public Long getPid() {
 		return pid;
@@ -74,6 +76,14 @@ public class PriceVO implements Serializable{
 
 	public void setCvalue(Float cvalue) {
 		this.cvalue = cvalue;
+	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
 	}
 	
 }

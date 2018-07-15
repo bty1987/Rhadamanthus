@@ -32,7 +32,7 @@ public class WorkerSalaryDaoImpl extends DaoImpl<WorkerSalaryPO> implements Work
 		return query.list();
 	}
 	
-	public List<WorkerSalaryPO> pageSalaryWorkerForUser(Paging paging,List<Filter> filters) {
+	public List<WorkerSalaryPO> pageWorkerSalaryByUserId(Paging paging, List<Filter> filters) {
 		
 		PagingQuery<WorkerSalaryPO> query = pagingQuery(paging,WorkerSalaryPO.class);
 		
@@ -124,18 +124,18 @@ public class WorkerSalaryDaoImpl extends DaoImpl<WorkerSalaryPO> implements Work
 			}
 		}
 	}
-	
+
 	private void queryFilterExcuteForWorker(PagingQuery<?> query, List<Filter> filters) {
-		
+	
 		if (filters != null) {
 			for (Filter filter : filters) {
 				
 				String filet = filter.getField();
 				String data = filter.getData();
 				
-				 if ("wuid".equals(filet)) {
-						query.alias("user", "user");
-						query.add(Restrictions.eq("user.uid", Integer.valueOf(data)));
+				 if ("uid".equals(filet)) {
+					query.alias("user", "user");
+					query.add(Restrictions.eq("user.uid", Integer.valueOf(data)));
 				  }
 				 
 				 if ("startTime".equals(filet)) {
@@ -148,8 +148,6 @@ public class WorkerSalaryDaoImpl extends DaoImpl<WorkerSalaryPO> implements Work
 				 
 			}
 		}
-		
 	}
-
-
+	
 }

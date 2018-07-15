@@ -8,7 +8,7 @@ public class CartVO implements Serializable{
 
 	private Long cid;
 	
-	private MuserVO muser;
+	private Long uid;
 	
 	private MpriceVO mprice;
 	
@@ -18,9 +18,8 @@ public class CartVO implements Serializable{
 		super();
 	}
 
-	public CartVO(MuserVO muser, MpriceVO mprice) {
+	public CartVO(MpriceVO mprice) {
 		super();
-		this.muser = muser;
 		this.mprice = mprice;
 	}
 
@@ -32,12 +31,12 @@ public class CartVO implements Serializable{
 		this.cid = cid;
 	}
 
-	public MuserVO getMuser() {
-		return muser;
+	public Long getUid() {
+		return uid;
 	}
 
-	public void setMuser(MuserVO muser) {
-		this.muser = muser;
+	public void setUid(Long uid) {
+		this.uid = uid;
 	}
 
 	public MpriceVO getMprice() {

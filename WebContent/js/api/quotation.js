@@ -86,24 +86,24 @@ $.extend(api, {quotation: {
     deleteQuotationFunctionArea: {url: "deleteQuotationFunctionArea.do"},
 
     queryQuotationFunctionAreaItemByQuotationFunctionAreaId: {url: "queryQuotationFunctionAreaItemByQuotationFunctionAreaId.do"},
-    updateQuotationFunctionAreaItem: {url: "updateQuotationFunctionAreaItem.do"},
+    updateQuotationFunctionAreaItem: {url: "updateQuotationFunctionAreaItem.do" , intercept: true},
     updateQuotationFunctionAreaItemForSpec: {url: "updateQuotationFunctionAreaItemForSpec.do"},
-    updateQuotationFunctionAreaItemForIndex: {url:"updateQuotationFunctionAreaItemForIndex.do"},
-    deleteQuotationFunctionAreaItem: {url: "deleteQuotationFunctionAreaItem.do"},
+    updateQuotationFunctionAreaItemForIndex: {url:"updateQuotationFunctionAreaItemForIndex.do" ,intercept: true},
+    deleteQuotationFunctionAreaItem: {url: "deleteQuotationFunctionAreaItem.do" ,intercept: true},
     updateQuotationFunctionAreaItemByQuotationIdAType: {url: "updateQuotationFunctionAreaItemByQuotationIdAType.do"},
 
 
     pageExtensionByOrderId:{url:"pageExtensionByOrderId.do"},
     queryExtensionByOrderId:{url:"queryExtensionByOrderId.do"},
     addExtension:{url:"addExtension.do"},
-    updateExtension:{url:"updateExtension.do"},
-    updateExtensionForAdvance:{url:"updateExtensionForAdvance.do"},
-    deleteExtension:{url:"deleteExtension.do"},
+    updateExtension:{url:"updateExtension.do" ,  intercept: true},
+    updateExtensionForAdvance:{url:"updateExtensionForAdvance.do" ,  intercept: true},
+    deleteExtension:{url:"deleteExtension.do" ,  intercept: true},
 
     queryExtensionItemByEid:{url:"queryExtensionItemByEid.do"},
     queryExtensionItemByEids:{url:"queryExtensionItemByEids.do"},
-    updateExtensionItem:{url:"updateExtensionItem.do"},
-    deleteExtensionItem:{url:"deleteExtensionItem.do"},
+    updateExtensionItem:{url:"updateExtensionItem.do" , intercept: true},
+    deleteExtensionItem:{url:"deleteExtensionItem.do" , intercept: true},
 
 
 }});
@@ -122,6 +122,6 @@ $.extend(api, {addReduce: {
 
     queryAddReduceItemByAddReduceId: {url: "queryAddReduceItemByAddReduceId.do", demo: true},
     queryAddReduceItemByAddReduceIds: {url: "queryAddReduceItemByAddReduceIds.do", demo: true},
-    updateAddReduceItem: {url: "updateAddReduceItem.do"},
-    deleteAddReduceItem: {url: "deleteAddReduceItem.do"}
+    updateAddReduceItem: {url: "updateAddReduceItem.do" ,  intercept: true},
+    deleteAddReduceItem: {url: "deleteAddReduceItem.do" ,  intercept: true}
 }});

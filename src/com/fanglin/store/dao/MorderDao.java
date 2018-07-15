@@ -11,8 +11,4 @@ public interface MorderDao extends Dao<MorderPO>{
 
 	public List<MorderPO> pageMorder(Paging paging, List<Filter> filters);
 	
-	public List<MorderPO> queryMorderByUid(Long uid);
-	
-	public List<MorderPO> queryMorderByStatus(Long uid, Short status);
-	
 }

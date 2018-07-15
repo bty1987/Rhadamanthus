@@ -50,29 +50,29 @@ public class VustomerServiceImpl implements VustomerService {
 	}
 	
 	@Override
-	public List<VustomerVO> queryVustomer() {
-		
-		List<VustomerPO> vustomerPOs = vustomerDao.queryVustomer();
-		
+	public void pageVustomerByUnionId(Paging paging, List<Filter> filters, String unionId) {
+
+		List<VustomerPO> vustomerPOs = vustomerDao.pageVustomerByUnionId(paging, filters, unionId);
+
 		List<VustomerVO> vustomerVOs = new ArrayList<VustomerVO>();
-		
-		for(VustomerPO vustomerPO : vustomerPOs){
+			
+		for (VustomerPO vustomerPO : vustomerPOs){
 			
 			VustomerVO vustomerVO = new VustomerVO();
 			
 			BeanUtil.copyProperties(vustomerPO, vustomerVO);
 			
 			vustomerVOs.add(vustomerVO);
+			
 		}
-
-		return vustomerVOs;
 		
+		paging.setData(vustomerVOs);
 	}
 
 	@Override
-	public List<VustomerVO> queryVustomerByIdent(VustomerVO vustomerVO) {
+	public List<VustomerVO> queryVustomerByUnionId(VustomerVO vustomerVO) {
 		
-		List<VustomerPO> vustomerPOs = vustomerDao.queryVustomerByIdent(vustomerVO.getIdent());
+		List<VustomerPO> vustomerPOs = vustomerDao.queryVustomerByUnionId(vustomerVO.getUnionId());
 		
 		List<VustomerVO> vustomerVOs = new ArrayList<VustomerVO>();
 		
@@ -149,5 +149,15 @@ public class VustomerServiceImpl implements VustomerService {
 		vustomerDao.update(vustomerPO);
 		
 	}
+
+	@Override
+	public List<?> countVustomerByUnionId(VustomerVO vustomerVO) {
+	
+		 List<?> count = vustomerDao.countVustomerByUnionId(vustomerVO.getUnionId());
+		 
+		return count;
+	}
+
+
 
 }

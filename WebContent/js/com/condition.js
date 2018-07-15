@@ -15,8 +15,8 @@ var Condition = function (api) {
                 validate: null
             },
             dataSource: {//从后台取数据的各种配置
-                url: api.personel.queryUserForNameByPinyinName,//获取数据要调用的接口
-                postData: {"user.status":""},//获取数据时的请求参数
+                url: api.personel.queryUserByPinyin,//获取数据要调用的接口
+                postData: {"user.status":"","departmentType.name":""},//获取数据时的请求参数
                 listPath: "autoFillKeyValue",//响应list的json路径
                 keyPath: "key",//用来向后台提交的字段的json路径
                 valuePath: "value"//用来在页面显示的字段的json路径
@@ -62,7 +62,7 @@ var Condition = function (api) {
                 validate: null//校验规则
             },
             dataSource: {//从后台取数据的各种配置
-                url: api.personel.queryUserByDepartmentType,//获取数据要调用的接口
+                url: api.personel.queryUserByPinyin,//获取数据要调用的接口
                 postData: {"user.status":0,"departmentType.name":""},//获取数据时的请求参数
                 listPath: "autoFillKeyValue",//响应list的json路径
                 keyPath: "key",//用来向后台提交的字段的json路径
@@ -94,7 +94,7 @@ var Condition = function (api) {
                 validate: null//校验规则
             },
             dataSource: {//从后台取数据的各种配置
-                url: api.personel.queryUserByDepartmentType,//获取数据要调用的接口
+                url: api.personel.queryUserByPinyin,//获取数据要调用的接口
                 postData: {"user.status":0,"departmentType.name":""},//获取数据时的请求参数
                 listPath: "autoFillKeyValue",//响应list的json路径
                 keyPath: "key",//用来向后台提交的字段的json路径
@@ -144,7 +144,7 @@ var Condition = function (api) {
                 validate: null//校验规则
             },
             dataSource: {//从后台取数据的各种配置
-                url: api.personel.queryUserByDepartmentType,//获取数据要调用的接口
+                url: api.personel.queryUserByPinyin,//获取数据要调用的接口
                 postData: {"user.status":0,"departmentType.name":""},//获取数据时的请求参数
                 listPath: "autoFillKeyValue",//响应list的json路径
                 keyPath: "key",//用来向后台提交的字段的json路径
@@ -418,10 +418,7 @@ var Condition = function (api) {
             submitConfig: {
                 name: "mno",
                 op: "eq",
-                validate: {
-                    "reg": /^[0-9]*$/,
-                    "msg": "请输入数字"
-                }
+                validate:null,
             }
         },
         vp_brand: {
@@ -438,6 +435,22 @@ var Condition = function (api) {
                 listPath: "autoFillKeyValue",//响应list的json路径
                 keyPath: "value",//用来向后台提交的字段的json路径
                 valuePath: "value"//用来在页面显示的字段的json路径
+            }
+        },
+        v_createrName: {
+            label: "创建人",
+            type: "autofill",
+            submitConfig: {
+                name: "creater",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {
+                url: api.personel.queryUserByPinyin,
+                postData: {"user.status":"0" },
+                listPath: "userBases",
+                keyPath: "userId",
+                valuePath: "currentName"
             }
         },
 
@@ -557,6 +570,23 @@ var Condition = function (api) {
                 valuePath: "name"
             }
         },
+        //--------数据-服务节点------
+        serviceNodeType : {
+            label: "节点类型",
+            type: "select",
+            submitConfig: {
+                name: "type",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {
+                url: api.ds.data,
+                postData: {},
+                listPath: "serviceNodeType",
+                keyPath: "key",
+                valuePath: "value"
+            }
+        },
         //--------放线小组---------
         groupName: {
             label: "放线小组",
@@ -647,7 +677,7 @@ var Condition = function (api) {
                 op: "cn",
                 validate: null
             }, dataSource: {
-                url: api.personel.queryUserByDepartmentType,
+                url: api.personel.queryUserByPinyin,
                 postData: {"user.status":0,"departmentType.name":"主材部"},
                 listPath: "autoFillKeyValue",
                 keyPath: "key",
@@ -723,7 +753,7 @@ var Condition = function (api) {
                 validate: null
             },
             dataSource: {
-                url: api.personel.queryUserForNameByPinyinName,
+                url: api.personel.queryUserByPinyin,
                 postData: {"user.status":"" },
                 listPath: "autoFillKeyValue",
                 keyPath: "key",
@@ -739,8 +769,8 @@ var Condition = function (api) {
                 validate: null
             },
             dataSource: {
-                url: api.personel.queryUserForNameByPinyinName,
-                postData: {"user.status":"" },
+                url: api.personel.queryUserByPinyin,
+                postData: {"user.status": ""},
                 listPath: "autoFillKeyValue",
                 keyPath: "key",
                 valuePath: "value"
@@ -755,7 +785,7 @@ var Condition = function (api) {
                 validate: null
             },
             dataSource: {
-                url: api.personel.queryUserForNameByPinyinName,
+                url: api.personel.queryUserByPinyin,
                 postData: {"user.status":""},
                 listPath: "autoFillKeyValue",
                 keyPath: "key",
@@ -933,7 +963,7 @@ var Condition = function (api) {
                 validate: null
             },
             dataSource: {//从后台取数据的各种配置
-                url: api.personel.queryUserByDepartmentType,//获取数据要调用的接口
+                url: api.personel.queryUserByPinyin,//获取数据要调用的接口
                 postData: {"user.status":0,"departmentType.name":""},//获取数据时的请求参数
                 listPath: "autoFillKeyValue",//响应list的json路径
                 keyPath: "key",//用来向后台提交的字段的json路径
@@ -949,7 +979,7 @@ var Condition = function (api) {
                 validate: null
             },
             dataSource: {//从后台取数据的各种配置
-                url: api.personel.queryUserByDepartmentType,//获取数据要调用的接口
+                url: api.personel.queryUserByPinyin,//获取数据要调用的接口
                 postData: {"user.status":0,"departmentType.name":""},//获取数据时的请求参数
                 listPath: "autoFillKeyValue",//响应list的json路径
                 keyPath: "key",//用来向后台提交的字段的json路径
@@ -965,7 +995,7 @@ var Condition = function (api) {
                 validate: null
             },
             dataSource: {//从后台取数据的各种配置
-                url: api.personel.queryUserByDepartmentType,//获取数据要调用的接口
+                url: api.personel.queryUserByPinyin,//获取数据要调用的接口
                 postData: {"user.status":0,"departmentType.name":""},//获取数据时的请求参数
                 listPath: "autoFillKeyValue",//响应list的json路径
                 keyPath: "key",//用来向后台提交的字段的json路径
@@ -1067,12 +1097,12 @@ var Condition = function (api) {
             label: "审核人",//中文名
             type: "autofill",//类型
             submitConfig: {//向后台提交的配置
-                name: "auditerId",//接口中的参数名
+                name: "auditer",//接口中的参数名
                 op: "eq",//查询方式
                 validate: null//校验规则
             },
             dataSource: {//从后台取数据的各种配置
-                url: api.personel.queryUserByDepartmentType,//获取数据要调用的接口
+                url: api.personel.queryUserByPinyin,//获取数据要调用的接口
                 postData: {"user.status":0,"departmentType.name":"职能部"},//获取数据时的请求参数
                 listPath: "autoFillKeyValue",//响应list的json路径
                 keyPath: "key",//用来向后台提交的字段的json路径
@@ -1265,7 +1295,7 @@ var Condition = function (api) {
                 validate: null//校验规则
             },
             dataSource: {//从后台取数据的各种配置
-                url: api.personel.queryUserByDepartmentType,//获取数据要调用的接口
+                url: api.personel.queryUserByPinyin,//获取数据要调用的接口
                 postData: {"user.status":0,"departmentType.name":""},//获取数据时的请求参数
                 listPath: "autoFillKeyValue",//响应list的json路径
                 keyPath: "key",//用来向后台提交的字段的json路径
@@ -1312,7 +1342,7 @@ var Condition = function (api) {
                 validate: null
             },
             dataSource: {//从后台取数据的各种配置
-                url: api.personel.queryUserForNameByPinyinName,//获取数据要调用的接口
+                url: api.personel.queryUserByPinyin,//获取数据要调用的接口
                 postData: {"user.status":"" },//获取数据时的请求参数
                 listPath: "autoFillKeyValue",//响应list的json路径
                 keyPath: "key",//用来向后台提交的字段的json路径
@@ -1420,7 +1450,7 @@ var Condition = function (api) {
                 validate: null
             },
             dataSource: {
-                url: api.personel.queryUserForNameByPinyinName,
+                url: api.personel.queryUserByPinyin,
                 postData: {"user.status":"" },
                 listPath: "autoFillKeyValue",
                 keyPath: "key",
@@ -1587,7 +1617,7 @@ var Condition = function (api) {
                 validate: null
             },
             dataSource: {
-                url: api.personel.queryUserForNameByPinyinName,
+                url: api.personel.queryUserByPinyin,
                 postData: {"user.status":"" },
                 listPath: "userBases",
                 keyPath: "userId",
@@ -1666,7 +1696,7 @@ var Condition = function (api) {
                 validate: null
             },
             dataSource: {
-                url: api.personel.queryUserForNameByPinyinName,
+                url: api.personel.queryUserByPinyin,
                 postData: {"user.status":"" },
                 listPath: "userBases",
                 keyPath: "userId",
@@ -1700,7 +1730,7 @@ var Condition = function (api) {
                 validate: null
             },
             dataSource: {
-                url: api.personel.queryUserForNameByPinyinName,
+                url: api.personel.queryUserByPinyin,
                 postData: {"user.status":"" },
                 listPath: "userBases",
                 keyPath: "userId",//后台i
@@ -1716,7 +1746,7 @@ var Condition = function (api) {
                 validate: null
             },
             dataSource: {
-                url: api.personel.queryUserForNameByPinyinName,
+                url: api.personel.queryUserByPinyin,
                 postData: {"user.status":"" },
                 listPath: "userBases",
                 keyPath: "userId",//后台i
@@ -1785,7 +1815,7 @@ var Condition = function (api) {
                 validate: null
             },
             dataSource: {//从后台取数据的各种配置
-                url: api.personel.queryUserByDepartmentType,//获取数据要调用的接口
+                url: api.personel.queryUserByPinyin,//获取数据要调用的接口
                 postData: {"user.status":0,"departmentType.name":""},//获取数据时的请求参数
                 listPath: "autoFillKeyValue",//响应list的json路径
                 keyPath: "key",//用来向后台提交的字段的json路径
@@ -1844,8 +1874,8 @@ var Condition = function (api) {
                 validate: null
             },
             dataSource : {
-                url : api.personel.queryUserForNameByPinyinName,
-                postData:{"user.status":""},
+                url : api.personel.queryUserByPinyin,
+                postData:{"user.status":"","departmentType.name":""},
                 listPath: "autoFillKeyValue",
                 keyPath:"key",
                 valuePath:"value"
@@ -1870,8 +1900,8 @@ var Condition = function (api) {
                 validate: null
             },
             dataSource: {
-                url: api.personel.queryUserForNameByPinyinName,
-                postData: {"user.status":""},
+                url: api.personel.queryUserByPinyin,
+                postData: {"user.status":"","departmentType.name":""},
                 listPath: "userBases",
                 keyPath: "userId",
                 valuePath: "userName"
@@ -1886,8 +1916,8 @@ var Condition = function (api) {
                 validate: null
             },
             dataSource: {
-                url: api.personel.queryUserForNameByPinyinName,
-                postData: {"user.status":""},
+                url: api.personel.queryUserByPinyin,
+                postData: {"user.status":"","departmentType.name":""},
                 listPath: "userBases",
                 keyPath: "userId",
                 valuePath: "userName"
@@ -2456,7 +2486,7 @@ var Condition = function (api) {
                 validate: null
             },
             dataSource: {//从后台取数据的各种配置
-                url: api.personel.queryUserByDepartmentType,//获取数据要调用的接口
+                url: api.personel.queryUserByPinyin,//获取数据要调用的接口
                 postData: {"user.status":0,"departmentType.name":""},//获取数据时的请求参数
                 listPath: "autoFillKeyValue",//响应list的json路径
                 keyPath: "key",//用来向后台提交的字段的json路径
@@ -2473,7 +2503,7 @@ var Condition = function (api) {
                 validate: null
             },
             dataSource: {//从后台取数据的各种配置
-                url: api.personel.queryUserByDepartmentType,//获取数据要调用的接口
+                url: api.personel.queryUserByPinyin,//获取数据要调用的接口
                 postData: { "user.status":0,"departmentType.name":""},//获取数据时的请求参数
                 listPath: "autoFillKeyValue",//响应list的json路径
                 keyPath: "key",//用来向后台提交的字段的json路径
@@ -2719,7 +2749,7 @@ var Condition = function (api) {
                 validate: null//校验规则
             },
             dataSource: {//从后台取数据的各种配置
-                url: api.personel.queryUserByDepartmentType,//获取数据要调用的接口
+                url: api.personel.queryUserByPinyin,//获取数据要调用的接口
                 postData: {"user.status":0,"departmentType.name":""},//获取数据时的请求参数
                 listPath: "autoFillKeyValue",//响应list的json路径
                 keyPath: "key",//用来向后台提交的字段的json路径
@@ -2770,7 +2800,7 @@ var Condition = function (api) {
                 validate: null//校验规则
             },
             dataSource: {//从后台取数据的各种配置
-                url: api.personel.queryUserByDepartmentType,//获取数据要调用的接口
+                url: api.personel.queryUserByPinyin,//获取数据要调用的接口
                 postData: {"user.status":0,"departmentType.name":"工程部"},//获取数据时的请求参数
                 listPath: "autoFillKeyValue",//响应list的json路径
                 keyPath: "key",//用来向后台提交的字段的json路径
@@ -2805,7 +2835,7 @@ var Condition = function (api) {
                 validate: null
             },
             dataSource: {//从后台取数据的各种配置
-                url: api.personel.queryUserByDepartmentType,//获取数据要调用的接口
+                url: api.personel.queryUserByPinyin,//获取数据要调用的接口
                 postData: {"user.status":0,"departmentType.name":""},//获取数据时的请求参数
                 listPath: "autoFillKeyValue",//响应list的json路径
                 keyPath: "key",//用来向后台提交的字段的json路径
@@ -2919,7 +2949,8 @@ var Condition = function (api) {
                 postData: {},
                 listPath: "autoFillKeyValue",
                 keyPath: "key",
-                valuePath: "value"
+                valuePath: "value",
+				query:"mbrand.name"
             }
         },
 
@@ -2963,23 +2994,6 @@ var Condition = function (api) {
             }
         },
 
-        morderUserName: {
-            label: "用户名",
-            type: "autofill",
-            submitConfig: {
-                name: "name",
-                op: "eq",
-                validate: null
-            },
-            dataSource: {
-                url: api.store.queryMuserByPinyinName,
-                postData: {},
-                listPath: "autoFillKeyValue",
-                keyPath: "key",
-                valuePath: "value"
-            }
-        },
-
         morderByStatus: {
             label: "状态",
             type: "select",
@@ -3012,6 +3026,50 @@ var Condition = function (api) {
 
         /*-------标签label----*/
 		
+		taskName : {
+            label:"任务名称",
+            type:"text",
+            submitConfig : {
+                name : "taskName",
+                op : "eq",
+                validate:null
+            }
+        },
+        
+        taskselect : {
+            label:"任务名称",
+            type:"select",
+            submitConfig : {
+                name : "taskName",
+                op : "eq",
+                validate:null
+            },
+            dataSource: {
+                url: api.information.queryTask,
+                postData: {},
+                listPath: "tasks",
+                keyPath: "tid",
+                valuePath: "name"
+            }
+        },
+        /*-------积分记录----*/
+        vscoreRecordType : {
+            label:"积分类型",
+            type:"select",
+            submitConfig : {
+                name : "VscoreRecordType",
+                op : "eq",
+                validate:null
+            },
+            dataSource: {
+                url: api.ds.data,
+                postData: {},
+                listPath: "vscoreRecordtype",
+                keyPath: "key",
+                valuePath: "value"
+            }
+        },
+
     };
     return {
         getRuleByCondName: function (condName) {

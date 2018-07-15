@@ -21,44 +21,50 @@ import com.fanglin.personel.po.UserPO;
 @Table(name = "vpayment", catalog = "information")
 public class VpaymentPO implements Serializable{
 
-	private static final long serialVersionUID = 2636300918448354861L;
-	
+	private static final long serialVersionUID = -5292403662672343953L;
+
 	public static final String COLUMN_MNO_STR = "mno";
 	
 	public static final String COLUMN_BRAND_STR = "brand";
-
-	private long vpid;
 	
-	private String mno;
+	public static final String COLUMN_CREATER_STR="creater.userId";
 	
-	private UserPO creater;
+	public static final String COLUMN_STATUS_STR = "status";
 	
-	private Timestamp createTime;
+	public static final short COLUMN_STATUS_NOTVPAYMENT_INT = 0;
 	
-	private UserPO collecter;
+	public static final short COLUMN_STATUS_VPAYMENT_INT = 1;
 	
-	private Timestamp collectTime;
+	private long vpid;//活动款ID
 	
-	private short type;
+	private String mno;//会员号
 	
-	private String brand;
+	private String orderId;//装修单号
 	
-	private float money;
+	private UserPO creater;//创建人 
 	
-	private short way;
+	private Timestamp createTime;//创建时间
 	
-	private String receipt;
+	private short type;//类型 , 0: 装修款 , 1: 主材款
 	
-	private String comment;
+	private String brand;//品牌
+	
+	private float money;//金额
+	
+	private VreceiptPO vreceipt;//活动收据ID
+	
+	private short status;//状态 , 0: 未付款 , 1: 已付款
+	
+	private String comment;//备注
 	
 	public VpaymentPO() {
 		super();
 	}
 
-	public VpaymentPO(UserPO creater, UserPO collecter) {
+	public VpaymentPO(UserPO creater,VreceiptPO vreceipt) {
 		super();
 		this.creater = creater;
-		this.collecter = collecter;
+		this.vreceipt=vreceipt;
 	}
  
 	@Id
@@ -81,6 +87,15 @@ public class VpaymentPO implements Serializable{
 		this.mno = mno;
 	}
 
+	@Column(name = "orderId")
+	public String getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
+	}
+
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "createrId", referencedColumnName = "uid")
 	public UserPO getCreater() {
@@ -100,25 +115,6 @@ public class VpaymentPO implements Serializable{
 		this.createTime = createTime;
 	}
 
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "collecterId", referencedColumnName = "uid")
-	public UserPO getCollecter() {
-		return collecter;
-	}
-
-	public void setCollecter(UserPO collecter) {
-		this.collecter = collecter;
-	}
-
-	@Column(name = "collectTime")
-	public Timestamp getCollectTime() {
-		return collectTime;
-	}
-
-	public void setCollectTime(Timestamp collectTime) {
-		this.collectTime = collectTime;
-	}
-	
 	@Column(name = "type")
 	public short getType() {
 		return type;
@@ -146,22 +142,23 @@ public class VpaymentPO implements Serializable{
 		this.money = money;
 	}
 	
-	@Column(name = "way")
-	public short getWay() {
-		return way;
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "vrid", referencedColumnName = "vrid")
+	public VreceiptPO getVreceipt() {
+		return vreceipt;
 	}
 
-	public void setWay(short way) {
-		this.way = way;
+	public void setVreceipt(VreceiptPO vreceipt) {
+		this.vreceipt = vreceipt;
 	}
 	
-	@Column(name = "receipt")
-	public String getReceipt() {
-		return receipt;
+	@Column(name = "status")
+	public short getStatus() {
+		return status;
 	}
 
-	public void setReceipt(String receipt) {
-		this.receipt = receipt;
+	public void setStatus(short status) {
+		this.status = status;
 	}
 
 	@Column(name = "comment")
@@ -172,6 +169,5 @@ public class VpaymentPO implements Serializable{
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	
 	
 }

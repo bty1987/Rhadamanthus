@@ -174,8 +174,8 @@ jQuery(function($) {
 		createHouseSource.customerItems.relationshipType.bindData(res.relationshipType, "key", "value");
 	}, null, false);
 
-	com.initChosen('followId', api.personel.queryUserByDepartmentType, "pinyinName", {"departmentType.name":"", "user.status":0}, "autoFillKeyValue", "key", "value");
-	com.initChosen('keyerId', api.personel.queryUserByDepartmentType, "pinyinName", {"departmentType.name":"", "user.status":0}, "autoFillKeyValue", "key", "value");
+	com.initChosen('followId', api.personel.queryUserByPinyin, "pinyinName", {"departmentType.name":"", "user.status":0}, "autoFillKeyValue", "key", "value");
+	com.initChosen('keyerId', api.personel.queryUserByPinyin, "pinyinName", {"departmentType.name":"", "user.status":0}, "autoFillKeyValue", "key", "value");
 	com.initChosen('customerId', api.data.queryCustomerForName, "pinyinName", {}, "autoFillCustomer", "key", "value").on("change", function(e){
 		if($(this).val() == "" || $("#customerId").val() == "") {
 			com.clearValidator("#customerId", true);

@@ -140,6 +140,40 @@ public class VticketServiceImpl implements VticketService {
 
 	}
 	
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public void comeVticket(VticketVO vticketVO) throws FLException  {
+		
+		VticketPO vticketPO = vticketDao.queryVticketByTno(vticketVO.getTno());
+		
+		if(vticketPO == null ){
+			throw new FLException(160026, "活动票不存在");
+		}
+		
+		if(vticketPO.getIscome() ==  VticketPO.ISCOME_YES_INT){
+			throw new FLException(160027, "活动票已到场");
+		}
+		
+		vticketPO.setIscome(VticketPO.ISCOME_YES_INT);
+		
+		vticketDao.update(vticketPO);
+		
+		
+	}
+
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public void registVticket(VticketVO vticketVO) {
+		
+		VticketPO vticketPO = vticketDao.queryVticketByTno(vticketVO.getTno());
+		
+		if(vticketPO != null){
+			vticketPO.setIsregist(VticketPO.ISREGIST_YES_INT);
+			
+			vticketDao.update(vticketPO);
+		}
+	}
+
 	public VticketVO vticketPOToVO(VticketPO vticketPO){
 		
 		VticketVO vticketVO = new VticketVO(new UserVO(), new UserVO(), new DepartmentVO(), new DepartmentVO());
@@ -156,5 +190,7 @@ public class VticketServiceImpl implements VticketService {
 		
 		return vticketVO;
 	}
+
+	
 
 }

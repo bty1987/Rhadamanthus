@@ -56,7 +56,6 @@ CREATE TABLE `decorationpayment` (
   `realMoney` decimal(10,3) NOT NULL DEFAULT '0.000',
   PRIMARY KEY (`dpid`),
   KEY `indexone` (`orderId`),
-  KEY `indextwo` (`createrId`),
   KEY `indexfor` (`orderId`,`paymentType`,`paymentStatus`),
   KEY `indexthr` (`drId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='装修款表';
@@ -64,8 +63,8 @@ CREATE TABLE `decorationpayment` (
 DROP TABLE IF EXISTS `decorationreceipt`;
 CREATE TABLE `decorationreceipt` (
   `drId` int(11) NOT NULL AUTO_INCREMENT,
-  `type` tinyint(4) NOT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT '0',
+  `type` tinyint(1) NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '0',
   `cluid` int(11) DEFAULT NULL COMMENT '收款人ID',
   `collecterName` varchar(32) DEFAULT NULL,
   `collectTime` timestamp NULL DEFAULT NULL,
@@ -109,11 +108,9 @@ CREATE TABLE `materialpayment` (
 DROP TABLE IF EXISTS `materialreceipt`;
 CREATE TABLE `materialreceipt` (
   `mrId` int(11) NOT NULL AUTO_INCREMENT,
-
   `cluid` int(11) NOT NULL COMMENT '收款人ID',
   `collecterName` varchar(32) NOT NULL DEFAULT '',
   `collectTime` timestamp NULL DEFAULT NULL,
-
   `cfuid` int(11) DEFAULT NULL COMMENT '确认人ID',
   `confirmerName` varchar(32) NOT NULL DEFAULT '',
   `confirmTime` timestamp NULL DEFAULT NULL,

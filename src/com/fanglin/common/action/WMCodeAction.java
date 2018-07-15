@@ -15,25 +15,37 @@ import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseAction;
 import com.fanglin.utils.DateUtil;
+import com.fanglin.utils.LogUtils;
 import com.fanglin.utils.WMCodeUtil;
 
-@ParentPackage("login")
+@ParentPackage("common")
 @Namespace("/")
 @Controller
 public class WMCodeAction extends BaseAction {
 
 	private static final long serialVersionUID = 8870921012656189842L;
 	
+	protected Logger logger = LoggerFactory.getLogger(getClass());
+	
 	private String watermark;
 
 	@Action(value = "wmCode", results = { @Result(name = "success", type = "json", params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" })
 	public String wmCode() throws Exception {
 		
-		watermark = WMCodeUtil.createImage(queryUserName(), DateUtil.current("yyyyMMdd"));
+		try {
+			watermark = WMCodeUtil.createImage(queryUserName(), DateUtil.current("yyyyMMdd"));
+		} catch (Exception e) {
+			setErrorCode(110000);
+			setErrorMsg("系统处理问题");
+			
+			LogUtils.logging(logger, e, "wmCode", "common");
+		}
 		
 		return SUCCESS;
 	}

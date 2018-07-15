@@ -21,7 +21,7 @@ jQuery(function ($) {
         });
         if(returnFlag) return;
 
-        com.post(api.data.querylabel,{"label.status" : 0}, function(data){
+        com.post(api.data.queryLabel,{"label.status" : 0}, function(data){
             var workflowStatus = [];
 
             /*将已添加的标签从下拉菜单中删除*/
@@ -34,19 +34,26 @@ jQuery(function ($) {
             workflowItem.workflows = workflowStatus;
         }, null, false);
 
+        if(workflowItem.workflows.length != 0){
+
         var $line = addline($lines.length + 1);
         $line.appendTo('#list');
         reorder();
+
+        }else{
+            layer.msg("没有任何标签");
+        }
     });
 
     function addline(lineindex) {
+
         var $line = $('<li></li>').addClass('line');
         var $indexWrap = $('<div></div>').addClass('line-wrap order').append($('<div></div>').addClass('cell index blue').text(lineindex));
         var $lineInfoWrap = $('<div></div>').addClass('line-wrap content col2');
         var $optWrap = $('<div></div>').addClass('line-wrap action');
         var _lineInfoSet = [
 
-            {labelClass: "name", hasInput: !0, color:'grey'},//名称
+            {labelClass: "name", hasInput: !0, color:'grey'},             //名称
             {labelClass: "value",hasvalue: !0, color:'blue'},             //编号
         ];
 
@@ -56,14 +63,16 @@ jQuery(function ($) {
         $.each(_lineInfoSet, function (i, v) {
 
             var $cell = $('<div></div>').addClass(v.color + ' cell ' + v.labelClass);
+
             if (v.hasInput) {
                 var $select = $('<select id="lid"></select>');
-                $select.bindData(workflowItem.workflows,"lid","name");
-                $cell.append($select);
+                    $select.bindData(workflowItem.workflows,"lid","name");
+                    $cell.append($select);
             }
+
             var $input;
             if(v.hasvalue){
-                $input = $('<input id="value">').prop({'type': 'text', 'autocomplete': 'off'}).addClass('editable v_required').css("width","60%");
+                $input = $('<input id="value" maxlength="5">').prop({'type': 'text', 'autocomplete': 'off'}).addClass('editable v_required v_float').css("width","60%");
 
                 $cell.append($input);
             }
@@ -83,11 +92,12 @@ jQuery(function ($) {
             var $lines = $('.line', '#list');
 
             var ulid =  $line.attr('data-ulid');
+
             if(ulid == null){
-                com.post(api.data.sevalabelling, {
+                com.post(api.data.addUserLabel, {
                     "userlabel.user.uid": label.id,
                     "userlabel.label.lid": $("#lid").val(),
-                    "userlabel.value": $("#value").val()
+                    "userlabel.scope": $("#value").val()
                 }, function (res) {
                     layer.msg('贴标签成功!', {icon: 1});
                     $line.find('.name').html($selectValue);
@@ -96,6 +106,7 @@ jQuery(function ($) {
                     workflowAdd();
                 })
             }
+
         });
 
         $btndel.click(function () {
@@ -103,10 +114,13 @@ jQuery(function ($) {
             var ulid =  $line.attr('data-ulid');
             if(ulid == null){
                 $line.remove();
+
             }else{
-                com.post(api.data.deletelabelling, {"userlabel.ulid" : $line.attr('data-ulid')}, function(res){
+
+                com.post(api.data.deleteUserLabel, {"userlabel.ulid" : $line.attr('data-ulid')}, function(res){
                     layer.msg('移除标签成功!', {icon: 1});
                     $line.remove();
+
                     reorder();
                 })
             }
@@ -119,7 +133,7 @@ jQuery(function ($) {
     function workflowAdd() {
         var index ;
 
-        com.post(api.data.querylabelByuid, {
+        com.post(api.data.queryUserLabelByUid, {
             "userlabel.user.uid":label.id
         }, function (res) {
             for (var i = 0, len = res.userlabels.length; i < len; i++) {
@@ -143,32 +157,34 @@ jQuery(function ($) {
             'data-ulid':data.ulid,
         });
         $lineInfoWrap1.find('div.name').text(data.label.name);
-        $lineInfoWrap1.find('div.value').text(data.value);
+        $lineInfoWrap1.find('div.value').text(data.scope);
     }
-
     function checkRowValue($line) {
         var flag = true;
         var input = $line.find('.value');
+        var iconok = $line.find('.green');
 
         if (!input.text()) {
-            input.focus().select();
-            input.addClass('tooltip-info').attr({
+            iconok.focus().select();
+            iconok.addClass('tooltip-info').attr({
                 "data-rel": "popover",
                 "data-placement": "top",
                 "data-original-title": "",
                 "title": "",
-                "data-content": "请输入分值",
+                "data-content": "请确定",
             }).popover('show');
             flag = false;
         } else {
-            input.popover('destroy');
+            iconok.popover('destroy');
         }
 
         return flag;
     }
 
+
     //重排序
     function reorder(){
+
         var $list = $('.line', '#list');
 
         $list.length && $list.each(function(i){

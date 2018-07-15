@@ -14,8 +14,9 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.store.service.MorderService;
 import com.fanglin.store.vo.MorderItemVO;
 import com.fanglin.store.vo.MorderVO;
+import com.fanglin.store.vo.MuserVO;
 
-@ParentPackage("login")
+@ParentPackage("base")
 @Namespace("/")
 @Controller
 public class MorderAction extends BaseListAction{
@@ -27,7 +28,9 @@ public class MorderAction extends BaseListAction{
 	
 	private List<MorderVO> morders;
 	
-	private MorderVO morder; 
+	private MorderVO morder;
+	
+	private MuserVO muser;
 	
 	private List<MorderItemVO> morderItems;
 	
@@ -36,34 +39,7 @@ public class MorderAction extends BaseListAction{
 	@Action(value="pageMorder", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String pageMorder(){
 		
-		morderService.pageMorder(getPaging(), getFilters());
-		
-		return SUCCESS;
-		
-	}
-	
-	@Action(value="queryMorderByUid", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryMorderByUid(){
-		
-		morders = morderService.queryMorderByUid(morder);
-		
-		return SUCCESS;
-		
-	}
-	
-	@Action(value="queryMorderByStatus", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryMorderByStatus(){
-		
-		morders = morderService.queryMorderByStatus(morder);
-		
-		return SUCCESS;
-		
-	}
-	
-	@Action(value="addMorder", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String addMorder() throws FLException{
-		
-		morderService.addMorder(morder, morderItems, cids);
+		morderService.pageMorder(getPaging(), getFilters(), false);
 		
 		return SUCCESS;
 		
@@ -101,6 +77,14 @@ public class MorderAction extends BaseListAction{
 
 	public void setMorder(MorderVO morder) {
 		this.morder = morder;
+	}
+
+	public MuserVO getMuser() {
+		return muser;
+	}
+
+	public void setMuser(MuserVO muser) {
+		this.muser = muser;
 	}
 
 	public List<MorderItemVO> getMorderItems() {

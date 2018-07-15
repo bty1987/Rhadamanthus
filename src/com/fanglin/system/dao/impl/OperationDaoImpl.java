@@ -42,18 +42,12 @@ public class OperationDaoImpl extends DaoImpl<OperationPO> implements OperationD
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<OperationPO> queryOperation() {
-		return session().createCriteria(OperationPO.class).list();
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<OperationPO> queryOperationBySystem(short system) {
-		return session().createCriteria(OperationPO.class).add(Restrictions.eq("system", system)).list();
+		return session().createCriteria(OperationPO.class).add(Restrictions.eq(OperationPO.COLUMN_STATUS_STR, OperationPO.STATUS_ENABLE_INT)).list();
 	}
 
 	@Override
 	public OperationPO queryOperationByOperation(String operation) {
-		return (OperationPO) session().createCriteria(OperationPO.class).add(Restrictions.eq(OperationPO.COLUMN_OPERATION_STR, operation)).uniqueResult();
+		return (OperationPO) session().createCriteria(OperationPO.class).add(Restrictions.eq(OperationPO.COLUMN_OPERATION_STR, operation)).add(Restrictions.eq(OperationPO.COLUMN_STATUS_STR, OperationPO.STATUS_ENABLE_INT)).uniqueResult();
 	}
 	
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){

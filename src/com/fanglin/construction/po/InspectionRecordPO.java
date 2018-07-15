@@ -35,7 +35,7 @@ public class InspectionRecordPO implements Serializable{
 	
 	private String orderAddr;
 	
-	private String operaterId;
+	private int ouid;
 	
 	private String operaterName;
 	
@@ -100,19 +100,21 @@ public class InspectionRecordPO implements Serializable{
 		this.recordDes = recordDes;
 	}
 
-	@Column(name = "operaterId")
-	public String getOperaterId(){
-		return operaterId;
+	@Column(name = "ouid")
+	public int getOuid() {
+		return ouid;
 	}
 
-	public void setOperaterId(String operaterId){
-		this.operaterId = operaterId;
+	public void setOuid(int ouid) {
+		this.ouid = ouid;
 	}
 
 	@Column(name = "operaterName")
 	public String getOperaterName(){
 		return operaterName;
 	}
+
+	
 
 	public void setOperaterName(String operaterName){
 		this.operaterName = operaterName;

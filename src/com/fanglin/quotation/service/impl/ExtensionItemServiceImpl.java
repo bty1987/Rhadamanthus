@@ -115,7 +115,7 @@ public class ExtensionItemServiceImpl implements ExtensionItemService{
 		
 		DecorationPO	decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 		
-		List<Short> status = Arrays.asList(new Short[]{DecorationPO.STATUS_SIGNED_INT, DecorationPO.STATUS_RESIGNED_INT, DecorationPO.STATUS_WASTE_INT, DecorationPO.STATUS_COMPLETED_INT, DecorationPO.STATUS_TERMINATION_INT});
+		List<Short> status = Arrays.asList(new Short[]{DecorationPO.STATUS_SIGNED_INT, DecorationPO.STATUS_WASTE_INT, DecorationPO.STATUS_COMPLETED_INT, DecorationPO.STATUS_TERMINATION_INT});
 		
 		if(status.contains(decorationPO.getStatus())){
 			throw new FLException(140049, "装修单状态,不可操作");

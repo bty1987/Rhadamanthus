@@ -11,9 +11,9 @@ public interface MbrandService {
 
 	public void pageMbrand(Paging paging, List<Filter> filters);
 
-	public List<MbrandVO> queryMbrandByCid(MbrandVO mbrand);
+	public List<MbrandVO> queryMbrand(MbrandVO mbrand);
 	
-	public List<MbrandVO> queryMbrandByName(String pinyinName);
+	public List<MbrandVO> queryMbrandByName(MbrandVO mbrand);
 
 	public void addMbrand(MbrandVO mbrand) throws FLException;
 

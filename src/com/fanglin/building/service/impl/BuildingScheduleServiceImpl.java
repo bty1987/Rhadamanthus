@@ -22,7 +22,7 @@ import com.fanglin.building.vo.BuildingVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
-import com.fanglin.personel.vo.UserVO;
+import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.utils.BeanUtil;
 
 @Service("buildingScheduleService")
@@ -186,13 +186,13 @@ public class BuildingScheduleServiceImpl implements BuildingScheduleService{
 	
 	public BuildingScheduleVO buildingSchedulePOToVO(BuildingSchedulePO buildingSchedulePO){
 		
-		BuildingScheduleVO buildingScheduleVO = new BuildingScheduleVO(new BuildingNodeVO(), new BuildingVO(), new UserVO());
+		BuildingScheduleVO buildingScheduleVO = new BuildingScheduleVO(new BuildingNodeVO(), new BuildingVO(), new UserBaseVO());
 		
-		BeanUtil.copyProperties(buildingSchedulePO, buildingScheduleVO, Arrays.asList("building","buildingNode", "operater"));
+		BeanUtil.copyProperties(buildingSchedulePO, buildingScheduleVO, Arrays.asList("building", "buildingNode", "operater"));
 		
 		BeanUtil.copyProperties(buildingSchedulePO.getBuildingNode(), buildingScheduleVO.getBuildingNode());
 		
-		BeanUtil.copyProperties(buildingSchedulePO.getOperater(), buildingScheduleVO.getOperater(), Arrays.asList("role", "dept", "duty"));
+		BeanUtil.copyProperties(buildingSchedulePO.getOperater(), buildingScheduleVO.getOperater(), Arrays.asList("dept", "duty"));
 		
 		return buildingScheduleVO;
 	}

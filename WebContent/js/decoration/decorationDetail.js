@@ -18,21 +18,26 @@ jQuery(function($) {
         materialPaymentListGrid: null,
         materialPaymentGridPager: null,
 
+        decorationOrderStatus: {},
+
         reloadFlag: 0,
 
         btnSaveBasedecorationInfo:null,
 
         activity: {},
 
+        dsid:null,
         decorationPaymentId: null,
         convertActivityItemId: null,
 
         items: {},
         houseItems: {},
         customerItems: {},
+        serviceItems:{},
 
         vRepeatFlg: false,
         cRepeatFlg: false,
+        accountFlg:false,
     };
     
     drawNode.draw(params.viewNode);
@@ -75,6 +80,8 @@ jQuery(function($) {
     decorationDetail.items.notSalesmanContent = $('#notSalesmanContent');
 
     decorationDetail.items.salesmanType = $('#salesmanType');
+
+    decorationDetail.serviceItems.comment = $('#comment');
 
     decorationDetail.items.quoterId = $('#quoterId');
     decorationDetail.items.escorterId = $('#escorterId');
@@ -214,6 +221,7 @@ jQuery(function($) {
         com.clearValidator();
     });
     decorationDetail.refundDecorationPaymentModal = $("#refundDecorationPaymentModal");
+    decorationDetail.serviceModal = $("#serviceModal");
     decorationDetail.otherPaymentModal = $("#otherPaymentModal");
 
     decorationUtils.init();
@@ -231,8 +239,8 @@ jQuery(function($) {
         decorationDetail.items.houseClass.bindData(res.houseClass, 'key', 'value');
     }, null, false);
 
-    com.initChosen('quoterId', api.personel.queryUserByDepartmentType, "pinyinName", {"user.status":0,"departmentType.name":""}, "autoFillKeyValue", "key", "value");
-    com.initChosen('escorterId', api.personel.queryUserByDepartmentType, "pinyinName", {"user.status":0,"departmentType.name":""}, "autoFillKeyValue", "key", "value");
+    com.initChosen('quoterId', api.personel.queryUserByPinyin, "pinyinName", {"user.status":0,"departmentType.name":""}, "autoFillKeyValue", "key", "value");
+    com.initChosen('escorterId', api.personel.queryUserByPinyin, "pinyinName", {"user.status":0,"departmentType.name":""}, "autoFillKeyValue", "key", "value");
     com.initChosen('no', api.data.queryVillageForNameByPinyin, "pinyinName", {}, "autoFillKeyValue", "key", "value")
 
     if(decorationDetail.orderType == decorationDetail.type["半价"]){
@@ -241,6 +249,12 @@ jQuery(function($) {
     if(decorationDetail.orderType == decorationDetail.type["全包"]){
         decorationUtils.initDecorationInclusive(decorationDetail.decorationOrderId);
     }
+
+    com.post(api.ds.decoration, {}, function (res) {
+        $.each(res.decorationOrderStatus, function(i,v){
+            decorationDetail.decorationOrderStatus[v.key] = v.value;
+        })
+    }, null, false);
 
     $('#customerInfosBtn').on(ace.click_event, function(){
         if(decorationDetail.showCustomerInfoFlag==undefined || decorationDetail.showCustomerInfoFlag==0 ){
@@ -611,6 +625,23 @@ jQuery(function($) {
         decorationDetail.otherPaymentModal.modal("show");
     });
 
+    $("#serviceSaveBtn").on('click',function(res){
+
+        if(com.validate("serviceModal")){
+            return;
+        }
+
+        var options = {};
+        options["decorationService.dsid"] = decorationDetail.dsid;
+        options["decorationService.comment"] = decorationDetail.serviceItems.comment.val();
+
+        com.post(api.decoration.completeDecorationService,options,function(res){
+            decorationUtils.initService(decorationDetail,decorationDetail.decorationOrderId);
+            decorationDetail.serviceModal.modal("hide");
+        });
+
+    })
+
     $("#saveRefundMoneyBtn").on('click', function(res){
 
         if(com.validate("refundDecorationPaymentModal")){
@@ -803,11 +834,16 @@ jQuery(function($) {
         decorationDetail.items.houseClass.val(decoration.houseClass);
         decorationDetail.items.houseArea.val(decoration.house.buildArea);
         decorationDetail.items.freeArea.val(decoration.freeArea);
-        decorationDetail.items.status.val(decoration.status);
+        decorationDetail.items.status.val(decorationDetail.decorationOrderStatus[decoration.status]);
         decorationDetail.items.measureTime.val(decoration.measureTime);
         decorationDetail.items.notSalesmanRate.val(decoration.notSalesmanRate);
         decorationDetail.notSalesmanRate = decoration.notSalesmanRate;
 
+        if (decoration.status != 6) {
+            decorationDetail.accountFlg = true;
+        }else {
+            decorationDetail.accountFlg = false;
+        }
         com.post(api.decoration.queryDecorationInfoByOrderId,{"orderId":decorationDetail.decorationOrderId},function (res) {
             res = res.decorationInfo;
             decorationDetail.items.backOrderName.val(res.backOrderName);
@@ -914,13 +950,19 @@ jQuery(function($) {
                 case "addreduce":
                     decorationUtils.initAddreduce(decorationDetail.decorationOrderId,decorationDetail.orderType)
                     break;
-
+                case "account":
+                    decorationUtils.initAccount(decorationDetail.decorationOrderId,decorationDetail.accountFlg);
+                    break;
+                case "service":
+                    decorationUtils.initService(decorationDetail,decorationDetail.decorationOrderId);
+                    break;
             }
         }).on('stepclick', function(e,info){
 
             info.step == 1 ? decorationDetail.btnSaveBasedecorationInfo.removeClass("hide") : decorationDetail.btnSaveBasedecorationInfo.addClass("hide")
 
             switch (params.viewNode[info.step-1].type){
+            
                 case "quotaion":
                     quotationUtils.loadQuotationDetail();
                     break;
@@ -947,6 +989,12 @@ jQuery(function($) {
                     break;
                 case "addreduce":
                     decorationUtils.initAddreduce(decorationDetail.decorationOrderId,decorationDetail.orderType)
+                    break;
+                case "account":
+                    decorationUtils.initAccount(decorationDetail.decorationOrderId,decorationDetail.accountFlg);
+                    break;
+                case "service":
+                    decorationUtils.initService(decorationDetail,decorationDetail.decorationOrderId);
                     break;
             }
         }).on('previous', function(e, info) {

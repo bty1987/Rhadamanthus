@@ -6,7 +6,7 @@ import java.sql.Timestamp;
 import org.apache.struts2.json.annotations.JSON;
 
 import com.fanglin.communion.vo.CustomerVO;
-import com.fanglin.personel.vo.UserVO;
+import com.fanglin.personel.vo.UserBaseVO;
 
 public class BuildingVO implements Serializable{
 
@@ -24,7 +24,7 @@ public class BuildingVO implements Serializable{
 	
 	private CustomerVO customerSourceAgent;
 	
-	private UserVO creater;
+	private UserBaseVO creater;
 	
 	private Timestamp createTime;
 	
@@ -48,7 +48,7 @@ public class BuildingVO implements Serializable{
 		super();
 	}
 
-	public BuildingVO(HouseSourceVO houseSource, CustomerSourceVO customerSource, CustomerVO houseSourceAgent, CustomerVO customerSourceAgent, UserVO creater, BuildingNodeVO buildingNode) {
+	public BuildingVO(HouseSourceVO houseSource, CustomerSourceVO customerSource, CustomerVO houseSourceAgent, CustomerVO customerSourceAgent, UserBaseVO creater, BuildingNodeVO buildingNode) {
 		super();
 		this.houseSource = houseSource;
 		this.customerSource = customerSource;
@@ -106,11 +106,11 @@ public class BuildingVO implements Serializable{
 		this.customerSourceAgent = customerSourceAgent;
 	}
 
-	public UserVO getCreater() {
+	public UserBaseVO getCreater() {
 		return creater;
 	}
 
-	public void setCreater(UserVO creater) {
+	public void setCreater(UserBaseVO creater) {
 		this.creater = creater;
 	}
 

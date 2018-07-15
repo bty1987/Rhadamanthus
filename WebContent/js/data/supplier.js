@@ -37,7 +37,7 @@ $(function(){
         //enable typeahead by specifying the source array
         isStaticResource : false,
         flsource: {
-            url : api.personel.queryUserByDepartmentType,
+            url : api.personel.queryUserByPinyin,
             postData : {"departmentType.name": '主材部', "user.status": 0},
             resultList : "autoFillKeyValue",
             keyPath : "key",

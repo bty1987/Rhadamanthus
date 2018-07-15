@@ -17,23 +17,29 @@ public class LabelPO implements Serializable {
 
 	public static final String COLUMN_STATUS_STR = "status";
 	
+	public static final String COLUMN_TYPE_STR = "type";
+	
 	public static final short STATUS_ENABLE_STR = 0;  //启用
 	
-	private int lid;
+	public static final short STATUS_ISSHOW_STR = 0;  //显示
+	
+	private long lid;
 	
 	private String name;
 	
-	private String proportion;
+	private short scale;
 	
 	private short type;
 	
 	private short status;
+	
+	private short isShow;
 
 	public  LabelPO() {
 		super();
 	}
 	
-	public LabelPO(int lid) {
+	public LabelPO(Long lid) {
 		super();
 		this.lid = lid;
 	}
@@ -41,11 +47,11 @@ public class LabelPO implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "lid")
-	public int getLid() {
+	public long getLid() {
 		return lid;
 	}
 
-	public void setLid(int lid) {
+	public void setLid(long lid) {
 		this.lid = lid;
 	}
 
@@ -57,16 +63,16 @@ public class LabelPO implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
-
-	@Column(name = "proportion")
-	public String getProportion() {
-		return proportion;
+	
+	@Column(name = "scale")
+	public short getScale() {
+		return scale;
 	}
 
-	public void setProportion(String proportion) {
-		this.proportion = proportion;
+	public void setScale(short scale) {
+		this.scale = scale;
 	}
-
+	
 	@Column(name = "type")
 	public short getType() {
 		return type;
@@ -84,5 +90,13 @@ public class LabelPO implements Serializable {
 	public void setStatus(short status) {
 		this.status = status;
 	}
-	
+	@Column(name = "isShow")
+	public short getIsShow() {
+		return isShow;
+	}
+
+	public void setIsShow(short isShow) {
+		this.isShow = isShow;
+	}
+
 }

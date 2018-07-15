@@ -3,26 +3,26 @@ USE `quotation`;
 
 DROP TABLE IF EXISTS `addreduce`;
 CREATE TABLE `addreduce` (
-  `arId` int(11) NOT NULL AUTO_INCREMENT,
+  `arid` int(11) NOT NULL AUTO_INCREMENT,
   `orderId` varchar(15) NOT NULL,
-  `type` tinyint(4) NOT NULL COMMENT '0 增项 1 减项 2 漏项',
+  `type` tinyint(1) NOT NULL COMMENT '0 增项 1 减项 2 漏项',
   `managePrice` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '管理费',
   `total` decimal(10,3) NOT NULL,
-  `status` tinyint(4) NOT NULL COMMENT '0 未提交 1、已提交/未付款 2、已付款 3、已确认  ',
+  `status` tinyint(1) NOT NULL COMMENT '0 未提交 1、已提交/未付款 2、已付款 3、已确认  ',
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `content` varchar(256) NOT NULL,
   `dpId` int(11) DEFAULT NULL COMMENT '对应收款编号',
-  PRIMARY KEY (`arId`),
+  PRIMARY KEY (`arid`),
   KEY `indexone` (`orderId`,`type`,`status`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='增减项表';
 
 DROP TABLE IF EXISTS `addreduceitem`;
 CREATE TABLE `addreduceitem` (
-  `ariId` int(11) NOT NULL AUTO_INCREMENT,
-  `arId` int(11) NOT NULL COMMENT '增减项编号',
+  `ariid` int(11) NOT NULL AUTO_INCREMENT,
+  `arid` int(11) NOT NULL COMMENT '增减项编号',
   `itemName` varchar(128) NOT NULL,
-  `type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0报价项 , 1自定义报价项目',
-  `subtype` tinyint(4) NOT NULL DEFAULT '0' COMMENT '1工程,2主材',
+  `type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0报价项 , 1自定义报价项目',
+  `subtype` tinyint(1) NOT NULL DEFAULT '0' COMMENT '1工程,2主材',
   `measurementUnit` varchar(10) NOT NULL,
   `workType` varchar(15) NOT NULL,
   `unitPrice` decimal(10,3) NOT NULL DEFAULT '0.000',
@@ -30,31 +30,31 @@ CREATE TABLE `addreduceitem` (
   `quotationFunctionAreaId` int(11) NOT NULL COMMENT '所属报价功能区编号',
   `quoteItemId` int(11) DEFAULT '0',
   `content` varchar(512) DEFAULT NULL,
-  `discount` tinyint(4) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`ariId`),
-  KEY `indexone` (`arId`)
+  `discount` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`ariid`),
+  KEY `indexone` (`arid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='增减项目';
 
 DROP TABLE IF EXISTS `extension`;
 CREATE TABLE `extension` (
-  `eId` int(11) NOT NULL AUTO_INCREMENT,
+  `eid` int(11) NOT NULL AUTO_INCREMENT,
   `orderId` varchar(15) NOT NULL,
   `type` tinyint(1) NOT NULL,
   `total` decimal(10,3) NOT NULL DEFAULT '0.000',
   `status` tinyint(1) NOT NULL DEFAULT '0',
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `content` varchar(256) NOT NULL,
-  PRIMARY KEY (`eId`),
+  PRIMARY KEY (`eid`),
   KEY `indexone` (`orderId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='拓展项';
 
 DROP TABLE IF EXISTS `extensionitem`;
 CREATE TABLE `extensionitem` (
-  `eiId` int(11) NOT NULL AUTO_INCREMENT,
-  `eId` int(11) NOT NULL,
+  `eiid` int(11) NOT NULL AUTO_INCREMENT,
+  `eid` int(11) NOT NULL,
   `itemName` varchar(128) NOT NULL,
-  `type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0扩展项增项,1增项自定义,2扩展项减项,3减项自定义',
-  `subtype` tinyint(4) NOT NULL DEFAULT '0' COMMENT '1工程,2主材',
+  `type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0扩展项增项,1增项自定义,2扩展项减项,3减项自定义',
+  `subtype` tinyint(1) NOT NULL DEFAULT '0' COMMENT '1工程,2主材',
   `measurementUnit` varchar(10) NOT NULL,
   `workType` varchar(15) NOT NULL,
   `unitPrice` decimal(10,3) NOT NULL DEFAULT '0.000',
@@ -62,19 +62,19 @@ CREATE TABLE `extensionitem` (
   `quotationFunctionAreaId` int(11) NOT NULL,
   `quoteItemId` int(11) NOT NULL,
   `content` varchar(512) DEFAULT NULL,
-  PRIMARY KEY (`eiId`),
-  KEY `indexone` (`eId`)
+  PRIMARY KEY (`eiid`),
+  KEY `indexone` (`eid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='拓展项目';
 
 DROP TABLE IF EXISTS `functionarea`;
 CREATE TABLE `functionarea` (
-  `faId` int(11) NOT NULL AUTO_INCREMENT,
+  `faid` int(11) NOT NULL AUTO_INCREMENT,
   `functionAreaId` varchar(10) NOT NULL,
   `functionAreaName` varchar(20) NOT NULL,
   `versionId` varchar(11) NOT NULL,
   `functionAreaOrder` int(11) NOT NULL,
   `functionAreaType` varchar(10) NOT NULL DEFAULT '普通' COMMENT ' 包括普通 , 一次性包死 , 综合项目 , 管理费 . ',
-  `type` tinyint(4) NOT NULL DEFAULT '0',
+  `type` tinyint(1) NOT NULL DEFAULT '0',
   `total` decimal(10,3) NOT NULL DEFAULT '0.000',
   PRIMARY KEY (`faId`),
   KEY `indexone` (`functionAreaId`,`versionId`,`functionAreaType`,`functionAreaOrder`),
@@ -83,10 +83,10 @@ CREATE TABLE `functionarea` (
 
 DROP TABLE IF EXISTS `functionareaquoteitem`;
 CREATE TABLE `functionareaquoteitem` (
-  `faiId` bigint(20) NOT NULL AUTO_INCREMENT,
+  `faiid` int(11) NOT NULL AUTO_INCREMENT,
   `functionAreaId` bigint(20) NOT NULL,
   `quoteItemId` bigint(20) NOT NULL,
-  PRIMARY KEY (`faiId`),
+  PRIMARY KEY (`faiid`),
   KEY `indexone` (`functionAreaId`,`quoteItemId`),
   KEY `indextwo` (`quoteItemId`,`functionAreaId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='功能区报价项关联表';
@@ -121,7 +121,7 @@ CREATE TABLE `quotationfunctionarea` (
   `functionAreaName` varchar(10) NOT NULL,
   `functionAreaOrder` int(11) DEFAULT NULL,
   `functionAreaType` varchar(10) DEFAULT NULL COMMENT ' 包括普通 , 一次性包死 , 综合项目 , 管理费 . ',
-  `type` tinyint(4) NOT NULL DEFAULT '0',
+  `type` tinyint(1) NOT NULL DEFAULT '0',
   `total` decimal(10,3) NOT NULL DEFAULT '0.000',
   PRIMARY KEY (`qfaId`),
   KEY `indexone` (`quotationId`,`functionAreaOrder`)
@@ -134,13 +134,13 @@ CREATE TABLE `quotationfunctionareaitem0` (
   `measurementUnit` varchar(10) NOT NULL,
   `workType` varchar(15) NOT NULL,
   `unitPrice` decimal(10,3) NOT NULL,
-  `index` tinyint(4) NOT NULL DEFAULT '0' COMMENT '索引',
+  `index` tinyint(1) NOT NULL DEFAULT '0' COMMENT '索引',
   `formula` varchar(16) NOT NULL DEFAULT '0',
   `initNum` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '原数',
   `num` decimal(10,3) NOT NULL,
-  `discount` tinyint(4) NOT NULL DEFAULT '1',
-  `type` tinyint(4) NOT NULL,
-  `subtype` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0生成项目,1工程,2主材',
+  `discount` tinyint(1) NOT NULL DEFAULT '1',
+  `type` tinyint(1) NOT NULL,
+  `subtype` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0生成项目,1工程,2主材',
   `quotationFunctionAreaId` int(11) NOT NULL,
   `quotationItemId` int(11) DEFAULT NULL,
   `content` varchar(256) DEFAULT NULL,
@@ -156,13 +156,13 @@ CREATE TABLE `quotationfunctionareaitem1` (
   `measurementUnit` varchar(10) NOT NULL,
   `workType` varchar(15) NOT NULL,
   `unitPrice` decimal(10,3) NOT NULL,
-  `index` tinyint(4) NOT NULL DEFAULT '0' COMMENT '索引',
+  `index` tinyint(1) NOT NULL DEFAULT '0' COMMENT '索引',
   `formula` varchar(16) NOT NULL DEFAULT '0',
   `initNum` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '原数',
   `num` decimal(10,3) NOT NULL,
-  `discount` tinyint(4) NOT NULL DEFAULT '1',
-  `type` tinyint(4) NOT NULL,
-  `subtype` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0生成项目,1工程,2主材',
+  `discount` tinyint(1) NOT NULL DEFAULT '1',
+  `type` tinyint(1) NOT NULL,
+  `subtype` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0生成项目,1工程,2主材',
   `quotationFunctionAreaId` int(11) NOT NULL,
   `quotationItemId` int(11) DEFAULT NULL,
   `content` varchar(256) DEFAULT NULL,
@@ -178,13 +178,13 @@ CREATE TABLE `quotationfunctionareaitem2` (
   `measurementUnit` varchar(10) NOT NULL,
   `workType` varchar(15) NOT NULL,
   `unitPrice` decimal(10,3) NOT NULL,
-  `index` tinyint(4) NOT NULL DEFAULT '0' COMMENT '索引',
+  `index` tinyint(1) NOT NULL DEFAULT '0' COMMENT '索引',
   `formula` varchar(16) NOT NULL DEFAULT '0',
   `initNum` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '原数',
   `num` decimal(10,3) NOT NULL,
-  `discount` tinyint(4) NOT NULL DEFAULT '1',
-  `type` tinyint(4) NOT NULL,
-  `subtype` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0生成项目,1工程,2主材',
+  `discount` tinyint(1) NOT NULL DEFAULT '1',
+  `type` tinyint(1) NOT NULL,
+  `subtype` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0生成项目,1工程,2主材',
   `quotationFunctionAreaId` int(11) NOT NULL,
   `quotationItemId` int(11) DEFAULT NULL,
   `content` varchar(256) DEFAULT NULL,
@@ -200,13 +200,13 @@ CREATE TABLE `quotationfunctionareaitem3` (
   `measurementUnit` varchar(10) NOT NULL,
   `workType` varchar(15) NOT NULL,
   `unitPrice` decimal(10,3) NOT NULL,
-  `index` tinyint(4) NOT NULL DEFAULT '0' COMMENT '索引',
+  `index` tinyint(1) NOT NULL DEFAULT '0' COMMENT '索引',
   `formula` varchar(16) NOT NULL DEFAULT '0',
   `initNum` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '原数',
   `num` decimal(10,3) NOT NULL,
-  `discount` tinyint(4) NOT NULL DEFAULT '1',
-  `type` tinyint(4) NOT NULL,
-  `subtype` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0生成项目,1工程,2主材',
+  `discount` tinyint(1) NOT NULL DEFAULT '1',
+  `type` tinyint(1) NOT NULL,
+  `subtype` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0生成项目,1工程,2主材',
   `quotationFunctionAreaId` int(11) NOT NULL,
   `quotationItemId` int(11) DEFAULT NULL,
   `content` varchar(256) DEFAULT NULL,
@@ -222,13 +222,13 @@ CREATE TABLE `quotationfunctionareaitem4` (
   `measurementUnit` varchar(10) NOT NULL,
   `workType` varchar(15) NOT NULL,
   `unitPrice` decimal(10,3) NOT NULL,
-  `index` tinyint(4) NOT NULL DEFAULT '0' COMMENT '索引',
+  `index` tinyint(1) NOT NULL DEFAULT '0' COMMENT '索引',
   `formula` varchar(16) NOT NULL DEFAULT '0',
   `initNum` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '原数',
   `num` decimal(10,3) NOT NULL,
-  `discount` tinyint(4) NOT NULL DEFAULT '1',
-  `type` tinyint(4) NOT NULL,
-  `subtype` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0生成项目,1工程,2主材',
+  `discount` tinyint(1) NOT NULL DEFAULT '1',
+  `type` tinyint(1) NOT NULL,
+  `subtype` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0生成项目,1工程,2主材',
   `quotationFunctionAreaId` int(11) NOT NULL,
   `quotationItemId` int(11) DEFAULT NULL,
   `content` varchar(256) DEFAULT NULL,
@@ -251,8 +251,8 @@ CREATE TABLE `quotationitem` (
   `itemWorkTypeId` int(11) NOT NULL,
   `quotationItemDes` varchar(512) NOT NULL,
   `unitPrice` decimal(10,3) NOT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT '0',
-  `discount` tinyint(4) NOT NULL DEFAULT '0',
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  `discount` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`qiId`),
   KEY `indexone` (`itemId`,`versionId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='报价项目表';
@@ -283,8 +283,8 @@ CREATE TABLE `systemdefineitem` (
   `itemWorkTypeId` int(11) NOT NULL,
   `quotationItemDes` varchar(512) NOT NULL,
   `unitPrice` decimal(10,3) NOT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT '0',
+  `status` tinyint(1) NOT NULL DEFAULT '0',
   `company` int(11) NOT NULL DEFAULT '0',
-  `discount` tinyint(4) NOT NULL DEFAULT '0',
+  `discount` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`sdiId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='系统定义报项目表';

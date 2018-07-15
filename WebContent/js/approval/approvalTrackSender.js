@@ -126,12 +126,13 @@ jQuery(function($) {
 				$("#materialInfo").html("销售信息");
 				$.each(res.approvalSalesRefundItem, function(i, v) {
 					$('#materialInfoList')
-						.append(approvalUtils.addspan('0', '名称  : ', v.salesItem.goods.name))
-						.append('<br/>')
-						.append(approvalUtils.addspan('10', '颜色  : ', v.salesItem.color.name))
+						.append(approvalUtils.addspan('10', '名称  : ', v.salesItem.goods.name))
+						.append(approvalUtils.addspan('40', '颜色  : ', v.salesItem.color.name))
 						.append(approvalUtils.addspan('40', '规格  : ', v.salesItem.format.info))
-						.append(approvalUtils.addspan('10', '数量  : ', v.num))
-						.append(approvalUtils.addspan('40', '总价  : ', v.total))
+						.append('<br/>')
+						.append(approvalUtils.addspan('10', '售价  : ', v.salesItem.selling))
+						.append(approvalUtils.addspan('40', '退货数量  : ', v.num))
+						.append(approvalUtils.addspan('40', '退货金额  : ', v.total))
 						.append('<hr/>');
 				});
 				$('#msoiModel').modal("show");

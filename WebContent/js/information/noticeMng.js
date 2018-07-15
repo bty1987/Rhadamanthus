@@ -138,7 +138,16 @@ $(function(){
             $btnEdit.click(function(){
                 notice.editFlg = !0;
                 var a = v;
-                void 0 != a && (notice.items.nid = a.nid,notice.items.noticeId = a.noticeId, notice.items.userId = a.creater.userId, notice.items.theme.val(a.theme), notice.items.typeSel.val(a.type), notice.items.prioritySel.val(a.priority),  notice.items.startTime.val(a.startTime), notice.items.endTime.val(a.endTime), notice.items.isPublic.prop("checked", a.isPublic == 0), notice.items.contents.html(a.contents), notice.modal.modal("show"))});
+                void 0 != a && (notice.items.nid = a.nid,notice.items.noticeId = a.noticeId, 
+                				notice.items.userId = a.creater.userId, notice.items.theme.val(a.theme), 
+                				notice.items.typeSel.val(a.type), notice.items.prioritySel.val(a.priority), 
+                				notice.items.startTime.val(a.startTime), 
+                				notice.items.endTime.val(a.endTime), 
+                				notice.items.isPublic.prop("checked", a.isPublic == 0), 
+                				notice.items.contents.html(a.contents), 
+                				notice.modal.modal("show"))
+
+            });
 
             $management.unbind().bind('click',function(){
                      showDepaermentModal()
@@ -150,19 +159,22 @@ $(function(){
                                  $wrap.find('input[value="'+ val.did +'"]').prop('checked', true);
                          })
                       });
+                      
                       $("#manageBtn").unbind().bind('click',function(){
                           var list = $('input[name="module"]:checked', $('#managements'));
                           var params = {"notice.nid": v.nid};
+                        
                           list.length && (
                               $.each(list, function(i, v){
                                   var $v = $(this).val();
                                   params["dids" + "[" + i + "]"] = $v;
-                                  if($v == -1 || $v == '全部') return false;
-                              })
+                                  if($v == -1 || $v == '全部') 
+                                	  return false;
+                              }),
+                              com.post(api.information.updateNoticeDepartment, params,function(res){
+                                  $('#managements').modal("hide");
+                                 },null,false)
                           );
-                         com.post(api.information.updateNoticeDepartment, params,function(res){
-                             $('#managements').modal("hide");
-                            },null,false)
                 });
             });
 

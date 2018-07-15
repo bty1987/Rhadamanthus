@@ -27,25 +27,23 @@ public class MgoodsPO implements Serializable{
 	
 	public static final short STATUS_DISABLE_SHORT = 1;
 	
-	public static final short STATUS_HOT_SHORT = 2;
-	
-	public static final short STATUS_RECOM_SHORT = 3;
-	
 	private long gid;
 	
 	private String no;
 	
 	private String name;
 	
-	private String pinyinName;
-	
-	private String barcode;
+	private String pinyin;
 	
 	private MbrandPO mbrand;
+	
+	private String barcode;
 	
 	private String title;
 	
 	private String defaultImg;
+	
+	private float price;
 	
 	private short status;
 
@@ -87,13 +85,23 @@ public class MgoodsPO implements Serializable{
 		this.name = name;
 	}
 
-	@Column(name="pinyinName")
-	public String getPinyinName() {
-		return pinyinName;
+	@Column(name="pinyin")
+	public String getPinyin() {
+		return pinyin;
 	}
 
-	public void setPinyinName(String pinyinName) {
-		this.pinyinName = pinyinName;
+	public void setPinyin(String pinyin) {
+		this.pinyin = pinyin;
+	}
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "bid", referencedColumnName="bid")
+	public MbrandPO getMbrand() {
+		return mbrand;
+	}
+
+	public void setMbrand(MbrandPO mbrand) {
+		this.mbrand = mbrand;
 	}
 
 	@Column(name="barcode")
@@ -103,16 +111,6 @@ public class MgoodsPO implements Serializable{
 
 	public void setBarcode(String barcode) {
 		this.barcode = barcode;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "bid", referencedColumnName="bid")
-	public MbrandPO getMbrand() {
-		return mbrand;
-	}
-
-	public void setMbrand(MbrandPO mbrand) {
-		this.mbrand = mbrand;
 	}
 
 	@Column(name="title")
@@ -131,6 +129,15 @@ public class MgoodsPO implements Serializable{
 
 	public void setDefaultImg(String defaultImg) {
 		this.defaultImg = defaultImg;
+	}
+	
+	@Column(name="price")
+	public float getPrice() {
+		return price;
+	}
+
+	public void setPrice(float price) {
+		this.price = price;
 	}
 
 	@Column(name="status")

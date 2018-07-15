@@ -19,11 +19,9 @@
                                                     <ul class="ace-thumbnails">
                                                         <li>
                                                             <div id="infoPicture" data-rel="colorbox" href="javascript:void(0)" class="cboxElement" target="_blank">
+                                                                <div style="width: 150px; height: 150px">
                                                                  <img id="showImg" src="#" alt="150x150" width='150' height='150' >
-                                                            </div>
-
-                                                            <div class="tools tools-top">
-                                                                <a id="removePicture" href="#"><i class="icon-remove red"></i></a>
+                                                                </div>
                                                             </div>
                                                         </li>
                                                     </ul>
@@ -31,11 +29,13 @@
                                             </div>
                                         </div>
                                     </div>
+
                                     <div class="width-85 label label-info label-xlg arrowed-in arrowed-in-right">
                                         <div class="inline position-relative">
                                             <span class="white" id="name"></span>
                                         </div>
                                     </div>
+
                                 </div>
                             </form>
                         </div>
@@ -50,17 +50,19 @@
         <div class="widget-box transparent">
             <div class="widget-header widget-header-small header-color-blue2" id="whis"><h4 class="smaller"><i class="icon-check bigger-110"></i>关于我</h4>
             </div>
-            <div id="profiles" style="float: left">
-                <span id="content" style="width: 213%"></span>
+            <div id="profiles" style="float: left;width: 100%;">
+                <textarea id = "text" maxlength="130" class="col-xs-12 col-sm-15" rows="3" style="display: none; height: 200px "></textarea>
+                <span  id="content" style="width: 100%;word-break:break-all;word-warp:break-word"></span>
             </div>
-            <div class="col-sm-6" style="float: left; margin-top: 170px">
+            <div class="col-sm-6" style="float: left;">
                 <div class="editable-buttons" id="btn">
-                    <button type="submit" class="btn btn-info editable-submit yes" style="margin-right: -2px"></button>
-                    <button type="button" class="btn editable-cancel no"></button>
+                    <button style="width: 50px" class="btn btn-info editable-submit yes">确定</button>
+                    <button style="width: 50px" class="btn editable-cancel no">取消</button>
                 </div>
             </div>
         </div>
     </div>
+
     <div class="col-xs-12 col-sm-6" style="float: left ;margin-top: 80px">
         <div class="widget-box transparent">
             <div class="widget-header widget-header-small header-color-blue2"><h4 class="smaller"><i class="icon-lightbulb bigger-120"></i>我的标签</h4>
@@ -73,7 +75,7 @@
         </div>
     </div>
 </div>
-<div class="col-xs-12 col-sm-6">
+<div class="col-xs-12 col-sm-6" style="margin-top: 50px">
     <button type="button" id="returnBtn" class="btn btn-primary pull-left col-xs-2" >返回</button>
 </div>
 <script type="text/javascript">

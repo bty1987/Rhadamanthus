@@ -37,7 +37,7 @@ jQuery(function($) {
 			optionName: "materialModel.materialModelName",
 			optionNo: "materialModel.materialModelNo",
 			optionMsoId: "",
-			optionItemId: "materialModel.mmId",
+			optionItemId: "materialModel.mmId"
 		},
 
 		editFlag: false,
@@ -65,9 +65,9 @@ jQuery(function($) {
 	if(params.saleType == "add"){
 		
 	}else{
-		com.initChosen('salesmanName', api.personel.queryUserByDepartmentType, "pinyinName", {"departmentType.name":"", "user.status":"0"}, "autoFillKeyValue", "key", "value");
-		com.initChosen('materialerName', api.personel.queryUserByDepartmentType, "pinyinName", {"departmentType.name":"主材部", "user.status":"0"}, "autoFillKeyValue", "key", "value");
-		com.initChosen('instoreName', api.personel.queryUserByDepartmentType, "pinyinName", {"departmentType.name":"主材部", "user.status":"0"}, "autoFillKeyValue", "key", "value");
+		com.initChosen('salesmanName', api.personel.queryUserByPinyin  , "pinyinName", {"user.status":"0","departmentType.name":""}, "autoFillKeyValue", "key", "value");
+		com.initChosen('materialerName', api.personel.queryUserByPinyin  , "pinyinName", {"user.status":"0","departmentType.name":"主材部"}, "autoFillKeyValue", "key", "value");
+		com.initChosen('instoreName', api.personel.queryUserByPinyin , "pinyinName", {"user.status":"0","departmentType.name":"主材部"}, "autoFillKeyValue", "key", "value");
 		com.initChosen('materialBrand', api.data.queryBrandForPinYinNameACategoryName, "pinyinName", {}, "autoFillKeyValue", "key", "value");
 
 		com.updateChosen("salesmanName", materialSaleOrderPostData["materialSubOrder.designerId"], materialSaleOrderPostData["materialSubOrder.designerName"]);

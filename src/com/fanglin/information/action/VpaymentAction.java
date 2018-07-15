@@ -12,8 +12,9 @@ import org.springframework.stereotype.Controller;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.information.service.VpaymentService;
+import com.fanglin.information.service.VreceiptService;
 import com.fanglin.information.vo.VpaymentVO;
-
+import com.fanglin.information.vo.VreceiptVO;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -25,22 +26,21 @@ public class VpaymentAction extends BaseListAction{
 	@Autowired
 	private VpaymentService vpaymentService;
 	
+	@Autowired
+	private VreceiptService vreceiptService;
+	
 	private VpaymentVO vpayment;
+	
+	private VreceiptVO vreceipt;
 	
 	private List<?> counts;
 	
+	private List<VpaymentVO> vpayments;
+
 	@Action(value = "pageVpayment", results = {@Result (name = "success", type = "json", params = {"ignoreHierarchy", "false"})}, params = {"contentType", "text/html"})
 	public String pageVpayment() throws FLException{
 		
-		vpaymentService.pageVpayment(getPaging(), getFilters());
-		
-		return SUCCESS;
-	}
-	
-	@Action(value="deleteVpaymentId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String deleteVpaymentId() throws FLException{
-		
-		vpaymentService.deleteVpaymentId(vpayment);
+		vpaymentService.pageVpayment(getPaging(), getFilters(), vpayment);
 		
 		return SUCCESS;
 	}
@@ -52,13 +52,53 @@ public class VpaymentAction extends BaseListAction{
 		
 		return SUCCESS;
 	}
+	
+	@Action(value = "collectVpayment", results = {@Result (name = "success", type = "json", params = {"ignoreHierarchy", "false"})}, params = {"contentType", "text/html"})
+	public String collectVpayment() throws FLException{
+		
+		vpaymentService.collectVpayment(vpayments,vreceipt,queryUserId());
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "queryVpaymentByNo", results = {@Result (name = "success", type = "json", params = {"ignoreHierarchy", "false"})}, params = {"contentType", "text/html"})
+	public String queryVpaymentByNo() throws FLException{
+		
+		vpayments = vpaymentService.queryVpaymentByNo(vpayment);
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "queryVpaymentByVrid", results = {@Result (name = "success", type = "json", params = {"ignoreHierarchy", "false"})}, params = {"contentType", "text/html"})
+	public String queryVpaymentByVrid() throws FLException{
+		
+		vpayments = vpaymentService.queryVpaymentByVrid(vpayment);
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "queryVreceiptByVrid", results = {@Result (name = "success", type = "json", params = {"ignoreHierarchy", "false"})}, params = {"contentType", "text/html"})
+	public String queryVreceiptByVrid() throws FLException{
+		
+		vreceipt=vreceiptService.queryVreceiptByVrid(vreceipt);
+		
+		return SUCCESS;
+	}
 
-	public VpaymentVO getVpayment() { 
+	public VpaymentVO getVpayment() {
 		return vpayment;
 	}
 
 	public void setVpayment(VpaymentVO vpayment) {
 		this.vpayment = vpayment;
+	}
+
+	public VreceiptVO getVreceipt() {
+		return vreceipt;
+	}
+
+	public void setVreceipt(VreceiptVO vreceipt) {
+		this.vreceipt = vreceipt;
 	}
 
 	public List<?> getCounts() {
@@ -68,6 +108,13 @@ public class VpaymentAction extends BaseListAction{
 	public void setCounts(List<?> counts) {
 		this.counts = counts;
 	}
-	
 
+	public List<VpaymentVO> getVpayments() {
+		return vpayments;
+	}
+
+	public void setVpayments(List<VpaymentVO> vpayments) {
+		this.vpayments = vpayments;
+	}
+	
 }

@@ -36,18 +36,18 @@ public class MpricePO implements Serializable{
 	public static final short STATUS_ENABLE_INT = 0;
 	
 	public static final short STATUS_DISABLE_INT = 1;
-
-	private long pid;
 	
-	private String name;
-	 
-	private float price;
+	private long pid;
 	
 	private MgoodsPO mgoods;
 	
 	private McolorPO mcolor;
 	
 	private MformatPO mformat;
+	
+	private String name;
+	 
+	private float price;
 	
 	private String img;
 	
@@ -75,24 +75,6 @@ public class MpricePO implements Serializable{
 		this.pid = pid;
 	}
 
-	@Column(name = "name")
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-	
-	@Column(name = "price")
-	public float getPrice() {
-		return price;
-	}
-
-	public void setPrice(float price) {
-		this.price = price;
-	}
-	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "gid", referencedColumnName="gid")
 	public MgoodsPO getMgoods() {
@@ -123,6 +105,24 @@ public class MpricePO implements Serializable{
 		this.mformat = mformat;
 	}
 
+	@Column(name = "name")
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	@Column(name = "price")
+	public float getPrice() {
+		return price;
+	}
+
+	public void setPrice(float price) {
+		this.price = price;
+	}
+	
 	@Column(name = "img")
 	public String getImg() {
 		return img;

@@ -52,7 +52,7 @@ jQuery(function($) {
 	});
 
 	$.extend(com.validator, houseSource.validator);
-	com.initChosen("belongUser", api.personel.queryUserByDepartmentType, "pinyinName", {"departmentType.name":"", "user.status":0}, "autoFillKeyValue", "key", "value");
+	com.initChosen("belongUser", api.personel.queryUserByPinyin, "pinyinName", {"departmentType.name":"", "user.status":0}, "autoFillKeyValue", "key", "value");
 
 	houseSource.buildItems.hsNo = $("#hsNo");
 	houseSource.buildItems.csNo = $("#csNo");

@@ -7,11 +7,8 @@ import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -19,24 +16,32 @@ import javax.persistence.Table;
 public class MorderPO implements Serializable{
 
 	private static final long serialVersionUID = -586716249741389800L;
-
-	public static final String COLUMN_UID_STR = "muser.uid";
+	
+	public static final String COLUMN_UNIONID_STR = "unionId";
 	
 	public static final String COLUMN_STATUS_STR = "status";
 	
 	public static final String COLUMN_NO_STR = "no";
 	
-	public static final short STATUS_INIT_STR = 0;
+	public static final String COLUMN_CREATETIME_STR = "createTime";
 	
-	public static final short STATUS_DELETE_STR = 4;
+	public static final short STATUS_INIT_SHORT = 0;
+	
+	public static final short STATUS_WAITINGSEND_SHORT = 1;
+	
+	public static final short STATUS_ENDSEND_SHORT = 2;
+	
+	public static final short STATUS_WAITINGEVALUATION_SHORT = 3;
+	
+	public static final short STATUS_DELETE_SHORT = 5;
+	
+	public static final short STATUS_COMPLETED_SHORT = 6;
 	
 	private long oid;
 	
 	private String no;
 	
-	private MuserPO muser;
-	
-	private AddressPO address;
+	private String unionId;
 	
 	private float total;
 	
@@ -44,21 +49,12 @@ public class MorderPO implements Serializable{
 	
 	private Timestamp paymentTime;
 	
+	private String address;
+	
 	private short status;
 
 	public MorderPO() {
 		super();
-	}
-	
-	public MorderPO(String no) {
-		super();
-		this.no = no;
-	}
-
-	public MorderPO(MuserPO muser, AddressPO address) {
-		super();
-		this.muser = muser;
-		this.address = address;
 	}
 
 	@Id
@@ -81,24 +77,13 @@ public class MorderPO implements Serializable{
 		this.no = no;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "uid", referencedColumnName="uid")
-	public MuserPO getMuser() {
-		return muser;
+	@Column(name = "unionId")
+	public String getUnionId() {
+		return unionId;
 	}
 
-	public void setMuser(MuserPO muser) {
-		this.muser = muser;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "aid", referencedColumnName="aid")
-	public AddressPO getAddress() {
-		return address;
-	}
-
-	public void setAddress(AddressPO address) {
-		this.address = address;
+	public void setUnionId(String unionId) {
+		this.unionId = unionId;
 	}
 
 	@Column(name = "total")
@@ -128,6 +113,15 @@ public class MorderPO implements Serializable{
 		this.paymentTime = paymentTime;
 	}
 
+	@Column(name = "address")
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+	
 	@Column(name = "status")
 	public short getStatus() {
 		return status;

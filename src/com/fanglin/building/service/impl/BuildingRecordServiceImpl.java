@@ -25,7 +25,7 @@ import com.fanglin.communion.vo.VillageVO;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
-import com.fanglin.personel.vo.UserVO;
+import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.utils.BeanUtil;
 
 @Service("buildingRecordService")
@@ -96,9 +96,9 @@ public class BuildingRecordServiceImpl implements BuildingRecordService{
 		
 		HouseSourceVO houseSourceVO = new HouseSourceVO(new HouseVO(new VillageVO()));
 		
-		CustomerSourceVO customerSourceVO = new CustomerSourceVO(new CustomerVO(), new UserVO());
+		CustomerSourceVO customerSourceVO = new CustomerSourceVO(new CustomerVO(), new UserBaseVO());
 		
-		BuildingRecordVO buildingRecordVO = new BuildingRecordVO(houseSourceVO, customerSourceVO, new UserVO());
+		BuildingRecordVO buildingRecordVO = new BuildingRecordVO(houseSourceVO, customerSourceVO, new UserBaseVO());
 		
 		BeanUtil.copyProperties(buildingRecordPO, buildingRecordVO, Arrays.asList("houseSource", "customerSource", "operater"));
 		
@@ -119,7 +119,7 @@ public class BuildingRecordServiceImpl implements BuildingRecordService{
 		}
 		
 		//operater
-		BeanUtil.copyProperties(buildingRecordPO.getOperater(), buildingRecordVO.getOperater(), Arrays.asList("role", "dept", "duty"));
+		BeanUtil.copyProperties(buildingRecordPO.getOperater(), buildingRecordVO.getOperater(), Arrays.asList("dept", "duty"));
 		
 		return buildingRecordVO;
 		

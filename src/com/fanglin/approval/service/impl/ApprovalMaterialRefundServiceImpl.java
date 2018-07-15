@@ -261,6 +261,7 @@ public class ApprovalMaterialRefundServiceImpl implements ApprovalMaterialRefund
 		materialPaymentPO.setBrand(materialPO.getBrand());//品牌
 		
 		materialPaymentPO.setCreater(approvalPO.getSender());
+		materialPaymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		
 		materialPaymentPO.setReferMoney(approvalMaterialRefundPO.getRefund());//退款金额
 		materialPaymentPO.setPaymentType(MaterialPaymentPO.PAYMENTTYPE_TYPE_REJECT_INT);

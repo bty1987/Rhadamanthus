@@ -85,9 +85,7 @@ public class DecorationVO implements Serializable {
 	
 	
 	private Short status;
-	
-	private Short quotationStatus;
-	
+		
 	private Short projectStatus;
 	
 	private Integer otherStatus;
@@ -255,14 +253,6 @@ public class DecorationVO implements Serializable {
 
 	public void setStatus(Short status) {
 		this.status = status;
-	}
-
-	public Short getQuotationStatus() {
-		return quotationStatus;
-	}
-
-	public void setQuotationStatus(Short quotationStatus) {
-		this.quotationStatus = quotationStatus;
 	}
 
 	public Short getType() {

@@ -76,7 +76,7 @@ jQuery(function ($) {
 
             var element = res.constructionSchedules;
 
-            com.initChosen(operate + "WorkerName", api.personel.queryUserByDepartmentType, "pinyinName", {
+            com.initChosen(operate + "WorkerName", api.personel.queryUserByPinyin, "pinyinName", {
                 "departmentType.name": "工程部",
                 "user.status": 0
             }, "autoFillKeyValue", "key", "value");

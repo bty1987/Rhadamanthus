@@ -11,9 +11,7 @@ public interface MbrandDao extends Dao<MbrandPO> {
 
 	public List<MbrandPO> pageMbrand(Paging paging, List<Filter> filters);
 	
-	public List<MbrandPO> queryMbrand();
-
-	public List<MbrandPO> queryMbrandByCid(Long cid);
+	public List<MbrandPO> queryMbrand(Long cid);
 
 	public List<MbrandPO> queryMbrandByName(Paging paging, String name);
 

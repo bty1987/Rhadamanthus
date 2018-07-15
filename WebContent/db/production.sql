@@ -93,7 +93,7 @@ CREATE TABLE `productionplan` (
   `no` varchar(32) NOT NULL,
   `path` varchar(128) NOT NULL DEFAULT ' ',
   `startTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '投料时间',
-  `endTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '出货时间',
+  `endTime` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '出货时间',
   `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0 初始 1入库 2送货',
   `comment` varchar(64) NOT NULL,
   PRIMARY KEY (`ppid`)

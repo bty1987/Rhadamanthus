@@ -33,11 +33,9 @@ public interface UserService {
 	
 	public UserVO queryUserByOldUserId(UserVO userVO) throws FLException;
 	
-	public List<UserBaseVO> queryUserForNameByPinyinName(String pinyinName,UserVO userVO,Integer company) throws FLException ;
+	public List<UserBaseVO> queryUserByPinyin(String pinyinName,UserVO userVO,DepartmentTypeVO departmentType) throws FLException ;
 			
 	public UserVO validateUser(String loginId, String password) throws FLException;
-	
-	public List<UserBaseVO> queryUserByDepartmentType(String pinyinName,UserVO userVO,DepartmentTypeVO departmentType) throws FLException;
 	
 	public List<UserBaseVO> queryUserByUids(List<Integer> uids) throws FLException;
 	

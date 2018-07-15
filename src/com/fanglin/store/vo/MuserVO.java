@@ -8,7 +8,7 @@ public class MuserVO implements Serializable{
 	
 	private Long uid;
 	
-	private String unionVal;
+	private String unionId;
 	
 	private String name;
 	
@@ -29,13 +29,13 @@ public class MuserVO implements Serializable{
 	public void setUid(Long uid) {
 		this.uid = uid;
 	}
-	
-	public String getUnionVal() {
-		return unionVal;
+
+	public String getUnionId() {
+		return unionId;
 	}
 
-	public void setUnionVal(String unionVal) {
-		this.unionVal = unionVal;
+	public void setUnionId(String unionId) {
+		this.unionId = unionId;
 	}
 
 	public String getName() {

@@ -121,19 +121,24 @@ public class ConstructerServiceImpl implements ConstructerService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public void updateConstructerForRate(ConstructerVO constructerVO) throws FLException{
+	public void updateConstructerForRate(List<ConstructerVO> constructerVOs) throws FLException{
 		
-		ConstructerPO constructerPO = constructerDao.queryConstructerByCrId(constructerVO.getCrid());
+		ConstructerPO constructerPO;
+		
+		for(ConstructerVO constructerVO:constructerVOs){
+			constructerPO = constructerDao.queryConstructerByCrId(constructerVO.getCrid());
 
-		if(constructerPO == null){
-			throw new FLException(120021, "施工人员不存在");
+			if(constructerPO == null){
+				throw new FLException(120021, "施工人员不存在");
+			}
+
+			short rate = constructerVO.getRate();
+			constructerPO.setRate(rate);
+			constructerPO.setAssessment(constructerVO.getAssessment());
+
+			constructerDao.update(constructerPO);
 		}
-
-		short rate = constructerVO.getRate();
-		constructerPO.setRate(rate);
-		constructerPO.setAssessment(constructerVO.getAssessment());
-
-		constructerDao.update(constructerPO);
+		
 	}
 
 	@Override

@@ -14,7 +14,7 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.store.service.McolorService;
 import com.fanglin.store.vo.McolorVO;
 
-@ParentPackage("login")
+@ParentPackage("base")
 @Namespace("/")
 @Controller
 public class McolorAction extends BaseListAction{
@@ -36,26 +36,10 @@ public class McolorAction extends BaseListAction{
 		return SUCCESS;
 	}
 	
-	@Action(value="queryMcolorByGidAndStatus", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String  queryMcolorByGidAndStatus(){
-		
-		mcolors = mcolorService.queryMcolorByGidAndStatus(mcolor);
-		
-		return SUCCESS;
-	}
-	
 	@Action(value="addMcolor", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String addMcolor() throws FLException{
 		
 		mcolorService.addMcolor(mcolor);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value="updateMcolor", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String updateMcolor() throws FLException{
-		
-		mcolorService.updateMcolor(mcolor);
 		
 		return SUCCESS;
 	}

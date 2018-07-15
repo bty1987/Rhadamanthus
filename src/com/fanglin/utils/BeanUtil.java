@@ -19,7 +19,6 @@ import java.util.List;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.FatalBeanException;
-import org.springframework.util.Assert;
 
 public class BeanUtil extends org.springframework.beans.BeanUtils {
 
@@ -30,7 +29,8 @@ public class BeanUtil extends org.springframework.beans.BeanUtils {
 			return ;
 		}
 		
-		Assert.notNull(target, "Target must not be null");
+		if(target == null) throw new IllegalArgumentException("TOarget must not be null");
+		
 		Class<?> actualEditable = target.getClass();
 		PropertyDescriptor[] targetPds = getPropertyDescriptors(actualEditable);
 		
@@ -72,7 +72,8 @@ public class BeanUtil extends org.springframework.beans.BeanUtils {
 		
 		List<String> _ignores = Arrays.asList(ignores);
 		
-		Assert.notNull(target, "Target must not be null");
+		if(target == null) throw new IllegalArgumentException("TOarget must not be null");
+
 		Class<?> actualEditable = target.getClass();
 		PropertyDescriptor[] targetPds = getPropertyDescriptors(actualEditable);
 		
@@ -112,7 +113,8 @@ public class BeanUtil extends org.springframework.beans.BeanUtils {
 			target = null;
 		}else{
 		
-			Assert.notNull(target, "Target must not be null");
+			if(target == null) throw new IllegalArgumentException("TOarget must not be null");
+			
 			Class<?> actualEditable = target.getClass();
 			PropertyDescriptor[] targetPds = getPropertyDescriptors(actualEditable);
 			
@@ -156,7 +158,8 @@ public class BeanUtil extends org.springframework.beans.BeanUtils {
 			
 			List<String> _ignores = Arrays.asList(ignores);
 		
-			Assert.notNull(target, "Target must not be null");
+			if(target == null) throw new IllegalArgumentException("TOarget must not be null");
+			
 			Class<?> actualEditable = target.getClass();
 			PropertyDescriptor[] targetPds = getPropertyDescriptors(actualEditable);
 			
@@ -199,7 +202,8 @@ public class BeanUtil extends org.springframework.beans.BeanUtils {
 			return;
 		}
 		
-		Assert.notNull(target, "Target must not be null");
+		if(target == null) throw new IllegalArgumentException("TOarget must not be null");
+		
 		Class<?> actualEditable = target.getClass();
 		PropertyDescriptor[] targetPds = getPropertyDescriptors(actualEditable);
 		
@@ -239,7 +243,8 @@ public class BeanUtil extends org.springframework.beans.BeanUtils {
 			target = null;
 		}else{
 		
-			Assert.notNull(target, "Target must not be null");
+			if(target == null) throw new IllegalArgumentException("TOarget must not be null");
+			
 			Class<?> actualEditable = target.getClass();
 			PropertyDescriptor[] targetPds = getPropertyDescriptors(actualEditable);
 			

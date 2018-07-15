@@ -35,6 +35,7 @@ import com.fanglin.sales.po.SalesPO;
 import com.fanglin.sales.service.SalesService;
 import com.fanglin.sales.vo.SalesItemVO;
 import com.fanglin.sales.vo.SalesVO;
+import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
@@ -204,6 +205,8 @@ public class SalesServiceImpl implements SalesService {
 			throw new FLException(230015 , "公司不存在");
 			
 		}
+		
+		Float totalMoney = 0f;
 			
 		SalesPO salesPO = new SalesPO(new HousePO(), new CustomerPO(), new UserPO(), new DepartmentPO(), new DepartmentPO(), new UserPO(), new DepartmentPO(), new UserPO());
 		
@@ -258,7 +261,13 @@ public class SalesServiceImpl implements SalesService {
 				
 				salesItemDao.save(salesItemPO);
 				
+				totalMoney = Arith.add(totalMoney, salesItemPO.getTotal());
+				
 			}
+		}
+		
+		if(totalMoney != salesPO.getTotal()){
+			throw new FLException(150025, "款项金额不正确");
 		}
 		
 		return 0;

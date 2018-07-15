@@ -9,12 +9,10 @@ public interface McolorService {
 	
 	public List<McolorVO> queryMcolorByGid(McolorVO mcolorVO);
 	
-	public List<McolorVO> queryMcolorByGidAndStatus(McolorVO mcolorVO);
+	public List<McolorVO> queryMcolor(McolorVO mcolorVO);
 	
-	public void addMcolor(McolorVO mcolorVO)throws FLException;
+	public void addMcolor(McolorVO mcolorVO) throws FLException;
 	
-	public void updateMcolor(McolorVO mcolorVO)throws FLException;
-	
-	public void updateMcolorForStatus(McolorVO mcolorVO)throws FLException;
+	public void updateMcolorForStatus(McolorVO mcolorVO) throws FLException;
 
 }

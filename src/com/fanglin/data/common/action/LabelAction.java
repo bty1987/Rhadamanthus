@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseListAction;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.common.service.LabelService;
 import com.fanglin.data.common.vo.LabelVO;
 
@@ -27,14 +28,6 @@ public class LabelAction extends BaseListAction {
 	
 	private LabelVO label;
 	
-	@Action(value = "querylabel", results = {@Result(name = "success", type = "json", params = {"ignoreHierarchy", "false"})}, params = {"contentType", "text/html"})
-	public String querylabel(){
-		
-		labels = labelService.querylabel(label);
-		
-		return SUCCESS;
-	}
-	
 	@Action(value = "pageLabel", results = {@Result(name = "success", type = "json", params = {"ignoreHierarchy", "false"})}, params = {"contentType", "text/html"})
 	public String pageLabel(){
 		
@@ -43,10 +36,10 @@ public class LabelAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-	@Action(value = "updataForStatus", results = {@Result(name = "success", type = "json", params = {"ignoreHierarchy", "false"})}, params = {"contentType", "text/html"})
-	public String updataForStatus(){
+	@Action(value = "queryLabel", results = {@Result(name = "success", type = "json", params = {"ignoreHierarchy", "false"})}, params = {"contentType", "text/html"})
+	public String queryLabel(){
 		
-		labelService.updataForStatus(label);
+		labels = labelService.queryLabel(label);
 		
 		return SUCCESS;
 	}
@@ -59,10 +52,18 @@ public class LabelAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-	@Action(value = "querylabelBytype", results = {@Result(name = "success", type = "json", params = {"ignoreHierarchy", "false"})}, params = {"contentType", "text/html"})
-	public String querylabelBytype(){
+	@Action(value = "updateLabel", results = {@Result(name = "success", type = "json", params = {"ignoreHierarchy", "false"})}, params = {"contentType", "text/html"})
+	public String updateLabel() throws FLException{
 		
-		labels = labelService.querylabelBytype(label);
+		labelService.updateLabel(label);
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "updateLabelForStatus", results = {@Result(name = "success", type = "json", params = {"ignoreHierarchy", "false"})}, params = {"contentType", "text/html"})
+	public String updateLabelForStatus() throws FLException{
+		
+		labelService.updateLabelForStatus(label);
 		
 		return SUCCESS;
 	}

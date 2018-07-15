@@ -39,9 +39,9 @@ public class DecorationOperatePO implements java.io.Serializable {
 	
 	public static final short TYPE_SIGNED_DECORATION_ORDER_INT = 7;		
 	
-	public static final short TYPE_DESIGNER_DECORATION_ORDER_INT = 8;	
+	public static final short TYPE_BELONG_DECORATION_ORDER_INT = 8;	
 	
-	public static final short TYPE_SALESMAN_DECORATION_ORDER_INT = 9;	
+//	public static final short TYPE_SALESMAN_DECORATION_ORDER_INT = 9;	
 	
 	public static final short TYPE_CONTRACT_DECORATION_ORDER_INT = 10;	
 	

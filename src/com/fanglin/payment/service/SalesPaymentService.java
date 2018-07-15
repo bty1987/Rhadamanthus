@@ -20,22 +20,22 @@ public interface SalesPaymentService {
 	
 	public List<SalesPaymentVO> querySalesPaymentBySid(SalesPaymentVO salesPaymentVO);
 	
-	public List<SalesPaymentVO> querySalesPaymentForNotInitBySrid(SalesReceiptVO salesReceipt);
-	
 	public List<SalesPaymentVO> querySalesPaymentByOrderId(SalesVO salesVO);
+	
+	public List<SalesPaymentVO> querySalesPaymentForNotInitBySrid(SalesReceiptVO salesReceipt);
 	
 	public int addSalesPayment(SalesPaymentVO salesPaymentVO, String userId) throws FLException;
 	
 	public int collectSalesPayment(SalesPaymentVO salesPaymentVO,SalesReceiptVO salesReceiptVO,String userId) throws FLException;
 	
 	public int collectSalesPayments(List<Long> spids,SalesPaymentVO salesPaymentVO,SalesReceiptVO salesReceiptVO,String userId) throws FLException;
+	
+	public int collectSalesPaymentForRefund(SalesPaymentVO salesPaymentVO,SalesReceiptVO salesReceiptVO,String userId) throws FLException;
 
 	public int confirmSalesPayment(List<Long> spids,String userId) throws FLException;
 	
 	public int cancelSalesPayment(SalesPaymentVO salesPaymentVO) throws FLException;
 	
 	public int refundSalesPayment(SalesPaymentVO salesPaymentVO, String userId) throws FLException;
-	
-	public int collectSalesPaymentForRefund(SalesPaymentVO salesPaymentVO,SalesReceiptVO salesReceiptVO,String userId) throws FLException;
 	
 }

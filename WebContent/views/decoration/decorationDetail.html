@@ -325,6 +325,34 @@
             </div>
         </div>
     </div>
+    <!--服务节点信息编辑-->
+
+    <div class="modal fade" id="serviceModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabel">完成装修服务</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group" >
+                            <label class="col-md-3 control-label no-padding-right" for="comment" >备注信息</label>
+                            <div class="col-md-9">
+                                <textarea id="comment" class="col-md-6 v_name v_required" rows="3" data-toggle="popover" data-trigger='manual' maxlength="40"></textarea>
+                            </div>
+                        </div>
+                        <div class="space-4"></div>
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="serviceSaveBtn" class="btn btn-primary">保存</button>
+                    <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- village approve modal -->
     <div class="modal fade" id="villageChangeModal" tabindex="-1">

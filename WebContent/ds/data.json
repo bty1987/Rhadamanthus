@@ -1,4 +1,4 @@
-{
+﻿{
   "relationshipType": [
     {"key":"普通客户","value":"普通客户"},
     {"key":"企业高端客户","value":"企业高端客户"},
@@ -57,7 +57,19 @@
     {"key":"1", "value":"签约"},
     {"key":"2", "value":"失效"}
   ],
-
+  "labeltype":[
+    {"key" : "0", "value" : "设计师风格"},
+    {"key" : "1", "value" : "擅长面积"},
+    {"key" : "2", "value" : "小区"}
+  ],"serviceNodeType":[
+  {"key" : "0", "value" : "装修"},
+  {"key" : "1", "value" : "主材"},
+  {"key" : "2", "value" : "工程"}
+],
+  "vscoreRecordtype":[
+    {"key" : "0", "value" : "新增"},
+    {"key" : "1", "value" : "提取"}
+  ],
 
   "errorCode": 0,
   "errorMsg": null

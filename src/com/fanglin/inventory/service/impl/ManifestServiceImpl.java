@@ -56,9 +56,7 @@ import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.sales.dao.SalesDao;
-import com.fanglin.sales.dao.SalesItemDao;
 import com.fanglin.sales.dao.SalesManifestDao;
-import com.fanglin.sales.po.SalesItemPO;
 import com.fanglin.sales.po.SalesManifestPO;
 import com.fanglin.sales.po.SalesPO;
 import com.fanglin.sales.vo.SalesVO;
@@ -114,8 +112,6 @@ public class ManifestServiceImpl implements ManifestService {
 	@Autowired
 	private SalesManifestDao salesManifestDao;
 	
-	@Autowired
-	private SalesItemDao salesItemDao;
 	
 	@Override
 	public void pageManifest(Paging paging, List<Filter> filters,int company) {
@@ -297,21 +293,6 @@ public class ManifestServiceImpl implements ManifestService {
 		ManifestItemPO manifestItemPO;
 		
 		for(ManifestItemVO manifestItemVO: manifestItemVOs){
-			
-			if(manifestItemVO.getSiid()!=null){
-				
-				SalesItemPO salesItemPO = salesItemDao.get(manifestItemVO.getSiid());
-				
-				if(salesItemPO.getXgnum() < manifestItemVO.getNum()){
-					throw new FLException(260047, "可出库数量不足");
-				}
-				
-				salesItemPO.setXgnum(Arith.sub(salesItemPO.getXgnum(), manifestItemVO.getNum()));
-				
-				salesItemDao.update(salesItemPO);
-				
-			}
-			
 			
 			manifestItemPO = new ManifestItemPO(new GoodsPO(),new ColorPO(),new FormatPO());
 			

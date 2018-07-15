@@ -26,7 +26,7 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
-import com.fanglin.personel.vo.UserVO;
+import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
@@ -190,7 +190,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 	
 	public CustomerSourceVO customerSourcePOToVO(CustomerSourcePO customerSourcePO){
 		
-		CustomerSourceVO customerSourceVO = new CustomerSourceVO(new CustomerVO(), new UserVO());
+		CustomerSourceVO customerSourceVO = new CustomerSourceVO(new CustomerVO(), new UserBaseVO());
 		
 		BeanUtil.copyProperties(customerSourcePO, customerSourceVO, Arrays.asList("customer", "create"));
 		BeanUtil.copyProperties(customerSourcePO.getCustomer(), customerSourceVO.getCustomer());
@@ -201,7 +201,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			customerSourceVO.getCustomer().setPhone(customerPhones.get(0).getPhone());
 		}
 		
-		BeanUtil.copyProperties(customerSourcePO.getCreate(), customerSourceVO.getCreate(), Arrays.asList("role", "dept", "duty"));
+		BeanUtil.copyProperties(customerSourcePO.getCreate(), customerSourceVO.getCreate(), Arrays.asList("dept", "duty"));
 		
 		return customerSourceVO;
 	}

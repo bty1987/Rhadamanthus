@@ -25,6 +25,8 @@ import com.fanglin.construction.po.ReworkPO;
 import com.fanglin.construction.service.ReworkService;
 import com.fanglin.construction.vo.ReworkVO;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.personel.dao.UserDao;
+import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
 
@@ -36,6 +38,8 @@ public class ReworkServiceImpl implements ReworkService{
 	private ReworkDao reworkDao;
 	@Autowired
 	private ReworkDrawingDao reworkDrawingDao;
+	@Autowired
+	private UserDao userDao;
 
 	@Override
 	public void pageRework(Paging paging, List<Filter> filters){
@@ -73,6 +77,11 @@ public class ReworkServiceImpl implements ReworkService{
 		
 		ReworkPO reworkPO = new ReworkPO();
 		BeanUtil.copyProperties(reworkVO, reworkPO);
+		
+		if(reworkVO.getCreaterId() != null && !reworkVO.getCreaterId().equals("")){
+			UserPO user = userDao.queryUserByUserId(reworkVO.getCreaterId());
+			reworkPO.setCuid(user.getUid());
+		}
 		
 		reworkDao.saveOrUpdate(reworkPO);
 		

@@ -154,7 +154,7 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 		approvalPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		approvalPO.setApprovalTime(DateUtil.getDateToTimestamp(new Date()));
 		//过滤条件     订单号:%s,销售单号:%s,品牌:%s,退款金额:%s,类型:%s
-		approvalPO.setContents(String.format(ApprovalPO.APPROVAL_CONTENTS_SALES_REFUND_STR, salesPO.getOrderId(),salesPO.getNo(),salesPO.getBrand(),approvalSalesRefundVO.getRefund(),refundType));
+		approvalPO.setContents(String.format(ApprovalPO.APPROVAL_CONTENTS_SALES_REFUND_STR, salesPO.getOrderId(),salesPO.getNo(),salesPO.getBrand(),approvalSalesRefundVO.getRefund(),approvalSalesRefundVO.getRefundTotal(),refundType));
 		approvalPO.setReceiver(receiver);
 		approvalPO.setSender(sender);
 		approvalPO.setCompany(company);
@@ -221,6 +221,7 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 		salesPaymentPO.setReferMoney(approvalSalesRefundPO.getRefund());//退款金额
 		salesPaymentPO.setBrand(salesPO.getBrand());//品牌
 		salesPaymentPO.setStatus(SalesPO.STATUS_INIT_SHORT);
+		salesPaymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		salesPaymentPO.setType(SalesPaymentPO.COLUMN_REFUNDSTYPE_INT);
 		
 		salesPaymentDao.save(salesPaymentPO);
@@ -240,7 +241,7 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 		
 		SalesBalancePO salesBalancePO = new SalesBalancePO ();
 		
-		if (balanceStatus==SalesPO.BALANCESTATUS_PRESETTLEMENT_SHORT||balanceStatus==SalesPO.BALANCESTATUS_SETTLEMENT_SHORT) {
+		if (balanceStatus==SalesPO.BALANCESTATUS_PRESETTLEMENT_SHORT||balanceStatus==SalesPO.BALANCESTATUS_SETTLEMENT_SHORT || balanceStatus == SalesPO.BALANCESTATUS_VENDORSETTLEMENT_SHORT) {
 				
 		salesBalancePO.setSales(salesPO);
 		salesBalancePO.setRefunds(refundsPO);
@@ -250,7 +251,7 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 		salesBalancePO.setBalance(refundMoney);
 		salesBalancePO.setVbalance(0f);
 		salesBalancePO.setPbalance(0f);
-		salesBalancePO.setType(balanceStatus==SalesPO.BALANCESTATUS_PRESETTLEMENT_SHORT?SalesBalancePO.TYPE_PREBALANCEREFUNDS_INT:SalesBalancePO.TYPE_BALANCEREFUNDS_INT);
+		salesBalancePO.setType(balanceStatus==SalesPO.BALANCESTATUS_SETTLEMENT_SHORT ? SalesBalancePO.TYPE_BALANCEREFUNDS_INT : SalesBalancePO.TYPE_PREBALANCEREFUNDS_INT);
 		salesBalancePO.setStatus(SalesBalancePO.STATUS_PREBALANCE_INT);
 		salesBalancePO.setComment(salesPO.getComment());
 		
@@ -280,7 +281,7 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 
 			refundsItemDao.save(refundsItemPO);
 			
-			if (balanceStatus==SalesPO.BALANCESTATUS_PRESETTLEMENT_SHORT||balanceStatus==SalesPO.BALANCESTATUS_SETTLEMENT_SHORT) {
+			if (balanceStatus==SalesPO.BALANCESTATUS_PRESETTLEMENT_SHORT||balanceStatus==SalesPO.BALANCESTATUS_SETTLEMENT_SHORT || balanceStatus == SalesPO.BALANCESTATUS_VENDORSETTLEMENT_SHORT) {
                  //0: 底价 , 1: 点位	
 				float cvalue=salesItemPO.getCvalue();//结算值
 				
@@ -305,7 +306,7 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 			}
 		}
 		
-		if (balanceStatus==SalesPO.BALANCESTATUS_PRESETTLEMENT_SHORT||balanceStatus==SalesPO.BALANCESTATUS_SETTLEMENT_SHORT) {
+		if (balanceStatus==SalesPO.BALANCESTATUS_PRESETTLEMENT_SHORT||balanceStatus==SalesPO.BALANCESTATUS_SETTLEMENT_SHORT || balanceStatus == SalesPO.BALANCESTATUS_VENDORSETTLEMENT_SHORT) {
 			salesBalancePO.setBalance(refundMoney);
 		
 			salesBalanceDao.update(salesBalancePO);

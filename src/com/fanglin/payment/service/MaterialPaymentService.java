@@ -42,6 +42,8 @@ public interface MaterialPaymentService {
 	
 	public void addMaterialPayment(MaterialPaymentVO materialPaymentVO, String userId) throws FLException;
 	
+	public int changeMaterialPaymentForTime(MaterialPaymentVO materialPaymentVO, Timestamp dateTime, String userId) throws FLException;
+	
 	public int collectMaterialPayment(MaterialPaymentVO materialPaymentVO, List<DecorationActivityItemVO> decorationActivityItemVOs, String userId) throws FLException;
 	
 	public int collectMaterialPayments(MaterialVO materialVO, List<MaterialPaymentVO> materialPaymentVOs, MaterialReceiptVO materialReceiptVO, String userId) throws FLException;
@@ -58,6 +60,5 @@ public interface MaterialPaymentService {
 	
 	public int refundMaterialPaymentForCoupon(MaterialVO materialVO, String userId) throws FLException;
 	
-	public int changeMaterialPaymentForTime(MaterialPaymentVO materialPaymentVO, Timestamp dateTime, String userId) throws FLException;
 
 }

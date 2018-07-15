@@ -403,6 +403,69 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 		materialPaymentDao.save(materialPaymentPO); 
 
 	}
+	
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public int changeMaterialPaymentForTime(MaterialPaymentVO materialPaymentVO, Timestamp dateTime, String userId) throws FLException{
+
+		Timestamp oldDateTime = null;
+		Timestamp oldConfirmTime = null;
+		String paymentType = "";
+
+		String msoNo = materialPaymentVO.getMaterial().getNo();
+		short _paymentType = materialPaymentVO.getPaymentType();
+
+		MaterialPaymentPO materialPaymentPO = materialPaymentDao.queryMaterialPaymentByMsoNoAType(msoNo, _paymentType);
+
+		if(materialPaymentPO == null){
+			throw new FLException(150003, "款项不存在");
+		}
+
+		MaterialReceiptPO materialReceiptPO = materialPaymentPO.getMaterialReceipt();
+
+		if(materialPaymentPO != null && (materialPaymentPO.getPaymentStatus() == 1 || materialPaymentPO.getPaymentStatus() == 2)){
+			oldDateTime = materialReceiptPO.getCollectTime();
+
+			materialReceiptPO.setCollectTime(dateTime);
+
+			if(_paymentType == MaterialPaymentPO.PAYMENTTYPE_TYPE_DEPOSIT_INT){
+				paymentType = MaterialPaymentPO.PAYMENTTYPE_TYPE_DEPOSIT_STR;
+			}else if(_paymentType == MaterialPaymentPO.PAYMENTTYPE_TYPE_FULL_INT){
+				paymentType = MaterialPaymentPO.PAYMENTTYPE_TYPE_FULL_STR;
+			}else if(_paymentType == MaterialPaymentPO.PAYMENTTYPE_TYPE_REJECT_INT){
+				paymentType = MaterialPaymentPO.PAYMENTTYPE_TYPE_REJECT_STR;
+			}else if(_paymentType == MaterialPaymentPO.PAYMENTTYPE_TYPE_FULL_REFUND_INT){
+				paymentType = MaterialPaymentPO.PAYMENTTYPE_TYPE_FULL_REFUND_STR;
+			}else if(_paymentType == MaterialPaymentPO.PAYMENTTYPE_TYPE_COUPON_REFUND_INT){
+				paymentType = MaterialPaymentPO.PAYMENTTYPE_TYPE_COUPON_REFUND_STR;
+			}else if(_paymentType == MaterialPaymentPO.PAYMENTTYPE_TYPE_DEPOSIT_REFUND_INT){
+				paymentType = MaterialPaymentPO.PAYMENTTYPE_TYPE_DEPOSIT_REFUND_STR;
+			}
+
+			if(materialReceiptPO.getConfirmTime() != null && materialReceiptPO.getConfirmTime().before(dateTime)){
+				oldConfirmTime = materialReceiptPO.getConfirmTime();
+
+				materialReceiptPO.setConfirmTime(dateTime);
+			}
+
+			materialPaymentDao.update(materialPaymentPO);
+
+			ServiceRecordPO serviceRecordPO = new ServiceRecordPO();
+			serviceRecordPO.setType(ServiceRecordPO.TYPE_TYPE_CHANGE_MATERIALPAYMENT_TIME_INT);
+			serviceRecordPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
+			serviceRecordPO.setOperateUserId(userId);
+
+			if(oldConfirmTime != null){
+				serviceRecordPO.setInfo(String.format("主材子订单编号:%s,修改款项类型:%s,原收款时间:%s,修改时间为:%s,原确认时间:", msoNo, paymentType, oldDateTime.toString(), dateTime, oldConfirmTime.toString()));
+			}else{
+				serviceRecordPO.setInfo(String.format("主材子订单编号:%s,修改款项类型:%s,原收款时间:%s,修改时间为:%s", msoNo, paymentType, oldDateTime.toString(), dateTime));
+			}
+
+			serviceRecordDao.saveOrUpdate(serviceRecordPO);
+		}
+
+		return 0;
+	}
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
@@ -1148,69 +1211,6 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 			materialPaymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 
 			materialPaymentDao.save(materialPaymentPO);
-		}
-
-		return 0;
-	}
-
-	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public int changeMaterialPaymentForTime(MaterialPaymentVO materialPaymentVO, Timestamp dateTime, String userId) throws FLException{
-
-		Timestamp oldDateTime = null;
-		Timestamp oldConfirmTime = null;
-		String paymentType = "";
-
-		String msoNo = materialPaymentVO.getMaterial().getNo();
-		short _paymentType = materialPaymentVO.getPaymentType();
-
-		MaterialPaymentPO materialPaymentPO = materialPaymentDao.queryMaterialPaymentByMsoNoAType(msoNo, _paymentType);
-
-		if(materialPaymentPO == null){
-			throw new FLException(150003, "款项不存在");
-		}
-
-		MaterialReceiptPO materialReceiptPO = materialPaymentPO.getMaterialReceipt();
-
-		if(materialPaymentPO != null && (materialPaymentPO.getPaymentStatus() == 1 || materialPaymentPO.getPaymentStatus() == 2)){
-			oldDateTime = materialReceiptPO.getCollectTime();
-
-			materialReceiptPO.setCollectTime(dateTime);
-
-			if(_paymentType == MaterialPaymentPO.PAYMENTTYPE_TYPE_DEPOSIT_INT){
-				paymentType = MaterialPaymentPO.PAYMENTTYPE_TYPE_DEPOSIT_STR;
-			}else if(_paymentType == MaterialPaymentPO.PAYMENTTYPE_TYPE_FULL_INT){
-				paymentType = MaterialPaymentPO.PAYMENTTYPE_TYPE_FULL_STR;
-			}else if(_paymentType == MaterialPaymentPO.PAYMENTTYPE_TYPE_REJECT_INT){
-				paymentType = MaterialPaymentPO.PAYMENTTYPE_TYPE_REJECT_STR;
-			}else if(_paymentType == MaterialPaymentPO.PAYMENTTYPE_TYPE_FULL_REFUND_INT){
-				paymentType = MaterialPaymentPO.PAYMENTTYPE_TYPE_FULL_REFUND_STR;
-			}else if(_paymentType == MaterialPaymentPO.PAYMENTTYPE_TYPE_COUPON_REFUND_INT){
-				paymentType = MaterialPaymentPO.PAYMENTTYPE_TYPE_COUPON_REFUND_STR;
-			}else if(_paymentType == MaterialPaymentPO.PAYMENTTYPE_TYPE_DEPOSIT_REFUND_INT){
-				paymentType = MaterialPaymentPO.PAYMENTTYPE_TYPE_DEPOSIT_REFUND_STR;
-			}
-
-			if(materialReceiptPO.getConfirmTime() != null && materialReceiptPO.getConfirmTime().before(dateTime)){
-				oldConfirmTime = materialReceiptPO.getConfirmTime();
-
-				materialReceiptPO.setConfirmTime(dateTime);
-			}
-
-			materialPaymentDao.update(materialPaymentPO);
-
-			ServiceRecordPO serviceRecordPO = new ServiceRecordPO();
-			serviceRecordPO.setType(ServiceRecordPO.TYPE_TYPE_CHANGE_MATERIALPAYMENT_TIME_INT);
-			serviceRecordPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
-			serviceRecordPO.setOperateUserId(userId);
-
-			if(oldConfirmTime != null){
-				serviceRecordPO.setInfo(String.format("主材子订单编号:%s,修改款项类型:%s,原收款时间:%s,修改时间为:%s,原确认时间:", msoNo, paymentType, oldDateTime.toString(), dateTime, oldConfirmTime.toString()));
-			}else{
-				serviceRecordPO.setInfo(String.format("主材子订单编号:%s,修改款项类型:%s,原收款时间:%s,修改时间为:%s", msoNo, paymentType, oldDateTime.toString(), dateTime));
-			}
-
-			serviceRecordDao.saveOrUpdate(serviceRecordPO);
 		}
 
 		return 0;

@@ -65,9 +65,10 @@ public class McategoryServiceImpl implements McategoryService {
 	}
 	
 	@Override
-	public List<McategoryVO> queryMcategoryByIsShow(McategoryVO mcategory) {
+	public List<McategoryVO> queryMcategoryForShow() {
 		
-		List<McategoryPO> mcategoryPOs = mcategoryDao.queryMcategoryByIsShow(mcategory.getIsShow());
+		List<McategoryPO> mcategoryPOs = mcategoryDao.queryMcategoryForShow();
+		
 		List<McategoryVO> mcategoryVOs = new ArrayList<McategoryVO>();
 		
 		for (McategoryPO mcategoryPO : mcategoryPOs) {
@@ -85,34 +86,12 @@ public class McategoryServiceImpl implements McategoryService {
 	}
 
 	@Override
-	public McategoryVO queryMcategoryByCid(McategoryVO mcategory) {
-		
-		McategoryPO mcategoryPO = mcategoryDao.queryMcategoryByCid(mcategory.getCid());
-			
-		McategoryVO mcategoryVO = new McategoryVO();
-		
-		BeanUtil.copyProperties(mcategoryPO, mcategoryVO);
-		
-		return mcategoryVO;
-		
-	}
-
-	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public void addMcategory(McategoryVO mcategoryVO) throws FLException {
 		
-		List<McategoryPO> mcategoryPOs = mcategoryDao.queryMcategory();
-		String name = mcategoryVO.getName();
-		
-		for (McategoryPO mcategory : mcategoryPOs) {
-			if(name.equals(mcategory.getName())){
-				throw new FLException(111111, "品类已存在");
-			}
-		}
-		
 		McategoryPO mcategoryPO = new McategoryPO();
 		
-		BeanUtil.copyProperties(mcategoryVO, mcategoryPO);
+		BeanUtil.copyProperties(mcategoryVO, mcategoryPO, Arrays.asList("isShow"));
 		
 		mcategoryDao.save(mcategoryPO);
 		
@@ -125,7 +104,7 @@ public class McategoryServiceImpl implements McategoryService {
 		McategoryPO mcategoryPO = mcategoryDao.get(mcategory.getCid());
 		
 		if(mcategoryPO == null){
-			throw new FLException(111111, "品类不存在");
+			throw new FLException(340003, "品类不存在");
 		}
 		
 		BeanUtil.copyProperties(mcategory, mcategoryPO, Arrays.asList("isShow"));
@@ -136,12 +115,12 @@ public class McategoryServiceImpl implements McategoryService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public void updateMcategoryForIsShow(McategoryVO mcategory) throws FLException {
+	public void updateMcategoryForShow(McategoryVO mcategory) throws FLException {
 		
 		McategoryPO mcategoryPO = mcategoryDao.get(mcategory.getCid());
 		
 		if(mcategoryPO == null){
-			throw new FLException(111111, "品类不存在");
+			throw new FLException(340003, "品类不存在");
 		}
 		
 		mcategoryPO.setIsShow(mcategory.getIsShow());

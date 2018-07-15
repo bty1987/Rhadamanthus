@@ -11,9 +11,9 @@ public interface VustomerService {
 	
 	public void pageVustomer(Paging paging, List<Filter> filters);
 	
-	public List<VustomerVO> queryVustomer();
+	public void pageVustomerByUnionId(Paging paging, List<Filter> filters, String unionId);
 	
-	public List<VustomerVO> queryVustomerByIdent(VustomerVO vustomerVO);
+	public List<VustomerVO> queryVustomerByUnionId(VustomerVO vustomerVO);
 	
 	public void addVustomer(VustomerVO vustomerVO);
 	
@@ -21,4 +21,6 @@ public interface VustomerService {
 
 	public void deleteVustomer(VustomerVO vustomerVO);
 
+	public List<?> countVustomerByUnionId(VustomerVO vustomerVO);
+	
 }

@@ -49,8 +49,8 @@ $.extend(api, {construction: {
 
     queryConstructionDrawingByOrderId: {url: "queryConstructionDrawingByOrderId.do"},
     queryConstructionDrawingByCid: {url: "queryConstructionDrawingByCid.do"},
-    addConstructionDrawing: {url: "addConstructionDrawing.do"},
-    addConstructionDrawings: {url: "addConstructionDrawings.do"},
+    addConstructionDrawing: {url: "addConstructionDrawing.do", intercept: true},
+    addConstructionDrawings: {url: "addConstructionDrawings.do", intercept: true},
     deleteConstructionDrawing: {url: "deleteConstructionDrawing.do"},
 
     pageCustomerServiceBackVisit: {url: "pageCustomerServiceBackVisit.do", demo: true},
@@ -80,7 +80,7 @@ $.extend(api, {construction: {
     deleteRework: {url: "deleteRework.do"},
 
     queryReworkDrawingByReworkId: {url: "queryReworkDrawingByReworkId.do"},
-    addReworkDrawing: {url: "addReworkDrawing.do"},
+    addReworkDrawing: {url: "addReworkDrawing.do", intercept: true},
     deleteReworkDrawingById: {url: "deleteReworkDrawingById.do"},
 
     queryConstructerByOrderId:{url:"queryConstructerByOrderId.do"},

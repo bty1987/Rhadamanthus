@@ -19,6 +19,7 @@ import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.system.dao.RoleOperationDao;
+import com.fanglin.system.po.OperationPO;
 import com.fanglin.system.po.RoleOperationPO;
 
 @Repository("roleOperationDao")
@@ -30,18 +31,13 @@ public class RoleOperationDaoImpl extends DaoImpl<RoleOperationPO> implements Ro
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<RoleOperationPO> queryRoleOperationByRid(int rId, short system) {
-		return session().createCriteria(RoleOperationPO.class).createAlias("operation", "operation").add(Restrictions.eq("rid", rId)).add(Restrictions.eq("operation.system", system)).list();
+	public List<RoleOperationPO> queryRoleOperationByRid(int rId) {
+		return session().createCriteria(RoleOperationPO.class).createAlias("operation", "operation").add(Restrictions.eq("rid", rId)).add(Restrictions.eq("operation.status", OperationPO.STATUS_ENABLE_INT)).list();
 	}
 
 	@Override
-	public RoleOperationPO queryRoleOperationByOperationName(String operationName, short system) {
-		return (RoleOperationPO) session().createCriteria(RoleOperationPO.class).createAlias("operation", "operation").add(Restrictions.eq("operation.operationName", operationName)).add(Restrictions.eq("operation.system", system)).uniqueResult();
-	}
-
-	@Override
-	public RoleOperationPO queryRoleOperationByOperationARid(String operation, int rid, short system) {
-		return (RoleOperationPO) session().createCriteria(RoleOperationPO.class).createAlias("operation", "operation").add(Restrictions.eq("rid", rid)).add(Restrictions.eq("operation.operation", operation)).add(Restrictions.eq("operation.system", system)).uniqueResult();
+	public RoleOperationPO queryRoleOperationByOperationARid(String operation, int rid) {
+		return (RoleOperationPO) session().createCriteria(RoleOperationPO.class).createAlias("operation", "operation").add(Restrictions.eq("rid", rid)).add(Restrictions.eq("operation.operation", operation)).add(Restrictions.eq("operation.status", OperationPO.STATUS_ENABLE_INT)).uniqueResult();
 	}
 
 	@Override
@@ -49,15 +45,6 @@ public class RoleOperationDaoImpl extends DaoImpl<RoleOperationPO> implements Ro
 		return (RoleOperationPO) session().createCriteria(RoleOperationPO.class).createAlias("operation", "operation").add(Restrictions.eq("rid", rid)).add(Restrictions.eq("operation.oid", oid)).uniqueResult();
 	}
 
-	@Override
-	public int deleteRoleOperationByRid(int rid, short system) {
-		
-		String sql = "delete from communion.roleoperation where rid = :rid and oid in (select oid from communion.operation where system = :system)";
-		session().createSQLQuery(sql).setInteger("rid", rid).setShort("system", system).executeUpdate();
-		
-		return 0;
-	}
-	
 	@Override
 	public int countRoleOperationByOid(int oid) {
 		

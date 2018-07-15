@@ -16,11 +16,11 @@ public class MuserPO implements Serializable{
 
 	public static final String COLUMN_UID_STR = "uid";
 	
-	public static final String COLUMN_UNION_STR = "unionVal";
+	public static final String COLUMN_UNIONID_STR = "unionId";
 	
 	private long uid;
 	
-	private String unionVal;
+	private String unionId;
 	
 	private String name;
 	
@@ -45,20 +45,20 @@ public class MuserPO implements Serializable{
 		this.uid = uid;
 	}
 
-	@Column(name="unionVal")
-	public String getUnionVal() {
-		return unionVal;
+	@Column(name="unionId")
+	public String getUnionId() {
+		return unionId;
 	}
 
-	public void setUnionVal(String unionVal) {
-		this.unionVal = unionVal;
+	public void setUnionId(String unionId) {
+		this.unionId = unionId;
 	}
 
 	@Column(name="name")
 	public String getName() {
 		return name;
 	}
-	
+
 	public void setName(String name) {
 		this.name = name;
 	}

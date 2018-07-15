@@ -80,7 +80,7 @@ public class ApprovalPO implements java.io.Serializable {
 
 	public static final String APPROVAL_CONTENTS_MATERIAL_FULL_PAYMENT_STR = "订单号:%s,子订单号:%s,金额:%s,补款审批";
 	
-	public static final String APPROVAL_CONTENTS_SALES_REFUND_STR = "订单号:%s,销售单号:%s,品牌:%s,退款金额:%s,类型:%s";
+	public static final String APPROVAL_CONTENTS_SALES_REFUND_STR = "订单号:%s,销售单号:%s,品牌:%s,退款金额:%s,应退金额:%s,类型:%s";
 	
 	public static final String APPROVAL_CONTENTS_MANIFESTDB_STR = "";
 	

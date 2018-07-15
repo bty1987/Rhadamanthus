@@ -24,8 +24,6 @@ public interface OperationDao extends Dao<OperationPO> {
 	
 	public List<OperationPO> queryOperation();
 	
-	public List<OperationPO> queryOperationBySystem(short system);
-	
 	public OperationPO queryOperationByOperation(String operation);
 	
 }

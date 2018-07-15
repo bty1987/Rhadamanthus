@@ -19,21 +19,21 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label no-padding-right" for="labelName">标签名称</label>
                             <div class="col-sm-9">
-                                <input type="text" maxlength="64" id="labelName" class="col-xs-10 col-sm-6 v_name v_required" data-toggle="popover" data-trigger='manual'/>
+                                <input type="text" maxlength="10" id="labelName" class="col-xs-10 col-sm-6 v_name v_required" />
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="col-sm-3 control-label no-padding-right" for="type">标签类型</label>
                             <div class="col-sm-9">
-                                <select id="type" name="type" maxlength="256" class="col-xs-10 col-sm-6 v_required"></select>
+                                <select id="type" name="type" class="col-xs-10 col-sm-6 "></select>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right" for="proportion">比例</label>
+                            <label class="col-sm-3 control-label no-padding-right" for="scale">比例</label>
                             <div class="col-sm-9">
-                                <input type="text" maxlength="64" id="proportion" class="col-xs-10 col-sm-6 v_name v_required" data-toggle="popover" data-trigger='manual'/>
+                                <input type="text" maxlength="5"  id="scale" class="col-xs-10 col-sm-6 v_name v_required v_float" placeholder="1-100" />
                             </div>
                         </div>
 
@@ -43,6 +43,60 @@
                     <button type="button" id="saveBtn" class="btn btn-primary">保存</button>
                     <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="LbaleModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">编辑标签</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <form class="form-horizontal">
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label no-padding-right" for="name">标签名称</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" maxlength="10" id="name" class="col-xs-10 col-sm-6 v_name v_required" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label no-padding-right" for="labeltype">标签类型</label>
+                                    <div class="col-sm-9">
+                                        <select id="labeltype" name="type" class="col-xs-10 col-sm-6 "></select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label no-padding-right" for="yes">是否显示</label>
+                                    <div class="col-sm-9">
+                                        <input type="checkbox" id="yes" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label no-padding-right" for="labelscale">比例</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" maxlength="5"  id="labelscale" class="col-xs-10 col-sm-6 v_name v_required v_float" />
+                                    </div>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="saveLbaleBtn" class="btn btn-primary">保存</button>
+                </div>
+
             </div>
         </div>
     </div>

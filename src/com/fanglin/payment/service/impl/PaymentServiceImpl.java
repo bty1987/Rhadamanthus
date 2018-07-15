@@ -274,77 +274,73 @@ public class PaymentServiceImpl implements PaymentService {
 
 		return 0;
 	}
-
+	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int updatePayment(PaymentVO paymentVO) throws FLException{
-		
-		float realMoney = 0;
+	public int withdrawPayment(PaymentVO paymentVO, String userId) throws FLException {
 
-		PaymentPO paymentPO = paymentDao.get(paymentVO.getPid());
+		long customerId = paymentVO.getCustomer().getCid();
+
+		CustomerPO customerPO = customerDao.get(customerId);
+
+		if(customerPO == null){
+			throw new FLException(230001, "客户信息不存在");
+		}
 		
-		if(paymentPO == null){
-			throw new FLException(150003, "款项不存在");
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(paymentVO.getOrderId());
+
+		AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCid(customerId,decorationPO.getCompany());
+
+		if(advancePaymentPO == null){
+			throw new FLException(150010, "预付款余额不足");
 		}
 
-		AdvanceReceiptPO advanceReceiptPO = paymentPO.getAdvanceReceipt();
-		
-		if(!PaymentPO.PAYMENT_STATUS_PAID_STR.equals(paymentPO.getStatus())){
-			throw new FLException(150036, "款项状态不可操作");
-		}
-		
-		Float cash = paymentVO.getCash();
-		Float bank = paymentVO.getBank();
-		Float checkv = paymentVO.getCheckv();
-		Float accounts = paymentVO.getAccounts();
-		Float installment = paymentVO.getInstallment();
+		float balance = 0;
+		float recharge = gatherPayment(paymentVO);
+		String paymentType = paymentVO.getPaymentType();
 
-		if(cash != null && cash != 0){
-			advanceReceiptPO.setCash(paymentVO.getCash());
-			advanceReceiptPO.setCashInfo(paymentVO.getCashInfo());
-			realMoney = Arith.add(cash, realMoney);
-		}else{
-			advanceReceiptPO.setCash(0);
-			advanceReceiptPO.setCashInfo("");
+		balance = AdvancePaymentServiceImpl.getCustomerBalanceByType(advancePaymentPO, paymentType);
+
+		float overBalance = 0;
+
+		if(balance < recharge){
+			throw new FLException(150010, "预付款余额不足");
 		}
-		if(bank != null && bank != 0){
-			advanceReceiptPO.setBank(bank);
-			advanceReceiptPO.setBankInfo(paymentVO.getBankInfo());
-			realMoney = Arith.add(bank, realMoney);
-		}else{
-			advanceReceiptPO.setBank(0);
-			advanceReceiptPO.setBankInfo("");
-		}
-		if(checkv != null && checkv != 0){
-			advanceReceiptPO.setCheckv(checkv);
-			advanceReceiptPO.setCheckvBank(paymentVO.getCheckvBank());
-			realMoney = Arith.add(checkv, realMoney);
-		}else{
-			advanceReceiptPO.setCheckv(0);
-			advanceReceiptPO.setCheckvBank("");
-		}
-		if(installment != null && installment != 0){
-			advanceReceiptPO.setInstallment(installment);
-			advanceReceiptPO.setInstallmentBank(paymentVO.getInstallmentBank());
-			realMoney = Arith.add(installment, realMoney);
-		}else{
-			advanceReceiptPO.setInstallment(0);
-			advanceReceiptPO.setInstallmentBank("");
-		}
-		if(accounts != null && accounts != 0){
-			advanceReceiptPO.setAccounts(accounts);
-			advanceReceiptPO.setAccountsBank(paymentVO.getAccountsBank());
-			realMoney = Arith.add(accounts, realMoney);
-		}else{
-			advanceReceiptPO.setAccounts(0);
-			advanceReceiptPO.setAccountsBank("");
-		}
+
+		overBalance = Arith.sub(balance, recharge);
+
+		paymentVO.setRecharge(Math.abs(recharge));
+		paymentVO.setCollectTime(DateUtil.getDateToTimestamp(new Date()));
+
+		AdvancePaymentServiceImpl.setCustomerBalanceByType(advancePaymentPO, paymentType, overBalance);
+
+		AdvanceReceiptPO advanceReceiptPO = new AdvanceReceiptPO();
+		BeanUtil.copyProperties(paymentVO, advanceReceiptPO, Arrays.asList("collectUser", "confirmUser", "status","type"));
+
+		UserPO user = userDao.queryUserByUserId(userId);
+		advanceReceiptPO.setCollecter(user);
+		advanceReceiptPO.setCollecterName(user.getUserName());
+		advanceReceiptPO.setConfirmerName("");
+
+		advanceReceiptDao.save(advanceReceiptPO);
+
+		PaymentPO paymentPO = new PaymentPO();
+		BeanUtil.copyProperties(paymentVO, paymentPO, Arrays.asList("customer", "collectUser", "type"));
+
+		paymentPO.setCustomer(customerPO);
+		paymentPO.setBalance(overBalance);
+		paymentPO.setStatus(PaymentPO.PAYMENT_STATUS_PAID_STR);
+		paymentPO.setAdvanceReceipt(advanceReceiptPO);
+		paymentPO.setType(PaymentPO.PAYMENT_TYPE_EXTRACT_STR);
+		paymentPO.setCompany(decorationPO.getCompany());
+		paymentPO.setCreater(user);
+		paymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		
-		if(paymentPO.getRecharge()!=realMoney){
-			throw new FLException(150025, "款项金额不正确");
-		}
-		
-		advanceReceiptDao.update(advanceReceiptPO);
+
+		paymentDao.save(paymentPO);
+		advancePaymentDao.update(advancePaymentPO);
+
+		paymentVO.setPid(paymentPO.getPid());
 
 		return 0;
 	}
@@ -417,73 +413,77 @@ public class PaymentServiceImpl implements PaymentService {
 
 		return 0;
 	}
-
+	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int withdrawPayment(PaymentVO paymentVO, String userId) throws FLException {
+	public int updatePayment(PaymentVO paymentVO) throws FLException{
+		
+		float realMoney = 0;
 
-		long customerId = paymentVO.getCustomer().getCid();
+		PaymentPO paymentPO = paymentDao.get(paymentVO.getPid());
+		
+		if(paymentPO == null){
+			throw new FLException(150003, "款项不存在");
+		}
 
-		CustomerPO customerPO = customerDao.get(customerId);
-
-		if(customerPO == null){
-			throw new FLException(230001, "客户信息不存在");
+		AdvanceReceiptPO advanceReceiptPO = paymentPO.getAdvanceReceipt();
+		
+		if(!PaymentPO.PAYMENT_STATUS_PAID_STR.equals(paymentPO.getStatus())){
+			throw new FLException(150036, "款项状态不可操作");
 		}
 		
-		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(paymentVO.getOrderId());
+		Float cash = paymentVO.getCash();
+		Float bank = paymentVO.getBank();
+		Float checkv = paymentVO.getCheckv();
+		Float accounts = paymentVO.getAccounts();
+		Float installment = paymentVO.getInstallment();
 
-		AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCid(customerId,decorationPO.getCompany());
-
-		if(advancePaymentPO == null){
-			throw new FLException(150010, "预付款余额不足");
+		if(cash != null && cash != 0){
+			advanceReceiptPO.setCash(paymentVO.getCash());
+			advanceReceiptPO.setCashInfo(paymentVO.getCashInfo());
+			realMoney = Arith.add(cash, realMoney);
+		}else{
+			advanceReceiptPO.setCash(0);
+			advanceReceiptPO.setCashInfo("");
 		}
-
-		float balance = 0;
-		float recharge = gatherPayment(paymentVO);
-		String paymentType = paymentVO.getPaymentType();
-
-		balance = AdvancePaymentServiceImpl.getCustomerBalanceByType(advancePaymentPO, paymentType);
-
-		float overBalance = 0;
-
-		if(balance < recharge){
-			throw new FLException(150010, "预付款余额不足");
+		if(bank != null && bank != 0){
+			advanceReceiptPO.setBank(bank);
+			advanceReceiptPO.setBankInfo(paymentVO.getBankInfo());
+			realMoney = Arith.add(bank, realMoney);
+		}else{
+			advanceReceiptPO.setBank(0);
+			advanceReceiptPO.setBankInfo("");
 		}
-
-		overBalance = Arith.sub(balance, recharge);
-
-		paymentVO.setRecharge(Math.abs(recharge));
-		paymentVO.setCollectTime(DateUtil.getDateToTimestamp(new Date()));
-
-		AdvancePaymentServiceImpl.setCustomerBalanceByType(advancePaymentPO, paymentType, overBalance);
-
-		AdvanceReceiptPO advanceReceiptPO = new AdvanceReceiptPO();
-		BeanUtil.copyProperties(paymentVO, advanceReceiptPO, Arrays.asList("collectUser", "confirmUser", "status","type"));
-
-		UserPO user = userDao.queryUserByUserId(userId);
-		advanceReceiptPO.setCollecter(user);
-		advanceReceiptPO.setCollecterName(user.getUserName());
-		advanceReceiptPO.setConfirmerName("");
-
-		advanceReceiptDao.save(advanceReceiptPO);
-
-		PaymentPO paymentPO = new PaymentPO();
-		BeanUtil.copyProperties(paymentVO, paymentPO, Arrays.asList("customer", "collectUser", "type"));
-
-		paymentPO.setCustomer(customerPO);
-		paymentPO.setBalance(overBalance);
-		paymentPO.setStatus(PaymentPO.PAYMENT_STATUS_PAID_STR);
-		paymentPO.setAdvanceReceipt(advanceReceiptPO);
-		paymentPO.setType(PaymentPO.PAYMENT_TYPE_EXTRACT_STR);
-		paymentPO.setCompany(decorationPO.getCompany());
-		paymentPO.setCreater(user);
-		paymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+		if(checkv != null && checkv != 0){
+			advanceReceiptPO.setCheckv(checkv);
+			advanceReceiptPO.setCheckvBank(paymentVO.getCheckvBank());
+			realMoney = Arith.add(checkv, realMoney);
+		}else{
+			advanceReceiptPO.setCheckv(0);
+			advanceReceiptPO.setCheckvBank("");
+		}
+		if(installment != null && installment != 0){
+			advanceReceiptPO.setInstallment(installment);
+			advanceReceiptPO.setInstallmentBank(paymentVO.getInstallmentBank());
+			realMoney = Arith.add(installment, realMoney);
+		}else{
+			advanceReceiptPO.setInstallment(0);
+			advanceReceiptPO.setInstallmentBank("");
+		}
+		if(accounts != null && accounts != 0){
+			advanceReceiptPO.setAccounts(accounts);
+			advanceReceiptPO.setAccountsBank(paymentVO.getAccountsBank());
+			realMoney = Arith.add(accounts, realMoney);
+		}else{
+			advanceReceiptPO.setAccounts(0);
+			advanceReceiptPO.setAccountsBank("");
+		}
 		
-
-		paymentDao.save(paymentPO);
-		advancePaymentDao.update(advancePaymentPO);
-
-		paymentVO.setPid(paymentPO.getPid());
+		if(paymentPO.getRecharge()!=realMoney){
+			throw new FLException(150025, "款项金额不正确");
+		}
+		
+		advanceReceiptDao.update(advanceReceiptPO);
 
 		return 0;
 	}

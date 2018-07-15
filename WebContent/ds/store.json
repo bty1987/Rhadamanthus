@@ -2,11 +2,12 @@
   "status":[
     {"key":"0","value":"待付款"},
     {"key":"1","value":"待发货"},
-    {"key":"2","value":"待收货 "},
-    {"key":"3","value":"已收货"},
-    {"key":"4","value":"已删除"}
+    {"key":"2","value":"已发货 "},
+    {"key":"3","value":"待评价"},
+    {"key":"4","value":"退货"},
+    {"key":"5","value":"已删除"},
+    {"key":"6","value":"已完成"}
   ],
-
   "statusItem":[
     {"key":"0","value":"初始"},
     {"key":"1","value":"退款中"},

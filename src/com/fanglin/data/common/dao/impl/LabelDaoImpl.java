@@ -3,6 +3,7 @@ package com.fanglin.data.common.dao.impl;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -32,11 +33,9 @@ public class LabelDaoImpl extends DaoImpl<LabelPO> implements LabelDao {
 				String data = filter.getData();
 				
 				if(field.equals("name")){
-					
 					query.add(query.getCriterion("name", data, op));
 				}
 			}
-			
 		}
 		
 		return query.list();
@@ -44,24 +43,14 @@ public class LabelDaoImpl extends DaoImpl<LabelPO> implements LabelDao {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<LabelPO> querylabel(Short status) {
+	public List<LabelPO> queryLabel(Short status) {
 		
 		Criteria c = session().createCriteria(LabelPO.class);
 		if(status != null){
-			c.add(Restrictions.eq(LabelPO.COLUMN_STATUS_STR, status));
+			c.add(Restrictions.eq(LabelPO.COLUMN_STATUS_STR, status)).addOrder(Order.asc(LabelPO.COLUMN_TYPE_STR)).addOrder(Order.asc("name"));
 		}
 		
 		return c.list();
 	}
-
-	
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<LabelPO> querylabelBytype(Short type) {
-		
-		return session().createCriteria(LabelPO.class).add(Restrictions.eq("type", type)).add(Restrictions.eq(LabelPO.COLUMN_STATUS_STR,LabelPO.STATUS_ENABLE_STR)).list();
-	}
-	
-	
                                    
 }

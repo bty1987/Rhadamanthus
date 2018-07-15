@@ -13,13 +13,11 @@ import com.fanglin.communion.dao.VrecordDao;
 import com.fanglin.communion.po.VrecordPO;
 import com.fanglin.communion.service.VrecordService;
 import com.fanglin.communion.vo.VrecordVO;
-import com.fanglin.core.vo.Filter;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
-import com.fanglin.utils.Paging;
 
 @Service("vrecordService")
 @Transactional(readOnly=true)
@@ -32,10 +30,9 @@ public class VrecordServiceImpl implements VrecordService{
 	private UserDao userDao;
 	
 	@Override
-	public List<VrecordVO> queryVrecordByVid(List<Filter> filters) {
+	public List<VrecordVO> queryVrecordByVid(VrecordVO vrecord) {
 		
-		List<VrecordPO> vrecordPOs = vrecordDao.queryVrecordByVid(new Paging(), filters);
-		
+		List<VrecordPO> vrecordPOs = vrecordDao.queryVrecordByVid(vrecord.getVid());
 		List<VrecordVO> vrecordVOs = new ArrayList<VrecordVO>();
 		
 		for(VrecordPO vrecordPO : vrecordPOs){
@@ -46,7 +43,6 @@ public class VrecordServiceImpl implements VrecordService{
 			BeanUtil.copyProperties(vrecordPO.getCreater(), vrecordVO.getCreater(), Arrays.asList("dept","duty"));
 			
 			vrecordVOs.add(vrecordVO);
-			
 		}
 		
 		return vrecordVOs;

@@ -93,9 +93,10 @@ public class GoodsDaoImpl extends DaoImpl<GoodsPO> implements GoodsDao {
 		return session().createCriteria(GoodsPO.class).add(Restrictions.eq(GoodsPO.COLUMN_STATUS_STR, GoodsPO.STATUS_ENABLE_INT)).add(Restrictions.eq(GoodsPO.COLUMN_ATID_STR, atid)).list();
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
-	public GoodsPO queryGoodsByName(String name,int company) {
-		return (GoodsPO) session().createCriteria(GoodsPO.class).add(Restrictions.eq(GoodsPO.COLUMN_COMPANY_STR, company)).add(Restrictions.eq(GoodsPO.COLUMN_STATUS_STR, GoodsPO.STATUS_ENABLE_INT)).add(Restrictions.or(Restrictions.eq(GoodsPO.COLUMN_NAME_STR, name), Restrictions.eq(GoodsPO.COLUMN_PINYIN_STR, name))).uniqueResult();
+	public List<GoodsPO> queryGoodsByName(String name,int company) {
+		return session().createCriteria(GoodsPO.class).add(Restrictions.eq(GoodsPO.COLUMN_COMPANY_STR, company)).add(Restrictions.eq(GoodsPO.COLUMN_STATUS_STR, GoodsPO.STATUS_ENABLE_INT)).add(Restrictions.eq(GoodsPO.COLUMN_NAME_STR, name)).list();
 	}
 
 	@Override

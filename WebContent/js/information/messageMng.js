@@ -19,7 +19,7 @@ $(function(){
 		repeatFlg: false,
 	};
 	
-	com.initChosen('receiver', api.personel.queryUserForNameByPinyinName, "pinyinName", {"duty": "", "user.status":0}, "autoFillKeyValue", "key", "value");
+	com.initChosen('receiver', api.personel.queryUserByPinyin, "pinyinName", {"duty": "", "user.status":0}, "autoFillKeyValue", "key", "value");
 
 	$("#returnBtn").on("click", function(){
 		$(".sysMessage").text("系统消息");
@@ -65,11 +65,7 @@ $(function(){
 			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 
 			var $label = $('<label></label>');
-			var $input = $('<input>').attr({
-				"type": "checkbox",
-				"name": "mmids",
-				"class": "ace ace-checkbox-2",
-			}).val(v.mid);
+			var $input = $('<input>').attr({"type": "checkbox", "name": "mmids", "class": "ace ace-checkbox-2"}).val(v.mid);
 			var $span = $('<span></span>').addClass('lbl blue bigger-150').text(v.contents);
 
 			var propertyArr = [

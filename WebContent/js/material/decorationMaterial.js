@@ -40,7 +40,7 @@ jQuery(function($) {
 						["设计师:", v.designer.currentName, "grey"],
 						["监理:", v.supervisor.currentName, "grey"],
 						["业务员:", v.salesman.currentName, "grey"],
-						["面积:", v.houseArea, "blue"],
+						["面积:", v.house.buildArea, "blue"]
 					];
 
 					$.each(propertyArr, function (index,value) {

@@ -1,14 +1,6 @@
 CREATE DATABASE  IF NOT EXISTS `inventory`;
 USE `inventory`;
 
-DROP TABLE IF EXISTS `assismanifest`;
-CREATE TABLE `assismanifest` (
-  `amid` int(11) NOT NULL AUTO_INCREMENT,
-  `aoid` int(11) NOT NULL COMMENT '辅料单ID',
-  `mid` int(11) NOT NULL COMMENT '货单ID',
-  PRIMARY KEY (`amid`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='辅料货单';
-
 DROP TABLE IF EXISTS `accessories`;
 CREATE TABLE `accessories` (
   `aid` int(11) NOT NULL AUTO_INCREMENT,
@@ -21,7 +13,7 @@ CREATE TABLE `accessories` (
   `approverId` int(11) DEFAULT NULL,
   `approverTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `fetchTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `status` tinyint(2) NOT NULL DEFAULT '0',
+  `status` tinyint(1) NOT NULL DEFAULT '0',
   `company` int(11) NOT NULL,
   PRIMARY KEY (`aid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='辅料订单';
@@ -32,7 +24,8 @@ CREATE TABLE `accessoriesitem` (
   `aid` int(11) NOT NULL,
   `gid` int(11) NOT NULL COMMENT '商品ID',
   `num` decimal(10,3) NOT NULL DEFAULT '0.000',
-  PRIMARY KEY (`aoiid`)
+  PRIMARY KEY (`aiid`),
+  KEY `indexone` (`aid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='辅料项';
 
 DROP TABLE IF EXISTS `accessoriesmanifest`;
@@ -47,7 +40,7 @@ CREATE TABLE `accessoriestype` (
   `atid` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(32) NOT NULL,
   `wtid` int(11) NOT NULL COMMENT '工种ID',
-  `status` tinyint(2) NOT NULL DEFAULT '0',
+  `status` tinyint(1) NOT NULL DEFAULT '0',
   `comment` varchar(64) DEFAULT NULL,
   PRIMARY KEY (`atid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='辅类';
@@ -59,7 +52,7 @@ CREATE TABLE `checklist` (
   `cid` int(11) NOT NULL COMMENT '颜色ID',
   `fid` int(11) NOT NULL COMMENT '规格ID',
   `shid` int(11) NOT NULL,
-  `type` tinyint(4) NOT NULL,
+  `type` tinyint(1) NOT NULL,
   `num` decimal(10,3) NOT NULL DEFAULT '0.000',
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `uid` int(11) NOT NULL,
@@ -71,7 +64,7 @@ CREATE TABLE `color` (
   `cid` int(11) NOT NULL AUTO_INCREMENT,
   `gid` int(11) NOT NULL,
   `name` varchar(32) NOT NULL,
-  `status` tinyint(2) NOT NULL DEFAULT '0',
+  `status` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`cid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='商品颜色';
 
@@ -80,7 +73,7 @@ CREATE TABLE `format` (
   `fid` int(11) NOT NULL AUTO_INCREMENT,
   `gid` int(11) NOT NULL,
   `info` varchar(64) NOT NULL,
-  `status` tinyint(2) NOT NULL DEFAULT '0',
+  `status` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`fid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='商品规格';
 
@@ -97,8 +90,8 @@ CREATE TABLE `goods` (
   `measurementUnit` varchar(10) NOT NULL,
   `pieceNum` int(5) NOT NULL,
   `atid` int(11) DEFAULT NULL COMMENT '辅类ID',
-  `type` tinyint(2) NOT NULL DEFAULT '0',
-  `status` tinyint(2) NOT NULL DEFAULT '0',
+  `type` tinyint(1) NOT NULL DEFAULT '0',
+  `status` tinyint(1) NOT NULL DEFAULT '0',
   `company` int(11) NOT NULL,
   PRIMARY KEY (`gid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='商品';
@@ -157,7 +150,8 @@ CREATE TABLE `manifestitem` (
   `num` decimal(10,3) NOT NULL DEFAULT '0.000',
   `unitPrice` decimal(10,3) NOT NULL DEFAULT '0.000',
   `comment` varchar(256) DEFAULT NULL,
-  PRIMARY KEY (`miid`)
+  PRIMARY KEY (`miid`),
+  KEY `indexone` (`mid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='货单项';
 
 DROP TABLE IF EXISTS `manifesttemplate`;

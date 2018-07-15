@@ -14,15 +14,16 @@ public interface ServicePaymentService {
 	
 	public void pageServicePaymentForConfirm(Paging paging, List<Filter> filters);
 	
-	public List<ServicePaymentVO> queryServicePaymentForNotInitBySrId(ServiceReceiptVO serviceReceiptVO);
-	
 	public List<ServicePaymentVO> queryServicePaymentByOrderId(ServicePaymentVO ServicePaymentVO);
 	
-	public int confirmServicePayment(List<Long> spids,String userId) throws FLException;
-
+	public List<ServicePaymentVO> queryServicePaymentForNotInitBySrId(ServiceReceiptVO serviceReceiptVO);
+	
 	public int collectServicePayment(ServicePaymentVO servicePaymentVO,ServiceReceiptVO serviceReceiptVO,AdvanceReceiptVO advanceReceiptVO,String cuid) throws FLException;
 	
 	public int collectServicePaymentForService(ServicePaymentVO servicePaymentVO,ServiceReceiptVO serviceReceiptVO, String userId) throws FLException;
 	
 	public int refundServicePaymentForService(ServicePaymentVO servicePaymentVO,ServiceReceiptVO serviceReceiptVO, String userId) throws FLException;
+	
+	public int confirmServicePayment(List<Long> spids,String userId) throws FLException;
+	
 }

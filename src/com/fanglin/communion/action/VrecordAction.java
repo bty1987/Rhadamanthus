@@ -18,7 +18,7 @@ import com.fanglin.core.interceptor.FLException;
 @Namespace("/")
 @Controller
 public class VrecordAction extends BaseListAction {
-
+	
 	private static final long serialVersionUID = -1598912214963548181L;
 	
 	@Autowired
@@ -31,7 +31,7 @@ public class VrecordAction extends BaseListAction {
 	@Action(value="queryVrecordByVid", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String queryVrecordByVid() {
 		
-		vrecords = vrecordService.queryVrecordByVid(getFilters());
+		vrecords = vrecordService.queryVrecordByVid(vrecord);
 		
 		return SUCCESS;
 	}
@@ -55,7 +55,7 @@ public class VrecordAction extends BaseListAction {
 	public List<VrecordVO> getVrecords() {
 		return vrecords;
 	}
-
+	
 	public void setVrecords(List<VrecordVO> vrecords) {
 		this.vrecords = vrecords;
 	}

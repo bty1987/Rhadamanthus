@@ -19,12 +19,64 @@ public class SalesPaymentDaoImpl extends DaoImpl<SalesPaymentPO> implements Sale
 	public SalesPaymentDaoImpl(){
 		super(SalesPaymentPO.class);
 	}
-
-	@SuppressWarnings("unchecked")
+	
 	@Override
+	public List<SalesPaymentPO> pageSalesPaymentForInit(Paging paging, List<Filter> filters) {
+
+		PagingQuery<SalesPaymentPO> query = pagingQuery(paging, SalesPaymentPO.class);
+
+		queryFilterExecute(query, filters);
+
+		return query.list();
+	}
+	
+	@Override
+	public List<SalesPaymentPO> pageSalesPaymentForCollect(Paging paging, List<Filter> filters) {
+
+		PagingQuery<SalesPaymentPO> query = pagingQuery(paging, SalesPaymentPO.class);
+
+		queryFilterExecute(query, filters);
+
+		return query.list();
+	}
+	
+	@Override
+	public List<SalesPaymentPO> pageSalesPaymentForConfirm(Paging paging, List<Filter> filters) {
+
+		PagingQuery<SalesPaymentPO> query = pagingQuery(paging, SalesPaymentPO.class);
+
+		queryFilterExecute(query, filters);
+
+		return query.list();
+	}
+	
+	@Override
+	public List<SalesPaymentPO> pageSalesPaymentForNotInit(Paging paging, List<Filter> filters) {
+
+		PagingQuery<SalesPaymentPO> query = pagingQuery(paging, SalesPaymentPO.class);
+
+		queryFilterExecute(query, filters);
+
+		return query.list();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
 	public List<SalesPaymentPO> querySalesPaymentsBySid(long sid)
 	{
 		return session().createCriteria(SalesPaymentPO.class).createAlias("sales", "sales").add(Restrictions.eq("sales.sid", Long.valueOf(sid))).list();
+	}
+	
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<SalesPaymentPO> querySalesPaymentBySids(List<Long> sids) {		
+		return session().createCriteria(SalesPaymentPO.class).createAlias("sales", "sales").add(Restrictions.in("sales.sid", sids)).list();
+	}
+	
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<SalesPaymentPO> querySalesPaymentForNotInitBySrid(long srid) {
+		return session().createCriteria(SalesPaymentPO.class).createAlias("salesReceipt", "salesReceipt").add(Restrictions.eq("salesReceipt.srId", srid)).add(Restrictions.sqlRestriction(" status!=0")).list();
 	}
 
 	@Override
@@ -41,58 +93,6 @@ public class SalesPaymentDaoImpl extends DaoImpl<SalesPaymentPO> implements Sale
 		String sql = "select count(*) from payment.salespayment where sid =:sid and type =:type";
 		BigInteger num = (BigInteger)session().createSQLQuery(sql).setLong("sid", sid).setShort("type", type).uniqueResult();
 		return num.intValue();
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<SalesPaymentPO> querySalesPaymentForNotInitBySrid(long srid) {
-		return session().createCriteria(SalesPaymentPO.class).createAlias("salesReceipt", "salesReceipt").add(Restrictions.eq("salesReceipt.srId", srid)).add(Restrictions.sqlRestriction(" status!=0")).list();
-	}
-	
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<SalesPaymentPO> querySalesPaymentBySids(List<Long> sids) {		
-		return session().createCriteria(SalesPaymentPO.class).createAlias("sales", "sales").add(Restrictions.in("sales.sid", sids)).list();
-	}
-
-	@Override
-	public List<SalesPaymentPO> pageSalesPaymentForConfirm(Paging paging, List<Filter> filters) {
-
-		PagingQuery<SalesPaymentPO> query = pagingQuery(paging, SalesPaymentPO.class);
-
-		queryFilterExecute(query, filters);
-
-		return query.list();
-	}
-
-	@Override
-	public List<SalesPaymentPO> pageSalesPaymentForCollect(Paging paging, List<Filter> filters) {
-
-		PagingQuery<SalesPaymentPO> query = pagingQuery(paging, SalesPaymentPO.class);
-
-		queryFilterExecute(query, filters);
-
-		return query.list();
-	}
-
-	@Override
-	public List<SalesPaymentPO> pageSalesPaymentForInit(Paging paging, List<Filter> filters) {
-
-		PagingQuery<SalesPaymentPO> query = pagingQuery(paging, SalesPaymentPO.class);
-
-		queryFilterExecute(query, filters);
-
-		return query.list();
-	}
-
-	@Override
-	public List<SalesPaymentPO> pageSalesPaymentForNotInit(Paging paging, List<Filter> filters) {
-
-		PagingQuery<SalesPaymentPO> query = pagingQuery(paging, SalesPaymentPO.class);
-
-		queryFilterExecute(query, filters);
-
-		return query.list();
 	}
 
 	private void queryFilterExecute(PagingQuery<?> query, List<Filter> filters){
@@ -154,6 +154,5 @@ public class SalesPaymentDaoImpl extends DaoImpl<SalesPaymentPO> implements Sale
 			}
 		}
 	}
-
-
+	
 }

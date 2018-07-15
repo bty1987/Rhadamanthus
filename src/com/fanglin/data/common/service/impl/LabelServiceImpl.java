@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.data.common.dao.LabelDao;
 import com.fanglin.data.common.service.LabelService;
@@ -23,32 +24,7 @@ public class LabelServiceImpl implements LabelService {
 	private LabelDao labelDao;
 	
 	@Override
-	public List<LabelVO> querylabel(LabelVO label) {
-		
-		List<LabelPO> labelPOs = labelDao.querylabel(label.getStatus());
-		List<LabelVO> labelVOs = new ArrayList<LabelVO>();
-		
-		LabelVO labelVO;
-		
-		for(LabelPO labelPO : labelPOs){
-			
-			labelVO = new LabelVO();
-			
-			labelVO.setName(labelPO.getName());
-			labelVO.setProportion(labelPO.getProportion());
-			labelVO.setStatus(labelPO.getStatus());
-			labelVO.setType(labelPO.getType());
-			labelVO.setLid(labelPO.getLid());
-			
-			labelVOs.add(labelVO);
-			
-		}
- 		
-		return labelVOs;
-	}
-
-	@Override
-	public void pageLabel(Paging paging, List<Filter> filters) {
+	public void pageLabel(Paging paging, List<Filter> filters) {	
 		
 		List<LabelPO> labelPOs = labelDao.pageLabel(paging, filters);
 		List<LabelVO> labelVOs = new ArrayList<LabelVO>();
@@ -64,19 +40,32 @@ public class LabelServiceImpl implements LabelService {
 		paging.setData(labelVOs);
 		
 	}
-
+	
 	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public void updataForStatus(LabelVO labelVO) {
+	public List<LabelVO> queryLabel(LabelVO labelVO) {
 		
-		LabelPO labelPO = labelDao.get(labelVO.getLid());
+		List<LabelPO> labelPOs = labelDao.queryLabel(labelVO.getStatus());
+		List<LabelVO> labelVOs = new ArrayList<LabelVO>();
 		
-		labelPO.setStatus((short) labelVO.getStatus());
+		LabelVO label;
 		
-		labelDao.update(labelPO);
+		for(LabelPO labelPO : labelPOs){
+			
+			label = new LabelVO();
+			
+			label.setName(labelPO.getName());
+			label.setScale(labelPO.getScale());
+			label.setStatus(labelPO.getStatus());
+			label.setType(labelPO.getType());
+			label.setLid(labelPO.getLid());
+			
+			labelVOs.add(label);
+			
+		}
+ 		
+		return labelVOs;
 	}
 
-	
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void addLabel(LabelVO labelVO) {
@@ -84,29 +73,42 @@ public class LabelServiceImpl implements LabelService {
 		
 		BeanUtil.copyPropertie(labelVO, labelPO);
 		
-		labelPO.setStatus((short)0);
+		labelPO.setStatus(LabelPO.STATUS_ENABLE_STR);
+		labelPO.setIsShow(LabelPO.STATUS_ISSHOW_STR);
 		
 		labelDao.save(labelPO);
 	}
 
 	@Override
-	public List<LabelVO> querylabelBytype(LabelVO labelVO) {
-			
-		List<LabelPO> labelPOs = labelDao.querylabelBytype(labelVO.getType());
-		List<LabelVO> LabelVOs = new ArrayList<LabelVO>();
+	@Transactional(rollbackFor = Exception.class)
+	public void updateLabel(LabelVO labelVO) throws FLException {
 		
-		for(LabelPO labelPO : labelPOs){
+		LabelPO labelPO = labelDao.get(labelVO.getLid());
+		
+		if(labelPO == null){
 			
-			LabelVO label = new LabelVO();
-			
-			BeanUtil.copyPropertie(labelPO, label);
-			
-			LabelVOs.add(label);
-			
+			throw new FLException(130024, "标签不存在");
 		}
 		
-		return LabelVOs;
+		BeanUtil.copyPropertie(labelVO, labelPO);
+		
+		labelDao.update(labelPO);
 	}
-
+	
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void updateLabelForStatus(LabelVO labelVO) throws FLException {
+		
+		LabelPO labelPO = labelDao.get(labelVO.getLid());
+		
+		if(labelPO == null){
+			
+			throw new FLException(130024, "标签不存在");
+		}
+		
+		labelPO.setStatus(labelVO.getStatus());
+		
+		labelDao.update(labelPO);
+	}
 	
 }

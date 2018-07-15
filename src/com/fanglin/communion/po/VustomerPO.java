@@ -14,7 +14,7 @@ public class VustomerPO implements Serializable{
 
 	private static final long serialVersionUID = 878679679282307928L;
 	
-	public static final String COLUMN_IDENT_STR = "ident";
+	public static final String COLUMN_UNIONID_STR = "unionId";
 	
 	public static final String COLUMN_NAME_STR = "name";
 	
@@ -30,7 +30,7 @@ public class VustomerPO implements Serializable{
 	
 	private long vid;
 	
-	private String ident;
+	private String unionId;
 	
 	private String name;
 	
@@ -60,14 +60,14 @@ public class VustomerPO implements Serializable{
 	public void setVid(long vid) {
 		this.vid = vid;
 	}
-
-	@Column(name="ident")
-	public String getIdent() {
-		return ident;
+	
+	@Column(name="unionId")
+	public String getUnionId() {
+		return unionId;
 	}
 
-	public void setIdent(String ident) {
-		this.ident = ident;
+	public void setUnionId(String unionId) {
+		this.unionId = unionId;
 	}
 
 	@Column(name="name")
@@ -132,5 +132,6 @@ public class VustomerPO implements Serializable{
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
+	
 	
 }

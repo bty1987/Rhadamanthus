@@ -13,6 +13,7 @@ import com.fanglin.dingding.po.AppMessageDelivery;
 import com.fanglin.dingding.po.OAMessage;
 import com.fanglin.dingding.utils.DDApi;
 import com.fanglin.dingding.utils.HttpHelper;
+import com.fanglin.dingding.utils.WXApi;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.system.po.SystemConfigPO;
@@ -72,6 +73,22 @@ public class MessageService {
 		}
 		
 		return json == null ? MessagePO.MESSAGE_DRESULT_FAIL_STR : json.getShort("errcode");
+	}
+	
+	public int sendMessage(int type, String name, String orderId, float money, String comment){
+		
+		SystemConfigPO isv = systemConfigDao.querySystemConfig("isv");
+		
+		String url = String.format(WXApi.WXAPI_SEND_MESSAGE_PAYMENT_STR, isv.getValue(), type, orderId, name, String.valueOf(money), comment);
+		
+		JSONObject json = HttpHelper.httpGet(url);
+		
+		if(json == null || json.getInteger("errorCode") == null || json.getInteger("errorCode") != 0){
+			System.out.println(url);
+			System.out.println(String.format("%d-%s", json.getInteger("errorCode"), json.getString("errorMsg")));
+		}
+		
+		return 0;
 	}
 
 }

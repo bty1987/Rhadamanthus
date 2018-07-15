@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.store.dao.McolorDao;
+import com.fanglin.store.dao.MformatDao;
+import com.fanglin.store.dao.MgoodsDao;
 import com.fanglin.store.dao.MpriceDao;
 import com.fanglin.store.po.McolorPO;
 import com.fanglin.store.po.MformatPO;
@@ -22,9 +25,6 @@ import com.fanglin.store.vo.MgoodsVO;
 import com.fanglin.store.vo.MpriceVO;
 import com.fanglin.utils.BeanUtil;
 
-
-
-
 @Service("mpriceService")
 @Transactional(readOnly=true)
 public class MpriceServiceImpl implements MpriceService{
@@ -32,27 +32,27 @@ public class MpriceServiceImpl implements MpriceService{
 	@Autowired
 	private MpriceDao mpriceDao;
 
+	@Autowired
+	private MgoodsDao mgoodsDao;
+	
+	@Autowired
+	private McolorDao mcolorDao;
+	
+	@Autowired
+	private MformatDao mformatDao;
+	
 	@Override
 	public List<MpriceVO> queryMprice(MpriceVO mpriceVO) {
-		
+	
 		List<MpricePO> mpricePOs = mpriceDao.queryMprice(mpriceVO.getMgoods().getGid());
 		List<MpriceVO> mpriceVOs = new ArrayList<MpriceVO>();
 		
-		MpriceVO mprice;
-		
 		for (MpricePO mpricePO : mpricePOs) { 
-			mprice = new MpriceVO(new MgoodsVO(), new McolorVO(), new MformatVO());
-			
-			BeanUtil.copyProperties(mpricePO, mprice, Arrays.asList("mgoods", "mcolor","mformat"));
-			BeanUtil.copyProperties(mpricePO.getMgoods(), mprice.getMgoods(), Arrays.asList("mbrand"));
-			BeanUtil.copyProperties(mpricePO.getMcolor(), mprice.getMcolor(), Arrays.asList("mgoods"));
-			BeanUtil.copyProperties(mpricePO.getMformat(), mprice.getMformat(), Arrays.asList("mgoods"));
-			
-			mpriceVOs.add(mprice);
-			
+			mpriceVOs.add(mpricePOToVO(mpricePO));
 		}
 		
 		return mpriceVOs;
+		
 	}
 	
 	@Override
@@ -61,184 +61,99 @@ public class MpriceServiceImpl implements MpriceService{
 		List<MpricePO> mpricePOs = mpriceDao.queryMpriceByGid(mpriceVO.getMgoods().getGid());
 		List<MpriceVO> mpriceVOs = new ArrayList<MpriceVO>();
 		
-		MpriceVO mprice;
-		
 		for (MpricePO mpricePO : mpricePOs) {
-			mprice = new MpriceVO(new MgoodsVO(), new McolorVO(), new MformatVO());
-			
-			BeanUtil.copyProperties(mpricePO, mprice, Arrays.asList("mgoods", "mcolor","mformat"));
-			BeanUtil.copyProperties(mpricePO.getMgoods(), mprice.getMgoods(), Arrays.asList("mbrand"));
-			BeanUtil.copyProperties(mpricePO.getMcolor(), mprice.getMcolor(), Arrays.asList("mgoods"));
-			BeanUtil.copyProperties(mpricePO.getMformat(), mprice.getMformat(), Arrays.asList("mgoods"));
-			
-			mpriceVOs.add(mprice);
-			
+			mpriceVOs.add(mpricePOToVO(mpricePO));
 		}
 		
 		return mpriceVOs;
+		
 	}
 	
 	@Override
-	public List<MpriceVO> queryMpriceByBid(MpriceVO mpriceVO) {
+	public List<MpriceVO> queryMpriceByPinyin(MpriceVO mpriceVO) {
 		
-		List<MpricePO> mpricePOs = mpriceDao.queryMpriceByBid(mpriceVO.getMgoods().getMbrand().getBid());
+		List<MpricePO> mpricePOs = mpriceDao.queryMpriceByPinyin(mpriceVO.getMgoods().getPinyin());
 		List<MpriceVO> mpriceVOs = new ArrayList<MpriceVO>();
 		
-		MpriceVO mprice;
-		
 		for (MpricePO mpricePO : mpricePOs) {
-			mprice = new MpriceVO(new MgoodsVO(), new McolorVO(), new MformatVO());
-			
-			BeanUtil.copyProperties(mpricePO, mprice, Arrays.asList("mgoods", "mcolor","mformat"));
-			BeanUtil.copyProperties(mpricePO.getMgoods(), mprice.getMgoods(), Arrays.asList("mbrand"));
-			BeanUtil.copyProperties(mpricePO.getMcolor(), mprice.getMcolor(), Arrays.asList("mgoods"));
-			BeanUtil.copyProperties(mpricePO.getMformat(), mprice.getMformat(), Arrays.asList("mgoods"));
-			
-			mpriceVOs.add(mprice);
-			
+			mpriceVOs.add(mpricePOToVO(mpricePO));
 		}
 		
 		return mpriceVOs;
+		
 	}
 	
 	@Override
-	public List<MpriceVO> queryMpriceByPinyinName(String pinyinName) {
+	public List<MpriceVO> queryMpriceForShow(MpriceVO mpriceVO) {
 		
-		List<MpricePO> mpricePOs = mpriceDao.queryMpriceByPinyinName(pinyinName);
 		List<MpriceVO> mpriceVOs = new ArrayList<MpriceVO>();
 		
-		MpriceVO mprice;
-		
-		for (MpricePO mpricePO : mpricePOs) {
-			mprice = new MpriceVO(new MgoodsVO(), new McolorVO(), new MformatVO());
+		if(mpriceVO.getStatus() == 2 || mpriceVO.getStatus() == 3){
 			
-			BeanUtil.copyProperties(mpricePO, mprice, Arrays.asList("mgoods", "mcolor","mformat"));
-			BeanUtil.copyProperties(mpricePO.getMgoods(), mprice.getMgoods(), Arrays.asList("mbrand"));
-			BeanUtil.copyProperties(mpricePO.getMcolor(), mprice.getMcolor(), Arrays.asList("mgoods"));
-			BeanUtil.copyProperties(mpricePO.getMformat(), mprice.getMformat(), Arrays.asList("mgoods"));
-			
-			mpriceVOs.add(mprice);
-			
-		}
-		
-		return mpriceVOs;
-	}
-	
-	@Override
-	public List<MpriceVO> queryMpriceByStatus(MpriceVO mpriceVO) {
-		
-		List<MpricePO> mpricePOs = mpriceDao.queryMpriceByStatus(mpriceVO.getStatus());
-		List<MpriceVO> mpriceVOs = new ArrayList<MpriceVO>();
-		
-		MpriceVO mprice;
-		
-		for (MpricePO mpricePO : mpricePOs) {
-			mprice = new MpriceVO(new MgoodsVO(), new McolorVO(), new MformatVO());
-			
-			BeanUtil.copyProperties(mpricePO, mprice, Arrays.asList("mgoods", "mcolor","mformat"));
-			BeanUtil.copyProperties(mpricePO.getMgoods(), mprice.getMgoods(), Arrays.asList("mbrand"));
-			BeanUtil.copyProperties(mpricePO.getMcolor(), mprice.getMcolor(), Arrays.asList("mgoods"));
-			BeanUtil.copyProperties(mpricePO.getMformat(), mprice.getMformat(), Arrays.asList("mgoods"));
-			
-			mpriceVOs.add(mprice);
-		}
-		
-		return mpriceVOs;
-	}	
-
-	@Override
-	public List<MpriceVO> queryMpriceByGidAndCid(MpriceVO mpriceVO) {
-		
-		List<MpricePO> mpricePOs = mpriceDao.queryMpriceByGidAndCid(mpriceVO.getMgoods().getGid(), mpriceVO.getMcolor().getCid());
-		List<MpriceVO> mpriceVOs = new ArrayList<MpriceVO>();
-		
-		MpriceVO mprice;
-		
-		for (MpricePO mpricePO : mpricePOs) {
-			mprice = new MpriceVO(new MgoodsVO(), new McolorVO(), new MformatVO());
-			
-			BeanUtil.copyProperties(mpricePO, mprice, Arrays.asList("mgoods", "mcolor","mformat"));
-			BeanUtil.copyProperties(mpricePO.getMgoods(), mprice.getMgoods(), Arrays.asList("mbrand"));
-			BeanUtil.copyProperties(mpricePO.getMcolor(), mprice.getMcolor(), Arrays.asList("mgoods"));
-			BeanUtil.copyProperties(mpricePO.getMformat(), mprice.getMformat(), Arrays.asList("mgoods"));
-			
-			mpriceVOs.add(mprice);
-			
-		}
-		
-		return mpriceVOs;
-	}
-	
-	@Override
-	public List<MpriceVO> queryMpriceByGidAndFid(MpriceVO mpriceVO) {
-		
-		List<MpricePO> mpricePOs = mpriceDao.queryMpriceByGidAndFid(mpriceVO.getMgoods().getGid(), mpriceVO.getMformat().getFid());
-		List<MpriceVO> mpriceVOs = new ArrayList<MpriceVO>();
-		
-		MpriceVO mprice;
-		
-		for (MpricePO mpricePO : mpricePOs) {
-			mprice = new MpriceVO(new MgoodsVO(), new McolorVO(), new MformatVO());
-			
-			BeanUtil.copyProperties(mpricePO, mprice, Arrays.asList("mgoods", "mcolor","mformat"));
-			BeanUtil.copyProperties(mpricePO.getMgoods(), mprice.getMgoods(), Arrays.asList("mbrand"));
-			BeanUtil.copyProperties(mpricePO.getMcolor(), mprice.getMcolor(), Arrays.asList("mgoods"));
-			BeanUtil.copyProperties(mpricePO.getMformat(), mprice.getMformat(), Arrays.asList("mgoods"));
-			
-			mpriceVOs.add(mprice);
-			
-		}
-		
-		return mpriceVOs;
-	}
-
-	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public int addMprice(MpriceVO mpriceVO) throws FLException {
-		
-		List<MpricePO> mpricePOs = mpriceDao.queryMpriceByGid(mpriceVO.getMgoods().getGid());
-		
-		if(mpricePOs != null && mpricePOs.size() != 0){
-			for (MpricePO mprice : mpricePOs) {
-				
-				if(mprice.getMcolor().getCid() == mpriceVO.getMcolor().getCid() && mprice.getMformat().getFid() == mpriceVO.getMformat().getFid()){
-					throw new FLException(111111, "价格已存在");
-				}
-				
+			List<MpricePO> mpricePOs = mpriceDao.queryMpriceForShow(mpriceVO.getStatus());
+			 
+			for (MpricePO mpricePO : mpricePOs) {
+				mpriceVOs.add(mpricePOToVO(mpricePO));
 			}
 		}
 		
-		MpricePO mpricePO = new MpricePO(new MgoodsPO(), new McolorPO(), new MformatPO());
+		return mpriceVOs;
+		
+	}	
+
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public int addMprice(MpriceVO mpriceVO) throws FLException { 
+		
+		Long gid = mpriceVO.getMgoods().getGid();
+		Long cid = mpriceVO.getMcolor().getCid();
+		Long fid = mpriceVO.getMformat().getFid();
+		
+		int count = mpriceDao.count(gid, cid, fid);
+		
+		if(count > 0){
+			throw new FLException(340014, "商品-颜色-规格对应价格已存在");
+		}
+		
+		MgoodsPO mgoodsPO = mgoodsDao.get(gid);
+		McolorPO mcolorPO = mcolorDao.get(cid);
+		MformatPO mformatPO = mformatDao.get(fid);
+		
+		MpricePO mpricePO = new MpricePO(mgoodsPO, mcolorPO, mformatPO);
 		
 		BeanUtil.copyProperties(mpriceVO, mpricePO, Arrays.asList("mgoods","mcolor","mformat"));
-		BeanUtil.copyProperties(mpriceVO.getMgoods(), mpricePO.getMgoods(), Arrays.asList("mbrand"));
-		BeanUtil.copyProperties(mpriceVO.getMcolor(), mpricePO.getMcolor(), Arrays.asList("mgoods"));
-		BeanUtil.copyProperties(mpriceVO.getMformat(), mpricePO.getMformat(), Arrays.asList("mgoods"));
-		
 		mpricePO.setStatus(MpricePO.STATUS_ENABLE_INT);
 		
 		mpriceDao.save(mpricePO);
 		
 		return 0;
+		
 	}
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int updateMpriceForStatus(MpriceVO mpriceVO) throws FLException {
+	public int updateMpriceForStatus(MpriceVO mpriceVO){
 		
 		MpricePO mpricePO = mpriceDao.get(mpriceVO.getPid());
-		
-		if(mpricePO == null){
-			throw new FLException(260016, "价格不存在");
-		}
 		
 		mpricePO.setStatus(mpriceVO.getStatus());
 		
 		mpriceDao.update(mpricePO);
 		
 		return 0;
+		
 	}
-
 	
-
+	public MpriceVO mpricePOToVO(MpricePO mpricePO){
+		
+		MpriceVO mpriceVO = new MpriceVO(new MgoodsVO(), new McolorVO(), new MformatVO());
+		
+		BeanUtil.copyProperties(mpricePO, mpriceVO, Arrays.asList("mgoods", "mcolor","mformat"));
+		BeanUtil.copyProperties(mpricePO.getMgoods(), mpriceVO.getMgoods(), Arrays.asList("mbrand"));
+		BeanUtil.copyProperties(mpricePO.getMcolor(), mpriceVO.getMcolor());
+		BeanUtil.copyProperties(mpricePO.getMformat(), mpriceVO.getMformat());
+		
+		return mpriceVO;
+		
+	}
 }

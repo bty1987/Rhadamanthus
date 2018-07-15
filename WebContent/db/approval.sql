@@ -31,10 +31,10 @@ CREATE TABLE `approvalcustomer` (
 
 DROP TABLE IF EXISTS `approvaldecorationactivity`;
 CREATE TABLE `approvaldecorationactivity` (
-  `adaid` int(11) NOT NULL AUTO_INCREMENT,
-  `aid` int(11) NOT NULL,
-  `orderId` varchar(15) NOT NULL,
+  `adaId` int(11) NOT NULL AUTO_INCREMENT,
+  `aId` int(11) NOT NULL,
   `activityId` int(11) NOT NULL,
+  `orderId` varchar(15) NOT NULL,
   `activityName` varchar(32) NOT NULL,
   PRIMARY KEY (`adaid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='活动审批表';
@@ -58,7 +58,7 @@ CREATE TABLE `approvaldecorationbelong` (
   `adbid` int(11) NOT NULL AUTO_INCREMENT,
   `aid` int(11) NOT NULL,
   `orderId` varchar(15) NOT NULL,
-  `belongType` varchar(10) NOT NULL COMMENT '归属类型, 设计/业务',
+  `belongType` tinyint(1) NOT NULL COMMENT '归属类型, 0:设计, 1:业务',
   PRIMARY KEY (`adbid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='订单归属信息修改审批表';
 
@@ -67,9 +67,9 @@ CREATE TABLE `approvaldecorationbelongitem` (
   `adbiid` int(11) NOT NULL AUTO_INCREMENT,
   `adbid` int(11) NOT NULL,
   `orderId` varchar(15) NOT NULL,
-  `belongUserId` varchar(15) NOT NULL COMMENT '归属人编号',
-  `belongRate` decimal(10,3) NOT NULL COMMENT '比例',
-  `defaultFlag` varchar(5) NOT NULL COMMENT '默认标识',
+  `buid` int(11) NOT NULL COMMENT '归属人ID',
+  `rate` decimal(5,3) NOT NULL COMMENT '比例',
+  `defaultFlag` varchar(1) NOT NULL COMMENT '默认标识',
   PRIMARY KEY (`adbiid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='订单归属信息审批项表';
 
@@ -109,7 +109,7 @@ DROP TABLE IF EXISTS `approvalmaterialfullpayment`;
 CREATE TABLE `approvalmaterialfullpayment` (
   `amfpid` int(11) NOT NULL AUTO_INCREMENT,
   `aid` int(11) NOT NULL,
-  `msoId` int(11) NOT NULL,
+  `mid` int(11) NOT NULL,
   `referMoney` decimal(10,3) NOT NULL,
   PRIMARY KEY (`amfpid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材补款审批表';
@@ -149,9 +149,9 @@ CREATE TABLE `approvalquotationdiscount` (
   `aqdid` int(11) NOT NULL AUTO_INCREMENT,
   `aid` int(11) NOT NULL,
   `orderId` varchar(15) NOT NULL,
-  `quotationId` bigint(20) NOT NULL,
-  `oldDiscount` decimal(10,3) NOT NULL,
-  `newDiscount` decimal(10,3) NOT NULL,
+  `qid` int(11) NOT NULL,
+  `oldDiscount` decimal(5,3) NOT NULL,
+  `newDiscount` decimal(5,3) NOT NULL,
   PRIMARY KEY (`aqdid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='订单报价折扣修改审批表';
 

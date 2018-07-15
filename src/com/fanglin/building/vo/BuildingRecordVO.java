@@ -4,7 +4,7 @@ import java.sql.Timestamp;
 
 import org.apache.struts2.json.annotations.JSON;
 
-import com.fanglin.personel.vo.UserVO;
+import com.fanglin.personel.vo.UserBaseVO;
 
 public class BuildingRecordVO implements java.io.Serializable {
 
@@ -22,7 +22,7 @@ public class BuildingRecordVO implements java.io.Serializable {
 	
 	private Short pattern;
 	
-	private UserVO operater;
+	private UserBaseVO operater;
 	
 	private Timestamp operatTime;
 	
@@ -30,13 +30,13 @@ public class BuildingRecordVO implements java.io.Serializable {
 		super();
 	}
 	
-	public BuildingRecordVO(HouseSourceVO houseSource, UserVO operater) {
+	public BuildingRecordVO(HouseSourceVO houseSource, UserBaseVO operater) {
 		super();
 		this.houseSource = houseSource;
 		this.operater = operater;
 	}
 	
-	public BuildingRecordVO(HouseSourceVO houseSource, CustomerSourceVO customerSource, UserVO operater) {
+	public BuildingRecordVO(HouseSourceVO houseSource, CustomerSourceVO customerSource, UserBaseVO operater) {
 		super();
 		this.houseSource = houseSource;
 		this.customerSource = customerSource;
@@ -91,11 +91,11 @@ public class BuildingRecordVO implements java.io.Serializable {
 		this.pattern = pattern;
 	}
 
-	public UserVO getOperater() {
+	public UserBaseVO getOperater() {
 		return operater;
 	}
 
-	public void setOperater(UserVO operater) {
+	public void setOperater(UserBaseVO operater) {
 		this.operater = operater;
 	}
 

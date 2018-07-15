@@ -14,48 +14,34 @@ jQuery(function ($) {
             Cmtbtn: function () {
                 $("#cmtbtn").click(function () {
 
+                    if (com.validate()) {
+                        return;
+                    }
+
                     $("#jianpan").hide();
                     var riqi = $('#riqi').val();
                     riqiarr = riqi.split("-");
 
-                    if (riqi == "" || riqi == "undefined") {
-                        com.showAlert(com.warning, "日期不能为空!");
-                        return;
-                    }
-
-                    var uid = $('#usernames').attr('data-typeahead-key');
+                    var userId = $('#usernames').attr('data-typeahead-key');
                     var username = $('#usernames').val();
 
-                    if (uid != "undefined" && uid != null && username != "" && username != null) {
-                        binding.openPackageGoods(uid, username, riqiarr[0], riqiarr[1]);
+                    if (userId != "undefined" && userId != null) {
+                        binding.openView(userId, username, riqiarr[0], riqiarr[1]);
                         project.usernames.val("");
                         project.riqi.val("");
                     } else {
-                        com.showAlert(com.warning, "请选择您的名字后再点击查询!");
+                        com.showAlert(com.warning, "请选择下拉框中您的名字后再点击查询!");
                     }
 
                 });
             },
 
             BindingEvent: function () {
-                //隐藏全屏按钮
-                $('#close').hide();
 
-                $('#close').click(function () {
-                    $('#bigScreen').parents('.page-content').removeClass('salary-Screen');
-                    $('#jianpan').attr('style', 'left: 37%;text-align: center;top :80%');
-                    $('#bigScreen').show();
-                    $('#close').hide();
-                });
-
-                binding.autoFill(api.personel.queryUserForNameByPinyinName, "usernames", "userBases", "uid", "userName");
-
+                binding.autoFill(api.personel.queryUserByPinyin, "usernames", "autoFillKeyValue", "key", "value");
+                //姓名输入
                 project.usernames.click(function () {
                     binding.BindingXfjianpan("usernames");
-                });
-                //电话
-                project.phone.click(function () {
-                    binding.BindingXfjianpan("phone");
                 });
                 //关闭键盘
                 $("#xjianpan").click(function () {
@@ -65,23 +51,22 @@ jQuery(function ($) {
                 $('#bigScreen').click(function () {
                     $('#close').show();
                     $('#bigScreen').parents('.page-content').addClass('salary-Screen');
-                    $('#jianpan').attr('style', 'left: 30%;text-align: center;top :65%');//36 45
+                    $('#jianpan').attr('style', 'left: 30%;text-align: center;top :65%');//37 65
                     $('#bigScreen').hide();
                 });
                 //绑定键盘
                 $(document).keyup(function (event) {
                     if (event.keyCode == 27) {
                         $('#bigScreen').parents('.page-content').removeClass('salary-Screen');
-                        $('#jianpan').attr('style', 'left: 50%;text-align: center');//40
                         $('#bigScreen').show();
-                        $('#close').hide();
+                        $('#jianpan').attr('style', 'left: 37%;text-align: center;top :65%');
                     }
                 });
             },
 
-            openPackageGoods: function (uid, username, startTime, endTime) {
+            openView: function (userId, username, startTime, endTime) {
                 var $popup = $('#viewPopUp');
-                $popup.attr({'data-uid': uid});
+                $popup.attr({'data-userId': userId});
                 $popup.attr({'data-startTime': startTime});
                 $popup.attr({'data-endTime': endTime});
                 $popup.css({'overflow': 'hidden'});
@@ -217,7 +202,7 @@ jQuery(function ($) {
                         moveX = Math.min(maxX, Math.max(0, moveX));
                         moveY = Math.min(maxY, Math.max(0, moveY));
                         $("#" + obj).css({"left": moveX, "top": moveY});
-                    })
+                    });
 
                     $(document).bind("touchend", function () {
                         moveKg = false;

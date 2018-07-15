@@ -28,7 +28,7 @@ jQuery(function($) {
 		}
 	}, null, false);
 
-	com.initChosen('userSel', api.personel.queryUserForNameByPinyinName, "pinyinName", {"user.status":"0"}, "autoFillKeyValue", "key", "value");
+	com.initChosen('userSel', api.personel.queryUserByPinyin, "pinyinName", {"user.status":"0","departmentType.name":""}, "autoFillKeyValue", "key", "value");
 
 	approve.items.type = $("#type").bindData(approve.approvalType, "key", "value", false);
 	

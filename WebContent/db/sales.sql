@@ -108,6 +108,8 @@ CREATE TABLE `salesitem` (
   `disPrice` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '折扣价',
   `postDis` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '折让',
   `price` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '折让价',
+  `xgnum` decimal(10,3) NOT NULL COMMENT '出货剩余数量',
+  `punum` decimal(10,3) NOT NULL COMMENT '采购剩余数量',
   `num` decimal(10,3) NOT NULL DEFAULT '0.000',
   `total` decimal(10,3) NOT NULL DEFAULT '0.000',
   `comment` varchar(128) DEFAULT NULL,

@@ -167,7 +167,7 @@ public class SalesPO implements Serializable {
 	public SalesPO() {
 		super();
 	}
-
+	
 	public SalesPO(HousePO house, CustomerPO customer, UserPO salesman,
 			DepartmentPO dept, DepartmentPO region, UserPO guider,
 			DepartmentPO guideDept, UserPO instorer) {

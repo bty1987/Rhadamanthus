@@ -8,23 +8,16 @@ public class PictureVO implements Serializable{
 	
 	private Long pid;
 	
-	private MgoodsVO mgoods;
+	private Long gid;
 	
 	private String img;
 	
 	private Short type;
 	
-	private Short status;
-	
 	private Short sort;
 
 	public PictureVO() {
 		super();
-	}
-
-	public PictureVO(MgoodsVO mgoods) {
-		super();
-		this.mgoods = mgoods;
 	}
 	
 	public Long getPid() {
@@ -35,14 +28,14 @@ public class PictureVO implements Serializable{
 		this.pid = pid;
 	}
 	
-	public MgoodsVO getMgoods() {
-		return mgoods;
+	public Long getGid() {
+		return gid;
 	}
 
-	public void setMgoods(MgoodsVO mgoods) {
-		this.mgoods = mgoods;
+	public void setGid(Long gid) {
+		this.gid = gid;
 	}
-	
+
 	public String getImg() {
 		return img;
 	}
@@ -57,14 +50,6 @@ public class PictureVO implements Serializable{
 
 	public void setType(Short type) {
 		this.type = type;
-	}
-	
-	public Short getStatus() {
-		return status;
-	}
-
-	public void setStatus(Short status) {
-		this.status = status;
 	}
 	
 	public Short getSort() {

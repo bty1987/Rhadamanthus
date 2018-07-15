@@ -4,11 +4,8 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -19,33 +16,22 @@ public class PicturePO implements Serializable{
 	
 	public static final String COLUMN_PID_STR = "pid";
 	
-	public static final String COLUMN_GID_STR = "mgoods.gid";
+	public static final String COLUMN_GID_STR = "gid";
 	
 	public static final String COLUMN_TYPE_STR = "type";
 	
-	public static final short STATUS_ABLE_SHORT = 0;
-	
-	public static final short STATUS_DISABLE_SHORT = 1;
-	
 	private long pid;
 	
-	private MgoodsPO mgoods;
+	private long gid;
 	
 	private String img;
 	
 	private short type;
 	
-	private short status;
-	
 	private short sort;
 
 	public PicturePO() {
 		super();
-	}
-
-	public PicturePO(MgoodsPO mgoods) {
-		super();
-		this.mgoods = mgoods;
 	}
 
 	@Id
@@ -58,15 +44,14 @@ public class PicturePO implements Serializable{
 	public void setPid(long pid) {
 		this.pid = pid;
 	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "gid", referencedColumnName="gid")
-	public MgoodsPO getMgoods() {
-		return mgoods;
+	
+	@Column(name="gid")
+	public long getGid() {
+		return gid;
 	}
-
-	public void setMgoods(MgoodsPO mgoods) {
-		this.mgoods = mgoods;
+	
+	public void setGid(long gid) {
+		this.gid = gid;
 	}
 
 	@Column(name="img")
@@ -85,15 +70,6 @@ public class PicturePO implements Serializable{
 
 	public void setType(short type) {
 		this.type = type;
-	}
-
-	@Column(name="status")
-	public short getStatus() {
-		return status;
-	}
-
-	public void setStatus(short status) {
-		this.status = status;
 	}
 
 	@Column(name="sort")

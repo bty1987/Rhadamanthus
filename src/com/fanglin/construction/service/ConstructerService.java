@@ -13,7 +13,7 @@ public interface ConstructerService {
 
 	public void addConstructer(ConstructerVO constructer, String createrId) throws FLException;
 
-	public void updateConstructerForRate(ConstructerVO constructer) throws FLException;
+	public void updateConstructerForRate(List<ConstructerVO> constructerVOs) throws FLException;
 
 	public void deleteConstructer(ConstructerVO constructer) throws FLException;
  

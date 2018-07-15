@@ -9,10 +9,8 @@ import com.fanglin.utils.Paging;
 
 public interface MgoodsDao extends Dao<MgoodsPO> {
 
-	public List<MgoodsPO> pageMgoods(Paging paging, List<Filter> filters);
+	public List<MgoodsPO> pageMgoods(Paging paging, List<Filter> filters, boolean flag);
 	
-	public List<MgoodsPO> queryMgoods(Long bid, Short status);
-
-	public List<MgoodsPO> queryMgoodsBypinyinName(Paging paging, String pinyinName);
+	public List<MgoodsPO> queryMgoodsByPinyin(Paging paging, String name);
 	
 }

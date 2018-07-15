@@ -8,23 +8,24 @@ public class AddressVO implements Serializable {
 
 	private Long aid;
 
-	private MuserVO muser;
+	private Long uid;
 	
 	private String name;
 	
 	private String phone;
 
+	private String province;
+	
+	private String city;
+	
+	private String proper;
+	
 	private String address;
-
+	
 	private Short status;
 
 	public AddressVO() {
 		super();
-	}
-
-	public AddressVO(MuserVO muser) {
-		super();
-		this.muser = muser;
 	}
 
 	public Long getAid() {
@@ -35,14 +36,14 @@ public class AddressVO implements Serializable {
 		this.aid = aid;
 	}
 
-	public MuserVO getMuser() {
-		return muser;
+	public Long getUid() {
+		return uid;
 	}
 
-	public void setMuser(MuserVO muser) {
-		this.muser = muser;
+	public void setUid(Long uid) {
+		this.uid = uid;
 	}
-	
+
 	public String getName() {
 		return name;
 	}
@@ -58,7 +59,31 @@ public class AddressVO implements Serializable {
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
+	
+	public String getProvince() {
+		return province;
+	}
 
+	public void setProvince(String province) {
+		this.province = province;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public String getProper() {
+		return proper;
+	}
+
+	public void setProper(String proper) {
+		this.proper = proper;
+	}
+	
 	public String getAddress() {
 		return address;
 	}

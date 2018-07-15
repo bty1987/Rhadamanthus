@@ -151,7 +151,7 @@ public class UserPO implements Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "deptId", referencedColumnName = "deptId", nullable = false)
+	@JoinColumn(name = "deptId", referencedColumnName = "did", nullable = false)
 	public DepartmentPO getDept(){
 		return dept;
 	}

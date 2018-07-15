@@ -23,6 +23,8 @@ import com.fanglin.construction.po.CustomerServiceComplaintPO;
 import com.fanglin.construction.service.CustomerServiceComplaintService;
 import com.fanglin.construction.vo.CustomerServiceComplaintVO;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.personel.dao.UserDao;
+import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
@@ -33,7 +35,10 @@ public class CustomerServiceComplainServiceImpl implements CustomerServiceCompla
 	
 	@Autowired
 	private CustomerServiceComplaintDao customerServiceComplaintDao;
-
+	
+	@Autowired
+	private UserDao userDao;
+	
 	@Override
 	public void pageCustomerServiceComplaint(Paging paging, List<Filter> filters){
 		
@@ -79,6 +84,9 @@ public class CustomerServiceComplainServiceImpl implements CustomerServiceCompla
 		customerServiceComplaintPO.setOperaterName("");
 		customerServiceComplaintPO.setHandleTime(DateUtil.current(CustomerServiceComplaintPO.CURRENT_TIME_FORMAT_STR));
 		customerServiceComplaintPO.setHandle("");
+		
+		UserPO user =userDao.queryUserByUserId(customerServiceComplaintVO.getCreaterId());
+		customerServiceComplaintPO.setCuid(user.getUid());
 		
 		customerServiceComplaintDao.saveOrUpdate(customerServiceComplaintPO);
 	}

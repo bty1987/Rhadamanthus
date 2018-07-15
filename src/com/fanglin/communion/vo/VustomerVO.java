@@ -8,7 +8,7 @@ public class VustomerVO implements Serializable{
 	
 	private Long vid;
 	
-	private String ident;
+	private String unionId;
 	
 	private String name;
 	
@@ -36,12 +36,12 @@ public class VustomerVO implements Serializable{
 		this.vid = vid;
 	}
 
-	public String getIdent() {
-		return ident;
+	public String getUnionId() {
+		return unionId;
 	}
 
-	public void setIdent(String ident) {
-		this.ident = ident;
+	public void setUnionId(String unionId) {
+		this.unionId = unionId;
 	}
 
 	public String getName() {
@@ -99,5 +99,6 @@ public class VustomerVO implements Serializable{
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
+
 	
 }

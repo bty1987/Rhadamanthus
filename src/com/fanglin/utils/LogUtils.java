@@ -11,6 +11,7 @@
 
 package com.fanglin.utils;
 
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,11 +31,14 @@ public class LogUtils {
 	    return map;
 	}
 	
-	public static void logging(Logger logger, Exception e, String actionName){
+	public static void logging(Logger logger, Exception e, String actionName, String userId){
 		if(SystemConfig.DEBUG_TRUE_STR.equals(SystemConfig.getString("debug", SystemConfig.DEBUG_FALSE_STR))){
 			
+			SimpleDateFormat currentTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
+			
 			System.out.println();
-			System.out.println(String.format("Exception Time: %s", e.getMessage()));
+			System.out.println(String.format("Exception User: %s", userId));
+			System.out.println(String.format("Exception Time: %s", currentTime.format(new java.util.Date())));
 			System.out.println(String.format("Exception Message: %s", e.getMessage()));
 			
 			StackTraceElement[] elements = e.getStackTrace();
@@ -55,6 +59,8 @@ public class LogUtils {
 			System.out.println();
 			
 			logger.error(String.format("%s|%s|%s|%s", "AI", "E", actionName, e.getMessage()));
+		}else if(SystemConfig.DEBUG_ERROR_STR.equals(SystemConfig.getString("debug", SystemConfig.DEBUG_FALSE_STR))){
+			e.printStackTrace();
 		}else{
 			logger.error(String.format("%s|%s|%s|%s", "AI", "E", actionName, e.getMessage()));
 		}

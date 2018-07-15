@@ -11,8 +11,6 @@ public interface MuserDao extends Dao<MuserPO> {
 
 	public List<MuserPO> pageMuser(Paging paging, List<Filter> filters);
 
-	public MuserPO queryMuserByUnion(String unionVal);
-
-	public List<MuserPO> queryMuserByPinyinName(Paging paging, String pinyinName);
+	public MuserPO queryMuserByUnionId(String unionId);
 
 }

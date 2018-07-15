@@ -9,12 +9,8 @@ import com.fanglin.utils.Paging;
 
 public interface LabelDao extends Dao<LabelPO> {
 
-	public List<LabelPO> querylabel(Short status);
+	public List<LabelPO> queryLabel(Short status);
 	
 	public List<LabelPO> pageLabel(Paging paging, List<Filter> filters);
-	
-	public List<LabelPO> querylabelBytype(Short type);
-	
-
 	
 }

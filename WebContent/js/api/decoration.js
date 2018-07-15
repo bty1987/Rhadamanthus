@@ -68,11 +68,8 @@ $.extend(api, {decoration: {
     queryDecorationBelongForBusinessnAChangeByOrderId: {url: "queryDecorationBelongForBusinessnAChangeByOrderId.do", demo: true},
     queryDecorationBelongForBusinessnByOrderId: {url: "queryDecorationBelongForBusinessnByOrderId.do"},
 
-    queryOrderDesignPictureByOrderId: {url: "queryOrderDesignPictureByOrderId.do"},
-    addOrderDesignPicture: {url: "addOrderDesignPicture.do"},
-
     queryDecorationPictureByOrderId: {url: "queryDecorationPictureByOrderId.do", demo: true},
-    addDecorationPicture: {url: "addDecorationPicture.do"},
+    addDecorationPicture: {url: "addDecorationPicture.do", intercept: true},
     deleteDecorationPicture: {url: "deleteDecorationPicture.do"},
     
     changeDecorationForOrderId: {url: "changeDecorationForOrderId.do"},
@@ -102,4 +99,14 @@ $.extend(api, {decoration: {
     updateAuditScaleForStatus: {url: "updateAuditScaleForStatus.do"},
     addAuditScale: {url: "addAuditScale.do"},
     deleteAuditScale: {url: "deleteAuditScale.do"},
+    
+    queryDecorationAccount:{url:"queryDecorationAccount.do"},
+    makeDecorationAccount:{url:"makeDecorationAccount.do"},
+    
+    queryDecorationServiceByOrderId:{url:"queryDecorationServiceByOrderId.do"},
+    completeDecorationService:{url:"completeDecorationService.do"},
+    addDecorationService:{url:"addDecorationService.do"},
+
+    queryDecorationAdditionByOrderId:{url:"queryDecorationAdditionByOrderId.do"},
+    
 }});

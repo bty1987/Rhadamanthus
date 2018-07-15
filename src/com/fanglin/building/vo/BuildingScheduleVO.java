@@ -4,7 +4,7 @@ import java.sql.Timestamp;
 
 import org.apache.struts2.json.annotations.JSON;
 
-import com.fanglin.personel.vo.UserVO;
+import com.fanglin.personel.vo.UserBaseVO;
 
 public class BuildingScheduleVO implements java.io.Serializable {
 
@@ -22,13 +22,13 @@ public class BuildingScheduleVO implements java.io.Serializable {
 	
 	private short status;
 	
-	private UserVO operater;
+	private UserBaseVO operater;
 	
 	private Timestamp operatTime;
 	
 	private String comment;
 	
-	public BuildingScheduleVO(BuildingNodeVO buildingNode, BuildingVO building, UserVO operater) {
+	public BuildingScheduleVO(BuildingNodeVO buildingNode, BuildingVO building, UserBaseVO operater) {
 		super();
 		this.buildingNode = buildingNode;
 		this.building = building;
@@ -88,11 +88,11 @@ public class BuildingScheduleVO implements java.io.Serializable {
 		this.status = status;
 	}
 
-	public UserVO getOperater() {
+	public UserBaseVO getOperater() {
 		return operater;
 	}
 
-	public void setOperater(UserVO operater) {
+	public void setOperater(UserBaseVO operater) {
 		this.operater = operater;
 	}
 

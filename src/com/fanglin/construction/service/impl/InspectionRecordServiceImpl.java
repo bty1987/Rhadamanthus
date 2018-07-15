@@ -23,6 +23,8 @@ import com.fanglin.construction.po.InspectionRecordPO;
 import com.fanglin.construction.service.InspectionRecordService;
 import com.fanglin.construction.vo.InspectionRecordVO;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.personel.dao.UserDao;
+import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
 
@@ -32,7 +34,10 @@ public class InspectionRecordServiceImpl implements InspectionRecordService {
 	
 	@Autowired
 	private InspectionRecordDao inspectionRecordDao;
-
+	
+	@Autowired
+	private UserDao userDao;
+	
 	@Override
 	public void pageInspectionRecord(Paging paging, List<Filter> filters){
 		
@@ -70,6 +75,9 @@ public class InspectionRecordServiceImpl implements InspectionRecordService {
 		InspectionRecordPO inspectionRecordPO = new InspectionRecordPO();
 		BeanUtil.copyProperties(inspectionRecordVO, inspectionRecordPO);
 		
+		UserPO user = userDao.queryUserByUserId(inspectionRecordVO.getOperaterId());
+		inspectionRecordPO.setOuid(user.getUid());
+		
 		inspectionRecordDao.saveOrUpdate(inspectionRecordPO);
 	}
 
@@ -89,7 +97,12 @@ public class InspectionRecordServiceImpl implements InspectionRecordService {
 		
 		InspectionRecordPO inspectionRecordPO = inspectionRecordDao.get(irId);
 		
-		if(inspectionRecordPO != null && inspectionRecordPO.getOperaterId().equals(userId)){
+		UserPO user = userDao.get(inspectionRecordPO.getOuid());
+		String _userId = user.getUserId();
+		
+		inspectionRecordPO.setOuid(user.getUid());
+		
+		if(inspectionRecordPO != null && _userId.equals(userId)){
 			inspectionRecordDao.delete(inspectionRecordPO);
 		}
 	}
@@ -100,7 +113,11 @@ public class InspectionRecordServiceImpl implements InspectionRecordService {
 		
 		for(String irId: irIds){
 			InspectionRecordPO inspectionRecordPO = inspectionRecordDao.get(Integer.valueOf(irId));
-			if(inspectionRecordPO != null && inspectionRecordPO.getOperaterId().equals(userId)){
+			
+			UserPO user = userDao.get(inspectionRecordPO.getOuid());
+			String _userId = user.getUserId();
+			
+			if(inspectionRecordPO != null && _userId.equals(userId)){
 				inspectionRecordDao.delete(inspectionRecordPO);
 			}
 		}

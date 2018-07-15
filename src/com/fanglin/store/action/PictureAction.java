@@ -14,7 +14,7 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.store.service.PictureService;
 import com.fanglin.store.vo.PictureVO;
 
-@ParentPackage("login")
+@ParentPackage("base")
 @Namespace("/")
 @Controller
 public class PictureAction extends BaseListAction{
@@ -22,13 +22,13 @@ public class PictureAction extends BaseListAction{
 	private static final long serialVersionUID = 6606015125690300464L;
 
 	@Autowired
-	private  PictureService  pictureService;
+	private PictureService pictureService;
 	
-	private  PictureVO  picture;
+	private PictureVO picture;
 	
 	private List<PictureVO> pictures;
 	
-	private List<String> picturnUrls;
+	private List<String> imgs;
 	
 	@Action(value="queryPictureByGid", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String queryPictureByGid(){
@@ -39,28 +39,10 @@ public class PictureAction extends BaseListAction{
 		
 	}
 	
-	@Action(value="queryPictureByType", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryPictureByType(){
-		
-		pictures = pictureService.queryPictureByType(picture);
-		
-		return SUCCESS;
-		
-	}
-	
 	@Action(value="addPicture", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String addPicture(){
 		
-		pictures = pictureService.addPicture(picture, picturnUrls);
-		
-		return SUCCESS;
-		
-	}
-	
-	@Action(value="updatePicture", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String updatePicture() throws FLException{
-		
-		pictureService.updatePicture(picture);
+		pictures = pictureService.addPicture(picture, imgs);
 		
 		return SUCCESS;
 		
@@ -76,7 +58,7 @@ public class PictureAction extends BaseListAction{
 	}
 	
 	@Action(value="deletePicture", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String deletePicture() throws FLException{
+	public String deletePicture(){
 		
 		pictureService.deletePicture(picture);
 		
@@ -100,12 +82,11 @@ public class PictureAction extends BaseListAction{
 		this.pictures = pictures;
 	}
 
-	public List<String> getPicturnUrls() {
-		return picturnUrls;
+	public List<String> getImgs() {
+		return imgs;
 	}
 
-	public void setPicturnUrls(List<String> picturnUrls) {
-		this.picturnUrls = picturnUrls;
+	public void setImgs(List<String> imgs) {
+		this.imgs = imgs;
 	}
-	
 }

@@ -13,23 +13,24 @@ import com.fanglin.common.po.CountingPO;
 import com.fanglin.common.service.CountingService;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.store.dao.AddressDao;
 import com.fanglin.store.dao.CartDao;
 import com.fanglin.store.dao.MorderDao;
 import com.fanglin.store.dao.MorderItemDao;
 import com.fanglin.store.dao.MpriceDao;
 import com.fanglin.store.dao.MuserDao;
-import com.fanglin.store.po.AddressPO;
 import com.fanglin.store.po.CartPO;
 import com.fanglin.store.po.MorderItemPO;
 import com.fanglin.store.po.MorderPO;
 import com.fanglin.store.po.MpricePO;
 import com.fanglin.store.po.MuserPO;
 import com.fanglin.store.service.MorderService;
-import com.fanglin.store.vo.AddressVO;
+import com.fanglin.store.vo.McolorVO;
+import com.fanglin.store.vo.MformatVO;
+import com.fanglin.store.vo.MgoodsVO;
 import com.fanglin.store.vo.MorderItemVO;
 import com.fanglin.store.vo.MorderVO;
-import com.fanglin.store.vo.MuserVO;
+import com.fanglin.store.vo.MpriceVO;
+import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
@@ -49,9 +50,6 @@ public class MorderServiceImpl implements MorderService{
 	private MuserDao muserDao;
 	
 	@Autowired
-	private AddressDao addressDao;
-	
-	@Autowired
 	private MpriceDao mpriceDao;
 	
 	@Autowired
@@ -61,7 +59,7 @@ public class MorderServiceImpl implements MorderService{
 	private CountingService countingService;
 	
 	@Override
-	public void pageMorder(Paging paging, List<Filter> filters) {
+	public void pageMorder(Paging paging, List<Filter> filters, Boolean flag) {
 		
 		if(filters.size() == 0) return;
 		
@@ -71,54 +69,42 @@ public class MorderServiceImpl implements MorderService{
 		MorderVO morderVO;
 		
 		for (MorderPO morderPO : morderPOs) {
-			morderVO = new MorderVO(new MuserVO(), new AddressVO());
 			
-			BeanUtil.copyProperties(morderPO, morderVO, Arrays.asList("muser","address"));
-			BeanUtil.copyProperties(morderPO.getMuser(), morderVO.getMuser());
-			BeanUtil.copyProperties(morderPO.getAddress(), morderVO.getAddress(), Arrays.asList("muser"));
+			morderVO = new MorderVO();
+			
+			BeanUtil.copyProperties(morderPO, morderVO);
+			
+			if(flag == true){
+				
+				List<MorderItemPO> morderItemPOs = morderItemDao.queryMorderItemByOid(morderPO.getOid());
+				List<MorderItemVO> morderItemVOs = new ArrayList<MorderItemVO>();
+				
+				MorderItemVO morderItemVO;
+				
+				for (MorderItemPO morderItemPO : morderItemPOs) {
+					
+					morderItemVO = new MorderItemVO(new MpriceVO(new MgoodsVO(), new McolorVO(), new MformatVO()));
+					
+					BeanUtil.copyProperties(morderItemPO, morderItemVO, Arrays.asList("mprice"));
+					BeanUtil.copyProperties(morderItemPO.getMprice(), morderItemVO.getMprice(), Arrays.asList("mgoods", "mcolor", "mformat"));
+					BeanUtil.copyProperties(morderItemPO.getMprice().getMgoods(), morderItemVO.getMprice().getMgoods(), Arrays.asList("mbrand"));
+					BeanUtil.copyProperties(morderItemPO.getMprice().getMcolor(), morderItemVO.getMprice().getMcolor());
+					BeanUtil.copyProperties(morderItemPO.getMprice().getMformat(), morderItemVO.getMprice().getMformat());
+					
+					morderItemVOs.add(morderItemVO);
+					
+				}
+				
+				morderVO.setItems(morderItemVOs);
+				
+			}
 			
 			morderVOs.add(morderVO);
+			
 		}
 		
 		paging.setData(morderVOs);
-	}
-	
-	@Override
-	public List<MorderVO> queryMorderByUid(MorderVO morderVO) {
 		
-		List<MorderPO> morderPOs = morderDao.queryMorderByUid(morderVO.getMuser().getUid());
-		List<MorderVO> morderVOs = new ArrayList<MorderVO>();
-		
-		for (MorderPO morderPO : morderPOs) {
-			morderVO = new MorderVO(new MuserVO(), new AddressVO());
-			
-			BeanUtil.copyProperties(morderPO, morderVO, Arrays.asList("muser","address"));
-			BeanUtil.copyProperties(morderPO.getMuser(), morderVO.getMuser());
-			BeanUtil.copyProperties(morderPO.getAddress(), morderVO.getAddress(), Arrays.asList("muser"));
-			
-			morderVOs.add(morderVO);
-		}
-		
-		return morderVOs;
-	}
-	
-	@Override
-	public List<MorderVO> queryMorderByStatus(MorderVO morderVO) {
-		
-		List<MorderPO> morderPOs = morderDao.queryMorderByStatus(morderVO.getMuser().getUid(), morderVO.getStatus());
-		List<MorderVO> morderVOs = new ArrayList<MorderVO>();
-		
-		for (MorderPO morderPO : morderPOs) {
-			morderVO = new MorderVO(new MuserVO(), new AddressVO());
-			
-			BeanUtil.copyProperties(morderPO, morderVO, Arrays.asList("muser","address"));
-			BeanUtil.copyProperties(morderPO.getMuser(), morderVO.getMuser());
-			BeanUtil.copyProperties(morderPO.getAddress(), morderVO.getAddress(), Arrays.asList("muser"));
-			
-			morderVOs.add(morderVO);
-		}
-		
-		return morderVOs;
 	}
 
 	@Override
@@ -128,22 +114,23 @@ public class MorderServiceImpl implements MorderService{
 		String word = "S";
 		
 		String currentDate = DateUtil.current("yyMMdd").toString();
-		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_AO_INT,currentDate);
+		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_STORE_ORDER_INT,currentDate);
 		String endNo = FormatUtil.fillZero(FormatUtil.offset(count), "0000");
 		
 		String no = String.valueOf(word) + currentDate + endNo;
 		
-		MorderPO morderPO = new MorderPO(no);
+		MuserPO muserPO = muserDao.queryMuserByUnionId(morderVO.getUnionId());
 		
-		MuserPO muserPO = muserDao.queryMuserByUnion(morderVO.getMuser().getUnionVal());
+		if(muserPO == null){
+			throw new FLException(340009, "用户不存在");
+		}
 		
-		AddressPO addressPO = addressDao.get(morderVO.getAddress().getAid());
+		MorderPO morderPO = new MorderPO();
 		
-		BeanUtil.copyProperties(morderVO, morderPO, Arrays.asList("muser","address"));
-		morderPO.setMuser(muserPO);
+		BeanUtil.copyProperties(morderVO, morderPO);
+		morderPO.setNo(no);
 		morderPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-		morderPO.setAddress(addressPO);
-		morderPO.setStatus(MorderPO.STATUS_INIT_STR);
+		morderPO.setStatus(MorderPO.STATUS_INIT_SHORT);
 		
 		morderDao.save(morderPO);
 		
@@ -151,26 +138,46 @@ public class MorderServiceImpl implements MorderService{
 		
 		if(morderItemVOs != null && morderItemVOs.size() != 0){
 			
+			float total = 0;
+			
 			for (MorderItemVO morderItemVO : morderItemVOs) {
 				
 				MpricePO mpricePO = mpriceDao.get(morderItemVO.getMprice().getPid());
-				morderItemPO = new MorderItemPO(morderPO, mpricePO);
 				
-				BeanUtil.copyProperties(morderItemVO, morderItemPO, Arrays.asList("morder", "mprice"));
+				float price = mpricePO.getPrice();
+				short num = morderItemVO.getNum();
+				total += Arith.mul(price, num);
+				
+				morderItemPO = new MorderItemPO(mpricePO);
+				
+				BeanUtil.copyProperties(morderItemVO, morderItemPO, Arrays.asList("mprice"));
+				morderItemPO.setOid(morderPO.getOid());
 				
 				morderItemDao.save(morderItemPO);
 				
 			}
 			
+			morderPO.setTotal(total);
+			
+			morderDao.update(morderPO);
+			
 		}
 		
 		if(cids != null && cids.size() != 0){
+			
 			for (Long cid : cids) {
+				
 				CartPO cartPO = cartDao.get(cid);
 				
 				cartDao.delete(cartPO);
+				
 			}
+			
 		}
+		
+		morderVO.setNo(morderPO.getNo());
+		
+		morderVO.setOid(morderPO.getOid());
 		
 		return 0;
 	}
@@ -182,10 +189,30 @@ public class MorderServiceImpl implements MorderService{
 		MorderPO morderPO = morderDao.get(morderVO.getOid());
 		
 		if(morderPO == null){
-			throw new FLException(111111, "订单不存在");
+			throw new FLException(340012, "订单不存在");
 		}
 		
-		morderPO.setStatus(morderVO.getStatus());
+		if(morderPO.getStatus() == 0 && morderVO.getStatus() == 1){
+			
+			morderPO.setStatus(MorderPO.STATUS_WAITINGSEND_SHORT);
+
+		}else if(morderPO.getStatus() == 1 && morderVO.getStatus() == 2){
+			
+			morderPO.setStatus(MorderPO.STATUS_ENDSEND_SHORT);
+			
+		}else if(morderPO.getStatus() == 2 && morderVO.getStatus() == 3){
+			
+			morderPO.setStatus(MorderPO.STATUS_WAITINGEVALUATION_SHORT);
+			
+		} else if(morderVO.getStatus() == 6){
+			
+			morderPO.setStatus(MorderPO.STATUS_COMPLETED_SHORT);
+			
+		}else{
+			
+			throw new FLException(340013, "订单状态不可操作");
+			
+		}
 		
 		morderDao.update(morderPO);
 		
@@ -196,28 +223,27 @@ public class MorderServiceImpl implements MorderService{
 	@Transactional(rollbackFor=Exception.class)
 	public int deleteMorder(MorderVO morderVO) throws FLException{
 		
-		MorderPO morderPO = morderDao.get(morderVO.getOid());
+		MuserPO muserPO = muserDao.queryMuserByUnionId(morderVO.getUnionId());
 		
-		if(morderPO == null){
-			throw new FLException(111111, "订单不存在");
+		if(muserPO == null){
+			throw new FLException(340009, "用户不存在");
 		}
 		
-		morderPO.setStatus(MorderPO.STATUS_DELETE_STR);
+		MorderPO morderPO = morderDao.get(morderVO.getOid());
+		
+		if(!morderPO.getUnionId().equals(morderVO.getUnionId())){
+			throw new FLException(340001, "无操作权限");
+		}
+	
+		if(morderPO.getStatus() == 0){
+			morderPO.setStatus(MorderPO.STATUS_DELETE_SHORT);
+		}else{
+			throw new FLException(340013, "订单状态不可操作");
+		}
 		
 		morderDao.update(morderPO);
 		
-		List<MorderItemPO> morderItemPOs = morderItemDao.queryMorderItemByOid(morderVO.getOid());
-		
-		if(morderItemPOs != null && morderItemPOs.size() != 0){
-			for (MorderItemPO morderItemPO : morderItemPOs) {
-				morderItemPO.setStatus(MorderItemPO.STATUS_DELETE_STR);
-				
-				morderItemDao.update(morderItemPO);
-			}
-		}
-		
 		return 0;
 	}
-
 
 }

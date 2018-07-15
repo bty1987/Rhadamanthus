@@ -19,27 +19,24 @@ public class MorderItemPO implements Serializable{
 
 	private static final long serialVersionUID = -7181108522256921462L;
 	
-	public static final String COLUMN_OID_STR = "morder.oid";
+	public static final String COLUMN_OID_STR = "oid";
 	
 	public static final short STATUS_DELETE_STR = 3;
 
 	private long oiid;
 	
-	private MorderPO morder;
+	private long oid;
 	
 	private MpricePO mprice;
 	
 	private short num;
-	
-	private short status;
 
 	public MorderItemPO() {
 		super();
 	}
 
-	public MorderItemPO(MorderPO morder, MpricePO mprice) {
+	public MorderItemPO( MpricePO mprice) {
 		super();
-		this.morder = morder;
 		this.mprice = mprice;
 	}
 
@@ -53,15 +50,14 @@ public class MorderItemPO implements Serializable{
 	public void setOiid(long oiid) {
 		this.oiid = oiid;
 	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "oid", referencedColumnName="oid")
-	public MorderPO getMorder() {
-		return morder;
+	
+	@Column(name = "oid")
+	public long getOid() {
+		return oid;
 	}
 
-	public void setMorder(MorderPO morder) {
-		this.morder = morder;
+	public void setOid(long oid) {
+		this.oid = oid;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -81,15 +77,6 @@ public class MorderItemPO implements Serializable{
 
 	public void setNum(short num) {
 		this.num = num;
-	}
-
-	@Column(name = "status")
-	public short getStatus() {
-		return status;
-	}
-
-	public void setStatus(short status) {
-		this.status = status;
 	}
 	
 }

@@ -304,7 +304,7 @@ $(function(){
             com.showAlert(com.warning, "请通过条件进行查询");
             return false;
         }
-        if($('span[name="totalRecords"]').text() > 500){
+        if($('span[name="totalRecords"]').text() > 2000){
             com.showAlert(com.warning, "查询结果大于阀值 , 不能完成导出动作");
             return false;
         }
@@ -315,6 +315,7 @@ $(function(){
 					["楼盘地址",['material.house.village.name', 'material.house.houseNumber']],
 					["主材订单编号","material.no"],
 					["品牌","material.brand"],
+                    ["编号","material.salesman.userId"],
 					["业务员","material.salesman.currentName"],
 					["大区","material.region.deptName"],
 					["部门","material.department.deptName"],

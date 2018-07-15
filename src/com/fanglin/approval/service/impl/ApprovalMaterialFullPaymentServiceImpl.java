@@ -142,6 +142,7 @@ public class ApprovalMaterialFullPaymentServiceImpl implements ApprovalMaterialF
 		materialPaymentPO.setPaymentStatus(MaterialPaymentPO.PAYMENTSTATUS_TYPE_INIT_INT);
 		
 		materialPaymentPO.setCreater(sender);
+		materialPaymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		
 		materialPaymentPO.setReferMoney(approvalMaterialFullPaymentPO.getReferMoney());
 		

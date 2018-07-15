@@ -344,7 +344,7 @@ $(function(){
 
     //设计师人员查询
     $layerAdd.find('input[name="designer"]').typeahead({
-        url: api.personel.queryUserByDepartmentType,//获取下拉列表的接口
+        url: api.personel.queryUserByPinyin,//获取下拉列表的接口
         list: [],
         postData: {"departmentType.name": "设计部", "user.status":"0"},//获取下拉列表的参数
         source: function (query, process) {

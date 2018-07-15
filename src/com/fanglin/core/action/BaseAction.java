@@ -36,7 +36,7 @@ import com.fanglin.utils.CookieUtil;
 import com.fanglin.utils.SystemConfig;
 import com.opensymphony.xwork2.ActionSupport;
 
-@ParentPackage("login")
+@ParentPackage("common")
 @Namespace("/")
 @Controller
 /*@Results({ 
@@ -236,20 +236,6 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 	@JSON(serialize = false)
 	public ResourceBundle getTexts(){
 		return super.getTexts();
-	}
-
-	@Override
-	@Deprecated
-	@JSON(serialize = false)
-	public Collection<String> getErrorMessages(){
-		return super.getErrorMessages();
-	}
-
-	@Override
-	@Deprecated
-	@JSON(serialize = false)
-	public Map<String, List<String>> getErrors(){
-		return super.getErrors();
 	}
 
 	@JSON(serialize = false)

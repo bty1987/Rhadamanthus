@@ -4,7 +4,7 @@ import java.sql.Timestamp;
 
 import org.apache.struts2.json.annotations.JSON;
 
-import com.fanglin.personel.vo.UserVO;
+import com.fanglin.personel.vo.UserBaseVO;
 
 public class BuildingDrawingVO implements java.io.Serializable {
 
@@ -22,13 +22,13 @@ public class BuildingDrawingVO implements java.io.Serializable {
 	
 	private Short type;
 	
-	private UserVO creater;
+	private UserBaseVO creater;
 	
 	private Timestamp createTime;
 	
 	private Short status;
 
-	public BuildingDrawingVO(UserVO creater) {
+	public BuildingDrawingVO(UserBaseVO creater) {
 		super();
 		this.creater = creater;
 	}
@@ -85,11 +85,11 @@ public class BuildingDrawingVO implements java.io.Serializable {
 		this.type = type;
 	}
 
-	public UserVO getCreater() {
+	public UserBaseVO getCreater() {
 		return creater;
 	}
 
-	public void setCreater(UserVO creater) {
+	public void setCreater(UserBaseVO creater) {
 		this.creater = creater;
 	}
 

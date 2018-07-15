@@ -36,7 +36,7 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
-import com.fanglin.personel.vo.UserVO;
+import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.system.vo.CityProperVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
@@ -216,8 +216,8 @@ public class BuildingServiceImpl implements BuildingService {
 	public BuildingVO buildingPOToVO(BuildingPO buildingPO){
 		
 		HouseVO houseVO = new HouseVO(new VillageVO(new CityProperVO()));
-		HouseSourceVO houseSourceVO = new HouseSourceVO(houseVO, new CustomerVO(), new UserVO(), new UserVO(), new UserVO(), new DepartmentVO(), new DepartmentVO());
-		CustomerSourceVO customerSourceVO = new CustomerSourceVO(new CustomerVO(), new UserVO());
+		HouseSourceVO houseSourceVO = new HouseSourceVO(houseVO, new CustomerVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO());
+		CustomerSourceVO customerSourceVO = new CustomerSourceVO(new CustomerVO(), new UserBaseVO());
 		
 		//houseSource
 		HouseSourcePO houseSourcePO = buildingPO.getHouseSource();
@@ -226,14 +226,14 @@ public class BuildingServiceImpl implements BuildingService {
 		BeanUtil.copyProperties(houseSourcePO.getHouse().getVillage(), houseSourceVO.getHouse().getVillage(), Arrays.asList("cityProper"));
 		BeanUtil.copyProperties(houseSourcePO.getHouse().getVillage().getCityProper(), houseSourceVO.getHouse().getVillage().getCityProper(), Arrays.asList("city"));
 		BeanUtil.copyProperties(houseSourcePO.getCustomer(), houseSourceVO.getCustomer());
-		BeanUtil.copyProperties(houseSourcePO.getCreate(), houseSourceVO.getCreate(), Arrays.asList("role", "dept", "duty"));
+		BeanUtil.copyProperties(houseSourcePO.getCreate(), houseSourceVO.getCreate(), Arrays.asList("dept", "duty"));
 		
 		if(houseSourcePO.getFollowUser() != null){
-			BeanUtil.copyProperties(houseSourcePO.getFollowUser(), houseSourceVO.getFollowUser(), Arrays.asList("role", "dept", "duty"));
+			BeanUtil.copyProperties(houseSourcePO.getFollowUser(), houseSourceVO.getFollowUser(), Arrays.asList("dept", "duty"));
 		}
 		
 		if(houseSourcePO.getKeyer() != null){
-			BeanUtil.copyProperties(houseSourcePO.getKeyer(), houseSourceVO.getKeyer(), Arrays.asList("role", "dept", "duty"));
+			BeanUtil.copyProperties(houseSourcePO.getKeyer(), houseSourceVO.getKeyer(), Arrays.asList("dept", "duty"));
 		}
 		
 		if(houseSourcePO.getDepartment() != null){
@@ -248,9 +248,9 @@ public class BuildingServiceImpl implements BuildingService {
 		CustomerSourcePO customerSourcePO = buildingPO.getCustomerSource();
 		BeanUtil.copyProperties(customerSourcePO, customerSourceVO, Arrays.asList("customer", "create"));
 		BeanUtil.copyProperties(customerSourcePO.getCustomer(), customerSourceVO.getCustomer());
-		BeanUtil.copyProperties(customerSourcePO.getCreate(), customerSourceVO.getCreate(), Arrays.asList("role", "dept", "duty"));
+		BeanUtil.copyProperties(customerSourcePO.getCreate(), customerSourceVO.getCreate(), Arrays.asList("dept", "duty"));
 		
-		BuildingVO buildingVO = new BuildingVO(houseSourceVO, customerSourceVO, new CustomerVO(), new CustomerVO(), new UserVO(), new BuildingNodeVO());
+		BuildingVO buildingVO = new BuildingVO(houseSourceVO, customerSourceVO, new CustomerVO(), new CustomerVO(), new UserBaseVO(), new BuildingNodeVO());
 		BeanUtil.copyProperties(buildingPO, buildingVO, Arrays.asList("houseSource", "customerSource", "houseSourceAgent", "customerSourceAgent", "creater", "buildingNode"));
 		
 		//houseSourceAgent
@@ -264,7 +264,7 @@ public class BuildingServiceImpl implements BuildingService {
 		}
 		
 		//creater
-		BeanUtil.copyProperties(buildingPO.getCreater(), buildingVO.getCreater(), Arrays.asList("role", "dept", "duty"));
+		BeanUtil.copyProperties(buildingPO.getCreater(), buildingVO.getCreater(), Arrays.asList("dept", "duty"));
 		
 		//buildingNode
 		BeanUtil.copyProperties(buildingPO.getBuildingNode(), buildingVO.getBuildingNode());

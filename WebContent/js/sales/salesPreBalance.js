@@ -9,7 +9,7 @@ $(function () {
     var url = api.inventory.pageSalesForBalance;
     var postData = "salesPreBalancePostData";
 
-    if(params['urlLoadParams'].type == "dompany"){
+    if (params['urlLoadParams'].type == "dompany") {
         url = api.inventory.pageSalesForBalanceByDompany;
         postData = "salesPreBalanceForDompanyPostData";
     }
@@ -81,7 +81,7 @@ $(function () {
                         ["部门:", v.dept.deptName, "grey"],
                         ["分区:", v.region.deptName, "grey"],
                         ["导购:", v.guider.currentName, "grey"],
-                        ["驻店:",v.instorer.currentName,"grey"],
+                        ["驻店:", v.instorer.currentName, "grey"],
                         ["品牌:", v.brand, "grey"],
                         ["总额:", v.total, "grey"],
                         ["抹零:", v.maling, "blue"],
@@ -126,9 +126,9 @@ $(function () {
 
                     $label.appendTo($h3);
 
-                    if(params['urlLoadParams'].type == "dompany"){
+                    if (params['urlLoadParams'].type == "dompany") {
                         $btnDiv.append($btnSwitch).appendTo($h3);
-                    }else{
+                    } else {
                         $btnDiv.append($btnSwitch).append($btnWipeZero).append($btnPre).appendTo($h3);
                     }
 
@@ -138,31 +138,31 @@ $(function () {
 
                     $btnSwitch.click(function () {
                         var flag = true;
-                        if(params['urlLoadParams'].type == "dompany"){
+                        if (params['urlLoadParams'].type == "dompany") {
                             flag = false
                         }
-                        openlayerView(v.sid, v.no,flag);
+                        openlayerView(v.sid, v.no, flag);
 
                     })
 
-                    $btnWipeZero.click(function(){
+                    $btnWipeZero.click(function () {
 
-                        $('#maling').val(utils.accAdd(v.maling,v.venderMaling));
+                        $('#maling').val(utils.accAdd(v.maling, v.venderMaling));
                         $('#originalMaling').val(v.maling);
                         $('#venderMaling').val(v.venderMaling);
                         $('#editVenderMaling').val(0)
 
-                        editLayer(function(){
+                        editLayer(function () {
 
-                            if(!checkRowValue()){
+                            if (!checkRowValue()) {
                                 return;
                             }
 
-                            com.post(api.inventory.updateSalesForMaling,{
-                                "sales.sid":v.sid,
-                                "sales.maling":utils.accSub($('#maling').val(),$('#editVenderMaling').val()),
-                                "sales.venderMaling":$('#editVenderMaling').val()
-                            },function(){
+                            com.post(api.inventory.updateSalesForMaling, {
+                                "sales.sid": v.sid,
+                                "sales.maling": utils.accSub($('#maling').val(), $('#editVenderMaling').val()),
+                                "sales.venderMaling": $('#editVenderMaling').val()
+                            }, function () {
                                 salesPreBalance.doSearch();
                                 layer.closeAll();
                             })
@@ -180,7 +180,6 @@ $(function () {
                         layer.confirm('确定要将单号为 ' + v.no + ' 的销售单进行预结算吗?', {
                             btn: ['确定', '取消'] //按钮
                         }, function (index, layero) {
-
                             com.post(api.inventory.preSalesBalance, _option, function (res) {
                                 layer.closeAll();
                                 layer.msg('预结算成功');
@@ -192,9 +191,7 @@ $(function () {
                             salesPreBalance.doSearch();
                         });
 
-
                     })
-
 
                 });
 
@@ -212,7 +209,7 @@ $(function () {
 
     })();
 
-    var _condArr = ['sales_no', 'sales_orderId', 'sales_brade','sales_instorer', 'sales_salesman', 'sales_deptName', 'sales_fullpayTimeRange'];
+    var _condArr = ['sales_no', 'sales_orderId', 'sales_brade', 'sales_instorer', 'sales_salesman', 'sales_deptName', 'sales_fullpayTimeRange'];
 
     var salesPreBalance = new Searcher();
 
@@ -258,7 +255,6 @@ $(function () {
             layer.confirm('确定要将选中的销售单进行预结算吗?', {
                 btn: ['确定', '取消'] //按钮
             }, function (index, layero) {
-
                 com.post(api.inventory.preSalesBalance, _option, function (res) {
 
                     layer.closeAll();
@@ -266,7 +262,6 @@ $(function () {
                     salesPreBalance.doSearch();
 
                 })
-
 
             }, function () {
 
@@ -278,7 +273,6 @@ $(function () {
 
         $addaEnd.click(function (e) {
             e.stopPropagation()
-
             var _option = {};
 
             var $inputs = $('input[name="sids"]:checked', '#resultList');
@@ -302,7 +296,6 @@ $(function () {
             layer.confirm('确定要将选中的销售单进行完结吗?', {
                 btn: ['确定', '取消'] //按钮
             }, function (index, layero) {
-
                 com.post(api.inventory.passSalesBalance, _option, function (res) {
 
                     layer.closeAll();
@@ -310,7 +303,6 @@ $(function () {
                     salesPreBalance.doSearch();
 
                 })
-
 
             }, function () {
 
@@ -320,9 +312,9 @@ $(function () {
 
         })
 
-        if(params['urlLoadParams'].type == "dompany"){
-            return[]
-        }else{
+        if (params['urlLoadParams'].type == "dompany") {
+            return []
+        } else {
             return [$adda, $addaEnd]
         }
 
@@ -330,17 +322,17 @@ $(function () {
 
 
     //查看弹窗
-    function openlayerView(sid, no,flag) {
+    function openlayerView(sid, no, flag) {
         layer.closeAll();
         var $popup = $('#viewPopUp');
-        $popup.attr({'data-sid': sid,'data-dompany':flag});
+        $popup.attr({'data-sid': sid, 'data-dompany': flag});
         //弹出即全屏
         var index = layer.open({
             type: 1,
             skin: 'layui-layer-molv',
             title: "预结算销售单号" + no,
             content: $popup,
-            area: ["1400px", ( $(window).height() * 0.84 < 700 ? $(window).height() * 0.84 : 700 ) + "px"],
+            area: ["1400px", ($(window).height() * 0.84 < 700 ? $(window).height() * 0.84 : 700) + "px"],
             //maxmin: true,
             zIndex: 9000,
             success: function (layer, index) {
@@ -362,7 +354,7 @@ $(function () {
             type: 1,
             title: "修改抹零",
             content: $('#editLayer'),
-            area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
+            area: ($(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620) + "px",
             maxmin: false,
             zIndex: 9000,
             btn: ['确定', '取消'],
@@ -381,7 +373,7 @@ $(function () {
 
         var flag = true;
 
-        if($('#editVenderMaling').val()>$('#maling').val()){
+        if (parseFloat($('#editVenderMaling').val()) > parseFloat($('#maling').val())) {
 
             $('#editVenderMaling').focus().select();
 
@@ -395,7 +387,7 @@ $(function () {
             }).popover('show');
 
             flag = false;
-        }else {
+        } else {
             $('#editVenderMaling').popover('destroy');
         }
 
