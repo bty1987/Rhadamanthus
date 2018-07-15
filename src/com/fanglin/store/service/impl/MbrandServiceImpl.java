@@ -45,9 +45,9 @@ public class MbrandServiceImpl implements MbrandService {
 	}
 
 	@Override
-	public List<MbrandVO> queryMbrandByCid(MbrandVO mbrand) {
+	public List<MbrandVO> queryMbrand(MbrandVO mbrand) {
 		
-		List<MbrandPO> mbrandPOs = mbrandDao.queryMbrandByCid(mbrand.getMcategory().getCid());
+		List<MbrandPO> mbrandPOs = mbrandDao.queryMbrand(mbrand.getMcategory().getCid());
 		List<MbrandVO> mbrandVOs = new ArrayList<MbrandVO>();
 		
 		for (MbrandPO mbrandPO : mbrandPOs) {
@@ -59,11 +59,11 @@ public class MbrandServiceImpl implements MbrandService {
 	}
 	
 	@Override
-	public List<MbrandVO> queryMbrandByName(String pinyinName) {
+	public List<MbrandVO> queryMbrandByName(MbrandVO mbrand) {
 		
 		Paging paging = new Paging(0, 10);
 		
-		List<MbrandPO> mbrandPOs = mbrandDao.queryMbrandByName(paging, pinyinName);
+		List<MbrandPO> mbrandPOs = mbrandDao.queryMbrandByName(paging, mbrand.getName());
 		List<MbrandVO> mbrandVOs = new ArrayList<MbrandVO>();
 		
 		for (MbrandPO mbrandPO : mbrandPOs) {
@@ -78,20 +78,11 @@ public class MbrandServiceImpl implements MbrandService {
 	@Transactional(rollbackFor=Exception.class)
 	public void addMbrand(MbrandVO mbrandVO) throws FLException {
 		
-		List<MbrandPO> mbrandPOs = mbrandDao.queryMbrand();
-		String name = mbrandVO.getName();
-		
-		for (MbrandPO mbrand : mbrandPOs) {
-			if(name.equals(mbrand.getName())){
-				throw new FLException(111111, "品牌已存在");
-			}
-		}
-		
 		McategoryPO mcategoryPO = mcategoryDao.get(mbrandVO.getMcategory().getCid());
 		
 		MbrandPO mbrandPO  = new MbrandPO(mcategoryPO);
 		
-		BeanUtil.copyProperties(mbrandVO, mbrandPO, Arrays.asList("mcategory"));
+		BeanUtil.copyProperties(mbrandVO, mbrandPO, Arrays.asList("mcategory","status"));
 		
 		mbrandDao.save(mbrandPO);
 		
@@ -104,7 +95,7 @@ public class MbrandServiceImpl implements MbrandService {
 		MbrandPO mbrandPO = mbrandDao.get(mbrand.getBid());
 		
 		if(mbrandPO == null){
-			throw new FLException(111111, "品牌不存在");
+			throw new FLException(340004, "品牌不存在");
 		}
 		
 		BeanUtil.copyProperties(mbrand, mbrandPO, Arrays.asList("mcategory", "status"));
@@ -128,7 +119,7 @@ public class MbrandServiceImpl implements MbrandService {
 		MbrandPO mbrandPO = mbrandDao.get(mbrand.getBid());
 		
 		if(mbrandPO == null){
-			throw new FLException(111111, "品牌不存在");
+			throw new FLException(340004, "品牌不存在");
 		}
 		
 		mbrandPO.setStatus(mbrand.getStatus());

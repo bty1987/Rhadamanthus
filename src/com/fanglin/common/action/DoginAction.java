@@ -15,6 +15,8 @@ import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -23,13 +25,16 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.dingding.po.User;
 import com.fanglin.dingding.service.AuthService;
 import com.fanglin.dingding.service.UserService;
+import com.fanglin.utils.LogUtils;
 
-@ParentPackage("login")
+@ParentPackage("common")
 @Namespace("/")
 @Controller
 public class DoginAction extends BaseListAction {
 	
 	private static final long serialVersionUID = 6488703220739762932L;
+	
+	protected Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Autowired
 	private  AuthService authDDService ;
@@ -50,15 +55,29 @@ public class DoginAction extends BaseListAction {
 	@Action(value = "requestDDConfig", results = { @Result(name = "success", type = "json", params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" })
 	public String requestDDConfig() throws FLException{
 		
-		configInfo = authDDService.getConfig(url, null, company);
+		try {
+			configInfo = authDDService.getConfig(url, null, company);
+		} catch (Exception e) {
+			setErrorCode(110000);
+			setErrorMsg("系统处理问题");
+			
+			LogUtils.logging(logger, e, "requestDDConfig", "common");
+		}
 		
 		return SUCCESS;
 	}
 	
 	@Action(value = "queryDDUserInfo", results = { @Result(name = "success", type = "json", params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" })
-	public String queryUserInfo() throws FLException{
+	public String queryDDUserInfo() throws FLException{
 		
-		user = userDDService.getUserInfo(code, company);
+		try {
+			user = userDDService.getUserInfo(code, company);
+		} catch (Exception e) {
+			setErrorCode(110000);
+			setErrorMsg("系统处理问题");
+			
+			LogUtils.logging(logger, e, "queryDDUserInfo", "common");
+		}
 		
 		return SUCCESS;
 	}

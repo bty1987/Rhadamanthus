@@ -18,6 +18,26 @@
             return;
         }
 
+        var method = url.url;
+        var target = method.substring(0, method.indexOf('.'));
+        var reg = new RegExp(/query*|page*|report*|count*|[a-z]*\/[a-z]*/);
+        var timestamp = new Date().getTime();
+
+        if(!reg.test(target)){
+            if(!url.intercept) { // 该接口不拦截)
+                if (params.apiHistory.hasOwnProperty(target)) {   // 存在请求方法
+                    if (utils.accSub(timestamp, params.apiHistory[target]) <= config.spacing * 1000) {
+                        // 指定秒数之内重复请求
+                        return;
+                    } else {
+                        params.apiHistory[target] = timestamp;
+                    }
+                } else {
+                    params.apiHistory[target] = timestamp;
+                }
+            }
+        }
+
         if(window.notOperate){
             com.showAlert(com.warning, "已锁屏不能进行操作！");
             return;
@@ -41,13 +61,6 @@
         }
 
         var server = "";
-        if(url.server){
-            server = config.communion;
-        }else{
-            server = config.server;
-        }
-
-        var server = "";
         if(url.server && config[url.server]){
             server = config[url.server];
         }else {
@@ -65,6 +78,7 @@
             url = server + url.url;
             opts["authentication"] = params.authentication;
         }
+
         $.ajax({
             url: url,
             data: opts,
@@ -108,6 +122,42 @@
         });
 
         return dfd.promise();
+    },
+    _post_: function(url, data, callback, failcallback, async){
+        
+    	var server = "";
+        if(url.server){
+            server = config[url.server];
+        }else{
+            server = config["server"];
+        }
+        
+        if(async == undefined || async == true){
+            async = true;
+        }else{
+            async = false;
+        }
+        
+        $.ajax({
+            url: server + url.url,
+            data: data,
+            type: "get",
+            dataType: "json",
+            async: async, //设为false就是同步请求
+            success: function (res) {
+                if(callback){
+                    callback(res);
+                }else{
+                    return res;
+                }
+            }, error: function (res) {
+                if(failcallback){
+                    failcallback(res);
+                }else{
+                    console.log(res);
+                }
+            }
+        });
     },
     adaptDataArray: function(obj,callback){
         var result = [];
@@ -538,87 +588,30 @@
     checkNull:function(obj,rep){
         return obj == null || obj == undefined || obj == "" ? rep : obj;
     },
-	esPost : function(url, data, callback, failcallback) {
-        if(url == null){
-            return;
+    setCookie: function(name, value, minutes) {
+        var expires = "";
+        if(minutes) {
+            var d = new Date();
+            d.setTime(d.getTime() + (minutes * 60 * 1000));
+            expires = "expires=" + d.toUTCString();
         }
-        var server = "";
-        if(url.elastic){
-            server = config.elastic;
-            server = server + 'decoration-' + url.elastic + '-*/_search';
-        }else{
-            com.showAlert(com.warning, "ES请求地址错误");
-            return;
-        }
-        if(config.demo){
-            if(!url.demo){
-                com.showAlert(com.warning, "Demo状态不能完成此操作");
-                return;
-            }
-            url = 'result/' + url.url.split('.')[0] + '.json';
-        }else{
-            url = server;
-        }
-        $.ajax({
-            url: url,
-            data: JSON.stringify(data),
-            type: "post",
-            dataType: "json",
-            async: false, // false:同步请求
-            success: function (res) {
-                callback(res)
-            }, error: function (msg) {
-                failcallback(msg)
-            }
-        });
+        document.cookie = name + "=" + value + "; " + expires;
     },
-    flaskPost: function(method, options, callback, failcallback){
-      if(url == null){
-            return;
+    getCookie: function(name) {
+        var arr, reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
+        if (arr = document.cookie.match(reg)) {
+            return unescape(arr[2]);
+        } else {
+            return null;
         }
-    
-        $.ajax({
-            url: config.flask + method + options,
-            type: "get",
-            dataType: "json",
-            success: function (res) {
-                callback(res);
-            }, error: function (msg) {
-                failcallback(msg);
-            }
-        });
     },
-	_post_: function(url, data, callback, failcallback){
-    	if(url == null){
-            return;
+    deleteCookie: function (name) {
+        var exp = new Date();
+        exp.setTime(exp.getTime() - 1);
+        var cval = com.getCookie(name);
+        if (cval != null) {
+            document.cookie = name + "=" + cval + ";expires=" + exp.toGMTString();
         }
-    	var server = "";
-    	if(url.library){
-    		server = config.library + url;
-    	}else{
-    		com.showAlert(com.warning, "Flask请求地址错误");
-            return;
-    	}
-    	if(config.demo){
-            if(!url.demo){
-                com.showAlert(com.warning, "Demo状态不能完成此操作");
-                return;
-            }
-            url = 'result/' + url.url.split('.')[0] + '.json';
-        }else{
-            url = server;
-        }
-        $.ajax({
-            url: url,
-            data: data,
-            type: "get",
-            dataType: "json",
-            success: function (res) {
-                callback(res);
-            }, error: function (msg) {
-                failcallback(msg);
-            }
-        });
     }
 };
 

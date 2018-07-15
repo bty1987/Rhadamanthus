@@ -22,7 +22,7 @@ jQuery(function($) {
 		com.clearValidator();
 	});
 
-	com.initChosen('belonger', api.personel.queryUserByDepartmentType, "pinyinName", {"departmentType.name":"", "user.status":0}, "autoFillKeyValue", "key", "value");
+	com.initChosen('belonger', api.personel.queryUserByPinyin, "pinyinName", {"departmentType.name":"", "user.status":0}, "autoFillKeyValue", "key", "value");
 
 	var displayFunc  = (function(){
 

@@ -131,22 +131,6 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 	}
 	
 	@Override
-	public List<ServicePaymentVO> queryServicePaymentForNotInitBySrId(ServiceReceiptVO serviceReceiptVO) {
-		
-		List<ServicePaymentVO> servicePaymentVOs = new ArrayList<ServicePaymentVO>();
-		List<ServicePaymentPO> servicePaymentPOs = servicePaymentDao.queryServicePaymentForNotInitBySrId(serviceReceiptVO.getSrId());
-
-		for(ServicePaymentPO servicePaymentPO: servicePaymentPOs){
-			ServicePaymentVO _servicePaymentVO = new ServicePaymentVO();
-			BeanUtil.copyProperties(servicePaymentPO, _servicePaymentVO, Arrays.asList("decoration","creater","collecter","confirmer","serviceReceipt"));
-			
-			servicePaymentVOs.add(_servicePaymentVO);
-		}
-
-		return servicePaymentVOs;
-	}
-	
-	@Override
 	public List<ServicePaymentVO> queryServicePaymentByOrderId(ServicePaymentVO servicePaymentVO) {
 		
 		List<ServicePaymentVO> servicePaymentVOs = new ArrayList<ServicePaymentVO>();
@@ -157,6 +141,22 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 			BeanUtil.copyProperties(servicePaymentPO, _servicePaymentVO, Arrays.asList("decoration","creater","collecter","confirmer","serviceReceipt"));
 			servicePaymentPO.getDecoration().ptvcascade(servicePaymentVO.getDecoration());
 			BeanUtil.copyProperties(servicePaymentPO.getServiceReceipt(), _servicePaymentVO.getServiceReceipt(), Arrays.asList("collecter","confirmer"));
+			
+			servicePaymentVOs.add(_servicePaymentVO);
+		}
+
+		return servicePaymentVOs;
+	}
+	
+	@Override
+	public List<ServicePaymentVO> queryServicePaymentForNotInitBySrId(ServiceReceiptVO serviceReceiptVO) {
+		
+		List<ServicePaymentVO> servicePaymentVOs = new ArrayList<ServicePaymentVO>();
+		List<ServicePaymentPO> servicePaymentPOs = servicePaymentDao.queryServicePaymentForNotInitBySrId(serviceReceiptVO.getSrId());
+
+		for(ServicePaymentPO servicePaymentPO: servicePaymentPOs){
+			ServicePaymentVO _servicePaymentVO = new ServicePaymentVO();
+			BeanUtil.copyProperties(servicePaymentPO, _servicePaymentVO, Arrays.asList("decoration","creater","collecter","confirmer","serviceReceipt"));
 			
 			servicePaymentVOs.add(_servicePaymentVO);
 		}

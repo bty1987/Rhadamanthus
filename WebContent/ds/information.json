@@ -59,9 +59,31 @@
     {"key":"3","value":"主材定金"}
   ],
   "ways":[
-    {"key":"0","value":"现金"},
+    {"key":"0","value":"现金"}
+  ],
+  "banks":[
     {"key":"1","value":"POS1"},
     {"key":"2","value":"POS2 "}
+  ],
+  "couponType": [
+  {"key":"物业费抵值券","value":"物业费抵值券"},
+  {"key":"采暖费抵值券","value":"采暖费抵值券"},
+  {"key":"赠品抵现","value":"赠品抵现"},
+  {"key":"通用券","value":"通用券"},
+  {"key":"主材券","value":"主材券"},
+  {"key":"特殊减免","value":"特殊减免"},
+  {"key":"厂家现金","value":"厂家现金"},
+  {"key":"免单","value":"免单"},
+  {"key":"物品","value":"物品"}
+],
+  "authorizedPerson":[
+    "FL-07033","FL-06474"
+  ],
+  "planStatus" :[
+  {"key":"0","value":"初始"},
+  {"key":"1","value":"取消"},
+  {"key":"2","value":"成功"},
+  {"key":"3","value":"失败"}
   ],
   "errorCode": 0,
   "errorMsg": null

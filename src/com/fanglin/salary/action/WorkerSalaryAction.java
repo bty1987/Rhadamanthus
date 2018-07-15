@@ -33,10 +33,10 @@ public class WorkerSalaryAction extends BaseListAction{
 		return "success";
 	}
 	
-	@Action(value="pageSalaryWorkerForUser", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	@Action(value="pageWorkerSalaryByUserId", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String pageSalaryWorkerForUser() throws FLException{
 	  
-		workerSalaryService.pageSalaryWorkerForUser(getPaging(), getFilters());
+		workerSalaryService.pageWorkerSalaryByUserId(getPaging(), getFilters());
     
 		return "success";
 	}

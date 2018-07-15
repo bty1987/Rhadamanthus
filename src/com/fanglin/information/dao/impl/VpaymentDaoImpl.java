@@ -4,6 +4,7 @@ package com.fanglin.information.dao.impl;
 import java.util.List;
 
 import org.hibernate.SQLQuery;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
@@ -20,15 +21,20 @@ public class VpaymentDaoImpl extends DaoImpl<VpaymentPO> implements VpaymentDao{
 	}
 
 	@Override
-	public List<VpaymentPO> pageVpayment(Paging paging, List<Filter> filters) {
+	public List<VpaymentPO> pageVpayment(Paging paging, List<Filter> filters, Short status) {
 		
 		PagingQuery<VpaymentPO> query = pagingQuery(paging, VpaymentPO.class);
 		
 		queryFilterExcute(query, filters);
 		
+		if(status != null){
+			query.add(Restrictions.eq(VpaymentPO.COLUMN_STATUS_STR, status));
+		}
+		
+		query.desc("vpid");
+		
 		return query.list();
 	}
-	
 	
 	@Override
 	public List<?> countVpayment() {
@@ -40,7 +46,20 @@ public class VpaymentDaoImpl extends DaoImpl<VpaymentPO> implements VpaymentDao{
 		return query.list();
 	}
 
-	
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<VpaymentPO> queryVpaymentByNo(String mno) {
+		return createCriteria(VpaymentPO.class).add(Restrictions.eq(VpaymentPO.COLUMN_MNO_STR, mno)).list();
+	}
+
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<VpaymentPO> queryVpaymentByVrid(long vrid) {
+		return session().createCriteria(VpaymentPO.class).createAlias("vreceipt", "vreceipt").add(Restrictions.eq("vreceipt.vrid", vrid)).list();
+	}
+
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){
 		
 		if(filters != null && filters.size() > 0){
@@ -51,17 +70,16 @@ public class VpaymentDaoImpl extends DaoImpl<VpaymentPO> implements VpaymentDao{
 				String op = filter.getOp();
 				
 				if(VpaymentPO.COLUMN_MNO_STR.equals(field)){
-					
 					query.add(query.getCriterion(VpaymentPO.COLUMN_MNO_STR, data, op));
-					
 				}else if(VpaymentPO.COLUMN_BRAND_STR.equals(field)){
-
 					query.add(query.getCriterion(VpaymentPO.COLUMN_BRAND_STR, data, op));
-					
+				}else if("creater".equals(field)){
+					query.alias("creater", "creater");
+					query.add(query.getCriterion(VpaymentPO.COLUMN_CREATER_STR, data, op));
+				}else if("status".equals(field)){
+					query.add(Restrictions.eq(VpaymentPO.COLUMN_STATUS_STR,Short.valueOf(data)));
 				}
 			}
 		}
 	}
-
-	
 }

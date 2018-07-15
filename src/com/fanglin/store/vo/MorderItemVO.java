@@ -8,21 +8,18 @@ public class MorderItemVO implements Serializable{
 
 	private Long oiid;
 	
-	private MorderVO morder;
+	private Long oid;
 	
 	private MpriceVO mprice;
 	
 	private Short num;
-	
-	private Short status;
 
 	public MorderItemVO() {
 		super();
 	}
 
-	public MorderItemVO(MorderVO morder, MpriceVO mprice) {
+	public MorderItemVO(MpriceVO mprice) {
 		super();
-		this.morder = morder;
 		this.mprice = mprice;
 	}
 
@@ -33,13 +30,13 @@ public class MorderItemVO implements Serializable{
 	public void setOiid(Long oiid) {
 		this.oiid = oiid;
 	}
-
-	public MorderVO getMorder() {
-		return morder;
+	
+	public Long getOid() {
+		return oid;
 	}
 
-	public void setMorder(MorderVO morder) {
-		this.morder = morder;
+	public void setOid(Long oid) {
+		this.oid = oid;
 	}
 
 	public MpriceVO getMprice() {
@@ -58,12 +55,4 @@ public class MorderItemVO implements Serializable{
 		this.num = num;
 	}
 
-	public Short getStatus() {
-		return status;
-	}
-
-	public void setStatus(Short status) {
-		this.status = status;
-	}
-	
 }

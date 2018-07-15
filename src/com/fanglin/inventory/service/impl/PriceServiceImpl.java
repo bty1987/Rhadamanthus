@@ -30,7 +30,10 @@ public class PriceServiceImpl implements PriceService{
 			
 			priceVO = new PriceVO();
 			
+			String content = pricePO.getSelling() + " " + pricePO.getName();
+			
 			BeanUtil.copyProperties(pricePO, priceVO);
+			priceVO.setContent(content);
 			
 			priceVOs.add(priceVO);
 		}

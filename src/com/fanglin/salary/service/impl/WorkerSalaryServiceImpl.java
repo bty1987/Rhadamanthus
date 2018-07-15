@@ -79,9 +79,27 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 	}
 
 	@Override
-	public void pageSalaryWorkerForUser(Paging paging, List<Filter> filters) {
+	public void pageWorkerSalaryByUserId(Paging paging, List<Filter> filters) {
 		
-		List<WorkerSalaryPO> WorkerSalaryPOs = workerSalaryDao.pageSalaryWorkerForUser(paging,filters);
+		String userId = null;
+		
+		if (filters != null) {
+			for (Filter filter : filters) {
+				
+				String filet = filter.getField();
+				String data = filter.getData();
+				
+				 if ("userId".equals(filet)) {
+					 userId = data;
+				  }
+			}
+		}
+		
+		int uid =userdao.queryUserByUserId(userId).getUid();
+		
+		filters.add(new Filter("uid", String.valueOf(uid), "eq"));
+			
+		List<WorkerSalaryPO> WorkerSalaryPOs = workerSalaryDao.pageWorkerSalaryByUserId(paging,filters);
 		
 		List<WorkerSalaryVO> WorkerSalaryVOs = new ArrayList<WorkerSalaryVO>();
 		
@@ -217,7 +235,7 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 			if(workerSalaryPO.getStatus() != WorkerSalaryPO.STATUS_INIT_STR){
 				throw new FLException(280002, "工费状态不可操作");
 			}
-		
+			
 			workerSalaryPO.setApproveTime(new Timestamp(System.currentTimeMillis()));
 			workerSalaryPO.setStatus(WorkerSalaryPO.STATUS_INIT_STRONE);
 			workerSalaryPO.setApprover(approval);

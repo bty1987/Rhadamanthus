@@ -15,13 +15,6 @@ public class MorderItemDaoImpl extends DaoImpl<MorderItemPO> implements MorderIt
 	public MorderItemDaoImpl(){
 		super(MorderItemPO.class);
 	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<MorderItemPO> queryMorderItemByUidAndStatus(Long uid, Short status) {
-		
-		return session().createCriteria(MorderItemPO.class).createAlias("morder", "morder").createAlias("morder.muser", "muser").add(Restrictions.eq("muser.uid", uid)).add(Restrictions.eq("morder.status", status)).list();
-	}
 	
 	@SuppressWarnings("unchecked")
 	@Override

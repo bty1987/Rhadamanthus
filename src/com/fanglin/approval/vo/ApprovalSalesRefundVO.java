@@ -11,8 +11,19 @@ public class ApprovalSalesRefundVO implements java.io.Serializable {
 	private Long sid;
 
 	private Float refund;
+	
+	private Float refundTotal;
 
 	private Short type;
+	
+
+	public Float getRefundTotal() {
+		return refundTotal;
+	}
+
+	public void setRefundTotal(Float refundTotal) {
+		this.refundTotal = refundTotal;
+	}
 
 	public Short getType() {
 		return type;

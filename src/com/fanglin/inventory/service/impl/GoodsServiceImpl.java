@@ -239,7 +239,15 @@ public class GoodsServiceImpl implements GoodsService {
 	@Transactional(rollbackFor=Exception.class)
 	public int addGoods(GoodsVO goodsVO,int company) throws FLException {
 		
-		GoodsPO goodsPO = goodsDao.queryGoodsByName(goodsVO.getName(), company);
+		List<GoodsPO> goodsPOs = goodsDao.queryGoodsByName(goodsVO.getName(), company);
+		
+		if(goodsPOs.size() != 0){
+			
+			throw new FLException(260046, "商品已存在");
+			
+		}
+		
+		GoodsPO goodsPO;
 		
 		if(goodsVO.getAccessoriesType().getAtid()!=null){
 			goodsPO = new GoodsPO(new AccessoriesTypePO());
@@ -253,8 +261,7 @@ public class GoodsServiceImpl implements GoodsService {
 		
 		List<String> pinyins = PinYin4Util.getPinyin(goodsVO.getName());
 	    
-		goodsPO.setPinyin(pinyins.subList(0, pinyins.size() >= 2 ? 2 : pinyins.size()).toString());
-		
+		goodsPO.setPinyin((String)pinyins.get(0));
 		goodsPO.setStatus(GoodsPO.STATUS_ENABLE_INT);
 		goodsPO.setType(GoodsPO.TYPE_GOODS_INT);
 		goodsPO.setCompany(company);

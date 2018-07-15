@@ -33,9 +33,9 @@ public class MgoodsServiceImpl implements MgoodsService {
 	private MbrandDao mbrandDao;
 
 	@Override
-	public void pageMgoods(Paging paging, List<Filter> filters) {
-		
-		List<MgoodsPO> mgoodsPOs = mgoodsDao.pageMgoods(paging, filters);
+	public void pageMgoods(Paging paging, List<Filter> filters, boolean flag) {
+
+		List<MgoodsPO> mgoodsPOs = mgoodsDao.pageMgoods(paging, filters, flag);
 		List<MgoodsVO> mgoodsVOs = new ArrayList<MgoodsVO>();
 		
 		for (MgoodsPO mgoodsPO : mgoodsPOs) {
@@ -47,11 +47,10 @@ public class MgoodsServiceImpl implements MgoodsService {
 	}
 
 	@Override
-	public List<MgoodsVO> queryMgoodsByPinyinName(String pinyinName) {
+	public List<MgoodsVO> queryMgoodsByPinyin(MgoodsVO mgoodsVO) {
 		
 		Paging paging = new Paging(0, 10);
-		
-		List<MgoodsPO> mgoodsPOs = mgoodsDao.queryMgoodsBypinyinName(paging, pinyinName);
+		List<MgoodsPO> mgoodsPOs = mgoodsDao.queryMgoodsByPinyin(paging, mgoodsVO.getPinyin());
 		List<MgoodsVO> mgoodsVOs = new ArrayList<MgoodsVO>();
 		
 		for (MgoodsPO mgoodsPO : mgoodsPOs) {
@@ -60,75 +59,21 @@ public class MgoodsServiceImpl implements MgoodsService {
 		
 		return mgoodsVOs;
 		
-	}
-	
-	@Override
-	public List<MgoodsVO> queryMgoodsByBid(MgoodsVO mgood) {
-		
-		List<MgoodsPO> mgoodsPOs = mgoodsDao.queryMgoods(mgood.getMbrand().getBid(), null);
-		List<MgoodsVO> mgoodsVOs = new ArrayList<MgoodsVO>();
-		
-		for (MgoodsPO mgoodsPO : mgoodsPOs) {
-			mgoodsVOs.add(mgoodsPOToVO(mgoodsPO));
-		}
-		
-		return mgoodsVOs;
-		
-	}
-	
-	@Override
-	public List<MgoodsVO> queryMgoodsByStatus(MgoodsVO mgood) {
-		
-		List<MgoodsPO> mgoodsPOs = mgoodsDao.queryMgoods(null, mgood.getStatus());
-		List<MgoodsVO> mgoodsVOs = new ArrayList<MgoodsVO>();
-		
-		for (MgoodsPO mgoodsPO : mgoodsPOs) {
-			mgoodsVOs.add(mgoodsPOToVO(mgoodsPO));
-		}
-		
-		return mgoodsVOs;
-		
-	}
-
-	@Override
-	public MgoodsVO queryMgoodsByGid(MgoodsVO mgood) {
-		
-		MgoodsPO mgoodsPO = mgoodsDao.get(mgood.getGid());
-		
-		MgoodsVO mgoodsVO = mgoodsPOToVO(mgoodsPO);
-		
-		return mgoodsVO;
 	}
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public void addMgoods(MgoodsVO mgoodVO) throws FLException {
+	public void addMgoods(MgoodsVO mgoodsVO){
 		
-		List<MgoodsPO> mgoodsPOs = mgoodsDao.queryMgoods(null, null);
-		String no = mgoodVO.getNo();
-		String barcode = mgoodVO.getBarcode();
-		
-		for (MgoodsPO mgoods : mgoodsPOs) {
-			
-			if(no.equals(mgoods.getNo())){
-				throw new FLException(260002, "商品编号已存在");
-			}
-			
-			if(barcode.equals(mgoods.getBarcode())){
-				throw new FLException(260003, "商品条形码已存在");
-			}
-			
-		}
-		
-		MbrandPO mbrandPO = mbrandDao.get(mgoodVO.getMbrand().getBid());
+		MbrandPO mbrandPO = mbrandDao.get(mgoodsVO.getMbrand().getBid());
 		
 		MgoodsPO mgoodsPO = new MgoodsPO(mbrandPO);
 		
-		BeanUtil.copyProperties(mgoodVO, mgoodsPO, Arrays.asList("mbrand", "pinyinName"));
+		BeanUtil.copyProperties(mgoodsVO, mgoodsPO, Arrays.asList("mbrand", "pinyin"));
 		
-		List<String> pinyins = PinYin4Util.getPinyin(mgoodVO.getName());
+		List<String> pinyins = PinYin4Util.getPinyin(mgoodsVO.getName());
 	    
-		mgoodsPO.setPinyinName((String)pinyins.get(0));
+		mgoodsPO.setPinyin((String)pinyins.get(0));
 		
 		mgoodsDao.save(mgoodsPO);
 		
@@ -136,55 +81,31 @@ public class MgoodsServiceImpl implements MgoodsService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public void updateMgoods(MgoodsVO mgood) throws FLException {
+	public void updateMgoods(MgoodsVO mgoodsVO) throws FLException {
 		
-		MgoodsPO mgoodsPO = mgoodsDao.get(mgood.getGid());
+		MgoodsPO mgoodsPO = mgoodsDao.get(mgoodsVO.getGid());
 		
 		if(mgoodsPO == null){
-			throw new FLException(260004, "商品不存在");
+			throw new FLException(340005, "商品不存在");
 		}
 		
-		BeanUtil.copyProperties(mgood, mgoodsPO, Arrays.asList("mbrand", "status"));
-		
-		if(mgood.getMbrand() != null){
-			
-			MbrandPO mbrandPO = mbrandDao.get(mgood.getMbrand().getBid());
-			
-			mgoodsPO.setMbrand(mbrandPO);
-			
-		}
+		BeanUtil.copyProperties(mgoodsVO, mgoodsPO, Arrays.asList("mbrand", "status"));
 		
 		mgoodsDao.update(mgoodsPO);
 
 	}
-	
-	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public void updateMgoodsForDefaultImg(MgoodsVO mgood) throws FLException {
-		
-		MgoodsPO mgoodsPO = mgoodsDao.get(mgood.getGid());
-		
-		if(mgoodsPO == null){
-			throw new FLException(260004, "商品不存在");
-		}
-		
-		mgoodsPO.setDefaultImg(mgood.getDefaultImg());
-		
-		mgoodsDao.update(mgoodsPO);
-		
-	}
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public void updateMgoodsForStatus(MgoodsVO mgood) throws FLException {
+	public void updateMgoodsForStatus(MgoodsVO mgoodsVO) throws FLException {
 		
-		MgoodsPO mgoodsPO = mgoodsDao.get(mgood.getGid());
+		MgoodsPO mgoodsPO = mgoodsDao.get(mgoodsVO.getGid());
 		
 		if(mgoodsPO == null){
-			throw new FLException(260004, "商品不存在");
+			throw new FLException(340005, "商品不存在");
 		}
 		
-		mgoodsPO.setStatus(mgood.getStatus());
+		mgoodsPO.setStatus(mgoodsVO.getStatus());
 		
 		mgoodsDao.update(mgoodsPO);
 

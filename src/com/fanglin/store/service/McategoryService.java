@@ -13,14 +13,12 @@ public interface McategoryService {
 
 	public List<McategoryVO> queryMcategory();
 	
-	public List<McategoryVO> queryMcategoryByIsShow(McategoryVO mcategory);
-
-	public McategoryVO queryMcategoryByCid(McategoryVO mcategory);
+	public List<McategoryVO> queryMcategoryForShow();
 
 	public void addMcategory(McategoryVO mcategory) throws FLException;
 
 	public void updateMcategory(McategoryVO mcategory) throws FLException;
 
-	public void updateMcategoryForIsShow(McategoryVO mcategory) throws FLException;
+	public void updateMcategoryForShow(McategoryVO mcategory) throws FLException;
 	
 }

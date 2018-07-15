@@ -19,11 +19,11 @@ public class CartPO implements Serializable{
 
 	private static final long serialVersionUID = -183752142668984998L;
 	
-	public static final String COLUMN_UID_STR = "muser.uid";
+	public static final String COLUMN_UID_STR = "uid";
 
 	private long cid;
 	
-	private MuserPO muser;
+	private long uid;
 	
 	private MpricePO mprice;
 	
@@ -33,9 +33,8 @@ public class CartPO implements Serializable{
 		super();
 	}
 
-	public CartPO(MuserPO muser, MpricePO mprice) {
+	public CartPO(MpricePO mprice) {
 		super();
-		this.muser = muser;
 		this.mprice = mprice;
 	}
 
@@ -50,16 +49,14 @@ public class CartPO implements Serializable{
 		this.cid = cid;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "uid", referencedColumnName="uid")
-	public MuserPO getMuser() {
-		return muser;
+	@Column(name = "uid")
+	public long getUid() {
+		return uid;
 	}
 
-	public void setMuser(MuserPO muser) {
-		this.muser = muser;
+	public void setUid(long uid) {
+		this.uid = uid;
 	}
-
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "pid", referencedColumnName="pid")

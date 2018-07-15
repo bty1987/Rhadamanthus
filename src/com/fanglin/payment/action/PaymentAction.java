@@ -79,10 +79,10 @@ public class PaymentAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-	@Action(value = "updatePayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updatePayment() throws FLException{
+	@Action(value = "withdrawPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String withdrawPayment() throws FLException{
 		
-		paymentService.updatePayment(payment);
+		paymentService.withdrawPayment(payment, queryUserId());
 		
 		return SUCCESS;
 	}
@@ -94,13 +94,21 @@ public class PaymentAction extends BaseListAction {
 		
 		return SUCCESS;
 	}
-
-	@Action(value = "withdrawPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String withdrawPayment() throws FLException{
+	
+	@Action(value = "updatePayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updatePayment() throws FLException{
 		
-		paymentService.withdrawPayment(payment, queryUserId());
+		paymentService.updatePayment(payment);
 		
 		return SUCCESS;
+	}
+	
+	public PaymentVO getPayment(){
+		return payment;
+	}
+
+	public void setPayment(PaymentVO payment){
+		this.payment = payment;
 	}
 	
 	public List<PaymentVO> getPayments() {
@@ -109,14 +117,6 @@ public class PaymentAction extends BaseListAction {
 
 	public void setPayments(List<PaymentVO> payments) {
 		this.payments = payments;
-	}
-
-	public PaymentVO getPayment(){
-		return payment;
-	}
-
-	public void setPayment(PaymentVO payment){
-		this.payment = payment;
 	}
 
 	public List<Long> getPaymentIds(){

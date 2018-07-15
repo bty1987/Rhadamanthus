@@ -46,14 +46,6 @@ public class VticketAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-//	@Action(value="countVticket", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-//    public String countVticket(){
-//		
-//		counts = vticketService.countVticket();
-//        
-//        return SUCCESS;
-//    }
-	
 	@Action(value="createVticket", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String createVticket() throws FLException{
 		
@@ -66,6 +58,22 @@ public class VticketAction extends BaseListAction {
 	public String updateVticket() throws FLException{
 		
 		vticketService.updateVticket(vticket);
+		
+		return SUCCESS;
+	}
+	
+	@Action(value="comeVticket", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String comeVticket() throws FLException {
+		
+		vticketService.comeVticket(vticket);
+		
+		return SUCCESS;
+	}
+	
+	@Action(value="registVticket", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String registVticket(){
+		
+		vticketService.registVticket(vticket);
 		
 		return SUCCESS;
 	}

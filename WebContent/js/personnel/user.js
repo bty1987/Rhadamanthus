@@ -38,8 +38,10 @@
                     });
 
                     $qrcode.click(function(){
+
                         $('#qrcodeModal').modal('show');
                         $('#Qrcode').html("");
+
                         $('#Qrcode').qrcode({
                             render: "canvas", //也可以替换为table
                             width: 150,
@@ -68,12 +70,14 @@
                             return;
                         }
                         var deptObj = {
+
                             '1' : {
                                 name:params.company.name,
                                 type : 'folder',
                                 id : params.company.no
                             }
-                        }, didList = [];
+                        },
+                        didList = [];
                         //获取所有叶子节点
                         $.each(deptList, function(i, v){
                             didList.push(v.id);
@@ -84,17 +88,26 @@
                             }
                         });
                         //splice为删除了父类的id,余下的在didlist中的id为子节点的id
+
                         $('#tree3').ace_tree({
+
                             dataSource: {
+
                                 data : function(options, callback) {
+                                  
                                     var $data = null;
                                     if( !("type" in options)){
+
                                         $data = deptObj;//the root tree
+
                                         callback({ data: $data });
                                         return;
                                     }
+
                                     else if("type" in options && options.type == "folder") {
+
                                         if("children" in options){
+
                                             $data = options.children;
                                         }
                                         else {
@@ -173,36 +186,51 @@
 
                     });
                     $('#closeM').click(function(){
+
                         $("#tree3").removeData("tree");
+
                     });
 //同步钉钉信息
                     $updateDD.click(function(){
-                       var  selectedDepts=[];
-                        var phone;
-                        com.post(api.dd.queryDDUser, {"user.userid": v.userId}, function(res){
-                            selectedDepts = res.user.department;
-                            phone = res.user.mobile
-                            if(selectedDepts == null){
-                                com.showAlert(com.error,"该员工还没有添加到钉钉部门");
-                                return;
-                            }
-                            var params = {
-                                "user.userid" : v.userId,
-                                "user.name":v.currentName,
-                                "user.Mobile":phone,
-                                "user.Position":v.duty.name,
-                                 "dids":selectedDepts
-                            }
+                        var btn = $(this);
+                        var span = btn.find('span');
+                        btn.find('i').remove();
+                        var loading = $('<i></i>').addClass('icon-spinner icon-spin white bigger-125');
+                        span.prepend(loading);
+                        var message = "<p>确定要将该员工信息同步到钉钉吗?</p>";
+                        bootbox.confirm(message, function(result) {
+                            if(result) {
+                                var selectedDepts = [];
+                                var phone;
+                                com.post(api.dd.queryDDUser, {"user.userid": v.userId}, function (res) {
+                                    selectedDepts = res.user.department;
+                                    phone = res.user.mobile
+                                    if (selectedDepts == null) {
+                                        com.showAlert(com.error, "该员工还没有添加到钉钉部门");
+                                        return;
+                                    }
+                                    var params = {
+                                        "user.userid": v.userId,
+                                        "user.name": v.currentName,
+                                        "user.Mobile": phone,
+                                        "user.Position": v.duty.name,
+                                        "dids": selectedDepts
+                                    }
 
-                            com.post(api.dd.updateDDUser, params, function(data){
-                                if($.trim(data.errcode) == $.trim(0) ){
-                                    com.showAlert(com.info, "更新成功");
-                                }else{
-                                    com.showAlert(com.error,"更新失败" );
-                                }
-                            });
-                          }, null, false);
-
+                                    com.post(api.dd.updateDDUser, params, function (data) {
+                                        if ($.trim(data.errcode) == $.trim(0)) {
+                                            com.showAlert(com.info, "更新成功");
+                                        } else {
+                                            com.showAlert(com.error, "更新失败");
+                                        }
+                                    });
+                                }, null, false);
+                            }else{
+                                btn.find('i').remove();
+                                var prepared = $('<i></i>').addClass('icon-ok bigger-110');
+                                span.prepend(prepared);
+                            }
+                    });
                     });
 //删除点击事件
                     $deleteDD.click(function(){

@@ -8,7 +8,7 @@ public class McolorVO implements Serializable {
 
 	private Long cid;
 	
-	private MgoodsVO mgoods;
+	private Long gid;
 	
 	private String color;
 	
@@ -16,11 +16,6 @@ public class McolorVO implements Serializable {
 
 	public McolorVO() {
 		super();
-	}
-
-	public McolorVO(MgoodsVO mgoods) {
-		super();
-		this.mgoods = mgoods;
 	}
 
 	public Long getCid() {
@@ -31,12 +26,12 @@ public class McolorVO implements Serializable {
 		this.cid = cid;
 	}
 
-	public MgoodsVO getMgoods() {
-		return mgoods;
+	public Long getGid() {
+		return gid;
 	}
 
-	public void setMgoods(MgoodsVO mgoods) {
-		this.mgoods = mgoods;
+	public void setGid(Long gid) {
+		this.gid = gid;
 	}
 
 	public String getColor() {

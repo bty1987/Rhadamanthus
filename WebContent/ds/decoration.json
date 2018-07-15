@@ -22,10 +22,7 @@
 		{"key":"5", "value":"终止"},
 		{"key":"6", "value":"决算"},
 		{"key":"7", "value":"完结"}
-    ], "decorationQuotationStatus": [
-		{"key":"0", "value":"未报价"},
-		{"key":"1", "value":"已报价"}
-	], "salesmanType": [
+    ], "salesmanType": [
 		{"key":"守园","value":"守园"},
 		{"key":"资源","value":"资源"},
 		{"key":"监理","value":"监理"},

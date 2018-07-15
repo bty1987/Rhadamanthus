@@ -8,12 +8,12 @@ public interface SlideService {
 	
 	public List<SlideVO> querySlide();
 	
-	public List<SlideVO> querySlideByGid(SlideVO slideVO);
+	public List<SlideVO> querySlideForShow();
 	
 	public void addSlide(SlideVO slideVO);
 	
-	public void updateSlide(SlideVO slideVO)throws FLException;
+	public void updateSlide(SlideVO slideVO) throws FLException;
 	
-	public void updateSlideForStatus(SlideVO slideVO)throws FLException;
+	public void updateSlideForStatus(SlideVO slideVO) throws FLException;
 	
 }

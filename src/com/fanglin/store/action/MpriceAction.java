@@ -14,7 +14,7 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.store.service.MpriceService;
 import com.fanglin.store.vo.MpriceVO;
 
-@ParentPackage("login")
+@ParentPackage("base")
 @Namespace("/")
 @Controller
 public class MpriceAction extends BaseListAction{
@@ -28,66 +28,10 @@ public class MpriceAction extends BaseListAction{
 	
 	private List<MpriceVO> mprices;
 	
-	private String pinyinName;
-	
-	@Action(value="queryMprice", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryMprice(){
-		
-		mprices = mpriceService.queryMprice(mprice);
-		
-		return SUCCESS;
-		
-	}
-	
 	@Action(value="queryMpriceByGid", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String queryMpriceByGid(){
 		
 		mprices = mpriceService.queryMpriceByGid(mprice);
-		
-		return SUCCESS;
-		
-	}
-	
-	@Action(value="queryMpriceByBid", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryMpriceByBid(){
-		
-		mprices = mpriceService.queryMpriceByBid(mprice);
-		
-		return SUCCESS;
-		
-	}
-	
-	@Action(value="queryMpriceByPinyinName", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryMpriceByPinyinName(){
-		
-		mprices = mpriceService.queryMpriceByPinyinName(pinyinName);
-		
-		return SUCCESS;
-		
-	}
-	
-	@Action(value="queryMpriceByStatus", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryMpriceByStatus(){
-		
-		mprices = mpriceService.queryMpriceByStatus(mprice);
-		
-		return SUCCESS;
-		
-	}
-	
-	@Action(value="queryMpriceByGidAndCid", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryMpriceByGidAndCid(){
-		
-		mprices = mpriceService.queryMpriceByGidAndCid(mprice);
-		
-		return SUCCESS;
-		
-	}
-	
-	@Action(value="queryMpriceByGidAndFid", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryMpriceByGidAndFid(){
-		
-		mprices = mpriceService.queryMpriceByGidAndFid(mprice);
 		
 		return SUCCESS;
 		
@@ -127,13 +71,4 @@ public class MpriceAction extends BaseListAction{
 		this.mprices = mprices;
 	}
 
-	public String getPinyinName() {
-		return pinyinName;
-	}
-
-	public void setPinyinName(String pinyinName) {
-		this.pinyinName = pinyinName;
-	}
-		
-	
 }

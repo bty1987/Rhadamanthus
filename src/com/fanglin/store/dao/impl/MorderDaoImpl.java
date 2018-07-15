@@ -2,7 +2,6 @@ package com.fanglin.store.dao.impl;
 
 import java.util.List;
 
-import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
@@ -30,20 +29,6 @@ public class MorderDaoImpl extends DaoImpl<MorderPO> implements MorderDao{
 		return query.list();
 	}
 	
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<MorderPO> queryMorderByUid(Long uid) {
-		
-		return session().createCriteria(MorderPO.class).add(Restrictions.eq(MorderPO.COLUMN_UID_STR, uid)).list();
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<MorderPO> queryMorderByStatus(Long uid, Short status) {
-		
-		return session().createCriteria(MorderPO.class).add(Restrictions.eq(MorderPO.COLUMN_UID_STR, uid)).add(Restrictions.eq(MorderPO.COLUMN_STATUS_STR, status)).list();
-	}
-	
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){
 		
 		if(filters != null){
@@ -55,11 +40,10 @@ public class MorderDaoImpl extends DaoImpl<MorderPO> implements MorderDao{
 				
 				if(MorderPO.COLUMN_NO_STR.equals(field)){
 					query.add(query.getCriterion(MorderPO.COLUMN_NO_STR, data, op));
-				}else if("name".equals(field)){
-					query.alias("muser", "muser");
-					query.add(query.getCriterion(MorderPO.COLUMN_UID_STR, Long.valueOf(data), op));
 				}else if(MorderPO.COLUMN_STATUS_STR.equals(field)){
 					query.add(query.getCriterion(MorderPO.COLUMN_STATUS_STR, Short.valueOf(data), op));
+				}else if("unionId".equals(field)){
+					query.add(query.getCriterion(MorderPO.COLUMN_UNIONID_STR, data, op));
 				}
 			}
 		}

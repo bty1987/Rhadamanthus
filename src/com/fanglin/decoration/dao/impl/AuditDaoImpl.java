@@ -55,7 +55,8 @@ public class AuditDaoImpl extends DaoImpl<AuditPO> implements AuditDao{
 					if("orderId".equals(field)){
 						query.add(query.getCriterion("decoration.orderId", data, op));
 					}else if("villageId".equals(field)){ 
-						query.alias("decoration.house.village","village");
+						query.alias("decoration.house", "house");
+						query.alias("house.village", "village");
 						query.add(query.getCriterion("village.no", data, op));		
 					}else if("designerId".equals(field)){
 						query.alias("decoration.designer", "designer");

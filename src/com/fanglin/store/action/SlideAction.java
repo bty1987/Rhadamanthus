@@ -12,7 +12,7 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.store.service.SlideService;
 import com.fanglin.store.vo.SlideVO;
 
-@ParentPackage("login")
+@ParentPackage("base")
 @Namespace("/")
 @Controller
 public class SlideAction extends BaseListAction {
@@ -25,25 +25,17 @@ public class SlideAction extends BaseListAction {
 	private SlideVO slide;
 	
 	private List<SlideVO> slides;
-	 
+	
 	@Action(value="querySlide", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String querySlide() throws FLException{
+	public String querySlide(){
 		
 		slides = slideService.querySlide();
 		
 		return SUCCESS;
 	}
-	
-	@Action(value="querySlideByGid", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String querySlideByGid(){
 		
-		slides = slideService.querySlideByGid(slide);
-		
-		return SUCCESS;
-	}
-	
 	@Action(value="addSlide", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String addSlide() throws FLException{
+	public String addSlide(){
 		
 		slideService.addSlide(slide);
 		

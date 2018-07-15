@@ -9,8 +9,12 @@ import com.fanglin.utils.Paging;
 
 public interface VpaymentDao extends Dao<VpaymentPO>{
 
-	public List<VpaymentPO> pageVpayment(Paging paging, List<Filter> filters);
+	public List<VpaymentPO> pageVpayment(Paging paging, List<Filter> filters, Short status);
 	
 	public List<?> countVpayment();
+
+	public List<VpaymentPO> queryVpaymentByNo(String mno);
+	
+	public List<VpaymentPO> queryVpaymentByVrid(long vrid);
 	
 }

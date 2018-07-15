@@ -6,8 +6,6 @@ import com.fanglin.store.po.SlidePO;
 
 public interface SlideDao extends Dao<SlidePO> {
 	
-	public List<SlidePO> querySlide();
-	
-	public List<SlidePO> querySlideByGid(long gid);
+	public List<SlidePO> querySlide(Boolean flag);
 	
 }

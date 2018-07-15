@@ -82,15 +82,15 @@ jQuery(function ($) {
 
     var $popup = $('#viewPopUp');
 
-    var uid = $popup.attr('data-uid');
+    var userId = $popup.attr('data-userId');
     var startTime = $popup.attr('data-startTime');
     var endTime = $popup.attr('data-endTime');
 
     var startTime = startTime.replace(/\//g, '-');
     var endTime = endTime.replace(/\//g, '-');
     var opt ={
-        "filters[0].field": "wuid",
-        "filters[0].data": uid,
+        "filters[0].field": "userId",
+        "filters[0].data": userId,
         "filters[1].field": "startTime",
         "filters[1].data": startTime + " 00:00:00",
         "filters[2].field": "endTime",
@@ -98,7 +98,7 @@ jQuery(function ($) {
     };
 
     var searcher = new Searcher();
-    searcher.init([], "", api.salary.pageSalaryWorkerForUser, function (list) {
+    searcher.init([], "", api.salary.pageWorkerSalaryByUserId, function (list) {
         displayFunc.init('resultList1', list);
     }, "pagenation", "inspectionRecordPostData", opt, false, null,null,"resultList1");
 

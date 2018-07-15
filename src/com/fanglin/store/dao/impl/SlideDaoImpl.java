@@ -1,6 +1,8 @@
 package com.fanglin.store.dao.impl;
 
 import java.util.List;
+
+import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import com.fanglin.core.dao.impl.DaoImpl;
@@ -16,14 +18,15 @@ public class SlideDaoImpl extends DaoImpl<SlidePO> implements SlideDao {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<SlidePO> querySlide() {
-		return session().createCriteria(SlidePO.class).add(Restrictions.eq("status", SlidePO.STATUS_ABLE_SHORT)).list();
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<SlidePO> querySlideByGid(long gid) {
-		return session().createCriteria(SlidePO.class).add(Restrictions.eq(SlidePO.COLUMN_GID_STR, gid)).list();
+	public List<SlidePO> querySlide(Boolean flag) {
+		
+		Criteria criteria = session().createCriteria(SlidePO.class);
+		
+		if(flag){
+			criteria.add(Restrictions.eq("status", SlidePO.STATUS_ABLE_SHORT));
+		}
+		
+		return criteria.list();
 	}
 
 }

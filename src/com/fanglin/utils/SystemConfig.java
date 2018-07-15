@@ -23,6 +23,8 @@ public class SystemConfig {
 	public static final String DEBUG_FALSE_STR = "false";
 	
 	public static final String DEBUG_TRUE_STR = "true";
+	
+	public static final String DEBUG_ERROR_STR = "error";
 
 	static {
 		try {

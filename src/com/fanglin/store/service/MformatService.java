@@ -9,11 +9,9 @@ public interface MformatService {
 	
 	public List<MformatVO> queryMformatByGid(MformatVO mformatVO);
 	
-	public List<MformatVO> queryMformatByGidAndStatus(MformatVO mformatVO);
+	public List<MformatVO> queryMformat(MformatVO mformatVO);
 	
-	public void addMformat(MformatVO mformatVO) throws FLException;
-	
-	public void updateMformat(MformatVO mformatVO) throws FLException;
+	public void addMformat(MformatVO mformatVO);
 	
 	public void updateMformatForStatus(MformatVO mformatVO) throws FLException;
 

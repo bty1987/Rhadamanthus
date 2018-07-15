@@ -6,7 +6,7 @@ CREATE TABLE `activity` (
   `aid` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(32) NOT NULL,
   `cuid` int(11) DEFAULT NULL,
-  `status` tinyint(4) NOT NULL,
+  `status` tinyint(1) NOT NULL,
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `startTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `endTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -104,7 +104,6 @@ DROP TABLE IF EXISTS `notice`;
 CREATE TABLE `notice` (
   `nid` int(11) NOT NULL AUTO_INCREMENT,
   `cuid` int(11) NOT NULL COMMENT '创建人ID',
-  `deptId` varchar(10) NOT NULL DEFAULT '',
   `theme` varchar(64) NOT NULL,
   `type` tinyint(1) NOT NULL COMMENT '1: 通知, 2: 活动',
   `priority` tinyint(1) NOT NULL COMMENT '优先级 , 0: 普通, 1: 重要, 2: 紧急',
@@ -117,7 +116,7 @@ CREATE TABLE `notice` (
   `filePath` varchar(128) DEFAULT NULL,
   `company` int(11) NOT NULL,
   PRIMARY KEY (`nid`),
-  KEY `indexone` (`type`,`deptId`,`isPublic`,`startTime`,`endTime`,`publishTime`)
+  KEY `indexone` (`type`,`isPublic`,`startTime`,`endTime`,`publishTime`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='公告';
 
 DROP TABLE IF EXISTS `noticedepartment`;
@@ -132,7 +131,6 @@ DROP TABLE IF EXISTS `phonecall`;
 CREATE TABLE `phonecall` (
   `pcid` int(11) NOT NULL AUTO_INCREMENT,
   `orderId` varchar(15) DEFAULT NULL COMMENT '订单编号',
-  `operater` varchar(15) NOT NULL COMMENT '操作人',
   `ouid` int(11) NOT NULL COMMENT '操作人ID',
   `operateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '操作时间',
   `callbackId` varchar(32) DEFAULT NULL COMMENT '通话信息id',
@@ -149,8 +147,8 @@ DROP TABLE IF EXISTS `phonecallrecord`;
 CREATE TABLE `phonecallrecord` (
   `pcrid` int(11) NOT NULL AUTO_INCREMENT,
   `pcid` int(11) NOT NULL,
-  `recordType` int(11) NOT NULL COMMENT '录音类型 0:初始,1:本地,2:线上,3:失败',
-  `recordUrl` varchar(255) DEFAULT NULL COMMENT '录音地址',
+  `type` int(11) NOT NULL COMMENT '录音类型 0:初始,1:本地,2:线上,3:失败',
+  `url` varchar(255) DEFAULT NULL COMMENT '录音地址',
   PRIMARY KEY (`pcrid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='电话回拨记录表';
 

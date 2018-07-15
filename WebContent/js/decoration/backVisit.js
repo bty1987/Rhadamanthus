@@ -66,7 +66,7 @@ $(function(){
                     //enable typeahead by specifying the source array
                     isStaticResource : false,
                     flsource: {
-                        url : api.personel.queryUserForNameByPinyinName,
+                        url : api.personel.queryUserByPinyin,
                         postData : {"duty": "", "user.status":0},
                         resultList : "autoFillKeyValue",
                         keyPath : "key",

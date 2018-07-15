@@ -4,11 +4,8 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -17,7 +14,7 @@ public class MformatPO implements Serializable {
 
 	private static final long serialVersionUID = -3873646957052842185L;
 
-	public static final String COLUMN_GID_STR = "mgoods.gid";
+	public static final String COLUMN_GID_STR = "gid";
 	
 	public static final Short STATUS_ABLE_SHORT = 0;
 
@@ -25,7 +22,7 @@ public class MformatPO implements Serializable {
 
 	private long fid;
 	
-	private MgoodsPO mgoods;
+	private long gid;
 
 	private String format;
 
@@ -33,11 +30,6 @@ public class MformatPO implements Serializable {
 
 	public MformatPO() {
 		super();
-	}
-
-	public MformatPO(MgoodsPO mgoods) {
-		super();
-		this.mgoods = mgoods;
 	}
 
 	@Id
@@ -51,14 +43,13 @@ public class MformatPO implements Serializable {
 		this.fid = fid;
 	}
 	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "gid", referencedColumnName = "gid")
-	public MgoodsPO getMgoods() {
-		return mgoods;
+	@Column(name = "gid")
+	public long getGid() {
+		return gid;
 	}
 
-	public void setMgoods(MgoodsPO mgoods) {
-		this.mgoods = mgoods;
+	public void setGid(long gid) {
+		this.gid = gid;
 	}
 
 	@Column(name = "format")

@@ -41,7 +41,7 @@ $.extend(api, {building: {
 	updateBuildingForBalanceStatus: {url: "updateBuildingForBalanceStatus.do"},
 
 	queryBuildingDrawing: {url: "queryBuildingDrawing.do"},
-	addBuildingDrawing: {url: "addBuildingDrawing.do"},
+	addBuildingDrawing: {url: "addBuildingDrawing.do", intercept: true},
 	deleteBuildingDrawing: {url: "deleteBuildingDrawing.do"},
 
 	pageBuildingNode: {url: "pageBuildingNode.do"},

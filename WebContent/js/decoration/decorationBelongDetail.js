@@ -16,7 +16,7 @@ jQuery(function($) {
 	decorationBelong.decorationOrderID = params.orderId;
 	decorationBelong.type = params.orderBelongType;
 	
-	com.initChosen('belongUserId', api.personel.queryUserByDepartmentType, "pinyinName", {"user.status":0,"departmentType.name":""},'userBases','userId','currentName').on("change",function(e){
+	com.initChosen('belongUserId', api.personel.queryUserByPinyin, "pinyinName", {"user.status":0,"departmentType.name":""},'autoFillKeyValue','key','value').on("change",function(e){
 		if($("#belongUserId").val() == null || $("#belongUserId").val() == ""){
 			return;
 		}

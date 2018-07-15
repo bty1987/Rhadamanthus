@@ -5,26 +5,30 @@ import java.io.Serializable;
 public class LabelVO implements Serializable {
 
 	private static final long serialVersionUID = -6244941175772594861L;
+	
+	
 
-	private int lid;
+	private Long lid;
 	
 	private String name;
 	
-	private String proportion;
+	private Short scale;
 	
 	private Short type;
 	
 	private Short status;
+	
+	private Short isShow;
 
 	public LabelVO(){
 		super();
 	}
 
-	public int getLid() {
+	public Long getLid() {
 		return lid;
 	}
 
-	public void setLid(int lid) {
+	public void setLid(Long lid) {
 		this.lid = lid;
 	}
 
@@ -36,12 +40,12 @@ public class LabelVO implements Serializable {
 		this.name = name;
 	}
 
-	public String getProportion() {
-		return proportion;
+	public Short getScale() {
+		return scale;
 	}
 
-	public void setProportion(String proportion) {
-		this.proportion = proportion;
+	public void setScale(Short scale) {
+		this.scale = scale;
 	}
 
 	public Short getType() {
@@ -59,6 +63,15 @@ public class LabelVO implements Serializable {
 	public void setStatus(Short status) {
 		this.status = status;
 	}
+
+	public Short getIsShow() {
+		return isShow;
+	}
+
+	public void setIsShow(Short isShow) {
+		this.isShow = isShow;
+	}
+
 	
 	
 }

@@ -98,6 +98,7 @@ var Searcher = function(){
                 var _rvalue = condRule['dataSource']["valuePath"];//autofill和select取值时调用接口后处理返回值时用来显示的参数名
                 var _rpostParam = condRule['dataSource']["postData"];//autofill和select取值时调用接口时传的参数
                 var _rresult = condRule['dataSource']["listPath"];//autofill和select取值时调用接口后取值用的eg:data.deptList
+                var _rquery = condRule['dataSource']["query"]
             }
 
             var setOption = function(data){
@@ -174,7 +175,19 @@ var Searcher = function(){
                     list: [],
                     postData: _rpostParam,
                     source: function (query, process) {
-                        var options = $.extend({pinyinName: query}, this.options.postData);
+                        var _option = {};
+                        if(_rquery != undefined){
+                            if(typeof _rquery == "object"){
+                                $.each(_rquery,function(i,v){
+                                    _option[v] = query;
+                                })
+                            }else if(typeof _rquery == "string"){
+                                _option[_rquery] = query;
+                            }
+                        }else{
+                            _option["pinyinName"] = query;
+                        }
+                        var options = $.extend(_option, this.options.postData);
                         com.post(this.options.url, options, $.proxy(this.options.callback, this));
                     }, matcher: function (item) {
                         return true;

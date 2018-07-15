@@ -12,8 +12,8 @@ public interface ServicePaymentDao extends Dao<ServicePaymentPO>{
 	
 	public List<ServicePaymentPO> pageServicePaymentForConfirm(Paging paging, List<Filter> filters);
 	
-	public List<ServicePaymentPO> queryServicePaymentForNotInitBySrId(long drId);
-	
 	public List<ServicePaymentPO> queryServicePaymentByOrderId(String orderId);
+	
+	public List<ServicePaymentPO> queryServicePaymentForNotInitBySrId(long drId);
 	
 }

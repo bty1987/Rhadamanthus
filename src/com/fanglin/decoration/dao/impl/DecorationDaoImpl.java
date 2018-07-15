@@ -399,8 +399,6 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 					query.add(query.getCriterion("houseClass", data, op));
 				}else if("status".equals(field)){
 					query.add(query.getCriterion("status", Short.valueOf(data), op));
-				}else if("quotationStatus".equals(field)){
-					query.add(query.getCriterion("quotationStatus", Short.valueOf(data), op));
 				}else if("statuses".equals(field)){
 					query.add(query.getCriterion("status",filter.getRange(), op));	
 				}else if("otherStatus".equals(field)){

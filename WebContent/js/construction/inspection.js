@@ -57,7 +57,7 @@ $(function () {
             $liLine.append($h3).append($ulProperty);
 
             $btnView.click(function () {
-                viewRecord(v.orderId, v.village.villageName);
+                viewRecord(v.orderId,v.house.village.name);
             });
 
             return $liLine;

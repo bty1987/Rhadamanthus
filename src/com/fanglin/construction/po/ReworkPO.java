@@ -18,6 +18,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+
 @Entity
 @Table(name="rework", catalog = "construction")
 public class ReworkPO implements Serializable{
@@ -36,7 +37,7 @@ public class ReworkPO implements Serializable{
 	
 	private String orderId;
 	
-	private String createrId;
+	private int cuid;
 	
 	private String createrName;
 	
@@ -81,13 +82,13 @@ public class ReworkPO implements Serializable{
 		this.reworkDes = reworkDes;
 	}
 
-	@Column(name = "createrId")
-	public String getCreaterId(){
-		return createrId;
+	@Column(name = "cuid")
+	public int getCuid() {
+		return cuid;
 	}
 
-	public void setCreaterId(String createrId){
-		this.createrId = createrId;
+	public void setCuid(int cuid) {
+		this.cuid = cuid;
 	}
 
 	@Column(name = "createrName")

@@ -20,6 +20,7 @@ import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseExportAction;
 import com.fanglin.log.service.LogService;
+import com.fanglin.log.service.LoginLogService;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -31,10 +32,21 @@ public class LogAction extends BaseExportAction {
 	@Autowired
 	private LogService logService;
 	
+	@Autowired
+	private LoginLogService loginLogService;
+	
 	@Action(value = "pageActionLog", results = { @Result(name = "success", type = "json" , params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" } )
 	public String pageActionLog(){
 		
 		logService.pageActionLog(getPaging(), getFilters());	
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "pageLoginLog", results = { @Result(name = "success", type = "json" , params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" } )
+	public String pageLoginLog(){
+		
+		loginLogService.pageLoginLog(getPaging(), getFilters());	
 		
 		return SUCCESS;
 	}

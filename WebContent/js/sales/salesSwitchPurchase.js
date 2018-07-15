@@ -104,7 +104,6 @@ $(function () {
                         "data-no": v.no,
                         "data-orderId": v.orderId,
                         "data-fullPayStatus": v.fullpayStatus,
-                        "data-punum":v.punum
                     }).addClass('ace ace-checkbox-2');
 
                     var _span = $('<span></span>').addClass('lbl blue bigger-150').css('font-weight', 'bold').html(v.no)
@@ -298,7 +297,6 @@ $(function () {
                         ["折扣价:", v.disPrice, "blue", "disPrice"],
                         ["折让价:", v.price, "blue", "price"],
                         ["数量:", v.num, "blue", "num"],
-                        ["可采购数量:", v.punum, "blue", "punum"],
                         ["总价:", v.total, "blue", "total"],
                         ["原结算方式:", v.rawCtype == 0 ? "底价" : "点位", "red", "rawCtype"],
                         ["原结算值:", v.rawCvalue, "blue", "rawCvalue"],
@@ -440,23 +438,12 @@ $(function () {
 
     function checkRowValue($line) {
         var flag = true;
-
+        var priceRex = /^\d{1,8}(\.\d{1,2})?$/
         $.each($line, function (i, v) {
 
             var num = $(v).find('input.inputNumber');
-            var punum = $(v).find('input[name="siids"]');
 
-            if (num>punum.attr('data-punum')) {
-                num.focus().select();
-                num.addClass('tooltip-info').attr({
-                    "data-rel": "popover",
-                    "data-placement": "top",
-                    "data-original-title": "",
-                    "title": "",
-                    "data-content": "采购数量大于可采购数量!"
-                }).popover('show');
-                flag = false;
-            } else if (num.val()<=0){
+            if (!(priceRex.test(num.val()) && parseFloat(num.val()) > 0 )){
                 num.focus().select();
                 num.addClass('tooltip-info').attr({
                     "data-rel": "popover",
@@ -471,8 +458,6 @@ $(function () {
             }
 
             var unitPrice = $(v).find('input.unitPrice');
-
-            var priceRex = /^\d{1,8}(\.\d{1,2})?$/
 
             if (!(priceRex.test(unitPrice.val()) && parseFloat(unitPrice.val()) > 0 )) {
                 unitPrice.focus().select();

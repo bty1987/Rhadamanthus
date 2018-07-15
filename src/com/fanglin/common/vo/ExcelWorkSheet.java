@@ -8,7 +8,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.FatalBeanException;
-import org.springframework.util.Assert;
 
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
@@ -67,7 +66,6 @@ public class ExcelWorkSheet<T> {
 
 	public String getIndexPropertyValue(Object obj, int index){
 
-		Assert.notNull(obj, "Target must not be null");
 		String valueString = null;
 		PropertyDescriptor propertyDescriptor = BeanUtil.getPropertyDescriptor(obj.getClass(), propertyNames.get(index));
 		

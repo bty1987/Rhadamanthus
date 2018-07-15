@@ -79,10 +79,8 @@ jQuery(function () {
             //赋值售价信息
             com.post(api.inventory.queryPriceByGid, {"price.gid": k}, function (priceData) {
                 if (priceData.prices.length != 0) {
-                    var purchase;
                     var $purchase = $('#purchase');
-                    $purchase.bindData(priceData.prices, "pid", "selling");
-                    purchase = parseFloat($purchase.find('option:selected').text());
+                    $purchase.bindData(priceData.prices, "pid", "content",false,null,"selling");
                     com.post(api.inventory.queryPriceByPid, {
                         "price.pid": $('#purchase').val()
                     }, function (data) {
@@ -93,7 +91,7 @@ jQuery(function () {
 
                     });
                     $('#discount').val(1);
-                    $('#disPrice').val(utils.accMul(parseFloat($('#purchase').find('option:selected').text()), parseFloat($('#discount').val())));
+                    $('#disPrice').val(utils.accMul(parseFloat($('#purchase').find('option:selected').attr("other")), parseFloat($('#discount').val())));
                     $('#postDis').val(1);
                     $('#selling').val(utils.accMul(parseFloat($('#disPrice').val()), parseFloat($('#postDis').val())));
                     $('#num').val(1);
@@ -158,7 +156,7 @@ jQuery(function () {
             //折扣价
             var $disPrice = parseFloat($('#disPrice').val());
             //售价
-            var $purchase = parseFloat($('#purchase option:selected').text());
+            var $purchase = parseFloat($('#purchase option:selected').attr("other"));
             //折扣
             var $discount = parseFloat($('#discount').val());
 
@@ -189,7 +187,7 @@ jQuery(function () {
             if (sales.gtype == 1) {
                 $h4.append($edit);
             }
-            $liList.append(addSpan('品类：', 's_category', $('#category').val(), " ", 'b_category', null)).append(addSpan('品牌：', 's_brand', $('#brand').val(), " ", 'b_brand', null)).append(addSpan('单位：', 's_unit', $('#measurementUnit').val(), " ", 'b_unit', null)).append(addSpan('颜色：', 's_color', $('#color').find("option:selected").text(), " ", 'b_color', sales.colorids)).append(addSpan('规格：', 's_format', $('#format').find("option:selected").text(), " ", 'b_format', sales.formatids)).append(addSpan('售价：', 's_selling', $('#purchase').find("option:selected").text(), 'blue', 'b_selling', null)).//append(addSpan('折扣：','s_count',$('#discount').val(),'red','b_count',null)).
+            $liList.append(addSpan('品类：', 's_category', $('#category').val(), " ", 'b_category', null)).append(addSpan('品牌：', 's_brand', $('#brand').val(), " ", 'b_brand', null)).append(addSpan('单位：', 's_unit', $('#measurementUnit').val(), " ", 'b_unit', null)).append(addSpan('颜色：', 's_color', $('#color').find("option:selected").text(), " ", 'b_color', sales.colorids)).append(addSpan('规格：', 's_format', $('#format').find("option:selected").text(), " ", 'b_format', sales.formatids)).append(addSpan('售价：', 's_selling', $('#purchase').find("option:selected").attr("other"), 'blue', 'b_selling', null)).//append(addSpan('折扣：','s_count',$('#discount').val(),'red','b_count',null)).
             append(addSpan('折扣价：', 's_countSelling', $('#disPrice').val(), 'blue', 'b_countSelling', null)).//append(addSpan('折让：','s_zherang',$('#postDis').val(),'red','b_zherang',null)).
             append(addSpan('折让价：', 's_price', $('#selling').val(), 'blue', 'b_price', null)).append(addSpan('数量：', 's_number', $('#num').val(), 'red', 'b_number')).append(addSpan('总价：', 's_total', $('#total').val(), 'blue', 'b_total', null)).append(addSpan('备注：', 's_remark', $('#remark').val(), " ", 'b_remark', null)).append($('<span></span>').css('display', 'none').text($('#bid').val()).attr("id", "invisiblePurchase")).append($('<span></span>').css('display', 'none').text($('#bid').attr('data-ctype')).attr("id", "invisibleCtype")).append($('<span></span>').css('display', 'none').text($('#bid').attr('data-cvalue')).attr("id", "invisibleCvalue"));
             $('#salesItemList').append($liList);
@@ -264,7 +262,7 @@ jQuery(function () {
 
     function count(flag, boolean) {
         if (flag == true && boolean == true) {
-            $('#disPrice').val(utils.changeTwoDecimal(utils.accMul(parseFloat($('#purchase').find('option:selected').text()), parseFloat($('#discount').val()))));
+            $('#disPrice').val(utils.changeTwoDecimal(utils.accMul(parseFloat($('#purchase').find('option:selected').attr("other")), parseFloat($('#discount').val()))));
             $('#selling').val(utils.changeTwoDecimal(utils.accMul(parseFloat($('#disPrice').val()), parseFloat($('#postDis').val()))));
             $('#total').val(utils.changeTwoDecimal(utils.accMul(parseFloat($('#selling').val()), parseFloat($('#num').val()))));
         } else if (flag == true && boolean == false) {
@@ -322,8 +320,6 @@ jQuery(function () {
                 options["salesItems[" + i + "].disPrice"] = parseFloat($v.find('.s_countSelling').find('.b_countSelling').text());
                 options["salesItems[" + i + "].postDis"] = parseFloat($v.attr('data-postDis'));
                 options["salesItems[" + i + "].price"] = parseFloat($v.find('.s_price').find('.b_price').text());
-                options["salesItems[" + i + "].xgnum"] = parseFloat($v.find('.s_number').find('.b_number').text());
-                options["salesItems[" + i + "].punum"] = parseFloat($v.find('.s_number').find('.b_number').text());
                 options["salesItems[" + i + "].num"] = parseFloat($v.find('.s_number').find('.b_number').text());
                 options["salesItems[" + i + "].total"] = parseFloat($v.find('.s_total').find('.b_total').text());
                 options["salesItems[" + i + "].comment"] = $v.find('.s_remark').find('.b_remark').text();

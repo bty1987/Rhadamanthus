@@ -18,15 +18,6 @@ public class BuildingNodeVO implements java.io.Serializable {
 		super();
 	}
 
-	public BuildingNodeVO(Long bnid, String name, Short type, Short sore, Short status) {
-		super();
-		this.bnid = bnid;
-		this.name = name;
-		this.type = type;
-		this.sore = sore;
-		this.status = status;
-	}
-
 	public Long getBnid() {
 		return bnid;
 	}

@@ -313,7 +313,7 @@ $(function(){
                         ["大类:", v.quotationItem.quotationBigCategory, "grey"],
                         ["小类:", v.quotationItem.quotationSmallCategory, "grey"],
                         ["单位:", v.quotationItem.measurementUnit, "grey"],
-                        ["工种:", v.quotationItem.itemWorkType, "grey"],
+                        ["工种:", v.quotationItem.workType, "grey"],
                         ["单价:", v.quotationItem.unitPrice, "grey"],
                     ];
 

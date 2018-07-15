@@ -8,7 +8,7 @@ public class MformatVO implements Serializable {
 
 	private Long fid;
 
-	private MgoodsVO mgoods;
+	private Long gid;
 
 	private String format;
 
@@ -16,11 +16,6 @@ public class MformatVO implements Serializable {
 
 	public MformatVO() {
 		super();
-	}
-
-	public MformatVO(MgoodsVO mgoods) {
-		super();
-		this.mgoods = mgoods;
 	}
 
 	public Long getFid() {
@@ -31,12 +26,12 @@ public class MformatVO implements Serializable {
 		this.fid = fid;
 	}
 
-	public MgoodsVO getMgoods() {
-		return mgoods;
+	public Long getGid() {
+		return gid;
 	}
 
-	public void setMgoods(MgoodsVO mgoods) {
-		this.mgoods = mgoods;
+	public void setGid(Long gid) {
+		this.gid = gid;
 	}
 
 	public String getFormat() {

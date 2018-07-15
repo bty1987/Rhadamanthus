@@ -15,7 +15,7 @@ import com.fanglin.building.service.BuildingDrawingService;
 import com.fanglin.building.vo.BuildingDrawingVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
-import com.fanglin.personel.vo.UserVO;
+import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.utils.BeanUtil;
 
 @Service("buildingDrawingService")
@@ -36,11 +36,11 @@ public class BuildingDrawingServiceImpl implements BuildingDrawingService {
 		
 		for (BuildingDrawingPO buildingDrawingPO : buildingDrawingPOs) {
 			
-			BuildingDrawingVO buildingDrawing = new BuildingDrawingVO(new UserVO());
+			BuildingDrawingVO buildingDrawing = new BuildingDrawingVO(new UserBaseVO());
 			
 			BeanUtil.copyProperties(buildingDrawingPO, buildingDrawing, Arrays.asList("creater"));
 			
-			BeanUtil.copyProperties(buildingDrawingPO.getCreater(), buildingDrawing.getCreater(), Arrays.asList("role", "dept", "duty"));
+			BeanUtil.copyProperties(buildingDrawingPO.getCreater(), buildingDrawing.getCreater(), Arrays.asList("duty", "dept"));
 			
 			buildingDrawingVOs.add(buildingDrawing);
 		}

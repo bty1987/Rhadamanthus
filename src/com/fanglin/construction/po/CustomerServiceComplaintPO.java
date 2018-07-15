@@ -18,6 +18,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+
 @Entity
 @Table(name="customerservicecomplaint", catalog = "construction")
 public class CustomerServiceComplaintPO implements Serializable{
@@ -38,7 +39,7 @@ public class CustomerServiceComplaintPO implements Serializable{
 	
 	private String customerName;
 	
-	private String createrId;
+	private int cuid;
 	
 	private String createrName;
 	
@@ -105,14 +106,14 @@ public class CustomerServiceComplaintPO implements Serializable{
 	public void setOperaterName(String operaterName){
 		this.operaterName = operaterName;
 	}
-
-	@Column(name = "createrId")
-	public String getCreaterId(){
-		return createrId;
+	
+	@Column(name = "cuid")
+	public int getCuid() {
+		return cuid;
 	}
 
-	public void setCreaterId(String createrId){
-		this.createrId = createrId;
+	public void setCuid(int cuid) {
+		this.cuid = cuid;
 	}
 
 	@Column(name = "createrName")

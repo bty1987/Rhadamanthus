@@ -127,12 +127,5 @@ $.extend(api, {upgrade: {
 }});
 
 $.extend(api, {home: {
-    contractTotalAmount: {url:"contractTotalAmount.do"},
-    contractTotalNumber: {url:"contractTotalNumber.do"},
-    createTotalNumber: {url:"createTotalNumber.do"},
-    designerContractDay: {url:"contractNumber.do"},
-    designerCreateDay: {url:"createNumber.do"},
-    designerRegionTotalAmount: {url:"designerRegionAmount.do"},
-    designerDeptTotalAmount: {url:"designerDeptAmount.do"},
-    designerTotalAmount: {url:"designerAmount.do"}
+	library: {url:"library",server:"library"}
 }});

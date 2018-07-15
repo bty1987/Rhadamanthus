@@ -14,19 +14,19 @@ CREATE TABLE `material` (
   `category` varchar(32) NOT NULL DEFAULT '',
   `brand` varchar(32) NOT NULL DEFAULT '',
   `packageFlag` tinyint(4) NOT NULL DEFAULT '0',
-  `regionId` varchar(10) NOT NULL,
-  `departmentId` varchar(10) NOT NULL,
-  `materialDeptId` varchar(10) NOT NULL,
+  `rid` varchar(10) NOT NULL COMMENT '业务分区ID',
+  `did` varchar(10) NOT NULL COMMENT '业务部门ID',
+  `mdid` varchar(10) NOT NULL COMMENT '主材部ID',
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `preBalanceTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `postBalanceTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `type` tinyint(4) DEFAULT '0',
-  `status` tinyint(4) DEFAULT '0' COMMENT '初始, 删除',
+  `type` tinyint(1) DEFAULT '0',
+  `status` tinyint(1) DEFAULT '0' COMMENT '初始, 删除',
   `depositPayment` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `depositStatus` tinyint(4) NOT NULL DEFAULT '0',
+  `depositStatus` tinyint(1) NOT NULL DEFAULT '0',
   `fullPayment` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `fullStatus` tinyint(4) NOT NULL DEFAULT '0',
-  `balanceStatus` tinyint(4) NOT NULL DEFAULT '0',
+  `fullStatus` tinyint(1) NOT NULL DEFAULT '0',
+  `balanceStatus` tinyint(1) NOT NULL DEFAULT '0',
   `total` decimal(10,3) NOT NULL DEFAULT '0.000',
   `distotal` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '折扣总价',
   `maling` decimal(10,3) NOT NULL DEFAULT '0.000',
@@ -35,14 +35,14 @@ CREATE TABLE `material` (
   `couponInfo` varchar(64) NOT NULL DEFAULT '',
   `comment` varchar(256) NOT NULL DEFAULT '',
   `fullpayTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `otherStatus` tinyint(2) NOT NULL DEFAULT '0',
+  `otherStatus` tinyint(1) NOT NULL DEFAULT '0',
   `company` int(11) NOT NULL,
   PRIMARY KEY (`mid`),
   KEY `indexone` (`orderId`,`status`),
   KEY `indextwo` (`balanceStatus`,`fullStatus`),
   KEY `indexthr` (`no`),
   KEY `indexsix` (`status`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材子订单表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材单表';
 
 DROP TABLE IF EXISTS `materialbalance`;
 CREATE TABLE `materialbalance` (
@@ -64,9 +64,8 @@ CREATE TABLE `materialbalance` (
   `ident` int(11) NOT NULL DEFAULT '0',
   `mpid` int(11) DEFAULT NULL,
   PRIMARY KEY (`mbid`),
-  KEY `indexone` (`mid`),
-  KEY `indextwo` (`instorerId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材子订单结算表';
+  KEY `indexone` (`mid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材单结算表';
 
 DROP TABLE IF EXISTS `materialitem`;
 CREATE TABLE `materialitem` (
@@ -97,7 +96,7 @@ CREATE TABLE `materialitem` (
   `comment` varchar(256) DEFAULT '',
   PRIMARY KEY (`miid`),
   KEY `indextwo` (`mid`,`status`,`refundStatus`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材子订单项表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材单项表';
 
 
 DROP TABLE IF EXISTS `materialrefund`;
@@ -128,6 +127,6 @@ CREATE TABLE `materialrefund` (
   PRIMARY KEY (`mrid`),
   KEY `indexone` (`mid`,`status`),
   KEY `indextwo` (`mpId`,`status`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材子订单退款信息表';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材单退款信息表';
 
 

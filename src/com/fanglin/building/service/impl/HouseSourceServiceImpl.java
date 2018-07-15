@@ -36,7 +36,7 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
-import com.fanglin.personel.vo.UserVO;
+import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.right.dao.HouseSourceRightDao;
 import com.fanglin.right.po.HouseSourceDepartmentRightPO;
 import com.fanglin.system.vo.CityProperVO;
@@ -374,7 +374,7 @@ public class HouseSourceServiceImpl implements HouseSourceService {
 	public HouseSourceVO houseSourcePOToVO(HouseSourcePO houseSourcePO){
 		
 		VillageVO villageVO = new VillageVO(new CityProperVO());
-		HouseSourceVO houseSourceVO = new HouseSourceVO(new HouseVO(villageVO), new CustomerVO(), new UserVO(), new UserVO(), new UserVO(), new DepartmentVO(), new DepartmentVO());
+		HouseSourceVO houseSourceVO = new HouseSourceVO(new HouseVO(villageVO), new CustomerVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO());
 		BeanUtil.copyProperties(houseSourcePO, houseSourceVO, Arrays.asList("house", "customer", "create", "followUser", "keyer", "department", "region"));
 		BeanUtil.copyProperties(houseSourcePO.getHouse(), houseSourceVO.getHouse(), Arrays.asList("village"));
 		BeanUtil.copyProperties(houseSourcePO.getHouse().getVillage(), houseSourceVO.getHouse().getVillage(), Arrays.asList("cityProper"));
@@ -382,15 +382,15 @@ public class HouseSourceServiceImpl implements HouseSourceService {
 		BeanUtil.copyProperties(houseSourcePO.getCustomer(), houseSourceVO.getCustomer());
 		
 		if(houseSourcePO.getCreate() != null){
-			BeanUtil.copyProperties(houseSourcePO.getCreate(), houseSourceVO.getCreate(), Arrays.asList("role", "dept", "duty"));
+			BeanUtil.copyProperties(houseSourcePO.getCreate(), houseSourceVO.getCreate(), Arrays.asList("dept", "duty"));
 		}
 		
 		if(houseSourcePO.getFollowUser() != null){
-			BeanUtil.copyProperties(houseSourcePO.getFollowUser(), houseSourceVO.getFollowUser(), Arrays.asList("role", "dept", "duty"));
+			BeanUtil.copyProperties(houseSourcePO.getFollowUser(), houseSourceVO.getFollowUser(), Arrays.asList("dept", "duty"));
 		}
 		
 		if(houseSourcePO.getKeyer() != null){
-			BeanUtil.copyProperties(houseSourcePO.getKeyer(), houseSourceVO.getKeyer(), Arrays.asList("role", "dept", "duty"));
+			BeanUtil.copyProperties(houseSourcePO.getKeyer(), houseSourceVO.getKeyer(), Arrays.asList("dept", "duty"));
 		}
 		
 		if(houseSourcePO.getDepartment() != null){
@@ -415,7 +415,7 @@ public class HouseSourceServiceImpl implements HouseSourceService {
 	//生成钥匙记录
 	public void keyerRecord(HouseSourcePO houseSourcePO, String keyerId){
 		
-		BuildingRecordVO buildingRecordVO = new BuildingRecordVO(new HouseSourceVO(), new UserVO());
+		BuildingRecordVO buildingRecordVO = new BuildingRecordVO(new HouseSourceVO(), new UserBaseVO());
 		
 		BeanUtil.copyPropertie(houseSourcePO, buildingRecordVO.getHouseSource(), Arrays.asList("house", "customer", "create", "followUser", "keyer", "department", "region"));
 		

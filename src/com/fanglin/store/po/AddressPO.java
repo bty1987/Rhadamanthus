@@ -4,11 +4,8 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -17,7 +14,7 @@ public class AddressPO implements Serializable {
 
 	private static final long serialVersionUID = -2216568102426630778L;
 
-	public static final String COLUMN_UID_STR = "muser.uid";
+	public static final String COLUMN_UID_STR = "uid";
 
 	public static final Short STATUS_ABLE_SHORT = 0;
 
@@ -27,23 +24,24 @@ public class AddressPO implements Serializable {
 
 	private long aid;
 
-	private MuserPO muser;
+	private long uid;
 	
 	private String name;
 	
 	private String phone;
-
+	
+	private String province;
+	
+	private String city;
+	
+	private String proper;
+	
 	private String address;
 
 	private short status;
 
 	public AddressPO() {
 		super();
-	}
-
-	public AddressPO(MuserPO Muser) {
-		super();
-		this.muser = Muser;
 	}
 
 	@Id
@@ -56,17 +54,16 @@ public class AddressPO implements Serializable {
 	public void setAid(Long aid) {
 		this.aid = aid;
 	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "uid", referencedColumnName = "uid")
-	public MuserPO getMuser() {
-		return muser;
-	}
-
-	public void setMuser(MuserPO muser) {
-		this.muser = muser;
-	}
 	
+	@Column(name = "uid")
+	public long getUid() {
+		return uid;
+	}
+
+	public void setUid(long uid) {
+		this.uid = uid;
+	}
+
 	@Column(name = "name")
 	public String getName() {
 		return name;
@@ -84,6 +81,33 @@ public class AddressPO implements Serializable {
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
+	
+	@Column(name = "province")
+	public String getProvince() {
+		return province;
+	}
+
+	public void setProvince(String province) {
+		this.province = province;
+	}
+
+	@Column(name = "city")
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+	
+	@Column(name = "proper")
+	public String getProper() {
+		return proper;
+	}
+
+	public void setProper(String proper) {
+		this.proper = proper;
+	}
 
 	@Column(name = "address")
 	public String getAddress() {
@@ -92,14 +116,14 @@ public class AddressPO implements Serializable {
 
 	public void setAddress(String address) {
 		this.address = address;
-	}
+	}	
 
 	@Column(name = "status")
 	public Short getStatus() {
 		return status;
 	}
 
-	public void setStatus(Short status) {
+	public void setStatus(short status) {
 		this.status = status;
 	}
 

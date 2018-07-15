@@ -12,8 +12,6 @@ public class OperationVO implements java.io.Serializable {
 	
 	private String operation;
 	
-	private Short system;
-	
 	public OperationVO(Integer oid) {
 		super();
 		this.oid = oid;
@@ -53,14 +51,6 @@ public class OperationVO implements java.io.Serializable {
 
 	public void setOperation(String operation) {
 		this.operation = operation;
-	}
-
-	public Short getSystem() {
-		return system;
-	}
-
-	public void setSystem(Short system) {
-		this.system = system;
 	}
 
 }

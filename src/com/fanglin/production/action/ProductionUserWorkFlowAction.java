@@ -27,7 +27,7 @@ public class ProductionUserWorkFlowAction extends BaseAction {
 
 	private ProductionUserWorkFlowVO productionUserWorkFlow;
 
-	@Action(value = "queryProductionUserWorkFlowsByPwfids", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	@Action(value = "queryProductionUserWorkFlowsByPwfid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryProductionUserWorkFlowByPwfid() {
 		
 		ProductionUserWorkFlows = productionUserWorkFlowService.queryProductionUserWorkFlowsByPwfids(ProductionUserWorkFlows);

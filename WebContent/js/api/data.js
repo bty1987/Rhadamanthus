@@ -95,24 +95,18 @@ $.extend(api, {data: {
     addPaymentScaleItem:{url:"addPaymentScaleItem.do"},
     deletePaymentScaleItem:{url:"deletePaymentScaleItem.do"},
 
-    
     queryChainPage: {url:"queryChainPage.do"},
     queryChainPageForSelf: {url:"queryChainPageForSelf.do"},
     addChainPage: {url:"addChainPage.do"},
     deleteChainPage: {url:"deleteChainPage.do"},
 
-    querylabel :{url : "querylabel.do"},
-    updatelabelling :{url : "updatelabelling.do"},
-    querylabelByuid :{url : "querylabelByuid.do"},
     pageLabel :{url : "pageLabel.do"},
-    updataForStatus :{url : "updataForStatus.do"},
+    queryLabel :{url : "queryLabel.do"},
     addLabel :{url : "addLabel.do"},
-    queryUserlabel :{url : "queryUserlabel.do"},
-    sevalabelling : {url : "sevalabelling.do"},
-    deletelabelling : {url : "deletelabelling.do"},
-    querylabelBytype : {url : "querylabelBytype.do"},
-    queryByranking : {url : "queryByranking.do"},
-    queryUserLbaelBylids : {url : "queryUserLbaelBylids.do"},
-    queryUserLabelByUidValue : {url : "queryUserLabelByUidValue.do"}
-
+    updateLabel : {url : "updateLabel.do"},
+    updateLabelForStatus :{url : "updateLabelForStatus.do"},
+    queryUserLabelByUid :{url : "queryUserLabelByUid.do"},
+    pickUserLabel : {url : "pickUserLabel.do"},
+    addUserLabel :{url : "addUserLabel.do"},
+    deleteUserLabel : {url : "deleteUserLabel.do"},
 }});

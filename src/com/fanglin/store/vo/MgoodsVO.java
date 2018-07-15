@@ -12,15 +12,17 @@ public class MgoodsVO implements Serializable{
 	
 	private String name;
 	
-	private String pinyinName;
-	
-	private String barcode;
+	private String pinyin;
 	
 	private MbrandVO mbrand;
+	
+	private String barcode;
 	
 	private String title;
 	
 	private String defaultImg;
+	
+	private Float price;
 	
 	private Short status;
 
@@ -57,12 +59,20 @@ public class MgoodsVO implements Serializable{
 		this.name = name;
 	}
 	
-	public String getPinyinName() {
-		return pinyinName;
+	public String getPinyin() {
+		return pinyin;
 	}
 
-	public void setPinyinName(String pinyinName) {
-		this.pinyinName = pinyinName;
+	public void setPinyin(String pinyin) {
+		this.pinyin = pinyin;
+	}
+
+	public MbrandVO getMbrand() {
+		return mbrand;
+	}
+
+	public void setMbrand(MbrandVO mbrand) {
+		this.mbrand = mbrand;
 	}
 	
 	public String getBarcode() {
@@ -71,14 +81,6 @@ public class MgoodsVO implements Serializable{
 
 	public void setBarcode(String barcode) {
 		this.barcode = barcode;
-	}
-	
-	public MbrandVO getMbrand() {
-		return mbrand;
-	}
-
-	public void setMbrand(MbrandVO mbrand) {
-		this.mbrand = mbrand;
 	}
 	
 	public String getTitle() {
@@ -97,6 +99,14 @@ public class MgoodsVO implements Serializable{
 		this.defaultImg = defaultImg;
 	}
 	
+	public Float getPrice() {
+		return price;
+	}
+
+	public void setPrice(Float price) {
+		this.price = price;
+	}
+
 	public Short getStatus() {
 		return status;
 	}
@@ -104,5 +114,4 @@ public class MgoodsVO implements Serializable{
 	public void setStatus(Short status) {
 		this.status = status;
 	}
-	
 }

@@ -42,11 +42,12 @@ public class AccessInterceptor extends AbstractInterceptor {
 		
 		String $authentication = request.getParameter("authentication");
 		
+		String userId = "base";
 		String actionName = invocation.getProxy().getActionName();
 		
 		try {
 			
-			if(actionName.startsWith("via") || actionName.startsWith("report")){
+			if(operationService.checkOperation(actionName)){
 				invocation.invoke();
 			}else{
 				
@@ -62,10 +63,16 @@ public class AccessInterceptor extends AbstractInterceptor {
 				
 				String decryptString = AESHelper.decryptString($authentication, encryptKey);
 				
+				if(decryptString == null || "".equals(decryptString)){
+					throw new FLException(110005, "登陆超时");
+				}
+				
 				Authentication authentication = new Authentication(decryptString);
 				Timestamp startTime = DateUtil.getDateToTimestamp(new Date());
 				
 				if(authentication.getUserId() != null){
+					
+					userId = authentication.getUserId();
 					
 					LogUtils.logging(logger, authentication.getUserId(), actionName, authentication.getCompany());
 					
@@ -78,7 +85,7 @@ public class AccessInterceptor extends AbstractInterceptor {
 						throw new FLException(110005, "登陆超时");
 					}
 					
-					if(operationService.checkOperationByUserId(authentication.getUserId(), actionName, authentication.getRollcall())){
+					if(operationService.checkOperation(authentication.getUserId(), actionName, authentication.getRollcall())){
 						invocation.invoke();
 					}else{
 						throw new FLException(-2, "无操作权限");
@@ -108,7 +115,7 @@ public class AccessInterceptor extends AbstractInterceptor {
 			invocation.getStack().setValue("errorCode", "110000");
 			invocation.getStack().setValue("errorMsg", "系统问题");
 			
-			LogUtils.logging(logger, e, actionName);
+			LogUtils.logging(logger, e, actionName, userId);
 		}
 		
 		return Action.SUCCESS;

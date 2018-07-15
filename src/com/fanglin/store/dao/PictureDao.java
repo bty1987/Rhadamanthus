@@ -6,8 +6,10 @@ import com.fanglin.core.dao.Dao;
 import com.fanglin.store.po.PicturePO;
 
 public interface PictureDao extends Dao<PicturePO> {
+	
+	public List<PicturePO> queryPictureByGid(Long gid);
 
-	public List<PicturePO> queryPicture(Long gid, Short type, Short status);
+	public List<PicturePO> queryPicture(Long gid, Short type);
 
 	public void updatePictureForSort(Long pid, Short sort);
 

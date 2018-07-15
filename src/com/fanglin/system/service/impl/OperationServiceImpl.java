@@ -78,7 +78,7 @@ public class OperationServiceImpl implements OperationService {
 	@Override
 	public List<OperationVO> queryOperation(OperationVO operationVO) {
 		
-		List<OperationPO> operationPOs = operationDao.queryOperationBySystem(operationVO.getSystem());
+		List<OperationPO> operationPOs = operationDao.queryOperation();
 		List<OperationVO> operationVOs = new ArrayList<OperationVO>();
 		
 		for(OperationPO operationPO: operationPOs){
@@ -102,7 +102,7 @@ public class OperationServiceImpl implements OperationService {
 			throw new FLException(190005, "人员不存在");
 		}
 		
-		List<RoleOperationPO> roleOperationPOs = roleOperationDao.queryRoleOperationByRid(userPO.getRole().getRid(), operationVO.getSystem());
+		List<RoleOperationPO> roleOperationPOs = roleOperationDao.queryRoleOperationByRid(userPO.getRole().getRid());
 		List<OperationVO> operationVOs = new ArrayList<OperationVO>();
 		
 		for(RoleOperationPO roleOperationPO: roleOperationPOs){
@@ -125,7 +125,7 @@ public class OperationServiceImpl implements OperationService {
 			throw new FLException(230010, "角色不存在");
 		}
 		
-		List<RoleOperationPO> roleOperationPOs = roleOperationDao.queryRoleOperationByRid(rolePO.getRid(), operationVO.getSystem());
+		List<RoleOperationPO> roleOperationPOs = roleOperationDao.queryRoleOperationByRid(rolePO.getRid());
 		List<OperationVO> operationVOs = new ArrayList<OperationVO>();
 		
 		for(RoleOperationPO roleOperationPO: roleOperationPOs){
@@ -140,7 +140,21 @@ public class OperationServiceImpl implements OperationService {
 	}
 
 	@Override
-	public boolean checkOperationByUserId(String userId, String operation, short rollcall) throws FLException {
+	public boolean checkOperation(String operation) throws FLException {
+		
+		boolean result = false;
+		
+		OperationPO operationPO = operationDao.queryOperationByOperation(operation);
+		
+		if (operationPO != null){
+			result = operationPO.getThrough() == OperationPO.THROUGH_PASS_INT;
+		}
+		
+		return result;
+	}
+
+	@Override
+	public boolean checkOperation(String userId, String operation, short rollcall) throws FLException {
 		
 		boolean result = false;
 		
@@ -175,7 +189,7 @@ public class OperationServiceImpl implements OperationService {
 			throw new FLException(230010, "角色不存在");
 		}
 		
-		roleOperationDao.deleteRoleOperationByRid(rolePO.getRid(), operationVO.getSystem());
+		roleOperationDao.deleteRoleOperationByRid(rolePO.getRid());
 		
 		if(oids != null && oids.size() > 0){
 			for(Integer oid: oids){
@@ -198,7 +212,7 @@ public class OperationServiceImpl implements OperationService {
 			throw new FLException(190005, "人员不存在");
 		}
 		
-		roleOperationDao.deleteRoleOperationByRid(userPO.getRole().getRid(), operationVO.getSystem());
+		roleOperationDao.deleteRoleOperationByRid(userPO.getRole().getRid());
 		
 		if(oids != null && oids.size() > 0){
 			for(Integer oid: oids){

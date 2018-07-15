@@ -11,12 +11,8 @@ import com.fanglin.utils.Paging;
 
 public interface MorderService {
 	
-	public void pageMorder(Paging paging, List<Filter> filters);
+	public void pageMorder(Paging paging, List<Filter> filters, Boolean flag);
 
-	public List<MorderVO> queryMorderByUid(MorderVO morderVO);
-	
-	public List<MorderVO> queryMorderByStatus(MorderVO morderVO);
-	
 	public int addMorder(MorderVO morderVO, List<MorderItemVO> morderItemVOs, List<Long> cids) throws FLException;
 	
 	public int updateMorderForStatus(MorderVO morderVO) throws FLException;

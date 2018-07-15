@@ -2,7 +2,6 @@ package com.fanglin.store.dao.impl;
 
 import java.util.List;
 
-import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
@@ -18,27 +17,18 @@ public class PictureDaoImpl extends DaoImpl<PicturePO> implements PictureDao {
 		super(PicturePO.class);
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<PicturePO> queryPictureByGid(Long gid) {
+		
+		return session().createCriteria(PicturePO.class).add(Restrictions.eq(PicturePO.COLUMN_GID_STR, gid)).list();
+	}
+	
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<PicturePO> queryPicture(Long gid, Short type, Short status) {
-		
-		Criteria criteria = session().createCriteria(PicturePO.class);
-		
-		if(gid != null){
-			criteria.add(Restrictions.eq(PicturePO.COLUMN_GID_STR, gid));
-		}
-		
-		if(type != null){
-			criteria.add(Restrictions.eq(PicturePO.COLUMN_TYPE_STR, type));
-		}
-		
-		if(status != null){
-			criteria.add(Restrictions.eq("status", status));
-		}
-			
-		criteria.addOrder(Order.asc("sort"));
-		
-		return criteria.list();
+	public List<PicturePO> queryPicture(Long gid, Short type) {
+	
+		return session().createCriteria(PicturePO.class).add(Restrictions.eq(PicturePO.COLUMN_GID_STR, gid)).add(Restrictions.eq(PicturePO.COLUMN_TYPE_STR, type)).addOrder(Order.asc("sort")).list();
 		
 	}
 

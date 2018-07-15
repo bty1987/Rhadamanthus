@@ -188,7 +188,7 @@ jQuery(function ($) {
 
         com.cleanItems(salary.items);
         $('#workersalaryModal').modal("show");
-        com.initChosen('workersalaryuser', api.personel.queryUserForNameByPinyinName, "pinyinName", {
+        com.initChosen('workersalaryuser', api.personel.queryUserByPinyin, "pinyinName", {
             "user.status": "0"
         }, "autoFillKeyValue", "key", "value");
 

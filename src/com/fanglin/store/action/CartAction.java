@@ -13,9 +13,10 @@ import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.store.service.CartService;
 import com.fanglin.store.vo.CartVO;
+import com.fanglin.store.vo.MuserVO;
 
 
-@ParentPackage("login")
+@ParentPackage("common")
 @Namespace("/")
 @Controller
 public class CartAction extends BaseListAction{
@@ -25,32 +26,36 @@ public class CartAction extends BaseListAction{
 	@Autowired
 	private CartService cartService;
 	
+	private MuserVO muser;
+	
 	private CartVO cart;
 	
 	private List<CartVO> carts;
 	
-	@Action(value="queryCartByUid", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryCartByUid(){
+	private List<Long> cids;
+	
+	@Action(value="pageCart", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String pageCart() throws FLException{
 		
-		carts = cartService.queryCartByUid(cart);
+		 cartService.pageCart(getPaging(), getFilters());
 		
 		return SUCCESS;
 		
 	}
 	
-	@Action(value="queryCartByUnion", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryCartByUnion(){
+	@Action(value="queryCartByUnionId", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String queryCartByUnionId() throws FLException{
 		
-		carts = cartService.queryCartByUnion(cart);
+		carts = cartService.queryCartByUnionId(muser);
 		
 		return SUCCESS;
 		
 	}
 	
-	@Action(value="addOrUpdateCart", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String addOrUpdateCart() throws FLException{
+	@Action(value="addCart", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String addCart() throws FLException{
 		
-		cartService.addOrUpdateCart(cart);
+		cartService.addCart(muser, cart);
 		
 		return SUCCESS;
 		
@@ -59,19 +64,27 @@ public class CartAction extends BaseListAction{
 	@Action(value="updateCart", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String updateCart() throws FLException{
 		
-		cartService.updateCart(cart);
+		cartService.updateCart(muser, cart);
 		
 		return SUCCESS;
 		
 	}
 	
-	@Action(value="deleteCartByCid", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String deleteCartByCid() throws FLException{
+	@Action(value="clearCart", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String clearCart() throws FLException{
 		
-		cartService.deleteCartByCid(cart);
+		cartService.clearCart(muser, cids);
 		
 		return SUCCESS;
 		
+	}
+	
+	public MuserVO getMuser() {
+		return muser;
+	}
+
+	public void setMuser(MuserVO muser) {
+		this.muser = muser;
 	}
 
 	public CartVO getCart() {
@@ -88,6 +101,14 @@ public class CartAction extends BaseListAction{
 
 	public void setCarts(List<CartVO> carts) {
 		this.carts = carts;
+	}
+
+	public List<Long> getCids() {
+		return cids;
+	}
+
+	public void setCids(List<Long> cids) {
+		this.cids = cids;
 	}
 	
 }

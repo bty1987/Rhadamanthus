@@ -5,7 +5,8 @@ $.extend(api.index, {
     noticeIndex: {url: "/views/information/noticeMng.html"},
     activityIndex: {url: "/views/information/activity.html"},
     activityItemIndex: {url: "/views/information/activityItem.html"},
-    phoneCallIndex: {url: "/views/information/phoneCall.html"}
+    phoneCallIndex: {url: "/views/information/phoneCall.html"},
+    vpaymentReceiptIndex:{url:"/views/information/vpaymentReceipt.html"}
 });
 
 $.extend(api, {information: {
@@ -53,9 +54,21 @@ $.extend(api, {information: {
     createVticket:{url:"createVticket.do"},
     updateVticket:{url:"updateVticket.do"},
     
-    //大活动—活动款
     pageVpayment:{url:"pageVpayment.do"},
     countVpayment:{url:"countVpayment.do"},
     createVpayment:{url:"createVpayment.do"},
     deleteVpaymentId:{url:"deleteVpaymentId.do"},
+    collectVpayment:{url:"collectVpayment.do"},
+    queryVpaymentByNo:{url:"queryVpaymentByNo.do"},
+    queryVpaymentByVrid:{url:"queryVpaymentByVrid.do"},
+    queryVreceiptByVrid:{url:"queryVreceiptByVrid.do"},
+	
+	pageTask:{url:"pageTask.do"},
+    queryTask:{url:"queryTask.do"},
+    addTask:{url:"addTask.do"},
+    updateTaskForStatus:{url:"updateTaskForStatus.do"},
+    
+    pagePlan:{url:"pagePlan.do"},
+    createPlan:{url:"createPlan.do"},
+    cancelPlan:{url:"cancelPlan.do"},
 }});

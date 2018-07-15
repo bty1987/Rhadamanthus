@@ -8,7 +8,7 @@ import org.apache.struts2.json.annotations.JSON;
 import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.communion.vo.HouseVO;
-import com.fanglin.personel.vo.UserVO;
+import com.fanglin.personel.vo.UserBaseVO;
 
 public class HouseSourceVO implements Serializable{
 
@@ -60,17 +60,17 @@ public class HouseSourceVO implements Serializable{
 	
 	private String checkingTime;
 	
-	private UserVO create;
+	private UserBaseVO create;
 	
 	private Timestamp createTime;
 	
-	private UserVO followUser;
+	private UserBaseVO followUser;
 	
 	private DepartmentVO department;
 	
 	private DepartmentVO region;
 	
-	private UserVO keyer;
+	private UserBaseVO keyer;
 	
 	private String housingGrade;
 	
@@ -89,7 +89,7 @@ public class HouseSourceVO implements Serializable{
 		this.house = house;
 	}
 	
-	public HouseSourceVO(HouseVO house, CustomerVO customer, UserVO create, UserVO followUser, UserVO keyer, DepartmentVO department, DepartmentVO region) {
+	public HouseSourceVO(HouseVO house, CustomerVO customer, UserBaseVO create, UserBaseVO followUser, UserBaseVO keyer, DepartmentVO department, DepartmentVO region) {
 		super();
 		this.house = house;
 		this.customer = customer;
@@ -286,11 +286,11 @@ public class HouseSourceVO implements Serializable{
 		this.checkingTime = checkingTime;
 	}
 
-	public UserVO getCreate() {
+	public UserBaseVO getCreate() {
 		return create;
 	}
 
-	public void setCreate(UserVO create) {
+	public void setCreate(UserBaseVO create) {
 		this.create = create;
 	}
 
@@ -302,11 +302,11 @@ public class HouseSourceVO implements Serializable{
 		this.createTime = createTime;
 	}
 
-	public UserVO getFollowUser() {
+	public UserBaseVO getFollowUser() {
 		return followUser;
 	}
 
-	public void setFollowUser(UserVO followUser) {
+	public void setFollowUser(UserBaseVO followUser) {
 		this.followUser = followUser;
 	}
 
@@ -334,11 +334,11 @@ public class HouseSourceVO implements Serializable{
 		this.path = path;
 	}
 	
-	public UserVO getKeyer() {
+	public UserBaseVO getKeyer() {
 		return keyer;
 	}
 
-	public void setKeyer(UserVO keyer) {
+	public void setKeyer(UserBaseVO keyer) {
 		this.keyer = keyer;
 	}
 

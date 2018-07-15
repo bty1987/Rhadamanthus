@@ -17,6 +17,10 @@ $(function(){
         postParam: {},
     };
 
+    $("#activityModal").on('show.bs.modal',function(e){
+        com.clearValidator();
+    });
+    
     $.extend(com.validator, activity.validator);
     $(".date-picker").datepicker({autoclose : !0}).on("show", function() {
         setTimeout(function() {

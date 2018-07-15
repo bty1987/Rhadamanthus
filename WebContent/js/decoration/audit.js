@@ -48,7 +48,7 @@ jQuery(function($) {
             var propertyArr = [
                 //显示的信息类型,显示信息的数据,显示信息的颜色
                 ["楼盘地址:", v.decoration.house.village.name + ' ' + v.decoration.house.houseNumber, "grey"],
-                ["客户:", v.decoration.customer.customerName, "grey"],
+                ["客户:", v.decoration.customer.name, "grey"],
                 ["设计师:", v.decoration.designer.currentName, "grey"],
                 ["设计部:", v.decoration.designer.dept.deptName, "grey"],
                 ["面积:", v.decoration.house.buildArea, "blue "],

@@ -1,9 +1,19 @@
 $(function(){
     var type={};
+    var createlabel = {
+        items:{},
+        modal: null,
+        saveLbaleBtn : null
+    }
+    createlabel.items.labelName = $("#name");
+    createlabel.items.type = $("#labeltype")
+    createlabel.items.scale = $("#labelscale");
+    createlabel.items.yes = $("#yes").switchBtn("isOrNot")
 
     com.post(api.ds.data,{},function(res){
-        $("#type").bindData(res.label,"key","value");
-        $.each(res.label,function(i,v){
+        $("#type").bindData(res.labeltype,"key","value");
+        createlabel.items.type.bindData(res.labeltype,"key","value");
+        $.each(res.labeltype,function(i,v){
             type[v.key]=v.value;
         })
     },null,false);
@@ -24,11 +34,12 @@ $(function(){
                 var $divBtnWrap = $('<div></div>').addClass('pull-right cation-buttons');
 
                 var $btnDel = $('<input />').attr("type","checkbox").addClass('ace ace-switch ace-switch-5').attr("checked", v.status == 0 ? true : false);
+                var $btnView= $("<a></a>").addClass("btn btn-minier btn-yellow").html("编辑");
                 var $btnSpan = $('<span></span>').addClass("lbl status-lbl");
 
                 var labelArr = [
                     ["类型:", type[v.type] , "grey"],
-                    ["比例:", v.proportion, "blue"]
+                    ["比例:", v.scale, "blue"]
                 ];
 
                 $.each(labelArr, function(index, value){
@@ -38,7 +49,7 @@ $(function(){
                     $liLabel.appendTo($ulProperty)
                 });
 
-                $divBtnWrap.append($btnDel).append($btnSpan).appendTo($h3);
+                $divBtnWrap.append($btnDel).append($btnSpan).append($btnView).appendTo($h3);
 
                 $liLine.append($h3).append($ulProperty).appendTo($ul);
 
@@ -50,6 +61,10 @@ $(function(){
                         cvalue = 1;
                     }
                     updatastatus(v.lid, cvalue);
+                })
+
+                $btnView.click(function(){
+                    editlabel(v);
                 })
 
             });
@@ -84,7 +99,7 @@ $(function(){
     });
 
     com.post(api.ds.data, {}, function(res){
-        $("#type").bindData(res.type, 'key', 'value');
+        $("#type").bindData(res.labeltype, 'key', 'value');
     });
 
     function updatastatus(labelId, cvalue){
@@ -92,19 +107,22 @@ $(function(){
         options["label.lid"] = labelId;
         options["label.status"] = cvalue;
 
-        com.post(api.data.updataForStatus, options, function(res){
+        com.post(api.data.updateLabelForStatus, options, function(res){
             labelSearcher.doSearch();
         })
     }
 
     $("#saveBtn").on('click', function(){
+        if(com.validate())
+            return;
+
         var $_modalBody = $('.modal-body');
         var type = $_modalBody.find('select[name="type"] option:selected').val();
 
         var options = {
             "label.name" : $("#labelName").val(),
             "label.type" : type,
-            "label.proportion":$("#proportion").val()
+            "label.scale":$("#scale").val()
         }
 
         com.post(api.data.addLabel, options, function(res){
@@ -112,9 +130,46 @@ $(function(){
             com.clearValidator("#type", true);
             com.clearValidator("#labelName", true);
             com.showAlert(com.info, "添加成功");
+            $("#scale").val("")
 
         })
         $("#labelModal").modal("hide");
     })
+
+
+    function editlabel(v){
+
+        createlabel.items.lid = v.lid;
+        createlabel.items.labelName.val(v.name);
+        createlabel.items.type.val(v.type);
+        createlabel.items.scale.val(v.scale);
+        if(v.isShow == 0){
+            createlabel.items.yes.prop("checked",true);
+        }else{
+            createlabel.items.yes.prop("checked",false);
+        }
+       // createlabel.items.yes.prop("checked", com.isOrNotType[v.isShow]);
+        $("#LbaleModal").modal("show");
+    }
+
+    $("#saveLbaleBtn").on('click', function(){
+
+        var option = {
+            "label.lid" : createlabel.items.lid,
+            "label.name" :  $("#name").val(),
+            "label.scale" : $("#labelscale").val(),
+            "label.type " : $("#labeltype").val(),
+            "label.isShow" : createlabel.items.yes.prop("checked")? 0 : 1
+        }
+
+        com.post(api.data.updateLabel, option, function(){
+            labelSearcher.doSearch()
+            com.showAlert(com.info,'修改成功');
+            $("#LbaleModal").modal("hide");
+        })
+    })
+
+
+
 
 });

@@ -21,24 +21,6 @@ public class ServicePaymentDaoImpl  extends DaoImpl<ServicePaymentPO> implements
 		super(ServicePaymentPO.class);
 	}
 	
-	
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<ServicePaymentPO> queryServicePaymentByOrderId(String orderId)
-	{
-		return session().createCriteria(ServicePaymentPO.class).createAlias("decoration", "decoration").add(Restrictions.eq("decoration.orderId", orderId)).list();
-	}
-	
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<ServicePaymentPO> queryServicePaymentForNotInitBySrId(long srId) {
-		
-		List<Short> status = Arrays.asList(ServicePaymentPO.COLUMN_INITIALSTATUS_INT, ServicePaymentPO.COLUMN_CONFIRMEDSTATUS_INT);
-		
-		return session().createCriteria(ServicePaymentPO.class).createAlias("serviceReceipt", "serviceReceipt").add(Restrictions.eq("serviceReceipt.srId", srId)).add(Restrictions.not(Restrictions.in("status", status))).list();
-	}
-	
-	
 	@Override
 	public List<ServicePaymentPO> pageServicePaymentForCollect(Paging paging, List<Filter> filters) {
 
@@ -57,6 +39,22 @@ public class ServicePaymentDaoImpl  extends DaoImpl<ServicePaymentPO> implements
 		queryFilterExecute(query, filters);
 
 		return query.list();
+	}
+	
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<ServicePaymentPO> queryServicePaymentByOrderId(String orderId)
+	{
+		return session().createCriteria(ServicePaymentPO.class).createAlias("decoration", "decoration").add(Restrictions.eq("decoration.orderId", orderId)).list();
+	}
+	
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<ServicePaymentPO> queryServicePaymentForNotInitBySrId(long srId) {
+		
+		List<Short> status = Arrays.asList(ServicePaymentPO.COLUMN_INITIALSTATUS_INT, ServicePaymentPO.COLUMN_CONFIRMEDSTATUS_INT);
+		
+		return session().createCriteria(ServicePaymentPO.class).createAlias("serviceReceipt", "serviceReceipt").add(Restrictions.eq("serviceReceipt.srId", srId)).add(Restrictions.not(Restrictions.in("status", status))).list();
 	}
 	
 	private void queryFilterExecute(PagingQuery<?> query, List<Filter> filters){
@@ -102,7 +100,6 @@ public class ServicePaymentDaoImpl  extends DaoImpl<ServicePaymentPO> implements
 						query.add(query.getCriterion("servicereceipt.collectTime", filter.getData(), filter.getOp()));
 					}
 				}
-				
 			}
 		}
 	}

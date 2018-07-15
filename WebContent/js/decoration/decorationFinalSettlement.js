@@ -1,21 +1,21 @@
-$(function(){
+$(function () {
     var decorationDetail = {
-        decorationOrderId:null,
-        orderType:"",
+        decorationOrderId: null,
+        orderType: "",
 
-        type:{
-            "半包":0,
-            "全包":1,
-            "半价":2,
+        type: {
+            0: "半包",
+            1: "全包",
+            2: "半价"
         },
 
         decoration: {},
-        customer:{},
-        village:{},
+        customer: {},
+        village: {},
 
-        quotationDetail:{},
+        quotationDetail: {},
 
-        btnSaveBasedecorationInfo:null,
+        btnSaveBasedecorationInfo: null,
 
         validator: {
             houseNumber: {
@@ -28,190 +28,299 @@ $(function(){
         items: {},
 
         vRepeatFlg: false,
-        cRepeatFlg: false
+        cRepeatFlg: false,
+        accountFlag: false
     };
 
-    var discount = 10;
+    decorationDetail.discount = 10;
 
     decorationDetail.decorationOrderId = params.decorationOrderId;
     decorationDetail.orderType = params.type;
+    decorationDetail.orderStatus = params.status;
 
-    $('#btnBack').on(ace.click_event, function(){
+    decorationDetail.accountModal = $("#applyDecorationAccount");
+    decorationDetail.items.maching = $("#maching");
+    decorationDetail.items.discount = $("#discount");
+    decorationDetail.items.projectPrice = $("#projectPrice");
+    decorationDetail.items.serviceRate = $("#serviceRate");
+
+    $('#btnBack').on(ace.click_event, function () {
         com.switchPage(params.historyPage);
     });
 
     decorationUtils.init();
     decorationUtils.initMaterial(decorationDetail);
-    
-    initWizard(discount,decorationDetail);
 
-    setTimeout(function () { quotationUtils.loadQuotationDetail(); }, 500);
+    initWizard(decorationDetail.discount, decorationDetail);
 
-})
+    setTimeout(function () {
+        quotationUtils.loadQuotationDetail();
+    }, 500);
 
-function initWizard(discount,decorationDetail) {
-    $('#fuelux-wizard').ace_wizard({"status": true}).on('change', function(e, info) {
+    function initWizard(discount, decorationDetail) {
+        $('#fuelux-wizard').ace_wizard({"status": true}).on('change', function (e, info) {
 
-        var curstep = 0;
+            var curstep = 0;
 
-        info.direction === "previous" ? curstep = info.step - 1 : curstep = info.step;
+            info.direction === "previous" ? curstep = info.step - 1 : curstep = info.step;
 
-        if (curstep == 1) {
-            quotationUtils.loadQuotationDetail();
-        } else if (curstep == 2){
-           decorationUtils.initMaterial(decorationDetail);
-        }else if (curstep == 3) {
-            $('#step3').empty();
-            drawBase("step3",decorationDetail);
-            drawTable(discount);
-        }
-    }).on('finished', function(e) {
-        com.switchPage(params.historyPage);
-    }).on('stepclick', function(e,info){
-
-        if (info.step == 1) {
-            quotationUtils.loadQuotationDetail();
-        }else if (info.step == 2){
-           decorationUtils.initMaterial(decorationDetail);
-        }else if (info.step == 3) {
-           $('#step3').empty();
-            drawBase("step3",decorationDetail);
-            drawTable(discount);
-        }
-    }).on('next', function(e, info) {
-    }).on('previous', function(e, info) {
-    });
-}
-function drawTable(discount) {
-    var machingType = {};
-    var decorationDetail = quotationUtils.quotationDetail;
-    var quotation = decorationDetail.quotation;
-    var payed = utils.changeTwoDecimal($('#materialPaidup').text() + $('#servicePaidup').text());
-
-    com.post(api.ds.decoration,{},function(res){
-        machingType = res.machingType;
-    },null,false);
-
-    var partCanDiscount = utils.changeTwoDecimal(decorationDetail.quotationUndisPrice + decorationDetail.minusQuoUndisPrice);
-    var partNotDiscount = utils.changeTwoDecimal(decorationDetail.quotationTotalPrice + decorationDetail.addReduceTotal + decorationDetail.minusQuoTotalPrice + decorationDetail.minusAddReduceTotal + decorationDetail.minusExtensionTotalPrice + decorationDetail.extensionItemTotalPrice);
-    var holonomyCanDiscount = utils.changeTwoDecimal(decorationDetail.quotationUndisPrice + decorationDetail.minusQuoUndisPrice + decorationDetail.quotationTotalPrice + decorationDetail.addReduceTotal + decorationDetail.minusQuoTotalPrice + decorationDetail.minusAddReduceTotal );
-    var holonomyNotDiscount = utils.changeTwoDecimal(decorationDetail.minusExtensionTotalPrice + decorationDetail.extensionItemTotalPrice);
-
-    var partTotal = utils.changeTwoDecimal(quotationUtils.quotationTotal());
-    var discountTotal = utils.changeTwoDecimal(quotationUtils.quotationCalculator(discount,0));
-    var transfee = utils.changeTwoDecimal(quotation.trafficPrice);
-    var managefee = utils.changeTwoDecimal(quotation.managePrice);
-
-    var table = $('<div></div>').html(null).addClass("fl-quo-cal");
-
-    var divItem1 = $('<div></div>').addClass('fl-quo-cal-item');
-
-    divItem1.append(createCalItem("基础",'normal border-right alert-info'),createCalItem("",'normal border-left-right alert-info'),createCalItem("",'normal border-left-right alert-info'),createCalItem("",'normal border-left-right alert-info'),createCalItem("",'normal border-left alert-info'),createCalItem("装修",' small border-left-right alert-success'),createCalItem("",'normal border-left alert-success'),createCalItem("主材",'small border-left-right alert-danger'),createCalItem("",'normal border-left-right alert-danger'),createCalItem("",'normal border-left-right alert-danger'),createCalItem("",'normal noborder'));
-    divItem1.appendTo(table);
-
-    var divItem2 = $('<div></div>').addClass('fl-quo-cal-item');
-    divItem2.append(createCalItem("版本",'normal'),createCalItem("折前总价",'normal'),createCalItem("打折项总额",'normal'),createCalItem("非打折项总额",'normal'),createCalItem("管理费",'normal'),createCalItem("折扣",'small'),createCalItem("折后总价",'normal'),createCalItem("配比",'small'),createCalItem("主材额",'normal'),createCalItem("服务费",'normal'),createCalItem("总额",' normal alert-warning'));
-    divItem2.appendTo(table);
-
-    var partDiv = $('<div></div>').addClass('fl-quo-cal-item');
-    partDiv.append(createCalItem("半包",'normal'),createCalItem(partTotal,'normal'),createCalItem(partCanDiscount,'normal'),createCalItem(utils.changeTwoDecimal(utils.accAdd(partNotDiscount,transfee)),'normal'),createCalItem(managefee,'normal'),createCalItem(discount,'small'),createCalItem(discountTotal,'normal'),createCalItem("-",'small'),createCalItem("-",'normal'),createCalItem("-",'normal'),createCalItem(utils.changeTwoDecimal(discountTotal),'normal alert-warning'));
-    partDiv.appendTo(table);
-
-    $.each(machingType,function (i,v) {
-
-        var projectPrice = quotationUtils.quotationCalculator(v.value,2);
-        var materialPrice = utils.changeTwoDecimal(utils.accMul(projectPrice,v.key));
-        var servicePrice = utils.changeTwoDecimal(utils.accMul(materialPrice,config.serviceRate));
-        var total = utils.changeTwoDecimal(utils.accAdd(projectPrice,utils.accAdd(materialPrice,servicePrice)));
-
-        var holonomyDiv = $('<div></div>').addClass('fl-quo-cal-item');
-
-        if(i == Math.ceil(machingType.length / 2) - 1){
-            if(machingType.length != 1){
-                holonomyDiv.append(createCalItem("半价",'normal border-top-bottom'),createCalItem(partTotal,'normal border-top-bottom'),createCalItem(utils.accAdd(utils.accAdd(holonomyCanDiscount,holonomyNotDiscount),transfee),'normal border-top-bottom'),createCalItem("-",'normal border-top-bottom'),createCalItem(managefee,'normal border-top-bottom'),createCalItem(v.value,'small'),createCalItem(projectPrice,'normal'),createCalItem(utils.accMul(v.key,100)+"%",'small'),createCalItem(materialPrice,'normal'),createCalItem(servicePrice,'normal'),createCalItem(total),'normal alert-warning');
-            }else {
-                holonomyDiv.append(createCalItem("半价",'normal border-top'),createCalItem(partTotal,'normal border-top'),createCalItem(utils.accAdd(utils.accAdd(holonomyCanDiscount,holonomyNotDiscount),transfee),'normal border-top'),createCalItem("-",'normal border-top'),createCalItem(managefee,'normal border-top'),createCalItem(v.value,'small'),createCalItem(projectPrice,'normal'),createCalItem(utils.accMul(v.key,100)+"%",'small'),createCalItem(materialPrice,'normal'),createCalItem(servicePrice,'normal'),createCalItem((total),'normal alert-warning'));
+            if (curstep == 1) {
+                quotationUtils.loadQuotationDetail();
+            } else if (curstep == 2) {
+                decorationUtils.initMaterial(decorationDetail);
+            } else if (curstep == 3) {
+                $('#step3').empty();
+                drawBase("step3", decorationDetail);
+                drawTable(discount);
             }
-        }else if(i == (machingType.length - 1)){
-            holonomyDiv.append(createCalItem("",'normal border-top'),createCalItem("",'normal border-top'),createCalItem("",'normal border-top'),createCalItem("",'normal border-top'),createCalItem("",'normal border-top'),createCalItem(v.value,'small'),createCalItem(projectPrice,'normal'),createCalItem(utils.accMul(v.key,100)+"%",'small'),createCalItem(materialPrice,'normal'),createCalItem(servicePrice,'normal'),createCalItem(total,'normal alert-warning'));
-        }else{
-            holonomyDiv.append(createCalItem("",'normal border-top-bottom'),createCalItem("",'normal border-top-bottom'),createCalItem("",'normal border-top-bottom'),createCalItem("",'normal border-top-bottom'),createCalItem("",'normal border-top-bottom'),createCalItem(v.value,'small'),createCalItem(projectPrice,'normal'),createCalItem(utils.accMul(v.key,100)+"%",'small'),createCalItem(materialPrice,'normal'),createCalItem(servicePrice,'normal'),createCalItem(total,'normal alert-warning'));
-        }
-        holonomyDiv.appendTo(table);
-    });
+        }).on('finished', function (e) {
+            com.switchPage(params.historyPage);
+        }).on('stepclick', function (e, info) {
 
-    var inputMainDiv = $("<div></div>").addClass("fl-quo-cal-item");
-    var input = $("<input>").attr("type","text").addClass("cell").css({"width":"17.8%"}).attr("id","calDiscount").attr("maxlength","4").val(discount);
-    var inputButton = $("<button></button>").addClass("btn btn-primary cell normal").attr("type","button").text("计算").off('click').on('click',function () {
-        discount = $("#calDiscount").val();
-        $(".fl-quo-cal").remove();
-
-        drawTable(discount,decorationDetail.undisPrice,decorationDetail.totalPrice);
-    });
-
-    inputMainDiv.append(createCalItem("输入折扣",'normal'),input,inputButton,createCalItem(" ",'normal  border-top').css({"border-width":"1px 0px 0px 0px"}),createCalItem(" ",'small border-top').css({"border-width":"1px 0px 0px 0px"}),createCalItem(" ",'normal border-top').css({"border-width":"1px 0px 0px 0px"}),createCalItem(" ",'small border-top').css({"border-width":"1px 0px 0px 0px"}),createCalItem(" ",'normal border-top').css({"border-width":"1px 0px 0px 0px"}),createCalItem(" ",'normal').css({"border-width":"1px 0px 0px 0px"}),createCalItem("",'normal border-top ').css({"border-width":"1px 0px 0px 0px"})).appendTo(table);
-    table.appendTo($('#step3'));
-
-    function createCalItem(text,inclass) {
-        return $('<div></div>').html(text).addClass('cell').addClass(inclass);
+            if (info.step == 1) {
+                quotationUtils.loadQuotationDetail();
+            } else if (info.step == 2) {
+                decorationUtils.initMaterial(decorationDetail);
+            } else if (info.step == 3) {
+                $('#step3').empty();
+                drawBase("step3", decorationDetail);
+                drawTable(discount);
+                if(decorationDetail.accountFlag){
+                    $("button[name='makeAccount']").addClass("hide");
+                    showDecorationAccount();
+                }
+            }
+        }).on('next', function (e, info) {
+        }).on('previous', function (e, info) {
+        });
     }
 
-}
-function  drawBase(divid,decorationDetail) {
-    var mainDiv = $('#' + divid);
+    function drawTable(discount) {
+        var machingType = {};
+        var decorationDetail = quotationUtils.quotationDetail;
+        var quotation = decorationDetail.quotation;
+        var payed = utils.changeTwoDecimal($('#materialPaidup').text() + $('#servicePaidup').text());
 
-    var holonomyDiv = $("<div></div>").addClass('row');
-    var holonomyHeader = $("<div></div>").addClass('widget-header').append($("<h4></h4>").append($('<strong></strong>').html("半价款项信息")));
-    var holonomyBody = $("<div></div>").addClass('widget-body');
-    var holonomyTable = $("<div></div>").addClass('clearfix').css({"margin-top": "15px", "margin-bottom": "15px"});
+        com.post(api.ds.decoration, {}, function (res) {
+            machingType = res.machingType;
+        }, null, false);
 
-    holonomyBody.append($("<div></div>").addClass('widget-body-inner').append(holonomyTable.append(createDivForHolonomy("col-md-4", "折前总价", "quotationPrice", true), createDivForHolonomy("col-md-4", "工程总额", "projectPrice", true), createDivForHolonomy("col-md-4", "管理费", "managePrice", false),
-        createDivForHolonomy("col-md-4", "主材总额", "materialPrice", true), createDivForHolonomy("col-md-4", "实收主材额", "materialPaidup", true), createDivForHolonomy("col-md-4", "主材额百分比", "materialPercent", false),
-        createDivForHolonomy("col-md-4", "服务费", "servicePrice", true), createDivForHolonomy("col-md-4", "实收服务费", "servicePaidup", true), createDivForHolonomy("col-md-4", "服务费百分比", "servicePercent", false))));
-    holonomyDiv.append($("<div></div>").addClass('widget-container-span col-md-12').append($("<div></div>").addClass('widget-box transparent').append(holonomyHeader, holonomyBody)));
-    $('<div></div>').addClass('hr col-md-12').appendTo(holonomyDiv);
-    $('<div></div>').addClass('hr col-md-12').prependTo(holonomyDiv);
-    holonomyDiv.appendTo(mainDiv);
+        var partCanDiscount = utils.changeTwoDecimal(decorationDetail.quotationUndisPrice + decorationDetail.minusQuoUndisPrice);
+        var partNotDiscount = utils.changeTwoDecimal(decorationDetail.quotationTotalPrice + decorationDetail.addReduceTotal + decorationDetail.minusQuoTotalPrice + decorationDetail.minusAddReduceTotal + decorationDetail.minusExtensionTotalPrice + decorationDetail.extensionItemTotalPrice);
+        var holonomyCanDiscount = utils.changeTwoDecimal(decorationDetail.quotationUndisPrice + decorationDetail.minusQuoUndisPrice + decorationDetail.quotationTotalPrice + decorationDetail.addReduceTotal + decorationDetail.minusQuoTotalPrice + decorationDetail.minusAddReduceTotal);
+        var holonomyNotDiscount = utils.changeTwoDecimal(decorationDetail.minusExtensionTotalPrice + decorationDetail.extensionItemTotalPrice);
 
-    com.post(api.decoration.queryDecorationHolonomy, {"decorationHolonomy.decoration.orderId": decorationDetail.decorationOrderId}, function (res) {
 
-        res = res.decorationHolonomy;
+        var partTotal = utils.changeTwoDecimal(quotationUtils.quotationTotal());
+        var discountTotal = utils.changeTwoDecimal(quotationUtils.quotationCalculator(discount, 0));
+        var transfee = utils.changeTwoDecimal(quotation.trafficPrice);
+        var managefee = utils.changeTwoDecimal(quotation.managePrice);
 
-        $('#projectPrice').html(checkNull(res.projectPrice + res.managePrice));
-        $('#managePrice').html(checkNull(res.managePrice));
-        $('#materialPrice').html(checkNull(res.materialPrice));
-        $('#servicePrice').html(checkNull(res.servicePrice));
-        $('#servicePaidup').html(checkNull(res.servicePaidup));
-        $('#materialPaidup').html(checkNull(decorationDetail.materialTotal));
-        var materialPaidup = decorationDetail.materialTotal;
+        var table = $('<div></div>').html(null).addClass("fl-quo-cal");
 
-        if(res.managePrice == null){
-            $('#quotationPrice').html(0);
-        }else {
-            $('#quotationPrice').html(checkNull(Math.ceil(utils.changeThrDecimal(utils.accAdd(utils.accDiv(checkNull(res.projectPrice), utils.accDiv(checkNull(res.discount), 10)), res.managePrice)))));
+        var divItem1 = $('<div></div>').addClass('fl-quo-cal-item');
+
+        divItem1.append(createCalItem("基础", 'normal border-right alert-info'), createCalItem("", 'normal border-left-right alert-info'), createCalItem("", 'normal border-left-right alert-info'), createCalItem("", 'normal border-left-right alert-info'), createCalItem("", 'normal border-left alert-info'), createCalItem("装修", ' small border-left-right alert-success'), createCalItem("", 'normal border-left alert-success'), createCalItem("主材", 'small border-left-right alert-danger'), createCalItem("", 'normal border-left-right alert-danger'), createCalItem("", 'normal border-left-right alert-danger'), createCalItem("", 'normal noborder'));
+        divItem1.appendTo(table);
+
+        var divItem2 = $('<div></div>').addClass('fl-quo-cal-item');
+        divItem2.append(createCalItem("版本", 'normal'), createCalItem("折前总价", 'normal'), createCalItem("打折项总额", 'normal'), createCalItem("非打折项总额", 'normal'), createCalItem("管理费", 'normal'), createCalItem("折扣", 'small'), createCalItem("折后总价", 'normal'), createCalItem("配比", 'small'), createCalItem("主材额", 'normal'), createCalItem("服务费", 'normal'), createCalItem("总额", ' normal alert-warning'));
+        divItem2.appendTo(table);
+
+        var partDiv = $('<div></div>').addClass('fl-quo-cal-item');
+        partDiv.append(createCalItem("半包", 'normal'), createCalItem(partTotal, 'normal'), createCalItem(partCanDiscount, 'normal'), createCalItem(utils.changeTwoDecimal(utils.accAdd(partNotDiscount, transfee)), 'normal'), createCalItem(managefee, 'normal'), createCalItem(discount, 'small'), createCalItem(discountTotal, 'normal'), createCalItem("-", 'small'), createCalItem("-", 'normal'), createCalItem("-", 'normal'), createCalItem(utils.changeTwoDecimal(discountTotal), 'normal alert-warning'));
+        partDiv.appendTo(table);
+
+        $.each(machingType, function (i, v) {
+
+            var projectPrice = quotationUtils.quotationCalculator(v.value, 2);//工程总额
+            var materialPrice = utils.changeTwoDecimal(utils.accMul(projectPrice, v.key));//主材总额
+            var servicePrice = utils.changeTwoDecimal(utils.accMul(materialPrice, config.serviceRate));//服务费
+            var total = utils.changeTwoDecimal(utils.accAdd(projectPrice, utils.accAdd(materialPrice, servicePrice)));
+
+            var holonomyDiv = $('<div></div>').addClass('fl-quo-cal-item');
+
+            if (i == Math.ceil(machingType.length / 2) - 1) {
+                if (machingType.length != 1) {
+                    holonomyDiv.append(createCalItem("半价", 'normal border-top-bottom'), createCalItem(partTotal, 'normal border-top-bottom'), createCalItem(utils.accAdd(utils.accAdd(holonomyCanDiscount, holonomyNotDiscount), transfee), 'normal border-top-bottom'), createCalItem("-", 'normal border-top-bottom'), createCalItem(managefee, 'normal border-top-bottom'), createCalItem(v.value, 'small'), createCalItem(projectPrice, 'normal'), createCalItem(utils.accMul(v.key, 100) + "%", 'small'), createCalItem(materialPrice, 'normal'), createCalItem(servicePrice, 'normal'), createCalItem(total), 'normal alert-warning');
+                } else {
+                    holonomyDiv.append(createCalItem("半价", 'normal border-top'), createCalItem(partTotal, 'normal border-top'), createCalItem(utils.accAdd(utils.accAdd(holonomyCanDiscount, holonomyNotDiscount), transfee), 'normal border-top'), createCalItem("-", 'normal border-top'), createCalItem(managefee, 'normal border-top'), createCalItem(v.value, 'small'), createCalItem(projectPrice, 'normal'), createCalItem(utils.accMul(v.key, 100) + "%", 'small'), createCalItem(materialPrice, 'normal'), createCalItem(servicePrice, 'normal'), createCalItem((total), 'normal alert-warning'));
+                }
+            } else if (i == (machingType.length - 1)) {
+                holonomyDiv.append(createCalItem("", 'normal border-top'), createCalItem("", 'normal border-top'), createCalItem("", 'normal border-top'), createCalItem("", 'normal border-top'), createCalItem("", 'normal border-top'), createCalItem(v.value, 'small'), createCalItem(projectPrice, 'normal'), createCalItem(utils.accMul(v.key, 100) + "%", 'small'), createCalItem(materialPrice, 'normal'), createCalItem(servicePrice, 'normal'), createCalItem(total, 'normal alert-warning'));
+            } else {
+                holonomyDiv.append(createCalItem("", 'normal border-top-bottom'), createCalItem("", 'normal border-top-bottom'), createCalItem("", 'normal border-top-bottom'), createCalItem("", 'normal border-top-bottom'), createCalItem("", 'normal border-top-bottom'), createCalItem(v.value, 'small'), createCalItem(projectPrice, 'normal'), createCalItem(utils.accMul(v.key, 100) + "%", 'small'), createCalItem(materialPrice, 'normal'), createCalItem(servicePrice, 'normal'), createCalItem(total, 'normal alert-warning'));
+            }
+            holonomyDiv.appendTo(table);
+        });
+
+        var inputMainDiv = $("<div></div>").addClass("fl-quo-cal-item");
+        var input = $("<input>").attr("type", "text").addClass("cell").css({"width": "17.8%"}).attr("id", "calDiscount").attr("maxlength", "4").val(discount);
+        var accountButton = $("<button></button>").addClass("btn btn-primary cell normal btn-warning").attr({"type": "button", "name": "makeAccount"}).text("生成决算");
+        var inputButton = $("<button></button>").addClass("btn btn-primary cell normal").attr("type", "button").text("计算").off('click').on('click', function () {
+            discount = $("#calDiscount").val();
+            $(".fl-quo-cal").remove();
+
+            drawTable(discount,decorationDetail.undisPrice, decorationDetail.totalPrice);
+        });
+        inputMainDiv.append(createCalItem("输入折扣", 'normal'), input,inputButton, accountButton, createCalItem(" ", 'normal  border-top').css({"border-width": "1px 0px 0px 0px"}), createCalItem(" ", 'small border-top').css({"border-width": "1px 0px 0px 0px"}), createCalItem(" ", 'normal border-top').css({"border-width": "1px 0px 0px 0px"}), createCalItem(" ", 'small border-top').css({"border-width": "1px 0px 0px 0px"}), createCalItem(" ", 'normal border-top').css({"border-width": "1px 0px 0px 0px"}), createCalItem(" ", 'normal').css({"border-width": "1px 0px 0px 0px"}), createCalItem("", 'normal border-top ').css({"border-width": "1px 0px 0px 0px"})).appendTo(table);
+        table.appendTo($('#step3'));
+
+        if (params.status == 6) {
+            accountButton.addClass("hide");
+        } else {
+            accountButton.bindClick(function () {
+
+                $("#applyDecorationAccount").modal("show")
+
+                $("#submitDecorationAccountBtn").click(function () {
+                    saveDecorationAccount();
+                })
+            });
+        }
+        function createCalItem(text, inclass) {
+            return $('<div></div>').html(text).addClass('cell').addClass(inclass);
+        }
+    }
+
+    function drawBase(divid, decorationDetail) {
+
+        $('#' + divid).append(deployAccount("accountPayment",decorationDetail.type[decorationDetail.orderType] + "款项信息", [
+            ["col-md-4", "折前总价", "quotationPrice", true],
+            ["col-md-4", "工程总额", "projectPrice", true],
+            ["col-md-4", "管理费", "managePrice", false],
+            ["col-md-4", "主材总额", "materialPrice", true],
+            ["col-md-4", "实收主材额", "materialPaidup", true],
+            ["col-md-4", "主材额百分比", "materialPercent", false],
+            ["col-md-4", "服务费", "servicePrice", true],
+            ["col-md-4", "实收服务费", "servicePaidup", true],
+            ["col-md-4", "服务费百分比", "servicePercent", false]
+        ]));
+
+        com.post(api.decoration.queryDecorationHolonomy, {"decorationHolonomy.decoration.orderId": decorationDetail.decorationOrderId}, function (res) {
+
+            showPaymentInfo(res.decorationHolonomy,decorationDetail.accountFlag);
+
+        }, function (e) {
+            com.showAlert(com.error, e.errorMsg);
+        }, false);
+
+        if (params.status == 6) {
+            showDecorationAccount();
+        }
+    }
+
+    function createDivForHolonomy(inclass, string, id, isleft) {
+        return $("<div></div>").addClass(inclass).css(isleft ? {
+            "border-left": "solid 1px #e3e3e3",
+            "margin-top": "15px"
+        } : {
+            "border-left": "solid 1px #e3e3e3",
+            "border-right": "solid 1px #e3e3e3",
+            "margin-top": "15px"
+        }).append($("<h5></h5>").addClass('bigger-110 center').html(string)).append($("<h2></h2>").addClass('oid bigger  center').append($('<b></b>').addClass('blue').attr('id', id).html(0)));
+    }
+
+    function deployAccount(id, title, content) {
+        var holonomyDiv = $("<div id="+ id +"></div>").addClass('row');
+        var holonomyHeader = $("<div></div>").addClass('widget-header').append($("<h4></h4>").append($('<strong></strong>').html(title)));
+        var holonomyBody = $("<div></div>").addClass('widget-body');
+        var holonomyTable = $("<div></div>").addClass('clearfix').css({"margin-top": "15px", "margin-bottom": "15px"});
+        holonomyBody.append($("<div></div>").addClass('widget-body-inner').append(holonomyTable));
+
+        $.each(content, function (i, v) {
+            createDivForHolonomy(v[0], v[1], v[2], v[3]).appendTo(holonomyTable);
+        });
+
+        holonomyDiv.append($("<div></div>").addClass('widget-container-span col-md-12').append($("<div></div>").addClass('widget-box transparent').append(holonomyHeader, holonomyBody)));
+
+        $('<div></div>').addClass('hr col-md-12').appendTo(holonomyDiv);
+        $('<div></div>').addClass('hr col-md-12').prependTo(holonomyDiv);
+
+        return holonomyDiv;
+    }
+
+    function saveDecorationAccount() {
+        if (com.validate()) {
+            return;
         }
 
-        if(res.materialPrice == null){
-            $('#materialPercent').html(0);
-        }else {
-            var materialPercent = utils.accMul(utils.changeThrDecimal(utils.accDiv(checkNull(materialPaidup), res.materialPrice)), 100);
-            $('#materialPercent').html(checkNull(materialPercent > 100 ? 100 : materialPercent) + "%");
+        var options = {
+            "decorationAccount.orderId": params.decorationOrderId,
+            "decorationAccount.type": decorationDetail.orderType,
+            "decorationAccount.maching": decorationDetail.items.maching.val(),
+            "decorationAccount.projectPrice": decorationDetail.items.projectPrice.val(),
+            "decorationAccount.discount": decorationDetail.items.discount.val(),
+            "decorationAccount.serviceRate": decorationDetail.items.serviceRate.val()
+        };
+
+        com.post(api.decoration.makeDecorationAccount, options, function (res) {
+
+            com.showAlert(com.info, "操作成功");
+            decorationDetail.accountFlag = true;
+            com.cleanItems(decorationDetail.items);
+            decorationDetail.accountModal.modal("hide");
+            $("button[name='makeAccount']").addClass("hide");
+            showDecorationAccount();
+        });
+    }
+
+    function showPaymentInfo(res,accountFlag){
+
+        var managePrice = com.checkNull(res.managePrice,0);
+        var decorationDetail = quotationUtils.quotationDetail;
+        var quotation = decorationDetail.quotation;
+        var quoManagePrice = utils.changeTwoDecimal(quotation.managePrice);
+        var materialPaidup =com.checkNull(res.materialPaidup,0);
+        var servicePaidup = com.checkNull(res.servicePaidup,0);
+
+        if(params.status !=6){
+            $('#projectPrice').html(utils.changeTwoDecimal(utils.accAdd(com.checkNull(res.projectPrice,0),com.checkNull(managePrice,accountFlag ==false  ? managePrice : quoManagePrice))));
+            $('#managePrice').html(com.checkNull(managePrice,accountFlag ==false ? managePrice : quoManagePrice));
+            managePrice = com.checkNull(managePrice,accountFlag == false ? managePrice : quoManagePrice );
+        }else{
+            $('#projectPrice').html(utils.changeTwoDecimal(utils.accAdd(com.checkNull(res.projectPrice,0),com.checkNull(managePrice,accountFlag ==false  ? quoManagePrice : managePrice))));
+            $('#managePrice').html(com.checkNull(managePrice,accountFlag ==false ? quoManagePrice : managePrice));
+            managePrice = com.checkNull(managePrice,accountFlag == false ? quoManagePrice : managePrice );
         }
 
-        if(res.servicePrice == null){
-            $('#servicePercent').html(0);
-        }else {
-            var servicePercent = utils.accMul(utils.changeThrDecimal(utils.accDiv(checkNull(res.servicePaidup), res.servicePrice)), 100);
-            $('#servicePercent').html(checkNull(servicePercent > 100 ? 100 : servicePercent) + "%");
-        }
+        $('#materialPrice').html(com.checkNull(res.materialPrice,0));
+        $('#servicePrice').html(com.checkNull(res.servicePrice,0));
+        $('#servicePaidup').html(servicePaidup);
+        $('#materialPaidup').html(materialPaidup);
 
-    },function (e) {
-        com.showAlert(com.error,e.errorMsg);
-    },false);
-}
-function createDivForHolonomy(inclass, string, id, isleft) {
-    return $("<div></div>").addClass(inclass).css(isleft ? {"border-left": "solid 1px #e3e3e3", "margin-top": "15px"}: {"border-left": "solid 1px #e3e3e3", "border-right": "solid 1px #e3e3e3", "margin-top": "15px"}).append($("<h5></h5>").addClass('bigger-110 center').html(string)).append($("<h2></h2>").addClass('oid bigger  center').append($('<b></b>').addClass('blue').attr('id', id).html(0)));
-}
-function checkNull(num) {
-    return num == null ? 0 : num;
-}
+        $('#quotationPrice').html(managePrice == null ? 0:Math.ceil(utils.changeTwoDecimal(utils.accAdd(utils.accDiv(res.projectPrice, utils.accDiv(com.checkNull(res.discount,10), 10)), managePrice))));
+        $('#materialPercent').html(res.materialPrice == null ? 0 :utils.accMul(utils.changeTwoDecimal(utils.accDiv(materialPaidup, res.materialPrice)), 100) > 100 ? 100 : utils.accMul(utils.changeTwoDecimal(utils.accDiv(materialPaidup, res.materialPrice)), 100)+"%");
+        $('#servicePercent').html(res.servicePrice == null ? 0 :utils.accMul(utils.changeTwoDecimal(utils.accDiv(servicePaidup, res.servicePrice)), 100) > 100 ? 100 :utils.accMul(utils.changeTwoDecimal(utils.accDiv(servicePaidup, res.servicePrice)), 100) +"%");
+
+    }
+
+    function showDecorationAccount() {
+        com.post(api.decoration.queryDecorationAccount, {"decorationAccount.orderId": params.decorationOrderId}, function (res) {
+
+            $("#accountPayment").append(deployAccount("account","决算信息", [
+                ["col-md-4", "主材配比", "maching", true],
+                ["col-md-4", "折扣", "discount", true],
+                ["col-md-4", "工程总额", "projectPrice_account", false],
+                ["col-md-4", "主材总额", "materialPrice_account", true],
+                ["col-md-4", "服务费比例", "serviceRate", true],
+                ["col-md-4", "服务费", "servicePrice_account", false]
+            ]));
+
+            res = res.decorationAccount;
+
+            $('#maching').html((utils.changeTwoDecimal(com.checkNull(res.maching*100,0))+"%"));
+            $('#discount').html(com.checkNull(res.discount,0));
+            $('#projectPrice_account').html(com.checkNull(res.projectPrice,0));
+            $('#materialPrice_account').html(com.checkNull(res.materialPrice,0));
+            $('#serviceRate').html(utils.changeTwoDecimal(com.checkNull(res.serviceRate*100,0))+"%");
+            $('#servicePrice_account').html(com.checkNull(res.servicePrice),0);
+
+            showPaymentInfo(res,decorationDetail.accountFlag);
+
+        }, function (e) {
+            com.showAlert(com.error, e.errorMsg);
+        }, false);
+    }
+
+});

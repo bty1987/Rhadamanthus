@@ -9,22 +9,14 @@ import com.fanglin.utils.Paging;
 
 public interface MgoodsService {
 
-	public void pageMgoods(Paging paging, List<Filter> filters);
-
-	public List<MgoodsVO> queryMgoodsByPinyinName(String pinyinName);
+	public void pageMgoods(Paging paging, List<Filter> filters, boolean flag);
 	
-	public List<MgoodsVO> queryMgoodsByBid(MgoodsVO mgood);
+	public List<MgoodsVO> queryMgoodsByPinyin(MgoodsVO mgoods);
 	
-	public List<MgoodsVO> queryMgoodsByStatus(MgoodsVO mgood);
+	public void addMgoods(MgoodsVO mgoods);
 
-	public MgoodsVO queryMgoodsByGid(MgoodsVO mgood);
+	public void updateMgoods(MgoodsVO mgoods) throws FLException;
 
-	public void addMgoods(MgoodsVO mgood) throws FLException;
-
-	public void updateMgoods(MgoodsVO mgood) throws FLException;
-	
-	public void updateMgoodsForDefaultImg(MgoodsVO mgood) throws FLException;
-
-	public void updateMgoodsForStatus(MgoodsVO mgood) throws FLException;
+	public void updateMgoodsForStatus(MgoodsVO mgoods) throws FLException;
 	
 }

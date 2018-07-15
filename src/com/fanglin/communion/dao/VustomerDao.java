@@ -11,8 +11,13 @@ public interface VustomerDao  extends Dao<VustomerPO> {
 	
 	public List<VustomerPO> pageVustomer(Paging paging, List<Filter> filters);
 	
+	public List<VustomerPO> pageVustomerByUnionId(Paging paging, List<Filter> filters ,String unionId);
+	
 	public List<VustomerPO> queryVustomer();
 	
-	public List<VustomerPO> queryVustomerByIdent(String ident);
+	public List<VustomerPO> queryVustomerByUnionId(String unionId);
+	
+	public List<?> countVustomerByUnionId(String unionId);
+
 	
 }

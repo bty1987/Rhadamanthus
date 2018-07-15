@@ -114,26 +114,16 @@ public class UserAction extends BaseListAction {
 	    return SUCCESS;
 	}
 	
-	@Action(value = "queryUserForNameByPinyinName", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryUserForNameByPinyinName() throws FLException{
+	@Action(value = "queryUserByPinyin", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryUserByPinyin() throws FLException{
 		
-		userBases = userService.queryUserForNameByPinyinName(pinyinName,user,queryCompany());
+		userBases = userService.queryUserByPinyin(pinyinName,user, departmentType);
 	
 		packageUserName(userBases);
 		
 		return SUCCESS;
 	}
 
-	@Action(value = "queryUserByDepartmentType", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryUserByDepartmentType() throws FLException{
-		
-		userBases = userService.queryUserByDepartmentType(pinyinName,user,departmentType);
-		
-		packageUserName(userBases);
-		
-		return SUCCESS;
-	}
-	
 	@Action(value = "queryUserByUids", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryUserByUids() throws FLException{
 		

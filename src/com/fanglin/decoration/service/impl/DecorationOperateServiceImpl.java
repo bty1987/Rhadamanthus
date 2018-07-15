@@ -46,8 +46,8 @@ public class DecorationOperateServiceImpl implements DecorationOperateService {
 				
 				DecorationOperatePO decorationOperatePO = new DecorationOperatePO();
 				decorationOperatePO.setOrderId(decorationPO.getOrderId());
-				decorationOperatePO.setDsuid(salesman.getBelonger().getUid());
-				decorationOperatePO.setSmuid(designer.getBelonger().getUid());
+				decorationOperatePO.setSmuid(salesman.getBelonger().getUid());
+				decorationOperatePO.setDsuid(designer.getBelonger().getUid());
 				decorationOperatePO.setOperater(operater);
 				decorationOperatePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 				decorationOperatePO.setStatus(DecorationOperatePO.STATUS_DISABLED_INT);

@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 
 import com.fanglin.communion.vo.CustomerVO;
-import com.fanglin.personel.vo.UserVO;
+import com.fanglin.personel.vo.UserBaseVO;
 
 public class CustomerSourceVO implements Serializable{
 
@@ -36,7 +36,7 @@ public class CustomerSourceVO implements Serializable{
 	
 	private String grade;
 	
-	private UserVO create;
+	private UserBaseVO create;
 	
 	private Timestamp createTime;
 	
@@ -48,7 +48,7 @@ public class CustomerSourceVO implements Serializable{
 		super();
 	}
 	
-	public CustomerSourceVO(CustomerVO customer, UserVO create) {
+	public CustomerSourceVO(CustomerVO customer, UserBaseVO create) {
 		super();
 		this.customer = customer;
 		this.create = create;
@@ -157,11 +157,11 @@ public class CustomerSourceVO implements Serializable{
 		this.grade = grade;
 	}
 
-	public UserVO getCreate() {
+	public UserBaseVO getCreate() {
 		return create;
 	}
 
-	public void setCreate(UserVO create) {
+	public void setCreate(UserBaseVO create) {
 		this.create = create;
 	}
 

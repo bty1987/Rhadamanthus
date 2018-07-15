@@ -11,18 +11,12 @@ public interface MpriceService {
 	
 	public List<MpriceVO> queryMpriceByGid(MpriceVO mpriceVO);
 	
-	public List<MpriceVO> queryMpriceByBid(MpriceVO mpriceVO);
+	public List<MpriceVO> queryMpriceByPinyin(MpriceVO mpriceVO);
 	
-	public List<MpriceVO> queryMpriceByPinyinName(String pinyinName);
-	
-	public List<MpriceVO> queryMpriceByStatus(MpriceVO mpriceVO);
-	
-	public List<MpriceVO> queryMpriceByGidAndCid(MpriceVO mpriceVO);
-	
-	public List<MpriceVO> queryMpriceByGidAndFid(MpriceVO mpriceVO);
+	public List<MpriceVO> queryMpriceForShow(MpriceVO mpriceVO);
 	
 	public int addMprice(MpriceVO mpriceVO) throws FLException;
 	
-	public int updateMpriceForStatus(MpriceVO mpriceVO) throws FLException;
+	public int updateMpriceForStatus(MpriceVO mpriceVO);
 	
 }

@@ -838,10 +838,133 @@ var decorationUtils = {
                 $liLine.appendTo($ul);
             });
 
-
             $ul.appendTo($tableWrap);
         }
-    }, initAddreduce: function (orderId, type) {
+    },initAccount:function(orderId,accountFlg){
+
+        var $metaData = $('#accountPayment').html('');
+
+        com.post(api.decoration.queryDecorationAccount, {"decorationAccount.orderId": orderId}, function (res) {
+
+            res = res.decorationAccount;
+
+            if(accountFlg){
+                $metaData.html('');
+                var $zone = $('<div></div>').addClass('dropzone dz-clickable').css('margin','20px').css('border','0px').appendTo($metaData);
+                var $mesg = $('<div></div>').addClass('dz-default dz-message').appendTo($zone);
+                $mesg.append($('<span></span>').text('无可用数据提供'));
+            }else{
+
+                function createDivForAccount(inclass, string, id, isleft) {
+                    return $("<div></div>").addClass(inclass).css(isleft ? {
+                        "border-left": "solid 1px #e3e3e3",
+                        "margin-top": "15px"
+                    } : {
+                        "border-left": "solid 1px #e3e3e3",
+                        "border-right": "solid 1px #e3e3e3",
+                        "margin-top": "15px"
+                    }).append($("<h5></h5>").addClass('bigger-110 center').html(string)).append($("<h2></h2>").addClass('oid bigger  center').append($('<b></b>').addClass('blue').attr('id', id).html(0)));
+                }
+
+                function deployAccount(id, title, content) {
+                    var accountDiv = $("<div id="+ id +"></div>").addClass('row');
+                    var accountHeader = $("<div></div>").addClass('widget-header').append($("<h4></h4>").append($('<strong></strong>').html(title)));
+                    var accountBody = $("<div></div>").addClass('widget-body');
+                    var accountTable = $("<div></div>").addClass('clearfix').css({"margin-top": "15px", "margin-bottom": "15px"});
+                    accountBody.append($("<div></div>").addClass('widget-body-inner').append(accountTable));
+
+                    $.each(content, function (i, v) {
+                        createDivForAccount(v[0], v[1], v[2], v[3]).appendTo(accountTable);
+                    });
+
+                    accountDiv.append($("<div></div>").addClass('widget-container-span col-md-12').append($("<div></div>").addClass('widget-box transparent').append(accountHeader, accountBody)));
+
+                    $('<div></div>').addClass('hr col-md-12').appendTo(accountDiv);
+                    $('<div></div>').addClass('hr col-md-12').prependTo(accountDiv);
+
+                    return accountDiv;
+                }
+
+                $("#accountPayment").append(deployAccount("account","决算信息", [
+                    ["col-md-4", "主材配比", "maching", true],
+                    ["col-md-4", "折扣", "discount", true],
+                    ["col-md-4", "工程总额", "projectPrice_account", false],
+                    ["col-md-4", "主材总额", "materialPrice_account", true],
+                    ["col-md-4", "服务费比例", "serviceRate", true],
+                    ["col-md-4", "服务费", "servicePrice_account", false]
+                ]));
+
+                $('#maching').html((utils.changeTwoDecimal(com.checkNull(res.maching*100,0))+"%"));
+                $('#discount').html(com.checkNull(res.discount,0));
+                $('#projectPrice_account').html(com.checkNull(res.projectPrice,0));
+                $('#materialPrice_account').html(com.checkNull(res.materialPrice,0));
+                $('#serviceRate').html(utils.changeTwoDecimal(com.checkNull(res.serviceRate*100,0))+"%");
+                $('#servicePrice_account').html(com.checkNull(res.servicePrice),0);
+            }
+
+        });
+
+    }, initService: function (decorationDetail,orderId) {
+
+        var $service = $("#serviceInfo").html('');
+
+        var $serviceul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable').appendTo($service);
+
+        var serviceInfo = null;
+
+        com.post(api.decoration.queryDecorationServiceByOrderId, {"decorationService.orderId": orderId}, function (res) {
+            decorationServices = res.decorationServices;
+        }, null, false);
+
+        if (decorationServices && decorationServices.length) {
+            $.each(decorationServices, function (i, v) {
+                var $liLine = $('<li></li>').addClass('item-orange clearfix');
+                var $h4 = $('<h4></h4>').addClass('oid').append($('<b></b>').addClass('blue').html(v.name));
+                var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+                var $ulStyle = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+                var $divBtnBlock = $('<div></div>').addClass('clearfix col-sm-12');
+                var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+                var $updateBtn = $('<a></a>').addClass('btn btn-minier btn-yellow').html('完成');;
+
+                var propertyArr = [
+                    ["装修单号:", v.orderId, "grey"],
+                    ["详述:", v.detail, "grey"],
+                    ["操作人:", v.operater.currentName, "grey"],
+                    ["操作时间:", v.operateTime, "green"],
+                    ["状态:", v.status == 0 ? '初始' : '完成', "red"],
+                    ["备注:",v.comment,"grey"]
+                ];
+
+                $updateBtn.click(function () {
+                    decorationDetail.dsid = v.dsid;
+                    com.cleanItems(decorationDetail.serviceItems);
+                    decorationDetail.serviceModal.modal("show");
+                });
+
+                $.each(propertyArr, function (index, value) {
+                    var $liProperty = $('<li></li>');
+                    $('<strong></strong>').html(value[0]).appendTo($liProperty);
+                    $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+                    $liProperty.appendTo($ulProperty);
+                });
+
+                if (v.status == 0) {
+                    $divBtnWrap.append($updateBtn);
+                    $divBtnWrap.appendTo($h4);
+                }
+
+                $liLine.append($h4).append($ulProperty).append($ulStyle).append($divBtnBlock);
+
+                $liLine.appendTo($serviceul)
+            });
+        }else{
+            var $metaData = $('#serviceInfo').html('');
+            var $zone = $('<div></div>').addClass('dropzone dz-clickable').css('margin','20px').css('border','0px').appendTo($metaData);
+            var $mesg = $('<div></div>').addClass('dz-default dz-message').appendTo($zone);
+            $mesg.append($('<span></span>').text('无可用数据提供'));
+        }
+    },initAddreduce: function (orderId, type) {
+
         var $resList = $('#resLists').html('');
         var $table = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable ');
 

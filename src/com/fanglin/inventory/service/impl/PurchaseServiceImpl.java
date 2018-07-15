@@ -24,13 +24,10 @@ import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.sales.dao.SalesDao;
-import com.fanglin.sales.dao.SalesItemDao;
 import com.fanglin.sales.dao.SalesPurchaseDao;
-import com.fanglin.sales.po.SalesItemPO;
 import com.fanglin.sales.po.SalesPO;
 import com.fanglin.sales.po.SalesPurchasePO;
 import com.fanglin.sales.vo.SalesVO;
-import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.Paging;
@@ -57,9 +54,6 @@ public class PurchaseServiceImpl  implements PurchaseService{
 	
 	@Autowired
 	private SalesPurchaseDao salesPurchaseDao;
-	
-	@Autowired
-	private SalesItemDao salesItemDao;
 	
 	@Override
 	public void pagePurchase(Paging paging, List<Filter> filters, int company) {
@@ -161,21 +155,7 @@ public class PurchaseServiceImpl  implements PurchaseService{
 		PurchaseItemPO purchaseItemPO;
 		
 		for(PurchaseItemVO purchaseItemVO:purchaseItemVOs){
-			
-			if(purchaseItemVO.getSiid() != null){
-				
-				SalesItemPO salesItemPO = salesItemDao.get(purchaseItemVO.getSiid());
-				
-				if(salesItemPO.getPunum() < purchaseItemVO.getNum()){
-					throw new FLException(260048, "可采购数量不足");
-				}
-				
-				salesItemPO.setPunum(Arith.sub(salesItemPO.getPunum(), purchaseItemVO.getNum()));
-				
-				salesItemDao.update(salesItemPO);
-			}
-			
-			
+						
 			purchaseItemPO = new PurchaseItemPO(new GoodsPO(),new ColorPO(),new FormatPO());
 			
 			purchaseItemPO.setPid(purchasePO.getPid());

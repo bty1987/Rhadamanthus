@@ -39,7 +39,7 @@ import com.fanglin.utils.IPUtil;
 import com.fanglin.utils.LogUtils;
 import com.fanglin.utils.SystemConfig;
 
-@ParentPackage("login")
+@ParentPackage("common")
 @Namespace("/")
 @Controller
 public class LoginAction extends BaseListAction {
@@ -122,7 +122,7 @@ public class LoginAction extends BaseListAction {
 			setErrorCode(110000);
 			setErrorMsg("系统处理问题");
 			
-			LogUtils.logging(logger, e, "doLogin");
+			LogUtils.logging(logger, e, "doLogin", "common");
 		}
 		
 		return SUCCESS;
@@ -148,6 +148,11 @@ public class LoginAction extends BaseListAction {
 		} catch (FLException e) {
 			setErrorCode(e.getCode());
 			setErrorMsg(e.getErrorMessage());
+		} catch (Exception e) {
+			setErrorCode(110000);
+			setErrorMsg("系统处理问题");
+			
+			LogUtils.logging(logger, e, "requestAuthCode", "common");
 		}
 		
 		return SUCCESS;
@@ -165,6 +170,11 @@ public class LoginAction extends BaseListAction {
 		} catch (FLException e) {
 			setErrorCode(e.getCode());
 			setErrorMsg(e.getErrorMessage());
+		} catch (Exception e) {
+			setErrorCode(110000);
+			setErrorMsg("系统处理问题");
+			
+			LogUtils.logging(logger, e, "changeAuthCode", "common");
 		}
 		
 		return SUCCESS;
@@ -197,7 +207,8 @@ public class LoginAction extends BaseListAction {
 		try {
 			run.exec(cmd);
 		} catch (Exception e) {
-			throw new FLException(110000, "系统处理问题");
+			setErrorCode(110000);
+			setErrorMsg("系统处理问题");
 		}
 		
 		return SUCCESS;

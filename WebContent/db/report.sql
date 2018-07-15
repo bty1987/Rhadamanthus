@@ -196,4 +196,91 @@ CREATE TABLE `materialdesignerregionrank` (
   `company` int(11) NOT NULL,
   PRIMARY KEY (`mdrrId`),
   KEY `indexone` (`designerRegionId`,`status`,`createTime`,`endTime`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材设计中心排名';
+) ENGINE=InnoDB AUTO_INCREMENT=94 DEFAULT CHARSET=utf8 COMMENT='主材设计中心排名';
+
+DROP TABLE IF EXISTS `zaterialdesignercount`;
+CREATE TABLE `zaterialdesignercount` (
+  `zdcId` int(11) NOT NULL AUTO_INCREMENT,
+  `designerId` varchar(15) NOT NULL,
+  `designerName` varchar(32) NOT NULL,
+  `designerDepartmentId` varchar(15) NOT NULL,
+  `designerDepartmentName` varchar(32) NOT NULL,
+  `designerRegionId` varchar(15) NOT NULL,
+  `designerRegionName` varchar(32) NOT NULL,
+  `materialBrand` varchar(32) NOT NULL,
+  `createTime` date NOT NULL,
+  `total` decimal(10,3) NOT NULL DEFAULT '0.000',
+  PRIMARY KEY (`zdcId`),
+  UNIQUE KEY `uniqueone` (`designerId`,`materialBrand`,`createTime`),
+  KEY `indexone` (`designerId`,`createTime`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='正林设计师业绩统计';
+
+DROP TABLE IF EXISTS `zaterialdesignerdepartmentcount`;
+CREATE TABLE `zaterialdesignerdepartmentcount` (
+  `zddcId` int(11) NOT NULL AUTO_INCREMENT,
+  `designerDeptId` varchar(15) NOT NULL,
+  `designerDeptName` varchar(32) NOT NULL,
+  `designerRegionId` varchar(15) NOT NULL,
+  `designerRegionName` varchar(32) NOT NULL,
+  `materialBrand` varchar(32) NOT NULL,
+  `createTime` date NOT NULL,
+  `total` decimal(10,3) NOT NULL DEFAULT '0.000',
+  PRIMARY KEY (`zddcId`),
+  UNIQUE KEY `uniqueone` (`designerDeptId`,`materialBrand`,`createTime`),
+  KEY `indexone` (`designerDeptId`,`createTime`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='正林设计部门业绩统计';
+
+DROP TABLE IF EXISTS `zaterialdesignerdepartmentrank`;
+CREATE TABLE `zaterialdesignerdepartmentrank` (
+  `zddrId` int(11) NOT NULL AUTO_INCREMENT,
+  `designerDeptId` varchar(15) NOT NULL,
+  `designerDeptName` varchar(32) NOT NULL,
+  `createTime` date NOT NULL,
+  `endTime` date NOT NULL,
+  `rank` double NOT NULL DEFAULT '0',
+  `status` tinyint(4) NOT NULL DEFAULT '0',
+  `company` int(11) NOT NULL,
+  PRIMARY KEY (`zddrId`),
+  KEY `indexone` (`designerDeptId`,`status`,`createTime`,`endTime`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='正林设计部门排名';
+
+DROP TABLE IF EXISTS `zaterialdesignerrank`;
+CREATE TABLE `zaterialdesignerrank` (
+  `zdrId` int(11) NOT NULL AUTO_INCREMENT,
+  `designerId` varchar(15) NOT NULL,
+  `designerName` varchar(32) NOT NULL,
+  `createTime` date NOT NULL,
+  `endTime` date NOT NULL,
+  `rank` double NOT NULL DEFAULT '0',
+  `status` tinyint(4) NOT NULL DEFAULT '0',
+  `company` int(11) NOT NULL,
+  PRIMARY KEY (`zdrId`),
+  KEY `indexone` (`designerId`,`status`,`createTime`,`endTime`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='正林设计师排名';
+
+DROP TABLE IF EXISTS `zaterialdesignerregioncount`;
+CREATE TABLE `zaterialdesignerregioncount` (
+  `zdrcId` int(11) NOT NULL AUTO_INCREMENT,
+  `designerRegionId` varchar(15) NOT NULL,
+  `designerRegionName` varchar(32) NOT NULL,
+  `materialBrand` varchar(32) NOT NULL,
+  `createTime` date NOT NULL,
+  `total` decimal(10,3) NOT NULL DEFAULT '0.000',
+  PRIMARY KEY (`zdrcId`),
+  UNIQUE KEY `uniqueone` (`designerRegionId`,`materialBrand`,`createTime`),
+  KEY `indexone` (`designerRegionId`,`createTime`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='正林设计分区业绩统计';
+
+DROP TABLE IF EXISTS `zaterialdesignerregionrank`;
+CREATE TABLE `zaterialdesignerregionrank` (
+  `zdrrId` int(11) NOT NULL AUTO_INCREMENT,
+  `designerRegionId` varchar(15) NOT NULL,
+  `designerRegionName` varchar(32) NOT NULL,
+  `createTime` date NOT NULL,
+  `endTime` date NOT NULL,
+  `rank` double NOT NULL DEFAULT '0',
+  `status` tinyint(4) NOT NULL DEFAULT '0',
+  `company` int(11) NOT NULL,
+  PRIMARY KEY (`zdrrId`),
+  KEY `indexone` (`designerRegionId`,`status`,`createTime`,`endTime`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='正林设计中心排名';

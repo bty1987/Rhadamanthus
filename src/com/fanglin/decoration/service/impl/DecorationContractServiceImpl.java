@@ -223,21 +223,20 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 			resignFlag = true;
 		}
 		
+		UserPO operater = userDao.queryUserByUserId(userId);
+		
 		decorationPO.setStatus(DecorationPO.STATUS_SIGNED_INT);
 		decorationPO.setContractCode(decorationContractPO.getContractCode());
-		decorationPO.setContractUserId(userDao.queryUserByOldUserId(userId));
+		decorationPO.setContracter(operater);
 		
 		List<DecorationBelongPO> designerOrderBelongInfoPOs = orderBelongInfoDao.queryOrderBelongInfoForCurrentByOrderIdAType(decorationContractVO.getOrderId(), DecorationBelongPO.BELONGTYPE_DESIGN_INT);
 		List<DecorationBelongPO> salemsanOrderBelongInfoPOs = orderBelongInfoDao.queryOrderBelongInfoForCurrentByOrderIdAType(decorationContractVO.getOrderId(), DecorationBelongPO.BELONGTYPE_SALESMAN_INT);
-		
 		
 		if(!resignFlag){
 			decorationPO.setContractTime(DateUtil.getDateToTimestamp(new Date()));
 		}
 		
 		decorationDao.update(decorationPO);
-		
-		UserPO operater = userDao.queryUserByUserId(userId);
 		
 		DecorationOperatePO decorationOperatePO = new DecorationOperatePO();
 		decorationOperatePO.setOrderId(decorationPO.getOrderId());

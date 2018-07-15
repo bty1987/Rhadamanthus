@@ -14,7 +14,7 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.store.service.MformatService;
 import com.fanglin.store.vo.MformatVO;
 
-@ParentPackage("login")
+@ParentPackage("base")
 @Namespace("/")
 @Controller
 public class MformatAction extends BaseListAction{
@@ -36,26 +36,10 @@ public class MformatAction extends BaseListAction{
 		return SUCCESS;
 	}
 	
-	@Action(value="queryMformatByGidAndStatus", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryMformatByGidAndStatus(){
-		
-		mformats = mformatService.queryMformatByGidAndStatus(mformat);
-		
-		return SUCCESS;
-	}
-	
 	@Action(value="addMformat", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String addMformat() throws FLException{
+	public String addMformat(){
 		
 		mformatService.addMformat(mformat);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value="updateMformat", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String updateMformat() throws FLException{
-		
-		mformatService.updateMformat(mformat);
 		
 		return SUCCESS;
 	}

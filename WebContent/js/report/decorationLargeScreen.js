@@ -16,8 +16,8 @@ $(function () {
         PropertySignedOrdersTOP10: $('#PropertySignedOrdersTOP10'),
         fullScreen: $('#fullScreen'),
         elasticUrl: {
-            create: 'http://192.168.5.21:9200/decoration-create-*/_search',
-            contract: 'http://192.168.5.21:9200/decoration-contract-*/_search',
+            create: 'http://192.168.5.22:9200/decoration-create-*/_search',
+            contract: 'http://192.168.5.22:9200/decoration-contract-*/_search',
         }
     }
 
@@ -26,19 +26,14 @@ $(function () {
 
         /*F-3-公司天级量尺数走势*/
         var CompanyDaysLevelScaleRuleTrend = {
+            "size": 0,
             "query": {
                 "bool": {
                     "must": [
                         {
                             "query_string": {
-                                "analyze_wildcard": true,
-                                "query": "*"
-                            }
-                        },
-                        {
-                            "query_string": {
-                                "analyze_wildcard": true,
-                                "query": "*"
+                                "query": "*",
+                                "analyze_wildcard": true
                             }
                         },
                         {
@@ -54,7 +49,6 @@ $(function () {
                     "must_not": []
                 }
             },
-            "size": 0,
             "_source": {
                 "excludes": []
             },
@@ -69,7 +63,7 @@ $(function () {
                     "aggs": {
                         "3": {
                             "terms": {
-                                "field": "companyName.keyword",
+                                "field": "company.keyword",
                                 "size": 5,
                                 "order": {
                                     "1": "desc"
@@ -78,43 +72,25 @@ $(function () {
                             "aggs": {
                                 "1": {
                                     "sum": {
-                                        "field": "halfbelongRate"
+                                        "field": "designerRate"
                                     }
                                 }
                             }
                         }
                     }
                 }
-            },
-            "version": true,
-            "highlight": {
-                "pre_tags": [
-                    "@kibana-highlighted-field@"
-                ],
-                "post_tags": [
-                    "@/kibana-highlighted-field@"
-                ],
-                "fields": {
-                    "*": {}
-                },
-                "fragment_size": 2147483647
             }
         }
         /*F-4-公司天级签单数走势*/
         var CompanyDaysToSignASingleNumberOfTrends = {
+            "size": 0,
             "query": {
                 "bool": {
                     "must": [
                         {
                             "query_string": {
-                                "analyze_wildcard": true,
-                                "query": "*"
-                            }
-                        },
-                        {
-                            "query_string": {
-                                "analyze_wildcard": true,
-                                "query": "*"
+                                "query": "*",
+                                "analyze_wildcard": true
                             }
                         },
                         {
@@ -130,7 +106,6 @@ $(function () {
                     "must_not": []
                 }
             },
-            "size": 0,
             "_source": {
                 "excludes": []
             },
@@ -145,8 +120,8 @@ $(function () {
                     "aggs": {
                         "3": {
                             "terms": {
-                                "field": "companyName.keyword",
-                                "size": 5,
+                                "field": "company.keyword",
+                                "size": 10,
                                 "order": {
                                     "1": "desc"
                                 }
@@ -154,39 +129,21 @@ $(function () {
                             "aggs": {
                                 "1": {
                                     "sum": {
-                                        "field": "halfbelongRate"
+                                        "field": "designerRate"
                                     }
                                 }
                             }
                         }
                     }
                 }
-            },
-            "version": true,
-            "highlight": {
-                "pre_tags": [
-                    "@kibana-highlighted-field@"
-                ],
-                "post_tags": [
-                    "@/kibana-highlighted-field@"
-                ],
-                "fields": {
-                    "*": {}
-                },
-                "fragment_size": 2147483647
             }
         }
         /*F-1-量尺总数*/
         var TheTotalNumberOfRuler = {
+            "size": 0,
             "query": {
                 "bool": {
                     "must": [
-                        {
-                            "query_string": {
-                                "query": "*",
-                                "analyze_wildcard": true
-                            }
-                        },
                         {
                             "query_string": {
                                 "analyze_wildcard": true,
@@ -206,33 +163,20 @@ $(function () {
                     "must_not": []
                 }
             },
-            "size": 0,
             "_source": {
                 "excludes": []
             },
             "aggs": {
                 "1": {
                     "sum": {
-                        "field": "halfbelongRate"
+                        "field": "designerRate"
                     }
                 }
-            },
-            "version": true,
-            "highlight": {
-                "pre_tags": [
-                    "@kibana-highlighted-field@"
-                ],
-                "post_tags": [
-                    "@/kibana-highlighted-field@"
-                ],
-                "fields": {
-                    "*": {}
-                },
-                "fragment_size": 2147483647
             }
         }
         /*F-2-签单总数*/
         var TheTotalNumberOfSignings = {
+            "size": 0,
             "query": {
                 "bool": {
                     "must": [
@@ -240,12 +184,6 @@ $(function () {
                             "query_string": {
                                 "query": "*",
                                 "analyze_wildcard": true
-                            }
-                        },
-                        {
-                            "query_string": {
-                                "analyze_wildcard": true,
-                                "query": "*"
                             }
                         },
                         {
@@ -261,33 +199,20 @@ $(function () {
                     "must_not": []
                 }
             },
-            "size": 0,
             "_source": {
                 "excludes": []
             },
             "aggs": {
                 "1": {
                     "sum": {
-                        "field": "halfbelongRate"
+                        "field": "designerRate"
                     }
                 }
-            },
-            "version": true,
-            "highlight": {
-                "pre_tags": [
-                    "@kibana-highlighted-field@"
-                ],
-                "post_tags": [
-                    "@/kibana-highlighted-field@"
-                ],
-                "fields": {
-                    "*": {}
-                },
-                "fragment_size": 2147483647
             }
         }
         /*F-5-公司量尺总数*/
         var TheTotalNumberOfCompanyScale = {
+            "size": 0,
             "query": {
                 "bool": {
                     "must": [
@@ -298,9 +223,10 @@ $(function () {
                             }
                         },
                         {
-                            "query_string": {
-                                "analyze_wildcard": true,
-                                "query": "*"
+                            "match_phrase": {
+                                "company.keyword": {
+                                    "query": params.company.name
+                                }
                             }
                         },
                         {
@@ -316,14 +242,13 @@ $(function () {
                     "must_not": []
                 }
             },
-            "size": 0,
             "_source": {
                 "excludes": []
             },
             "aggs": {
                 "2": {
                     "terms": {
-                        "field": "companyName.keyword",
+                        "field": "company.keyword",
                         "size": 5,
                         "order": {
                             "1": "desc"
@@ -332,28 +257,16 @@ $(function () {
                     "aggs": {
                         "1": {
                             "sum": {
-                                "field": "halfbelongRate"
+                                "field": "designerRate"
                             }
                         }
                     }
                 }
-            },
-            "version": true,
-            "highlight": {
-                "pre_tags": [
-                    "@kibana-highlighted-field@"
-                ],
-                "post_tags": [
-                    "@/kibana-highlighted-field@"
-                ],
-                "fields": {
-                    "*": {}
-                },
-                "fragment_size": 2147483647
             }
         }
         /*F-6-公司签单总数*/
         var TheTotalNumberOfCompanySignings = {
+            "size": 0,
             "query": {
                 "bool": {
                     "must": [
@@ -364,9 +277,10 @@ $(function () {
                             }
                         },
                         {
-                            "query_string": {
-                                "analyze_wildcard": true,
-                                "query": "*"
+                            "match_phrase": {
+                                "company.keyword": {
+                                    "query": params.company.name
+                                }
                             }
                         },
                         {
@@ -382,14 +296,13 @@ $(function () {
                     "must_not": []
                 }
             },
-            "size": 0,
             "_source": {
                 "excludes": []
             },
             "aggs": {
                 "2": {
                     "terms": {
-                        "field": "companyName.keyword",
+                        "field": "company.keyword",
                         "size": 5,
                         "order": {
                             "1": "desc"
@@ -398,101 +311,16 @@ $(function () {
                     "aggs": {
                         "1": {
                             "sum": {
-                                "field": "halfbelongRate"
+                                "field": "designerRate"
                             }
                         }
                     }
                 }
-            },
-            "version": true,
-            "highlight": {
-                "pre_tags": [
-                    "@kibana-highlighted-field@"
-                ],
-                "post_tags": [
-                    "@/kibana-highlighted-field@"
-                ],
-                "fields": {
-                    "*": {}
-                },
-                "fragment_size": 2147483647
             }
         }
         /*F-7-设计师签单数TOP10*/
         var DesignerSignNumberTOP10 = {
-            "query": {
-                "bool": {
-                    "must": [
-                        {
-                            "query_string": {
-                                "analyze_wildcard": true,
-                                "query": "*"
-                            }
-                        },
-                        {
-                            "match_phrase": {
-                                "belongType.keyword": {
-                                    "query": "设计"
-                                }
-                            }
-                        },
-                        {
-                            "query_string": {
-                                "analyze_wildcard": true,
-                                "query": "*"
-                            }
-                        },
-                        {
-                            "range": {
-                                "contractTime": {
-                                    "gte": Date.parse(new Date(2017, 01, 01)),
-                                    "lte": Date.parse(new Date()),
-                                    "format": "epoch_millis"
-                                }
-                            }
-                        }
-                    ],
-                    "must_not": []
-                }
-            },
             "size": 0,
-            "_source": {
-                "excludes": []
-            },
-            "aggs": {
-                "2": {
-                    "terms": {
-                        "field": "currentName.keyword",
-                        "size": 10,
-                        "order": {
-                            "1": "desc"
-                        }
-                    },
-                    "aggs": {
-                        "1": {
-                            "sum": {
-                                "field": "belongRate"
-                            }
-                        }
-                    }
-                }
-            },
-            "version": true,
-            "highlight": {
-                "pre_tags": [
-                    "@kibana-highlighted-field@"
-                ],
-                "post_tags": [
-                    "@/kibana-highlighted-field@"
-                ],
-                "fields": {
-                    "*": {}
-                },
-                "fragment_size": 2147483647
-            }
-        }
-        /*F-8-业务员签单数TOP10*/
-        var SalesmanSignedNumberTOP10 = {
             "query": {
                 "bool": {
                     "must": [
@@ -503,16 +331,50 @@ $(function () {
                             }
                         },
                         {
-                            "match_phrase": {
-                                "belongType.keyword": {
-                                    "query": "业务"
+                            "range": {
+                                "contractTime": {
+                                    "gte": Date.parse(new Date(2017, 01, 01)),
+                                    "lte": Date.parse(new Date()),
+                                    "format": "epoch_millis"
                                 }
                             }
-                        },
+                        }
+                    ],
+                    "must_not": []
+                }
+            },
+            "_source": {
+                "excludes": []
+            },
+            "aggs": {
+                "2": {
+                    "terms": {
+                        "field": "designerName.keyword",
+                        "size": 10,
+                        "order": {
+                            "1": "desc"
+                        }
+                    },
+                    "aggs": {
+                        "1": {
+                            "sum": {
+                                "field": "designerRate"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        /*F-8-业务员签单数TOP10*/
+        var SalesmanSignedNumberTOP10 = {
+            "size": 0,
+            "query": {
+                "bool": {
+                    "must": [
                         {
                             "query_string": {
-                                "analyze_wildcard": true,
-                                "query": "*"
+                                "query": "*",
+                                "analyze_wildcard": true
                             }
                         },
                         {
@@ -528,14 +390,13 @@ $(function () {
                     "must_not": []
                 }
             },
-            "size": 0,
             "_source": {
                 "excludes": []
             },
             "aggs": {
                 "2": {
                     "terms": {
-                        "field": "currentName.keyword",
+                        "field": "salesmanName.keyword",
                         "size": 10,
                         "order": {
                             "1": "desc"
@@ -544,24 +405,11 @@ $(function () {
                     "aggs": {
                         "1": {
                             "sum": {
-                                "field": "belongRate"
+                                "field": "designerRate"
                             }
                         }
                     }
                 }
-            },
-            "version": true,
-            "highlight": {
-                "pre_tags": [
-                    "@kibana-highlighted-field@"
-                ],
-                "post_tags": [
-                    "@/kibana-highlighted-field@"
-                ],
-                "fields": {
-                    "*": {}
-                },
-                "fragment_size": 2147483647
             }
         }
         /*F-9-楼盘签单额TOP10*/
@@ -764,13 +612,14 @@ $(function () {
                 "line-height": "180px",
                 "font-size": "40px",
                 "font-weight": "bold"
-            }).html(res.aggregations['1'].value)
+            }).html(res.aggregations['1'].value.toFixed(2))
         }, function (msg) {
             console.log(msg)
             flag = true;
         })
 
         ajax(largeScreen.elasticUrl.create, TheTotalNumberOfCompanyScale, function (res) {
+            console.log(res)
             var data = [];
             $.each(res.aggregations['2'].buckets, function (i, v) {
                 data.push({company: v.key, create: v['1'].value});
@@ -873,9 +722,10 @@ $(function () {
         })
 
         ajax(largeScreen.elasticUrl.contract, DesignerSignNumberTOP10, function (res) {
+            console.log(res)
             var data = []
-            $.each(res.aggregations['2'].buckets,function(i,v){
-                data.push({designer:v.key,contract:v['1'].value});
+            $.each(res.aggregations['2'].buckets, function (i, v) {
+                data.push({designer: v.key, contract: v['1'].value});
             })
             var ds = new DataSet();
             var dv = ds.createView().source(data);
@@ -890,7 +740,7 @@ $(function () {
                 container: 'DesignerSignNumberTOP10',
                 forceFit: true,
                 height: 460,
-                padding: [20,0,20,50]
+                padding: [20, 0, 20, 50]
             });
             chart.source(dv);
             chart.axis('designer', {
@@ -907,9 +757,10 @@ $(function () {
         })
 
         ajax(largeScreen.elasticUrl.contract, SalesmanSignedNumberTOP10, function (res) {
+            console.log(res)
             var data = []
-            $.each(res.aggregations['2'].buckets,function(i,v){
-                data.push({salesman:v.key,contract:v['1'].value});
+            $.each(res.aggregations['2'].buckets, function (i, v) {
+                data.push({salesman: v.key, contract: v['1'].value});
             })
             var ds = new DataSet();
             var dv = ds.createView().source(data);
@@ -924,7 +775,7 @@ $(function () {
                 container: 'SalesmanSignedNumberTOP10',
                 forceFit: true,
                 height: 460,
-                padding: [20,0,20,50]
+                padding: [20, 0, 20, 50]
             });
             chart.source(dv);
             chart.axis('salesman', {
@@ -940,10 +791,10 @@ $(function () {
             flag = true;
         })
 
-        ajax(largeScreen.elasticUrl.contract, PropertySignedOrdersTOP10, function (res) {
+        /*ajax(largeScreen.elasticUrl.contract, PropertySignedOrdersTOP10, function (res) {
             var data = []
-            $.each(res.aggregations['2'].buckets,function(i,v){
-                data.push({property:v.key,contract:v['1'].value});
+            $.each(res.aggregations['2'].buckets, function (i, v) {
+                data.push({property: v.key, contract: v['1'].value});
             })
             var ds = new DataSet();
             var dv = ds.createView().source(data);
@@ -958,7 +809,7 @@ $(function () {
                 container: 'PropertySignedOrdersTOP10',
                 forceFit: true,
                 height: 460,
-                padding: [20,0,20,120]
+                padding: [20, 0, 20, 120]
             });
             chart.source(dv);
             chart.axis('property', {
@@ -972,7 +823,7 @@ $(function () {
         }, function (msg) {
             console.log(msg)
             flag = true;
-        })
+        })*/
 
         if ($('.page-content').hasClass('full-Screen')) {
             G2.Global.setTheme('dark');

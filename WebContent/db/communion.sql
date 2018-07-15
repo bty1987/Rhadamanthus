@@ -107,7 +107,7 @@ CREATE TABLE `counting` (
   `count` int(11) NOT NULL,
   PRIMARY KEY (`date`,`type`),
   KEY `indexone` (`date`,`type`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='统计数表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='统计数表';
 
 DROP TABLE IF EXISTS `customer`;
 CREATE TABLE `customer` (
@@ -126,6 +126,7 @@ CREATE TABLE `customer` (
   `officer` varchar(32) DEFAULT NULL,
   `passport` varchar(32) DEFAULT NULL,
   `identity` varchar(32) DEFAULT NULL,
+  `company` int(11) DEFAULT '0',
   PRIMARY KEY (`cid`),
   UNIQUE KEY `uniqueone` (`no`),
   KEY `indexone` (`name`),
@@ -133,6 +134,25 @@ CREATE TABLE `customer` (
   KEY `indexthree` (`pinyinAll`)
 
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='客户表';
+
+DROP TABLE IF EXISTS `customerorigin`;
+CREATE TABLE `customerorigin` (
+  `coid` int(11) NOT NULL AUTO_INCREMENT COMMENT '客源ID',
+  `cid` int(11) NOT NULL COMMENT '客户ID',
+  `phone` varchar(32) NOT NULL COMMENT '电话',
+  `purpose` varchar(128) DEFAULT NULL COMMENT '目的',
+  `intention` varchar(128) DEFAULT NULL COMMENT '意向',
+  `price` varchar(64) DEFAULT NULL COMMENT '需求价格',
+  `grade` varchar(32) DEFAULT NULL COMMENT '客户等级',
+  `cuid` int(11) NOT NULL COMMENT '创建人',
+  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `buid` int(11) DEFAULT NULL COMMENT '归属人',
+  `did` int(11) DEFAULT NULL COMMENT '归属部门',
+  `rdid` int(11) DEFAULT NULL COMMENT '归属分区',
+  `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '状态',
+  `comment` varchar(128) DEFAULT NULL COMMENT '备注',
+  PRIMARY KEY (`coid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='客源';
 
 DROP TABLE IF EXISTS `customerphone`;
 CREATE TABLE `customerphone` (
@@ -146,36 +166,32 @@ CREATE TABLE `customerphone` (
   KEY `indextwo` (`cid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=134862 DEFAULT CHARSET=utf8 COMMENT='客户电话';
 
-DROP TABLE IF EXISTS communion.`customerorigin`;
-CREATE TABLE communion.`customerorigin` (
-  `coid` int(11) NOT NULL AUTO_INCREMENT COMMENT '客源ID',
-  `cid` int(11) NOT NULL COMMENT '客户ID',
-  `phone` varchar(32) NOT NULL COMMENT '电话',
-  `purpose` varchar(128) DEFAULT NULL COMMENT '目的',
-  `intention` varchar(128) DEFAULT NULL COMMENT '意向',
-  `price` varchar(64) DEFAULT NULL COMMENT '需求价格',
-  `grade` varchar(32) DEFAULT NULL COMMENT '客户等级',
-  `cuid` int(11) NOT NULL COMMENT '创建人',
-  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `buid` int(11) DEFAULT NULL COMMENT '归属人',
-  `did` int(11) DEFAULT NULL COMMENT '归属部门',
-  `rdid` int(11) DEFAULT NULL COMMENT '归属分区',
-  `status` tinyint(2) NOT NULL DEFAULT '0' COMMENT '状态',
-  `comment` varchar(128) DEFAULT NULL COMMENT '备注',
-  PRIMARY KEY (`csid`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='客源';
-
-DROP TABLE IF EXISTS communion.`customerrecord`;
-CREATE TABLE communion.`customerrecord` (
+DROP TABLE IF EXISTS `customerrecord`;
+CREATE TABLE `customerrecord` (
   `crid` int(11) NOT NULL AUTO_INCREMENT COMMENT '客户记录ID',
-  `csid` int(11) NOT NULL COMMENT '客源ID',
+  `coid` int(11) NOT NULL COMMENT '客源ID',
   `comment` varchar(255) NOT NULL COMMENT '记录信息',
-  `type` tinyint(2) NOT NULL COMMENT '记录类型',
+  `type` tinyint(1) NOT NULL COMMENT '记录类型',
   `ouid` int(11) NOT NULL COMMENT '操作人',
   `operatTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '操作时间',
   PRIMARY KEY (`crid`),
-  KEY `indexone` (`csid`) USING BTREE
+  KEY `indexone` (`coid`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='客源记录';
+
+DROP TABLE IF EXISTS `datadrawing`;
+CREATE TABLE `datadrawing` (
+  `ddid` int(11) NOT NULL AUTO_INCREMENT,
+  `sid` int(11) NOT NULL COMMENT '资源ID',
+  `name` varchar(15) DEFAULT NULL COMMENT '图片名称',
+  `drawingUrl` varchar(256) NOT NULL COMMENT '图片路径',
+  `drawingType` tinyint(1) NOT NULL COMMENT '图片类型',
+  `type` tinyint(1) NOT NULL COMMENT '类型',
+  `cuid` int(11) NOT NULL COMMENT '创建人',
+  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `status` tinyint(1) NOT NULL COMMENT '状态',
+  `defaults` tinyint(1) NOT NULL COMMENT '默认状态',
+  PRIMARY KEY (`ddid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='数据图片';
 
 DROP TABLE IF EXISTS `department`;
 CREATE TABLE `department` (
@@ -224,33 +240,45 @@ CREATE TABLE `house` (
   `unit` varchar(32) DEFAULT NULL COMMENT '单元',
   `floor` smallint(3) DEFAULT NULL COMMENT '楼层',
   `door` smallint(3) DEFAULT NULL COMMENT '门号',
-  `type` tinyint(1) DEFAULT '0' COMMENT '房产类型',
+  `type` tinyint(2) DEFAULT '0' COMMENT '房产类型',
   `buildArea` decimal(10,2) NOT NULL COMMENT '建筑面积',
   `maxFloor` smallint(3) DEFAULT '0' COMMENT '最高楼层',
   `through` tinyint(1) DEFAULT '0' COMMENT '是否越层',
-  `roomNum` tinyint(1) DEFAULT '1' COMMENT '房间数量',
+  `roomNum` smallint(2) DEFAULT '1' COMMENT '房间数量',
   `houseType` varchar(16) DEFAULT '0' COMMENT '户型',
-  `orientation` tinyint(1) DEFAULT '0' COMMENT '房屋朝向',
+  `orientation` tinyint(2) DEFAULT '0' COMMENT '房屋朝向',
   `feature` varchar(256) DEFAULT NULL COMMENT '三不',
   `waterVapour` tinyint(1) DEFAULT '0' COMMENT '水气设施',
   `parlourType` tinyint(1) DEFAULT '0' COMMENT '客厅类型',
   `heatingType` tinyint(1) DEFAULT '0' COMMENT '供暖类型',
   `status` tinyint(1) NOT NULL DEFAULT '0',
+  `company` int(11) DEFAULT '0',
   PRIMARY KEY (`hid`),
   KEY `indexone` (`vid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='房产';
 
+DROP TABLE IF EXISTS `label`;
+CREATE TABLE `label` (
+  `lid` int(11) NOT NULL AUTO_INCREMENT COMMENT '标签id',
+  `name` varchar(15) NOT NULL COMMENT '标签名字',
+  `scale` tinyint(1) NOT NULL COMMENT '值',
+  `type` tinyint(1) NOT NULL,
+  `isShow` tinyint(1) NOT NULL DEFAULT 0,
+  `status` tinyint(1) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`lid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='标签';
+
 DROP TABLE IF EXISTS `measurementunit`;
 CREATE TABLE `measurementunit` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `muid` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(10) NOT NULL,
-  `unitDes` varchar(30) NOT NULL,
+  `comment` varchar(30) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='计量单位表';
 
 DROP TABLE IF EXISTS `module`;
 CREATE TABLE `module` (
-  `mid` int(10) NOT NULL AUTO_INCREMENT,
+  `mid` int(11) NOT NULL AUTO_INCREMENT,
   `fatherModuleId` int(11) DEFAULT NULL,
   `name` varchar(32) NOT NULL DEFAULT '',
   `alias` varchar(32) DEFAULT NULL,
@@ -313,9 +341,9 @@ CREATE TABLE `receipttype` (
   `oneCode` varchar(6) NOT NULL,
   `twoCode` varchar(4) NOT NULL,
   `thrCode` varchar(4) NOT NULL,
-  `direction` tinyint(4) NOT NULL COMMENT '余额方向,借 1, 贷 -1',
+  `direction` tinyint(1) NOT NULL COMMENT '余额方向,借 1, 贷 -1',
   `type` tinyint(1) NOT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT '0',
+  `status` tinyint(1) NOT NULL DEFAULT '0',
   `company` int(11) NOT NULL,
   PRIMARY KEY (`rtid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='收据类型表';
@@ -414,7 +442,7 @@ CREATE TABLE `user` (
   `loginId` varchar(32) NOT NULL COMMENT '登录用户名',
   `password` varchar(32) DEFAULT NULL COMMENT '密码',
   `userName` varchar(32) NOT NULL COMMENT '真实姓名',
-  `userNamePinYin` varchar(64) NOT NULL COMMENT '真实姓名全拼',
+  `pinyin` varchar(64) NOT NULL COMMENT '真实姓名全拼',
   `currentName` varchar(32) DEFAULT NULL COMMENT '现用名',
   `status` tinyint(1) NOT NULL COMMENT '0:在职,1:离职,2:停薪留职',
   `dtid` int(11) NOT NULL COMMENT '部门类型ID',
@@ -432,7 +460,7 @@ CREATE TABLE `user` (
   UNIQUE KEY `uniquetwo` (`userId`),
   KEY `indexone` (`userId`,`company`),
   KEY `indextwo` (`userName`),
-  KEY `indexthr` (`userNamePinYin`)
+  KEY `indexthr` (`pinyin`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='用户表';
 
 DROP TABLE IF EXISTS `usercompany`;
@@ -505,9 +533,20 @@ CREATE TABLE `userinfo` (
   `qq` varchar(15) DEFAULT NULL COMMENT 'QQ',
   `wechat` varchar(15) DEFAULT NULL COMMENT '微信',
   `email` varchar(50) DEFAULT NULL COMMENT '邮箱',
+  `profiles` varchar(128) DEFAULT NULL,
   PRIMARY KEY (`uiid`),
   KEY `indexone` (`uid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='用户信息表';
+
+DROP TABLE IF EXISTS `userlabel`;
+CREATE TABLE `userlabel` (
+  `ulid` int(11) NOT NULL AUTO_INCREMENT,
+  `uid` int(11) NOT NULL,
+  `lid` int(11) NOT NULL,
+  `scope` tinyint(1) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`ulid`),
+  KEY `lid` (`lid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='人员标签';
 
 DROP TABLE IF EXISTS `version`;
 CREATE TABLE `version` (
@@ -534,7 +573,9 @@ CREATE TABLE `village` (
   `content` varchar(128) DEFAULT NULL,
   `x` double NOT NULL DEFAULT '0',
   `y` double NOT NULL DEFAULT '0',
+  `company` int(11) DEFAULT '0',
   `status` tinyint(4) NOT NULL DEFAULT '0',
+  `url` varchar(256) DEFAULT NULL COMMENT '楼盘默认图片',
   PRIMARY KEY (`vId`),
   UNIQUE KEY `uniqueone` (`no`),
   KEY `indexone` (`no`),
@@ -548,32 +589,32 @@ CREATE TABLE `vrecord`  (
   `vrid` int(11) NOT NULL AUTO_INCREMENT COMMENT '记录ID',
   `vid` int(11) NOT NULL COMMENT '返单ID',
   `cuid` int(11) NOT NULL COMMENT '操作人',
-  `createTime` timestamp(0) NOT NULL COMMENT '操作时间',
+  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '操作时间',
   `comment` varchar(255) NULL COMMENT '说明',
   PRIMARY KEY (`vrid`),
-  INDEX `indexone`(`vid`) USING BTREE
+  KEY `indexone`(`vid`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='大客户记录';
 
 DROP TABLE IF EXISTS `vustomer`;
 CREATE TABLE `vustomer`  (
   `vid` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
-  `ident` varchar(64) NOT NULL COMMENT '微信ID',
+  `ident` varchar(15) NOT NULL COMMENT '微信ID',
   `name` varchar(32) NOT NULL COMMENT '姓名',
   `phone` varchar(32) NOT NULL COMMENT '电话',
   `address` varchar(255) NOT NULL COMMENT '地址',
-  `orderId` varchar(32) NULL COMMENT '订单ID',
-  `contractPrice` decimal(10, 2) NULL COMMENT '合同额',
-  `status` tinyint(2) NOT NULL DEFAULT 0 COMMENT '状态',
-  `comment` varchar(255) NULL COMMENT '说明',
+  `orderId` varchar(32) COMMENT '订单ID',
+  `contractPrice` decimal(10, 2) COMMENT '合同额',
+  `status` tinyint(1) NOT NULL DEFAULT 0 COMMENT '状态',
+  `comment` varchar(255) COMMENT '说明',
   PRIMARY KEY (`vid`),
-  INDEX `indexone`(`ident`) USING BTREE
+  KEY `indexone`(`ident`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='大客户';
 
 DROP TABLE IF EXISTS `worktype`;
 CREATE TABLE `worktype` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `wtid` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(15) NOT NULL,
-  `workTypeDes` varchar(30) NOT NULL,
+  `comment` varchar(30) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='工种表';
 

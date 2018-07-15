@@ -36,8 +36,8 @@ public class WorkerSalaryImportService implements com.fanglin.imports.service.Wo
 			
 		
 			List<String> _salary = excels.get(i);
-			long wsId = Long.parseLong(_salary.get(0));
-			short status = Short.parseShort(_salary.get(1));
+			long wsId=(long)Float.parseFloat(_salary.get(0));
+			short status = (short)Float.parseFloat(_salary.get(1));
 			workerSalaryPO = workerSalaryDao.get(wsId);
 			if(workerSalaryPO == null){
 				continue;
@@ -72,7 +72,7 @@ public class WorkerSalaryImportService implements com.fanglin.imports.service.Wo
 				
 			String userid=_salary.get(0);					
 			Float salary=Float.valueOf(_salary.get(2));
-			short subtype=Short.valueOf(_salary.get(3));
+			short subtype=(short)Float.parseFloat(_salary.get(3));
 			String comment=_salary.get(4);
 		
 			UserPO user	=userDao.queryUserByUserId(userid);
@@ -93,6 +93,7 @@ public class WorkerSalaryImportService implements com.fanglin.imports.service.Wo
 			workerSalarypo.setSalary(salary);
 			workerSalarypo.setCreater(creater);
 			workerSalarypo.setCreateTime(new Timestamp(System.currentTimeMillis()));
+			workerSalarypo.setCsid(WorkerSalaryPO.CSID_INIT_STR);
 			
 			workerSalaryDao.save(workerSalarypo);
 			}

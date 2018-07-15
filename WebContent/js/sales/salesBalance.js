@@ -143,9 +143,10 @@ $(function () {
                     $liLine.append($h3).append($ulProperty);
 
                     if(params['urlLoadParams'].type == "dompany") {
-                        $btnDiv.append($btnVbalanceValue).append($btnVbalance).append($btnBalanceValue).append($btnBalance).append($btnPayment).append($btnBalanceItem);
-                    }else{
                         $btnDiv.append($btnPayment).append($btnBalanceItem);
+
+                    }else{
+                        $btnDiv.append($btnVbalanceValue).append($btnVbalance).append($btnBalanceValue).append($btnBalance).append($btnPayment).append($btnBalanceItem);
                     }
                     $small.appendTo($h3);
                     $btnDiv.appendTo($h3);

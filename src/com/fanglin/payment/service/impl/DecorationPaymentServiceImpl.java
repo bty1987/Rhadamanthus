@@ -155,6 +155,23 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 
 		return decorationPaymentVOs;
 	}
+	
+	@Override
+	public List<DecorationPaymentVO> queryDecorationPaymentForContractByOrderId(DecorationPaymentVO decorationPaymentVO) {
+		
+		String[] paymentStatus = new String[]{DecorationPaymentPO.PAYMENTSTATUS_PAY_STR,DecorationPaymentPO.PAYMENTSTATUS_CONFIRM_STR};
+
+		List<DecorationPaymentPO> decorationPaymentPOs = decorationPaymentDao.queryDecorationPaymentByOrderIdAStatusAOneTypeATwoType(decorationPaymentVO.getDecoration().getOrderId(),paymentStatus,DecorationPaymentPO.ONETYPE_ADD_INT,DecorationPaymentPO.TWOTYPE_DEAL_INT);
+		List<DecorationPaymentVO> decorationPaymentVOs = new ArrayList<DecorationPaymentVO>();
+
+		for(DecorationPaymentPO decorationPaymentPO : decorationPaymentPOs){
+			DecorationPaymentVO _decorationPaymentVO = changePOToVO(decorationPaymentPO);
+
+			decorationPaymentVOs.add(_decorationPaymentVO);
+		}
+
+		return decorationPaymentVOs;
+	}
 
 	@Override
 	public List<DecorationPaymentVO> queryDecorationPaymentForNotInitByDrId(DecorationReceiptVO decorationReceiptVO) {
@@ -172,23 +189,6 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 				BeanUtil.copyProperties(decorationReceipt.getCollecter(), _decorationPaymentVO.getCollecter(),Arrays.asList("dept","duty"));
 			}
 			
-			decorationPaymentVOs.add(_decorationPaymentVO);
-		}
-
-		return decorationPaymentVOs;
-	}
-	
-	@Override
-	public List<DecorationPaymentVO> queryDecorationPaymentForContractByOrderId(DecorationPaymentVO decorationPaymentVO) {
-		
-		String[] paymentStatus = new String[]{DecorationPaymentPO.PAYMENTSTATUS_PAY_STR,DecorationPaymentPO.PAYMENTSTATUS_CONFIRM_STR};
-
-		List<DecorationPaymentPO> decorationPaymentPOs = decorationPaymentDao.queryDecorationPaymentByOrderIdAStatusAOneTypeATwoType(decorationPaymentVO.getDecoration().getOrderId(),paymentStatus,DecorationPaymentPO.ONETYPE_ADD_INT,DecorationPaymentPO.TWOTYPE_DEAL_INT);
-		List<DecorationPaymentVO> decorationPaymentVOs = new ArrayList<DecorationPaymentVO>();
-
-		for(DecorationPaymentPO decorationPaymentPO : decorationPaymentPOs){
-			DecorationPaymentVO _decorationPaymentVO = changePOToVO(decorationPaymentPO);
-
 			decorationPaymentVOs.add(_decorationPaymentVO);
 		}
 
@@ -324,90 +324,6 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		} else {
 			throw new FLException(150002, "合同已签订不可修改");
 		}
-	}
-
-	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public int updateDecorationPayment(DecorationPaymentVO decorationPaymentVO) throws FLException{
-		
-		float realMoney = 0;
-
-		DecorationPaymentPO decorationPaymentPO = decorationPaymentDao.get(decorationPaymentVO.getDpid());
-
-		if(decorationPaymentPO == null){
-			throw new FLException(150003, "款项不存在");
-		}
-
-		DecorationReceiptPO decorationReceiptPO = decorationPaymentPO.getDecorationReceipt();
-
-		if(!DecorationPaymentPO.PAYMENTSTATUS_PAY_STR.equals(decorationPaymentPO.getPaymentStatus())){
-			throw new FLException(150036, "款项状态不可操作");
-		}
-
-		Float cash = decorationPaymentVO.getCash();
-		Float bank = decorationPaymentVO.getBank();
-		Float checkv = decorationPaymentVO.getCheckv();
-		Float accounts = decorationPaymentVO.getAccounts();
-		Float installment = decorationPaymentVO.getInstallment();
-		Float coupon = decorationPaymentVO.getCoupon();
-		Float advance = decorationPaymentVO.getAdvance();
-
-		if(cash != null && cash.floatValue() != 0f){
-			decorationReceiptPO.setCash(cash);
-			decorationReceiptPO.setCashInfo(decorationPaymentVO.getCashInfo());
-			realMoney = Arith.add(cash, realMoney);
-		}else{
-			decorationReceiptPO.setCash(0f);
-			decorationReceiptPO.setCashInfo("");
-		}
-		if(bank != null && bank.floatValue() != 0f){
-			decorationReceiptPO.setBank(bank);
-			decorationReceiptPO.setBankInfo(decorationPaymentVO.getBankInfo());
-			realMoney = Arith.add(bank,realMoney);
-		}else{
-			decorationReceiptPO.setBank(0f);
-			decorationReceiptPO.setBankInfo("");
-		}
-		if(checkv != null && checkv.floatValue() != 0f){
-			decorationReceiptPO.setCheckv(checkv);
-			decorationReceiptPO.setCheckvBank(decorationPaymentVO.getCheckvBank());
-			realMoney = Arith.add(checkv,realMoney);
-		}else{
-			decorationReceiptPO.setCheckv(0f);
-			decorationReceiptPO.setCheckvBank("");
-		}
-		if(accounts != null && accounts.floatValue() != 0f){
-			decorationReceiptPO.setAccounts(accounts);
-			decorationReceiptPO.setAccountsBank(decorationPaymentVO.getAccountsBank());
-			realMoney = Arith.add(accounts,realMoney);
-		}else{
-			decorationReceiptPO.setAccounts(0f);
-			decorationReceiptPO.setAccountsBank("");
-		}
-		if(installment != null && installment.floatValue() != 0f){
-			decorationReceiptPO.setInstallment(installment);
-			decorationReceiptPO.setInstallmentBank(decorationPaymentVO.getInstallmentBank());
-			realMoney = Arith.add(installment,realMoney);
-		}else{
-			decorationReceiptPO.setInstallment(0f);
-			decorationReceiptPO.setInstallmentBank("");
-		}
-		if(coupon != null && coupon.floatValue() != 0f){
-			realMoney = Arith.add(coupon,realMoney);
-		}
-		if(advance != null && advance.floatValue() != 0f){
-			realMoney = Arith.add(advance,realMoney);
-		}
-		
-		if(decorationPaymentPO.getReferMoney()!=realMoney){
-			throw new FLException(150025, "款项金额不正确");
-		}
-
-		decorationPaymentVO.setDrId(decorationReceiptPO.getDrId());
-
-		decorationReceiptDao.update(decorationReceiptPO);
-
-		return 0;
 	}
 
 	@Override
@@ -617,82 +533,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		
 		return 0;
 	}
-
-	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public int confirmDecorationPayment(List<Long> ids, String confirmUserId) throws FLException{
-
-		List<DecorationPaymentPO> decorationPaymentPOs = decorationPaymentDao.queryDecorationPaymentByDpids(ids);
-
-		for(DecorationPaymentPO decorationPaymentPO: decorationPaymentPOs){
-			if(DecorationPaymentPO.PAYMENTSTATUS_PAY_STR.equals(decorationPaymentPO.getPaymentStatus())){
-
-				DecorationReceiptPO decorationReceiptPO = decorationPaymentPO.getDecorationReceipt();
-
-				decorationPaymentPO.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_CONFIRM_STR);
-				decorationReceiptPO.setConfirmTime(DateUtil.getDateToTimestamp(new Date()));
-				UserPO user = userDao.queryUserByUserId(confirmUserId);
-				decorationReceiptPO.setConfirmer(user);
-				decorationReceiptPO.setCollecterName(user.getCurrentName());
-
-				if(decorationReceiptPO.getStatus() != DecorationReceiptPO.STATUS_CONFIRM_INT){
-					decorationReceiptPO.setStatus((short) DecorationReceiptPO.STATUS_CONFIRM_INT);
-				}
-
-				decorationReceiptDao.save(decorationReceiptPO);
-				decorationPaymentDao.save(decorationPaymentPO);
-			}
-		}
-
-		return 0;
-	}
-
-	@Override
-	public int deleteDecorationPaymentById(DecorationPaymentVO payment){
-		return 0;
-	}
-
-	private DecorationPaymentVO changePOToVO(DecorationPaymentPO decorationPaymentPO){
-		DecorationPaymentVO decorationPaymentVO = new DecorationPaymentVO(new DecorationVO());
-		BeanUtil.copyProperties(decorationPaymentPO, decorationPaymentVO, Arrays.asList("decoration","decorationReceipt","creater"));
-
-		DecorationReceiptPO decorationReceiptPO = decorationPaymentPO.getDecorationReceipt();
-
-		if(decorationReceiptPO != null){
-			BeanUtil.copyProperties(decorationReceiptPO, decorationPaymentVO, Arrays.asList("collecter","confirmer","creater"));
-
-			if(decorationReceiptPO.getCollecter() != null){
-				decorationPaymentVO.setCollecter(new UserBaseVO());
-				BeanUtil.copyProperties(decorationReceiptPO.getCollecter(), decorationPaymentVO.getCollecter(), Arrays.asList("duty","dept"));
-			}
-			
-			if(decorationReceiptPO.getConfirmer() != null){
-				decorationPaymentVO.setConfirmer(new UserBaseVO());
-				BeanUtil.copyProperties(decorationReceiptPO.getConfirmer(), decorationPaymentVO.getConfirmer(), Arrays.asList("duty","dept"));
-			}
-		}
-
-		BeanUtil.copyProperties(decorationPaymentPO, decorationPaymentVO,Arrays.asList("decoration","creater","collecter","confirmer"));
-		decorationPaymentPO.getDecoration().ptvcascade(decorationPaymentVO.getDecoration());
-		
-		return decorationPaymentVO;
-	}
-
-	private void pageDecorationPayment(Paging paging, List<Filter> filters){
-
-		List<DecorationPaymentVO> decorationPaymentVOs = new ArrayList<DecorationPaymentVO>();
-		List<DecorationPaymentPO> decorationPaymentPOs = null;
-
-		decorationPaymentPOs = decorationPaymentDao.pageDecorationPaymentForCollect(paging, filters);
-
-		for(DecorationPaymentPO decorationPaymentPO: decorationPaymentPOs){
-			DecorationPaymentVO decorationPaymentVO = changePOToVO(decorationPaymentPO);
-			decorationPaymentVOs.add(decorationPaymentVO);
-		}
-
-		paging.setData(decorationPaymentVOs);
-	}
-
+	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public int refundDecorationPayment(DecorationPaymentVO decorationPaymentVO,String userId) throws FLException {
@@ -790,6 +631,165 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		decorationPaymentVO.setDrId(decorationReceiptPO.getDrId());
 
 		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public int confirmDecorationPayment(List<Long> ids, String confirmUserId) throws FLException{
+
+		List<DecorationPaymentPO> decorationPaymentPOs = decorationPaymentDao.queryDecorationPaymentByDpids(ids);
+
+		for(DecorationPaymentPO decorationPaymentPO: decorationPaymentPOs){
+			if(DecorationPaymentPO.PAYMENTSTATUS_PAY_STR.equals(decorationPaymentPO.getPaymentStatus())){
+
+				DecorationReceiptPO decorationReceiptPO = decorationPaymentPO.getDecorationReceipt();
+
+				decorationPaymentPO.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_CONFIRM_STR);
+				decorationReceiptPO.setConfirmTime(DateUtil.getDateToTimestamp(new Date()));
+				UserPO user = userDao.queryUserByUserId(confirmUserId);
+				decorationReceiptPO.setConfirmer(user);
+				decorationReceiptPO.setCollecterName(user.getCurrentName());
+
+				if(decorationReceiptPO.getStatus() != DecorationReceiptPO.STATUS_CONFIRM_INT){
+					decorationReceiptPO.setStatus((short) DecorationReceiptPO.STATUS_CONFIRM_INT);
+				}
+
+				decorationReceiptDao.save(decorationReceiptPO);
+				decorationPaymentDao.save(decorationPaymentPO);
+			}
+		}
+
+		return 0;
+	}
+	
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public int updateDecorationPayment(DecorationPaymentVO decorationPaymentVO) throws FLException{
+		
+		float realMoney = 0;
+
+		DecorationPaymentPO decorationPaymentPO = decorationPaymentDao.get(decorationPaymentVO.getDpid());
+
+		if(decorationPaymentPO == null){
+			throw new FLException(150003, "款项不存在");
+		}
+
+		DecorationReceiptPO decorationReceiptPO = decorationPaymentPO.getDecorationReceipt();
+
+		if(!DecorationPaymentPO.PAYMENTSTATUS_PAY_STR.equals(decorationPaymentPO.getPaymentStatus())){
+			throw new FLException(150036, "款项状态不可操作");
+		}
+
+		Float cash = decorationPaymentVO.getCash();
+		Float bank = decorationPaymentVO.getBank();
+		Float checkv = decorationPaymentVO.getCheckv();
+		Float accounts = decorationPaymentVO.getAccounts();
+		Float installment = decorationPaymentVO.getInstallment();
+		Float coupon = decorationPaymentVO.getCoupon();
+		Float advance = decorationPaymentVO.getAdvance();
+
+		if(cash != null && cash.floatValue() != 0f){
+			decorationReceiptPO.setCash(cash);
+			decorationReceiptPO.setCashInfo(decorationPaymentVO.getCashInfo());
+			realMoney = Arith.add(cash, realMoney);
+		}else{
+			decorationReceiptPO.setCash(0f);
+			decorationReceiptPO.setCashInfo("");
+		}
+		if(bank != null && bank.floatValue() != 0f){
+			decorationReceiptPO.setBank(bank);
+			decorationReceiptPO.setBankInfo(decorationPaymentVO.getBankInfo());
+			realMoney = Arith.add(bank,realMoney);
+		}else{
+			decorationReceiptPO.setBank(0f);
+			decorationReceiptPO.setBankInfo("");
+		}
+		if(checkv != null && checkv.floatValue() != 0f){
+			decorationReceiptPO.setCheckv(checkv);
+			decorationReceiptPO.setCheckvBank(decorationPaymentVO.getCheckvBank());
+			realMoney = Arith.add(checkv,realMoney);
+		}else{
+			decorationReceiptPO.setCheckv(0f);
+			decorationReceiptPO.setCheckvBank("");
+		}
+		if(accounts != null && accounts.floatValue() != 0f){
+			decorationReceiptPO.setAccounts(accounts);
+			decorationReceiptPO.setAccountsBank(decorationPaymentVO.getAccountsBank());
+			realMoney = Arith.add(accounts,realMoney);
+		}else{
+			decorationReceiptPO.setAccounts(0f);
+			decorationReceiptPO.setAccountsBank("");
+		}
+		if(installment != null && installment.floatValue() != 0f){
+			decorationReceiptPO.setInstallment(installment);
+			decorationReceiptPO.setInstallmentBank(decorationPaymentVO.getInstallmentBank());
+			realMoney = Arith.add(installment,realMoney);
+		}else{
+			decorationReceiptPO.setInstallment(0f);
+			decorationReceiptPO.setInstallmentBank("");
+		}
+		if(coupon != null && coupon.floatValue() != 0f){
+			realMoney = Arith.add(coupon,realMoney);
+		}
+		if(advance != null && advance.floatValue() != 0f){
+			realMoney = Arith.add(advance,realMoney);
+		}
+		
+		if(decorationPaymentPO.getReferMoney()!=realMoney){
+			throw new FLException(150025, "款项金额不正确");
+		}
+
+		decorationPaymentVO.setDrId(decorationReceiptPO.getDrId());
+
+		decorationReceiptDao.update(decorationReceiptPO);
+
+		return 0;
+	}
+
+	@Override
+	public int deleteDecorationPaymentById(DecorationPaymentVO payment){
+		return 0;
+	}
+
+	private DecorationPaymentVO changePOToVO(DecorationPaymentPO decorationPaymentPO){
+		DecorationPaymentVO decorationPaymentVO = new DecorationPaymentVO(new DecorationVO());
+		BeanUtil.copyProperties(decorationPaymentPO, decorationPaymentVO, Arrays.asList("decoration","decorationReceipt","creater"));
+
+		DecorationReceiptPO decorationReceiptPO = decorationPaymentPO.getDecorationReceipt();
+
+		if(decorationReceiptPO != null){
+			BeanUtil.copyProperties(decorationReceiptPO, decorationPaymentVO, Arrays.asList("collecter","confirmer","creater"));
+
+			if(decorationReceiptPO.getCollecter() != null){
+				decorationPaymentVO.setCollecter(new UserBaseVO());
+				BeanUtil.copyProperties(decorationReceiptPO.getCollecter(), decorationPaymentVO.getCollecter(), Arrays.asList("duty","dept"));
+			}
+			
+			if(decorationReceiptPO.getConfirmer() != null){
+				decorationPaymentVO.setConfirmer(new UserBaseVO());
+				BeanUtil.copyProperties(decorationReceiptPO.getConfirmer(), decorationPaymentVO.getConfirmer(), Arrays.asList("duty","dept"));
+			}
+		}
+
+		BeanUtil.copyProperties(decorationPaymentPO, decorationPaymentVO,Arrays.asList("decoration","creater","collecter","confirmer"));
+		decorationPaymentPO.getDecoration().ptvcascade(decorationPaymentVO.getDecoration());
+		
+		return decorationPaymentVO;
+	}
+
+	private void pageDecorationPayment(Paging paging, List<Filter> filters){
+
+		List<DecorationPaymentVO> decorationPaymentVOs = new ArrayList<DecorationPaymentVO>();
+		List<DecorationPaymentPO> decorationPaymentPOs = null;
+
+		decorationPaymentPOs = decorationPaymentDao.pageDecorationPaymentForCollect(paging, filters);
+
+		for(DecorationPaymentPO decorationPaymentPO: decorationPaymentPOs){
+			DecorationPaymentVO decorationPaymentVO = changePOToVO(decorationPaymentPO);
+			decorationPaymentVOs.add(decorationPaymentVO);
+		}
+
+		paging.setData(decorationPaymentVOs);
 	}
 
 }

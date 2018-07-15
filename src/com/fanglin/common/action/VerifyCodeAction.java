@@ -17,6 +17,8 @@ import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseAction;
@@ -24,13 +26,17 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.security.AESHelper;
 import com.fanglin.core.security.SecurityCodeHelper;
 import com.fanglin.core.security.SecurityImageHelper;
+import com.fanglin.utils.LogUtils;
 import com.fanglin.utils.SystemConfig;
 
-@SuppressWarnings("serial")
-@ParentPackage("login")
+@ParentPackage("common")
 @Namespace("/")
 @Controller
 public class VerifyCodeAction extends BaseAction {
+	
+	private static final long serialVersionUID = 6903462944786262299L;
+
+	protected Logger logger = LoggerFactory.getLogger(getClass());
 
 	private ByteArrayInputStream imageStream; // 图片流
 	
@@ -39,10 +45,17 @@ public class VerifyCodeAction extends BaseAction {
 	@Action(value = "queryVode", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryVode() throws Exception{
 		
-		String tmp = SecurityCodeHelper.getSecurityCode();
-		String key = SystemConfig.getString("encryptKey");
-		
-		securityCode = AESHelper.encryptToString(tmp, key);
+		try {
+			String tmp = SecurityCodeHelper.getSecurityCode();
+			String key = SystemConfig.getString("encryptKey");
+			
+			securityCode = AESHelper.encryptToString(tmp, key);
+		} catch (Exception e) {
+			setErrorCode(110000);
+			setErrorMsg("系统处理问题");
+			
+			LogUtils.logging(logger, e, "queryVode", "common");
+		}
 		
 		return SUCCESS;
 	}
@@ -53,7 +66,10 @@ public class VerifyCodeAction extends BaseAction {
 		try {
 			imageStream = SecurityImageHelper.getImageAsInputStream(AESHelper.decryptString(securityCode, SystemConfig.getString("encryptKey")));
 		} catch (Exception e) {
-			new FLException(110000, "系统处理问题");
+			setErrorCode(110000);
+			setErrorMsg("系统处理问题");
+			
+			LogUtils.logging(logger, e, "verifyCode", "common");
 		}
 		
 		return SUCCESS;

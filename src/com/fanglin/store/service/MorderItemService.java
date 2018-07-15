@@ -2,14 +2,11 @@ package com.fanglin.store.service;
 
 import java.util.List;
 
-import com.fanglin.core.interceptor.FLException;
 import com.fanglin.store.vo.MorderItemVO;
+import com.fanglin.store.vo.MorderVO;
 
 public interface MorderItemService{
-	
-	public List<MorderItemVO> queryMorderItemByUidAndStatus(MorderItemVO morderItemVO);
 
-	public List<MorderItemVO> queryMorderItemByOid(MorderItemVO morderItemVO);
+	public List<MorderItemVO> queryMorderItemByOid(MorderVO morderVO);
 	
-	public int updateMorderItemForStatus(MorderItemVO orderItemVO) throws FLException ;
 }

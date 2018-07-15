@@ -33,7 +33,9 @@ public class VticketPO implements java.io.Serializable {
 	
 	public static final String COLUMN_BELONGER_STR = "belonger.uid";
 	
-	public static final short COLUMN_ISCOME_YES = 1;
+	public static final short ISCOME_YES_INT = 1;
+	
+	public static final short ISREGIST_YES_INT = 1;
 	
 	private long vtid;
 	
@@ -94,7 +96,7 @@ public class VticketPO implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, name = "cuid",referencedColumnName="uid")
+	@JoinColumn(name = "cuid",referencedColumnName="uid")
 	public UserPO getCreater() {
 		return creater;
 	}
@@ -113,7 +115,7 @@ public class VticketPO implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, name = "buid",referencedColumnName="uid")
+	@JoinColumn(name = "buid",referencedColumnName="uid")
 	public UserPO getBelonger() {
 		return belonger;
 	}
@@ -123,7 +125,7 @@ public class VticketPO implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, name = "did",referencedColumnName="did")
+	@JoinColumn(name = "did",referencedColumnName="did")
 	public DepartmentPO getDepartment() {
 		return department;
 	}
@@ -133,7 +135,7 @@ public class VticketPO implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, name = "rid",referencedColumnName="did")
+	@JoinColumn(name = "rid",referencedColumnName="did")
 	public DepartmentPO getRegion() {
 		return region;
 	}

@@ -2,8 +2,6 @@ package com.fanglin.store.dao.impl;
 
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
-import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -42,21 +40,8 @@ public class MuserDaoImpl extends DaoImpl<MuserPO> implements MuserDao {
 	}
 
 	@Override
-	public MuserPO queryMuserByUnion(String unionVal) {
-		return (MuserPO) session().createCriteria(MuserPO.class).add(Restrictions.eq(MuserPO.COLUMN_UNION_STR, unionVal)).uniqueResult();
-	}
-
-	@Override
-	public List<MuserPO> queryMuserByPinyinName(Paging paging, String pinyinName) {
-		
-		PagingQuery<MuserPO> query = pagingQuery(paging, MuserPO.class);
-		
-		if(StringUtils.isNotEmpty(pinyinName)){
-		    query.add(Restrictions.like("name", pinyinName, MatchMode.START));
-		}
-		
-		return query.list();
-		
+	public MuserPO queryMuserByUnionId(String unionId) {
+		return (MuserPO) session().createCriteria(MuserPO.class).add(Restrictions.eq(MuserPO.COLUMN_UNIONID_STR, unionId)).uniqueResult();
 	}
 
 }

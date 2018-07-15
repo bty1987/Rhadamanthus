@@ -165,17 +165,19 @@ var AddReduceDetail = (function(){
 		total : 0,//总金额
 		//计算报价项各种值
 		calculateQuoteFee : function($quote){
+
 			var quotationFunctionAreaType = parseFloat($quote.find('.cell.line').attr("quotationFunctionAreaType"));
 			var addReduceItemType = parseFloat($quote.find('.typedict').attr("data-type"));
 			var _num = parseFloat($quote.find('.num .cell-wrap').text());
 			var _unitprice = parseFloat($quote.find('.unitprice .cell-wrap').text());
 			var _discountFlag = $quote.find('.discountprice').attr('data-discount');//1打折,0不打折
-
 			var _discountprice = _unitprice;
 			if([1, 3].indexOf(addReduceItemType) != -1){
 				_discountprice = utils.changeTwoDecimal(utils.accMul( _discountprice, (_discountFlag == 1 || addReduceDetail.ordertype == 2 ? utils.accDiv(addReduceDetail.discount, 10) : 1)));
 			}else if([0, 2, 4].indexOf(addReduceItemType) != -1 && addReduceDetail.ordertype == 2){
-				_discountprice = utils.changeTwoDecimal(utils.accMul(_discountprice,utils.accDiv(config.addreduceDiscount, 10)));
+
+				//半价增项款不打折
+				 _discountprice = utils.changeTwoDecimal(_discountprice);
 			}
 			/*_discountprice = quotationFunctionAreaType == 3 && [3].indexOf(addReduceItemType) != -1 ? 0 : utils.changeTwoDecimal(_discountprice) ;*/
 
@@ -213,8 +215,10 @@ var AddReduceDetail = (function(){
 					}
 					var _totlaPrice = parseFloat($this.attr("data-totalprice"));
 					var _totlaPriceDiscount = parseFloat($this.find('.totalprice-discount .cell-wrap').text());
+
 					sum = utils.changeTwoDecimal(utils.accAdd(sum, _totlaPrice));
 					sumd = utils.changeTwoDecimal(utils.accAdd(sumd, _totlaPriceDiscount));
+
 				});
 			}
 			return {
@@ -639,6 +643,7 @@ var AddReduceDetail = (function(){
 				$quote.attr('data-del-flag',1);
 				that.sortQuote();
 				var sumobj = arCalculator.calculateArFees();
+
 				_params = [];
 				_params["addReduceItem.ariId"] = _qid;
 				_params["addReduce.arId"] = addReduceDetail.basicParams["addReduce.arId"];
@@ -722,7 +727,10 @@ var AddReduceDetail = (function(){
 			if([1, 3].indexOf(qv.type) != -1){
 				_dcp = utils.changeTwoDecimal(utils.accMul( _dcp, (qv.discount == 1 || addReduceDetail.ordertype == 2 ? utils.accDiv(addReduceDetail.discount, 10) : 1)));
 			}else if([0, 2, 4].indexOf(qv.type) != -1 && addReduceDetail.ordertype == 2){
-				_dcp =  utils.changeTwoDecimal(utils.changeTwoDecimal(utils.accMul(_dcp,utils.accDiv(config.addreduceDiscount, 10))));
+				//半价增项款8.8折
+				//_dcp =  utils.changeTwoDecimal(utils.changeTwoDecimal(utils.accMul(_dcp,utils.accDiv(config.addreduceDiscount, 10))));
+				//半价增项款改为不打折
+
 			}
 			/*if(qv.quotationFunctionAreaType == 3 && [3].indexOf(qv.type) != -1){
 				_dcp = 0;

@@ -1,3 +1,4 @@
 var params = {
-    selectCaching : {}
+    selectCaching : {},
+    apiHistory: {}
 };

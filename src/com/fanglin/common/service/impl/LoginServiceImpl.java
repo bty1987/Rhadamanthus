@@ -13,8 +13,6 @@ package com.fanglin.common.service.impl;
 
 import java.util.Date;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,14 +31,11 @@ import com.fanglin.personel.po.UserPO;
 import com.fanglin.system.dao.CompanyDao;
 import com.fanglin.system.po.CompanyPO;
 import com.fanglin.utils.FormatUtil;
-import com.fanglin.utils.LogUtils;
 import com.fanglin.utils.SystemConfig;
 
 @Service("loginService")
 @Transactional(readOnly=true)
 public class LoginServiceImpl implements LoginService {
-	
-	protected Logger logger = LoggerFactory.getLogger(getClass());
 	
 	@Autowired
 	private CompanyDao companyDao;
@@ -88,7 +83,6 @@ public class LoginServiceImpl implements LoginService {
 		} catch (FLException e) {
 			throw e;
 		}  catch (Exception e) {
-			LogUtils.logging(logger, e, "requestAuthCode");
 			throw new FLException(110000, "系统处理问题");
 		}
 		
@@ -126,7 +120,6 @@ public class LoginServiceImpl implements LoginService {
 			throw e;
 		} catch (Exception e) {
 			e.printStackTrace();
-			LogUtils.logging(logger, e, "changeAuthCode");
 			throw new FLException(110000, "系统处理问题");
 		}
 		
@@ -154,7 +147,6 @@ public class LoginServiceImpl implements LoginService {
 		} catch (FLException e) {
 			throw e;
 		} catch (Exception e) {
-			LogUtils.logging(logger, e, "updateAuthCode");
 			throw new FLException(110000, "系统处理问题");
 		}
 	}

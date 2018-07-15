@@ -245,44 +245,6 @@ public class SalesPaymentServiceImpl implements SalesPaymentService{
 		return salesPaymentVOs;
 	}
 	
-	@Override                  
-	public List<SalesPaymentVO> querySalesPaymentForNotInitBySrid(SalesReceiptVO salesReceipt) {
-
-		List<SalesPaymentPO> salesPaymentPOs = salesPaymentDao.querySalesPaymentForNotInitBySrid(salesReceipt.getSrId());
-
-		List<SalesPaymentVO> salesPaymentVOs = new ArrayList<SalesPaymentVO>();
-
-		SalesPaymentVO salesPaymentVO;
-
-		for(SalesPaymentPO salesPaymentPO: salesPaymentPOs){
-
-			salesPaymentVO = new SalesPaymentVO(new UserBaseVO() , new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO()) ,new SalesReceiptVO(new UserBaseVO(),new UserBaseVO()));
-			SalesPO salesPO = salesPaymentPO.getSales();
-			SalesVO salesVO = salesPaymentVO.getSales();
-			BeanUtil.copyProperties(salesPaymentPO, salesPaymentVO, Arrays.asList("creater","sales","salesReceipt"));
-			salesPaymentVO.getCreater().setBaseInfo(salesPaymentPO.getCreater());
-			BeanUtil.copyProperties(salesPO, salesVO, Arrays.asList("house","customer","salesman","dept","region","guider","instorer","guideDept"));
-			BeanUtil.copyProperties(salesPO.getHouse(), salesVO.getHouse(), Arrays.asList("village"));
-			BeanUtil.copyProperties(salesPO.getHouse().getVillage(), salesVO.getHouse().getVillage(), Arrays.asList("cityProper"));
-			BeanUtil.copyProperties(salesPO.getCustomer(), salesVO.getCustomer());
-			BeanUtil.copyProperties(salesPO.getSalesman(), salesVO.getSalesman(),Arrays.asList("role","dept","duty"));
-			BeanUtil.copyProperties(salesPO.getDept(), salesVO.getDept(),Arrays.asList("fatherDept","cityProper","type"));
-			BeanUtil.copyProperties(salesPO.getRegion(), salesVO.getRegion(),Arrays.asList("fatherDept","cityProper","type"));
-			BeanUtil.copyProperties(salesPO.getGuider(), salesVO.getGuider(),Arrays.asList("role","dept","duty"));
-			BeanUtil.copyProperties(salesPO.getInstorer(), salesVO.getInstorer(),Arrays.asList("role","dept","duty"));
-			BeanUtil.copyProperties(salesPO.getGuideDept(), salesVO.getGuideDept(),Arrays.asList("fatherDept","cityProper","type"));
-			BeanUtil.copyProperties(salesPaymentPO.getSalesReceipt(), salesPaymentVO.getSalesReceipt(), Arrays.asList("collecter","confirmer"));
-			BeanUtil.copyProperties(salesPaymentPO.getSalesReceipt().getCollecter(), salesPaymentVO.getSalesReceipt().getCollecter(), Arrays.asList("role","dept","duty"));
-			BeanUtil.copyProperties(salesPaymentPO.getSalesReceipt().getConfirmer(), salesPaymentVO.getSalesReceipt().getConfirmer(), Arrays.asList("role","dept","duty"));
-
-			salesPaymentVOs.add(salesPaymentVO);
-
-		}
-
-		return salesPaymentVOs;
-	}
-	
-	
 	@Override
 	public List<SalesPaymentVO> querySalesPaymentByOrderId(SalesVO salesVO) {
 		
@@ -326,6 +288,43 @@ public class SalesPaymentServiceImpl implements SalesPaymentService{
 			salesPaymentVOs.add(salesPaymentVO);
 		}
 		
+		return salesPaymentVOs;
+	}
+	
+	@Override                  
+	public List<SalesPaymentVO> querySalesPaymentForNotInitBySrid(SalesReceiptVO salesReceipt) {
+
+		List<SalesPaymentPO> salesPaymentPOs = salesPaymentDao.querySalesPaymentForNotInitBySrid(salesReceipt.getSrId());
+
+		List<SalesPaymentVO> salesPaymentVOs = new ArrayList<SalesPaymentVO>();
+
+		SalesPaymentVO salesPaymentVO;
+
+		for(SalesPaymentPO salesPaymentPO: salesPaymentPOs){
+
+			salesPaymentVO = new SalesPaymentVO(new UserBaseVO() , new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO()) ,new SalesReceiptVO(new UserBaseVO(),new UserBaseVO()));
+			SalesPO salesPO = salesPaymentPO.getSales();
+			SalesVO salesVO = salesPaymentVO.getSales();
+			BeanUtil.copyProperties(salesPaymentPO, salesPaymentVO, Arrays.asList("creater","sales","salesReceipt"));
+			salesPaymentVO.getCreater().setBaseInfo(salesPaymentPO.getCreater());
+			BeanUtil.copyProperties(salesPO, salesVO, Arrays.asList("house","customer","salesman","dept","region","guider","instorer","guideDept"));
+			BeanUtil.copyProperties(salesPO.getHouse(), salesVO.getHouse(), Arrays.asList("village"));
+			BeanUtil.copyProperties(salesPO.getHouse().getVillage(), salesVO.getHouse().getVillage(), Arrays.asList("cityProper"));
+			BeanUtil.copyProperties(salesPO.getCustomer(), salesVO.getCustomer());
+			BeanUtil.copyProperties(salesPO.getSalesman(), salesVO.getSalesman(),Arrays.asList("role","dept","duty"));
+			BeanUtil.copyProperties(salesPO.getDept(), salesVO.getDept(),Arrays.asList("fatherDept","cityProper","type"));
+			BeanUtil.copyProperties(salesPO.getRegion(), salesVO.getRegion(),Arrays.asList("fatherDept","cityProper","type"));
+			BeanUtil.copyProperties(salesPO.getGuider(), salesVO.getGuider(),Arrays.asList("role","dept","duty"));
+			BeanUtil.copyProperties(salesPO.getInstorer(), salesVO.getInstorer(),Arrays.asList("role","dept","duty"));
+			BeanUtil.copyProperties(salesPO.getGuideDept(), salesVO.getGuideDept(),Arrays.asList("fatherDept","cityProper","type"));
+			BeanUtil.copyProperties(salesPaymentPO.getSalesReceipt(), salesPaymentVO.getSalesReceipt(), Arrays.asList("collecter","confirmer"));
+			BeanUtil.copyProperties(salesPaymentPO.getSalesReceipt().getCollecter(), salesPaymentVO.getSalesReceipt().getCollecter(), Arrays.asList("role","dept","duty"));
+			BeanUtil.copyProperties(salesPaymentPO.getSalesReceipt().getConfirmer(), salesPaymentVO.getSalesReceipt().getConfirmer(), Arrays.asList("role","dept","duty"));
+
+			salesPaymentVOs.add(salesPaymentVO);
+
+		}
+
 		return salesPaymentVOs;
 	}
 	

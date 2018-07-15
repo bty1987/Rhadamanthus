@@ -2,6 +2,7 @@ package com.fanglin.store.vo;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.List;
 
 import org.apache.struts2.json.annotations.JSON;
 
@@ -13,9 +14,7 @@ public class MorderVO implements Serializable{
 	 
 	private String no;
 	
-	private MuserVO muser;
-	
-	private AddressVO address;
+	private String unionId;
 	
 	private Float total;
 	
@@ -23,16 +22,14 @@ public class MorderVO implements Serializable{
 	
 	private Timestamp paymentTime;
 	
+	private String address;
+	
 	private Short status;
+	
+	private List<MorderItemVO> items;
 
 	public MorderVO() {
 		super();
-	}
-
-	public MorderVO(MuserVO muser, AddressVO address) {
-		super();
-		this.muser = muser;
-		this.address = address;
 	}
 
 	public Long getOid() {
@@ -51,20 +48,12 @@ public class MorderVO implements Serializable{
 		this.no = no;
 	}
 
-	public MuserVO getMuser() {
-		return muser;
+	public String getUnionId() {
+		return unionId;
 	}
 
-	public void setMuser(MuserVO muser) {
-		this.muser = muser;
-	}
-
-	public AddressVO getAddress() {
-		return address;
-	}
-
-	public void setAddress(AddressVO address) {
-		this.address = address;
+	public void setUnionId(String unionId) {
+		this.unionId = unionId;
 	}
 
 	public Float getTotal() {
@@ -75,7 +64,7 @@ public class MorderVO implements Serializable{
 		this.total = total;
 	}
 
-	@JSON(format="yyyy-MM-dd")
+	@JSON(format="yyyy-MM-dd HH:mm:ss")
 	public Timestamp getCreateTime() {
 		return createTime;
 	}
@@ -84,7 +73,7 @@ public class MorderVO implements Serializable{
 		this.createTime = createTime;
 	}
 
-	@JSON(format="yyyy-MM-dd")
+	@JSON(format="yyyy-MM-dd HH:mm:ss")
 	public Timestamp getPaymentTime() {
 		return paymentTime;
 	}
@@ -93,6 +82,14 @@ public class MorderVO implements Serializable{
 		this.paymentTime = paymentTime;
 	}
 
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+	
 	public Short getStatus() {
 		return status;
 	}
@@ -100,5 +97,13 @@ public class MorderVO implements Serializable{
 	public void setStatus(Short status) {
 		this.status = status;
 	}
-	
+
+	public List<MorderItemVO> getItems() {
+		return items;
+	}
+
+	public void setItems(List<MorderItemVO> items) {
+		this.items = items;
+	}
+
 }

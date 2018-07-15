@@ -18,6 +18,7 @@ $(function () {
     var importBtn = $('#importBtn');
 
     var refund = $('#refund');
+    var refundTotal = $('#refundTotal');
     var approver = $('#approver');
     var refundDes = $('#refundDes');
 
@@ -29,6 +30,7 @@ $(function () {
     var approvalSalesRefundStr = {
         sid: "approvalSalesRefund.sid",
         refund: "approvalSalesRefund.refund",
+        refundTotal:"approvalSalesRefund.refundTotal",
         type: "approvalSalesRefund.type"
     };
 
@@ -46,7 +48,7 @@ $(function () {
 
     refundBtn.click(function () {
 
-        if (status != 0) {
+        if (status != 0 && status != 5) {
             com.showAlert(com.error, "该订单状态不能退货");
             return false;
         }
@@ -56,7 +58,6 @@ $(function () {
 
         $('#list li.clearfix div.action-buttons a.btn').addClass('hide');
         recordMoney(false);
-
 
     });
 
@@ -113,7 +114,7 @@ $(function () {
 
     fullRefundBtn.click(function () {
 
-        if (status != 0) {
+        if (status != 0 && status != 5) {
             com.showAlert(com.error, "该订单状态不能全退");
             return false;
         }
@@ -162,7 +163,7 @@ $(function () {
 
     reOrderBtn.click(function () {
 
-        if (status != 0) {
+        if (status != 0 && status != 5) {
             com.showAlert(com.error, "该订单状态不能倒单");
             return false;
         }
@@ -389,7 +390,7 @@ $(function () {
     }
 
     function closeRefundlayer() {
-        $('#refundTotal').val("");
+        refundTotal.val("");
         $('#refund').val("");
         $('#refundDes').val("");
         $('#list li.clearfix div.action-buttons').empty();
@@ -481,7 +482,7 @@ $(function () {
             return false;
         }
 
-        $('#refundTotal').val(total);
+        refundTotal.val(total);
 
         return flag;
     }
@@ -495,6 +496,7 @@ $(function () {
     function creatapprovalSalesRefundPostData(type) {
         approvalSalesRefundPostData[approvalSalesRefundStr.sid] = sid;
         approvalSalesRefundPostData[approvalSalesRefundStr.refund] = refund.val();
+        approvalSalesRefundPostData[approvalSalesRefundStr.refundTotal] = refundTotal.val();
         approvalSalesRefundPostData[approvalSalesRefundStr.type] = type;
     }
 

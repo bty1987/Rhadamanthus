@@ -26,6 +26,12 @@ $.extend(api, {communion: {
     pageDepartmentType : {url: "pageDepartmentType.do", demo: true},
 	
 	queryDataDrawing: {url: "queryDataDrawing.do"},
-	addDataDrawing :{url:"addDataDrawing.do",server: "communion"},
-	deleteDataDrawing:{url:"deleteDataDrawing.do",server: "communion"}
+	addDataDrawing :{url:"addDataDrawing.do",server: "communion", intercept: true},
+	deleteDataDrawing:{url:"deleteDataDrawing.do",server: "communion"},
+
+    pageServiceNode:{url:"pageServiceNode.do"},
+    addServiceNode:{url:"addServiceNode.do"},
+    updateServiceNode:{url:"updateServiceNode.do"},
+    updateServiceNodeForStatus:{url:"updateServiceNodeForStatus.do", intercept: true}
+
 }});

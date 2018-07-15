@@ -14,7 +14,7 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.store.service.AddressService;
 import com.fanglin.store.vo.AddressVO;
 
-@ParentPackage("login")
+@ParentPackage("base")
 @Namespace("/")
 @Controller
 public class AddressAction extends BaseListAction {
@@ -25,45 +25,22 @@ public class AddressAction extends BaseListAction {
 	private AddressService addressService;
 
 	private AddressVO address;
-
-	private List<AddressVO> addresss;
-
+	
+	private List<AddressVO> addresses;
+	
+	
 	@Action(value = "queryAddressByUid", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
-	public String queryAddressByUid() {
-
-		addresss = addressService.queryAddressByUid(address);
-
-		return SUCCESS;
-	}
-
-	@Action(value = "addAddress", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
-	public String addAddress() throws FLException {
-
-		addressService.addAddress(address);
-
-		return SUCCESS;
-	}
-
-	@Action(value = "updateAddress", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
-	public String updateAddress() throws FLException {
-
-		addressService.updateAddress(address);
+	public String queryAddressByUid(){
+		
+		addresses = addressService.queryAddressByUid(address);
 
 		return SUCCESS;
 	}
 	
-	@Action(value = "updateAddressForStatus", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
-	public String updateAddressForStatus() throws FLException {
+	@Action(value = "updateAddressByAid", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
+	public String updateAddressByAid() throws FLException {
 		
-		addressService.updateAddressForStatus(address);
-
-		return SUCCESS;
-	}
-
-	@Action(value = "deleteAddress", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
-	public String deleteAddress() throws FLException {
-
-		addressService.deleteAddress(address);
+		addressService.updateAddressByAid(address);
 
 		return SUCCESS;
 	}
@@ -76,12 +53,13 @@ public class AddressAction extends BaseListAction {
 		this.address = address;
 	}
 
-	public List<AddressVO> getAddresss() {
-		return addresss;
+	public List<AddressVO> getAddresses() {
+		return addresses;
 	}
 
-	public void setAddresss(List<AddressVO> addresss) {
-		this.addresss = addresss;
+	public void setAddresses(List<AddressVO> addresses) {
+		this.addresses = addresses;
 	}
 
+	
 }

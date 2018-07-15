@@ -1,0 +1,141 @@
+<div class="page-content">
+    <div class="row">
+        <div class='col-xs-12' style='padding-left:0px;'>
+        </div>
+    </div>
+
+    <div class="row clearfix">
+        <div class="col-xs-12 pricing-span-body">
+            <div class="tabbable">
+                <ul class="nav nav-tabs padding-12" id="homeNav">
+                    <li class="active" id="homeTab">
+                        <a data-toggle="tab" href="#homePage">首页</a>
+                    </li>
+
+                    <li class="" id="calendarTab">
+                        <a data-toggle="tab" href="#calendarPage">日历</a>
+                    </li>
+                </ul>
+
+                <div class="tab-content no-border">
+                    <div id="homePage" class="tab-pane in active">
+
+                        <div class='col-sm-6 declare'>
+                            <div class="widget-box transparent col-xs-12">
+                                <div class="widget-header widget-header-flat">
+                                    <h4 class="lighter">
+                                        <i class="icon-bullhorn"></i>
+                                        最近通知
+                                    </h4>
+                                    <div class="widget-toolbar action-buttons">
+                                        <a href="javascript:void(0);" onclick="loadNotices();" data-action="reload" data-rel="tooltip" data-original-title="更新">
+                                            <i class="icon-refresh"></i>
+                                        </a>&nbsp;
+                                        <a href='#' id='moreNotice' class="moreLink">更多</a>
+                                    </div>
+                                </div>
+
+                                <div class="widget-body">
+                                    <div class="widget-main padding-8">
+                                        <div id="noticeList" class="profile-feed"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6" style="border-left: 1px solid #e5e8ea;">
+
+                            <div class="widget-box transparent col-xs-12">
+                                <div class="widget-header widget-header-flat">
+                                    <h4 class="lighter">
+                                        <i class="icon-flag"></i>
+                                        最近活动
+                                    </h4>
+                                    <div class="widget-toolbar action-buttons" >
+                                        <a href="javascript:void(0);" onclick="loadActivities();" data-action="reload" data-rel="tooltip" data-original-title="更新">
+                                            <i class="icon-refresh"></i>
+                                        </a>&nbsp;
+                                        <a href='#' id='moreActivity' class="moreLink">更多</a>
+                                    </div>
+                                </div>
+
+                                <div class="widget-body">
+                                    <div class="widget-main padding-8">
+                                        <div id="activityList" class="profile-feed"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="col-sm-12" id="customize"></div>
+                    </div>
+
+                    <div id="calendarPage" class="tab-pane in active">
+                        <div class="row">
+                            <div id="calendar"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="ace-settings-container" id="ace-settings-container">
+    <div class="btn btn-app btn-xs btn-warning ace-settings-btn" id="ace-settings-btn">
+        <i class="icon-eye-open bigger-150"></i>
+    </div>
+
+    <div class="ace-settings-box" id="ace-settings-box">
+        <div>
+            <span>配置您的可见内容</span>
+        </div>
+
+
+        <div>设计</div>
+        <div>
+            <input type="checkbox" class="ace ace-checkbox-2" name="designer" id="amount_ds" value="1" key="amount_ds"/>
+            <label class="lbl" for="amount_ds"> 业绩统计 </label>
+        </div>
+        <div>
+            <input type="checkbox" class="ace ace-checkbox-2" name="designer" id="trend_ds" value="2" key="designerSigning"/>
+            <label class="lbl" for="trend_ds"> 签单&量尺走势 </label>
+        </div>
+        <input type="checkbox" class="ace ace-checkbox-2" name="designer" id="ranking_ds" value="3" key="designerTotal"/>
+        <label class="lbl" for="ranking_ds"> 设计师排名 </label>
+        <div>
+            <input type="checkbox" class="ace ace-checkbox-2" name="designer" id="ranking_dept_ds" value="4" key="designerDept"/>
+            <label class="lbl" for="ranking_dept_ds"> 部门排名 </label>
+        </div>
+
+
+        <div>业务</div>
+        <div>
+            <input type="checkbox" class="ace ace-checkbox-2" name="designer" id="amount_sm" value="5" key="amount_sm"/>
+            <label class="lbl" for="amount_sm"> 业绩统计 </label>
+        </div>
+        <div>
+            <input type="checkbox" class="ace ace-checkbox-2" name="designer" id="trend_sm" value="6" key="salesmanSigning"/>
+            <label class="lbl" for="trend_sm"> 签单&量尺走势 </label>
+        </div>
+        <div>
+            <input type="checkbox" class="ace ace-checkbox-2" name="designer" id="ranking_sm" value="7" key="salesmanTotal"/>
+            <label class="lbl" for="ranking_sm"> 业务员排名 </label>
+        </div>
+        <div>
+            <input type="checkbox" class="ace ace-checkbox-2" name="designer" id="ranking_dept_sm" value="8" key="salesmanDept"/>
+            <label class="lbl" for="ranking_dept_sm"> 部门排名 </label>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function(){
+        $.loadScript(['js/home-antv.js']);
+    });
+    $("#ace-settings-btn").on(ace.click_event, function () {
+        $(this).toggleClass("open");
+        $("#ace-settings-box").toggleClass("open")
+    });
+</script>

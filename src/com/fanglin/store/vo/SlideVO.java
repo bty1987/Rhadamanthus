@@ -8,7 +8,7 @@ public class SlideVO implements Serializable {
 
 	private Long sid;
 	
-	private MgoodsVO mgoods;
+	private Long gid;
 	
 	private String img;
 	
@@ -20,11 +20,6 @@ public class SlideVO implements Serializable {
 		super();
 	}
 
-	public SlideVO(MgoodsVO mgoods) {
-		super();
-		this.mgoods = mgoods;
-	}
-
 	public Long getSid() {
 		return sid;
 	}
@@ -32,13 +27,13 @@ public class SlideVO implements Serializable {
 	public void setSid(Long sid) {
 		this.sid = sid;
 	}
-
-	public MgoodsVO getMgoods() {
-		return mgoods;
+	
+	public Long getGid() {
+		return gid;
 	}
 
-	public void setMgoods(MgoodsVO mgoods) {
-		this.mgoods = mgoods;
+	public void setGid(Long gid) {
+		this.gid = gid;
 	}
 
 	public String getImg() {

@@ -46,57 +46,27 @@ public class DecorationPO implements Serializable {
 
 	private static final long serialVersionUID = -5971474052433500262L;
 	
-	public static final int RESOURCETYPE_CONSULT_STR = 0;
+	public static final short STATUS_INIT_INT = 0;//初始
 	
-	public static final int RESOURCETYPE_AMOUNT_STR = 1;
+	public static final short STATUS_DEPOSIT_INT = 1;//定金
 	
-	public static final Short QUOTATIONSTATUS_UNDONE_INT = 0;//未报价
+	public static final short STATUS_SIGNED_INT = 2;//已签约
 	
-	public static final Short QUOTATIONSTATUS_ALREADY_INT = 1;//已报价
+	public static final short STATUS_RESIGNED_INT = 3;//重签合同
 	
-	public static final Short STATUS_INIT_INT = 0;//初始
+	public static final short STATUS_WASTE_INT = 4;//废单
 	
-	public static final Short STATUS_DEPOSIT_INT = 1;//定金
+	public static final short STATUS_TERMINATION_INT = 5;//合同终止
 	
-	public static final Short STATUS_SIGNED_INT = 2;//已签约
+	public static final short STATUS_FINAL_INT = 6;//决算
 	
-	public static final Short STATUS_RESIGNED_INT = 3;//重签合同
+	public static final short STATUS_COMPLETED_INT = 7;//已完工
 	
-	public static final Short STATUS_WASTE_INT = 4;//废单
+	public static final short PROJECTSTATUS_INITIAL_INT = 0;	//工程初始
 	
-	public static final Short STATUS_TERMINATION_INT = 5;//合同终止
+	public static final short PROJECTSTATUS_START_INT = 1;		//开工
 	
-	public static final Short STATUS_FINAL_INT = 6;//决算
-	
-	public static final Short STATUS_COMPLETED_INT = 7;//已完工
-	
-	public static final Short PROJECTSTATUS_INITIAL_INT = 0;	//工程初始
-	
-	public static final Short PROJECTSTATUS_START_INT = 1;		//开工
-	
-	public static final Short PROJECTSTATUS_FINISH_INT = 2;		//完工
-	
-	public static final String PROJECTSTATUS_FANG_APPLY_STR = "放线申请";
-	
-	public static final String PROJECTSTATUS_FANG_SUCCESS_STR = "放线成功";
-	
-	public static final String PROJECTSTATUS_FANG_FAIL_STR = "放线失败";
-	
-	public static final String HOUSETYPE_COMPLETE_STR = "现房";
-	
-	public static final String HOUSETYPE_OFFPLAN_STR = "期房";
-	
-	public static final String ACTIVITYSTATUS_RECEIVED_STR = "已领取";
-	
-	public static final String ACTIVITYSTATUS_UNRECEIVED_STR = "未领取";
-	
-	public static final int APPROVAL_MODIFICATION_INT = 0;
-	
-	public static final int APPROVAL_APPLY_INT = 1;
-	
-	public static final int APPROVAL_PASS_INT = 2;
-	
-	public static final int APPROVAL_UNPASS_INT = 3;
+	public static final short PROJECTSTATUS_FINISH_INT = 2;		//完工
 	
 	public static final short TYPE_PART_INT = 0;
 	
@@ -112,7 +82,6 @@ public class DecorationPO implements Serializable {
 	
 	private HousePO house;
 	
-	
 
 	private UserPO designer;
 	
@@ -126,6 +95,7 @@ public class DecorationPO implements Serializable {
 	
 	private UserPO escorter;
 	
+	private UserPO contracter;
 	
 	
 	private short type;
@@ -141,19 +111,15 @@ public class DecorationPO implements Serializable {
 	private int resourceType;
 	
 	private float freeArea;
+	
+	private DecorationAdditionPO addition;
 
 	
-	
 	private String contractCode;
-	
-	private UserPO contractUserId;
 	
 	private float orderTotalPrice;
 	
 	private float quotationPrice;
-	
-	private short quotationStatus;
-	
 	
 	
 	private Timestamp contractTime;
@@ -165,13 +131,11 @@ public class DecorationPO implements Serializable {
 	private Timestamp createTime;
 	
 	
-	
 	private short status;
 	
 	private short projectStatus;
 	
 	private int otherStatus;
-	
 	
 	
 	private QuotationVersionPO version;
@@ -194,7 +158,6 @@ public class DecorationPO implements Serializable {
 		super();
 		this.orderId = orderId;
 	}
-
 	
 	@GeneratedValue
 	@Column(name="doid")
@@ -300,12 +263,12 @@ public class DecorationPO implements Serializable {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = true, name = "ctuid", referencedColumnName="uId")
-	public UserPO getContractUserId() {
-		return contractUserId;
+	public UserPO getContracter() {
+		return contracter;
 	}
 
-	public void setContractUserId(UserPO contractUserId) {
-		this.contractUserId = contractUserId;
+	public void setContracter(UserPO contracter) {
+		this.contracter = contracter;
 	}
 
 	public Timestamp getMeasureTime(){
@@ -331,15 +294,6 @@ public class DecorationPO implements Serializable {
 	public void setCreateTime(Timestamp createTime){
 		this.createTime = createTime;
 	}
-
-	public short getQuotationStatus() {
-		return quotationStatus;
-	}
-
-	public void setQuotationStatus(short quotationStatus) {
-		this.quotationStatus = quotationStatus;
-	}
-	
 
 	public Short getStatus() {
 		return status;
@@ -500,6 +454,16 @@ public class DecorationPO implements Serializable {
 	public void setDiscount(float discount) {
 		this.discount = discount;
 	}
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = true, name = "orderId", referencedColumnName="orderId", insertable=false, updatable=false)
+	public DecorationAdditionPO getAddition() {
+		return addition;
+	}
+
+	public void setAddition(DecorationAdditionPO addition) {
+		this.addition = addition;
+	}
 
 	private void ptv(DecorationVO decorationVO){
 		BeanUtil.copyProperties(this, decorationVO, Arrays.asList("house","customer","designer","salesman","supervisor","version","createUser","quoter","escorter","contractUserId"));
@@ -542,7 +506,7 @@ public class DecorationPO implements Serializable {
 		BeanUtil.copyPropertie(this.getSalesman().getDept(), decorationVO.getSalesman().getDept(), Arrays.asList("type","fatherDept","cityProper"));
 		BeanUtil.copyPropertie(this.getSalesman().getDept().getFatherDept(), decorationVO.getSalesman().getDept().getFatherDept(), Arrays.asList("type","fatherDept","cityProper"));
 		
-		decorationVO.setVersion(new QuotationVersionVO());		
+		decorationVO.setVersion(new QuotationVersionVO());
 		
 		BeanUtil.copyPropertie(this.getVersion(), decorationVO.getVersion());	
 	}
@@ -562,8 +526,6 @@ public class DecorationPO implements Serializable {
 			BeanUtil.copyPropertie(this.getSupervisor().getDept().getFatherDept(), decorationVO.getSupervisor().getDept().getFatherDept(), Arrays.asList("type","fatherDept","cityProper"));
 		}
 		
-		
-		
 		if(decorationVO.getCreateUser() != null && this.getCreateUser() != null){
 			
 			decorationVO.getCreateUser().setDuty(new DutyVO());
@@ -580,7 +542,6 @@ public class DecorationPO implements Serializable {
 		if(decorationVO.getQuoter() != null && this.getQuoter() != null){
 			BeanUtil.copyPropertie(this.getQuoter(), decorationVO.getQuoter(), Arrays.asList("duty","dept"));
 		}
-
 		
 		if(decorationVO.getEscorter() != null && this.getEscorter() != null){
 			BeanUtil.copyPropertie(this.getEscorter(), decorationVO.getEscorter(), Arrays.asList("duty","dept"));

@@ -7,10 +7,11 @@
     uploadTimeout: 30,
     quotationLimitDiscount: 8.8,
     timeout: 120,
-
+	singlePointTime:60000,
     serviceRate: 0.1,
     addreduceManagerPrice:true,
     addreduceDiscount: 8.8,
+    spacing: 5,
 	
     prefix: '', // 使用在获取二维码路径
     iconImg: './images/icon_fanglin.png',
@@ -21,5 +22,6 @@
     server: '',
     media: '',
     dmedia: '',
-    library: ''
+    library: '',
+    store: ''
 };

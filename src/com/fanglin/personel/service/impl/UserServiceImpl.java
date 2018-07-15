@@ -123,6 +123,7 @@ public class UserServiceImpl implements UserService {
 		}
 		
 		if(userPO != null && !userPO.getRole().getNo().equals(RolePO.SUPER_NO_STR) ){
+			
 			userVO = convertBean(userPO);
 		}
 		
@@ -131,9 +132,9 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserVO queryUserByUserId(UserVO userVO) throws FLException{
-
+		
 		UserPO userPO = userDao.queryUserByUserId(userVO.getUserId());
-	
+		
 		if(userPO == null){
 			throw new FLException(190005, "人员不存在");
 		}
@@ -196,7 +197,6 @@ public class UserServiceImpl implements UserService {
 		
 		userInfoVO.setUser(convertBean(userInfoPO.getUser()));
 		
-		
 		try {
 			userInfoVO.getUser().setCompanys(AESHelper.encryptToString(FormatUtil.encodeCompany(userInfoPO.getUser().getCompany()),SystemConfig.getString("encryptKey")));
 		} catch (Exception e) {
@@ -222,12 +222,21 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
-	public List<UserBaseVO> queryUserForNameByPinyinName(String pinyinName,UserVO userVO,Integer company) throws FLException{
+	public List<UserBaseVO> queryUserByPinyin(String pinyinName,UserVO userVO,DepartmentTypeVO departmentType) throws FLException{
+		
 		List<UserBaseVO> userBaseVOs = new ArrayList<UserBaseVO>();
 		
 		Paging paging = new Paging(0, 10);
 		
-		List<UserPO> userPOs = userDao.pageUserForNameByPinyinName(paging, pinyinName,userVO.getStatus(), company);
+		int dtid = 0;
+		
+		if(departmentType != null && departmentType.getName() != null && departmentType.getName().length() != 0){
+			
+			dtid = departmentTypeDao.queryDepartmentTypeByName(departmentType.getName()).getDtid();
+		
+		}
+		
+		List<UserPO> userPOs = userDao.pageUserForNameByPinyinName(paging, pinyinName,userVO.getStatus(), dtid);
 
 		for(UserPO userPO: userPOs){
 			
@@ -245,12 +254,11 @@ public class UserServiceImpl implements UserService {
 		UserVO userVO = null;
 		
 		if(userPO != null){
-			if(userPO.getPassword().equals(MD5Helper.MD5(password)) && userPO.getStatus() !=1){
+			if(userPO.getPassword().equals(MD5Helper.MD5(password)) && userPO.getStatus() != 1){
 				
 				userVO = new UserVO(new RoleVO(), new DepartmentVO(),new DutyVO());
 				
 				BeanUtil.copyProperties(userPO, userVO, Arrays.asList("role", "dept","duty", "password", "identity","company"));
-
 				BeanUtil.copyProperties(userPO.getRole(), userVO.getRole());
 				
 				userVO.setCompanys(String.valueOf(userPO.getCompany()));
@@ -260,32 +268,6 @@ public class UserServiceImpl implements UserService {
 		return userVO;
 	}
 	
-	@Override
-	public List<UserBaseVO> queryUserByDepartmentType(String pinyinName,UserVO userVO,DepartmentTypeVO departmentType) throws FLException{
-		
-		List<UserBaseVO> userBaseVOs = new ArrayList<UserBaseVO>();
-		
-		Paging paging = new Paging(0, 10);
-		
-		int dtid = 0;
-		
-		if(departmentType.getName() != null && departmentType.getName().length() !=0){
-			
-			dtid = departmentTypeDao.queryDepartmentTypeByName(departmentType.getName()).getDtid();
-		
-		}
-		
-		List<UserPO> userPOs = userDao.pageUserForNameByPinyinNameAType(paging, pinyinName,userVO.getStatus(),dtid);
-		
-		for(UserPO userPO: userPOs){
-			
-			userBaseVOs.add(convertBaseBean(userPO));
-			
-		}
-		
-		return userBaseVOs;
-		
-	}
 	
 	@Override
 	public List<UserBaseVO> queryUserByUids(List<Integer> uids) throws FLException{
@@ -381,6 +363,7 @@ public class UserServiceImpl implements UserService {
 		UserInfoPO userInfoPO = userInfoDao.queryUserInfoByUserId(userVO.getUserId());
 		
 		if(userInfoPO == null){
+			
 			throw new FLException(190005, "人员不存在");
 		}
 		
@@ -389,6 +372,7 @@ public class UserServiceImpl implements UserService {
 		DepartmentPO departmentPO =departmentDao.queryDepartmentByDeptId(userVO.getDept().getDeptId());
 		
 		if(departmentPO.getFatherDept() == null){
+			
 			throw new FLException(310002, "部门不可添加人员");
 		}
 		
@@ -407,7 +391,7 @@ public class UserServiceImpl implements UserService {
 		BeanUtil.copyProperties(userInfoVO, userInfoPO, Arrays.asList("user"));
 		BeanUtil.copyProperties(userVO, userPO, Arrays.asList("role", "dept","duty","uId", "userId", "userName","loginId", "password", "role", "isLogin", "company", "extranet"));
 		
-		userPO.setDept(new DepartmentPO(userVO.getDept().getDeptId()));
+		userPO.setDept(departmentDao.queryDepartmentByDeptId(userVO.getDept().getDeptId()));
 		BeanUtil.copyProperties(userVO.getDept(), userPO.getDept(), Arrays.asList("fatherDept", "cityProper"));
 		
 		userPO.setDuty(new DutyPO(userVO.getDuty().getDid()));
@@ -643,6 +627,7 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	private UserVO convertBean(UserPO userPO) throws FLException{
+		
 		UserVO userVO = new UserVO(new RoleVO(), new DepartmentVO(),new DutyVO());
 		
 		BeanUtil.copyProperties(userPO, userVO, Arrays.asList("role", "dept","duty", "password", "identity","company"));

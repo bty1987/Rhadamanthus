@@ -214,6 +214,20 @@ $(function(){
         return [createDiv("row", "resLists")];
     }
 
+    function drawAccount(conf) {
+        return [createDiv("row","accountPayment")];
+    }
+
+    function drawService(conf){
+
+        var row = createDiv("row","serviceInfo ");
+        var left = createDiv("col-xs-12 col-md-12 widget-container-span ui-sortable").append(createDiv("widget-box transparent").append(createDiv("widget-header").append($("<h4></h4>").append($("<strong></strong>").text("服务信息"))),createDiv("widget-body").append(createDiv("widget-body-inner","serviceInfo"))));
+        row.append(left);
+
+        return [row];
+
+    }
+
     var _propertyArr = ["楼盘地址","客户名","设计部","设计师","业务部","业务员","面积","签单额","报价金额","量房时间","签单时间","定金时间","创建时间","类型","状态","工程状态","折扣"];
 
     var decorationPage = {
@@ -235,14 +249,14 @@ $(function(){
             "apiPage":api.decoration.pageDecorationForDesigner,
             "pageBtn":["view","revie","line","price","scal","contract","extension","addminus","cal"],
             "postDataName": "designerPostData",
-            "nodes":[{type:"basic",opt:{btn:["customerInfosBtn"],show:["houseType","houseClass"]}},{type:"quotaion",opt:{btn:["btnPrintDefaultQuotationInfo"]}},{type:"picture",opt:{show:["designPictureUpload","projectPictureUpload","CADUpload","ContractUpload"]}},{type:"material"},{type:"activity",opt:{btn:["joinActivityBtn","applyActivityItemBtn","applySpecialActivityItemBtn"]},wizard:{"activityBtnMethod":activityBtnMethod,"uiBtnMethod":uiBtnMethod} },{type:"payment",opt:{btn:["btnSetDecorationPaymentInfo","btnOtherPayment"]},wizard:{"isDesign":true}},{type:"belong"}, {type: "addreduce"}],
+            "nodes":[{type:"basic",opt:{btn:["customerInfosBtn"],show:["orderType","houseType","houseClass"]}},{type:"quotaion",opt:{btn:["btnPrintDefaultQuotationInfo"]}},{type:"picture",opt:{show:["designPictureUpload","projectPictureUpload","CADUpload","ContractUpload"]}},{type:"material"},{type:"activity",opt:{btn:["joinActivityBtn","applyActivityItemBtn","applySpecialActivityItemBtn"]},wizard:{"activityBtnMethod":activityBtnMethod,"uiBtnMethod":uiBtnMethod} },{type:"payment",opt:{btn:["btnSetDecorationPaymentInfo","btnOtherPayment"]},wizard:{"isDesign":true}},{type:"belong"}, {type: "addreduce"}, {type: "account"},{type:"service"}],
             "hasExport":true
         },
         "designermanager": {
             "apiPage":api.decoration.pageDecorationForDesignerManager,
             "pageBtn":["view","revie","line","price","scal","contract","extension","addminus","cal"],
             "postDataName": "designermanagerPostData",
-            "nodes":[{type:"basic",opt:{btn:["customerInfosBtn"],show:["houseType","houseClass","quoterId"]}},{type:"quotaion",opt:{btn:["btnPrintDefaultQuotationInfo"]}},{type:"picture",opt:{show:["designPictureUpload","projectPictureUpload","CADUpload","ContractUpload"]}},{type:"material"},{type:"activity",opt:{btn:["joinActivityBtn","applyActivityItemBtn","applySpecialActivityItemBtn"]},wizard:{"activityBtnMethod":activityBtnMethod,"uiBtnMethod":uiBtnMethod} },{type:"payment",opt:{btn:["btnSetDecorationPaymentInfo","btnOtherPayment"]},wizard:{"isDesign":true}},{type:"belong"}, {type: "addreduce"}],
+            "nodes":[{type:"basic",opt:{btn:["customerInfosBtn"],show:["orderType","houseType","houseClass","quoterId"]}},{type:"quotaion",opt:{btn:["btnPrintDefaultQuotationInfo"]}},{type:"picture",opt:{show:["designPictureUpload","projectPictureUpload","CADUpload","ContractUpload"]}},{type:"material"},{type:"activity",opt:{btn:["joinActivityBtn","applyActivityItemBtn","applySpecialActivityItemBtn"]},wizard:{"activityBtnMethod":activityBtnMethod,"uiBtnMethod":uiBtnMethod} },{type:"payment",opt:{btn:["btnSetDecorationPaymentInfo","btnOtherPayment"]},wizard:{"isDesign":true}},{type:"belong"}, {type: "addreduce"}, {type: "account"},{type:"service"}],
             "hasExport":true
         },
         "directer": {
@@ -300,7 +314,7 @@ $(function(){
             "apiPage":api.decoration.pageDecorationForDesigner,
             "pageBtn":["view","revie"],
             "postDataName": "planPostData",
-            "nodes":[{type:"basic",opt:{btn:["customerInfosBtn","customerChangeBtn","villageChangeBtn"],show:["orderType","houseType","houseClass"]}},{type:"quotaion",opt:{btn:["btnPrintDefaultQuotationInfo"]}},{type:"picture",opt:{show:["designPictureUpload","projectPictureUpload","CADUpload","ContractUpload"]}},{type:"material"},{type:"activity",opt:{btn:["joinActivityBtn","applyActivityItemBtn","applySpecialActivityItemBtn"]},wizard:{"activityBtnMethod":activityBtnMethod,"uiBtnMethod":uiBtnMethod} },{type:"payment",opt:{btn:["btnSetDecorationPaymentInfo","btnOtherPayment"]}},{type:"belong"}, {type: "addreduce"}],
+            "nodes":[{type:"basic",opt:{btn:["customerInfosBtn"],show:["orderType","houseType","houseClass"]}},{type:"quotaion",opt:{btn:["btnPrintDefaultQuotationInfo"]}},{type:"picture",opt:{show:["designPictureUpload","projectPictureUpload","CADUpload","ContractUpload"]}},{type:"material"},{type:"activity",opt:{btn:["joinActivityBtn","applyActivityItemBtn","applySpecialActivityItemBtn"]},wizard:{"activityBtnMethod":activityBtnMethod,"uiBtnMethod":uiBtnMethod} },{type:"payment",opt:{btn:["btnSetDecorationPaymentInfo","btnOtherPayment"]}},{type:"belong"}, {type: "addreduce"}],
             "hasExport":false
         },
         "escorter": {
@@ -401,7 +415,7 @@ $(function(){
             var isCADUpload = false;
             var isContractUpload = false;
 
-            var title = {"basic":"基本信息","quotaion":"报价信息","picture":"图纸信息","material":"主材信息","activity":"活动信息","payment":"款项信息","belong":"归属信息","addreduce":"增减项"};
+            var title = {"basic":"基本信息","quotaion":"报价信息","picture":"图纸信息","material":"主材信息","activity":"活动信息","payment":"款项信息","belong":"归属信息","addreduce":"增减项","account":"决算信息","service":"服务信息"};
 
             if($.isEmptyObject(nodes)) return;
 
@@ -433,6 +447,12 @@ $(function(){
                         break;
                     case "addreduce":
                         rows = drawAddreuce(v);
+                        break;
+                    case "account":
+                        rows = drawAccount(v);
+                        break;
+                    case "service":
+                        rows = drawService(v);
                         break;
                 }
                 $.each(rows,function (j,b) {
@@ -467,6 +487,11 @@ $(function(){
                                 isContractUpload = true;
                                 break;
 
+                        }
+                    }
+                    if($Obj.selector == '#orderType'){
+                        if(!(params.orederStatus == '初始' || params.orederStatus == '定金' || params.orederStatus == '重签')){
+                            $Obj.prop("disabled", true);
                         }
                     }
                 })

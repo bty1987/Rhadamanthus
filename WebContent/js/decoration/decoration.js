@@ -51,7 +51,7 @@ $(function(){
 				var options ={
 					"drawLine.content":$("#applayDes").val(),
 					"drawLine.applayTime":$("#applayTime").val()+" 00:00:00",
-					"drawLine.orderId":$("#decorationOrderId").val(),
+					"drawLine.orderId":$("#dischargeLineOrderId").val(),
 				};
 
 				com.post(api.drawline.applayDrawLine, options);
@@ -343,7 +343,7 @@ $(function(){
 					});
 
 					btnCal.click(function(){
-						viewDecorationFinalSettlement(v.orderId, v.type);
+						viewDecorationFinalSettlement(v.orderId, v.type,v.status);
 					});
 
 					btnActivity.click(function(){
@@ -404,7 +404,7 @@ $(function(){
 								$divBtnWrap.append(btnInfo);
 								break;
 							case "cal"://决算
-								if([2,7].indexOf(v.status) != -1 && v.type == 2){
+								if([2,6,7].indexOf(v.status) != -1){
 									$divBtnWrap.append(btnCal);
 								}
 								break;
@@ -452,7 +452,7 @@ $(function(){
 			com.switchPage(api.index.decorationDetailIndex.url);
 		}
 		//报价
-		var viewDecorationQuotateIndex = function (decorationOrderId, type){
+		var viewDecorationQuotateIndex = function (decorationOrderId,type){
 			params["decorationOrderId"] = decorationOrderId;
 			params["orderType"] = type;
 			params.historyPage = api.index.decorationIndex.url;
@@ -470,7 +470,7 @@ $(function(){
 
 			$("#applayDes").val("");
 			$("#applayTime").val("");
-			$("#decorationOrderId").val(decorationOrderId);
+			$("#dischargeLineOrderId").val(decorationOrderId);
 			order.drawLineModal.modal("show");
 		}
 		//合同
@@ -520,9 +520,10 @@ $(function(){
 			com.switchPage(api.index.extensionIndex.url);
 		}
 		//决算
-		function viewDecorationFinalSettlement(decorationOrderId,type){
+		function viewDecorationFinalSettlement(decorationOrderId,type,status){
 			params.decorationOrderId = decorationOrderId;
 			params.type = type;
+			params.status = status;
 			params.historyPage = api.index.decorationIndex.url;
 			com.switchPage(api.index.decorationFinalSettlementIndex.url);
 		}
@@ -678,8 +679,11 @@ $(function(){
 
 			$.exceler({
 				column : pageConfig.column,
-				list: res.paging.data,
-			});
+				list: res.paging.data
+			},function (v) {
+                v.status = order.decorationOrderStatus[v.status];
+            });
+
 		});
     });
 

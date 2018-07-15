@@ -33,10 +33,6 @@ public class SalesItemVO implements Serializable {
 	
 	private	Float price;
 	
-	private Float xgnum;
-	
-	private Float punum;
-	
 	private	Float num;
 	
 	private	Float total;
@@ -148,22 +144,6 @@ public class SalesItemVO implements Serializable {
 
 	public void setPrice(Float price) {
 		this.price = price;
-	}
-
-	public Float getXgnum() {
-		return xgnum;
-	}
-
-	public void setXgnum(Float xgnum) {
-		this.xgnum = xgnum;
-	}
-
-	public Float getPunum() {
-		return punum;
-	}
-
-	public void setPunum(Float punum) {
-		this.punum = punum;
 	}
 
 	public Float getNum() {

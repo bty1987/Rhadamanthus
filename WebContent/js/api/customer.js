@@ -1,6 +1,7 @@
 $.extend(api.index, {
 	vustomer: {url: "/views/customer/vustomer.html"},
 	vrecord: {url: "/views/customer/vrecord.html"},
+	vscoreRecord: {url: "/views/customer/vscoreRecord.html"},
 });
 
 $.extend(api, {customer: {
@@ -9,7 +10,7 @@ $.extend(api, {customer: {
 	
 	queryVustomer: {url: "queryVustomer.do"},
 	
-	queryVustomerByIdent: {url: "queryVustomerByIdent.do"},
+	queryVustomerByUnionId: {url: "queryVustomerByUnionId.do"},
 	
 	addVustomer: {url: "addVustomer.do"},
 	
@@ -41,7 +42,22 @@ $.extend(api, {customer: {
     
     queryCustomerRecord:{url:"queryCustomerRecord.do"},
     
-    addCustomerRecord:{url:"addCustomerRecord.do"}
+    addCustomerRecord:{url:"addCustomerRecord.do"},
+    
+    
+    
+    buildVustomerNet : {url : "buildVustomerNet.do"},
+    countVustomerNetByUnionId : {url : "countVustomerNetByUnionId.do"},
+    countVustomerByUnionId : {url : "countVustomerByUnionId.do"},
+    queryVscoreByUnionId : {url : "queryVscoreByUnionId.do"},
+    pageVscoreRecordByUnionId : {url : "pageVscoreRecordByUnionId.do"},
+    raiseVscore : {url : "raiseVscore.do"},
+    pickupVscore : {url : "pickupVscore.do"},
+    updateVscoreRecordForStatus : {url : "updateVscoreRecordForStatus.do"},
+    
+    
+    addVuser : {url : "addVuser.do"},
+    queryVuser : {url : "queryVuser.do"},
     
 }});
 

@@ -10,11 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseListAction;
-import com.fanglin.core.interceptor.FLException;
 import com.fanglin.store.service.MorderItemService;
 import com.fanglin.store.vo.MorderItemVO;
+import com.fanglin.store.vo.MorderVO;
 
-@ParentPackage("login")
+@ParentPackage("base")
 @Namespace("/")
 @Controller
 public class MorderItemAction extends BaseListAction{
@@ -26,33 +26,25 @@ public class MorderItemAction extends BaseListAction{
 	
 	private MorderItemVO morderItem;
 	
-	private List<MorderItemVO> morderItems;
+	private MorderVO morder;
 	
-	@Action(value="queryMorderItemByUidAndStatus", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryMorderItemByUidAndStatus(){
-		
-		morderItems = morderItemService.queryMorderItemByUidAndStatus(morderItem);
-		
-		return SUCCESS;
-		
-	}
+	private List<MorderItemVO> morderItems;
 	
 	@Action(value="queryMorderItemByOid", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String queryMorderItemByOid(){
 		
-		morderItems = morderItemService.queryMorderItemByOid(morderItem);
+		morderItems = morderItemService.queryMorderItemByOid(morder);
 		
 		return SUCCESS;
 		
 	}
 	
-	@Action(value="updateMorderItemForStatus", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String updateMorderItemForStatus() throws FLException{
-		
-		morderItemService.updateMorderItemForStatus(morderItem);
-		
-		return SUCCESS;
-		
+	public MorderVO getMorder() {
+		return morder;
+	}
+
+	public void setMorder(MorderVO morder) {
+		this.morder = morder;
 	}
 
 	public MorderItemVO getMorderItem() {
