@@ -66,7 +66,7 @@ jQuery(function($) {
             var $btnConfig = $('<a></a>').addClass('btn btn-minier btn-yellow').html('品牌权限');
             
             var propertyArr = [
-               ["编号:", v.userId, "grey"],
+               ["人员编号:", v.userId, "grey"],
                ["用户名:", v.loginId, "grey"],
            ];
             

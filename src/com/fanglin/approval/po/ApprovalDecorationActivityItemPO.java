@@ -14,6 +14,10 @@ public class ApprovalDecorationActivityItemPO implements java.io.Serializable {
 	private static final long serialVersionUID = -5325357230277494348L;
 	
 	public static final String COLUMN_AAID_STR = "adaId";
+	
+	public static final String COLUMN_ORDERID_STR = "orderId";
+	
+	public static final int COLUMN_COUPON_INT = 0;
 
 	private long adaiId;
 	

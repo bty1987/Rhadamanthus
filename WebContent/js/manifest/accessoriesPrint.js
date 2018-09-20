@@ -51,7 +51,7 @@ jQuery(function ($) {
         var headReceiptH2 = $('<h2></h2>').text("辅料单信息").appendTo(headReceiptDiv);
 
         var orderReceiptTr = $('<tr></tr>').appendTo(receiptTable);
-        var codeTd = $('<td colspan="5" style="padding-left: 10px;font"></td>').text('货单编号: ' + commonInfo["no"]);
+        var codeTd = $('<td colspan="5" style="padding-left: 10px;font"></td>').text('货单号: ' + commonInfo["no"]);
         var createTimeTd = $('<td colspan="2" style="padding-left: 10px;"></td>').text('创建时间: ' + commonInfo["createTime"]);
         var manifestTimeTd = $('<td colspan="4" style="padding-left: 10px;"></td>').text('货单时间: ' + commonInfo["manifestTime"]);
         orderReceiptTr.append(codeTd).append(createTimeTd).append(manifestTimeTd);

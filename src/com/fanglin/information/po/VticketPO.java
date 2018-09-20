@@ -33,9 +33,13 @@ public class VticketPO implements java.io.Serializable {
 	
 	public static final String COLUMN_BELONGER_STR = "belonger.uid";
 	
+	public static final String COLUMN_EXPIRE_STR = "expire";
+	
 	public static final short ISCOME_YES_INT = 1;
 	
 	public static final short ISREGIST_YES_INT = 1;
+	
+	public static final short EXPIRE_INIT_INT = 0;
 	
 	private long vtid;
 	
@@ -62,6 +66,8 @@ public class VticketPO implements java.io.Serializable {
 	private short isregist;
 	
 	private short iscome;
+	
+	private short expire;
 	
 	public VticketPO() {
 		super();
@@ -196,6 +202,14 @@ public class VticketPO implements java.io.Serializable {
 
 	public void setIscome(short iscome) {
 		this.iscome = iscome;
+	}
+
+	public short getExpire() {
+		return expire;
+	}
+
+	public void setExpire(short expire) {
+		this.expire = expire;
 	}
 	
 }

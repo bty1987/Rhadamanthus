@@ -265,6 +265,7 @@ public class ApprovalMaterialRefundServiceImpl implements ApprovalMaterialRefund
 		
 		materialPaymentPO.setReferMoney(approvalMaterialRefundPO.getRefund());//退款金额
 		materialPaymentPO.setPaymentType(MaterialPaymentPO.PAYMENTTYPE_TYPE_REJECT_INT);
+		materialPaymentPO.setCompany(materialPO.getCompany());
 		
 		materialPaymentDao.save(materialPaymentPO);
 		

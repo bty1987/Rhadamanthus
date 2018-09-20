@@ -16,6 +16,10 @@ public class MorderVO implements Serializable{
 	
 	private String unionId;
 	
+	private String rmunionId;
+	
+	private CouponVO coupon;
+	
 	private Float total;
 	
 	private Timestamp createTime;
@@ -30,6 +34,11 @@ public class MorderVO implements Serializable{
 
 	public MorderVO() {
 		super();
+	}
+
+	public MorderVO(CouponVO coupon) {
+		super();
+		this.coupon = coupon;
 	}
 
 	public Long getOid() {
@@ -54,6 +63,22 @@ public class MorderVO implements Serializable{
 
 	public void setUnionId(String unionId) {
 		this.unionId = unionId;
+	}
+
+	public String getRmunionId() {
+		return rmunionId;
+	}
+
+	public void setRmunionId(String rmunionId) {
+		this.rmunionId = rmunionId;
+	}
+
+	public CouponVO getCoupon() {
+		return coupon;
+	}
+
+	public void setCoupon(CouponVO coupon) {
+		this.coupon = coupon;
 	}
 
 	public Float getTotal() {

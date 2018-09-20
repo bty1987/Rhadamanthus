@@ -9,6 +9,6 @@ import com.fanglin.utils.Paging;
 
 public interface EvaluateDao extends Dao<EvaluatePO>{
 	
-	public List<EvaluatePO> pageEvaluate(Paging paging, List<Filter> filters, List<Long> pids);
+	public List<EvaluatePO> pageEvaluate(Paging paging, List<Filter> filters);
 	
 }

@@ -24,7 +24,7 @@ public interface VoucherService {
 	
 	public VoucherVO queryVoucherByVId(VoucherVO voucherVO) throws FLException;
 	
-	public int addVoucher(VoucherVO voucherVO, List<Long> atIds, String userId) throws FLException ;
+	public int addVoucher(VoucherVO voucherVO, List<Long> atIds, String userId, int company) throws FLException ;
 	
 	public int updateVoucher(VoucherVO voucherVO, List<Long> atIds, List<Long> uatIds, List<Long> datIds) throws FLException;
 	

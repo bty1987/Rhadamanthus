@@ -85,6 +85,8 @@ public class SalesPaymentPO  implements Serializable{
 	private Timestamp createTime;
 	
 	private float referMoney;
+	
+	private int company;
 
 	public SalesPaymentPO() {
 		super();
@@ -196,6 +198,15 @@ public class SalesPaymentPO  implements Serializable{
 
 	public void setSalesReceipt(SalesReceiptPO salesReceipt) {
 		this.salesReceipt = salesReceipt;
-	}	
+	}
+
+	@Column(name = "company")
+	public int getCompany() {
+		return company;
+	}
+
+	public void setCompany(int company) {
+		this.company = company;
+	}
 	
 }

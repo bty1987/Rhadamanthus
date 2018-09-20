@@ -144,7 +144,7 @@ $(function () {
 
                     }
                     var propertyArr = [
-                        ["订单编号:", v.orderId, "blue"],
+                        ["装修单号:", v.orderId, "blue"],
                         ["楼盘地址:", v.house.village.name + " " + v.house.houseNumber, "grey"],
                         ["客户名:", v.customer.name, "grey"],
                         ["渠道:", v.salesman.currentName, "grey"],
@@ -934,7 +934,7 @@ $(function () {
     function printPayment(orderId, sid) {
         params.salesSid = sid;
        // + "?sales.sid=" + sid + "&time=" + params.loginTime
-        com.popup("专用合同__订单编号：" + orderId, api.index.salesPrintIndex.url, function () {
+        com.popup("专用合同__装修单号：" + orderId, api.index.salesPrintIndex.url, function () {
             parent.layer.getFrameIndex(window.name);
         }, null, true);
 

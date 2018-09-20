@@ -8,17 +8,12 @@ $(function () {
         list:[],
         psid:null
     };
-    
     PaymentScale.saveBtn = $("#saveBtn").on("click", saveData);
-    PaymentScale.items.cid = $("#cid");
     PaymentScale.items.names = $("#names");
     PaymentScale.items.comment = $("#comment");
 
-
     var displayFunc = (function () {
-
         var renderList = function (tableId, listData) {
-
             if (listData && listData.length) {
                 $.each(listData, function (i, v) {
                     creatLine(tableId,v);
@@ -27,7 +22,6 @@ $(function () {
         };
 
         var  creatLine = function (tableId,v) {
-
             var $div = $('<div></div>').appendTo($('#' + tableId));
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable').appendTo($div);
             var $liLine = $('<li></li>').addClass('item-orange clearfix').appendTo($ul);
@@ -35,31 +29,25 @@ $(function () {
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons').appendTo($ulProperty);
             var $btnshow = $('<a></a>').addClass('btn btn-minier btn-yellow').html('查看').appendTo($divBtnWrap);
             var $btnDel = $('<a></a>').addClass('btn btn-minier btn-success ').html('删除').appendTo($divBtnWrap);
-
-
              var propertyArr = [
                 ["款项名称:", v.name, "grey"],
                 ["说明:", v.comment, "grey"]
-
              ];
 
             $.each(propertyArr, function (index, value) {
-
                 var $liProperty = $('<li></li>');
                 $('<strong style="font-size:15px ; padding-bottom: 50px;"  ></strong>').html(value[0]).appendTo($liProperty);
                 $('<b style="font-size:15px"></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
                 $liProperty.appendTo($ulProperty);
-
-            });
-
-            $btnDel.click(function () {
-                DelePaymentScale(v.psid);
             });
 
             $btnshow.click(function () {
                 showPaymentScaleitem(v);
             });
 
+            $btnDel.click(function () {
+                DelePaymentScale(v.psid);
+            });
         };
 
         return {
@@ -72,41 +60,21 @@ $(function () {
         };
     })();
 
-    com.post(api.system.queryCompany,{},function (data) {
-        var coms = data.companys;
-        $.each(coms,function (i,v) {
-            $('<option></option>').attr("value", v.cid).html(v.name).appendTo("#cid");
-
-            var $div = $('<div></div>').attr("id",v.cid).appendTo($('#resultList'));
-            var $h3 = $('<h3 style="font-size:22px;"></h3>').addClass('blue').html(v.name).appendTo($div);
-
-        });
-         drawlin(coms);
+    var $div = $('<div></div>').attr("id",params.company.cid).appendTo($('#resultList'));
+    var $h3 = $('<h3 style="font-size:22px;"></h3>').addClass('blue').html(params.company.name).appendTo($div);
+    com.post(api.data.queryPaymentScaleByCid, {"paymentScale.cid":params.company.cid }, function (data) {
+        displayFunc.init(params.company.cid , data.paymentScales);
     },null,false);
 
-
-    function drawlin(PaymentScalelist) {
-
-        $.each(PaymentScalelist,function(i,v){
-            com.post(api.data.queryPaymentScaleByCid, {"paymentScale.cid": v.cid}, function (data) {
-                displayFunc.init(v.cid, data.paymentScales);
-            },null,false);
-        });
-    }
-
     function DelePaymentScale(psid){
-
         com.post(api.data.deletePaymentScale, {"paymentScale.psid": psid}, function () {
-        com.switchPage(api.index.PaymentScale.url);
-
+            com.switchPage(api.index.PaymentScale.url);
         });
     }
 
     $("#addBtn").click(function(){
-
         com.cleanItems(PaymentScale.items);
         $("#paymentScaleModal").modal("show");
-
     });
 
     function showPaymentScaleitem(res){
@@ -144,7 +112,7 @@ $(function () {
               var scalDiv = $('<div></div>').addClass("form-group").appendTo("#itemlist").css({"padding-left":"35px"});
               var dvT = $('<label><b>比例</b></label>').addClass("col-sm-1 control-label no-padding-right").appendTo(scalDiv);
               var dvinput = $('<div></div>').addClass("col-sm-9").appendTo(scalDiv);
-              var scaleinput = $('<input/>').addClass("col-sm-5 v_required").attr("id","sscal").attr("type","text").appendTo(dvinput);
+              var scaleinput = $('<input/>').addClass("col-sm-5 v_required v_number").attr("id","sscal").attr("type","text").appendTo(dvinput);
         });
         $("#itemModal").modal("show");
     }
@@ -164,15 +132,14 @@ $(function () {
 
     function saveData() {
         if (!com.validate("form1")) {
-
             com.post(api.data.addPaymentScale, {
-                "paymentScale.cid": PaymentScale.items.cid.val(),
+                "paymentScale.cid":params.company.cid,
                 "paymentScale.name": PaymentScale.items.names.val(),
                 "paymentScale.comment": PaymentScale.items.comment.val()
                 }, function () {
                     com.switchPage(api.index.PaymentScale.url);
             });
-                $("#paymentScaleModal").modal("hide");
+            $("#paymentScaleModal").modal("hide");
         }
     }
 

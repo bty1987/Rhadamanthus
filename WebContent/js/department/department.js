@@ -89,7 +89,7 @@ jQuery(function ($) {
 
             v.status && $statusSwitch.prop("checked", true);
             $statusSwitch.switchBtn("status-lbl").on("click",function() {
-                $statusSwitch.prop("checked") ? (updateStatus(v.deptId, 1, function(){$statusSwitch.prop("checked")})) : (updateStatus(v.deptId, 0,function(){$statusSwitch.removeAttr("checked")}));
+                $statusSwitch.prop("checked") ? (updateStatus(v.did, 1, function(){$statusSwitch.prop("checked")})) : (updateStatus(v.deptId, 0,function(){$statusSwitch.removeAttr("checked")}));
             });
 
             return $liLine;
@@ -141,9 +141,9 @@ jQuery(function ($) {
         department.items.des.val(dept.des);
     }
 
-    function updateStatus(deptId, cvalue) {
+    function updateStatus(did, cvalue) {
         var options = {};
-        options["dept.deptId"] = deptId;
+        options["dept.did"] = did;
         options["dept.status"] = cvalue;
         com.post(api.communion.updateDepartmentForStatus, options, function (res) {
             searcher.doSearch();

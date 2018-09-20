@@ -27,6 +27,8 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.system.dao.CompanyDao;
+import com.fanglin.system.po.CompanyPO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
@@ -54,6 +56,9 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 	@Autowired
 	private BuildingDao buildingDao;
 	
+	@Autowired
+	private CompanyDao companyDao;
+	
 	@Override
 	public void pageCustomerSource(Paging paging, List<Filter> filters, String userId) {
 		
@@ -67,7 +72,6 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 		}
 		
 		paging.setData(customerSourceVOs);
-
 	}
 	
 	@Override
@@ -78,7 +82,6 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 		CustomerSourceVO customerSourceVO = customerSourcePOToVO(customerSourcePO);
 		
 		return customerSourceVO;
-		
 	}
 	
 	@Override
@@ -111,7 +114,13 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public void addCustomerSource(CustomerSourceVO customerSourceVO, String userId) throws FLException {
+	public void addCustomerSource(CustomerSourceVO customerSourceVO, String userId, int company) throws FLException {
+		
+		CompanyPO companyPO = companyDao.get(company);
+		
+		if(companyPO == null){
+			throw new FLException(230015, "公司不存在");
+		}
 		
 		Integer customerSourceCount = customerSourceDao.countCustomerSource(customerSourceVO.getCustomer().getCid(), customerSourceVO.getType());
 		
@@ -130,9 +139,9 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 		
 		//NO
 		String currentDate = DateUtil.current("yyyyMMdd").toString().substring(2);
-		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_DECORATION_ORDER_INT, currentDate);
+		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_DECORATION_ORDER_INT, currentDate, company);
 		
-		String no = "C" + currentDate + FormatUtil.fillZero(FormatUtil.offset(count), "0000");
+		String no = companyPO.getShortname() + "C" + currentDate + FormatUtil.fillZero(FormatUtil.offset(count), "0000");
 		
 		customerSourcePO.setNo(no);
 		

@@ -72,9 +72,9 @@ $(function(){
                 $liProperty.appendTo($ulProperty);
             });
 
-
+            if(v.creater.uid == params.userInfo.user.uid){
             $divBtnWrap.append($btnEdit).append($btnView).appendTo($h3);
-
+            }
             $liLine.append($h3).append($ulProperty);
 
 

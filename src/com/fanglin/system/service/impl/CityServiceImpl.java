@@ -147,7 +147,7 @@ public class CityServiceImpl implements CityService {
 
 		CityPO cityPO = new CityPO();
 
-		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_CITY_INT, CountingPO.COUNTING_DATE_SILNLE_STR);
+		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_CITY_INT, CountingPO.COUNTING_DATE_SILNLE_STR, 0);
 
 		StringBuffer no = new StringBuffer();
 		no.append(SystemConfig.getString("companyIdent", ""));

@@ -107,7 +107,7 @@ $(function () {
 
                     }
                     var propertyArr = [
-                        ["订单编号:", v.sales.orderId, "blue"],
+                        ["装修单号:", v.sales.orderId, "blue"],
                         ["楼盘地址:", v.sales.house.village.name + " " + v.sales.house.houseNumber, "grey"],
                         ["品牌:", v.sales.brand, "grey"],
                         ["渠道:", v.sales.salesman.currentName, "grey"],
@@ -582,7 +582,7 @@ $(function () {
         com.post(url, $.extend({}, params['urlLoadParams'].type == "dompany"?params.salesBalanceForDompanyPostData:params.salesBalancePostData, {"paging.noPage": 1}), function (res) {
             $.exceler({
                 column: [
-                    ['订单编号', 'sales.orderId'],
+                    ['装修单号', 'sales.orderId'],
                     ['楼盘地址',['sales.house.village.name','sales.house.houseNumber']],
                     ['品牌', 'sales.brand'],
                     ['渠道', 'sales.salesman.currentName'],

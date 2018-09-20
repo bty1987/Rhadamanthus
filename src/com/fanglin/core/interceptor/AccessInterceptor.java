@@ -24,6 +24,7 @@ import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
+import com.opensymphony.xwork2.util.ValueStack;
 
 public class AccessInterceptor extends AbstractInterceptor {
 	private static final long serialVersionUID = -1754802896214390640L;
@@ -45,6 +46,8 @@ public class AccessInterceptor extends AbstractInterceptor {
 		String userId = "base";
 		String actionName = invocation.getProxy().getActionName();
 		
+		ValueStack stack = invocation.getStack();
+		
 		try {
 			
 			if(operationService.checkOperation(actionName)){
@@ -64,6 +67,7 @@ public class AccessInterceptor extends AbstractInterceptor {
 				String decryptString = AESHelper.decryptString($authentication, encryptKey);
 				
 				if(decryptString == null || "".equals(decryptString)){
+					LogUtils.logging(logger, actionName, 0, "aseerror");
 					throw new FLException(110005, "登陆超时");
 				}
 				
@@ -96,7 +100,7 @@ public class AccessInterceptor extends AbstractInterceptor {
 				
 				Timestamp endTime = DateUtil.getDateToTimestamp(new Date());
 				
-				if((Integer) invocation.getStack().findValue("errorCode") != null){
+				if((Integer) stack.findValue("errorCode") != null){
 					
 					Long runTime = endTime.getTime() - startTime.getTime();
 					
@@ -106,14 +110,14 @@ public class AccessInterceptor extends AbstractInterceptor {
 				}
 			}
 		}catch (LockAcquisitionException e) {
-			invocation.getStack().setValue("errorCode", "-2");
-			invocation.getStack().setValue("errorMsg", "数据冲突,请重新再试!");
+			stack.setValue("errorCode", "-2");
+			stack.setValue("errorMsg", "数据冲突,请重新再试!");
 		}catch (FLException e) {
-			invocation.getStack().setValue("errorCode", e.getCode());
-			invocation.getStack().setValue("errorMsg", e.getErrorMessage());
+			stack.setValue("errorCode", e.getCode());
+			stack.setValue("errorMsg", e.getErrorMessage());
 		}catch (Exception e) {
-			invocation.getStack().setValue("errorCode", "110000");
-			invocation.getStack().setValue("errorMsg", "系统问题");
+			stack.setValue("errorCode", "110000");
+			stack.setValue("errorMsg", "系统问题");
 			
 			LogUtils.logging(logger, e, actionName, userId);
 		}

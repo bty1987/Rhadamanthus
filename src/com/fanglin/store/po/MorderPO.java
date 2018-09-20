@@ -7,8 +7,11 @@ import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -43,6 +46,10 @@ public class MorderPO implements Serializable{
 	
 	private String unionId;
 	
+	private String rmunionId;
+	
+	private CouponPO coupon;
+	
 	private float total;
 	
 	private Timestamp createTime;
@@ -55,6 +62,11 @@ public class MorderPO implements Serializable{
 
 	public MorderPO() {
 		super();
+	}
+	
+	public MorderPO(CouponPO coupon) {
+		super();
+		this.coupon = coupon;
 	}
 
 	@Id
@@ -84,6 +96,25 @@ public class MorderPO implements Serializable{
 
 	public void setUnionId(String unionId) {
 		this.unionId = unionId;
+	}
+
+	@Column(name = "rmunionId")
+	public String getRmunionId() {
+		return rmunionId;
+	}
+
+	public void setRmunionId(String rmunionId) {
+		this.rmunionId = rmunionId;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "cid", referencedColumnName="cid")
+	public CouponPO getCoupon() {
+		return coupon;
+	}
+
+	public void setCoupon(CouponPO coupon) {
+		this.coupon = coupon;
 	}
 
 	@Column(name = "total")

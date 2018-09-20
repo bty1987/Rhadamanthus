@@ -22,12 +22,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.decoration.dao.DecorationActivityItemDao;
+import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationActivityItemPO;
+import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.service.DecorationActivityItemService;
 import com.fanglin.decoration.vo.DecorationActivityItemVO;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 
@@ -41,6 +44,9 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 	@Autowired
 	private UserDao userDao;
 
+	@Autowired
+	private DecorationDao decorationDao;
+	
 	@Override
 	public List<DecorationActivityItemVO> queryDecorationActivityItemByOrderId(DecorationVO decorationVO) {
 		
@@ -81,7 +87,7 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int convertDecorationActivityItem(DecorationActivityItemVO decorationActivityItemVO) throws FLException {
+	public int abateDecorationActionItem(DecorationActivityItemVO decorationActivityItemVO) throws FLException {
 		
 		DecorationActivityItemPO decorationActivityItemPO = decorationActivityItemDao.get(decorationActivityItemVO.getDaiId());
 		
@@ -89,46 +95,29 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 			throw new FLException(140030, "订单活动物品不存在");
 		}
 		
-		if(decorationActivityItemPO.getType() != DecorationActivityItemPO.TYPE_THING_INT){
-			throw new FLException(140031, "订单活动物品类型不能够抵现");
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationActivityItemPO.getOrderId());
+		float couponCut = decorationPO.getCouponCut();
+		float thingCut = decorationPO.getThingCut();
+		
+		List<Short> statuses = Arrays.asList(DecorationPO.STATUS_INIT_INT,DecorationPO.STATUS_DEPOSIT_INT,DecorationPO.STATUS_RESIGNED_INT);
+		
+		if(!statuses.contains(decorationPO.getStatus())){
+			throw new FLException(140003, "装修单已签约");
 		}
 		
-		DecorationActivityItemPO _decorationActivityItemPO = new DecorationActivityItemPO();
-		BeanUtil.copyProperties(decorationActivityItemPO, _decorationActivityItemPO, DecorationActivityItemPO.COLUMN_DAIID_STR);
-		
-		_decorationActivityItemPO.setActivityName("物品抵现");
-		_decorationActivityItemPO.setActivityItemName(decorationActivityItemPO.getActivityItemName() + "抵现");
-		_decorationActivityItemPO.setContent(String.valueOf(decorationActivityItemPO.getDaiId()));
-		_decorationActivityItemPO.setNum(1);
-		_decorationActivityItemPO.setMoney(decorationActivityItemVO.getMoney());
-		_decorationActivityItemPO.setAid(decorationActivityItemPO.getAid());
-		_decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_VAILD_INT);
-		_decorationActivityItemPO.setType(DecorationActivityItemPO.TYPE_COUPON_INT);
-		
-		decorationActivityItemDao.save(_decorationActivityItemPO);
-		
-		decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_UNVALID_INT);
-		
-		decorationActivityItemDao.save(decorationActivityItemPO);
-		
-		BeanUtil.copyProperties(_decorationActivityItemPO, decorationActivityItemVO);
-		
-		return 0;
-	}
-
-	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public int abateDecorationActionItem(	DecorationActivityItemVO decorationActivityItemVO) throws FLException {
-		
-		DecorationActivityItemPO decorationActivityItemPO = decorationActivityItemDao.get(decorationActivityItemVO.getDaiId());
-		
-		if(decorationActivityItemPO == null){
-			throw new FLException(140030, "订单活动物品不存在");
+		if(decorationActivityItemPO.getType() == DecorationActivityItemPO.TYPE_COUPON_INT){
+			couponCut = Arith.sub(couponCut,Arith.mul(decorationActivityItemPO.getNum(),decorationActivityItemPO.getMoney()));
+		}else{
+			thingCut = Arith.sub(thingCut,Arith.mul(decorationActivityItemPO.getNum(),decorationActivityItemPO.getMoney()));
 		}
 		
 		decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_UNVALID_INT);
 		
 		decorationActivityItemDao.update(decorationActivityItemPO);
+		
+		decorationPO.setCouponCut(couponCut);
+		decorationPO.setThingCut(thingCut);
+		decorationDao.update(decorationPO);
 		
 		return 0;
 	}

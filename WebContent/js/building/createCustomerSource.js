@@ -119,12 +119,12 @@ jQuery(function($) {
 			"customerPhone.phone": $this.val(),
 			"customerPhone.status": 0
 		}, function(res) {
-			createCustomerSource.customerRepeatFlg = true;
-			com.showPopover($("#phone"),{errorMsg: "电话号码已存在"}, "right");
-
-		}, function(res){
 			createCustomerSource.customerRepeatFlg = false;
 			$("#phone").css("border", "1px solid #d5d5d5").popover("destroy");
+
+		}, function(res){
+			createCustomerSource.customerRepeatFlg = true;
+			com.showPopover($("#phone"),{errorMsg: "电话号码已存在"}, "right");
 		});
 	});
 

@@ -92,7 +92,7 @@ public class MemberCardServiceImpl  implements MemberCardService {
 
 		BeanUtil.copyProperties(memberCardVO, memberCardPO);
 		//VIP作为编号前缀 , 之后由8位数字组成
-		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_PO_INT,"yyyyMMdd");
+		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_PO_INT,"yyyyMMdd", 0);
 		String memberNo = String.valueOf("VIP") + FormatUtil.fillZero(count, "00000000");
 		memberCardPO.setNo(memberNo);
 		memberCardPO.setCredits(MemberCardPO.CREDITS_INIT_INT); 

@@ -43,6 +43,8 @@ public class AccessoriesPO implements Serializable{
 	
 	public static final String COLUMN_COMPANY_STR = "company";
 	
+	public static final String COLUMN_NO_STR = "no";
+	
 	public static final short STATUS_ENABLE_INT = 0;
 	
 	public static final short STATUS_DISABLE_INT = 1;

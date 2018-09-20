@@ -14,6 +14,8 @@ public class TaskVO implements Serializable{
 	
 	private Short type;
 	
+	private String content;
+	
 	private Short status;
 
 	public TaskVO(){
@@ -59,7 +61,14 @@ public class TaskVO implements Serializable{
 	public void setStatus(Short status) {
 		this.status = status;
 	}
-	
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
 	
 	
 }

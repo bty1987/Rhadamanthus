@@ -14,13 +14,13 @@ public class CustomerPO implements Serializable{
 
 	private static final long serialVersionUID = 263298158826936889L;
 	
-	public static final String BALANCE_TYPE_BALANCE_STR = "合同预付款";
+	public static final short BALANCE_TYPE_BALANCE_INT = 0;
 	
-	public static final String BALANCE_TYPE_MATERIAL_STR = "主材预付款";
-	
-	public static final String BALANCE_TYPE_ZHENGLIN_STR = "正林预付款";
-	
-	public static final String BALANCE_TYPE_PROJECT_STR = "工程预付款";
+	public static final short BALANCE_TYPE_PROJECT_INT = 1;
+	  
+    public static final short BALANCE_TYPE_MATERIAL_INT = 2;  
+
+    public static final short BALANCE_TYPE_ZHENGLIN_INT = 3;
 	
 	private long cid;
 	

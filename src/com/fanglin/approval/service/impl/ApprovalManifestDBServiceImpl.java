@@ -38,6 +38,8 @@ import com.fanglin.inventory.vo.GoodsVO;
 import com.fanglin.inventory.vo.StorehouseVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.system.dao.CompanyDao;
+import com.fanglin.system.po.CompanyPO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
@@ -46,6 +48,9 @@ import com.fanglin.utils.FormatUtil;
 @Service("approvalManifestDBService")
 @Transactional(readOnly = true)
 public class ApprovalManifestDBServiceImpl implements ApprovalManifestDBService {
+	
+	@Autowired
+	private CompanyDao companyDao;
 
 	@Autowired
 	private ApprovalDao approvalDao;
@@ -180,6 +185,12 @@ public class ApprovalManifestDBServiceImpl implements ApprovalManifestDBService 
 	@Transactional(rollbackFor=Exception.class)
 	public int approvalManifestDB(ApprovalPO approvalPO)throws FLException {
 		
+		CompanyPO companyPO = companyDao.get(approvalPO.getCompany());
+		
+		if(companyPO == null){
+			throw new FLException(230015, "公司不存在");
+		}
+		
         ApprovalManifestDBPO approvalManifestDBPO = approvalManifestDBDao.queryApprovalManifestDBByAId(approvalPO.getAid());
 		
 		if (approvalManifestDBPO == null) {
@@ -191,6 +202,8 @@ public class ApprovalManifestDBServiceImpl implements ApprovalManifestDBService 
 		if(approvalManifestDBItemPOs == null || approvalManifestDBItemPOs.size() <= 0){
 			throw new FLException(260007, "货单无商品信息");
 		}
+		
+		int company = approvalPO.getCompany();
 	
 		float total = 0f;
 		String month = DateUtil.getDateToDateString(new Date(), "yyyyMM");
@@ -199,8 +212,10 @@ public class ApprovalManifestDBServiceImpl implements ApprovalManifestDBService 
 		
 		UserPO userPO = userDao.queryUserByUserId(approvalPO.getSender().getUserId());
 		
-		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_DB_INT, CountingPO.COUNTING_DATE_SILNLE_STR);
-		String manifestId = String.valueOf(word) + FormatUtil.fillZero(count, "00000000");
+		String currentDate = DateUtil.current("yyMMdd").toString();
+	    int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_DB_INT, currentDate, company);
+	    String endNo = FormatUtil.fillZero(FormatUtil.offset(count), "0000");
+	    String manifestId = companyPO.getShortname() + String.valueOf(word) + currentDate + endNo;
 		
 		ManifestPO manifestPO = new ManifestPO(manifestId);
 		
@@ -211,7 +226,7 @@ public class ApprovalManifestDBServiceImpl implements ApprovalManifestDBService 
 		manifestPO.setCreateUser(userPO);
 		manifestPO.setStatus(ManifestPO.STATUS_DISABLE_INT);
 		manifestPO.setAttachment(approvalManifestDBPO.getAttachment());
-		manifestPO.setCompany(approvalPO.getCompany());
+		manifestPO.setCompany(company);
 		
 		manifestDao.save(manifestPO);
 		

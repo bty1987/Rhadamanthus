@@ -131,8 +131,8 @@ $(function () {
                 var type = $('#layerAdd').find('select[name="type"]').val(v.type);
                 var name = $('#layerAdd').find('input[name="name"]').val(v.name);
                 var barcode = $('#layerAdd').find('input[name="barcode"]').val(v.barcode);
-                var category = $('#layerAdd').find('select[name="category"]').val(v.category);
-                var brand = $('#layerAdd').find('input[name="brand"]').val(v.brand);
+                var category = $('#layerAdd').find('input[name="category"]').val(v.category);
+                com.updateChosen('brand', v.bid, v.brand);
                 var measurementUnit = $('#layerAdd').find('select[name="measurementUnit"]').val(v.measurementUnit);
                 var pieceNum = $('#layerAdd').find('input[name="pieceNum"]').val(v.pieceNum);
                 var atid = $('#layerAdd').find('select[name="atid"]').val(v.accessoriesType.atid);
@@ -253,24 +253,18 @@ $(function () {
         $('select[name="atid"]').bindData(accessoriesTypesStatus, 'atid', 'name', true);
     });
 
-    $('input[name="brand"]').typeahead({
-        url: api.data.queryBrandForPinYinName,//获取下拉列表的接口
-        list: [],
-        postData: {},//获取下拉列表的参数
-        source: function (query, process) {
-            var options = $.extend({pinyinName: query}, this.options.postData);
-            com.post(this.options.url, options, $.proxy(this.options.callback, this));
-        }, matcher: function (item) {
-            return true;
-        }, callback: function (data) {
-            this.options.list = data["brands"];
-            this.flprocess(this.options.list, ["bid"], ["brandName"]);
-        },
-
-        isResultTypeMap: true //必填值为true，获取key，value的标识，
-        , flupdater: function (k, v) {//下拉列表选中时的一些处理，必填对选中项的key和value做处理
-            $('input[name="brand"]').attr('data-bid',k);
-            return v;
+    $('input[name="category"]').val("");
+    com.initChosen('brand', api.data.queryBrandForPinYinName, "pinyinName", {}, "brands", "bid", "brandName").on('change', function(e){
+        if($(this).val() == "" || $("#brand").val() == "") {
+            com.clearValidator("#brand", true);
+            $('input[name="category"]').val("");
+            return;
+        }else{
+            var bid = $('#brand').val();
+            com.post(api.data.queryBrandByBrandId, {"brand.bid": bid}, function (res) {
+                var categoryName = res.brand.categoryName;
+                $('input[name="category"]').val(categoryName);
+            });
         }
     });
 
@@ -308,6 +302,7 @@ $(function () {
 
         $adda.click(function () {
             clearForm('form1');
+            closeEditReadOnly();
             openlayer(function (index, layero) {
                 if(com.validate('form1'))
                     return;
@@ -707,45 +702,7 @@ $(function () {
             });
 
         });
-    };
-
-
-    /*登录表单校验*/
-    var submitValidate = function () {
-        $("#form1 .alert-error").hide();
-
-        var validator = com.validate("form1", {
-            //一些校验规则
-            messages: {
-                no: {
-                    required: "请填写商品编号."
-                },
-                name: {
-                    required: "请填写名称."
-                },
-                category: {
-                    required: "请填写品类."
-                },
-                brand: {
-                    required: "请填写品牌."
-                },
-                measurementUnit: {
-                    required: "请填写单位."
-                },
-                pieceNum:{
-                	required: "请填写件数."
-                },
-            },
-            success: function (label) {
-                label.closest('.control-group').removeClass('error');
-                label.remove();
-            },
-            errorPlacement: function (error, element) {
-                error.addClass('help-small no-left-padding').insertAfter(element);
-            }
-        });
-        return validator;
-    };
+    }
     //状态启用
     function startGoodsStatus(id, status, callback) {
         if (status == "1") {
@@ -788,9 +745,8 @@ $(function () {
         var goodsType = $layer.find('select[name="type"] option:selected').val();
         var name = $layer.find('input[name="name"]').val();
         var barcode = $layer.find('input[name="barcode"]').val();
-        var category = $layer.find('select[name="category"] option:selected').text();
-        var brand = $layer.find('input[name="brand"]').val();
-        var bid = $layer.find('input[name="brand"]').attr('data-bid');
+        var category = $layer.find('input[name="category"]').val();
+        var bid = $('#brand').val();
         var measurementUnit = $layer.find('select[name="measurementUnit"] option:selected').text();
         var pieceNum = $layer.find('input[name="pieceNum"]').val();
         var atid = $layer.find('select[name="atid"] option:selected').val();
@@ -802,7 +758,6 @@ $(function () {
                         "goods.name": name,
                         "goods.barcode": barcode,
                         "goods.category": category,
-                        "goods.brand": brand,
                         "goods.bid": bid,
                         "goods.measurementUnit": measurementUnit,
                         "goods.pieceNum": pieceNum,
@@ -818,7 +773,7 @@ $(function () {
                     params.goods["goods.name"] = name;
                     params.goods["goods.barcode"] = barcode;
                     params.goods["goods.category"] = category;
-                    params.goods["goods.brand"] = brand;
+                    params.goods["goods.bid"] = bid;
                     params.goods["goods.measurementUnit"] = measurementUnit;
                     params.goods["goods.pieceNum"] = pieceNum;
                     params.goods["goods.accessoriesType.atid"] = atid == null || atid == "" ? "" : atid;
@@ -846,8 +801,9 @@ $(function () {
         $layerAdd.find('select[name="type"]').attr('disabled','disabled');
         $layerAdd.find('input[name="name"]').attr('disabled', 'disabled');
         $layerAdd.find('input[name="barcode"]').attr('disabled', 'disabled');
-        $layerAdd.find('select[name="category"]').attr('disabled', 'disabled');
-        $layerAdd.find('input[name="brand"]').attr('disabled', 'disabled');
+        $layerAdd.find('input[name="category"]').attr('disabled', 'disabled');
+        //com.updateChosen('brand',"","");
+        $layerAdd.find('select[name="brand"]').attr('disabled', 'disabled');
         $layerAdd.find('select[name="measurementUnit"]').attr('disabled', 'disabled');
         $layerAdd.find('input[name="pieceNum"]').attr('disabled', 'disabled');
 
@@ -859,8 +815,9 @@ $(function () {
         $layerAdd.find('select[name="type"]').removeAttr('disabled');
         $layerAdd.find('input[name="name"]').removeAttr('disabled');
         $layerAdd.find('input[name="barcode"]').removeAttr('disabled');
-        $layerAdd.find('select[name="category"]').removeAttr('disabled');
-        $layerAdd.find('input[name="brand"]').removeAttr('disabled');
+        $layerAdd.find('input[name="category"]').removeAttr('disabled');
+        com.updateChosen('brand',"","");
+        $layerAdd.find('select[name="brand"]').removeAttr('disabled');
         $layerAdd.find('select[name="measurementUnit"]').removeAttr('disabled');
         $layerAdd.find('input[name="pieceNum"]').removeAttr('disabled');
     }

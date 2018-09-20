@@ -30,29 +30,25 @@ public class PaymentPO implements Serializable {
 
 	private static final long serialVersionUID = 2529822120958975802L;
 	
-	public static final String PAYMENT_PAYMENTTYPE_BALANCE_STR = "合同预付款";
+	public static final short PAYMENT_PAYMENTTYPE_BALANCE_INT = 0;
 
-	public static final String PAYMENT_PAYMENTTYPE_PROJECT_STR = "工程预付款";
+	public static final short PAYMENT_PAYMENTTYPE_PROJECT_INT = 1;
 	
-	public static final String PAYMENT_PAYMENTTYPE_MATERIAL_STR = "主材预付款";
+	public static final short PAYMENT_PAYMENTTYPE_MATERIAL_INT = 2;
 	
-	public static final String PAYMENT_PAYMENTTYPE_ZATERIAL_STR = "正林预付款";
+	public static final short PAYMENT_PAYMENTTYPE_ZATERIAL_INT = 3;
 	
-	public static final String PAYMENT_TYPE_EXTRACT_STR = "提现"; 
+	public static final short PAYMENT_TYPE_EXTRACT_INT = 0; 
 	
-	public static final String PAYMENT_TYPE_COLLECTION_STR = "收款";
+	public static final short PAYMENT_TYPE_COLLECTION_INT = 1;
 	
-	public static final String PAYMENT_TYPE_REFUND_STR = "退款";
+	public static final short PAYMENT_TYPE_PAYMENT_INT = 2; //减
 	
-	public static final String PAYMENT_TYPE_PAYMENT_STR = "付款"; //减
+	public static final short PAYMENT_STATUS_PAID_INT = 1;
 	
-	public static final String PAYMENT_TYPE_CONVERT_STR = "转换款项";
+	public static final short PAYMENT_STATUS_CONFIRMED_INT = 2;
 	
-	public static final String PAYMENT_STATUS_PAID_STR = "已付款";
-	
-	public static final String PAYMENT_STATUS_CONFIRMED_STR = "已确认";
-	
-	public static final String PAYMENT_STATUS_CANCELED_STR = "已撤销";
+	public static final short PAYMENT_STATUS_CANCELED_INT = 3;
 	
 	public static final String PAYMENT_DECORETION_PAYMENTNAME_STR = "装修款";
 	
@@ -62,25 +58,27 @@ public class PaymentPO implements Serializable {
 	
 	private AdvanceReceiptPO advanceReceipt;
 	
-	private CustomerPO customer;
-	
 	private String orderId;
+	
+	private CustomerPO customer;
 	
 	private float balance;
 	
 	private float recharge;
 	
-	private String type;
+	private short type;
 	
-	private String paymentType;
+	private short paymentType;
 	
-	private String status;
+	private short status;
 	
 	private int company;
 	
 	private UserPO creater;
 	
 	private Timestamp createTime;
+	
+	private String uniqueid;
 	
 	public PaymentPO(){
 		super();
@@ -102,17 +100,17 @@ public class PaymentPO implements Serializable {
 	public void setPid(long pid) {
 		this.pid = pid;
 	}
-
+	
 	@javax.persistence.ManyToOne(fetch = FetchType.LAZY)
-	@javax.persistence.JoinColumn(nullable = false, name = "customerId", referencedColumnName = "cid")
-	public CustomerPO getCustomer(){
-		return customer;
+	@javax.persistence.JoinColumn(nullable = false, name = "arId", referencedColumnName = "arId")
+	public AdvanceReceiptPO getAdvanceReceipt() {
+		return advanceReceipt;
 	}
 
-	public void setCustomer(CustomerPO customer){
-		this.customer = customer;
+	public void setAdvanceReceipt(AdvanceReceiptPO advanceReceipt) {
+		this.advanceReceipt = advanceReceipt;
 	}
-
+	
 	@Column(name = "orderId")
 	public String getOrderId() {
 		return orderId;
@@ -123,13 +121,13 @@ public class PaymentPO implements Serializable {
 	}
 
 	@javax.persistence.ManyToOne(fetch = FetchType.LAZY)
-	@javax.persistence.JoinColumn(nullable = false, name = "arId", referencedColumnName = "arId")
-	public AdvanceReceiptPO getAdvanceReceipt() {
-		return advanceReceipt;
+	@javax.persistence.JoinColumn(nullable = false, name = "customerId", referencedColumnName = "cid")
+	public CustomerPO getCustomer(){
+		return customer;
 	}
 
-	public void setAdvanceReceipt(AdvanceReceiptPO advanceReceipt) {
-		this.advanceReceipt = advanceReceipt;
+	public void setCustomer(CustomerPO customer){
+		this.customer = customer;
 	}
 
 	@Column(nullable = false, name="balance")
@@ -150,33 +148,33 @@ public class PaymentPO implements Serializable {
 		this.recharge = recharge;
 	}
 
-	@Column(nullable = false, name="type")
-	public String getType(){
+	@Column(name="type")
+	public short getType() {
 		return type;
 	}
 
-	public void setType(String type){
+	public void setType(short type) {
 		this.type = type;
 	}
 
 	@Column(name="paymentType")
-	public String getPaymentType(){
+	public short getPaymentType() {
 		return paymentType;
 	}
-
-	public void setPaymentType(String paymentType){
+	
+	public void setPaymentType(short paymentType) {
 		this.paymentType = paymentType;
 	}
 
 	@Column(name="status")
-	public String getStatus(){
+	public short getStatus() {
 		return status;
 	}
-
-	public void setStatus(String status){
+	
+	public void setStatus(short status) {
 		this.status = status;
 	}
-
+	
 	@Column(name = "company")
 	public int getCompany() {
 		return company;
@@ -203,6 +201,15 @@ public class PaymentPO implements Serializable {
 
 	public void setCreateTime(Timestamp createTime){
 		this.createTime = createTime;
+	}
+
+	@Column(name="uniqueid")
+	public String getUniqueid() {
+		return uniqueid;
+	}
+
+	public void setUniqueid(String uniqueid) {
+		this.uniqueid = uniqueid;
 	}
 	
 }

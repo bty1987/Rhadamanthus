@@ -30,7 +30,7 @@ public class QuotationTypeDaoImpl extends DaoImpl<QuotationTypePO> implements Qu
 
 	@Override
 	public List<QuotationTypePO> pageQuotationType(Paging paging,List<Filter> filters) {
-		// TODO Auto-generated method stub
+		
          PagingQuery<QuotationTypePO> query = pagingQuery(paging, QuotationTypePO.class);
 		
          if(filters != null){

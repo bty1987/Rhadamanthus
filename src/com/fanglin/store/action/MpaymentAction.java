@@ -11,6 +11,7 @@ import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.store.service.MpaymentService;
 import com.fanglin.store.vo.MpaymentVO;
+import com.fanglin.store.vo.MuserVO;
 
 @ParentPackage("common")
 @Namespace("/")
@@ -24,10 +25,12 @@ public class MpaymentAction extends BaseListAction{
 	
 	private MpaymentVO mpayment;
 	
+	private MuserVO muser;
+	
 	@Action(value="addMpayment", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String addMpayment() throws FLException{
 		
-		mpaymentService.addMpayment(mpayment);
+		mpaymentService.addMpayment(mpayment, muser);
 		
 		return SUCCESS;
 		
@@ -39,6 +42,14 @@ public class MpaymentAction extends BaseListAction{
 
 	public void setMpayment(MpaymentVO mpayment) {
 		this.mpayment = mpayment;
+	}
+
+	public MuserVO getMuser() {
+		return muser;
+	}
+
+	public void setMuser(MuserVO muser) {
+		this.muser = muser;
 	}
 
 }

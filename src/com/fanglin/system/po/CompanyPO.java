@@ -47,6 +47,8 @@ public class CompanyPO implements Serializable {
 	
 	private String fullname;
 	
+	private String shortname;
+	
 	private String address;
 	
 	private String corporation;
@@ -93,6 +95,15 @@ public class CompanyPO implements Serializable {
 		this.name = name;
 	}
 	
+	@Column(name = "shortname")
+	public String getShortname() {
+		return shortname;
+	}
+
+	public void setShortname(String shortname) {
+		this.shortname = shortname;
+	}
+
 	@Column(name = "fullname")
 	public String getFullname() {
 		return fullname;

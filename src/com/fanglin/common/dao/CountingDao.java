@@ -16,6 +16,6 @@ import com.fanglin.core.dao.Dao;
 
 public interface CountingDao extends Dao<CountingPO>{
 	
-	public CountingPO queryCountingByTypeDate(int type, String Date);
+	public CountingPO queryCountingByTypeDate(int type, String Date, int company);
 	
 }

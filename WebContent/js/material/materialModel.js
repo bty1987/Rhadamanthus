@@ -196,7 +196,7 @@ $(function(){
 			
 			$.exceler({
 				column : [
-				    ["编号","mmId"],
+				    ["ID","mmId"],
 					["编号","materialModelNo"],
 					["名称",'materialModelName'],
 					['品类','materialTypeName'],

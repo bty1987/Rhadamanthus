@@ -18,9 +18,7 @@ jQuery(function ($) {
         wizardSept[info.step] = true;
 
     }).on('finished', function(e) {
-    	
-    	com.switchPage("/views/system/company.html");
-    	
+    	//com.switchPage("/views/system/company.html");
     });
 
     // 1.报价版本
@@ -225,11 +223,10 @@ jQuery(function ($) {
                     break;
                 case 'systemConfig':
                     propertyArr = [
-                        [data.key],
+                        [data.comment],
                         [data.value],
                         [data.createName],
                         [data.createTime],
-                        [data.comment]
                     ];
                     break;
             }
@@ -270,7 +267,7 @@ jQuery(function ($) {
     }, "receiptTypePagenation");
     
     com.post(api.system.querySystemConfigByCid, {}, function (data) {
-        displayFunc.init("systemConfig", ["key","value","创建人","创建时间","说明"], data.systemConfigVOs,  "systemConfig");
+        displayFunc.init("systemConfig", ["说明","信息","创建人","创建时间"], data.systemConfigVOs,  "systemConfig");
     }, null, false);
 
     showPaymentScale();

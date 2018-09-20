@@ -32,9 +32,6 @@ public class MbrandDaoImpl extends DaoImpl<MbrandPO> implements MbrandDao {
 				String op = filter.getOp();
 				if(field.equals(MbrandPO.COLUMN_NAME_STR)){
 					query.add(query.getCriterion(field, data, op));
-				}else if(field.equals(MbrandPO.COLUMN_NAME_STR)){
-					query.alias("mcategory", "mcategory");
-					query.add(query.getCriterion(field, Long.valueOf(data), op));
 				}
 			}
 		}

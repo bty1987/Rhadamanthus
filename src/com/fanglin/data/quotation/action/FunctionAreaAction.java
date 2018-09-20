@@ -68,7 +68,7 @@ public class FunctionAreaAction extends BaseListAction {
 	@Action(value="addFunctionArea", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String addFunctionArea() throws FLException{
 
-		functionAreaService.addFunctionArea(functionArea);
+		functionAreaService.addFunctionArea(functionArea, queryCompany());
 	    
 		return SUCCESS;
 	}

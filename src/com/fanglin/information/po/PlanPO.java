@@ -3,7 +3,6 @@ package com.fanglin.information.po;
 import static javax.persistence.GenerationType.IDENTITY;
 import java.io.Serializable;
 import java.sql.Timestamp;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -13,23 +12,27 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fanglin.personel.po.UserPO;
+
 @Entity
 @Table(name = "plan",catalog = "information")
 public class PlanPO implements Serializable{
 	
 	private static final long serialVersionUID = 4258766333068282952L;
+	
+	public static final String COLUMN_CUID_STR = "cuid";
     
-    public static final String COLUMN_CUID_STR = "cuid";
-  
     public static final String COLUMN_STATUS_STR = "status";
-	
-	public static final Short COLUMN_STATUS_INT = 0;
-	
-	public static final Short COLUMN_STATUS_CANCEL_INT = 1;
 	
 	public static final String COLUMN_EXECUTETIME_STR ="executeTime";
 	
-	public static final Short COLUMN_STATUS_IMME_INT = 4;
+	public static final short STATUS_INIT_INT = 0;
+	
+	public static final short STATUS_CANCEL_INT = 1;
+	
+	public static final short STATUS_FAIL_INT = 3;
+	
+	public static final short STATUS_IMME_INT = 4;
 
 	private long pid;
 	
@@ -37,7 +40,7 @@ public class PlanPO implements Serializable{
 	
 	private String args;
 	
-	private long cuid;
+	private UserPO creater;
 	
 	private Timestamp createTime;
 	
@@ -83,13 +86,14 @@ public class PlanPO implements Serializable{
 		this.args = args;
 	}
 
-	@Column(name = "cuid")
-	public long getCuid() {
-		return cuid;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "cuid", referencedColumnName = "uid")
+	public UserPO getCreater() {
+		return creater;
 	}
 
-	public void setCuid(long cuid) {
-		this.cuid = cuid;
+	public void setCreater(UserPO creater) {
+		this.creater = creater;
 	}
 
 	@Column(name = "createTime")
@@ -155,5 +159,10 @@ public class PlanPO implements Serializable{
 	public void setInfo(String info) {
 		this.info = info;
 	}
+
+
+	
+
+	
 	
 }

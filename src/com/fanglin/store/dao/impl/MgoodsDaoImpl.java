@@ -46,6 +46,7 @@ public class MgoodsDaoImpl extends DaoImpl<MgoodsPO> implements MgoodsDao {
 						query.add(Restrictions.or(Restrictions.like("pinyin", data, MatchMode.START), Restrictions.like("name", data, MatchMode.START))).add(Restrictions.eq("status", MgoodsPO.STATUS_ABLE_SHORT));
 					}
 			    }
+
 			}
 			if(flag){
 				query.add(Restrictions.ne("status", MgoodsPO.STATUS_DISABLE_SHORT));
@@ -61,7 +62,7 @@ public class MgoodsDaoImpl extends DaoImpl<MgoodsPO> implements MgoodsDao {
 		PagingQuery<MgoodsPO> query = pagingQuery(paging, MgoodsPO.class);
 		
 		if(StringUtils.isNotEmpty(name)){
-		    query.add(Restrictions.or(Restrictions.like("pinyin", name, MatchMode.START), Restrictions.like("name", name, MatchMode.START))).add(Restrictions.eq("status", MgoodsPO.STATUS_ABLE_SHORT));
+		    query.add(Restrictions.or(Restrictions.like("pinyin", name, MatchMode.START), Restrictions.like("no", name, MatchMode.START))).add(Restrictions.eq("status", MgoodsPO.STATUS_ABLE_SHORT));
 		}
 		
 		return query.list();

@@ -51,7 +51,7 @@ jQuery(function($) {
 
 
 	var $addReduceIds = {};
-	//通过订单编号获取增减项信息
+	//通过装修单号获取增减项信息
 	url = api.addReduce.queryAddReduceByOrderId;
 	com.post(url, {"addReduce.orderId":_orderId}, function (res) {
 		var addReduces = res.addReduces;
@@ -179,7 +179,7 @@ jQuery(function($) {
 	function generatePrintPage(){
 		html = "";
 
-		$("#orderId").html("订单编号: " + addReduceDetail.quotation.orderId);
+		$("#orderId").html("装修单号: " + addReduceDetail.quotation.orderId);
 		$("#orderAddr").html("楼盘地址: " + addReduceDetail.quotation.orderAddr);
 		$("#supervisor").html("监理: " + (addReduceDetail.quotation.supervisorName != null ? addReduceDetail.quotation.supervisorName : "--"));
 		$("#designer").html("设计师: " + (addReduceDetail.quotation.designerName != null ? addReduceDetail.quotation.designerName : "--"));

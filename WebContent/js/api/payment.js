@@ -29,6 +29,8 @@ $.extend(api, {payment: {
     queryAdvancePaymentByCustomerId: {url: "queryAdvancePaymentByCustomerId.do"},
 	queryAdvancePaymentByOrderId: {url: "queryAdvancePaymentByOrderId.do"},
 
+	pagePaymentForCollect: {url: "pagePaymentForCollect.do", demo: true},
+	pagePaymentForConfirm: {url: "pagePaymentForConfirm.do", demo: true},
 	pagePaymentForHistory: {url: "pagePaymentForHistory.do", demo: true},
 	queryPaymentByOrderId: {url: "queryPaymentByOrderId.do"},
 	queryPaymentByPaymentId: {url: "queryPaymentByPaymentId.do"},
@@ -98,6 +100,7 @@ $.extend(api, {payment: {
 	collectServicePaymentForService: {url: "collectServicePaymentForService.do"},
 	pageServicePaymentForCollect: {url: "pageServicePaymentForCollect.do"},
 	pageServicePaymentForConfirm: {url: "pageServicePaymentForConfirm.do"},
+	pageServicePaymentForHistory: {url: "pageServicePaymentForHistory.do"},
 	pageServicePaymentForNotInit: {url: "pageServicePaymentForNotInit.do"},
 	confirmServicePayment: {url: "confirmServicePayment.do"},
 	refundServicePaymentForService: {url: "refundServicePaymentForService.do"},

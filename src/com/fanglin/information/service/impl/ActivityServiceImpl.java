@@ -47,8 +47,6 @@ public class ActivityServiceImpl implements ActivityService {
 	@Transactional(rollbackFor=Exception.class)
 	public void pageActivity(Paging paging, List<Filter> filters, String userId,int company) {
 		
-		filters.add(new Filter(ActivityPO.COLUMN_CREATEUSERID_STR, userId, "eq"));
-		
 		List<ActivityPO> activityPOs = activityDao.pageActivity(paging, filters,company);
 		List<ActivityVO> activityVOs = new ArrayList<ActivityVO>();
 		

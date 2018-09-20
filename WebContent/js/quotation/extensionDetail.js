@@ -3,7 +3,7 @@ var ExtensionDetail = (function(){
 
     var extensionDetail = {
 
-        orderid :null,//订单编号
+        orderid :null,//装修单号
         versionid : null,//报价版本
 
         qid : null,//订单的默认报价编号
@@ -67,12 +67,17 @@ var ExtensionDetail = (function(){
             });
 
             //功能区选择弹出层 todo
-            com.post(api.quotation.queryQuotationFunctionAreaForCommonByQuotationId, {"quotation.qid": that.qid}, function(res){
+            if(that.qid != null){
+                com.post(api.quotation.queryQuotationFunctionAreaForCommonByQuotationId, {"quotation.qid": that.qid}, function(res){
 
-                $("#addQuotationFunctionAreaId").bindData(res.quotationFunctionAreas, "qfaId", "functionAreaName");
-                $("#quotationFunctionAreaId").bindData(res.quotationFunctionAreas, "qfaId", "functionAreaName");
+                    $("#addQuotationFunctionAreaId").bindData(res.quotationFunctionAreas, "qfaId", "functionAreaName");
+                    $("#quotationFunctionAreaId").bindData(res.quotationFunctionAreas, "qfaId", "functionAreaName");
 
-            });
+                });
+            }else{
+                com.showAlert(com.error, "该订单没有默认报价");
+            }
+
         },
         initBtnItems : function(){
             var that = this;
@@ -652,11 +657,12 @@ var ExtensionDetail = (function(){
             extensionDetail.eid = params.extensionId;
             extensionDetail.basicParams["extension.eid"] = params.extensionId;
             extensionDetail.basicParams["extensionItem.eid"] = params.extensionId;
-            extensionDetail.orderid = params.decorationOrderId;//订单编号
-            //根据订单编号获取默认报价
+            extensionDetail.orderid = params.decorationOrderId;//装修单号
+            //根据装修单号获取默认报价
             com.post(api.quotation.queryQuotationForDefaultByOrderId, {"quotation.orderId" : extensionDetail.orderid}, function(res){
                 extensionDetail.discount = 10;
                 extensionDetail.qid = res.quotation.qid;
+
                 extensionDetail.versionid = res.quotation.versionId;
             }, null, false);
 

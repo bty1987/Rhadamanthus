@@ -64,15 +64,7 @@ public class ConstructionDrawingAction extends BaseListAction{
 	@Action(value = "addConstructionDrawing", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addConstructionDrawing() throws FLException{
 		
-		constructionDrawingService.addConstructionDrawing(constructionDrawing, queryUserId());
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "addConstructionDrawings", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addConstructionDrawings() throws FLException{
-		
-		constructionDrawings = constructionDrawingService.addConstructionDrawings(constructionDrawing, drawingUrls, queryUserId());
+		constructionDrawingService.addConstructionDrawing(constructionDrawing, queryUserId(), queryCompany());
 		
 		return SUCCESS;
 	}

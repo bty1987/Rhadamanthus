@@ -130,12 +130,11 @@ jQuery(function($) {
 			"customerPhone.phone": $this.val(),
 			"customerPhone.status": 0
 		}, function(res) {
-			building.customerRepeatFlg = true;
-			com.showPopover($("#phone"),{errorMsg: "电话号码已存在"}, "right");
-
-		}, function(res){
 			building.customerRepeatFlg = false;
 			$("#phone").css("border", "1px solid #d5d5d5").popover("destroy");
+		}, function(res){
+			building.customerRepeatFlg = true;
+			com.showPopover($("#phone"),{errorMsg: "电话号码已存在"}, "right");
 		});
 	});
 

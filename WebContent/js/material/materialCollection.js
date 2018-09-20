@@ -93,7 +93,7 @@ jQuery(function($) {
                         var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
                         var $ulStyle = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
                         var propertyArr = [
-                            ["编号:", v.material.no, "blue"],
+                            ["主材单号:", v.material.no, "blue"],
                             ["品类:", v.category, "grey"],
                             ["品牌:", v.brand, "grey"],
                             ["应收额:", v.referMoney, "blue"],
@@ -144,7 +144,7 @@ jQuery(function($) {
                             var $_ulStyle = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 
                             var _propertyArr = [
-                                ["编号:", v.material.no, "blue"],
+                                ["主材单号:", v.material.no, "blue"],
                                 ["品类:", v.category, "grey"],
                                 ["品牌:", v.brand, "grey"],
                                 ["应收额:", v.referMoney, "blue"],

@@ -40,7 +40,7 @@ public class ServicePaymentPO  implements java.io.Serializable {
 	
 	public static final float COLUMN_RATIO_INT = 1.1f; 
 	
-	public static final float COLUMN_MONEY_INT = 0f; 
+	public static final float COLUMN_MONEY_INT = 0f;
 	
 	private long spid;
 	
@@ -63,6 +63,8 @@ public class ServicePaymentPO  implements java.io.Serializable {
 	private float advanceMoney;
 	
 	private String comment;
+	
+	private int company;
 	
 	public ServicePaymentPO() {
 		super();
@@ -181,6 +183,15 @@ public class ServicePaymentPO  implements java.io.Serializable {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	@Column(name = "company")
+	public int getCompany() {
+		return company;
+	}
+
+	public void setCompany(int company) {
+		this.company = company;
 	}
 	
 }

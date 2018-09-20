@@ -83,7 +83,7 @@ public class HouseSourceAction extends BaseListAction{
 	@Action(value = "addHouseSource", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addHouseSource() throws FLException{
 		
-		houseSourceService.addHouseSource(houseSource, queryUserId());
+		houseSourceService.addHouseSource(houseSource, queryUserId(), queryCompany());
 		
 		return SUCCESS;
 	}

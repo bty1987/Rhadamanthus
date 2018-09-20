@@ -21,7 +21,7 @@ public interface HouseSourceService {
 	
 	public HouseSourceVO checkHouseSource(HouseSourceVO houseSource) throws FLException;
 
-	public void addHouseSource(HouseSourceVO houseSource, String userId) throws FLException;
+	public void addHouseSource(HouseSourceVO houseSource, String userId, int company) throws FLException;
 	
 	public void takeHouseSource(HouseSourceVO houseSource, String userId) throws FLException;
 

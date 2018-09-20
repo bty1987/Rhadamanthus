@@ -16,7 +16,9 @@ $.extend(api.index, {
     
     auditIndex: {url: "/views/decoration/audit.html"},
     auditRecordIndex: {url: "/views/decoration/auditRecord.html"},
-    
+
+    decorationServiceIndex :{url:"/views/decoration/decorationService.html"},
+
     decorationFinalSettlementIndex : {url:"/views/decoration/decorationFinalSettlement.html"}
 });
 
@@ -30,7 +32,6 @@ $.extend(api, {decoration: {
     queryDecorationActivityItemForCouponAVaildByOrderId: {url: "queryDecorationActivityItemForCouponAVaildByOrderId.do"},
     addDecorationActivity: {url: "addDecorationActivity.do"},
     deleteDecorationActivity: {url: "deleteDecorationActivity.do"},
-    convertDecorationActivityItem: {url: "convertDecorationActivityItem.do"},
     abateDecorationActivityItem: {url: "abateDecorationActivityItem.do"},
     receiveDecorationActivityItem: {url: "receiveDecorationActivityItem.do"},
 
@@ -108,5 +109,10 @@ $.extend(api, {decoration: {
     addDecorationService:{url:"addDecorationService.do"},
 
     queryDecorationAdditionByOrderId:{url:"queryDecorationAdditionByOrderId.do"},
+    queryDecorationConfig: {url: "queryDecorationConfig.do"},
+    
+    queryDecorationUser:{url:"queryDecorationUser.do"},
+    addDecorationUser:{url:"addDecorationUser.do"},
+    deleteDecorationUser:{url:"deleteDecorationUser.do"},
     
 }});

@@ -56,7 +56,6 @@ $(function () {
                         case 5:
                             status = "完结";
                             break;
-
                     }
 
                     switch (v.balanceStatus) {
@@ -72,14 +71,12 @@ $(function () {
                         case 3:
                             balanceStatus = " 结算";
                             break;
-
                     }
-
 
                     var $btnSwitch = $('<a></a>').addClass('btn btn-minier btn-yellow').html('转出库单');
 
                     var propertyArr = [
-                        ["订单编号:", v.orderId, "blue"],
+                        ["装修单号:", v.orderId, "blue"],
                         ["楼盘地址:", v.house.village.name + " " + v.house.houseNumber, "grey"],
                         ["客户名:", v.customer.customerName, "grey"],
                         ["渠道:", v.salesman.currentName, "grey"],
@@ -121,7 +118,7 @@ $(function () {
                         "data-fullPayStatus": v.fullpayStatus
                     }).addClass('ace ace-checkbox-2');
 
-                    var _span = $('<span></span>').addClass('lbl blue bigger-150').css('font-weight', 'bold').html(v.no)
+                    var _span = $('<span></span>').addClass('lbl blue bigger-150').html(v.no)
 
                     _label.append($input).append(_span).appendTo($label)
 

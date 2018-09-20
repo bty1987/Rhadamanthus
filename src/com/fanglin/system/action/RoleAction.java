@@ -43,17 +43,17 @@ public class RoleAction extends BaseListAction {
 	private List<RoleVO> roleList;
 
 	@Action(value = "pageRole", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageRole(){
+	public String pageRole() throws FLException{
 		
-		roleService.pageRole(getPaging(), getFilters());
+		roleService.pageRole(getPaging(), getFilters(),queryCompany());
 		
 		return SUCCESS;
 	}
 
 	@Action(value = "queryRole", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryRole(){
+	public String queryRole() throws FLException{
 		
-		roleList = roleService.querylRole();
+		roleList = roleService.querylRole(queryCompany());
 		
 		return SUCCESS;
 	}
@@ -67,9 +67,9 @@ public class RoleAction extends BaseListAction {
 	}
 	
 	@Action(value = "queryRoleByName", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryRoleByName(){
+	public String queryRoleByName() throws FLException{
 		
-		role = roleService.queryRoleByName(role);
+		role = roleService.queryRoleByName(role,queryCompany());
 		
 		return SUCCESS;
 	}
@@ -81,7 +81,7 @@ public class RoleAction extends BaseListAction {
 		    throw new FLException(-1, "无操作权限");
 		}
 		
-		roleService.addRole(role);
+		roleService.addRole(role,queryCompany());
 		
 	    return SUCCESS;
 	}

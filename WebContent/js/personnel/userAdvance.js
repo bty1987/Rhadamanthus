@@ -155,7 +155,56 @@ jQuery(function($) {
 			}, null, false);
 
 		}
+	function dialogUserAdvanceIndex(userId){
+		userAdvance.postData.userId = userId;
+		var options = {
+			"user.userId": userId,
+		}
+		com.post(api.personel.queryUserByUserId, options, function(res){
+			var user = res.user;
 
+			userAdvance.userAdvanceItems.company.bindData(userAdvance.companysel , "cid", "name");
+			userAdvance.userAdvanceItems.roleSel.bindData(userAdvance.roleList, "rid", "name");
+			userAdvance.userAdvanceItems.isLogin.prop("checked", (user.isLogin & 1) == 1 ? true : false);
+			userAdvance.userAdvanceItems.extranet.prop("checked", user.extranet == 1 ? true : false);
+
+			userAdvance.userAdvanceItems.oldcompany.val(user.companys)
+			userAdvance.userAdvanceItems.company.val();
+			userAdvance.userAdvanceItems.roleSel.val(user.role.rid);
+			userAdvance.userAdvanceModal.modal("show");
+		}, null, false);
+	}
+	function saveData(){
+		var options = {
+			"user.userId": userAdvance.postData.userId,
+			"user.isLogin": userAdvance.userAdvanceItems.isLogin.prop("checked") ? 1 : -1,
+			"user.extranet": userAdvance.userAdvanceItems.extranet.prop("checked") ? 1 : 0,
+			"user.role.rid": userAdvance.userAdvanceItems.roleSel.val(),
+			"user.companys": userAdvance.userAdvanceItems.company.val(),
+		}
+		com.post(api.personel.updateUserForAdvance, options, function(res){
+			com.showAlert(com.info, "提交成功");
+		});
+		userAdvance.userAdvanceModal.modal("hide");
+
+		return false;
+	}
+	
+	function resetPassword(userId,userName){
+		bootbox.confirm("确定要重置("+userName+")的密码吗?",function(result){
+			if(result == true){
+				com.post(api.personel.resetPassword, {'user.userId': userId});
+			}
+		});
+	}
+	
+	function defaultPassword(userId,userName){
+		bootbox.confirm("确定要重置("+userName+")密码为默认密码?",function(result){
+			if(result == true){
+				com.post(api.personel.defaultPassword, {'user.userId': userId});
+			}
+		});
+	}
 
 	userAdvance.userAdvanceModal = $("#userAdvanceModal");
 	userAdvance.userCompanyModal=$("#companyModal");
@@ -200,6 +249,8 @@ jQuery(function($) {
 					var $btnStatus = $('<a></a>').addClass('btn btn-minier btn-danger').html('订单状态');
 					var $btnHouse = $('<a></a>').addClass('btn btn-minier btn-pink').html('房源权配');
 					var $btnCustomer = $('<a></a>').addClass('btn btn-minier btn-purple').html('客源权配');
+					var $resetPassword = $('<a></a>').addClass('btn btn-minier btn-yellow').html('重置密码');
+					var $defaultPassword = $('<a></a>').addClass('btn btn-minier btn-success').html('默认密码');
 
 					var propertyArr = [
 						["员工编号:", v.userId, "grey"],
@@ -267,8 +318,6 @@ jQuery(function($) {
 								com.post(api.personel.updateUserCompany, params,function (res) {
 								},null,false)
 							}
-
-
 						  });
 						});
 
@@ -294,8 +343,17 @@ jQuery(function($) {
 
 					$btnCustomer.click(function(){
 						binding.openCustomerDialog(v.userId);
-					})
-					$divBtnWrap.append($company).append($btnRight).append($btnDesigne).append($btnSales).append($btnStatus).append($btnHouse).append($btnCustomer).appendTo($h3);
+					});
+					
+					$resetPassword.click(function(){
+						resetPassword(v.userId,v.userName);
+					});
+					
+					$defaultPassword.click(function(){
+						defaultPassword(v.userId, v.userName);
+					});
+					
+					$divBtnWrap.append($company).append($btnRight).append($btnDesigne).append($btnSales).append($btnStatus).append($btnHouse).append($btnCustomer).append($resetPassword).append($defaultPassword).appendTo($h3);
 
 					$liLine.append($h3).append($ulProperty).appendTo($ul);
 				});
@@ -459,38 +517,4 @@ jQuery(function($) {
 
 });
 
-function dialogUserAdvanceIndex(userId){
-	userAdvance.postData.userId = userId;
-	var options = {
-		"user.userId": userId,
-	}
-	com.post(api.personel.queryUserByUserId, options, function(res){
-		var user = res.user;
-
-		userAdvance.userAdvanceItems.company.bindData(userAdvance.companysel , "cid", "name");
-		userAdvance.userAdvanceItems.roleSel.bindData(userAdvance.roleList, "rid", "name");
-		userAdvance.userAdvanceItems.isLogin.prop("checked", (user.isLogin & 1) == 1 ? true : false);
-		userAdvance.userAdvanceItems.extranet.prop("checked", user.extranet == 1 ? true : false);
-
-		userAdvance.userAdvanceItems.oldcompany.val(user.companys)
-		userAdvance.userAdvanceItems.company.val();
-		userAdvance.userAdvanceItems.roleSel.val(user.role.rid);
-		userAdvance.userAdvanceModal.modal("show");
-	}, null, false);
-}
-function saveData(){
-	var options = {
-		"user.userId": userAdvance.postData.userId,
-		"user.isLogin": userAdvance.userAdvanceItems.isLogin.prop("checked") ? 1 : -1,
-		"user.extranet": userAdvance.userAdvanceItems.extranet.prop("checked") ? 1 : 0,
-		"user.role.rid": userAdvance.userAdvanceItems.roleSel.val(),
-		"user.companys": userAdvance.userAdvanceItems.company.val(),
-	}
-	com.post(api.personel.updateUserForAdvance, options, function(res){
-		com.showAlert(com.info, "提交成功");
-	});
-	userAdvance.userAdvanceModal.modal("hide");
-
-	return false;
-}
 

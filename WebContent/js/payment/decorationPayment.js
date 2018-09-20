@@ -1,38 +1,18 @@
-
-var decorationPaymentPostData = {};
-
 jQuery(function($) {
-
+	var decorationPaymentPostData = {};
 	var decorationPayment = {
-			
 		paymentModelNameData: ["cash", "bank", "checkv", "installment", "accounts", "advance", "coupon"],
-		
 		couponType: {},
 		couponTypeData: {},
-		
-		orderPaymentId:null,
-		
-		saveBtn: null,
-		cancellBtn: null,
-		
+		orderPaymentId: null,
 		baseModal: null,
-		addOrReduceModal:null,
-		refundModal:null,
-		refundDecorationPaymentModal:null,
-		decorationPaymentItems: {},
-		addReduceDetail:null,
-		paymentId:null,
-		
+		refundDecorationPaymentModal: null,
+		addReduceDetail: null,
+		paymentId: null,
 		items: {},
-		
-		editFlg:false,
-		batchFlag: true,
-		
-		bankList:null,
-		accountsList: [],
-		
-		paymentType:"增项款",
-		orderId:null,
+		editFlg: false,
+		paymentType: "增项款",
+		orderId: null
 	};
 
     decorationPayment.items.cashCheckbox = $("#cashCheckbox");
@@ -56,10 +36,9 @@ jQuery(function($) {
 	
 	$("#collectBtn").bindClick(payment);
 	$("#saveRefundBtn").bindClick(refund);
-	
+
 	$("#refundBankCard").on("click",function(e) {
 		$("#refundCashInfoDiv").addClass("hide");
-
 		$("#refundBankCardDiv").removeClass("hide");
 		$("#refundBank").addClass("v_required");
 		$("#refundBank").get(0).selectedIndex = 0;
@@ -67,7 +46,6 @@ jQuery(function($) {
 
 	$("#refundCash").on("click",function(e) {
 		$("#refundCashInfoDiv").removeClass("hide");
-
 		$("#refundBankCardDiv").addClass("hide");
 		$("#refundBank").removeClass("v_required");
 	});
@@ -76,14 +54,13 @@ jQuery(function($) {
         $(this).prop("checked") ? $("[referCheckbox="+this.id+"]").show() : $("[referCheckbox="+this.id+"]").hide()
     });
 
-	
 	$("#advanceType").bindData([{"key":"1", "value":"合同"}, {"key":"2", "value":"工程"}], 'key', 'value');
 	
 	$("#couponType").chosen({width: "216px", multi_type: "input"});
 	$("#refundCouponType").chosen({width: "216px", multi_type: "input"});
-	
-	com.post(api.common.queryReceiptType, {}, function(res){
 
+	//绑定收款单位的基础信息
+	com.post(api.common.queryReceiptType, {}, function(res){
 		decorationPayment.cash = [];
 		decorationPayment.bank = [];
 		decorationPayment.checkBank = [];
@@ -116,10 +93,8 @@ jQuery(function($) {
 		});
 
 		$("#cashInfo").bindData(decorationPayment.cash, 'no', 'name');
-		$("#refundCashInfo").bindData(decorationPayment.cash, 'no', 'name');
 
 		$("#installmentBank").bindData(decorationPayment.bank, 'no', 'name');
-		$("#refundBank").bindData(decorationPayment.bank, 'no', 'name');
 
 		$("#checkvBank").bindData(decorationPayment.checkBank, 'no', 'name');
 
@@ -127,9 +102,6 @@ jQuery(function($) {
 
 		$("#couponType").bindData(decorationPayment.couponType, 'no', 'no');
 		$("#couponType").trigger("chosen:updated");
-
-		$("#refundCouponType").bindData(decorationPayment.couponType, 'no', 'no');
-		$("#refundCouponType").trigger("chosen:updated");
 	}, null,false);
 
 	$("#bankAdd").click(function(){
@@ -137,12 +109,10 @@ jQuery(function($) {
 		var nextNum = parseInt(num)+1;
 		addBankDiv(nextNum);
 		$(this).attr("num", nextNum);
-		
 		return false;
 	});
 	
 	var displayFunc  = (function(){
-
         var renderList = function(tableId,listData){
             var $tableWrap = $('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
@@ -150,21 +120,17 @@ jQuery(function($) {
             if(listData && listData.length){ 
                 $.each(listData,function(i, v){
                     var $liLine = creatLine(v);
-
                     $liLine.appendTo($ul);
                 });
-
                 $ul.appendTo($tableWrap);
             }
         };
 
         var creatLine = function(v){
-
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.paymentType));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-
             var $btnCollect = $('<a></a>').addClass('btn btn-minier');
             var $btnDetail = $('<a></a>').addClass('btn btn-minier btn-yellow').html('查看明细');
             
@@ -174,7 +140,7 @@ jQuery(function($) {
                ["客户:", v.decoration.customer.name, "grey"],
                ["设计师:", v.decoration.designer.currentName, "grey"],
                ["设计部:", v.decoration.designer.dept.deptName, "grey"],
-               ["应收金额:", v.referMoney, "blue"],
+               ["应收金额:", v.referMoney, "blue"]
             ];
             
             $.each(propertyArr, function (index,value) {
@@ -185,26 +151,32 @@ jQuery(function($) {
             });
            
             $divBtnWrap.append($btnCollect).appendTo($h3);
-           
-            if(v.paymentType.search('退款') != -1){
-        		$btnCollect.text('退款').addClass("btn-danger");
-        	}else if(v.paymentType == "减项款"){
-        		$btnCollect.text('减项款').addClass("btn-danger");
-        		$divBtnWrap.append($btnDetail);
-        	}else if(v.paymentType == "增项款"){
-        		$btnCollect.text('增项款').addClass("btn-info");
-        		$divBtnWrap.append($btnDetail);
-        	}else{
-        		$btnCollect.text('收款').addClass("btn-info");
-        	}
+
+			if(v.oneType == 0){
+				if(v.twoType == 2){
+					$btnCollect.text('增项款').addClass("btn-info");
+					$divBtnWrap.append($btnDetail);
+				}else{
+					$btnCollect.text('收款').addClass("btn-info");
+				}
+			}else if(v.oneType == 1){
+				if(v.twoType == 2 && v.paymentType == "减项款"){
+					$btnCollect.text('减项款').addClass("btn-danger");
+					$divBtnWrap.append($btnDetail);
+				}else{
+					$btnCollect.text('退款').addClass("btn-danger");
+				}
+			}
             
             $liLine.append($h3).append($ulProperty);
-            
+
+			//退款、增减项款、收款点击显示模态框
             $btnCollect.click(function(){
 				decorationPayment.typeUpdate = 1;
             	dialogPayment(v);
             });
-            
+
+			//查看明细(只有增减项有)
             $btnDetail.click(function(){
             	addReduceDetail(v.dpid, v.paymentType, v.decoration.orderId);
             });
@@ -230,7 +202,6 @@ jQuery(function($) {
 	}, "pagenation", "decorationPaymentPostData");
 	
 	var hdisplayFunc  = (function(){
-
         var renderList = function(tableId,listData){
             var $tableWrap = $('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
@@ -247,7 +218,6 @@ jQuery(function($) {
         };
 
         var creatLine = function(v){
-
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.paymentType));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
@@ -267,7 +237,7 @@ jQuery(function($) {
                ["收款人:", v.collecter.currentName, "grey"],
                ["收款时间:", v.collectTime, "green"],
                ["状态:", v.paymentStatus, "red"],
-               ["备注:", v.comment, "grey"],
+               ["备注:", v.comment, "grey"]
             ];
 
             $.each(propertyArr, function (index,value) {
@@ -304,33 +274,36 @@ jQuery(function($) {
 			});
 
 			if(v.paymentStatus == "已确认" && v.oneType == 0){
-				$divBtnWrap.append($btnPrint).append($btnRefund).appendTo($h3);
-			}else if(v.paymentType.search('退款') != -1 || v.paymentType.search('历史') != -1){
+				$divBtnWrap.append($btnPrint);
+				if(v.twoType != 2){
+					$divBtnWrap.append($btnRefund);
+				}
+				$divBtnWrap.appendTo($h3);
+			}else if(v.oneType == 1 || v.oneType == 2){ //退款或者历史
 				$divBtnWrap.append($btnPrint).appendTo($h3);
 			}else{
 				$divBtnWrap.append($btnPrint).append($btnUpdate).appendTo($h3);
 			}
 
-           
             $liLine.append($h3).append($ulProperty).append($ulStyle);
 
 			$btnRefund.click(function(){
 				$("#changeReason").val("");
 				decorationPayment.paymentId = v.dpid;
-				approvalUtils.initqueryApprovalUser("refundApproveManSel",5);
+				approvalUtils.initqueryApprovalUser("refundApproveManSel", 5);
 				$("#referMoneyApproval").val(v.referMoney);
 				decorationPayment.refundDecorationPaymentModal.modal("show");
 			});
             
             $btnPrint.click(function(){
-				if(v.collecter.userId!=params.userInfo.user.userId){
+				if(v.collecter.userId != params.userInfo.user.userId){
 					com.showAlert(com.warning, "收款人不匹配，不能打印");
 					return false;
 				}else{
 					params.decorationOrderOrderId = v.decoration.orderId;
 					params.decorationPaymentOrderId = v.decoration.orderId;
 					params.decorationReceiptDrId = v.drId;
-					com.popup("专用收款收据__订单编号:" + v.decoration.orderId  ,api.index.decorationPaymentReceiptIndex.url,function () {
+					com.popup("专用收款收据__装修单号:" + v.decoration.orderId  ,api.index.decorationPaymentReceiptIndex.url,function () {
 						parent.layer.getFrameIndex(window.name);
 					},null,true);
 				}
@@ -355,7 +328,6 @@ jQuery(function($) {
     })();
 
 	$("#saveRefundMoneyBtn").on('click', function(){
-
 		if(com.validate("refundDecorationPaymentModal")){
 			return;
 		}
@@ -382,8 +354,6 @@ jQuery(function($) {
 
 			decorationPayment.refundDecorationPaymentModal.modal("hide");
 		});
-
-
 	});
 	
 	var hsearcher = new Searcher();
@@ -391,18 +361,14 @@ jQuery(function($) {
 	hsearcher.init(["orderId", "paymentDesigner", "paymentVillage", "houseNumber", "collectTimeDateRange"], "hcondList", api.payment.pageDecorationPaymentForHistory, function(data){
 		hdisplayFunc.init('hresultList', data);
 	}, "hpagenation", "hdecorationPaymentPostData", null, false, null, function(){
-    	
     	var $impa = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'import').css("margin", "0px 3px");
     	var $impi = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($impa);
     	var $impspan = $('<span></span>').text('导出').appendTo($impa);
-    	
     	return [$impa];
     }, "hresultList");
 	
 	function dialogPayment(payment){
-		
 		decorationPaymentPostData.paymentInfo = payment;
-
         com.cleanItems(decorationPayment.items);
 		
 		$("#paymentInfo").text("");
@@ -417,8 +383,8 @@ jQuery(function($) {
 		$("#checkvBank").find("option:first").prop("selected", true);
 		$("#installmentBank").find("option:first").prop("selected", true);
 		$("#accountsBank").find("option:first").prop("selected", true);
-		
-		if(payment.paymentType.search('退款') != -1 || payment.paymentType == "减项款"){ // 退款
+
+		if(payment.oneType == 1){// 退款
 			initBaseModal();
 			$("#myModalPayLabel").text("退款信息");
 			$("#referMoney").val(payment.referMoney).attr("disabled", "disabled");
@@ -427,7 +393,6 @@ jQuery(function($) {
 			decorationPaymentPostData.customerId = payment.decoration.customer.cid;
             $("#collectBtn").addClass("hide");
             $("#saveRefundBtn").removeClass("hide");
-
 		}else{
 			initBaseModal();
 			$("#myModalPayLabel").text("付款信息");
@@ -448,7 +413,6 @@ jQuery(function($) {
 	}
 
 	function dialogPaymentUpdate(payment){
-
 		decorationPaymentPostData.paymentInfo = payment;
 		decorationPaymentPostData.orderId = payment.decoration.orderId;
 		decorationPaymentPostData.customerId = payment.decoration.customer.cid;
@@ -506,7 +470,8 @@ jQuery(function($) {
 		});
 		$("#advance").val(payment.advance);
 		$("#advance").attr("readonly","readonly");
-		//卷信息
+
+		//券信息
 		var couponInfoList = {};
 		var couponInfoAll = "";
 		couponInfoAll = payment.couponInfo.substring(1,payment.couponInfo.length-1);
@@ -552,7 +517,6 @@ jQuery(function($) {
 		
 		$("#collectDes").val("");
 
-
 		$("#checkvBank option:first").prop("selected", 'selected');
 		$("#installmentBank option:first").prop("selected", 'selected');
 		$("#accountsBank option:first").prop("selected", 'selected');
@@ -565,7 +529,6 @@ jQuery(function($) {
 	}
 	
     function addBankDiv(index){
-    	
     	var d = new Date();
     	var currentData = d.getFullYear() + "-" + ((d.getMonth() + 1).toString().length == 1 ? "0" : "") + (d.getMonth() + 1) + "-" + (d.getDate().toString().length == 1 ? "0" : "") + d.getDate();
     	
@@ -585,21 +548,20 @@ jQuery(function($) {
     	
     	var bankMoneyLabel = $('<label></label>').addClass('col-sm-3 control-label no-padding-right').text('刷卡金额').appendTo(bankDiv);
     	var bankMoneyDiv = $('<div></div>').addClass('col-sm-8').appendTo(bankDiv);
-    	var bankMoneyInput = $('<input></input>').addClass("col-sm-6 v_required v_float").attr("data-toggle", "popover").attr("data-trigger", "manual").attr("type", "text").attr("id", "bank_"+index).appendTo(bankMoneyDiv);
+    	var bankMoneyInput = $('<input/>').addClass("col-sm-6 v_required v_float").attr("data-toggle", "popover").attr("data-trigger", "manual").attr("type", "text").attr("id", "bank_"+index).appendTo(bankMoneyDiv);
     	
     	var bankDateLabel = $('<label></label>').addClass('col-sm-3 control-label no-padding-right').text('日期').appendTo(bankDiv);
     	var bankDateDiv = $('<div></div>').addClass('col-sm-8').appendTo(bankDiv);
-    	var bankDateInput = $('<input></input>').addClass("date-picker-date col-sm-6 v_required").attr("data-toggle", "popover").attr("data-trigger", "manual").attr("type", "text").attr("id", "bankDate_"+index).attr("data-date-format", "yyyy-mm-dd").val(currentData).datepicker({autoclose:true}).appendTo(bankDateDiv);
+    	var bankDateInput = $('<input/>').addClass("date-picker-date col-sm-6 v_required").attr("data-toggle", "popover").attr("data-trigger", "manual").attr("type", "text").attr("id", "bankDate_"+index).attr("data-date-format", "yyyy-mm-dd").val(currentData).datepicker({autoclose:true}).appendTo(bankDateDiv);
     	
     	var bankTimeLabel = $('<label></label>').addClass('col-sm-3 control-label no-padding-right').text('时间').appendTo(bankDiv);
     	var bankTimeDiv = $('<div></div>').addClass('col-sm-8').appendTo(bankDiv);
     	var bankTimePicker = $('<div></div>').addClass('bootstrap-timepicker').appendTo(bankTimeDiv);
-    	var bankTimeInput =  $('<input></input>').addClass('col-sm-6 v_time v_required').attr("type", "text").attr("id", "bankTime_"+index).attr("data-toggle", "popover").attr("data-trigger", "manual").mask('99:99:99').appendTo(bankTimePicker);
-    	
+    	var bankTimeInput =  $('<input/>').addClass('col-sm-6 v_time v_required').attr("type", "text").attr("id", "bankTime_"+index).attr("data-toggle", "popover").attr("data-trigger", "manual").mask('99:99:99').appendTo(bankTimePicker);
     }
 
+	//增减项详细信息
     function addReduceDetail(decorationPaymentId, paymentType, orderId){
-
         com.cleanItems(decorationPayment.items);
     	
     	decorationPayment.orderPaymentId = decorationPaymentId;
@@ -609,11 +571,10 @@ jQuery(function($) {
     	
     	var options = {
     		"quotation.orderId": orderId,
-    		"addReduce.dpId": decorationPaymentId,
+    		"addReduce.dpId": decorationPaymentId
     	};
     	
     	com.post(api.addReduce.queryAddReduceByDecorationPaymentId, options, function(res){
-    		
     		var quotationItemSeacher = new Searcher();
     		quotationItemSeacher.init([], "acondList", api.addReduce.queryAddReduceItemByAddReduceId,  function(data){
     			var $tableWrap = $('#aresultList').empty();
@@ -633,17 +594,15 @@ jQuery(function($) {
     function createAddReduceItem(v){
     	var $liLine = $('<li></li>').addClass('item-blue clearfix');
     	var $h3 = $('<h3></h3>').addClass('oid').css({"margin-bottom" : 0});
-
     	var $label = $('<label></label>');
     	var $span = $('<span></span>').addClass('lbl');
-
     	var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 
     	var propertyArr = [
     		["单位:", v.measurementUnit, "grey"],
     		["单价:", v.unitPrice, "grey"],
     		["工程量:", v.num, "grey"],
-    		["类型:", v.type, "grey"],
+    		["类型:", v.type, "grey"]
     	];
 
     	$.each(propertyArr, function (index,value) {
@@ -661,7 +620,6 @@ jQuery(function($) {
     }
 
     function payment(){
-
     	if(com.validate()){
     		return;
     	}
@@ -671,7 +629,6 @@ jQuery(function($) {
     	var args = {};
     	var referPayment = $("#referMoney").val();
     	var realPayment = 0;
-    	
     	var dpids = "";
     	var orderId = "";
     	var _paymentInfo = "#paymentInfo";
@@ -680,7 +637,6 @@ jQuery(function($) {
     	$(_paymentInfo).text("");
     	
     	for(var i=0;i<decorationPayment.paymentModelNameData.length;i++){
-    		
     		var _paymentName = decorationPayment.paymentModelNameData[i];
     		var _checkboxId = "#" + _paymentName + "Checkbox";
     		var _inputId = _paymentName;
@@ -707,7 +663,6 @@ jQuery(function($) {
     		});
     		
     		if($(_checkboxId).prop("checked")){
-    			
     			var _payment = 0;
     			
     			if(_paymentName == "cash"){
@@ -742,7 +697,6 @@ jQuery(function($) {
     				var _couponInfo = "#";
     				
     				$("[class='search-choice']", $("#couponType_chosen")).each(function(i,e){
-    					
     					var _ = $(e);
     					
     					_couponVal = $(e).children('span').children('input').val();
@@ -778,7 +732,6 @@ jQuery(function($) {
     	}
     	
     	if($("#advanceCheckbox").prop("checked")){
-    		
     		var _advance = 0;
     		var advanceType = $("#advanceType").val();
     		
@@ -818,11 +771,8 @@ jQuery(function($) {
 		options["decorationPayment.dpid"] = _info.dpid;
 
     	com.post(url, options, function(result){
-    		
     		searcher.doSearch();
-
 			hsearcher.doSearch();
-
     		decorationPayment.baseModal.modal("hide");
     		
     		var argsDrId = result.decorationPayment.drId;
@@ -835,27 +785,25 @@ jQuery(function($) {
 						params.decorationOrderOrderId = orderId;
 						params.decorationPaymentOrderId = orderId;
 						params.decorationReceiptDrId = argsDrId;
-						com.popup("专用收款收据__订单编号:" + orderId  ,api.index.decorationPaymentReceiptIndex.url,function () {
+						com.popup("专用收款收据__装修单号:" + orderId  ,api.index.decorationPaymentReceiptIndex.url,function () {
 							parent.layer.getFrameIndex(window.name);
 						},null,true);
 					}
 				});
 			}
     	});
-
     }
 
 	function refund(){
-
 		if(com.validate()){
 			return;
 		}
+
 		var url = "";
 		var options = {};
 		var args = {};
 		var referPayment = $("#referMoney").val();
 		var realPayment = 0;
-
 		var dpids = "";
 		var orderId = "";
 		var _paymentInfo = "#paymentInfo";
@@ -864,7 +812,6 @@ jQuery(function($) {
 		$(_paymentInfo).text("");
 
 		for(var i=0;i<decorationPayment.paymentModelNameData.length;i++){
-
 			var _paymentName = decorationPayment.paymentModelNameData[i];
 			var _checkboxId = "#" + _paymentName + "Checkbox";
 			var _inputId = _paymentName;
@@ -891,7 +838,6 @@ jQuery(function($) {
 			});
 
 			if($(_checkboxId).prop("checked")){
-
 				var _payment = 0;
 
 				if(_paymentName == "cash"){
@@ -926,7 +872,6 @@ jQuery(function($) {
 					var _couponInfo = "#";
 
 					$("[class='search-choice']", $("#couponType_chosen")).each(function(i,e){
-
 						var _ = $(e);
 
 						_couponVal = $(e).children('span').children('input').val();
@@ -958,7 +903,6 @@ jQuery(function($) {
 			return false;
 		}
 
-
 		if($.isEmptyObject(args)){
 			com.showAlert(com.warning, "无退款方式信息");
 			return false;
@@ -978,11 +922,8 @@ jQuery(function($) {
 		options["decorationPayment.comment"] = $("#collectDes").val();
 
 		com.post(url, options, function(result){
-
 			searcher.doSearch();
-
 			decorationPayment.baseModal.modal("hide");
-
 			var argsDrId = result.decorationPayment.drId;
 
 			bootbox.confirm("是否需要打印当前收款对应的收据信息?", function(result) {
@@ -991,7 +932,7 @@ jQuery(function($) {
 					params.decorationOrderOrderId = orderId;
 					params.decorationPaymentOrderId = orderId;
 					params.decorationReceiptDrId = argsDrId;
-					com.popup("专用收款收据__订单编号:" + orderId  ,api.index.decorationPaymentReceiptIndex.url,function () {
+					com.popup("专用收款收据__装修单号:" + orderId  ,api.index.decorationPaymentReceiptIndex.url,function () {
 						parent.layer.getFrameIndex(window.name);
 					},null,true);
 				}
@@ -1002,7 +943,6 @@ jQuery(function($) {
 	}
     
     $('a[name="import"]', '#hpagenation').click(function () {
-    	
     	if($('span[name="totalRecords"]').text() == 0){
 			com.showAlert(com.warning, "请通过条件进行查询");
 			return false;
@@ -1014,7 +954,6 @@ jQuery(function($) {
 		}
 
 		com.post(api.payment.pageDecorationPaymentForHistory, $.extend({}, params.hdecorationPaymentPostData, {"paging.noPage": 1}), function(res){
-
 			$.exceler({
 				column : [
 					["订单号","decoration.orderId"],
@@ -1034,9 +973,9 @@ jQuery(function($) {
 					['分期', ['installment', 'installmentBank']],
 					['对公', ['accounts', 'accountsBank']],
 					['预付款', 'advance'],
-					['券', ['coupon', 'couponInfo']],
+					['券', ['coupon', 'couponInfo']]
 				],
-				list: res.paging.data,
+				list: res.paging.data
 			}, function(v){
 				if(v.bank != null && v.bank != 0){
 					  var $info = ' ';

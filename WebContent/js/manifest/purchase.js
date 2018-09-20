@@ -37,7 +37,7 @@ $(function () {
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>'));
             var $contentWrap = $('<div></div>').addClass('line-wrap  content col9');
 
-            var titleName = '采购单编号,创建人,创建时间,结算时间,交期时间,入库状态,结算状态,说明';
+            var titleName = '采购单号,创建人,创建时间,结算时间,交期时间,入库状态,结算状态,说明';
 
             $.each(titleName.split(','), function (i, v) {
                 var $cell = $('<div></div>').addClass('cell').html(v);
@@ -185,7 +185,7 @@ $(function () {
 
     var goodsSeacher = new Searcher();
 
-    goodsSeacher.init(["purchaseUserName", "purchaseNo", "purchaseTime"], "condList", api.inventory.pagePurchaseObDelivery, function (data) {
+    goodsSeacher.init(["purchaseNo", "purchaseUserName", "purchaseTime"], "condList", api.inventory.pagePurchaseObDelivery, function (data) {
         displayFunc.init('resultList', data);
     }, "pagenation", "purchasePostData", null, false, null, function () {
 
@@ -220,7 +220,7 @@ $(function () {
         var index = layer.open({
             type: 1,
             skin: 'layui-layer-lan',
-            title: "查看__采购单编号：" + no,
+            title: "查看__采购单号：" + no,
             content: $popup,
             area: [($(window).width() * 0.7 < 1000 ? $(window).width() * 0.7 : 1000) + "px", ($(window).height() * 0.84 < 620 ? $(window).height() * 0.84 : 620) + "px"],
             maxmin: false,
@@ -249,7 +249,7 @@ $(function () {
         var index = layer.open({
             type: 1,
             skin: 'layui-layer-lan',
-            title: "修改__采购单编号：" + no,
+            title: "修改__采购单号：" + no,
             content: $popup,
             area: [($(window).width() * 0.7 < 1000 ? $(window).width() * 0.7 : 1000) + "px", ($(window).height() * 0.84 < 620 ? $(window).height() * 0.84 : 620) + "px"],
             maxmin: false,
@@ -274,7 +274,7 @@ $(function () {
         var index = layer.open({
             type: 1,
             skin: 'layui-layer-lan',
-            title: "入库__采购单编号：" + no,
+            title: "入库__采购单号：" + no,
             content: $popup,
             area: [($(window).width() * 0.7 < 1000 ? $(window).width() * 0.7 : 1000) + "px", ($(window).height() * 0.84 < 620 ? $(window).height() * 0.84 : 620) + "px"],
             maxmin: false,
@@ -386,7 +386,7 @@ $(function () {
 
             $.exceler({
                 column: [
-                    ['采购单编号', 'no'],
+                    ['采购单号', 'no'],
                     ['创建人', 'user.userName'],
                     ['创建时间', 'createTime'],
                     ['结算时间', 'balanceTime'],

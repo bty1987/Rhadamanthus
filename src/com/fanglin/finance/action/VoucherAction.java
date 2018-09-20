@@ -64,7 +64,7 @@ public class VoucherAction extends BaseListAction {
 	@Action(value = "addVoucher", results = { @Result(name = "success", type = "json" , params={"ignoreHierarchy","false"}) } )
 	public String addVoucher() throws FLException{
 		
-		voucherService.addVoucher(voucher, atIds, queryUserId());
+		voucherService.addVoucher(voucher, atIds, queryUserId(), queryCompany());
 		
 		return SUCCESS;
 	}

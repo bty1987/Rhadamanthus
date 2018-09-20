@@ -35,13 +35,13 @@ public class AdvanceReceiptPO implements java.io.Serializable {
 	
 	private UserPO collecter;
 	
-	private UserPO confirmer;
-	
 	private String collecterName;
 	
-	private String confirmerName;
-	
 	private Timestamp collectTime;
+	
+	private UserPO confirmer;
+	
+	private String confirmerName;
 	
 	private Timestamp confirmTime;
 	
@@ -90,15 +90,6 @@ public class AdvanceReceiptPO implements java.io.Serializable {
 		this.arId = arId;
 	}
 	
-	@Column(name = "status")
-	public short getStatus() {
-		return status;
-	}
-
-	public void setStatus(short status) {
-		this.status = status;
-	}
-	
 	@Column(name = "type")
 	public short getType() {
 		return type;
@@ -106,6 +97,15 @@ public class AdvanceReceiptPO implements java.io.Serializable {
 
 	public void setType(short type) {
 		this.type = type;
+	}
+	
+	@Column(name = "status")
+	public short getStatus() {
+		return status;
+	}
+
+	public void setStatus(short status) {
+		this.status = status;
 	}
 
 	@javax.persistence.ManyToOne(fetch = FetchType.LAZY)
@@ -126,16 +126,7 @@ public class AdvanceReceiptPO implements java.io.Serializable {
 	public void setCollecterName(String collecterName) {
 		this.collecterName = collecterName;
 	}
-
-	@Column(name = "confirmerName")
-	public String getConfirmerName() {
-		return confirmerName;
-	}
-
-	public void setConfirmerName(String confirmerName) {
-		this.confirmerName = confirmerName;
-	}
-
+	
 	@Column(name="collectTime")
 	public Timestamp getCollectTime(){
 		return collectTime;
@@ -144,7 +135,7 @@ public class AdvanceReceiptPO implements java.io.Serializable {
 	public void setCollectTime(Timestamp collectTime){
 		this.collectTime = collectTime;
 	}
-
+	
 	@javax.persistence.ManyToOne(fetch = FetchType.LAZY)
 	@javax.persistence.JoinColumn(name = "cfuid", referencedColumnName = "uid")
 	public UserPO getConfirmer(){
@@ -153,6 +144,15 @@ public class AdvanceReceiptPO implements java.io.Serializable {
 
 	public void setConfirmer(UserPO confirmer){
 		this.confirmer = confirmer;
+	}
+
+	@Column(name = "confirmerName")
+	public String getConfirmerName() {
+		return confirmerName;
+	}
+
+	public void setConfirmerName(String confirmerName) {
+		this.confirmerName = confirmerName;
 	}
 
 	@Column(name="confirmTime")

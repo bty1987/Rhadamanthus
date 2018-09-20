@@ -1,26 +1,37 @@
 $(function () {
 
     var Signing = {
-        emergeWidget: function (titleName, main, i, remove, css) {
-            var $brink = $('<div></div>');
+        emergeWidget: function (titleName, main, i, css, flag, content) {
+            var $brink = $('<div id="'+main+'Div"></div>');
             var $box = $('<div class="widget-box transparent"></div>');
 
-            if (css) $brink.attr('class', css);
+            if (css) $brink.addClass(css);
             else $brink.attr('class', "col-xs-12 col-sm-6");
 
             var $header = $('<div class="widget-header widget-header-flat"></div>');
             var $body = $('<div class="widget-body"></div>');
 
             var $lighter = $('<h4 class="lighter"><i class="' + i + '">   ' + titleName + '</i></h4>');
-            var $toolbar = $('<div class="widget-toolbar"></div>');
+           
+            var $main = $('<div class="widget-main padding-4"></div>').append();
 
-            var $btnClose = $('<a href="#" data-action="close" data-rel="tooltip" data-original-title="不再显示"></a>').append($('<i class="icon-remove"></i>')).css({'margin-right': '5px'});
-
-            var $main = $('<div class="widget-main padding-4"></div>').append($('<div id="' + main + '"></div>'));
-
-            $brink.append($box.append($header.append($lighter).append($toolbar.append($btnClose))).append($body.append($main)));
+            if (flag){
+                $main.append(Signing.emergeAmount(content));
+            }else{
+                $main.append($('<div id="' + main + '"></div>'));
+            }
+            $brink.append($box.append($header.append($lighter)).append($body.append($main)));
 
             return $brink;
+        },
+        emergeAmount: function (content) {
+            var $cont = $('<div></div>');
+            $.each(content, function (i, v) {
+                var $piece = $('<div class="amount-font" id="' + i + '"></div>').appendTo($cont);
+                $('<span class="col-sm-12">本月' + v + '</span>').appendTo($piece);
+                $('<b class="amount-b"></b>').appendTo($piece);
+            });
+            return $cont;
         },
         getNoticeDOM: function (notice) {
             var $wrap = $('<div class="alert alert-info clearfix" style="padding: 1px 12px;"></div>');
@@ -53,7 +64,7 @@ $(function () {
 
             $('<span class="label arrowed-in pull-right" style="line-height: 17px;">' + priorityText + '</span>').addClass(priorityStyle).appendTo($title);
             var $contents = $('<div class="col-xs-12"><div style="text-overflow: ellipsis;white-space: nowrap;overflow: hidden;margin-right:50px;">'
-                + notice.contentsText + '</div><abbr title="' + notice.contentsText + '"></abbr></div>');
+                + notice.contents + '</div><abbr title="' + notice.contents + '"></abbr></div>');
             var $bottomInfo = $('<small><div class="pull-right"><span><i class="icon-time bigger-110"></i>&nbsp;'
                 + notice.startTime + ' 至 ' + notice.endTime + '</span>&nbsp;&nbsp;<span><i class="icon-user bigger-110"></i>&nbsp;'
                 + notice.creater.userName + '</span>&nbsp;&nbsp;</div></small>');
@@ -66,50 +77,37 @@ $(function () {
             return $wrap;
         },
         loadNotices: function () {
-            var img = new Image();
-            img.src = params.watermark;
-            url = 'url("' + img.src + '")';
-            $(".page-content").css('background-size', '300px').css('background-image', url).css('bottom', '0');
-
-            var options = {
-                "paging.rows": 5,
-                "paging.page": 1,
-                "notice.type": 1
-            };
-
-            com.post(api.information.pageNoticeForSeenByType, options, function (res) {
+            com._post_(api.home.library, $.extend({}, {"noticeType": 1, "api": "information.notice.getNotice"}, Signing.noticeOptions), function (e) {
+                console.log(e)
+                if(e == "null" || e == null){
+                    com.post(api.information.pageNoticeForSeenByType, {"paging.rows": 5, "paging.page": 1, "notice.type": 1}, function (data) {
+                        e = JSON.stringify(data.paging.data);
+                        //com._post_(api.home.library, $.extend({}, {"noticeType": 1, "api": "information.notice.setNotice", "ntoiceResult": JSON.stringify(data)}, Signing.noticeOptions));
+                    }, null, false)
+                }
+                
+                e = JSON.parse(e);
                 $("#noticeList").empty();
-                $.each(res.paging.data, function (i, v) {
-                    Signing.getNoticeDOM(v).appendTo($("#noticeList"));
+                $.each(e, function(i, v){
+                	Signing.getNoticeDOM(v).appendTo($("#noticeList"));
                 });
             });
         },
         loadActivities: function () {
-            var options = {
-                "paging.rows": 5,
-                "paging.page": 1,
-                "notice.type": 2
-            };
-            com.post(api.information.pageNoticeForSeenByType, options, function (res) {
+            com._post_(api.home.library, $.extend({}, {"noticeType": 2, "api": "information.notice.getNotice"}, Signing.noticeOptions), function (e) {
+
+            	if(e == "null"|| e == null){
+                    com.post(api.information.pageNoticeForSeenByType, {"paging.rows": 5, "paging.page": 1, "notice.type": 2}, function (data) {
+                        e = JSON.stringify(data.paging.data);
+                        //com._post_(api.home.library, $.extend({}, {"noticeType": 2, "api": "information.notice.setNotice", "ntoiceResult": JSON.stringify(data)}, Signing.noticeOptions));
+                    }, null, false)
+                }
+
+                e = JSON.parse(e);
                 $("#activityList").empty();
-                $.each(res.paging.data, function (i, v) {
+                $.each(e, function (i, v) {
                     Signing.getNoticeDOM(v).appendTo($("#activityList"));
                 });
-            });
-        },
-        loadMessageCount: function () {
-            com.post(api.information.countMessage, {}, function (res) {
-                if (res.messageCount == 0) {
-                    $("#messageCount").remove();
-                } else {
-                    if ($("#messageCount").length == 0) {
-                        $("#messageBtn").append("<span id='messageCount' class='badge badge-pink'>" + res.messageCount + "</span>");
-                    } else {
-                        $("#messageCount").text(res.messageCount);
-                    }
-                }
-            }, function (res) {
-                console.log("get message count fail...");
             });
         },
         getZF: function (num) {     //转换日期加0
@@ -127,7 +125,7 @@ $(function () {
                 oMin = oDate.getMinutes(),
                 oSen = oDate.getSeconds(),
                 oTime = oYear + '-' + Signing.getZF(oMonth) + '-' + Signing.getZF(oDay) + ' ' + Signing.getZF(oHour) + ':' + Signing.getZF(oMin) + ':' + Signing.getZF(oSen); //最后拼接时间
-            return oTime;
+        	return oTime;
         },
         convert: function (data, temp, count) {   //数据逻辑转换
             for (var i = 0; i < count; i++) {
@@ -148,18 +146,433 @@ $(function () {
         },
         toDecimalPlaces: function (num) {
             return (num || 0).toString().replace(/([0-9]+\.[0-9]{2})[0-9]*/g, "$1");
+        },
+        /**
+        * 配置设计
+        */
+        deploy_amount_ds: function(){
+            $("#customize").append(Signing.emergeWidget('数据统计', 'amount_ds', 'icon-twitter', 'col-sm-6', true, {'billingAmount': '设计师签单额', 'billingCreate': '设计师量尺数', 'billingNumber': '设计师签单数'}));
+
+            var contractTotalAmount = {api: "decoration.index.contractTotalAmount"};
+            com._post_(api.home.library, $.extend({}, contractTotalAmount, Signing.options), function (e) {
+                $("#billingAmount").find("b").html(Signing.toThousands(eval("(" + e + ")").aggregations["1"].value));
+            }, function (ex) {
+                console.log(ex)
+            });
+
+            var createTotalNumber = {api: "decoration.index.createTotalNumber"};
+            com._post_(api.home.library, $.extend({}, createTotalNumber, Signing.options), function (e) {
+                $("#billingCreate").find("b").html(Signing.toThousands(eval("(" + e + ")").aggregations["1"].value));
+            }, function (ex) {
+                console.log(ex);
+            });
+
+            var contractTotalNumber = {api: "decoration.index.contractTotalNumber"};
+            com._post_(api.home.library, $.extend({}, contractTotalNumber, Signing.options), function (e) {
+                $("#billingNumber").find("b").html(Signing.toThousands(eval("(" + e + ")").aggregations["1"].value));
+            }, function (ex) {
+                console.log(ex);
+            });
+        },
+        deploy_ranking_ds: function(){
+            $("#customize").append(Signing.emergeWidget('设计师业绩TOP10', 'designerTotal', 'icon-signal', 'col-sm-3 amount-col'));
+
+            var designerAmount = {api: "decoration.index.amount"};
+            com._post_(api.home.library, $.extend({}, designerAmount, Signing.options), function (e) {
+                var data = [];
+                $.each(eval("(" + e + ")").aggregations['2'].buckets, function (i, v) {
+                    data.push({"designerName": v.key, "designerAmount": Signing.toDecimalPlaces(v["1"].value)});
+                });
+
+                var $ul = $('<ul class="list-unstyled list-striped top-table amount-li"></ul>');
+                $.each(data, function (i, e) {
+                    if (i < 3){
+                        var $li = $('<li><i class="icon-trophy orange"></i>' + e['designerName'] + '<div>' + e['designerAmount'] + '</div></li>');
+                    }else{
+                        var $li = $('<li><span style="width: 35.5px;"></span>' + e['designerName'] + '<div>' + e['designerAmount'] + '</div></li>');
+                    }
+                    $li.appendTo($ul);
+                });
+                $("#designerTotal").append($ul);
+
+            }, function (ex) {
+                console.log(ex);
+            });
+        },
+        deploy_ranking_dept_ds: function(){
+            $("#customize").append(Signing.emergeWidget('设计师部门业绩TOP10', 'designerDept', 'icon-signal', 'col-sm-3 amount-col'));
+
+            var designerDeptAmount = {api: "decoration.index.deptAmount"};
+            com._post_(api.home.library, $.extend({}, designerDeptAmount, Signing.options), function (e) {
+                var data = [];
+                $.each(eval("(" + e + ")").aggregations['2'].buckets, function (i, v) {
+                    data.push({"deptName": v.key, "deptAmount": Signing.toDecimalPlaces(v["1"].value)});
+                });
+
+                var $ul = $('<ul class="list-unstyled list-striped top-table amount-li"></ul>');
+                $.each(data, function (i, e) {
+                    if (i < 3) {
+                        var $li = $('<li><i class="icon-trophy orange"></i>' + e['deptName'] + '<div>' + e['deptAmount'] + '</div></li>');
+                    }else{
+                        var $li = $('<li><span style="width: 35.5px;"></span>' + e['deptName'] + '<div>' + e['deptAmount'] + '</div></li>');
+                    }
+                    $li.appendTo($ul);
+                });
+                $("#designerDept").append($ul);
+
+            }, function (ex) {
+                console.log(ex);
+            });
+        },
+        deploy_trend_ds: function () {
+            $("#customize").append(Signing.emergeWidget('设计师天级量尺量&签单量', 'designerSigning', 'icon-signal', 'col-sm-6'));
+
+            var createNumber = {api: "decoration.index.createNumber"};
+            com._post_(api.home.library, $.extend({}, createNumber, Signing.options), function (o) {
+                var dataCreate = [];
+                var userId = [];
+                $.each(eval("(" + o + ")").aggregations['2'].buckets, function (i, v) {
+                    userId.push(v.key);
+                    $.each(v['3'].buckets, function (index, value) {
+                        var temp = {};
+                        temp['times'] = Signing.convertDate(v.key);
+                        temp['量尺'] = value.doc_count;
+                        temp['签单'] = 0;
+                        dataCreate.push(temp)
+                    })
+                });
+
+                var contractNumber = {api: "decoration.index.contractNumber"};
+                com._post_(api.home.library, $.extend({}, contractNumber, Signing.options), function (e) {
+                    var dataSign = [];
+                    $.each(eval("(" + e + ")").aggregations['2'].buckets, function (i, v) {
+                        var _data = {};
+                        _data['times'] = Signing.convertDate(v.key);
+                        $.each(v['3'].buckets, function (index, value) {
+                            _data['量尺'] = 0;
+                            _data['签单'] = value.doc_count;
+                        });
+                        dataSign.push(_data)
+                    });
+
+                    var data = dataSign.concat(dataCreate);
+                    var temp = [];
+                    for (var i in data) {
+                        if (data[i]['times'] != undefined) {
+                            var key = data[i]['times'];
+                            if (temp[key]) {
+                                temp[key]['量尺'] += data[i]['量尺'];
+                                temp[key]['签单'] += data[i]['签单'];
+                                temp[key]['times'] = data[i]['times'];
+                            } else {
+                                temp[key] = {};
+                                temp[key]['量尺'] = data[i]['量尺'];
+                                temp[key]['签单'] = data[i]['签单'];
+                                temp[key]['times'] = data[i]['times'];
+                            }
+                        }
+                    }
+                    var _data = [];
+                    for(var i in temp){
+                        _data.push(temp[i])
+                    }
+
+                    var ds = new DataSet();
+                    var dv = ds.createView().source(_data);
+                    dv.transform({
+                        type: 'fold',
+                        fields: ['量尺', '签单'], // 展开字段集
+                        key: 'dsName', // key字段
+                        value: 'temperature' // value字段
+                    });
+                    var chart = new G2.Chart({
+                        container: 'designerSigning',
+                        forceFit: true,
+                        height: 250
+                    });
+                    chart.source(dv, {
+                        month: {
+                            range: [0, 1]
+                        }
+                    });
+                    chart.tooltip({
+                        crosshairs: {
+                            type: 'line'
+                        }
+                    });
+                    chart.axis('temperature', {
+                        label: {
+                            formatter: function (val) {
+                                return val;
+                            }
+                        }
+                    });
+                    chart.line().position('times*temperature').color('dsName').shape('smooth');
+                    chart.point().position('times*temperature').color('dsName').size(4).shape('circle').style({
+                        stroke: '#fff',
+                        lineWidth: 1
+                    });
+                    chart.render();
+                }, function (ex) {
+                    console.log(ex);
+                });
+
+            }, function (ex) {
+                console.log(ex);
+            });
+        },
+        /**
+         * 配置业务
+         */
+        deploy_amount_sm: function () {
+            $("#customize").append(Signing.emergeWidget('数据统计', 'amount_sm', 'icon-twitter', 'col-sm-6', true, {'salesmanAmount': '业务员签单额', 'salesmanCreate': '业务员量尺数', 'salesmanNumber': '业务员签单数'}));
+
+            var contractTotalAmount = {api: "decoration.index.contractTotalAmount", "salesman": true};
+            com._post_(api.home.library, $.extend({}, contractTotalAmount, Signing.options), function (e) {
+                $("#salesmanAmount").find("b").html(Signing.toThousands(eval("(" + e + ")").aggregations["1"].value));
+            }, function (ex) {
+                console.log(ex)
+            });
+
+            var createTotalNumber = {api: "decoration.index.createTotalNumber", "salesman": true};
+            com._post_(api.home.library, $.extend({}, createTotalNumber, Signing.options), function (e) {
+                $("#salesmanCreate").find("b").html(Signing.toThousands(eval("(" + e + ")").aggregations["1"].value));
+            }, function (ex) {
+                console.log(ex);
+            });
+
+            var contractTotalNumber = {api: "decoration.index.contractTotalNumber", "salesman": true};
+            com._post_(api.home.library, $.extend({}, contractTotalNumber, Signing.options), function (e) {
+                $("#salesmanNumber").find("b").html(Signing.toThousands(eval("(" + e + ")").aggregations["1"].value));
+            }, function (ex) {
+                console.log(ex);
+            });
+        },
+        deploy_ranking_sm: function () {
+            $("#customize").append(Signing.emergeWidget('业务员业绩TOP10', 'salesmanTotal', 'icon-signal', 'col-sm-3 amount-col'));
+
+            var designerAmount = {api: "decoration.index.amount", "salesman": true};
+            com._post_(api.home.library, $.extend({}, designerAmount, Signing.options), function (e) {
+                var data = [];
+                $.each(eval("(" + e + ")").aggregations['2'].buckets, function (i, v) {
+                    data.push({"salesmanName": v.key, "salesmanAmount": Signing.toDecimalPlaces(v["1"].value)});
+                });
+
+                var $ul = $('<ul class="list-unstyled list-striped top-table amount-li"></ul>');
+                $.each(data, function (i, e) {
+                    if (i < 3) {
+                        var $li = $('<li><i class="icon-trophy orange"></i>' + e['salesmanName'] + '<div>' + e['salesmanAmount'] + '</div></li>');
+                    } else {
+                        var $li = $('<li><span style="width: 35.5px;"></span>' + e['salesmanName'] + '<div>' + e['salesmanAmount'] + '</div></li>');
+                    }
+                    $li.appendTo($ul);
+                });
+                $("#salesmanTotal").append($ul);
+
+            }, function (ex) {
+                console.log(ex);
+            });
+        },
+        deploy_ranking_dept_sm: function () {
+            $("#customize").append(Signing.emergeWidget('业务员部门业绩TOP10', 'salesmanDept', 'icon-signal', 'col-sm-3 amount-col'));
+
+            var designerDeptAmount = {api: "decoration.index.deptAmount", "salesman": true};
+            com._post_(api.home.library, $.extend({}, designerDeptAmount, Signing.options), function (e) {
+                var data = [];
+                $.each(eval("(" + e + ")").aggregations['2'].buckets, function (i, v) {
+                    data.push({"deptName": v.key, "deptAmount": Signing.toDecimalPlaces(v["1"].value)});
+                });
+
+                var $ul = $('<ul class="list-unstyled list-striped top-table amount-li"></ul>');
+                $.each(data, function (i, e) {
+                    if (i < 3) {
+                        var $li = $('<li><i class="icon-trophy orange"></i>' + e['deptName'] + '<div>' + e['deptAmount'] + '</div></li>');
+                    } else {
+                        var $li = $('<li><span style="width: 35.5px;"></span>' + e['deptName'] + '<div>' + e['deptAmount'] + '</div></li>');
+                    }
+                    $li.appendTo($ul);
+                });
+                $("#salesmanDept").append($ul);
+
+            }, function (ex) {
+                console.log(ex);
+            });
+        },
+        deploy_trend_sm: function () {
+            $("#customize").append(Signing.emergeWidget('业务员天级量尺量&签单量', 'salesmanSigning', 'icon-signal', 'col-sm-6'));
+
+            var createNumber = {api: "decoration.index.createNumber", "salesman": true};
+            com._post_(api.home.library, $.extend({}, createNumber, Signing.options), function (o) {
+                var dataCreate = [];
+                var userId = [];
+                $.each(eval("(" + o + ")").aggregations['2'].buckets, function (i, v) {
+                    userId.push(v.key);
+                    $.each(v['3'].buckets, function (index, value) {
+                        var temp = {};
+                        temp['times'] = Signing.convertDate(v.key);
+                        temp['量尺'] = value.doc_count;
+                        temp['签单'] = 0;
+                        dataCreate.push(temp)
+                    });
+                });
+
+                var contractNumber = {api: "decoration.index.contractNumber", "salesman": true};
+                com._post_(api.home.library, $.extend({}, contractNumber, Signing.options), function (e) {
+                    var dataSign = [];
+                    $.each(eval("(" + e + ")").aggregations['2'].buckets, function (i, v) {
+                        var _data = {};
+                        _data['times'] = Signing.convertDate(v.key);
+                        $.each(v['3'].buckets, function (index, value) {
+                            _data['量尺'] = 0;
+                            _data['签单'] = value.doc_count;
+                        });
+                        dataSign.push(_data);
+                    });
+
+                    var data = dataSign.concat(dataCreate);
+                    var temp = [];
+                    for (var i in data) {
+                        if (data[i]['times'] != undefined) {
+                            var key = data[i]['times'];
+                            if (temp[key]) {
+                                temp[key]['量尺'] += data[i]['量尺'];
+                                temp[key]['签单'] += data[i]['签单'];
+                                temp[key]['times'] = data[i]['times'];
+                            } else {
+                                temp[key] = {};
+                                temp[key]['量尺'] = data[i]['量尺'];
+                                temp[key]['签单'] = data[i]['签单'];
+                                temp[key]['times'] = data[i]['times'];
+                            }
+                        }
+                    }
+                    var _data = [];
+                    for (var i in temp) {
+                        _data.push(temp[i]);
+                    }
+
+                    var ds = new DataSet();
+                    var dv = ds.createView().source(_data);
+                    dv.transform({
+                        type: 'fold',
+                        fields: ['量尺', '签单'], // 展开字段集
+                        key: 'dsName', // key字段
+                        value: 'temperature' // value字段
+                    });
+                    var chart = new G2.Chart({
+                        container: 'salesmanSigning',
+                        forceFit: true,
+                        height: 250
+                    });
+                    chart.source(dv, {
+                        month: {
+                            range: [0, 1]
+                        }
+                    });
+                    chart.tooltip({
+                        crosshairs: {
+                            type: 'line'
+                        }
+                    });
+                    chart.axis('temperature', {
+                        label: {
+                            formatter: function (val) {
+                                return val;
+                            }
+                        }
+                    });
+                    chart.line().position('times*temperature').color('dsName').shape('smooth');
+                    chart.point().position('times*temperature').color('dsName').size(4).shape('circle').style({
+                        stroke: '#fff',
+                        lineWidth: 1
+                    });
+                    chart.render();
+                }, function (ex) {
+                    console.log(ex);
+                });
+
+            }, function (ex) {
+                console.log(ex);
+            });
+        },
+        setCookie: function(name, value) {
+            var val = com.getCookie(name);
+            if (val != null) {
+                document.cookie = name + "=" + val + value + ";";
+            } else {
+                document.cookie = name + "=" + value + ";";
+            }
+        },
+        baseClick: function(){
+            var $input = $('input[type="checkbox"]','#ace-settings-box');
+            $.each($input, function (i, v) {
+                var $v = $(v);
+                $v.click(function () {
+                    var id = $v.attr('key') + "Div";
+
+                    if ($v.is(':checked')) {
+                        var method = $v.attr('id');
+                        Signing.call("Signing.deploy_"+ method);
+                        Signing.storageCookie();
+                    } else {
+                        $("#" + id).remove();
+                        com.deleteCookie("userDisplay");
+                        Signing.storageCookie();
+                    }
+                });
+            });
+        },
+        call: function(functionName){
+            eval(functionName+"()");
+        },
+        transferDeploy: function() {
+            if(com.getCookie("userDisplay") == null){ return; }
+            var list = com.getCookie("userDisplay").split(",");
+
+            $.each(list, function (i, e) {
+                $.each($('input[type="checkbox"]','#ace-settings-box'), function (i, v) {
+                    if (e == $(v).val()){
+                        $(v).attr('checked',"checked");
+                    }
+                })
+            });
+
+            $.each($('input[type="checkbox"]','#ace-settings-box'), function (i, b) {
+                var $b = $(b);
+                if ($b.is(':checked')) {
+                    var method = $b.attr('id');
+                    Signing.call("Signing.deploy_" + method);
+                }
+            })
+        },
+        storageCookie: function() {
+            $.each($('input[type="checkbox"]','#ace-settings-box'), function (i, k) {
+                var $k = $(k);
+                if ($k.is(':checked')) {
+                    Signing.setCookie("userDisplay", $k.val()+",")
+                }
+            });
+        },
+        options: {
+            "user": params.userInfo.user.uid,
+            "companyName": params.company.name,
+            "mc": true,
+            "es": true
+        },
+        noticeOptions:{
+        	"deptId": params.userInfo.user.dept.deptId,
+            "companyName": params.company.name,
+            "mc": true
         }
     };
 
-
-    $("#homePage").find(".pricing-span-body").append(Signing.emergeWidget('设计师天级量尺量&签单量', 'designerSigning', 'icon-signal', '', 'col-sm-12'));
-    $("#amount").append(Signing.emergeWidget('设计师业绩TOP10', 'designerTotal', 'icon-signal', '', 'col-sm-4 amount-col'));
-    $("#amount").append(Signing.emergeWidget('设计师部门业绩TOP10', 'designerDept', 'icon-signal', '', 'col-sm-4 amount-col'));
-    $("#amount").append(Signing.emergeWidget('设计师分区业绩TOP10', 'designerRegion', 'icon-signal', '', 'col-sm-4 amount-col'));
+    Signing.transferDeploy();
+    Signing.baseClick();
 
     Signing.loadNotices();
     Signing.loadActivities();
-    Signing.loadMessageCount();
+
+    loadMessageCount();
 
     com.showImg($("#personalPic"), params.userInfo.user.userPhoto, 180, 180, '');
     com.showImg($("#userImg"), params.userInfo.user.userPhoto, 30, 30, '');
@@ -185,6 +598,13 @@ $(function () {
         com.switchPage(api.index.moreNoticesIndex.url);
         $('.breadcrumb .nav2').hide();
         $('.breadcrumb .nav3').hide();
+    });
+
+    $('a[name="updateNotices"]').click(function () {
+        Signing.loadNotices();
+    });
+    $('a[name="updateActivities"]').click(function () {
+        Signing.loadActivities();
     });
 
     var date = new Date();
@@ -405,179 +825,20 @@ $(function () {
     $('#calendarTab').click(function () {
         setTimeout("$('#calendar').fullCalendar('rerenderEvents')", 500)
     });
-
-    var options = {
-        "user": params.userInfo.user.uid,
-        "mc": true,
-        "es": true
-    };
-    var contractTotalAmount = {api: "decoration.index.contractTotalAmount"};
-    com._post_(api.home.library, $.extend({}, contractTotalAmount, options), function (e) {
-        $("#billingAmount").find("b").html(Signing.toThousands(eval("(" + e + ")").aggregations["1"].value));
-    }, function (ex) {
-        console.log(ex)
-    });
-
-    var createTotalNumber = {api: "decoration.index.createTotalNumber"};
-    com._post_(api.home.library, $.extend({}, createTotalNumber, options), function (e) {
-        $("#billingCreate").find("b").html(Signing.toThousands(eval("(" + e + ")").aggregations["1"].value));
-    }, function (ex) {
-        console.log(ex);
-    });
-
-    var contractTotalNumber = {api: "decoration.index.contractTotalNumber"};
-    com._post_(api.home.library, $.extend({}, contractTotalNumber, options), function (e) {
-        $("#billingNumber").find("b").html(Signing.toThousands(eval("(" + e + ")").aggregations["1"].value));
-    }, function (ex) {
-        console.log(ex);
-    });
-
-    var designerRegionAmount = {api: "decoration.index.designerRegionAmount"};
-    com._post_(api.home.library, $.extend({}, designerRegionAmount, options), function (e) {
-        var data = [];
-        $.each(eval("(" + e + ")").aggregations['2'].buckets, function (i, v) {
-            data.push({"regionName": v.key, "regionAmount": Signing.toDecimalPlaces(v["1"].value)});
-        });
-
-        var $ul = $('<ul class="list-unstyled list-striped top-table amount-li"></ul>');
-        $.each(data, function (i, e) {
-            var $li = $('<li><i class="icon-trophy orange"></i>' + e['regionName'] + '<div>' + e['regionAmount'] + '</div></li>');
-            $li.appendTo($ul);
-        });
-        $("#designerRegion").append($ul);
-    }, function (ex) {
-        console.log(ex);
-    });
-
-    var designerDeptAmount = {api: "decoration.index.designerDeptAmount"};
-    com._post_(api.home.library, $.extend({}, designerDeptAmount, options), function (e) {
-        var data = [];
-        $.each(eval("(" + e + ")").aggregations['2'].buckets, function (i, v) {
-            data.push({"deptName": v.key, "deptAmount": Signing.toDecimalPlaces(v["1"].value)});
-        });
-
-        var $ul = $('<ul class="list-unstyled list-striped top-table amount-li"></ul>');
-        $.each(data, function (i, e) {
-            var $li = $('<li><i class="icon-trophy orange"></i>' + e['deptName'] + '<div>' + e['deptAmount'] + '</div></li>');
-            $li.appendTo($ul);
-        });
-        $("#designerDept").append($ul);
-
-    }, function (ex) {
-        console.log(ex);
-    });
-
-    var designerAmount = {api: "decoration.index.designerAmount"};
-    com._post_(api.home.library, $.extend({}, designerAmount, options), function (e) {
-        var data = [];
-        $.each(eval("(" + e + ")").aggregations['2'].buckets, function (i, v) {
-            data.push({"designerName": v.key, "designerAmount": Signing.toDecimalPlaces(v["1"].value)});
-        });
-
-        var $ul = $('<ul class="list-unstyled list-striped top-table amount-li"></ul>');
-        $.each(data, function (i, e) {
-            var $li = $('<li><i class="icon-trophy orange"></i>' + e['designerName'] + '<div>' + e['designerAmount'] + '</div></li>');
-            $li.appendTo($ul);
-        });
-        $("#designerTotal").append($ul);
-
-    }, function (ex) {
-        console.log(ex);
-    });
-
-    var createNumber = {api: "decoration.index.createNumber"};
-    com._post_(api.home.library, $.extend({}, createNumber, options), function (o) {
-        var dataCreate = [];
-        var userId = [];
-        $.each(eval("(" + o + ")").aggregations['2'].buckets, function (i, v) {
-            userId.push(v.key);
-            $.each(v['3'].buckets, function (index, value) {
-                var temp = {};
-                temp['times'] = Signing.convertDate(v.key);
-                temp['量尺'] = value.doc_count;
-                temp['签单'] = 0;
-                dataCreate.push(temp)
-            })
-        });
-        
-        var contractNumber = {api: "decoration.index.contractNumber"};
-        com._post_(api.home.library, $.extend({}, contractNumber, options), function (e) {
-            var dataSign = [];
-            $.each(eval("(" + e + ")").aggregations['2'].buckets, function (i, v) {
-                var _data = {};
-                _data['times'] = Signing.convertDate(v.key);
-                $.each(v['3'].buckets, function (index, value) {
-                    _data['量尺'] = 0;
-                    _data['签单'] = value.doc_count;
-                });
-                dataSign.push(_data)
-            });
-
-            var data = dataSign.concat(dataCreate);
-            var temp = [];
-            for (var i in data) {
-                if (data[i]['times'] != undefined) {
-                    var key = data[i]['times'];
-                    if (temp[key]) {
-                        temp[key]['量尺'] += data[i]['量尺'];
-                        temp[key]['签单'] += data[i]['签单'];
-                        temp[key]['times'] = data[i]['times'];
-                    } else {
-                        temp[key] = {};
-                        temp[key]['量尺'] = data[i]['量尺'];
-                        temp[key]['签单'] = data[i]['签单'];
-                        temp[key]['times'] = data[i]['times'];
-                    }
-                }
-            }
-            var _data = [];
-            for(var i in temp){
-                _data.push(temp[i])
-            }
-
-            var ds = new DataSet();
-            var dv = ds.createView().source(_data);
-            dv.transform({
-                type: 'fold',
-                fields: ['量尺', '签单'], // 展开字段集
-                key: 'dsName', // key字段
-                value: 'temperature' // value字段
-            });
-            var chart = new G2.Chart({
-                container: 'designerSigning',
-                forceFit: true,
-                height: 250
-            });
-            chart.source(dv, {
-                month: {
-                    range: [0, 1]
-                }
-            });
-            chart.tooltip({
-                crosshairs: {
-                    type: 'line'
-                }
-            });
-            chart.axis('temperature', {
-                label: {
-                    formatter: function (val) {
-                        return val;
-                    }
-                }
-            });
-            chart.line().position('times*temperature').color('dsName').shape('smooth');
-            chart.point().position('times*temperature').color('dsName').size(4).shape('circle').style({
-                stroke: '#fff',
-                lineWidth: 1
-            });
-            chart.render();
-        }, function (ex) {
-            console.log(ex);
-        });
-
-    }, function (ex) {
-        console.log(ex);
-    });
-
-
 });
+
+function loadMessageCount() {
+    com.post(api.information.countMessage, {}, function (res) {
+        if (res.messageCount == 0) {
+            $("#messageCount").remove();
+        } else {
+            if ($("#messageCount").length == 0) {
+                $("#messageBtn").append("<span id='messageCount' class='badge badge-pink'>" + res.messageCount + "</span>");
+            } else {
+                $("#messageCount").text(res.messageCount);
+            }
+        }
+    }, function (res) {
+        console.log("get message count fail...");
+    });
+}

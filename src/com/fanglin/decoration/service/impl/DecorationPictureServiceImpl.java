@@ -26,74 +26,89 @@ import com.fanglin.decoration.po.DecorationPicturePO;
 import com.fanglin.decoration.service.DecorationPictureService;
 import com.fanglin.decoration.vo.DecorationPictureVO;
 import com.fanglin.personel.dao.UserDao;
+import com.fanglin.system.dao.SystemConfigDao;
+import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 
 @Service("orderDesignPictureService")
-@Transactional(readOnly=true)
+@Transactional(readOnly = true)
 public class DecorationPictureServiceImpl implements DecorationPictureService {
 
 	@Autowired
+	private SystemConfigDao systemConfigDao;
+
+	@Autowired
 	private DecorationPictureDao decorationPictureDao;
-	
+
 	@Autowired
 	private UserDao userDao;
-	
+
 	@Override
-	public List<DecorationPictureVO> queryDecorationPictureByOrderId(DecorationPictureVO decorationPictureVO){
-		
+	public List<DecorationPictureVO> queryDecorationPictureByOrderId(DecorationPictureVO decorationPictureVO) {
+
 		List<DecorationPicturePO> decorationPicturePOs = decorationPictureDao.queryDecorationPictureByOrderId(decorationPictureVO.getOrderId());
 		List<DecorationPictureVO> decorationPictureVOs = new ArrayList<DecorationPictureVO>();
-		
-		for(DecorationPicturePO decorationPicturePO: decorationPicturePOs){
+
+		for (DecorationPicturePO decorationPicturePO : decorationPicturePOs) {
 			DecorationPictureVO _decorationPictureVO = new DecorationPictureVO();
-			
-			BeanUtil.copyProperties(decorationPicturePO, _decorationPictureVO, Arrays.asList("house","customer","designer","salesman","supervisor","version","createUser","quoter","escorter"));
-			
+
+			BeanUtil.copyProperties(decorationPicturePO, _decorationPictureVO, Arrays.asList("house", "customer", "designer", "salesman", "supervisor", "version", "createUser", "quoter", "escorter"));
+
 			_decorationPictureVO.setOrderId(decorationPicturePO.getOrderId());
 			_decorationPictureVO.setUserId(decorationPicturePO.getUserPO().getUserId());
-			
+
 			decorationPictureVOs.add(_decorationPictureVO);
 		}
+		
 		return decorationPictureVOs;
 	}
-	
+
 	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public int addDecorationPicture(DecorationPictureVO decorationPictureVO, String userId) throws FLException{
-		
+	@Transactional(rollbackFor = Exception.class)
+	public int addDecorationPicture(DecorationPictureVO decorationPictureVO, String userId, int company) throws FLException {
+
+		int type = decorationPictureVO.getType();
+		String orderId = decorationPictureVO.getOrderId();
+
+		SystemConfigPO decorationPictureLimit = systemConfigDao.querySystemConfig(String.format("decorationpicturelimit%d", type), company);
+
+		if (decorationPictureDao.countDecorationPicture(orderId, type) >= (decorationPictureLimit == null ? 3 : Integer.valueOf(decorationPictureLimit.getValue()))) {
+			throw new FLException(110017, "资源数已达上限");
+		}
+
 		DecorationPicturePO decorationPicturePO = new DecorationPicturePO();
-		
-		BeanUtil.copyProperties(decorationPictureVO, decorationPicturePO, Arrays.asList("house","customer","designer","salesman","supervisor","version","createUser","quoter","escorter"));
-		
+
+		BeanUtil.copyProperties(decorationPictureVO, decorationPicturePO, Arrays.asList("house", "customer", "designer", "salesman", "supervisor", "version", "createUser", "quoter", "escorter"));
+
 		String name = decorationPictureVO.getName();
 		String _name = name.split("\\.")[0];
 		String _suffix = name.split("\\.")[1];
-		
+
 		decorationPicturePO.setUserPO(userDao.queryUserByUserId(userId));
 		decorationPicturePO.setUploadTime(DateUtil.getDateToTimestamp(new Date()));
 		decorationPicturePO.setName(String.format("%s.%s", _name.substring(0, _name.length() > 8 ? 8 : _name.length()), _suffix));
 		decorationPicturePO.setStatus(DecorationPicturePO.STATUS_ENABLE_INT);
-		
+
 		decorationPictureDao.save(decorationPicturePO);
-		
+
 		decorationPictureVO.setDpId(decorationPicturePO.getDpId());
 		decorationPictureVO.setUploadTime(decorationPicturePO.getUploadTime());
-		
+
 		return 0;
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
+	@Transactional(rollbackFor = Exception.class)
 	public int deleteDecorationPicture(DecorationPictureVO decorationPictureVO) {
-		
+
 		DecorationPicturePO decorationPicturePO = decorationPictureDao.get(decorationPictureVO.getDpId());
-		
-		if(decorationPicturePO != null){
+
+		if (decorationPicturePO != null) {
 			decorationPicturePO.setStatus(DecorationPicturePO.STATUS_DISABLE_INT);
 		}
-		
+
 		return 0;
 	}
-	
+
 }

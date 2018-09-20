@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fanglin.common.dao.CountingDao;
 import com.fanglin.common.po.CountingPO;
 import com.fanglin.common.service.CountingService;
+import com.fanglin.utils.SystemConfig;
 
 @Service("countingService")
 @Transactional(readOnly = true)
@@ -28,9 +29,9 @@ public class CountingServiceImpl implements CountingService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int queryCountingByTypeDate(int type, String date){
+	public int queryCountingByTypeDate(int type, String date, int company){
 		
-		CountingPO countingPO = countingDao.queryCountingByTypeDate(type, date);
+		CountingPO countingPO = countingDao.queryCountingByTypeDate(type, date, SystemConfig.getInt("multicompany" , 0) != 0 ? company : 0);
 		
 		int nextCount = 1;
 		
@@ -45,6 +46,7 @@ public class CountingServiceImpl implements CountingService {
 			countingPO.setCount(nextCount);
 			countingPO.setDate(date);
 			countingPO.setType(type);
+			countingPO.setCompany(company);
 			
 			countingDao.save(countingPO);
 		}
@@ -56,9 +58,9 @@ public class CountingServiceImpl implements CountingService {
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public void updateCountingByTypeDate(int type, String date, int count){
+	public void updateCountingByTypeDate(int type, String date, int company, int count){
 		
-		CountingPO countingPO = countingDao.queryCountingByTypeDate(type, date);
+		CountingPO countingPO = countingDao.queryCountingByTypeDate(type, date, SystemConfig.getInt("multicompany" , 0) != 0 ? company : 0);
 		
 		if(countingPO != null){
 			countingPO.setCount(count);

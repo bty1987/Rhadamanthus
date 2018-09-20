@@ -19,6 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.communion.dao.BrandDao;
+import com.fanglin.communion.po.BrandPO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.inventory.dao.AccessoriesTypeDao;
@@ -60,6 +62,8 @@ public class GoodsServiceImpl implements GoodsService {
 	@Autowired
 	private BrandUserRightDao brandUserRightDao;
 	
+	@Autowired
+	private BrandDao brandDao;
 	
 	@Override
 	public void pageGoods(Paging paging, List<Filter> filters,	String userId, int company) throws FLException{
@@ -266,6 +270,11 @@ public class GoodsServiceImpl implements GoodsService {
 		goodsPO.setType(GoodsPO.TYPE_GOODS_INT);
 		goodsPO.setCompany(company);
 		
+		BrandPO brandPO = brandDao.get(goodsVO.getBid());
+		String brandName = brandPO.getBrandName();
+		
+		goodsPO.setBrand(brandName);
+		
 		goodsDao.save(goodsPO);
 		
 		goodsPO.getGid();
@@ -338,6 +347,11 @@ public class GoodsServiceImpl implements GoodsService {
 		goodsPO.setType(GoodsPO.TYPE_SUIT_INT);
 		goodsPO.setCompany(company);
 		
+		BrandPO brandPO = brandDao.get(goodsVO.getBid());
+		String brandName = brandPO.getBrandName();
+		
+		goodsPO.setBrand(brandName);
+		
 		goodsDao.save(goodsPO);
 		
 		goodsPO = goodsDao.get(goodsPO.getGid());
@@ -348,9 +362,9 @@ public class GoodsServiceImpl implements GoodsService {
 		
 		String brand = goodsPO.getBrand();
 		
-		GoodsPackagePO goodsPackagePO = new GoodsPackagePO(new GoodsPO(),new ColorPO(),new FormatPO());
-		
 		for (GoodsPackageVO goodsPackageVO : goodsPackageVOs) {
+			
+			GoodsPackagePO goodsPackagePO = new GoodsPackagePO(new GoodsPO(),new ColorPO(),new FormatPO());
 			
 			if(goodsPackageVO.getGoods().getGid() == null){
 				throw new FLException(260004,"商品不存在");

@@ -212,6 +212,8 @@ public class MaterialPaymentDaoImpl extends DaoImpl<MaterialPaymentPO> implement
 					}else{
 						query.add(query.getCriterion("materialReceipt.collectTime", data, op));
 					}
+				}else if("company".equals(filter.getField())){
+					query.add(query.getCriterion(filter.getField(), Integer.valueOf(filter.getData()), filter.getOp()));
 				}
 			}
 		}

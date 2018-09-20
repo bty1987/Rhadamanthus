@@ -19,12 +19,7 @@ jQuery(function($) {
 	activityItem.items.activityItems = $("#activityItems");
 	activityItem.items.type = $("#type").bindData(activityItem.activityItemType, "key", "value").change(function(){
 		var $this = $(this);
-		
-		if($this.val() == 0){
 			activityItem.items.moneyInfo.css("display", "block");
-		}else if($this.val() == 1){
-			activityItem.items.moneyInfo.css("display", "none");
-		}
 	});
 	
 	activityItem.items.activityItemName = $("#activityItemName");
@@ -117,14 +112,9 @@ jQuery(function($) {
 			"activityItem.activityName": activityItemPostData.activityName,
 			"activityItem.name": activityItem.items.activityItemName.val(),
 			"activityItem.type": activityItem.items.type.val(),
+			"activityItem.money": activityItem.items.money.val()
 		}
-		
-		if(activityItem.items.type.val() == '0'){
-			options["activityItem.money"] = activityItem.items.money.val();
-		}else{
-			options["activityItem.money"] = 0;
-		}
-		
+
 		if(activityItem.editFlag){
 			url = api.information.updateActivityItem;
 			options["activityItem.aiid"] = activityItemPostData.aiid;
@@ -150,12 +140,8 @@ jQuery(function($) {
 		activityItem.items.activityItemName.val(activityItemName);
 		activityItem.items.type.val(type);
 		
-		if(type == 0){
 			activityItem.items.moneyInfo.css("display", "block").val(money);
 			activityItem.items.money.val(money);
-		}else{
-			activityItem.items.moneyInfo.css("display", "none");
-		}
 		
 		activityItemPostData.aiid = aiId;
 		

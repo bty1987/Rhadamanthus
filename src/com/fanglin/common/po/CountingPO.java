@@ -28,6 +28,8 @@ public class CountingPO implements Serializable{
 	
 	private int type;
 	
+	private int company;
+	
 	private int count;
 
 	@Id
@@ -42,20 +44,30 @@ public class CountingPO implements Serializable{
 
 	@Id
 	@Column(name = "type")
-	public Integer getType(){
+	public int getType(){
 		return type;
 	}
 
-	public void setType(Integer type){
+	public void setType(int type){
 		this.type = type;
 	}
 
+	@Id
+	@Column(name = "company")
+	public int getCompany() {
+		return company;
+	}
+
+	public void setCompany(int company) {
+		this.company = company;
+	}
+
 	@Column(name = "count")
-	public Integer getCount(){
+	public int getCount(){
 		return count;
 	}
 
-	public void setCount(Integer count){
+	public void setCount(int count){
 		this.count = count;
 	}
 	
@@ -140,6 +152,8 @@ public class CountingPO implements Serializable{
 	public static String COLUMN_DATE_STR = "date";
 	
 	public static String COLUMN_TYPE_STR = "type";
+	
+	public static String COLUMN_COMPANY_STR = "company";
 	
 	public static String COUNTING_DATE_SILNLE_STR = "single";
 	

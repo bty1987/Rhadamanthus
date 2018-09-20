@@ -30,7 +30,7 @@ jQuery(function ($) {
     //获取采购单信息
     com.post(api.inventory.queryPurchaseByPid, {"purchase.pid": purchase.pid}, function (res) {
 
-        $('#no').text(res.purchase.no);                            //– 采购单编号
+        $('#no').text(res.purchase.no); //– 采购单号
         $('[name="date"]', '#form').val(res.purchase.createTime);  //– 创建时间
         no = res.purchase.no;
     });

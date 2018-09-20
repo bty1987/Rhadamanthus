@@ -28,6 +28,8 @@ $(function(){
 	order.drawLineModal = $("#drawLineModal");
 	order.refundContractModal = $("#refundContractModal");
 	order.customerInfoModal = $("#customerInfoModal");
+	order.drawContractModal = $("#drawContractModal");
+	order.contractBtn = $("#contractBtn");
 
 	var contract = {
 		decorationOrderId:null
@@ -236,6 +238,7 @@ $(function(){
 					var btnExtension = $('<a></a>').addClass('btn btn-minier btn-yellow').html('扩展项');
 					var btnInfo = $('<a></a>').addClass('btn btn-minier btn-success').html('信息轴');
 					var btnCal = $('<a></a>').addClass('btn btn-minier btn-warning').html('决算');
+					var btnService = $('<a></a>').addClass('btn btn-minier btn-purple').html('服务');
 					var btnActivity = $('<a></a>').addClass('btn btn-minier btn-inverse').html('活动物品');
 					var btnDelete = $('<a></a>').addClass('btn btn-minier btn-danger').html('废单');
 					var btnSign = $('<a></a>').addClass('btn btn-minier btn-pink').html('签订合同');
@@ -346,6 +349,10 @@ $(function(){
 						viewDecorationFinalSettlement(v.orderId, v.type,v.status);
 					});
 
+					btnService.click(function(){
+						viewDecorationService(v.orderId);
+					});
+
 					btnActivity.click(function(){
 						viewDecorationActivityItem(v.orderId);
 					});
@@ -355,7 +362,8 @@ $(function(){
 					});
 
 					btnSign.click(function(){
-						signOrder(v.orderId,v.customer.cid,v.orderTotalPrice);
+						signOrder(v.orderId,v.customer.cid,v.orderTotalPrice,v.notSalesmanRate,v.couponCut,v.thingCut);
+
 					});
 
 					btnTerminal.click(function(){
@@ -396,7 +404,7 @@ $(function(){
 								}
 								break;
 							case "extension"://扩展项
-								if([1,3,2,7].indexOf(v.status) != -1){
+								if([0,1,3,2,7].indexOf(v.status) != -1){
 									$divBtnWrap.append(btnExtension);
 								}
 								break;
@@ -407,6 +415,9 @@ $(function(){
 								if([2,6,7].indexOf(v.status) != -1){
 									$divBtnWrap.append(btnCal);
 								}
+								break;
+							case "services"://服务
+									$divBtnWrap.append(btnService);
 								break;
 							case "activity"://活动物品
 								$divBtnWrap.append(btnActivity);
@@ -527,6 +538,12 @@ $(function(){
 			params.historyPage = api.index.decorationIndex.url;
 			com.switchPage(api.index.decorationFinalSettlementIndex.url);
 		}
+		//服务
+		function viewDecorationService(decorationOrderId){
+			params.decorationOrderId = decorationOrderId;
+			params.historyPage = api.index.decorationIndex.url;
+			com.switchPage(api.index.decorationServiceIndex.url);
+		}
 		//活动物品
 		function viewDecorationActivityItem(decorationOrderId){
 			params.decorationOrderId = decorationOrderId;
@@ -546,7 +563,7 @@ $(function(){
 			});
 		}
 		//签订合同
-		function signOrder(orderId, customerId, orderTotalPrice){
+		function signOrder(orderId, customerId, orderTotalPrice,notSalesmanRate,coupon,thing){
 			// params["decoration.orderId"] = orderId;
 			// params["customer.customerId"] = customerId;
 			// $("#customerInfoDialog").attr("totalPrice",orderTotalPrice);
@@ -557,36 +574,58 @@ $(function(){
 
 			var cId = params["customer.customerId"];
 
-			var options = {
-				"decorationContract.orderId": orderId,
-			}
-
 			com.post(api.quotation.queryQuotationForDefaultByOrderId,{"quotation.orderId":orderId},function (res) {
 
+				var netperfor = 0;
+				var comperfor = 0;
 				if(res.quotation.qid == null){
 					com.showAlert(com.error,"报价不存在")
 					return;
 				}
+				order.drawContractModal.modal("show");
 
-				if(utils.accSub(orderTotalPrice, res.quotation.totalPrice) > 100){
-					bootbox.confirm("合同金额与报价金额相差大于100，确认签单？", function(yes) {
-						if(yes){
-							com.post(api.decoration.signDecorationContract, options, function(res){
-								searcher.doSearch();
-							}, null, false);
-						}
-					});
-				}else {
-					com.post(api.decoration.signDecorationContract, options, function(res){
-						searcher.doSearch();
-					}, null, false);
+				var contract = utils.accAdd(utils.accAdd(utils.accMul(res.quotation.disPrice,0.88),res.quotation.undisPrice),utils.accAdd(res.quotation.trafficPrice,res.quotation.managePrice))
+				var notpoint = utils.accMul(utils.accAdd(utils.accAdd(res.quotation.disPrice,res.quotation.undisPrice),res.quotation.trafficPrice),notSalesmanRate);
+				var Offer = utils.accAdd(coupon,thing);
+				netperfor = utils.accSub(utils.accSub(orderTotalPrice,utils.accAdd(coupon,thing)),utils.accMul(utils.accAdd(res.quotation.undisPrice,utils.accAdd(res.quotation.trafficPrice,res.quotation.disPrice)),notSalesmanRate))
+				comperfor = utils.changeTwoDecimal(utils.accDiv(utils.accAdd(utils.accSub(utils.accMul(utils.accSub(contract,notpoint),0.38),Offer),utils.accSub(orderTotalPrice,contract)),0.38));
+
+				var options = {
+					"decorationContract.orderId": orderId,
+					"decorationContract.netperfor": netperfor,
+					"decorationContract.comperfor": comperfor
 				}
+
+				$("#coupon").html("券优惠 : "+ coupon)
+				$("#thing").html("物品优惠 : "+ thing)
+				$("#netperfor").html("净业绩 : "+ netperfor)
+				$("#comperfor").html("复合业绩 : "+ comperfor)
+
+				$("#contractBtn").unbind('click').on("click", function(){
+					if(utils.accSub(orderTotalPrice, res.quotation.totalPrice) > 100){
+						bootbox.confirm("合同金额与报价金额相差大于100，确认签单？", function(yes) {
+							if(yes){
+								com.post(api.decoration.signDecorationContract, options, function(res){
+									order.drawContractModal.modal("hide");
+									searcher.doSearch();
+								}, null, false);
+							}
+						});
+					}else {
+						com.post(api.decoration.signDecorationContract, options, function(res){
+							order.drawContractModal.modal("hide");
+							searcher.doSearch();
+						}, null, false);
+					}
+				});
+
 			},function () {
 				com.showAlert(com.error,"报价不存在")
 				return;
 			},false)
 
 		}
+
 		//合同终止
 		function terminalOrder(decorationOrderId, rowId){
 
@@ -743,6 +782,8 @@ $(function(){
 		}
 		$('<div class="alert"> <button type="button" class="close" data-dismiss="alert">&times;</button><strong>File upload error</strong> ' + msg + ' </div>').prependTo('#alerts');
 	}
+
+
 
 });
 

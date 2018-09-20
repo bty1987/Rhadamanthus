@@ -15,7 +15,7 @@ public interface ProductionPlanService {
 	
 	public ProductionPlanVO queryProductionPlanByNo(ProductionPlanVO productionPlanVO) throws FLException;
 	
-	public int addProductionPlan(ProductionPlanVO productionPlanVO) throws FLException;
+	public int addProductionPlan(ProductionPlanVO productionPlanVO, int company) throws FLException;
 	
 	public int updateProductionPlan(ProductionPlanVO productionPlanVO) throws FLException;
 	

@@ -80,14 +80,6 @@ public class DecorationActivityAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-	@Action(value="convertDecorationActivityItem", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String convertDecorationActivityItem() throws FLException{
-		
-		decorationActivityItemService.convertDecorationActivityItem(decorationActivityItem);
-		
-		return SUCCESS;
-	}
-	
 	@Action(value="abateDecorationActivityItem", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String abateDecorationActivityItem() throws FLException{
 		

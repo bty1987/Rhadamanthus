@@ -79,7 +79,9 @@ import com.fanglin.right.dao.DecorationStatusRightDao;
 import com.fanglin.right.po.DecorationDesignDepartmentRightPO;
 import com.fanglin.right.po.DecorationSalesmanDepartmentRightPO;
 import com.fanglin.right.po.DecorationStatusRightPO;
+import com.fanglin.system.dao.CompanyDao;
 import com.fanglin.system.dao.SystemConfigDao;
+import com.fanglin.system.po.CompanyPO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
@@ -89,7 +91,10 @@ import com.fanglin.utils.SystemConfig;
 
 @Service("quotationOrderService")
 @Transactional(readOnly=true)
-public class DecorationServiceImpl implements DecorationService {	
+public class DecorationServiceImpl implements DecorationService {
+	
+	@Autowired
+	private CompanyDao companyDao;
 
 	@Autowired
 	private CountingService countingService;
@@ -965,6 +970,8 @@ public class DecorationServiceImpl implements DecorationService {
 	@Transactional(rollbackFor=Exception.class)
 	public void createDecoration(DecorationVO decorationVO, DecorationInfoVO decorationInfoVO, Authentication authentication) throws FLException{
 		
+		CompanyPO companyPO = companyDao.get(authentication.getCompany());
+		
 		List<Short> unstatus = Arrays.asList(DecorationPO.STATUS_WASTE_INT, DecorationPO.STATUS_TERMINATION_INT);
 		
 		DecorationPO decorationPO = decorationDao.queryDecorationByHid(decorationVO.getHouse().getHid(), authentication.getCompany());
@@ -982,9 +989,9 @@ public class DecorationServiceImpl implements DecorationService {
 		decorationPO.setVersion(quotationVersionPO);
 		
 		String currentDate = DateUtil.current("yyyyMMdd").toString().substring(2);
-		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_DECORATION_ORDER_INT, currentDate);
+		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_DECORATION_ORDER_INT, currentDate, authentication.getCompany());
 		
-		String orderId = currentDate + FormatUtil.fillZero(FormatUtil.offset(count), "0000");
+		String orderId = companyPO.getShortname() + currentDate + FormatUtil.fillZero(FormatUtil.offset(count), "0000");
 		
 		decorationPO.setOrderId(orderId);
 		
@@ -993,7 +1000,6 @@ public class DecorationServiceImpl implements DecorationService {
 		}else{
 			decorationPO.setNotSalesmanRate(decorationVO.getNotSalesmanRate());
 		}
-		
 
 		decorationPO.setFreeArea((float) 0);
 		decorationPO.setHouseClass(decorationVO.getHouseClass());
@@ -1029,7 +1035,7 @@ public class DecorationServiceImpl implements DecorationService {
 		decorationPO.setMeasureTime(DateUtil.getDateToTimestamp(new Date()));
 		
 		UserPO operater = userDao.queryUserByUserId(authentication.getUserId());
-		decorationPO.setCreateUser(operater);
+		decorationPO.setCreater(operater);
 		
 		decorationPO.setProjectStatus(DecorationPO.PROJECTSTATUS_INITIAL_INT);
 		
@@ -1197,86 +1203,87 @@ public class DecorationServiceImpl implements DecorationService {
 		String userId = authentication.getUserId();
 		int company = authentication.getCompany();
 		
-		if(DecorationPO.STATUS_SIGNED_INT == decorationPO.getStatus()){ // 签约
-
-			decorationPO.setStatus(DecorationPO.STATUS_TERMINATION_INT);
-			decorationDao.update(decorationPO);
-			
-			DecorationPaymentPO decorationPaymentPO = new DecorationPaymentPO();
-			decorationPaymentPO.setCreater(userDao.queryUserByUserId(userId));
-			decorationPaymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-			decorationPaymentPO.setPaymentType(DecorationPaymentPO.PAYMENTTYPE_CONTRACT_REFUND_STR);
-			decorationPaymentPO.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_UNPAY_STR);
-			decorationPaymentPO.setOneType(DecorationPaymentPO.ONETYPE_REFUND_INT);
-			decorationPaymentPO.setTwoType(DecorationPaymentPO.TWOTYPE_DEAL_INT);
-			decorationPaymentPO.setReferMoney(refundValue);
-			decorationPaymentPO.setDecoration(decorationPO);
-			
-			decorationPaymentDao.save(decorationPaymentPO);
-
-			if(refundValue < paymentValue){
-				DecorationPaymentPO penalty = new DecorationPaymentPO();
-				DecorationReceiptPO decorationReceipt = new DecorationReceiptPO();
-				
-				decorationReceipt.setComment(DecorationPaymentPO.PAYMENTTYPE_PENALTY_STR);
-				decorationReceipt.setCollectTime(DateUtil.getDateToTimestamp(new Date()));
-				decorationReceipt.setCollecter(userDao.queryUserByUserId(userId));
-				
-				decorationReceiptDao.save(decorationReceipt);
-				
-				penalty.setCreater(userDao.queryUserByUserId(userId));
-				penalty.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-				penalty.setPaymentType(DecorationPaymentPO.PAYMENTTYPE_PENALTY_STR);
-				penalty.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_PAY_STR);
-				decorationPaymentPO.setOneType(DecorationPaymentPO.ONETYPE_REFUND_INT);
-				decorationPaymentPO.setTwoType(DecorationPaymentPO.TWOTYPE_DEAL_INT);
-				penalty.setReferMoney(Arith.sub(paymentValue, refundValue));
-				penalty.setDecoration(decorationPO);
-				penalty.setDecorationReceipt(decorationReceipt);
-				
-				decorationPaymentDao.save(penalty);
-			}
-			
-			float orderTotalPrice = Arith.sub(0, decorationPO.getOrderTotalPrice());
-			
-			UserPO userPO = decorationPO.getDesigner();
-			DepartmentPO departmentPO = userPO.getDept();
-			DepartmentPO regionPO = userPO.getDept().getFatherDept();
-			
-			String designerId = userPO.getUserId();
-			String designerName = userPO.getUserName();
-			
-			String departmentId = departmentPO.getDeptId();
-			String departmentName = departmentPO.getDeptName();
-			
-			String regionId = regionPO.getDeptId();
-			String regionName = regionPO.getDeptName();
-			
-			String currentTimeStr = DateUtil.current("yyyy-MM-dd");
-			
-			String notCountDesignDepartmentId = SystemConfig.getString("notCountDesignDepartmentId", "");
-			
-			if(notCountDesignDepartmentId.indexOf(designerId) == -1){ // 部分部门不参与业绩统计
-				decorationRankService.updateDecorationDesignerRank(designerId, designerName, orderTotalPrice, currentTimeStr, company);
-				decorationRankService.updateDecorationDesignerDepartmentRank(departmentId, departmentName, orderTotalPrice, currentTimeStr, company);
-				decorationRankService.updateDecorationDesignerRegionRank(regionId, regionName, orderTotalPrice, currentTimeStr, company);
-			}
-			
-			DecorationOperatePO decorationOperatePO = new DecorationOperatePO();
-			decorationOperatePO.setOrderId(decorationPO.getOrderId());
-			decorationOperatePO.setOperater(userDao.queryUserByUserId(userId));
-			decorationOperatePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
-			decorationOperatePO.setType(DecorationOperatePO.TYPE_TERMINATION_DECORATION_ORDER_INT);
-			decorationOperatePO.setStatus(DecorationOperatePO.STATUS_INIT_INT);
-			
-			decorationOperatePO.setComment("订单合同终止");
-			
-			decorationOperateDao.save(decorationOperatePO);
-			
-			return 0;
+		if(DecorationPO.STATUS_SIGNED_INT != decorationPO.getStatus()){ // 签约
+			throw new FLException(140025, "订单非签约,不能终止合同");
 		}
 
-		throw new FLException(140025, "订单非签约,不能终止合同");
+		decorationPO.setStatus(DecorationPO.STATUS_TERMINATION_INT);
+		decorationDao.update(decorationPO);
+		
+		DecorationPaymentPO decorationPaymentPO = new DecorationPaymentPO();
+		decorationPaymentPO.setCreater(userDao.queryUserByUserId(userId));
+		decorationPaymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+		decorationPaymentPO.setPaymentType(DecorationPaymentPO.PAYMENTTYPE_CONTRACT_REFUND_STR);
+		decorationPaymentPO.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_UNPAY_STR);
+		decorationPaymentPO.setOneType(DecorationPaymentPO.ONETYPE_REFUND_INT);
+		decorationPaymentPO.setTwoType(DecorationPaymentPO.TWOTYPE_DEAL_INT);
+		decorationPaymentPO.setReferMoney(refundValue);
+		decorationPaymentPO.setDecoration(decorationPO);
+		decorationPaymentPO.setCompany(company);
+		
+		decorationPaymentDao.save(decorationPaymentPO);
+
+		if(refundValue < paymentValue){
+			DecorationPaymentPO penalty = new DecorationPaymentPO();
+			DecorationReceiptPO decorationReceipt = new DecorationReceiptPO();
+			
+			decorationReceipt.setComment(DecorationPaymentPO.PAYMENTTYPE_PENALTY_STR);
+			decorationReceipt.setCollectTime(DateUtil.getDateToTimestamp(new Date()));
+			decorationReceipt.setCollecter(userDao.queryUserByUserId(userId));
+			
+			decorationReceiptDao.save(decorationReceipt);
+			
+			penalty.setCreater(userDao.queryUserByUserId(userId));
+			penalty.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+			penalty.setPaymentType(DecorationPaymentPO.PAYMENTTYPE_PENALTY_STR);
+			penalty.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_PAY_STR);
+			penalty.setOneType(DecorationPaymentPO.ONETYPE_REFUND_INT);
+			penalty.setTwoType(DecorationPaymentPO.TWOTYPE_DEAL_INT);
+			penalty.setReferMoney(Arith.sub(paymentValue, refundValue));
+			penalty.setDecoration(decorationPO);
+			penalty.setDecorationReceipt(decorationReceipt);
+			penalty.setCompany(company);
+			
+			decorationPaymentDao.save(penalty);
+		}
+		
+		float orderTotalPrice = Arith.sub(0, decorationPO.getOrderTotalPrice());
+		
+		UserPO userPO = decorationPO.getDesigner();
+		DepartmentPO departmentPO = userPO.getDept();
+		DepartmentPO regionPO = userPO.getDept().getFatherDept();
+		
+		String designerId = userPO.getUserId();
+		String designerName = userPO.getUserName();
+		
+		String departmentId = departmentPO.getDeptId();
+		String departmentName = departmentPO.getDeptName();
+		
+		String regionId = regionPO.getDeptId();
+		String regionName = regionPO.getDeptName();
+		
+		String currentTimeStr = DateUtil.current("yyyy-MM-dd");
+		
+		String notCountDesignDepartmentId = SystemConfig.getString("notCountDesignDepartmentId", "");
+		
+		if(notCountDesignDepartmentId.indexOf(designerId) == -1){ // 部分部门不参与业绩统计
+			decorationRankService.updateDecorationDesignerRank(designerId, designerName, orderTotalPrice, currentTimeStr, company);
+			decorationRankService.updateDecorationDesignerDepartmentRank(departmentId, departmentName, orderTotalPrice, currentTimeStr, company);
+			decorationRankService.updateDecorationDesignerRegionRank(regionId, regionName, orderTotalPrice, currentTimeStr, company);
+		}
+		
+		DecorationOperatePO decorationOperatePO = new DecorationOperatePO();
+		decorationOperatePO.setOrderId(decorationPO.getOrderId());
+		decorationOperatePO.setOperater(userDao.queryUserByUserId(userId));
+		decorationOperatePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
+		decorationOperatePO.setType(DecorationOperatePO.TYPE_TERMINATION_DECORATION_ORDER_INT);
+		decorationOperatePO.setStatus(DecorationOperatePO.STATUS_INIT_INT);
+		
+		decorationOperatePO.setComment("订单合同终止");
+		
+		decorationOperateDao.save(decorationOperatePO);
+		
+		return 0;
 	}
 
 	@Override

@@ -39,6 +39,8 @@ import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.right.dao.HouseSourceRightDao;
 import com.fanglin.right.po.HouseSourceDepartmentRightPO;
+import com.fanglin.system.dao.CompanyDao;
+import com.fanglin.system.po.CompanyPO;
 import com.fanglin.system.vo.CityProperVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
@@ -75,6 +77,9 @@ public class HouseSourceServiceImpl implements HouseSourceService {
 	
 	@Autowired
 	private BuildingRecordService buildingRecordService;
+	
+	@Autowired
+	private CompanyDao companyDao;
 	
 	@Override
 	public void pageHouseSource(Paging paging, List<Filter> filters) {
@@ -188,7 +193,13 @@ public class HouseSourceServiceImpl implements HouseSourceService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public void addHouseSource(HouseSourceVO houseSourceVO, String userId) throws FLException {
+	public void addHouseSource(HouseSourceVO houseSourceVO, String userId, int company) throws FLException {
+
+		CompanyPO companyPO = companyDao.get(company);
+		
+		if(companyPO == null){
+			throw new FLException(230015, "公司不存在");
+		}
 		
 		Integer houseCount = houseSourceDao.countHouseSource(houseSourceVO.getHouse().getHid(), houseSourceVO.getType());
 		
@@ -216,9 +227,9 @@ public class HouseSourceServiceImpl implements HouseSourceService {
 		houseSourcePO.setStatus(HouseSourcePO.STATUS_INIT_SHORT);
 		//NO
 		String currentDate = DateUtil.current("yyyyMMdd").toString().substring(2);
-		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_DECORATION_ORDER_INT, currentDate);
+		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_DECORATION_ORDER_INT, currentDate, company);
 		
-		String no = "H" + currentDate + FormatUtil.fillZero(FormatUtil.offset(count), "0000");
+		String no = companyPO.getShortname() + "H" + currentDate + FormatUtil.fillZero(FormatUtil.offset(count), "0000");
 		
 		houseSourcePO.setNo(no);
 		

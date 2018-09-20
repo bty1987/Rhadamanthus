@@ -17,6 +17,7 @@ $(function(){
             endTime : $("#endTime"),
             isPublic : $("#isPublic").switchBtn("isOrNot"),
             contents : $("#contents"),
+            filePath : $("#filePath")
         },
         editFlg: !1,
         postParam: {},
@@ -98,7 +99,7 @@ $(function(){
                 ["开始时间:", v.startTime, "grey"],
                 ["结束时间:", v.endTime, "grey"],
                 ["公开:", noticeIsPublic[v.isPublic], "blue"],
-                ["内容:", v.contentsText, "grey"],
+                ["内容:", v.contents, "grey"],
                 ["状态:", status, "blue"],
 
             ];
@@ -118,16 +119,24 @@ $(function(){
                 //插入btnDown
             	$divBtnWrap.append($btnDown);
         	}
+
+            if(v.creater.uid == params.userInfo.user.uid){
+
+                if(v.isPublic == 1) {
+                    $divBtnWrap.append($management).appendTo($h3)
+                }
+
+                $divBtnWrap.append($btnEdit).append($btnDel).appendTo($h3);
+                $liLine.append($h3).append($ulProperty);
+            }
+
             if(starts <= myDate && end >=myDate){
                 if(v.isPublic == 1) {
-                    $divBtnWrap.append($management).append($btnEdit).append($btnDel).appendTo($h3);
                     $liLine.append($h3).append($ulProperty);
                 }else{
-                    $divBtnWrap.append($btnEdit).append($btnDel).appendTo($h3);
                     $liLine.append($h3).append($ulProperty);
                 }
             }else{
-                    $divBtnWrap.append($btnEdit).append($btnDel).appendTo($h3);
                     $liLine.append($h3).append($ulProperty);
             }
             $btnDown.click(function(){
@@ -138,15 +147,18 @@ $(function(){
             $btnEdit.click(function(){
                 notice.editFlg = !0;
                 var a = v;
-                void 0 != a && (notice.items.nid = a.nid,notice.items.noticeId = a.noticeId, 
-                				notice.items.userId = a.creater.userId, notice.items.theme.val(a.theme), 
-                				notice.items.typeSel.val(a.type), notice.items.prioritySel.val(a.priority), 
+                void 0 != a && (notice.items.nid = a.nid,
+                                notice.items.noticeId = a.noticeId,
+                				notice.items.userId = a.creater.userId,
+                                notice.items.theme.val(a.theme),
+                                notice.items.typeSel.val(a.type),
+                                notice.items.prioritySel.val(a.priority),
                 				notice.items.startTime.val(a.startTime), 
                 				notice.items.endTime.val(a.endTime), 
                 				notice.items.isPublic.prop("checked", a.isPublic == 0), 
-                				notice.items.contents.html(a.contents), 
-                				notice.modal.modal("show"))
-
+                				notice.items.contents.val(a.contents),
+                                notice.items.filePath.val(a.filePath),
+                                notice.modal.modal("show"))
             });
 
             $management.unbind().bind('click',function(){
@@ -213,7 +225,6 @@ $(function(){
         $adda.click(function(){
             notice.editFlg = !1;
             com.cleanItems(notice.items);
-            notice.items.contents.html("");
             notice.modal.modal("show")
         });
         return [$adda];
@@ -221,7 +232,7 @@ $(function(){
 
     function saveData() {
         if (!com.validate() && !notice.repeatFlg){
-            if ("" == notice.items.contents.text().trim()){
+            if ("" == notice.items.contents.val().trim()){
                 com.showTips(notice.items.contents, "内容不能为空.");
             }else if(notice.items.startTime.val() > notice.items.endTime.val()){
                 bootbox.alert("结束时间不能小于开始时间");
@@ -236,8 +247,7 @@ $(function(){
                         "notice.startTime": notice.items.startTime.val(),
                         "notice.endTime": notice.items.endTime.val(),
                         "notice.isPublic": notice.items.isPublic.prop("checked") ? 0 : 1,
-                        "notice.contents": notice.items.contents.html(),
-                        "notice.contentsText": notice.items.contents.text(),
+                        "notice.contents": notice.items.contents.val(),
                         "notice.filePath": $("#filePath").val()
                     };
                     notice.editFlg ? (a = api.information.updateNotice,b["notice.noticeId"] = notice.items.noticeId) : a = api.information.addNotice;
@@ -293,90 +303,11 @@ $(function(){
         })
     };
 
-    initializeContent();
-    function initializeContent(){
-
-        $("#contents").ace_wysiwyg({
-            toolbar: ["font", null, "fontSize", null,
-                {
-                    name: "bold",
-                    className: "btn-info"
-                }, {
-                    name: "italic",
-                    className: "btn-info"
-                }, {
-                    name: "strikethrough",
-                    className: "btn-info"
-                }, {
-                    name: "underline",
-                    className: "btn-info"
-                },
-                null,
-                {
-                    name: "insertunorderedlist",
-                    className: "btn-success"
-                }, {
-                    name: "insertorderedlist",
-                    className: "btn-success"
-                }, {
-                    name: "outdent",
-                    className: "btn-purple"
-                }, {
-                    name: "indent",
-                    className: "btn-purple"
-                },
-                null,
-                {
-                    name: "justifyleft",
-                    className: "btn-primary"
-                }, {
-                    name: "justifycenter",
-                    className: "btn-primary"
-                }, {
-                    name: "justifyright",
-                    className: "btn-primary"
-                }, {
-                    name: "justifyfull",
-                    className: "btn-inverse"
-                },
-                null, null, null, null, null, null, "foreColor", null,
-                {
-                    name: "undo",
-                    className: "btn-grey"
-                }, {
-                    name: "redo",
-                    className: "btn-grey"
-                }],
-            wysiwyg: {
-                fileUploadError: showErrorAlert
-            }
-        }).prev().addClass("wysiwyg-style2");
-        if ("undefined" !== typeof jQuery.ui && /applewebkit/.test(navigator.userAgent.toLowerCase())) {
-            var a = function() {
-                    null != b && (b.resizable("destroy"), b.removeData("resizable"), b = null)
-                },
-                b = null;
-            (function() {
-                $(".wysiwyg-editor").on("mousedown", function(a) {
-                    var d = $(a.target);
-                    a.target instanceof HTMLImageElement && !d.data("resizable") && (d.resizable({
-                        aspectRatio: a.target.width / a.target.height
-                    }), d.data("resizable", !0), null != b && (b.resizable("destroy"), b.removeData("resizable")), b = d)
-                }).on("click", function(c) {
-                    null == b || c.target instanceof HTMLImageElement || a()
-                }).on("keydown", function() {
-                    a()
-                })
-            })()
-        }
-    }
-
     function showErrorAlert(a, b) {
         var c = "";
         "unsupported-file-type" === a ? c = "Unsupported format " + b : console.log("error uploading file", a, b);
         $('<div class="alert"> <button type="button" class="close" data-dismiss="alert">&times;</button><strong>File upload error</strong> ' + c + " </div>").prependTo("#alerts")
     }
-
 
     function showDepaermentModal() {
         $wrap = $('#managements').find('.modal-body').empty();

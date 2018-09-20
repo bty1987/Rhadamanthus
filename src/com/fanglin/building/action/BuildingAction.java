@@ -44,7 +44,7 @@ public class BuildingAction extends BaseListAction{
 	@Action(value="bindBuilding", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String bindBuilding() throws FLException{
 		
-		buildingService.bindBuilding(building, queryUserId());
+		buildingService.bindBuilding(building, queryUserId(), queryCompany());
 		
 		return SUCCESS;
 	}

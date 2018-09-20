@@ -179,6 +179,8 @@ public class DecorationPaymentDaoImpl extends DaoImpl<DecorationPaymentPO> imple
 						}else{
 							query.add(query.getCriterion("createTime", filter.getData(), filter.getOp()));
 						}
+					}else if("company".equals(filter.getField())){
+						query.add(query.getCriterion(filter.getField(), Integer.valueOf(filter.getData()), filter.getOp()));
 					}else {
 						query.add(query.getCriterion(filter.getField(), filter.getData(), filter.getOp()));
 					}

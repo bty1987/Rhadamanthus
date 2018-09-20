@@ -33,7 +33,7 @@ public interface UserService {
 	
 	public UserVO queryUserByOldUserId(UserVO userVO) throws FLException;
 	
-	public List<UserBaseVO> queryUserByPinyin(String pinyinName,UserVO userVO,DepartmentTypeVO departmentType) throws FLException ;
+	public List<UserBaseVO> queryUserByPinyin(String pinyinName,UserVO userVO,DepartmentTypeVO departmentType, int company) throws FLException ;
 			
 	public UserVO validateUser(String loginId, String password) throws FLException;
 	
@@ -50,6 +50,8 @@ public interface UserService {
 	public void updateUserForIsLogin(UserVO userVO) throws FLException;
 	
 	public void updateUserForAdvance(UserVO userVO) throws FLException;
+	
+	public void checkUserForPassword(String userId, int company) throws FLException;
 	
 	public void checkUserForPassword(String userId, String password, String rePassword) throws FLException;
 	

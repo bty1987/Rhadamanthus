@@ -56,8 +56,6 @@ public class NoticePO implements Serializable {
 	
 	private String contents;
 	
-	private String contentsText;
-	
 	private String filePath;
 	
 	private int company;
@@ -161,15 +159,6 @@ public class NoticePO implements Serializable {
 
 	public void setContents(String contents){
 		this.contents = contents;
-	}
-
-	@Column(name="contentsText")
-	public String getContentsText(){
-		return contentsText;
-	}
-
-	public void setContentsText(String contentsText){
-		this.contentsText = contentsText;
 	}
 
 	@Column(name="filePath")

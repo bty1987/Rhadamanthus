@@ -40,6 +40,7 @@ import com.fanglin.quotation.po.QuotationPO;
 import com.fanglin.quotation.service.QuotationService;
 import com.fanglin.quotation.vo.QuotationVO;
 import com.fanglin.system.dao.SystemConfigDao;
+import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 
@@ -106,21 +107,20 @@ public class QuotationServiceImpl implements QuotationService {
 		config.put("manageRates", Arrays.asList(systemConfigDao.querySystemConfig("manageRate", company).getValue().split(",")));
 		config.put("trafficRates", Arrays.asList(systemConfigDao.querySystemConfig("trafficRate", company).getValue().split(",")));
 		
-		/*config.put("manageRates", Arrays.asList(SystemConfig.getString("manageRate").split(",")));
-		config.put("trafficRates", Arrays.asList(SystemConfig.getString("trafficRate").split(",")));*/
-		
 		return config;
 	}
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int addQuotation(QuotationVO quotationVO, String userId) throws FLException{
+	public int addQuotation(QuotationVO quotationVO, String userId, int company) throws FLException{
+		
+		SystemConfigPO quotationlimit = systemConfigDao.querySystemConfig("quotationlimit", company);
 		
 		String orderId = quotationVO.getOrderId();
 		
 		QuotationPO quotationPO = new QuotationPO();
 		
-		if(quotationDao.countQuotationByOrderId(orderId) >= Integer.parseInt(systemConfigDao.querySystemConfig("limitQuotationNumber").getValue())){
+		if(quotationDao.countQuotationByOrderId(orderId) >= (quotationlimit == null ? 3 : Integer.parseInt(quotationlimit.getValue()))){
 			throw new FLException(200001, "报价已经达到数量上限");
 		}
 		
@@ -141,6 +141,8 @@ public class QuotationServiceImpl implements QuotationService {
 		quotationPO.setOrderId(orderId);
 		quotationPO.setCreater(userDao.queryUserByUserId(userId));
 		quotationPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+		quotationPO.setManageRate(quotationVersionPO.getManageRate());
+		quotationPO.setTrafficRate(quotationVersionPO.getTrafficRate());
 		quotationPO.setDiscount(10);
 		QuotationPO defaultQuotationPO = quotationDao.queryQuotationForDefaultByOrderId(orderId);
 		if(defaultQuotationPO == null){
@@ -150,6 +152,8 @@ public class QuotationServiceImpl implements QuotationService {
 		}
 		
 		quotationDao.save(quotationPO);
+		
+		BeanUtil.copyProperties(quotationPO, quotationVO,Arrays.asList("creater"));
 		
 		QuotationFunctionAreaPO autogeneration = new QuotationFunctionAreaPO(quotationPO, "生成项目", 9999, QuotationFunctionAreaPO.TYPE_MANAGEMENT_INT);
 		
@@ -182,6 +186,8 @@ public class QuotationServiceImpl implements QuotationService {
 		
 		quotationDao.update(quotationPO);
 		
+		BeanUtil.copyProperties(quotationPO, quotationVO,Arrays.asList("creater"));
+		
 		return 0;
 	}
 	
@@ -209,6 +215,8 @@ public class QuotationServiceImpl implements QuotationService {
 			quotationDao.update(quotationPO);
 			decorationDao.update(decorationPO);
 		}
+		
+		BeanUtil.copyProperties(quotationPO, quotationVO,Arrays.asList("creater"));
 		
 		return 0;
 	}
@@ -265,7 +273,7 @@ public class QuotationServiceImpl implements QuotationService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int replicaQuotation(QuotationVO quotationVO, String userId) throws FLException{
+	public int replicaQuotation(QuotationVO quotationVO, String userId, int company) throws FLException{
 		
 		long replicaQId = quotationVO.getQid();
 		
@@ -283,11 +291,11 @@ public class QuotationServiceImpl implements QuotationService {
 		
 		DecorationPO _decorationPO = decorationDao.queryDecorationByOrderId(copyQuotationPO.getOrderId());
 		
-		if(quotationDao.countQuotationByOrderId(orderId) >= Integer.parseInt(systemConfigDao.querySystemConfig("limitQuotationNumber").getValue())){
+		if(quotationDao.countQuotationByOrderId(orderId) >= Integer.parseInt(systemConfigDao.querySystemConfig("quotationlimit", company).getValue())){
 			throw new FLException(200001, "报价已经达到数量上限");
 		}
 		
-		if(decorationPO.getQuotationTimeLimit() >= Integer.parseInt(systemConfigDao.querySystemConfig("quotationTimeLimit").getValue())){
+		if(decorationPO.getQuotationTimeLimit() >= Integer.parseInt(systemConfigDao.querySystemConfig("quotationtimelimit", company).getValue())){
 			throw new FLException(200018, "报价复制次数达到上线");
 		}else{
 			decorationPO.setQuotationTimeLimit(decorationPO.getQuotationTimeLimit() + 1);
@@ -325,12 +333,14 @@ public class QuotationServiceImpl implements QuotationService {
 		
 		copyQuotation(replicaQId, quotationPO.getQid());
 		
+		BeanUtil.copyProperties(quotationPO,quotationVO, Arrays.asList("creater"));
+		
 		return 0;
 	}
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int copyQuotation(QuotationVO quotationVO, String userId) throws FLException{
+	public int copyQuotation(QuotationVO quotationVO, String userId, int company) throws FLException{
 		
 		long copyQId = quotationVO.getQid();
 		String orderId = quotationVO.getOrderId();
@@ -341,11 +351,15 @@ public class QuotationServiceImpl implements QuotationService {
 		
 		checkQuotationForStatusByEnabled(copyQId);
 	
-		if(quotationDao.countQuotationByOrderId(orderId) >= Integer.parseInt(systemConfigDao.querySystemConfig("limitQuotationNumber").getValue())){
+		SystemConfigPO quotationlimit = systemConfigDao.querySystemConfig("quotationlimit", company); // 报价数量限制
+		
+		if(quotationDao.countQuotationByOrderId(orderId) >= (quotationlimit == null ? 3 : Integer.parseInt(quotationlimit.getValue()))){
 			throw new FLException(200001, "报价已经达到数量上限");
 		}
 		
-		if(decorationPO.getQuotationTimeLimit() >= Integer.parseInt(systemConfigDao.querySystemConfig("quotationTimeLimit").getValue())){
+		SystemConfigPO quotationtimelimit = systemConfigDao.querySystemConfig("quotationtimelimit", company); // 报价复制/拷贝次数限制
+		
+		if(decorationPO.getQuotationTimeLimit() >= (quotationtimelimit == null ? 3 : Integer.parseInt(quotationtimelimit.getValue()))){
 			throw new FLException(200018, "报价复制次数达到上线");
 		}else{
 			decorationPO.setQuotationTimeLimit(decorationPO.getQuotationTimeLimit() + 1);
@@ -370,6 +384,8 @@ public class QuotationServiceImpl implements QuotationService {
 		
 		copyQuotation(copyQId, quotationPO.getQid());
 		
+		BeanUtil.copyProperties(quotationPO, quotationVO,Arrays.asList("creater"));
+		
 		return 0;
 	}
 	
@@ -391,6 +407,7 @@ public class QuotationServiceImpl implements QuotationService {
 	}
 	
 	public static void convertQuotationVOToPOForAdvance(QuotationVO quotationVO, QuotationPO quotationPO){
+		
 		quotationPO.setDiscount(quotationVO.getDiscount());
 		quotationPO.setTotalPrice(quotationVO.getTotalPrice());
 		quotationPO.setManagePrice(quotationVO.getManagePrice());

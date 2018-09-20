@@ -1,6 +1,6 @@
 var QuotationDetail = (function(){
 	var quo = {
-		//订单编号
+		//装修单号
 		orderid : null,
 		//报价ID
 		quotationid : null,
@@ -158,8 +158,8 @@ var QuotationDetail = (function(){
 			});
 
 			//初始化半价配比
-			com.post(api.ds.decoration,{},function(res){
-				quo.machingType = res.machingType;
+			com.post(api.decoration.queryDecorationConfig,{},function(res){
+				quo.machingType = res.config.machingType;
 			});
 
 			return that;
@@ -1467,7 +1467,7 @@ var QuotationDetail = (function(){
 
 	return {
 		init : function(){
-			//订单编号
+			//装修单号
 			quo.orderid = params.orderId;
 			//报价ID
 			quo.quotationid = params.quotationId;
@@ -1567,6 +1567,7 @@ var QuotationDetail = (function(){
 
 					quo.basicParams["quotation.totalPrice"] = _dtotal;
 					quo.basicParams["quotation.managePrice"] = _managefee;//管理费
+					quo.basicParams["quotation.manageRate"] = _manageRate;//管理费比例
 					quo.basicParams["quotation.trafficPrice"] = _transfee;//车运费
 					quo.basicParams["quotation.trafficRate"] = _tranRate;//车运费比例
 					quo.basicParams["quotation.undisPrice"] = _undisPrice;//非打折项折前总额

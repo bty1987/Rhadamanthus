@@ -40,17 +40,25 @@ public class ServicePaymentAction extends BaseListAction {
 	private List<Long> spIds;
 	
 	@Action(value = "pageServicePaymentForCollect", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageServicePaymentForCollect(){
+	public String pageServicePaymentForCollect() throws FLException{
 		
-		servicePaymentService.pageServicePaymentForCollect(getPaging(), getFilters());
+		servicePaymentService.pageServicePaymentForCollect(getPaging(), getFilters(), queryCompany());
 		
 		return SUCCESS;
 	}
 	
 	@Action(value = "pageServicePaymentForConfirm", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageServicePaymentForConfirm(){
+	public String pageServicePaymentForConfirm() throws FLException{
 		
-		servicePaymentService.pageServicePaymentForConfirm(getPaging(), getFilters());
+		servicePaymentService.pageServicePaymentForConfirm(getPaging(), getFilters(), queryCompany());
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "pageServicePaymentForHistory", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageServicePaymentForHistory() throws FLException{
+		
+		servicePaymentService.pageServicePaymentForHistory(getPaging(), getFilters(), queryCompany());
 		
 		return SUCCESS;
 	}
@@ -82,7 +90,7 @@ public class ServicePaymentAction extends BaseListAction {
 	@Action(value = "collectServicePayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String collectServicePayment() throws FLException{
 		
-		servicePaymentService.collectServicePayment(servicePayment, serviceReceipt, advanceReceipt, queryUserId());
+		servicePaymentService.collectServicePayment(servicePayment, serviceReceipt, advanceReceipt, queryUserId(), queryCompany());
 		
 		return SUCCESS;
 	}
@@ -90,7 +98,7 @@ public class ServicePaymentAction extends BaseListAction {
 	@Action(value = "collectServicePaymentForService", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String collectServicePaymentForService() throws FLException{
 		
-		servicePaymentService.collectServicePaymentForService(servicePayment, serviceReceipt, queryUserId());
+		servicePaymentService.collectServicePaymentForService(servicePayment, serviceReceipt, queryUserId(), queryCompany());
 		
 		return SUCCESS;
 	}
@@ -98,7 +106,7 @@ public class ServicePaymentAction extends BaseListAction {
 	@Action(value = "refundServicePaymentForService", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String refundServicePaymentForService() throws FLException{
 		
-		servicePaymentService.refundServicePaymentForService(servicePayment, serviceReceipt, queryUserId());
+		servicePaymentService.refundServicePaymentForService(servicePayment, serviceReceipt, queryUserId(), queryCompany());
 		
 		return SUCCESS;
 	}

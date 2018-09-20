@@ -50,6 +50,14 @@ public class AdvanceReceiptVO implements java.io.Serializable {
 	public void setArId(Long arId) {
 		this.arId = arId;
 	}
+	
+	public UserBaseVO getCollecter() {
+		return collecter;
+	}
+
+	public void setCollecter(UserBaseVO collecter) {
+		this.collecter = collecter;
+	}
 
 	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getCollectTime() {
@@ -58,6 +66,14 @@ public class AdvanceReceiptVO implements java.io.Serializable {
 
 	public void setCollectTime(Timestamp collectTime) {
 		this.collectTime = collectTime;
+	}
+	
+	public UserBaseVO getConfirmer() {
+		return confirmer;
+	}
+
+	public void setConfirmer(UserBaseVO confirmer) {
+		this.confirmer = confirmer;
 	}
 
 	@JSON(format = "yyyy-MM-dd HH:mm:ss")
@@ -69,22 +85,6 @@ public class AdvanceReceiptVO implements java.io.Serializable {
 		this.confirmTime = confirmTime;
 	}
 	
-	public UserBaseVO getCollecter() {
-		return collecter;
-	}
-
-	public void setCollecter(UserBaseVO collecter) {
-		this.collecter = collecter;
-	}
-
-	public UserBaseVO getConfirmer() {
-		return confirmer;
-	}
-
-	public void setConfirmer(UserBaseVO confirmer) {
-		this.confirmer = confirmer;
-	}
-
 	public Float getRealMoney() {
 		return realMoney;
 	}

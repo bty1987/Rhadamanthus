@@ -316,7 +316,7 @@ public class MaterialPO implements java.io.Serializable {
 	}
 
 	@ManyToOne
-	@JoinColumn(name = "regionId", referencedColumnName = "deptId")
+	@JoinColumn(name = "regionId", referencedColumnName = "did")
 	public DepartmentPO getRegion() {
 		return region;
 	}
@@ -326,7 +326,7 @@ public class MaterialPO implements java.io.Serializable {
 	}
 
 	@ManyToOne
-	@JoinColumn(name = "departmentId", referencedColumnName = "deptId")
+	@JoinColumn(name = "departmentId", referencedColumnName = "did")
 	public DepartmentPO getDepartment() {
 		return department;
 	}
@@ -336,7 +336,7 @@ public class MaterialPO implements java.io.Serializable {
 	}
 
 	@ManyToOne
-	@JoinColumn(name = "materialDeptId", referencedColumnName = "deptId")
+	@JoinColumn(name = "materialDeptId", referencedColumnName = "did")
 	public DepartmentPO getMaterialDepartment() {
 		return materialDepartment;
 	}

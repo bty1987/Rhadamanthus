@@ -17,6 +17,11 @@ $.extend(api.index, {
 
     extensionIndex: {url: "/views/quotation/extension.html"},
     extensionDetailIndex: {url: "/views/quotation/extensionDetail.html"},
+
+    quotetionIndex:{url: "/views/quotation/quotetionIndex.html"},
+    quotetionPartIndex : {url:"/views/quotation/quotetionPart.html"},
+    quotetionCompareIndex : {url:"/views/quotation/quotetionCompare.html"},
+
 });
 
 $.extend(api, {quotation: {
@@ -104,7 +109,30 @@ $.extend(api, {quotation: {
     queryExtensionItemByEids:{url:"queryExtensionItemByEids.do"},
     updateExtensionItem:{url:"updateExtensionItem.do" , intercept: true},
     deleteExtensionItem:{url:"deleteExtensionItem.do" , intercept: true},
+    
+    
+    queryQuotetion:{url:"queryQuotetion.do"},
+    queryQuotetionByQid:{url:"queryQuotetionByQid.do"},
+    queryQuotetionByNo:{url:"queryQuotetionByNo.do"},
+    addQuotetion:{url:"addQuotetion.do"},
+    updateQuotetion:{url:"updateQuotetion.do"},
+    updateQuotetionForAdvance:{url:"updateQuotetionForAdvance.do"},
+    deleteQuotetion:{url:"deleteQuotetion.do"},
+    replicaQuotetion:{url:"replicaQuotetion.do"},
+    cloneQuotetion:{url:"cloneQuotetion.do"},
+    copyQuotetion:{url:"copyQuotetion.do"},
 
+    queryQuotetionFunctionAreaByQid:{url:"queryQuotetionFunctionAreaByQid.do"},
+    addQuotetionFuctionArea:{url:"addQuotetionFuctionArea.do"},
+    updateQuotetionFunctionArea:{url:"updateQuotetionFunctionArea.do"},
+    deleteQuotetionFunctionArea:{url:"deleteQuotetionFunctionArea.do"},
+
+    updateQuotetionFunctionAreaItem:{url:"updateQuotetionFunctionAreaItem.do" , intercept: true},
+    updateQuotetionFunctionAreaItemForIndex:{url:"updateQuotetionFunctionAreaItemForIndex.do" , intercept: true},
+    updateQuotetionFunctionAreaItemForSpec:{url:"updateQuotetionFunctionAreaItemForSpec.do" , intercept: true},
+    deleteQuotetionFunctionAreaItem:{url:"deleteQuotetionFunctionAreaItem.do" , intercept: true}
+    
+    
 
 }});
 

@@ -283,16 +283,17 @@ public class AddReduceServiceImpl implements AddReduceService{
 		decorationPaymentPO.setReferMoney((float) Math.rint(addReducePO.getTotal()));
 		if(addReducePO.getType() == AddReducePO.TYPE_ADD_INT || addReducePO.getType() == AddReducePO.TYPE_LEAKAGE_INT){
 			decorationPaymentPO.setOneType(DecorationPaymentPO.ONETYPE_ADD_INT);
-			decorationPaymentPO.setTwoType(DecorationPaymentPO.TWOTYPE_ADD_INT);
+			decorationPaymentPO.setTwoType(DecorationPaymentPO.TWOTYPE_ADD_REDUCE_INT);
 		}else{
 			decorationPaymentPO.setOneType(DecorationPaymentPO.ONETYPE_REFUND_INT);
-			decorationPaymentPO.setTwoType(DecorationPaymentPO.TWOTYPE_REDUCE_INT);
+			decorationPaymentPO.setTwoType(DecorationPaymentPO.TWOTYPE_ADD_REDUCE_INT);
 		}
 		decorationPaymentPO.setDecoration(decorationPO);
 		decorationPaymentPO.setCreater(userDao.queryUserByUserId(userId));
 		decorationPaymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		
 		decorationPaymentPO.setPaymentType(addReducePO.getType() == 0 ? DecorationPaymentPO.PAYMENTTYPE_ADD_STR : DecorationPaymentPO.PAYMENTTYPE_REDUCE_STR);
+		decorationPaymentPO.setCompany(decorationPO.getCompany());
 		
 		decorationPaymentDao.saveOrUpdate(decorationPaymentPO);
 		

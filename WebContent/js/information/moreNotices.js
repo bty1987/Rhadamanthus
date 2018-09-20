@@ -59,7 +59,7 @@ $(function(){
 				["开始时间:", v.startTime, "grey"],
 				["结束时间:", v.endTime, "grey"],
 				["公开:", noticeIsPublic[v.isPublic], "blue"],
-				["内容:", v.contentsText, "grey"],
+				["内容:", v.contents, "grey"],
 				["状态:", status, "blue"],
 			];
 

@@ -46,7 +46,6 @@ $(function(){
         };
 
         var creatLine = function(i, v, lastFlag){
-            console.log(v);
 
             var $liLine = $('<li></li>').addClass('line');
 

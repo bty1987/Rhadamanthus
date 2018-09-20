@@ -146,11 +146,9 @@ public class MgoodScopeAction extends BaseListAction {
 			KeyValueVO keyValueVO = new KeyValueVO();
 			
 			StringBuffer value = new StringBuffer();
-			value.append(mgoods.getNo());
-			value.append("-");
 			value.append(mgoods.getMbrand().getName());
 			value.append("-");
-			value.append(mgoods.getName());
+			value.append(mgoods.getTitle());
 			
 			keyValueVO.setKey(String.valueOf(mgoods.getGid()));
 			keyValueVO.setValue(value.toString());

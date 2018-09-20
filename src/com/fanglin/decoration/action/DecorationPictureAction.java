@@ -31,38 +31,38 @@ import com.fanglin.decoration.vo.DecorationPictureVO;
 public class DecorationPictureAction extends BaseListAction {
 
 	private static final long serialVersionUID = -1599812124963548192L;
-	
+
 	@Autowired
 	private DecorationPictureService decorationPictureService;
 
 	private DecorationPictureVO decorationPicture;
-	
+
 	private List<DecorationPictureVO> decorationPictures;
-	
-	@Action(value = "queryDecorationPictureByOrderId", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryDecorationPictureByOrderId(){
+
+	@Action(value = "queryDecorationPictureByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryDecorationPictureByOrderId() {
 
 		decorationPictures = decorationPictureService.queryDecorationPictureByOrderId(decorationPicture);
-	    
-		return SUCCESS;
-	}
-
-	@Action(value = "addDecorationPicture", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addDecorationPicture() throws FLException{
-
-		decorationPictureService.addDecorationPicture(decorationPicture, queryUserId());
 
 		return SUCCESS;
 	}
-	
-	@Action(value = "deleteDecorationPicture", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String deleteDecorationPicture(){
-		
+
+	@Action(value = "addDecorationPicture", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addDecorationPicture() throws FLException {
+
+		decorationPictureService.addDecorationPicture(decorationPicture, queryUserId(), queryCompany());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "deleteDecorationPicture", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String deleteDecorationPicture() {
+
 		decorationPictureService.deleteDecorationPicture(decorationPicture);
-		
+
 		return SUCCESS;
 	}
-	
+
 	public DecorationPictureVO getDecorationPicture() {
 		return decorationPicture;
 	}
@@ -78,7 +78,5 @@ public class DecorationPictureAction extends BaseListAction {
 	public void setDecorationPictures(List<DecorationPictureVO> decorationPictures) {
 		this.decorationPictures = decorationPictures;
 	}
-	
-	
 
 }

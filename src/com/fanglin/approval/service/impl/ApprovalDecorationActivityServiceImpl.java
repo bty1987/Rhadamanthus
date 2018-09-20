@@ -31,9 +31,12 @@ import com.fanglin.approval.vo.ApprovalDecorationActivityVO;
 import com.fanglin.approval.vo.ApprovalVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.decoration.dao.DecorationActivityItemDao;
+import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationActivityItemPO;
+import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 
@@ -56,6 +59,9 @@ public class ApprovalDecorationActivityServiceImpl implements ApprovalDecoration
 	@Autowired
 	private UserDao userDao;
 	
+	@Autowired
+	private DecorationDao decorationDao;
+	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public int submitApprovalForDecorationActivity(ApprovalVO approvalVO, ApprovalDecorationActivityVO approvalDecorationActivityVO, List<ApprovalDecorationActivityItemVO> approvalDecorationActivityItemVOs, String userId, int company) throws FLException {
@@ -63,6 +69,14 @@ public class ApprovalDecorationActivityServiceImpl implements ApprovalDecoration
 		String orderId = approvalDecorationActivityVO.getOrderId();
 		
 		ApprovalPO approvalPO = approvalDao.queryApproval(ApprovalPO.APPROVAL_STATUS_INIT_INT,ApprovalPO.APPROVAL_TYPE_DECORATION_ACTIVITY_INT, orderId);
+		
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
+		
+		List<Short> statuses = Arrays.asList(DecorationPO.STATUS_INIT_INT,DecorationPO.STATUS_DEPOSIT_INT,DecorationPO.STATUS_RESIGNED_INT);
+		
+		if(!statuses.contains(decorationPO.getStatus())){
+			throw new FLException(140003, "装修单已签约");
+		}
 		
 		if(approvalPO != null){
 			throw new FLException(240004, "正在审批中,不能提交新审批");
@@ -117,6 +131,11 @@ public class ApprovalDecorationActivityServiceImpl implements ApprovalDecoration
 		
 		List<ApprovalDecorationActivityItemPO> approvalDecorationActivityItemPOs = approvalDecorationActivityItemDao.queryApprovalDecorationActivityItemByAaId(approvalDecorationActivityPO.getAdaId());
 		
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(approvalDecorationActivityPO.getOrderId());
+		
+		float couponCut = decorationPO.getCouponCut();
+		float thingCut = decorationPO.getThingCut();
+		
 		for(ApprovalDecorationActivityItemPO approvalDecorationActivityItemPO: approvalDecorationActivityItemPOs){
 			DecorationActivityItemPO decorationActivityItemPO = new DecorationActivityItemPO();
 			BeanUtil.copyProperties(approvalDecorationActivityItemPO, decorationActivityItemPO);
@@ -126,8 +145,19 @@ public class ApprovalDecorationActivityServiceImpl implements ApprovalDecoration
 			decorationActivityItemPO.setTotal(approvalDecorationActivityItemPO.getNum());
 			decorationActivityItemPO.setReceiveUserName("");
 			
+			if(approvalDecorationActivityItemPO.getType() == ApprovalDecorationActivityItemPO.COLUMN_COUPON_INT){
+				couponCut += Arith.mul(approvalDecorationActivityItemPO.getMoney(),approvalDecorationActivityItemPO.getNum());
+			}else{
+				thingCut += Arith.mul(approvalDecorationActivityItemPO.getMoney(),approvalDecorationActivityItemPO.getNum());
+			}
+			
 			decorationActivityItemDao.save(decorationActivityItemPO);
 		}
+		
+		decorationPO.setCouponCut(couponCut);
+		decorationPO.setThingCut(thingCut);
+		
+		decorationDao.update(decorationPO);
 		
 		return 0;
 	}

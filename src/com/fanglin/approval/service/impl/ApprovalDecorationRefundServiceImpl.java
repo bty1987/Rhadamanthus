@@ -148,23 +148,25 @@ public class ApprovalDecorationRefundServiceImpl implements ApprovalDecorationRe
 		decorationRefundPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		decorationRefundPO.setCreater(approvalPO.getSender());
 		decorationRefundPO.setReferMoney(decorationPaymentPO.getReferMoney());
+		decorationRefundPO.setCompany(decorationPO.getCompany());
 		
 		decorationPaymentDao.save(decorationRefundPO);
 		
-		if (decorationPaymentPO.getOneType()==DecorationPaymentPO.ONETYPE_ADD_INT&&(decorationPaymentPO.getTwoType()==DecorationPaymentPO.TWOTYPE_DEAL_INT||decorationPaymentPO.getTwoType()==DecorationPaymentPO.TWOTYPE_ADD_INT)) {
+		if (decorationPaymentPO.getOneType()==DecorationPaymentPO.ONETYPE_ADD_INT&&(decorationPaymentPO.getTwoType()==DecorationPaymentPO.TWOTYPE_DEAL_INT||decorationPaymentPO.getTwoType()==DecorationPaymentPO.TWOTYPE_ADD_REDUCE_INT)) {
 			
-		DecorationPaymentPO initialDecorationPaymentPO = new DecorationPaymentPO();
-		BeanUtil.copyProperties(decorationRefundPO, initialDecorationPaymentPO);
+			DecorationPaymentPO initialDecorationPaymentPO = new DecorationPaymentPO();
+			BeanUtil.copyProperties(decorationRefundPO, initialDecorationPaymentPO);
+			
+			initialDecorationPaymentPO.setOneType(DecorationPaymentPO.ONETYPE_ADD_INT);
+			initialDecorationPaymentPO.setTwoType(decorationPaymentPO.getTwoType());
+			initialDecorationPaymentPO.setPaymentType(decorationPaymentPO.getPaymentType());
+			initialDecorationPaymentPO.setCompany(decorationPO.getCompany());
 		
-		initialDecorationPaymentPO.setOneType(DecorationPaymentPO.ONETYPE_ADD_INT);
-		initialDecorationPaymentPO.setTwoType(decorationPaymentPO.getTwoType());
-		initialDecorationPaymentPO.setPaymentType(decorationPaymentPO.getPaymentType());
-	
-		decorationPaymentDao.save(initialDecorationPaymentPO);
+			decorationPaymentDao.save(initialDecorationPaymentPO);
 		
-		if (decorationPaymentPO.getTwoType()==DecorationPaymentPO.TWOTYPE_ADD_INT) {
-			AddReducePO addReducePO = addReduceDao.queryAddReduceByDecorationPaymentId(approvalDecorationRefundPO.getPaymentId());
-			    addReducePO.setDpId(initialDecorationPaymentPO.getDpid());
+		if (decorationPaymentPO.getTwoType()==DecorationPaymentPO.TWOTYPE_ADD_REDUCE_INT) {
+				AddReducePO addReducePO = addReduceDao.queryAddReduceByDecorationPaymentId(approvalDecorationRefundPO.getPaymentId());
+				addReducePO.setDpId(initialDecorationPaymentPO.getDpid());
 			    addReduceDao.update(addReducePO);
 			}
 		}

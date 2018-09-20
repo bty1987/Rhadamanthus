@@ -98,7 +98,7 @@ body > .header .logo .icon {
 
 /****** 3.1 HEADER RIGHT SIDE BAR *******/
 .right-side {
-  margin-left: 250px;
+  margin-left: 200px;
   padding: 51px 10px 10px 10px; }
 
 .right-side > .content-header > h1 {
@@ -286,7 +286,7 @@ input[type="range"] {
 .sidebar {
   display: block;
   float: left;
-  width: 250px; }
+  width: 200px; }
 
 .page-content {
   display: block;
@@ -671,7 +671,7 @@ li.dropdown-footer a {
 /****** 4.LEFT SIDEBAR ******/
 .left-side {
   position: absolute;
-  width: 250px; }
+  width: 200px; }
 
 li.active > a > .arrow {
   position: absolute;
@@ -696,10 +696,8 @@ a {
   padding: 0;
   margin: 0; }
 
-#menu li.active > a {
-  border-right: 3px solid #68DEB7; }
-
-#menu li.active > a {
+#menu li.active > a,#menu li.open > a {
+  border-right: 3px solid #68DEB7;
   background: #EEEEEE;
   color: #33CC99; }
 
@@ -736,7 +734,10 @@ a {
   display: block;
   font-size: 13px;
   line-height: 20px;
-  padding: 11px 20px; }
+  padding: 10px 0px;
+  padding-left: 14px;
+  padding-right: 20px;
+}
 
 #menu .fa.arrow:before {
   content: "\f105"; }

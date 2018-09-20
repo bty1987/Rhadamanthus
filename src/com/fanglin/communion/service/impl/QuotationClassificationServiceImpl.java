@@ -50,7 +50,7 @@ public class QuotationClassificationServiceImpl implements QuotationClassificati
 
 	@Override
 	public void pageQuotationClassification(Paging paging, List<Filter> filters) {
-		// TODO Auto-generated method stub
+		
 		List<QuotationClassificationPO> quotationClassificationPOs = quotationClassificationDao.pageQuotationClassification(paging, filters);
 		List<QuotationClassificationVO> quotationClassificationVOs = new ArrayList<QuotationClassificationVO>();
 		

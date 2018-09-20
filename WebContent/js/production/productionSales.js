@@ -40,7 +40,7 @@ $(function(){
                         }
 
                         propertyArr = [
-                           // ["订单编号:", data.orderId, "grey"],
+                           // ["装修单号:", data.orderId, "grey"],
                            // ["楼盘地址:", data.village.villageName + " " + data.houseNumber, "grey"],
                             ["客户名:", data.customer.name, "grey"],
                            // ["渠道:", data.salesman.userName, "grey"],

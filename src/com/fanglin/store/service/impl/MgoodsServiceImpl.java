@@ -48,7 +48,6 @@ public class MgoodsServiceImpl implements MgoodsService {
 
 	@Override
 	public List<MgoodsVO> queryMgoodsByPinyin(MgoodsVO mgoodsVO) {
-		
 		Paging paging = new Paging(0, 10);
 		List<MgoodsPO> mgoodsPOs = mgoodsDao.queryMgoodsByPinyin(paging, mgoodsVO.getPinyin());
 		List<MgoodsVO> mgoodsVOs = new ArrayList<MgoodsVO>();

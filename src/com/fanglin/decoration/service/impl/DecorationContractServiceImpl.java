@@ -21,7 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.approval.dao.ApprovalDao;
-import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Authentication;
 import com.fanglin.decoration.dao.DecorationBelongDao;
@@ -42,9 +41,7 @@ import com.fanglin.personel.po.UserPO;
 import com.fanglin.quotation.dao.AddReduceDao;
 import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.po.QuotationPO;
-import com.fanglin.report.service.DecorationRankService;
 import com.fanglin.system.dao.SystemConfigDao;
-import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.SystemConfig;
@@ -67,9 +64,6 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 	
 	@Autowired
 	private DecorationBelongDao orderBelongInfoDao;
-	
-	@Autowired
-	private DecorationRankService decorationRankService;
 	
 	@Autowired
 	private ApprovalDao approvalDao;
@@ -202,8 +196,6 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 			throw new FLException(140037, "订单存在未处理审批项");
 		}
 		
-		int decorationCompany = decorationPO.getCompany();
-		
 		DecorationContractPO decorationContractPO = decorationContractDao.queryDecorationContractByOrderId(orderId);
 		
 		if(decorationContractPO == null){
@@ -225,6 +217,8 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		
 		UserPO operater = userDao.queryUserByUserId(userId);
 		
+		decorationPO.setNetperfor(decorationContractVO.getNetperfor());
+		decorationPO.setComperfor(decorationContractVO.getComperfor());
 		decorationPO.setStatus(DecorationPO.STATUS_SIGNED_INT);
 		decorationPO.setContractCode(decorationContractPO.getContractCode());
 		decorationPO.setContracter(operater);
@@ -248,37 +242,6 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		
 		if(!resignFlag){
 			
-			float orderTotalPrice = decorationPO.getOrderTotalPrice();
-			float managePrice = quotationPO.getManagePrice();
-			float manageRate = quotationPO.getManageRate();
-			float notSalesmanRate = decorationPO.getNotSalesmanRate();
-			
-			double achievement = 0f;
-			
-			if(manageRate != 0){
-				achievement = Arith.div(managePrice, manageRate);
-			}
-			
-			float rank = Math.round(Arith.sub(orderTotalPrice, Arith.mul(notSalesmanRate, achievement)));
-			
-			UserPO userPO = decorationPO.getDesigner();
-			DepartmentPO departmentPO = userPO.getDept();
-			DepartmentPO regionPO = userPO.getDept().getFatherDept();
-			
-			String designerId = userPO.getUserId();
-			String designerName = userPO.getUserName();
-			
-			String departmentId = departmentPO.getDeptId();
-			String departmentName = departmentPO.getDeptName();
-			
-			String regionId = regionPO.getDeptId();
-			String regionName = regionPO.getDeptName();
-			
-			String currentTimeStr = DateUtil.current("yyyy-MM-dd");
-			
-			String notCountDesignDepartmentId = SystemConfig.getString("notCountDesignDepartmentId", "");
-			String notCountDecorationContractUserId = SystemConfig.getString("notCountDecorationContractUserId", "");
-			
 			//更新归属信息的部门和大区
 			for(DecorationBelongPO orderBelongInfoPO: designerOrderBelongInfoPOs){
 				orderBelongInfoPO.setDepartment(orderBelongInfoPO.getBelonger().getDept());
@@ -292,12 +255,6 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 				orderBelongInfoPO.setRegion(orderBelongInfoPO.getBelonger().getDept().getFatherDept());
 				
 				orderBelongInfoDao.update(orderBelongInfoPO);
-			}
-			
-			if(notCountDesignDepartmentId.indexOf(designerId) == -1 && notCountDecorationContractUserId.indexOf(userId) == -1){ // 部分部门不参与业绩统计
-				decorationRankService.updateDecorationDesignerRank(designerId, designerName, rank, currentTimeStr, decorationCompany);
-				decorationRankService.updateDecorationDesignerDepartmentRank(departmentId, departmentName, rank, currentTimeStr, decorationCompany);
-				decorationRankService.updateDecorationDesignerRegionRank(regionId, regionName, rank, currentTimeStr, decorationCompany);
 			}
 			
 			decorationOperatePO.setType(DecorationOperatePO.TYPE_SIGN_DECORATION_ORDER_INT);

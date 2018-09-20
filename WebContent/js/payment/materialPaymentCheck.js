@@ -1,39 +1,24 @@
-var materialPaymentCheck = {
-	
-	saveBtn: null,
-	cancellBtn: null,
-	
-	baseModal: null,
-	addOrReduceModal:null,
-	refundModal:null,
-	materialPaymentCheckItems: {},
-	
-	materialPaymentTypeData: {},
-	materialPaymentRevTypeData: {},
-	
-	ouponType: {},
-	
-	editFlg:false,
-	queryUrl:null
-	
-};
 
 jQuery(function($) {
-	
+	var materialPaymentCheck = {
+		materialPaymentTypeData: {},
+		materialPaymentRevTypeData: {},
+		ouponType: {}
+	};
+
 	com.post(api.common.queryReceiptType, {}, function(res){
-		
 		materialPaymentCheck.cash = [];
 		materialPaymentCheck.bank = [];
 		materialPaymentCheck.checkBank = [];
 		materialPaymentCheck.accounts = [];
 		materialPaymentCheck.couponType = [];
-		
+
 		materialPaymentCheck.cashInfo = {};
 		materialPaymentCheck.bankInfo = {};
 		materialPaymentCheck.checkBankInfo = {};
 		materialPaymentCheck.accountsInfo = {};
 		materialPaymentCheck.couponTypeData = {};
-		
+
 		$.each(res.receiptTypes, function(i, v){
 			if(v.type == 1){
 				materialPaymentCheck.cash.push(v);
@@ -61,16 +46,10 @@ jQuery(function($) {
 			materialPaymentCheck.materialPaymentRevTypeData[paymentType.value] = paymentType.key;
 		}
 	}, null, false);
-	
-	com.post(api.ds.payment, {}, function(res){
-		materialPaymentCheck.couponType = res.couponTypes;
-		$("#couponType").bindData(res.couponTypes, 'key', 'value');
-	});
 
 	$("#materialPaymentHistoryList").removeClass("active");
 	
 	var displayFunc  = (function(){
-
         var renderList = function(tableId,listData){
             var $tableWrap = $('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
@@ -78,16 +57,13 @@ jQuery(function($) {
             if(listData && listData.length){ 
                 $.each(listData,function(i, v){
                     var $liLine = creatLine(v);
-
                     $liLine.appendTo($ul);
                 });
-
                 $ul.appendTo($tableWrap);
             }
         };
 
         var creatLine = function(v){
-        	
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
             var $h3 = $('<h3></h3>').addClass('oid');
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
@@ -104,8 +80,8 @@ jQuery(function($) {
                ["应收金额:", v.referMoney, "blue"],
                ["收款人:", v.collecter.currentName, "grey"],
                ["收款时间:", v.collectTime, "green"],
-               ["状态:", v.paymentStatus == 1 ? '待确认' : '已确认', "red"],
-               ["备注:", v.comment, "grey"],
+               ["状态:", v.paymentStatus == 1 ? '已付款' : '已确认', "red"],
+               ["备注:", v.comment, "grey"]
             ];
             
             var $label = $('<label></label>');
@@ -113,7 +89,7 @@ jQuery(function($) {
 				"type": "checkbox",
 				"name": "mpIds",
 				"class": "ace ace-checkbox-2",
-				"mpId": v.mpId,
+				"mpId": v.mpId
 			}).val(v.arId);
 			var $span = $('<span></span>').addClass('lbl blue bigger-150').text(materialPaymentCheck.materialPaymentTypeData[v.paymentType]);
             
@@ -173,7 +149,6 @@ jQuery(function($) {
 	searcher.init(["orderId", "msoNo", "paymentMsoDesigner", "paymentOrderAddr", "collectTimeDateRange"], "condList", api.payment.pageMaterialPaymentForCollect, function(data){
 		displayFunc.init('resultList', data);
 	}, "pagenation", "materialPaymentCheckPostData", null, false, null, function(){
-		
 		var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'confirms').css("margin", "0px 3px");
     	var $addi = $('<i></i>').addClass('icon-ok bigger-110').appendTo($adda);
     	var $addspan = $('<span></span>').text('批量确认').appendTo($adda);
@@ -186,7 +161,6 @@ jQuery(function($) {
 	});
 	
 	var hdisplayFunc  = (function(){
-
         var renderList = function(tableId,listData){
             var $tableWrap = $('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
@@ -203,7 +177,6 @@ jQuery(function($) {
         };
 
         var creatLine = function(v){
-        	
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
             var $h3 = $('<h3></h3>').addClass('oid');
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
@@ -225,8 +198,8 @@ jQuery(function($) {
                ["收款时间:", v.collectTime, "green"],
 		       ["确认人:", v.confirmer.currentName, "grey"],
 		       ["确认时间:", v.confirmTime, "green"],
-               ["状态:", v.paymentStatus == 1 ? '待确认' : '已确认', "red"],
-               ["备注:", v.comment, "grey"],
+               ["状态:", v.paymentStatus == 1 ? '已付款' : '已确认', "red"],
+               ["备注:", v.comment, "grey"]
             ];
             
             $.each(propertyArr, function (index,value) {
@@ -288,14 +261,11 @@ jQuery(function($) {
 	
 	
 	$('a[name="confirms"]', '#pagenation').click(function(){
-
 		var options = {};
-
 		var $inputs = $('input[name="mpIds"]:checked');
 
 		$.each($inputs, function(i, v){
 			var $input = $(v);
-
 			options["mpIds["+i+"]"] = $input.attr('mpId');
 		});
 
@@ -315,7 +285,6 @@ jQuery(function($) {
 	});
 	
 	$('a[name="import"]', '#pagenation').click(function () {
-    	
     	if($('span[name="totalRecords"]').text() == 0){
 			com.showAlert(com.warning, "请通过条件进行查询");
 			return false;
@@ -327,7 +296,6 @@ jQuery(function($) {
 		}
 		
 		com.post(api.payment.pageMaterialPaymentForCollect, $.extend({}, params.materialPaymentCheckPostData, {"paging.noPage": 1}), function(res){
-
 			$.exceler({
 				column : [
 					["订单号","material.orderId"],
@@ -346,16 +314,16 @@ jQuery(function($) {
 					['分期', ['installment', 'installmentBank']],
 					['对公', ['accounts', 'accountsBank']],
 					['预付款', 'advance'],
-					['券', ['coupon', 'couponInfo']],
+					['券', ['coupon', 'couponInfo']]
 				],
-				list: res.paging.data,
+				list: res.paging.data
 			}, function(v){
 				if(v.bank != null && v.bank != 0){
 					  var $info = ' ';
 					  var _s = v.bankInfo.split('#');
 					  for(var i=1;i<_s.length-1;i++){
 					    var _i = _s[i].split('|');
-					    $info += materialPayment.bankInfo[_i[0]] + " " + _i[1] + ", " + _i[2] + ", ";
+					    $info += materialPaymentCheck.bankInfo[_i[0]] + " " + _i[1] + ", " + _i[2] + ", ";
 					  }
 					  
 					  v.bankInfo = $info;
@@ -366,7 +334,7 @@ jQuery(function($) {
 				v.accountsBank = v.accounts != null && v.accounts != "0" ? materialPaymentCheck.accountsInfo[v.accountsBank] : '';
 				
 				v.paymentType = materialPaymentCheck.materialPaymentTypeData[v.paymentType];
-				v.paymentStatus = v.paymentStatus == 1 ? '待确认' : '已确认';
+				v.paymentStatus = v.paymentStatus == 1 ? '已付款' : '已确认';
 			});
 		});
     });

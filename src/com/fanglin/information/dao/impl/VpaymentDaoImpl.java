@@ -31,6 +31,8 @@ public class VpaymentDaoImpl extends DaoImpl<VpaymentPO> implements VpaymentDao{
 			query.add(Restrictions.eq(VpaymentPO.COLUMN_STATUS_STR, status));
 		}
 		
+		query.add(Restrictions.eq(VpaymentPO.COLUMN_EXPIRE_STR, VpaymentPO.EXPIRE_INIT_INT));
+		
 		query.desc("vpid");
 		
 		return query.list();
@@ -39,7 +41,7 @@ public class VpaymentDaoImpl extends DaoImpl<VpaymentPO> implements VpaymentDao{
 	@Override
 	public List<?> countVpayment() {
 		
-		String sql = "SELECT brand, SUM(money) from information.vpayment WHERE type = 0 GROUP BY brand";
+		String sql = "SELECT brand, SUM(money) from information.vpayment WHERE type in (2, 3) and expire = 0 GROUP BY brand";
 		
 		SQLQuery query = session().createSQLQuery(sql);
 		
@@ -47,10 +49,10 @@ public class VpaymentDaoImpl extends DaoImpl<VpaymentPO> implements VpaymentDao{
 	}
 
 
-	@SuppressWarnings("unchecked")
 	@Override
+	@SuppressWarnings("unchecked")
 	public List<VpaymentPO> queryVpaymentByNo(String mno) {
-		return createCriteria(VpaymentPO.class).add(Restrictions.eq(VpaymentPO.COLUMN_MNO_STR, mno)).list();
+		return createCriteria(VpaymentPO.class).add(Restrictions.eq(VpaymentPO.COLUMN_MNO_STR, mno)).add(Restrictions.eq(VpaymentPO.COLUMN_EXPIRE_STR, VpaymentPO.EXPIRE_INIT_INT)).list();
 	}
 
 

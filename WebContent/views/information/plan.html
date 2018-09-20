@@ -1,4 +1,4 @@
-<div class="page-content">
+﻿<div class="page-content">
   <div class="row">
     <div class="col-xs-12">
       <div id="condList" class="fl_search clearfix"></div> <!-- 查询条件-->
@@ -21,28 +21,59 @@
             <div class="form-group">
               <label class="col-sm-3 control-label no-padding-right" for="task">任务选择</label>
               <div class="col-sm-9">
-                <select id="task" class="col-xs-10 col-sm-5 v_required" data-toggle="popover"data-trigger='manual'>
+                <select id="task" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual'>
                 </select>
                 <span class='star'></span>
               </div>
             </div>
 
-            <div class="form-group">
-              <label class="col-sm-3 control-label no-padding-right" for="args">参数</label>
+            <div class="form-group hide" id="dateRange">
+              <label class="col-sm-3 control-label no-padding-right" for="argsRange">时间区间</label>
               <div class="col-sm-9">
-                  <input id="args" type="text" maxlength="60" class="col-xs-10 col-sm-5 "/>
+                <input  class="col-xs-10 col-sm-5 " name ="date-range-picker" id="argsRange"  type="text" readonly="readonly" >
               </div>
             </div>
 
-            <div class="form-group">
-              <label class="col-sm-3 control-label no-padding-right" for="timing">时间选择</label>
+            <div class="form-group hide" id="commont">
+              <label class="col-sm-3 control-label no-padding-right" for="args">参数</label>
               <div class="col-sm-9">
-                <select id="timing" class="col-xs-10 col-sm-5  v_required"data-toggle="popover" data-trigger='manual'>
-                  <option value="0">立即</option>
-                  <option value="1">定时</option>
+                <input  class="col-xs-10 col-sm-5 " type="text" id="args"  maxlength="60" />
+              </div>
+            </div>
+
+            <div class="form-group hide" id="hupload">
+              <label class="col-sm-3 control-label no-padding-right" for="attachment">上传附件</label>
+              <div class="col-sm-3 col-xs-4">
+                <div id="attachment"></div>
+                <input type="text" class="hidden" id="filePath"/>
+              </div>
+            </div>
+
+            <div class="form-group hide" id="export">
+              <label class="col-sm-3 control-label no-padding-right" for="exportSelect">导出标识</label>
+              <div class="col-sm-9">
+                <select id="exportSelect" class="col-xs-10 col-sm-5" data-toggle="popover" data-trigger='manual'>
                 </select>
               </div>
             </div>
+
+            <div class="form-group hide" id="import">
+              <label class="col-sm-3 control-label no-padding-right" for="importSelect">导入标识</label>
+              <div class="col-sm-9">
+                <select id="importSelect" class="col-xs-10 col-sm-5" data-toggle="popover" data-trigger='manual'>
+                </select>
+              </div>
+            </div>
+
+            <!--<div class="form-group">-->
+              <!--<label class="col-sm-3 control-label no-padding-right" for="timing">时间选择</label>-->
+              <!--<div class="col-sm-9">-->
+                <!--<select id="timing" class="col-xs-10 col-sm-5  v_required"data-toggle="popover" data-trigger='manual'>-->
+                  <!--<option value="0">立即</option>-->
+                  <!--<option value="1">定时</option>-->
+                <!--</select>-->
+              <!--</div>-->
+            <!--</div>-->
 
             <div class ="hide" id ="timediv">
               <div class="form-group ">

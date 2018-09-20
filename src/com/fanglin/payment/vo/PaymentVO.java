@@ -22,19 +22,27 @@ public class PaymentVO implements Serializable {
 
 	private Long pid;
 	
-	private CustomerVO customer;
-	
 	private String orderId;
+	
+	private CustomerVO customer;
 	
 	private Float balance = 0f;
 	
 	private Float recharge = 0f;
 	
-	private String type;
+	private Short type;
 	
-	private String paymentType;
+	private Short paymentType;
 	
-	private String status;
+	private UserBaseVO collectUser;
+	
+	private Timestamp collectTime;
+	
+	private UserBaseVO confirmUser;
+	
+	private Timestamp confirmTime;
+	
+	private Short status;
 	
 	private Float cash = 0f;
 	
@@ -56,17 +64,19 @@ public class PaymentVO implements Serializable {
 	
 	private String accountsBank;
 	
-	private UserBaseVO collectUser;
-	
-	private Timestamp collectTime;
-	
-	private UserBaseVO confirmUser;
-	
-	private Timestamp confirmTime;
-	
 	private String comment;
 	
-	public PaymentVO(){
+	private String uniqueid;
+	
+	public PaymentVO() {
+		super();
+	}
+
+	public PaymentVO(CustomerVO customer, UserBaseVO collectUser, UserBaseVO confirmUser) {
+		super();
+		this.customer = customer;
+		this.collectUser = collectUser;
+		this.confirmUser = confirmUser;
 	}
 
 	public Long getPid() {
@@ -77,14 +87,6 @@ public class PaymentVO implements Serializable {
 		this.pid = pid;
 	}
 
-	public CustomerVO getCustomer(){
-		return customer;
-	}
-
-	public void setCustomer(CustomerVO customer){
-		this.customer = customer;
-	}
-
 	public String getOrderId() {
 		return orderId;
 	}
@@ -93,43 +95,93 @@ public class PaymentVO implements Serializable {
 		this.orderId = orderId;
 	}
 
-	public Float getBalance(){
+	public CustomerVO getCustomer() {
+		return customer;
+	}
+
+	public void setCustomer(CustomerVO customer) {
+		this.customer = customer;
+	}
+
+	public Float getBalance() {
 		return balance;
 	}
 
-	public void setBalance(Float balance){
+	public void setBalance(Float balance) {
 		this.balance = balance;
 	}
 
-	public Float getRecharge(){
+	public Float getRecharge() {
 		return recharge;
 	}
 
-	public void setRecharge(Float recharge){
+	public void setRecharge(Float recharge) {
 		this.recharge = recharge;
 	}
 
-	public String getType(){
+	public Short getType() {
 		return type;
 	}
 
-	public void setType(String type){
+	public void setType(Short type) {
 		this.type = type;
 	}
 
-	public String getPaymentType(){
+	public Short getPaymentType() {
 		return paymentType;
 	}
 
-	public void setPaymentType(String paymentType){
+	public void setPaymentType(Short paymentType) {
 		this.paymentType = paymentType;
 	}
 
-	public Float getCash(){
+	public UserBaseVO getCollectUser() {
+		return collectUser;
+	}
+
+	public void setCollectUser(UserBaseVO collectUser) {
+		this.collectUser = collectUser;
+	}
+
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
+	public Timestamp getCollectTime() {
+		return collectTime;
+	}
+
+	public void setCollectTime(Timestamp collectTime) {
+		this.collectTime = collectTime;
+	}
+
+	public UserBaseVO getConfirmUser() {
+		return confirmUser;
+	}
+
+	public void setConfirmUser(UserBaseVO confirmUser) {
+		this.confirmUser = confirmUser;
+	}
+
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
+	public Timestamp getConfirmTime() {
+		return confirmTime;
+	}
+
+	public void setConfirmTime(Timestamp confirmTime) {
+		this.confirmTime = confirmTime;
+	}
+
+	public Short getStatus() {
+		return status;
+	}
+
+	public void setStatus(Short status) {
+		this.status = status;
+	}
+
+	public Float getCash() {
 		return cash;
 	}
 
-	public void setCash(Float cash){
+	public void setCash(Float cash) {
 		this.cash = cash;
 	}
 
@@ -141,118 +193,84 @@ public class PaymentVO implements Serializable {
 		this.cashInfo = cashInfo;
 	}
 
-	public String getInstallmentBank(){
-		return installmentBank;
-	}
-
-	public void setInstallmentBank(String installmentBank){
-		this.installmentBank = installmentBank;
-	}
-
-	public Float getInstallment(){
-		return installment;
-	}
-
-	public void setInstallment(Float installment){
-		this.installment = installment;
-	}
-
-	public String getAccountsBank(){
-		return accountsBank;
-	}
-
-	public void setAccountsBank(String accountsBank){
-		this.accountsBank = accountsBank;
-	}
-
-	public Float getAccounts(){
-		return accounts;
-	}
-
-	public void setAccounts(Float accounts){
-		this.accounts = accounts;
-	}
-
-	public UserBaseVO getCollectUser(){
-		return collectUser;
-	}
-
-	public void setCollectUser(UserBaseVO collectUser){
-		this.collectUser = collectUser;
-	}
-
-	@JSON(format = "yyyy-MM-dd HH:mm:ss")
-	public Timestamp getCollectTime(){
-		return collectTime;
-	}
-
-	public void setCollectTime(Timestamp collectTime){
-		this.collectTime = collectTime;
-	}
-
-	public UserBaseVO getConfirmUser(){
-		return confirmUser;
-	}
-
-	public void setConfirmUser(UserBaseVO confirmUser){
-		this.confirmUser = confirmUser;
-	}
-
-	@JSON(format = "yyyy-MM-dd HH:mm:ss")
-	public Timestamp getConfirmTime(){
-		return confirmTime;
-	}
-
-	public void setConfirmTime(Timestamp confirmTime){
-		this.confirmTime = confirmTime;
-	}
-
-	public String getStatus(){
-		return status;
-	}
-
-	public void setStatus(String status){
-		this.status = status;
-	}
-
-	public Float getBank(){
+	public Float getBank() {
 		return bank;
 	}
 
-	public void setBank(Float bank){
+	public void setBank(Float bank) {
 		this.bank = bank;
 	}
 
-	public Float getCheckv(){
-		return checkv;
-	}
-
-	public void setCheckv(Float checkv){
-		this.checkv = checkv;
-	}
-
-	public String getCheckvBank(){
-		return checkvBank;
-	}
-
-	public void setCheckvBank(String checkvBank){
-		this.checkvBank = checkvBank;
-	}
-
-	public String getBankInfo(){
+	public String getBankInfo() {
 		return bankInfo;
 	}
 
-	public void setBankInfo(String bankInfo){
+	public void setBankInfo(String bankInfo) {
 		this.bankInfo = bankInfo;
 	}
-	
+
+	public Float getCheckv() {
+		return checkv;
+	}
+
+	public void setCheckv(Float checkv) {
+		this.checkv = checkv;
+	}
+
+	public String getCheckvBank() {
+		return checkvBank;
+	}
+
+	public void setCheckvBank(String checkvBank) {
+		this.checkvBank = checkvBank;
+	}
+
+	public Float getInstallment() {
+		return installment;
+	}
+
+	public void setInstallment(Float installment) {
+		this.installment = installment;
+	}
+
+	public String getInstallmentBank() {
+		return installmentBank;
+	}
+
+	public void setInstallmentBank(String installmentBank) {
+		this.installmentBank = installmentBank;
+	}
+
+	public Float getAccounts() {
+		return accounts;
+	}
+
+	public void setAccounts(Float accounts) {
+		this.accounts = accounts;
+	}
+
+	public String getAccountsBank() {
+		return accountsBank;
+	}
+
+	public void setAccountsBank(String accountsBank) {
+		this.accountsBank = accountsBank;
+	}
+
 	public String getComment() {
 		return comment;
 	}
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public String getUniqueid() {
+		return uniqueid;
+	}
+
+	public void setUniqueid(String uniqueid) {
+		this.uniqueid = uniqueid;
 	}
 
 }

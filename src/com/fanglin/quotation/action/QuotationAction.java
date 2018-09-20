@@ -79,7 +79,7 @@ public class QuotationAction extends BaseListAction {
 	@Action(value = "addQuotation", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addQuotation() throws FLException{
 
-		quotationService.addQuotation(quotation, queryUserId());
+		quotationService.addQuotation(quotation, queryUserId(), queryCompany());
 		
 		return SUCCESS;
 	}
@@ -119,7 +119,7 @@ public class QuotationAction extends BaseListAction {
 	@Action(value = "replicaQuotation", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String replicaQuotation() throws FLException{
 		
-		quotationService.replicaQuotation(quotation,queryUserId());
+		quotationService.replicaQuotation(quotation,queryUserId(), queryCompany());
 		
 		return SUCCESS;
 	}
@@ -127,7 +127,7 @@ public class QuotationAction extends BaseListAction {
 	@Action(value = "copyQuotation", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String copyQuotation() throws FLException{ 
 		
-		quotationService.copyQuotation(quotation, queryUserId());
+		quotationService.copyQuotation(quotation, queryUserId(), queryCompany());
 	    
 		return SUCCESS;
 	}

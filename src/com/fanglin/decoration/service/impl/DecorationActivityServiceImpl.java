@@ -72,8 +72,14 @@ public class DecorationActivityServiceImpl implements DecorationActivityService 
 		
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationActivityVO.getOrderId());
 		
+		List<Short> statuses = Arrays.asList(DecorationPO.STATUS_INIT_INT,DecorationPO.STATUS_DEPOSIT_INT,DecorationPO.STATUS_RESIGNED_INT);
+		
 		if(decorationPO == null){
 			throw new FLException(140013, "订单不存在");
+		}
+		
+		if(!statuses.contains(decorationPO.getStatus())){
+			throw new FLException(140003, "装修单已签约");
 		}
 		
 		ActivityPO activityPO = activityDao.get(decorationActivityVO.getActivity().getAid());
@@ -109,6 +115,14 @@ public class DecorationActivityServiceImpl implements DecorationActivityService 
 		
 		if(decorationActivityPO == null){
 			throw new FLException(140033, "订单活动信息不存在");
+		}
+		
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationActivityPO.getOrderId());
+		
+		List<Short> statuses = Arrays.asList(DecorationPO.STATUS_INIT_INT,DecorationPO.STATUS_DEPOSIT_INT,DecorationPO.STATUS_RESIGNED_INT);
+		
+		if(!statuses.contains(decorationPO.getStatus())){
+			throw new FLException(140003, "装修单已签约");
 		}
 		
 		decorationActivityDao.delete(decorationActivityPO);
