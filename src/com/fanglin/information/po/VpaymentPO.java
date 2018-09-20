@@ -31,9 +31,13 @@ public class VpaymentPO implements Serializable{
 	
 	public static final String COLUMN_STATUS_STR = "status";
 	
-	public static final short COLUMN_STATUS_NOTVPAYMENT_INT = 0;
+	public static final String COLUMN_EXPIRE_STR = "expire";
 	
-	public static final short COLUMN_STATUS_VPAYMENT_INT = 1;
+	public static final short STATUS_INIT_INT = 0;
+	
+	public static final short STATUS_PAYED_INT = 1;
+	
+	public static final short EXPIRE_INIT_INT = 0;
 	
 	private long vpid;//活动款ID
 	
@@ -54,6 +58,8 @@ public class VpaymentPO implements Serializable{
 	private VreceiptPO vreceipt;//活动收据ID
 	
 	private short status;//状态 , 0: 未付款 , 1: 已付款
+	
+	private short expire; // 到期标识 , 0: 有效 , 1: 到期
 	
 	private String comment;//备注
 	
@@ -159,6 +165,15 @@ public class VpaymentPO implements Serializable{
 
 	public void setStatus(short status) {
 		this.status = status;
+	}
+
+	@Column(name = "expire")
+	public short getExpire() {
+		return expire;
+	}
+
+	public void setExpire(short expire) {
+		this.expire = expire;
 	}
 
 	@Column(name = "comment")

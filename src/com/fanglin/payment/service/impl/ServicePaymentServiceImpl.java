@@ -71,29 +71,18 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 	private SystemConfigDao systemConfigDao;
 	
 	@Override
-	public void pageServicePaymentForCollect(Paging paging, List<Filter> filters) {
+	public void pageServicePaymentForCollect(Paging paging, List<Filter> filters, Integer company) {
 
 		if(filters.size() == 0) return;
 
-		filters.add(new Filter(ServicePaymentPO.COLUMN_STATUS_STR, String.valueOf(ServicePaymentPO.COLUMN_PAIDFORSTATUS_INT), "eq") );
+		filters.add(new Filter(ServicePaymentPO.COLUMN_STATUS_STR, String.valueOf(ServicePaymentPO.COLUMN_PAIDFORSTATUS_INT), "eq"));
+		filters.add(new Filter("company", String.valueOf(company), "eq"));
 
 		List<ServicePaymentPO> servicePaymentPOs = servicePaymentDao.pageServicePaymentForCollect(paging, filters);
 		List<ServicePaymentVO> servicePaymentVOs = new ArrayList<ServicePaymentVO>();
 
-		ServicePaymentVO servicePaymentVO;
-
 		for(ServicePaymentPO servicePaymentPO: servicePaymentPOs){
-
-			servicePaymentVO = new ServicePaymentVO(new UserBaseVO(),new UserBaseVO(),new UserBaseVO(),new DecorationVO(),new ServiceReceiptVO(new UserBaseVO(),new UserBaseVO()));
-			BeanUtil.copyProperties(servicePaymentPO, servicePaymentVO, Arrays.asList("creater","collecter","confirmer","decoration","serviceReceipt"));
-			servicePaymentVO.getCreater().setBaseInfo(servicePaymentPO.getCreater());
-			servicePaymentPO.getDecoration().ptvcascade(servicePaymentVO.getDecoration());
-			BeanUtil.copyProperties(servicePaymentPO.getServiceReceipt(), servicePaymentVO.getServiceReceipt(), Arrays.asList("collecter","confirmer"));
-			BeanUtil.copyProperties(servicePaymentPO.getServiceReceipt().getCollecter(), servicePaymentVO.getServiceReceipt().getCollecter(), Arrays.asList("dept","duty"));
-			BeanUtil.copyProperties(servicePaymentPO.getServiceReceipt().getConfirmer(), servicePaymentVO.getServiceReceipt().getConfirmer(), Arrays.asList("dept","duty"));
-
-			servicePaymentVOs.add(servicePaymentVO);
-
+			servicePaymentVOs.add(servicePaymentPOToVO(servicePaymentPO));
 		}
 
 		paging.setData(servicePaymentVOs);
@@ -101,29 +90,36 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 	}
 	
 	@Override
-	public void pageServicePaymentForConfirm(Paging paging, List<Filter> filters) {
+	public void pageServicePaymentForConfirm(Paging paging, List<Filter> filters, Integer company) {
 
 		if(filters.size() == 0) return;
 
-		filters.add(new Filter(ServicePaymentPO.COLUMN_STATUS_STR, String.valueOf(ServicePaymentPO.COLUMN_CONFIRMEDSTATUS_INT), "eq") );
+		filters.add(new Filter(ServicePaymentPO.COLUMN_STATUS_STR, String.valueOf(ServicePaymentPO.COLUMN_CONFIRMEDSTATUS_INT), "eq"));
+		filters.add(new Filter("company", String.valueOf(company), "eq"));
 
 		List<ServicePaymentPO> servicePaymentPOs = servicePaymentDao.pageServicePaymentForCollect(paging, filters);
 		List<ServicePaymentVO> servicePaymentVOs = new ArrayList<ServicePaymentVO>();
 
-		ServicePaymentVO servicePaymentVO;
+		for(ServicePaymentPO servicePaymentPO: servicePaymentPOs){
+			servicePaymentVOs.add(servicePaymentPOToVO(servicePaymentPO));
+		}
+
+		paging.setData(servicePaymentVOs);
+
+	}
+	
+	@Override
+	public void pageServicePaymentForHistory(Paging paging, List<Filter> filters, Integer company) {
+
+		if(filters.size() == 0) return;
+		
+		filters.add(new Filter("company", String.valueOf(company), "eq"));
+
+		List<ServicePaymentPO> servicePaymentPOs = servicePaymentDao.pageServicePaymentForCollect(paging, filters);
+		List<ServicePaymentVO> servicePaymentVOs = new ArrayList<ServicePaymentVO>();
 
 		for(ServicePaymentPO servicePaymentPO: servicePaymentPOs){
-
-			servicePaymentVO = new ServicePaymentVO(new UserBaseVO(),new UserBaseVO(),new UserBaseVO(),new DecorationVO(),new ServiceReceiptVO(new UserBaseVO(),new UserBaseVO()));
-			BeanUtil.copyProperties(servicePaymentPO, servicePaymentVO, Arrays.asList("creater","collecter","confirmer","decoration","serviceReceipt"));
-			servicePaymentVO.getCreater().setBaseInfo(servicePaymentPO.getCreater());
-			servicePaymentPO.getDecoration().ptvcascade(servicePaymentVO.getDecoration());
-			BeanUtil.copyProperties(servicePaymentPO.getServiceReceipt(), servicePaymentVO.getServiceReceipt(), Arrays.asList("collecter","confirmer"));
-			BeanUtil.copyProperties(servicePaymentPO.getServiceReceipt().getCollecter(), servicePaymentVO.getServiceReceipt().getCollecter(), Arrays.asList("dept","duty"));
-			BeanUtil.copyProperties(servicePaymentPO.getServiceReceipt().getConfirmer(), servicePaymentVO.getServiceReceipt().getConfirmer(), Arrays.asList("dept","duty"));
-			
-			servicePaymentVOs.add(servicePaymentVO);
-
+			servicePaymentVOs.add(servicePaymentPOToVO(servicePaymentPO));
 		}
 
 		paging.setData(servicePaymentVOs);
@@ -166,7 +162,7 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int collectServicePayment(ServicePaymentVO servicePaymentVO,ServiceReceiptVO serviceReceiptVO,AdvanceReceiptVO advanceReceiptVO,String cuid) throws FLException {
+	public int collectServicePayment(ServicePaymentVO servicePaymentVO, ServiceReceiptVO serviceReceiptVO, AdvanceReceiptVO advanceReceiptVO, String cuid, Integer company) throws FLException {
 
 		DecorationHolonomyPO  decorationHolonomy = decorationHolonomyDao.queryDecorationHolonomyByOrderId(servicePaymentVO.getDecoration().getOrderId());
 
@@ -175,23 +171,30 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 		}
 
 		DecorationPO decoration = decorationDao.queryDecorationByOrderId(servicePaymentVO.getDecoration().getOrderId());
+		
 		ServicePaymentPO servicePaymentPO = new ServicePaymentPO(new DecorationPO());
 		BeanUtil.copyProperties(servicePaymentVO, servicePaymentPO, Arrays.asList("decoration","creater","collecter","confirmer","serviceReceipt"));
 		BeanUtil.copyProperties(decoration, servicePaymentPO.getDecoration(), Arrays.asList("house","customer","designer","salesman","supervisor","version","createUser","quoter","escorter"));
+		
 		UserPO userPO = userDao.queryUserByUserId(cuid);
 		servicePaymentPO.setCreater(userPO);
 		servicePaymentPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
 		servicePaymentPO.setStatus(ServicePaymentPO.COLUMN_PAIDFORSTATUS_INT);
 		servicePaymentPO.setType(ServicePaymentPO.COLUMN_STYPE_INT);
+		servicePaymentPO.setCompany(company);
 		
 		SystemConfigPO servicePaymentRatio = systemConfigDao.querySystemConfig("servicePaymentRatio", decoration.getCompany());
 		
 		float ratio = servicePaymentRatio != null ? Float.parseFloat(servicePaymentRatio.getValue()) : 1.1f;
 
+		//应收款
 		Float money = servicePaymentVO.getReferMoney();
+		//预付款=应收款/服务款比率
 		servicePaymentPO.setAdvanceMoney((float)(int)Arith.div(money, ratio));
+		//服务费=应收款-预付款
 		servicePaymentPO.setServiceMoney(Arith.sub(money, servicePaymentPO.getAdvanceMoney()));
 
+		//实收服务费 decorationHolonomy.getServicePaidup()  服务费decorationHolonomy.getServicePrice()
 		if(Arith.add(servicePaymentPO.getServiceMoney(), decorationHolonomy.getServicePaidup())>decorationHolonomy.getServicePrice()){
 			Float sumMoney = Arith.add(servicePaymentPO.getServiceMoney(), decorationHolonomy.getServicePaidup());
 			Float subMoney = Arith.sub(sumMoney, decorationHolonomy.getServicePrice());
@@ -203,7 +206,9 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 
 		servicePaymentVO.setSpid(servicePaymentPO.getSpid());
 
+		//实收款
 		serviceReceiptVO.setRealMoney(money);
+		//生成收据
 		generateServicePayment(servicePaymentVO,serviceReceiptVO,cuid);
 
 		decorationHolonomy.setMaterialPaidup(Arith.add(servicePaymentPO.getAdvanceMoney(), decorationHolonomy.getMaterialPaidup()));
@@ -229,24 +234,30 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 		BeanUtil.copyProperties(decoration.getCustomer(), payment.getCustomer());
 		payment.setBalance(advancePaymentPO.getMaterialBalance());
 		payment.setRecharge(servicePaymentPO.getAdvanceMoney());
-		payment.setType(PaymentPO.PAYMENT_TYPE_COLLECTION_STR);
-		payment.setPaymentType(PaymentPO.PAYMENT_PAYMENTTYPE_MATERIAL_STR);
-		payment.setStatus(PaymentPO.PAYMENT_STATUS_PAID_STR);
+		payment.setType(PaymentPO.PAYMENT_TYPE_COLLECTION_INT);
+		payment.setPaymentType(PaymentPO.PAYMENT_PAYMENTTYPE_MATERIAL_INT);
+		payment.setStatus(PaymentPO.PAYMENT_STATUS_PAID_INT);
 		payment.setOrderId(servicePaymentPO.getDecoration().getOrderId());
 		payment.setCompany(decoration.getCompany());
+		payment.setCreater(userPO);
 		
 		advanceReceiptVO.setRealMoney(servicePaymentPO.getAdvanceMoney());
 		AdvanceReceiptPO advanceReceiptPO = addAdvanceReceipt(advanceReceiptVO,cuid);
 
 		BeanUtil.copyProperties(advanceReceiptPO, payment.getAdvanceReceipt());
+		
+		payment.setUniqueid("S" + servicePaymentPO.getServiceReceipt().getSrId());
 		paymentDao.save(payment);
+		
+		servicePaymentPO.setPid(new Long(payment.getPid()).intValue());
+		servicePaymentDao.update(servicePaymentPO);
 
 		return 0;
 	}
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int collectServicePaymentForService(ServicePaymentVO servicePaymentVO,ServiceReceiptVO serviceReceiptVO,String cuid) throws FLException {
+	public int collectServicePaymentForService(ServicePaymentVO servicePaymentVO, ServiceReceiptVO serviceReceiptVO, String cuid, Integer company) throws FLException {
 
 		DecorationHolonomyPO  decorationHolonomy = decorationHolonomyDao.queryDecorationHolonomyByOrderId(servicePaymentVO.getDecoration().getOrderId());
 
@@ -255,17 +266,19 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 		}
 
 		DecorationPO decoration = decorationDao.queryDecorationByOrderId(servicePaymentVO.getDecoration().getOrderId());
+		
 		ServicePaymentPO servicePaymentPO = new ServicePaymentPO(new DecorationPO());
 		BeanUtil.copyProperties(servicePaymentVO, servicePaymentPO, Arrays.asList("decoration","creater","collecter","confirmer","serviceReceipt"));
 		BeanUtil.copyProperties(decoration, servicePaymentPO.getDecoration(), Arrays.asList("house","customer","designer","salesman","supervisor","version","createUser","quoter","escorter"));
+		
 		UserPO userPO = userDao.queryUserByUserId(cuid);
 		servicePaymentPO.setCreater(userPO);
 		servicePaymentPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
 		servicePaymentPO.setStatus(ServicePaymentPO.COLUMN_PAIDFORSTATUS_INT);
 		servicePaymentPO.setType(ServicePaymentPO.COLUMN_STYPE_INT);
-
 		servicePaymentPO.setServiceMoney(servicePaymentVO.getReferMoney());
 		servicePaymentPO.setAdvanceMoney(ServicePaymentPO.COLUMN_MONEY_INT);
+		servicePaymentPO.setCompany(company);
 
 		servicePaymentDao.save(servicePaymentPO);
 
@@ -282,7 +295,7 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int refundServicePaymentForService(ServicePaymentVO servicePaymentVO,ServiceReceiptVO serviceReceiptVO,String cuid) throws FLException {
+	public int refundServicePaymentForService(ServicePaymentVO servicePaymentVO, ServiceReceiptVO serviceReceiptVO, String cuid, Integer company) throws FLException {
 
 		DecorationHolonomyPO  decorationHolonomy = decorationHolonomyDao.queryDecorationHolonomyByOrderId(servicePaymentVO.getDecoration().getOrderId());
 
@@ -299,9 +312,9 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 		servicePaymentPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
 		servicePaymentPO.setStatus(ServicePaymentPO.COLUMN_PAIDFORSTATUS_INT);
 		servicePaymentPO.setType(ServicePaymentPO.COLUMN_TTYPE_INT);
-		
 		servicePaymentPO.setServiceMoney(servicePaymentVO.getReferMoney());
 		servicePaymentPO.setAdvanceMoney(ServicePaymentPO.COLUMN_MONEY_INT);
+		servicePaymentPO.setCompany(company);
 
 		servicePaymentDao.save(servicePaymentPO);
 
@@ -471,6 +484,17 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 		servicePaymentDao.update(servicePayment);
 
 		return 0;
+	}
+	
+	public ServicePaymentVO servicePaymentPOToVO(ServicePaymentPO servicePaymentPO){
+		ServicePaymentVO servicePaymentVO = new ServicePaymentVO(new UserBaseVO(),new UserBaseVO(),new UserBaseVO(),new DecorationVO(),new ServiceReceiptVO(new UserBaseVO(),new UserBaseVO()));
+		BeanUtil.copyProperties(servicePaymentPO, servicePaymentVO, Arrays.asList("creater","collecter","confirmer","decoration","serviceReceipt"));
+		servicePaymentVO.getCreater().setBaseInfo(servicePaymentPO.getCreater());
+		servicePaymentPO.getDecoration().ptvcascade(servicePaymentVO.getDecoration());
+		BeanUtil.copyProperties(servicePaymentPO.getServiceReceipt(), servicePaymentVO.getServiceReceipt(), Arrays.asList("collecter","confirmer"));
+		BeanUtil.copyProperties(servicePaymentPO.getServiceReceipt().getCollecter(), servicePaymentVO.getServiceReceipt().getCollecter(), Arrays.asList("dept","duty"));
+		BeanUtil.copyProperties(servicePaymentPO.getServiceReceipt().getConfirmer(), servicePaymentVO.getServiceReceipt().getConfirmer(), Arrays.asList("dept","duty"));
+		return servicePaymentVO;
 	}
 
 }

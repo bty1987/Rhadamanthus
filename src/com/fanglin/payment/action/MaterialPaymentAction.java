@@ -62,33 +62,33 @@ public class MaterialPaymentAction extends BaseListAction{
 	private Timestamp dateTime;
 	
 	@Action(value="pageMaterialPaymentForInit", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String pageMaterialPaymentForInit(){
+	public String pageMaterialPaymentForInit() throws FLException{
 		
-		materialPaymentService.pageMaterialPaymentForInit(getPaging(), getFilters());
-		
-		return SUCCESS;
-	}
-	
-	@Action(value="pageMaterialPaymentForCollect", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String pageMaterialPaymentForCollect(){
-		
-		materialPaymentService.pageMaterialPaymentForCollect(getPaging(), getFilters());
-		
-		return SUCCESS;
-	}
-	
-	@Action(value="pageMaterialPaymentForConfirm", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String pageMaterialPaymentForConfirm(){
-		
-		materialPaymentService.pageMaterialPaymentForConfirm(getPaging(), getFilters());
+		materialPaymentService.pageMaterialPaymentForInit(getPaging(), getFilters(), queryCompany());
 		
 		return SUCCESS;
 	}
 	
 	@Action(value="pageMaterialPaymentForNotInit", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String pageMaterialPaymentForNotInit(){
+	public String pageMaterialPaymentForNotInit() throws FLException{
 		
-		materialPaymentService.pageMaterialPaymentForNotInit(getPaging(), getFilters());
+		materialPaymentService.pageMaterialPaymentForNotInit(getPaging(), getFilters(), queryCompany());
+		
+		return SUCCESS;
+	}
+	
+	@Action(value="pageMaterialPaymentForCollect", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String pageMaterialPaymentForCollect() throws FLException{
+		
+		materialPaymentService.pageMaterialPaymentForCollect(getPaging(), getFilters(), queryCompany());
+		
+		return SUCCESS;
+	}
+	
+	@Action(value="pageMaterialPaymentForConfirm", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String pageMaterialPaymentForConfirm() throws FLException{
+		
+		materialPaymentService.pageMaterialPaymentForConfirm(getPaging(), getFilters(), queryCompany());
 		
 		return SUCCESS;
 	}
@@ -152,7 +152,7 @@ public class MaterialPaymentAction extends BaseListAction{
 	@Action(value="collectMaterialPayment", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String collectMaterialPayment() throws FLException{
 		
-		materialPaymentService.collectMaterialPayment(materialPayment, decorationActivityItems, queryUserId());
+		materialPaymentService.collectMaterialPayment(materialPayment, decorationActivityItems, queryUserId(), queryCompany());
 		
 		return SUCCESS;
 	}
@@ -160,7 +160,7 @@ public class MaterialPaymentAction extends BaseListAction{
 	@Action(value="collectMaterialPayments", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String collectMaterialPayments() throws FLException{
 		
-		materialPaymentService.collectMaterialPayments(material, materialPayments, materialReceipt, queryUserId());
+		materialPaymentService.collectMaterialPayments(material, materialPayments, materialReceipt, queryUserId(), queryCompany());
 		
 		return SUCCESS;
 	}
@@ -168,7 +168,7 @@ public class MaterialPaymentAction extends BaseListAction{
 	@Action(value="collectMaterialPaymentForRefund", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String collectMaterialPaymentForRefund() throws FLException{
 		
-		materialPaymentService.collectMaterialPaymentForRefund(materialPayment, queryUserId());
+		materialPaymentService.collectMaterialPaymentForRefund(materialPayment, queryUserId(), queryCompany());
 		
 		return SUCCESS;
 	}

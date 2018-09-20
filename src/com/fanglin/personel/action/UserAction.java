@@ -117,7 +117,7 @@ public class UserAction extends BaseListAction {
 	@Action(value = "queryUserByPinyin", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryUserByPinyin() throws FLException{
 		
-		userBases = userService.queryUserByPinyin(pinyinName,user, departmentType);
+		userBases = userService.queryUserByPinyin(pinyinName,user, departmentType,queryCompany());
 	
 		packageUserName(userBases);
 		
@@ -178,6 +178,18 @@ public class UserAction extends BaseListAction {
 		}
 		
 		userService.updateUserForAdvance(user);
+
+		return SUCCESS;
+	}
+	
+	@Action(value = "defaultPassword", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
+	public String defaultPassword() throws FLException {
+		
+		if(SystemConfig.getString("communion") == null){
+		    throw new FLException(-1, "无操作权限");
+		}
+		
+		userService.checkUserForPassword(queryUserId(), queryCompany());
 
 		return SUCCESS;
 	}

@@ -2,8 +2,9 @@ package com.fanglin.information.vo;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
-
 import org.apache.struts2.json.annotations.JSON;
+import com.fanglin.personel.vo.UserBaseVO;
+
 
 public class PlanVO implements Serializable {
 	
@@ -15,9 +16,7 @@ public class PlanVO implements Serializable {
 	
 	private String args;
 	
-	private Long cuid;
-	
-	private String  createrName;
+	private UserBaseVO creater;
 	
 	private Timestamp createTime;
 	
@@ -37,12 +36,13 @@ public class PlanVO implements Serializable {
 		super();
 	}
 	
-	public PlanVO(TaskVO task) {
+	public PlanVO(TaskVO task, UserBaseVO creater) {
 		super();
 		this.task = task;
+		this.creater = creater;
 	}
 
-	public Long getPid() {
+    public Long getPid() {
 		return pid;
 	}
 
@@ -66,22 +66,14 @@ public class PlanVO implements Serializable {
 		this.args = args;
 	}
 
-	public Long getCuid() {
-		return cuid;
+	public UserBaseVO getCreater() {
+		return creater;
 	}
 
-	public void setCuid(Long cuid) {
-		this.cuid = cuid;
+	public void setCreater(UserBaseVO creater) {
+		this.creater = creater;
 	}
 
-	public String getCreaterName() {
-		return createrName;
-	}
-
-	public void setCreaterName(String createrName) {
-		this.createrName = createrName;
-	}
-	
 	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getCreateTime() {
 		return createTime;

@@ -3,169 +3,169 @@ USE `store`;
 
 DROP TABLE IF EXISTS `mcategory`;
 CREATE TABLE `mcategory` (
-  `cid` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Ʒ��ID' ,
-  `name` varchar(15) NOT NULL COMMENT 'Ʒ������' ,
-  `icon` varchar(256) NOT NULL COMMENT 'Ʒ��logoͼƬ' ,
-  `isShow` tinyint(1) NOT NULL COMMENT '״̬(0:��ҳ����ʾ 1:��ҳ��ʾ)' ,
+  `cid` int(11) NOT NULL AUTO_INCREMENT COMMENT '品类ID' ,
+  `name` varchar(15) NOT NULL COMMENT '品类名称' ,
+  `icon` varchar(256) NOT NULL COMMENT '品类logo图片' ,
+  `isShow` tinyint(1) NOT NULL COMMENT '状态(0:首页不显示 1:首页显示)' ,
 PRIMARY KEY (`cid`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='Ʒ��';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='品类';
 
 DROP TABLE IF EXISTS `mbrand`;
 CREATE TABLE `mbrand` (
-  `bid` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Ʒ��ID' ,
-  `cid` int(11) NOT NULL COMMENT 'Ʒ��ID' ,
-  `name` varchar(32) NOT NULL COMMENT 'Ʒ������' ,
-  `icon` varchar(256) NOT NULL COMMENT 'Ʒ��logoͼƬ' ,
-  `status` tinyint(1) NOT NULL COMMENT '״̬(0:���� 1������)',
+  `bid` int(11) NOT NULL AUTO_INCREMENT COMMENT '品牌ID' ,
+  `cid` int(11) NOT NULL COMMENT '品类ID' ,
+  `name` varchar(32) NOT NULL COMMENT '品牌名称' ,
+  `icon` varchar(256) NOT NULL COMMENT '品牌logo图片' ,
+  `status` tinyint(1) NOT NULL COMMENT '状态(0:启用 1：禁用)',
 PRIMARY KEY (`bid`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='Ʒ��';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='品牌';
 
 DROP TABLE IF EXISTS `mgoods`;
 CREATE TABLE `mgoods` (
-  `gid` int(11) NOT NULL AUTO_INCREMENT COMMENT '��ƷID' ,
-  `no` varchar(15) NOT NULL COMMENT '��Ʒ���' ,
-  `name` varchar(32) NOT NULL COMMENT '��Ʒ����' ,
-  `pinyin` varchar(64) NOT NULL COMMENT '��Ʒ����ƴ��' ,
-  `bid` int(11) NOT NULL COMMENT 'Ʒ��' ,
-  `barcode` varchar(32) NOT NULL COMMENT '������' ,
-  `title` varchar(256) NOT NULL COMMENT '����' ,
-  `defaultImg` varchar(256) NULL COMMENT '��ƷͼƬ' ,
-  `price`  decimal(10,2) NOT NULL COMMENT '�۸�' ,
-  `status` tinyint(1) NOT NULL COMMENT '״̬(0:���� 1������)' ,
+  `gid` int(11) NOT NULL AUTO_INCREMENT COMMENT '商品ID' ,
+  `no` varchar(15) NOT NULL COMMENT '商品编号' ,
+  `name` varchar(32) NOT NULL COMMENT '商品名称' ,
+  `pinyin` varchar(64) NOT NULL COMMENT '商品名称拼音' ,
+  `bid` int(11) NOT NULL COMMENT '品牌' ,
+  `barcode` varchar(32) NOT NULL COMMENT '条形码' ,
+  `title` varchar(256) NOT NULL COMMENT '标题' ,
+  `defaultImg` varchar(256) NULL COMMENT '商品图片' ,
+  `price`  decimal(10,2) NOT NULL COMMENT '价格' ,
+  `status` tinyint(1) NOT NULL COMMENT '状态(0:启用 1：禁用)' ,
 PRIMARY KEY (`gid`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='��Ʒ';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='商品';
 
 DROP TABLE IF EXISTS `mcolor`;
 CREATE TABLE `mcolor` (
-  `cid` int(11) NOT NULL AUTO_INCREMENT COMMENT '��ɫID' ,
-  `gid` int(11) NOT NULL COMMENT '��ƷID' ,
-  `color` varchar(32) NOT NULL COMMENT '��Ʒ��ɫ' ,
-  `status` tinyint(1) NOT NULL COMMENT '״̬(0:���� 1:����)' ,
+  `cid` int(11) NOT NULL AUTO_INCREMENT COMMENT '颜色ID' ,
+  `gid` int(11) NOT NULL COMMENT '商品ID' ,
+  `color` varchar(32) NOT NULL COMMENT '商品颜色' ,
+  `status` tinyint(1) NOT NULL COMMENT '状态(0:启用 1:禁用)' ,
 PRIMARY KEY (`cid`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='��ɫ';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='颜色';
 
 DROP TABLE IF EXISTS `mformat`;
 CREATE TABLE `mformat` (
-  `fid` int(11) NOT NULL AUTO_INCREMENT COMMENT '���ID' ,
-  `gid` int(11) NOT NULL COMMENT '��ƷID' ,
-  `format` varchar(32) NOT NULL COMMENT '��Ʒ���' ,
-  `status` tinyint(1) NOT NULL COMMENT '״̬(0:���� 1:����)' ,
+  `fid` int(11) NOT NULL AUTO_INCREMENT COMMENT '规格ID' ,
+  `gid` int(11) NOT NULL COMMENT '商品ID' ,
+  `format` varchar(32) NOT NULL COMMENT '商品规格' ,
+  `status` tinyint(1) NOT NULL COMMENT '状态(0:启用 1:禁用)' ,
 PRIMARY KEY (`fid`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='���';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='规格';
 
 DROP TABLE IF EXISTS `mprice`;
 CREATE TABLE `mprice` (
-  `pid` int(11) NOT NULL AUTO_INCREMENT COMMENT '�۸�ID' ,
-  `gid` int(11) NOT NULL COMMENT '��ƷID' ,
-  `cid` int(11) NOT NULL COMMENT '��ɫID' ,
-  `fid` int(11) NOT NULL COMMENT '���ID' ,
-  `name` varchar(32) NULL COMMENT '�۸�����' ,
-  `price` decimal(10,2) NOT NULL COMMENT '�۸�' ,
-  `img` varchar(256) NOT NULL COMMENT '��ƷͼƬ' ,
+  `pid` int(11) NOT NULL AUTO_INCREMENT COMMENT '价格ID' ,
+  `gid` int(11) NOT NULL COMMENT '商品ID' ,
+  `cid` int(11) NOT NULL COMMENT '颜色ID' ,
+  `fid` int(11) NOT NULL COMMENT '规格ID' ,
+  `name` varchar(32) NULL COMMENT '价格名称' ,
+  `price` decimal(10,2) NOT NULL COMMENT '价格' ,
+  `img` varchar(256) NOT NULL COMMENT '商品图片' ,
 PRIMARY KEY (`pid`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='�۸�';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='价格';
 
 DROP TABLE IF EXISTS `cart`;
 CREATE TABLE `cart` (
-  `cid` int(11) NOT NULL AUTO_INCREMENT COMMENT '���ﳵID' ,
-  `uid` int(11) NOT NULL COMMENT '�û�ID' ,
-  `pid` int(11) NOT NULL COMMENT '�۸�ID' ,
-  `num` int(6) NOT NULL COMMENT '��Ʒ����' ,
+  `cid` int(11) NOT NULL AUTO_INCREMENT COMMENT '购物车ID' ,
+  `uid` int(11) NOT NULL COMMENT '用户ID' ,
+  `pid` int(11) NOT NULL COMMENT '价格ID' ,
+  `num` int(6) NOT NULL COMMENT '商品数量' ,
 PRIMARY KEY (`cid`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='���ﳵ';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='购物车';
 
 DROP TABLE IF EXISTS `morder`;
 CREATE TABLE `morder` (
-  `oid` int(11) NOT NULL AUTO_INCREMENT COMMENT '����ID' ,
-  `no` varchar(15) NOT NULL COMMENT '�������' ,
-  `unionId`  varchar(64) NOT NULL COMMENT '�û�unionId',
-  `total` decimal(10,2) NOT NULL COMMENT '�ܼ�' ,
-  `createTime`  timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '����ʱ��' ,
-  `paymentTime`  timestamp NULL COMMENT '֧��ʱ��' ,
-  `address` varchar(255) NOT NULL COMMENT '��ַ' ,
-  `status` tinyint(1) NOT NULL COMMENT '״̬(0:������ 1:������ 2:���ջ� 3:���ջ� 4:��ɾ��)' ,
+  `oid` int(11) NOT NULL AUTO_INCREMENT COMMENT '订单ID' ,
+  `no` varchar(15) NOT NULL COMMENT '订单编号' ,
+  `unionId`  varchar(64) NOT NULL COMMENT '用户unionId',
+  `total` decimal(10,2) NOT NULL COMMENT '总价' ,
+  `createTime`  timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间' ,
+  `paymentTime`  timestamp NULL COMMENT '支付时间' ,
+  `address` varchar(255) NOT NULL COMMENT '地址' ,
+  `status` tinyint(1) NOT NULL COMMENT '状态(0:待付款 1:待发货 2:待收货 3:已收货 4:已删除)' ,
 PRIMARY KEY (`oid`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='����';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='订单';
 
 DROP TABLE IF EXISTS `morderItem`;
 CREATE TABLE `morderItem` (
-  `oiid` int(11) NOT NULL AUTO_INCREMENT COMMENT '������ID' ,
-  `oid` int(11) NOT NULL COMMENT '����ID' ,
-  `pid` int(11) NOT NULL COMMENT '�۸�ID' ,
-  `num` int(6) NOT NULL COMMENT '��Ʒ����' ,
+  `oiid` int(11) NOT NULL AUTO_INCREMENT COMMENT '订单项ID' ,
+  `oid` int(11) NOT NULL COMMENT '订单ID' ,
+  `pid` int(11) NOT NULL COMMENT '价格ID' ,
+  `num` int(6) NOT NULL COMMENT '商品数量' ,
 PRIMARY KEY (`oiid`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='������';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='订单项';
 
 DROP TABLE IF EXISTS `picture`;
 CREATE TABLE `picture` (
-  `pid` int(11) NOT NULL AUTO_INCREMENT COMMENT '��ƷͼƬID' ,
-  `gid` int(11) NOT NULL COMMENT '��ƷID' ,
-  `img` varchar(256) NOT NULL COMMENT 'ͼƬ·��' ,
-  `type` tinyint(1) NOT NULL COMMENT 'ͼƬ����(0:ͼƬ�ֲ�ͼ 1:����ͼ)' ,
-  `status` tinyint(1) NOT NULL COMMENT '״̬' ,
-  `sort` tinyint(1) NOT NULL COMMENT '����' ,
+  `pid` int(11) NOT NULL AUTO_INCREMENT COMMENT '商品图片ID' ,
+  `gid` int(11) NOT NULL COMMENT '商品ID' ,
+  `img` varchar(256) NOT NULL COMMENT '图片路径' ,
+  `type` tinyint(1) NOT NULL COMMENT '图片类型(0:图片轮播图 1:详情图)' ,
+  `status` tinyint(1) NOT NULL COMMENT '状态' ,
+  `sort` tinyint(1) NOT NULL COMMENT '排序' ,
 PRIMARY KEY (`pid`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='��ƷͼƬ';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='商品图片';
 
 DROP TABLE IF EXISTS `slide`;
 CREATE TABLE `slide` (
-  `sid` int(11) NOT NULL AUTO_INCREMENT COMMENT '�ֲ�ͼƬID' ,
-  `gid` int(11) NULL COMMENT '��ƷID' ,
-  `img` varchar(256) NOT NULL COMMENT 'ͼƬ·��' ,
-  `url` varchar(256) NOT NULL COMMENT '�����' ,
-  `status` tinyint(1) NOT NULL COMMENT '״̬(0:��Ч 1:��Ч)' ,
+  `sid` int(11) NOT NULL AUTO_INCREMENT COMMENT '轮播图片ID' ,
+  `gid` int(11) NULL COMMENT '商品ID' ,
+  `img` varchar(256) NOT NULL COMMENT '图片路径' ,
+  `url` varchar(256) NOT NULL COMMENT '活动链接' ,
+  `status` tinyint(1) NOT NULL COMMENT '状态(0:有效 1:无效)' ,
 PRIMARY KEY (`sid`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='�ֲ�ͼƬ';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='轮播图片';
 
 DROP TABLE IF EXISTS `muser`;
 CREATE TABLE `muser` (
-  `uid` int(11) NOT NULL AUTO_INCREMENT COMMENT '�û�ID' ,
-  `unionId` varchar(64) NOT NULL COMMENT '�û�union' ,
-  `name` varchar(32) NOT NULL COMMENT '����' ,
-  `phone` varchar(32) NULL COMMENT '��ϵ�绰' ,
-  `gender` tinyint(1) NOT NULL COMMENT '�Ա�(0:Ů 1:��)' ,
-  `birthday`  date NULL COMMENT '����' ,
+  `uid` int(11) NOT NULL AUTO_INCREMENT COMMENT '用户ID' ,
+  `unionId` varchar(64) NOT NULL COMMENT '用户union' ,
+  `name` varchar(32) NOT NULL COMMENT '姓名' ,
+  `phone` varchar(32) NULL COMMENT '联系电话' ,
+  `gender` tinyint(1) NOT NULL COMMENT '性别(0:女 1:男)' ,
+  `birthday`  date NULL COMMENT '生日' ,
 PRIMARY KEY (`uid`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='�û�';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='用户';
 
 DROP TABLE IF EXISTS `address`;
 CREATE TABLE `address` (
-  `aid` int(11) NOT NULL AUTO_INCREMENT COMMENT '��ַID' ,
-  `uid` int(11) NOT NULL COMMENT '�û�ID' ,
-  `name` varchar(32) NOT NULL COMMENT '����' ,
-  `phone` varchar(32) NOT NULL COMMENT '��ϵ�绰' ,
-  `province`  varchar(32) NOT NULL COMMENT 'ʡ��' ,
-  `city`  varchar(32) NOT NULL COMMENT '����' ,
-  `proper`  varchar(64) NOT NULL COMMENT '����' ,
-  `address` varchar(128) NOT NULL COMMENT '��ϸ��ַ' ,
-  `status` tinyint(1) NOT NULL COMMENT 'Ĭ�ϵ�ַ(0:�� 1:�� 2:��Ч)' ,
+  `aid` int(11) NOT NULL AUTO_INCREMENT COMMENT '地址ID' ,
+  `uid` int(11) NOT NULL COMMENT '用户ID' ,
+  `name` varchar(32) NOT NULL COMMENT '姓名' ,
+  `phone` varchar(32) NOT NULL COMMENT '联系电话' ,
+  `province`  varchar(32) NOT NULL COMMENT '省份' ,
+  `city`  varchar(32) NOT NULL COMMENT '城市' ,
+  `proper`  varchar(64) NOT NULL COMMENT '城区' ,
+  `address` varchar(128) NOT NULL COMMENT '详细地址' ,
+  `status` tinyint(1) NOT NULL COMMENT '默认地址(0:否 1:是 2:无效)' ,
 PRIMARY KEY (`aid`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='��ַ';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='地址';
 
 DROP TABLE IF EXISTS `mpayment`;
 CREATE TABLE `mpayment` (
   `mpid`  int(11) NOT  NULL  AUTO_INCREMENT ,
-  `oid`  int(11) NOT NULL COMMENT '����id',
-  `totalPrice`  decimal(10,2) NOT NULL COMMENT '�ܼ�',
-  `type`  tinyint(1) NOT NULL COMMENT '����' ,
-  `status`  tinyint(1) NOT NULL COMMENT '״̬' ,
+  `oid`  int(11) NOT NULL COMMENT '订单id',
+  `totalPrice`  decimal(10,2) NOT NULL COMMENT '总价',
+  `type`  tinyint(1) NOT NULL COMMENT '类型' ,
+  `status`  tinyint(1) NOT NULL COMMENT '状态' ,
 PRIMARY KEY(`mpid`)
-)ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='�̳ǿ���';
+)ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='商城款项';
 
 DROP TABLE IF EXISTS `evaluate` ;
 CREATE TABLE `evaluate` (
    `eid`  int(11) NOT NULL  AUTO_INCREMENT ,
-   `oid`  int(11) NOT NULL COMMENT '����ID',
-   `pid`  int(11) NOT NULL COMMENT '�۸�ID',
-   `unionId`  varchar(64) NOT NULL COMMENT '�û�unionId',
-   `name` varchar(32) NOT NULL COMMENT '�û�����' ,
-   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '����ʱ��',
-   `score`  tinyint(1) NOT NULL COMMENT '����',
-   `comment`  varchar(256) NOT NULL COMMENT '����',
-   `discribeRate`  tinyint(1) NOT NULL COMMENT '��������',
-   `logisticsRate`  tinyint(1) NOT NULL COMMENT '��������',
-   `serviceRate`  tinyint(1) NOT NULL COMMENT '��������',
-   `imgs` varchar(256) NOT NULL COMMENT 'ͼƬ·��',
+   `oid`  int(11) NOT NULL COMMENT '订单ID',
+   `pid`  int(11) NOT NULL COMMENT '价格ID',
+   `unionId`  varchar(64) NOT NULL COMMENT '用户unionId',
+   `name` varchar(32) NOT NULL COMMENT '用户姓名' ,
+   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+   `score`  tinyint(1) NOT NULL COMMENT '评分',
+   `comment`  varchar(256) NOT NULL COMMENT '评价',
+   `discribeRate`  tinyint(1) NOT NULL COMMENT '描述评价',
+   `logisticsRate`  tinyint(1) NOT NULL COMMENT '物流评价',
+   `serviceRate`  tinyint(1) NOT NULL COMMENT '服务评价',
+   `imgs` varchar(256) NOT NULL COMMENT '图片路径',
  PRIMARY KEY (`eid`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='�̳�����';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='商城评价';
 

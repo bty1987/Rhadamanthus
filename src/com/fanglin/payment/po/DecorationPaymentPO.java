@@ -80,11 +80,9 @@ public class DecorationPaymentPO implements Serializable {
 	
 	public static final short TWOTYPE_DEAL_INT = 1;        
 	
-	public static final short TWOTYPE_ADD_INT = 2;   	   
+	public static final short TWOTYPE_ADD_REDUCE_INT = 2;  
 	
-	public static final short TWOTYPE_REDUCE_INT = 3;      
-	
-	public static final short TWOTYPE_OTHER_INT = 4;       
+	public static final short TWOTYPE_OTHER_INT = 3;
 
 	private long dpid;
 	
@@ -107,6 +105,8 @@ public class DecorationPaymentPO implements Serializable {
 	private float referMoney =  0f;
 	
 	private float realMoney = 0f;
+	
+	private int company;
 	
 	public DecorationPaymentPO() {
 		super();
@@ -216,4 +216,12 @@ public class DecorationPaymentPO implements Serializable {
 		this.twoType = twoType;
 	}
 
+	@Column(name = "company")
+	public int getCompany() {
+		return company;
+	}
+
+	public void setCompany(int company) {
+		this.company = company;
+	}
 }

@@ -31,7 +31,7 @@ $(function () {
                     var $manifestItemsid = $('<div id="resultListManifestItem' + v.mid + '"></div>').addClass('clearfix tab-pane active').appendTo($manifestItemscol)
 
                     var propertyArr = [
-                        ["货单编号:", v.code, "grey"],
+                        ["货单号:", v.code, "grey"],
                     ];
 
                     $.each(propertyArr, function (index, value) {
@@ -323,7 +323,7 @@ $(function () {
                     var $purchaseManifestItemmid = $('<div id="resultListPurchaseManifestItem' + v.mid + '"></div>').addClass('clearfix tab-pane active').appendTo($purchaseManifestItemscol)
 
                     var propertyArr = [
-                        ["货单编号:", v.code, "grey"],
+                        ["货单号:", v.code, "grey"],
                     ];
 
                     $.each(propertyArr, function (index, value) {

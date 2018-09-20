@@ -26,7 +26,6 @@ jQuery(function ($) {
             $inNo: $('#cardId'),
             $turnPointsCredit: $('#turnPointsCredit')
         },
-
     };
 
     var displayFunc = (function () {
@@ -56,12 +55,10 @@ jQuery(function ($) {
             var $btnTurnPoints = $('<a></a>').addClass('btn btn-minier btn-success').html('转积分');
 
             var propertyArr = [
-
                 ["会员卡号: ", v.no, "red"],
-                ["订单编号: ", v.orderId, "grey"],
+                ["装修单号: ", v.orderId, "grey"],
                 ["会员积分: ", v.credits + "分", "red"],
                 ["创建时间: ", v.createTime, "red"]
-
             ];
 
             $.each(propertyArr, function (index, value) {
@@ -91,7 +88,6 @@ jQuery(function ($) {
                 memberCard.items.$credits = v.credits;
                 dialogTurnPoints();
             });
-
 
             return $liLine;
         };

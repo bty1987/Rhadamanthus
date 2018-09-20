@@ -35,6 +35,8 @@ import com.fanglin.sales.po.SalesPO;
 import com.fanglin.sales.service.SalesService;
 import com.fanglin.sales.vo.SalesItemVO;
 import com.fanglin.sales.vo.SalesVO;
+import com.fanglin.system.dao.CompanyDao;
+import com.fanglin.system.po.CompanyPO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
@@ -60,6 +62,9 @@ public class SalesServiceImpl implements SalesService {
 	
 	@Autowired
 	private GoodsDao goodsDao;
+	
+	@Autowired
+	private CompanyDao companyDao;
 	
 	@Override
 	public List<SalesVO> pageSales(List<SalesPO> salesPOs) {
@@ -192,7 +197,7 @@ public class SalesServiceImpl implements SalesService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int addSales(SalesVO salesVO,List<SalesItemVO> salesItemVOs,int company) throws FLException {
+	public int addSales(SalesVO salesVO, List<SalesItemVO> salesItemVOs, int company) throws FLException {
 		
 		int dompany;
 		
@@ -206,6 +211,12 @@ public class SalesServiceImpl implements SalesService {
 			
 		}
 		
+		CompanyPO companyPO = companyDao.get(company);
+		
+		if(companyPO == null){
+			throw new FLException(230015, "公司不存在");
+		}
+		
 		Float totalMoney = 0f;
 			
 		SalesPO salesPO = new SalesPO(new HousePO(), new CustomerPO(), new UserPO(), new DepartmentPO(), new DepartmentPO(), new UserPO(), new DepartmentPO(), new UserPO());
@@ -216,10 +227,10 @@ public class SalesServiceImpl implements SalesService {
 		UserPO guider = userDao.queryUserByUserId(salesVO.getGuider().getUserId());
 		UserPO instorer = userDao.queryUserByUserId(salesVO.getInstorer().getUserId());
 		
-		String currentDate = DateUtil.current("yyyyMMdd").toString();
-		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_SO_INT , currentDate);
+		String currentDate = DateUtil.current("yyMMdd").toString();
+		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_SO_INT , currentDate, company);
 		
-		String no = currentDate + FormatUtil.fillZero(FormatUtil.offset(count), "000000");
+		String no = companyPO.getShortname() + currentDate + FormatUtil.fillZero(FormatUtil.offset(count), "00000");
 		
 		BeanUtil.copyProperties(salesVO, salesPO, Arrays.asList("salesman","dept","region","guider","instorer","guideDept","house","customer","maling","venderMaling","depositpayStatus","fullpayStatus"));
 		BeanUtil.copyProperties(salesman, salesPO.getSalesman(),Arrays.asList("dept","duty"));

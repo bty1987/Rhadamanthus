@@ -113,7 +113,7 @@ public class RegionServiceImpl implements RegionService {
 
 		RegionPO regionPO = new RegionPO();
 		
-		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_REGION_INT, CountingPO.COUNTING_DATE_SILNLE_STR);
+		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_REGION_INT, CountingPO.COUNTING_DATE_SILNLE_STR, 0);
 		
 		StringBuffer no = new StringBuffer();
 		no.append(SystemConfig.getString("regionIdent", "A_"));

@@ -35,6 +35,10 @@ public class DecorationPicturePO implements Serializable {
 	
 	public static final String COLUMN_STATUS_STR = "status";
 	
+	public static final String COLUMN_TYPE_STR = "type";
+	
+	public static final int TYPE_EPICTURE_INT = 1;
+	
 	public static final short STATUS_ENABLE_INT = 1;
 	
 	public static final short STATUS_DISABLE_INT = 0;

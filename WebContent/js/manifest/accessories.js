@@ -37,7 +37,7 @@ $(function () {
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>'));
             var $contentWrap = $('<div></div>').addClass('line-wrap  content col7');
 
-            var titleName = '编号,订单编号,创建人,创建时间,审批人,审批时间,状态';
+            var titleName = '辅料单号,装修单号,创建人,创建时间,审批人,审批时间,状态';
 
             $.each(titleName.split(','), function (i, v) {
                 var $cell = $('<div></div>').addClass('cell').html(v);
@@ -101,13 +101,13 @@ $(function () {
             var $btnCheck = $('<li></li>').append($('<a></a>').html('查看'));
             var $btnView = $('<li></li>').append($('<a></a>').html('出货'));
             var $btnEdit = $('<li></li>').append($('<a></a>').html('修改'));
-            var $btnReturn = $('<li></li>').append($('<a></a>').html('退回'));
+            //var $btnReturn = $('<li></li>').append($('<a></a>').html('退回'));
             var $btnPrint = $('<li></li>').append($('<a></a>').html('打印'));
 
             v.status != 4 && ($btnUl.append($btnEdit));
 
             v.status == 0 && ($btnUl.append($btnView));//初始：出货，修改
-            v.status == 1 && ($btnUl.append($btnCheck).append($btnView).append($btnEdit).append($btnReturn).append($btnPrint));//出货：出货 修改 退回 打印
+            v.status == 1 && ($btnUl.append($btnCheck).append($btnView).append($btnEdit).append($btnPrint));//出货：出货 修改 退回 打印
             v.status == 4 && ($btnUl.append($btnCheck));
             $btnGroup
                 .append($btn)
@@ -180,9 +180,9 @@ $(function () {
 
             });
 
-            $btnReturn.click(function(){
-                refundAccessories(v.orderId, v.aid, v.no, v.createTime, v.status);
-            });
+            //$btnReturn.click(function(){
+            //    refundAccessories(v.orderId, v.aid, v.no, v.createTime, v.status);
+            //});
 
             $btnPrint.click(function(){
 
@@ -215,7 +215,7 @@ $(function () {
 
 
     var accessoriesSeacher = new Searcher();
-    var _Array = ['createrName', 'approverName', 'orderId', 'createTime'];
+    var _Array = ['orderId', 'accessoriesNo', 'createrName', 'approverName', 'createTime'];
     accessoriesSeacher.init(_Array, "condList", api.inventory.pageAccessories, function (data) {
 
         displayFunc.init('resultList', data);
@@ -379,7 +379,7 @@ $(function () {
     //打印货单项
     function printAccessoriesItem(aid,no){
 
-        com.popup("辅料单编号" + no, api.index.accessoriesPrintIndex.url, function () {
+        com.popup("辅料单号" + no, api.index.accessoriesPrintIndex.url, function () {
             parent.layer.getFrameIndex(window.name);
         }, null, true);
 
@@ -387,27 +387,27 @@ $(function () {
     }
 
 
-    function refundAccessories(orderId, aid, no, createTime, status){
-        var $popup = $('#refundPopUp');
-        $popup.attr({'data-orderId': orderId, 'data-aid': aid, 'data-createTime': createTime, 'data-status': status});
-        //弹出即全屏
-        var index = layer.open({
-            type: 1,
-            skin: 'layui-layer-lan',
-            title: "辅料订单" + no,
-            content: $popup,
-            area: ["1200px", ( $(window).height() * 0.84 < 700 ? $(window).height() * 0.84 : 700 ) + "px"],
-            maxmin: false,
-            zIndex: 9000,
-            success: function (layer, index) {
-                $popup.load("views/manifest/viewRefundAccessoriesItem.html");
-            },
-            end: function () {
-                $popup.attr({'data-orderId': null, 'data-aid': null, 'data-createTime': null, 'data-status': null});
-                $popup.empty();
-                accessoriesSeacher.doSearch();
-            }
-        });
-
-    }
+    //function refundAccessories(orderId, aid, no, createTime, status){
+    //    var $popup = $('#refundPopUp');
+    //    $popup.attr({'data-orderId': orderId, 'data-aid': aid, 'data-createTime': createTime, 'data-status': status});
+    //    //弹出即全屏
+    //    var index = layer.open({
+    //        type: 1,
+    //        skin: 'layui-layer-lan',
+    //        title: "辅料订单" + no,
+    //        content: $popup,
+    //        area: ["1200px", ( $(window).height() * 0.84 < 700 ? $(window).height() * 0.84 : 700 ) + "px"],
+    //        maxmin: false,
+    //        zIndex: 9000,
+    //        success: function (layer, index) {
+    //            $popup.load("views/manifest/viewRefundAccessoriesItem.html");
+    //        },
+    //        end: function () {
+    //            $popup.attr({'data-orderId': null, 'data-aid': null, 'data-createTime': null, 'data-status': null});
+    //            $popup.empty();
+    //            accessoriesSeacher.doSearch();
+    //        }
+    //    });
+    //
+    //}
 });

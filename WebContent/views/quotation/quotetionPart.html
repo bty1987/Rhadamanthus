@@ -1,0 +1,457 @@
+
+<div class="page-content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="col-xs-12 col-md-3">
+                <div class="widget-box  transparent">
+                    <div class="widget-header">
+                        <h4 id="quotetionName">高档</h4>
+                    </div>
+
+                    <div class="widget-body">
+                        <div class="widget-main">
+                            <div class="row">
+                                <div id="functionAreaSumList" class="col-md-12"></div>
+                                <div class="col-md-12 hr hr-14"></div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class=" col-md-6  no-padding-right">总价:</label>
+                                        <label id="sumquoSumMoney" class=" col-md-4  no-padding-left">0.00</label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class=" col-md-6  no-padding-right">折扣:</label>
+                                        <label id="sumquoDiscount" class=" col-md-4  no-padding-left">10.0</label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-6 no-padding-right">折扣价:</label>
+                                        <label id="sumquoDiscountMoney" class="col-md-6 no-padding-left">0.00</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--左下角按钮-->
+            <div class="col-xs-12 col-md-3" style="position:fixed; bottom:10px; background-color: white;">
+                <div class="col-md-12">
+                    <div class="col-md-12">
+                        <div class="ui-pg-div">
+                            <button class="btn btn-minier btn-danger col-md-4" id="calculateTotalBtn">
+                                <i class="icon-calculator"></i>计算总价
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-12 space-8"></div>
+                    <div class="col-md-12">
+                        <div class="ui-pg-div">
+                            <button class="btn btn-minier col-md-4" id="openFunctionAreasBtn">
+                                <i class="icon-folder-close"></i>展开功能区
+                            </button>
+                            <button class="btn btn-minier col-md-4" id="closeFunctionAreasBtn" style="margin-left: 2px;">
+                                <i class="icon-folder-open "></i>收起功能区
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-12 space-8"></div>
+                    <div class="col-md-12">
+                        <div class="ui-pg-div">
+                            <button id="functionAreaTemplateBtn" class="btn btn-minier btn-yellow col-md-3" >
+                                <i class="icon-pencil"></i>功能区
+                            </button>
+                            <button id="discountBtn" class="btn btn-minier btn-success col-md-3" style="margin-left: 2px;">
+                                <i class="icon-pencil"></i>折扣
+                            </button>
+                            <button id="viewStatisticalBtn" class="btn btn-minier btn-pink col-md-3" style="margin-left: 2px;">
+                                <i class="icon-bar-chart"></i>统计
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-12 space-8"></div>
+                    <div class="col-md-12">
+                        <div class="ui-pg-div">
+                            <button id="saveQuotetionBtn" class="btn btn-minier btn-inverse col-md-3" data-loading-text="Loading...">
+                                <i class="icon-save"></i>保存
+                            </button>
+                            <a id="printFinanceBtn" class="btn btn-minier btn-primary col-md-3" style="margin-left: 2px;" target="_blank">
+                                <i class="icon-print"></i>打印
+                            </a>
+                            <button id="detailBckBtn" class="btn btn-minier btn-info col-md-3" style="margin-left: 2px;">
+                                <i class="icon-mail-forward"></i>返回
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--右边表格-->
+            <div class="col-xs-12 col-md-9" style="border-width: 0 0 0 1px;border-style: solid; border-color: #c1c1c1;">
+                <div class="row clearfix">
+                    <div class="col-xs-12" id="functionAreaDetailList"></div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="functionAreaTemplateModal" tabindex="-1" data-backdrop="static">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">
+                                <span>&times;</span><span class="sr-only">Close</span>
+                            </button>
+                            <h4 class="modal-title" id="functionAreaTemplateDialog">功能区模版</h4>
+                        </div>
+
+                        <div class="modal-body clearfix">
+
+
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" id="addFunctionAreasBtn" class="btn btn-primary">保存</button>
+                            <button type="button" id="cancelAddFunctionAreasBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="functionAreaModal" tabindex="-1" data-backdrop="static">
+                <div class="modal-dialog">
+                    <div class="modal-content col-md-12">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">
+                                <span>&times;</span><span class="sr-only">Close</span>
+                            </button>
+                            <h4 class="modal-title" id="functionAreaDialog">功能区修改</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label no-padding-right" for="functionAreaName">功能区名称</label>
+                                    <div class="col-md-9">
+                                        <input type="text" id="functionAreaName" data-toggle="popover" data-trigger='manual' maxlength='10' class="col-xs-10 col-md-5 v_required v_name" />
+                                        <input type="text" id="functionAreaIndex" class="hide" />
+                                    </div>
+                                </div>
+                                <div class="space-4"></div>
+
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label no-padding-right" for="functionAreaOrder">排序</label>
+                                    <div class="col-md-9">
+                                        <input type="text" id="functionAreaOrder" data-toggle="popover" data-trigger='manual' maxlength='3' class="col-xs-10 col-md-5 v_required v_number" />
+                                    </div>
+                                </div>
+                                <div class="space-4"></div>
+                            </form>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" id="saveFunctionAreaBtn" class="btn btn-primary">保存</button>
+                            <button type="button" id="cancelFunctionAreaBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="quotetionItemModal" tabindex="-1" data-backdrop="static">
+                <div class="modal-dialog" style="width:900px;">
+                    <div class="modal-content col-md-12">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">
+                                <span>&times;</span><span class="sr-only">Close</span>
+                            </button>
+                            <h4 class="modal-title" id="quotationItemDialog">报价项</h4>
+                        </div>
+                        <div class="modal-body">
+                            <input type="text" id="addItemFunctionAreaIndex" class="hide" />
+                            <div id="quotationItemSearchDiv"></div>
+                            <div class="row">
+                                <div id="condList" class="fl_search clearfix"></div> <!-- 查询条件-->
+                                <div id="resultList" class="clearfix tab-pane active"></div> <!--查询结果-->
+                                <div id="pagenation" class="fl-page-wrap clearfix" style="text-align: center;max-width: 680px;"></div> <!--分页-->
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" id="addFunctionAreaItemsBtn" class="btn btn-primary">保存</button>
+                            <button type="button" id="addCustomFunctionAreaItemsBtn" class="btn btn-primary icon-add" style="display: none;">自定义</button>
+                            <button type="button" id="cancelAddFunctionAreaItemsBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="modal fade" id="historyQuotetionItemModal" tabindex="-1" data-backdrop="static">
+                <div class="modal-dialog" style="width:900px;">
+                    <div class="modal-content col-md-12">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">
+                                <span>&times;</span><span class="sr-only">Close</span>
+                            </button>
+                            <h4 class="modal-title" id="historyQuotetionItemDialog">历史报价项</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-xs-12" id="historyQuotetionItemDiv">
+                                    <ul class="item-list fl-table-list ui-sortable"></ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" id="addHistoryItemsBtn" class="btn btn-primary">保存</button>
+                            <button type="button" id="cancelHistoryItemsBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="customFunctionAreaItemsModal" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content col-md-12">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">
+                                <span>&times;</span><span class="sr-only">Close</span>
+                            </button>
+                            <h4 class="modal-title" id="customFunctionAreaItemsDialog">自定义报价项</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label no-padding-right" for="name">名称</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" id="name" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual' maxlength="32"/>
+                                    </div>
+                                </div>
+                                <div class="space-4"></div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label no-padding-right" for="quotetionType">类型</label>
+                                    <div class="col-sm-3">
+                                        <select class="form-control v_required" id="quotetionType" data-toggle="popover" data-trigger='manual'></select>
+                                    </div>
+                                </div>
+                                <div class="space-4"></div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label no-padding-right" for="measurementUnit">单位</label>
+                                    <div class="col-sm-3">
+                                        <select class="form-control v_required" id="measurementUnit" data-toggle="popover" data-trigger='manual'></select>
+                                    </div>
+                                </div>
+                                <div class="space-4"></div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label no-padding-right" for="workType">工种</label>
+                                    <div class="col-sm-3">
+                                        <select class="form-control v_required" id="workType" data-toggle="popover" data-trigger='manual'></select>
+                                    </div>
+                                </div>
+                                <div class="space-4"></div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label no-padding-right" for="quotetionItemDes">信息</label>
+                                    <div class="col-sm-9">
+                                        <textarea id="quotetionItemDes" class="col-xs-10 col-sm-5 v_required" rows="3" data-toggle="popover" data-trigger='manual' maxlength="500"></textarea>
+                                    </div>
+                                </div>
+                                <div class="space-4"></div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label no-padding-right" for="unitPrice">单价</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" id="unitPrice" class="col-xs-10 col-sm-5 v_required v_float" data-toggle="popover" data-trigger='manual' maxlength="5"/>
+                                    </div>
+                                </div>
+                                <div class="space-4"></div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label no-padding-right" for="formula">计算公式</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" id="formula" class="col-xs-10 col-sm-5 v_required" maxlength="16" data-toggle="popover" data-trigger='manual'/>
+                                    </div>
+                                </div>
+                                <div class="space-4"></div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label no-padding-right" for="num">数量</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" id="num" class="col-xs-10 col-sm-5 v_required v_float" readonly  data-toggle="popover" data-trigger='manual' maxlength="9"/>
+                                    </div>
+                                </div>
+                                <div class="space-4"></div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label no-padding-right" for="discountFlag">打折</label>
+                                    <div class="col-sm-9">
+                                        <input type="checkbox" class="ace ace-switch ace-switch-5" id="discountFlag">
+                                        <span class="lbl"></span>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" id="saveCustomFunctionAreaItemBtn" class="btn btn-primary">保存</button>
+                            <button type="button" id="cancelCustomFunctionAreaItemBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--折扣设置弹窗-->
+            <div class="modal fade" id="discountModal" tabindex="-1" data-backdrop="static" >
+                <div class="modal-dialog">
+                    <div class="modal-content col-md-12">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">
+                                <span>&times;</span><span class="sr-only">Close</span>
+                            </button>
+                            <h4 class="modal-title" id="discountDialog">折扣</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label no-padding-right" for="discount">折扣数</label>
+                                    <div class="col-md-9">
+                                        <input type="text" id="discount" class="col-xs-10 col-md-5 v_required v_float"  data-toggle="popover" data-trigger='manual' maxlength='4'/>
+                                        <input type="text" id="limitDiscount" class="hide col-xs-10 col-md-5" />
+                                    </div>
+                                </div>
+                                <div class="space-4"></div>
+                            </form>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" id="saveDisCountBtn" class="btn btn-primary">保存</button>
+                            <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 计算总价信息 -->
+            <div class="modal fade " id="calculateTotalFeeModal" tabindex="-1" data-backdrop="static">
+                <div class="modal-dialog">
+                    <div class="modal-content col-md-12" style="position: absolute;width: 1100px;left: 50%;margin-left: -500px; ">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">
+                                <span>&times;</span><span class="sr-only">Close</span>
+                            </button>
+                            <h4 class="modal-title">总价计算</h4>
+                        </div>
+                        <div class="modal-body" >
+                            <div class="col-md-12" style="margin-bottom: 10px">
+                                <label class="control-label no-padding-right pull-left" for="calDiscount">折扣</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="calDiscount" class="col-xs-10 col-md-3 v_required v_float"  data-toggle="popover" data-trigger='manual' maxlength='4'/>
+                                </div>
+                            </div>
+                            <div style="height: 40px;"></div>
+                            <div class="fl-quo-cal">
+
+                            </div>
+
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" id="calculateTotalFeeBtn" class="btn btn-primary">计算</button>
+                            <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--管理费比例设置弹窗-->
+            <div class="modal fade" id="manageRateModal" tabindex="-1" data-backdrop="static">
+                <div class="modal-dialog">
+                    <div class="modal-content col-md-12">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">
+                                <span>&times;</span><span class="sr-only">Close</span>
+                            </button>
+                            <h4 class="modal-title" id="manageRateDialog">管理费比例</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label no-padding-right" for="manageRate">管理费比例</label>
+                                    <div class="col-md-9">
+                                        <input type="text" id="manageRate" class="col-xs-10 col-md-3 v_required v_manageRate"  data-toggle="popover" data-trigger='manual' maxlength='5'/>
+                                    </div>
+                                </div>
+
+                            </form>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" id="saveMrBtn" class="btn btn-primary">保存</button>
+                            <button type="button" id="cancelMrBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                        </div>
+                    </div>
+                  </div>
+             </div>
+
+            <!--车运费比例设置弹窗-->
+            <div class="modal fade" id="conveyanceRateModal" tabindex="-1" data-backdrop="static">
+                <div class="modal-dialog">
+                    <div class="modal-content col-md-12">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">
+                                <span>&times;</span><span class="sr-only">Close</span>
+                            </button>
+                            <h4 class="modal-title">车运费比例</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label no-padding-right" for="manageRate">车运费比例</label>
+                                    <div class="col-md-9">
+                                        <input type="text" id="conveyanceRate" class="col-xs-10 col-md-3 v_required v_manageRate"  data-toggle="popover" data-trigger='manual' maxlength='5'/>
+                                    </div>
+                                </div>
+
+                            </form>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" id="saveconveyanceBtn" class="btn btn-primary">保存</button>
+                            <button type="button" id="cancelconveyanceBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="quotationStatisticalModal" tabindex="-1" data-backdrop="static">
+                <div class="modal-dialog" style="width:900px;">
+                    <div class="modal-content col-md-12">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">
+                                <span>&times;</span><span class="sr-only">Close</span>
+                            </button>
+                            <h4 class="modal-title" id="quotationStatisticalDialog">报价统计</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div id="searchItemNameStatisticalDiv"></div>
+                            <table id="listItemNameStatisticalGrid"></table>
+                            <div id="gridItemNameStatisticalPager"></div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" id="closeStatisticalBtn" class="btn btn-primary" data-dismiss="modal">关闭</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div id="spinner" style="width: 100%; height: 100%; position: absolute; top: 0px; left: 0px; background-color: rgb(45, 45, 45); z-index: 5000; opacity: 0.5; display: none; background-position: initial initial; background-repeat: initial initial;" align="center">
+    <div id="spinner-preview" style="position: absolute; left: 50%; top: 30%;">
+        <i class="icon-spinner icon-spin orange bigger-300"></i><br/>
+        <span class="text-warning">数据提交中 , 请耐心等待.</span>
+    </div>
+</div>
+<!--这里的审批应该就不用了-->
+<script type="text/javascript">
+    $.loadScript(['js/quotation/quotetionPart.js']);
+</script>

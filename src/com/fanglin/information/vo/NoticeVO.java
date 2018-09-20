@@ -37,8 +37,6 @@ public class NoticeVO implements Serializable {
 	
 	private String contents;
 	
-	private String contentsText;
-	
 	private String filePath;
 	
 	public NoticeVO(){
@@ -127,14 +125,6 @@ public class NoticeVO implements Serializable {
 
 	public void setContents(String contents) {
 		this.contents = contents;
-	}
-
-	public String getContentsText() {
-		return contentsText;
-	}
-
-	public void setContentsText(String contentsText) {
-		this.contentsText = contentsText;
 	}
 
 	public String getFilePath() {

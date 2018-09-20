@@ -11,8 +11,8 @@ import com.fanglin.communion.dao.HouseDao;
 import com.fanglin.communion.po.HousePO;
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.utils.Constant;
 import com.fanglin.utils.Paging;
+import com.fanglin.utils.SystemConfig;
 
 @Repository("houseDao")
 public class HouseDaoImpl extends DaoImpl<HousePO> implements HouseDao {
@@ -28,7 +28,7 @@ public class HouseDaoImpl extends DaoImpl<HousePO> implements HouseDao {
 
 		queryFilterExcute(query, filters);
 		
-		if(Integer.valueOf(Constant.COMPANY_COMMUNION_SWITCH_INT) > 0){
+		if(SystemConfig.getInt("multicompany" , 0) != 0){
 			query.add(Restrictions.eq("company", company));
 		}
 
@@ -46,7 +46,7 @@ public class HouseDaoImpl extends DaoImpl<HousePO> implements HouseDao {
 		        .add(Restrictions.eq(HousePO.COLUMN_VILLAGE_NO_STR , no))
 		        .add(Restrictions.eq(HousePO.COLUMN_HOUSENUMBER_STR, houseNumber));
 		
-		if(Integer.valueOf(Constant.COMPANY_COMMUNION_SWITCH_INT) > 0){
+		if(SystemConfig.getInt("multicompany" , 0) != 0){
 			criteria.add(Restrictions.eq("company", company));
 		}
 		

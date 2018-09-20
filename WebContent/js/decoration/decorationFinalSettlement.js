@@ -1,8 +1,8 @@
 $(function () {
+    var accountType = {};
     var decorationDetail = {
         decorationOrderId: null,
         orderType: "",
-
         type: {
             0: "半包",
             1: "全包",
@@ -43,6 +43,8 @@ $(function () {
     decorationDetail.items.discount = $("#discount");
     decorationDetail.items.projectPrice = $("#projectPrice");
     decorationDetail.items.serviceRate = $("#serviceRate");
+    decorationDetail.items.materialPrice = $("#materialPrice");
+    decorationDetail.items.accountType = $("#accountType");
 
     $('#btnBack').on(ace.click_event, function () {
         com.switchPage(params.historyPage);
@@ -56,6 +58,13 @@ $(function () {
     setTimeout(function () {
         quotationUtils.loadQuotationDetail();
     }, 500);
+
+    com.post(api.ds.decoration, {}, function(res){
+        $("#accountType").bindData(res.orderType, "key", "value");
+        $.each(res.orderType,function (i,val) {
+            accountType[val.key] = val.value;
+        });
+    }, null, false);
 
     function initWizard(discount, decorationDetail) {
         $('#fuelux-wizard').ace_wizard({"status": true}).on('change', function (e, info) {
@@ -101,8 +110,8 @@ $(function () {
         var quotation = decorationDetail.quotation;
         var payed = utils.changeTwoDecimal($('#materialPaidup').text() + $('#servicePaidup').text());
 
-        com.post(api.ds.decoration, {}, function (res) {
-            machingType = res.machingType;
+        com.post(api.decoration.queryDecorationConfig, {}, function (res) {
+            machingType = res.config.machingType;
         }, null, false);
 
         var partCanDiscount = utils.changeTwoDecimal(decorationDetail.quotationUndisPrice + decorationDetail.minusQuoUndisPrice);
@@ -199,7 +208,9 @@ $(function () {
 
         com.post(api.decoration.queryDecorationHolonomy, {"decorationHolonomy.decoration.orderId": decorationDetail.decorationOrderId}, function (res) {
 
-            showPaymentInfo(res.decorationHolonomy,decorationDetail.accountFlag);
+            if(res.decorationHolonomy.dhid != null) {
+                showPaymentInfo(res.decorationHolonomy, decorationDetail.accountFlag);
+            }
 
         }, function (e) {
             com.showAlert(com.error, e.errorMsg);
@@ -247,11 +258,12 @@ $(function () {
 
         var options = {
             "decorationAccount.orderId": params.decorationOrderId,
-            "decorationAccount.type": decorationDetail.orderType,
+            "decorationAccount.type": decorationDetail.items.accountType.val(),
             "decorationAccount.maching": decorationDetail.items.maching.val(),
             "decorationAccount.projectPrice": decorationDetail.items.projectPrice.val(),
             "decorationAccount.discount": decorationDetail.items.discount.val(),
-            "decorationAccount.serviceRate": decorationDetail.items.serviceRate.val()
+            "decorationAccount.serviceRate": decorationDetail.items.serviceRate.val(),
+            "decorationAccount.materialPrice":decorationDetail.items.materialPrice.val()
         };
 
         com.post(api.decoration.makeDecorationAccount, options, function (res) {
@@ -291,8 +303,9 @@ $(function () {
 
         $('#quotationPrice').html(managePrice == null ? 0:Math.ceil(utils.changeTwoDecimal(utils.accAdd(utils.accDiv(res.projectPrice, utils.accDiv(com.checkNull(res.discount,10), 10)), managePrice))));
         $('#materialPercent').html(res.materialPrice == null ? 0 :utils.accMul(utils.changeTwoDecimal(utils.accDiv(materialPaidup, res.materialPrice)), 100) > 100 ? 100 : utils.accMul(utils.changeTwoDecimal(utils.accDiv(materialPaidup, res.materialPrice)), 100)+"%");
-        $('#servicePercent').html(res.servicePrice == null ? 0 :utils.accMul(utils.changeTwoDecimal(utils.accDiv(servicePaidup, res.servicePrice)), 100) > 100 ? 100 :utils.accMul(utils.changeTwoDecimal(utils.accDiv(servicePaidup, res.servicePrice)), 100) +"%");
-
+        if(res.servicePrice != 0) {
+            $('#servicePercent').html(res.servicePrice == null ? 0 : utils.accMul(utils.changeTwoDecimal(utils.accDiv(servicePaidup, res.servicePrice)), 100) > 100 ? 100 : utils.accMul(utils.changeTwoDecimal(utils.accDiv(servicePaidup, res.servicePrice)), 100) + "%");
+        }
     }
 
     function showDecorationAccount() {
@@ -309,14 +322,14 @@ $(function () {
 
             res = res.decorationAccount;
 
-            $('#maching').html((utils.changeTwoDecimal(com.checkNull(res.maching*100,0))+"%"));
+            $('#maching').html((utils.changeTwoDecimal(com.checkNull(res.maching, 0) *100)+"%"));
             $('#discount').html(com.checkNull(res.discount,0));
             $('#projectPrice_account').html(com.checkNull(res.projectPrice,0));
             $('#materialPrice_account').html(com.checkNull(res.materialPrice,0));
-            $('#serviceRate').html(utils.changeTwoDecimal(com.checkNull(res.serviceRate*100,0))+"%");
+            $('#serviceRate').html(utils.changeTwoDecimal(com.checkNull(res.serviceRate,0) *100)+"%");
             $('#servicePrice_account').html(com.checkNull(res.servicePrice),0);
 
-            showPaymentInfo(res,decorationDetail.accountFlag);
+            showPaymentInfo(res, decorationDetail.accountFlag);
 
         }, function (e) {
             com.showAlert(com.error, e.errorMsg);

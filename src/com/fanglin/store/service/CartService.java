@@ -11,7 +11,7 @@ import com.fanglin.utils.Paging;
 
 public interface CartService {
 	
-	public void pageCart(Paging paging, List<Filter> filters);
+	public void pageCart(Paging paging, List<Filter> filters, MuserVO muserVO);
 	
 	public List<CartVO> queryCartByUnionId(MuserVO muserVO) throws FLException;
 	

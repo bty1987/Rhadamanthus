@@ -102,6 +102,8 @@ public class MaterialPaymentPO implements java.io.Serializable {
 	
 	private float referMoney;
 	
+	private int company;
+	
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "mpId")
@@ -195,5 +197,14 @@ public class MaterialPaymentPO implements java.io.Serializable {
 
 	public void setReferMoney(float referMoney){
 		this.referMoney = referMoney;
+	}
+
+	@Column(name = "company")
+	public int getCompany() {
+		return company;
+	}
+
+	public void setCompany(int company) {
+		this.company = company;
 	}
 }

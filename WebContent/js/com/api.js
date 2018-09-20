@@ -56,6 +56,7 @@ var Api = function(){
             fillApi(path + 'communion.js');
             fillApi(path + 'customer.js');
 			fillApi(path + 'store.js');
+			fillApi(path + 'ehouse.js');
             return dtd.promise();
         }
     }

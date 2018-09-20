@@ -119,7 +119,7 @@ public class CityProperServiceImpl implements CityProperService {
 		
 		cityProperPO = new CityProperPO();
 		
-		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_CITY_PROPER_INT, CountingPO.COUNTING_DATE_SILNLE_STR);
+		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_CITY_PROPER_INT, CountingPO.COUNTING_DATE_SILNLE_STR, 0);
 		
 		StringBuffer no = new StringBuffer();
 		no.append(SystemConfig.getString("regionIdent", "R_"));

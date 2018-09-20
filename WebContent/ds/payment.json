@@ -43,8 +43,7 @@
         {"key":"0", "value":"预结算"},
         {"key":"1", "value":"厂商结算"},
         {"key":"2", "value":"结算"}
-    ],
-    "couponTypes": [
+    ], "couponTypes": [
 	    {"key":"物业费抵值券","value":"物业费抵值券"},
 	    {"key":"采暖费抵值券","value":"采暖费抵值券"},
 		{"key":"赠品抵现","value":"赠品抵现"},
@@ -76,7 +75,21 @@
 		{"key":"衣柜券","value":"衣柜券"},
 		{"key":"塑钢窗券","value":"塑钢窗券"},
 		{"key":"榻榻米券","value":"榻榻米券"}
-    ],
+    ], "type": [
+		{"key":"0", "value":"提现"},
+		{"key":"1", "value":"收款"},
+		{"key":"2", "value":"付款"}
+	], "paymentType": [
+		{"key":"0", "value":"合同预付款"},
+		{"key":"1", "value":"工程预付款"},
+		{"key":"2", "value":"主材预付款"},
+		{"key":"3", "value":"正林预付款"}
+	],"status": [
+		{"key":"0", "value":"初始"},
+		{"key":"1", "value":"已付款"},
+		{"key":"2", "value":"已确认"},
+		{"key":"3", "value":"已撤销"}
+	],
     "errorCode": 0,
     "errorMsg": null
 }

@@ -17,6 +17,10 @@ import com.fanglin.payment.vo.PaymentVO;
 import com.fanglin.utils.Paging;
 
 public interface PaymentService {
+	
+	public void pagePaymentForCollect(Paging paging, List<Filter> filters, int company);
+
+	public void pagePaymentForConfirm(Paging paging, List<Filter> filters, int company);
 
 	public void pagePaymentForHistory(Paging paging, List<Filter> filters, int company);
 	
@@ -33,5 +37,5 @@ public interface PaymentService {
 	public int payPayment(PaymentVO paymentVO, String userId) throws FLException;
 	
 	public int updatePayment(PaymentVO paymentVO) throws FLException;
-	
+
 }

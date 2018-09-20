@@ -61,7 +61,7 @@ $(function () {
 
                     }
                     var propertyArr = [
-                        ["订单编号:", v.orderId, "blue"],
+                        ["装修单号:", v.orderId, "blue"],
                         ["楼盘地址:", v.house.village.name + " " + v.house.houseNumber, "grey"],
                         ["客户名:", v.customer.name, "grey"],
                         ["渠道:", v.salesman.currentName, "grey"],

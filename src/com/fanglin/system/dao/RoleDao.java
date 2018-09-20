@@ -9,10 +9,10 @@ import com.fanglin.utils.Paging;
 
 public interface RoleDao extends Dao<RolePO> {
 	
-	public List<RolePO> pageRole(Paging paging, List<Filter> filters);
+	public List<RolePO> pageRole(Paging paging, List<Filter> filters,Integer company);
 
-	public List<RolePO> queryRole();
+	public List<RolePO> queryRole(Integer company);
 	
-	public RolePO queryRoleByName(String name);
+	public RolePO queryRoleByName(String name,Integer company);
 	
 }

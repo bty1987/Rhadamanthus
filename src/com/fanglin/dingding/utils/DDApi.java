@@ -21,6 +21,7 @@ public interface DDApi {
 	public static final String DDAPI_SIGN_STR = "jsapi_ticket=%s&noncestr=%s&timestamp=%s&url=%s";
 	
 	public static final String DDAPI_MESSAGE_SEND_STR = "%s/message/send?access_token=%s";
+	public static final String DDAPI_ROBOT_SEND_STR = "%s/robot/send?access_token=%s";
 	
 	public static final String DDAPI_GET_USER_INFO_STR = "%s/user/getuserinfo?access_token=%s&code=%s";
 	

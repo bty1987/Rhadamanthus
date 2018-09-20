@@ -62,7 +62,9 @@ public class SalesPaymentVO  implements Serializable{
 	
 	private Short advanceType;         
 	
-	private String comment;               
+	private String comment;
+	
+	private Integer company;
 
 	public SalesPaymentVO() {
 		super();
@@ -308,5 +310,13 @@ public class SalesPaymentVO  implements Serializable{
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public Integer getCompany() {
+		return company;
+	}
+
+	public void setCompany(Integer company) {
+		this.company = company;
 	}
 }

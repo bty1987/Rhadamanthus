@@ -23,8 +23,6 @@ public interface DecorationActivityItemService {
 	
 	public List<DecorationActivityItemVO> queryDecorationActivityItemForCouponAVaildByOrderId(DecorationVO decorationVO);
 	
-	public int convertDecorationActivityItem(DecorationActivityItemVO decorationActivityItemVO) throws FLException;
-	
 	public int abateDecorationActionItem(DecorationActivityItemVO decorationActivityItemVO) throws FLException;
 	
 	public int receiveDecorationActivityItem(DecorationActivityItemVO decorationActivityItemVO, String userId, String userName) throws FLException;

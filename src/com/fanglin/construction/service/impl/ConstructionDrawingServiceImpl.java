@@ -19,132 +19,138 @@ import com.fanglin.construction.vo.ConstructionVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.system.dao.SystemConfigDao;
+import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.BeanUtil;
 
 @Service("constructionDrawingService")
-@Transactional(readOnly=true)
+@Transactional(readOnly = true)
 public class ConstructionDrawingServiceImpl implements ConstructionDrawingService {
+	
+	@Autowired
+	private SystemConfigDao systemConfigDao;
 
 	@Autowired
 	private ConstructionDrawingDao constructionDrawingDao;
-	
+
 	@Autowired
 	private ConstructionDao constructionDao;
-	
+
 	@Autowired
 	private UserDao userDao;
-	
+
 	@Override
 	public List<ConstructionDrawingVO> queryConstructionDrawingByOrderId(ConstructionVO constructionVO, ConstructionDrawingVO constructionDrawingVO) throws FLException {
-		
+
 		ConstructionPO constructionPO = constructionDao.queryConstructionByOrderId(constructionVO.getOrderId());
-		
-		if(constructionPO == null){
+
+		if (constructionPO == null) {
 			throw new FLException(120020, "工程信息不存在");
 		}
-		
+
 		Long cid = constructionPO.getCid();
-		
+
 		Short schedule = null;
-		
-		if(constructionDrawingVO != null){
+
+		if (constructionDrawingVO != null) {
 			schedule = constructionDrawingVO.getSchedule();
 		}
-		
+
 		List<ConstructionDrawingPO> constructionDrawingPOs = constructionDrawingDao.queryConstructionDrawingByCid(cid, schedule);
-		List<ConstructionDrawingVO> constructionDrawingVOs = new ArrayList<ConstructionDrawingVO>(); 
-		
-		for(ConstructionDrawingPO constructionDrawingPO: constructionDrawingPOs){
-			
+		List<ConstructionDrawingVO> constructionDrawingVOs = new ArrayList<ConstructionDrawingVO>();
+
+		for (ConstructionDrawingPO constructionDrawingPO : constructionDrawingPOs) {
+
 			ConstructionDrawingVO _constructionDrawingVO = new ConstructionDrawingVO();
-			
+
 			BeanUtil.copyProperties(constructionDrawingPO, _constructionDrawingVO, Arrays.asList("creater"));
-			
+
 			constructionDrawingVOs.add(_constructionDrawingVO);
 		}
-		
+
 		return constructionDrawingVOs;
 	}
-	
+
 	@Override
 	public List<ConstructionDrawingVO> queryConstructionDrawingByCid(ConstructionDrawingVO constructionDrawingVO) {
-		
+
 		Long cid = constructionDrawingVO.getCid();
 		Short schedule = constructionDrawingVO.getSchedule();
-		
+
 		List<ConstructionDrawingPO> constructionDrawingPOs = constructionDrawingDao.queryConstructionDrawingByCid(cid, schedule);
-		List<ConstructionDrawingVO> constructionDrawingVOs = new ArrayList<ConstructionDrawingVO>(); 
-		
-		for(ConstructionDrawingPO constructionDrawingPO: constructionDrawingPOs){
-			
+		List<ConstructionDrawingVO> constructionDrawingVOs = new ArrayList<ConstructionDrawingVO>();
+
+		for (ConstructionDrawingPO constructionDrawingPO : constructionDrawingPOs) {
+
 			ConstructionDrawingVO _constructionDrawingVO = new ConstructionDrawingVO();
-			
+
 			BeanUtil.copyProperties(constructionDrawingPO, _constructionDrawingVO, Arrays.asList("creater"));
-			
+
 			constructionDrawingVOs.add(_constructionDrawingVO);
 		}
-		
+
 		return constructionDrawingVOs;
 	}
-	
-	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public int addConstructionDrawing(ConstructionDrawingVO constructionDrawingVO, String userId) {
 
-		ConstructionDrawingPO constructionDrawingPO = null;
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int addConstructionDrawing(ConstructionDrawingVO constructionDrawingVO, String userId, int company) throws FLException {
 		
-		if(constructionDrawingVO.getCdId() == null ||  constructionDrawingVO.getCdId() == 0){
-			constructionDrawingPO = new ConstructionDrawingPO();
-		}else{
-			constructionDrawingPO = constructionDrawingDao.get(constructionDrawingVO.getCdId());
+		long cid = constructionDrawingVO.getCid();
+		short type = constructionDrawingVO.getType();
+		
+		SystemConfigPO constructionDrawingLimit = systemConfigDao.querySystemConfig("constructiondrawinglimit", company);
+		
+		if(constructionDrawingDao.countConstructionDrawing(cid, type) >= (constructionDrawingLimit == null ? 5 : Integer.valueOf(constructionDrawingLimit.getValue()))){
+			throw new FLException(110017, "资源数已达上限");
 		}
 		
-		BeanUtil.copyProperties(constructionDrawingVO, constructionDrawingPO, Arrays.asList("creater"));
-		//新添加的创建人和创建时间
-		UserPO userC = userDao.queryUserByUserId(userId);
-		constructionDrawingPO.setCreater(userC);
-		constructionDrawingPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
-		
-		constructionDrawingDao.saveOrUpdate(constructionDrawingPO);
-		
-		constructionDrawingVO.setCdId(constructionDrawingPO.getCdId());
-		
-		return 0;
+		ConstructionDrawingPO constructionDrawingPO = new ConstructionDrawingPO();
 
+		BeanUtil.copyProperties(constructionDrawingVO, constructionDrawingPO, Arrays.asList("creater"));
+		
+		constructionDrawingPO.setCreater(userDao.queryUserByUserId(userId));
+		constructionDrawingPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
+
+		constructionDrawingDao.saveOrUpdate(constructionDrawingPO);
+
+		constructionDrawingVO.setCdId(constructionDrawingPO.getCdId());
+
+		return 0;
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
+	@Transactional(rollbackFor = Exception.class)
 	public List<ConstructionDrawingVO> addConstructionDrawings(ConstructionDrawingVO constructionDrawingVO, List<String> drawingUrls, String userId) {
 
 		List<ConstructionDrawingVO> constructionDrawingVOs = new ArrayList<ConstructionDrawingVO>();
-		
-		for(String drawingUrl: drawingUrls){
-			
+
+		for (String drawingUrl : drawingUrls) {
+
 			ConstructionDrawingPO constructionDrawingPO = new ConstructionDrawingPO();
-			
+
 			BeanUtil.copyProperties(constructionDrawingVO, constructionDrawingPO, Arrays.asList("creater"));
 			constructionDrawingPO.setDrawingUrl(drawingUrl);
-			//新添加的创建人和创建时间
+			// 新添加的创建人和创建时间
 			UserPO userC = userDao.queryUserByUserId(userId);
 			constructionDrawingPO.setCreater(userC);
 			constructionDrawingPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
-			
+
 			constructionDrawingDao.save(constructionDrawingPO);
-			
+
 			ConstructionDrawingVO _constructionDrawingVO = new ConstructionDrawingVO();
 			BeanUtil.copyProperties(constructionDrawingPO, _constructionDrawingVO, Arrays.asList("creater"));
-			
+
 			constructionDrawingVOs.add(_constructionDrawingVO);
 		}
-		
+
 		return constructionDrawingVOs;
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
+	@Transactional(rollbackFor = Exception.class)
 	public void deleteConstructionDrawingByCdId(ConstructionDrawingVO constructionDrawingVO) {
-		
+
 		constructionDrawingDao.deleteById(constructionDrawingVO.getCdId());
 
 	}

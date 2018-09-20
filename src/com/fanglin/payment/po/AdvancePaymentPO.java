@@ -26,11 +26,11 @@ public class AdvancePaymentPO implements java.io.Serializable {
 	
 	private float balance;
 	
+	private float projectBalance;
+	
 	private float materialBalance;
 	
 	private float zhenglinBalance;
-	
-	private float projectBalance;
 	
 	private int company;
 	
@@ -53,6 +53,16 @@ public class AdvancePaymentPO implements java.io.Serializable {
 	public void setApId(int apId) {
 		this.apId = apId;
 	}
+	
+	@ManyToOne
+	@JoinColumn(nullable = true, name = "customerId", referencedColumnName="cid")
+	public CustomerPO getCustomer() {
+		return customer;
+	}
+
+	public void setCustomer(CustomerPO customer) {
+		this.customer = customer;
+	}
 
 	@Column(name = "balance")
 	public float getBalance() {
@@ -61,6 +71,15 @@ public class AdvancePaymentPO implements java.io.Serializable {
 
 	public void setBalance(float balance) {
 		this.balance = balance;
+	}
+	
+	@Column(name = "projectBalance")
+	public float getProjectBalance() {
+		return this.projectBalance;
+	}
+
+	public void setProjectBalance(float projectBalance) {
+		this.projectBalance = projectBalance;
 	}
 
 	@Column(name = "materialBalance")
@@ -80,26 +99,7 @@ public class AdvancePaymentPO implements java.io.Serializable {
 	public void setZhenglinBalance(float zhenglinBalance) {
 		this.zhenglinBalance = zhenglinBalance;
 	}
-
-	@Column(name = "projectBalance")
-	public float getProjectBalance() {
-		return this.projectBalance;
-	}
-
-	public void setProjectBalance(float projectBalance) {
-		this.projectBalance = projectBalance;
-	}
-
-	@ManyToOne
-	@JoinColumn(nullable = true, name = "customerId", referencedColumnName="cid")
-	public CustomerPO getCustomer() {
-		return customer;
-	}
-
-	public void setCustomer(CustomerPO customer) {
-		this.customer = customer;
-	}
-
+	
 	@Column(name = "company")
 	public int getCompany() {
 		return company;

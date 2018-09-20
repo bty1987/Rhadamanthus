@@ -141,7 +141,7 @@ $(function () {
                         $lineInfoWrap.find('.no').text(val.no);
                         $lineInfoWrap.find('.barcode').text(val.barcode);
                         $lineInfoWrap.find('.category').text(val.category);
-                        $lineInfoWrap.find('.brand').text(val.brand);
+                        $lineInfoWrap.find('.brand').text(val.brand).attr('data-bid', val.bid);
                         $lineInfoWrap.find('.measurementUnit').text(val.measurementUnit);
                         $lineInfoWrap.find('.accessoriesTypeName').text(val.accessoriesType.name == null ? "" : val.accessoriesType.name);
                         $lineInfoWrap.find('.status').text(val.status == "0" ? "启用" : "禁用");
@@ -230,8 +230,8 @@ $(function () {
 
         var flag = true;
 
-        var brand = $line.find('.brand');
-        if(brand.text()!=_goodsPackage['goods.brand']){
+        var bid = $line.find('.brand').attr('data-bid');
+        if(bid!=_goodsPackage['goods.bid']){
             layer.msg('品牌不一致');
             flag =  false;
         }
@@ -274,7 +274,7 @@ $(function () {
 
         if(packageList.length==0){
 
-            layer.msg('请添加套餐商品.')
+            layer.msg('请添加套餐商品.');
 
             return
         }
@@ -286,7 +286,7 @@ $(function () {
             $('#list').empty();
         })
 
-    })
+    });
 
     $btnCancel.click(function(){
         layer.closeAll()

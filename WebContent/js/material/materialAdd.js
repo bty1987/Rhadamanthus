@@ -452,7 +452,7 @@ jQuery(function($) {
 		}
 
 		var num = $line.find('.num input');
-		var numRex = /^(\d+|\d+\.[0-9]{1,4})$/;
+		var numRex =  /^[0-9]+\.{0,1}[0-9]{0,3}$/;
 		if(!(numRex.test(num.val()) && parseFloat(num.val()) > 0)){
 			num.focus().select();
 			num.addClass('tooltip-info').attr({

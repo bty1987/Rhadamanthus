@@ -44,7 +44,7 @@ public class DecorationVO implements Serializable {
 	
 	private UserBaseVO supervisor;
 	
-	private UserBaseVO createUser;
+	private UserBaseVO creater;
 	
 	private UserBaseVO quoter;
 	
@@ -59,8 +59,6 @@ public class DecorationVO implements Serializable {
 	private String houseType;
 	
 	private String houseClass;
-	
-	private String apartmentType;
 	
 	private Integer resourceType;
 	
@@ -82,6 +80,8 @@ public class DecorationVO implements Serializable {
 	
 	private Timestamp createTime;
 	
+	private Timestamp accountTime;
+	
 	
 	
 	private Short status;
@@ -101,6 +101,14 @@ public class DecorationVO implements Serializable {
 	private Float notSalesmanRate;
 	
 	private Float discount;
+	
+	private Float couponCut;
+	
+	private Float thingCut;
+	
+	private Float netperfor;
+	
+	private Float comperfor;
 
 	
 	private String dompany;
@@ -153,14 +161,6 @@ public class DecorationVO implements Serializable {
 
 	public void setHouseClass(String houseClass) {
 		this.houseClass = houseClass;
-	}
-
-	public String getApartmentType() {
-		return apartmentType;
-	}
-
-	public void setApartmentType(String apartmentType) {
-		this.apartmentType = apartmentType;
 	}
 
 	public Float getFreeArea() {
@@ -287,12 +287,12 @@ public class DecorationVO implements Serializable {
 		this.version = version;
 	}
 
-	public UserBaseVO getCreateUser() {
-		return createUser;
+	public UserBaseVO getCreater() {
+		return creater;
 	}
 
-	public void setCreateUser(UserBaseVO createUser) {
-		this.createUser = createUser;
+	public void setCreater(UserBaseVO creater) {
+		this.creater = creater;
 	}
 
 	public Float getOrderTotalPrice() {
@@ -373,6 +373,47 @@ public class DecorationVO implements Serializable {
 
 	public void setPaySacle(Short paySacle) {
 		this.paySacle = paySacle;
+	}
+	
+	@JSON(format="yyyy-MM-dd")
+	public Timestamp getAccountTime() {
+		return accountTime;
+	}
+
+	public void setAccountTime(Timestamp accountTime) {
+		this.accountTime = accountTime;
+	}
+
+	public Float getCouponCut() {
+		return couponCut;
+	}
+
+	public void setCouponCut(Float couponCut) {
+		this.couponCut = couponCut;
+	}
+
+	public Float getThingCut() {
+		return thingCut;
+	}
+
+	public void setThingCut(Float thingCut) {
+		this.thingCut = thingCut;
+	}
+
+	public Float getNetperfor() {
+		return netperfor;
+	}
+
+	public void setNetperfor(Float netperfor) {
+		this.netperfor = netperfor;
+	}
+
+	public Float getComperfor() {
+		return comperfor;
+	}
+
+	public void setComperfor(Float comperfor) {
+		this.comperfor = comperfor;
 	}
 
 	public void vtp(DecorationPO decorationPO){

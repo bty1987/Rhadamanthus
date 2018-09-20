@@ -65,7 +65,7 @@ public class ServiceNodeServiceImpl implements ServiceNodeService{
 		ServiceNodePO serviceNodePO = serviceNodeDao.get(serviceNodeVO.getSnid());
 		
 		if(serviceNodePO == null){
-			throw new FLException(140013,"服务节点信息不存在");
+			throw new FLException(130025,"服务节点不存在");
 		}
 		
 		serviceNodePO.setName(serviceNodeVO.getName());
@@ -84,7 +84,7 @@ public class ServiceNodeServiceImpl implements ServiceNodeService{
 		ServiceNodePO serviceNodePO = serviceNodeDao.get(serviceNodeVO.getSnid());
 		
 		if(serviceNodePO == null){
-			throw new FLException(140013,"服务节点信息不存在");
+			throw new FLException(130025,"服务节点不存在");
 		}
 		
 		serviceNodePO.setStatus(serviceNodeVO.getStatus());

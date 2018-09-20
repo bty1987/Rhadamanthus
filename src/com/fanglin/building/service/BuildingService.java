@@ -13,7 +13,7 @@ public interface BuildingService {
 
 	public BuildingVO queryBuildingByBid(BuildingVO building);
 
-	public void bindBuilding(BuildingVO building, String userId) throws FLException;
+	public void bindBuilding(BuildingVO building, String userId, int company) throws FLException;
 
 	public void unbindBuilding(BuildingVO building) throws FLException;
 

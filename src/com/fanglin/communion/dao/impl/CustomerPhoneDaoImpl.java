@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.fanglin.communion.dao.CustomerPhoneDao;
 import com.fanglin.communion.po.CustomerPhonePO;
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.utils.Constant;
+import com.fanglin.utils.SystemConfig;
 
 @Repository("customerPhoneDao")
 public class CustomerPhoneDaoImpl extends DaoImpl<CustomerPhonePO> implements CustomerPhoneDao {
@@ -52,7 +52,7 @@ public class CustomerPhoneDaoImpl extends DaoImpl<CustomerPhonePO> implements Cu
 		sql.append("from communion.customer c left join communion.customerphone cp on c.cid = cp.cid ");
 		sql.append("where cp.phone =:phone ");
 	
-		if(Integer.valueOf(Constant.COMPANY_COMMUNION_SWITCH_INT) > 0){
+		if(SystemConfig.getInt("multicompany" , 0) != 0){
 			sql.append("and c.company =:company ");
 		}
 		
@@ -66,7 +66,7 @@ public class CustomerPhoneDaoImpl extends DaoImpl<CustomerPhonePO> implements Cu
 		
 		query.setString("phone", phone);
 		
-		if(Integer.valueOf(Constant.COMPANY_COMMUNION_SWITCH_INT) > 0){
+		if(SystemConfig.getInt("multicompany" , 0) != 0){
 			query.setInteger("company", company);
 		}
 		

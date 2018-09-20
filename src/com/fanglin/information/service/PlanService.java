@@ -15,6 +15,8 @@ public interface PlanService {
 	
     public int updatePlan(PlanVO PlanVO,String userId) throws FLException ,ParseException;
     
+    public int updatePlanSchedule(PlanVO PlanVO) throws FLException;
+    
     public int cancelPlan(PlanVO planVO,String userId) throws FLException;
 
 

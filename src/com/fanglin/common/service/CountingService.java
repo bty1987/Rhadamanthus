@@ -13,8 +13,8 @@ package com.fanglin.common.service;
 
 public interface CountingService {
 	
-	public int queryCountingByTypeDate(int type, String date);
+	public int queryCountingByTypeDate(int type, String date, int company);
 
-	public void updateCountingByTypeDate(int type, String date, int count);
+	public void updateCountingByTypeDate(int type, String date, int company, int count);
 
 }

@@ -22,7 +22,7 @@ jQuery(function(a) {
         roleKey: "roleId",
         roleValue: "roleName",
         deptList: {},
-        deptKey: "deptId",
+        deptKey: "did",
         deptValue: "deptName",
         eSaveBtn: null,
         eCancelBtn: null,
@@ -130,7 +130,7 @@ jQuery(function(a) {
             },null,false)
 
             com.post(api.communion.queryDepartmentByDtid, {"dept.type.dtid": a(this).val()}, function(res) {
-                    user.items.deptSel.bindData(res.deptList, "deptId", "deptName");
+                    user.items.deptSel.bindData(res.deptList, "did", "deptName");
                     d && d();
                 },null,false)
 
@@ -198,7 +198,7 @@ jQuery(function(a) {
                     user.items.company.val( $user.companys),
 
                     user.items.deptTypeSel.val($user.dtid).trigger("change",function() {
-                        user.items.deptSel.val($user.dept.deptId);
+                        user.items.deptSel.val($user.dept.did);
                         user.items.dutySel.val($user.duty.did)
                         user.items.dutySel.trigger("chosen:updated")
                     }),
@@ -276,7 +276,7 @@ jQuery(function(a) {
                 "userInfo.lover": user.items.lover.val(),
                 "userInfo.user.loginId": user.items.loginId.val(),
                 "userInfo.user.dtid": user.items.deptTypeSel.val(),
-                "userInfo.user.dept.deptId": user.items.deptSel.val(),
+                "userInfo.user.dept.did": user.items.deptSel.val(),
                 "userInfo.user.duty.did": user.items.dutySel.val(),
                 "userInfo.user.status": user.items.statusSel.val(),
                 "userInfo.employWay": user.items.employWaySel.val(),

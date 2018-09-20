@@ -31,18 +31,6 @@ public interface Constant {
 	
 	public static final String COOKIE_AUTHENTICATION_SPLIT = ",";
 	
-	// cookie 验证码定义
-	public static final String COOKIE_VERIFYCODE = "verifyCode";
-	
-	// 系统版本
-	public static final String COOKIE_VERSIONCODE_STR = "versionCode";
-	
-	// cookie 订单编号
-	public static final String COOKIE_DECORATIONORDER_ORDERID = "decorationOrderId";
-	
-	// cookie 报价编号
-	public static final String COOKIE_QUOTATIONID = "quotationId";
-	
 	public static final String COMMA = ",";
 	public static final String COLON = ":";
 	public static final String SEMICOLON = ";";

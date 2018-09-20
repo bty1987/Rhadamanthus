@@ -13,8 +13,8 @@ import com.fanglin.communion.dao.VillageDao;
 import com.fanglin.communion.po.VillagePO;
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.utils.Constant;
 import com.fanglin.utils.Paging;
+import com.fanglin.utils.SystemConfig;
 
 @Repository("villageDao")
 public class VillageDaoImpl extends DaoImpl<VillagePO> implements VillageDao {
@@ -30,7 +30,7 @@ public class VillageDaoImpl extends DaoImpl<VillagePO> implements VillageDao {
 
 		queryFilterExcute(query, filters);
 	
-		if(Integer.valueOf(Constant.COMPANY_COMMUNION_SWITCH_INT) > 0){
+		if(SystemConfig.getInt("multicompany" , 0) != 0){
 			query.add(Restrictions.eq("company", company));
 		}
 		
@@ -48,7 +48,7 @@ public class VillageDaoImpl extends DaoImpl<VillagePO> implements VillageDao {
 			query.add(Restrictions.eq(VillagePO.COLUMN_STATUS_STR, VillagePO.STATUS_ENABLE_INT)).add(Restrictions.or(Restrictions.ilike("name", pinyinName, MatchMode.ANYWHERE), Restrictions.ilike("pinyinAB", pinyinName, MatchMode.ANYWHERE)));
 		}
 		
-		if(Integer.valueOf(Constant.COMPANY_COMMUNION_SWITCH_INT) > 0){
+		if(SystemConfig.getInt("multicompany" , 0) != 0){
 			query.add(Restrictions.eq("company", company));
 		}
 		
@@ -77,7 +77,7 @@ public class VillageDaoImpl extends DaoImpl<VillagePO> implements VillageDao {
 		
 		sql.append("select count(*) from communion.village where name = :name and cityProperId = :cityProperId");
 		
-		if(Integer.valueOf(Constant.COMPANY_COMMUNION_SWITCH_INT) > 0){
+		if(SystemConfig.getInt("multicompany" , 0) != 0){
 			
 			sql.append("and company =:company ");
 		}
@@ -86,7 +86,7 @@ public class VillageDaoImpl extends DaoImpl<VillagePO> implements VillageDao {
 		
 		query.setString("name", name).setInteger("cityProperId", cpid);
 	
-		if(Integer.valueOf(Constant.COMPANY_COMMUNION_SWITCH_INT) > 0){
+		if(SystemConfig.getInt("multicompany" , 0) != 0){
 			
 			query.setInteger("company", company);
 		

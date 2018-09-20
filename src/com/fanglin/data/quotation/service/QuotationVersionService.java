@@ -13,6 +13,7 @@ package com.fanglin.data.quotation.service;
 
 import java.util.List;
 
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.data.quotation.vo.QuotationVersionVO;
 import com.fanglin.utils.Paging;
@@ -26,7 +27,7 @@ public interface QuotationVersionService {
 	
 	public List<QuotationVersionVO> queryQuotationVersion(int company);
 	
-	public void saveQuotationVersion(QuotationVersionVO quotationVersionVO,int company);
+	public void saveQuotationVersion(QuotationVersionVO quotationVersionVO,int company) throws FLException;
 	
 	public void updateQuotationVersion(QuotationVersionVO quotationVersionVO);
 	

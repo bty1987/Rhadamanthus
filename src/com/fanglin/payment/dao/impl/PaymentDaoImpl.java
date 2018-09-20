@@ -94,7 +94,7 @@ public class PaymentDaoImpl extends DaoImpl<PaymentPO> implements PaymentDao {
 					query.add(query.getCriterion("advanceReceipt.collectTime", eTimestamp, "le"));
 					query.add(query.getCriterion("advanceReceipt.collectTime", sTimestamp, "ge"));
 				} else if("status".equals(filter.getField())){
-					query.add(query.getCriterion("status", filter));
+					query.add(query.getCriterion("status", Short.valueOf(filter.getData()), filter.getOp()));
 				}
 			}
 		}

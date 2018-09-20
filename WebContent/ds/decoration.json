@@ -39,8 +39,10 @@
         {"key":"1", "value":"全包"},
         {"key":"2", "value":"半价"}
     ], "paymentType": [
-		{"key":"0","value":"设计费"},
-        {"key":"4","value":"主材代购费"}
+		{"key":"0-0","value":"设计费"},
+        {"key":"0-3","value":"主材代购费"},
+		{"key":"0-3","value":"决算补款"},
+		{"key":"1-3","value":"决算扣款"}
     ], "machingType": [
 		{"key":"1.5", "value":"5"}
 	], "orderType": [

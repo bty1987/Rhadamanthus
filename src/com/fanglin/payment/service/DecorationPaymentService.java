@@ -23,14 +23,14 @@ import com.fanglin.utils.Paging;
 
 public interface DecorationPaymentService {
 	
-	public void pageDecorationPaymentForCommit(Paging paging, List<Filter> filters);
-
-	public void pageDecorationPaymentForCollect(Paging paging, List<Filter> filters);
+	public void pageDecorationPaymentForCommit(Paging paging, List<Filter> filters, int company);
 	
-	public void pageDecorationPaymentForConfirm(Paging paging, List<Filter> filters);
+	public void pageDecorationPaymentForHistory(Paging paging, List<Filter> filters, int company);
 
-	public void pageDecorationPaymentForHistory(Paging paging, List<Filter> filters);
+	public void pageDecorationPaymentForCollect(Paging paging, List<Filter> filters, Integer company);
 	
+	public void pageDecorationPaymentForConfirm(Paging paging, List<Filter> filters, Integer company);
+
 	public DecorationPaymentVO queryDecorationPaymentById(DecorationPaymentVO decorationPaymentVO);
 	
 	public List<DecorationPaymentVO> queryDecorationPaymentByOrderId(DecorationPaymentVO decorationPaymentVO);
@@ -47,9 +47,9 @@ public interface DecorationPaymentService {
 	
 	public int changeDecorationPaymentForTime(DecorationPaymentVO decorationPaymentVO, Timestamp dateTime, String userId);
 	
-	public int collectDecorationPayment(DecorationPaymentVO decorationPaymentVO, List<DecorationActivityItemVO> decorationActivityItemVOs, String userId) throws FLException;
+	public int collectDecorationPayment(DecorationPaymentVO decorationPaymentVO, List<DecorationActivityItemVO> decorationActivityItemVOs, String userId, Integer company) throws FLException;
 	
-	public int refundDecorationPayment(DecorationPaymentVO decorationPaymentVO, String userId) throws FLException;
+	public int refundDecorationPayment(DecorationPaymentVO decorationPaymentVO, String userId, Integer company) throws FLException;
 
 	public int confirmDecorationPayment(List<Long> paymentIds, String userId) throws FLException;
 	

@@ -88,7 +88,6 @@ jQuery(function ($) {
         var type = manifest.mtype;//– 类型
         var comment = $('#comment').val();//– 备注
         var sid = manifest.sid;
-        console.log(manifest.sid);
         var options = {
             "manifest.mid": mid,
             "manifest.status":status,

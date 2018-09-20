@@ -1,14 +1,13 @@
-$.extend(api.index, {
+﻿$.extend(api.index, {
 	vustomer: {url: "/views/customer/vustomer.html"},
 	vrecord: {url: "/views/customer/vrecord.html"},
 	vscoreRecord: {url: "/views/customer/vscoreRecord.html"},
+	vustomerAdvance : {url : "/views/customer/vustomerAdvance.html"}
 });
 
 $.extend(api, {customer: {
     
 	pageVustomer: {url: "pageVustomer.do"},
-	
-	queryVustomer: {url: "queryVustomer.do"},
 	
 	queryVustomerByUnionId: {url: "queryVustomerByUnionId.do"},
 	
@@ -45,7 +44,7 @@ $.extend(api, {customer: {
     addCustomerRecord:{url:"addCustomerRecord.do"},
     
     
-    
+    pageVustomerByUnionId : {url : "pageVustomerByUnionId.do"},
     buildVustomerNet : {url : "buildVustomerNet.do"},
     countVustomerNetByUnionId : {url : "countVustomerNetByUnionId.do"},
     countVustomerByUnionId : {url : "countVustomerByUnionId.do"},
@@ -54,10 +53,54 @@ $.extend(api, {customer: {
     raiseVscore : {url : "raiseVscore.do"},
     pickupVscore : {url : "pickupVscore.do"},
     updateVscoreRecordForStatus : {url : "updateVscoreRecordForStatus.do"},
-    
+   
+    pageVustomerForAdvance : {url : "pageVustomerForAdvance.do"},
+    pageVustomerForCommunion : {url : "pageVustomerForCommunion.do"},
+    freeVustomer : {url : "freeVustomer.do"},
+    takeVustomer : {url : "takeVustomer.do"},
+    updateVustomerForBelonger : {url : "updateVustomerForBelonger.do"},
     
     addVuser : {url : "addVuser.do"},
     queryVuser : {url : "queryVuser.do"},
+    
+    
+    
+    
+    //公众号
+    queryCusConstructer : {url : "queryCusConstructer.do"},
+    queryCusConstruction : {url : "queryCusConstruction.do"},
+    
+    queryCusDecoration : {url : "queryCusDecoration.do"},
+    queryCusDecorationByOrderId : {url : "queryCusDecorationByOrderId.do"},
+    queryCusDecorationUser : {url : "queryCusDecorationUser.do"},
+    bindingCusDecoration : {url : "bindingCusDecoration.do"},
+    queryCusDecorationForDefault : {url : "queryCusDecorationForDefault.do"},
+    updateCusDecorationForDefault : {url : "updateCusDecorationForDefault.do"},
+    
+    pageEmember : {url : "pageEmember.do"},
+    queryEmember : {url : "queryEmember.do"},
+    addEmember : {url : "addEmember.do"},
+    
+    pageFeedBack : {url : "pageFeedBack.do"},
+    addFeedBack : {url : "addFeedBack.do"},
+    
+    pageGroup : {url : "pageGroup.do"},
+    queryGroup : {url : "queryGroup.do"},
+    updateGroup : {url : "updateGroup.do"},
+    unbindGroup : {url : "unbindGroup.do"},
+    bindGroup : {url : "bindGroup.do"},
+    
+    queryCusMaterialPayment : {url : "queryCusMaterialPayment.do"},
+    queryCusDecorationPayment : {url : "queryCusDecorationPayment.do"},
+    queryCusServicePayment : {url : "queryCusServicePayment.do"},
+    queryCusSalesPayment : {url : "queryCusSalesPayment.do"},
+    queryCusAdvance: {url : "queryCusAdvance.do"},
+    queryCusPayment : {url : "queryCusPayment.do"},
+    
+    queryCusDecorationPicture : {url : "queryCusDecorationPicture.do"},
+    queryCusConstructionDrawing : {url : "queryCusConstructionDrawing.do"},
+    
+    addDecorationCircle:{url:"addDecorationCircle.do"}
     
 }});
 

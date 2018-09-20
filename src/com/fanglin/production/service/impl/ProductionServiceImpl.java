@@ -23,6 +23,8 @@ import com.fanglin.production.dao.ProductionDao;
 import com.fanglin.production.po.ProductionPO;
 import com.fanglin.production.service.ProductionService;
 import com.fanglin.production.vo.ProductionVO;
+import com.fanglin.system.dao.CompanyDao;
+import com.fanglin.system.po.CompanyPO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
@@ -40,6 +42,9 @@ public class ProductionServiceImpl implements ProductionService {
 
 	@Autowired
 	private CountingService countingService;
+	
+	@Autowired
+	private CompanyDao companyDao;
 
 	@Override
 	public void pageProduction(Paging paging, List<Filter> filters, int company) {
@@ -69,13 +74,20 @@ public class ProductionServiceImpl implements ProductionService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int addProduction(ProductionVO productionVO, String userId, int company) throws FLException {
-
+		
+		CompanyPO companyPO = companyDao.get(company);
+		
+		if(companyPO == null){
+			throw new FLException(230015, "公司不存在");
+		}
+		
 		ProductionPO productionPO = new ProductionPO(new HousePO(), new UserPO(), new UserPO());
 
 		String currentDate = DateUtil.current("yyMMdd").toString();
-		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_SO_INT, currentDate);
+		
+		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_SO_INT, currentDate, company);
 
-		String no = "P" + currentDate + FormatUtil.fillZero(FormatUtil.offset(count), "0000");
+		String no =  companyPO.getShortname() +"P" + currentDate + FormatUtil.fillZero(FormatUtil.offset(count), "0000");
 
 		UserPO designer = userDao.queryUserByUserId(productionVO.getDesigner().getUserId());
 		UserPO creater = userDao.queryUserByUserId(userId);

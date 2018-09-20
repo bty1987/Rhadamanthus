@@ -26,8 +26,8 @@ public class CountingDaoImpl extends DaoImpl<CountingPO> implements CountingDao 
 	}
 
 	@Override
-	public CountingPO queryCountingByTypeDate(int type, String date){
-		return (CountingPO) session().createCriteria(CountingPO.class).add(Restrictions.eq(CountingPO.COLUMN_DATE_STR, date)).add(Restrictions.eq(CountingPO.COLUMN_TYPE_STR, type)).uniqueResult();
+	public CountingPO queryCountingByTypeDate(int type, String date, int company){
+		return (CountingPO) session().createCriteria(CountingPO.class).add(Restrictions.eq(CountingPO.COLUMN_DATE_STR, date)).add(Restrictions.eq(CountingPO.COLUMN_TYPE_STR, type)).add(Restrictions.eq(CountingPO.COLUMN_COMPANY_STR, company)).uniqueResult();
 	}
 
 }

@@ -294,7 +294,6 @@ jQuery(function($) {
 			"decoration.customer.cid": orderEntry.orderItems.customerId.val(),
 			"decoration.houseType": orderEntry.orderItems.houseType.val(),
 			"decoration.houseClass": orderEntry.orderItems.houseClass.val(),
-			"decoration.apartmentType": orderEntry.orderItems.apartmentType.val(),
 			"decoration.designer.userId": orderEntry.orderItems.designerId.val(),
 			"decoration.salesman.userId": orderEntry.orderItems.salesmanId.val(),
 			"decoration.salesmanType": orderEntry.orderItems.salesmanType.val(),

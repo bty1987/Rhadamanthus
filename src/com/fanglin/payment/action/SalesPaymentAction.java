@@ -35,33 +35,33 @@ public class SalesPaymentAction extends BaseListAction {
 	private List<Long> spids;
 	
 	@Action(value = "pageSalesPaymentForInit", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageSalesPaymentForInit(){
+	public String pageSalesPaymentForInit() throws FLException{
 		
-		salesPaymentService.pageSalesPaymentForInit(getPaging(), getFilters());
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "pageSalesPaymentForCollect", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageSalesPaymentForCollect(){
-		
-		salesPaymentService.pageSalesPaymentForCollect(getPaging(), getFilters());
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "pageSalesPaymentForConfirm", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageSalesPaymentForConfirm(){
-		
-		salesPaymentService.pageSalesPaymentForConfirm(getPaging(), getFilters());
+		salesPaymentService.pageSalesPaymentForInit(getPaging(), getFilters(), queryCompany());
 		
 		return SUCCESS;
 	}
 	
 	@Action(value = "pageSalesPaymentForNotInit", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageSalesPaymentForNotInit(){
+	public String pageSalesPaymentForNotInit() throws FLException{
 		
-		salesPaymentService.pageSalesPaymentForNotInit(getPaging(), getFilters());
+		salesPaymentService.pageSalesPaymentForNotInit(getPaging(), getFilters(), queryCompany());
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "pageSalesPaymentForCollect", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageSalesPaymentForCollect() throws FLException{
+		
+		salesPaymentService.pageSalesPaymentForCollect(getPaging(), getFilters(), queryCompany());
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "pageSalesPaymentForConfirm", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageSalesPaymentForConfirm() throws FLException{
+		
+		salesPaymentService.pageSalesPaymentForConfirm(getPaging(), getFilters(), queryCompany());
 		
 		return SUCCESS;
 	}
@@ -101,7 +101,7 @@ public class SalesPaymentAction extends BaseListAction {
 	@Action(value = "collectSalesPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String collectSalesPayment() throws FLException{
 		
-		salesPaymentService.collectSalesPayment(salesPayment, salesReceipt, queryUserId());
+		salesPaymentService.collectSalesPayment(salesPayment, salesReceipt, queryUserId(), queryCompany());
 		
 		return SUCCESS;
 	}
@@ -109,7 +109,7 @@ public class SalesPaymentAction extends BaseListAction {
 	@Action(value = "collectSalesPayments", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String collectSalesPayments() throws FLException{
 		
-		salesPaymentService.collectSalesPayments(spids,salesPayment, salesReceipt, queryUserId());
+		salesPaymentService.collectSalesPayments(spids,salesPayment, salesReceipt, queryUserId(), queryCompany());
 		
 		return SUCCESS;
 	}
@@ -117,7 +117,7 @@ public class SalesPaymentAction extends BaseListAction {
 	@Action(value = "collectSalesPaymentForRefund", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String collectSalesPaymentForRefund() throws FLException{
 		
-		salesPaymentService.collectSalesPaymentForRefund(salesPayment, salesReceipt,queryUserId());
+		salesPaymentService.collectSalesPaymentForRefund(salesPayment, salesReceipt, queryUserId(), queryCompany());
 		
 		return SUCCESS;
 	}

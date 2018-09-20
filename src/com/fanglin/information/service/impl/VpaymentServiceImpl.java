@@ -160,7 +160,7 @@ public class VpaymentServiceImpl implements VpaymentService {
 
 			VpaymentPO vpaymentPO = vpaymentDao.get(vpaymentVO.getVpid());
 
-			vpaymentPO.setStatus(VpaymentPO.COLUMN_STATUS_VPAYMENT_INT);
+			vpaymentPO.setStatus(VpaymentPO.STATUS_PAYED_INT);
 			vpaymentPO.setVreceipt(vreceiptPO);
 
 			vpaymentDao.update(vpaymentPO);

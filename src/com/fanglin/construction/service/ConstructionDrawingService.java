@@ -12,7 +12,7 @@ public interface ConstructionDrawingService {
 
 	public List<ConstructionDrawingVO> queryConstructionDrawingByCid(ConstructionDrawingVO constructionDrawing);
 	
-	public int addConstructionDrawing(ConstructionDrawingVO constructionDrawing, String userId);
+	public int addConstructionDrawing(ConstructionDrawingVO constructionDrawing, String userId, int company) throws FLException;
 
 	public List<ConstructionDrawingVO> addConstructionDrawings(ConstructionDrawingVO constructionDrawing, List<String> drawingUrls, String userId);
 

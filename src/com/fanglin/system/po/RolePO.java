@@ -25,6 +25,8 @@ public class RolePO implements Serializable {
 
 	private String content;
 	
+	private int company;
+	
 	public RolePO(){
 		super();
 	}
@@ -77,4 +79,14 @@ public class RolePO implements Serializable {
 		this.content = content;
 	}
 
+	@Column(name = "company")
+	public int getCompany() {
+		return company;
+	}
+
+	public void setCompany(int company) {
+		this.company = company;
+	}
+
+	
 }

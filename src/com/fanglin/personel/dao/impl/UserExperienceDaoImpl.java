@@ -28,9 +28,7 @@ public class UserExperienceDaoImpl extends DaoImpl<UserExperiencePO> implements 
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<UserExperiencePO> queryUserExperiencesByUid(Integer uid){
-	
 		return session().createCriteria(UserExperiencePO.class).add(Restrictions.eq("uid", uid)).list();
- 
 	}
 
 }

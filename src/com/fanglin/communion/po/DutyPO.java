@@ -33,8 +33,6 @@ public class DutyPO implements Serializable {
 
 	private short status;
 	
-	//2017.11.8新增字段
-	
 	private DepartmentTypePO departmentType;
 	
 	private int type;

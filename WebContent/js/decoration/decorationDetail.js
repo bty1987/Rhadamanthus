@@ -9,7 +9,6 @@ jQuery(function($) {
             "全包":1,
             "半价":2,
         },
-
         decoration: {},
         customer:{},
         village:{},
@@ -39,7 +38,7 @@ jQuery(function($) {
         cRepeatFlg: false,
         accountFlg:false,
     };
-    
+
     drawNode.draw(params.viewNode);
 
     var decorationPayment = {
@@ -147,7 +146,7 @@ jQuery(function($) {
     }, null, false);
 
     decorationDetail.printQuotationModal = $("#printQuotationModal");
-    
+
     decorationDetail.activity.activity = $("#activity").on("change", function(){
         var $this = $(this);
 
@@ -168,12 +167,12 @@ jQuery(function($) {
                 if(_activityItem.type == 0){
                     _coupons.push({aiId:_activityItem.aiId, activityItemName:_activityItem.name + " 金额:" + _activityItem.money});
                 }else if(_activityItem.type == 1){
-                    _things.push({aiId:_activityItem.aiId, activityItemName:_activityItem.name});
+                    _things.push({aiId:_activityItem.aiId, activityItemName:_activityItem.name + " 金额:" + _activityItem.money});
                 }
             }
 
             decorationDetail.activity.things.chosen("destroy");
-            decorationDetail.activity.things.chosen({width: "216px"});
+            decorationDetail.activity.things.chosen({width: "216px",multi_type: "input"});
             decorationDetail.activity.things.bindData(_things, 'aiId', 'activityItemName', false);
             decorationDetail.activity.things.trigger("chosen:updated");
 
@@ -191,9 +190,7 @@ jQuery(function($) {
     decorationDetail.activity.convertActivityItemName = $("#convertActivityItemName");
     decorationDetail.activity.convertActivityItemMoney = $("#convertActivityItemMoney");
     decorationDetail.activity.activityType = $("#activityType").on("change", function(){
-        var $this = $(this);
-
-        $this.val() == 0 ? decorationDetail.activity.couponInfo.css("display", "block") : decorationDetail.activity.couponInfo.css("display", "none");
+        decorationDetail.activity.couponInfo.css("display", "block")
     });
     decorationDetail.activity.activityItemName = $("#activityItemName");
     decorationDetail.activity.couponInfo = $("#couponInfo");
@@ -205,6 +202,7 @@ jQuery(function($) {
 
     decorationDetail.activitys = $("#activitys");
     decorationDetail.activityItems = $("#activityItems");
+    decorationDetail.activityPriceInfo = $("#activityPriceInfo");
 
     decorationDetail.printQuotationModal = $("#printQuotationModal");
     decorationDetail.quotationTotalPriceModal = $("#quotationTotalPriceModal");
@@ -214,9 +212,7 @@ jQuery(function($) {
     decorationDetail.applyDecorationActivityItemModal = $("#applyDecorationActivityItemModal").on('show.bs.modal', function(e){
         com.clearValidator();
     });
-    decorationDetail.convertDecorationActivityItemModal = $("#convertDecorationActivityItemModal").on('show.bs.modal', function(e){
-        com.clearValidator();
-    });
+
     decorationDetail.applySpecialDecorationActivityItemModal = $("#applySpecialDecorationActivityItemModal").on('show.bs.modal', function(e){
         com.clearValidator();
     });
@@ -333,10 +329,10 @@ jQuery(function($) {
 
             options["approvalDecorationActivityItems[" + index + "].orderId"] = orderId;
             options["approvalDecorationActivityItems[" + index + "].activityName"] = activityName;
-            options["approvalDecorationActivityItems[" + index + "].activityItemName"] = _.children('span').text();
+            options["approvalDecorationActivityItems[" + index + "].activityItemName"] = _.children('span').text().split(" ")[0];
             options["approvalDecorationActivityItems[" + index + "].type"] = 1;
-            options["approvalDecorationActivityItems[" + index + "].num"] = 1;
-            options["approvalDecorationActivityItems[" + index + "].money"] = 0;
+            options["approvalDecorationActivityItems[" + index + "].num"] = _.children('span').children('input').val();
+            options["approvalDecorationActivityItems[" + index + "].money"] = _.children('span').text().split(" ")[1].split(':')[1];
             options["approvalDecorationActivityItems[" + index + "].content"] = "";
 
             index++;
@@ -398,14 +394,8 @@ jQuery(function($) {
             "approvalDecorationActivityItems[0].activityItemName": decorationDetail.activity.activityItemName.val(),
             "approvalDecorationActivityItems[0].type": type,
             "approvalDecorationActivityItems[0].content": "",
-        }
-
-        if(type == 0){
-            options["approvalDecorationActivityItems[0].num"] = decorationDetail.activity.activityItemNum.val();
-            options["approvalDecorationActivityItems[0].money"] = decorationDetail.activity.activityItemMoney.val();
-        }else if(type == 1){
-            options["approvalDecorationActivityItems[0].num"] = 1;
-            options["approvalDecorationActivityItems[0].money"] = 0;
+            "approvalDecorationActivityItems[0].num":decorationDetail.activity.activityItemNum.val(),
+            "approvalDecorationActivityItems[0].money":decorationDetail.activity.activityItemMoney.val(),
         }
 
         com.post(api.approval.submitApprovalForDecorationActivity, options, function(res){
@@ -413,33 +403,6 @@ jQuery(function($) {
         });
 
         decorationDetail.applySpecialDecorationActivityItemModal.modal("hide");
-    });
-
-    $("#convertDecorationActivityItemBtn").on(ace.click_event, function(){
-
-        if(com.validate()){
-            return;
-        }
-
-        var daiId = params.convertActivityItemId;
-
-        var options = {
-            "decorationActivityItem.daiId": daiId,
-            "decorationActivityItem.money": decorationDetail.activity.convertActivityItemMoney.val(),
-        }
-
-        com.post(api.decoration.convertDecorationActivityItem, options, function(res){
-            var decorationActivityItem = res.decorationActivityItem;
-
-            $("#convert_" + daiId).unbind();
-            $("#abate_" + daiId).unbind();
-            $("#widgetHeader_" + daiId).addClass("header-color-grey");
-
-            decorationUtils.addActivityItemForDiv(decorationDetail.activityItems, decorationActivityItem, uiBtnMethod);
-        });
-
-        decorationDetail.convertDecorationActivityItemModal.modal("hide")
-
     });
 
     $("#joinActivityBtn").on("click", function(){
@@ -452,10 +415,10 @@ jQuery(function($) {
             for(var i=0;i<activitys.length;i++){
                 var _activity = activitys[i];
 
-                _activitys.push({aid:_activity.aid, activityName:_activity.name});
+                _activitys.push({aid:_activity.aid, activityName:_activity.name,money:_activitys.money});
             }
 
-            decorationDetail.activity.activityInfo.bindData(_activitys, "aid", "activityName", false);
+            decorationDetail.activity.activityInfo.bindData(_activitys, "aid", "activityName","money", false);
         });
 
         decorationDetail.joinDecorationActivityModal.modal("show");
@@ -464,13 +427,13 @@ jQuery(function($) {
     $("#applyActivityItemBtn").on("click", function(){
 
         decorationDetail.activity.things.chosen("destroy");
-        decorationDetail.activity.things.chosen({width: "42%"});
-        decorationDetail.activity.things.bindData([{aid:-1, activityName: ""}], "aid", "activityName");
+        decorationDetail.activity.things.chosen({width: "42%",multi_type: "input"});
+        decorationDetail.activity.things.bindData([{aid:-1, activityName: ""}], "aid", "activityName","money");
         decorationDetail.activity.things.trigger("chosen:updated");
 
         decorationDetail.activity.coupons.chosen("destroy");
         decorationDetail.activity.coupons.chosen({width: "42%", multi_type: "input"});
-        decorationDetail.activity.coupons.bindData([{aid:-1, activityName: ""}], "aid", "activityName");
+        decorationDetail.activity.coupons.bindData([{aid:-1, activityName: ""}], "aid", "activityName","money");
         decorationDetail.activity.coupons.trigger("chosen:updated");
 
         var options = {
@@ -486,10 +449,10 @@ jQuery(function($) {
             for(var i=0;i<decorationActivitys.length;i++){
                 var _decorationActivity = decorationActivitys[i];
 
-                _activitys.push({aid:_decorationActivity.activity.aid, activityName:_decorationActivity.activity.name})
+                _activitys.push({aid:_decorationActivity.activity.aid, activityName:_decorationActivity.activity.name,money:_decorationActivity.activity.money})
             }
 
-            decorationDetail.activity.activity.bindData(_activitys, "aid", "activityName", false);
+            decorationDetail.activity.activity.bindData(_activitys, "aid", "activityName","money", false);
         }, null, false);
 
         approvalUtils.initqueryApprovalUser("approveActivityItemManSel",8);
@@ -515,7 +478,7 @@ jQuery(function($) {
     $('#customerChangeBtn').on("click", function(){
         com.clearValidator();
         com.post(api.data.queryCustomerById,{ "customer.cid": decorationDetail.customer.cid},function (res) {
-           res = res.customer;
+            res = res.customer;
 
             decorationDetail.customerItems.customerName.val(res.name);
             decorationDetail.customerItems.identity.val(res.identity);
@@ -558,7 +521,7 @@ jQuery(function($) {
         if(decorationDetail.vRepeatFlg || decorationDetail.houseItems.thid == null){
             return;
         }
-        
+
         com.post(api.decoration.changeDecorationForHouse,{"decoration.orderId":decorationDetail.decorationOrderId,"decoration.house.hid":decorationDetail.houseItems.thid},function (res) {
             com.showAlert(com.info,"操作成功")
             decorationDetail.items.houseAddr.val(decorationDetail.houseItems.villageName + decorationDetail.houseItems.houseNumber);
@@ -571,9 +534,8 @@ jQuery(function($) {
     $("#btnSetDecorationPaymentInfo").on('click', function(res) {
         com.clearValidator();
 
-        com.post(api.ds.decoration,{},function (res) {
-            $('#decorationDiscount').bindData(res.machingType,"key","value");
-
+        com.post(api.decoration.queryDecorationConfig,{},function (res) {
+            $('#decorationDiscount').bindData(res.config.machingType,"key","value");
         });
 
         $("#decorationTotalMoney").val("");
@@ -678,15 +640,20 @@ jQuery(function($) {
         $('#changeReason').val("")
     });
 
+
+
     $("#saveOtherPaymentBtn").on("click", function(res){
         if(com.validate("otherPaymentModal")){
             return;
         }
 
+        var type = decorationDetail.otherPaymentType.val().split('-');
+
         var options = {
             "decorationPayment.decoration.orderId": decorationDetail.decorationOrderId,
             "decorationPayment.paymentType": decorationDetail.otherPaymentType.find("option:selected").text(),
-            "decorationPayment.twoType": decorationDetail.otherPaymentType.val(),
+            "decorationPayment.oneType": type[0],
+            "decorationPayment.twoType": type[1],
             "decorationPayment.referMoney": decorationDetail.otherPayment.val()
         }
 
@@ -821,7 +788,7 @@ jQuery(function($) {
     initWizard(decorationDetail);
 
     decorationUtils.initBaseInfo(decorationDetail.decorationOrderId, api.decoration.queryDecorationForCommonByOrderId, function(decoration){
-        
+
         decorationDetail.items.orderId.val(decoration.orderId);
         decorationDetail.items.customer.val(decoration.customer.name);
         decorationDetail.items.houseAddr.val(decoration.house.village.name + decoration.house.houseNumber);
@@ -938,7 +905,7 @@ jQuery(function($) {
                     params.convertActivityItemId = decorationDetail.convertActivityItemId;
                     params.activity = decorationDetail.activity;
                     decorationUtils.decorationActivityInfo(decorationDetail.activitys, wizard["activityBtnMethod"], decorationDetail.decorationOrderId);
-                    decorationUtils.decorationActivityItemInfo(decorationDetail.activityItems, wizard["uiBtnMethod"], decorationDetail.decorationOrderId);
+                    decorationUtils.decorationActivityItemInfo(decorationDetail.activityPriceInfo,decorationDetail.activityItems, wizard["uiBtnMethod"], decorationDetail.decorationOrderId);
                     break;
                 case "belong":
                     decorationUtils.initDecorationBelong(decorationDetail.decorationOrderId);
@@ -962,7 +929,7 @@ jQuery(function($) {
             info.step == 1 ? decorationDetail.btnSaveBasedecorationInfo.removeClass("hide") : decorationDetail.btnSaveBasedecorationInfo.addClass("hide")
 
             switch (params.viewNode[info.step-1].type){
-            
+
                 case "quotaion":
                     quotationUtils.loadQuotationDetail();
                     break;
@@ -978,7 +945,7 @@ jQuery(function($) {
                     params.convertActivityItemId = decorationDetail.convertActivityItemId;
                     params.activity = decorationDetail.activity;
                     decorationUtils.decorationActivityInfo(decorationDetail.activitys, wizard["activityBtnMethod"], decorationDetail.decorationOrderId);
-                    decorationUtils.decorationActivityItemInfo(decorationDetail.activityItems, wizard["uiBtnMethod"], decorationDetail.decorationOrderId);
+                    decorationUtils.decorationActivityItemInfo(decorationDetail.activityPriceInfo,decorationDetail.activityItems, wizard["uiBtnMethod"], decorationDetail.decorationOrderId);
                     break;
                 case "belong":
                     decorationUtils.initDecorationBelong(decorationDetail.decorationOrderId);
@@ -1014,17 +981,9 @@ jQuery(function($) {
 
     function uiBtnMethod(uiPgDiv, activityItem){
 
-        if(activityItem.type == 1){
-            var convertBtn = $("<span></span>").addClass("ui-icon icon-exchange").attr("id", "convert_" + activityItem.daiId).appendTo(uiPgDiv);
-        }
         var abateBtn = $("<span></span>").addClass("ui-icon icon-ban-circle red").attr("id", "abate_" + activityItem.daiId).appendTo(uiPgDiv);
 
         if(activityItem.state == 0){
-            if(activityItem.type == 1){
-                convertBtn.on("click", function(){
-                    convertDecorationActivityItem(activityItem);
-                });
-            }
 
             abateBtn.on("click", function(){
                 abateDecorationActivityItem(activityItem.daiId, activityItem.activityItemName);
@@ -1040,16 +999,6 @@ jQuery(function($) {
         com.post(api.decoration.deleteDecorationActivity, options, function(res){
             $("#dactivity_" + res.decorationActivity.daId).remove();
         });
-    }
-
-    function convertDecorationActivityItem(activityItem){
-
-        decorationDetail.convertActivityItemId = activityItem.daiId;
-
-        decorationDetail.activity.convertActivityItemName.val(activityItem.activityItemName);
-        decorationDetail.activity.convertActivityItemMoney.val(0);
-
-        decorationDetail.convertDecorationActivityItemModal.modal("show");
     }
 
     function abateDecorationActivityItem(daiId, activityItemName){
@@ -1072,7 +1021,7 @@ jQuery(function($) {
             }
         });
     }
-    
+
     function houseNumbervali(houseNumber,regex,errorMsg){
 
         if (new RegExp(regex).test(houseNumber)) {
@@ -1254,7 +1203,7 @@ jQuery(function($) {
                     "customerPhone.phone": $id.val(),
                     "customerPhone.status": null
                 }, function (res) {
-                	decorationDetail.customer.repeatFlg = false;
+                    decorationDetail.customer.repeatFlg = false;
                     $id.css("border", "1px solid #d5d5d5").popover("destroy");
                 }, function (res) {
                     decorationDetail.customer.repeatFlg = true;
@@ -1328,7 +1277,6 @@ jQuery(function($) {
                 break;
         }
     }
-
 });
 
 

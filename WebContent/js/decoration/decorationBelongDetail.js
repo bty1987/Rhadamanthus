@@ -70,7 +70,7 @@ jQuery(function($) {
 			var $v = $(belongInfos[i]);
 			
 			if($v.attr('belongUserId') == addRow.belonger.userId){
-				bootbox.alert("该员工编号("+addRow.belonger.userId+")已存在不能重复添加");
+				bootbox.alert("员工编号("+addRow.belonger.userId+")已存在不能重复添加");
 				return false;
 			}
 		}

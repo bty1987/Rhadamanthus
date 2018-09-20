@@ -32,10 +32,7 @@ public class NoticeDaoImpl extends DaoImpl<NoticePO> implements NoticeDao {
 		
 		PagingQuery<NoticePO> query = pagingQuery(paging, NoticePO.class);
 		
-		query.alias("creater", "creater");
-		
 		query.add(Restrictions.eq("company", company));
-		query.add(Restrictions.eq("creater.userId", userId));
 		
 		queryFilterExcute(query, filters);
 		

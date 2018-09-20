@@ -14,6 +14,8 @@ public class RoleVO implements Serializable {
 
 	protected String content;
 	
+	private Integer company; 
+	
 	public RoleVO(Integer rid) {
 		super();
 		this.rid = rid;
@@ -60,4 +62,13 @@ public class RoleVO implements Serializable {
 		this.content = content;
 	}
 
+	public Integer getCompany() {
+		return company;
+	}
+
+	public void setCompany(Integer company) {
+		this.company = company;
+	}
+
+	
 }

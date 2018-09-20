@@ -209,7 +209,7 @@ public class CustomerServiceImpl implements CustomerService {
 	    
 	    String currentDate = DateUtil.current("yyyyMMdd").toString().substring(2);
 	  
-		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_CUSTOMER_INT, currentDate);
+		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_CUSTOMER_INT, currentDate, company);
 		
 	    String no = currentDate + FormatUtil.fillZero(FormatUtil.offset(count), "0000");
 	    

@@ -64,8 +64,8 @@ $(function(){
 
             var propertyArr = [
                 [v.name,'grey'],
-                [v.phone == "" ? "无": v.phone ,'black'],
-                [v.gender =="0" ? "男" : "女",'red'],
+                [v.phone == null ? "无": v.phone ,'black'],
+                [v.gender =="0" ? "女" : "男",'red'],
                 [v.birthday == null ? "无" : v.birthday ,'red']
             ];
 

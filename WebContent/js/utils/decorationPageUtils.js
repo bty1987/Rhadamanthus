@@ -177,7 +177,7 @@ $(function(){
     }
     function drawActivity(conf){
         var row = createDiv("row").append(
-            createDiv("col-md-12").append(createButton(conf,"joinActivityBtn","btn btn-info","参加活动","button",'<i class="icon-cog bigger-110"></i>'),createButton(conf,"applyActivityItemBtn","btn btn-info","申领活动物品","button",'<i class="icon-cog bigger-110"></i>'), createButton(conf,"applySpecialActivityItemBtn","btn btn-info","特批活动物品","button",'<i class="icon-cog bigger-110"></i>'))
+            createDiv("col-md-12").append(createButton(conf,"joinActivityBtn","btn btn-info","参加活动","button",'<i class="icon-cog bigger-110"></i>'),createButton(conf,"applyActivityItemBtn","btn btn-info","申领活动物品","button",'<i class="icon-cog bigger-110"></i>'), createButton(conf,"applySpecialActivityItemBtn","btn btn-info","特批活动物品","button",'<i class="icon-cog bigger-110"></i>'),createDiv("col-sm-6","activityPriceInfo").attr("style","padding:0px;float:right;text-align:right;"))
             ,createDiv("col-md-12 hr"),createDiv("col-md-12","activitys"),createDiv("col-md-12 hr"),createDiv("col-md-12","activityItems")
         );
 
@@ -247,14 +247,14 @@ $(function(){
         },
         "designer": {
             "apiPage":api.decoration.pageDecorationForDesigner,
-            "pageBtn":["view","revie","line","price","scal","contract","extension","addminus","cal"],
+            "pageBtn":["view","revie","line","price","scal","contract","extension","addminus","cal","services"],
             "postDataName": "designerPostData",
             "nodes":[{type:"basic",opt:{btn:["customerInfosBtn"],show:["orderType","houseType","houseClass"]}},{type:"quotaion",opt:{btn:["btnPrintDefaultQuotationInfo"]}},{type:"picture",opt:{show:["designPictureUpload","projectPictureUpload","CADUpload","ContractUpload"]}},{type:"material"},{type:"activity",opt:{btn:["joinActivityBtn","applyActivityItemBtn","applySpecialActivityItemBtn"]},wizard:{"activityBtnMethod":activityBtnMethod,"uiBtnMethod":uiBtnMethod} },{type:"payment",opt:{btn:["btnSetDecorationPaymentInfo","btnOtherPayment"]},wizard:{"isDesign":true}},{type:"belong"}, {type: "addreduce"}, {type: "account"},{type:"service"}],
             "hasExport":true
         },
         "designermanager": {
             "apiPage":api.decoration.pageDecorationForDesignerManager,
-            "pageBtn":["view","revie","line","price","scal","contract","extension","addminus","cal"],
+            "pageBtn":["view","revie","line","price","scal","contract","extension","addminus","cal","services"],
             "postDataName": "designermanagerPostData",
             "nodes":[{type:"basic",opt:{btn:["customerInfosBtn"],show:["orderType","houseType","houseClass","quoterId"]}},{type:"quotaion",opt:{btn:["btnPrintDefaultQuotationInfo"]}},{type:"picture",opt:{show:["designPictureUpload","projectPictureUpload","CADUpload","ContractUpload"]}},{type:"material"},{type:"activity",opt:{btn:["joinActivityBtn","applyActivityItemBtn","applySpecialActivityItemBtn"]},wizard:{"activityBtnMethod":activityBtnMethod,"uiBtnMethod":uiBtnMethod} },{type:"payment",opt:{btn:["btnSetDecorationPaymentInfo","btnOtherPayment"]},wizard:{"isDesign":true}},{type:"belong"}, {type: "addreduce"}, {type: "account"},{type:"service"}],
             "hasExport":true
@@ -345,17 +345,9 @@ $(function(){
 
     function uiBtnMethod(uiPgDiv, activityItem){
 
-        if(activityItem.type == 1){
-            var convertBtn = $("<span></span>").addClass("ui-icon icon-exchange").attr("id", "convert_" + activityItem.daiId).appendTo(uiPgDiv);
-        }
         var abateBtn = $("<span></span>").addClass("ui-icon icon-ban-circle red").attr("id", "abate_" + activityItem.daiId).appendTo(uiPgDiv);
 
         if(activityItem.state == 0){
-            if(activityItem.type == 1){
-                convertBtn.on("click", function(){
-                    convertDecorationActivityItem(activityItem);
-                });
-            }
 
             abateBtn.on("click", function(){
                 abateDecorationActivityItem(activityItem.daiId, activityItem.activityItemName);
@@ -371,16 +363,6 @@ $(function(){
         com.post(api.decoration.deleteDecorationActivity, options, function(res){
             $("#dactivity_" + res.decorationActivity.daId).remove();
         });
-    }
-
-    function convertDecorationActivityItem(activityItem){
-
-        params.convertActivityItemId = activityItem.daiId;
-
-        params.activity.convertActivityItemName.val(activityItem.activityItemName);
-        params.activity.convertActivityItemMoney.val(0);
-
-        $("#convertDecorationActivityItemModal").modal("show");
     }
 
     function abateDecorationActivityItem(daiId, activityItemName){
@@ -399,6 +381,8 @@ $(function(){
                     $("#convert_" + daiId).unbind();
                     $("#abate_" + daiId).unbind();
                     $("#widgetHeader_" + daiId).addClass("header-color-grey");
+                    decorationUtils.decorationActivityItemInfo($("#activityPriceInfo"), $("#activityItems"), uiBtnMethod, params["decorationOrderId"])
+
                 })
             }
         });
@@ -524,7 +508,7 @@ $(function(){
             pageConfig.postDataName = "";
 
             pageConfig.column = [
-                ["订单编号","orderId"],
+                ["装修单号","orderId"],
                 ['楼盘地址',['house.village.name', 'house.houseNumber']],
                 ['客户名','customer.name'],
                 ['设计部','designer.dept.deptName'],

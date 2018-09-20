@@ -40,6 +40,8 @@ import com.fanglin.inventory.vo.AccessoriesVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.system.dao.CompanyDao;
+import com.fanglin.system.po.CompanyPO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
@@ -49,6 +51,9 @@ import com.fanglin.utils.Paging;
 @Service("accessoriesService")
 @Transactional(readOnly=true)
 public class AccessoriesServiceImpl implements AccessoriesService {
+	
+	@Autowired
+	private CompanyDao companyDao;
 	
 	@Autowired
 	private AccessoriesDao accessoriesDao;
@@ -119,13 +124,18 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 	@Transactional(rollbackFor=Exception.class)
 	public int addAccessories(AccessoriesVO accessoriesVO,List<AccessoriesItemVO> accessoriesItemVOs, String creater,String approver,int company) throws FLException {
 		
-		String word = "AO";
+		CompanyPO companyPO = companyDao.get(company);
 		
+		if(companyPO == null){
+			throw new FLException(230015, "公司不存在");
+		}
+		
+		String word = "AO";
 		String currentDate = DateUtil.current("yyMMdd").toString();
-		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_AO_INT,currentDate);
+		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_AO_INT,currentDate, company);
 		String endNo = FormatUtil.fillZero(FormatUtil.offset(count), "0000");
 		
-		String no = String.valueOf(word) + currentDate + endNo;
+		String no = companyPO.getShortname() + String.valueOf(word) + currentDate + endNo;
 		
 		AccessoriesPO accessoriesPO = new AccessoriesPO(no);
 		
@@ -185,7 +195,7 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 		String word = "AO";
 		
 		String currentDate = DateUtil.current("yyMMdd").toString();
-		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_AO_INT,currentDate);
+		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_AO_INT,currentDate, company);
 		String endNo = FormatUtil.fillZero(FormatUtil.offset(count), "0000");
 		
 		String no = String.valueOf(word) + currentDate + endNo;
@@ -234,7 +244,7 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 		
 		UserPO userPO = userDao.queryUserByUserId(creater);
 		
-		int countAS = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_AS_INT, CountingPO.COUNTING_DATE_SILNLE_STR);
+		int countAS = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_AS_INT, CountingPO.COUNTING_DATE_SILNLE_STR, company);
 		String manifestId = String.valueOf(wordAS) + FormatUtil.fillZero(countAS, "00000000");
 		
 		ManifestPO manifestPO = new ManifestPO(manifestId);

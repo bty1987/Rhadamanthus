@@ -123,7 +123,7 @@ public class FinanceServiceImpl implements FinanceService {
 		voucherPO.setPeriod(currentPeriod);
 		
 		if(relat){
-			int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_FINANCE_CC_INT, CountingPO.COUNTING_DATE_SILNLE_STR);
+			int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_FINANCE_CC_INT, CountingPO.COUNTING_DATE_SILNLE_STR, company);
 			
 			StringBuffer voucherId = new StringBuffer();
 			voucherId.append(VoucherPO.PERIOD_CC_INT);
@@ -135,7 +135,7 @@ public class FinanceServiceImpl implements FinanceService {
 			word = VoucherPO.PERIOD_CC_STR;
 			abstracts = String.format("收订单%s的预付款", orderId);
 		}else{
-			int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_FINANCE_CR_INT, CountingPO.COUNTING_DATE_SILNLE_STR);
+			int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_FINANCE_CR_INT, CountingPO.COUNTING_DATE_SILNLE_STR, company);
 			
 			StringBuffer voucherId = new StringBuffer();
 			voucherId.append(VoucherPO.PERIOD_CR_INT);
@@ -171,15 +171,15 @@ public class FinanceServiceImpl implements FinanceService {
 			AssistantPO assistantPO = new AssistantPO(orderId, orderAddr);
 			
 			String sid = null;
-			String paymentType = paymentPO.getPaymentType();
+			Short paymentType = paymentPO.getPaymentType();
 			
-			if(PaymentPO.PAYMENT_PAYMENTTYPE_BALANCE_STR.equals(paymentType)){
+			if(PaymentPO.PAYMENT_PAYMENTTYPE_BALANCE_INT == paymentType){
 				sid = SystemConfig.getString("balanceSubject");
-			}else if(PaymentPO.PAYMENT_PAYMENTTYPE_PROJECT_STR.equals(paymentType)){
+			}else if(PaymentPO.PAYMENT_PAYMENTTYPE_PROJECT_INT == paymentType){
 				sid = SystemConfig.getString("projectBalanceSubject");
-			}else if(PaymentPO.PAYMENT_PAYMENTTYPE_MATERIAL_STR.equals(paymentType)){
+			}else if(PaymentPO.PAYMENT_PAYMENTTYPE_MATERIAL_INT == paymentType){
 				sid = SystemConfig.getString("materialBalanceSubject");
-			}else if(PaymentPO.PAYMENT_PAYMENTTYPE_ZATERIAL_STR.equals(paymentType)){
+			}else if(PaymentPO.PAYMENT_PAYMENTTYPE_ZATERIAL_INT == paymentType){
 				sid = SystemConfig.getString("zaterialBalanceSubject");
 			}
 			
@@ -267,7 +267,7 @@ public class FinanceServiceImpl implements FinanceService {
 		voucherPO.setPeriod(currentPeriod);
 		
 		if(relat){
-			int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_FINANCE_CC_INT, CountingPO.COUNTING_DATE_SILNLE_STR);
+			int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_FINANCE_CC_INT, CountingPO.COUNTING_DATE_SILNLE_STR, company);
 			
 			StringBuffer voucherId = new StringBuffer();
 			voucherId.append(VoucherPO.PERIOD_CC_INT);
@@ -279,7 +279,7 @@ public class FinanceServiceImpl implements FinanceService {
 			word = VoucherPO.PERIOD_CC_STR;
 			abstracts = String.format("收订单%s的工程款", orderId);
 		}else{
-			int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_FINANCE_CR_INT, CountingPO.COUNTING_DATE_SILNLE_STR);
+			int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_FINANCE_CR_INT, CountingPO.COUNTING_DATE_SILNLE_STR, company);
 			
 			StringBuffer voucherId = new StringBuffer();
 			voucherId.append(VoucherPO.PERIOD_CR_INT);
@@ -454,7 +454,7 @@ public class FinanceServiceImpl implements FinanceService {
 		voucherPO.setPeriod(currentPeriod);
 		
 		if(relat){
-			int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_FINANCE_CC_INT, CountingPO.COUNTING_DATE_SILNLE_STR);
+			int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_FINANCE_CC_INT, CountingPO.COUNTING_DATE_SILNLE_STR, company);
 			
 			StringBuffer voucherId = new StringBuffer();
 			voucherId.append(VoucherPO.PERIOD_CC_INT);
@@ -466,7 +466,7 @@ public class FinanceServiceImpl implements FinanceService {
 			word = VoucherPO.PERIOD_CC_STR;
 			abstracts = String.format("收订单%s子订单%s的主材款", orderId, no);
 		}else{
-			int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_FINANCE_CR_INT, CountingPO.COUNTING_DATE_SILNLE_STR);
+			int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_FINANCE_CR_INT, CountingPO.COUNTING_DATE_SILNLE_STR, company);
 			
 			StringBuffer voucherId = new StringBuffer();
 			voucherId.append(VoucherPO.PERIOD_CR_INT);

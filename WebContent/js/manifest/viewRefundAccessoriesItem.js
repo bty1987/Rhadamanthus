@@ -222,6 +222,9 @@ jQuery(function ($) {
         $('#' + tableId).html(null);
         var $tableWrap = $('#' + tableId);
         var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+        var status ={
+            '0':'初始', '1':'定金' , '2' : '签约' ,'3' : '重签' , '4' : '废单','5' : '终止','6' : '决算','7' : '完结'
+        };
         accessories.supervisorId = v.supervisor.userId;
         var propertyArr = [
             ["楼盘地址:", v.house.village.name + " " + v.house.houseNumber, "grey"],
@@ -235,7 +238,7 @@ jQuery(function ($) {
             ["合同报价:", v.orderTotalPrice, "blue"],
             ["签单时间:", v.contractTime == null || "" ? "----" : v.contractTime, "green"],
             ["量房时间:", v.measureTime == null || "" ? "----" : v.measureTime, "green"],
-            ["状态:", v.status, "red"]
+            ["状态:", status[v.status], "red"]
         ];
         $.each(propertyArr, function (index, value) {
             var $liProperty = $('<li></li>').css({"border-bottom": "0px"});

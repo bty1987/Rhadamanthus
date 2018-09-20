@@ -32,5 +32,6 @@ public class ApprovalDecorationActivityItemDaoImpl extends DaoImpl<ApprovalDecor
 	public List<ApprovalDecorationActivityItemPO> queryApprovalDecorationActivityItemByAaId(long adaId) {
 		return session().createCriteria(ApprovalDecorationActivityItemPO.class).add(Restrictions.eq(ApprovalDecorationActivityItemPO.COLUMN_AAID_STR, adaId)).list();
 	}
+	
 
 }

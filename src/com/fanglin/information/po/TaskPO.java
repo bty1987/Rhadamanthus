@@ -18,8 +18,12 @@ public class TaskPO implements Serializable{
     public static final String COLUMN_NAME_STR = "name";
   
     public static final String COLUMN_STATUS_STR = "status";
+    
+	public static final short TYPE_PYTHON_INT = 0;
 	
-	public static final Short COLUMN_STATUS_INT = 0;
+	public static final short TYPE_SHELL_INT = 1;
+	
+	public static final Short STATUS_ENABLE_INT = 0;
 	
 	private long tid;
 	
@@ -28,6 +32,8 @@ public class TaskPO implements Serializable{
 	private String filepath;
 	
 	private short type;
+	
+	private String content;
 	
 	private short status;
 
@@ -85,6 +91,15 @@ public class TaskPO implements Serializable{
 
 	public void setStatus(short status) {
 		this.status = status;
+	}
+
+	@Column(name = "content")
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
 	}
 
 	

@@ -27,7 +27,7 @@ public interface QuotationService {
 	
 	public Map<String, List<String>> queryQuotationForConfig(int company);
 	
-	public int addQuotation(QuotationVO quotationVO, String userId) throws FLException;
+	public int addQuotation(QuotationVO quotationVO, String userId, int company) throws FLException;
 	
 	public int updateQuotation(QuotationVO quotationVO) throws FLException;
 	
@@ -37,9 +37,9 @@ public interface QuotationService {
 	
 	public int updateQuotationForStatus(QuotationVO quotationVO, String userId) throws FLException;
 	
-	public int replicaQuotation(QuotationVO quotationVO, String userId) throws FLException;
+	public int replicaQuotation(QuotationVO quotationVO, String userId, int company) throws FLException;
 	
-	public int copyQuotation(QuotationVO quotationVO, String userId) throws FLException;
+	public int copyQuotation(QuotationVO quotationVO, String userId, int company) throws FLException;
 	
 	public int deleteQuotationById(QuotationVO quotationVO) throws FLException;
 	

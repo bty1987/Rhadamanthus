@@ -28,7 +28,10 @@ import com.fanglin.sales.dao.SalesPurchaseDao;
 import com.fanglin.sales.po.SalesPO;
 import com.fanglin.sales.po.SalesPurchasePO;
 import com.fanglin.sales.vo.SalesVO;
+import com.fanglin.system.dao.CompanyDao;
+import com.fanglin.system.po.CompanyPO;
 import com.fanglin.utils.BeanUtil;
+import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.Paging;
 import java.sql.Timestamp;
@@ -37,6 +40,9 @@ import java.sql.Timestamp;
 @Transactional(readOnly=true)
 public class PurchaseServiceImpl  implements PurchaseService{
 
+	@Autowired 
+	private CompanyDao companyDao;
+	
 	@Autowired
 	private PurchaseDao purchaseDao;
 	
@@ -133,9 +139,16 @@ public class PurchaseServiceImpl  implements PurchaseService{
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public int addPurchase(PurchaseVO purchaseVO,List<Long> sids,List<PurchaseItemVO> purchaseItemVOs, String userId,int company) throws FLException{
+		
+		CompanyPO companyPO = companyDao.get(company);
+		
+		if(companyPO == null){
+			throw new FLException(230015, "公司不存在");
+		}
+		
 		//PO作为编号前缀 , 之后由8位数字组成
-		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_PO_INT,"yyyyMMdd");
-		String manifestId = String.valueOf("PO") + FormatUtil.fillZero(count, "00000000");
+		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_PO_INT, DateUtil.current("yyMMdd").toString(), company);
+		String manifestId = companyPO.getShortname() + String.valueOf("PO") + FormatUtil.fillZero(count, "00000000");
 		
 		PurchasePO purchasePO = new PurchasePO(manifestId);
 		

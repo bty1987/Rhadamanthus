@@ -61,9 +61,10 @@ public class TaskServiceImpl implements TaskService{
 		
 		BeanUtil.copyProperties(taskVO, taskPO);
 		
-		taskPO.setStatus(TaskPO.COLUMN_STATUS_INT);
+		taskPO.setStatus(TaskPO.STATUS_ENABLE_INT);
 
 		taskDao.save(taskPO);
+		
 		return 0;
 	}
 
@@ -71,11 +72,15 @@ public class TaskServiceImpl implements TaskService{
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int updateTaskForStatus(TaskVO taskVO) throws FLException {
+		
 		TaskPO taskPO = taskDao.get(taskVO.getTid());
+		
 		if (taskPO == null) {
 			throw new FLException(160027, "任务不存在");
 		}
+		
 		taskPO.setStatus(taskVO.getStatus());
+		
 		taskDao.update(taskPO);
 
 		return 0;

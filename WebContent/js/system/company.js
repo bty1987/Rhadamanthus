@@ -92,11 +92,7 @@
     	var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
     	var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
-        var $config = $('<a></a>').addClass('btn btn-minier btn-warning pull-left').attr('name', 'companyConfig').css("margin", "0px 3px");
-        var $configi = $('<i></i>').addClass('icon-eye-open bigger-110').appendTo($config);
-        var $configspan = $('<span></span>').text('配置').appendTo($config);
-    	
-    	return [$adda,$config];
+    	return [$adda];
     });
     
     //定义全局变量  json
@@ -212,9 +208,4 @@
     	//$('button.btn-search','#condList').click();//调用成功后,执行查询操作  
 		companySeacher.doSearch();//调用成功后,执行com.Seacher中的doSeach方法
     }
-
-    //配置公司
-	$('[name="companyConfig"]',"#pagenation").on('click',function () {
-        com.switchPage(api.index.companyConfig.url);
-    });
 });

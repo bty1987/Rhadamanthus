@@ -123,33 +123,45 @@ public class SalesPaymentDaoImpl extends DaoImpl<SalesPaymentPO> implements Sale
 				}else if("collectTime".equals(field)){
 					//因srId第一次为NULL 所以在链接时放在这里
 					query.alias("salesReceipt","salesReceipt");
-
-					String sTime = data + " 00:00:00";
-					String eTime = data + " 23:59:59";
-
-					Date sdate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
-					Date edate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
-
-					Timestamp stimestamp = DateUtil.getDateToTimestamp(sdate);
-					Timestamp etimestamp = DateUtil.getDateToTimestamp(edate);
-
-					query.add(query.getCriterion(SalesPaymentPO.COLUMN_COLLECTTIME_STR, stimestamp, "ge"));
-					query.add(query.getCriterion(SalesPaymentPO.COLUMN_COLLECTTIME_STR, etimestamp, "le"));
+					
+					if("between".equals(filter.getOp())){
+						
+						String sTime = filter.getData().split("-")[0].replaceAll("/", "-") + " 00:00:00";
+						String eTime = filter.getData().split("-")[1].replaceAll("/", "-") + " 23:59:59";
+						
+						Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
+						Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
+						
+						Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
+						Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
+						
+						query.add(query.getCriterion(SalesPaymentPO.COLUMN_COLLECTTIME_STR, eTimestamp, "le"));
+						query.add(query.getCriterion(SalesPaymentPO.COLUMN_COLLECTTIME_STR, sTimestamp, "ge"));
+					}else{
+						query.add(query.getCriterion(SalesPaymentPO.COLUMN_COLLECTTIME_STR, filter.getData(), filter.getOp()));
+					}
 				}else if("confirmTime".equals(field)){
 
 					query.alias("salesReceipt","salesReceipt");
-
-					String sTime = data + " 00:00:00";
-					String eTime = data + " 23:59:59";
-
-					Date sdate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
-					Date edate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
-
-					Timestamp stimestamp = DateUtil.getDateToTimestamp(sdate);
-					Timestamp etimestamp = DateUtil.getDateToTimestamp(edate);
-
-					query.add(query.getCriterion(SalesPaymentPO.COLUMN_CONFIRMTIME_STR, stimestamp, "ge"));
-					query.add(query.getCriterion(SalesPaymentPO.COLUMN_CONFIRMTIME_STR, etimestamp, "le"));
+					
+					if("between".equals(filter.getOp())){
+						
+						String sTime = filter.getData().split("-")[0].replaceAll("/", "-") + " 00:00:00";
+						String eTime = filter.getData().split("-")[1].replaceAll("/", "-") + " 23:59:59";
+						
+						Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
+						Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
+						
+						Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
+						Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
+						
+						query.add(query.getCriterion(SalesPaymentPO.COLUMN_COLLECTTIME_STR, eTimestamp, "le"));
+						query.add(query.getCriterion(SalesPaymentPO.COLUMN_COLLECTTIME_STR, sTimestamp, "ge"));
+					}else{
+						query.add(query.getCriterion(SalesPaymentPO.COLUMN_COLLECTTIME_STR, filter.getData(), filter.getOp()));
+					}
+				}else if("company".equals(filter.getField())){
+					query.add(query.getCriterion(filter.getField(), Integer.valueOf(filter.getData()), filter.getOp()));
 				}
 			}
 		}

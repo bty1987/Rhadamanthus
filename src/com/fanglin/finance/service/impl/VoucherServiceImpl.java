@@ -121,7 +121,7 @@ public class VoucherServiceImpl implements VoucherService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int addVoucher(VoucherVO voucherVO, List<Long> atIds, String userId) throws FLException {
+	public int addVoucher(VoucherVO voucherVO, List<Long> atIds, String userId, int company) throws FLException {
 		
 		UserPO userPO = userDao.queryUserByUserId(userId);
 		
@@ -137,7 +137,7 @@ public class VoucherServiceImpl implements VoucherService {
 		
 		int wordnum = voucherVO.getWordnum();
 		
-		int count = countingService.queryCountingByTypeDate(wordnum + 100, CountingPO.COUNTING_DATE_SILNLE_STR);
+		int count = countingService.queryCountingByTypeDate(wordnum + 100, CountingPO.COUNTING_DATE_SILNLE_STR, company);
 		String voucherId = String.valueOf(wordnum) + FormatUtil.fillZero(count, "00000000");
 		
 		voucherPO.setVoucherId(voucherId);

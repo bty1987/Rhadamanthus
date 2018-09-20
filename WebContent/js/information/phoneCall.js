@@ -64,7 +64,7 @@ jQuery(function($) {
            
             var propertyArr = [
                 ["编号:",v.callbackId,"grey"],
-                ["订单编号:", v.orderId, "red"],                
+                ["装修单号:", v.orderId, "red"],                
                 ["操作时间:", v.operateTime, "red"],
                 ["主叫号码:", v.caller,"blue"],
                 ["被叫号码:", v.callee,"blue"],

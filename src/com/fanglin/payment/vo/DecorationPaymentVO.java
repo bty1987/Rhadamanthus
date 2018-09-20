@@ -85,6 +85,8 @@ public class DecorationPaymentVO implements Serializable {
 
 	private Long psId;
 	
+	private Integer company;
+	
 	public DecorationPaymentVO() {
 		super();
 	}
@@ -343,6 +345,14 @@ public class DecorationPaymentVO implements Serializable {
 
 	public void setPsId(Long psId) {
 		this.psId = psId;
+	}
+
+	public Integer getCompany() {
+		return company;
+	}
+
+	public void setCompany(Integer company) {
+		this.company = company;
 	}
 	
 }

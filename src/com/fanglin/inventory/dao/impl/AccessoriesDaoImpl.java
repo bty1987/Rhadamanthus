@@ -54,6 +54,8 @@ public class AccessoriesDaoImpl extends DaoImpl<AccessoriesPO> implements Access
 					query.add(query.getCriterion(AccessoriesPO.COLUMN_CREATER_USERID_STR, data, op));
 				}else if(AccessoriesPO.COLUMN_ORDERID_STR.equals(field)){
 					query.add(query.getCriterion(AccessoriesPO.COLUMN_ORDERID_STR, data, op));
+				}else if(AccessoriesPO.COLUMN_NO_STR.equals(field)){
+					query.add(query.getCriterion(AccessoriesPO.COLUMN_NO_STR, data, op));
 				}else if(AccessoriesPO.COLUMN_CREATETIME_STR.equals(field)){
 					
 					String sTime = data + " 00:00:00";

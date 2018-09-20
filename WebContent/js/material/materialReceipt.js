@@ -85,7 +85,7 @@ jQuery(function($) {
 		var headReceiptH2 = $('<h2></h2>').text("主材型号明细信息").appendTo(headReceiptDiv);
 		
 		var orderReceiptTr = $('<tr></tr>').appendTo(receiptTable);
-		var noReceiptTd = $('<td colspan="3"></td>').text('订单编号: ' + commonInfo["materialOrderNo"]).appendTo(orderReceiptTr);
+		var noReceiptTd = $('<td colspan="3"></td>').text('主材单号: ' + commonInfo["materialOrderNo"]).appendTo(orderReceiptTr);
 		var addrReceiptTd = $('<td colspan="5"></td>').text('客户地址: ' + commonInfo["orderAddr"]).appendTo(orderReceiptTr);
 		
 		var presonReceiptTr = $('<tr></tr>').appendTo(receiptTable);

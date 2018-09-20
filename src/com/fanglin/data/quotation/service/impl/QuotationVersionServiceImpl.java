@@ -21,12 +21,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.common.po.CountingPO;
 import com.fanglin.common.service.CountingService;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.data.po.QuotationVersionPO;
 import com.fanglin.data.quotation.dao.QuotationVersionDao;
 import com.fanglin.data.quotation.service.QuotationVersionService;
 import com.fanglin.data.quotation.vo.QuotationVersionVO;
-import com.fanglin.system.dao.SystemConfigDao;
+import com.fanglin.system.dao.CompanyDao;
+import com.fanglin.system.po.CompanyPO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.Paging;
@@ -42,7 +44,7 @@ public class QuotationVersionServiceImpl implements QuotationVersionService {
 	private CountingService countingService;
 	
 	@Autowired
-	private SystemConfigDao systemConfigDao;
+	private CompanyDao companyDao;
 	
 	@Override
 	public void pageQuotationVersion(Paging paging, List<Filter> filters,int company){
@@ -88,7 +90,13 @@ public class QuotationVersionServiceImpl implements QuotationVersionService {
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public void saveQuotationVersion(QuotationVersionVO quotationVersionVO,int company){
+	public void saveQuotationVersion(QuotationVersionVO quotationVersionVO, int company) throws FLException{
+		
+		CompanyPO companyPO = companyDao.get(company);
+		
+		if(companyPO == null){
+			throw new FLException(230015, "公司不存在");
+		}
 		
 		if(quotationVersionVO.getDefaultFlag() == 1){
 			List<QuotationVersionPO> defaultFlagQuotationVersionPOs = quotationVersionDao.queryQuotationVersionByDefaultFlag(company,1);
@@ -104,12 +112,11 @@ public class QuotationVersionServiceImpl implements QuotationVersionService {
 			
 		BeanUtil.copyProperties(quotationVersionVO, quotationVersionPO, Arrays.asList(new String[]{"versionId"}));
 		
-		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_QUOTATION_VERSION_INT, CountingPO.COUNTING_DATE_SILNLE_STR);
+		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_QUOTATION_VERSION_INT, CountingPO.COUNTING_DATE_SILNLE_STR, company);
 		
-		StringBuffer versionId = new StringBuffer();
-		versionId.append(systemConfigDao.querySystemConfig("quotationVersionIdent").getValue());
-		versionId.append(FormatUtil.fillZero(count, "000"));
-		quotationVersionPO.setVersionId(versionId.toString());
+		String no = String.format("%sQV_%s", companyPO.getShortname(), FormatUtil.fillZero(count, "000"));
+		
+		quotationVersionPO.setVersionId(no);
 		quotationVersionPO.setCompany(company);
 		quotationVersionDao.save(quotationVersionPO);
 	}
@@ -140,8 +147,6 @@ public class QuotationVersionServiceImpl implements QuotationVersionService {
 			quotationVersionDao.update(sourceQuotationVersionPO);
 		}
 	}
-	
-	
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)

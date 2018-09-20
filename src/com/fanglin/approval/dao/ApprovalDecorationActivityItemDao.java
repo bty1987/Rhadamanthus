@@ -19,5 +19,5 @@ import com.fanglin.core.dao.Dao;
 public interface ApprovalDecorationActivityItemDao extends Dao<ApprovalDecorationActivityItemPO> {
 	
 	public List<ApprovalDecorationActivityItemPO> queryApprovalDecorationActivityItemByAaId(long adaId);
-
+	
 }

@@ -10,7 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.alibaba.fastjson.JSONObject;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.dingding.po.AppMessageDelivery;
+import com.fanglin.dingding.po.MessageDelivery;
 import com.fanglin.dingding.po.OAMessage;
+import com.fanglin.dingding.po.TextMessage;
 import com.fanglin.dingding.utils.DDApi;
 import com.fanglin.dingding.utils.HttpHelper;
 import com.fanglin.dingding.utils.WXApi;
@@ -32,13 +34,17 @@ public class MessageService {
 	@Autowired
 	private SystemConfigDao systemConfigDao;
 	
-	public short sendMessage(String receiveId, String senderName, String contents, int aimid,int company) throws FLException {
+	public short sendMessage(String receiveId, String senderName, String contents, int aimid, int company) throws FLException {
 
 		String accessToken = authDDService.getAccessToken(FormatUtil.encodeCompany(company));
 
 		SystemConfigPO deliverValue = systemConfigDao.querySystemConfig("messageAgentId", company);
 		
 		SystemConfigPO jumpValue = systemConfigDao.querySystemConfig("messageUrl", company);
+		
+		if(accessToken == null || deliverValue == null || jumpValue == null){
+			return -1;
+		}
 
 		AppMessageDelivery appMessageDelivery = new AppMessageDelivery(receiveId, "", deliverValue.getValue());
 		
@@ -90,5 +96,28 @@ public class MessageService {
 		
 		return 0;
 	}
-
+	
+	public int sendMessage(String accessToken, String message){
+		
+		// 返单 https://oapi.dingtalk.com/robot/send?access_token=71449a2f7b476bf25fde8e568253c80d093ea7142e3e3731b926bc545c3ef4c3
+		// https://oapi.dingtalk.com//message/send?access_token=71449a2f7b476bf25fde8e568253c80d093ea7142e3e3731b926bc545c3ef4c3
+		
+		SystemConfigPO oapiHost = systemConfigDao.querySystemConfig("oapiHost");
+		
+		String url = String.format(DDApi.DDAPI_ROBOT_SEND_STR, oapiHost.getValue(), accessToken);
+		
+		MessageDelivery messageDelivery = new MessageDelivery();
+		TextMessage textMessage = new TextMessage(message);
+		
+		messageDelivery.withMessage(textMessage);
+		
+		try {
+			HttpHelper.httpPost(url, messageDelivery.toJsonObject());
+		} catch (Exception e) {
+			LogUtils.logging(logger, url, -1, e.getMessage());
+		}
+		
+		return 0;
+	}
+	
 }

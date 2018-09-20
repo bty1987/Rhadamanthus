@@ -14,7 +14,7 @@ function printHeader(headStr){
 	headHtml += '</tr>';
 	headHtml += '<tr bgcolor="#FFFFFF">';
 	headHtml += '<td colspan="3" width="40%">客户姓名:' + quotation.customerName + '</td>';
-	headHtml += '<td colspan="3" width="40%">订单编号:' + quotation.orderId + '</td>';
+	headHtml += '<td colspan="3" width="40%">装修单号:' + quotation.orderId + '</td>';
 	headHtml += '<td colspan="2" width="20%">设 计 师:' + quotation.designerName + '</td>';
 	headHtml += '</tr>';
 	headHtml += '<tr bgcolor="#FFFFFF">';
@@ -191,7 +191,7 @@ function printFinanceTable(){
 	return contentHtml;
 }
 
-function printCustomerTable(subtype){
+function printCustomerTable(subtype,companyfullname){
 	var index = 0;
 	var contentHtml = '';
 	
@@ -286,7 +286,7 @@ function printCustomerTable(subtype){
 	contentHtml += '<td>17、甲方签署后,表示对此工程明细表的价格、工艺及各条款认可,并自愿承担相关法律责任.</td>';
 	contentHtml += '</tr><tr>';
 	contentHtml += '</tr><tr>';
-	contentHtml += '<td>18、所有工程项目施工结束,甲乙双方清算增减项目交尾款后,甲方到乙方处开发票并补交税金.最终解释权归' + config.companyFullName + '所有.</td>';
+	contentHtml += '<td>18、所有工程项目施工结束,甲乙双方清算增减项目交尾款后,甲方到乙方处开发票并补交税金.最终解释权归' + companyfullname + '所有.</td>';
 	contentHtml += '</tr><tr>';
 	contentHtml += '</tr></tbody></table>';
 	contentHtml += '</td>';
@@ -470,12 +470,12 @@ jQuery(function($) {
 	quotationUtils.quotationDetail.UndisPrice = quotationUtils.quotationCalculator(quotationUtils.quotationDetail.quotation.discount,params.orderType);
 
 	quotationUtils.quotationDetail.TotalPrice = quotationUtils.quotationTotal();
-	
-	generatePrintPage(params.type, params.subtype,params.workType, params.company.name);
+
+	generatePrintPage(params.type, params.subtype,params.workType, params.company.name, params.company.fullname);
 
 });
 
-function generatePrintPage(type,subtype,workType, company){
+function generatePrintPage(type,subtype,workType, company,companyfullname){
 	var html = "";
 
 	if(type == '1'){
@@ -486,7 +486,7 @@ function generatePrintPage(type,subtype,workType, company){
 		html += printFinanceTable();
 	}else if(type == '3'){
 		html += printHeader(company + "家装项目单");
-		html += printCustomerTable(subtype);
+		html += printCustomerTable(subtype,companyfullname);
 	}else if(type == "4"){
 		html += printHeader(company + "工种项目单");
 		html += printWorkTable(workType);

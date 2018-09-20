@@ -3,7 +3,7 @@ var AddReduceDetail = (function(){
 
 	var addReduceDetail = {
 		artype : null,//增减项类型//"0":"增项", "1":"减项", "2":"漏项"
-		orderid :null,//订单编号
+		orderid :null,//装修单号
 		versionid : null,//报价版本
 		ordertype : null,//订单类型
 		discount : null,
@@ -828,8 +828,8 @@ var AddReduceDetail = (function(){
 			addReduceDetail.arid = params.addReduceId;
 			addReduceDetail.basicParams["addReduce.arId"] = params.addReduceId;
 			addReduceDetail.basicParams["addReduceItem.arId"] = params.addReduceId;
-			addReduceDetail.orderid = params.decorationOrderId;//订单编号
-            //根据订单编号获取默认报价
+			addReduceDetail.orderid = params.decorationOrderId;//装修单号
+            //根据装修单号获取默认报价
 			com.post(api.quotation.queryQuotationForDefaultByOrderId, {"quotation.orderId" : addReduceDetail.orderid, "quotation.type": params.decorationOrderType}, function(res){
 				addReduceDetail.discount = res.quotation.discount;
 				$('#sumLabDiscount').text(addReduceDetail.discount);

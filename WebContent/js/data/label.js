@@ -29,7 +29,7 @@ $(function(){
 
             $.each(listData, function(i, v){
                 var $liLine = $('<li></li>').addClass('item-orange clearfix');
-                var $h3 = $('<h3></h3>').addClass('oid').append($('<amall></amall>').addClass('blue').html(v.name));
+                var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.name));
                 var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
                 var $divBtnWrap = $('<div></div>').addClass('pull-right cation-buttons');
 

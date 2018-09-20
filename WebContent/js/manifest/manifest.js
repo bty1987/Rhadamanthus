@@ -172,7 +172,6 @@ $(function () {
             //货单出返
             $btnRO.click(function(){
                 if(v.status == 1){
-                    console.log(v.sid);
                     sendReturnManifest(v.mid, v.status, v.sid);
                 }else{
                     layer.msg('订单没有确认,无法出返',{icon:2});
@@ -316,7 +315,6 @@ $(function () {
     }
 
     function sendReturnManifest(mid,status,sid){
-        console.log(sid);
         var $popup = $('#ROPopUp');
         $popup.attr({'data-mid': mid,'data-status': status,'data-sid': sid});
         //弹出即全屏

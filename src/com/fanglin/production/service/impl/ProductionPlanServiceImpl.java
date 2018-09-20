@@ -78,12 +78,13 @@ public class ProductionPlanServiceImpl implements ProductionPlanService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int addProductionPlan(ProductionPlanVO productionPlanVO) throws FLException {
+	public int addProductionPlan(ProductionPlanVO productionPlanVO, int company) throws FLException {
 
 		ProductionPlanPO productionPlanPO = new ProductionPlanPO();
 
 		String currentDate = DateUtil.current("yyyyMMdd").toString();
-		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_SO_INT, currentDate);
+		
+		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_SO_INT, currentDate, company);
 		String no = currentDate + FormatUtil.fillZero(FormatUtil.offset(count), "000000");
 
 		BeanUtil.copyProperties(productionPlanVO, productionPlanPO);

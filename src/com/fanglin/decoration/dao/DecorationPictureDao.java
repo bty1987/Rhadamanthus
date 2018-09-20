@@ -20,4 +20,6 @@ public interface DecorationPictureDao extends Dao<DecorationPicturePO> {
 	
 	public List<DecorationPicturePO> queryDecorationPictureByOrderId(String orderId);
 	
+	public int countDecorationPicture(String orderId, Integer type);
+	
 }

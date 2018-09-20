@@ -28,7 +28,7 @@ $.extend(api, {information: {
     updateNoticeDepartments:{url:"updateNoticeDepartments.do"},
     queryNoticeDepartment: {url: "queryNoticeDepartment.do"},
     updateNoticeDepartment:{url: "updateNoticeDepartment.do"},
-    
+
     pageActivity: {url: "pageActivity.do", demo: true},
     queryActivityForValid: {url: "queryActivityForValid.do", demo: true},
     queryActivityItemByAId: {url: "queryActivityItemByAId.do", demo: true},
@@ -37,7 +37,7 @@ $.extend(api, {information: {
     updateActivity: {url: "updateActivity.do"},
     updateActivityItem: {url: "updateActivityItem.do"},
     deleteActivityItemByAiId: {url: "deleteActivityItemByAiId.do"},
- 
+
 
     queryEvent: {url: "queryEvent.do", demo:true},
     addEvent: {url: "addEvent.do"},
@@ -47,13 +47,13 @@ $.extend(api, {information: {
     phoneCall:{url:"phoneCall.do"},
     updatePhoneCallForInfo:{url:"updatePhoneCallForInfo.do"},
     updatePhoneCallForRecord:{url:"updatePhoneCallForRecord.do"},
-    
+
     pageVticket: {url: "pageVticket.do"},
     pageVticketForBelonger: {url: "pageVticketForBelonger.do"},
     countVticket:{url:"countVticket.do"},
     createVticket:{url:"createVticket.do"},
     updateVticket:{url:"updateVticket.do"},
-    
+
     pageVpayment:{url:"pageVpayment.do"},
     countVpayment:{url:"countVpayment.do"},
     createVpayment:{url:"createVpayment.do"},
@@ -62,13 +62,14 @@ $.extend(api, {information: {
     queryVpaymentByNo:{url:"queryVpaymentByNo.do"},
     queryVpaymentByVrid:{url:"queryVpaymentByVrid.do"},
     queryVreceiptByVrid:{url:"queryVreceiptByVrid.do"},
-	
-	pageTask:{url:"pageTask.do"},
+
+    pageTask:{url:"pageTask.do"},
     queryTask:{url:"queryTask.do"},
     addTask:{url:"addTask.do"},
     updateTaskForStatus:{url:"updateTaskForStatus.do"},
-    
+
     pagePlan:{url:"pagePlan.do"},
     createPlan:{url:"createPlan.do"},
     cancelPlan:{url:"cancelPlan.do"},
+    updatePlan:{url:"updatePlan.do"}
 }});

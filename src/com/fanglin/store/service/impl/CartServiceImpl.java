@@ -41,23 +41,19 @@ public class CartServiceImpl implements CartService{
 	private MuserDao muserDao;
 	
 	@Override
-	public void pageCart(Paging paging, List<Filter> filters) {
+	public void pageCart(Paging paging, List<Filter> filters, MuserVO muserVO) {
 		
-		if (filters.get(0).getField().equals("unionId")){
-			
-	      MuserPO muserPO = muserDao.queryMuserByUnionId(filters.get(0).getData());
-	      
-	      Filter newFilter = new Filter();
-	      
-	      newFilter.setField("uid");
-	      
-	      newFilter.setData(String.valueOf(muserPO.getUid()));
-	      
-	      newFilter.setOp("eq");
-	      
-	      filters.add(newFilter);
-	      
-	    }
+		MuserPO muserPO = muserDao.queryMuserByUnionId(muserVO.getUnionId());
+		
+        Filter newFilter = new Filter();
+      
+        newFilter.setField("uid");
+      
+        newFilter.setData(String.valueOf(muserPO.getUid()));
+      
+        newFilter.setOp("eq");
+      
+        filters.add(newFilter);
 		
 	    List<CartPO> cartPOs = cartDao.pageCart(paging, filters);
 	    

@@ -89,7 +89,7 @@ public class DecorationPO implements Serializable {
 	
 	private UserPO supervisor;
 	
-	private UserPO createUser;
+	private UserPO creater;
 	
 	private UserPO quoter;
 	
@@ -106,8 +106,6 @@ public class DecorationPO implements Serializable {
 	
 	private String houseClass;
 	
-	private String apartmentType;
-	
 	private int resourceType;
 	
 	private float freeArea;
@@ -121,6 +119,15 @@ public class DecorationPO implements Serializable {
 	
 	private float quotationPrice;
 	
+	private float couponCut;
+	
+	private float thingCut;
+	
+	private float netperfor;
+	
+	private float comperfor;
+	
+	
 	
 	private Timestamp contractTime;
 	
@@ -130,6 +137,7 @@ public class DecorationPO implements Serializable {
 	
 	private Timestamp createTime;
 	
+	private Timestamp accountTime;
 	
 	private short status;
 	
@@ -213,14 +221,6 @@ public class DecorationPO implements Serializable {
 
 	public void setHouseClass(String houseClass){
 		this.houseClass = houseClass;
-	}
-
-	public String getApartmentType(){
-		return apartmentType;
-	}
-
-	public void setApartmentType(String apartmentType){
-		this.apartmentType = apartmentType;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -329,12 +329,12 @@ public class DecorationPO implements Serializable {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = true, name = "cuid", referencedColumnName="uId")
-	public UserPO getCreateUser(){
-		return createUser;
+	public UserPO getCreater(){
+		return creater;
 	}
 
-	public void setCreateUser(UserPO createUser){
-		this.createUser = createUser;
+	public void setCreater(UserPO creater){
+		this.creater = creater;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -455,6 +455,46 @@ public class DecorationPO implements Serializable {
 		this.discount = discount;
 	}
 	
+	public float getCouponCut() {
+		return couponCut;
+	}
+
+	public void setCouponCut(float couponCut) {
+		this.couponCut = couponCut;
+	}
+
+	public float getThingCut() {
+		return thingCut;
+	}
+
+	public void setThingCut(float thingCut) {
+		this.thingCut = thingCut;
+	}
+
+	public float getNetperfor() {
+		return netperfor;
+	}
+
+	public void setNetperfor(float netperfor) {
+		this.netperfor = netperfor;
+	}
+
+	public float getComperfor() {
+		return comperfor;
+	}
+
+	public void setComperfor(float comperfor) {
+		this.comperfor = comperfor;
+	}
+
+	public Timestamp getAccountTime() {
+		return accountTime;
+	}
+
+	public void setAccountTime(Timestamp accountTime) {
+		this.accountTime = accountTime;
+	}
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = true, name = "orderId", referencedColumnName="orderId", insertable=false, updatable=false)
 	public DecorationAdditionPO getAddition() {
@@ -466,7 +506,7 @@ public class DecorationPO implements Serializable {
 	}
 
 	private void ptv(DecorationVO decorationVO){
-		BeanUtil.copyProperties(this, decorationVO, Arrays.asList("house","customer","designer","salesman","supervisor","version","createUser","quoter","escorter","contractUserId"));
+		BeanUtil.copyProperties(this, decorationVO, Arrays.asList("house","customer","designer","salesman","supervisor","version","creater","quoter","escorter","contractUserId"));
 		
 		if(decorationVO.getOrderTotalPrice() == null){
 			decorationVO.setOrderTotalPrice(new Float(0));
@@ -526,17 +566,16 @@ public class DecorationPO implements Serializable {
 			BeanUtil.copyPropertie(this.getSupervisor().getDept().getFatherDept(), decorationVO.getSupervisor().getDept().getFatherDept(), Arrays.asList("type","fatherDept","cityProper"));
 		}
 		
-		if(decorationVO.getCreateUser() != null && this.getCreateUser() != null){
+		if(decorationVO.getCreater() != null && this.getCreater() != null){
 			
-			decorationVO.getCreateUser().setDuty(new DutyVO());
-			decorationVO.getCreateUser().setDept(new DepartmentVO());
-			decorationVO.getCreateUser
-			().getDept().setFatherDept(new DepartmentVO());
+			decorationVO.getCreater().setDuty(new DutyVO());
+			decorationVO.getCreater().setDept(new DepartmentVO());
+			decorationVO.getCreater().getDept().setFatherDept(new DepartmentVO());
 			
-			BeanUtil.copyPropertie(this.getCreateUser(), decorationVO.getCreateUser(), Arrays.asList("duty","dept"));
-			BeanUtil.copyPropertie(this.getCreateUser().getDuty(), decorationVO.getCreateUser().getDuty(), Arrays.asList("departmentType"));
-			BeanUtil.copyPropertie(this.getCreateUser().getDept(), decorationVO.getCreateUser().getDept(), Arrays.asList("type","fatherDept","cityProper"));
-			BeanUtil.copyPropertie(this.getCreateUser().getDept().getFatherDept(), decorationVO.getCreateUser().getDept().getFatherDept(), Arrays.asList("type","fatherDept","cityProper"));
+			BeanUtil.copyPropertie(this.getCreater(), decorationVO.getCreater(), Arrays.asList("duty","dept"));
+			BeanUtil.copyPropertie(this.getCreater().getDuty(), decorationVO.getCreater().getDuty(), Arrays.asList("departmentType"));
+			BeanUtil.copyPropertie(this.getCreater().getDept(), decorationVO.getCreater().getDept(), Arrays.asList("type","fatherDept","cityProper"));
+			BeanUtil.copyPropertie(this.getCreater().getDept().getFatherDept(), decorationVO.getCreater().getDept().getFatherDept(), Arrays.asList("type","fatherDept","cityProper"));
 		}
 		
 		if(decorationVO.getQuoter() != null && this.getQuoter() != null){

@@ -43,7 +43,6 @@
             return;
         }
 
-        var dfd = $.Deferred();
         var opts = $.extend({}, options || {});
         var optAsync = true;
         if(asyncFlag == undefined || asyncFlag == true){
@@ -95,7 +94,6 @@
                         callback(res);
                     }else{
                         com.showAlert(com.info, "操作成功");
-                        dfd.resolve(res);
                         return res;
                     }
                 }else if(res.errorCode == 110005){
@@ -109,7 +107,6 @@
                         failCallback(res);
                     }else{
                         com.showAlert(com.error, res.errorMsg);
-                        dfd.reject(res);
                         return res;
                     }
                 }
@@ -121,7 +118,6 @@
             }
         });
 
-        return dfd.promise();
     },
     _post_: function(url, data, callback, failcallback, async){
         
@@ -612,6 +608,54 @@
         if (cval != null) {
             document.cookie = name + "=" + cval + ";expires=" + exp.toGMTString();
         }
+    },
+    /**
+     * 显示帮助文档
+     * @param target 传入块级ID，必须在help.json中存在且为key (不允许携带符号'#')
+     * 例：com.showHelp("decoration")
+     *  传参：decoration在help.json中存在为key,除一级内容外可在页面中不存在decoration标识符
+     *  执行：遍历key为decoration的数据，将在页面中标签ID为decoration[key]的元素添加提示内容，并在鼠标经过时显示
+     */
+    showHelp: function(target) {
+
+        var o = function (i, e){
+            var t = '#' + i;
+            $(t).parent().mouseover(function () {
+                if($(t).hasClass("chosen-select")) { //特殊处理chosen选择框
+                    $(t).next(".chosen-container").attr({"data-rel": "popover", "data-original-title": "提示", "data-content": e}).popover('show');
+                }else {
+                    $(t).attr({"data-rel": "popover", "data-original-title": "提示", "data-content": e}).popover('show');
+                }
+            });
+            $(t).parent().mouseout(function () {
+                if($(t).hasClass("chosen-select")) { //特殊处理chosen选择框
+                    $(t).next(".chosen-container").popover('destroy');
+                }
+                $(t).popover('destroy');
+            })
+        };
+
+        var f = function(r){
+            $.each(r, function(k, v){
+                if ($.isPlainObject(v)) {
+                    f(v)
+                }else{
+                    o(k, v)
+                }
+            })
+        };
+
+        $.getJSON(api.ds.help.url, function(d){
+            $.each(d, function(i, e){
+                if(target == i) { // 目标ID与help.json目标ID相同
+                    if ($.isPlainObject(e)) {
+                        f(e);     // 相对应的内容为字典，拥有子项
+                    }else{
+                        o(i, e);  // 相对应的内容为字符
+                    }
+                }
+            })
+        });
     }
 };
 

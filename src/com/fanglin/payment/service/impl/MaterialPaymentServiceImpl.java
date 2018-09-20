@@ -58,6 +58,7 @@ import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
+import com.fanglin.utils.SystemConfig;
 
 @Service("materialPaymentService")
 @Transactional(readOnly=true)
@@ -97,9 +98,13 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 	private ServiceRecordDao serviceRecordDao;
 
 	@Override
-	public void pageMaterialPaymentForInit(Paging paging, List<Filter> filters) {
+	public void pageMaterialPaymentForInit(Paging paging, List<Filter> filters, int company) {
 
 		if(filters.size() == 0) return;
+		
+		if (SystemConfig.getInt("multicompany", 0) != 0) {
+			filters.add(new Filter("company", String.valueOf(company), "eq"));
+		}
 
 		List<MaterialPaymentVO> materialPaymentVOs = new ArrayList<MaterialPaymentVO>();
 		List<MaterialPaymentPO> materialPaymentPOs = materialPaymentDao.pageMaterialPaymentForStatus(paging, filters, MaterialPaymentPO.PAYMENTSTATUS_TYPE_INIT_INT, "eq");
@@ -122,90 +127,17 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 
 		paging.setData(materialPaymentVOs);
 	}
-
+	
 	@Override
-	public void pageMaterialPaymentForCollect(Paging paging, List<Filter> filters){
-
-		if(filters.size() == 0) return;
-
-		List<MaterialPaymentVO> materialPaymentVOs = new ArrayList<MaterialPaymentVO>();
-
-		List<MaterialPaymentPO> materialPaymentPOs = materialPaymentDao.pageMaterialPaymentForStatus(paging, filters, MaterialPaymentPO.PAYMENTSTATUS_TYPE_COLLECT_INT, "eq");
-
-		MaterialPaymentVO materialPaymentVO;
-
-		for(MaterialPaymentPO materialPaymentPO: materialPaymentPOs){
-
-			materialPaymentVO = new MaterialPaymentVO(new MaterialVO(new HouseVO(new VillageVO()),new CustomerVO()),new UserBaseVO());
-
-			BeanUtil.copyProperties(materialPaymentPO, materialPaymentVO,Arrays.asList("material","creater","collecter","confirmer"));
-			
-			if(materialPaymentPO.getMaterialReceipt() != null){
-				BeanUtil.copyProperties(materialPaymentPO.getMaterialReceipt(), materialPaymentVO,Arrays.asList("material","creater","collecter","confirmer"));
-			}
-			BeanUtil.copyProperties(materialPaymentPO.getCreater(), materialPaymentVO.getCreater(),Arrays.asList("dept","duty"));
-			BeanUtil.copyProperties(materialPaymentPO.getMaterial(), materialPaymentVO.getMaterial(),Arrays.asList("house","customer","salesman","materialer","instorer","region","department","materialDepartment"));
-			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getCustomer(), materialPaymentVO.getMaterial().getCustomer());
-			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getHouse(), materialPaymentVO.getMaterial().getHouse(),Arrays.asList("village"));
-			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getHouse().getVillage(), materialPaymentVO.getMaterial().getHouse().getVillage(),Arrays.asList("cityProper"));
-			MaterialReceiptPO materialReceipt = materialPaymentPO.getMaterialReceipt();
-			if(materialReceipt != null){
-				materialPaymentVO.setCollecter(new UserBaseVO());
-				BeanUtil.copyProperties(materialReceipt.getCollecter(), materialPaymentVO.getCollecter(),Arrays.asList("dept","duty"));
-			}
-			
-			materialPaymentVOs.add(materialPaymentVO);
-		}
-
-		paging.setData(materialPaymentVOs);
-	}
-
-	@Override
-	public void pageMaterialPaymentForConfirm(Paging paging, List<Filter> filters){
-
-		if(filters.size() == 0) return;
-
-		List<MaterialPaymentVO> materialPaymentVOs = new ArrayList<MaterialPaymentVO>();
-
-		List<MaterialPaymentPO> materialPaymentPOs = materialPaymentDao.pageMaterialPaymentForStatus(paging, filters, MaterialPaymentPO.PAYMENTSTATUS_TYPE_CONFIRM_INT, "eq");
-
-		MaterialPaymentVO materialPaymentVO;
-
-		for(MaterialPaymentPO materialPaymentPO: materialPaymentPOs){
-
-			materialPaymentVO = new MaterialPaymentVO(new MaterialVO(new HouseVO(new VillageVO()),new CustomerVO()),new UserBaseVO());
-
-			BeanUtil.copyProperties(materialPaymentPO, materialPaymentVO,Arrays.asList("material","creater","collecter","confirmer"));
-
-			if(materialPaymentPO.getMaterialReceipt() != null){
-				BeanUtil.copyProperties(materialPaymentPO.getMaterialReceipt(), materialPaymentVO,Arrays.asList("material","creater","collecter","confirmer"));
-			}
-			BeanUtil.copyProperties(materialPaymentPO.getCreater(), materialPaymentVO.getCreater(),Arrays.asList("dept","duty"));
-			BeanUtil.copyProperties(materialPaymentPO.getMaterial(), materialPaymentVO.getMaterial(),Arrays.asList("house","customer","salesman","materialer","instorer","region","department","materialDepartment"));
-			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getCustomer(), materialPaymentVO.getMaterial().getCustomer());
-			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getHouse(), materialPaymentVO.getMaterial().getHouse(),Arrays.asList("village"));
-			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getHouse().getVillage(), materialPaymentVO.getMaterial().getHouse().getVillage(),Arrays.asList("cityProper"));
-			MaterialReceiptPO materialReceipt = materialPaymentPO.getMaterialReceipt();
-			if(materialReceipt != null){
-				materialPaymentVO.setCollecter(new UserBaseVO());
-				materialPaymentVO.setConfirmer(new UserBaseVO());
-				BeanUtil.copyProperties(materialReceipt.getCollecter(), materialPaymentVO.getCollecter(),Arrays.asList("dept","duty"));
-				BeanUtil.copyProperties(materialReceipt.getConfirmer(), materialPaymentVO.getConfirmer(),Arrays.asList("dept","duty"));
-			}
-			
-			materialPaymentVOs.add(materialPaymentVO);
-		}
-
-		paging.setData(materialPaymentVOs);
-	}
-
-	@Override
-	public void pageMaterialPaymentForNotInit(Paging paging, List<Filter> filters){
+	public void pageMaterialPaymentForNotInit(Paging paging, List<Filter> filters, int company){
 
 		if(filters.size() == 0) return ;
+		
+		if (SystemConfig.getInt("multicompany", 0) != 0) {
+			filters.add(new Filter("company", String.valueOf(company), "eq"));
+		}
 
 		List<MaterialPaymentVO> materialPaymentVOs = new ArrayList<MaterialPaymentVO>();
-
 		List<MaterialPaymentPO> materialPaymentPOs = materialPaymentDao.pageMaterialPaymentForStatus(paging, filters, MaterialPaymentPO.PAYMENTSTATUS_TYPE_INIT_INT, "ne");
 
 		MaterialPaymentVO materialPaymentVO;
@@ -236,6 +168,91 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 		paging.setData(materialPaymentVOs);
 	}
 
+	@Override
+	public void pageMaterialPaymentForCollect(Paging paging, List<Filter> filters, int company){
+
+		if(filters.size() == 0) return;
+
+		List<MaterialPaymentVO> materialPaymentVOs = new ArrayList<MaterialPaymentVO>();
+		
+		filters.add(new Filter("company", String.valueOf(company), "eq"));
+
+		List<MaterialPaymentPO> materialPaymentPOs = materialPaymentDao.pageMaterialPaymentForStatus(paging, filters, MaterialPaymentPO.PAYMENTSTATUS_TYPE_COLLECT_INT, "eq");
+
+		MaterialPaymentVO materialPaymentVO;
+
+		for(MaterialPaymentPO materialPaymentPO: materialPaymentPOs){
+
+			materialPaymentVO = new MaterialPaymentVO(new MaterialVO(new HouseVO(new VillageVO()),new CustomerVO()),new UserBaseVO());
+
+			BeanUtil.copyProperties(materialPaymentPO, materialPaymentVO,Arrays.asList("material","creater","collecter","confirmer"));
+			
+			if(materialPaymentPO.getMaterialReceipt() != null){
+				BeanUtil.copyProperties(materialPaymentPO.getMaterialReceipt(), materialPaymentVO,Arrays.asList("material","creater","collecter","confirmer"));
+			}
+			
+			BeanUtil.copyProperties(materialPaymentPO.getCreater(), materialPaymentVO.getCreater(),Arrays.asList("dept","duty"));
+			BeanUtil.copyProperties(materialPaymentPO.getMaterial(), materialPaymentVO.getMaterial(),Arrays.asList("house","customer","salesman","materialer","instorer","region","department","materialDepartment"));
+			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getCustomer(), materialPaymentVO.getMaterial().getCustomer());
+			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getHouse(), materialPaymentVO.getMaterial().getHouse(),Arrays.asList("village"));
+			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getHouse().getVillage(), materialPaymentVO.getMaterial().getHouse().getVillage(),Arrays.asList("cityProper"));
+			
+			MaterialReceiptPO materialReceipt = materialPaymentPO.getMaterialReceipt();
+			
+			if(materialReceipt != null){
+				materialPaymentVO.setCollecter(new UserBaseVO());
+				BeanUtil.copyProperties(materialReceipt.getCollecter(), materialPaymentVO.getCollecter(),Arrays.asList("dept","duty"));
+			}
+			
+			materialPaymentVOs.add(materialPaymentVO);
+		}
+
+		paging.setData(materialPaymentVOs);
+	}
+
+	@Override
+	public void pageMaterialPaymentForConfirm(Paging paging, List<Filter> filters, int company){
+
+		if(filters.size() == 0) return;
+
+		List<MaterialPaymentVO> materialPaymentVOs = new ArrayList<MaterialPaymentVO>();
+		
+		filters.add(new Filter("company", String.valueOf(company), "eq"));
+
+		List<MaterialPaymentPO> materialPaymentPOs = materialPaymentDao.pageMaterialPaymentForStatus(paging, filters, MaterialPaymentPO.PAYMENTSTATUS_TYPE_CONFIRM_INT, "eq");
+
+		MaterialPaymentVO materialPaymentVO;
+
+		for(MaterialPaymentPO materialPaymentPO: materialPaymentPOs){
+
+			materialPaymentVO = new MaterialPaymentVO(new MaterialVO(new HouseVO(new VillageVO()),new CustomerVO()),new UserBaseVO());
+
+			BeanUtil.copyProperties(materialPaymentPO, materialPaymentVO,Arrays.asList("material","creater","collecter","confirmer"));
+
+			if(materialPaymentPO.getMaterialReceipt() != null){
+				BeanUtil.copyProperties(materialPaymentPO.getMaterialReceipt(), materialPaymentVO,Arrays.asList("material","creater","collecter","confirmer"));
+			}
+			
+			BeanUtil.copyProperties(materialPaymentPO.getCreater(), materialPaymentVO.getCreater(),Arrays.asList("dept","duty"));
+			BeanUtil.copyProperties(materialPaymentPO.getMaterial(), materialPaymentVO.getMaterial(),Arrays.asList("house","customer","salesman","materialer","instorer","region","department","materialDepartment"));
+			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getCustomer(), materialPaymentVO.getMaterial().getCustomer());
+			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getHouse(), materialPaymentVO.getMaterial().getHouse(),Arrays.asList("village"));
+			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getHouse().getVillage(), materialPaymentVO.getMaterial().getHouse().getVillage(),Arrays.asList("cityProper"));
+			
+			MaterialReceiptPO materialReceipt = materialPaymentPO.getMaterialReceipt();
+			
+			if(materialReceipt != null){
+				materialPaymentVO.setCollecter(new UserBaseVO());
+				materialPaymentVO.setConfirmer(new UserBaseVO());
+				BeanUtil.copyProperties(materialReceipt.getCollecter(), materialPaymentVO.getCollecter(),Arrays.asList("dept","duty"));
+				BeanUtil.copyProperties(materialReceipt.getConfirmer(), materialPaymentVO.getConfirmer(),Arrays.asList("dept","duty"));
+			}
+			
+			materialPaymentVOs.add(materialPaymentVO);
+		}
+
+		paging.setData(materialPaymentVOs);
+	}
 
 	@Override
 	public List<MaterialPaymentVO> queryMaterialPaymentByOrderId(MaterialPaymentVO materialPaymentVO) {
@@ -357,6 +374,7 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 		materialPaymentPO.setMaterial(materialPO);
 		materialPaymentPO.setCategory(materialPaymentVO.getCategory());
 		materialPaymentPO.setBrand(materialPaymentVO.getBrand());
+		materialPaymentPO.setCompany(materialPO.getCompany());
 
 		UserPO userPO = userDao.queryUserByUserId(userId);
 		if(userPO != null){
@@ -469,7 +487,7 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int collectMaterialPayment(MaterialPaymentVO materialPaymentVO, List<DecorationActivityItemVO> decorationActivityItemVOs, String userId) throws FLException{
+	public int collectMaterialPayment(MaterialPaymentVO materialPaymentVO, List<DecorationActivityItemVO> decorationActivityItemVOs, String userId, Integer company) throws FLException{
 
 		float realMoney = 0;
 
@@ -477,6 +495,10 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 
 		if(materialPaymentPO == null){
 			throw new FLException(150003, "款项不存在");
+		}
+		
+		if(materialPaymentPO.getPaymentStatus() != MaterialPaymentPO.PAYMENTSTATUS_TYPE_INIT_INT){
+			throw new FLException(150008, "款项不能进行收款");
 		}
 
 		MaterialReceiptPO materialReceiptPO = new MaterialReceiptPO();
@@ -489,137 +511,135 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 			materialReceiptPO.setType(MaterialReceiptPO.RECEIPT_TYPE_REFUND_INT);
 		}
 
-		if(materialPaymentPO.getPaymentStatus() == MaterialPaymentPO.PAYMENTSTATUS_TYPE_INIT_INT){
+		Float advance = materialPaymentVO.getAdvance();
 
-			Float advance = materialPaymentVO.getAdvance();
-
-			if(materialPaymentVO.getAdvance() != 0){
-
-				int advanceType = materialPaymentVO.getAdvanceType();
-				float customerAdvance = 0f;
-				String _paymentType = "";
-
-				CustomerPO customerPO = customerDao.get(materialPaymentPO.getMaterial().getCustomer().getCid());
-
-				if(customerPO == null){
-					throw new FLException(230001, "客户信息不存在");
-				}
-
-				AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCustomerId(customerPO.getCid(),materialPaymentPO.getMaterial().getCompany());
-
-				if(advancePaymentPO == null){
-					throw new FLException(150010, "预付款余额不足");
-				}
-
-				if(advanceType == MaterialPaymentPO.ADVANCETYPE_TYPE_MATERIAL_INT){
-					customerAdvance = advancePaymentPO.getMaterialBalance();
-					_paymentType = CustomerPO.BALANCE_TYPE_MATERIAL_STR;
-				}else if(advanceType == MaterialPaymentPO.ADVANCETYPE_TYPE_ZATERIAL_INT){
-					customerAdvance = advancePaymentPO.getZhenglinBalance();
-					_paymentType = CustomerPO.BALANCE_TYPE_ZHENGLIN_STR;
-				}
-
-				PaymentVO paymentVO  = new PaymentVO();
-
-				MaterialPO materialPO = materialPaymentPO.getMaterial();
-
-				String orderId = "";
-
-				if(materialPO != null){
-					orderId = materialPO.getOrderId();
-				}
-
-				paymentVO = PaymentServiceImpl.advancePaymentBalance(PaymentPO.PAYMENT_DECORETION_PAYMENTNAME_STR,advance, _paymentType, customerAdvance, userId, customerPO.getCid(), advancePaymentPO, orderId);
-				advancePaymentService.updateAdvancePayment(paymentVO,materialPO.getCompany());
-
-				materialReceiptPO.setAdvance(materialPaymentVO.getAdvance());
-				materialReceiptPO.setAdvanceType(materialPaymentVO.getAdvanceType());
-				realMoney = Arith.add(materialPaymentVO.getAdvance(), realMoney);
-			}
-
-			if(materialPaymentVO.getCoupon() != 0){
-				materialReceiptPO.setCoupon(materialPaymentVO.getCoupon());
-				materialReceiptPO.setCouponInfo(materialPaymentVO.getCouponInfo());
-				realMoney = Arith.add(materialPaymentVO.getCoupon(), realMoney);
-			}
-
-			if(materialPaymentVO.getCash() != 0){
-				materialReceiptPO.setCash(materialPaymentVO.getCash());
-				materialReceiptPO.setCashInfo(materialPaymentVO.getCashInfo());
-				realMoney = Arith.add(materialPaymentVO.getCash(), realMoney);
-			}
-			if(materialPaymentVO.getBank() != 0){
-				materialReceiptPO.setBank(materialPaymentVO.getBank());
-				materialReceiptPO.setBankInfo(materialPaymentVO.getBankInfo());
-				realMoney = Arith.add(materialPaymentVO.getBank(), realMoney);
-			}
-			if(materialPaymentVO.getCheckv() != 0){
-				materialReceiptPO.setCheckv(materialPaymentVO.getCheckv());
-				materialReceiptPO.setCheckvBank(materialPaymentVO.getCheckvBank());
-				realMoney = Arith.add(materialPaymentVO.getCheckv(), realMoney);
-			}
-			if(materialPaymentVO.getInstallment() != 0){
-				materialReceiptPO.setInstallment(materialPaymentVO.getInstallment());
-				materialReceiptPO.setInstallmentBank(materialPaymentVO.getInstallmentBank());
-				realMoney = Arith.add(materialPaymentVO.getInstallment(), realMoney);
-			}
-			if(materialPaymentVO.getAccounts() != 0){
-				materialReceiptPO.setAccounts(materialPaymentVO.getAccounts());
-				materialReceiptPO.setAccountsBank(materialPaymentVO.getAccountsBank());
-				realMoney = Arith.add(materialPaymentVO.getAccounts(), realMoney);
-			}
-
-
-			if(materialPaymentPO.getReferMoney()!=realMoney){
-				throw new FLException(150008, "款项不能进行收款");
-			}
-
-
-			materialReceiptPO.setComment(materialPaymentVO.getComment());
-			materialPaymentPO.setPaymentStatus(MaterialPaymentPO.PAYMENTSTATUS_TYPE_COLLECT_INT);
-
-			MaterialPO materialPO = materialPaymentPO.getMaterial();
-
-			float count = 0;
-			
-			if(materialPO != null){
-
-				if(paymentType == MaterialPaymentPO.PAYMENTTYPE_TYPE_DEPOSIT_INT){
-					materialPO.setDepositStatus(MaterialPO.FINANCE_STATUS_TYPE_COLLECT_INT);					
-					count = Arith.add(count, materialPaymentPO.getReferMoney());
-				}else if(MaterialPaymentPO.PAYMENTTYPE_TYPE_FULL_INT == paymentType){
-					materialPO.setFullStatus(MaterialPO.FINANCE_STATUS_TYPE_COLLECT_INT);
-					materialPO.setFullpayTime(materialReceiptPO.getCollectTime());
-					count = Arith.add(Arith.add(count, materialPaymentPO.getReferMoney()), materialPO.getCoupon());
-				}
-
-				materialDao.update(materialPO);
-			}
-
-			UserPO userPO = userDao.queryUserByUserId(userId);
-			if(userPO != null){
-				materialReceiptPO.setCollecter(userPO);
-				materialReceiptPO.setCollecterName(userPO.getCurrentName());
-			}
-			materialReceiptPO.setCollectTime(DateUtil.getDateToTimestamp(new Date()));
-
-			materialPaymentPO.setMaterialReceipt(materialReceiptPO);
-
-			materialReceiptDao.save(materialReceiptPO);
-			materialPaymentDao.update(materialPaymentPO);
-
-			materialPaymentVO.setMrId(materialReceiptPO.getMrId());
-
-			memberCardService.IncreaseMemberCardIntegraldivider(materialPO, materialPaymentPO, userPO);
-
+		if(materialPaymentVO.getAdvance() != 0){
+			materialReceiptPO.setAdvance(materialPaymentVO.getAdvance());
+			materialReceiptPO.setAdvanceType(materialPaymentVO.getAdvanceType());
+			realMoney = Arith.add(materialPaymentVO.getAdvance(), realMoney);
 		}
+
+		if(materialPaymentVO.getCoupon() != 0){
+			materialReceiptPO.setCoupon(materialPaymentVO.getCoupon());
+			materialReceiptPO.setCouponInfo(materialPaymentVO.getCouponInfo());
+			realMoney = Arith.add(materialPaymentVO.getCoupon(), realMoney);
+		}
+
+		if(materialPaymentVO.getCash() != 0){
+			materialReceiptPO.setCash(materialPaymentVO.getCash());
+			materialReceiptPO.setCashInfo(materialPaymentVO.getCashInfo());
+			realMoney = Arith.add(materialPaymentVO.getCash(), realMoney);
+		}
+		if(materialPaymentVO.getBank() != 0){
+			materialReceiptPO.setBank(materialPaymentVO.getBank());
+			materialReceiptPO.setBankInfo(materialPaymentVO.getBankInfo());
+			realMoney = Arith.add(materialPaymentVO.getBank(), realMoney);
+		}
+		if(materialPaymentVO.getCheckv() != 0){
+			materialReceiptPO.setCheckv(materialPaymentVO.getCheckv());
+			materialReceiptPO.setCheckvBank(materialPaymentVO.getCheckvBank());
+			realMoney = Arith.add(materialPaymentVO.getCheckv(), realMoney);
+		}
+		if(materialPaymentVO.getInstallment() != 0){
+			materialReceiptPO.setInstallment(materialPaymentVO.getInstallment());
+			materialReceiptPO.setInstallmentBank(materialPaymentVO.getInstallmentBank());
+			realMoney = Arith.add(materialPaymentVO.getInstallment(), realMoney);
+		}
+		if(materialPaymentVO.getAccounts() != 0){
+			materialReceiptPO.setAccounts(materialPaymentVO.getAccounts());
+			materialReceiptPO.setAccountsBank(materialPaymentVO.getAccountsBank());
+			realMoney = Arith.add(materialPaymentVO.getAccounts(), realMoney);
+		}
+
+
+		if(materialPaymentPO.getReferMoney()!=realMoney){
+			throw new FLException(150008, "款项不能进行收款");
+		}
+
+
+		materialReceiptPO.setComment(materialPaymentVO.getComment());
+		materialPaymentPO.setPaymentStatus(MaterialPaymentPO.PAYMENTSTATUS_TYPE_COLLECT_INT);
+
+		MaterialPO materialPO = materialPaymentPO.getMaterial();
+
+		float count = 0;
+		
+		if(materialPO != null){
+
+			if(paymentType == MaterialPaymentPO.PAYMENTTYPE_TYPE_DEPOSIT_INT){
+				materialPO.setDepositStatus(MaterialPO.FINANCE_STATUS_TYPE_COLLECT_INT);					
+				count = Arith.add(count, materialPaymentPO.getReferMoney());
+			}else if(MaterialPaymentPO.PAYMENTTYPE_TYPE_FULL_INT == paymentType){
+				materialPO.setFullStatus(MaterialPO.FINANCE_STATUS_TYPE_COLLECT_INT);
+				materialPO.setFullpayTime(materialReceiptPO.getCollectTime());
+				count = Arith.add(Arith.add(count, materialPaymentPO.getReferMoney()), materialPO.getCoupon());
+			}
+
+			materialDao.update(materialPO);
+		}
+
+		UserPO userPO = userDao.queryUserByUserId(userId);
+		if(userPO != null){
+			materialReceiptPO.setCollecter(userPO);
+			materialReceiptPO.setCollecterName(userPO.getCurrentName());
+		}
+		materialReceiptPO.setCollectTime(DateUtil.getDateToTimestamp(new Date()));
+
+		materialPaymentPO.setMaterialReceipt(materialReceiptPO);
+		materialPaymentPO.setCompany(company);
+
+		materialReceiptDao.save(materialReceiptPO);
+		materialPaymentDao.update(materialPaymentPO);
+		
+		if(materialPaymentVO.getAdvance() != 0){
+
+			int advanceType = materialPaymentVO.getAdvanceType();
+			float customerAdvance = 0f;
+			Short _paymentType = 0;
+
+			CustomerPO customerPO = customerDao.get(materialPaymentPO.getMaterial().getCustomer().getCid());
+
+			if(customerPO == null){
+				throw new FLException(230001, "客户信息不存在");
+			}
+
+			AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCustomerId(customerPO.getCid(),materialPaymentPO.getMaterial().getCompany());
+
+			if(advancePaymentPO == null){
+				throw new FLException(150010, "预付款余额不足");
+			}
+
+			if(advanceType == MaterialPaymentPO.ADVANCETYPE_TYPE_MATERIAL_INT){
+				customerAdvance = advancePaymentPO.getMaterialBalance();
+				_paymentType = CustomerPO.BALANCE_TYPE_MATERIAL_INT;
+			}else if(advanceType == MaterialPaymentPO.ADVANCETYPE_TYPE_ZATERIAL_INT){
+				customerAdvance = advancePaymentPO.getZhenglinBalance();
+				_paymentType = CustomerPO.BALANCE_TYPE_ZHENGLIN_INT;
+			}
+
+			PaymentVO paymentVO  = new PaymentVO();
+
+			String orderId = "";
+
+			if(materialPO != null){
+				orderId = materialPO.getOrderId();
+			}
+
+			paymentVO = PaymentServiceImpl.advancePaymentBalance(PaymentPO.PAYMENT_DECORETION_PAYMENTNAME_STR,advance, _paymentType, customerAdvance, userId, customerPO.getCid(), advancePaymentPO, orderId);
+			paymentVO.setUniqueid("M" + materialReceiptPO.getMrId());
+			advancePaymentService.updateAdvancePayment(paymentVO, materialPO.getCompany());
+		}
+
+		materialPaymentVO.setMrId(materialReceiptPO.getMrId());
+
+		memberCardService.IncreaseMemberCardIntegraldivider(materialPO, materialPaymentPO, userPO);
 
 		return 0;
 	}
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int collectMaterialPayments(MaterialVO materialVO, List<MaterialPaymentVO> materialPaymentVOs, MaterialReceiptVO materialReceiptVO, String userId) throws FLException{
+	public int collectMaterialPayments(MaterialVO materialVO, List<MaterialPaymentVO> materialPaymentVOs, MaterialReceiptVO materialReceiptVO, String userId, Integer company) throws FLException{
 
 		float total = 0;
 
@@ -640,37 +660,6 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 		Float coupon = materialReceiptVO.getCoupon();
 
 		if(advance != null && advance != 0){
-
-			int advanceType = materialReceiptVO.getAdvanceType();
-			float customerAdvance = 0f;
-			String _paymentType = "";
-
-			CustomerPO customerPO = decorationPO.getCustomer();
-
-			if(customerPO == null){
-				throw new FLException(230001, "客户信息不存在");
-			}
-
-			AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCustomerId(customerPO.getCid(),decorationPO.getCompany());
-
-			if(advancePaymentPO == null){
-				throw new FLException(150010, "预付款余额不足");
-			}
-
-			if(advanceType == MaterialPaymentPO.ADVANCETYPE_TYPE_MATERIAL_INT){
-				customerAdvance = advancePaymentPO.getMaterialBalance();
-				_paymentType = CustomerPO.BALANCE_TYPE_MATERIAL_STR;
-			}else if(advanceType == MaterialPaymentPO.ADVANCETYPE_TYPE_ZATERIAL_INT){
-				customerAdvance = advancePaymentPO.getZhenglinBalance();
-				_paymentType = CustomerPO.BALANCE_TYPE_ZHENGLIN_STR;
-			}
-
-			PaymentVO paymentVO  = new PaymentVO();
-
-			paymentVO = PaymentServiceImpl.advancePaymentBalance(PaymentPO.PAYMENT_DECORETION_PAYMENTNAME_STR,advance, _paymentType, customerAdvance, userId, customerPO.getCid(), advancePaymentPO, materialVO.getOrderId());
-			paymentVO.setComment("主材批量收款");
-			advancePaymentService.updateAdvancePayment(paymentVO,decorationPO.getCompany());
-
 			materialReceiptPO.setAdvance(materialReceiptVO.getAdvance());
 			materialReceiptPO.setAdvanceType(materialReceiptVO.getAdvanceType());
 			total = Arith.add(total, materialReceiptVO.getAdvance());
@@ -717,6 +706,39 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 		materialReceiptPO.setType(MaterialReceiptPO.RECEIPT_TYPE_COLLECT_INT);
 
 		materialReceiptDao.save(materialReceiptPO);
+		
+		if(advance != null && advance != 0){
+
+			int advanceType = materialReceiptVO.getAdvanceType();
+			float customerAdvance = 0f;
+			Short _paymentType = 0;
+
+			CustomerPO customerPO = decorationPO.getCustomer();
+
+			if(customerPO == null){
+				throw new FLException(230001, "客户信息不存在");
+			}
+
+			AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCustomerId(customerPO.getCid(),decorationPO.getCompany());
+
+			if(advancePaymentPO == null){
+				throw new FLException(150010, "预付款余额不足");
+			}
+
+			if(advanceType == MaterialPaymentPO.ADVANCETYPE_TYPE_MATERIAL_INT){
+				customerAdvance = advancePaymentPO.getMaterialBalance();
+				_paymentType = CustomerPO.BALANCE_TYPE_MATERIAL_INT;
+			}else if(advanceType == MaterialPaymentPO.ADVANCETYPE_TYPE_ZATERIAL_INT){
+				customerAdvance = advancePaymentPO.getZhenglinBalance();
+				_paymentType = CustomerPO.BALANCE_TYPE_ZHENGLIN_INT;
+			}
+
+			PaymentVO paymentVO  = new PaymentVO();
+
+			paymentVO = PaymentServiceImpl.advancePaymentBalance(PaymentPO.PAYMENT_DECORETION_PAYMENTNAME_STR,advance, _paymentType, customerAdvance, userId, customerPO.getCid(), advancePaymentPO, materialVO.getOrderId());
+			paymentVO.setUniqueid("M" + materialReceiptPO.getMrId());
+			advancePaymentService.updateAdvancePayment(paymentVO, decorationPO.getCompany());
+		}
 
 		float referMoney = 0;
 
@@ -727,6 +749,7 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 			if(materialPaymentPO == null){
 				throw new FLException(150003, "款项不存在");
 			}
+			
 			referMoney = Arith.add(referMoney,materialPaymentPO.getReferMoney());
 		}
 
@@ -774,6 +797,8 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 			}
 
 			materialPaymentPO.setMaterialReceipt(materialReceiptPO);
+			
+			materialPaymentPO.setCompany(company);
 
 			materialPaymentDao.update(materialPaymentPO);
 
@@ -787,7 +812,7 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int collectMaterialPaymentForRefund(MaterialPaymentVO materialPaymentVO, String userId) throws FLException{
+	public int collectMaterialPaymentForRefund(MaterialPaymentVO materialPaymentVO, String userId, Integer company) throws FLException{
 
 		float real = 0;
 		float count = 0;
@@ -882,7 +907,9 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 		materialReceiptPO.setType(MaterialReceiptPO.RECEIPT_TYPE_REFUND_INT);
 		materialReceiptPO.setComment(materialPaymentVO.getComment());
 		materialReceiptPO.setRealMoney(real);
+		
 		materialPaymentPO.setMaterialReceipt(materialReceiptPO);
+		materialPaymentPO.setCompany(company);
 
 		materialReceiptDao.save(materialReceiptPO);
 		materialPaymentDao.update(materialPaymentPO);
@@ -1170,6 +1197,7 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 		
 		materialPaymentPO.setCategory(materialPO.getCategory());
 		materialPaymentPO.setBrand(materialPO.getBrand());
+		materialPaymentPO.setCompany(materialPO.getCompany());
 
 		materialPaymentDao.save(materialPaymentPO);
 
@@ -1209,6 +1237,7 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 			UserPO userCreater = userDao.queryUserByUserId(userId);
 			materialPaymentPO.setCreater(userCreater);
 			materialPaymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+			materialPaymentPO.setCompany(materialPO.getCompany());
 
 			materialPaymentDao.save(materialPaymentPO);
 		}

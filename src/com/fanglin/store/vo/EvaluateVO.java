@@ -14,6 +14,8 @@ public class EvaluateVO implements Serializable{
 	
 	private MpriceVO mprice;
 	
+	private Long gid;
+	
 	private String unionId;
 	
 	private String name;
@@ -63,6 +65,14 @@ public class EvaluateVO implements Serializable{
 
 	public void setMprice(MpriceVO mprice) {
 		this.mprice = mprice;
+	}
+	
+	public Long getGid() {
+		return gid;
+	}
+
+	public void setGid(Long gid) {
+		this.gid = gid;
 	}
 
 	public String getUnionId() {

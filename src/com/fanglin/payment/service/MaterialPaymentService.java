@@ -24,13 +24,13 @@ import com.fanglin.utils.Paging;
 
 public interface MaterialPaymentService {
 	
-	public void pageMaterialPaymentForInit(Paging paging, List<Filter> filters);
+	public void pageMaterialPaymentForInit(Paging paging, List<Filter> filters, int company);
 	
-	public void pageMaterialPaymentForCollect(Paging paging, List<Filter> filters);
+	public void pageMaterialPaymentForNotInit(Paging paging, List<Filter> filters, int company);
 	
-	public void pageMaterialPaymentForConfirm(Paging paging, List<Filter> filters);
+	public void pageMaterialPaymentForCollect(Paging paging, List<Filter> filters, int company);
 	
-	public void pageMaterialPaymentForNotInit(Paging paging, List<Filter> filters);
+	public void pageMaterialPaymentForConfirm(Paging paging, List<Filter> filters, int company);
 	
 	public List<MaterialPaymentVO> queryMaterialPaymentByOrderId(MaterialPaymentVO materialPaymentVO);
 	
@@ -44,11 +44,11 @@ public interface MaterialPaymentService {
 	
 	public int changeMaterialPaymentForTime(MaterialPaymentVO materialPaymentVO, Timestamp dateTime, String userId) throws FLException;
 	
-	public int collectMaterialPayment(MaterialPaymentVO materialPaymentVO, List<DecorationActivityItemVO> decorationActivityItemVOs, String userId) throws FLException;
+	public int collectMaterialPayment(MaterialPaymentVO materialPaymentVO, List<DecorationActivityItemVO> decorationActivityItemVOs, String userId, Integer company) throws FLException;
 	
-	public int collectMaterialPayments(MaterialVO materialVO, List<MaterialPaymentVO> materialPaymentVOs, MaterialReceiptVO materialReceiptVO, String userId) throws FLException;
+	public int collectMaterialPayments(MaterialVO materialVO, List<MaterialPaymentVO> materialPaymentVOs, MaterialReceiptVO materialReceiptVO, String userId, Integer company) throws FLException;
 	
-	public int collectMaterialPaymentForRefund(MaterialPaymentVO materialPaymentVO, String userId) throws FLException;
+	public int collectMaterialPaymentForRefund(MaterialPaymentVO materialPaymentVO, String userId, Integer company) throws FLException;
 	
 	public int updateMaterialPayment(MaterialPaymentVO materialPaymentVO,MaterialReceiptVO materialReceiptVO) throws FLException;
 	

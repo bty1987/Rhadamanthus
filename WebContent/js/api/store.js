@@ -83,9 +83,18 @@ $.extend(api, {store: {
 	updateSlide: {url: "updateSlide.do", server: "store"},
 	updateSlideForStatus: {url: "updateSlideForStatus.do", server: "store"},
 	
+	addMpayment: {url: "addMpayment.do", server: "store"},
+	
 	pageEvaluate: {url: "pageEvaluate.do", server: "store"},
 	addEvaluate: {url: "addEvaluate.do", server: "store"},
 	
-	addMpayment: {url: "addMpayment.do", server: "store"}
-
+	pageCoupon: {url: "pageCoupon.do", server: "store"},
+	queryCouponByCid: {url: "queryCouponByCid.do", server: "store"},
+	addCoupon: {url: "addCoupon.do", server: "store"},
+	updateCoupon: {url: "updateCoupon.do", server: "store"},
+	updateCouponForStatus: {url: "updateCouponForStatus.do", server: "store"},
+	
+	pageMuserCoupon: {url: "pageMuserCoupon.do", server: "store"},
+	queryMuserCouponByUnionId: {url: "queryMuserCouponByUnionId.do", server: "store"},
+	addMuserCoupon: {url: "addMuserCoupon.do", server: "store"},
 }});

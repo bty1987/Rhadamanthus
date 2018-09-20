@@ -3,7 +3,7 @@ $(function(){
 
     Api().init('js/api/');
     Condition = Condition(api);
-
+    var interval = null;
     params.authentication = window.authentication;
     params.loginTime = window.loginTime;
 
@@ -20,7 +20,6 @@ $(function(){
 	            });
 	        }, null, false);
     	}
-
         com._post_(api.home.library, {
             "userId":params.userInfo.user.userId,
             "loginTime":window.loginTime,
@@ -28,7 +27,7 @@ $(function(){
 			"api": "system.login.login"
         });
         
-        setInterval(function(){
+        interval = setInterval(function(){
             com._post_(api.home.library,{
                 "userId":params.userInfo.user.userId,
                 "mc":"",
@@ -37,10 +36,10 @@ $(function(){
             }, function(res){
                 if(res.code != 0){
                     alert('账号在其他设备上登录!');
-                    
+
                     window.onbeforeunload=null;
-                    setCookie("authentication", "", -1);
-                    
+                    com.deleteCookie("authentication");
+
                     if(parent.window.isPC){
                         nwRestart();
                     }else{
@@ -89,23 +88,6 @@ $(function(){
     $(".messageList").attr("href", api.index.messageIndex.url + "?timestamp=" + new Date().getTime());
     $(".messageList").data("level", 1);
 
-    //clear 左侧图标
-    $("#switchUserp").attr("href", api.index.userProfile.url + "?timestamp="+ new Date().getTime());
-    $("#switchUserp").data("level", 1);
-
-    $("#switchChangepwd").attr("href", api.index.changePasswordIndex.url + "?timestamp=" + new Date().getTime());
-    $("#switchChangepwd").data("level", 1);
-
-    $("#switchMessagem").attr("href", api.index.messageIndex.url + "?timestamp=" + new Date().getTime());
-    $("#switchMessagem").data("level", 1);
-
-    var setCookie =  function(cname, cvalue, minutes) {
-        var d = new Date();
-        d.setTime(d.getTime() + (minutes*60*1000));
-        var expires = "expires=" + d.toUTCString();
-        document.cookie = cname + "=" + cvalue + "; " + expires;
-    };
-
     params.userCompany = window.userCompany;
 
     com.post(api.personel.queryUserCompany, {"user.uid": params.userInfo.user.uid}, function (res) {
@@ -148,7 +130,7 @@ $(function(){
     }, null, false);
 
     $("#logout").on("click", function(e){
-        setCookie("authentication", "", -1);
+        com.deleteCookie("authentication");
         window.location.href = '/';
     });
 
@@ -249,7 +231,6 @@ $(function(){
 
     });
 
-    // clear append
     $("#switchUserp").on("click", function(e){
         foldMenu();
 
@@ -527,9 +508,9 @@ $(function(){
 
                 if(res.errorCode == 0){
                     // 重置cookie
-                    setCookie("authentication" , res.authentication , config.timeout);
-                    setCookie("loginTime" , new Date().getTime() , config.timeout);
-                    setCookie("versionCode", config.versionCode, config.timeout);
+                    com.setCookie("authentication" , res.authentication , config.timeout);
+                    com.setCookie("loginTime" , new Date().getTime() , config.timeout);
+                    com.setCookie("versionCode", config.versionCode, config.timeout);
                     // 重置params
                     params.authentication = res.authentication;
                     params.loginTime = new Date().getTime();
@@ -537,6 +518,35 @@ $(function(){
                     window.authentication = params.authentication;
                     window.loginTime = params.loginTime;
                     window.versionCode = config.versionCode;
+                    clearInterval(interval);
+                    com._post_(api.home.library, {
+                        "userId":params.userInfo.user.userId,
+                        "loginTime":window.loginTime,
+                        "mc":"",
+                        "api": "system.login.login"
+                    });
+
+                    interval = setInterval(function(){
+                        com._post_(api.home.library,{
+                            "userId":params.userInfo.user.userId,
+                            "mc":"",
+                            "api": "system.login.index",
+                            "loginTime": window.loginTime
+                        }, function(res){
+                            if(res.code != 0){
+                                alert('账号在其他设备上登录!');
+
+                                window.onbeforeunload=null;
+                                com.deleteCookie("authentication");
+
+                                if(parent.window.isPC){
+                                    nwRestart();
+                                }else{
+                                    window.location.href = '/';
+                                }
+                            }
+                        })
+                    }, config.singlePointTime);
 
                     clearLocking();
 

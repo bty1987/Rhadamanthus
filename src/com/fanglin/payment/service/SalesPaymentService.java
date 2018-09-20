@@ -10,13 +10,13 @@ import com.fanglin.utils.Paging;
 
 public interface SalesPaymentService {
 
-	public void pageSalesPaymentForInit(Paging paging, List<Filter> filters);
+	public void pageSalesPaymentForInit(Paging paging, List<Filter> filters, int company);
 	
-	public void pageSalesPaymentForCollect(Paging paging, List<Filter> filters);
+	public void pageSalesPaymentForNotInit(Paging paging, List<Filter> filters, int company);
 	
-	public void pageSalesPaymentForConfirm(Paging paging, List<Filter> filters);
+	public void pageSalesPaymentForCollect(Paging paging, List<Filter> filters, int company);
 	
-	public void pageSalesPaymentForNotInit(Paging paging, List<Filter> filters);
+	public void pageSalesPaymentForConfirm(Paging paging, List<Filter> filters, int company);
 	
 	public List<SalesPaymentVO> querySalesPaymentBySid(SalesPaymentVO salesPaymentVO);
 	
@@ -26,13 +26,13 @@ public interface SalesPaymentService {
 	
 	public int addSalesPayment(SalesPaymentVO salesPaymentVO, String userId) throws FLException;
 	
-	public int collectSalesPayment(SalesPaymentVO salesPaymentVO,SalesReceiptVO salesReceiptVO,String userId) throws FLException;
+	public int collectSalesPayment(SalesPaymentVO salesPaymentVO, SalesReceiptVO salesReceiptVO, String userId, Integer company) throws FLException;
 	
-	public int collectSalesPayments(List<Long> spids,SalesPaymentVO salesPaymentVO,SalesReceiptVO salesReceiptVO,String userId) throws FLException;
+	public int collectSalesPayments(List<Long> spids, SalesPaymentVO salesPaymentVO, SalesReceiptVO salesReceiptVO, String userId, Integer company) throws FLException;
 	
-	public int collectSalesPaymentForRefund(SalesPaymentVO salesPaymentVO,SalesReceiptVO salesReceiptVO,String userId) throws FLException;
+	public int collectSalesPaymentForRefund(SalesPaymentVO salesPaymentVO, SalesReceiptVO salesReceiptVO, String userId, Integer company) throws FLException;
 
-	public int confirmSalesPayment(List<Long> spids,String userId) throws FLException;
+	public int confirmSalesPayment(List<Long> spids, String userId) throws FLException;
 	
 	public int cancelSalesPayment(SalesPaymentVO salesPaymentVO) throws FLException;
 	

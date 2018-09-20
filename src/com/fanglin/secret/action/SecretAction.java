@@ -13,10 +13,8 @@ package com.fanglin.secret.action;
 
 import java.util.List;
 
-import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
-import org.apache.struts2.convention.annotation.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -42,7 +40,7 @@ public class SecretAction extends BaseAction {
 	
 	private List<DecorationVO> AJIGRRVT;
 	
-	@Action(value = "CVLIBHQMVWFSPQWU", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	//@Action(value = "CVLIBHQMVWFSPQWU", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String CVLIBHQMVWFSPQWU(){
 		
 		OTCVCJSC = secretService.CVLIBHQMVWFSPQWU(VZYKHFFK);
@@ -50,7 +48,7 @@ public class SecretAction extends BaseAction {
 		return SUCCESS;
 	}
 	
-	@Action(value = "KGZPHFBAOKWVMWGW", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	//@Action(value = "KGZPHFBAOKWVMWGW", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String KGZPHFBAOKWVMWGW(){
 		
 		AJIGRRVT = secretService.KGZPHFBAOKWVMWGW(FAKKGDAZ);

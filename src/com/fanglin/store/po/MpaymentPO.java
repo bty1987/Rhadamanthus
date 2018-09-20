@@ -17,7 +17,7 @@ public class MpaymentPO implements Serializable{
 
 	private static final long serialVersionUID = -4211290319807165352L;
 
-	public static final short STATUS_ABLE_SHORT = 0;
+	public static final short STATUS_PAYMENT_SHORT = 1;
 	
 	private long mpid;
 	

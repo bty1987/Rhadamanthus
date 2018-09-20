@@ -43,6 +43,10 @@ public class DecorationContractVO implements Serializable {
 	
 	private Float orderTotalPrice;
 	
+	private Float netperfor;
+	
+	private Float comperfor;
+	
 	private List<DecorationPaymentVO> payments;
 	
 	private List<Integer> paymentRates;
@@ -146,4 +150,20 @@ public class DecorationContractVO implements Serializable {
 		this.paymentRates = paymentRates;
 	}
 
+	public Float getNetperfor() {
+		return netperfor;
+	}
+
+	public void setNetperfor(Float netperfor) {
+		this.netperfor = netperfor;
+	}
+
+	public Float getComperfor() {
+		return comperfor;
+	}
+
+	public void setComperfor(Float comperfor) {
+		this.comperfor = comperfor;
+	}
+	
 }

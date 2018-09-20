@@ -68,7 +68,7 @@ $(function(){
             //侯骅峰于4.7日增加楼盘地址、业务员、品牌、总价、券值、券信息显示字段
             var propertyArr = [
                 //增加订单号
-                ["订单编号：",v.material.orderId,"blue"],
+                ["装修单号：",v.material.orderId,"blue"],
                 //增加楼盘地址
                 ["楼盘地址：",v.material.house.village.name + " " + v.material.house.houseNumber,"grey"],
                 //创建品牌字段
@@ -311,16 +311,16 @@ $(function(){
         com.post(api.material.pageMaterialBalance, $.extend({},params.materialOrderPostBalancePostData,{"paging.noPage": 1}), function (res){
             $.exceler({
                 column:[
-					["订单编号","material.orderId"],
+					["主材单号","material.no"],
+					["装修单号","material.orderId"],
 					["楼盘地址",['material.house.village.name', 'material.house.houseNumber']],
-					["主材订单编号","material.no"],
 					["品牌","material.brand"],
-                    ["编号","material.salesman.userId"],
+					["编号","material.salesman.userId"],
 					["业务员","material.salesman.currentName"],
 					["大区","material.region.deptName"],
 					["部门","material.department.deptName"],
 					["总价","total"],
-                    ["子订单总价","material.total"],
+					["子订单总价","material.total"],
 					["券值","material.coupon"],
 					["券信息","material.couponInfo"],
 					["主材驻店", "instorer.currentName"],

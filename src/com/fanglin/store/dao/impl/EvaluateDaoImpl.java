@@ -19,7 +19,7 @@ public class EvaluateDaoImpl extends DaoImpl<EvaluatePO> implements EvaluateDao{
 	}
 
 	@Override
-	public List<EvaluatePO> pageEvaluate(Paging paging, List<Filter> filters, List <Long> pids) {
+	public List<EvaluatePO> pageEvaluate(Paging paging, List<Filter> filters) {
 		
 		PagingQuery<EvaluatePO> query = pagingQuery(paging, EvaluatePO.class);
 		
@@ -33,14 +33,14 @@ public class EvaluateDaoImpl extends DaoImpl<EvaluatePO> implements EvaluateDao{
 				
 				if(field.equals(EvaluatePO.COLUMN_SCORE_STR)){
 					query.add(query.getCriterion(field, Short.valueOf(data), op));
-				}else if(field.equals("unionId")){
-					query.add(query.getCriterion("unionId", data, op));
+				}else if(field.equals(EvaluatePO.COLUMN_UNIONID_STR)){
+					query.add(query.getCriterion(field, data, op));
 				}else if(field.equals(MgoodsPO.COLUMN_GID_STR)){
-					query.alias("mprice", "mprice");
-					query.add(query.getCriterion(EvaluatePO.COLUMN_PID_STR, pids, "in"));	
+					query.add(query.getCriterion(field, Long.valueOf(data), op));	
 				}
 			}
 		}
+		
 		return query.desc("createTime").list();
 	}
 	

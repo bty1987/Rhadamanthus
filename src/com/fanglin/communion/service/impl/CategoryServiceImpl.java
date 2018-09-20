@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-//import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -100,7 +99,7 @@ public class CategoryServiceImpl implements CategoryService {
 		
 		CategoryPO categoryPO = new CategoryPO();
 		
-		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_CATEGORY_INT, CountingPO.COUNTING_DATE_SILNLE_STR);
+		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_CATEGORY_INT, CountingPO.COUNTING_DATE_SILNLE_STR, 0);
 		
 		StringBuffer categoryId = new StringBuffer();
 		categoryId.append(SystemConfig.getString("categoryIdent", "C_"));

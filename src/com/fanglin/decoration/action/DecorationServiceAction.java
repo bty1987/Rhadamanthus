@@ -39,8 +39,7 @@ public class DecorationServiceAction extends BaseListAction{
 
 	@Action(value = "addDecorationService", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addDecorationService() throws FLException{
-		
-		System.out.println("ACTION:"+authentication().getUserId());
+	
 		decorationServiceService.addDecortionService(decorationService,authentication());
 		
 		return SUCCESS;

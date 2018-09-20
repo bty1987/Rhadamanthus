@@ -1,7 +1,6 @@
 package com.fanglin.payment.dao.impl;
 
 import java.sql.Timestamp;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import org.hibernate.criterion.Restrictions;
@@ -43,18 +42,14 @@ public class ServicePaymentDaoImpl  extends DaoImpl<ServicePaymentPO> implements
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<ServicePaymentPO> queryServicePaymentByOrderId(String orderId)
-	{
+	public List<ServicePaymentPO> queryServicePaymentByOrderId(String orderId){
 		return session().createCriteria(ServicePaymentPO.class).createAlias("decoration", "decoration").add(Restrictions.eq("decoration.orderId", orderId)).list();
 	}
 	
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<ServicePaymentPO> queryServicePaymentForNotInitBySrId(long srId) {
-		
-		List<Short> status = Arrays.asList(ServicePaymentPO.COLUMN_INITIALSTATUS_INT, ServicePaymentPO.COLUMN_CONFIRMEDSTATUS_INT);
-		
-		return session().createCriteria(ServicePaymentPO.class).createAlias("serviceReceipt", "serviceReceipt").add(Restrictions.eq("serviceReceipt.srId", srId)).add(Restrictions.not(Restrictions.in("status", status))).list();
+		return session().createCriteria(ServicePaymentPO.class).createAlias("serviceReceipt", "serviceReceipt").add(Restrictions.eq("serviceReceipt.srId", srId)).add(Restrictions.ne("status", ServicePaymentPO.COLUMN_INITIALSTATUS_INT)).list();
 	}
 	
 	private void queryFilterExecute(PagingQuery<?> query, List<Filter> filters){
@@ -99,6 +94,8 @@ public class ServicePaymentDaoImpl  extends DaoImpl<ServicePaymentPO> implements
 					}else{
 						query.add(query.getCriterion("servicereceipt.collectTime", filter.getData(), filter.getOp()));
 					}
+				}else if("company".equals(filter.getField())){
+					query.add(query.getCriterion(filter.getField(), Integer.valueOf(filter.getData()), filter.getOp()));
 				}
 			}
 		}

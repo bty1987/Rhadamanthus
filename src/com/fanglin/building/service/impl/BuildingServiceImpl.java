@@ -37,6 +37,8 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.system.dao.CompanyDao;
+import com.fanglin.system.po.CompanyPO;
 import com.fanglin.system.vo.CityProperVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
@@ -71,6 +73,9 @@ public class BuildingServiceImpl implements BuildingService {
 	@Autowired
 	private CountingService countingService;
 	
+	@Autowired
+	private CompanyDao companyDao;
+	
 	@Override
 	public void pageBuilding(Paging paging, List<Filter> filters) {
 		
@@ -97,7 +102,13 @@ public class BuildingServiceImpl implements BuildingService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public void bindBuilding(BuildingVO buildingVO, String userId) throws FLException {
+	public void bindBuilding(BuildingVO buildingVO, String userId, int company) throws FLException {
+		
+		CompanyPO companyPO = companyDao.get(company);
+		
+		if(companyPO == null){
+			throw new FLException(230015, "公司不存在");
+		}
 		
 		//判断房源状态
 		HouseSourcePO houseSourcePO = houseSourceDao.get(buildingVO.getHouseSource().getHsid());
@@ -150,9 +161,9 @@ public class BuildingServiceImpl implements BuildingService {
 		
 		//NO
 		String currentDate = DateUtil.current("yyyyMMdd").toString().substring(2);
-		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_DECORATION_ORDER_INT, currentDate);
+		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_DECORATION_ORDER_INT, currentDate, company);
 		
-		String no = "B" + currentDate + FormatUtil.fillZero(FormatUtil.offset(count), "0000");
+		String no = companyPO.getShortname() + "B" + currentDate + FormatUtil.fillZero(FormatUtil.offset(count), "0000");
 		
 		buildingPO.setNo(no);
 		

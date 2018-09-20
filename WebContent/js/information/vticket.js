@@ -116,6 +116,7 @@ jQuery(function($) {
 
 	//添加
 	$('a[name="addVticket"]', '#pagenation').click(function(){
+		vticket.items.tno.attr("readOnly", false);
 		com.updateChosen("belonger", "", "");
 		com.cleanItems(vticket.items);
 		$("#vticketModal").modal("show");

@@ -10,8 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseListAction;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.store.service.EvaluateService;
 import com.fanglin.store.vo.EvaluateVO;
+import com.fanglin.store.vo.MorderVO;
+import com.fanglin.store.vo.MuserVO;
 
 @ParentPackage("common")
 @Namespace("/")
@@ -27,19 +30,23 @@ public class EvaluateAction extends BaseListAction{
 	
 	private List<EvaluateVO> evaluates; 
 	
+	private MuserVO muser;
+	
+	private MorderVO morder;
+	
 	@Action(value="pageEvaluate", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String pageEvaluate(){
-		
+	
 		evaluateService.pageEvaluate(getPaging(), getFilters());
-		
+
 		return SUCCESS;
 		
 	}
 		
 	@Action(value="addEvaluate", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String addEvaluate(){
+	public String addEvaluate() throws FLException{
 		
-		evaluateService.addEvaluate(evaluates);
+		evaluateService.addEvaluate(evaluates, muser, morder);
 		
 		return SUCCESS;
 		
@@ -61,4 +68,20 @@ public class EvaluateAction extends BaseListAction{
 		this.evaluates = evaluates;
 	}
 
+	public MuserVO getMuser() {
+		return muser;
+	}
+
+	public void setMuser(MuserVO muser) {
+		this.muser = muser;
+	}
+
+	public MorderVO getMorder() {
+		return morder;
+	}
+
+	public void setMorder(MorderVO morder) {
+		this.morder = morder;
+	}
+	
 }

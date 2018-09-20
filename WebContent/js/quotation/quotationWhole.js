@@ -31,7 +31,7 @@ var QuotationDetail = (function(){
 				//打印
 				//$btnPrint : $('#printFinanceBtn').attr('href', api.index.quotationOutputIndex.url + "?quotation.qid=" + quo.quotationid + "&type=2&time=" + params.loginTime),
 				$btnPrint : $('#printFinanceBtn').click(function(){
-					com.popup("家装预算__订单编号：" + params.orderId  ,api.index.quotationOutputIndex.url + "?quotation.qid=" + quo.quotationid + "&type=2&time=" + params.loginTime,function () {
+					com.popup("家装预算__装修单号：" + params.orderId  ,api.index.quotationOutputIndex.url + "?quotation.qid=" + quo.quotationid + "&type=2&time=" + params.loginTime,function () {
 						parent.layer.getFrameIndex(window.name);
 					})
 				}),

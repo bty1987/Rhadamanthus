@@ -437,7 +437,6 @@ jQuery(function($) {
 		});
 		$line.find('.option > button').addClass('hide');
 		$line.find('.option > div').removeClass('hide');
-
 		var $total = $line.find('.total');
 		var $editInput = $('<input/>').attr('type', 'text').addClass('v_required v_float').val($total.text()).focus().select();
 		$total.attr('total',$total.text()).html($editInput);
@@ -446,13 +445,12 @@ jQuery(function($) {
 	function editMaterialSubOrderItem($line){ // 编辑
 		var $numCell = $line.find('.num');
 		var $numv = $line.find('.num .numv');
-		
 		$numv.hide();
-		
 		var $editInput = $('<div></div>').addClass('fl-ma-num-input').css('background', 'transparent').append($('<input/>').attr('type', 'text').addClass('v_required v_float')).appendTo($numCell);
 		$editInput.find('input').val($numv.text()).focus().select();
 		$line.find('.option > button').addClass('hide');
 		$line.find('.option > div').removeClass('hide');
+
 	}
 
 	function deleteAll($line, v){
@@ -590,18 +588,16 @@ jQuery(function($) {
 	}
 
 	function saveRowData($line, v){ // 确认编辑
-
 		var materialBrand = materialSubOrderItemPostData["materialSubOrder.materialBrand"];
 		var materialSubOrderItem = v;
 		var $numOld = $line.find('.num'),
 			$numNew = $line.find('.fl-ma-num-input input'),
 			_numOld, _numNew, _numNewRex;
 		var _total, _price;
-
 		_numOld = parseFloat($line.find('.numv').text());
 		_numNew = parseFloat($numNew.val());
-
-		_numNewRex = /^(\d+|\d+\.[0-9]{1,4})$/;
+		// _numNewRex = /^(\d+|\d+\.[0-9]{1,4})$/;
+		_numNewRex = /^[0-9]+\.{0,1}[0-9]{0,3}$/;
 		if(!_numNewRex.test(_numNew) || _numNew <= 0){
 			$numNew.focus().select();
 			$numNew.addClass('tooltip-info').attr({
@@ -609,7 +605,7 @@ jQuery(function($) {
 				"data-placement" : "top",
 				"data-original-title" : "",
 				"title" : "",
-				"data-content" : "请输入大于零的数字!"
+				"data-content" : "数量输入内容格式错误!"
 			}).popover('show');
 			return false;
 		}else{

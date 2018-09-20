@@ -1,6 +1,3 @@
-/**
- * Created by Administrator on 2017/4/17.
- */
 jQuery(function ($) {
 
     $('#editPopUp').css({'margin': '0 auto', 'margin-top': '2%', 'width': '98%'});
@@ -32,7 +29,6 @@ jQuery(function ($) {
         var $line = addline(num + 1);
         $line.appendTo('#list');
     });
-
 
     function addline(lineindex) {
 
@@ -114,22 +110,50 @@ jQuery(function ($) {
             var flag = true;
 
             if (aiid == null) {
-                options = {
-                    "accessories.aid": accessoriesItem.aid,
-                    "accessoriesItem.goods.gid": $line.attr('data-gid'),
-                    //"accessoriesItem.color.cid": $line.find('.color select option:selected').val(),
-                    //"accessoriesItem.format.fid": $line.find('.format select option:selected').val(),
-                    "accessoriesItem.num": $line.find('.number input').val()
-                };
-                if (checkRowValue($line)) {
-                    com.post(api.inventory.addAccessoriesItem, options, function (data) {
-                        $line.attr('data-aiid', data.accessoriesItem.aiid);
-                        layer.msg('添加成功!', {icon: 1});
-                        $line.find('.name').html($line.attr('data-name'));
-                    }, function (e) {
-                        com.showAlert(com.error, e.errorMsg);
-                    });
-                }
+
+                var $layer = $('#editPopUp');
+                var aid = $layer.attr('data-aid');
+                var gid = $line.attr('data-gid');
+                com.post(api.inventory.queryAccessoriesItemByAid, {
+                    "accessoriesItem.aid": aid
+                }, function(res){
+                    $.each(res.accessoriesItems, function(i,v){
+                            if(gid == v.goods.gid){
+                                layer.msg('商品已存在！');
+                                flag = false;
+                                $lineInfoWrap.find('.no').text("");
+                                $lineInfoWrap.find('.name input').val("");
+                                $lineInfoWrap.find('.measurementUnit').text("");
+                                $lineInfoWrap.find('.category').text("");
+                                $lineInfoWrap.find('.brand').text("");
+                                $lineInfoWrap.find('.number input').val("");
+                                $lineInfoWrap.find('.pieceNum').text("");
+                                $line.removeAttr('data-gid');
+                                $line.removeAttr('data-name');
+                            }
+                        }
+                    );
+                    setTimeout(function () {
+                        if(flag){
+                            options = {
+                                "accessories.aid": accessoriesItem.aid,
+                                "accessoriesItem.goods.gid": $line.attr('data-gid'),
+                                "accessoriesItem.num": $line.find('.number input').val()
+                            };
+                            if (checkRowValue($line)) {
+                                com.post(api.inventory.addAccessoriesItem, options, function (data) {
+                                    $line.attr('data-aiid', data.accessoriesItem.aiid);
+                                    layer.msg('添加成功!', {icon: 1});
+                                    $line.find('.name').html($line.attr('data-name'));
+                                }, function (e) {
+                                    com.showAlert(com.error, e.errorMsg);
+                                });
+                            }
+                        }
+
+                    }, 500);
+
+                });
 
             } else {
                 if (checkRowValueNum($line)) {
@@ -145,10 +169,6 @@ jQuery(function ($) {
             }
 
         });
-
-
-
-
 
         $btndel.click(function (e) {
             e.stopPropagation();
@@ -172,7 +192,6 @@ jQuery(function ($) {
         return $line;
 
     }
-
 
     function checkRowValue($line) {
 
@@ -255,38 +274,34 @@ jQuery(function ($) {
         return flag;
     }
 
-
     function accessoriesAdd() {
         var aid = accessoriesItem.aid;
         var index = $('.line', '#list').length;
         com.post(api.inventory.queryAccessoriesItemByAid, {
             "accessoriesItem.aid": aid
         }, function (res) {
-            for (var i = 0; i < res.accessoriesItems.length; i++) {
-                index = $('.line', '#list').length;
-                autoAddline(index);
-            }
-            function autoAddline(index) {
+
+            $.each(res.accessoriesItems, function(i,v){
                 index = $('.line', '#list').length;
                 addline(1 + index).appendTo('#list');
                 var $lineInfoWrap1 = $('#list li:nth-of-type(' + (index + 1) + ') div.content');
                 $('#list li:nth-of-type(' + (index + 1) + ')').attr({
-                    'data-gid': res.accessoriesItems[i].goods.gid,
-                    'data-aiid': res.accessoriesItems[i].aiid
+                    'data-gid': v.goods.gid,
+                    'data-aiid': v.aiid
                 });
 
-                $lineInfoWrap1.find('div.no').text(res.accessoriesItems[i].goods.no);
-                $lineInfoWrap1.find('div.name').text(res.accessoriesItems[i].goods.name);
-                $lineInfoWrap1.find('div.category').text(res.accessoriesItems[i].goods.category);
-                $lineInfoWrap1.find('div.brand').text(res.accessoriesItems[i].goods.brand);
-                $lineInfoWrap1.find('div.measurementUnit').text(res.accessoriesItems[i].goods.measurementUnit);
-                $lineInfoWrap1.find('div.number input').val(res.accessoriesItems[i].num);
-                $lineInfoWrap1.find('div.pieceNum').text(res.accessoriesItems[i].goods.pieceNum);
-            }
+                $lineInfoWrap1.find('div.no').text(v.goods.no);
+                $lineInfoWrap1.find('div.name').text(v.goods.name);
+                $lineInfoWrap1.find('div.category').text(v.goods.category);
+                $lineInfoWrap1.find('div.brand').text(v.goods.brand);
+                $lineInfoWrap1.find('div.measurementUnit').text(v.goods.measurementUnit);
+                $lineInfoWrap1.find('div.number input').val(v.num);
+                $lineInfoWrap1.find('div.pieceNum').text(v.goods.pieceNum);
+            });
+
         });
     }
 
     accessoriesAdd();
-
 
 });

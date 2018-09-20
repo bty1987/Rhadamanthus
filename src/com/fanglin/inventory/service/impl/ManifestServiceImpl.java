@@ -60,6 +60,8 @@ import com.fanglin.sales.dao.SalesManifestDao;
 import com.fanglin.sales.po.SalesManifestPO;
 import com.fanglin.sales.po.SalesPO;
 import com.fanglin.sales.vo.SalesVO;
+import com.fanglin.system.dao.CompanyDao;
+import com.fanglin.system.po.CompanyPO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
@@ -69,6 +71,9 @@ import com.fanglin.utils.Paging;
 @Service("manifestService")
 @Transactional(readOnly=true)
 public class ManifestServiceImpl implements ManifestService {
+	
+	@Autowired
+	private CompanyDao companyDao;
 	
 	@Autowired
 	private ManifestDao manifestDao;
@@ -197,6 +202,12 @@ public class ManifestServiceImpl implements ManifestService {
 	@Transactional(rollbackFor=Exception.class)
 	public int addManifestForCG(ManifestVO manifestVO,List<ManifestItemVO> manifestItemVOs, String userId,int company) throws FLException {
 		
+		CompanyPO companyPO = companyDao.get(company);
+		
+		if(companyPO == null){
+			throw new FLException(230015, "公司不存在");
+		}
+		
 		if(manifestItemVOs == null || manifestItemVOs.size() < 0){
 			throw new FLException(260007,"货单无商品信息");
 		}
@@ -209,8 +220,10 @@ public class ManifestServiceImpl implements ManifestService {
 		
 		UserPO userPO = userDao.queryUserByUserId(userId);
 		
-		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_CG_INT, CountingPO.COUNTING_DATE_SILNLE_STR);
-		String manifestId = String.valueOf(word) + FormatUtil.fillZero(count, "00000000");
+		String currentDate = DateUtil.current("yyMMdd").toString();
+		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_CG_INT,currentDate, company);
+		String endNo = FormatUtil.fillZero(FormatUtil.offset(count), "0000");
+		String manifestId = companyPO.getShortname() + String.valueOf(word) + currentDate + endNo;
 		
 		ManifestPO manifestPO = new ManifestPO(manifestId);
 		
@@ -266,6 +279,13 @@ public class ManifestServiceImpl implements ManifestService {
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public int addManifestForXG(ManifestVO manifestVO,List<Long> sids, List<ManifestItemVO> manifestItemVOs, String userId, int company) throws FLException {
+		
+		CompanyPO companyPO = companyDao.get(company);
+		
+		if(companyPO == null){
+			throw new FLException(230015, "公司不存在");
+		}
+		
 		if(manifestItemVOs == null || manifestItemVOs.size() < 0){
 			throw new FLException(260007,"货单无商品信息");
 		}
@@ -278,8 +298,10 @@ public class ManifestServiceImpl implements ManifestService {
 		
 		UserPO userPO = userDao.queryUserByUserId(userId);
 		
-		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_XG_INT, CountingPO.COUNTING_DATE_SILNLE_STR);
-		String manifestId = String.valueOf(word) + FormatUtil.fillZero(count, "00000000");
+		String currentDate = DateUtil.current("yyMMdd").toString();
+		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_XG_INT,currentDate, company);
+		String endNo = FormatUtil.fillZero(FormatUtil.offset(count), "0000");
+		String manifestId = companyPO.getShortname() + String.valueOf(word) + currentDate + endNo;
 		
 		ManifestPO manifestPO = new ManifestPO(manifestId);
 		BeanUtil.copyProperties(manifestVO, manifestPO, Arrays.asList("createUser"));
@@ -352,6 +374,12 @@ public class ManifestServiceImpl implements ManifestService {
 	@Transactional(rollbackFor=Exception.class)
 	public int addManifestForCR(ManifestVO manifestVO,List<ManifestItemVO> manifestItemVOs, String userId,int company) throws FLException {
 
+		CompanyPO companyPO = companyDao.get(company);
+		
+		if(companyPO == null){
+			throw new FLException(230015, "公司不存在");
+		}
+		
 		if(manifestItemVOs == null || manifestItemVOs.size() <= 0){
 			throw new FLException(260007, "货单无商品信息");
 		}
@@ -382,8 +410,10 @@ public class ManifestServiceImpl implements ManifestService {
 		
 		UserPO userPO = userDao.queryUserByUserId(userId);
 		
-		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_CR_INT, CountingPO.COUNTING_DATE_SILNLE_STR);
-		String manifestId = String.valueOf(word) + FormatUtil.fillZero(count, "00000000");
+		String currentDate = DateUtil.current("yyMMdd").toString();
+		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_CR_INT,currentDate, company);
+		String endNo = FormatUtil.fillZero(FormatUtil.offset(count), "0000");
+		String manifestId = companyPO.getShortname() + String.valueOf(word) + currentDate + endNo;
 		
 		ManifestPO manifestPO = new ManifestPO(manifestId);
 		
@@ -444,6 +474,12 @@ public class ManifestServiceImpl implements ManifestService {
 	@Transactional(rollbackFor=Exception.class)
 	public int addManifestForXB(ManifestVO manifestVO,List<ManifestItemVO> manifestItemVOs, String userId,int company) throws FLException {
 		
+		CompanyPO companyPO = companyDao.get(company);
+		
+		if(companyPO == null){
+			throw new FLException(230015, "公司不存在");
+		}
+		
 		if(manifestItemVOs == null || manifestItemVOs.size() <= 0){
 			throw new FLException(260007, "货单无商品信息");
 		}
@@ -475,8 +511,10 @@ public class ManifestServiceImpl implements ManifestService {
 		
 		UserPO userPO = userDao.queryUserByUserId(userId);
 		
-		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_XB_INT, CountingPO.COUNTING_DATE_SILNLE_STR);
-		String manifestId = String.valueOf(word) + FormatUtil.fillZero(count, "00000000");
+		String currentDate = DateUtil.current("yyMMdd").toString();
+		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_XB_INT,currentDate, company);
+		String endNo = FormatUtil.fillZero(FormatUtil.offset(count), "0000");
+		String manifestId = companyPO.getShortname() + String.valueOf(word) + currentDate + endNo;
 		
 		ManifestPO manifestPO = new ManifestPO(manifestId);
 		
@@ -541,6 +579,12 @@ public class ManifestServiceImpl implements ManifestService {
 		
 		// type 1: 进货 , 2: 进退 , 3: 出货 , 4: 出返 , 5: 调拨 , 6:采购 , 7:辅类
 		
+		CompanyPO companyPO = companyDao.get(company);
+		
+		if(companyPO == null){
+			throw new FLException(230015, "公司不存在");
+		}
+		
 		if(purchaseVOs == null || purchaseVOs.size() <= 0){
 			throw new FLException(260017, "采购单不存在");
 		}
@@ -554,9 +598,10 @@ public class ManifestServiceImpl implements ManifestService {
 		
 		UserPO userPO = userDao.queryUserByUserId(uid);
 		
-		//PO作为编号前缀 , 之后由8位数字组成
-		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_PU_INT, CountingPO.COUNTING_DATE_SILNLE_STR);
-		String manifestId = String.valueOf(word) + FormatUtil.fillZero(count, "00000000");
+		String currentDate = DateUtil.current("yyMMdd").toString();
+		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_PU_INT,currentDate, company);
+		String endNo = FormatUtil.fillZero(FormatUtil.offset(count), "0000");
+		String manifestId = companyPO.getShortname() + String.valueOf(word) + currentDate + endNo;
 		
 		ManifestPO manifestPO = new ManifestPO(manifestId);
 		
@@ -638,6 +683,12 @@ public class ManifestServiceImpl implements ManifestService {
 		
 		// type 1: 进货 , 2: 进退 , 3: 出货 , 4: 出返 , 5: 调拨 , 6:采购 , 7:辅类
 		
+		CompanyPO companyPO = companyDao.get(company);
+		
+		if(companyPO == null){
+			throw new FLException(230015, "公司不存在");
+		}
+		
 		if(accessoriesVOs == null || accessoriesVOs.size() <= 0){
 			throw new FLException(260023, "辅料单不存在");
 		}
@@ -651,8 +702,10 @@ public class ManifestServiceImpl implements ManifestService {
 		
 		UserPO userPO = userDao.queryUserByUserId(userId);
 		
-		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_AS_INT, CountingPO.COUNTING_DATE_SILNLE_STR);
-		String manifestId = String.valueOf(word) + FormatUtil.fillZero(count, "00000000");
+		String currentDate = DateUtil.current("yyMMdd").toString();
+		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_AS_INT,currentDate, company);
+		String endNo = FormatUtil.fillZero(FormatUtil.offset(count), "0000");
+		String manifestId = companyPO.getShortname() + String.valueOf(word) + currentDate + endNo;
 		
 		ManifestPO manifestPO = new ManifestPO(manifestId);
 		
@@ -729,6 +782,12 @@ public class ManifestServiceImpl implements ManifestService {
 	@Transactional(rollbackFor=Exception.class)
 	public int addManifestForPS(List<ManifestItemPO> manifestItemPOs, String userId, int company) throws FLException {
 		
+		CompanyPO companyPO = companyDao.get(company);
+		
+		if(companyPO == null){
+			throw new FLException(230015, "公司不存在");
+		}
+		
 		String word = "PS";//套拆
 		String comment = "";
 		String attachment = "";
@@ -736,8 +795,10 @@ public class ManifestServiceImpl implements ManifestService {
 		
 		UserPO userPO = userDao.queryUserByUserId(userId);
 		
-		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_PS_INT, CountingPO.COUNTING_DATE_SILNLE_STR);
-		String manifestId = String.valueOf(word) + FormatUtil.fillZero(count, "00000000");
+		String currentDate = DateUtil.current("yyMMdd").toString();
+		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_PS_INT,currentDate, company);
+		String endNo = FormatUtil.fillZero(FormatUtil.offset(count), "0000");
+		String manifestId = companyPO.getShortname() + String.valueOf(word) + currentDate + endNo;
 		
 		ManifestPO manifestPO = new ManifestPO(manifestId);
 		
@@ -763,6 +824,12 @@ public class ManifestServiceImpl implements ManifestService {
 	@Transactional(rollbackFor=Exception.class)
 	public int addManifestForPM(List<ManifestItemPO> manifestItemPOs, String userId, int company)throws FLException {
 		
+		CompanyPO companyPO = companyDao.get(company);
+		
+		if(companyPO == null){
+			throw new FLException(230015, "公司不存在");
+		}
+		
 		String word = "PM";
 		String comment = "";
 		String attachment = "";
@@ -770,8 +837,10 @@ public class ManifestServiceImpl implements ManifestService {
 		
 		UserPO userPO = userDao.queryUserByUserId(userId);
 		
-		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_PM_INT, CountingPO.COUNTING_DATE_SILNLE_STR);
-		String manifestId = String.valueOf(word) + FormatUtil.fillZero(count, "00000000");
+		String currentDate = DateUtil.current("yyMMdd").toString();
+		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_PM_INT,currentDate, company);
+		String endNo = FormatUtil.fillZero(FormatUtil.offset(count), "0000");
+		String manifestId = companyPO.getShortname() + String.valueOf(word) + currentDate + endNo;
 		
 		ManifestPO manifestPO = new ManifestPO(manifestId);
 		

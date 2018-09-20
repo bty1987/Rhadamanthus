@@ -17,7 +17,7 @@ public interface CustomerSourceService {
 	
 	public CustomerSourceVO checkCustomerSource(CustomerSourceVO customerSource) throws FLException;
 
-	public void addCustomerSource(CustomerSourceVO customerSource, String userId) throws FLException;
+	public void addCustomerSource(CustomerSourceVO customerSource, String userId, int company) throws FLException;
 
 	public void updateCustomerSource(CustomerSourceVO customerSource) throws FLException;
 

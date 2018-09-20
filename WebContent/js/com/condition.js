@@ -153,14 +153,14 @@ var Condition = function (api) {
         },
         //text
         orderId: {
-            label: "订单编号",
+            label: "装修单号",
             type: "text",
             submitConfig: {
                 name: "orderId",
                 op: "eq",
                 validate: {
-                    "reg": /^[0-9]*$/,
-                    "msg": "请输入数字"
+                    "reg": /^[A-Z0-9]*$/,
+                    "msg": "格式不正确A-Z,0-9"
                 }
             }
         },
@@ -399,14 +399,14 @@ var Condition = function (api) {
             }
         },
         inf_orderId: {
-            label: "订单编号",
+            label: "装修单号",
             type: "text",
             submitConfig: {
                 name: "orderId",
                 op: "eq",
                 validate: {
-                    "reg": /^[0-9]*$/,
-                    "msg": "请输入数字"
+                    "reg": /^[A-Z0-9]*$/,
+                    "msg": "格式不正确A-Z,0-9"
                 }
             }
         },
@@ -636,7 +636,7 @@ var Condition = function (api) {
         cityProperId: null,
         //---------数据-主材-型号 页面的各种查询条件
         materialModelNo: { //
-            label: "编号",
+            label: "主材单号",
             type: "text",
             submitConfig: {
                 name: "materialModelNo",
@@ -808,8 +808,8 @@ var Condition = function (api) {
                 name: "phone",
                 op: "cn",
                 validate: {
-                    "reg": /^[0-9]*$/,
-                    "msg": "请输入数字"
+                    "reg": /^[A-Z0-9]*$/,
+                    "msg": "格式不正确A-Z,0-9"
                 }
             }
         },
@@ -911,8 +911,8 @@ var Condition = function (api) {
                 name: "houseArea",
                 op: "eq",
                 validate: {
-                    "reg": /^[0-9]*$/,
-                    "msg": "请输入数字"
+                    "reg": /^[A-Z0-9]*$/,
+                    "msg": "格式不正确A-Z,0-9"
                 }
             }
         },
@@ -932,8 +932,8 @@ var Condition = function (api) {
                 name: "customerPhone",
                 op: "eq",
                 validate: {
-                    "reg": /^[0-9]*$/,
-                    "msg": "请输入数字"
+                    "reg": /^[A-Z0-9]*$/,
+                    "msg": "格式不正确A-Z,0-9"
                 }
             }
         },
@@ -1590,7 +1590,7 @@ var Condition = function (api) {
         },
 
         storehouseNumber: {
-            label: "编号",
+            label: "库房编号",
             type: "text",
             submitConfig: {
                 name: "code",
@@ -1651,7 +1651,7 @@ var Condition = function (api) {
             }
         },
         manifestCode: {
-            label: "货单编号",
+            label: "货单号",
             type: "text",
             submitConfig: {
                 name: "code",
@@ -1704,7 +1704,7 @@ var Condition = function (api) {
             }
         },
         purchaseNo: {
-            label: "编号",
+            label: "采购单号",
             type: "text",
             submitConfig: {
                 name: "no",
@@ -1735,6 +1735,15 @@ var Condition = function (api) {
                 listPath: "userBases",
                 keyPath: "userId",//后台i
                 valuePath: "currentName"//前台
+            }
+        },
+        accessoriesNo: {
+            label: "辅料单号",
+            type: "text",
+            submitConfig: {
+                name: "no",
+                op: "eq",
+                validate: null
             }
         },
         approverName: {
@@ -1783,14 +1792,14 @@ var Condition = function (api) {
         },
 
         salesPaymentOrderId:{
-            label:"订单编号",
+            label:"装修单号",
             type:"text",
             submitConfig : {
                 name : "sid",
                 op : "eq",
                 validate:{
-                    "reg" : /^[0-9]*$/,
-                    "msg" : "请输入数字"
+                    "reg" : /^[A-Z0-9]*$/,
+                    "msg" : "格式不正确A-Z,0-9"
                 }
             }
         },
@@ -1801,8 +1810,8 @@ var Condition = function (api) {
                 name : "no",
                 op : "eq",
                 validate:{
-                    "reg" : /^[0-9]*$/,
-                    "msg" : "请输入数字"
+                    "reg" : /^[A-Z0-9]*$/,
+                    "msg" : "格式不正确A-Z,0-9"
                 }
             }
         },
@@ -1840,7 +1849,7 @@ var Condition = function (api) {
         },
         salesReceiptCollectTime:{
             label:"收款时间",
-            type:"datePicker",
+            type:"dateRangePicker",
             submitConfig:{
                 name:"collectTime",
                 op:"between",
@@ -1849,7 +1858,7 @@ var Condition = function (api) {
         },
         salesReceiptConfirmTime:{
             label:"确认时间",
-            type:"datePicker",
+            type:"dateRangePicker",
             submitConfig:{
                 name:"confirmTime",
                 op:"between",
@@ -2055,14 +2064,14 @@ var Condition = function (api) {
             }
         },
         p_orderId : {
-            label:"订单编号",
+            label:"装修单号",
             type:"text",
             submitConfig : {
                 name : "orderId",
                 op : "eq",
                 validate:{
-                    "reg" : /^[0-9]*$/,
-                    "msg" : "请输入数字"
+                    "reg" : /^[A-Z0-9]*$/,
+                    "msg" : "格式不正确A-Z,0-9"
                 }
             }
         },
@@ -2083,7 +2092,7 @@ var Condition = function (api) {
             }
         },
         p_productionPNo:{
-            label: "生产单编号",
+            label: "生产单号",
             type: "text",
             submitConfig: {
                 name: "pno",
@@ -2131,8 +2140,8 @@ var Condition = function (api) {
                 name : "no",
                 op : "eq",
                 validate:{
-                    "reg" : /^B?[0-9]*$/,
-                    "msg" : "请正确输入房产单号!"
+                    "reg" : /^[A-Z0-9]*$/,
+                    "msg" : "格式不正确A-Z,0-9"
                 }
             }
         },
@@ -2143,8 +2152,8 @@ var Condition = function (api) {
                 name : "no",
                 op : "eq",
                 validate:{
-                    "reg" : /^C?[0-9]*$/,
-                    "msg" : "请正确输入客源编号!"
+                    "reg" : /^[A-Z0-9]*$/,
+                    "msg" : "格式不正确A-Z,0-9"
                 }
             }
         },
@@ -2155,8 +2164,8 @@ var Condition = function (api) {
                 name : "no",
                 op : "eq",
                 validate:{
-                    "reg" : /^H?[0-9]*$/,
-                    "msg" : "请正确输入房源编号!"
+                    "reg" : /^[A-Z0-9]*$/,
+                    "msg" : "格式不正确A-Z,0-9"
                 }
             }
         },
@@ -2459,21 +2468,21 @@ var Condition = function (api) {
                 name : "no",
                 op : "eq",
                 validate:{
-                    "reg" : /^[0-9]*$/,
-                    "msg" : "请输入数字"
+                    "reg" : /^[A-Z0-9]*$/,
+                    "msg" : "格式不正确A-Z,0-9"
                 }
             }
         },
 
         sales_orderId: {
-            label: "订单编号",
+            label: "装修单号",
             type: "text",
             submitConfig: {
                 name: "orderId",
                 op: "eq",
                 validate: {
-                    "reg": /^[0-9]*$/,
-                    "msg": "请输入数字"
+                    "reg": /^[A-Z0-9]*$/,
+                    "msg": "格式不正确A-Z,0-9"
                 }
             }
         },
@@ -2547,7 +2556,7 @@ var Condition = function (api) {
         },
 
         sales_balanceOrderId:{
-            label: "订单编号",
+            label: "装修单号",
             type: "text",
             submitConfig: {
                 name: "sales.orderId",
@@ -2704,14 +2713,14 @@ var Condition = function (api) {
 
         /*-------工程construction : start----*/
         c_orderId : {
-            label:"订单编号",
+            label:"装修单号",
             type:"text",
             submitConfig : {
                 name : "orderId",
                 op : "eq",
                 validate:{
-                    "reg" : /^[0-9]*$/,
-                    "msg" : "请输入数字"
+                    "reg" : /^[A-Z0-9]*$/,
+                    "msg" : "格式不正确A-Z,0-9"
                 }
             }
         },
@@ -2901,7 +2910,7 @@ var Condition = function (api) {
                     op: "eq",
                     validate: {
                         "reg": /^[0-9]*$/,
-                        "msg": "请输入数字"
+                        "msg": "电话格式不正确"
                     }
                 }
         },
@@ -2985,7 +2994,7 @@ var Condition = function (api) {
         },
 		
 		morderNo:{
-            label:"订单编号",
+            label:"订单号",
             type:"text",
             submitConfig : {
                 name : "no",
@@ -3008,6 +3017,16 @@ var Condition = function (api) {
                 listPath: "status",
                 keyPath: "key",
                 valuePath: "value"
+            }
+        },
+		
+		mgoodsno: {
+            label: "商品编号",
+            type: "text",
+            submitConfig: {
+                name: "mgoods",
+                op: "eq",
+                validate: null
             }
         },
 
@@ -3070,6 +3089,187 @@ var Condition = function (api) {
             }
         },
 
+        /*------创建反馈时间----------*/
+        feedbackCreateTime: {
+            label: "创建时间",
+            type: "dateRangePicker",
+            submitConfig: {
+                name: "createTime",
+                op: "between",
+                validate: null
+            }
+        },
+
+        /*-------群--------*/
+        groupName : {
+            label:"名称",
+            type:"text",
+            submitConfig : {
+                name : "name",
+                op : "eq",
+                validate:null
+            }
+        },
+
+        groupOrderId : {
+            label:"装修单号",
+            type:"text",
+            submitConfig : {
+                name : "orderId",
+                op : "eq",
+                validate:null
+            }
+        },
+
+        /*--------------会员----------------*/
+        cu_no: {
+            label: "会员编号",
+            type: "text",
+            submitConfig: {
+                name: "no",
+                op: "eq",
+                validate:null,
+            }
+        },
+
+        cu_phone :{
+            label: "手机号",
+            type: "text",
+            submitConfig: {
+                name: "phone",
+                op: "eq",
+                validate: {
+                    "reg": /^[0-9]*$/,
+                    "msg": "请输入数字"
+                }
+            }
+        },
+
+        /*-------易居ehouse : start----*/
+        e_designer: {
+            label: "设计师",
+            type: "autofill",
+            submitConfig: {
+                name: "designer",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {
+                url: api.ehouse.queryEuserByName,
+                postData: {},
+                listPath: "autoFillKeyValue",
+                keyPath: "key",
+                valuePath: "value",
+                query: "euser.name"
+            }
+        },
+		e_supervisor: {
+            label: "监理",
+            type: "autofill",
+            submitConfig: {
+                name: "supervisor",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {
+                url: api.ehouse.queryEuserByName,
+                postData: {},
+                listPath: "autoFillKeyValue",
+                keyPath: "key",
+                valuePath: "value",
+                query: "euser.name"
+            }
+        },
+        e_pictureType: {
+            label: "类型",
+            type: "select",
+            submitConfig: {
+                name: "type",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {
+                url: null,
+                postData: null,
+                listPath: [
+                    {"key": "0", "value": "效果图"},
+                    {"key": "1", "value": "施工图"}
+                ],
+                keyPath: "key",
+                valuePath: "value"
+            }
+        },
+        e_name : {
+            label:"姓名",
+            type:"text",
+            submitConfig : {
+                name : "name",
+                op : "cn",
+                validate:null
+            }
+        },
+        e_style : {
+            label:"风格",
+            type:"text",
+            submitConfig : {
+                name : "style",
+                op : "cn",
+                validate:null
+            }
+        },
+        e_houseType: {
+            label: "户型",
+            type: "select",
+            submitConfig: {
+                name: "houseType",
+                op: "cn",
+                validate: null
+            },
+            dataSource: {
+                url: api.ds.ehouse,
+                postData: {"timestamp": new Date().getTime()},
+                listPath: "houseType",
+                keyPath: "key",
+                valuePath: "value"
+            }
+        },
+
+        e_area: {
+            label: "面积",
+            type: "select",
+            submitConfig: {
+                name: "area",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {
+                url: api.ds.ehouse,
+                postData: {"timestamp": new Date().getTime()},
+                listPath: "area",
+                keyPath: "key",
+                valuePath: "value"
+            }
+        },
+        e_customerName: {
+            label:"姓名",
+            type:"text",
+            submitConfig : {
+                name : "name",
+                op : "cn",
+                validate:null
+            }
+        },
+        e_city: {
+            label:"城市",
+            type:"text",
+            submitConfig : {
+                name : "city",
+                op : "cn",
+                validate:null
+            }
+        }
+
+        /*-------易居ehouse : end----*/
     };
     return {
         getRuleByCondName: function (condName) {

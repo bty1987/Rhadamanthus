@@ -30,6 +30,8 @@ public class EvaluatePO implements Serializable{
 	
 	private MpricePO mprice;
 	
+	private long gid;
+	
 	private String unionId;
 	
 	private String name;
@@ -87,6 +89,15 @@ public class EvaluatePO implements Serializable{
 		this.mprice = mprice;
 	}
 	
+	@Column(name = "gid")
+	public long getGid() {
+		return gid;
+	}
+
+	public void setGid(long gid) {
+		this.gid = gid;
+	}
+
 	@Column(name = "unionId")
 	public String getUnionId() {
 		return unionId;

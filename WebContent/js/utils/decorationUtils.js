@@ -229,7 +229,7 @@ var decorationUtils = {
             $liLine.append($h4).appendTo($ulbrand);
         }
 
-    }, addDecorationActivityForDiv: function (_activitys, _decorationActivity, uiBtnMethod) {
+    }, addDecorationActivityForDiv: function (_activitys, _decorationActivity, uiBtnMethod,couponCut,thingCut) {
 
         var pricingSpan = $("<div></div>").addClass("pricing-span").css("margin-right", "10px").attr("id", "dactivity_" + _decorationActivity.daId).prependTo(_activitys);
         var widgetBox = $("<div></div>").addClass("widget-box pricing-box-small").appendTo(pricingSpan);
@@ -265,7 +265,7 @@ var decorationUtils = {
             }
         });
 
-    }, decorationActivityItemInfo: function (activityItems, uiBtnMethod, orderId) {
+    }, decorationActivityItemInfo: function (activityPriceInfo,activityItems, uiBtnMethod, orderId) {
 
         var options = {
             "decoration.orderId": orderId,
@@ -276,11 +276,23 @@ var decorationUtils = {
         com.post(api.decoration.queryDecorationActivityItem, options, function (res) {
             var decorationActivityItems = res.decorationActivityItems;
 
+            var couponCut = 0;
+            var thingCut = 0;
+
             for (var i = 0; i < decorationActivityItems.length; i++) {
+                if (decorationActivityItems[i].type == 0 && decorationActivityItems[i].state != 1) {
+                    couponCut = utils.accAdd(couponCut, utils.accMul(decorationActivityItems[i].money, decorationActivityItems[i].num));
+                } else if (decorationActivityItems[i].type == 1 && decorationActivityItems[i].state != 1) {
+                    thingCut = utils.accAdd(thingCut, utils.accMul(decorationActivityItems[i].money, decorationActivityItems[i].num));
+                }
+                activityPriceInfo.html("")
+                var couponCutSpan = $("<div></div>").addClass("col-sm-4").append($("<h4></h4>").html("券优惠:").append($('<strong></strong>').addClass("red").html(couponCut))).appendTo(activityPriceInfo);
+                var thingCutSpan = $("<div></div>").addClass("col-sm-4").append($("<h4></h4>").html("物品优惠:").append($('<strong></strong>').addClass("red").html(thingCut))).appendTo(activityPriceInfo);
+                var detailSpan = $("<div></div>").addClass("col-sm-4").append($("<h4></h4>").html("优惠总额:").append($('<strong></strong>').addClass("red").html(utils.accAdd(couponCut,thingCut)))).appendTo(activityPriceInfo);
                 decorationUtils.addActivityItemForDiv(activityItems, decorationActivityItems[i], uiBtnMethod);
             }
         });
-    }, addActivityItemForDiv: function (_activityItems, _activityItem, uiBtnMethod) {
+    },addActivityItemForDiv: function (_activityItems, _activityItem, uiBtnMethod) {
 
         var pricingSpan = $("<div></div>").addClass("pricing-span").css("margin-right", "10px").attr("id", "pricing_" + _activityItem.daiId).prependTo(_activityItems);
         var widgetBox = $("<div></div>").addClass("widget-box pricing-box-small").appendTo(pricingSpan);
@@ -289,9 +301,9 @@ var decorationUtils = {
         var widgetHeaderH5 = $("<h5></h5>").addClass("bigger lighter").appendTo(widgetHeader);
 
         if (_activityItem.type == 0) {
-            widgetHeaderH5.text("券");
+            widgetHeaderH5.text("券:"+_activityItem.activityItemName);
         } else if (_activityItem.type == 1) {
-            widgetHeaderH5.text("物品");
+            widgetHeaderH5.text("物品:"+_activityItem.activityItemName);
         }
 
         if (_activityItem.state == 0) {
@@ -315,12 +327,15 @@ var decorationUtils = {
         var moneySpan = $("<span></span>").attr("id", "money_" + _activityItem.daiId).text(_activityItem.money).appendTo(moneyLi);
         var numLi = $("<li></li>").text("数量:").appendTo(ul);
         var numSpan = $("<span></span>").attr("id", "money_" + _activityItem.daiId).text(_activityItem.num).appendTo(numLi);
+        var totalLi = $("<li></li>").text("合计:").appendTo(ul);
+        var totalSpan = $("<span></span>").attr("id", "money_" + _activityItem.daiId).text(utils.accMul(_activityItem.money,_activityItem.num)).appendTo(totalLi);
 
         var uiPgDiv = $("<div></div>").addClass("ui-pg-div").appendTo(widgetBody);
 
         if (uiBtnMethod != null) {
             uiBtnMethod(uiPgDiv, _activityItem);
         }
+
     }, initPayment: function (decorationDetail, isDesign) {
 
         var totalMoney = 0;
@@ -412,9 +427,11 @@ var decorationUtils = {
                 if (isDesign) {
 
                     if (v.paymentStatus == "已确认" && v.oneType == 0) {
-                        $divBtnWrap.append($refundBtn);
-                    }
 
+                        if (v.twoType != 2) {
+                            $divBtnWrap.append($refundBtn);
+                        }
+                    }
                 }
 
                 $divBtnWrap.appendTo($h4);
@@ -501,13 +518,14 @@ var decorationUtils = {
 
             res = res.decorationInclusive;
 
-            $('#contractPrice').html(com.checkNull(res.contractPrice), 0);
-            $('#projectPrice').html(com.checkNull(res.projectPrice), 0);
-            $('#cdiff').html(com.checkNull(res.cdiff), 0);
-            $('#mdiff').html(com.checkNull(res.mdiff), 0);
-            $('#managePrice').html(com.checkNull(res.managePrice), 0);
-            $('#materialPaidup').html(com.checkNull(res.materialPaidup), 0);
-
+            if(res && res.length) {
+                $('#contractPrice').html(com.checkNull(res.contractPrice, 0));
+                $('#projectPrice').html(com.checkNull(res.projectPrice, 0));
+                $('#cdiff').html(com.checkNull(res.cdiff, 0));
+                $('#mdiff').html(com.checkNull(res.mdiff, 0));
+                $('#managePrice').html(com.checkNull(res.managePrice, 0));
+                $('#materialPaidup').html(com.checkNull(res.materialPaidup, 0));
+            }
         });
 
     }, initDecorationBelong: function (orderId) {

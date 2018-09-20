@@ -11,6 +11,7 @@
 
 package com.fanglin.decoration.dao.impl;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import org.hibernate.criterion.Restrictions;
@@ -31,6 +32,15 @@ public class DecorationPictureDaoImpl extends DaoImpl<DecorationPicturePO> imple
 	@SuppressWarnings("unchecked")
 	public List<DecorationPicturePO> queryDecorationPictureByOrderId(String orderId) {
 		return createCriteria(DecorationPicturePO.class).add(Restrictions.eq(DecorationPicturePO.COLUMN_ORDERID_STR, orderId)).add(Restrictions.eq(DecorationPicturePO.COLUMN_STATUS_STR, DecorationPicturePO.STATUS_ENABLE_INT)).list();
+	}
+
+	@Override
+	public int countDecorationPicture(String orderId, Integer type) {
+		
+		String sql = "select count(*) from decoration.decorationpicture where orderId = :orderId and type = :type";
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setString("orderId", orderId).setInteger("type", type).uniqueResult();
+
+		return count.intValue();
 	}
 	
 }
