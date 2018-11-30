@@ -6,9 +6,9 @@ $(function(){
         repeatFlg: false
     };
 
-    mbrand.mbrandItems.name = $("#name");
-    mbrand.mbrandItems.cid = $("#categoryId");
-    mbrand.mbrandItems.path = $("#path");
+    mbrand.mbrandItems.name = com.focusPage("#name");
+    mbrand.mbrandItems.cid = com.focusPage("#categoryId");
+    mbrand.mbrandItems.path = com.focusPage("#path");
 
     var colorboxArgs = {
         reposition:true,
@@ -22,17 +22,16 @@ $(function(){
         maxHeight:'100%'
     };
 
-    com.post(api.store.queryMcategory, {}, function(res){
-        $("#categoryId").bindData(res.mcategorys, "cid", "name");
+    com.post(api.store.queryMcategoryOnshow, {}, function(res){
+        com.focusPage("#categoryId").bindData(res.mcategorys, "cid", "name");
     });
 
     var displayFunc  = (function(){
         /*表格样式*/
         var renderList = function(tableId,listData){
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
 
             if(listData && listData.length){
-
                 var $ulTitle = createTableTitle();
                 var $ulData = $('<ul></ul>').addClass('flex-table');
                 $tableWrap.append($ulTitle).append($ulData);
@@ -46,7 +45,6 @@ $(function(){
 
         /*表格头*/
         var createTableTitle = function(){
-
             var $ulTitle = $('<ul></ul>').addClass('flex-table');
             var $liTitle = $('<li></li>').addClass('line table-title');
 
@@ -61,16 +59,12 @@ $(function(){
 
             var $optionWrap = $('<div></div>').addClass('line-wrap action').html($('<div>操作</div>').addClass('cell option'));
 
-            $liTitle.append($indexWrap)
-                .append($contentWrap)
-                .append($optionWrap)
-                .appendTo($ulTitle);
+            $liTitle.append($indexWrap).append($contentWrap).append($optionWrap).appendTo($ulTitle);
 
             return $ulTitle;
         };
         /*表格体*/
         var creatLine = function (i, v, lastFlag) {
-
             var $liLine = $('<li></li>').addClass('line');
             var id = i + 1;
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(id));
@@ -85,7 +79,7 @@ $(function(){
             });
 
             var propertyArr = [
-                [v.mcategory.name,"black"],
+                [v.mcategory.name,'grey'],
                 [v.name,'grey'],
                 [v.status =="0" ? "启用" : "禁用",'red']
             ];
@@ -145,7 +139,7 @@ $(function(){
 
         return {
             init : function(tableId,listData){
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
             },
             drawLine : function(v){
@@ -157,6 +151,7 @@ $(function(){
     /*分页*/
     var _condArr = ['mbrandName'];
     var mbrandSeacher = new Searcher();
+
     mbrandSeacher.init( _condArr, "condList", api.store.pageMbrand, function(data){
         displayFunc.init('resultList', data);
     }, "pagenation", "mbrandPostData", null, false, null, function() {
@@ -166,12 +161,13 @@ $(function(){
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
         $adda.click(function(){
-            $("#brandImg").html("");
+            com.focusPage("#brandImg").html("");
             com.cleanItems(mbrand.mbrandItems);
+
             openlayer(function(index, layero){
-                if($("#path").val() == null || $("#path").val() == ""){
-                    $("#brandImg").html("");
-                    var $text = $('<span></span>').html('请上传图片！').css("color", "red").appendTo($("#brandImg"));
+                if(com.focusPage("#path").val() == null || com.focusPage("#path").val() == ""){
+                    com.focusPage("#brandImg").html("");
+                    var $text = $('<span></span>').html('请上传图片！').css("color", "red").appendTo(com.focusPage("#brandImg"));
                     return;
                 }
 
@@ -192,13 +188,13 @@ $(function(){
         layer.open({
             type: 1,
             title:" ",
-            content: $('#layerAdd'),
+            content: com.focusPage('#layerAdd'),
             area: ( $(window).width()*0.6 < 620 ?  $(window).height()*0.6 : 620 )+"px",
             maxmin: false,
             zIndex:9000,
             btn: ['确定', '取消'],
             yes: function(index, layero){
-                var img =$('#showImg').attr('src');
+                var img =com.focusPage('#showImg').attr('src');
                 if(img == "#"){
                     layer.msg("请上传图片");
                 }else{
@@ -217,10 +213,10 @@ $(function(){
 
     /*状态信息验证*/
     function startStatus(id, status, callback){
-        if(status=="1"){
+        if(status == "1"){
             com.post(api.store.updateMbrandForStatus,{
-                "mbrand.bid":id,
-                "mbrand.status":"0"
+                "mbrand.bid" : id,
+                "mbrand.status" : "0"
             },function(res){
                 callback();
                 mbrandSeacher.doSearch();
@@ -234,10 +230,10 @@ $(function(){
     }
 
     function stopStatus(id, status, callback){
-        if(status=="0"){
+        if(status == "0"){
             com.post(api.store.updateMbrandForStatus,{
-                "mbrand.bid":id,
-                "mbrand.status":"1"
+                "mbrand.bid" : id,
+                "mbrand.status" : "1"
             },function(res){
                 callback();
                 mbrandSeacher.doSearch();
@@ -254,7 +250,7 @@ $(function(){
     function saveData(callback){
         var cid = mbrand.mbrandItems.cid.val();
         var name = mbrand.mbrandItems.name.val();
-        var path = $("#path").val();
+        var path = com.focusPage("#path").val();
 
         com.post(api.store.addMbrand, {
             "mbrand.mcategory.cid": cid,
@@ -269,15 +265,17 @@ $(function(){
     function updateData(v, callback){
         var cid = mbrand.mbrandItems.cid.val();
         var name = mbrand.mbrandItems.name.val();
-        var path = $("#path").val();
+        var path = com.focusPage("#path").val();
+
         if(name == v.name){
             layer.msg("你未修改品牌");
         }
+
         com.post(api.store.updateMbrand, {
-            'mbrand.bid':v.bid,
-            "mbrand.mcategory.cid": cid,
-            "mbrand.name": name,
-            "mbrand.icon":path
+            'mbrand.bid' : v.bid,
+            "mbrand.mcategory.cid" : cid,
+            "mbrand.name" : name,
+            "mbrand.icon" : path
         }, function(res){
             callback();
             mbrandSeacher.doSearch();
@@ -285,16 +283,16 @@ $(function(){
     }
 
     function editBrand(v){
-        $("#brandImg").html("");
+        com.focusPage("#brandImg").html("");
         mbrand.mbrandItems.cid.val(v.mcategory.cid);
         mbrand.mbrandItems.name.val(v.name);
         mbrand.mbrandItems.path.val(v.icon);
         var img = $('<img />');
-        var imgA = $("<a></a>").attr("href", com.showImg(img, v.icon, 150, 150, '150x150', null, 0)).attr("data-rel", "colorbox").css("height", "150px").append(img).appendTo($("#brandImg"));
+        var imgA = $("<a></a>").attr("href", com.showImg(img, v.icon, 150, 150, '150x150', null, 0)).attr("data-rel", "colorbox").css("height", "150px").append(img).appendTo(com.focusPage("#brandImg"));
         imgA.colorbox(colorboxArgs);
     }
 
-    $("#pictureUpload").Huploadify({
+    com.focusPage("#pictureUpload").Huploadify({
         'debug' : false, // 开启调试
         'auto':true, // 是否自动上传
         'successTimeout': 99999, //超时时间
@@ -318,10 +316,10 @@ $(function(){
         'onUploadSuccess':function(file, data, response){
             var dateObj=eval("("+data+")");
             if(dateObj.errorCode == 0){
-                $("#brandImg").html("");
+                com.focusPage("#brandImg").html("");
                 mbrand.mbrandItems.path.val(dateObj.resUrl);
                 var img = $('<img />');
-                var imgA = $("<a></a>").attr("href", com.showImg(img, dateObj.resUrl, 150, 150, '150x150', null, 0)).attr("data-rel", "colorbox").css("height", "150px").append(img).appendTo($("#brandImg"));
+                var imgA = $("<a></a>").attr("href", com.showImg(img, dateObj.resUrl, 150, 150, '150x150', null, 0)).attr("data-rel", "colorbox").css("height", "150px").append(img).appendTo(com.focusPage("#brandImg"));
                 imgA.colorbox(colorboxArgs);
             }else{
                 alert(data);

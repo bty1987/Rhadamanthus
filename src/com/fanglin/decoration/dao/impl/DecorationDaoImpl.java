@@ -25,11 +25,14 @@ import org.springframework.stereotype.Repository;
 import com.fanglin.communion.dao.CustomerPhoneDao;
 import com.fanglin.communion.po.CustomerPhonePO;
 import com.fanglin.core.dao.impl.DaoImpl;
+import com.fanglin.core.security.AESHelper;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.utils.DateUtil;
+import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.Paging;
+import com.fanglin.utils.SystemConfig;
 
 @Repository("decoratioDao")
 public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements DecorationDao {
@@ -46,7 +49,7 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 		PagingQuery<DecorationPO> query = pagingQuery(paging, DecorationPO.class);
 		
 		query.add(query.getCriterion("company", company, "eq"));
-			
+		
 		if(designDepartmentIds != null && designDepartmentIds.size() > 0){
 			query.alias("designer", "designer");
 			query.alias("designer.dept", "designerDept");
@@ -56,6 +59,17 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 		if(statuses != null && statuses.size() > 0){
 			query.add(Restrictions.in("status", statuses));
 		}
+		
+		queryFilterExcute(query, filters);
+		
+		query.desc("doid");
+
+		return query.list();
+	}
+	
+	@Override
+	public List<DecorationPO> pageAllDecoration(Paging paging, List<Filter> filters){
+		PagingQuery<DecorationPO> query = pagingQuery(paging, DecorationPO.class);
 		
 		queryFilterExcute(query, filters);
 		
@@ -99,8 +113,6 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 	public List<DecorationPO> pageDecorationForSalesman(Paging paging, List<Filter> filters, int company) {
 		
 		PagingQuery<DecorationPO> query = pagingQuery(paging, DecorationPO.class);
-
-		query.add(query.getCriterion("company", company, "eq"));
 		
 		queryFilterExcute(query, filters);
 		
@@ -181,12 +193,10 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 	}
 
 	@Override
-	public List<DecorationPO> pageDecorationForSalesmanManager(Paging paging, List<Filter> filters, List<Integer> salesmanDepartmentIds, List<Short> statuses, int company) {
+	public List<DecorationPO> pageDecorationForSalesmanManager(Paging paging, List<Filter> filters, List<Integer> salesmanDepartmentIds, List<Short> statuses) {
 		
 		PagingQuery<DecorationPO> query = pagingQuery(paging, DecorationPO.class);
 
-		query.add(query.getCriterion("company", company, "eq"));
-		
 		if(salesmanDepartmentIds != null && salesmanDepartmentIds.size() > 0){
 			query.alias("salesman", "salesman");
 			query.alias("salesman.dept", "salesmanDept");
@@ -410,9 +420,9 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 				}else if("villageId".equals(field)){
 					query.add(query.getCriterion("village.no", data, op));
 				}else if("designerDepartmentId".equals(field)){
-					query.add(query.getCriterion("designerDept.deptId", data, op));
+					query.add(query.getCriterion("designerDept.no", data, op));
 				}else if("salesmanDepartmentId".equals(field)){
-					query.add(query.getCriterion("salesmanDept.deptId", data, op));
+					query.add(query.getCriterion("salesmanDept.no", data, op));
 				}else if("designer".equals(field)){
 					query.add(query.getCriterion("designer.currentName", data, op));
 				}else if("salesman".equals(field)){
@@ -431,15 +441,20 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 				}else if("village".equals(field)){ 
 					query.add(query.getCriterion("village.name", data, op));
 				}else if("company".equals(field)){
-					query.add(query.getCriterion("company", Integer.valueOf(data), op));
+			    try {
+					int cid =FormatUtil.decodeCompany(AESHelper.decryptString(filter.getData(), SystemConfig.getString("encryptKey")));
+		            query.add(query.getCriterion("company", cid, op));
+				} 
+				catch (Exception e) {
+	          	}
 				}else if("salesmanDepartment".equals(field)){
-					query.add(query.getCriterion("salesmanDept.deptName", data, op));
+					query.add(query.getCriterion("salesmanDept.name", data, op));
 				}else if("designerDepartment".equals(field)){
-					query.add(query.getCriterion("designerDept.deptName", data, op));
+					query.add(query.getCriterion("designerDept.name", data, op));
 				}else if("designerRegionId".equals(field)){
-					query.add(query.getCriterion("designerRegion.deptId", data, op));
+					query.add(query.getCriterion("designerRegion.no", data, op));
 				}else if("salesmanRegionId".equals(field)){
-					query.add(query.getCriterion("salesmanRegion.deptId", data, op));
+					query.add(query.getCriterion("salesmanRegion.no", data, op));
 				}else if("orderType".equals(field)){
 					query.add(query.getCriterion("type", Short.valueOf(data), op));
 				}else if("salesmanType".equals(field)){

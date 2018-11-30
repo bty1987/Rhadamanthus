@@ -1,10 +1,10 @@
 $(function () {
-    var backBtn = $('#backBtn');
+    var backBtn = com.focusPage('#backBtn');
     var qid =params["qid"] ;
     var status =params["status"];
     var use = params["use"];
     var initList = function (listData) {
-        var $tableWrap = $('#list');
+        var $tableWrap = com.focusPage('#list');
         var $ul = $('<ul></ul>').addClass('item-list ui-sortable  fl-table-list');
 
         if (listData && listData.length) {
@@ -54,7 +54,7 @@ $(function () {
                         btn: ['确定', '取消'] //按钮
                     }, function (indexo, layero) {
                     	 com.post(api.production.deletePuotationItem, {"puotationItem.qiid": v.qiid}, function () {
-                          $('#list ul.item-list').remove();
+                             com.focusPage('#list ul.item-list').remove();
                           queryPuotationItemByQid(v.qid);
                         }, function (e) {
                             com.showAlert(com.error, e.errorMsg);

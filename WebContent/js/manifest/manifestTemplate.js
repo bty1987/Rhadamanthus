@@ -9,7 +9,7 @@ $(function(){
     var displayFunc  = (function(){
 
         var renderList = function(tableId,listData){
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
 
             if(listData && listData.length){
 
@@ -110,14 +110,14 @@ $(function(){
             $btnEdit.click(function(){
 
 
-                var name = $('#layerAdd').find('input[name="name"]').val( v.name);
-                var comment = $('#layerAdd').find('input[name="comment"]').val(v.comment);
+                var name = com.focusPage('#layerAdd').find('input[name="name"]').val( v.name);
+                var comment = com.focusPage('#layerAdd').find('input[name="comment"]').val(v.comment);
 
 
-                $('#layerAdd').attr('data-mtid', v.mtId);
+                com.focusPage('#layerAdd').attr('data-mtid', v.mtId);
                 //com.clearForm('form1')
                 openlayer(function(){
-                    var id = $('#layerAdd').attr('data-mtid');
+                    var id = com.focusPage('#layerAdd').attr('data-mtid');
                     if(com.validate('form1'))
                         return;
 
@@ -137,10 +137,10 @@ $(function(){
                 layer.confirm('是否启用？', {
                     btn: ['确定','取消'] //按钮
                 }, function(index, layero){
-                    $('#layerAdd').attr('data-mtId', v.mtId);
-                    $('#layerAdd').attr('data-status', v.status);
-                    var id = $('#layerAdd').attr('data-mtId');
-                    var status = $('#layerAdd').attr('data-status');
+                    com.focusPage('#layerAdd').attr('data-mtId', v.mtId);
+                    com.focusPage('#layerAdd').attr('data-status', v.status);
+                    var id = com.focusPage('#layerAdd').attr('data-mtId');
+                    var status = com.focusPage('#layerAdd').attr('data-status');
                     startStatus(id,status,function(){
                         layer.closeAll();
                         layer.msg('启用成功',{icon:1,time:2000});
@@ -153,10 +153,10 @@ $(function(){
                 layer.confirm('是否禁用？', {
                     btn: ['确定','取消'] //按钮
                 }, function(index, layero){
-                    $('#layerAdd').attr('data-mtId', v.mtId);
-                    $('#layerAdd').attr('data-status', v.status);
-                    var id = $('#layerAdd').attr('data-mtId');
-                    var status = $('#layerAdd').attr('data-status');
+                    com.focusPage('#layerAdd').attr('data-mtId', v.mtId);
+                    com.focusPage('#layerAdd').attr('data-status', v.status);
+                    var id = com.focusPage('#layerAdd').attr('data-mtId');
+                    var status = com.focusPage('#layerAdd').attr('data-status');
                     stopStatus(id,status,function(){
                         layer.closeAll();
                         layer.msg('禁用成功',{icon:1,time:2000});
@@ -169,8 +169,8 @@ $(function(){
                 layer.confirm('是否确定删除？', {
                     btn: ['确定','取消'] //按钮
                 }, function(index, layero){
-                    $('#layerAdd').attr('data-mtId', v.mtId);
-                    var id = $('#layerAdd').attr('data-mtId');
+                    com.focusPage('#layerAdd').attr('data-mtId', v.mtId);
+                    var id = com.focusPage('#layerAdd').attr('data-mtId');
                    deleteManifestTemplate(id,function(){
                        layer.closeAll();
                        layer.msg('删除成功',{icon:1,time:2000});
@@ -183,8 +183,8 @@ $(function(){
 
             /*绑定*/
             $btnBinbing.click(function(mtId){
-                $('#layerAdd').attr('data-mtid', v.mtId);
-                mtId = $('#layerAdd').attr('data-mtid');
+                com.focusPage('#layerAdd').attr('data-mtid', v.mtId);
+                mtId = com.focusPage('#layerAdd').attr('data-mtid');
                 params.mtid = mtId;
                 com.switchPage('views/manifest/manifestTemplateItem.html');
 
@@ -197,7 +197,7 @@ $(function(){
 
         return {
             init : function(tableId,listData){
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
 
             },
@@ -241,18 +241,18 @@ $(function(){
     },'resultList');
 
     function clearForm(formId){
-        var $form = $("#"+formId);
+        var $form = com.focusPage("#"+formId);
         var error = $('.alert-error', $form);
         var success = $('.alert-success', $form);
-        $('.control-group').removeClass("success").removeClass("error");
-        $(".ok").remove();
-        $(".help-inline").remove();
+        com.focusPage('.control-group').removeClass("success").removeClass("error");
+        com.focusPage(".ok").remove();
+        com.focusPage(".help-inline").remove();
         success.hide();
         error.hide();
         $("span.checked",$form).removeClass("checked");
-        $("tr.edit-on").removeClass("edit-on");
+        com.focusPage("tr.edit-on").removeClass("edit-on");
         $form.removeClass("edit-item");
-        $(".extra-wrap .control-group:not(.hide)").remove();//去掉辅助项
+        com.focusPage(".extra-wrap .control-group:not(.hide)").remove();//去掉辅助项
         $('input[type="hidden"]',$form).val('');
         document.getElementById(formId).reset();
     }
@@ -263,7 +263,7 @@ $(function(){
             type: 1,
             //skin: 'layui-layer-lan',
             title:"添加",
-            content: $('#layerAdd'),
+            content: com.focusPage('#layerAdd'),
             area: ( $(window).width()*0.6 < 620 ?  $(window).height()*0.6 : 620 )+"px",
             maxmin: false,
             zIndex:9000,
@@ -324,34 +324,9 @@ $(function(){
             manifestSeacher.doSearch();
         });
     }
-    /*登录表单校验*/
-    var submitValidate = function(){
-        $("#form1 .alert-error").hide();
-
-        var validator = com.validate("#form1",{
-            //一些校验规则
-            messages: {
-                name: {
-                    required: "请填写名称."
-                },
-                comment: {
-                    required: "请填写说明."
-                }
-            },
-            success: function (label) {
-                label.closest('.control-group').removeClass('error');
-                label.remove();
-            },
-            errorPlacement: function (error, element) {
-                error.addClass('help-small no-left-padding').insertAfter(element);
-            }
-        });
-        return validator;
-    };
-
 
     function saveData(id,callback){
-        var $layer = $('#layerAdd');
+        var $layer = com.focusPage('#layerAdd');
         var name = $layer.find('input[name="name"]').val();
         var comment = $layer.find('input[name="comment"]').val();
 

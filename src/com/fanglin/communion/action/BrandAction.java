@@ -55,26 +55,26 @@ public class BrandAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value="queryBrandByBId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryBrandByBId(){
+	@Action(value="queryBrandByBid", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String queryBrandByBid(){
 		
-		brand = brandService.queryBrandByBId(brand);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value="queryBrandByBrandId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryBrandByBrandId(){
-		
-		brand = brandService.queryBrandByBrandId(brand);
+		brand = brandService.queryBrandByBid(brand);
 		
 		return SUCCESS;
 	}
 	
-	@Action(value="queryBrandByCategoryId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryBrandByCategoryId(){
+	@Action(value="queryBrandByNo", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String queryBrandByNo(){
 		
-		brands = brandService.queryBrandByCategoryId(brand);
+		brand = brandService.queryBrandByNo(brand);
+		
+		return SUCCESS;
+	}
+	
+	@Action(value="queryBrandByCid", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String queryBrandByCid(){
+		
+		brands = brandService.queryBrandByCid(brand);
 		
 		return SUCCESS;
 	}
@@ -86,26 +86,27 @@ public class BrandAction extends BaseListAction {
 		
 		for(BrandVO brandVO: brands){
 			KeyValueVO keyValueVO = new KeyValueVO();
-			keyValueVO.setKey(brandVO.getBrandId()); 
-			keyValueVO.setValue(brandVO.getBrandName());
+			keyValueVO.setKey(brandVO.getNo()); 
+			keyValueVO.setValue(brandVO.getName());
 			getAutoFillKeyValue().add(keyValueVO);
-			getAutoFillList().add(brandVO.getBrandName());
+			getAutoFillList().add(brandVO.getName());
 		}
 		
 		return SUCCESS;
 	}
 	
-	@Action(value="queryBrandForPinYinNameACategoryName", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryBrandForPinYinNameACategoryName() throws FLException{
+	@Action(value="queryBrandForPinYinNameAname", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String queryBrandForPinYinNameAname() throws FLException{
 		
 		brands = brandService.queryBrandForPinYinName(pinyinName,queryCompany());
 		
 		for(BrandVO brandVO: brands){
 			KeyValueVO keyValueVO = new KeyValueVO();
-			keyValueVO.setKey(brandVO.getBrandId());
-			keyValueVO.setValue(String.format("%s-%s", brandVO.getBrandName(), brandVO.getCategoryName()));
+			keyValueVO.setKey(brandVO.getNo());
+			keyValueVO.setValue(String.format("%s-%s", brandVO.getName(), brandVO.getCategoryName()));
 			getAutoFillKeyValue().add(keyValueVO);
 			getAutoFillList().add(brandVO.getCategoryName());
+			brandVO.setAlias(String.format("%s-%s", brandVO.getName(), brandVO.getCategoryName()));
 		}
 		
 		return SUCCESS;

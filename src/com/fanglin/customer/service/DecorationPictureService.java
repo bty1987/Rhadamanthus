@@ -7,6 +7,6 @@ import com.fanglin.utils.Paging;
 
 public interface DecorationPictureService {
 	
-	public void queryCusDecorationPicture(Paging paging, List<Filter> filters,String orderId,String unionId);
+	public void queryCusDecorationPicture(Paging paging, List<Filter> filters,String orderId);
 	
 }

@@ -163,7 +163,7 @@ jQuery(function($) {
 	}
 	
 	function Charts(chartId, title, categories, series){
-        $('#' + chartId).highcharts({
+        com.focusPage('#' + chartId).highcharts({
             credits:{
                 enabled: false // 禁用版权信息
             },
@@ -206,7 +206,7 @@ jQuery(function($) {
     };
     
     function Pies(chartId, title, series){
-    	$('#' + chartId).highcharts({
+    	com.focusPage('#' + chartId).highcharts({
     		credits:{
                 enabled: false // 禁用版权信息
             },

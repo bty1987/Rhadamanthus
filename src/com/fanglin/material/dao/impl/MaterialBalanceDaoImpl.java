@@ -66,10 +66,10 @@ public class MaterialBalanceDaoImpl extends DaoImpl<MaterialBalancePO> implement
 				query.add(query.getCriterion("village.no", filter.getData(), filter.getOp()));
 			}else if(MaterialPO.COLUMN_REGIONID_STR.equals(filter.getField())){//增加归属大区名字模糊查询
 				query.alias("material.region", "region");
-				query.add(Restrictions.eq("region.deptName", filter.getData()));
+				query.add(Restrictions.eq("region.name", filter.getData()));
 			}else if(MaterialPO.COLUMN_DEPARTMENTID_STR.equals(filter.getField())){//增加业务大区名字模糊查询
 				query.alias("material.department", "department");
-				query.add(Restrictions.eq("department.deptName", filter.getData()));
+				query.add(Restrictions.eq("department.name", filter.getData()));
 			}
 			else if(MaterialPO.COLUMN_FULLCOLLECTTIME_RANGE_STR.equals(filter.getField())){
 				String data = filter.getData();

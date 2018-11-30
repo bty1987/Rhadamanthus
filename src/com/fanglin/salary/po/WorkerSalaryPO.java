@@ -18,7 +18,7 @@ import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.personel.po.UserPO;
 
 @Entity
-@Table(name="workerSalary", catalog = "salary")
+@Table(name = "workerSalary", catalog = "salary")
 public class WorkerSalaryPO  implements Serializable{
 	
 	private static final long serialVersionUID = -6436620084581973635L;
@@ -45,7 +45,9 @@ public class WorkerSalaryPO  implements Serializable{
 	
 	public static final short STATUS_INIT_STRONE = 1;                     
 	
-	public static final short STATUS_INIT_STRTWO = 2;                     
+	public static final short STATUS_INIT_STRTWO = 2;  
+	
+	public static final short STATUS_INIT_STRTHREE = 3;
 	
 	public static final String STATUS_INIT_STRA = "status";                      
 	
@@ -67,7 +69,39 @@ public class WorkerSalaryPO  implements Serializable{
 	
 	public static final int COLUMN_CONSTRUCTION_STATUS = 1;
 	
+	public static final short TYPE_ADD_INT = 0;//加
+	
+	public static final short TYPE_SUB_INT = 1;//减
+	
+	public static final short ONETYPE_SALARY_INT = 0;//工费
+	
+	public static final short ONETYPE_CUT_INT = 1;//扣/罚
+	
+	public static final short ONETYPE_TRAN_INT = 2;//转额
+	
+	public static final short ONETYPE_ELSE_INT = 3;//其他
+	
+	public static final short TWOTYPE_SALARY_INT = 1;//工费
+	
+	public static final short TWOTYPE_ADDITME_INT = 2;//增项
+	
+	public static final short TWOTYPE_OILER_INT = 3;//油工一级奖励
+	
+	public static final short TWOTYPE_MAINTAIN_INT = 4;//维修款
+	
+	public static final short TWOTYPE_CUT_INT = 5;//罚款
+	
+	public static final short TWOTYPE_PROJECT_INT = 6;//工程质保金
+	
+	public static final short TWOTYPE_TOOL_INT = 7;//工具押金
+	
+	public static final short TWOTYPE_LEND_INT = 8;//借款
+	
+	public static final short TWOTYPE_INSURANCE_INT = 9;//工人家属保险
+	
 	private long wsId;
+	
+	private long cwsid;
 	
 	private long cid;
 	
@@ -98,6 +132,14 @@ public class WorkerSalaryPO  implements Serializable{
 	private int company;
 	
 	private long csid;
+	
+	private float money;
+	
+	private float deposit;
+	
+	private short onetype;
+	
+	private short twotype;
 	
 	public WorkerSalaryPO() {
 		super();
@@ -134,6 +176,16 @@ public class WorkerSalaryPO  implements Serializable{
 	public void setWsId(long wsId) {
 		this.wsId = wsId;
 	}
+
+	@Column(name="cwsid")
+	public long getCwsid() {
+		return cwsid;
+	}
+
+	public void setCwsid(long cwsid) {
+		this.cwsid = cwsid;
+	}
+
 
 	@Column(name="cid")
 	public long getCid() {
@@ -273,4 +325,41 @@ public class WorkerSalaryPO  implements Serializable{
 	public void setCsid(long csid) {
 		this.csid = csid;
 	}
+	
+	@Column(name = "money")
+	public float getMoney() {
+		return money;
+	}
+
+	public void setMoney(float money) {
+		this.money = money;
+	}
+
+	@Column(name = "deposit")
+	public float getDeposit() {
+		return deposit;
+	}
+
+	public void setDeposit(float deposit) {
+		this.deposit = deposit;
+	}
+
+	@Column(name = "onetype")
+	public short getOnetype() {
+		return onetype;
+	}
+
+	public void setOnetype(short onetype) {
+		this.onetype = onetype;
+	}
+
+	@Column(name = "twotype")
+	public short getTwotype() {
+		return twotype;
+	}
+
+	public void setTwotype(short twotype) {
+		this.twotype = twotype;
+	}
+	
 }

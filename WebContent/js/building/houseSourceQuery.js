@@ -1,6 +1,5 @@
 
 jQuery(function($) {
-
 	var houseSource = {
 		houseSources: {},
 		hsid: null,
@@ -21,7 +20,7 @@ jQuery(function($) {
 		balanceStatus: [],
 		rentType: [],
 		repeatFlg: null,
-		validator: null,
+		validator: null
 	};
 
 	com.post(api.ds.building, {}, function(res){
@@ -49,7 +48,7 @@ jQuery(function($) {
 	var displayFunc  = (function(){
 
 		var renderList = function(tableId,listData){
-			var $tableWrap = $('#' + tableId);
+			var $tableWrap = com.focusPage('#' + tableId);
 			var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
 			if(listData && listData.length){
@@ -112,7 +111,7 @@ jQuery(function($) {
 
 		return {
 			init : function(tableId,listData){
-				$('#' + tableId).html(null);
+				com.focusPage('#' + tableId).html(null);
 				renderList(tableId,listData);
 			},
 			drawLine : function(v){
@@ -131,7 +130,7 @@ jQuery(function($) {
 	//转换金额
 	function toMoney(num){
 		num = num.toFixed(2);
-		num = parseFloat(num)
+		num = parseFloat(num);
 		num = num.toLocaleString();
 		return num;
 	}

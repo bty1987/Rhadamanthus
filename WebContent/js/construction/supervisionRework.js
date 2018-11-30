@@ -1,25 +1,25 @@
 jQuery(function ($) {
-    $('#fl-statement').statement("监理控制", "返工信息列表");
+    com.focusPage('#fl-statement').statement("监理控制", "返工信息列表");
 
     var rework = {
-        saveBtn: $("#saveBtn").on("click", saveData),
-        cancellBtn: $("#cancelBtn"),
-        modal: $("#reworkModal"),
+        saveBtn: com.focusPage("#saveBtn").on("click", saveData),
+        cancellBtn: com.focusPage("#cancelBtn"),
+        modal: com.focusPage("#reworkModal"),
         reworkItems: {
-            createTime: $("#createTime"),
-            reworkDes: $("#reworkDes"),
+            createTime: com.focusPage("#createTime"),
+            reworkDes: com.focusPage("#reworkDes")
         },
 
         editFlag: false,
-        repeatFlg: false,
+        repeatFlg: false
     };
 
-    $('.date-picker').datepicker({autoclose: true});
+    com.focusPage('.date-picker').datepicker({autoclose: true});
 
     var displayFunc = (function () {
 
         var renderList = function (tableId, listData) {
-            var $tableWrap = $('#' + tableId).empty();
+            var $tableWrap = com.focusPage('#' + tableId).empty();
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if (listData && listData.length) {
@@ -48,7 +48,7 @@ jQuery(function ($) {
             var propertyArr = [
                 ["创建人:", v.createrName, "grey"],
                 ["返工时间:", v.createTime, "green "],
-                ["返工说明:", v.reworkDes, "grey"],
+                ["返工说明:", v.reworkDes, "grey"]
             ];
 
             $.each(propertyArr, function (index, value) {
@@ -82,7 +82,7 @@ jQuery(function ($) {
 
         return {
             init: function (tableId, listData) {
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             },
             drawLine: function (v) {
@@ -109,7 +109,7 @@ jQuery(function ($) {
         return [$addb, $adda];
     });
 
-    $('a[name="add"]', '#pagenation').click(function () {
+    com.focusPage('a[name="add"]', '#pagenation').click(function () {
         rework.editFlag = false;
 
         com.cleanItems(rework.reworkItems);
@@ -117,7 +117,7 @@ jQuery(function ($) {
         rework.modal.modal("show");
     });
 
-    $('a[name="back"]', '#pagenation').click(function () {
+    com.focusPage('a[name="back"]', '#pagenation').click(function () {
         com.switchPage(api.index.supervisionIndex.url);
     });
 

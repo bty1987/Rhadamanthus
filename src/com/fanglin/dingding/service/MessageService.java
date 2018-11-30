@@ -1,6 +1,12 @@
 
 package com.fanglin.dingding.service;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +26,7 @@ import com.fanglin.information.po.MessagePO;
 import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.FormatUtil;
+import com.fanglin.utils.HttpUtil;
 import com.fanglin.utils.LogUtils;
 
 @Service("messageDDService")
@@ -85,9 +92,41 @@ public class MessageService {
 		
 		SystemConfigPO isv = systemConfigDao.querySystemConfig("isv");
 		
-		String url = String.format(WXApi.WXAPI_SEND_MESSAGE_PAYMENT_STR, isv.getValue(), type, orderId, name, String.valueOf(money), comment);
+		String url = String.format(WXApi.WXAPI_SEND_MESSAGE_PAYMENT_STR, isv.getValue());
 		
-		JSONObject json = HttpHelper.httpGet(url);
+		List<BasicNameValuePair> param = new ArrayList<BasicNameValuePair>(); 
+		
+        param.add(new BasicNameValuePair("payment.type", String.valueOf(type)));
+        param.add(new BasicNameValuePair("payment.no", orderId));
+        param.add(new BasicNameValuePair("payment.name", name));
+        param.add(new BasicNameValuePair("payment.money", String.valueOf(money)));
+        param.add(new BasicNameValuePair("payment.comment", comment));
+		
+		JSONObject json = HttpUtil.httpPost(url, param);
+		
+		if(json == null || json.getInteger("errorCode") == null || json.getInteger("errorCode") != 0){
+			System.out.println(url);
+			System.out.println(String.format("%d-%s", json.getInteger("errorCode"), json.getString("errorMsg")));
+		}
+		
+		return 0;
+	}
+	
+	public int sendMessage(String unionId, String name, String orderId, String content){
+		
+		SystemConfigPO isv = systemConfigDao.querySystemConfig("isv");
+		
+		String url = String.format(WXApi.WXAPI_SEND_MESSAGE_SERVICE_SCHEDULE_STR, isv.getValue());
+		
+		List<BasicNameValuePair> param = new ArrayList<BasicNameValuePair>(); 
+		
+		param.add(new BasicNameValuePair("serviceSchedule.unionId", unionId));
+        param.add(new BasicNameValuePair("serviceSchedule.name", name));
+        param.add(new BasicNameValuePair("serviceSchedule.orderId", orderId));
+        param.add(new BasicNameValuePair("serviceSchedule.content", content));
+        param.add(new BasicNameValuePair("serviceSchedule.time", new SimpleDateFormat("yyyy-MM-dd").format(new Date())));
+		
+		JSONObject json = HttpUtil.httpPost(url, param);
 		
 		if(json == null || json.getInteger("errorCode") == null || json.getInteger("errorCode") != 0){
 			System.out.println(url);

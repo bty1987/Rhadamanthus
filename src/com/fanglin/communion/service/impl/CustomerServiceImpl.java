@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -119,13 +120,13 @@ public class CustomerServiceImpl implements CustomerService {
 	
 		if(!customerPhones.isEmpty()){
 			
-			StringBuffer phones = new StringBuffer("#");
-		
-			for(CustomerPhonePO customerphone : customerPhones){
-				phones.append(String.format("#%s", customerphone.getPhone()));
+			List<String> phones = new ArrayList<String>();
+			
+			for (CustomerPhonePO customerphone : customerPhones) {
+				phones.add(customerphone.getPhone());
 			}
 			
-			customerVO.setPhone(phones.toString());
+			customerVO.setPhone(StringUtils.join(phones, ","));
 	    }
 	
 		return customerVO;

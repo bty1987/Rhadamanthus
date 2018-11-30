@@ -1,6 +1,6 @@
 $(function () {
 
-    var $popUp = $('#viewPopUp');
+    var $popUp = com.focusPage('#viewPopUp');
 
     var sid = $popUp.attr('data-sid');
 
@@ -10,7 +10,7 @@ $(function () {
 
         var renderList = function (tableId, listData) {
 
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if (listData && listData.length) {
@@ -19,16 +19,16 @@ $(function () {
                     var $liLine = $('<li></li>').addClass('item-orange clearfix');
                     var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
                     var $h3 = $('<h3></h3>').addClass('oid');
-                    var $small = $('<small></small>').addClass('blue')//.html(v.sales.orderId);
+                    var $small = $('<small></small>').addClass('blue');//.html(v.sales.orderId);
                     var $btnDiv = $('<div></div>').addClass('pull-right action-buttons');
 
                     var $btnSalesItem = $('<a></a>').addClass(' btn btn-minier btn-yellow').html('出库单详情');
-                    var $iicon = $('<i></i>').addClass('icon-chevron-down').appendTo($btnSalesItem)
+                    var $iicon = $('<i></i>').addClass('icon-chevron-down').appendTo($btnSalesItem);
 
-                    var $manifestItems = $('<div></div>').attr('data-mid', v.mid).addClass('page-content').hide()
-                    var $manifestItemsrow = $('<div></div>').addClass('row').appendTo($manifestItems)
-                    var $manifestItemscol = $('<div></div>').addClass('col-xs-12').appendTo($manifestItemsrow)
-                    var $manifestItemsid = $('<div id="resultListManifestItem' + v.mid + '"></div>').addClass('clearfix tab-pane active').appendTo($manifestItemscol)
+                    var $manifestItems = $('<div></div>').attr('data-mid', v.mid).addClass('page-content').hide();
+                    var $manifestItemsrow = $('<div></div>').addClass('row').appendTo($manifestItems);
+                    var $manifestItemscol = $('<div></div>').addClass('col-xs-12').appendTo($manifestItemsrow);
+                    var $manifestItemsid = $('<div id="resultListManifestItem' + v.mid + '"></div>').addClass('clearfix tab-pane active').appendTo($manifestItemscol);
 
                     var propertyArr = [
                         ["货单号:", v.code, "grey"],
@@ -44,7 +44,7 @@ $(function () {
                     $btnSalesItem.click(function () {
 
                         if ($manifestItems.hasClass('open')) {
-                            $manifestItems.removeClass('open').hide()
+                            $manifestItems.removeClass('open').hide();
                         } else {
 
                             if ($manifestItemsid.html() == "") {
@@ -52,7 +52,7 @@ $(function () {
 
                                     var renderListManifestItem = function (tableId, listData) {
 
-                                        var $tableWrapManifestItem = $('#' + tableId);
+                                        var $tableWrapManifestItem = com.focusPage('#' + tableId);
                                         var $ulManifestItem = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
                                         if (listData && listData.length) {
@@ -95,7 +95,7 @@ $(function () {
 
                                     return {
                                         init: function (tableId, listData) {
-                                            $('#' + tableId).html(null);
+                                            com.focusPage('#' + tableId).html(null);
                                             renderListManifestItem(tableId, listData);
                                         }
                                     };
@@ -107,16 +107,16 @@ $(function () {
                                     "manifest.mid": v.mid
                                 }, function (res) {
 
-                                    displayFuncManifestItem.init('resultListManifestItem' + v.mid, res.manifestItems)
-                                })
+                                    displayFuncManifestItem.init('resultListManifestItem' + v.mid, res.manifestItems);
+                                });
                             }
 
                             $manifestItems.addClass('open').show();
                         }
 
-                    })
+                    });
 
-                    $btnDiv.append($btnSalesItem).appendTo($h3)
+                    $btnDiv.append($btnSalesItem).appendTo($h3);
                     $liLine.appendTo($ul);
                     $manifestItems.appendTo($ul);
                     $liLine.append($h3).append($ulProperty);
@@ -131,7 +131,7 @@ $(function () {
 
         return {
             init: function (tableId, listData) {
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             }
         };
@@ -148,14 +148,14 @@ $(function () {
             displayFuncSalesManifest.init('resultListSalesManifest', res.manifests);
         }
 
-    }, null, false)
+    }, null, false);
 
 
     var displayFuncSalesPurchase = (function () {
 
         var renderList = function (tableId, listData) {
 
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if (listData && listData.length) {
@@ -164,16 +164,16 @@ $(function () {
                     var $liLine = $('<li></li>').addClass('item-orange clearfix');
                     var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
                     var $h3 = $('<h3></h3>').addClass('oid');
-                    var $small = $('<small></small>').addClass('blue')//.html(v.sales.orderId);
+                    var $small = $('<small></small>').addClass('blue');//.html(v.sales.orderId);
                     var $btnDiv = $('<div></div>').addClass('pull-right action-buttons');
 
                     var $btnSalesItem = $('<a></a>').addClass(' btn btn-minier btn-yellow').html('采购单详情');
-                    var $iicon = $('<i></i>').addClass('icon-chevron-down').appendTo($btnSalesItem)
+                    var $iicon = $('<i></i>').addClass('icon-chevron-down').appendTo($btnSalesItem);
 
-                    var $purchaseItems = $('<div></div>').attr('data-pid', v.pid).addClass('page-content').hide()
-                    var $purchaseItemsrow = $('<div></div>').addClass('row').appendTo($purchaseItems)
-                    var $purchaseItemscol = $('<div></div>').addClass('col-xs-12').appendTo($purchaseItemsrow)
-                    var $purchaseItempid = $('<div id="resultListPurchaseItem' + v.pid + '"></div>').addClass('clearfix tab-pane active').appendTo($purchaseItemscol)
+                    var $purchaseItems = $('<div></div>').attr('data-pid', v.pid).addClass('page-content').hide();
+                    var $purchaseItemsrow = $('<div></div>').addClass('row').appendTo($purchaseItems);
+                    var $purchaseItemscol = $('<div></div>').addClass('col-xs-12').appendTo($purchaseItemsrow);
+                    var $purchaseItempid = $('<div id="resultListPurchaseItem' + v.pid + '"></div>').addClass('clearfix tab-pane active').appendTo($purchaseItemscol);
 
                     var propertyArr = [
                         ["采购单号:", v.no, "grey"],
@@ -189,7 +189,7 @@ $(function () {
                     $btnSalesItem.click(function () {
 
                         if ($purchaseItems.hasClass('open')) {
-                            $purchaseItems.removeClass('open').hide()
+                            $purchaseItems.removeClass('open').hide();
                         } else {
 
                             if ($purchaseItempid.html() == "") {
@@ -197,7 +197,7 @@ $(function () {
 
                                     var renderListPurchaseItem = function (tableId, listData) {
 
-                                        var $tableWrapPurchaseItem = $('#' + tableId);
+                                        var $tableWrapPurchaseItem = com.focusPage('#' + tableId);
                                         var $ulPurchaseItem = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
                                         if (listData && listData.length) {
@@ -239,7 +239,7 @@ $(function () {
 
                                     return {
                                         init: function (tableId, listData) {
-                                            $('#' + tableId).html(null);
+                                            com.focusPage('#' + tableId).html(null);
                                             renderListPurchaseItem(tableId, listData);
                                         }
                                     };
@@ -250,15 +250,14 @@ $(function () {
                                 com.post(api.inventory.queryPurchaseItemByPid, {
                                     "purchase.pid": v.pid
                                 }, function (res) {
-                                    displayFuncPurchaseItem.init('resultListPurchaseItem' + v.pid, res.purchaseItems)
-                                })
+                                    displayFuncPurchaseItem.init('resultListPurchaseItem' + v.pid, res.purchaseItems);
+                                });
                             }
 
                             $purchaseItems.addClass('open').show();
                         }
 
-                    })
-
+                    });
 
                     $btnDiv.append($btnSalesItem).appendTo($h3);
                     $liLine.appendTo($ul);
@@ -272,18 +271,15 @@ $(function () {
 
                 $ul.appendTo($tableWrap);
 
-
             }
         };
-
 
         return {
             init: function (tableId, listData) {
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             }
         };
-
 
     })();
 
@@ -296,13 +292,13 @@ $(function () {
             displayFuncSalesPurchase.init('resultListSalesPurchase', res.purchases);
         }
 
-    }, null, false)
+    }, null, false);
 
     var displayFuncPurchaseManifest = (function () {
 
         var renderList = function (tableId, listData) {
 
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if (listData && listData.length) {
@@ -311,16 +307,16 @@ $(function () {
                     var $liLine = $('<li></li>').addClass('item-orange clearfix');
                     var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
                     var $h3 = $('<h3></h3>').addClass('oid');
-                    var $small = $('<small></small>').addClass('blue')//.html(v.purchase.no);
+                    var $small = $('<small></small>').addClass('blue');//.html(v.purchase.no);
                     var $btnDiv = $('<div></div>').addClass('pull-right action-buttons');
 
                     var $btnSalesItem = $('<a></a>').addClass(' btn btn-minier btn-yellow').html('采购货单详情');
                     var $iicon = $('<i></i>').addClass('icon-chevron-down').appendTo($btnSalesItem)
 
-                    var $purchaseManifestItems = $('<div></div>').attr('data-mid', v.mid).addClass('page-content').hide()
-                    var $purchaseManifestItemsrow = $('<div></div>').addClass('row').appendTo($purchaseManifestItems)
-                    var $purchaseManifestItemscol = $('<div></div>').addClass('col-xs-12').appendTo($purchaseManifestItemsrow)
-                    var $purchaseManifestItemmid = $('<div id="resultListPurchaseManifestItem' + v.mid + '"></div>').addClass('clearfix tab-pane active').appendTo($purchaseManifestItemscol)
+                    var $purchaseManifestItems = $('<div></div>').attr('data-mid', v.mid).addClass('page-content').hide();
+                    var $purchaseManifestItemsrow = $('<div></div>').addClass('row').appendTo($purchaseManifestItems);
+                    var $purchaseManifestItemscol = $('<div></div>').addClass('col-xs-12').appendTo($purchaseManifestItemsrow);
+                    var $purchaseManifestItemmid = $('<div id="resultListPurchaseManifestItem' + v.mid + '"></div>').addClass('clearfix tab-pane active').appendTo($purchaseManifestItemscol);
 
                     var propertyArr = [
                         ["货单号:", v.code, "grey"],
@@ -336,7 +332,7 @@ $(function () {
                     $btnSalesItem.click(function () {
 
                         if ($purchaseManifestItems.hasClass('open')) {
-                            $purchaseManifestItems.removeClass('open').hide()
+                            $purchaseManifestItems.removeClass('open').hide();
                         } else {
 
                             if ($purchaseManifestItemmid.html() == "") {
@@ -344,7 +340,7 @@ $(function () {
 
                                     var renderListPurchaseManifestItem = function (tableId, listData) {
 
-                                        var $tableWrapPurchaseManifestItem = $('#' + tableId);
+                                        var $tableWrapPurchaseManifestItem = com.focusPage('#' + tableId);
                                         var $ulPurchaseManifestItem = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
                                         if (listData && listData.length) {
@@ -387,7 +383,7 @@ $(function () {
 
                                     return {
                                         init: function (tableId, listData) {
-                                            $('#' + tableId).html(null);
+                                            com.focusPage('#' + tableId).html(null);
                                             renderListPurchaseManifestItem(tableId, listData);
                                         }
                                     };
@@ -398,14 +394,14 @@ $(function () {
                                 com.post(api.inventory.queryManifestItemByMid, {
                                     "manifest.mid": v.mid
                                 }, function (res) {
-                                    displayFuncPurchaseManifestItem.init('resultListPurchaseManifestItem' + v.mid, res.manifestItems)
-                                })
+                                    displayFuncPurchaseManifestItem.init('resultListPurchaseManifestItem' + v.mid, res.manifestItems);
+                                });
                             }
 
                             $purchaseManifestItems.addClass('open').show();
                         }
 
-                    })
+                    });
 
                     $btnDiv.append($btnSalesItem).appendTo($h3);
                     $liLine.appendTo($ul);
@@ -424,7 +420,7 @@ $(function () {
 
         return {
             init: function (tableId, listData) {
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             }
         };
@@ -439,14 +435,13 @@ $(function () {
             displayFuncPurchaseManifest.init('resultListPurchaseManifest', res.manifests);
         }
 
-    }, null, false)
+    }, null, false);
 
     function emptyData(id) {
-        var $resultList = $('#' + id).html('');
+        var $resultList = com.focusPage('#' + id).html('');
         var $zone = $('<div></div>').addClass('dropzone dz-clickable').css('margin', '20px').css('border', '0px').appendTo($resultList);
         var $mesg = $('<div></div>').addClass('dz-default dz-message').appendTo($zone);
         var $span = $('<span></span>').text('无可用数据提供').appendTo($mesg);
     }
 
-
-})
+});

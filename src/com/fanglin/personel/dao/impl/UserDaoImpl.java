@@ -156,8 +156,8 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 					query.add(query.getCriterion("userId", filter));
 				} else if ("roleId".equals(field)) {
 					query.add(Restrictions.eq("role.rid", Integer.valueOf(filter.getData())));
-				} else if ("deptId".equals(field)) {
-					query.add(query.getCriterion("dept.deptId", filter));
+				} else if ("no".equals(field)) {
+					query.add(query.getCriterion("dept.no", filter));
 				} else if ("status".equals(field)) {
 					query.add(Restrictions.eq("status", Short.valueOf(filter.getData())));
 				} else if ("duty.name".equals(field)) {

@@ -71,8 +71,8 @@ public class AuditServiceImpl implements AuditService{
 			
 			BeanUtil.copyPropertie(designer, auditVO.getDecoration().getDesigner(), Arrays.asList("duty","dept"));
 			BeanUtil.copyPropertie(designer.getDuty(), auditVO.getDecoration().getDesigner().getDuty(), Arrays.asList("departmentType"));
-			BeanUtil.copyPropertie(designer.getDept(), auditVO.getDecoration().getDesigner().getDept(), Arrays.asList("type","fatherDept","cityProper"));
-			BeanUtil.copyPropertie(designer.getDept().getFatherDept(), auditVO.getDecoration().getDesigner().getDept().getFatherDept(), Arrays.asList("type","fatherDept","cityProper"));		
+			BeanUtil.copyPropertie(designer.getDept(), auditVO.getDecoration().getDesigner().getDept(), Arrays.asList("type", "fatherDept", "manager"));
+			BeanUtil.copyPropertie(designer.getDept().getFatherDept(), auditVO.getDecoration().getDesigner().getDept().getFatherDept(), Arrays.asList("type", "fatherDept", "manager"));		
 			
 			AuditVOs.add(auditVO);
 		}

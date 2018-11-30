@@ -5,21 +5,21 @@ $(function(){
 
     var materialOrderPostBalance = {
         //厂商结算值点击保存
-        vsaveBtn: $("#vsaveBtn").on("click", updateMaterialSubOrderBalanceForVBalance),
+        vsaveBtn: com.focusPage("#vsaveBtn").on("click", updateMaterialSubOrderBalanceForVBalance),
         //结算值点击保存
-        saveBtn: $("#saveBtn").on("click", updateMaterialSubOrderBalanceForBalance),
-        smodal: $('#smodal').on("show.bs.modal", function(a) {
+        saveBtn: com.focusPage("#saveBtn").on("click", updateMaterialSubOrderBalanceForBalance),
+        smodal: com.focusPage('#smodal').on("show.bs.modal", function(a) {
             com.clearValidator();
-            $('#vbalance').val(null);
-            $('#vbalancets_total').val(materialOrderPostBalance.total);
+            com.focusPage('#vbalance').val(null);
+            com.focusPage('#vbalancets_total').val(materialOrderPostBalance.total);
         }).on("hide.bs.modal", function(a) {
             materialOrderPostBalance.msobId = null;
-            $('#balance').val(null);
+            com.focusPage('#balance').val(null);
         }),
-        modal: $('#modal').on("show.bs.modal", function(a) {
+        modal: com.focusPage('#modal').on("show.bs.modal", function(a) {
             com.clearValidator();
-            $('#balance_prebalance').val(materialOrderPostBalance.preTotal);
-            $('#balance_vbalance').val(materialOrderPostBalance.vbalance);
+            com.focusPage('#balance_prebalance').val(materialOrderPostBalance.preTotal);
+            com.focusPage('#balance_vbalance').val(materialOrderPostBalance.vbalance);
         }).on("hide.bs.modal", function(a) {
             materialOrderPostBalance.msobId = null;
         }),
@@ -36,7 +36,7 @@ $(function(){
     var displayFunc  = (function(){
 
         var renderList = function(tableId,listData){
-            var $tableWrap = $('#' + tableId);//取到画table的div
+            var $tableWrap = com.focusPage('#' + tableId);//取到画table的div
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if(listData && listData.length){
@@ -76,8 +76,8 @@ $(function(){
                 //增加业务员字段
                 ["业务员：",v.material.salesman.currentName ? v.material.salesman.currentName : '---',"grey"],
                 //新增业务部门和业务大区
-                ["归属大区: ",v.material.region.deptName ? v.material.region.deptName : '---',"grey"],
-                ["归属部门：",v.material.department.deptName ? v.material.department.deptName :'---',"grey"],
+                ["归属大区: ",v.material.region.name ? v.material.region.name : '---',"grey"],
+                ["归属部门：",v.material.department.name ? v.material.department.name :'---',"grey"],
                 //增加总价字段
                 ["总价：",v.total,"blue"],
                 //过度数据
@@ -198,13 +198,13 @@ $(function(){
 
         return {
             init : function(tableId,listData){
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
             },
             drawLine : function(v){
                 return creatLine(v);
             }
-        }
+        };
     })();
    //侯骅峰4.7增加品牌，预结算时间，厂商结算时间，结算时间，楼盘地址查询字段(?添加业务员)
     var _condArr = ['orderId','msoNo','material_brand', 'material_orderAddr','regionName','departmentName','balanceStatus', 'balanceType' ,'fullCollectTimeRange', 'preBalanceTimeRange','vbalanceTimeRange','postBalanceTimeRange'];
@@ -234,7 +234,7 @@ $(function(){
                 //ID用于后台获得该订单实体
                 "materialBalance.mbid": materialOrderPostBalance.msobId,
                 //用于后台修改厂商结算值
-                "materialBalance.vbalance": $('#vbalance').val()
+                "materialBalance.vbalance": com.focusPage('#vbalance').val()
             };
             //调用后台方法
             com.post(api.material.updateMaterialBalanceForVBalance, _params, function(a) {
@@ -254,7 +254,7 @@ $(function(){
             var _params = {
                 //同理 后台传入json
                 "materialBalance.mbid": materialOrderPostBalance.msobId,
-                "materialBalance.balance": $('#balance').val()
+                "materialBalance.balance": com.focusPage('#balance').val()
             };
             com.post(api.material.updateMaterialBalanceForBalance, _params, function(a) {
                 setTimeout(function(){
@@ -300,15 +300,16 @@ $(function(){
     //导出功能
     function exportation(){
 
-        if($('span[name="totalRecords"]').text() == 0){
+        if(com.focusPage('span[name="totalRecords"]').text() == 0){
             com.showAlert(com.warning, "请通过条件进行查询");
             return false;
         }
-        if($('span[name="totalRecords"]').text() > 2000){
+        if(com.focusPage('span[name="totalRecords"]').text() > 2000){
             com.showAlert(com.warning, "查询结果大于阀值 , 不能完成导出动作");
             return false;
         }
-        com.post(api.material.pageMaterialBalance, $.extend({},params.materialOrderPostBalancePostData,{"paging.noPage": 1}), function (res){
+        var materialOrderPostBalancePostData=params.materialOrderPostBalancePostData;
+        com.post(api.material.pageMaterialBalance, $.extend({},materialOrderPostBalancePostData,{"paging.noPage": 1}), function (res){
             $.exceler({
                 column:[
 					["主材单号","material.no"],
@@ -317,8 +318,8 @@ $(function(){
 					["品牌","material.brand"],
 					["编号","material.salesman.userId"],
 					["业务员","material.salesman.currentName"],
-					["大区","material.region.deptName"],
-					["部门","material.department.deptName"],
+					["大区","material.region.name"],
+					["部门","material.department.name"],
 					["总价","total"],
 					["子订单总价","material.total"],
 					["券值","material.coupon"],
@@ -340,7 +341,7 @@ $(function(){
                 list: res.paging.data,
             }, function(v){
 				v.status = v.status== 0 ? '预结算': v.status== 1 ? '厂商结算' : v.status== 2 ? '结算' : '---';
-				v.type = v.type == 0 ? '购货' : v.type == 1 ? '预结算退货' : '结算退货'
+				v.type = v.type == 0 ? '购货' : v.type == 1 ? '预结算退货' : '结算退货';
 			});
         });
     }

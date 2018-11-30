@@ -1,8 +1,8 @@
 $(function(){
 
-    var $uploadBtn = $("#uploadBtn");
-    var $back = $("#backBtn");
-    var $layerImport = $("#layerProductionImport");
+    var $uploadBtn = com.focusPage("#uploadBtn");
+    var $back = com.focusPage("#backBtn");
+    var $layerImport = com.focusPage("#layerProductionImport");
 
     var $pid = params["pid"];
     var $status = params["status"];
@@ -33,7 +33,7 @@ $(function(){
 
     function createLine(data){
 
-        var $tableWrap = $('#resultList').find("#uploadCAD");
+        var $tableWrap = com.focusPage('#resultList').find("#uploadCAD");
 
         $.each(data.productionPictures,function(i,v){
 
@@ -74,16 +74,16 @@ $(function(){
             $("#importProductionPicture").addClass("hide")
         }
 
-        $('#importProductionPicture').empty();
+        com.focusPage('#importProductionPicture').empty();
         openlayerImportProduction();
 
-        $("#importProductionPicture").click(function(){
+        com.focusPage("#importProductionPicture").click(function(){
             if(com.validate("layerProductionImport",null)){
                 return false;
             }
         });
 
-        $("#importProductionPicture").Huploadify({
+        com.focusPage("#importProductionPicture").Huploadify({
             'debug': false, // 开启调试
             'auto': true, // 是否自动上传
             'successTimeout': 99999, // 超时时间
@@ -124,7 +124,7 @@ $(function(){
 
             },
             end: function () {
-                $("#uploadCAD").empty();
+                com.focusPage("#uploadCAD").empty();
                 createPage();
             }
         });

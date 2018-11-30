@@ -8,7 +8,7 @@ $(function () {
      * 回调函数必须提供 init(tableId, result.list)方法 tableId ，用来显示的div的id result.list
      * 列表的json数组
      */
-    var goodsPricePopUp = $('#goodsPricePopUp')
+    var goodsPricePopUp = com.focusPage('#goodsPricePopUp');
 
     var validator = {
         num: {
@@ -29,7 +29,7 @@ $(function () {
     var displayFunc = (function () {
 
         var renderList = function (tableId, listData) {
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
 
             if (listData && listData.length) {
 
@@ -134,7 +134,7 @@ $(function () {
 
         return {
             init: function (tableId, listData) {
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
 
             },
@@ -154,13 +154,14 @@ $(function () {
 
     doSearcher();
 
-    $('.layui-layer-content').css('overflow', 'hidden');
-    $('#showPrice').css('height', '560px');
-    $('#resultListPrice').css({
+    com.focusPage('.layui-layer-content').css('overflow', 'hidden');
+    com.focusPage('#showPrice').css('height', '560px');
+    com.focusPage('#resultListPrice').css({
         'width': '96%',
         'margin': '0 auto',
         'height': '560px',
-        'marigin-top': '20px'
+        'marigin-top': '20px',
+        'overflow-y': 'scroll'
     })
 
 });

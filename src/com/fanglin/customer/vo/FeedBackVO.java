@@ -1,8 +1,10 @@
 package com.fanglin.customer.vo;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 import org.apache.struts2.json.annotations.JSON;
+
 
 public class FeedBackVO implements Serializable{
 
@@ -14,7 +16,7 @@ public class FeedBackVO implements Serializable{
 	
 	private String content;
 	
-	private Long createTime;
+	private Timestamp createTime;
 	
 	private Short type;
 	
@@ -44,15 +46,6 @@ public class FeedBackVO implements Serializable{
 		this.content = content;
 	}
 
-	@JSON(format="yyyy-MM-hh HH:mm:ss")
-	public Long getCreateTime() {
-		return createTime;
-	}
-
-	public void setCreateTime(Long createTime) {
-		this.createTime = createTime;
-	}
-
 	public Short getType() {
 		return type;
 	}
@@ -68,5 +61,15 @@ public class FeedBackVO implements Serializable{
 	public void setPicture(String picture) {
 		this.picture = picture;
 	}
+	
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
+	public Timestamp getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Timestamp createTime) {
+		this.createTime = createTime;
+	}
+	
 	
 }

@@ -39,6 +39,8 @@ public interface QuotationService {
 	
 	public int replicaQuotation(QuotationVO quotationVO, String userId, int company) throws FLException;
 	
+	public int cloneQuotation(QuotationVO quotationVO,String no, String userId, int company) throws FLException;
+	
 	public int copyQuotation(QuotationVO quotationVO, String userId, int company) throws FLException;
 	
 	public int deleteQuotationById(QuotationVO quotationVO) throws FLException;

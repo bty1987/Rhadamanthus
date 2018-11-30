@@ -9,6 +9,8 @@ public interface DecorationDao extends Dao<DecorationPO>{
 	
 	public List<DecorationPO> queryCusDecoration(String unionId);
 	
+	public List<DecorationPO> queryCusDecorationByOrderId(String orderId);
+	
 	public DecorationPO queryCusDecorationByOrderId(String orderId,String unionId);
 	
 	public DecorationPO queryCusDecorationForDefault(String unionId);

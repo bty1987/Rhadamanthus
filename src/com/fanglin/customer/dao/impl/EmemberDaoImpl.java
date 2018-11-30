@@ -34,6 +34,11 @@ public class EmemberDaoImpl extends DaoImpl<EmemberPO> implements EmemberDao{
 		return (EmemberPO) createCriteria(EmemberPO.class).add(Restrictions.eq(EmemberPO.COLUMN_UNIONID_STR, unionId)).uniqueResult();
 	}
 	
+	@Override
+	public EmemberPO queryEmemberByNo(String no) {
+		return (EmemberPO) createCriteria(EmemberPO.class).add(Restrictions.eq(EmemberPO.COLUMN_NO_STR, no)).uniqueResult();
+	}
+	
 	
 	private void queryFilterExcute(PagingQuery<EmemberPO> query,List<Filter> filters) {
 		if(filters != null && filters.size() > 0){
@@ -51,4 +56,5 @@ public class EmemberDaoImpl extends DaoImpl<EmemberPO> implements EmemberDao{
 			}
 		}
 	}
+
 }

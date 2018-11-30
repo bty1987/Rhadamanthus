@@ -49,7 +49,6 @@ function printProjectTable(){
 	contentHtml += '</tbody></table>';
 	
 	var quotationFunctionAreas = quotationUtils.quotationDetail.quotationFunctionAreaItemCs;
-
 	
 	contentHtml += '<table style="font-size: 12px" width="100%" bgcolor="#000000" border="1" cellpadding="1" cellspacing="0">';
 	contentHtml += '<tbody>';
@@ -73,13 +72,13 @@ function printProjectTable(){
 			contentHtml += '<td width="18%" align="left">' + qv.itemName+"("+qv.typestr+")" + '</td>';
 			contentHtml += '<td width="5%" align="center">' + qv.measurementUnit + '</td>';
 			contentHtml += '<td width="5%" align="center">' + qv.num + '</td>';
-			contentHtml += '<td width="5%" align="center">' + qv.dcp + '</td>';
-			contentHtml += '<td width="5%" align="center"> ' + qv.dcpt + '</td>';
+			contentHtml += '<td width="5%" align="center">' + qv.unitPrice + '</td>';
+			contentHtml += '<td width="5%" align="center"> ' + (utils.accMul(qv.unitPrice,qv.num)) + '</td>';
 			contentHtml += '<td width="52%" align="left">' + (qv.content ? qv.content : '-') + '</td>';
 			contentHtml += '</tr>';
-		})
+		});
 		index++;
-	})
+	});
 	
 	contentHtml += '<tr bgcolor="#FFFFFF">';
 	contentHtml += '<td colspan="11" align="left">工程总价:' + quotationUtils.quotationDetail.UndisPrice + '元</td>';
@@ -164,7 +163,7 @@ function printFinanceTable(){
 
 			preDiscountPrice = preDiscountPrice + qv.quotationTotalPrice;
 
-		})
+		});
 
 		contentHtml += '<tr align="center" bgcolor="#FFFFFF">';
 		contentHtml += '<td>&nbsp;</td>';
@@ -179,7 +178,7 @@ function printFinanceTable(){
 		contentHtml += '</tr>';
 		contentHtml += '';
 		index++;
-	})
+	});
 
 
 	contentHtml += '<tr bgcolor="#FFFFFF">';
@@ -191,24 +190,42 @@ function printFinanceTable(){
 	return contentHtml;
 }
 
-function printCustomerTable(subtype,companyfullname){
+function printCustomerTable(subtype,companyfullname,orderType){
 	var index = 0;
 	var contentHtml = '';
-	
-	contentHtml += '<table style="font-size: 12px" width="100%" bgcolor="#000000" border="1" cellpadding="0" cellspacing="0">';
-	contentHtml += '<tbody>';
-	contentHtml += '<tr align="center" bgcolor="#FFFFFF">';
-	contentHtml += '<td width="4%"><strong>序号</strong></td>';
-	contentHtml += '<td width="18%"><strong>项目名称</strong></td>';
-	contentHtml += '<td width="4%"><strong>计量单位</strong></td>';
-	contentHtml += '<td width="3%"><strong>数量</strong></td>';
-	contentHtml += '<td width="72%"><strong>工艺做法及材料说明</strong></td>';
-	contentHtml += '</tr>';
+
+    contentHtml += '<table style="font-size: 12px" width="100%" bgcolor="#000000" border="1" cellpadding="0" cellspacing="0">';
+    contentHtml += '<tbody>';
+
+    if(orderType == 1){
+        contentHtml += '<tr bgcolor="#FFFFFF">';
+        contentHtml += '<td width="4%" align="center">序号</td>';
+        contentHtml += '<td width="18%" align="center">项目名称</td>';
+        contentHtml += '<td width="4%" align="center">计量单位</td>';
+        contentHtml += '<td width="3%" align="center">数量</td>';
+        contentHtml += '<td width="5%" align="center">单价</td>';
+        contentHtml += '<td width="5%" align="center">合价</td>';
+        contentHtml += '<td width="62%" align="center">工艺做法及材料说明</td>';
+        contentHtml += '</tr>';
+        contentHtml += '</tbody></table>';
+        contentHtml += '<table style="font-size: 12px" width="100%" bgcolor="#000000" border="1" cellpadding="1" cellspacing="0">';
+        contentHtml += '<tbody>';
+    }else{
+        contentHtml += '<tr align="center" bgcolor="#FFFFFF">';
+        contentHtml += '<td width="4%"><strong>序号</strong></td>';
+        contentHtml += '<td width="18%"><strong>项目名称</strong></td>';
+        contentHtml += '<td width="4%"><strong>计量单位</strong></td>';
+        contentHtml += '<td width="3%"><strong>数量</strong></td>';
+        contentHtml += '<td width="72%"><strong>工艺做法及材料说明</strong></td>';
+        contentHtml += '</tr>';
+	}
 
 	var quotationFunctionAreas = quotationUtils.quotationDetail.quotationFunctionAreaItemCs;
 
 	$.each(quotationFunctionAreas, function (i, v){
-		var _index = 1;
+
+        var _index = 1;
+
 		contentHtml += '<tr bgcolor="#CCCCCC">';
 		contentHtml += '<td colspan="1">';
 		contentHtml += '<div align="center">' + utils.getBigNumber(index+1) + '</div></td>';
@@ -222,17 +239,31 @@ function printCustomerTable(subtype,companyfullname){
 			if(!subtype || subtype > 0 &&  qv.subtype!=subtype){
 				return true;
 			}
-			contentHtml += '<tr align="center" bgcolor="#FFFFFF">';
-			contentHtml += '<td>' + (_index++) + '</td>';
-			contentHtml += '<td align="left">' + qv.itemName + '</td>';
-			contentHtml += '<td>项</td>';
-			contentHtml += '<td>1</td>';
-			contentHtml += '<td align="left">' + (qv.content ? qv.content : "-") + '</td>';
-			contentHtml += '</tr>';
-		})
+
+			if(orderType == 1){
+                contentHtml += '<tr bgcolor="#FFFFFF">';
+                contentHtml += '<td width="4%" align="center">' + (j+1) + '</td>';
+                contentHtml += '<td width="18%" align="left">' + qv.itemName + '</td>';
+                contentHtml += '<td width="4%" align="center">' + (qv.type == 4 ? "项" : qv.measurementUnit) + '</td>';
+                contentHtml += '<td width="3%" align="center">' + (qv.type==4 ? 1 : qv.num) + '</td>';
+                contentHtml += '<td width="5%" align="center">' + qv.dcp + '</td>';
+                contentHtml += '<td width="5%" align="center">' + qv.dcpt + '</td>';
+                contentHtml += '<td width="62%" align="left">' + (qv.content ? qv.content : "-") + '</td>';
+			}else{
+                contentHtml += '<tr align="center" bgcolor="#FFFFFF">';
+                contentHtml += '<td>' + (_index++) + '</td>';
+                contentHtml += '<td align="left">' + qv.itemName + '</td>';
+                contentHtml += '<td>项</td>';
+                contentHtml += '<td>1</td>';
+                contentHtml += '<td align="left">' + (qv.content ? qv.content : "-") + '</td>';
+			}
+
+            contentHtml += '</tr>';
+		});
 		index++;
 		
-	})
+	});
+
 	contentHtml += '</tbody>';
 	contentHtml += '</table>';
 	
@@ -356,9 +387,9 @@ function printWorkTable(workType){
 			contentHtml += '<td width="10%" align="left"></td>';
 			contentHtml += '</tr>';
 			itemIndex++;
-		})
+		});
 		index++;
-	})
+	});
 
 	contentHtml += '</tbody>';
 	contentHtml += '</table>';
@@ -452,7 +483,7 @@ jQuery(function($) {
 //	url = api.addReduce.queryAddReduceForPayedByOrderId;
 	
 	var addReduceIds = {};
-
+	var db = 1;
 	com.post(url, {'addReduce.orderId': params.decorationOrderId}, function(res){
 		$.each(res.addReduces, function(i, v){
 			addReduceIds['addReduceIds[' + i + ']'] = v.arId;
@@ -463,19 +494,25 @@ jQuery(function($) {
 		quotationUtils.quotationDetail.addReduceItems = res.addReduceItems;
 	}, null, false);
 
+    com.post(api.decoration.queryDecorationHolonomy, {
+        "decorationHolonomy.decoration.orderId": params.decorationOrderId
+	}, function(res){
+        db = res.decorationHolonomy.discountBase == null || res.decorationHolonomy.discountBase == "" || res.decorationHolonomy.discountBase == undefined ? 1 : res.decorationHolonomy.discountBase;
+    }, null, false);
+
 	quotationUtils.statisticalQuotationItem(quotationUtils.quotationDetail.quotationFunctionAreas,quotationUtils.quotationDetail.addReduceItems,quotationUtils.quotationDetail.extensions);
 
 	quotationUtils.initQuotationDetailItem(quotationUtils.quotationDetail.quotation,quotationUtils.quotationDetail.quotationFunctionAreas,quotationUtils.quotationDetail.addReduceItems,quotationUtils.quotationDetail.extensions,params.orderType,false);
 
-	quotationUtils.quotationDetail.UndisPrice = quotationUtils.quotationCalculator(quotationUtils.quotationDetail.quotation.discount,params.orderType);
+	quotationUtils.quotationDetail.UndisPrice = quotationUtils.quotationCalculator(quotationUtils.quotationDetail.quotation.discount,params.orderType,db);
 
 	quotationUtils.quotationDetail.TotalPrice = quotationUtils.quotationTotal();
 
-	generatePrintPage(params.type, params.subtype,params.workType, params.company.name, params.company.fullname);
+	generatePrintPage(params.type, params.subtype,params.workType, params.company.name, params.company.fullname,params.orderType);
 
 });
 
-function generatePrintPage(type,subtype,workType, company,companyfullname){
+function generatePrintPage(type,subtype,workType, company,companyfullname,orderType){
 	var html = "";
 
 	if(type == '1'){
@@ -486,7 +523,7 @@ function generatePrintPage(type,subtype,workType, company,companyfullname){
 		html += printFinanceTable();
 	}else if(type == '3'){
 		html += printHeader(company + "家装项目单");
-		html += printCustomerTable(subtype,companyfullname);
+		html += printCustomerTable(subtype,companyfullname,orderType);
 	}else if(type == "4"){
 		html += printHeader(company + "工种项目单");
 		html += printWorkTable(workType);
@@ -494,4 +531,6 @@ function generatePrintPage(type,subtype,workType, company,companyfullname){
 	                                                                                                                                                                                                       
 	$("#quotationList").html(html);
 }
+
+
 

@@ -45,29 +45,6 @@ public class StorehouseUserServiceImpl implements StorehouseUserService {
 	private UserDao userDao;
 
 	@Override
-	public List<StorehouseUserVO> queryStorehouseUserByUId(UserBaseVO userVO) {
-		
-		List<StorehouseUserPO> storehouseUserPOs = storehouseUserDao.queryStorehouseUserByUId(userVO.getUid());
-		List<StorehouseUserVO> storehouseUserVOs = new ArrayList<StorehouseUserVO>();
-		
-		StorehouseUserVO storehouseUserVO;
-		
-		for(StorehouseUserPO storehouseUserPO: storehouseUserPOs){
-			
-			storehouseUserVO = new StorehouseUserVO(new UserBaseVO(), new StorehouseVO());
-			
-			storehouseUserVO.setShuId(storehouseUserPO.getShuId());
-			storehouseUserVO.getUser().setBaseInfo(storehouseUserPO.getUser());
-			
-			BeanUtil.copyProperties(storehouseUserPO.getStorehouse(), storehouseUserVO.getStorehouse());
-			
-			storehouseUserVOs.add(storehouseUserVO);
-		}
-		
-		return storehouseUserVOs;
-	}
-
-	@Override
 	public List<StorehouseUserVO> queryStorehouseUserByUserId(UserBaseVO userVO) {
 
 		List<StorehouseUserPO> storehouseUserPOs = storehouseUserDao.queryStorehouseUserByUserId(userVO.getUserId());

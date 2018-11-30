@@ -17,8 +17,8 @@ jQuery(function($) {
 		editFlag: false,
 	};
 	
-	materialSubOrderAdd.saveBtn = $("#saveBtn");
-	materialSubOrderAdd.cancelBtn = $("#cancelBtn");
+	materialSubOrderAdd.saveBtn = com.focusPage("#saveBtn");
+	materialSubOrderAdd.cancelBtn = com.focusPage("#cancelBtn");
 	
 	materialSubOrderAddPostData["material.mid"] = materialSubOrderPostData["materialSubOrder.msoId"];
 	materialSubOrderAddPostData["material.brand"] = materialSubOrderPostData["materialSubOrder.materialBrand"];
@@ -37,20 +37,20 @@ jQuery(function($) {
 		
 		var materialSubOrder = res.material;
 		
-		materialSubOrderAdd.materialSubOrderAddItems.msoNo = $("#msoNo").val(materialSubOrder.no);
-		materialSubOrderAdd.materialSubOrderAddItems.designerName = $("#designerName").val(materialSubOrder.region.deptName);
-		materialSubOrderAdd.materialSubOrderAddItems.customerName = $("#customerName").val(materialSubOrder.customer.name);
-		materialSubOrderAdd.materialSubOrderAddItems.salesmanName = $("#salesmanName").val(materialSubOrder.salesman.currentName);
-		materialSubOrderAdd.materialSubOrderAddItems.instoreId = $("#materialerName").val(materialSubOrder.materialer.currentName);
-		materialSubOrderAdd.materialSubOrderAddItems.instoreId = $("#instoreName").val(materialSubOrder.instorer.currentName);
-		materialSubOrderAdd.materialSubOrderAddItems.orderAddr = $("#orderAddr").val(materialSubOrder.house.village.name + " " + materialSubOrder.house.houseNumber);
-		materialSubOrderAdd.materialSubOrderAddItems.msoType = $("#msoType").val(materialSubOrderAdd.materialType[materialSubOrder.type]);
-		materialSubOrderAdd.materialSubOrderAddItems.des = $("#des").val(materialSubOrder.comment);
+		materialSubOrderAdd.materialSubOrderAddItems.msoNo = com.focusPage("#msoNo").val(materialSubOrder.no);
+		materialSubOrderAdd.materialSubOrderAddItems.designerName = com.focusPage("#designerName").val(materialSubOrder.region.name);
+		materialSubOrderAdd.materialSubOrderAddItems.customerName = com.focusPage("#customerName").val(materialSubOrder.customer.name);
+		materialSubOrderAdd.materialSubOrderAddItems.salesmanName = com.focusPage("#salesmanName").val(materialSubOrder.salesman.currentName);
+		materialSubOrderAdd.materialSubOrderAddItems.instoreId = com.focusPage("#materialerName").val(materialSubOrder.materialer.currentName);
+		materialSubOrderAdd.materialSubOrderAddItems.instoreId = com.focusPage("#instoreName").val(materialSubOrder.instorer.currentName);
+		materialSubOrderAdd.materialSubOrderAddItems.orderAddr = com.focusPage("#orderAddr").val(materialSubOrder.house.village.name + " " + materialSubOrder.house.houseNumber);
+		materialSubOrderAdd.materialSubOrderAddItems.msoType = com.focusPage("#msoType").val(materialSubOrderAdd.materialType[materialSubOrder.type]);
+		materialSubOrderAdd.materialSubOrderAddItems.des = com.focusPage("#des").val(materialSubOrder.comment);
 		
-		materialSubOrderAdd.materialSubOrderAddItems.materialOrderBrand = $("#materialOrderBrand").text(materialSubOrderPostData["materialSubOrder.materialBrand"]);
+		materialSubOrderAdd.materialSubOrderAddItems.materialOrderBrand = com.focusPage("#materialOrderBrand").text(materialSubOrderPostData["materialSubOrder.materialBrand"]);
 		
-		materialSubOrderAdd.materialSubOrderAddItems.originalTotal = $("#originalTotalSpan").text(materialSubOrder.total);
-		materialSubOrderAdd.materialSubOrderAddItems.total = $("#totalSpan").text(materialSubOrder.total);
+		materialSubOrderAdd.materialSubOrderAddItems.originalTotal = com.focusPage("#originalTotalSpan").text(materialSubOrder.total);
+		materialSubOrderAdd.materialSubOrderAddItems.total = com.focusPage("#totalSpan").text(materialSubOrder.total);
 		
 		materialSubOrderAdd.totalSum = parseFloat(materialSubOrder.total);
 		
@@ -163,7 +163,7 @@ jQuery(function($) {
 		$line.append($indexWrap).append($lineInfoWrap).append($optWrap);
 
 		$line.click(function(){
-			$('.current').removeClass('current');
+			com.focusPage('.current').removeClass('current');
 			$(this).addClass('current');
 		});
 
@@ -187,12 +187,12 @@ jQuery(function($) {
 	addline(1).addClass('current').appendTo('#list');
 	addline(2).addClass('current').appendTo('#list');
 	
-	$('#addSubOrderItem').click(function(){
+	com.focusPage('#addSubOrderItem').click(function(){
 		
-		var num = $('.line', '#list').length;
+		var num = com.focusPage('.line', '#list').length;
 
 		var returnFlag = false;
-		var $lines = $('.line', '#list');
+		var $lines = com.focusPage('.line', '#list');
 		$lines.each(function(){
 			var $this = $(this);
 			if(!checkRowValue($this)){
@@ -208,7 +208,7 @@ jQuery(function($) {
 		$line.appendTo('#list');
 	});
 
-	$('#submitSubOrderItem').bindClick(addmaterialitem);
+	com.focusPage('#submitSubOrderItem').bindClick(addmaterialitem);
 
 	function addmaterialitem(){
 		
@@ -223,7 +223,7 @@ jQuery(function($) {
 		if(com.validate() || salesmanNameFlag)
 			return false;
 		
-		var $lines = $('li.selected', '#list');
+		var $lines = com.focusPage('li.selected', '#list');
 		if(!$lines.length){
 			com.showAlert(com.warning, '请添加型号进行提交');
 			return false;
@@ -250,7 +250,7 @@ jQuery(function($) {
 		
 		var msoId = materialSubOrderAddPostData.material.mid;
 		
-		var $list = $('li.selected', '#list');
+		var $list = com.focusPage('li.selected', '#list');
 		$list.length && $list.each(function(i){
 			var $this = $(this);
 
@@ -291,7 +291,7 @@ jQuery(function($) {
 			return false;
 		}
 		
-		var btn = $('#submitSubOrderItem');
+		var btn = com.focusPage('#submitSubOrderItem');
 		btn.button('loading');
 		
 		if(i > 0){
@@ -312,7 +312,7 @@ jQuery(function($) {
 		}
 	};
 	
-	$("#backBtn").on("click", function(){
+	com.focusPage("#backBtn").on("click", function(){
 		params.orderId = materialSubOrderAddPostData.material.orderId;
 		params.customerId = materialSubOrderAddPostData.material.customer.cid;
 		params.customerName = materialSubOrderAddPostData.material.customer.name;
@@ -537,7 +537,7 @@ jQuery(function($) {
 
 		var _total = 0;
 
-		var $list = $('.line', '#list');
+		var $list = com.focusPage('.line', '#list');
 		$list.length && $list.each(function(){
 			var $this = $(this);
 			if($this.find('.total input').val()){
@@ -545,14 +545,14 @@ jQuery(function($) {
 			}
 		});
 
-		$("#totalSpan").text(utils.accAdd(materialSubOrderAdd.totalSum, _total));
+		com.focusPage("#totalSpan").text(utils.accAdd(materialSubOrderAdd.totalSum, _total));
 	}
 	
 	function reorder(){
-		var $list = $('.line', '#list');
+		var $list = com.focusPage('.line', '#list');
 		$list.length && $list.each(function(i){
 			var $this = $(this);
-			$this.find('.index').text(i + 1)
+			$this.find('.index').text(i + 1);
 		});
 	}
 	

@@ -12,7 +12,7 @@ public class DecorationPaymentVO implements Serializable {
 	private String orderId;
 
 	private Float referMoney;
-
+	
 	private Timestamp collectTime;
 
 	private Float coupon;

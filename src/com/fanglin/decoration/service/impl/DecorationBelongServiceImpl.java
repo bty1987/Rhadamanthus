@@ -55,11 +55,11 @@ public class DecorationBelongServiceImpl implements DecorationBelongService {
 			}
 			
 			orderBelongInfoVO.setDepartment(new DepartmentVO());
-			BeanUtil.copyProperties(orderBelongInfoPO.getDepartment(), orderBelongInfoVO.getDepartment(), Arrays.asList("type", "fatherDept", "cityProper"));
+			BeanUtil.copyProperties(orderBelongInfoPO.getDepartment(), orderBelongInfoVO.getDepartment(), Arrays.asList("type", "fatherDept", "manager"));
 			
 			orderBelongInfoVO.setRegion(new DepartmentVO());
 			if(orderBelongInfoPO.getBelonger() != null){
-				BeanUtil.copyProperties(orderBelongInfoPO.getRegion(), orderBelongInfoVO.getRegion(), Arrays.asList("type", "fatherDept", "cityProper"));
+				BeanUtil.copyProperties(orderBelongInfoPO.getRegion(), orderBelongInfoVO.getRegion(), Arrays.asList("type", "fatherDept", "manager"));
 			}else{
 				BeanUtil.copyProperties("", orderBelongInfoVO.getRegion());
 			}
@@ -105,11 +105,11 @@ public class DecorationBelongServiceImpl implements DecorationBelongService {
 			}
 			
 			orderBelongInfoVO.setDepartment(new DepartmentVO());
-			BeanUtil.copyProperties(orderBelongInfoPO.getDepartment(), orderBelongInfoVO.getDepartment(), Arrays.asList("type", "fatherDept", "cityProper"));
+			BeanUtil.copyProperties(orderBelongInfoPO.getDepartment(), orderBelongInfoVO.getDepartment(), Arrays.asList("type", "fatherDept", "manager"));
 			
 			orderBelongInfoVO.setRegion(new DepartmentVO());
 			if(orderBelongInfoPO.getRegion() != null){
-				BeanUtil.copyProperties(orderBelongInfoPO.getRegion(), orderBelongInfoVO.getRegion(), Arrays.asList("type", "fatherDept", "cityProper"));
+				BeanUtil.copyProperties(orderBelongInfoPO.getRegion(), orderBelongInfoVO.getRegion(), Arrays.asList("type", "fatherDept", "manager"));
 			}else{
 				BeanUtil.copyProperties("", orderBelongInfoVO.getRegion());
 			}
@@ -144,11 +144,11 @@ public class DecorationBelongServiceImpl implements DecorationBelongService {
 			}
 			
 			_orderBelongInfoVO.setDepartment(new DepartmentVO());
-			BeanUtil.copyProperties(orderBelongInfoPO.getDepartment(), _orderBelongInfoVO.getDepartment(), Arrays.asList("type", "fatherDept", "cityProper"));
+			BeanUtil.copyProperties(orderBelongInfoPO.getDepartment(), _orderBelongInfoVO.getDepartment(), Arrays.asList("type", "fatherDept", "manager"));
 			
 			_orderBelongInfoVO.setRegion(new DepartmentVO());
 			if(orderBelongInfoPO.getRegion() != null){
-				BeanUtil.copyProperties(orderBelongInfoPO.getRegion(), _orderBelongInfoVO.getRegion(), Arrays.asList("type", "fatherDept", "cityProper"));
+				BeanUtil.copyProperties(orderBelongInfoPO.getRegion(), _orderBelongInfoVO.getRegion(), Arrays.asList("type", "fatherDept", "manager"));
 			}else{
 				BeanUtil.copyProperties("", _orderBelongInfoVO.getRegion());
 			}

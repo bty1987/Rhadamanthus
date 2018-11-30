@@ -1,10 +1,10 @@
 $(function () {
 
-    var $workshopName = $('#workshopName');
+    var $workshopName = com.focusPage('#workshopName');
     var displayFunc = (function () {
 
         var renderList = function (tableId, listData) {
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
 
             if (listData && listData.length) {
 
@@ -136,7 +136,7 @@ $(function () {
 
         return {
             init: function (tableId, listData) {
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             },
             drawLine: function (v) {
@@ -180,7 +180,7 @@ $(function () {
             type: 1,
             skin: 'layui-layer-lan',
             title: layerType,
-            content: $('#layerAdd'),
+            content: com.focusPage('#layerAdd'),
             area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
             maxmin: false,
             zIndex: 9000,
@@ -238,7 +238,7 @@ $(function () {
     }
 
     function queryWorkplan(id) {
-        var $popup = $('#viewPopUp');
+        var $popup = com.focusPage('#viewPopUp');
         $popup.attr('data-wsid', id);
         layer.closeAll();
         layer.open({
@@ -262,5 +262,4 @@ $(function () {
             }
         });
     }
-
 });

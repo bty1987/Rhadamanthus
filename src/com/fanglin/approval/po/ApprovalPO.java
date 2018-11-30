@@ -49,6 +49,8 @@ public class ApprovalPO implements java.io.Serializable {
 	public static final short APPROVAL_STATUS_APPROVAL_INT = 1;
 
 	public static final short APPROVAL_STATUS_REFUSE_INT = 2;
+	
+	public static final short APPROVAL_STATUS_DINGDING_INT = 3;
 
 	public static final String COLUMN_TYPE_STR = "type";
 
@@ -61,6 +63,8 @@ public class ApprovalPO implements java.io.Serializable {
 	public static final String COLUMN_CREATETIME_STR = "createTime";
 
 	public static final String COLUMN_APPROVALTIME_STR = "approvalTime";
+	
+	public static final String COLUMN_PROCESSINSTANCEID_STR = "processinstanceid";
 
 	public static final String APPROVAL_CONTENTS_CUSTOMER_STR = "客户名:%s,修改为客户名:%s,新增电话:%s";
 
@@ -85,6 +89,32 @@ public class ApprovalPO implements java.io.Serializable {
 	public static final String APPROVAL_CONTENTS_MANIFESTDB_STR = "";
 	
 	public static final String APPROVAL_CONTENTS_SALES_DISCOUNT_STR ="订单号:%s,销售单号:%s,应收金额:%s";
+	
+	public static final String APPROVAL_SYSTEMCONFIG_DECORATIONACTIVITY_STR = "decorationActivity"; //活动归属
+	
+	public static final String APPROVAL_SYSTEMCONFIG_DECORATIONBELONG_STR = "decorationBelong"; //装修单归属
+	
+	public static final String APPROVAL_SYSTEMCONFIG_CUSTOMER_STR = "customer"; //客户信息
+	
+	public static final String APPROVAL_SYSTEMCONFIG_DECORATIONHOUSE_STR = "decorationHouse"; //楼盘信息
+	
+	public static final String APPROVAL_SYSTEMCONFIG_DECORATIONREFUND_STR = "decorationRefund"; //装修退款
+	
+	public static final String APPROVAL_SYSTEMCONFIG_MANIFESTDB_STR = "manifestDB"; //调拨
+	
+	public static final String APPROVAL_SYSTEMCONFIG_MATERIALDISCOUNT_STR = "materialDiscount"; //主材补款
+	
+	public static final String APPROVAL_SYSTEMCONFIG_MATERIALREFUND_STR = "materialRefund"; //主材退款
+	
+	public static final String APPROVAL_SYSTEMCONFIG_QUOTATIONDISCOUNT_STR = "quotationDiscount"; //报价折扣
+	
+	public static final String APPROVAL_SYSTEMCONFIG_SALESDISCOUNT_STR = "salesDiscount"; //销售补款
+	
+	public static final String APPROVAL_SYSTEMCONFIG_SALESREFUND_STR = "salesRefund"; //销售退款
+	
+	public static final String APPROVAL_SYSTEMCONFIG_INCREASE_OR_DECREASE_STR = "increaseOrDecrease";//增减项
+	
+	public static final String APPROVAL_SYSTEMCONFIG_RESIGNATION_STR = "resignation";//人员离职
 
 	private long aid;
 
@@ -107,6 +137,8 @@ public class ApprovalPO implements java.io.Serializable {
 	private String comment;
 	
 	private int company;
+	
+	private String processinstanceid;
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -209,6 +241,14 @@ public class ApprovalPO implements java.io.Serializable {
 	public void setCompany(int company) {
 		this.company = company;
 	}
+	
+	@Column(name = "processinstanceid")
+	public String getProcessinstanceid() {
+		return processinstanceid;
+	}
 
+	public void setProcessinstanceid(String processinstanceid) {
+		this.processinstanceid = processinstanceid;
+	}
 	
 }

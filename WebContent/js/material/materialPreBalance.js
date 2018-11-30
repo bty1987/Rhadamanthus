@@ -12,36 +12,36 @@ var materialOrderPreBalance = {
 var materialOrderPreBalancePostData = {};
 
 jQuery(function($) {
-	$('#fl-statement').statement("主材子订单", "订单信息列表");
+	com.focusPage('#fl-statement').statement("主材子订单", "订单信息列表");
 	
-	//materialOrderPreBalance.saveBtn = $("#saveBtn").on("click", saveData);
-	materialOrderPreBalance.saveMalingBtn = $("#saveMalingBtn").on("click", saveMalingData);
-	materialOrderPreBalance.cancelBtn = $("#cancelBtn");
-	materialOrderPreBalance.modal = $("#materialOrderPreBalanceCalModal").on('show.bs.modal',function(e){
+	//materialOrderPreBalance.saveBtn = com.focusPage("#saveBtn").on("click", saveData);
+	materialOrderPreBalance.saveMalingBtn = com.focusPage("#saveMalingBtn").on("click", saveMalingData);
+	materialOrderPreBalance.cancelBtn = com.focusPage("#cancelBtn");
+	materialOrderPreBalance.modal = com.focusPage("#materialOrderPreBalanceCalModal").on('show.bs.modal',function(e){
 		com.clearValidator("#value", true);
 		com.clearValidator();
 	});
-	materialOrderPreBalance.malingModal = $("#materialOrderMalingModal").on('show.bs.modal',function(e){
+	materialOrderPreBalance.malingModal = com.focusPage("#materialOrderMalingModal").on('show.bs.modal',function(e){
 		com.clearValidator("#venderMaling", true);
 		com.clearValidator();
 	});
 	
-	materialOrderPreBalance.materialOrderPreBalanceItems.oldPoint = $("#oldPoint");
-	materialOrderPreBalance.materialOrderPreBalanceItems.oldBase = $("#oldBase");
-	materialOrderPreBalance.materialOrderPreBalanceItems.caclType = $("#caclType");
-	materialOrderPreBalance.materialOrderPreBalanceItems.value = $("#value");
+	materialOrderPreBalance.materialOrderPreBalanceItems.oldPoint = com.focusPage("#oldPoint");
+	materialOrderPreBalance.materialOrderPreBalanceItems.oldBase = com.focusPage("#oldBase");
+	materialOrderPreBalance.materialOrderPreBalanceItems.caclType = com.focusPage("#caclType");
+	materialOrderPreBalance.materialOrderPreBalanceItems.value = com.focusPage("#value");
 	
-	materialOrderPreBalance.materialOrderPreBalanceItems.malingTotal = $("#malingTotal");
-	materialOrderPreBalance.materialOrderPreBalanceItems.oldMaling = $("#oldMaling");
-	materialOrderPreBalance.materialOrderPreBalanceItems.oldVenderMaling = $("#oldVenderMaling");
-	materialOrderPreBalance.materialOrderPreBalanceItems.venderMaling = $("#venderMaling");
+	materialOrderPreBalance.materialOrderPreBalanceItems.malingTotal = com.focusPage("#malingTotal");
+	materialOrderPreBalance.materialOrderPreBalanceItems.oldMaling = com.focusPage("#oldMaling");
+	materialOrderPreBalance.materialOrderPreBalanceItems.oldVenderMaling = com.focusPage("#oldVenderMaling");
+	materialOrderPreBalance.materialOrderPreBalanceItems.venderMaling = com.focusPage("#venderMaling");
 	
 	materialOrderPreBalance.materialOrderPreBalanceItems.caclType.bindData(materialOrderPreBalance.caclTypeData, "id", "name");
 	
 	var displayFunc  = (function(){
 
 		var renderList = function(tableId,listData){
-			var $tableWrap = $('#' + tableId);
+			var $tableWrap = com.focusPage('#' + tableId);
 			var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
 			if(listData && listData.length){
@@ -118,10 +118,10 @@ jQuery(function($) {
 		
 		return {
 			init : function(tableId,listData){
-				$('#' + tableId).html(null);
+				com.focusPage('#' + tableId).html(null);
 				renderList(tableId,listData);
 			}
-		}
+		};
 	})();
 	
 	var searcher = new Searcher();
@@ -148,7 +148,7 @@ jQuery(function($) {
 	//点预结算
 	function preBalance(){
 		//复选框选中的对象
-        var $inputs = $('input[name="msoIds"]:checked');
+        var $inputs = com.focusPage('input[name="msoIds"]:checked');
         if($inputs.length>0){
             var btn = $(this);
             var span = btn.find('span');
@@ -182,7 +182,8 @@ jQuery(function($) {
                         btn.find('i').remove();
                         var prepared = $('<i></i>').addClass('icon-ok bigger-110');
                         span.prepend(prepared);
-                    });
+						com.showAlert(com.warning,"存在未处理审批信息");
+				});
                 }else{
                     btn.find('i').remove();
                     var prepared = $('<i></i>').addClass('icon-ok bigger-110');
@@ -195,7 +196,7 @@ jQuery(function($) {
 	}
 	//点完结  后台将订单状态更改为完结
 	function passBalance(){
-		var $inputs = $('input[name="msoIds"]:checked');
+		var $inputs = com.focusPage('input[name="msoIds"]:checked');
 		if($inputs.length>0){
             var btn = $(this);
             var span = btn.find('span');
@@ -235,7 +236,7 @@ jQuery(function($) {
 	function viewMaterialOrderBalanceDetailIndex(mid){
 		materialOrderPreBalancePostData["materialOrderPreBalance.msoId"] = mid;
 		//ajax
-		$("#materialOrderPreBalancePageContent").load(api.index.materialPreBalanceDetailIndex.url);
+		com.focusPage("#materialOrderPreBalancePageContent").load(api.index.materialPreBalanceDetailIndex.url);
 	}
 	//点结算值按钮
 	function dialogMaterialOrderPreBalanceBacl(v){

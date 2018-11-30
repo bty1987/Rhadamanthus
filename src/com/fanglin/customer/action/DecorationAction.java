@@ -11,7 +11,11 @@ import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.customer.service.DecorationActivityService;
+import com.fanglin.customer.service.DecorationHolonomyService;
 import com.fanglin.customer.service.DecorationService;
+import com.fanglin.customer.vo.DecorationActivityVO;
+import com.fanglin.customer.vo.DecorationHolonomyVO;
 import com.fanglin.customer.vo.DecorationVO;
 
 @ParentPackage("common")
@@ -23,6 +27,16 @@ public class DecorationAction extends BaseListAction{
 	
 	@Autowired
 	private DecorationService decorationOrderService;
+	
+	@Autowired
+	private DecorationActivityService decorationActivityService;
+	
+	@Autowired
+	private DecorationHolonomyService decorationHolonomyService;
+	
+	private DecorationActivityVO decorationActivity;
+	
+	private DecorationHolonomyVO decorationHolonomy;
 
 	private List<DecorationVO> decorations;
 	
@@ -55,7 +69,7 @@ public class DecorationAction extends BaseListAction{
 	@Action(value = "queryCusDecorationUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryCusDecorationUser() throws FLException{
 		
-		decorationOrderService.queryCusDecorationUser(getPaging(),getFilters(),decoration,unionId);
+		decorationOrderService.queryCusDecorationUser(getPaging(),getFilters(),decoration);
 		
 		return SUCCESS;
 	}
@@ -64,6 +78,22 @@ public class DecorationAction extends BaseListAction{
 	public String queryCusDecorationForDefault() throws FLException{
 		
 		decoration = decorationOrderService.queryCusDecorationForDefault(unionId);
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "queryCusDecorationActivity", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryCusDecorationActivity() throws FLException{
+		
+		decorationActivity = decorationActivityService.queryCusDecorationActivity(decorationActivity);
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "queryCusDecorationHolonomy", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryCusDecorationHolonomy() throws FLException{
+		
+		decorationHolonomy = decorationHolonomyService.queryCusDecorationHolonomy(decorationHolonomy);
 		
 		return SUCCESS;
 	}
@@ -130,6 +160,22 @@ public class DecorationAction extends BaseListAction{
 
 	public void setDecorationObject(Object decorationObject) {
 		this.decorationObject = decorationObject;
+	}
+
+	public DecorationActivityVO getDecorationActivity() {
+		return decorationActivity;
+	}
+
+	public void setDecorationActivity(DecorationActivityVO decorationActivity) {
+		this.decorationActivity = decorationActivity;
+	}
+
+	public DecorationHolonomyVO getDecorationHolonomy() {
+		return decorationHolonomy;
+	}
+
+	public void setDecorationHolonomy(DecorationHolonomyVO decorationHolonomy) {
+		this.decorationHolonomy = decorationHolonomy;
 	}
 
 }

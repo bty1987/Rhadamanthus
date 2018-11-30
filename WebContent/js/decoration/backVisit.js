@@ -11,7 +11,7 @@ $(function(){
         var painter = {
             renderList : function(list){
                 var that = this;
-                var $list = $('#backVisitList');
+                var $list = com.focusPage('#backVisitList');
                 $list.empty();
                 if(list.length){
                     $.each(list, function(i,v){
@@ -59,7 +59,7 @@ $(function(){
                 getList();
 
                 //动态key val
-                var tag_input = $('#form-field-tags');
+                var tag_input = com.focusPage('#form-field-tags');
 
                 tag_input.tag({
                     placeholder:tag_input.attr('placeholder'),
@@ -78,27 +78,27 @@ $(function(){
             getList : function(){
                 getList();
             }
-        }
+        };
     })();
     
     TimeLine.init();
 
     var backVisit = {
-        $saveBtn : $('#saveBtn').on('click', saveData),
-        modal : $("#backVisitModal"),
-        $addBtn : $('#add').click(function(){
+        $saveBtn : com.focusPage('#saveBtn').on('click', saveData),
+        modal : com.focusPage("#backVisitModal"),
+        $addBtn : com.focusPage('#add').click(function(){
             com.clearValidator();
             com.cleanItems(backVisit.backVisitItems);
             backVisit.backVisitItems.backVisitContent.get(0).selectedIndex = 0;
-            backVisit.modal.modal("show")
+            backVisit.modal.modal("show");
         }),
         backVisitItems : {
-            backVisitContent : $('#backVisitContent'),
-            backVisitNoticePeople : $('#form-field-tags')
+            backVisitContent : com.focusPage('#backVisitContent'),
+            backVisitNoticePeople : com.focusPage('#form-field-tags')
         }
     };
 
-    $('#btnBack').click(function(){
+    com.focusPage('#btnBack').click(function(){
         com.switchPage(params.historyPage);
     });
 
@@ -115,12 +115,12 @@ $(function(){
                 }
             });
 
-            com.post(api.decoration.addBackVisit, a, successCallback)
+            com.post(api.decoration.addBackVisit, a, successCallback);
         }
     }
     
     function successCallback(a) {
-        0 == a.errorCode && (com.showAlert(com.info, "\u64cd\u4f5c\u6210\u529f"), TimeLine.getList(), backVisit.modal.modal("hide"))
+        0 == a.errorCode && (com.showAlert(com.info, "\u64cd\u4f5c\u6210\u529f"), TimeLine.getList(), backVisit.modal.modal("hide"));
     }
 
 });

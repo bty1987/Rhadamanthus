@@ -27,20 +27,20 @@ jQuery(function($) {
 		cityList:[],
 	};
 	
-	cityProper.saveBtn = $("#saveBtn").on("click", saveData);
-	cityProper.cancelBtn = $("#cancelBtn");
+	cityProper.saveBtn = com.focusPage("#saveBtn").on("click", saveData);
+	cityProper.cancelBtn = com.focusPage("#cancelBtn");
 	
-	cityProper.items.cityProperId = $("#cityProperId");
-	cityProper.items.cityProperName = $("#cityProperName");
-	cityProper.items.citySel =$("#citySel");
-	cityProper.items.regionSel=$("#regionSel").on("change", function(e, callback){
+	cityProper.items.cityProperId = com.focusPage("#cityProperId");
+	cityProper.items.cityProperName = com.focusPage("#cityProperName");
+	cityProper.items.citySel =com.focusPage("#citySel");
+	cityProper.items.regionSel=com.focusPage("#regionSel").on("change", function(e, callback){
 		com.post(api.system.queryCityByRid, {"city.region.rid":$(this).val()}, function(res){
 			cityProper.items.citySel.bindData(res.citys, "cid", "name", false);
 			if(callback) callback();
 		});
 	});
 	
-	cityProper.modal = $("#cityProperModal");
+	cityProper.modal = com.focusPage("#cityProperModal");
 	cityProper.modal.on('show.bs.modal',function(e){
 		com.clearValidator();
 		com.clearValidator("#cityProperId", true);
@@ -54,7 +54,7 @@ jQuery(function($) {
 	var displayFunc  = (function(){
 
         var renderList = function(tableId,listData){
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if(listData && listData.length){ 
@@ -108,7 +108,7 @@ jQuery(function($) {
       
         return {
             init : function(tableId,listData){
-                $('#' + tableId).html(null);
+				com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
             },
             drawLine : function(v){
@@ -130,7 +130,7 @@ jQuery(function($) {
     	return [$adda];
 	});
 		
-	$('a[name="addCityProper"]', '#pagenation').click(function(){
+	com.focusPage('[name="addCityProper"]', com.focusPage('#pagenation')).click(function(){
 		editFlg = false;
 		
 		com.cleanItems(cityProper.items);

@@ -43,8 +43,8 @@ public class UserCompanyAction extends BaseListAction {
 	@Action(value = "updateUserCompany", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateUserCompany() throws FLException{
       
-		if(SystemConfig.getString("communion") == null){
-		    throw new FLException(-1, "无操作权限");
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
 		}
 		
 		 userCompanyService.updateUserCompany(user,cids);

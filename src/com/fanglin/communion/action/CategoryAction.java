@@ -40,7 +40,7 @@ public class CategoryAction extends BaseListAction {
 	
 	private List<CategoryVO> categorys;
 	
-	private List<Long> cIds;
+	private List<Long> cids;
 	
 	@Action(value="pageCategory", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String pageCategory() throws FLException{
@@ -69,8 +69,8 @@ public class CategoryAction extends BaseListAction {
 	@Action(value="addCategory", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String addCategory() throws FLException{
 		
-		if(SystemConfig.getString("communion") == null){
-		    throw new FLException(-1, "无操作权限");
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
 		}
 		
 		categoryService.addCategory(category);
@@ -81,8 +81,8 @@ public class CategoryAction extends BaseListAction {
 	@Action(value="updateCategory", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String updateCategory() throws FLException{
 		
-		if(SystemConfig.getString("communion") == null){
-		    throw new FLException(-1, "无操作权限");
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
 		}
 		
 		categoryService.updateCategory(category);
@@ -93,7 +93,7 @@ public class CategoryAction extends BaseListAction {
 	@Action(value="deleteCategoryByCIds", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String deleteCategoryByCIds(){
 		
-		categoryService.deleteCategoryByCIds(cIds);
+		categoryService.deleteCategoryByCIds(cids);
 		
 		return SUCCESS;
 	}
@@ -114,12 +114,12 @@ public class CategoryAction extends BaseListAction {
 		this.categorys = categorys;
 	}
 
-	public List<Long> getcIds() {
-		return cIds;
+	public List<Long> getCids() {
+		return cids;
 	}
 
-	public void setcIds(List<Long> cIds) {
-		this.cIds = cIds;
+	public void setCids(List<Long> cids) {
+		this.cids = cids;
 	}
 
 }

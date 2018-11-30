@@ -2,11 +2,11 @@
 jQuery(function($) {
 	var servicePaymentCheck = {};
 
-	$("#servicePaymentHistoryList").removeClass("active");
+	com.focusPage("#servicePaymentHistoryList").removeClass("active");
 
 	var displayFunc  = (function(){
 		var renderList = function(tableId,listData){
-			var $tableWrap = $('#' + tableId);
+			var $tableWrap = com.focusPage('#' + tableId);
 			var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
 			if(listData && listData.length){
@@ -28,8 +28,8 @@ jQuery(function($) {
 				["楼盘地址:", v.decoration.house.village.name + ''+v.decoration.house.houseNumber, "grey"],
 				["客户:", v.decoration.customer.name, "grey"],
 				["设计师:", v.decoration.designer.currentName, "grey"],
-				["设计部:", v.decoration.designer.dept.deptName, "grey"],
-				["应收金额:", v.advanceMoney, "blue"],
+				["设计部:", v.decoration.designer.dept.name, "grey"],
+				["预付款金额:", v.advanceMoney, "blue"],
 				["服务费:", v.serviceMoney, "blue"],
 				["收款人:", v.serviceReceipt.collecter.currentName, "grey"],
 				["收款时间:", v.serviceReceipt.collectTime, "green"],
@@ -62,7 +62,7 @@ jQuery(function($) {
 
 		return {
 			init : function(tableId,listData){
-				$('#' + tableId).html(null);
+				com.focusPage('#' + tableId).html(null);
 				renderList(tableId,listData);
 			},
 			drawLine : function(v){
@@ -115,13 +115,13 @@ jQuery(function($) {
 		return [$adda, $impa];
 	},"resultList");
 
-	$('a[name="import"]', '#pagenation').click(function () {
-		if($('span[name="totalRecords"]').text() == 0){
+	com.focusPage('a[name="import"]', '#pagenation').click(function () {
+		if(com.focusPage('span[name="totalRecords"]').text() == 0){
 			com.showAlert(com.warning, "请通过条件进行查询");
 			return false;
 		}
 
-		if($('span[name="totalRecords"]').text() > 1000){
+		if(com.focusPage('span[name="totalRecords"]').text() > 1000){
 			com.showAlert(com.warning, "查询结果大于阀值 , 不能完成导出动作");
 			return false;
 		}
@@ -133,8 +133,8 @@ jQuery(function($) {
 					['楼盘地址',['decoration.house.village.name', 'decoration.house.houseNumber']],
 					['客户','decoration.customer.name'],
 					['设计师','decoration.designer.currentName'],
-					['设计部','decoration.designer.dept.deptName'],
-					['应收金额', 'advanceMoney'],
+					['设计部','decoration.designer.dept.name'],
+					['预付款金额', 'advanceMoney'],
 					['服务费', 'serviceMoney'],
 					['收款人', 'serviceReceipt.collecter.currentName'],
 					['收款时间', 'serviceReceipt.collectTime'],
@@ -158,7 +158,23 @@ jQuery(function($) {
 
 					v.serviceReceipt.bankInfo = $info;
 				}
-				v.serviceReceipt.checkvBank = v.serviceReceipt.checkv != null && v.serviceReceipt.checkv != "0" ? servicePaymentCheck.checkBankInfo[v.serviceReceipt.checkvBank] : '';
+
+				if(v.serviceReceipt.checkv != null && v.serviceReceipt.checkv != 0){
+					var checkBankInfoStr = v.serviceReceipt.checkvBank;
+					if(checkBankInfoStr.indexOf("#") != -1){
+						var $checkvInfo = ' ';
+						var _c = v.serviceReceipt.checkvBank.split('#');
+						for(var i=1;i<_c.length-1;i++){
+							var _i = _c[i].split('|');
+							$checkvInfo += servicePaymentCheck.checkBankInfo[_i[0]] + " " + _i[1] + ", " + _i[2] + ", ";
+						}
+
+						v.serviceReceipt.checkvBank = $checkvInfo;
+					}else{
+						v.serviceReceipt.checkvBank = v.serviceReceipt.checkv != null && v.serviceReceipt.checkv != "0" ? servicePaymentCheck.checkBankInfo[v.serviceReceipt.checkvBank] : '';
+					}
+				}
+
 				v.serviceReceipt.installBank = v.serviceReceipt.installment != null && v.serviceReceipt.installment != "0" ? servicePaymentCheck.bankInfo[v.serviceReceipt.installBank] : '';
 				v.serviceReceipt.accountsBank = v.serviceReceipt.accounts != null && v.serviceReceipt.accounts != "0" ? servicePaymentCheck.accountsInfo[v.serviceReceipt.accountsBank] : '';
 			});
@@ -168,7 +184,7 @@ jQuery(function($) {
 	//服务款已确认信息查询
 	var hdisplayFunc  = (function(){
 		var renderList = function(tableId,listData){
-			var $tableWrap = $('#' + tableId);
+			var $tableWrap = com.focusPage('#' + tableId);
 			var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
 			if(listData && listData.length){
@@ -192,8 +208,8 @@ jQuery(function($) {
 				["楼盘地址:", v.decoration.house.village.name + ''+v.decoration.house.houseNumber, "grey"],
 				["客户:", v.decoration.customer.name, "grey"],
 				["设计师:", v.decoration.designer.currentName, "grey"],
-				["设计部:", v.decoration.designer.dept.deptName, "grey"],
-				["应收金额:", v.advanceMoney, "blue"],
+				["设计部:", v.decoration.designer.dept.name, "grey"],
+				["预付款金额:", v.advanceMoney, "blue"],
 				["服务费:", v.serviceMoney, "blue"],
 				["收款人:", v.serviceReceipt.collecter.currentName, "grey"],
 				["收款时间:", v.serviceReceipt.collectTime, "green"],
@@ -219,7 +235,7 @@ jQuery(function($) {
 
 		return {
 			init : function(tableId,listData){
-				$('#' + tableId).html(null);
+				com.focusPage('#' + tableId).html(null);
 				renderList(tableId,listData);
 			},
 			drawLine : function(v){
@@ -235,9 +251,9 @@ jQuery(function($) {
 		hdisplayFunc.init('hresultList', data);
 	}, "hpagenation", "servicePaymentForConfirmPostData", null, false, null, function(){}, "hresultList");
 
-	$('a[name="confirms"]', '#pagenation').click(function(){
+	com.focusPage('a[name="confirms"]', '#pagenation').click(function(){
 		var options = {};
-		var $inputs = $('input[name="spids"]:checked');
+		var $inputs = com.focusPage('input[name="spids"]:checked');
 
 		$.each($inputs, function(i, v){
 			options["spIds["+i+"]"] = $(v).attr('spid');
@@ -257,13 +273,13 @@ jQuery(function($) {
 		});
 	});
 
-	$('a[name="import"]', '#pagenation').click(function () {
-		if ($('span[name="totalRecords"]').text() == 0) {
+	com.focusPage('a[name="import"]', '#pagenation').click(function () {
+		if (com.focusPage('span[name="totalRecords"]').text() == 0) {
 			com.showAlert(com.warning, "请通过条件进行查询");
 			return false;
 		}
 
-		if ($('span[name="totalRecords"]').text() > 1000) {
+		if (com.focusPage('span[name="totalRecords"]').text() > 1000) {
 			com.showAlert(com.warning, "查询结果大于阀值 , 不能完成导出动作");
 			return false;
 		}

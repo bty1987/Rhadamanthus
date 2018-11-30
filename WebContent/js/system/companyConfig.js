@@ -9,9 +9,9 @@ jQuery(function ($) {
         "6": false
     };
 
-    $('#fl-statement').statement("配置公司", "当前公司为：" + params.company.name);
+    com.focusPage('#fl-statement').statement("配置公司", "当前公司为:" + params.company.name);
 
-    $('#fuelux-wizard').ace_wizard({"status": true}).on('change', function(e, info) {
+    com.focusPage('#fuelux-wizard').ace_wizard({"status": true}).on('change', function(e, info) {
 
     }).on('stepclick', function(e,info){
 
@@ -60,14 +60,14 @@ jQuery(function ($) {
     var companyConfig = {
         /*  1.  */
         quotationVersion: {
-            saveQuotation: $("#saveQuotationBtn").on("click", saveQuotation),
-            cancelQuotation: $("#cancelQuotationBtn"),
-            modal: $("#quotationVersionModal").on("show.bs.modal", function (e) {
+            saveQuotation: com.focusPage("#saveQuotationBtn").on("click", saveQuotation),
+            cancelQuotation: com.focusPage("#cancelQuotationBtn"),
+            modal: com.focusPage("#quotationVersionModal").on("show.bs.modal", function (e) {
                 com.clearValidator();
                 com.clearValidator("#versionId", true)
             }),
             items: {
-                versionId: $("#versionId").on("blur", function () {
+                versionId: com.focusPage("#versionId").on("blur", function () {
                     $this = $(this);
                     var b = {
                         "quotationVersion.versionId": $this.val()
@@ -76,17 +76,17 @@ jQuery(function ($) {
                         a.quotationVersion && a.quotationVersion.qvId ? (com.showTips($this, "\u8be5\u7248\u672c\u7f16\u53f7\u5df2\u5b58\u5728", !0), companyConfig.quotationVersion.repeatFlg = !0) : (com.clearValidator("#versionId", !0), companyConfig.quotationVersion.repeatFlg = !1)
                     })
                 }),
-                versionName: $("#versionName"),
-                trafficRate: $("#trafficRate"),
-                trafficDiscount : $("#trafficDiscount").switchBtn("discount-lbl").on("click", function(a) {
+                versionName: com.focusPage("#versionName"),
+                trafficRate: com.focusPage("#trafficRate"),
+                trafficDiscount : com.focusPage("#trafficDiscount").switchBtn("discount-lbl").on("click", function(a) {
                     companyConfig.quotationVersion.items.trafficDiscount.value = 0 == companyConfig.quotationVersion.items.trafficDiscount.value ? 1 : 0
                 }),
-                manageRate: $("#manageRate"),
-                manageDiscount : $("#manageDiscount").switchBtn("discount-lbl").on("click", function(a) {
+                manageRate: com.focusPage("#manageRate"),
+                manageDiscount : com.focusPage("#manageDiscount").switchBtn("discount-lbl").on("click", function(a) {
                     companyConfig.quotationVersion.items.manageDiscount.value = 0 == companyConfig.quotationVersion.items.manageDiscount.value ? 1 : 0
                 }),
-                versionDes: $("#versionDes"),
-                defaultFlag : $("#defaultFlag").switchBtn().on("click", function(a) {
+                versionDes: com.focusPage("#versionDes"),
+                defaultFlag : com.focusPage("#defaultFlag").switchBtn().on("click", function(a) {
                     companyConfig.quotationVersion.items.defaultFlag.value = 0 == companyConfig.quotationVersion.items.defaultFlag.value ? 1 : 0
                 })
             },
@@ -102,26 +102,26 @@ jQuery(function ($) {
         },
         /*  3.  */
         paymentScale: {
-            saveBtn: $("#savePaymentScale").on("click", savePaymentScale),
+            saveBtn: com.focusPage("#savePaymentScale").on("click", savePaymentScale),
             cancelBtn: null,
             items: {
                 cid : params.company.cid,
-                names: $("#names"),
-                comment: $("#comment")
+                names: com.focusPage("#names"),
+                comment: com.focusPage("#comment")
             },
             list:[],
             psid:null
         },
         /*  5.  */
         drawLine: {
-            addmodal : $("#drawLineModal"),
+            addmodal : com.focusPage("#drawLineModal"),
             groupadd : {
-                drawLineGroup: $("#drawLineGroup"),
-                contentadd: $("#contentadd"),
-                gid: $("#drawLineGroup").parent()
+                drawLineGroup: com.focusPage("#drawLineGroup"),
+                contentadd: com.focusPage("#contentadd"),
+                gid: com.focusPage("#drawLineGroup").parent()
             },
-            cancelBtn :$("#cancelDrawLineBtn"),
-            savebtn : $("#saveDrawLineBtn").on("click", saveDrawLine),
+            cancelBtn :com.focusPage("#cancelDrawLineBtn"),
+            savebtn : com.focusPage("#saveDrawLineBtn").on("click", saveDrawLine),
             editFlg : false,
             validator: {
                 drawlingroup: {
@@ -133,13 +133,13 @@ jQuery(function ($) {
         },
         /*  6. */
         receiptType: {
-            saveBtn: $("#saveReceiptTypeBtn").on("click", saveReceiptType),
+            saveBtn: com.focusPage("#saveReceiptTypeBtn").on("click", saveReceiptType),
             cancelBtn: null,
-            modal: $("#receiptTypeModal"),
+            modal: com.focusPage("#receiptTypeModal"),
             items: {
-                rtId: $("#rtId"),
-                name: $("#name"),
-                no: $("#no")
+                rtId: com.focusPage("#rtId"),
+                name: com.focusPage("#name"),
+                no: com.focusPage("#no")
             },
             editFlg: false
         }
@@ -151,7 +151,7 @@ jQuery(function ($) {
     var displayFunc = (function () {
 
         var renderTable = function (aimsId, title, listData, typeArr) {
-            var $tableWrap = $('#' + aimsId);
+            var $tableWrap = com.focusPage('#' + aimsId);
             var $table = $('<table class="table table-striped table-bordered table-hover"></table>');
 
             var $thead = $('<thead></thead>').appendTo($table);
@@ -241,7 +241,7 @@ jQuery(function ($) {
 
         return {
             init : function (aimsId, title, listData, typeArr) {
-                $('#' + aimsId).html(null);
+                com.focusPage('#' + aimsId).html(null);
                 renderTable(aimsId, title, listData, typeArr);
             },
             drawLine : function (v) {
@@ -283,23 +283,23 @@ jQuery(function ($) {
     }, null, false);
 
 
-    $('a[name="addQuotationVersion"]').click(function(){
+    com.focusPage('[name="addQuotationVersion"]').click(function(){
         companyConfig.quotationVersion.editFlag = false;
         com.cleanItems(companyConfig.quotationVersion.items);
         companyConfig.quotationVersion.items.versionId.prop("disabled", false);
         companyConfig.quotationVersion.modal.modal("show")
     });
-    $('a[name="addPaymentScale"]').click(function(){
+    com.focusPage('[name="addPaymentScale"]').click(function(){
         com.cleanItems(companyConfig.paymentScale.items);
-        $("#paymentScaleModal").modal("show");
+        com.focusPage("#paymentScaleModal").modal("show");
     });
-    $('a[name="addLineGroup"]').click(function(){
+    com.focusPage('[name="addLineGroup"]').click(function(){
         companyConfig.drawLine.editFlg = true;
         com.cleanItems(companyConfig.drawLine.groupadd);
         companyConfig.drawLine.addmodal.modal("show");
         popoverInitDrawLine();
     });
-    $('a[name="addReceiptType"]').click(function(){
+    com.focusPage('[name="addReceiptType"]').click(function(){
         com.cleanItems(companyConfig.receiptType.items);
         companyConfig.receiptType.editFlg = true;
         companyConfig.receiptType.modal.modal("show")
@@ -340,7 +340,7 @@ jQuery(function ($) {
                 showPaymentScale();
                 //com.switchPage(api.index.PaymentScale.url);
             });
-            $("#paymentScaleModal").modal("hide");
+            com.focusPage("#paymentScaleModal").modal("hide");
         }
     }
     // 5.
@@ -371,18 +371,18 @@ jQuery(function ($) {
 
     }
     function popoverInitDrawLine(){
-        $("[data-toggle='popover']").popover({
+        com.focusPage("[data-toggle='popover']").popover({
             html : true,
             trigger:'blur'
         });
-        $('#drawLineGroup').css('border-color', '');
+        com.focusPage('#drawLineGroup').css('border-color', '');
     }
     //6.
     function saveReceiptType() {
         var options = {
-            "receiptType.name" : $("#name").val(),
-            "receiptType.no" : $("#no").val(),
-            "receiptType.type" : $("#type").val()
+            "receiptType.name" : com.focusPage("#name").val(),
+            "receiptType.no" : com.focusPage("#no").val(),
+            "receiptType.type" : com.focusPage("#type").val()
         };
         if(com.validate("receiptTypeModal")){
             return;
@@ -408,7 +408,7 @@ jQuery(function ($) {
 
     // 生成模态框
     function showModal(modal, cont, btn) {
-        var $modal = $('<div class="modal fade" id="'+ modal[0] +'" tabindex="-1"></div>').appendTo($("#companyConfig")); // 模态框id
+        var $modal = $('<div class="modal fade" id="'+ modal[0] +'" tabindex="-1"></div>').appendTo(com.focusPage("#companyConfig")); // 模态框id
 
         var $modalDialog = $('<div class="modal-dialog"></div>').appendTo($modal);
 

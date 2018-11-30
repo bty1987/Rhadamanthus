@@ -24,7 +24,7 @@ public class MformatServiceImpl implements MformatService {
 	@Override
 	public List<MformatVO> queryMformatByGid(MformatVO mformatVO) {
 
-		List<MformatPO> mformatPOs = mformatDao.queryMformatByGid(mformatVO.getGid(), false);
+		List<MformatPO> mformatPOs = mformatDao.queryMformatByGid(mformatVO.getGid(), mformatVO.getStatus());
 		
 		List<MformatVO> mformatVOs = new ArrayList<MformatVO>();
 
@@ -47,7 +47,7 @@ public class MformatServiceImpl implements MformatService {
 	@Override
 	public List<MformatVO> queryMformat(MformatVO mformatVO) {
 
-		List<MformatPO> mformatPOs = mformatDao.queryMformatByGid(mformatVO.getGid(), true);
+		List<MformatPO> mformatPOs = mformatDao.queryMformatByGid(mformatVO.getGid(), MformatPO.STATUS_ABLE_SHORT);
 		
 		List<MformatVO> mformatVOs = new ArrayList<MformatVO>();
 

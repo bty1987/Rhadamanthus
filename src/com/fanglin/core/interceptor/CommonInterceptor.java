@@ -1,11 +1,18 @@
 package com.fanglin.core.interceptor;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.struts2.StrutsStatics;
 import org.hibernate.exception.LockAcquisitionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fanglin.core.security.AESHelper;
+import com.fanglin.core.vo.Authentication;
 import com.fanglin.utils.LogUtils;
+import com.fanglin.utils.SystemConfig;
 import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 
@@ -18,11 +25,30 @@ public class CommonInterceptor extends AbstractInterceptor {
 	@Override
 	public String intercept(ActionInvocation invocation) throws Exception {
 		
+		ActionContext ctx = invocation.getInvocationContext();
+		HttpServletRequest request = (HttpServletRequest) ctx.get(StrutsStatics.HTTP_REQUEST);
+		
 		String actionName = invocation.getProxy().getActionName();
 		
 		try {
 			
 			LogUtils.logging(logger, "common", actionName, 0);
+			
+			String $authentication = request.getParameter("authentication");
+			
+			String encryptKey = SystemConfig.getString("encryptKey");
+			
+			String decryptString = AESHelper.decryptString($authentication, encryptKey);
+			
+			if(decryptString == null || "".equals(decryptString)){
+				throw new FLException(-2, "无操作权限");
+			}
+			
+			Authentication authentication = new Authentication(decryptString);
+			
+			if(authentication.getUserId() == null && !"fanglincommon".equals(decryptString)){
+				throw new FLException(-2, "无操作权限");
+			}
 			
 			invocation.invoke();
 		}catch (LockAcquisitionException e) {
@@ -33,7 +59,7 @@ public class CommonInterceptor extends AbstractInterceptor {
 			invocation.getStack().setValue("errorMsg", e.getErrorMessage());
 		}catch (Exception e) {
 			invocation.getStack().setValue("errorCode", "110000");
-			invocation.getStack().setValue("errorMsg", "系统问题");
+			invocation.getStack().setValue("errorMsg", "操作失败,请稍后重试");
 			
 			LogUtils.logging(logger, e, actionName, "common");
 		}

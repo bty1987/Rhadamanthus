@@ -107,6 +107,38 @@ public class CompanyServiceImpl implements CompanyService{
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
+	public int createCompany(CompanyVO companyVO, String securityCode, String verifyCode) throws FLException {
+		
+		try {
+			String code = AESHelper.decryptString(securityCode, SystemConfig.getString("encryptKey"));
+			
+			if(code == null || !code.equals(verifyCode)){
+				throw new FLException(110001, "验证码错误");
+			}
+		} catch (Exception e) {
+			throw new FLException(110001, "验证码错误");
+		}
+		
+		CompanyPO companyPO = companyDao.queryCompanyByName(companyVO.getName());
+		
+		if (companyPO != null) {
+			throw new FLException(230014 , "公司已经存在");
+		}
+		
+		companyPO = new CompanyPO();
+		
+		BeanUtil.copyProperties(companyVO,companyPO);
+		
+		companyPO.setNo(0);
+		companyPO.setShortname("");
+		
+		companyDao.save(companyPO);
+		
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor=Exception.class)
 	public int addCompany(CompanyVO companyVO) throws FLException {
 		
 		CompanyPO companyPO = companyDao.queryCompanyByNo(companyVO.getNo());

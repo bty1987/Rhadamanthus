@@ -4,7 +4,7 @@ var printContract = {
 jQuery(function($) {
 	
 	params.server = window.server;
-	params.authentication = window.authentication;
+	params.authentication = parent.params.authentication;
 	
 	$('.companyFullName').text(config.companyFullName);
 	

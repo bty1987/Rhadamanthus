@@ -1,4 +1,4 @@
-jQuery(function ($) {
+$(function () {
 
     var constructionNodes = {};
 
@@ -23,7 +23,7 @@ jQuery(function ($) {
     var displayFunc = (function () {
 
         var renderList = function (tableId, listData) {
-            var $tableWrap = $('#' + tableId).empty();
+            var $tableWrap = com.focusPage('#' + tableId).empty();
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if (listData && listData.length) {
@@ -54,7 +54,7 @@ jQuery(function ($) {
                 ["总价:", v.orderTotalPrice, "blue"],
                 //["折扣:", v.discount, "blue"],
                 ["面积:", v.house.buildArea, "blue"],
-                ["进度:", constructionNodes[v.projectStatus], "red"],
+                ["进度:", constructionNodes[v.projectStatus], "red"]
             ];
 
             $.each(propertyArr, function (index, value) {
@@ -77,7 +77,7 @@ jQuery(function ($) {
 
         return {
             init: function (tableId, listData) {
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             },
             drawLine: function (v) {

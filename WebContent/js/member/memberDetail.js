@@ -1,10 +1,10 @@
 
-jQuery(function($) {
+$(function() {
 
     var displayFunc  = (function(){
 
         var renderList = function(tableId,listData){
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if(listData && listData.length){
@@ -41,16 +41,17 @@ jQuery(function($) {
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
             var newTime = new Date(v.createTime).Format("yyyy-MM-dd hh:mm:ss");
-
+            
+            var orderId = params.orderId;
             var propertyArr = [
 
-                ["装修单号:", params.orderId , "grey"],
-                ["积分类型:", v.type == 1 ? "主材" : (v.type == 2 ? "装修" :"转积分"),  "red"],
-                ["积分增减:", v.subType == 0 ? "增加" : (v.subType == 1 ? "减少" :""), "red"],
-                ["积分:", v.credit + "分", "red"],
-                ["创建人:", v.cuId.userName , "grey"],
-                ["创建时间:", newTime, "grey"],
-                ["说明:", v.comment , "grey"]
+                ["订单编号: ", orderId , "grey"],
+                ["积分类型: ", v.type == 1 ? "主材" : (v.type == 2 ? "装修" : "转积分"),  "red"],
+                ["积分增减: ", v.subType == 0 ? "增加" : (v.subType == 1 ? "减少" : ""), "red"],
+                ["积分: ", v.credit + "分", "red"],
+                ["创建人: ", v.cuId.userName , "grey"],
+                ["创建时间: ", newTime, "grey"],
+                ["说明: ", v.comment , "grey"]
 
             ];
 
@@ -68,27 +69,28 @@ jQuery(function($) {
 
         return {
             init : function(tableId,listData){
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
             },
             drawLine : function(v){
                 return creatLine(v);
             }
-        }
+        };
     })();
-
+    
+    var mcid = params.mcId;
     var searcher = new Searcher();
     var _condArr = [  ];
     searcher.init(_condArr, "condList", api.member.pageMemberDetail, function(data){
         displayFunc.init('resultList', data);
-    }, "pagenation", "memberDetailPostData", {"filters[0].data": params.mcId,"filters[0].op":"eq","filters[0].field":"mcId"}, false, null, function(){
+    }, "pagenation", "memberDetailPostData", {"filters[0].data": mcid,"filters[0].op":"eq","filters[0].field":"mcId"}, false, null, function(){
         var $impa = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'backtrack').css("margin", "0px 5px");
         var $impspan = $('<span></span>').text('返回').appendTo($impa);
 
         return [$impa];
     }, "resultList");
 
-    $('a[name="backtrack"]', '#pagenation').click(function () {
+    com.focusPage('a[name="backtrack"]', '#pagenation').click(function () {
         com.switchPage('views/member/memberCard.html');
         return false;
     });

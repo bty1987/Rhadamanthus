@@ -2,25 +2,25 @@ $(function(){
 
     var supplier = {
         $nowLine : null,
-        saveBtn: $("#saveBtn").on("click", saveData),
-        cancelBtn: $("#cancelBtn"),
-        saveUserBtn : $("#saveUserBtn").on("click", saveUser),
-        supplierRightModal  : $("#supplierRightModal").on("show.bs.modal", function(a) {
+        saveBtn: com.focusPage("#saveBtn").on("click", saveData),
+        cancelBtn: com.focusPage("#cancelBtn"),
+        saveUserBtn : com.focusPage("#saveUserBtn").on("click", saveUser),
+        supplierRightModal  : com.focusPage("#supplierRightModal").on("show.bs.modal", function(a) {
 
         }).on("hide.bs.modal", function(a) {
 
         }),
-        modal: $("#supplierModal").on("show.bs.modal", function(a) {
+        modal: com.focusPage("#supplierModal").on("show.bs.modal", function(a) {
             com.clearValidator();
         }).on("hide.bs.modal", function(a) {
             supplier.editFlg = false;
             supplier.repeatFlg = false;
-            $("#password").removeAttr('disabled')
+            com.focusPage("#password").removeAttr('disabled')
         }),
         supplierModelItems: {
-            supplierName : $("#supplierName"),
-            loginId : $("#loginId"),
-            password : $("#password"),
+            supplierName : com.focusPage("#supplierName"),
+            loginId : com.focusPage("#loginId"),
+            password : com.focusPage("#password"),
         },
         data: {
             materialTypeData: {},
@@ -30,7 +30,7 @@ $(function(){
         editFlg: !1,
         repeatFlg: !1,
     };
-    var tag_input = $("#user");
+    var tag_input = com.focusPage("#user");
 
     tag_input.tag({
         placeholder:tag_input.attr('placeholder'),
@@ -54,7 +54,7 @@ $(function(){
     var displayFunc  = (function(){
 
         var renderList = function(tableId,listData){
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if(listData && listData.length){
@@ -119,7 +119,7 @@ $(function(){
 
         return {
             init : function(tableId,listData){
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
             },
             drawLine : function(v){
@@ -148,7 +148,7 @@ $(function(){
     });
 
     //添加按钮
-    $('a[name="add"]','#pagenation').click(function(){
+    $('a[name="add"]',com.focusPage('#pagenation')).click(function(){
         supplier.editFlg = !1;
         com.cleanItems(supplier.supplierModelItems);
         supplier.modal.modal("show");
@@ -217,7 +217,7 @@ $(function(){
 
         com.post(api.data.querySupplierUserRightBySId, {"supplierUserRight.sid": sid}, function(res){
 
-            var _tag = $('#user').data('tag');
+            var _tag = com.focusPage('#user').data('tag');
 
             if(_tag){
                 while(_tag.values.length > 0){

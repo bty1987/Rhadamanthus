@@ -21,7 +21,7 @@ public interface DecorationContractService {
 
 	public DecorationContractVO queryDecorationContractForQuotationByOrderId(DecorationContractVO decorationContractVO) throws FLException;
 	
-	public int saveDecorationContract(DecorationContractVO decorationContractVO) throws FLException;
+	public int saveDecorationContract(DecorationContractVO decorationContractVO, int company) throws FLException;
 	
 	public int signDecorationContract(DecorationContractVO decorationContractVO, Authentication authentication) throws FLException;
 	

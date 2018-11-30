@@ -89,6 +89,19 @@
 		{"key":"1", "value":"已付款"},
 		{"key":"2", "value":"已确认"},
 		{"key":"3", "value":"已撤销"}
+	],"receiptPaymentType": [
+		{"key":"0", "value":"预付款"},
+		{"key":"1", "value":"装修款"},
+		{"key":"2", "value":"主材款"},
+		{"key":"3", "value":"销售款"},
+		{"key":"4", "value":"服务款"}
+	],"receiptType": [
+		{"key":"0", "value":"现金"},
+		{"key":"1", "value":"银行"},
+		{"key":"2", "value":"转账"},
+		{"key":"3", "value":"对公"},
+		{"key":"4", "value":"分期"},
+		{"key":"5", "value":"优惠"}
 	],
     "errorCode": 0,
     "errorMsg": null

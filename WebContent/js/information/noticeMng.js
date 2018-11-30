@@ -4,20 +4,20 @@ $(function(){
     var  noticePriority={};
     var noticeIsPublic={};
     var notice = {
-        saveBtn: $("#saveBtn").on("click", saveData),
-        cancelBtn: $("#cancelBtn"),
-        modal: $("#noticeModal").on("show.bs.modal", function(a) {
-            com.clearValidator()
+        saveBtn: com.focusPage("#saveBtn").on("click", saveData),
+        cancelBtn: com.focusPage("#cancelBtn"),
+        modal: com.focusPage("#noticeModal").on("show.bs.modal", function(a) {
+            com.clearValidator();
         }),
         items: {
-            theme : $("#theme"),
-            typeSel : $("#typeSel"),
-            prioritySel : $("#prioritySel"),
-            startTime : $("#startTime"),
-            endTime : $("#endTime"),
-            isPublic : $("#isPublic").switchBtn("isOrNot"),
-            contents : $("#contents"),
-            filePath : $("#filePath")
+            theme : com.focusPage("#theme"),
+            typeSel : com.focusPage("#typeSel"),
+            prioritySel : com.focusPage("#prioritySel"),
+            startTime : com.focusPage("#startTime"),
+            endTime : com.focusPage("#endTime"),
+            isPublic : com.focusPage("#isPublic").switchBtn("isOrNot"),
+            contents : com.focusPage("#contents"),
+            filePath : com.focusPage("#filePath")
         },
         editFlg: !1,
         postParam: {},
@@ -25,8 +25,8 @@ $(function(){
     };
 
     com.post(api.ds.information, {}, function(res){
-        $("#prioritySel").bindData(res.noticePriority, "key", "value");
-        $("#typeSel").bindData(res.noticeType, "key", "value");
+        com.focusPage("#prioritySel").bindData(res.noticePriority, "key", "value");
+        com.focusPage("#typeSel").bindData(res.noticeType, "key", "value");
         $.each(res.noticeType,function (i,v) {
             noticeType[v.key] = v.value;//类型
         });
@@ -42,9 +42,9 @@ $(function(){
 
     bindUploadfiy();
 //Datepicker是绑在一个标准的形式输入字段
-    $(".date-picker").datepicker({autoclose : !0}).on("show", function() {
+    com.focusPage(".date-picker").datepicker({autoclose : !0}).on("show", function() {
         setTimeout(function() {
-            $(".dropdown-menu").css("z-index", 1060);
+            com.focusPage(".dropdown-menu").css("z-index", 1060);
         },0);
     }).next().on(ace.click_event, function() {
         $(this).prev().focus();
@@ -52,7 +52,7 @@ $(function(){
 
     var displayFunc  = (function(){
         var renderList = function(tableId,listData){
-            var $tableWrap = $('#' + tableId).empty();
+            var $tableWrap = com.focusPage('#' + tableId).empty();
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if(listData && listData.length){
@@ -100,7 +100,7 @@ $(function(){
                 ["结束时间:", v.endTime, "grey"],
                 ["公开:", noticeIsPublic[v.isPublic], "blue"],
                 ["内容:", v.contents, "grey"],
-                ["状态:", status, "blue"],
+                ["状态:", status, "blue"]
 
             ];
 
@@ -123,7 +123,7 @@ $(function(){
             if(v.creater.uid == params.userInfo.user.uid){
 
                 if(v.isPublic == 1) {
-                    $divBtnWrap.append($management).appendTo($h3)
+                    $divBtnWrap.append($management).appendTo($h3);
                 }
 
                 $divBtnWrap.append($btnEdit).append($btnDel).appendTo($h3);
@@ -158,22 +158,22 @@ $(function(){
                 				notice.items.isPublic.prop("checked", a.isPublic == 0), 
                 				notice.items.contents.val(a.contents),
                                 notice.items.filePath.val(a.filePath),
-                                notice.modal.modal("show"))
+                                notice.modal.modal("show"));
             });
 
             $management.unbind().bind('click',function(){
-                     showDepaermentModal()
-                   $('#managements').modal('show');
+                     showDepaermentModal();
+                    com.focusPage('#managements').modal('show');
                      var noticedids=[];
                       com.post(api.information.queryNoticeDepartment, {"notice.nid": v.nid},function(res){
                           $.each(res.noticeDepartments,function(i,val){
                                  noticedids[i]=(val.did);
                                  $wrap.find('input[value="'+ val.did +'"]').prop('checked', true);
-                         })
+                         });
                       });
-                      
-                      $("#manageBtn").unbind().bind('click',function(){
-                          var list = $('input[name="module"]:checked', $('#managements'));
+
+                com.focusPage("#manageBtn").unbind().bind('click',function(){
+                          var list = com.focusPage('input[name="module"]:checked', com.focusPage('#managements'));
                           var params = {"notice.nid": v.nid};
                         
                           list.length && (
@@ -184,7 +184,7 @@ $(function(){
                                 	  return false;
                               }),
                               com.post(api.information.updateNoticeDepartment, params,function(res){
-                                  $('#managements').modal("hide");
+                                  com.focusPage('#managements').modal("hide");
                                  },null,false)
                           );
                 });
@@ -203,13 +203,13 @@ $(function(){
 
         return {
             init : function(tableId,listData){
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
             },
             drawLine : function(v){
                 return creatLine(v);
             }
-        }
+        };
     })();
 
     var _condArr = ['theme', 'dateRange'];
@@ -225,7 +225,7 @@ $(function(){
         $adda.click(function(){
             notice.editFlg = !1;
             com.cleanItems(notice.items);
-            notice.modal.modal("show")
+            notice.modal.modal("show");
         });
         return [$adda];
     });
@@ -248,11 +248,11 @@ $(function(){
                         "notice.endTime": notice.items.endTime.val(),
                         "notice.isPublic": notice.items.isPublic.prop("checked") ? 0 : 1,
                         "notice.contents": notice.items.contents.val(),
-                        "notice.filePath": $("#filePath").val()
+                        "notice.filePath": com.focusPage("#filePath").val()
                     };
                     notice.editFlg ? (a = api.information.updateNotice,b["notice.noticeId"] = notice.items.noticeId) : a = api.information.addNotice;
                     com.post(a, b, successCallback);
-                    notice.modal.modal("hide")
+                    notice.modal.modal("hide");
                 }
         }
     }
@@ -266,7 +266,7 @@ $(function(){
     }
     
     function bindUploadfiy() {
-        $("#attachment").Huploadify({
+        com.focusPage("#attachment").Huploadify({
             auto: !0,
             successTimeout: 99999,
             formData: {
@@ -283,34 +283,34 @@ $(function(){
             onSelectError: function(a, b, c) {
                 switch (b) {
                     case -100:
-                        alert("上传的文件数量已经超出系统限制的" + $("#file_upload").uploadify("settings", "queueSizeLimit") + "个文件!");
+                        alert("上传的文件数量已经超出系统限制的" + com.focusPage("#file_upload").uploadify("settings", "queueSizeLimit") + "个文件!");
                         break;
                     case -110:
-                        alert("文件 [" + a.name + "] 大小超出系统限制的" + $("#file_upload").uploadify("settings", "fileSizeLimit") + "大小!");
+                        alert("文件 [" + a.name + "] 大小超出系统限制的" + com.focusPage("#file_upload").uploadify("settings", "fileSizeLimit") + "大小!");
                         break;
                     case -120:
                         alert("文件 [" + a.name + "] 大小异常！");
                         break;
                     case -130:
-                        alert("文件 [" + a.name + "] 类型不正确！")
+                        alert("文件 [" + a.name + "] 类型不正确！");
                 }
             },
             onUploadSuccess: function(a, b, c) {
                 a = eval("(" + b + ")");
-                0 == a.errorCode ? $("#filePath").val(a.resUrl) : alert(b)
+                0 == a.errorCode ? com.focusPage("#filePath").val(a.resUrl) : alert(b);
             },
             itemTemplate: '<div id="${fileID}" class="uploadify-queue-item" style="position:absolute;top:-30px;width:200px;left:-200px;">\r\n\t\t\t<div class="cancel">\r\n\t\t\t\t<a href="javascript:$(\'#${instanceID}\').uploadify(\'cancel\', \'${fileID}\')">X</a>\r\n\t\t\t</div>\r\n\t\t\t<span class="fileName">${fileName} (${fileSize})</span><span class="data"></span>\r\n\t\t\t<div class="uploadify-progress">\r\n\t\t\t\t<div class="uploadify-progress-bar"><!--Progress Bar--></div>\r\n\t\t\t</div>\r\n\t\t</div>'
-        })
+        });
     };
 
     function showErrorAlert(a, b) {
         var c = "";
         "unsupported-file-type" === a ? c = "Unsupported format " + b : console.log("error uploading file", a, b);
-        $('<div class="alert"> <button type="button" class="close" data-dismiss="alert">&times;</button><strong>File upload error</strong> ' + c + " </div>").prependTo("#alerts")
+        $('<div class="alert"> <button type="button" class="close" data-dismiss="alert">&times;</button><strong>File upload error</strong> ' + c + " </div>").prependTo("#alerts");
     }
 
     function showDepaermentModal() {
-        $wrap = $('#managements').find('.modal-body').empty();
+        $wrap = com.focusPage('#managements').find('.modal-body').empty();
         com.post(api.communion.queryDepartment, {}, function (res) {
             var treeData = res.deptList;
             if (!treeData || !treeData.length) {
@@ -334,24 +334,24 @@ $(function(){
 
             $.each(treeData,function(i,v){
                 if(v.fatherDept.did == null || v.fatherDept.did == 0){
-                    menuArr.level2.push(v)
+                    menuArr.level2.push(v);
                 }
-            })
+            });
 
             $.each(menuArr.level2,function(i,v){
                 $.each(treeData,function(index,value){
                     if(value.fatherDept != null) {
                         if (value.fatherDept.did == v.did) {
-                            menuArr.level3.push(value)
+                            menuArr.level3.push(value);
                         }
                     }
-                })
-            })
+                });
+            });
 
             if (menuArr.level1.length) {
                 $.each(menuArr.level1, function (i, v) {
                     var $li = $('<li></li>').addClass('dd-item');
-                    var $div = $('<div></div>').addClass('dd-handle clearfix').text(v.deptName);
+                    var $div = $('<div></div>').addClass('dd-handle clearfix').text(v.name);
                     var $input = $('<input>').attr({type: 'checkbox', name: 'module'}).addClass('ace').val(v.did);
                     var $indexCheck = $('<div></div>').addClass('checkbox pull-right').css({'margin-bottom': '0', 'margin-top': '-5px'});
                     var $label = $('<label></label>').append($input).append('<span class="lbl"></span>');
@@ -364,14 +364,14 @@ $(function(){
             if (menuArr.level2.length) {
                 $.each(menuArr.level2, function (i, v) {
                     var $li = $('<li></li>').addClass('dd-item');
-                    var $div = $('<div></div>').addClass('dd-handle clearfix').text(v.deptName);
+                    var $div = $('<div></div>').addClass('dd-handle clearfix').text(v.name);
                     var $indexCheck = $('<div></div>').addClass('checkbox pull-right').css({'margin-bottom': '0', 'margin-top': '-5px'});
                     var $label = $('<label></label>').append('<span class="lbl"></span>');
                     $indexCheck.append($label).appendTo($div);
                     menuObj.level2[v.did] = $li;
                     $li.append($div);
 
-                    var $parent = menuObj.level1[-1]
+                    var $parent = menuObj.level1[-1];
                     $parent.children('div').hasClass('btn-default') || $parent.children('div').addClass('btn-default');
                     if (!$parent.children('button').length) {
                         var $title = $parent.children('div');
@@ -388,8 +388,8 @@ $(function(){
                 $.each(menuArr.level3, function (i, v) {
                     if(v != null) {
                         var $li = $('<li></li>').addClass('dd-item');
-                        var $div = $('<div></div>').addClass('dd-handle clearfix').text(v.deptName);
-                        var $input = $('<input>').attr({type: 'checkbox', name: 'module'}).addClass('ace').val(v.did)
+                        var $div = $('<div></div>').addClass('dd-handle clearfix').text(v.name);
+                        var $input = $('<input>').attr({type: 'checkbox', name: 'module'}).addClass('ace').val(v.did);
                         var $indexCheck = $('<div></div>').addClass('checkbox pull-right').css({'margin-bottom': '0', 'margin-top': '-5px'});
                         var $label = $('<label></label>').append($input).append('<span class="lbl"></span>');
                         $indexCheck.append($label).appendTo($div);
@@ -409,7 +409,7 @@ $(function(){
                     }
                 });
             }
-            $('button[data-action="collapse"]').click(function () {
+            com.focusPage('button[data-action="collapse"]').click(function () {
                 var $this = $(this);
                 $this.siblings('ol').addClass('hide');
                 $this.parent().find('.plus').toggleClass('hide');
@@ -418,7 +418,7 @@ $(function(){
                 $this.toggleClass('hide');
             });
 
-            $('button[data-action="expand"]').click(function () {
+            com.focusPage('button[data-action="expand"]').click(function () {
                 var $this = $(this);
                 $this.siblings('ol').removeClass('hide');
                 $this.parent().find('.minus').toggleClass('hide');

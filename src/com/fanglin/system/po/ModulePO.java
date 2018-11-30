@@ -38,6 +38,8 @@ public class ModulePO implements Serializable {
 	
 	private short order;
 	
+	private String helpKey;
+	
 	public ModulePO() {
 		super();
 	}
@@ -129,6 +131,15 @@ public class ModulePO implements Serializable {
 
 	public void setOrder(short order) {
 		this.order = order;
+	}
+
+	@Column(name = "helpKey")
+	public String getHelpKey() {
+		return helpKey;
+	}
+
+	public void setHelpKey(String helpKey) {
+		this.helpKey = helpKey;
 	}
 	
 }

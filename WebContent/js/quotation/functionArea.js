@@ -1,6 +1,6 @@
 $(function(){
 	
-	$('#fl-statement').statement("子功能区", "报价项配置");
+	com.focusPage('#fl-statement').statement("子功能区", "报价项配置");
 
     /**
      * 回调函数必须提供 init(tableId, result.list)方法
@@ -10,7 +10,7 @@ $(function(){
     var displayFunc  = (function(){
 
         var renderList = function(tableId,listData){
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if(listData && listData.length){
@@ -70,13 +70,13 @@ $(function(){
 
         return {
             init : function(tableId,listData){
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
             },
             drawLine : function(v){
                 return creatLine(v);
             }
-        }
+        };
     })();
 
     var _condArr = ['versionId'];
@@ -94,41 +94,41 @@ $(function(){
     });
 
     var functionArea = {
-            saveBtn: $("#saveBtn").on("click", saveFunctionArea),
+            saveBtn: com.focusPage("#saveBtn").on("click", saveFunctionArea),
             cancellBtn: null,
-            modal: $("#functionAreaModal").on("shown.bs.modal",function(a) {
+            modal: com.focusPage("#functionAreaModal").on("shown.bs.modal",function(a) {
                 com.clearValidator();
-                0 == functionArea.editFlg && (functionArea.functionAreaItems.functionAreaType.get(0).selectedIndex = 0)
+                0 == functionArea.editFlg && (functionArea.functionAreaItems.functionAreaType.get(0).selectedIndex = 0);
             }),
             functionAreaItems: {
-                faId: $("#faId"),
-                functionAreaId: $("#functionAreaId").on("blur", function () {
+                faId: com.focusPage("#faId"),
+                functionAreaId: com.focusPage("#functionAreaId").on("blur", function () {
                     $this = $(this);
                     "" != $this.val() && com.post(api.quotation.queryFunctionAreaByIdAVersionId, {
                         "functionArea.functionAreaId": $this.val(),
-                        "functionArea.versionId": $("#versionId").val()
+                        "functionArea.versionId": com.focusPage("#versionId").val()
                     },function (a) {
-                        a.functionArea && a.functionArea.functionAreaId ? (com.showTips($this, "该版本的功能区编号已存在", !0), functionArea.repeatFunctionIdFlg = !0) : (com.clearValidator("#functionAreaId", !0), functionArea.repeatFunctionIdFlg = !1)
-                    })
+                        a.functionArea && a.functionArea.functionAreaId ? (com.showTips($this, "该版本的功能区编号已存在", !0), functionArea.repeatFunctionIdFlg = !0) : (com.clearValidator("#functionAreaId", !0), functionArea.repeatFunctionIdFlg = !1);
+                    });
                 }),
-                functionAreaName: $("#functionAreaName"),
-                versionId: $("#versionId").on("change", function () {
+                functionAreaName: com.focusPage("#functionAreaName"),
+                versionId: com.focusPage("#versionId").on("change", function () {
                     $this = $(this);
                     "" != functionArea.functionAreaItems.functionAreaId.val() && com.post(api.quotation.queryFunctionAreaByIdAVersionId, {
-                        "functionArea.functionAreaId": $("#functionAreaId").val(),
-                        "functionArea.versionId": $("#versionId").val()
+                        "functionArea.functionAreaId": com.focusPage("#functionAreaId").val(),
+                        "functionArea.versionId": com.focusPage("#versionId").val()
                     },function (b) {
-                        b.functionArea && b.functionArea.functionAreaId ? (com.showTips($("#functionAreaId"), "该版本的功能区编号已存在", !0), functionArea.repeatFunctionIdFlg = !0) : (com.clearValidator("#functionAreaId", !0), functionArea.repeatFunctionIdFlg = !1)
-                    })
+                        b.functionArea && b.functionArea.functionAreaId ? (com.showTips(com.focusPage("#functionAreaId"), "该版本的功能区编号已存在", !0), functionArea.repeatFunctionIdFlg = !0) : (com.clearValidator("#functionAreaId", !0), functionArea.repeatFunctionIdFlg = !1);
+                    });
                 }),
-                functionAreaType: $("#functionAreaType"),
-                functionAreaOrder: $("#functionAreaOrder"),
-                type : $("#type").on('change', function(){
+                functionAreaType: com.focusPage("#functionAreaType"),
+                functionAreaOrder: com.focusPage("#functionAreaOrder"),
+                type : com.focusPage("#type").on('change', function(){
                     if($(this).val() == 2)
-                    $("#total").addClass('v_required').removeAttr('readonly');
-                    else $("#total").removeClass('v_required').attr('readonly', true).val(null);
+                    com.focusPage("#total").addClass('v_required').removeAttr('readonly');
+                    else com.focusPage("#total").removeClass('v_required').attr('readonly', true).val(null);
                 }),
-                total : $("#total"),
+                total : com.focusPage("#total"),
             },
             oldFunctionAreaType: null,
             quotationVersionList: [],
@@ -147,19 +147,19 @@ $(function(){
         };
 
     var functionAreaItem = {
-            btnBack: $("#btnBack").on("click", showFunctionAreaList),
-            modal: $("#selectItemModal").on("show.bs.modal", function(a) {}),
-            btnAdd : $('#addBtn').on('click',function(){
+            btnBack: com.focusPage("#btnBack").on("click", showFunctionAreaList),
+            modal: com.focusPage("#selectItemModal").on("show.bs.modal", function(a) {}),
+            btnAdd : com.focusPage('#addBtn').on('click',function(){
                 functionAreaItem.modal.modal("show");
                 initQuotationItemList();
             }),
-            btnDel : $('#delBtn').on('click',function(){
+            btnDel : com.focusPage('#delBtn').on('click',function(){
 
                 var ids = {};
                 var aitems = $('input[type="checkbox"][name="areaItems"]:checked');
 
                 aitems.length && (aitems.each(function(i){
-                    ids["ids[" + i + "]"] = $(this).val()
+                    ids["ids[" + i + "]"] = $(this).val();
                 }),removeFunctionAreaItem(ids));
 
             }),
@@ -168,9 +168,9 @@ $(function(){
         };
 
     var quotationItem = {
-            saveBtn: $("#saveSelectItemBtn").on("click", addSelectItem),
-            cancelBtn: $("#cancelSelectItemBtn").on("click", function(a) {
-                functionAreaItem.modal.modal("hide")
+            saveBtn: com.focusPage("#saveSelectItemBtn").on("click", addSelectItem),
+            cancelBtn: com.focusPage("#cancelSelectItemBtn").on("click", function(a) {
+                functionAreaItem.modal.modal("hide");
             }),
             modal: null,
             quotationItemItems: {},
@@ -187,7 +187,7 @@ $(function(){
     $.extend(com.validator, functionArea.validator);
 
     com.post(api.ds.quotation, {}, function(res){
-        $('#type').bindData(res.functionType, 'key', 'value');
+        com.focusPage('#type').bindData(res.functionType, 'key', 'value');
 
     });
 
@@ -202,7 +202,7 @@ $(function(){
 
         functionArea.functionAreaItems.type.find('option:eq(0)').attr('selected', true);
         functionArea.functionAreaItems.total.attr('disabled', true);
-        functionArea.modal.modal("show")
+        functionArea.modal.modal("show");
     });
 
     //功能区编辑按钮
@@ -239,8 +239,8 @@ $(function(){
                 a = api.quotation.updateFunctionArea,
                 b["functionArea.faId"] = functionArea.functionAreaItems.faId.val(),
                 functionArea.oldFunctionAreaType != functionArea.functionAreaItems.functionAreaType.val() ? bootbox.confirm("功能区的类型修改，会清空以前包含的报价项，确认修改吗？",function(c) {
-                    c && (com.post(a, b, successFunctionAreaCallback), functionArea.modal.modal("hide"))
-                }) : (com.post(a, b, successFunctionAreaCallback), functionArea.modal.modal("hide"))) : (a = api.quotation.addFunctionArea, com.post(a, b, successFunctionAreaCallback), functionArea.modal.modal("hide"))
+                    c && (com.post(a, b, successFunctionAreaCallback), functionArea.modal.modal("hide"));
+                }) : (com.post(a, b, successFunctionAreaCallback), functionArea.modal.modal("hide"))) : (a = api.quotation.addFunctionArea, com.post(a, b, successFunctionAreaCallback), functionArea.modal.modal("hide"));
         }
     }
     //功能区删除事件
@@ -255,10 +255,10 @@ $(function(){
     }
     //分配报价项
     function assignQuotationItemIndex(a, b, c) {
-        $("#selectFunctionAreaId").val(a);
-        $("#selectVersionId").val(b);
-        $("#functionAreaList").addClass("hide");
-        $("#functionAreaQuotationItemList").removeClass("hide");
+        com.focusPage("#selectFunctionAreaId").val(a);
+        com.focusPage("#selectVersionId").val(b);
+        com.focusPage("#functionAreaList").addClass("hide");
+        com.focusPage("#functionAreaQuotationItemList").removeClass("hide");
         quotationItem.postParam["quotationItem.versionId"] = b;
         functionAreaItem.postParam.functionAreaId = a;
         functionAreaItem.postParam.functionAreaType = c;
@@ -272,8 +272,8 @@ $(function(){
         com.post(api.quotation.queryQuotationVersion, {}, function(b) {
             functionArea.quotationVersionList = b.quotationVersions;
             functionArea.functionAreaItems.versionId.bindData(functionArea.quotationVersionList, functionArea.quotationVersionKey, functionArea.quotationVersionValue);
-            "undefined" == typeof a || null == a ? functionArea.functionAreaItems.versionId.get(0).selectedIndex = 0 : functionArea.functionAreaItems.versionId.val(a)
-        })
+            "undefined" == typeof a || null == a ? functionArea.functionAreaItems.versionId.get(0).selectedIndex = 0 : functionArea.functionAreaItems.versionId.val(a);
+        });
     }
     //功能区弹窗保存成功回调函数
     function successFunctionAreaCallback() {
@@ -287,7 +287,7 @@ $(function(){
         //"faId 报价项编号 分类 大类 小类 名称 单位 工种 单价" itemList
         com.post( api.quotation.queryFunctionAreaItemByFunctionAreaId, functionAreaItem.postParam, function(data){
 
-            var $tableWrap = $('#itemList');
+            var $tableWrap = com.focusPage('#itemList');
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
             $tableWrap.empty();
 
@@ -333,19 +333,19 @@ $(function(){
 
                 $ul.appendTo($tableWrap);
             }
-        })
+        });
     }
     //报价项信息列表返回按钮点击事件
     function showFunctionAreaList() {
-        $("#functionAreaQuotationItemList").addClass("hide");
-        $("#functionAreaList").removeClass("hide");
+        com.focusPage("#functionAreaQuotationItemList").addClass("hide");
+        com.focusPage("#functionAreaList").removeClass("hide");
     }
     //删除报价项
     function removeFunctionAreaItem(c) {
         bootbox.confirm("确认删除报价项吗？",function(flag) {
 
             flag && com.post(api.quotation.deleteFunctionAreaItemByIds, c, successFunctionAreaItemCallback);
-        })
+        });
     }
 
     function successFunctionAreaItemCallback() {
@@ -362,7 +362,7 @@ $(function(){
         var quoDisplayFunc  = (function(){
 
             var renderList = function(tableId,listData){
-                var $tableWrap = $('#' + tableId);
+                var $tableWrap = com.focusPage('#' + tableId);
                 var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
                 if(listData && listData.length){
@@ -421,13 +421,13 @@ $(function(){
 
             return {
                 init : function(tableId,listData){
-                    $('#' + tableId).html(null);
+                    com.focusPage('#' + tableId).html(null);
                     renderList(tableId,listData);
                 },
                 drawLine : function(v){
                     return creatLine(v);
                 }
-            }
+            };
         })();
 
         var condArr = ['itemName', 'quotationTypeId', 'quotationClassificationId', 'quotationBigCategoryId', 'quotationSmallCategoryId'];
@@ -451,7 +451,7 @@ $(function(){
             var quotationClassification,itemName;
             quotationClassification = $(this).attr('data-quotationClassification');
             itemName = $(this).attr('data-itemName');
-            _params["functionAreaItems[" + i + "].functionArea.faId"] = $("#selectFunctionAreaId").val(),
+            _params["functionAreaItems[" + i + "].functionArea.faId"] = com.focusPage("#selectFunctionAreaId").val(),
             _params["functionAreaItems[" + i + "].quotationItem.qiId"] = $(this).val(),
             _params["functionAreaItems[" + i + "].quotationItem.quotationClassification"] = quotationClassification;
         }), !jQuery.isEmptyObject(_params) && com.post(api.quotation.addFunctionAreaItem, _params, successFunctionAreaItemCallback));

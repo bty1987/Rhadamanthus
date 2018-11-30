@@ -1,16 +1,16 @@
 jQuery(function ($) {
 
-    $('#warehousingPopUp').css({'margin': '0 auto', 'margin-top': '3%', 'width': '97%','max-height':'500px','overflow':'hidden','overflow-y':'scroll'});
+    com.focusPage('#warehousingPopUp').css({'margin': '0 auto', 'margin-top': '3%', 'width': '97%','max-height':'500px','overflow':'hidden','overflow-y':'scroll'});
 
     var purchase = {
-        pid: $('#warehousingPopUp').attr('data-pid'),
-        saveBtn: $("#saveBtn"),
-        cancellBtn: $("#cancelBtn"),
+        pid: com.focusPage('#warehousingPopUp').attr('data-pid'),
+        saveBtn: com.focusPage("#saveBtn"),
+        cancellBtn: com.focusPage("#cancelBtn"),
         purchaseItems: {
-            pid: $("#pId"),
+            pid: com.focusPage("#pId")
         },
         record: {},
-        sid: $('#warehousingPopUp').attr('data-sid'),
+        sid: com.focusPage('#warehousingPopUp').attr('data-sid')
     };
 
     var $btnSave = $('<a></a>').addClass('btn btn-info btn-sm').attr({
@@ -23,15 +23,15 @@ jQuery(function ($) {
         'href': 'javascript:void(0);'
     }).css({'margin-left': '17px', 'margin-top': '12px'}).text('取消');
     var $div = $('<div class="layui-layer-btn0" style="position: relative;top:-10%;left:73%;"></div>');
-    var $condList1 = $('#warehousingPopUp').parents('.layui-layer.layui-anim.layui-layer-page.layui-layer-lan');
+    var $condList1 = com.focusPage('#warehousingPopUp').parents('.layui-layer.layui-anim.layui-layer-page.layui-layer-lan');
     $div.append($btnSave).append($btnCancel).appendTo($condList1);
 
     var no = "";
     //获取采购单信息
     com.post(api.inventory.queryPurchaseByPid, {"purchase.pid": purchase.pid}, function (res) {
 
-        $('#no').text(res.purchase.no); //– 采购单号
-        $('[name="date"]', '#form').val(res.purchase.createTime);  //– 创建时间
+        com.focusPage('#no').text(res.purchase.no); //– 采购单号
+        com.focusPage('[name="date"]', '#form').val(res.purchase.createTime);  //– 创建时间
         no = res.purchase.no;
     });
 
@@ -43,7 +43,7 @@ jQuery(function ($) {
             if(v.status==0){
                 storehousesStatus.push(v);
             }
-        })
+        });
         purchase.storehouses = storehousesStatus;
     }, null, false);
 
@@ -52,7 +52,7 @@ jQuery(function ($) {
 
     //获取采购单下采购项
     function getPurchaseItem() {
-        $('#list').empty();
+        com.focusPage('#list').empty();
         com.post(api.inventory.queryPurchaseItemByPid, {"purchase.pid": purchase.pid}, function (res) {
             $.each(res.purchaseItems, function (i, v) {
                 //添加一条空行
@@ -62,13 +62,13 @@ jQuery(function ($) {
                     'data-gid': v.goods.gid,
                     'data-cid': v.color.cid,
                     'data-fid': v.format.fid,
-                    'data-unitPrice': v.unitPrice,
-                }).appendTo('#list');
+                    'data-unitPrice': v.unitPrice
+                }).appendTo(com.focusPage('#list'));
                 $piId[i] = v.piId;
             });
 
         });
-    };
+    }
     getPurchaseItem();
 
     //表单提交
@@ -86,7 +86,7 @@ jQuery(function ($) {
     function saveOptionChange() {
 
         var options = {};
-        var $menus = $('input[type="checkbox"]:checked', "#list");
+        var $menus = com.focusPage('input[type="checkbox"]:checked', "#list");
         var flag = false;
         var rnum = "";
         var ishid = "";
@@ -126,7 +126,7 @@ jQuery(function ($) {
 
                     layer.closeAll();
                     layer.msg("入库成功", {icon: 1});
-                    $('#list').empty();
+                    com.focusPage('#list').empty();
                 }, function (e) {
                     com.showAlert(com.error, e.errorMsg);
                 });
@@ -183,12 +183,12 @@ jQuery(function ($) {
         var _label = $('<label></label>');
 
         var $input = $('<input>').attr({
-            "type": "checkbox",
+            "type": "checkbox"
         }).css('width','0px').addClass('ace ace-checkbox-2');
 
         var _span = $('<span></span>').addClass('lbl grey bigger-150').css('font-weight','bold');
 
-        _label.append($input).append(_span)
+        _label.append($input).append(_span);
 
         var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(_label).attr({"data-pid": purchase.pid}));
         var $lineInfoWrap = $('<div></div>').addClass('line-wrap content col12');

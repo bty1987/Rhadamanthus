@@ -1,11 +1,11 @@
 $(function () {
-    var $layerAdd = $('#layerAdd');
-    var $quoteTypeName = $('#quoteTypeName');
+    var $layerAdd = com.focusPage('#layerAdd');
+    var $quoteTypeName = com.focusPage('#quoteTypeName');
 
     var displayFunc = (function () {
         /*表格样式*/
         var renderList = function (tableId, listData) {
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
 
             if (listData && listData.length) {
                 var $ulTitle = createTableTitle();
@@ -129,7 +129,7 @@ $(function () {
 
         return {
             init: function (tableId, listData) {
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             },
             drawLine: function (v) {

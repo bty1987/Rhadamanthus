@@ -1,6 +1,6 @@
 package com.fanglin.information.action;
 
-import java.text.ParseException;
+//import java.text.ParseException;
 import java.util.List;
 
 import org.apache.struts2.convention.annotation.Action;
@@ -29,9 +29,9 @@ public class PlanAction extends BaseListAction{
 	private List<PlanVO> plans;
 
 	@Action(value = "pagePlan", results = {@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pagePlan(){
+	public String pagePlan() throws FLException{
 		
-		planService.pagePlan(getPaging(),getFilters());
+		planService.pagePlan(getPaging(),getFilters(),authentication(), queryCompany());
 		
 		return SUCCESS;
 	}
@@ -39,15 +39,7 @@ public class PlanAction extends BaseListAction{
 	@Action(value = "createPlan", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String createPlan() throws Exception{
 		
-		planService.createPlan(plan,queryUserId());
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "updatePlan", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updatePlan() throws FLException, ParseException{
-		
-		 planService.updatePlan(plan,queryUserId());
+		planService.createPlan(plan,queryUserId(), queryCompany());
 		
 		return SUCCESS;
 	}

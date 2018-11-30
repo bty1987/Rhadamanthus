@@ -1,14 +1,14 @@
 jQuery(function ($) {
 
-    $('#editPopUp').css({'margin': '0 auto', 'margin-top': '2%', 'width': '98%'});
+    com.focusPage('#editPopUp').css({'margin': '0 auto', 'margin-top': '2%', 'width': '98%'});
 
     var accessoriesItem = {
-        aid: $('#editPopUp').attr('data-aid'),
-        saveBtn: $("#saveBtn"),
-        cancellBtn: $("#cancelBtn"),
+        aid: com.focusPage('#editPopUp').attr('data-aid'),
+        saveBtn: com.focusPage("#saveBtn"),
+        cancellBtn: com.focusPage("#cancelBtn"),
         manifestItems: {
-            customerName: $("#customer"),
-            des: $("#comment"),
+            customerName: com.focusPage("#customer"),
+            des: com.focusPage("#comment")
         },
         record: {},
         validator: {
@@ -23,11 +23,11 @@ jQuery(function ($) {
 
     $.extend(com.validator, accessoriesItem.validator);
 
-    $('#addSaleOrder').click(function () {
-        var num = $('.line', '#list').length;
+    com.focusPage('#addSaleOrder').click(function () {
+        var num = com.focusPage('.line', '#list').length;
 
         var $line = addline(num + 1);
-        $line.appendTo('#list');
+        $line.appendTo(com.focusPage('#list'));
     });
 
     function addline(lineindex) {
@@ -43,7 +43,7 @@ jQuery(function ($) {
             {cellClass: "brand grey"},//品牌
             {cellClass: "measurementUnit grey"},//单位
             {cellClass: "number", hasInput: !0},//数量
-            {cellClass: "pieceNum blue"},//件数
+            {cellClass: "pieceNum blue"}//件数
         ];
         var $btncheck = $('<a class="green" style="font-size: 18px"><i class="icon-ok"></i></a>');
         var $btndel = $('<a class="red" style="font-size: 18px"><i class=" icon-remove"></i></a>');
@@ -111,7 +111,7 @@ jQuery(function ($) {
 
             if (aiid == null) {
 
-                var $layer = $('#editPopUp');
+                var $layer = com.focusPage('#editPopUp');
                 var aid = $layer.attr('data-aid');
                 var gid = $line.attr('data-gid');
                 com.post(api.inventory.queryAccessoriesItemByAid, {
@@ -276,16 +276,16 @@ jQuery(function ($) {
 
     function accessoriesAdd() {
         var aid = accessoriesItem.aid;
-        var index = $('.line', '#list').length;
+        var index = com.focusPage('.line', '#list').length;
         com.post(api.inventory.queryAccessoriesItemByAid, {
             "accessoriesItem.aid": aid
         }, function (res) {
 
             $.each(res.accessoriesItems, function(i,v){
-                index = $('.line', '#list').length;
-                addline(1 + index).appendTo('#list');
-                var $lineInfoWrap1 = $('#list li:nth-of-type(' + (index + 1) + ') div.content');
-                $('#list li:nth-of-type(' + (index + 1) + ')').attr({
+                index = com.focusPage('.line', '#list').length;
+                addline(1 + index).appendTo(com.focusPage('#list'));
+                var $lineInfoWrap1 = com.focusPage('#list li:nth-of-type(' + (index + 1) + ') div.content');
+                com.focusPage('#list li:nth-of-type(' + (index + 1) + ')').attr({
                     'data-gid': v.goods.gid,
                     'data-aiid': v.aiid
                 });

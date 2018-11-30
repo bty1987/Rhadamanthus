@@ -6,9 +6,13 @@ public class CategoryVO implements java.io.Serializable {
 
 	private Long cid;
 	
-	private String categoryId;
+	private String no;
 	
-	private String categoryName;
+	private String name;
+	
+	private String kino;
+	
+	private String kiname;
 
 	public Long getCid() {
 		return cid;
@@ -18,22 +22,36 @@ public class CategoryVO implements java.io.Serializable {
 		this.cid = cid;
 	}
 
-	public String getCategoryId() {
-		return categoryId;
+	public String getNo() {
+		return no;
 	}
 
-	public void setCategoryId(String categoryId) {
-		this.categoryId = categoryId;
+	public void setNo(String no) {
+		this.no = no;
 	}
 
-	public String getCategoryName() {
-		return categoryName;
+	public String getName() {
+		return name;
 	}
 
-	public void setCategoryName(String categoryName) {
-		this.categoryName = categoryName;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	
+	public String getKino() {
+		return kino;
+	}
+
+	public void setKino(String kino) {
+		this.kino = kino;
+	}
+
+	public String getKiname() {
+		return kiname;
+	}
+
+	public void setKiname(String kiname) {
+		this.kiname = kiname;
+	}
 
 }

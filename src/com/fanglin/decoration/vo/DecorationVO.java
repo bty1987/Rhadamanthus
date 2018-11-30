@@ -114,6 +114,9 @@ public class DecorationVO implements Serializable {
 	private String dompany;
 	
 	private Short paySacle;
+	
+	private String scale;
+
 
 	public Long getDoid() {
 		return doid;
@@ -418,6 +421,14 @@ public class DecorationVO implements Serializable {
 
 	public void vtp(DecorationPO decorationPO){
 		BeanUtil.copyProperties(this, decorationPO, Arrays.asList("house","customer","designer","salesman","supervisor","version","createUser","quoter","escorter","contractUserId"));
+	}
+	
+	public String getScale() {
+		return scale;
+	}
+
+	public void setScale(String scale) {
+		this.scale = scale;
 	}
 
 }

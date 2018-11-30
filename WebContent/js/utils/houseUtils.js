@@ -10,7 +10,7 @@ var houseUtils={
             }else {
                 erri = i;
             }
-        })
+        });
         return  str;
     },  validatehouse : function(no,houseNumber,status,errid,Whether){
         var prehouse ={
@@ -28,8 +28,8 @@ var houseUtils={
         };
 
         com.post(api.data.queryHouseByNoAHnum, options, function(res){
-            prehouse.house = res.house
-            prehouse.Flag =true
+            prehouse.house = res.house;
+            prehouse.Flag =true;
             if(Whether){
                 errid.removeAttr("data-placement").attr({
                     "data-rel":"popover",
@@ -38,9 +38,9 @@ var houseUtils={
                 }).removeAttr("data-toggle").popover('show');
             }
         }, function(res){
-            prehouse.Flag =false
+            prehouse.Flag =false;
             if(Whether){
-                errid.popover("destroy")
+                errid.popover("destroy");
             }
         }, false);
         return prehouse;
@@ -51,7 +51,7 @@ var houseUtils={
         if(houseitems.no.val() == "" ){
             com.showPopover(houseitems.no,{errorMsg: "请先选择楼盘!"}, "right");
         }else{
-            houseitems.no.css("border", "1px solid #d5d5d5").popover("destroy")
+            houseitems.no.css("border", "1px solid #d5d5d5").popover("destroy");
         }
 
         validateresult.rulenum = [
@@ -62,10 +62,10 @@ var houseUtils={
 
         validateresult.houseNumber =houseUtils.creatHouseNumber(validateresult.rulenum);
 
-        validateresult.prehouse = houseUtils.validatehouse(houseitems.no.val(),validateresult.houseNumber,status,houseitems.errMsg,Whether)
+        validateresult.prehouse = houseUtils.validatehouse(houseitems.no.val(),validateresult.houseNumber,status,houseitems.errMsg,Whether);
 
         return validateresult;
     },savehouse : function(house){
 
     }
-}
+};

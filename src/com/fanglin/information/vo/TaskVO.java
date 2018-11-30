@@ -14,7 +14,11 @@ public class TaskVO implements Serializable{
 	
 	private Short type;
 	
-	private String content;
+	private String plugins;
+	
+	private String keyWord;
+	
+	private Long handle;
 	
 	private Short status;
 
@@ -54,6 +58,14 @@ public class TaskVO implements Serializable{
 		this.type = type;
 	}
 	
+	public Long getHandle() {
+		return handle;
+	}
+
+	public void setHandle(Long handle) {
+		this.handle = handle;
+	}
+
 	public Short getStatus() {
 		return status;
 	}
@@ -62,13 +74,20 @@ public class TaskVO implements Serializable{
 		this.status = status;
 	}
 
-	public String getContent() {
-		return content;
+	public String getKeyWord() {
+		return keyWord;
 	}
 
-	public void setContent(String content) {
-		this.content = content;
+	public void setKeyWord(String keyWord) {
+		this.keyWord = keyWord;
 	}
-	
+
+	public String getPlugins() {
+		return plugins;
+	}
+
+	public void setPlugins(String plugins) {
+		this.plugins = plugins;
+	}
 	
 }

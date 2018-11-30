@@ -9,17 +9,17 @@ jQuery(function($) {
 	materialSaleOrderPostData["materialSubOrder.designerName"] = params.designerName.indexOf('--') != -1 ? "" : params.designerName;
 	
 	var materialSaleOrder = {
-		saveBtn:  $("#saveBtn"),
-		cancellBtn: $("#cancelBtn"),
+		saveBtn:  com.focusPage("#saveBtn"),
+		cancellBtn: com.focusPage("#cancelBtn"),
 		modal: null,
 		materialSaleOrderItems: {
-			orderId : $("#orderId").val(params.orderId),
-			customerName : $("#customerName").val(params.customerName),
-			salesmanName : $("#salesmanName").val(params.designerName),
-			materialerName : $("#materialerName"),
-			orderAddr : $("#orderAddr").val(params.orderAddr),
-			msoType : $("#msoType"),
-			des : $("#des"),
+			orderId : com.focusPage("#orderId").val(params.orderId),
+			customerName : com.focusPage("#customerName").val(params.customerName),
+			salesmanName : com.focusPage("#salesmanName").val(params.designerName),
+			materialerName : com.focusPage("#materialerName"),
+			orderAddr : com.focusPage("#orderAddr").val(params.orderAddr),
+			msoType : com.focusPage("#msoType"),
+			des : com.focusPage("#des"),
 		},
 
 		mmIdLimit: 2,
@@ -68,7 +68,7 @@ jQuery(function($) {
 		com.initChosen('salesmanName', api.personel.queryUserByPinyin  , "pinyinName", {"user.status":"0","departmentType.name":""}, "autoFillKeyValue", "key", "value");
 		com.initChosen('materialerName', api.personel.queryUserByPinyin  , "pinyinName", {"user.status":"0","departmentType.name":"主材部"}, "autoFillKeyValue", "key", "value");
 		com.initChosen('instoreName', api.personel.queryUserByPinyin , "pinyinName", {"user.status":"0","departmentType.name":"主材部"}, "autoFillKeyValue", "key", "value");
-		com.initChosen('materialBrand', api.data.queryBrandForPinYinNameACategoryName, "pinyinName", {}, "autoFillKeyValue", "key", "value");
+		com.initChosen('materialBrand', api.data.queryBrandForPinYinNameAname, "pinyinName", {}, "brands", "bid", "alias");
 
 		com.updateChosen("salesmanName", materialSaleOrderPostData["materialSubOrder.designerId"], materialSaleOrderPostData["materialSubOrder.designerName"]);
 
@@ -83,11 +83,11 @@ jQuery(function($) {
 	addline(1).addClass('current').appendTo('#list');
 	addline(2).addClass('current').appendTo('#list');
 
-	$('#addSaleOrder').click(function(){
-		var num = $('.line', '#list').length;
+	com.focusPage('#addSaleOrder').click(function(){
+		var num = com.focusPage('.line', '#list').length;
 
 		var returnFlag = false;
-		var $lines = $('.line', '#list');
+		var $lines = com.focusPage('.line', '#list');
 		$lines.each(function(){
 			var $this = $(this);
 			if(!checkRowValue($this)){
@@ -103,7 +103,7 @@ jQuery(function($) {
 		$line.appendTo('#list');
 	});
 
-	$('#submitSaleOrder').bindClick(addmaterial);
+	com.focusPage('#submitSaleOrder').bindClick(addmaterial);
 
 	function addmaterial(){
 
@@ -115,15 +115,15 @@ jQuery(function($) {
 		var materialBrandFlag = true;
 		var salesmanNameFlag = false;
 
-		if($("#salesmanName").val() == ""){
-			com.showTips($("#salesmanName"), "字段不能为空!", true);
+		if(com.focusPage("#salesmanName").val() == ""){
+			com.showTips(com.focusPage("#salesmanName"), "字段不能为空!", true);
 			salesmanNameFlag = true;
 		}
 
 		if(com.validate() || salesmanNameFlag)
 			return;
 
-		var $lines = $('li.selected', '#list');
+		var $lines = com.focusPage('li.selected', '#list');
 //		if(!$lines.length) return;
 
 		var returnFlag = false;
@@ -144,12 +144,11 @@ jQuery(function($) {
 			return false;
 		}
 
-		materialBrandStr = $("#materialBrand_chosen span")[0].textContent;
+		materialBrandStr = com.focusPage("#materialBrand_chosen span")[0].textContent;
 		var orderId = materialSaleOrder.materialSaleOrderItems.orderId.val();
 		var customerId = materialSaleOrderPostData["materialSubOrder.customerId"];
 		var customerName = materialSaleOrder.materialSaleOrderItems.customerName.val();
 
-		var materialType = materialBrandStr.split('-')[1];
 		var materialBrand = materialBrandStr.split('-')[0];
 
 		options["material.orderId"] = orderId;
@@ -158,13 +157,12 @@ jQuery(function($) {
 		options["material.customer.name"] = customerName;
 		options["material.type"] = materialSaleOrder.materialSaleOrderItems.msoType.val();
 		options["material.comment"] = materialSaleOrder.materialSaleOrderItems.des.val();
-		options["material.salesman.userId"] = $('#salesmanName').val();
-		options["material.materialer.userId"] = $('#materialerName').val();
-		options["material.instorer.userId"] = $('#instoreName').val() ? $('#instoreName').val() : "";
-		options["material.category"] = materialType;
-		options["material.brand"] = materialBrand;
+		options["material.salesman.userId"] = com.focusPage('#salesmanName').val();
+		options["material.materialer.userId"] = com.focusPage('#materialerName').val();
+		options["material.instorer.userId"] = com.focusPage('#instoreName').val() ? com.focusPage('#instoreName').val() : "";
+        options["material.bid"] = com.focusPage('#materialBrand').val();;
 
-		var $list = $('li.selected', '#list');
+		var $list = com.focusPage('li.selected', '#list');
 		$list.length && $list.each(function(i){
 			var $this = $(this);
 
@@ -205,7 +203,7 @@ jQuery(function($) {
 			return false;
 		}
 
-		var btn = $('#submitSaleOrder');
+		var btn = com.focusPage('#submitSaleOrder');
 		btn.button('loading');
 
 		com.post(api.material.addMaterial, options, function(){
@@ -220,8 +218,8 @@ jQuery(function($) {
 		});
 	};
 
-	$("#backBtn").on("click", function(){
-		com.switchPage(params.historyOrderPage);
+	com.focusPage("#backBtn").on("click", function(){
+		com.switchPage(api.index.decorationMaterialIndex.url);
 	});
 
 	//添加一个空行
@@ -337,7 +335,7 @@ jQuery(function($) {
 		$line.append($indexWrap).append($lineInfoWrap).append($optWrap);
 
 		$line.click(function(){
-			$('.current').removeClass('current');
+			com.focusPage('.current').removeClass('current');
 			$(this).addClass('current');
 		});
 
@@ -596,7 +594,7 @@ jQuery(function($) {
 
 		var _total = 0;
 
-		var $list = $('.line', '#list');
+		var $list = com.focusPage('.line', '#list');
 		$list.length && $list.each(function(){
 			var $this = $(this);
 			if($this.find('.total input').val()){
@@ -606,15 +604,15 @@ jQuery(function($) {
 
 		materialSaleOrder.totalSum = _total;
 
-		$("#totalSpan").text(_total);
+		com.focusPage("#totalSpan").text(_total);
 	}
 
 	//重排序
 	function reorder(){
-		var $list = $('.line', '#list');
+		var $list = com.focusPage('.line', '#list');
 		$list.length && $list.each(function(i){
 			var $this = $(this);
-			$this.find('.index').text(i + 1)
+			$this.find('.index').text(i + 1);
 		});
 	}
 

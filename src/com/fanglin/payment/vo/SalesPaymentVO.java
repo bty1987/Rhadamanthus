@@ -44,7 +44,7 @@ public class SalesPaymentVO  implements Serializable{
 	
 	private Float checkv;              
 	
-	private String checkvBank;        
+	private String checkvBank;
 	
 	private Float installment;        
 	
@@ -52,7 +52,7 @@ public class SalesPaymentVO  implements Serializable{
 	
 	private Float accounts;            
 	
-	private String accountsBank;       
+	private String accountsBank;
 	
 	private Float coupon;              
 	
@@ -231,7 +231,7 @@ public class SalesPaymentVO  implements Serializable{
 	public void setCheckvBank(String checkvBank) {
 		this.checkvBank = checkvBank;
 	}
-
+	
 	public Float getInstallment() {
 		return installment;
 	}

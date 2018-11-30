@@ -10,7 +10,8 @@ $.extend(api.index, {
     workerBaseSalaryScheduleDetailIndex: {url: "/views/salary/workerBaseSalaryScheduleDetail.html"},
     workerDeductSalaryScheduleDetailIndex: {url: "/views/salary/workerDeductSalaryScheduleDetail.html"},
     workerBaseSalaryIndex: {url: "/views/salary/workerBaseSalary.html"},
-    workerDeductSalaryIndex: {url: "/views/salary/workerDeductSalary.html"}
+    workerDeductSalaryIndex: {url: "/views/salary/workerDeductSalary.html"},
+    workerDetailIndex:{url:"/views/salary/workerDetail.html"},
 });
 
 $.extend(api, {salary: {
@@ -76,6 +77,12 @@ $.extend(api, {salary: {
     rejectdesignerSalary:{url:"rejectdesignerSalary.do"},
     deletedesignerSalary:{url: "deletedesignerSalary.do"},
 
-    pageWorkerSalaryByUserId: {url: "pageWorkerSalaryByUserId.do"}
+    pageWorkerSalaryByUserId: {url: "pageWorkerSalaryByUserId.do"},
     
+    pageWorkerBalance : { url : "pageWorkerBalance.do" },
+    payWorkerSalary : { url : "payWorkerSalary.do" },
+    collectWorkerDeposit : { url : "collectWorkerDeposit.do" },
+    drawWorkerDeposit : { url : "drawWorkerDeposit.do"},
+    cutWorkerSalary : { url : "cutWorkerSalary.do"},
+    tranWorkerSalary :{ url : "tranWorkerSalary.do"}
 }});

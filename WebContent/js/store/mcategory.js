@@ -5,22 +5,21 @@ $(function(){
         modal: null,
         mcategoryItems:{},
         data:{
-            mcategoryData: {},
+            mcategoryData: {}
         },
         editFlg: false,
-        repeatFlg: false,
+        repeatFlg: false
     };
 
-    mcategory.mcategoryItems.name = $("#name");
-    mcategory.mcategoryItems.icon = $("#icon");
-    var displayFunc  = (function(){
+    mcategory.mcategoryItems.name = com.focusPage("#name");
+    mcategory.mcategoryItems.icon = com.focusPage("#icon");
 
+    var displayFunc  = (function(){
         /*表格样式*/
         var renderList = function(tableId,listData){
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
 
             if(listData && listData.length){
-
                 var $ulTitle = createTableTitle();
                 var $ulData = $('<ul></ul>').addClass('flex-table');
                 $tableWrap.append($ulTitle).append($ulData);
@@ -34,7 +33,6 @@ $(function(){
 
         /*表格头*/
         var createTableTitle = function(){
-
             var $ulTitle = $('<ul></ul>').addClass('flex-table');
             var $liTitle = $('<li></li>').addClass('line table-title');
 
@@ -50,17 +48,13 @@ $(function(){
 
             var $optionWrap = $('<div></div>').addClass('line-wrap action').html($('<div>操作</div>').addClass('cell option'));
 
-            $liTitle.append($indexWrap)
-                .append($contentWrap)
-                .append($optionWrap)
-                .appendTo($ulTitle);
+            $liTitle.append($indexWrap).append($contentWrap).append($optionWrap).appendTo($ulTitle);
 
             return $ulTitle;
         };
 
         /*表格体*/
         var creatLine = function (i, v, lastFlag) {
-
             var $liLine = $('<li></li>').addClass('line');
             var id = i + 1;
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(id));
@@ -70,6 +64,7 @@ $(function(){
                 [v.name,'grey'],
                 [v.isShow =="0" ? "首页显示" : "首页不显示", 'red']
             ];
+
             $.each(propertyArr, function (i, v) {
                 var $cell = $('<div></div>').addClass('cell ' + v[1]).html(v[0]);
                 $cell.appendTo($contentWrap);
@@ -88,25 +83,17 @@ $(function(){
 
             $btnUl.append($btnStart).append($btnBan).append($update);
 
-            $btnUl
-                .append($btnStart)
-                .append($btnBan)
-                .append($update);
-            $btnGroup
-                .append($btn)
-                .append($btnUl)
-                .appendTo($cellOption);
+            $btnUl.append($btnStart).append($btnBan).append($update);
+            $btnGroup.append($btn).append($btnUl).appendTo($cellOption);
 
             $cellOption.appendTo($optionWrap);
 
-            $liLine.append($indexWrap)
-                .append($contentWrap)
-                .append($optionWrap);
+            $liLine.append($indexWrap).append($contentWrap).append($optionWrap);
 
             $update.click(function(){
                 //editBrand(v);
-                $("#name").val(v.name);
-                $("#icon").val(v.icon);
+                com.focusPage("#name").val(v.name);
+                com.focusPage("#icon").val(v.icon);
                 openlayer(function(index, layero){
                     if(com.validate('form1'))
                         return;
@@ -122,11 +109,11 @@ $(function(){
 
          /*不显示 ==》显示*/
             $btnStart.click(function(){
-                $('#layerAdd').attr('data-cid', v.cid);
-                $('#layerAdd').attr('data-status', v.isShow);
+                com.focusPage('#layerAdd').attr('data-cid', v.cid);
+                com.focusPage('#layerAdd').attr('data-status', v.isShow);
 
-                var id = $('#layerAdd').attr('data-cid');
-                var status = $('#layerAdd').attr('data-status');
+                var id = com.focusPage('#layerAdd').attr('data-cid');
+                var status = com.focusPage('#layerAdd').attr('data-status');
                 startStatus(id,status,function(){
                     layer.closeAll();
                     layer.msg('首页不显示',{icon:1});
@@ -134,11 +121,11 @@ $(function(){
             });
             /*显示 ==》不显示*/
             $btnBan.click(function(){
-                $('#layerAdd').attr('data-bid', v.cid);
-                $('#layerAdd').attr('data-status', v.isShow);
+                com.focusPage('#layerAdd').attr('data-bid', v.cid);
+                com.focusPage('#layerAdd').attr('data-status', v.isShow);
 
-                var id = $('#layerAdd').attr('data-bid');
-                var status = $('#layerAdd').attr('data-status');
+                var id = com.focusPage('#layerAdd').attr('data-bid');
+                var status = com.focusPage('#layerAdd').attr('data-status');
 
                 stopStatus(id,status,function(){
                     layer.closeAll();
@@ -150,7 +137,7 @@ $(function(){
 
         return {
             init : function(tableId,listData){
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
 
             },
@@ -165,9 +152,7 @@ $(function(){
     var mcategorySeacher = new Searcher();
 
     mcategorySeacher.init( _condArr, "condList", api.store.pageMcategory, function(data){
-
         displayFunc.init('resultList', data);
-
     }, "pagenation", "mcategoryPostData", null, false, null, function(){
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addQuotationVersion').css('margin', '0px 3px');
@@ -195,7 +180,7 @@ $(function(){
         layer.open({
             type: 1,
             title:" ",
-            content: $('#layerAdd'),
+            content: com.focusPage('#layerAdd'),
             area: ( $(window).width()*0.6 < 620 ?  $(window).height()*0.6 : 620 )+"px",
             maxmin: false,
             zIndex:9000,
@@ -249,22 +234,23 @@ $(function(){
     }
 
     /*添加信息*/
-    function saveData(id,callback){
-        var $layer = $('#layerAdd');
-        var mcategory = $("#name").val();
-        var icon = $("#icon").val();
-            com.post(api.store.addMcategory, {
-                "mcategory.name": mcategory,
-                "mcategory.icon": icon
-            }, function(res){
-                callback();
-                mcategorySeacher.doSearch();
-            });
+    function saveData(id, callback){
+        var $layer = com.focusPage('#layerAdd');
+        var mcategory = com.focusPage("#name").val();
+        var icon = com.focusPage("#icon").val();
+
+        com.post(api.store.addMcategory, {
+            "mcategory.name": mcategory,
+            "mcategory.icon": icon
+        }, function(res){
+            callback();
+            mcategorySeacher.doSearch();
+        });
     }
 
     function updateData(id, callback){
-        var $layer = $('#layerAdd');
-        var name = $("#name").val();
+        var $layer = com.focusPage('#layerAdd');
+        var name = com.focusPage("#name").val();
         var icon = mcategory.mcategoryItems.icon.val();
         com.post(api.store.updateMcategory, {
             'mcategory.cid':id,

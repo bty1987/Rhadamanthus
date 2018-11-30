@@ -40,6 +40,8 @@ public class SalesVO implements Serializable {
 	
 	private String category;
 	
+	private Long bid;
+	
 	private String brand;
 	
 	private String comment;
@@ -52,7 +54,11 @@ public class SalesVO implements Serializable {
 	
 	private Short status;
 	
+	private Float depositpay;
+	
 	private Short depositpayStatus;
+	
+	private Float fullpay;
 	
 	private Short fullpayStatus;
 	
@@ -69,6 +75,8 @@ public class SalesVO implements Serializable {
 	private String couponInfo;
 	
 	private Short otherStatus;
+	
+	private Integer activityId;
 
 	public SalesVO() {
 		super();
@@ -192,6 +200,14 @@ public class SalesVO implements Serializable {
 		this.category = category;
 	}
 
+	public Long getBid() {
+		return bid;
+	}
+
+	public void setBid(Long bid) {
+		this.bid = bid;
+	}
+
 	public String getBrand() {
 		return brand;
 	}
@@ -243,12 +259,28 @@ public class SalesVO implements Serializable {
 		this.status = status;
 	}
 
+	public Float getDepositpay() {
+		return depositpay;
+	}
+
+	public void setDepositpay(Float depositpay) {
+		this.depositpay = depositpay;
+	}
+
 	public Short getDepositpayStatus() {
 		return depositpayStatus;
 	}
 
 	public void setDepositpayStatus(Short depositpayStatus) {
 		this.depositpayStatus = depositpayStatus;
+	}
+
+	public Float getFullpay() {
+		return fullpay;
+	}
+
+	public void setFullpay(Float fullpay) {
+		this.fullpay = fullpay;
 	}
 
 	public Short getFullpayStatus() {
@@ -313,6 +345,14 @@ public class SalesVO implements Serializable {
 
 	public void setOtherStatus(Short otherStatus) {
 		this.otherStatus = otherStatus;
+	}
+
+	public Integer getActivityId() {
+		return activityId;
+	}
+
+	public void setActivityId(Integer activityId) {
+		this.activityId = activityId;
 	}
 
 }

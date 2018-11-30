@@ -55,6 +55,8 @@ public class PlanPO implements Serializable{
 	private short status;
 	
 	private String info;
+	
+	private long company;
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -159,10 +161,14 @@ public class PlanPO implements Serializable{
 	public void setInfo(String info) {
 		this.info = info;
 	}
-
-
 	
+	@Column(name = "company")
+	public long getCompany() {
+		return company;
+	}
 
-	
+	public void setCompany(long company) {
+		this.company = company;
+	}
 	
 }

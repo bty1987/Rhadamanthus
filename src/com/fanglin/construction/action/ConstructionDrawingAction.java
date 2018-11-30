@@ -69,6 +69,14 @@ public class ConstructionDrawingAction extends BaseListAction{
 		return SUCCESS;
 	}
 	
+	@Action(value = "addConstructionDrawings", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addConstructionDrawings() throws FLException{
+		
+		constructionDrawings = constructionDrawingService.addConstructionDrawings(constructionDrawing, drawingUrls, queryUserId());
+		
+		return SUCCESS;
+	}
+	
 	@Action(value = "deleteConstructionDrawing", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteConstructionDrawing(){
 		

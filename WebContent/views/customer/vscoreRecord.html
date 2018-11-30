@@ -1,0 +1,46 @@
+<div class="page-content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="condList" class="fl_search clearfix"></div> <!-- 查询条件-->
+            <h3 style="margin-left: 10px">当前积分:<span id="result"></span></h3>
+            <div id="resultList" class="clearfix tab-pane active"></div> <!--查询结果-->
+            <div id="pagenation" class="fl-page-wrap clearfix"></div> <!--分页-->
+        </div>
+    </div>
+
+    <div class="modal fade" id="vscoreModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content" style="width:900px;margin-left:-30%">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myvscoreModal">增加积分</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <form class="form-horizontal">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label no-padding-right">积分</label>
+                                            <div class="col-md-9">
+                                                <input type="text" maxlength="7" id="vscore" class="col-xs-10 col-sm-6 v_required v_number"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="text-align: center">
+                    <button type="button" id="vscoreSaveBtn" class="btn btn-primary">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $.loadScript(['js/customer/vscoreRecord.js']);
+</script>

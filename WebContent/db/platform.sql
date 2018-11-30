@@ -13,22 +13,22 @@ CREATE TABLE `decorationdesigndepartmentright` (
 
 DROP TABLE IF EXISTS `decorationsalesmandepartmentright`;
 CREATE TABLE `decorationsalesmandepartmentright` (
-  `dsdrId` int(11) NOT NULL AUTO_INCREMENT,
+  `dsdrid` int(11) NOT NULL AUTO_INCREMENT,
   `uId` int(11) NOT NULL,
   `dId` int(11) NOT NULL,
   `company` int(11) NOT NULL,
-  PRIMARY KEY (`dsdrId`),
+  PRIMARY KEY (`dsdrid`),
   KEY `indexone` (`uId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='装修单业务部权限';
 
 DROP TABLE IF EXISTS `decorationstatusright`;
 CREATE TABLE `decorationstatusright` (
-  `dsrId` int(11) NOT NULL AUTO_INCREMENT,
-  `uId` int(11) NOT NULL,
+  `dsrid` int(11) NOT NULL AUTO_INCREMENT,
+  `uid` int(11) NOT NULL,
   `status` tinyint(1) NOT NULL,
   `company` int(11) NOT NULL,
-  PRIMARY KEY (`dsrId`),
-  KEY `indexone` (`uId`)
+  PRIMARY KEY (`dsrid`),
+  KEY `indexone` (`uid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='装修单状态权限';
 
 

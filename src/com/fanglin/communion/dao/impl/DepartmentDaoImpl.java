@@ -12,7 +12,6 @@ package com.fanglin.communion.dao.impl;
 import java.util.List;
 
 import org.hibernate.Criteria;
-import org.hibernate.Query;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -77,24 +76,17 @@ public class DepartmentDaoImpl extends DaoImpl<DepartmentPO> implements Departme
         	criteria.add(Restrictions.eq("company", company));
         }
         
-        criteria.addOrder(Order.asc("deptId"));
+		criteria.addOrder(Order.asc("did"));
         
         return criteria.list();
     }
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public List<String> queryDepartmentForChildren(String fatherDeptId){
-    	
-        String sql = "select deptId from communion.department where fatherDeptId = :fatherDeptId and status = 1";
-        
-        Query query = session().createSQLQuery(sql);
-        
-        query.setString("fatherDeptId", fatherDeptId);
-        
-        return query.list();
-    }
-    
+	@Override
+	public DepartmentPO queryDepartmentByNo(String no) {
+
+		return (DepartmentPO) session().createCriteria(DepartmentPO.class).add(Restrictions.eq("no", no)).uniqueResult();
+	}
+
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<DepartmentPO> queryDepartmentBytype(int type , Integer company) {
@@ -108,13 +100,13 @@ public class DepartmentDaoImpl extends DaoImpl<DepartmentPO> implements Departme
                 if("deptType".equals(filter.getField())){
                 	  query.add(query.getCriterion("type.dtid", Integer.valueOf(filter.getData()),filter.getOp()));
                 }else if("deptName".equals(filter.getField())){
-                    query.add(query.getCriterion("deptName", filter));
+					query.add(query.getCriterion("name", filter));
                 }else if("company".equals(filter.getField())){
                 	query.add(query.getCriterion("company", Integer.valueOf(filter.getData()), filter.getOp()));
                 }
             }
         }
     }
-    
+
 	
 }

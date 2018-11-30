@@ -4,8 +4,8 @@ var rank = {
 
 jQuery(function($) {
 	
-	$("[name='rankType']").change(function(e){
-		$("[name='rankType']").each(function(i, e){
+	com.focusPage("[name='rankType']").change(function(e){
+		com.focusPage("[name='rankType']").each(function(i, e){
 			$(e).prop('checked', 0);
 		});
 		
@@ -14,8 +14,8 @@ jQuery(function($) {
 		queryRankInfo();
 	});
 	
-	$("[name='rankRegion']").change(function(e){
-		$("[name='rankRegion']").each(function(i, e){
+	com.focusPage("[name='rankRegion']").change(function(e){
+		com.focusPage("[name='rankRegion']").each(function(i, e){
 			$(e).prop('checked', 0);
 		});
 		
@@ -32,7 +32,7 @@ function queryRankInfo(){
 	var region = "";
 	var name = "";
 	
-	$("[name='rankType']").each(function(i, e){
+	com.focusPage("[name='rankType']").each(function(i, e){
 		var checkBox = $(e);
 		
 		if(checkBox.prop('checked')){
@@ -40,7 +40,7 @@ function queryRankInfo(){
 		}
 	});
 	
-	$("[name='rankRegion']").each(function(i, e){
+	com.focusPage("[name='rankRegion']").each(function(i, e){
 		var checkBox = $(e);
 		
 		if(checkBox.prop('checked')){
@@ -59,7 +59,7 @@ function queryRankInfo(){
 			var offset = length % 3;
 			var lineNum = parseInt(length / 3) + (offset > 0 ? 1 : 0);
 			
-			var rankInfo = $("#rankInfo").html("");
+			var rankInfo = com.focusPage("#rankInfo").html("");
 			
 			if(length > 50){
 				insertTable("col-xs-4", 1, ranks.slice(0, lineNum), name);
@@ -74,7 +74,7 @@ function queryRankInfo(){
 
 function insertTable(colxs, index, rankData, name){
 	
-	var rankInfo = $("#rankInfo");
+	var rankInfo = com.focusPage("#rankInfo");
 	
 	var div = $("<div></div>").addClass(colxs).appendTo(rankInfo);
 	

@@ -22,6 +22,8 @@ public interface DecorationDao extends Dao<DecorationPO> {
 	
 	public List<DecorationPO> pageDecoration(Paging paging, List<Filter> filters, List<Integer> designDepartmentIds, List<Short> statuses, int company);
 	
+	public List<DecorationPO> pageAllDecoration(Paging paging, List<Filter> filters);
+	
 	public List<DecorationPO> pageDecorationForGeneral(Paging paging, List<Filter> filters, int company);
 	
 	public List<DecorationPO> pageDecorationForDesign(Paging paging, List<Filter> filters, int company);
@@ -36,7 +38,7 @@ public interface DecorationDao extends Dao<DecorationPO> {
 	
 	public List<DecorationPO> pageDecorationForDesignerManager(Paging paging, List<Filter> filters, List<Integer> designDepartmentIds, List<Short> statuses, int company);
 	
-	public List<DecorationPO> pageDecorationForSalesmanManager(Paging paging, List<Filter> filters, List<Integer> salesmanDepartmentIds, List<Short> statuses, int company);
+	public List<DecorationPO> pageDecorationForSalesmanManager(Paging paging, List<Filter> filters, List<Integer> salesmanDepartmentIds, List<Short> statuses);
 	
 	public List<DecorationPO> queryDecoration(List<Filter> filters);
 	

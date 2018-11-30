@@ -1,6 +1,7 @@
 
 $(function () {
     var salesPayment = {
+        salesPaymentModelNameData: ["cash", "bank", "checkv", "advance", "coupon"],
         salesPaymentTypeData: {},
         salesPaymentRevTypeData: {},
         couponType: {},
@@ -13,35 +14,50 @@ $(function () {
                 regex: /^[0-9]+\.{0,1}[0-9]{0,2}$/g,
                 errorMsg: "价格内容输入错误"
             }
-        }
+        },
+        bankNums: [],
+        checkvNums: [],
+        collectOrRefundFalg: null,
+        coupon: 0,
+        couponInfo: null,
+        firstSid: 0,
+        spids: []
     };
 
     var salesPaymentPostData = {};
 
-    salesPayment.items.couponType = $('#couponType');
+    salesPayment.items.couponType = com.focusPage('#couponType');
+
+    salesPayment.cash = [];
+    salesPayment.bank = [];
+    salesPayment.bankUtil = [];
+    salesPayment.checkBank = [];
+    salesPayment.accounts = [];
+    salesPayment.couponType = [];
+
+    salesPayment.cashUtil = [];
+    salesPayment.bankUtil = [];
+    salesPayment.checkBankUtil = [];
+
+    salesPayment.cashInfo = {};
+    salesPayment.bankInfo = {};
+    salesPayment.checkBankInfo = {};
+    salesPayment.accountsInfo = {};
+    salesPayment.couponTypeData = {};
 
     com.post(api.common.queryReceiptType, {}, function (res) {
-        salesPayment.cash = [];
-        salesPayment.bank = [];
-        salesPayment.checkBank = [];
-        salesPayment.accounts = [];
-        salesPayment.couponType = [];
-
-        salesPayment.cashInfo = {};
-        salesPayment.bankInfo = {};
-        salesPayment.checkBankInfo = {};
-        salesPayment.accountsInfo = {};
-        salesPayment.couponTypeData = {};
-
         $.each(res.receiptTypes, function (i, v) {
             if (v.type == 1) {
                 salesPayment.cash.push(v);
+                salesPayment.cashUtil.push({"key":v.no,"value":v.name});
                 salesPayment.cashInfo[v.no] = v.name;
             } else if (v.type == 2) {
                 salesPayment.bank.push(v);
+                salesPayment.bankUtil.push({"key":v.no,"value":v.name});
                 salesPayment.bankInfo[v.no] = v.name;
             } else if (v.type == 3) {
                 salesPayment.checkBank.push(v);
+                salesPayment.checkBankUtil.push({"key":v.no,"value":v.name});
                 salesPayment.checkBankInfo[v.no] = v.name;
             } else if (v.type == 4) {
                 salesPayment.accounts.push(v);
@@ -52,37 +68,15 @@ $(function () {
             }
         });
 
-        $("#cashInfo").bindData(salesPayment.cash, 'no', 'name');
-
-        $("#installmentBankName").bindData(salesPayment.bank, 'no', 'name');
-
-        $("#checkvBankName").bindData(salesPayment.checkBank, 'no', 'name');
-
-        $("#accountsBankName").bindData(salesPayment.accounts, 'no', 'name');
-
-        $("#couponType").bindData(salesPayment.couponType, 'no', 'name');
-        $("#couponType").trigger("chosen:updated");
+        com.focusPage("#couponType").bindData(salesPayment.couponType, 'no', 'name');
+        com.focusPage("#couponType").trigger("chosen:updated");
     }, null, false);
+
+    paymentUtils.dynamicChosen('layerAdd',"salescashInfo",salesPayment.cashUtil,"key","value");
 
     $.extend(com.validator, salesPayment.validator);
 
-    $("#history").removeClass("active");
-
-    $("#refundBankCard").on("click", function (e) {
-        $("#refundBankCardDiv").removeClass("hide");
-        $("#refundBankName").addClass("v_required");
-
-        $("#refundCashInfoDiv").addClass("hide");
-        $("#refundCashInfo").removeClass("v_required");
-    });
-
-    $("#refundCash").on("click", function (e) {
-        $("#refundBankCardDiv").addClass("hide");
-        $("#refundBankName").removeClass("v_required");
-
-        $("#refundCashInfoDiv").removeClass("hide");
-        $("#refundCashInfo").addClass("v_required");
-    });
+    com.focusPage("#historySales").removeClass("active");
 
     com.post(api.ds.payment, {}, function (res) {
         for (var i = 0; i < res.materialPaymentType.length; i++) {
@@ -92,23 +86,20 @@ $(function () {
         }
     }, null, false);
 
-    $("#advanceType").bindData([{"key": "1", "value": "合同预付款"}, {"key": "2", "value": "工程预付款"}, {
-        "key": "3",
-        "value": "主材预付款"
-    }, {"key": "4", "value": "正林预付款"}], 'key', 'value');
+    com.focusPage("#advanceType").bindData([{"key": "1", "value": "合同预付款"}, {"key": "2", "value": "工程预付款"}, {"key": "3", "value": "主材预付款"}, {"key": "4", "value": "正林预付款"}], 'key', 'value');
 
     var advanceType = null;
 
-    $("#advanceCheckbox").on("click", function () {
+    com.focusPage("#advanceCheckbox").on("click", function () {
         changeValue();
     });
 
-    $("#advanceType").on("change", function () {
+    com.focusPage("#advanceType").on("change", function () {
         changeValue();
     });
 
     function changeValue() {
-        advanceType = $("#advanceType option:checked").val();
+        advanceType = com.focusPage("#advanceType option:checked").val();
         var typeStr = "";
 
         if (advanceType == 1) {
@@ -121,29 +112,45 @@ $(function () {
             typeStr = "zaterialAdvance";
         }
 
-        var orderId = $('#layerAdd').attr('orderId');
+        var orderId = com.focusPage('#layerAdd').attr('orderId');
 
         com.post(api.payment.queryAdvancePaymentByOrderId, {"decoration.orderId": orderId}, function (res) {
-            $("#advance").val(res[typeStr]).attr("readonly", "readonly");
+            com.focusPage("#advance").val(res[typeStr]).attr("readonly", "readonly");
         }, null, false);
     }
 
-    $("#couponType").chosen({width: "100%", multi_type: "input"});
-    $("#refundCouponType").chosen({width: "100%", multi_type: "input"});
+    com.focusPage("#couponType").chosen({width: "100%", multi_type: "input"});
+    com.focusPage("#refundCouponType").chosen({width: "100%", multi_type: "input"});
 
-    $("#bankAdd").on('click',function(){
+    com.focusPage("#salesbankAdd").on('click',function(){
         var num = $(this).attr("num");
         var nextNum = parseInt(num)+1;
-
-        addBankDiv(nextNum);
         $(this).attr("num", nextNum);
+
+        var maxNum = $(this).attr("maxnum");
+        maxNum = parseInt(maxNum)+1;
+        $(this).attr("maxnum", maxNum);
+        paymentUtils.addBankUtil(maxNum, "bankDiv", "#salesbankDivGroup", salesPayment.bankNums, salesPayment.bankUtil, "sales");
+
+        return false;
+    });
+
+    com.focusPage("#salescheckvAdd").on('click',function(){
+        var num = $(this).attr("num");
+        var nextNum = parseInt(num)+1;
+        $(this).attr("num", nextNum);
+
+        var maxNum = $(this).attr("maxnum");
+        maxNum = parseInt(maxNum)+1;
+        $(this).attr("maxnum", maxNum);
+        paymentUtils.addBankUtil(maxNum, "checkvDiv", "#salescheckvDivGroup", salesPayment.checkvNums, salesPayment.checkBankUtil, "sales");
 
         return false;
     });
 
     var displayFunc = (function () {
         var renderList = function (tableId, listData) {
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
             if (listData && listData.length) {
                 $.each(listData, function (i, v) {
@@ -212,70 +219,44 @@ $(function () {
 
             $liLine.append($h3).append($ulProperty);
             $btnCollect.click(function () {
-                $('#layerAdd').attr('orderId', v.sales.orderId);
-                $('#referMoney').val(v.referMoney);
+                com.focusPage("#myModalLabel").html($btnCollect.html() + "信息");
+                com.focusPage('#layerAdd').attr('orderId', v.sales.orderId);
+                com.focusPage('#referMoney').val(v.referMoney);
+                com.focusPage('#advanceCheckbox').removeAttr('disabled');
+                com.focusPage('#couponCheckbox').removeAttr('disabled');
+                com.focusPage('#collectDes').removeAttr('readonly');
+                com.focusPage("#historyUpdateSA").addClass("hide");
+                com.focusPage("#couponDiv div.form-group").removeClass("hide");
+                com.focusPage('.couponBlue').remove();
+                com.focusPage('#advanceType').val(1).removeAttr("disabled");
+                com.focusPage('#payAdvance').removeAttr("readonly");
 
-                var $layerrAdd = $('#layerAdd');
+                var $layerrAdd = com.focusPage('#layerAdd');
                 $layerrAdd.attr('spid', v.spid);
                 $layerrAdd.attr('sid', v.sales.sid);
 
                 if ($btnCollect.text() == '退款') {
-                    $('#couponCheckbox').parents('.inline').removeClass('hidden');
-                    $('#advanceCheckbox').parents('.inline').css('cssText','display:none!important');
+                    salesPayment.collectOrRefundFalg = 2;
+                    com.focusPage('#couponCheckbox').parents('.inline').removeClass('hidden');
+                    com.focusPage('#advanceCheckbox').parents('.inline').css('cssText','display:none!important');
                 }
                 if ($btnCollect.text() == '收款') {
-                    $('#advanceCheckbox').parents('.inline').removeClass('hidden');
-                    $('#advanceCheckbox').parents('.inline').css('cssText','display:inline-block!important');
-                    $('#advanceCheckbox').parents('.inline').addClass('show');
-                    $('#couponCheckbox').parents('.inline').removeClass('hidden');
-                    $('#couponCheckbox').parents('.inline').addClass('show');
+                    salesPayment.collectOrRefundFalg = 1;
+                    com.focusPage('#advanceCheckbox').parents('.inline').removeClass('hidden');
+                    com.focusPage('#advanceCheckbox').parents('.inline').css('cssText','display:inline-block!important');
+                    com.focusPage('#advanceCheckbox').parents('.inline').addClass('show');
+                    com.focusPage('#couponCheckbox').parents('.inline').removeClass('hidden');
+                    com.focusPage('#couponCheckbox').parents('.inline').addClass('show');
                 }
 
-                openlayer($btnCollect.text(), function () {
-                    var spid = $layerrAdd.attr('spid');
-                    var sid = $layerrAdd.attr('sid');
-                    var referMoney = $('#referMoney').val();
-                    var flagCoupon = true;
-
-                    var _coupon = 0;
-                    var _couponInfo = "#";
-                    $("li[class='search-choice']", $('#couponType_chosen')).each(function (i, v) {
-                        var _ = $(v);
-                        var _couponVal = _.find('input[name="multi_input"]').val();
-
-                        if (_couponVal < 0) {
-                            flagCoupon = false;
-                        }
-
-                        if (_couponVal == "") {
-                            _couponVal = 0;
-                        }
-
-                        _coupon = utils.accAdd(parseFloat(_coupon), parseFloat(_couponVal));
-                        _couponInfo += _.find('span').text() + ":" + _couponVal + "#";
-
-                    });
-
-                    if (!flagCoupon) {
-                        layer.msg('代金券价格填写错误');
-                        return
-                    }
-
-                    if ($btnCollect.text() == '收款') {
-                        collectSalesPayment(sid, spid, referMoney, _coupon, _couponInfo);
-                    }
-
-                    if ($btnCollect.text() == '退款') {
-                        collectSalesPaymentForRefund(sid, spid, referMoney,_coupon, _couponInfo);
-                    }
-                });
+                com.focusPage("#layerAdd").modal("show");
             });
             return $liLine;
         };
 
         return {
             init: function (tableId, listData) {
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             },
             drawLine: function (v) {
@@ -293,13 +274,20 @@ $(function () {
         var $addspan = $('<span></span>').text('批量收款').appendTo($adda);
 
         $adda.click(function () {
-            $('#advanceCheckbox').parents('.inline').removeClass('hidden');
-            $('#advanceCheckbox').parents('.inline').addClass('show');
-            $('#advanceCheckbox').parents('.inline').css('cssText','display:inline-block!important');
-            $('#couponCheckbox').parents('.inline').addClass('hidden');
+            salesPayment.collectOrRefundFalg = 3;
 
-            var $inputs = $('input[name="spids"]:checked', '#resultList');
-            var referMoney = 0;
+            com.focusPage('#advanceCheckbox').parents('.inline').removeClass('hidden');
+            com.focusPage('#advanceCheckbox').parents('.inline').addClass('show');
+            com.focusPage('#advanceCheckbox').parents('.inline').css('cssText','display:inline-block!important');
+            com.focusPage('#couponCheckbox').parents('.inline').addClass('hidden');
+
+            com.focusPage('#advanceCheckbox').removeAttr('disabled');
+            com.focusPage('#collectDes').removeAttr('readonly');
+            com.focusPage("#historyUpdateSA").addClass("hide");
+            com.focusPage('#advanceType').val(1).removeAttr("disabled");
+            com.focusPage('#payAdvance').removeAttr("readonly");
+
+            var $inputs = com.focusPage('input[name="spids"]:checked', '#resultList');
 
             if (!$inputs.length) return;
 
@@ -360,7 +348,7 @@ $(function () {
                 referMoney += parseFloat(row.referMoney);
             });
 
-            $('#layerAdd').attr('orderId', orderIds);
+            com.focusPage('#layerAdd').attr('orderId', orderIds);
 
             for (var i = 0; i < _sid.length; i++) {
                 var items = _sid[i];
@@ -391,11 +379,12 @@ $(function () {
                 return false;
             }
 
-            $('#referMoney').val(referMoney);
+            com.focusPage('#referMoney').val(referMoney);
 
-            openlayer($addspan.text(), function () {
-                collectSalesPayments(sid[0], spids, $('#referMoney').val());
-            });
+            salesPayment.firstSid = sid[0];
+            salesPayment.spids = spids;
+
+            com.focusPage("#layerAdd").modal('show');
         });
 
         var $showa = $('<a></a>').addClass('btn btn-minier btn-pink pull-left').attr('name', 'showTotal').css("margin", "0px 3px");
@@ -404,7 +393,7 @@ $(function () {
 
         $showa.click(function () {
             var $total = 0;
-            var $inputs = $('input[name="spids"]:checked');
+            var $inputs = com.focusPage('input[name="spids"]:checked');
 
             $inputs.length && ($.each($inputs, function (i, v) {
                 var $that = $(v);
@@ -424,7 +413,7 @@ $(function () {
 
     var hdisplayFunc = (function () {
         var renderList = function (tableId, listData) {
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if (listData && listData.length) {
@@ -444,6 +433,7 @@ $(function () {
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
             var $btnPrint = $('<a></a>').addClass('btn btn-minier btn-info').html('打印');
+            var $btnUpdate = $('<a></a>').addClass('btn btn-minier btn-success').html('更新');
 
             var propertyArr = [
                 ["订单号:", v.sales.orderId, "blue"],
@@ -483,17 +473,8 @@ $(function () {
             var styleArr = [];
 
             v.salesReceipt.cash != null && v.salesReceipt.cash != "0" ? styleArr.push(["现金:", v.salesReceipt.cash, "blue"]) : true;
-            v.salesReceipt.bank != null && v.salesReceipt.bank != "0" ? styleArr.push(["银行:", (function (bank, bankInfo) {
-                var info = bank + ", ";
-                var _s = bankInfo.split('#');
-                for (var i = 1; i < _s.length - 1; i++) {
-                    var _i = _s[i].split('|');
-                    info += salesPayment.bankInfo[_i[0]] + " " + _i[1] + ", ";
-                }
-
-                return info;
-            })(v.salesReceipt.bank, v.salesReceipt.bankInfo), "blue"]) : true;
-            v.salesReceipt.checkv != null && v.salesReceipt.checkv != "0" ? styleArr.push(["转账:", v.salesReceipt.checkv, "blue"]) : true;
+            v.salesReceipt.bank != null && v.salesReceipt.bank != "0" ? styleArr.push(["银行:", paymentUtils.splitBankInfo(v.salesReceipt.bank, v.salesReceipt.bankInfo, salesPayment.bankInfo), "blue"]) : true;
+            v.salesReceipt.checkv != null && v.salesReceipt.checkv != "0" ? styleArr.push(["转账:", paymentUtils.splitBankInfo(v.salesReceipt.checkv, v.salesReceipt.checkvBank, salesPayment.checkBankInfo), "blue"]) : true;
             v.salesReceipt.installment != null && v.salesReceipt.installment != "0" ? styleArr.push(["分期:", v.salesReceipt.installment, "blue"]) : true;
             v.salesReceipt.accounts != null && v.salesReceipt.accounts != "0" ? styleArr.push(["对公帐户:", v.salesReceipt.accounts, "blue"]) : true;
             v.salesReceipt.advance != null && v.salesReceipt.advance != "0" ? styleArr.push(["预付款:", v.salesReceipt.advance, "blue"]) : true;
@@ -511,10 +492,93 @@ $(function () {
 
             $divBtnWrap.append($btnPrint).appendTo($h3);
 
+            if(v.status == 1){
+                $divBtnWrap.append($btnUpdate);
+            }
+
             $liLine.append($h3).append($ulProperty).append($ulStyle);
 
             $btnPrint.click(function () {
-                printPayment(v.sales.orderId, v.salesReceipt.srId,v);
+                printPayment(v.sales.orderId, v.salesReceipt.srId, v);
+            });
+
+            //更新功能
+            $btnUpdate.click(function(){
+                com.focusPage("#myModalLabel").html("更新款项信息");
+                salesPayment.collectOrRefundFalg = 4;
+                var $layerrAdd = com.focusPage('#layerAdd');
+                com.focusPage('#layerAdd').attr('orderId', v.sales.orderId);
+                com.focusPage('#layerAdd').attr('spid', v.spid);
+                com.focusPage('#collectDes').val(v.salesReceipt.comment).attr("readonly", "readonly");
+                com.focusPage("#historyUpdateSA").removeClass("hide");
+
+                com.focusPage('#advanceCheckbox').parents('.inline').removeClass('hidden');
+                com.focusPage('#advanceCheckbox').parents('.inline').css('cssText','display:inline-block!important');
+                com.focusPage('#advanceCheckbox').parents('.inline').addClass('show');
+                com.focusPage('#couponCheckbox').parents('.inline').removeClass('hidden');
+                com.focusPage('#couponCheckbox').parents('.inline').addClass('show');
+
+                var spid = $layerrAdd.attr('spid', v.spid);
+                var sid = $layerrAdd.attr('sid', v.sales.sid);
+
+                if(com.focusPage('#advanceCheckbox').attr("disabled")){
+                    com.focusPage('#advanceCheckbox').removeAttr('disabled');
+                }
+                if(com.focusPage('#couponCheckbox').attr("disabled")){
+                    com.focusPage('#couponCheckbox').removeAttr('disabled');
+                }
+
+                //预付款
+                if(v.salesReceipt.advance!="" && v.salesReceipt.advance!=null && v.salesReceipt.advance!=0){
+                    com.focusPage("#advanceCheckbox").trigger("click");
+                    com.focusPage("#advanceDiv").removeClass("hide");
+                    com.focusPage("#advanceType").val(3).attr("disabled", "disabled");
+
+                    com.post(api.payment.queryAdvancePaymentByCustomerId, {"customer.cid": v.sales.customer.cid},function(res){
+                        com.focusPage("#advance").val(res.materialAdvance);
+                        com.focusPage("#payAdvance").val(v.salesReceipt.advance).attr("readonly", "readonly");
+                    });
+                }
+
+                //券信息
+                if(v.salesReceipt.coupon!="" && v.salesReceipt.coupon!=null && v.salesReceipt.coupon!=0){
+                    com.focusPage("#couponCheckbox").trigger("click");
+
+                    var couponInfoList = {};
+                    var couponInfoAll = "";
+                    couponInfoAll = v.salesReceipt.couponInfo.substring(1,v.salesReceipt.couponInfo.length-1);
+                    couponInfoList = couponInfoAll.split("#");
+
+                    com.focusPage("#couponDiv").removeClass("hide");
+                    com.focusPage('.couponBlue').remove();
+                    com.focusPage("#couponDiv div.form-group").addClass("hide");
+
+                    $.each(couponInfoList,function (i,v) {
+                        var $couponSpan = $('<span></span>').addClass('blue couponBlue').text(v).css({"font-size":"14px","margin-left":"20px"});
+                        com.focusPage("#couponDiv").append($couponSpan);
+                    });
+                }
+
+                com.focusPage('#advanceCheckbox').attr('disabled', 'disabled');
+                com.focusPage('#couponCheckbox').attr('disabled', 'disabled');
+
+                //历史收款信息
+                com.focusPage("#cashHistorySA").text("现金: "+com.checkNull(salesPayment.cashInfo[v.salesReceipt.cashInfo],"")+" "+com.checkNull(v.salesReceipt.cash,"无"));
+                com.focusPage("#bankHistorySA").text("银行卡: " + (v.salesReceipt.bank == 0 ? "无" : paymentUtils.splitBankInfo(v.salesReceipt.bank, v.salesReceipt.bankInfo, salesPayment.bankInfo)));
+                com.focusPage("#checkvHistorySA").text("转账: " + (v.salesReceipt.checkv == 0 ? "无" : paymentUtils.splitBankInfo(v.salesReceipt.checkv, v.salesReceipt.checkvBank, salesPayment.checkBankInfo)));
+                com.focusPage("#installmentHistorySA").text("分期: "+com.checkNull(salesPayment.bankInfo[v.salesReceipt.installmentBank],"")+" "+com.checkNull(v.salesReceipt.installment,"无"));
+                com.focusPage("#accountsHistorySA").text("对公账户: "+com.checkNull(salesPayment.accountsInfo[v.salesReceipt.accountsBank],"")+" "+com.checkNull(v.salesReceipt.accounts,"无"));
+
+                salesPayment.coupon = v.salesReceipt.coupon;
+                salesPayment.couponInfo = v.salesReceipt.couponInfo;
+
+                var cashAndBank = utils.accAdd(v.salesReceipt.cash,v.salesReceipt.bank);
+                var checkvAndCoupon = utils.accAdd(v.salesReceipt.checkv,v.salesReceipt.coupon);
+
+                var historyReferMoney = utils.accAdd(utils.accAdd(cashAndBank, checkvAndCoupon), v.salesReceipt.advance);
+                com.focusPage('#referMoney').val(historyReferMoney);
+
+                com.focusPage("#layerAdd").modal("show");
             });
 
             return $liLine;
@@ -522,7 +586,7 @@ $(function () {
 
         return {
             init: function (tableId, listData) {
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             },
             drawLine: function (v) {
@@ -541,90 +605,13 @@ $(function () {
 
         $impa.click(function () {
             salesPaymentForNotInitImport();
-
         });
 
         return [$impa];
     }, "hresultList");
 
-    function openlayer(type, callback) {
-        layer.closeAll();
-        var index = layer.open({
-            type: 1,
-            title: type,
-            content: $('#layerAdd'),
-            area: ["650px", ( $(window).height() * 0.84 < 750 ? $(window).height() * 0.84 : 750 ) + "px"],
-            maxmin: false,
-            zIndex: 9000,
-            btn: ['确定', '取消'],
-            yes: function (index, layero) {
-                if(com.validate('layerAdd')){
-                    return;
-                }
-                callback(index, layero);
-                salesPaymentSearcher.doSearch();
-            },
-            btn2: function (index, layero) {
-                com.clearValidator();
-                salesPaymentSearcher.doSearch();
-                closeLayer();
-            },
-            cancel: function () {
-                salesPaymentSearcher.doSearch();
-                closeLayer();
-            }
-        });
-    }
-
-    function closeLayer() {
-        $('[name="top"]').addClass('hide');
-        $('#cash').val("");
-        $('#bankAdd').attr("num", 0);
-        $('input[type="checkbox"]','#form').removeAttr('checked');
-        $('#bank').val("");
-        $('#checkv').val("");
-        $('#installment').val("");
-        $('#accounts').val("");
-        $('#bankDivGroup').empty();
-        $('#payAdvance').val("");
-        $('.search-choice').find('input').val('');
-        $('#collectDes').val("");
-    }
-
-    function addBankDiv(index){
-        var d = new Date();
-        var currentData = d.getFullYear() + "-" + ((d.getMonth() + 1).toString().length == 1 ? "0" : "") + (d.getMonth() + 1) + "-" + (d.getDate().toString().length == 1 ? "0" : "") + d.getDate();
-
-        var bankDiv = $('<div></div>').addClass('form-group').attr("id", "bankDiv_"+index).appendTo($("#bankDivGroup"));
-
-        var bankNameLabel = $('<label></label>').addClass('col-sm-3 control-label no-padding-right').text('开户行').appendTo(bankDiv);
-        var bankNameDiv = $('<div></div>').addClass('col-sm-8').appendTo(bankDiv);
-        var bankNameSelect = $('<select></select>').addClass('col-sm-6 v_required').attr("id", "bankName_"+index).attr("data-toggle", "popover").attr("data-trigger", "manual").bindData(salesPayment.bank, 'no', 'name').appendTo(bankNameDiv);
-        var bankDelDiv = $('<div></div>').addClass('col-sm-1').appendTo(bankDiv);
-        var bankDelBtn = $('<button></button>').addClass('btn btn-minier btn-danger pull-right inline').text("删除").attr("id", "bankDel_"+index).attr("index", index).appendTo(bankDelDiv).click(function(){
-            $("#bankDiv_"+$(this).attr("index")).remove();
-            var bankAdd = $("#bankAdd");
-            var num = bankAdd.attr("num");
-            bankAdd.attr("num", parseInt(num)-1);
-            return false;
-        });
-
-        var bankMoneyLabel = $('<label></label>').addClass('col-sm-3 control-label no-padding-right').text('刷卡金额').appendTo(bankDiv);
-        var bankMoneyDiv = $('<div></div>').addClass('col-sm-8').appendTo(bankDiv);
-        var bankMoneyInput = $('<input/>').addClass("col-sm-6 v_required v_float").attr("data-toggle", "popover").attr("data-trigger", "manual").attr("type", "text").attr("id", "bank_"+index).appendTo(bankMoneyDiv);
-
-        var bankDateLabel = $('<label></label>').addClass('col-sm-3 control-label no-padding-right').text('日期').appendTo(bankDiv);
-        var bankDateDiv = $('<div></div>').addClass('col-sm-8').appendTo(bankDiv);
-        var bankDateInput = $('<input/>').addClass("date-picker-date col-sm-6 v_required").attr("data-toggle", "popover").attr("data-trigger", "manual").attr("type", "text").attr("id", "bankDate_"+index).attr("data-date-format", "yyyy-mm-dd").val(currentData).datepicker({autoclose:true}).appendTo(bankDateDiv);
-
-        var bankTimeLabel = $('<label></label>').addClass('col-sm-3 control-label no-padding-right').text('时间').appendTo(bankDiv);
-        var bankTimeDiv = $('<div></div>').addClass('col-sm-8').appendTo(bankDiv);
-        var bankTimePicker = $('<div></div>').addClass('bootstrap-timepicker').appendTo(bankTimeDiv);
-        var bankTimeInput =  $('<input/>').addClass('col-sm-6 v_time v_required').attr("type", "text").attr("id", "bankTime_"+index).attr("data-toggle", "popover").attr("data-trigger", "manual").mask('99:99:99').appendTo(bankTimePicker);
-    }
-
     function baseClick() {
-        var $input = $('input[type="checkbox"]','#form');
+        var $input = com.focusPage('input[type="checkbox"]','#form');
 
         $.each($input, function (i, v) {
             var $v = $(v);
@@ -632,9 +619,9 @@ $(function () {
                 var id = $v.attr('key') + "Div";
 
                 if ($v.is(':checked')) {
-                    $("#" + id).removeClass('hide');
+                    com.focusPage("#" + id).removeClass('hide');
                 } else {
-                    $("#" + id).addClass('hide');
+                    com.focusPage("#" + id).addClass('hide');
                 }
             });
         });
@@ -646,311 +633,13 @@ $(function () {
         layer.msg(msg);
     }
 
-    function collectSalesPayments(sid, spids, referMoney) {
-        var layerAdd = $('#layerAdd');
-        var bankAdd = $("#bankAdd");
-
-        var referMoney = parseFloat(referMoney);
-
-        checkPaymentHideFlag();
-
-        var _coupon = 0;
-        var _couponInfo = "#";
-
-        var _bank = 0;
-        var _bankInfo = "#";
-
-        var num = parseInt(bankAdd.attr("num"));
-        for (var j = 0; j < num; j++) {
-            var index = j + 1;
-            var bankName = $("#bankName_" + index).val();
-            var bankMoney = $("#bank_" + index).val();
-            var bankDate = $("#bankDate_" + index).val();
-            var bankTime = $("#bankTime_" + index).val();
-
-            _bankInfo += bankName + "|" + bankMoney + "|" + bankDate + " " + bankTime + "#";
-
-            _bank = utils.accAdd(parseFloat(bankMoney), _bank);
-        }
-
-        $("[class='search-choice']", $('#couponType_chosen')).each(function (i, v) {
-            var _ = $(v);
-            var _couponVal = _.find('input').val();
-            _coupon = utils.accAdd(parseFloat(_coupon), parseFloat(_couponVal));
-            _couponInfo += _.find('span').text() + ":" + _couponVal + "#";
-        });
-
-        var cash = layerAdd.find('#cash').val();
-        var cashInfo = layerAdd.find('#cashInfo').val();
-
-        var bank = _bank;
-        var bankInfo = _bankInfo;
-
-        var checkv = layerAdd.find('#checkv').val();
-        var checkvBank = layerAdd.find('#checkvBankName').val();
-
-        var installment = layerAdd.find('#installment').val();
-        var installBank = layerAdd.find('#installmentBankName').val();
-
-        var accounts = layerAdd.find('#accounts').val();
-        var accountsBank = layerAdd.find('#accountsBankName').val();
-
-        var payAdvance = layerAdd.find('#payAdvance').val();
-        var advance = layerAdd.find('#advance').val();
-        var advanceType = layerAdd.find('#advanceType option:selected').val();
-
-        if (parseFloat(payAdvance) > parseFloat(advance)) {
-            com.showAlert(com.warning, "当前实收款项总数大于预付款项,请核实再进行提交!");
-            return false;
-        }
-
-        var des = $('#collectDes').val();
-        var realMoney = parseFloat(cash != "" ? cash : 0) + parseFloat(bank != "" ? bank : 0) + parseFloat(checkv != "" ? checkv : 0) + parseFloat(installment != "" ? installment : 0) + parseFloat(accounts != "" ? accounts : 0) + parseFloat(payAdvance != "" ? payAdvance : 0);//+parseFloat(coupon);
-
-        if (referMoney != realMoney) {
-            com.showAlert(com.warning, "当前实收款项总数与应收款项不等,请核实再进行提交!");
-            return false;
-        }
-
-        var option = {
-            "sales.sid": sid,
-            "salesPayment.sales.sid": sid,
-            "salesReceipt.realMoney": realMoney,
-            "salesReceipt.cash": cash == "" ? 0 : cash,
-            "salesReceipt.cashInfo": cashInfo,
-            "salesReceipt.bank": bank == "" ? 0 : bank,
-            "salesReceipt.bankInfo": bankInfo,
-            "salesReceipt.checkv": checkv == "" ? 0 : checkv,
-            "salesReceipt.checkvBank": checkvBank,
-            "salesReceipt.installment": installment == "" ? 0 : installment,
-            "salesReceipt.installBank": installBank,
-            "salesReceipt.accounts": accounts == "" ? 0 : accounts,
-            "salesReceipt.accountsBank": accountsBank,
-            "salesReceipt.advance": payAdvance == "" ? 0 : payAdvance,
-            "salesReceipt.advanceType": advanceType,
-            "salesReceipt.comment": des
-        };
-
-        if (!$('#advanceDiv').hasClass('hide')) {
-            option["salesPayment.advanceType"] = advanceType;
-            option["salesPayment.advance"] = parseFloat(payAdvance).toFixed(2);
-        }
-
-        $.each(spids, function (i, v) {
-            option["spids[" + i + "]"] = v;
-        });
-
-        if (checkInfo()) {
-            com.post(api.payment.collectSalesPayments, option, function () {
-                layer.closeAll();
-                salesPaymentSearcher.doSearch();
-                layer.msg('批量收款成功', {icon: 1});
-                closeLayer();
-
-            });
-        }
-    }
-
-    function collectSalesPayment(sid, spid, referMoney, coupon, couponInfo) {
-        var layerAdd = $('#layerAdd');
-        var bankAdd = $("#bankAdd");
-        var layerOrderId = $('#layerAdd').attr('orderId');
-
-        salesPayment.items.couponType.chosen("destroy");
-        salesPayment.items.couponType.chosen({width: "100%", multi_type: "input"});
-        salesPayment.items.couponType.bindData(salesPayment.couponType, 'no', 'name');
-        salesPayment.items.couponType.trigger("chosen:updated");
-
-        var referMoney = parseFloat(referMoney);
-
-        checkPaymentHideFlag();
-
-        if ($('#couponDiv').hasClass('hide')) {
-            coupon = 0;
-            couponInfo = "#";
-        }
-
-        var _bank = 0;
-        var _bankInfo = "#";
-        var num = parseInt(bankAdd.attr("num"));
-        for (var j = 0; j < num; j++) {
-            var index = j + 1;
-            var bankName = $("#bankName_" + index).val();
-            var bankMoney = $("#bank_" + index).val();
-            var bankDate = $("#bankDate_" + index).val();
-            var bankTime = $("#bankTime_" + index).val() + ":00";
-
-            _bankInfo += bankName + "|" + bankMoney + "|" + bankDate + " " + bankTime + "#";
-
-            _bank = utils.accAdd(parseFloat(bankMoney), _bank);
-        }
-
-        var sid = sid;
-        var spid = spid;
-
-        var cash = layerAdd.find('#cash').val() != "" ? layerAdd.find('#cash').val() : 0;
-        var cashInfo = layerAdd.find('#cashInfo').val();
-
-        var bank = _bank;
-        var bankInfo = _bankInfo;
-
-        var checkv = layerAdd.find('#checkv').val() != "" ? layerAdd.find('#checkv').val() : 0;
-        var checkvBank = layerAdd.find('#checkvBankName').val();
-
-        var installment = layerAdd.find('#installment').val() != "" ? layerAdd.find('#installment').val() : 0;
-        var installBank = layerAdd.find('#installmentBankName').val();
-
-        var accounts = layerAdd.find('#accounts').val() != "" ? layerAdd.find('#accounts').val() : 0;
-        var accountsBank = layerAdd.find('#accountsBankName').val();
-
-        var advance = layerAdd.find('#advance').val() != "" ? layerAdd.find('#advance').val() : 0;
-        var advanceType = layerAdd.find('#advanceType option:selected').val();
-
-        var payAdvance = layerAdd.find('#payAdvance').val();
-
-        if (parseFloat(payAdvance) > parseFloat(advance)) {
-            com.showAlert(com.warning, "当前实收款项总数大于预付款项,请核实再进行提交!");
-            return false;
-        }
-
-        var des = $('#collectDes').val();
-
-        var realMoney = parseFloat(cash != "" ? cash : 0) + parseFloat(bank != "" ? bank : 0) + parseFloat(checkv != "" ? checkv : 0) + parseFloat(installment != "" ? installment : 0) + parseFloat(accounts != "" ? accounts : 0) + parseFloat(coupon != "" ? coupon : 0) + parseFloat(payAdvance != "" ? payAdvance : 0);
-
-        if (referMoney != realMoney) {
-            com.showAlert(com.warning, "当前实收款项总数与应收款项不等,请核实再进行提交!");
-            return false;
-        }
-
-        var option = {
-            "sales.sid": sid,
-            "salesPayment.sales.sid": sid,
-            "salesPayment.spid": spid,
-            "salesReceipt.realMoney": realMoney,
-            "salesReceipt.cash": cash,
-            "salesReceipt.cashInfo": cashInfo,
-            "salesReceipt.bank": bank,
-            "salesReceipt.bankInfo": bankInfo,
-            "salesReceipt.checkv": checkv,
-            "salesReceipt.checkvBank": checkvBank,
-            "salesReceipt.installment": installment,
-            "salesReceipt.installBank": installBank,
-            "salesReceipt.accounts": accounts,
-            "salesReceipt.accountsBank": accountsBank,
-            "salesReceipt.coupon": coupon,
-            "salesReceipt.couponInfo": couponInfo,
-            "salesReceipt.advance": payAdvance,
-            "salesReceipt.advanceType": advanceType,
-            "salesReceipt.comment": des
-        };
-
-        if (!$('#advanceDiv').hasClass('hide')) {
-            option["salesPayment.advanceType"] = advanceType;
-            option["salesPayment.advance"] = parseFloat(payAdvance).toFixed(2);
-        }
-
-        if (checkInfo()) {
-            com.post(api.payment.collectSalesPayment, option, function () {
-                layer.closeAll();
-                salesPaymentSearcher.doSearch();
-                layer.msg('收款成功', {icon: 1});
-                closeLayer();
-            });
-        }
-    }
-
-    function collectSalesPaymentForRefund(sid, spid, referMoney, coupon, couponInfo) {
-        var layerAdd = $('#layerAdd');
-        var bankAdd = $("#bankAdd");
-
-        var referMoney = parseFloat(referMoney);
-
-        checkPaymentHideFlag();
-
-        if ($('#couponDiv').hasClass('hide')) {
-            coupon = 0;
-            couponInfo = "#";
-        }
-
-        var _bank = 0;
-        var _bankInfo = "#";
-        var num = parseInt(bankAdd.attr("num"));
-        for (var j = 0; j < num; j++) {
-            var index = j + 1;
-            var bankName = $("#bankName_" + index).val();
-            var bankMoney = $("#bank_" + index).val();
-            var bankDate = $("#bankDate_" + index).val();
-            var bankTime = $("#bankTime_" + index).val() + ":00";
-
-            _bankInfo += bankName + "|" + bankMoney + "|" + bankDate + " " + bankTime + "#";
-
-            _bank = utils.accAdd(parseFloat(bankMoney), _bank);
-        }
-
-        var sid = sid;
-        var spid = spid;
-
-        var cash = layerAdd.find('#cash').val();
-        var cashInfo = layerAdd.find('#cashInfo').val();
-
-        var bank = _bank;
-        var bankInfo = _bankInfo;
-
-        var checkv = layerAdd.find('#checkv').val();
-        var checkvBank = layerAdd.find('#checkvBankName').val();
-
-        var installment = layerAdd.find('#installment').val();
-        var installBank = layerAdd.find('#installmentBankName').val();
-
-        var accounts = layerAdd.find('#accounts').val();
-        var accountsBank = layerAdd.find('#accountsBankName').val();
-
-        var des = $('#collectDes').val();
-
-        var realMoney = parseFloat(cash != "" ? cash : 0) + parseFloat(bank != "" ? bank : 0) + parseFloat(checkv != "" ? checkv : 0) + parseFloat(installment != "" ? installment : 0) + parseFloat(accounts != "" ? accounts : 0) + parseFloat(coupon != "" ? coupon : 0);
-
-        if (referMoney != realMoney) {
-            com.showAlert(com.warning, "当前实收款项总数与应收款项不等,请核实再进行提交!");
-            return false;
-        }
-
-        var option = {
-            "salesPayment.sales.sid": sid,
-            "salesPayment.spid": spid,
-            "salesReceipt.realMoney": realMoney,
-            "salesReceipt.cash": cash,
-            "salesReceipt.cashInfo": cashInfo,
-            "salesReceipt.bank": bank,
-            "salesReceipt.bankInfo": bankInfo,
-            "salesReceipt.checkv": checkv,
-            "salesReceipt.checkvBank": checkvBank,
-            "salesReceipt.installment": installment,
-            "salesReceipt.installBank": installBank,
-            "salesReceipt.accounts": accounts,
-            "salesReceipt.accountsBank": accountsBank,
-            "salesReceipt.coupon": coupon,
-            "salesReceipt.couponInfo": couponInfo,
-            "salesReceipt.comment": des
-        };
-
-        if (checkInfo()) {
-            com.post(api.payment.collectSalesPaymentForRefund, option, function () {
-                layer.closeAll();
-                salesPaymentSearcher.doSearch();
-                layer.msg('退款成功', {icon: 1});
-                closeLayer();
-
-            });
-        }
-    }
-
     function salesPaymentForNotInitImport() {
-        if ($('span[name="totalRecords"]').text() == 0) {
+        if (com.focusPage('span[name="totalRecords"]').text() == 0) {
             com.showAlert(com.warning, "请通过条件进行查询");
             return false;
         }
 
-        if ($('span[name="totalRecords"]').text() > 1000) {
+        if (com.focusPage('span[name="totalRecords"]').text() > 1000) {
             com.showAlert(com.warning, "查询结果大于阀值 , 不能完成导出动作");
             return false;
         }
@@ -989,7 +678,22 @@ $(function () {
                     v.salesReceipt.bankInfo = $info;
                 }
 
-                v.salesReceipt.checkvBank = v.salesReceipt.checkv != null && v.salesReceipt.checkv != "0" ? salesPayment.checkBankInfo[v.salesReceipt.checkvBank] : '';
+                if (v.salesReceipt.checkv!= null && v.salesReceipt.checkv != 0) {
+                    var checkBankInfoStr = v.salesReceipt.checkvBank;
+                    if(checkBankInfoStr.indexOf("#") != -1){
+                       var $checkvInfo = ' ';
+                       var _c = v.salesReceipt.checkvBank.split('#');
+                       for(var i=1;i<_c.length-1;i++){
+                           var _i = _c[i].split('|');
+                           $checkvInfo += salesPayment.checkBankInfo[_i[0]] + " " + _i[1] + ", " + _i[2] + ", ";
+                       }
+
+                       v.salesReceipt.checkvBank = $checkvInfo;
+                   }else{
+                        v.salesReceipt.checkvBank = v.salesReceipt.checkv != null && v.salesReceipt.checkv != "0" ? salesPayment.checkBankInfo[v.salesReceipt.checkvBank] : '';
+                   }
+                }
+
                 v.salesReceipt.installBank = v.salesReceipt.installment != null && v.salesReceipt.installment != "0" ? salesPayment.bankInfo[v.salesReceipt.installBank] : '';
                 v.salesReceipt.accountsBank = v.salesReceipt.accounts != null && v.salesReceipt.accounts != "0" ? salesPayment.accountsInfo[v.salesReceipt.accountsBank] : '';
 
@@ -999,209 +703,260 @@ $(function () {
         });
     }
 
-    function printPayment(orderId, srId,v) {
+    function printPayment(orderId, srId, v) {
         if(v.salesReceipt.collecter.userId!=params.userInfo.user.userId){
-            com.showAlert(com.warning, "收款人不匹配，不能打印");
+            com.showAlert(com.warning, "收款人不匹配, 不能打印");
             return false;
         }else{
             params.salesReceiptSrId = srId;
-            com.popup("专用收款收据__装修单号：" + orderId, api.index.salesPaymentReceiptIndex.url, function () {
+            com.popup("专用收款收据__装修单号: " + orderId, api.index.salesPaymentReceiptIndex.url, function () {
                 parent.layer.getFrameIndex(window.name);
             }, null, true);
         }
     }
 
     function checkPaymentHideFlag() {
-        if ($('#cashDiv').hasClass('hide')) {
-            $('#cash').val("");
-        }
-        if ($('#bankDiv').hasClass('hide')) {
-            $('#bankAdd').attr("num", 0);
-            $('#bankDivGroup').empty();
+        if (com.focusPage('#cashDiv').hasClass('hide')) {
+            com.focusPage('#cash').val("");
         }
 
-        if ($('#checkvDiv').hasClass('hide')) {
-            $('#checkv').val("");
+        if (com.focusPage('#bankDiv').hasClass('hide')) {
+            com.focusPage('#salesbankAdd').attr("num", 0).attr("maxnum", 0);
+            com.focusPage('#salesbankDivGroup').empty();
         }
 
-        if ($('#installmentDiv').hasClass('hide')) {
-            $('#installment').val("");
+        if (com.focusPage('#checkvDiv').hasClass('hide')) {
+            com.focusPage('#salescheckvAdd').attr("num", 0).attr("maxnum", 0);
+            com.focusPage('#salescheckvDivGroup').empty();
         }
 
-        if ($('#accountsDiv').hasClass('hide')) {
-            $('#accounts').val("");
+        if (com.focusPage('#advanceDiv').hasClass('hide')) {
+            com.focusPage('#payAdvance').val("");
         }
 
-        if ($('#advanceDiv').hasClass('hide')) {
-            $('#payAdvance').val("");
-        }
-
-        if ($('#couponDiv').hasClass('hide')) {
-            $('.search-choice').find('input').val("")
+        if (com.focusPage('#couponDiv').hasClass('hide')) {
+            com.focusPage('.search-choice').find('input').val("")
         }
     }
 
-    function checkInfo() {
-        var flag = true;
+    com.focusPage("#collectOrRefundBtn").click(function(){
+        if(salesPayment.collectOrRefundFalg <= 2){
+            var $layerrAdd = com.focusPage('#layerAdd');
+            var spid = $layerrAdd.attr('spid');
+            var sid = $layerrAdd.attr('sid');
+            var referMoney = com.focusPage('#referMoney').val();
+            var flagCoupon = true;
 
-        if (!$('#cashDiv').hasClass('hide')) {
-            var num = $('#cash');
-            var numRex = /^(\d+|\d+\.[0-9]{1,4})$/;
+            var _coupon = 0;
+            var _couponInfo = "#";
+            com.focusPage("li[class='search-choice']", '#couponType_chosen').each(function (i, v) {
+                var _ = $(v);
+                var _couponVal = _.find('input[name="multi_input"]').val();
 
-            if (!(numRex.test(num.val()) && parseFloat(num.val()) >= 0)) {
-                num.focus().select();
-                num.addClass('tooltip-info').attr({
-                    "data-rel": "popover",
-                    "data-placement": "right",
-                    "data-original-title": "",
-                    "title": "",
-                    "data-content": "价格输入内容格式错误!"
-                }).popover('show');
-                flag = false;
-            } else {
-                num.popover('destroy');
-            }
-        }
-
-        if (!$('#bankDiv').hasClass('hide')) {
-            var date = $('.date-picker-date', '#bankDivGroup');
-            if (!date.val()) {
-                date.focus().select();
-
-                date.addClass('popover-notitle').attr({
-                    "data-rel": "popover",
-                    "data-placement": "right",
-                    "data-original-title": "",
-                    "title": "",
-                    "data-content": "请选择日期"
-
-                }).popover('show');
-
-                flag = false;
-            } else {
-                date.popover('destroy');
-            }
-
-            var time = $('.v_time', '#bankDivGroup');
-            var timerex = /^([0-1][0-9]|[2][0-3]):([0-5][0-9])$/;
-
-            $.each(time, function (i, v) {
-                var $v = $(v);
-                if (!$v.val() && !timerex.test($v.val())) {
-                    $v.focus().select();
-
-                    $v.addClass('popover-notitle').attr({
-                        "data-rel": "popover",
-                        "data-placement": "right",
-                        "data-original-title": "",
-                        "title": "",
-                        "data-content": "请填写正确的时间"
-                    }).popover('show');
-
-                    flag = false;
-
-                } else {
-                    $v.popover('destroy');
+                if (_couponVal < 0) {
+                    flagCoupon = false;
                 }
+
+                if (_couponVal == "") {
+                    _couponVal = 0;
+                }
+
+                _coupon = utils.accAdd(parseFloat(_coupon), parseFloat(_couponVal));
+                _couponInfo += _.find('span').text() + ":" + _couponVal + "#";
+
             });
 
-            var price = $('.v_price', '#bankDivGroup');
-            var priceRex = /^(\d+|\d+\.[0-9]{1,4})$/;
+            if (!flagCoupon) {
+                layer.msg('代金券价格填写错误');
+                return;
+            }
+            if(salesPayment.collectOrRefundFalg == 1){
+                //收款
+                aboutcollectAndRefundMoney(sid, spid, null, referMoney, _coupon, _couponInfo, "single", api.payment.collectSalesPayment, "collect");
+            }else if(salesPayment.collectOrRefundFalg == 2){
+                //退款
+                aboutcollectAndRefundMoney(sid, spid, null, referMoney, _coupon, _couponInfo, "single", api.payment.collectSalesPaymentForRefund, "refund");
+            }
+        }else if(salesPayment.collectOrRefundFalg == 3){
+            //批量收款
+            aboutcollectAndRefundMoney(salesPayment.firstSid, null, salesPayment.spids, com.focusPage('#referMoney').val(), 0, null, "many", api.payment.collectSalesPayments, "collect");
+        }else if(salesPayment.collectOrRefundFalg == 4){
+            //更新收款
+            var spid = com.focusPage('#layerAdd').attr('spid');
+            var referMoney = com.focusPage('#referMoney').val();
+            aboutcollectAndRefundMoney(null, spid, null, referMoney, salesPayment.coupon, salesPayment.couponInfo, "single", api.payment.updateSalesPayment, "update");
+        }
+        salesPaymentSearcher.doSearch();
+        hsearcher.doSearch();
+    });
 
-            $.each(price, function (i, v) {
-                var $v = $(v);
-                if (!(parseFloat($v.val()) >= 0 && priceRex.test($v.val()))) {
-                    $v.focus().select();
+    com.focusPage("#layerAdd").on('hidden.bs.modal', function(){
+        com.cleanItems("layerAdd");
+        com.clearValidator("layerAdd");
 
-                    $v.addClass('popover-notitle').attr({
-                        "data-rel": "popover",
-                        "data-placement": "right",
-                        "data-original-title": "",
-                        "title": "",
-                        "data-content": "价格输入内容格式错误"
-                    }).popover('show');
-                    flag = false;
-                } else {
-                    $v.popover('destroy');
+        salesPayment.bankNums=[];
+        salesPayment.checkvNums=[];
+
+        com.focusPage('[name="top"]').addClass('hide');
+        com.focusPage('#cash').val("");
+        com.focusPage('#salesbankAdd').attr("num", 0).attr("maxnum", 0);
+        com.focusPage('#salescheckvAdd').attr("num", 0).attr("maxnum", 0);
+        com.focusPage('input[type="checkbox"]','#form').removeAttr('checked');
+        com.focusPage('#bank').val("");
+        com.focusPage('#checkv').val("");
+        com.focusPage('#salesbankDivGroup').empty();
+        com.focusPage('#salescheckvDivGroup').empty();
+        com.focusPage('#payAdvance').val("");
+        com.focusPage('.search-choice').find('input').val('');
+        com.focusPage('#collectDes').val("");
+
+        paymentUtils.EmptyChosen('salescashInfo');
+    });
+
+    function aboutcollectAndRefundMoney(sid, spid, spids, referMoney, coupon, couponInfo, singleFlag, url, collectOrRefund){
+        if(com.validate("layerAdd")){
+            return;
+        }
+
+        var layerAdd = com.focusPage('#layerAdd');
+        var des = com.focusPage('#collectDes').val();
+
+        if(singleFlag == "single"){
+            if(collectOrRefund != "update"){
+                if (com.focusPage('#couponDiv').hasClass('hide')) {
+                    coupon = 0;
+                    couponInfo = "#";
                 }
-            })
-        }
-
-        if (!$('#checkvDiv').hasClass('hide')) {
-            var num = $('#checkv');
-            var numRex = /^(\d+|\d+\.[0-9]{1,4})$/;
-
-            if (!(numRex.test(num.val()) && parseFloat(num.val()) >= 0)) {
-                num.focus().select();
-                num.addClass('tooltip-info').attr({
-                    "data-rel": "popover",
-                    "data-placement": "right",
-                    "data-original-title": "",
-                    "title": "",
-                    "data-content": "价格输入内容格式错误!"
-                }).popover('show');
-                flag = false;
-            } else {
-                num.popover('destroy');
             }
         }
 
-        if (!$('#installmentDiv').hasClass('hide')) {
-            var num = $('#installment');
-            var numRex = /^(\d+|\d+\.[0-9]{1,4})$/;
+        var referMoney = parseFloat(referMoney);
 
-            if (!(numRex.test(num.val()) && parseFloat(num.val()) >= 0)) {
-                num.focus().select();
-                num.addClass('tooltip-info').attr({
-                    "data-rel": "popover",
-                    "data-placement": "right",
-                    "data-original-title": "",
-                    "title": "",
-                    "data-content": "价格输入内容格式错误!"
-                }).popover('show');
-                flag = false;
-            } else {
-                num.popover('destroy');
+        checkPaymentHideFlag();
+
+        var cash = 0;
+        var cashInfo = "";
+        var bank = 0;
+        var bankInfo = "";
+        var checkv = 0;
+        var checkvBank = "";
+        var payAdvance = 0;
+        var advanceType;
+
+
+        if(com.focusPage("#cashCheckbox").prop("checked")){
+            cash = layerAdd.find('#cash').val() != "" ? layerAdd.find('#cash').val() : 0;
+            cashInfo = layerAdd.find('#salescashInfo').val();
+        }
+
+        if(com.focusPage("#bankCheckbox").prop("checked")){
+            var aboutBankParams = paymentUtils.returnBankParams(salesPayment.bankNums, "salesbank");
+            bank = aboutBankParams[0];
+            bankInfo = aboutBankParams[1];
+            if (bank == 0) {
+                bankInfo = "";
             }
         }
 
-        if (!$('#accountsDiv').hasClass('hide')) {
-            var num = $('#accounts');
-            var numRex = /^(\d+|\d+\.[0-9]{1,4})$/;
-
-            if (!(numRex.test(num.val()) && parseFloat(num.val()) >= 0)) {
-                num.focus().select();
-                num.addClass('tooltip-info').attr({
-                    "data-rel": "popover",
-                    "data-placement": "right",
-                    "data-original-title": "",
-                    "title": "",
-                    "data-content": "价格输入内容格式错误!"
-                }).popover('show');
-                flag = false;
-            } else {
-                num.popover('destroy');
+        if(com.focusPage("#checkvCheckbox").prop("checked")){
+            var aboutCheckvParams = paymentUtils.returnBankParams(salesPayment.checkvNums, "salescheckv");
+            checkv = aboutCheckvParams[0];
+            checkvBank = aboutCheckvParams[1];
+            if (checkv == 0) {
+                checkvBank = "";
             }
         }
 
-        if (!$('#advanceDiv').hasClass('hide')) {
-            var num = $('#payAdvance');
-            var numRex = /^(\d+|\d+\.[0-9]{1,4})$/;
+        var realMoney = utils.accAdd(utils.accAdd(cash, bank), checkv);
 
-            if (!(numRex.test(num.val()) && parseFloat(num.val()) >= 0)) {
-                num.focus().select();
-                num.addClass('tooltip-info').attr({
-                    "data-rel": "popover",
-                    "data-placement": "right",
-                    "data-original-title": "",
-                    "title": "",
-                    "data-content": "价格输入内容格式错误!"
-                }).popover('show');
-                flag = false;
-            } else {
-                num.popover('destroy');
+        if (collectOrRefund != "refund") {
+            if(com.focusPage("#advanceCheckbox").prop("checked")) {
+                var advance = layerAdd.find('#advance').val() != "" ? layerAdd.find('#advance').val() : 0;
+                advanceType = layerAdd.find('#advanceType option:selected').val();
+                payAdvance = layerAdd.find('#payAdvance').val();
+
+                if(collectOrRefund == "collect"){
+                    if (parseFloat(payAdvance) > parseFloat(advance)) {
+                        com.showAlert(com.warning, "当前实收款项总数大于预付款项,请核实再进行提交!");
+                        return false;
+                    }
+                }
+
+                realMoney = realMoney + parseFloat(payAdvance != "" ? payAdvance : 0);
             }
         }
-        return flag;
+
+        if (singleFlag == "single") {
+            if(com.focusPage("#couponCheckbox").prop("checked")){
+                realMoney = realMoney + parseFloat(coupon != "" ? coupon : 0);
+            }
+        }
+
+        if (referMoney != realMoney) {
+            com.showAlert(com.warning, "当前实收款项总数与应收款项不等,请核实再进行提交!");
+            return false;
+        }
+
+        var option = {
+            "salesReceipt.cash": cash,
+            "salesReceipt.cashInfo": cashInfo,
+            "salesReceipt.bank": bank,
+            "salesReceipt.bankInfo": bankInfo,
+            "salesReceipt.checkv": checkv,
+            "salesReceipt.checkvBank": checkvBank,
+            "salesReceipt.comment": des
+        };
+
+        if(collectOrRefund != "update"){
+            option["salesPayment.sales.sid"] = sid;
+        }
+
+        if(collectOrRefund != "refund"){
+            if(singleFlag == "single" && collectOrRefund != "update"){
+                option["sales.sid"] = sid;
+            }
+
+            option["salesReceipt.advance"] = payAdvance;
+            option["salesReceipt.advanceType"] = advanceType;
+        }
+
+        if(spid != null){
+            option["salesPayment.spid"] = spid;
+            if(coupon != 0 && couponInfo != null){
+                option["salesReceipt.coupon"] = coupon;
+                option["salesReceipt.couponInfo"] = couponInfo;
+            }
+        }
+
+        if(spids != null && spids.length > 0){
+            $.each(spids, function (i, v) {
+                option["spids[" + i + "]"] = v;
+            });
+        }
+
+        if(collectOrRefund == "collect"){
+            if (!com.focusPage('#advanceDiv').hasClass('hide')) {
+                option["salesPayment.advanceType"] = advanceType;
+                option["salesPayment.advance"] = parseFloat(payAdvance).toFixed(2);
+            }
+        }
+
+        com.post(url, option, function () {
+            if(collectOrRefund == "collect"){
+                com.showAlert(com.info, singleFlag == "single" ? '收款成功' : "批量收款成功")
+            }else if(collectOrRefund == "refund"){
+                com.showAlert(com.info, '退款成功')
+            }else if(collectOrRefund == "update"){
+                com.showAlert(com.info, '更新成功')
+            }
+
+            if(singleFlag == "single" && collectOrRefund != "refund"){
+                salesPayment.items.couponType.chosen("destroy");
+                salesPayment.items.couponType.chosen({width: "100%", multi_type: "input"});
+                salesPayment.items.couponType.bindData(salesPayment.couponType, 'no', 'name');
+                salesPayment.items.couponType.trigger("chosen:updated");
+            }
+            com.focusPage("#layerAdd").modal("hide");
+        });
     }
 });

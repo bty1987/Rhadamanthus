@@ -59,7 +59,7 @@ $(function () {
 
         var renderList = function (tableId, listData) {
 
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list ui-sortable  fl-table-list');
 
             if (listData && listData.length) {
@@ -111,8 +111,10 @@ $(function () {
                         ["楼盘地址:", v.sales.house.village.name + " " + v.sales.house.houseNumber, "grey"],
                         ["品牌:", v.sales.brand, "grey"],
                         ["渠道:", v.sales.salesman.currentName, "grey"],
-                        ["归属大区:", v.sales.region.deptName, "grey"],
-                        ["归属部门:", v.sales.dept.deptName, "grey"],
+                        ["归属大区:", v.sales.region.name, "grey"],
+                        ["归属部门:", v.sales.dept.name, "grey"],
+                        ["定金:", v.sales.depositpay, "blue"],
+                        ["补款:", v.sales.fullpay, "blue"],
                         ["总价:", v.total, "blue"],
                         ["券值:", v.sales.coupon, "blue"],
                         ["券信息:", v.sales.couponInfo, "grey"],
@@ -155,15 +157,15 @@ $(function () {
                         e.stopPropagation();
 
                         if (v.status != 0) {
-                            layer.msg('非预结算状态下不允许进行厂商结算.')
+                            layer.msg('非预结算状态下不允许进行厂商结算.');
                             return
                         }
 
-                        $('#vbalanceValue').find('input[name="total"]').val(v.total);
+                        com.focusPage('#vbalanceValue').find('input[name="total"]').val(v.total);
 
-                        openlayerVbalance($('#vbalanceValue'), function () {
+                        openlayerVbalance(com.focusPage('#vbalanceValue'), function () {
 
-                            var _vBalance = $('#vbalanceValue').find('input[name="vbalanceValue"]').val();
+                            var _vBalance = com.focusPage('#vbalanceValue').find('input[name="vbalanceValue"]').val();
 
                             if (com.validate('vbalanceValue','right')==false) {
 
@@ -173,23 +175,23 @@ $(function () {
                                 }, function (res) {
 
                                     layer.closeAll();
-                                    layer.msg('更新成功')
-                                    clearinput($('#vbalanceValue'))
-                                    salesBalanceSearcher.doSearch()
+                                    layer.msg('更新成功');
+                                    clearinput(com.focusPage('#vbalanceValue'));
+                                    salesBalanceSearcher.doSearch();
 
-                                })
+                                });
 
                             }
 
-                        })
+                        });
 
-                    })
+                    });
 
                     $btnVbalance.click(function (e) {
                         e.stopPropagation();
 
                         if (v.status != 0) {
-                            layer.msg('非预结算状态下不允许进行厂商结算.')
+                            layer.msg('非预结算状态下不允许进行厂商结算.');
                             return
                         }
 
@@ -203,7 +205,7 @@ $(function () {
                                 layer.closeAll();
                                 layer.msg('厂商结算成功');
                                 salesBalanceSearcher.doSearch();
-                            })
+                            });
 
                         }, function () {
 
@@ -211,22 +213,22 @@ $(function () {
                         });
 
 
-                    })
+                    });
 
                     $btnBalanceValue.click(function (e) {
                         e.stopPropagation();
 
                         if (v.status != 1) {
-                            layer.msg('非厂商结算状态下不允许进行结算.')
+                            layer.msg('非厂商结算状态下不允许进行结算.');
                             return
                         }
 
-                        $('#pbalanceValue').find('input[name="balanceValue"]').val(v.balance);
-                        $('#pbalanceValue').find('input[name="vbalanceValue"]').val(v.vbalance);
+                        com.focusPage('#pbalanceValue').find('input[name="balanceValue"]').val(v.balance);
+                        com.focusPage('#pbalanceValue').find('input[name="vbalanceValue"]').val(v.vbalance);
 
-                        openlayerPbalance($('#pbalanceValue'), function () {
+                        openlayerPbalance(com.focusPage('#pbalanceValue'), function () {
 
-                            var _pBalance = $('#pbalanceValue').find('input[name="pbalanceValue"]').val();
+                            var _pBalance = com.focusPage('#pbalanceValue').find('input[name="pbalanceValue"]').val();
 
                             if (com.validate('pbalanceValue','right')==false) {
 
@@ -236,24 +238,24 @@ $(function () {
                                 }, function (res) {
 
                                     layer.closeAll();
-                                    layer.msg('更新成功')
-                                    clearinput($('#pbalanceValue'))
-                                    salesBalanceSearcher.doSearch()
+                                    layer.msg('更新成功');
+                                    clearinput(com.focusPage('#pbalanceValue'));
+                                    salesBalanceSearcher.doSearch();
 
-                                })
+                                });
 
                             }
 
-                        })
+                        });
 
-                    })
+                    });
 
                     $btnBalance.click(function (e) {
 
                         e.stopPropagation();
 
                         if (v.status != 1) {
-                            layer.msg('非厂商结算状态下不允许进行结算.')
+                            layer.msg('非厂商结算状态下不允许进行结算.');
                             return
                         }
 
@@ -268,14 +270,14 @@ $(function () {
                                 layer.closeAll();
                                 layer.msg('结算成功');
                                 salesBalanceSearcher.doSearch();
-                            })
+                            });
 
                         }, function () {
 
                             salesBalanceSearcher.doSearch();
                         });
 
-                    })
+                    });
 
                     $btnPayment.click(function (e) {
 
@@ -289,11 +291,11 @@ $(function () {
 
                                 viewSalesPaymentLine('resultListItem', res);
 
-                            })
+                            });
 
-                        }, '收款')
+                        }, '收款');
 
-                    })
+                    });
 
                     $btnBalanceItem.click(function (e) {
 
@@ -305,11 +307,11 @@ $(function () {
                                 "salesBalance.sbid":v.sbid
                             },function(res){
                                 salesBalanceItemList.init('resultListItem', res.salesBalanceItems);
-                            })
+                            });
 
-                        }, '子项')
+                        }, '子项');
 
-                    })
+                    });
 
 
                 });
@@ -321,7 +323,7 @@ $(function () {
 
         return {
             init: function (tableId, listData) {
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             }
         };
@@ -336,7 +338,7 @@ $(function () {
 
     salesBalanceSearcher.init(_condArr, 'condList', url, function (data) {
 
-        displayFunc.init('resultList', data)
+        displayFunc.init('resultList', data);
 
     }, 'pagenation', postData , null, false, null, function () {
 
@@ -350,7 +352,7 @@ $(function () {
 
         return [$addaExportSales];
 
-    }, 'resultList')
+    }, 'resultList');
 
 
     //厂商结算值弹窗
@@ -361,7 +363,7 @@ $(function () {
             type: 1,
             skin: 'layui-layer-lan',
             title: "厂商结算值",
-            content: $('#vbalanceValue'),
+            content: com.focusPage('#vbalanceValue'),
             area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
             //maxmin: true,
             zIndex: 9000,
@@ -371,13 +373,13 @@ $(function () {
             },
             btn2: function (index, layero) {
                 //按钮【按钮二】的回调
-                com.clearValidator()
-                clearinput($line)
+                com.clearValidator();
+                clearinput($line);
             },
             cancel: function () {
                 //右上角关闭回调
-                com.clearValidator()
-                clearinput($line)
+                com.clearValidator();
+                clearinput($line);
             }
         });
     }
@@ -390,7 +392,7 @@ $(function () {
             type: 1,
             skin: 'layui-layer-lan',
             title: "结算值",
-            content: $('#pbalanceValue'),
+            content: com.focusPage('#pbalanceValue'),
             area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
             //maxmin: true,
             zIndex: 9000,
@@ -400,28 +402,24 @@ $(function () {
             },
             btn2: function (index, layero) {
                 //按钮【按钮二】的回调
-                com.clearValidator()
-                clearinput($line)
+                com.clearValidator();
+                clearinput($line);
             },
             cancel: function () {
                 //右上角关闭回调
-                com.clearValidator()
-                clearinput($line)
+                com.clearValidator();
+                clearinput($line);
             }
         });
 
     }
 
-    <!--收款查看-->
-    <!--子项查看-->
-    <!--退款查看-->
-    <!--退货查看-->
     function viewPopUp(callback, title) {
 
-        var _popUp = $('#viewPopUp');
+        var _popUp = com.focusPage('#viewPopUp');
 
         layer.closeAll();
-        var index = layer.open({
+        layer.open({
             type: 1,
             skin: 'layui-layer-lan',
             title: title,
@@ -431,7 +429,7 @@ $(function () {
             zIndex: 9000,
             btn: ['确定'],
             success: function (layers, index) {
-                callback()
+                callback();
             },
             end: function () {
                 _popUp.find('#resultListItem').empty();
@@ -447,7 +445,7 @@ $(function () {
 
     //收款显示
     function viewSalesPaymentLine(tableId, listData) {
-        var $tableWrap = $('#' + tableId);
+        var $tableWrap = com.focusPage('#' + tableId);
         var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
         if (listData && listData.salesPayments.length) {
             $.each(listData.salesPayments, function (i, v) {
@@ -484,7 +482,7 @@ $(function () {
                         info += salesPaymentForStatus.bankInfo[_i[0]] + " " + _i[1] + ", ";
                     }
 
-                    return info
+                    return info;
                 })(v.salesReceipt.bank, v.salesReceipt.bankInfo), "blue"]) : true;
                 v.salesReceipt.checkv != null && v.salesReceipt.checkv != "0" ? addPropertyArr.push(["转账:", v.salesReceipt.checkv, "blue"]) : true;
                 v.salesReceipt.installment != null && v.salesReceipt.installment != "0" ? addPropertyArr.push(["分期:", v.salesReceipt.installment, "blue"]) : true;
@@ -511,16 +509,16 @@ $(function () {
     var salesBalanceItemList = (function () {
 
         var renderList = function (tableId, listData) {
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list ui-sortable  fl-table-list');
 
             if (listData && listData.length) {
                 $.each(listData, function (i, v) {
                     var $liLine = $('<li></li>').addClass('item-orange clearfix');
-                    var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix')
+                    var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
                     var $h3 = $('<h3></h3>').addClass('oid');//.addClass('siid')
-                    var $small = $('<small></small>').addClass('blue').html(v.salesItem.goods.name)
-                    var $btnDiv = $('<div></div>').addClass('action-buttons pull-right')
+                    var $small = $('<small></small>').addClass('blue').html(v.salesItem.goods.name);
+                    var $btnDiv = $('<div></div>').addClass('action-buttons pull-right');
 
                     var propertyArr = [
                         ["商品品类:", v.salesItem.goods.category, "grey", "category"],
@@ -560,7 +558,7 @@ $(function () {
 
         return {
             init: function (tableId, listData) {
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             }
         };
@@ -569,12 +567,12 @@ $(function () {
 
     function pageSalesBalanceExport(){
 
-        if ($('span[name="totalRecords"]').text() == 0) {
+        if (com.focusPage('span[name="totalRecords"]').text() == 0) {
             com.showAlert(com.warning, "请通过条件进行查询");
             return false;
         }
 
-        if ($('span[name="totalRecords"]').text() > 1000) {
+        if (com.focusPage('span[name="totalRecords"]').text() > 1000) {
             com.showAlert(com.warning, "查询结果大于阀值 , 不能完成导出动作");
             return false;
         }
@@ -583,12 +581,13 @@ $(function () {
             $.exceler({
                 column: [
                     ['装修单号', 'sales.orderId'],
+                    ['销售单号', 'sales.no'],
                     ['楼盘地址',['sales.house.village.name','sales.house.houseNumber']],
                     ['品牌', 'sales.brand'],
                     ['渠道', 'sales.salesman.currentName'],
                     ['渠道ID', 'sales.salesman.userId'],
-                    ['归属大区', 'sales.region.deptName'],
-                    ['归属部门', 'sales.dept.deptName'],
+                    ['归属大区', 'sales.region.name'],
+                    ['归属部门', 'sales.dept.name'],
                     ['总价', 'total'],
                     ["券值:", 'sales.coupon'],
                     ["券信息:", 'sales.couponInfo'],
@@ -613,12 +612,12 @@ $(function () {
                 v.postTime = v.postTime == null? '':v.postTime;
                 v.poster.currentName = v.poster.currentName==null? '':v.poster.currentName;
                 v.status = v.status == 0 ? '预结算' : v.status == 1 ? "厂商结算" : "结算" ;
-                v.type = v.type == 0 ? "购货" : v.type == 1 ? "预结算退货" : "结算退货"
+                v.type = v.type == 0 ? "购货" : v.type == 1 ? "预结算退货" : "结算退货";
             });
 
         });
     }
 
-    $('#resultListItem').css({'width': '96%', 'margin': '0 auto'});
+    com.focusPage('#resultListItem').css({'width': '96%', 'margin': '0 auto'});
 
 });

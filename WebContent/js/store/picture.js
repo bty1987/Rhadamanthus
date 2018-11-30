@@ -15,7 +15,7 @@ $(function () {
 
     var slideImgs = [];
     var detailImgs = [];
-    var gid = $("#goodsPicturePopUp").attr("data-gid");
+    var gid = com.focusPage("#goodsPicturePopUp").attr("data-gid");
 
     initUploadBtn(gid, 0, "slideImg", "slideBtn");
     initUploadBtn(gid, 1, "detailImg", "detailBtn");
@@ -35,7 +35,7 @@ $(function () {
     });
 
     function initUploadBtn(gid, type, divId, btnDiv){
-        $("#" + btnDiv).html("").Huploadify({
+        com.focusPage("#" + btnDiv).html("").Huploadify({
             'debug' : false, // 开启调试
             'auto':true, // 是否自动上传
             'successTimeout':150, // 超时时间
@@ -89,7 +89,7 @@ $(function () {
 
     //追加图片元素
     function appendGalleryElement(galleryId, imgId, imgUrl, type, deleteUrl, updateUrl){
-        var gallery = $("#" + galleryId);
+        var gallery = com.focusPage("#" + galleryId);
         var imgLi = $("<li></li>").attr("id", "gallery_li"+imgId).addClass("text-center").attr("data-pid", imgId).css("border-color", "#ddd").appendTo(gallery);
         var img = $('<img />');
         var imgA = $("<a></a>").attr("href", com.showImg(img, imgUrl, 150, 150, '150x150', null, type)).attr("data-rel", "colorbox").css("height", "150px").append(img).appendTo(imgLi);
@@ -104,14 +104,14 @@ $(function () {
 
         toolsA.click(function(){
             //向前移动
-            var prevData = $("#gallery_li" + imgId).prev().attr("data-pid");
+            var prevData = com.focusPage("#gallery_li" + imgId).prev().attr("data-pid");
             if(prevData != undefined){
                 var opt = {
                     "pictures[0].pid": imgId,
                     "pictures[1].pid": prevData
                 };
                 com.post(updateUrl, opt, function(res){
-                    $("#gallery_li" + imgId).insertBefore($("#gallery_li" + imgId).prev());
+                    com.focusPage("#gallery_li" + imgId).insertBefore(com.focusPage("#gallery_li" + imgId).prev());
                 });
             }else{
                 com.showAlert(com.warning, "当前图片为第一张,不能再向前更换！");
@@ -131,7 +131,7 @@ $(function () {
             options["picture.pid"] = imgId;
 
             com.post(deleteUrl, options, function(res){
-                $("#gallery_li"+imgId).remove();
+                com.focusPage("#gallery_li"+imgId).remove();
             });
         });
 
@@ -149,7 +149,7 @@ $(function () {
             options["mgoods.defaultImg"] = imgUrl;
 
             com.post(api.store.updateMgoods, options, function(res){
-                $("#goodsPicturePopUp").attr({'data-flag': true});
+                com.focusPage("#goodsPicturePopUp").attr({'data-flag': true});
                 com.showAlert(com.info, "图片设置成功！");
             });
         });
@@ -164,14 +164,14 @@ $(function () {
 
         toolsD.click(function(){
             //向后移动
-            var nextData = $("#gallery_li" + imgId).next().attr("data-pid");
+            var nextData = com.focusPage("#gallery_li" + imgId).next().attr("data-pid");
             if(nextData != undefined){
                 var opts = {
                     "pictures[0].pid": imgId,
                     "pictures[1].pid": nextData
                 };
                 com.post(updateUrl, opts, function(res){
-                    $("#gallery_li" + imgId).insertAfter($("#gallery_li" + imgId).next());
+                    com.focusPage("#gallery_li" + imgId).insertAfter(com.focusPage("#gallery_li" + imgId).next());
                 });
             }else{
                 com.showAlert(com.warning, "当前图片为最后一张,不能再向后更换！");
@@ -179,5 +179,5 @@ $(function () {
 
         });
         imgA.colorbox(colorboxArgs);
-    };
+    }
 });

@@ -6,17 +6,17 @@
 jQuery(function ($) {
 
     var accessories = {
-        orderId: $('#viewPopUp').attr('data-orderId'),
-        aid: $('#viewPopUp').attr('data-aid'),
-        createTime: $('#viewPopUp').attr('data-createTime'),
-        status: $('#viewPopUp').attr('data-status'),
-        saveBtn: $("#saveBtn"),
-        cancellBtn: $("#cancelBtn"),
+        orderId: com.focusPage('#viewPopUp').attr('data-orderId'),
+        aid: com.focusPage('#viewPopUp').attr('data-aid'),
+        createTime: com.focusPage('#viewPopUp').attr('data-createTime'),
+        status: com.focusPage('#viewPopUp').attr('data-status'),
+        saveBtn: com.focusPage("#saveBtn"),
+        cancellBtn: com.focusPage("#cancelBtn"),
         manifestItems: {
-            customerName: $("#customer"),
-            des: $("#comment"),
+            customerName: com.focusPage("#customer"),
+            des: com.focusPage("#comment")
         },
-        record: {},
+        record: {}
 
     };
 
@@ -35,7 +35,7 @@ jQuery(function ($) {
             if (v.status == 0) {
                 storehousesStatus.push(v);
             }
-        })
+        });
         accessories.storehouses = storehousesStatus;
     }, null, false);
 
@@ -53,7 +53,7 @@ jQuery(function ($) {
         'name': 'cancelbtn',
         'href': 'javascript:void(0);'
     }).css({'margin-left': '3px', 'margin-top': '12px'}).text('取消');
-    var $condList1 = $('#viewPopUp').parents('.layui-layer.layui-anim.layui-layer-page.layui-layer-lan');
+    var $condList1 = com.focusPage('#viewPopUp').parents('.layui-layer.layui-anim.layui-layer-page.layui-layer-lan');
     var $div = $('<div class="layui-layer-btn0" style="position: relative;top:-10%;left:73%;"></div>');
     $div.append($btnConfirm).append($btnRefuse).append($btnCancel).appendTo($condList1);
 
@@ -61,7 +61,7 @@ jQuery(function ($) {
         if (com.validate('list', 'bottom')) {
             return;
         }
-        var $lines = $('li.line', '#list');
+        var $lines = com.focusPage('li.line', '#list');
         var flag = true;
         if (!$lines.length) {
             layer.msg("辅料单不能为空");
@@ -70,9 +70,9 @@ jQuery(function ($) {
 
         var options = {};
 
-        var $list = $('li.line', '#list');
+        var $list = com.focusPage('li.line', '#list');
 
-        options["accessories[0].aid"] = accessories.aid
+        options["accessories[0].aid"] = accessories.aid;
 
         $list.length && $list.each(function (i) {
             var $this = $(this);
@@ -89,7 +89,7 @@ jQuery(function ($) {
             layer.closeAll();
             layer.msg('添加成功!', {icon: 1}, function () {
                 //清空页面
-                $('#list').empty();
+                com.focusPage('#list').empty();
             });
         }, function (e) {
             com.showAlert(com.error, e.errorMsg);
@@ -129,7 +129,7 @@ jQuery(function ($) {
             {cellClass: "measurementUnit grey"},//单位
             {cellClass: "storehouse grey", hasSelect: !0},//仓库
             {cellClass: "number blue"},//数量
-            {cellClass: "des grey", hasInput: !0},//备注
+            {cellClass: "des grey", hasInput: !0}//备注
         ];
 
         $.each(_lineInfoSet, function (i, v) {
@@ -172,12 +172,12 @@ jQuery(function ($) {
 
     function accessoriesAdd() {
         var aid = accessories.aid;
-        var index = $('.line', '#list').length;
+        var index = com.focusPage('.line', '#list').length;
         com.post(api.inventory.queryAccessoriesItemByAid, {
             "accessoriesItem.aid": aid
         }, function (res) {
             for (var i = 0; i < res.accessoriesItems.length; i++) {
-                index = $('.line', '#list').length;
+                index = com.focusPage('.line', '#list').length;
                 autoAddline(index, i, res);
             }
 
@@ -189,10 +189,10 @@ jQuery(function ($) {
 
     function autoAddline(index, i, res) {
 
-        index = $('.line', '#list').length;
-        addline(1 + index).appendTo('#list');
-        var $lineInfoWrap1 = $('#list li:nth-of-type(' + (index + 1) + ') div.content');
-        $('#list li:nth-of-type(' + (index + 1) + ')').attr({'data-gid': res.accessoriesItems[i].goods.gid});
+        index = com.focusPage('.line', '#list').length;
+        addline(1 + index).appendTo(com.focusPage('#list'));
+        var $lineInfoWrap1 = com.focusPage('#list li:nth-of-type(' + (index + 1) + ') div.content');
+        com.focusPage('#list li:nth-of-type(' + (index + 1) + ')').attr({'data-gid': res.accessoriesItems[i].goods.gid});
         $lineInfoWrap1.find('div.no').text(res.accessoriesItems[i].goods.no);
         $lineInfoWrap1.find('div.name').text(res.accessoriesItems[i].goods.name);
 
@@ -204,7 +204,7 @@ jQuery(function ($) {
         }, function (data) {
             $lineInfoWrap1.find('.color select').bindData(data.colors, "cid", "name");
 
-        })
+        });
         com.post(api.inventory.queryFormatForEnableByGid, {
             "format.gid": res.accessoriesItems[i].goods.gid
         }, function (data) {
@@ -218,8 +218,8 @@ jQuery(function ($) {
 
     function orderInfo(tableId, v) {
 
-        $('#' + tableId).html(null);
-        var $tableWrap = $('#' + tableId);
+        com.focusPage('#' + tableId).html(null);
+        var $tableWrap = com.focusPage('#' + tableId);
         var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
         var status ={
             '0':'初始', '1':'定金' , '2' : '签约' ,'3' : '重签' , '4' : '废单','5' : '终止','6' : '决算','7' : '完结'

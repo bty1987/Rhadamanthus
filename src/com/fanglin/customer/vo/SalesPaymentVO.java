@@ -13,7 +13,7 @@ public class SalesPaymentVO implements Serializable {
 
 	private Float money;
 
-	private Short type;
+	private Short status;
 
 	private Short paymentType;
 
@@ -62,12 +62,12 @@ public class SalesPaymentVO implements Serializable {
 		this.money = money;
 	}
 
-	public Short getType() {
-		return type;
+	public Short getStatus() {
+		return status;
 	}
 
-	public void setType(Short type) {
-		this.type = type;
+	public void setStatus(Short status) {
+		this.status = status;
 	}
 
 }

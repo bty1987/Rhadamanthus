@@ -29,14 +29,14 @@ jQuery(function ($) {
     var qualityInfo = {"supervisor": "工程部监理"};
     var qualityIds = {"supervisor": ""};
 
-    personInfo.cancelBtn = $("#cancelBtn");
+    personInfo.cancelBtn = com.focusPage("#cancelBtn");
 
-    personInfo.deployedBtn = $("#deployedBtn").on("click", drawLineDeployed);
+    personInfo.deployedBtn = com.focusPage("#deployedBtn").on("click", drawLineDeployed);
 
-    personInfo.personInfoModal = $("#personInfoModal");
+    personInfo.personInfoModal = com.focusPage("#personInfoModal");
 
     com.post(api.ds.construction, {}, function (res) {
-        $("#scheduleSearch").bindData(res.constructionSchedule, "key", "value", true);
+        com.focusPage("#scheduleSearch").bindData(res.constructionSchedule, "key", "value", true);
     });
 
     for (var qualityName in qualityInfo) {
@@ -54,7 +54,7 @@ jQuery(function ($) {
 
         var renderList = function (tableId, listData) {
 
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
 
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
@@ -96,7 +96,7 @@ jQuery(function ($) {
                 ["创建时间:", v.createTime, "green"],
                 ["进度:", constructionNodes[v.projectStatus], "red"],
                 //v.contractPrefix ==null?'无': v.contractPrefix
-                ["状态:", statusName, "red"],
+                ["状态:", statusName, "red"]
             ];
 
             $.each(propertyArr, function (index, value) {
@@ -120,7 +120,7 @@ jQuery(function ($) {
         return {
             init: function (tableId, listData) {
 
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
 
                 renderList(tableId, listData);
             },
@@ -163,10 +163,10 @@ jQuery(function ($) {
         var options = {};
 
         for (var qualityId in qualityIds) {
-            var $id = $('#' + qualityId + "Quality").val();
+            var $id = com.focusPage('#' + qualityId + "Quality").val();
 
             if (!$id) {
-                com.showTips($("#" + qualityId + "Quality_chosen"), "人员部署信息不能为空", true);
+                com.showTips(com.focusPage("#" + qualityId + "Quality_chosen"), "人员部署信息不能为空", true);
                 return false;
             }
             options["construction.supervisor.userId"] = $id;

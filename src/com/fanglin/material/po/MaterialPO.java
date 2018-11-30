@@ -143,6 +143,8 @@ public class MaterialPO implements java.io.Serializable {
 	
 	private String category;
 	
+	private long bid;
+	
 	private String brand;
 	
 	private short packageFlag;
@@ -192,6 +194,8 @@ public class MaterialPO implements java.io.Serializable {
 	private String comment;
 	
 	private int company;
+	
+	private int activityId;
 	
 	public MaterialPO(){
 		super();
@@ -295,6 +299,15 @@ public class MaterialPO implements java.io.Serializable {
 
 	public void setCategory(String category) {
 		this.category = category;
+	}
+	
+	@Column(name = "bid")
+	public long getBid() {
+		return bid;
+	}
+
+	public void setBid(long bid) {
+		this.bid = bid;
 	}
 
 	@Column(name = "brand")
@@ -523,6 +536,15 @@ public class MaterialPO implements java.io.Serializable {
 
 	public void setCompany(int company) {
 		this.company = company;
+	}
+
+	@Column(name = "activityId")
+	public int getActivityId() {
+		return activityId;
+	}
+
+	public void setActivityId(int activityId) {
+		this.activityId = activityId;
 	}
 
 }

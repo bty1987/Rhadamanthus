@@ -101,13 +101,15 @@ public class DecorationHolonomyServiceImpl implements DecorationHolonomyService 
 		String orderId = decorationHolonomyVO.getDecoration().getOrderId();
 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
+		
+		//获取装修单对应的半价信息
 		DecorationHolonomyPO decorationHolonomyPO = decorationHolonomyDao.queryDecorationHolonomyByOrderId(orderId);
-		
+		//已付款   已确认
 		String[] paymentStatus = new String[]{DecorationPaymentPO.PAYMENTSTATUS_PAY_STR,DecorationPaymentPO.PAYMENTSTATUS_CONFIRM_STR};
-		
+		//服务款比例
 		SystemConfigPO servicePaymentRatio = systemConfigDao.querySystemConfig("servicePaymentRatio", decorationPO.getCompany());
 		
-		float ratio = Arith.sub(servicePaymentRatio != null ? Float.parseFloat(servicePaymentRatio.getValue()) : 1.1f, 1f);
+		float ratio = Arith.sub(servicePaymentRatio != null ? Float.parseFloat(servicePaymentRatio.getValue()) : 1.1f,     1f);
 		
 		if(decorationHolonomyPO != null){
 			if(decorationHolonomyPO.getStatus() != DecorationHolonomyPO.STATUS_INIT_SHORT || !Float.valueOf(DecorationHolonomyPO.MONEY_SERVICEPAIDUP_FLOAT).equals(decorationHolonomyPO.getServicePaidup())){
@@ -125,12 +127,22 @@ public class DecorationHolonomyServiceImpl implements DecorationHolonomyService 
 			BeanUtil.copyProperties(decorationHolonomyVO, decorationHolonomyPO,Arrays.asList("decoration"));
 		}
 		
+		// 管理费比例
 		Float manageRate = decorationHolonomyVO.getManageRate();
-		Float projectPrice = (float) Arith.div(decorationHolonomyVO.getProjectPrice(), Arith.add(1, manageRate));
-		Float disprojectPrice = (float) Math.floor(Arith.mul(projectPrice,decorationHolonomyVO.getDiscount() / 10));
-
+		
+		// 折前工程总额 = 选择报价总金额(工程总额)/(1+管理费比例)
+		Float projectPrice = (float) Arith.div(decorationHolonomyVO.getProjectBase(), Arith.add(1, manageRate));
+		
+		Float remainder= projectPrice % decorationHolonomyVO.getDiscountBase();
+		Float disprojectPrice = (float) Math.floor(Arith.add(Arith.mul(Arith.sub(projectPrice, remainder), (decorationHolonomyVO.getDiscount()/10)),remainder));
+		
+		// 管理费= 工程总额1 * 管理费比例
 		Float managePrice = (float) Math.floor(Arith.mul(projectPrice, manageRate));
-		Float materialPrice = (float) Math.ceil(Arith.mul(decorationHolonomyVO.getProjectPrice(), decorationHolonomyVO.getMaching()));
+		
+		//主材总额 = 	工程总额 * 主材配比			
+		Float materialPrice = (float) Math.ceil(Arith.mul(decorationHolonomyVO.getProjectBase(), decorationHolonomyVO.getMaching()));
+		
+		// 服务费 = 服务费 * 服务费比例
 		Float servicePrice = (float) Math.floor(Arith.mul(materialPrice, ratio));
 		
 		decorationHolonomyPO.setProjectPrice(disprojectPrice);
@@ -138,10 +150,13 @@ public class DecorationHolonomyServiceImpl implements DecorationHolonomyService 
 		decorationHolonomyPO.setMaterialPrice(materialPrice);
 		decorationHolonomyPO.setServicePrice(servicePrice);
 		decorationHolonomyPO.setServiceRate(ratio);
+		decorationHolonomyPO.setName(decorationHolonomyVO.getName());
+		decorationHolonomyPO.setDiscountBase(decorationHolonomyVO.getDiscountBase());
+		decorationHolonomyPO.setProjectBase(decorationHolonomyVO.getProjectBase());
 		
 		decorationHolonomyPO.setMaterialPaidup(DecorationHolonomyPO.MONEY_SERVICEPAIDUP_FLOAT);
 		decorationHolonomyPO.setServicePaidup(DecorationHolonomyPO.MONEY_SERVICEPAIDUP_FLOAT);
-
+		
 		decorationHolonomyDao.saveOrUpdate(decorationHolonomyPO);
 		
 		DecorationPaymentVO decorationpaymentVO = new DecorationPaymentVO();
@@ -150,13 +165,15 @@ public class DecorationHolonomyServiceImpl implements DecorationHolonomyService 
 		decorationpaymentVO.setDecoration(decorationHolonomyVO.getDecoration());
 		decorationpaymentVO.setPsId(decorationHolonomyVO.getPsId());
 		
+		//传给款项
+		//生成装修款信息 , 通过款项比例对应的比例项信息生成装修款信息
 		decorationPaymentService.makeDecorationPayment(decorationpaymentVO, userId);
 		
 		decorationHolonomyVO.setProjectPrice(disprojectPrice);
 		decorationHolonomyVO.setManagePrice(managePrice);
 		decorationHolonomyVO.setMaterialPrice(materialPrice);
 		decorationHolonomyVO.setServicePrice(servicePrice);
-
+		decorationHolonomyVO.setProjectBase(decorationHolonomyVO.getProjectBase());
 		
 	}
 	

@@ -22,6 +22,7 @@ import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.customer.service.DecorationService;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.payment.dao.AdvancePaymentDao;
@@ -61,6 +62,9 @@ public class PaymentServiceImpl implements PaymentService {
 
 	@Autowired
 	private UserDao userDao;
+	
+	@Autowired
+	private DecorationService decorationService;
 	
 	@Override
 	public void pagePaymentForCollect(Paging paging, List<Filter> filters, int company) {
@@ -183,8 +187,8 @@ public class PaymentServiceImpl implements PaymentService {
 		Short type = paymentVO.getType();
 		Short paymentType = paymentVO.getPaymentType();
 		
-		//合同预付款   工程预付款   主材预付款  正林预付款
-		List<Short> paymentTypes = Arrays.asList(PaymentPO.PAYMENT_PAYMENTTYPE_BALANCE_INT, PaymentPO.PAYMENT_PAYMENTTYPE_PROJECT_INT, PaymentPO.PAYMENT_PAYMENTTYPE_MATERIAL_INT, PaymentPO.PAYMENT_PAYMENTTYPE_ZATERIAL_INT);
+		//合同预付款   主材预付款 
+		List<Short> paymentTypes = Arrays.asList(PaymentPO.PAYMENT_PAYMENTTYPE_BALANCE_INT, PaymentPO.PAYMENT_PAYMENTTYPE_MATERIAL_INT);
 
 		balance = AdvancePaymentServiceImpl.getCustomerBalanceByType(advancePaymentPO, paymentType);
 
@@ -242,7 +246,13 @@ public class PaymentServiceImpl implements PaymentService {
 
 			decorationDao.update(decorationPO);
 		}
-
+		
+		if(paymentPO.getPaymentType() == 0){
+			decorationService.sendMessage(paymentPO.getOrderId(), "装修单", String.format("合同预付款金额%s元", paymentPO.getRecharge()));
+		}else if(paymentPO.getPaymentType() == 2){
+			decorationService.sendMessage(paymentPO.getOrderId(), "主材单", String.format("主材预付款金额%s元", paymentPO.getRecharge()));
+		}
+		
 		return 0;
 	}
 
@@ -342,6 +352,15 @@ public class PaymentServiceImpl implements PaymentService {
 		advancePaymentDao.update(advancePaymentPO);
 
 		paymentVO.setPid(paymentPO.getPid());
+		
+		String name = "";
+		if(paymentPO.getPaymentType() == 0){
+			name = "合同预付款";
+		}else if(paymentPO.getPaymentType() == 2){
+			name = "主材预付款";
+		}
+		
+		decorationService.sendMessage(paymentPO.getOrderId(), name, name + "退款金额" + paymentPO.getRecharge() + "元");
 
 		return 0;
 	}
@@ -437,8 +456,6 @@ public class PaymentServiceImpl implements PaymentService {
 		Float cash = paymentVO.getCash();
 		Float bank = paymentVO.getBank();
 		Float checkv = paymentVO.getCheckv();
-		Float accounts = paymentVO.getAccounts();
-		Float installment = paymentVO.getInstallment();
 
 		if(cash != null && cash != 0){
 			advanceReceiptPO.setCash(paymentVO.getCash());
@@ -448,6 +465,7 @@ public class PaymentServiceImpl implements PaymentService {
 			advanceReceiptPO.setCash(0);
 			advanceReceiptPO.setCashInfo("");
 		}
+		
 		if(bank != null && bank != 0){
 			advanceReceiptPO.setBank(bank);
 			advanceReceiptPO.setBankInfo(paymentVO.getBankInfo());
@@ -456,6 +474,7 @@ public class PaymentServiceImpl implements PaymentService {
 			advanceReceiptPO.setBank(0);
 			advanceReceiptPO.setBankInfo("");
 		}
+		
 		if(checkv != null && checkv != 0){
 			advanceReceiptPO.setCheckv(checkv);
 			advanceReceiptPO.setCheckvBank(paymentVO.getCheckvBank());
@@ -463,22 +482,6 @@ public class PaymentServiceImpl implements PaymentService {
 		}else{
 			advanceReceiptPO.setCheckv(0);
 			advanceReceiptPO.setCheckvBank("");
-		}
-		if(installment != null && installment != 0){
-			advanceReceiptPO.setInstallment(installment);
-			advanceReceiptPO.setInstallmentBank(paymentVO.getInstallmentBank());
-			realMoney = Arith.add(installment, realMoney);
-		}else{
-			advanceReceiptPO.setInstallment(0);
-			advanceReceiptPO.setInstallmentBank("");
-		}
-		if(accounts != null && accounts != 0){
-			advanceReceiptPO.setAccounts(accounts);
-			advanceReceiptPO.setAccountsBank(paymentVO.getAccountsBank());
-			realMoney = Arith.add(accounts, realMoney);
-		}else{
-			advanceReceiptPO.setAccounts(0);
-			advanceReceiptPO.setAccountsBank("");
 		}
 		
 		if(paymentPO.getRecharge() != realMoney){
@@ -498,23 +501,22 @@ public class PaymentServiceImpl implements PaymentService {
 		Float cash = paymentVO.getCash();
 		Float bank = paymentVO.getBank();
 		Float checkv = paymentVO.getCheckv();
-		Float installment = paymentVO.getInstallment();
-		Float accounts = paymentVO.getAccounts();
+		Float transfer = paymentVO.getTransfer();
 
 		if(cash != null){
 			recharge = Arith.add(cash, recharge);
 		}
+		
 		if(bank != null){
 			recharge = Arith.add(bank, recharge);
 		}
+		
 		if(checkv != null){
 			recharge = Arith.add(checkv, recharge);
 		}
-		if(installment != null){
-			recharge = Arith.add(installment, recharge);
-		}
-		if(accounts != null){
-			recharge = Arith.add(accounts, recharge);
+		
+		if(transfer != null){
+			recharge = Arith.add(transfer, recharge);
 		}
 
 		return recharge;
@@ -528,7 +530,7 @@ public class PaymentServiceImpl implements PaymentService {
 			throw new FLException(150010, "预付款余额不足");
 		}else{
 			paymentVO.setType(PaymentPO.PAYMENT_TYPE_PAYMENT_INT); //付款
-			paymentVO.setCash(advance);
+			paymentVO.setTransfer(advance);
 			
 			String newPaymentType = "";
 			switch (_paymentType) {

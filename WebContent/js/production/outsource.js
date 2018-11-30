@@ -2,14 +2,14 @@ $(function(){
 
     var $pid = params["pid"];
     var $status = params["status"];
-    var $layerAdd = $("#layerAdd");
-    var $layerImport = $("#layerImport");
+    var $layerAdd = com.focusPage("#layerAdd");
+    var $layerImport = com.focusPage("#layerImport");
 
     var displayFunc  = (function(){
 
         var renderList = function(tableId,listData){
 
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list ui-sortable  fl-table-list');
 
             if(listData && listData.length){
@@ -61,16 +61,16 @@ $(function(){
                             createLine(v.path, v.comment);
                         }
 
-                        $('#importProductionPicture').empty();
+                        com.focusPage('#importProductionPicture').empty();
 
-                        hidBtn( $('#importProductionPicture'), v.status);
+                        hidBtn( com.focusPage('#importProductionPicture'), v.status);
 
-                        var $downloadGroup = $("#layerImport").find("#downLoad");
+                        var $downloadGroup = com.focusPage("#layerImport").find("#downLoad");
                         com.downloadFile($downloadGroup, v.path, null);
 
 
 
-                        $("#importProductionPicture").Huploadify({
+                        com.focusPage("#importProductionPicture").Huploadify({
                             'debug': false, // 开启调试
                             'auto': true, // 是否自动上传
                             'successTimeout': 150, // 超时时间
@@ -99,11 +99,11 @@ $(function(){
                     $btnEdit.click(function() {
 
                         productionUtils.clearForm('form1');
-                        var comment = $("#layerEdit").find('input[name="comment"]').val(v.comment);
+                        var comment = com.focusPage("#layerEdit").find('input[name="comment"]').val(v.comment);
                         com.clearValidator();
-                        $("#layerEdit").attr("attr-oid",v.oid);
+                        com.focusPage("#layerEdit").attr("attr-oid",v.oid);
                         openlayerEdit(function (index, layero) {
-                            var id =  $("#layerEdit").attr("attr-oid");
+                            var id =  com.focusPage("#layerEdit").attr("attr-oid");
                             if (!com.validate("layerEdit",null)) {
                                 saveData(id,function () {
                                     layer.closeAll();
@@ -155,7 +155,7 @@ $(function(){
 
         return {
             init : function(tableId,listData){
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
             }
         };
@@ -235,7 +235,7 @@ $(function(){
             type: 1,
             title: "添加",
             skin: 'layui-layer-lan',
-            content: $('#layerAdd'),
+            content: com.focusPage('#layerAdd'),
             area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
             maxmin: false,
             zIndex: 9000,
@@ -259,7 +259,7 @@ $(function(){
             type: 1,
             skin: 'layui-layer-lan',
             title: "修改",
-            content: $('#layerEdit'),
+            content: com.focusPage('#layerEdit'),
             area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
             maxmin: false,
             zIndex: 9000,
@@ -279,11 +279,11 @@ $(function(){
     }
 
     function saveData(id, callback) {
-        var $layer = $('#layerAdd');
+        var $layer = com.focusPage('#layerAdd');
 
         var comment = $layer.find('input[name="comment"]').val();
-        var path = $('#layerEdit').find('input[name="path"]').val();
-        var commen = $('#layerEdit').find('input[name="comment"]').val();
+        var path = com.focusPage('#layerEdit').find('input[name="path"]').val();
+        var commen = com.focusPage('#layerEdit').find('input[name="comment"]').val();
 
         if (!id) {
 
@@ -318,7 +318,7 @@ $(function(){
             type: 1,
             skin: 'layui-layer-lan',
             title: "导入excel",
-            content: $('#layerImport'),
+            content: com.focusPage('#layerImport'),
             area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
             maxmin: false,
             zIndex: 9000,

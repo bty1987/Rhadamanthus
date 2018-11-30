@@ -8,6 +8,7 @@ import java.util.List;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
+import org.apache.struts2.convention.annotation.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -25,7 +26,11 @@ public class WorkerSalaryAction extends BaseListAction{
   
 	private List<WorkerSalaryVO> workerSalarys; 
 	
-	@Action(value="pageWorkerSalary", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	private String sourceId;
+	
+	private String targetId;
+	
+	@Action(value="pageWorkerSalary", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String pageWorkerSalary() throws FLException{
 	  
 		workerSalaryService.pageWorkerSalary(getPaging(), getFilters(), queryCompany());
@@ -33,7 +38,7 @@ public class WorkerSalaryAction extends BaseListAction{
 		return "success";
 	}
 	
-	@Action(value="pageWorkerSalaryByUserId", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	@Action(value="pageWorkerSalaryByUserId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String pageSalaryWorkerForUser() throws FLException{
 	  
 		workerSalaryService.pageWorkerSalaryByUserId(getPaging(), getFilters());
@@ -41,7 +46,7 @@ public class WorkerSalaryAction extends BaseListAction{
 		return "success";
 	}
 	
-	@Action(value="queryWorkerSalary", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	@Action(value="queryWorkerSalary", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String queryWorkerSalary() throws FLException{
 	  
 		workerSalarys = workerSalaryService.queryWorkerSalary(workerSalary);
@@ -49,7 +54,7 @@ public class WorkerSalaryAction extends BaseListAction{
 		return "success";
 	}
   
-	@Action(value="addWorkerSalary", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	@Action(value="addWorkerSalary", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String addWorkerSalary() throws FLException{
 	  
 	  workerSalaryService.addWorkerSalary(workerSalary, queryUserId(), queryCompany());
@@ -57,7 +62,7 @@ public class WorkerSalaryAction extends BaseListAction{
 	  return "success";
 	}
   
-	@Action(value="updateWorkerSalary", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	@Action(value="updateWorkerSalary", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String updateWorkerSalary()throws FLException{
 	  
 	  workerSalaryService.updateWorkerSalary(workerSalary);
@@ -65,7 +70,7 @@ public class WorkerSalaryAction extends BaseListAction{
 	  return "success";
 	}
   
-	@Action(value="adoptWorkerSalary", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	@Action(value="adoptWorkerSalary", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String adoptWorkerSalary() throws FLException{
 	  
 	  workerSalaryService.adoptWorkerSalary(workerSalarys, queryUserId());
@@ -73,20 +78,60 @@ public class WorkerSalaryAction extends BaseListAction{
 	  return "success";
 	}
   
-	@Action(value="rejectWorkerSalary", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	@Action(value="rejectWorkerSalary", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String rejectWorkerSalary()throws FLException{
 	  
-		workerSalaryService.rejectWorkerSalary(workerSalarys, queryUserId());
+		workerSalaryService.rejectWorkerSalary(workerSalary, queryUserId());
 	  
 		return "success";
 	}
   
-	@Action(value="deleteWorkerSalary", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	@Action(value="deleteWorkerSalary", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String deleteWorkerSalary()throws FLException{
 	  
-		workerSalaryService.deleteWorkerSalary(workerSalary);
+		workerSalaryService.deleteWorkerSalary(workerSalary,queryUserId());
     
 		return "success";
+	}
+	
+	@Action(value = "collectWorkerDeposit", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String collectWorkerDeposit() throws FLException{
+		
+		workerSalaryService.collectWorkerDeposit(workerSalary, queryUserId(), queryCompany());
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "drawWorkerDeposit", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String drawWorkerDeposit() throws FLException{
+		
+		workerSalaryService.drawWorkerDeposit(workerSalary, queryUserId(), queryCompany());
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "cutWorkerSalary", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String cutWorkerSalary() throws FLException{
+		
+		workerSalaryService.cutWorkerSalary(workerSalary, queryUserId(), queryCompany());
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "tranWorkerSalary", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String tranWorkerSalary() throws FLException{
+		
+		workerSalaryService.tranWorkerSalary(workerSalary, queryUserId(), sourceId, targetId, queryCompany());
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "payWorkerSalary", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String payWorkerSalary() throws FLException{
+		
+		workerSalaryService.payWorkerSalary(workerSalary, queryUserId(), queryCompany());
+		
+		return SUCCESS;
 	}
 
 	public WorkerSalaryVO getWorkerSalary() {
@@ -103,6 +148,22 @@ public class WorkerSalaryAction extends BaseListAction{
 
 	public void setWorkerSalarys(List<WorkerSalaryVO> workerSalarys) {
 		this.workerSalarys = workerSalarys;
+	}
+
+	public String getSourceId() {
+		return sourceId;
+	}
+
+	public void setSourceId(String sourceId) {
+		this.sourceId = sourceId;
+	}
+
+	public String getTargetId() {
+		return targetId;
+	}
+
+	public void setTargetId(String targetId) {
+		this.targetId = targetId;
 	}
 
 

@@ -1,6 +1,5 @@
 
 jQuery(function($) {
-
 	var houseSourceDetail = {
 		houseSourceDetails: {},
 		saveBtn: null,
@@ -30,6 +29,9 @@ jQuery(function($) {
 		editFlg: false,
 		buildingJson:null,
 		validator: {},
+		currentHsid: params.drawingId,
+		houseSourcePage: params.page,
+		currentHsStatus: params.hsStatus
 	};
 
 	var colorboxArgs = {
@@ -42,19 +44,19 @@ jQuery(function($) {
 		current:'{current} of {total}',
 		maxWidth:'100%',
 		maxHeight:'100%'
-	}
+	};
 
 	$.extend(com.validator, houseSourceDetail.validator);
 
-	$(".date-picker").datepicker({autoclose: !0}).on("show",function() {
+	com.focusPage(".date-picker").datepicker({autoclose: !0}).on("show",function() {
 		setTimeout(function() {
-			$(".dropdown-menu").css("z-index", 1060)
+			com.focusPage(".dropdown-menu").css("z-index", 1060)
 		},0)
 	}).next().on(ace.click_event,function() {
 		a(this).prev().focus()
 	});
 
-	var tag_input = $("#indoores");
+	var tag_input = com.focusPage("#indoores");
 
 	tag_input.tag({
 		placeholder:tag_input.attr('placeholder'),
@@ -65,26 +67,26 @@ jQuery(function($) {
 			resultList : "autoFillKeyValue",
 			keyPath : "key",
 			valuePath : "value",
-			isResultTypeMap : true, //是否是key - value 形式的列表
-		},
+			isResultTypeMap : true //是否是key - value 形式的列表
+		}
 	});
 
-	$("#history").bindData(houseSourceDetail.history);
-	$("#housingGrade").bindData(houseSourceDetail.housingGrade);
+	com.focusPage("#history").bindData(houseSourceDetail.history);
+	com.focusPage("#housingGrade").bindData(houseSourceDetail.housingGrade);
 
-	if(!(params.page == "query")){
+	if(!(houseSourceDetail.houseSourcePage == "query")){
 		var $btnSave = $("<a>保存</a>").addClass("btn btn-primary icon-ok").prop("id", "saveBtn").css("padding", "4px 8px");
-		$("#btnDiv").append($btnSave);
+		com.focusPage("#btnDiv").append($btnSave);
 	}
 
-	houseSourceDetail.saveBtn = $("#saveBtn").on("click", updateHouseSource);
-	houseSourceDetail.backBtn = $("#backBtn");
-	houseSourceDetail.houseBtn = $("#houseBtn").on("click", function(){
-		$("#houseData").toggle();
+	houseSourceDetail.saveBtn = com.focusPage("#saveBtn").on("click", updateHouseSource);
+	houseSourceDetail.backBtn = com.focusPage("#backBtn");
+	houseSourceDetail.houseBtn = com.focusPage("#houseBtn").on("click", function(){
+		com.focusPage("#houseData").toggle();
 	});
 
-	$('#backBtn').on(ace.click_event, function(){
-		switch(params.page)
+	com.focusPage('#backBtn').on(ace.click_event, function(){
+		switch(houseSourceDetail.houseSourcePage)
 		{
 			case "houseSource":
 				com.switchPage(api.index.houseSource.url);
@@ -101,47 +103,47 @@ jQuery(function($) {
 		}
 	});
 
-	houseSourceDetail.items.customerId = $("#customerId");
-	houseSourceDetail.items.customerPhone = $("#customerPhone");
-	houseSourceDetail.items.no = $("#no");
-	houseSourceDetail.items.houseNumber = $("#houseNumber");
-	houseSourceDetail.items.hsType = $("#hsType");
-	houseSourceDetail.items.sourceType = $("#sourceType");
-	houseSourceDetail.items.deedNum = $("#deedNum");
-	houseSourceDetail.items.deedValue = $("#deedValue");
-	houseSourceDetail.items.unitPrice = $("#unitPrice");
-	houseSourceDetail.items.totalPrice = $("#totalPrice");
-	houseSourceDetail.items.decorateTime = $("#decorateTime");
-	houseSourceDetail.items.decorateDegree = $("#decorateDegree");
-	houseSourceDetail.items.discussType = $("#discussType");
-	houseSourceDetail.items.rentType = $("#rentType");
-	houseSourceDetail.items.indoores = $("#indoores");
-	houseSourceDetail.items.history = $("#history");
-	houseSourceDetail.items.propertyFee = $("#propertyFee");
-	houseSourceDetail.items.elevator = $("#elevator");
-	houseSourceDetail.items.onlyHousing = $("#onlyHousing");
-	houseSourceDetail.items.documentsDate = $("#documentsDate");
-	houseSourceDetail.items.allowLoan = $("#allowLoan");
-	houseSourceDetail.items.beingLoan = $("#beingLoan");
-	houseSourceDetail.items.checkingTime = $("#checkingTime");
-	houseSourceDetail.items.followId = $("#followId");
-	houseSourceDetail.items.keyerId = $("#keyerId");
-	houseSourceDetail.items.housingGrade = $("#housingGrade");
-	houseSourceDetail.items.comment = $("#comment");
+	houseSourceDetail.items.customerId = com.focusPage("#customerId");
+	houseSourceDetail.items.customerPhone = com.focusPage("#customerPhone");
+	houseSourceDetail.items.no = com.focusPage("#no");
+	houseSourceDetail.items.houseNumber = com.focusPage("#houseNumber");
+	houseSourceDetail.items.hsType = com.focusPage("#hsType");
+	houseSourceDetail.items.sourceType = com.focusPage("#sourceType");
+	houseSourceDetail.items.deedNum = com.focusPage("#deedNum");
+	houseSourceDetail.items.deedValue = com.focusPage("#deedValue");
+	houseSourceDetail.items.unitPrice = com.focusPage("#unitPrice");
+	houseSourceDetail.items.totalPrice = com.focusPage("#totalPrice");
+	houseSourceDetail.items.decorateTime = com.focusPage("#decorateTime");
+	houseSourceDetail.items.decorateDegree = com.focusPage("#decorateDegree");
+	houseSourceDetail.items.discussType = com.focusPage("#discussType");
+	houseSourceDetail.items.rentType = com.focusPage("#rentType");
+	houseSourceDetail.items.indoores = com.focusPage("#indoores");
+	houseSourceDetail.items.history = com.focusPage("#history");
+	houseSourceDetail.items.propertyFee = com.focusPage("#propertyFee");
+	houseSourceDetail.items.elevator = com.focusPage("#elevator");
+	houseSourceDetail.items.onlyHousing = com.focusPage("#onlyHousing");
+	houseSourceDetail.items.documentsDate = com.focusPage("#documentsDate");
+	houseSourceDetail.items.allowLoan = com.focusPage("#allowLoan");
+	houseSourceDetail.items.beingLoan = com.focusPage("#beingLoan");
+	houseSourceDetail.items.checkingTime = com.focusPage("#checkingTime");
+	houseSourceDetail.items.followId = com.focusPage("#followId");
+	houseSourceDetail.items.keyerId = com.focusPage("#keyerId");
+	houseSourceDetail.items.housingGrade = com.focusPage("#housingGrade");
+	houseSourceDetail.items.comment = com.focusPage("#comment");
 
-	houseSourceDetail.houseItems.village = $("#village");
-	houseSourceDetail.houseItems.no = $("#no");
-	houseSourceDetail.houseItems.houseNumber = $("#houseNumber");
-	houseSourceDetail.houseItems.type = $("#type");
-	houseSourceDetail.houseItems.buildArea = $("#buildArea");
-	houseSourceDetail.houseItems.maxFloor = $("#maxFloor");
-	houseSourceDetail.houseItems.through = $("#through");
-	houseSourceDetail.houseItems.houseType = $("#houseType");
-	houseSourceDetail.houseItems.orientation = $("#orientation");
-	houseSourceDetail.houseItems.feature = $("#feature");
-	houseSourceDetail.houseItems.waterVapour = $("#waterVapour");
-	houseSourceDetail.houseItems.parlourType = $("#parlourType");
-	houseSourceDetail.houseItems.heatingType = $("#heatingType");
+	houseSourceDetail.houseItems.village = com.focusPage("#village");
+	houseSourceDetail.houseItems.no = com.focusPage("#no");
+	houseSourceDetail.houseItems.houseNumber = com.focusPage("#houseNumber");
+	houseSourceDetail.houseItems.type = com.focusPage("#type");
+	houseSourceDetail.houseItems.buildArea = com.focusPage("#buildArea");
+	houseSourceDetail.houseItems.maxFloor = com.focusPage("#maxFloor");
+	houseSourceDetail.houseItems.through = com.focusPage("#through");
+	houseSourceDetail.houseItems.houseType = com.focusPage("#houseType");
+	houseSourceDetail.houseItems.orientation = com.focusPage("#orientation");
+	houseSourceDetail.houseItems.feature = com.focusPage("#feature");
+	houseSourceDetail.houseItems.waterVapour = com.focusPage("#waterVapour");
+	houseSourceDetail.houseItems.parlourType = com.focusPage("#parlourType");
+	houseSourceDetail.houseItems.heatingType = com.focusPage("#heatingType");
 
 	com.post(api.ds.building, {}, function(res){
 		houseSourceDetail.items.discussType.bindData(res.discussType, "key", "value");
@@ -210,12 +212,12 @@ jQuery(function($) {
 	}, null, false);
 
 	//查询房源信息
-	com.post(api.building.queryHouseSourceByHsid, {"houseSource.hsid" : params.drawingId}, function(res){
+	com.post(api.building.queryHouseSourceByHsid, {"houseSource.hsid" : houseSourceDetail.currentHsid}, function(res){
 		bindHouseSourceData(res.houseSource);
 		bindHouseData(res.houseSource.house);
 	}, null, false);
 
-	houseSourceDetail.modal = $("#houseSourceDetailModal");
+	houseSourceDetail.modal = com.focusPage("#houseSourceDetailModal");
 	houseSourceDetail.modal.on('show.bs.modal',function(e){
 		com.clearValidator();
 	});
@@ -224,7 +226,7 @@ jQuery(function($) {
 
 	//编辑
 	function updateHouseSource(){
-		if(params.hsStatus != 3){
+		if(houseSourceDetail.currentHsStatus != 3){
 			com.showAlert(com.warning, "只有已通过房源可以修改房源信息！");
 			return;
 		}
@@ -234,7 +236,7 @@ jQuery(function($) {
 		}
 
 		var options = {};
-		options["houseSource.hsid"] = params.drawingId;
+		options["houseSource.hsid"] = houseSourceDetail.currentHsid;
 		options["houseSource.keyer.userId"] = houseSourceDetail.items.keyerId.val();
 		options["houseSource.sourceType"] = houseSourceDetail.items.sourceType.val();
 		options["houseSource.deedNum"] = houseSourceDetail.items.deedNum.val();
@@ -263,7 +265,7 @@ jQuery(function($) {
 			com.showAlert(com.error, data.errorMsg);
 		});
 
-		$("#houseSourceDetailModal").modal("hide");
+		com.focusPage("#houseSourceDetailModal").modal("hide");
 	}
 
 	function bindHouseData(houses){
@@ -282,7 +284,7 @@ jQuery(function($) {
 	}
 
 	function bindHouseSourceData(houseSources){
-		var _tag = $('#indoores').data('tag');
+		var _tag = com.focusPage('#indoores').data('tag');
 
 		if(_tag){
 			while(_tag.values.length > 0){

@@ -33,6 +33,8 @@ public class ManifestPO implements java.io.Serializable {
 	
 	public static final String COLUMN_STATUS_STR = "status";
 	
+	public static final String COLUMN_CREATEUSER_USERID_STR = "createUser.userId";
+	
 	public static final Float COLUMN_TOTAL_STR = 0F;
 	
 	public static final Short TYPE_CR_INT = 2;

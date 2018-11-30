@@ -86,7 +86,7 @@ public class CategoryServiceImpl implements CategoryService {
 	@Override
 	public CategoryVO queryCategoryByCategoryId(CategoryVO categoryVO) {
 		
-		CategoryPO categoryPO = categoryDao.queryCategoryByCategoryId(categoryVO.getCategoryId());
+		CategoryPO categoryPO = categoryDao.queryCategoryByCategoryId(categoryVO.getNo());
 		
 		BeanUtil.copyProperties(categoryPO, categoryVO);
 		
@@ -101,12 +101,12 @@ public class CategoryServiceImpl implements CategoryService {
 		
 		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_CATEGORY_INT, CountingPO.COUNTING_DATE_SILNLE_STR, 0);
 		
-		StringBuffer categoryId = new StringBuffer();
-		categoryId.append(SystemConfig.getString("categoryIdent", "C_"));
-		categoryId.append(FormatUtil.fillZero(count, "000"));
+		StringBuffer no = new StringBuffer();
+		no.append(SystemConfig.getString("categoryIdent", "C_"));
+		no.append(FormatUtil.fillZero(count, "000"));
 		
-		categoryPO.setCategoryId(categoryId.toString());
-		BeanUtil.copyProperties(categoryVO, categoryPO, Arrays.asList("categoryId"));
+		categoryPO.setNo(no.toString());
+		BeanUtil.copyProperties(categoryVO, categoryPO, Arrays.asList("no"));
 		
 		categoryDao.save(categoryPO);
 		
@@ -119,7 +119,7 @@ public class CategoryServiceImpl implements CategoryService {
 		
 		CategoryPO categoryPO = categoryDao.get(categoryVO.getCid());
 		
-		BeanUtil.copyProperties(categoryVO, categoryPO, Arrays.asList("categoryId"));
+		BeanUtil.copyProperties(categoryVO, categoryPO, Arrays.asList("no"));
 		
 		categoryDao.update(categoryPO);
 		
@@ -137,10 +137,10 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int deleteCategoryByCIds(List<Long> cIds) {
+	public int deleteCategoryByCIds(List<Long> cids) {
 		
-		for(long cId: cIds){
-			categoryDao.deleteById(cId);
+		for(long cid: cids){
+			categoryDao.deleteById(cid);
 		}
 		
 		return 0;

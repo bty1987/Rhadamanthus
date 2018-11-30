@@ -34,10 +34,10 @@ public class GroupAction extends BaseListAction{
 		return SUCCESS;
 	}
 	
-	@Action(value = "updateGroupForCommon", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateGroupForCommon() throws FLException{
+	@Action(value = "updateGroup", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateGroup() throws FLException{
 		
-		groupService.updateGroupForCommon(group);
+		groupService.updateGroup(group);
 		
 		return SUCCESS;
 	}

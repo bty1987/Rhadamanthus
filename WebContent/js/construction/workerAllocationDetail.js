@@ -1,4 +1,4 @@
-jQuery(function ($) {
+$(function () {
     var constructionNode = {};
 
     var workerAllocationDetail = {
@@ -14,8 +14,8 @@ jQuery(function ($) {
             "6": false,
             "7": false,
             "8": false,
-            "9": false,
-        },
+            "9": false
+        }
     };
 
     var orderId = params.orderId;
@@ -35,17 +35,17 @@ jQuery(function ($) {
         workerAllocationDetail.constructionSchedules = res.constructionSchedules;
 
         $.each(constructionSchedule, function (i, v) {
-            constructerNode("#stepId", v.schedule);
-            constructerPane("#step-container", v.schedule, v.schedule);
+            constructerNode("#stepId1", v.schedule);
+            constructerPane("#step-container1", v.schedule, v.schedule);
         });
 
         var stepnum = constructionSchedule[0].schedule;
         initWizardSept(stepnum, stepnum);
 
-        $('#fuelux-wizard').ace_wizard({status: true}).on('finished', function (e) {
+        com.focusPage('#fuelux-wizard').ace_wizard({status: true}).on('finished', function (e) {
             com.showAlert(com.info, "工程已经结束,之后可以进行验收工作!");
         }).on('stepclick', function (e, info) {
-            var stepId = $("[flag]").eq(info.step - 1).attr("id");
+            var stepId = com.focusPage("[flag]").eq(info.step - 1).attr("id");
             var sd = stepId.substring(4);
             if (!workerAllocationDetail.wizardSept[sd]) {
                 initWizardSept(sd, sd);
@@ -54,12 +54,12 @@ jQuery(function ($) {
 
     }, null, false);
 
-    $('#modal-wizard .modal-header').ace_wizard();
-    $('#modal-wizard .wizard-actions .btn[data-dismiss=modal]').removeAttr('disabled');
+    com.focusPage('#modal-wizard .modal-header').ace_wizard();
+    com.focusPage('#modal-wizard .wizard-actions .btn[data-dismiss=modal]').removeAttr('disabled');
 
-    $('[data-rel=popover]').popover({html: true});
+    com.focusPage('[data-rel=popover]').popover({html: true});
 
-    $('#btnBack').on(ace.click_event, function () {
+    com.focusPage('#btnBack').on(ace.click_event, function () {
         com.switchPage(api.index.workerAllocationIndex.url);
     });
 
@@ -81,14 +81,14 @@ jQuery(function ($) {
                 "user.status": 0
             }, "autoFillKeyValue", "key", "value");
 
-            $("#" + operate + "StartTime").val(element[0].startTime);
-            $("#" + operate + "EndTime").val(element[0].endTime);
+            com.focusPage("#" + operate + "StartTime").val(element[0].startTime);
+            com.focusPage("#" + operate + "EndTime").val(element[0].endTime);
 
             var otherename = schedule;
             var otherStatus = res.constructionSchedules[0].status;
 
-            var otherSuccessBtn = $("#" + otherename + "Success");
-            var othereFailBtn = $("#" + otherename + "Fail");
+            var otherSuccessBtn = com.focusPage("#" + otherename + "Success");
+            var othereFailBtn = com.focusPage("#" + otherename + "Fail");
 
             updatastatusDiv(otherStatus, otherename);
 
@@ -137,11 +137,11 @@ jQuery(function ($) {
                 queryWorkerUrl(operate, res);
             }, null, false);
 
-            $("#" + operate + "WorkerSubmit").unbind("click");
+            com.focusPage("#" + operate + "WorkerSubmit").unbind("click");
 
-            $("#" + operate + "WorkerSubmit").on("click", function () {
+            com.focusPage("#" + operate + "WorkerSubmit").on("click", function () {
 
-                if ($("#" + operate + "WorkerName_chosen span")[0].textContent.replace(/\s+/g, "") == "") {
+                if (com.focusPage("#" + operate + "WorkerName_chosen span")[0].textContent.replace(/\s+/g, "") == "") {
                     com.showAlert(com.error, "工人名称不能为空!");
                     return false;
                 }
@@ -149,7 +149,7 @@ jQuery(function ($) {
                 var args = {};
                 args["constructer.cid"] = element[0].cid;
                 args["constructer.schedule"] = schedule;
-                args["constructer.user.userId"] = $('#' + operate + "WorkerName").val();
+                args["constructer.user.userId"] = com.focusPage('#' + operate + "WorkerName").val();
 
                 com.post(api.construction.addConstructer, args, function (res) {
                     setWorkerUrl(operate, res);
@@ -158,7 +158,7 @@ jQuery(function ($) {
                 return false;
             });
 
-            $('#' + operate + "Drawing").removeClass("active");
+            com.focusPage('#' + operate + "Drawing").removeClass("active");
 
             return false;
 
@@ -168,7 +168,7 @@ jQuery(function ($) {
     //添加初始完结按钮
     function updatastatusDiv(Status, statusDiv) {
 
-        var statusDiv = $("#" + statusDiv + "Status").html("");
+        var statusDiv = com.focusPage("#" + statusDiv + "Status").html("");
         if (Status == 1) {
             $("<span></span>").addClass("label label-success col-sm-1").text("完结").appendTo(statusDiv);
         } else {
@@ -180,7 +180,7 @@ jQuery(function ($) {
     function queryWorkerUrl(operate, res) {
 
         constructers = res.constructers;
-        $("#" + operate + "WorkerInfos").html("");
+        com.focusPage("#" + operate + "WorkerInfos").html("");
 
         if (constructers.length != 0) {
             for (var i = 0; i < constructers.length; i++) {
@@ -204,17 +204,17 @@ jQuery(function ($) {
                     args["constructer.crid"] = id;
 
                     com.post(api.construction.deleteConstructer, args, function () {
-                        $("#" + id).remove();
+                        com.focusPage("#" + id).remove();
                     });
 
                 }).appendTo(buttonsDiv);
                 var removeI = $('<i></i>').addClass("icon-remove bigger-130").appendTo(removeBtn);
 
-                profileDiv.appendTo($("#" + operate + "WorkerInfos"));
+                profileDiv.appendTo(com.focusPage("#" + operate + "WorkerInfos"));
             }
 
         } else {
-            $('<div class="alert alert-info">').text("当前进度没有分配工人!").appendTo($("#" + operate + "WorkerInfos"));
+            $('<div class="alert alert-info">').text("当前进度没有分配工人!").appendTo(com.focusPage("#" + operate + "WorkerInfos"));
         }
     }
 
@@ -241,14 +241,14 @@ jQuery(function ($) {
                 args["constructer.crid"] = worker.crid;
 
                 com.post(api.construction.deleteConstructer, args, function () {
-                    $("#" + worker.crid).remove();
+                    com.focusPage("#" + worker.crid).remove();
                 });
 
             }).appendTo(buttonsDiv);
 
         var removeI = $('<i></i>').addClass("icon-remove bigger-130").appendTo(removeBtn);
 
-        var workerInfos = $("#" + operate + "WorkerInfos");
+        var workerInfos = com.focusPage("#" + operate + "WorkerInfos");
 
         if (workerInfos.children(".profile-picture").length == 0) {
             workerInfos.html("");
@@ -331,11 +331,11 @@ jQuery(function ($) {
     function addActive(schedule) {
         var con = workerAllocationDetail.constructionSchedules;
         $.each(con, function (i, v) {
-            $("#step" + v.schedule).removeClass("active");
-            $("#step" + v.schedule).addClass("step-pane");
+            com.focusPage("#step" + v.schedule).removeClass("active");
+            com.focusPage("#step" + v.schedule).addClass("step-pane");
         });
-        $("#step" + schedule).removeClass("step-pane");
-        $("#step" + schedule).addClass("active");
+        com.focusPage("#step" + schedule).removeClass("step-pane");
+        com.focusPage("#step" + schedule).addClass("active");
     }
 
 });

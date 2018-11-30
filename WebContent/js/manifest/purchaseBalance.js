@@ -2,7 +2,7 @@
 $(function(){
 
     if (jQuery().datepicker) {
-        $('.date-picker').datepicker({
+        com.focusPage('.date-picker').datepicker({
             format: 'yyyy-mm-dd',//yyyy-mm-dd hh:ii,
         });
     }
@@ -18,7 +18,7 @@ $(function(){
     var displayFunc  = (function(){
 
         var renderList = function(tableId,listData){
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
 
             if(listData && listData.length){
 
@@ -189,7 +189,7 @@ $(function(){
 
         return {
             init : function(tableId,listData){
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
 
             },
@@ -227,7 +227,7 @@ $(function(){
 
     //查看采购单
     function viewGoods(pid,no){
-        var $popup = $('#viewPopUp');
+        var $popup = com.focusPage('#viewPopUp');
         $popup.attr({'data-pid': pid});
         //弹出即全屏
         var index = layer.open({
@@ -256,7 +256,7 @@ $(function(){
     //编辑采购单
     function editPurchase(pid, no, type){
 
-        var $popup = $('#editPopUp');
+        var $popup = com.focusPage('#editPopUp');
         $popup.attr({'data-pid': pid});
         //弹出即全屏
         var index = layer.open({
@@ -276,12 +276,12 @@ $(function(){
                 goodsSeacher.doSearch();
             }
         });
-    };
+    }
 
     //采购单单条入库
     function warehousingPurchase(pid, no, type){
 
-        var $popup = $('#warehousingPopUp');
+        var $popup = com.focusPage('#warehousingPopUp');
         $popup.attr({'data-pid': pid, 'data-type': type});
         //弹出即全屏
         var index = layer.open({
@@ -301,11 +301,11 @@ $(function(){
                 goodsSeacher.doSearch();
             }
         });
-    };
+    }
 
     //采购单批量入库
     function viewPurchaseItems(type){
-        var $popup = $('#viewPurchaseItemsPopUp');
+        var $popup = com.focusPage('#viewPurchaseItemsPopUp');
         $popup.attr({'data-type': type});
         //弹出即全屏
         var index = layer.open({
@@ -325,13 +325,13 @@ $(function(){
                 goodsSeacher.doSearch();
             }
         });
-    };
+    }
 
     //批量入库校验
     function ItemsClick(){
         var _params = {};
         var flag = true;
-        var $menus = $('.checked','#resultList');
+        var $menus = com.focusPage('.checked','#resultList');
         var $pids = [];
         $.each($menus,function(i,v){
             var $v = $(v);
@@ -379,12 +379,12 @@ $(function(){
 
     //导出excel
     function pagePurchaseImport(){
-        if ($('span[name="totalRecords"]').text() == 0) {
+        if (com.focusPage('span[name="totalRecords"]').text() == 0) {
             com.showAlert(com.warning, "请通过条件进行查询");
             return false;
         }
 
-        if ($('span[name="totalRecords"]').text() > 1000) {
+        if (com.focusPage('span[name="totalRecords"]').text() > 1000) {
             com.showAlert(com.warning, "查询结果大于阀值 , 不能完成导出动作");
             return false;
         }
@@ -405,13 +405,13 @@ $(function(){
                     ['交期时间', 'deliveryTime'],
                     ['入库状态', 'status'],
                     ['结算状态', 'balanceStatus'],
-                    ['说明', 'comment'],
+                    ['说明', 'comment']
                 ],
-                list: res.paging.data,
+                list: res.paging.data
             });
 
         });
-    };
+    }
 
     //导出单条明细
     function queryPurchaseItemByPidImport(pid){
@@ -430,13 +430,13 @@ $(function(){
                     ['采购单价', 'unitPrice'],
                     ['数量', 'num'],
                     ['件数', 'goods.pieceNum'],
-                    ['剩余数量', 'surplus'],
+                    ['剩余数量', 'surplus']
                 ],
-                list: res.purchaseItems,
+                list: res.purchaseItems
             });
 
         });
-    };
+    }
 
     function updatePurchaseForBalanceStatus(pid){
         layer.confirm('确认该采购单结算已完结？', {
@@ -446,7 +446,7 @@ $(function(){
                 goodsSeacher.doSearch();
             }, function(e){
                 com.showAlert(com.error, e.errorMsg);
-            })
+            });
 
             layer.close(indexo);
 

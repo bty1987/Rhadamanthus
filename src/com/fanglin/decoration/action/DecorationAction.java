@@ -45,6 +45,10 @@ public class DecorationAction extends BaseListAction {
 	private short timeType;
 	
 	private Timestamp dateTime;
+	
+	private List<Short> statuses;
+
+	
 
 	@Action(value = "pageDecorationForGeneral", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageDecorationForGeneral() throws FLException{
@@ -231,6 +235,14 @@ public class DecorationAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
+	@Action(value = "pageDecoration", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageDecoration() throws FLException{
+		
+		decorationService.pageDecoration(getPaging(), getFilters(), authentication(), statuses);
+
+		return SUCCESS;
+	}
+	
 	public List<DecorationVO> getDecorations() {
 		return decorations;
 	}
@@ -310,5 +322,15 @@ public class DecorationAction extends BaseListAction {
 	public void setDecorationInfo(DecorationInfoVO decorationInfo) {
 		this.decorationInfo = decorationInfo;
 	}
+
+	public List<Short> getStatusas() {
+		return statuses;
+	}
+
+	public void setStatusas(List<Short> statuses) {
+		this.statuses = statuses;
+	}
+	
+	
 
 }

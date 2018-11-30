@@ -108,7 +108,6 @@ public class GoodsServiceImpl implements GoodsService {
 			
 		}
 		
-		
 	}
 
 	@Override
@@ -271,7 +270,7 @@ public class GoodsServiceImpl implements GoodsService {
 		goodsPO.setCompany(company);
 		
 		BrandPO brandPO = brandDao.get(goodsVO.getBid());
-		String brandName = brandPO.getBrandName();
+		String brandName = brandPO.getName();
 		
 		goodsPO.setBrand(brandName);
 		
@@ -348,7 +347,7 @@ public class GoodsServiceImpl implements GoodsService {
 		goodsPO.setCompany(company);
 		
 		BrandPO brandPO = brandDao.get(goodsVO.getBid());
-		String brandName = brandPO.getBrandName();
+		String brandName = brandPO.getName();
 		
 		goodsPO.setBrand(brandName);
 		

@@ -31,7 +31,9 @@ public class CountingServiceImpl implements CountingService {
 	@Transactional(rollbackFor=Exception.class)
 	public int queryCountingByTypeDate(int type, String date, int company){
 		
-		CountingPO countingPO = countingDao.queryCountingByTypeDate(type, date, SystemConfig.getInt("multicompany" , 0) != 0 ? company : 0);
+		company = SystemConfig.getInt("multicompany" , 0) != 0 ? company : 0;
+		
+		CountingPO countingPO = countingDao.queryCountingByTypeDate(type, date, company);
 		
 		int nextCount = 1;
 		

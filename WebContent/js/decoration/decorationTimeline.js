@@ -7,7 +7,7 @@ $(function(){
     var order = {
         oid : params.decorationOrderId,
         $pic : {
-            $picList : $('#orderpics')
+            $picList : com.focusPage('#orderpics')
         }
     };
 
@@ -15,15 +15,15 @@ $(function(){
     var constructerParams = {};
     var construcionScheName = {};
 
-    $('#oid').text(order.oid);
+    com.focusPage('#oid').text(order.oid);
 
-    $('.widget-box').addClass('flloading');
-    $('.widget-box', '#orderId').removeClass('flloading');
+    com.focusPage('.widget-box').addClass('flloading');
+    com.focusPage('.widget-box', '#orderId').removeClass('flloading');
 
     com.post(api.ds.construction,{},function (res) {
         $.each(res.constructionSchedule,function (i,v) {
             construcionScheName[v.key] = v.value;
-        })
+        });
     },null,false);
 
     var initPhotoSwipeFromDOM = function(gallerySelector) {
@@ -226,21 +226,21 @@ $(function(){
 
 //    获取订单基本信息
     com.post(api.decoration.queryDecorationForDesignerByOrderId, {"decoration.orderId": order.oid}, function(req){
-        var $info = $('#baseinfo');
+        var $info = com.focusPage('#baseinfo');
 
         var decoration = req.decoration;
 
-        $('[name="uname"]',$info).text(decoration.customer.name);
-        $('[name="addr"]',$info).text(decoration.house.village.name+' '+decoration.house.houseNumber);
-        $('[name="dname"]',$info).text(decoration.designer.currentName);
-        $('[name="dphone"]',$info).text(decoration.designer.phone|| '');
-        $('[name="sname"]',$info).text(decoration.salesman.currentName);
-        $('[name="sphone"]',$info).text(decoration.salesman.phone|| '');
-        $('[name="vname"]',$info).text(decoration.supervisor.currentName|| '');
-        $('[name="vphone"]',$info).text(decoration.supervisor.phone|| '');
-        $('[name="status"]',$info).text(decoration.status);
+        com.focusPage('[name="uname"]',$info).text(decoration.customer.name);
+        com.focusPage('[name="addr"]',$info).text(decoration.house.village.name+' '+decoration.house.houseNumber);
+        com.focusPage('[name="dname"]',$info).text(decoration.designer.currentName);
+        com.focusPage('[name="dphone"]',$info).text(decoration.designer.phone|| '');
+        com.focusPage('[name="sname"]',$info).text(decoration.salesman.currentName);
+        com.focusPage('[name="sphone"]',$info).text(decoration.salesman.phone|| '');
+        com.focusPage('[name="vname"]',$info).text(decoration.supervisor.currentName|| '');
+        com.focusPage('[name="vphone"]',$info).text(decoration.supervisor.phone|| '');
+        com.focusPage('[name="status"]',$info).text(decoration.status);
 
-        $('.widget-box', '#baseinfo').removeClass('flloading');
+        com.focusPage('.widget-box', '#baseinfo').removeClass('flloading');
     });
 
 //    获取图纸信息
@@ -256,7 +256,7 @@ $(function(){
                     };
                     var $pic = createPic(path, v.uploadTime,'700x700');
 
-                    $pic.appendTo(v.type == 1 ? $('[name="effect"]',order.$pic.$picList) : $('[name="project"]',order.$pic.$picList));
+                    $pic.appendTo(v.type == 1 ? com.focusPage('[name="effect"]',order.$pic.$picList) : com.focusPage('[name="project"]',order.$pic.$picList));
                 }
 
             });
@@ -276,7 +276,7 @@ $(function(){
                 var $li = createPayment(v, i);
                 $li.appendTo('[name="list"]', '#payment');
             });
-            $('.widget-box', '#payment').removeClass('flloading');
+            com.focusPage('.widget-box', '#payment').removeClass('flloading');
         }
     }, null, false);
 
@@ -299,7 +299,7 @@ $(function(){
             $.each(res.constructionSchedules,function (i,v) {
                 constructionDataBySche[v.schedule] = new Array();
                 createProjectSchedule(v.schedule);
-            })
+            });
         },null,false);
 
         com.post(api.construction.queryConstructionDrawingByOrderId,constructionParams,function (res) {
@@ -319,8 +319,8 @@ $(function(){
 
             for(var i=0;i<length;i++){
                 var constructer = constructers[i];
-                $('.alert-info', '#cs' + constructer.schedule).addClass("hide");
-                $('[name="workers"]', '#cs' + constructer.schedule).append(createWoker(constructer));
+                com.focusPage('.alert-info', '#cs' + constructer.schedule).addClass("hide");
+                com.focusPage('[name="workers"]', '#cs' + constructer.schedule).append(createWoker(constructer));
             }
 
         }, null, false);
@@ -355,7 +355,7 @@ $(function(){
 
                             var $pic = createPic(path, null, '700x700');
 
-                            $('[name="project"]', '#' + domid).append($pic);
+                            com.focusPage('[name="project"]', '#' + domid).append($pic);
                         }
 
                     });
@@ -363,11 +363,11 @@ $(function(){
                     initPhotoSwipeFromDOM('#' + domid + ' [name="project"]');
 
                 } else {
-                    $('.widget-main', '#' + domid).empty().append('<div class="alert alert-info">当前没有施工信息!</div>');
+                    com.focusPage('.widget-main', '#' + domid).empty().append('<div class="alert alert-info">当前没有施工信息!</div>');
                 }
 
-                $('.widget-box', '#' + domid).removeClass('flloading');
-            })
+                com.focusPage('.widget-box', '#' + domid).removeClass('flloading');
+            });
 
         }
     }
@@ -405,7 +405,7 @@ $(function(){
 
         var propertyArr = [
             ["金额:", v.realMoney, "grey"],
-            ["状态:", v.paymentStatus, "grey"],
+            ["状态:", v.paymentStatus, "grey"]
         ];
 
         $.each(propertyArr, function (index,value) {
@@ -440,7 +440,7 @@ $(function(){
     }
 
     function createProjectSchedule(i) {
-        var root = $('.timeline-items');
+        var root = com.focusPage('.timeline-items');
 
         var mainDiv = $('<div></div>').addClass('timeline-item clearfix').attr('id',"cs"+i);
 

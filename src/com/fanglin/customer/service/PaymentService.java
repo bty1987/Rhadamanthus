@@ -8,6 +8,6 @@ import com.fanglin.utils.Paging;
 
 public interface PaymentService {
 	
-	public void queryCusPayment(Paging paging, List<Filter> filters, PaymentVO paymentVO,String unionId);
+	public void queryCusPayment(Paging paging, List<Filter> filters, PaymentVO paymentVO);
 	
 }

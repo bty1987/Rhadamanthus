@@ -13,6 +13,12 @@ public class ReceiptTypeVO implements java.io.Serializable {
 	private Short type;
 	
 	private Short status;
+	
+	private String kino;
+	
+	private String kiname;
+	
+	private String assistant;
 
 	public Integer getRtId() {
 		return this.rtId;
@@ -52,6 +58,30 @@ public class ReceiptTypeVO implements java.io.Serializable {
 
 	public void setStatus(Short status) {
 		this.status = status;
+	}
+
+	public String getKino() {
+		return kino;
+	}
+
+	public void setKino(String kino) {
+		this.kino = kino;
+	}
+
+	public String getKiname() {
+		return kiname;
+	}
+
+	public void setKiname(String kiname) {
+		this.kiname = kiname;
+	}
+
+	public String getAssistant() {
+		return assistant;
+	}
+
+	public void setAssistant(String assistant) {
+		this.assistant = assistant;
 	}
 
 }

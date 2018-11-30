@@ -54,16 +54,19 @@ public class VscoreServiceImpl implements VscoreService {
 		List<VscoreRecordPO> vscoreRecordPOs = vscoreRecordDao.pageVscoreRecordByUnionId(paging, filters, unionId);
 		List<VscoreRecordVO> vscoreRecordVOs = new ArrayList<VscoreRecordVO>();
 		
-		for (VscoreRecordPO vscoreRecordPO : vscoreRecordPOs) {
+		if(vscoreRecordPOs.size() != 0 && vscoreRecordPOs != null){
 			
-			VscoreRecordVO vscoreRecordVO = new VscoreRecordVO(new UserBaseVO());
-			
-			BeanUtil.copyProperties(vscoreRecordPO, vscoreRecordVO, Arrays.asList("operater"));
-			BeanUtil.copyProperties(vscoreRecordPO.getOperater(), vscoreRecordVO.getOperater(), Arrays.asList("duty", "dept"));
-			
-			vscoreRecordVO.setOperateTime(vscoreRecordPO.getOperateTime());
-			
-			vscoreRecordVOs.add(vscoreRecordVO);
+			for (VscoreRecordPO vscoreRecordPO : vscoreRecordPOs) {
+				
+				VscoreRecordVO vscoreRecordVO = new VscoreRecordVO(new UserBaseVO());
+				
+				BeanUtil.copyProperties(vscoreRecordPO, vscoreRecordVO, Arrays.asList("operater"));
+				BeanUtil.copyProperties(vscoreRecordPO.getOperater(), vscoreRecordVO.getOperater(), Arrays.asList("duty", "dept"));
+				
+				vscoreRecordVO.setOperateTime(vscoreRecordPO.getOperateTime());
+				
+				vscoreRecordVOs.add(vscoreRecordVO);
+			}
 		}
 		
 		paging.setData(vscoreRecordVOs);

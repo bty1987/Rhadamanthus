@@ -2,7 +2,8 @@
 	vustomer: {url: "/views/customer/vustomer.html"},
 	vrecord: {url: "/views/customer/vrecord.html"},
 	vscoreRecord: {url: "/views/customer/vscoreRecord.html"},
-	vustomerAdvance : {url : "/views/customer/vustomerAdvance.html"}
+	vustomerAdvance : {url : "/views/customer/vustomerAdvance.html"},
+    crowd : {url : "/views/customer/crowd.html"}
 });
 
 $.extend(api, {customer: {

@@ -1,11 +1,11 @@
 $(function(){
     //弹出内容许些样式
-    $('#resultList1').css({'width':'96%','margin':'0 auto'});
+    com.focusPage('#resultList1').css({'width':'96%','margin':'0 auto'});
 
     var displayFunc  = (function(){
 
         var renderList = function(tableId,listData){
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
 
             if(listData && listData.length){
 
@@ -75,9 +75,9 @@ $(function(){
 
             init : function(tableId,listData){
                 if(!listData.length){
-                    $('#' + tableId).html("暂无工序组信息");
+                    com.focusPage('#' + tableId).html("暂无工序组信息");
                 }else{
-                    $('#' + tableId).html(null);
+                    com.focusPage('#' + tableId).html(null);
                     renderList(tableId,listData);
                 }
 
@@ -88,15 +88,12 @@ $(function(){
         };
     })();
 
-    var mid =  $('#viewPopUp').attr('data-wsid');
+    var mid =  com.focusPage('#viewPopUp').attr('data-wsid');
 
     com.post(api.production.queryWorkplanByWsid,{
         "workplan.workshop.wsid": mid
     },function(res){
             displayFunc.init('resultList1',res.workplans);
     });
-
-
-
 });
 

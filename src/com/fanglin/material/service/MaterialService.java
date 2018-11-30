@@ -47,7 +47,7 @@ public interface MaterialService {
 	
 	public void passBalanceMaterial(List<Long> mids);
 	
-	public void preBalanceMaterial(List<Long> mids, String userId, String userName);
+	public void preBalanceMaterial(List<Long> mids, String userId, String userName) throws FLException;
 	
 	public void postBalanceMaterial(MaterialVO materialVO, String userId, String userName) throws FLException;
 	

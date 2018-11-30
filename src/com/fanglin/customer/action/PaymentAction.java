@@ -1,5 +1,7 @@
 package com.fanglin.customer.action;
 
+import java.util.List;
+
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
@@ -61,10 +63,24 @@ public class PaymentAction extends BaseListAction {
 	
 	private String unionId;
 	
+	private String orderId;
+	
+	private List<DecorationPaymentVO> decorationPayments;
+	
+	private Float realMoney;
+	
 	@Action(value = "queryCusMaterialPayment", results = {@Result(name = "success", type = "json", params = {"ignoreHierarchy", "false"})}, params = {"contentType", "text/html"})
 	public String queryCusMaterialPayment(){
 		
-		materialPaymentService.queryCusMaterialPayment(getPaging(), getFilters(), materialPayment, unionId);
+		materialPaymentService.queryCusMaterialPayment(getPaging(), getFilters(), materialPayment);
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "countCusMaterialPaymentForAmount", results = {@Result(name = "success", type = "json", params = {"ignoreHierarchy", "false"})}, params = {"contentType", "text/html"})
+	public String countCusMaterialPaymentForAmount(){
+		
+		realMoney = materialPaymentService.countCusMaterialPaymentForAmount(materialPayment);
 		
 		return SUCCESS;
 	}
@@ -72,7 +88,15 @@ public class PaymentAction extends BaseListAction {
 	@Action(value = "queryCusDecorationPayment", results = {@Result(name = "success", type = "json", params = {"ignoreHierarchy", "false"})}, params = {"contentType", "text/html"})
 	public String queryCusDecorationPayment(){
 		
-		decorationPaymentService.queryCusDecorationPayment(getPaging(), getFilters(), decorationPayment,unionId);
+		decorationPaymentService.queryCusDecorationPayment(getPaging(), getFilters(), decorationPayment);
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "countCusDecorationPaymentForAmount", results = {@Result(name = "success", type = "json", params = {"ignoreHierarchy", "false"})}, params = {"contentType", "text/html"})
+	public String countCusDecorationPaymentForAmount(){
+		
+		decorationPayments = decorationPaymentService.countCusDecorationPaymentForAmount(decorationPayment);
 		
 		return SUCCESS;
 	}
@@ -80,7 +104,15 @@ public class PaymentAction extends BaseListAction {
 	@Action(value = "queryCusServicePayment", results = {@Result(name = "success", type = "json", params = {"ignoreHierarchy", "false"})}, params = {"contentType", "text/html"})
 	public String queryCusServicePayment(){
 		
-		servicePaymentOrderService.queryCusServicePayment(getPaging(), getFilters(), servicePayment,unionId);
+		servicePaymentOrderService.queryCusServicePayment(getPaging(), getFilters(), servicePayment);
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "countCusServicePaymentForAmount", results = {@Result(name = "success", type = "json", params = {"ignoreHierarchy", "false"})}, params = {"contentType", "text/html"})
+	public String countCusServicePaymentForAmount(){
+		
+		realMoney = servicePaymentOrderService.countCusServicePaymentForAmount(servicePayment);
 		
 		return SUCCESS;
 	}
@@ -88,7 +120,7 @@ public class PaymentAction extends BaseListAction {
 	@Action(value = "queryCusAdvance", results = {@Result (name = "success", type = "json", params = {"ignoreHierarchy", "false"})}, params = {"contentType", "text/html"})
 	public String queryCusAdvance() throws FLException{
 		
-		advance = advanceService.queryCusAdvance(advance);
+		advance = advanceService.queryCusAdvance(advance,orderId);
 		
 		return SUCCESS;
 	}
@@ -96,7 +128,7 @@ public class PaymentAction extends BaseListAction {
 	@Action(value = "queryCusSalesPayment", results = {@Result (name = "success", type = "json", params = {"ignoreHierarchy", "false"})}, params = {"contentType", "text/html"})
 	public String queryCusSalesPayment() throws FLException{
 		
-		salesPaymentService.queryCusSalesPayment(getPaging(), getFilters(), salesPayment,unionId);
+		salesPaymentService.queryCusSalesPayment(getPaging(), getFilters(), salesPayment);
 		
 		return SUCCESS;
 	}
@@ -104,7 +136,7 @@ public class PaymentAction extends BaseListAction {
 	@Action(value = "queryCusPayment", results = {@Result (name = "success", type = "json", params = {"ignoreHierarchy", "false"})}, params = {"contentType", "text/html"})
 	public String queryCusPayment() throws FLException{
 		
-		paymentService.queryCusPayment(getPaging(), getFilters(), payment,unionId);
+		paymentService.queryCusPayment(getPaging(), getFilters(), payment);
 		
 		return SUCCESS;
 	}
@@ -165,5 +197,28 @@ public class PaymentAction extends BaseListAction {
 		this.materialPayment = materialPayment;
 	}
 
-	
+	public List<DecorationPaymentVO> getDecorationPayments() {
+		return decorationPayments;
+	}
+
+	public void setDecorationPayments(List<DecorationPaymentVO> decorationPayments) {
+		this.decorationPayments = decorationPayments;
+	}
+
+	public Float getRealMoney() {
+		return realMoney;
+	}
+
+	public void setRealMoney(Float realMoney) {
+		this.realMoney = realMoney;
+	}
+
+	public String getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
+	}
+
 }

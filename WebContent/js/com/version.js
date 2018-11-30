@@ -3,7 +3,7 @@ $(function(){
 
     console.log("version config");
     
-    config.versionCode = '2.0.010.001';
+    config.versionCode = '2.0.014.000';
 
 });
 

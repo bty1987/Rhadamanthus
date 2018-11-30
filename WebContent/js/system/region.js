@@ -21,20 +21,20 @@ jQuery(function($) {
 		repeatFlg: false
 	};
 	
-	region.saveBtn = $("#saveBtn").on("click", saveData);
-	region.cancelBtn = $("#cancelBtn");
+	region.saveBtn = com.focusPage("#saveBtn").on("click", saveData);
+	region.cancelBtn = com.focusPage("#cancelBtn");
 	
-	region.modal = $("#regionModal");
+	region.modal = com.focusPage("#regionModal");
 	
-	region.regionItems.name = $("#regionName");
-	region.regionItems.no = $("#regionId");
+	region.regionItems.name = com.focusPage("#regionName");
+	region.regionItems.no = com.focusPage("#regionId");
 	
 	$.extend(com.validator, region.validator);
 	
 	var displayFunc  = (function(){
 
         var renderList = function(tableId,listData){
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if(listData && listData.length){ 
@@ -75,7 +75,7 @@ jQuery(function($) {
       
         return {
             init : function(tableId,listData){
-                $('#' + tableId).html(null);
+				com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
             },
             drawLine : function(v){
@@ -97,7 +97,7 @@ jQuery(function($) {
     	return [$adda];
 	});
 		
-	$('a[name="addRegion"]', '#pagenation').click(function(){
+	com.focusPage('[name="addRegion"]', com.focusPage('#pagenation')).click(function(){
 		editFlg = false;
 		
 		com.cleanItems(region.regionItems);

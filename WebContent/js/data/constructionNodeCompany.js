@@ -3,7 +3,7 @@ $(function(){
 	var displayFunc  = (function(){
 
 		var renderList = function(tableId,listData){
-			var $tableWrap = $('#' + tableId);
+			var $tableWrap = com.focusPage('#' + tableId);
 			var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
 			if(listData && listData.length){
@@ -51,7 +51,7 @@ $(function(){
 
 		return {
 			init : function(tableId,listData){
-				$('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
 				renderList(tableId,listData);
 			},
 			drawLine : function(v){
@@ -77,9 +77,9 @@ $(function(){
 		repeatFlg:false
 	};
 
-	constructionNodeCompany.cancelBtn = $("#cancelBtn");
-	constructionNodeCompany.modal = $("#constructionNodeModal");
-	constructionNodeCompany.constructionNodeCompanyItems.nodeName = $("#nodeName").chosen({
+	constructionNodeCompany.cancelBtn = com.focusPage("#cancelBtn");
+	constructionNodeCompany.modal = com.focusPage("#constructionNodeModal");
+	constructionNodeCompany.constructionNodeCompanyItems.nodeName = com.focusPage("#nodeName").chosen({
 		width: "216px"
 	});
 
@@ -90,7 +90,7 @@ $(function(){
             constructionNodeCompany.constructionNodeCompanyItems.nodeName.bindData(res.constructionNodes, "cnid", "name");
 		},null,false);
 
-		$("#companyName").val(row.name);
+        com.focusPage("#companyName").val(row.name);
 		constructionNodeCompany.modal.modal("show");
 		var options = {
 			"constructionNodeCompany.cid": row.cid,
@@ -116,8 +116,8 @@ $(function(){
 
 		constructionNodeCompany.constructionNodeCompanyItems.nodeName.trigger("chosen:updated");
 
-		$("#saveBtn").unbind("click");
-		$("#saveBtn").click(function(){
+        com.focusPage("#saveBtn").unbind("click");
+        com.focusPage("#saveBtn").click(function(){
 			if(com.validate()){
 				return;
 			}

@@ -7,6 +7,6 @@ import com.fanglin.store.po.MformatPO;
 
 public interface MformatDao extends Dao<MformatPO>{
 	
-	public List<MformatPO> queryMformatByGid(long gid, Boolean flag);
+	public List<MformatPO> queryMformatByGid(long gid, Short status);
 
 }

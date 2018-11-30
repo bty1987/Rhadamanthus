@@ -27,22 +27,21 @@
                                             <select class="col-xs-10 col-sm-12 v_required" id="type" ></select>
                                         </div>
 
-                                        <label for="no" class="col-sm-2 control-label no-padding-right">楼盘名</label>
+                                        <label for="no" class="col-sm-2 control-label no-padding-right orange">楼盘名</label>
                                         <div class="col-md-5">
-                                            <select class="chosen-select col-md-4 v_required" id="no"  style="display: none;"></select>
-                                            <span class='star'></span>
+                                            <select class="chosen-select col-md-4 v_required" id="no" style="display: none;"></select>
                                         </div>
                                     </div>
 
                                     <div class="form-group" id="ohouseNumber">
-                                        <label class="col-sm-2 control-label no-padding-right" for="oldhouseNumber">楼牌号</label>
+                                        <label class="col-sm-2 control-label no-padding-right orange" for="oldhouseNumber">楼牌号</label>
                                         <div class="col-sm-9">
-                                            <input type="text" id="oldhouseNumber" class="col-xs-10 col-sm-6  " readonly="readonly"/>
+                                            <input type="text" id="oldhouseNumber" class="col-xs-10 col-sm-6" readonly="readonly"/>
                                         </div>
                                     </div>
 
                                     <div class="form-group" id="nhouseNumber">
-                                        <label for="built" class="col-sm-2 control-label no-padding-right">楼牌号</label>
+                                        <label for="built" class="col-sm-2 control-label no-padding-right orange">楼牌号</label>
                                         <div class="col-sm-10">
                                             <input type="text" class="v_required col-sm-1" maxlength="7" style="float: none;"  id="built">
                                             <select id="builtrule" style="padding: 0px;font-size: 1px; width: 7%!important; height: 25px; vertical-align: bottom"></select>
@@ -52,13 +51,11 @@
                                             <select id="floorrule" style="padding: 0px;font-size: 1px; width: 7%!important; height: 25px; vertical-align: bottom"></select>
                                             <input type="text" class="v_required col-sm-1" maxlength="3"  style="float: none;"  id="door">
                                             <select id="doorrule" style="padding: 0px;font-size: 1px; width: 7%!important; height: 25px; vertical-align: bottom"></select>
-                                            <span class='star' id="errMsg"></span>
+                                            <span id="errMsg"></span>
                                             <div class="col-md-12" style="padding: 0px;" >
                                                 <span id="rule" class="red"></span>
                                             </div>
                                         </div>
-
-
                                     </div>
 
                                     <div class="form-group" id="ohousetype">
@@ -69,23 +66,20 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label class="col-sm-2 control-label no-padding-right">户型</label>
+                                        <label class="col-sm-2 control-label no-padding-right orange">户型</label>
                                         <div class="col-sm-9">
-                                            <input type="text" class="col-sm-1" style="float: none;"     id="houseTypeOne" /> 室
-                                            <input type="text" class="col-sm-1" style="float: none;"   id="houseTypeTwo" /> 厅
-                                            <input type="text" class="col-sm-1" style="float: none;"     id="houseTypeThr" /> 厨
-                                            <input type="text" class="col-sm-1" style="float: none;"    id="houseTypeFour" /> 卫
-                                            <span class='star'></span>
+                                            <input type="text" class="col-sm-1" style="float: none;" id="houseTypeOne" /> 室
+                                            <input type="text" class="col-sm-1" style="float: none;" id="houseTypeTwo" /> 厅
+                                            <input type="text" class="col-sm-1" style="float: none;" id="houseTypeThr" /> 厨
+                                            <input type="text" class="col-sm-1" style="float: none;" id="houseTypeFour" /> 卫
                                         </div>
                                     </div>
-
 
                                     <div class="form-group">
                                         <label class="col-sm-2 control-label no-padding-right" for="buildArea">建筑面积</label>
                                         <div class="col-sm-3">
                                             <input type="text" id="buildArea" maxlength="7" class="col-xs-10 col-sm-9 v_required v_float" />
                                             <span style = "margin-left: 10px; line-height: 34px">平</span>
-
                                         </div>
 
                                         <label class="col-sm-2 control-label no-padding-right" for="maxFloor">最高楼层</label>

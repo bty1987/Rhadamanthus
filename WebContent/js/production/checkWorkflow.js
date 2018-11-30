@@ -1,16 +1,16 @@
 jQuery(function ($) {
 
-    $('#checkWorkflow').css({'margin': '0 auto', 'margin-top': '2%', 'width': '98%'});
+    com.focusPage('#checkWorkflow').css({'margin': '0 auto', 'margin-top': '2%', 'width': '98%'});
 
     var workflowItem = {
-        wpid: $('#checkWorkflow').attr('data-wpid'),
+        wpid: com.focusPage('#checkWorkflow').attr('data-wpid'),
         workflows:[],
         currentWpid : []   //当前启用以及要启用的工序
     };
 
     /*添加一条新的工序*/
-    $('#addWorkPlan').click(function () {
-        var $lines = $('.line', '#list');
+    com.focusPage('#addWorkPlan').click(function () {
+        var $lines = com.focusPage('.line', '#list');
 
         var returnFlag = false;
         $lines.each(function(){
@@ -97,11 +97,11 @@ jQuery(function ($) {
 
     workflowAdd();
 
-    $("#submitHardwareItem").click(function () {
+    com.focusPage("#submitHardwareItem").click(function () {
 
         var options = {};
         var returnFlag = false;
-        var $lines = $('.line', '#list');
+        var $lines = com.focusPage('.line', '#list');
 
         $lines.each(function(i){
             var $this = $(this);
@@ -149,9 +149,9 @@ jQuery(function ($) {
 
         addline(1 + index).appendTo('#list');
 
-        var $lineInfoWrap1 = $('#list li:nth-of-type(' + (index + 1) + ') div.content');
+        var $lineInfoWrap1 = com.focusPage('#list li:nth-of-type(' + (index + 1) + ') div.content');
 
-        $('#list li:nth-of-type(' + (index + 1) + ')').attr({
+        com.focusPage('#list li:nth-of-type(' + (index + 1) + ')').attr({
             'data-wfid': data.workflow.wfid
         });
 
@@ -184,7 +184,7 @@ jQuery(function ($) {
 
     //重排序
     function reorder(){
-        var $list = $('.line', '#list');
+        var $list = com.focusPage('.line', '#list');
 
         $list.length && $list.each(function(i){
             var $this = $(this);
@@ -202,5 +202,4 @@ jQuery(function ($) {
             }
         }
     }
-
 });

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>Information Platform</title>
+
+    <meta charset="utf-8" />
+
+    <link rel="shortcut icon" href="fanglin.ico" type="image/x-icon">
+
+    <script>
+        var hostServer = "";
+        var cookies = document.cookie.split(";");
+
+        for(var i=0;i<cookies.length;i++){
+            var cookie = cookies[i];
+            if(cookie.indexOf("hostServer") != -1){
+                window.hostServer = unescape(hostServer);
+                break;
+            }
+        }
+
+        var csses = "";
+        csses += '<link rel="stylesheet" href="' + hostServer + 'assets/ace/css/bootstrap.min.css" />'; // basic styles
+        csses += '<link rel="stylesheet" href="' + hostServer + 'assets/altogether/css/font-awesome.min.css" />';
+        csses += '<link rel="stylesheet" href="' + hostServer + 'assets/altogether/css/iconfont.css" />'; /* iconfont */
+        csses += '<link rel="stylesheet" href="' + hostServer + 'assets/ace/css/jquery-ui-1.10.3.full.min.css" />'; // page specific plugin styles
+        csses += '<link rel="stylesheet" href="' + hostServer + 'assets/clear/css/login.css" />'; // clear login
+
+        document.write(csses);
+    </script>
+    <style>
+        #winTop {
+            -webkit-app-region: drag;
+        }
+        button {
+            -webkit-app-region: no-drag;
+        }
+    </style>
+
+</head>
+
+<body id="sign-in">
+<div class="preloader">
+    <div class="loader_img"><img src="assets/clear/img/loader.gif" alt="loading..." height="64" width="64"></div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4 col-sm-8 col-sm-offset-2 col-xs-10 col-xs-offset-1 login-form">
+            <div class="panel-header">
+                <h2 class="text-center">
+                   Login
+                </h2>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-xs-12">
+
+                            <label id="errorMsg" class="errorMsg"></label>
+
+                            <div class="form-group">
+                                <label for="userId" class="sr-only"> 登陆ID</label>
+                                <input type="text" class="form-control  form-control-lg" id="userId" name="userId"
+                                       placeholder="登陆ID">
+                            </div>
+                            <div class="form-group">
+                                <label for="password" class="sr-only">密码</label>
+                                <input type="password" class="form-control form-control-lg" id="password"
+                                       name="password" placeholder="密码">
+                            </div>
+
+                            <div class="form-group" style="display: -webkit-box;">
+                                <label for="password" class="sr-only">验证码</label>
+                                <input type="password" class="form-control form-control-lg" id="nowCode"
+                                       name="password" placeholder="验证码" style="width: 75%;">
+                                <img class="verify" id="Verify" style="cursor: hand;margin-left: 12px;margin-top: 2px;" alt="看不清,换一张" />
+                            </div>
+
+                            <div class="form-group">
+                                <input type="submit" value="登 陆" id="loginBtn" class="btn btn-primary btn-block"/>
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="slide" style="width: 100%; height: 100%;">
+    <div class="bg" id="container" style="width: 100%; height: 100%;">
+        <div id="canvas"></div>
+    </div>
+</div>
+<script src="assets/altogether/js/jquery-2.0.3.min.js"></script>
+<script type="text/javascript">
+
+    if(parent.window.isPC){
+        var gui = require('nw.gui');
+        var win = gui.Window.get();
+    }
+
+    var jses = "";
+
+    jses += '<script src="' + hostServer + 'assets/ace/js/bootstrap.min.js"><\/script>';
+	jses += '<script src="' + hostServer + 'assets/ace/js/cav.js"><\/script>';
+	jses += '<script src="' + hostServer + 'assets/ace/js/shaking.js"><\/script>';
+
+    if(!parent.window.isEncryption){
+        jses += '<script src="' + hostServer + 'js/com/config.js"><\/script>';
+        jses += '<script src="' + hostServer + 'js/com/server.js"><\/script>';
+        jses += '<script src="' + hostServer + 'js/com/params.js"><\/script>';
+        jses += '<script src="' + hostServer + 'js/dlogin.js"><\/script>';
+    }else if(parent.window.isPC && parent.window.isEncryption){
+        win.evalNWBin(null, 'js/com/config.bin');
+        win.evalNWBin(null, 'js/dlogin.bin');
+    }
+
+    document.write(jses);
+
+    $(window).on('load', function () {
+        $('.preloader img').fadeOut();
+        $('.preloader').fadeOut();
+    });
+</script>
+</body>
+</html>

@@ -6,17 +6,17 @@
 jQuery(function ($) {
 
     var manifest = {
-        mid: $('#editPopUp').attr('data-mid'),
-        mtype: parseInt($('#editPopUp').attr('data-type')),
-        status: parseInt($('#editPopUp').attr('data-status')),
-        saveBtn: $("#saveBtn"),
-        cancellBtn: $("#cancelBtn"),
+        mid: com.focusPage('#editPopUp').attr('data-mid'),
+        mtype: parseInt(com.focusPage('#editPopUp').attr('data-type')),
+        status: parseInt(com.focusPage('#editPopUp').attr('data-status')),
+        saveBtn: com.focusPage("#saveBtn"),
+        cancellBtn: com.focusPage("#cancelBtn"),
         manifestItems: {
-            orderId: $("#orderId"),
-            customerName: $("#customer"),
-            des: $("#comment"),
+            orderId: com.focusPage("#orderId"),
+            customerName: com.focusPage("#customer"),
+            des: com.focusPage("#comment")
         },
-        record: {},
+        record: {}
 
     };
 
@@ -27,19 +27,19 @@ jQuery(function ($) {
             if(v.status==0){
                 storehousesStatus.push(v);
             }
-        })
+        });
 
         manifest.storehouses = storehousesStatus;
     }, null, false);
 
-    var addSaleOrder = $('#addSaleOrder');
+    var addSaleOrder = com.focusPage('#addSaleOrder');
 
     addSaleOrder.click(function () {
-        var num = $('.line', '#list').length;
+        var num = com.focusPage('.line', '#list').length;
 
         var $line = addline(num + 1);
-        $line.appendTo('#list');
-    })
+        $line.appendTo(com.focusPage('#list'));
+    });
 
     //添加一个空行
     function addline(lineindex) {
@@ -60,7 +60,7 @@ jQuery(function ($) {
             {cellClass: "num", hasInput: !0},//数量
             {cellClass: "pieceNum"},//件数
             {cellClass: "price", hasInput: !0}, //价格
-            {cellClass: "des", hasInput: !0},//备注
+            {cellClass: "des", hasInput: !0}//备注
         ];
 
         var $btncheck = $('<a class="color-green" style="font-size: 18px"><i class="icon-ok"></i></a>');
@@ -118,12 +118,12 @@ jQuery(function ($) {
                         com.post(api.inventory.queryColorForEnableByGid, {
                             "color.gid": val.gid
                         }, function (res) {
-                            $('li[data-gid="' + val.gid + '_'+lineindex+'"] .color select').bindData(res.colors, "cid", "name");
-                        })
+                            com.focusPage('li[data-gid="' + val.gid + '_'+lineindex+'"] .color select').bindData(res.colors, "cid", "name");
+                        });
                         com.post(api.inventory.queryFormatForEnableByGid, {
                             "format.gid": val.gid
                         }, function (res) {
-                            $('li[data-gid="' + val.gid + '_'+lineindex+'"] .format select').bindData(res.formats, "fid", "info");
+                            com.focusPage('li[data-gid="' + val.gid + '_'+lineindex+'"] .format select').bindData(res.formats, "fid", "info");
                         })
                     }
                 });
@@ -179,12 +179,12 @@ jQuery(function ($) {
                 if (checkRowValueByNew($line)) {
                     com.post(api.inventory.addManifestItem, _params, function (data) {
                         btn.button('reset');
-                        $line.attr('data-miid', data.manifestItem.miId)
+                        $line.attr('data-miid', data.manifestItem.miId);
                         layer.msg('添加成功!', {icon: 1},function(){});
                         $line.find('.name').html($line.find('.name input').val());
-                        $line.find('.color').html($line.find('.color select option:selected').text())
-                        $line.find('.format').html($line.find('.format select option:selected').text())
-                        $line.find('.storehouse').html($line.find('.storehouse select option:selected').text())
+                        $line.find('.color').html($line.find('.color select option:selected').text());
+                        $line.find('.format').html($line.find('.format select option:selected').text());
+                        $line.find('.storehouse').html($line.find('.storehouse select option:selected').text());
                         $line.find('.name input').remove();
                         $line.find('.color select').remove();
                         $line.find('.format select').remove();
@@ -248,7 +248,7 @@ jQuery(function ($) {
                     com.post(api.inventory.deleteManifestItem, {
                         "manifest.mid": manifest.mid,
                         "manifest.total":manifest.totalSum,
-                        "manifestItem.miId": $line.attr('data-miid'),
+                        "manifestItem.miId": $line.attr('data-miid')
                     }, function () {
                         btn.button('reset');
                         layer.msg('删除成功', {icon: 1});
@@ -270,19 +270,19 @@ jQuery(function ($) {
     }
 
     function accessoriesAdd() {
-        var index = $('.line', '#list').length;
+        var index = com.focusPage('.line', '#list').length;
         com.post(api.inventory.queryManifestItemByMid, {
             "manifest.mid": manifest.mid
         }, function (res) {
             for (var i = 0; i < res.manifestItems.length; i++) {
-                index = $('.line', '#list').length;
+                index = com.focusPage('.line', '#list').length;
                 autoAddline(index);
             }
             function autoAddline(index) {
-                index = $('.line', '#list').length;
-                addline(1 + index).appendTo('#list');
-                var $lineInfoWrap1 = $('#list li:nth-of-type(' + (index + 1) + ') div.content');
-                $('#list li:nth-of-type(' + (index + 1) + ')').attr({
+                index = com.focusPage('.line', '#list').length;
+                addline(1 + index).appendTo(com.focusPage('#list'));
+                var $lineInfoWrap1 = com.focusPage('#list li:nth-of-type(' + (index + 1) + ') div.content');
+                com.focusPage('#list li:nth-of-type(' + (index + 1) + ')').attr({
                     'data-gid': res.manifestItems[i].goods.gid,
                     'data-miid': res.manifestItems[i].miId
                 });
@@ -461,7 +461,7 @@ jQuery(function ($) {
 
         var _total = 0;
 
-        var $list = $('.line', '#list');
+        var $list = com.focusPage('.line', '#list');
         $list.length && $list.each(function () {
             var $this = $(this);
             if ($this.find('.price input').val()) {
@@ -471,11 +471,11 @@ jQuery(function ($) {
 
         manifest.totalSum = _total;
 
-        $("#totalSpan").text(_total);
+        com.focusPage("#totalSpan").text(_total);
     }
 
     function reorder() {
-        var $list = $('.line', '#list');
+        var $list = com.focusPage('.line', '#list');
         $list.length && $list.each(function (i) {
             var $this = $(this);
             $this.find('.index').text(i + 1)

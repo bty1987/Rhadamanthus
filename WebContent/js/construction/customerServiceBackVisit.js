@@ -1,5 +1,5 @@
 jQuery(function ($) {
-    $('#fl-statement').statement("客服控制", "回访信息列表");
+    com.focusPage('#fl-statement').statement("客服控制", "回访信息列表");
 
     var backVisit = {
         saveBtn: null,
@@ -9,27 +9,27 @@ jQuery(function ($) {
         levelDict: {"0": "普通", "1": "重要"},
         backVisitTypeData: [{"id": "1", "name": "普通"}],
         editFlag: false,
-        repeatFlg: false,
+        repeatFlg: false
     };
 
-    backVisit.saveBtn = $("#saveBtn").on("click", saveData);
-    backVisit.cancelBtn = $("#cancelBtn");
-    backVisit.modal = $("#backVisitModal");
+    backVisit.saveBtn = com.focusPage("#saveBtn").on("click", saveData);
+    backVisit.cancelBtn = com.focusPage("#cancelBtn");
+    backVisit.modal = com.focusPage("#backVisitModal");
 
-    backVisit.backVisitItems.orderId = $("#orderId");
-    backVisit.backVisitItems.orderAddr = $("#orderAddr");
-    backVisit.backVisitItems.customerName = $("#customerName");
-    backVisit.backVisitItems.backVisitTime = $("#backVisitTime");
-    backVisit.backVisitItems.backVisitType = $("#backVisitType");
-    backVisit.backVisitItems.backVisitDes = $("#backVisitDes");
+    backVisit.backVisitItems.orderId = com.focusPage("#orderId");
+    backVisit.backVisitItems.orderAddr = com.focusPage("#orderAddr");
+    backVisit.backVisitItems.customerName = com.focusPage("#customerName");
+    backVisit.backVisitItems.backVisitTime = com.focusPage("#backVisitTime");
+    backVisit.backVisitItems.backVisitType = com.focusPage("#backVisitType");
+    backVisit.backVisitItems.backVisitDes = com.focusPage("#backVisitDes");
 
     backVisit.backVisitItems.backVisitType.bindData(backVisit.backVisitTypeData, "id", "name", false);
 
-    $('.date-picker').datepicker({autoclose: true});
+    com.focusPage('.date-picker').datepicker({autoclose: true});
 
     var displayFunc = (function () {
         var renderList = function (tableId, listData) {
-            var $tableWrap = $('#' + tableId).empty();
+            var $tableWrap = com.focusPage('#' + tableId).empty();
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if (listData && listData.length) {
@@ -58,7 +58,7 @@ jQuery(function ($) {
                 ["客户名:", v.customerName, "grey"],
                 ["时间:", v.backVisitTime, "green"],
                 ["类型:", typeInit(v), "red "],
-                ["备注:", v.backVisitDes, "grey"],
+                ["备注:", v.backVisitDes, "grey"]
             ];
 
             $.each(propertyArr, function (index, value) {
@@ -101,7 +101,7 @@ jQuery(function ($) {
 
         return {
             init: function (tableId, listData) {
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             },
             drawLine: function (v) {
@@ -128,7 +128,7 @@ jQuery(function ($) {
         return [$addb, $adda];
     });
 
-    $('a[name="add"]', '#pagenation').click(function () {
+    com.focusPage('a[name="add"]', '#pagenation').click(function () {
         backVisit.editFlag = false;
 
         com.cleanItems(backVisit.backVisitItems);
@@ -144,7 +144,7 @@ jQuery(function ($) {
         backVisit.modal.modal("show");
     });
 
-    $('a[name="back"]', '#pagenation').click(function () {
+    com.focusPage('a[name="back"]', '#pagenation').click(function () {
         com.switchPage(api.index.customerServiceIndex.url);
     });
 
@@ -172,7 +172,7 @@ jQuery(function ($) {
             "customerServiceBackVisit.customerName": backVisit.backVisitItems.customerName.val(),
             "customerServiceBackVisit.backVisitTime": backVisit.backVisitItems.backVisitTime.val(),
             "customerServiceBackVisit.backVisitType": backVisit.backVisitItems.backVisitType.val(),
-            "customerServiceBackVisit.backVisitDes": backVisit.backVisitItems.backVisitDes.val(),
+            "customerServiceBackVisit.backVisitDes": backVisit.backVisitItems.backVisitDes.val()
         };
 
         if (backVisit.editFlag) {

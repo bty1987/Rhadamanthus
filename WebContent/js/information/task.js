@@ -2,19 +2,33 @@ $(function(){
 //定义全局变量  json
     var  task= {
 
-        saveBtn: $("#addTaskBtn").on("click", saveData),//绑定事件
+        saveBtn: com.focusPage("#addTaskBtn").on("click", saveData),//绑定事件
         cancelBtn: null,
-        modal: null,
+        modal: com.focusPage("#addtaskModal").on("show.bs.modal", function(a) {
+            com.clearValidator();
+        }),
         taskItems: {},
         editFlg: false,
         taskType:["python","shell"],
+
+};
+    var taskRegular ={
+        validator: {
+            taskNumberAll:{
+                type: "v_zhengze",
+                regex: /^([A-Z])(,([A-Z]))*$/,
+                errorMsg: "请输入A-Z,如两位以上用,分隔"}// 正数或负数 小数3位
+        }
     };
+    $.extend(com.validator, taskRegular.validator);
     //给全局变量赋值(主要操作是制定页面标签)
-    task.cancelBtn = $("#cancelTaskBtn");
-    task.modal = $("#addtaskModal");
-    task.taskItems.name = $("#taskName");
-    task.taskItems.filepath = $("#filepath");
-    task.taskItems.tasktype = $("#tasktype");
+    task.cancelBtn = com.focusPage("#cancelTaskBtn");
+    task.modal = com.focusPage("#addtaskModal");
+    task.taskItems.name = com.focusPage("#taskName");
+    task.taskItems.filepath = com.focusPage("#filepath");
+    task.taskItems.tasktype = com.focusPage("#tasktype");
+    task.taskItems.handle = com.focusPage("#handle");
+    task.taskItems.plugins = com.focusPage("#plugins");
 
     /**
      * 回调函数必须提供 init(tableId, result.list)方法
@@ -24,7 +38,7 @@ $(function(){
     var displayFunc  = (function(){
 
         var renderList = function(tableId,listData){
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
             if(listData && listData.length){
                 $.each(listData,function(i, v){
@@ -50,9 +64,11 @@ $(function(){
             var $btnStatus = $('<div></div>').addClass('pull-right');
             var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({"type" : "checkbox"});
             var $span = $('<span></span>').addClass('lbl');
+
             var propertyArr = [
                 ["文件路径:", v.filepath, "grey"],
                 ["类型:", task.taskType[v.type], "grey"],
+                ["配置:", v.plugins, "grey"]
             ];
 
             $.each(propertyArr, function(index,value) {
@@ -76,14 +92,14 @@ $(function(){
 
             !v.status && $statusSwitch.prop("checked", true);
             $statusSwitch.switchBtn("status-lbl").on("click",function() {
-                $statusSwitch.prop("checked") ? (updateStatus(v.tid, 0, function(){$statusSwitch.removeAttr("checked")})) : (updateStatus(v.tid, 1,function(){$statusSwitch.prop("checked")}));
+                $statusSwitch.prop("checked") ? (updateStatus(v.tid, 0, function(){$statusSwitch.removeAttr("checked");})) : (updateStatus(v.tid, 1,function(){$statusSwitch.prop("checked");}));
             });
             return $liLine;
         };
 
         return {
             init : function(tableId,listData){
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
             },
             drawLine : function(v){
@@ -114,7 +130,8 @@ $(function(){
         task.taskItems.tasktype.val(row.type);
         task.taskItems.filepath.val(row.filepath);
         task.taskItems.name.val(row.name);
-        $("#addTaskBtn").addClass("hide");
+        task.taskItems.handle.val(row.handle);
+        com.focusPage("#addTaskBtn").addClass("hide");
     //$("#addTaskBtn"  ,'.modal-footer').css({"display":"none"});
     }
     //保存
@@ -123,10 +140,13 @@ $(function(){
         if(com.validate())
             return;
         var url;
+
         var options = {
             "task.name": task.taskItems.name.val(),
             "task.filepath":task.taskItems.filepath.val(),
             "task.type":task.taskItems.tasktype.val(),
+            "task.handle":task.taskItems.handle.val(),
+            "task.plugins":task.taskItems.plugins.val()
         };
 
         if(task.editFlg) {
@@ -142,11 +162,12 @@ $(function(){
     }
 
     //添加
-    $('[name="addTask"]' , '#pagenation').on("click",function(){  //选择器 [属性名="属性值"]  匿名函数
+    com.focusPage('[name="addTask"]' , '#pagenation').on("click",function(){  //选择器 [属性名="属性值"]  匿名函数
 
         com.cleanItems(task.taskItems);
         task.modal.modal("show");
-        $("#addTaskBtn").removeClass("hide");
+        com.focusPage("#addTaskBtn").removeClass("hide");
+        // com.focusPage("#addTaskBtn"  ,'.modal-footer').css({"display":"none"});
         task.editFlg = false;
 
     });

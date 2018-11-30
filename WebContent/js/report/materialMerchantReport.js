@@ -11,13 +11,13 @@ $(function() {
 	$('input[name=date-range-picker]').daterangepicker(com.dateramgepickerdefault).prev().on(ace.click_event, function(){
 		$(this).next().focus();
 	});
-	$("#dateRangeSearch").attr("readonly", "readonly");
+	com.focusPage("#dateRangeSearch").attr("readonly", "readonly");
 	
-	$("#reportType").bindData(reportTypeData, "id", "name", false);
+	com.focusPage("#reportType").bindData(reportTypeData, "id", "name", false);
 	
-	$("#fl_btn_searchDiv").on("click", function(){
-		var dateRange = $("#dateRangeSearch").val();
-		var reportType = $("#reportType").val();
+	com.focusPage("#fl_btn_searchDiv").on("click", function(){
+		var dateRange = com.focusPage("#dateRangeSearch").val();
+		var reportType = com.focusPage("#reportType").val();
 		
 		if(dateRange == ""){
 			com.showAlert(com.error, "请输入需要查询的时期范围");
@@ -43,11 +43,11 @@ $(function() {
 		
 		merchantReport.options = options;
 		
-		$("#materialTypeReport").html("");
-		$("#materialBrandReport").html("");
+		com.focusPage("#materialTypeReport").html("");
+		com.focusPage("#materialBrandReport").html("");
 		
-		$("#materialTypeTable").html("");
-		$("#materialBrandTable").html("");
+		com.focusPage("#materialTypeTable").html("");
+		com.focusPage("#materialBrandTable").html("");
 		
 		initTypeReport();
 		initBrandReport();
@@ -91,7 +91,7 @@ function initTypeReport(){
 			return;
 		}
 		
-		$('#materialTypeReport').highcharts({
+		com.focusPage('#materialTypeReport').highcharts({
 			chart: {
 	            type: 'column'
 	        },
@@ -107,7 +107,7 @@ function initTypeReport(){
 	        series:series,
 	    });
 		
-		var materialTypeTable = $("#materialTypeTable").html("");
+		var materialTypeTable = com.focusPage("#materialTypeTable").html("");
 		tbody.appendTo(materialTypeTable);
 		thead.appendTo(materialTypeTable);
 		
@@ -153,7 +153,7 @@ function initBrandReport(){
 			return;
 		}
 		
-		$('#materialBrandReport').highcharts({
+		com.focusPage('#materialBrandReport').highcharts({
 			chart: {
 	            type: 'column'
 	        },
@@ -184,7 +184,7 @@ function initBrandReport(){
 	        series:series,
 	    });
 		
-		var materialBrandTable = $("#materialBrandTable").html("");
+		var materialBrandTable = com.focusPage("#materialBrandTable").html("");
 		tbody.appendTo(materialBrandTable);
 		thead.appendTo(materialBrandTable);
 		

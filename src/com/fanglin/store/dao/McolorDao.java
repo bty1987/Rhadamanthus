@@ -7,6 +7,6 @@ import com.fanglin.store.po.McolorPO;
 
 public interface McolorDao extends Dao<McolorPO>{
 	
-	public List<McolorPO> queryMcolorByGid(long gid, Boolean flag);
+	public List<McolorPO> queryMcolorByGid(long gid, Short status);
 	
 }

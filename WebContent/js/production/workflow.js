@@ -4,7 +4,7 @@ $(function(){
     var displayFunc  = (function() {
 
         var renderList = function(tableId,listData){
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
 
             if(listData && listData.length){
 
@@ -77,7 +77,7 @@ $(function(){
             $btnEdit.on("click",function () {
                 productionUtils.clearForm("form1");
                 com.clearValidator();
-                $('#layerAdd').find('input[name="name"]').val(v.name);
+                com.focusPage('#layerAdd').find('input[name="name"]').val(v.name);
                 openlayer("编辑",function(){
                     if(!com.validate("layerAdd",null)){
                         saveData(v.wfid, function(){
@@ -118,7 +118,7 @@ $(function(){
 
         return {
             init: function (tableId, listData) {
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
 
             },
@@ -160,7 +160,7 @@ $(function(){
         layer.open({
             type: 1,
             title:layerType,
-            content: $('#layerAdd'),
+            content: com.focusPage('#layerAdd'),
             area: ( $(window).width()*0.6 < 620 ?  $(window).height()*0.6 : 620 )+"px",
             maxmin: false,
             zIndex: 9000,
@@ -178,7 +178,7 @@ $(function(){
     }
 
     function saveData(id,callback){
-        var name = $('#layerAdd').find('input[name="name"]').val();
+        var name = com.focusPage('#layerAdd').find('input[name="name"]').val();
 
         if(!id){
             com.post(api.production.addWorkflow, {
@@ -221,5 +221,4 @@ $(function(){
             });
         }
     }
-
 });

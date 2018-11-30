@@ -51,7 +51,7 @@ public class DecorationPaymentVO implements Serializable {
 	
 	private Float referMoney;
 	
-	private Float realMoney;
+	private Short sort;
 	
 	private Float cash;
 	
@@ -211,12 +211,12 @@ public class DecorationPaymentVO implements Serializable {
 		this.referMoney = referMoney;
 	}
 
-	public Float getRealMoney() {
-		return realMoney;
+	public Short getSort() {
+		return sort;
 	}
 
-	public void setRealMoney(Float realMoney) {
-		this.realMoney = realMoney;
+	public void setSort(Short sort) {
+		this.sort = sort;
 	}
 
 	public Float getCash() {
@@ -266,7 +266,7 @@ public class DecorationPaymentVO implements Serializable {
 	public void setCheckvBank(String checkvBank) {
 		this.checkvBank = checkvBank;
 	}
-
+	
 	public Float getInstallment() {
 		return installment;
 	}

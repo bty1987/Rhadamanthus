@@ -86,9 +86,9 @@ public class MaterialBalanceServiceImpl implements MaterialBalanceService {
 			BeanUtil.copyProperties(materialBalancePO.getMaterial().getMaterialer(), materialBalanceVO.getMaterial().getMaterialer(), Arrays.asList("dept", "duty"));
 			BeanUtil.copyProperties(materialBalancePO.getMaterial().getInstorer(), materialBalanceVO.getMaterial().getInstorer(), Arrays.asList("dept", "duty"));
 			
-			BeanUtil.copyProperties(materialBalancePO.getMaterial().getRegion(), materialBalanceVO.getMaterial().getRegion(), Arrays.asList("type", "fatherDept", "cityProper"));
-			BeanUtil.copyProperties(materialBalancePO.getMaterial().getDepartment(), materialBalanceVO.getMaterial().getDepartment(), Arrays.asList("type", "fatherDept", "cityProper"));
-			BeanUtil.copyProperties(materialBalancePO.getMaterial().getMaterialDepartment(), materialBalanceVO.getMaterial().getMaterialDepartment(), Arrays.asList("type", "fatherDept", "cityProper"));
+			BeanUtil.copyProperties(materialBalancePO.getMaterial().getRegion(), materialBalanceVO.getMaterial().getRegion(), Arrays.asList("type", "fatherDept", "manager"));
+			BeanUtil.copyProperties(materialBalancePO.getMaterial().getDepartment(), materialBalanceVO.getMaterial().getDepartment(), Arrays.asList("type", "fatherDept", "manager"));
+			BeanUtil.copyProperties(materialBalancePO.getMaterial().getMaterialDepartment(), materialBalanceVO.getMaterial().getMaterialDepartment(), Arrays.asList("type", "fatherDept", "manager"));
 			
 			materialBalanceVO.getCreater().setBaseInfo(materialBalancePO.getCreater());
 			materialBalanceVO.getInstorer().setBaseInfo(materialBalancePO.getInstorer());

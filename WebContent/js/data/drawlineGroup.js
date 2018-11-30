@@ -17,20 +17,20 @@ $(function(){
         }
     }
 
-    group.cancelBtn = $("#cancelBtn");
-    group.groupadd.gid = $("#gid");
-    group.addmodal = $("#addModal");
-    group.groupadd.drawLineGroup = $("#drawLineGroup");
-    group.groupadd.contentadd = $("#contentadd");
+    group.cancelBtn = com.focusPage("#cancelBtn");
+    group.groupadd.gid = com.focusPage("#gid");
+    group.addmodal = com.focusPage("#addModal");
+    group.groupadd.drawLineGroup = com.focusPage("#drawLineGroup");
+    group.groupadd.contentadd = com.focusPage("#contentadd");
     //添加的保存按钮
     
     $.extend(com.validator, group.validator);
-    group.savebtn = $("#groupadd").on("click", saveData);
+    group.savebtn = com.focusPage("#groupadd").on("click", saveData);
 
     var displayFunc  = (function(){
 
         var renderList = function(tableId,listData){
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if(listData && listData.length){
@@ -83,7 +83,7 @@ $(function(){
 
         return {
             init : function(tableId,listData){
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
             },
             drawLine : function(v){
@@ -106,17 +106,17 @@ $(function(){
     });
 
     function popoverInit(){
-        $("[data-toggle='popover']").popover({
+        com.focusPage("[data-toggle='popover']").popover({
             html : true,
             trigger:'blur',
 
         });
-        $('#drawLineGroup').css('border-color', '');
+        com.focusPage('#drawLineGroup').css('border-color', '');
 
     }
 
     //添加按钮
-    $('a[name="addGroup"]','#pagenation').click(function(){
+    com.focusPage('a[name="addGroup"]','#pagenation').click(function(){
         group.editFlg = true;
         com.cleanItems(group.groupadd);
         group.addmodal.modal("show");

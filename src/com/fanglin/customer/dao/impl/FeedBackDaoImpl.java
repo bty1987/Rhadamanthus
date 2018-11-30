@@ -1,5 +1,6 @@
 package com.fanglin.customer.dao.impl;
 
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
@@ -43,8 +44,12 @@ public class FeedBackDaoImpl extends DaoImpl<FeedbackPO> implements FeedBackDao{
 					Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
 					Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
 					
-					query.add(query.getCriterion("createTime", eDate.getTime(), "le"));
-					query.add(query.getCriterion("createTime", sDate.getTime(), "ge"));
+					Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
+					Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
+					
+					query.add(query.getCriterion("createTime", eTimestamp, "le"));
+					query.add(query.getCriterion("createTime", sTimestamp, "ge"));
+
 			 }
 			}
 		}

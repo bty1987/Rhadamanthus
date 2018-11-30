@@ -12,7 +12,7 @@ jQuery(function($) {
 		emergencyPhone:""
 	};
 	
-	$("#removePicture").on("click",removePicture);
+	com.focusPage("#removePicture").on("click",removePicture);
 	var userid=-null;
 	com.post(api.personel.queryUserForSelfByUserId, {}, function(res){
   
@@ -30,59 +30,59 @@ jQuery(function($) {
 	});
 
 	function initUser(){
-		$("#age").val(userProfile.age);
-		$("#telephone").val(userProfile.phone);
-		$("#qq").val(userProfile.qq);
-		$("#wechat").val(userProfile.wechat);
-		$("#email").val(userProfile.email);
-		$("#emergencyMan").val(userProfile.emergencyMan);
-		$("#emergencyPhone").val(userProfile.emergencyPhone);
-		$("#picture").val(userProfile.userPhoto);
-		$("#infoPicture").attr("href", com.showImg($("#showImg"), userProfile.userPhoto, 150, 150, ''));
+		com.focusPage("#age").val(userProfile.age);
+		com.focusPage("#telephone").val(userProfile.phone);
+		com.focusPage("#qq").val(userProfile.qq);
+		com.focusPage("#wechat").val(userProfile.wechat);
+		com.focusPage("#email").val(userProfile.email);
+		com.focusPage("#emergencyMan").val(userProfile.emergencyMan);
+		com.focusPage("#emergencyPhone").val(userProfile.emergencyPhone);
+		com.focusPage("#picture").val(userProfile.userPhoto);
+		com.focusPage("#infoPicture").attr("href", com.showImg(com.focusPage("#showImg"), userProfile.userPhoto, 150, 150, ''));
 	}
 	
-	$("#reset").on("click",function(){
+	com.focusPage("#reset").on("click",function(){
 		initUser();
 	});
 	
-	$("#saveBtn").on("click",function(){
+	com.focusPage("#saveBtn").on("click",function(){
 	
 		if(com.validate()){
 			return;
 		}
 		
 		parm = {
-			"userInfo.user.userPhoto":$("#picture").val(),
+			"userInfo.user.userPhoto":com.focusPage("#picture").val(),
 			"userInfo.user.userId": userid,
-			"userInfo.user.phone":$("#telephone").val(),
-			"userInfo.age":$("#age").val(),
-			"userInfo.emergencyMan":$("#emergencyMan").val(),
-			"userInfo.emergencyPhone":$("#emergencyPhone").val(),
-			"userInfo.qq":$("#qq").val(),
-			"userInfo.wechat":$("#wechat").val(),
-			"userInfo.email":$("#email").val()
+			"userInfo.user.phone":com.focusPage("#telephone").val(),
+			"userInfo.age":com.focusPage("#age").val(),
+			"userInfo.emergencyMan":com.focusPage("#emergencyMan").val(),
+			"userInfo.emergencyPhone":com.focusPage("#emergencyPhone").val(),
+			"userInfo.qq":com.focusPage("#qq").val(),
+			"userInfo.wechat":com.focusPage("#wechat").val(),
+			"userInfo.email":com.focusPage("#email").val()
 		};
 
 		com.post(api.personel.updateUserForBaseInfo, parm, function(res){
-			userProfile.userPhoto = $("#picture").val();
-			userProfile.age = $("#age").val();
-			userProfile.phone = $("#telephone").val();
-			userProfile.emergencyMan = $("#emergencyMan").val();
-			userProfile.emergencyPhone = $("#emergencyPhone").val();
-			userProfile.qq = $("#qq").val();
-			userProfile.wechat=$("#wechat").val();
-			userProfile.email = $("#email").val();
+			userProfile.userPhoto = com.focusPage("#picture").val();
+			userProfile.age = com.focusPage("#age").val();
+			userProfile.phone = com.focusPage("#telephone").val();
+			userProfile.emergencyMan = com.focusPage("#emergencyMan").val();
+			userProfile.emergencyPhone = com.focusPage("#emergencyPhone").val();
+			userProfile.qq = com.focusPage("#qq").val();
+			userProfile.wechat=com.focusPage("#wechat").val();
+			userProfile.email = com.focusPage("#email").val();
 			com.showAlert(com.info, "操作成功");
 		});
 	});
 
 	function removePicture(){
-		$("#showImg").attr("src","#");
-		$("#picture").val("");
-		$("#infoPicture").attr("href","javascript:void(0)");
+		com.focusPage("#showImg").attr("src","#");
+		com.focusPage("#picture").val("");
+		com.focusPage("#infoPicture").attr("href","javascript:void(0)");
 	}
 	
-	$("#pictureUpload").Huploadify({
+	com.focusPage("#pictureUpload").Huploadify({
         'debug' : false, // 开启调试
         'auto':true, // 是否自动上传
         'successTimeout': 99999, //超时时间
@@ -104,8 +104,8 @@ jQuery(function($) {
         'onUploadSuccess':function(file, data, response){
 			var dateObj=eval("("+data+")");
 			if(dateObj.errorCode == 0){
-			 	$("#picture").val(dateObj.resUrl);
-			 	$("#infoPicture").attr("href", com.showImg($("#showImg"), dateObj.resUrl, 150, 150, ''));
+			 	com.focusPage("#picture").val(dateObj.resUrl);
+			 	com.focusPage("#infoPicture").attr("href", com.showImg(com.focusPage("#showImg"), dateObj.resUrl, 150, 150, ''));
 			}else{
 				alert(data);
 			}

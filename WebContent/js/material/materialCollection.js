@@ -3,7 +3,7 @@ var materialSubOrderCollectionPostData = {};
 
 jQuery(function($) {
 	
-	$('#fl-statement').statement("主材子订单", "收款信息");
+	com.focusPage('#fl-statement').statement("主材子订单", "收款信息");
 	
 	var materialSubOrderCollection = {
 			
@@ -62,13 +62,13 @@ jQuery(function($) {
 			}
 		});
 		
-		$("#bankName").bindData(materialSubOrderCollection.bank, 'no', 'value');
-		$("#checkvBankName").bindData(materialSubOrderCollection.bank, 'no', 'value');
-		$("#installmentBankName").bindData(materialSubOrderCollection.bank, 'no', 'value');
-		$("#accountsBankName").bindData(materialSubOrderCollection.bank, 'no', 'value');
-		$("#refundBankName").bindData(materialSubOrderCollection.bank, 'no', 'value');
-		$("#accountsBankName").bindData(materialSubOrderCollection.accounts, 'no', 'value');
-		$("#couponType").bindData(materialSubOrderCollection.couponType, 'no', 'value');
+		com.focusPage("#bankName").bindData(materialSubOrderCollection.bank, 'no', 'value');
+		com.focusPage("#checkvBankName").bindData(materialSubOrderCollection.bank, 'no', 'value');
+		com.focusPage("#installmentBankName").bindData(materialSubOrderCollection.bank, 'no', 'value');
+		com.focusPage("#accountsBankName").bindData(materialSubOrderCollection.bank, 'no', 'value');
+		com.focusPage("#refundBankName").bindData(materialSubOrderCollection.bank, 'no', 'value');
+		com.focusPage("#accountsBankName").bindData(materialSubOrderCollection.accounts, 'no', 'value');
+		com.focusPage("#couponType").bindData(materialSubOrderCollection.couponType, 'no', 'value');
 	}, null, false);
 	
 	com.post(api.ds.payment, {}, function(res){
@@ -82,7 +82,7 @@ jQuery(function($) {
 	var displayFunc  = (function(){
 
 		var renderList = function(tableId,listData){
-			var $tableWrap = $('#' + tableId);
+			var $tableWrap = com.focusPage('#' + tableId);
 			var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
 			if(listData && listData.length){
@@ -120,7 +120,7 @@ jQuery(function($) {
                                     info += materialSubOrderCollection.bankInfo[_i[0]] + " " + _i[1] + ", ";
                                 }
 
-                                return info
+                                return info;
                             })(v.bank, v.bankInfo), "blue"]) : true;
                         v.checkv != null && v.checkv != "0" ? styleArr.push(["转账:", v.checkv, "blue"]) : true;
                         v.installment != null && v.installment != "0" ? styleArr.push(["分期:", v.installment, "blue"]) : true;
@@ -171,7 +171,7 @@ jQuery(function($) {
                                         info += materialSubOrderCollection.bankInfo[_i[0]] + " " + _i[1] + ", ";
                                     }
 
-                                    return info
+                                    return info;
                                 })(v.bank, v.bankInfo), "grey"]) : true;
                             v.checkv != null && v.checkv != "0" ? _styleArr.push(["转账:", v.checkv, "blue"]) : true;
                             v.installment != null && v.installment != "0" ? _styleArr.push(["分期:", v.installment, "blue"]) : true;
@@ -199,10 +199,10 @@ jQuery(function($) {
 		
 		return {
 			init : function(tableId,listData){
-				$('#' + tableId).html(null);
+				com.focusPage('#' + tableId).html(null);
 				renderList(tableId,listData);
 			}
-		}
+		};
 	})();
 	
 	var searcher = new Searcher();
@@ -211,7 +211,7 @@ jQuery(function($) {
 		displayFunc.init('resultList', data);
 	}, "pagenation", null, materialSubOrderCollectionPostData, true, "materialPayments");
 	
-	$('#back').click(function(){
+	com.focusPage('#back').click(function(){
 		com.switchPage(params.historyPage);
 	});
 	

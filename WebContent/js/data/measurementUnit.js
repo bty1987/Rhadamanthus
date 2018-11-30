@@ -10,18 +10,18 @@ $(function(){
         editFlg : false,
     }
 
-    measurementUnit.addmodal = $("#addModal");
-    measurementUnit.cancelBtn = $("#cancelBtn");
-    measurementUnit.Unit.id = $("#id");
-    measurementUnit.Unit.name = $("#measurement");
-    measurementUnit.Unit.unitDes = $("#unitDes");
-    measurementUnit.savebtn = $("#measurementadd").on("click", saveData);
+    measurementUnit.addmodal = com.focusPage("#addModal");
+    measurementUnit.cancelBtn = com.focusPage("#cancelBtn");
+    measurementUnit.Unit.id = com.focusPage("#id");
+    measurementUnit.Unit.name = com.focusPage("#measurement");
+    measurementUnit.Unit.unitDes = com.focusPage("#unitDes");
+    measurementUnit.savebtn = com.focusPage("#measurementadd").on("click", saveData);
 
     var displayFunc  = (function(){
 
 
         var renderList = function(tableId,listData){
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if(listData && listData.length){
@@ -64,7 +64,7 @@ $(function(){
 
         return {
             init : function(tableId,listData){
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
             },
             drawLine : function(v){
@@ -95,7 +95,7 @@ $(function(){
         measurementUnit.addmodal.modal("show");
     }
 
-    $('a[name="addMeasurementUnit"]','#pagenation').click(function(){
+    com.focusPage('a[name="addMeasurementUnit"]','#pagenation').click(function(){
         measurementUnit.editFlg = true;
         com.cleanItems(measurementUnit.Unit);
         measurementUnit.addmodal.modal("show");

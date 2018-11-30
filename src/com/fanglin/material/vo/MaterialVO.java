@@ -44,6 +44,8 @@ public class MaterialVO implements Serializable {
 	
 	private String category;
 	
+	private Long bid;
+	
 	private String brand;
 	
 	private Short packageFlag;
@@ -93,6 +95,8 @@ public class MaterialVO implements Serializable {
 	private String comment;
 	
 	private Integer company;
+	
+	private Integer activityId;
 	
 	public MaterialVO(){
 		super();
@@ -191,6 +195,14 @@ public class MaterialVO implements Serializable {
 
 	public void setCategory(String category) {
 		this.category = category;
+	}
+
+	public Long getBid() {
+		return bid;
+	}
+
+	public void setBid(Long bid) {
+		this.bid = bid;
 	}
 
 	public String getBrand() {
@@ -395,6 +407,14 @@ public class MaterialVO implements Serializable {
 
 	public void setCompany(Integer company) {
 		this.company = company;
+	}
+
+	public Integer getActivityId() {
+		return activityId;
+	}
+
+	public void setActivityId(Integer activityId) {
+		this.activityId = activityId;
 	}
 	
 }

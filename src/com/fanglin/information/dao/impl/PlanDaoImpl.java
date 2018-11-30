@@ -20,12 +20,16 @@ public class PlanDaoImpl extends DaoImpl<PlanPO> implements PlanDao {
 	}
 
 	@Override
-	public List<PlanPO> pagePlan(Paging paging, List<Filter> filters) {
+	public List<PlanPO> pagePlan(Paging paging, List<Filter> filters, int uid, int company) {
 		
 		PagingQuery<PlanPO> query = pagingQuery(paging, PlanPO.class);
-
+		
+		query.add(query.getCriterion("company", (long)company, "eq"));
+		
+		query.add(Restrictions.eq("creater.uid", uid));
+		
 		queryFilterExecute(query, filters);
-
+		
 		query.desc("pid");
 
 		return query.list();
@@ -48,6 +52,14 @@ public class PlanDaoImpl extends DaoImpl<PlanPO> implements PlanDao {
 
 		return count.intValue();
 	}
+	@Override
+	public int countPlanByExecuteTimAndCuid(String executeTime, long cuid) {
+		String sql = "select count(*) from information.plan where executeTime= :executeTime and status = :status and cuid = :cuid";
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setString(PlanPO.COLUMN_EXECUTETIME_STR, executeTime).setShort(PlanPO.COLUMN_STATUS_STR, PlanPO.STATUS_INIT_INT).setLong(PlanPO.COLUMN_CUID_STR, cuid).uniqueResult();
+
+		return count.intValue();
+	}
+
 
 	@Override
 	public int countPlanRightNow() {
@@ -75,5 +87,6 @@ public class PlanDaoImpl extends DaoImpl<PlanPO> implements PlanDao {
 			}
 		}
 	}
+
 
 }

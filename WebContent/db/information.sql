@@ -24,7 +24,7 @@ CREATE TABLE `activityitem` (
   `num` int(11) NOT NULL DEFAULT '0',
   `type` tinyint(4) NOT NULL,
   `money` decimal(10,3) NOT NULL DEFAULT '0.000',
-  PRIMARY KEY (`aiId`)
+  PRIMARY KEY (`aiid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='活动物品表';
 
 DROP TABLE IF EXISTS `assassin`;
@@ -111,8 +111,7 @@ CREATE TABLE `notice` (
   `endTime` date NOT NULL,
   `publishTime` date NOT NULL,
   `isPublic` tinyint(1) NOT NULL COMMENT '公开, 0: 公开, 1: 非公开',
-  `contents` varchar(4096) NOT NULL,
-  `contentsText` varchar(1024) NOT NULL,
+  `contents` varchar(256) NOT NULL,
   `filePath` varchar(128) DEFAULT NULL,
   `company` int(11) NOT NULL,
   PRIMARY KEY (`nid`),
@@ -151,6 +150,38 @@ CREATE TABLE `phonecallrecord` (
   `url` varchar(255) DEFAULT NULL COMMENT '录音地址',
   PRIMARY KEY (`pcrid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='电话回拨记录表';
+DROP TABLE IF EXISTS `plan`;
+
+CREATE TABLE `plan` (
+  `pid` int(11) NOT NULL AUTO_INCREMENT,
+  `tid` int(11) NOT NULL,
+  `args` varchar(128) DEFAULT NULL COMMENT '参数',
+  `cuid` int(11) NOT NULL COMMENT '创建人',
+  `createtime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON COMMENT '创建时间',
+  `executetime` varchar(10) DEFAULT NULL COMMENT '执行时间',
+  `resultfilepath` varchar(128) COMMENT '结果文件路径',
+  `infofilepath` varchar(128) COMMENT '信息文件路径',
+  `schedule` tinyint(1) NOT NULL DEFAULT '0',
+  `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '状态,0:初始,1:取消,2:成功,3:失败,4:执行',
+  `info` varchar(20) DEFAULT NULL COMMENT '结果信息',
+  `company` int(11) NOT NULL,
+  PRIMARY KEY (`pid`),
+  KEY `indexone` (`cuid`),
+  KEY `indextwo` (`executetime`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='计划表';
+DROP TABLE IF EXISTS `task`;
+
+CREATE TABLE `task` (
+  `tid` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(32) CHARACTER SET utf8 NOT NULL,
+  `filepath` varchar(128) CHARACTER SET utf8 NOT NULL,
+  `type` tinyint(1) NOT NULL COMMENT '命令类型 , 0: PYTHON, 1: SHELL',
+  `status` tinyint(1) NOT NULL COMMENT '状态 , 0: 启用, 1: 禁用',
+  `keyword` varchar(32) COMMENT '任务关键字',
+  `handle` tinyint(1) NOT NULL,
+  `plugins` varchar(16) DEFAULT '' COMMENT '插件信息,A: 日期, B: 日期范围, C: 上传控件, D: 参数',
+  PRIMARY KEY (`tid`)
+)  ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='任务表';
 
 DROP TABLE IF EXISTS `upgrade`;
 CREATE TABLE `upgrade` (
@@ -164,35 +195,69 @@ CREATE TABLE `upgrade` (
   PRIMARY KEY (`ugid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='升级表'; 
 
-DROP TABLE IF EXISTS `vticket`;
-CREATE TABLE `vticket` (
-`vtid`  int(11) NOT NULL AUTO_INCREMENT COMMENT '活动票ID' ,
-`tno`  varchar(15) NOT NULL COMMENT '活动票号' ,
-`cuid`  int(11) NOT NULL COMMENT '创建人' ,
-`createTime`  timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间' ,
-`buid`  int(11) NOT NULL COMMENT '归属人' ,
-`did`  int(11) NOT NULL COMMENT '归属部门' ,
-`rid`  int(11) NOT NULL COMMENT '归属分区' ,
-`orderId`  varchar(15) NULL COMMENT '装修单号' ,
-`name`  varchar(15) NOT NULL COMMENT '姓名' ,
-`phone`  varchar(32) NOT NULL COMMENT '电话' ,
-`address`  varchar(128) NOT NULL COMMENT '地址' ,
-`isregist`  tinyint(1) NOT NULL COMMENT '是否注册' ,
-`iscome`  tinyint(1) NOT NULL COMMENT '是否到场' ,
-PRIMARY KEY (`vtid`),
-UNIQUE KEY `indexone` (`tno`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='活动票表';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 DROP TABLE IF EXISTS `vpayment`;
 CREATE TABLE `vpayment` (
   `vpid` int(11) NOT NULL AUTO_INCREMENT,
+  `vrid` int(11),
   `mno` varchar(15) NOT NULL,
+  `orderId` varchar(32),
   `createrId` int(11) NOT NULL,
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `collecterId` int(11) NOT NULL,
-  `collectTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `type` tinyint(2) NOT NULL,
-  `brand` varchar(32) DEFAULT NULL,
+  `type` tinyint(1) NOT NULL,
+  `brand` varchar(32),
   `money` decimal(10,3) NOT NULL,
+  `status` tinyint(2) NOT NULL,
+  `expire` tinyint(1) DEFAULT '0' COMMENT '到期标识 , 0: 有效 , 1: 到期',
+  `comment` varchar(128) DEFAULT NULL,
   PRIMARY KEY (`vpid`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='活动款';
+DROP TABLE IF EXISTS `vreceipt`;
+CREATE TABLE `vreceipt` (
+  `vrid` int(11) NOT NULL AUTO_INCREMENT COMMENT '活动收据ID',
+  `cluid` int(11) NOT NULL COMMENT '收款人ID',
+  `collectTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '收款时间',
+  `cash` decimal(11,3) NOT NULL COMMENT '现金',
+  `bank` decimal(11,3) NOT NULL COMMENT '刷卡',
+  `bankInfo` varchar(255) NOT NULL COMMENT '刷卡信息',
+  `coupon` decimal(10,2) NOT NULL COMMENT '券值',
+  `couponInfo` varchar(255) NOT NULL COMMENT '券信息',
+  `comment` varchar(255) DEFAULT NULL COMMENT '说明',
+  PRIMARY KEY (`vrid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='活动收据';
+DROP TABLE IF EXISTS `vticket`;
+CREATE TABLE `vticket` (
+  `vtid` int(11) NOT NULL AUTO_INCREMENT COMMENT '活动票ID',
+  `tno` varchar(15) CHARACTER SET utf8 NOT NULL COMMENT '活动票号',
+  `cuid` int(11) DEFAULT NULL COMMENT '创建人',
+  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `buid` int(11) DEFAULT NULL COMMENT '归属人',
+  `did` int(11) DEFAULT NULL COMMENT '归属部门',
+  `rid` int(11) DEFAULT NULL COMMENT '归属分区',
+  `orderId` varchar(15) CHARACTER SET utf8 DEFAULT NULL COMMENT '装修单号',
+  `name` varchar(15) CHARACTER SET utf8 DEFAULT NULL COMMENT '姓名',
+  `phone` varchar(32) CHARACTER SET utf8 DEFAULT NULL COMMENT '电话',
+  `address` varchar(128) CHARACTER SET utf8 DEFAULT NULL COMMENT '地址',
+  `isregist` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否注册',
+  `iscome` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否到场',
+  `expire` tinyint(1) DEFAULT '0' COMMENT '到期标识 , 0: 有效 , 1: 到期',
+  PRIMARY KEY (`vtid`),
+  UNIQUE KEY `indexone` (`tno`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='活动票表';

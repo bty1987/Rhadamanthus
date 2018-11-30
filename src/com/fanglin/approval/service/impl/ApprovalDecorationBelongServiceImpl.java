@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.fastjson.JSONObject;
 import com.fanglin.approval.dao.ApprovalDao;
 import com.fanglin.approval.dao.ApprovalDecorationBelongDao;
 import com.fanglin.approval.dao.ApprovalDecorationBelongItemDao;
@@ -38,10 +39,13 @@ import com.fanglin.decoration.po.DecorationAdditionPO;
 import com.fanglin.decoration.po.DecorationBelongPO;
 import com.fanglin.decoration.po.DecorationOperatePO;
 import com.fanglin.decoration.po.DecorationPO;
+import com.fanglin.dingding.service.ApprovalService;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.MessageService;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.system.dao.SystemConfigDao;
+import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
@@ -76,7 +80,13 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 	
 	@Autowired
 	private DecorationAdditionDao decorationAdditionDao;
+	
+	@Autowired
+	private SystemConfigDao systemConfigDao;
 
+	@Autowired
+	private ApprovalService approvalDDService;
+	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public int submitApprovalForDecorationBelong(ApprovalVO approvalVO, ApprovalDecorationBelongVO approvalDecorationBelongVO, List<ApprovalDecorationBelongItemVO> approvalDecorationBelongItemVOs, String userId, int company) throws FLException {
@@ -163,8 +173,18 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiver().getUserId());
 		UserPO sender = userDao.queryUserByUserId(userId);
 		
+		SystemConfigPO systemConfigPO = systemConfigDao.querySystemConfig(ApprovalPO.APPROVAL_SYSTEMCONFIG_DECORATIONBELONG_STR,company);
+		
+		if(systemConfigPO == null){
+			approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_INIT_INT);
+		}else{
+			approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_DINGDING_INT);
+			List<JSONObject> formComponentValues = approvalDDService.getForms("说明", String.format(ApprovalPO.APPROVAL_CONTENTS_ORDER_BELONG_STR, orderId, (approvalDecorationBelongVO.getBelongType() == 0 ? "设计" : "业务"), oldBelongUserName.toString(), oldBelongRate.toString(), newBelongUserName.toString(), newBelongRate.toString()));
+			String processinstanceid = approvalDDService.initiateApproval(systemConfigPO.getValue(), userId, approvalVO.getReceiver().getUserId(), null, null, formComponentValues, company);
+			approvalPO.setProcessinstanceid(processinstanceid);
+		}
+		
 		approvalPO.setType(ApprovalPO.APPROVAL_TYPE_ORDER_BELONG_INT);
-		approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_INIT_INT);
 		approvalPO.setIdent(orderId);
 		approvalPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		approvalPO.setContents(String.format(ApprovalPO.APPROVAL_CONTENTS_ORDER_BELONG_STR, orderId, (approvalDecorationBelongVO.getBelongType() == 0 ? "设计" : "业务"), oldBelongUserName.toString(), oldBelongRate.toString(), newBelongUserName.toString(), newBelongRate.toString()));
@@ -275,9 +295,9 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 			decorationBelongPO.setRegion(userPO.getDept().getFatherDept());
 			
 			if(DecorationBelongPO.BELONGTYPE_DESIGN_INT == belongType){
-				decorationAdditionPO.setDesign(userPO.getCurrentName(), userPO.getDept().getDeptName(), userPO.getDept().getFatherDept().getDeptName());
+				decorationAdditionPO.setDesign(userPO.getCurrentName(), userPO.getDept().getName(), userPO.getDept().getFatherDept().getName());
 			}else if(DecorationBelongPO.BELONGTYPE_SALESMAN_INT == belongType){
-				decorationAdditionPO.setSales(userPO.getCurrentName(), userPO.getDept().getDeptName(), userPO.getDept().getFatherDept().getDeptName());
+				decorationAdditionPO.setSales(userPO.getCurrentName(), userPO.getDept().getName(), userPO.getDept().getFatherDept().getName());
 			}
 			
 			if(DecorationBelongPO.DEFAULTFLAG_TRUE_INT.equals(approvalDecorationBelongItemPO.getDefaultFlag())){

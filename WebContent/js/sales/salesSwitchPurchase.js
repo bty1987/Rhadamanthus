@@ -1,7 +1,7 @@
 $(function () {
 
     if (jQuery().datepicker) {
-        $('#layerAdd input[name="deliveryTime"]').datepicker({
+        com.focusPage('#layerAdd input[name="deliveryTime"]').datepicker({
             autoclose: true,
             format: 'yyyy-mm-dd',//yyyy-mm-dd hh:ii,
         });
@@ -11,7 +11,7 @@ $(function () {
 
         var renderList = function (tableId, listData) {
 
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list ui-sortable  fl-table-list');
 
             if (listData && listData.length) {
@@ -20,7 +20,7 @@ $(function () {
                     var $liLine = $('<li></li>').addClass('item-orange clearfix');
                     var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
                     var $h3 = $('<h3></h3>').addClass('oid');
-                    var $btnDiv = $('<div></div>').addClass('action-buttons pull-right')
+                    var $btnDiv = $('<div></div>').addClass('action-buttons pull-right');
 
                     var status = "";
                     var balanceStatus = "";
@@ -65,11 +65,11 @@ $(function () {
                         ["楼盘地址:", v.house.village.name + " " + v.house.houseNumber, "grey"],
                         ["客户名:", v.customer.customerName, "grey"],
                         ["渠道:", v.salesman.currentName, "grey"],
-                        ["部门:", v.dept.deptName, "grey"],
-                        ["分区:", v.region.deptName, "grey"],
+                        ["部门:", v.dept.name, "grey"],
+                        ["分区:", v.region.name, "grey"],
                         ["导购:", v.guider.currentName, "grey"],
                         ["驻店:", v.instorer.currentName, "grey"],
-                        ["主材部:", v.guideDept.deptName, "grey"],
+                        ["主材部:", v.guideDept.name, "grey"],
                         ["品类:", v.category, "grey"],
                         ["品牌:", v.brand, "grey"],
                         ["创建时间:", v.createTime, "green"],
@@ -103,9 +103,9 @@ $(function () {
                         "data-fullPayStatus": v.fullpayStatus,
                     }).addClass('ace ace-checkbox-2');
 
-                    var _span = $('<span></span>').addClass('lbl blue bigger-150').html(v.no)
+                    var _span = $('<span></span>').addClass('lbl blue bigger-150').html(v.no);
 
-                    _label.append($input).append(_span).appendTo($label)
+                    _label.append($input).append(_span).appendTo($label);
 
                     $.each(propertyArr, function (index, value) {
                         var $liProperty = $('<li></li>');
@@ -128,16 +128,15 @@ $(function () {
                         _params["sids[0]"] = v.sid;
 
                         if (v.fullpayStatus == 2) {
-                            viewSalesItems(v.sid)
+                            viewSalesItems(v.sid);
                             openlayer($btnSwitch.html(), function () {
                                 savePurchase(_params);
-                            },v.sid)
+                            },v.sid);
                         } else {
-                            layer.msg('此销售单补款未确认,无法转采购单', {time: 2e3})
+                            layer.msg('此销售单补款未确认,无法转采购单', {time: 2e3});
                         }
 
-                    })
-
+                    });
 
                 });
 
@@ -148,7 +147,7 @@ $(function () {
 
         return {
             init: function (tableId, listData) {
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             }
         };
@@ -159,11 +158,11 @@ $(function () {
     var salesSwitchPurchaseSearcher = new Searcher();
 
     salesSwitchPurchaseSearcher.init(_condArr, 'condList', api.inventory.pageSalesForAdvance, function (data) {
-        $('input[name="fullpayTime"]').parent('.inline').addClass('m-wrap m-ctrl-medium date-picker');
-        $('input[name="fullpayTime"]').attr('readonly', true);
-        $('input[name="fullpayTime"]').removeAttr('placeholder');
+        com.focusPage('input[name="fullpayTime"]').parent('.inline').addClass('m-wrap m-ctrl-medium date-picker');
+        com.focusPage('input[name="fullpayTime"]').attr('readonly', true);
+        com.focusPage('input[name="fullpayTime"]').removeAttr('placeholder');
 
-        displayFunc.init('resultList', data)
+        displayFunc.init('resultList', data);
     }, 'pagenation', 'salesSwitchPurchasePostData', null, false, null, function () {
         var $adda = $('<a></a>').addClass('btn btn-minier pull-left btn-info').attr('name', 'collects').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-money bigger-110').appendTo($adda);
@@ -174,15 +173,15 @@ $(function () {
                 var _params = {};
                 var flag = true;
                 var fullPayStatusFlag = true;
-                var fullPayStatus = []
-                var checked = $('input[name="sids"]:checked', '#resultList')
+                var fullPayStatus = [];
+                var checked = com.focusPage('input[name="sids"]:checked', '#resultList');
                 var $sids = [];
 
                 if (checked.length != 0) {
 
                     $.each(checked, function (i, v) {
                         var $this = $(v);
-                        fullPayStatus.push($this.attr('data-fullPayStatus'))
+                        fullPayStatus.push($this.attr('data-fullPayStatus'));
                         $sids.push($this.attr('data-sid'));
                         if (fullPayStatus[i] == 2 && flag) {
                             _params["sids[" + i + "]"] = $sids[i];
@@ -191,26 +190,26 @@ $(function () {
                             fullPayStatusFlag = false;
                             flag = false;
                         }
-                    })
+                    });
 
                     if (fullPayStatusFlag && flag) {
-                        viewSalessItems(_params)
+                        viewSalessItems(_params);
                         openlayer($addspan.text(), function () {
-                            savePurchase(_params)
-                        })
+                            savePurchase(_params);
+                        });
                     } else if (fullPayStatusFlag == false && flag == true || fullPayStatusFlag == false && flag == false) {
-                        layer.msg('销售单中有补款未确认,无法转采购单', {time: 2e3})
+                        layer.msg('销售单中有补款未确认,无法转采购单', {time: 2e3});
                     }
 
                 } else {
-                    layer.msg("请选择销售单", {time: 2e3})
+                    layer.msg("请选择销售单", {time: 2e3});
                 }
 
             }
-        )
-        return []
+        );
+        return [];
 
-    }, 'resultList')
+    }, 'resultList');
 
 
     function viewSalesItems(sid) {
@@ -219,14 +218,14 @@ $(function () {
         }, function (res) {
 
             initList.init('resultListItem', res.salesItems);
-        })
+        });
     }
 
     function viewSalessItems(options) {
         com.post(api.inventory.querySalesItemBySids, options, function (res) {
 
             initList.init('resultListItem', res.salesItems);
-        })
+        });
     }
 
     function savePurchase(sids) {
@@ -234,13 +233,13 @@ $(function () {
         if (com.validate('layerAdd', 'right')) return;
 
         var options = {
-            "purchase.comment": $('#layerAdd input[name="comment"]').val(),
-            "purchase.deliveryTime": $('#layerAdd input[name="deliveryTime"]').val()
-        }
+            "purchase.comment": com.focusPage('#layerAdd input[name="comment"]').val(),
+            "purchase.deliveryTime": com.focusPage('#layerAdd input[name="deliveryTime"]').val()
+        };
 
-        $.extend(options,sids)
+        $.extend(options,sids);
 
-        var checkList = $('input[name="siids"]:checked', '#resultListItem')
+        var checkList = com.focusPage('input[name="siids"]:checked', '#resultListItem');
         var $liline = checkList.parents('.oid');
 
         $.each(checkList, function (i, v) {
@@ -251,21 +250,21 @@ $(function () {
             options["purchaseItems[" + i + "].format.fid"] = $this.attr('data-fid');//– 规格
             options["purchaseItems[" + i + "].unitPrice"] = $this.parents('.oid').find('input.unitPrice').val();  //单价
             options["purchaseItems[" + i + "].num"] = $this.parents('.oid').find('input.inputNumber').val();           //– 数量
-        })
+        });
 
         if (checkList.length != 0) {
             if (checkRowValue($liline)) {
                 com.post(api.inventory.addPurchase, options, function () {
                     layer.closeAll();
-                    layer.msg('添加成功')
-                    $('#resultListItem').empty()
-                    $('input[name="deliveryTime"]').val("")
+                    layer.msg('添加成功');
+                    com.focusPage('#resultListItem').empty();
+                    com.focusPage('input[name="deliveryTime"]').val("");
                 }, function (e) {
                     com.showAlert(com.error, e.errorMsg);
-                })
+                });
             }
         } else {
-            layer.msg("请选择需要转采购单的商品")
+            layer.msg("请选择需要转采购单的商品");
         }
 
     }
@@ -273,7 +272,7 @@ $(function () {
     var initList = (function () {
 
         var renderList = function (tableId, listData) {
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list ui-sortable  fl-table-list');
 
             if (listData && listData.length) {
@@ -283,7 +282,7 @@ $(function () {
                         'data-discount': v.discount,
                         'data-postDis': v.postDis
                     });
-                    var $h3 = $('<h3></h3>').addClass('oid')
+                    var $h3 = $('<h3></h3>').addClass('oid');
                     var $btnDiv = $('<div></div>').addClass('action-buttons pull-right').attr('data-num', v.num).attr('data-selling', v.price).attr('data-siid', v.siid);
 
                     var propertyArr = [
@@ -350,9 +349,9 @@ $(function () {
                         "data-num": v.num,
                     }).addClass('ace ace-checkbox-2');
 
-                    var _span = $('<span></span>').addClass('lbl blue bigger-150').css('font-weight', 'bold').html(v.goods.name + ' ' + v.goods.no)
+                    var _span = $('<span></span>').addClass('lbl blue bigger-150').css('font-weight', 'bold').html(v.goods.name + ' ' + v.goods.no);
 
-                    _label.append($input).append(_span).appendTo($label)
+                    _label.append($input).append(_span).appendTo($label);
 
                     $.each(propertyArr, function (index, value) {
                         var $liProperty = $('<li></li>').css({"border-bottom": "0px"});
@@ -382,8 +381,8 @@ $(function () {
                             } else {
                                 layer.msg('该商品剩余库存:' + res.nums);
                             }
-                        })
-                    })
+                        });
+                    });
 
 
                 });
@@ -395,7 +394,7 @@ $(function () {
 
         return {
             init: function (tableId, listData) {
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             }
         };
@@ -404,13 +403,13 @@ $(function () {
 
 
     function openlayer(title, callback,sid) {
-        $('#layerAdd').attr({'data-sid': sid});
+        com.focusPage('#layerAdd').attr({'data-sid': sid});
         layer.closeAll();
         layer.open({
             type: 1,
             skin: 'layui-layer-lan',
             title: title,
-            content: $('#layerAdd'),
+            content: com.focusPage('#layerAdd'),
             area: ["1200px", ( $(window).height() * 0.84 < 800 ? $(window).height() * 0.84 : 800 ) + "px"],
             //maxmin: true,
             zIndex: 9000,
@@ -421,21 +420,21 @@ $(function () {
             btn2: function (index, layero) {
                 //按钮【按钮二】的回调
                 com.clearValidator();
-                $('#resultListItem').empty()
-                $('input[name="deliveryTime"]').val("")
+                com.focusPage('#resultListItem').empty();
+                com.focusPage('input[name="deliveryTime"]').val("");
             },
             cancel: function () {
                 //右上角关闭回调
                 com.clearValidator();
-                $('#resultListItem').empty()
-                $('input[name="deliveryTime"]').val("")
+                com.focusPage('#resultListItem').empty();
+                com.focusPage('input[name="deliveryTime"]').val("");
             }
         });
     }
 
     function checkRowValue($line) {
         var flag = true;
-        var priceRex = /^\d{1,8}(\.\d{1,2})?$/
+        var priceRex = /^\d{1,8}(\.\d{1,2})?$/;
         $.each($line, function (i, v) {
 
             var num = $(v).find('input.inputNumber');
@@ -473,13 +472,13 @@ $(function () {
                 unitPrice.popover('destroy');
             }
 
-        })
+        });
 
         return flag;
     }
 
 
-    $('#resultListItem').css({'width': '96%', 'margin': '0 auto'});
+    com.focusPage('#resultListItem').css({'width': '96%', 'margin': '0 auto'});
 
-})
+});
 

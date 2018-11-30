@@ -58,7 +58,7 @@ public class PaymentExportServiceImpl implements PaymentExportService {
 			decorationPaymentExportVO = new DecorationPaymentExportVO();
 			
 			decorationPaymentExportVO.setPaymentType(decorationPaymentPO.getPaymentType());
-			decorationPaymentExportVO.setReferMoney(decorationPaymentPO.getRealMoney());
+			decorationPaymentExportVO.setReferMoney(decorationPaymentPO.getReferMoney());
 			
 			DecorationReceiptPO decorationReceiptPO = decorationPaymentPO.getDecorationReceipt();
 			
@@ -74,7 +74,7 @@ public class PaymentExportServiceImpl implements PaymentExportService {
 			UserPO designer = decorationPO.getDesigner();
 			
 			decorationPaymentExportVO.setDesigner(designer.getUserName());
-			decorationPaymentExportVO.setDesignerDepartment(designer.getDept().getDeptName());
+			decorationPaymentExportVO.setDesignerDepartment(designer.getDept().getName());
 			decorationPaymentExportVO.setOrderId(decorationPO.getOrderId());
 			decorationPaymentExportVO.setVillage(villagePO.getName());
 			decorationPaymentExportVO.setHouseNumber(decorationPO.getHouse().getHouseNumber());

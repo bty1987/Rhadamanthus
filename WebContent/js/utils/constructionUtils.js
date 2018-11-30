@@ -1,1 +1,1 @@
-var constructionUtils = {}
+var constructionUtils = {};

@@ -1,7 +1,5 @@
 package com.fanglin.customer.action;
 
-import java.util.List;
-
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
@@ -11,11 +9,9 @@ import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.customer.service.DecorationCircleService;
 import com.fanglin.customer.service.EmemberService;
 import com.fanglin.customer.service.FeedBackService;
 import com.fanglin.customer.service.GroupService;
-import com.fanglin.customer.vo.DecorationCirclePictureVO;
 import com.fanglin.customer.vo.DecorationCircleVO;
 import com.fanglin.customer.vo.FeedBackVO;
 import com.fanglin.customer.vo.GroupVO;
@@ -36,16 +32,12 @@ public class BasesAction extends BaseListAction{
 	@Autowired
 	private GroupService groupService;
 	
-	@Autowired
-	private DecorationCircleService decorationCircleService;
-	
 	private GroupVO group;
 	
 	private FeedBackVO feedBack;
 	
 	private DecorationCircleVO decorationCircle;
-	
-	private List<DecorationCirclePictureVO> decorationCirclePictures;
+
 	
 	@Action(value = "pageFeedBack", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageFeedBack() throws FLException{
@@ -94,14 +86,6 @@ public class BasesAction extends BaseListAction{
 		
 		return SUCCESS;
 	}
-	
-	@Action(value = "addDecorationCircle", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addDecorationCircle() throws FLException{
-		
-		decorationCircleService.addDecorationCircle(decorationCircle, decorationCirclePictures, queryUserId());
-		
-		return SUCCESS;
-	}
 
 	public FeedBackVO getFeedBack() {
 		return feedBack;
@@ -125,15 +109,6 @@ public class BasesAction extends BaseListAction{
 
 	public void setDecorationCircle(DecorationCircleVO decorationCircle) {
 		this.decorationCircle = decorationCircle;
-	}
-
-	public List<DecorationCirclePictureVO> getDecorationCirclePictures() {
-		return decorationCirclePictures;
-	}
-
-	public void setDecorationCirclePictures(
-			List<DecorationCirclePictureVO> decorationCirclePictures) {
-		this.decorationCirclePictures = decorationCirclePictures;
 	}
 	
 }

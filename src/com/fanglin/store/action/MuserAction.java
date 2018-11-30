@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.store.service.MuserService;
+import com.fanglin.store.vo.MuserVO;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -20,6 +21,8 @@ public class MuserAction extends BaseListAction{
 	@Autowired
 	private MuserService muserService;
 	
+	private MuserVO muser;
+	
 	@Action(value="pageMuser", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String pageMuser(){
 		
@@ -27,6 +30,23 @@ public class MuserAction extends BaseListAction{
 		
 		return SUCCESS;
 		
+	}
+	
+	@Action(value="updateMuser", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String updateMuser(){
+		
+		muserService.saveMuser(muser);
+		
+		return SUCCESS;
+		
+	}
+
+	public MuserVO getMuser() {
+		return muser;
+	}
+
+	public void setMuser(MuserVO muser) {
+		this.muser = muser;
 	}
 	
 }

@@ -6,9 +6,9 @@ CREATE TABLE `approval` (
   `aid` int(11) NOT NULL AUTO_INCREMENT,
   `ruid` int(11) NOT NULL COMMENT '接收人ID',
   `suid` int(11) NOT NULL COMMENT '发送人ID',
-  `type` tinyint(1) NOT NULL,
-  `ident` varchar(20) NOT NULL,
-  `status` tinyint(1) NOT NULL,
+  `type` tinyint(1) NOT NULL COMMENT '类型,1: 客户信息修改, 2: 楼盘信息修改, 3: 装修单归属修改, 4: 报价折扣修改, 5: 装修退款, 6: 主材退货, 7: 主材场外退款, 8: 装修活动申请, 9: 主材补款提交, 10: 销售退货, 11: 商品库存调拨',
+  `ident` varchar(20) NOT NULL COMMENT '外部资源引用,例如装修单号,主材单ID等',
+  `status` tinyint(1) NOT NULL COMMENT '状态, 1: 审批通过 , 2: 审批拒绝',
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `approvalTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `contents` varchar(256) NOT NULL DEFAULT '',
@@ -46,7 +46,7 @@ CREATE TABLE `approvaldecorationactivityitem` (
   `orderId` varchar(15) NOT NULL,
   `activityName` varchar(32) NOT NULL,
   `activityItemName` varchar(32) NOT NULL,
-  `type` tinyint(1) NOT NULL COMMENT '',
+  `type` tinyint(1) NOT NULL COMMENT '0: 券, 1: 物品',
   `num` int(11) NOT NULL,
   `money` decimal(10,3) NOT NULL DEFAULT '0.000',
   `content` varchar(32) NOT NULL DEFAULT '',
@@ -69,7 +69,7 @@ CREATE TABLE `approvaldecorationbelongitem` (
   `orderId` varchar(15) NOT NULL,
   `buid` int(11) NOT NULL COMMENT '归属人ID',
   `rate` decimal(5,3) NOT NULL COMMENT '比例',
-  `defaultFlag` varchar(1) NOT NULL COMMENT '默认标识',
+  `defaultFlag` tinyint(1) NOT NULL COMMENT '默认标识',
   PRIMARY KEY (`adbiid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='订单归属信息审批项表';
 

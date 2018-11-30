@@ -1,5 +1,4 @@
-﻿
-$(function(){
+﻿$(function(){
 
     Api().init('js/api/');
     Condition = Condition(api);
@@ -75,7 +74,43 @@ $(function(){
 
     com.post(api.system.queryModuleForLogin, {"module.system": 1}, createMenu);
 
-    if(parent.window.isPC){ $("#logout").remove(); $(".divider").remove(); }
+    if(parent.window.isPC){
+
+        $("#logout").remove();
+        $(".divider").remove();
+
+        $(document).keyup(function (event) {
+            if (event.ctrlKey && event.keyCode === 70) {
+                $('#search_container').fadeToggle(function () {
+                    $(this).find('input').focus().val("")
+                    $('#fl-container').find('.black').removeClass('black')
+                })
+            }
+        });
+
+        $('#close').click(function(){
+            $('#search_container').fadeOut(function () {
+                $(this).find('input').val("")
+                $('#fl-container').find('.black').removeClass('black')
+            })
+        })
+
+        document.getElementById("searchInput").addEventListener("input", function (e) {
+            var data = $(this).val()
+            if(data == ""){
+                $('.flpage.tab-pane.active').find('.black').removeClass('black')
+            }else{
+                $('.flpage.tab-pane.active').find('.black').removeClass('black')
+                var l = $('.flpage.tab-pane.active').find(":contains('" + data + "')");
+                $.each(l, function (i, e) {
+                    var _e = $(e);
+                    if(_e.children().length == 0){
+                        _e.addClass('black')
+                    }
+                });
+            }
+        });
+    }
 
     $("#versionCode").text(config.versionCode);
 
@@ -110,7 +145,7 @@ $(function(){
                     params.authentication = res.authentication;
                     window.authentication = res.authentication;
 
-                    com.switchPage(api.index.homeIndex.url);
+                    com.switchPage(api.index.homeIndex.url, true);
 
                     // 切换公司后 目录所有菜单收起
                     foldMenu();
@@ -129,25 +164,30 @@ $(function(){
         });
     }, null, false);
 
+    $.breadcrumb('icon-home', ['首页']);
+
     $("#logout").on("click", function(e){
         com.deleteCookie("authentication");
         window.location.href = '/';
     });
 
-    $(".userProfile").on("click", function(e){
+    $("a.userProfile").on("click", function(e){
         foldMenu();
 
         $this = $(this);
         navControl($this);
 
         e.preventDefault();
+
         var hrefStr = $this.attr("href");
         if(hrefStr != "#" && hrefStr!="null" && hrefStr!=undefined){
-            com.switchPage(hrefStr);
+            $this.attr({"mid": "userProfileTab", "menuText": "个人资料", "icon": "icon-user"});
+            com.loadPage(hrefStr, $this);
         }
+        $.breadcrumb('icon-user', ['个人资料']);
     });
 
-    $(".changePassword").on("click", function(e){
+    $("a.changePassword").on("click", function(e){
         foldMenu();
 
         $this = $(this);
@@ -156,13 +196,17 @@ $(function(){
         e.preventDefault();
         var hrefStr = $this.attr("href");
         if(hrefStr != "#" && hrefStr!="null" && hrefStr!=undefined){
-            com.switchPage(hrefStr);
+            $this.attr({"mid": "changePasswordTab", "menuText": "修改密码", "icon": "icon-cog"});
+            com.loadPage(hrefStr, $this);
         }
+        $.breadcrumb('icon-cog', ['修改密码']);
     });
 
     $("#indexBtn").on("click", function(e){
         foldMenu();
-        com.switchPage('home.html');
+        $(this).attr({"mid": "homePage","menuText": "首页"});
+        com.loadPage('home-antv.html', $(this));
+        $.breadcrumb('icon-home', ['首页']);
         return false;
     });
 
@@ -174,25 +218,24 @@ $(function(){
         e.preventDefault();
         var hrefStr = $this.attr("href");
         if(hrefStr != "#" && hrefStr!="null" && hrefStr!=undefined){
-            com.switchPage(hrefStr);
+            $this.attr({"mid": "messageListTab", "menuText": "消息查看", "icon": "icon-envelope"});
+            com.loadPage(hrefStr, $this);
         }
-        $('.breadcrumb .nav1').empty().append('<i class="icon-envelope"></i>&nbsp;消息查看');
+        $.breadcrumb('icon-envelope', ['消息查看']);
     });
 
     $("#versionInfo").on("click", function(e){
         foldMenu();
-        $('.breadcrumb .nav1').empty().append('<i class="icon-bookmark"></i>&nbsp;版本');
-        com.switchPage(api.index.versionIndex.url);
-        $('.breadcrumb .nav2').hide();
-        $('.breadcrumb .nav3').hide();
+        $(this).attr({"mid": "versionInfoTab", "menuText": "版本", "icon": "icon-bookmark"});
+        com.loadPage(api.index.versionIndex.url, $(this));
+        $.breadcrumb('icon-bookmark', ['版本']);
     });
 
     $("#faqInfo").on("click", function(e){
         foldMenu();
-        $('.breadcrumb .nav1').empty().append('<i class="icon-bookmark"></i>&nbsp;帮助');
-        com.switchPage(api.index.faqIndex.url);
-        $('.breadcrumb .nav2').hide();
-        $('.breadcrumb .nav3').hide();
+        $(this).attr({"mid": "faqInfoTab", "menuText": "帮助", "icon": "icon-key"});
+        com.loadPage(api.index.faqIndex.url, $(this));
+        $.breadcrumb('icon-bookmark', ['帮助']);
     });
     $("#called").unbind().bind('click',function(){
         var sameFalg=true;
@@ -219,7 +262,7 @@ $(function(){
             var param = {
                 "phoneCall.operater.userId":params.userInfo.user.userId,
                 "phoneCall.caller":params.userInfo.user.phone,
-                "phoneCall.callee":$("#callee").val(),
+                "phoneCall.callee":$("#callee").val()
             };
 
             com.post(api.information.phoneCall, param, function(res){
@@ -231,53 +274,40 @@ $(function(){
 
     });
 
-    $("#switchUserp").on("click", function(e){
-        foldMenu();
-
-        $this = $(this);
-        navControl($this);
-
-        e.preventDefault();
-        var hrefStr = $this.attr("href");
-        if(hrefStr != "#" && hrefStr!="null" && hrefStr!=undefined){
-            com.switchPage(hrefStr);
-        }
-        $('.breadcrumb .nav1').empty().append('<i class="fa fa-fw ti-user"></i>&nbsp;个人资料');
-    });
-    $("#switchChangepwd").on("click", function(e){
-        foldMenu();
-
-        $this = $(this);
-        navControl($this);
-
-        e.preventDefault();
-        var hrefStr = $this.attr("href");
-        if(hrefStr != "#" && hrefStr!="null" && hrefStr!=undefined){
-            com.switchPage(hrefStr);
-        }
-        $('.breadcrumb .nav1').empty().append('<i class="fa fa-fw ti-settings"></i>&nbsp;修改密码');
-    });
-    $("#switchMessagem").on("click", function(e){
-        foldMenu();
-
-        $this = $(this);
-        navControl($this);
-
-        e.preventDefault();
-        var hrefStr = $this.attr("href");
-        if(hrefStr != "#" && hrefStr!="null" && hrefStr!=undefined){
-            com.switchPage(hrefStr);
-        }
-        $('.breadcrumb .nav1').empty().append('<i class="fa fa-fw ti-comments"></i>&nbsp;消息查看');
-    });
-
     $("#userLock").on("click",function(i){
         doLocking();
     });
 
-//	setInterval(function(){
-//		loadMessageCount();
-//	}, 1800000);
+    $("button.userProfile").on("click", function(e){
+        foldMenu();
+
+        $this = $(this);
+        navControl($this);
+
+        e.preventDefault();
+
+        var hrefStr = $this.attr("href");
+        if(hrefStr != "#" && hrefStr!="null" && hrefStr!=undefined){
+            $this.attr({"mid": "userProfileTab", "menuText": "个人资料", "icon": "icon-cogs"});
+            com.loadPage(hrefStr, $this);
+        }
+        $.breadcrumb('icon-user', ['个人资料']);
+    });
+
+    $("button.changePassword").on("click", function(e){
+        foldMenu();
+
+        $this = $(this);
+        navControl($this);
+
+        e.preventDefault();
+        var hrefStr = $this.attr("href");
+        if(hrefStr != "#" && hrefStr!="null" && hrefStr!=undefined){
+            $this.attr({"mid": "changePasswordTab", "menuText": "修改密码", "icon": "icon-user"});
+            com.loadPage(hrefStr, $this);
+        }
+        $.breadcrumb('icon-cog', ['修改密码']);
+    });
 
     params.homeLoader = false;
 
@@ -285,7 +315,7 @@ $(function(){
         if(config && !params.homeLoader){
             $('#navbar').fadeIn();
             $('#main-container').fadeIn();
-            com.switchPage('home.html');
+            com.switchPage('home-antv.html', true);
             params.homeLoader = true;
         }
     });
@@ -308,7 +338,7 @@ $(function(){
         var arr;
 
         $tree.slimscroll({
-            height: '100vh',
+            height: '88vh',
             size: '5px',
             opacity: 0.2
         });
@@ -316,7 +346,9 @@ $(function(){
         $main.click(function(){
             $('li',$tree).removeClass('open').removeClass('active');
             $main.addClass('active');
-            com.switchPage('home.html');
+            $(this).attr({"mid": "homePage", "menuText": "首页"});
+            com.loadPage('home-antv.html', $(this));
+            $.breadcrumb('icon-home', ['首页']);
             return false;
         });
 
@@ -338,7 +370,7 @@ $(function(){
         if(menuArr.level1.length){
             $.each(menuArr.level1, function(i, v){
                 var $li = $('<li></li>');
-                var $a = $('<a href="#"></a>');
+                var $a = $('<a href="#"></a>').attr({'menuText': v.name});
                 var $i = $('<i></i>').addClass(v.icon);
                 var $span = $('<span></span>').addClass('menu-text').text(v.name);
                 $a.append($i).append($span).appendTo($li);
@@ -350,7 +382,7 @@ $(function(){
         if(menuArr.level2.length){
             $.each(menuArr.level2, function(i, v){
                 var $li = $('<li></li>');
-                var $a = $('<a></a>').attr('href', v.url ? v.url : '#');
+                var $a = $('<a></a>').attr({'href': v.url ? v.url: '#', 'mid': v.mid, 'menuText': v.name, 'helpKey': v.helpKey});
                 var $i = $('<i></i>').addClass(v.icon);
                 var $span = $('<span></span>').addClass('menu-text').text(v.name);
                 $a.append($i).append($span).appendTo($li);
@@ -366,9 +398,10 @@ $(function(){
         if(menuArr.level3.length){
             $.each(menuArr.level3, function(i, v){
                 var $li = $('<li></li>');
-                var $a = $('<a></a>').attr('href', v.url ? v.url : '#');
+                var $a = $('<a></a>').attr({'href': v.url ? v.url: '#', 'mid': v.mid, 'menuText': v.name, 'helpKey': v.helpKey});
                 var $i = $('<i></i>').addClass(v.icon);
                 var $span = $('<span></span>').addClass('menu-text').text(v.name);
+
                 $a.append($i).append($span).appendTo($li);
 
                 var $parent = menuObj.level2[v.fatherModule.mid];
@@ -380,7 +413,6 @@ $(function(){
 
         $("a", $tree).on("click", function(e){
             $this = $(this);
-//			navControl($this);
 
             var hrefStr = $this.attr("href");
 
@@ -391,38 +423,39 @@ $(function(){
                 }
             }else{
                 if(hrefStr != "#" && hrefStr!="null" && hrefStr != undefined){
-                    // 截取load参数存至全局变量
                     params['urlLoadParams'] = com.splitUrl(hrefStr);
 
-                    com.switchPage(hrefStr);
-                    $('.active').not($this.parents('li')).removeClass('active').removeClass('open');
+                    var _list = $this.parents('li.open');
+                    $(_list.get(0)).siblings('li').removeClass('active');
+                    $this.parent().siblings('li').removeClass('active').removeClass('open');
+                    $.each($this.parent().siblings('li'),function(i,v){
+                        $(v).find('li.active').removeClass('active');
+                    });
                     $this.parent('li').addClass('active');
-                    //$this.parents('.nav-list > li').addClass('active');
                     $this.next("ul").toggle().closest("li").siblings("li").children("ul").hide();
+                    $this.attr('icon', $this.parents('li').find('a:first i').attr('class'));
+
+                    com.loadPage(hrefStr, $this);
                 }
             }
 
             e.preventDefault();
         });
     }
-
     function navControl($this){
         if($this.data('level') == 1){
             $('.level1').removeClass('level1');
             $this.addClass('level1');
             if($this.attr('href')!='#'){
-                $('ul.breadcrumb .nav1').html("<i class='"+$('i', $this).attr('class')+"'></i> "+$this.text());
-                $('ul.breadcrumb .nav2').hide();
-                $('ul.breadcrumb .nav3').hide();
+                $.breadcrumb($('i', $this).attr('class'), [$this.text()]);
             }
         }else if($this.data('level') == 2){
             $('.level2').removeClass('level2');
             $this.addClass('level2');
             if($this.attr('href')!='#'){
-                $('ul.breadcrumb .nav1').html("<i class='"+$('.nav-list .level1 i').attr('class')+"'></i> "+$('.nav-list .level1').text());
+                $.breadcrumb($('.nav-list .level1 i').attr('class'), [$('.nav-list .level1').text()]);
+
                 $a = $('<a href='+$this.attr("href")+'>'+$this.text()+'</a>');
-                $('ul.breadcrumb .nav2').show().html($a);
-                $('ul.breadcrumb .nav3').hide();
                 $a.on('click', function(e){
                     e.preventDefault();
                     com.switchPage(e.target.href);
@@ -432,10 +465,9 @@ $(function(){
             $('.level3').removeClass('level3');
             $this.addClass('level3');
             if($this.attr('href')!='#'){
-                $('ul.breadcrumb .nav1').html("<i class='"+$('.nav-list .level1 i').attr('class')+"'></i> "+$('.nav-list .level1').text());
-                $('ul.breadcrumb .nav2').show().text($('.nav-list .level2').text());
+                $.breadcrumb($('.nav-list .level1 i').attr('class'), [$('.nav-list .level1').text()]);
+
                 $a = $('<a href='+$this.attr("href")+'>'+$this.text()+'</a>');
-                $('ul.breadcrumb .nav3').show().html($a);
                 $a.on('click', function(e){
                     e.preventDefault();
                     com.switchPage(e.target.href);
@@ -609,7 +641,7 @@ $(function(){
 		render: "canvas", //也可以替换为table
 		width: 100,
 		height: 100,
-		text: "fanglinserver:"+params.userInfo.user.userId,
+		text: "fanglinserver:"+params.userInfo.user.userId
     });
 
 });

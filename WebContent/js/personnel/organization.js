@@ -1,9 +1,4 @@
-/**
- * Created by Administrator on 2016/12/4.
- */
-
 $(function(){
-
     var deptList = null;
     com.post(api.communion.queryDepartment, {}, function(res){
         deptList = res.deptList;
@@ -17,17 +12,18 @@ $(function(){
     $.each(deptList, function(i, v){
         didList.push(v.did);
     });
-    $.each(deptList, function(i,v){
+
+    $.each(deptList, function(i, v){
         if(v.fatherDept && didList.indexOf(v.fatherDept.did) != -1){
-            didList.splice(didList.indexOf(v.fatherDept.did),1);
+            didList.splice(didList.indexOf(v.fatherDept.did), 1);
         }
     });
+
     //获取根节点
     $.each(deptList, function(i, v){
-
-        if(v.fatherDept !=null &&v.fatherDept.did !=null &&v.fatherDept.did !=0){
-                return true;
-            }
+        if(v.fatherDept != null && v.fatherDept.did != null && v.fatherDept.did != 0){
+            return true;
+        }
 
         if(!deptObj[v.company]){
             deptObj[v.company] = {
@@ -38,12 +34,11 @@ $(function(){
         }
 
         deptObj[v.company]['children'][v.did] = {
-            name: v.deptName,
+            name: v.name,
             type : didList.indexOf(v.did) == -1 ? 'folder' : 'item',
             did : v.did,
-            deptid : v.deptId
+            no : v.no
         };
-
     });
 
     var getDeptByDid = function(did){
@@ -52,13 +47,12 @@ $(function(){
         $.each(deptList, function(i, v){
             if(!v.fatherDept) return true;
 
-
             if(v.fatherDept.did == did){
                 depts[v.did] = {
-                    name: v.deptName,
+                    name: v.name,
                     type : didList.indexOf(v.did) == -1 ? 'folder' : 'item',
                     did : v.did,
-                    deptid : v.deptId
+                    no : v.no
                 }
             }
         });
@@ -67,14 +61,13 @@ $(function(){
     };
 
     var displayFunc  = (function(){
-
-        var renderList = function(tableId,listData){
-            var $tableWrap = $('#' + tableId);
+        var renderList = function(tableId, listData){
+            var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if(listData && listData.length){
 
-                $.each(listData,function(i, v){
+                $.each(listData, function(i, v){
                     var $liLine = $('<li></li>').addClass('item-orange clearfix');
                     var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.userName));
                     var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
@@ -82,7 +75,7 @@ $(function(){
                     var propertyArr = [
                         ["员工编号:", v.userId, "grey"],
                         ["用户名:", v.loginId, "grey"],
-                        ["部门:", v.dept.deptName, "grey"],
+                        ["部门:", v.dept.name, "grey"],
                         ["职位:", v.duty.name, "grey"],
                         ["角色:", v.role.name, "grey"],
                         ["联系方式:", v.phone, "grey"]
@@ -94,7 +87,6 @@ $(function(){
                         $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
                         $liProperty.appendTo($ulProperty);
                     });
-
 
                     $liLine.append($h3).append($ulProperty).appendTo($ul);
                 });
@@ -115,10 +107,10 @@ $(function(){
 
         return {
             init : function(tableId,listData){
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
             }, initAddUser: function(){
-                $('a[name="addUser"]','#pagenation').click(function(){
+                com.focusPage('a[name="addUser"]','#pagenation').click(function(){
                     addUser();
                 });
             }
@@ -128,18 +120,16 @@ $(function(){
     var _condArr = [];
     var userSeacher = new Searcher();
 
-    $('#tree3').ace_tree({
+    com.focusPage('#tree3').ace_tree({
         dataSource: {
             data : function(options, callback) {
-
                 var $data = null;
 
                 if(!("name" in options) && !("type" in options)){
                     $data = deptObj;//the root tree
                     callback({ data: $data });
                     return;
-                }
-                else if("type" in options && options.type == "folder") {
+                }else if("type" in options && options.type == "folder") {
                     if("children" in options)
                         $data = options.children;
                     else {
@@ -147,8 +137,9 @@ $(function(){
                     }
                 }
 
-                if($data != null)
+                if($data != null){
                     setTimeout(function(){callback({ data: $data });} , parseInt(Math.random() * 500) + 200);
+                }
             }
         },
         loadingHTML:'<div class="tree-loading"><i class="icon-refresh icon-spin blue"></i></div>',
@@ -156,14 +147,14 @@ $(function(){
         'close-icon' : 'icon-plus',
         'selectable' : true,
         'selected-icon' : null,
-        'unselected-icon' : null,
+        'unselected-icon' : null
 
     }).on('selected', function (evt, opt) {
         userSeacher.init( _condArr, "condList", api.personel.pageUser, function(data){
             displayFunc.init('resultList', data);
         }, "pagenation", "menuPostData", {
-            'filters[0].data' : opt.info[0].deptid,
-            'filters[0].field' : 'deptId',
+            'filters[0].data' : opt.info[0].no,
+            'filters[0].field' : 'no',
             'filters[0].op' : 'eq'
         });
     });

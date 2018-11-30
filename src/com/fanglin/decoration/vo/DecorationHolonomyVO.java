@@ -36,6 +36,10 @@ public class DecorationHolonomyVO implements Serializable {
 	
 	private Long psId;
 	
+	private Float discountBase;
+	
+	private Float projectBase;
+	
 	public DecorationHolonomyVO() {
 		super();
 	}
@@ -166,7 +170,20 @@ public class DecorationHolonomyVO implements Serializable {
 		this.psId = psId;
 	}
 
+	public Float getDiscountBase() {
+		return discountBase;
+	}
 
+	public void setDiscountBase(Float discountBase) {
+		this.discountBase = discountBase;
+	}
 
+	public Float getProjectBase() {
+		return projectBase;
+	}
 
+	public void setProjectBase(Float projectBase) {
+		this.projectBase = projectBase;
+	}
+	
 }

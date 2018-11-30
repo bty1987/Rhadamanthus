@@ -1,13 +1,13 @@
 jQuery(function ($) {
 
-    var $pageDiv = $('.pageDiv');
+    var $pageDiv = com.focusPage('.pageDiv');
     var ppid = params["productionPlan.ppid"];
     var workstatus = params["productionPlan.status"];
     var $productionStatus = params["production.status"];
 
     function drawProgress() {
         com.post(api.production.queryProductionWorkPlanByPpid,{"productionWorkPlan.ppid":ppid},function (res) {
-            $("div[name='portlet']").remove();//清空之前形成的页面
+            com.focusPage("div[name='portlet']").remove();//清空之前形成的页面
             var workplans = res.productionWorkPlans;
 
             $.each(workplans,function (i,v) {
@@ -43,9 +43,11 @@ jQuery(function ($) {
 
         $.each(workflows,function(i,v){
             pwfids["productionUserWorkFlows["+i+"].productionworkflow.pwfid"] = v.pwfid;//查询操作状态用
-        });
 
-        com.post(api.production.queryProductionUserWorkFlowsByPwfids,pwfids,function (res) {
+        });
+        console.log(pwfids)
+        com.post(api.production.queryProductionUserWorkFlowsByPwfid,pwfids,function (res) {
+
             returnOptions = res.productionUserWorkFlows;
         },null,false);
 
@@ -128,7 +130,7 @@ jQuery(function ($) {
         return $topspan;
     }
 
-    $('#addWorkPlans').click(function () {
+    com.focusPage('#addWorkPlans').click(function () {
 
         if(workstatus == 0 && $productionStatus != 4 && $productionStatus != 5 ){
             addProductionWorkPlans(ppid);
@@ -138,12 +140,12 @@ jQuery(function ($) {
 
     });
 
-    $('#back').click(function () {
+    com.focusPage('#back').click(function () {
         com.switchPage(api.index.productionPlanIndex.url);
     });
 
     function addProductionWorkPlans(ppid) {
-        var $popup = $('#addPopUp');
+        var $popup = com.focusPage('#addPopUp');
         $popup.attr('data-ppid', ppid);
         //弹出即全屏
         layer.open({

@@ -42,6 +42,8 @@ public class QuotationAction extends BaseListAction {
 	
 	private int canChange;
 	
+	private String no;
+	
 	private Map<String, List<String>> configs;
 	
 	@Action(value = "queryQuotationByOrderId", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
@@ -123,6 +125,13 @@ public class QuotationAction extends BaseListAction {
 		
 		return SUCCESS;
 	}
+	@Action(value = "cloneQuotation", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String cloneQuotation() throws FLException{
+		
+		quotationService.cloneQuotation(quotation,no,queryUserId(), queryCompany());
+		
+		return SUCCESS;
+	}
 
 	@Action(value = "copyQuotation", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String copyQuotation() throws FLException{ 
@@ -170,6 +179,14 @@ public class QuotationAction extends BaseListAction {
 
 	public void setConfigs(Map<String, List<String>> configs) {
 		this.configs = configs;
+	}
+
+	public String getNo() {
+		return no;
+	}
+
+	public void setNo(String no) {
+		this.no = no;
 	}
 
 }

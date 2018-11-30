@@ -6,10 +6,12 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.fanglin.data.common.dao.PaymentScaleItemDao;
 import com.fanglin.data.common.service.PaymentScaleItemService;
 import com.fanglin.data.common.vo.PaymentScaleItemVO;
 import com.fanglin.data.po.PaymentScaleItemPO;
+import com.fanglin.utils.BeanUtil;
 
 @Service("paymentScaleItemServic")
 @Transactional(readOnly = true)
@@ -27,10 +29,7 @@ public class PaymentScaleItemServiceImpl implements PaymentScaleItemService {
 			
 			PaymentScaleItemVO paymentScaleItemVO = new PaymentScaleItemVO();
 			
-			paymentScaleItemVO.setPsiid(paymentScaleItemPO.getPsiid());
-			paymentScaleItemVO.setName(paymentScaleItemPO.getName());
-			paymentScaleItemVO.setPsid(paymentScaleItemPO.getPsid());
-			paymentScaleItemVO.setScale(paymentScaleItemPO.getScale());
+			BeanUtil.copyProperties(paymentScaleItemPO, paymentScaleItemVO);
 			
 			paymentScaleItemVOs.add(paymentScaleItemVO);
 			
@@ -46,6 +45,7 @@ public class PaymentScaleItemServiceImpl implements PaymentScaleItemService {
 		paymentScaleItemPO.setName(paymentScaleitem.getName());
 		paymentScaleItemPO.setPsid(paymentScaleitem.getPsid());
 		paymentScaleItemPO.setScale(paymentScaleitem.getScale());
+		paymentScaleItemPO.setSort(paymentScaleitem.getSort());
 		
 		paymentScaleItemDao.save(paymentScaleItemPO);
 		

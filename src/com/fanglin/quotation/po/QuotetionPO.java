@@ -2,12 +2,16 @@ package com.fanglin.quotation.po;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import com.fanglin.utils.DateUtil;
+import com.fanglin.utils.UUIDUtil;
 
 @Entity
 @Table(name = "quotetion", catalog = "quotetion")
@@ -191,5 +195,17 @@ public class QuotetionPO implements Serializable {
 		this.trafficRate = trafficRate;
 	}
 	
+	public void ptp(String name,String version,long cuid){
+		
+		this.setName(name);
+		this.setVersion(version);
+		this.setNo(UUIDUtil.getUuid().substring(0, 15));
+		this.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+		this.setCuid(cuid);
+		this.setDiscount(10);
+		this.setTotalPrice(0);
+		this.setContent("");
+		
+	}
 	
 }

@@ -50,6 +50,7 @@ $.extend(api, {decoration: {
     pageDecorationForBelong: {url: "pageDecorationForBelong.do", demo: true},
     pageDecorationForDesignerManager: {url: "pageDecorationForDesignerManager.do", demo: true},
     pageDecorationForSalesmanManager: {url: "pageDecorationForSalesmanManager.do", demo: true},
+    pageDecoration: {url: "pageDecoration.do", demo: true},
     checkDecoration: {url: "checkDecoration.do"},
     queryDecorationByCustomerId: {url: "queryDecorationByCustomerId.do"},
     queryDecorationForDesignerByOrderId: {url: "queryDecorationForDesignerByOrderId.do", demo: true},

@@ -9,7 +9,7 @@ $(function(){
         success: function(res) {
             var counts = res.counts;
             counts.sort(sortNumber);
-            addLine($("#table"), counts)
+            addLine(com.focusPage("#table"), counts);
         }
     });
 

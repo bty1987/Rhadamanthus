@@ -1,10 +1,10 @@
 $(function(){
-    var goodsColorPopUp = $('#goodsColorPopUp');
+    var goodsColorPopUp = com.focusPage('#goodsColorPopUp');
     var displayFunc  = (function(){
 
         /*表格样式*/
         var renderList = function(tableId,listData){
-            var $tableWrap = $('#'+ tableId);
+            var $tableWrap = com.focusPage('#'+ tableId);
 
             if(listData && listData.length){
                 var $ulTitle = createTableTitle();
@@ -16,7 +16,7 @@ $(function(){
                     $liLine.appendTo($ulTitle);
                 });
 
-                $('#resultListColor').css({'width':'96%','margin':'0 auto','height':'560px','marigin-top':'20px'})
+                com.focusPage('#resultListColor').css({'width':'96%','margin':'0 auto','height':'560px','marigin-top':'20px'})
 
             }
         };
@@ -37,10 +37,7 @@ $(function(){
 
             var $optionWrap = $('<div></div>').addClass('line-wrap action').html($('<div>操作</div>').addClass('cell option'));
 
-            $liTitle.append($indexWrap)
-                .append($contentWrap)
-                .append($optionWrap)
-                .appendTo($ulTitle);
+            $liTitle.append($indexWrap).append($contentWrap).append($optionWrap).appendTo($ulTitle);
 
             return $ulTitle;
         };
@@ -71,43 +68,36 @@ $(function(){
             var $btnStart = $('<li></li>').append($('<a></a>').html('启用'));
             var $btnBan = $('<li></li>').append($('<a></a>').html('禁用'));
 
-            $btnUl
-                .append($btnStart)
-                .append($btnBan);
-            $btnGroup
-                .append($btn)
-                .append($btnUl)
-                .appendTo($cellOption);
+            $btnUl.append($btnStart).append($btnBan);
+            $btnGroup.append($btn).append($btnUl).appendTo($cellOption);
 
             $cellOption.appendTo($optionWrap);
 
-            $liLine.append($indexWrap)
-                .append($contentWrap)
-                .append($optionWrap);
+            $liLine.append($indexWrap).append($contentWrap).append($optionWrap);
 
             /*状态启用*/
             $btnStart.click(function(){
-                $('#layerAdd').attr('data-cid', v.cid);
-                $('#layerAdd').attr('data-status', v.status);
+                com.focusPage('#layerAdd').attr('data-cid', v.cid);
+                com.focusPage('#layerAdd').attr('data-status', v.status);
 
-                var id = $('#layerAdd').attr('data-cid');
-                var status = $('#layerAdd').attr('data-status');
+                var id = com.focusPage('#layerAdd').attr('data-cid');
+                var status = com.focusPage('#layerAdd').attr('data-status');
                 startStatus(id,status,function(){
-                    layer.msg('启用成功',{icon:1})
+                    layer.msg('启用成功',{icon:1});
                     doSearcher()
                 });
             });
             
             /*状态禁用*/
             $btnBan.click(function(){
-                $('#layerAdd').attr('data-cid', v.cid);
-                $('#layerAdd').attr('data-status', v.status);
+                com.focusPage('#layerAdd').attr('data-cid', v.cid);
+                com.focusPage('#layerAdd').attr('data-status', v.status);
 
-                var id = $('#layerAdd').attr('data-cid');
-                var status = $('#layerAdd').attr('data-status');
+                var id = com.focusPage('#layerAdd').attr('data-cid');
+                var status = com.focusPage('#layerAdd').attr('data-status');
 
                 stopStatus(id,status,function(){
-                    layer.msg('禁用成功',{icon:1})
+                    layer.msg('禁用成功',{icon:1});
                     doSearcher();
                 });
             });
@@ -117,7 +107,7 @@ $(function(){
 
         return {
             init : function(tableId,listData){
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
 
             },
@@ -138,8 +128,8 @@ $(function(){
     doSearcher();
 
     /*状态信息验证*/
-    function startStatus(id,status,callback){
-        if(status=="1"){
+    function startStatus(id, status, callback){
+        if(status == "1"){
             com.post(api.store.updateMcolorForStatus,{
                 "mcolor.cid":id,
                 "mcolor.status":"0"
@@ -154,11 +144,11 @@ $(function(){
             })
         }
     }
-    function stopStatus(id,status,callback){
-        if(status=="0"){
+    function stopStatus(id, status, callback){
+        if(status == "0"){
             com.post(api.store.updateMcolorForStatus,{
-                "mcolor.cid":id,
-                "mcolor.status":"1"
+                "mcolor.cid" : id,
+                "mcolor.status" : "1"
             },function(res){
                 callback();
                 doSearcher();
@@ -172,13 +162,12 @@ $(function(){
     }
 
     function addline(lineindex) {
-
         var $line = $('<li></li>').addClass('line');
         var $indexWrap = $('<div></div>').addClass('line-wrap order').append($('<div></div>').addClass('cell index').text(lineindex));
         var $lineInfoWrap = $('<div></div>').addClass('line-wrap content col1');
         var $optWrap = $('<div></div>').addClass('line-wrap action');
         var _lineInfoSet = [
-            {cellClass : "name", hasInput : !0},//名称
+            {cellClass : "name", hasInput : !0}//名称
         ];
         var $btncheck = $('<a class="color-green green" style="font-size: 18px"><i class="icon-ok"></i></a>');
         var $btndel = $('<a class="color-red red" style="font-size: 18px"><i class=" icon-remove"></i></a>');
@@ -192,7 +181,6 @@ $(function(){
             }
 
             $cell.appendTo($lineInfoWrap);
-
         });
 
         $optWrap.append($('<div></div>').addClass('cell option').append($btncheck).append($btndel));
@@ -211,7 +199,7 @@ $(function(){
             };
 
             com.post(api.store.addMcolor,options,function(){
-                $('#list').empty();
+                com.focusPage('#list').empty();
                 addline(1).addClass('current').appendTo('#list');
                 doSearcher();
             },function(e){
@@ -220,20 +208,17 @@ $(function(){
         });
 
         $btndel.click(function (e) {
-
-            $('#list').empty();
-
+            com.focusPage('#list').empty();
             addline(1).addClass('current').appendTo('#list');
-
         });
 
         return $line;
-
     }
+
     addline(1).addClass('current').appendTo('#list');
 
-    $('.layui-layer-content').css('overflow','hidden');
-    $('#showColor').css('height','560px');
-    $('#addColor').css({'width':'96%','margin':'0 auto','margin-top':'15px'})
-    $('#showColor').css('overflow-y' , 'scroll');
+    com.focusPage('.layui-layer-content').css('overflow','hidden');
+    com.focusPage('#showColor').css('height','560px');
+    com.focusPage('#addColor').css({'width':'96%','margin':'0 auto','margin-top':'15px'});
+    com.focusPage('#showColor').css('overflow-y' , 'scroll');
 });

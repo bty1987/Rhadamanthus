@@ -1,6 +1,8 @@
 package com.fanglin.data.common.dao.impl;
 
 import java.util.List;
+
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -19,7 +21,7 @@ public class PaymentScaleItemDaoImpl  extends DaoImpl<PaymentScaleItemPO> implem
 	@Override
 	public List<PaymentScaleItemPO> queryPaymentScaleItemByPsid(long psid) {
 		
-		return session().createCriteria(PaymentScaleItemPO.class).add(Restrictions.eq("psid", psid)).list();
+		return session().createCriteria(PaymentScaleItemPO.class).add(Restrictions.eq("psid", psid)).addOrder(Order.asc("sort")).list();
 	}
 
 }

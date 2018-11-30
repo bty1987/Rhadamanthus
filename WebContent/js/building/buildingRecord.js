@@ -8,13 +8,19 @@ jQuery(function($) {
 		csid: null,
 		saveBtn: null,
 		dataFlag: false,
+		currenFlag: params.flag,
+		buildingRecordHsno: params.hsNo,
+		buildingRecordCsno: params.csNo,
+		buildingRecordHsid: params.hsid,
+		buildingRecordCsid: params.csid,
+		currentPage: params.page
 	};
 
-	buildingRecord.items.hsNo = $("#hsNo");
-	buildingRecord.items.csNo = $("#csNo");
-	buildingRecord.items.brType = $("#brType");
-	buildingRecord.items.pattern = $("#pattern");
-	buildingRecord.items.comment = $("#comment");
+	buildingRecord.items.hsNo = com.focusPage("#hsNo");
+	buildingRecord.items.csNo = com.focusPage("#csNo");
+	buildingRecord.items.brType = com.focusPage("#brType");
+	buildingRecord.items.pattern = com.focusPage("#pattern");
+	buildingRecord.items.comment = com.focusPage("#comment");
 
 	com.post(api.ds.building, {}, function(res){
 		buildingRecord.items.brType.bindData(res.recordType, "key", "value");
@@ -28,12 +34,12 @@ jQuery(function($) {
 		});
 	}, null, false);
 
-	buildingRecord.saveBtn = $("#saveBtn").on("click", saveData);
+	buildingRecord.saveBtn = com.focusPage("#saveBtn").on("click", saveData);
 
 	var displayFunc  = (function(){
 
 		var renderList = function(tableId,listData){
-			var $tableWrap = $('#' + tableId).empty();
+			var $tableWrap = com.focusPage('#' + tableId).empty();
 			var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
 			if(listData && listData.length){
@@ -51,7 +57,7 @@ jQuery(function($) {
 			var that = this;
 			var $liLine = $('<li></li>').addClass('item-orange clearfix');
 			var noVal;
-			params.flag == true ? noVal = v.houseSource.no :  noVal = v.customerSource.no;
+			buildingRecord.currenFlag == true ? noVal = v.houseSource.no :  noVal = v.customerSource.no;
 			var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(noVal));
 			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 			//var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
@@ -70,7 +76,7 @@ jQuery(function($) {
 				["联系方式:", buildingRecord.pattern[v.pattern], "grey"],
 				["记录时间:", v.operatTime, "green"],
 				["记录信息:", v.comment, "grey"],
-				["操作人:", v.operater.userName, "grey"],
+				["操作人:", v.operater.userName, "grey"]
 			];
 
 			$.each(propertyArr, function (index,value) {
@@ -94,7 +100,7 @@ jQuery(function($) {
 
 		return {
 			init : function(tableId,listData){
-				$('#' + tableId).html(null);
+				com.focusPage('#' + tableId).html(null);
 				renderList(tableId,listData);
 			},
 			drawLine : function(v){
@@ -106,17 +112,17 @@ jQuery(function($) {
 	var brField;
 	var brOptionId;
 	
-	if(params.flag){
+	if(buildingRecord.currenFlag){
 		//房源
-		brOptionId = params.hsid;
-		brOptionNo = params.hsNo;
+		brOptionId = buildingRecord.buildingRecordHsid;
+		brOptionNo = buildingRecord.buildingRecordHsno;
 		brField = "hsid";
-		$('#fl-statement').statement("房源", "跟进记录");
+		com.focusPage('#fl-statement').statement("房源", "跟进记录");
 	}else{
-		brOptionId = params.csid;
-		brOptionNo = params.csNo;
+		brOptionId = buildingRecord.buildingRecordCsid;
+		brOptionNo = buildingRecord.buildingRecordCsno;
 		brField = "csid";
-		$('#fl-statement').statement("客源", "跟进记录");
+		com.focusPage('#fl-statement').statement("客源", "跟进记录");
 	}
 
 	var searcher = new Searcher();
@@ -125,23 +131,23 @@ jQuery(function($) {
 	}, "pagenation", "buildingRecordPostData",{"filters[0].data":brOptionId, "filters[0].field":brField}, true, "buildingRecords", null);
 
 	//添加
-	$("#addBuildingRecord").click(function(){
+	com.focusPage("#addBuildingRecord").click(function(){
 		com.cleanItems(buildingRecord.items);
 
-		if(params.flag){
+		if(buildingRecord.currenFlag){
 			buildingRecord.items.hsNo.prop("disabled", true);
-			buildingRecord.items.hsNo.val(params.hsNo);
+			buildingRecord.items.hsNo.val(buildingRecord.buildingRecordHsno);
 		}else{
 			buildingRecord.items.csNo.prop("disabled", true);
-			buildingRecord.items.csNo.val(params.csNo);
+			buildingRecord.items.csNo.val(buildingRecord.buildingRecordCsno);
 		}
 
-		$("#buildingRecordModal").modal("show");
+		com.focusPage("#buildingRecordModal").modal("show");
 	});
 
 	//返回
-	$("#back").click(function(){
-		switch(params.page)
+	com.focusPage("#back").click(function(){
+		switch(buildingRecord.currentPage)
 		{
 			case "houseSource":
 				com.switchPage(api.index.houseSource.url);
@@ -196,6 +202,6 @@ jQuery(function($) {
 			searcher.doSearch();
 		});
 
-		$("#buildingRecordModal").modal("hide");
+		com.focusPage("#buildingRecordModal").modal("hide");
 	}
 });

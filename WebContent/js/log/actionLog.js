@@ -16,7 +16,7 @@ jQuery(function($) {
 			regionValue: "regionName"
 		};
 	
-	actionLog.listgrid = $("#listgrid");
+	actionLog.listgrid = com.focusPage("#listgrid");
 	actionLog.gridPager = "#gridPager";
 	
 	var searchOpts = {
@@ -25,11 +25,11 @@ jQuery(function($) {
 		listgrid: actionLog.listgrid,
 		items: [
 	        {label:"操作人",id:"createUserSearch",name:"createUser",type:"autoFillPinyinText", url:api.personel.queryUserByPinyin,postData:{"departmentType.name":"", "user.status": 0}}, 
-	        {label:"操作名称", id:"actionNameSearch", name:"actionName",type:"text",op:"cn"},
+	        {label:"操作名称", id:"actionNameSearch", name:"actionName",type:"text",op:"cn"}
 //		    {label:"操作时间", id:"createTimeSearch", name:"createTime",type:"dateRangePicker",op:"between"},
 		]
 	};
-	$("#searchDiv").flSearch(searchOpts);
+	com.focusPage("#searchDiv").flSearch(searchOpts);
 	
 	function initializeListgrid(){
 		actionLog.listgrid.jqGrid({		
@@ -42,7 +42,7 @@ jQuery(function($) {
 				{name:'createUserName'},
 				{name:'actionName'},
 				{name:'createTime'},
-				{name:'runTime'},
+				{name:'runTime'}
 			], 
 			rowList:[50,100,200,300],
 			rowNum:100,

@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.payment.vo.AdvanceReceiptVO;
 import com.fanglin.payment.vo.ServiceReceiptVO;
 import com.fanglin.payment.service.ServicePaymentService;
 import com.fanglin.payment.service.ServiceReceiptService;
@@ -34,8 +33,6 @@ public class ServicePaymentAction extends BaseListAction {
 	private List<ServicePaymentVO> servicePayments;
 	
 	private ServiceReceiptVO serviceReceipt;
-	
-	private AdvanceReceiptVO advanceReceipt;
 	
 	private List<Long> spIds;
 	
@@ -90,7 +87,7 @@ public class ServicePaymentAction extends BaseListAction {
 	@Action(value = "collectServicePayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String collectServicePayment() throws FLException{
 		
-		servicePaymentService.collectServicePayment(servicePayment, serviceReceipt, advanceReceipt, queryUserId(), queryCompany());
+		servicePaymentService.collectServicePayment(servicePayment, serviceReceipt, queryUserId(), queryCompany());
 		
 		return SUCCESS;
 	}
@@ -119,6 +116,14 @@ public class ServicePaymentAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
+	@Action(value = "updateServicePayment", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateServicePayment() throws FLException{
+		
+		servicePaymentService.updateServicePayment(servicePayment, serviceReceipt);
+		
+		return SUCCESS;
+	}
+	
 	public ServicePaymentVO getServicePayment() {
 		return servicePayment;
 	}
@@ -133,14 +138,6 @@ public class ServicePaymentAction extends BaseListAction {
 
 	public void setServiceReceipt(ServiceReceiptVO serviceReceipt) {
 		this.serviceReceipt = serviceReceipt;
-	}
-	
-	public AdvanceReceiptVO getAdvanceReceipt() {
-		return advanceReceipt;
-	}
-
-	public void setAdvanceReceipt(AdvanceReceiptVO advanceReceipt) {
-		this.advanceReceipt = advanceReceipt;
 	}
 
 	public List<Long> getSpIds() {

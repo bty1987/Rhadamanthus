@@ -11,7 +11,6 @@
 
 package com.fanglin.inventory.dao.impl;
 
-import java.math.BigInteger;
 import java.util.List;
 
 import org.hibernate.criterion.Restrictions;
@@ -30,23 +29,8 @@ public class StorehouseUserDaoImpl extends DaoImpl<StorehouseUserPO> implements 
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<StorehouseUserPO> queryStorehouseUserByUId(int uId) {
-		return session().createCriteria(StorehouseUserPO.class).createAlias("user", "user").add(Restrictions.eq(StorehouseUserPO.COLUMN_UID_STR, uId)).list();
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
 	public List<StorehouseUserPO> queryStorehouseUserByUserId(String userId) {
 		return session().createCriteria(StorehouseUserPO.class).createAlias("user", "user").add(Restrictions.eq(StorehouseUserPO.COLUMN_USERID_STR, userId)).list();
-	}
-
-	@Override
-	public int countStorehouseUserByShId(long shId) {
-		
-		String sql = "select count(*) from inventory.storehouseuser where shId = :shId";
-		BigInteger count = (BigInteger) session().createSQLQuery(sql).setLong("shId", shId).uniqueResult();
-		
-		return count.intValue();
 	}
 
 	@Override

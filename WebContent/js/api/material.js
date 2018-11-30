@@ -94,6 +94,8 @@ $.extend(api, {material: {
     addMaterialType: {url: "addMaterialType.do"},
     updateMaterialType: {url: "updateMaterialType.do"},
     deleteMaterialTypeByIds: {url: "deleteMaterialTypeByIds.do"},
-    pageMaterialForAdvance: {url: "pageMaterialForAdvance.do"}//
+    pageMaterialForAdvance: {url: "pageMaterialForAdvance.do"},//
+    
+    queryMaterialItemByTotal : {url : "queryMaterialItemByTotal.do"}
 }});
 

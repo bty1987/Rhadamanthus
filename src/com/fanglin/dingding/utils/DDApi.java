@@ -38,6 +38,8 @@ public interface DDApi {
 	public static final String DDAPI_GET_ADMIN_USER_STR="%s/user/get_admin?access_token=%s";//get	
 	
 	public static final String DDAPI_GET_DEPARTMENT_LIST_STR="%s/department/list_parent_depts?access_token=%s&userId=%s";
+	
+	public static final String DDAPI_CREATE_PROCESS_INSTANCE_STR = "%s/topapi/processinstance/create?access_token=%s";
 
 
 }

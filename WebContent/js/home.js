@@ -14,26 +14,6 @@ jQuery(function(){
         $('.breadcrumb .nav2').hide();
         $('.breadcrumb .nav3').hide();
     });
-    
-    /*layer.open({
-        type: 1,
-        title: false,
-        closeBtn: false,
-        area: ['300px','330px'],
-        shade: 0.8,
-        id: 'LAY_layuipro',
-        btn: ['了解了'],
-        moveType: 1,
-        content:
-        '<div class="home-layer-content">' +
-        '<div>' +
-        '<div class="home-layer-img"><img src="/images/v20.png" style="padding-top: 15px;height: 250px;"></div> ' +
-        '</div>' +
-        '</div>',
-        success: function(layero){
-            layero.find('.layui-layer-btn').css('text-align', 'center');
-        }
-    });*/
 
     com.post(api.common.wmCode, {}, function(res){
         var img = new Image();
@@ -41,18 +21,10 @@ jQuery(function(){
         url = 'url("' + img.src + '")'
         $("#fl-container").css('background-size', '300px').css('background-image', url).css('bottom', '0');
     }, null, false);
-    
-    com.showImg($("#personalPic"), params.userInfo.user.userPhoto, 180, 180, '');
-    com.showImg($("#userImg"), params.userInfo.user.userPhoto, 30, 30, '');
 
     loadNotices();
     loadActivities();
     loadMessageCount();
-    loadTopSelf();
-    queryTopInfo('decorationDesignerRank', 'designerName', '设计分区业绩排名');
-
-    /* initialize the calendar
-     -----------------------------------------------------------------*/
 
     var date = new Date();
     var d = date.getDate();
@@ -376,7 +348,7 @@ function getNoticeDOM(notice){
 
     $('<span class="label arrowed-in pull-right" style="line-height: 17px;">' + priorityText+'</span>').addClass(priorityStyle).appendTo($title);
     var $contents = $('<div class="col-xs-12"><div style="text-overflow: ellipsis;white-space: nowrap;overflow: hidden;margin-right:50px;">'
-        + notice.contentsText+'</div><abbr title="' + notice.contentsText+'"></abbr></div>');
+        + notice.contents +'</div><abbr title="' + notice.contents+'"></abbr></div>');
     var $bottomInfo = $('<small><div class="pull-right"><span><i class="icon-time bigger-110"></i>&nbsp;'
         + notice.startTime + ' 至 ' + notice.endTime + '</span>&nbsp;&nbsp;<span><i class="icon-user bigger-110"></i>&nbsp;'
         + notice.creater.userName + '</span>&nbsp;&nbsp;</div></small>');
@@ -402,57 +374,5 @@ function loadMessageCount(){
         }
     }, function(res){
         console.log("get message count fail...");
-    });
-}
-
-function queryTopInfo(url, name, info){
-    var url = api.report[url];
-
-    var topTable = $('.top-table').html("");
-
-    $('.nowTopType').html(info);
-
-    com.post(url, {}, function(res){
-        var topList = "";
-
-        $.each(res.ranks, function(i, v){
-
-            var _name = v[name];
-            var _rank = v["rank"];
-
-            var rankImg = '';
-
-            var rankLi = $("<li></li>");
-            var rankSpan = $("<span></span>").addClass("topPic").appendTo(rankLi);
-            var rankNameSpan = $("<span></span>").addClass("topName").text(_name).appendTo(rankLi);
-
-            if(_rank != null){
-                var rankNameSpan = $("<span></span>").addClass("topValue").text(_rank).appendTo(rankLi);
-            }
-
-            if(i == 0){
-                rankLi.addClass('bigger-150 orange');
-                $('<i></i>').addClass('icon-trophy').appendTo(rankSpan);
-            }else if(i == 1){
-                rankLi.addClass('bigger-120 blue');
-                $('<i></i>').addClass('icon-trophy').appendTo(rankSpan);
-            }else if(i == 2){
-                rankLi.addClass('bigger-120 blue');
-                $('<i></i>').addClass('icon-trophy').appendTo(rankSpan);
-            }
-
-            rankLi.appendTo(topTable);
-        });
-    });
-}
-
-function loadTopSelf(opts){
-    com.post(api.report.queryRankForPlace, opts, function(res){
-        $("#decorationPlace").text(res.decorationPlace);
-        $("#decorationRank").text(res.decorationRank);
-        $("#materialPlace").text(res.materialPlace);
-        $("#materialRank").text(res.materialRank);
-        $("#zaterialPlace").text(res.zaterialPlace);
-        $("#zaterialRank").text(res.zaterialRank);
     });
 }

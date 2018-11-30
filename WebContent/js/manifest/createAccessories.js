@@ -1,9 +1,9 @@
 jQuery(function () {
 
     if (jQuery().datepicker) {
-        $('.date-picker').datepicker({
+        com.focusPage('.date-picker').datepicker({
             format: 'yyyy-mm-dd',//yyyy-mm-dd hh:ii,
-            autoclose:true,
+            autoclose:true
         });
     }
 
@@ -13,7 +13,7 @@ jQuery(function () {
             goodes: "goodes",
             goods: "goods",
             gid: "goods.gid",
-            pricegid: "price.gid",
+            pricegid: "price.gid"
         },
         gids: null,
         gtype: null,
@@ -25,7 +25,7 @@ jQuery(function () {
     };
 
     //销售项区 自动赋值
-    $('#goodsName').typeahead({
+    com.focusPage('#goodsName').typeahead({
         url: api.inventory.queryGoodsByName,
         list: [],
         postData: {},
@@ -46,8 +46,8 @@ jQuery(function () {
         isResultTypeMap: true
         , flupdater: function (k, v) {
 
-            $('#left').find('input').val("");
-            $('#left').find('select').empty();
+            com.focusPage('#left').find('input').val("");
+            com.focusPage('#left').find('select').empty();
 
             //查询商品信息
             var list = this.options.list;
@@ -57,11 +57,11 @@ jQuery(function () {
             $.each(list, function (index, val) {
                 if (val.gid == k) {
                     sales.gtype = val.type;
-                    $('#goodsName').attr('data-name', val.name);
-                    $('#goodsNo').attr('data-no',val.no).val(val.no);
-                    $('#category').attr('data-category', val.category).val(val.category);
-                    $('#brand').attr('data-brand', val.brand).val(val.brand);
-                    $('#measurementUnit').attr('data-measurementUnit', val.measurementUnit).val(val.measurementUnit);
+                    com.focusPage('#goodsName').attr('data-name', val.name);
+                    com.focusPage('#goodsNo').attr('data-no',val.no).val(val.no);
+                    com.focusPage('#category').attr('data-category', val.category).val(val.category);
+                    com.focusPage('#brand').attr('data-brand', val.brand).val(val.brand);
+                    com.focusPage('#measurementUnit').attr('data-measurementUnit', val.measurementUnit).val(val.measurementUnit);
                 }
             });
 
@@ -71,7 +71,7 @@ jQuery(function () {
 
 
     //点击添加按钮
-    $("#add").click(function () {
+    com.focusPage("#add").click(function () {
         /*
          表单校验
          */
@@ -82,7 +82,7 @@ jQuery(function () {
                 'data-otherStatus': $otherStatus
             });
 
-            var $h4 = $('<h4></h4>').html($('#goodsName').attr('data-name') + ' ' + $('#goodsNo').attr('data-no')).attr('addData', sales.gids);
+            var $h4 = $('<h4></h4>').html(com.focusPage('#goodsName').attr('data-name') + ' ' + com.focusPage('#goodsNo').attr('data-no')).attr('addData', sales.gids);
 
             var $delete = $('<div></div>').addClass('pull-right action-button').append($('<a></a>').addClass('btn btn-danger btn-minier').html('删除'));
             var $edit = $('<div></div>').css('margin-right', '5px').addClass('pull-right action-button').append($('<a></a>').addClass('btn btn-primary btn-minier').html('查看')).click(function () {
@@ -93,19 +93,19 @@ jQuery(function () {
             if (sales.gtype == 1) {
                 $h4.append($edit);
             }
-            $liList.append(addSpan('品类：', 's_category', $('#category').val(), " ", 'b_category', null)).append(addSpan('品牌：', 's_brand', $('#brand').val(), " ", 'b_brand', null)).append(addSpan('单位：', 's_unit', $('#measurementUnit').val(), " ", 'b_unit', null)).
-            append(addSpan('数量：', 's_number', $('#num').val(), 'red', 'b_number'));
-            $('#salesItemList').append($liList);
+            $liList.append(addSpan('品类：', 's_category', com.focusPage('#category').val(), " ", 'b_category', null)).append(addSpan('品牌：', 's_brand', com.focusPage('#brand').val(), " ", 'b_brand', null)).append(addSpan('单位：', 's_unit', com.focusPage('#measurementUnit').val(), " ", 'b_unit', null)).
+            append(addSpan('数量：', 's_number', com.focusPage('#num').val(), 'red', 'b_number'));
+            com.focusPage('#salesItemList').append($liList);
             //给最后一个li标签加上底框,除了最后一个li 其他的li均无底框
-            //$('.list-group-item').css("border-bottom", "none");
-            //$('.list-group-item:last').css("border-bottom", "grey solid 1px");
+            //com.focusPage('.list-group-item').css("border-bottom", "none");
+            //com.focusPage('.list-group-item:last').css("border-bottom", "grey solid 1px");
             //清空左侧
-            $('#left').find('input').val("");
-            $('#left').find('select').empty();
-            $('#goodsName').removeAttr('data-name');
-            $('#category').removeAttr('data-category');
-            $('#brand').removeAttr('data-brand');
-            $('#measurementUnit').removeAttr('data-measurementUnit');
+            com.focusPage('#left').find('input').val("");
+            com.focusPage('#left').find('select').empty();
+            com.focusPage('#goodsName').removeAttr('data-name');
+            com.focusPage('#category').removeAttr('data-category');
+            com.focusPage('#brand').removeAttr('data-brand');
+            com.focusPage('#measurementUnit').removeAttr('data-measurementUnit');
             /*
              点击删除移除数据
              */
@@ -116,7 +116,7 @@ jQuery(function () {
                 //取到当前Li的总价
                 //var deleteNum = $liParent.find('.b_total').text();
                 $liParent.remove();
-                $('.list-group-item:last').css("border-bottom", "solid 1px");
+                com.focusPage('.list-group-item:last').css("border-bottom", "solid 1px");
             });
 
 
@@ -125,9 +125,9 @@ jQuery(function () {
         }
     });
 
-    $('#refresh').click(function () {
-        $('#left').find('input').popover('destroy').css('border-color', "#b5b5b5").val("");
-        $('#left').find('select').empty();
+    com.focusPage('#refresh').click(function () {
+        com.focusPage('#left').find('input').popover('destroy').css('border-color', "#b5b5b5").val("");
+        com.focusPage('#left').find('select').empty();
     });
 
     /*
@@ -145,35 +145,35 @@ jQuery(function () {
         if (color != null) {
             $b.addClass(color + " " + attrs).attr('addData', addData);
         }
-        $span.append($b)
+        $span.append($b);
         return $span;
 
     }
     
     //订单区
 //根据订单号查询出客户姓名 业务员和楼盘地址信息
-    $('#orderId').on("change", function () {
+    com.focusPage('#orderId').on("change", function () {
 
         var option = {};
-        option["decoration.orderId"] = $('#orderId').val();
+        option["decoration.orderId"] = com.focusPage('#orderId').val();
         com.post(sales.queryDecorationByOrderIdUrl, option, function (data) {
 
             if(data.decoration.supervisor.userId == null){
-                $("#supervisorName").val("---");
+                com.focusPage("#supervisorName").val("---");
             }else{
-                $("#supervisorName").val(data.decoration.supervisor.currentName);
+                com.focusPage("#supervisorName").val(data.decoration.supervisor.currentName);
             }
 
-            $("#orderAddr").val(data.decoration.house.village.name + " " + data.decoration.house.houseNumber);
+            com.focusPage("#orderAddr").val(data.decoration.house.village.name + " " + data.decoration.house.houseNumber);
 
-            if ($('#searchInfo').find('#supervisorName').val() != "") {
-                $('#searchInfo').find('#supervisorName').next().remove();
+            if (com.focusPage('#searchInfo').find('#supervisorName').val() != "") {
+                com.focusPage('#searchInfo').find('#supervisorName').next().remove();
             }
-            //if ($('#searchInfo').find("#salesmanName").val() != "") {
-            //    $('#searchInfo').find('#salesmanName').next().remove();
+            //if (com.focusPage('#searchInfo').find("#salesmanName").val() != "") {
+            //    com.focusPage('#searchInfo').find('#salesmanName').next().remove();
             //}
-            if ($('#searchInfo').find("#orderAddr").val() != "") {
-                $('#searchInfo').find('#orderAddr').next().remove();
+            if (com.focusPage('#searchInfo').find("#orderAddr").val() != "") {
+                com.focusPage('#searchInfo').find('#orderAddr').next().remove();
             }
             //客户Id
             sales.userId = data.decoration.supervisor.userId;
@@ -186,18 +186,18 @@ jQuery(function () {
 
         }, function (e) {
             com.showAlert(null, "未查询到此订单!");
-            $("#supervisorName").val(null);
-            //$("#salesmanName").val(null);
-            $("#orderAddr").val(null);
+            com.focusPage("#supervisorName").val(null);
+            //com.focusPage("#salesmanName").val(null);
+            com.focusPage("#orderAddr").val(null);
         });
     });
 
     // 销售单区 提交
     //进行主材品类的校验不是同一品牌不能提交
     //取参数添加
-    $('#submit').click(function () {
+    com.focusPage('#submit').click(function () {
 
-        if($('.list-group-item').length == 0){
+        if(com.focusPage('.list-group-item').length == 0){
             com.showAlert(null, "请添加辅料项！");
             return;
         }
@@ -209,24 +209,24 @@ jQuery(function () {
             if(sales.userId == null){
                 sales.userId = "---";
             }
-            sales.fetchTime = $('[name="date"]', '#searchInfo').val();
+            sales.fetchTime = com.focusPage('[name="date"]', '#searchInfo').val();
 
             _option = {
-                "accessories.orderId": $('#orderId').val(),
+                "accessories.orderId": com.focusPage('#orderId').val(),
                 "accessories.supervisor.userId": sales.userId,
                 "accessories.fetchTime": sales.fetchTime
             };
 
             //客户id
             //业务员(有问题)
-            //if ($('#salesmanName').attr('data-typeahead-key')!=undefined) {
-            //    _option["sales.salesman.userId"] = $('#salesmanName').attr('data-typeahead-key');
+            //if (com.focusPage('#salesmanName').attr('data-typeahead-key')!=undefined) {
+            //    _option["sales.salesman.userId"] = com.focusPage('#salesmanName').attr('data-typeahead-key');
             //} else {
             //    _option["sales.salesman.userId"] = sales.salesmanid;
             //}
 
             //折让审批
-            var $lis = $('.list-group-item');
+            var $lis = com.focusPage('.list-group-item');
 
             $lis && $lis.length && $.each($lis, function (i, v) {
                 var $v = $(v);
@@ -238,13 +238,13 @@ jQuery(function () {
                 com.showAlert(null, "添加成功");
 
                 //清空销售项
-                $('#salesItemList').empty();
+                com.focusPage('#salesItemList').empty();
                 //清空类为order_inputinfo的input
-                $('.order_inputinfo').val(null);
-                $('[name="date"]', '#searchInfo').val(null);
+                com.focusPage('.order_inputinfo').val(null);
+                com.focusPage('[name="date"]', '#searchInfo').val(null);
 
                 //删除data-typeahead-key属性
-                //$('#salesmanName').removeAttr('data-typeahead-key');
+                //com.focusPage('#salesmanName').removeAttr('data-typeahead-key');
 
             }, function (e) {
                 com.showAlert(com.error, "添加失败");
@@ -256,10 +256,10 @@ jQuery(function () {
     cancelProp();
 
     function cancelProp() {
-        var $inputs = $('input', '#left');
+        var $inputs = com.focusPage('input', '#left');
         //获得右侧input焦点事件重置input为初始,进而取消提示
-        var $inputss = $('input', '#searchInfo').focus(function cls() {
-            $('input', '#searchInfo').text("");
+        var $inputss = com.focusPage('input', '#searchInfo').focus(function cls() {
+            com.focusPage('input', '#searchInfo').text("");
         });
         $.each($inputs, function (i, v) {
             $(this).focus(function () {
@@ -281,7 +281,7 @@ jQuery(function () {
 
     //查看套餐弹窗
     function openPackageGoods(gid) {
-        var $popup = $('#viewPopUp');
+        var $popup = com.focusPage('#viewPopUp');
         $popup.attr({'data-gid': gid});
         //弹出即全屏
         var index = layer.open({

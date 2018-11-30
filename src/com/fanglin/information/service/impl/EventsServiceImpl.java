@@ -59,8 +59,8 @@ public class EventsServiceImpl implements EventsService {
 			
 			eventsVO.getCreater().setBaseInfo(eventsPO.getCreater());
 			eventsVO.getHolder().setBaseInfo(eventsPO.getHolder());
-			BeanUtil.copyProperties(eventsPO.getDepartment(), eventsVO.getDepartment(), Arrays.asList("fatherDept", "cityProper", "company"));
-			BeanUtil.copyProperties(eventsPO.getRegion(), eventsVO.getRegion(), Arrays.asList("fatherDept", "cityProper", "company"));
+			BeanUtil.copyProperties(eventsPO.getDepartment(), eventsVO.getDepartment(), Arrays.asList("fatherDept", "company", "manager"));
+			BeanUtil.copyProperties(eventsPO.getRegion(), eventsVO.getRegion(), Arrays.asList("fatherDept", "company", "manager"));
 			
 			eventsVOs.add(eventsVO);
 		}

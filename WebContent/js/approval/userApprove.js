@@ -12,11 +12,11 @@ jQuery(function($) {
 	};
 	
 	
-	approve.saveBtn = $("#saveBtn").bindClick(saveData);
-	approve.cancelBtn = $("#cancelBtn");  
-	approve.modal = $("#approveModal");
-	approve.items.userSel = $("#userSel");
-	approve.items.comment = $("#comment");
+	approve.saveBtn = com.focusPage("#saveBtn").bindClick(saveData);
+	approve.cancelBtn = com.focusPage("#cancelBtn");  
+	approve.modal = com.focusPage("#approveModal");
+	approve.items.userSel = com.focusPage("#userSel");
+	approve.items.comment = com.focusPage("#comment");
 	com.post(api.ds.approval, {"timestamp": new Date().getTime()}, function(res){
 		approve.approvalType = res.approvalType;
 		
@@ -30,12 +30,12 @@ jQuery(function($) {
 
 	com.initChosen('userSel', api.personel.queryUserByPinyin, "pinyinName", {"user.status":"0","departmentType.name":""}, "autoFillKeyValue", "key", "value");
 
-	approve.items.type = $("#type").bindData(approve.approvalType, "key", "value", false);
+	approve.items.type = com.focusPage("#type").bindData(approve.approvalType, "key", "value", false);
 	
 	var displayFunc  = (function(){
 
         var renderList = function(tableId,listData){
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if(listData && listData.length){ 
@@ -87,13 +87,13 @@ jQuery(function($) {
       
         return {
             init : function(tableId,listData){
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
             },
             drawLine : function(v){
                 return creatLine(v);
             }
-        }
+        };
     })();
 	
 	var searcher = new Searcher();
@@ -109,7 +109,7 @@ jQuery(function($) {
     	return [$adda];
 	});
 
-	$('a[name="addApprovalUser"]', '#pagenation').click(function(){
+	com.focusPage('a[name="addApprovalUser"]', '#pagenation').click(function(){
 		editFlg = false;
 		com.clearValidator();
 		com.updateChosen('userSel', '', '');

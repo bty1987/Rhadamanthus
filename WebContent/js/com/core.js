@@ -3,18 +3,18 @@
     error: 'error',
     warning: 'warning',
     info: 'info',
-    genderType: {"女":true, "男":false, "true": "女", "false": "男"},
-    isOrNotType: {"是":true, "否":false, "true": "是", "false": "否"},
+    genderType: {"女": true, "男": false, "true": "女", "false": "男"},
+    isOrNotType: {"是": true, "否": false, "true": "是", "false": "否"},
     deptType: {"designRegion": "设计大区", "businessRegion": "业务大区", "designDept": "设计部", "businessDept": "业务部", "materialDept": "主材部", "engineeringDept": "工程部", "qualityDept": "质检部", "supervisionDept": "监理部", "dutyDept": "职能部", "adminDept": "行政部", "financeDept": "财务部"},
-    currentTime: function() {
+    currentTime: function () {
         var date = new Date();
         return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + " " + date.getHours() + ':' + date.getSeconds();
     },
-    resizeContainer: function(){
+    resizeContainer: function () {
     },
-    post: function(url, options, callback, failCallback, asyncFlag) {
+    post: function (url, options, callback, failCallback, asyncFlag) {
 
-        if(url == null){
+        if (url == null) {
             return;
         }
 
@@ -23,8 +23,8 @@
         var reg = new RegExp(/query*|page*|report*|count*|[a-z]*\/[a-z]*/);
         var timestamp = new Date().getTime();
 
-        if(!reg.test(target)){
-            if(!url.intercept) { // 该接口不拦截)
+        if (!reg.test(target)) {
+            if (!url.intercept) { // 该接口不拦截)
                 if (params.apiHistory.hasOwnProperty(target)) {   // 存在请求方法
                     if (utils.accSub(timestamp, params.apiHistory[target]) <= config.spacing * 1000) {
                         // 指定秒数之内重复请求
@@ -38,42 +38,42 @@
             }
         }
 
-        if(window.notOperate){
+        if (window.notOperate) {
             com.showAlert(com.warning, "已锁屏不能进行操作！");
             return;
         }
 
         var opts = $.extend({}, options || {});
         var optAsync = true;
-        if(asyncFlag == undefined || asyncFlag == true){
+        if (asyncFlag == undefined || asyncFlag == true) {
             optAsync = true;
-        }else{
+        } else {
             optAsync = false;
         }
 
         var $ct = new Date();
         var timeout = config.timeout;
-        if(!params.loginTime || (params.loginTime + timeout * 60 * 1000) < $ct.getTime()){
+        if (!params.loginTime || (params.loginTime + timeout * 60 * 1000) < $ct.getTime()) {
             $("#userLock").click();
-        }else{
+        } else {
             params.loginTime = $ct.getTime();
         }
 
         var server = "";
-        if(url.server && config[url.server]){
+        if (url.server && config[url.server]) {
             server = config[url.server];
-        }else {
+        } else {
             server = config.server;
         }
 
-        if(config.demo){
-            if(!url.demo){
+        if (config.demo) {
+            if (!url.demo) {
                 com.showAlert(com.warning, "Demo状态不能完成此操作");
                 return;
             }
 
             url = 'result/' + url.url.split('.')[0] + '.json';
-        }else{
+        } else {
             url = server + url.url;
             opts["authentication"] = params.authentication;
         }
@@ -84,56 +84,56 @@
             type: url.indexOf('.json') != -1 ? "get" : "post",
             dataType: "json",
             async: optAsync, //设为false就是同步请求
-            success: function(res) {
-                if(res == null){
+            success: function (res) {
+                if (res == null) {
                     return;
                 }
 
-                if(res.errorCode == 0) {
-                    if(callback){
+                if (res.errorCode == 0) {
+                    if (callback) {
                         callback(res);
-                    }else{
+                    } else {
                         com.showAlert(com.info, "操作成功");
                         return res;
                     }
-                }else if(res.errorCode == 110005){
-                    if(parent.window.isPC){
+                } else if (res.errorCode == 110005) {
+                    if (parent.window.isPC) {
                         document.getElementById('myiframe').contentWindow.document.getElementById("userLock").click();
-                    }else{
+                    } else {
                         $("#userLock").click();
                     }
-                }else{
-                    if(failCallback){
+                } else {
+                    if (failCallback) {
                         failCallback(res);
-                    }else{
+                    } else {
                         com.showAlert(com.error, res.errorMsg);
                         return res;
                     }
                 }
-            }, error: function(msg) {
+            }, error: function (msg) {
                 com.showAlert(com.error, msg);
-                if(failCallback){
+                if (failCallback) {
                     failCallback(msg);
                 }
             }
         });
 
     },
-    _post_: function(url, data, callback, failcallback, async){
-        
-    	var server = "";
-        if(url.server){
+    _post_: function (url, data, callback, failcallback, async) {
+
+        var server = "";
+        if (url.server) {
             server = config[url.server];
-        }else{
+        } else {
             server = config["server"];
         }
-        
-        if(async == undefined || async == true){
+
+        if (async == undefined || async == true) {
             async = true;
-        }else{
+        } else {
             async = false;
         }
-        
+
         $.ajax({
             url: server + url.url,
             data: data,
@@ -141,24 +141,24 @@
             dataType: "json",
             async: async, //设为false就是同步请求
             success: function (res) {
-                if(callback){
+                if (callback) {
                     callback(res);
-                }else{
+                } else {
                     return res;
                 }
             }, error: function (res) {
-                if(failcallback){
+                if (failcallback) {
                     failcallback(res);
-                }else{
+                } else {
                     console.log(res);
                 }
             }
         });
     },
-    adaptDataArray: function(obj,callback){
+    adaptDataArray: function (obj, callback) {
         var result = [];
-        if (obj != undefined){
-            for(var i = 0; i < obj.length; i++){
+        if (obj != undefined) {
+            for (var i = 0; i < obj.length; i++) {
                 var node = callback(obj[i], i);
                 result.push(node);
             }
@@ -166,16 +166,16 @@
 
         return result;
     },
-    cleanItems: function(items){
-        for(var i in items){
-            if(typeof items[i] != 'object') continue;
-            if(items[i][0].type == 'checkbox'){
+    cleanItems: function (items) {
+        for (var i in items) {
+            if (typeof items[i] != 'object') continue;
+            if (items[i][0].type == 'checkbox') {
                 items[i].prop("checked", false).trigger("change");
                 continue;
-            }else if(items[i][0].type=='select-one'){
-                if(items[i][0].options[0] != undefined)
+            } else if (items[i][0].type == 'select-one') {
+                if (items[i][0].options[0] != undefined)
                     items[i][0].options[0].selected = true;
-            }else{
+            } else {
                 items[i].val("");
             }
         }
@@ -184,21 +184,21 @@
         required: {
             type: "v_required",
             errorMsg: "内容不能为空",
-            func: function(obj){
-                if(obj.val() == null || obj.val() == undefined)
+            func: function (obj) {
+                if (obj.val() == null || obj.val() == undefined)
                     return true;
-                if(toString.apply(obj.val()) === '[object Array]')
+                if (toString.apply(obj.val()) === '[object Array]')
                     return obj.val().toString().trim().length == 0 ? true : false;
                 return obj.val().trim().length == 0 ? true : false;
             }
         },
-        typeahead:{
+        typeahead: {
             type: "v_typeahead",
             errorMsg: "请使用匹配数据",
-            func: function(obj){
-                if(obj.attr('data-typeahead-key') == null || obj.attr('data-typeahead-key') == undefined)
+            func: function (obj) {
+                if (obj.attr('data-typeahead-key') == null || obj.attr('data-typeahead-key') == undefined)
                     return true;
-                if(toString.apply(obj.attr('data-typeahead-key')) === '[object Array]')
+                if (toString.apply(obj.attr('data-typeahead-key')) === '[object Array]')
                     return obj.attr('data-typeahead-key').toString().trim().length == 0 ? true : false;
                 return obj.attr('data-typeahead-key').trim().length == 0 ? true : false;
             }
@@ -218,27 +218,27 @@
             regex: /^[\w\u4e00-\u9fa5-.@&!, \/()%\[\]（）*，;。；！、：:?？><]*$/,
             errorMsg: "内容可以由汉字, 字母, 数字,基本标点符号,'-','>','<','_', '.', '@'组成."
         },
-        nameen:{
+        nameen: {
             type: "v_name_en",
             regex: /^[\w-_]*$/,
             errorMsg: "内容可以由字母, 数字, '-', '_'组成."
         },
-        email:{
+        email: {
             type: "v_email",
             regex: /^(([a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+)|(\s)*)$/,
             errorMsg: "内容可以由字母, 数字, '-', '_', '.', '@'组成.(如:muzh@163.com)"
         },
-        dateTime:{
+        dateTime: {
             type: "v_dateTime",
             regex: /^((((1[6-9]|[2-9]\d)\d{2})-(0?[13578]|1[02])-(0?[1-9]|[12]\d|3[01]))|(((1[6-9]|[2-9]\d)\d{2})-(0?[13456789]|1[012])-(0?[1-9]|[12]\d|30))|(((1[6-9]|[2-9]\d)\d{2})-0?2-(0?[1-9]|1\d|2[0-8]))|(((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))-0?2-29-))(\s(20|21|22|23|[0-1]?\d):[0-5]?\d(:[0-5]?\d)?)?$/,
             errorMsg: "请输入正确格式的日期.(YYYY-MM-DD hh:mm:ss)"
         },
-        date:{
+        date: {
             type: "v_date",
             regex: /^((((1[6-9]|[2-9]\d)\d{2})-(0?[13578]|1[02])-(0?[1-9]|[12]\d|3[01]))|(((1[6-9]|[2-9]\d)\d{2})-(0?[13456789]|1[012])-(0?[1-9]|[12]\d|30))|(((1[6-9]|[2-9]\d)\d{2})-0?2-(0?[1-9]|1\d|2[0-8]))|(((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))-0?2-29-))(\s(20|21|22|23|[0-1]?\d):[0-5]?\d(:[0-5]?\d)?)?$/,
             errorMsg: "请输入正确格式的日期.(YYYY-MM-DD)"
         },
-        time:{
+        time: {
             type: "v_time",
             regex: /^(([01][0-9])|(2[0-3])):[0-5][0-9]:[0-5][0-9]$/,
             errorMsg: "请输入正确格式的时间.(hh:mm:ss)"
@@ -260,7 +260,7 @@
         },
         identity: {
             type: "v_identity",
-			/*
+            /*
              * xxxxxx yyyy MM dd 375 0     十八位
              * xxxxxx   yy MM dd  75 0     十五位
              * 地区： [1-9]\d{5}
@@ -304,7 +304,7 @@
     },
     validate: function (scopeID, placement) {
 
-        var _scopeID = scopeID == "" || scopeID == null || scopeID == undefined ? "#fl-container" : "#" + scopeID;
+        var _scopeID = scopeID == "" || scopeID == null || scopeID == undefined ? '.flpage.tab-pane.active' : "#" + com.focusPage("#" + scopeID).attr("id");
         var _placement = placement == "" || placement == null || placement == undefined ? 'right' : placement;
 
         var _count = 0;
@@ -322,7 +322,6 @@
                     if ($this.data("for")) {
                         $datafor = $("#" + $this.data("for"));
                     }
-                    
                     if (value.func) {
                         if (value.func($datafor)) {
                             com.showPopover($this, value, _placement);
@@ -330,6 +329,8 @@
                         } else {
                             $this.css('border-color', "#b5b5b5");
                             $this.popover('destroy')
+
+
                         }
                         return true;
                     } else {
@@ -354,7 +355,7 @@
 
         var popover = isTip == true ? "[data-rel='popover']" : " [data-rel='popover']";
 
-        $.each($(id + popover), function(k, v){
+        $.each(com.focusPage(id + popover), function(k, v){
 
             if($(this).data("tip") && !isTip){  return true; }
             if($(this).data("addBorderWidth")){  $(this).css("border-width", "0px");  }
@@ -365,39 +366,40 @@
         });
 
     },
-    showTips: function($obj, msg, isTip){
-        if($obj.css("border-width") == "0px"){
+    showTips: function ($obj, msg, isTip) {
+        $obj = com.focusPage($obj);
+        if ($obj.css("border-width") == "0px") {
             $obj.css("border-width", "1px");
             $obj.data("addBorderWidth", true);
         }
 
-        if($obj.css("border-style") == "none"){
+        if ($obj.css("border-style") == "none") {
             $obj.css("border-style", "solid");
             $obj.data("addBorderStyle", true);
         }
 
         $obj.css("border-color", "red");
-        $obj.attr({"data-rel":"popover"}).popover('destroy').popover({content:msg}).popover('show');
+        $obj.attr({"data-rel": "popover"}).popover('destroy').popover({content: msg}).popover('show');
 
-        if(isTip){
+        if (isTip) {
             $obj.data("tip", isTip);
         }
     },
-    showAlert: function(type, contents){
+    showAlert: function (type, contents) {
 
         var outtime = 1000;
         var gritterTypeClass = "gritter-info";
         var gritterLightClass = "gritter-light";
 
-        if($.alert[type] == undefined){
+        if ($.alert[type] == undefined) {
             console.log("提示类型只能为<error>, <warning> 和 <info>");
         }
 
-        if(type == com.error){
+        if (type == com.error) {
             gritterTypeClass = "gritter-error";
             gritterLightClass = "";
             outtime = 5000;
-        }else if(type == com.warning){
+        } else if (type == com.warning) {
             gritterTypeClass = "gritter-warning";
             gritterLightClass = "";
             outtime = 3000;
@@ -410,10 +412,10 @@
             time: outtime
         });
     },
-    showInfo: function(title, contents){
+    showInfo: function (title, contents) {
         $.gritter.removeAll();
 
-        setTimeout(function(){
+        setTimeout(function () {
             $.gritter.add({
                 title: title,
                 text: contents,
@@ -422,52 +424,152 @@
             });
         }, 500)
     },
-    switchPage: function(url, data, callback){
-        $("#fl-container").load(url, data, function(response, status, xhr){
+    /**
+     * 加载页面，切换页面功能
+     * @param url 页面地址
+     * @param notTab 页面不在flpage.active中显示
+     * @param data 页面携带参数
+     * @param callback 成功回调
+     */
+    switchPage: function (url, notTab, data, callback) {
+        var container = $(".flpage.tab-pane.active").attr("id");
+        if (notTab) {
+            container =  "fl-container";
+        }
+        $("#" + container).load(url, data, function (response, status, xhr) {
             callback && callback(response, status, xhr);
         });
     },
+    /**
+     * 载入页面
+     * @param page 页面 不可为空 如api.index.homeIndex
+     * @param features 显示内容
+     */
+    loadPage: function (page, $features){
+        if (!page) return false;
+        if ($('.flpage.nav-tab').length > 10) {
+            com.showAlert(com.warning, "页面标签加载过多!");
+            return false;
+        }
+
+        var menuId = $features.attr("mid");
+
+        if ($("#homeNav .flpage.nav-tab a#tab_"+ menuId +"").length > 0 ) {
+            $("#tab_"+ menuId +"").parent().siblings().removeClass("active");
+            $("#tab_"+ menuId +"").parent().addClass("active");
+            $("#"+ menuId +"").siblings().removeClass("active");
+            $("#"+ menuId +"").addClass("active");
+            return false;
+        }
+
+        var homeNav = $("#homeNav.nav.nav-tabs");
+        var tabDel = $('<div class="removePage"><i class="icon-remove"></i></div>');
+        var tabLi = $('<li class="flpage nav-tab active" data-page="'+ page +'"></li>');
+        var taba = $('<a data-toggle="tab" href="#'+ menuId +'" id="tab_'+ menuId +'">'+ $features.attr("menuText") +'</a>').append(tabDel);
+        var tabPane = $('<div id="'+ menuId +'" class="flpage tab-pane in active"></div>').attr({
+            'icon': $features.attr('icon'),
+            'helpKey': $features.attr('helpKey'),
+            'text': $features.attr("menuText"),
+            'parentText': $($features.parents('li').find('a:first')).attr("menuText")
+        });
+
+        var tabClose = $('<ul class="dropdown-menu dropdown-info"><li><a>关闭所有页面</a></li></ul>').css({'cursor':'pointer'});
+
+        $(".flpage.nav-tab").removeClass("active");
+        $(".flpage.tab-pane").removeClass("active");
+
+        homeNav.append(tabLi.append(taba)).append($('.dropdown-menu.dropdown-info').length>0?'':tabClose);
+        $(".flpage.tab-content").append(tabPane);
+
+        tabPane.load(page);
+
+        tabDel.on(ace.click_event, function(){
+            params['urlLoadParams'] = com.splitUrl($(this).parents('li.flpage').prev().attr('data-page'));
+            $(this).parents('li.flpage').prev('li.flpage').addClass('active');
+            $($(this).parent("a").attr("href")).prev('div.flpage').addClass('active');
+            $(this).parents('li.flpage').remove();
+            $($(this).parent("a").attr("href")).remove();
+        });
+        taba.on(ace.click_event, function(){
+            tabClose.removeClass('show');
+            params['urlLoadParams'] = com.splitUrl(page);
+            breadcrumb();
+        });
+        homeNav.bind({
+            contextmenu: function() {
+                return false;
+            },
+            mousedown: function(e) {
+                if (3 == e.which) tabClose.css({'top': 1,'left': e.pageX - 190}).addClass('show');  // 右击
+            }
+        });
+        tabClose.on('mouseout', function () { tabClose.removeClass('show'); });
+        tabClose.on(ace.click_event, function(){
+            if($("#home #homeNav.nav.nav-tabs .flpage.nav-tab").length > 2) {
+                $(".flpage.nav-tab").removeClass("active");
+                $(".flpage.tab-pane").removeClass("active");
+                $("#home #homeNav.nav.nav-tabs .flpage.nav-tab:gt(1)").remove();
+                $("#home .flpage.tab-content div.flpage.tab-pane:gt(1)").remove();
+                $("#home #homeNav.nav.nav-tabs .flpage.nav-tab:last").addClass("active");
+                $("#home .flpage.tab-content div.flpage.tab-pane:last").addClass("active");
+            }
+            tabClose.removeClass('show');
+        });
+
+        var breadcrumb = function(){
+            var temp = [];
+            if (tabPane.attr('parentText')) temp.push(tabPane.attr('parentText'));
+            if (tabPane.attr('text')) temp.push(tabPane.attr('text'));
+            $.breadcrumb(tabPane.attr('icon'), temp);
+            $.showHelp('.breadcrumb', tabPane.attr('helpKey'));
+        };
+        breadcrumb();
+    },
+    focusPage: function(selecter, contianer){
+        if(!contianer){ return $('.flpage.tab-pane.active').find(selecter); }
+        else { return $('.flpage.tab-pane.active').find(contianer).find(selecter); }
+    },
     dateramgepickerdefault: {
         format: 'YYYY/MM/DD',
-        separator:'-',
+        separator: '-',
         locale: {
             applyLabel: '确定',
             cancelLabel: '取消',
             fromLabel: '从',
             toLabel: '到',
-            daysOfWeek: ['日', '一', '二', '三', '四', '五','六'],
+            daysOfWeek: ['日', '一', '二', '三', '四', '五', '六'],
             monthNames: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月']
         }
     },
-    initChosen: function(id, url, name, post, result, key, value){
+    initChosen: function (id, url, name, post, result, key, value) {
 
-        var $e = $('#' + id);
+        var $e = com.focusPage('#' + id);
 
         $e.chosen({
-            allow_single_deselect : true
+            allow_single_deselect: true
         });
 
         var $i = $('#' + id + '_chosen input');
         var $c = $('#' + id + '_chosen');
 
-        $i.bind("input", function() {
+        $i.bind("input", function () {
             var $pinyin = $(this).val();
 
             if ($(this).val() != "") {
 
                 var $p = {}; $p[name] = $pinyin;
 
-                com.post(url, $.extend({}, $p, post), function(res) {
+                com.post(url, $.extend({}, $p, post), function (res) {
 
                     var html = '<option value="">&nbsp;</option>';
 
-                    if (res[result] != null){
+                    if (res[result] != null) {
                         var kv = res[result];
                         var length = kv.length;
 
-                        for(var i=0;i<length;i++){
-                            var  _ = kv[i];
-                            html+= '<option value="' +  _[key] + '">' +  _[value] + '</option>';
+                        for (var i = 0; i < length; i++) {
+                            var _ = kv[i];
+                            html += '<option value="' + _[key] + '">' + _[value] + '</option>';
                         }
                     }
 
@@ -480,45 +582,45 @@
 
         return $e;
     },
-    updateChosen: function(id, key, value){
-        return $("#" + id).html($('<option></option>').attr('value', key).text(value)).trigger("chosen:updated");
+    updateChosen: function (id, key, value) {
+        return com.focusPage("#" + id).html($('<option></option>').attr('value', key).text(value)).trigger("chosen:updated");
     },
-    showImg: function($e, url, width, height, alt, defaultUrl, type){
+    showImg: function ($e, url, width, height, alt, defaultUrl, type) {
 
         var $media = '', imgUrl = '';
 
-        if(type){
+        if (type) {
             $media = config.dmedia;
-            imgUrl = url ? $media + url + '_' + alt + '.jpg' :  defaultUrl ;
-        }else{
+            imgUrl = url ? $media + url + '_' + alt + '.jpg' : defaultUrl;
+        } else {
             $media = config.media;
-            imgUrl = url ? $media + api.common.showImg.url + '?imgBasePath=' + url + '&divFlag=1&width=' + width + '&height=' + height + '&timestamp='+ new Date().getTime() :  defaultUrl ;
+            imgUrl = url ? $media + api.common.showImg.url + '?imgBasePath=' + url + '&divFlag=1&width=' + width + '&height=' + height + '&timestamp=' + new Date().getTime() : defaultUrl;
         }
 
-        $e.attr("src", imgUrl).attr("alt", alt).error(function(){
+        $e.attr("src", imgUrl).attr("alt", alt).error(function () {
             $(this).hide();
         });
 
         return $media + api.common.showImg.url + '?imgBasePath=' + url;
     },
-    downloadFile: function($e, url, name){
+    downloadFile: function ($e, url, name) {
         $e.attr('href', config.media + api.common.downloadFile.url + "?downloadFilePath=" + url + "&fileName=" + name).attr('target', '_blank');
     },
     popup: function (title, url, success, cancel, isPrint) {
         var layerPra = {
             type: 2,
             skin: 'layui-layer-lan',
-            title:title,
+            title: title,
             content: url,
-            zIndex:9999,
+            zIndex: 9999,
             move: false,
-            success: function(){
-                if(success != null && typeof(success) == 'function'){
+            success: function () {
+                if (success != null && typeof(success) == 'function') {
                     success();
                 }
             },
-            cancel: function (){
-                if(cancel != null && typeof(cancel) == 'function'){
+            cancel: function () {
+                if (cancel != null && typeof(cancel) == 'function') {
                     cancel();
                 }
             }
@@ -536,6 +638,7 @@
                     var div1 = $("<div></div>").attr("id","FL-titleDiv").css({"float":"left","width":"33%"}).text(title);
                     var div2 = $(".layui-layer-btn").css({"float":"right","width":"65%"});
 
+                    divM.append(div1,div2).appendTo(com.focusPage('.layui-layer-title'));
                     divM.append(div1,div2).appendTo($('.layui-layer-title'));
 
                 }
@@ -553,7 +656,7 @@
     sealJournal: function (level, content) {
         (config.logflag) && console[level](content);
     },
-    splitUrl: function(url){
+    splitUrl: function (url) {
 
         var _url = url == "" || url == undefined || url == null ? location.href : url;
 
@@ -571,29 +674,29 @@
 
     },
     showPopover: function ($obj, msg, placement) {
-
+        $obj = com.focusPage($obj);
         $obj.css('border', '1px red solid');
         $obj.focus().select();
         $obj.removeAttr("data-placement").attr({
-            "data-rel":"popover",
+            "data-rel": "popover",
             "data-placement": placement,
             "data-content": msg.errorMsg
         }).removeAttr("data-toggle").popover('show');
 
     },
-    checkNull:function(obj,rep){
+    checkNull: function (obj, rep) {
         return obj == null || obj == undefined || obj == "" ? rep : obj;
     },
-    setCookie: function(name, value, minutes) {
+    setCookie: function (name, value, minutes) {
         var expires = "";
-        if(minutes) {
+        if (minutes) {
             var d = new Date();
             d.setTime(d.getTime() + (minutes * 60 * 1000));
             expires = "expires=" + d.toUTCString();
         }
         document.cookie = name + "=" + value + "; " + expires;
     },
-    getCookie: function(name) {
+    getCookie: function (name) {
         var arr, reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
         if (arr = document.cookie.match(reg)) {
             return unescape(arr[2]);
@@ -608,71 +711,23 @@
         if (cval != null) {
             document.cookie = name + "=" + cval + ";expires=" + exp.toGMTString();
         }
-    },
-    /**
-     * 显示帮助文档
-     * @param target 传入块级ID，必须在help.json中存在且为key (不允许携带符号'#')
-     * 例：com.showHelp("decoration")
-     *  传参：decoration在help.json中存在为key,除一级内容外可在页面中不存在decoration标识符
-     *  执行：遍历key为decoration的数据，将在页面中标签ID为decoration[key]的元素添加提示内容，并在鼠标经过时显示
-     */
-    showHelp: function(target) {
-
-        var o = function (i, e){
-            var t = '#' + i;
-            $(t).parent().mouseover(function () {
-                if($(t).hasClass("chosen-select")) { //特殊处理chosen选择框
-                    $(t).next(".chosen-container").attr({"data-rel": "popover", "data-original-title": "提示", "data-content": e}).popover('show');
-                }else {
-                    $(t).attr({"data-rel": "popover", "data-original-title": "提示", "data-content": e}).popover('show');
-                }
-            });
-            $(t).parent().mouseout(function () {
-                if($(t).hasClass("chosen-select")) { //特殊处理chosen选择框
-                    $(t).next(".chosen-container").popover('destroy');
-                }
-                $(t).popover('destroy');
-            })
-        };
-
-        var f = function(r){
-            $.each(r, function(k, v){
-                if ($.isPlainObject(v)) {
-                    f(v)
-                }else{
-                    o(k, v)
-                }
-            })
-        };
-
-        $.getJSON(api.ds.help.url, function(d){
-            $.each(d, function(i, e){
-                if(target == i) { // 目标ID与help.json目标ID相同
-                    if ($.isPlainObject(e)) {
-                        f(e);     // 相对应的内容为字典，拥有子项
-                    }else{
-                        o(i, e);  // 相对应的内容为字符
-                    }
-                }
-            })
-        });
     }
 };
 
-Array.prototype.formatArrayMapToStr = function(k, v){
+Array.prototype.formatArrayMapToStr = function (k, v) {
     var str = "";
-    for(var i in this){
+    for (var i in this) {
         var _i = this[i];
-        if(typeof _i === "object" && _i != null){
+        if (typeof _i === "object" && _i != null) {
             str += _i[k] + ":" + _i[v] + ";";
         }
     }
     return str;
 };
 
-Array.prototype.contains = function(v){
-    for(var i in this){
-        if(this[i] === v){
+Array.prototype.contains = function (v) {
+    for (var i in this) {
+        if (this[i] === v) {
             return this[i];
         }
     }
@@ -680,7 +735,7 @@ Array.prototype.contains = function(v){
 };
 
 $.extend($, {
-    jsonToString: function(jsonObj) {
+    jsonToString: function (jsonObj) {
         var THIS = this;
         switch (typeof (jsonObj)) {
             case 'string':
@@ -691,15 +746,15 @@ $.extend($, {
                 if (jsonObj instanceof Array) {
                     var strArr = [];
                     var len = jsonObj.length;
-                    for(var i=0;i<len;i++){
+                    for (var i = 0; i < len; i++) {
                         strArr.push(THIS.jsonToString(jsonObj[i]));
                     }
                     return '[' + strArr.join(',') + ']';
-                }else if(jsonObj == null) {
+                } else if (jsonObj == null) {
                     return 'null';
-                }else{
+                } else {
                     var string = [];
-                    for(var property in jsonObj){
+                    for (var property in jsonObj) {
                         string.push(THIS.jsonToString(property) + ':' + THIS.jsonToString(jsonObj[property]));
                     }
                     return '{' + string.join(',') + '}';
@@ -709,11 +764,96 @@ $.extend($, {
             case 'false':
                 return jsonObj;
         }
+    },
+    breadcrumb: function (i, e) {
+        $('.breadcrumb').empty();
+        if ($.isArray(e)) {
+            $.each(e, function (k, o) {
+                if (o) {
+                    $('.breadcrumb').append($('<li class="nav' + (k + 1) + '"></li>').append(k == 0 ? '<i class="fa fa-fw ' + i + '"></i>&nbsp;&nbsp;&nbsp;' + o : o, '&nbsp;&nbsp;'));
+                }
+            });
+        } else {
+            com.showAlert(com.warning, "使用breadcrumb必须传入数组!");
+        }
+    },
+    /**
+     * 显示帮助文档
+     * @param container 显示帮助按钮的块级元素 (必须传入标识符, 例如：(".breadcrumb")符号不可省略)
+     * @param key 显示帮助文档的内容关键词，与help.json中key值至少相同一个
+     * 例：$.showHelp(".breadcrumb", "decoration-create")
+     *  执行：从help.json中获取key为"decoration-create"的数据，将在标识为".breadcrumb"的元素之后显示帮助按钮并在点击帮助按钮后显示帮助信息
+     */
+    showHelp: function (container, key) {
+
+        var o = function (v) {
+            $(container).append(
+                $('<span class="help-button">?</span>')
+                    .on(ace.click_event, function () {
+                        layer.open({
+                            type: 1,
+                            title: v.title,
+                            area: ["40%", ( $(window).height() * 0.84 < 750 ? $(window).height() * 0.84 : 750 ) + "px"],
+                            maxmin: false,
+                            zIndex: 9000,
+                            content: '<div class="help-content">'+ c(v.content) +'</div>'
+                        });
+                    })
+                    .css({"cursor": "pointer", "line-height": "18px", "font-size": "15px"})
+                    .attr({"data-rel": "popover", "data-trigger": "hover", "data-content": "对此页面有疑问 ?"}).popover('show')
+            );
+            var c = function (content) {
+                var container = $('<div></div>');
+                if ($.isArray(content)) {
+                    $.each(content, function(i, o){
+                        if ($.isPlainObject(o)) {
+                            $.each(o, function(k, e){
+                                if (k == 'title') container.append($('<h3>'+ e +'</h3>'));
+                                if (k == 'content') container.append($('<div>'+ e +'</div>'));
+                                if (k == 'img') container.append($('<image src="'+ e +'"></image>'));
+                                if (k == 'p') {
+                                	if($.isArray(e)) {
+                                		$.each(e, function(pi, p){
+                                			container.append($('<p>'+ p +'</p>'));
+                                		});
+                                	}else{
+                                		container.append($('<p>'+ e +'</p>'));
+                                	}
+                                }
+                            })
+                        } else {
+                            container.append($('<div>'+ o +'</div>'))
+                        }
+                    })
+                } else {
+                    container.append($('<div>'+ content +'</div>'))
+                }
+                return container.html();
+            }
+        };
+
+        var f = function (r) {
+            if (r.constructor == String) return;
+            $.each(r, function (i, v) {
+                if (key == i) {
+                    if (!v.hasOwnProperty("title")) {  // 字典类型不存在属性title
+                        f(v)
+                    } else {
+                        o(v)
+                    }
+                } else {
+                    f(v)
+                }
+            })
+        };
+
+        $.getJSON(api.ds.help.url, function (d) {
+            f(d);
+        })
     }
 });
 
-
-(function($){
+(function ($) {
 
     $.extend(true, $.jgrid, com.jgrid);
     $.alert = {
@@ -722,65 +862,65 @@ $.extend($, {
         info: '成功'
     };
 
-    $.fn.statement = function(title, detail){
-        return this.each(function(){
-            $(this).empty().append("<div class='page-header'><h1>"+title+"<small><i class='icon-double-angle-right'></i> "+detail+"</small></h1></div>");
+    $.fn.statement = function (title, detail) {
+        return this.each(function () {
+            $(this).empty().append("<div class='page-header'><h1>" + title + "<small><i class='icon-double-angle-right'></i> " + detail + "</small></h1></div>");
         });
     };
 
-    $.fn.bindData = function(d, k, v, all, cb, o){
-        if(this[0] != undefined && this[0].nodeName.toLowerCase() == "select" && d != undefined){
+    $.fn.bindData = function (d, k, v, all, cb, o) {
+        if (this[0] != undefined && this[0].nodeName.toLowerCase() == "select" && d != undefined) {
             this.empty();
 
             var optionHTML = "";
 
-            if(all){
+            if (all) {
                 optionHTML = "<option value=''>全部</option>";
             }
 
-            for(var i=0;i<d.length;i++) {
-                if(typeof d[i] == 'object'){
-                    if(k == undefined || v == undefined || k == "" || v == ""){
+            for (var i = 0; i < d.length; i++) {
+                if (typeof d[i] == 'object') {
+                    if (k == undefined || v == undefined || k == "" || v == "") {
                         console.log("该控件无法绑定列表数据");
                         return this;
                     }
                     var _o = o ? "other='" + d[i][o] + "'" : "";
                     optionHTML = optionHTML + "<option value='" + d[i][k] + "'" + _o + ">" + d[i][v] + "</option>";
-                }else{
+                } else {
                     optionHTML = optionHTML + "<option value='" + d[i] + "' multikey='multikey'>" + d[i] + "</option>";
                 }
             }
 
             $(optionHTML).appendTo(this);
 
-            if(cb){
+            if (cb) {
                 cb();
             }
-        }else{
+        } else {
             console.log("该控件无法绑定列表数据");
         }
         return this;
     };
-    $.fn.switchBtn = function(c){
-        return this.each(function(){
+    $.fn.switchBtn = function (c) {
+        return this.each(function () {
             $this = $(this);
             _c = c || "";
 
-            if(this.type != "checkbox"){
+            if (this.type != "checkbox") {
                 return;
             }
 
-            $this.addClass('ace ace-switch ace-switch-5').after("<span class='lbl "+_c+"'></span>");
+            $this.addClass('ace ace-switch ace-switch-5').after("<span class='lbl " + _c + "'></span>");
         });
     };
 
-    $.fn.bindClick = function(callback, delayTime){
+    $.fn.bindClick = function (callback, delayTime) {
 
         var dfd = $.Deferred();
 
         var that = this;
 
-        that.click(function(){
+        that.click(function () {
 
             that.button('loading');
 

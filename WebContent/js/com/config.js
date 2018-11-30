@@ -5,7 +5,7 @@
     versionCode: "",
     system: 1,
     uploadTimeout: 30,
-    quotationLimitDiscount: 8.8,
+    quotationLimitDiscount: 5,
     timeout: 120,
 	singlePointTime:60000,
     serviceRate: 0.1,

@@ -130,7 +130,7 @@
 					<button type="button" class="close" data-dismiss="modal">
 						<span>&times;</span><span class="sr-only">Close</span>
 					</button>
-					<h4 class="modal-title" id="drawContractDialog">优惠信息</h4>
+					<h4 class="modal-title" id="drawContractDialog">签订合同</h4>
 				</div>
 
 				<div class="modal-body">
@@ -151,18 +151,22 @@
 						</div>
 
 						<div class="form-group">
-							<label for="netperfor" class="col-sm-3 control-label no-padding-right"></label>
+							<label class="col-sm-3 control-label no-padding-right" for="netperfor">净业绩</label>
 							<div class="col-sm-9">
-								<span id="netperfor" ></span>
+								<input type="text" maxlength="64" id="netperfor" class="col-xs-10 col-sm-6 v_decorationNumberAll v_required" data-toggle="popover" data-trigger='manual'/>
+								<span class='star'></span>
 							</div>
 						</div>
+						<div class="space-4"></div>
 
 						<div class="form-group">
-							<label for="comperfor" class="col-sm-3 control-label no-padding-right"></label>
+							<label class="col-sm-3 control-label no-padding-right" for="comperfor">复合业绩</label>
 							<div class="col-sm-9">
-								<span id="comperfor" ></span>
+								<input type="text" maxlength="64" id="comperfor" class="col-xs-10 col-sm-6 v_decorationNumberAll v_required" data-toggle="popover" data-trigger='manual'/>
+								<span class='star'></span>
 							</div>
 						</div>
+						<div class="space-4"></div>
 
 					</form>
 				</div>

@@ -11,7 +11,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-
 @Entity
 @Table(name = "decorationholonomy", catalog = "decoration")
 public class DecorationHolonomyPO implements java.io.Serializable {
@@ -57,6 +56,10 @@ public class DecorationHolonomyPO implements java.io.Serializable {
 	private float servicePaidup;
 	
 	private short status;
+
+	private float discountBase; //基数
+	
+	private float projectBase; //工程基础
 	
 	public DecorationHolonomyPO() {
 		super();
@@ -196,7 +199,23 @@ public class DecorationHolonomyPO implements java.io.Serializable {
 	public void setStatus(short status) {
 		this.status = status;
 	}
+	
+	@Column(name = "discountBase")
+	public float getDiscountBase() {
+		return discountBase;
+	}
 
+	public void setDiscountBase(float discountBase) {
+		this.discountBase = discountBase;
+	}
 
+	@Column(name = "projectBase")
+	public float getProjectBase() {
+		return projectBase;
+	}
+
+	public void setProjectBase(float projectBase) {
+		this.projectBase = projectBase;
+	}
 
 }

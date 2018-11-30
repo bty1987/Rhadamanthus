@@ -78,11 +78,11 @@ $(function () {
         },
         loadNotices: function () {
             com._post_(api.home.library, $.extend({}, {"noticeType": 1, "api": "information.notice.getNotice"}, Signing.noticeOptions), function (e) {
-                console.log(e)
+
                 if(e == "null" || e == null){
                     com.post(api.information.pageNoticeForSeenByType, {"paging.rows": 5, "paging.page": 1, "notice.type": 1}, function (data) {
                         e = JSON.stringify(data.paging.data);
-                        //com._post_(api.home.library, $.extend({}, {"noticeType": 1, "api": "information.notice.setNotice", "ntoiceResult": JSON.stringify(data)}, Signing.noticeOptions));
+                        com._post_(api.home.library, $.extend({}, {"noticeType": 1, "api": "information.notice.setNotice", "ntoiceResult": JSON.stringify(data)}, Signing.noticeOptions));
                     }, null, false)
                 }
                 
@@ -99,7 +99,7 @@ $(function () {
             	if(e == "null"|| e == null){
                     com.post(api.information.pageNoticeForSeenByType, {"paging.rows": 5, "paging.page": 1, "notice.type": 2}, function (data) {
                         e = JSON.stringify(data.paging.data);
-                        //com._post_(api.home.library, $.extend({}, {"noticeType": 2, "api": "information.notice.setNotice", "ntoiceResult": JSON.stringify(data)}, Signing.noticeOptions));
+                        com._post_(api.home.library, $.extend({}, {"noticeType": 2, "api": "information.notice.setNotice", "ntoiceResult": JSON.stringify(data)}, Signing.noticeOptions));
                     }, null, false)
                 }
 
@@ -560,7 +560,7 @@ $(function () {
             "es": true
         },
         noticeOptions:{
-        	"deptId": params.userInfo.user.dept.deptId,
+        	"deptId": params.userInfo.user.dept.no,
             "companyName": params.company.name,
             "mc": true
         }

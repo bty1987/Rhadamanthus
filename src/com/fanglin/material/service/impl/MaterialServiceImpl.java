@@ -24,8 +24,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.approval.dao.ApprovalDao;
+import com.fanglin.approval.po.ApprovalPO;
 import com.fanglin.common.dao.ServiceRecordDao;
 import com.fanglin.common.po.ServiceRecordPO;
+import com.fanglin.communion.dao.BrandDao;
+import com.fanglin.communion.po.BrandPO;
 import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.communion.po.HousePO;
@@ -78,6 +82,12 @@ public class MaterialServiceImpl implements MaterialService {
 	@Autowired
 	private ServiceRecordDao serviceRecordDao;
 	
+	@Autowired
+	private ApprovalDao approvalDao;
+	
+	@Autowired
+	private BrandDao brandDao;
+	
 	@Override
 	public void pageMaterial(Paging paging, List<Filter> filters){
 		
@@ -98,9 +108,9 @@ public class MaterialServiceImpl implements MaterialService {
 			BeanUtil.copyProperties(materialPO.getMaterialer(), materialVO.getMaterialer(), Arrays.asList("dept", "duty"));
 			BeanUtil.copyProperties(materialPO.getInstorer(), materialVO.getInstorer(), Arrays.asList("dept", "duty"));
 			
-			BeanUtil.copyProperties(materialPO.getRegion(), materialVO.getRegion(), Arrays.asList("type", "fatherDept", "cityProper"));
-			BeanUtil.copyProperties(materialPO.getDepartment(), materialVO.getDepartment(), Arrays.asList("type", "fatherDept", "cityProper"));
-			BeanUtil.copyProperties(materialPO.getMaterialDepartment(), materialVO.getMaterialDepartment(), Arrays.asList("type", "fatherDept", "cityProper"));
+			BeanUtil.copyProperties(materialPO.getRegion(), materialVO.getRegion(), Arrays.asList("type", "fatherDept" ,"manager"));
+			BeanUtil.copyProperties(materialPO.getDepartment(), materialVO.getDepartment(), Arrays.asList("type", "fatherDept" ,"manager"));
+			BeanUtil.copyProperties(materialPO.getMaterialDepartment(), materialVO.getMaterialDepartment(), Arrays.asList("type", "fatherDept", "manager"));
 			
 			materialVOs.add(materialVO);
 		}
@@ -135,9 +145,9 @@ public class MaterialServiceImpl implements MaterialService {
 			BeanUtil.copyProperties(materialPO.getMaterialer(), materialVO.getMaterialer(), Arrays.asList("dept", "duty"));
 			BeanUtil.copyProperties(materialPO.getInstorer(), materialVO.getInstorer(), Arrays.asList("dept", "duty"));
 			
-			BeanUtil.copyProperties(materialPO.getRegion(), materialVO.getRegion(), Arrays.asList("type", "fatherDept", "cityProper"));
-			BeanUtil.copyProperties(materialPO.getDepartment(), materialVO.getDepartment(), Arrays.asList("type", "fatherDept", "cityProper"));
-			BeanUtil.copyProperties(materialPO.getMaterialDepartment(), materialVO.getMaterialDepartment(), Arrays.asList("type", "fatherDept", "cityProper"));
+			BeanUtil.copyProperties(materialPO.getRegion(), materialVO.getRegion(), Arrays.asList("type", "fatherDept", "manager"));
+			BeanUtil.copyProperties(materialPO.getDepartment(), materialVO.getDepartment(), Arrays.asList("type", "fatherDept", "manager"));
+			BeanUtil.copyProperties(materialPO.getMaterialDepartment(), materialVO.getMaterialDepartment(), Arrays.asList("type", "fatherDept", "manager"));
 			
 			materialVOs.add(materialVO);
 		}
@@ -165,9 +175,9 @@ public class MaterialServiceImpl implements MaterialService {
 			BeanUtil.copyProperties(materialPO.getMaterialer(), materialVO.getMaterialer(), Arrays.asList("dept", "duty"));
 			BeanUtil.copyProperties(materialPO.getInstorer(), materialVO.getInstorer(), Arrays.asList("dept", "duty"));
 			
-			BeanUtil.copyProperties(materialPO.getRegion(), materialVO.getRegion(), Arrays.asList("type", "fatherDept", "cityProper"));
-			BeanUtil.copyProperties(materialPO.getDepartment(), materialVO.getDepartment(), Arrays.asList("type", "fatherDept", "cityProper"));
-			BeanUtil.copyProperties(materialPO.getMaterialDepartment(), materialVO.getMaterialDepartment(), Arrays.asList("type", "fatherDept", "cityProper"));
+			BeanUtil.copyProperties(materialPO.getRegion(), materialVO.getRegion(), Arrays.asList("type", "fatherDept", "manager"));
+			BeanUtil.copyProperties(materialPO.getDepartment(), materialVO.getDepartment(), Arrays.asList("type", "fatherDept", "manager"));
+			BeanUtil.copyProperties(materialPO.getMaterialDepartment(), materialVO.getMaterialDepartment(), Arrays.asList("type", "fatherDept", "manager"));
 			
 			materialVOs.add(materialVO);
 		}
@@ -197,9 +207,9 @@ public class MaterialServiceImpl implements MaterialService {
 			BeanUtil.copyProperties(materialPO.getMaterialer(), materialVO.getMaterialer(), Arrays.asList("dept", "duty"));
 			BeanUtil.copyProperties(materialPO.getInstorer(), materialVO.getInstorer(), Arrays.asList("dept", "duty"));
 			
-			BeanUtil.copyProperties(materialPO.getRegion(), materialVO.getRegion(), Arrays.asList("type", "fatherDept", "cityProper"));
-			BeanUtil.copyProperties(materialPO.getDepartment(), materialVO.getDepartment(), Arrays.asList("type", "fatherDept", "cityProper"));
-			BeanUtil.copyProperties(materialPO.getMaterialDepartment(), materialVO.getMaterialDepartment(), Arrays.asList("type", "fatherDept", "cityProper"));
+			BeanUtil.copyProperties(materialPO.getRegion(), materialVO.getRegion(), Arrays.asList("type", "fatherDept", "manager"));
+			BeanUtil.copyProperties(materialPO.getDepartment(), materialVO.getDepartment(), Arrays.asList("type", "fatherDept", "manager"));
+			BeanUtil.copyProperties(materialPO.getMaterialDepartment(), materialVO.getMaterialDepartment(), Arrays.asList("type", "fatherDept", "manager"));
 			
 			materialVOs.add(materialVO);
 		}
@@ -239,9 +249,9 @@ public class MaterialServiceImpl implements MaterialService {
 		BeanUtil.copyProperties(materialPO.getMaterialer(), materialVOs.getMaterialer(), Arrays.asList("dept", "duty"));
 		BeanUtil.copyProperties(materialPO.getInstorer(), materialVOs.getInstorer(), Arrays.asList("dept", "duty"));
 		
-		BeanUtil.copyProperties(materialPO.getRegion(), materialVOs.getRegion(), Arrays.asList("type", "fatherDept", "cityProper"));
-		BeanUtil.copyProperties(materialPO.getDepartment(), materialVOs.getDepartment(), Arrays.asList("type", "fatherDept", "cityProper"));
-		BeanUtil.copyProperties(materialPO.getMaterialDepartment(), materialVOs.getMaterialDepartment(), Arrays.asList("type", "fatherDept", "cityProper"));
+		BeanUtil.copyProperties(materialPO.getRegion(), materialVOs.getRegion(), Arrays.asList("type", "fatherDept", "manager"));
+		BeanUtil.copyProperties(materialPO.getDepartment(), materialVOs.getDepartment(), Arrays.asList("type", "fatherDept", "manager"));
+		BeanUtil.copyProperties(materialPO.getMaterialDepartment(), materialVOs.getMaterialDepartment(), Arrays.asList("type", "fatherDept", "manager"));
 		
 		return materialVOs;
 	}
@@ -266,9 +276,9 @@ public class MaterialServiceImpl implements MaterialService {
 		BeanUtil.copyProperties(materialPO.getMaterialer(), materialVOs.getMaterialer(), Arrays.asList("dept", "duty"));
 		BeanUtil.copyProperties(materialPO.getInstorer(), materialVOs.getInstorer(), Arrays.asList("dept", "duty"));
 		
-		BeanUtil.copyProperties(materialPO.getRegion(), materialVOs.getRegion(), Arrays.asList("type", "fatherDept", "cityProper"));
-		BeanUtil.copyProperties(materialPO.getDepartment(), materialVOs.getDepartment(), Arrays.asList("type", "fatherDept", "cityProper"));
-		BeanUtil.copyProperties(materialPO.getMaterialDepartment(), materialVOs.getMaterialDepartment(), Arrays.asList("type", "fatherDept", "cityProper"));
+		BeanUtil.copyProperties(materialPO.getRegion(), materialVOs.getRegion(), Arrays.asList("type", "fatherDept", "manager"));
+		BeanUtil.copyProperties(materialPO.getDepartment(), materialVOs.getDepartment(), Arrays.asList("type", "fatherDept", "manager"));
+		BeanUtil.copyProperties(materialPO.getMaterialDepartment(), materialVOs.getMaterialDepartment(), Arrays.asList("type", "fatherDept", "manager"));
 		
 		return materialVOs;
 	}
@@ -287,8 +297,9 @@ public class MaterialServiceImpl implements MaterialService {
 		UserPO salesman = userDao.queryUserByUserId(materialVO.getSalesman().getUserId());
 		UserPO materialer = userDao.queryUserByUserId(materialVO.getMaterialer().getUserId());
 		UserPO instorer = userDao.queryUserByUserId(materialVO.getInstorer().getUserId());
+		BrandPO brandPO = brandDao.get(materialVO.getBid());
 		
-		BeanUtil.copyProperties(materialVO, materialPO, Arrays.asList("house", "customer", "salesman", "materialer", "instorer", "region", "department", "materialDepartment", "balanceStatus", "company", "coupon", "depositPayment", "depositStatus", "distotal", "fullPayment", "fullStatus", "maling", "otherStatus", "packageFlag", "status", "total", "venderMaling", "mid"));
+		BeanUtil.copyProperties(materialVO, materialPO, Arrays.asList("house", "customer", "salesman", "materialer", "instorer","brand","category", "region", "department", "materialDepartment", "balanceStatus", "company", "coupon", "depositPayment", "depositStatus", "distotal", "fullPayment", "fullStatus", "maling", "otherStatus", "packageFlag", "status", "total", "venderMaling", "mid"));
 		BeanUtil.copyProperties(new HousePO(materialVO.getHouse().getHid()), materialPO.getHouse(), Arrays.asList("village"));
 		BeanUtil.copyProperties(new CustomerPO(materialVO.getCustomer().getCid()), materialPO.getCustomer());
 		
@@ -296,9 +307,9 @@ public class MaterialServiceImpl implements MaterialService {
 		BeanUtil.copyProperties(materialer, materialPO.getMaterialer(), Arrays.asList("role", "dept", "duty"));
 		BeanUtil.copyProperties(instorer, materialPO.getInstorer(), Arrays.asList("role", "dept", "duty"));
 		
-		BeanUtil.copyProperties(salesman.getDept().getFatherDept(), materialPO.getRegion(), Arrays.asList("type", "fatherDept", "cityProper"));
-		BeanUtil.copyProperties(salesman.getDept(), materialPO.getDepartment(), Arrays.asList("type", "fatherDept", "cityProper"));
-		BeanUtil.copyProperties(materialer.getDept(), materialPO.getMaterialDepartment(), Arrays.asList("type", "fatherDept", "cityProper"));
+		BeanUtil.copyProperties(salesman.getDept().getFatherDept(), materialPO.getRegion(), Arrays.asList("type", "fatherDept", "manager"));
+		BeanUtil.copyProperties(salesman.getDept(), materialPO.getDepartment(), Arrays.asList("type", "fatherDept", "manager"));
+		BeanUtil.copyProperties(materialer.getDept(), materialPO.getMaterialDepartment(), Arrays.asList("type", "fatherDept", "manager"));
 		
 		String currentData = DateUtil.current(MaterialPO.CURRENT_TIME_FORMAT_STR);
 		
@@ -317,6 +328,8 @@ public class MaterialServiceImpl implements MaterialService {
 				break;
 			}
 		}
+		materialPO.setBrand(brandPO.getName());
+		materialPO.setCategory(brandPO.getCategory().getName());
 		materialPO.setNo(msoNo.toString());
 		materialPO.setCompany(company);
 		
@@ -434,13 +447,19 @@ public class MaterialServiceImpl implements MaterialService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public void preBalanceMaterial(List<Long> mids, String userId, String userName){
+	public void preBalanceMaterial(List<Long> mids, String userId, String userName) throws FLException{
 		
 		float totalBalance;
 		List<String> materialItemPackageNameList = new ArrayList<String>();
 		
 		for(Long mid: mids){
 			MaterialPO materialPO = materialDao.get(mid);
+			
+			ApprovalPO approvalPO =  approvalDao.queryApproval(ApprovalPO.APPROVAL_STATUS_INIT_INT,ApprovalPO.APPROVAL_TYPE_MATERIAL_REFUND_INT, String.valueOf(mid));
+			
+			if(approvalPO != null){
+				throw new FLException(240007, "存在未处理审批信息");
+			}
 			
 			if(materialPO != null && materialPO.getStatus() == MaterialPO.STATUS_TYPE_INIT_INT && materialPO.getBalanceStatus() == MaterialPO.BALANCE_STATUS_TYPE_INIT_INT){
 				totalBalance = 0;

@@ -122,7 +122,7 @@ jQuery(function($) {
 			}
 			
 			if(type == 2){
-				refundTotal = utils.accAdd(refundTotal, itemInfo[i].total)
+				refundTotal = utils.accAdd(refundTotal, itemInfo[i].total);
 			}
 		}
 		

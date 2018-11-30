@@ -11,7 +11,7 @@ jQuery(function(a){
             counts.sort(function(x, y){
                 return y[2] - x[2];
             });
-            addLine($("#table"), counts, getUrlParams().param);
+            addLine(com.focusPage("#table"), counts, getUrlParams().param);
         }
     });
 
@@ -19,13 +19,13 @@ jQuery(function(a){
 
         switch (num){
             case "1":
-                $("#tr").append($("<th style='text-align: center'>已到场</th>"));
+                com.focusPage("#tr").append($("<th style='text-align: center'>已到场</th>"));
                 break;
             case "2":
-                $("#tr").append($("<th style='text-align: center'>已注册</th>"));
+                com.focusPage("#tr").append($("<th style='text-align: center'>已注册</th>"));
                 break;
             default:
-                $("#tr").append($("<th style='text-align: center'>票数</th>"));
+                com.focusPage("#tr").append($("<th style='text-align: center'>票数</th>"));
                 break;
         }
 

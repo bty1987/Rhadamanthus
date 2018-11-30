@@ -1,13 +1,13 @@
 $(function(){
     var productionPostData={};
-    var $layerAdd = $('#layerAdd');
+    var $layerAdd = com.focusPage('#layerAdd');
     var transferData= {};
 
     var displayFunc  = (function(){
 
         var renderList = function(tableId,listData){
 
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list ui-sortable fl-table-list');
 
                 listData && listData.length && ($.each(listData,function(i, v){
@@ -286,7 +286,7 @@ $(function(){
 
         return {
             init : function(tableId,listData){
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
             }
         };
@@ -325,7 +325,7 @@ $(function(){
         layer.open({
             type: 1,
             title:"添加" ,
-            content:$('#layerAdd'),
+            content:com.focusPage('#layerAdd'),
             area: ( $(window).width()*0.6 < 620 ?  $(window).height()*0.6 : 620 ) + "px",
             maxmin: false,
             zIndex:9000,
@@ -373,7 +373,7 @@ $(function(){
             //$layerAdd.find("input[name='orderAddr']").val(data.decorationOrder.village.villageName+"  "+data.decorationOrder.houseNumber);
             $layerAdd.find("input[name='orderAddr']").val(data.decoration.house.village.name+"  "+data.decoration.house.houseNumber);
             //装修订单id
-            productionPostData["production.orderId"] = $('#layerAdd').find("input[name='orderId']").val();
+            productionPostData["production.orderId"] = com.focusPage('#layerAdd').find("input[name='orderId']").val();
             //房源id
             productionPostData["production.house.hid"] = data.decoration.house.hid;
             //楼盘编号

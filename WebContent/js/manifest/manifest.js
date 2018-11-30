@@ -9,7 +9,7 @@ $(function () {
     var displayFunc = (function () {
 
         var renderList = function (tableId, listData) {
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
 
             if (listData && listData.length) {
 
@@ -63,7 +63,7 @@ $(function () {
                 '采购',//6
                 '辅料',//7
                 '套合',//8
-                '套拆',//9
+                '套拆'//9
             ];
 
 
@@ -81,7 +81,7 @@ $(function () {
                 [v.total,'blue'],
                 [v.status == "0" ? "初始" : "已确认",'red'],
                 [v.comment == null ? "":v.comment,'grey'],
-                [typeList[parseInt(v.type) - 1] ? typeList[parseInt(v.type) - 1] : '---','red'],
+                [typeList[parseInt(v.type) - 1] ? typeList[parseInt(v.type) - 1] : '---','red']
             ];
 
 
@@ -204,7 +204,7 @@ $(function () {
 
         return {
             init: function (tableId, listData) {
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
 
             },
@@ -215,7 +215,7 @@ $(function () {
     })();
 
 
-    var _condArr = ["manifestCode", "manifestTime"];
+    var _condArr = ["manifestCode", "createrName", "manifestTime"];
 
     var seacher = new Searcher();
 
@@ -227,7 +227,7 @@ $(function () {
 
 
     function viewManifest(mid, code) {
-        var $popup = $('#viewPopUp');
+        var $popup = com.focusPage('#viewPopUp');
         $popup.attr({'data-mid': mid});
         //弹出即全屏
         var index = layer.open({
@@ -250,7 +250,7 @@ $(function () {
 
     function editManifest(mid, code, type, status) {
 
-        var $popup = $('#editPopUp');
+        var $popup = com.focusPage('#editPopUp');
         $popup.attr({'data-mid': mid, 'data-type': type, 'data-status': status});
         //弹出即全屏
         var index = layer.open({
@@ -271,7 +271,7 @@ $(function () {
                 seacher.doSearch();
             }
         });
-    };
+    }
 
     function confirmManifest(mid){
         layer.confirm('是否确认订单？', {
@@ -292,7 +292,7 @@ $(function () {
     }
 
     function advanceRetreatManifest(mid,status){
-        var $popup = $('#AARPopUp');
+        var $popup = com.focusPage('#AARPopUp');
         $popup.attr({'data-mid': mid,'data-status': status});
         //弹出即全屏
         var index = layer.open({
@@ -315,7 +315,7 @@ $(function () {
     }
 
     function sendReturnManifest(mid,status,sid){
-        var $popup = $('#ROPopUp');
+        var $popup = com.focusPage('#ROPopUp');
         $popup.attr({'data-mid': mid,'data-status': status,'data-sid': sid});
         //弹出即全屏
         var index = layer.open({

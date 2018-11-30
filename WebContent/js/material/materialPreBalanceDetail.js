@@ -13,17 +13,17 @@ var materialOrderPreBalanceDetailPostData = {};
 
 jQuery(function($) {
 	
-	$('#fl-statement').statement("主材订单", "型号信息");
+	com.focusPage('#fl-statement').statement("主材订单", "型号信息");
 	
-	materialOrderPreBalanceDetail.saveBtn = $("#saveBtn").on("click", saveData);
-	materialOrderPreBalanceDetail.cancelBtn = $("#cancelBtn");
-	materialOrderPreBalanceDetail.materialSubOrderItemBalanceModal = $("#materialSubOrderItemBalanceModal").on('show.bs.modal',function(e){
+	materialOrderPreBalanceDetail.saveBtn = com.focusPage("#saveBtn").on("click", saveData);
+	materialOrderPreBalanceDetail.cancelBtn = com.focusPage("#cancelBtn");
+	materialOrderPreBalanceDetail.materialSubOrderItemBalanceModal = com.focusPage("#materialSubOrderItemBalanceModal").on('show.bs.modal',function(e){
 		com.clearValidator("#value", true);
 		com.clearValidator();
 	});
 	
-	materialOrderPreBalanceDetail.materialOrderBalanceDetailItems.calcType = $("#calcType");
-	materialOrderPreBalanceDetail.materialOrderBalanceDetailItems.value = $("#value");
+	materialOrderPreBalanceDetail.materialOrderBalanceDetailItems.calcType = com.focusPage("#calcType");
+	materialOrderPreBalanceDetail.materialOrderBalanceDetailItems.value = com.focusPage("#value");
 	
 	var options = {};
 	options["materialItem.mid"] = materialOrderPreBalancePostData["materialOrderPreBalance.msoId"];
@@ -31,7 +31,7 @@ jQuery(function($) {
 	var displayFunc  = (function(){
 
 		var renderList = function(tableId,listData){
-			var $tableWrap = $('#' + tableId);
+			var $tableWrap = com.focusPage('#' + tableId);
 			var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
 			if(listData && listData.length){
@@ -117,14 +117,14 @@ jQuery(function($) {
 
 				$ul.appendTo($tableWrap);
 			}
-		}
+		};
 		
 		return {
 			init : function(tableId,listData){
-				$('#' + tableId).html(null);
+				com.focusPage('#' + tableId).html(null);
 				renderList(tableId,listData);
 			}
-		}
+		};
 	})();
 	
 	var searcher = new Searcher();
@@ -133,7 +133,7 @@ jQuery(function($) {
 		displayFunc.init('resultList', data);
 	}, "pagenation", null, options, true, "materialItems");
 	
-	$('#import').click(function(){
+	com.focusPage('#import').click(function(){
 		
 		com.post(api.material.queryMaterialItemByMid, options, function(res){
 			
@@ -156,7 +156,7 @@ jQuery(function($) {
 		});
     });
 	
-	$('#prebalance').click(function(){
+	com.focusPage('#prebalance').click(function(){
 		
 		var options = {};
 		
@@ -165,7 +165,7 @@ jQuery(function($) {
 		bootbox.confirm("确定需要提交当前子订单的预结算处理吗?", function(result) {
 			if(result){
 				com.post(api.material.preBalanceMaterial, options, function(result){
-					$("#materialOrderPreBalancePageContent").load(api.index.materialPreBalanceIndex.url);
+					com.focusPage("#materialOrderPreBalancePageContent").load(api.index.materialPreBalanceIndex.url);
 				}, function(result){
 					com.showAlert(com.error, "确认失败!");
 				});
@@ -173,9 +173,9 @@ jQuery(function($) {
 		});
 	});
 	
-	$('#back').click(function(){
-		$(".tooltip").remove();
-		$("#materialOrderPreBalancePageContent").load(api.index.materialPreBalanceIndex.url);
+	com.focusPage('#back').click(function(){
+		com.focusPage(".tooltip").remove();
+		com.focusPage("#materialOrderPreBalancePageContent").load(api.index.materialPreBalanceIndex.url);
 	});
 	
 	function profitInit(v){
@@ -226,7 +226,7 @@ jQuery(function($) {
 	
 	function pointCacl(salePrice, price, point, num, maling){
 		// (售价 - 折扣价 * (1 - 点位)) * 数量
-		return utils.accMul(utils.accSub(price, utils.accMul(salePrice, utils.accSub(1, point))), num)
+		return utils.accMul(utils.accSub(price, utils.accMul(salePrice, utils.accSub(1, point))), num);
 	}
 
 	function baseCacl(price, base, num, maling){

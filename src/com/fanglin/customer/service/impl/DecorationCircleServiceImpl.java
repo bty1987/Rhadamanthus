@@ -164,14 +164,13 @@ public class DecorationCircleServiceImpl implements DecorationCircleService{
 		
 		DecorationCirclePO decorationCirclePO = decorationCircleDao.get(decorationCircleVO.getDcid());
 		
-		if(decorationCirclePO == null){
-			throw new FLException(111111, "动态不存在");
+		if(decorationCirclePO != null){
+			
+			int praise = (int) Arith.add(decorationCirclePO.getPraise(), 1);
+			decorationCirclePO.setPraise(praise);
+			
+			decorationCircleDao.update(decorationCirclePO);
 		}
-		
-		int praise = (int) Arith.add(decorationCirclePO.getPraise(), 1);
-		decorationCirclePO.setPraise(praise);
-		
-		decorationCircleDao.update(decorationCirclePO);
 		
 		return 0;
 	}

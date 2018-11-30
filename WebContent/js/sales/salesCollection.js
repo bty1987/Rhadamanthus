@@ -53,11 +53,11 @@ jQuery(function () {
         com.showAlert(null, "没有对应信息");
     });
     function createLine(tableId, listData) {
-        var $tableWrap = $('#' + tableId);
+        var $tableWrap = com.focusPage('#' + tableId);
         var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
         if (listData && listData.salesPayments.length) {
             $.each(listData.salesPayments, function (i, v) {
-                var $liLine = $('<li></li>').addClass('item-orange  clearfix')
+                var $liLine = $('<li></li>').addClass('item-orange  clearfix');
                 var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
                 var $h3 = $('<h3></h3>').addClass('oid');
                 var $small = $('<small></small>').addClass('blue').html(salesCollection.salesPaymentType[v.type]);
@@ -90,7 +90,7 @@ jQuery(function () {
                         info += salesPaymentForStatus.bankInfo[_i[0]] + " " + _i[1] + ", ";
                     }
 
-                    return info
+                    return info;
                 })(v.salesReceipt.bank, v.salesReceipt.bankInfo), "blue"]) : true;
                 v.salesReceipt.checkv != null && v.salesReceipt.checkv != "0" ? addPropertyArr.push(["转账:", v.salesReceipt.checkv, "blue"]) : true;
                 v.salesReceipt.installment != null && v.salesReceipt.installment != "0" ? addPropertyArr.push(["分期:", v.salesReceipt.installment, "blue"]) : true;
@@ -104,7 +104,7 @@ jQuery(function () {
                     $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liPropertys);
                     $liPropertys.appendTo($ulProperty);
                 });
-                $small.appendTo($h3)
+                $small.appendTo($h3);
                 $liLine.append($h3).append($ulProperty).appendTo($ul);
             });
 
@@ -113,8 +113,8 @@ jQuery(function () {
 
     }
 
-    $('#back').click(function () {
+    com.focusPage('#back').click(function () {
         com.switchPage("views/sales/sales.html");
-    })
+    });
 
 });

@@ -15,14 +15,14 @@ jQuery(function($) {
 		editFlg: false,
 	};
 
-	serviceNode.saveBtn = $("#saveBtn").on("click", saveData);
-	serviceNode.cancelBtn = $("#cancelBtn");
+	serviceNode.saveBtn = com.focusPage("#saveBtn").on("click", saveData);
+	serviceNode.cancelBtn = com.focusPage("#cancelBtn");
 
-	serviceNode.items.serviceNodeName = $("#serviceNodeName");
-	serviceNode.items.serviceNodeType = $("#serviceNodeType");
-	serviceNode.items.serviceNodeDetail = $("#serviceNodeDetail");
+	serviceNode.items.serviceNodeName = com.focusPage("#serviceNodeName");
+	serviceNode.items.serviceNodeType = com.focusPage("#serviceNodeType");
+	serviceNode.items.serviceNodeDetail = com.focusPage("#serviceNodeDetail");
 
-	serviceNode.modal = $("#serviceNodeModal");
+	serviceNode.modal = com.focusPage("#serviceNodeModal");
 	serviceNode.modal.on('show.bs.modal',function(e){
 		com.clearValidator();
 	});
@@ -30,7 +30,7 @@ jQuery(function($) {
 	$.extend(com.validator, serviceNode.validator);
 
 	com.post(api.ds.data, {}, function(res){
-		$("#serviceNodeType").bindData(res.serviceNodeType, "key", "value");
+        com.focusPage("#serviceNodeType").bindData(res.serviceNodeType, "key", "value");
 		$.each(res.serviceNodeType,function (i,val) {
 			serviceNodeType[val.key] = val.value;
 		});
@@ -40,7 +40,7 @@ jQuery(function($) {
 
 		var renderList = function(tableId, listData){
 			com.sealJournal("info",listData);
-			var $tableWrap = $('#' + tableId);
+			var $tableWrap = com.focusPage('#' + tableId);
 			var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
 			if(listData && listData.length){
@@ -84,7 +84,7 @@ jQuery(function($) {
 				serviceNode.editFlg = false;
 				serviceNode.snid = v.snid;
 				com.cleanItems(serviceNode.items);
-				$("#serviceNodeModal").modal("show");
+                com.focusPage("#serviceNodeModal").modal("show");
 			});
 
 			$btnDel.click(function(){
@@ -102,7 +102,7 @@ jQuery(function($) {
 
 		return {
 			init : function(tableId,listData){
-				$('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
 				renderList(tableId,listData);
 			},
 			drawLine : function(v){
@@ -125,10 +125,10 @@ jQuery(function($) {
 	});
 
 	//添加
-	$('a[name="addServiceNode"]', '#pagenation').click(function(){
+    com.focusPage('a[name="addServiceNode"]', '#pagenation').click(function(){
 		serviceNode.editFlg = true;
 		com.cleanItems(serviceNode.items);
-		$("#serviceNodeModal").modal("show");
+        com.focusPage("#serviceNodeModal").modal("show");
 	});
 
 	function updateNodeStatus(snid, cvalue){
@@ -161,7 +161,7 @@ jQuery(function($) {
 
 		com.post(api.communion.addServiceNode, options, function(res){
 			searcher.doSearch();
-			$("#serviceNodeModal").modal("hide");
+            com.focusPage("#serviceNodeModal").modal("hide");
 		});
 	}
 
@@ -177,7 +177,7 @@ jQuery(function($) {
 		options["serviceNode.detail"] = serviceNode.items.serviceNodeDetail.val();
 		com.post(api.communion.updateServiceNode, options, function(res){
 			searcher.doSearch();
-			$("#serviceNodeModal").modal("hide");
+            com.focusPage("#serviceNodeModal").modal("hide");
 		});
 	}
 });

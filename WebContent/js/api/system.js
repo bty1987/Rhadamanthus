@@ -106,7 +106,6 @@ $.extend(api, {system: {
 
     queryServer:{url:"queryServer.do",server:"communion"}
 
-
 }});
 
 
@@ -114,7 +113,7 @@ $.extend(api, {upgrade: {
 
     pageUpgrade:{url:"pageUpgrade.do"},
     queryUpgrade :{url:"queryUpgrade.do"},
-    matchUpgrade:{url:"matchUpgrade.do"},
+    matchUpgrade:{url:"matchUpgrade.do", intercept: true},
     addUpgrade:{url:"addUpgrade.do"},
     deleteUpgrade:{url:"deleteUpgrade.do"},
     pageVersion:{url:"pageVersion.do"},

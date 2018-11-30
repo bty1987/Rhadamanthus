@@ -39,7 +39,7 @@ public class ConstructionAction extends BaseListAction {
 	@Action(value = "queryCusConstructer", results = {@Result(name = "success", type = "json", params = {"ignoreHierarchy", "false"})}, params = {"contentType", "text/html"})
 	public String queryCusConstructer(){
 		
-		constructionWorkers = constructerService.queryCusConstructer(orderId,unionId);
+		constructionWorkers = constructerService.queryCusConstructer(orderId);
 		
 		return SUCCESS;
 	}
@@ -47,7 +47,7 @@ public class ConstructionAction extends BaseListAction {
 	@Action(value = "queryCusConstruction", results = {@Result(name = "success", type = "json", params = {"ignoreHierarchy", "false"})}, params = {"contentType", "text/html"})
 	public String queryCusConstruction(){
 		
-		construction = constructionService.queryCusConstruction(orderId,unionId);
+		construction = constructionService.queryCusConstruction(orderId);
 		
 		return SUCCESS;
 	}

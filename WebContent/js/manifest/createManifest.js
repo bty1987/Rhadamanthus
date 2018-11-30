@@ -6,19 +6,19 @@
 jQuery(function($) {
 
     if (jQuery().datepicker) {
-        $('.date-picker').datepicker({
+        com.focusPage('.date-picker').datepicker({
             format: 'yyyy-mm-dd',//yyyy-mm-dd hh:ii,
-            autoclose:true,
+            autoclose:true
         });
     }
 
     var manifest = {
-        saveBtn:  $("#saveBtn"),
-        cancellBtn: $("#cancelBtn"),
+        saveBtn:  com.focusPage("#saveBtn"),
+        cancellBtn: com.focusPage("#cancelBtn"),
         manifestItems: {
-            orderId : $("#orderId"),
-            customerName : $("#customer"),
-            des : $("#comment"),
+            orderId : com.focusPage("#orderId"),
+            customerName : com.focusPage("#customer"),
+            des : com.focusPage("#comment")
         },
         record: {},
         validator: {
@@ -45,13 +45,13 @@ jQuery(function($) {
             if(v.status==0){
                 storehousesStatus.push(v);
             }
-        })
+        });
         manifest.storehouses = storehousesStatus;
     }, null, false);
 
 
     com.post(api.ds.manifest, {}, function(res){
-        $('#form [name="mtype"]').bindData(res.manifestTypes,"key","value");
+        com.focusPage('#form [name="mtype"]').bindData(res.manifestTypes,"key","value");
     }, null, false);
 
 
@@ -61,20 +61,20 @@ jQuery(function($) {
             if(v.status==0){
                 manifestTemplatesStatus.push(v);
             }
-        })
-        $('#form [name="manifest"]').bindData(manifestTemplatesStatus,'mtId','name');
+        });
+        com.focusPage('#form [name="manifest"]').bindData(manifestTemplatesStatus,'mtId','name');
     });
 
     //添加一条空行
-    addline(1).addClass('current').appendTo('#list');
+    addline(1).addClass('current').appendTo(com.focusPage('#list'));
     
-    $('#addSaleOrder').click(function(){
+    com.focusPage('#addSaleOrder').click(function(){
         if(com.validate('list','bottom')){
             return;
         }
-        var num = $('.line', '#list').length;
+        var num = com.focusPage('.line', '#list').length;
         var returnFlag = false;
-        var $lines = $('.line', '#list');
+        var $lines = com.focusPage('.line', '#list');
         $lines.each(function(){
             var $this = $(this);
 
@@ -84,16 +84,16 @@ jQuery(function($) {
 
         cyclTotal();
         var $line = addline(num + 1);
-        $line.appendTo('#list');
+        $line.appendTo(com.focusPage('#list'));
     });
 
-    $('#submitSaleOrder').click(function(){
+    com.focusPage('#submitSaleOrder').click(function(){
         if(com.validate('list','bottom')){
             return;
         }
         var options = {};
 
-        var $lines = $('li.line', '#list');
+        var $lines = com.focusPage('li.line', '#list');
         if(!checkInfo()) return;
 
 
@@ -118,21 +118,21 @@ jQuery(function($) {
             return false;
         }
 
-        var manifestTime = $('[name="date"]', '#form').val();//– 货单时间
+        var manifestTime = com.focusPage('[name="date"]', '#form').val();//– 货单时间
         var total = manifest.totalSum;// – 总价
-        var type = $('[name="mtype"]','#form').val();//– 类型
-        var comment = $('#comment').val();//– 备注
+        var type = com.focusPage('[name="mtype"]','#form').val();//– 类型
+        var comment = com.focusPage('#comment').val();//– 备注
 
         options = {
             "manifest.manifestTime": manifestTime,
             "manifest.total": total,
             "manifest.type": type,
             "manifest.comment": comment,
-            "manifest.attachment": "",//– 附件路径
+            "manifest.attachment": ""//– 附件路径
         };
 
 
-        var $list = $('li.line', '#list');
+        var $list = com.focusPage('li.line', '#list');
         $list.length && $list.each(function(i){
             var $this = $(this);
 
@@ -160,15 +160,15 @@ jQuery(function($) {
                 btn.button('reset');
                 layer.msg('保存成功!', {icon : 1});
                 
-                $('#list').empty();
-                $('[name="date"]','#form').val(null);
-                $('[name="orderid"]','#form').val(null);
-                $('[name="customer"]','#form').val(null);
-                $('#comment').val(null);
-                $("#totalSpan").text(0);
+                com.focusPage('#list').empty();
+                com.focusPage('[name="date"]','#form').val(null);
+                com.focusPage('[name="orderid"]','#form').val(null);
+                com.focusPage('[name="customer"]','#form').val(null);
+                com.focusPage('#comment').val(null);
+                com.focusPage("#totalSpan").text(0);
 
                 //添加一条空行
-                addline(1).addClass('current').appendTo('#list');
+                addline(1).addClass('current').appendTo(com.focusPage('#list'));
 
             }, function(e){
                 btn.button('reset');
@@ -179,15 +179,15 @@ jQuery(function($) {
                 btn.button('reset');
                 layer.msg('保存成功!', {icon : 1});
                 //清空页面
-                $('#list').empty();
-                $('[name="date"]','#form').val(null);
-                $('[name="orderid"]','#form').val(null);
-                $('[name="customer"]','#form').val(null);
-                $('#comment').val(null);
-                $("#totalSpan").text(0);
+                com.focusPage('#list').empty();
+                com.focusPage('[name="date"]','#form').val(null);
+                com.focusPage('[name="orderid"]','#form').val(null);
+                com.focusPage('[name="customer"]','#form').val(null);
+                com.focusPage('#comment').val(null);
+                com.focusPage("#totalSpan").text(0);
 
                 //添加一条空行
-                addline(1).addClass('current').appendTo('#list');
+                addline(1).addClass('current').appendTo(com.focusPage('#list'));
                 
             }, function(e){
                 btn.button('reset');
@@ -216,7 +216,7 @@ jQuery(function($) {
             {cellClass : "storehouse", hasSelect : !0},//仓库
             {cellClass : "number", hasInput : !0},//数量
             {cellClass : "price", hasInput : !0},//采购金额
-            {cellClass : "des", hasInput : !0},//备注
+            {cellClass : "des", hasInput : !0}//备注
         ];
 
         var $btncheck = $('<a class="green" style="font-size: 18px"><i class="icon-ok"></i></a>');
@@ -286,12 +286,12 @@ jQuery(function($) {
                         com.post(api.inventory.queryColorForEnableByGid,{
                             "color.gid": val.gid
                         },function(res){
-                            $('li[data-pgid="'+val.gid+'_'+lineindex+'"] .color select').bindData(res.colors,"cid","name");
+                            com.focusPage('li[data-pgid="'+val.gid+'_'+lineindex+'"] .color select').bindData(res.colors,"cid","name");
                         });
                         com.post(api.inventory.queryFormatForEnableByGid,{
                             "format.gid": val.gid
                         },function(res){
-                            $('li[data-pgid="'+val.gid+'_'+lineindex+'"] .format select').bindData(res.formats,"fid","info");
+                            com.focusPage('li[data-pgid="'+val.gid+'_'+lineindex+'"] .format select').bindData(res.formats,"fid","info");
                         });
                     }
                 });
@@ -327,29 +327,29 @@ jQuery(function($) {
     }
 
     //选择模板添加
-    var $btnadd = $('#form a[name="addQuotationVersion"]');
+    var $btnadd = com.focusPage('#form a[name="addQuotationVersion"]');
     $btnadd.click(function(){
 
-        var optmtId = $('#form select[name="manifest"]').val();
+        var optmtId = com.focusPage('#form select[name="manifest"]').val();
         if(optmtId == null || optmtId == ""){
             layer.msg('模板不存在',{icon:2});
             return
         }
-        var index = $('.line', '#list').length;
+        var index = com.focusPage('.line', '#list').length;
         com.post(api.inventory.queryManifestTemplateItemByMtId,{
             "manifestTemplate.mtId": optmtId
         },function(res){
             if(index!=0){
                 for(var i = 0;i<res.manifestTemplateItems.length;i++){
-                    index = $('.line', '#list').length;
-                    if($('#list li:last-of-type div.no').text()!=""){
+                    index = com.focusPage('.line', '#list').length;
+                    if(com.focusPage('#list li:last-of-type div.no').text()!=""){
                         autoAddline(index);
                         //addline(2+index).addClass('current').appendTo('#list');
                     }else{
 
                         if(res.manifestTemplateItems[i].goods.status==0){
-                            var $lineInfoWrap1 = $('#list li:nth-of-type('+index+') div.content');
-                            $('#list li:nth-of-type('+index+')').attr('data-gid',res.manifestTemplateItems[i].goods.gid);
+                            var $lineInfoWrap1 = com.focusPage('#list li:nth-of-type('+index+') div.content');
+                            com.focusPage('#list li:nth-of-type('+index+')').attr('data-gid',res.manifestTemplateItems[i].goods.gid);
                             $lineInfoWrap1.find('div.no').text(res.manifestTemplateItems[i].goods.no);
                             $lineInfoWrap1.find('div.name input').val(res.manifestTemplateItems[i].goods.name);
                             $lineInfoWrap1.find('div.barcode').text(res.manifestTemplateItems[i].goods.barcode);
@@ -373,18 +373,18 @@ jQuery(function($) {
                 }
             }else{
                 for(var i = 0;i<res.manifestTemplateItems.length;i++){
-                    index=$('.line', '#list').length;
+                    index=com.focusPage('.line', '#list').length;
                     autoAddline(index);
                 }
             }
             function autoAddline(index){
                 if(res.manifestTemplateItems[i].goods.status==0){
 
-                    index = $('.line', '#list').length;
-                    addline(1+index).appendTo('#list');
+                    index = com.focusPage('.line', '#list').length;
+                    addline(1+index).appendTo(com.focusPage('#list'));
 
-                    var $lineInfoWrap1 = $('#list li:nth-of-type('+(index+1)+') div.content');
-                    $('#list li:nth-of-type('+(index+1)+')').attr('data-gid',res.manifestTemplateItems[i].goods.gid);
+                    var $lineInfoWrap1 = com.focusPage('#list li:nth-of-type('+(index+1)+') div.content');
+                    com.focusPage('#list li:nth-of-type('+(index+1)+')').attr('data-gid',res.manifestTemplateItems[i].goods.gid);
                     $lineInfoWrap1.find('div.no').text(res.manifestTemplateItems[i].goods.no);
                     $lineInfoWrap1.find('div.name input').val(res.manifestTemplateItems[i].goods.name);
                     $lineInfoWrap1.find('div.barcode').text(res.manifestTemplateItems[i].goods.barcode);
@@ -417,7 +417,7 @@ jQuery(function($) {
 
         var _total = 0;
 
-        var $list = $('.line', '#list');
+        var $list = com.focusPage('.line', '#list');
         $list.length && $list.each(function(){
             var $this = $(this);
             if($this.find('.price input').val()){
@@ -427,12 +427,12 @@ jQuery(function($) {
 
         manifest.totalSum = _total;
 
-        $("#totalSpan").text(_total);
+        com.focusPage("#totalSpan").text(_total);
     }
 
     //重排序
     function reorder(){
-        var $list = $('.line', '#list');
+        var $list = com.focusPage('.line', '#list');
         $list.length && $list.each(function(i){
             var $this = $(this);
             $this.find('.index').text(i + 1);
@@ -443,7 +443,7 @@ jQuery(function($) {
 
         var flag = true;
 
-        var date = $('[name="date"]','#form');
+        var date = com.focusPage('[name="date"]','#form');
         if(!date.val()){
             date.focus().select();
 
@@ -465,7 +465,7 @@ jQuery(function($) {
 
     }
 
-    $('#form div.pull-right').css('width','55%');
-    $('#form div.pull-right:nth-of-type(3) .inline-group:nth-of-type(3)').css('margin-left','160px');
+    com.focusPage('#form div.pull-right').css('width','55%');
+    com.focusPage('#form div.pull-right:nth-of-type(3) .inline-group:nth-of-type(3)').css('margin-left','160px');
 
 });

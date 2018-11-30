@@ -19,6 +19,10 @@ public class TaskPO implements Serializable{
   
     public static final String COLUMN_STATUS_STR = "status";
     
+    public static final String COLUMN_KEYWORD_STR = "keyWord";
+    
+    public static final String COLUMN_PLUGINS_STR = "plugins";
+    
 	public static final short TYPE_PYTHON_INT = 0;
 	
 	public static final short TYPE_SHELL_INT = 1;
@@ -33,7 +37,11 @@ public class TaskPO implements Serializable{
 	
 	private short type;
 	
-	private String content;
+	private String plugins;
+	
+	private String keyWord;
+	
+	private long handle;
 	
 	private short status;
 
@@ -84,6 +92,15 @@ public class TaskPO implements Serializable{
 		return type;
 	}
 	
+	@Column(name = "handle")
+	public long getHandle() {
+		return handle;
+	}
+
+	public void setHandle(long handle) {
+		this.handle = handle;
+	}
+	
 	@Column(name = "status")
 	public short getStatus() {
 		return status;
@@ -92,15 +109,22 @@ public class TaskPO implements Serializable{
 	public void setStatus(short status) {
 		this.status = status;
 	}
-
-	@Column(name = "content")
-	public String getContent() {
-		return content;
-	}
-
-	public void setContent(String content) {
-		this.content = content;
-	}
-
 	
+	@Column(name = "keyWord")
+	public String getKeyWord() {
+		return keyWord;
+	}
+
+	public void setKeyWord(String keyWord) {
+		this.keyWord = keyWord;
+	}
+
+	@Column(name = "plugins")
+	public String getPlugins() {
+		return plugins;
+	}
+
+	public void setPlugins(String plugins) {
+		this.plugins = plugins;
+	}
 }

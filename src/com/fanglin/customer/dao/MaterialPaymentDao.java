@@ -11,4 +11,7 @@ import com.fanglin.utils.Paging;
 public interface MaterialPaymentDao extends Dao<MaterialPaymentPO> {
 	
 	public List<MaterialPaymentPO> queryCusMaterialByOrderId(Paging paging, List<Filter> filters, String orderId);
+	
+	public Float countCusMaterialPaymentForAmount(String orderId);
+	
 }

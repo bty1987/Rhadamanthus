@@ -66,6 +66,14 @@ public class ApprovalAction extends BaseListAction {
 
 		return SUCCESS;
 	}
+	
+	@Action(value = "approveDing", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
+	public String approveDing() throws FLException {
+
+		approvalService.approveDing(approval);
+
+		return SUCCESS;
+	}
 
 	@Action(value = "refuseApproval", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
 	public String refuseApproval() throws FLException {

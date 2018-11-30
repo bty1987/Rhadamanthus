@@ -2,14 +2,14 @@
 
 $(function () {
 
-	var sid = params.sid
+	var sid = params.sid;
 
-    $('#backBtn').click(function () {
+    com.focusPage('#backBtn').click(function () {
         com.switchPage(api.index.querySalesIndex.url);
     });
 
     var initList = function(listData) {
-        var $tableWrap = $('#list');
+        var $tableWrap = com.focusPage('#list');
         var $ul = $('<ul></ul>').addClass('item-list ui-sortable  fl-table-list');
 
         if (listData && listData.length) {
@@ -65,9 +65,7 @@ $(function () {
             initList(data.refundsItems);
         },function (e) {
             com.showAlert(com.error,e.errorMsg);
-        },false)
+        },false);
     }
 
-
-
-})
+});

@@ -20,7 +20,7 @@ jQuery(function($) {
 	var displayFunc = (function() {
 
 		var renderList = function(tableId, listData) {
-			var $tableWrap = $('#' + tableId);
+			var $tableWrap = com.focusPage('#' + tableId);
 			var $ul = $('<ul></ul>').addClass(
 					'item-list fl-table-list ui-sortable');
 
@@ -83,7 +83,7 @@ jQuery(function($) {
 
 		return {
 			init : function(tableId, listData) {
-				$('#' + tableId).html(null);
+				com.focusPage('#' + tableId).html(null);
 				renderList(tableId, listData);
 			},
 			drawLine : function(v) {
@@ -101,14 +101,14 @@ jQuery(function($) {
 
 	function queryMaterialSubOrder(aId,type,$this) {
 
-		if ($('#materialInfoList').children()) {
-			$('#materialInfoList').empty();
+		if (com.focusPage('#materialInfoList').children()) {
+			com.focusPage('#materialInfoList').empty();
 		}
 		if(type=="6"){
 			com.post(api.approval.queryApprovalMaterialRefundItem,{"approval.aid" : aId}, function(res) {
-				$("#materialInfo").html("主材信息");
+				com.focusPage("#materialInfo").html("主材信息");
 				$.each(res.approvalMaterialRefundItems, function(i, v) {
-					$('#materialInfoList')
+					com.focusPage('#materialInfoList')
 						.append(approvalUtils.addspan('10', '型号  : ', v.materialItem.name))
 						.append(approvalUtils.addspan('40', '品类  : ', v.materialItem.category))
 						.append(approvalUtils.addspan('40', '品牌  : ', v.materialItem.brand))
@@ -118,14 +118,14 @@ jQuery(function($) {
 						.append(approvalUtils.addspan('40', '退货金额  : ', v.total))
 						.append('<hr/>');
 				});
-				$('#msoiModel').modal("show");
+				com.focusPage('#msoiModel').modal("show");
 			}, null, false);
 		}
 		if(type=="10"){
 			com.post(api.approval.queryApprovalSalesRefundItem,{"approval.aid" : aId}, function(res) {
-				$("#materialInfo").html("销售信息");
+				com.focusPage("#materialInfo").html("销售信息");
 				$.each(res.approvalSalesRefundItem, function(i, v) {
-					$('#materialInfoList')
+					com.focusPage('#materialInfoList')
 						.append(approvalUtils.addspan('10', '名称  : ', v.salesItem.goods.name))
 						.append(approvalUtils.addspan('40', '颜色  : ', v.salesItem.color.name))
 						.append(approvalUtils.addspan('40', '规格  : ', v.salesItem.format.info))
@@ -135,7 +135,7 @@ jQuery(function($) {
 						.append(approvalUtils.addspan('40', '退货金额  : ', v.total))
 						.append('<hr/>');
 				});
-				$('#msoiModel').modal("show");
+				com.focusPage('#msoiModel').modal("show");
 			}, null, false);
 		}
 	}

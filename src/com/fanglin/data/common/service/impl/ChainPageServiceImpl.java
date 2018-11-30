@@ -2,10 +2,12 @@ package com.fanglin.data.common.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import sun.misc.BASE64Encoder;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import sun.misc.BASE64Encoder;
 
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.common.dao.ChainPageDao;

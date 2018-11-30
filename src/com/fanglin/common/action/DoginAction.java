@@ -27,7 +27,7 @@ import com.fanglin.dingding.service.AuthService;
 import com.fanglin.dingding.service.UserService;
 import com.fanglin.utils.LogUtils;
 
-@ParentPackage("common")
+@ParentPackage("login")
 @Namespace("/")
 @Controller
 public class DoginAction extends BaseListAction {

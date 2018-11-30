@@ -33,7 +33,9 @@ CREATE TABLE `accessoriesmanifest` (
   `amid` int(11) NOT NULL AUTO_INCREMENT,
   `aid` int(11) NOT NULL COMMENT '辅料单ID',
   `mid` int(11) NOT NULL COMMENT '货单ID',
-  PRIMARY KEY (`amid`)
+  PRIMARY KEY (`amid`),
+  KEY `indexone` (`aid`),
+  KEY `indextwo` (`mid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='辅料货单';
 DROP TABLE IF EXISTS `accessoriestype`;
 CREATE TABLE `accessoriestype` (
@@ -93,7 +95,10 @@ CREATE TABLE `goods` (
   `type` tinyint(1) NOT NULL DEFAULT '0',
   `status` tinyint(1) NOT NULL DEFAULT '0',
   `company` int(11) NOT NULL,
-  PRIMARY KEY (`gid`)
+  PRIMARY KEY (`gid`),
+  KEY `indexone` (`company`,`status`,`no`),
+  KEY `indextwo` (`company`,`status`,`name`),
+  KEY `indexthr` (`company`,`bid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='商品';
 
 DROP TABLE IF EXISTS `goodspackage`;
@@ -125,15 +130,18 @@ CREATE TABLE `manifest` (
   `code` varchar(32) NOT NULL,
   `createTime` timestamp NULL DEFAULT NULL,
   `manifestTime` timestamp NULL DEFAULT NULL,
-  `createUserId` int(11) NOT NULL,
+  `cuid` int(11) NOT NULL COMMENT '创建人ID',
   `total` decimal(13,3) NOT NULL DEFAULT '0.000',
-  `type` tinyint(4) NOT NULL,
-  `status` tinyint(4) NOT NULL,
+  `type` tinyint(1) NOT NULL,
+  `status` tinyint(1) NOT NULL,
   `comment` varchar(128) NOT NULL DEFAULT '',
   `attachment` varchar(256) NOT NULL DEFAULT '',
   `qmid` int(11) DEFAULT NULL COMMENT '引用货单ID',
   `company` int(11) NOT NULL,
-  PRIMARY KEY (`mid`)
+  PRIMARY KEY (`mid`),
+  UNIQUE KEY `uniqueone` (`code`),
+  KEY `indexone` (`code`),
+  KEY `indextwo` (`cuid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='货单';
 
 
@@ -162,15 +170,15 @@ CREATE TABLE `manifesttemplate` (
   `status` tinyint(4) NOT NULL DEFAULT '0',
   `company` int(11) NOT NULL,
   PRIMARY KEY (`mtid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='货单模版';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='货单模版';
 
 DROP TABLE IF EXISTS `manifesttemplateitem`;
 CREATE TABLE `manifesttemplateitem` (
-  `mtiId` int(11) NOT NULL AUTO_INCREMENT,
+  `mtiid` int(11) NOT NULL AUTO_INCREMENT,
   `mtid` int(11) NOT NULL,
   `gid` int(11) NOT NULL,
-  PRIMARY KEY (`mtiId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='货单模版项';
+  PRIMARY KEY (`mtiid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='货单模版项';
 DROP TABLE IF EXISTS `price`;
 CREATE TABLE `price` (
   `pid` int(11) NOT NULL AUTO_INCREMENT,
@@ -178,7 +186,7 @@ CREATE TABLE `price` (
   `name` varchar(32) NOT NULL,
   `purchase` decimal(10,3) NOT NULL DEFAULT '0.000',
   `selling` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `ctype` tinyint(2) NOT NULL DEFAULT '0',
+  `ctype` tinyint(1) NOT NULL DEFAULT '0',
   `cvalue` decimal(10,3) NOT NULL DEFAULT '0.000',
   PRIMARY KEY (`pid`),
   KEY `indexone` (`gid`)
@@ -189,14 +197,16 @@ CREATE TABLE `purchase` (
   `pid` int(11) NOT NULL AUTO_INCREMENT,
   `no` varchar(15) NOT NULL,
   `cuid` int(11) NOT NULL COMMENT '创建人ID',
-  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `balanceTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '结算时间',
   `deliveryTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '预到货时间',
   `status` tinyint(2) NOT NULL DEFAULT '0',
   `balanceStatus` tinyint(2) NOT NULL DEFAULT '0',
   `comment` varchar(128) DEFAULT NULL,
   `company` int(11) NOT NULL,
-  PRIMARY KEY (`pid`)
+  PRIMARY KEY (`pid`),
+  UNIQUE KEY `uniqueone` (`no`),
+  KEY `indexone` (`no`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='采购单';
 
 DROP TABLE IF EXISTS `purchaseamount`;
@@ -217,7 +227,8 @@ CREATE TABLE `purchasebalance` (
   `balance` decimal(10,3) NOT NULL,
   `status` tinyint(2) NOT NULL,
   `comment` varchar(128) DEFAULT NULL,
-  PRIMARY KEY (`pbid`)
+  PRIMARY KEY (`pbid`),
+  KEY `indexone` (`pid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='采购结算';
 
 DROP TABLE IF EXISTS `purchaseitem`;
@@ -231,7 +242,8 @@ CREATE TABLE `purchaseitem` (
   `unitPrice` decimal(10,2) NOT NULL,
   `num` decimal(10,3) NOT NULL DEFAULT '0.000',
   `surplus` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '剩余数量',
-  PRIMARY KEY (`piid`)
+  PRIMARY KEY (`piid`),
+  KEY `indexone` (`pid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='采购项';
 
 DROP TABLE IF EXISTS `purchasemanifest`;
@@ -239,7 +251,9 @@ CREATE TABLE `purchasemanifest` (
   `pmid` int(11) NOT NULL AUTO_INCREMENT,
   `pid` int(11) NOT NULL COMMENT '采购单ID',
   `mid` int(11) NOT NULL COMMENT '货单ID',
-  PRIMARY KEY (`pmid`)
+  PRIMARY KEY (`pmid`),
+  KEY `indexone` (`pid`),
+  KEY `indextwo` (`mid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='采购货单';
 
 DROP TABLE IF EXISTS `storehouse`;

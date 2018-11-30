@@ -5,16 +5,16 @@ $(function () {
     today.setSeconds(0)
 
     var largeScreen = {
-        CompanyDaysLevelScaleRuleTrend: $('#CompanyDaysLevelScaleRuleTrend'),
-        CompanyDaysToSignASingleNumberOfTrends: $('#CompanyDaysToSignASingleNumberOfTrends'),
-        TheTotalNumberOfRuler: $('#TheTotalNumberOfRuler'),
-        TheTotalNumberOfSignings: $('#TheTotalNumberOfSignings'),
-        TheTotalNumberOfCompanySignings: $('#TheTotalNumberOfCompanySignings'),
-        TheTotalNumberOfCompanyScale: $('#TheTotalNumberOfCompanyScale'),
-        DesignerSignNumberTOP10: $('#DesignerSignNumberTOP10'),
-        SalesmanSignedNumberTOP10: $('#SalesmanSignedNumberTOP10'),
-        PropertySignedOrdersTOP10: $('#PropertySignedOrdersTOP10'),
-        fullScreen: $('#fullScreen'),
+        CompanyDaysLevelScaleRuleTrend: com.focusPage('#CompanyDaysLevelScaleRuleTrend'),
+        CompanyDaysToSignASingleNumberOfTrends: com.focusPage('#CompanyDaysToSignASingleNumberOfTrends'),
+        TheTotalNumberOfRuler: com.focusPage('#TheTotalNumberOfRuler'),
+        TheTotalNumberOfSignings: com.focusPage('#TheTotalNumberOfSignings'),
+        TheTotalNumberOfCompanySignings: com.focusPage('#TheTotalNumberOfCompanySignings'),
+        TheTotalNumberOfCompanyScale: com.focusPage('#TheTotalNumberOfCompanyScale'),
+        DesignerSignNumberTOP10: com.focusPage('#DesignerSignNumberTOP10'),
+        SalesmanSignedNumberTOP10: com.focusPage('#SalesmanSignedNumberTOP10'),
+        PropertySignedOrdersTOP10: com.focusPage('#PropertySignedOrdersTOP10'),
+        fullScreen: com.focusPage('#fullScreen'),
         elasticUrl: {
             create: 'http://192.168.5.22:9200/decoration-create-*/_search',
             contract: 'http://192.168.5.22:9200/decoration-contract-*/_search',
@@ -591,7 +591,7 @@ $(function () {
         })
 
         ajax(largeScreen.elasticUrl.create, TheTotalNumberOfRuler, function (res) {
-            $('#TheTotalNumberOfRuler').css({
+            com.focusPage('#TheTotalNumberOfRuler').css({
                 "text-align": "center",
                 "width": "auto",
                 "height": "220px",
@@ -605,7 +605,7 @@ $(function () {
         })
 
         ajax(largeScreen.elasticUrl.contract, TheTotalNumberOfSignings, function (res) {
-            $('#TheTotalNumberOfSignings').css({
+            com.focusPage('#TheTotalNumberOfSignings').css({
                 "text-align": "center",
                 "width": "auto",
                 "height": "220px",
@@ -825,7 +825,7 @@ $(function () {
             flag = true;
         })*/
 
-        if ($('.page-content').hasClass('full-Screen')) {
+        if (com.focusPage('.page-content').hasClass('full-Screen')) {
             G2.Global.setTheme('dark');
         }
 

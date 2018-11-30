@@ -99,6 +99,11 @@ public class DecorationPaymentDaoImpl extends DaoImpl<DecorationPaymentPO> imple
 	public List<DecorationPaymentPO> queryDecorationPaymentByDrid(long drid) {
 		return session().createCriteria(DecorationPaymentPO.class).createAlias("decorationReceipt", "decorationReceipt").add(Restrictions.eq("decorationReceipt.drid", drid)).list();
 	}
+	
+	@Override
+	public DecorationPaymentPO queryDecorationPaymentByOrderIdAndSort(String orderId, short sort) {
+		return (DecorationPaymentPO) session().createCriteria(DecorationPaymentPO.class).add(Restrictions.eq("decoration.orderId", orderId)).add(Restrictions.eq("sort", sort)).add(Restrictions.eq("oneType", DecorationPaymentPO.ONETYPE_ADD_INT)).add(Restrictions.eq("twoType", DecorationPaymentPO.TWOTYPE_DEAL_INT)).uniqueResult();
+	}
 
 	@Override
 	public int changeDecorationPaymentForOrderId(String oldOrderId, String newOrderId) {
@@ -188,4 +193,5 @@ public class DecorationPaymentDaoImpl extends DaoImpl<DecorationPaymentPO> imple
 			}
 		}
 	}
+
 }

@@ -22,7 +22,7 @@ var productionUtils = {
     //    }
     //},
     clearForm: function (formId) {
-        var $form = $("#" + formId);
+        var $form = com.focusPage("#" + formId);
         $('.control-group').removeClass("success").removeClass("error");
         $(".ok").remove();
         $(".help-inline").remove();

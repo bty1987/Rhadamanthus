@@ -1,0 +1,50 @@
+<div class="page-content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="condList" class="fl_search clearfix"></div> <!-- 查询条件-->
+            <div id="resultList" class="clearfix tab-pane active"></div> <!--查询结果-->
+            <div id="pagenation" class="fl-page-wrap clearfix"></div> <!--分页-->
+        </div>
+    </div>
+    <div class="modal fade" id="groupUserModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabel">群人员</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+
+                        <div class="form-group">
+                            <label for="userSel" class="col-sm-3 control-label no-padding-right">群人员</label>
+                            <div class="col-md-9">
+                                <select class="chosen-select col-md-4 v_required" id="userSel" data-placeholder="请输入群人员" data-toggle="popover" data-trigger='manual' style="display: none;">
+                                    <option value="">&nbsp;</option>
+                                </select>
+                                <span class='star'></span>
+                            </div>
+                        </div>
+
+                        <div class="space-4"></div>
+                        <div class="form-group">
+                            <label for="userSel" class="col-sm-3 control-label no-padding-right">说明</label>
+                            <div class="col-md-9">
+                                <textarea id="comment" maxlength="128" class="col-xs-10 col-sm-6" rows="3"></textarea>
+                            </div>
+                        </div>
+                        <div class="space-4"></div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="saveBtn" class="btn btn-primary">保存</button>
+                    <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $.loadScript(['js/customer/crowdUser.js']);
+</script>

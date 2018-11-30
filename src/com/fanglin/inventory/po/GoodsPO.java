@@ -48,8 +48,6 @@ public class GoodsPO implements java.io.Serializable {
 	
 	private long gid;
 	
-	private int company;
-	
 	private String no;
 	
 	private String name;
@@ -73,6 +71,8 @@ public class GoodsPO implements java.io.Serializable {
 	private short type;
 	
 	private short status;
+	
+	private int company;
 	
 	public GoodsPO() {
 		super();
@@ -98,15 +98,6 @@ public class GoodsPO implements java.io.Serializable {
 	public void setGid(long gid) {
 		this.gid = gid;
 	}
-	
-	@Column(name = "company")
-	public int getCompany() {
-		return company;
-	}
-
-	public void setCompany(int company) {
-		this.company = company;
-	}
 
 	@Column(name = "no")
 	public String getNo() {
@@ -124,6 +115,15 @@ public class GoodsPO implements java.io.Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	@Column(name = "pinyin")
+	public String getPinyin() {
+		return pinyin;
+	}
+	
+	public void setPinyin(String pinyin) {
+		this.pinyin = pinyin;
 	}
 
 	@Column(name = "barcode")
@@ -179,15 +179,6 @@ public class GoodsPO implements java.io.Serializable {
 	public void setPieceNum(float pieceNum) {
 		this.pieceNum = pieceNum;
 	}
-
-	@Column(name = "status")
-	public short getStatus() {
-		return this.status;
-	}
-
-	public void setStatus(short status) {
-		this.status = status;
-	}
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "atid", referencedColumnName = "atid")
@@ -198,15 +189,6 @@ public class GoodsPO implements java.io.Serializable {
 	public void setAccessoriesType(AccessoriesTypePO accessoriesType) {
 		this.accessoriesType = accessoriesType;
 	}
-
-	@Column(name = "pinyin")
-	public String getPinyin() {
-		return pinyin;
-	}
-	
-	public void setPinyin(String pinyin) {
-		this.pinyin = pinyin;
-	}
 	
 	@Column(name = "type")
 	public short getType() {
@@ -215,6 +197,24 @@ public class GoodsPO implements java.io.Serializable {
 
 	public void setType(short type) {
 		this.type = type;
+	}
+	
+	@Column(name = "status")
+	public short getStatus() {
+		return this.status;
+	}
+
+	public void setStatus(short status) {
+		this.status = status;
+	}
+
+	@Column(name = "company")
+	public int getCompany() {
+		return company;
+	}
+
+	public void setCompany(int company) {
+		this.company = company;
 	}
 
 }

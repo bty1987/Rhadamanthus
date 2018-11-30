@@ -1,6 +1,6 @@
 jQuery(function ($) {
 
-    $('#fl-statement').statement("巡检控制", "巡检记录");
+    com.focusPage('#fl-statement').statement("巡检控制", "巡检记录");
 
     var record = {
         saveBtn: null,
@@ -9,30 +9,30 @@ jQuery(function ($) {
         recordItems: {},
 
         editFlag: false,
-        repeatFlg: false,
+        repeatFlg: false
     };
 
-    record.saveBtn = $("#saveBtn").on("click", saveData);
-    record.cancelBtn = $("#cancelBtn");
-    record.modal = $("#recordModal").on('show.bs.modal', function (e) {
+    record.saveBtn = com.focusPage("#saveBtn").on("click", saveData);
+    record.cancelBtn = com.focusPage("#cancelBtn");
+    record.modal = com.focusPage("#recordModal").on('show.bs.modal', function (e) {
         com.clearValidator();
     });
 
-    record.recordItems.orderId = $("#orderId");
-    record.recordItems.orderAddr = $("#orderAddr");
-    record.recordItems.startDate = $("#startDate");
-    record.recordItems.startTime = $("#startTime");
-    record.recordItems.endDate = $("#endDate");
-    record.recordItems.endTime = $("#endTime");
-    record.recordItems.recordDes = $("#recordDes");
+    record.recordItems.orderId = com.focusPage("#orderId");
+    record.recordItems.orderAddr = com.focusPage("#orderAddr");
+    record.recordItems.startDate = com.focusPage("#startDate");
+    record.recordItems.startTime = com.focusPage("#startTime");
+    record.recordItems.endDate = com.focusPage("#endDate");
+    record.recordItems.endTime = com.focusPage("#endTime");
+    record.recordItems.recordDes = com.focusPage("#recordDes");
 
-    $('.date-picker').datepicker({autoclose: true});
+    com.focusPage('.date-picker').datepicker({autoclose: true});
     record.recordItems.startTime.timepicker({minuteStep: 1, showSeconds: true, showMeridian: false});
     record.recordItems.endTime.timepicker({minuteStep: 1, showSeconds: true, showMeridian: false});
 
     var displayFunc = (function () {
         var renderList = function (tableId, listData) {
-            var $tableWrap = $('#' + tableId).empty();
+            var $tableWrap = com.focusPage('#' + tableId).empty();
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if (listData && listData.length) {
@@ -61,7 +61,7 @@ jQuery(function ($) {
                 ["操作人:", v.operaterName, "grey"],
                 ["开始时间:", v.startTime, "green "],
                 ["结束时间:", v.endTime, "green"],
-                ["备注:", v.recordDes, "grey"],
+                ["备注:", v.recordDes, "grey"]
             ];
 
             $.each(propertyArr, function (index, value) {
@@ -88,7 +88,7 @@ jQuery(function ($) {
 
         return {
             init: function (tableId, listData) {
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             },
             drawLine: function (v) {
@@ -115,7 +115,7 @@ jQuery(function ($) {
         return [$addb, $adda];
     });
 
-    $('a[name="add"]', '#pagenation').click(function () {
+    com.focusPage('a[name="add"]', '#pagenation').click(function () {
         record.editFlag = false;
 
         com.cleanItems(record.recordItems);
@@ -129,7 +129,7 @@ jQuery(function ($) {
         record.modal.modal("show");
     });
 
-    $('a[name="back"]', '#pagenation').click(function () {
+    com.focusPage('a[name="back"]', '#pagenation').click(function () {
         com.switchPage(api.index.inspectionIndex.url);
     });
 
@@ -173,7 +173,7 @@ jQuery(function ($) {
             "inspectionRecord.orderAddr": record.recordItems.orderAddr.val(),
             "inspectionRecord.startTime": record.recordItems.startDate.val() + " " + record.recordItems.startTime.val(),
             "inspectionRecord.endTime": record.recordItems.endDate.val() + " " + record.recordItems.endTime.val(),
-            "inspectionRecord.recordDes": record.recordItems.recordDes.val(),
+            "inspectionRecord.recordDes": record.recordItems.recordDes.val()
         };
 
         if (options["inspectionRecord.startTime"] > options["inspectionRecord.endTime"]) {

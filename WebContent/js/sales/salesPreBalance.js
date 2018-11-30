@@ -19,7 +19,7 @@ $(function () {
 
         var renderList = function (tableId, listData) {
 
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list ui-sortable  fl-table-list');
 
             if (listData && listData.length) {
@@ -75,11 +75,13 @@ $(function () {
                         ["楼盘地址:", v.house.village.name + " " + v.house.houseNumber, "grey"],
                         ["客户名:", v.customer.name, "grey"],
                         ["渠道:", v.salesman.currentName, "grey"],
-                        ["部门:", v.dept.deptName, "grey"],
-                        ["分区:", v.region.deptName, "grey"],
+                        ["部门:", v.dept.name, "grey"],
+                        ["分区:", v.region.name, "grey"],
                         ["导购:", v.guider.currentName, "grey"],
                         ["驻店:", v.instorer.currentName, "grey"],
                         ["品牌:", v.brand, "grey"],
+                        ["定金:", v.depositpay, "blue"],
+                        ["补款:", v.fullpay, "blue"],
                         ["总额:", v.total, "grey"],
                         ["抹零:", v.maling, "blue"],
                         ["厂商抹零:", v.venderMaling, "blue"],
@@ -111,7 +113,7 @@ $(function () {
 
                     var _span = $('<span></span>').addClass('lbl blue bigger-150').html(v.no);
 
-                    _label.append($input).append(_span).appendTo($label)
+                    _label.append($input).append(_span).appendTo($label);
 
                     $.each(propertyArr, function (index, value) {
                         var $liProperty = $('<li></li>');
@@ -135,18 +137,18 @@ $(function () {
                     $btnSwitch.click(function () {
                         var flag = true;
                         if (params['urlLoadParams'].type == "dompany") {
-                            flag = false
+                            flag = false;
                         }
                         openlayerView(v.sid, v.no, flag);
 
-                    })
+                    });
 
                     $btnWipeZero.click(function () {
 
-                        $('#maling').val(utils.accAdd(v.maling, v.venderMaling));
-                        $('#originalMaling').val(v.maling);
-                        $('#venderMaling').val(v.venderMaling);
-                        $('#editVenderMaling').val(0)
+                        com.focusPage('#maling').val(utils.accAdd(v.maling, v.venderMaling));
+                        com.focusPage('#originalMaling').val(v.maling);
+                        com.focusPage('#venderMaling').val(v.venderMaling);
+                        com.focusPage('#editVenderMaling').val(0);
 
                         editLayer(function () {
 
@@ -156,16 +158,16 @@ $(function () {
 
                             com.post(api.inventory.updateSalesForMaling, {
                                 "sales.sid": v.sid,
-                                "sales.maling": utils.accSub($('#maling').val(), $('#editVenderMaling').val()),
-                                "sales.venderMaling": $('#editVenderMaling').val()
+                                "sales.maling": utils.accSub(com.focusPage('#maling').val(), com.focusPage('#editVenderMaling').val()),
+                                "sales.venderMaling": com.focusPage('#editVenderMaling').val()
                             }, function () {
                                 salesPreBalance.doSearch();
                                 layer.closeAll();
-                            })
+                            });
 
-                        })
+                        });
 
-                    })
+                    });
 
                     $btnPre.click(function () {
 
@@ -180,14 +182,14 @@ $(function () {
                                 layer.closeAll();
                                 layer.msg('预结算成功');
                                 salesPreBalance.doSearch();
-                            })
+                            });
 
                         }, function () {
 
                             salesPreBalance.doSearch();
                         });
 
-                    })
+                    });
 
                 });
 
@@ -198,7 +200,7 @@ $(function () {
 
         return {
             init: function (tableId, listData) {
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             }
         };
@@ -211,7 +213,7 @@ $(function () {
 
     salesPreBalance.init(_condArr, 'condList', url, function (data) {
 
-        displayFunc.init('resultList', data)
+        displayFunc.init('resultList', data);
 
     }, 'pagenation', postData, null, false, null, function () {
 
@@ -226,11 +228,11 @@ $(function () {
 
         $adda.click(function (e) {
 
-            e.stopPropagation()
+            e.stopPropagation();
 
             var _option = {};
 
-            var $inputs = $('input[name="sids"]:checked', '#resultList');
+            var $inputs = com.focusPage('input[name="sids"]:checked', '#resultList');
 
             if (!$inputs.length) {
 
@@ -246,7 +248,7 @@ $(function () {
 
                 _option["sid[" + i + "]"] = $this.attr('data-sid');
 
-            })
+            });
 
             layer.confirm('确定要将选中的销售单进行预结算吗?', {
                 btn: ['确定', '取消'] //按钮
@@ -257,7 +259,7 @@ $(function () {
                     layer.msg('操作成功');
                     salesPreBalance.doSearch();
 
-                })
+                });
 
             }, function () {
 
@@ -265,13 +267,13 @@ $(function () {
             });
 
 
-        })
+        });
 
         $addaEnd.click(function (e) {
-            e.stopPropagation()
+            e.stopPropagation();
             var _option = {};
 
-            var $inputs = $('input[name="sids"]:checked', '#resultList');
+            var $inputs = com.focusPage('input[name="sids"]:checked', '#resultList');
 
             if (!$inputs.length) {
 
@@ -287,7 +289,7 @@ $(function () {
 
                 _option["sid[" + i + "]"] = $this.attr('data-sid');
 
-            })
+            });
 
             layer.confirm('确定要将选中的销售单进行完结吗?', {
                 btn: ['确定', '取消'] //按钮
@@ -298,7 +300,7 @@ $(function () {
                     layer.msg('操作成功');
                     salesPreBalance.doSearch();
 
-                })
+                });
 
             }, function () {
 
@@ -306,24 +308,24 @@ $(function () {
             });
 
 
-        })
+        });
 
         if (params['urlLoadParams'].type == "dompany") {
-            return []
+            return [];
         } else {
-            return [$adda, $addaEnd]
+            return [$adda, $addaEnd];
         }
 
-    }, 'resultList')
+    }, 'resultList');
 
 
     //查看弹窗
     function openlayerView(sid, no, flag) {
         layer.closeAll();
-        var $popup = $('#viewPopUp');
+        var $popup = com.focusPage('#viewPopUp');
         $popup.attr({'data-sid': sid, 'data-dompany': flag});
         //弹出即全屏
-        var index = layer.open({
+        layer.open({
             type: 1,
             skin: 'layui-layer-molv',
             title: "预结算销售单号" + no,
@@ -332,16 +334,16 @@ $(function () {
             //maxmin: true,
             zIndex: 9000,
             success: function (layer, index) {
-                com.clearValidator()
+                com.clearValidator();
                 $popup.load("views/sales/viewSalesItemPreBalance.html");
             },
             end: function () {
-                com.clearValidator()
+                com.clearValidator();
                 $popup.attr({'data-sid': null});
                 $popup.empty();
                 salesPreBalance.doSearch();
             }
-        })
+        });
     }
 
     function editLayer(callback) {
@@ -349,7 +351,7 @@ $(function () {
         layer.open({
             type: 1,
             title: "修改抹零",
-            content: $('#editLayer'),
+            content: com.focusPage('#editLayer'),
             area: ($(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620) + "px",
             maxmin: false,
             zIndex: 9000,
@@ -369,11 +371,11 @@ $(function () {
 
         var flag = true;
 
-        if (parseFloat($('#editVenderMaling').val()) > parseFloat($('#maling').val())) {
+        if (parseFloat(com.focusPage('#editVenderMaling').val()) > parseFloat(com.focusPage('#maling').val())) {
 
-            $('#editVenderMaling').focus().select();
+            com.focusPage('#editVenderMaling').focus().select();
 
-            $('#editVenderMaling').addClass('popover-notitle').attr({
+            com.focusPage('#editVenderMaling').addClass('popover-notitle').attr({
                 "data-rel": "popover",
                 "data-placement": "right",
                 "data-original-title": "",
@@ -384,12 +386,12 @@ $(function () {
 
             flag = false;
         } else {
-            $('#editVenderMaling').popover('destroy');
+            com.focusPage('#editVenderMaling').popover('destroy');
         }
 
         return flag;
     }
 
-})
+});
 
 

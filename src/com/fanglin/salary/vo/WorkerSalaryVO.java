@@ -14,6 +14,8 @@ public class WorkerSalaryVO  implements Serializable{
 
 	private Long wsId;
 	
+	private Long cwsid;
+	
 	private DecorationVO decoration;
 	
 	private Long cid;
@@ -24,7 +26,7 @@ public class WorkerSalaryVO  implements Serializable{
 	
 	private Timestamp createTime;
 	
-	private  UserBaseVO   approver;
+	private  UserBaseVO approver;
 	
 	private Timestamp approveTime ;
 	
@@ -41,6 +43,14 @@ public class WorkerSalaryVO  implements Serializable{
 	private String comment ;
 	
 	private Long csid;
+	
+	private Float money;
+	
+	private Float deposit;
+	
+	private Short onetype;
+	
+	private Short twotype;
 
 	public WorkerSalaryVO() {
 		super();
@@ -62,6 +72,14 @@ public class WorkerSalaryVO  implements Serializable{
 		this.wsId = wsId;
 	}
 
+	public Long getCwsid() {
+		return cwsid;
+	}
+
+	public void setCwsid(Long cwsid) {
+		this.cwsid = cwsid;
+	}
+
 	public Long getCid() {
 		return cid;
 	}
@@ -69,7 +87,6 @@ public class WorkerSalaryVO  implements Serializable{
 	public void setCid(Long cid) {
 		this.cid = cid;
 	}
-
 
 	public DecorationVO getDecoration() {
 		return decoration;
@@ -177,4 +194,36 @@ public class WorkerSalaryVO  implements Serializable{
 		this.csid = csid;
 	}
 
+	public Float getMoney() {
+		return money;
+	}
+
+	public void setMoney(Float money) {
+		this.money = money;
+	}
+
+	public Float getDeposit() {
+		return deposit;
+	}
+
+	public void setDeposit(Float deposit) {
+		this.deposit = deposit;
+	}
+
+	public Short getOnetype() {
+		return onetype;
+	}
+
+	public void setOnetype(Short onetype) {
+		this.onetype = onetype;
+	}
+
+	public Short getTwotype() {
+		return twotype;
+	}
+
+	public void setTwotype(Short twotype) {
+		this.twotype = twotype;
+	}
+	
 }

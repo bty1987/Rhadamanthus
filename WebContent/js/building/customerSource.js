@@ -1,6 +1,5 @@
 
 jQuery(function($) {
-
 	var customerSource = {
 		saveBtn: null,
 		cancelBtn: null,
@@ -24,11 +23,11 @@ jQuery(function($) {
 		areaFlg: false,
 		editFlag: false,
 		dataFlag: false,
-		validator: {},
+		validator: {}
 	};
 
-	var tag_input = $("#conditions");
-	var tag_inputTwo = $("#intention");
+	var tag_input = com.focusPage("#conditions");
+	var tag_inputTwo = com.focusPage("#intention");
 
 	tag_input.tag({
 		placeholder:tag_input.attr('placeholder'),
@@ -39,8 +38,8 @@ jQuery(function($) {
 			resultList : "autoFillKeyValue",
 			keyPath : "key",
 			valuePath : "value",
-			isResultTypeMap : true, //是否是key - value 形式的列表
-		},
+			isResultTypeMap : true //是否是key - value 形式的列表
+		}
 	});
 
 	tag_inputTwo.tag({
@@ -52,61 +51,61 @@ jQuery(function($) {
 			resultList : "autoFillKeyValue",
 			keyPath : "key",
 			valuePath : "value",
-			isResultTypeMap : true, //是否是key - value 形式的列表
-		},
+			isResultTypeMap : true //是否是key - value 形式的列表
+		}
 	});
 
-	$(".date-picker").datepicker({autoclose: !0}).on("show",function() {
+	com.focusPage(".date-picker").datepicker({autoclose: !0}).on("show",function() {
 		setTimeout(function() {
-			$(".dropdown-menu").css("z-index", 1060)
+			com.focusPage(".dropdown-menu").css("z-index", 1060)
 		},0)
 	}).next().on(ace.click_event,function() {
 		a(this).prev().focus()
 	});
 
-	$("#cardType").bindData(customerSource.cardType);
-	$("#grade").bindData(customerSource.grade);
+	com.focusPage("#cardType").bindData(customerSource.cardType);
+	com.focusPage("#grade").bindData(customerSource.grade);
 
-	customerSource.items.gender = $("#gender").switchBtn("gender");
+	customerSource.items.gender = com.focusPage("#gender").switchBtn("gender");
 
-	customerSource.saveBtn = $("#saveBtn").on("click", updateCustomerSource);
-	customerSource.cancelBtn = $("#cancelBtn").on("click", deleteDate);
-	customerSource.bsaveBtn = $("#bsaveBtn").on("click", saveBuildingData);
+	customerSource.saveBtn = com.focusPage("#saveBtn").on("click", updateCustomerSource);
+	customerSource.cancelBtn = com.focusPage("#cancelBtn").on("click", deleteDate);
+	customerSource.bsaveBtn = com.focusPage("#bsaveBtn").on("click", saveBuildingData);
 
-	customerSource.items.csType = $("#csType");
-	customerSource.items.purpose = $("#purpose");
-	customerSource.items.intention = $("#intention");
-	customerSource.items.priceLow = $("#priceLow");
-	customerSource.items.priceHigh = $("#priceHigh");
-	customerSource.items.areaLow = $("#areaLow");
-	customerSource.items.areaHigh = $("#areaHigh");
-	customerSource.items.familyType = $("#familyType");
-	customerSource.items.orientation = $("#orientation");
-	customerSource.items.conditions = $("#conditions");
-	customerSource.items.grade = $("#grade");
-	customerSource.items.comment = $("#comment");
+	customerSource.items.csType = com.focusPage("#csType");
+	customerSource.items.purpose = com.focusPage("#purpose");
+	customerSource.items.intention = com.focusPage("#intention");
+	customerSource.items.priceLow = com.focusPage("#priceLow");
+	customerSource.items.priceHigh = com.focusPage("#priceHigh");
+	customerSource.items.areaLow = com.focusPage("#areaLow");
+	customerSource.items.areaHigh = com.focusPage("#areaHigh");
+	customerSource.items.familyType = com.focusPage("#familyType");
+	customerSource.items.orientation = com.focusPage("#orientation");
+	customerSource.items.conditions = com.focusPage("#conditions");
+	customerSource.items.grade = com.focusPage("#grade");
+	customerSource.items.comment = com.focusPage("#comment");
 
-	customerSource.customerItems.customerName = $("#customerName");
-	customerSource.customerItems.cardType = $("#cardType");
-	customerSource.customerItems.cardNum = $("#cardNum");
-	customerSource.customerItems.gender = $("#gender");
-	customerSource.customerItems.qq = $("#qq");
-	customerSource.customerItems.wechat = $("#wechat");
-	customerSource.customerItems.email = $("#email");
-	customerSource.customerItems.relationshipType = $("#relationshipType");
-	customerSource.customerItems.address = $("#address");
-	customerSource.customerItems.phone = $("#phone");
+	customerSource.customerItems.customerName = com.focusPage("#customerName");
+	customerSource.customerItems.cardType = com.focusPage("#cardType");
+	customerSource.customerItems.cardNum = com.focusPage("#cardNum");
+	customerSource.customerItems.gender = com.focusPage("#gender");
+	customerSource.customerItems.qq = com.focusPage("#qq");
+	customerSource.customerItems.wechat = com.focusPage("#wechat");
+	customerSource.customerItems.email = com.focusPage("#email");
+	customerSource.customerItems.relationshipType = com.focusPage("#relationshipType");
+	customerSource.customerItems.address = com.focusPage("#address");
+	customerSource.customerItems.phone = com.focusPage("#phone");
 
-	customerSource.buildItems.hsNo = $("#hsNo");
-	customerSource.buildItems.csNo = $("#csNo");
-	customerSource.buildItems.hsAUser = $("#hsAUser");
-	customerSource.buildItems.csAUser = $("#csAUser");
-	customerSource.buildItems.signingTime = $("#signingTime");
-	customerSource.buildItems.tradePrice = $("#tradePrice");
-	customerSource.buildItems.downpayment = $("#downpayment");
-	customerSource.buildItems.loanPrice = $("#loanPrice");
-	customerSource.buildItems.payType = $("#payType");
-	customerSource.buildItems.balanceStatus = $("#balanceStatus");
+	customerSource.buildItems.hsNo = com.focusPage("#hsNo");
+	customerSource.buildItems.csNo = com.focusPage("#csNo");
+	customerSource.buildItems.hsAUser = com.focusPage("#hsAUser");
+	customerSource.buildItems.csAUser = com.focusPage("#csAUser");
+	customerSource.buildItems.signingTime = com.focusPage("#signingTime");
+	customerSource.buildItems.tradePrice = com.focusPage("#tradePrice");
+	customerSource.buildItems.downpayment = com.focusPage("#downpayment");
+	customerSource.buildItems.loanPrice = com.focusPage("#loanPrice");
+	customerSource.buildItems.payType = com.focusPage("#payType");
+	customerSource.buildItems.balanceStatus = com.focusPage("#balanceStatus");
 
 	com.post(api.ds.building, {}, function(res){
 		customerSource.items.orientation.bindData(res.orientation,"key", "value");
@@ -132,28 +131,28 @@ jQuery(function($) {
 		var relationshipTypes = res.relationshipType;
 		if(relationshipTypes && relationshipTypes.length){
 			$.each(relationshipTypes, function(i, v){
-				$('<option></option>').attr("value" , v.key).html(v.value).appendTo($("#relationshipType"));
+				$('<option></option>').attr("value" , v.key).html(v.value).appendTo(com.focusPage("#relationshipType"));
 			});
 		}
 	});
 
-	$("#hsNo").on("blur", function(){
+	com.focusPage("#hsNo").on("blur", function(){
 		com.post(api.building.queryHouseSourceByNo, {"houseSource.no" : customerSource.buildItems.hsNo.val()}, function(res){
-			if(res.houseSource.status != 0){
+			if(res.houseSource.status != 3){
 				customerSource.dataFlag = true;
-				com.showPopover($("#hsNo"),{errorMsg: "房源已签约或失效！"}, "right");
+				com.showPopover(com.focusPage("#hsNo"),{errorMsg: "房源处于待审核、已签约或失效状态, 无法签约！"}, "right");
 			}else{
 				customerSource.dataFlag = false;
 				customerSource.hsid = res.houseSource.hsid;
-				$("#hsNo").css("border", "1px solid #d5d5d5").popover("destroy");
+				com.focusPage("#hsNo").css("border", "1px solid #d5d5d5").popover("destroy");
 			}
 		}, function(data){
-			com.showPopover($("#hsNo"),{errorMsg: "请正确输入房源编号！"}, "right");
+			com.showPopover(com.focusPage("#hsNo"),{errorMsg: "请正确输入房源编号！"}, "right");
 			customerSource.dataFlag = true;
 		}, false);
 	});
 
-	customerSource.modal = $("#customerSourceModal");
+	customerSource.modal = com.focusPage("#customerSourceModal");
 	customerSource.modal.on('show.bs.modal',function(e){
 		com.clearValidator();
 	});
@@ -163,7 +162,7 @@ jQuery(function($) {
 	var displayFunc  = (function(){
 
 		var renderList = function(tableId,listData){
-			var $tableWrap = $('#' + tableId);
+			var $tableWrap = com.focusPage('#' + tableId);
 			var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
 			if(listData && listData.length){
@@ -226,7 +225,7 @@ jQuery(function($) {
 				}
 
 				if(cvalue == 0){
-					$("#" + v.csid).attr("checked", false);
+					com.focusPage("#" + v.csid).attr("checked", false);
 					updateCustomerSourceStatus(v.csid, cvalue);
 				}else if(cvalue == 1){
 					updateCustomerSourceStatus(v.csid, cvalue);
@@ -239,7 +238,7 @@ jQuery(function($) {
 				customerSource["customerSource.csid"] = v.csid;
 				customerSource.csStatus = v.status;
 
-				$("#cancelBtn").css("display", "none");
+				com.focusPage("#cancelBtn").css("display", "none");
 
 				//绑定数据
 				com.post(api.building.queryCustomerSourceByCsid, {"customerSource.csid": v.csid}, function(res){
@@ -248,7 +247,7 @@ jQuery(function($) {
 
 					customerSource.items.csType.val(customerSources.type);
 					customerSource.items.purpose.val(customerSources.purpose);
-					var _tagOne = $('#intention').data('tag');
+					var _tagOne = com.focusPage('#intention').data('tag');
 
 					if(_tagOne){
 						while(_tagOne.values.length > 0){
@@ -269,7 +268,7 @@ jQuery(function($) {
 					customerSource.items.areaHigh.val(customerSources.area.split(",")[1]);
 					customerSource.items.familyType.val(customerSources.familyType);
 					customerSource.items.orientation.val(customerSources.orientation);
-					var _tag = $('#conditions').data('tag');
+					var _tag = com.focusPage('#conditions').data('tag');
 
 					if(_tag){
 						while(_tag.values.length > 0){
@@ -319,7 +318,7 @@ jQuery(function($) {
 
 				readOnlyCustomerFlag(true);
 
-				$("#customerSourceModal").modal("show");
+				com.focusPage("#customerSourceModal").modal("show");
 			});
 
 			//绑定房源
@@ -334,7 +333,7 @@ jQuery(function($) {
 				customerSource.buildItems.csNo.prop("readOnly", true);
 				com.initChosen('hsAUser', api.data.queryCustomerForName, "pinyinName", {}, "autoFillCustomer", "key", "value");
 				com.initChosen('csAUser', api.data.queryCustomerForName, "pinyinName", {}, "autoFillCustomer", "key", "value");
-				$("#buildingModal").modal("show");
+				com.focusPage("#buildingModal").modal("show");
 			});
 
 			//跟进记录
@@ -351,7 +350,7 @@ jQuery(function($) {
 
 		return {
 			init : function(tableId,listData){
-				$('#' + tableId).html(null);
+				com.focusPage('#' + tableId).html(null);
 				renderList(tableId,listData);
 			},
 			drawLine : function(v){
@@ -378,22 +377,22 @@ jQuery(function($) {
 		var areaLow = customerSource.items.areaLow.val();
 
 		if(parseInt(priceHigh) < parseInt(priceLow) || parseInt(priceHigh) == parseInt(priceLow)){
-			$("#priceHigh").removeClass("v_required");
-			com.showPopover($("#priceHigh"),{errorMsg: "请填写可接受的最高价格！"}, "right");
+			com.focusPage("#priceHigh").removeClass("v_required");
+			com.showPopover(com.focusPage("#priceHigh"),{errorMsg: "请填写可接受的最高价格！"}, "right");
 			customerSource.priceFlg = true;
 		}else{
-			$("#priceHigh").addClass("v_required");
-			$("#priceHigh").css("border", "1px solid #d5d5d5").popover("destroy");
+			com.focusPage("#priceHigh").addClass("v_required");
+			com.focusPage("#priceHigh").css("border", "1px solid #d5d5d5").popover("destroy");
 			customerSource.priceFlg = false;
 		}
 
 		if(parseInt(areaHigh) < parseInt(areaLow) || parseInt(areaHigh) == parseInt(areaLow)){
-			$("#areaHigh").removeClass("v_required");
-			com.showPopover($("#areaHigh"),{errorMsg: "请填写需求面积的最大值！"}, "right");
+			com.focusPage("#areaHigh").removeClass("v_required");
+			com.showPopover(com.focusPage("#areaHigh"),{errorMsg: "请填写需求面积的最大值！"}, "right");
 			customerSource.areaFlg = true;
 		}else{
-			$("#areaHigh").addClass("v_required");
-			$("#areaHigh").css("border", "1px solid #d5d5d5").popover("destroy");
+			com.focusPage("#areaHigh").addClass("v_required");
+			com.focusPage("#areaHigh").css("border", "1px solid #d5d5d5").popover("destroy");
 			customerSource.areaFlg = false;
 		}
 
@@ -417,7 +416,7 @@ jQuery(function($) {
 			searcher.doSearch();
 		});
 
-		$("#customerSourceModal").modal("hide");
+		com.focusPage("#customerSourceModal").modal("hide");
 	}
 
 	//清楚数据
@@ -432,7 +431,7 @@ jQuery(function($) {
 		options["customerSource.status"] = cvalue;
 
 		com.post(api.building.updateCustomerSourceForStatus, options, function(res){
-			$("#" + csid).attr("checked", true);
+			com.focusPage("#" + csid).attr("checked", true);
 			searcher.doSearch();
 		});
 	}
@@ -466,7 +465,7 @@ jQuery(function($) {
 			'building.downpayment': customerSource.buildItems.downpayment.val(),
 			'building.loanPrice': customerSource.buildItems.loanPrice.val(),
 			'building.payType': customerSource.buildItems.payType.val(),
-			'building.balanceStatus': customerSource.buildItems.balanceStatus.val(),
+			'building.balanceStatus': customerSource.buildItems.balanceStatus.val()
 		};
 
 		com.post(api.building.bindBuilding, options, function(res){
@@ -474,7 +473,7 @@ jQuery(function($) {
 			searcher.doSearch();
 		});
 
-		$("#buildingModal").modal("hide");
+		com.focusPage("#buildingModal").modal("hide");
 	}
 
 	//删除房产单数据

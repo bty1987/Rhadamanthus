@@ -2,6 +2,11 @@ jQuery(function($) {
 	var buildingNodes = [];
 	var buildingSchedules = {};
 	var buildingSores = [];
+
+	var buildingScheduleParams = {
+		currentBid: params.bid,
+		thisPayType: params.type
+	};
 	
 	var colorboxArgs = {
 		reposition:true,
@@ -16,14 +21,14 @@ jQuery(function($) {
 	};
 
 	//获取所有节点
-	com.post(api.building.queryBuildingNodeByType, {"buildingNode.type":params.type, "buildingNode.status":0}, function(res){
+	com.post(api.building.queryBuildingNodeByType, {"buildingNode.type":buildingScheduleParams.thisPayType, "buildingNode.status":0}, function(res){
 		$.each(res.buildingNodes, function(i, v){
 			buildingNodes[i] = (v.sore);
 		});
 	}, null, false);
 
 	//动态获取节点轴
-	com.post(api.building.queryBuildingScheduleByBid, {"buildingSchedule.building.bid":params.bid}, function(res){
+	com.post(api.building.queryBuildingScheduleByBid, {"buildingSchedule.building.bid":buildingScheduleParams.currentBid}, function(res){
 		$.each(res.buildingSchedules, function(i, v){
 			buildingSchedules[v.buildingNode.sore] = v;
 			buildingSores[i] = v.buildingNode.sore;
@@ -31,19 +36,19 @@ jQuery(function($) {
 			buildingPane("#step-container", v.buildingNode.sore);
 		});
 
-		$('#fuelux-wizard').ace_wizard({status:true}).on('finished', function(e) {
+		com.focusPage('#fuelux-wizard').ace_wizard({status:true}).on('finished', function(e) {
 			com.showAlert(com.info, "当前房产单流转已完成！");
 		}).on('stepclick', function(e, info){
-			var stepId = $("[flag]").eq(info.step-1).attr("id");
+			var stepId = com.focusPage("[flag]").eq(info.step-1).attr("id");
 			var sd = stepId.substring(4);
 			initWizardSept(sd);
 		});
 	},null,false);
 
-	$('#modal-wizard .modal-header').ace_wizard();
-	$('#modal-wizard .wizard-actions .btn[data-dismiss=modal]').removeAttr('disabled');
+	com.focusPage('#modal-wizard .modal-header').ace_wizard();
+	com.focusPage('#modal-wizard .wizard-actions .btn[data-dismiss=modal]').removeAttr('disabled');
 
-	$('[data-rel=popover]').popover({html:true});
+	com.focusPage('[data-rel=popover]').popover({html:true});
 
 	//显示初始页面是最后一个
 	initWizardSept(buildingSores[buildingSores.length-1]);
@@ -59,26 +64,26 @@ jQuery(function($) {
 		options["buildingDrawing.type"] = 3;
 
 		com.post(api.building.queryBuildingDrawing, options, function(res){
-			$('#' + sore + "Gallery").empty();
+			com.focusPage('#' + sore + "Gallery").empty();
 			var buildingDrawings = res.buildingDrawings;
 
 			for(var i = 0; i < buildingDrawings.length; i++){
 				var buildingDrawing = buildingDrawings[i];
 				appendGalleryElement(sore + "Gallery", buildingDrawing.bdid, buildingDrawing.drawingUrl, buildingDrawing.drawingType, "", api.building.deleteBuildingDrawing)
-			};
+			}
 		});
 
 		initUploadBtn(sore, buildingSchedules[sore].bsid, buildingSchedules[sore].buildingNode.name);
 
-		$('#'+ sore + "Drawing").removeClass("active");
+		com.focusPage('#'+ sore + "Drawing").removeClass("active");
 
-		if($('#' + sore + "NavTab" + ' li:last-of-type').hasClass("active")){
-			$('#' + sore + "Drawing").addClass("active");
-		};
+		if(com.focusPage('#' + sore + "NavTab" + ' li:last-of-type').hasClass("active")){
+			com.focusPage('#' + sore + "Drawing").addClass("active");
+		}
 
 		//点击更新按钮  更新计划时间和备注信息(计划时间可能没有)
-		$("#" + sore + "btnUpdate").unbind("click");
-		$("#" + sore + "btnUpdate").on("click", function(){
+		com.focusPage("#" + sore + "btnUpdate").unbind("click");
+		com.focusPage("#" + sore + "btnUpdate").on("click", function(){
 			if(buildingSchedules[sore].status == 2){
 				com.showAlert(com.warning, "当前节点已完成，不能修改节点信息！");
 				return;
@@ -86,8 +91,8 @@ jQuery(function($) {
 
 			var options = {};
 			options["buildingSchedule.bsid"] = buildingSchedules[sore].bsid;
-			options["buildingSchedule.comment"] = $("#" + sore + "Record").val();
-			options["buildingSchedule.planTime"] = $("#" + sore + "PlanTime").val();
+			options["buildingSchedule.comment"] = com.focusPage("#" + sore + "Record").val();
+			options["buildingSchedule.planTime"] = com.focusPage("#" + sore + "PlanTime").val();
 
 			com.post(api.building.updateBuildingSchedule, options, function(res){
 				buildingSchedules[sore] = res.buildingSchedule;
@@ -99,8 +104,8 @@ jQuery(function($) {
 		});
 
 		//点击下一步
-		$("#" + sore + "btnNext").unbind("click");
-		$("#" + sore + "btnNext").on("click", function(){
+		com.focusPage("#" + sore + "btnNext").unbind("click");
+		com.focusPage("#" + sore + "btnNext").on("click", function(){
 			var nodeSore = buildingNodes.indexOf(parseInt(sore));
 			var nextNodeSore = buildingNodes[parseInt(nodeSore)+1];
 
@@ -109,23 +114,23 @@ jQuery(function($) {
 					//更新节点状态、生成下一节点
 					var bsDate = {};
 					bsDate["buildingSchedule.bsid"] = buildingSchedules[sore].bsid;
-					bsDate["buildingSchedule.comment"] = $("#" + sore + "Record").val();
-					bsDate["buildingSchedule.planTime"] = $("#" + sore + "PlanTime").val();
+					bsDate["buildingSchedule.comment"] = com.focusPage("#" + sore + "Record").val();
+					bsDate["buildingSchedule.planTime"] = com.focusPage("#" + sore + "PlanTime").val();
 					bsDate["buildingSchedule.buildingNode.sore"] = nextNodeSore;
 
 					com.post(api.building.nextBuildingSchedule, bsDate, function(res){
 						buildingSchedules[sore].status = 2;
-						buildingSchedules[sore].planTime = $("#" + sore + "PlanTime").val();
+						buildingSchedules[sore].planTime = com.focusPage("#" + sore + "PlanTime").val();
 						buildingSchedules[sore].operatTime = getCurrentDate();
-						buildingSchedules[sore].comment = $("#" + sore + "Record").val();
+						buildingSchedules[sore].comment = com.focusPage("#" + sore + "Record").val();
 						var num = res.buildingSchedule.buildingNode.sore;
 						buildingSchedules[num] = res.buildingSchedule;
 						buildingSores.push(num);
-						$("#sstep" + sore).addClass("complete");
+						com.focusPage("#sstep" + sore).addClass("complete");
 
 						showBuildingNode("#stepId", nextNodeSore);
 						buildingPane("#step-container", nextNodeSore);
-						$("#step" + nextNodeSore).removeClass("step-pane").addClass("active complete");
+						com.focusPage("#step" + nextNodeSore).removeClass("step-pane").addClass("active complete");
 
 						initWizardSept(nextNodeSore);
 					});
@@ -141,12 +146,12 @@ jQuery(function($) {
 
 				var datas = {};
 				datas["buildingSchedule.bsid"] = buildingSchedules[sore].bsid;
-				datas["buildingSchedule.comment"] = $("#" + sore + "Record").val();
-				datas["buildingSchedule.planTime"] = $("#" + sore + "PlanTime").val();
+				datas["buildingSchedule.comment"] = com.focusPage("#" + sore + "Record").val();
+				datas["buildingSchedule.planTime"] = com.focusPage("#" + sore + "PlanTime").val();
 
 				com.post(api.building.updateBuildingSchedule, datas, function(res){
 					buildingSchedules[sore] = res.buildingSchedule;
-					$("#" + sore + "OperatTime").val(getCurrentDate());
+					com.focusPage("#" + sore + "OperatTime").val(getCurrentDate());
 					buildingSchedules[sore].operatTime = getCurrentDate();
 				});
 
@@ -155,7 +160,7 @@ jQuery(function($) {
 
 				com.post(api.building.updateBuildingScheduleForStatus, options, function(res){
 					buildingSchedules[sore].status = 2;
-					$("#sstep" + sore).addClass("complete");
+					com.focusPage("#sstep" + sore).addClass("complete");
 					scheduleStatus(sore);
 					com.showAlert(com.info, "当前房产单流转已完成！");
 				});
@@ -163,14 +168,14 @@ jQuery(function($) {
 
 		});
 
-		$("#" + sore + "btnBack").on("click", function(){
+		com.focusPage("#" + sore + "btnBack").on("click", function(){
 			com.switchPage(api.index.building.url);
 		});
-	};
+	}
 
 	//图片上传
 	function initUploadBtn(sore, ele, dwName){
-		$("#" + sore + "Upload").html("").Huploadify({
+		com.focusPage("#" + sore + "Upload").html("").Huploadify({
 			'debug' : false, // 开启调试
 			'auto':true, // 是否自动上传
 			'successTimeout':150, // 超时时间
@@ -210,10 +215,10 @@ jQuery(function($) {
 				}
 			}
 		});
-	};
+	}
 	
 	function appendGalleryElement(galleryId, imgId, imgUrl, type, editUrl, deleteUrl){
-		var gallery = $("#" + galleryId);
+		var gallery = com.focusPage("#" + galleryId);
 		var imgLi = $("<li></li>").attr("id", "gallery_li"+imgId).addClass("col-xs-2 text-center").css("border-color", "#ddd").appendTo(gallery);
 		var img = $('<img />');
 		var imgA = $("<a></a>").attr("href", com.showImg(img, imgUrl, 150, 150, '150x150', null, type)).attr("data-rel", "colorbox").css("height", "150px").append(img).appendTo(imgLi);
@@ -223,12 +228,12 @@ jQuery(function($) {
 			options["buildingDrawing.bdid"] = imgId;
 
 			com.post(deleteUrl, options, function(res){
-				$("#gallery_li"+imgId).remove();
+				com.focusPage("#gallery_li"+imgId).remove();
 			});
 		}).appendTo(toolsDiv);
 		$("<i></i>").addClass("icon-remove red").appendTo(toolsA);
 		imgA.colorbox(colorboxArgs);
-	};
+	}
 	
 	//画节点信息轴
 	function showBuildingNode(stepul, schedule){
@@ -274,18 +279,17 @@ jQuery(function($) {
 		var panePTThree = $("<div></div>").addClass("col-sm-2").appendTo(panePlanTimeTwo);
 		var panePTInput = $("<input/>").attr("id", sore + "OperatTime").attr("type","text").addClass("col-sm-12").attr("readonly","readonly").attr("data-toggle","popover").attr("data-trigge","manual").appendTo(panePTThree);
 
-		var thisPayType = params.type;
 		var thisNodeSore = buildingSchedules[sore].buildingNode.sore;
 
-		if(thisPayType == 1){
+		if(buildingScheduleParams.thisPayType == 1){
 			if(thisNodeSore == 8){
 				planTime(sore, panePlanTimeTwo, statusFlag);
 			}
-		}else if(thisPayType == 2 || thisPayType == 4){
+		}else if(buildingScheduleParams.thisPayType == 2 || buildingScheduleParams.thisPayType == 4){
 			if(thisNodeSore == 2 || thisNodeSore == 3 || thisNodeSore == 11){
 				planTime(sore, panePlanTimeTwo, statusFlag);
 			}
-		}else if(thisPayType == 3){
+		}else if(buildingScheduleParams.thisPayType == 3){
 			if(thisNodeSore == 8 || thisNodeSore == 9 || thisNodeSore == 10){
 				planTime(sore, panePlanTimeTwo, statusFlag);
 			}
@@ -333,7 +337,7 @@ jQuery(function($) {
 
 		var paneDrawingRowT = $("<div></div>").addClass("row").appendTo(paneDrawing);
 		var paneDrawingRowTOne = $("<div></div>").addClass("hr hr32 hr-dotted").appendTo(paneDrawingRowT);
-		var paneDrawingRowTTwo = $("<div></div>").addClass("col-xs-12").appendTo(paneDrawingRowT)
+		var paneDrawingRowTTwo = $("<div></div>").addClass("col-xs-12").appendTo(paneDrawingRowT);
 		var paneDrawingRowTh = $("<div></div>").addClass("pull-left inline").appendTo(paneDrawingRowTTwo);
 		var paneDrawingRowFour = $("<div></div>").attr("id", sore + "Upload").appendTo(paneDrawingRowTh);
 		var paneDrawingRowInp = $("<input />").attr("type","text").addClass("hidden").attr("id", sore + "picture").appendTo(paneDrawingRowTh);
@@ -354,11 +358,11 @@ jQuery(function($) {
 
 	function addActive(sore){
 		$.each(buildingSchedules, function(i, v){
-			$("#step" + v.buildingNode.sore).removeClass("active");
-			$("#step" + v.buildingNode.sore).addClass("step-pane");
+			com.focusPage("#step" + v.buildingNode.sore).removeClass("active");
+			com.focusPage("#step" + v.buildingNode.sore).addClass("step-pane");
 		});
-		$("#step" + sore).removeClass("step-pane");
-		$("#step" + sore).addClass("active");
+		com.focusPage("#step" + sore).removeClass("step-pane");
+		com.focusPage("#step" + sore).addClass("active");
 	}
 
 	//画计划时间输入框
@@ -369,9 +373,9 @@ jQuery(function($) {
 		if(statusFlag){
 			var panePTTInput = $("<input/>").attr("id", sore + "PlanTime").attr("type","text").addClass("form-control date-picker").attr("data-date-format", "yyyy-mm-dd").appendTo(panePTTThree);
 
-			$(".date-picker").datepicker({autoclose : !0}).on("show", function(){
+			com.focusPage(".date-picker").datepicker({autoclose : !0}).on("show", function(){
 			   setTimeout(function() {
-				   $(".dropdown-menu").css("z-index", 1060);
+				   com.focusPage(".dropdown-menu").css("z-index", 1060);
 			   },0);
 			}).next().on(ace.click_event, function() {
 				   $(this).prev().focus();
@@ -383,20 +387,20 @@ jQuery(function($) {
 
 	//设置节点信息、节点状态
 	function scheduleMessage(sore){
-		$("#" + sore + "PlanTime").val(buildingSchedules[sore].planTime);
-		$("#" + sore + "Record").val(buildingSchedules[sore].comment);
-		$("#" + sore + "OperatTime").val(buildingSchedules[sore].operatTime);
-		$("#" + sore + "Operater").val(buildingSchedules[sore].operater.currentName);
+		com.focusPage("#" + sore + "PlanTime").val(buildingSchedules[sore].planTime);
+		com.focusPage("#" + sore + "Record").val(buildingSchedules[sore].comment);
+		com.focusPage("#" + sore + "OperatTime").val(buildingSchedules[sore].operatTime);
+		com.focusPage("#" + sore + "Operater").val(buildingSchedules[sore].operater.currentName);
 	}
 
 	function scheduleStatus(sore){
-		var statusDiv = $("#" + sore + "Status").html("");
+		var statusDiv = com.focusPage("#" + sore + "Status").html("");
 
 		if(buildingSchedules[sore].status == 0){
 			$("<span></span>").addClass("label label-success").text("初始").appendTo(statusDiv);
 		}else if(buildingSchedules[sore].status == 2){
 			$("<span></span>").addClass("label").text("完结").appendTo(statusDiv);
-		};
+		}
 	}
 
 	//获取当前时间

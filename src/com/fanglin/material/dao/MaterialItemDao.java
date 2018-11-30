@@ -31,5 +31,7 @@ public interface MaterialItemDao extends Dao<MaterialItemPO> {
 	public List<MaterialItemPO> queryMaterialItemByNo(long mid, String msoNo, int limit);
 	
 	public void deleteMaterialItemByMid(long mid);
+	
+	public Float queryMaterialItemByTotal(long mid);
 
 }

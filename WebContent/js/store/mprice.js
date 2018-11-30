@@ -1,6 +1,5 @@
 $(function () {
-
-    var goodsPricePopUp = $('#goodsPricePopUp');
+    var goodsPricePopUp = com.focusPage('#goodsPricePopUp');
     var imgUrl;
 
     var validator = {
@@ -30,28 +29,22 @@ $(function () {
     $.extend(com.validator, validator);
 
     var displayFunc = (function () {
-
         var renderList = function (tableId, listData) {
-
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
 
             if (listData && listData.length) {
-
                 var $ulTitle = createTableTitle();
                 var $ulData = $('<ul></ul>').addClass('flex-table');
                 $tableWrap.append($ulTitle).append($ulData);
 
                 $.each(listData, function (i, v) {
-
                     var $liLine = creatLine(i, v, i == listData.length - 1);
-
                     $liLine.appendTo($ulTitle);
                 });
             }
         };
 
         var createTableTitle = function () {
-
             var $ulTitle = $('<ul></ul>').addClass('flex-table');
             var $liTitle = $('<li></li>').addClass('line table-title');
 
@@ -73,7 +66,6 @@ $(function () {
         };
 
         var creatLine = function (i, v, lastFlag) {
-
             var $liLine = $('<li></li>').addClass('line');
 
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(i + 1));
@@ -82,8 +74,8 @@ $(function () {
                 0: "启用",
                 1: "禁用",
                 2: "热点",
-                3: "推荐",
-            }
+                3: "推荐"
+            };
 
             var propertyArr = [
                 [v.mgoods.name, 'blue'],
@@ -95,7 +87,7 @@ $(function () {
             ];
 
             var propertyArr2 = [
-                [v.img, 'blue'],
+                [v.img, 'blue']
             ];
 
             $.each(propertyArr2, function (i, v) {
@@ -132,52 +124,52 @@ $(function () {
 
             /*有效状态*/
             $btnStart.click(function () {
-                $('#layerAdd').attr('data-fid', v.pid);
-                $('#layerAdd').attr('data-status', v.status);
+                com.focusPage('#layerAdd').attr('data-fid', v.pid);
+                com.focusPage('#layerAdd').attr('data-status', v.status);
 
-                var id = $('#layerAdd').attr('data-fid');
-                var status = $('#layerAdd').attr('data-status');
+                var id = com.focusPage('#layerAdd').attr('data-fid');
+                var status = com.focusPage('#layerAdd').attr('data-status');
                 zero(id, status, function () {
-                    layer.msg('设置成功', {icon: 1})
+                    layer.msg('设置成功', {icon: 1});
                     doSearcher();
                 });
             });
             /*无效状态*/
             $btnStop.click(function () {
-                $('#layerAdd').attr('data-fid', v.pid);
-                $('#layerAdd').attr('data-status', v.status);
+                com.focusPage('#layerAdd').attr('data-fid', v.pid);
+                com.focusPage('#layerAdd').attr('data-status', v.status);
 
-                var id = $('#layerAdd').attr('data-fid');
-                var status = $('#layerAdd').attr('data-status');
+                var id = com.focusPage('#layerAdd').attr('data-fid');
+                var status = com.focusPage('#layerAdd').attr('data-status');
 
                 one(id, status, function () {
-                    layer.msg('设置成功', {icon: 1})
+                    layer.msg('设置成功', {icon: 1});
                     doSearcher()
                 });
             });
 
             /*人气状态*/
             $gtbe.click(function () {
-                $('#layerAdd').attr('data-fid', v.pid);
-                $('#layerAdd').attr('data-status', v.status);
+                com.focusPage('#layerAdd').attr('data-fid', v.pid);
+                com.focusPage('#layerAdd').attr('data-status', v.status);
 
-                var id = $('#layerAdd').attr('data-fid');
-                var status = $('#layerAdd').attr('data-status');
+                var id = com.focusPage('#layerAdd').attr('data-fid');
+                var status = com.focusPage('#layerAdd').attr('data-status');
                 two(id, status, function () {
-                    layer.msg('设置成功', {icon: 1})
+                    layer.msg('设置成功', {icon: 1});
                     doSearcher();
                 });
             });
 
             /*推荐状态*/
             $go.click(function () {
-                $('#layerAdd').attr('data-fid', v.pid);
-                $('#layerAdd').attr('data-status', v.status);
+                com.focusPage('#layerAdd').attr('data-fid', v.pid);
+                com.focusPage('#layerAdd').attr('data-status', v.status);
 
-                var id = $('#layerAdd').attr('data-fid');
-                var status = $('#layerAdd').attr('data-status');
+                var id = com.focusPage('#layerAdd').attr('data-fid');
+                var status = com.focusPage('#layerAdd').attr('data-status');
                 three(id, status, function () {
-                    layer.msg('设置成功', {icon: 1})
+                    layer.msg('设置成功', {icon: 1});
                     doSearcher();
                 });
             });
@@ -186,7 +178,7 @@ $(function () {
 
         return {
             init: function (tableId, listData) {
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             },
             drawLine: function (v) {
@@ -205,7 +197,7 @@ $(function () {
 
     doSearcher();
 
-    com.post(api.store.queryMcolor, {"mcolor.gid": goodsPricePopUp.attr('data-gid')}, function (res) {
+    com.post(api.store.queryMcolorByGid, {"mcolor.gid": goodsPricePopUp.attr('data-gid'),"mcolor.status": 0}, function (res) {
         var colorsp = [];
         $.each(res.mcolors, function (i, v) {
             colorsp.push(v)
@@ -213,7 +205,7 @@ $(function () {
         validator.color = colorsp;
     }, null, false);
 
-    com.post(api.store.queryMformat, {"mformat.gid": goodsPricePopUp.attr('data-gid')}, function (res) {
+    com.post(api.store.queryMformatByGid, {"mformat.gid": goodsPricePopUp.attr('data-gid'),"mformat.status": 0}, function (res) {
         var mformatsp = [];
         $.each(res.mformats, function (i, v) {
             mformatsp.push(v)
@@ -222,7 +214,6 @@ $(function () {
     }, null, false);
 
     function addline(lineindex) {
-
         var $line = $('<li></li>').addClass('line');
         var $indexWrap = $('<div></div>').addClass('line-wrap order').append($('<div></div>').addClass('cell index').text(lineindex));
         var $lineInfoWrap = $('<div></div>').addClass('line-wrap content col7');
@@ -312,8 +303,7 @@ $(function () {
         $line.append($indexWrap).append($lineInfoWrap).append($optWrap);
 
         $btncheck.click(function (e) {
-
-            $("#file_upload_1-button").attr("class","uploadify-button btn btn-success v_requireds");
+            com.focusPage("#file_upload_1-button").attr("class","uploadify-button btn btn-success v_requireds");
             e.stopPropagation();
             if (com.validate(null,"bottom")) {
                 return;
@@ -329,14 +319,14 @@ $(function () {
             };
 
             com.post(api.store.addMprice, options, function () {
-                $('#list').empty();
+                com.focusPage('#list').empty();
                 addline(1).addClass('current').appendTo('#list');
                 doSearcher();
             })
         });
 
         $btndel.click(function (e) {
-            $('#list').empty();
+            com.focusPage('#list').empty();
             addline(1).addClass('current').appendTo('#list');
         });
         return $line;
@@ -413,14 +403,14 @@ $(function () {
         }
     }
 
-    $('.layui-layer-content').css('overflow', 'hidden');
-    $('#showPrice').css('height', '660px');
-    $('#showPrice').css('overflow-y' , 'scroll');
-    $('#resultListPrice').css({
+    com.focusPage('.layui-layer-content').css('overflow', 'hidden');
+    com.focusPage('#showPrice').css('height', '660px');
+    com.focusPage('#showPrice').css('overflow-y' , 'scroll');
+    com.focusPage('#resultListPrice').css({
         'width': '96%',
         'margin': '0 auto',
         'height': '560px',
         'marigin-top': '20px'
-    })
-    $('#addPrice').css({'width': '96%', 'margin': '0 auto', 'margin-top': '15px'});
+    });
+    com.focusPage('#addPrice').css({'width': '96%', 'margin': '0 auto', 'margin-top': '15px'});
 });

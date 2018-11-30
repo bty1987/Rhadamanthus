@@ -27,7 +27,7 @@ $.extend(api.index, {
     manifestPrintIndex: {
         url: "/views/manifest/manifestPrint.html"
     },
-    accessoriesPrintIndex:{
+    accessoriesPrintIndex: {
         url: "/views/manifest/accessoriesPrint.html"
     }
 });
@@ -67,7 +67,7 @@ $.extend(api, {
         pageGoods: {
             url: "pageGoods.do",
         },
-		pageGoodsForAdvance: {
+        pageGoodsForAdvance: {
             url: "pageGoodsForAdvance.do",
         },
         queryGoods: {
@@ -94,8 +94,8 @@ $.extend(api, {
         addGoods: {
             url: "addGoods.do",
         },
-        addPackage:{
-            url:"addPackage.do",
+        addPackage: {
+            url: "addPackage.do",
         },
         updateGoods: {
             url: "updateGoods.do",
@@ -157,13 +157,13 @@ $.extend(api, {
         queryGoodsStorehouseStockByGid: {
             url: "queryGoodsStorehouseStockByGid.do",
         },
-        makeGoodsStorehouseStock:{
+        makeGoodsStorehouseStock: {
             url: "makeGoodsStorehouseStock.do",
         },
-        mergePackage:{
+        mergePackage: {
             url: "mergePackage.do",
         },
-        splitPackage:{
+        splitPackage: {
             url: "splitPackage.do",
         },
 
@@ -353,8 +353,8 @@ $.extend(api, {
         deleteAccessoriesItem: {
             url: "deleteAccessoriesItem.do",
         },
-        queryManifestByAid:{
-            url:"queryManifestByAid.do"
+        queryManifestByAid: {
+            url: "queryManifestByAid.do"
         },
 
         addSales: {
@@ -366,19 +366,19 @@ $.extend(api, {
         pageSalesForAdvance: {
             url: "pageSalesForAdvance.do",
         },
-        pageSalesForBalance:{
-          url:"pageSalesForBalance.do",
+        pageSalesForBalance: {
+            url: "pageSalesForBalance.do",
         },
-        pageSalesForDompany:{
-            url:"pageSalesForDompany.do",
+        pageSalesForDompany: {
+            url: "pageSalesForDompany.do",
         },
-		pageSalesForBalanceByDompany:{
-            url:"pageSalesForBalanceByDompany.do",
+        pageSalesForBalanceByDompany: {
+            url: "pageSalesForBalanceByDompany.do",
         },
         querySalesBySid: {
             url: "querySalesBySid.do",
         },
-		querySalesByNo: {
+        querySalesByNo: {
             url: "querySalesByNo.do",
         },
         updateSalesForCoupon: {
@@ -413,41 +413,44 @@ $.extend(api, {
         queryPriceByPid: {
             url: "queryPriceByPid.do",
         },
-        pageSalesBalance:{
-            url:"pageSalesBalance.do",
+        pageSalesBalance: {
+            url: "pageSalesBalance.do",
         },
-        pageSalesBalanceForDompany:{
-            url:"pageSalesBalanceForDompany.do",
+        pageSalesBalanceForDompany: {
+            url: "pageSalesBalanceForDompany.do",
         },
-        updateSalesBalanceForVBalance:{
-            url:"updateSalesBalanceForVBalance.do",
+        updateSalesBalanceForVBalance: {
+            url: "updateSalesBalanceForVBalance.do",
         },
-        updateSalesBalanceForPBalance:{
-            url:"updateSalesBalanceForPBalance.do",
+        updateSalesBalanceForPBalance: {
+            url: "updateSalesBalanceForPBalance.do",
         },
-        passSalesBalance:{
-            url:"passSalesBalance.do",
+        passSalesBalance: {
+            url: "passSalesBalance.do",
         },
-        preSalesBalance:{
-            url:"preSalesBalance.do",
+        preSalesBalance: {
+            url: "preSalesBalance.do",
         },
-        vpostSalesBalance:{
-            url:"vpostSalesBalance.do",
+        vpostSalesBalance: {
+            url: "vpostSalesBalance.do",
         },
-        postSalesBalance:{
-            url:"postSalesBalance.do",
+        postSalesBalance: {
+            url: "postSalesBalance.do",
         },
-        querySalesBalanceItemBySbid:{
-            url:"querySalesBalanceItemBySbid.do",
+        querySalesBalanceItemBySbid: {
+            url: "querySalesBalanceItemBySbid.do",
         },
-		queryManifestForPUByPids : {
-            url:"queryManifestForPUByPids.do"
+        queryManifestForPUByPids: {
+            url: "queryManifestForPUByPids.do"
         },
-        queryManifestForXGBySid : {
-            url:"queryManifestForXGBySid.do"
+        queryManifestForXGBySid: {
+            url: "queryManifestForXGBySid.do"
         },
-        queryPurchaseBySid:{
-            url:"queryPurchaseBySid.do"
+        queryPurchaseBySid: {
+            url: "queryPurchaseBySid.do"
+        },
+        countSalesItemForAmount: {
+            url: "countSalesItemForAmount.do"
         }
 
     }

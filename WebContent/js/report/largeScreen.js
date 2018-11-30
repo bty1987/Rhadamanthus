@@ -5,521 +5,560 @@ $(function () {
     today.setSeconds(0)
 
     var largeScreen = {
-        InterfaceRequestsForMouth: $('#InterfaceRequestsForMouth'),
-        InterfaceRequestsAll: $('#InterfaceRequestsAll'),
-        InterfaceRequestsForDay: $('#InterfaceRequestsForDay'),
-        TemperatureTrend: $('#TemperatureTrend'),
-        InterfaceRequestsForDayAll: $('#InterfaceRequestsForDayAll'),
-        InterfaceRequestsForDayByUserId: $('#InterfaceRequestsForDayByUserId'),
-        ApiInterfaceRequestsForDay: $('#ApiInterfaceRequestsForDay'),
-        fullScreen: $('#fullScreen'),
+        InterfaceRequestsForMouth: com.focusPage('#InterfaceRequestsForMouth'),
+        InterfaceRequestsAll: com.focusPage('#InterfaceRequestsAll'),
+        InterfaceRequestsForDay: com.focusPage('#InterfaceRequestsForDay'),
+        TemperatureTrend: com.focusPage('#TemperatureTrend'),
+        InterfaceRequestsForDayAll: com.focusPage('#InterfaceRequestsForDayAll'),
+        InterfaceRequestsForDayByUserId: com.focusPage('#InterfaceRequestsForDayByUserId'),
+        ApiInterfaceRequestsForDay: com.focusPage('#ApiInterfaceRequestsForDay'),
+        fullScreen: com.focusPage('#fullScreen'),
         elasticUrl: {
             logstash: 'http://192.168.5.21:9200/logstash-*/_search',
             monitor: 'http://192.168.5.21:9200/monitor-*/_search',
         }
     }
 
+    /*M-4-天级请求数走势*/
+    var InterfaceRequestsForMouth = {
+        "query": {
+            "bool": {
+                "must": [
+                    {
+                        "query_string": {
+                            "analyze_wildcard": true,
+                            "query": "*"
+                        }
+                    },
+                    {
+                        "query_string": {
+                            "analyze_wildcard": true,
+                            "query": "*"
+                        }
+                    },
+                    {
+                        "range": {
+                            "@timestamp": {
+                                "gte": Date.parse(new Date())-5412506000,//1510452005607,
+                                "lte": Date.parse(new Date()),
+                                "format": "epoch_millis"
+                            }
+                        }
+                    }
+                ],
+                "must_not": []
+            }
+        },
+        "size": 0,
+        "_source": {
+            "excludes": []
+        },
+        "aggs": {
+            "2": {
+                "date_histogram": {
+                    "field": "@timestamp",
+                    "interval": "1d",
+                    "time_zone": "Asia/Shanghai",
+                    "min_doc_count": 1
+                }
+            }
+        },
+        "version": true,
+        "highlight": {
+            "pre_tags": [
+                "@kibana-highlighted-field@"
+            ],
+            "post_tags": [
+                "@/kibana-highlighted-field@"
+            ],
+            "fields": {
+                "*": {}
+            },
+            "fragment_size": 2147483647
+        }
+    }
+    /*M-6-请求数*/
+    var InterfaceRequestsAll = {
+        "query": {
+            "bool": {
+                "must": [
+                    {
+                        "query_string": {
+                            "query": "*",
+                            "analyze_wildcard": true
+                        }
+                    },
+                    {
+                        "query_string": {
+                            "analyze_wildcard": true,
+                            "query": "*"
+                        }
+                    },
+                    {
+                        "range": {
+                            "@timestamp": {
+                                "gte": 1483200000000,
+                                "lte": Date.parse(new Date()),
+                                "format": "epoch_millis"
+                            }
+                        }
+                    }
+                ],
+                "must_not": []
+            }
+        },
+        "size": 0,
+        "_source": {
+            "excludes": []
+        },
+        "aggs": {},
+        "version": true,
+        "highlight": {
+            "pre_tags": [
+                "@kibana-highlighted-field@"
+            ],
+            "post_tags": [
+                "@/kibana-highlighted-field@"
+            ],
+            "fields": {
+                "*": {}
+            },
+            "fragment_size": 2147483647
+        }
+    }
+    /*M-1-24小时请求总数*/
+    var InterfaceRequestsForDay = {
+        "query": {
+            "bool": {
+                "must": [
+                    {
+                        "query_string": {
+                            "analyze_wildcard": true,
+                            "query": "*"
+                        }
+                    },
+                    {
+                        "query_string": {
+                            "analyze_wildcard": true,
+                            "query": "*"
+                        }
+                    },
+                    {
+                        "range": {
+                            "@timestamp": {
+                                "gte": Date.parse(today),
+                                "lte": Date.parse(new Date()),
+                                "format": "epoch_millis"
+                            }
+                        }
+                    }
+                ],
+                "must_not": []
+            }
+        },
+        "size": 0,
+        "_source": {
+            "excludes": []
+        },
+        "aggs": {
+            "2": {
+                "date_range": {
+                    "field": "@timestamp",
+                    "ranges": [
+                        {
+                            "from": "now-24h/h",
+                            "to": "now"
+                        }
+                    ]
+                }
+            }
+        },
+        "version": true,
+        "highlight": {
+            "pre_tags": [
+                "@kibana-highlighted-field@"
+            ],
+            "post_tags": [
+                "@/kibana-highlighted-field@"
+            ],
+            "fields": {
+                "*": {}
+            },
+            "fragment_size": 2147483647
+        }
+    }
+    /*M-5-8小时服务器温度走势*/
+    var TemperatureTrend = {
+        "query": {
+            "bool": {
+                "must": [
+                    {
+                        "query_string": {
+                            "analyze_wildcard": true,
+                            "query": "*"
+                        }
+                    },
+                    {
+                        "match_phrase": {
+                            "_type": {
+                                "query": "TP"
+                            }
+                        }
+                    },
+                    {
+                        "query_string": {
+                            "analyze_wildcard": true,
+                            "query": "*"
+                        }
+                    },
+                    {
+                        "range": {
+                            "timestamp": {
+                                "gte": Date.parse(today)-2733418000,
+                                "lte": Date.parse(new Date()),
+                                "format": "epoch_millis"
+                            }
+                        }
+                    }
+                ],
+                "must_not": []
+            }
+        },
+        "size": 0,
+        "_source": {
+            "excludes": []
+        },
+        "aggs": {
+            "3": {
+                "terms": {
+                    "field": "name.keyword",
+                    "size": 10,
+                    "order": {
+                        "1": "desc"
+                    }
+                },
+                "aggs": {
+                    "1": {
+                        "avg": {
+                            "field": "temperature"
+                        }
+                    },
+                    "4": {
+                        "date_range": {
+                            "field": "timestamp",
+                            "ranges": [
+                                {
+                                    "from": "now-8h/h",
+                                    "to": "now-7h/h"
+                                },
+                                {
+                                    "from": "now-9h/h",
+                                    "to": "now-8h/h"
+                                },
+                                {
+                                    "from": "now-10h/h",
+                                    "to": "now-9h/h"
+                                },
+                                {
+                                    "from": "now-11h/h",
+                                    "to": "now-10h/h"
+                                },
+                                {
+                                    "to": "now-11h/h",
+                                    "from": "now-12h/h"
+                                },
+                                {
+                                    "to": "now-12h/h",
+                                    "from": "now-13h/h"
+                                },
+                                {
+                                    "to": "now-13h/h",
+                                    "from": "now-14h/h"
+                                },
+                                {
+                                    "to": "now-14h/h",
+                                    "from": "now-15h/h"
+                                }
+                            ]
+                        },
+                        "aggs": {
+                            "1": {
+                                "avg": {
+                                    "field": "temperature"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "version": true,
+        "highlight": {
+            "pre_tags": [
+                "@kibana-highlighted-field@"
+            ],
+            "post_tags": [
+                "@/kibana-highlighted-field@"
+            ],
+            "fields": {
+                "*": {}
+            },
+            "fragment_size": 2147483647
+        }
+    }
+    /*M-2-服务器天级请求总数*/
+    var InterfaceRequestsForDayAll = {
+        "query": {
+            "bool": {
+                "must": [
+                    {
+                        "query_string": {
+                            "query": "*",
+                            "analyze_wildcard": true
+                        }
+                    },
+                    {
+                        "query_string": {
+                            "analyze_wildcard": true,
+                            "query": "*"
+                        }
+                    },
+                    {
+                        "range": {
+                            "@timestamp": {
+                                "gte": Date.parse(new Date())-5412506000,//1510452822303,8145924000
+                                "lte": Date.parse(new Date()),
+                                "format": "epoch_millis"
+                            }
+                        }
+                    }
+                ],
+                "must_not": []
+            }
+        },
+        "size": 0,
+        "_source": {
+            "excludes": []
+        },
+        "aggs": {
+            "2": {
+                "date_histogram": {
+                    "field": "@timestamp",
+                    "interval": "1d",
+                    "time_zone": "Asia/Shanghai",
+                    "min_doc_count": 1
+                },
+                "aggs": {
+                    "3": {
+                        "terms": {
+                            "field": "host.keyword",
+                            "size": 10,
+                            "order": {
+                                "_count": "desc"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "version": true,
+        "highlight": {
+            "pre_tags": [
+                "@kibana-highlighted-field@"
+            ],
+            "post_tags": [
+                "@/kibana-highlighted-field@"
+            ],
+            "fields": {
+                "*": {}
+            },
+            "fragment_size": 2147483647
+        }
+    }
+    /*M-3-人员天级请求TOP10*/
+    var InterfaceRequestsForDayByUserId = {
+        "query": {
+            "bool": {
+                "must": [
+                    {
+                        "query_string": {
+                            "query": "*",
+                            "analyze_wildcard": true
+                        }
+                    },
+                    {
+                        "query_string": {
+                            "analyze_wildcard": true,
+                            "query": "*"
+                        }
+                    },
+                    {
+                        "range": {
+                            "@timestamp": {
+                                "gte": Date.parse(new Date())-2733418000,//1510452822303,
+                                "lte": Date.parse(new Date()),
+                                "format": "epoch_millis"
+                            }
+                        }
+                    }
+                ],
+                "must_not": []
+            }
+        },
+        "size": 0,
+        "_source": {
+            "excludes": []
+        },
+        "aggs": {
+            "3": {
+                "terms": {
+                    "field": "info.keyword",
+                    "size": 10,
+                    "order": {
+                        "_count": "desc"
+                    }
+                },
+                "aggs": {
+                    "4": {
+                        "date_histogram": {
+                            "field": "@timestamp",
+                            "interval": "1d",
+                            "time_zone": "Asia/Shanghai",
+                            "min_doc_count": 1
+                        }
+                    }
+                }
+            }
+        },
+        "version": true,
+        "highlight": {
+            "pre_tags": [
+                "@kibana-highlighted-field@"
+            ],
+            "post_tags": [
+                "@/kibana-highlighted-field@"
+            ],
+            "fields": {
+                "*": {}
+            },
+            "fragment_size": 2147483647
+        }
+    }
+    /*M-7-天级API请求数(TOP10)*/
+    var ApiInterfaceRequestsForDay = {
+        "query": {
+            "bool": {
+                "must": [
+                    {
+                        "query_string": {
+                            "query": "*",
+                            "analyze_wildcard": true
+                        }
+                    },
+                    {
+                        "query_string": {
+                            "analyze_wildcard": true,
+                            "query": "*"
+                        }
+                    },
+                    {
+                        "range": {
+                            "@timestamp": {
+                                "gte": Date.parse(new Date())-2733418000,//1510452822303,
+                                "lte": Date.parse(new Date()),
+                                "format": "epoch_millis"
+                            }
+                        }
+                    }
+                ],
+                "must_not": []
+            }
+        },
+        "size": 0,
+        "_source": {
+            "excludes": []
+        },
+        "aggs": {
+            "2": {
+                "date_histogram": {
+                    "field": "@timestamp",
+                    "interval": "1d",
+                    "time_zone": "Asia/Shanghai",
+                    "min_doc_count": 1
+                },
+                "aggs": {
+                    "3": {
+                        "terms": {
+                            "field": "api.keyword",
+                            "size": 7,
+                            "order": {
+                                "_count": "desc"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "version": true,
+        "highlight": {
+            "pre_tags": [
+                "@kibana-highlighted-field@"
+            ],
+            "post_tags": [
+                "@/kibana-highlighted-field@"
+            ],
+            "fields": {
+                "*": {}
+            },
+            "fragment_size": 2147483647
+        }
+    }
+
+    var InterfaceRequestsForMouthChart = new G2.Chart({
+        container: 'InterfaceRequestsForMouth',
+        forceFit: true,
+        height: 220,
+        padding: [30, 50]
+    });
+
+    var TemperatureTrendChart = new G2.Chart({
+        container: 'TemperatureTrend',
+        forceFit: true,
+        height: 450
+    });
+
+    var InterfaceRequestsForDayAllChart = new G2.Chart({
+        container: 'InterfaceRequestsForDayAll',
+        forceFit: true,
+        height: 220
+    });
+
+    var InterfaceRequestsForDayByUserIdChart = new G2.Chart({
+        container: 'InterfaceRequestsForDayByUserId',
+        forceFit: true,
+        height: 420
+    });
+
+    var ApiInterfaceRequestsForDayChart = new G2.Chart({
+        container: 'ApiInterfaceRequestsForDay',
+        forceFit: true,
+        height: 420
+    });
+
+    var TemperatureTrendDataSet = new DataSet();
+
+    var InterfaceRequestsForDayAllDataSet = new DataSet();
+
+    var InterfaceRequestsForDayByUserIdDataSet = new DataSet();
+
+    var ApiInterfaceRequestsForDayDataSet = new DataSet();
     //开始绘制大屏
     function begin() {
-
-        /*M-4-天级请求数走势*/
-        var InterfaceRequestsForMouth = {
-            "query": {
-                "bool": {
-                    "must": [
-                        {
-                            "query_string": {
-                                "analyze_wildcard": true,
-                                "query": "*"
-                            }
-                        },
-                        {
-                            "query_string": {
-                                "analyze_wildcard": true,
-                                "query": "*"
-                            }
-                        },
-                        {
-                            "range": {
-                                "@timestamp": {
-                                    "gte": Date.parse(new Date())-5412506000,//1510452005607,
-                                    "lte": Date.parse(new Date()),
-                                    "format": "epoch_millis"
-                                }
-                            }
-                        }
-                    ],
-                    "must_not": []
-                }
-            },
-            "size": 0,
-            "_source": {
-                "excludes": []
-            },
-            "aggs": {
-                "2": {
-                    "date_histogram": {
-                        "field": "@timestamp",
-                        "interval": "1d",
-                        "time_zone": "Asia/Shanghai",
-                        "min_doc_count": 1
-                    }
-                }
-            },
-            "version": true,
-            "highlight": {
-                "pre_tags": [
-                    "@kibana-highlighted-field@"
-                ],
-                "post_tags": [
-                    "@/kibana-highlighted-field@"
-                ],
-                "fields": {
-                    "*": {}
-                },
-                "fragment_size": 2147483647
-            }
-        }
-        /*M-6-请求数*/
-        var InterfaceRequestsAll = {
-            "query": {
-                "bool": {
-                    "must": [
-                        {
-                            "query_string": {
-                                "query": "*",
-                                "analyze_wildcard": true
-                            }
-                        },
-                        {
-                            "query_string": {
-                                "analyze_wildcard": true,
-                                "query": "*"
-                            }
-                        },
-                        {
-                            "range": {
-                                "@timestamp": {
-                                    "gte": 1483200000000,
-                                    "lte": Date.parse(new Date()),
-                                    "format": "epoch_millis"
-                                }
-                            }
-                        }
-                    ],
-                    "must_not": []
-                }
-            },
-            "size": 0,
-            "_source": {
-                "excludes": []
-            },
-            "aggs": {},
-            "version": true,
-            "highlight": {
-                "pre_tags": [
-                    "@kibana-highlighted-field@"
-                ],
-                "post_tags": [
-                    "@/kibana-highlighted-field@"
-                ],
-                "fields": {
-                    "*": {}
-                },
-                "fragment_size": 2147483647
-            }
-        }
-        /*M-1-24小时请求总数*/
-        var InterfaceRequestsForDay = {
-            "query": {
-                "bool": {
-                    "must": [
-                        {
-                            "query_string": {
-                                "analyze_wildcard": true,
-                                "query": "*"
-                            }
-                        },
-                        {
-                            "query_string": {
-                                "analyze_wildcard": true,
-                                "query": "*"
-                            }
-                        },
-                        {
-                            "range": {
-                                "@timestamp": {
-                                    "gte": Date.parse(today),
-                                    "lte": Date.parse(new Date()),
-                                    "format": "epoch_millis"
-                                }
-                            }
-                        }
-                    ],
-                    "must_not": []
-                }
-            },
-            "size": 0,
-            "_source": {
-                "excludes": []
-            },
-            "aggs": {
-                "2": {
-                    "date_range": {
-                        "field": "@timestamp",
-                        "ranges": [
-                            {
-                                "from": "now-24h/h",
-                                "to": "now"
-                            }
-                        ]
-                    }
-                }
-            },
-            "version": true,
-            "highlight": {
-                "pre_tags": [
-                    "@kibana-highlighted-field@"
-                ],
-                "post_tags": [
-                    "@/kibana-highlighted-field@"
-                ],
-                "fields": {
-                    "*": {}
-                },
-                "fragment_size": 2147483647
-            }
-        }
-        /*M-5-8小时服务器温度走势*/
-        var TemperatureTrend = {
-            "query": {
-                "bool": {
-                    "must": [
-                        {
-                            "query_string": {
-                                "analyze_wildcard": true,
-                                "query": "*"
-                            }
-                        },
-                        {
-                            "match_phrase": {
-                                "_type": {
-                                    "query": "TP"
-                                }
-                            }
-                        },
-                        {
-                            "query_string": {
-                                "analyze_wildcard": true,
-                                "query": "*"
-                            }
-                        },
-                        {
-                            "range": {
-                                "timestamp": {
-                                    "gte": Date.parse(today),
-                                    "lte": Date.parse(new Date()),
-                                    "format": "epoch_millis"
-                                }
-                            }
-                        }
-                    ],
-                    "must_not": []
-                }
-            },
-            "size": 0,
-            "_source": {
-                "excludes": []
-            },
-            "aggs": {
-                "3": {
-                    "terms": {
-                        "field": "name.keyword",
-                        "size": 10,
-                        "order": {
-                            "1": "desc"
-                        }
-                    },
-                    "aggs": {
-                        "1": {
-                            "avg": {
-                                "field": "temperature"
-                            }
-                        },
-                        "4": {
-                            "date_range": {
-                                "field": "timestamp",
-                                "ranges": [
-                                    {
-                                        "from": "now-8h/h",
-                                        "to": "now-7h/h"
-                                    },
-                                    {
-                                        "from": "now-9h/h",
-                                        "to": "now-8h/h"
-                                    },
-                                    {
-                                        "from": "now-10h/h",
-                                        "to": "now-9h/h"
-                                    },
-                                    {
-                                        "from": "now-11h/h",
-                                        "to": "now-10h/h"
-                                    },
-                                    {
-                                        "to": "now-11h/h",
-                                        "from": "now-12h/h"
-                                    },
-                                    {
-                                        "to": "now-12h/h",
-                                        "from": "now-13h/h"
-                                    },
-                                    {
-                                        "to": "now-13h/h",
-                                        "from": "now-14h/h"
-                                    },
-                                    {
-                                        "to": "now-14h/h",
-                                        "from": "now-15h/h"
-                                    }
-                                ]
-                            },
-                            "aggs": {
-                                "1": {
-                                    "avg": {
-                                        "field": "temperature"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "version": true,
-            "highlight": {
-                "pre_tags": [
-                    "@kibana-highlighted-field@"
-                ],
-                "post_tags": [
-                    "@/kibana-highlighted-field@"
-                ],
-                "fields": {
-                    "*": {}
-                },
-                "fragment_size": 2147483647
-            }
-        }
-        /*M-2-服务器天级请求总数*/
-        var InterfaceRequestsForDayAll = {
-            "query": {
-                "bool": {
-                    "must": [
-                        {
-                            "query_string": {
-                                "query": "*",
-                                "analyze_wildcard": true
-                            }
-                        },
-                        {
-                            "query_string": {
-                                "analyze_wildcard": true,
-                                "query": "*"
-                            }
-                        },
-                        {
-                            "range": {
-                                "@timestamp": {
-                                    "gte": Date.parse(new Date())-5412506000,//1510452822303,8145924000
-                                    "lte": Date.parse(new Date()),
-                                    "format": "epoch_millis"
-                                }
-                            }
-                        }
-                    ],
-                    "must_not": []
-                }
-            },
-            "size": 0,
-            "_source": {
-                "excludes": []
-            },
-            "aggs": {
-                "2": {
-                    "date_histogram": {
-                        "field": "@timestamp",
-                        "interval": "1d",
-                        "time_zone": "Asia/Shanghai",
-                        "min_doc_count": 1
-                    },
-                    "aggs": {
-                        "3": {
-                            "terms": {
-                                "field": "host.keyword",
-                                "size": 10,
-                                "order": {
-                                    "_count": "desc"
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "version": true,
-            "highlight": {
-                "pre_tags": [
-                    "@kibana-highlighted-field@"
-                ],
-                "post_tags": [
-                    "@/kibana-highlighted-field@"
-                ],
-                "fields": {
-                    "*": {}
-                },
-                "fragment_size": 2147483647
-            }
-        }
-        /*M-3-人员天级请求TOP10*/
-        var InterfaceRequestsForDayByUserId = {
-            "query": {
-                "bool": {
-                    "must": [
-                        {
-                            "query_string": {
-                                "query": "*",
-                                "analyze_wildcard": true
-                            }
-                        },
-                        {
-                            "query_string": {
-                                "analyze_wildcard": true,
-                                "query": "*"
-                            }
-                        },
-                        {
-                            "range": {
-                                "@timestamp": {
-                                    "gte": Date.parse(new Date())-2733418000,//1510452822303,
-                                    "lte": Date.parse(new Date()),
-                                    "format": "epoch_millis"
-                                }
-                            }
-                        }
-                    ],
-                    "must_not": []
-                }
-            },
-            "size": 0,
-            "_source": {
-                "excludes": []
-            },
-            "aggs": {
-                "3": {
-                    "terms": {
-                        "field": "info.keyword",
-                        "size": 10,
-                        "order": {
-                            "_count": "desc"
-                        }
-                    },
-                    "aggs": {
-                        "4": {
-                            "date_histogram": {
-                                "field": "@timestamp",
-                                "interval": "1d",
-                                "time_zone": "Asia/Shanghai",
-                                "min_doc_count": 1
-                            }
-                        }
-                    }
-                }
-            },
-            "version": true,
-            "highlight": {
-                "pre_tags": [
-                    "@kibana-highlighted-field@"
-                ],
-                "post_tags": [
-                    "@/kibana-highlighted-field@"
-                ],
-                "fields": {
-                    "*": {}
-                },
-                "fragment_size": 2147483647
-            }
-        }
-        /*M-7-天级API请求数(TOP10)*/
-        var ApiInterfaceRequestsForDay = {
-            "query": {
-                "bool": {
-                    "must": [
-                        {
-                            "query_string": {
-                                "query": "*",
-                                "analyze_wildcard": true
-                            }
-                        },
-                        {
-                            "query_string": {
-                                "analyze_wildcard": true,
-                                "query": "*"
-                            }
-                        },
-                        {
-                            "range": {
-                                "@timestamp": {
-                                    "gte": Date.parse(new Date())-2733418000,//1510452822303,
-                                    "lte": Date.parse(new Date()),
-                                    "format": "epoch_millis"
-                                }
-                            }
-                        }
-                    ],
-                    "must_not": []
-                }
-            },
-            "size": 0,
-            "_source": {
-                "excludes": []
-            },
-            "aggs": {
-                "2": {
-                    "date_histogram": {
-                        "field": "@timestamp",
-                        "interval": "1d",
-                        "time_zone": "Asia/Shanghai",
-                        "min_doc_count": 1
-                    },
-                    "aggs": {
-                        "3": {
-                            "terms": {
-                                "field": "api.keyword",
-                                "size": 7,
-                                "order": {
-                                    "_count": "desc"
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "version": true,
-            "highlight": {
-                "pre_tags": [
-                    "@kibana-highlighted-field@"
-                ],
-                "post_tags": [
-                    "@/kibana-highlighted-field@"
-                ],
-                "fields": {
-                    "*": {}
-                },
-                "fragment_size": 2147483647
-            }
-        }
 
         var flag = false;
 
         ajax(largeScreen.elasticUrl.logstash, InterfaceRequestsForMouth, function (res) {
+
             var data = []
             $.each(res.aggregations['2'].buckets, function (i, v) {
                 data.push({
@@ -527,33 +566,28 @@ $(function () {
                     count: v.doc_count
                 })
             })
-            var chart = new G2.Chart({
-                container: 'InterfaceRequestsForMouth',
-                forceFit: true,
-                height: 220,
-                padding: [30, 50]
-            });
-            chart.source(data);
-            chart.scale({
+
+            InterfaceRequestsForMouthChart.source(data);
+            InterfaceRequestsForMouthChart.scale({
                 times: {
                     range: [0, 1]
                 }
             });
-            chart.tooltip({
+            InterfaceRequestsForMouthChart.tooltip({
                 crosshairs: {
                     type: 'line'
                 }
             });
-            chart.area().position('times*count');
-            chart.line().position('times*count').size(2);
-            chart.render();
+            InterfaceRequestsForMouthChart.area().position('times*count');
+            InterfaceRequestsForMouthChart.line().position('times*count').size(2);
+            InterfaceRequestsForMouthChart.render();
         }, function (msg) {
             console.log(msg)
             flag = true;
         })
 
         ajax(largeScreen.elasticUrl.logstash, InterfaceRequestsAll, function (res) {
-            $('#InterfaceRequestsAll').css({
+            com.focusPage('#InterfaceRequestsAll').css({
                 "text-align": "center",
                 "width": "auto",
                 "height": "160px",
@@ -567,7 +601,7 @@ $(function () {
         })
 
         ajax(largeScreen.elasticUrl.logstash, InterfaceRequestsForDay, function (res) {
-            $('#InterfaceRequestsForDay').css({
+            com.focusPage('#InterfaceRequestsForDay').css({
                 "text-align": "center",
                 "width": "auto",
                 "height": "220px",
@@ -575,6 +609,269 @@ $(function () {
                 "font-size": "40px",
                 "font-weight": "bold"
             }).html(res.aggregations['2'].buckets[0].doc_count)
+        }, function (msg) {
+            console.log(msg)
+            flag = true;
+        })
+
+        ajax(largeScreen.elasticUrl.monitor, TemperatureTrend, function (res) {
+
+            var data = [];
+            var _temp = [];
+            var computer = [];
+            $.each(res.aggregations['3'].buckets, function (i, v) {
+                computer.push(v.key)
+                $.each(v['4'].buckets, function (index, value) {
+                    var temp = {}
+                    temp['times'] = getMyDate(value.from)
+                    temp[v.key] = value['1'].value
+                    _temp.push(temp)
+                })
+
+            })
+            push(data, _temp, 8)
+            var dv = TemperatureTrendDataSet.createView().source(data);
+            dv.transform({
+                type: 'fold',
+                fields: computer, // 展开字段集
+                key: 'computer', // key字段
+                value: 'temperature', // value字段
+            });
+
+            TemperatureTrendChart.source(dv, {
+                times: {
+                    range: [0, 1]
+                }
+            });
+            TemperatureTrendChart.tooltip({
+                crosshairs: {
+                    type: 'line'
+                }
+            });
+            TemperatureTrendChart.axis('temperature', {
+                label: {
+                    formatter: function (val) {
+                        return val + '°C'
+                    }
+                }
+            });
+            TemperatureTrendChart.line().position('times*temperature').color('computer').shape('smooth');
+            TemperatureTrendChart.point().position('times*temperature').color('computer').size(4).shape('circle').style({
+                stroke: '#fff',
+                lineWidth: 1
+            });
+            TemperatureTrendChart.render();
+        }, function (msg) {
+            console.log(msg)
+            flag = true;
+        })
+
+        ajax(largeScreen.elasticUrl.logstash, InterfaceRequestsForDayAll, function (res) {
+            var data = [];
+            var server = [];
+            $.each(res.aggregations['2'].buckets, function (i, v) {
+                var _data = {};
+                _data['times'] = getMyDate(v.key);
+                $.each(v['3'].buckets, function (index, value) {
+                    server.push(value.key)
+                    _data[value.key] = value.doc_count
+                })
+                data.push(_data)
+            })
+            $.unique(server);
+
+            var dv = InterfaceRequestsForDayAllDataSet.createView().source(data);
+            dv.transform({
+                type: 'fold',
+                fields: server, // 展开字段集
+                key: 'server', // key字段
+                value: 'requests', // value字段
+            });
+            InterfaceRequestsForDayAllChart.source(dv, {
+                times: {
+                    range: [0, 1]
+                }
+            });
+            InterfaceRequestsForDayAllChart.tooltip({
+                crosshairs: {
+                    type: 'line'
+                }
+            });
+            InterfaceRequestsForDayAllChart.axis('requests', {
+                label: {
+                    formatter: function (val) {
+                        return val
+                    }
+                }
+            });
+            InterfaceRequestsForDayAllChart.line().position('times*requests').color('server');
+            InterfaceRequestsForDayAllChart.point().position('times*requests').color('server').size(4).shape('circle').style({
+                stroke: '#fff',
+                lineWidth: 1
+            });
+            InterfaceRequestsForDayAllChart.render();
+        }, function (msg) {
+            console.log(msg)
+            flag = true;
+        })
+
+        ajax(largeScreen.elasticUrl.logstash, InterfaceRequestsForDayByUserId, function (res) {
+
+            var data = [];
+            var _temp = [];
+            var userId = [];
+
+            $.each(res.aggregations['3'].buckets, function (i, v) {
+                userId.push(v.key)
+                $.each(v['4'].buckets, function (index, value) {
+                    var temp = {}
+                    temp['times'] = getMyDate(value.key)
+                    temp[v.key] = value.doc_count
+                    _temp.push(temp)
+                })
+
+            })
+            push(data, _temp, 10)
+
+            var dv = InterfaceRequestsForDayByUserIdDataSet.createView().source(data);
+            dv.transform({
+                type: 'fold',
+                fields: userId, // 展开字段集
+                key: 'userId', // key字段
+                value: 'count', // value字段
+            });
+
+            InterfaceRequestsForDayByUserIdChart.source(dv, {
+                times: {
+                    range: [0, 1]
+                }
+            });
+            InterfaceRequestsForDayByUserIdChart.tooltip({
+                crosshairs: {
+                    type: 'line'
+                }
+            });
+            InterfaceRequestsForDayByUserIdChart.axis('count', {
+                label: {
+                    formatter: function (val) {
+                        return val
+                    }
+                }
+            });
+
+            InterfaceRequestsForDayByUserIdChart.line().position('times*count').color('userId').shape('smooth');
+            InterfaceRequestsForDayByUserIdChart.point().position('times*count').color('userId').size(4).shape('circle').style({
+                stroke: '#fff',
+                lineWidth: 1
+            });
+            InterfaceRequestsForDayByUserIdChart.render();
+        }, function (msg) {
+            console.log(msg)
+            flag = true;
+        })
+
+        ajax(largeScreen.elasticUrl.logstash, ApiInterfaceRequestsForDay, function (res) {
+            var data = [];
+            var api = [];
+
+            $.each(res.aggregations['2'].buckets, function (i, v) {
+                var _data = {};
+                _data['times'] = getMyDate(v.key);
+                $.each(v['3'].buckets, function (index, value) {
+                    api.push(value.key)
+                    _data[value.key] = value.doc_count
+                })
+                data.push(_data)
+            })
+            $.unique(api)
+
+            var dv = ApiInterfaceRequestsForDayDataSet.createView().source(data);
+            dv.transform({
+                type: 'fold',
+                fields: api, // 展开字段集
+                key: 'api', // key字段
+                value: 'count', // value字段
+            });
+
+            ApiInterfaceRequestsForDayChart.source(dv, {
+                times: {
+                    range: [0, 1]
+                }
+            });
+            ApiInterfaceRequestsForDayChart.tooltip({
+                crosshairs: {
+                    type: 'line'
+                }
+            });
+            ApiInterfaceRequestsForDayChart.axis('count', {
+                label: {
+                    formatter: function (val) {
+                        return val
+                    }
+                }
+            });
+            ApiInterfaceRequestsForDayChart.line().position('times*count').color('api');//,['red','green','blue','yellow','#FF0088','#33FFFF','#FF3EFF','orange','#00FFFF','#9400D3']
+            ApiInterfaceRequestsForDayChart.point().position('times*count').color('api').size(4).shape('circle').style({//,['red','green','blue','yellow','#FF0088','#33FFFF','#FF3EFF','orange','#00FFFF','#9400D3']
+                stroke: '#fff',
+                lineWidth: 1
+            });
+            ApiInterfaceRequestsForDayChart.render();
+
+        }, function (msg) {
+            console.log(msg)
+            flag = true;
+        })
+
+        if (com.focusPage('.page-content').hasClass('full-Screen')) {
+            G2.Global.setTheme('dark');
+        }
+
+        if (flag) {
+            clear(function () {
+                begin()
+            })
+        }
+
+    }
+
+    function refresh(){
+
+        InterfaceRequestsForMouth["query"]["bool"]["must"][2]["range"]["@timestamp"]["lte"] = Date.parse(new Date());
+        InterfaceRequestsAll["query"]["bool"]["must"][2]["range"]["@timestamp"]["lte"] = Date.parse(new Date());
+        InterfaceRequestsForDay["query"]["bool"]["must"][2]["range"]["@timestamp"]["lte"] = Date.parse(new Date());
+        TemperatureTrend["query"]["bool"]["must"][3]["range"]["timestamp"]["lte"] = Date.parse(new Date());
+        InterfaceRequestsForDayAll["query"]["bool"]["must"][2]["range"]["@timestamp"]["lte"] = Date.parse(new Date());
+        InterfaceRequestsForDayByUserId["query"]["bool"]["must"][2]["range"]["@timestamp"]["lte"] = Date.parse(new Date());
+        ApiInterfaceRequestsForDay["query"]["bool"]["must"][2]["range"]["@timestamp"]["lte"] = Date.parse(new Date());
+
+        var flag = false;
+
+        ajax(largeScreen.elasticUrl.logstash, InterfaceRequestsForMouth, function (res) {
+
+            var data = []
+            $.each(res.aggregations['2'].buckets, function (i, v) {
+                data.push({
+                    times: getMyDate(v.key),
+                    count: v.doc_count
+                })
+            })
+
+            InterfaceRequestsForMouthChart.source(data);
+            InterfaceRequestsForMouthChart.render();
+        }, function (msg) {
+            console.log(msg)
+            flag = true;
+        })
+
+        ajax(largeScreen.elasticUrl.logstash, InterfaceRequestsAll, function (res) {
+            com.focusPage('#InterfaceRequestsAll').html(res.hits.total)
+        }, function (msg) {
+            console.log(msg)
+            flag = true;
+        })
+
+        ajax(largeScreen.elasticUrl.logstash, InterfaceRequestsForDay, function (res) {
+            com.focusPage('#InterfaceRequestsForDay').html(res.aggregations['2'].buckets[0].doc_count)
         }, function (msg) {
             console.log(msg)
             flag = true;
@@ -595,48 +892,28 @@ $(function () {
 
             })
             push(data, _temp, 8)
-            var ds = new DataSet();
-            var dv = ds.createView().source(data);
+
+            var dv = TemperatureTrendDataSet.createView().source(data);
             dv.transform({
                 type: 'fold',
                 fields: computer, // 展开字段集
                 key: 'computer', // key字段
                 value: 'temperature', // value字段
             });
-            var chart = new G2.Chart({
-                container: 'TemperatureTrend',
-                forceFit: true,
-                height: 450
-            });
-            chart.source(dv, {
+
+            TemperatureTrendChart.source(dv, {
                 times: {
                     range: [0, 1]
                 }
             });
-            chart.tooltip({
-                crosshairs: {
-                    type: 'line'
-                }
-            });
-            chart.axis('temperature', {
-                label: {
-                    formatter: function (val) {
-                        return val + '°C'
-                    }
-                }
-            });
-            chart.line().position('times*temperature').color('computer').shape('smooth');
-            chart.point().position('times*temperature').color('computer').size(4).shape('circle').style({
-                stroke: '#fff',
-                lineWidth: 1
-            });
-            chart.render();
+            TemperatureTrendChart.render();
         }, function (msg) {
             console.log(msg)
             flag = true;
         })
 
         ajax(largeScreen.elasticUrl.logstash, InterfaceRequestsForDayAll, function (res) {
+
             var data = [];
             var server = [];
             $.each(res.aggregations['2'].buckets, function (i, v) {
@@ -648,53 +925,32 @@ $(function () {
                 })
                 data.push(_data)
             })
-            $.unique(server)
-            var ds = new DataSet();
-            var dv = ds.createView().source(data);
+            $.unique(server);
+
+            var dv = InterfaceRequestsForDayAllDataSet.createView().source(data);
             dv.transform({
                 type: 'fold',
                 fields: server, // 展开字段集
                 key: 'server', // key字段
                 value: 'requests', // value字段
             });
-            var chart = new G2.Chart({
-                container: 'InterfaceRequestsForDayAll',
-                forceFit: true,
-                height: 220
-            });
-            chart.source(dv, {
+            InterfaceRequestsForDayAllChart.source(dv, {
                 times: {
                     range: [0, 1]
                 }
             });
-            chart.tooltip({
-                crosshairs: {
-                    type: 'line'
-                }
-            });
-            chart.axis('requests', {
-                label: {
-                    formatter: function (val) {
-                        return val
-                    }
-                }
-            });
-            chart.line().position('times*requests').color('server');
-            chart.point().position('times*requests').color('server').size(4).shape('circle').style({
-                stroke: '#fff',
-                lineWidth: 1
-            });
-            chart.render();
+            InterfaceRequestsForDayAllChart.render();
         }, function (msg) {
             console.log(msg)
             flag = true;
         })
 
         ajax(largeScreen.elasticUrl.logstash, InterfaceRequestsForDayByUserId, function (res) {
-            console.log(res)
+
             var data = [];
             var _temp = [];
             var userId = [];
+
             $.each(res.aggregations['3'].buckets, function (i, v) {
                 userId.push(v.key)
                 $.each(v['4'].buckets, function (index, value) {
@@ -706,51 +962,31 @@ $(function () {
 
             })
             push(data, _temp, 10)
-            var ds = new DataSet();
-            var dv = ds.createView().source(data);
+
+            var dv = InterfaceRequestsForDayByUserIdDataSet.createView().source(data);
             dv.transform({
                 type: 'fold',
                 fields: userId, // 展开字段集
                 key: 'userId', // key字段
                 value: 'count', // value字段
             });
-            var chart = new G2.Chart({
-                container: 'InterfaceRequestsForDayByUserId',
-                forceFit: true,
-                height: 420
-            });
-            chart.source(dv, {
+
+            InterfaceRequestsForDayByUserIdChart.source(dv, {
                 times: {
                     range: [0, 1]
                 }
             });
-            chart.tooltip({
-                crosshairs: {
-                    type: 'line'
-                }
-            });
-            chart.axis('count', {
-                label: {
-                    formatter: function (val) {
-                        return val
-                    }
-                }
-            });
-
-            chart.line().position('times*count').color('userId').shape('smooth');
-            chart.point().position('times*count').color('userId').size(4).shape('circle').style({
-                stroke: '#fff',
-                lineWidth: 1
-            });
-            chart.render();
+            InterfaceRequestsForDayByUserIdChart.render();
         }, function (msg) {
             console.log(msg)
             flag = true;
         })
 
         ajax(largeScreen.elasticUrl.logstash, ApiInterfaceRequestsForDay, function (res) {
+
             var data = [];
             var api = [];
+
             $.each(res.aggregations['2'].buckets, function (i, v) {
                 var _data = {};
                 _data['times'] = getMyDate(v.key);
@@ -761,58 +997,30 @@ $(function () {
                 data.push(_data)
             })
             $.unique(api)
-            var ds = new DataSet();
-            var dv = ds.createView().source(data);
+
+            var dv = ApiInterfaceRequestsForDayDataSet.createView().source(data);
             dv.transform({
                 type: 'fold',
                 fields: api, // 展开字段集
                 key: 'api', // key字段
                 value: 'count', // value字段
             });
-            var chart = new G2.Chart({
-                container: 'ApiInterfaceRequestsForDay',
-                forceFit: true,
-                height: 420
-            });
-            chart.source(dv, {
+
+            ApiInterfaceRequestsForDayChart.source(dv, {
                 times: {
                     range: [0, 1]
                 }
             });
-            chart.tooltip({
-                crosshairs: {
-                    type: 'line'
-                }
-            });
-            chart.axis('count', {
-                label: {
-                    formatter: function (val) {
-                        return val
-                    }
-                }
-            });
-            chart.line().position('times*count').color('api');//,['red','green','blue','yellow','#FF0088','#33FFFF','#FF3EFF','orange','#00FFFF','#9400D3']
-            chart.point().position('times*count').color('api').size(4).shape('circle').style({//,['red','green','blue','yellow','#FF0088','#33FFFF','#FF3EFF','orange','#00FFFF','#9400D3']
-                stroke: '#fff',
-                lineWidth: 1
-            });
-            chart.render();
+            ApiInterfaceRequestsForDayChart.render();
 
         }, function (msg) {
             console.log(msg)
             flag = true;
         })
 
-        if ($('.page-content').hasClass('full-Screen')) {
-            G2.Global.setTheme('dark');
-        }
-
         if (flag) {
-            clear(function () {
-                begin()
-            })
+            refresh();
         }
-
     }
 
     function ajax(url, data, callback, failcallback) {
@@ -836,8 +1044,8 @@ $(function () {
         largeScreen.fullScreen.parents('.page-content').addClass('full-Screen').css('background-color', '#1f1f1f');
         largeScreen.fullScreen.parents('.page-content').find('h3').css('color', '#fff')
         largeScreen.fullScreen.hide();
-        $('#InterfaceRequestsAll').css('color', '#fff')
-        $('#InterfaceRequestsForDay').css('color', '#fff')
+        com.focusPage('#InterfaceRequestsAll').css('color', '#fff')
+        com.focusPage('#InterfaceRequestsForDay').css('color', '#fff')
     })
 
     $(document).keyup(function (event) {
@@ -845,8 +1053,8 @@ $(function () {
             largeScreen.fullScreen.parents('.page-content').removeClass('full-Screen').css('background-color', '');
             largeScreen.fullScreen.parents('.page-content').find('h3').css('color', '')
             largeScreen.fullScreen.show();
-            $('#InterfaceRequestsAll').css('color', '')
-            $('#InterfaceRequestsForDay').css('color', '')
+            com.focusPage('#InterfaceRequestsAll').css('color', '')
+            com.focusPage('#InterfaceRequestsForDay').css('color', '')
             G2.Global.setTheme();
         }
     })
@@ -982,7 +1190,7 @@ $(function () {
         pointView.source(userData);
         pointView.point()
             .position('x*y')
-            .size('name', [30, 25, 25, 20, 20])//圆的大小
+            .size('name', [30, 25, 25, 20, 20, 20])//圆的大小
             .label('name', {
                 offset: 0,
                 textStyle: {
@@ -998,11 +1206,13 @@ $(function () {
             .tooltip('name*value*lng*lat');
 
         chart.animate(false)
+        //沈阳/武汉/合肥/长春/重庆/南京
 
         var lineData = [{"name": "沈阳", "lng": 123.38, "lat": 41.8}, {"name": "合肥", "lng": 117.27, "lat": 31.86}]
         var lineData1 = [{"name": "沈阳", "lng": 123.38, "lat": 41.8}, {"name": "武汉", "lng": 114.31, "lat": 30.52}]
-        var lineData2 = [{"name": "沈阳", "lng": 123.38, "lat": 41.8}, {"name": "天津", "lng": 117.2, "lat": 39.13}]
+        var lineData2 = [{"name": "沈阳", "lng": 123.38, "lat": 41.8}, {"name": "南京", "lng": 118.78, "lat": 32.07}]
         var lineData3 = [{"name": "沈阳", "lng": 123.38, "lat": 41.8}, {"name": "重庆", "lng": 106.54, "lat": 29.59}]
+        var lineData4 = [{"name": "沈阳", "lng": 123.38, "lat": 41.8}, {"name": "长春", "lng": 125.32, "lat": 43.90}]
 
         var _linedata = ds.createView().source(lineData);
         _linedata.transform({
@@ -1046,196 +1256,190 @@ $(function () {
                 return obj;
             }
         })
+        var _linedata4 = ds.createView().source(lineData4);
+        _linedata4.transform({
+            type: 'map',
+            callback: function (obj) {
+                var projectedCoord = dv.geoProjectPosition([obj.lng * 1, obj.lat * 1], 'geoMercator');
+                obj.x = projectedCoord[0];
+                obj.y = projectedCoord[1];
+                return obj;
+            }
+        })
 
         var lineview = chart.view().source(_linedata); // 飞行路线
         var lineview1 = chart.view().source(_linedata1); // 飞行路线
         var lineview2 = chart.view().source(_linedata2); // 飞行路线
         var lineview3 = chart.view().source(_linedata3); // 飞行路线
+        var lineview4 = chart.view().source(_linedata4); // 飞行路线
         var link = lineview.path().position('x*y').color('x*y');
         var link1 = lineview1.path().position('x*y').color('x*y');
         var link2 = lineview2.path().position('x*y').color('x*y');
         var link3 = lineview3.path().position('x*y').color('x*y');
-
+        var link4 = lineview4.path().position('x*y').color('x*y');
+        var lineviews = [lineview,lineview1,lineview2,lineview3,lineview4];
+        var links = [link,link1,link2,link3,link4];
         chart.render();
 
         var number = 0
-        Interval(lineview, lineview1, lineview2, lineview3, link, link1, link2, link3, number);
+        Interval(lineviews, links, number);
 
 
     });
 
-    function Interval(lineview, lineview1, lineview2, lineview3, link, link1, link2, link3, number) {
+    function Interval(lineviews, links, number) {
         setInterval(function () {
 
-
             if (number % 11 == 0) {
-                link.style({
-                    stroke: 'l(180) 0:#000000 0.1:#ffffff 0.2:#ffffff 0.3:#ffffff 0.4:#ffffff 0.5:#ffffff 0.6:#ffffff 0.7:#ffffff 0.8:#ffffff 0.9:#ffffff 1:#ffffff'
-                });
-                link1.style({
-                    stroke: 'l(180) 0:#000000 0.1:#ffffff 0.2:#ffffff 0.3:#ffffff 0.4:#ffffff 0.5:#ffffff 0.6:#ffffff 0.7:#ffffff 0.8:#ffffff 0.9:#ffffff 1:#ffffff'
-                });
-                link2.style({
-                    stroke: 'l(180) 0:#000000 0.1:#ffffff 0.2:#ffffff 0.3:#ffffff 0.4:#ffffff 0.5:#ffffff 0.6:#ffffff 0.7:#ffffff 0.8:#ffffff 0.9:#ffffff 1:#ffffff'
-                });
-                link3.style({
-                    stroke: 'l(180) 0:#000000 0.1:#ffffff 0.2:#ffffff 0.3:#ffffff 0.4:#ffffff 0.5:#ffffff 0.6:#ffffff 0.7:#ffffff 0.8:#ffffff 0.9:#ffffff 1:#ffffff'
-                });
+                $.each(links,function(i,v){
+                    if(i==4){
+                        v.style({
+                            stroke: 'l(180) 0:#ffffff 0.1:#ffffff 0.2:#ffffff 0.3:#ffffff 0.4:#ffffff 0.5:#ffffff 0.6:#ffffff 0.7:#ffffff 0.8:#ffffff 0.9:#ffffff 1:#000000'
+                        });
+                    }else{
+                        v.style({
+                            stroke: 'l(180) 0:#000000 0.1:#ffffff 0.2:#ffffff 0.3:#ffffff 0.4:#ffffff 0.5:#ffffff 0.6:#ffffff 0.7:#ffffff 0.8:#ffffff 0.9:#ffffff 1:#ffffff'
+                        });
+                    }
+                })
             }
             if (number % 11 == 1) {
-                link.style({
-                    stroke: 'l(180) 0:#ffffff 0.1:#000000 0.2:#ffffff 0.3:#ffffff 0.4:#ffffff 0.5:#ffffff 0.6:#ffffff 0.7:#ffffff 0.8:#ffffff 0.9:#ffffff 1:#ffffff'
-                });
-                link1.style({
-                    stroke: 'l(180) 0:#ffffff 0.1:#000000 0.2:#ffffff 0.3:#ffffff 0.4:#ffffff 0.5:#ffffff 0.6:#ffffff 0.7:#ffffff 0.8:#ffffff 0.9:#ffffff 1:#ffffff'
-                });
-                link2.style({
-                    stroke: 'l(180) 0:#ffffff 0.1:#000000 0.2:#ffffff 0.3:#ffffff 0.4:#ffffff 0.5:#ffffff 0.6:#ffffff 0.7:#ffffff 0.8:#ffffff 0.9:#ffffff 1:#ffffff'
-                });
-                link3.style({
-                    stroke: 'l(180) 0:#ffffff 0.1:#000000 0.2:#ffffff 0.3:#ffffff 0.4:#ffffff 0.5:#ffffff 0.6:#ffffff 0.7:#ffffff 0.8:#ffffff 0.9:#ffffff 1:#ffffff'
-                });
+                $.each(links,function(i,v){
+                    if(i==4){
+                        v.style({
+                            stroke: 'l(180) 0:#ffffff 0.1:#ffffff 0.2:#ffffff 0.3:#ffffff 0.4:#ffffff 0.5:#ffffff 0.6:#ffffff 0.7:#ffffff 0.8:#ffffff 0.9:#000000 1:#ffffff'
+                        });
+                    }else{
+                        v.style({
+                            stroke: 'l(180) 0:#ffffff 0.1:#000000 0.2:#ffffff 0.3:#ffffff 0.4:#ffffff 0.5:#ffffff 0.6:#ffffff 0.7:#ffffff 0.8:#ffffff 0.9:#ffffff 1:#ffffff'
+                        });
+                    }
+                })
             }
             if (number % 11 == 2) {
-                link.style({
-                    stroke: 'l(180) 0:#ffffff 0.1:#ffffff 0.2:#000000 0.3:#ffffff 0.4:#ffffff 0.5:#ffffff 0.6:#ffffff 0.7:#ffffff 0.8:#ffffff 0.9:#ffffff 1:#ffffff'
-                });
-                link1.style({
-                    stroke: 'l(180) 0:#ffffff 0.1:#ffffff 0.2:#000000 0.3:#ffffff 0.4:#ffffff 0.5:#ffffff 0.6:#ffffff 0.7:#ffffff 0.8:#ffffff 0.9:#ffffff 1:#ffffff'
-                });
-                link2.style({
-                    stroke: 'l(180) 0:#ffffff 0.1:#ffffff 0.2:#000000 0.3:#ffffff 0.4:#ffffff 0.5:#ffffff 0.6:#ffffff 0.7:#ffffff 0.8:#ffffff 0.9:#ffffff 1:#ffffff'
-                });
-                link3.style({
-                    stroke: 'l(180) 0:#ffffff 0.1:#ffffff 0.2:#000000 0.3:#ffffff 0.4:#ffffff 0.5:#ffffff 0.6:#ffffff 0.7:#ffffff 0.8:#ffffff 0.9:#ffffff 1:#ffffff'
-                });
+                $.each(links,function(i,v){
+                    if(i==4){
+                        v.style({
+                            stroke: 'l(180) 0:#ffffff 0.1:#ffffff 0.2:#ffffff 0.3:#ffffff 0.4:#ffffff 0.5:#ffffff 0.6:#ffffff 0.7:#ffffff 0.8:#000000 0.9:#ffffff 1:#ffffff'
+                        });
+                    }else{
+                        v.style({
+                            stroke: 'l(180) 0:#ffffff 0.1:#ffffff 0.2:#000000 0.3:#ffffff 0.4:#ffffff 0.5:#ffffff 0.6:#ffffff 0.7:#ffffff 0.8:#ffffff 0.9:#ffffff 1:#ffffff'
+                        });
+                    }
+                })
             }
             if (number % 11 == 3) {
-                link.style({
-                    stroke: 'l(180) 0:#ffffff 0.1:#ffffff 0.2:#ffffff 0.3:#000000 0.4:#ffffff 0.5:#ffffff 0.6:#ffffff 0.7:#ffffff 0.8:#ffffff 0.9:#ffffff 1:#ffffff'
-                });
-                link1.style({
-                    stroke: 'l(180) 0:#ffffff 0.1:#ffffff 0.2:#ffffff 0.3:#000000 0.4:#ffffff 0.5:#ffffff 0.6:#ffffff 0.7:#ffffff 0.8:#ffffff 0.9:#ffffff 1:#ffffff'
-                });
-                link2.style({
-                    stroke: 'l(180) 0:#ffffff 0.1:#ffffff 0.2:#ffffff 0.3:#000000 0.4:#ffffff 0.5:#ffffff 0.6:#ffffff 0.7:#ffffff 0.8:#ffffff 0.9:#ffffff 1:#ffffff'
-                });
-                link3.style({
-                    stroke: 'l(180) 0:#ffffff 0.1:#ffffff 0.2:#ffffff 0.3:#000000 0.4:#ffffff 0.5:#ffffff 0.6:#ffffff 0.7:#ffffff 0.8:#ffffff 0.9:#ffffff 1:#ffffff'
-                });
+                $.each(links,function(i,v){
+                    if(i==4){
+                        v.style({
+                            stroke: 'l(180) 0:#ffffff 0.1:#ffffff 0.2:#ffffff 0.3:#ffffff 0.4:#ffffff 0.5:#ffffff 0.6:#ffffff 0.7:#000000 0.8:#ffffff 0.9:#ffffff 1:#ffffff'
+                        });
+                    }else{
+                        v.style({
+                            stroke: 'l(180) 0:#ffffff 0.1:#ffffff 0.2:#ffffff 0.3:#000000 0.4:#ffffff 0.5:#ffffff 0.6:#ffffff 0.7:#ffffff 0.8:#ffffff 0.9:#ffffff 1:#ffffff'
+                        });
+                    }
+                })
             }
             if (number % 11 == 4) {
-                link.style({
-                    stroke: 'l(180) 0:#ffffff 0.1:#ffffff 0.2:#ffffff 0.3:#ffffff 0.4:#000000 0.5:#ffffff 0.6:#ffffff 0.7:#ffffff 0.8:#ffffff 0.9:#ffffff 1:#ffffff'
-                });
-                link1.style({
-                    stroke: 'l(180) 0:#ffffff 0.1:#ffffff 0.2:#ffffff 0.3:#ffffff 0.4:#000000 0.5:#ffffff 0.6:#ffffff 0.7:#ffffff 0.8:#ffffff 0.9:#ffffff 1:#ffffff'
-                });
-                link2.style({
-                    stroke: 'l(180) 0:#ffffff 0.1:#ffffff 0.2:#ffffff 0.3:#ffffff 0.4:#000000 0.5:#ffffff 0.6:#ffffff 0.7:#ffffff 0.8:#ffffff 0.9:#ffffff 1:#ffffff'
-                });
-                link3.style({
-                    stroke: 'l(180) 0:#ffffff 0.1:#ffffff 0.2:#ffffff 0.3:#ffffff 0.4:#000000 0.5:#ffffff 0.6:#ffffff 0.7:#ffffff 0.8:#ffffff 0.9:#ffffff 1:#ffffff'
-                });
+                $.each(links,function(i,v){
+                    if(i==4){
+                        v.style({
+                            stroke: 'l(180) 0:#ffffff 0.1:#ffffff 0.2:#ffffff 0.3:#ffffff 0.4:#ffffff 0.5:#ffffff 0.6:#000000 0.7:#ffffff 0.8:#ffffff 0.9:#ffffff 1:#ffffff'
+                        });
+                    }else{
+                        v.style({
+                            stroke: 'l(180) 0:#ffffff 0.1:#ffffff 0.2:#ffffff 0.3:#ffffff 0.4:#000000 0.5:#ffffff 0.6:#ffffff 0.7:#ffffff 0.8:#ffffff 0.9:#ffffff 1:#ffffff'
+                        });
+                    }
+                })
             }
             if (number % 11 == 5) {
-                link.style({
-                    stroke: 'l(180) 0:#ffffff 0.1:#ffffff 0.2:#ffffff 0.3:#ffffff 0.4:#ffffff 0.5:#000000 0.6:#ffffff 0.7:#ffffff 0.8:#ffffff 0.9:#ffffff 1:#ffffff'
-                });
-                link1.style({
-                    stroke: 'l(180) 0:#ffffff 0.1:#ffffff 0.2:#ffffff 0.3:#ffffff 0.4:#ffffff 0.5:#000000 0.6:#ffffff 0.7:#ffffff 0.8:#ffffff 0.9:#ffffff 1:#ffffff'
-                });
-                link2.style({
-                    stroke: 'l(180) 0:#ffffff 0.1:#ffffff 0.2:#ffffff 0.3:#ffffff 0.4:#ffffff 0.5:#000000 0.6:#ffffff 0.7:#ffffff 0.8:#ffffff 0.9:#ffffff 1:#ffffff'
-                });
-                link3.style({
-                    stroke: 'l(180) 0:#ffffff 0.1:#ffffff 0.2:#ffffff 0.3:#ffffff 0.4:#ffffff 0.5:#000000 0.6:#ffffff 0.7:#ffffff 0.8:#ffffff 0.9:#ffffff 1:#ffffff'
-                });
+                $.each(links,function(i,v){
+                    v.style({
+                        stroke: 'l(180) 0:#ffffff 0.1:#ffffff 0.2:#ffffff 0.3:#ffffff 0.4:#ffffff 0.5:#000000 0.6:#ffffff 0.7:#ffffff 0.8:#ffffff 0.9:#ffffff 1:#ffffff'
+                    });
+                })
             }
             if (number % 11 == 6) {
-                link.style({
-                    stroke: 'l(180) 0:#ffffff 0.1:#ffffff 0.2:#ffffff 0.3:#ffffff 0.4:#ffffff 0.5:#ffffff 0.6:#000000 0.7:#ffffff 0.8:#ffffff 0.9:#ffffff 1:#ffffff'
-                });
-                link1.style({
-                    stroke: 'l(180) 0:#ffffff 0.1:#ffffff 0.2:#ffffff 0.3:#ffffff 0.4:#ffffff 0.5:#ffffff 0.6:#000000 0.7:#ffffff 0.8:#ffffff 0.9:#ffffff 1:#ffffff'
-                });
-                link2.style({
-                    stroke: 'l(180) 0:#ffffff 0.1:#ffffff 0.2:#ffffff 0.3:#ffffff 0.4:#ffffff 0.5:#ffffff 0.6:#000000 0.7:#ffffff 0.8:#ffffff 0.9:#ffffff 1:#ffffff'
-                });
-                link3.style({
-                    stroke: 'l(180) 0:#ffffff 0.1:#ffffff 0.2:#ffffff 0.3:#ffffff 0.4:#ffffff 0.5:#ffffff 0.6:#000000 0.7:#ffffff 0.8:#ffffff 0.9:#ffffff 1:#ffffff'
-                });
+                $.each(links,function(i,v){
+                    if(i==4){
+                        v.style({
+                            stroke: 'l(180) 0:#ffffff 0.1:#ffffff 0.2:#ffffff 0.3:#ffffff 0.4:#000000 0.5:#ffffff 0.6:#ffffff 0.7:#ffffff 0.8:#ffffff 0.9:#ffffff 1:#ffffff'
+                        });
+                    }else{
+                        v.style({
+                            stroke: 'l(180) 0:#ffffff 0.1:#ffffff 0.2:#ffffff 0.3:#ffffff 0.4:#ffffff 0.5:#ffffff 0.6:#000000 0.7:#ffffff 0.8:#ffffff 0.9:#ffffff 1:#ffffff'
+                        });
+                    }
+                })
             }
             if (number % 11 == 7) {
-                link.style({
-                    stroke: 'l(180) 0:#ffffff 0.1:#ffffff 0.2:#ffffff 0.3:#ffffff 0.4:#ffffff 0.5:#ffffff 0.6:#ffffff 0.7:#000000 0.8:#ffffff 0.9:#ffffff 1:#ffffff'
-                });
-                link1.style({
-                    stroke: 'l(180) 0:#ffffff 0.1:#ffffff 0.2:#ffffff 0.3:#ffffff 0.4:#ffffff 0.5:#ffffff 0.6:#ffffff 0.7:#000000 0.8:#ffffff 0.9:#ffffff 1:#ffffff'
-                });
-                link2.style({
-                    stroke: 'l(180) 0:#ffffff 0.1:#ffffff 0.2:#ffffff 0.3:#ffffff 0.4:#ffffff 0.5:#ffffff 0.6:#ffffff 0.7:#000000 0.8:#ffffff 0.9:#ffffff 1:#ffffff'
-                });
-                link3.style({
-                    stroke: 'l(180) 0:#ffffff 0.1:#ffffff 0.2:#ffffff 0.3:#ffffff 0.4:#ffffff 0.5:#ffffff 0.6:#ffffff 0.7:#000000 0.8:#ffffff 0.9:#ffffff 1:#ffffff'
-                });
+                $.each(links,function(i,v){
+                    if(i==4){
+                        v.style({
+                            stroke: 'l(180) 0:#ffffff 0.1:#ffffff 0.2:#ffffff 0.3:#000000 0.4:#ffffff 0.5:#ffffff 0.6:#ffffff 0.7:#ffffff 0.8:#ffffff 0.9:#ffffff 1:#ffffff'
+                        });
+                    }else{
+                        v.style({
+                            stroke: 'l(180) 0:#ffffff 0.1:#ffffff 0.2:#ffffff 0.3:#ffffff 0.4:#ffffff 0.5:#ffffff 0.6:#ffffff 0.7:#000000 0.8:#ffffff 0.9:#ffffff 1:#ffffff'
+                        });
+                    }
+                })
             }
             if (number % 11 == 8) {
-                link.style({
-                    stroke: 'l(180) 0:#ffffff 0.1:#ffffff 0.2:#ffffff 0.3:#ffffff 0.4:#ffffff 0.5:#ffffff 0.6:#ffffff 0.7:#ffffff 0.8:#000000 0.9:#ffffff 1:#ffffff'
-                });
-                link1.style({
-                    stroke: 'l(180) 0:#ffffff 0.1:#ffffff 0.2:#ffffff 0.3:#ffffff 0.4:#ffffff 0.5:#ffffff 0.6:#ffffff 0.7:#ffffff 0.8:#000000 0.9:#ffffff 1:#ffffff'
-                });
-                link2.style({
-                    stroke: 'l(180) 0:#ffffff 0.1:#ffffff 0.2:#ffffff 0.3:#ffffff 0.4:#ffffff 0.5:#ffffff 0.6:#ffffff 0.7:#ffffff 0.8:#000000 0.9:#ffffff 1:#ffffff'
-                });
-                link3.style({
-                    stroke: 'l(180) 0:#ffffff 0.1:#ffffff 0.2:#ffffff 0.3:#ffffff 0.4:#ffffff 0.5:#ffffff 0.6:#ffffff 0.7:#ffffff 0.8:#000000 0.9:#ffffff 1:#ffffff'
-                });
+                $.each(links,function(i,v){
+                    if(i==4){
+                        v.style({
+                            stroke: 'l(180) 0:#ffffff 0.1:#ffffff 0.2:#000000 0.3:#ffffff 0.4:#ffffff 0.5:#ffffff 0.6:#ffffff 0.7:#ffffff 0.8:#ffffff 0.9:#ffffff 1:#ffffff'
+                        });
+                    }else{
+                        v.style({
+                            stroke: 'l(180) 0:#ffffff 0.1:#ffffff 0.2:#ffffff 0.3:#ffffff 0.4:#ffffff 0.5:#ffffff 0.6:#ffffff 0.7:#ffffff 0.8:#000000 0.9:#ffffff 1:#ffffff'
+                        });
+                    }
+                })
             }
             if (number % 11 == 9) {
-                link.style({
-                    stroke: 'l(180) 0:#ffffff 0.1:#ffffff 0.2:#ffffff 0.3:#ffffff 0.4:#ffffff 0.5:#ffffff 0.6:#ffffff 0.7:#ffffff 0.8:#ffffff 0.9:#000000 1:#ffffff'
-                });
-                link1.style({
-                    stroke: 'l(180) 0:#ffffff 0.1:#ffffff 0.2:#ffffff 0.3:#ffffff 0.4:#ffffff 0.5:#ffffff 0.6:#ffffff 0.7:#ffffff 0.8:#ffffff 0.9:#000000 1:#ffffff'
-                });
-                link2.style({
-                    stroke: 'l(180) 0:#ffffff 0.1:#ffffff 0.2:#ffffff 0.3:#ffffff 0.4:#ffffff 0.5:#ffffff 0.6:#ffffff 0.7:#ffffff 0.8:#ffffff 0.9:#000000 1:#ffffff'
-                });
-                link3.style({
-                    stroke: 'l(180) 0:#ffffff 0.1:#ffffff 0.2:#ffffff 0.3:#ffffff 0.4:#ffffff 0.5:#ffffff 0.6:#ffffff 0.7:#ffffff 0.8:#ffffff 0.9:#000000 1:#ffffff'
-                });
+                $.each(links,function(i,v){
+                    if(i==4){
+                        v.style({
+                            stroke: 'l(180) 0:#ffffff 0.1:#000000 0.2:#ffffff 0.3:#ffffff 0.4:#ffffff 0.5:#ffffff 0.6:#ffffff 0.7:#ffffff 0.8:#ffffff 0.9:#ffffff 1:#ffffff'
+                        });
+                    }else{
+                        v.style({
+                            stroke: 'l(180) 0:#ffffff 0.1:#ffffff 0.2:#ffffff 0.3:#ffffff 0.4:#ffffff 0.5:#ffffff 0.6:#ffffff 0.7:#ffffff 0.8:#ffffff 0.9:#000000 1:#ffffff'
+                        });
+                    }
+
+                })
             }
             if (number % 11 == 10) {
-                link.style({
-                    stroke: 'l(180) 0:#ffffff 0.1:#ffffff 0.2:#ffffff 0.3:#ffffff 0.4:#ffffff 0.5:#ffffff 0.6:#ffffff 0.7:#ffffff 0.8:#ffffff 0.9:#ffffff 1:#000000'
-                });
-                link1.style({
-                    stroke: 'l(180) 0:#ffffff 0.1:#ffffff 0.2:#ffffff 0.3:#ffffff 0.4:#ffffff 0.5:#ffffff 0.6:#ffffff 0.7:#ffffff 0.8:#ffffff 0.9:#ffffff 1:#000000'
-                });
-                link2.style({
-                    stroke: 'l(180) 0:#ffffff 0.1:#ffffff 0.2:#ffffff 0.3:#ffffff 0.4:#ffffff 0.5:#ffffff 0.6:#ffffff 0.7:#ffffff 0.8:#ffffff 0.9:#ffffff 1:#000000'
-                });
-                link3.style({
-                    stroke: 'l(180) 0:#ffffff 0.1:#ffffff 0.2:#ffffff 0.3:#ffffff 0.4:#ffffff 0.5:#ffffff 0.6:#ffffff 0.7:#ffffff 0.8:#ffffff 0.9:#ffffff 1:#000000'
-                });
+                $.each(links,function(i,v){
+                    if(i==4){
+                        v.style({
+                            stroke: 'l(180) 0:#000000 0.1:#ffffff 0.2:#ffffff 0.3:#ffffff 0.4:#ffffff 0.5:#ffffff 0.6:#ffffff 0.7:#ffffff 0.8:#ffffff 0.9:#ffffff 1:#ffffff'
+                        });
+                    }else{
+                        v.style({
+                            stroke: 'l(180) 0:#ffffff 0.1:#ffffff 0.2:#ffffff 0.3:#ffffff 0.4:#ffffff 0.5:#ffffff 0.6:#ffffff 0.7:#ffffff 0.8:#ffffff 0.9:#ffffff 1:#000000'
+                        });
+                    }
+                })
             }
-
-            lineview.repaint();
-            lineview1.repaint();
-            lineview2.repaint();
-            lineview3.repaint();
+            $.each(lineviews,function(i,v){
+                v.repaint();
+            })
             number += 1
         }, 150)
     }
 
     //5分钟重新绘制大屏
     setInterval(function () {
-        clear(function () {
-            begin()
-        })
-    }, 300000)
+
+        refresh()
+
+    }, 60000)
 
 })

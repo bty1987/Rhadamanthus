@@ -1,7 +1,7 @@
 
 $(function(){
 
-    var $popup = $('#viewOrder');
+    var $popup = com.focusPage('#viewOrder');
     var orderId = $popup.attr('data-id');
     if(orderId==0){
         layer.alert('客户ID为0', {
@@ -14,8 +14,8 @@ $(function(){
         com.post(api.data.queryCustomerById,{
             "customer.id": orderId
         },function(res){
-            var $table = $('table.table');
-            $table.css({'margin-left': '10%','margin-top':'6%'})
+            var $table = com.focusPage('table.table');
+            $table.css({'margin-left': '10%','margin-top':'6%'});
             var $td = $('table.table td');
             $td.css({'text-align':'right','width':'40%'});
             var $th = $('table.table th');

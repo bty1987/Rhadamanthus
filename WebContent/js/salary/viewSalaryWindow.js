@@ -1,9 +1,8 @@
-jQuery(function ($) {
-
+$(function(){
     var displayFunc = (function () {
 
         var renderList = function (tableId, listData) {
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
 
             if (listData && listData.length) {
 
@@ -71,7 +70,7 @@ jQuery(function ($) {
         };
         return {
             init: function (tableId, listData) {
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             },
             drawLine: function (v) {
@@ -80,8 +79,7 @@ jQuery(function ($) {
         }
     })();
 
-    var $popup = $('#viewPopUp');
-
+    var $popup = com.focusPage('#viewPopUp');
     var userId = $popup.attr('data-userId');
     var startTime = $popup.attr('data-startTime');
     var endTime = $popup.attr('data-endTime');
@@ -96,12 +94,11 @@ jQuery(function ($) {
         "filters[2].field": "endTime",
         "filters[2].data": endTime + " 23:59:59",
     };
+    var searchers = new Searcher();
 
-    var searcher = new Searcher();
-    searcher.init([], "", api.salary.pageWorkerSalaryByUserId, function (list) {
-        displayFunc.init('resultList1', list);
-    }, "pagenation", "inspectionRecordPostData", opt, false, null,null,"resultList1");
-
+    searchers.init([], null, api.salary.pageWorkerSalaryByUserId, function (data) {
+        displayFunc.init('resultList', data);
+    }, "pagenation", "planPostData", opt, false, null);
     //弹出内容许些样式
-    $('#resultList1').css({'width': '96%', 'margin': '0 auto'});
-});
+    com.focusPage('#resultList').css({'width': '96%', 'margin': '0 auto'});
+})

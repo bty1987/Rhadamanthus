@@ -73,14 +73,13 @@ $.extend(api, {quotation: {
     queryQuotationByOrderId: {url: "queryQuotationByOrderId.do", demo: true},
     queryQuotationForDefaultByOrderId: {url: "queryQuotationForDefaultByOrderId.do", demo: true},
     queryQuotationById: {url: "queryQuotationById.do", demo: true},
-    queryQuotationForPersonnel: {url: "queryQuotationForPersonnel.do"},
     queryQuotationForConfig: {url: "queryQuotationForConfig.do", demo: true},
-    checkQuotationForStatusByOrderId: {url: "checkQuotationForStatusByOrderId.do"},
     addQuotation: {url: "addQuotation.do"},
     updateQuotation: {url: "updateQuotation.do"},
     updateQuotationForAdvance: {url: "updateQuotationForAdvance.do"},
     deleteQuotationById: {url: "deleteQuotationById.do"},
     replicaQuotation: {url: "replicaQuotation.do"},
+    cloneQuotation:{url:"cloneQuotation.do"},
     copyQuotation: {url: "copyQuotation.do"},
     changeQuotationForDefault: {url: "changeQuotationForDefault.do"},
 
@@ -91,10 +90,10 @@ $.extend(api, {quotation: {
     deleteQuotationFunctionArea: {url: "deleteQuotationFunctionArea.do"},
 
     queryQuotationFunctionAreaItemByQuotationFunctionAreaId: {url: "queryQuotationFunctionAreaItemByQuotationFunctionAreaId.do"},
-    updateQuotationFunctionAreaItem: {url: "updateQuotationFunctionAreaItem.do" , intercept: true},
+    updateQuotationFunctionAreaItem: {url: "updateQuotationFunctionAreaItem.do", intercept: true},
     updateQuotationFunctionAreaItemForSpec: {url: "updateQuotationFunctionAreaItemForSpec.do"},
-    updateQuotationFunctionAreaItemForIndex: {url:"updateQuotationFunctionAreaItemForIndex.do" ,intercept: true},
-    deleteQuotationFunctionAreaItem: {url: "deleteQuotationFunctionAreaItem.do" ,intercept: true},
+    updateQuotationFunctionAreaItemForIndex: {url:"updateQuotationFunctionAreaItemForIndex.do", intercept: true},
+    deleteQuotationFunctionAreaItem: {url: "deleteQuotationFunctionAreaItem.do", intercept: true},
     updateQuotationFunctionAreaItemByQuotationIdAType: {url: "updateQuotationFunctionAreaItemByQuotationIdAType.do"},
 
 

@@ -37,7 +37,8 @@
     ], "type": [
         {"key":"0", "value":"半包"},
         {"key":"1", "value":"全包"},
-        {"key":"2", "value":"半价"}
+        {"key":"2", "value":"半价"},
+		{"key":"3", "value":"满减"}
     ], "paymentType": [
 		{"key":"0-0","value":"设计费"},
         {"key":"0-3","value":"主材代购费"},
@@ -48,7 +49,8 @@
 	], "orderType": [
 		{"key":"0", "value":"半包"},
 		{"key":"1", "value":"全包"},
-		{"key":"2", "value":"半价"}
+		{"key":"2", "value":"半价"},
+		{"key":"3", "value":"满减"}
 	], "perCharge": [
 		{"key":"designer", "value":"9"},
 		{"key":"manager", "value":"1"}

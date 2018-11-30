@@ -10,12 +10,12 @@ jQuery(function ($) {
         ageType: null,
         radio: null,
         checkbox: null,
-        labeltype: [],
+        labeltype: []
     };
 
-    $('#fl-statement').statement("优选", "人员排名");
+    com.focusPage('#fl-statement').statement("优选", "人员排名");
 
-    checkuserlabel.check = $("#check").on('click', checkuser);
+    checkuserlabel.check = com.focusPage("#check").on('click', checkuser);
 
     com.post(api.ds.data, {}, function (res) {
         checkuserlabel.labeltype = res.labeltype
@@ -25,21 +25,15 @@ jQuery(function ($) {
 
     function displayline() {
         $.each(checkuserlabel.labeltype, function (i, v) {
-
-            var $div = $('<div class="col-md-3" id="form' + i + '"></div>').appendTo($("#formLabs"));
-
+            var $div = $('<div class="col-md-4" id="form' + i + '"></div>').appendTo(com.focusPage("#formLabs"));
             var $col = $('<div class="col-sm-12" ></div>');
-
             var $lal = $('<label class=" control-label no-padding-right">' + v.value + '</label>');
-
             $div.append($col.append($lal)).append(drowRoid("belongDesignInfo" + i, "roid" + i));
-
-            $("#roid"+i).append(choice($("#roid" + i), v.key, "checkbox"))
+            com.focusPage("#roid"+i).append(choice(com.focusPage("#roid" + i), v.key, "checkbox"))
         })
     }
 
     function drowRoid(belongDesignInfo1, roid1) {
-
         var $col_md = $('<div class="col-md-12"></div>');
         var $widget = $('<div class="widget-container-span ui-sortable"></div>');
         var $widget_box = $('<div class="widget-box transparent"></div>');
@@ -50,7 +44,7 @@ jQuery(function ($) {
 
         $col_md.append($widget.append($widget_box.append($widget_body.append($body_inner.append($ul.append($li))))));
 
-        return $col_md
+        return $col_md;
     }
 
     function choice(removeid, typeid, type) {
@@ -59,38 +53,31 @@ jQuery(function ($) {
 
         var $ul = $('<ul class="list-unstyled fl-inline-list clearfix"></ul>');
         com.post(api.data.queryLabel, {"label.status": 0}, function (res) {
-
             $.each(res.labels, function (i, v) {
-                    if(v.type == typeid){
-                        var $li = $('<li style="width: 50%;padding: 0px!important;"></li>');
-                        var $label = $('<label style=""></label>');
-                        var $input = $('<input>').attr({
-                            "type": type,
-                            "name": "module" + typeid,
-                            "class": "ace",
-                            "id": v.lid
-                        }).val(v.lid);
-                        var $span = $('<span></span>').addClass('lbl').html(v.name);
-                        $li.append($label.append($input).append($span));
+                if(v.type == typeid){
+                    var $li = $('<li style="width: 50%;padding: 0px!important;"></li>');
+                    var $label = $('<label style=""></label>');
+                    var $input = $('<input>').attr({
+                        "type": type,
+                        "name": "module" + typeid,
+                        "class": "ace",
+                        "id": v.lid
+                    }).val(v.lid);
+                    var $span = $('<span></span>').addClass('lbl').html(v.name);
+                    $li.append($label.append($input).append($span));
 
-                        $li.appendTo($ul);
-                    }
-
+                    $li.appendTo($ul);
+                }
             })
         }, null, false);
-        return $ul
+        return $ul;
     }
 
     function checkuser() {
-
-        $("#userlabel").css("display", "block");
-
-        $(".rem").remove();
-
-        var checkbox = $('input[name^="module"]:checked');
-
+        com.focusPage("#userlabel").css("display", "block");
+        com.focusPage(".rem").remove();
+        var checkbox = com.focusPage('input[name^="module"]:checked');
         var option = {};
-
         var k = 0;
 
         $.each(checkbox, function (i, v) {
@@ -103,38 +90,29 @@ jQuery(function ($) {
         });
 
         if (checkbox.length == 0) {
-
             layer.msg("请选择标签");
-
         } else {
             var userlabels = null;
 
             com.post(api.data.pickUserLabel, option, function (res) {
-
-
                 if (res.userlabels == null || res.userlabels.length == 0) {
                     layer.msg("没有符合的人员");
                 }
 
                 userlabels = res.userlabels;
 
-                var $row = $('<div class="row rem"></div>').appendTo($("#userlabel"));
+                var $row = $('<div class="row rem"></div>').appendTo(com.focusPage("#userlabel"));
 
                 $.each(userlabels, function (i, v) {
-
                     checkuserlabel.userPhoto = (v.user.userPhoto == null ? " " : v.user.userPhoto);
-
                     var $li =drawlnke(v,i);
-
                     $li.appendTo($row);
                 });
-
             }, null, false);
         }
     }
 
     function drawlnke(v,i){
-
         var $box = $('<div class="col-xs-6 col-sm-4 pricing-box"></div>');
         var $widget_box = $('<div class="widget-box"></div>');
 
@@ -147,7 +125,7 @@ jQuery(function ($) {
         var $liimg = $('<li></li>').css({"text-align":"center"});
         var $scope = $('<span class="col-md-3"></span>');
         var $number = $('<span class="line-height-1 bigger-170 blue">'+v.scope+'</span><br>');
-        var $points = $('<span class="line-height-1 smaller-90">总分数</span>')
+        var $points = $('<span class="line-height-1 smaller-90">总分数</span>');
         var $div = $('<div id="infoPicture'+i+'"></div>').css({"width":"170px","height":"160px","border-radius":"100px","border":"1px solid #ccc","margin": "0px auto"});
         var $liname = $('<li>姓名:'+v.user.userName+'</li>');
         var $lilabel = $('<li><i class="icon-lightbulb bigger-120"></i>&nbsp;&nbsp;精通的标签:</li>');
@@ -162,13 +140,11 @@ jQuery(function ($) {
                 if(v.label.isShow == 0) {
                     var num = 0;
                     if (v.scope >= 100) {
-                        num = 100
+                        num = 100;
                         var $bar = $('<div class="progress-bar" style="width:' + num + '%"></div>');
-
                     } else {
-                        num = v.scope
+                        num = v.scope;
                         var $bar = $('<div class="progress-bar" style="width:' + num + '%"></div>');
-
                     }
 
                     $progress = $('<div class="progress"></div>');

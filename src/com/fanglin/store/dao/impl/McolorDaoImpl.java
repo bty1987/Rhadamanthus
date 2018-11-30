@@ -19,12 +19,12 @@ public class McolorDaoImpl extends DaoImpl<McolorPO> implements McolorDao{
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<McolorPO> queryMcolorByGid(long gid, Boolean flag) {
+	public List<McolorPO> queryMcolorByGid(long gid, Short status) {
 		
 		Criteria criteria = session().createCriteria(McolorPO.class).add(Restrictions.eq(McolorPO.COLUMN_GID_STR, gid));
 		
-		if(flag){
-			criteria.add(Restrictions.eq("status", McolorPO.STATUS_ABLE_SHORT));
+		if(status != null){
+			criteria.add(Restrictions.eq("status", status));
 		}
 		
 		return criteria.list();

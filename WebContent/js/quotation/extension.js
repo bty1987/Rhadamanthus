@@ -1,11 +1,11 @@
 jQuery(function($) {
-
-    var extraParams = {"extension.orderId" : params.decorationOrderId};
+    var decorationOrderId = params.decorationOrderId;
+    var extraParams = {"extension.orderId" : decorationOrderId};
     var typeDict = {"0":"增项", "1":"减项"};
     var displayFunc  = (function(){
 
         var renderList = function(tableId,listData){
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if(listData && listData.length){
@@ -32,7 +32,7 @@ jQuery(function($) {
             var $input = $('<input>').attr({
                 "type": "checkbox",
                 "name": "eids",
-                "class": "ace ace-checkbox-2",
+                "class": "ace ace-checkbox-2"
             }).val(v.eid);
             var $span = $('<span></span>').addClass('lbl blue bigger-150').text(v.content);
 
@@ -62,7 +62,7 @@ jQuery(function($) {
             $btnDel.click(function(){
                 bootbox.confirm("确认删除吗?",function(flag) {
                     flag && removeRow(v.eid);
-                })
+                });
             });
 
             return $liLine;
@@ -70,7 +70,7 @@ jQuery(function($) {
 
         return {
             init : function(tableId,listData){
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
             },
             drawLine : function(v){
@@ -86,22 +86,22 @@ jQuery(function($) {
 
     var extension = {
         decorationOrderId : params.decorationOrderId,
-        saveBtn: $("#saveBtn").on("click", saveData),
-        cancellBtn: $("#cancelBtn"),
-        modal: $("#extensionModal"),
+        saveBtn: com.focusPage("#saveBtn").on("click", saveData),
+        cancellBtn: com.focusPage("#cancelBtn"),
+        modal: com.focusPage("#extensionModal"),
         extensionItems: {
-            addExtensionDes : $("#extensionDes"),
-            addExtensionType : $("#extensionType")
-        },
+            addExtensionDes : com.focusPage("#extensionDes"),
+            addExtensionType : com.focusPage("#extensionType")
+        }
     };
 
     //返回按钮
-    $('#btnBack').click(function(){
-        com.switchPage(params.historyPage);
+    com.focusPage('#btnBack').click(function(){
+        com.switchPage("/views/decoration/decoration.html");
     });
 
     //添加按钮
-    $('#add').click(function(){
+    com.focusPage('#add').click(function(){
         com.cleanItems(extension.extensionItems);
 
         extension.extensionItems.addExtensionType.attr('disabled', false);
@@ -122,7 +122,7 @@ jQuery(function($) {
             search.doSearch();
         });
 
-        $("#eData").trigger("click");
+        com.focusPage("#eData").trigger("click");
     }
 
     function saveData(){

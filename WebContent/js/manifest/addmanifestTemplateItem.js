@@ -10,7 +10,7 @@ $(function(){
      * */
     var displayFunc  = (function(){
         var renderList = function(tableId,listData){
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
             if(listData && listData.length){
                 var $ulTitle = createTableTitle();
                 var $ulData = $('<ul></ul>').addClass('flex-table');
@@ -46,7 +46,7 @@ $(function(){
 
             $inputCheckbox.click(function () {
                 $(this).toggleClass('checked')
-            })
+            });
 
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html($divChecker).attr({"value" : v.gid}));
             var $contentWrap = $('<div></div>').addClass('line-wrap  content col9');
@@ -78,7 +78,7 @@ $(function(){
         };
         return {
             init : function(tableId,listData){
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
             },
             drawLine : function(v){
@@ -93,7 +93,7 @@ $(function(){
     //添加按钮
     var $btnConfirm = $('<a></a>').addClass('btn btn-success mgr-10').attr({'name':'subbtn','href':'javascript:void(0);'}).text('确定');
     var $btnCancel = $('<a></a>').addClass('btn').attr({'name':'cancelbtn','href':'javascript:void(0);'}).text('取消');
-    var $condList1 = $('#condList1');
+    var $condList1 = com.focusPage('#condList1');
     $condList1.append($btnConfirm).append($btnCancel);
     //添加按钮事件
     $btnConfirm.bindClick(function(){
@@ -102,21 +102,21 @@ $(function(){
     $btnCancel.bindClick(function(){
         layer.closeAll();
     });
-    var $page = $('span[name="totalPage"]').val();
-    var $nowpage = $('span[name="nowPage"]').val();
+    var $page = com.focusPage('span[name="totalPage"]').val();
+    var $nowpage = com.focusPage('span[name="nowPage"]').val();
     //选择框操作
     function saveOptionChange(){
         var _params = {
             "manifestTemplate.mtId" : params.mtid
         };
-        var $menus = $('input[type="checkbox"]:checked', '.line');
-        //var $menus = $('input[type="checkbox"]:checked');
-        //var gidObj = $('input[type="checkbox"]');
+        var $menus = com.focusPage('input[type="checkbox"]:checked', '.line');
+        //var $menus = com.focusPage('input[type="checkbox"]:checked');
+        //var gidObj = com.focusPage('input[type="checkbox"]');
         var $gid = [];
         $.each($menus,function(i,v){
             var $v = $(v);
             $gid.push($v.val());
-        })
+        });
         $menus.length && $menus.each(function(i){
             _params["miIds[" + i + "]"] = $gid[i];
         });
@@ -127,11 +127,11 @@ $(function(){
         });
     }
 //弹出内容许些样式
-    $('#condList1').css('margin-bottom','12px');
-    $('#condList1 .inline').css('margin-top','15px');
-    $('#condList1 .inline:nth-of-type(1)').css('margin-left','25px')
-    $('#condList1 .small').css('margin-top','15px');
-    $('#condList1 a[name="subbtn"]').css({'margin-left':'160px'});
-    $('#condList1 a[name="cancelbtn"]').css({'margin-left':'3px'});
-    $('#resultList1').css({'width':'96%','margin':'0 auto'})
+    com.focusPage('#condList1').css('margin-bottom','12px');
+    com.focusPage('#condList1 .inline').css('margin-top','15px');
+    com.focusPage('#condList1 .inline:nth-of-type(1)').css('margin-left','25px');
+    com.focusPage('#condList1 .small').css('margin-top','15px');
+    com.focusPage('#condList1 a[name="subbtn"]').css({'margin-left':'160px'});
+    com.focusPage('#condList1 a[name="cancelbtn"]').css({'margin-left':'3px'});
+    com.focusPage('#resultList1').css({'width':'96%','margin':'0 auto'})
 });

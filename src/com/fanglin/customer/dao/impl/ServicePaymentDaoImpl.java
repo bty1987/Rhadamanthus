@@ -1,5 +1,6 @@
 package com.fanglin.customer.dao.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.hibernate.criterion.Restrictions;
@@ -28,5 +29,21 @@ public class ServicePaymentDaoImpl extends DaoImpl<ServicePaymentPO> implements 
 		return query.list();
 	}
 
-	
+	@Override
+	public Float countCusServicePaymentForAmount(String orderId) {
+		
+		String sql = "select sum(IF(payment.servicepayment.type = 1,-payment.servicepayment.serviceMoney ,payment.servicepayment.serviceMoney)) from payment.servicepayment where payment.servicepayment.`status` in (1,2) and payment.servicepayment.orderId = :orderId";
+		
+		BigDecimal nums = (BigDecimal) session().createSQLQuery(sql).setString("orderId", orderId).uniqueResult();
+		
+		if(nums==null){
+			
+			nums = BigDecimal.ZERO;
+			
+		}
+		
+		return nums.floatValue();
+		
+	}
+
 }

@@ -12,8 +12,8 @@ jQuery(function ($) {
             "4": false,
             "5": false,
             "6": false,
-            "7": false,
-        },
+            "7": false
+        }
 
     };
 
@@ -36,17 +36,17 @@ jQuery(function ($) {
         customerServiceDetail.constructionSchedules = res.constructionSchedules;
 
         $.each(constructionSchedule, function (i, v) {
-            customerServiceNode("#stepId", v.schedule);
-            customerServicePane("#step-container", v.schedule, v.schedule);
+            customerServiceNode("#stepIds", v.schedule);
+            customerServicePane("#step-containers", v.schedule, v.schedule);
         });
 
         var stepnum = constructionSchedule[0].schedule;
         initWizardSept(stepnum);
 
-        $('#fuelux-wizard').ace_wizard({status: true}).on('finished', function (e) {
+        com.focusPage('#fuelux-wizard').ace_wizard({status: true}).on('finished', function (e) {
             com.showAlert(com.info, "工程已经结束,之后可以进行验收工作!");
         }).on('stepclick', function (e, info) {
-            var stepId = $("[flag]").eq(info.step - 1).attr("id");
+            var stepId = com.focusPage("[flag]").eq(info.step - 1).attr("id");
             var sd = stepId.substring(4);
             if (!customerServiceDetail.wizardSept[sd]) {
                 initWizardSept(sd);
@@ -55,10 +55,10 @@ jQuery(function ($) {
 
     }, null, false);
 
-    $('#modal-wizard .modal-header').ace_wizard();
-    $('#modal-wizard .wizard-actions .btn[data-dismiss=modal]').removeAttr('disabled');
+    com.focusPage('#modal-wizard .modal-header').ace_wizard();
+    com.focusPage('#modal-wizard .wizard-actions .btn[data-dismiss=modal]').removeAttr('disabled');
 
-    $('#btnBack').on(ace.click_event, function () {
+    com.focusPage('#btnBack').on(ace.click_event, function () {
         com.switchPage(api.index.customerServiceIndex.url);
     });
 
@@ -72,11 +72,11 @@ jQuery(function ($) {
         //得到全部的施工人员
         com.post(api.construction.queryConstructerByOrderId, elementPostData, function (res) {
             constructers = res.constructers;
-            $("#btnSave").unbind("click");
+            com.focusPage("#btnSave").unbind("click");
             if (schedule) {
                 workerIdsData = [];
                 commitFlag = false;
-                $("#" + schedule + "WorkerInfos").html("");
+                com.focusPage("#" + schedule + "WorkerInfos").html("");
 
                 if (constructers.length != 0) {
 
@@ -99,27 +99,27 @@ jQuery(function ($) {
                         var workerDesGroupDiv = $('<div class="form-group">').appendTo(horizontalDiv);
                         var workerDesTextarea = $('<textarea rows="3"></textarea>').attr("id", workerInfo.crid + "workerRatyDes").val(workerInfo.assessment).appendTo(workerDesGroupDiv);
 
-                        profileDiv.appendTo($("#" + schedule + "WorkerInfos"));
+                        profileDiv.appendTo(com.focusPage("#" + schedule + "WorkerInfos"));
 
                         setWorkerRaty('#' + workerInfo.crid + "workerRaty", workerInfo.rate);
                         setWorkerDes("#" + workerInfo.crid + "workerRatyDes", workerInfo.assessment);
 
                         workerIdsData.push(constructers[i].crid);
-                    })
+                    });
 
                     commitFlag = true;
                 } else {
                     $('<div class="alert alert-info">').text("当前进度没有分配工人!").appendTo($("#" + schedule + "WorkerInfos"));
                 }
 
-                $("#btnSave").click(function () {
+                com.focusPage("#btnSave").click(function () {
                     var successFlag = false;
 
                     var options = {};
                     for (var i = 0; i < workerIdsData.length; i++) {
                         options["constructers["+i+"].crid"] = workerIdsData[i];
-                        options["constructers["+i+"].rate"] = $("#" + workerIdsData[i] + "workerRaty-score").val();
-                        options["constructers["+i+"].assessment"] = $("#" + workerIdsData[i] + "workerRatyDes").val();
+                        options["constructers["+i+"].rate"] = com.focusPage("#" + workerIdsData[i] + "workerRaty-score").val();
+                        options["constructers["+i+"].assessment"] = com.focusPage("#" + workerIdsData[i] + "workerRatyDes").val();
                     }
 
                     if (commitFlag) {
@@ -147,13 +147,13 @@ jQuery(function ($) {
     }
 
     function setWorkerDes(id, des) {
-        $(id).val(des);
+        com.focusPage(id).val(des);
     }
 
     function setWorkerRaty(id, raty) {
-        $(id).raty({
+        com.focusPage(id).raty({
             path: './assets/altogether/images/',
-            start: raty,
+            start: raty
         });
     }
 
@@ -182,11 +182,11 @@ jQuery(function ($) {
     function addActive(schedule) {
         var con = customerServiceDetail.constructionSchedules;
         $.each(con, function (i, v) {
-            $("#step" + v.schedule).removeClass("active");
-            $("#step" + v.schedule).addClass("step-pane");
+            com.focusPage("#step" + v.schedule).removeClass("active");
+            com.focusPage("#step" + v.schedule).addClass("step-pane");
         });
-        $("#step" + schedule).removeClass("step-pane");
-        $("#step" + schedule).addClass("active");
+        com.focusPage("#step" + schedule).removeClass("step-pane");
+        com.focusPage("#step" + schedule).addClass("active");
     }
 
 });

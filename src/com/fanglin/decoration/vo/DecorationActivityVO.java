@@ -11,6 +11,10 @@ public class DecorationActivityVO implements java.io.Serializable {
 	private String orderId;
 	
 	private ActivityVO activity;
+	
+	private int type;
+	
+	private int defaults;
 
 	public Integer getDaId() {
 		return daId;
@@ -35,5 +39,23 @@ public class DecorationActivityVO implements java.io.Serializable {
 	public void setActivity(ActivityVO activity) {
 		this.activity = activity;
 	}
+
+	public int getType() {
+		return type;
+	}
+
+	public void setType(int type) {
+		this.type = type;
+	}
+
+	public int getDefaults() {
+		return defaults;
+	}
+
+	public void setDefaults(int defaults) {
+		this.defaults = defaults;
+	}
+	
+	
 
 }

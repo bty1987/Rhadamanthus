@@ -19,7 +19,7 @@ jQuery(function (a) {
         d.setTime(d.getTime() + (minutes * 60 * 1000));
         var expires = "expires=" + d.toUTCString();
         document.cookie = cname + "=" + cvalue + "; " + expires;
-    }
+    };
 
     if (!config.intranet) {
         $.ajax({
@@ -29,7 +29,7 @@ jQuery(function (a) {
             dataType: "json",
             async: false,
             success: function (res) {
-                config.communion = res.communion
+                config.communion = res.communion;
                 setCookie('communion', res.communion, config.timeout)
             }
         });
@@ -58,7 +58,7 @@ jQuery(function (a) {
         })
 
         if (macs.length == 0) {
-            alert("设备无使用权限,如果有问题请联系管理员.");
+            alert("设备信息获取失败,如果有问题请联系管理员.");
             require('nw.gui').Window.get().close();
         }
 
@@ -75,11 +75,14 @@ jQuery(function (a) {
                 }
             },
             error: function (res) {
-                alert("设备无使用权限,如果有问题请联系管理员.");
+                alert("设备权限验证失败,如果有问题请联系管理员.");
                 require('nw.gui').Window.get().close();
             }
         });
-
+    } else if (!location.hostname.startsWith('192.168')){
+        $("#unamePwdContainer").remove();
+        $("#QRLogin").remove();
+        $("#WXLogin").remove();
     }
 
     config.demo && (config.server = 'result/', config.communion = 'result/', config.media = 'result/', QRCode = '/QRCode.json', queryVode = '/queryVode.json');
@@ -94,18 +97,29 @@ jQuery(function (a) {
         }).done(function (data) {
             var _flag = data.loginInfo.loginFlag;
 
-            !config.demo && _flag && checkLogin(_flag);
+            !config.demo && _flag && checkQRLogin(_flag);
+        });
+    };
+    var initWXCode = function () {
+        $.ajax(config.communion + QRCode + "?timestamp=" + new Date().getTime() + "&prefix=" + config.prefix + "&type=1").done(function (data) {
+            $('#wxcode img').prop('src', data.QRCode);
+        }).fail(function () {
+            alert("获取二维码失败!");
+        }).done(function (data) {
+            var _flag = data.loginInfo.loginFlag;
+
+            !config.demo && _flag && checkWXLogin(_flag);
         });
     };
 
-    var checkLogin = function (flag) {
-        count == 30 ? $('.login_qrcode_refresh').html("您的二维码已失效, <br>请点击下方刷新按钮").removeClass('hide') : $.post(config.communion + "/queryLoginInfoByLoginFlag.do", {"loginInfo.loginFlag": flag}).done(function (data) {
+    var checkQRLogin = function (flag) {
+        count == 30 ? $('.login_qrcode_refresh').html("您的钉钉二维码已失效, <br>请点击下方刷新按钮").removeClass('hide') : $.post(config.communion + "/queryLoginInfoByLoginFlag.do", {"loginInfo.loginFlag": flag}).done(function (data) {
             count++;
             var statusCode = data.loginInfo.code;
 
             if (statusCode == -1) {
                 setTimeout(function () {
-                    checkLogin(flag)
+                    checkQRLogin(flag)
                 }, 4000)
             } else if (0 == statusCode) {
                 setCookie("authentication", data.loginInfo.authentication, config.timeout);
@@ -125,21 +139,67 @@ jQuery(function (a) {
             }
         });
     };
+    var checkWXLogin = function (flag) {
+        count == 30 ? $('.login_wxcode_refresh').html("您的微信二维码已失效, <br>请点击下方刷新按钮").removeClass('hide') : $.post(config.communion + "/queryLoginInfoByLoginFlag.do", {"loginInfo.loginFlag": flag}).done(function (data) {
+            count++;
+            var statusCode = data.loginInfo.code;
+
+            if (statusCode == -1) {
+                setTimeout(function () {
+                    checkWXLogin(flag)
+                }, 4000)
+            } else if (0 == statusCode) {
+                setCookie("authentication", data.loginInfo.authentication, config.timeout);
+                setCookie("loginTime", new Date().getTime(), config.timeout);
+                if (!parent.window.isPC) {
+                    window.location.href = "index.html?timestamp=" + new Date().getTime();
+                } else {
+                    openChildWindow();
+                    require('fs').readFile('C:/19484298061545ce', 'utf-8', function (err, data) {
+                        if (!err) {
+                            openChildWindow();
+                        }
+                    })
+                }
+            } else {
+                $('.login_wxcode_refresh').html(data.loginInfo.message).removeClass('hide')
+            }
+        });
+    };
 
     $('.login_qrcode_text span').click(function () {
         !$('.login_qrcode_refresh').hasClass('hide') && ($('.login_qrcode_refresh').addClass('hide'), count = 0, initQRCode());
     });
-
-    initQRCode();
-
-    $('#changetoform').click(function () {
-        $('#dloginContainer').addClass('hide');
-        $('#unamePwdContainer').removeClass('hide');
+    $('.login_wxcode_text span').click(function () {
+        !$('.login_wxcode_refresh').hasClass('hide') && ($('.login_wxcode_refresh').addClass('hide'), count = 0, initWXCode());
     });
 
-    $('#changetoqrcode').click(function () {
+    initQRCode();
+    initWXCode();
+
+    $('#QRToForm').click(function () {
+        $('#QRLogin').addClass('hide');
+        $('#unamePwdContainer').removeClass('hide');
+    });
+    $('#WXToForm').click(function () {
+        $('#WXLogin').addClass('hide');
+        $('#unamePwdContainer').removeClass('hide');
+    });
+    $('#FormToQR').click(function () {
         $('#unamePwdContainer').addClass('hide');
-        $('#dloginContainer').removeClass('hide');
+        $('#QRLogin').removeClass('hide');
+    });
+    $('#FormToWX').click(function () {
+        $('#unamePwdContainer').addClass('hide');
+        $('#WXLogin').removeClass('hide');
+    });
+    $('#QRToWX').click(function () {
+        $('#QRLogin').addClass('hide');
+        $('#WXLogin').removeClass('hide');
+    });
+    $('#WXToQR').click(function () {
+        $('#WXLogin').addClass('hide');
+        $('#QRLogin').removeClass('hide');
     });
 
     $("#Verify").click(function () {
@@ -263,34 +323,38 @@ jQuery(function (a) {
 
     function pcBody() {
         var span = $('<img class="" src="" id="Verify" alt="看不清,换一张"/>').css({'float': 'right', 'height': '34px'});
-        $('#winTop').css('display', "")
+        $('#winTop').css('display', "");
         $("div.main-container > div:first-child").remove();
         $("div.main-content").css('padding', '0xp 30px');
-        $("div.main-content > div:first-child").removeClass('row')
+        $("div.main-content > div:first-child").removeClass('row');
         $("div.main-content > div:first-child > div:first-child").removeClass('col-sm-10').removeAttr('style');
         $('#login-box').css('overflow', 'hidden');
         $("#loginFrom > div:first-child").css('margin-top', '14%');
-        $('div.input-icon.input-icon-right.no-padding-right').css({"padding": "0px", "margin-top": "30px"});
-        $('#nowCode').css({'width': '65%', 'float': 'left'});
+        $('div.input-icon.input-icon-right.no-padding-right').css({"padding": "0px", "margin-top": "30px", "width": "100%"});
+        $('#nowCode').css({'width': '70%', 'float': 'left'});
         $('#Verify').parent().remove();
         $('#newCodeIcon').remove();
-        $('#nowCode').after(span)
+        $('#nowCode').after(span);
         $('#loginBtn').parent().removeClass('col-md-2').css({
             'margin-right': '',
             'width': '100%',
             'margin-top': '37px'
         });
-        $('#loginBtn').css({'float': 'left', 'padding': '3px', 'width': '48%', 'margin-right': '4.5px'});
+        $('.btn-toolbar button').css({'float': 'left','width': '32%'});
         $('#changetoqrcode').css({'float': 'left', 'padding': '3px', 'width': '48%'});
         $('#icon').remove();
         $('#name').parent().remove();
         $('#ename').parent().remove();
         $("#unamePwdContainer > div:first-child").removeClass('clearfix').removeAttr("style");
-        $("#unamePwdContainer > div:first-child > div:first-child").css({'padding': '0px', 'margin-top': '30px'})
-        $('#dloginContainer').removeClass('clearfix').css({'margin': '', 'text-align': 'center'})
-        $('#dloginContainer div:first-child').removeClass('login_content')
-        $('.slide').css('display', 'none')
-        $('body').css('display', 'block')
+        $("#unamePwdContainer > div:first-child > div:first-child").css({'padding': '0px', 'margin-top': '30px'});
+        $('#dloginContainer').removeClass('clearfix').css({'margin': '', 'text-align': 'center'});
+        $('#dloginContainer div:first-child').removeClass('login_content');
+        $('.slide').css('display', 'none');
+        $('body').css('display', 'block');
+        $('.login-layout').css('background-color', 'white');
+        $('.main-content #login-box .login_content').css({'width': '100%', 'border': '0px'});
+        $('.main-content #login-box .clearfix').css('overflow', 'hidden');
+
     }
 
     document.onkeydown = function (e) {

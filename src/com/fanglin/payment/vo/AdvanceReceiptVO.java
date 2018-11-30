@@ -19,8 +19,6 @@ public class AdvanceReceiptVO implements java.io.Serializable {
 	
 	private Timestamp confirmTime;
 	
-	private Float realMoney;
-	
 	private Float cash;
 	
 	private String cashInfo;
@@ -40,6 +38,8 @@ public class AdvanceReceiptVO implements java.io.Serializable {
 	private Float accounts;
 	
 	private String accountsBank;
+	
+	private Float transfer;
 	
 	private String comment;
 
@@ -83,14 +83,6 @@ public class AdvanceReceiptVO implements java.io.Serializable {
 
 	public void setConfirmTime(Timestamp confirmTime) {
 		this.confirmTime = confirmTime;
-	}
-	
-	public Float getRealMoney() {
-		return realMoney;
-	}
-
-	public void setRealMoney(Float realMoney) {
-		this.realMoney = realMoney;
 	}
 
 	public Float getCash() {
@@ -140,7 +132,7 @@ public class AdvanceReceiptVO implements java.io.Serializable {
 	public void setCheckvBank(String checkvBank) {
 		this.checkvBank = checkvBank;
 	}
-
+	
 	public Float getInstallment() {
 		return installment;
 	}
@@ -171,6 +163,14 @@ public class AdvanceReceiptVO implements java.io.Serializable {
 
 	public void setAccountsBank(String accountsBank) {
 		this.accountsBank = accountsBank;
+	}
+
+	public Float getTransfer() {
+		return transfer;
+	}
+
+	public void setTransfer(Float transfer) {
+		this.transfer = transfer;
 	}
 
 	public String getComment() {

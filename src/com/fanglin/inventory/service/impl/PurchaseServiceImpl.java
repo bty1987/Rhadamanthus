@@ -146,11 +146,12 @@ public class PurchaseServiceImpl  implements PurchaseService{
 			throw new FLException(230015, "公司不存在");
 		}
 		
-		//PO作为编号前缀 , 之后由8位数字组成
-		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_PO_INT, DateUtil.current("yyMMdd").toString(), company);
-		String manifestId = companyPO.getShortname() + String.valueOf("PO") + FormatUtil.fillZero(count, "00000000");
+		String currentDate = DateUtil.current("yyMMdd").toString();
+		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_PO_INT,currentDate, company);
+		String endNo = FormatUtil.fillZero(FormatUtil.offset(count), "0000");
+		String purchaseId = companyPO.getShortname() + String.valueOf("PO") + currentDate + endNo;
 		
-		PurchasePO purchasePO = new PurchasePO(manifestId);
+		PurchasePO purchasePO = new PurchasePO(purchaseId);
 		
 		BeanUtil.copyProperties(purchaseVO, purchasePO, Arrays.asList("user"));
 		

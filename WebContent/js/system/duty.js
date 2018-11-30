@@ -8,7 +8,7 @@
     var displayFunc  = (function(){
 
         var renderList = function(tableId,listData){
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if(listData && listData.length){
@@ -58,7 +58,7 @@
       
         return {
             init : function(tableId,listData){
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
             },
             drawLine : function(v){
@@ -84,7 +84,7 @@
     //定义全局变量  json
     var duty = {
     		
-		saveBtn: $("#saveAddItemBtn").on("click", saveData),//绑定事件
+		saveBtn: com.focusPage("#saveAddItemBtn").on("click", saveData),//绑定事件
 		cancelBtn: null,
 		modal: null,
 		dutyItems: {},
@@ -100,13 +100,13 @@
 	};
     	
    //给全局变量赋值(主要操作是制定页面标签)
-//	duty.saveBtn = $("#saveAddItemBtn").on("click", saveData);
-	duty.cancelBtn = $("#cancelBtn");
-	duty.modal = $("#addItemModal");
-	duty.dutyItems.did = $("#did");
-	duty.dutyItems.name = $("#dutyName");
-	duty.dutyItems.lead = $("#lead");
-	duty.dutyItems.depttype = $("#depttype");
+//	duty.saveBtn = com.focusPage("#saveAddItemBtn").on("click", saveData);
+	duty.cancelBtn = com.focusPage("#cancelBtn");
+	duty.modal = com.focusPage("#addItemModal");
+	duty.dutyItems.did = com.focusPage("#did");
+	duty.dutyItems.name = com.focusPage("#dutyName");
+	duty.dutyItems.lead = com.focusPage("#lead");
+	duty.dutyItems.depttype = com.focusPage("#depttype");
 	$.extend(com.validator, duty.validator); //将多个对象合并成一个对象
 
 
@@ -148,7 +148,7 @@
     }
     
     //添加
-    $('[name="addDuty"]' , '#pagenation').on("click",function(){  //选择器 [属性名="属性值"]  匿名函数
+    com.focusPage('[name="addDuty"]' , '#pagenation').on("click",function(){  //选择器 [属性名="属性值"]  匿名函数
 		duty.editFlg = false;
 
 		com.cleanItems(duty.dutyItems);

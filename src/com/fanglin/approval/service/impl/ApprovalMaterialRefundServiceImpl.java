@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.fastjson.JSONObject;
 import com.fanglin.approval.dao.ApprovalDao;
 import com.fanglin.approval.dao.ApprovalMaterialRefundDao;
 import com.fanglin.approval.dao.ApprovalMaterialRefundItemDao;
@@ -32,6 +33,7 @@ import com.fanglin.approval.vo.ApprovalMaterialRefundItemVO;
 import com.fanglin.approval.vo.ApprovalMaterialRefundVO;
 import com.fanglin.approval.vo.ApprovalVO;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.dingding.service.ApprovalService;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.MessageService;
 import com.fanglin.material.dao.MaterialBalanceDao;
@@ -47,6 +49,8 @@ import com.fanglin.payment.dao.MaterialPaymentDao;
 import com.fanglin.payment.po.MaterialPaymentPO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.system.dao.SystemConfigDao;
+import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
@@ -89,6 +93,12 @@ public class ApprovalMaterialRefundServiceImpl implements ApprovalMaterialRefund
 	
 	@Autowired
 	private UserDao userDao;
+	
+	@Autowired
+	private SystemConfigDao systemConfigDao;
+	
+	@Autowired
+	private ApprovalService approvalDDService;
 	
 	// 获取主材退货审批项信息
 	@Override
@@ -164,10 +174,20 @@ public class ApprovalMaterialRefundServiceImpl implements ApprovalMaterialRefund
 		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiver().getUserId());
 		UserPO sender = userDao.queryUserByUserId(userId);
 		
+		SystemConfigPO systemConfigPO = systemConfigDao.querySystemConfig(ApprovalPO.APPROVAL_SYSTEMCONFIG_MATERIALREFUND_STR,company);
+		
 		String refundType = approvalMaterialRefundVO.getType() == MaterialPO.STATUS_TYPE_FULLREFUND_INT ? "全退" : approvalMaterialRefundVO.getType() == MaterialPO.STATUS_TYPE_DAODAN_INT ? "倒单" : "退货";
 		
+		if(systemConfigPO == null){
+			approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_INIT_INT);
+		}else{
+			approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_DINGDING_INT);
+			List<JSONObject> formComponentValues = approvalDDService.getForms("说明", String.format(ApprovalPO.APPROVAL_CONTENTS_MATERIAL_REFUND_STR, materialPO.getOrderId(), materialPO.getNo(), materialPO.getBrand(), approvalMaterialRefundVO.getRefund(), approvalMaterialRefundVO.getReferMoney(), refundType));
+			String processinstanceid = approvalDDService.initiateApproval(systemConfigPO.getValue(), userId, approvalVO.getReceiver().getUserId(), null, null, formComponentValues, company);
+			approvalPO.setProcessinstanceid(processinstanceid);
+		}
+		
 		approvalPO.setType(ApprovalPO.APPROVAL_TYPE_MATERIAL_REFUND_INT);//主材退货
-		approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_INIT_INT);//初始
 		approvalPO.setIdent(String.valueOf(mid));//主材订单编号
 		approvalPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		//"订单号:%s,主材订单号:%s,品牌:%s,退款金额:%s,应退金额:%s,类型:%s"

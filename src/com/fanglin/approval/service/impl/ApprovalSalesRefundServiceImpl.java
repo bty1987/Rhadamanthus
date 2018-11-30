@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.fastjson.JSONObject;
 import com.fanglin.approval.dao.ApprovalDao;
 import com.fanglin.approval.dao.ApprovalSalesRefundDao;
 import com.fanglin.approval.dao.ApprovalSalesRefundItemDao;
@@ -21,6 +22,7 @@ import com.fanglin.approval.vo.ApprovalSalesRefundItemVO;
 import com.fanglin.approval.vo.ApprovalSalesRefundVO;
 import com.fanglin.approval.vo.ApprovalVO;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.dingding.service.ApprovalService;
 import com.fanglin.inventory.vo.ColorVO;
 import com.fanglin.inventory.vo.FormatVO;
 import com.fanglin.inventory.vo.GoodsVO;
@@ -41,6 +43,8 @@ import com.fanglin.sales.po.SalesBalancePO;
 import com.fanglin.sales.po.SalesItemPO;
 import com.fanglin.sales.po.SalesPO;
 import com.fanglin.sales.vo.SalesItemVO;
+import com.fanglin.system.dao.SystemConfigDao;
+import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
@@ -82,6 +86,13 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 
 	@Autowired
 	private SalesBalanceItemDao salesBalanceItemDao;
+	
+	@Autowired
+	private SystemConfigDao systemConfigDao;
+	
+	@Autowired
+	private ApprovalService approvalDDService;
+	
     //获取销售退货审批向信息
 	@Override
 	public List<ApprovalSalesRefundItemVO> queryApprovalSalesRefundItem(ApprovalVO approvalVO) throws FLException {
@@ -147,9 +158,19 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 		UserPO sender = userDao.queryUserByUserId(userId);
 		
 		String refundType = approvalSalesRefundVO.getType() == SalesPO.STATUS_ALLBACK_SHORT ? "全退" : approvalSalesRefundVO.getType() == SalesPO.STATUS_DBACKORDER_SHORT ? "倒单" : "退货";
-	
+		
+		SystemConfigPO systemConfigPO = systemConfigDao.querySystemConfig(ApprovalPO.APPROVAL_SYSTEMCONFIG_SALESREFUND_STR,company);
+		
+		if(systemConfigPO == null){
+			approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_INIT_INT);
+		}else{
+			approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_DINGDING_INT);
+			List<JSONObject> formComponentValues = approvalDDService.getForms("说明", String.format(ApprovalPO.APPROVAL_CONTENTS_SALES_REFUND_STR, salesPO.getOrderId(),salesPO.getNo(),salesPO.getBrand(),approvalSalesRefundVO.getRefund(),approvalSalesRefundVO.getRefundTotal(),refundType));
+			String processinstanceid = approvalDDService.initiateApproval(systemConfigPO.getValue(), userId, approvalVO.getReceiver().getUserId(), null, null, formComponentValues, company);
+			approvalPO.setProcessinstanceid(processinstanceid);
+		}
+		
 		approvalPO.setType(ApprovalPO.APPROVAL_TYPE_SALESREFUND_PAYMENT_INT);//销售退货
-		approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_INIT_INT);//初始
 		approvalPO.setIdent(String.valueOf(sid));
 		approvalPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		approvalPO.setApprovalTime(DateUtil.getDateToTimestamp(new Date()));

@@ -137,8 +137,8 @@ public class UserAction extends BaseListAction {
 	@Action(value = "resetPassword", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String resetPassword() throws FLException{
 		
-		if(SystemConfig.getString("communion") == null){
-		    throw new FLException(-1, "无操作权限");
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
 		}
 		
 		userService.resetPassword(user,queryCompany());
@@ -149,8 +149,8 @@ public class UserAction extends BaseListAction {
 	@Action(value = "addUser", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
 	public String addUser() throws FLException {
 		
-		if(SystemConfig.getString("communion") == null){
-		    throw new FLException(-1, "无操作权限");
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
 		}
 
 		userService.addUser(userInfo, queryCompany());
@@ -161,8 +161,8 @@ public class UserAction extends BaseListAction {
 	@Action(value = "updateUser", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
 	public String updateUser() throws FLException {
 		
-		if(SystemConfig.getString("communion") == null){
-		    throw new FLException(-1, "无操作权限");
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
 		}
 		
 		userService.updateUser(userInfo, queryCompany());
@@ -173,8 +173,8 @@ public class UserAction extends BaseListAction {
 	@Action(value = "updateUserForAdvance", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
 	public String updateUserForAdvance() throws FLException {
 		
-		if(SystemConfig.getString("communion") == null){
-		    throw new FLException(-1, "无操作权限");
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
 		}
 		
 		userService.updateUserForAdvance(user);
@@ -185,11 +185,11 @@ public class UserAction extends BaseListAction {
 	@Action(value = "defaultPassword", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
 	public String defaultPassword() throws FLException {
 		
-		if(SystemConfig.getString("communion") == null){
-		    throw new FLException(-1, "无操作权限");
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
 		}
 		
-		userService.checkUserForPassword(queryUserId(), queryCompany());
+		userService.defaultPassword(user.getUserId(), queryCompany());
 
 		return SUCCESS;
 	}
@@ -197,8 +197,8 @@ public class UserAction extends BaseListAction {
 	@Action(value = "changePassword", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
 	public String changePassword() throws FLException {
 		
-		if(SystemConfig.getString("communion") == null){
-		    throw new FLException(-1, "无操作权限");
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
 		}
 		
 		userService.checkUserForPassword(queryUserId(), password, rePassword);
@@ -209,10 +209,10 @@ public class UserAction extends BaseListAction {
 	@Action(value = "updateUserForBaseInfo", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
 	public String updateUserForBaseInfo() throws FLException {
 	
-		if(SystemConfig.getString("communion") == null){
-		    throw new FLException(-1, "无操作权限");
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
 		}
-		
+
 		userService.updateUserForBaseInfo(userInfo);
 
 		return SUCCESS;
@@ -221,8 +221,8 @@ public class UserAction extends BaseListAction {
 	@Action(value = "updateUserForProfiles", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
 	public String updateUserForProfiles() throws FLException {
 	
-		if(SystemConfig.getString("communion") == null){
-		    throw new FLException(-1, "无操作权限");
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
 		}
 		
 		userService.updateUserForProfiles(userInfo);
@@ -237,7 +237,7 @@ public class UserAction extends BaseListAction {
 			StringBuffer value = new StringBuffer();
 			value.append(userBaseVO.getCurrentName());
 			value.append("-");
-			value.append(userBaseVO.getDept().getDeptName());
+			value.append(userBaseVO.getDept().getName());
 			
 			keyValueVO.setKey(userBaseVO.getUserId());
 			keyValueVO.setValue(value.toString());

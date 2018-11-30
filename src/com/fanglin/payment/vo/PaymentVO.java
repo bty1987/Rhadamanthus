@@ -64,6 +64,8 @@ public class PaymentVO implements Serializable {
 	
 	private String accountsBank;
 	
+	private Float transfer = 0f;
+	
 	private String comment;
 	
 	private String uniqueid;
@@ -224,7 +226,7 @@ public class PaymentVO implements Serializable {
 	public void setCheckvBank(String checkvBank) {
 		this.checkvBank = checkvBank;
 	}
-
+	
 	public Float getInstallment() {
 		return installment;
 	}
@@ -255,6 +257,14 @@ public class PaymentVO implements Serializable {
 
 	public void setAccountsBank(String accountsBank) {
 		this.accountsBank = accountsBank;
+	}
+
+	public Float getTransfer() {
+		return transfer;
+	}
+
+	public void setTransfer(Float transfer) {
+		this.transfer = transfer;
 	}
 
 	public String getComment() {

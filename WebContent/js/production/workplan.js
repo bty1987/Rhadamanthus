@@ -2,7 +2,7 @@ $(function(){
 
     var displayFunc  = (function(){
         var renderList = function(tableId,listData){
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
             if(listData && listData.length){
                 var $ulTitle = createTableTitle();
                 var $ulData = $('<ul></ul>').addClass('flex-table');
@@ -72,9 +72,9 @@ $(function(){
             $btnEdit.click(function(){
                 productionUtils.clearForm("form1");
                 com.clearValidator();
-                $('#layerAdd').find('input[name="name"]').val(v.name);
-                $('#layerAdd').find('select[name="workshop"]').val(v.workshop.wsid);
-                $('#layerAdd').find('input[name="comment"]').val(v.comment);
+                com.focusPage('#layerAdd').find('input[name="name"]').val(v.name);
+                com.focusPage('#layerAdd').find('select[name="workshop"]').val(v.workshop.wsid);
+                com.focusPage('#layerAdd').find('input[name="comment"]').val(v.comment);
                 openlayer("编辑",function(){
                     if(!com.validate("layerAdd",null)){
                         saveData(v.wpid, function(){
@@ -119,7 +119,7 @@ $(function(){
 
         return {
             init : function(tableId,listData){
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
             },
             drawLine : function(v){
@@ -158,11 +158,11 @@ $(function(){
 
     //绑定车间下拉菜单
     com.post(api.production.queryWorkshop,{},function(res){
-        $('select[name="workshop"]').bindData(res.workshops,"wsid","name");
+        com.focusPage('select[name="workshop"]').bindData(res.workshops,"wsid","name");
     });
 
     function checkWorkflow(wpid) {
-        var $popup = $('#checkWorkflow');
+        var $popup = com.focusPage('#checkWorkflow');
         $popup.attr('data-wpid',wpid);
         //弹出即全屏
         layer.open({
@@ -187,7 +187,7 @@ $(function(){
         layer.open({
             type: 1,
             title:layerType,
-            content: $('#layerAdd'),
+            content: com.focusPage('#layerAdd'),
             area: ( $(window).width()*0.6 < 620 ?  $(window).height()*0.6 : 620 )+"px",
             maxmin: false,
             zIndex: 9000,
@@ -224,7 +224,7 @@ $(function(){
     }
 
     function saveData(id,callback){
-        var $layer = $('#layerAdd');
+        var $layer = com.focusPage('#layerAdd');
         var name = $layer.find('input[name="name"]').val();
         var workshop = $layer.find('select[name="workshop"] option:selected').val();
         var comment = $layer.find('input[name="comment"]').val();

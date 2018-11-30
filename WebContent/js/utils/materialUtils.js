@@ -53,4 +53,4 @@ var materialUtils = {
 		html += "<input type='text' class='hide' value='"+info.substring(0, info.length-2)+"' />";
 		return html;
 	}
-}
+};

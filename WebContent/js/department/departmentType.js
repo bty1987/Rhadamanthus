@@ -6,10 +6,10 @@ jQuery(function($) {
 		modal: null,
 		items:{}
 	};
-	departmentType.saveBtn = $("#saveBtn").on("click", saveData);
-	departmentType.cancelBtn = $("#cancelBtn");
-	departmentType.items.departmentTypeName = $("#departmentTypeName");
-	departmentType.modal = $("#departmentTypeModal");
+	departmentType.saveBtn = com.focusPage("#saveBtn").on("click", saveData);
+	departmentType.cancelBtn = com.focusPage("#cancelBtn");
+	departmentType.items.departmentTypeName = com.focusPage("#departmentTypeName");
+	departmentType.modal = com.focusPage("#departmentTypeModal");
 	departmentType.modal.on('show.bs.modal',function(e){
 		com.clearValidator();
 		com.clearValidator("#businessRegionId", true);
@@ -17,7 +17,7 @@ jQuery(function($) {
 
 	var displayFunc  = (function(){
 		var renderList = function(tableId,listData){
-			var $tableWrap = $('#' + tableId);
+			var $tableWrap = com.focusPage('#' + tableId);
 			var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 			if(listData && listData.length){
 				$.each(listData,function(i, v){
@@ -37,7 +37,7 @@ jQuery(function($) {
 
 		return {
 			init : function(tableId,listData){
-				$('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
 				renderList(tableId,listData);
 			},
 			drawLine : function(v){
@@ -59,7 +59,7 @@ jQuery(function($) {
 		return [$adda];
 	});
 
-	$('a[name="departmentTypeModal"]', '#pagenation').click(function(){
+	$('a[name="departmentTypeModal"]', com.focusPage('#pagenation')).click(function(){
 		departmentType.modal.modal("show");
 	});
 	function saveData(){

@@ -8,13 +8,13 @@ jQuery(function($) {
 	com.post(api.ds.decoration, {}, function (res) {
 		$.each(res.decorationOrderStatus, function(i,v){
 			decorationBelong.decorationOrderStatus[v.key] = v.value;
-		})
+		});
     }, null, false);
 	
 	var displayFunc  = (function(){
 
         var renderList = function(tableId,listData){
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if(listData && listData.length){ 
@@ -41,14 +41,14 @@ jQuery(function($) {
             var propertyArr = [
                 ["楼盘地址:", v.house.village.name + " " + v.house.houseNumber, "grey"],
                 ["客户名:", v.customer.name, "grey"],
-                ["设计部:", v.designer.dept.deptName, "grey"],
+                ["设计部:", v.designer.dept.name, "grey"],
                 ["设计师:", v.designer.currentName, "grey"],
-                ["业务部:", v.salesman.dept.deptName, "grey"],
+                ["业务部:", v.salesman.dept.name, "grey"],
                 ["业务员:", v.salesman.currentName, "grey"],
                 ["面积:", v.house.buildArea, "blue"],
                 ["合同报价:", v.orderTotalPrice, "blue"],
                 ["量房时间:", v.measureTime, "green"],
-                ["类型:", v.type == 0 ? '半包' : (v.type == 1 ? '全包' : '半价'), "red"],
+                ["类型:", v.type == 0 ? '半包' : (v.type == 1 ? '全包' : (v.type == 2 ? '半价' : '满减')), "red"],
                 ["状态:", decorationBelong.decorationOrderStatus[v.status], "red"]
             ];
             
@@ -80,13 +80,13 @@ jQuery(function($) {
       
         return {
             init : function(tableId,listData){
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
             },
             drawLine : function(v){
                 return creatLine(v);
             }
-        }
+        };
     })();
 	
 	var _condArr = ['orderId', 'village', 'houseNumber', 'houseArea', 'designer', 'salesman','orderType','salesmanType'];

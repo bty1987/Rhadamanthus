@@ -3,7 +3,7 @@ $(function () {
     var params = {};
 
     api = parent.api;
-    config = parent.config ;
+    config = parent.config;
     server = parent.server;
     utils = parent.utils;
     com = parent.com;
@@ -17,9 +17,9 @@ $(function () {
 
     var numberOfCases = 0;
 
-    var trList = $('#resultList');
-    var $amountInTotal = $('#amountInTotal');
-    var $numberOfCases = $('#numberOfCases');
+    var trList = com.focusPage('#resultList');
+    var $amountInTotal = com.focusPage('#amountInTotal');
+    var $numberOfCases = com.focusPage('#numberOfCases');
 
     var querySalesItemBySid = api.inventory.querySalesItemBySid;
 
@@ -34,9 +34,9 @@ $(function () {
 
             var tr1 = createList(i, v);
 
-            tr1.appendTo(trList)
+            tr1.appendTo(trList);
 
-        })
+        });
 
         $amountInTotal.html(amountInTotal);
         $numberOfCases.html(numberOfCases);
@@ -62,11 +62,11 @@ $(function () {
 
         $.each(propertyArr, function (index, value) {
             var $td = $('<td width="101" valign="top" style="width:150pt;border:solid windowtext 1.0pt;border-bottom:solid black 1.0pt;padding:0cm 5.4pt 0cm 5.4pt;height:30.0pt;text-align: center;line-height: 30.0pt;text-align: center;line-height: 30.0pt"></td>').html(value);
-            $td.appendTo(tr)
-        })
+            $td.appendTo(tr);
+        });
 
         return tr;
     }
 
-})
+});
 

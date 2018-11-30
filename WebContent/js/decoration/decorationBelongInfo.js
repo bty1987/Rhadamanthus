@@ -8,11 +8,11 @@ var decorationBelong = {
 };
 
 jQuery(function($) {
-	$('#fl-statement').statement("订单归属", "归属详细信息");
+	com.focusPage('#fl-statement').statement("订单归属", "归属详细信息");
 	
 	decorationBelong.decorationOrderId = params.orderId;
 	
-	$('#btnBack').on(ace.click_event, function(){
+	com.focusPage('#btnBack').on(ace.click_event, function(){
 		com.switchPage(api.index.decorationBelongIndex.url);
 	});
 	

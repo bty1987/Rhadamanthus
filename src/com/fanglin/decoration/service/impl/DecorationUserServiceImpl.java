@@ -57,7 +57,7 @@ public class DecorationUserServiceImpl implements DecorationUserService{
 	@Transactional(rollbackFor=Exception.class)
 	public int addDecorationUser(DecorationUserVO decorationUserVO,Authentication authentication) {
 		
-		UserPO userPO = userDao.get(decorationUserVO.getUser().getUid());
+		UserPO userPO = userDao.queryUserByUserId(decorationUserVO.getUser().getUserId());
 
 		DecorationUserPO decorationUserPO = new DecorationUserPO();
 		

@@ -1,23 +1,16 @@
-
-
-
 $(function () {
-
-    var approvalPostData = {};
-    var approvalSalesRefundPostData = {};
-    var approvalSalesRefundItemPostData = {};
 
     var pid = params.pid;
 
     var status = params.status;
 
-    var backBtn = $('#backBtn');
-    var importBtn = $('#importBtn');
-    var addBtn = $('#addBtn');
+    var backBtn = com.focusPage('#backBtn');
+    var importBtn = com.focusPage('#importBtn');
+    var addBtn = com.focusPage('#addBtn');
 
-    var refund = $('#refund');
-    var approver = $('#approver');
-    var refundDes = $('#refundDes');
+    var refund = com.focusPage('#refund');
+    var approver = com.focusPage('#approver');
+    var refundDes = com.focusPage('#refundDes');
 
     var purchaseBalance = {
         validator: {
@@ -40,7 +33,7 @@ $(function () {
     });
 
     var initList = function (listData) {
-        var $tableWrap = $('#list');
+        var $tableWrap = com.focusPage('#list');
         var $ul = $('<ul></ul>').addClass('item-list ui-sortable  fl-table-list');
 
         if (listData && listData.length) {
@@ -88,13 +81,13 @@ $(function () {
 
                 $btnEdit.click(function () {
 
-                    $('#balance').val(v.balance);
-                    $('#comment').val(v.comment);
+                    com.focusPage('#balance').val(v.balance);
+                    com.focusPage('#comment').val(v.comment);
 
                     openMoneylayer(function (index, layero) {
 
-                        var balance = $('#balance').val();
-                        var comment = $('#comment').val();
+                        var balance = com.focusPage('#balance').val();
+                        var comment = com.focusPage('#comment').val();
 
                         var editArr = {
                             "purchaseBalance.pbid": v.pbid,
@@ -105,22 +98,21 @@ $(function () {
                             return;
                         }
 
-                            if(v.status == 1){
-                                layer.alert('采购结算状态不可操作', {
-                                    icon: 0,
-                                    skin: 'layer-ext-moon'
-                                });
-                            }else if(v.status == 0) {
-                                com.post(api.inventory.updatePurchaseBalance, editArr, function () {
-                                    $('#list ul.item-list').remove();
-                                    queryPurchaseBalanceByPid(pid);
-                                    layer.closeAll();
+                        if(v.status == 1){
+                            layer.alert('采购结算状态不可操作', {
+                                icon: 0,
+                                skin: 'layer-ext-moon'
+                            });
+                        }else if(v.status == 0) {
+                            com.post(api.inventory.updatePurchaseBalance, editArr, function () {
+                                com.focusPage('#list ul.item-list').remove();
+                                queryPurchaseBalanceByPid(pid);
+                                layer.closeAll();
 
-                                }, function (e) {
-                                    com.showAlert(com.error, e.errorMsg);
-                                }, false);
-                            }
-
+                            }, function (e) {
+                                com.showAlert(com.error, e.errorMsg);
+                            }, false);
+                        }
 
                     });
 
@@ -140,7 +132,7 @@ $(function () {
                             });
                         }else if(v.status == 0){
                             com.post(api.inventory.updatePurchaseBalanceForStatus, {"purchaseBalance.pbid": v.pbid,"purchaseBalance.status" : v.status}, function () {
-                                $('#list ul.item-list').remove();
+                                com.focusPage('#list ul.item-list').remove();
                                 queryPurchaseBalanceByPid(pid);
                             }, function (e) {
                                 com.showAlert(com.error, e.errorMsg);
@@ -178,7 +170,7 @@ $(function () {
             type: 1,
             //skin: 'layui-layer-lan',
             title: "编辑",
-            content: $('#layerEdit'),
+            content: com.focusPage('#layerEdit'),
             area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
             maxmin: false,
             zIndex: 9000,
@@ -202,7 +194,7 @@ $(function () {
             type: 1,
             //skin: 'layui-layer-lan',
             title: "添加",
-            content: $('#layerEdit'),
+            content: com.focusPage('#layerEdit'),
             area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
             maxmin: false,
             zIndex: 9000,
@@ -240,17 +232,17 @@ $(function () {
 
 
 
-        //$('#balance').on('change', function () {
+        //com.focusPage('#balance').on('change', function () {
         //    checkRowValue();
         //});
 
-        $('#balance').val("");
-        $('#comment').val("");
+        com.focusPage('#balance').val("");
+        com.focusPage('#comment').val("");
 
         openAddlayer(function (index, layero) {
 
-            var balance = $('#balance').val();
-            var comment = $('#comment').val();
+            var balance = com.focusPage('#balance').val();
+            var comment = com.focusPage('#comment').val();
 
             var editArr = {
                 "purchaseBalance.pid": pid,
@@ -263,7 +255,7 @@ $(function () {
             }
             //if(checkRowValue()){
                 com.post(api.inventory.addPurchaseBalance, editArr, function () {
-                    $('#list ul.item-list').remove();
+                    com.focusPage('#list ul.item-list').remove();
                     queryPurchaseBalanceByPid(pid);
                     layer.closeAll();
 
@@ -306,7 +298,7 @@ $(function () {
     //
     //    var flag = true;
     //
-    //    var num = $('#balance');
+    //    var num = com.focusPage('#balance');
     //    var numRex = /^(([1-9]\d{0,6})|(([1-9]\d{0,6}\.\d{1,3})|(0\.[1-9]{1,3})))$/;
     //    if (!(numRex.test(num.val()) && parseFloat(num.val()) > 0)) {
     //        num.focus().select();

@@ -2,16 +2,16 @@
 $(function(){
 
 	var message = {
-		saveBtn : $("#saveBtn").on("click", saveData),
-		messageList : $("#messageList"),
-	 	messageDetail : $("#messageDetail"),
-		isPerformance : $("#isPerformance").switchBtn("isOrNot"),
-		modal : $("#messageModal").on('show.bs.modal',function(e){
+		saveBtn : com.focusPage("#saveBtn").on("click", saveData),
+		messageList : com.focusPage("#messageList"),
+	 	messageDetail : com.focusPage("#messageDetail"),
+		isPerformance : com.focusPage("#isPerformance").switchBtn("isOrNot"),
+		modal : com.focusPage("#messageModal").on('show.bs.modal',function(e){
 			com.clearValidator();
 		}),
 		messageItems: {
-			receiver : $("#receiver"),
-			contents : $("#contents")
+			receiver : com.focusPage("#receiver"),
+			contents : com.focusPage("#contents")
 		},
 		currMessageId: "",
 
@@ -21,8 +21,8 @@ $(function(){
 	
 	com.initChosen('receiver', api.personel.queryUserByPinyin, "pinyinName", {"duty": "", "user.status":0}, "autoFillKeyValue", "key", "value");
 
-	$("#returnBtn").on("click", function(){
-		$(".sysMessage").text("系统消息");
+	com.focusPage("#returnBtn").on("click", function(){
+		com.focusPage(".sysMessage").text("系统消息");
 		
 		message.messageList.show();
 		
@@ -45,7 +45,7 @@ $(function(){
 	var displayFunc  = (function(){
 
 		var renderList = function(tableId,listData){
-			var $tableWrap = $('#' + tableId).empty();
+			var $tableWrap = com.focusPage('#' + tableId).empty();
 			var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
 			if(listData && listData.length){
@@ -72,7 +72,7 @@ $(function(){
 				["消息分类:",messageType[v.type], "grey"],
 				["状态:", status[v.status], "red"],
 				["发送人:", v.sender ? v.sender.userName :"", "grey"],
-				["时间:", v.createTime, "grey"],
+				["时间:", v.createTime, "grey"]
 			];
 
 			$.each(propertyArr, function (index,value) {
@@ -91,13 +91,13 @@ $(function(){
 
 		return {
 			init : function(tableId,listData){
-				$('#' + tableId).html(null);
+				com.focusPage('#' + tableId).html(null);
 				renderList(tableId,listData);
 			},
 			drawLine : function(v){
 				return creatLine(v);
 			}
-		}
+		};
 	})();
 
 	var searcher = new Searcher();
@@ -125,7 +125,7 @@ $(function(){
 		var $readspan = $('<span></span>').text('已读').appendTo($reada);
 
 		$reada.click(function(){
-			var nums = $('input[name="mmids"]:checked');
+			var nums = com.focusPage('input[name="mmids"]:checked');
 			if(nums==null || nums.length ==0){
 				return;
 			}

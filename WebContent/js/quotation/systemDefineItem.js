@@ -8,7 +8,7 @@ $(function(){
     var displayFunc  = (function(){
 
         var renderList = function(tableId,listData){
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if(listData && listData.length){
@@ -74,12 +74,12 @@ $(function(){
 
 			v.status && $statusSwitch.prop("checked", true);
 			$statusSwitch.switchBtn("status-lbl").on("click",function() {
-				$statusSwitch.prop("checked") ? (updateStatus(v.sdiId, 1, function(){$statusSwitch.removeAttr("checked")})) : (updateStatus(v.sdiId, 0,function(){$statusSwitch.prop("checked")}));
+				$statusSwitch.prop("checked") ? (updateStatus(v.sdiId, 1, function(){$statusSwitch.removeAttr("checked");})) : (updateStatus(v.sdiId, 0,function(){$statusSwitch.prop("checked");}));
 			});
 
 			v.discount && $discountSwitch.prop("checked", true);
 			$discountSwitch.switchBtn("discount-lbl").on("click",function() {
-				$discountSwitch.prop("checked") ? (updateDiscount(v.sdiId, 1, function(){$discountSwitch.removeAttr("checked")})) : (updateDiscount(v.sdiId, 0,function(){$discountSwitch.prop("checked")}));
+				$discountSwitch.prop("checked") ? (updateDiscount(v.sdiId, 1, function(){$discountSwitch.removeAttr("checked");})) : (updateDiscount(v.sdiId, 0,function(){$discountSwitch.prop("checked");}));
 			});
 
 
@@ -88,13 +88,13 @@ $(function(){
       
         return {
             init : function(tableId,listData){
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
             },
             drawLine : function(v){
                 return creatLine(v);
             }
-        }
+        };
     })();
 
     var _condArr = ['itemName','quotationBigCategoryId','quotationWorkTypeId'];//与condition.js中名字相同
@@ -115,7 +115,7 @@ $(function(){
     //定义全局变量  json
     var systemDefineItem = {
     		
-		saveBtn: $("#saveAddItemBtn").on("click", saveData),//绑定事件
+		saveBtn: com.focusPage("#saveAddItemBtn").on("click", saveData),//绑定事件
 		cancelBtn: null,
 
 		modal: null,
@@ -164,17 +164,17 @@ $(function(){
     	
    //给全局变量赋值（主要操作是制定页面标签）
 	//systemDefineItem.saveBtn = $("#saveAddItemBtn").on("click", saveData);
-	systemDefineItem.cancelBtn = $("#cancelBtn");
-	systemDefineItem.modal = $("#addItemModal");
+	systemDefineItem.cancelBtn = com.focusPage("#cancelBtn");
+	systemDefineItem.modal = com.focusPage("#addItemModal");
 
-	systemDefineItem.systemDefineItemItems.sdiId = $("#sdiId");
-	systemDefineItem.systemDefineItemItems.quotationBigCategory = $("#quotationBigCategory");
-	systemDefineItem.systemDefineItemItems.itemName = $("#itemName");
-	systemDefineItem.systemDefineItemItems.measurementUnit = $("#measurementUnit");
-	systemDefineItem.systemDefineItemItems.itemWorkType = $("#itemWorkType");
-	systemDefineItem.systemDefineItemItems.quotationItemDes = $("#quotationItemDes");
-	systemDefineItem.systemDefineItemItems.unitPrice = $("#unitPrice");
-	systemDefineItem.systemDefineItemItems.itemId = $("#itemId").on("blur",function(){
+	systemDefineItem.systemDefineItemItems.sdiId = com.focusPage("#sdiId");
+	systemDefineItem.systemDefineItemItems.quotationBigCategory = com.focusPage("#quotationBigCategory");
+	systemDefineItem.systemDefineItemItems.itemName = com.focusPage("#itemName");
+	systemDefineItem.systemDefineItemItems.measurementUnit = com.focusPage("#measurementUnit");
+	systemDefineItem.systemDefineItemItems.itemWorkType = com.focusPage("#itemWorkType");
+	systemDefineItem.systemDefineItemItems.quotationItemDes = com.focusPage("#quotationItemDes");
+	systemDefineItem.systemDefineItemItems.unitPrice = com.focusPage("#unitPrice");
+	systemDefineItem.systemDefineItemItems.itemId = com.focusPage("#itemId").on("blur",function(){
 		$this = $(this);
 		if($this.val() == ""){
 			return;
@@ -222,7 +222,7 @@ $(function(){
     		}
     		
     		systemDefineItem.measurementUnitsStr = systemDefineItem.measurementUnitsStr.substr(0,systemDefineItem.measurementUnitsStr.length-1);
-    		$("#measurementUnit").bindData(systemDefineItem.measurementUnits, "id", "name");// bindData 给select标签 绑定一组数据
+    		com.focusPage("#measurementUnit").bindData(systemDefineItem.measurementUnits, "id", "name");// bindData 给select标签 绑定一组数据
     		
     	}, null, false);
     	
@@ -237,7 +237,7 @@ $(function(){
     		systemDefineItem.quotationBigCategorysStr = systemDefineItem.quotationBigCategorysStr.substr(0,systemDefineItem.quotationBigCategorysStr.length-1);
     		
     		
-    		$("#quotationBigCategory").bindData(systemDefineItem.quotationBigCategorys, "id", "name");
+    		com.focusPage("#quotationBigCategory").bindData(systemDefineItem.quotationBigCategorys, "id", "name");
     		
     	}, null, false);
     	
@@ -251,7 +251,7 @@ $(function(){
     		}
     		systemDefineItem.workTypesStr = systemDefineItem.workTypesStr.substr(0,systemDefineItem.workTypesStr.length-1);
     		
-    		$("#itemWorkType").bindData(systemDefineItem.workTypes, "id", "name");
+    		com.focusPage("#itemWorkType").bindData(systemDefineItem.workTypes, "id", "name");
     	
     	}, null, false);
     }
@@ -307,12 +307,12 @@ $(function(){
     }
     
     //添加
-    $('[name="addSystemDefineItem"]' , '#pagenation').on("click",function(){  //选择器 [属性名="属性值"]  匿名函数
+    com.focusPage('[name="addSystemDefineItem"]' , '#pagenation').on("click",function(){  //选择器 [属性名="属性值"]  匿名函数
     	systemDefineItem.editFlg = false;
 		systemDefineItem.systemDefineItemItems.itemId.prop("disabled", false);
 		com.cleanItems(systemDefineItem.systemDefineItemItems);
 		systemDefineItem.modal.modal("show");
-    })
+    });
 
     //删除
      function removeSystemDefine(id) {
