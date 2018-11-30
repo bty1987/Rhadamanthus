@@ -159,7 +159,7 @@ public class AdvancePaymentServiceImpl implements AdvancePaymentService {
 		PaymentPO paymentPO = new PaymentPO();
 		AdvanceReceiptPO advanceReceiptPO = new AdvanceReceiptPO();
 		
-		advanceReceiptPO.setCash(paymentVO.getCash());
+		advanceReceiptPO.setTransfer(paymentVO.getTransfer());
 		advanceReceiptPO.setComment(paymentVO.getComment());
 		advanceReceiptPO.setCollectTime(DateUtil.getDateToTimestamp(new Date()));
 		advanceReceiptPO.setStatus(AdvanceReceiptPO.STATUS_INIT_INT);

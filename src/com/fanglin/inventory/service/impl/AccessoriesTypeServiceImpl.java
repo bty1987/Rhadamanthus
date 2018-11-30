@@ -28,6 +28,7 @@ public class AccessoriesTypeServiceImpl implements AccessoriesTypeService{
 	
 	@Override
 	public void pageAccessoriesType(Paging paging, List<Filter> filters) {
+		
 		List<AccessoriesTypePO> accessoriesTypePOs = accessoriesTypeDao.pageAccessoriesType(paging, filters);
 		List<AccessoriesTypeVO> accessoriesTypeVOs = new ArrayList<AccessoriesTypeVO>();
 		

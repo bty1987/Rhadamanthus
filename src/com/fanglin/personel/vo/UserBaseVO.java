@@ -166,10 +166,10 @@ public class UserBaseVO implements Serializable {
 		}
 		
 		if(userPO.getDept() != null && this.getDept() != null){
-			BeanUtil.copyPropertie(this.getDept(), userPO.getDept(), Arrays.asList("type","fatherDept","cityProper"));
+			BeanUtil.copyPropertie(this.getDept(), userPO.getDept(), Arrays.asList("type","fatherDept","manager"));
 			
 			if(userPO.getDept().getFatherDept() != null && this.getDept().getFatherDept() != null){
-				BeanUtil.copyPropertie(this.getDept().getFatherDept(), userPO.getDept().getFatherDept(), Arrays.asList("type","fatherDept","cityProper"));
+				BeanUtil.copyPropertie(this.getDept().getFatherDept(), userPO.getDept().getFatherDept(), Arrays.asList("type","fatherDept","manager"));
 			}
 		}
 	}

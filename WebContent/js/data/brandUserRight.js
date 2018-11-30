@@ -15,11 +15,11 @@ jQuery(function($) {
 		userId: "",
 	};
 	
-	materialBrandRight.saveBtn = $("#saveBtn").on("click", saveData);
-	materialBrandRight.cancelBtn = $("#cancelBtn");
-	materialBrandRight.modal = $("#materialBrandRightModal");
+	materialBrandRight.saveBtn = com.focusPage("#saveBtn").on("click", saveData);
+	materialBrandRight.cancelBtn = com.focusPage("#cancelBtn");
+	materialBrandRight.modal = com.focusPage("#materialBrandRightModal");
 	
-	var tag_input = $("#brandright");
+	var tag_input = com.focusPage("#brandright");
 
 	tag_input.tag({
 		placeholder:tag_input.attr('placeholder'),
@@ -30,7 +30,7 @@ jQuery(function($) {
 			postData : {},
 			resultList : "brands",
 			keyPath : "bid",
-			valuePath : "brandName",
+			valuePath : "name",
 			isResultTypeMap : true, //是否是key - value 形式的列表
 		},
 	});
@@ -42,7 +42,7 @@ jQuery(function($) {
 	var displayFunc  = (function(){
 
         var renderList = function(tableId,listData){
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if(listData && listData.length){ 
@@ -90,7 +90,7 @@ jQuery(function($) {
         
         return {
             init : function(tableId,listData){
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
             },
             drawLine : function(v){
@@ -111,7 +111,7 @@ jQuery(function($) {
 
 		com.post(api.right.queryBrandUserRightByUid, {"brandUserRight.uid": uid}, function(res){
 
-			var _tag = $('#brandright').data('tag');
+			var _tag = com.focusPage('#brandright').data('tag');
 
 			while(_tag.values.length > 0){
 				_tag.remove(0)
@@ -119,7 +119,7 @@ jQuery(function($) {
 
 			if(res.brandUserRight.brands.length){
 				$.each(res.brandUserRight.brands, function(i, v){
-					_tag.fladd(v.bid.toString(), v.brandName);
+					_tag.fladd(v.bid.toString(), v.name);
 				});
 
 			}
@@ -135,7 +135,7 @@ jQuery(function($) {
 		var options = {};
 		var brandright = "#";
 		
-		var brandIds = $("#brandright").val();
+		var brandIds = com.focusPage("#brandright").val();
 		if(brandIds == null){
 			brandright = "";
 		}else{

@@ -17,27 +17,31 @@ public class BrandPO implements java.io.Serializable {
 	
 	private static final long serialVersionUID = -1250639697212151929L;
 	
-	public static final String COLUMN_BID_STR = "bid";
+	public static final String COLUMN_BID_INT = "bid";
 	
-	public static final String COLUMN_BRANDID_STR = "brandId";
+	public static final String COLUMN_NO_STR = "no";
 	
-	public static final String COLUMN_BRANDNAME_STR = "brandName";
+	public static final String COLUMN_NAME_STR = "name";
 	
-	public static final String COLUMN_BRANDNAMEPINYIN_STR = "brandNamePinyin";
+	public static final String COLUMN_PINYIN_STR = "pinyin";
 	
-	public static final String COLUMN_CATEGORYID_STR = "categoryId";
+	public static final String COLUMN_CATEGORYNO_STR = "no";
 
 	private long bid;
 	
-	private String brandId;
+	private String no;
 	
-	private String brandName;
+	private String name;
 	
-	private String brandNamePinyin;
+	private String pinyin;
 	
 	private CategoryPO category;
 	
 	private int company;
+	
+	private String kino;
+	
+	private String kiname;
 	
 	public BrandPO() {
 		super();
@@ -50,7 +54,7 @@ public class BrandPO implements java.io.Serializable {
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "bId")
+	@Column(name = "bid")
 	public long getBid() {
 		return this.bid;
 	}
@@ -59,42 +63,43 @@ public class BrandPO implements java.io.Serializable {
 		this.bid = bid;
 	}
 
-	@Column(name = "brandId")
-	public String getBrandId() {
-		return this.brandId;
+	@Column(name = "no")
+	public String getNo() {
+		return no;
 	}
 
-	public void setBrandId(String brandId) {
-		this.brandId = brandId;
+	public void setNo(String no) {
+		this.no = no;
 	}
 
-	@Column(name = "brandName")
-	public String getBrandName() {
-		return this.brandName;
+	@Column(name = "name")
+	public String getName() {
+		return name;
 	}
 
-	public void setBrandName(String brandName) {
-		this.brandName = brandName;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	@Column(name = "brandNamePinyin")
-	public String getBrandNamePinyin() {
-		return this.brandNamePinyin;
+	@Column(name = "pinyin")
+	public String getPinyin() {
+		return pinyin;
 	}
 
-	public void setBrandNamePinyin(String brandNamePinyin) {
-		this.brandNamePinyin = brandNamePinyin;
+	public void setPinyin(String pinyin) {
+		this.pinyin = pinyin;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "cId", referencedColumnName = "cId")
+	@JoinColumn(name = "cid", referencedColumnName = "cid")
 	public CategoryPO getCategory() {
 		return category;
 	}
-
+	
 	public void setCategory(CategoryPO category) {
 		this.category = category;
 	}
+	
 	@Column(name = "company")
 	public int getCompany() {
 		return company;
@@ -104,6 +109,22 @@ public class BrandPO implements java.io.Serializable {
 		this.company = company;
 	}
 	
-	
+	@Column(name = "kino")
+	public String getKino() {
+		return kino;
+	}
+
+	public void setKino(String kino) {
+		this.kino = kino;
+	}
+
+	@Column(name = "kiname")
+	public String getKiname() {
+		return kiname;
+	}
+
+	public void setKiname(String kiname) {
+		this.kiname = kiname;
+	}
 
 }

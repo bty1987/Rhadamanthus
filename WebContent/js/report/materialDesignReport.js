@@ -11,13 +11,13 @@ $(function() {
 	$('input[name=date-range-picker]').daterangepicker(com.dateramgepickerdefault).prev().on(ace.click_event, function(){
 		$(this).next().focus();
 	});
-	$("#dateRangeSearch").attr("readonly", "readonly");
+	com.focusPage("#dateRangeSearch").attr("readonly", "readonly");
 	
-	$("#reportType").bindData(reportTypeData, "id", "name", false);
+	com.focusPage("#reportType").bindData(reportTypeData, "id", "name", false);
 	
-	$("#fl_btn_searchDiv").on("click", function(){
-		var dateRange = $("#dateRangeSearch").val();
-		var reportType = $("#reportType").val();
+	com.focusPage("#fl_btn_searchDiv").on("click", function(){
+		var dateRange = com.focusPage("#dateRangeSearch").val();
+		var reportType = com.focusPage("#reportType").val();
 		
 		if(dateRange == ""){
 			com.showAlert(com.error, "请输入需要查询的时期范围");
@@ -43,13 +43,13 @@ $(function() {
 		
 		designReport.options = options;
 		
-		$("#designerRegionReport").html("");
-		$("#designerDepartmentReport").html("");
-		$("#designerReport").html("");
+		com.focusPage("#designerRegionReport").html("");
+		com.focusPage("#designerDepartmentReport").html("");
+		com.focusPage("#designerReport").html("");
 		
-		$("#designerRegionTable").html("");
-		$("#designerDepartmentTable").html("");
-		$("#designerTable").html("");
+		com.focusPage("#designerRegionTable").html("");
+		com.focusPage("#designerDepartmentTable").html("");
+		com.focusPage("#designerTable").html("");
 		
 		initRegionReport();
 	});
@@ -92,7 +92,7 @@ function initRegionReport(){
 			return;
 		}
 		
-		$('#designerRegionReport').highcharts({
+		com.focusPage('#designerRegionReport').highcharts({
 			chart: {
 	            type: 'column'
 	        },
@@ -110,8 +110,8 @@ function initRegionReport(){
 	                cursor: 'pointer',
 	                events:{
 	                    click: function(e) {
-	                    	$("#designerReport").html("");
-	                    	$("#designerTable").html("");
+	                    	com.focusPage("#designerReport").html("");
+	                    	com.focusPage("#designerTable").html("");
 	                    	
 	                    	initDepartmentReport(e.point.id);
 	                    }
@@ -121,7 +121,7 @@ function initRegionReport(){
 	        series:series,
 	    });
 		
-		var designerRegionTable = $("#designerRegionTable").html("");
+		var designerRegionTable = com.focusPage("#designerRegionTable").html("");
 		tbody.appendTo(designerRegionTable);
 		thead.appendTo(designerRegionTable);
 		
@@ -166,7 +166,7 @@ function initDepartmentReport(regionId){
 			var _tdT = $("<td></td>").text(designerDepartment.total).appendTo(_tr);
 		}
 		
-		$('#designerDepartmentReport').highcharts({
+		com.focusPage('#designerDepartmentReport').highcharts({
 			chart: {
 	            type: 'column'
 	        }, title: {
@@ -188,7 +188,7 @@ function initDepartmentReport(regionId){
 	        series:series,
 	    });
 		
-		var designerDepartmentTable = $("#designerDepartmentTable").html("");
+		var designerDepartmentTable = com.focusPage("#designerDepartmentTable").html("");
 		tbody.appendTo(designerDepartmentTable);
 		thead.appendTo(designerDepartmentTable);
 		
@@ -233,7 +233,7 @@ function initDesignerReport(departmentId){
 			var _tdT = $("<td></td>").text(designer.total).appendTo(_tr);
 		}
 		
-		$('#designerReport').highcharts({
+		com.focusPage('#designerReport').highcharts({
 			chart: {
 	            type: 'column'
 	        }, title: {
@@ -246,7 +246,7 @@ function initDesignerReport(departmentId){
 	        series:series,
 	    });
 		
-		var designerTable = $("#designerTable").html("");
+		var designerTable = com.focusPage("#designerTable").html("");
 		tbody.appendTo(designerTable);
 		thead.appendTo(designerTable);
 		

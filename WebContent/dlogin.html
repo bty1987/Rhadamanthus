@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 
@@ -39,7 +39,9 @@
 		#winTop {
 			-webkit-app-region: drag;
 		}
-
+		p{
+			margin: 8px 0px;
+		}
 		button {
 			-webkit-app-region: no-drag;
 		}
@@ -76,27 +78,30 @@
 										<span id="passwordIcon" class="icon-lock" data-rel="popover" data-trigger="hover" data-placement="top" data-content=""></span>
 									</div>
 
-									<div class="col-md-2 input-icon input-icon-right  no-padding-right">
+									<div class="col-md-2 input-icon input-icon-right  no-padding-right" style="width: 12%;">
 										<input type="text" class="form-control" id="nowCode" placeholder="验证码" maxlength="8">
 										<span id="newCodeIcon" class="" data-rel="popover" data-trigger="hover" data-placement="top" data-content=""></span>
 									</div>
 									<div class="col-md-1">
-										<img class="" src="" id="Verify" style="cursor: hand;" alt="看不清,换一张" />
+										<img src="" id="Verify" style="cursor: pointer;height: 34px;" alt="看不清,换一张" />
 									</div>
 
-									<div class="col-md-2 btn-toolbar" style="margin-right: 10px;float: left;">
+									<div class="btn-toolbar" style="float: left;">
 										<button type="button" class="btn btn-sm btn-primary" id="loginBtn">
 											<i class="icon-key"></i> 登陆
 										</button>
-										<button id="changetoqrcode"  type="button" class="btn btn-sm btn-danger">
-											<i class="icon-key"></i> 二维码
+										<button id="FormToQR"  type="button" class="btn btn-sm btn-danger">
+											<i class="icon-key"></i> 钉钉登录
+										</button>
+										<button id="FormToWX"  type="button" class="btn btn-sm btn-success">
+											<i class="icon-key"></i> 微信登录
 										</button>
 									</div>
 								</div>
 							</div>
 
 							<!-- 二维码登录-->
-							<div class="clearfix" style="margin: 20px;" id="dloginContainer">
+							<div class="clearfix" id="QRLogin">
 
 								<div class="login_content">
 									<div class="login_body">
@@ -106,12 +111,36 @@
 											<div class="login_qrcode_text">
 												请使用钉钉扫描二维码登录
 												<span style="color:#38adff;cursor:pointer;">刷新</span>
-												<p><a href="javascript:;" id="changetoform">用户名和密码登录</a></p>
+												<p><a id="QRToWX">微信扫码登录</a></p>
+												<p><a id="QRToForm">用户名和密码登录</a></p>
 											</div>
 											<div class="login_qrcode_scan" style="display: none;">
 												二维码已扫描
 											</div>
 											<div class="login_qrcode_refresh hide" style="display: block;">您的二维码已失效, <br>请点击下方刷新按钮</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<!-- 微信登录-->
+							<div class="clearfix hide" id="WXLogin">
+
+								<div class="login_content">
+									<div class="login_body">
+
+										<div class="login_qrcode">
+											<div id="wxcode" class="login_qrcode_content" title=""><img alt="二维码" src=""></div>
+											<div class="login_wxcode_text">
+												请使用微信扫码登录
+												<span style="color:#38adff;cursor:pointer;">刷新</span>
+												<p><a id="WXToQR">钉钉扫码登录</a></p>
+												<p><a id="WXToForm">用户名和密码登录</a></p>
+											</div>
+											<div class="login_qrcode_scan" style="display: none;">
+												二维码已扫描
+											</div>
+											<div class="login_wxcode_refresh hide" style="display: block;">您的二维码已失效, <br>请点击下方刷新按钮</div>
 										</div>
 									</div>
 								</div>

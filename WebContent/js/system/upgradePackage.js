@@ -1,23 +1,23 @@
 jQuery(function($) {
 	
 	var upgrade = {
-		saveBtn : $("#saveBtn").on("click", saveData),
-		cancelBtn : $("#cancelBtn").on("click", empty),
-		modal : $("#upgradeModal").on("show.bs.modal", function(a) {
+		saveBtn : com.focusPage("#saveBtn").on("click", saveData),
+		cancelBtn : com.focusPage("#cancelBtn").on("click", empty),
+		modal : com.focusPage("#upgradeModal").on("show.bs.modal", function(a) {
 			com.clearValidator()
 		}),
 		items : {
-			upgradeNumber : $("#upgradeNumber"),
-			trialUpgrade : $("#trialUpgrade"),
-			createTime : $("#createTime"),
-			content : $("#content"),
-			path : $("#path"),
-			fileSize : $("#fileSize"),
+			upgradeNumber : com.focusPage("#upgradeNumber"),
+			trialUpgrade : com.focusPage("#trialUpgrade"),
+			createTime : com.focusPage("#createTime"),
+			content : com.focusPage("#content"),
+			path : com.focusPage("#path"),
+			fileSize : com.focusPage("#fileSize"),
 		},
 	};
 
 	if (jQuery().datepicker) {
-		$('.date-picker').datepicker({
+		com.focusPage('.date-picker').datepicker({
 			format : 'yyyy-mm-dd',// yyyy-mm-dd hh:ii,
 			autoclose : true,
 		});
@@ -27,7 +27,7 @@ jQuery(function($) {
 	var displayFunc = (function() {
 
 		var renderList = function(tableId, listData) {
-			var $tableWrap = $('#' + tableId).empty();
+			var $tableWrap = com.focusPage('#' + tableId).empty();
 			var $ul = $('<ul></ul>').addClass(
 					'item-list fl-table-list ui-sortable');
 
@@ -86,7 +86,7 @@ jQuery(function($) {
 
 		return {
 			init : function(tableId, listData) {
-				$('#' + tableId).html(null);
+				com.focusPage('#' + tableId).html(null);
 				renderList(tableId, listData);
 			},
 			drawLine : function(v) {
@@ -101,7 +101,7 @@ jQuery(function($) {
 			function(list) {
 				displayFunc.init('resultList', list);
 				if (jQuery().datepicker) {
-					$('[name="upgradeCreateTime"]').datepicker({
+					com.focusPage('[name="upgradeCreateTime"]').datepicker({
 						format : 'yyyy-mm-dd',// yyyy-mm-dd hh:ii,
 						autoclose : true,
 					});
@@ -144,7 +144,7 @@ jQuery(function($) {
 		}
 	}
 
-	$("#file").Huploadify({
+	com.focusPage("#file").Huploadify({
 		'debug' : false, // 开启调试
 		'auto' : true, // 是否自动上传
 		'successTimeout' : 99999, // 超时时间
@@ -167,8 +167,8 @@ jQuery(function($) {
 		'onUploadSuccess' : function(file, data, response) {
 			var dateObj = eval("(" + data + ")");
 			if (dateObj.errorCode == 0) {
-				$("#path").val(dateObj.resUrl);
-				$("#fileSize").val(file.size);
+				com.focusPage("#path").val(dateObj.resUrl);
+				com.focusPage("#fileSize").val(file.size);
 			} else {
 				alert(data);
 			}
@@ -176,21 +176,21 @@ jQuery(function($) {
 	});
 
 	function empty() {
-		$('#upgradeNumber').val("");
-		$('#trialUpgrade').val("");
-		$('#createTime').val("");
-		$('#content').val("");
-		$('#path').val("");
-		$("#fileSize").val("");
+		com.focusPage('#upgradeNumber').val("");
+		com.focusPage('#trialUpgrade').val("");
+		com.focusPage('#createTime').val("");
+		com.focusPage('#content').val("");
+		com.focusPage('#path').val("");
+		com.focusPage("#fileSize").val("");
 	}
 
     function checkInfo() {
 
         var flag = true;
 
-        if (!$('#cashDiv').hasClass('hide')) {
+        if (!com.focusPage('#cashDiv').hasClass('hide')) {
 
-            var num = $('#cash');
+            var num = com.focusPage('#cash');
             var numRex = /^(\d+|\d+\.[0-9]{1,4})$/;
 
             if (!(numRex.test(num.val()) && parseFloat(num.val()) >= 0)) {

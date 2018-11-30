@@ -19,8 +19,6 @@ import com.fanglin.personel.vo.UserBaseVO;
 
 public interface StorehouseUserService {
 	
-	public List<StorehouseUserVO> queryStorehouseUserByUId(UserBaseVO userVO);
-	
 	public List<StorehouseUserVO> queryStorehouseUserByUserId(UserBaseVO userVO);
 	
 	public int updateStorehouseUser(UserBaseVO userVO, List<Long> shIds) throws FLException;

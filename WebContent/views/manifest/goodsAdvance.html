@@ -18,9 +18,9 @@
 </div>
 
 
-<div id="layerAdd"  style="padding: 40px 0;display: none;">
+<div id="layerAddAdvance"  style="padding: 40px 0;display: none;">
     <div class="row-fluid">
-        <form class="form-horizontal" novalidate="novalidate" id="form1">
+        <form class="form-horizontal" novalidate="novalidate" id="formAdvance">
 
             <div class="widget-main">
                 <div class="row" style="margin: 0px;">
@@ -154,7 +154,7 @@
 
 <div id="importGoods" style="padding: 40px 0;display: none;">
     <div class="row-fluid">
-        <form class="form-horizontal" novalidate="novalidate" id="form2">
+        <form class="form-horizontal" novalidate="novalidate" id="formAdvance2">
 
             <div class="alert alert-error hide">
 
@@ -238,7 +238,7 @@
 
 <div id="importColor" style="padding: 40px 0;display: none;">
     <div class="row-fluid">
-        <form class="form-horizontal" novalidate="novalidate" id="form3">
+        <form class="form-horizontal" novalidate="novalidate" id="formAdvance3">
 
             <div class="alert alert-error hide">
 
@@ -312,7 +312,7 @@
 
 <div id="importFormat" style="padding: 40px 0;display: none;">
     <div class="row-fluid">
-        <form class="form-horizontal" novalidate="novalidate" id="form4">
+        <form class="form-horizontal" novalidate="novalidate" id="formAdvance4">
 
             <div class="alert alert-error hide">
 
@@ -387,7 +387,7 @@
 
 <div id="importPrice" style="padding: 40px 0;display: none;">
     <div class="row-fluid">
-        <form class="form-horizontal" novalidate="novalidate" id="form5">
+        <form class="form-horizontal" novalidate="novalidate" id="formAdvance5">
 
             <div class="alert alert-error hide">
 
@@ -472,7 +472,7 @@
 
 <div id="deleteImportPrice" style="padding: 40px 0;display: none;">
     <div class="row-fluid">
-        <form class="form-horizontal" novalidate="novalidate" id="form6">
+        <form class="form-horizontal" novalidate="novalidate" id="formAdvance6">
 
             <div class="alert alert-error hide">
 
@@ -542,6 +542,69 @@
 
 </div>
 
+<div id="exportGoods" style="padding: 40px 0;display: none;">
+    <div class="row-fluid">
+        <form class="form-horizontal" novalidate="novalidate" id="formAdvance99">
+
+            <div class="alert alert-error hide">
+
+                <button data-dismiss="alert" class="close"></button>
+
+                You have some form errors. Please check below.
+
+            </div>
+
+            <div class="alert alert-success hide">
+
+                <button data-dismiss="alert" class="close"></button>
+
+                Your form validation is successful!
+
+            </div>
+        </form>
+    </div>
+
+</div>
+
+<div class="form-group hide" style="margin: 0px;" id="uploaddiv">
+    <form class="form-horizontal">
+        <br>
+        <div id="fileUp" class="hide">
+            <label class="col-sm-3 control-label no-padding-right" style="right: 60px"
+                   for="attachment"><strong>上传附件</strong></label>
+            <div class="col-sm-3 col-xs-4">
+                <div id="attachment"></div>
+                <input type="text" class="hidden" id="filePath"/>
+            </div>
+            <br><br>
+        </div>
+
+        <label class="col-sm-3 control-label no-padding-right" style="right: 60px"
+               for="executeDates"><strong>执行日期</strong></label>
+        <div class="col-sm-9">
+            <input class="date-picker col-xs-10 col-sm-5 v_required " id="executeDates" type="text" readonly="readonly"
+                   data-date-format="yyyy-mm-dd" data-toggle="popover" data-trigger='manual'/>
+        </div>
+        <br><br>
+
+        <label class="col-sm-3 control-label no-padding-right" style="right: 60px"
+               for="executeTimes"><strong>执行时间</strong></label>
+        <div class="col-sm-9">
+            <div class="bootstrap-timepicker">
+                <input id="executeTimes" type="text" class="v_required col-xs-10 col-sm-5 "/>
+            </div>
+        </div>
+        <br><br>
+    </form>
+</div>
+
+<div id="layerAdd" class="hide" style="padding: 40px 0;">
+    <div class="row-fluid">
+        <div class="progress" data-percent="0%">
+            <div class="progress-bar" style="width:0%;"></div>
+        </div>
+    </div>
+</div>
 
 <script type="text/javascript">
     $.loadScript(['js/manifest/goodsAdvance.js']);

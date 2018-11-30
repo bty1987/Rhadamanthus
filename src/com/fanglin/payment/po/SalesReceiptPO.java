@@ -49,8 +49,6 @@ public class SalesReceiptPO  implements Serializable{
 	
 	private Timestamp confirmTime;
 	
-	private float realMoney;
-	
 	private float cash;                
 	
 	private String cashInfo;           
@@ -61,7 +59,7 @@ public class SalesReceiptPO  implements Serializable{
 	
 	private float checkv;              
 	
-	private String checkvBank;         
+	private String checkvBank;
 	
 	private float installment;         
 	
@@ -69,7 +67,7 @@ public class SalesReceiptPO  implements Serializable{
 	
 	private float accounts;            
 	
-	private String accountsBank;       
+	private String accountsBank; 
 	
 	private float advance;             
 	
@@ -83,6 +81,9 @@ public class SalesReceiptPO  implements Serializable{
 	
 	public SalesReceiptPO() {
 		super();
+		
+		this.installBank = "";
+		this.accountsBank = "";
 	}
 
 	public SalesReceiptPO(long srId) {
@@ -164,15 +165,6 @@ public class SalesReceiptPO  implements Serializable{
 
 	public void setConfirmTime(Timestamp confirmTime) {
 		this.confirmTime = confirmTime;
-	}
-
-	@Column(name = "realMoney")
-	public float getRealMoney() {
-		return realMoney;
-	}
-
-	public void setRealMoney(float realMoney) {
-		this.realMoney = realMoney;
 	}
 
 	@Column(name = "cash")

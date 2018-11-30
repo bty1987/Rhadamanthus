@@ -26,7 +26,12 @@ public class DecorationActivityPO implements java.io.Serializable {
 	private String orderId;
 	
 	private ActivityPO activity;
+	
+	private int type;
+	
+	private int defaults;
 
+	
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "daId")
@@ -56,5 +61,24 @@ public class DecorationActivityPO implements java.io.Serializable {
 	public void setActivity(ActivityPO activity) {
 		this.activity = activity;
 	}
+	
+	@Column(name = "type")
+	public int getType() {
+		return type;
+	}
+
+	public void setType(int type) {
+		this.type = type;
+	}
+	
+	@Column(name = "defaults")
+	public int getDefaults() {
+		return defaults;
+	}
+
+	public void setDefaults(int defaults) {
+		this.defaults = defaults;
+	}
+
 
 }

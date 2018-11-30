@@ -1,7 +1,7 @@
 $(function(){
 
-    var $layerAdd = $("#layerAdd");
-    var $layerImport = $("#layerImport");
+    var $layerAdd = com.focusPage("#layerAdd");
+    var $layerImport = com.focusPage("#layerImport");
     var $pid = params["pid"];
     var $status = params["status"];
 
@@ -14,7 +14,7 @@ $(function(){
 
         var renderList = function(tableId,listData){
 
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list ui-sortable  fl-table-list');
 
             if(listData && listData.length){
@@ -100,11 +100,11 @@ $(function(){
                             createLine(v.path, v.comment);
                         }
 
-                        $('#importProductionPicture').empty();
+                        com.focusPage('#importProductionPicture').empty();
 
-                        hidBtn($('#importProductionPicture'), v.status);
+                        hidBtn(com.focusPage('#importProductionPicture'), v.status);
 
-                        $("#importProductionPicture").Huploadify({
+                        com.focusPage("#importProductionPicture").Huploadify({
                             'debug': false, // 开启调试
                             'auto': true, // 是否自动上传
                             'successTimeout': 99999, // 超时时间
@@ -175,7 +175,7 @@ $(function(){
 
         return {
             init : function(tableId,listData){
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
             }
         };
@@ -232,7 +232,7 @@ $(function(){
             type: 1,
             skin: 'layui-layer-lan',
             title: "导入excel",
-            content: $('#layerImport'),
+            content: com.focusPage('#layerImport'),
             area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
             maxmin: false,
             btn: ['确定'],
@@ -252,7 +252,7 @@ $(function(){
             type: 1,
             skin: 'layui-layer-lan',
             title: $title,
-            content: $('#layerAdd'),
+            content: com.focusPage('#layerAdd'),
             area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
             maxmin: false,
             zIndex: 9000,

@@ -1,6 +1,5 @@
 
 jQuery(function($) {
-
 	var createCustomerSource = {
 		customerId: null,
 		saveBtn: null,
@@ -18,13 +17,13 @@ jQuery(function($) {
 		repeatFlg: null,
 		cardFlag: false,
 		repeatCustomerFlg: false,
-		customerRepeatFlg: false,
+		customerRepeatFlg: false
 	};
 
-	createCustomerSource.customerItems.gender = $("#gender").switchBtn("gender");
+	createCustomerSource.customerItems.gender = com.focusPage("#gender").switchBtn("gender");
 
-	var tag_input = $("#conditions");
-	var tag_inputTwo = $("#intention");
+	var tag_input = com.focusPage("#conditions");
+	var tag_inputTwo = com.focusPage("#intention");
 
 	tag_input.tag({
 		placeholder:tag_input.attr('placeholder'),
@@ -35,8 +34,8 @@ jQuery(function($) {
 			resultList : "autoFillKeyValue",
 			keyPath : "key",
 			valuePath : "value",
-			isResultTypeMap : true, //是否是key - value 形式的列表
-		},
+			isResultTypeMap : true //是否是key - value 形式的列表
+		}
 	});
 
 	tag_inputTwo.tag({
@@ -48,51 +47,51 @@ jQuery(function($) {
 			resultList : "autoFillKeyValue",
 			keyPath : "key",
 			valuePath : "value",
-			isResultTypeMap : false, //是否是key - value 形式的列表
-		},
+			isResultTypeMap : false //是否是key - value 形式的列表
+		}
 	});
 
-	$("#cardType").bindData(createCustomerSource.cardType);
-	$("#grade").bindData(createCustomerSource.grade);
+	com.focusPage("#cardType").bindData(createCustomerSource.cardType);
+	com.focusPage("#grade").bindData(createCustomerSource.grade);
 
 	com.initChosen('customerId', api.data.queryCustomerForName, "pinyinName", {}, "autoFillCustomer", "key", "value").on("change", function(e){
-		if($(this).val() == "" || $("#customerId").val() == "") {
+		if($(this).val() == "" || com.focusPage("#customerId").val() == "") {
 			com.clearValidator("#customerId", true);
 			createCustomerSource.repeatCustomerFlg = false;
 			return;
 		}
 	});
 
-	createCustomerSource.saveBtn = $("#saveBtn").on("click", addCustomerSource);
-	createCustomerSource.cancelBtn = $("#cancelBtn").on("click", deleteDate);
-	createCustomerSource.createCustomerSaveBtn = $("#createCustomerSaveBtn").on("click", createCustomer);
+	createCustomerSource.saveBtn = com.focusPage("#saveBtn").on("click", addCustomerSource);
+	createCustomerSource.cancelBtn = com.focusPage("#cancelBtn").on("click", deleteDate);
+	createCustomerSource.createCustomerSaveBtn = com.focusPage("#createCustomerSaveBtn").on("click", createCustomer);
 
-	createCustomerSource.items.customerId= $("#customerId");
-	createCustomerSource.items.csType = $("#csType");
-	createCustomerSource.items.purpose = $("#purpose");
-	createCustomerSource.items.intention = $("#intention");
-	createCustomerSource.items.priceLow = $("#priceLow");
-	createCustomerSource.items.priceHigh = $("#priceHigh");
-	createCustomerSource.items.areaLow = $("#areaLow");
-	createCustomerSource.items.areaHigh = $("#areaHigh");
-	createCustomerSource.items.familyType = $("#familyType");
-	createCustomerSource.items.orientation = $("#orientation");
-	createCustomerSource.items.conditions = $("#conditions");
-	createCustomerSource.items.grade = $("#grade");
-	createCustomerSource.items.comment = $("#comment");
+	createCustomerSource.items.customerId= com.focusPage("#customerId");
+	createCustomerSource.items.csType = com.focusPage("#csType");
+	createCustomerSource.items.purpose = com.focusPage("#purpose");
+	createCustomerSource.items.intention = com.focusPage("#intention");
+	createCustomerSource.items.priceLow = com.focusPage("#priceLow");
+	createCustomerSource.items.priceHigh = com.focusPage("#priceHigh");
+	createCustomerSource.items.areaLow = com.focusPage("#areaLow");
+	createCustomerSource.items.areaHigh = com.focusPage("#areaHigh");
+	createCustomerSource.items.familyType = com.focusPage("#familyType");
+	createCustomerSource.items.orientation = com.focusPage("#orientation");
+	createCustomerSource.items.conditions = com.focusPage("#conditions");
+	createCustomerSource.items.grade = com.focusPage("#grade");
+	createCustomerSource.items.comment = com.focusPage("#comment");
 
-	createCustomerSource.customerItems.customerName = $("#customerName");
-	createCustomerSource.customerItems.cardType = $("#cardType");
-	createCustomerSource.customerItems.cardNum = $("#cardNum");
-	createCustomerSource.customerItems.gender = $("#gender");
-	createCustomerSource.customerItems.qq = $("#qq");
-	createCustomerSource.customerItems.wechat = $("#wechat");
-	createCustomerSource.customerItems.email = $("#email");
-	createCustomerSource.customerItems.relationshipType = $("#relationshipType");
-	createCustomerSource.customerItems.address = $("#address");
-	createCustomerSource.customerItems.phone = $("#phone");
+	createCustomerSource.customerItems.customerName = com.focusPage("#customerName");
+	createCustomerSource.customerItems.cardType = com.focusPage("#cardType");
+	createCustomerSource.customerItems.cardNum = com.focusPage("#cardNum");
+	createCustomerSource.customerItems.gender = com.focusPage("#gender");
+	createCustomerSource.customerItems.qq = com.focusPage("#qq");
+	createCustomerSource.customerItems.wechat = com.focusPage("#wechat");
+	createCustomerSource.customerItems.email = com.focusPage("#email");
+	createCustomerSource.customerItems.relationshipType = com.focusPage("#relationshipType");
+	createCustomerSource.customerItems.address = com.focusPage("#address");
+	createCustomerSource.customerItems.phone = com.focusPage("#phone");
 
-	createCustomerSource.modal = $("#createCustomerSource");
+	createCustomerSource.modal = com.focusPage("#createCustomerSource");
 	createCustomerSource.modal.on('show.bs.modal',function(e){
 		com.clearValidator();
 	});
@@ -108,32 +107,32 @@ jQuery(function($) {
 		createCustomerSource.customerItems.relationshipType.bindData(res.relationshipType, "key", "value");
 	});
 
-	$("#customerId").on("change", function(){
+	com.focusPage("#customerId").on("change", function(){
 		deleteCsDate();
 	});
 
 	//检查电话号是否已存在
-	createCustomerSource.customerItems.phone = $("#phone").on("blur", function(){
+	createCustomerSource.customerItems.phone = com.focusPage("#phone").on("blur", function(){
 		$this = $(this);
-		void 0 == $this.val() || "" == $this.val().trim() ? (com.showPopover($("#phone"),{errorMsg: "电话号码不能为空"}, "right"), createCustomerSource.repeatFlg = false) : com.post(api.data.checkCustomerForPhone, {
+		void 0 == $this.val() || "" == $this.val().trim() ? (com.showPopover(com.focusPage("#phone"),{errorMsg: "电话号码不能为空"}, "right"), createCustomerSource.repeatFlg = false) : com.post(api.data.checkCustomerForPhone, {
 			"customerPhone.phone": $this.val(),
 			"customerPhone.status": 0
 		}, function(res) {
 			createCustomerSource.customerRepeatFlg = false;
-			$("#phone").css("border", "1px solid #d5d5d5").popover("destroy");
+			com.focusPage("#phone").css("border", "1px solid #d5d5d5").popover("destroy");
 
 		}, function(res){
 			createCustomerSource.customerRepeatFlg = true;
-			com.showPopover($("#phone"),{errorMsg: "电话号码已存在"}, "right");
+			com.showPopover(com.focusPage("#phone"),{errorMsg: "电话号码已存在"}, "right");
 		});
 	});
 
-	$('#fl-statement').statement("客源", "创建客源");
+	com.focusPage('#fl-statement').statement("客源", "创建客源");
 
 	//创建客户模态框
-	$("#createCustomer").click(function(){
+	com.focusPage("#createCustomer").click(function(){
 		com.cleanItems(createCustomerSource.customerItems);
-		$("#customerModal").modal("show");
+		com.focusPage("#customerModal").modal("show");
 	});
 
 	//创建客户
@@ -147,22 +146,22 @@ jQuery(function($) {
 
 		if(com.validate("customerModal") || createCustomerSource.customerRepeatFlg || createCustomerSource.cardFlag){
 			if(createCustomerSource.customerRepeatFlg){
-				com.showPopover($("#phone"),{errorMsg: "电话号码已存在"}, "right");
+				com.showPopover(com.focusPage("#phone"),{errorMsg: "电话号码已存在"}, "right");
 			}
 			return;
 		}
 
 		var customerOptions = {};
-		switch($("#cardType").val())
+		switch(com.focusPage("#cardType").val())
 		{
 			case "身份证":
-				customerOptions["customer.identity"]  = $("#cardNum").val();
+				customerOptions["customer.identity"]  = com.focusPage("#cardNum").val();
 				break;
 			case "军官证":
-				customerOptions["customer.officer"] = $("#cardNum").val();
+				customerOptions["customer.officer"] = com.focusPage("#cardNum").val();
 				break;
 			case "护照":
-				customerOptions["customer.passport"] = $("#cardNum").val();
+				customerOptions["customer.passport"] = com.focusPage("#cardNum").val();
 				break;
 		}
 
@@ -179,10 +178,10 @@ jQuery(function($) {
 			com.showAlert(com.info, "创建用户成功");
 			createCustomerSource.customerId = res.customer.cid;
 
-			$("#customerId").html('<option value="'+ res.customer.cid + '">'+res.customer.name + '-' + res.customer.phone + '</option>');
-			$("#customerId").trigger("chosen:updated");
+			com.focusPage("#customerId").html('<option value="'+ res.customer.cid + '">'+res.customer.name + '-' + res.customer.phone + '</option>');
+			com.focusPage("#customerId").trigger("chosen:updated");
 
-			$("#customerModal").modal("hide");
+			com.focusPage("#customerModal").modal("hide");
 
 		}, function(e){
 			com.showAlert(com.warning, "客户电话已存在！");
@@ -197,22 +196,22 @@ jQuery(function($) {
 		var areaLow = createCustomerSource.items.areaLow.val();
 
 		if(parseInt(priceHigh) < parseInt(priceLow) || parseInt(priceHigh) == parseInt(priceLow)){
-			$("#priceHigh").removeClass("v_required");
-			com.showPopover($("#priceHigh"),{errorMsg: "请填写可接受的最高价格！"}, "right");
+			com.focusPage("#priceHigh").removeClass("v_required");
+			com.showPopover(com.focusPage("#priceHigh"),{errorMsg: "请填写可接受的最高价格！"}, "right");
 			createCustomerSource.priceFlag = true;
 		}else{
-			$("#priceHigh").addClass("v_required");
-			$("#priceHigh").css("border", "1px solid #d5d5d5").popover("destroy");
+			com.focusPage("#priceHigh").addClass("v_required");
+			com.focusPage("#priceHigh").css("border", "1px solid #d5d5d5").popover("destroy");
 			createCustomerSource.priceFlag = false;
 		}
 
 		if(parseInt(areaHigh) < parseInt(areaLow) || parseInt(areaHigh) == parseInt(areaLow)){
-			$("#areaHigh").removeClass("v_required");
-			com.showPopover($("#areaHigh"),{errorMsg: "请填写需求面积的最大值！"}, "right");
+			com.focusPage("#areaHigh").removeClass("v_required");
+			com.showPopover(com.focusPage("#areaHigh"),{errorMsg: "请填写需求面积的最大值！"}, "right");
 			createCustomerSource.areaFlag = true;
 		}else{
-			$("#areaHigh").addClass("v_required");
-			$("#areaHigh").css("border", "1px solid #d5d5d5").popover("destroy");
+			com.focusPage("#areaHigh").addClass("v_required");
+			com.focusPage("#areaHigh").css("border", "1px solid #d5d5d5").popover("destroy");
 			createCustomerSource.areaFlag = false;
 		}
 
@@ -261,12 +260,12 @@ jQuery(function($) {
 		com.updateChosen("customerId", "", "");
 		com.cleanItems(createCustomerSource.items);
 		com.cleanItems(createCustomerSource.customerItems);
-		$(".tag").remove();
+		com.focusPage(".tag").remove();
 		com.clearValidator();
 	}
 
 	function deleteCsDate(){
-		$(".tag").remove();
+		com.focusPage(".tag").remove();
 		createCustomerSource.items.purpose.val("");
 		createCustomerSource.items.priceLow.val("");
 		createCustomerSource.items.priceHigh.val("");

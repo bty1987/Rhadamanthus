@@ -145,13 +145,13 @@ public class DrawLineDaoImpl extends DaoImpl<DrawLinePO> implements DrawLineDao 
 					}else if("drawLineGroupName".equals(filter.getField())){
 						query.add(query.getCriterion("drawLineGroupName", (filter.getData()), filter.getOp()));
 					}else if("businessDepartment".equals(filter.getField())){				
-						query.add(query.getCriterion("salesmanDept.deptName", (filter.getData()), filter.getOp()));
+						query.add(query.getCriterion("salesmanDept.name", (filter.getData()), filter.getOp()));
 					}else if("designDepartment".equals(filter.getField())){
-						query.add(query.getCriterion("designerDept.deptName", (filter.getData()), filter.getOp()));
+						query.add(query.getCriterion("designerDept.name", (filter.getData()), filter.getOp()));
 					}else if("businessDepartmentId".equals(filter.getField())){				
-						query.add(query.getCriterion("salesmanDept.deptId", (filter.getData()), filter.getOp()));
+						query.add(query.getCriterion("salesmanDept.no", (filter.getData()), filter.getOp()));
 					}else if("designDepartmentId".equals(filter.getField())){
-						query.add(query.getCriterion("designerDept.deptId", (filter.getData()), filter.getOp()));
+						query.add(query.getCriterion("designerDept.no", (filter.getData()), filter.getOp()));
 					}else if("salesman".equals(filter.getField())){
 						query.add(query.getCriterion("salesman.userId", (filter.getData()), filter.getOp()));
 					}else if("designer".equals(filter.getField())){

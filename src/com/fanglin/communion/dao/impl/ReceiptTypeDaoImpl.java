@@ -13,6 +13,7 @@ package com.fanglin.communion.dao.impl;
 
 import java.util.List;
 
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -33,10 +34,13 @@ public class ReceiptTypeDaoImpl extends DaoImpl<ReceiptTypePO> implements Receip
 	public List<ReceiptTypePO> pageReceiptType(Paging paging, List<Filter> filters,int company) {
 		
 		PagingQuery<ReceiptTypePO> query = pagingQuery(paging, ReceiptTypePO.class);
+
+		queryFilterExcute(query, filters);
+
 		query.add(Restrictions.eq("company", company));
 		
-		queryFilterExcute(query, filters);
-		
+		query.asc("rtId");
+
 		return query.list();
 	}
 
@@ -58,6 +62,18 @@ public class ReceiptTypeDaoImpl extends DaoImpl<ReceiptTypePO> implements Receip
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){
+
+		if (filters != null) {
+			for (Filter filter : filters) {
+				if ("name".equals(filter.getField())) {
+					query.add(Restrictions.ilike("name", filter.getData(), MatchMode.ANYWHERE));
+				} else if ("type".equals(filter.getField())) {
+					query.add(Restrictions.eq("type", Short.valueOf(filter.getData())));
+				} else if ("status".equals(filter.getField())) {
+					query.add(Restrictions.eq("status", Short.valueOf(filter.getData())));
+				}
+			}
+		}
 		
 	}
 

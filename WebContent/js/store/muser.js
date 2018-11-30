@@ -6,19 +6,18 @@ $(function(){
         repeatFlg: false
     };
 
-    muser.muserItems.name = $("#name");
-    muser.muserItems.phone = $("#phone");
-    muser.muserItems.unionvid = $("#unionvid");
-    muser.muserItems.gender = $("#gender");
-    muser.muserItems.birthday = $("#birthday");
+    muser.muserItems.name = com.focusPage("#name");
+    muser.muserItems.phone = com.focusPage("#phone");
+    muser.muserItems.unionvid = com.focusPage("#unionvid");
+    muser.muserItems.gender = com.focusPage("#gender");
+    muser.muserItems.birthday = com.focusPage("#birthday");
 
     var displayFunc  = (function(){
         /*表格样式*/
         var renderList = function(tableId,listData){
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
 
             if(listData && listData.length){
-
                 var $ulTitle = createTableTitle();
                 var $ulData = $('<ul></ul>').addClass('flex-table');
                 $tableWrap.append($ulTitle).append($ulData);
@@ -32,7 +31,6 @@ $(function(){
 
         /*表格头*/
         var createTableTitle = function(){
-
             var $ulTitle = $('<ul></ul>').addClass('flex-table');
             var $liTitle = $('<li></li>').addClass('line table-title');
 
@@ -47,16 +45,12 @@ $(function(){
 
             var $optionWrap = $('<div></div>').addClass('line-wrap action').html($('<div>操作</div>').addClass('cell option'));
 
-            $liTitle.append($indexWrap)
-                .append($contentWrap)
-                .append($optionWrap)
-                .appendTo($ulTitle);
+            $liTitle.append($indexWrap).append($contentWrap).append($optionWrap).appendTo($ulTitle);
 
             return $ulTitle;
         };
         /*表格体*/
         var creatLine = function (i, v, lastFlag) {
-
             var $liLine = $('<li></li>').addClass('line');
             var id = i + 1;
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(id));
@@ -64,8 +58,8 @@ $(function(){
 
             var propertyArr = [
                 [v.name,'grey'],
-                [v.phone == null ? "无": v.phone ,'black'],
-                [v.gender =="0" ? "女" : "男",'red'],
+                [v.phone == null ? "无": v.phone ,'grey'],
+                [v.gender =="0" ? "男" : "女",'red'],
                 [v.birthday == null ? "无" : v.birthday ,'red']
             ];
 
@@ -83,23 +77,14 @@ $(function(){
             var $update = $('<li></li>').append($('<a></a>').html('编辑'));
             var $address = $('<li></li>').append($('<a></a>').html('地址'));
 
-            $btnUl
-                .append($address)
-                .append($update);
-            $btnUl
-                .append($address)
-                .append($update);
+            $btnUl.append($address).append($update);
+            $btnUl.append($address).append($update);
 
-            $btnGroup
-                .append($btn)
-                .append($btnUl)
-                .appendTo($cellOption);
+            $btnGroup.append($btn).append($btnUl).appendTo($cellOption);
 
             $cellOption.appendTo($optionWrap);
 
-            $liLine.append($indexWrap)
-                .append($contentWrap)
-                .append($optionWrap);
+            $liLine.append($indexWrap).append($contentWrap).append($optionWrap);
 
             //地址点击事件
             $address.click(function () {
@@ -127,7 +112,7 @@ $(function(){
 
         return {
             init : function(tableId,listData){
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
             },
             drawLine : function(v){
@@ -139,14 +124,13 @@ $(function(){
     /*分页*/
     var _condArr = ["muserName"];
     var muserSeacher = new Searcher();
+
     muserSeacher.init( _condArr, "condList", api.store.pageMuser, function(data){
         displayFunc.init('resultList', data);
-    }, "pagenation", "muserPostData", null, false, null, function() {
-
-    },'resultList');
+    }, "pagenation", "muserPostData", null, false, null, null,'resultList');
 
     function openLayerSwitch(id, uid, unionid, title, url) {
-        var $PopUp = $('#' + id);
+        var $PopUp = com.focusPage('#' + id);
         $PopUp.attr({'data-unionid': unionid});
         $PopUp.attr({'data-uid': uid});
 
@@ -172,19 +156,19 @@ $(function(){
     }
 
     function clearForm(formId){
-        var $form = $("#"+formId);
-        var error = $('.alert-error', $form);
-        var success = $('.alert-success', $form);
-        $('.control-group').removeClass("success").removeClass("error");
-        $(".ok").remove();
-        $(".help-inline").remove();
+        var $form = com.focusPage("#"+formId);
+        var error = com.focusPage('.alert-error', $form);
+        var success = com.focusPage('.alert-success', $form);
+        com.focusPage('.control-group').removeClass("success").removeClass("error");
+        com.focusPage(".ok").remove();
+        com.focusPage(".help-inline").remove();
         success.hide();
         error.hide();
-        $("span.checked",$form).removeClass("checked");
-        $("tr.edit-on").removeClass("edit-on");
+        com.focusPage("span.checked",$form).removeClass("checked");
+        com.focusPage("tr.edit-on").removeClass("edit-on");
         $form.removeClass("edit-item");
-        $(".extra-wrap .control-group:not(.hide)").remove();//去掉辅助项
-        $('input[type="hidden"]',$form).val('');
+        com.focusPage(".extra-wrap .control-group:not(.hide)").remove();//去掉辅助项
+        com.focusPage('input[type="hidden"]',$form).val('');
         document.getElementById(formId).reset();
     }
 
@@ -194,7 +178,7 @@ $(function(){
             type: 1,
             //skin: 'layui-layer-lan',
             title:"                                              ",
-            content: $('#layerAdd'),
+            content: com.focusPage('#layerAdd'),
             area: ( $(window).width()*0.6 < 620 ?  $(window).height()*0.6 : 620 )+"px",
             maxmin: false,
             zIndex:9000,
@@ -203,20 +187,20 @@ $(function(){
                 callback(index,layero);
             },
             btn2: function(index, layero){
-                $(".dropdown-menu").css("z-index", 9999).css("top","38px");
+                com.focusPage(".dropdown-menu").css("z-index", 9999).css("top","38px");
                 //按钮【按钮二】的回调
                 com.clearValidator();
             },
             cancel: function(){
-                $(".dropdown-menu").css("z-index", 9999).css("top","38px");
+                com.focusPage(".dropdown-menu").css("z-index", 9999).css("top","38px");
                 //右上角关闭回调
             }
         });
     }
 
-    $(".date-picker").datepicker({autoclose:!0}).on("show",function() {
+    com.focusPage(".date-picker").datepicker({autoclose:!0}).on("show",function() {
         setTimeout(function() {
-            $(".dropdown-menu").css("z-index", 9999).css("top","510px");
+            com.focusPage(".dropdown-menu").css("z-index", 9999).css("top","510px");
         }, 0)
     }).next().on(ace.click_event,function() {
         a(this).prev().focus()
@@ -229,13 +213,15 @@ $(function(){
         muser.muserItems.gender.val(v.gender);
         muser.muserItems.birthday.val(v.birthday);
     }
+
     function updateData(v,callback){
-        var $layer = $('#layerAdd');
-        var phone = $("#phone").val();
-        var name = $("#name").val();
-        var gender = $("#gender").val();
-        var birthday = $("#birthday").val();
-        com.post(api.store.saveMuser, {
+        var $layer = com.focusPage('#layerAdd');
+        var phone = com.focusPage("#phone").val();
+        var name = com.focusPage("#name").val();
+        var gender = com.focusPage("#gender").val();
+        var birthday = com.focusPage("#birthday").val();
+
+        com.post(api.store.updateMuser, {
             "muser.unionId": v.unionId,
             "muser.phone": phone,
             "muser.name": name,

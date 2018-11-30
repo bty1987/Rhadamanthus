@@ -1,17 +1,17 @@
 jQuery(function($) {
 
     if (jQuery().datepicker) {
-        $('.date-picker').datepicker({
+        com.focusPage('.date-picker').datepicker({
             autoclose:true,
-            format: 'yyyy-mm-dd',//yyyy-mm-dd hh:ii,
+            format: 'yyyy-mm-dd'//yyyy-mm-dd hh:ii,
         });
     }
 
     var purchase = {
-        saveBtn:  $("#saveBtn"),
-        cancellBtn: $("#cancelBtn"),
+        saveBtn:  com.focusPage("#saveBtn"),
+        cancellBtn: com.focusPage("#cancelBtn"),
         purchaseItems: {
-            pid : $("#pId"),
+            pid : com.focusPage("#pId")
         },
         record: {},
         validator: {
@@ -31,19 +31,19 @@ jQuery(function($) {
     $.extend(com.validator, purchase.validator);
 
     //添加一条空行
-    addline(1).addClass('current').appendTo('#list');
+    addline(1).addClass('current').appendTo(com.focusPage('#list'));
     
-    $('#addPurchase').click(function(){
+    com.focusPage('#addPurchase').click(function(){
 
         if(com.validate('list', 'bottom')){
             return;
         }
     	
-        var num = $('.line', '#list').length;
+        var num = com.focusPage('.line', '#list').length;
 
         var returnFlag = false;
         
-        var $lines = $('.line', '#list');
+        var $lines = com.focusPage('.line', '#list');
         
         $lines.each(function(){
         	
@@ -58,17 +58,17 @@ jQuery(function($) {
 
         var $line = addline(num + 1);
         
-        $line.appendTo('#list');
+        $line.appendTo(com.focusPage('#list'));
 
     });
 
     //返回采购单
-    $('#returnPurchase').click(function(){
+    com.focusPage('#returnPurchase').click(function(){
         com.switchPage('views/manifest/purchase.html');
     });
 
     //保存添加采购单
-    $('#submitPurchase').click(function(){
+    com.focusPage('#submitPurchase').click(function(){
 
         if(com.validate('list', 'bottom')){
             return;
@@ -76,7 +76,7 @@ jQuery(function($) {
 
         var options = {};
 
-        var $lines = $('li.line', '#list');
+        var $lines = com.focusPage('li.line', '#list');
         
         if(!checkInfo()) return;
         
@@ -101,16 +101,16 @@ jQuery(function($) {
             return false;
         }
 
-        var purchaseTime = $('[name="date"]', '#form').val();  //– 创建时间
-        var deliveryTime = $('[name="deliveryTime"]', '#form').val();//- 交付时间
-        var comment = $('#comment').val();
+        var purchaseTime = com.focusPage('[name="date"]', '#form').val();  //– 创建时间
+        var deliveryTime = com.focusPage('[name="deliveryTime"]', '#form').val();//- 交付时间
+        var comment = com.focusPage('#comment').val();
 
         options = {
             "purchase.comment":comment,
-            "purchase.deliveryTime": deliveryTime,
+            "purchase.deliveryTime": deliveryTime
         };
 
-        var $list = $('li.line', '#list');
+        var $list = com.focusPage('li.line', '#list');
         
         $list.length && $list.each(function(i){
         	
@@ -128,13 +128,13 @@ jQuery(function($) {
         	
             layer.msg('保存成功!', {icon : 1});
             
-            $('#list').empty();
-            $('[name="date"]','#form').val(null);
-            $('[name="deliveryTime"]', '#form').val(null);
-            $('#comment').val(null);
-            $("#totalSpan").text(0);
+            com.focusPage('#list').empty();
+            com.focusPage('[name="date"]','#form').val(null);
+            com.focusPage('[name="deliveryTime"]', '#form').val(null);
+            com.focusPage('#comment').val(null);
+            com.focusPage("#totalSpan").text(0);
             //添加一条空行
-            addline(1).addClass('current').appendTo('#list');
+            addline(1).addClass('current').appendTo(com.focusPage('#list'));
 
         }, function(e){
         	
@@ -224,12 +224,12 @@ jQuery(function($) {
                         com.post(api.inventory.queryColorForEnableByGid,{
                             "color.gid": val.gid
                         },function(res){
-                            $('li[data-gid="'+val.gid+'_'+lineindex+'"] .color select').bindData(res.colors,"cid","name");
+                            com.focusPage('li[data-gid="'+val.gid+'_'+lineindex+'"] .color select').bindData(res.colors,"cid","name");
                         });
                         com.post(api.inventory.queryFormatForEnableByGid,{
                             "format.gid": val.gid
                         },function(res){
-                            $('li[data-gid="'+val.gid+'_'+lineindex+'"] .format select').bindData(res.formats,"fid","info");
+                            com.focusPage('li[data-gid="'+val.gid+'_'+lineindex+'"] .format select').bindData(res.formats,"fid","info");
                         });
                     }
                 });
@@ -279,7 +279,7 @@ jQuery(function($) {
 
     //重排序
     function reorder(){
-        var $list = $('.line', '#list');
+        var $list = com.focusPage('.line', '#list');
         $list.length && $list.each(function(i){
             var $this = $(this);
             $this.find('.index').text(i + 1);
@@ -290,8 +290,8 @@ jQuery(function($) {
 
         var flag = true;
 
-        var date = $('[name="date"]','#form');
-        var deliveryTime = $('[name="deliveryTime"]','#form');
+        var date = com.focusPage('[name="date"]','#form');
+        var deliveryTime = com.focusPage('[name="deliveryTime"]','#form');
 
         if(!date.val()){
             date.focus().select();
@@ -334,7 +334,7 @@ jQuery(function($) {
 
         var _total = 0;
 
-        var $list = $('.line', '#list');
+        var $list = com.focusPage('.line', '#list');
         $list.length && $list.each(function(){
             var $this = $(this);
             if($this.find('.unitPrice input').val()){
@@ -345,6 +345,6 @@ jQuery(function($) {
         });
 
 
-        $("#totalSpan").text(_total);
+        com.focusPage("#totalSpan").text(_total);
     }
 });

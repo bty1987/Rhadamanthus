@@ -162,6 +162,20 @@ public class QuotetionFunctionAreaItemPO implements Serializable {
 		this.content = content;
 	}
 	
+	public void ptp(QuotationFunctionAreaItemPO quotationFunctionAreaItemPO){
+		this.setName(quotationFunctionAreaItemPO.getItemName());
+		this.setUnitPrice(quotationFunctionAreaItemPO.getUnitPrice());
+		this.setIndex(quotationFunctionAreaItemPO.getIndex());
+		this.setFormula(quotationFunctionAreaItemPO.getFormula());
+		this.setNum(quotationFunctionAreaItemPO.getNum());
+		this.setType(quotationFunctionAreaItemPO.getType());
+		this.setSubtype(quotationFunctionAreaItemPO.getSubtype());
+		this.setMeasurementUnit(quotationFunctionAreaItemPO.getMeasurementUnit());
+		this.setWorkType(quotationFunctionAreaItemPO.getWorkType());
+		this.setDiscount(quotationFunctionAreaItemPO.getDiscount());
+		this.setContent(quotationFunctionAreaItemPO.getContent());
+	}
+	
 	public static String quotetionFunctionAreaItemTable(Long qfaid,Integer div) {
 		
 		int index = (int)(qfaid/div);
@@ -172,7 +186,6 @@ public class QuotetionFunctionAreaItemPO implements Serializable {
 		
 		return quotetionFunctionAreaItemTable;
 	}
-	
 	
 	public static QuotetionFunctionAreaItemPO factoryToInstance(Long qfaid, Integer div)throws FLException{
 		

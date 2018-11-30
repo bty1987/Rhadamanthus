@@ -8,7 +8,7 @@ $(function () {
      * 回调函数必须提供 init(tableId, result.list)方法 tableId ，用来显示的div的id result.list
      * 列表的json数组
      */
-    var goodsPricePopUp = $('#goodsPricePopUp')
+    var goodsPricePopUp = com.focusPage('#goodsPricePopUp');
 
     var validator = {
         num: {
@@ -29,7 +29,7 @@ $(function () {
     var displayFunc = (function () {
 
         var renderList = function (tableId, listData) {
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
 
             if (listData && listData.length) {
 
@@ -126,7 +126,7 @@ $(function () {
                 }, function (e) {
                     com.showAlert(com.error, e.errorMsg);
                 });
-            })
+            });
 
             return $liLine;
 
@@ -134,7 +134,7 @@ $(function () {
 
         return {
             init: function (tableId, listData) {
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
 
             },
@@ -152,7 +152,7 @@ $(function () {
         })
     }
 
-    doSearcher()
+    doSearcher();
 
     function addline(lineindex) {
 
@@ -165,7 +165,7 @@ $(function () {
             {cellClass : "purchase", hasInput : !0},//名称
             {cellClass : "selling", hasInput : !0},//名称
             {cellClass : "ctype", hasSelectCtype : !0},//名称
-            {cellClass : "cvalue", hasInput : !0},//名称
+            {cellClass : "cvalue", hasInput : !0}//名称
         ];
         var $btncheck = $('<a class="color-green green" style="font-size: 18px"><i class="icon-ok"></i></a>');
         var $btndel = $('<a class="color-red red" style="font-size: 18px"><i class=" icon-remove"></i></a>');
@@ -221,33 +221,33 @@ $(function () {
 
             //if(checkRowValue($line)){
                 com.post(api.inventory.addPrice,options,function(){
-                    $('#list').empty();
-                    addline(1).addClass('current').appendTo('#list');
+                    com.focusPage('#list').empty();
+                    addline(1).addClass('current').appendTo(com.focusPage('#list'));
                     com.post(api.inventory.queryPriceByGid,{
                         "price.gid":goodsPricePopUp.attr('data-gid')
                     },function(data){
-                        displayFunc.init('resultListPrice',data.prices)
+                        displayFunc.init('resultListPrice',data.prices);
                         doSearcher();
                     })
                 },function(e){
                     com.showAlert(com.error, e.errorMsg);
-                })
+                });
             //}
 
-        })
+        });
 
         $btndel.click(function (e) {
 
-            $('#list').empty();
+            com.focusPage('#list').empty();
 
-            addline(1).addClass('current').appendTo('#list');
+            addline(1).addClass('current').appendTo(com.focusPage('#list'));
 
-        })
+        });
 
         return $line;
 
     }
-    addline(1).addClass('current').appendTo('#list');
+    addline(1).addClass('current').appendTo(com.focusPage('#list'));
 
     function deleteManifestTemplate(id, callback) {
         com.post(api.inventory.deletePrice, {
@@ -423,14 +423,15 @@ $(function () {
 
     }
 
-    $('.layui-layer-content').css('overflow', 'hidden');
-    $('#showPrice').css('height', '560px');
-    $('#resultListPrice').css({
+    com.focusPage('.layui-layer-content').css('overflow', 'hidden');
+    com.focusPage('#showPrice').css('height', '560px');
+    com.focusPage('#resultListPrice').css({
         'width': '96%',
         'margin': '0 auto',
         'height': '560px',
-        'marigin-top': '20px'
-    })
-    $('#addPrice').css({'width': '96%', 'margin': '0 auto', 'margin-top': '15px'})
+        'marigin-top': '20px',
+        'overflow-y': 'scroll'
+    });
+    com.focusPage('#addPrice').css({'width': '96%', 'margin': '0 auto', 'margin-top': '15px'})
 
 });

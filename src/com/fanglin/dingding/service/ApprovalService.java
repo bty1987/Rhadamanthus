@@ -1,0 +1,105 @@
+package com.fanglin.dingding.service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.alibaba.fastjson.JSONObject;
+import com.fanglin.core.interceptor.FLException;
+import com.fanglin.dingding.po.User;
+import com.fanglin.dingding.utils.DDApi;
+import com.fanglin.dingding.utils.HttpHelper;
+import com.fanglin.system.dao.SystemConfigDao;
+import com.fanglin.system.po.SystemConfigPO;
+import com.fanglin.utils.FormatUtil;
+
+@Service("approvalDDService")
+@Transactional(readOnly = true)
+public class ApprovalService {
+
+	@Autowired
+	private UserService userDDService;
+
+	@Autowired
+	private AuthService authDDService;
+
+	@Autowired
+	private SystemConfigDao systemConfigDao;
+
+	public String initiateApproval(String processCode, String sender, String approver, String copy, String copyPosition, List<JSONObject> forms, int company) throws FLException {
+
+		User senderUser = userDDService.getUser(sender, company);
+
+		if (senderUser == null) {
+			throw new FLException(270003, "获取人员信息失败");
+		}
+
+		JSONObject params = new JSONObject();
+
+		if (copy != null && !"".equals(copy)) {
+			params.put("cc_list", copy);
+		}
+
+		if (copyPosition != null && !"".equals(copyPosition)) {
+			params.put("cc_position", copyPosition);
+		}
+
+		params.put("process_code", processCode);
+		params.put("originator_user_id", sender);
+		params.put("dept_id", senderUser.getDepartment().get(0));
+		params.put("approvers", approver);
+		params.put("form_component_values", forms);
+
+		SystemConfigPO oapiHost = systemConfigDao.querySystemConfig("oapiHost");
+		String accessToken = authDDService.getAccessToken(FormatUtil.encodeCompany(company));
+
+		String url = String.format(DDApi.DDAPI_CREATE_PROCESS_INSTANCE_STR, oapiHost.getValue(), accessToken);
+
+		JSONObject response = HttpHelper.httpPost(url, params);
+
+		if (response != null && response.getInteger("errcode") == 0) {
+			return response.getString("process_instance_id");
+		} else {
+			System.out.println(url);
+			System.out.println(String.format("%d-%s", response.getInteger("errorCode"), response.getString("errorMsg")));
+
+			return "";
+		}
+	}
+
+	public List<JSONObject> getForms(String name, String value) {
+
+		List<JSONObject> forms = new ArrayList<JSONObject>();
+
+		JSONObject jsonObject = new JSONObject();
+
+		jsonObject.put("name", name);
+		jsonObject.put("value", value);
+
+		forms.add(jsonObject);
+
+		return forms;
+	}
+
+	public List<JSONObject> getForms(Map<String, Object> values) {
+
+		List<JSONObject> forms = new ArrayList<JSONObject>();
+
+		for (Map.Entry<String, Object> map : values.entrySet()) {
+
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("name", map.getKey());
+			jsonObject.put("value", map.getValue());
+
+			forms.add(jsonObject);
+
+		}
+
+		return forms;
+	}
+
+}

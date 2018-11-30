@@ -8,16 +8,16 @@
 						<a data-toggle="tab" href="#decorationPaymentList" >装修收款</a>
 					</li>
 					<li class="">
-						<a data-toggle="tab" href="#history" id="historyReduceSalaryTab">历史收款</a>
+						<a data-toggle="tab" href="#historyDecoration" id="historyReduceSalaryTab">历史收款</a>
 					</li>
 				</ul>
-				<div class="tab-content ">
+				<div class="tab-content">
 					<div id="decorationPaymentList" class="tab-pane active">
 						<div id="condList" class="fl_search clearfix"></div> <!-- 查询条件-->
 						<div id="resultList" class="clearfix tab-pane active"></div> <!--查询结果-->
 						<div id="pagenation" class="fl-page-wrap clearfix"></div> <!--分页-->
 					</div>
-					<div id="history" class="tab-pane">
+					<div id="historyDecoration" class="tab-pane">
 						<div id="hcondList" class="fl_search clearfix"></div> <!-- 查询条件-->
 						<div id="hresultList" class="clearfix tab-pane active"></div> <!--查询结果-->
 						<div id="hpagenation" class="fl-page-wrap clearfix"></div> <!--分页-->
@@ -68,14 +68,6 @@
 										<span class="lbl"> 转账</span>
 									</label>
 									<label class="inline">
-										<input type="checkbox" class="ace" id="installmentCheckbox" key="installment" select="1">
-										<span class="lbl"> 分期</span>
-									</label>
-									<label class="inline">
-										<input type="checkbox" class="ace" id="accountsCheckbox" key="accounts" select="1">
-										<span class="lbl"> 对公账户</span>
-									</label>
-									<label class="inline">
 										<input type="checkbox" class="ace" id="advanceCheckbox" key="advance" select="1">
 										<span class="lbl"> 预付款</span>
 									</label>
@@ -114,16 +106,16 @@
 			      					<h4 class="header blue bolder smaller">现金</h4>
 			      					<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="cashInfo">类型</label>
-										<div class="col-sm-9">
-											<select id="cashInfo" class="col-xs-10 col-sm-5 v_required"></select>
+										<div class="col-md-9">
+											<select id="cashInfo" class="chosen-select col-xs-10 col-sm-5 v_required"></select>
 										</div>
 									</div>
 									<div class="space-4"></div>
 									
 						      		<div class="form-group">
 										<label for="cash" class="col-md-3 control-label no-padding-right">现金金额</label>
-										<div class="col-md-9 block no-padding-right">
-											<input type="text" id="cash" class="col-xs-10 col-sm-5 v_required v_float"  data-toggle="popover" data-trigger='manual' maxlength="8"/>
+										<div class="col-md-9">
+											<input type="text" id="cash" class="col-xs-10 col-sm-5 v_required v_float" data-toggle="popover" data-trigger='manual' maxlength="8"/>
 										</div>
 									</div>
 									<div class="space-4 "></div>
@@ -132,68 +124,17 @@
 								<div id="bankDiv" referCheckbox="bankCheckbox" style="display: none;">
 									<h4 class="header blue bolder smaller">
 										银行卡
-										<button id="bankAdd" class="btn btn-minier btn-success pull-right inline" num="0">添加</button>
+										<button id="bankAdd" class="btn btn-minier btn-success pull-right inline" num="0" maxnum="0">添加</button>
 									</h4>
 									<div id="bankDivGroup"></div>
 								</div>
-								
+
 								<div id="checkvDiv" referCheckbox="checkvCheckbox" style="display: none;">
-									<h4 class="header blue bolder smaller">转账</h4>
-									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="checkvBank">银行</label>
-										<div class="col-sm-9">
-											<select id="checkvBank" class="col-xs-10 col-sm-5"></select>
-										</div>
-									</div>
-									<div class="space-4"></div>
-									
-									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="checkv" >转账金额</label>
-										<div class="col-sm-9">
-											<input type="text" id="checkv" class="col-xs-10 col-sm-5 v_required v_float"  data-toggle="popover" data-trigger='manual' maxlength="8">
-										</div>
-									</div>
-									<div class="space-4 "></div>
-									
-								</div>
-								
-								<div id="installmentDiv" referCheckbox="installmentCheckbox" style="display: none;">
-									<h4 class="header blue bolder smaller">分期</h4>
-									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="installmentBank">银行</label>
-										<div class="col-sm-9">
-											<select id="installmentBank" class="col-xs-10 col-sm-5"></select>
-										</div>
-									</div>
-									<div class="space-4"></div>
-									
-									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="installment" >分期金额</label>
-										<div class="col-sm-9">
-											<input type="text" id="installment" class="col-xs-10 col-sm-5 v_required v_float"  data-toggle="popover" data-trigger='manual' maxlength="8">
-										</div>
-									</div>
-									<div class="space-4 "></div>
-								</div>
-								
-								<div id="accountsDiv" referCheckbox="accountsCheckbox" style="display: none;">
-									<h4 class="header blue bolder smaller">对公账户</h4>
-									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="accountsBank">银行</label>
-										<div class="col-sm-9">
-											<select id="accountsBank" class="col-xs-10 col-sm-5"></select>
-										</div>
-									</div>
-									<div class="space-4"></div>
-									
-									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="accounts" >对公金额</label>
-										<div class="col-sm-9">
-											<input type="text" id="accounts" class="col-xs-10 col-sm-5 v_required v_float"  data-toggle="popover" data-trigger='manual' maxlength="8">
-										</div>
-									</div>
-									<div class="space-4 "></div>
-									
+									<h4 class="header blue bolder smaller">
+										转账
+										<button id="checkvAdd" class="btn btn-minier btn-success pull-right inline" num="0" maxnum="0">添加</button>
+									</h4>
+									<div id="checkvDivGroup"></div>
 								</div>
 								
 								<div id="advanceDiv" referCheckbox="advanceCheckbox" style="display: none;">
@@ -201,7 +142,7 @@
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="advanceType">类型</label>
 										<div class="col-sm-9">
-											<select id="advanceType" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual'></select>
+											<select id="advanceType" class="col-xs-10 col-sm-5 v_required " data-toggle="popover" style="min-width: 50%; width: 170px;" data-trigger='manual'></select>
 										</div>
 									</div>
 									<div class="space-4"></div>
@@ -214,14 +155,14 @@
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="projectAdvance" >工程余额</label>
 										<div class="col-sm-9">
-											<input type="text" id="projectAdvance" class="col-xs-10 col-sm-5"  data-toggle="popover" data-trigger='manual' >
+											<input type="text" id="projectAdvance" class="col-xs-10 col-sm-5" data-toggle="popover" data-trigger='manual' >
 										</div>
 									</div>
 					      		
 						      		<div class="form-group">
 										<label for="advance" class="col-md-3 control-label">金额</label>
 										<div class="col-md-9 block no-padding-right  ">
-											<input type="text" id="advance" class="col-xs-10 col-sm-5 v_required v_float"  data-toggle="popover" data-trigger='manual' maxlength="8"/>
+											<input type="text" id="advance" class="col-xs-10 col-sm-5 v_required v_float" data-toggle="popover" data-trigger='manual' maxlength="8"/>
 										</div>
 									</div>
 								</div>
@@ -306,5 +247,5 @@
 </div>
 
 <script type="text/javascript">
-	$.loadScript(['js/payment/decorationPayment.js','js/utils/approvalUtils.js']);
+	$.loadScript(['js/utils/paymentUtils.js', 'js/payment/decorationPayment.js', 'js/utils/approvalUtils.js']);
 </script>

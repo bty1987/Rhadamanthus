@@ -27,6 +27,8 @@ public class ApprovalVO implements java.io.Serializable {
 	private String contents;
 	
 	private String comment;
+	
+	private String processinstanceid;
 
 	public ApprovalVO(){
 		super();
@@ -110,6 +112,14 @@ public class ApprovalVO implements java.io.Serializable {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public String getProcessinstanceid() {
+		return processinstanceid;
+	}
+
+	public void setProcessinstanceid(String processinstanceid) {
+		this.processinstanceid = processinstanceid;
 	}
 
 }

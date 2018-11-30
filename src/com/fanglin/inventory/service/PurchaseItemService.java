@@ -11,8 +11,6 @@ public interface PurchaseItemService {
 	
 	public int updatePurchaseItem(PurchaseVO purchaseVO,PurchaseItemVO purchaseItemVOs) throws FLException;
 	
-	public int updatePurchaseItemSurplus(PurchaseVO purchaseVO, List<PurchaseItemVO> purchaseItemVOs) throws FLException;
-	
 	public int deletePurchaseItem(PurchaseVO purchaseVO,PurchaseItemVO purchaseItemVOs) throws FLException;
 	
 	public List<PurchaseItemVO> queryPurchaseItemByPid(PurchaseVO purchaseVO);

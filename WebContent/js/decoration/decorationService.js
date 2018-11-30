@@ -8,20 +8,20 @@ jQuery(function($) {
         item:{},
         modal:null,
         serviceModal:null
-    }
+    };
 
     var  servicePage = {
-        btnBack:$("#btnBack")
-    }
+        btnBack:com.focusPage("#btnBack")
+    };
 
     decorationService.decorationOrderId = params.decorationOrderId;
-    decorationService.serviceItems.comment = $('#comment');
+    decorationService.serviceItems.comment = com.focusPage('#comment');
 
-    decorationService.serviceModal = $("#serviceModal");
+    decorationService.serviceModal = com.focusPage("#serviceModal");
 
     drawTable(decorationService.decorationOrderId);
 
-    $("#serviceSaveBtn").on('click',function(res){
+    com.focusPage("#serviceSaveBtn").on('click',function(res){
 
         if(com.validate("serviceModal")){
             return;
@@ -36,11 +36,11 @@ jQuery(function($) {
             decorationService.serviceModal.modal("hide");
         });
 
-    })
+    });
 
     decorationService.rollback && servicePage.btnBack.click(function () {
         com.switchPage(decorationService.rollback);
-    })
+    });
 
     function createDiv(classes,id,css) {
         var div = $('<div></div>').attr("class",classes);
@@ -51,7 +51,7 @@ jQuery(function($) {
 
     function drawTable(decorationOrderId) {
 
-        var $service = $("#serviceInfo").html('');
+        var $service = com.focusPage("#serviceInfo").html('');
 
         var $serviceul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable').appendTo($service);
 
@@ -100,10 +100,10 @@ jQuery(function($) {
 
                     $liLine.append($h4).append($ulProperty).append($ulStyle).append($divBtnBlock);
 
-                    $liLine.appendTo($serviceul)
+                    $liLine.appendTo($serviceul);
                 });
             } else {
-                var $metaData = $('#serviceInfo').html('');
+                var $metaData = com.focusPage('#serviceInfo').html('');
                 var $zone = $('<div></div>').addClass('dropzone dz-clickable').css('margin', '20px').css('border', '0px').appendTo($metaData);
                 var $mesg = $('<div></div>').addClass('dz-default dz-message').appendTo($zone);
                 $mesg.append($('<span></span>').text('无可用数据提供'));

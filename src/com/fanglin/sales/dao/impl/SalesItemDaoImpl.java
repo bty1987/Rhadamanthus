@@ -1,5 +1,6 @@
 package com.fanglin.sales.dao.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.hibernate.criterion.Restrictions;
@@ -28,6 +29,20 @@ public class SalesItemDaoImpl extends DaoImpl<SalesItemPO> implements SalesItemD
 		
 		return session().createCriteria(SalesItemPO.class).add(Restrictions.in(SalesItemPO.COLUMN_SID_STR, sids)).list();
 		
+	}
+
+	@Override
+	public Float countSalesItemForAmount(long sid) {
+		
+		String sql="SELECT SUM(sales.salesitem.total) FROM sales.salesitem where sid=:sid";
+		
+		BigDecimal sum=(BigDecimal) session().createSQLQuery(sql).setLong("sid", sid).uniqueResult();
+		
+		if (sum == null) {
+			sum = BigDecimal.ZERO;
+		}
+		
+		return sum.floatValue();
 	}
 
 }

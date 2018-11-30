@@ -14,7 +14,7 @@ $.extend(api, {
         building: {url: "ds/building.json", demo: true},
         production: {url: "ds/production.json", demo: true},
         store: {url: "ds/store.json", demo: true},
-        ehouse: {url: "ds/ehouse.json", demo: true},
+        market: {url: "ds/market.json", demo: true},
         help: {url: "ds/help.json", demo: true}
     }
 });

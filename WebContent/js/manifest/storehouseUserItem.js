@@ -52,10 +52,10 @@ var OptionManagement = (function(){
         binding : function(){
             var $wrapper = option.settings.wrapper;
             var that = this;
-            $('a[name="subbtn"]', $wrapper).click(function(){
+            com.focusPage('a[name="subbtn"]', $wrapper).click(function(){
                 that.saveOptionChange();
             });
-            $('a[name="cancelbtn"]', $wrapper).click(function(){
+            com.focusPage('a[name="cancelbtn"]', $wrapper).click(function(){
                 layer.closeAll();
             });
 
@@ -85,7 +85,7 @@ var OptionManagement = (function(){
 
     return {
         init : function(){
-            var $optPopUp = $('#optPopUp');
+            var $optPopUp = com.focusPage('#optPopUp');
             var userId = $optPopUp.attr('data-userId');
             option.init($('div.fltree', $optPopUp));
             option.getOptionData(api.inventory.queryStorehouse, {}, $.proxy(function(data){
@@ -94,7 +94,7 @@ var OptionManagement = (function(){
                     if(v.status==0){
                         storehousesStatus.push(v);
                     }
-                })
+                });
                 this.renderOption(storehousesStatus);
                 this.getOptionData(api.inventory.queryStorehouseUserByUserId, {
                     "user.userId": userId

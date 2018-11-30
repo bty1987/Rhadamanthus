@@ -24,11 +24,11 @@ jQuery(function($) {
 		});
 	}, null, false);
 	
-	$("#decorationPaymentHistoryList").removeClass("active");
+	com.focusPage("#decorationPaymentHistoryList").removeClass("active");
 	
 	var displayFunc  = (function(){
         var renderList = function(tableId,listData){
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if(listData && listData.length){ 
@@ -52,7 +52,7 @@ jQuery(function($) {
                ["楼盘地址:", v.decoration.house.village.name + ''+v.decoration.house.houseNumber, "grey"],
                ["客户:", v.decoration.customer.name, "grey"],
                ["设计师:", v.decoration.designer.currentName, "grey"],
-               ["设计部:", v.decoration.designer.dept.deptName, "grey"],
+               ["设计部:", v.decoration.designer.dept.name, "grey"],
                ["应收金额:", v.referMoney, "blue"],
                ["收款人:", v.collecter.currentName, "grey"],
                ["收款时间:", v.collectTime, "green"],
@@ -89,7 +89,7 @@ jQuery(function($) {
 				    info += decorationPaymentCheck.bankInfo[_i[0]] + " " + _i[1] + ", ";
 				  }
 				  
-				  return info
+				  return info;
 			})(v.bank, v.bankInfo), "grey"]) : true;
 			v.checkv != null && v.checkv != "0" ? styleArr.push(["转账:", v.checkv, "grey"]) : true;
 			v.installment != null && v.installment != "0" ? styleArr.push(["分期:", v.installment, "grey"]) : true;
@@ -111,7 +111,7 @@ jQuery(function($) {
       
         return {
             init : function(tableId,listData){
-                $('#' + tableId).html(null);
+				com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
             },
             drawLine : function(v){
@@ -138,7 +138,7 @@ jQuery(function($) {
 	
 	var hdisplayFunc  = (function(){
         var renderList = function(tableId,listData){
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if(listData && listData.length){
@@ -162,7 +162,7 @@ jQuery(function($) {
                ["楼盘地址:", v.decoration.house.village.name + ''+v.decoration.house.houseNumber, "grey"],
                ["客户:", v.decoration.customer.name, "grey"],
                ["设计师:", v.decoration.designer.currentName, "grey"],
-               ["设计部:", v.decoration.designer.dept.deptName, "grey"],
+               ["设计部:", v.decoration.designer.dept.name, "grey"],
                ["应收金额:", v.referMoney, "blue"],
                ["收款人:", v.collecter.currentName, "grey"],
                ["收款时间:", v.collectTime, "green"],
@@ -190,7 +190,7 @@ jQuery(function($) {
 				    info += decorationPaymentCheck.bankInfo[_i[0]] + " " + _i[1] + ", ";
 				  }
 
-				  return info
+				  return info;
 			})(v.bank, v.bankInfo), "blue"]) : true;
 			v.checkv != null && v.checkv != "0" ? styleArr.push(["转账:", v.checkv, "blue"]) : true;
 			v.installment != null && v.installment != "0" ? styleArr.push(["分期:", v.installment, "blue"]) : true;
@@ -212,7 +212,7 @@ jQuery(function($) {
 
         return {
             init : function(tableId,listData){
-                $('#' + tableId).html(null);
+				com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
             },
             drawLine : function(v){
@@ -225,10 +225,10 @@ jQuery(function($) {
 	hsearcher.init(["orderId", "paymentDesigner", "paymentVillage", "houseNumber", "collectTimeDateRange"], "hcondList", api.payment.pageDecorationPaymentForConfirm, function(data){
 		hdisplayFunc.init('hresultList', data);
 	}, "hpagenation", "hdecorationPaymentCheckPostData", null, false, null, null, "hresultList");
-	
-	$('a[name="confirms"]', '#pagenation').click(function(){
+
+	com.focusPage('a[name="confirms"]', '#pagenation').click(function(){
 		var options = {};
-		var $inputs = $('input[name="dpIds"]:checked');
+		var $inputs = com.focusPage('input[name="dpIds"]:checked');
 
 		$.each($inputs, function(i, v){
 			options["paymentIds["+i+"]"] = $(v).attr('dpId');
@@ -248,14 +248,14 @@ jQuery(function($) {
 			}
 		});
 	});
-	
-	$('a[name="import"]', '#pagenation').click(function () {
-    	if($('span[name="totalRecords"]').text() == 0){
+
+	com.focusPage('a[name="import"]', '#pagenation').click(function () {
+    	if(com.focusPage('span[name="totalRecords"]').text() == 0){
 			com.showAlert(com.warning, "请通过条件进行查询");
 			return false;
 		}
     	
-    	if($('span[name="totalRecords"]').text() > 1000){
+    	if(com.focusPage('span[name="totalRecords"]').text() > 1000){
 			com.showAlert(com.warning, "查询结果大于阀值 , 不能完成导出动作");
 			return false;
 		}
@@ -267,7 +267,7 @@ jQuery(function($) {
 					['楼盘地址',['decoration.house.village.name', 'decoration.house.houseNumber']],
 					['客户','decoration.customer.name'],
 					['设计师','decoration.designer.currentName'],
-					['设计部','decoration.designer.dept.deptName'],
+					['设计部','decoration.designer.dept.name'],
 					['应收金额', 'referMoney'],
 					['收款人', 'collecter.currentName'],
 					['收款时间', 'collectTime'],
@@ -294,8 +294,23 @@ jQuery(function($) {
 					  
 					  v.bankInfo = $info;
 				}
+
+				if(v.checkv != null && v.checkv != 0){
+					var checkBankInfoStr = v.checkvBank;
+					if(checkBankInfoStr.indexOf("#") != -1){
+						var $checkvInfo = ' ';
+						var _c = v.checkvBank.split('#');
+						for(var i=1;i<_c.length-1;i++){
+							var _i = _c[i].split('|');
+							$checkvInfo += decorationPaymentCheck.checkBankInfo[_i[0]] + " " + _i[1] + ", " + _i[2] + ", ";
+						}
+
+						v.checkvBank = $checkvInfo;
+					}else{
+						v.checkvBank = v.checkv != null && v.checkv != "0" ? decorationPaymentCheck.checkBankInfo[v.checkvBank] : '';
+					}
+				}
 				
-				v.checkvBank = v.checkv != null && v.checkv != "0" ? decorationPaymentCheck.checkBankInfo[v.checkvBank] : '';
 				v.installmentBank = v.installment != null && v.installment != "0" ? decorationPaymentCheck.bankInfo[v.installmentBank] : '';
 				v.accountsBank = v.accounts != null && v.accounts != "0" ? decorationPaymentCheck.accountsInfo[v.accountsBank] : '';
 			});

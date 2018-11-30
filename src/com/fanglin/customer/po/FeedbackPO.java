@@ -1,6 +1,7 @@
 package com.fanglin.customer.po;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,7 +21,7 @@ public class FeedbackPO implements Serializable{
 	
 	private String content;
 	
-	private long createTime;
+	private Timestamp createTime;
 	
 	private short type;
 	
@@ -55,15 +56,6 @@ public class FeedbackPO implements Serializable{
 		this.content = content;
 	}
 	
-	@Column(name="createTime")
-	public long getCreateTime() {
-		return createTime;
-	}
-
-	public void setCreateTime(long createTime) {
-		this.createTime = createTime;
-	}
-	
 	@Column(name="type")
 	public short getType() {
 		return type;
@@ -80,6 +72,15 @@ public class FeedbackPO implements Serializable{
 
 	public void setPicture(String picture) {
 		this.picture = picture;
+	}
+	
+	@Column(name="createTime")
+	public Timestamp getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Timestamp createTime) {
+		this.createTime = createTime;
 	}
 	
 }

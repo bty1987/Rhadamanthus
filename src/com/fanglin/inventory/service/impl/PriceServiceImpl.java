@@ -42,6 +42,18 @@ public class PriceServiceImpl implements PriceService{
 	}
 
 	@Override
+	public PriceVO queryPriceByPid(PriceVO priceVO) {
+		
+		PricePO pricePO = priceDao.queryPriceByPid(priceVO.getPid());
+		
+		PriceVO priceVOs = new PriceVO();
+		BeanUtil.copyProperties(pricePO, priceVOs);
+		
+		return priceVOs;
+		
+	}
+
+	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public int addPrice(PriceVO priceVO) throws FLException {
 		
@@ -68,17 +80,5 @@ public class PriceServiceImpl implements PriceService{
 		
 		return 0;
 	}
-
-	@Override
-	public PriceVO queryPriceByPid(PriceVO priceVO) {
-		
-		PricePO pricePO = priceDao.queryPriceByPid(priceVO.getPid());
-		
-		PriceVO priceVOs = new PriceVO();
-		BeanUtil.copyProperties(pricePO, priceVOs);
-		
-		return priceVOs;
-		
-	}
-
+	
 }

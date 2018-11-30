@@ -78,11 +78,11 @@ public class MaterialModelServiceImpl implements MaterialModelService{
 			CategoryPO categoryPO = brandPO.getCategory();
 			
 			materialModelVO.setMaterialBrandId(brandPO.getBid());
-			materialModelVO.setMaterialBrandName(brandPO.getBrandName());
+			materialModelVO.setMaterialBrandName(brandPO.getName());
 			materialModelVO.setMeasurementUnitId(materialModelPO.getMeasurementUnit().getId());
 			materialModelVO.setMeasurementUnitName(materialModelPO.getMeasurementUnit().getName());
 			materialModelVO.setMaterialTypeId(categoryPO.getCid());
-			materialModelVO.setMaterialTypeName(categoryPO.getCategoryName());
+			materialModelVO.setMaterialTypeName(categoryPO.getName());
 			
 			materialModelVOs.add(materialModelVO);
 		}
@@ -105,11 +105,11 @@ public class MaterialModelServiceImpl implements MaterialModelService{
 			CategoryPO categoryPO = brandPO.getCategory();
 			
 			materialModelVO.setMaterialBrandId(brandPO.getBid());
-			materialModelVO.setMaterialBrandName(brandPO.getBrandName());
+			materialModelVO.setMaterialBrandName(brandPO.getName());
 			materialModelVO.setMeasurementUnitId(materialModelPO.getMeasurementUnit().getId());
 			materialModelVO.setMeasurementUnitName(materialModelPO.getMeasurementUnit().getName());
 			materialModelVO.setMaterialTypeId(categoryPO.getCid());
-			materialModelVO.setMaterialTypeName(categoryPO.getCategoryName());
+			materialModelVO.setMaterialTypeName(categoryPO.getName());
 			
 			materialModelVOs.add(materialModelVO);
 		}
@@ -123,7 +123,7 @@ public class MaterialModelServiceImpl implements MaterialModelService{
 		
 		MaterialModelPO materialModelPO = materialModelDao.queryMaterialModelByNoBrand(materialModelVO.getMaterialModelNo(), materialModelVO.getMaterialBrandId());
 		
-		BrandPO brandPO = brandDao.queryBrandByBId(materialModelVO.getMaterialBrandId());
+		BrandPO brandPO = brandDao.queryBrandByBid(materialModelVO.getMaterialBrandId());
 		
 		CategoryPO categoryPO = categoryDao.queryCategoryByCId(brandPO.getCategory().getCid());
 		
@@ -140,8 +140,8 @@ public class MaterialModelServiceImpl implements MaterialModelService{
 		materialModelPO.setBase(0);
 		materialModelPO.setPoint(0);
 		materialModelPO.setStatus(MaterialModelPO.TYPE_DISABLE_INT);
-		materialModelPO.setMaterialTypeName(categoryPO.getCategoryName());
-		materialModelPO.setMaterialBrandName(brandPO.getBrandName());
+		materialModelPO.setMaterialTypeName(categoryPO.getName());
+		materialModelPO.setMaterialBrandName(brandPO.getName());
 		
 		materialModelDao.save(materialModelPO);
 		
@@ -206,7 +206,7 @@ public class MaterialModelServiceImpl implements MaterialModelService{
 			BeanUtil.copyProperties(materialModelPO, materialModelVO, Arrays.asList("brand", "measurementUnit"));
 			
 			materialModelVO.setMaterialBrandId(materialModelPO.getBrand().getBid());
-			materialModelVO.setMaterialBrandName(materialModelPO.getBrand().getBrandName());
+			materialModelVO.setMaterialBrandName(materialModelPO.getBrand().getName());
 			materialModelVO.setMeasurementUnitId(materialModelPO.getMeasurementUnit().getId());
 			materialModelVO.setMeasurementUnitName(materialModelPO.getMeasurementUnit().getName());
 			
@@ -229,7 +229,7 @@ public class MaterialModelServiceImpl implements MaterialModelService{
 			BeanUtil.copyProperties(materialModelPO, materialModelVO, Arrays.asList("brand", "measurementUnit"));
 			
 			materialModelVO.setMaterialBrandId(materialModelPO.getBrand().getBid());
-			materialModelVO.setMaterialBrandName(materialModelPO.getBrand().getBrandName());
+			materialModelVO.setMaterialBrandName(materialModelPO.getBrand().getName());
 			materialModelVO.setMeasurementUnitId(materialModelPO.getMeasurementUnit().getId());
 			materialModelVO.setMeasurementUnitName(materialModelPO.getMeasurementUnit().getName());
 			
@@ -279,7 +279,7 @@ public class MaterialModelServiceImpl implements MaterialModelService{
 			BeanUtil.copyProperties(materialModelPO, materialModelVO, Arrays.asList("brand", "measurementUnit"));
 			
 			materialModelVO.setMaterialBrandId(materialModelPO.getBrand().getBid());
-			materialModelVO.setMaterialBrandName(materialModelPO.getBrand().getBrandName());
+			materialModelVO.setMaterialBrandName(materialModelPO.getBrand().getName());
 			materialModelVO.setMeasurementUnitId(materialModelPO.getMeasurementUnit().getId());
 			materialModelVO.setMeasurementUnitName(materialModelPO.getMeasurementUnit().getName());
 			
@@ -302,7 +302,7 @@ public class MaterialModelServiceImpl implements MaterialModelService{
 			BeanUtil.copyProperties(materialModelPO, materialModelVO, Arrays.asList("brand", "measurementUnit"));
 			
 			materialModelVO.setMaterialBrandId(materialModelPO.getBrand().getBid());
-			materialModelVO.setMaterialBrandName(materialModelPO.getBrand().getBrandName());
+			materialModelVO.setMaterialBrandName(materialModelPO.getBrand().getName());
 			materialModelVO.setMeasurementUnitId(materialModelPO.getMeasurementUnit().getId());
 			materialModelVO.setMeasurementUnitName(materialModelPO.getMeasurementUnit().getName());
 			
@@ -320,7 +320,7 @@ public class MaterialModelServiceImpl implements MaterialModelService{
 		BeanUtil.copyProperties(materialModelPO, materialModelVO, Arrays.asList("brand", "measurementUnit"));
 		
 		materialModelVO.setMaterialBrandId(materialModelPO.getBrand().getBid());
-		materialModelVO.setMaterialBrandName(materialModelPO.getBrand().getBrandName());
+		materialModelVO.setMaterialBrandName(materialModelPO.getBrand().getName());
 		materialModelVO.setMeasurementUnitId(materialModelPO.getMeasurementUnit().getId());
 		materialModelVO.setMeasurementUnitName(materialModelPO.getMeasurementUnit().getName());
 		

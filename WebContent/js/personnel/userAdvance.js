@@ -1,165 +1,165 @@
-﻿var userAdvance = {
-	postData: {},
-	postParam: {},
-	userAdvanceItems: {},
-}
-var $wrap=null;
-
-jQuery(function($) {
+﻿jQuery(function($) {
+	var userAdvance = {
+		postData: {},
+		postParam: {},
+		userAdvanceItems: {}
+	};
+	var $wrap = null;
 
 	function showDepaermentModal(value) {
+		$wrap = com.focusPage('#moduleModal').find('.modal-body').empty();
+		com.post(api.communion.queryDepartment, {"dept.type.name": value}, function (res) {
+			var tree = res.deptList;
+			var childtree=[];
 
-			$wrap = $('#moduleModal').find('.modal-body').empty();
+			if (!tree || !tree.length) {
+				return;
+			}
+			var menuArr = {
+				level1 : [],
+				level2 : [],
+				level3 : []
+			};
+			var menuObj = {
+				level1:{},
+				level2 : {},
+				level3 : {}
+			};
+			var $tree = $('<ol class="dd-list"></ol>');
+			$wrap.append($tree);
+			menuArr.level1=[{did: -1, name: "全部"}];
 
-			com.post(api.communion.queryDepartment, {"dept.type.name": value}, function (res) {
-				var tree = res.deptList;
-
-				var childtree=[];
-				if (!tree || !tree.length) {
-					return;
-				}
-				var menuArr = {
-					level1 : [],
-					level2 : [],
-					level3 : [],
-				};
-				var menuObj = {
-					level1:{},
-					level2 : {},
-					level3 : {},
-				};
-				var $tree = $('<ol class="dd-list"></ol>');
-				$wrap.append($tree);
-				menuArr.level1=[{did: -1, deptName: "全部"}];
-
-				$.each(tree,function(i, va){
-					var aa = true ;
-					if(menuArr.level2.length>0) {
-						$.each(menuArr.level2, function (j, vl) {
-							if(va.fatherDept.deptId == vl.deptId){
-								aa = false;
-								return false;
-							}
-						})
-					}else if(va.fatherDept.did != null&& va.fatherDept.did !=0){
-						aa = false;
-						menuArr.level2.push(va.fatherDept);
-					}
-					if(aa){
-						if(va.fatherDept.did != null&& va.fatherDept.did !=0)
- 						menuArr.level2.push(va.fatherDept);
-					}
-					if(va.fatherDept.did == null || va.fatherDept.did ==0){
-						childtree.push(va)
-					}
-				})
-
-				$.each(childtree, function (j, vb) {
-					var bb = true ;
+			$.each(tree,function(i, va){
+				var aa = true ;
+				if(menuArr.level2.length > 0) {
 					$.each(menuArr.level2, function (j, vl) {
-						if(vb.deptId == vl.deptId){
-							bb = false;
+						if(va.fatherDept.did == vl.did){
+							aa = false;
 							return false;
 						}
 					})
-					if(bb){
-							menuArr.level2.push(vb);
+				}else if(va.fatherDept.did != null && va.fatherDept.did != 0){
+					aa = false;
+					menuArr.level2.push(va.fatherDept);
+				}
+				if(aa){
+					if(va.fatherDept.did != null && va.fatherDept.did != 0)
+					menuArr.level2.push(va.fatherDept);
+				}
+				if(va.fatherDept.did == null || va.fatherDept.did == 0){
+					childtree.push(va)
+				}
+			});
+
+			$.each(childtree, function (j, vb) {
+				var bb = true ;
+				$.each(menuArr.level2, function (j, vl) {
+					if(vb.did == vl.did){
+						bb = false;
+						return false;
+					}
+				});
+				if(bb){
+					menuArr.level2.push(vb);
+				}
+			});
+
+			$.each(menuArr.level2, function(i,va){
+				$.each(tree,function(index, value){
+					if (value.fatherDept.did == va.did) {
+						menuArr.level3.push(value)
+					}
+				})
+			});
+
+			if (menuArr.level1.length) {
+				$.each(menuArr.level1, function (i, va) {
+					var $li = $('<li></li>').addClass('dd-item');
+					var $div = $('<div></div>').addClass('dd-handle clearfix').text(va.name);
+					var $input = $('<input>').attr({type: 'checkbox', name: 'module'}).addClass('ace').val(va.did);
+					var $indexCheck = $('<div></div>').addClass('checkbox pull-right').css({'margin-bottom': '0', 'margin-top': '-5px'});
+					var $label = $('<label></label>').append($input).append('<span class="lbl"></span>');
+					$indexCheck.append($label).appendTo($div);
+					$li.append($div).appendTo($tree);
+					menuObj.level1[va.did] = $li;
+				});
+			}
+
+			if (menuArr.level2.length) {
+				$.each(menuArr.level2, function (i, va) {
+					var $li = $('<li></li>').addClass('dd-item');
+					var $div = $('<div></div>').addClass('dd-handle clearfix').text(va.name);
+					var $indexCheck = $('<div></div>').addClass('checkbox pull-right').css({'margin-bottom': '0', 'margin-top': '-5px'});
+					var $label = $('<label></label>').append('<span class="lbl"></span>');
+					$indexCheck.append($label).appendTo($div);
+					menuObj.level2[va.did] = $li;
+					$li.append($div);
+
+					var $parent = menuObj.level1[-1];
+					$parent.children('div').hasClass('btn-default') || $parent.children('div').addClass('btn-default');
+					if (!$parent.children('button').length) {
+						var $title = $parent.children('div');
+						$('<button type="button" data-action="collapse" class="minus hide">Collapse</button>').insertBefore($title);
+						$('<button type="button" data-action="expand" class="plus">Expand</button>').insertBefore($title);
 					}
 
-				})
-
-				$.each(menuArr.level2,function(i,va){
-					$.each(tree,function(index,value){
-						if (value.fatherDept.deptId == va.deptId) {
-							menuArr.level3.push(value)
-						}
-					})
-				})
-				if (menuArr.level1.length) {
-					$.each(menuArr.level1, function (i, va) {
-						var $li = $('<li></li>').addClass('dd-item');
-						var $div = $('<div></div>').addClass('dd-handle clearfix').text(va.deptName);
-						var $input = $('<input>').attr({type: 'checkbox', name: 'module'}).addClass('ace').val(va.did);
-						var $indexCheck = $('<div></div>').addClass('checkbox pull-right').css({'margin-bottom': '0', 'margin-top': '-5px'});
-						var $label = $('<label></label>').append($input).append('<span class="lbl"></span>');
-						$indexCheck.append($label).appendTo($div);
-						$li.append($div).appendTo($tree);
-						menuObj.level1[va.did] = $li;
-					});
-				}
-
-				if (menuArr.level2.length) {
-					$.each(menuArr.level2, function (i, va) {
-						var $li = $('<li></li>').addClass('dd-item');
-						var $div = $('<div></div>').addClass('dd-handle clearfix').text(va.deptName);
-						var $indexCheck = $('<div></div>').addClass('checkbox pull-right').css({'margin-bottom': '0', 'margin-top': '-5px'});
-						var $label = $('<label></label>').append('<span class="lbl"></span>');
-						$indexCheck.append($label).appendTo($div);
-						menuObj.level2[va.did] = $li;
-						$li.append($div);
-
-						var $parent = menuObj.level1[-1]
-						$parent.children('div').hasClass('btn-default') || $parent.children('div').addClass('btn-default');
-						if (!$parent.children('button').length) {
-							var $title = $parent.children('div');
-							$('<button type="button" data-action="collapse" class="minus hide">Collapse</button>').insertBefore($title);
-							$('<button type="button" data-action="expand" class="plus">Expand</button>').insertBefore($title);
-						}
-
-						var $pol = $parent.children('ol').length ? $parent.children('ol') : $('<ol></ol>').addClass('dd-list hide').appendTo($parent).attr("id","one");
-						$li.appendTo($pol);
-					});
-				}
-
-				if (menuArr.level3.length) {
-					$.each(menuArr.level3, function (i, va) {
-						var $li = $('<li></li>').addClass('dd-item');
-						var $div = $('<div></div>').addClass('dd-handle clearfix').text(va.deptName);
-						var $input = $('<input>').attr({type: 'checkbox', name: 'module'}).addClass('ace').val(va.did)
-						var $indexCheck = $('<div></div>').addClass('checkbox pull-right').css({'margin-bottom': '0', 'margin-top': '-5px'});
-						var $label = $('<label></label>').append($input).append('<span class="lbl"></span>');
-						$indexCheck.append($label).appendTo($div);
-						menuObj.level3[va.did] = $li;
-						$li.append($div);
-
-						var $parent = menuObj.level2[va.fatherDept.did];
-						$parent.children('div').hasClass('btn-default') || $parent.children('div').addClass('btn-default');
-						if (!$parent.children('button').length) {
-							var $title = $parent.children('div');
-							// 减号
-							$('<button type="button" data-action="collapse" class="minus ">Collapse</button>').insertBefore($title);
-
-							$('<button type="button" data-action="expand" class="plus">Expand</button>').insertBefore($title);
-						}
-
-						var $pol = $parent.children('ol').length ? $parent.children('ol') : $('<ol></ol>').addClass('dd-list hide').appendTo($parent).attr("id","two");
-						$li.appendTo($pol);
-					});
-				}
-				$('button[data-action="collapse"]').click(function () {
-					var $this = $(this);
-					$this.siblings('ol').addClass('hide');
-					$this.parent().find('.plus').toggleClass('hide');
-					$this.parent().find('.minus').removeClass('hide');
-					$this.siblings('ol').find('.dd-list').addClass('hide');
-					$this.toggleClass('hide');
+					var $pol = $parent.children('ol').length ? $parent.children('ol') : $('<ol></ol>').addClass('dd-list hide').appendTo($parent).attr("id","one");
+					$li.appendTo($pol);
 				});
-				$('button[data-action="expand"]').click(function () {
-					var $this = $(this);
-					$this.siblings('ol').removeClass('hide');
-					$this.parent().find('.minus').toggleClass('hide');
-					$this.parent().find('.plus').removeClass('hide');
-					$this.toggleClass('hide');
+			}
+
+			if (menuArr.level3.length) {
+				$.each(menuArr.level3, function (i, va) {
+					var $li = $('<li></li>').addClass('dd-item');
+					var $div = $('<div></div>').addClass('dd-handle clearfix').text(va.name);
+					var $input = $('<input>').attr({type: 'checkbox', name: 'module'}).addClass('ace').val(va.did);
+					var $indexCheck = $('<div></div>').addClass('checkbox pull-right').css({'margin-bottom': '0', 'margin-top': '-5px'});
+					var $label = $('<label></label>').append($input).append('<span class="lbl"></span>');
+					$indexCheck.append($label).appendTo($div);
+					menuObj.level3[va.did] = $li;
+					$li.append($div);
+
+					var $parent = menuObj.level2[va.fatherDept.did];
+					$parent.children('div').hasClass('btn-default') || $parent.children('div').addClass('btn-default');
+					if (!$parent.children('button').length) {
+						var $title = $parent.children('div');
+						// 减号
+						$('<button type="button" data-action="collapse" class="minus ">Collapse</button>').insertBefore($title);
+
+						$('<button type="button" data-action="expand" class="plus">Expand</button>').insertBefore($title);
+					}
+
+					var $pol = $parent.children('ol').length ? $parent.children('ol') : $('<ol></ol>').addClass('dd-list hide').appendTo($parent).attr("id","two");
+					$li.appendTo($pol);
 				});
+			}
 
-			}, null, false);
+			com.focusPage('button[data-action="collapse"]').click(function () {
+				var $this = $(this);
+				$this.siblings('ol').addClass('hide');
+				$this.parent().find('.plus').toggleClass('hide');
+				$this.parent().find('.minus').removeClass('hide');
+				$this.siblings('ol').find('.dd-list').addClass('hide');
+				$this.toggleClass('hide');
+			});
 
-		}
+			com.focusPage('button[data-action="expand"]').click(function () {
+				var $this = $(this);
+				$this.siblings('ol').removeClass('hide');
+				$this.parent().find('.minus').toggleClass('hide');
+				$this.parent().find('.plus').removeClass('hide');
+				$this.toggleClass('hide');
+			});
+
+		}, null, false);
+	}
+
 	function dialogUserAdvanceIndex(userId){
 		userAdvance.postData.userId = userId;
 		var options = {
-			"user.userId": userId,
-		}
+			"user.userId": userId
+		};
+
 		com.post(api.personel.queryUserByUserId, options, function(res){
 			var user = res.user;
 
@@ -168,25 +168,27 @@ jQuery(function($) {
 			userAdvance.userAdvanceItems.isLogin.prop("checked", (user.isLogin & 1) == 1 ? true : false);
 			userAdvance.userAdvanceItems.extranet.prop("checked", user.extranet == 1 ? true : false);
 
-			userAdvance.userAdvanceItems.oldcompany.val(user.companys)
+			userAdvance.userAdvanceItems.oldcompany.val(user.companys);
 			userAdvance.userAdvanceItems.company.val();
 			userAdvance.userAdvanceItems.roleSel.val(user.role.rid);
 			userAdvance.userAdvanceModal.modal("show");
 		}, null, false);
 	}
+
 	function saveData(){
 		var options = {
 			"user.userId": userAdvance.postData.userId,
 			"user.isLogin": userAdvance.userAdvanceItems.isLogin.prop("checked") ? 1 : -1,
 			"user.extranet": userAdvance.userAdvanceItems.extranet.prop("checked") ? 1 : 0,
 			"user.role.rid": userAdvance.userAdvanceItems.roleSel.val(),
-			"user.companys": userAdvance.userAdvanceItems.company.val(),
-		}
+			"user.companys": userAdvance.userAdvanceItems.company.val()
+		};
+
 		com.post(api.personel.updateUserForAdvance, options, function(res){
 			com.showAlert(com.info, "提交成功");
 		});
-		userAdvance.userAdvanceModal.modal("hide");
 
+		userAdvance.userAdvanceModal.modal("hide");
 		return false;
 	}
 	
@@ -206,20 +208,20 @@ jQuery(function($) {
 		});
 	}
 
-	userAdvance.userAdvanceModal = $("#userAdvanceModal");
-	userAdvance.userCompanyModal=$("#companyModal");
+	userAdvance.userAdvanceModal = com.focusPage("#userAdvanceModal");
+	userAdvance.userCompanyModal=com.focusPage("#companyModal");
 
-	userAdvance.userAdvanceItems.isLogin = $("#isLogin").switchBtn("isOrNot");
-	userAdvance.userAdvanceItems.extranet = $("#extranet").switchBtn("isOrNot");
-	userAdvance.userAdvanceItems.roleSel = $("#roleSel");
-	userAdvance.userAdvanceItems.company = $("#company");
-	userAdvance.userAdvanceItems.companysel = $("#companyse").chosen({
+	userAdvance.userAdvanceItems.isLogin = com.focusPage("#isLogin").switchBtn("isOrNot");
+	userAdvance.userAdvanceItems.extranet = com.focusPage("#extranet").switchBtn("isOrNot");
+	userAdvance.userAdvanceItems.roleSel = com.focusPage("#roleSel");
+	userAdvance.userAdvanceItems.company = com.focusPage("#company");
+	userAdvance.userAdvanceItems.companysel = com.focusPage("#companyse").chosen({
 		width: "200px"
 	});
-	userAdvance.userAdvanceItems.currentcompany=$("#currentcompany");
-	userAdvance.userAdvanceItems.oldcompany=$("#oldcompany");
-	userAdvance.userAdvanceItems.advanceSaveBtn = $("#advanceSaveBtn").on("click", saveData);
-	userAdvance.userAdvanceItems.advanceCancelBtn = $("#advanceCancelBtn");
+	userAdvance.userAdvanceItems.currentcompany=com.focusPage("#currentcompany");
+	userAdvance.userAdvanceItems.oldcompany=com.focusPage("#oldcompany");
+	userAdvance.userAdvanceItems.advanceSaveBtn = com.focusPage("#advanceSaveBtn").on("click", saveData);
+	userAdvance.userAdvanceItems.advanceCancelBtn = com.focusPage("#advanceCancelBtn");
 
 	com.post(api.system.queryRole, {"timestamp": new Date().getTime()}, function(res){
 		userAdvance.roleList = res.roleList;
@@ -230,13 +232,12 @@ jQuery(function($) {
 	}, null, false);
 
 	var displayFunc  = (function(){
-
-		var renderList = function(tableId,listData){
-			var $tableWrap = $('#' + tableId);
+		var renderList = function(tableId, listData){
+			var $tableWrap = com.focusPage('#' + tableId);
 			var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
 			if(listData && listData.length){
-				$.each(listData,function(i, v){
+				$.each(listData, function(i, v){
 					var $liLine = $('<li></li>').addClass('item-orange clearfix');
 					var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.userName));
 					var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
@@ -244,8 +245,8 @@ jQuery(function($) {
 
 					var $company = $('<a></a>').addClass('btn btn-minier btn-yellow').html('公司');
 					var $btnRight = $('<a></a>').addClass('btn btn-minier btn-success').html('权配');
-					var $btnDesigne = $('<a></a>').addClass('btn btn-minier btn-warning').html('订单设计')
-					var $btnSales = $('<a></a>').addClass('btn btn-minier btn-inverse').html('订单业务')
+					var $btnDesigne = $('<a></a>').addClass('btn btn-minier btn-warning').html('订单设计');
+					var $btnSales = $('<a></a>').addClass('btn btn-minier btn-inverse').html('订单业务');
 					var $btnStatus = $('<a></a>').addClass('btn btn-minier btn-danger').html('订单状态');
 					var $btnHouse = $('<a></a>').addClass('btn btn-minier btn-pink').html('房源权配');
 					var $btnCustomer = $('<a></a>').addClass('btn btn-minier btn-purple').html('客源权配');
@@ -255,7 +256,7 @@ jQuery(function($) {
 					var propertyArr = [
 						["员工编号:", v.userId, "grey"],
 						["用户名:", v.loginId, "grey"],
-						["部门:", v.dept.deptName, "grey"],
+						["部门:", v.dept.name, "grey"],
 						["职位:", v.duty.name, "grey"],
 						["角色:", v.role.name, "grey"],
 						["联系方式:", v.phone, "grey"]
@@ -269,23 +270,20 @@ jQuery(function($) {
 					});
 
 					$company.unbind().bind('click',function(){
-
 						userAdvance.userAdvanceItems.companysel.bindData(userAdvance.companysel , "cid", "name");
 						userAdvance.userCompanyModal.modal("show");
 						var options = {
-								"user.uid": v.uid,
-							}
+							"user.uid": v.uid
+						};
 						var userCompanys={};
 						var cids=[];
 						var companyname=[];
 						com.post(api.personel.queryUserCompany, options, function(res){
 							userCompanys = res.userCompanys;
-
 							$.each(userCompanys,function(i,va){
 								companyname.push(va.company.name);
 							});
-
-							}, null, false);
+						}, null, false);
 
 						userAdvance.userAdvanceItems.currentcompany.html("");
 						companyname && companyname.length && $.each(companyname, function(i, v){
@@ -296,20 +294,19 @@ jQuery(function($) {
 
 						userAdvance.userAdvanceItems.companysel.trigger("chosen:updated");
 
-						$('button[name="saveCompanyBtn"]').unbind().bind('click',function(){
+						com.focusPage('button[name="saveCompanyBtn"]').unbind().bind('click',function(){
 							var newcids=[];
 							userAdvance.userCompanyModal.modal("hide");
 							var params={
-								"user.uid": v.uid,
-							}
+								"user.uid": v.uid
+							};
 							if(userAdvance.userAdvanceItems.companysel.val() != null){
-							  $.each(userAdvance.userAdvanceItems.companysel.val().splice(','),function(i,value){
-								newcids.push(value)
+								$.each(userAdvance.userAdvanceItems.companysel.val().splice(','),function(i,value){
+									newcids.push(value)
 								});
 								$.each(newcids, function(i, val){
 									params["cids" + "[" + i + "]"] = val;
 								});
-
 								com.post(api.personel.updateUserCompany, params,function (res) {
 
 								},null,false)
@@ -318,8 +315,8 @@ jQuery(function($) {
 								com.post(api.personel.updateUserCompany, params,function (res) {
 								},null,false)
 							}
-						  });
 						});
+					});
 
 					$btnRight.click(function(){
 						dialogUserAdvanceIndex(v.userId);
@@ -363,7 +360,7 @@ jQuery(function($) {
 		};
 
 		var binding = {
-			$dialog : $('#moduleModal'),
+			$dialog : com.focusPage('#moduleModal'),
 			postConf : {
 				"user.userId" : null,
 				path : null,
@@ -412,7 +409,6 @@ jQuery(function($) {
 				}, null, false);
 
 				com.post(api.right.queryDecorationStatusRightByUserId, { "user.userId" : userId}, function(data){
-
 					userList = data.statuses;
 				}, null, false);
 
@@ -421,14 +417,14 @@ jQuery(function($) {
 					var $input = $('<input>').attr({
 						"type" : "checkbox",
 						"name" : "module",
-						"class" : "ace",
+						"class" : "ace"
 					}).val(v.key);
 					var $span = $('<span></span>').addClass('lbl').html(v.value);
 					$label.append($input).append($span).appendTo($list);
 				});
 
 				userList && userList.length && $.each(userList, function(i, v){
-					$('input[name="module"][value="'+ v +'"]', $list).prop('checked',true);
+					com.focusPage('input[name="module"][value="'+ v +'"]', $list).prop('checked',true);
 				});
 
 				$dialog.modal("show");
@@ -476,7 +472,7 @@ jQuery(function($) {
 				var $dialog = this.$dialog;
 				var postConf = this.postConf;
 
-				$('button[name="saveBtn"]').click(function(){
+				com.focusPage('button[name="saveBtn"]').click(function(){
 					var list = $('input[name="module"]:checked', $dialog);
 
 					var params = {"user.userId" : postConf["user.userId"]};
@@ -497,7 +493,7 @@ jQuery(function($) {
 
 		return {
 			init : function(tableId,listData){
-				$('#' + tableId).html(null);
+				com.focusPage('#' + tableId).html(null);
 				renderList(tableId,listData);
 			}, setAdvance: function(){
 				binding.setAdvance();
@@ -505,7 +501,7 @@ jQuery(function($) {
 		}
 	})();
 
-	var _condArr = ['userId', 'userName', 'roleId', 'deptType', 'deptId'];
+	var _condArr = ['userId', 'userName', 'roleId', 'deptType', 'deptId', 'userstatus', 'identity', 'phone'];
 
 	var userAdvanceSeacher = new Searcher();
 

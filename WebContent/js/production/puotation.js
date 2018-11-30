@@ -1,6 +1,6 @@
 ﻿$(function () {
-    var backBtn = $('#backBtn');
-    var addpuotationBtn = $('#addpuotationBtn');
+    var backBtn = com.focusPage('#backBtn');
+    var addpuotationBtn = com.focusPage('#addpuotationBtn');
     var pid =params["pid"];
     var status =params["status"];
 
@@ -10,7 +10,7 @@
     var discount = null;
     var tot = null;
     var initList = function (listData) {
-        var $tableWrap = $('#list');
+        var $tableWrap = com.focusPage('#list');
         var $ul = $('<ul></ul>').addClass('item-list ui-sortable  fl-table-list');
 
         if (listData && listData.length) {
@@ -83,7 +83,7 @@
                         btn: ['确定', '取消'] //按钮
                     }, function (indexo, layero) {
                         com.post(api.production.deletePuotation, {"puotation.qid": v.qid}, function () {
-                            $('#list ul.item-list').remove();
+                            com.focusPage('#list ul.item-list').remove();
                             queryPuotationByPid(v.pid);
                         }, function (e) {
                             com.showAlert(com.error, e.errorMsg);
@@ -102,7 +102,7 @@
                     }, function (indexo, layero) {
                         com.post(api.production.updatePuotationForDefault, {"puotation.qid": v.qid}, function () {
                             layer.msg('修改成功',{icon:1,time:2e3});
-                            $('#list ul.item-list').remove();
+                            com.focusPage('#list ul.item-list').remove();
                             queryPuotationByPid(v.pid);
                         }, function (e) {
                             com.showAlert(com.error, e.errorMsg);
@@ -115,12 +115,12 @@
                 });
                 
                 $btnEdit.click(function(){
-                    var name = $('#layerAdd').find('input[name="name"]').val(v.name);
-                    var comment = $('#layerAdd').find('input[name="comment"]').val(v.comment);
+                    var name = com.focusPage('#layerAdd').find('input[name="name"]').val(v.name);
+                    var comment = com.focusPage('#layerAdd').find('input[name="comment"]').val(v.comment);
 
-                    $('#layerAdd').attr('data-qid', v.qid);
+                    com.focusPage('#layerAdd').attr('data-qid', v.qid);
                     openlayer(function(){
-                        var id = $('#layerAdd').attr('data-qid');
+                        var id = com.focusPage('#layerAdd').attr('data-qid');
                         saveData(id, function(){
                             layer.closeAll();
                         });
@@ -129,15 +129,15 @@
                 });
 
                 $btnDis.click(function(){
-                    var dis = $('#layerAdd2').find('input[name="dis"]').val(v.discount);
+                    var dis = com.focusPage('#layerAdd2').find('input[name="dis"]').val(v.discount);
                     discount= v.discount;
-                    var total = $('#layerAdd2').find('input[name="total"]').val(v.total);
+                    var total = com.focusPage('#layerAdd2').find('input[name="total"]').val(v.total);
                     tot = v.total;
-                    $('#layerAdd2').attr('data-qid', v.qid);
+                    com.focusPage('#layerAdd2').attr('data-qid', v.qid);
                     com.clearValidator();
 
                     openlayer2(function(){
-                        var id = $('#layerAdd2').attr('data-qid');
+                        var id = com.focusPage('#layerAdd2').attr('data-qid');
                         if(!com.validate("layerAdd2",null)){
                             saveDis(id, function(){
                                 layer.closeAll();
@@ -172,7 +172,7 @@
         layer.open({
             type: 1,
             title:"报价信息",
-            content: $('#layerAdd'),
+            content: com.focusPage('#layerAdd'),
             area: ( $(window).width()*0.6 < 620 ?  $(window).height()*0.6 : 620 )+"px",
             maxmin: false,
             zIndex:9000,
@@ -193,7 +193,7 @@
         layer.open({
             type: 1,
             title:"报价折让信息",
-            content: $('#layerAdd2'),
+            content: com.focusPage('#layerAdd2'),
             area: ( $(window).width()*0.6 < 620 ?  $(window).height()*0.6 : 620 )+"px",
             maxmin: false,
             zIndex:9000,
@@ -211,7 +211,7 @@
     }
 
     function saveData(id,callback){
-        var $layer = $('#layerAdd');
+        var $layer = com.focusPage('#layerAdd');
         var name = $layer.find('input[name="name"]').val();
         var comment = $layer.find('input[name="comment"]').val();
             com.post(api.production.updatePuotation, {
@@ -221,17 +221,17 @@
             }, function(res){
                 callback();
                 layer.msg("修改成功",{icon: 1,time:2e3});
-               $('#list ul.item-list').remove();
+                com.focusPage('#list ul.item-list').remove();
                 queryPuotationByPid(pid);
             },function(e){
                 layer.msg(e.exception.errorMessage,{icon: 1,time:2e3});
             });
     }
 
-    $('#dis').on("change",function () {
+    com.focusPage('#dis').on("change",function () {
         com.clearValidator();
         if(!com.validate("layerAdd2",null)) {
-            $('#total').val(utils.accMul(utils.accDiv(parseFloat(tot),parseFloat(discount)), parseFloat($('#dis').val())));
+            com.focusPage('#total').val(utils.accMul(utils.accDiv(parseFloat(tot),parseFloat(discount)), parseFloat($('#dis').val())));
         }
     });
 
@@ -243,7 +243,7 @@
     //});
 
     function saveDis(id,callback){
-        var $layer = $('#layerAdd2');
+        var $layer = com.focusPage('#layerAdd2');
         var dis = $layer.find('input[name="dis"]').val();
         var total = $layer.find('input[name="total"]').val();
             com.post(api.production.updatePuotationForAdvance, {
@@ -252,7 +252,7 @@
                 "puotation.total": total
             }, function(res){
                 callback();
-               $('#list ul.item-list').remove();
+                com.focusPage('#list ul.item-list').remove();
                 queryPuotationByPid(pid);
             });   
     }

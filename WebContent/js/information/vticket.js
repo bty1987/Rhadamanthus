@@ -7,17 +7,17 @@ jQuery(function($) {
 		items:{},
 	};
 
-	vticket.saveBtn = $("#saveBtn").on("click", saveData);
+	vticket.saveBtn = com.focusPage("#saveBtn").on("click", saveData);
 
-	vticket.items.vtid = $("#vtid");
-	vticket.items.tno = $("#tno");
-	vticket.items.belonger  = $("#belonger");
-	vticket.items.orderId = $("#orderId");
-	vticket.items.name = $("#name");
-	vticket.items.phone = $("#phone");
-	vticket.items.address = $("#address");
+	vticket.items.vtid = com.focusPage("#vtid");
+	vticket.items.tno = com.focusPage("#tno");
+	vticket.items.belonger  = com.focusPage("#belonger");
+	vticket.items.orderId = com.focusPage("#orderId");
+	vticket.items.name = com.focusPage("#name");
+	vticket.items.phone = com.focusPage("#phone");
+	vticket.items.address = com.focusPage("#address");
 
-	vticket.modal = $("#vticketModal");
+	vticket.modal = com.focusPage("#vticketModal");
 	vticket.modal.on('show.bs.modal',function(e){
 		com.clearValidator();
 	});
@@ -27,7 +27,7 @@ jQuery(function($) {
 	var displayFunc  = (function(){
 
 		var renderList = function(tableId,listData){
-			var $tableWrap = $('#' + tableId);
+			var $tableWrap = com.focusPage('#' + tableId);
 			var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
 			if(listData && listData.length){
@@ -59,7 +59,7 @@ jQuery(function($) {
 				vticket.items.name.val(v.name);
 				vticket.items.phone.val(v.phone);
 				vticket.items.address.val(v.address);
-				$("#vticketModal").modal("show");
+				com.focusPage("#vticketModal").modal("show");
 			});
 
 			var propertyArr = [
@@ -68,8 +68,8 @@ jQuery(function($) {
 				["地址:", v.address, "grey"],
 				["装修单号:", v.orderId, "grey"],
 				["归属人:", v.belonger.userName, "grey"],
-				["归属部门:", v.department.deptName, "grey"],
-				["归属分区:", v.region.deptName, "grey"],
+				["归属部门:", v.department.name, "grey"],
+				["归属分区:", v.region.name, "grey"],
 				["创建人:", v.creater.userName, "grey"],
 				["创建时间:", v.createTime, "grey"],
 				["是否注册:", v.isregist == 0 ? "未注册" : "已注册", "red"],
@@ -92,13 +92,13 @@ jQuery(function($) {
 
 		return {
 			init : function(tableId,listData){
-				$('#' + tableId).html(null);
+				com.focusPage('#' + tableId).html(null);
 				renderList(tableId,listData);
 			},
 			drawLine : function(v){
 				return creatLine(v);
 			}
-		}
+		};
 	})();
 
 	var searcher = new Searcher();
@@ -115,11 +115,11 @@ jQuery(function($) {
 	});
 
 	//添加
-	$('a[name="addVticket"]', '#pagenation').click(function(){
+	com.focusPage('a[name="addVticket"]', '#pagenation').click(function(){
 		vticket.items.tno.attr("readOnly", false);
 		com.updateChosen("belonger", "", "");
 		com.cleanItems(vticket.items);
-		$("#vticketModal").modal("show");
+		com.focusPage("#vticketModal").modal("show");
 	});
 
 	function saveData(){

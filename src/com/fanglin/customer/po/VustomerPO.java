@@ -16,55 +16,59 @@ import com.fanglin.personel.po.UserPO;
 
 @Entity
 @Table(name = "vustomer", catalog = "customer")
-public class VustomerPO implements Serializable{
+public class VustomerPO implements Serializable {
 
 	private static final long serialVersionUID = 878679679282307928L;
-	
+
 	public static final String COLUMN_UNIONID_STR = "unionId";
-	
+
 	public static final String COLUMN_NAME_STR = "name";
-	
+
 	public static final String COLUMN_USERID_STR = "belonger.userId";
-	
+
 	public static final String COLUMN_PHONE_STR = "phone";
-	
+
 	public static final String COLUMN_ORDERID_STR = "orderId";
-	
+
 	public static final String COLUMN_STATUS_STR = "status";
-	 
+
 	public static final short STATUS_INIT_INT = 0;
-	
+
 	public static final short STATUS_DISABLE_INT = 1;
-	
+
 	private long vid;
-	
+
 	private String unionId;
-	
+
 	private UserPO belonger;
-	
+
 	private String name;
-	
+
 	private String phone;
-	
+
+	private String referrer;
+
+	private String referphone;
+
 	private Timestamp createTime;
-	
+
 	private String address;
-	
+
 	private String orderId;
-	
+
 	private float contractPrice;
-	
+
 	private short status;
-	
+
 	private String comment;
-	
+
 	public VustomerPO() {
 		super();
 	}
 
 	@Id
 	@GeneratedValue
-	@Column(name="vid")
+	@Column(name = "vid")
 	public long getVid() {
 		return vid;
 	}
@@ -72,8 +76,8 @@ public class VustomerPO implements Serializable{
 	public void setVid(long vid) {
 		this.vid = vid;
 	}
-	
-	@Column(name="unionId")
+
+	@Column(name = "unionId")
 	public String getUnionId() {
 		return unionId;
 	}
@@ -92,7 +96,7 @@ public class VustomerPO implements Serializable{
 		this.belonger = belonger;
 	}
 
-	@Column(name="name")
+	@Column(name = "name")
 	public String getName() {
 		return name;
 	}
@@ -101,13 +105,31 @@ public class VustomerPO implements Serializable{
 		this.name = name;
 	}
 
-	@Column(name="phone")
+	@Column(name = "phone")
 	public String getPhone() {
 		return phone;
 	}
 
 	public void setPhone(String phone) {
 		this.phone = phone;
+	}
+
+	@Column(name = "referrer")
+	public String getReferrer() {
+		return referrer;
+	}
+
+	public void setReferrer(String referrer) {
+		this.referrer = referrer;
+	}
+
+	@Column(name = "referphone")
+	public String getReferphone() {
+		return referphone;
+	}
+
+	public void setReferphone(String referphone) {
+		this.referphone = referphone;
 	}
 
 	@Column(name = "createTime")
@@ -119,7 +141,7 @@ public class VustomerPO implements Serializable{
 		this.createTime = createTime;
 	}
 
-	@Column(name="address")
+	@Column(name = "address")
 	public String getAddress() {
 		return address;
 	}
@@ -128,7 +150,7 @@ public class VustomerPO implements Serializable{
 		this.address = address;
 	}
 
-	@Column(name="orderId")
+	@Column(name = "orderId")
 	public String getOrderId() {
 		return orderId;
 	}
@@ -137,7 +159,7 @@ public class VustomerPO implements Serializable{
 		this.orderId = orderId;
 	}
 
-	@Column(name="contractPrice")
+	@Column(name = "contractPrice")
 	public float getContractPrice() {
 		return contractPrice;
 	}
@@ -146,7 +168,7 @@ public class VustomerPO implements Serializable{
 		this.contractPrice = contractPrice;
 	}
 
-	@Column(name="status")
+	@Column(name = "status")
 	public short getStatus() {
 		return status;
 	}
@@ -155,7 +177,7 @@ public class VustomerPO implements Serializable{
 		this.status = status;
 	}
 
-	@Column(name="comment")
+	@Column(name = "comment")
 	public String getComment() {
 		return comment;
 	}
@@ -163,5 +185,5 @@ public class VustomerPO implements Serializable{
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	
+
 }

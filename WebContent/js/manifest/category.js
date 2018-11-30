@@ -16,29 +16,29 @@ jQuery(function($) {
 				regex: /^C_\d{3}$/g,
 				errorMsg: "请以C_作为前缀 , 之后以三位数字组成(如C_001)."
 			}
-		},
+		}
 	};
 	
-//	$('#fl-statement').statement("主材品类", "主材品类信息列表");
+//	com.focusPage('#fl-statement').statement("主材品类", "主材品类信息列表");
 	
-	category.saveBtn = $("#saveBtn").on("click", saveData);
-	category.cancelBtn = $("#cancelBtn");
+	category.saveBtn = com.focusPage("#saveBtn").on("click", saveData);
+	category.cancelBtn = com.focusPage("#cancelBtn");
 	
-	category.modal = $("#categoryModal").on('show.bs.modal',function(e){
+	category.modal = com.focusPage("#categoryModal").on('show.bs.modal',function(e){
 		com.clearValidator();
 		com.clearValidator("#categoryId", true);
 	});
 	
-	category.categoryItems.cId = $("#cId");
-	category.categoryItems.categoryId = $("#categoryId");
-	category.categoryItems.categoryName = $("#categoryName");
+	category.categoryItems.cId = com.focusPage("#cId");
+	category.categoryItems.categoryId = com.focusPage("#categoryId");
+	category.categoryItems.categoryName = com.focusPage("#categoryName");
 	
 	$.extend(com.validator, category.validator);
 	
 	var displayFunc  = (function(){
 
         var renderList = function(tableId,listData){
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if(listData && listData.length){ 
@@ -74,7 +74,7 @@ jQuery(function($) {
       
         return {
             init : function(tableId,listData){
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
             },
             drawLine : function(v){
@@ -96,7 +96,7 @@ jQuery(function($) {
     	return [$adda];
 	});
 	
-	$('a[name="add"]', '#pagenation').click(function(){
+	com.focusPage('a[name="add"]', '#pagenation').click(function(){
 		editFlg = false;
 		
 		com.cleanItems(category.categoryItems);
@@ -125,7 +125,7 @@ jQuery(function($) {
 		var options = {
 			'category.cid': category.categoryItems.cId.val(),
 			'category.categoryId': category.categoryItems.categoryId.val(),
-			'category.categoryName': category.categoryItems.categoryName.val(),
+			'category.categoryName': category.categoryItems.categoryName.val()
 		};
 		
 		if(editFlg){

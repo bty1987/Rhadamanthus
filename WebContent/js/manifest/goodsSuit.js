@@ -1,6 +1,6 @@
 $(function () {
 
-    var goodsSuitPopUp = $('#goodsSuitPopUp');
+    var goodsSuitPopUp = com.focusPage('#goodsSuitPopUp');
 
     var goodsSuit = {
         'flag':true,
@@ -43,7 +43,7 @@ $(function () {
             {cellClass: "format grey",value:formatInfo},//规格
             {cellClass: "measurementUnit grey", value:data.measurementUnit},//单位
             {cellClass: "number blue" , value:num},//数量
-            {cellClass: "status red",value:data.status==0?'启用':'禁用'},//状态
+            {cellClass: "status red",value:data.status==0?'启用':'禁用'}//状态
         ];
         var $btndel = $('<a class="color-red red" style="font-size: 18px"><i class=" icon-remove"></i></a>');
         $.each(_lineInfoSet, function (i, v) {
@@ -60,7 +60,7 @@ $(function () {
 
         $btndel.click(function (e) {
             $(this).parents('.line.current').remove();
-        })
+        });
 
         return $line;
 
@@ -80,10 +80,10 @@ $(function () {
             {cellClass: "brand"},//品牌
             {cellClass: "color", hasSelectColor: !0},//颜色
             {cellClass: "format",hasSelectFormat: !0},//规格
-            {cellClass: "measurementUnit", },//单位
+            {cellClass: "measurementUnit"},//单位
             {cellClass: "accessoriesTypeName"},//辅类
             {cellClass: "number" , hasInput :!0},//数量
-            {cellClass: "status"},//状态
+            {cellClass: "status"}//状态
         ];
         var $btncheck = $('<a class="color-green green" style="font-size: 18px"><i class="icon-ok"></i></a>');
         var $btndel = $('<a class="color-red red" style="font-size: 18px"><i class=" icon-remove"></i></a>');
@@ -151,7 +151,7 @@ $(function () {
                         },function(res){
                             if(res.colors.length!=0){
                                 goodsSuit.flag = true;
-                                $('li[data-gid="'+val.gid+'"] .color select').bindData(res.colors,"cid","name");
+                                com.focusPage('li[data-gid="'+val.gid+'"] .color select').bindData(res.colors,"cid","name");
                             }else{
                                 goodsSuit.flag = false;
                                 com.showAlert(com.warning,'该商品暂无颜色信息,请录入')
@@ -159,14 +159,14 @@ $(function () {
 
                         },function(e){
                             com.showAlert(com.error, e.errorMsg);
-                        })
+                        });
 
                         com.post(api.inventory.queryFormatForEnableByGid,{
                             "format.gid": val.gid
                         },function(res){
                             if(res.formats.length!=0){
                                 goodsSuit.flag=true;
-                                $('li[data-gid="'+val.gid+'"] .format select').bindData(res.formats,"fid","info");
+                                com.focusPage('li[data-gid="'+val.gid+'"] .format select').bindData(res.formats,"fid","info");
                             }else{
                                 goodsSuit.flag = false;
                                 com.showAlert(com.warning,'该商品暂无规格信息,请录入')
@@ -202,29 +202,29 @@ $(function () {
                 com.post(api.inventory.queryGoodsByGId, {
                     'goods.gid': gid
                 }, function (data) {
-                    $('#list').empty();
-                    addline(1).addClass('current').appendTo('#list');
+                    com.focusPage('#list').empty();
+                    addline(1).addClass('current').appendTo(com.focusPage('#list'));
                     addlinePackge(data.goods, cid, colorName, fid, formatInfo, num).addClass('current').appendTo('#showList');
                 }, function (e) {
                     com.showAlert(com.error, e.errorMsg);
                 })
             }
 
-        })
+        });
 
         $btndel.click(function (e) {
 
-            $('#list').empty();
+            com.focusPage('#list').empty();
 
-            addline(1).addClass('current').appendTo('#list');
+            addline(1).addClass('current').appendTo(com.focusPage('#list'));
 
-        })
+        });
 
         return $line;
 
     }
 
-    addline(1).addClass('current').appendTo('#list');
+    addline(1).addClass('current').appendTo(com.focusPage('#list'));
 
     function checkRowValue($line) {
 
@@ -246,31 +246,31 @@ $(function () {
         return flag;
     }
 
-    $('.layui-layer-content').css('overflow', 'hidden');
-    $('#showGoods').css({'height': '560px','margin-top':'3%'});
-    $('#resultListGoodsPackage').css({
+    com.focusPage('.layui-layer-content').css('overflow', 'hidden');
+    com.focusPage('#showGoods').css({'height': '560px','margin-top':'3%'});
+    com.focusPage('#resultListGoodsPackage').css({
         'width': '96%',
         'margin': '0 auto',
         'height': '560px',
         'overflow-y': 'scroll',
         'marigin-top': '20px'
-    })
-    $('#addGoodsPackage').css({'width': '96%', 'margin': '0 auto', 'margin-top': '15px'})
+    });
+    com.focusPage('#addGoodsPackage').css({'width': '96%', 'margin': '0 auto', 'margin-top': '15px'});
 
     $btnConfirm.click(function(e){
-        e.stopPropagation()
-        var _option = {}
+        e.stopPropagation();
+        var _option = {};
 
         $.extend(_option,params.goods);
 
-        var packageList = $('#showList','#goodsSuitPopUp').find('li');
+        var packageList = com.focusPage('#showList','#goodsSuitPopUp').find('li');
         $.each(packageList,function(i,v){
             var _this = $(v);
             _option["goodsPackages["+i+"].goods.gid"] = _this.attr('data-gid');
-            _option["goodsPackages["+i+"].color.cid"] =_this.attr('data-cid')
-            _option["goodsPackages["+i+"].format.fid"] = _this.attr('data-fid')
+            _option["goodsPackages["+i+"].color.cid"] =_this.attr('data-cid');
+            _option["goodsPackages["+i+"].format.fid"] = _this.attr('data-fid');
             _option["goodsPackages["+i+"].num"] = _this.attr('data-num')
-        })
+        });
 
         if(packageList.length==0){
 
@@ -282,16 +282,16 @@ $(function () {
         com.post(api.inventory.addPackage,_option,function(){
             layer.closeAll();
             layer.msg('添加成功');
-            $('#showList').empty();
-            $('#list').empty();
+            com.focusPage('#showList').empty();
+            com.focusPage('#list').empty();
         })
 
     });
 
     $btnCancel.click(function(){
-        layer.closeAll()
-        $('#showList').empty();
-        $('#list').empty();
+        layer.closeAll();
+        com.focusPage('#showList').empty();
+        com.focusPage('#list').empty();
     })
 
-})
+});

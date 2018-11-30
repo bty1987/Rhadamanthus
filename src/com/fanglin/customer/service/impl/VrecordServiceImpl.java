@@ -35,14 +35,18 @@ public class VrecordServiceImpl implements VrecordService{
 		List<VrecordPO> vrecordPOs = vrecordDao.queryVrecordByVid(vrecord.getVid());
 		List<VrecordVO> vrecordVOs = new ArrayList<VrecordVO>();
 		
-		for(VrecordPO vrecordPO : vrecordPOs){
+		if(vrecordPOs.size() != 0 && vrecordPOs != null){
 			
-			VrecordVO vrecordVO = new VrecordVO(new UserBaseVO());
+			for(VrecordPO vrecordPO : vrecordPOs){
+				
+				VrecordVO vrecordVO = new VrecordVO(new UserBaseVO());
+				
+				BeanUtil.copyProperties(vrecordPO, vrecordVO, Arrays.asList("creater"));
+				BeanUtil.copyProperties(vrecordPO.getCreater(), vrecordVO.getCreater(), Arrays.asList("dept","duty"));
+				
+				vrecordVOs.add(vrecordVO);
+			}
 			
-			BeanUtil.copyProperties(vrecordPO, vrecordVO, Arrays.asList("creater"));
-			BeanUtil.copyProperties(vrecordPO.getCreater(), vrecordVO.getCreater(), Arrays.asList("dept","duty"));
-			
-			vrecordVOs.add(vrecordVO);
 		}
 		
 		return vrecordVOs;

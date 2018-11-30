@@ -14,7 +14,7 @@ $(function(){
 
 
         var renderList = function(tableId,listData){
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
 
             if(listData && listData.length){
 
@@ -129,7 +129,7 @@ $(function(){
 
         return {
             init : function(tableId,listData){
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
 
             },
@@ -142,7 +142,7 @@ $(function(){
         //操作配置
         optAction : function(mtId, manifestTemplate){
 
-            var $popup = $("#optPopUp");
+            var $popup = com.focusPage("#optPopUp");
             $popup.attr('data-mtId', mtId);
             //$popup.attr('data-name', name);
             //弹出即全屏
@@ -163,13 +163,13 @@ $(function(){
                     $popup.attr('data-mtId', null);
                 }
             });
-        },
+        }
     };
 
 
 
-    var $adda = $('a[name="addQuotationVersion"]');
-    var $return = $('a[name="returnQuotationVersion"]');
+    var $adda = com.focusPage('a[name="addQuotationVersion"]');
+    var $return = com.focusPage('a[name="returnQuotationVersion"]');
 
     $adda.click(function(v){
         binding.optAction(v.mtId,v);

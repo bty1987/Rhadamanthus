@@ -26,6 +26,12 @@
 		{"key":"13","name":"电工费"}
 		
 	],
+	"SalaryTwoType": [
+		{"key":"1","name":"工费"},
+		{"key":"2","name":"增项"},
+		{"key":"3","name":"油工一级奖励"},
+		{"key":"4","name":"工具押金"}
+	],
     "errorCode": 0,
     "errorMsg": null
 }

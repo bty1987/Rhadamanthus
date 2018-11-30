@@ -13,7 +13,7 @@ $(function() {
 	$('input[name=date-range-picker]').daterangepicker(com.dateramgepickerdefault).prev().on(ace.click_event, function(){
 		$(this).next().focus();
 	});
-	$("#dateRangeSearch").attr("readonly", "readonly");
+	com.focusPage("#dateRangeSearch").attr("readonly", "readonly");
 	
 	com.post(api.department.queryDepartment, {"dept.type.name":"主材部"}, function(res){
 
@@ -35,8 +35,8 @@ $(function() {
 		}
 	}, null, false);
 	
-	$("#fl_btn_searchDiv").on("click", function(){
-		var dateRange = $("#dateRangeSearch").val();
+	com.focusPage("#fl_btn_searchDiv").on("click", function(){
+		var dateRange = com.focusPage("#dateRangeSearch").val();
 		
 		if(dateRange == ""){
 			com.showAlert(com.warning, "请输入需要查询的时期范围");
@@ -89,7 +89,7 @@ $(function() {
 });
 
 function highcharts(series){
-	$('#materialDepartmentReport').highcharts({
+	com.focusPage('#materialDepartmentReport').highcharts({
         chart: {
             zoomType: 'x',
             spacingRight: 20

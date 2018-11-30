@@ -1,5 +1,4 @@
 
-
 jQuery(function($) {
    var  stopReason={};
    var  recordType={};
@@ -32,10 +31,10 @@ jQuery(function($) {
         for (var k in o)
         if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
         return fmt;
-    }
+    };
 
         var renderList = function(tableId,listData){
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if(listData && listData.length){
@@ -64,7 +63,7 @@ jQuery(function($) {
            
             var propertyArr = [
                 ["编号:",v.callbackId,"grey"],
-                ["装修单号:", v.orderId, "red"],                
+                ["订单编号:", v.orderId, "red"],                
                 ["操作时间:", v.operateTime, "red"],
                 ["主叫号码:", v.caller,"blue"],
                 ["被叫号码:", v.callee,"blue"],
@@ -72,7 +71,7 @@ jQuery(function($) {
                 ["结束时间:", endTime,"red"],
                 ["挂断原因:", stopReason[v.stopReason],"green"],
                 ["通话时长:", v.duration,"grey"],
-                ["录音类型:",  recordType[ v.recordType],"blue"],                
+                ["录音类型:",  recordType[ v.recordType],"blue"]                
             ];
             $.each(propertyArr, function (index,value) {
                 var $liProperty = $('<li></li>');
@@ -97,22 +96,22 @@ jQuery(function($) {
         		var url = config.media + v.recordUrl;	
             	com.popup("录音地址：" ,url,function () {
             	    	
-        	    })
+        	    });
         		
-        	})
+        	});
             
             return $liLine;
         };
 
         return {
             init : function(tableId,listData){
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
             },
             drawLine : function(v){
                 return creatLine(v);
             }
-        }
+        };
     })();
     
     var searcher = new Searcher();

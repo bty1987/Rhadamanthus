@@ -41,6 +41,8 @@ public interface UserService {
 	
 	public int resetPassword(UserVO userVO,Integer company) throws FLException;
 	
+	public void defaultPassword(String userId, int company) throws FLException;
+	
 	public void addUser(UserInfoVO userInfoVO, int company) throws FLException;
 	
 	public void updateUser(UserInfoVO userInfoVO, int company) throws FLException;
@@ -50,8 +52,6 @@ public interface UserService {
 	public void updateUserForIsLogin(UserVO userVO) throws FLException;
 	
 	public void updateUserForAdvance(UserVO userVO) throws FLException;
-	
-	public void checkUserForPassword(String userId, int company) throws FLException;
 	
 	public void checkUserForPassword(String userId, String password, String rePassword) throws FLException;
 	

@@ -21,35 +21,35 @@ jQuery(function ($) {
     var qualityInfo = {"supervisor": "工程部监理"};
     var qualityIds = {"supervisor": ""};
 
-    drawLineDeployment.saveBtn = $("#saveBtn").on("click", saveData);
+    drawLineDeployment.saveBtn = com.focusPage("#saveBtn").on("click", saveData);
 
-    drawLineDeployment.deployedBtn = $("#deployedBtn").on("click", drawLineDeployed);
+    drawLineDeployment.deployedBtn = com.focusPage("#deployedBtn").on("click", drawLineDeployed);
 
-    drawLineDeployment.cancelBtn = $("#cancelBtn");
+    drawLineDeployment.cancelBtn = com.focusPage("#cancelBtn");
 
-    drawLineDeployment.drawLineDeploymentModal = $("#drawLineDeploymentModal");
+    drawLineDeployment.drawLineDeploymentModal = com.focusPage("#drawLineDeploymentModal");
 
-    drawLineDeployment.drawLineModal = $("#drawLineModal");
+    drawLineDeployment.drawLineModal = com.focusPage("#drawLineModal");
 
-    drawLineDeployment.drawLineDeploymentItems.supervisorQuality = $("#supervisorQuality");
+    drawLineDeployment.drawLineDeploymentItems.supervisorQuality = com.focusPage("#supervisorQuality");
 
-    drawLineDeployment.drawLineDeploymentItems.chanQuality = $("#chanQuality");
+    drawLineDeployment.drawLineDeploymentItems.chanQuality = com.focusPage("#chanQuality");
 
-    drawLineDeployment.drawLineDeploymentItems.putlineQuality = $("#putlineQuality");
+    drawLineDeployment.drawLineDeploymentItems.putlineQuality = com.focusPage("#putlineQuality");
 
-    drawLineDeployment.drawLineDeploymentItems.waterwayCircuitPowerQuality = $("#waterwayCircuitPowerQuality");
+    drawLineDeployment.drawLineDeploymentItems.waterwayCircuitPowerQuality = com.focusPage("#waterwayCircuitPowerQuality");
 
-    drawLineDeployment.drawLineDeploymentItems.powerQuality = $("#powerQuality");
+    drawLineDeployment.drawLineDeploymentItems.powerQuality = com.focusPage("#powerQuality");
 
-    drawLineDeployment.drawLineDeploymentItems.bricklayQuality = $("#bricklayQuality");
+    drawLineDeployment.drawLineDeploymentItems.bricklayQuality = com.focusPage("#bricklayQuality");
 
-    drawLineDeployment.drawLineDeploymentItems.carpentQuality = $("#carpentQuality");
+    drawLineDeployment.drawLineDeploymentItems.carpentQuality = com.focusPage("#carpentQuality");
 
-    drawLineDeployment.drawLineDeploymentItems.oilQuality = $("#oilQuality");
+    drawLineDeployment.drawLineDeploymentItems.oilQuality = com.focusPage("#oilQuality");
 
-    drawLineDeployment.drawLineDeploymentItems.cleaningQuality = $("#cleaningQuality");
+    drawLineDeployment.drawLineDeploymentItems.cleaningQuality = com.focusPage("#cleaningQuality");
 
-    drawLineDeployment.drawLineApplyModal = $("#drawLineApplyModal");
+    drawLineDeployment.drawLineApplyModal = com.focusPage("#drawLineApplyModal");
 
     var drawLineStatus;
 
@@ -61,14 +61,14 @@ jQuery(function ($) {
         if (res.drawLineGroups == null || res.drawLineGroups == "") {
             drawLineDeployment.up = true;
         }
-        $("#drawLineGroup").bindData(res.drawLineGroups, 'gid', 'name');
+        com.focusPage("#drawLineGroup").bindData(res.drawLineGroups, 'gid', 'name');
 
         $.each(res.drawLineGroups, function (i, v) {
             drawLineDeployment.drawLineGroup.push(v.name);
         });
     }, null, false);
 
-    $('.date-picker').datepicker(
+    com.focusPage('.date-picker').datepicker(
         {
             format: 'yyyy-mm-dd',
             autoclose: true,
@@ -76,15 +76,15 @@ jQuery(function ($) {
             todayHighlight: true
         }
     ).next().on(ace.click_event, function () {
-        $(this).prev().focus();
+        com.focusPage(this).prev().focus();
     });
 
-    $("#searchDiv .clearfix").removeClass("clearfix");
-    $('input[name=date-range-picker]').daterangepicker(com.dateramgepickerdefault).prev().on(ace.click_event, function () {
-        $(this).next().focus();
+    com.focusPage("#searchDiv .clearfix").removeClass("clearfix");
+    com.focusPage('input[name=date-range-picker]').daterangepicker(com.dateramgepickerdefault).prev().on(ace.click_event, function () {
+        com.focusPage(this).next().focus();
     });
 
-    $('.date-picker').datepicker(
+    com.focusPage('.date-picker').datepicker(
         {
             format: 'yyyy-mm-dd',
             autoclose: true,
@@ -92,16 +92,16 @@ jQuery(function ($) {
             todayHighlight: true
         }
     ).next().on(ace.click_event, function () {
-        $(this).prev().focus();
+        com.focusPage(this).prev().focus();
     });
 
-    $('#startTime').timepicker({
+    com.focusPage('#startTime').timepicker({
         minuteStep: 1,
         showSeconds: false,
         showMeridian: false
     });
 
-    $('#endTime').timepicker({
+    com.focusPage('#endTime').timepicker({
         minuteStep: 1,
         showSeconds: false,
         showMeridian: false
@@ -151,9 +151,9 @@ jQuery(function ($) {
                 nub = pageGroup.indexOf(drawLineGroup);
             }
 
-            var $tableWrap = $("#group" + nub);
+            var $tableWrap = com.focusPage("#group" + nub);
             if (!$tableWrap.attr('id')) {
-                var resultList = $("#resultList");
+                var resultList = com.focusPage("#resultList");
                 var groupDiv = $("<div></div>").addClass("col-xs-6 col-md-6 widget-container-span ui-sortable").appendTo(resultList);
                 var groupWidgetBox = $("<div></div>").addClass("widget-box transparent").appendTo(groupDiv);
                 var groupWidgetHeader = $("<div></div>").addClass("widget-header").appendTo(groupWidgetBox);
@@ -200,7 +200,7 @@ jQuery(function ($) {
                 ["结束时间:", v.endTime, "green"],
                 ["报价版本:", v.versionName, "green"],
                 ["状态:", statusName, "red"],
-                ["描述:", v.content, "grey"],
+                ["描述:", v.content, "grey"]
             ];
 
             $.each(propertyArr, function (index, value) {
@@ -240,7 +240,7 @@ jQuery(function ($) {
 
         return {
             init: function (tableId, listData) {
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             },
             drawLine: function (v) {
@@ -251,22 +251,22 @@ jQuery(function ($) {
 
     var searcher = new Searcher();
     searcher.init(["c_orderId", "c_drawLineStatus", "c_actualDate"], "condList", api.drawline.queryDrawLine, function (data) {
-        $("#resultList").html("");
+        com.focusPage("#resultList").html("");
         displayFunc.init('resultList', data);
 
     }, "pagenation", "drawLineDeploymentPostData", null, true, "drawLines");
 
-    $("#condList").append('<button id="showDrawLineApplyInfos" style="marg" class="btn btn-xs btn-yellow btn-search">申请信息</button>');
-    $('#showDrawLineApplyInfos').on('click', function () {
+    com.focusPage("#condList").append('<button id="showDrawLineApplyInfos" style="marg" class="btn btn-xs btn-yellow btn-search">申请信息</button>');
+    com.focusPage('#showDrawLineApplyInfos').on('click', function () {
         drawLineDeployment.drawLineApplyModal.modal("show");
     });
 
     function updateDeployed(v) {
-        $("#dlId").val(v.dlId);
-        $("#actualDate").datepicker('update', v.actualDate);
-        $("#startTime").val(v.startTime);
-        $("#endTime").val(v.endTime);
-        $("#drawLineGroup").val(v.gid);
+        com.focusPage("#dlId").val(v.dlId);
+        com.focusPage("#actualDate").datepicker('update', v.actualDate);
+        com.focusPage("#startTime").val(v.startTime);
+        com.focusPage("#endTime").val(v.endTime);
+        com.focusPage("#drawLineGroup").val(v.gid);
         drawLineDeployment.drawLineModal.modal("show");
         if (drawLineDeployment.up) {
             bootbox.alert("无可用放线小组");
@@ -276,7 +276,7 @@ jQuery(function ($) {
 
     function deployed(v) {
         var options = {
-            "construction.orderId": v.orderId,
+            "construction.orderId": v.orderId
         };
         com.post(api.construction.queryConstructionByOrderId, options, function (res) {
 
@@ -299,7 +299,7 @@ jQuery(function ($) {
         });
 
         drawLineDeploymentPostData.orderId = v.orderId;
-        $("#orderInfos").html(v.orderId + " " + v.village);
+        com.focusPage("#orderInfos").html(v.orderId + " " + v.village);
         drawLineDeployment.drawLineDeploymentModal.modal("show");
     }
 
@@ -319,8 +319,8 @@ jQuery(function ($) {
             return;
         }
 
-        var start = Date.parse($("#actualDate").val().replace("-", "/") + " " + $("#startTime").val());
-        var end = Date.parse($("#actualDate").val().replace("-", "/") + " " + $("#endTime").val());
+        var start = Date.parse(com.focusPage("#actualDate").val().replace("-", "/") + " " + com.focusPage("#startTime").val());
+        var end = Date.parse(com.focusPage("#actualDate").val().replace("-", "/") + " " + com.focusPage("#endTime").val());
 
         if (start == NaN || end == NaN || start >= end) {
             bootbox.alert("起始时间和结束时间非法");
@@ -328,11 +328,11 @@ jQuery(function ($) {
         }
 
         var options = {
-            "drawLine.dlId": $("#dlId").val(),
-            "drawLine.actualDate": $("#actualDate").val(),
-            "drawLine.startTime": $("#startTime").val(),
-            "drawLine.endTime": $("#endTime").val(),
-            "drawLine.gid": $("#drawLineGroup").val()
+            "drawLine.dlId": com.focusPage("#dlId").val(),
+            "drawLine.actualDate": com.focusPage("#actualDate").val(),
+            "drawLine.startTime": com.focusPage("#startTime").val(),
+            "drawLine.endTime": com.focusPage("#endTime").val(),
+            "drawLine.gid": com.focusPage("#drawLineGroup").val()
         };
         com.post(api.drawline.resetDrawLine, options, function (res) {
             com.showAlert(com.info, "操作成功");
@@ -345,15 +345,15 @@ jQuery(function ($) {
     function drawLineDeployed() {
 
         var options = {
-            "construction.orderId": drawLineDeploymentPostData["orderId"],
+            "construction.orderId": drawLineDeploymentPostData["orderId"]
         };
 
         for (var qualityId in qualityIds) {
 
-            var $id = $('#' + qualityId + 'Quality').val();
+            var $id = com.focusPage('#' + qualityId + 'Quality').val();
 
             if (!$id) {
-                com.showTips($("#" + qualityId + "Quality_chosen"), "内容不能为空");
+                com.showTips(com.focusPage("#" + qualityId + "Quality_chosen"), "内容不能为空");
                 return;
             }
 
@@ -369,7 +369,7 @@ jQuery(function ($) {
 
     function DrawLine(v) {
 
-        var option = {"drawLine.dlId": v.dlId}
+        var option = {"drawLine.dlId": v.dlId};
 
         com.post(api.drawline.setDrawLineForSuccess, option, function (res) {
             com.showAlert(com.info, "放线成功");
@@ -387,10 +387,10 @@ jQuery(function ($) {
 
     function initPlan() {
 
-        $('#calendar').fullCalendar('destroy');
-        $('#calendar').fullCalendar('today');
+        com.focusPage('#calendar').fullCalendar('destroy');
+        com.focusPage('#calendar').fullCalendar('today');
 
-        $('#calendar').fullCalendar({
+        com.focusPage('#calendar').fullCalendar({
             buttonText: {
                 today: '今天', month: '月', week: '周', day: '日', prev: '上一月', next: '下一月'
             },
@@ -405,8 +405,8 @@ jQuery(function ($) {
 
                 var options = {
                     "drawLine.startTime": startTime,
-                    "drawLine.endTime": endTime,
-                }
+                    "drawLine.endTime": endTime
+                };
 
                 com.post(api.drawline.countDrawLineByDate, options, function (res) {
                     drawLineDeployment.drawLineDateCount = res.drawLineDateCount;
@@ -426,7 +426,7 @@ jQuery(function ($) {
                                 title: j + _ + "个",
                                 start: new Date(s[0], s[1] - 1, s[2]),
                                 allDay: true
-                            }
+                            };
 
                             events.push(event);
                         }

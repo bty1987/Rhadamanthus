@@ -19,8 +19,6 @@ public class SalesReceiptVO  implements Serializable{
 	
 	private Timestamp confirmTime;
 	
-	private Float realMoney;
-	
 	private Float cash;                
 	
 	private String cashInfo;          
@@ -31,7 +29,7 @@ public class SalesReceiptVO  implements Serializable{
 	
 	private Float checkv;             
 	
-	private String checkvBank;        
+	private String checkvBank;
 	
 	private Float installment;         
 	
@@ -39,7 +37,7 @@ public class SalesReceiptVO  implements Serializable{
 	
 	private Float accounts;            
 	
-	private String accountsBank;       
+	private String accountsBank; 
 	
 	private Float advance;             
 	
@@ -108,14 +106,6 @@ public class SalesReceiptVO  implements Serializable{
 		this.collectTime = collectTime;
 	}
 
-	public Float getRealMoney() {
-		return realMoney;
-	}
-
-	public void setRealMoney(Float realMoney) {
-		this.realMoney = realMoney;
-	}
-
 	public Float getCash() {
 		return cash;
 	}
@@ -163,7 +153,7 @@ public class SalesReceiptVO  implements Serializable{
 	public void setCheckvBank(String checkvBank) {
 		this.checkvBank = checkvBank;
 	}
-
+	
 	public Float getInstallment() {
 		return installment;
 	}

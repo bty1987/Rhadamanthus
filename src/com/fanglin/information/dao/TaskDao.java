@@ -14,4 +14,6 @@ public interface TaskDao extends Dao<TaskPO> {
 	
 	public List<TaskPO> queryTask();
 	
+	public TaskPO queryTaskByKeyWord(String keyWord);
+	
 }

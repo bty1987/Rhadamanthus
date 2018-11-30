@@ -3,12 +3,12 @@ $(function () {
         slideItems: {},
         editFlg: false,
         repeatFlg: false,
-        slideData: [],
+        slideData: []
     };
 
-    slide.slideItems.gid = $("#name");
-    slide.slideItems.url = $("#url");
-    slide.slideItems.path = $("#path");
+    slide.slideItems.gid = com.focusPage("#name");
+    slide.slideItems.url = com.focusPage("#url");
+    slide.slideItems.path = com.focusPage("#path");
 
     var colorboxArgs = {
         reposition:true,
@@ -26,7 +26,7 @@ $(function () {
     var displayFunc = (function () {
         /*表格样式*/
         var renderList = function (tableId, listData) {
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
             if (listData && listData.length) {
                 var $ulTitle = createTableTitle();
                 var $ulData = $('<ul></ul>').addClass('flex-table');
@@ -54,10 +54,7 @@ $(function () {
 
             var $optionWrap = $('<div></div>').addClass('line-wrap action').html($('<div>操作</div>').addClass('cell option'));
 
-            $liTitle.append($indexWrap)
-                .append($contentWrap)
-                .append($optionWrap)
-                .appendTo($ulTitle);
+            $liTitle.append($indexWrap).append($contentWrap).append($optionWrap).appendTo($ulTitle);
 
             return $ulTitle;
         };
@@ -100,28 +97,20 @@ $(function () {
             var $btnStart = $('<li></li>').append($('<a></a>').html('启用'));
             var $update = $('<li></li>').append($('<a></a>').html('编辑'));
 
-            $btnUl
-                .append($update)
-                .append($btnBan)
-                .append($btnStart);
+            $btnUl.append($update).append($btnBan).append($btnStart);
 
-            $btnGroup
-                .append($btn)
-                .append($btnUl)
-                .appendTo($cellOption);
+            $btnGroup.append($btn).append($btnUl).appendTo($cellOption);
 
             $cellOption.appendTo($optionWrap);
 
-            $liLine.append($indexWrap)
-                .append($contentWrap)
-                .append($optionWrap);
+            $liLine.append($indexWrap).append($contentWrap).append($optionWrap);
 
             //编辑
             $update.click(function () {
-                $("#name").attr('data-gid',v.gid);
-                $("#name").attr('data-typeahead-key',v.name);
-                $("#mgoodsname").hide();
-                var $layer = $('#layerAdd');
+                com.focusPage("#name").attr('data-gid',v.gid);
+                com.focusPage("#name").attr('data-typeahead-key',v.name);
+                com.focusPage("#mgoodsname").hide();
+                var $layer = com.focusPage('#layerAdd');
                 editBrand(v);
                 openlayer(function (index, layero) {
                     if(com.validate('form1'))
@@ -134,11 +123,11 @@ $(function () {
             });
 
             $btnBan.click(function () {
-                $('#layerAdd').attr('data-sid', v.sid);
-                $('#layerAdd').attr('data-status', v.status);
+                com.focusPage('#layerAdd').attr('data-sid', v.sid);
+                com.focusPage('#layerAdd').attr('data-status', v.status);
 
-                var id = $('#layerAdd').attr('data-sid');
-                var status = $('#layerAdd').attr('data-status');
+                var id = com.focusPage('#layerAdd').attr('data-sid');
+                var status = com.focusPage('#layerAdd').attr('data-status');
 
                 startStatus(id, status, function () {
                     layer.closeAll();
@@ -147,11 +136,11 @@ $(function () {
             });
 
             $btnStart.click(function () {
-                $('#layerAdd').attr('data-sid', v.sid);
-                $('#layerAdd').attr('data-status', v.status);
+                com.focusPage('#layerAdd').attr('data-sid', v.sid);
+                com.focusPage('#layerAdd').attr('data-status', v.status);
 
-                var id = $('#layerAdd').attr('data-sid');
-                var status = $('#layerAdd').attr('data-status');
+                var id = com.focusPage('#layerAdd').attr('data-sid');
+                var status = com.focusPage('#layerAdd').attr('data-status');
 
                 stopStatus(id, status, function () {
                     layer.closeAll();
@@ -164,7 +153,7 @@ $(function () {
 
         return {
             init: function (tableId, listData) {
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             },
             drawLine: function (v) {
@@ -173,7 +162,7 @@ $(function () {
         };
     })();
 
-    autoFill(api.store.queryMgoodsByPinyin, "mgoods", "gid", "name");
+    autoFill(api.store.queryBaseMgoodsByPinyin, "mgoods", "gid", "name");
 
     //查询
     function doSearcher() {
@@ -181,10 +170,11 @@ $(function () {
             displayFunc.init('resultList', res.slides);
         });
     }
+
     doSearcher();
 
     function autoFill(url, id, key, value) {
-        $('input[name=' + id + ']').typeahead({
+        com.focusPage('input[name=' + id + ']').typeahead({
             url: url,
             list: [],
             postData: {},
@@ -200,7 +190,7 @@ $(function () {
             },
             isResultTypeMap: true,
             flupdater: function (k, v) {
-                $('input[name=' + id + ']').attr('data-gid',k);
+                com.focusPage('input[name=' + id + ']').attr('data-gid',k);
                 return v;
             }
         });
@@ -211,13 +201,13 @@ $(function () {
         layer.open({
             type: 1,
             title: " ",
-            content: $('#layerAdd'),
+            content: com.focusPage('#layerAdd'),
             area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
             maxmin: false,
             zIndex: 9000,
             btn: ['确定', '取消'],
             yes: function (index, layero) {
-                var img =$('#showImg').attr('src');
+                var img =com.focusPage('#showImg').attr('src');
                 if(img == "#"){
                     layer.msg("请上传图片");
                 }else{
@@ -226,13 +216,13 @@ $(function () {
             },
             btn2: function (index, layero) {
                 //按钮【按钮二】的回调
-                $("#name").removeAttr("data-gid");
-                $("#name").removeAttr("data-typeahead-key");
+                com.focusPage("#name").removeAttr("data-gid");
+                com.focusPage("#name").removeAttr("data-typeahead-key");
                 com.clearValidator();
             },
             cancel: function () {
-                $("#name").removeAttr("data-gid");
-                $("#name").removeAttr("data-typeahead-key");
+                com.focusPage("#name").removeAttr("data-gid");
+                com.focusPage("#name").removeAttr("data-typeahead-key");
                 //右上角关闭回调
             }
         });
@@ -274,10 +264,10 @@ $(function () {
 
     /*添加信息*/
     function saveData(id,callback){
-        var $layer = $('#layerAdd');
-        var nameid = $("#name").val();
-        var url = $("#url").val();
-        var img = $("#path").val();
+        var $layer = com.focusPage('#layerAdd');
+        var nameid = com.focusPage("#name").val();
+        var url = com.focusPage("#url").val();
+        var img = com.focusPage("#path").val();
         if( nameid == "" ){
             nameid = 0;
             com.post(api.store.addSlide, {
@@ -289,7 +279,7 @@ $(function () {
                 com.clearValidator();
                 layer.closeAll();
             });
-        }else {
+        }else{
             nameid = $layer.find('input[id="name"]').attr("data-gid");
             com.post(api.store.addSlide, {
                 "slide.gid": nameid,
@@ -303,9 +293,9 @@ $(function () {
         }
     }
 
-    function updateData(v,callback){
-        var $layer = $('#layerAdd');
-        var path = $("#path").val();
+    function updateData(v, callback){
+        var $layer = com.focusPage('#layerAdd');
+        var path = com.focusPage("#path").val();
         com.post(api.store.updateSlide, {
             'slide.sid': v.sid,
             "slide.gid":v.gid,
@@ -315,19 +305,18 @@ $(function () {
             doSearcher();
             callback();
         });
-        callback
     }
 
     function editBrand(v) {
-        $("#slideImg").html("");
+        com.focusPage("#slideImg").html("");
         slide.slideItems.url.val(v.url);
         slide.slideItems.path.val(v.img);
         var img = $('<img />');
-        var imgA = $("<a></a>").attr("href", com.showImg(img, v.img, 150, 150, '150x150', null, 0)).attr("data-rel", "colorbox").css("height", "150px").append(img).appendTo($("#slideImg"));
+        var imgA = $("<a></a>").attr("href", com.showImg(img, v.img, 150, 150, '150x150', null, 0)).attr("data-rel", "colorbox").css("height", "150px").append(img).appendTo(com.focusPage("#slideImg"));
         imgA.colorbox(colorboxArgs);
     }
 
-    $("#pictureUpload").html("").Huploadify({
+    com.focusPage("#pictureUpload").html("").Huploadify({
         'debug': false, // 开启调试
         'auto': true, // 是否自动上传
         'successTimeout': 99999, //超时时间
@@ -351,10 +340,10 @@ $(function () {
         'onUploadSuccess': function (file, data, response) {
             var dateObj = eval("(" + data + ")");
             if (dateObj.errorCode == 0) {
-                $("#slideImg").html("");
+                com.focusPage("#slideImg").html("");
                 slide.slideItems.path.val(dateObj.resUrl);
                 var img = $('<img />');
-                var imgA = $("<a></a>").attr("href", com.showImg(img, dateObj.resUrl, 150, 150, '150x150', null, 0)).attr("data-rel", "colorbox").css("height", "150px").append(img).appendTo($("#slideImg"));
+                var imgA = $("<a></a>").attr("href", com.showImg(img, dateObj.resUrl, 150, 150, '150x150', null, 0)).attr("data-rel", "colorbox").css("height", "150px").append(img).appendTo(com.focusPage("#slideImg"));
                 imgA.colorbox(colorboxArgs);
             } else {
                 alert(data);
@@ -362,13 +351,13 @@ $(function () {
         }
     });
 
-    $("#adda").click(function () {
-        $("#mgoodsname").show();
-        $("#slideImg").html("");
+    com.focusPage("#adda").click(function () {
+        com.focusPage("#mgoodsname").show();
+        com.focusPage("#slideImg").html("");
         com.cleanItems(slide.slideItems);
         openlayer(function (index, layero) {
-            if($("#path").val() == null || $("#path").val() == ""){
-                $("#slideImg").html("");
+            if(com.focusPage("#path").val() == null || com.focusPage("#path").val() == ""){
+                com.focusPage("#slideImg").html("");
                 var $text = $('<span></span>').html('请上传图片！').css("color", "red").appendTo($("#slideImg"));
                 return;
             }
@@ -377,10 +366,8 @@ $(function () {
             }
 
             if (slide.slideData.length == 0) {
-
-                if($("#name").val() != ""  ) {
-
-                    $("#name").addClass('popover-notitle').attr({
+                if(com.focusPage("#name").val() != ""  ) {
+                    com.focusPage("#name").addClass('popover-notitle').attr({
                         "data-rel": "popover",
                         "data-placement": "right",
                         "data-original-title": "",

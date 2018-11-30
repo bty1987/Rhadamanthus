@@ -10,7 +10,7 @@ $(function(){
      * */
     var displayFunc  = (function(){
         var renderList = function(tableId,listData){
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
             if(listData && listData.length){
                 var $ulTitle = createTableTitle();
                 var $ulData = $('<ul></ul>').addClass('flex-table');
@@ -73,12 +73,12 @@ $(function(){
                 .append($contentWrap)
                 .append($optionWrap);
             $btnEdit.click(function(){
-                var name = $('#layerAdd').find('input[name="name"]').val(v.name);
-                var workType = $('#layerAdd').find('select[name="workType"]').val(v.workType.id);
-                var comment = $('#layerAdd').find('input[name="comment"]').val(v.comment);
-                $('#layerAdd').attr('data-atid', v.atid);
+                var name = com.focusPage('#layerAdd').find('input[name="name"]').val(v.name);
+                var workType = com.focusPage('#layerAdd').find('select[name="workType"]').val(v.workType.id);
+                var comment = com.focusPage('#layerAdd').find('input[name="comment"]').val(v.comment);
+                com.focusPage('#layerAdd').attr('data-atid', v.atid);
                 openlayer(function(){
-                    var id = $('#layerAdd').attr('data-atid');
+                    var id = com.focusPage('#layerAdd').attr('data-atid');
                     if(com.validate('form1'))
                         return;
                     saveData(id, function(){
@@ -97,10 +97,10 @@ $(function(){
                 layer.confirm('是否启用？', {
                     btn: ['确定','取消'] //按钮
                 }, function(index, layero){
-                    $('#layerAdd').attr('data-atid', v.atid);
-                    $('#layerAdd').attr('data-status', v.status);
-                    var id = $('#layerAdd').attr('data-atid');
-                    var status = $('#layerAdd').attr('data-status');
+                    com.focusPage('#layerAdd').attr('data-atid', v.atid);
+                    com.focusPage('#layerAdd').attr('data-status', v.status);
+                    var id = com.focusPage('#layerAdd').attr('data-atid');
+                    var status = com.focusPage('#layerAdd').attr('data-status');
                     startGoodsStatus(id,status,function(){
                         layer.closeAll();
                         layer.msg('启用成功',{icon:1,time:2e3});
@@ -113,10 +113,10 @@ $(function(){
                 layer.confirm('是否禁用？', {
                     btn: ['确定','取消'] //按钮
                 }, function(index, layero){
-                    $('#layerAdd').attr('data-atid', v.atid);
-                    $('#layerAdd').attr('data-status', v.status);
-                    var id = $('#layerAdd').attr('data-atid');
-                    var status = $('#layerAdd').attr('data-status');
+                    com.focusPage('#layerAdd').attr('data-atid', v.atid);
+                    com.focusPage('#layerAdd').attr('data-status', v.status);
+                    var id = com.focusPage('#layerAdd').attr('data-atid');
+                    var status = com.focusPage('#layerAdd').attr('data-status');
                     stopGoodsStatus(id,status,function(){
                         layer.closeAll();
                         layer.msg('禁用成功',{icon:1,time:2e3});
@@ -130,7 +130,7 @@ $(function(){
 
         return {
             init : function(tableId,listData){
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
 
             },
@@ -141,7 +141,7 @@ $(function(){
     })();
     var goodsSeacher = new Searcher();
     com.post(api.common.queryWorkType,{},function(res){
-        $('select[name="workType"]').bindData(res.workTypes,"id","name");
+        com.focusPage('select[name="workType"]').bindData(res.workTypes,"id","name");
     });
     //"workType"   api.inventory.pageAssisType
     goodsSeacher.init( ["workTypeName"], "condList", api.inventory.pageAccessoriesType, function(data){
@@ -176,17 +176,17 @@ $(function(){
         $importAccessoriesType.click(function(){
 
             clearForm('form2');
-            $('#importSelectAccessoriesType').empty();
+            com.focusPage('#importSelectAccessoriesType').empty();
 
             openlayerImportAccessoriesType();
 
-            $('#importSelectAccessoriesType').Huploadify({
+            com.focusPage('#importSelectAccessoriesType').Huploadify({
 
                 'debug' : false, // 开启调试
                 'auto':true, // 是否自动上传
                 'successTimeout':config.uploadTimeout, // 超时时间
                 'formData':{
-                    'uploadType':4,
+                    'uploadType':4
                 },
                 'buttonClass': 'btn btn-success col-sm-6',
                 'overrideEvents' : ['onDialogClose'], // 不执行默认的onSelect事件
@@ -212,19 +212,23 @@ $(function(){
     },'resultList');
 
     function clearForm(formId){
-        var $form = $("#"+formId);
-        var error = $('.alert-error', $form);
-        var success = $('.alert-success', $form);
-        $('.control-group').removeClass("success").removeClass("error");
-        $(".ok").remove();
-        $(".help-inline").remove();
+        com.focusPage("#name").val('');
+        com.focusPage("#workType").get(0).selectedIndex = 0;
+        com.focusPage("#comment").val('');
+
+        var $form = com.focusPage("#"+formId);
+        var error = com.focusPage('.alert-error', $form);
+        var success = com.focusPage('.alert-success', $form);
+        com.focusPage('.control-group').removeClass("success").removeClass("error");
+        com.focusPage(".ok").remove();
+        com.focusPage(".help-inline").remove();
         success.hide();
         error.hide();
-        $("span.checked",$form).removeClass("checked");
-        $("tr.edit-on").removeClass("edit-on");
+        com.focusPage("span.checked",$form).removeClass("checked");
+        com.focusPage("tr.edit-on").removeClass("edit-on");
         $form.removeClass("edit-item");
-        $(".extra-wrap .control-group:not(.hide)").remove();//去掉辅助项
-        $('input[type="hidden"]',$form).val('');
+        com.focusPage(".extra-wrap .control-group:not(.hide)").remove();//去掉辅助项
+        com.focusPage('input[type="hidden"]',$form).val('');
         document.getElementById(formId).reset();
     }
 
@@ -234,7 +238,7 @@ $(function(){
             type: 1,
             //skin: 'layui-layer-lan',
             title:"添加",
-            content: $('#layerAdd'),
+            content: com.focusPage('#layerAdd'),
             area: ( $(window).width()*0.6 < 620 ?  $(window).height()*0.6 : 620 )+"px",
             maxmin: false,
             zIndex:9000,
@@ -260,10 +264,9 @@ $(function(){
             type: 1,
             skin: 'layui-layer-lan',
             title: "导入辅类",
-            content: $('#importAccessoriesType'),
+            content: com.focusPage('#importAccessoriesType'),
             area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
             maxmin: false,
-            zIndex: 9000,
             btn: ['确定'],
             zIndex: 9000,
             success: function (layers, index) {
@@ -276,30 +279,6 @@ $(function(){
 
     }
 
-    /*登录表单校验*/
-    var submitValidate = function(){
-        $("#form1 .alert-error").hide();
-
-        var validator = com.validate("#form1",{
-            //一些校验规则
-            messages: {
-                name: {
-                    required: "请填写名称."
-                },
-                comment: {
-                    required: "请填写说明."
-                },
-            },
-            success: function (label) {
-                label.closest('.control-group').removeClass('error');
-                label.remove();
-            },
-            errorPlacement: function (error, element) {
-                error.addClass('help-small no-left-padding').insertAfter(element);
-            }
-        });
-        return validator;
-    };
     //状态启用
     function startGoodsStatus(id,status,callback){
         if(status=="1"){
@@ -335,7 +314,7 @@ $(function(){
         }
     }
     function saveData(id,callback){
-        var $layer = $('#layerAdd');
+        var $layer = com.focusPage('#layerAdd');
         var name = $layer.find('input[name="name"]').val();
         var workType = $layer.find('select[name="workType"] option:selected').val();
         var comment = $layer.find('input[name="comment"]').val();

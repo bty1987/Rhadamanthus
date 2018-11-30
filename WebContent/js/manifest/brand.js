@@ -7,7 +7,7 @@ jQuery(function($) {
 		modal: null,
 		brandItems:{},
 		data:{
-			categoryData: {},
+			categoryData: {}
 		},
 		
 		editFlg: false,
@@ -19,35 +19,35 @@ jQuery(function($) {
 				regex: /^B_\d{3}$/g,
 				errorMsg: "请以B_作为前缀 , 之后以三位数字组成(如B_001)."
 			}
-		},
+		}
 	};
 	
-	$('#fl-statement').statement("主材品牌", "主材品牌信息列表");
+	com.focusPage('#fl-statement').statement("主材品牌", "主材品牌信息列表");
 	
-	brand.saveBtn = $("#saveBtn").on("click", saveData);
-	brand.cancelBtn = $("#cancelBtn");
-	brand.modal = $("#brandModal");
+	brand.saveBtn = com.focusPage("#saveBtn").on("click", saveData);
+	brand.cancelBtn = com.focusPage("#cancelBtn");
+	brand.modal = com.focusPage("#brandModal");
 	
 	brand.modal.on('show.bs.modal',function(e){
 		com.clearValidator();
 		com.clearValidator("#brandId", true);
 	});
 	
-	brand.brandItems.bId = $("#bId");
-	brand.brandItems.brandId = $("#brandId");
-	brand.brandItems.brandName = $("#brandName");
-	brand.brandItems.categoryId = $("#categoryId");
+	brand.brandItems.bId = com.focusPage("#bId");
+	brand.brandItems.brandId = com.focusPage("#brandId");
+	brand.brandItems.brandName = com.focusPage("#brandName");
+	brand.brandItems.categoryId = com.focusPage("#categoryId");
 	
 	$.extend(com.validator, brand.validator);
 	
 	com.post(api.data.queryCategory, {}, function(res){
-		$("#categoryId").bindData(res.categorys, "cid", "categoryName");
+		com.focusPage("#categoryId").bindData(res.categorys, "cid", "categoryName");
 	});
 	
 	var displayFunc  = (function(){
 
         var renderList = function(tableId,listData){
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if(listData && listData.length){ 
@@ -83,7 +83,7 @@ jQuery(function($) {
       
         return {
             init : function(tableId,listData){
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
             },
             drawLine : function(v){
@@ -105,7 +105,7 @@ jQuery(function($) {
     	return [$adda];
 	});
 	
-	$('a[name="add"]', '#pagenation').click(function(){
+	com.focusPage('a[name="add"]', '#pagenation').click(function(){
 		editFlg = false;
 		
 		com.cleanItems(brand.brandItems);
@@ -135,7 +135,7 @@ jQuery(function($) {
 			'brand.bid': brand.brandItems.bId.val(),
 			'brand.brandId': brand.brandItems.brandId.val(),
 			'brand.brandName': brand.brandItems.brandName.val(),
-			'brand.cid': brand.brandItems.categoryId.val(),
+			'brand.cid': brand.brandItems.categoryId.val()
 		};
 		
 		if(editFlg){

@@ -11,16 +11,16 @@ jQuery(function ($) {
 
     };
 
-    designersalary.saveBtn = $("#saveBtn").on("click", saveData);
-    designersalary.updatadesignersalary =$("#updatadesignersalary").on("click",updatadesignersalary);
-    designersalary.cancelBtn = $("#cancelBtn");
-    designersalary.modal = $("#designersalaryModal");
-    designersalary.modal.designersalaryuser = $("#designersalaryuser");
-    designersalary.modal.designersalary = $("#designersalary");
-    designersalary.modal.uid = $("#uid");
-    designersalary.modal.user = $("#user");
-    designersalary.modal.dsid = $("#dsid");
-    designersalary.modal.salary = $("#salary");
+    designersalary.saveBtn = com.focusPage("#saveBtn").on("click", saveData);
+    designersalary.updatadesignersalary =com.focusPage("#updatadesignersalary").on("click",updatadesignersalary);
+    designersalary.cancelBtn = com.focusPage("#cancelBtn");
+    designersalary.modal = com.focusPage("#designersalaryModal");
+    designersalary.modal.designersalaryuser = com.focusPage("#designersalaryuser");
+    designersalary.modal.designersalary = com.focusPage("#designersalary");
+    designersalary.modal.uid = com.focusPage("#uid");
+    designersalary.modal.user = com.focusPage("#user");
+    designersalary.modal.dsid = com.focusPage("#dsid");
+    designersalary.modal.salary = com.focusPage("#salary");
 
 
     $.extend(com.validator, designersalary.validator);
@@ -29,7 +29,7 @@ jQuery(function ($) {
     var displayFunc = (function () {
 
         var renderList = function (tableId, listData) {
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if (listData && listData.length) {
@@ -92,7 +92,7 @@ jQuery(function ($) {
             });
             $btnuptl.click(function () {
 
-                $('#updataModal').modal("show");
+                com.focusPage('#updataModal').modal("show");
                 designersalary.modal.dsid.val(v.dsid);
                 designersalary.modal.user.val(v.duser.userName);
                designersalary.modal.salary.val(v.salary);
@@ -118,7 +118,7 @@ jQuery(function ($) {
 
         return {
             init: function (tableId, listData) {
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             },
             drawLine: function (v) {
@@ -165,7 +165,7 @@ jQuery(function ($) {
     });
 
     //全选
-    $('a[name="select"]').on("click", function () {
+    com.focusPage('a[name="select"]').on("click", function () {
 
         if ($('input[type="checkbox"]').prop('checked')) {
             $('input[type="checkbox"]').removeAttr('checked');
@@ -178,27 +178,27 @@ jQuery(function ($) {
         }
     });
     //创建
-    $('a[name="add"]', '#pagenation').on("click", function () {
+    com.focusPage('a[name="add"]', '#pagenation').on("click", function () {
 
         com.cleanItems(designersalary.items);
-        $('#designersalaryModal').modal("show");
-        com.initChosen('designersalaryuser', api.personel.queryUserForNameByPinyinName, "pinyinName", {"userNamePinYin": $("#designersalaryuser").val()}, "autoFillKeyValue", "key", "value");
+        com.focusPage('#designersalaryModal').modal("show");
+        com.initChosen('designersalaryuser', api.personel.queryUserForNameByPinyinName, "pinyinName", {"userNamePinYin": com.focusPage("#designersalaryuser").val()}, "autoFillKeyValue", "key", "value");
 
-        designersalary.modal.uid.val($("#designersalaryuser").duser.uid);
+        designersalary.modal.uid.val(com.focusPage("#designersalaryuser").duser.uid);
     });
 
 
-    $('a[name="import"]', '#pagenation').on("click", function () {
+    com.focusPage('a[name="import"]', '#pagenation').on("click", function () {
 
-        $('#importModal').modal("show");
+        com.focusPage('#importModal').modal("show");
     });
 
-    $('a[name="batchImport"]', '#pagenation').on("click", function () {
-        $('#batchImportModal').modal("show");
+    com.focusPage('a[name="batchImport"]', '#pagenation').on("click", function () {
+        com.focusPage('#batchImportModal').modal("show");
 
     });
     // 导出
-    $('a[name="export"]', '#pagenation').on("click", function () {
+    com.focusPage('a[name="export"]', '#pagenation').on("click", function () {
 
 
         if ($('span[name="totalRecords"]').text() == 0) {
@@ -276,7 +276,7 @@ jQuery(function ($) {
 
     });
     //通过
-    $('a[name="adopt"]', '#pagenation').on("click", function (v) {
+    com.focusPage('a[name="adopt"]', '#pagenation').on("click", function (v) {
 
         var options = {};
         var groupCheckbox = $('input[name="check"]:checked');
@@ -306,7 +306,7 @@ jQuery(function ($) {
 
 
     function saveData() {
-        com.post(api.personel.queryUserByUserId,{"user.userId": $("#designersalaryuser").val()},
+        com.post(api.personel.queryUserByUserId,{"user.userId": com.focusPage("#designersalaryuser").val()},
             function (res) {
            var  uid =   res.user.uid;
 
@@ -320,7 +320,7 @@ jQuery(function ($) {
                 },function (res) {
 
                         searcher.doSearch();
-                        $('#designersalaryModal').modal("hide")
+                        com.focusPage('#designersalaryModal').modal("hide")
                     }
                     ,function (res) {
 
@@ -341,7 +341,7 @@ function updatadesignersalary() {
 
     }, function (dat) {
         searcher.doSearch();
-        $('#updataModal').modal("hide");
+        com.focusPage('#updataModal').modal("hide");
 
     }, function (data) {
         com.showAlert(com.error, "工费状态不可操作")
@@ -392,7 +392,7 @@ function updatadesignersalary() {
             com.showAlert(com.error, "工费状态不可操作")
         })
     }
-    $('#import').Huploadify({
+    com.focusPage('#import').Huploadify({
 
         'debug' : false, // 开启调试
         'auto':true, // 是否自动上传
@@ -417,7 +417,7 @@ function updatadesignersalary() {
         }
     });
 
-    $('#batchImport').Huploadify({
+    com.focusPage('#batchImport').Huploadify({
 
         'debug' : false, // 开启调试
         'auto':true, // 是否自动上传

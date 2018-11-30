@@ -36,6 +36,8 @@ public class DecorationAccountPO implements Serializable{
 	
 	private float serviceRate;
 	
+	private float projectBase;
+	
 	
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -120,6 +122,12 @@ public class DecorationAccountPO implements Serializable{
 		this.serviceRate = serviceRate;
 	}
 	
-	
-	
+	@Column(name = "projectBase")
+	public float getProjectBase() {
+		return projectBase;
+	}
+
+	public void setProjectBase(float projectBase) {
+		this.projectBase = projectBase;
+	}
 }

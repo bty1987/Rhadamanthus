@@ -1,36 +1,31 @@
-var printContract = {
-};
-
 jQuery(function($) {
-	
-	Api().init('../../js/api/');
+
+	var params = {};
+	api = parent.api;
+	config = parent.config ;
+	server = parent.server;
+	utils = parent.utils;
+	com = parent.com;
 	
 	params.server = window.server;
-	params.authentication = window.authentication;
+	params.authentication = parent.params.authentication;
 	
-	$('.companyFullName').text(config.companyFullName);
-	$('.companyAddr').text(config.companyAddr);
-	
-	var orderId = "";
-	var args = window.location.search.substr(1).split('&');
-	
-	$.each(args, function(i, v){
-		if(v.indexOf('time=') != -1){
-			params.loginTime = v.substring(v.indexOf('time=')).split('=')[1];
-		}else if(v.indexOf("decorationContract.orderId") != -1){
-			orderId = args[i].split('=')[1];
-		}
-	});
-	
-	var decorationOrder;
+	$('.companyFullName').text(parent.params.company.fullname);
+	$('.companyAddr').text(parent.params.company.address);
+	$('.legalPerson').text(parent.params.company.corporation);
+	params = parent.params;
+
+	var orderId = params.orderId;
+
+	var decoration;
 	var decorationContract;
 	
 	com.post(api.decoration.generateDecorationContract, {"decorationContract.orderId": orderId}, function(res) {
 		decorationContract = res.decorationContract;
 	}, null, false);
 	
-	com.post(api.decoration.queryDecorationOrderForCommonByOrderId, {"decorationOrder.orderId": orderId}, function(res){
-		decorationOrder = res.decorationOrder;
+	com.post(api.decoration.queryDecorationForCommonByOrderId, {"decoration.orderId": orderId}, function(res){
+		decoration = res.decoration;
 	}, null, false);
 	
 	if (decorationContract.autoId == null) {
@@ -39,60 +34,54 @@ jQuery(function($) {
 		return;
 	}
 	
-//	if (decorationContract.quotationDetail == null) {
-//		$(".WordSection1").html("");
-//		alert("订单没有报价信息");
-//		return;
-//	}
-	
 	var quotationDetail = decorationContract.quotationDetail;
 	
-	if(parseFloat(decorationOrder.orderTotalPrice) == 0){
+	if(parseFloat(decoration.orderTotalPrice) == 0){
 		$(".WordSection1").html("");
 		alert("订单没有总价信息");
 		return;
 	}
-	
+
 	var payments = decorationContract.payments;
-	
-	var firstPayment = parseFloat(payments["首付款"]);
-	var firstSecondPayment = payments["首付二期款"] ? parseFloat(payments["首付二期款"]) : 0;;
-	var secondPayment = parseFloat(payments["二期款"]);
-	var lastPayment = parseFloat(payments["尾款"]);
-	
-	var paymentRates = decorationContract.paymentRates;
-	
-	var firstRate = paymentRates[0];
-	var firstSecondRate = paymentRates[1];
-	var secondRate = paymentRates[2];
-	var lastRate = paymentRates[3];
-	
-	var _orderTotalPrice = firstPayment + firstSecondPayment + secondPayment + lastPayment;
-	
-//	if(decorationContract.orderTotalPrice != quotationDetail.totalPrice){
-//		$(".WordSection1").html("");
-//		alert("合同总额不等于报价总额");
-//		return;
-//	}
-	
-//	if(decorationContract.orderTotalPrice != _orderTotalPrice){
-//		$(".WordSection1").html("");
-//		alert("合同总额不等于款项总额");
-//		return;
-//	}
-	
-	if(decorationOrder.houseType == '现房' && firstSecondPayment > 0 || decorationOrder.houseType == '期房' && firstSecondPayment == 0){
+	var payFlag = false;
+	var baseStatus = ["未付款", "已付款", "已确认", "申请审批"];
+	var typeCounts = 0;
+
+	$.each(payments,function (i,v) {
+		if(baseStatus.indexOf(v.paymentStatus) !=-1){
+			payFlag = true;
+		}
+		typeCounts += 1;
+		switch (v.sort){
+			case 1:
+				$("#firstPayment").text(v.referMoney);
+				$("#firstPayment1").text(v.referMoney);
+				break;
+			case 2:
+				$("#firstSecondPayment").text(v.referMoney);
+				$("#secondPayment1").text(v.referMoney);
+				break;
+			case 3:
+				$("#secondPayment").text(v.referMoney);
+				$("#lastPayment1").text(v.referMoney);
+				break;
+			case 4:
+				$("#lastPayment").text(v.referMoney);
+				break;
+		}
+
+	});
+
+	if(!payFlag){
 		$(".WordSection1").html("");
-		alert("房屋类型和款项类型不匹配");
+		alert("无款项交付");
 		return;
 	}
 	
 	$(".WordSection1").css("display", "block");
 	
-	var orderTotalMoney = parseFloat(decorationOrder.orderTotalPrice);
-	
-	$("#decorationOrderType").html(decorationOrder.type == 0 ? "半包" : decorationOrder.type == 1 ? "全包" : "半价");
-	
+	var orderTotalMoney = parseFloat(decoration.orderTotalPrice);
+
 	if (decorationContract.signTime != null && decorationContract.signTime != "") {
 		var signSplit = decorationContract.signTime.split('-');
 
@@ -129,48 +118,28 @@ jQuery(function($) {
 	} else {
 		$("#additionalInfo").html(decorationContract.additionalInfo);
 	}
-	
-	if (decorationOrder.houseType == '现房') {
+
+	if (typeCounts == 3) {
 		$("#threePayment").css("display", "block");
 		$("#fourPayment").css("display", "none");
-		
-		$("#firstRate1").html(parseFloat(firstRate) + parseFloat(firstSecondRate));
-		$("#secondRate1").html(secondRate);
-		$("#lastRate1").html(lastRate);
-
-		$("#firstPayment1").html(payments["首付款"]);
-		$("#secondPayment1").html(payments["二期款"]);
-		$("#lastPayment1").html(payments["尾款"]);
-	} else {
+	} else if (typeCounts == 4){
 		$("#threePayment").css("display", "none");
 		$("#fourPayment").css("display", "block");
-		
-		$("#firstRate").html(firstRate);
-		$("#firstSecondRate").html(firstSecondRate);
-		$("#secondRate").html(secondRate);
-		$("#lastRate").html(lastRate);
-
-		$("#firstRate1").html(parseFloat(firstRate) + parseFloat(firstSecondRate));
-		$("#secondRate1").html(secondRate);
-		$("#lastRate1").html(lastRate);
-
-		$("#firstPayment").html(payments["首付款"]);
-		$("#firstSecondPayment").html(payments["首付二期款"]);
-		$("#secondPayment").html(payments["二期款"]);
-		$("#lastPayment").html(payments["尾款"]);
-
 		$("#fourPayment").attr("style", "");
+	} else {
+		$(".WordSection1").html("");
+		alert("款项数量有误!");
 	}
 
-	$("#orderTotalPrice").html(	decorationOrder.orderTotalPrice);
+	$("#orderTotalPrice").html(	decoration.orderTotalPrice);
 
-	var totalCN = utils.getCNMoney(decorationOrder.orderTotalPrice);
+	var totalCN = utils.getCNMoney(decoration.orderTotalPrice);
 	$("#orderTotalPriceCN").html(totalCN);
-	$("#disgner").html(decorationOrder.designer);
-	$("#disgnerPhone").html(decorationOrder.designerPhone);
-	$("#houseAddr").html(decorationOrder.village.cityProper.cityProperName + decorationOrder.village.villageName + decorationOrder.houseNumber);
-	$("#houseArea").html(decorationOrder.houseArea);
-	$("#freeArea").html(decorationOrder.freeArea);
-	$("#totalArea").html(parseFloat(decorationOrder.houseArea) + parseFloat(decorationOrder.freeArea));
+	$("#disgner").html(decoration.designer);
+	$("#disgnerPhone").html(decoration.designerPhone);
+	$("#houseAddr").html(decoration.house.village.cityProper.name + decoration.house.village.name + decoration.house.houseNumber);
+	$("#houseArea").html(decoration.houseArea);
+	$("#freeArea").html(decoration.freeArea);
+	$("#totalArea").html(parseFloat(decoration.houseArea) + parseFloat(decoration.freeArea));
 	
 });

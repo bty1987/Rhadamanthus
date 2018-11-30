@@ -4,7 +4,7 @@ jQuery(function($) {
     var displayFunc  = (function(){
 
         var renderList = function(tableId,listData){
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if(listData && listData.length){
@@ -30,7 +30,7 @@ jQuery(function($) {
             var propertyArr = [
                 ["编号:", v.userId, "grey"],
                 ["用户名:", v.loginId, "grey"],
-                ["部门:", v.dept.deptName, "grey"],
+                ["部门:", v.dept.name, "grey"],
                 ["职位:", v.duty.name, "grey"],
                 ["角色:", v.role.name, "grey"],
                 ["电话:", v.phone, "grey"]
@@ -56,7 +56,7 @@ jQuery(function($) {
 
         return {
             init : function(tableId,listData){
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
             },
             drawLine : function(v){

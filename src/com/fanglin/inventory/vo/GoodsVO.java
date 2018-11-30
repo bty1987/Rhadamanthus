@@ -41,7 +41,7 @@ public class GoodsVO implements java.io.Serializable {
 	}
 
 	public Long getGid() {
-		return this.gid;
+		return gid;
 	}
 
 	public void setGid(Long gid) {
@@ -49,7 +49,7 @@ public class GoodsVO implements java.io.Serializable {
 	}
 
 	public String getNo() {
-		return this.no;
+		return no;
 	}
 
 	public void setNo(String no) {
@@ -57,15 +57,23 @@ public class GoodsVO implements java.io.Serializable {
 	}
 
 	public String getName() {
-		return this.name;
+		return name;
 	}
 
 	public void setName(String name) {
 		this.name = name;
 	}
 
+	public String getPinyin() {
+		return pinyin;
+	}
+
+	public void setPinyin(String pinyin) {
+		this.pinyin = pinyin;
+	}
+
 	public String getBarcode() {
-		return this.barcode;
+		return barcode;
 	}
 
 	public void setBarcode(String barcode) {
@@ -73,7 +81,7 @@ public class GoodsVO implements java.io.Serializable {
 	}
 
 	public String getCategory() {
-		return this.category;
+		return category;
 	}
 
 	public void setCategory(String category) {
@@ -97,7 +105,7 @@ public class GoodsVO implements java.io.Serializable {
 	}
 
 	public String getMeasurementUnit() {
-		return this.measurementUnit;
+		return measurementUnit;
 	}
 
 	public void setMeasurementUnit(String measurementUnit) {
@@ -112,14 +120,6 @@ public class GoodsVO implements java.io.Serializable {
 		this.pieceNum = pieceNum;
 	}
 
-	public Short getStatus() {
-		return this.status;
-	}
-
-	public void setStatus(Short status) {
-		this.status = status;
-	}
-
 	public AccessoriesTypeVO getAccessoriesType() {
 		return accessoriesType;
 	}
@@ -128,20 +128,20 @@ public class GoodsVO implements java.io.Serializable {
 		this.accessoriesType = accessoriesType;
 	}
 
-	public String getPinyin() {
-		return pinyin;
-	}
-
-	public void setPinyin(String pinyin) {
-		this.pinyin = pinyin;
-	}
-
 	public Short getType() {
 		return type;
 	}
 
 	public void setType(Short type) {
 		this.type = type;
+	}
+
+	public Short getStatus() {
+		return status;
+	}
+
+	public void setStatus(Short status) {
+		this.status = status;
 	}
 
 }

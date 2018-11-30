@@ -199,6 +199,21 @@ public class QuotationFunctionAreaItemPO implements Serializable {
 	public void setIndex(int index) {
 		this.index = index;
 	}
+	
+	public void ptp(QuotetionFunctionAreaItemPO quotetionFunctionAreaItemPO){
+		this.setItemName(quotetionFunctionAreaItemPO.getName());
+		this.setUnitPrice(quotetionFunctionAreaItemPO.getUnitPrice());
+		this.setIndex(quotetionFunctionAreaItemPO.getIndex());
+		this.setInitNum(quotetionFunctionAreaItemPO.getNum());
+		this.setFormula(quotetionFunctionAreaItemPO.getFormula());
+		this.setNum(quotetionFunctionAreaItemPO.getNum());
+		this.setType(quotetionFunctionAreaItemPO.getType());
+		this.setSubtype(quotetionFunctionAreaItemPO.getSubtype());
+		this.setMeasurementUnit(quotetionFunctionAreaItemPO.getMeasurementUnit());
+		this.setWorkType(quotetionFunctionAreaItemPO.getWorkType());
+		this.setDiscount(quotetionFunctionAreaItemPO.getDiscount());
+		this.setContent(quotetionFunctionAreaItemPO.getContent());
+	}
 
 	public static String quotationFunctionAreaItemTable(Long quotationFunctionAreaId,Integer div) {
 		

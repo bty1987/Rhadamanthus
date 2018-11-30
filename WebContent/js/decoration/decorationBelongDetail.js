@@ -11,35 +11,35 @@ jQuery(function($) {
 		lastEditId:-1
 	};
 	
-	$('#fl-statement').statement("订单归属", "归属详细信息");
+	com.focusPage('#fl-statement').statement("订单归属", "归属详细信息");
 	
 	decorationBelong.decorationOrderID = params.orderId;
 	decorationBelong.type = params.orderBelongType;
 	
 	com.initChosen('belongUserId', api.personel.queryUserByPinyin, "pinyinName", {"user.status":0,"departmentType.name":""},'autoFillKeyValue','key','value').on("change",function(e){
-		if($("#belongUserId").val() == null || $("#belongUserId").val() == ""){
+		if(com.focusPage("#belongUserId").val() == null || com.focusPage("#belongUserId").val() == ""){
 			return;
 		}
 		
-		com.post(api.personel.queryUserByUserId, {"user.userId":$("#belongUserId").val()}, function(res){
-			$("#belongUser").val(res.user.currentName);
-			$("#belongDept").val(res.user.dept.deptName);
-			$("#belongRegion").val(res.user.dept.fatherDept.deptName);
-			$("#belongDeptId").val(res.user.dept.deptId);
-			$("#belongRegionId").val(res.user.dept.fatherDept.deptId);
+		com.post(api.personel.queryUserByUserId, {"user.userId":com.focusPage("#belongUserId").val()}, function(res){
+			com.focusPage("#belongUser").val(res.user.currentName);
+			com.focusPage("#belongDept").val(res.user.dept.neame);
+			com.focusPage("#belongRegion").val(res.user.dept.fatherDept.name);
+			com.focusPage("#belongDeptId").val(res.user.dept.no);
+			com.focusPage("#belongRegionId").val(res.user.dept.fatherDept.no);
 		});
 	});
 	
-	$("#defaultFlag").switchBtn("isOrNot");
-	$("#updateDefaultFlag").switchBtn("isOrNot");
+	com.focusPage("#defaultFlag").switchBtn("isOrNot");
+	com.focusPage("#updateDefaultFlag").switchBtn("isOrNot");
 	
-	$('#detailBckBtn').on(ace.click_event, function(){
+	com.focusPage('#detailBckBtn').on(ace.click_event, function(){
 		com.switchPage(api.index.decorationBelongIndex.url);
 	});
 	
-	$('#saveBelongInfoBtn').on(ace.click_event, saveOrderBelongInfo);
+	com.focusPage('#saveBelongInfoBtn').on(ace.click_event, saveOrderBelongInfo);
 		
-	$("#addNewUserBtn").on(ace.click_event, function(event){
+	com.focusPage("#addNewUserBtn").on(ace.click_event, function(event){
 		com.clearValidator();
 		
 		if(com.validate("addUserModal"))
@@ -50,21 +50,21 @@ jQuery(function($) {
 		addRow.belonger = {};
 		addRow.department = {};
         addRow.region = {};
-		addRow.belonger.userId = $("#belongUserId").val();
-		addRow.belonger.currentName = $("#belongUser").val();
-		addRow.department.deptName = $("#belongDept").val();
-		addRow.region.deptName = $("#belongRegion").val();
-		addRow.rate = $("#belongRate").val();
-		addRow.department.deptId = $("#belongDeptId").val();
-		addRow.region.deptId = $("#belongRegionId").val();
-		addRow.defaultFlag = com.isOrNotType[$("#defaultFlag").prop("checked")];
+		addRow.belonger.userId = com.focusPage("#belongUserId").val();
+		addRow.belonger.currentName = com.focusPage("#belongUser").val();
+		addRow.department.deptName = com.focusPage("#belongDept").val();
+		addRow.region.deptName = com.focusPage("#belongRegion").val();
+		addRow.rate = com.focusPage("#belongRate").val();
+		addRow.department.deptId = com.focusPage("#belongDeptId").val();
+		addRow.region.deptId = com.focusPage("#belongRegionId").val();
+		addRow.defaultFlag = com.isOrNotType[com.focusPage("#defaultFlag").prop("checked")];
 		
 		if(!/^(0\.\d{1,2})|1|0$/.test(addRow.rate)){
 			bootbox.alert("分配比例输入错误 , 为0到1之间的小数");
 			return false;
 		}
 		
-		var belongInfos = $('.item-orange');
+		var belongInfos = com.focusPage('.item-orange');
 		
 		for(var i=0;i<belongInfos.length;i++){
 			var $v = $(belongInfos[i]);
@@ -75,21 +75,21 @@ jQuery(function($) {
 			}
 		}
 		
-		$('#resultList').append(displayFunc(addRow));
+		com.focusPage('#resultList').append(displayFunc(addRow));
 		
 		changeItem();
 		
 		return false;
 	});
 	
-	$("#cApproveSaveBtn").on("click", function(){
+	com.focusPage("#cApproveSaveBtn").on("click", function(){
 		com.clearValidator();
 		
 		if(com.validate("approveModal")){
 			return;
 		}
 
-		var receiverId = $("#approveManSel").find('input:checked').attr('userid');
+		var receiverId = com.focusPage("#approveManSel").find('input:checked').attr('userid');
 
 		if(receiverId == null || receiverId == ""){
 			com.showAlert(com.error,"请选择审批人!");
@@ -102,7 +102,7 @@ jQuery(function($) {
 		var rate = 0;
 		var defaultCount = 0;
 		
-		$.each($('.item-orange'), function(i, v){
+		$.each(com.focusPage('.item-orange'), function(i, v){
 			
 			var $v = $(v);
 			
@@ -136,32 +136,32 @@ jQuery(function($) {
 		options["approvalDecorationBelong.belongType"] = decorationBelong.type;
 		
 		options["approval.receiver.userId"] = receiverId;
-		options["approval.comment"] = $("#changeReason").val();
+		options["approval.comment"] = com.focusPage("#changeReason").val();
 		
 		com.post(api.approval.submitApprovalForDecorationBelong, options, function(res){
 			com.showAlert(com.info, "操作成功");
 			com.switchPage(api.index.decorationBelongIndex.url);
 		});
 		
-		$("#approveModal").modal("hide");
+		com.focusPage("#approveModal").modal("hide");
 	});
 	
-	$('#updateBtn').on('click', function(){
+	com.focusPage('#updateBtn').on('click', function(){
 		com.clearValidator();
 		
 		if(com.validate("updateModal")){
 			return;
 		}
 		
-		var rate = $('#updateBelongRate').val();
-		var flag = com.isOrNotType[$("#updateDefaultFlag").prop("checked")];
+		var rate = com.focusPage('#updateBelongRate').val();
+		var flag = com.isOrNotType[com.focusPage("#updateDefaultFlag").prop("checked")];
 		
 		if(!/^(0\.\d{1,2})|1|0$/.test(rate)){
 			bootbox.alert("分配比例输入错误 , 为0到1之间的小数");
 			return false;
 		}
 		
-		var $e = $('#' + decorationBelong.belongUserId);
+		var $e = com.focusPage('#' + decorationBelong.belongUserId);
 
 		$e.attr('belongrate', rate);
 		$e.attr('defaultflag', flag);
@@ -169,8 +169,8 @@ jQuery(function($) {
 		$e.find('li :eq(7)').text(rate);
 		$e.find('li :eq(9)').text(flag);
 		
-		$('#updateModal').modal('hide');
-	})
+		com.focusPage('#updateModal').modal('hide');
+	});
 	
 	function displayFunc(v){
 		var $liLine = $('<li></li>').addClass('item-orange clearfix');
@@ -185,8 +185,8 @@ jQuery(function($) {
 		
 		var propertyArr = [
 			["员工编号:", v.belonger.userId, "grey"],
-			["所属部门:", v.department.deptName, "grey"],
-			["所属大区:", v.region.deptName, "grey"],
+			["所属部门:", v.department.name, "grey"],
+			["所属大区:", v.region.name, "grey"],
 			["分配比例:", v.rate, "blue"],
 			["默认:", v.defaultFlag == 1 ? '是' : '否', "red"]
 		];
@@ -217,35 +217,35 @@ jQuery(function($) {
 	function dialogUpdate(belongUserId){
 		decorationBelong.belongUserId = belongUserId;
 		
-		var $info = $('#' + belongUserId);
+		var $info = com.focusPage('#' + belongUserId);
 		
-		$('#updateBelongRate').val($info.attr('belongrate'));
+		com.focusPage('#updateBelongRate').val($info.attr('belongrate'));
 		
-		$('#updateModal').modal('show');
+		com.focusPage('#updateModal').modal('show');
 	}
 	
 	function delRow(id){
-		$('#' + id).remove();
+		com.focusPage('#' + id).remove();
 	}
 	
 	function changeItem(){
 		com.updateChosen('belongUserId', '', '');
-		$('#belongRate').val(0);
+		com.focusPage('#belongRate').val(0);
 	}
 
 	function saveOrderBelongInfo(){
-		$("#changeReason").val("");
+		com.focusPage("#changeReason").val("");
 
 		approvalUtils.initqueryApprovalUser("approveManSel",3);
 		
-		$("#approveModal").modal("show");	
+		com.focusPage("#approveModal").modal("show");
 	}
 	
 	var url = decorationBelong.type == 0 ? api.decoration.queryDecorationBelongForDesignAChangeByOrderId : api.decoration.queryDecorationBelongForBusinessnAChangeByOrderId;
 	
 	com.post(url, {"decorationBelong.orderId":decorationBelong.decorationOrderID}, function(res){
 
-		var $resultList = $('#resultList').html('');
+		var $resultList = com.focusPage('#resultList').html('');
 		var decorationBelongs = res.decorationBelongs;
 		
 		if(decorationBelongs && decorationBelongs.length > 0){

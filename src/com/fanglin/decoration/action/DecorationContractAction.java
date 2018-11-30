@@ -50,7 +50,7 @@ public class DecorationContractAction extends BaseListAction {
 	@Action(value = "saveDecorationContract", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String saveDecorationContract() throws FLException{
 		
-		decorationContractService.saveDecorationContract(decorationContract);
+		decorationContractService.saveDecorationContract(decorationContract, queryCompany());
 		
 		return SUCCESS;
 	}

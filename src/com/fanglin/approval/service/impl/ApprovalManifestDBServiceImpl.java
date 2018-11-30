@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.fastjson.JSONObject;
 import com.fanglin.approval.dao.ApprovalDao;
 import com.fanglin.approval.dao.ApprovalManifestDBDao;
 import com.fanglin.approval.dao.ApprovalManifestDBItemDao;
@@ -22,6 +23,7 @@ import com.fanglin.approval.vo.ApprovalVO;
 import com.fanglin.common.po.CountingPO;
 import com.fanglin.common.service.CountingService;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.dingding.service.ApprovalService;
 import com.fanglin.inventory.dao.ManifestDao;
 import com.fanglin.inventory.dao.ManifestItemDao;
 import com.fanglin.inventory.po.ColorPO;
@@ -39,7 +41,9 @@ import com.fanglin.inventory.vo.StorehouseVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.system.dao.CompanyDao;
+import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.system.po.CompanyPO;
+import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
@@ -79,6 +83,11 @@ public class ApprovalManifestDBServiceImpl implements ApprovalManifestDBService 
 	@Autowired
 	private StorehouseStockService storehouseStockService;
 	
+	@Autowired
+	private SystemConfigDao systemConfigDao;
+	
+	@Autowired
+	private ApprovalService approvalDDService;
 
 	@Override
 	public List<ApprovalManifestDBItemVO> queryApprovalManifestDBItem (ApprovalVO approvalVO) throws FLException {
@@ -128,8 +137,18 @@ public class ApprovalManifestDBServiceImpl implements ApprovalManifestDBService 
         UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiver().getUserId());
 		UserPO sender = userDao.queryUserByUserId(userId);
 		
+		SystemConfigPO systemConfigPO = systemConfigDao.querySystemConfig(ApprovalPO.APPROVAL_SYSTEMCONFIG_MANIFESTDB_STR,company);
+		
+		if(systemConfigPO == null){
+			approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_INIT_INT);
+		}else{
+			approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_DINGDING_INT);
+			List<JSONObject> formComponentValues = approvalDDService.getForms("说明", approvalManifestDBVO.getComment());
+			String processinstanceid = approvalDDService.initiateApproval(systemConfigPO.getValue(), userId, approvalVO.getReceiver().getUserId(), null, null, formComponentValues, company);
+			approvalPO.setProcessinstanceid(processinstanceid);
+		}
+		
 		approvalPO.setType(ApprovalPO.APPROVAL_TYPE_MANIFESTDB_INT);
-		approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_INIT_INT);  
 		approvalPO.setIdent("");
 		approvalPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		approvalPO.setApprovalTime(DateUtil.getDateToTimestamp(new Date()));

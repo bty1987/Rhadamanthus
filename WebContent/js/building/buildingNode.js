@@ -1,6 +1,5 @@
 
 jQuery(function($) {
-
 	var buildingNodeType = {};
 	var buildingNode = {
 		saveBtn: null,
@@ -9,19 +8,19 @@ jQuery(function($) {
 		modal: null,
 		items:{},
 		editFlg: false,
-		nodeId: null,
+		nodeId: null
 	};
 
-	buildingNode.saveBtn = $("#saveBtn").on("click", saveData);
-	buildingNode.cancelBtn = $("#cancelBtn");
-	buildingNode.viewDeployedBtn = $("#viewDeployedBtn").on("click", updateNodeName);
+	buildingNode.saveBtn = com.focusPage("#saveBtn").on("click", saveData);
+	buildingNode.cancelBtn = com.focusPage("#cancelBtn");
+	buildingNode.viewDeployedBtn = com.focusPage("#viewDeployedBtn").on("click", updateNodeName);
 
-	buildingNode.items.buildingNodeName = $("#buildingNodeName");
-	buildingNode.items.buildingNodeType = $("#buildingNodeType");
+	buildingNode.items.buildingNodeName = com.focusPage("#buildingNodeName");
+	buildingNode.items.buildingNodeType = com.focusPage("#buildingNodeType");
 
-	buildingNode.items.nodeName = $("#nodeName");
+	buildingNode.items.nodeName = com.focusPage("#nodeName");
 
-	buildingNode.modal = $("#buildingNodeModal");
+	buildingNode.modal = com.focusPage("#buildingNodeModal");
 	buildingNode.modal.on('show.bs.modal',function(e){
 		com.clearValidator();
 	});
@@ -29,7 +28,7 @@ jQuery(function($) {
 	$.extend(com.validator, buildingNode.validator);
 	
 	com.post(api.ds.building, {}, function(res){
-        $("#buildingNodeType").bindData(res.payType, "key", "value");
+        com.focusPage("#buildingNodeType").bindData(res.payType, "key", "value");
         $.each(res.payType,function (i,val) {
         	buildingNodeType[val.key] = val.value;
         });
@@ -38,7 +37,7 @@ jQuery(function($) {
 	var displayFunc  = (function(){
 
 		var renderList = function(tableId, listData){
-			var $tableWrap = $('#' + tableId);
+			var $tableWrap = com.focusPage('#' + tableId);
 			var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
 			if(listData && listData.length){
@@ -64,7 +63,7 @@ jQuery(function($) {
 
 			var propertyArr = [
 				["节点类型:", buildingNodeType[v.type], "red"],
-				["节点名称:", v.name, "grey"],
+				["节点名称:", v.name, "grey"]
             ];
 
             $.each(propertyArr, function(index,value) {
@@ -81,7 +80,7 @@ jQuery(function($) {
 			$btnView.click(function(){
 				buildingNode.nodeId = v.bnid;
 				com.cleanItems(buildingNode.items);
-				$("#viewBuildingNodeModal").modal("show");
+				com.focusPage("#viewBuildingNodeModal").modal("show");
 			});
 
 			//启禁用
@@ -100,7 +99,7 @@ jQuery(function($) {
 
 		return {
 			init : function(tableId,listData){
-				$('#' + tableId).html(null);
+				com.focusPage('#' + tableId).html(null);
 				renderList(tableId,listData);
 			},
 			drawLine : function(v){
@@ -125,9 +124,9 @@ jQuery(function($) {
 	});
 
 	//添加
-	$('a[name="addBuildingNode"]', '#pagenation').click(function(){
+	com.focusPage('a[name="addBuildingNode"]', '#pagenation').click(function(){
 		com.cleanItems(buildingNode.items);
-		$("#buildingNodeModal").modal("show");
+		com.focusPage("#buildingNodeModal").modal("show");
 	});
 
 	function updateNodeStatus(bnId, cvalue){
@@ -148,7 +147,7 @@ jQuery(function($) {
 		var url;
 		var options = {
 			'buildingNode.name': buildingNode.items.buildingNodeName.val(),
-			'buildingNode.type': buildingNode.items.buildingNodeType.val(),
+			'buildingNode.type': buildingNode.items.buildingNodeType.val()
 		};
 
 		url = api.building.addBuildingNode;
@@ -170,7 +169,7 @@ jQuery(function($) {
 		options["buildingNode.name"] = buildingNode.items.nodeName.val();
 		com.post(api.building.updateBuildingNode, options, function(res){
 			searcher.doSearch();
-			$("#viewBuildingNodeModal").modal("hide");
+			com.focusPage("#viewBuildingNodeModal").modal("hide");
 		});
 	}
 });

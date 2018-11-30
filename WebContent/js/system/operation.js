@@ -41,7 +41,7 @@ $(function(){
 
         return {
             renderList : function(listData, tableId){
-                var $tableWrap = $('#' + tableId).empty();
+                var $tableWrap = com.focusPage('#' + tableId).empty();
                 if(listData && listData.length){
 
                     var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
@@ -70,25 +70,25 @@ $(function(){
 
     var operation = {
 
-        modal : $('#operationModal').on("show.bs.modal", function(a) {
+        modal : com.focusPage('#operationModal').on("show.bs.modal", function(a) {
             com.clearValidator();
             com.clearValidator("#materialModelName", !0);
             com.clearValidator("#materialModelNo", !0)
         }),
-        btnAdd : $('#addModule').click(function(){
-            $('#operationModal').modal("show");
+        btnAdd : com.focusPage('#addModule').click(function(){
+            com.focusPage('#operationModal').modal("show");
         }),
-        saveBtn: $("#saveBtn").on("click", saveData),
+        saveBtn: com.focusPage("#saveBtn").on("click", saveData),
         operationModalItems : {
-            operation  : $('#operation'),
-            operationName : $('#operationName'),
-            fatherModule : $('#fatherModule').typeahead({
+            operation  : com.focusPage('#operation'),
+            operationName : com.focusPage('#operationName'),
+            fatherModule : com.focusPage('#fatherModule').typeahead({
 
                 list: [],
                 source: function (query, process) {
 
 
-                    var level = $('#level').val() - 1;
+                    var level = com.focusPage('#level').val() - 1;
 
                     var result = $.map(fatherModuleArr, function(val){
                         return val.name.indexOf(query) == -1 ? null : val;

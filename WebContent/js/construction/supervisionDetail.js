@@ -18,15 +18,15 @@ jQuery(function ($) {
             "6": false,
             "7": false,
             "8": false,
-            "9": false,
+            "9": false
         },
         validator: {
             salary: {
                 type: "v_salary",
                 regex: /^-?(([1-9]\d{0,6})|(([1-9]\d{0,6}\.\d{1,3})|(0\.[1-9]{1,3})))$/,
                 errorMsg: "请正确输入工人工费，小数点后最多保留3位"
-            },
-        },
+            }
+        }
     };
 
     var colorboxArgs = {
@@ -39,7 +39,7 @@ jQuery(function ($) {
         current: '{current} of {total}',
         maxWidth: '100%',
         maxHeight: '100%'
-    }
+    };
 
     $.extend(com.validator, supervisionDetail.validator);
     var orderId = params.orderId;
@@ -69,10 +69,10 @@ jQuery(function ($) {
         var stepnum = constructionSchedule[0].schedule;
         initWizardSept(stepnum, stepnum);
 
-        $('#fuelux-wizard').ace_wizard({status: true}).on('finished', function (e) {
+        com.focusPage('#fuelux-wizard').ace_wizard({status: true}).on('finished', function (e) {
             com.showAlert(com.info, "工程已经结束,之后可以进行验收工作!");
         }).on('stepclick', function (e, info) {
-            var stepId = $("[flag]").eq(info.step - 1).attr("id");
+            var stepId = com.focusPage("[flag]").eq(info.step - 1).attr("id");
             var sd = stepId.substring(4);
             if (!supervisionDetail.wizardSept[sd]) {
                 initWizardSept(sd, sd);
@@ -80,11 +80,11 @@ jQuery(function ($) {
         });
     }, null, false);
 
-    $('#modal-wizard .modal-header').ace_wizard();
-    $('#modal-wizard .wizard-actions .btn[data-dismiss=modal]').removeAttr('disabled');
-    $('[data-rel=popover]').popover({html: true});
+    com.focusPage('#modal-wizard .modal-header').ace_wizard();
+    com.focusPage('#modal-wizard .wizard-actions .btn[data-dismiss=modal]').removeAttr('disabled');
+    com.focusPage('[data-rel=popover]').popover({html: true});
 
-    $('#btnBack').on(ace.click_event, function () {
+    com.focusPage('#btnBack').on(ace.click_event, function () {
         com.switchPage(api.index.supervisionIndex.url);
     });
 
@@ -105,8 +105,8 @@ jQuery(function ($) {
             supervisionDetail["constructionSchedule.csId"] = element[0].csId;
 
             if (schedule == element[0].schedule) {
-                $("#" + operate + "StartTime").val(element[0].startTime);
-                $("#" + operate + "EndTime").val(element[0].endTime);
+                com.focusPage("#" + operate + "StartTime").val(element[0].startTime);
+                com.focusPage("#" + operate + "EndTime").val(element[0].endTime);
 
                 var otherename = schedule;
                 var otherStatus = res.constructionSchedules[0].status;
@@ -130,7 +130,7 @@ jQuery(function ($) {
             com.post(api.construction.queryConstructionDrawingByCid, options, function (res) {
                 var drawings = res.constructionDrawings;
 
-                $("#" + operate + "Gallery").html("");
+                com.focusPage("#" + operate + "Gallery").html("");
 
                 for (var i = 0; i < drawings.length; i++) {
                     var drawing = drawings[i];
@@ -142,19 +142,19 @@ jQuery(function ($) {
                 }
             });
             initUploadBtn(operate, element, constructionNodes["num" + schedule]);
-            $('#' + operate + "Drawing").removeClass("active");
+            com.focusPage('#' + operate + "Drawing").removeClass("active");
 
-            if ($('#' + operate + "NavTab" + ' li:last-of-type').hasClass("active")) {
-                $('#' + operate + "Drawing").addClass("active");
+            if (com.focusPage('#' + operate + "NavTab" + ' li:last-of-type').hasClass("active")) {
+                com.focusPage('#' + operate + "Drawing").addClass("active");
             }
             return false;
         });
-    };
+    }
 
     //上传图片
     function initUploadBtn(operate, ele, eleschedule) {
 
-        $("#" + operate + "Upload").html("").Huploadify({
+        com.focusPage("#" + operate + "Upload").html("").Huploadify({
             'debug': false, // 开启调试
             'auto': true, // 是否自动上传
             'successTimeout': 150, // 超时时间
@@ -183,6 +183,7 @@ jQuery(function ($) {
                     options["constructionDrawing.drawingName"] = "";
                     options["constructionDrawing.drawingUrl"] = dateObj.resUrl;
                     options["constructionDrawing.drawingAddUrl"] = "";
+                    options["constructionDrawing.type"] = 0;
 
                     options["constructionDrawing.schedule"] = eleschedule;
 
@@ -195,12 +196,12 @@ jQuery(function ($) {
                 }
             }
         });
-    };
+    }
 
     //追加图库元素
     function appendGalleryElement(galleryId, imgId, imgUrl, type, editUrl, deleteUrl) {
 
-        var gallery = $("#" + galleryId);
+        var gallery = com.focusPage("#" + galleryId);
         var imgLi = $("<li></li>").attr("id", "gallery_li" + imgId).addClass("col-xs-2 text-center").css("border-color", "#ddd").appendTo(gallery);
         var img = $('<img />');
         var imgA = $("<a></a>").attr("href", com.showImg(img, imgUrl, 150, 150, '150x150', null, type)).attr("data-rel", "colorbox").css("height", "150px").append(img).appendTo(imgLi);
@@ -210,12 +211,12 @@ jQuery(function ($) {
             options["constructionDrawing.cdId"] = imgId;
 
             com.post(deleteUrl, options, function (res) {
-                $("#gallery_li" + imgId).remove();
+                com.focusPage("#gallery_li" + imgId).remove();
             });
         }).appendTo(toolsDiv);
         $("<i></i>").addClass("icon-remove red").appendTo(toolsA);
         imgA.colorbox(colorboxArgs);
-    };
+    }
 
     function _show_WorkerSalary(_index, csids) {
         //获得对应位置的工人
@@ -223,7 +224,7 @@ jQuery(function ($) {
 
         var options = {
             "workerSalary.csid": csids,
-            "workerSalary.user.userId": workerInfo.user.userId,
+            "workerSalary.user.userId": workerInfo.user.userId
         };
         queryConstructerSalary(options);
     }
@@ -231,7 +232,7 @@ jQuery(function ($) {
     //查询施工人员
     function queryConstructer(operate, res, csids) {
         constructionScheduleWorkers = res.constructers;
-        $("#" + operate + "WorkerInfos").html("");
+        com.focusPage("#" + operate + "WorkerInfos").html("");
         if (constructionScheduleWorkers.length != 0) {
             //迭代所有的工人
             for (var i = 0; i < constructionScheduleWorkers.length; i++) {
@@ -254,19 +255,19 @@ jQuery(function ($) {
                 buttonSpan.click(function () {
                     _show_WorkerSalary(this._index, csids);
                 });
-                profileDiv.appendTo($("#" + operate + "WorkerInfos"));
+                profileDiv.appendTo(com.focusPage("#" + operate + "WorkerInfos"));
             }
             return true;
         } else {
-            $('<div class="alert alert-info">').text("当前进度没有分配工人!").appendTo($("#" + operate + "WorkerInfos"));
+            $('<div class="alert alert-info">').text("当前进度没有分配工人!").appendTo(com.focusPage("#" + operate + "WorkerInfos"));
             return false;
         }
-    };
+    }
 
     //查询工人工费
     function queryConstructerSalary(options) {
-        if ($('#workerSalaryList').children()) {
-            $('#workerSalaryList').empty();
+        if (com.focusPage('#workerSalaryList').children()) {
+            com.focusPage('#workerSalaryList').empty();
         }
         com.post(api.salary.queryWorkerSalary, options, function (res) {
             $.each(res.workerSalarys, function (i, v) {
@@ -278,10 +279,10 @@ jQuery(function ($) {
 
                 switch (v.status) {
                     case 0:
-                        vstatus = "初始"
+                        vstatus = "初始";
                         break;
                     case 1:
-                        vstatus = "通过"
+                        vstatus = "通过";
                         break;
                     default:
                         vstatus = "拒绝"
@@ -296,17 +297,17 @@ jQuery(function ($) {
                     .append($('<button>删除</button>').addClass("btn btn-xs btn-danger pull-right").css("margin-left", "35px").attr("id", "deleteBtn" + i)
                         .click(function () {
                             var data = {
-                                "workerSalary.wsId": v.wsId,
+                                "workerSalary.wsId": v.wsId
                             };
                             com.post(api.salary.deleteWorkerSalary, data, function () {
-                                $("#salary" + i).remove();
+                                com.focusPage("#salary" + i).remove();
                             }, function (res) {
                                 com.showAlert(com.error, "工费状态不可操作!");
                             });
                         }))
                     .append('<hr/>');
-                workerSalary.appendTo($("#workerSalaryList"))
-            })
+                workerSalary.appendTo(com.focusPage("#workerSalaryList"))
+            });
 
             var salaryDiv = $('<div></div>').addClass("form-group").css("height", "50px").css("margin-bottom", "0px");
             var salaryDivT = $('<div></div>').addClass("col-sm-9").appendTo(salaryDiv);
@@ -339,12 +340,12 @@ jQuery(function ($) {
                 .click(function () {
                     saveData(options)
                 });
-            salaryDiv.appendTo($("#workerSalaryList"));
-            salaryDiv3.appendTo($("#workerSalaryList"));
-            salaryDiv4.appendTo($("#workerSalaryList"));
-            $('#guaranteeModal').modal('show');
+            salaryDiv.appendTo(com.focusPage("#workerSalaryList"));
+            salaryDiv3.appendTo(com.focusPage("#workerSalaryList"));
+            salaryDiv4.appendTo(com.focusPage("#workerSalaryList"));
+            com.focusPage('#guaranteeModal').modal('show');
         }, null, false)
-    };
+    }
 
     function addspan(px, name, value) {
         var $10pxdiv = $('<div></div>').css({
@@ -363,7 +364,7 @@ jQuery(function ($) {
         } else if (px == '10') {
             return $10pxdiv.append($nameSpan).append($valueSpan);
         }
-    };
+    }
 
     //添加工人工费
     function saveData(options) {
@@ -374,27 +375,27 @@ jQuery(function ($) {
             return;
         }
 
-        var salary = $('#salary').val();
+        var salary = com.focusPage('#salary').val();
         if (salary >= 0) {
             options["workerSalary.type"] = 0;
         } else {
             options["workerSalary.type"] = 1;
         }
 
-        options["workerSalary.salary"] = $('#salary').val();
-        options["workerSalary.subtype"] = $("#salaryType").val();
-        options["workerSalary.comment"] = $("#comment").val();
+        options["workerSalary.salary"] = com.focusPage('#salary').val();
+        options["workerSalary.subtype"] = com.focusPage("#salaryType").val();
+        options["workerSalary.comment"] = com.focusPage("#comment").val();
 
         com.post(url, options);
-        $('#guaranteeModal').modal('hide');
-    };
+        com.focusPage('#guaranteeModal').modal('hide');
+    }
 
     //画节点信息轴
     function constructionNode(stepul, schedule) {
         var stepLi = $("<li></li>").attr("data-targe", "#step" + schedule).addClass("complete").appendTo(stepul);
         var stepSpan = $("<span></span>").addClass("step").html(schedule).appendTo(stepLi);
         var stepSpan = $("<span></span>").addClass("title").html(constructionNodes[schedule]).appendTo(stepLi);
-    };
+    }
 
     //画节点下面的面板
     function constructionPane(paneId, schedule, scheduleNameNum) {
@@ -464,7 +465,7 @@ jQuery(function ($) {
 
         var paneDrawingRowT = $("<div></div>").addClass("row").appendTo(paneDrawing);
         var paneDrawingRowTOne = $("<div></div>").addClass("hr hr32 hr-dotted").appendTo(paneDrawingRowT);
-        var paneDrawingRowTTwo = $("<div></div>").addClass("col-xs-12").appendTo(paneDrawingRowT)
+        var paneDrawingRowTTwo = $("<div></div>").addClass("col-xs-12").appendTo(paneDrawingRowT);
         var paneDrawingRowTh = $("<div></div>").addClass("pull-left inline").appendTo(paneDrawingRowTTwo);
         var paneDrawingRowFour = $("<div></div>").attr("id", scheduleNameNum + "Upload").appendTo(paneDrawingRowTh);
         var paneDrawingRowInp = $("<input />").attr("type", "text").addClass("hidden").attr("id", "picture").appendTo(paneDrawingRowTh);
@@ -479,16 +480,16 @@ jQuery(function ($) {
     function addActive(schedule) {
         var con = supervisionDetail.constructionSchedules;
         $.each(con, function (i, v) {
-            $("#step" + v.schedule).removeClass("active");
-            $("#step" + v.schedule).addClass("step-pane");
+            com.focusPage("#step" + v.schedule).removeClass("active");
+            com.focusPage("#step" + v.schedule).addClass("step-pane");
         });
-        $("#step" + schedule).removeClass("step-pane");
-        $("#step" + schedule).addClass("active");
+        com.focusPage("#step" + schedule).removeClass("step-pane");
+        com.focusPage("#step" + schedule).addClass("active");
     }
 
     function updatastatusDiv(Status, statusDiv) {
 
-        var statusDiv = $("#" + statusDiv + "Status").html("");
+        var statusDiv = com.focusPage("#" + statusDiv + "Status").html("");
         if (Status == 1) {
             $("<span></span>").addClass("label label-success col-sm-1").text("完结").appendTo(statusDiv);
         } else {

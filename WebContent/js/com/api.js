@@ -28,13 +28,11 @@ var Api = function(){
 
             var dtd = $.Deferred();
 
-            /*fillApi(path + 'addReduce.js');*/
             fillApi(path + 'approval.js');
             fillApi(path + 'common.js');
             fillApi(path + 'construction.js');
             fillApi(path + 'data.js');
             fillApi(path + 'decoration.js');
-            /*fillApi(path + 'department.js');*/
             fillApi(path + 'dingding.js');
             fillApi(path + 'drawline.js');
             fillApi(path + 'information.js');
@@ -48,7 +46,6 @@ var Api = function(){
             fillApi(path + 'right.js');
             fillApi(path + 'salary.js');
             fillApi(path + 'system.js');
-			//fillApi(path + 'upgrade.js');
 			fillApi(path + 'member.js');
 			fillApi(path + 'production.js');
             fillApi(path + 'ds.js');
@@ -56,9 +53,8 @@ var Api = function(){
             fillApi(path + 'communion.js');
             fillApi(path + 'customer.js');
 			fillApi(path + 'store.js');
-			fillApi(path + 'ehouse.js');
+			fillApi(path + 'market.js');
             return dtd.promise();
         }
     }
-
-}
+};

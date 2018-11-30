@@ -7,54 +7,52 @@ import org.apache.struts2.json.annotations.JSON;
 
 import com.fanglin.personel.vo.UserBaseVO;
 
-public class ServiceReceiptVO  implements Serializable{
+public class ServiceReceiptVO implements Serializable {
 
 	private static final long serialVersionUID = 1851130876530178256L;
 
-	private Long srId;        			
-	
+	private Long srId;
+
 	private UserBaseVO collecter;
-	
+
 	private UserBaseVO confirmer;
-	
+
 	private Timestamp collectTime;
-	
+
 	private Timestamp confirmTime;
-	
-	private Float realMoney;
-	
-	private Float cash;                
-	
-	private String cashInfo;           
-	
-	private Float bank;                
-	
-	private String bankInfo;           
-	
-	private Float checkv;              
-	
-	private String checkvBank;         
-	
-	private Float installment;        
-	
-	private String installBank;       
-	
-	private Float accounts;            
-	
-	private String accountsBank;       
-	
-	private String comment;               
-	
+
+	private Float cash;
+
+	private String cashInfo;
+
+	private Float bank;
+
+	private String bankInfo;
+
+	private Float checkv;
+
+	private String checkvBank;
+
+	private Float installment;
+
+	private String installBank;
+
+	private Float accounts;
+
+	private String accountsBank;
+
+	private String comment;
+
 	public ServiceReceiptVO() {
 		super();
 	}
-	
+
 	public ServiceReceiptVO(UserBaseVO collecter) {
 		super();
 		this.collecter = collecter;
 	}
 
-	public ServiceReceiptVO(UserBaseVO collecter,UserBaseVO confirmer) {
+	public ServiceReceiptVO(UserBaseVO collecter, UserBaseVO confirmer) {
 		super();
 		this.collecter = collecter;
 		this.confirmer = confirmer;
@@ -67,7 +65,7 @@ public class ServiceReceiptVO  implements Serializable{
 	public void setSrId(Long srId) {
 		this.srId = srId;
 	}
-	
+
 	public UserBaseVO getCollecter() {
 		return collecter;
 	}
@@ -100,14 +98,6 @@ public class ServiceReceiptVO  implements Serializable{
 
 	public void setCollectTime(Timestamp collectTime) {
 		this.collectTime = collectTime;
-	}
-
-	public Float getRealMoney() {
-		return realMoney;
-	}
-
-	public void setRealMoney(Float realMoney) {
-		this.realMoney = realMoney;
 	}
 
 	public Float getCash() {

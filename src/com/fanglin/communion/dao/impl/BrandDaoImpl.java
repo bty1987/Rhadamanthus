@@ -42,11 +42,11 @@ public class BrandDaoImpl extends DaoImpl<BrandPO> implements BrandDao {
 	}
 
 	@Override
-	public List<BrandPO> pageBrandByBrandNamePinYin(Paging paging, String pinyinName,int company) {
+	public List<BrandPO> pageBrandByPinYinName(Paging paging, String pinyinName,int company) {
 		
 		PagingQuery<BrandPO> query = pagingQuery(paging, BrandPO.class);
 		
-		query.add(Restrictions.or(Restrictions.ilike(BrandPO.COLUMN_BRANDNAME_STR, pinyinName, MatchMode.ANYWHERE), Restrictions.ilike(BrandPO.COLUMN_BRANDNAMEPINYIN_STR, pinyinName, MatchMode.ANYWHERE)));
+		query.add(Restrictions.or(Restrictions.ilike(BrandPO.COLUMN_NAME_STR, pinyinName, MatchMode.ANYWHERE), Restrictions.ilike(BrandPO.COLUMN_PINYIN_STR, pinyinName, MatchMode.ANYWHERE)));
 		query.add(Restrictions.eq("company", company));
 		
 		return query.list();
@@ -55,7 +55,7 @@ public class BrandDaoImpl extends DaoImpl<BrandPO> implements BrandDao {
 	private void queryFilterExcute(PagingQuery<?> query,List<Filter> filters){
 		if(filters != null){
 			for(Filter filter:filters){
-				if("categoryId".equals(filter.getField())){
+				if(BrandPO.COLUMN_CATEGORYNO_STR.equals(filter.getField())){
 					query.add(query.getCriterion("category.cid", Long.valueOf(filter.getData()), filter.getOp()));
 				}else{
 					query.add(query.getCriterion(filter.getField(), filter.getData(), filter.getOp()));
@@ -66,24 +66,24 @@ public class BrandDaoImpl extends DaoImpl<BrandPO> implements BrandDao {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<BrandPO> queryBrandByCategoryId(long categoryId) {
-		return session().createCriteria(BrandPO.class).createAlias("category", "category").add(Restrictions.eq("category.cid", categoryId)).list();
+	public List<BrandPO> queryBrandByCid(long cid) {
+		return session().createCriteria(BrandPO.class).createAlias("category", "category").add(Restrictions.eq("category.cid", cid)).list();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<BrandPO> queryBrandByBrandIds(List<Long> brandIds) {
-		return session().createCriteria(BrandPO.class).add(Restrictions.in("bid", brandIds)).list();
+	public List<BrandPO> queryBrandByBids(List<Long> bids) {
+		return session().createCriteria(BrandPO.class).add(Restrictions.in("bid", bids)).list();
 	}
 
 	@Override
-	public BrandPO queryBrandByBId(long bId) {
-		return (BrandPO) session().createCriteria(BrandPO.class).add(Restrictions.eq(BrandPO.COLUMN_BID_STR, bId)).uniqueResult();
+	public BrandPO queryBrandByBid(long bid) {
+		return (BrandPO) session().createCriteria(BrandPO.class).add(Restrictions.eq(BrandPO.COLUMN_BID_INT, bid)).uniqueResult();
 	}
 
 	@Override
-	public BrandPO queryBrandByBrandId(String brandId) {
-		return (BrandPO) session().createCriteria(BrandPO.class).add(Restrictions.eq(BrandPO.COLUMN_BRANDID_STR, brandId)).uniqueResult();
+	public BrandPO queryBrandByNo(String no) {
+		return (BrandPO) session().createCriteria(BrandPO.class).add(Restrictions.eq(BrandPO.COLUMN_NO_STR, no)).uniqueResult();
 	}
 
 }

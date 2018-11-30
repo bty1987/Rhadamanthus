@@ -1,6 +1,4 @@
-var order = {};
 jQuery(function ($) {
-
     var morder = {
         saveBtn: null,
         cancelBtn: null,
@@ -9,30 +7,29 @@ jQuery(function ($) {
         editFlg: false
     };
 
-    morder.saveBtn = $("#saveBtn").bindClick(saveData);
-    morder.cancelBtn = $("#cancelBtn");
-    morder.items.no = $("#no");
-    morder.items.user = $("#user");
-    morder.items.address = $("#address");
-    morder.items.total = $("#total");
-    morder.items.status = $("#status");
-    morder.modal = $("#morderModal");
+    morder.saveBtn = com.focusPage("#saveBtn").bindClick(saveData);
+    morder.cancelBtn = com.focusPage("#cancelBtn");
+    morder.items.no = com.focusPage("#no");
+    morder.items.user = com.focusPage("#user");
+    morder.items.address = com.focusPage("#address");
+    morder.items.total = com.focusPage("#total");
+    morder.items.status = com.focusPage("#status");
+    morder.modal = com.focusPage("#morderModal");
     morder.modal.on('show.bs.modal', function (e) {
         com.clearValidator();
         com.clearValidator("#no", true);
     });
 
     com.post(api.ds.store, {}, function (res) {
-        $("#status").bindData(res.status, "key", "value");
+        com.focusPage("#status").bindData(res.status, "key", "value");
         $.each(res.status, function (i, v) {
             status[v.key] = v.value;
         })
     }, null, false);
 
     var displayFunc = (function () {
-
         var renderList = function (tableId, listData) {
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
             if (listData && listData.length) {
                 $.each(listData, function (i, v) {
@@ -61,7 +58,7 @@ jQuery(function ($) {
                 "4": "退货",
                 "5": "已删除",
                 "6":"已完成"
-            }
+            };
 
             var address = JSON.parse(v.address);
 
@@ -71,7 +68,7 @@ jQuery(function ($) {
                 ["总价:", v.total, "grey"],
                 ["创建时间:", v.createTime, "green"],
                 ["支付时间:", v.paymentTime, "green"],
-                ["状态:", status[v.status], "red"],
+                ["状态:", status[v.status], "red"]
             ];
 
             $.each(propertyArr, function (index, value) {
@@ -121,7 +118,6 @@ jQuery(function ($) {
 
             function one(id, status, callback) {
                 bootbox.confirm("确认发货吗?", function (res) {
-
                     if (res) {
                         if (status != "1") {
                             com.post(api.store.updateMorderForStatus, {
@@ -133,13 +129,11 @@ jQuery(function ($) {
                             })
                         }
                     }
-
                 })
             }
 
             function two(id, status, callback) {
                 bootbox.confirm("确认收货吗?", function (res) {
-
                     if (res) {
                         if (status != "2") {
                             com.post(api.store.updateMorderForStatus, {
@@ -151,7 +145,6 @@ jQuery(function ($) {
                             })
                         }
                     }
-
                 })
             }
             return $liLine;
@@ -159,7 +152,7 @@ jQuery(function ($) {
 
         return {
             init: function (tableId, listData) {
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             },
             drawLine: function (v) {
@@ -180,7 +173,7 @@ jQuery(function ($) {
     function saveData() {
         var options = {
             'morder.oid': morder.items.oid,
-            'morder.status': morder.items.status.val(),
+            'morder.status': morder.items.status.val()
         };
         com.post(api.store.updateMorderForStatus, options, function (res) {
             morder.modal.modal("hide");

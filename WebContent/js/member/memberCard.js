@@ -1,17 +1,17 @@
-jQuery(function ($) {
+$(function () {
 
     var memberCard = {
 
-        saveBtn: $("#saveBtn").on("click", saveData),
-        turnPointsBtn: $('#turnPointsBtn').on("click", turnPoints),
-        cancelBtn: $("#cancelBtn").on("click", empty),
-        turnPointsCancelBtn: $('#turnPointsCancelBtn').on("click", empty),
-        modal: $("#memberModal").on("show.bs.modal", function (a) {
-            com.clearValidator()
+        saveBtn: com.focusPage("#saveBtn").on("click", saveData),
+        turnPointsBtn: com.focusPage('#turnPointsBtn').on("click", turnPoints),
+        cancelBtn: com.focusPage("#cancelBtn").on("click", empty),
+        turnPointsCancelBtn: com.focusPage('#turnPointsCancelBtn').on("click", empty),
+        modal: com.focusPage("#memberModal").on("show.bs.modal", function (a) {
+            com.clearValidator();
         }),
 
-        turnPoints: $("#turnPointsModal").on("show.bs.modal", function (a) {
-            com.clearValidator()
+        turnPoints: com.focusPage("#turnPointsModal").on("show.bs.modal", function (a) {
+            com.clearValidator();
         }),
 
         items: {
@@ -19,19 +19,20 @@ jQuery(function ($) {
             $pid: null,
             $no: null,
             $credits:null,
-            $type: $('#type'),
-            $subtype: $('#subtype'),
-            $credit: $('#credit'),
-            $comment: $('#comment'),
-            $inNo: $('#cardId'),
-            $turnPointsCredit: $('#turnPointsCredit')
+            $type: com.focusPage('#type'),
+            $subtype: com.focusPage('#subtype'),
+            $credit: com.focusPage('#credit'),
+            $comment: com.focusPage('#comment'),
+            $inNo: com.focusPage('#cardId'),
+            $turnPointsCredit: com.focusPage('#turnPointsCredit')
         },
+
     };
 
     var displayFunc = (function () {
 
         var renderList = function (tableId, listData) {
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if (listData && listData.length) {
@@ -55,10 +56,12 @@ jQuery(function ($) {
             var $btnTurnPoints = $('<a></a>').addClass('btn btn-minier btn-success').html('转积分');
 
             var propertyArr = [
+
                 ["会员卡号: ", v.no, "red"],
-                ["装修单号: ", v.orderId, "grey"],
+                ["订单编号: ", v.orderId, "grey"],
                 ["会员积分: ", v.credits + "分", "red"],
                 ["创建时间: ", v.createTime, "red"]
+
             ];
 
             $.each(propertyArr, function (index, value) {
@@ -71,9 +74,9 @@ jQuery(function ($) {
             $liLine.append($h3).append($ulProperty);
 
             $btnDetails.click(function () {
-                com.switchPage('views/member/memberDetail.html');
                 params["mcId"] = v.mcId;
                 params["orderId"] = v.orderId;
+                com.switchPage('views/member/memberDetail.html');
                 return false;
             });
 
@@ -89,18 +92,19 @@ jQuery(function ($) {
                 dialogTurnPoints();
             });
 
+
             return $liLine;
         };
 
         return {
             init: function (tableId, listData) {
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             },
             drawLine: function (v) {
                 return creatLine(v);
             }
-        }
+        };
     })();
 
     var searcher = new Searcher();
@@ -126,7 +130,7 @@ jQuery(function ($) {
 
     function saveData() {
         if (com.validate("memberModal")) {
-            return false
+            return false;
         } else {
             var option = {
                 "memberDetail.memberCard.mcId": memberCard.items.$mcid,
@@ -147,7 +151,7 @@ jQuery(function ($) {
 
     function turnPoints() {
         if (com.validate("turnPointsModal")) {
-            return false
+            return false;
         } else {
             var option = {
                 "outMemberCard.no": memberCard.items.$no,
@@ -157,11 +161,11 @@ jQuery(function ($) {
 
             //转出分数验证只能输入数字
             var reg = /^[0-9]*$/;
-            if(reg.test($("#turnPointsCredit").val()) != true){
+            if(reg.test(com.focusPage("#turnPointsCredit").val()) != true){
                 com.showAlert(com.error, "转出分数只能为数字");
                 return false;
             }
-            if($("#turnPointsCredit").val() == null || $("#turnPointsCredit").val() == ""){
+            if(com.focusPage("#turnPointsCredit").val() == null || com.focusPage("#turnPointsCredit").val() == ""){
                 com.showAlert(com.error, "转出分数不能为空");
                 return false;
             }

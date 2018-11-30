@@ -1,15 +1,15 @@
 jQuery(function ($) {
-    $('#fl-statement').statement("客服控制", "投诉信息列表");
+    com.focusPage('#fl-statement').statement("客服控制", "投诉信息列表");
 
     var complaint = {
-        saveBtn: $("#saveBtn").on("click", saveData),
-        cancellBtn: $("#cancelBtn"),
-        saveHandleBtn: $("#saveHandleBtn").on("click", saveHandleData),
-        canceHandlelBtn: $("#cancelBtn"),
-        modal: $("#complaintModal").on('show.bs.modal', function (e) {
+        saveBtn: com.focusPage("#saveBtn").on("click", saveData),
+        cancellBtn: com.focusPage("#cancelBtn"),
+        saveHandleBtn: com.focusPage("#saveHandleBtn").on("click", saveHandleData),
+        canceHandlelBtn: com.focusPage("#cancelBtn"),
+        modal: com.focusPage("#complaintModal").on('show.bs.modal', function (e) {
             com.clearValidator();
         }),
-        handleModal: $("#complaintHandleModal").on('show.bs.modal', function (e) {
+        handleModal: com.focusPage("#complaintHandleModal").on('show.bs.modal', function (e) {
             com.clearValidator();
         }),
         complaintItems: {},
@@ -18,27 +18,27 @@ jQuery(function ($) {
         typeDict: {"0": "装修", "1": "主材"},
 
         editFlag: false,
-        repeatFlg: false,
+        repeatFlg: false
     };
 
-    complaint.complaintItems.orderId = $("#orderId");
-    complaint.complaintItems.customerName = $("#customerName");
-    complaint.complaintItems.complaintLevel = $("#complaintLevel");
-    complaint.complaintItems.complaintTime = $("#complaintTime");
-    complaint.complaintItems.complaintDes = $("#complaintDes");
-    complaint.complaintItems.complaintType = $("#complaintType");
+    complaint.complaintItems.orderId = com.focusPage("#orderId");
+    complaint.complaintItems.customerName = com.focusPage("#customerName");
+    complaint.complaintItems.complaintLevel = com.focusPage("#complaintLevel");
+    complaint.complaintItems.complaintTime = com.focusPage("#complaintTime");
+    complaint.complaintItems.complaintDes = com.focusPage("#complaintDes");
+    complaint.complaintItems.complaintType = com.focusPage("#complaintType");
 
-    complaint.complaintItems.handleOrderId = $("#handleOrderId");
-    complaint.complaintItems.handleCustomerName = $("#handleCustomerName");
-    complaint.complaintItems.handleComplaintLevel = $("#handleComplaintLevel");
-    complaint.complaintItems.handleComplaintType = $("#handleComplaintType");
-    complaint.complaintItems.complaintHandleDes = $("#complaintHandleDes");
+    complaint.complaintItems.handleOrderId = com.focusPage("#handleOrderId");
+    complaint.complaintItems.handleCustomerName = com.focusPage("#handleCustomerName");
+    complaint.complaintItems.handleComplaintLevel = com.focusPage("#handleComplaintLevel");
+    complaint.complaintItems.handleComplaintType = com.focusPage("#handleComplaintType");
+    complaint.complaintItems.complaintHandleDes = com.focusPage("#complaintHandleDes");
 
-    $('.date-picker').datepicker({autoclose: true});
+    com.focusPage('.date-picker').datepicker({autoclose: true});
 
     var displayFunc = (function () {
         var renderList = function (tableId, listData) {
-            var $tableWrap = $('#' + tableId).empty();
+            var $tableWrap = com.focusPage('#' + tableId).empty();
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if (listData && listData.length) {
@@ -78,7 +78,7 @@ jQuery(function ($) {
                 ["时间:", v.createTime, "green "],
                 ["备注:", v.des, "grey"],
                 ["状态:", disposeStatus, "grey"],
-                ["处理信息:", v.handle, "grey"],
+                ["处理信息:", v.handle, "grey"]
             ];
 
             $.each(propertyArr, function (index, value) {
@@ -108,7 +108,7 @@ jQuery(function ($) {
 
         return {
             init: function (tableId, listData) {
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             },
             drawLine: function (v) {
@@ -135,7 +135,7 @@ jQuery(function ($) {
         return [$addb, $adda];
     });
 
-    $('a[name="add"]', '#pagenation').click(function () {
+    com.focusPage('a[name="add"]', '#pagenation').click(function () {
         complaint.editFlag = false;
 
         com.cleanItems(complaint.complaintItems);
@@ -150,7 +150,7 @@ jQuery(function ($) {
         complaint.modal.modal("show");
     });
 
-    $('a[name="back"]', '#pagenation').click(function () {
+    com.focusPage('a[name="back"]', '#pagenation').click(function () {
         com.switchPage(api.index.customerServiceIndex.url);
     });
 
@@ -180,7 +180,7 @@ jQuery(function ($) {
             "customerServiceComplaint.level": complaint.complaintItems.complaintLevel.val(),
             "customerServiceComplaint.createTime": complaint.complaintItems.complaintTime.val(),
             "customerServiceComplaint.des": complaint.complaintItems.complaintDes.val(),
-            "customerServiceComplaint.type": complaint.complaintItems.complaintType.val(),
+            "customerServiceComplaint.type": complaint.complaintItems.complaintType.val()
         };
 
         if (complaint.editFlag) {
@@ -208,7 +208,7 @@ jQuery(function ($) {
 
         var options = {
             "customerServiceComplaint.cscId": complaint["customerServiceComplaint.cscId"],
-            "customerServiceComplaint.handle": complaint.complaintItems.complaintHandleDes.val(),
+            "customerServiceComplaint.handle": complaint.complaintItems.complaintHandleDes.val()
         };
 
         com.post(api.construction.handleCustomerServiceComplaint, options, successCallback);

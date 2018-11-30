@@ -9,12 +9,12 @@ jQuery(function($) {
 	var deleteMaterialSubOrderItemData = [];
 
 	var materialSubOrderDetail = {
-		saveRefundBtn : $("#saveRefundBtn").on("click", saveRefundData),
+		saveRefundBtn : com.focusPage("#saveRefundBtn").on("click", saveRefundData),
 		//返回按钮
-		backBtn : $("#backBtn").on("click", function(){
+		backBtn : com.focusPage("#backBtn").on("click", function(){
 			com.switchPage(api.index.materialIndex.url);
 		}),
-		importBtn: $('#importBtn').on("click", function(){
+		importBtn: com.focusPage('#importBtn').on("click", function(){
 			var options = {};
 			options["materialItem.mid"] = materialSubOrderPostData["materialSubOrder.msoId"];
 			com.post(api.material.queryMaterialItemByMid, options, function(res){
@@ -36,17 +36,17 @@ jQuery(function($) {
 				});
 			});
 		}),
-		rejectMaterialSubOrderModal : $("#rejectMaterialSubOrderModal").on('show.bs.modal',function(e){
-			$("#refund").val("");
-			$("#refundDes").val("");
+		rejectMaterialSubOrderModal : com.focusPage("#rejectMaterialSubOrderModal").on('show.bs.modal',function(e){
+			com.focusPage("#refund").val("");
+			com.focusPage("#refundDes").val("");
 			com.updateChosen('approver', '', '');
 			com.clearValidator();
 			com.clearValidator("#refund", true);
 		}),
 		//退货按钮
-		refundBtn : $("#refundBtn").on("click", function(){
+		refundBtn : com.focusPage("#refundBtn").on("click", function(){
 
-			var $checkedItems = $("[name='refund']:checked", '#list');
+			var $checkedItems = com.focusPage("[name='refund']:checked", '#list');
 			if(!$checkedItems.length) return;
 
 			$checkedItems.each(function(i, e){
@@ -55,7 +55,7 @@ jQuery(function($) {
 				var $line = $this.parents('.line');
 				
 				if($line.attr('packageName') != ''){
-					$.each($('[packageName=' + $line.attr('packageName') + ']'), function(i, v){
+					$.each(com.focusPage('[packageName=' + $line.attr('packageName') + ']'), function(i, v){
 						var $li = $(v);
 						
 						var $option = $li.find('.option');
@@ -80,13 +80,13 @@ jQuery(function($) {
 			materialSubOrderDetail.daodanBtn.addClass('hide');
 		}),
 		//全退按钮
-		fullRefundBtn: $('#fullRefundBtn').on("click", function(){
+		fullRefundBtn: com.focusPage('#fullRefundBtn').on("click", function(){
 
             var fullStatus = materialSubOrderPostData["materialSubOrder.fullStatus"];
             if(fullStatus == 3 || fullStatus == 2){
                 var options = {};
 
-                $("#refundTotal").val(fullFunctionData(options));
+                com.focusPage("#refundTotal").val(fullFunctionData(options));
                 refundMaterialSubOrderItemData = options;
 
                 materialSubOrderDetail.refundType = 6;
@@ -98,13 +98,13 @@ jQuery(function($) {
 
 		}),
 		//倒单按钮
-		daodanBtn: $('#daodanBtn').on("click", function(){
+		daodanBtn: com.focusPage('#daodanBtn').on("click", function(){
 
             var fullStatus = materialSubOrderPostData["materialSubOrder.fullStatus"];
             if(fullStatus == 3 || fullStatus == 2){
                 var options = {};
 
-                $("#refundTotal").val(fullFunctionData(options));
+                com.focusPage("#refundTotal").val(fullFunctionData(options));
                 refundMaterialSubOrderItemData = options;
 
                 materialSubOrderDetail.refundType = 7;
@@ -117,11 +117,11 @@ jQuery(function($) {
 
 		}),
 		//退货确认按钮
-		refundCommitBtn : $("#refundCommitBtn").click(function(){
+		refundCommitBtn : com.focusPage("#refundCommitBtn").click(function(){
 			
-			$('.popover.fade').remove(); // 取消提示信息
+			com.focusPage('.popover.fade').remove(); // 取消提示信息
 
-			var $checkedItems = $("[name='refundnum']:visible", '#list');
+			var $checkedItems = com.focusPage("[name='refundnum']:visible", '#list');
 			
 			var index = 0;
 			var numRex = /^(\d+|\d+\.[0-9]{1,4})$/;
@@ -207,7 +207,7 @@ jQuery(function($) {
 				return;
 			}
 			
-			$("#refundTotal").val(totalPrice);
+			com.focusPage("#refundTotal").val(totalPrice);
 			refundMaterialSubOrderItemData = options;
 			
 			materialSubOrderDetail.refundType = 0;
@@ -216,11 +216,11 @@ jQuery(function($) {
 
 		}),
 		//退货取消按钮
-		refundCancelBtn : $("#refundCancelBtn").click(function(){
+		refundCancelBtn : com.focusPage("#refundCancelBtn").click(function(){
 			
-			$('.popover.fade').remove(); // 取消提示信息
+			com.focusPage('.popover.fade').remove(); // 取消提示信息
 			
-			var $checkedItems = $("[name='refund']:checked", '#list');
+			var $checkedItems = com.focusPage("[name='refund']:checked", '#list');
 			$checkedItems.each(function(i, e){
 				var $this = $(this);
 				
@@ -274,10 +274,10 @@ jQuery(function($) {
 	var autoFillList = [];
 	var autoFillNameList = [];
 
-	$('#fl-statement').statement("主材订单", "型号信息");
+	com.focusPage('#fl-statement').statement("主材订单", "型号信息");
 
 	if(materialSubOrderPostData["materialSubOrder.fullStatus"] ==2 || materialSubOrderPostData["materialSubOrder.fullStatus"] ==3 ){
-		$("#refundBtn").removeClass('hide');
+		com.focusPage("#refundBtn").removeClass('hide');
 	}
 
 	materialSubOrderItemPostData["materialSubOrder.msoId"] = materialSubOrderPostData["materialSubOrder.msoId"];
@@ -294,7 +294,7 @@ jQuery(function($) {
 		var options = {};
 		options["materialItem.mid"] = materialSubOrderPostData["materialSubOrder.msoId"];
 		com.post(api.material.queryMaterialItemByMid, options, function(result){
-			var $list = $('#list').html('');
+			var $list = com.focusPage('#list').html('');
 			result.materialItems.length && $.each(result.materialItems, function(i, v){
 				var $line = addline(i + 1, v);
 				$line.appendTo($list);
@@ -365,7 +365,7 @@ jQuery(function($) {
 		var $btnEdit, $btnDel, $btnCommit, $btnCancel, $check, $refund;
 		var $option = $line.find('.cell.option');
 		if(fullStatus == 1 || !(fullStatus + '').length){
-			$option.append('--')
+			$option.append('--');
 		}else{
 
 			if(fullStatus == 0){
@@ -459,7 +459,7 @@ jQuery(function($) {
 				var options = {};
 				var materialSubOrderItem = v;
 
-				var arr = $( 'li.line[packageName="'+ v.packageName +'"][isLeaf="true"]','#list');
+				var arr = com.focusPage( 'li.line[packageName="'+ v.packageName +'"][isLeaf="true"]','#list');
 
 				options["mid"] = materialSubOrderItem.mid;
 
@@ -493,14 +493,14 @@ jQuery(function($) {
 					com.showAlert(com.info, "数据删除成功!");
 					$line.remove();
 					if(result.redirect == 1 || result.redirect == "1"){
-						$("#materialOrderPageContent").load(api.index.materialIndex.url);
+						com.focusPage("#materialOrderPageContent").load(api.index.materialIndex.url);
 					}else{
 						reorder();
 					}
 
 				}, function(result){
-					alert(result)
-					console.log(result)
+					alert(result);
+					console.log(result);
 					com.showAlert(com.error, "数据删除失败!");
 				});
 			}
@@ -508,16 +508,16 @@ jQuery(function($) {
 	}
 	
 	function reorder(){ // 重排序
-		var $list = $('.line', '#list');
+		var $list = com.focusPage('.line', '#list');
 		$list.length && $list.each(function(i){
 			var $this = $(this);
-			$this.find('.index').text(i + 1)
+			$this.find('.index').text(i + 1);
 		});
 	}
 
 	function saveAll($line, v){
 		var _index = $line.index();
-		var arr = $( 'li.line[packageName="'+ v.packageName +'"][isLeaf="true"]','#list');
+		var arr = com.focusPage( 'li.line[packageName="'+ v.packageName +'"][isLeaf="true"]','#list');
 		var materialBrand = materialSubOrderItemPostData["materialSubOrder.materialBrand"];
 		var options = {};
 
@@ -664,7 +664,7 @@ jQuery(function($) {
 
 	function saveRefundData(){
 
-        var length = $('#approvalUser').find('input:checked').length;
+        var length = com.focusPage('#approvalUser').find('input:checked').length;
 
         if(length == 0){
             com.showAlert(com.error, "请选择审批人!");
@@ -677,9 +677,9 @@ jQuery(function($) {
 			return;
 		}
 
-		var refundTotal = $("#refundTotal");
-		var refund = $("#refund");
-		var refundDes = $("#refundDes");
+		var refundTotal = com.focusPage("#refundTotal");
+		var refund = com.focusPage("#refund");
+		var refundDes = com.focusPage("#refundDes");
 
 		var options = refundMaterialSubOrderItemData;
 
@@ -688,7 +688,7 @@ jQuery(function($) {
 			return ;
 		}
 		options["approvalMaterialRefund.mid"] = materialSubOrderItemPostData["materialSubOrder.msoId"];
-        options["approval.receiver.userId"] = $('#approvalUser').find('input:checked').attr('userid');
+        options["approval.receiver.userId"] = com.focusPage('#approvalUser').find('input:checked').attr('userid');
 		options["approval.comment"] = refundDes.val();
 		options["approvalMaterialRefund.type"] = materialSubOrderDetail.refundType;
 		options["approvalMaterialRefund.refund"] = refund.val();
@@ -719,8 +719,8 @@ jQuery(function($) {
 		var index = 0;
 		var total = 0;
 		var totalPrice = 0;
-		
-		$('#list>li').each(function(i, e){
+
+		com.focusPage('#list>li').each(function(i, e){
 			  
 			  var linetotal = 0;
 			  

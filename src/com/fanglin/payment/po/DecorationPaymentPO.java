@@ -104,7 +104,7 @@ public class DecorationPaymentPO implements Serializable {
 	
 	private float referMoney =  0f;
 	
-	private float realMoney = 0f;
+	private short sort;
 	
 	private int company;
 	
@@ -132,53 +132,7 @@ public class DecorationPaymentPO implements Serializable {
 	public void setDecoration(DecorationPO decoration){
 		this.decoration = decoration;
 	}
-
-	@Column(name = "paymentType")
-	public String getPaymentType(){
-		return paymentType;
-	}
-
-	public void setPaymentType(String paymentType){
-		this.paymentType = paymentType;
-	}
-
-	@Column(name = "paymentStatus")
-	public String getPaymentStatus(){
-		return paymentStatus;
-	}
-
-	public void setPaymentStatus(String paymentStatus){
-		this.paymentStatus = paymentStatus;
-	}
-
-	@Column(name = "referMoney")
-	public float getReferMoney(){
-		return referMoney;
-	}
-
-	public void setReferMoney(float referMoney){
-		this.referMoney = referMoney;
-	}
-
-	@Column(name="createTime")
-	public Timestamp getCreateTime(){
-		return createTime;
-	}
-
-	public void setCreateTime(Timestamp createTime){
-		this.createTime = createTime;
-	}
 	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "cuid", referencedColumnName = "uid")
-	public UserPO getCreater(){
-		return creater;
-	}
-
-	public void setCreater(UserPO creater){
-		this.creater = creater;
-	}
-
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "drId", referencedColumnName = "drId")
 	public DecorationReceiptPO getDecorationReceipt() {
@@ -188,16 +142,7 @@ public class DecorationPaymentPO implements Serializable {
 	public void setDecorationReceipt(DecorationReceiptPO decorationReceipt) {
 		this.decorationReceipt = decorationReceipt;
 	}
-
-	@Column(name="realMoney")
-	public float getRealMoney(){
-		return realMoney;
-	}
-
-	public void setRealMoney(float realMoney){
-		this.realMoney = realMoney;
-	}
-
+	
 	@Column(name = "onetype")
 	public short getOneType() {
 		return oneType;
@@ -216,6 +161,61 @@ public class DecorationPaymentPO implements Serializable {
 		this.twoType = twoType;
 	}
 
+	@Column(name = "paymentType")
+	public String getPaymentType(){
+		return paymentType;
+	}
+
+	public void setPaymentType(String paymentType){
+		this.paymentType = paymentType;
+	}
+
+	@Column(name = "paymentStatus")
+	public String getPaymentStatus(){
+		return paymentStatus;
+	}
+
+	public void setPaymentStatus(String paymentStatus){
+		this.paymentStatus = paymentStatus;
+	}
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "cuid", referencedColumnName = "uid")
+	public UserPO getCreater(){
+		return creater;
+	}
+
+	public void setCreater(UserPO creater){
+		this.creater = creater;
+	}
+
+	@Column(name="createTime")
+	public Timestamp getCreateTime(){
+		return createTime;
+	}
+
+	public void setCreateTime(Timestamp createTime){
+		this.createTime = createTime;
+	}
+	
+	@Column(name = "referMoney")
+	public float getReferMoney(){
+		return referMoney;
+	}
+
+	public void setReferMoney(float referMoney){
+		this.referMoney = referMoney;
+	}
+
+	@Column(name = "sort")
+	public short getSort() {
+		return sort;
+	}
+
+	public void setSort(short sort) {
+		this.sort = sort;
+	}
+
 	@Column(name = "company")
 	public int getCompany() {
 		return company;
@@ -224,4 +224,5 @@ public class DecorationPaymentPO implements Serializable {
 	public void setCompany(int company) {
 		this.company = company;
 	}
+
 }

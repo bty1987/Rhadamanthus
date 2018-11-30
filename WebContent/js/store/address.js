@@ -1,27 +1,24 @@
 $(function(){
-
     var address = {
         addressItems:{},
         editFlg: false,
         repeatFlg: false
     };
 
-    address.addressItems.name = $("#name1");
-    address.addressItems.phone = $("#phone1");
-    address.addressItems.province = $("#province");
-    address.addressItems.city = $("#city");
-    address.addressItems.proper = $("#proper");
-    address.addressItems.address = $("#address");
-    var userAddressPopUp = $('#userAddressPopUp');
+    address.addressItems.name = com.focusPage("#name1");
+    address.addressItems.phone = com.focusPage("#phone1");
+    address.addressItems.province = com.focusPage("#province");
+    address.addressItems.city = com.focusPage("#city");
+    address.addressItems.proper = com.focusPage("#proper");
+    address.addressItems.address = com.focusPage("#address");
+    var userAddressPopUp = com.focusPage('#userAddressPopUp');
 
     var displayFunc  = (function(){
-
         /*表格样式*/
         var renderList = function(tableId,listData){
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
 
             if(listData && listData.length){
-
                 var $ulTitle = createTableTitle();
                 var $ulData = $('<ul></ul>').addClass('flex-table');
                 $tableWrap.append($ulTitle).append($ulData);
@@ -37,7 +34,6 @@ $(function(){
 
         /*表格头*/
         var createTableTitle = function(){
-
             var $ulTitle = $('<ul></ul>').addClass('flex-table');
             var $liTitle = $('<li></li>').addClass('line table-title');
 
@@ -53,10 +49,7 @@ $(function(){
 
             var $optionWrap = $('<div></div>').addClass('line-wrap action').html($('<div>操作</div>').addClass('cell option'));
 
-            $liTitle.append($indexWrap)
-                .append($contentWrap)
-                .append($optionWrap)
-                .appendTo($ulTitle);
+            $liTitle.append($indexWrap).append($contentWrap).append($optionWrap).appendTo($ulTitle);
             return $ulTitle;
         };
 
@@ -87,18 +80,12 @@ $(function(){
 
             var $update = $('<li></li>').append($('<a></a>').html('编辑'));
 
-            $btnUl
-                .append($update);
-            $btnGroup
-                .append($btn)
-                .append($btnUl)
-                .appendTo($cellOption);
+            $btnUl.append($update);
+            $btnGroup.append($btn).append($btnUl).appendTo($cellOption);
 
             $cellOption.appendTo($optionWrap);
 
-            $liLine.append($indexWrap)
-                .append($contentWrap)
-                .append($optionWrap);
+            $liLine.append($indexWrap).append($contentWrap).append($optionWrap);
 
             $update.click(function(){
                 clearForm('form2');
@@ -121,7 +108,7 @@ $(function(){
 
         return {
             init : function(tableId,listData){
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
 
             },
@@ -130,26 +117,24 @@ $(function(){
             }
         }
     })();
-    doSearcher();
-    function doSearcher() {
 
-        com.post(api.store.queryAddressByUid, {
-                "address.uid": userAddressPopUp.attr("data-uid")
-            },
-            function (res) {
-                displayFunc.init('resultListAddress', res.addresses)
-            });
+    doSearcher();
+
+    function doSearcher() {
+        com.post(api.store.queryAddressByUid, {"address.uid": userAddressPopUp.attr("data-uid")}, function (res) {
+            displayFunc.init('resultListAddress', res.addresses);
+        });
     }
 
     function addline(lineindex) {
-
         var $line = $('<li></li>').addClass('line');
         var $indexWrap = $('<div></div>').addClass('line-wrap order').append($('<div></div>').addClass('cell index').text(lineindex));
         var $lineInfoWrap = $('<div></div>').addClass('line-wrap content col1');
         var $optWrap = $('<div></div>').addClass('line-wrap action');
-        var _lineInfoSet = [{cellClass : "info", hasInput : !0},];
+        var _lineInfoSet = [{cellClass : "info", hasInput : !0}];
         var $btncheck = $('<a class="color-green green" style="font-size: 18px"><i class="icon-ok"></i></a>');
         var $btndel = $('<a class="color-red red" style="font-size: 18px"><i class=" icon-remove"></i></a>');
+
         $.each(_lineInfoSet, function (i, v) {
             var $input;
             var $cell = $('<div></div>').addClass('cell ' + v.cellClass);
@@ -161,13 +146,13 @@ $(function(){
         });
 
         $btndel.click(function (e) {
-            $('#list').empty();
+            com.focusPage('#list').empty();
             addline(1).addClass('current').appendTo('#list');
         });
         return $line;
     }
-    addline(1).addClass('current').appendTo('#list');
 
+    addline(1).addClass('current').appendTo('#list');
 
     function editBrand(v){
         com.clearValidator();
@@ -180,13 +165,13 @@ $(function(){
     }
 
     function updateData(v,callback){
-        var $layer = $('#layerAdd2');
-        var name = $("#name1").val();
-        var province = $("#province").val();
-        var city = $("#city").val();
-        var proper = $("#proper").val();
-        var address = $("#address").val();
-        com.post(api.store.updateAddress, {
+        var $layer = com.focusPage('#layerAdd2');
+        var name = com.focusPage("#name1").val();
+        var province = com.focusPage("#province").val();
+        var city = com.focusPage("#city").val();
+        var proper = com.focusPage("#proper").val();
+        var address = com.focusPage("#address").val();
+        com.post(api.store.updateBaseAddress, {
             "muser.unionId": userAddressPopUp.attr("data-unionid"),
             'address.aid':v.aid,
             "address.name": name,
@@ -200,19 +185,19 @@ $(function(){
     }
 
     function clearForm(formId){
-        var $form = $("#"+formId);
-        var error = $('.alert-error', $form);
-        var success = $('.alert-success', $form);
-        $('.control-group').removeClass("success").removeClass("error");
-        $(".ok").remove();
-        $(".help-inline").remove();
+        var $form = com.focusPage("#"+formId);
+        var error = com.focusPage('.alert-error', $form);
+        var success = com.focusPage('.alert-success', $form);
+        com.focusPage('.control-group').removeClass("success").removeClass("error");
+        com.focusPage(".ok").remove();
+        com.focusPage(".help-inline").remove();
         success.hide();
         error.hide();
-        $("span.checked",$form).removeClass("checked");
-        $("tr.edit-on").removeClass("edit-on");
+        com.focusPage("span.checked",$form).removeClass("checked");
+        com.focusPage("tr.edit-on").removeClass("edit-on");
         $form.removeClass("edit-item");
-        $(".extra-wrap .control-group:not(.hide)").remove();//去掉辅助项
-        $('input[type="hidden"]',$form).val('');
+        com.focusPage(".extra-wrap .control-group:not(.hide)").remove();//去掉辅助项
+        com.focusPage('input[type="hidden"]',$form).val('');
         document.getElementById(formId).reset();
     }
 
@@ -220,7 +205,7 @@ $(function(){
         layer.open({
             type: 1,
             title:"                                              ",
-            content: $('#layerAdd2'),
+            content: com.focusPage('#layerAdd2'),
             area: ( $(window).width()*0.6 < 620 ?  $(window).height()*0.6 : 620 )+"px",
             maxmin: false,
             btn: ['确定', '取消'],
@@ -237,8 +222,8 @@ $(function(){
         });
     }
 
-    $('.layui-layer-content').css('overflow','hidden');
-    $('#showAddress').css('height','680px');
-    $('#showAddress').css('overflow-y' , 'scroll');
+    com.focusPage('.layui-layer-content').css('overflow', 'hidden');
+    com.focusPage('#showAddress').css('height', '680px');
+    com.focusPage('#showAddress').css('overflow-y', 'scroll');
     
 });

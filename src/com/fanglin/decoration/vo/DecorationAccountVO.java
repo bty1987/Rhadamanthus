@@ -24,7 +24,7 @@ public class DecorationAccountVO implements Serializable{
 	
 	private Float serviceRate;
 	
-	
+	private Float projectBase;
 	
 	public Long getDaid() {
 		return daid;
@@ -97,9 +97,12 @@ public class DecorationAccountVO implements Serializable{
 	public void setServiceRate(Float serviceRate) {
 		this.serviceRate = serviceRate;
 	}
-	
-	
-	
-	
-	
+
+	public Float getProjectBase() {
+		return projectBase;
+	}
+
+	public void setProjectBase(Float projectBase) {
+		this.projectBase = projectBase;
+	}
 }

@@ -8,7 +8,7 @@ $(function(){
     var displayFunc  = (function(){
 
         var renderList = function(tableId,listData){
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if(listData && listData.length){
@@ -73,13 +73,13 @@ $(function(){
 
         return {
             init : function(tableId,listData){
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
             },
             drawLine : function(v){
                 return creatLine(v);
             }
-        }
+        };
     })();
 
     var _condArr = ['materialModelNo', 'materialModelName', 'materialTypeId', 'materialBrandName'];
@@ -103,27 +103,27 @@ $(function(){
 
     var materialModel = {
         $nowLine : null,
-        saveBtn: $("#saveBtn").on("click", saveData),
-        cancelBtn: $("#cancelBtn"),
-        modal: $("#materialModelModal").on("show.bs.modal", function(a) {
+        saveBtn: com.focusPage("#saveBtn").on("click", saveData),
+        cancelBtn: com.focusPage("#cancelBtn"),
+        modal: com.focusPage("#materialModelModal").on("show.bs.modal", function(a) {
             com.clearValidator();
             com.clearValidator("#materialModelName", true);
-            com.clearValidator("#materialModelNo", true)
+            com.clearValidator("#materialModelNo", true);
         }),
         materialModelItems: {
-            mmId : $("#mmId"),
-            materialModelNo : $("#materialModelNo").on("blur",function() {
+            mmId : com.focusPage("#mmId"),
+            materialModelNo : com.focusPage("#materialModelNo").on("blur",function() {
                 $this = $(this);
                 void 0 != $this.val() && "" != $this.val().trim() && com.post(api.material.queryMaterialModelByNo, {"materialModel.materialModelNo": $this.val()},function(a) {
-                     a.materialModel.mmId != null ? (com.showTips($this, "\u8be5\u578b\u53f7\u7f16\u53f7\u5df2\u5b58\u5728", !0), materialModel.repeatFlg = false) : (com.clearValidator("#materialModelNo", true), materialModel.repeatFlg = true)
-                })
+                     a.materialModel.mmId != null ? (com.showTips($this, "\u8be5\u578b\u53f7\u7f16\u53f7\u5df2\u5b58\u5728", !0), materialModel.repeatFlg = false) : (com.clearValidator("#materialModelNo", true), materialModel.repeatFlg = true);
+                });
             }),
-            materialModelName : $("#materialModelName"),
-            materialBrandId : $("#materialBrandId"),
-            measurementUnitId : $("#measurementUnitId"),
-            materialUnitPrice : $("#materialUnitPrice"),
-            materialPurchasePrice : $("#materialPurchasePrice"),
-            discount : $("#discount")
+            materialModelName : com.focusPage("#materialModelName"),
+            materialBrandId : com.focusPage("#materialBrandId"),
+            measurementUnitId : com.focusPage("#measurementUnitId"),
+            materialUnitPrice : com.focusPage("#materialUnitPrice"),
+            materialPurchasePrice : com.focusPage("#materialPurchasePrice"),
+            discount : com.focusPage("#discount")
         },
         data: {
             materialTypeData: {},
@@ -150,29 +150,27 @@ $(function(){
 
     com.post(api.data.queryCategory, {},function(b) {
         materialModel.data.materialTypeData = b.categorys;
-        $("#materialTypeId").bindData(materialModel.data.materialTypeData, "cid", "categoryName");
+        com.focusPage("#materialTypeId").bindData(materialModel.data.materialTypeData, "cid", "name");
     });
 
     com.post(api.common.queryMeasurementUnit, {},function(b) {
         materialModel.data.measurementUnitData = b.measurementUnits;
-        $("#measurementUnitId").bindData(materialModel.data.measurementUnitData, "id", "name")
+        com.focusPage("#measurementUnitId").bindData(materialModel.data.measurementUnitData, "id", "name");
     });
 
     com.post(api.right.queryBrandUserRightForLogin, {}, function(c) {
 
     	var $brands = [];
     	var brands = c.brandUserRight.brands;
-    	
     	$.each(brands, function(i, v){
-    		v.name = v.brandName + "-" + v.categoryName;
+    		v.name = v.name + "-" + v.categoryName;
     	});
-    	
-    	
-        $("#materialBrandId").bindData(c.brandUserRight.brands, "bid", "name");
+
+        com.focusPage("#materialBrandId").bindData(c.brandUserRight.brands, "bid", "name");
     });
 
     //添加按钮
-    $('a[name="add"]','#pagenation').click(function(){
+    com.focusPage('a[name="add"]','#pagenation').click(function(){
         materialModel.editFlg = !1;
         com.cleanItems(materialModel.materialModelItems);
         materialModel.materialModelItems.materialModelNo.removeAttr("disabled");
@@ -180,19 +178,19 @@ $(function(){
         materialModel.modal.modal("show");
     });
     
-    $('a[name="import"]','#pagenation').click(function(){
+    com.focusPage('a[name="import"]','#pagenation').click(function(){
     	
-    	if($('span[name="totalRecords"]').text() == 0){
+    	if(com.focusPage('span[name="totalRecords"]').text() == 0){
 			com.showAlert(com.warning, "请通过条件进行查询");
 			return false;
 		}
     	
-    	if($('span[name="totalRecords"]').text() > 500){
+    	if(com.focusPage('span[name="totalRecords"]').text() > 500){
 			com.showAlert(com.warning, "查询结果大于阀值 , 不能完成导出动作");
 			return false;
 		}
-		
-		com.post(api.material.pageMaterialModel, $.extend({}, params.materialModelPostData, {"paging.noPage": 1}), function(res){
+		var materialModelPostData=params.materialModelPostData;
+		com.post(api.material.pageMaterialModel, $.extend({}, materialModelPostData, {"paging.noPage": 1}), function(res){
 			
 			$.exceler({
 				column : [

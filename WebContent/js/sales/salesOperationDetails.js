@@ -9,7 +9,7 @@ $(function () {
 
         var renderList = function (tableId, listData) {
 
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if (listData && listData.length) {
@@ -65,11 +65,11 @@ $(function () {
                         ["楼盘地址:", v.house.village.name + " " + v.house.houseNumber, "grey"],
                         ["客户名:", v.customer.name, "grey"],
                         ["渠道:", v.salesman.currentName, "grey"],
-                        ["部门:", v.dept.deptName, "grey"],
-                        ["分区:", v.region.deptName, "grey"],
+                        ["部门:", v.dept.name, "grey"],
+                        ["分区:", v.region.name, "grey"],
                         ["导购:", v.guider.currentName, "grey"],
                         ["驻店:", v.instorer.currentName, "grey"],
-                        ["主材部:", v.guideDept.deptName, "grey"],
+                        ["主材部:", v.guideDept.name, "grey"],
                         ["品类:", v.category, "grey"],
                         ["品牌:", v.brand, "grey"],
                         ["创建时间:", v.createTime, "green"],
@@ -93,7 +93,7 @@ $(function () {
                     });
 
                     if(v.fullpayStatus == 2){
-                        $btnDiv.append($btnDetail)
+                        $btnDiv.append($btnDetail);
                     }
 
                     $btnDiv.appendTo($h3);
@@ -102,7 +102,7 @@ $(function () {
                     $small.appendTo($h3);
 
                     $btnDetail.click(function () {
-                        openOperationLayer(v.sid)
+                        openOperationLayer(v.sid);
                     });
 
                 });
@@ -114,7 +114,7 @@ $(function () {
 
         return {
             init: function (tableId, listData) {
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             }
         };
@@ -135,10 +135,10 @@ $(function () {
 
 
     function openOperationLayer(sid) {
-        var $popup = $('#viewPopUp');
+        var $popup = com.focusPage('#viewPopUp');
         $popup.attr({'data-sid': sid});
         //弹出即全屏
-        var index = layer.open({
+        layer.open({
             type: 1,
             skin: 'layui-layer-lan',
             title: "销售运转详情",

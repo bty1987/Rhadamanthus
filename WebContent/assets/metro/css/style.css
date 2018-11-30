@@ -14,7 +14,7 @@ Reset and overrides
 /* general body settings */
 body {
     color: #000;
-    font-family: "HelveticaNeue", "Helvetica Neue", Helvetica, Arial;
+    font-family: "Microsoft Yahei";
     padding: 0px !important;
     margin: 0px !important;
     font-size:13px;
@@ -859,8 +859,6 @@ Page content
 ***/
 .main-content {
     margin-top: 0px;
-    /*padding-left: 20px;
-    padding-right: 20px;*/
 }
 
 .ie8 .main-content {
@@ -6832,7 +6830,7 @@ input[type=checkbox].ace+.lbl::before,input[type=radio].ace+.lbl::before {
     color: #908d8d;
     content:"\a0";
     background-color:#fafafa;
-    /*border:1px solid #c8c8c8;*/
+    border:1px solid #c8c8c8;
     box-shadow:0 1px 2px rgba(0,0,0,0.05);
     border-radius:0;
     display:inline-block;

@@ -47,11 +47,11 @@ jQuery(function($) {
 		}
 	}, null, false);
 
-	$("#materialPaymentHistoryList").removeClass("active");
+	com.focusPage("#materialPaymentHistoryList").removeClass("active");
 	
 	var displayFunc  = (function(){
         var renderList = function(tableId,listData){
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if(listData && listData.length){ 
@@ -111,7 +111,7 @@ jQuery(function($) {
 				    info += materialPaymentCheck.bankInfo[_i[0]] + " " + _i[1] + ", ";
 				  }
 				  
-				  return info
+				  return info;
 			})(v.bank, v.bankInfo), "blue"]) : true;
 			v.checkv != null && v.checkv != "0" ? styleArr.push(["转账:", v.checkv, "blue"]) : true;
 			v.installment != null && v.installment != "0" ? styleArr.push(["分期:", v.installment, "blue"]) : true;
@@ -135,7 +135,7 @@ jQuery(function($) {
       
         return {
             init : function(tableId,listData){
-                $('#' + tableId).html(null);
+				com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
             },
             drawLine : function(v){
@@ -162,7 +162,7 @@ jQuery(function($) {
 	
 	var hdisplayFunc  = (function(){
         var renderList = function(tableId,listData){
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if(listData && listData.length){ 
@@ -220,7 +220,7 @@ jQuery(function($) {
 				    info += materialPaymentCheck.bankInfo[_i[0]] + " " + _i[1] + ", ";
 				  }
 				  
-				  return info
+				  return info;
 			})(v.bank, v.bankInfo), "blue"]) : true;
 			v.checkv != null && v.checkv != "0" ? styleArr.push(["转账:", v.checkv, "blue"]) : true;
 			v.installment != null && v.installment != "0" ? styleArr.push(["分期:", v.installment, "blue"]) : true;
@@ -244,7 +244,7 @@ jQuery(function($) {
       
         return {
             init : function(tableId,listData){
-                $('#' + tableId).html(null);
+				com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
             },
             drawLine : function(v){
@@ -258,11 +258,11 @@ jQuery(function($) {
 	hsearcher.init(["orderId", "msoNo", "paymentMsoDesigner", "paymentOrderAddr", "collectTimeDateRange"], "hcondList", api.payment.pageMaterialPaymentForConfirm, function(data){
 		hdisplayFunc.init('hresultList', data);
 	}, "hpagenation", "hmaterialPaymentCheckPostData", null, false, null, null, "hresultList");
-	
-	
-	$('a[name="confirms"]', '#pagenation').click(function(){
+
+
+	com.focusPage('a[name="confirms"]', '#pagenation').click(function(){
 		var options = {};
-		var $inputs = $('input[name="mpIds"]:checked');
+		var $inputs = com.focusPage('input[name="mpIds"]:checked');
 
 		$.each($inputs, function(i, v){
 			var $input = $(v);
@@ -283,14 +283,14 @@ jQuery(function($) {
 			}
 		});
 	});
-	
-	$('a[name="import"]', '#pagenation').click(function () {
-    	if($('span[name="totalRecords"]').text() == 0){
+
+	com.focusPage('a[name="import"]', '#pagenation').click(function () {
+    	if(com.focusPage('span[name="totalRecords"]').text() == 0){
 			com.showAlert(com.warning, "请通过条件进行查询");
 			return false;
 		}
     	
-    	if($('span[name="totalRecords"]').text() > 1000){
+    	if(com.focusPage('span[name="totalRecords"]').text() > 1000){
 			com.showAlert(com.warning, "查询结果大于阀值 , 不能完成导出动作");
 			return false;
 		}
@@ -328,8 +328,23 @@ jQuery(function($) {
 					  
 					  v.bankInfo = $info;
 				}
+
+				if(v.checkv != null && v.checkv != 0){
+					var checkBankInfoStr = v.checkvBank;
+					if(checkBankInfoStr.indexOf("#") != -1){
+						var $checkvInfo = ' ';
+						var _c = v.checkvBank.split('#');
+						for(var i=1;i<_c.length-1;i++){
+							var _i = _c[i].split('|');
+							$checkvInfo += materialPaymentCheck.checkBankInfo[_i[0]] + " " + _i[1] + ", " + _i[2] + ", ";
+						}
+
+						v.checkvBank = $checkvInfo;
+					}else{
+						v.checkvBank = v.checkv != null && v.checkv != "0" ? materialPaymentCheck.checkBankInfo[v.checkvBank] : '';
+					}
+				}
 				
-				v.checkvBank = v.checkv != null && v.checkv != "0" ? materialPaymentCheck.checkBankInfo[v.checkvBank] : '';
 				v.installmentBank = v.installment != null && v.installment != "0" ? materialPaymentCheck.bankInfo[v.installmentBank] : '';
 				v.accountsBank = v.accounts != null && v.accounts != "0" ? materialPaymentCheck.accountsInfo[v.accountsBank] : '';
 				

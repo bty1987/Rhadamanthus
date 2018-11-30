@@ -28,6 +28,16 @@ body {
     border-color: #509DE0;
     background: #509DE0 !important;
 }
+.btn-register {
+	color: #fff;
+    border-color: #66cc99;
+    background: #66cc99 !important;
+}
+.btn-register:hover {
+	color: #fff;
+    border-color: #66cc99;
+    background: #66cc99 !important;
+}
 .icheckbox_minimal-blue {
     background-position: -20px 0;
 }

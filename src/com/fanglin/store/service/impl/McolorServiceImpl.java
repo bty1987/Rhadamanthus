@@ -24,7 +24,7 @@ public class McolorServiceImpl implements McolorService{
 	@Override
 	public List<McolorVO> queryMcolorByGid(McolorVO mcolor) {
 		
-		List<McolorPO> mcolorPOs = mcolorDao.queryMcolorByGid(mcolor.getGid(), false);
+		List<McolorPO> mcolorPOs = mcolorDao.queryMcolorByGid(mcolor.getGid(), mcolor.getStatus());
 		
 		List<McolorVO> mcolorVOs = new ArrayList<McolorVO>();
 		
@@ -45,7 +45,7 @@ public class McolorServiceImpl implements McolorService{
 	@Override
 	public List<McolorVO> queryMcolor(McolorVO mcolor) {
 		
-		List<McolorPO> mcolorPOs = mcolorDao.queryMcolorByGid(mcolor.getGid(), true);
+		List<McolorPO> mcolorPOs = mcolorDao.queryMcolorByGid(mcolor.getGid(), McolorPO.STATUS_ABLE_SHORT);
 		
 		List<McolorVO> mcolorVOs = new ArrayList<McolorVO>();
 		

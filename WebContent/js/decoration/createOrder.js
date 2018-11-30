@@ -26,99 +26,99 @@ jQuery(function($) {
 		valideteresult: null
 	};
 
-	orderEntry.orderItems.decorationFlag = $("#decorationFlag");
-	orderEntry.orderItems.materialOrderFlag = $("#materialOrderFlag");
-	orderEntry.orderItems.customerId = $("#customerId");
-	orderEntry.orderItems.villageId = $("#villageId");
-	orderEntry.orderItems.orderType = $("#orderType");
-	orderEntry.orderItems.houseNumber = $("#houseNumber");
-	orderEntry.orderItems.houseType = $("#houseType");
-	orderEntry.orderItems.houseClass = $("#houseClass");
-	orderEntry.orderItems.apartmentType = $("#apartmentType");
-	orderEntry.orderItems.houseArea = $("#houseArea");
-	orderEntry.orderItems.designerId = $("#designerId");
-	orderEntry.orderItems.salesmanId = $("#salesmanId");
-	orderEntry.orderItems.salesmanType = $("#salesmanType");
-	orderEntry.orderItems.notSalesmanName = $("#notSalesmanName");
-	orderEntry.orderItems.notSalesmanRate = $("#notSalesmanRate");
-	orderEntry.orderItems.notSalesmanPhone = $("#notSalesmanPhone");
-	orderEntry.orderItems.notSalesmanContent = $("#notSalesmanContent");
-	orderEntry.orderItems.backOrderName = $("#backOrderName");
-	orderEntry.orderItems.backOrderPhone = $("#backOrderPhone");
-	orderEntry.orderItems.backOrderContent = $("#backOrderContent");
-	orderEntry.orderItems.status = $("#status");
-	orderEntry.orderItems.quoterId = $("#quoterId");
-	orderEntry.orderItems.escorterId = $("#escorterId");
-	orderEntry.saveBtn = $("#saveBtn").on("click", createOrder);
-	orderEntry.cancelBtn = $("#cancelBtn").on("click", initCreate);
+	orderEntry.orderItems.decorationFlag = com.focusPage("#decorationFlag");
+	orderEntry.orderItems.materialOrderFlag = com.focusPage("#materialOrderFlag");
+	orderEntry.orderItems.customerId = com.focusPage("#customerId");
+	orderEntry.orderItems.villageId = com.focusPage("#villageId");
+	orderEntry.orderItems.orderType = com.focusPage("#orderType");
+	orderEntry.orderItems.houseNumber = com.focusPage("#houseNumber");
+	orderEntry.orderItems.houseType = com.focusPage("#houseType");
+	orderEntry.orderItems.houseClass = com.focusPage("#houseClass");
+	orderEntry.orderItems.apartmentType = com.focusPage("#apartmentType");
+	orderEntry.orderItems.houseArea = com.focusPage("#houseArea");
+	orderEntry.orderItems.designerId = com.focusPage("#designerId");
+	orderEntry.orderItems.salesmanId = com.focusPage("#salesmanId");
+	orderEntry.orderItems.salesmanType = com.focusPage("#salesmanType");
+	orderEntry.orderItems.notSalesmanName = com.focusPage("#notSalesmanName");
+	orderEntry.orderItems.notSalesmanRate = com.focusPage("#notSalesmanRate");
+	orderEntry.orderItems.notSalesmanPhone = com.focusPage("#notSalesmanPhone");
+	orderEntry.orderItems.notSalesmanContent = com.focusPage("#notSalesmanContent");
+	orderEntry.orderItems.backOrderName = com.focusPage("#backOrderName");
+	orderEntry.orderItems.backOrderPhone = com.focusPage("#backOrderPhone");
+	orderEntry.orderItems.backOrderContent = com.focusPage("#backOrderContent");
+	orderEntry.orderItems.status = com.focusPage("#status");
+	orderEntry.orderItems.quoterId = com.focusPage("#quoterId");
+	orderEntry.orderItems.escorterId = com.focusPage("#escorterId");
+	orderEntry.saveBtn = com.focusPage("#saveBtn").on("click", createOrder);
+	orderEntry.cancelBtn = com.focusPage("#cancelBtn").on("click", initCreate);
 
-	orderEntry.customerItems.customerName = $("#customerName");
-	orderEntry.customerItems.gender = $("#gender").switchBtn("gender");
-	orderEntry.customerItems.identity = $("#identity");
-	orderEntry.customerItems.officer = $("#officer");
-	orderEntry.customerItems.passport = $("#passport");
-	orderEntry.customerItems.phone = $("#phone").on("blur", function () {
+	orderEntry.customerItems.customerName = com.focusPage("#customerName");
+	orderEntry.customerItems.gender = com.focusPage("#gender").switchBtn("gender");
+	orderEntry.customerItems.identity = com.focusPage("#identity");
+	orderEntry.customerItems.officer = com.focusPage("#officer");
+	orderEntry.customerItems.passport = com.focusPage("#passport");
+	orderEntry.customerItems.phone = com.focusPage("#phone").on("blur", function () {
 		$this = $(this);
 
-		checkPhone($this)
+		checkPhone($this);
 	});
-	orderEntry.customerItems.qq = $("#qq");
-	orderEntry.customerItems.wechat = $("#wechat");
-	orderEntry.customerItems.email = $("#email");
-	orderEntry.customerItems.address = $("#address");
-	orderEntry.customerItems.relationshipType = $("#relationshipType");
+	orderEntry.customerItems.qq = com.focusPage("#qq");
+	orderEntry.customerItems.wechat = com.focusPage("#wechat");
+	orderEntry.customerItems.email = com.focusPage("#email");
+	orderEntry.customerItems.address = com.focusPage("#address");
+	orderEntry.customerItems.relationshipType = com.focusPage("#relationshipType");
 	orderEntry.customerItems.relationshipType.bindData(orderEntry.relationshipType);
 
-	orderEntry.houseItems.no = $("#no");
-	orderEntry.houseItems.type = $("#type");
-	orderEntry.houseItems.buildArea = $("#buildArea");
-	orderEntry.houseItems.maxFloor = $("#maxFloor");
-	orderEntry.houseItems.through = $("#through");
-	orderEntry.houseItems.houseTypeOne = $("#houseTypeOne");
-	orderEntry.houseItems.houseTypeTwo = $("#houseTypeTwo");
-	orderEntry.houseItems.houseTypeThr = $("#houseTypeThr");
-	orderEntry.houseItems.houseTypeFour = $("#houseTypeFour");
-	orderEntry.houseItems.orientation = $("#orientation");
-	orderEntry.houseItems.feature = $("#feature");
-	orderEntry.houseItems.waterVapour = $("#waterVapour");
-	orderEntry.houseItems.parlourType = $("#parlourType");
-	orderEntry.houseItems.heatingType = $("#heatingType");
-	orderEntry.houseItems.rule = $("#rule");
-	orderEntry.houseItems.errMsg = $("#errMsg");
+	orderEntry.houseItems.no = com.focusPage("#no");
+	orderEntry.houseItems.type = com.focusPage("#type");
+	orderEntry.houseItems.buildArea = com.focusPage("#buildArea");
+	orderEntry.houseItems.maxFloor = com.focusPage("#maxFloor");
+	orderEntry.houseItems.through = com.focusPage("#through");
+	orderEntry.houseItems.houseTypeOne = com.focusPage("#houseTypeOne");
+	orderEntry.houseItems.houseTypeTwo = com.focusPage("#houseTypeTwo");
+	orderEntry.houseItems.houseTypeThr = com.focusPage("#houseTypeThr");
+	orderEntry.houseItems.houseTypeFour = com.focusPage("#houseTypeFour");
+	orderEntry.houseItems.orientation = com.focusPage("#orientation");
+	orderEntry.houseItems.feature = com.focusPage("#feature");
+	orderEntry.houseItems.waterVapour = com.focusPage("#waterVapour");
+	orderEntry.houseItems.parlourType = com.focusPage("#parlourType");
+	orderEntry.houseItems.heatingType = com.focusPage("#heatingType");
+	orderEntry.houseItems.rule = com.focusPage("#rule");
+	orderEntry.houseItems.errMsg = com.focusPage("#errMsg");
 	orderEntry.houseItems.no.on('change', function () {
 		deleteVillageData("no",orderEntry.houseItems);
 		com.post(api.data.queryVillageById, {"village.no": orderEntry.houseItems.no.val()}, function (res) {
 			orderEntry.houseItems.rule.html("推荐楼牌号规则：" + res.village.rule);
-		}, null, false)
+		}, null, false);
 	});
 
-	orderEntry.houseItems.built = $("#built").on("blur", function (e) {
+	orderEntry.houseItems.built = com.focusPage("#built").on("blur", function (e) {
 		deleteVillageData("built",orderEntry.houseItems);
 
 	});
 
-	orderEntry.houseItems.unit = $("#unit").on("blur", function (e) {
+	orderEntry.houseItems.unit = com.focusPage("#unit").on("blur", function (e) {
 		deleteVillageData("unit",orderEntry.houseItems);
 	});
 
-	orderEntry.houseItems.floor = $("#floor").on("blur", function (e) {
+	orderEntry.houseItems.floor = com.focusPage("#floor").on("blur", function (e) {
 		deleteVillageData("floor",orderEntry.houseItems);
 	});
 
-	orderEntry.houseItems.door = $("#door").on("blur", function (e) {
-		validatehouse()
+	orderEntry.houseItems.door = com.focusPage("#door").on("blur", function (e) {
+		validatehouse();
 	});
-	orderEntry.houseItems.builtrule = $("#builtrule").on("change", function (e) {
-		validatehouse()
+	orderEntry.houseItems.builtrule = com.focusPage("#builtrule").on("change", function (e) {
+		validatehouse();
 	});
-	orderEntry.houseItems.unitrule = $("#unitrule").on("change", function (e) {
-		validatehouse()
+	orderEntry.houseItems.unitrule = com.focusPage("#unitrule").on("change", function (e) {
+		validatehouse();
 	});
-	orderEntry.houseItems.floorrule = $("#floorrule").on("change", function (e) {
-		validatehouse()
+	orderEntry.houseItems.floorrule = com.focusPage("#floorrule").on("change", function (e) {
+		validatehouse();
 	});
-	orderEntry.houseItems.doorrule = $("#doorrule").on("change", function (e) {
-		validatehouse()
+	orderEntry.houseItems.doorrule = com.focusPage("#doorrule").on("change", function (e) {
+		validatehouse();
 	});
 
 	$.extend(com.validator, orderEntry.validator);
@@ -140,18 +140,18 @@ jQuery(function($) {
 	});
 
 	com.initChosen('customerId', api.data.queryCustomerForName, "pinyinName", {}, "autoFillCustomer", "key", "value").on("change", function (e) {
-		if ($(this).val() == "" || $("#customerId").val() == "") {
+		if ($(this).val() == "" || com.focusPage("#customerId").val() == "") {
 			com.clearValidator("#customerId", true);
 			orderEntry.repeatCustomerFlg = false;
 			return;
 		}
 
-		com.post(api.decoration.queryDecorationByCustomerId, {"decoration.customer.cid": $("#customerId").val()}, function (res) {
+		com.post(api.decoration.queryDecorationByCustomerId, {"decoration.customer.cid": com.focusPage("#customerId").val()}, function (res) {
 			if (res.decorations && res.decorations.length > 0) {
 
 				var decoration = res.decorations[0];
 
-				com.showTips($("#customerId"), "订单已存在.订单号:" + decoration.orderId + ",订单所属设计师:" + decoration.designer.currentName, true);
+				com.showTips(com.focusPage("#customerId"), "订单已存在.订单号:" + decoration.orderId + ",订单所属设计师:" + decoration.designer.currentName, true);
 				orderEntry.repeatCustomerFlg = true;
 			} else {
 				com.clearValidator("#customerId", true);
@@ -160,18 +160,18 @@ jQuery(function($) {
 		}, null, false);
 	});
 
-	com.initChosen('villageId', api.data.queryVillageForNameByPinyin, "pinyinName", {}, "autoFillKeyValue", "key", "value")
+	com.initChosen('villageId', api.data.queryVillageForNameByPinyin, "pinyinName", {}, "autoFillKeyValue", "key", "value");
 
 	com.initChosen('designerId', api.personel.queryUserByPinyin, "pinyinName", {"user.status":0,"departmentType.name":""}, "autoFillKeyValue", "key", "value");
 	com.initChosen('salesmanId', api.personel.queryUserByPinyin, "pinyinName", {"user.status":0,"departmentType.name":""}, "autoFillKeyValue", "key", "value");
 	com.initChosen('quoterId', api.personel.queryUserByPinyin, "pinyinName", {"user.status":0,"departmentType.name":""}, "autoFillKeyValue", "key", "value");
 	com.initChosen('escorterId', api.personel.queryUserByPinyin, "pinyinName", {"user.status":0,"departmentType.name":""}, "autoFillKeyValue", "key", "value");
 
-	com.initChosen('no', api.data.queryVillageForNameByPinyin, "pinyinName", {}, "autoFillKeyValue", "key", "value")
+	com.initChosen('no', api.data.queryVillageForNameByPinyin, "pinyinName", {}, "autoFillKeyValue", "key", "value");
 
 
-	$("#houseNumber").on("blur", function (e) {
-		if ($(this).val() == "" || $("#villageId").val() == "") {
+	com.focusPage("#houseNumber").on("blur", function (e) {
+		if ($(this).val() == "" || com.focusPage("#villageId").val() == "") {
 			return;
 		}
 
@@ -179,7 +179,7 @@ jQuery(function($) {
 			"house.village.no": orderEntry.orderItems.villageId.val(),
 			"house.houseNumber": orderEntry.orderItems.houseNumber.val(),
 			"house.status": 0
-		}
+		};
 
 		com.post(api.data.queryHouseByNoAHnum, housePostData, function (res) {
 			com.post(api.decoration.checkDecoration, {"filters[0].data": res.house.hid,"filters[0].field": "houseId","filters[0].op": "eq","filters[1].data": "4","filters[1].field": "status","filters[1].op": "ne","filters[2].data": "7","filters[2].field": "status","filters[2].op": "ne","filters[3].data": "5","filters[3].field": "status","filters[3].op": "ne"}, function (des) {
@@ -191,10 +191,10 @@ jQuery(function($) {
 						if (yes) {
 							orderEntry.houseItems.hid = res.house.hid;
 							orderEntry.repeatFlg = false;
-							orderEntry.orderItems.houseArea.val(res.house.buildArea)
-							orderEntry.orderItems.apartmentType.val(res.house.houseType)
+							orderEntry.orderItems.houseArea.val(res.house.buildArea);
+							orderEntry.orderItems.apartmentType.val(res.house.houseType);
 						} else {
-							$("#houseModal").modal("show");
+							com.focusPage("#houseModal").modal("show");
 						}
 					});
 				}
@@ -204,14 +204,14 @@ jQuery(function($) {
 			com.showAlert(com.warning, "房产不存在，请创建房产");
 			clearHouse();
 			com.clearValidator("#houseNumber", true);
-			com.updateChosen('no', orderEntry.orderItems.villageId.val(), $("#villageId" + " option:selected").text())
+			com.updateChosen('no', orderEntry.orderItems.villageId.val(), com.focusPage("#villageId" + " option:selected").text());
 			orderEntry.houseItems.no.trigger("change");
-			$("#houseModal").modal("show");
+			com.focusPage("#houseModal").modal("show");
 		}, false);
 
 	});
 
-	$('#fl-statement').statement("订单管理", "录入订单");
+	com.focusPage('#fl-statement').statement("装修单", "录入订单");
 
 	com.post(api.ds.building, {}, function (res) {
 		orderEntry.houseItems.type.bindData(res.houseType, "key", "value");
@@ -226,31 +226,31 @@ jQuery(function($) {
 		orderEntry.houseItems.doorrule.bindData(res.buildrule, "key", "value");
 	}, null, false);
 
-	$("#createCustomerSaveBtn").on("click", createCustomer);
+	com.focusPage("#createCustomerSaveBtn").on("click", createCustomer);
 
-	$("#createCustomer").on("click", function () {
-		clearCustomer()
-		$("#customerModal").modal("show");
+	com.focusPage("#createCustomer").on("click", function () {
+		clearCustomer();
+		com.focusPage("#customerModal").modal("show");
 	});
 
-	$("#createHouse").on("click", function () {
+	com.focusPage("#createHouse").on("click", function () {
 		clearHouse();
-		$("#houseModal").modal("show");
+		com.focusPage("#houseModal").modal("show");
 	});
 
-	$("#cancelHouselBtn").on("click", function () {
+	com.focusPage("#cancelHouselBtn").on("click", function () {
 		clearHouse();
-		$("#houseModal").modal("hide");
+		com.focusPage("#houseModal").modal("hide");
 	});
 
-	$("#saveHouseBtn").on("click", function () {
+	com.focusPage("#saveHouseBtn").on("click", function () {
 
 		if (com.validate("houseModal")) {
 			return;
 		}
 
 		if(orderEntry.houseFlag){
-			validatehouse()
+			validatehouse();
 			return;
 		}else{
 			saveHouse();
@@ -258,37 +258,37 @@ jQuery(function($) {
 
 	});
 
-	$("#decorationFlag").on("click", function (res) {
-		if ($("#decorationFlag").is(":checked") == true) {
-			$("#designerId").addClass("v_required");
-			$("#salesmanId").addClass("v_required");
+	com.focusPage("#decorationFlag").on("click", function (res) {
+		if (com.focusPage("#decorationFlag").is(":checked") == true) {
+			com.focusPage("#designerId").addClass("v_required");
+			com.focusPage("#salesmanId").addClass("v_required");
 
-			$(".material").removeClass("hide");
+			com.focusPage(".material").removeClass("hide");
 		} else {
-			$("#designerId").removeClass("v_required");
-			$("#salesmanId").removeClass("v_required");
+			com.focusPage("#designerId").removeClass("v_required");
+			com.focusPage("#salesmanId").removeClass("v_required");
 
-			$(".material").addClass("hide");
+			com.focusPage(".material").addClass("hide");
 		}
 	});
 
-	$("#materialOrderFlag").on("click", function (res) {
-		if ($("#decorationFlag").is(":checked") != true && $("#materialOrderFlag").is(":checked") == true) {
-			$("#designerId").removeClass("v_required");
-			$("#salesmanId").removeClass("v_required");
+	com.focusPage("#materialOrderFlag").on("click", function (res) {
+		if (com.focusPage("#decorationFlag").is(":checked") != true && com.focusPage("#materialOrderFlag").is(":checked") == true) {
+			com.focusPage("#designerId").removeClass("v_required");
+			com.focusPage("#salesmanId").removeClass("v_required");
 
-			$(".material").addClass("hide");
+			com.focusPage(".material").addClass("hide");
 		} else {
-			$("#designerId").addClass("v_required");
-			$("#salesmanId").addClass("v_required");
+			com.focusPage("#designerId").addClass("v_required");
+			com.focusPage("#salesmanId").addClass("v_required");
 
-			$(".material").removeClass("hide");
+			com.focusPage(".material").removeClass("hide");
 		}
 	});
 
 	function createOrder() {
 
-		var btn = $("#saveBtn");
+		var btn = com.focusPage("#saveBtn");
 
 		var options = {
 			"decoration.customer.cid": orderEntry.orderItems.customerId.val(),
@@ -321,7 +321,7 @@ jQuery(function($) {
 		}
 
 
-		if ((1 - parseFloat($("#notSalesmanRate").val()) < 0.0000001) && parseFloat($("#notSalesmanRate").val()) > -0.0000001) {
+		if ((1 - parseFloat(com.focusPage("#notSalesmanRate").val()) < 0.0000001) && parseFloat(com.focusPage("#notSalesmanRate").val()) > -0.0000001) {
 			bootbox.alert("非业务提点必须大于0小于1");
 			return;
 		}
@@ -365,7 +365,7 @@ jQuery(function($) {
 		com.updateChosen("designerId", '', '');
 		com.updateChosen("salesmanId", '', '');
 
-		$(".chosen-single span").html("");
+		com.focusPage(".chosen-single span").html("");
 
 		com.clearValidator("#houseNumber", true);
 		com.clearValidator("#customerId", true);
@@ -377,13 +377,13 @@ jQuery(function($) {
 
 	function saveHouse() {
 
-		var btn = $("#saveHouseBtn");
-		var houseOptions = {}
+		var btn = com.focusPage("#saveHouseBtn");
+		var houseOptions = {};
 
 		if (com.validate("houseModal", "top") || orderEntry.houseItems.no.val() == "") return;
 
 		if(orderEntry.houseFlag){
-			validatehouse()
+			validatehouse();
 			return;
 		}
 
@@ -413,15 +413,15 @@ jQuery(function($) {
 
 		com.post(url, houseOptions, function (res) {
 			com.showAlert(com.info, "操作成功");
-			com.updateChosen('villageId', orderEntry.houseItems.no.val(), $("#no" + " option:selected").text());
+			com.updateChosen('villageId', orderEntry.houseItems.no.val(), com.focusPage("#no" + " option:selected").text());
 			orderEntry.orderItems.houseNumber.val(orderEntry.houseItems.houseNumber);
 			orderEntry.houseItems.hid = res.house.hid;
-			orderEntry.orderItems.houseArea.val(res.house.buildArea)
+			orderEntry.orderItems.houseArea.val(res.house.buildArea);
 			orderEntry.orderItems.apartmentType.val(res.house.houseType);
 			clearHouse();
 			btn.button('reset');
 
-			$("#houseModal").modal("hide");
+			com.focusPage("#houseModal").modal("hide");
 
 		}, function (e) {
 			com.showAlert(com.error, e.errorMsg);
@@ -433,16 +433,16 @@ jQuery(function($) {
 		orderEntry.houseItems.rule.html("");
 		orderEntry.houseItems.no.prop("disabled", false);
 		orderEntry.houseItems.no.get(0).selectedIndex = 0;
-		com.cleanItems(orderEntry.houseItems)
+		com.cleanItems(orderEntry.houseItems);
 		com.updateChosen("no", '', '');
 		com.clearValidator();
-		$("#errMsg").css("border", "0px");
+		com.focusPage("#errMsg").css("border", "0px");
 	}
 
 	function createCustomer() {
 
-		regcard(/(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/, orderEntry.customerItems.identity)
-		regcard(/^[\u4e00-\u9fa5]{3}\d{8}[\u4e00-\u9fa5]$/, orderEntry.customerItems.officer)
+		regcard(/(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/, orderEntry.customerItems.identity);
+		regcard(/^[\u4e00-\u9fa5]{3}\d{8}[\u4e00-\u9fa5]$/, orderEntry.customerItems.officer);
 
 		if (com.validate("customerModal") || orderEntry.customerRepeatFlg) {
 			return;
@@ -469,10 +469,10 @@ jQuery(function($) {
 		com.post(url, options, function (res) {
 			com.showAlert(com.info, "创建用户成功");
 
-			$("#customerId").html('<option value="' + res.customer.cid + '">' + res.customer.name + '-' + res.customer.phone + '</option>');
-			$("#customerId").trigger("chosen:updated");
+			com.focusPage("#customerId").html('<option value="' + res.customer.cid + '">' + res.customer.name + '-' + res.customer.phone + '</option>');
+			com.focusPage("#customerId").trigger("chosen:updated");
 
-			$("#customerModal").modal("hide");
+			com.focusPage("#customerModal").modal("hide");
 		}, function (e) {
 			com.showAlert(com.error, e.errorMsg);
 		}, false);
@@ -480,7 +480,7 @@ jQuery(function($) {
 
 	function clearCustomer() {
 		orderEntry.customerItems.customerName.val("");
-		orderEntry.customerItems.gender.get(0).selectedIndex = 0
+		orderEntry.customerItems.gender.get(0).selectedIndex = 0;
 		orderEntry.customerItems.identity.val("");
 		orderEntry.customerItems.officer.val("");
 		orderEntry.customerItems.passport.val("");
@@ -489,7 +489,7 @@ jQuery(function($) {
 		orderEntry.customerItems.wechat.val("");
 		orderEntry.customerItems.email.val("");
 		orderEntry.customerItems.address.val("");
-		orderEntry.customerItems.relationshipType.get(0).selectedIndex = 0
+		orderEntry.customerItems.relationshipType.get(0).selectedIndex = 0;
 
 		com.clearValidator();
 
@@ -501,10 +501,10 @@ jQuery(function($) {
 			if (reg.test(id.val()) == false) {
 				com.showPopover(id, {errorMsg: "请输入正确的证件号!!"}, "right");
 			} else {
-				id.css("border", "1px solid #d5d5d5").popover("destroy")
+				id.css("border", "1px solid #d5d5d5").popover("destroy");
 			}
 		} else {
-			id.css("border", "1px solid #d5d5d5").popover("destroy")
+			id.css("border", "1px solid #d5d5d5").popover("destroy");
 		}
 
 	}
@@ -514,7 +514,7 @@ jQuery(function($) {
         var reg = /^((1[0-9]{10})|(0[0-9]{10}))((#((1[0-9]{10})|(0[0-9]{10})))){0,4}$/;
         if ($id.val() == "" || $id.val() == 0) {
             orderEntry.customerRepeatFlg = true;
-            com.showPopover($id, {errorMsg: "电话号码不能为空"}, "bottom")
+            com.showPopover($id, {errorMsg: "电话号码不能为空"}, "bottom");
         } else {
             if (reg.test($id.val()) == false) {
                 orderEntry.customerRepeatFlg = true;
@@ -539,10 +539,10 @@ jQuery(function($) {
 
 	function validatehouse(no, houseNumber) {
 
-		orderEntry.valideteresult = houseUtils.anytimevalidate(orderEntry.houseItems, null, true)
+		orderEntry.valideteresult = houseUtils.anytimevalidate(orderEntry.houseItems, null, true);
 
 		if (orderEntry.valideteresult.prehouse != undefined) {
-			orderEntry.houseFlag = orderEntry.valideteresult.prehouse.Flag
+			orderEntry.houseFlag = orderEntry.valideteresult.prehouse.Flag;
 		}
 		orderEntry.houseItems.houseNumber = orderEntry.valideteresult.houseNumber;
 	}
@@ -571,8 +571,8 @@ jQuery(function($) {
 				orderEntry.houseItems.unitrule.get(0).selectedIndex = 0;
 				orderEntry.houseItems.floorrule.get(0).selectedIndex = 0;
 				orderEntry.houseItems.doorrule.get(0).selectedIndex = 0;
-				$("#door").css("border", "1px solid #d5d5d5").popover("destroy");
-				$("#errMsg").popover("destroy");
+				com.focusPage("#door").css("border", "1px solid #d5d5d5").popover("destroy");
+				com.focusPage("#errMsg").popover("destroy");
 				break;
 		}
 	}

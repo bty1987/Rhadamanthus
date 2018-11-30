@@ -47,29 +47,36 @@ public class VustomerServiceImpl implements VustomerService {
 		List<VustomerPO> vustomerPOs = vustomerDao.pageVustomer(paging, filters);
 
 		List<VustomerVO> vustomerVOs = new ArrayList<VustomerVO>();
+		
+		if(vustomerPOs.size() != 0 && vustomerPOs != null){
 			
-		for (VustomerPO vustomerPO : vustomerPOs){
+			for (VustomerPO vustomerPO : vustomerPOs){
+				
+				vustomerVOs.add(vustomerVOToPO(vustomerPO));
+			}
 			
-			vustomerVOs.add(vustomerVOToPO(vustomerPO));
 		}
 		
 		paging.setData(vustomerVOs);
 
 	}
 	
-
 	@Override
 	public void pageVustomerForAdvance(Paging paging, List<Filter> filters) {
 		
 		List<VustomerPO> vustomerPOs = vustomerDao.pageVustomer(paging, filters);
 
 		List<VustomerVO> vustomerVOs = new ArrayList<VustomerVO>();
-			
-		for (VustomerPO vustomerPO : vustomerPOs){
-			
-			vustomerVOs.add(vustomerVOToPO(vustomerPO));
-		}
 		
+		if(vustomerPOs.size() != 0 && vustomerPOs != null){
+			
+			for (VustomerPO vustomerPO : vustomerPOs){
+				
+				vustomerVOs.add(vustomerVOToPO(vustomerPO));
+			}
+			
+		}
+			
 		paging.setData(vustomerVOs);
 	}
 	
@@ -80,9 +87,13 @@ public class VustomerServiceImpl implements VustomerService {
 
 		List<VustomerVO> vustomerVOs = new ArrayList<VustomerVO>();
 			
-		for (VustomerPO vustomerPO : vustomerPOs){
+		if(vustomerPOs.size() != 0 && vustomerPOs != null){
 			
-			vustomerVOs.add(vustomerVOToPO(vustomerPO));
+			for (VustomerPO vustomerPO : vustomerPOs){
+				
+				vustomerVOs.add(vustomerVOToPO(vustomerPO));
+			}
+			
 		}
 		
 		paging.setData(vustomerVOs);
@@ -95,14 +106,18 @@ public class VustomerServiceImpl implements VustomerService {
 		
 		List<VustomerVO> vustomerVOs = new ArrayList<VustomerVO>();
 		
-		for(VustomerPO vustomerPO : vustomerPOs){
+		if(vustomerPOs.size() != 0 && vustomerPOs != null){
 			
-			VustomerVO vustomer = new VustomerVO(new UserBaseVO());
+			for(VustomerPO vustomerPO : vustomerPOs){
+				
+				VustomerVO vustomer = new VustomerVO(new UserBaseVO());
+				
+				BeanUtil.copyProperties(vustomerPO, vustomer, Arrays.asList("belonger"));
+				BeanUtil.copyProperties(vustomerPO.getBelonger(), vustomer.getBelonger(), Arrays.asList("duty", "dept"));
+				
+				vustomerVOs.add(vustomer);
+			}
 			
-			BeanUtil.copyProperties(vustomerPO, vustomer, Arrays.asList("belonger"));
-			BeanUtil.copyProperties(vustomerPO.getBelonger(), vustomer.getBelonger(), Arrays.asList("duty", "dept"));
-			
-			vustomerVOs.add(vustomer);
 		}
 		
 		return vustomerVOs;

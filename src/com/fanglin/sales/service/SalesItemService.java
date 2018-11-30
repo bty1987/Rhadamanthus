@@ -19,4 +19,6 @@ public interface SalesItemService {
 	public int updateSalesItemForBalance(SalesItemVO salesItemVO) throws FLException;
 	
 	public int deleteSalesItem(SalesItemVO salesItemVO) throws FLException;
+	
+	public Float countSalesItemForAmount(SalesItemVO salesItemVO) throws FLException;
 }

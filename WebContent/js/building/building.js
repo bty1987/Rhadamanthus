@@ -1,6 +1,5 @@
 
 jQuery(function($) {
-
 	var buildingPayType;
 	var building = {
 		bid: null,
@@ -21,47 +20,47 @@ jQuery(function($) {
 		cardFlag: false,
 		customerRepeatFlg: false,
 		repeatFlg: false,
-		cardType: ["身份证", "军官证", "护照"],
+		cardType: ["身份证", "军官证", "护照"]
 	};
 
-	building.saveBtn = $("#saveBtn").on("click", saveData);
-	building.cancelBtn = $("#cancelBtn").on("click", deleteData);
-	building.deployedBtn = $("#deployedBtn").unbind("click").on("click", updatePayTypeFun);
-	building.createCustomerSaveBtn = $("#createCustomerSaveBtn").on("click", createCustomer);
+	building.saveBtn = com.focusPage("#saveBtn").on("click", saveData);
+	building.cancelBtn = com.focusPage("#cancelBtn").on("click", deleteData);
+	building.deployedBtn = com.focusPage("#deployedBtn").unbind("click").on("click", updatePayTypeFun);
+	building.createCustomerSaveBtn = com.focusPage("#createCustomerSaveBtn").on("click", createCustomer);
 
-	$("#cardType").bindData(building.cardType);
-	$("#grade").bindData(building.grade);
+	com.focusPage("#cardType").bindData(building.cardType);
+	com.focusPage("#grade").bindData(building.grade);
 
-	building.items.hsNo = $("#hsNo");
-	building.items.csNo = $("#csNo");
-	building.items.hsAUser = $("#hsAUser");
-	building.items.csAUser = $("#csAUser");
-	building.items.signingTime = $("#signingTime");
-	building.items.tradePrice = $("#tradePrice");
-	building.items.downpayment = $("#downpayment");
-	building.items.loanPrice = $("#loanPrice");
-	building.items.payType = $("#payType");
-	building.items.balanceStatus = $("#balanceStatus");
+	building.items.hsNo = com.focusPage("#hsNo");
+	building.items.csNo = com.focusPage("#csNo");
+	building.items.hsAUser = com.focusPage("#hsAUser");
+	building.items.csAUser = com.focusPage("#csAUser");
+	building.items.signingTime = com.focusPage("#signingTime");
+	building.items.tradePrice = com.focusPage("#tradePrice");
+	building.items.downpayment = com.focusPage("#downpayment");
+	building.items.loanPrice = com.focusPage("#loanPrice");
+	building.items.payType = com.focusPage("#payType");
+	building.items.balanceStatus = com.focusPage("#balanceStatus");
 
-	building.customerItems.customerName = $("#customerName");
-	building.customerItems.cardType = $("#cardType");
-	building.customerItems.cardNum = $("#cardNum");
-	building.customerItems.gender = $("#gender");
-	building.customerItems.qq = $("#qq");
-	building.customerItems.wechat = $("#wechat");
-	building.customerItems.email = $("#email");
-	building.customerItems.relationshipType = $("#relationshipType");
-	building.customerItems.address = $("#address");
-	building.customerItems.phone = $("#phone");
+	building.customerItems.customerName = com.focusPage("#customerName");
+	building.customerItems.cardType = com.focusPage("#cardType");
+	building.customerItems.cardNum = com.focusPage("#cardNum");
+	building.customerItems.gender = com.focusPage("#gender");
+	building.customerItems.qq = com.focusPage("#qq");
+	building.customerItems.wechat = com.focusPage("#wechat");
+	building.customerItems.email = com.focusPage("#email");
+	building.customerItems.relationshipType = com.focusPage("#relationshipType");
+	building.customerItems.address = com.focusPage("#address");
+	building.customerItems.phone = com.focusPage("#phone");
 
 	//修改支付状态用的
-	building.items.payTypes = $("#payTypes");
+	building.items.payTypes = com.focusPage("#payTypes");
 
-	building.customerItems.gender = $("#gender").switchBtn("gender");
+	building.customerItems.gender = com.focusPage("#gender").switchBtn("gender");
 
-	$(".date-picker").datepicker({autoclose: !0}).on("show",function() {
+	com.focusPage(".date-picker").datepicker({autoclose: !0}).on("show",function() {
 		setTimeout(function() {
-			$(".dropdown-menu").css("z-index", 1060)
+			com.focusPage(".dropdown-menu").css("z-index", 1060)
 		},0)
 	});
 
@@ -84,57 +83,57 @@ jQuery(function($) {
 		var relationshipTypes = res.relationshipType;
 		if(relationshipTypes && relationshipTypes.length){
 			$.each(relationshipTypes, function(i, v){
-				$('<option></option>').attr("value" , v.key).html(v.value).appendTo($("#relationshipType"));
+				$('<option></option>').attr("value" , v.key).html(v.value).appendTo(com.focusPage("#relationshipType"));
 			});
 		}
 	});
 
-	building.modal = $("#buildingModal");
+	building.modal = com.focusPage("#buildingModal");
 
-	$("#hsNo").on("blur", function(){
+	com.focusPage("#hsNo").on("blur", function(){
 		com.post(api.building.queryHouseSourceByNo, {"houseSource.no" : building.items.hsNo.val()}, function(res){
 			if(res.houseSource.status != 0){
 				building.dataFlag = true;
-				com.showPopover($("#hsNo"),{errorMsg: "房源已签约或失效！"}, "right");
+				com.showPopover(com.focusPage("#hsNo"),{errorMsg: "房源已签约或失效！"}, "right");
 			}else{
 				building.dataFlag = false;
 				building.hsid = res.houseSource.hsid;
-				$("#hsNo").css("border", "1px solid #d5d5d5").popover("destroy");
+				com.focusPage("#hsNo").css("border", "1px solid #d5d5d5").popover("destroy");
 			}
 		}, function(data){
-			com.showPopover($("#hsNo"),{errorMsg: "请正确输入房源编号！"}, "right");
+			com.showPopover(com.focusPage("#hsNo"),{errorMsg: "请正确输入房源编号！"}, "right");
 			building.dataFlag = true;
 		}, false);
 	});
 
-	$("#csNo").on("blur", function(){
+	com.focusPage("#csNo").on("blur", function(){
 		com.post(api.building.queryCustomerSourceByNo, {"customerSource.no" : building.items.csNo.val()}, function(res){
 			if(res.customerSource.status != 0){
 				building.dataFlag = true;
-				com.showPopover($("#csNo"),{errorMsg: "客源已签约或失效！"}, "right");
+				com.showPopover(com.focusPage("#csNo"),{errorMsg: "客源已签约或失效！"}, "right");
 			}else{
 				building.dataFlag = false;
 				building.csid = res.customerSource.csid;
-				$("#csNo").css("border", "1px solid #d5d5d5").popover("destroy");
+				com.focusPage("#csNo").css("border", "1px solid #d5d5d5").popover("destroy");
 			}
 		}, function(data){
-			com.showPopover($("#csNo"),{errorMsg: "请正确输入客源编号！"}, "right");
+			com.showPopover(com.focusPage("#csNo"),{errorMsg: "请正确输入客源编号！"}, "right");
 			building.dataFlag = true;
 		}, false);
 	});
 
 	//检查电话号是否已存在
-	building.customerItems.phone = $("#phone").on("blur", function(){
+	building.customerItems.phone = com.focusPage("#phone").on("blur", function(){
 		$this = $(this);
-		void 0 == $this.val() || "" == $this.val().trim() ? (com.showPopover($("#phone"),{errorMsg: "电话号码不能为空"}, "right"), building.repeatFlg = false) : com.post(api.data.checkCustomerForPhone, {
+		void 0 == $this.val() || "" == $this.val().trim() ? (com.showPopover(com.focusPage("#phone"),{errorMsg: "电话号码不能为空"}, "right"), building.repeatFlg = false) : com.post(api.data.checkCustomerForPhone, {
 			"customerPhone.phone": $this.val(),
 			"customerPhone.status": 0
 		}, function(res) {
 			building.customerRepeatFlg = false;
-			$("#phone").css("border", "1px solid #d5d5d5").popover("destroy");
+			com.focusPage("#phone").css("border", "1px solid #d5d5d5").popover("destroy");
 		}, function(res){
 			building.customerRepeatFlg = true;
-			com.showPopover($("#phone"),{errorMsg: "电话号码已存在"}, "right");
+			com.showPopover(com.focusPage("#phone"),{errorMsg: "电话号码已存在"}, "right");
 		});
 	});
 
@@ -143,7 +142,7 @@ jQuery(function($) {
 	var displayFunc  = (function(){
 
 		var renderList = function(tableId,listData){
-			var $tableWrap = $('#' + tableId);
+			var $tableWrap = com.focusPage('#' + tableId);
 			var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
 			if(listData && listData.length){
@@ -222,7 +221,7 @@ jQuery(function($) {
 
 		return {
 			init : function(tableId,listData){
-				$('#' + tableId).html(null);
+				com.focusPage('#' + tableId).html(null);
 				renderList(tableId,listData);
 			},
 			drawLine : function(v){
@@ -249,17 +248,17 @@ jQuery(function($) {
 	});
 
 	//添加
-	$('a[name="addBuilding"]', '#pagenation').click(function(){
+	com.focusPage('a[name="addBuilding"]', '#pagenation').click(function(){
 		deleteData();
 		com.initChosen('hsAUser', api.data.queryCustomerForName, "pinyinName", {}, "autoFillCustomer", "key", "value");
 		com.initChosen('csAUser', api.data.queryCustomerForName, "pinyinName", {}, "autoFillCustomer", "key", "value");
-		$("#buildingModal").modal("show");
+		com.focusPage("#buildingModal").modal("show");
 	});
 
 	//创建代理人
-	$('a[name="createAuser"]', '#pagenation').click(function(){
+	com.focusPage('a[name="createAuser"]', '#pagenation').click(function(){
 		com.cleanItems(building.customerItems);
-		$("#customerModal").modal("show");
+		com.focusPage("#customerModal").modal("show");
 	});
 
 	function buildingDetail(buildingId, type){
@@ -275,7 +274,7 @@ jQuery(function($) {
 			buildingPayType = res.building.payType;
 			building.items.payTypes.val(res.building.payType);
 		}, null, false);
-		$("#buildingPayTypeModal").modal("show");
+		com.focusPage("#buildingPayTypeModal").modal("show");
 	}
 
 	//没想到合适的地方  所以在页面上没有体现
@@ -304,7 +303,7 @@ jQuery(function($) {
 			'building.downpayment': building.items.downpayment.val(),
 			'building.loanPrice': building.items.loanPrice.val(),
 			'building.payType': building.items.payType.val(),
-			'building.balanceStatus': building.items.balanceStatus.val(),
+			'building.balanceStatus': building.items.balanceStatus.val()
 		};
 
 		com.post(api.building.bindBuilding, options, function(res){
@@ -312,26 +311,26 @@ jQuery(function($) {
 			searcher.doSearch();
 		});
 
-		$("#buildingModal").modal("hide");
+		com.focusPage("#buildingModal").modal("hide");
 	}
 
 	//更改支付方式
 	function updatePayTypeFun(){
-		if(buildingPayType == $("#payTypes").val()){
+		if(buildingPayType == com.focusPage("#payTypes").val()){
 			com.showAlert(com.warning, "两次支付方式不能相同！");
 			return;
 		}
 
 		var options = {
 			'building.bid': building.bid,
-			'building.payType': building.items.payTypes.val(),
+			'building.payType': building.items.payTypes.val()
 		};
 
 		com.post(api.building.resetBuildingSchedule, options, function(res){
 			searcher.doSearch();
 		});
 
-		$("#buildingPayTypeModal").modal("hide");
+		com.focusPage("#buildingPayTypeModal").modal("hide");
 	}
 
 	//合同终止
@@ -350,22 +349,22 @@ jQuery(function($) {
 
 		if(com.validate("customerModal") || building.customerRepeatFlg || building.cardFlag){
 			if(building.customerRepeatFlg){
-				com.showPopover($("#phone"),{errorMsg: "电话号码已存在"}, "right");
+				com.showPopover(com.focusPage("#phone"),{errorMsg: "电话号码已存在"}, "right");
 			}
 			return;
 		}
 
 		var customerOptions = {};
-		switch($("#cardType").val())
+		switch(com.focusPage("#cardType").val())
 		{
 			case "身份证":
-				customerOptions["customer.identity"]  = $("#cardNum").val();
+				customerOptions["customer.identity"]  = com.focusPage("#cardNum").val();
 				break;
 			case "军官证":
-				customerOptions["customer.officer"] = $("#cardNum").val();
+				customerOptions["customer.officer"] = com.focusPage("#cardNum").val();
 				break;
 			case "护照":
-				customerOptions["customer.passport"] = $("#cardNum").val();
+				customerOptions["customer.passport"] = com.focusPage("#cardNum").val();
 				break;
 		}
 
@@ -380,7 +379,7 @@ jQuery(function($) {
 
 		com.post(api.data.addCustomer, customerOptions, function(res){
 			com.showAlert(com.info, "创建用户成功");
-			$("#customerModal").modal("hide");
+			com.focusPage("#customerModal").modal("hide");
 		}, function(e){
 			com.showAlert(com.warning, "客户电话已存在！");
 		}, false);

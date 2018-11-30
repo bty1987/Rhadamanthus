@@ -82,13 +82,17 @@ CREATE TABLE `decoration` (
   `projectStatus` tinyint(1) DEFAULT NULL COMMENT '0:初始  1:开工  2:完工',
   `quotationStatus` tinyint(1) DEFAULT '0' COMMENT '报价状态',
   `otherStatus` tinyint(1) DEFAULT '0' COMMENT '1合尺, 2设计费',
-  `type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '半包0, 全包1, 半价2',
+  `type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '半包0, 全包1, 半价2, 满减3',
   `orderType` tinyint(1) DEFAULT '1' COMMENT '1 装修订单 2 主材订单',
   `versionId` varchar(11) NOT NULL COMMENT '订单使用报价版本号',
   `orderTotalPrice` decimal(10,3) DEFAULT '0.000' COMMENT '折后合同额',
   `quotationPrice` decimal(10,3) DEFAULT '0.000',
   `paySacle` tinyint(1) unsigned DEFAULT '0' COMMENT '付款比例',
   `discount` float DEFAULT '0',
+  `couponCut` decimal(10,3) DEFAULT '0.000',
+  `thingCut` decimal(10,3) DEFAULT '0.000',
+  `netperfor` decimal(10,3) DEFAULT '0.000',
+  `comperfor` decimal(10,3) DEFAULT '0.000',
   `company` int(11) NOT NULL COMMENT '所属公司',
   `quotationTimeLimit` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`doid`),
@@ -101,12 +105,26 @@ CREATE TABLE `decoration` (
   KEY `indexnig` (`company`),
   KEY `indextwo` (`hid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='装修单';
+DROP TABLE IF EXISTS `decorationaccount`;
+CREATE TABLE `decorationaccount` (
+  `daid` int(11) NOT NULL AUTO_INCREMENT,
+  `orderId` varchar(15) NOT NULL COMMENT '订单编号',
+  `type` tinyint(1) NOT NULL COMMENT '类型:0:半包,1:套餐,2:半价,3:满减',
+  `maching` decimal(10,3) NOT NULL COMMENT '主材配比',
+  `discount` decimal(10,3) NOT NULL COMMENT '订单折扣',
+  `projectPrice` decimal(10,3) NOT NULL COMMENT '工程总额',
+  `materialPrice` decimal(10,3) NOT NULL COMMENT '主材总额',
+  `servicePrice` decimal(10,3) NOT NULL COMMENT '服务费',
+  `serviceRate` decimal(10,3) NOT NULL COMMENT '服务费比例',
+  PRIMARY KEY (`daid`),
+  UNIQUE KEY `uniqueone` (`orderId`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='决算表';
 
 DROP TABLE IF EXISTS `decorationactivity`;
 CREATE TABLE `decorationactivity` (
-  `daId` int(11) NOT NULL AUTO_INCREMENT,
+  `daid` int(11) NOT NULL AUTO_INCREMENT,
   `orderId` varchar(15) NOT NULL,
-  `aId` int(11) NOT NULL,
+  `aid` int(11) NOT NULL,
   PRIMARY KEY (`daId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='订单活动表';
 
@@ -128,6 +146,18 @@ CREATE TABLE `decorationactivityitem` (
   `receiveTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`daiId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='订单活动物品表';
+DROP TABLE IF EXISTS `decorationaddition`;
+CREATE TABLE `decorationaddition` (
+  `daid` int(11) NOT NULL AUTO_INCREMENT,
+  `orderId` varchar(15) NOT NULL COMMENT '装修单号',
+  `designer` varchar(64) NOT NULL COMMENT '设计师',
+  `designDepartment` varchar(64) NOT NULL COMMENT '设计部',
+  `designRegion` varchar(64) DEFAULT NULL COMMENT '设计大区',
+  `salesman` varchar(64) NOT NULL COMMENT '业务员',
+  `salesDepartment` varchar(64) NOT NULL COMMENT '业务部',
+  `salesRegion` varchar(64) DEFAULT NULL COMMENT '业务大区',
+  PRIMARY KEY (`daid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='附加表';
 
 DROP TABLE IF EXISTS `decorationbelong`;
 CREATE TABLE `decorationbelong` (
@@ -169,6 +199,7 @@ CREATE TABLE `decorationholonomy` (
   `name` varchar(32) DEFAULT NULL COMMENT '名称',
   `maching` decimal(10,3) NOT NULL COMMENT '主材配比',
   `discount` decimal(10,3) NOT NULL COMMENT '订单折扣',
+  `discountBase` decimal(10,3) NOT NULL COMMENT '基础值',
   `projectPrice` decimal(10,3) NOT NULL COMMENT '工程总额',
   `managePrice` decimal(10,3) NOT NULL COMMENT '管理费',
   `manageRate` decimal(10,3) NOT NULL COMMENT '管理费比例',
@@ -207,7 +238,7 @@ CREATE TABLE `decorationinfo` (
   `backOrderContent` varchar(100) DEFAULT NULL COMMENT '返单人员备注',
   PRIMARY KEY (`diid`),
   UNIQUE KEY `uniqueone` (`orderId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='装修单信息表';
 
 DROP TABLE IF EXISTS `decorationoperate`;
 CREATE TABLE `decorationoperate` (
@@ -249,31 +280,26 @@ CREATE TABLE `decorationpicture` (
   KEY `indexone` (`orderId`,`uploadTime`,`type`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='设计图纸';
 
+DROP TABLE IF EXISTS `decorationservice`;
+CREATE TABLE `decorationservice` (
+  `dsid` int(11) NOT NULL AUTO_INCREMENT,
+  `orderId` varchar(15) NOT NULL COMMENT '订单编号',
+  `name` varchar(32) NOT NULL COMMENT '名称',
+  `detail` varchar(64) NOT NULL COMMENT '详述',
+  `dsuid` int(11) NOT NULL COMMENT '操作人',
+  `operateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `status` tinyint(1) NOT NULL COMMENT '状态,0:初始,1:完成',
+  `comment` varchar(128) NOT NULL COMMENT '备注',
+  PRIMARY KEY (`dsid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='装修单服务表';
 
-DROP TABLE IF EXISTS `decorationAccount`;
-CREATE TABLE `decorationAccount` (
-`daid`  bigint(20) NOT  NULL  AUTO_INCREMENT ,
-`orderId`  varchar(15) NOT NULL COMMENT '订单编号',
-`type`  tinyint(4) NOT NULL COMMENT '类型:0:半包,1:套餐,2:半价' ,
-`maching`  decimal(10,3) NOT NULL COMMENT '主材配比',
-`discount`  decimal(10,3) NOT NULL COMMENT '订单折扣',
-`projectPrice`  decimal(10,3) NOT NULL COMMENT '工程总额',
-`materialPrice`  decimal(10,3) NOT NULL COMMENT '主材总额',
-`servicePrice`  decimal(10,3) NOT NULL COMMENT '服务费',
-`serviceRate`  decimal(10,3) NOT NULL COMMENT '服务费比例',
-PRIMARY KEY(`daid`)
-)ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='决算表';
+DROP TABLE IF EXISTS `decorationservice`;
 
-DROP TABLE IF EXISTS `decorationService`;
-CREATE TABLE `decorationService` (
-`dsid`  int(11) NOT  NULL  AUTO_INCREMENT ,
-`orderId`  varchar(15) NOT NULL COMMENT '订单编号',
-`name`  varchar(32) NOT NULL COMMENT '名称',
-`detail`  varchar(256) NOT NULL COMMENT '详述',
-`dsuid`  int(11) NOT NULL COMMENT '操作人',
-`operateTime`  timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-`status`  tinyint(1) NOT NULL COMMENT '状态,0:初始,1:完成' ,
-`comment`  varchar(256) NOT NULL COMMENT '备注',
-PRIMARY KEY(`dsid`)
-)ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='服务表';
-
+DROP TABLE IF EXISTS `decorationuser`;
+CREATE TABLE `decorationuser` (
+  `duid` int(11) NOT NULL AUTO_INCREMENT,
+  `orderId` varchar(15) NOT NULL COMMENT '装修单号',
+  `uid` int(11) NOT NULL COMMENT '人员',
+  `content` varchar(64) DEFAULT NULL COMMENT '说明',
+  PRIMARY KEY (`duid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='装修单人员表';

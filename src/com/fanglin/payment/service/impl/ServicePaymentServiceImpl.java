@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.customer.service.DecorationService;
 import com.fanglin.decoration.dao.DecorationHolonomyDao;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationHolonomyPO;
@@ -27,7 +28,6 @@ import com.fanglin.payment.po.PaymentPO;
 import com.fanglin.payment.po.ServicePaymentPO;
 import com.fanglin.payment.po.ServiceReceiptPO;
 import com.fanglin.payment.service.ServicePaymentService;
-import com.fanglin.payment.vo.AdvanceReceiptVO;
 import com.fanglin.payment.vo.ServicePaymentVO;
 import com.fanglin.payment.vo.ServiceReceiptVO;
 import com.fanglin.personel.dao.UserDao;
@@ -69,6 +69,9 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 	
 	@Autowired
 	private SystemConfigDao systemConfigDao;
+	
+	@Autowired
+	private DecorationService decorationService;
 	
 	@Override
 	public void pageServicePaymentForCollect(Paging paging, List<Filter> filters, Integer company) {
@@ -162,8 +165,7 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int collectServicePayment(ServicePaymentVO servicePaymentVO, ServiceReceiptVO serviceReceiptVO, AdvanceReceiptVO advanceReceiptVO, String cuid, Integer company) throws FLException {
-
+	public int collectServicePayment(ServicePaymentVO servicePaymentVO, ServiceReceiptVO serviceReceiptVO, String cuid, Integer company) throws FLException {
 		DecorationHolonomyPO  decorationHolonomy = decorationHolonomyDao.queryDecorationHolonomyByOrderId(servicePaymentVO.getDecoration().getOrderId());
 
 		if(decorationHolonomy == null){
@@ -206,8 +208,6 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 
 		servicePaymentVO.setSpid(servicePaymentPO.getSpid());
 
-		//实收款
-		serviceReceiptVO.setRealMoney(money);
 		//生成收据
 		generateServicePayment(servicePaymentVO,serviceReceiptVO,cuid);
 
@@ -241,8 +241,7 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 		payment.setCompany(decoration.getCompany());
 		payment.setCreater(userPO);
 		
-		advanceReceiptVO.setRealMoney(servicePaymentPO.getAdvanceMoney());
-		AdvanceReceiptPO advanceReceiptPO = addAdvanceReceipt(advanceReceiptVO,cuid);
+		AdvanceReceiptPO advanceReceiptPO = addAdvanceReceipt(servicePaymentPO.getAdvanceMoney(), serviceReceiptVO.getComment(), cuid);
 
 		BeanUtil.copyProperties(advanceReceiptPO, payment.getAdvanceReceipt());
 		
@@ -251,6 +250,8 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 		
 		servicePaymentPO.setPid(new Long(payment.getPid()).intValue());
 		servicePaymentDao.update(servicePaymentPO);
+		
+		decorationService.sendMessage(servicePaymentPO.getDecoration().getOrderId(), "装修单", String.format("服务款交款金额%s元", money));
 
 		return 0;
 	}
@@ -284,11 +285,12 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 
 		servicePaymentVO.setSpid(servicePaymentPO.getSpid());
 
-		serviceReceiptVO.setRealMoney(servicePaymentVO.getReferMoney());
 		generateServicePayment(servicePaymentVO,serviceReceiptVO,cuid);
 
 		decorationHolonomy.setServicePaidup(Arith.add(servicePaymentPO.getServiceMoney(), decorationHolonomy.getServicePaidup()));
 		decorationHolonomyDao.update(decorationHolonomy);
+		
+		decorationService.sendMessage(servicePaymentPO.getDecoration().getOrderId(), "装修单", String.format("服务款交款金额%s元", servicePaymentPO.getServiceMoney()));
 
 		return 0;
 	}
@@ -320,11 +322,12 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 
 		servicePaymentVO.setSpid(servicePaymentPO.getSpid());
 
-		serviceReceiptVO.setRealMoney(servicePaymentVO.getReferMoney());
 		generateServicePayment(servicePaymentVO,serviceReceiptVO,cuid);
 
 		decorationHolonomy.setServicePaidup(DecorationHolonomyPO.MONEY_SERVICEPAIDUP_FLOAT);
 		decorationHolonomyDao.update(decorationHolonomy);
+		
+		decorationService.sendMessage(servicePaymentPO.getDecoration().getOrderId(), "装修单", String.format("服务款退款金额%s元", servicePaymentPO.getServiceMoney()));
 
 		return 0;
 	}
@@ -336,7 +339,6 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 		for (Long spid : spids) {
 
 			ServicePaymentPO servicePayment = servicePaymentDao.get(spid);
-
 			UserPO user = userDao.queryUserByUserId(userId);
 
 			servicePayment.setStatus(ServicePaymentPO.COLUMN_CONFIRMEDSTATUS_INT);
@@ -348,14 +350,86 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 			serviceReceiptPO.setConfirmerName(user.getUserName());
 			serviceReceiptPO.setConfirmTime(new Timestamp(System.currentTimeMillis()));
 			serviceReceiptDao.update(serviceReceiptPO);
-
+			
+			if(servicePayment.getPid() != 0){
+				PaymentPO paymentPO = paymentDao.get(Long.valueOf(servicePayment.getPid()));
+				AdvanceReceiptPO advanceReceiptPO = paymentPO.getAdvanceReceipt();
+				
+				advanceReceiptPO.setConfirmer(user);
+				advanceReceiptPO.setConfirmerName(user.getUserName());
+				advanceReceiptPO.setConfirmTime(new Timestamp(System.currentTimeMillis()));
+				advanceReceiptPO.setStatus(PaymentPO.PAYMENT_STATUS_CONFIRMED_INT);
+				
+				paymentPO.setStatus(PaymentPO.PAYMENT_STATUS_CONFIRMED_INT);
+				
+				paymentDao.update(paymentPO);
+				advanceReceiptDao.update(advanceReceiptPO);
+			}
 		}
 
 		return 0;
 	}
+	
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public void updateServicePayment(ServicePaymentVO servicePayment, ServiceReceiptVO serviceReceipt) throws FLException {
+		
+		float realMoney = 0;
+
+		ServicePaymentPO servicePaymentPO = servicePaymentDao.get(servicePayment.getSpid());
+
+		if (servicePaymentPO == null) {
+			throw new FLException(150003, "款项不存在");
+		}
+
+		ServiceReceiptPO serviceReceiptPO = servicePaymentPO.getServiceReceipt();
+		
+		if(servicePaymentPO.getStatus() != 1){
+			throw new FLException(150036, "款项状态不可操作");
+		}
+
+		Float cash = serviceReceipt.getCash();
+		Float bank = serviceReceipt.getBank();
+		Float checkv = serviceReceipt.getCheckv();
+
+		if (cash != null && cash.floatValue() != 0f) {
+			serviceReceiptPO.setCash(cash);
+			serviceReceiptPO.setCashInfo(serviceReceipt.getCashInfo());
+			realMoney = Arith.add(cash, realMoney);
+		} else {
+			serviceReceiptPO.setCash(0f);
+			serviceReceiptPO.setCashInfo("");
+		}
+		
+		if (bank != null && bank.floatValue() != 0f) {
+			serviceReceiptPO.setBank(bank);
+			serviceReceiptPO.setBankInfo(serviceReceipt.getBankInfo());
+			realMoney = Arith.add(bank, realMoney);
+		} else {
+			serviceReceiptPO.setBank(0f);
+			serviceReceiptPO.setBankInfo("");
+		}
+		
+		if (checkv != null && checkv.floatValue() != 0f) {
+			serviceReceiptPO.setCheckv(checkv);
+			serviceReceiptPO.setCheckvBank(serviceReceipt.getCheckvBank());
+			realMoney = Arith.add(checkv, realMoney);
+		} else {
+			serviceReceiptPO.setCheckv(0f);
+			serviceReceiptPO.setCheckvBank("");
+		}
+		
+		float referMoney = Arith.add(servicePaymentPO.getAdvanceMoney(), servicePaymentPO.getServiceMoney());
+
+		if (referMoney != realMoney) {
+			throw new FLException(150025, "款项金额不正确");
+		}
+
+		serviceReceiptDao.update(serviceReceiptPO);
+	}
 
 	@Transactional(rollbackFor=Exception.class)
-	private AdvanceReceiptPO addAdvanceReceipt(AdvanceReceiptVO advanceReceiptVO,String userId){
+	private AdvanceReceiptPO addAdvanceReceipt(Float advanceMoney, String comment, String userId){
 
 		AdvanceReceiptPO advanceReceiptPO = new AdvanceReceiptPO();
 		UserPO user = userDao.queryUserByUserId(userId);
@@ -365,49 +439,13 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 		advanceReceiptPO.setConfirmerName("");
 		advanceReceiptPO.setStatus(AdvanceReceiptPO.STATUS_COLLRCT_INT);
 		advanceReceiptPO.setType(AdvanceReceiptPO.STATUS_RECEIPTTYPE_INT);
-
-		if(advanceReceiptVO.getCash() != null){
-			advanceReceiptPO.setCash(advanceReceiptVO.getCash());
-			advanceReceiptPO.setCashInfo(advanceReceiptVO.getCashInfo());
-		}else{
-			advanceReceiptPO.setCash(AdvanceReceiptPO.COLUMN_MONEY_INT);
-			advanceReceiptPO.setCashInfo("");
+		
+		if(advanceMoney != 0){
+			advanceReceiptPO.setTransfer(advanceMoney);
 		}
-
-		if(advanceReceiptVO.getBank() != null){
-			advanceReceiptPO.setBank(advanceReceiptVO.getBank());
-			advanceReceiptPO.setBankInfo(advanceReceiptVO.getBankInfo());
-		}else{
-			advanceReceiptPO.setBank(AdvanceReceiptPO.COLUMN_MONEY_INT);
-			advanceReceiptPO.setBankInfo("");
-		}
-
-		if(advanceReceiptVO.getCheckv() != null){
-			advanceReceiptPO.setCheckv(advanceReceiptVO.getCheckv());
-			advanceReceiptPO.setCheckvBank(advanceReceiptVO.getCheckvBank());
-		}else{
-			advanceReceiptPO.setCheckv(AdvanceReceiptPO.COLUMN_MONEY_INT);
-			advanceReceiptPO.setCheckvBank("");
-		}
-
-		if(advanceReceiptVO.getInstallment() != null){
-			advanceReceiptPO.setInstallment(advanceReceiptVO.getInstallment());
-			advanceReceiptPO.setInstallmentBank(advanceReceiptVO.getInstallmentBank());
-		}else{
-			advanceReceiptPO.setInstallment(AdvanceReceiptPO.COLUMN_MONEY_INT);
-			advanceReceiptPO.setInstallmentBank("");
-		}
-
-		if(advanceReceiptVO.getAccounts() != null){
-			advanceReceiptPO.setAccounts(advanceReceiptVO.getAccounts());
-			advanceReceiptPO.setAccountsBank(advanceReceiptVO.getAccountsBank());
-		}else{
-			advanceReceiptPO.setAccounts(AdvanceReceiptPO.COLUMN_MONEY_INT);
-			advanceReceiptPO.setAccountsBank("");
-		}
-
-		if(advanceReceiptVO.getComment() != null){
-			advanceReceiptPO.setComment(advanceReceiptVO.getComment());
+		
+		if(comment != null){
+			advanceReceiptPO.setComment(comment);
 		}else{
 			advanceReceiptPO.setComment("");
 		}
@@ -427,9 +465,8 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 		serviceReceiptPO.setCollecter(user);
 		serviceReceiptPO.setCollecterName(user.getUserName());
 		serviceReceiptPO.setCollectTime(new Timestamp(System.currentTimeMillis()));
-		serviceReceiptPO.setRealMoney(serviceReceiptVO.getRealMoney());
 
-		if(serviceReceiptVO.getCash() != null){
+		if(serviceReceiptVO.getCash() != null && serviceReceiptVO.getCash() != 0f){ 
 			serviceReceiptPO.setCash(serviceReceiptVO.getCash());
 			serviceReceiptPO.setCashInfo(serviceReceiptVO.getCashInfo());
 		}else{
@@ -437,7 +474,7 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 			serviceReceiptPO.setCashInfo("");
 		}
 
-		if(serviceReceiptVO.getBank() != null){
+		if(serviceReceiptVO.getBank() != null && serviceReceiptVO.getBank() != 0f){
 			serviceReceiptPO.setBank(serviceReceiptVO.getBank());
 			serviceReceiptPO.setBankInfo(serviceReceiptVO.getBankInfo());
 		}else{
@@ -445,28 +482,12 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 			serviceReceiptPO.setBankInfo("");
 		}
 
-		if(serviceReceiptVO.getCheckv() != null){
+		if(serviceReceiptVO.getCheckv() != null && serviceReceiptVO.getCheckv() != 0f){
 			serviceReceiptPO.setCheckv(serviceReceiptVO.getCheckv());
 			serviceReceiptPO.setCheckvBank(serviceReceiptVO.getCheckvBank());
 		}else{
 			serviceReceiptPO.setCheckv(AdvanceReceiptPO.COLUMN_MONEY_INT);
 			serviceReceiptPO.setCheckvBank("");
-		}
-
-		if(serviceReceiptVO.getInstallment() != null){
-			serviceReceiptPO.setInstallment(serviceReceiptVO.getInstallment());
-			serviceReceiptPO.setInstallBank(serviceReceiptVO.getInstallBank());
-		}else{
-			serviceReceiptPO.setInstallment(AdvanceReceiptPO.COLUMN_MONEY_INT);
-			serviceReceiptPO.setInstallBank("");
-		}
-
-		if(serviceReceiptVO.getAccounts() != null){
-			serviceReceiptPO.setAccounts(serviceReceiptVO.getAccounts());
-			serviceReceiptPO.setAccountsBank(serviceReceiptVO.getAccountsBank());
-		}else{
-			serviceReceiptPO.setAccounts(AdvanceReceiptPO.COLUMN_MONEY_INT);
-			serviceReceiptPO.setAccountsBank("");
 		}
 
 		if(serviceReceiptVO.getComment() != null){

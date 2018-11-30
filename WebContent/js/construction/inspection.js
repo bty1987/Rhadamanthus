@@ -13,7 +13,7 @@ $(function () {
     var displayFunc = (function () {
 
         var renderList = function (tableId, listData) {
-            var $tableWrap = $('#' + tableId).empty();
+            var $tableWrap = com.focusPage('#' + tableId).empty();
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if (listData && listData.length) {
@@ -38,11 +38,11 @@ $(function () {
 
             var propertyArr = [
                 ["楼盘名:", v.house.village.name, "grey"],
-                ["设计部门:", v.designer.dept.deptName, "grey"],
+                ["设计部门:", v.designer.dept.name, "grey"],
                 ["设计师:", v.designer.userName, "grey"],
                 ["监理:", v.supervisor.userName, "grey"],
                 ["面积:", v.house.buildArea, "blue"],
-                ["进度:", constructionNodes[v.projectStatus], "red"],
+                ["进度:", constructionNodes[v.projectStatus], "red"]
             ];
 
             $.each(propertyArr, function (index, value) {
@@ -65,7 +65,7 @@ $(function () {
 
         return {
             init: function (tableId, listData) {
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             },
             drawLine: function (v) {

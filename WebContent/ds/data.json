@@ -70,6 +70,17 @@
     {"key" : "0", "value" : "新增"},
     {"key" : "1", "value" : "提取"}
   ],
+  "receiptTypeStatus":[
+    {"key" : "0", "value" : "禁用"},
+    {"key" : "1", "value" : "启用"}
+  ],
+  "receiptType":[
+    {"key" : "1", "value" : "现金"},
+    {"key" : "2", "value" : "银行"},
+    {"key" : "3", "value" : "转账"},
+    {"key" : "4", "value" : "对公账户"},
+    {"key" : "5", "value" : "券"}
+  ],
 
   "errorCode": 0,
   "errorMsg": null

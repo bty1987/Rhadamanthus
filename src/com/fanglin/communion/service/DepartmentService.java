@@ -22,8 +22,12 @@ public interface DepartmentService {
 	
 	public List<DepartmentVO> queryDepartment(DepartmentVO departmentVO, Integer company) throws FLException;
 
-	public DepartmentVO queryDepartmentById(String id);
+	public List<DepartmentVO> queryDepartmentByDtid(DepartmentVO departmentVO, int Company);
+
+	public DepartmentVO queryDepartmentByDid(DepartmentVO departmentVO);
 	
+	public DepartmentVO queryDepartmentByNo(DepartmentVO departmentVO);
+
 	public List<DepartmentVO> queryDepartmentByName(DepartmentVO departmentVO, int company);
 	
 	public void addDepartment(DepartmentVO departmentVO, String userId,int company) throws FLException;
@@ -32,7 +36,6 @@ public interface DepartmentService {
 
 	public void updateDepartmentForStatus(DepartmentVO departmentVO) throws FLException;
 
-	public List<DepartmentVO> queryDepartmentByDtid(DepartmentVO departmentVO,int Company);
 	
 	
 

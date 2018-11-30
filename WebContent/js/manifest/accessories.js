@@ -12,7 +12,7 @@ $(function () {
     var displayFunc = (function () {
 
         var renderList = function (tableId, listData) {
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
 
             if (listData && listData.length) {
 
@@ -61,12 +61,12 @@ $(function () {
             var _label = $('<label></label>');
 
             var $input = $('<input>').attr({
-                "type": "checkbox",
+                "type": "checkbox"
             }).css('width','0px').addClass('ace ace-checkbox-2');
 
             var _span = $('<span></span>').addClass('lbl grey bigger-150').css('font-weight','bold');
 
-            _label.append($input).append(_span)
+            _label.append($input).append(_span);
 
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(_label).attr({
                 "value": v.aid,
@@ -188,7 +188,7 @@ $(function () {
 
                 params["accessories.no"] = v.no;
                 params["accessories.orderId"] = v.orderId;
-                params["accessories.createTime"] = v.createTime
+                params["accessories.createTime"] = v.createTime;
                 params["accessories.creater"] = v.creater.userName;
                 params["accessories.aid"] = v.aid;
                 params["accessories.manifestTime"] = v.approverTime;
@@ -203,7 +203,7 @@ $(function () {
 
         return {
             init: function (tableId, listData) {
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
 
             },
@@ -215,7 +215,7 @@ $(function () {
 
 
     var accessoriesSeacher = new Searcher();
-    var _Array = ['orderId', 'accessoriesNo', 'createrName', 'approverName', 'createTime'];
+    var _Array = ['orderId', 'accessoriesNo', 'createrName', 'approverName', 'createTime', 'approverTime'];
     accessoriesSeacher.init(_Array, "condList", api.inventory.pageAccessories, function (data) {
 
         displayFunc.init('resultList', data);
@@ -231,7 +231,7 @@ $(function () {
     }, 'resultList');
 
     function queryAccessoriesItem(aid, no){
-        var $popup = $('#checkPupUp');
+        var $popup = com.focusPage('#checkPupUp');
         $popup.attr({'data-aid': aid});
         //弹出即全屏
         var index = layer.open({
@@ -254,7 +254,7 @@ $(function () {
     }
 
     function viewAccessoriesItemAndOrder(orderId, aid, no, createTime, status) {
-        var $popup = $('#viewPopUp');
+        var $popup = com.focusPage('#viewPopUp');
         $popup.attr({'data-orderId': orderId, 'data-aid': aid, 'data-createTime': createTime, 'data-status': status});
         //弹出即全屏
         var index = layer.open({
@@ -277,7 +277,7 @@ $(function () {
     }
 
     function editAccessoriesItem(aid, no) {
-        var $popup = $('#editPopUp');
+        var $popup = com.focusPage('#editPopUp');
         $popup.attr({'data-aid': aid});
         //弹出即全屏
         var index = layer.open({
@@ -301,7 +301,7 @@ $(function () {
     }
 
     function batchAccessoriesItem(createTime) {
-        var $popup = $('#shipmentPopUp');
+        var $popup = com.focusPage('#shipmentPopUp');
         $popup.attr('data-createTime', createTime);
         //弹出即全屏
         var index = layer.open({
@@ -388,7 +388,7 @@ $(function () {
 
 
     //function refundAccessories(orderId, aid, no, createTime, status){
-    //    var $popup = $('#refundPopUp');
+    //    var $popup = com.focusPage('#refundPopUp');
     //    $popup.attr({'data-orderId': orderId, 'data-aid': aid, 'data-createTime': createTime, 'data-status': status});
     //    //弹出即全屏
     //    var index = layer.open({

@@ -1,27 +1,25 @@
 $(function () {
     var mgoods = {
         items: {
-            no: $("#no"),
-            name: $("#name"),
-            barcode: $("#barcode"),
-            mbrand: $("#mbrand"),
-            title: $("#title"),
-            price: $("#price"),
+            no: com.focusPage("#no"),
+            name: com.focusPage("#name"),
+            barcode: com.focusPage("#barcode"),
+            mbrand: com.focusPage("#mbrand"),
+            title: com.focusPage("#title"),
+            price: com.focusPage("#price")
         },
         editFlg: !1,
         postParam: {},
         repeatFlg: !1,
         mbrandData: [],
-        editflg:false,
+        editflg:false
     };
 
     var displayFunc = (function () {
-
         var renderList = function (tableId, listData) {
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
 
             if (listData && listData.length) {
-
                 var $ulTitle = createTableTitle();
                 var $ulData = $('<ul></ul>').addClass('flex-table');
                 $tableWrap.append($ulTitle).append($ulData);
@@ -36,14 +34,13 @@ $(function () {
 
         //绘制表格头
         var createTableTitle = function () {
-
             var $ulTitle = $('<ul></ul>').addClass('flex-table');
             var $liTitle = $('<li></li>').addClass('line table-title');
 
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>'));
-            var $contentWrap = $('<div></div>').addClass('line-wrap  content col9');
+            var $contentWrap = $('<div></div>').addClass('line-wrap  content col10');
 
-            var titleName = '图片,编号,商品,条形码,品牌,标题,价格,状态';
+            var titleName = '二维码,图片,编号,商品,条形码,品牌,标题,价格,状态';
 
             $.each(titleName.split(','), function (i, v) {
                 var $cell = $('<div></div>').addClass('cell').html(v);
@@ -64,7 +61,7 @@ $(function () {
         var creatLine = function (i, v, lastFlag) {
             var $liLine = $('<li></li>').addClass('line');
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(i + 1));
-            var $contentWrap = $('<div></div>').addClass('line-wrap  content col9');
+            var $contentWrap = $('<div></div>').addClass('line-wrap  content col10');
             //显示字段
             var propertyArr = [
                 [v.no, 'blue'],
@@ -79,6 +76,20 @@ $(function () {
             var propertyArr2 = [
                 [v.defaultImg, 'blue']
             ];
+
+            var propertyArr3 = [
+                [v.gid, 'blue']
+            ];
+
+            $.each(propertyArr3, function (i,v){
+                var $imgDiv = $('<div></div>').addClass('cell').appendTo($contentWrap);
+                $imgDiv.qrcode({
+                    render: "canvas",
+                    width: 100,
+                    height: 100,
+                    text: "http://fanglin.vip/wx/store?gid=" + v[0]
+                });
+            });
 
             $.each(propertyArr2, function (i, v) {
                 var $imgDiv = $('<div></div>').addClass('cell').appendTo($contentWrap);
@@ -108,25 +119,13 @@ $(function () {
             var $btnImg = $('<li></li>').append($('<a></a>').html('图片'));
 
             //添加操作按钮下面的选项
-            $btnUl
-                .append($btnEdit)
-                .append($btnColor)
-                .append($btnFormat)
-                .append($btnPrice)
-                .append($btnStart)
-                .append($btnStop)
-                .append($btnImg);
+            $btnUl.append($btnEdit).append($btnColor).append($btnFormat).append($btnPrice).append($btnStart).append($btnStop).append($btnImg);
 
-            $btnGroup
-                .append($btn)
-                .append($btnUl)
-                .appendTo($cellOption);
+            $btnGroup.append($btn).append($btnUl).appendTo($cellOption);
 
             $cellOption.appendTo($optionWrap);
 
-            $liLine.append($indexWrap)
-                .append($contentWrap)
-                .append($optionWrap);
+            $liLine.append($indexWrap).append($contentWrap).append($optionWrap);
 
             //编辑点击事件
             $btnEdit.click(function () {
@@ -155,14 +154,14 @@ $(function () {
                 layer.confirm('是否启用？', {
                     btn: ['确定', '取消'] //按钮
                 }, function (index, layero) {
-                    $('#layerAdd').attr('data-gid', v.gid);
-                    $('#layerAdd').attr('data-status', v.status);
-                    var id = $('#layerAdd').attr('data-gid');
-                    var status = $('#layerAdd').attr('data-status');
+                    com.focusPage('#layerAdd').attr('data-gid', v.gid);
+                    com.focusPage('#layerAdd').attr('data-status', v.status);
+                    var id = com.focusPage('#layerAdd').attr('data-gid');
+                    var status = com.focusPage('#layerAdd').attr('data-status');
                     startGoodsStatus(id, status, function () {
                         layer.closeAll();
                         layer.msg('启用成功', {icon: 1, time: 2e3});
-                        $('#layerAdd').attr({'data-gid': null, 'data-status': null});
+                        com.focusPage('#layerAdd').attr({'data-gid': null, 'data-status': null});
                     });
                 }, function () {
 
@@ -173,26 +172,24 @@ $(function () {
                 layer.confirm('是否禁用？', {
                     btn: ['确定', '取消'] //按钮
                 }, function (index, layero) {
-                    $('#layerAdd').attr('data-gid', v.gid);
-                    $('#layerAdd').attr('data-status', v.status);
-                    var id = $('#layerAdd').attr('data-gid');
-                    var status = $('#layerAdd').attr('data-status');
+                    com.focusPage('#layerAdd').attr('data-gid', v.gid);
+                    com.focusPage('#layerAdd').attr('data-status', v.status);
+                    var id = com.focusPage('#layerAdd').attr('data-gid');
+                    var status = com.focusPage('#layerAdd').attr('data-status');
                     stopGoodsStatus(id, status, function () {
                         layer.closeAll();
                         layer.msg('禁用成功', {icon: 1, time: 2e3});
-                        $('#layerAdd').attr({'data-gid': null, 'data-status': null});
+                        com.focusPage('#layerAdd').attr({'data-gid': null, 'data-status': null});
                     });
                 }, function () {
 
                 });
             });
-
             return $liLine;
-
         };
         return {
             init: function (tableId, listData) {
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             },
             drawLine: function (v) {
@@ -201,8 +198,8 @@ $(function () {
         };
     })();
 
-    autoFill(api.store.queryMbrandByName, "mbrand", "mbrands", "bid", "name");
-    autoFill(api.store.queryMbrandByName, "mgoodsBrands", "mbrands", "bid", "name");
+    autoFill(api.store.queryBaseMbrandByName, "mbrand", "mbrands", "bid", "name");
+    autoFill(api.store.queryBaseMbrandByName, "mgoodsBrands", "mbrands", "bid", "name");
 
     var searcher = new Searcher();
 
@@ -215,7 +212,6 @@ $(function () {
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
         $adda.click(function () {
-
             com.cleanItems(mgoods.items);
             openlayer("添加", function (index, layero) {
                 if (com.validate('form1')) {
@@ -223,7 +219,7 @@ $(function () {
                 }
 
                 if(mgoods.mbrandData.length == 0){
-                    $("#mbrand").addClass('popover-notitle').attr({
+                    com.focusPage("#mbrand").addClass('popover-notitle').attr({
                         "data-rel" : "popover",
                         "data-placement" : "right",
                         "data-original-title" : "",
@@ -239,12 +235,11 @@ $(function () {
     });
 
     function openlayer(name, callback) {
-
         layer.closeAll();
         layer.open({
             type: 1,
             title: name,
-            content: $('#layerAdd'),
+            content: com.focusPage('#layerAdd'),
             area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
             maxmin: false,
             zIndex: 9000,
@@ -266,7 +261,7 @@ $(function () {
     }
 
     function openLayerSwitch(id, gid, title, url, goodsName) {
-        var $PopUp = $('#' + id);
+        var $PopUp = com.focusPage('#' + id);
         $PopUp.attr({'data-gid': gid});
         if(goodsName != null){
             $PopUp.attr({'data-goodName': goodsName});
@@ -296,7 +291,7 @@ $(function () {
     }
 
     function saveData(id) {
-        var $layer = $('#layerAdd');
+        var $layer = com.focusPage('#layerAdd');
         var no = $layer.find('input[name="no"]').val();
         var name = $layer.find('input[name="name"]').val();
         var barcode = $layer.find('input[name="barcode"]').val();
@@ -317,8 +312,8 @@ $(function () {
             "mgoods.price": price,
             "mgoods.defaultImg": ""
         };
-        com.post(api.store.addMgoods, opt, function (res) {
 
+        com.post(api.store.addMgoods, opt, function (res) {
             if(com.validate('input[id="mbrand"]')){
                 return;
             }
@@ -332,7 +327,7 @@ $(function () {
         if(com.validate()){
             return;
         }
-        var $layer = $('#layerAdd');
+        var $layer = com.focusPage('#layerAdd');
         var name = $layer.find('input[name="name"]').val();
         var brand = $layer.find('input[name="mbrand"]').attr("data-bid");
         var title = $layer.find('input[name="title"]').val();
@@ -344,7 +339,7 @@ $(function () {
             "mgoods.mbrand.bid": brand,
             "mgoods.title": title,
             "mgoods.price": price
-        }
+        };
 
         com.post(api.store.updateMgoods, opt, function (res) {
             searcher.doSearch();
@@ -354,7 +349,7 @@ $(function () {
     }
 
     function editReadOnly() {
-        var $layerAdd = $('#layerAdd');
+        var $layerAdd = com.focusPage('#layerAdd');
         $layerAdd.find('input[name="no"]').attr('disabled', 'disabled');
         $layerAdd.find('input[name="barcode"]').attr('disabled', 'disabled');
         $layerAdd.find('input[name="mbrand"]').attr('disabled', 'disabled');
@@ -399,24 +394,24 @@ $(function () {
 
     function edits(v) {
         editReadOnly();
-        var no = $('#layerAdd').find('input[name="no"]').val(v.no);
-        var name = $('#layerAdd').find('input[name="name"]').val(v.name);
-        var barcode = $('#layerAdd').find('input[name="barcode"]').val(v.barcode);
-        var mbrand = $('#layerAdd').find('input[id="mbrand"]').val(v.mbrand.name);
-        var title = $('#layerAdd').find('input[name="title"]').val(v.title);
-        var price = $('#layerAdd').find('input[name="price"]').val(v.price);
+        var no = com.focusPage('#layerAdd').find('input[name="no"]').val(v.no);
+        var name = com.focusPage('#layerAdd').find('input[name="name"]').val(v.name);
+        var barcode = com.focusPage('#layerAdd').find('input[name="barcode"]').val(v.barcode);
+        var mbrand = com.focusPage('#layerAdd').find('input[id="mbrand"]').val(v.mbrand.name);
+        var title = com.focusPage('#layerAdd').find('input[name="title"]').val(v.title);
+        var price = com.focusPage('#layerAdd').find('input[name="price"]').val(v.price);
 
-        $('#mbrand').attr('data-bid', v.mbrand.bid);
-        $('#mbrand').attr('data-typeahead-key',v.mbrand.name);
+        com.focusPage('#mbrand').attr('data-bid', v.mbrand.bid);
+        com.focusPage('#mbrand').attr('data-typeahead-key',v.mbrand.name);
 
-        $('#layerAdd').attr('data-gid', v.gid);
+        com.focusPage('#layerAdd').attr('data-gid', v.gid);
         openlayer("编辑", function () {
             updateSaveData(v);
         });
     }
 
     function autoFill(url, id, dataValue, key, value) {
-        $('input[name=' + id + ']').typeahead({
+        com.focusPage('input[name=' + id + ']').typeahead({
             url: url,
             list: [],
             postData: {},
@@ -433,14 +428,14 @@ $(function () {
             },
             isResultTypeMap: true
             , flupdater: function (k, v) {
-                $('input[name=' + id + ']').attr('data-bid', k);
+                com.focusPage('input[name=' + id + ']').attr('data-bid', k);
                 return v;
             }
         });
     }
 
     function closeEditReadOnly() {
-        var $layerAdd = $('#layerAdd');
+        var $layerAdd = com.focusPage('#layerAdd');
         $layerAdd.find('input[name="no"]').removeAttr('disabled');
         $layerAdd.find('input[name="name"]').removeAttr('disabled');
         $layerAdd.find('input[name="barcode"]').removeAttr('disabled');

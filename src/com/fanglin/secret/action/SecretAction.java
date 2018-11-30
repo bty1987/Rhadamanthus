@@ -13,12 +13,15 @@ package com.fanglin.secret.action;
 
 import java.util.List;
 
+import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
+import org.apache.struts2.convention.annotation.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseAction;
+import com.fanglin.customer.service.DecorationService;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.secret.service.SecretService;
 
@@ -32,6 +35,9 @@ public class SecretAction extends BaseAction {
 	@Autowired
 	private SecretService secretService;
 	
+	@Autowired
+	private DecorationService decorationService;
+	
 	private String VZYKHFFK;
 	
 	private String FAKKGDAZ;
@@ -40,7 +46,7 @@ public class SecretAction extends BaseAction {
 	
 	private List<DecorationVO> AJIGRRVT;
 	
-	//@Action(value = "CVLIBHQMVWFSPQWU", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	//Action(value = "CVLIBHQMVWFSPQWU", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String CVLIBHQMVWFSPQWU(){
 		
 		OTCVCJSC = secretService.CVLIBHQMVWFSPQWU(VZYKHFFK);
@@ -48,10 +54,18 @@ public class SecretAction extends BaseAction {
 		return SUCCESS;
 	}
 	
-	//@Action(value = "KGZPHFBAOKWVMWGW", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	//Action(value = "KGZPHFBAOKWVMWGW", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String KGZPHFBAOKWVMWGW(){
 		
 		AJIGRRVT = secretService.KGZPHFBAOKWVMWGW(FAKKGDAZ);
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "KGZPHFBAOKWVMWGW", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String baitianyu(){
+		
+		decorationService.sendMessage("1601010001", "装修单", "测试");
 		
 		return SUCCESS;
 	}

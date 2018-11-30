@@ -37,13 +37,13 @@ public class VticketDaoImpl extends DaoImpl<VticketPO> implements VticketDao {
 		
 		switch (param){
 			case 1:
-		    	sql = "SELECT d.deptName AS 'regionName', de.deptName AS 'deptName', COUNT(*) from information.vticket v, communion.department d, communion.department de where v.rid = d.dId and v.did = de.dId and v.iscome = 1 and v.expire = 0 GROUP BY v.rid, v.did";
+		    	sql = "SELECT d.name AS 'regionName', de.name AS 'deptName', COUNT(*) from information.vticket v, communion.department d, communion.department de where v.rid = d.dId and v.did = de.dId and v.iscome = 1 and v.expire = 0 GROUP BY v.rid, v.did";
 		    	break;
 		    case 2:
-		    	sql = "SELECT d.deptName AS 'regionName', de.deptName AS 'deptName', COUNT(*) from information.vticket v, communion.department d, communion.department de where v.rid = d.dId and v.did = de.dId and v.isregist = 1 and v.expire = 0 GROUP BY v.rid, v.did";
+		    	sql = "SELECT d.name AS 'regionName', de.name AS 'deptName', COUNT(*) from information.vticket v, communion.department d, communion.department de where v.rid = d.dId and v.did = de.dId and v.isregist = 1 and v.expire = 0 GROUP BY v.rid, v.did";
 		    	break;
 		    default:
-		    	sql = "SELECT d.deptName AS 'regionName', de.deptName AS 'deptName', COUNT(*) from information.vticket v, communion.department d, communion.department de where v.rid = d.dId and v.did = de.dId and v.expire = 0  GROUP BY v.rid, v.did";
+		    	sql = "SELECT d.name AS 'regionName', de.name AS 'deptName', COUNT(*) from information.vticket v, communion.department d, communion.department de where v.rid = d.dId and v.did = de.dId and v.expire = 0  GROUP BY v.rid, v.did";
 		    	break;
 		}
 		

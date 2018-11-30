@@ -425,7 +425,7 @@ var Searcher = function(){
     };
 
     var emptyData = function(){
-        var $resultList = $('#' + basicConf.resultListId).html('');
+        var $resultList = com.focusPage('#' + basicConf.resultListId).html('');
         var $zone = $('<div></div>').addClass('dropzone dz-clickable').css('margin', '20px').css('border', '0px').appendTo($resultList);
         var $mesg = $('<div></div>').addClass('dz-default dz-message').appendTo($zone);
         var $span = $('<span></span>').text('无可用数据提供').appendTo($mesg);
@@ -447,14 +447,14 @@ var Searcher = function(){
 
         _condArr && _condArr.length &&(
             $.each(_condArr,function(i,val){
-                var $input = $('[name=' + val + ']', basicConf.$searcher);
+                var $input = com.focusPage('[name=' + val + ']', basicConf.$searcher);
                 var _inputType = $input.attr("data-type");
                 var _postName = $input.attr("data-rqs");
                 var _rule = Condition.getRuleByCondName( val);
                 var _reg = _rule.submitConfig.validate;
                 var _inputValue = $input.val();
                 var _inputKey = _inputValue!=""?$input.attr("data-typeahead-key"):$input.removeAttr("data-typeahead-key");
-                var _op = $('[name=' + val + ']', basicConf.$searcher).attr('data-op');
+                var _op = com.focusPage('[name=' + val + ']', basicConf.$searcher).attr('data-op');
                 if(_inputValue){
 
                     if(_reg){
@@ -506,7 +506,7 @@ var Searcher = function(){
                 _pname = val,
                     _pvalue = _params[key.substring(0,key.length-5) + "inputValue"],
                     _pkey = _params[key.substring(0,key.length-5) + "data"],
-                    $('[data-rqs="'+ _pname +'"]',basicConf.$searcher).attr('data-typeahead-key',_pkey).val(_pvalue),
+                    com.focusPage('[data-rqs="'+ _pname +'"]',basicConf.$searcher).attr('data-typeahead-key',_pkey).val(_pvalue),
                     _count++
             );
         });
@@ -517,8 +517,8 @@ var Searcher = function(){
             _params = $.extend({},_params,basicConf.extraParams);
             paging.nowPostParams = _params;
 
-            $('.fl-page-input').val(_params["paging.page"]);
-            $('.fl-page-select').val(_params["paging.rows"]);
+            com.focusPage('.fl-page-input').val(_params["paging.page"]);
+            com.focusPage('.fl-page-select').val(_params["paging.rows"]);
 
             paging.getDataByPage(_params);
         }else{
@@ -543,8 +543,8 @@ var Searcher = function(){
         init : function(condCodeArrs, searchId, url, displayFunc, pagerId, historyName, extraParams, noPagingFlag, resultListName, cusBtns, resultListId){
             /*各种设置*/
             basicConf.condCodeArrs = condCodeArrs;
-            basicConf.$searcher = $('#' + searchId);
-            basicConf.$pager = $('#' + pagerId);
+            basicConf.$searcher = com.focusPage('#' + searchId);
+            basicConf.$pager = com.focusPage('#' + pagerId);
             basicConf.url = url;
             basicConf.historyName = historyName;
             basicConf.displayFunc = displayFunc;

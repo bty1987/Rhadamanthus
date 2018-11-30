@@ -8,7 +8,7 @@ $(function () {
      * result.list 列表的json数组
      * */
 
-    $('#layerAddGoodsStorehouseStock').find('input[name="name"]').typeahead({
+    com.focusPage('#layerAddGoodsStorehouseStock').find('input[name="name"]').typeahead({
         url: api.inventory.queryGoodsByName,
         list: [],
         postData: {},
@@ -28,22 +28,22 @@ $(function () {
         isResultTypeMap: true
         , flupdater: function (k, v) {
             //k: key, v:value
-            $('#layerAddGoodsStorehouseStock').find('input[name="name"]').attr('data-gid', k);
+            com.focusPage('#layerAddGoodsStorehouseStock').find('input[name="name"]').attr('data-gid', k);
             com.post(api.inventory.queryColorForEnableByGid, {
                 "color.gid": k
             }, function (res) {
-                $('#layerAddGoodsStorehouseStock').find('select[name="color"]').bindData(res.colors, 'cid', 'name');
+                com.focusPage('#layerAddGoodsStorehouseStock').find('select[name="color"]').bindData(res.colors, 'cid', 'name');
             });
             com.post(api.inventory.queryFormatForEnableByGid, {
                 "format.gid": k
             }, function (res) {
-                $('#layerAddGoodsStorehouseStock').find('select[name="format"]').bindData(res.formats, 'fid', 'info');
+                com.focusPage('#layerAddGoodsStorehouseStock').find('select[name="format"]').bindData(res.formats, 'fid', 'info');
             });
 
             return v;
         }
 
-    })
+    });
 
     com.post(api.inventory.queryStorehouseForSelf, {}, function (res) {
         var storehousesStatus = [];
@@ -52,15 +52,15 @@ $(function () {
             if (v.status == 0) {
                 storehousesStatus.push(v);
             }
-        })
-        $('#layerAddGoodsStorehouseStock').find('select[name="storehouse"]').bindData(storehousesStatus, 'shId', 'name');
+        });
+        com.focusPage('#layerAddGoodsStorehouseStock').find('select[name="storehouse"]').bindData(storehousesStatus, 'shId', 'name');
     }, null, false);
 
     var displayFunc = (function () {
         /*表格样式*/
 
         var renderList = function (tableId, listData) {
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
             if (listData && listData.length) {
 
                 var $ulTitle = createTableTitle();
@@ -149,11 +149,11 @@ $(function () {
 
             $btnCheck.click(function () {
 
-                clearForm('form1');
+                clearForm('formStore');
 
-                var num = $('#layerAdd').find('input[name="num"]').val(v.num);
+                var num = com.focusPage('#layerAddStrore').find('input[name="num"]').val(v.num);
 
-                $('#layerAdd').attr({
+                com.focusPage('#layerAddStrore').attr({
                     'data-gid': v.goods.gid,
                     'data-shId': v.storehouse.shId,
                     'data-cid': v.color.cid,
@@ -161,11 +161,11 @@ $(function () {
                 });
 
                 openlayer(function () {
-                    var gid = $('#layerAdd').attr('data-gid');
-                    var shId = $('#layerAdd').attr('data-shId');
-                    var cid = $('#layerAdd').attr('data-cid');
-                    var fid = $('#layerAdd').attr('data-fid');
-                    if(com.validate('form1'))
+                    var gid = com.focusPage('#layerAddStrore').attr('data-gid');
+                    var shId = com.focusPage('#layerAddStrore').attr('data-shId');
+                    var cid = com.focusPage('#layerAddStrore').attr('data-cid');
+                    var fid = com.focusPage('#layerAddStrore').attr('data-fid');
+                    if(com.validate('formStore'))
                         return;
 
                     saveData(gid, shId, cid, fid, function () {
@@ -180,19 +180,19 @@ $(function () {
             //拆分按钮点击事件
             $btnSplit.click(function () {
                 openlayerPackage(v, $btnSplit.text(), "views/manifest/splitAndMerge.html")
-            })
+            });
 
             //合并按钮点击事件
             $btnMerge.click(function () {
                 openlayerPackage(v, $btnMerge.text(), "views/manifest/splitAndMerge.html")
-            })
+            });
 
             return $liLine;
         };
 
         return {
             init: function (tableId, listData) {
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             },
             drawLine: function (i, v) {
@@ -223,9 +223,9 @@ $(function () {
 
             $adda.click(function () {
 
-                clearForm('form2');
+                clearForm('formStore2');
                 openlayerAdd(function () {
-                    if(com.validate('form2'))
+                    if(com.validate('formStore2'))
                         return;
 
                     addData(function () {
@@ -239,38 +239,38 @@ $(function () {
                     })
 
                 })
-            })
+            });
             return [$impa, $adda];
 
         }
     );
 
     function clearForm(formId){
-        var $form = $("#"+formId);
-        var error = $('.alert-error', $form);
-        var success = $('.alert-success', $form);
-        $('.control-group').removeClass("success").removeClass("error");
-        $(".ok").remove();
-        $(".help-inline").remove();
+        var $form = com.focusPage("#"+formId);
+        var error = com.focusPage('.alert-error', $form);
+        var success = com.focusPage('.alert-success', $form);
+        com.focusPage('.control-group').removeClass("success").removeClass("error");
+        com.focusPage(".ok").remove();
+        com.focusPage(".help-inline").remove();
         success.hide();
         error.hide();
-        $("span.checked",$form).removeClass("checked");
-        $("tr.edit-on").removeClass("edit-on");
+        com.focusPage("span.checked",$form).removeClass("checked");
+        com.focusPage("tr.edit-on").removeClass("edit-on");
         $form.removeClass("edit-item");
-        $(".extra-wrap .control-group:not(.hide)").remove();//去掉辅助项
-        $('input[type="hidden"]',$form).val('');
+        com.focusPage(".extra-wrap .control-group:not(.hide)").remove();//去掉辅助项
+        com.focusPage('input[type="hidden"]',$form).val('');
         document.getElementById(formId).reset();
     }
 
     //导出
     function pageGoodsStorehouseStockImport() {
 
-        if ($('span[name="totalRecords"]').text() == 0) {
+        if (com.focusPage('span[name="totalRecords"]').text() == 0) {
             com.showAlert(com.warning, "请通过条件进行查询");
             return false;
         }
 
-        if ($('span[name="totalRecords"]').text() > 1000) {
+        if (com.focusPage('span[name="totalRecords"]').text() > 2000) {
             com.showAlert(com.warning, "查询结果大于阀值 , 不能完成导出动作");
             return false;
         }
@@ -289,13 +289,13 @@ $(function () {
                     ['单位', 'goods.measurementUnit'],
                     ['套餐', 'goods.type'],
                     ['件数', 'goods.pieceNum'],
-                    ['数量', 'num'],
+                    ['数量', 'num']
                 ],
-                list: res.paging.data,
+                list: res.paging.data
             });
 
         });
-    };
+    }
 
     //盘点弹窗
     function openlayer(callback) {
@@ -304,7 +304,7 @@ $(function () {
             type: 1,
             //skin: 'layui-layer-lan',
             title: "盘点",
-            content: $('#layerAdd'),
+            content: com.focusPage('#layerAddStrore'),
             area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
             maxmin: false,
             zIndex: 9000,
@@ -330,7 +330,7 @@ $(function () {
             type: 1,
             //skin: 'layui-layer-lan',
             title: "添加",
-            content: $('#layerAddGoodsStorehouseStock'),
+            content: com.focusPage('#layerAddGoodsStorehouseStock'),
             area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
             maxmin: false,
             zIndex: 9000,
@@ -340,24 +340,24 @@ $(function () {
             },
             btn2: function (index, layero) {
                 //按钮【按钮二】的回调
-                emptyAdd()
+                emptyAdd();
                 goodsStorehouseSeacher.doSearch();
             },
             cancel: function () {
                 //右上角关闭回调
-                emptyAdd()
+                emptyAdd();
                 goodsStorehouseSeacher.doSearch();
             }
         })
     }
     function emptyAdd(){
-        $('#layerAddGoodsStorehouseStock').find('select[name="color"]').empty();
-        $('#layerAddGoodsStorehouseStock').find('select[name="format"]').empty();
+        com.focusPage('#layerAddGoodsStorehouseStock').find('select[name="color"]').empty();
+        com.focusPage('#layerAddGoodsStorehouseStock').find('select[name="format"]').empty();
     }
     //拆分,合并弹窗
     function openlayerPackage(v, title, url) {
 
-        var $PopUp = $('#splitAndMergePopUp');
+        var $PopUp = com.focusPage('#splitAndMergePopUp');
         params['goodsStorehouseStock'] = v;
         $PopUp.attr({'data-title': title});
         //弹出即全屏
@@ -381,60 +381,8 @@ $(function () {
         });
     }
 
-    /*登录表单校验*/
-    var submitValidate = function () {
-        $("#form1 .alert-error").hide();
-
-        var validator = com.validate("#form1", {
-            //一些校验规则
-            messages: {
-                uewNum: {
-                    isAllDigit: "请输入数字."
-                }
-            },
-            success: function (label) {
-                label.closest('.control-group').removeClass('error');
-                label.remove();
-            },
-            errorPlacement: function (error, element) {
-                error.addClass('help-small no-left-padding').insertAfter(element);
-            }
-        });
-        return validator;
-    };
-    //添加表单校验
-    var submitValidataGoodsStorehouseStock = function () {
-        $("#form2 .alert-error").hide();
-
-        var validator = com.validate("#form2", {
-            //一些校验规则
-            messages: {
-                name: {
-                    required: "请输入数字."
-                },
-                color: {
-                    required: "请选择颜色."
-                },
-                format: {
-                    required: "请选择规格."
-                },
-                storehouse: {
-                    required: "请选择仓库."
-                }
-            },
-            success: function (label) {
-                label.closest('.control-group').removeClass('error');
-                label.remove();
-            },
-            errorPlacement: function (error, element) {
-                error.addClass('help-small no-left-padding').insertAfter(element);
-            }
-        });
-        return validator;
-    }
-
     function saveData(gid, shId, cid, fid, callback) {
-        var $layer = $('#layerAdd');
+        var $layer = com.focusPage('#layerAddStrore');
         var num = $layer.find('input[name="num"]').val();
         var newNum = $layer.find('input[name="newNum"]').val();
         com.post(api.inventory.checkGoodsStorehouseStock, {
@@ -452,7 +400,7 @@ $(function () {
     }
 
     function addData(callback) {
-        var $layer = $('#layerAddGoodsStorehouseStock');
+        var $layer = com.focusPage('#layerAddGoodsStorehouseStock');
         var gid = $layer.find('input[name="name"]').attr('data-gid');
         var cid = $layer.find('select[name="color"] option:selected').val();
         var fid = $layer.find('select[name="format"] option:selected').val();
@@ -465,7 +413,7 @@ $(function () {
             "goodsStorehouseStock.storehouse.shId": shId
         }, function (res) {
             callback();
-            emptyAdd()
+            emptyAdd();
             goodsStorehouseSeacher.doSearch();
         })
     }

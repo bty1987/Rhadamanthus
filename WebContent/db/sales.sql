@@ -12,7 +12,8 @@ CREATE TABLE `refunds` (
   `balanceTime` timestamp NULL DEFAULT NULL COMMENT '结算时间',
   `comment` varchar(128) NOT NULL,
   `status` tinyint(2) DEFAULT '0',
-  PRIMARY KEY (`rid`)
+  PRIMARY KEY (`rid`),
+  KEY `indexone` (`sid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='退货单';
 
 DROP TABLE IF EXISTS `refundsitem`;
@@ -23,7 +24,9 @@ CREATE TABLE `refundsitem` (
   `siid` int(11) NOT NULL COMMENT '销售项ID',
   `num` decimal(10,3) NOT NULL DEFAULT '0.000',
   `total` decimal(10,3) NOT NULL DEFAULT '0.000',
-  PRIMARY KEY (`riid`)
+  PRIMARY KEY (`riid`),
+  KEY `indexone` (`sid`),
+  KEY `indextwo` (`rid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='退货单';
 
 DROP TABLE IF EXISTS `sales`;
@@ -78,21 +81,24 @@ CREATE TABLE `salesbalance` (
   `type` tinyint(2) NOT NULL COMMENT '类型,0:购货,1:预结算退货,2:结算退货',
   `status` tinyint(2) NOT NULL COMMENT '状态,0:预结算,1:厂商结算,2:结算',
   `comment` varchar(128) DEFAULT NULL COMMENT '备注',
-  PRIMARY KEY (`sbid`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='销售结算';
+  PRIMARY KEY (`sbid`),
+  KEY `indexone` (`sid`),
+  KEY `indextwo` (`createTime`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='销售结算';
 
 DROP TABLE IF EXISTS `salesbalanceitem`;
 CREATE TABLE `salesbalanceitem` (
   `sbiid` int(11) NOT NULL AUTO_INCREMENT,
   `sbid` int(11) NOT NULL COMMENT '销售结算ID',
   `siid` int(11) NOT NULL COMMENT '销售项ID',
-  `rawCtype` tinyint(2) NOT NULL COMMENT '原结算方式, 0:底价,1:结算',
+  `rawCtype` tinyint(1) NOT NULL COMMENT '原结算方式, 0:底价,1:结算',
   `rawCvalue` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '原结算值',
-  `ctype` tinyint(2) NOT NULL COMMENT '结算方式',
+  `ctype` tinyint(1) NOT NULL COMMENT '结算方式',
   `cvalue` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '结算值',
   `num` decimal(10,3) NOT NULL COMMENT '数量',
   `total` decimal(10,3) NOT NULL COMMENT '总价',
-  PRIMARY KEY (`sbiid`)
+  PRIMARY KEY (`sbiid`),
+  KEY `indexone` (`sbid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='销售结算项';
 
 DROP TABLE IF EXISTS `salesitem`;
@@ -108,14 +114,14 @@ CREATE TABLE `salesitem` (
   `disPrice` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '折扣价',
   `postDis` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '折让',
   `price` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '折让价',
-  `xgnum` decimal(10,3) NOT NULL COMMENT '出货剩余数量',
-  `punum` decimal(10,3) NOT NULL COMMENT '采购剩余数量',
+  `xgnum` decimal(10,3) NOT NULL DEFAULT 0 COMMENT '出货剩余数量',
+  `punum` decimal(10,3) NOT NULL DEFAULT 0 COMMENT '采购剩余数量',
   `num` decimal(10,3) NOT NULL DEFAULT '0.000',
   `total` decimal(10,3) NOT NULL DEFAULT '0.000',
   `comment` varchar(128) DEFAULT NULL,
   `rawCtype` tinyint(2) NOT NULL COMMENT '原结算方式',
   `rawCvalue` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '原结算值',
-  `ctype` tinyint(2) NOT NULL COMMENT '结算方式',
+  `ctype` tinyint(1) NOT NULL COMMENT '结算方式',
   `cvalue` decimal(10,3) NOT NULL DEFAULT '0.000' COMMENT '结算值',
   PRIMARY KEY (`siid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='销售项';
@@ -125,7 +131,9 @@ CREATE TABLE `salesmanifest` (
   `smid` int(11) NOT NULL AUTO_INCREMENT,
   `sid` int(11) NOT NULL,
   `mid` int(11) NOT NULL,
-  PRIMARY KEY (`smid`) USING BTREE
+  PRIMARY KEY (`smid`),
+  KEY `indexone` (`sid`),
+  KEY `indextwo` (`mid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='销售货单';
 
 DROP TABLE IF EXISTS `salespurchase`;
@@ -133,5 +141,7 @@ CREATE TABLE `salespurchase` (
   `spid` int(11) NOT NULL AUTO_INCREMENT,
   `sid` int(11) NOT NULL,
   `pid` int(11) NOT NULL,
-  PRIMARY KEY (`spid`) USING BTREE
+  PRIMARY KEY (`spid`),
+  KEY `indexone` (`sid`),
+  KEY `indextwo` (`pid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='销售采购单';

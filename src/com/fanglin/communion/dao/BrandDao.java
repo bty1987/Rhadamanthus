@@ -22,14 +22,14 @@ public interface BrandDao extends Dao<BrandPO> {
 	
 	public List<BrandPO> pageBrand(Paging paging, List<Filter> filters,int company);
 	
-	public List<BrandPO> pageBrandByBrandNamePinYin(Paging paging, String pinyinName,int company);
+	public List<BrandPO> pageBrandByPinYinName(Paging paging, String pinyinName,int company);
 	
-	public List<BrandPO> queryBrandByCategoryId(long categoryId);
+	public List<BrandPO> queryBrandByCid(long cid);
 	
-	public List<BrandPO> queryBrandByBrandIds(List<Long> brandIds);
+	public List<BrandPO> queryBrandByBids(List<Long> bids);
 	
-	public BrandPO queryBrandByBId(long bId);
+	public BrandPO queryBrandByBid(long bid);
 	
-	public BrandPO queryBrandByBrandId(String brandId);
+	public BrandPO queryBrandByNo(String no);
 	
 }

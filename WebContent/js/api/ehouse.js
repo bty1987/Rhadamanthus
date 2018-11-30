@@ -4,12 +4,14 @@ $.extend(api, {ehouse: {
     deleteEpicture: {url: "deleteEpicture.do"},
 
     pageEuser: {url: "pageEuser.do"},
-    queryEuserByName: {url: "queryEuserByName.do"},
+    queryEuserByEuid: {url: "queryEuserByEuid.do"},
+    queryEuserByPinYin: {url: "queryEuserByPinYin.do"},
     addEuser: {url: "addEuser.do"},
     updateEuser: {url: "updateEuser.do"},
 
     pageCase: {url: "pageCase.do"},
     queryCaseByTypeAndStatus: {url: "queryCaseByTypeAndStatus.do"},
+    queryCaseByCid: {url: "queryCaseByCid.do"},
     addCase: {url: "addCase.do"},
     updateCase: {url: "updateCase.do"},
     updateCaseForStatus: {url: "updateCaseForStatus.do"},
@@ -19,6 +21,9 @@ $.extend(api, {ehouse: {
     addEcustomer: {url: "addEcustomer.do"},
 
     pageEcity: {url: "pageEcity.do"},
-    queryEcityByCity: {url: "queryEcityByCity.do"},
-    addEcity: {url: "addEcity.do"}
+    queryEcity: {url: "queryEcity.do"},
+    queryEcityByXandY: {url: "queryEcityByXandY.do"},
+    queryEcityByPinYin: {url: "queryEcityByPinYin.do"},
+    addEcity: {url: "addEcity.do"},
+    updateEcity: {url: "updateEcity.do"}
 }});

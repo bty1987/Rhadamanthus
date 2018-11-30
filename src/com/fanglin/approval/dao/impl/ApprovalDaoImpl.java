@@ -80,6 +80,13 @@ public class ApprovalDaoImpl extends DaoImpl<ApprovalPO> implements ApprovalDao 
 				.add(Restrictions.eq(ApprovalPO.COLUMN_STATUS_STR, status))
 				.uniqueResult();
 	}
+	
+	@Override
+	public ApprovalPO queryApprovalByProcessinstanceid(String processinstanceid) {
+		
+		return (ApprovalPO) session().createCriteria(ApprovalPO.class).add(Restrictions.eq(ApprovalPO.COLUMN_PROCESSINSTANCEID_STR, processinstanceid)).uniqueResult();
+				
+	}
 
 	@Override
 	public int countApprovalForInitByIdent(String ident) {
@@ -145,6 +152,5 @@ public class ApprovalDaoImpl extends DaoImpl<ApprovalPO> implements ApprovalDao 
 		}
 	
 	}
-	
-	
+
 }

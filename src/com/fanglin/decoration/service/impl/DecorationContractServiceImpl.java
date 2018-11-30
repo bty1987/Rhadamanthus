@@ -23,10 +23,12 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fanglin.approval.dao.ApprovalDao;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Authentication;
+import com.fanglin.decoration.dao.DecorationAdditionDao;
 import com.fanglin.decoration.dao.DecorationBelongDao;
 import com.fanglin.decoration.dao.DecorationContractDao;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.dao.DecorationOperateDao;
+import com.fanglin.decoration.po.DecorationAdditionPO;
 import com.fanglin.decoration.po.DecorationBelongPO;
 import com.fanglin.decoration.po.DecorationContractPO;
 import com.fanglin.decoration.po.DecorationOperatePO;
@@ -42,6 +44,7 @@ import com.fanglin.quotation.dao.AddReduceDao;
 import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.po.QuotationPO;
 import com.fanglin.system.dao.SystemConfigDao;
+import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.SystemConfig;
@@ -80,6 +83,9 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 	@Autowired
 	private SystemConfigDao SystemConfigDao;
 	
+	@Autowired
+	private DecorationAdditionDao decorationAdditionDao;
+	
 	@Override
 	public DecorationContractVO queryDecorationContractByOrderId(DecorationContractVO decorationContractVO) throws FLException{
 		
@@ -102,7 +108,6 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 			payments.add(_decorationPaymentVO);
 		}
 		decorationContractVO.setPayments(payments);
-		decorationContractVO.setPaymentRates(Arrays.asList(SystemConfig.getInt("firstRate"), SystemConfig.getInt("firstSecondRate"), SystemConfig.getInt("secondRate"), SystemConfig.getInt("lastRate")));
 		
 		return decorationContractVO;
 	}
@@ -130,7 +135,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int saveDecorationContract(DecorationContractVO decorationContractVO) throws FLException{
+	public int saveDecorationContract(DecorationContractVO decorationContractVO, int company) throws FLException{
 		
 		List<Short> noUpdateStatus = Arrays.asList(new Short[]{DecorationPO.STATUS_SIGNED_INT, DecorationPO.STATUS_COMPLETED_INT, DecorationPO.STATUS_WASTE_INT, DecorationPO.STATUS_TERMINATION_INT}); // 已签约, 已完工, 废单, 合同终止
 		
@@ -148,8 +153,6 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		
 		StringBuffer contractCode= new StringBuffer(SystemConfig.getString("contractStartWith", "FLJ-"));
 		contractCode.append(decorationPO.getOrderId());
-		contractCode.append("-");
-		contractCode.append(decorationPO.getDesigner().getDept().getContractPrefix());
 		
 		decorationContractPO.setAdditionalInfo(decorationContractVO.getAdditionalInfo());
 		decorationContractPO.setEndTime(decorationContractVO.getEndTime());
@@ -157,7 +160,11 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		decorationContractPO.setDecorationPO(decorationPO);
 		decorationContractPO.setContractCode(contractCode.toString());
 		decorationContractPO.setWorkingDuration(decorationContractVO.getWorkingDuration());
-		decorationContractPO.setTemplateHtml(SystemConfigDao.querySystemConfig("contractPath").getValue());
+		
+		SystemConfigPO querySystemConfig = SystemConfigDao.querySystemConfig("contractPath", company);
+		
+		decorationContractPO.setTemplateHtml(querySystemConfig == null ? "default.html" : querySystemConfig.getValue());
+		
 		decorationContractPO.setSignTime(DateUtil.getDateToTimestamp(new Date()));
 	
 		decorationContractDao.saveOrUpdate(decorationContractPO);
@@ -225,6 +232,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		
 		List<DecorationBelongPO> designerOrderBelongInfoPOs = orderBelongInfoDao.queryOrderBelongInfoForCurrentByOrderIdAType(decorationContractVO.getOrderId(), DecorationBelongPO.BELONGTYPE_DESIGN_INT);
 		List<DecorationBelongPO> salemsanOrderBelongInfoPOs = orderBelongInfoDao.queryOrderBelongInfoForCurrentByOrderIdAType(decorationContractVO.getOrderId(), DecorationBelongPO.BELONGTYPE_SALESMAN_INT);
+		DecorationAdditionPO decorationAdditionPO = decorationAdditionDao.queryDecorationAdditionByOrderId(orderId);
 		
 		if(!resignFlag){
 			decorationPO.setContractTime(DateUtil.getDateToTimestamp(new Date()));
@@ -242,11 +250,16 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		
 		if(!resignFlag){
 			
-			//更新归属信息的部门和大区
+			decorationAdditionPO.clearDesign();
+			decorationAdditionPO.clearSales();
+			
+			//更新归属信息的部门和大区, 更新附加信息
 			for(DecorationBelongPO orderBelongInfoPO: designerOrderBelongInfoPOs){
 				orderBelongInfoPO.setDepartment(orderBelongInfoPO.getBelonger().getDept());
 				orderBelongInfoPO.setRegion(orderBelongInfoPO.getBelonger().getDept().getFatherDept());
 				
+				decorationAdditionPO.setDesign(orderBelongInfoPO.getBelonger().getCurrentName(), orderBelongInfoPO.getBelonger().getDept().getName(), orderBelongInfoPO.getBelonger().getDept().getFatherDept().getName());
+
 				orderBelongInfoDao.update(orderBelongInfoPO);
 			}
 			
@@ -254,10 +267,14 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 				orderBelongInfoPO.setDepartment(orderBelongInfoPO.getBelonger().getDept());
 				orderBelongInfoPO.setRegion(orderBelongInfoPO.getBelonger().getDept().getFatherDept());
 				
+				decorationAdditionPO.setSales(orderBelongInfoPO.getBelonger().getCurrentName(), orderBelongInfoPO.getBelonger().getDept().getName(), orderBelongInfoPO.getBelonger().getDept().getFatherDept().getName());
+				
 				orderBelongInfoDao.update(orderBelongInfoPO);
 			}
 			
+			decorationAdditionDao.update(decorationAdditionPO);
 			decorationOperatePO.setType(DecorationOperatePO.TYPE_SIGN_DECORATION_ORDER_INT);
+			
 		}else{
 			decorationOperatePO.setType(DecorationOperatePO.TYPE_SIGNED_DECORATION_ORDER_INT);
 		}

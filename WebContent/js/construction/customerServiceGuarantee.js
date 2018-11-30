@@ -9,24 +9,24 @@ jQuery(function ($) {
         levelDict: {"0": "普通", "1": "重要"},
 
         editFlag: false,
-        repeatFlg: false,
+        repeatFlg: false
     };
 
-    $('#fl-statement').statement("客服控制", "保修信息列表");
+    com.focusPage('#fl-statement').statement("客服控制", "保修信息列表");
 
-    guarantee.saveBtn = $("#saveBtn").on("click", saveData);
-    guarantee.cancelBtn = $("#cancelBtn");
-    guarantee.modal = $("#guaranteeModal");
+    guarantee.saveBtn = com.focusPage("#saveBtn").on("click", saveData);
+    guarantee.cancelBtn = com.focusPage("#cancelBtn");
+    guarantee.modal = com.focusPage("#guaranteeModal");
 
-    guarantee.guaranteeItems.orderId = $("#orderId");
-    guarantee.guaranteeItems.customerName = $("#customerName");
-    guarantee.guaranteeItems.guaranteeTime = $("#guaranteeTime");
-    guarantee.guaranteeItems.guaranteeDes = $("#guaranteeDes");
+    guarantee.guaranteeItems.orderId = com.focusPage("#orderId");
+    guarantee.guaranteeItems.customerName = com.focusPage("#customerName");
+    guarantee.guaranteeItems.guaranteeTime = com.focusPage("#guaranteeTime");
+    guarantee.guaranteeItems.guaranteeDes = com.focusPage("#guaranteeDes");
 
 
     var displayFunc = (function () {
         var renderList = function (tableId, listData) {
-            var $tableWrap = $('#' + tableId).empty();
+            var $tableWrap = com.focusPage('#' + tableId).empty();
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if (listData && listData.length) {
@@ -54,7 +54,7 @@ jQuery(function ($) {
             var propertyArr = [
                 ["客户名:", v.customerName, "grey"],
                 ["时间:", v.guaranteeTime, "grey"],
-                ["备注:", v.guaranteeDes, "grey"],
+                ["备注:", v.guaranteeDes, "grey"]
             ];
 
             $.each(propertyArr, function (index, value) {
@@ -94,7 +94,7 @@ jQuery(function ($) {
 
         return {
             init: function (tableId, listData) {
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             },
             drawLine: function (v) {
@@ -121,7 +121,7 @@ jQuery(function ($) {
         return [$addb, $adda];
     });
 
-    $('a[name="add"]', '#pagenation').click(function () {
+    com.focusPage('a[name="add"]', '#pagenation').click(function () {
         guarantee.editFlag = false;
 
         com.cleanItems(guarantee.guaranteeItems);
@@ -136,11 +136,11 @@ jQuery(function ($) {
         guarantee.modal.modal("show");
     });
 
-    $('a[name="back"]', '#pagenation').click(function () {
+    com.focusPage('a[name="back"]', '#pagenation').click(function () {
         com.switchPage(api.index.customerServiceIndex.url);
     });
 
-    $('.date-picker').datepicker({autoclose: true});
+    com.focusPage('.date-picker').datepicker({autoclose: true});
 
     function levelFormat(cellvalue, options, rowdata) {
 
@@ -167,7 +167,7 @@ jQuery(function ($) {
             "customerServiceGuarantee.orderId": guarantee.guaranteeItems.orderId.val(),
             "customerServiceGuarantee.customerName": guarantee.guaranteeItems.customerName.val(),
             "customerServiceGuarantee.guaranteeTime": guarantee.guaranteeItems.guaranteeTime.val(),
-            "customerServiceGuarantee.guaranteeDes": guarantee.guaranteeItems.guaranteeDes.val(),
+            "customerServiceGuarantee.guaranteeDes": guarantee.guaranteeItems.guaranteeDes.val()
         };
 
         if (guarantee.editFlag) {

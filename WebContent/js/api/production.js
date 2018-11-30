@@ -141,6 +141,6 @@ $.extend(api,{production:{
 	queryProductionWorkFlowByPwpid : {url : "queryProductionWorkFlowByPwpid.do"},
 	queryProductionWorkFlowByPwpidAWfid : {url : "queryProductionWorkFlowByPwpidAWfid.do"},
 	operateProductionWorkFlow : {url : "operateProductionWorkFlow.do"},
-	queryProductionUserWorkFlowsByPwfids:{url:"queryProductionUserWorkFlowsByPwfids.do"}
+	queryProductionUserWorkFlowsByPwfid:{url:"queryProductionUserWorkFlowsByPwfid.do"}
 
 }});

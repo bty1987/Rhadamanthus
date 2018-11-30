@@ -9,13 +9,13 @@ import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
 import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -28,6 +28,7 @@ import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.client.RedirectLocations;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
@@ -107,8 +108,9 @@ public class HttpUtil {
         System.out.println(url);
         
         try {
-        	StringEntity requestEntity = new StringEntity(JSON.toJSONString(data), "utf-8");
-            httpPost.setEntity(requestEntity);
+        	StringEntity stringEntity = new StringEntity(JSON.toJSONString(data), "utf-8");
+        	
+            httpPost.setEntity(stringEntity);
             
             response = httpClient.execute(httpPost, new BasicHttpContext());
 
@@ -140,6 +142,43 @@ public class HttpUtil {
             }
         }
 
+        return null;
+    }
+	
+	public static JSONObject httpPost(String url, List<BasicNameValuePair> param){
+
+        HttpPost httpPost = new HttpPost(url);
+        CloseableHttpClient client = HttpClients.createDefault();
+        
+        HttpResponse response = null;
+        
+        System.out.println(url);
+        
+        try {
+        	httpPost.setEntity(new UrlEncodedFormEntity(param, "utf-8"));  
+        	
+        	response = client.execute(httpPost);
+            
+            if (!RESPONSE_CODE_SUCCESS_LIST.contains(response.getStatusLine().getStatusCode())) {
+            	logger.error(String.format(RESPONSE_PRINT_ISSUES_STR, response.getStatusLine().getStatusCode(), url));
+                return null;
+            }
+            
+            HttpEntity entity = response.getEntity();
+            
+            if (entity != null) {
+                String resultStr = EntityUtils.toString(entity, "utf-8");
+
+                JSONObject result = JSON.parseObject(resultStr);
+                
+                System.out.println(resultStr.substring(0, 128));
+                
+                return result;
+            }
+        } catch (IOException e) {
+        	logger.error(String.format(RESPONSE_PRINT_EXCEPTION_STR, url, e.getMessage()));
+        }
+        
         return null;
     }
 	
@@ -330,14 +369,5 @@ public class HttpUtil {
 	
 	public static void main(String[] args) {
 //		HttpUtil.download("http://static.dingtalk.com/media/lADOHx5W480FAM0C0A_720_1280.jpg", "test.jpg", "d:\\");
-		
-		String url = "http://192.168.5.100:9200/test/test";
-		
-		Map<String, String> param = new HashMap<String, String>();
-		
-		param.put("name", "test2");
-		
-		HttpUtil.httpPost(url, param);
-		
 	}
 }

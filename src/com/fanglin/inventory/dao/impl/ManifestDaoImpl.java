@@ -92,6 +92,9 @@ public class ManifestDaoImpl extends DaoImpl<ManifestPO> implements ManifestDao 
 					
 				}else if(ManifestPO.COLUMN_CODE_STR.equals(field)){
 					query.add(query.getCriterion(ManifestPO.COLUMN_CODE_STR, data, op));
+				}else if("createrName".equals(field)){
+					query.alias("createUser", "createUser");
+					query.add(query.getCriterion(ManifestPO.COLUMN_CREATEUSER_USERID_STR, data, op));
 				}
 			}
 		}

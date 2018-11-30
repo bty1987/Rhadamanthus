@@ -13,11 +13,13 @@ package com.fanglin.approval.service.impl;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.fastjson.JSONObject;
 import com.fanglin.approval.dao.ApprovalDao;
 import com.fanglin.approval.dao.ApprovalMaterialFullPaymentDao;
 import com.fanglin.approval.po.ApprovalMaterialFullPaymentPO;
@@ -26,12 +28,15 @@ import com.fanglin.approval.service.ApprovalMaterialFullPaymentService;
 import com.fanglin.approval.vo.ApprovalMaterialFullPaymentVO;
 import com.fanglin.approval.vo.ApprovalVO;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.dingding.service.ApprovalService;
 import com.fanglin.material.dao.MaterialDao;
 import com.fanglin.material.po.MaterialPO;
 import com.fanglin.payment.dao.MaterialPaymentDao;
 import com.fanglin.payment.po.MaterialPaymentPO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.system.dao.SystemConfigDao;
+import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 
@@ -53,6 +58,12 @@ public class ApprovalMaterialFullPaymentServiceImpl implements ApprovalMaterialF
 	
 	@Autowired
 	private UserDao userDao;
+	
+	@Autowired
+	private SystemConfigDao systemConfigDao;
+	
+	@Autowired
+	private ApprovalService approvalDDService;
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
@@ -85,8 +96,18 @@ public class ApprovalMaterialFullPaymentServiceImpl implements ApprovalMaterialF
 		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiver().getUserId());
 		UserPO sender = userDao.queryUserByUserId(userId);
 		
+		SystemConfigPO systemConfigPO = systemConfigDao.querySystemConfig(ApprovalPO.APPROVAL_SYSTEMCONFIG_MATERIALDISCOUNT_STR,company);
+		
+		if(systemConfigPO == null){
+			approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_INIT_INT);
+		}else{
+			approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_DINGDING_INT);
+			List<JSONObject> formComponentValues = approvalDDService.getForms("说明", String.format(ApprovalPO.APPROVAL_CONTENTS_MATERIAL_FULL_PAYMENT_STR, materialPO.getOrderId(), materialPO.getNo(), approvalMaterialFullPaymentVO.getReferMoney()));
+			String processinstanceid = approvalDDService.initiateApproval(systemConfigPO.getValue(), userId, approvalVO.getReceiver().getUserId(), null, null, formComponentValues, company);
+			approvalPO.setProcessinstanceid(processinstanceid);
+		}
+		
 		approvalPO.setType(ApprovalPO.APPROVAL_TYPE_MATERIAL_FULL_PAYMENT_INT);
-		approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_INIT_INT);
 		approvalPO.setIdent(String.valueOf(msoId));
 		approvalPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		approvalPO.setContents(String.format(ApprovalPO.APPROVAL_CONTENTS_MATERIAL_FULL_PAYMENT_STR, materialPO.getOrderId(), materialPO.getNo(), approvalMaterialFullPaymentVO.getReferMoney()));

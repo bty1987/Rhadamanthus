@@ -63,15 +63,17 @@ public class BrandUserRightServiceImpl implements BrandUserRightService {
 				for(int i=0;i<brandId.size();i++) {
 					brandIds.add(Long.parseLong(brandId.get(i)));
 				}
-				List<BrandPO> brandPOs = brandDao.queryBrandByBrandIds(brandIds); 
+				List<BrandPO> brandPOs = brandDao.queryBrandByBids(brandIds); 
 				List<BrandVO> brandVOs = new ArrayList<BrandVO>();
 				
 				for(BrandPO brandPO : brandPOs){
 				
 					BrandVO brandVO = new BrandVO();
 					
-					BeanUtil.copyProperties(brandPO, brandVO);
-					BeanUtil.copyProperties(brandPO.getCategory(), brandVO);
+					BeanUtil.copyProperties(brandPO, brandVO,Arrays.asList("category"));
+					brandVO.setCategoryId(brandPO.getCategory().getNo());
+					brandVO.setCategoryName(brandPO.getCategory().getName());
+					brandVO.setCid(brandPO.getCategory().getCid());
 					
 					brandVOs.add(brandVO);
 				}
@@ -105,15 +107,17 @@ public class BrandUserRightServiceImpl implements BrandUserRightService {
 				for(int i=0;i<brandId.size();i++) {
 					brandIds.add(Long.parseLong(brandId.get(i)));
 				}
-				List<BrandPO> brandPOs = brandDao.queryBrandByBrandIds(brandIds); 
+				List<BrandPO> brandPOs = brandDao.queryBrandByBids(brandIds); 
 				List<BrandVO> brandVOs = new ArrayList<BrandVO>();
 				
 				for(BrandPO brandPO : brandPOs){
 				
 					BrandVO brandVO = new BrandVO();
 					
-					BeanUtil.copyProperties(brandPO, brandVO);
-					BeanUtil.copyProperties(brandPO.getCategory(), brandVO);
+					BeanUtil.copyProperties(brandPO, brandVO,Arrays.asList("category"));
+					brandVO.setCategoryId(brandPO.getCategory().getNo());
+					brandVO.setCategoryName(brandPO.getCategory().getName());
+					brandVO.setCid(brandPO.getCategory().getCid());
 					
 					brandVOs.add(brandVO);
 				}

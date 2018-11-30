@@ -12,23 +12,23 @@ jQuery(function ($) {
         editFlag: false
     };
 
-    drawLineApply.saveBtn = $("#saveBtn").on("click", saveData);
+    drawLineApply.saveBtn = com.focusPage("#saveBtn").on("click", saveData);
 
-    drawLineApply.cancelBtn = $("#cancelBtn");
+    drawLineApply.cancelBtn = com.focusPage("#cancelBtn");
 
-    drawLineApply.drawLineApplyModal = $("#drawLineApplyModal");
+    drawLineApply.drawLineApplyModal = com.focusPage("#drawLineApplyModal");
 
-    drawLineApply.drawLineModal = $("#drawLineModal");
+    drawLineApply.drawLineModal = com.focusPage("#drawLineModal");
 
-    drawLineApply.drawLineApplyItems.dlId = $("#dlId");
+    drawLineApply.drawLineApplyItems.dlId = com.focusPage("#dlId");
 
-    drawLineApply.drawLineApplyItems.actualDate = $("#actualDate");
+    drawLineApply.drawLineApplyItems.actualDate = com.focusPage("#actualDate");
 
-    drawLineApply.drawLineApplyItems.startTime = $("#startTime");
+    drawLineApply.drawLineApplyItems.startTime = com.focusPage("#startTime");
 
-    drawLineApply.drawLineApplyItems.endTime = $("#endTime");
+    drawLineApply.drawLineApplyItems.endTime = com.focusPage("#endTime");
 
-    drawLineApply.drawLineApplyItems.drawLineGroup = $("#drawLineGroup");
+    drawLineApply.drawLineApplyItems.drawLineGroup = com.focusPage("#drawLineGroup");
 
     com.post(api.data.queryDrawlineGroup, {}, function (res) {
         if (res.drawLineGroups == null || res.drawLineGroups == "") {
@@ -41,7 +41,7 @@ jQuery(function ($) {
     var displayFunc = (function () {
 
         var renderList = function (tableId, listData) {
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if (listData && listData.length) {
@@ -71,7 +71,7 @@ jQuery(function ($) {
                 ["申请人:", v.applayUser, "grey"],
                 ["申请时间:", v.applayTime, "green"],
                 ["放线次数:", v.count, "blue"],
-                ["描述:", v.content, "grey"],
+                ["描述:", v.content, "grey"]
             ];
 
             $.each(propertyArr, function (index, value) {
@@ -94,7 +94,7 @@ jQuery(function ($) {
 
         return {
             init: function (tableId, listData) {
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             },
             drawLine: function (v) {
@@ -107,7 +107,7 @@ jQuery(function ($) {
     searcher.init(["c_orderId", "c_designer", "c_salesman"], "condList", api.drawline.pageDrawLineForPlan, function (data) {
         displayFunc.init('resultList', data);
     }, "pagenation", "drawLineApplyPostData");
-    $("#condList").append('<button id="showDrawLineApplyInfos" style="marg" class="btn btn-xs btn-yellow btn-search">申请信息</button>');
+    com.focusPage("#condList").append('<button id="showDrawLineApplyInfos" style="marg" class="btn btn-xs btn-yellow btn-search">申请信息</button>');
 
     function drawLine(v) {
 
@@ -172,15 +172,15 @@ jQuery(function ($) {
         });
     }
 
-    $('#showDrawLineApplyInfos').click(function () {
+    com.focusPage('#showDrawLineApplyInfos').click(function () {
         drawLineApply.drawLineApplyModal.modal("show");
     });
 
-    $('.date-picker').datepicker().next().on(ace.click_event, function () {
-        $(this).prev().focus();
+    com.focusPage('.date-picker').datepicker().next().on(ace.click_event, function () {
+        com.focusPage(this).prev().focus();
     });
 
-    $('#startTime').timepicker({
+    com.focusPage('#startTime').timepicker({
 
         minuteStep: 1,
 
@@ -189,7 +189,7 @@ jQuery(function ($) {
         showMeridian: false
     });
 
-    $('#endTime').timepicker({
+    com.focusPage('#endTime').timepicker({
 
         minuteStep: 1,
 
@@ -205,11 +205,11 @@ jQuery(function ($) {
 
     function initPlan() {
 
-        $('#calendar').fullCalendar('destroy');
+        com.focusPage('#calendar').fullCalendar('destroy');
 
-        $('#calendar').fullCalendar('today');
+        com.focusPage('#calendar').fullCalendar('today');
 
-        $('#calendar').fullCalendar({
+        com.focusPage('#calendar').fullCalendar({
             buttonText: {
                 today: '今天', month: '月', week: '周', day: '日', prev: '上一月', next: '下一月'
             },
@@ -230,8 +230,8 @@ jQuery(function ($) {
 
                 var options = {
                     "drawLine.startTime": startTime,
-                    "drawLine.endTime": endTime,
-                }
+                    "drawLine.endTime": endTime
+                };
 
                 com.post(api.drawline.countDrawLineByDate, options, function (res) {
 
@@ -252,7 +252,7 @@ jQuery(function ($) {
                                 title: j + _ + "个",
                                 start: new Date(s[0], s[1] - 1, s[2]),
                                 allDay: true
-                            }
+                            };
 
                             events.push(event);
                         }

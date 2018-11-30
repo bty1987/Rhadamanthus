@@ -95,6 +95,7 @@ $.extend(api, {payment: {
 	confirmSalesPayment : {url : "confirmSalesPayment.do"},
 	cancelSalesPayment : {url : "cancelSalesPayment.do"},
 	refundSalesPayment : {url : "refundSalesPayment.do"},
+	updateSalesPayment: {url: "updateSalesPayment.do"},
 		
 	collectServicePayment: {url: "collectServicePayment.do"},
 	collectServicePaymentForService: {url: "collectServicePaymentForService.do"},
@@ -107,4 +108,7 @@ $.extend(api, {payment: {
 	queryServiceReceiptBySrId: {url: "queryServiceReceiptBySrId.do"},
 	queryServicePaymentForNotInitBySrId: {url: "queryServicePaymentForNotInitBySrId.do"},
 	queryServicePaymentByOrderId: {url: "queryServicePaymentByOrderId.do"},
+	updateServicePayment: {url: "updateServicePayment.do"},
+	
+	pageReceipt: {url: "pageReceipt.do"}
 }});

@@ -22,7 +22,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fanglin.system.po.CityProperPO;
+import com.fanglin.personel.po.UserPO;
 
 @Entity
 @Table(name = "department", catalog = "communion")
@@ -30,7 +30,7 @@ public class DepartmentPO implements Serializable {
 
 	private static final long serialVersionUID = -7371170236257562586L;
 
-	public static final String COLUMN_DEPTNAME_STR = "deptName";
+	public static final String COLUMN_DEPTNAME_STR = "name";
 
 	public static final String COLUMN_PINYIN_STR = "pinyin";
 
@@ -48,29 +48,29 @@ public class DepartmentPO implements Serializable {
 
 	private int did;
 
-	private String deptId;
+	private String no;
 
-	private String deptName;
+	private String name;
 
 	private String pinyin;
 
 	private DepartmentTypePO type;
 
-	private String subType;
+	private DepartmentPO fatherDept;
 
 	private String createTime;
 
-	private String des;
-
-	private String contractPrefix;
-
-	private DepartmentPO fatherDept;
-
-	private CityProperPO cityProper;
+	private String comment;
 
 	private int company;
 
 	private short status;
+
+	private String kino;
+
+	private String kiname;
+	
+	private UserPO manager;
 
 	public DepartmentPO() {
 		super();
@@ -80,18 +80,23 @@ public class DepartmentPO implements Serializable {
 		super();
 		this.did = did;
 	}
-
-	public DepartmentPO(DepartmentTypePO type, DepartmentPO fatherDept,
-			CityProperPO cityProper) {
-
-		this.type = type;
-		this.fatherDept = fatherDept;
-		this.cityProper = cityProper;
+	
+	public DepartmentPO(String no) {
+		super();
+		this.no = no;
 	}
 
-	public DepartmentPO(String deptId) {
+	public DepartmentPO(DepartmentTypePO type, DepartmentPO fatherDept) {
 		super();
-		this.deptId = deptId;
+		this.type = type;
+		this.fatherDept = fatherDept;
+	}
+
+	public DepartmentPO(DepartmentTypePO type, DepartmentPO fatherDept, UserPO manager) {
+		super();
+		this.type = type;
+		this.fatherDept = fatherDept;
+		this.manager = manager;
 	}
 
 	@Id
@@ -105,22 +110,22 @@ public class DepartmentPO implements Serializable {
 		this.did = did;
 	}
 
-	@Column(name = "deptId")
-	public String getDeptId() {
-		return deptId;
+	@Column(name = "no")
+	public String getNo() {
+		return no;
 	}
 
-	public void setDeptId(String deptId) {
-		this.deptId = deptId;
+	public void setNo(String no) {
+		this.no = no;
 	}
 
-	@Column(name = "deptName")
-	public String getDeptName() {
-		return deptName;
+	@Column(name = "name")
+	public String getName() {
+		return name;
 	}
 
-	public void setDeptName(String deptName) {
-		this.deptName = deptName;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	@Column(name = "pinyin")
@@ -142,13 +147,14 @@ public class DepartmentPO implements Serializable {
 		this.type = type;
 	}
 
-	@Column(name = "subType")
-	public String getSubType() {
-		return subType;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "fdid", referencedColumnName = "did")
+	public DepartmentPO getFatherDept() {
+		return fatherDept;
 	}
 
-	public void setSubType(String subType) {
-		this.subType = subType;
+	public void setFatherDept(DepartmentPO fatherDept) {
+		this.fatherDept = fatherDept;
 	}
 
 	@Column(name = "createTime")
@@ -160,42 +166,13 @@ public class DepartmentPO implements Serializable {
 		this.createTime = createTime;
 	}
 
-	@Column(name = "des")
-	public String getDes() {
-		return des;
+	@Column(name = "comment")
+	public String getComment() {
+		return comment;
 	}
 
-	public void setDes(String des) {
-		this.des = des;
-	}
-
-	@Column(name = "contractPrefix")
-	public String getContractPrefix() {
-		return contractPrefix;
-	}
-
-	public void setContractPrefix(String contractPrefix) {
-		this.contractPrefix = contractPrefix;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "fatherDeptId", referencedColumnName = "did")
-	public DepartmentPO getFatherDept() {
-		return fatherDept;
-	}
-
-	public void setFatherDept(DepartmentPO fatherDept) {
-		this.fatherDept = fatherDept;
-	}
-
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "cityProperId", referencedColumnName = "cpid")
-	public CityProperPO getCityProper() {
-		return cityProper;
-	}
-
-	public void setCityProper(CityProperPO cityProper) {
-		this.cityProper = cityProper;
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
 	@Column(name = "company")
@@ -216,4 +193,32 @@ public class DepartmentPO implements Serializable {
 		this.status = status;
 	}
 
+	@Column(name = "kino")
+	public String getKino() {
+		return kino;
+	}
+
+	public void setKino(String kino) {
+		this.kino = kino;
+	}
+
+	@Column(name = "kiname")
+	public String getKiname() {
+		return kiname;
+	}
+
+	public void setKiname(String kiname) {
+		this.kiname = kiname;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "muid", referencedColumnName = "uid")
+	public UserPO getManager() {
+		return manager;
+	}
+
+	public void setManager(UserPO manager) {
+		this.manager = manager;
+	}
+	
 }

@@ -9,7 +9,7 @@ $(function(){
         success: function(res) {
             var monitors = res.monitors;
             monitors.sort(sortNumber);
-            addLine($("#table"), monitors)
+            addLine(com.focusPage("#table"), monitors)
         }
     });
 

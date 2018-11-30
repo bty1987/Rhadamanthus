@@ -39,7 +39,7 @@ import com.fanglin.utils.IPUtil;
 import com.fanglin.utils.LogUtils;
 import com.fanglin.utils.SystemConfig;
 
-@ParentPackage("common")
+@ParentPackage("login")
 @Namespace("/")
 @Controller
 public class LoginAction extends BaseListAction {

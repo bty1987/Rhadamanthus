@@ -11,13 +11,13 @@ jQuery(function($) {
 		editFlg: false,
 	};
 
-	constructionNode.saveBtn = $("#saveBtn").on("click", saveData);
-	constructionNode.cancelBtn = $("#cancelBtn");
+	constructionNode.saveBtn = com.focusPage("#saveBtn").on("click", saveData);
+	constructionNode.cancelBtn = com.focusPage("#cancelBtn");
 
-	constructionNode.items.constructionNodeId = $("#constructionNodeId");
-	constructionNode.items.constructionNodeName = $("#constructionNodeName");
+	constructionNode.items.constructionNodeId = com.focusPage("#constructionNodeId");
+	constructionNode.items.constructionNodeName = com.focusPage("#constructionNodeName");
 
-	constructionNode.modal = $("#constructionNodeModal");
+	constructionNode.modal = com.focusPage("#constructionNodeModal");
 	constructionNode.modal.on('show.bs.modal',function(e){
 		com.clearValidator();
 		com.clearValidator("#constructionNodeId", true);
@@ -28,7 +28,7 @@ jQuery(function($) {
 	var displayFunc  = (function(){
 
 		var renderList = function(tableId,listData){
-			var $tableWrap = $('#' + tableId);
+			var $tableWrap = com.focusPage('#' + tableId);
 			var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
 			if(listData && listData.length){
@@ -71,7 +71,7 @@ jQuery(function($) {
 
 		return {
 			init : function(tableId,listData){
-				$('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
 				renderList(tableId,listData);
 			},
 			drawLine : function(v){
@@ -94,9 +94,9 @@ jQuery(function($) {
 	});
 
 	//添加
-	$('a[name="addConstructionNode"]', '#pagenation').click(function(){
-		$("#constructionNodeName").val("");
-		$("#constructionNodeModal").modal("show");
+	$('a[name="addConstructionNode"]', com.focusPage('#pagenation')).click(function(){
+		com.focusPage("#constructionNodeName").val("");
+        com.focusPage("#constructionNodeModal").modal("show");
 	});
 
 	function updateconstructionNode(constructionNodeId, cvalue){

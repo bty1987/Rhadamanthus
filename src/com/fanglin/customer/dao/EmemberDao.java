@@ -13,4 +13,6 @@ public interface EmemberDao extends Dao<EmemberPO>{
 
 	public EmemberPO queryEmenber(String unionId);
 	
+	public EmemberPO queryEmemberByNo(String no);
+	
 }

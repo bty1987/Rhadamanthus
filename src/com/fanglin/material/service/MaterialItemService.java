@@ -23,6 +23,8 @@ public interface MaterialItemService {
 	
 	public List<MaterialItemVO> queryMaterialItemByMid(MaterialItemVO materialItemVO);
 	
+	public Float queryMaterialItemByTotal(MaterialItemVO materialItem);
+	
 	public MaterialItemVO queryMaterialItemForSaleByMiid(MaterialItemVO materialItemVO);
 	
 	public List<MaterialItemVO> queryMaterialItemForNameByName(MaterialItemVO materialItemVO);
@@ -40,5 +42,7 @@ public interface MaterialItemService {
 	public int changeMaterialItemForCaclType(MaterialItemVO materialItemVO, String userId) throws FLException;
 	
 	public int deleteMaterialItem(List<Long> miids, long mid) throws FLException;
+	
+
 
 }

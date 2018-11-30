@@ -22,6 +22,8 @@ public class PaymentScaleItemPO implements Serializable {
 	private String name;
 	
 	private int scale;
+	
+	private short sort;
 
 	public PaymentScaleItemPO() {
 		super();
@@ -54,6 +56,7 @@ public class PaymentScaleItemPO implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
 	@Column(name="scale")
 	public int getScale() {
 		return scale;
@@ -61,6 +64,15 @@ public class PaymentScaleItemPO implements Serializable {
 
 	public void setScale(int scale) {
 		this.scale = scale;
+	}
+
+	@Column(name="sort")
+	public short getSort() {
+		return sort;
+	}
+
+	public void setSort(short sort) {
+		this.sort = sort;
 	}
 	
 }

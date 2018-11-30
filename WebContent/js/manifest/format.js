@@ -1,11 +1,4 @@
-/**
- * Created by Administrator on 2017/4/6.
- */
-
-/**
- * Created by Administrator on 2016/9/20.
- */
-$(function(){
+$(function () {
 
     /**
      * 回调函数必须提供 init(tableId, result.list)方法
@@ -13,32 +6,38 @@ $(function(){
      * result.list 列表的json数组
      * */
 
-    var goodsFormatPopUp = $('#goodsFormatPopUp')
+    var goodsFormatPopUp = com.focusPage('#goodsFormatPopUp');
 
 
-    var displayFunc  = (function(){
+    var displayFunc = (function () {
 
         /*表格样式*/
-        var renderList = function(tableId,listData){
-            var $tableWrap = $('#' + tableId);
+        var renderList = function (tableId, listData) {
+            var $tableWrap = com.focusPage('#' + tableId);
 
-            if(listData && listData.length){
+            if (listData && listData.length) {
 
                 var $ulTitle = createTableTitle();
                 var $ulData = $('<ul></ul>').addClass('flex-table');
                 $tableWrap.append($ulTitle).append($ulData);
 
-                $.each(listData,function(i, v){
+                $.each(listData, function (i, v) {
                     var $liLine = creatLine(i, v, i == listData.length - 1);
 
                     $liLine.appendTo($ulTitle);
                 });
-                $('#resultListFormat').css({'width':'96%','margin':'0 auto','height':'560px','marigin-top':'20px'})
+                com.focusPage('#resultListFormat').css({
+                    'width': '96%',
+                    'margin': '0 auto',
+                    'height': '560px',
+                    'marigin-top': '20px',
+                    'overflow-y': 'scroll'
+                })
             }
         };
 
         /*表格头*/
-        var createTableTitle = function(){
+        var createTableTitle = function () {
 
             var $ulTitle = $('<ul></ul>').addClass('flex-table');
             var $liTitle = $('<li></li>').addClass('line table-title');
@@ -74,8 +73,8 @@ $(function(){
 
             var propertyArr = [
                 //v.gid,
-                [v.info,'grey'],
-                [v.status =="0" ? "启用" : "禁用",'red']
+                [v.info, 'grey'],
+                [v.status == "0" ? "启用" : "禁用", 'red']
             ];
 
 
@@ -111,27 +110,27 @@ $(function(){
 
 
             /*状态启用*/
-            $btnStart.click(function(){
-                $('#layerAdd').attr('data-fid', v.fid);
-                $('#layerAdd').attr('data-status', v.status);
+            $btnStart.click(function () {
+                com.focusPage('#layerAdd').attr('data-fid', v.fid);
+                com.focusPage('#layerAdd').attr('data-status', v.status);
 
-                var id = $('#layerAdd').attr('data-fid');
-                var status = $('#layerAdd').attr('data-status');
-                startStatus(id,status,function(){
-                    layer.msg('启用成功',{icon:1})
+                var id = com.focusPage('#layerAdd').attr('data-fid');
+                var status = com.focusPage('#layerAdd').attr('data-status');
+                startStatus(id, status, function () {
+                    layer.msg('启用成功', {icon: 1});
                     doSearcher();
                 });
             });
             /*状态禁用*/
-            $btnBan.click(function(){
-                $('#layerAdd').attr('data-fid', v.fid);
-                $('#layerAdd').attr('data-status', v.status);
+            $btnBan.click(function () {
+                com.focusPage('#layerAdd').attr('data-fid', v.fid);
+                com.focusPage('#layerAdd').attr('data-status', v.status);
 
-                var id = $('#layerAdd').attr('data-fid');
-                var status = $('#layerAdd').attr('data-status');
+                var id = com.focusPage('#layerAdd').attr('data-fid');
+                var status = com.focusPage('#layerAdd').attr('data-status');
 
-                stopStatus(id,status,function(){
-                    layer.msg('禁用成功',{icon:1})
+                stopStatus(id, status, function () {
+                    layer.msg('禁用成功', {icon: 1});
                     doSearcher()
                 });
             });
@@ -142,25 +141,27 @@ $(function(){
         };
 
         return {
-            init : function(tableId,listData){
-                $('#' + tableId).html(null);
-                renderList(tableId,listData);
+            init: function (tableId, listData) {
+                com.focusPage('#' + tableId).html(null);
+                renderList(tableId, listData);
 
             },
-            drawLine : function(v){
+            drawLine: function (v) {
                 return creatLine(v);
             }
         }
     })();
+
     /*分页*/
-    function doSearcher(){
-        com.post(api.inventory.queryFormatByGid,{
+    function doSearcher() {
+        com.post(api.inventory.queryFormatByGid, {
             "format.gid": goodsFormatPopUp.attr('data-gid')
-        },function(res){
-            displayFunc.init('resultListFormat',res.formats)
+        }, function (res) {
+            displayFunc.init('resultListFormat', res.formats)
         })
     }
-    doSearcher()
+
+    doSearcher();
 
     function addline(lineindex) {
 
@@ -169,7 +170,7 @@ $(function(){
         var $lineInfoWrap = $('<div></div>').addClass('line-wrap content col1');
         var $optWrap = $('<div></div>').addClass('line-wrap action');
         var _lineInfoSet = [
-            {cellClass : "info", hasInput : !0},//名称
+            {cellClass: "info", hasInput: !0}//名称
         ];
         var $btncheck = $('<a class="color-green green" style="font-size: 18px"><i class="icon-ok"></i></a>');
         var $btndel = $('<a class="color-red red" style="font-size: 18px"><i class=" icon-remove"></i></a>');
@@ -191,73 +192,74 @@ $(function(){
 
         $btncheck.click(function (e) {
             e.stopPropagation();
-            if(com.validate('addFormat','bottom')){
+            if (com.validate('addFormat', 'bottom')) {
                 return;
             }
             var gid = $(this).parents('li.line.current').attr('data-gid');
             var options = {
-                "format.gid":goodsFormatPopUp.attr('data-gid'),
+                "format.gid": goodsFormatPopUp.attr('data-gid'),
                 "format.info": $lineInfoWrap.find('.info input').val()
             };
 
-            com.post(api.inventory.addFormat,options,function(){
-                $('#list').empty();
-                addline(1).addClass('current').appendTo('#list');
-                com.post(api.inventory.queryFormatByGid,{
-                    "format.gid":goodsFormatPopUp.attr('data-gid')
-                },function(data){
-                    displayFunc.init('resultListColor',data.formats)
+            com.post(api.inventory.addFormat, options, function () {
+                com.focusPage('#list').empty();
+                addline(1).addClass('current').appendTo(com.focusPage('#list'));
+                com.post(api.inventory.queryFormatByGid, {
+                    "format.gid": goodsFormatPopUp.attr('data-gid')
+                }, function (data) {
+                    displayFunc.init('resultListColor', data.formats);
                     doSearcher();
                 })
-            },function(e){
+            }, function (e) {
                 com.showAlert(com.error, e.errorMsg);
             })
 
 
-        })
+        });
 
         $btndel.click(function (e) {
 
-            $('#list').empty();
+            com.focusPage('#list').empty();
 
-            addline(1).addClass('current').appendTo('#list');
+            addline(1).addClass('current').appendTo(com.focusPage('#list'));
 
-        })
+        });
 
         return $line;
 
     }
-    addline(1).addClass('current').appendTo('#list');
 
+    addline(1).addClass('current').appendTo(com.focusPage('#list'));
 
 
     /*状态信息验证*/
-    function startStatus(id,status,callback){
-        if(status=="1"){
-            com.post(api.inventory.updateFormatForStatus,{
+    function startStatus(id, status, callback) {
+        if (status == "1") {
+            com.post(api.inventory.updateFormatForStatus, {
                 "format.fid": id,
-                "format.status":"0"
-            },function(res){
+                "format.status": "0"
+            }, function (res) {
                 callback();
                 doSearcher()
             })
-        }else{
+        } else {
             layer.alert('已经启用', {
                 icon: 0,
                 skin: 'layer-ext-moon' //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
             })
         }
     }
-    function stopStatus(id,status,callback){
-        if(status=="0"){
-            com.post(api.inventory.updateFormatForStatus,{
+
+    function stopStatus(id, status, callback) {
+        if (status == "0") {
+            com.post(api.inventory.updateFormatForStatus, {
                 "format.fid": id,
-                "format.status":"1"
-            },function(res){
+                "format.status": "1"
+            }, function (res) {
                 callback();
                 doSearcher()
             })
-        }else{
+        } else {
             layer.alert('已经禁用', {
                 icon: 0,
                 skin: 'layer-ext-moon' //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
@@ -266,8 +268,8 @@ $(function(){
     }
 
 
-    $('.layui-layer-content').css('overflow','hidden');
-    $('#showFormat').css('height','560px');
-    $('#addFormat').css({'width':'96%','margin':'0 auto','margin-top':'15px'})
+    com.focusPage('.layui-layer-content').css('overflow', 'hidden');
+    com.focusPage('#showFormat').css('height', '560px');
+    com.focusPage('#addFormat').css({'width': '96%', 'margin': '0 auto', 'margin-top': '15px'});
 
 });

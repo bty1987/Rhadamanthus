@@ -9,17 +9,17 @@
         scid: null,
     };
 
-    system.saveBtn = $('#saveBtn').on("click",saveData);
-    system.cancellBtn = $("#cancelBtn");
-    system.modal = $("#system");
-    system.config.key = $("#key");
-    system.config.value = $("#value");
-    system.config.comment = $("#comment");
+    system.saveBtn = com.focusPage('#saveBtn').on("click",saveData);
+    system.cancellBtn = com.focusPage("#cancelBtn");
+    system.modal = com.focusPage("#system");
+    system.config.key = com.focusPage("#key");
+    system.config.value = com.focusPage("#value");
+    system.config.comment = com.focusPage("#comment");
 
     var displayFunc  = (function(){
 
         var renderList = function(tableId,listData){
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if(listData && listData.length){
@@ -71,7 +71,7 @@
 
         return {
             init : function(tableId,listData){
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
             },
             drawLine : function(v){
@@ -100,7 +100,7 @@
 		system.modal.modal("show"); //弹出弹层
     }
 
-    $('[name="systemConfig"]' , '#pagenation').on("click",function(){
+    com.focusPage('[name="systemConfig"]', com.focusPage('#pagenation')).on("click",function(){
         com.cleanItems(system.config);
         system.modal.modal('show');
     });

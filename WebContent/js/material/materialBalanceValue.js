@@ -36,13 +36,13 @@ jQuery(function($) {
 		},
 	};
 	
-	$('#fl-statement').statement("主材型号", "主材型号信息列表");
+	com.focusPage('#fl-statement').statement("主材型号", "主材型号信息列表");
 	
-	materialModel.listGrid = $("#listGrid");
+	materialModel.listGrid = com.focusPage("#listGrid");
 	materialModel.gridPager = "#gridPager";
-	materialModel.saveBtn = $("#saveBtn").on("click", saveData);
-	materialModel.cancelBtn = $("#cancelBtn");
-	materialModel.modal = $("#materialModelModal");
+	materialModel.saveBtn = com.focusPage("#saveBtn").on("click", saveData);
+	materialModel.cancelBtn = com.focusPage("#cancelBtn");
+	materialModel.modal = com.focusPage("#materialModelModal");
 	
 	materialModel.modal.on('show.bs.modal',function(e){
 		com.clearValidator();
@@ -50,17 +50,17 @@ jQuery(function($) {
 		com.clearValidator("#materialModelNo", true);
 	});
 	
-	materialModel.materialModelItems.mmId = $("#mmId");
-	materialModel.materialModelItems.materialModelNo = $("#materialModelNo");
+	materialModel.materialModelItems.mmId = com.focusPage("#mmId");
+	materialModel.materialModelItems.materialModelNo = com.focusPage("#materialModelNo");
 	
-	materialModel.materialModelItems.materialModelName = $("#materialModelName");
-	materialModel.materialModelItems.materialTypeId = $("#materialTypeId");
-	materialModel.materialModelItems.materialBrandId = $("#materialBrandId");
-	materialModel.materialModelItems.measurementUnitId = $("#measurementUnitId");
-	materialModel.materialModelItems.materialUnitPrice = $("#materialUnitPrice");
-	materialModel.materialModelItems.materialPurchasePrice = $("#materialPurchasePrice");
-	materialModel.materialModelItems.discount = $("#discount");
-	materialModel.materialModelItems.calcTypeSwitch = $("#calcTypeSwitch").switchBtn("calcType").on("change", function(){
+	materialModel.materialModelItems.materialModelName = com.focusPage("#materialModelName");
+	materialModel.materialModelItems.materialTypeId = com.focusPage("#materialTypeId");
+	materialModel.materialModelItems.materialBrandId = com.focusPage("#materialBrandId");
+	materialModel.materialModelItems.measurementUnitId = com.focusPage("#measurementUnitId");
+	materialModel.materialModelItems.materialUnitPrice = com.focusPage("#materialUnitPrice");
+	materialModel.materialModelItems.materialPurchasePrice = com.focusPage("#materialPurchasePrice");
+	materialModel.materialModelItems.discount = com.focusPage("#discount");
+	materialModel.materialModelItems.calcTypeSwitch = com.focusPage("#calcTypeSwitch").switchBtn("calcType").on("change", function(){
 		if(materialModel.materialModelItems.calcTypeSwitch.prop("checked")){
 			materialModel.materialModelItems.pointDiv.css("display", "block");
 			materialModel.materialModelItems.baseDiv.css("display", "none");
@@ -69,36 +69,36 @@ jQuery(function($) {
 			materialModel.materialModelItems.baseDiv.css("display", "block");
 		}
 	});
-	materialModel.materialModelItems.calcType = $("#calcType");
-	materialModel.materialModelItems.pointDiv = $("#pointDiv");
-	materialModel.materialModelItems.point = $("#point");
-	materialModel.materialModelItems.baseDiv = $("#baseDiv");
-	materialModel.materialModelItems.base = $("#base");
+	materialModel.materialModelItems.calcType = com.focusPage("#calcType");
+	materialModel.materialModelItems.pointDiv = com.focusPage("#pointDiv");
+	materialModel.materialModelItems.point = com.focusPage("#point");
+	materialModel.materialModelItems.baseDiv = com.focusPage("#baseDiv");
+	materialModel.materialModelItems.base = com.focusPage("#base");
 	
 	$.extend(com.validator, materialModel.validator);
 	
 	com.post(api.data.queryCategory, {}, function(res){
 		materialModel.data.materialTypeData = res.categorys;
-		$("#materialTypeId").bindData(materialModel.data.materialTypeData, "cid", "categoryName");
+		com.focusPage("#materialTypeId").bindData(materialModel.data.materialTypeData, "cid", "name");
 	});
 	
 	com.post(api.common.queryMeasurementUnit, {}, function(res){
 		materialModel.data.measurementUnitData = res.measurementUnits;
-		$("#measurementUnitId").bindData(materialModel.data.measurementUnitData, "id", "name");
+		com.focusPage("#measurementUnitId").bindData(materialModel.data.measurementUnitData, "id", "name");
 	});
 	
 	materialModel.materialModelItems.materialTypeId.change(function(){
 		var _materialTypeId = materialModel.materialModelItems.materialTypeId.val();
-		com.post(api.data.queryBrandByCategoryId, {"brand.cid": _materialTypeId, }, function(res){
+		com.post(api.data.queryBrandByCid, {"brand.cid": _materialTypeId, }, function(res){
 			materialModel.data.materialBrandData[_materialTypeId] = res.brands;
-			$("#materialBrandId").bindData(materialModel.data.materialBrandData[_materialTypeId+""], "bid", "brandName");
+			com.focusPage("#materialBrandId").bindData(materialModel.data.materialBrandData[_materialTypeId+""], "bid", "name");
 		});
 	});
 	
 	var displayFunc  = (function(){
 
         var renderList = function(tableId,listData){
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if(listData && listData.length){
@@ -152,13 +152,13 @@ jQuery(function($) {
 
         return {
             init : function(tableId,listData){
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
             },
             drawLine : function(v){
                 return creatLine(v);
             }
-        }
+        };
     })();
 
     var seacher = new Searcher();
@@ -176,10 +176,10 @@ jQuery(function($) {
 		materialModel.materialModelItems.materialModelName.val(v.materialModelName);
 		materialModel.materialModelItems.materialTypeId.val(v.materialTypeId);
 		
-		com.post(api.data.queryBrandByCategoryId, {"brand.cid": v.materialTypeId}, 
+		com.post(api.data.queryBrandByCid, {"brand.cid": v.materialTypeId},
 			function(res){
 				materialModel.data.materialBrandData[v.materialTypeId] = res.brands;
-				$("#materialBrandId").bindData(materialModel.data.materialBrandData[v.materialTypeId+""], "bid", "brandName");
+				com.focusPage("#materialBrandId").bindData(materialModel.data.materialBrandData[v.materialTypeId+""], "bid", "name");
 				
 				materialModel.materialModelItems.materialBrandId.val(v.materialBrandId);
 			}, 

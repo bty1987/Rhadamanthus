@@ -19,4 +19,7 @@ public  interface WorkerSalaryDao extends Dao<WorkerSalaryPO>{
   
 	public  int countWorkerSalary(Long cid, Integer wuid);
 	
+	public List<WorkerSalaryPO> queryWorkerSalaryByCwsid(Long wsid);
+
+	
 }

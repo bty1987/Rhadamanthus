@@ -226,7 +226,7 @@ public class DecorationReceiptPO implements java.io.Serializable {
 	public void setCheckvBank(String checkvBank) {
 		this.checkvBank = checkvBank;
 	}
-
+	
 	@Column(name = "installment")
 	public float getInstallment() {
 		return this.installment;

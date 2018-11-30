@@ -58,6 +58,12 @@ public class ReceiptTypePO implements java.io.Serializable {
 	
 	private int company;
 	
+	private String kino;
+	
+	private String kiname;
+	
+	private String assistant;
+	
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "rtId")
@@ -150,7 +156,6 @@ public class ReceiptTypePO implements java.io.Serializable {
 		this.status = status;
 	}
 	
-
 	@Column(name = "company")
 	public int getCompany() {
 		return company;
@@ -158,6 +163,33 @@ public class ReceiptTypePO implements java.io.Serializable {
 
 	public void setCompany(int company) {
 		this.company = company;
+	}
+
+	@Column(name = "kino")
+	public String getKino() {
+		return kino;
+	}
+
+	public void setKino(String kino) {
+		this.kino = kino;
+	}
+
+	@Column(name = "kiname")
+	public String getKiname() {
+		return kiname;
+	}
+
+	public void setKiname(String kiname) {
+		this.kiname = kiname;
+	}
+
+	@Column(name = "assistant")
+	public String getAssistant() {
+		return assistant;
+	}
+
+	public void setAssistant(String assistant) {
+		this.assistant = assistant;
 	}
 
 }

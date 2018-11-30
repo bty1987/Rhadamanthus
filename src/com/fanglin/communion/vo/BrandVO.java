@@ -6,11 +6,13 @@ public class BrandVO implements java.io.Serializable {
 
 	private Long bid;
 	
-	private String brandId;
+	private String no;
 	
-	private String brandName;
+	private String name;
 	
-	private String brandNamePinyin;
+	private String alias;
+	
+	private String pinyin;
 	
 	private Long cid;
 	
@@ -20,6 +22,10 @@ public class BrandVO implements java.io.Serializable {
 	
 	private int company;
 	
+	private String kino;
+	
+	private String kiname;
+	
 	public Long getBid() {
 		return bid;
 	}
@@ -28,28 +34,52 @@ public class BrandVO implements java.io.Serializable {
 		this.bid = bid;
 	}
 
-	public String getBrandId() {
-		return brandId;
+	public String getNo() {
+		return no;
 	}
 
-	public void setBrandId(String brandId) {
-		this.brandId = brandId;
+	public void setNo(String no) {
+		this.no = no;
 	}
 
-	public String getBrandName() {
-		return brandName;
+	public String getName() {
+		return name;
 	}
 
-	public void setBrandName(String brandName) {
-		this.brandName = brandName;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public String getBrandNamePinyin() {
-		return brandNamePinyin;
+	public String getAlias() {
+		return alias;
 	}
 
-	public void setBrandNamePinyin(String brandNamePinyin) {
-		this.brandNamePinyin = brandNamePinyin;
+	public void setAlias(String alias) {
+		this.alias = alias;
+	}
+
+	public String getPinyin() {
+		return pinyin;
+	}
+
+	public void setPinyin(String pinyin) {
+		this.pinyin = pinyin;
+	}
+
+	public String getKino() {
+		return kino;
+	}
+
+	public void setKino(String kino) {
+		this.kino = kino;
+	}
+
+	public String getKiname() {
+		return kiname;
+	}
+
+	public void setKiname(String kiname) {
+		this.kiname = kiname;
 	}
 
 	public Long getCid() {
@@ -84,6 +114,4 @@ public class BrandVO implements java.io.Serializable {
 		this.company = company;
 	}
 	
-	
-
 }

@@ -8,7 +8,7 @@
     var displayFunc  = (function(){
 
         var renderList = function(tableId,listData){
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if(listData && listData.length){
@@ -72,7 +72,7 @@
       
         return {
             init : function(tableId,listData){
-                $('#' + tableId).html(null);
+				com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
             },
             drawLine : function(v){
@@ -98,7 +98,7 @@
     //定义全局变量  json
     var company = {
     		
-		saveBtn: $("#saveAddItemBtn").on("click", saveData),//绑定事件
+		saveBtn: com.focusPage("#saveAddItemBtn").on("click", saveData),//绑定事件
 		cancelBtn: null,
 		modal: null,
 		companyItems: {},
@@ -114,17 +114,17 @@
 	};
     	
    //给全局变量赋值（主要操作是制定页面标签）
-//	company.saveBtn = $("#saveAddItemBtn").on("click", saveData);
-    company.cancelBtn = $("#cancelBtn");
-	company.modal = $("#addItemModal");
-	company.companyItems.cid = $("#cid");
-	company.companyItems.fullname = $("#fullname");
-	company.companyItems.address = $("#address");
-	company.companyItems.corporation = $("#corporation");
-	company.companyItems.phone = $("#phone");
-	company.companyItems.name = $("#_name");
+//	company.saveBtn = com.focusPage("#saveAddItemBtn").on("click", saveData);
+    company.cancelBtn = com.focusPage("#cancelBtn");
+	company.modal = com.focusPage("#addItemModal");
+	company.companyItems.cid = com.focusPage("#cid");
+	company.companyItems.fullname = com.focusPage("#fullname");
+	company.companyItems.address = com.focusPage("#address");
+	company.companyItems.corporation = com.focusPage("#corporation");
+	company.companyItems.phone = com.focusPage("#phone");
+	company.companyItems.name = com.focusPage("#_name");
 
-	company.companyItems.no = $("#no").on("blur",function(){
+	company.companyItems.no = com.focusPage("#no").on("blur",function(){
 		$this = $(this);
 		if($this.val() == "") {
 			return;
@@ -133,7 +133,7 @@
 
 	company.modal.on('shown.bs.modal', function(e){
 		com.clearValidator();
-		com.clearValidator("#no", true);
+		com.clearValidator(com.focusPage("#no").attr("id"), true);
 	});
 	$.extend(com.validator, company.validator); //将多个对象合并成一个对象
 
@@ -165,11 +165,11 @@
     	var options = {
 			
     		"company.no":company.companyItems.no.val(),
-    		"company.name": $('#_name').val(),
-    		"company.fullname": $('#fullname').val(),
-    		"company.address": $('#address').val(),
-    		"company.corporation": $('#corporation').val(),
-    		"company.phone": $('#phone').val(),
+    		"company.name": com.focusPage('#_name').val(),
+    		"company.fullname": com.focusPage('#fullname').val(),
+    		"company.address": com.focusPage('#address').val(),
+    		"company.corporation": com.focusPage('#corporation').val(),
+    		"company.phone": com.focusPage('#phone').val(),
     	};
 
     	if(company.editFlg) {
@@ -184,7 +184,7 @@
     }
     
     //添加
-    $('[name="addCompany"]' , '#pagenation').on("click",function(){  //选择器 [属性名="属性值"]  匿名函数
+    com.focusPage('[name="addCompany"]', com.focusPage('#pagenation')).on("click",function(){  //选择器 [属性名="属性值"]  匿名函数
 		company.editFlg = false;
 		company.companyItems.no.prop("disabled", false);
 		com.cleanItems(company.companyItems);

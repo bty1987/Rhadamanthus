@@ -8,9 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.vo.Filter;
-import com.fanglin.customer.dao.DecorationDao;
 import com.fanglin.customer.dao.MaterialPaymentDao;
-import com.fanglin.customer.po.DecorationPO;
 import com.fanglin.customer.service.MaterialPaymentService;
 import com.fanglin.customer.vo.MaterialPaymentVO;
 import com.fanglin.payment.po.MaterialPaymentPO;
@@ -23,40 +21,43 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 	@Autowired
 	private MaterialPaymentDao materialPaymentDao;
 	
-	@Autowired
-	private DecorationDao decorationOrderDao;
-	
 	@Override
-	public void queryCusMaterialPayment(Paging paging, List<Filter> filters, MaterialPaymentVO materialPaymentVO,String unionId) {
-		
-		DecorationPO decorationPO = decorationOrderDao.queryCusDecorationByOrderId(materialPaymentVO.getOrderId(), unionId);
-		
-		if(decorationPO != null){
+	public void queryCusMaterialPayment(Paging paging, List<Filter> filters, MaterialPaymentVO materialPaymentVO) {
 			
 			List<MaterialPaymentPO> materialPaymentPOs = materialPaymentDao.queryCusMaterialByOrderId(paging, filters, materialPaymentVO.getOrderId());
 			List<MaterialPaymentVO> materialPaymentVOs = new ArrayList<MaterialPaymentVO>();
 			
-			for(MaterialPaymentPO materialPaymentPO : materialPaymentPOs){
+			if(materialPaymentPOs.size() != 0 && materialPaymentPOs != null){
 				
-				materialPaymentVO = new MaterialPaymentVO();
-				
-				materialPaymentVO.setOrderId(materialPaymentPO.getMaterial().getOrderId());
-				materialPaymentVO.setPaymentType(materialPaymentPO.getPaymentType());
-				materialPaymentVO.setPaymentStatus(materialPaymentPO.getPaymentStatus());
-				materialPaymentVO.setBrand(materialPaymentPO.getMaterial().getBrand());
-				materialPaymentVO.setReferMoney(materialPaymentPO.getReferMoney());
-				
-				if(materialPaymentPO.getMaterialReceipt() != null){
-					materialPaymentVO.setCollectTime(materialPaymentPO.getMaterialReceipt().getCollectTime());
+				for(MaterialPaymentPO materialPaymentPO : materialPaymentPOs){
+					
+					materialPaymentVO = new MaterialPaymentVO();
+					
+					materialPaymentVO.setOrderId(materialPaymentPO.getMaterial().getOrderId());
+					materialPaymentVO.setPaymentType(materialPaymentPO.getPaymentType());
+					materialPaymentVO.setPaymentStatus(materialPaymentPO.getPaymentStatus());
+					materialPaymentVO.setBrand(materialPaymentPO.getMaterial().getBrand());
+					materialPaymentVO.setReferMoney(materialPaymentPO.getReferMoney());
+					
+					if(materialPaymentPO.getMaterialReceipt() != null){
+						materialPaymentVO.setCollectTime(materialPaymentPO.getMaterialReceipt().getCollectTime());
+					}
+					
+					
+					materialPaymentVOs.add(materialPaymentVO);
 				}
-				
-				
-				materialPaymentVOs.add(materialPaymentVO);
 			}
 			
 			paging.setData(materialPaymentVOs);
 			
-		}
+	}
+
+	@Override
+	public float countCusMaterialPaymentForAmount(MaterialPaymentVO materialPaymentVO) {
+		
+		float total = materialPaymentDao.countCusMaterialPaymentForAmount(materialPaymentVO.getOrderId());
+		
+		return total;
 	}
 
 }

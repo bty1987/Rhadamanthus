@@ -12,31 +12,30 @@ $(function ($) {
 
     $.extend(com.validate(),receiptType.validator);
 
-    receiptType.modal = $("#receiptTypeModal");
-    receiptType.saveBtn = $("#saveBtn").on("click", saveData);
-    receiptType.items.rtId = $("#rtId");
-    receiptType.items.name = $("#name");
-    receiptType.items.no = $("#no");
-
+    receiptType.modal = com.focusPage("#receiptTypeModal");
+    receiptType.saveBtn = com.focusPage("#saveBtn").on("click", saveData);
+    receiptType.items.rtId = com.focusPage("#rtId");
+    receiptType.items.name = com.focusPage("#name");
+    receiptType.items.no = com.focusPage("#no");
+    receiptType.items.type = com.focusPage("#type");
+    receiptType.items.kino = com.focusPage("#kino");
+    receiptType.items.kiname = com.focusPage("#kiname");
+    receiptType.items.assistant = com.focusPage("#assistant");
 
     var displayFunc = (function () {
-
         var renderList = function (tableId, listData) {
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if (listData && listData.length) {
                 $.each(listData, function (i, v) {
-
                     var $liLine = creatLine(v);
-
                     $liLine.appendTo($ul);
                 });
 
                 $ul.appendTo($tableWrap);
             }
         };
-
         var creatLine = function (v) {
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.name));
@@ -52,10 +51,12 @@ $(function ($) {
                 case 5: v.type = "券";break;
             }
             var propertyArr = [
-
                 ["键值:", v.no, "grey"],
                 ["类型:", v.type, "red"],
-                ["状态:", v.status == 1 ? "启用" : "禁用", "red"]
+                ["状态:", v.status == 1 ? "启用" : "禁用", "red"],
+                ["金蝶编号:", com.checkNull(v.kino, "无"), "grey"],
+                ["金蝶名称:", com.checkNull(v.kiname, "无"), "grey"],
+                ["辅核项:", com.checkNull(v.assistant, "无"), "grey"]
             ];
 
             $.each(propertyArr, function (index, value) {
@@ -84,6 +85,9 @@ $(function ($) {
                 receiptType.items.rtId.val(v.rtId);
                 receiptType.items.name.val(v.name);
                 receiptType.items.no.val(v.no);
+                receiptType.items.kino.val(v.kino);
+                receiptType.items.kiname.val(v.kiname);
+                receiptType.items.assistant.val(v.assistant);
                 editFlg = false;
                 receiptType.modal.modal("show")
 
@@ -94,7 +98,7 @@ $(function ($) {
 
         return {
             init: function (tableId, listData) {
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             },
             drawLine: function (v) {
@@ -107,7 +111,6 @@ $(function ($) {
     var _condArr = [];
 
     searcher.init(_condArr, "condList", api.common.pageReceiptType, function (data) {
-
         displayFunc.init('resultList', data);
     }, "pagenation", "ReceiptTypePostData", null, false, null, function () {
 
@@ -119,47 +122,40 @@ $(function ($) {
             com.cleanItems(receiptType.items);
             editFlg = true;
             receiptType.modal.modal("show")
-            
         });
         return [$adda];
-
-
     });
 
     function saveData() {
         var options = {
-            "receiptType.name" : $("#name").val(),
-            "receiptType.no" : $("#no").val(),
-            "receiptType.type" : $("#type").val()
+            "receiptType.name" : receiptType.items.name.val(),
+            "receiptType.no" : receiptType.items.no.val(),
+            "receiptType.type" : receiptType.items.type.val(),
+            "receiptType.kino" : receiptType.items.kino.val(),
+            "receiptType.kiname" : receiptType.items.kino.val(),
+            "receiptType.assistant" : receiptType.items.assistant.val()
         };
 
         if(com.validate("form1")){
-
             return;
         }
         if(editFlg){
-
             com.post(api.common.addReceiptType,options,function () {
                 searcher.doSearch();
                 com.showAlert(com.info, "添加成功");
                 receiptType.modal.modal("hide")
             })
         }else{
-
             options["receiptType.rtId"]=receiptType.items.rtId.val();
             com.post(api.common.updateReceiptType,options,function () {
                 searcher.doSearch();
                 com.showAlert(com.info, "修改成功");
                 receiptType.modal.modal("hide")
             })
-
         }
-
     }
 
     function updateStatus(id, status, failcallBack) {
-
-
         com.post(api.common.updateReceiptTypeForStatus, {
             "receiptType.rtId": id,
             "receiptType.status": status

@@ -2,11 +2,13 @@
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.fastjson.JSONObject;
 import com.fanglin.approval.dao.ApprovalDao;
 import com.fanglin.approval.dao.ApprovalSalesDiscountDao;
 import com.fanglin.approval.po.ApprovalPO;
@@ -15,12 +17,15 @@ import com.fanglin.approval.service.ApprovalSalesDiscountService;
 import com.fanglin.approval.vo.ApprovalSalesDiscountVO;
 import com.fanglin.approval.vo.ApprovalVO;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.dingding.service.ApprovalService;
 import com.fanglin.payment.dao.SalesPaymentDao;
 import com.fanglin.payment.po.SalesPaymentPO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.sales.dao.SalesDao;
 import com.fanglin.sales.po.SalesPO;
+import com.fanglin.system.dao.SystemConfigDao;
+import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 
@@ -42,7 +47,13 @@ public class ApprovalSalesDiscountServiceImpl implements ApprovalSalesDiscountSe
 
 	@Autowired
 	private SalesPaymentDao salesPaymentDao;
-
+	
+	@Autowired
+	private SystemConfigDao systemConfigDao;
+	
+	@Autowired
+	private ApprovalService approvalDDService;
+	
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int submitApprovalSalesDiscount(ApprovalVO approvalVO,ApprovalSalesDiscountVO approvalSalesDiscountVO, String userId,int company)throws FLException {
@@ -64,7 +75,7 @@ public class ApprovalSalesDiscountServiceImpl implements ApprovalSalesDiscountSe
 			throw new FLException(260012, "销售订单当前状态不能提交补款");
 		}
 		salesPO.setFullpayStatus((short) 3);
-
+		
 		salesDao.update(salesPO);
 
 		approvalPO = new ApprovalPO();
@@ -73,9 +84,19 @@ public class ApprovalSalesDiscountServiceImpl implements ApprovalSalesDiscountSe
 
 		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiver().getUserId());
 		UserPO sender = userDao.queryUserByUserId(userId);
-
+		
+		SystemConfigPO systemConfigPO = systemConfigDao.querySystemConfig(ApprovalPO.APPROVAL_SYSTEMCONFIG_SALESDISCOUNT_STR,company);
+		
+		if(systemConfigPO == null){
+			approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_INIT_INT);
+		}else{
+			approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_DINGDING_INT);
+			List<JSONObject> formComponentValues = approvalDDService.getForms("说明", String.format(ApprovalPO.APPROVAL_CONTENTS_SALES_DISCOUNT_STR,salesPO.getOrderId(), salesPO.getNo(),approvalSalesDiscountVO.getReferMoney()));
+			String processinstanceid = approvalDDService.initiateApproval(systemConfigPO.getValue(), userId, approvalVO.getReceiver().getUserId(), null, null, formComponentValues, company);
+			approvalPO.setProcessinstanceid(processinstanceid);
+		}
+		
 		approvalPO.setType(ApprovalPO.APPROVAL_TYPE_SALES_DIACOUNT_INT);
-		approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_INIT_INT);
 		approvalPO.setIdent(String.valueOf(sid));
 		approvalPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		approvalPO.setApprovalTime(DateUtil.getDateToTimestamp(new Date()));
@@ -135,7 +156,7 @@ public class ApprovalSalesDiscountServiceImpl implements ApprovalSalesDiscountSe
 		salesPaymentPO.setReferMoney(approvalSalesDiscountPO.getReferMoney());
 
 		salesPaymentDao.save(salesPaymentPO);
-
+		salesPO.setFullpay(approvalSalesDiscountPO.getReferMoney());
 		salesPO.setFullpayStatus(SalesPO.FULLPAYSTATUS_UNPAY_SHORT);// 0: 未付款
 		salesDao.update(salesPO);
 		return 0;
@@ -158,7 +179,9 @@ public class ApprovalSalesDiscountServiceImpl implements ApprovalSalesDiscountSe
 			throw new FLException(260021, "销售单不存在");
 		}
 
+		salesPO.setFullpay(0);
 		salesPO.setFullpayStatus(SalesPO.FULLPAYSTATUS_INIT_SHORT);
+		
 		salesDao.update(salesPO);
 
 		return 0;

@@ -29,10 +29,10 @@ var AddWorkflow = (function(){
         binding : function(){
             var $wrapper = option.settings.wrapper;
             var that = this;
-            $('a[name="subbtn"]', $wrapper).click(function(){
+            com.focusPage('a[name="subbtn"]', $wrapper).click(function(){
                 that.saveOptionChange();
             });
-            $('a[name="cancelbtn"]', $wrapper).click(function(){
+            com.focusPage('a[name="cancelbtn"]', $wrapper).click(function(){
                 layer.closeAll();
             });
 
@@ -41,20 +41,18 @@ var AddWorkflow = (function(){
         saveOptionChange : function(){
 
             var _params = {};
-            _params["productionWorkPlan.ppid"] = $('#addPopUp').attr("data-ppid");
+            _params["productionWorkPlan.ppid"] = com.focusPage('#addPopUp').attr("data-ppid");
 
-            var $menus = $('input[type="checkbox"]:checked', option.settings.wrapper);
+            var $menus = com.focusPage('input[type="checkbox"]:checked', option.settings.wrapper);
             $menus.length && $menus.each(function(i){
                 _params["productionWorkPlan.workplan.wpid"] = $(this).val();
 
                 com.post(api.production.addProductionWorkPlan, _params, function(data){
                     layer.closeAll();
                     layer.msg("添加成功", {icon : 1}, function(){
-
                     });
                 });
             });
-
         },
         init : function($wrapper){
             this.settings.wrapper = $wrapper;
@@ -63,10 +61,10 @@ var AddWorkflow = (function(){
 
     return {
         init : function(){
-            var $addPopUp = $('#addPopUp');
+            var $addPopUp = com.focusPage('#addPopUp');
             var ppid = $addPopUp.attr('data-ppid');
 
-            option.init($('div.fltree', $addPopUp));
+            option.init(com.focusPage('div.fltree', $addPopUp));
             option.getOptionData(api.production.queryProductionWorkPlanByPpid, {"productionWorkPlan.ppid": ppid}, $.proxy(function(data){
                 var usingWorkplan =[];//使用中的工序组 存放已加入工序组的wpid
 
@@ -82,7 +80,6 @@ var AddWorkflow = (function(){
                             showWorkplans.push(v);
                         }
                     });
-
                     this.renderOption(showWorkplans);
                 }, option));
             }, option));

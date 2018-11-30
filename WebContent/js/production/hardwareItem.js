@@ -8,7 +8,7 @@ $(function () {
 
         var renderList = function(tableId,listData){
 
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list ui-sortable fl-table-list');
 
             if (listData && listData.length) {
@@ -72,7 +72,7 @@ $(function () {
         };
         return {
             init : function(tableId,listData){
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
             }
         };
@@ -119,7 +119,7 @@ $(function () {
             type: 1,
             skin: 'layui-layer-lan',
             title: "添加五金项",
-            content: $('#layerAddItem'),
+            content:com.focusPage('#layerAddItem'),
             area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
             maxmin: false,
             zIndex: 9000,
@@ -137,7 +137,7 @@ $(function () {
     }
 
 
-    $('#layerAddItem').find("#itemName").typeahead({
+    com.focusPage('#layerAddItem').find("#itemName").typeahead({
         url: api.production.queryQuoteItemByPinyin,
         list: [],
         postData: {},
@@ -157,8 +157,8 @@ $(function () {
             $.each(list, function (index, val) {
 
                 if (val.qiid == k) {
-                    $('#layerAddItem').find('#measurementUnit').val(val.measurementunit);
-                    $('#layerAddItem').find('#unitPrice').val(val.unitprice);
+                    com.focusPage('#layerAddItem').find('#measurementUnit').val(val.measurementunit);
+                    com.focusPage('#layerAddItem').find('#unitPrice').val(val.unitprice);
                 }
 
             });
@@ -171,7 +171,7 @@ $(function () {
 
     function addItem(){
         var options = {};
-        var $layerAdd = $('#layerAddItem');
+        var $layerAdd = com.focusPage('#layerAddItem');
 
         options["hardware.hid"] = $hid;
         options["hardwareItems[0].name"] = $layerAdd.find('#itemName').val();
@@ -191,7 +191,7 @@ $(function () {
         })
     }
 
-    $('#layerAddItem').find("#itemNum").on("change",function(){
+    com.focusPage('#layerAddItem').find("#itemNum").on("change",function(){
         com.clearValidator();
         if(!com.validate('itemNum')){
             calcTotal();
@@ -199,10 +199,10 @@ $(function () {
     });
 
     function calcTotal(){
-        var _num =  $('#layerAddItem').find("#itemNum").val();
-        var _unitPrice =  $('#layerAddItem').find('#unitPrice').val();
+        var _num =  com.focusPage('#layerAddItem').find("#itemNum").val();
+        var _unitPrice =  com.focusPage('#layerAddItem').find('#unitPrice').val();
         var _total = utils.accMul(parseFloat(_num+''),parseFloat(_unitPrice+''));
-        $('#layerAddItem').find('#total').val(_total);
+        com.focusPage('#layerAddItem').find('#total').val(_total);
     }
 
 

@@ -98,7 +98,7 @@ jQuery(function($) {
             var tem={
                 "money":parseFloat(vreceipt.coupon),
                 "paymentWay":"优惠券",
-            }
+            };
             receipt.receiptItems.push(tem);
         }
 

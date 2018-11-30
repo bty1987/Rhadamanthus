@@ -11,6 +11,7 @@
 
 package com.fanglin.material.dao.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.hibernate.criterion.MatchMode;
@@ -82,5 +83,20 @@ public class MaterialItemDaoImpl extends DaoImpl<MaterialItemPO> implements Mate
 		String sql= "delete from material.materialitem where mid = ?";
 		
 		session().createSQLQuery(sql).setLong(0, mid).executeUpdate();
+	}
+
+	@Override
+	public Float queryMaterialItemByTotal(long mid) {
+		
+		String sql = "select sum(money) from (select if(packagename = '', sum(total), total) money from material.materialitem where mid = :mid and status = 0 group by packagename) t";
+		
+		BigDecimal num = (BigDecimal) session().createSQLQuery(sql).setLong("mid", mid).uniqueResult();
+		
+		if(num == null){
+			num = BigDecimal.ZERO;
+		}
+		
+		return num.floatValue();
+				 
 	}
 }

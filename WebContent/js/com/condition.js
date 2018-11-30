@@ -22,6 +22,7 @@ var Condition = function (api) {
                 valuePath: "value"//用来在页面显示的字段的json路径
             }
         },
+
         material_orderAddr: {
             label: "楼盘",
             type: "autofill",
@@ -177,8 +178,8 @@ var Condition = function (api) {
                 url: api.communion.queryDepartment,
                 postData: {"dept.type.name": "设计大区"},
                 listPath: "deptList",
-                keyPath: "deptId",
-                valuePath: "deptName"
+                keyPath: "no",
+                valuePath: "name"
             }
         },
         //timeRange
@@ -688,7 +689,7 @@ var Condition = function (api) {
             label: "品类",
             type: "select",
             submitConfig: {
-                name: "categoryId",
+                name: "no",
                 op: "eq",
                 validate: null
             },
@@ -697,14 +698,14 @@ var Condition = function (api) {
                 postData: {},
                 listPath: "categorys",
                 keyPath: "cid",
-                valuePath: "categoryName"
+                valuePath: "name"
             }
         },
         categoryName: {
             label: "名称",
             type: "text",
             submitConfig: {
-                name: "categoryName",
+                name: "name",
                 op: "eq",
                 validate: null
             }
@@ -713,7 +714,7 @@ var Condition = function (api) {
             label: "名称",
             type: "text",
             submitConfig: {
-                name: "brandName",
+                name: "name",
                 op: "cn",
                 validate: null
             }
@@ -732,6 +733,48 @@ var Condition = function (api) {
                 listPath: "autoFillKeyValue",//响应list的json路径
                 keyPath: "value",//用来向后台提交的字段的json路径
                 valuePath: "value"//用来在页面显示的字段的json路径
+            }
+        },
+        //---------数据-收据类型 页面的各种查询条件
+        receiptTypeName: {
+            label: "名称",
+            type: "text",
+            submitConfig: {
+                name: "name",
+                op: "cn",
+                validate: null
+            }
+        },
+        receiptType: {
+            label: "类型",
+            type: "select",
+            submitConfig: {
+                name: "type",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {//从后台取数据的各种配置
+                url: api.ds.data,
+                postData: {},
+                listPath: "receiptType",
+                keyPath: "key",
+                valuePath: "value"
+            }
+        },
+        receiptTypeStatus: {
+            label: "状态",
+            type: "select",
+            submitConfig: {
+                name: "status",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {//从后台取数据的各种配置
+                url: api.ds.data,
+                postData: {},
+                listPath: "receiptTypeStatus",
+                keyPath: "key",
+                valuePath: "value"
             }
         },
         //--------人事-员工 页面的各种查询条件
@@ -857,8 +900,8 @@ var Condition = function (api) {
                 url: api.communion.queryDepartment,
                 postData: {},
                 listPath: "deptList",
-                keyPath: "deptId",
-                valuePath: "deptName"
+                keyPath: "no",
+                valuePath: "name"
             }
         },
 
@@ -954,6 +997,23 @@ var Condition = function (api) {
             }
         },
 
+        selectCompany: {
+            label: "公司名称",
+            type: "select",
+            submitConfig: {
+                name: "company",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {
+                url: api.system.queryCompany,
+                postData: {},
+                listPath: "companys",
+                keyPath: "cid",
+                valuePath: "name"
+            }
+        },
+
         salesman: {
             label: "业务员",
             type: "autofill",
@@ -1014,8 +1074,8 @@ var Condition = function (api) {
                 url: api.communion.queryDepartment,
                 postData: {"dept.type.name": "设计部"},
                 listPath: "deptList",
-                keyPath: "deptId",
-                valuePath: "deptName"
+                keyPath: "no",
+                valuePath: "name"
             }
         },
         salesmanRegionId: {
@@ -1030,8 +1090,8 @@ var Condition = function (api) {
                 url: api.communion.queryDepartment,
                 postData: {"dept.type.name": "业务大区"},
                 listPath: "deptList",
-                keyPath: "deptId",
-                valuePath: "deptName"
+                keyPath: "no",
+                valuePath: "name"
             }
         },
         salesmanDepartmentId: {
@@ -1046,8 +1106,8 @@ var Condition = function (api) {
                 url: api.communion.queryDepartment,
                 postData: {},
                 listPath: "deptList",
-                keyPath: "deptId",
-                valuePath: "deptName"
+                keyPath: "no",
+                valuePath: "name"
             }
         },
         signTimeDateRange: {
@@ -1470,7 +1530,8 @@ var Condition = function (api) {
                 listPath: [
                     {key: "0", value: "初始"},
                     {key: "1", value: "通过"},
-                    {key: "2", value: "驳回"}
+                    {key: "2", value: "驳回"},
+                    {key: "3", value: "撤销"}
                 ],
                 keyPath: "key",
                 valuePath: "value"
@@ -1538,7 +1599,7 @@ var Condition = function (api) {
         },
 
 
-        //jinxiaocun
+        //进销存
         goodsNo: {
             label: "商品编号",
             type: "text",
@@ -1586,6 +1647,23 @@ var Condition = function (api) {
                 name: "gid",
                 op: "cn",
                 validate: null
+            }
+        },
+
+        goodsStatus: {
+            label: "状态",
+            type: "select",
+            submitConfig: {
+                name: "status",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {//从后台取数据的各种配置
+                url: api.ds.manifest,
+                postData: {},
+                listPath: "statusType",
+                keyPath: "key",
+                valuePath:"value"
             }
         },
 
@@ -2524,7 +2602,7 @@ var Condition = function (api) {
             label: "部门",
             type: "selectCaching",
             submitConfig: {
-                name: "dept.deptName",
+                name: "dept.name",
                 op: "eq",
                 validate: null
             },
@@ -2532,8 +2610,8 @@ var Condition = function (api) {
                 url: api.communion.queryDepartment,
                 postData: {},
                 listPath: "deptList",
-                keyPath: "deptName",
-                valuePath: "deptName"
+                keyPath: "name",
+                valuePath: "name"
             }
         },
 
@@ -2609,7 +2687,7 @@ var Condition = function (api) {
             label: "大区名称",
             type: "text",
             submitConfig: {
-                name: "region.deptName",
+                name: "region.name",
                 op: "cn",
                 validata: null
             }
@@ -2618,7 +2696,7 @@ var Condition = function (api) {
             label: "归属部门",
             type: "text",
             submitConfig: {
-                name: "dept.deptName",
+                name: "dept.name",
                 op: "cn",
                 validata: null
             }
@@ -2954,7 +3032,7 @@ var Condition = function (api) {
                 validate: null
             },
             dataSource: {
-                url: api.store.queryMbrandByName,
+                url: api.store.queryBaseMbrandByName,
                 postData: {},
                 listPath: "autoFillKeyValue",
                 keyPath: "key",
@@ -3145,7 +3223,7 @@ var Condition = function (api) {
             }
         },
 
-        /*-------易居ehouse : start----*/
+        /*-------易居market : start----*/
         e_designer: {
             label: "设计师",
             type: "autofill",
@@ -3155,12 +3233,12 @@ var Condition = function (api) {
                 validate: null
             },
             dataSource: {
-                url: api.ehouse.queryEuserByName,
+                url: api.market.queryEpersonByPinYin,
                 postData: {},
                 listPath: "autoFillKeyValue",
                 keyPath: "key",
                 valuePath: "value",
-                query: "euser.name"
+                query: "epseron.pinyin"
             }
         },
 		e_supervisor: {
@@ -3172,12 +3250,12 @@ var Condition = function (api) {
                 validate: null
             },
             dataSource: {
-                url: api.ehouse.queryEuserByName,
+                url: api.market.queryEpersonByPinYin,
                 postData: {},
                 listPath: "autoFillKeyValue",
                 keyPath: "key",
                 valuePath: "value",
-                query: "euser.name"
+                query: "eperson.pinyin"
             }
         },
         e_pictureType: {
@@ -3226,9 +3304,9 @@ var Condition = function (api) {
                 validate: null
             },
             dataSource: {
-                url: api.ds.ehouse,
+                url: api.ds.market,
                 postData: {"timestamp": new Date().getTime()},
-                listPath: "houseType",
+                listPath: "room",
                 keyPath: "key",
                 valuePath: "value"
             }
@@ -3243,7 +3321,7 @@ var Condition = function (api) {
                 validate: null
             },
             dataSource: {
-                url: api.ds.ehouse,
+                url: api.ds.market,
                 postData: {"timestamp": new Date().getTime()},
                 listPath: "area",
                 keyPath: "key",
@@ -3267,9 +3345,92 @@ var Condition = function (api) {
                 op : "cn",
                 validate:null
             }
-        }
+        },
+        e_cityId: {
+            label: "城市",
+            type: "autofill",
+            submitConfig: {
+                name: "cityId",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {
+                url: api.market.queryEcityByPinYin,
+                postData: {},
+                listPath: "autoFillKeyValue",
+                keyPath: "key",
+                valuePath: "value",
+                query: "ecity.pinyin"
+            }
+        },
+		
+		e_phone : {
+            label:"电话",
+            type:"text",
+            submitConfig : {
+                name : "phone",
+                op : "cn",
+                validate:{
+                    "reg": /^[0-9]*$/,
+                    "msg": "电话格式不正确"
+                }
+            }
+        },
+        e_industry : {
+            label:"行业",
+            type:"text",
+            submitConfig : {
+                name : "industry",
+                op : "cn",
+                validate:null
+            }
+        },
 
-        /*-------易居ehouse : end----*/
+        /*-------易居market : end----*/
+
+        /*-------款项payment新增 : start----*/
+        r_paymentType : {
+            label: "款项类型",
+            type: "select",
+            submitConfig: {
+                name: "paymentType",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {
+                url: api.ds.payment,
+                postData: {},
+                listPath: "receiptPaymentType",
+                keyPath: "key",
+                valuePath: "value"
+            }
+        },
+        r_receiptType : {
+            label:"收据类型",
+            type: "select",
+            submitConfig: {
+                name: "receiptType",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {
+                url: api.ds.payment,
+                postData: {},
+                listPath: "receiptType",
+                keyPath: "key",
+                valuePath: "value"
+            }
+        },
+        r_collectTime:{
+            label:"收款时间",
+            type:"dateRangePicker",
+            submitConfig:{
+                name:"collectTime",
+                op:"between",
+                validate:null
+            }
+        }
+        /*-------款项payment新增 : end----*/
     };
     return {
         getRuleByCondName: function (condName) {

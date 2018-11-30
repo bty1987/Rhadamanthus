@@ -15,8 +15,6 @@ public interface GroupService {
 	
 	public int updateGroup(GroupVO groupVO) throws FLException;
 	
-	public int updateGroupForCommon(GroupVO groupVO) throws FLException;
-	
 	public int bindGroup(GroupVO groupVO) throws FLException;
 	
 	public int unbindGroup(GroupVO groupVO) throws FLException;

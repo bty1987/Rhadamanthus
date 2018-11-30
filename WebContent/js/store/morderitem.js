@@ -1,5 +1,4 @@
 jQuery(function ($) {
-
     var morder = {
         saveBtn: null,
         cancelBtn: null,
@@ -7,34 +6,33 @@ jQuery(function ($) {
         items: {},
         editFlg: false
     };
-    var backBtn = $('#backBtn');
-    morder.saveBtn = $("#saveBtn").bindClick(saveData);
-    morder.cancelBtn = $("#cancelBtn");
-    morder.items.no = $("#no");
-    morder.items.price = $("#price");
-    morder.items.num = $("#num");
-    morder.items.status = $("#status");
-    morder.modal = $("#morderItemModal");
+    var backBtn = com.focusPage('#backBtn');
+    morder.saveBtn = com.focusPage("#saveBtn").bindClick(saveData);
+    morder.cancelBtn = com.focusPage("#cancelBtn");
+    morder.items.no = com.focusPage("#no");
+    morder.items.price = com.focusPage("#price");
+    morder.items.num = com.focusPage("#num");
+    morder.items.status = com.focusPage("#status");
+    morder.modal = com.focusPage("#morderItemModal");
     morder.modal.on('show.bs.modal', function (e) {
         com.clearValidator();
         com.clearValidator("#no", true);
     });
-
+    var morderOid = params["morder.oid"];
     var options = {
-        "morder.oid": params["morder.oid"]
+        "morder.oid": morderOid
     };
 
     com.post(api.ds.store, {}, function (res) {
-        $("#status").bindData(res.statusItem, "key", "value");
+        com.focusPage("#status").bindData(res.statusItem, "key", "value");
         $.each(res.statusItem, function (i, v) {
             status[v.key] = v.value;
         })
     }, null, false);
 
     var displayFunc  = (function(){
-
-        var renderList = function(tableId,listData){
-            var $tableWrap = $('#' + tableId);
+        var renderList = function(tableId, listData){
+            var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
             if(listData && listData.length){
                 $.each(listData,function(i, v){
@@ -79,7 +77,7 @@ jQuery(function ($) {
 
         return {
             init : function(tableId,listData){
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
             },
             drawLine : function(v){

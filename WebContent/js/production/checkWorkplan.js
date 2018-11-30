@@ -10,7 +10,7 @@ $(function(){
     var displayFunc  = (function(){
 
         var renderList = function(tableId,listData){
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
 
             if(listData && listData.length){
 
@@ -73,7 +73,7 @@ $(function(){
         };
         return {
             init : function(tableId,listData){
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
             },
             drawLine : function(v){
@@ -81,7 +81,7 @@ $(function(){
             }
         };
     })();
-    var $popup = $('#checkWorkplan');
+    var $popup = com.focusPage('#checkWorkplan');
     var wfid =  $popup.attr('data-wfid');
     com.post(api.production.queryWorkflowPlanByWfid,{
         "workflowPlan.workflow.wfid": wfid
@@ -90,6 +90,6 @@ $(function(){
     });
 
     //弹出内容许些样式
-    $('#resultList1').css({'width':'96%','margin':'0 auto'});
+    com.focusPage('#resultList1').css({'width':'96%','margin':'0 auto'});
 
 });

@@ -1,0 +1,54 @@
+<div class="page-content">
+	<div class="row">
+		<div class="col-xs-12">
+			<div id="condList" class="fl_search clearfix"></div> <!-- 查询条件-->
+			<div id="resultList" class="clearfix tab-pane active"></div> <!--查询结果-->
+			<div id="pagenation" class="fl-page-wrap clearfix">
+				<a class="btn btn-minier btn-yellow pull-left" id="add" style="margin: 0px 3px;">
+					<i class="icon-plus bigger-110"></i>
+					<span>添加</span>
+				</a>
+				<a class="btn btn-minier btn-success pull-left" id="back" style="margin: 0px 3px;">
+					<i class="icon-mail-forward bigger-110"></i>
+					<span>返回</span>
+				</a>
+			</div> <!--分页-->
+		</div>
+	</div>
+
+	<div class="modal fade" id="vrecordModal" tabindex="-1">
+		<div class="modal-dialog">
+			<div class="modal-content" style="width:900px;margin-left:-30%">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+					<h4 class="modal-title" id="myModalLabel">返单记录</h4>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-xs-12">
+							<form class="form-horizontal">
+								<div class="row">
+									<div class="col-md-12">
+										<div class="form-group">
+											<label class="col-sm-3 control-label no-padding-right" for="comment">备注</label>
+											<div class="col-sm-9">
+												<textarea id="comment" maxlength="256" class="col-xs-10 col-sm-6 v_required" data-toggle="popover" data-trigger='manual'></textarea>
+											</div>
+										</div>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer" style="text-align: center">
+					<button type="button" id="saveBtn" class="btn btn-primary">保存</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$.loadScript(['js/customer/vrecord.js']);
+</script>

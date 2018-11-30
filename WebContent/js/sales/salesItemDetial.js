@@ -9,18 +9,18 @@ $(function () {
     var status = params.status;
     var dompany = params.dompany;
 
-    var refundBtn = $('#refundBtn');
-    var refundCommitBtn = $('#refundCommitBtn');
-    var refundCancelBtn = $('#refundCancelBtn');
-    var fullRefundBtn = $('#fullRefundBtn');
-    var reOrderBtn = $('#reOrderBtn');
-    var backBtn = $('#backBtn');
-    var importBtn = $('#importBtn');
+    var refundBtn = com.focusPage('#refundBtn');
+    var refundCommitBtn = com.focusPage('#refundCommitBtn');
+    var refundCancelBtn = com.focusPage('#refundCancelBtn');
+    var fullRefundBtn = com.focusPage('#fullRefundBtn');
+    var reOrderBtn = com.focusPage('#reOrderBtn');
+    var backBtn = com.focusPage('#backBtn');
+    var importBtn = com.focusPage('#importBtn');
 
-    var refund = $('#refund');
-    var refundTotal = $('#refundTotal');
-    var approver = $('#approver');
-    var refundDes = $('#refundDes');
+    var refund = com.focusPage('#refund');
+    var refundTotal = com.focusPage('#refundTotal');
+    var approver = com.focusPage('#approver');
+    var refundDes = com.focusPage('#refundDes');
 
     var approvalStr = {
         receiverId: "approval.receiver.userId",
@@ -56,7 +56,7 @@ $(function () {
         hideButtons([fullRefundBtn, refundBtn, reOrderBtn, backBtn, importBtn]);
         showButtons([refundCommitBtn, refundCancelBtn]);
 
-        $('#list li.clearfix div.action-buttons a.btn').addClass('hide');
+        com.focusPage('#list li.clearfix div.action-buttons a.btn').addClass('hide');
         recordMoney(false);
 
     });
@@ -72,7 +72,7 @@ $(function () {
             createApprovalPostData();
             creatapprovalSalesRefundPostData("0");
 
-            var _approval = $('#approver')
+            var _approval = com.focusPage('#approver');
 
             var radios = _approval.find('input:checked').attr('userid');
 
@@ -93,7 +93,7 @@ $(function () {
                         refreshPage();
                         refundLayerOut();
                         layer.msg("退货申请已提交.");
-                        $('#approver').empty();
+                        com.focusPage('#approver').empty();
                     }, function (e) {
                         com.showAlert(com.error, e.errorMsg);
                     });
@@ -107,8 +107,8 @@ $(function () {
         showButtons([fullRefundBtn, reOrderBtn, refundBtn, backBtn, importBtn]);
         hideButtons([refundCommitBtn, refundCancelBtn]);
 
-        $('#list div.action-buttons a.btn').removeClass('hide');
-        $('#list div.action-buttons label').remove();
+        com.focusPage('#list div.action-buttons a.btn').removeClass('hide');
+        com.focusPage('#list div.action-buttons label').remove();
 
     });
 
@@ -126,7 +126,7 @@ $(function () {
 
         openRefundlayer(function (index, layero) {
 
-            var _approval = $('#approver')
+            var _approval = com.focusPage('#approver');
 
             var radio = _approval.find('input:checked').attr('userid');
 
@@ -147,11 +147,11 @@ $(function () {
                 com.post(api.approval.submitApprovalForSalesRefund, $.extend(approvalPostData, approvalSalesRefundPostData, approvalSalesRefundItemPostData),
                     function () {
                         status = 2;
-                        $('#list div.action-buttons label').remove();
+                        com.focusPage('#list div.action-buttons label').remove();
                         refreshPage();
                         refundLayerOut();
                         layer.msg("全退申请已提交.");
-                        $('#approver').empty();
+                        com.focusPage('#approver').empty();
                     }, function (e) {
                         com.showAlert(com.error, e.errorMsg);
                     });
@@ -169,14 +169,14 @@ $(function () {
         }
 
         recordMoney(true);
-        console.log(calcRefundData(true))
+        console.log(calcRefundData(true));
         if (!calcRefundData(true)) return
 
         approvalUtils.initqueryApprovalUser("approver", 10);
 
         openRefundlayer(function (index, layero) {
 
-            var _approval = $('#approver');
+            var _approval = com.focusPage('#approver');
 
             var radio = _approval.find('input:checked').attr('userid');
 
@@ -196,11 +196,11 @@ $(function () {
                 com.post(api.approval.submitApprovalForSalesRefund, $.extend(approvalPostData, approvalSalesRefundPostData, approvalSalesRefundItemPostData),
                     function () {
                         status = 3;
-                        $('#list div.action-buttons label').remove();
+                        com.focusPage('#list div.action-buttons label').remove();
                         refreshPage();
                         refundLayerOut();
                         layer.msg("倒单申请已提交.");
-                        $('#approver').empty();
+                        com.focusPage('#approver').empty();
                     }, function (e) {
                         com.showAlert(com.error, e.errorMsg);
                     });
@@ -210,7 +210,7 @@ $(function () {
     });
 
     var initList = function (listData) {
-        var $tableWrap = $('#list');
+        var $tableWrap = com.focusPage('#list');
         var $ul = $('<ul></ul>').addClass('item-list ui-sortable  fl-table-list');
 
         if (listData && listData.length) {
@@ -279,20 +279,20 @@ $(function () {
 
                 $btnEdit.click(function () {
 
-                    $('#num').val(v.num);
-                    $('#total').val(v.total);
-                    $('#comment').val(v.comment);
+                    com.focusPage('#num').val(v.num);
+                    com.focusPage('#total').val(v.total);
+                    com.focusPage('#comment').val(v.comment);
 
-                    $('#num').on('change', function () {
+                    com.focusPage('#num').on('change', function () {
                         if (com.validate('layerEdit', 'right') == false) {
-                            $('#total').val(parseFloat($('#num').val()) * parseFloat(v.price));
+                            com.focusPage('#total').val(parseFloat(com.focusPage('#num').val()) * parseFloat(v.price));
                         }
                     });
                     openMoneylayer(function (index, layero) {
 
-                        var num = $('#num').val();
-                        var total = $('#total').val();
-                        var comment = $('#comment').val();
+                        var num = com.focusPage('#num').val();
+                        var total = com.focusPage('#total').val();
+                        var comment = com.focusPage('#comment').val();
 
                         var editArr = {
                             "salesItem.siid": v.siid,
@@ -303,7 +303,7 @@ $(function () {
 
                         if (com.validate('layerEdit', 'right') == false) {
                             com.post(api.inventory.updateSalesItem, editArr, function () {
-                                $('#list ul.item-list').remove();
+                                com.focusPage('#list ul.item-list').remove();
                                 querySalesItemBySid(v.sid);
                                 layer.closeAll();
                             }, function (e) {
@@ -338,7 +338,7 @@ $(function () {
             type: 1,
             skin: 'layui-layer-lan',
             title: "编辑",
-            content: $('#layerEdit'),
+            content: com.focusPage('#layerEdit'),
             area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
             //maxmin: true,
             zIndex: 9000,
@@ -349,11 +349,11 @@ $(function () {
             },
             btn2: function (index, layero) {
                 //按钮【按钮二】的回调
-                com.clearValidator()
+                com.clearValidator();
             },
             cancel: function () {
                 //右上角关闭回调
-                com.clearValidator()
+                com.clearValidator();
             }
         });
     }
@@ -364,7 +364,7 @@ $(function () {
             type: 1,
             skin: 'layui-layer-lan',
             title: "退货信息",
-            content: $('#layerRefund'),
+            content: com.focusPage('#layerRefund'),
             area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
             //maxmin: true,
             zIndex: 9000,
@@ -375,32 +375,32 @@ $(function () {
             },
             btn2: function (index, layero) {
                 //按钮【按钮二】的回调
-                com.clearValidator()
+                com.clearValidator();
                 closeRefundlayer();
-                $('#approver').empty();
+                com.focusPage('#approver').empty();
 
             },
             cancel: function () {
                 //右上角关闭回调
-                com.clearValidator()
+                com.clearValidator();
                 closeRefundlayer();
-                $('#approver').empty();
+                com.focusPage('#approver').empty();
             }
         });
     }
 
     function closeRefundlayer() {
         refundTotal.val("");
-        $('#refund').val("");
-        $('#refundDes').val("");
-        $('#list li.clearfix div.action-buttons').empty();
-        approvalSalesRefundPostData = {}
-        approvalSalesRefundItemPostData = {}
+        com.focusPage('#refund').val("");
+        com.focusPage('#refundDes').val("");
+        com.focusPage('#list li.clearfix div.action-buttons').empty();
+        approvalSalesRefundPostData = {};
+        approvalSalesRefundItemPostData = {};
     }
 
     function checkNum($input, message, position) {
 
-        var priceRex = /^\d{1,8}(\.\d{1,2})?$/;
+        var priceRex = /^\d{1,8}(\.\d{1,3})?$/;
 
         if ($input.attr('max') < parseFloat($input.val()) || $input.attr('min') > $input.val() || $input.val() < 0 || !priceRex.test($input.val())) {
 
@@ -452,7 +452,7 @@ $(function () {
 
         var itemTotal = 0;
 
-        $('#list input[name="num"]').each(function (i) {
+        com.focusPage('#list input[name="num"]').each(function (i) {
 
             if (typeof($(this)) != "undefined") {
                 if (!isAll) {
@@ -509,7 +509,7 @@ $(function () {
 
     function recordMoney(ishide) {
 
-        $('#list li.clearfix div.action-buttons').each(function (i) {
+        com.focusPage('#list li.clearfix div.action-buttons').each(function (i) {
 
             var $inputNum = $('<input>').addClass('span1').attr('name', 'num').attr('value', '0').attr('type', 'number')
                 .attr('min', '0').attr('max', $(this).attr('data-num')).attr('step', '0.001')

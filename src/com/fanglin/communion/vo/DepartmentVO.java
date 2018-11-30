@@ -12,7 +12,7 @@ package com.fanglin.communion.vo;
 import java.io.Serializable;
 
 import com.fanglin.communion.po.DepartmentPO;
-import com.fanglin.system.vo.CityProperVO;
+import com.fanglin.personel.vo.UserVO;
 
 public class DepartmentVO implements Serializable {
 
@@ -20,34 +20,43 @@ public class DepartmentVO implements Serializable {
 	
 	private Integer did;
 
-	private String deptId;
-	
-	private String deptName;
-	
+	private String no;
+
+	private String name;
+
 	private DepartmentTypeVO type;
-	
-	private String subType;
-	
-	private String createTime;
-	
-	private String des;
-	
-	private String contractPrefix;
 
 	private DepartmentVO fatherDept;
-	
-	private CityProperVO cityProper;
-	
+
+	private String createTime;
+
+	private String comment;
+
+	private Integer company;
+
 	private Short status;
+
+	private String kino;
+
+	private String kiname;
+	
+	private UserVO manager;
 	
 	public DepartmentVO(){
 		super();
 	}
 
-	public DepartmentVO(DepartmentTypeVO type, DepartmentVO fatherDept,CityProperVO cityProper) {
+	public DepartmentVO(DepartmentTypeVO type, DepartmentVO fatherDept) {
+		super();
 		this.type = type;
 		this.fatherDept = fatherDept;
-		this.cityProper = cityProper;
+	}
+
+	public DepartmentVO(DepartmentTypeVO type, DepartmentVO fatherDept, UserVO manager) {
+		super();
+		this.type = type;
+		this.fatherDept = fatherDept;
+		this.manager = manager;
 	}
 
 	public Integer getDid() {
@@ -58,20 +67,20 @@ public class DepartmentVO implements Serializable {
 		this.did = did;
 	}
 
-	public String getDeptId() {
-		return deptId;
+	public String getNo() {
+		return no;
 	}
 
-	public void setDeptId(String deptId) {
-		this.deptId = deptId;
+	public void setNo(String no) {
+		this.no = no;
 	}
 
-	public String getDeptName() {
-		return deptName;
+	public String getName() {
+		return name;
 	}
 
-	public void setDeptName(String deptName) {
-		this.deptName = deptName;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public DepartmentTypeVO getType() {
@@ -82,12 +91,12 @@ public class DepartmentVO implements Serializable {
 		this.type = type;
 	}
 
-	public String getSubType() {
-		return subType;
+	public DepartmentVO getFatherDept() {
+		return fatherDept;
 	}
 
-	public void setSubType(String subType) {
-		this.subType = subType;
+	public void setFatherDept(DepartmentVO fatherDept) {
+		this.fatherDept = fatherDept;
 	}
 
 	public String getCreateTime() {
@@ -98,36 +107,20 @@ public class DepartmentVO implements Serializable {
 		this.createTime = createTime;
 	}
 
-	public String getDes() {
-		return des;
+	public String getComment() {
+		return comment;
 	}
 
-	public void setDes(String des) {
-		this.des = des;
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
-	public String getContractPrefix() {
-		return contractPrefix;
+	public Integer getCompany() {
+		return company;
 	}
 
-	public void setContractPrefix(String contractPrefix) {
-		this.contractPrefix = contractPrefix;
-	}
-
-	public DepartmentVO getFatherDept() {
-		return fatherDept;
-	}
-
-	public void setFatherDept(DepartmentVO fatherDept) {
-		this.fatherDept = fatherDept;
-	}
-
-	public CityProperVO getCityProper() {
-		return cityProper;
-	}
-
-	public void setCityProper(CityProperVO cityProper) {
-		this.cityProper = cityProper;
+	public void setCompany(Integer company) {
+		this.company = company;
 	}
 
 	public Short getStatus() {
@@ -138,12 +131,37 @@ public class DepartmentVO implements Serializable {
 		this.status = status;
 	}
 
+	public String getKino() {
+		return kino;
+	}
+
+	public void setKino(String kino) {
+		this.kino = kino;
+	}
+
+	public String getKiname() {
+		return kiname;
+	}
+
+	public void setKiname(String kiname) {
+		this.kiname = kiname;
+	}
+
+	public UserVO getManager() {
+		return manager;
+	}
+
+	public void setManager(UserVO manager) {
+		this.manager = manager;
+	}
+
 	public DepartmentVO setBaseInfo(DepartmentPO departmentPO){
 		this.did = departmentPO.getDid();
-		this.deptId = departmentPO.getDeptId();
-		this.deptName = departmentPO.getDeptName();
+		this.no = departmentPO.getNo();
+		this.name = departmentPO.getNo();
 		
 		return this;
 	}
 	
+
 }

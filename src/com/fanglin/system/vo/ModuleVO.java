@@ -27,6 +27,8 @@ public class ModuleVO implements Serializable {
 	
 	private Set<OperationVO> operations;
 	
+	private String helpKey;
+	
 	public Integer getMid() {
 		return mid;
 	}
@@ -105,6 +107,14 @@ public class ModuleVO implements Serializable {
 
 	public void setOrder(Short order) {
 		this.order = order;
+	}
+
+	public String getHelpKey() {
+		return helpKey;
+	}
+
+	public void setHelpKey(String helpKey) {
+		this.helpKey = helpKey;
 	}
 	
 }

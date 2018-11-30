@@ -12,20 +12,20 @@ jQuery(function($) {
 		editFlg: false
 	};
 
-	designerSalaryCalculation.modal = $("#paySalaryModal");
+	designerSalaryCalculation.modal = com.focusPage("#paySalaryModal");
 	designerSalaryCalculation.modal.on('show.bs.modal',function(e){
 		com.clearValidator();
 	});
 	
-	designerSalaryCalculation.listGrid = $("#listGrid");
+	designerSalaryCalculation.listGrid = com.focusPage("#listGrid");
 	designerSalaryCalculation.gridPager = "#gridPager";
 	
-	designerSalaryCalculation.listCalSalaryHistoryGrid = $("#listCalSalaryHistoryGrid");
+	designerSalaryCalculation.listCalSalaryHistoryGrid = com.focusPage("#listCalSalaryHistoryGrid");
 	designerSalaryCalculation.gridCalSalaryHistoryPager = "#gridCalSalaryHistoryPager";
 
-	designerSalaryCalculation.designerSalaryCalculationItems.designerSalaryId = $("#designerSalaryId");
-	designerSalaryCalculation.designerSalaryCalculationItems.salaryContent = $("#salaryContent");
-	designerSalaryCalculation.designerSalaryCalculationItems.realSalary = $("#realSalary");
+	designerSalaryCalculation.designerSalaryCalculationItems.designerSalaryId = com.focusPage("#designerSalaryId");
+	designerSalaryCalculation.designerSalaryCalculationItems.salaryContent = com.focusPage("#salaryContent");
+	designerSalaryCalculation.designerSalaryCalculationItems.realSalary = com.focusPage("#realSalary");
 	
 	initPaySalaryList();
 	initPaySalaryHistoryList();
@@ -42,9 +42,9 @@ jQuery(function($) {
 		       ]
 	};
 
-	$("#searchDiv").flSearch(searchOpts);
-	$("#designRegionSearch").bindData([{"key":"0","value":"设计一分区 "},{"key":"1","value":"设计二分区 "},{"key":"2","value":"设计三分区  "}], "key", "value", true);
-	$("#designDeptSearch").bindData([{"key":"0","value":"设计一部 "},{"key":"1","value":"宏发部 "},{"key":"2","value":"设计四部  "}], "key", "value", true);
+	com.focusPage("#searchDiv").flSearch(searchOpts);
+	com.focusPage("#designRegionSearch").bindData([{"key":"0","value":"设计一分区 "},{"key":"1","value":"设计二分区 "},{"key":"2","value":"设计三分区  "}], "key", "value", true);
+	com.focusPage("#designDeptSearch").bindData([{"key":"0","value":"设计一部 "},{"key":"1","value":"宏发部 "},{"key":"2","value":"设计四部  "}], "key", "value", true);
 	
 	var searchHistoryOpts = {
 		url: designerSalaryCalculation.queryHistoryUrl,
@@ -57,11 +57,11 @@ jQuery(function($) {
 			        {label:"工资时间", id:"salaryMonthHistorySearch", name:"salaryMonth",type:"dateRangePicker",op:"between"}
 			   ]
 	};
-	$("#searchCalSalaryHistoryDiv").flSearch(searchHistoryOpts);
-	$("#designRegionHistorySearch").bindData([{"key":"0","value":"设计一分区 "},{"key":"1","value":"设计二分区 "},{"key":"2","value":"设计三分区  "}], "key", "value", true);
-	$("#designDeptHistorySearch").bindData([{"key":"0","value":"设计一部 "},{"key":"1","value":"宏发部 "},{"key":"2","value":"设计四部  "}], "key", "value", true);
+	com.focusPage("#searchCalSalaryHistoryDiv").flSearch(searchHistoryOpts);
+	com.focusPage("#designRegionHistorySearch").bindData([{"key":"0","value":"设计一分区 "},{"key":"1","value":"设计二分区 "},{"key":"2","value":"设计三分区  "}], "key", "value", true);
+	com.focusPage("#designDeptHistorySearch").bindData([{"key":"0","value":"设计一部 "},{"key":"1","value":"宏发部 "},{"key":"2","value":"设计四部  "}], "key", "value", true);
 	
-	$("#history").removeClass("active");
+	com.focusPage("#history").removeClass("active");
 
 	function initPaySalaryList(){
 		designerSalaryCalculation.listGrid.jqGrid({

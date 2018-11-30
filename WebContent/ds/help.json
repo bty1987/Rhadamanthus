@@ -1,19 +1,11 @@
 {
   "decoration": {
-    "order": {
-      "orderType": "订单类型, 必填, 默认半包",
-      "status": "订单状态, 默认咨询",
-      "designerId": "请输入设计师",
-      "salesmanId": "请输入业务员",
-      "salesmanType": "请输入业务员类型"
+    "decoration-create": {
+      "title": "装修 - 订单录入",
+      "content": [{"title": "页面标题", "content": "页面内容","img":"图片", "p": "段落标记"},{"title": "页面标题", "content": "页面内容","img":"图片", "p": "段落标记"}]
     },
-    "customer": {
-      "customerId": "客户姓名, 同一电话号不能重复",
-      "villageId": "楼盘名不能重复",
-      "houseNumber": "楼牌号不能重复",
-      "houseClass": "房屋类型, 默认平层",
-      "houseType": "房屋类别, 默认期房",
-      "apartmentType": "请输入房屋户型"
-    }
+    "decoration-designer": {"title": "装修 - 装修单设计", "content": "敬请期待"},
+    "decoration-common": {"title": "装修 - 装修单通用", "content": "敬请期待"},
+    "decoration-belong": {"title": "装修 - 装修单归属", "content": "敬请期待"}
   }
 }

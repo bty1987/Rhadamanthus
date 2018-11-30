@@ -166,7 +166,7 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 		
 		UserPO belonger=userDao.get(customerOriginVO.getBelonger().getUid());
 		
-		creatCustomerRecord(customerOriginPO.getCsid(), String.format("原归属人:%s,原归属部门:%s,原归属分区:%s,新归属人:%s,新归属部门:%s,新归属分区:%s", customerOriginPO.getBelonger().getUserName(), customerOriginPO.getBelonger().getDept().getDeptName(), customerOriginPO.getBelonger().getDept().getFatherDept().getDeptName(), belonger.getUserName(), belonger.getDept().getDeptName(), belonger.getDept().getFatherDept().getDeptName()), (short)1, userDao.queryUserByUserId(userId));
+		creatCustomerRecord(customerOriginPO.getCsid(), String.format("原归属人:%s,原归属部门:%s,原归属分区:%s,新归属人:%s,新归属部门:%s,新归属分区:%s", customerOriginPO.getBelonger().getUserName(), customerOriginPO.getBelonger().getDept().getName(), customerOriginPO.getBelonger().getDept().getFatherDept().getName(), belonger.getUserName(), belonger.getDept().getName(), belonger.getDept().getFatherDept().getName()), (short)1, userDao.queryUserByUserId(userId));
 		
 		customerOriginPO.setBelonger(belonger);
 		customerOriginPO.setDepartment(belonger.getDept());
@@ -234,10 +234,10 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 		
 		BeanUtil.copyProperties(customerOriginPO, customerOriginVO, Arrays.asList("customer","creater","createTime","belonger","department","region"));
 		BeanUtil.copyProperties(customerOriginPO.getCustomer(), customerOriginVO.getCustomer());
-		BeanUtil.copyProperties(customerOriginPO.getCreater(), customerOriginVO.getCreater(), Arrays.asList("dept","duty"));
-		BeanUtil.copyProperties(customerOriginPO.getBelonger(), customerOriginVO.getBelonger(), Arrays.asList("dept","duty"));
-		BeanUtil.copyProperties(customerOriginPO.getDepartment(), customerOriginVO.getDepartment(), Arrays.asList("type","fatherDept","cityProper"));
-		BeanUtil.copyProperties(customerOriginPO.getRegion(), customerOriginVO.getRegion(), Arrays.asList("type","fatherDept","cityProper"));
+		BeanUtil.copyProperties(customerOriginPO.getCreater(), customerOriginVO.getCreater(), Arrays.asList("dept", "duty"));
+		BeanUtil.copyProperties(customerOriginPO.getBelonger(), customerOriginVO.getBelonger(), Arrays.asList("dept", "duty"));
+		BeanUtil.copyProperties(customerOriginPO.getDepartment(), customerOriginVO.getDepartment(), Arrays.asList("type", "fatherDept", "manager"));
+		BeanUtil.copyProperties(customerOriginPO.getRegion(), customerOriginVO.getRegion(), Arrays.asList("type", "fatherDept", "manager"));
 		
 		customerOriginVO.setCreateTime(customerOriginPO.getCreateTime());
 		

@@ -9,7 +9,7 @@ jQuery(function ($) {
 
     var displayFunc = (function () {
         var renderList = function(tableId,listData){
-            var $tableWrap = $('#'+tableId);
+            var $tableWrap = com.focusPage('#'+tableId);
             var $ul = $('<ul></ul>').addClass('item-list ui-sortable  fl-table-list');
 
             if(listData && listData.length){
@@ -66,7 +66,7 @@ jQuery(function ($) {
         };
         return {
             init : function(tableId,listData){
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
             }
         }
@@ -104,7 +104,7 @@ jQuery(function ($) {
 
     });
 
-    $('#layerAddItem').find("#itemName").typeahead({
+    com.focusPage('#layerAddItem').find("#itemName").typeahead({
         url: api.production.queryQuoteItemByPinyin,
         list: [],
         postData: {},
@@ -124,8 +124,8 @@ jQuery(function ($) {
             $.each(list, function (index, val) {
 
                 if (val.qiid == k) {
-                    $('#layerAddItem').find('#measurementUnit').val(val.measurementunit);
-                    $('#layerAddItem').find('#typeNo').val(val.format);
+                    com.focusPage('#layerAddItem').find('#measurementUnit').val(val.measurementunit);
+                    com.focusPage('#layerAddItem').find('#typeNo').val(val.format);
                 }
 
 
@@ -140,7 +140,7 @@ jQuery(function ($) {
             type: 1,
             skin: 'layui-layer-lan',
             title: "添加计划项",
-            content: $('#layerAddItem'),
+            content: com.focusPage('#layerAddItem'),
             area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
             maxmin: false,
             zIndex: 9999,
@@ -159,19 +159,19 @@ jQuery(function ($) {
 
     function addItem() {
         var option = [];
-        var $color = $('#color').val();
+        var $color = com.focusPage('#color').val();
 
         option["productionPlanItem.productionPlan.ppid"] = ppid;
-        option["productionPlanItem.typeno"] = $('#typeNo').val();
-        option["productionPlanItem.name"] = $('#itemName').val();
-        option["productionPlanItem.height"] = $('#height').val();
-        option["productionPlanItem.width"] = $('#width').val();
-        option["productionPlanItem.thick"] = $('#thick').val();
+        option["productionPlanItem.typeno"] = com.focusPage('#typeNo').val();
+        option["productionPlanItem.name"] = com.focusPage('#itemName').val();
+        option["productionPlanItem.height"] = com.focusPage('#height').val();
+        option["productionPlanItem.width"] = com.focusPage('#width').val();
+        option["productionPlanItem.thick"] = com.focusPage('#thick').val();
         option["productionPlanItem.color"] = $color ? $color : ' ';
         option["productionPlanItem.unitprice"] = 0;
-        option["productionPlanItem.num"] = $('#num').val();
+        option["productionPlanItem.num"] = com.focusPage('#num').val();
         option["productionPlanItem.total"] = 0;
-        option["productionPlanItem.comment"] = $('#comment').val();
+        option["productionPlanItem.comment"] = com.focusPage('#comment').val();
         com.post(api.production.addProductionPlanItem,option,function (res) {
             layer.msg("添加成功");
             searcher.doSearch();

@@ -1,6 +1,5 @@
 
 jQuery(function($) {
-
 	var createHouseSource = {
 		houseSources: {},
 		saveBtn: null,
@@ -29,11 +28,11 @@ jQuery(function($) {
 		houseFlag: false,
 		repeatCustomerFlg: false,
 		cardFlag: false,
-		isAddHouseSource: true,
+		isAddHouseSource: true
 	};
 
-	var tag_input = $("#indoores");
-	var tag_inputTwo = $("#feature");
+	var tag_input = com.focusPage("#indoores");
+	var tag_inputTwo = com.focusPage("#feature");
 
 	tag_input.tag({
 		placeholder:tag_input.attr('placeholder'),
@@ -44,8 +43,8 @@ jQuery(function($) {
 			resultList : "autoFillKeyValue",
 			keyPath : "key",
 			valuePath : "value",
-			isResultTypeMap : true, //是否是key - value 形式的列表
-		},
+			isResultTypeMap : true //是否是key - value 形式的列表
+		}
 	});
 
 	tag_inputTwo.tag({
@@ -57,93 +56,93 @@ jQuery(function($) {
 			resultList : "autoFillKeyValue",
 			keyPath : "key",
 			valuePath : "value",
-			isResultTypeMap : true, //是否是key - value 形式的列表
-		},
+			isResultTypeMap : true //是否是key - value 形式的列表
+		}
 	});
 
-	$("#history").bindData(createHouseSource.history);
-	$("#cardType").bindData(createHouseSource.cardType);
-	$("#housingGrade").bindData(createHouseSource.housingGrade);
+	com.focusPage("#history").bindData(createHouseSource.history);
+	com.focusPage("#cardType").bindData(createHouseSource.cardType);
+	com.focusPage("#housingGrade").bindData(createHouseSource.housingGrade);
 
-	$(".date-picker").datepicker({autoclose: !0}).on("show",function() {
+	com.focusPage(".date-picker").datepicker({autoclose: !0}).on("show",function() {
 		setTimeout(function() {
-			$(".dropdown-menu").css("z-index", 1060)
+			com.focusPage(".dropdown-menu").css("z-index", 1060)
 		}, 0)
 	}).next().on(ace.click_event,function() {
 		a(this).prev().focus()
 	});
 
-	createHouseSource.modal = $("#createHouseSource");
+	createHouseSource.modal = com.focusPage("#createHouseSource");
 	createHouseSource.modal.on('show.bs.modal',function(e){
 		com.clearValidator();
 	});
 
-	createHouseSource.items.gender = $("#gender").switchBtn("gender");
+	createHouseSource.items.gender = com.focusPage("#gender").switchBtn("gender");
 
-	createHouseSource.saveBtn = $("#saveBtn").bindClick(addHouseSource);
-	createHouseSource.cancelBtn = $("#cancelBtn").on("click", deleteDate);
-	createHouseSource.createCustomerSaveBtn = $("#createCustomerSaveBtn").on("click", createCustomer);
+	createHouseSource.saveBtn = com.focusPage("#saveBtn").bindClick(addHouseSource);
+	createHouseSource.cancelBtn = com.focusPage("#cancelBtn").on("click", deleteDate);
+	createHouseSource.createCustomerSaveBtn = com.focusPage("#createCustomerSaveBtn").on("click", createCustomer);
 
-	createHouseSource.items.customerId = $("#customerId");
-	createHouseSource.items.hsType = $("#hsType");
-	createHouseSource.items.sourceType = $("#sourceType");
-	createHouseSource.items.deedNum = $("#deedNum");
-	createHouseSource.items.deedValue = $("#deedValue");
-	createHouseSource.items.unitPrice = $("#unitPrice");
-	createHouseSource.items.totalPrice = $("#totalPrice");
-	createHouseSource.items.decorateTime = $("#decorateTime");
-	createHouseSource.items.decorateDegree = $("#decorateDegree");
-	createHouseSource.items.discussType = $("#discussType");
-	createHouseSource.items.rentType = $("#rentType");
-	createHouseSource.items.indoores = $("#indoores");
-	createHouseSource.items.history = $("#history");
-	createHouseSource.items.propertyFee = $("#propertyFee");
-	createHouseSource.items.elevator = $("#elevator");
-	createHouseSource.items.onlyHousing = $("#onlyHousing");
-	createHouseSource.items.documentsDate = $("#documentsDate");
-	createHouseSource.items.allowLoan = $("#allowLoan");
-	createHouseSource.items.beingLoan = $("#beingLoan");
-	createHouseSource.items.checkingTime = $("#checkingTime");
-	createHouseSource.items.followId = $("#followId");
-	createHouseSource.items.keyerId = $("#keyerId");
-	createHouseSource.items.housingGrade = $("#housingGrade");
-	createHouseSource.items.comment = $("#comment");
+	createHouseSource.items.customerId = com.focusPage("#customerId");
+	createHouseSource.items.hsType = com.focusPage("#hsType");
+	createHouseSource.items.sourceType = com.focusPage("#sourceType");
+	createHouseSource.items.deedNum = com.focusPage("#deedNum");
+	createHouseSource.items.deedValue = com.focusPage("#deedValue");
+	createHouseSource.items.unitPrice = com.focusPage("#unitPrice");
+	createHouseSource.items.totalPrice = com.focusPage("#totalPrice");
+	createHouseSource.items.decorateTime = com.focusPage("#decorateTime");
+	createHouseSource.items.decorateDegree = com.focusPage("#decorateDegree");
+	createHouseSource.items.discussType = com.focusPage("#discussType");
+	createHouseSource.items.rentType = com.focusPage("#rentType");
+	createHouseSource.items.indoores = com.focusPage("#indoores");
+	createHouseSource.items.history = com.focusPage("#history");
+	createHouseSource.items.propertyFee = com.focusPage("#propertyFee");
+	createHouseSource.items.elevator = com.focusPage("#elevator");
+	createHouseSource.items.onlyHousing = com.focusPage("#onlyHousing");
+	createHouseSource.items.documentsDate = com.focusPage("#documentsDate");
+	createHouseSource.items.allowLoan = com.focusPage("#allowLoan");
+	createHouseSource.items.beingLoan = com.focusPage("#beingLoan");
+	createHouseSource.items.checkingTime = com.focusPage("#checkingTime");
+	createHouseSource.items.followId = com.focusPage("#followId");
+	createHouseSource.items.keyerId = com.focusPage("#keyerId");
+	createHouseSource.items.housingGrade = com.focusPage("#housingGrade");
+	createHouseSource.items.comment = com.focusPage("#comment");
 
-	createHouseSource.customerItems.customerName = $("#customerName");
-	createHouseSource.customerItems.cardType = $("#cardType");
-	createHouseSource.customerItems.cardNum = $("#cardNum");
-	createHouseSource.customerItems.gender = $("#gender");
-	createHouseSource.customerItems.qq = $("#qq");
-	createHouseSource.customerItems.wechat = $("#wechat");
-	createHouseSource.customerItems.email = $("#email");
-	createHouseSource.customerItems.relationshipType = $("#relationshipType");
-	createHouseSource.customerItems.address = $("#address");
-	createHouseSource.customerItems.phone = $("#phone");
+	createHouseSource.customerItems.customerName = com.focusPage("#customerName");
+	createHouseSource.customerItems.cardType = com.focusPage("#cardType");
+	createHouseSource.customerItems.cardNum = com.focusPage("#cardNum");
+	createHouseSource.customerItems.gender = com.focusPage("#gender");
+	createHouseSource.customerItems.qq = com.focusPage("#qq");
+	createHouseSource.customerItems.wechat = com.focusPage("#wechat");
+	createHouseSource.customerItems.email = com.focusPage("#email");
+	createHouseSource.customerItems.relationshipType = com.focusPage("#relationshipType");
+	createHouseSource.customerItems.address = com.focusPage("#address");
+	createHouseSource.customerItems.phone = com.focusPage("#phone");
 
-	createHouseSource.houseItems.no = $("#no");
-	createHouseSource.houseItems.rule = $("#rule");
-	createHouseSource.houseItems.built = $("#built");
-	createHouseSource.houseItems.unit = $("#unit");
-	createHouseSource.houseItems.floor = $("#floor");
-	createHouseSource.houseItems.door = $("#door");
-	createHouseSource.houseItems.builtrule = $("#builtrule");
-	createHouseSource.houseItems.unitrule = $("#unitrule");
-	createHouseSource.houseItems.floorrule = $("#floorrule");
-	createHouseSource.houseItems.doorrule = $("#doorrule");
-	createHouseSource.houseItems.type = $("#type");
-	createHouseSource.houseItems.buildArea = $("#buildArea");
-	createHouseSource.houseItems.maxFloor = $("#maxFloor");
-	createHouseSource.houseItems.through = $("#through");
-	createHouseSource.houseItems.houseTypeOne = $("#houseTypeOne");
-	createHouseSource.houseItems.houseTypeTwo = $("#houseTypeTwo");
-	createHouseSource.houseItems.houseTypeThr = $("#houseTypeThr");
-	createHouseSource.houseItems.houseTypeFour= $("#houseTypeFour");
-	createHouseSource.houseItems.orientation = $("#orientation");
-	createHouseSource.houseItems.feature = $("#feature");
-	createHouseSource.houseItems.waterVapour = $("#waterVapour");
-	createHouseSource.houseItems.parlourType = $("#parlourType");
-	createHouseSource.houseItems.heatingType = $("#heatingType");
-	createHouseSource.houseItems.oldhousetype = $("#oldhousetype");
+	createHouseSource.houseItems.no = com.focusPage("#no");
+	createHouseSource.houseItems.rule = com.focusPage("#rule");
+	createHouseSource.houseItems.built = com.focusPage("#built");
+	createHouseSource.houseItems.unit = com.focusPage("#unit");
+	createHouseSource.houseItems.floor = com.focusPage("#floor");
+	createHouseSource.houseItems.door = com.focusPage("#door");
+	createHouseSource.houseItems.builtrule = com.focusPage("#builtrule");
+	createHouseSource.houseItems.unitrule = com.focusPage("#unitrule");
+	createHouseSource.houseItems.floorrule = com.focusPage("#floorrule");
+	createHouseSource.houseItems.doorrule = com.focusPage("#doorrule");
+	createHouseSource.houseItems.type = com.focusPage("#type");
+	createHouseSource.houseItems.buildArea = com.focusPage("#buildArea");
+	createHouseSource.houseItems.maxFloor = com.focusPage("#maxFloor");
+	createHouseSource.houseItems.through = com.focusPage("#through");
+	createHouseSource.houseItems.houseTypeOne = com.focusPage("#houseTypeOne");
+	createHouseSource.houseItems.houseTypeTwo = com.focusPage("#houseTypeTwo");
+	createHouseSource.houseItems.houseTypeThr = com.focusPage("#houseTypeThr");
+	createHouseSource.houseItems.houseTypeFour= com.focusPage("#houseTypeFour");
+	createHouseSource.houseItems.orientation = com.focusPage("#orientation");
+	createHouseSource.houseItems.feature = com.focusPage("#feature");
+	createHouseSource.houseItems.waterVapour = com.focusPage("#waterVapour");
+	createHouseSource.houseItems.parlourType = com.focusPage("#parlourType");
+	createHouseSource.houseItems.heatingType = com.focusPage("#heatingType");
+	createHouseSource.houseItems.oldhousetype = com.focusPage("#oldhousetype");
 
 	com.post(api.ds.building, {}, function(res){
 		createHouseSource.items.hsType.bindData(res.hsType, "key", "value");
@@ -177,7 +176,7 @@ jQuery(function($) {
 	com.initChosen('followId', api.personel.queryUserByPinyin, "pinyinName", {"departmentType.name":"", "user.status":0}, "autoFillKeyValue", "key", "value");
 	com.initChosen('keyerId', api.personel.queryUserByPinyin, "pinyinName", {"departmentType.name":"", "user.status":0}, "autoFillKeyValue", "key", "value");
 	com.initChosen('customerId', api.data.queryCustomerForName, "pinyinName", {}, "autoFillCustomer", "key", "value").on("change", function(e){
-		if($(this).val() == "" || $("#customerId").val() == "") {
+		if($(this).val() == "" || com.focusPage("#customerId").val() == "") {
 			com.clearValidator("#customerId", true);
 			createHouseSource.repeatCustomerFlg = false;
 			return;
@@ -185,13 +184,13 @@ jQuery(function($) {
 	});
 
 	com.initChosen('no', api.data.queryVillageForNameByPinyin, "pinyinName", {}, "autoFillKeyValue", "key", "value").on("change", function(e){
-		if($("#no").val() == null || $("#no").val() == ""){
+		if(com.focusPage("#no").val() == null || com.focusPage("#no").val() == ""){
 			return;
 		}
 	});
 
 	//清空数据
-	createHouseSource.houseItems.no = $("#no").on("change",function(e){
+	createHouseSource.houseItems.no = com.focusPage("#no").on("change",function(e){
 		deleteVillageData("no");
 		houseItemsReadOnlyFlag(false);
 
@@ -200,15 +199,15 @@ jQuery(function($) {
 		}, null, false)
 	});
 
-	createHouseSource.houseItems.built = $("#built").on("change", function(e){
+	createHouseSource.houseItems.built = com.focusPage("#built").on("change", function(e){
 		deleteVillageData("built");
 		houseItemsReadOnlyFlag(false);
 	});
-	createHouseSource.houseItems.unit = $("#unit").on("change", function(e){
+	createHouseSource.houseItems.unit = com.focusPage("#unit").on("change", function(e){
 		deleteVillageData("unit");
 		houseItemsReadOnlyFlag(false);
 	});
-	createHouseSource.houseItems.floor = $("#floor").on("change", function(e){
+	createHouseSource.houseItems.floor = com.focusPage("#floor").on("change", function(e){
 		deleteVillageData("floor");
 		houseItemsReadOnlyFlag(false);
 	});
@@ -230,47 +229,47 @@ jQuery(function($) {
 		checkHouseAndHouseSource("hsType");
 	});
 
-	createHouseSource.houseItems.door = $("#door").on("blur", function(e){
+	createHouseSource.houseItems.door = com.focusPage("#door").on("blur", function(e){
 		checkHouseAndHouseSource("door");
 	});
 
 	//检查电话号是否已存在
-	createHouseSource.customerItems.phone = $("#phone").on("blur", function(){
+	createHouseSource.customerItems.phone = com.focusPage("#phone").on("blur", function(){
 		$this = $(this);
-		void 0 == $this.val() || "" == $this.val().trim() ? (com.showPopover($("#phone"),{errorMsg: "电话号码不能为空"}, "right"), createHouseSource.repeatFlg = false) : com.post(api.data.checkCustomerForPhone, {
+		void 0 == $this.val() || "" == $this.val().trim() ? (com.showPopover(com.focusPage("#phone"),{errorMsg: "电话号码不能为空"}, "right"), createHouseSource.repeatFlg = false) : com.post(api.data.checkCustomerForPhone, {
 			"customerPhone.phone": $this.val(),
 			"customerPhone.status": 0
 		}, function(res) {
 			createHouseSource.customerRepeatFlg = true;
-			com.showPopover($("#phone"),{errorMsg: "电话号码已存在"}, "right");
+			com.showPopover(com.focusPage("#phone"),{errorMsg: "电话号码已存在"}, "right");
 
 		}, function(res){
 			createHouseSource.customerRepeatFlg = false;
-			$("#phone").css("border", "1px solid #d5d5d5").popover("destroy")
+			com.focusPage("#phone").css("border", "1px solid #d5d5d5").popover("destroy")
 		});
 	});
 
 	//填写单价
-	$("#totalPrice").on("blur", function(){
-		if($("#buildArea").val() == ""){
+	com.focusPage("#totalPrice").on("blur", function(){
+		if(com.focusPage("#buildArea").val() == ""){
 			return;
 		}
-		createHouseSource.items.unitPrice.val(utils.accDiv($("#totalPrice").val(), $("#buildArea").val()));
+		createHouseSource.items.unitPrice.val(utils.accDiv(com.focusPage("#totalPrice").val(), com.focusPage("#buildArea").val()));
 	});
 
-	$("#buildArea").on("blur", function(){
-		if($("#totalPrice").val() == ""){
+	com.focusPage("#buildArea").on("blur", function(){
+		if(com.focusPage("#totalPrice").val() == ""){
 			return;
 		}
-		createHouseSource.items.unitPrice.val(utils.accDiv($("#totalPrice").val(), $("#buildArea").val()));
+		createHouseSource.items.unitPrice.val(utils.accDiv(com.focusPage("#totalPrice").val(), com.focusPage("#buildArea").val()));
 	});
 
-	$('#fl-statement').statement("房源", "创建房源");
+	com.focusPage('#fl-statement').statement("房源", "创建房源");
 
 	//创建客户
-	$("#createCustomer").click(function(){
+	com.focusPage("#createCustomer").click(function(){
 		com.cleanItems(createHouseSource.customerItems);
-		$("#customerModal").modal("show");
+		com.focusPage("#customerModal").modal("show");
 	});
 
 	//编辑OR添加
@@ -360,16 +359,16 @@ jQuery(function($) {
 		}
 
 		var customerOptions = {};
-		switch($("#cardType").val())
+		switch(com.focusPage("#cardType").val())
 		{
 			case "身份证":
-				customerOptions["customer.identity"]  = $("#cardNum").val();
+				customerOptions["customer.identity"]  = com.focusPage("#cardNum").val();
 				break;
 			case "军官证":
-				customerOptions["customer.officer"] = $("#cardNum").val();
+				customerOptions["customer.officer"] = com.focusPage("#cardNum").val();
 				break;
 			case "护照":
-				customerOptions["customer.passport"] = $("#cardNum").val();
+				customerOptions["customer.passport"] = com.focusPage("#cardNum").val();
 				break;
 		}
 
@@ -386,10 +385,10 @@ jQuery(function($) {
 			com.showAlert(com.info, "创建用户成功");
 			createHouseSource.customerId = res.customer.cid;
 
-			$("#customerId").html('<option value="'+res.customer.cid+'">'+res.customer.name+'-'+res.customer.phone+'</option>');
-			$("#customerId").trigger("chosen:updated");
+			com.focusPage("#customerId").html('<option value="'+res.customer.cid+'">'+res.customer.name+'-'+res.customer.phone+'</option>');
+			com.focusPage("#customerId").trigger("chosen:updated");
 
-			$("#customerModal").modal("hide");
+			com.focusPage("#customerModal").modal("hide");
 
 		}, function(e){
 			com.showAlert(com.warning, "客户电话已存在！");
@@ -404,10 +403,10 @@ jQuery(function($) {
 		com.updateChosen("followId", "", "");
 		com.updateChosen("keyerId", "", "");
 
-		$(".tag").remove();
+		com.focusPage(".tag").remove();
 		createHouseSource.houseItems.rule.html("");
-		$("#ohousetype").css("display", "none");
-		$("#nhousetype").removeAttr("style");
+		com.focusPage("#ohousetype").css("display", "none");
+		com.focusPage("#nhousetype").removeAttr("style");
 		com.cleanItems(createHouseSource.items);
 		com.cleanItems(createHouseSource.houseItems);
 		com.cleanItems(createHouseSource.customerItems);
@@ -416,9 +415,9 @@ jQuery(function($) {
 
 	//删除房产数据
 	function deleteHouseData(){
-		$("#ohousetype").css("display", "none");
-		$("#nhousetype").removeAttr("style");
-		$(".tag").remove();
+		com.focusPage("#ohousetype").css("display", "none");
+		com.focusPage("#nhousetype").removeAttr("style");
+		com.focusPage(".tag").remove();
 
 		createHouseSource.houseItems.houseTypeOne.val("");
 		createHouseSource.houseItems.houseTypeTwo.val("");
@@ -445,32 +444,32 @@ jQuery(function($) {
 
 			var hsOptions = {
 				"houseSource.house.hid": houses.hid,
-				"houseSource.type": createHouseSource.items.hsType.val(),
+				"houseSource.type": createHouseSource.items.hsType.val()
 			};
 
 			com.post(api.building.checkHouseSource, hsOptions, function(data){
 				createHouseSource.houseFlag = false;
-				com.showPopover($("#door"),{errorMsg: "该房源已存在"}, "bottom");
+				com.showPopover(com.focusPage("#door"),{errorMsg: "该房源已存在"}, "bottom");
 			}, function(res){
 				createHouseSource.houseFlag = false;
 				//绑定房产数据
 				bindHouseData(houses);
 				houseItemsReadOnlyFlag(true);
-				$("#door").css("border", "1px solid #d5d5d5").popover("destroy");
+				com.focusPage("#door").css("border", "1px solid #d5d5d5").popover("destroy");
 			}, false);
 		}else{
 			createHouseSource.houseFlag = true;
 			//deleteHouseData();
 			houseItemsReadOnlyFlag(false);
-			$("#" + inputId).css("border", "1px solid #d5d5d5").popover("destroy");
+			com.focusPage("#" + inputId).css("border", "1px solid #d5d5d5").popover("destroy");
 		}
 	}
 
 	//绑定房产数据
 	function bindHouseData(houses){
 		com.updateChosen("no", houses.village.no, houses.village.name);
-		$("#nhousetype").css("display", "none");
-		$("#ohousetype").removeAttr("style");
+		com.focusPage("#nhousetype").css("display", "none");
+		com.focusPage("#ohousetype").removeAttr("style");
 		createHouseSource.houseItems.type.val(houses.type);
 		createHouseSource.houseItems.buildArea.val(houses.buildArea);
 		createHouseSource.houseItems.maxFloor.val(houses.maxFloor);
@@ -524,7 +523,7 @@ jQuery(function($) {
 				createHouseSource.houseItems.unitrule.get(0).selectedIndex = 0;
 				createHouseSource.houseItems.floorrule.get(0).selectedIndex = 0;
 				createHouseSource.houseItems.doorrule.get(0).selectedIndex = 0;
-				$("#door").popover("destroy");
+				com.focusPage("#door").popover("destroy");
 				deleteHouseData();
 				break;
 		}
@@ -532,8 +531,8 @@ jQuery(function($) {
 
 	function houseItemsReadOnlyFlag(flag){
 		if(!flag){
-			$("#ohousetype").css("display", "none");
-			$("#nhousetype").removeAttr("style");
+			com.focusPage("#ohousetype").css("display", "none");
+			com.focusPage("#nhousetype").removeAttr("style");
 		}
 
 		createHouseSource.houseItems.type.prop("disabled", flag);

@@ -30,9 +30,9 @@ public class SalesBalancePO implements Serializable{
 	
 	public static final String COLUMN_SALESVILLAGE_STR = "village.no";
 	
-	public static final String COLUMN_SALESREGION_STR = "region.deptName";
+	public static final String COLUMN_SALESREGION_STR = "region.name";
 	
-	public static final String COLUMN_SALESDEPT_STR = "dept.deptName";
+	public static final String COLUMN_SALESDEPT_STR = "dept.name";
 	
 	public static final String COLUMN_STATUS_STR = "status";
 	

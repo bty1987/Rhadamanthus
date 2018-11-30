@@ -15,13 +15,13 @@ jQuery(function ($) {
             "oilQuality", "oilServer", "oilHygiene",
             "supervisQuality", "supervisServer", "supervisHygiene",
             "materialQuality", "materialServer",
-            "multiple", "internal",
+            "multiple", "internal"
         ], desIds: [
             "waterwayDes", "circuitDes", "bricklayDes", "carpentDes", "oilDes", "supervisDes", "materialDes",
-            "question", "propose", "acceptanceTime",
+            "question", "propose", "acceptanceTime"
         ],
 
-        options: {},
+        options: {}
     };
 
     //获取所有节点的name
@@ -37,21 +37,21 @@ jQuery(function ($) {
 
         for (var i = 0; i < acceptanceDetail.baseInfos.length; i++) {
             infoName = acceptanceDetail.baseInfos[i];
-            $("#" + infoName).val(acceptanceInfo[infoName]);
+            com.focusPage("#" + infoName).val(acceptanceInfo[infoName]);
         }
 
         for (var i = 1; i <= acceptanceDetail.ratyLength; i++) {
-            $('#raty' + i).raty({
+            com.focusPage('#raty' + i).raty({
                 path: './assets/altogether/images/',
                 number: 4,
-                start: acceptanceInfo[acceptanceDetail.ratyIds[i - 1]],
+                start: acceptanceInfo[acceptanceDetail.ratyIds[i - 1]]
             });
         }
 
         for (var i = 0; i < acceptanceDetail.desIds.length; i++) {
             var desId = acceptanceDetail.desIds[i];
             if (acceptanceInfo[desId]) {
-                $("#" + desId).val(acceptanceInfo[desId]);
+                com.focusPage("#" + desId).val(acceptanceInfo[desId]);
             }
         }
     });
@@ -61,7 +61,7 @@ jQuery(function ($) {
         var constructionSchedule = res.constructionSchedules;
 
         $.each(constructionSchedule, function (i, v) {
-            var nodeDiv = $("<div></div>").attr("id", constructionScheName[v.schedule]).appendTo($("#constructerDiv"));
+            var nodeDiv = $("<div></div>").attr("id", constructionScheName[v.schedule]).appendTo(com.focusPage("#constructerDiv"));
         });
     }, null, false);
 
@@ -74,7 +74,7 @@ jQuery(function ($) {
                 constructerImg(constructers[i].user.userPhoto, constructers[i].user.userName, constructers[i].user.duty.name, constructers[i].schedule);
             }
         } else {
-            var pane = $("<div>当前订单没有分配工人!</div>").addClass("alert alert-info").appendTo($("#constructerDiv"));
+            var pane = $("<div>当前订单没有分配工人!</div>").addClass("alert alert-info").appendTo(com.focusPage("#constructerDiv"));
         }
     });
 
@@ -85,14 +85,13 @@ jQuery(function ($) {
         }
 
         for (var i = 1; i <= acceptanceDetail.ratyLength; i++) {
-            acceptanceDetail.options["acceptance." + acceptanceDetail.ratyIds[i - 1]] = $("#raty" + i + "-score").attr("value");
+            acceptanceDetail.options["acceptance." + acceptanceDetail.ratyIds[i - 1]] = com.focusPage("#raty" + i + "-score").attr("value");
         }
-        ;
 
         for (var i = 0; i < acceptanceDetail.desIds.length; i++) {
             var desId = acceptanceDetail.desIds[i];
-            if ($("#" + desId).val()) {
-                acceptanceDetail.options["acceptance." + desId] = $("#" + desId).val();
+            if (com.focusPage("#" + desId).val()) {
+                acceptanceDetail.options["acceptance." + desId] = com.focusPage("#" + desId).val();
             } else {
                 acceptanceDetail.options["acceptance." + desId] = "";
             }
@@ -103,19 +102,19 @@ jQuery(function ($) {
         com.post(api.construction.updateAcceptance, acceptanceDetail.options, function (res) {
             com.showAlert(com.info, "提交成功!");
         });
-    }
+    };
 
-    $("#saveBtn").bindClick(save);
-    $('.date-picker').datepicker({autoclose: true});
+    com.focusPage("#saveBtn").bindClick(save);
+    com.focusPage('.date-picker').datepicker({autoclose: true});
 
-    $("#backBtn").click(function () {
+    com.focusPage("#backBtn").click(function () {
         com.switchPage(api.index.acceptanceIndex.url);
     });
 
     //工程图片 名字 工种
     function constructerImg(imgPath, name, duty, schedule) {
 
-        var pane = $("<div ></div>").addClass("col-xs-3 col-md-3 widget-container-span ui-sortable").appendTo($("#" + constructionScheName[schedule]));
+        var pane = $("<div ></div>").addClass("col-xs-3 col-md-3 widget-container-span ui-sortable").appendTo(com.focusPage("#" + constructionScheName[schedule]));
 
         var imgDiv = $('<div></div>').css({"border": "1px solid #ccc","width": "50px","float":"left","height":"50px","margin-right":"20px","margin-bottom":"10px"}).appendTo(pane);
         var img = $('<img />').css("margin-right", "20px").css("margin-bottom", "10px").appendTo(imgDiv);

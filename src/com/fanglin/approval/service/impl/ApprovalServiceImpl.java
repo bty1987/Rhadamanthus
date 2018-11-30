@@ -122,18 +122,12 @@ public class ApprovalServiceImpl implements ApprovalService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int approve(ApprovalVO approvalVO) throws FLException {
-	
-		ApprovalPO approvalPO = approvalDao.get(approvalVO.getAid());
+	public ApprovalPO approve(ApprovalPO approvalPO) throws FLException {
 		
 		if(approvalPO == null){
 			throw new FLException(240009, "审批信息不存在");
 		}
 		
-		if(approvalPO.getStatus() != ApprovalPO.APPROVAL_STATUS_INIT_INT){
-			throw new FLException(240001, "不能重复审批");
-		}
-
 		approvalPO.setApprovalTime(DateUtil.getDateToTimestamp(new Date()));
 		approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_APPROVAL_INT);
 
@@ -176,8 +170,41 @@ public class ApprovalServiceImpl implements ApprovalService {
 			default:
 				break;
 		}
-
+		
+		return approvalPO;
+	}
+	
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public int approve(ApprovalVO approvalVO) throws FLException {
+	
+		ApprovalPO approvalPO = approvalDao.get(approvalVO.getAid());
+		
+		if(approvalPO.getStatus() != ApprovalPO.APPROVAL_STATUS_INIT_INT){
+			throw new FLException(240001, "不能重复审批");
+		}
+		
+		approvalPO = approve(approvalPO);
+		
 		approvalDao.update(approvalPO);
+		
+		return 0;
+	}
+	
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public int approveDing(ApprovalVO approvalVO) throws FLException {
+	
+		ApprovalPO approvalPO = approvalDao.queryApprovalByProcessinstanceid(approvalVO.getProcessinstanceid());
+		
+		if(approvalPO.getStatus() != ApprovalPO.APPROVAL_STATUS_DINGDING_INT){
+			throw new FLException(240001, "不能重复审批");
+		}
+		
+		approvalPO = approve(approvalPO);
+		
+		approvalDao.update(approvalPO);
+		
 		return 0;
 	}
 	

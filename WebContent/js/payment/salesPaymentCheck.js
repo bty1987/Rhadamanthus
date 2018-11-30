@@ -58,9 +58,11 @@ $(function () {
         }
     }, null, false);
 
+    com.focusPage("#salesPaymentHistoryList").removeClass("active");
+
     var displayFunc = (function () {
         var renderList = function (tableId, listData) {
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if (listData && listData.length) {
@@ -131,7 +133,7 @@ $(function () {
                     info += salesPaymentForStatus.bankInfo[_i[0]] + " " + _i[1] + ", ";
                 }
 
-                return info
+                return info;
             })(v.salesReceipt.bank, v.salesReceipt.bankInfo), "blue"]) : true;
             v.salesReceipt.checkv != null && v.salesReceipt.checkv != "0" ? styleArr.push(["转账:", v.salesReceipt.checkv, "blue"]) : true;
             v.salesReceipt.installment != null && v.salesReceipt.installment != "0" ? styleArr.push(["分期:", v.salesReceipt.installment, "blue"]) : true;
@@ -159,7 +161,7 @@ $(function () {
 
         return {
             init: function (tableId, listData) {
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             },
             drawLine: function (v) {
@@ -193,7 +195,7 @@ $(function () {
 
     var hdisplayFunc = (function () {
         var renderList = function (tableId, listData) {
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if (listData && listData.length) {
@@ -247,7 +249,7 @@ $(function () {
                     info += salesPaymentForStatus.bankInfo[_i[0]] + " " + _i[1] + ", ";
                 }
 
-                return info
+                return info;
             })(v.salesReceipt.bank, v.salesReceipt.bankInfo), "blue"]) : true;
             v.salesReceipt.checkv != null && v.salesReceipt.checkv != "0" ? styleArr.push(["转账:", v.salesReceipt.checkv, "blue"]) : true;
             v.salesReceipt.installment != null && v.salesReceipt.installment != "0" ? styleArr.push(["分期:", v.salesReceipt.installment, "blue"]) : true;
@@ -277,7 +279,7 @@ $(function () {
 
         return {
             init: function (tableId, listData) {
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             },
             drawLine: function (v) {
@@ -303,12 +305,12 @@ $(function () {
     }, "hresultList");
 
     function salesPaymentForCollentImport(id) {
-        if ($('span[name="totalRecords"]', '#' + id).text() == 0) {
+        if (com.focusPage('span[name="totalRecords"]', '#' + id).text() == 0) {
             com.showAlert(com.warning, "请通过条件进行查询");
             return false;
         }
 
-        if ($('span[name="totalRecords"]').text() > 1000) {
+        if (com.focusPage('span[name="totalRecords"]').text() > 1000) {
             com.showAlert(com.warning, "查询结果大于阀值 , 不能完成导出动作");
             return false;
         }
@@ -347,7 +349,22 @@ $(function () {
                     v.salesReceipt.bankInfo = $info;
                 }
 
-                v.salesReceipt.checkvBank = v.salesReceipt.checkv != null && v.salesReceipt.checkv != "0" ? salesPaymentForStatus.checkBankInfo[v.salesReceipt.checkvBank] : '';
+                if (v.salesReceipt.checkv!= null && v.salesReceipt.checkv != 0) {
+                    var checkBankInfoStr = v.salesReceipt.checkvBank;
+                    if(checkBankInfoStr.indexOf("#") != -1){
+                        var $checkvInfo = ' ';
+                        var _c = v.salesReceipt.checkvBank.split('#');
+                        for(var i=1;i<_c.length-1;i++){
+                            var _i = _c[i].split('|');
+                            $checkvInfo += salesPaymentForStatus.checkBankInfo[_i[0]] + " " + _i[1] + ", " + _i[2] + ", ";
+                        }
+
+                        v.salesReceipt.checkvBank = $checkvInfo;
+                    }else{
+                        v.salesReceipt.checkvBank = v.salesReceipt.checkv != null && v.salesReceipt.checkv != "0" ? salesPaymentForStatus.checkBankInfo[v.salesReceipt.checkvBank] : '';
+                    }
+                }
+
                 v.salesReceipt.installBank = v.salesReceipt.installment != null && v.salesReceipt.installment != "0" ? salesPaymentForStatus.bankInfo[v.salesReceipt.installBank] : '';
                 v.salesReceipt.accountsBank = v.salesReceipt.accounts != null && v.salesReceipt.accounts != "0" ? salesPaymentForStatus.accountsInfo[v.salesReceipt.accountsBank] : '';
 
@@ -358,12 +375,12 @@ $(function () {
     }
 
     function salesPaymentForConfirmImport(id) {
-        if ($('span[name="totalRecords"]', '#' + id).text() == 0) {
+        if (com.focusPage('span[name="totalRecords"]', '#' + id).text() == 0) {
             com.showAlert(com.warning, "请通过条件进行查询");
             return false;
         }
 
-        if ($('span[name="totalRecords"]').text() > 1000) {
+        if (com.focusPage('span[name="totalRecords"]').text() > 1000) {
             com.showAlert(com.warning, "查询结果大于阀值 , 不能完成导出动作");
             return false;
         }
@@ -404,7 +421,22 @@ $(function () {
                     v.salesReceipt.bankInfo = $info;
                 }
 
-                v.salesReceipt.checkvBank = v.salesReceipt.checkv != null && v.salesReceipt.checkv != "0" ? salesPaymentForStatus.checkBankInfo[v.salesReceipt.checkvBank] : '';
+                if (v.salesReceipt.checkv!= null && v.salesReceipt.checkv != 0) {
+                    var checkBankInfoStr = v.salesReceipt.checkvBank;
+                    if(checkBankInfoStr.indexOf("#") != -1){
+                        var $checkvInfo = ' ';
+                        var _c = v.salesReceipt.checkvBank.split('#');
+                        for(var i=1;i<_c.length-1;i++){
+                            var _i = _c[i].split('|');
+                            $checkvInfo += salesPaymentForStatus.checkBankInfo[_i[0]] + " " + _i[1] + ", " + _i[2] + ", ";
+                        }
+
+                        v.salesReceipt.checkvBank = $checkvInfo;
+                    }else{
+                        v.salesReceipt.checkvBank = v.salesReceipt.checkv != null && v.salesReceipt.checkv != "0" ? salesPaymentForStatus.checkBankInfo[v.salesReceipt.checkvBank] : '';
+                    }
+                }
+
                 v.salesReceipt.installBank = v.salesReceipt.installment != null && v.salesReceipt.installment != "0" ? salesPaymentForStatus.bankInfo[v.salesReceipt.installBank] : '';
                 v.salesReceipt.accountsBank = v.salesReceipt.accounts != null && v.salesReceipt.accounts != "0" ? salesPaymentForStatus.accountsInfo[v.salesReceipt.accountsBank] : '';
 
@@ -415,7 +447,7 @@ $(function () {
     }
 
     function batchConfirm(salesPaymentSearcher,hsearcher) {
-        var $inputs = $('input[name="spids"]:checked', '#resultList');
+        var $inputs = com.focusPage('input[name="spids"]:checked', '#resultList');
 
         if (!$inputs.length) return;
 
@@ -449,11 +481,11 @@ $(function () {
 
     function printPayment(orderId,srId,v){
         if(v.salesReceipt.collecter.userId!=params.userInfo.user.userId){
-            com.showAlert(com.warning, "收款人不匹配，不能打印");
+            com.showAlert(com.warning, "收款人不匹配, 不能打印");
             return false;
         }else{
             params.salesReceiptSrId = srId;
-            com.popup("专用收款收据__装修单号：" + orderId ,api.index.salesPaymentReceiptIndex.url + "?salesReceipt.srId=" + srId + "&time=" + params.loginTime,function () {
+            com.popup("专用收款收据__装修单号: " + orderId ,api.index.salesPaymentReceiptIndex.url + "?salesReceipt.srId=" + srId + "&time=" + params.loginTime,function () {
                 parent.layer.getFrameIndex(window.name);
             },null,true);
         }

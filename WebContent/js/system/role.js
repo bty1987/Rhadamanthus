@@ -37,19 +37,19 @@ jQuery(function($) {
 		}
 	};
 	
-	role.saveBtn = $("#saveBtn").on("click", saveData);
-	role.operationSaveBtn = $('#operationModal').find(' button[name="saveBtn"]').on("click", saveOperation);
-	role.moduleSaveBtn = $('#moduleModal').find(' button[name="saveBtn"]').on("click", saveModule);
-	role.cancelBtn = $("#cancelBtn");
-	role.modal = $("#roleModal");
-	role.operationModal = $("#operationModal");
-	role.moduleModal = $("#moduleModal");
-	role.roleItems.no = $("#roleId");
-	role.roleItems.content = $("#roleDes");
-	role.roleItems.name = $("#roleName");
-	role.chainPageModal = $("#chainPageModal");
-	role.roleItems.currentchainPage = $("#currentchainPage");
-	role.roleItems.chainPage = $("#chainPage").chosen({
+	role.saveBtn = com.focusPage("#saveBtn").on("click", saveData);
+	role.operationSaveBtn = com.focusPage('#operationModal').find(' button[name="saveBtn"]').on("click", saveOperation);
+	role.moduleSaveBtn = com.focusPage('#moduleModal').find(' button[name="saveBtn"]').on("click", saveModule);
+	role.cancelBtn = com.focusPage("#cancelBtn");
+	role.modal = com.focusPage("#roleModal");
+	role.operationModal = com.focusPage("#operationModal");
+	role.moduleModal = com.focusPage("#moduleModal");
+	role.roleItems.no = com.focusPage("#roleId");
+	role.roleItems.content = com.focusPage("#roleDes");
+	role.roleItems.name = com.focusPage("#roleName");
+	role.chainPageModal = com.focusPage("#chainPageModal");
+	role.roleItems.currentchainPage = com.focusPage("#currentchainPage");
+	role.roleItems.chainPage = com.focusPage("#chainPage").chosen({
 		width: "200px"
 	});
 
@@ -61,11 +61,11 @@ jQuery(function($) {
 	
 	$.extend(com.validator, role.validator);
 	
-	$("#cancelRoleRightBtn").on("click",goBackRoleList);
-	$("#saveRoleRightBtn").on("click",saveRoleRight);
+	com.focusPage("#cancelRoleRightBtn").on("click",goBackRoleList);
+	com.focusPage("#saveRoleRightBtn").on("click",saveRoleRight);
 
 	function queryOperationByRoleId(rid){
-		var $wrap = $('#operationModal').find('.modal-body').empty();
+		var $wrap = com.focusPage('#operationModal').find('.modal-body').empty();
 		//获取全部操作
 		com.post(api.system.queryOperation, {'operation.system' : 1}, function(data){
 
@@ -96,9 +96,9 @@ jQuery(function($) {
 	}
 
 	function queryModuleByRoleId(roleId){
-		var $wrap = $('#moduleModal').find('.modal-body').empty();
+		var $wrap = com.focusPage('#moduleModal').find('.modal-body').empty();
 		//获取全部模块
-		com.post(api.system.queryModule, {'module.system' : 1}, function(data){
+		com.post(api.system.queryModuleForLogin, {'module.system' : 1}, function(data){
 
 			var menuArr = {
 				level1 : [],
@@ -238,7 +238,7 @@ jQuery(function($) {
 	var displayFunc  = (function(){
 
         var renderList = function(tableId,listData){
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if(listData && listData.length){ 
@@ -358,7 +358,7 @@ jQuery(function($) {
       
         return {
             init : function(tableId,listData){
-                $('#' + tableId).html(null);
+				com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
             },
             drawLine : function(v){
@@ -380,7 +380,7 @@ jQuery(function($) {
     	return [$adda];
 	});
 	
-	$('a[name="addRole"]', '#pagenation').click(function(){
+	com.focusPage('[name="addRole"]', com.focusPage('#pagenation')).click(function(){
 		role.editFlg = false;
 		
 		com.cleanItems(role.roleItems);
@@ -483,21 +483,21 @@ jQuery(function($) {
 	}
 	
 	function gotoRoleRight(roleId, roleName){
-		$("#roleList").addClass("hidden");
-		$("#roleRightDiv").removeClass("hidden");
-		$("#roleRightRoleId").val(roleId);
-		$("#roleRightContent").html("配置角色("+roleName+")权限");
+		com.focusPage("#roleList").addClass("hidden");
+		com.focusPage("#roleRightDiv").removeClass("hidden");
+		com.focusPage("#roleRightRoleId").val(roleId);
+		com.focusPage("#roleRightContent").html("配置角色("+roleName+")权限");
 		
 		com.post(api.system.queryRoleRight, {"role.rid": roleId}, function(res){
-			 $.fn.zTree.init($("#treeDemo"), setting, res.zTree);
+			 $.fn.zTree.init(com.focusPage("#treeDemo"), setting, res.zTree);
 		});
 	}
 
 	function goBackRoleList(){
-		$("#roleRightDiv").addClass("hidden");
-		$("#roleList").removeClass("hidden");
-		$("#roleRightRoleId").val("");
-		$("#roleRightContent").html("配置角色()权限");
+		com.focusPage("#roleRightDiv").addClass("hidden");
+		com.focusPage("#roleList").removeClass("hidden");
+		com.focusPage("#roleRightRoleId").val("");
+		com.focusPage("#roleRightContent").html("配置角色()权限");
 	}
 
 	function saveRoleRight(){
@@ -544,7 +544,7 @@ jQuery(function($) {
 				}
 			}
 		}
-		params["role.no"]= $("#roleRightRoleId").val();
+		params["role.no"]= com.focusPage("#roleRightRoleId").val();
 
 		com.post(api.system.updateRoleRight, params, function(res){
 			com.showAlert(com.info, "操作成功");

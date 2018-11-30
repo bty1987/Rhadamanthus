@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.common.po.CountingPO;
 import com.fanglin.common.service.CountingService;
+import com.fanglin.communion.dao.BrandDao;
+import com.fanglin.communion.po.BrandPO;
 import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.communion.po.HousePO;
@@ -66,6 +68,9 @@ public class SalesServiceImpl implements SalesService {
 	@Autowired
 	private CompanyDao companyDao;
 	
+	@Autowired
+	private BrandDao brandDao;
+	
 	@Override
 	public List<SalesVO> pageSales(List<SalesPO> salesPOs) {
 		
@@ -77,11 +82,11 @@ public class SalesServiceImpl implements SalesService {
 			
 			BeanUtil.copyProperties(salesPO, _salesVO, Arrays.asList("salesman","dept","region","guider","instorer","guideDept","house","customer"));
 			BeanUtil.copyProperties(salesPO.getSalesman(), _salesVO.getSalesman(),Arrays.asList("dept","duty"));
-			BeanUtil.copyProperties(salesPO.getDept(), _salesVO.getDept(),Arrays.asList("fatherDept","cityProper","type"));
-			BeanUtil.copyProperties(salesPO.getRegion(), _salesVO.getRegion(),Arrays.asList("fatherDept","cityProper","type"));
+			BeanUtil.copyProperties(salesPO.getDept(), _salesVO.getDept(),Arrays.asList("fatherDept","type","manager"));
+			BeanUtil.copyProperties(salesPO.getRegion(), _salesVO.getRegion(),Arrays.asList("fatherDept","type","manager"));
 			BeanUtil.copyProperties(salesPO.getInstorer(), _salesVO.getInstorer(),Arrays.asList("dept","duty"));
 			BeanUtil.copyProperties(salesPO.getGuider(), _salesVO.getGuider(),Arrays.asList("dept","duty"));
-			BeanUtil.copyProperties(salesPO.getGuideDept(), _salesVO.getGuideDept(),Arrays.asList("fatherDept","cityProper","type"));
+			BeanUtil.copyProperties(salesPO.getGuideDept(), _salesVO.getGuideDept(),Arrays.asList("fatherDept","type","manager"));
 			BeanUtil.copyProperties(salesPO.getHouse(), _salesVO.getHouse(),Arrays.asList("village"));
 			BeanUtil.copyProperties(salesPO.getHouse().getVillage(), _salesVO.getHouse().getVillage(),Arrays.asList("cityProper"));
 			BeanUtil.copyProperties(salesPO.getCustomer(), _salesVO.getCustomer());
@@ -221,29 +226,36 @@ public class SalesServiceImpl implements SalesService {
 			
 		SalesPO salesPO = new SalesPO(new HousePO(), new CustomerPO(), new UserPO(), new DepartmentPO(), new DepartmentPO(), new UserPO(), new DepartmentPO(), new UserPO());
 		
-		String salesBrand = salesVO.getBrand();
-		
 		UserPO salesman = userDao.queryUserByUserId(salesVO.getSalesman().getUserId());
 		UserPO guider = userDao.queryUserByUserId(salesVO.getGuider().getUserId());
 		UserPO instorer = userDao.queryUserByUserId(salesVO.getInstorer().getUserId());
+		BrandPO brandPO = brandDao.get(salesVO.getBid());
+		
+		String salesBrand = brandPO.getName();
 		
 		String currentDate = DateUtil.current("yyMMdd").toString();
+
 		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_SO_INT , currentDate, company);
 		
-		String no = companyPO.getShortname() + currentDate + FormatUtil.fillZero(FormatUtil.offset(count), "00000");
+		String no = companyPO.getShortname() + currentDate + FormatUtil.fillZero(FormatUtil.offset(count), "0000");
 		
-		BeanUtil.copyProperties(salesVO, salesPO, Arrays.asList("salesman","dept","region","guider","instorer","guideDept","house","customer","maling","venderMaling","depositpayStatus","fullpayStatus"));
+		BeanUtil.copyProperties(salesVO, salesPO, Arrays.asList("salesman","dept","region","guider","instorer","brand","category","guideDept","house","customer","maling","venderMaling","depositpayStatus","fullpayStatus"));
 		BeanUtil.copyProperties(salesman, salesPO.getSalesman(),Arrays.asList("dept","duty"));
-		BeanUtil.copyProperties(salesman.getDept(), salesPO.getDept(),Arrays.asList("fatherDept","cityProper","type"));
-		BeanUtil.copyProperties(salesman.getDept().getFatherDept(), salesPO.getRegion(),Arrays.asList("fatherDept","cityProper","type"));
+		BeanUtil.copyProperties(salesman.getDept(), salesPO.getDept(),Arrays.asList("fatherDept","type","manager"));
+		BeanUtil.copyProperties(salesman.getDept().getFatherDept(), salesPO.getRegion(),Arrays.asList("fatherDept","type","manager"));
 		BeanUtil.copyProperties(instorer, salesPO.getInstorer(),Arrays.asList("dept","duty"));
 		BeanUtil.copyProperties(guider, salesPO.getGuider(),Arrays.asList("dept","duty"));
-		BeanUtil.copyProperties(guider.getDept(), salesPO.getGuideDept(),Arrays.asList("fatherDept","cityProper","type"));
+		BeanUtil.copyProperties(guider.getDept(), salesPO.getGuideDept(),Arrays.asList("fatherDept","type","manager"));
 		BeanUtil.copyProperties(new HousePO(salesVO.getHouse().getHid()), salesPO.getHouse(),Arrays.asList("village"));
 		BeanUtil.copyProperties(new CustomerPO(salesVO.getCustomer().getCid()), salesPO.getCustomer());
+		
+		salesPO.setBrand(brandPO.getName());
+		salesPO.setCategory(brandPO.getCategory().getName());
 		salesPO.setMaling(0);
 		salesPO.setVenderMaling(salesVO.getMaling());
+		salesPO.setDepositpay(0);
 		salesPO.setDepositpayStatus(SalesPO.DESPOSITPAYSTATUS_INIT_SHORT);
+		salesPO.setFullpay(0);
 		salesPO.setFullpayStatus(SalesPO.FULLPAYSTATUS_INIT_SHORT);
 		salesPO.setNo(no);
 		salesPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));

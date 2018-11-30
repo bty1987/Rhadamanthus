@@ -10,7 +10,7 @@ $(function(){
     var displayFunc  = (function(){
 
         var renderList = function(tableId,listData){
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
 
             if(listData && listData.length){
 
@@ -85,7 +85,7 @@ $(function(){
         };
         return {
             init : function(tableId,listData){
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
             },
             drawLine : function(v){
@@ -93,7 +93,7 @@ $(function(){
             }
         }
     })();
-    var $popup = $('#viewPopUp');
+    var $popup = com.focusPage('#viewPopUp');
     var mid =  $popup.attr('data-mid');
     com.post(api.inventory.queryManifestItemByMid,{
         "manifest.mid": mid
@@ -102,6 +102,6 @@ $(function(){
     });
 
     //弹出内容许些样式
-   /* $('#resultList1').css({'width':'96%','margin':'0 auto'});*/
+   /* com.focusPage('#resultList1').css({'width':'96%','margin':'0 auto'});*/
 
 });

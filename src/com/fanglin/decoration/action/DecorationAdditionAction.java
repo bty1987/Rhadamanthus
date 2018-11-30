@@ -13,6 +13,7 @@ import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.decoration.service.DecorationAdditionService;
 import com.fanglin.decoration.vo.DecorationAdditionVO;
+import com.fanglin.decoration.vo.DecorationVO;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -28,6 +29,8 @@ public class DecorationAdditionAction extends BaseListAction{
 	
 	private Map<String, Object> config;
 	
+	private DecorationVO decoration;
+	
 	@Action(value = "queryDecorationAdditionByOrderId", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryDecorationAdditionByOrderId() {
 
@@ -39,7 +42,7 @@ public class DecorationAdditionAction extends BaseListAction{
 	@Action(value = "queryDecorationConfig", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryDecorationConfig() throws FLException {
 
-		config = decorationAdditionService.queryDecorationConfig(queryCompany());
+		config = decorationAdditionService.queryDecorationConfig(decoration ,queryCompany());
 
 		return SUCCESS;
 	}
@@ -58,6 +61,14 @@ public class DecorationAdditionAction extends BaseListAction{
 
 	public void setConfig(Map<String, Object> config) {
 		this.config = config;
+	}
+
+	public DecorationVO getDecoration() {
+		return decoration;
+	}
+
+	public void setDecoration(DecorationVO decoration) {
+		this.decoration = decoration;
 	}
 	
 }

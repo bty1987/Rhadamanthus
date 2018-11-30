@@ -21,35 +21,35 @@ $(function () {
         status:0
     };
     var pageAdd = {
-        select1 : $("#select1"),
-        select2 : $('#select2'),
-    }
+        select1 : com.focusPage("#select1"),
+        select2 : com.focusPage('#select2'),
+    };
     var perCharge = {};
     var auditScalePage = {
-        auditScaleModel:$("#auditScaleModel"),
-        auditScaleStatusModel:$("#auditScaleStatusModel"),
+        auditScaleModel:com.focusPage("#auditScaleModel"),
+        auditScaleStatusModel:com.focusPage("#auditScaleStatusModel"),
 
-        userId:$("#userId"),
-        deptId:$("#deptId"),
-        money:$("#money"),
-        status:$("#status"),
+        userId:com.focusPage("#userId"),
+        deptId:com.focusPage("#deptId"),
+        money:com.focusPage("#money"),
+        status:com.focusPage("#status"),
 
-        add:$("#addS"),
-        saveBtn:$("#saveBtnS"),
-        cancelBtn:$("#cancelBtnS"),
+        add:com.focusPage("#addS"),
+        saveBtn:com.focusPage("#saveBtnS"),
+        cancelBtn:com.focusPage("#cancelBtnS"),
     };
     var auditRecordPage = {
-        changeAuditRecordModel:$("#auditRecordModel"),
+        changeAuditRecordModel:com.focusPage("#auditRecordModel"),
 
-        comment:$("#comment"),
-        untiPrice:$("#untiPrice"),
-        num:$("#num"),
-        discount:$("#discount"),
+        comment:com.focusPage("#comment"),
+        untiPrice:com.focusPage("#untiPrice"),
+        num:com.focusPage("#num"),
+        discount:com.focusPage("#discount"),
 
-        add:$("#addR"),
-        saveBtn:$("#saveBtn"),
-        cancelBtn:$("#cancelBtn"),
-        btnBack:$("#btnBack"),
+        add:com.focusPage("#addR"),
+        saveBtn:com.focusPage("#saveBtn"),
+        cancelBtn:com.focusPage("#cancelBtn"),
+        btnBack:com.focusPage("#btnBack"),
       
 
     };
@@ -58,7 +58,7 @@ $(function () {
         asid:"auditScale.asid",
         arid:"auditScale.auditRecord.arid",
         userId:"auditScale.belongUser.userId",
-        deptId:"auditScale.belongDepartment.deptId",
+        deptId:"auditScale.belongDepartment.no",
         money:"auditScale.money",
         type:"auditScale.type",
         status:"auditScale.status",
@@ -70,7 +70,7 @@ $(function () {
         auditScalePage.status.bindData(res.auditScaleStatus,"key","value");
         $.each(res.auditScaleStatus,function (i,v) {
             status[v.key] = v.value;
-        })
+        });
     });
 
     var auditScalePostdata = {};
@@ -89,15 +89,15 @@ $(function () {
     com.post(api.ds.decoration,{},function (res) {
         $.each(res.perCharge,function (i,v) {
             perCharge[v.key] = v.value;
-        })
+        });
     });
 
     com.initChosen('userId', api.personel.queryUserByPinyin, "pinyinName", {"duty": "", "user.status":0}, "autoFillKeyValue", "key", "value");
     auditScalePage.userId.on('change',function () {
         com.post(api.personel.queryUserByUserId,{"user.userId":auditScalePage.userId.val()},function (res) {
-            auditScalePage.deptId.val(res.user.dept.deptName);
-        })
-    })
+            auditScalePage.deptId.val(res.user.dept.name);
+        });
+    });
     auditRecord.auditStatusType = params.auditStatusType;
     auditRecord.decorationOrderId = params.decorationOrderId;
     if(auditRecord.auditStatusType=='select'){
@@ -118,10 +118,10 @@ $(function () {
 
     auditRecord.rollback && auditRecordPage.btnBack.click(function () {
         com.switchPage(auditRecord.rollback);
-    })
+    });
 
     function initPageScale(){
-        var $Scale = $('#auditS').html('');
+        var $Scale = com.focusPage('#auditS').html('');
         var $zone = $('<div></div>').addClass('dropzone dz-clickable').css('margin', '20px').css('border', '0px').appendTo($Scale);
         var $mesg = $('<div></div>').addClass('dz-default dz-message').appendTo($zone);
         $mesg.append( $('<span></span>').text('请选择审核信息'));
@@ -130,7 +130,7 @@ $(function () {
     var displayFunc  = (function(){
 
         var renderList = function(tableId,listData){
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if(listData && listData.length){
@@ -153,7 +153,7 @@ $(function () {
                         ["数量:",v.num, "blue"],
                         ["折扣:",v.discount, "blue"],
                         ["总价:",total, "blue"],
-                        ["状态:",type[v.status],"red"],
+                        ["状态:",type[v.status],"red"]
                     ];
 
                     $.each(propertyArr, function (index,value) {
@@ -185,7 +185,7 @@ $(function () {
 
                 $ul.appendTo($tableWrap);
             }else{
-                var $Record = $('#auditR').html('');
+                var $Record = com.focusPage('#auditR').html('');
                 var $zone = $('<div></div>').addClass('dropzone dz-clickable').css('margin', '20px').css('border', '0px').appendTo($Record);
                 var $mesg = $('<div></div>').addClass('dz-default dz-message').appendTo($zone);
                 $mesg.append( $('<span></span>').text('无审核信息'));
@@ -208,7 +208,7 @@ $(function () {
         };
         //生成人员扣款
         var makeAuditRecord = function (total,arid) {
-            com.sealJournal("info",auditRecord)
+            com.sealJournal("info",auditRecord);
             com.post(api.decoration.makeAuditScale,makeAuditScalesPostdata(0,arid,auditRecord.designerId,auditRecord.deptId,((utils.accMul(total,perCharge["designer"]))/10),0),function (res) {
                 com.showAlert(com.info,"生成人员成功");
                 initPage();
@@ -216,38 +216,38 @@ $(function () {
             },function (e) {
                 com.showAlert(com.error,e.errorMsg);
                 initPages(arid);
-            })
+            });
         };
         
         return {
             init : function(tableId,listData){
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
             }
-        }
+        };
     })();
     
     function makeAuditRecordPostParam(arid,aid,comment,unitprice,num,discount,status,orderId) {
         auditRecordPostdata = {};
-        if(arid){auditRecordPostdata[auditRecordPostdataStr.arid] = arid}
-        if(aid){auditRecordPostdata[auditRecordPostdataStr.aid] = aid}
-        if(comment){auditRecordPostdata[auditRecordPostdataStr.comment] = comment}
-        if(unitprice){auditRecordPostdata[auditRecordPostdataStr.unitprice] = unitprice}
-        if(num){auditRecordPostdata[auditRecordPostdataStr.num] = num}
-        if(discount){auditRecordPostdata[auditRecordPostdataStr.discount] = discount}
-        if(status){auditRecordPostdata[auditRecordPostdataStr.status] = status}
-        if(orderId){auditRecordPostdata[auditRecordPostdataStr.orderId] = orderId}
+        if(arid){auditRecordPostdata[auditRecordPostdataStr.arid] = arid;}
+        if(aid){auditRecordPostdata[auditRecordPostdataStr.aid] = aid;}
+        if(comment){auditRecordPostdata[auditRecordPostdataStr.comment] = comment;}
+        if(unitprice){auditRecordPostdata[auditRecordPostdataStr.unitprice] = unitprice;}
+        if(num){auditRecordPostdata[auditRecordPostdataStr.num] = num;}
+        if(discount){auditRecordPostdata[auditRecordPostdataStr.discount] = discount;}
+        if(status){auditRecordPostdata[auditRecordPostdataStr.status] = status;}
+        if(orderId){auditRecordPostdata[auditRecordPostdataStr.orderId] = orderId;}
         return auditRecordPostdata;
     }
 
     function makeAuditScalesPostdata(i,arid,userId,deptId,money,type){
         auditScalePostdata = {};
-        if(arid){auditScalePostdata["auditScales["+i+"].auditRecord.arid"] = arid}
-        if(userId){auditScalePostdata["auditScales["+i+"].belongUser.uid"] = userId}
-        if(deptId){auditScalePostdata["auditScales["+i+"].belongDepartment.deptId"] = deptId}
-        if(money){auditScalePostdata["auditScales["+i+"].money"] = money}
+        if(arid){auditScalePostdata["auditScales["+i+"].auditRecord.arid"] = arid;}
+        if(userId){auditScalePostdata["auditScales["+i+"].belongUser.uid"] = userId;}
+        if(deptId){auditScalePostdata["auditScales["+i+"].belongDepartment.deptId"] = deptId;}
+        if(money){auditScalePostdata["auditScales["+i+"].money"] = money;}
         if(type){auditScalePostdata["auditScales["+i+"].type"] = type;}
-        return auditScalePostdata
+        return auditScalePostdata;
     }
 
     function initPage() {
@@ -265,7 +265,7 @@ $(function () {
         var number = /^[1-9]\d*$/;
         var num = /^([1-9]|10)$/;
         auditRecordPage.add.click(function () {
-            clearAuditRecordModel()
+            clearAuditRecordModel();
             auditRecordPage.changeAuditRecordModel.attr("type","addR");
             auditRecordPage.changeAuditRecordModel.modal("show");
 
@@ -298,7 +298,7 @@ $(function () {
                     auditRecordPage.changeAuditRecordModel.modal("hide");
                     clearAuditRecordModel();
                     com.showAlert(com.error,e.errorMsg);
-                })
+                });
             }else if(type == "change"){
                 com.post(api.decoration.updateAuditRecord,makeAuditRecordPostParam(auditRecordPage.changeAuditRecordModel.attr("arid"),auditRecord.aid,auditRecordPage.comment.val()
                     ,auditRecordPage.untiPrice.val(),auditRecordPage.num.val(),auditRecordPage.discount.val()),function (res) {
@@ -311,7 +311,7 @@ $(function () {
                     auditRecordPage.changeAuditRecordModel.modal("hide");
                     clearAuditRecordModel();
                     com.showAlert(com.error,e.errorMsg);
-                })
+                });
             }
 
         });
@@ -344,7 +344,7 @@ $(function () {
                 auditScalePage.auditScaleModel.modal("hide");
                 clearAuditScaleModel();
                 com.showAlert(com.error,e.errorMsg);
-            })
+            });
         });
         auditScalePage.cancelBtn.click(function () {
             clearAuditScaleModel();
@@ -370,7 +370,7 @@ $(function () {
     var displayFuncs  = (function(){
 
         var renderLists = function(tableId,listData){
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if(listData && listData.length){
@@ -386,7 +386,7 @@ $(function () {
                     var propertyArr = [
                         ["扣款金额:",v.money, "grey"],
                         ["职位:",v.type == 0 ? "设计师": "设计部经理", "grey"],
-                        ["扣款状态:",status[v.status], "red"],
+                        ["扣款状态:",status[v.status], "red"]
                     ];
 
                     $.each(propertyArr, function (index,value) {
@@ -397,14 +397,14 @@ $(function () {
                     });
                     $confirm.click(function(){
                         changeAuditScaleStatus(v.asid);
-                    })
+                    });
 
                     $btnDel.bindClick(function () {
                         delAuditScale(v.asid);
                     });
                     if(auditRecord.auditStatusType=='admin'){
                         if(v.status==0){
-                            $divBtnWrap.append($confirm)
+                            $divBtnWrap.append($confirm);
                         }
                         $divBtnWrap.append($btnDel).appendTo($h3);
                     }
@@ -416,7 +416,7 @@ $(function () {
 
             }else{
 
-                var $Scale = $('#auditS').html('');
+                var $Scale = com.focusPage('#auditS').html('');
                 var $zone = $('<div></div>').addClass('dropzone dz-clickable').css('margin', '20px').css('border', '0px').appendTo($Scale);
                 var $mesg = $('<div></div>').addClass('dz-default dz-message').appendTo($zone);
                 $mesg.append( $('<span></span>').text('无审批记录'));
@@ -443,17 +443,17 @@ $(function () {
                         initPages(auditScale.arid);
                     }, function (e) {
                         com.showAlert(com.error, e.errorMsg);
-                    })
+                    });
                 }
             });
         };
 
         return {
             inits : function(tableId,listData){
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderLists(tableId,listData);
             }
-        }
+        };
     })();
 
     function initPages(arid) {
@@ -467,14 +467,14 @@ $(function () {
     }
     function makeAuditScalePostdata(asid,arid,userId,deptId,money,type,status){
         auditScalePostdata = {};
-        if(arid){auditScalePostdata[auditScalePostdataStr.arid] = arid}
-        if(asid){auditScalePostdata[auditScalePostdataStr.asid] = asid}
-        if(userId){auditScalePostdata[auditScalePostdataStr.userId] = userId}
-        if(deptId){auditScalePostdata[auditScalePostdataStr.deptId] = deptId}
-        if(money){auditScalePostdata[auditScalePostdataStr.money] = money}
+        if(arid){auditScalePostdata[auditScalePostdataStr.arid] = arid;}
+        if(asid){auditScalePostdata[auditScalePostdataStr.asid] = asid;}
+        if(userId){auditScalePostdata[auditScalePostdataStr.userId] = userId;}
+        if(deptId){auditScalePostdata[auditScalePostdataStr.deptId] = deptId;}
+        if(money){auditScalePostdata[auditScalePostdataStr.money] = money;}
         if(type){auditScalePostdata[auditScalePostdataStr.type] = type;}
         if(status){auditScalePostdata[auditScalePostdataStr.status] = status;}
-        return auditScalePostdata
+        return auditScalePostdata;
     }
 });
 

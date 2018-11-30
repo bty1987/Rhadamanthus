@@ -4,7 +4,7 @@ jQuery(function($) {
 	var activityItem = {
 		activityType: null,
 		items:{},
-	}
+	};
 	
 	var activityItemPostData = {};
 	
@@ -15,21 +15,21 @@ jQuery(function($) {
 		activityItem.activityItemType = res.activityItemType;
 	}, null, false);
 	
-	activityItem.items.activityName = $("#activityName");
-	activityItem.items.activityItems = $("#activityItems");
-	activityItem.items.type = $("#type").bindData(activityItem.activityItemType, "key", "value").change(function(){
+	activityItem.items.activityName = com.focusPage("#activityName");
+	activityItem.items.activityItems = com.focusPage("#activityItems");
+	activityItem.items.type = com.focusPage("#type").bindData(activityItem.activityItemType, "key", "value").change(function(){
 		var $this = $(this);
 			activityItem.items.moneyInfo.css("display", "block");
 	});
 	
-	activityItem.items.activityItemName = $("#activityItemName");
-	activityItem.items.money = $("#money");
-	activityItem.items.moneyInfo = $("#moneyInfo");
-	activityItem.items.activityItemModal = $("#activityItemModal").on('show.bs.modal',function(e){
+	activityItem.items.activityItemName = com.focusPage("#activityItemName");
+	activityItem.items.money = com.focusPage("#money");
+	activityItem.items.moneyInfo = com.focusPage("#moneyInfo");
+	activityItem.items.activityItemModal = com.focusPage("#activityItemModal").on('show.bs.modal',function(e){
 		com.clearValidator();
 	});
 	
-	activityItem.items.addBtn = $("#addBtn").on("click", function(){
+	activityItem.items.addBtn = com.focusPage("#addBtn").on("click", function(){
 		activityItem.items.activityItemModal.modal("show");
 		
 		activityItem.items.moneyInfo.css("display", "none");
@@ -41,17 +41,17 @@ jQuery(function($) {
 		activityItem.editFlag = false;
 	});
 	
-	activityItem.items.backBtn = $("#backBtn").on("click", function(){
-		$("#activityPageContent").load(api.index.activityIndex.url);
+	activityItem.items.backBtn = com.focusPage("#backBtn").on("click", function(){
+		com.focusPage("#activityPageContent").load(api.index.activityIndex.url);
 	});
 	
-	activityItem.items.saveBtn = $("#saveBtn").on("click", saveData);
+	activityItem.items.saveBtn = com.focusPage("#saveBtn").on("click", saveData);
 	
 	activityItem.items.activityName.text(activityItemPostData.activityName);
 	
 	var options = {
 		"activity.aid": activityItemPostData.aid,
-	}
+	};
 	
 	com.post(api.information.queryActivityItemByAId, options, function(res){
 		var activityItems = res.activityItems;
@@ -97,7 +97,7 @@ jQuery(function($) {
 		
 		deleteBtn.on("click", function(){
 			deleteActivityItem(_activityItem.aiid, _activityItem.name);
-		})
+		});
 	}
 
 	function saveData(){
@@ -113,7 +113,7 @@ jQuery(function($) {
 			"activityItem.name": activityItem.items.activityItemName.val(),
 			"activityItem.type": activityItem.items.type.val(),
 			"activityItem.money": activityItem.items.money.val()
-		}
+		};
 
 		if(activityItem.editFlag){
 			url = api.information.updateActivityItem;
@@ -126,7 +126,7 @@ jQuery(function($) {
 			com.showAlert(com.info, "操作成功");
 			
 			if(activityItem.editFlag){
-				$("#pricing_" + activityItemPostData.aiid).remove();
+				com.focusPage("#pricing_" + activityItemPostData.aiid).remove();
 			}
 			
 			addActivityItemForDiv(activityItem.items.activityItems, res.activityItem);
@@ -157,13 +157,13 @@ jQuery(function($) {
 				
 				var options = {
 					"activityItem.aiid": aiId,
-				}
+				};
 				
 				com.post(api.information.deleteActivityItemByAiId, options, function(res){
 					com.showAlert(com.info, "操作成功");
-					
-					$("#pricing_" + aiId).remove();
-				})
+
+					com.focusPage("#pricing_" + aiId).remove();
+				});
 			}
 		});
 	}

@@ -184,9 +184,9 @@ public class VticketServiceImpl implements VticketService {
 		
 		BeanUtil.copyProperties(vticketPO.getBelonger(), vticketVO.getBelonger(), Arrays.asList("role", "dept", "duty"));
 		
-		BeanUtil.copyProperties(vticketPO.getDepartment(), vticketVO.getDepartment(), Arrays.asList("type", "fatherDept", "cityProper"));
+		BeanUtil.copyProperties(vticketPO.getDepartment(), vticketVO.getDepartment(), Arrays.asList("type", "fatherDept","manager"));
 		
-		BeanUtil.copyProperties(vticketPO.getRegion(), vticketVO.getRegion(), Arrays.asList("type", "fatherDept", "cityProper"));
+		BeanUtil.copyProperties(vticketPO.getRegion(), vticketVO.getRegion(), Arrays.asList("type", "fatherDept", "manager"));
 		
 		return vticketVO;
 	}

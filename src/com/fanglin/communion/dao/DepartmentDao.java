@@ -9,6 +9,7 @@
 package com.fanglin.communion.dao;
 
 import java.util.List;
+
 import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.core.dao.Dao;
 import com.fanglin.core.vo.Filter;
@@ -23,8 +24,8 @@ public interface DepartmentDao extends Dao<DepartmentPO> {
     
     public List<DepartmentPO> queryDepartment(int type,Integer company);
 
-    public List<String> queryDepartmentForChildren(String fatherDeptId);
-    
+	public DepartmentPO queryDepartmentByNo(String no);
+
     public List<DepartmentPO> queryDepartmentBytype(int type ,Integer company);
     
 }

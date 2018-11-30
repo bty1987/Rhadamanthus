@@ -15,7 +15,7 @@ jQuery(function($) {
 	var displayFunc  = (function(){
 
         var renderList = function(tableId,listData){
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if(listData && listData.length){ 
@@ -39,7 +39,7 @@ jQuery(function($) {
             var propertyArr = [
                ["登陆Ip地址:", v.sourceIp, "grey"],
                ["登陆时间:", v.loginTime, "grey"],
-               ["登陆结果:", v.successFlag == 1 ? "成功" : "失败", "red"],
+               ["登陆结果:", v.successFlag == 1 ? "成功" : "失败", "red"]
            ];
             
            $.each(propertyArr, function (index,value) {
@@ -56,7 +56,7 @@ jQuery(function($) {
       
         return {
             init : function(tableId,listData){
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
             },
             drawLine : function(v){

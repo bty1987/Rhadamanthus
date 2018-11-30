@@ -1,0 +1,101 @@
+<div class="page-content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="condList" class="fl_search clearfix"></div><!---c查询条件有就写没有 也写上 在js 里面不传参就行--->
+            <div id="resultList" class="clearfix tab-pane action"></div><!-- c查询结果-->
+            <div id="pagenation" class="fl-page-wrap clearfix"></div><!--分页-->
+
+        </div>
+    </div>
+</div>
+
+<div id="sustomersource" style="padding: 40px 0; display: none">
+    <div class="row-fluid">
+        <form class="form-horizontal" novalidate="novalidate" id="form1">
+            <div class="widget-main">
+                <div class="row" style="margin-right: 0px">
+                    <div class="col-xs-12">
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">电话</label>
+                            <div class="col-sm-8">
+                                <input type="text" class=" m-wrap col-xs-8 v_required" id="Phone">
+                            </div>
+                        </div>
+
+                        <div class="space5"></div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">目的</label>
+                            <div class="col-sm-8">
+                                <input type="text" class=" m-wrap col-xs-8" id="purpose">
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">意向</label>
+                            <div class="col-sm-8">
+                                <input type="text" class=" m-wrap col-xs-8 v_required" id="intention">
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">需求价格</label>
+                            <div class="col-sm-8">
+                                <input type="text" class=" m-wrap col-xs-8 v_required" id="price">
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">客户等级</label>
+                            <div class="col-sm-8">
+                                <select type="text" class="col-xs-8 m-wrap" id="grade">
+                                </select>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">备注</label>
+                            <div class="col-sm-8">
+                                <input type="text" class=" m-wrap col-xs-8 " id="comment">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<div id="customersourceforbelonger" style="padding: 100px 0; display: none">
+    <div class="row-fluid">
+        <form class="form-horizontal" novalidate="novalidate" id="form2">
+            <div class="widget-main">
+                <div class="row" style="margin-right: 0px">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label for="belonger" class="col-sm-2 control-label no-padding-right">归属人</label>
+                            <div class="col-sm-10">
+                                <select class="chosen-select col-md-4 v_required" id="belonger" data-placeholder="请输入归属人"  style="display: none;">
+                                    <option value="">&nbsp;</option>
+                                </select> <i id="designerId_asterisk" class='material icon-asterisk'></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!--查看信息弹窗-->
+<div id="customerRecord" class="portlet box"></div>
+
+<script type="text/javascript">
+    $.loadScript(['js/customer/customerAdvance.js']);
+</script>

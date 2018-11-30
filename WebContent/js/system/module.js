@@ -67,7 +67,7 @@ $(function(){
 
         return {
             renderList : function(listData, tableId){
-                var $tableWrap = $('#' + tableId).empty();
+                var $tableWrap = com.focusPage('#' + tableId).empty();
                 var menuArr = sortData(listData);
                 var menuObj = {
                     level1 : {},
@@ -127,33 +127,33 @@ $(function(){
     search();
 
     var module = {
-        modal : $('#moduleModal').on("show.bs.modal", function(a) {
+        modal : com.focusPage('#moduleModal').on("show.bs.modal", function(a) {
             com.clearValidator();
             com.clearValidator("#materialModelName", !0);
             com.clearValidator("#materialModelNo", !0);
         }),
-        btnAdd : $('#addModule').click(function(){
+        btnAdd : com.focusPage('#addModule').click(function(){
         	com.cleanItems(module.moduleModalItems);
-            $('#moduleModal').modal("show");
+            com.focusPage('#moduleModal').modal("show");
         }),
-        saveBtn: $("#saveBtn").on("click", saveData),
+        saveBtn: com.focusPage("#saveBtn").on("click", saveData),
         moduleModalItems : {
-            name : $('#moduleName'),
-            icon : $('#icon'),
-            url : $('#url'),
-            level : $('#level').on('change', function(){
+            name : com.focusPage('#moduleName'),
+            icon : com.focusPage('#icon'),
+            url : com.focusPage('#url'),
+            level : com.focusPage('#level').on('change', function(){
                 var val = $(this).val();
                 if (val == 1){
-                    $('#fatherModule').attr('readonly', true).removeClass('v_required');
+                    com.focusPage('#fatherModule').attr('readonly', true).removeClass('v_required');
                 }else{
-                    $('#fatherModule').removeAttr('readonly').addClass('v_required');
+                    com.focusPage('#fatherModule').removeAttr('readonly').addClass('v_required');
                 }
             }),
-            fatherModule : $('#fatherModule').typeahead({
+            fatherModule : com.focusPage('#fatherModule').typeahead({
 
                 list: [],
                 source: function (query, process) {
-                    var level = $('#level').val() - 1;
+                    var level = com.focusPage('#level').val() - 1;
 
                     var result = $.map(fatherModuleArr['level' + level], function(val){
                         return val.name.indexOf(query) == -1 ? null : val;

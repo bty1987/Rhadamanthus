@@ -8,7 +8,7 @@ $(function(){
     var displayFunc  = (function(){
 
         var renderList = function(tableId,listData){
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if(listData && listData.length){
@@ -61,13 +61,13 @@ $(function(){
 
         return {
             init : function(tableId,listData){
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
             },
             drawLine : function(v){
                 return creatLine(v);
             }
-        }
+        };
     })();
 
     var _condArr = ['versionName'];
@@ -85,53 +85,53 @@ $(function(){
     });
 
     var quotationVersion = {
-        saveBtn: $("#saveBtn").on("click", saveData),
-        cancellBtn: $("#cancelBtn"),
-        modal: $("#qtModal").on("show.bs.modal", function(a) {
+        saveBtn: com.focusPage("#saveBtn").on("click", saveData),
+        cancellBtn: com.focusPage("#cancelBtn"),
+        modal: com.focusPage("#qtModal").on("show.bs.modal", function(a) {
             com.clearValidator();
-            com.clearValidator("#versionId", !0)
+            com.clearValidator("#versionId", !0);
         }),
 
-        cancelCopyVersionBtn : $("#cancelCopyVersionBtn"),
-        modalCopyVersion : $("#copyVersionModal").on("show.bs.modal", function(a) {
+        cancelCopyVersionBtn : com.focusPage("#cancelCopyVersionBtn"),
+        modalCopyVersion : com.focusPage("#copyVersionModal").on("show.bs.modal", function(a) {
             com.clearValidator();
-            com.clearValidator("#copyVersionId", !0)
+            com.clearValidator("#copyVersionId", !0);
         }),
         quotationVersionItems: {
-            copyVersionId: $("#copyVersionId").on("blur", function () {
+            copyVersionId: com.focusPage("#copyVersionId").on("blur", function () {
+                $this = com.focusPage(this);
+                var b = {
+                    "quotationVersion.versionId": $this.val()
+                };
+                com.post(api.quotation.queryQuotationVersionByVersionId, b, function (a) {
+                    a.quotationVersion && a.quotationVersion.qvId ? (com.showTips($this, "\u8be5\u7248\u672c\u7f16\u53f7\u5df2\u5b58\u5728", !0), quotationVersion.repeatFlg = !0) : (com.clearValidator("#copyVersionId", !0), quotationVersion.repeatFlg = !1);
+                });
+            }),
+            copyVersionName: com.focusPage("#copyVersionName"),
+            copyTrafficRate: com.focusPage("#copyTrafficRate"),
+            copyManageRate: com.focusPage("#copyManageRate"),
+            copyVersionDes: com.focusPage("#copyVersionDes"),
+            versionId: com.focusPage("#versionId").on("blur", function () {
                 $this = $(this);
                 var b = {
                     "quotationVersion.versionId": $this.val()
                 };
                 com.post(api.quotation.queryQuotationVersionByVersionId, b, function (a) {
-                    a.quotationVersion && a.quotationVersion.qvId ? (com.showTips($this, "\u8be5\u7248\u672c\u7f16\u53f7\u5df2\u5b58\u5728", !0), quotationVersion.repeatFlg = !0) : (com.clearValidator("#copyVersionId", !0), quotationVersion.repeatFlg = !1)
-                })
+                    a.quotationVersion && a.quotationVersion.qvId ? (com.showTips($this, "\u8be5\u7248\u672c\u7f16\u53f7\u5df2\u5b58\u5728", !0), quotationVersion.repeatFlg = !0) : (com.clearValidator("#versionId", !0), quotationVersion.repeatFlg = !1);
+                });
             }),
-            copyVersionName: $("#copyVersionName"),
-            copyTrafficRate: $("#copyTrafficRate"),
-            copyManageRate: $("#copyManageRate"),
-            copyVersionDes: $("#copyVersionDes"),
-            versionId: $("#versionId").on("blur", function () {
-                $this = $(this);
-                var b = {
-                    "quotationVersion.versionId": $this.val()
-                };
-                com.post(api.quotation.queryQuotationVersionByVersionId, b, function (a) {
-                    a.quotationVersion && a.quotationVersion.qvId ? (com.showTips($this, "\u8be5\u7248\u672c\u7f16\u53f7\u5df2\u5b58\u5728", !0), quotationVersion.repeatFlg = !0) : (com.clearValidator("#versionId", !0), quotationVersion.repeatFlg = !1)
-                })
+            versionName: com.focusPage("#versionName"),
+            trafficRate: com.focusPage("#trafficRate"),
+            trafficDiscount : com.focusPage("#trafficDiscount").switchBtn("discount-lbl").on("click", function(a) {
+                quotationVersion.quotationVersionItems.trafficDiscount.value = 0 == quotationVersion.quotationVersionItems.trafficDiscount.value ? 1 : 0;
             }),
-            versionName: $("#versionName"),
-            trafficRate: $("#trafficRate"),
-            trafficDiscount : $("#trafficDiscount").switchBtn("discount-lbl").on("click", function(a) {
-                quotationVersion.quotationVersionItems.trafficDiscount.value = 0 == quotationVersion.quotationVersionItems.trafficDiscount.value ? 1 : 0
+            manageRate: com.focusPage("#manageRate"),
+            manageDiscount : com.focusPage("#manageDiscount").switchBtn("discount-lbl").on("click", function(a) {
+                quotationVersion.quotationVersionItems.manageDiscount.value = 0 == quotationVersion.quotationVersionItems.manageDiscount.value ? 1 : 0;
             }),
-            manageRate: $("#manageRate"),
-            manageDiscount : $("#manageDiscount").switchBtn("discount-lbl").on("click", function(a) {
-                quotationVersion.quotationVersionItems.manageDiscount.value = 0 == quotationVersion.quotationVersionItems.manageDiscount.value ? 1 : 0
-            }),
-            versionDes: $("#versionDes"),
-            defaultFlag : $("#defaultFlag").switchBtn().on("click", function(a) {
-                quotationVersion.quotationVersionItems.defaultFlag.value = 0 == quotationVersion.quotationVersionItems.defaultFlag.value ? 1 : 0
+            versionDes: com.focusPage("#versionDes"),
+            defaultFlag : com.focusPage("#defaultFlag").switchBtn().on("click", function(a) {
+                quotationVersion.quotationVersionItems.defaultFlag.value = 0 == quotationVersion.quotationVersionItems.defaultFlag.value ? 1 : 0;
             })
         },
         validator: {
@@ -147,12 +147,12 @@ $(function(){
 
     $.extend(com.validator, quotationVersion.validator);
 
-    $('a[name="addQuotationVersion"]','#pagenation').click(function(){
+    com.focusPage('a[name="addQuotationVersion"]','#pagenation').click(function(){
         quotationVersion.quotationVersionItems.versionId.css("display", "none");
         quotationVersion.editFlag = !1;
         com.cleanItems(quotationVersion.quotationVersionItems);
         quotationVersion.quotationVersionItems.versionId.prop("disabled", !1);
-        quotationVersion.modal.modal("show")
+        quotationVersion.modal.modal("show");
     });
 
     function editLine(b){
@@ -194,7 +194,7 @@ $(function(){
                 "quotationVersion.versionDes": quotationVersion.quotationVersionItems.versionDes.val()
             };
             com.post(quotationVersion.editFlag ? api.quotation.updateQuotationVersion: api.quotation.addQuotationVersion, options, successCallback);
-            quotationVersion.modal.modal("hide")
+            quotationVersion.modal.modal("hide");
         }
     }
 

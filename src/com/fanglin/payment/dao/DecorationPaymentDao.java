@@ -38,6 +38,8 @@ public interface DecorationPaymentDao extends Dao<DecorationPaymentPO> {
 	
 	public List<DecorationPaymentPO> queryDecorationPaymentByDrid(long drId);
 	
+	public DecorationPaymentPO queryDecorationPaymentByOrderIdAndSort(String orderId, short sort);
+	
 	public int changeDecorationPaymentForOrderId(String oldOrderId, String newOrderId);
 	
 	public int deleteDecorationPaymentForBase(String orderId);

@@ -14,9 +14,9 @@ CREATE TABLE `material` (
   `category` varchar(32) NOT NULL DEFAULT '',
   `brand` varchar(32) NOT NULL DEFAULT '',
   `packageFlag` tinyint(4) NOT NULL DEFAULT '0',
-  `rid` varchar(10) NOT NULL COMMENT '业务分区ID',
-  `did` varchar(10) NOT NULL COMMENT '业务部门ID',
-  `mdid` varchar(10) NOT NULL COMMENT '主材部ID',
+  `rid` varchar(11) NOT NULL COMMENT '业务分区ID',
+  `did` varchar(11) NOT NULL COMMENT '业务部门ID',
+  `mdid` varchar(11) NOT NULL COMMENT '主材部ID',
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `preBalanceTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `postBalanceTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -64,7 +64,8 @@ CREATE TABLE `materialbalance` (
   `ident` int(11) NOT NULL DEFAULT '0',
   `mpid` int(11) DEFAULT NULL,
   PRIMARY KEY (`mbid`),
-  KEY `indexone` (`mid`)
+  KEY `indexone` (`mid`),
+  KEY `indextwo` (`balanceTime`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材单结算表';
 
 DROP TABLE IF EXISTS `materialitem`;

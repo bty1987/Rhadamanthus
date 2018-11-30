@@ -49,7 +49,7 @@ public class AuditScaleServiceImpl implements AuditScaleService {
 			BeanUtil.copyProperties(auditScalePO, auditScaleVO,Arrays.asList("belongUser","belongDepartment","creater"));
 			BeanUtil.copyProperties(auditScalePO.getCreater(), auditScaleVO.getCreater(),Arrays.asList("dept","duty"));
 			BeanUtil.copyProperties(auditScalePO.getBelongUser(), auditScaleVO.getBelongUser(),Arrays.asList("dept","duty"));
-			BeanUtil.copyProperties(auditScalePO.getBelongDepartment(), auditScaleVO.getBelongDepartment(),Arrays.asList("fatherDept", "cityProper","type"));
+			BeanUtil.copyProperties(auditScalePO.getBelongDepartment(), auditScaleVO.getBelongDepartment(),Arrays.asList("fatherDept", "type", "manager"));
 			
 			auditScaleVOs.add(auditScaleVO);
 		}

@@ -1,0 +1,111 @@
+package com.fanglin.salary.po;
+
+import static javax.persistence.GenerationType.IDENTITY;
+
+import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import com.fanglin.personel.po.UserPO;
+
+@Entity
+@Table(name = "workerbalance", catalog = "salary")
+public class WorkerBalancePO implements Serializable {
+
+	private static final long serialVersionUID = -4634252524595404538L;
+
+	public static final String COLUMN_USER_UID_STR = "user.uid";
+	
+	public static final String COLUMN_USER_USERID_STR = "user.userId";
+
+	public static final String COLUMN_USER_USERNAME = "user.userName";
+
+	public static final String COLUMN_USER_USERDUTY = "user.duty.name";
+
+	public static final short STATUS_VALID_INT = 0;// 有效
+
+	public static final short STATUS_NULL_INT = 1;// 无效
+
+	public static final float COLUMN_ZERO_INT = 0;// 扣工人工费为0
+
+	private long wbid;
+
+	private UserPO user;
+
+	private float deposit;
+
+	private float salary;
+
+	private float toplimit;
+
+	private short status;
+
+	public WorkerBalancePO() {
+		super();
+	}
+
+	@Id
+	@GeneratedValue(strategy = IDENTITY)
+	@Column(name = "wbid")
+	public long getWbid() {
+		return wbid;
+	}
+
+	public void setWbid(long wbid) {
+		this.wbid = wbid;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "uid", referencedColumnName = "uid")
+	public UserPO getUser() {
+		return user;
+	}
+
+	public void setUser(UserPO user) {
+		this.user = user;
+	}
+
+	@Column(name = "deposit")
+	public float getDeposit() {
+		return deposit;
+	}
+
+	public void setDeposit(float deposit) {
+		this.deposit = deposit;
+	}
+
+	@Column(name = "salary")
+	public float getSalary() {
+		return salary;
+	}
+
+	public void setSalary(float salary) {
+		this.salary = salary;
+	}
+
+	@Column(name = "toplimit")
+	public float getToplimit() {
+		return toplimit;
+	}
+
+	public void setToplimit(float toplimit) {
+		this.toplimit = toplimit;
+	}
+
+	@Column(name = "status")
+	public short getStatus() {
+		return status;
+	}
+
+	public void setStatus(short status) {
+		this.status = status;
+	}
+
+}

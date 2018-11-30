@@ -22,15 +22,15 @@ jQuery(function ($) {
         current: '{current} of {total}',
         maxWidth: '100%',
         maxHeight: '100%'
-    }
+    };
 
-    $('#fl-statement').statement("监理控制", "返工图纸");
+    com.focusPage('#fl-statement').statement("监理控制", "返工图纸");
 
     drawing.galleryId = "reworkDrawingGallery";
 
     drawing.mediaServer = window.mediaServer;
 
-    $("#btnBack").click(function () {
+    com.focusPage("#btnBack").click(function () {
         com.switchPage(api.index.supervisionReworkIndex.url);
     });
 
@@ -45,7 +45,7 @@ jQuery(function ($) {
         }
     });
 
-    $("#pictureUpload").Huploadify({
+    com.focusPage("#pictureUpload").Huploadify({
         'debug': false, // 开启调试
         'auto': true, // 是否自动上传
         'successTimeout': 150, // 超时时间
@@ -72,7 +72,7 @@ jQuery(function ($) {
                     "reworkDrawing.rwId": params.rwId,
                     "reworkDrawing.rwdName": "",
                     "reworkDrawing.rwdUrl": dateObj.resUrl,
-                    "reworkDrawing.rwdAddUrl": "",
+                    "reworkDrawing.rwdAddUrl": ""
                 };
 
                 com.post(api.construction.addReworkDrawing, options, function (res) {
@@ -87,7 +87,7 @@ jQuery(function ($) {
 
     function appendGalleryElement(galleryId, imgId, imgUrl, type, editUrl, deleteUrl, operate) {
 
-        var gallery = $("#" + galleryId);
+        var gallery = com.focusPage("#" + galleryId);
         var imgLi = $("<li></li>").attr("id", "gallery_li" + imgId).css("border-color", "#ddd").appendTo(gallery);
         var img = $('<img/>');
         var imgA = $("<a></a>").attr("href", com.showImg(img, imgUrl, 150, 150, '150x150', null, type)).attr("data-rel", "colorbox").append(img).appendTo(imgLi);
@@ -95,16 +95,16 @@ jQuery(function ($) {
         var toolsA = $("<a></a>").attr("href", "#").on("click", function () {
             var options = {
                 "reworkDrawing.rwId": params.rwId,
-                "reworkDrawing.rwdId": imgId,
+                "reworkDrawing.rwdId": imgId
             };
             com.post(api.construction.deleteReworkDrawingById, options, function (res) {
-                $("#gallery_li" + imgId).remove();
+                com.focusPage("#gallery_li" + imgId).remove();
             });
         }).appendTo(toolsDiv);
         $("<i></i>").addClass("icon-remove red").appendTo(toolsA);
 
         imgA.colorbox(colorboxArgs);
-    };
+    }
 
 });
 

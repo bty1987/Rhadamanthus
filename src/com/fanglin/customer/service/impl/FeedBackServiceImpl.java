@@ -15,6 +15,7 @@ import com.fanglin.customer.po.FeedbackPO;
 import com.fanglin.customer.service.FeedBackService;
 import com.fanglin.customer.vo.FeedBackVO;
 import com.fanglin.utils.BeanUtil;
+import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
 @Service("feedBackService")
@@ -31,13 +32,17 @@ public class FeedBackServiceImpl implements FeedBackService{
 		
 		List<FeedBackVO> feedBackVOs = new ArrayList<FeedBackVO>();
 		
-		for (FeedbackPO feedbackPO : feedbackPOs) {
+		if(feedbackPOs.size() != 0 && feedbackPOs != null){
 			
-			FeedBackVO feedBackVO = new FeedBackVO();
-			
-			BeanUtil.copyPropertie(feedbackPO, feedBackVO);
-			
-			feedBackVOs.add(feedBackVO);
+			for (FeedbackPO feedbackPO : feedbackPOs) {
+				
+				FeedBackVO feedBackVO = new FeedBackVO();
+				
+				BeanUtil.copyPropertie(feedbackPO, feedBackVO); 	
+				
+				feedBackVOs.add(feedBackVO);
+				
+			}
 			
 		}
 		
@@ -52,10 +57,8 @@ public class FeedBackServiceImpl implements FeedBackService{
 		FeedbackPO feedbackPO = new FeedbackPO();
 		
 		BeanUtil.copyPropertie(feedBackVO, feedbackPO);
-		
-		Date date = new Date();       
-		
-		feedbackPO.setCreateTime(date.getTime());
+
+		feedbackPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		
 		feedBackDao.save(feedbackPO);
 		

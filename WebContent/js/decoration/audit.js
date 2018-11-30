@@ -8,7 +8,7 @@ jQuery(function($) {
 	com.post(api.ds.decoration, {}, function (res) {
 		$.each(res.decorationOrderStatus, function(i,v){
 			audit.decorationOrderStatus[v.key] = v.value;
-		})
+		});
     }, null, false);
 
 
@@ -16,7 +16,7 @@ jQuery(function($) {
         //ID名,API分页查询的返回值
         var renderList = function (tableId, listData) {
             //创建DIV
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
             //创建一对UL并添加bootstrap的样式
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
             //如果返回值不为null
@@ -34,7 +34,7 @@ jQuery(function($) {
         };
 
         var creatLine = function (v) {
-            com.sealJournal("info",v)
+            com.sealJournal("info",v);
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.decoration.orderId));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
@@ -50,13 +50,13 @@ jQuery(function($) {
                 ["楼盘地址:", v.decoration.house.village.name + ' ' + v.decoration.house.houseNumber, "grey"],
                 ["客户:", v.decoration.customer.name, "grey"],
                 ["设计师:", v.decoration.designer.currentName, "grey"],
-                ["设计部:", v.decoration.designer.dept.deptName, "grey"],
+                ["设计部:", v.decoration.designer.dept.name, "grey"],
                 ["面积:", v.decoration.house.buildArea, "blue "],
                 ["量房时间:", v.decoration.measureTime , "green"],
                 ["签单时间:", v.decoration.contractTime, "green"],
-                ["类型:", v.decoration.type == 0 ? '半包' : (v.type == 1 ? '全包' : '半价'), "red"],
+                ["类型:", v.decoration.type == 0 ? '半包' : (v.type == 1 ? '全包' : (v.type == 2 ? '半价' : '满减')), "red"],
                 ["状态:", audit.decorationOrderStatus[v.decoration.status], "red"],
-                ["审核状态:", v.auditer?'已审核':'未审核', "red"],
+                ["审核状态:", v.auditer?'已审核':'未审核', "red"]
             ];
             if(v.auditer){
                 $btnInfo = null;
@@ -77,16 +77,16 @@ jQuery(function($) {
 
             $btnView.click(function(){
                 auditScale(v.decoration.orderId,v.decoration.type, v.versionId, v.notSalesmanRate);
-            })
+            });
 
             $btnPrice.click(function(){
-                com.sealJournal("info",v)
-                viewAuditRecord(v.decoration.orderId, v.decoration.designer.uid,v.decoration.designer.dept.deptId);
+                com.sealJournal("info",v);
+                viewAuditRecord(v.decoration.orderId, v.decoration.designer.uid,v.decoration.designer.dept.no);
             });
 
             $btnAddMinus.click(function(){
                 viewdecorationTimelineIndex(v.decoration.orderId);
-            })
+            });
 
             $btnInfo && $btnInfo.click(function(){
                 applyAudit(v.aid);
@@ -102,22 +102,22 @@ jQuery(function($) {
             params["deptId"] = deptId;
             params['auditStatusType'] = 'admin';
             params['historyPage'] = api.index.auditIndex.url;
-            params["viewNode"] = [{type:"basic",opt:{btn:["customerInfosBtn"]}},{type:"quotaion",opt:{btn:["btnPrintDefaultQuotationInfo"]}},{type:"picture"},{type:"material"},{type:"activity"},{type:"payment"},{type:"belong"}]
+            params["viewNode"] = [{type:"basic",opt:{btn:["customerInfosBtn"]}},{type:"quotaion",opt:{btn:["btnPrintDefaultQuotationInfo"]}},{type:"picture"},{type:"material"},{type:"activity"},{type:"payment"},{type:"belong"}];
             com.switchPage(api.index.auditRecordIndex.url);
-        }
+        };
 
         return {
             //数据显示框的ID,分页查询API的返回值
             init: function (tableId, listData) {
                 //创建DIV 并且内容为null
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
 
                 renderList(tableId, listData);
             },
             audit: function (v) {
                 return creatLine(v);
             }
-        }
+        };
     })();
     var _condArr = ['orderId', 'village', 'designer','c_supervisor','designerDepartmentId',
         'createTimeDateRange','signTimeDateRange','auditTime','status','auditStatus','auditName'];
@@ -149,12 +149,12 @@ jQuery(function($) {
         params["versionId"] = versionId;
         params["notSalesmanRate"] = notSalesmanRate;
         params['historyPage'] = api.index.auditIndex.url;
-        params["viewNode"] = [{type:"basic",opt:{btn:["customerInfosBtn"]}},{type:"quotaion",opt:{btn:["btnPrintDefaultQuotationInfo"]}},{type:"picture",wizard:{"editPicture":true} },{type:"material"},{type:"activity"},{type:"payment"},{type:"belong"}, {type: "addreduce"}]
+        params["viewNode"] = [{type:"basic",opt:{btn:["customerInfosBtn"]}},{type:"quotaion",opt:{btn:["btnPrintDefaultQuotationInfo"]}},{type:"picture",wizard:{"editPicture":true} },{type:"material"},{type:"activity"},{type:"payment"},{type:"belong"}, {type: "addreduce"}];
         com.switchPage(api.index.decorationDetailIndex.url);
-    }
+    };
 
     var viewdecorationTimelineIndex = function(orderId){
         params.decorationOrderId = orderId;
         com.switchPage(api.index.decorationTimelineIndex.url);
-    }
-})
+    };
+});

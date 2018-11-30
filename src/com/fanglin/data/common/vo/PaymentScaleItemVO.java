@@ -9,6 +9,8 @@ public class PaymentScaleItemVO {
 	private String name;
 		
 	private Integer scale;
+	
+	private Short sort;
 
 	public PaymentScaleItemVO() {
 			super();
@@ -44,6 +46,14 @@ public class PaymentScaleItemVO {
 
 	public void setScale(Integer scale) {
 		this.scale = scale;
+	}
+
+	public Short getSort() {
+		return sort;
+	}
+
+	public void setSort(Short sort) {
+		this.sort = sort;
 	}
 
 }

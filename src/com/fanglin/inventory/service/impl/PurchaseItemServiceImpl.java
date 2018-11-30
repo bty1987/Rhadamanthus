@@ -18,7 +18,6 @@ import com.fanglin.inventory.po.GoodsPO;
 import com.fanglin.inventory.po.PurchaseItemPO;
 import com.fanglin.inventory.po.PurchasePO;
 import com.fanglin.inventory.service.PurchaseItemService;
-import com.fanglin.inventory.service.PurchaseService;
 import com.fanglin.inventory.vo.ColorVO;
 import com.fanglin.inventory.vo.FormatVO;
 import com.fanglin.inventory.vo.GoodsVO;
@@ -35,9 +34,6 @@ public class PurchaseItemServiceImpl  implements PurchaseItemService{
 	
 	@Autowired
 	private PurchaseItemDao purchaseItemDao;
-	
-	@Autowired
-	private PurchaseService purchaseService;
 	
 	@Autowired
 	private GoodsDao goodsDao;
@@ -170,27 +166,6 @@ public class PurchaseItemServiceImpl  implements PurchaseItemService{
 		purchaseItemPO.setNum(purchaseItemVO.getNum());
 		purchaseItemPO.setSurplus(purchaseItemVO.getNum());
 		purchaseItemDao.update(purchaseItemPO);
-		
-		return 0;
-	}
-	
-	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public int updatePurchaseItemSurplus(PurchaseVO purchaseVO, List<PurchaseItemVO> purchaseItemVOs) throws FLException{
-		
-		PurchaseItemPO purchaseItemPO;
-		
-		for(PurchaseItemVO purchaseItemVO:purchaseItemVOs){
-			purchaseItemPO = purchaseItemDao.get(purchaseItemVO.getPiId());
-			
-			BeanUtil.copyProperties(purchaseItemVO, purchaseItemPO, Arrays.asList("goods","color","format"));
-			purchaseItemPO.setSurplus(purchaseItemVO.getSurplus());
-			purchaseItemDao.update(purchaseItemPO);
-		}
-		
-		if(purchaseVO!=null){
-			purchaseService.updatePurchaseStatus(purchaseVO);
-		}
 		
 		return 0;
 	}

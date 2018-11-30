@@ -6,11 +6,11 @@
         items: {},
     };
 
-    chainPage.saveBtn = $("#saveBtn").on("click", saveData);
-    chainPage.items.names = $("#names");
-    chainPage.items.url = $("#url");
-    chainPage.items.comment = $("#comment");
-    chainPage.items.companymark = $("#companymark");
+    chainPage.saveBtn = com.focusPage("#saveBtn").on("click", saveData);
+    chainPage.items.names = com.focusPage("#names");
+    chainPage.items.url = com.focusPage("#url");
+    chainPage.items.comment = com.focusPage("#comment");
+    chainPage.items.companymark = com.focusPage("#companymark");
 
     var displayFunc = (function () {
 
@@ -25,7 +25,7 @@
 
         var  creatLine = function (tableId,v) {
 
-                    var $div = $('<div></div>').appendTo($('#' + tableId));
+                    var $div = $('<div></div>').appendTo(com.focusPage('#' + tableId));
                     var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable').appendTo($div);
                     var $liLine = $('<li></li>').addClass('item-blue clearfix').appendTo($ul);
                     var $h3 = $('<h3 ></h3>').addClass('oid').append($('<small style="font-size:22px;"></small>').addClass('blue')).appendTo($liLine);var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix').css({'margin-top': '10px'}).appendTo($h3);
@@ -66,7 +66,7 @@
     search();
     function search(){
         com.post(api.data.queryChainPage, {}, function(v){
-            var $div = $('<div></div>').appendTo($('#resultList'));
+            var $div = $('<div></div>').appendTo(com.focusPage('#resultList'));
             var $h3 = $('<h3 style="font-size:22px;"></h3>').addClass('blue').html("外链").appendTo($div);
             displayFunc.init('resultList', v.chainPages);
         }, null, false);
@@ -74,14 +74,14 @@
 
      function DeleChainPage(cpid) {
         com.post(api.data.deleteChainPage, {"chainPage.cpid": cpid}, function () {
-            $("#resultList").empty();
+            com.focusPage("#resultList").empty();
             search();
         });
     }
 
-    $("#addBtn").click(function () {
+    com.focusPage("#addBtn").click(function () {
          com.cleanItems(chainPage.items);
-        $("#chainPageModal").modal("show");
+        com.focusPage("#chainPageModal").modal("show");
 
     });
 
@@ -97,10 +97,10 @@
             "chainPage.companymark": chainPage.items.companymark.prop("checked") ? 0 : 1
 
         }, function () {
-            $("#resultList").empty();
+            com.focusPage("#resultList").empty();
             search();
             });
-        $("#chainPageModal").modal("hide");
+        com.focusPage("#chainPageModal").modal("hide");
      }
 
 });

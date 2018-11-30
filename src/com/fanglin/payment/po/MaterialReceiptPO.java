@@ -44,8 +44,6 @@ public class MaterialReceiptPO implements java.io.Serializable {
 	
 	private Timestamp confirmTime;
 	
-	private float realMoney;
-	
 	private float cash;
 	
 	private String cashInfo;
@@ -178,15 +176,6 @@ public class MaterialReceiptPO implements java.io.Serializable {
 		this.confirmTime = confirmTime;
 	}
 
-	@Column(name = "realMoney")
-	public float getRealMoney() {
-		return this.realMoney;
-	}
-
-	public void setRealMoney(float realMoney) {
-		this.realMoney = realMoney;
-	}
-
 	@Column(name = "cash")
 	public float getCash() {
 		return this.cash;
@@ -240,7 +229,7 @@ public class MaterialReceiptPO implements java.io.Serializable {
 	public void setCheckvBank(String checkvBank) {
 		this.checkvBank = checkvBank;
 	}
-
+	
 	@Column(name = "installment")
 	public float getInstallment() {
 		return this.installment;

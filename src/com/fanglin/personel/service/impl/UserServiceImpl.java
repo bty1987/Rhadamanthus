@@ -365,7 +365,7 @@ public class UserServiceImpl implements UserService {
 		userExperiencePO.setUid(userPO.getUid());
 		userExperiencePO.setType("入职");
 		userExperiencePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-		userExperiencePO.setComment(String.format("公司:%s,部门:%s,职位:%s", companyPO.getName(), userPO.getDept().getDeptName(), dutyDao.get(userPO.getDuty().getDid()).getName()));
+		userExperiencePO.setComment(String.format("公司:%s,部门:%s,职位:%s", companyPO.getName(), userPO.getDept().getName(), dutyDao.get(userPO.getDuty().getDid()).getName()));
 
 		userExperienceDao.save(userExperiencePO);
 	}
@@ -405,7 +405,7 @@ public class UserServiceImpl implements UserService {
 		BeanUtil.copyProperties(userVO, userPO, Arrays.asList("role", "dept", "duty", "uId", "userId", "userName", "loginId", "password", "role", "isLogin", "company", "extranet"));
 
 		userPO.setDept(departmentPO);
-		BeanUtil.copyProperties(userVO.getDept(), userPO.getDept(), Arrays.asList("fatherDept", "cityProper"));
+		BeanUtil.copyProperties(userVO.getDept(), userPO.getDept(), Arrays.asList("fatherDept", "type", "manager"));
 
 		userPO.setDuty(new DutyPO(userVO.getDuty().getDid()));
 		BeanUtil.copyProperties(userVO.getDept(), userPO.getDept(), Arrays.asList("departmentType"));
@@ -427,7 +427,7 @@ public class UserServiceImpl implements UserService {
 			userExperiencePO.setUid(userPO.getUid());
 			userExperiencePO.setType((newstatus == oldstatus) ? "调职" : newstatus == 0 ? "入职" : "离职");
 			userExperiencePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-			userExperiencePO.setComment(String.format("原部:%s,原职:%s,现部:%s,现职:%s", odept.getDeptName(), oldduty, ndept.getDeptName(), newduty));
+			userExperiencePO.setComment(String.format("原部:%s,原职:%s,现部:%s,现职:%s", odept.getName(), oldduty, ndept.getName(), newduty));
 
 			userExperienceDao.save(userExperiencePO);
 		}
@@ -548,23 +548,6 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	@Transactional
-	public void checkUserForPassword(String userId, int company) throws FLException {
-		
-		UserPO userPO = userDao.queryUserByUserId(userId);
-
-		if (userPO == null) {
-			throw new FLException(220005, "员工不存在");
-		}
-		
-		SystemConfigPO password = systemConfigDao.querySystemConfig("password", company);
-		
-		userPO.setPassword(MD5Helper.MD5(password == null ? "helloworld" : password.getValue()));
-		
-		userDao.update(userPO);
-	}
-
-	@Override
-	@Transactional
 	public void checkUserForPassword(String userId, String password, String rePassword) throws FLException {
 
 		UserPO userPO = userDao.queryUserByUserId(userId);
@@ -636,6 +619,23 @@ public class UserServiceImpl implements UserService {
 
 		return 0;
 	}
+	
+	@Override
+	@Transactional
+	public void defaultPassword(String userId, int company) throws FLException {
+		
+		UserPO userPO = userDao.queryUserByUserId(userId);
+
+		if (userPO == null) {
+			throw new FLException(220005, "员工不存在");
+		}
+		
+		SystemConfigPO password = systemConfigDao.querySystemConfig("password", company);
+		
+		userPO.setPassword(MD5Helper.MD5(password == null ? "helloworld" : password.getValue()));
+		
+		userDao.update(userPO);
+	}
 
 	@Override
 	@Transactional
@@ -670,12 +670,12 @@ public class UserServiceImpl implements UserService {
 
 		BeanUtil.copyProperties(userPO.getRole(), userVO.getRole());
 
-		BeanUtil.copyProperties(userPO.getDept(), userVO.getDept(), Arrays.asList("fatherDept", "cityProper", "type"));
+		BeanUtil.copyProperties(userPO.getDept(), userVO.getDept(), Arrays.asList("fatherDept", "type", "manager"));
 
 		if (userPO.getDept().getFatherDept() != null) {
 			userVO.getDept().setFatherDept(new DepartmentVO());
 
-			BeanUtil.copyProperties(userPO.getDept().getFatherDept(), userVO.getDept().getFatherDept(), Arrays.asList("fatherDept", "cityProper", "type"));
+			BeanUtil.copyProperties(userPO.getDept().getFatherDept(), userVO.getDept().getFatherDept(), Arrays.asList("fatherDept", "type", "manager"));
 		}
 
 		if (userPO.getDept().getType() != null) {
@@ -694,7 +694,7 @@ public class UserServiceImpl implements UserService {
 
 		BeanUtil.copyProperties(userPO.getDuty(), userBaseVO.getDuty(), Arrays.asList("departmentType"));
 
-		BeanUtil.copyProperties(userPO.getDept(), userBaseVO.getDept(), Arrays.asList("fatherDept", "cityProper", "type"));
+		BeanUtil.copyProperties(userPO.getDept(), userBaseVO.getDept(), Arrays.asList("fatherDept", "type", "manager"));
 
 		return userBaseVO;
 	}

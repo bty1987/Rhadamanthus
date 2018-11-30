@@ -1,5 +1,7 @@
 package com.fanglin.store.action;
 
+import java.util.List;
+
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
@@ -23,6 +25,17 @@ public class McategoryAction extends BaseListAction{
 	private McategoryService mcategoryService;
 	
 	private McategoryVO mcategory;
+	
+	private List<McategoryVO> mcategorys;
+	
+	@Action(value="queryMcategoryOnshow", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String queryMcategoryOnshow(){
+		
+		mcategorys = mcategoryService.queryMcategory();
+		
+		return SUCCESS;
+		
+	}
 	
 	@Action(value="pageMcategory", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String pageMcategory(){
@@ -67,5 +80,14 @@ public class McategoryAction extends BaseListAction{
 	public void setMcategory(McategoryVO mcategory) {
 		this.mcategory = mcategory;
 	}
+
+	public List<McategoryVO> getMcategorys() {
+		return mcategorys;
+	}
+
+	public void setMcategorys(List<McategoryVO> mcategorys) {
+		this.mcategorys = mcategorys;
+	}
+	
 	
 }

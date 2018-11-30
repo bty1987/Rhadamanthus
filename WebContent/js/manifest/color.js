@@ -9,13 +9,14 @@ $(function(){
      * tableId ，用来显示的div的id
      * result.list 列表的json数组
      * */
-    var goodsColorPopUp = $('#goodsColorPopUp')
+
+    var goodsColorPopUp = com.focusPage('#goodsColorPopUp');
 
     var displayFunc  = (function(){
 
         /*表格样式*/
         var renderList = function(tableId,listData){
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
 
             if(listData && listData.length){
 
@@ -28,7 +29,7 @@ $(function(){
                     $liLine.appendTo($ulTitle);
                 });
 
-                $('#resultListColor').css({'width':'96%','margin':'0 auto','height':'560px','marigin-top':'20px'})
+                com.focusPage('#resultListColor').css({'width':'96%','margin':'0 auto','height':'560px','marigin-top':'20px','overflow-y':'scroll'});
 
             }
         };
@@ -108,26 +109,26 @@ $(function(){
 
             /*状态启用*/
             $btnStart.click(function(){
-                $('#layerAdd').attr('data-cid', v.cid);
-                $('#layerAdd').attr('data-status', v.status);
+                com.focusPage('#layerAdd').attr('data-cid', v.cid);
+                com.focusPage('#layerAdd').attr('data-status', v.status);
 
-                var id = $('#layerAdd').attr('data-cid');
-                var status = $('#layerAdd').attr('data-status');
+                var id = com.focusPage('#layerAdd').attr('data-cid');
+                var status = com.focusPage('#layerAdd').attr('data-status');
                 startStatus(id,status,function(){
-                    layer.msg('启用成功',{icon:1})
+                    layer.msg('启用成功',{icon:1});
                     doSearcher()
                 });
             });
             /*状态禁用*/
             $btnBan.click(function(){
-                $('#layerAdd').attr('data-cid', v.cid);
-                $('#layerAdd').attr('data-status', v.status);
+                com.focusPage('#layerAdd').attr('data-cid', v.cid);
+                com.focusPage('#layerAdd').attr('data-status', v.status);
 
-                var id = $('#layerAdd').attr('data-cid');
-                var status = $('#layerAdd').attr('data-status');
+                var id = com.focusPage('#layerAdd').attr('data-cid');
+                var status = com.focusPage('#layerAdd').attr('data-status');
 
                 stopStatus(id,status,function(){
-                    layer.msg('禁用成功',{icon:1})
+                    layer.msg('禁用成功',{icon:1});
                     doSearcher();
                 });
             });
@@ -139,7 +140,7 @@ $(function(){
 
         return {
             init : function(tableId,listData){
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
 
             },
@@ -199,7 +200,7 @@ $(function(){
         var $lineInfoWrap = $('<div></div>').addClass('line-wrap content col1');
         var $optWrap = $('<div></div>').addClass('line-wrap action');
         var _lineInfoSet = [
-            {cellClass : "name", hasInput : !0},//名称
+            {cellClass : "name", hasInput : !0}//名称
         ];
         var $btncheck = $('<a class="color-green green" style="font-size: 18px"><i class="icon-ok"></i></a>');
         var $btndel = $('<a class="color-red red" style="font-size: 18px"><i class=" icon-remove"></i></a>');
@@ -231,8 +232,8 @@ $(function(){
             };
 
             com.post(api.inventory.addColor,options,function(){
-                $('#list').empty();
-                addline(1).addClass('current').appendTo('#list');
+                com.focusPage('#list').empty();
+                addline(1).addClass('current').appendTo(com.focusPage('#list'));
                 com.post(api.inventory.queryColorByGid,{
                     "color.gid":goodsColorPopUp.attr('data-gid')
                 },function(data){
@@ -244,23 +245,23 @@ $(function(){
             })
 
 
-        })
+        });
 
         $btndel.click(function (e) {
 
-            $('#list').empty();
+            com.focusPage('#list').empty();
 
-            addline(1).addClass('current').appendTo('#list');
+            addline(1).addClass('current').appendTo(com.focusPage('#list'));
 
-        })
+        });
 
         return $line;
 
     }
-    addline(1).addClass('current').appendTo('#list');
+    addline(1).addClass('current').appendTo(com.focusPage('#list'));
 
-    $('.layui-layer-content').css('overflow','hidden');
-    $('#showColor').css('height','560px');
-    $('#addColor').css({'width':'96%','margin':'0 auto','margin-top':'15px'})
+    com.focusPage('.layui-layer-content').css('overflow','hidden');
+    com.focusPage('#showColor').css('height','560px');
+    com.focusPage('#addColor').css({'width':'96%','margin':'0 auto','margin-top':'15px'})
 
 });

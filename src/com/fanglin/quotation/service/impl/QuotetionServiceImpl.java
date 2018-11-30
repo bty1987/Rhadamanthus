@@ -208,14 +208,7 @@ public class QuotetionServiceImpl implements QuotetionService {
 			throw new FLException(200001, "报价已经达到数量上限");
 		}
 
-		quotetionPO.setName(copyQuotationPO.getQuotationName());
-		quotetionPO.setVersion(decorationDao.queryDecorationByOrderId(copyQuotationPO.getOrderId()).getVersion().getVersionId());
-		quotetionPO.setNo(UUIDUtil.getUuid().substring(0, 15));
-		quotetionPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-		quotetionPO.setCuid(userPO.getUid());
-		quotetionPO.setDiscount(10);
-		quotetionPO.setTotalPrice(0);
-		quotetionPO.setContent("");
+		quotetionPO.ptp(copyQuotationPO.getQuotationName(), decorationDao.queryDecorationByOrderId(copyQuotationPO.getOrderId()).getVersion().getVersionId(), userPO.getUid());
 
 		quotetionDao.save(quotetionPO);
 
@@ -234,11 +227,9 @@ public class QuotetionServiceImpl implements QuotetionService {
 		
 		QuotetionPO quotetionPO = new QuotetionPO();
 		
-		QuotetionPO copyQuotetionPO = new QuotetionPO();
+		QuotetionPO copyQuotetionPO = quotetionDao.queryQuotetionByNo(quotetionVO.getNo());
 		
-		copyQuotetionPO = quotetionDao.queryQuotetionByNo(quotetionVO.getNo());
-		
-		if(copyQuotetionPO.getVersion() == null){
+		if(copyQuotetionPO == null){
 			throw new FLException(200003, "报价不存在");
 		}
 		
@@ -247,15 +238,8 @@ public class QuotetionServiceImpl implements QuotetionService {
 		if(quotetionDao.countQuotetionByCuid(userPO.getUid()) >= (quotetionlimit == null ? 10 : Integer.parseInt(quotetionlimit.getValue()))){
 			throw new FLException(200001, "报价已经达到数量上限");
 		}
-
-		quotetionPO.setName(copyQuotetionPO.getName());
-		quotetionPO.setVersion(copyQuotetionPO.getVersion());
-		quotetionPO.setNo(UUIDUtil.getUuid().substring(0, 15));
-		quotetionPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-		quotetionPO.setCuid(userPO.getUid());
-		quotetionPO.setDiscount(10);
-		quotetionPO.setTotalPrice(0);
-		quotetionPO.setContent("");
+		
+		quotetionPO.ptp(copyQuotetionPO.getName(), copyQuotetionPO.getVersion(), userPO.getUid());
 
 		quotetionDao.save(quotetionPO);
 
@@ -281,7 +265,7 @@ public class QuotetionServiceImpl implements QuotetionService {
 		}
 		
 		BeanUtil.copyProperties(quotetionVO, quotetionPO, Arrays.asList("qid","cuid"));
-		
+
 		quotetionPO.setCuid(userPO.getUid());
 		quotetionPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		quotetionPO.setNo(UUIDUtil.getUuid().substring(0, 15));
@@ -330,17 +314,7 @@ public class QuotetionServiceImpl implements QuotetionService {
 					clazz.setQiid(quotationFunctionAreaItem.getQuotationItem().getQiId());
 				}
 				
-				clazz.setName(quotationFunctionAreaItem.getItemName());
-				clazz.setUnitPrice(quotationFunctionAreaItem.getUnitPrice());
-				clazz.setIndex(quotationFunctionAreaItem.getIndex());
-				clazz.setFormula(quotationFunctionAreaItem.getFormula());
-				clazz.setNum(quotationFunctionAreaItem.getNum());
-				clazz.setType(quotationFunctionAreaItem.getType());
-				clazz.setSubtype(quotationFunctionAreaItem.getSubtype());
-				clazz.setMeasurementUnit(quotationFunctionAreaItem.getMeasurementUnit());
-				clazz.setWorkType(quotationFunctionAreaItem.getWorkType());
-				clazz.setDiscount(quotationFunctionAreaItem.getDiscount());
-				clazz.setContent(quotationFunctionAreaItem.getContent());
+				clazz.ptp(quotationFunctionAreaItem);
 				
 				quotetionFunctionAreaItemDao.save(clazz);
 			}
@@ -457,7 +431,5 @@ public class QuotetionServiceImpl implements QuotetionService {
 			quotationVOs.add(_quotetionVO);
 		}
 	}
-
-	
 	
 }

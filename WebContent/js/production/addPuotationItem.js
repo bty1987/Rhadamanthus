@@ -13,7 +13,7 @@ jQuery(function () {
         puotationItem:{},
     };
     //报价项区 自动赋值
-    $('#left').find('#name').typeahead({
+    com.focusPage('#left').find('#name').typeahead({
         url: api.production.queryQuoteItemByPinyin,
         list: [],
         postData: {},
@@ -28,15 +28,15 @@ jQuery(function () {
             puotation.flag = true;
             this.options.list = data['quoteItems'];
             this.flprocess(this.options.list,'qiid', 'name');
-            $('.typeahead').css("left","33px");
+            com.focusPage('.typeahead').css("left","33px");
         },
         isResultTypeMap : true,
         flupdater: function(k,v){
             //k---qiid  v---name
-            $('#left').find('input').val("");
-            $('#left').find('select').empty();
+            com.focusPage('#left').find('input').val("");
+            com.focusPage('#left').find('select').empty();
         	var priceOption = {};
-            var $content = $('#left');
+            var $content = com.focusPage('#left');
             puotation.qiids = k;
             //查询报价项信息
             var list = this.options.list;
@@ -58,40 +58,40 @@ jQuery(function () {
         }
     });
     //点击添加按钮
-    $("#add").click(function () {
+    com.focusPage("#add").click(function () {
         com.clearValidator();
         if(!calctotal()){return false}
-        var _name=$('#left').find('#name').attr('data-name');
+        var _name=com.focusPage('#left').find('#name').attr('data-name');
         if(puotation.flag==true){
             var $liList = $('<li></li>').addClass('list-group-item');
             var $delete = $('<div></div>').addClass('pull-right action-button').append($('<a></a>').addClass('btn btn-minier btn-danger _delete').html('删除'));
             var $h4 = $('<h4></h4>').html(_name).attr('data-qutoName',_name);
             $h4.append($delete).appendTo($liList);
-            $liList.append(addSpan(' 类型：','s_brand',$('#brand').val()," ",'b_brand',puotation.quoteTypes)).
-                append(addSpan(' 单位：','s_unit',$('#measurementunit').val()," ",'b_unit',null)).
-                append(addSpan(' 规格：','s_format',$('#format1').val()," ",'b_format',null)).
-                append(addSpan(' 长度：','s_height',$('#height').val()," ",'b_height',null)).
-                append(addSpan(' 宽度：','s_width',$('#width').val()," ",'b_width',null)).
-                append(addSpan(' 厚度：','s_thick',$('#thick').val()," ",'b_thick',null)).
-                append(addSpan(' 面积：','s_area',$('#area').val()," ",'b_area',null)).
-                append(addSpan(' 售价：','s_unitprice',$('#unitprice').val(),'blue','b_unitprice',null)).
-                append(addSpan(' 数量：','s_number',$('#num').val(),'red','b_number')).
-                append(addSpan(' 总价：','s_total',$('#total').val(),'blue','b_total',null)).
-                append(addSpan(' 备注：','s_remark',$('#remark').val()," ",'b_remark',null)).
-                append(addSpan(' 特型：','s_specil',$('#specil').val()," ",'b_specil',null)).
-                append($('<span></span>').text($('#bid').val()).attr("id","invisiblePurchase"));
+            $liList.append(addSpan(' 类型：','s_brand',com.focusPage('#brand').val()," ",'b_brand',puotation.quoteTypes)).
+                append(addSpan(' 单位：','s_unit',com.focusPage('#measurementunit').val()," ",'b_unit',null)).
+                append(addSpan(' 规格：','s_format',com.focusPage('#format1').val()," ",'b_format',null)).
+                append(addSpan(' 长度：','s_height',com.focusPage('#height').val()," ",'b_height',null)).
+                append(addSpan(' 宽度：','s_width',com.focusPage('#width').val()," ",'b_width',null)).
+                append(addSpan(' 厚度：','s_thick',com.focusPage('#thick').val()," ",'b_thick',null)).
+                append(addSpan(' 面积：','s_area',com.focusPage('#area').val()," ",'b_area',null)).
+                append(addSpan(' 售价：','s_unitprice',com.focusPage('#unitprice').val(),'blue','b_unitprice',null)).
+                append(addSpan(' 数量：','s_number',com.focusPage('#num').val(),'red','b_number')).
+                append(addSpan(' 总价：','s_total',com.focusPage('#total').val(),'blue','b_total',null)).
+                append(addSpan(' 备注：','s_remark',com.focusPage('#remark').val()," ",'b_remark',null)).
+                append(addSpan(' 特型：','s_specil',com.focusPage('#specil').val()," ",'b_specil',null)).
+                append($('<span></span>').text(com.focusPage('#bid').val()).attr("id","invisiblePurchase"));
 
-                $('#puotationItemList').append($liList);
+            $('#puotationItemList').append($liList);
                 //给最后一个li标签加上底框,除了最后一个li 其他的li均无底框
                 //     $('.list-group-item').css("border-bottom","none");
                 //     $('.list-group-item:last').css("border-bottom","grey solid 1px");
                 //清空左侧
-                $('#left').find('input').val("");
-                $('#left').find('select').empty();
+            com.focusPage('#left').find('input').val("");
+            com.focusPage('#left').find('select').empty();
 
             $delete.click(function () {
-                var $this = $(this);
-                var $totals = $('#totals');
+                var $this = com.focusPage(this);
+                var $totals = com.focusPage('#totals');
 
                 var $liParent = $this.parent().parent();
 
@@ -105,12 +105,12 @@ jQuery(function () {
         }else if(puotation.flag == false){
             com.showAlert(com.warning,"商品信息不完善，请先完善商品信息");
         }
-        $('#totals').val(cycTotals());
+        com.focusPage('#totals').val(cycTotals());
     });
 
-    $('#refresh').click(function () {
-        $('#left').find('input').val("");
-        $('#left').find('select').empty();
+    com.focusPage('#refresh').click(function () {
+        com.focusPage('#left').find('input').val("");
+        com.focusPage('#left').find('select').empty();
     });
 
     function addSpan(sValue,sclass,bValue,color,attrs,addData) {
@@ -125,20 +125,19 @@ jQuery(function () {
             $b.addClass(color+" "+attrs).attr('addData',addData);
         }
         return $span.append($b);
-
     }
 
-    $('#unitprice,#num,#height,#width').on("change",function () {
+    com.focusPage('#unitprice,#num,#height,#width').on("change",function () {
         calctotal();
     });
 
     //计算报价项总价
     function calctotal(){
         com.clearValidator();
-        var $width = $('#left').find('#width').val();
-        var $height = $('#left').find('#height').val();
+        var $width = com.focusPage('#left').find('#width').val();
+        var $height = com.focusPage('#left').find('#height').val();
 
-        var $measurementunit = $('#left').find('#measurementunit').val();
+        var $measurementunit = com.focusPage('#left').find('#measurementunit').val();
         var $area = 1;
 
         if(com.validate("left","top")){return false}
@@ -152,7 +151,7 @@ jQuery(function () {
             //$('#left').find('#area').val($area)
         }
 
-        $('#total').val(utils.accMul(utils.accMul(parseFloat($('#unitprice').val()), parseFloat($('#num').val())),$area).toFixed(2));
+        com.focusPage('#total').val(utils.accMul(utils.accMul(parseFloat(com.focusPage('#unitprice').val()), parseFloat(com.focusPage('#num').val())),$area).toFixed(2));
 
         return true;
     }
@@ -161,7 +160,7 @@ jQuery(function () {
     function cycTotals() {
         var _total =0;
         var _num = params["total"];
-        var $li = $('.list-group-item');
+        var $li = com.focusPage('.list-group-item');
         $li.length && $li.each(function () {
             var $this = $(this);
             var $span = $this.find('.s_total');
@@ -176,20 +175,20 @@ jQuery(function () {
     //报价区
 
     //楼盘id
-    $("#orderAddr").val(params["address"]);
-    $("#discount").val(params["discount"]);
-    $("#brands").val(params["name"]);
-    $("#totals").val(params["total"]);
-    $("#comment").val(params["comment"]);
+    com.focusPage("#orderAddr").val(params["address"]);
+    com.focusPage("#discount").val(params["discount"]);
+    com.focusPage("#brands").val(params["name"]);
+    com.focusPage("#totals").val(params["total"]);
+    com.focusPage("#comment").val(params["comment"]);
     //提交
-        $('#submit').click(function () {
-           
+    com.focusPage('#submit').click(function () {
+
             if(submitCheck()==true){
 
-                $lis = $('.list-group-item');
+                $lis = com.focusPage('.list-group-item');
 
                 $.each($lis,function (i,v) {
-                    
+
                     var $v = $(v);
                     puotation.puotationItem["puotationItem.qid"] = params["qid"];
                     puotation.puotationItem["puotationItem.name"] = $v.find('h4').attr('data-qutoName');
@@ -209,7 +208,7 @@ jQuery(function () {
                         com.showAlert(null,"报价项添加成功");
                         }
                         //清空销售项
-                        $('.list-group-item').remove();
+                        com.focusPage('.list-group-item').remove();
                     },function (e) {
                         com.showAlert(com.error,"第"+(i+1)+"报价项添加失败");
                     });
@@ -220,12 +219,12 @@ jQuery(function () {
 //检查主材品牌
     function submitCheck() {
         var flag = true;
-        var $_brand = $('#brands');
+        var $_brand = com.focusPage('#brands');
         var _brand =$.trim($_brand.val());
         com.clearValidator();
 
         if(!com.validate("right",null)){
-            var $_lis = $('.list-group-item');
+            var $_lis = com.focusPage('.list-group-item');
             $.each($_lis,function (i,v) {
                 var $v = $(v);
                 if(_brand != $v.find('.s_brand').find('.b_brand').text()){
@@ -238,10 +237,10 @@ jQuery(function () {
         }else{
             flag = false;
         }
-        return flag;
+         return flag;
     }
 
-    $('#returnBtn').click(function () {
+    com.focusPage('#returnBtn').click(function () {
         com.switchPage(api.index.puotationIndex.url);
     });
 

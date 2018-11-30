@@ -45,6 +45,39 @@
                             </div>
                         </div>
 
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="handle">操作</label>
+                            <div class="col-sm-9">
+                                <select id="handle" class="col-xs-10 col-sm-5 v_required" data-toggle="popover"data-trigger='manual'>
+                                    <option value="">全部</option>
+                                    <option value="0">读</option>
+                                    <option value="1">写</option>
+                                </select>
+                                <span class='star'></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group" >
+                            <label class="col-sm-3 control-label no-padding-right" for="plugins" >配置</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="plugins" class="col-xs-10 col-sm-5 v_required v_zhengze"data-toggle="popover" data-trigger='manual' maxlength="64" placeholder="例:A,B,C"/>
+                                <span class='star'></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="color:red">
+                            <label  class="col-sm-3 control-label no-padding-right">配置选项:</label>
+                        </div>
+
+                        <div class="form-group" style="color:red">
+                            <label  class="col-sm-4 control-label no-padding-right">A:时间区间</label>
+                            <label  class="col-sm-2 control-label no-padding-right">B:月份区间</label>
+                        </div>
+                        <div class="form-group" style="color:red">
+                            <label  class="col-sm-4 control-label no-padding-right">C:上传附件</label>
+                            <label  class="col-sm-2 control-label " style="float: left">D:参数&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                        </div>
+
                     </form>
                 </div>
                 <div class="modal-footer">

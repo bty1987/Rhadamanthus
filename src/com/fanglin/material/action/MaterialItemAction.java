@@ -42,6 +42,8 @@ public class MaterialItemAction extends BaseListAction{
 	
 	private List<MaterialItemVO> materialItems;
 	
+	private Float num;
+	
 	private List<Long> miids;
 	
 	private long mid;
@@ -82,6 +84,14 @@ public class MaterialItemAction extends BaseListAction{
 	public String queryMaterialItemForNameByNo(){
 		
 		materialItems = materialItemService.queryMaterialItemForNameByNo(materialItem);
+		
+		return SUCCESS;
+	}
+	
+	@Action(value="queryMaterialItemByTotal", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String queryMaterialItemByTotal() throws FLException{
+		
+		num = materialItemService.queryMaterialItemByTotal(materialItem);
 		
 		return SUCCESS;
 	}
@@ -173,5 +183,15 @@ public class MaterialItemAction extends BaseListAction{
 	public void setMid(long mid) {
 		this.mid = mid;
 	}
+
+	public Float getNum() {
+		return num;
+	}
+
+	public void setNum(Float num) {
+		this.num = num;
+	}
+	
+	
 
 }

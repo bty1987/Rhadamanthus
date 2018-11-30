@@ -62,8 +62,23 @@
     {"key":"0","value":"现金"}
   ],
   "banks":[
-    {"key":"1","value":"POS1"},
-    {"key":"2","value":"POS2 "}
+    {"key":"1","value":"POS10979726"},
+    {"key":"2","value":"POS10979727"},
+    {"key":"3","value":"POS10979728"},
+    {"key":"4","value":"POS10979729"},
+    {"key":"5","value":"POS10979730"},
+    {"key":"6","value":"POS10979731"},
+    {"key":"7","value":"POS10979732"},
+    {"key":"8","value":"POS10979733"},
+    {"key":"9","value":"POS10979734"},
+    {"key":"10","value":"POS10979735"},
+    {"key":"11","value":"POS10979736"},
+    {"key":"12","value":"POS10979737"},
+    {"key":"13","value":"POS10979738"},
+    {"key":"14","value":"POS10979739"},
+    {"key":"15","value":"POS10979740"},
+    {"key":"16","value":"内部转账"},
+    {"key":"17","value":"POS10979725"}
   ],
   "couponType": [
     {"key":"物业费抵值券","value":"物业费抵值券"},
@@ -77,7 +92,7 @@
     {"key":"物品","value":"物品"}
   ],
   "authorizedPerson":[
-    "FL-07033","FL-06474"
+    "FL-00479", "manager9961", "FL-00179"
   ],
   "planStatus" :[
     {"key":"0","value":"初始"},

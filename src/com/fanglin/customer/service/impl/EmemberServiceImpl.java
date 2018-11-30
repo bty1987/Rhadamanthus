@@ -32,13 +32,17 @@ public class EmemberServiceImpl implements EmemberService{
 		
 		List<EmemberVO> ememberVOs = new ArrayList<EmemberVO>();
 		
-		for (EmemberPO ememberPO : ememberPOs) {
+		if(ememberPOs.size() != 0 && ememberPOs != null){
 			
-			EmemberVO ememberVO = new EmemberVO();
-			
-			BeanUtil.copyPropertie(ememberPO, ememberVO);
-			
-			ememberVOs.add(ememberVO);
+			for (EmemberPO ememberPO : ememberPOs) {
+				
+				EmemberVO ememberVO = new EmemberVO();
+				
+				BeanUtil.copyPropertie(ememberPO, ememberVO);
+				
+				ememberVOs.add(ememberVO);
+				
+			}
 			
 		}
 		
@@ -68,16 +72,22 @@ public class EmemberServiceImpl implements EmemberService{
 		
 		try {
 	        if(!verifyCode.equals(AESHelper.decryptString(securityCode, SystemConfig.getString("encryptKey")))){
-	          throw new FLException(910131,"验证失败,重新验证");
+	          throw new FLException(330012,"验证失败,重新验证");
 	      }
 	    } catch (Exception e) {
-	      throw new FLException(910131,"验证失败,重新验证");
+	      throw new FLException(330012,"验证失败,重新验证");
 	    }
 		
 		EmemberPO ememberPO = ememberDao.queryEmenber(ememberVO.getUnionId());
 		
 		if(ememberPO != null){
-			throw new FLException(111111, "电子会员已存在");
+			throw new FLException(330013, "电子会员已存在");
+		}
+		
+		ememberPO = ememberDao.queryEmemberByNo(ememberVO.getNo());
+		
+		if(ememberPO != null){
+			throw new FLException(330013, "电子会员已存在");
 		}
 		
 		ememberPO = new EmemberPO();
@@ -87,6 +97,8 @@ public class EmemberServiceImpl implements EmemberService{
 		ememberPO.setStatus(EmemberPO.STATUS_INIT_SHORT);
 		
 		ememberDao.save(ememberPO);
+		
+		BeanUtil.copyPropertie(ememberPO, ememberVO);
 		
 		return 0;
 	}

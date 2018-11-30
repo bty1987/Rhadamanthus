@@ -12,7 +12,7 @@ $(function(){
 
         /*表格样式*/
         var renderList = function(tableId,listData){
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
 
             if(listData && listData.length){
 
@@ -99,11 +99,11 @@ $(function(){
             /*状态启用*/
             $btnStart.click(function(shId,status){
 
-                $('#layerAdd').attr('data-shId', v.shId);
-                $('#layerAdd').attr('data-status', v.status);
+                com.focusPage('#layerAdd').attr('data-shId', v.shId);
+                com.focusPage('#layerAdd').attr('data-status', v.status);
 
-                var id = $('#layerAdd').attr('data-shId');
-                var status = $('#layerAdd').attr('data-status');
+                var id = com.focusPage('#layerAdd').attr('data-shId');
+                var status = com.focusPage('#layerAdd').attr('data-status');
                 startStatus(id,status,function(){
                     layer.closeAll();
                     layer.msg('启用成功',{icon:1});
@@ -111,11 +111,11 @@ $(function(){
             });
             /*状态禁用*/
             $btnBan.click(function(){
-                $('#layerAdd').attr('data-shId', v.shId);
-                $('#layerAdd').attr('data-status', v.status);
+                com.focusPage('#layerAdd').attr('data-shId', v.shId);
+                com.focusPage('#layerAdd').attr('data-status', v.status);
 
-                var id = $('#layerAdd').attr('data-shId');
-                var status = $('#layerAdd').attr('data-status');
+                var id = com.focusPage('#layerAdd').attr('data-shId');
+                var status = com.focusPage('#layerAdd').attr('data-status');
 
                 stopStatus(id,status,function(){
                     layer.closeAll();
@@ -130,7 +130,7 @@ $(function(){
 
         return {
             init : function(tableId,listData){
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
 
             },
@@ -177,18 +177,18 @@ $(function(){
 
 
     function clearForm(formId){
-        var $form = $("#"+formId);
-        var error = $('.alert-error', $form);
-        var success = $('.alert-success', $form);
-        $('.control-group').removeClass("success").removeClass("error");
-        $(".ok").remove();
-        $(".help-inline").remove();
+        var $form = com.focusPage("#"+formId);
+        var error = com.focusPage('.alert-error', $form);
+        var success = com.focusPage('.alert-success', $form);
+        com.focusPage('.control-group').removeClass("success").removeClass("error");
+        com.focusPage(".ok").remove();
+        com.focusPage(".help-inline").remove();
         success.hide();
         error.hide();
         $("span.checked",$form).removeClass("checked");
         $("tr.edit-on").removeClass("edit-on");
         $form.removeClass("edit-item");
-        $(".extra-wrap .control-group:not(.hide)").remove();//去掉辅助项
+        com.focusPage(".extra-wrap .control-group:not(.hide)").remove();//去掉辅助项
         $('input[type="hidden"]',$form).val('');
         document.getElementById(formId).reset();
     }
@@ -199,7 +199,7 @@ $(function(){
             type: 1,
             //skin: 'layui-layer-lan',
             title:"添加",
-            content: $('#layerAdd'),
+            content: com.focusPage('#layerAdd'),
             area: ( $(window).width()*0.6 < 620 ?  $(window).height()*0.6 : 620 )+"px",
             maxmin: false,
             zIndex:9000,
@@ -217,33 +217,6 @@ $(function(){
             }
         });
     }
-
-
-    /*登录表单校验*/
-    //var submitValidate = function(){
-    //    $("#form1 .alert-error").hide();
-    //
-    //    var validator = com.validate("form1",{
-    //        //一些校验规则
-    //        messages: {
-    //            code: {
-    //                required: "请输入编号."
-    //            },
-    //            name: {
-    //                required: "请输入仓库名."
-    //            }
-    //        },
-    //        success: function (label) {
-    //            label.closest('.control-group').removeClass('error');
-    //            label.remove();
-    //        },
-    //        errorPlacement: function (error, element) {
-    //            error.addClass('help-small no-left-padding').insertAfter(element);
-    //        }
-    //    });
-    //    return validator;
-    //};
-
 
     /*状态信息验证*/
     function startStatus(id,status,callback){
@@ -281,7 +254,7 @@ $(function(){
 
     /*添加仓库信息*/
     function saveData(id,callback){
-        var $layer = $('#layerAdd');
+        var $layer = com.focusPage('#layerAdd');
         var code = $layer.find('input[name="code"]').val();
         var name = $layer.find('input[name="name"]').val();
         if(!id){

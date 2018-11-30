@@ -76,7 +76,7 @@ public class AuditDaoImpl extends DaoImpl<AuditPO> implements AuditDao{
 					}else if("designerDepartmentId".equals(field)){
 						query.alias("decoration.designer", "designer");
 						query.alias("designer.dept", "designerDept");
-						query.add(query.getCriterion("designerDept.deptId", data, op));
+						query.add(query.getCriterion("designerDept.no", data, op));
 					}else if("createTimeDateRange".equals(field)){
 						String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
 						String eTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";

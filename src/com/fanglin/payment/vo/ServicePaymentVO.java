@@ -6,61 +6,61 @@ import org.apache.struts2.json.annotations.JSON;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.personel.vo.UserBaseVO;
 
-public class ServicePaymentVO   implements Serializable{
+public class ServicePaymentVO implements Serializable {
 
 	private static final long serialVersionUID = -2013773082913342258L;
 
 	private Long spid;
-	
+
 	private ServiceReceiptVO serviceReceipt;
-	
+
 	private DecorationVO decoration;
-	
+
 	private Integer pid;
-	
-	private Short type; 
-	
+
+	private Short type;
+
 	private Short status;
-	
+
 	private UserBaseVO creater;
-	
+
 	private UserBaseVO collecter;
-	
+
 	private UserBaseVO confirmer;
-	
-	private String createrName;           
-	
-	private String collecterName;         
-	
-	private String confirmerName;         
-	
+
+	private String createrName;
+
+	private String collecterName;
+
+	private String confirmerName;
+
 	private Timestamp createTime;
-	
+
 	private Timestamp collcetTime;
-	
+
 	private Timestamp confirmTime;
-	
+
 	private Float serviceMoney;
-	
+
 	private Float advanceMoney;
-	
+
 	private Float referMoney;
-	
+
 	private String comment;
-	
+
 	private Integer company;
-	
+
 	public ServicePaymentVO() {
 		super();
 	}
-	
-	public ServicePaymentVO(UserBaseVO creater,DecorationVO decoration) {
+
+	public ServicePaymentVO(UserBaseVO creater, DecorationVO decoration) {
 		super();
 		this.creater = creater;
 		this.decoration = decoration;
 	}
-	
-	public ServicePaymentVO(UserBaseVO creater,UserBaseVO collecter,UserBaseVO confirmer,DecorationVO decoration,ServiceReceiptVO serviceReceipt) {
+
+	public ServicePaymentVO(UserBaseVO creater, UserBaseVO collecter, UserBaseVO confirmer, DecorationVO decoration, ServiceReceiptVO serviceReceipt) {
 		super();
 		this.creater = creater;
 		this.collecter = collecter;
@@ -68,7 +68,7 @@ public class ServicePaymentVO   implements Serializable{
 		this.decoration = decoration;
 		this.serviceReceipt = serviceReceipt;
 	}
-	
+
 	public Long getSpid() {
 		return spid;
 	}
@@ -84,7 +84,7 @@ public class ServicePaymentVO   implements Serializable{
 	public void setDecoration(DecorationVO decoration) {
 		this.decoration = decoration;
 	}
-	
+
 	public Short getType() {
 		return type;
 	}
@@ -166,7 +166,7 @@ public class ServicePaymentVO   implements Serializable{
 		this.createTime = createTime;
 	}
 
-	@JSON(format="yyyy-MM-dd HH:mm:ss")
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getCollcetTime() {
 		return collcetTime;
 	}
@@ -175,7 +175,7 @@ public class ServicePaymentVO   implements Serializable{
 		this.collcetTime = collcetTime;
 	}
 
-	@JSON(format="yyyy-MM-dd HH:mm:ss")
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getConfirmTime() {
 		return confirmTime;
 	}
@@ -207,7 +207,7 @@ public class ServicePaymentVO   implements Serializable{
 	public void setReferMoney(Float referMoney) {
 		this.referMoney = referMoney;
 	}
-	
+
 	public ServiceReceiptVO getServiceReceipt() {
 		return serviceReceipt;
 	}
@@ -231,5 +231,5 @@ public class ServicePaymentVO   implements Serializable{
 	public void setCompany(Integer company) {
 		this.company = company;
 	}
-	
+
 }

@@ -36,6 +36,8 @@ import com.fanglin.communion.po.ServiceNodePO;
 import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.communion.vo.DutyVO;
+import com.fanglin.communion.vo.HouseVO;
+import com.fanglin.communion.vo.VillageVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.security.AESHelper;
 import com.fanglin.core.vo.Authentication;
@@ -312,6 +314,7 @@ public class DecorationServiceImpl implements DecorationService {
 	
 	@Override
 	public void pageDecorationForSalesman(Paging paging, List<Filter> filters,  Authentication authentication){
+		if(filters.size() == 0) return;
 		
 		String userId = authentication.getUserId();
 		int company = authentication.getCompany();
@@ -320,33 +323,55 @@ public class DecorationServiceImpl implements DecorationService {
 		
 		if(userPO == null) return;
 		
-		filters.add(new Filter("salesmanId", userPO.getUserId(), "eq"));
+		List<Integer> designDepartmentIds = null;
+		List<Short> statuses = null;
 		
-		List<DecorationPO> decorationPOs = decorationDao.pageDecorationForSalesman(paging, filters, company);
+		List<DecorationDesignDepartmentRightPO> decorationDesignDepartmentRightPOs = decorationDesignDepartmentRightDao.queryDecorationDesignDepartmentRightByUId(userPO.getUid(),company);
+		
+		designDepartmentIds = new ArrayList<Integer>();
+		
+		for(DecorationDesignDepartmentRightPO decorationDesignDepartmentRightPO: decorationDesignDepartmentRightPOs){
+			designDepartmentIds.add(decorationDesignDepartmentRightPO.getDid());
+		}
+		
+		List<DecorationStatusRightPO> decorationStatusRightPOs = decorationStatusRightDao.queryDecorationStatusRightByUId(userPO.getUid(),company);
+		
+		statuses = new ArrayList<Short>();
+		
+		for(DecorationStatusRightPO decorationStatusRightPO: decorationStatusRightPOs){
+			statuses.add(decorationStatusRightPO.getStatus());
+		}
+		
+		if(statuses.size() == 0 || designDepartmentIds.size() == 0){
+			return;
+		}
+		
+		if(designDepartmentIds.size() == 1 && designDepartmentIds.get(0) == DecorationDesignDepartmentRightPO.DEPARTMENT_ALL_ENABLE_INT){
+			designDepartmentIds = null;
+		}
+		
+		if(statuses.size() == 1 && DecorationStatusRightPO.STATUS_ALL_ENABLE_INT == statuses.get(0)){
+			statuses = null;
+		}
+		
+		List<DecorationPO> decorationPOs = decorationDao.pageDecoration(paging, filters, designDepartmentIds, statuses, company);
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
 		
 		for(DecorationPO decorationPO: decorationPOs){
 			DecorationVO decorationVO = new DecorationVO();
 			
-			decorationVO.setSupervisor(new UserBaseVO());			
 			decorationPO.ptvcascade(decorationVO);
 			
-			if(decorationVO.getOrderTotalPrice() == null){
-				decorationVO.setOrderTotalPrice(new Float(0));
-			}
-			
-			if(decorationPO.getOrderTotalPrice() != 0){
-				decorationVO.setOrderTotalPrice(decorationPO.getOrderTotalPrice());
-			}else{
-				decorationVO.setOrderTotalPrice(0f);
-			}
-			
+			decorationVO.setOrderTotalPrice(decorationPO.getOrderTotalPrice());
 			decorationVO.setDiscount(decorationPO.getDiscount());
+			
+			addition(decorationPO.getAddition(), decorationVO);
 			
 			decorationVOs.add(decorationVO);
 		}
-	
+		
 		paging.setData(decorationVOs);
+	
 	}
 
 	@Override
@@ -532,8 +557,7 @@ public class DecorationServiceImpl implements DecorationService {
 			statuses = null;
 		}
 		
-		
-		List<DecorationPO> decorationPOs = decorationDao.pageDecorationForSalesmanManager(paging, filters, salesmanDepartmentIds, statuses, company);
+		List<DecorationPO> decorationPOs = decorationDao.pageDecorationForSalesmanManager(paging, filters, salesmanDepartmentIds, statuses);
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
 		
 		for(DecorationPO decorationPO: decorationPOs){
@@ -552,6 +576,64 @@ public class DecorationServiceImpl implements DecorationService {
 		paging.setData(decorationVOs);
 	}
 	
+	@Override
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public void pageDecoration(Paging paging, List<Filter> filters, Authentication authentication,List<Short> status) {
+		
+		if(filters.size() == 0) return;
+		
+		String userId = authentication.getUserId();
+
+		UserPO userPO = userDao.queryUserByUserId(userId);
+		
+		if(userPO == null) return;
+		
+		List statuses = new ArrayList();
+		
+		for (Short statuss : status) {
+			statuses.add(statuss);
+		}
+		filters.add(new Filter("statuses",statuses,"in"));
+		
+		List<DecorationPO> decorationPOs = decorationDao.pageAllDecoration(paging, filters);
+		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
+		
+		for(DecorationPO decorationPO: decorationPOs){
+			DecorationVO decorationVO = new DecorationVO();
+			decorationVO.setOrderId(decorationPO.getOrderId());
+			decorationVO.setStatus(decorationPO.getStatus());
+			
+			HousePO housePO = houseDao.get(decorationPO.getHouse().getHid());
+			HouseVO houseVO = new HouseVO();
+			VillageVO villageVO = new VillageVO();
+			villageVO.setName(housePO.getVillage().getName());
+			houseVO.setBuildArea(housePO.getBuildArea());
+			houseVO.setVillage(villageVO);
+			decorationVO.setHouse(houseVO);
+			
+			UserPO DuserPO = userDao.get(decorationPO.getDesigner().getUid());	
+			UserBaseVO duserBaseVO = new UserBaseVO();
+			DepartmentVO ddepartmentVO = new DepartmentVO();
+			ddepartmentVO.setName(DuserPO.getDept().getName());
+			duserBaseVO.setDept(ddepartmentVO);
+			duserBaseVO.setCurrentName(decorationPO.getDesigner().getUserName());
+			decorationVO.setDesigner(duserBaseVO);
+			
+			UserPO suserPO = userDao.get(decorationPO.getSalesman().getUid());	
+			UserBaseVO suserBaseVO = new UserBaseVO();
+			DepartmentVO sdepartmentVO = new DepartmentVO();
+			sdepartmentVO.setName(suserPO.getDept().getName());
+			suserBaseVO.setDept(sdepartmentVO);
+			suserBaseVO.setCurrentName(decorationPO.getSalesman().getUserName());
+			decorationVO.setSalesman(suserBaseVO);
+			
+			decorationVOs.add(decorationVO);
+		}
+		
+		paging.setData(decorationVOs);
+		
+	}
+
 	@Override
 	public DecorationVO queryDecorationById(String decorationOrderId) throws FLException{
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationOrderId);
@@ -596,7 +678,7 @@ public class DecorationServiceImpl implements DecorationService {
 			
 			UserPO userPO = userDao.queryUserByUserId(userId);
 			
-			if(userPO != null && !userPO.getDept().getDeptName().contains("客服")){
+			if(userPO != null && !userPO.getDept().getName().contains("客服")){
 				decorationVO.getCustomer().setConfidentialInfo();
 			}
 		}
@@ -673,8 +755,8 @@ public class DecorationServiceImpl implements DecorationService {
 			
 			BeanUtil.copyPropertie(decorationPO.getDesigner(), decorationVO.getDesigner(), Arrays.asList("duty","dept"));
 			BeanUtil.copyPropertie(decorationPO.getDesigner().getDuty(), decorationVO.getDesigner().getDuty(), Arrays.asList("departmentType"));
-			BeanUtil.copyPropertie(decorationPO.getDesigner().getDept(), decorationVO.getDesigner().getDept(), Arrays.asList("type","fatherDept","cityProper"));
-			BeanUtil.copyPropertie(decorationPO.getDesigner().getDept().getFatherDept(), decorationVO.getDesigner().getDept().getFatherDept(), Arrays.asList("type","fatherDept","cityProper"));		
+			BeanUtil.copyPropertie(decorationPO.getDesigner().getDept(), decorationVO.getDesigner().getDept(), Arrays.asList("type", "fatherDept", "manager"));
+			BeanUtil.copyPropertie(decorationPO.getDesigner().getDept().getFatherDept(), decorationVO.getDesigner().getDept().getFatherDept(), Arrays.asList("type", "fatherDept", "manager"));		
 			
 			decorationVO.setSalesman(new UserBaseVO());
 			decorationVO.getSalesman().setDuty(new DutyVO());
@@ -683,8 +765,8 @@ public class DecorationServiceImpl implements DecorationService {
 			
 			BeanUtil.copyPropertie(decorationPO.getSalesman(), decorationVO.getSalesman(), Arrays.asList("duty","dept"));
 			BeanUtil.copyPropertie(decorationPO.getSalesman().getDuty(), decorationVO.getSalesman().getDuty(), Arrays.asList("departmentType"));
-			BeanUtil.copyPropertie(decorationPO.getSalesman().getDept(), decorationVO.getSalesman().getDept(), Arrays.asList("type","fatherDept","cityProper"));
-			BeanUtil.copyPropertie(decorationPO.getSalesman().getDept().getFatherDept(), decorationVO.getSalesman().getDept().getFatherDept(), Arrays.asList("type","fatherDept","cityProper"));
+			BeanUtil.copyPropertie(decorationPO.getSalesman().getDept(), decorationVO.getSalesman().getDept(), Arrays.asList("type", "fatherDept", "manager"));
+			BeanUtil.copyPropertie(decorationPO.getSalesman().getDept().getFatherDept(), decorationVO.getSalesman().getDept().getFatherDept(), Arrays.asList("type", "fatherDept", "manager"));
 
 			
 			decorationVOs.add(decorationVO);
@@ -1091,8 +1173,8 @@ public class DecorationServiceImpl implements DecorationService {
 		DecorationAdditionPO additionInfo = new DecorationAdditionPO();
 		additionInfo.setOrderId(decorationPO.getOrderId());
 		
-		additionInfo.setDesign(decorationPO.getDesigner().getCurrentName(), decorationPO.getDesigner().getDept().getDeptName(), decorationPO.getDesigner().getDept().getDeptName());
-		additionInfo.setSales(decorationPO.getSalesman().getCurrentName(), decorationPO.getSalesman().getDept().getDeptName(), decorationPO.getSalesman().getDept().getFatherDept().getDeptName());
+		additionInfo.setDesign(decorationPO.getDesigner().getCurrentName(), decorationPO.getDesigner().getDept().getName(), decorationPO.getDesigner().getDept().getName());
+		additionInfo.setSales(decorationPO.getSalesman().getCurrentName(), decorationPO.getSalesman().getDept().getName(), decorationPO.getSalesman().getDept().getFatherDept().getName());
 		
 		decorationAdditionDao.save(additionInfo);
 		
@@ -1256,11 +1338,11 @@ public class DecorationServiceImpl implements DecorationService {
 		String designerId = userPO.getUserId();
 		String designerName = userPO.getUserName();
 		
-		String departmentId = departmentPO.getDeptId();
-		String departmentName = departmentPO.getDeptName();
+		String departmentId = departmentPO.getNo();
+		String departmentName = departmentPO.getName();
 		
-		String regionId = regionPO.getDeptId();
-		String regionName = regionPO.getDeptName();
+		String regionId = regionPO.getNo();
+		String regionName = regionPO.getName();
 		
 		String currentTimeStr = DateUtil.current("yyyy-MM-dd");
 		
@@ -1321,13 +1403,13 @@ public class DecorationServiceImpl implements DecorationService {
 		if(addition == null){
 			decorationVO.getDesigner().setCurrentName("");
 			decorationVO.getSalesman().setCurrentName("");
-			decorationVO.getDesigner().getDept().setDeptName("");
-			decorationVO.getSalesman().getDept().setDeptName("");
+			decorationVO.getDesigner().getDept().setName("");
+			decorationVO.getSalesman().getDept().setName("");
 		}else{
 			decorationVO.getDesigner().setCurrentName(addition.getDesigner());
 			decorationVO.getSalesman().setCurrentName(addition.getSalesman());
-			decorationVO.getDesigner().getDept().setDeptName(addition.getDesignDepartment());
-			decorationVO.getSalesman().getDept().setDeptName(addition.getSalesDepartment());
+			decorationVO.getDesigner().getDept().setName(addition.getDesignDepartment());
+			decorationVO.getSalesman().getDept().setName(addition.getSalesDepartment());
 		}
 	}
 

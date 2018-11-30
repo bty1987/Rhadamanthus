@@ -27,9 +27,11 @@ public class UpgradeDaoImpl extends DaoImpl<UpgradePO> implements UpgradeDao {
 		PagingQuery<UpgradePO> query = pagingQuery(paging, UpgradePO.class);
 
 		queryFilterExcute(query, filters);
-
+		
+		query.desc("ugid");
+		
 		return query.list();
-
+			
 	}
 
 	@Override

@@ -5,20 +5,20 @@
     </div>
 
     <div class="row clearfix">
-        <div class="col-xs-12 pricing-span-body">
+        <div class="col-xs-12 pricing-span-body" id="home">
             <div class="tabbable">
                 <ul class="nav nav-tabs padding-12" id="homeNav">
-                    <li class="active" id="homeTab">
-                        <a data-toggle="tab" href="#homePage">首页</a>
+                    <li class="flpage nav-tab active" id="homeTab">
+                        <a data-toggle="tab" href="#homePage" id="tab_homePage">首页</a>
                     </li>
 
-                    <li class="" id="calendarTab">
+                    <li class="flpage nav-tab" id="calendarTab">
                         <a data-toggle="tab" href="#calendarPage">日历</a>
                     </li>
                 </ul>
 
-                <div class="tab-content no-border">
-                    <div id="homePage" class="tab-pane in active">
+                <div class="flpage tab-content no-border">
+                    <div id="homePage" class="flpage tab-pane in active">
 
                         <div class='col-sm-6 declare'>
                             <div class="widget-box transparent col-xs-12">
@@ -28,7 +28,7 @@
                                         最近通知
                                     </h4>
                                     <div class="widget-toolbar action-buttons">
-                                        <a href="javascript:void(0);" onclick="loadNotices();" data-action="reload" data-rel="tooltip" data-original-title="更新">
+                                        <a href="javascript:void(0);" name="updateNotices" data-action="reload" data-rel="tooltip" data-original-title="更新">
                                             <i class="icon-refresh"></i>
                                         </a>&nbsp;
                                         <a href='#' id='moreNotice' class="moreLink">更多</a>
@@ -43,7 +43,7 @@
                             </div>
                         </div>
 
-                        <div class="col-sm-6" style="border-left: 1px solid #e5e8ea;">
+                        <div class="col-sm-6 declare" style="border-left: 1px solid #e5e8ea;">
 
                             <div class="widget-box transparent col-xs-12">
                                 <div class="widget-header widget-header-flat">
@@ -52,7 +52,7 @@
                                         最近活动
                                     </h4>
                                     <div class="widget-toolbar action-buttons" >
-                                        <a href="javascript:void(0);" onclick="loadActivities();" data-action="reload" data-rel="tooltip" data-original-title="更新">
+                                        <a href="javascript:void(0);" name="updateActivities" data-action="reload" data-rel="tooltip" data-original-title="更新">
                                             <i class="icon-refresh"></i>
                                         </a>&nbsp;
                                         <a href='#' id='moreActivity' class="moreLink">更多</a>
@@ -71,7 +71,7 @@
                         <div class="col-sm-12" id="customize"></div>
                     </div>
 
-                    <div id="calendarPage" class="tab-pane in active">
+                    <div id="calendarPage" class="flpage tab-pane in active">
                         <div class="row">
                             <div id="calendar"></div>
                         </div>
@@ -129,7 +129,6 @@
         </div>
     </div>
 </div>
-
 <script>
     $(function(){
         $.loadScript(['js/home-antv.js']);

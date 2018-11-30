@@ -1,5 +1,5 @@
 jQuery(function ($) {
-    $('#AARPopUp').css({
+    com.focusPage('#AARPopUp').css({
         'margin': '0 auto',
         'margin-top': '3%',
         'width': '97%',
@@ -7,22 +7,21 @@ jQuery(function ($) {
         'overflow': 'hidden',
         'overflow-y': 'scroll'
     });
-    $('#AARPopUp').parent().css({
+    com.focusPage('#AARPopUp').parent().css({
         'overflow':'hidden'
-    })
+    });
 
     var manifest = {
-        mid: $('#AARPopUp').attr('data-mid'),
-        status: $('#AARPopUp').attr('data-status'),
+        mid: com.focusPage('#AARPopUp').attr('data-mid'),
+        status: com.focusPage('#AARPopUp').attr('data-status'),
         mtype: 2,
-        saveBtn: $("#saveBtn"),
-        cancellBtn: $("#cancelBtn"),
+        saveBtn: com.focusPage("#saveBtn"),
+        cancellBtn: com.focusPage("#cancelBtn"),
         manifestItems: {
-            customerName: $("#customer"),
-            des: $("#comment"),
+            customerName: com.focusPage("#customer"),
+            des: com.focusPage("#comment"),
         },
-        record: {},
-
+        record: {}
     };
 
     var $btnConfirm = $('<a></a>').addClass('btn btn-success btn-sm').attr({
@@ -35,7 +34,7 @@ jQuery(function ($) {
         'href': 'javascript:void(0);'
     }).css({'margin-left': '8px', 'margin-top': '12px'}).text('取消');
 
-    var $condList1 = $('#AARPopUp').parents('.layui-layer.layui-anim.layui-layer-page.layui-layer-lan');
+    var $condList1 = com.focusPage('#AARPopUp').parents('.layui-layer.layui-anim.layui-layer-page.layui-layer-lan');
 
     var $div = $('<div class="layui-layer-btn0" style="position: relative;top:-10%;left:73%;"></div>');
 
@@ -43,7 +42,7 @@ jQuery(function ($) {
 
     $btnConfirm.click(function () {
         var _params = {};
-        var $menus = $('input[type="checkbox"]:checked', '#list');
+        var $menus = com.focusPage('input[type="checkbox"]:checked', '#list');
         var $miid = [];
 
         if (!$menus.length) {
@@ -66,7 +65,7 @@ jQuery(function ($) {
         var mid = manifest.mid;
         var status = manifest.status;
         var type = manifest.mtype;//– 类型
-        var comment = $('#comment').val();//– 备注
+        var comment = com.focusPage('#comment').val();//– 备注
 
         var options = {
             "manifest.mid": mid,
@@ -80,7 +79,7 @@ jQuery(function ($) {
             com.post(api.inventory.addManifestForCR, options, function (data) {
                 layer.closeAll();
                 layer.msg('保存成功!', {icon: 1});
-                $('#list').empty();
+                com.focusPage('#list').empty();
             }, function (e) {
                 com.showAlert(com.error, e.errorMsg);
             });
@@ -115,7 +114,7 @@ jQuery(function ($) {
 
         var _span = $('<span></span>').addClass('lbl grey bigger-150').css('font-weight','bold');
 
-        _label.append($input).append(_span).appendTo($label)
+        _label.append($input).append(_span).appendTo($label);
 
 
         var $indexWrap = $('<div></div>').addClass('line-wrap order').append($('<div></div>').addClass('cell index').html($label).attr({
@@ -139,7 +138,7 @@ jQuery(function ($) {
             {cellClass: "number blue"},//数量
             {cellClass: "pieceNum blue"},//件数
             {cellClass: "aarNum", hasInput: !0},
-            {cellClass: "des grey"},//备注
+            {cellClass: "des grey"}//备注
         ];
 
         $.each(_lineInfoSet, function (i, v) {
@@ -160,25 +159,25 @@ jQuery(function ($) {
     }
 
     function accessoriesAdd() {
-        var index = $('.line', '#list').length;
+        var index = com.focusPage('.line', '#list').length;
         com.post(api.inventory.queryManifestItemByMid, {
             "manifest.mid": manifest.mid
         }, function (res) {
             for (var i = 0; i < res.manifestItems.length; i++) {
-                index = $('.line', '#list').length;
+                index = com.focusPage('.line', '#list').length;
                 autoAddline(index, res.manifestItems);
             }
 
             function autoAddline(index, data) {
-                index = $('.line', '#list').length;
-                addline(1 + index, data).appendTo('#list');
-                var $lineInfoWrap1 = $('#list li:nth-of-type(' + (index + 1) + ') div.content');
-                $('#list li:nth-of-type(' + (index + 1) + ')').attr({
+                index = com.focusPage('.line', '#list').length;
+                addline(1 + index, data).appendTo(com.focusPage('#list'));
+                var $lineInfoWrap1 = com.focusPage('#list li:nth-of-type(' + (index + 1) + ') div.content');
+                com.focusPage('#list li:nth-of-type(' + (index + 1) + ')').attr({
                     'data-gid': res.manifestItems[i].goods.gid,
                     'data-miid': res.manifestItems[i].miId,
                     'data-cid': res.manifestItems[i].color.cid,
                     'data-fid': res.manifestItems[i].format.fid,
-                    'data-shId': res.manifestItems[i].instorehouse.shId,
+                    'data-shId': res.manifestItems[i].instorehouse.shId
                 });
                 $lineInfoWrap1.find('div.no').text(res.manifestItems[i].goods.no);
                 $lineInfoWrap1.find('div.name').text(res.manifestItems[i].goods.name);

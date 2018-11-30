@@ -119,6 +119,52 @@ public class GoodsStorehouseStockServiceImpl implements GoodsStorehouseStockServ
 	}
 	
 	@Override
+	public Float queryGoodsStorehouseStockByGid(GoodsStorehouseStockVO goodsStorehouseStockVO) {
+			
+		Float nums = goodsStorehouseStockDao.queryGoodsStorehouseStockByGid(goodsStorehouseStockVO.getGoods().getGid(), goodsStorehouseStockVO.getColor().getCid(), goodsStorehouseStockVO.getFormat().getFid());
+		
+		return nums;
+	}
+	
+	@Override
+	public GoodsStorehouseStockVO queryStorehouseStockByShIdAGId(GoodsStorehouseStockVO goodsStorehouseStockVO){
+		
+		GoodsStorehouseStockPO goodsStorehouseStockPO = goodsStorehouseStockDao.queryGoodsStorehouseStockByShIdAGId(goodsStorehouseStockVO.getGoods().getGid(), goodsStorehouseStockVO.getColor().getCid(), goodsStorehouseStockVO.getFormat().getFid(), goodsStorehouseStockVO.getStorehouse().getShId());
+		
+		goodsStorehouseStockVO = new GoodsStorehouseStockVO();
+		
+		BeanUtil.copyProperties(goodsStorehouseStockPO, goodsStorehouseStockVO, Arrays.asList("goods","color","format","storehouse"));
+		
+		return goodsStorehouseStockVO;
+	}
+	
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public int makeGoodsStorehouseStock(GoodsStorehouseStockVO goodsStorehouseStockVO)throws FLException {
+		
+		GoodsStorehouseStockPO goodsStorehouseStockPO = goodsStorehouseStockDao.queryGoodsStorehouseStockByShIdAGId(goodsStorehouseStockVO.getGoods().getGid(), goodsStorehouseStockVO.getColor().getCid(), goodsStorehouseStockVO.getFormat().getFid(), goodsStorehouseStockVO.getStorehouse().getShId());
+		
+		if(goodsStorehouseStockPO != null){
+			
+			throw new FLException(260042,"商品库存已存在");
+			
+		}
+		
+		goodsStorehouseStockPO = new GoodsStorehouseStockPO(new GoodsPO(),new ColorPO(),new FormatPO(),new StorehousePO());
+		
+		BeanUtil.copyPropertie(goodsStorehouseStockVO.getGoods(), goodsStorehouseStockPO.getGoods());
+		BeanUtil.copyPropertie(goodsStorehouseStockVO.getColor(), goodsStorehouseStockPO.getColor());
+		BeanUtil.copyPropertie(goodsStorehouseStockVO.getFormat(), goodsStorehouseStockPO.getFormat());
+		BeanUtil.copyPropertie(goodsStorehouseStockVO.getStorehouse(), goodsStorehouseStockPO.getStorehouse());
+		
+		goodsStorehouseStockPO.setNum(0f);
+		
+		goodsStorehouseStockDao.save(goodsStorehouseStockPO);
+		
+		return 0;
+	}
+	
+	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public void checkGoodsStorehouseStock(CheckListVO checkListVO, String userId) throws FLException {
 		
@@ -159,108 +205,87 @@ public class GoodsStorehouseStockServiceImpl implements GoodsStorehouseStockServ
 	}
 	
 	@Override
-	public GoodsStorehouseStockVO queryStorehouseStockByShIdAGId(GoodsStorehouseStockVO goodsStorehouseStockVO){
-		
-		GoodsStorehouseStockPO goodsStorehouseStockPO = goodsStorehouseStockDao.queryGoodsStorehouseStockByShIdAGId(goodsStorehouseStockVO.getGoods().getGid(), goodsStorehouseStockVO.getColor().getCid(), goodsStorehouseStockVO.getFormat().getFid(), goodsStorehouseStockVO.getStorehouse().getShId());
-		
-		goodsStorehouseStockVO = new GoodsStorehouseStockVO();
-		
-		BeanUtil.copyProperties(goodsStorehouseStockPO, goodsStorehouseStockVO, Arrays.asList("goods","color","format","storehouse"));
-		
-		return goodsStorehouseStockVO;
-	}
-	
-	@Override
-	public Float queryGoodsStorehouseStockByGid(GoodsStorehouseStockVO goodsStorehouseStockVO) {
-			
-		Float nums = goodsStorehouseStockDao.queryGoodsStorehouseStockByGid(goodsStorehouseStockVO.getGoods().getGid(), goodsStorehouseStockVO.getColor().getCid(), goodsStorehouseStockVO.getFormat().getFid());
-		
-		return nums;
-	}
-
-	public StorehousePO instorehouse(long gid,long cid,long fid, long shId, float num) throws FLException{
-		
-		if(goodsDao.get(gid) == null){
-			throw new FLException(260004, "商品不存在");
-		}
-		
-		if(storehouseDao.get(shId) == null){
-			throw new FLException(260005, "仓库不存在");
-		}
-		
-		GoodsStorehouseStockPO inGoodsStorehouseStockPO = goodsStorehouseStockDao.queryGoodsStorehouseStockByShIdAGId(gid, cid, fid , shId);
-		
-		if(inGoodsStorehouseStockPO == null){
-			inGoodsStorehouseStockPO = new GoodsStorehouseStockPO();
-			
-			inGoodsStorehouseStockPO.setGoods(new GoodsPO(gid));
-			inGoodsStorehouseStockPO.setColor(new ColorPO(cid));
-			inGoodsStorehouseStockPO.setFormat(new FormatPO(fid));
-			inGoodsStorehouseStockPO.setStorehouse(new StorehousePO(shId));
-			
-			inGoodsStorehouseStockPO.setNum(0f);
-		}
-		
-		inGoodsStorehouseStockPO.setNum(Arith.add(inGoodsStorehouseStockPO.getNum(), num));
-		
-		goodsStorehouseStockDao.saveOrUpdate(inGoodsStorehouseStockPO);
-		
-		return inGoodsStorehouseStockPO.getStorehouse();
-	}
-	
-	public StorehousePO outstorehouse(long gid, long cid, long fid, long shId, float num) throws FLException{
-		
-		GoodsStorehouseStockPO outGoodsStorehouseStockPO = goodsStorehouseStockDao.queryGoodsStorehouseStockByShIdAGId(gid, cid, fid, shId);
-
-		if(outGoodsStorehouseStockPO == null){
-			throw new FLException(260011, "商品库存不存在");
-		}
-		
-		if(outGoodsStorehouseStockPO.getGoods() == null){
-			throw new FLException(260004, "商品不存在");
-		}
-		
-		if(outGoodsStorehouseStockPO.getStorehouse() == null){
-			throw new FLException(260005, "仓库不存在");
-		}
-	
-		if(outGoodsStorehouseStockPO.getNum() < num){
-			throw new FLException(260008, outGoodsStorehouseStockPO.getGoods().getName() + "商品库存不足");
-		}
-		
-		outGoodsStorehouseStockPO.setNum(Arith.sub(outGoodsStorehouseStockPO.getNum(), num));
-		
-		goodsStorehouseStockDao.update(outGoodsStorehouseStockPO);
-		
-		return outGoodsStorehouseStockPO.getStorehouse();
-	}
-	
-	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int makeGoodsStorehouseStock(GoodsStorehouseStockVO goodsStorehouseStockVO)throws FLException {
+	public int mergePackage(GoodsStorehouseStockVO goodsStorehouseStockVO,String userId,int company)throws FLException {
 		
-		GoodsStorehouseStockPO goodsStorehouseStockPO = goodsStorehouseStockDao.queryGoodsStorehouseStockByShIdAGId(goodsStorehouseStockVO.getGoods().getGid(), goodsStorehouseStockVO.getColor().getCid(), goodsStorehouseStockVO.getFormat().getFid(), goodsStorehouseStockVO.getStorehouse().getShId());
+		List<ManifestItemPO> manifestItemPOs = new ArrayList<ManifestItemPO>();
 		
-		if(goodsStorehouseStockPO != null){
-			
-			throw new FLException(260042,"商品库存已存在");
-			
+		ManifestItemPO manifestItemPO = new ManifestItemPO();
+		
+		GoodsPO goodsPO = goodsDao.get(goodsStorehouseStockVO.getGoods().getGid());
+		
+		if(goodsPO.getType()!=GoodsPO.TYPE_SUIT_INT){
+			throw new FLException(260041, "套餐不存在");
 		}
 		
-		goodsStorehouseStockPO = new GoodsStorehouseStockPO(new GoodsPO(),new ColorPO(),new FormatPO(),new StorehousePO());
+		long gid = goodsStorehouseStockVO.getGoods().getGid();
+		long cid = goodsStorehouseStockVO.getColor().getCid();
+		long fid = goodsStorehouseStockVO.getFormat().getFid();
+		long shId = goodsStorehouseStockVO.getStorehouse().getShId();
 		
-		BeanUtil.copyPropertie(goodsStorehouseStockVO.getGoods(), goodsStorehouseStockPO.getGoods());
-		BeanUtil.copyPropertie(goodsStorehouseStockVO.getColor(), goodsStorehouseStockPO.getColor());
-		BeanUtil.copyPropertie(goodsStorehouseStockVO.getFormat(), goodsStorehouseStockPO.getFormat());
-		BeanUtil.copyPropertie(goodsStorehouseStockVO.getStorehouse(), goodsStorehouseStockPO.getStorehouse());
+		GoodsStorehouseStockPO goodsStorehouseStockPO = goodsStorehouseStockDao.queryGoodsStorehouseStockByShIdAGId(gid,cid,fid,shId);
 		
-		goodsStorehouseStockPO.setNum(0f);
+		float num = Arith.add(goodsStorehouseStockPO.getNum(), goodsStorehouseStockVO.getNum());
 		
-		goodsStorehouseStockDao.save(goodsStorehouseStockPO);
+		goodsStorehouseStockPO.setNum(num);
+		
+		goodsStorehouseStockDao.update(goodsStorehouseStockPO);
+		
+		manifestItemPO.setGoods(goodsStorehouseStockPO.getGoods());
+		manifestItemPO.setColor(goodsStorehouseStockPO.getColor());
+		manifestItemPO.setFormat(goodsStorehouseStockPO.getFormat());
+		manifestItemPO.setInstorehouse(goodsStorehouseStockPO.getStorehouse());
+		manifestItemPO.setNum(goodsStorehouseStockVO.getNum());
+		
+		manifestItemPOs.add(manifestItemPO);
+		
+		List<GoodsPackagePO> goodsPackagePOs = goodsPackageDao.queryPackage(goodsStorehouseStockVO.getGoods().getGid());
+		
+		for(GoodsPackagePO goodsPackagePO : goodsPackagePOs){
+			
+			manifestItemPO = new ManifestItemPO();
+			
+			long _gid = goodsPackagePO.getGoods().getGid();
+			long _cid = goodsPackagePO.getColor().getCid();
+			long _fid = goodsPackagePO.getFormat().getFid();
+			
+			GoodsStorehouseStockPO goodsStorehouseStock = goodsStorehouseStockDao.queryGoodsStorehouseStockByShIdAGId(_gid,_cid,_fid,shId);
+			
+			float _num = Arith.mul(goodsPackagePO.getNum(), goodsStorehouseStockVO.getNum());
+			
+			if(goodsStorehouseStock==null){
+				
+				throw new FLException(260008, "商品库存不足");
+				
+			}
+				
+			if(goodsStorehouseStock.getNum() < _num ){
+				
+				throw new FLException(260008, "商品库存不足");
+				
+			}
+						
+			float _storehousestockNum = Arith.sub(goodsStorehouseStock.getNum(), _num);
+			
+			goodsStorehouseStock.setNum(_storehousestockNum);
+			
+			goodsStorehouseStockDao.update(goodsStorehouseStock);
+			
+			manifestItemPO.setGoods(goodsStorehouseStock.getGoods());
+			manifestItemPO.setColor(goodsStorehouseStock.getColor());
+			manifestItemPO.setFormat(goodsStorehouseStock.getFormat());
+			manifestItemPO.setOutstorehouse(goodsStorehouseStockPO.getStorehouse());
+			manifestItemPO.setNum(_num);
+			
+			manifestItemPOs.add(manifestItemPO);
+				
+		}
+		
+		manifestService.addManifestForPM(manifestItemPOs, userId, company);
+		
 		
 		return 0;
 	}
-	
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
@@ -369,88 +394,62 @@ public class GoodsStorehouseStockServiceImpl implements GoodsStorehouseStockServ
 		
 		return 0;
 	}
+	
+	public StorehousePO instorehouse(long gid,long cid,long fid, long shId, float num) throws FLException{
+		
+		if(goodsDao.get(gid) == null){
+			throw new FLException(260004, "商品不存在");
+		}
+		
+		if(storehouseDao.get(shId) == null){
+			throw new FLException(260005, "仓库不存在");
+		}
+		
+		GoodsStorehouseStockPO inGoodsStorehouseStockPO = goodsStorehouseStockDao.queryGoodsStorehouseStockByShIdAGId(gid, cid, fid , shId);
+		
+		if(inGoodsStorehouseStockPO == null){
+			inGoodsStorehouseStockPO = new GoodsStorehouseStockPO();
+			
+			inGoodsStorehouseStockPO.setGoods(new GoodsPO(gid));
+			inGoodsStorehouseStockPO.setColor(new ColorPO(cid));
+			inGoodsStorehouseStockPO.setFormat(new FormatPO(fid));
+			inGoodsStorehouseStockPO.setStorehouse(new StorehousePO(shId));
+			
+			inGoodsStorehouseStockPO.setNum(0f);
+		}
+		
+		inGoodsStorehouseStockPO.setNum(Arith.add(inGoodsStorehouseStockPO.getNum(), num));
+		
+		goodsStorehouseStockDao.saveOrUpdate(inGoodsStorehouseStockPO);
+		
+		return inGoodsStorehouseStockPO.getStorehouse();
+	}
+	
+	public StorehousePO outstorehouse(long gid, long cid, long fid, long shId, float num) throws FLException{
+		
+		GoodsStorehouseStockPO outGoodsStorehouseStockPO = goodsStorehouseStockDao.queryGoodsStorehouseStockByShIdAGId(gid, cid, fid, shId);
 
-	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public int mergePackage(GoodsStorehouseStockVO goodsStorehouseStockVO,String userId,int company)throws FLException {
-		
-		List<ManifestItemPO> manifestItemPOs = new ArrayList<ManifestItemPO>();
-		
-		ManifestItemPO manifestItemPO = new ManifestItemPO();
-		
-		GoodsPO goodsPO = goodsDao.get(goodsStorehouseStockVO.getGoods().getGid());
-		
-		if(goodsPO.getType()!=GoodsPO.TYPE_SUIT_INT){
-			throw new FLException(260041, "套餐不存在");
+		if(outGoodsStorehouseStockPO == null){
+			throw new FLException(260011, "商品库存不存在");
 		}
 		
-		long gid = goodsStorehouseStockVO.getGoods().getGid();
-		long cid = goodsStorehouseStockVO.getColor().getCid();
-		long fid = goodsStorehouseStockVO.getFormat().getFid();
-		long shId = goodsStorehouseStockVO.getStorehouse().getShId();
-		
-		GoodsStorehouseStockPO goodsStorehouseStockPO = goodsStorehouseStockDao.queryGoodsStorehouseStockByShIdAGId(gid,cid,fid,shId);
-		
-		float num = Arith.add(goodsStorehouseStockPO.getNum(), goodsStorehouseStockVO.getNum());
-		
-		goodsStorehouseStockPO.setNum(num);
-		
-		goodsStorehouseStockDao.update(goodsStorehouseStockPO);
-		
-		manifestItemPO.setGoods(goodsStorehouseStockPO.getGoods());
-		manifestItemPO.setColor(goodsStorehouseStockPO.getColor());
-		manifestItemPO.setFormat(goodsStorehouseStockPO.getFormat());
-		manifestItemPO.setInstorehouse(goodsStorehouseStockPO.getStorehouse());
-		manifestItemPO.setNum(goodsStorehouseStockVO.getNum());
-		
-		manifestItemPOs.add(manifestItemPO);
-		
-		List<GoodsPackagePO> goodsPackagePOs = goodsPackageDao.queryPackage(goodsStorehouseStockVO.getGoods().getGid());
-		
-		for(GoodsPackagePO goodsPackagePO : goodsPackagePOs){
-			
-			manifestItemPO = new ManifestItemPO();
-			
-			long _gid = goodsPackagePO.getGoods().getGid();
-			long _cid = goodsPackagePO.getColor().getCid();
-			long _fid = goodsPackagePO.getFormat().getFid();
-			
-			GoodsStorehouseStockPO goodsStorehouseStock = goodsStorehouseStockDao.queryGoodsStorehouseStockByShIdAGId(_gid,_cid,_fid,shId);
-			
-			float _num = Arith.mul(goodsPackagePO.getNum(), goodsStorehouseStockVO.getNum());
-			
-			if(goodsStorehouseStock==null){
-				
-				throw new FLException(260008, "商品库存不足");
-				
-			}
-				
-			if(goodsStorehouseStock.getNum() < _num ){
-				
-				throw new FLException(260008, "商品库存不足");
-				
-			}
-						
-			float _storehousestockNum = Arith.sub(goodsStorehouseStock.getNum(), _num);
-			
-			goodsStorehouseStock.setNum(_storehousestockNum);
-			
-			goodsStorehouseStockDao.update(goodsStorehouseStock);
-			
-			manifestItemPO.setGoods(goodsStorehouseStock.getGoods());
-			manifestItemPO.setColor(goodsStorehouseStock.getColor());
-			manifestItemPO.setFormat(goodsStorehouseStock.getFormat());
-			manifestItemPO.setOutstorehouse(goodsStorehouseStockPO.getStorehouse());
-			manifestItemPO.setNum(_num);
-			
-			manifestItemPOs.add(manifestItemPO);
-				
+		if(outGoodsStorehouseStockPO.getGoods() == null){
+			throw new FLException(260004, "商品不存在");
 		}
 		
-		manifestService.addManifestForPM(manifestItemPOs, userId, company);
+		if(outGoodsStorehouseStockPO.getStorehouse() == null){
+			throw new FLException(260005, "仓库不存在");
+		}
+	
+		if(outGoodsStorehouseStockPO.getNum() < num){
+			throw new FLException(260008, outGoodsStorehouseStockPO.getGoods().getName() + "商品库存不足");
+		}
 		
+		outGoodsStorehouseStockPO.setNum(Arith.sub(outGoodsStorehouseStockPO.getNum(), num));
 		
-		return 0;
+		goodsStorehouseStockDao.update(outGoodsStorehouseStockPO);
+		
+		return outGoodsStorehouseStockPO.getStorehouse();
 	}
 
 }

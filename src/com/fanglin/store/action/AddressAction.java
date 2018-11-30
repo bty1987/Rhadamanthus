@@ -13,6 +13,7 @@ import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.store.service.AddressService;
 import com.fanglin.store.vo.AddressVO;
+import com.fanglin.store.vo.MuserVO;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -28,11 +29,20 @@ public class AddressAction extends BaseListAction {
 	
 	private List<AddressVO> addresses;
 	
+	private MuserVO muser;
 	
 	@Action(value = "queryAddressByUid", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
 	public String queryAddressByUid(){
 		
 		addresses = addressService.queryAddressByUid(address);
+
+		return SUCCESS;
+	}
+	
+	@Action(value = "updateBaseAddress", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
+	public String updateBaseAddress() throws FLException {
+
+		addressService.updateAddress(address, muser);
 
 		return SUCCESS;
 	}
@@ -61,5 +71,12 @@ public class AddressAction extends BaseListAction {
 		this.addresses = addresses;
 	}
 
-	
+	public MuserVO getMuser() {
+		return muser;
+	}
+
+	public void setMuser(MuserVO muser) {
+		this.muser = muser;
+	}
+
 }

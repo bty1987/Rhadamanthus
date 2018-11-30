@@ -138,16 +138,16 @@ public class DecorationExportServiceImpl implements DecorationExportService {
 				decorationExportVO.setOperateUserName(belongUserPO.getCurrentName());
 				
 				if(departmentPO != null){
-					decorationExportVO.setDepartmentId(departmentPO.getDeptId());
-					decorationExportVO.setDepartment(departmentPO.getDeptName());
+					decorationExportVO.setDepartmentId(departmentPO.getNo());
+					decorationExportVO.setDepartment(departmentPO.getName());
 				}else{
 					decorationExportVO.setDepartmentId("");
 					decorationExportVO.setDepartment("");
 				}
 				
 				if(regionPO != null){
-					decorationExportVO.setRegionId(regionPO.getDeptId());
-					decorationExportVO.setRegion(regionPO.getDeptName());
+					decorationExportVO.setRegionId(regionPO.getNo());
+					decorationExportVO.setRegion(regionPO.getName());
 				}else{
 					decorationExportVO.setRegionId("");
 					decorationExportVO.setRegion("");

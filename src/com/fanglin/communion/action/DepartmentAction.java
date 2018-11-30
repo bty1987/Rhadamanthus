@@ -19,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import com.fanglin.communion.service.DepartmentService;
-import com.fanglin.communion.vo.DepartmentTypeVO;
 import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
@@ -39,12 +38,6 @@ public class DepartmentAction extends BaseListAction {
 	
 	private List<DepartmentVO> deptList;
 	
-	private List<String> deptIds;
-	
-	private List<String> deptType;
-	
-	private List<DepartmentTypeVO> depttypelist;
-
 	@Action(value = "pageDepartment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageDepartment() throws FLException{
 		
@@ -61,35 +54,56 @@ public class DepartmentAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-	@Action(value = "queryDepartmentById", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryDepartmentById() throws FLException{
-		
-		dept = departmentService.queryDepartmentById(dept.getDeptId());
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "queryDepartmentByName", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryDepartmentByName() throws FLException{
-		
-		deptList = departmentService.queryDepartmentByName(dept, queryCompany());
-		
-		return SUCCESS;
-	}
-	
 	@Action(value = "queryDepartmentByDtid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryDepartmentByDtid() throws FLException{
-				
-		deptList=departmentService.queryDepartmentByDtid(dept,queryCompany());
+	public String queryDepartmentByDtid() throws FLException {
+
+		deptList = departmentService.queryDepartmentByDtid(dept, queryCompany());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "queryDepartmentByDid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryDepartmentByDid() throws FLException {
+		
+		dept = departmentService.queryDepartmentByDid(dept);
 		
 		return SUCCESS;
 	}
 	
+	@Action(value = "queryDepartmentByNo", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryDepartmentByNo() throws FLException {
+
+		dept = departmentService.queryDepartmentByNo(dept);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "queryDepartmentByName", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryDepartmentByName() throws FLException {
+
+		deptList = departmentService.queryDepartmentByName(dept, queryCompany());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "addDepartment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addDepartment() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
+		}
+
+		departmentService.addDepartment(dept, queryUserId(), queryCompany());
+
+		return SUCCESS;
+	}
+	
+
 	@Action(value = "updateDepartment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateDepartment() throws FLException{
 		
-		if(SystemConfig.getString("communion") == null){
-		    throw new FLException(-1, "无操作权限");
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
 		}
 		
 		departmentService.updateDepartment(dept);
@@ -100,28 +114,15 @@ public class DepartmentAction extends BaseListAction {
 	@Action(value = "updateDepartmentForStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateDepartmentForStatus() throws FLException{
 			
-		if(SystemConfig.getString("communion") == null){
-		    throw new FLException(-1, "无操作权限");
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
 		}
 		
 		departmentService.updateDepartmentForStatus(dept);
 		
 		return SUCCESS;
 	}
-	
-	@Action(value = "addDepartment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addDepartment() throws FLException{
-		
-		if(SystemConfig.getString("communion") == null){
-		    throw new FLException(-1, "无操作权限");
-		}
-		
-		departmentService.addDepartment(dept, queryUserId(), queryCompany());
-		
-		return SUCCESS;
-	}
-	
-	
+
 	public DepartmentVO getDept() {
 		return dept;
 	}
@@ -138,28 +139,4 @@ public class DepartmentAction extends BaseListAction {
 		this.deptList = deptList;
 	}
 
-	public List<String> getDeptIds() {
-		return deptIds;
-	}
-
-	public void setDeptIds(List<String> deptIds) {
-		this.deptIds = deptIds;
-	}
-
-	public List<String> getDeptType() {
-		return deptType;
-	}
-
-	public void setDeptType(List<String> deptType) {
-		this.deptType = deptType;
-	}
-
-	public List<DepartmentTypeVO> getDepttypelist() {
-		return depttypelist;
-	}
-
-	public void setDepttypelist(List<DepartmentTypeVO> depttypelist) {
-		this.depttypelist = depttypelist;
-	}
-	
 }

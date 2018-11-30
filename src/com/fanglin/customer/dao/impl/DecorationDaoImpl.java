@@ -16,10 +16,16 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 		super(DecorationPO.class);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
+	@SuppressWarnings("unchecked")
 	public List<DecorationPO> queryCusDecoration(String unionId) {
 		return createCriteria(DecorationPO.class).add(Restrictions.eq(DecorationPO.COLUMN_UNIONID_STR, unionId)).list();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<DecorationPO> queryCusDecorationByOrderId(String orderId) {
+		return createCriteria(DecorationPO.class).add(Restrictions.eq(DecorationPO.COLUMN_ORDERID_STR, orderId)).list();
 	}
 
 	@Override
@@ -38,7 +44,6 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 		String sql = "delete from customer.decoration where unionId = :unionId";
 		
 		session().createSQLQuery(sql).setString(DecorationPO.COLUMN_UNIONID_STR, unionId).executeUpdate();
-		
 	}
 
 }

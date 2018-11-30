@@ -42,9 +42,9 @@
 	
 	<package name="common" extends="json-default,struts-default">
         <interceptors>
-            <interceptor name="accessInterceptor" class="com.fanglin.core.interceptor.CommonInterceptor" />
+            <interceptor name="commonInterceptor" class="com.fanglin.core.interceptor.CommonInterceptor" />
             <interceptor-stack name="accessItctStack">
-                <interceptor-ref name="accessInterceptor"></interceptor-ref>
+                <interceptor-ref name="commonInterceptor"></interceptor-ref>
                 <interceptor-ref name="defaultStack"></interceptor-ref>
             </interceptor-stack>
         </interceptors>
@@ -53,21 +53,13 @@
 
 	<package name="login" extends="json-default,struts-default">
 		<interceptors>
+            <interceptor name="loginInterceptor" class="com.fanglin.core.interceptor.LoginInterceptor" />
 			<interceptor-stack name="accessItctStack">
-				<interceptor-ref name="defaultStack">
-					<param name="exception.logEnabled">true</param>
-					<param name="exception.logLevel">ERROR</param>
-				</interceptor-ref>
+				<interceptor-ref name="loginInterceptor"></interceptor-ref>
+                <interceptor-ref name="defaultStack"></interceptor-ref>
 			</interceptor-stack>
 		</interceptors>
 		<default-interceptor-ref name="accessItctStack" />
-		<global-results>
-			<result name="error">operateError.do</result>
-			<result name="login">login.do</result>
-		</global-results>
-		<global-exception-mappings>
-			<exception-mapping result="error" exception="java.lang.Exception">	</exception-mapping>
-		</global-exception-mappings>
 	</package>
 
 	<package name="other" extends="json-default,struts-default"></package>

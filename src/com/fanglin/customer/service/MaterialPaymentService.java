@@ -8,6 +8,8 @@ import com.fanglin.utils.Paging;
 
 public interface MaterialPaymentService {
 
-	public void queryCusMaterialPayment(Paging paging, List<Filter> filters, MaterialPaymentVO materialPaymentVO, String unionId);
+	public void queryCusMaterialPayment(Paging paging, List<Filter> filters, MaterialPaymentVO materialPaymentVO);
+	
+	public float countCusMaterialPaymentForAmount(MaterialPaymentVO materialPaymentVO);
 	
 }

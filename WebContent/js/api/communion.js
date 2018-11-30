@@ -14,7 +14,8 @@ $.extend(api, {communion: {
 	
 	pageDepartment: {url: "pageDepartment.do", demo: true},
     queryDepartment: {url: "queryDepartment.do", demo: true},
-    queryDepartmentById: {url: "queryDepartmentById.do"},
+    queryDepartmentByDid: {url: "queryDepartmentByDid.do"},
+    queryDepartmentByNo: {url: "queryDepartmentByNo.do"},
     queryDepartmentByName: {url: "queryDepartmentByName.do"},
     addDepartment: {url: "addDepartment.do", server: "communion"},
     updateDepartment: {url: "updateDepartment.do", server: "communion"},

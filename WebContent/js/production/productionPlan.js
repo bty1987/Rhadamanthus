@@ -3,7 +3,7 @@
  */
 jQuery(function ($) {
 
-	var $layerImport = $("#layerImport");
+	var $layerImport = com.focusPage("#layerImport");
     var pid = params.pid;
     var $productionStatus = params["status"];
     var productionPlan ={
@@ -12,7 +12,7 @@ jQuery(function ($) {
     };
 
     if (jQuery().datepicker) {
-        $('.date-picker').datepicker({
+        com.focusPage('.date-picker').datepicker({
             format: 'yyyy-mm-dd',//yyyy-mm-dd hh:ii,
             autoclose:true
         });
@@ -20,7 +20,7 @@ jQuery(function ($) {
 
     var displayFunc = (function () {
         var renderList = function(tableId,listData){
-            var $tableWrap = $('#'+tableId);
+            var $tableWrap = com.focusPage('#'+tableId);
             var $ul = $('<ul></ul>').addClass('item-list ui-sortable  fl-table-list');
 
             if(listData && listData.length){
@@ -95,18 +95,18 @@ jQuery(function ($) {
 
                     $btnUpload.click(function(){
 
-                        $("#layerImport").find('.infobox').remove();
+                        com.focusPage("#layerImport").find('.infobox').remove();
                         openlayerImport();
 
                         if(v.path){
                             createLine(v.path, v.comment);
                         }
 
-                        $('#importProductionPlanExcel').empty();
+                        com.focusPage('#importProductionPlanExcel').empty();
 
-                        hidBtn($('#importProductionPlanExcel'), v.status);
+                        hidBtn(com.focusPage('#importProductionPlanExcel'), v.status);
 
-                        $("#importProductionPlanExcel").Huploadify({
+                        com.focusPage("#importProductionPlanExcel").Huploadify({
                             'debug': false, // 开启调试
                             'auto': true, // 是否自动上传
                             'successTimeout': 99999, // 超时时间
@@ -134,14 +134,14 @@ jQuery(function ($) {
 
                     $btnEdit.click(function () {
                         productionPlan.ppid = v.ppid;
-                        $('#startTime').val(v.startTime);
-                        $('#endTime').val(v.endTime);
-                        $('#comment').val(v.comment);
+                        com.focusPage('#startTime').val(v.startTime);
+                        com.focusPage('#endTime').val(v.endTime);
+                        com.focusPage('#comment').val(v.comment);
                         editProductionPlan(function () {
                             if(checkTime()==true){
-                                var startTime = $('#startTime').val();
-                                var endTime = $('#endTime').val();
-                                var comment = $('#comment').val();
+                                var startTime = com.focusPage('#startTime').val();
+                                var endTime = com.focusPage('#endTime').val();
+                                var comment = com.focusPage('#comment').val();
                                 var ppid = productionPlan.ppid;
                                 com.post(api.production.updateProductionPlan,{
                                     "productionPlan.ppid" : ppid,
@@ -179,7 +179,6 @@ jQuery(function ($) {
                         var status = v.status;
                         var ppid = v.ppid;
 
-
                         if($productionStatus == 0 || $productionStatus == 1){
                             layer.msg("未审核无法进行生产");
                             return false;
@@ -212,16 +211,14 @@ jQuery(function ($) {
                             layer.msg("已送货");
                             searcher.doSearch();
                         })
-
                     });
-                    
                 });
                 $ul.appendTo($tableWrap);
             }
         };
         return {
             init : function(tableId,listData){
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
             }
         }
@@ -240,7 +237,7 @@ jQuery(function ($) {
         hidBtn($adda,0);
 
         $adda.click(function () {
-            $('#layerAdd').find('input').val("");
+            com.focusPage('#layerAdd').find('input').val("");
             addProductionPlan(function () {
 
                 if(submitValidate() == true && checkTime() == true){
@@ -269,7 +266,7 @@ jQuery(function ($) {
             type: 1,
             skin: 'layui-layer-lan',
             title: "新增",
-            content: $('#layerAdd'),
+            content: com.focusPage('#layerAdd'),
             area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
             maxmin: false,
             zIndex: 9000,
@@ -293,7 +290,7 @@ jQuery(function ($) {
             type: 1,
             skin: 'layui-layer-lan',
             title: "编辑",
-            content: $('#layerAdd'),
+            content: com.focusPage('#layerAdd'),
             area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
             maxmin: false,
             zIndex: 9000,
@@ -312,11 +309,11 @@ jQuery(function ($) {
 
     var submitValidate = function () {
         var flag = true;
-        if($('#startTime').val() == ""){
+        if(com.focusPage('#startTime').val() == ""){
             layer.msg("请填写投料时间");
             flag = false;
         }
-        if($('#endTime').val() == ""){
+        if(com.focusPage('#endTime').val() == ""){
             layer.msg("请填写出货时间");
             flag = false;
         }
@@ -326,8 +323,8 @@ jQuery(function ($) {
     function checkTime(){
 
         var flag = true;
-        var startTime = $('#startTime').val();
-        var endTime = $('#endTime').val();
+        var startTime = com.focusPage('#startTime').val();
+        var endTime = com.focusPage('#endTime').val();
 
         if(startTime == "" || endTime == ""){
             flag = false;
@@ -341,9 +338,9 @@ jQuery(function ($) {
     }
 
     function addProduction() {
-            var startTime = $('#startTime').val();
-            var endTime = $('#endTime').val();
-            var comment = $('#comment').val();
+            var startTime = com.focusPage('#startTime').val();
+            var endTime = com.focusPage('#endTime').val();
+            var comment = com.focusPage('#comment').val();
             com.post(api.production.addProductionPlan,{
                 "productionPlan.pid" : pid,
                 "productionPlan.startTime" : startTime,
@@ -365,7 +362,7 @@ jQuery(function ($) {
             type: 1,
             skin: 'layui-layer-lan',
             title: "导入excel",
-            content: $('#layerImport'),
+            content: com.focusPage('#layerImport'),
             area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
             maxmin: false,
             zIndex: 9000,

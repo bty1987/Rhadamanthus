@@ -1,16 +1,16 @@
 $(function(){
 
-    var $layerBind = $('#layerBind');
+    var $layerBind = com.focusPage('#layerBind');
     var transferData =  params["transferData"];
     var productionSalesPostData={};
 
     if (transferData.status == 5 || transferData.status == 4 || transferData.status == 3) {
-        $("#bindBtn").addClass('hide');
+        com.focusPage("#bindBtn").addClass('hide');
     }
 
     var initList = function(tableId,listData) {
 
-        var $tableWrap = $('#' + tableId);
+        var $tableWrap = com.focusPage('#' + tableId);
         var $ul = $('<ul></ul>').addClass('item-list ui-sortable fl-table-list');
 
         listData && listData.length && $.each(listData, function (i, v) {
@@ -120,14 +120,9 @@ $(function(){
                        propertyArr = {};
                     });
                 }
-
             });
-
             $ul.appendTo($tableWrap);
-
     };
-
-
 
     //写入每条绑定信息
     function creatureRow(propertyArr,v,$ul,data){
@@ -171,11 +166,11 @@ $(function(){
     createPage();
 
     //返回
-    $('#backBtn').click(function () {
+    com.focusPage('#backBtn').click(function () {
         com.switchPage(api.index.productionIndex.url);
     });
     //绑定
-    $('#bindBtn').click(function () {
+    com.focusPage('#bindBtn').click(function () {
         com.clearValidator();
         productionUtils.clearForm('form1');
         productionSalesPostData = {};
@@ -193,7 +188,7 @@ $(function(){
     $layerBind.find('input[name="saleNo"]').on("change",function(){
 
         var option = {};
-        var _type = $("select option:selected").attr("value");
+        var _type = com.focusPage("select option:selected").attr("value");
 
         if(_type == 1){
 
@@ -283,7 +278,7 @@ $(function(){
             com.post(api.production.bindProductionSales,productionSalesPostData,function(data){
                 callback();
                 layer.msg('绑定成功', {icon: 1, time: 2e3});
-                $("#resultList ul.ui-sortable").remove();
+                com.focusPage("#resultList ul.ui-sortable").remove();
                 createPage();
             },function(e){
                 callback();

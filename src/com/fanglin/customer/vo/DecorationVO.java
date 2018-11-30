@@ -19,6 +19,8 @@ public class DecorationVO implements Serializable{
 	
 	private String address;
 	
+	private Short type;
+	
 	private UserBaseVO designer;
 	
 	private UserBaseVO salesman;
@@ -83,6 +85,14 @@ public class DecorationVO implements Serializable{
 
 	public void setAddress(String address) {
 		this.address = address;
+	}
+
+	public Short getType() {
+		return type;
+	}
+
+	public void setType(Short type) {
+		this.type = type;
 	}
 
 	public UserBaseVO getDesigner() {

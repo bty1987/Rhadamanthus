@@ -10,7 +10,7 @@
 
 
 jQuery(function ($) {
-    $('#ROPopUp').css({
+    com.focusPage('#ROPopUp').css({
         'margin': '0 auto',
         'margin-top': '3%',
         'width': '97%',
@@ -19,23 +19,23 @@ jQuery(function ($) {
         'overflow-y': 'scroll'
     });
 
-    $('#ROPopUp').parent().css({
+    com.focusPage('#ROPopUp').parent().css({
         'overflow':'hidden'
-    })
+    });
 
 
     var manifest = {
-        mid: $('#ROPopUp').attr('data-mid'),
-        status: $('#ROPopUp').attr('data-status'),
+        mid: com.focusPage('#ROPopUp').attr('data-mid'),
+        status: com.focusPage('#ROPopUp').attr('data-status'),
         mtype: 4,
-        saveBtn: $("#saveBtn"),
-        cancellBtn: $("#cancelBtn"),
+        saveBtn: com.focusPage("#saveBtn"),
+        cancellBtn: com.focusPage("#cancelBtn"),
         manifestItems: {
-            customerName: $("#customer"),
-            des: $("#comment"),
+            customerName: com.focusPage("#customer"),
+            des: com.focusPage("#comment")
         },
         record: {},
-        sid: $('#ROPopUp').attr('data-sid')
+        sid: com.focusPage('#ROPopUp').attr('data-sid')
 
     };
 
@@ -49,7 +49,7 @@ jQuery(function ($) {
         'href': 'javascript:void(0);'
     }).css({'margin-left': '8px', 'margin-top': '12px'}).text('取消');
 
-    var $condList1 = $('#ROPopUp').parents('.layui-layer.layui-anim.layui-layer-page.layui-layer-lan');
+    var $condList1 = com.focusPage('#ROPopUp').parents('.layui-layer.layui-anim.layui-layer-page.layui-layer-lan');
 
     var $div = $('<div class="layui-layer-btn0" style="position: relative;top:-10%;left:73%;"></div>');
 
@@ -60,7 +60,7 @@ jQuery(function ($) {
 
         var _params = {};
 
-        var $menus = $('input[type="checkbox"]:checked', '#list');
+        var $menus = com.focusPage('input[type="checkbox"]:checked', '#list');
         var $miid = [];
 
         if(!$menus.length){
@@ -86,7 +86,7 @@ jQuery(function ($) {
         var mid = manifest.mid;
         var status = manifest.status;
         var type = manifest.mtype;//– 类型
-        var comment = $('#comment').val();//– 备注
+        var comment = com.focusPage('#comment').val();//– 备注
         var sid = manifest.sid;
         var options = {
             "manifest.mid": mid,
@@ -102,8 +102,8 @@ jQuery(function ($) {
             com.post(api.inventory.addManifestForXB, options, function (data) {
             	
                 layer.closeAll();
-                layer.msg('保存成功!', {icon: 1})
-                $('#list').empty();
+                layer.msg('保存成功!', {icon: 1});
+                com.focusPage('#list').empty();
             }, function (e) {
                 com.showAlert(com.error, e.errorMsg);
             });
@@ -138,7 +138,7 @@ jQuery(function ($) {
 
         var _span = $('<span></span>').addClass('lbl grey bigger-150').css('font-weight','bold');
 
-        _label.append($input).append(_span).appendTo($label)
+        _label.append($input).append(_span).appendTo($label);
 
         var $indexWrap = $('<div></div>').addClass('line-wrap order').append($('<div></div>').addClass('cell index').html($label).attr({
             "type": "checkbox",
@@ -154,13 +154,13 @@ jQuery(function ($) {
         var _lineInfoSet = [
             {cellClass: "no blue"},//编号
             {cellClass: "name grey"},//名称
-            {cellClass: "color grey",},//颜色
-            {cellClass: "format grey",},//规格
+            {cellClass: "color grey"},//颜色
+            {cellClass: "format grey"},//规格
             {cellClass: "measurementUnit grey"},//单位
             {cellClass: "storehouse grey"},//仓库
             {cellClass: "number blue"},//数量
             {cellClass: "roNum", hasInput: !0},
-            {cellClass: "des grey"},//备注
+            {cellClass: "des grey"}//备注
         ];
 
         $.each(_lineInfoSet, function (i, v) {
@@ -181,24 +181,24 @@ jQuery(function ($) {
     }
 
     function accessoriesAdd() {
-        var index = $('.line', '#list').length;
+        var index = com.focusPage('.line', '#list').length;
         com.post(api.inventory.queryManifestItemByMid, {
             "manifest.mid": manifest.mid
         }, function (res) {
             for (var i = 0; i < res.manifestItems.length; i++) {
-                index = $('.line', '#list').length;
+                index = com.focusPage('.line', '#list').length;
                 autoAddline(index, res.manifestItems);
             }
             function autoAddline(index, data) {
-                index = $('.line', '#list').length;
-                addline(1 + index, data).appendTo('#list');
-                var $lineInfoWrap1 = $('#list li:nth-of-type(' + (index + 1) + ') div.content');
-                $('#list li:nth-of-type(' + (index + 1) + ')').attr({
+                index = com.focusPage('.line', '#list').length;
+                addline(1 + index, data).appendTo(com.focusPage('#list'));
+                var $lineInfoWrap1 = com.focusPage('#list li:nth-of-type(' + (index + 1) + ') div.content');
+                com.focusPage('#list li:nth-of-type(' + (index + 1) + ')').attr({
                     'data-gid': res.manifestItems[i].goods.gid,
                     'data-miid': res.manifestItems[i].miId,
                     'data-cid': res.manifestItems[i].color.cid,
                     'data-fid': res.manifestItems[i].format.fid,
-                    'data-shId': res.manifestItems[i].outstorehouse.shId,
+                    'data-shId': res.manifestItems[i].outstorehouse.shId
                 });
                 $lineInfoWrap1.find('div.no').text(res.manifestItems[i].goods.no);
                 $lineInfoWrap1.find('div.name').text(res.manifestItems[i].goods.name);

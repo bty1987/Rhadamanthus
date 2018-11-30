@@ -6,10 +6,10 @@ $(function(){
      * tableId ，用来显示的div的id
      * result.list 列表的json数组
      * */
-    var splitAndMergePopUp = $('#splitAndMergePopUp')
-    splitAndMergePopUp.attr('data-title')=="拆分"? $('#split').removeClass('hide'):$('#merge').removeClass('hide');
+    var splitAndMergePopUp = com.focusPage('#splitAndMergePopUp');
+    splitAndMergePopUp.attr('data-title')=="拆分"? com.focusPage('#split').removeClass('hide'):com.focusPage('#merge').removeClass('hide');
     var _goodsStorehouseStock = params['goodsStorehouseStock'];
-    var $list = splitAndMergePopUp.attr('data-title')=="拆分"?$('#splitList'):$('#mergeList');
+    var $list = splitAndMergePopUp.attr('data-title')=="拆分"?com.focusPage('#splitList'):com.focusPage('#mergeList');
     var validator = {
         splitAndMerge: {
             type: "v_splitAndMerge",
@@ -25,7 +25,7 @@ $(function(){
         'href': 'javascript:void(0);'
     }).css({'margin-left':'90%'}).text(splitAndMergePopUp.attr('data-title'));
 
-    var $condList1 = splitAndMergePopUp.attr('data-title')=="拆分"?$('#splitAndMergePopUp').parents('.layui-layer.layui-anim.layui-layer-page.layui-layer-molv'):$('#splitAndMergePopUp').parents('.layui-layer.layui-anim.layui-layer-page.layui-layer-lan');
+    var $condList1 = splitAndMergePopUp.attr('data-title')=="拆分"?com.focusPage('#splitAndMergePopUp').parents('.layui-layer.layui-anim.layui-layer-page.layui-layer-molv'):com.focusPage('#splitAndMergePopUp').parents('.layui-layer.layui-anim.layui-layer-page.layui-layer-lan');
     var $div = $('<div class="layui-layer-btn0" style="position: relative;top:-5%;margin: -50px 10px -50px 10px;"></div>');
     $div.append($btnConfirm).appendTo($condList1);
 
@@ -33,7 +33,7 @@ $(function(){
 
         /*表格样式*/
         var renderList = function(tableId,listData){
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
 
             if(listData && listData.length){
 
@@ -46,8 +46,8 @@ $(function(){
                     $liLine.appendTo($ulTitle);
                 });
 
-                $('#resultListSplit').css({'width':'96%','margin':'0 auto','height':'540px','overflow-y':listData.length > 1 ? 'scroll': 'visible','marigin-top':'20px'})
-                $('#resultListMerge').css({'width':'96%','margin':'0 auto','height':'540px','overflow-y':listData.length > 1 ? 'scroll': 'visible','marigin-top':'20px'})
+                com.focusPage('#resultListSplit').css({'width':'96%','margin':'0 auto','height':'540px','overflow-y':listData.length > 1 ? 'scroll': 'visible','marigin-top':'20px'})
+                com.focusPage('#resultListMerge').css({'width':'96%','margin':'0 auto','height':'540px','overflow-y':listData.length > 1 ? 'scroll': 'visible','marigin-top':'20px'})
 
             }
         };
@@ -90,7 +90,7 @@ $(function(){
                 "goodsStorehouseStock.storehouse.shId": _goodsStorehouseStock.storehouse.shId
             },function(res){
                 storehouseNum = res.goodsStorehouseStock.num == null?'仓库暂无此商品':res.goodsStorehouseStock.num;
-            },null,false)
+            },null,false);
 
             var $liLine = $('<li></li>').addClass('line');
 
@@ -134,7 +134,7 @@ $(function(){
 
         return {
             init : function(tableId,listData){
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
 
             },
@@ -173,7 +173,7 @@ $(function(){
             {cellClass : "pieceNum blue",value:_goodsStorehouseStock.goods.pieceNum},
             {cellClass : "number blue",value:_goodsStorehouseStock.num},
             {cellClass : "storehouse grey",value:_goodsStorehouseStock.storehouse.name},
-            {cellClass : "inputNum",hasInput:!0},
+            {cellClass : "inputNum",hasInput:!0}
         ];
 
         $.each(_lineInfoSet, function (i, v) {
@@ -249,7 +249,7 @@ $(function(){
     }
 
 
-    $('.layui-layer-content').css('overflow','hidden');
+    com.focusPage('.layui-layer-content').css('overflow','hidden');
 
     $btnConfirm.click(function(e){
         e.stopPropagation();
@@ -265,7 +265,7 @@ $(function(){
             var shId =_goodsStorehouseStock.storehouse.shId;
 
             if($btnConfirm.text()=="拆分"){
-                var num =$('#splitList').find('.inputNum input').val();
+                var num =com.focusPage('#splitList').find('.inputNum input').val();
                 com.post(api.inventory.splitPackage,{
                     "goodsStorehouseStock.goods.gid": gid,
                     "goodsStorehouseStock.color.cid": cid,
@@ -277,7 +277,7 @@ $(function(){
                     layer.msg('拆分成功')
                 })
             }else{
-                var num =$('#mergeList').find('.inputNum input').val();
+                var num =com.focusPage('#mergeList').find('.inputNum input').val();
                 com.post(api.inventory.mergePackage,{
                     "goodsStorehouseStock.goods.gid": gid,
                     "goodsStorehouseStock.color.cid": cid,

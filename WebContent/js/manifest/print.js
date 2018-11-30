@@ -28,17 +28,17 @@ $(function(){
         '进退',//2
         '出货',//3
         '出返',//4
-        '调拨',//5
+        '调拨'//5
     ];
 
     //获取货单信息
     var df1 = com.post(api.inventory.queryManifestByMid, {"manifest.mid": id}, function(res){
         var typeTxt = mtypeList[parseInt(res.manifest.type) -1];
-        $('#mcode').text(res.manifest.code);
-        $('#mtype').text(typeTxt); //– 类型
-        $('#createDate').text(res.manifest.manifestTime);//– 货单时间
-        $('#total').text(res.manifest.total);// – 总价
-        $('#creator').text(res.manifest.createUser.currentName );// – 创建人
+        com.focusPage('#mcode').text(res.manifest.code);
+        com.focusPage('#mtype').text(typeTxt); //– 类型
+        com.focusPage('#createDate').text(res.manifest.manifestTime);//– 货单时间
+        com.focusPage('#total').text(res.manifest.total);// – 总价
+        com.focusPage('#creator').text(res.manifest.createUser.currentName );// – 创建人
         //res.total;
     });
     //获取货单下商品
@@ -63,7 +63,7 @@ $(function(){
         var LODOP = document.getElementById('LODOP_EM');
 
         if(LODOP){
-            $('.print_container').css('display', 'block');
+            com.focusPage('.print_container').css('display', 'block');
 
 //        LODOP.SET_PRINT_PAGESIZE(1,58,200,'');
 
@@ -107,7 +107,7 @@ $(function(){
             LODOP.PRINT();
             //LODOP.PREVIEW();
         }
-    };
+    }
 
 });
 

@@ -1,6 +1,6 @@
 	var approvalUtils = {
         initqueryApprovalUser: function (id, type) {
-            var $approvalDiv = $('#' + id);
+            var $approvalDiv = com.focusPage('#' + id);
             $approvalDiv.empty();
             com.post(api.approval.queryApproverByType, {"approver.type": type}, function (res) {
                 for (var i = 0; i < res.approvalUsers.length; i++) {
@@ -43,4 +43,4 @@
                 return $10pxdiv.append($('<h3></h3>').html(value));
             }
         }
-    }
+    };

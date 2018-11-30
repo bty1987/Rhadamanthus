@@ -23,21 +23,21 @@ import com.fanglin.utils.Paging;
 public interface GoodsStorehouseStockService {
 	
 	public void pageGoodsStorehouseStock(Paging paging, List<Filter> filters, String userId);
+
+	public Float queryGoodsStorehouseStockByGid(GoodsStorehouseStockVO goodsStorehouseStockVO);
 	
 	public GoodsStorehouseStockVO queryStorehouseStockByShIdAGId(GoodsStorehouseStockVO goodsStorehouseStock);
 	
-	public Float queryGoodsStorehouseStockByGid(GoodsStorehouseStockVO goodsStorehouseStockVO);
+	public int makeGoodsStorehouseStock(GoodsStorehouseStockVO goodsStorehouseStockVO)throws FLException;
 	
 	public void checkGoodsStorehouseStock(CheckListVO checkListVO, String userId) throws FLException;
+	
+	public int mergePackage(GoodsStorehouseStockVO goodsStorehouseStockVO,String userId,int company) throws FLException;
+	
+	public int splitPackage(GoodsStorehouseStockVO goodsStorehouseStockVO,String userId,int company) throws FLException;
 
 	public StorehousePO instorehouse(long gid, long cid, long fid, long shId, float num) throws FLException;
 
 	public StorehousePO outstorehouse(long gid, long cid, long fid, long shId, float num) throws FLException;
-	
-	public int makeGoodsStorehouseStock(GoodsStorehouseStockVO goodsStorehouseStockVO)throws FLException;
-	
-	public int splitPackage(GoodsStorehouseStockVO goodsStorehouseStockVO,String userId,int company) throws FLException;
-	
-	public int mergePackage(GoodsStorehouseStockVO goodsStorehouseStockVO,String userId,int company) throws FLException;
 
 }

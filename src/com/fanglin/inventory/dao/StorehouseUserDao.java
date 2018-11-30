@@ -18,11 +18,7 @@ import com.fanglin.inventory.po.StorehouseUserPO;
 
 public interface StorehouseUserDao extends Dao<StorehouseUserPO> {
 	
-	public List<StorehouseUserPO> queryStorehouseUserByUId(int uId);
-	
 	public List<StorehouseUserPO> queryStorehouseUserByUserId(String userId);
-	
-	public int countStorehouseUserByShId(long shId);
 	
 	public int deleteStorehouseUserByUId(int uId);
 

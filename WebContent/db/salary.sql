@@ -22,3 +22,17 @@ CREATE TABLE `workersalary` (
   PRIMARY KEY (`wsid`),
   KEY `indexone` (`cid`,`wuid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='工人工费';
+
+
+
+DROP TABLE IF EXISTS `workerbalance`;
+CREATE TABLE `workerbalance` (
+  `wbid` int(11) NOT NULL AUTO_INCREMENT,
+  `uid` int(11) NOT NULL,
+  `deposit` decimal(10,3) NOT NULL DEFAULT '0.000',
+  `salary` decimal(10,3) NOT NULL DEFAULT '0.000',
+  `toplimit` decimal(10,3) NOT NULL DEFAULT '0.000',
+  `status` tinyint(4) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`wbid`),
+  KEY `oneindex` (`uid`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='工人账户';

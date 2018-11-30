@@ -1,7 +1,7 @@
 
 $(function(){
 
-    var $popup = $('#viewDecoration');
+    var $popup = com.focusPage('#viewDecoration');
     var orderId = $popup.attr('data-orderId');
     if(orderId==""||orderId==null||orderId==0){
         layer.alert('订单不存在', {
@@ -15,7 +15,7 @@ $(function(){
             "decoration.orderId": orderId
         },function(res){
             var $table = $('table.table');
-            $table.css({'margin-top':'6%'})
+            $table.css({'margin-top':'6%'});
             var $td = $('table.table td');
             $td.css('text-align','right');
             var $th = $('table.table th');

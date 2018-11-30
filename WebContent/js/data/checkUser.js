@@ -7,32 +7,32 @@ jQuery(function($) {
         userid : null,
         btnno : null,
         returnBtn : null,
+        tempUserId: params.tempUserId,
+        currentUid: params.uid
     };
 
-    $('#fl-statement').statement("人员资料", "编辑资料");
+    com.focusPage('#fl-statement').statement("人员资料", "编辑资料");
 
-    checkUser.btnyes = $(".yes").on("click",updateprofiles);
-    checkUser.btnno = $(".no").on("click",removeprofiles);
+    checkUser.btnyes = com.focusPage(".yes").on("click",updateprofiles);
+    checkUser.btnno = com.focusPage(".no").on("click",removeprofiles);
 
-    com.post(api.personel.queryUserInfoByUserId, {"userInfo.user.userId": label.tempUserId}, function(res){
-
+    com.post(api.personel.queryUserInfoByUserId, {"userInfo.user.userId": checkUser.tempUserId}, function(res){
         checkUser.name=res.userInfo.user.userName;
         checkUser.userPhoto=(res.userInfo.user.userPhoto == null ? " " : res.userInfo.user.userPhoto);
         checkUser.profiles = res.userInfo.profiles;
-        $("#content").html(checkUser.profiles);
-        $("#infoPicture").attr("href", com.showImg($("#showImg"), checkUser.userPhoto, 150, 150, ''));
-        $("#name").html(checkUser.name);
+        com.focusPage("#content").html(checkUser.profiles);
+        com.focusPage("#infoPicture").attr("href", com.showImg(com.focusPage("#showImg"), checkUser.userPhoto, 150, 150, ''));
+        com.focusPage("#name").html(checkUser.name);
         checkUser.userid=res.userInfo.user.userId;
 
         com.post(api.data.queryUserLabelByUid, {"userlabel.user.uid" : res.userInfo.user.uid}, function(res){
-
-                $.each(res.userlabels, function(i, v){
+            $.each(res.userlabels, function(i, v){
                 if(v.label.isShow == 0){
                     var $draw = ('标签名称:  '+ v.label.name+'<div class="progress" data-percent="'+ v.scope+'%'+'"><div class="progress-bar" style="width:'+ v.scope+'%'+';"></div></div>')
-                    $("#astrict").append($draw);
+                    com.focusPage("#astrict").append($draw);
                 }
-                })
-        })
+            })
+        });
 
         var propertyArr = [
             ["年龄", "age", res.userInfo.age],         // name aid value inputId
@@ -44,64 +44,57 @@ jQuery(function($) {
             ["联系电话", "emergencyPhone", res.userInfo.emergencyPhone]
         ];
 
-        var $striped = $('<div class = "profile-user-info profile-user-info-striped"></div>').appendTo($("#all"));
+        var $striped = $('<div class = "profile-user-info profile-user-info-striped"></div>').appendTo(com.focusPage("#all"));
 
-        var $btn=$('<button class = "btn btn-info">编辑个人简介</button>').css('float','right') .appendTo($("#whis"));
+        var $btn=$('<button class = "btn btn-info">编辑个人简介</button>').css('float','right') .appendTo(com.focusPage("#whis"));
 
-        $("#btn").css("display","none");
+        com.focusPage("#btn").css("display","none");
 
         $.each(propertyArr, function (i, v) {
             var $row = $('<div class = "profile-info-row"></div>').css("height","35px");
-
             var $name = $('<div class = "profile-info-name">'+ v[0] +'</div>');
-
             var $value = $('<div class = "profile-info-value"></div>');
             var $a = $('<p href="#" class = "editable" id="'+ v[1] +'">'+ v[2] +'</p>');
-
             $row.append($name).append($value.append($a)).appendTo($striped);
-
         });
 
         $btn.click(function(){
-            $("#text").css("display","block");
-            $("#content").css("display","none");
-            $("#btn").css("display","block");
-            $("#text").val($("#content").html());
+            com.focusPage("#text").css("display","block");
+            com.focusPage("#content").css("display","none");
+            com.focusPage("#btn").css("display","block");
+            com.focusPage("#text").val(com.focusPage("#content").html());
         });
         //$content.appendTo($("#profiles"));
     });
 
-    $("#returnBtn").click(function(){
+    com.focusPage("#returnBtn").click(function(){
         com.switchPage(api.index.userLabel.url);
     });
 
     function updateprofiles(){
         var option={
             "userInfo.user.userId" : checkUser.userid,
-            "userInfo.profiles" : $("#text").val()
+            "userInfo.profiles" : com.focusPage("#text").val()
         };
-        com.post(api.personel.updateUserForProfiles,option,function(){
+        com.post(api.personel.updateUserForProfiles, option, function(){
             com.post(api.personel.queryUserInfoByUserId, {"userInfo.user.userId" : checkUser.userid}, function(res){
-                $("#content").html(res.userInfo.profiles);
+                com.focusPage("#content").html(res.userInfo.profiles);
             });
             com.showAlert(com.info, "编辑个人简介成功！");
-            select($("#text"),$("#btn"),$("#content"));
+            select(com.focusPage("#text"), com.focusPage("#btn"), com.focusPage("#content"));
         });
     }
 
     function removeprofiles(){
-
-        select($("#text"),$("#btn"),$("#content"));
-        com.post(api.personel.queryUserInfoByUserId, {"userInfo.user.userId": label.tempUserId}, function(res){
-
-            $("#content").html(res.userInfo.profiles);
+        select(com.focusPage("#text"), com.focusPage("#btn"), com.focusPage("#content"));
+        com.post(api.personel.queryUserInfoByUserId, {"userInfo.user.userId": checkUser.tempUserId}, function(res){
+            com.focusPage("#content").html(res.userInfo.profiles);
         })
     }
 
-    function select(textid,btnid,contentid){
+    function select(textid, btnid, contentid){
         textid.css("display","none");
         btnid.css("display","none");
         contentid.css("display","block");
     }
-
-    });
+});

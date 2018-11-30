@@ -19,12 +19,12 @@ public class MformatDaoImpl extends DaoImpl<MformatPO> implements MformatDao {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<MformatPO> queryMformatByGid(long gid, Boolean flag) {
+	public List<MformatPO> queryMformatByGid(long gid, Short status) {
 
 		Criteria criteria = session().createCriteria(MformatPO.class).add(Restrictions.eq(MformatPO.COLUMN_GID_STR, gid));
 		
-		if(flag){
-			criteria.add(Restrictions.eq("status",MformatPO.STATUS_ABLE_SHORT));
+		if(status != null){
+			criteria.add(Restrictions.eq("status",status));
 		}
 		
 		return criteria.list();

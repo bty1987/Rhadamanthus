@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.approval.dao.ApprovalDao;
+import com.fanglin.approval.po.ApprovalPO;
 import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.communion.vo.HouseVO;
@@ -54,6 +56,9 @@ public class SalesBalanceServiceImpl implements SalesBalanceService{
 	@Autowired
 	private SalesBalanceItemDao salesBalanceItemDao; 
 	
+	@Autowired
+	private ApprovalDao approvalDao;
+	
 	@Override
 	public List<SalesBalanceVO> pageSalesBalance(List<SalesBalancePO> salesBalancePOs) {
 		
@@ -66,11 +71,11 @@ public class SalesBalanceServiceImpl implements SalesBalanceService{
 			BeanUtil.copyPropertie(salesBalancePO, salesBalanceVO, Arrays.asList("sales","refunds","creater","poster"));
 			BeanUtil.copyPropertie(salesBalancePO.getSales(), salesBalanceVO.getSales(), Arrays.asList("salesman","dept","region","guider","instorer","guideDept","house","customer"));
 			BeanUtil.copyProperties(salesBalancePO.getSales().getSalesman(), salesBalanceVO.getSales().getSalesman(),Arrays.asList("dept","duty"));
-			BeanUtil.copyProperties(salesBalancePO.getSales().getDept(), salesBalanceVO.getSales().getDept(),Arrays.asList("fatherDept","cityProper","type"));
-			BeanUtil.copyProperties(salesBalancePO.getSales().getRegion(), salesBalanceVO.getSales().getRegion(),Arrays.asList("fatherDept","cityProper","type"));
+			BeanUtil.copyProperties(salesBalancePO.getSales().getDept(), salesBalanceVO.getSales().getDept(),Arrays.asList("fatherDept","type","manager"));
+			BeanUtil.copyProperties(salesBalancePO.getSales().getRegion(), salesBalanceVO.getSales().getRegion(),Arrays.asList("fatherDept","type","manager"));
 			BeanUtil.copyProperties(salesBalancePO.getSales().getInstorer(), salesBalanceVO.getSales().getInstorer(),Arrays.asList("dept","duty"));
 			BeanUtil.copyProperties(salesBalancePO.getSales().getGuider(), salesBalanceVO.getSales().getGuider(),Arrays.asList("dept","duty"));
-			BeanUtil.copyProperties(salesBalancePO.getSales().getGuideDept(), salesBalanceVO.getSales().getGuideDept(),Arrays.asList("fatherDept","cityProper","type"));
+			BeanUtil.copyProperties(salesBalancePO.getSales().getGuideDept(), salesBalanceVO.getSales().getGuideDept(),Arrays.asList("fatherDept","type","manager"));
 			BeanUtil.copyProperties(salesBalancePO.getSales().getHouse(), salesBalanceVO.getSales().getHouse(),Arrays.asList("village"));
 			BeanUtil.copyProperties(salesBalancePO.getSales().getHouse().getVillage(), salesBalanceVO.getSales().getHouse().getVillage(),Arrays.asList("cityProper"));
 			BeanUtil.copyProperties(salesBalancePO.getSales().getCustomer(), salesBalanceVO.getSales().getCustomer());
@@ -196,6 +201,12 @@ public class SalesBalanceServiceImpl implements SalesBalanceService{
 			
 			if(salesPO.getBalanceStatus() != SalesPO.BALANCESTATUS_INIT_SHORT){
 				throw new FLException(260022, "销售单状态不可操作");
+			}
+			
+			ApprovalPO approvalPO = approvalDao.queryApproval(ApprovalPO.APPROVAL_STATUS_INIT_INT,ApprovalPO.APPROVAL_TYPE_SALESREFUND_PAYMENT_INT, String.valueOf(sid));
+			
+			if(approvalPO != null){
+				throw new FLException(240007, "存在未处理审批信息");
 			}
 			
 			SalesBalancePO salesBalancePO = new SalesBalancePO();

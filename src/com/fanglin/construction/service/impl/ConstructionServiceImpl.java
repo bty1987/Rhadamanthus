@@ -166,7 +166,7 @@ public class ConstructionServiceImpl implements ConstructionService {
 		decorationVO.setHouse(new HouseVO());
 		decorationVO.setDesigner(new UserBaseVO(null, new DepartmentVO()));
 		decorationVO.setSalesman(new UserBaseVO(null, new DepartmentVO()));
-		decorationVO.setSupervisor(new UserBaseVO(new DutyVO(), new DepartmentVO(null, new DepartmentVO(), null)));
+		decorationVO.setSupervisor(new UserBaseVO(new DutyVO(), new DepartmentVO(null, new DepartmentVO())));
 		
 		decorationPO.ptvcascade(decorationVO);
 		

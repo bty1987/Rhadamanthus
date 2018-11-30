@@ -5,12 +5,12 @@
 
 jQuery(function ($) {
 
-    $('#editPopUp').css({'height': '100%', 'margin': 0});
+    com.focusPage('#editPopUp').css({'height': '100%', 'margin': 0});
 
     var purchase = {
-        pid: $('#editPopUp').attr('data-pid'),
+        pid: com.focusPage('#editPopUp').attr('data-pid'),
         purchaseItems: {
-            pid: $("#pId")
+            pid: com.focusPage("#pId")
         },
         record: {},
         validator: {
@@ -39,7 +39,7 @@ jQuery(function ($) {
         'href': 'javascript:void(0);'
     }).css({'margin-left': '17px', 'margin-top': '12px'}).text('取消');
     var $div = $('<div class="layui-layer-btn0" style="position: relative;top:-10%;left:73%;"></div>');
-    var $condList1 = $('#editPopUp').parents('.layui-layer.layui-anim.layui-layer-page.layui-layer-lan');
+    var $condList1 = com.focusPage('#editPopUp').parents('.layui-layer.layui-anim.layui-layer-page.layui-layer-lan');
     $div.append($btnSave).append($btnCancel).appendTo($condList1);
 
     //创建表头
@@ -59,24 +59,24 @@ jQuery(function ($) {
     //获取采购单信息
     com.post(api.inventory.queryPurchaseByPid, {"purchase.pid": purchase.pid}, function (res) {
 
-        $('#no').text(res.purchase.no);                            //– 采购单编号
-        $('[name="date"]', '#form').val(res.purchase.createTime);  //– 创建时间
+        com.focusPage('#no').text(res.purchase.no);                            //– 采购单编号
+        com.focusPage('[name="date"]', '#form').val(res.purchase.createTime);  //– 创建时间
 
-        $('#comment').val(res.purchase.comment);                   //– 说明
+        com.focusPage('#comment').val(res.purchase.comment);                   //– 说明
 
     });
 
 
     //获取采购单下采购项
     function getPurchaseItem() {
-        $('#list').empty();
+        com.focusPage('#list').empty();
         com.post(api.inventory.queryPurchaseItemByPid, {"purchase.pid": purchase.pid}, function (res) {
             $.each(res.purchaseItems, function (i, v) {
                 //添加一条空行
                 addline(i + 1, getLineInfoSet(v)).addClass('current').attr({
                     'data-pid': v.pid,
                     'data-piid': v.piId
-                }).appendTo('#list');
+                }).appendTo(com.focusPage('#list'));
             });
 
         });
@@ -85,20 +85,20 @@ jQuery(function ($) {
     getPurchaseItem();
 
     //添加一条空行
-    $('#addPurchase').click(function () {
+    com.focusPage('#addPurchase').click(function () {
         if(com.validate('list')){
             return;
         }
-        var num = $('ul#list .line').length;
+        var num = com.focusPage('ul#list .line').length;
         var returnFlag = false;
-        var $lines = $('.line', '#list');
+        var $lines = com.focusPage('.line', '#list');
         $lines.each(function () {
             var $this = $(this);
         });
         if (returnFlag) return;
 
         var $line = addlineC(num + 1);
-        $line.appendTo('#list');
+        $line.appendTo(com.focusPage('#list'));
 
     });
 
@@ -115,7 +115,7 @@ jQuery(function ($) {
         }
         var options = {};
 
-        var $lines = $('li.line', '#list');
+        var $lines = com.focusPage('li.line', '#list');
         if (!checkInfo()) return;
         if (!$lines.length) {
             layer.msg('请填写商品');
@@ -135,11 +135,11 @@ jQuery(function ($) {
             return false;
         }
 
-        var comment = $('#comment').val();                      //– 说明
+        var comment = com.focusPage('#comment').val();                      //– 说明
 
         options = {
             "purchase.pid": purchase.pid,
-            "purchase.comment": comment,
+            "purchase.comment": comment
         };
 
         var btn = $(this);
@@ -149,9 +149,9 @@ jQuery(function ($) {
             btn.button('reset');
             layer.closeAll();
             layer.msg('保存成功!', {icon: 1});
-            $('#list').empty();
-            $('[name="date"]', '#form').val(null);
-            $('#comment').val(null);
+            com.focusPage('#list').empty();
+            com.focusPage('[name="date"]', '#form').val(null);
+            com.focusPage('#comment').val(null);
         }, function (e) {
             btn.button('reset');
             com.showAlert(com.error, e.errorMsg);
@@ -273,12 +273,12 @@ jQuery(function ($) {
                         com.post(api.inventory.queryColorForEnableByGid, {
                             "color.gid": val.gid
                         }, function (res) {
-                            $('li[data-gid="' + val.gid + '_' + lineindex + '"] .color select').bindData(res.colors, "cid", "name");
+                            com.focusPage('li[data-gid="' + val.gid + '_' + lineindex + '"] .color select').bindData(res.colors, "cid", "name");
                         });
                         com.post(api.inventory.queryFormatForEnableByGid, {
                             "format.gid": val.gid
                         }, function (res) {
-                            $('li[data-gid="' + val.gid + '_' + lineindex + '"] .format select').bindData(res.formats, "fid", "info");
+                            com.focusPage('li[data-gid="' + val.gid + '_' + lineindex + '"] .format select').bindData(res.formats, "fid", "info");
                         });
                     }
                 });
@@ -320,7 +320,7 @@ jQuery(function ($) {
                 if ($line.attr('data-piid')) {
                     com.post(api.inventory.deletePurchaseItem, {
                         "purchase.pid": $line.attr('data-pid'),
-                        "purchaseItem.piId": $line.attr('data-piid'),
+                        "purchaseItem.piId": $line.attr('data-piid')
                     }, function () {
                     }, function () {
                         layer.msg('操作失败', {icon: 2});
@@ -466,7 +466,7 @@ jQuery(function ($) {
                     if ($line.attr('data-piid')) {
                         com.post(api.inventory.deletePurchaseItem, {
                             "purchase.pid": $line.attr('data-pid'),
-                            "purchaseItem.piId": $line.attr('data-piid'),
+                            "purchaseItem.piId": $line.attr('data-piid')
                         }, function () {
                         }, function () {
                             layer.msg('操作失败', {icon: 2});
@@ -546,7 +546,7 @@ jQuery(function ($) {
 
     //重排序
     function reorder() {
-        var $list = $('.line', '#list');
+        var $list = com.focusPage('.line', '#list');
         $list.length && $list.each(function (i) {
             var $this = $(this);
             $this.find('.index').text(i + 1);
@@ -558,7 +558,7 @@ jQuery(function ($) {
 
         var flag = true;
 
-        var date = $('[name="date"]', '#form');
+        var date = com.focusPage('[name="date"]', '#form');
         if (!date.val()) {
             date.focus().select();
 
@@ -613,9 +613,9 @@ jQuery(function ($) {
             btn.button('reset');
             layer.msg('新增成功!', {icon: 1}, function () {
             });
-            $(dataDivDom.childNodes[1]).html($(dataDivDom.childNodes[1]).find("input").val());
-            $(dataDivDom.childNodes[5]).html($(dataDivDom.childNodes[5]).find("option:selected").text());
-            $(dataDivDom.childNodes[6]).html($(dataDivDom.childNodes[6]).find("option:selected").text());
+            com.focusPage(dataDivDom.childNodes[1]).html(com.focusPage(dataDivDom.childNodes[1]).find("input").val());
+            com.focusPage(dataDivDom.childNodes[5]).html(com.focusPage(dataDivDom.childNodes[5]).find("option:selected").text());
+            com.focusPage(dataDivDom.childNodes[6]).html(com.focusPage(dataDivDom.childNodes[6]).find("option:selected").text());
         }, function (e) {
             btn.button('reset');
             com.showAlert(com.error, e.errorMsg);

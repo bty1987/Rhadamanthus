@@ -1,11 +1,11 @@
 $(function(){
 
-    var $layeradd = $('#layerAdd');
+    var $layeradd = com.focusPage('#layerAdd');
 
     var displayFunc = (function(){
 
         var renderList = function(tableID,listData){
-            var $tableWrap = $('#'+ tableID);
+            var $tableWrap = com.focusPage('#'+ tableID);
 
             if(listData && listData.length){
                 var $ulTitle = createTableTitle();
@@ -126,7 +126,7 @@ $(function(){
         }
         return{
             init: function (tableId, listData) {
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
 
             },
@@ -219,12 +219,12 @@ $(function(){
     }
     //绑定报价类型
     com.post(api.production.queryQuoteType,{},function (res) {
-        $('select[name = "quoteType"]').bindData(res.quoteTypes,"qtid","name");
+        com.focusPage('select[name = "quoteType"]').bindData(res.quoteTypes,"qtid","name");
     });
 
     //绑定单位
     com.post(api.data.queryMeasurementUnit,{},function(res){
-        $('select[name = "measureunit"]').bindData(res.measurementUnits,"id","name");
+        com.focusPage('select[name = "measureunit"]').bindData(res.measurementUnits,"id","name");
     });
 
     //添加方法

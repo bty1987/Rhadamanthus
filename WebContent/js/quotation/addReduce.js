@@ -1,14 +1,28 @@
 
 jQuery(function($) {
-	
-	var extraParams = {"addReduce.orderId" : params.decorationOrderId};
+	//searcher 第七个参数传参
+	var decorationOrderId = params.decorationOrderId;
+	var extraParams = {"addReduce.orderId" : decorationOrderId};
+	var addReduce = {
+		decorationOrderId : params.decorationOrderId,
+		saveBtn: com.focusPage("#saveBtn").on("click", saveData),
+		cancellBtn: com.focusPage("#cancelBtn"),
+		modal: com.focusPage("#addReduceModal"),
+		addReduceItems: {
+			addReduceDes : com.focusPage("#addReduceDes"),
+			addReduceType : com.focusPage("#addReduceType")
+		},
+
+		editFlag: false
+	};
+
 	var displayFunc  = (function(){
 
 		var typeDict = {"0":"增项", "1":"减项", "2":"漏项"};
 		var statusDict = {"0":"未提交", "1":"未付款","2":"已付款","3":"已确认"};
 
 		var renderList = function(tableId,listData){
-			var $tableWrap = $('#' + tableId);
+			var $tableWrap = com.focusPage('#' + tableId);
 			var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
 			if(listData && listData.length){
@@ -35,7 +49,7 @@ jQuery(function($) {
 			var $input = $('<input>').attr({
 				"type": "checkbox",
 				"name": "arids",
-				"class": "ace ace-checkbox-2",
+				"class": "ace ace-checkbox-2"
 			}).val(v.arId);
 			var $span = $('<span></span>').addClass('lbl blue bigger-150').text(v.content);
 
@@ -43,7 +57,7 @@ jQuery(function($) {
 				["总价:", v.total, "grey"],
 				["类别:", typeDict[v.type + ''], "grey"],
 				["状态:", statusDict[v.status], "red"],
-				["添加时间:", v.createTime, "grey"],
+				["添加时间:", v.createTime, "grey"]
 			];
 
 			$.each(propertyArr, function (index,value) {
@@ -65,7 +79,7 @@ jQuery(function($) {
 			$btnDel.click(function(){
 				bootbox.confirm("确认删除吗?",function(flag) {
 					flag && removeRow(v.arId);
-				})
+				});
 			});
 
 			return $liLine;
@@ -73,7 +87,7 @@ jQuery(function($) {
 
 		return {
 			init : function(tableId,listData){
-				$('#' + tableId).html(null);
+				com.focusPage('#' + tableId).html(null);
 				renderList(tableId,listData);
 			},
 			drawLine : function(v){
@@ -89,57 +103,13 @@ jQuery(function($) {
 		displayFunc.init('resultList', data);
 	}, null, "addReducePostData", extraParams, true, "addReduces");
 
-	var addReduce = {
-		decorationOrderId : params.decorationOrderId,
-		saveBtn: $("#saveBtn").on("click", saveData),
-		cancellBtn: $("#cancelBtn"),
-		modal: $("#addReduceModal"),
-		addReduceItems: {
-			addReduceDes : $("#addReduceDes"),
-		 	addReduceType : $("#addReduceType")
-		},
 
-		editFlag: false,
-	};
-
-	//返回按钮
-	$('#btnBack').click(function(){
-		com.switchPage(params.historyPage);
-	});
-	//刷新按钮
-	$('#updated').click(function(){
-		search.doSearch();
-	});
-
-	//添加按钮
-	$('#add').click(function(){
-		addReduce.editFlag = false;
-		com.cleanItems(addReduce.addReduceItems);
-
-		addReduce.addReduceItems.addReduceType.attr('disabled', false);
-
-		addReduce.modal.modal("show");
-	});
-
-	//打印按钮
-	$('#print').click(function(){
-		var $inputs = $('input[name="arids"]:checked');
-		var url = api.index.addReduceOutputIndex.url ;
-		var _addReduceIds = [];
-		if(!$inputs.length) return;
-		$.each($inputs, function(i, v){
-			_addReduceIds.push(parseInt($(v).val()));
-		});
-		params.addReduceIds = _addReduceIds;
-		//url += "quotation.orderId=" + params.decorationOrderId + "&orderType=" + params.decorationOrderType + "&time=" + parent.params.loginTime;
-		com.popup("增减项打印",url,null,null,true)
-	});
-
+	//查看按钮方法
 	function viewDetailAddReduce(addReduceId){
 		params["addReduceId"] = addReduceId;
 		com.switchPage(api.index.addReduceDetailIndex.url);
 	}
-
+	//删除按钮方法
 	function removeRow(arid){
 		com.post(api.addReduce.deleteAddReduce, {"addReduce.arId" : arid}, function(res){
 			if(res.deleteFlag == "EXIST"){
@@ -150,8 +120,41 @@ jQuery(function($) {
 			}
 		});
 
-		$("#eData").trigger("click");
+		com.focusPage("#eData").trigger("click");
 	}
+
+	//添加按钮
+	com.focusPage('#add').click(function(){
+		addReduce.editFlag = false;
+		com.cleanItems(addReduce.addReduceItems);
+
+		addReduce.addReduceItems.addReduceType.attr('disabled', false);
+
+		addReduce.modal.modal("show");
+	});
+	//打印按钮
+	com.focusPage('#print').click(function(){
+		var $inputs = com.focusPage('input[name="arids"]:checked');
+		var url = api.index.addReduceOutputIndex.url ;
+		var _addReduceIds = [];
+		if(!$inputs.length) return;
+		$.each($inputs, function(i, v){
+			_addReduceIds.push(parseInt($(v).val()));
+		});
+		params.addReduceIds = _addReduceIds;
+		//url += "quotation.orderId=" + params.decorationOrderId + "&orderType=" + params.decorationOrderType + "&time=" + parent.params.loginTime;
+		com.popup("增减项打印",url,null,null,true);
+	});
+
+	//返回按钮
+	com.focusPage('#btnBack').click(function(){
+		com.switchPage("/views/decoration/decoration.html");
+	});
+	//刷新按钮
+	com.focusPage('#updated').click(function(){
+		search.doSearch();
+	});
+
 
 	function saveData(){
 

@@ -117,7 +117,7 @@ public class AccessInterceptor extends AbstractInterceptor {
 			stack.setValue("errorMsg", e.getErrorMessage());
 		}catch (Exception e) {
 			stack.setValue("errorCode", "110000");
-			stack.setValue("errorMsg", "系统问题");
+			stack.setValue("errorMsg", "操作失败,请稍后重试");
 			
 			LogUtils.logging(logger, e, actionName, userId);
 		}

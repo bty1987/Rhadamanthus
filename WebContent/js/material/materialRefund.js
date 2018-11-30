@@ -14,10 +14,10 @@ var materialSubOrderRefundPostData = {};
 var materialSubOrderRefundData = [];
 
 jQuery(function($) {
-	$('#fl-statement').statement("主材子订单", "退款信息");
+	com.focusPage('#fl-statement').statement("主材子订单", "退款信息");
 	
-	materialSubOrderRefund.saveBtn = $("#saveBtn");
-	materialSubOrderRefund.cancelBtn = $("#cancelBtn");
+	materialSubOrderRefund.saveBtn = com.focusPage("#saveBtn");
+	materialSubOrderRefund.cancelBtn = com.focusPage("#cancelBtn");
 	
 	materialSubOrderRefundPostData["materialRefund.mid"] = materialSubOrderPostData["materialSubOrder.msoId"];
 	materialSubOrderRefundPostData["materialRefund.customer.name"] = materialSubOrderPostData["materialSubOrder.customerName"];
@@ -25,7 +25,7 @@ jQuery(function($) {
 	var displayFunc  = (function(){
 
 		var renderList = function(tableId,listData){
-			var $tableWrap = $('#' + tableId);
+			var $tableWrap = com.focusPage('#' + tableId);
 			var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
 			if(listData && listData.length){
@@ -105,14 +105,14 @@ jQuery(function($) {
 
 				$ul.appendTo($tableWrap);
 			}
-		}
+		};
 		
 		return {
 			init : function(tableId,listData){
-				$('#' + tableId).html(null);
+				com.focusPage('#' + tableId).html(null);
 				renderList(tableId,listData);
 			}
-		}
+		};
 	})();
 	
 	var searcher = new Searcher();
@@ -121,11 +121,11 @@ jQuery(function($) {
 		displayFunc.init('resultList', data);
 	}, "pagenation", null, materialSubOrderRefundPostData, true, "materialRefunds");
 	
-	$("#back").on("click", function(){
+	com.focusPage("#back").on("click", function(){
 		com.switchPage(api.index.materialIndex.url);
 	});
 	
-	$("#import").on("click", function(){
+	com.focusPage("#import").on("click", function(){
 		com.post(api.material.queryMaterialRefundByMid, materialSubOrderRefundPostData, function(res){
 			
 			$.exceler({
@@ -145,10 +145,10 @@ jQuery(function($) {
 		});
 	});
 	
-	$("#print").on("click", function(){
+	com.focusPage("#print").on("click", function(){
 
 		var idents = "";
-		var $inputs = $('input[name="idents"]:checked');
+		var $inputs = com.focusPage('input[name="idents"]:checked');
 
 		$inputs && $inputs.length > 0 && ($.each($inputs, function(i, v){
 			idents += "&idents[" + i + "]=" + $(v).attr('ident');

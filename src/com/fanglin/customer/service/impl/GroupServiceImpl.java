@@ -35,13 +35,17 @@ public class GroupServiceImpl implements GroupService{
 		
 		List<GroupVO> groupVOs = new ArrayList<GroupVO>();
 		
-		for (GroupPO groupPO : groupPOs) {
+		if(groupPOs.size() != 0 && groupPOs != null){
 			
-			GroupVO groupVO = new GroupVO();
-			
-			BeanUtil.copyPropertie(groupPO, groupVO);
-			
-			groupVOs.add(groupVO);
+			for (GroupPO groupPO : groupPOs) {
+				
+				GroupVO groupVO = new GroupVO();
+				
+				BeanUtil.copyPropertie(groupPO, groupVO);
+				
+				groupVOs.add(groupVO);
+				
+			}
 			
 		}
 		
@@ -68,49 +72,50 @@ public class GroupServiceImpl implements GroupService{
 	@Transactional(rollbackFor=Exception.class)
 	public int updateGroup(GroupVO groupVO) throws FLException {
 		
-		GroupPO groupPO = groupDao.get(groupVO.getGid());
-		
-		if(groupPO != null){
+		if(groupVO.getGid() != null){
 			
-			groupPO.setName(groupVO.getName());
-			groupPO.setContent(groupVO.getContent());
+			GroupPO groupPO = groupDao.get(groupVO.getGid());
 			
-			groupDao.update(groupPO);
-			
-		}
-		
-		return 0;
-	}
-	
-	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public int updateGroupForCommon(GroupVO groupVO) throws FLException {
-		
-		GroupPO groupPO = groupDao.queryGroup(groupVO.getOpengid());
-		
-		if(groupPO == null){
-			
-			groupPO = new GroupPO();
-			
-			BeanUtil.copyPropertie(groupVO, groupPO);
-			
-			groupDao.save(groupPO);
-			
-		}else{
-			
-			if(groupVO.getOrderId() != null){
+			if(groupPO != null){
 				
-				groupPO.setOrderId(groupVO.getOrderId());
+				groupPO.setName(groupVO.getName());
+				groupPO.setContent(groupVO.getContent());
 				
 				groupDao.update(groupPO);
 				
 			}
 			
+		}else{
+			
+			GroupPO groupPO = groupDao.queryGroup(groupVO.getOpengid());
+			
+			if(groupPO == null){
+				
+				groupPO = new GroupPO();
+				
+				BeanUtil.copyPropertie(groupVO, groupPO);
+				
+				groupDao.save(groupPO);
+				
+			}else{
+				
+				if(groupVO.getOrderId() != null){
+					
+					groupPO.setOrderId(groupVO.getOrderId());
+					
+				}
+				
+				groupPO.setName(groupVO.getName());
+				groupPO.setContent(groupVO.getContent());
+				
+				groupDao.update(groupPO);
+				
+			}
 		}
 		
 		return 0;
 	}
-
+	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public int bindGroup(GroupVO groupVO) throws FLException {

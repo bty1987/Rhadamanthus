@@ -7,36 +7,40 @@ import org.apache.struts2.json.annotations.JSON;
 
 import com.fanglin.personel.vo.UserBaseVO;
 
-public class VustomerVO implements Serializable{
+public class VustomerVO implements Serializable {
 
 	private static final long serialVersionUID = -4666586604257215679L;
-	
+
 	private Long vid;
-	
+
 	private String unionId;
-	
+
 	private UserBaseVO belonger;
-	
+
 	private String name;
-	
+
 	private String phone;
-	
+
+	private String referrer;
+
+	private String referphone;
+
 	private Timestamp createTime;
-	
+
 	private String address;
-	
+
 	private String orderId;
-	
+
 	private Float contractPrice;
-	
+
 	private Short status;
-	
+
 	private String comment;
-	
-	public VustomerVO(){
+
+	public VustomerVO() {
 		super();
 	}
-	
+
 	public VustomerVO(UserBaseVO belonger) {
 		super();
 		this.belonger = belonger;
@@ -65,6 +69,7 @@ public class VustomerVO implements Serializable{
 	public void setBelonger(UserBaseVO belonger) {
 		this.belonger = belonger;
 	}
+
 	public String getName() {
 		return name;
 	}
@@ -80,7 +85,23 @@ public class VustomerVO implements Serializable{
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
-	
+
+	public String getReferrer() {
+		return referrer;
+	}
+
+	public void setReferrer(String referrer) {
+		this.referrer = referrer;
+	}
+
+	public String getReferphone() {
+		return referphone;
+	}
+
+	public void setReferphone(String referphone) {
+		this.referphone = referphone;
+	}
+
 	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getCreateTime() {
 		return createTime;

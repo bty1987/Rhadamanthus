@@ -1,5 +1,4 @@
 jQuery(function(a) {
-
     var user = {
         politicalType: [],
         householdType: [],
@@ -23,7 +22,7 @@ jQuery(function(a) {
         roleValue: "roleName",
         deptList: {},
         deptKey: "did",
-        deptValue: "deptName",
+        deptValue: "name",
         eSaveBtn: null,
         eCancelBtn: null,
         eModal: null,
@@ -38,41 +37,37 @@ jQuery(function(a) {
         cEditFlg: !1,
         cEditNum: null,
         contractList: [],
-        loginFlag:true,
+        loginFlag: true
     };
  
-    user.saveBtn = a("#saveBtn").on("click", saveData);
-    user.cancelBtn = a("#cancelBtn").on("click",function() {
+    user.saveBtn = com.focusPage("#saveBtn").on("click", saveData);
+    user.cancelBtn = com.focusPage("#cancelBtn").on("click",function() {
         com.switchPage(api.index.userIndex.url);
-
     });
-    user.items.userId = a("#userId");
-    user.items.oldUserId = a("#oldUserId").on("blur",function() {
+    user.items.userId = com.focusPage("#userId");
+    user.items.oldUserId = com.focusPage("#oldUserId").on("blur", function(){
         $this = a(this);
-        void 0 == $this.val() || "" == $this.val().trim() || $this.val() == user.editLoginId ? ($("#oldUserId").css("border", "1px solid #d5d5d5").popover("destroy"),   user.eEditFlg = true) : com.post(api.personel.queryUserByLoginId, {
+        void 0 == $this.val() || "" == $this.val().trim() || $this.val() == user.editLoginId ? (com.focusPage("#oldUserId").css("border", "1px solid #d5d5d5").popover("destroy"),   user.eEditFlg = true) : com.post(api.personel.queryUserByLoginId, {
             "user.oldUserId": $this.val()
         }, function(res) {
-            user.eEditFlg = true
+            user.eEditFlg = true;
             $("#oldUserId").css("border", "1px solid #d5d5d5").popover("destroy")
         }, function(res){
-            user.eEditFlg = false
-            com.showPopover($("#oldUserId"),{errorMsg: "该原始工号已经存在"},  "right");
-
+            user.eEditFlg = false;
+            com.showPopover(com.focusPage("#oldUserId"),{errorMsg: "该原始工号已经存在"},  "right");
         });
-
     });
-    user.items.loginId =a("#loginId").on("blur", function() {
+
+    user.items.loginId = com.focusPage("#loginId").on("blur", function() {
         $this = a(this);
-        void 0 == $this.val() || "" == $this.val().trim() || $this.val() == user.editLoginId ? (com.showPopover($("#loginId"),{errorMsg: "用户名不能为空"}, "right"), user.repeatFlg = !1) : com.post(api.personel.queryUserByLoginId, {
+        void 0 == $this.val() || "" == $this.val().trim() || $this.val() == user.editLoginId ? (com.showPopover(com.focusPage("#loginId"),{errorMsg: "用户名不能为空"}, "right"), user.repeatFlg = !1) : com.post(api.personel.queryUserByLoginId, {
             "user.loginId": $this.val()
         }, function(res) {
-            user.loginFlag =false
-            com.showPopover($("#loginId"),{errorMsg: "用户名已存在"}, "right");
-
+            user.loginFlag =false;
+            com.showPopover(com.focusPage("#loginId"),{errorMsg: "用户名已存在"}, "right");
         }, function(res){
-            user.loginFlag =true
-
-            $("#loginId").css("border", "1px solid #d5d5d5").popover("destroy")
+            user.loginFlag =true;
+            com.focusPage("#loginId").css("border", "1px solid #d5d5d5").popover("destroy")
         });
     });
 
@@ -87,145 +82,141 @@ jQuery(function(a) {
         user.experienceType = a.experienceType;
     },null, !1);
 
-    user.items.userName = a("#userName");
-    user.items.currentName = a("#currentName");
-    user.items.gender = a("#gender").switchBtn("gender");
-    user.items.age = a("#age");
-    user.items.birthday = a("#birthday");
-    user.items.politicalSel = a("#politicalSel").bindData(user.politicalType);
-    user.items.jobYears = a("#jobYears");
-    user.items.identity = a("#identity");
-    user.items.phone = a("#phone");
-    user.items.address = a("#address");
-    user.items.hometownAddress = a("#hometownAddress");
-    user.items.householdSel = a("#householdSel").bindData(user.householdType);
-    user.items.emergencyMan = a("#emergencyMan");
-    user.items.emergencyPhone = a("#emergencyPhone");
-    user.items.isPresentGraduate = a("#isPresentGraduate").switchBtn("isOrNot");
-    user.items.graduateTime = a("#graduateTime");
-    user.items.school = a("#school");
-    user.items.educationSel = a("#educationSel").bindData(user.educationType);
-    user.items.specialty = a("#specialty");
-    user.items.isMarried = a("#isMarried").switchBtn("isOrNot");
-    user.items.isBirth = a("#isBirth").switchBtn("isOrNot");
-    user.items.isHouseLoan = a("#isHouseLoan").switchBtn("isOrNot");
-    user.items.isCarLoan = a("#isCarLoan").switchBtn("isOrNot");
-    user.items.houseTypeSel = a("#houseTypeSel").bindData(user.houseType);
-    user.items.lover = a("#lover");
-    user.items.company = a("#company");
+    user.items.userName = com.focusPage("#userName");
+    user.items.currentName = com.focusPage("#currentName");
+    user.items.gender = com.focusPage("#gender").switchBtn("gender");
+    user.items.age = com.focusPage("#age");
+    user.items.birthday = com.focusPage("#birthday");
+    user.items.politicalSel = com.focusPage("#politicalSel").bindData(user.politicalType);
+    user.items.jobYears = com.focusPage("#jobYears");
+    user.items.identity = com.focusPage("#identity");
+    user.items.phone = com.focusPage("#phone");
+    user.items.address = com.focusPage("#address");
+    user.items.hometownAddress = com.focusPage("#hometownAddress");
+    user.items.householdSel = com.focusPage("#householdSel").bindData(user.householdType);
+    user.items.emergencyMan = com.focusPage("#emergencyMan");
+    user.items.emergencyPhone = com.focusPage("#emergencyPhone");
+    user.items.isPresentGraduate = com.focusPage("#isPresentGraduate").switchBtn("isOrNot");
+    user.items.graduateTime = com.focusPage("#graduateTime");
+    user.items.school = com.focusPage("#school");
+    user.items.educationSel = com.focusPage("#educationSel").bindData(user.educationType);
+    user.items.specialty = com.focusPage("#specialty");
+    user.items.isMarried = com.focusPage("#isMarried").switchBtn("isOrNot");
+    user.items.isBirth = com.focusPage("#isBirth").switchBtn("isOrNot");
+    user.items.isHouseLoan = com.focusPage("#isHouseLoan").switchBtn("isOrNot");
+    user.items.isCarLoan = com.focusPage("#isCarLoan").switchBtn("isOrNot");
+    user.items.houseTypeSel = com.focusPage("#houseTypeSel").bindData(user.houseType);
+    user.items.lover = com.focusPage("#lover");
+    user.items.company = com.focusPage("#company");
     //获取部门类型
-    com.post(api.communion.queryDepartmentType, {},function(a) {
-        user.deptType = a.departmentTypes
+    com.post(api.communion.queryDepartmentType, {}, function(a){
+        user.deptType = a.departmentTypes;
     },null, false);
 
-    user.items.deptSel = a("#deptSel");
-    user.items.dutySel = a("#dutySel");
-    user.items.deptTypeSel = a("#deptTypeSel");
+    user.items.deptSel = com.focusPage("#deptSel");
+    user.items.dutySel = com.focusPage("#dutySel");
+    user.items.deptTypeSel = com.focusPage("#deptTypeSel");
     user.items.deptTypeSel.bindData(user.deptType, "dtid", "name");
-    user.items.deptTypeSel.on("change",
-        function(b, d) {
-            com.post(api.system.queryDutyByDtid,{"duty.departmentType.dtid" :a(this).val()},function(res){
-                user.dutyTypeMap=res.dutys;
-                user.items.dutySel.bindData(user.dutyTypeMap,"did","name");
-            },null,false)
+    user.items.deptTypeSel.on("change", function(b, d) {
+        com.post(api.system.queryDutyByDtid,{"duty.departmentType.dtid" :a(this).val()},function(res){
+            user.dutyTypeMap=res.dutys;
+            user.items.dutySel.bindData(user.dutyTypeMap,"did","name");
+        },null,false);
 
-            com.post(api.communion.queryDepartmentByDtid, {"dept.type.dtid": a(this).val()}, function(res) {
-                    user.items.deptSel.bindData(res.deptList, "did", "deptName");
-                    d && d();
-                },null,false)
+        com.post(api.communion.queryDepartmentByDtid, {"dept.type.dtid": a(this).val()}, function(res) {
+            user.items.deptSel.bindData(res.deptList, "did", "name");
+            d && d();
+        },null,false)
+    }).trigger("change");
 
-        }).trigger("change");
-    user.items.statusSel = a("#statusSel").bindData(user.statusType,"key", "value");
-    user.items.employWaySel = a("#employWaySel").bindData(user.employWayType);
-    user.items.employTypeSel = a("#employTypeSel").bindData(user.employType);
-    user.items.recommendMan = a("#recommendMan");
-    user.items.entryTime = a("#entryTime");
-    user.items.employTime = a("#employTime");
-    user.items.serviceYears = a("#serviceYears");
-    user.items.isContract = a("#isContract").switchBtn("isOrNot");
-    user.items.isInsurance = a("#isInsurance").switchBtn("isOrNot");
-    user.items.insuranceTime = a("#insuranceTime");
-    user.items.pensionNum = a("#pensionNum");
-    user.items.medicalNum = a("#medicalNum");
-    user.items.salary = a("#salary");
-    user.items.bank = a("#bank");
-    user.items.bankCardNum = a("#bankCardNum");
+    user.items.statusSel = com.focusPage("#statusSel").bindData(user.statusType,"key", "value");
+    user.items.employWaySel = com.focusPage("#employWaySel").bindData(user.employWayType);
+    user.items.employTypeSel = com.focusPage("#employTypeSel").bindData(user.employType);
+    user.items.recommendMan = com.focusPage("#recommendMan");
+    user.items.entryTime = com.focusPage("#entryTime");
+    user.items.employTime = com.focusPage("#employTime");
+    user.items.serviceYears = com.focusPage("#serviceYears");
+    user.items.isContract = com.focusPage("#isContract").switchBtn("isOrNot");
+    user.items.isInsurance = com.focusPage("#isInsurance").switchBtn("isOrNot");
+    user.items.insuranceTime = com.focusPage("#insuranceTime");
+    user.items.pensionNum = com.focusPage("#pensionNum");
+    user.items.medicalNum = com.focusPage("#medicalNum");
+    user.items.salary = com.focusPage("#salary");
+    user.items.bank = com.focusPage("#bank");
+    user.items.bankCardNum = com.focusPage("#bankCardNum");
 
-
-    //编辑用户，获取用户信息
+    //编辑用户, 获取用户信息
     if(params.tempUserId){
-
         user.editFlg = !0;
         user.items.userId.prop("disabled", "true");
         user.items.userId.css("display", "block");
         user.currentCompany=null;
         com.post(api.personel.queryUserInfoByUserId, {"userInfo.user.userId": params.tempUserId}, function(data){
-
             var $userInfo = data.userInfo;
             var $user = $userInfo.user;
 
             void 0 != a && (
                 user.editUserId = $user.userId,
-                    user.editLoginId = $user.loginId,
-                    user.items.userId.val($user.userId),
-                    user.items.oldUserId.val($user.oldUserId),
-                    user.items.userName.val($user.userName).prop("disabled", !0),
-                    user.items.currentName.val($user.currentName),
-                    user.items.gender.prop("checked", com.genderType[$user.gender]),
-                    user.items.age.val($userInfo.age),
-                    user.items.birthday.val($user.birthday),
-                    user.items.politicalSel.val($userInfo.political),
-                    user.items.jobYears.val($userInfo.jobYears),
-                    user.items.identity.val($user.identity),
-                    user.items.phone.val($user.phone),
-                    user.items.address.val($userInfo.address),
-                    user.items.hometownAddress.val($userInfo.hometownAddress),
-                    user.items.householdSel.val($userInfo.householdType),
-                    user.items.emergencyMan.val($userInfo.emergencyMan),
-                    user.items.emergencyPhone.val($userInfo.emergencyPhone),
-                    user.items.isPresentGraduate.prop("checked", com.isOrNotType[$userInfo.isPresentGraduate]),
-                    user.items.graduateTime.val($userInfo.graduateTime),
-                    user.items.school.val($userInfo.school),
-                    user.items.educationSel.val($userInfo.education),
-                    user.items.specialty.val($userInfo.specialty),
-                    user.items.isMarried.prop("checked", com.isOrNotType[$userInfo.isMarried]),
-                    user.items.isBirth.prop("checked", com.isOrNotType[$userInfo.isBirth]),
-                    user.items.isHouseLoan.prop("checked", com.isOrNotType[$userInfo.isHouseLoan]),
-                    user.items.isCarLoan.prop("checked", com.isOrNotType[$userInfo.isCarLoan]),
-                    user.items.houseTypeSel.val($userInfo.houseType),
-                    user.items.lover.val($userInfo.lover),
-                    user.items.loginId.val($user.loginId).attr("disabled", "disabled"),
-                    user.items.company.val( $user.companys),
+                user.editLoginId = $user.loginId,
+                user.items.userId.val($user.userId),
+                user.items.oldUserId.val($user.oldUserId),
+                user.items.userName.val($user.userName).prop("disabled", !0),
+                user.items.currentName.val($user.currentName),
+                user.items.gender.prop("checked", com.genderType[$user.gender]),
+                user.items.age.val($userInfo.age),
+                user.items.birthday.val($user.birthday),
+                user.items.politicalSel.val($userInfo.political),
+                user.items.jobYears.val($userInfo.jobYears),
+                user.items.identity.val($user.identity),
+                user.items.phone.val($user.phone),
+                user.items.address.val($userInfo.address),
+                user.items.hometownAddress.val($userInfo.hometownAddress),
+                user.items.householdSel.val($userInfo.householdType),
+                user.items.emergencyMan.val($userInfo.emergencyMan),
+                user.items.emergencyPhone.val($userInfo.emergencyPhone),
+                user.items.isPresentGraduate.prop("checked", com.isOrNotType[$userInfo.isPresentGraduate]),
+                user.items.graduateTime.val($userInfo.graduateTime),
+                user.items.school.val($userInfo.school),
+                user.items.educationSel.val($userInfo.education),
+                user.items.specialty.val($userInfo.specialty),
+                user.items.isMarried.prop("checked", com.isOrNotType[$userInfo.isMarried]),
+                user.items.isBirth.prop("checked", com.isOrNotType[$userInfo.isBirth]),
+                user.items.isHouseLoan.prop("checked", com.isOrNotType[$userInfo.isHouseLoan]),
+                user.items.isCarLoan.prop("checked", com.isOrNotType[$userInfo.isCarLoan]),
+                user.items.houseTypeSel.val($userInfo.houseType),
+                user.items.lover.val($userInfo.lover),
+                user.items.loginId.val($user.loginId).attr("disabled", "disabled"),
+                user.items.company.val( $user.companys),
 
-                    user.items.deptTypeSel.val($user.dtid).trigger("change",function() {
-                        user.items.deptSel.val($user.dept.did);
-                        user.items.dutySel.val($user.duty.did)
-                        user.items.dutySel.trigger("chosen:updated")
-                    }),
+                user.items.deptTypeSel.val($user.dtid).trigger("change",function() {
+                    user.items.deptSel.val($user.dept.did);
+                    user.items.dutySel.val($user.duty.did);
+                    user.items.dutySel.trigger("chosen:updated")
+                }),
 
-                    user.items.statusSel.val($user.status),
-                    user.items.employWaySel.val($userInfo.employWay),
-                    user.items.employTypeSel.val($userInfo.employType),
-                    user.items.recommendMan.val($userInfo.recommendMan),
-                    user.items.entryTime.val($userInfo.entryTime),
-                    user.items.employTime.val($userInfo.employTime),
-                    user.items.serviceYears.val($userInfo.serviceYears),
-                    user.items.isContract.prop("checked", com.isOrNotType[$userInfo.isContract]),
-                    user.items.isInsurance.prop("checked", com.isOrNotType[$userInfo.isInsurance]),
-                    user.items.insuranceTime.val($userInfo.insuranceTime),
-                    user.items.pensionNum.val($userInfo.pensionNum),
-                    user.items.medicalNum.val($userInfo.medicalNum),
-                    user.items.salary.val($userInfo.salary),
-                    user.items.bank.val($userInfo.bank),
-                    user.items.bankCardNum.val($userInfo.bankCardNum),
-                    $("#loginId").css("border", "1px solid #d5d5d5").popover("destroy"),
-                    $("#userId").css("border", "1px solid #d5d5d5").popover("destroy"),
-                    com.clearValidator()
+                user.items.statusSel.val($user.status),
+                user.items.employWaySel.val($userInfo.employWay),
+                user.items.employTypeSel.val($userInfo.employType),
+                user.items.recommendMan.val($userInfo.recommendMan),
+                user.items.entryTime.val($userInfo.entryTime),
+                user.items.employTime.val($userInfo.employTime),
+                user.items.serviceYears.val($userInfo.serviceYears),
+                user.items.isContract.prop("checked", com.isOrNotType[$userInfo.isContract]),
+                user.items.isInsurance.prop("checked", com.isOrNotType[$userInfo.isInsurance]),
+                user.items.insuranceTime.val($userInfo.insuranceTime),
+                user.items.pensionNum.val($userInfo.pensionNum),
+                user.items.medicalNum.val($userInfo.medicalNum),
+                user.items.salary.val($userInfo.salary),
+                user.items.bank.val($userInfo.bank),
+                user.items.bankCardNum.val($userInfo.bankCardNum),
+                com.focusPage("#loginId").css("border", "1px solid #d5d5d5").popover("destroy"),
+                com.focusPage("#userId").css("border", "1px solid #d5d5d5").popover("destroy"),
+                com.clearValidator()
             )
         });
     }
 
-    a(".date-picker").datepicker({autoclose: !0}).on("show",function() {
+    com.focusPage(".date-picker").datepicker({autoclose: !0}).on("show",function() {
         setTimeout(function() {
             a(".dropdown-menu").css("z-index", 1060)
         },0)
@@ -234,10 +225,8 @@ jQuery(function(a) {
     });
 
     function saveData() {
-
         if( "" == user.items.loginId.val().trim() || user.items.loginId.val() == null) {
-
-        	 $("#loginId").removeAttr("data-placement").addClass('popover-notitle').attr({
+            com.focusPage("#loginId").removeAttr("data-placement").addClass('popover-notitle').attr({
                  "data-rel":"popover",
                  "data-placement": "right",
                  "data-content": "用户名不能为空"
@@ -293,8 +282,8 @@ jQuery(function(a) {
                 "userInfo.salary": user.items.salary.val(),
                 "userInfo.bank": user.items.bank.val(),
                 "userInfo.bankCardNum": user.items.bankCardNum.val(),
-
             };
+
             for (a = 0; a < user.experienceList.length; a++) b["user.experiences[" + a + "].userId"] = b["user.userId"],
                 b["user.experiences[" + a + "].id"] = user.experienceList[a].experienceId,
                 b["user.experiences[" + a + "].type"] = user.experienceList[a].type,
@@ -326,7 +315,7 @@ jQuery(function(a) {
         com.showAlert(com.error, res.errorMsg);
         user.contractList = [];
         user.experienceList = []
-    };
+    }
 
 });
 

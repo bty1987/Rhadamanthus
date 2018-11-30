@@ -7,16 +7,15 @@ $(function(){
         couponData: []
     };
 
-    coupon.couponItems.mgoods = $("#mgoods");
-    coupon.couponItems.title = $("#title");
-    coupon.couponItems.vprice = $("#vprice");
-    coupon.couponItems.type = $("#type");
-
+    coupon.couponItems.mgoods = com.focusPage("#mgoods");
+    coupon.couponItems.title = com.focusPage("#title");
+    coupon.couponItems.vprice = com.focusPage("#vprice");
+    coupon.couponItems.type = com.focusPage("#type");
 
     var displayFunc  = (function(){
         /*表格样式*/
         var renderList = function(tableId,listData){
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
 
             if(listData && listData.length){
 
@@ -33,7 +32,6 @@ $(function(){
 
         /*表格头*/
         var createTableTitle = function(){
-
             var $ulTitle = $('<ul></ul>').addClass('flex-table');
             var $liTitle = $('<li></li>').addClass('line table-title');
 
@@ -57,17 +55,16 @@ $(function(){
         };
         /*表格体*/
         var creatLine = function (i, v, lastFlag) {
-
             var $liLine = $('<li></li>').addClass('line');
             var id = i + 1;
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(id));
             var $contentWrap = $('<div></div>').addClass('line-wrap content col5');
             var propertyArr = [
-                [v.mgoods.title,"black"],
+                [v.mgoods.title,'grey'],
                 [v.title,'grey'],
                 [v.value,'grey'],
                 [v.type =="0" ? "劵值" : "折扣",'red'],
-                [v.status =="0" ? "启用" : "禁用",'red'],
+                [v.status =="0" ? "启用" : "禁用",'red']
             ];
 
             $.each(propertyArr, function (i, v) {
@@ -95,7 +92,7 @@ $(function(){
 
             //编辑
             $update.click(function(){
-                $("#mgood").hide();
+                com.focusPage("#mgood").hide();
                 editBrand(v);
                 openlayer("编辑", function(index, layero){
                     if(com.validate('form'))
@@ -126,7 +123,7 @@ $(function(){
 
         return {
             init : function(tableId,listData){
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
             },
             drawLine : function(v){
@@ -135,12 +132,12 @@ $(function(){
         };
     })();
 
-    autoFill(api.store.queryMgoodsByPinyin, "mgoods", "gid", "name");
+    autoFill(api.store.queryBaseMgoodsByPinyin, "mgoods", "gid", "name");
 
     /*分页*/
     var _condArr = ["mgoodsno"];
     var couponSeacher = new Searcher();
-    couponSeacher.init( _condArr, "condList", api.store.pageCoupon, function(data){
+    couponSeacher.init( _condArr, "condList", api.store.pageCouponScope, function(data){
         displayFunc.init('resultList', data);
     }, "pagenation", "couponPostData", null, false, null, function() {
 
@@ -149,14 +146,14 @@ $(function(){
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
         $adda.click(function(){
-            $("#mgood").show();
+            com.focusPage("#mgood").show();
             com.cleanItems(coupon.couponItems);
             openlayer("添加", function(index, layero){
                 if(com.validate('form1')){
                     return;
                 }
                 if (coupon.couponData.length == 0) {
-                        $("#mgoods").addClass('popover-notitle').attr({
+                        com.focusPage("#mgoods").addClass('popover-notitle').attr({
                             "data-rel": "popover",
                             "data-placement": "right",
                             "data-original-title": "",
@@ -169,10 +166,10 @@ $(function(){
             });
         });
         return [$adda];
-    },'resultList');
+    }, 'resultList');
 
     function autoFill(url, id, key, value) {
-        $('input[name=' + id + ']').typeahead({
+        com.focusPage('input[name=' + id + ']').typeahead({
             url: url,
             list: [],
             postData: {},
@@ -188,7 +185,7 @@ $(function(){
             },
             isResultTypeMap: true,
             flupdater: function (k, v) {
-                $('input[name=' + id + ']').attr('data-cid',k);
+                com.focusPage('input[name=' + id + ']').attr('data-cid',k);
                 return v;
             }
         });
@@ -200,7 +197,7 @@ $(function(){
         layer.open({
             type: 1,
             title:name,
-            content: $('#layerAdd'),
+            content: com.focusPage('#layerAdd'),
             area: ( $(window).width()*0.6 < 620 ?  $(window).height()*0.6 : 620 )+"px",
             maxmin: false,
             zIndex:9000,
@@ -220,8 +217,8 @@ $(function(){
 
     /*状态信息验证*/
     function startStatus(id, status, callback){
-        if(status=="1"){
-            com.post(api.store.updateCouponForStatus,{
+        if(status == "1"){
+            com.post(api.store.updateCouponScopeForStatus,{
                 "coupon.cid":id,
                 "coupon.status":"0"
             },function(res){
@@ -237,8 +234,8 @@ $(function(){
     }
 
     function stopStatus(id, status, callback){
-        if(status=="0"){
-            com.post(api.store.updateCouponForStatus,{
+        if(status == "0"){
+            com.post(api.store.updateCouponScopeForStatus,{
                 "coupon.cid":id,
                 "coupon.status":"1"
             },function(res){
@@ -255,7 +252,6 @@ $(function(){
 
     /*添加信息*/
     function saveData(callback){
-
         if(coupon.couponItems.type.val() == 0){
             var regex = /^[0-9]+\.{0,1}[0-9]{0,2}$/;
             if(!regex.test(coupon.couponItems.vprice.val())){
@@ -271,9 +267,9 @@ $(function(){
                 return;
             }
         }
-        var $layer = $('#layerAdd');
-        nameid = $layer.find('input[id="mgoods"]').attr("data-cid");
-        com.post(api.store.addCoupon, {
+        var $layer = com.focusPage('#layerAdd');
+        var nameid = $layer.find('input[id="mgoods"]').attr("data-cid");
+        com.post(api.store.addCouponScope, {
             "coupon.mgoods.gid": nameid,
             "coupon.title":coupon.couponItems.title.val(),
             "coupon.value":coupon.couponItems.vprice.val(),
@@ -285,7 +281,6 @@ $(function(){
     }
 
     function updateData(v, callback){
-
         if(coupon.couponItems.type.val() == 0){
             var regex =  /^[0-9]+\.{0,1}[0-9]{0,2}$/;
             if(!regex.test(coupon.couponItems.vprice.val())){
@@ -302,9 +297,10 @@ $(function(){
             }
         }
 
-        var $layer = $('#layerAdd');
-        nameid = $layer.find('input[id="mgoods"]').attr("data-cid");
-        com.post(api.store.updateCoupon, {
+        var $layer = com.focusPage('#layerAdd');
+        var nameid = $layer.find('input[id="mgoods"]').attr("data-cid");
+        
+        com.post(api.store.updateCouponScope, {
             'coupon.cid':v.cid,
             "coupon.mgoods.gid": nameid,
             "coupon.title": coupon.couponItems.title.val(),

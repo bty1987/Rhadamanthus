@@ -38,6 +38,7 @@ CREATE TABLE `acceptance` (
   `multiple` tinyint(1) DEFAULT NULL,
   `internal` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`actId`),
+  UNIQUE KEY `uniqueone` (`orderId`),
   KEY `indexone` (`orderId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='工程验收表';
 
@@ -115,7 +116,8 @@ CREATE TABLE `customerservicecomplaint` (
   `cscId` int(11) NOT NULL AUTO_INCREMENT,
   `orderId` varchar(15) NOT NULL,
   `customerName` varchar(32) NOT NULL,
-  `createrId` varchar(15) NOT NULL,
+  `cuid` int(11) NOT NULL,
+  `createrId` varchar(15) DEFAULT NULL,
   `createrName` varchar(32) NOT NULL,
   `operaterId` varchar(15) NOT NULL,
   `operaterName` varchar(32) NOT NULL,
@@ -192,7 +194,7 @@ CREATE TABLE `qualitytestingrecord` (
   `createTime` timestamp NULL DEFAULT NULL,
   `comment` varchar(256) NOT NULL,
   PRIMARY KEY (`qtrid`),
-  KEY `indexone` (`operaterId`,`orderId`)
+  KEY `indexone` (`ouid`,`orderId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='质检记录表';
 
 DROP TABLE IF EXISTS `rework`;

@@ -37,5 +37,7 @@ public interface SalesPaymentService {
 	public int cancelSalesPayment(SalesPaymentVO salesPaymentVO) throws FLException;
 	
 	public int refundSalesPayment(SalesPaymentVO salesPaymentVO, String userId) throws FLException;
+
+	public void updateSalesPayment(SalesPaymentVO salesPayment, SalesReceiptVO salesReceipt) throws FLException;
 	
 }

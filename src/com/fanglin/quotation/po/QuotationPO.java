@@ -13,6 +13,7 @@ package com.fanglin.quotation.po;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -24,6 +25,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.utils.DateUtil;
 
 @Entity
 @Table(name = "quotation", catalog = "quotation")
@@ -235,5 +237,18 @@ public class QuotationPO implements Serializable {
 
 	public void setTrafficRate(float trafficRate) {
 		this.trafficRate = trafficRate;
+	}
+	
+	public void ptp(String orderId,UserPO userPO,String name,String style){
+		
+		this.setOrderId(orderId);
+		this.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+		this.setCreater(userPO);
+		this.setQuotationName(name);
+		this.setDecorationStyle(style);
+		this.setDiscount(10);
+		this.setTotalPrice(0);
+		this.setContent("");
+		this.setDefaults(QuotationPO.DEFAULTS_DEFAULT_SHORT); // 设置复制报价为默认报价
 	}
 }

@@ -18,7 +18,7 @@ $(function(){
 	var displayFunc  = (function(){
 
 		var renderList = function(tableId,listData){
-			var $tableWrap = $('#' + tableId).empty();
+			var $tableWrap = com.focusPage('#' + tableId).empty();
 
 			var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
@@ -60,7 +60,7 @@ $(function(){
 				["结束时间:", v.endTime, "grey"],
 				["公开:", noticeIsPublic[v.isPublic], "blue"],
 				["内容:", v.contents, "grey"],
-				["状态:", status, "blue"],
+				["状态:", status, "blue"]
 			];
 
 			$.each(propertyArr, function (index,value) {
@@ -88,13 +88,13 @@ $(function(){
 
 		return {
 			init : function(tableId,listData){
-				$('#' + tableId).html(null);
+				com.focusPage('#' + tableId).html(null);
 				renderList(tableId,listData);
 			},
 			drawLine : function(v){
 				return creatLine(v);
 			}
-		}
+		};
 	})();
 
 	var _condArr = ['theme', 'dateRange'];

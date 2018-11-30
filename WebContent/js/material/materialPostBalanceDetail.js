@@ -1,7 +1,7 @@
 
 jQuery(function($) {
 	
-	$('#fl-statement').statement("主材订单", "型号信息");
+	com.focusPage('#fl-statement').statement("主材订单", "型号信息");
 	
 	var options = {};
 	var _options = {};
@@ -71,7 +71,7 @@ jQuery(function($) {
 	var displayFunc  = (function(){
 
 		var renderList = function(tableId,listData){
-			var $tableWrap = $('#' + tableId);
+			var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 			if(listData && listData.length){
 				$.each(listData,function(i, v){
@@ -148,13 +148,13 @@ jQuery(function($) {
 		
 		return {
 			init : function(tableId,listData){
-				$('#' + tableId).html(null);
+				com.focusPage('#' + tableId).html(null);
 				renderList(tableId,listData);
 			}
-		}
+		};
 	})();
 
-	$('#back').click(function(){
+	com.focusPage('#back').click(function(){
 		com.switchPage('views/material/materialPostBalance.html');
 	});
 

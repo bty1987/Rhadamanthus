@@ -3,30 +3,30 @@ $(function () {
     var saveFlag = true;
 
     var version = {
-        saveBtn: $("#saveBtn").on("click", function () {
+        saveBtn: com.focusPage("#saveBtn").on("click", function () {
             if (saveFlag) {
                 saveData();
             } else {
                 updateData();
             }
         }),
-        cancelBtn: $("#cancelBtn").on("click", function () {
-            $('#myModalLabel').removeAttr('data-vid');
+        cancelBtn: com.focusPage("#cancelBtn").on("click", function () {
+            com.focusPage('#myModalLabel').removeAttr('data-vid');
             clearModel()
         }),
-        modal: $("#versionModal").on("show.bs.modal", function (a) {
+        modal: com.focusPage("#versionModal").on("show.bs.modal", function (a) {
             com.clearValidator()
         }),
         items: {
-            no: $("#versionNo"),
-            createTime: $("#createTime"),
-            comment: $("#contents"),
+            no: com.focusPage("#versionNo"),
+            createTime: com.focusPage("#createTime"),
+            comment: com.focusPage("#contents"),
         },
     };
 
 //Datepicker是绑在一个标准的形式输入字段
     if (jQuery().datepicker) {
-        $('.date-picker').datepicker({
+        com.focusPage('.date-picker').datepicker({
             format: 'yyyy-mm-dd',// yyyy-mm-dd hh:ii,
             autoclose: true,
         });
@@ -35,7 +35,7 @@ $(function () {
 
     var displayFunc = (function () {
         var renderList = function (tableId, listData) {
-            var $tableWrap = $('#' + tableId).empty();
+            var $tableWrap = com.focusPage('#' + tableId).empty();
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if (listData && listData.length) {
@@ -88,10 +88,10 @@ $(function () {
             $btnEdit.click(function () {
 
                 saveFlag = false;
-                $('#myModalLabel').attr('data-vid', v.vid);
-                $('#versionNo').val(v.no),
-                $('#createTime').val(v.createTime),
-                $('#contents').html(v.comment)
+                com.focusPage('#myModalLabel').attr('data-vid', v.vid);
+                com.focusPage('#versionNo').val(v.no),
+                com.focusPage('#createTime').val(v.createTime),
+                com.focusPage('#contents').html(v.comment)
 
                 version.modal.modal("show");
 
@@ -136,7 +136,7 @@ $(function () {
 
         return {
             init: function (tableId, listData) {
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             },
             drawLine: function (v) {
@@ -167,10 +167,10 @@ $(function () {
 
     function saveData() {
 
-        var no = $('#versionNo').val();
-        var createTime = $('#createTime').val();
-        var comment = $('#contents').html();
-        var commentText = $('#contents').text();
+        var no = com.focusPage('#versionNo').val();
+        var createTime = com.focusPage('#createTime').val();
+        var comment = com.focusPage('#contents').html();
+        var commentText = com.focusPage('#contents').text();
 
         if (checkInfo()) {
             com.post(api.upgrade.addVersion, {
@@ -187,13 +187,13 @@ $(function () {
 
     function updateData() {
 
-        var no = $('#versionNo').val();
-        var createTime = $('#createTime').val();
-        var comment = $('#contents').html();
+        var no = com.focusPage('#versionNo').val();
+        var createTime = com.focusPage('#createTime').val();
+        var comment = com.focusPage('#contents').html();
 
         if (checkInfo()) {
             com.post(api.upgrade.updateVersion, {
-                "version.vid": $('#myModalLabel').attr('data-vid'),
+                "version.vid": com.focusPage('#myModalLabel').attr('data-vid'),
                 "version.no": no,
                 "version.createTime": createTime,
                 "version.comment": comment,
@@ -209,7 +209,7 @@ $(function () {
 
     function initializeContent() {
 
-        $("#contents").ace_wysiwyg({
+        com.focusPage("#contents").ace_wysiwyg({
             toolbar: ["font", null, "fontSize", null,
                 {
                     name: "bold",
@@ -270,7 +270,7 @@ $(function () {
                 },
                 b = null;
             (function () {
-                $(".wysiwyg-editor").on("mousedown", function (a) {
+                com.focusPage(".wysiwyg-editor").on("mousedown", function (a) {
                     var d = $(a.target);
                     a.target instanceof HTMLImageElement && !d.data("resizable") && (d.resizable({
                         aspectRatio: a.target.width / a.target.height
@@ -294,7 +294,7 @@ $(function () {
 
         var flag = true;
 
-        var createTime = $('#createTime');
+        var createTime = com.focusPage('#createTime');
         var createTimeRex = /^(?:(?!0000)[0-9]{4}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[0-9]{2}(?:0[48]|[2468][048]|[13579][26])|(?:0[48]|[2468][048]|[13579][26])00)-02-29)$/;
 
         if (createTime.val() == null || createTime.val() == "") {
@@ -311,7 +311,7 @@ $(function () {
             createTime.popover('destroy');
         }
 
-        var comment = $('#contents');
+        var comment = com.focusPage('#contents');
 
         if (comment.html() == null || comment == "") {
             comment.focus().select();
@@ -332,8 +332,8 @@ $(function () {
     }
 
     function clearModel(){
-        $('#versionNo').val("");
-        $('#createTime').val("");
-        $('#contents').html("");
+        com.focusPage('#versionNo').val("");
+        com.focusPage('#createTime').val("");
+        com.focusPage('#contents').html("");
     }
 });

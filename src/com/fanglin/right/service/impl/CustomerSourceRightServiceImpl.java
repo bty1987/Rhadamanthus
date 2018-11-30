@@ -12,7 +12,6 @@ import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserVO;
 import com.fanglin.right.dao.CustomerSourceRightDao;
-
 import com.fanglin.right.po.CustomerSourceRightPO;
 import com.fanglin.right.service.CustomerSourceRightService;
 

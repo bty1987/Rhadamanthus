@@ -2,7 +2,7 @@
 jQuery(function($) {
 	var materialPaymentPostData = {};
 	var materialPayment = {
-		paymentModelNameData: ["cash", "bank", "checkv", "installment", "accounts", "advance", "coupon"],
+		paymentModelNameData: ["cash", "bank", "checkv", "advance", "coupon"],
 		materialPaymentTypeData: {},
 		materialPaymentRevTypeData: {},
 		couponType: {},
@@ -21,53 +21,63 @@ jQuery(function($) {
 				regex: /^[0-9]+\.{0,1}[0-9]{0,2}$/g,
 				errorMsg: "价格内容输入错误."
 			}
-		}
+		},
+		bankNums:[],
+		checkvNums: []
 	};
 
-	materialPayment.baseModal = $("#baseItemModal").on('show.bs.modal', function(e){
+	materialPayment.baseModal = com.focusPage("#baseItemModal").on('show.bs.modal', function(e){
 		com.clearValidator();
+		com.focusPage("#paymentInfo").val("");
 	});
-	materialPayment.saveBtn = $("#saveBtn").bindClick(payment);
-	materialPayment.saveBtn = $("#saveRefundBtn").bindClick(refund);
-	materialPayment.cancelBtn = $("#cancelBtn").on("click", function(){
+	materialPayment.saveBtn = com.focusPage("#saveBtn").bindClick(payment);
+	materialPayment.saveBtn = com.focusPage("#saveRefundBtn").bindClick(refund);
+	materialPayment.cancelBtn = com.focusPage("#cancelBtn").on("click", function(){
 		materialPayment.historyFlag = false;
 	});
 
-	materialPayment.refundModal = $("#refundModal").on('show.bs.modal', function(e){
+	materialPayment.refundModal = com.focusPage("#refundModal").on('show.bs.modal', function(e){
 		com.clearValidator();
+		com.focusPage("#paymentInfo").val("");
 	});
 
-    materialPayment.items.cashCheckbox = $("#cashCheckbox");
-    materialPayment.items.bankCheckbox = $("#bankCheckbox");
-    materialPayment.items.checkvCheckbox = $("#checkvCheckbox");
-    materialPayment.items.installmentCheckbox = $("#installmentCheckbox");
-    materialPayment.items.accountsCheckbox = $("#accountsCheckbox");
-    materialPayment.items.couponCheckbox = $("#couponCheckbox");
-    materialPayment.items.advanceCheckbox = $("#advanceCheckbox");
-	materialPayment.items.couponType = $("#couponType");
+    materialPayment.items.cashCheckbox = com.focusPage("#cashCheckbox");
+    materialPayment.items.bankCheckbox = com.focusPage("#bankCheckbox");
+    materialPayment.items.checkvCheckbox = com.focusPage("#checkvCheckbox");
+    materialPayment.items.couponCheckbox = com.focusPage("#couponCheckbox");
+    materialPayment.items.advanceCheckbox = com.focusPage("#advanceCheckbox");
+	materialPayment.items.couponType = com.focusPage("#couponType");
+
+	materialPayment.cash = [];
+	materialPayment.bank = [];
+	materialPayment.bankUtil = [];
+	materialPayment.checkBank = [];
+	materialPayment.accounts = [];
+	materialPayment.couponType = [];
+
+	materialPayment.cashUtil = [];
+	materialPayment.bankUtil = [];
+	materialPayment.checkBankUtil = [];
+
+	materialPayment.cashInfo = {};
+	materialPayment.bankInfo = {};
+	materialPayment.checkBankInfo = {};
+	materialPayment.accountsInfo = {};
+	materialPayment.couponTypeData = {};
 
 	com.post(api.common.queryReceiptType, {}, function(res){
-		materialPayment.cash = [];
-		materialPayment.bank = [];
-		materialPayment.checkBank = [];
-		materialPayment.accounts = [];
-		materialPayment.couponType = [];
-
-		materialPayment.cashInfo = {};
-		materialPayment.bankInfo = {};
-		materialPayment.checkBankInfo = {};
-		materialPayment.accountsInfo = {};
-		materialPayment.couponTypeData = {};
-
 		$.each(res.receiptTypes, function(i, v){
 			if(v.type == 1){
 				materialPayment.cash.push(v);
+				materialPayment.cashUtil.push({"key":v.no,"value":v.name});
 				materialPayment.cashInfo[v.no] = v.name;
 			}else if(v.type == 2){
 				materialPayment.bank.push(v);
+				materialPayment.bankUtil.push({"key":v.no,"value":v.name});
 				materialPayment.bankInfo[v.no] = v.name;
 			}else if(v.type == 3){
 				materialPayment.checkBank.push(v);
+				materialPayment.checkBankUtil.push({"key":v.no,"value":v.name});
 				materialPayment.checkBankInfo[v.no] = v.name;
 			}else if(v.type == 4){
 				materialPayment.accounts.push(v);
@@ -77,29 +87,23 @@ jQuery(function($) {
 				materialPayment.couponTypeData[v.no] = [v.no, v.name];
 			}
 		});
-
-		$("#cashInfo").bindData(materialPayment.cash, 'no', 'name');
-
-		$("#installmentBank").bindData(materialPayment.bank, 'no', 'name');
-
-		$("#checkvBank").bindData(materialPayment.checkBank, 'no', 'name');
-
-		$("#accountsBank").bindData(materialPayment.accounts, 'no', 'name');
-
-		$("#couponType").bindData(materialPayment.couponType, 'no', 'name');
-		$("#couponType").trigger("chosen:updated");
 	}, null, false);
+
+	paymentUtils.dynamicChosen('baseItemModal',"materialcashInfo",materialPayment.cashUtil,"key","value");
+
+	com.focusPage("#couponType").bindData(materialPayment.couponType, 'no', 'name');
+	com.focusPage("#couponType").trigger("chosen:updated");
 
 	$.extend(com.validator, materialPayment.validator);
 
-	$("#history").removeClass("active");
+	com.focusPage("#historyMaterial").removeClass("active");
 
-    $("#baseItemModal :checkbox").on("change", function(){
-        $(this).prop("checked") ? $("[referCheckbox="+this.id+"]").show()  : $("[referCheckbox="+this.id+"]").hide()
+    com.focusPage("#baseItemModal :checkbox").on("change", function(){
+		$(this).prop("checked") ? com.focusPage("[referCheckbox="+this.id+"]").show()  : com.focusPage("[referCheckbox="+this.id+"]").hide()
     });
 
 	com.post(api.ds.payment, {}, function(res){
-		$("#advanceType").bindData(res.advanceType, 'key', 'value');
+		com.focusPage("#advanceType").bindData(res.advanceType, 'key', 'value');
 
 		for(var i=0;i<res.materialPaymentType.length;i++){
 			var paymentType = res.materialPaymentType[i];
@@ -108,22 +112,38 @@ jQuery(function($) {
 		}
 	}, null, false);
 
-	$("#couponType").chosen({width: "216px", multi_type: "input"});
-	$("#refundCouponType").chosen({width: "216px", multi_type: "input"});
+	com.focusPage("#couponType").chosen({width: "216px", multi_type: "input"});
+	com.focusPage("#refundCouponType").chosen({width: "216px", multi_type: "input"});
 
-	$("#bankAdd").click(function(){
+	com.focusPage("#materialbankAdd").click(function(){
 		var num = $(this).attr("num");
 		var nextNum = parseInt(num)+1;
-
-		addBankDiv(nextNum);
 		$(this).attr("num", nextNum);
 
+		var maxNum = $(this).attr("maxnum");
+		maxNum = parseInt(maxNum)+1;
+		$(this).attr("maxnum", maxNum);
+
+		paymentUtils.addBankUtil(maxNum, "bankDiv", "#materialbankDivGroup", materialPayment.bankNums, materialPayment.bankUtil, "material");
+
+		return false;
+	});
+
+	com.focusPage("#materialcheckvAdd").click(function(){
+		var num = $(this).attr("num");
+		var nextNum = parseInt(num)+1;
+		$(this).attr("num", nextNum);
+
+		var maxNum = $(this).attr("maxnum");
+		maxNum = parseInt(maxNum)+1;
+		$(this).attr("maxnum", maxNum);
+		paymentUtils.addBankUtil(maxNum, "checkvDiv", "#materialcheckvDivGroup", materialPayment.checkvNums, materialPayment.checkBankUtil, "material");
 		return false;
 	});
 
 	var displayFunc  = (function(){
         var renderList = function(tableId,listData){
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if(listData && listData.length){
@@ -196,7 +216,7 @@ jQuery(function($) {
 
         return {
             init : function(tableId,listData){
-                $('#' + tableId).html(null);
+				com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
             },
             drawLine : function(v){
@@ -223,7 +243,7 @@ jQuery(function($) {
 
 	var hdisplayFunc  = (function(){
         var renderList = function(tableId,listData){
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if(listData && listData.length){
@@ -286,17 +306,8 @@ jQuery(function($) {
             var styleArr = [];
 
 			v.cash != null && v.cash != "0" ? styleArr.push(["现金:", v.cash, "blue"]) : true;
-			v.bank != null && v.bank != "0" ? styleArr.push(["银行:", (function(bank, bankInfo){
-				  var info = bank + ", ";
-				  var _s = bankInfo.split('#');
-				  for(var i=1;i<_s.length-1;i++){
-				    var _i = _s[i].split('|');
-				    info += materialPayment.bankInfo[_i[0]] + " " + _i[1] + ", ";
-				  }
-
-				  return info
-			})(v.bank, v.bankInfo), "blue"]) : true;
-			v.checkv != null && v.checkv != "0" ? styleArr.push(["转账:", v.checkv, "blue"]) : true;
+			v.bank != null && v.bank != "0" ? styleArr.push(["银行:", paymentUtils.splitBankInfo(v.bank, v.bankInfo, materialPayment.bankInfo), "blue"]) : true;
+			v.checkv != null && v.checkv != "0" ? styleArr.push(["转账:", paymentUtils.splitBankInfo(v.checkv, v.checkvBank, materialPayment.checkBankInfo), "blue"]) : true;
 			v.installment != null && v.installment != "0" ? styleArr.push(["分期:", v.installment, "blue"]) : true;
 			v.accounts != null && v.accounts != "0" ? styleArr.push(["对公帐户:", v.accounts, "blue"]) : true;
 			v.advance != null && v.advance != "0" ? styleArr.push(["预付款:", v.advance, "blue"]) : true;
@@ -326,13 +337,13 @@ jQuery(function($) {
 
 			$btnPrint.click(function(){
 				if(v.collecter.userId!=params.userInfo.user.userId){
-					com.showAlert(com.warning, "收款人不匹配，不能打印");
+					com.showAlert(com.warning, "收款人不匹配, 不能打印");
 					return false;
 				}else{
 					params.mrId = mrId;
 					params.decorationOrderMOrderId = v.material.orderId;
 					params.decorationReceiptDrId = v.drId;
-					com.popup("专用收款收据__装修单号：" + v.material.orderId  ,api.index.materialPaymentReceiptIndex.url ,function () {
+					com.popup("专用收款收据__装修单号: " + v.material.orderId  ,api.index.materialPaymentReceiptIndex.url ,function () {
 						parent.layer.getFrameIndex(window.name);
 					},null,true)
 				}
@@ -348,7 +359,7 @@ jQuery(function($) {
 
         return {
             init : function(tableId,listData){
-                $('#' + tableId).html(null);
+				com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
             },
             drawLine : function(v){
@@ -369,9 +380,9 @@ jQuery(function($) {
     	return [$impa];
     }, "hresultList");
 
-	$('a[name="showTotal"]', '#pagenation').click(function(){
+	com.focusPage('a[name="showTotal"]', '#pagenation').click(function(){
 		var $total = 0;
-		var $inputs = $('input[name="mpIds"]:checked');
+		var $inputs = com.focusPage('input[name="mpIds"]:checked');
 
 		$inputs.length && ($.each($inputs, function(i, v){
 			var $that = $(v);
@@ -387,18 +398,20 @@ jQuery(function($) {
 
 	});
 
-	$('a[name="collects"]', '#pagenation').click(function(){
+	com.focusPage('a[name="collects"]', '#pagenation').click(function(){
 		com.cleanItems(materialPayment.items);
         materialPayment.typeUpdate = 1;
 
-		$("#des").val("");
-		$("#des").removeAttr("disabled");
+		com.focusPage("#des").val("");
+		com.focusPage("#des").removeAttr("disabled");
+		com.focusPage('#advanceCheckbox').parents('.inline').css('cssText','display:inline-block!important');
+		com.focusPage("#advance").removeAttr("readonly");
 
-		$("#saveBtn").removeClass("hide");
-		$("#saveRefundBtn").addClass("hide");
-        $("#historyUpdateM").addClass("hide");
+		com.focusPage("#saveBtn").removeClass("hide");
+		com.focusPage("#saveRefundBtn").addClass("hide");
+        com.focusPage("#historyUpdateM").addClass("hide");
 
-		var $inputs = $('input[name="mpIds"]:checked');
+		var $inputs = com.focusPage('input[name="mpIds"]:checked');
 
 		if(!$inputs.length) return;
 
@@ -465,8 +478,8 @@ jQuery(function($) {
 			materialPaymentPostData.paymentInfo.push(row);
 
 			com.post(api.payment.queryAdvancePaymentByCustomerId, {"customer.cid": materialPaymentPostData.customerId},function(res){
-				$("#materialAdvance").val(res.materialAdvance).attr("readonly", "readonly");
-				$("#zaterialAdvance").val(res.zaterialAdvance).attr("readonly", "readonly");
+				com.focusPage("#materialAdvance").val(res.materialAdvance).attr("readonly", "readonly");
+				com.focusPage("#zaterialAdvance").val(res.zaterialAdvance).attr("readonly", "readonly");
 			},null,false);
 		});
 
@@ -481,8 +494,8 @@ jQuery(function($) {
 			return false;
 		}
 
-		$("#sumMoney").val(sumMoney);
-		$("#sumMoneyShow").html(sumMoney);
+		com.focusPage("#sumMoney").val(sumMoney);
+		com.focusPage("#sumMoneyShow").html(sumMoney);
 
 		if(_paymentTypeFlag != 0){
 			_paymentTypeFlag != 1 ? _paymentTypeFlag != 2 ? com.showAlert(com.warning, "批量收款只能选择相同类型的收款项") : com.showAlert(com.warning, "批量收款只能选择相同类型的收款项") : com.showAlert(com.warning, "批量收款不支持不同订单间的操作");
@@ -492,8 +505,8 @@ jQuery(function($) {
 		if(sumMoney >= 0){
 			initBaseModal();
 
-			$("#referMoney").val(sumMoney).attr("disabled", "disabled");
-			$("#couponCheckbox").attr("disabled", "disabled");
+			com.focusPage("#referMoney").val(sumMoney).attr("disabled", "disabled");
+			com.focusPage("#couponCheckbox").attr("disabled", "disabled");
 
 			materialPayment.baseModal.modal("show");
 		}else{
@@ -501,13 +514,13 @@ jQuery(function($) {
 		}
     });
 
-	$('a[name="import"]', '#hpagenation').click(function () {
-    	if($('span[name="totalRecords"]').text() == 0){
+	com.focusPage('a[name="import"]', '#hpagenation').click(function () {
+    	if(com.focusPage('span[name="totalRecords"]').text() == 0){
 			com.showAlert(com.warning, "请通过条件进行查询");
 			return false;
 		}
 
-    	if($('span[name="totalRecords"]').text() > 1000){
+    	if(com.focusPage('span[name="totalRecords"]').text() > 1000){
 			com.showAlert(com.warning, "查询结果大于阀值 , 不能完成导出动作");
 			return false;
 		}
@@ -546,7 +559,22 @@ jQuery(function($) {
 					  v.bankInfo = $info;
 				}
 
-				v.checkvBank = v.checkv != null && v.checkv != "0" ? materialPayment.checkBankInfo[v.checkvBank] : '';
+				if(v.checkv != null && v.checkv != 0){
+					var checkBankInfoStr = v.checkvBank;
+					if(checkBankInfoStr.indexOf("#") != -1){
+						var $checkvInfo = ' ';
+						var _c = v.checkvBank.split('#');
+						for(var i=1;i<_c.length-1;i++){
+							var _i = _c[i].split('|');
+							$checkvInfo += materialPayment.checkBankInfo[_i[0]] + " " + _i[1] + ", " + _i[2] + ", ";
+						}
+
+						v.checkvBank = $checkvInfo;
+					}else{
+						v.checkvBank = v.checkv != null && v.checkv != "0" ? materialPayment.checkBankInfo[v.checkvBank] : '';
+					}
+				}
+
 				v.installmentBank = v.installment != null && v.installment != "0" ? materialPayment.bankInfo[v.installmentBank] : '';
 				v.accountsBank = v.accounts != null && v.accounts != "0" ? materialPayment.accountsInfo[v.accountsBank] : '';
 
@@ -561,31 +589,32 @@ jQuery(function($) {
 
 		materialPaymentPostData.orderId = payment.material.orderId;
 		materialPaymentPostData.customerId = payment.material.customer.cid;
-		$("#historyUpdateM").addClass("hide");
-		$("#advance").removeAttr("readonly");
-		$("#des").removeAttr("disabled");
-		$("#des").val("");
+		com.focusPage("#historyUpdateM").addClass("hide");
+		com.focusPage("#advance").removeAttr("readonly");
+		com.focusPage("#des").removeAttr("disabled");
+		com.focusPage("#des").val("");
 
 		if([1, 2, 3].indexOf(payment.paymentType) != -1){
 			initBaseModal();
-			$("#myModalLabel").text("付款信息");
-			$("#referMoney").val(payment.referMoney).attr("disabled", "disabled");
-            $('#advanceCheckbox').parents('.inline').css('cssText','display:inline-block!important');
-			$("#saveBtn").removeClass("hide");
-			$("#saveRefundBtn").addClass("hide");
+			com.focusPage("#myModalLabel").text("付款信息");
+			com.focusPage("#referMoney").val(payment.referMoney).attr("disabled", "disabled");
+			com.focusPage('#advanceCheckbox').parents('.inline').css('cssText','display:inline-block!important');
+			com.focusPage("#saveBtn").removeClass("hide");
+			com.focusPage("#saveRefundBtn").addClass("hide");
+
 
 		}else if([4, 5, 6, 7].indexOf(payment.paymentType) != -1){
 			initBaseModal();
-			$("#myModalLabel").text("退款信息");
-			$("#referMoney").val(payment.referMoney).attr("disabled", "disabled");
-			$('#advanceCheckbox').parents('.inline').css('cssText','display:none!important');
-			$("#saveBtn").addClass("hide");
-			$("#saveRefundBtn").removeClass("hide");
+			com.focusPage("#myModalLabel").text("退款信息");
+			com.focusPage("#referMoney").val(payment.referMoney).attr("disabled", "disabled");
+			com.focusPage('#advanceCheckbox').parents('.inline').css('cssText','display:none!important');
+			com.focusPage("#saveBtn").addClass("hide");
+			com.focusPage("#saveRefundBtn").removeClass("hide");
 		}
 
         com.post(api.payment.queryAdvancePaymentByCustomerId, {"customer.cid": materialPaymentPostData.customerId},function(res){
-            $("#materialAdvance").val(res.materialAdvance).attr("readonly", "readonly");
-            $("#zaterialAdvance").val(res.zaterialAdvance).attr("readonly", "readonly");
+            com.focusPage("#materialAdvance").val(res.materialAdvance).attr("readonly", "readonly");
+            com.focusPage("#zaterialAdvance").val(res.zaterialAdvance).attr("readonly", "readonly");
         },null,false);
 
 		materialPaymentPostData.paymentInfo = [payment];
@@ -599,73 +628,75 @@ jQuery(function($) {
 
 		com.cleanItems(materialPayment.items);
 
-		$("#historyUpdateM").removeClass("hide");
-		$("#saveRefundBtn").addClass("hide");
-		$("#saveBtn").removeClass("hide");
+		com.focusPage("#historyUpdateM").removeClass("hide");
+		com.focusPage("#saveRefundBtn").addClass("hide");
+		com.focusPage("#saveBtn").removeClass("hide");
 		initBaseModal();
-		$("#advanceCheckbox").attr("disabled","disabled");
-		$("#couponCheckbox").attr("disabled","disabled");
+		com.focusPage("#advanceCheckbox").attr("disabled","disabled");
+		com.focusPage("#couponCheckbox").attr("disabled","disabled");
 
 		if(payment.advance!="" && payment.advance!=null && payment.advance!=0){
-			$("#advanceCheckbox").removeAttr("disabled");
-			$("#advanceCheckbox").trigger("click");
+			com.focusPage("#advanceCheckbox").removeAttr("disabled");
+			com.focusPage("#advanceCheckbox").trigger("click");
 		}
 
 		if(payment.coupon!="" && payment.coupon!=null && payment.coupon!=0){
-			$("#couponCheckbox").removeAttr("disabled");
-			$("#couponCheckbox").trigger("click");
+			com.focusPage("#couponCheckbox").removeAttr("disabled");
+			com.focusPage("#couponCheckbox").trigger("click");
 		}
 
-		$("#advanceCheckbox").attr("disabled","disabled");
-		$("#couponCheckbox").attr("disabled","disabled");
-		$("#referMoney").attr("disabled","disabled");
+		com.focusPage("#advanceCheckbox").attr("disabled","disabled");
+		com.focusPage("#couponCheckbox").attr("disabled","disabled");
+		com.focusPage("#referMoney").attr("disabled","disabled");
 
-		$("#des").val(payment.comment);
-		$("#des").attr("disabled","disabled");
+		com.focusPage("#des").val(payment.comment);
+		com.focusPage("#des").attr("disabled","disabled");
 
 		//历史收款信息
-		$("#cashHistoryM").text("现金： "+com.checkNull(materialPayment.cashInfo[payment.cashInfo],"")+" "+com.checkNull(payment.cash,"无"));
-		var info = "";
-		var _s = payment.bankInfo.split('#');
-		for(var i=1;i<_s.length-1;i++){
-			var _i = _s[i].split('|');
-			info += materialPayment.bankInfo[_i[0]] + " " + _i[1] + " ";
-		}
-		$("#bankHistoryM").text("银行卡： "+com.checkNull(payment.bank,"无") + " "+com.checkNull(info,""));
-		$("#checkvHistoryM").text("转账： "+com.checkNull(materialPayment.checkBankInfo[payment.checkvBank],"")+" "+com.checkNull(payment.checkv,"无"));
-		$("#installmentHistoryM").text("分期： "+com.checkNull(materialPayment.bankInfo[payment.installmentBank],"")+" "+com.checkNull(payment.installment,"无"));
-		$("#accountsHistoryM").text("对公账户： "+com.checkNull(materialPayment.accountsInfo[payment.accountsBank],"")+" "+com.checkNull(payment.accounts,"无"));
+		com.focusPage("#cashHistoryM").text("现金: "+com.checkNull(materialPayment.cashInfo[payment.cashInfo],"")+" "+com.checkNull(payment.cash,"无"));
+		com.focusPage("#bankHistoryM").text("银行卡: "+ (payment.bank == 0 ? "无" : paymentUtils.splitBankInfo(payment.bank, payment.bankInfo, materialPayment.bankInfo)));
+		com.focusPage("#checkvHistoryM").text("转账: "+ (payment.checkv == 0 ? "无" : paymentUtils.splitBankInfo(payment.checkv, payment.checkvBank, materialPayment.checkBankInfo)));
+		com.focusPage("#installmentHistoryM").text("分期: "+com.checkNull(materialPayment.bankInfo[payment.installmentBank],"")+" "+com.checkNull(payment.installment,"无"));
+		com.focusPage("#accountsHistoryM").text("对公账户: "+com.checkNull(materialPayment.accountsInfo[payment.accountsBank],"")+" "+com.checkNull(payment.accounts,"无"));
 
-        materialPayment.historyMaterialPayment = utils.accAdd(utils.accAdd(utils.accAdd(payment.cash,payment.bank),utils.accAdd(payment.checkv,payment.installment)),utils.accAdd(utils.accAdd(payment.accounts,payment.coupon),payment.advance));
-        $("#referMoney").val(materialPayment.historyMaterialPayment);
+		materialPayment.historyMaterialPayment = utils.accAdd(utils.accAdd(utils.accAdd(payment.cash, payment.bank), utils.accAdd(payment.checkv,payment.coupon)), payment.advance);
+
+		com.focusPage("#referMoney").val(materialPayment.historyMaterialPayment);
 
 		//预付款
 		com.post(api.payment.queryAdvancePaymentByCustomerId, {"customer.cid": materialPaymentPostData.customerId},function(res){
-			$("#materialAdvance").val(res.materialAdvance).attr("readonly", "readonly");
-			$("#zaterialAdvance").val(res.zaterialAdvance).attr("readonly", "readonly");
+			com.focusPage("#materialAdvance").val(res.materialAdvance).attr("readonly", "readonly");
+			com.focusPage("#zaterialAdvance").val(res.zaterialAdvance).attr("readonly", "readonly");
 		},null,false);
+
 		materialPaymentPostData.paymentInfo = [payment];
-		$("#advance").val(payment.advance);
-		$("#advance").attr("readonly","readonly");
+		com.focusPage("#advance").val(payment.advance);
+		com.focusPage("#advance").attr("readonly","readonly");
 
 		//券信息
 		var couponInfoList = {};
 		var couponInfoAll = "";
 		couponInfoAll = payment.couponInfo.substring(1,payment.couponInfo.length-1);
 		couponInfoList = couponInfoAll.split("#");
-		$('.couponBlue').remove();
+		com.focusPage('.couponBlue').remove();
 
-		$("#couponDiv div.form-group").addClass("hide");
+		com.focusPage("#couponDiv div.form-group").addClass("hide");
 
 		materialPayment.couponUpdate = payment.coupon;
 
 		$.each(couponInfoList,function (i,v) {
 			var $couponSpan = $('<span></span>').addClass('blue couponBlue').text(v).css({"font-size":"14px","margin-left":"20px"});
-			$("#couponDiv").append($couponSpan);
+			com.focusPage("#couponDiv").append($couponSpan);
 		});
 	}
 
 	function initBaseModal(){
+		com.focusPage("#couponDiv div.form-group").removeClass("hide");
+		com.focusPage('.couponBlue').remove();
+
+		materialPayment.bankNums = [];
+		materialPayment.checkvNums = [];
+
 		for(var i=0;i<materialPayment.paymentModelNameData.length;i++){
 			var _name = materialPayment.paymentModelNameData[i];
 			var _checkboxId = "#" + _name + "Checkbox";
@@ -678,27 +709,29 @@ jQuery(function($) {
 				_selectId = "#" + _name + "Name";
 			}
 
-			$(_checkboxId).removeAttr("checked").removeAttr("disabled");
+			com.focusPage(_checkboxId).removeAttr("checked").removeAttr("disabled");
 
-			$(_inputId).val("");
-			$(_selectId).val("");
+			com.focusPage(_inputId).val("");
+			com.focusPage(_selectId).val("");
 
 			if(_name == "coupon"){
-				$("#couponType").chosen("destroy");
-				$("#couponType").chosen({width: "216px", multi_type: "input"});
-				$("#couponType").bindData(materialPayment.couponType, 'no', 'name');
-				$("#couponType").trigger("chosen:updated");
+				com.focusPage("#couponType").chosen("destroy");
+				com.focusPage("#couponType").chosen({width: "216px", multi_type: "input"});
+				com.focusPage("#couponType").bindData(materialPayment.couponType, 'no', 'name');
+				com.focusPage("#couponType").trigger("chosen:updated");
 			}else if(_name == "bank"){
-				$("#bankDivGroup").html("");
-				$("#bankAdd").attr("num", 0);
+				com.focusPage("#materialbankDivGroup").html("");
+				com.focusPage("#materialbankAdd").attr("num", 0).attr("maxnum", 0);
+			}else if(_name == "checkv"){
+				com.focusPage("#materialcheckvDivGroup").html("");
+				com.focusPage("#materialcheckvAdd").attr("num", 0).attr("maxnum", 0);
 			}
 		}
 
-		$("des").val("");
+		com.focusPage("des").val("");
 
-		$("#checkvBank option:first").prop("selected", 'selected');
-		$("#installmentBank option:first").prop("selected", 'selected');
-		$("#accountsBank option:first").prop("selected", 'selected');
+		paymentUtils.EmptyChosen('materialcashInfo');
+		paymentUtils.EmptyChosen('materialcheckvBank');
 
 		materialPayment.items.couponType.chosen("destroy");
 		materialPayment.items.couponType.chosen({width: "100%", multi_type: "input"});
@@ -706,38 +739,6 @@ jQuery(function($) {
 		materialPayment.items.couponType.trigger("chosen:updated");
 
 		materialPayment.baseModal.modal("show");
-	}
-
-	function addBankDiv(index){
-		var d = new Date();
-		var currentData = d.getFullYear() + "-" + ((d.getMonth() + 1).toString().length == 1 ? "0" : "") + (d.getMonth() + 1) + "-" + (d.getDate().toString().length == 1 ? "0" : "") + d.getDate();
-
-		var bankDiv = $('<div></div>').addClass('form-group').attr("id", "bankDiv_"+index).appendTo($("#bankDivGroup"));
-
-		var bankNameLabel = $('<label></label>').addClass('col-sm-3 control-label no-padding-right').text('开户行').appendTo(bankDiv);
-		var bankNameDiv = $('<div></div>').addClass('col-sm-8').appendTo(bankDiv);
-		var bankNameSelect = $('<select></select>').addClass('col-sm-6 v_required').attr("id", "bankName_"+index).attr("data-toggle", "popover").attr("data-trigger", "manual").bindData(materialPayment.bank, 'no', 'name').appendTo(bankNameDiv);
-		var bankDelDiv = $('<div></div>').addClass('col-sm-1').appendTo(bankDiv);
-		var bankDelBtn = $('<button></button>').addClass('btn btn-minier btn-danger pull-right inline').text("删除").attr("id", "bankDel_"+index).attr("index", index).appendTo(bankDelDiv).click(function(){
-			$("#bankDiv_"+$(this).attr("index")).remove();
-			var bankAdd = $("#bankAdd");
-			var num = bankAdd.attr("num");
-			bankAdd.attr("num", parseInt(num)-1);
-			return false;
-		});
-
-		var bankMoneyLabel = $('<label></label>').addClass('col-sm-3 control-label no-padding-right').text('刷卡金额').appendTo(bankDiv);
-		var bankMoneyDiv = $('<div></div>').addClass('col-sm-8').appendTo(bankDiv);
-		var bankMoneyInput = $('<input/>').addClass("col-sm-6 v_required v_float").attr("data-toggle", "popover").attr("data-trigger", "manual").attr("type", "text").attr("id", "bank_"+index).appendTo(bankMoneyDiv);
-
-		var bankDateLabel = $('<label></label>').addClass('col-sm-3 control-label no-padding-right').text('日期').appendTo(bankDiv);
-		var bankDateDiv = $('<div></div>').addClass('col-sm-8').appendTo(bankDiv);
-		var bankDateInput = $('<input/>').addClass("date-picker-date col-sm-6 v_required").attr("data-toggle", "popover").attr("data-trigger", "manual").attr("type", "text").attr("id", "bankDate_"+index).attr("data-date-format", "yyyy-mm-dd").val(currentData).datepicker({autoclose:true}).appendTo(bankDateDiv);
-
-		var bankTimeLabel = $('<label></label>').addClass('col-sm-3 control-label no-padding-right').text('时间').appendTo(bankDiv);
-		var bankTimeDiv = $('<div></div>').addClass('col-sm-8').appendTo(bankDiv);
-		var bankTimePicker = $('<div></div>').addClass('bootstrap-timepicker').appendTo(bankTimeDiv);
-		var bankTimeInput =  $('<input/>').addClass('col-sm-6 v_time v_required').attr("type", "text").attr("id", "bankTime_"+index).attr("data-toggle", "popover").attr("data-trigger", "manual").mask('99:99:99').appendTo(bankTimePicker);
 	}
 
 	function payment(){
@@ -748,122 +749,39 @@ jQuery(function($) {
 		var url = "";
 		var options = {};
 		var args = {};
-		var referPayment = $("#referMoney").val();
+		var referPayment = com.focusPage("#referMoney").val();
 		var realPayment = 0;
 		var couponCount = 0;
 
 		var resMrIdIndex = "";
 
 		var mpIds = "";
+		
 		var _paymentInfo = "#paymentInfo";
 
-		$(_paymentInfo).text("");
+		com.focusPage(_paymentInfo).text("");
 
-		for(var i=0;i<materialPayment.paymentModelNameData.length;i++){
-			var _paymentName = materialPayment.paymentModelNameData[i];
-			var _checkboxId = "#" + _paymentName + "Checkbox";
-			var _inputId = _paymentName;
-			var _selectId = "";
+		var returnParams = paymentUtils.getBankInfoParams(materialPayment.paymentModelNameData, "material", materialPayment.bankNums, materialPayment.checkvNums, couponCount, materialPayment.typeUpdate,  materialPayment.couponUpdate, _paymentInfo);
 
-			 if(_paymentName == "coupon" || _paymentName == "advance"){
-				_selectId = _paymentName + "Type";
-			 }else if(_paymentName != "bank"){
-				_selectId = _paymentName + "Bank";
-			 }else{
-				_selectId = _paymentName + "Name";
-			 }
+		var realPayment = returnParams[0];
+		var args = returnParams[1];
 
-			$(_checkboxId).on("change", function(){
-				$(_paymentInfo).text("");
-			});
-
-			$("#"+_selectId).on("change", function(){
-				$(_paymentInfo).text("");
-			});
-
-			$("#"+_paymentName).on("keydown", function(){
-				$(_paymentInfo).text("");
-			});
-
-			if($(_checkboxId).prop("checked")){
-
-				var _payment = 0;
-
-				if(_paymentName == "cash"){
-					args["cash"] = $("#cash").val();
-					args["cashInfo"] = $("#cashInfo").val();
-
-					_payment = $("#cash").val();
-				}else if(_paymentName == "bank"){
-					var _bank = 0;
-					var _bankInfo = "#";
-
-					var bankAdd = $("#bankAdd");
-					var num = parseInt(bankAdd.attr("num"));
-					for(var j=0;j<num;j++){
-						var index = j + 1;
-						var bankName = $("#bankName_"+index).val();
-						var bankMoney = $("#bank_"+index).val();
-						var bankDate = $("#bankDate_"+index).val();
-						var bankTime = $("#bankTime_"+index).val();
-
-						_bankInfo += bankName + "|" + bankMoney + "|" + bankDate + " " + bankTime + "#";
-
-						_bank = utils.accAdd(parseFloat(bankMoney), _bank);
-					}
-
-					args["bank"] = _bank;
-					args["bankInfo"] = _bankInfo;
-
-					_payment = _bank;
-				}else if(_paymentName == "coupon"){
-					var _coupon = 0;
-					var _couponInfo = "#";
-
-					$("[class='search-choice']", $("#couponType_chosen")).each(function(i, e){
-						var _ = $(e);
-						_couponVal = _.children('span').children('input').val();
-						_coupon = utils.accAdd(parseFloat(_coupon), parseFloat(_couponVal));
-						_couponInfo += _.children('span').text() + ":" + _couponVal + "#";
-						couponCount++;
-					});
-
-					if(materialPayment.typeUpdate == 1){
-						args["coupon"] = _coupon;
-						_payment = _coupon;
-					}else{
-						args["coupon"] = materialPayment.couponUpdate;
-						_payment = materialPayment.couponUpdate;
-					}
-					args["couponInfo"] = _couponInfo;
-				}else{
-					args[_inputId] = $("#" + _inputId).val();
-					_payment = $("#" + _inputId).val();
-				}
-
-				if($(_checkboxId).attr("select") == "1"){
-					args[_selectId] = $("#" + _selectId).val();
-				}
-
-				realPayment = utils.accAdd(realPayment, parseFloat(_payment));
-			}
-		}
 		if(referPayment != realPayment){
 			com.showAlert(com.warning, "当前实收款项总数与应收款项不等,请核实再进行提交!");
 			return false;
 		}
 
-		if($("#advanceCheckbox").prop("checked")){
+		if(com.focusPage("#advanceCheckbox").prop("checked")){
 			var _advance = 0;
-			var advanceType = $("#advanceType").val();
+			var advanceType = com.focusPage("#advanceType").val();
 
 			if(advanceType == 1){
-				_advance = parseFloat($("#materialAdvance").val());
+				_advance = parseFloat(com.focusPage("#materialAdvance").val());
 			}else if(advanceType == 2){
-				_advance = parseFloat($("#zaterialAdvance").val());
+				_advance = parseFloat(com.focusPage("#zaterialAdvance").val());
 			}
 
-			if(_advance > 0 && _advance < parseFloat($("#advance").val())){
+			if(_advance > 0 && _advance < parseFloat(com.focusPage("#advance").val())){
 				com.showAlert(com.warning, "预付款金额大于当前客户预付款余额!");
 				return false;
 			}
@@ -879,7 +797,7 @@ jQuery(function($) {
 			$.each(materialPaymentPostData.paymentInfo, function(i, v){
 				options["materialPayments["+i+"].mpId"] = v.mpId;
 			});
-			options["materialReceipt.comment"] = $("#des").val();
+			options["materialReceipt.comment"] = com.focusPage("#des").val();
 		}else{
 			url = api.payment.updateMaterialPayment;
 			$.each(materialPaymentPostData.paymentInfo, function(i, v){
@@ -927,100 +845,18 @@ jQuery(function($) {
 		var url = "";
 		var options = {};
 		var args = {};
-		var referPayment = $("#referMoney").val();
+		var referPayment = com.focusPage("#referMoney").val();
 		var realPayment = 0;
 		var couponCount = 0;
+		
 		var _paymentInfo = "#paymentInfo";
 
-		$(_paymentInfo).text("");
+		com.focusPage(_paymentInfo).text("");
 
-		for(var i=0;i<materialPayment.paymentModelNameData.length;i++){
-			var _paymentName = materialPayment.paymentModelNameData[i];
-			var _checkboxId = "#" + _paymentName + "Checkbox";
-			var _inputId = _paymentName;
-			var _selectId = "";
+		var returnParams = paymentUtils.getBankInfoParams(materialPayment.paymentModelNameData, "material", materialPayment.bankNums, materialPayment.checkvNums, couponCount, materialPayment.typeUpdate,  0, _paymentInfo);
 
-			if(_paymentName == "coupon" || _paymentName == "advance"){
-				_selectId = _paymentName + "Type";
-			}else if(_paymentName != "bank"){
-				_selectId = _paymentName + "Bank";
-			}else{
-				_selectId = _paymentName + "Name";
-			}
-
-			$(_checkboxId).on("change", function(){
-				$(_paymentInfo).text("");
-			});
-
-			$("#"+_selectId).on("change", function(){
-				$(_paymentInfo).text("");
-			});
-
-			$("#"+_paymentName).on("keydown", function(){
-				$(_paymentInfo).text("");
-			});
-
-			if($(_checkboxId).prop("checked")){
-				var _payment = 0;
-
-				if(_paymentName == "cash"){
-					args["cash"] = $("#cash").val();
-					args["cashInfo"] = $("#cashInfo").val();
-
-					_payment = $("#cash").val();
-				}else if(_paymentName == "bank"){
-					var _bank = 0;
-					var _bankInfo = "#";
-
-					var bankAdd = $("#bankAdd");
-					var num = parseInt(bankAdd.attr("num"));
-					for(var j=0;j<num;j++){
-						var index = j + 1;
-						var bankName = $("#bankName_"+index).val();
-						var bankMoney = $("#bank_"+index).val();
-						var bankDate = $("#bankDate_"+index).val();
-						var bankTime = $("#bankTime_"+index).val();
-
-						_bankInfo += bankName + "|" + bankMoney + "|" + bankDate + " " + bankTime + "#";
-
-						_bank = utils.accAdd(parseFloat(bankMoney), _bank);
-					}
-
-					args["bank"] = _bank;
-					args["bankInfo"] = _bankInfo;
-
-					_payment = _bank;
-				}else if(_paymentName == "coupon"){
-					var _coupon = 0;
-					var _couponInfo = "#";
-
-					$("[class='search-choice']", $("#couponType_chosen")).each(function(i, e){
-
-						var _ = $(e);
-
-						_couponVal = _.children('span').children('input').val();
-						_coupon = utils.accAdd(parseFloat(_coupon), parseFloat(_couponVal));
-						_couponInfo += _.children('span').text() + ":" + _couponVal + "#";
-
-						couponCount++;
-					});
-
-					args["coupon"] = _coupon;
-					args["couponInfo"] = _couponInfo;
-
-					_payment = _coupon;
-				}else{
-					args[_inputId] = $("#" + _inputId).val();
-					_payment = $("#" + _inputId).val();
-				}
-
-				if($(_checkboxId).attr("select") == "1"){
-					args[_selectId] = $("#" + _selectId).val();
-				}
-
-				realPayment = utils.accAdd(realPayment, parseFloat(_payment));
-			}
-		}
+		var realPayment = returnParams[0];
+		var args = returnParams[1];
 
 		if(referPayment != realPayment){
 			com.showAlert(com.warning, "当前实收款项总数与应收款项不等,请核实再进行提交!");
@@ -1043,7 +879,7 @@ jQuery(function($) {
 			options["materialPayment."+arg] = args[arg];
 		}
 
-		options["materialPayment.comment"] = $("#des").val();
+		options["materialPayment.comment"] = com.focusPage("#des").val();
 
 		options["material.orderId"] = materialPaymentPostData.orderId;
 

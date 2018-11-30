@@ -17,7 +17,7 @@ jQuery(function ($) {
 					if (value.type.dtid == v.dtid) {
 						_data.children.push({
 							children: [],
-							name: value.deptName
+							name: value.name
 						})
 					}
 				})

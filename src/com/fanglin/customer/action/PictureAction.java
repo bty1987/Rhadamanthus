@@ -35,7 +35,7 @@ public class PictureAction extends BaseListAction {
 	@Action(value = "queryCusDecorationPicture", results = {@Result (name = "success", type = "json", params = {"ignoreHierarchy", "false"})}, params = {"contentType", "text/html"})
 	public String queryCusDecorationPicture() {
 		
-		decorationPictureService.queryCusDecorationPicture(getPaging(), getFilters(), orderId,unionId);
+		decorationPictureService.queryCusDecorationPicture(getPaging(), getFilters(), orderId);
 		
 		return SUCCESS;
 	}

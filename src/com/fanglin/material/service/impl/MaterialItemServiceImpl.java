@@ -124,6 +124,15 @@ public class MaterialItemServiceImpl implements MaterialItemService {
 	}
 
 	@Override
+	public Float queryMaterialItemByTotal(MaterialItemVO materialItem) {
+	
+		Float MaterialItemPO = materialItemDao.queryMaterialItemByTotal(materialItem.getMid());	
+			
+		return MaterialItemPO;
+	}
+	
+	
+	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public int addMaterialItem(MaterialVO materialVO, List<MaterialItemVO> materialItemVOs) throws FLException{
 		
@@ -168,7 +177,8 @@ public class MaterialItemServiceImpl implements MaterialItemService {
 			}
 		}
 		
-		if(materialItemVOs != null){
+		
+		if(materialItemVOs != null ){
 			
 			float _total = packageMaterialItem(materialPO, materialItemVOs, packageItems);
 			float _discountTotal = setDisCountTotal(materialPO, materialItemVOs);
@@ -202,6 +212,9 @@ public class MaterialItemServiceImpl implements MaterialItemService {
 				}
 			}
 		}
+		
+		
+		
 		materialPO.setDistotal(discountTotal);
 		materialPO.setTotal(Arith.round(total, 2));
 		materialDao.save(materialPO);
@@ -481,9 +494,7 @@ public class MaterialItemServiceImpl implements MaterialItemService {
 						
 					}
 					
-					materialItemPO.setStatus(MaterialItemPO.STATUS_TYPE_DELETE_INT);
-					materialItemPO.setNum(0f);
-					materialItemPO.setTotal(0f);
+					materialItemDao.delete(materialItemPO);
 				}
 			}
 			
@@ -570,5 +581,6 @@ public class MaterialItemServiceImpl implements MaterialItemService {
 		}
 		return discountTotal;
 	}
-	
+
+
 }

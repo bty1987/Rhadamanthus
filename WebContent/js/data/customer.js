@@ -12,26 +12,26 @@ jQuery(function($) {
 		repeatFlg: false,//添加客户是电话的flag
 	};
 	
-	customer.saveBtn = $("#saveBtn").on("click", saveData);
-	customer.cancelBtn = $("#cancelBtn");
-	customer.phonesaveBtn = $("#phonesaveBtn").on("click", savecustomerPhone);
-	customer.modal = $("#customerModal").on('show.bs.modal', function(e){
+	customer.saveBtn = com.focusPage("#saveBtn").on("click", saveData);
+	customer.cancelBtn = com.focusPage("#cancelBtn");
+	customer.phonesaveBtn = com.focusPage("#phonesaveBtn").on("click", savecustomerPhone);
+	customer.modal = com.focusPage("#customerModal").on('show.bs.modal', function(e){
 		com.clearValidator();
 		com.clearValidator("#phone", true);
 	});
 
-	customer.items.customerName = $("#customerName");
-	customer.items.identity = $("#identity");
-	customer.items.officer = $("#officer");
-	customer.items.passport = $("#passport");
-	customer.items.gender = $("#gender").switchBtn("gender");
-	customer.items.phone = $("#phone").on("blur",function(){checkPhone(null,$("#phone"),1)});
-	customer.items.addphone = $("#addphone");
-	customer.items.qq = $("#qq");
-	customer.items.wechat = $("#wechat");
-	customer.items.email = $("#email");
-	customer.items.address = $("#address");
-	customer.items.relationshipType = $("#relationshipType");
+	customer.items.customerName = com.focusPage("#customerName");
+	customer.items.identity = com.focusPage("#identity");
+	customer.items.officer = com.focusPage("#officer");
+	customer.items.passport = com.focusPage("#passport");
+	customer.items.gender = com.focusPage("#gender").switchBtn("gender");
+	customer.items.phone = com.focusPage("#phone").on("blur",function(){checkPhone(null,com.focusPage("#phone"),1)});
+	customer.items.addphone = com.focusPage("#addphone");
+	customer.items.qq = com.focusPage("#qq");
+	customer.items.wechat = com.focusPage("#wechat");
+	customer.items.email = com.focusPage("#email");
+	customer.items.address = com.focusPage("#address");
+	customer.items.relationshipType = com.focusPage("#relationshipType");
 	
 	com.post(api.ds.data, {}, function(res){
 		$.each(res.relationshipType, function(i, k){
@@ -44,7 +44,7 @@ jQuery(function($) {
 	var displayFunc  = (function(){
 
         var renderList = function(tableId,listData){
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if(listData && listData.length){
@@ -96,7 +96,7 @@ jQuery(function($) {
         var editCustomer = function (c){
 			customer.modal.modal("show");
         	customer.editFlg = true;
-			$("#phonehide").css({"display":"none"});
+            com.focusPage("#phonehide").css({"display":"none"});
 			customer.repeatFlg = false
 			customer.items.cid = c.cid;
 			customer.items.customerName.val(c.name);
@@ -109,18 +109,17 @@ jQuery(function($) {
 			customer.items.address.val(c.address);
 			customer.items.relationshipType.val(c.relationshipType);
 			customer.items.gender.prop('checked', com.genderType[c.gender]);
-
         };
         
         return {
             init : function(tableId,listData){
-                $('#' + tableId).html(null);
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
             }, initAddCustomer: function(){
-            	$('a[name="add"]','#pagenation').click(function(){
+                com.focusPage('a[name="add"]','#pagenation').click(function(){
             		customer.editFlg = false;
 					initcustomer()
-					$("#phonehide").css({"display":"block"});
+                    com.focusPage("#phonehide").css({"display":"block"});
         			customer.modal.modal("show");
                 });
             }
@@ -146,7 +145,7 @@ jQuery(function($) {
 		com.clearValidator();
 		if(com.validate() || customer.repeatFlg ){
 			if(customer.editFlg == false){
-				checkPhone(null,$("#phone"),1)
+				checkPhone(null,com.focusPage("#phone"),1)
 			}
 			return;
 		}
@@ -181,14 +180,14 @@ jQuery(function($) {
 
 	//画电话的弹窗
 	function managephone() {
-		if ($('#customerphoneList').children()) {
-			$('#customerphoneList').empty();
+		if (com.focusPage('#customerphoneList').children()) {
+            com.focusPage('#customerphoneList').empty();
 		}
 		customer.phoneflag =true;
-		$("#addphone").css("border", "1px solid #d5d5d5").popover("destroy");
+        com.focusPage("#addphone").css("border", "1px solid #d5d5d5").popover("destroy");
 		customer.items.addphone.val("");
 		com.post(api.data.queryCustomerPhoneByCid, {"customerPhone.cid": customer.items.cid}, function (res) {
-			$('#customerphoneModal').modal('show');
+            com.focusPage('#customerphoneModal').modal('show');
 			$.each(res.customerPhones, function (i, v) {
 
 				var Phonelist = $('<div></div>').prop("id", "customerPhone" + i);
@@ -245,7 +244,7 @@ jQuery(function($) {
 
 				$btnDStatus.append($DstatusSwitch).append($Dspan);
 				$btnStatus.append($statusSwitch).append($span);
-				Phonelist.append($btnDStatus).append($btnStatus).append($hr).appendTo($("#customerphoneList"))
+				Phonelist.append($btnDStatus).append($btnStatus).append($hr).appendTo(com.focusPage("#customerphoneList"))
 			});
 
 		}, null, false)
@@ -275,7 +274,7 @@ jQuery(function($) {
 
 	function savecustomerPhone(){
 		
-		checkPhone(customer.items.cid,$("#addphone"),0);
+		checkPhone(customer.items.cid,com.focusPage("#addphone"),0);
 		
 		if(customer.phoneflag){
 			return;

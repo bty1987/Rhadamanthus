@@ -3,7 +3,7 @@
  */
 jQuery(function ($) {
 
-    $('#viewPurchaseItemsPopUp').css({
+    com.focusPage('#viewPurchaseItemsPopUp').css({
         'margin': '0 auto',
         'margin-top': '3%',
         'width': '97%',
@@ -13,13 +13,13 @@ jQuery(function ($) {
     });
 
     var purchase = {
-        createTime: $('#viewPurchaseItemsPopUp').attr('data-createTime'),
-        saveBtn: $("#saveBtn"),
-        cancellBtn: $("#cancelBtn"),
+        createTime: com.focusPage('#viewPurchaseItemsPopUp').attr('data-createTime'),
+        saveBtn: com.focusPage("#saveBtn"),
+        cancellBtn: com.focusPage("#cancelBtn"),
         manifestItems: {
-            des: $("#comment"),
+            des: com.focusPage("#comment")
         },
-        record: {},
+        record: {}
 
     };
 
@@ -31,7 +31,7 @@ jQuery(function ($) {
             if (v.status == 0) {
                 storehousesStatus.push(v);
             }
-        })
+        });
 
         purchase.storehouses = storehousesStatus;
 
@@ -48,7 +48,7 @@ jQuery(function ($) {
         'name': 'cancelbtn',
         'href': 'javascript:void(0);'
     }).css({'margin-left': '17px', 'margin-top': '12px'}).text('取消');
-    var $condList1 = $('#viewPurchaseItemsPopUp').parents('.layui-layer.layui-anim.layui-layer-page.layui-layer-lan');
+    var $condList1 = com.focusPage('#viewPurchaseItemsPopUp').parents('.layui-layer.layui-anim.layui-layer-page.layui-layer-lan');
     var $div = $('<div class="layui-layer-btn0" style="position: relative;top:-10%;left:77%;"></div>');
     $div.append($btnConfirm).append($btnCancel).appendTo($condList1);
 
@@ -61,7 +61,7 @@ jQuery(function ($) {
 
         var options = {};
 
-        var $list = $('input[type="checkbox"]:checked', "#list");
+        var $list = com.focusPage('input[type="checkbox"]:checked', "#list");
         var flag = false;
         $.extend(options,params["purchases.pids"]);
         $list.length && $list.each(function (i) {
@@ -94,7 +94,7 @@ jQuery(function ($) {
 
                     layer.closeAll();
                     layer.msg("入库成功", {icon: 1});
-                    $('#list').empty();
+                    com.focusPage('#list').empty();
                 }, function (e) {
                     com.showAlert(com.error, e.errorMsg);
                 });
@@ -121,12 +121,12 @@ jQuery(function ($) {
         var _label = $('<label></label>');
 
         var $input = $('<input>').attr({
-            "type": "checkbox",
+            "type": "checkbox"
         }).css('width', '0px').addClass('ace ace-checkbox-2');
 
         var _span = $('<span></span>').addClass('lbl grey bigger-150').css('font-weight', 'bold');
 
-        _label.append($input).append(_span)
+        _label.append($input).append(_span);
 
         var $indexWrap = $('<div></div>').addClass('line-wrap order').append($('<div></div>').addClass('cell index').html(_label));
         var $lineInfoWrap = $('<div></div>').addClass('line-wrap content col12');
@@ -142,7 +142,7 @@ jQuery(function ($) {
             {cellClass: "number blue"},                         //总数量
             {cellClass: "surplus blue"},                     //剩余数量
             {cellClass: "storehouse", hasSelect: !0},   //仓库
-            {cellClass: "rnum", hasInput: !0},         //入库数量
+            {cellClass: "rnum", hasInput: !0}         //入库数量
         ];
 
         $.each(_lineInfoSet, function (i, v) {
@@ -172,18 +172,18 @@ jQuery(function ($) {
 
     function purchaseAdd() {
         var _params = params.pids;
-        var index = $('.line', '#list').length;
+        var index = com.focusPage('.line', '#list').length;
         com.post(api.inventory.queryPurchaseItemByPids, _params, function (res) {
             for (var i = 0; i < res.purchaseItems.length; i++) {
-                index = $('.line', '#list').length;
+                index = com.focusPage('.line', '#list').length;
                 autoAddline(index);
             }
 
             function autoAddline(index) {
-                index = $('.line', '#list').length;
-                addline(1 + index).appendTo('#list');
-                var $lineInfoWrap1 = $('#list li:nth-of-type(' + (index + 1) + ') div.content');
-                $('#list li:nth-of-type(' + (index + 1) + ')').attr('data-gid', res.purchaseItems[i].goods.gid).attr('data-cid', res.purchaseItems[i].color.cid).attr('data-fid', res.purchaseItems[i].format.fid).attr('data-piid', res.purchaseItems[i].piId);
+                index = com.focusPage('.line', '#list').length;
+                addline(1 + index).appendTo(com.focusPage('#list'));
+                var $lineInfoWrap1 = com.focusPage('#list li:nth-of-type(' + (index + 1) + ') div.content');
+                com.focusPage('#list li:nth-of-type(' + (index + 1) + ')').attr('data-gid', res.purchaseItems[i].goods.gid).attr('data-cid', res.purchaseItems[i].color.cid).attr('data-fid', res.purchaseItems[i].format.fid).attr('data-piid', res.purchaseItems[i].piId);
                 $lineInfoWrap1.find('div.no').text(res.purchaseItems[i].goods.no);
                 $lineInfoWrap1.find('div.name').text(res.purchaseItems[i].goods.name);
                 $lineInfoWrap1.find('div.category').text(res.purchaseItems[i].goods.category);

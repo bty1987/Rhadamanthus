@@ -45,8 +45,6 @@ public class ServiceReceiptPO  implements Serializable{
 	
 	private Timestamp confirmTime;
 	
-	private float realMoney;
-	
 	private float cash;
 	
 	private String cashInfo;
@@ -71,6 +69,9 @@ public class ServiceReceiptPO  implements Serializable{
 	
 	public ServiceReceiptPO() {
 		super();
+		
+		this.installBank = "";
+		this.accountsBank = "";
 	}
 
 	public ServiceReceiptPO(long srId) {
@@ -154,15 +155,6 @@ public class ServiceReceiptPO  implements Serializable{
 
 	public void setConfirmTime(Timestamp confirmTime) {
 		this.confirmTime = confirmTime;
-	}
-
-	@Column(name = "realMoney")
-	public float getRealMoney() {
-		return realMoney;
-	}
-
-	public void setRealMoney(float realMoney) {
-		this.realMoney = realMoney;
 	}
 
 	@Column(name = "cash")

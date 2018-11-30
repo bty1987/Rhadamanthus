@@ -56,8 +56,8 @@ public class BrandServiceImpl implements BrandService {
 			CategoryPO categoryPO = brandPO.getCategory();
 			
 			brandVO.setCid(categoryPO.getCid());
-			brandVO.setCategoryId(categoryPO.getCategoryId());
-			brandVO.setCategoryName(categoryPO.getCategoryName());
+			brandVO.setCategoryId(categoryPO.getNo());
+			brandVO.setCategoryName(categoryPO.getName());
 			
 			brandVOs.add(brandVO);
 		}
@@ -77,8 +77,8 @@ public class BrandServiceImpl implements BrandService {
 			
 			CategoryPO categoryPO = brandPO.getCategory();
 			
-			brandVO.setCategoryId(categoryPO.getCategoryId());
-			brandVO.setCategoryName(categoryPO.getCategoryName());
+			brandVO.setCategoryId(categoryPO.getNo());
+			brandVO.setCategoryName(categoryPO.getName());
 			brandVO.setCompany(company);
 			
 			brandVOs.add(brandVO);
@@ -92,7 +92,7 @@ public class BrandServiceImpl implements BrandService {
 		
 		Paging paging = new Paging(0, 10);
 		
-		List<BrandPO> brandPOs = brandDao.pageBrandByBrandNamePinYin(paging, pinyinName,company);
+		List<BrandPO> brandPOs = brandDao.pageBrandByPinYinName(paging, pinyinName,company);
 		List<BrandVO> brandVOs = new ArrayList<BrandVO>();
 		
 		for(BrandPO brandPO: brandPOs){
@@ -102,8 +102,8 @@ public class BrandServiceImpl implements BrandService {
 			
 			CategoryPO categoryPO = brandPO.getCategory();
 			
-			_brandVO.setCategoryId(categoryPO.getCategoryId());
-			_brandVO.setCategoryName(categoryPO.getCategoryName());
+			_brandVO.setCategoryId(categoryPO.getNo());
+			_brandVO.setCategoryName(categoryPO.getName());
 			
 			brandVOs.add(_brandVO);
 		}
@@ -112,39 +112,39 @@ public class BrandServiceImpl implements BrandService {
 	}
 
 	@Override
-	public BrandVO queryBrandByBrandId(BrandVO brandVO) {
+	public BrandVO queryBrandByBid(BrandVO brandVO) {
 
-		BrandPO brandPO = brandDao.queryBrandByBId(brandVO.getBid());
+		BrandPO brandPO = brandDao.queryBrandByBid(brandVO.getBid());
 		
 		BeanUtil.copyProperties(brandPO, brandVO, Arrays.asList("category"));
 		
 		CategoryPO categoryPO = brandPO.getCategory();
 		
-		brandVO.setCategoryId(categoryPO.getCategoryId());
-		brandVO.setCategoryName(categoryPO.getCategoryName());
+		brandVO.setCategoryId(categoryPO.getNo());
+		brandVO.setCategoryName(categoryPO.getName());
 		
 		return brandVO;
 	}
 
 	@Override
-	public BrandVO queryBrandByBId(BrandVO brandVO) {
+	public BrandVO queryBrandByNo(BrandVO brandVO) {
 
-		BrandPO brandPO = brandDao.queryBrandByBrandId(brandVO.getBrandId());
+		BrandPO brandPO = brandDao.queryBrandByNo(brandVO.getNo());
 		
 		BeanUtil.copyProperties(brandPO, brandVO, Arrays.asList("category"));
 		
 		CategoryPO categoryPO = brandPO.getCategory();
 		
-		brandVO.setCategoryId(categoryPO.getCategoryId());
-		brandVO.setCategoryName(categoryPO.getCategoryName());
+		brandVO.setCategoryId(categoryPO.getNo());
+		brandVO.setCategoryName(categoryPO.getName());
 		
 		return brandVO;
 	}
 
 	@Override
-	public List<BrandVO> queryBrandByCategoryId(BrandVO brandVO) {
+	public List<BrandVO> queryBrandByCid(BrandVO brandVO) {
 		
-		List<BrandPO> brandPOs = brandDao.queryBrandByCategoryId(brandVO.getCid());
+		List<BrandPO> brandPOs = brandDao.queryBrandByCid(brandVO.getCid());
 		List<BrandVO> brandVOs = new ArrayList<BrandVO>();
 		
 		for(BrandPO brandPO: brandPOs){
@@ -153,8 +153,8 @@ public class BrandServiceImpl implements BrandService {
 			
 			CategoryPO categoryPO = brandPO.getCategory();
 			
-			brandVO.setCategoryId(categoryPO.getCategoryId());
-			brandVO.setCategoryName(categoryPO.getCategoryName());
+			brandVO.setCategoryId(categoryPO.getNo());
+			brandVO.setCategoryName(categoryPO.getName());
 			
 			brandVOs.add(brandVO);
 		}
@@ -169,14 +169,14 @@ public class BrandServiceImpl implements BrandService {
 		BrandPO brandPO = new BrandPO();
 		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_BRAND_INT, CountingPO.COUNTING_DATE_SILNLE_STR, company);
 		
-		StringBuffer brandId = new StringBuffer();
-		brandId.append(SystemConfig.getString("brandIdent", "B_"));
-		brandId.append(FormatUtil.fillZero(count, "000"));
-		brandPO.setBrandId(brandId.toString());
-		BeanUtil.copyProperties(brandVO, brandPO, Arrays.asList("brandId", "category"));
+		StringBuffer brandNo = new StringBuffer();
+		brandNo.append(SystemConfig.getString("brandIdent", "B_"));
+		brandNo.append(FormatUtil.fillZero(count, "000"));
+		brandPO.setNo(brandNo.toString());
+		BeanUtil.copyProperties(brandVO, brandPO, Arrays.asList("no", "category"));
 		brandPO.setCompany(company);
 		brandPO.setCategory(new CategoryPO(brandVO.getCid()));
-		brandPO.setBrandNamePinyin(PinYin4Util.getPinyin(brandVO.getBrandName()).get(0).toString());
+		brandPO.setPinyin(PinYin4Util.getPinyin(brandVO.getName()).get(0).toString());
 		brandDao.save(brandPO);
 
 		return 0;
@@ -192,20 +192,11 @@ public class BrandServiceImpl implements BrandService {
 		
 		brandPO.setCategory(new CategoryPO(brandVO.getCid()));
 		
-		if(brandVO.getBrandName() != null){
-			brandPO.setBrandNamePinyin(PinYin4Util.getPinyin(brandVO.getBrandName()).toString());
+		if(brandVO.getName() != null){
+			brandPO.setPinyin(PinYin4Util.getPinyin(brandVO.getName()).toString());
 		}
 		
 		brandDao.update(brandPO);
-		
-		return 0;
-	}
-
-	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public int deleteBrandByBId(long bId) {
-		
-		brandDao.deleteById(bId);
 		
 		return 0;
 	}

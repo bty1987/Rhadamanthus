@@ -19,14 +19,14 @@ jQuery(function($) {
 		repeatFlg: false,
 	};
 	
-	city.saveBtn = $("#saveBtn").on("click", saveData);
-	city.cancelBtn = $("#cancelBtn");
+	city.saveBtn = com.focusPage("#saveBtn").on("click", saveData);
+	city.cancelBtn = com.focusPage("#cancelBtn");
 	
-	city.cityItems.no = $("#cityId");
-	city.cityItems.name = $("#cityName");
-	city.cityItems.regionSel = $("#regionSel");
+	city.cityItems.no = com.focusPage("#cityId");
+	city.cityItems.name = com.focusPage("#cityName");
+	city.cityItems.regionSel = com.focusPage("#regionSel");
 	
-	city.modal = $("#cityModal");
+	city.modal = com.focusPage("#cityModal");
 	
 	$.extend(com.validator, city.validator);
 	
@@ -37,7 +37,7 @@ jQuery(function($) {
 	var displayFunc  = (function(){
 
         var renderList = function(tableId,listData){
-            var $tableWrap = $('#' + tableId);
+            var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if(listData && listData.length){ 
@@ -90,7 +90,7 @@ jQuery(function($) {
       
         return {
             init : function(tableId,listData){
-                $('#' + tableId).html(null);
+				com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
             },
             drawLine : function(v){
@@ -112,7 +112,7 @@ jQuery(function($) {
     	return [$adda];
 	});
 	
-	$('a[name="addCity"]', '#pagenation').click(function(){
+	com.focusPage('[name="addCity"]', com.focusPage('#pagenation')).click(function(){
 		
 		editFlg = false;
 		
