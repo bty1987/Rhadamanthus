@@ -10,4 +10,6 @@ public interface SalesPaymentService {
 	
 	public void queryCusSalesPayment(Paging paging, List<Filter> filters, SalesPaymentVO salesPaymentVO);
 	
+	public Float countCusSalesPaymentForAmount(SalesPaymentVO salesPaymentVO);
+	
 }

@@ -44,296 +44,277 @@ import com.fanglin.quotation.dao.AddReduceDao;
 import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.po.QuotationPO;
 import com.fanglin.system.dao.SystemConfigDao;
-import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.SystemConfig;
 
 @Service("decorationContractService")
-@Transactional(readOnly=true)
+@Transactional(readOnly = true)
 public class DecorationContractServiceImpl implements DecorationContractService {
 
 	@Autowired
 	private DecorationContractDao decorationContractDao;
-	
+
 	@Autowired
 	private DecorationDao decorationDao;
-	
+
 	@Autowired
 	private DecorationPaymentDao decorationPaymentDao;
-	
+
 	@Autowired
 	private QuotationDao quotationDao;
-	
+
 	@Autowired
 	private DecorationBelongDao orderBelongInfoDao;
-	
+
 	@Autowired
 	private ApprovalDao approvalDao;
-	
+
 	@Autowired
 	private DecorationOperateDao decorationOperateDao;
-	
+
 	@Autowired
-	private AddReduceDao addReduceDao;	
-	
+	private AddReduceDao addReduceDao;
+
 	@Autowired
 	private UserDao userDao;
-	
+
 	@Autowired
-	private SystemConfigDao SystemConfigDao;
-	
+	private SystemConfigDao systemConfigDao;
+
 	@Autowired
 	private DecorationAdditionDao decorationAdditionDao;
-	
+
 	@Override
-	public DecorationContractVO queryDecorationContractByOrderId(DecorationContractVO decorationContractVO) throws FLException{
-		
+	public DecorationContractVO queryDecorationContractByOrderId(DecorationContractVO decorationContractVO) throws FLException {
+
 		String orderId = decorationContractVO.getOrderId();
-		String[] paymentStatus = new String[]{DecorationPaymentPO.PAYMENTSTATUS_APPLY_STR,DecorationPaymentPO.PAYMENTSTATUS_UNPAY_STR,DecorationPaymentPO.PAYMENTSTATUS_PAY_STR,DecorationPaymentPO.PAYMENTSTATUS_CONFIRM_STR};
-		
+		Short[] paymentStatus = new Short[] { DecorationPaymentPO.PAYMENTSTATUS_UNPAY_INT, DecorationPaymentPO.PAYMENTSTATUS_PAY_INT, DecorationPaymentPO.PAYMENTSTATUS_CONFIRM_INT, DecorationPaymentPO.PAYMENTSTATUS_APPLYING_INT };
+
 		DecorationContractPO decorationContractPO = decorationContractDao.queryDecorationContractByOrderId(orderId);
-		
-		if(decorationContractPO != null){
+
+		if (decorationContractPO != null) {
 			BeanUtil.copyProperties(decorationContractPO, decorationContractVO);
 		}
-		
-		List<DecorationPaymentPO> decorationPaymentPOs = decorationPaymentDao.queryDecorationPaymentByOrderIdAStatusAOneTypeATwoType(orderId,paymentStatus,DecorationPaymentPO.ONETYPE_ADD_INT,DecorationPaymentPO.TWOTYPE_DEAL_INT);
+
+		List<DecorationPaymentPO> decorationPaymentPOs = decorationPaymentDao.queryDecorationPaymentByOrderIdAStatusAOneTypeATwoType(orderId, paymentStatus, DecorationPaymentPO.ONETYPE_ADD_INT, DecorationPaymentPO.TWOTYPE_DEAL_INT);
 		List<DecorationPaymentVO> payments = new ArrayList<DecorationPaymentVO>();
 
-		for(DecorationPaymentPO decorationPaymentPO : decorationPaymentPOs){
+		for (DecorationPaymentPO decorationPaymentPO : decorationPaymentPOs) {
 			DecorationPaymentVO _decorationPaymentVO = new DecorationPaymentVO();
-			BeanUtil.copyProperties(decorationPaymentPO, _decorationPaymentVO,Arrays.asList("decoration","creater","collecter","confirmer"));
+			BeanUtil.copyProperties(decorationPaymentPO, _decorationPaymentVO, Arrays.asList("decoration", "creater", "collecter", "confirmer"));
 
 			payments.add(_decorationPaymentVO);
 		}
 		decorationContractVO.setPayments(payments);
-		
+
 		return decorationContractVO;
 	}
-	
+
 	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public DecorationContractVO queryDecorationContractForQuotationByOrderId(DecorationContractVO decorationContractVO)  throws FLException{
-		
+	@Transactional(rollbackFor = Exception.class)
+	public DecorationContractVO queryDecorationContractForQuotationByOrderId(DecorationContractVO decorationContractVO) throws FLException {
+
 		DecorationContractPO decorationContractPO = decorationContractDao.queryDecorationContractByOrderId(decorationContractVO.getOrderId());
-		
-		if(decorationContractPO != null){
+
+		if (decorationContractPO != null) {
 			BeanUtil.copyProperties(decorationContractPO, decorationContractVO);
-			
-			if(decorationContractPO.getOrderTotalPrice() == 0f && decorationContractPO.getDecorationPO() != null){
+
+			if (decorationContractPO.getOrderTotalPrice() == 0f && decorationContractPO.getDecorationPO() != null) {
 				decorationContractPO.setOrderTotalPrice(decorationContractPO.getDecorationPO().getOrderTotalPrice());
-				
+
 				decorationContractDao.update(decorationContractPO);
 			}
-		}else{
+		} else {
 			decorationContractVO.setTemplateHtml(SystemConfig.getString("contractPath"));
 		}
-		
+
 		return decorationContractVO;
 	}
-	
+
 	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public int saveDecorationContract(DecorationContractVO decorationContractVO, int company) throws FLException{
-		
-		List<Short> noUpdateStatus = Arrays.asList(new Short[]{DecorationPO.STATUS_SIGNED_INT, DecorationPO.STATUS_COMPLETED_INT, DecorationPO.STATUS_WASTE_INT, DecorationPO.STATUS_TERMINATION_INT}); // 已签约, 已完工, 废单, 合同终止
-		
+	@Transactional(rollbackFor = Exception.class)
+	public int saveDecorationContract(DecorationContractVO decorationContractVO, int company) throws FLException {
+
+		List<Short> noUpdateStatus = Arrays.asList(new Short[] { DecorationPO.STATUS_SIGNED_INT, DecorationPO.STATUS_COMPLETED_INT, DecorationPO.STATUS_WASTE_INT, DecorationPO.STATUS_TERMINATION_INT }); // 已签约,
+																																																			// 已完工,
+																																																			// 废单,
+																																																			// 合同终止
+
 		DecorationContractPO decorationContractPO = decorationContractDao.queryDecorationContractByOrderId(decorationContractVO.getOrderId());
-		
-		if(decorationContractPO != null){
-			if(noUpdateStatus.contains(decorationContractPO.getDecorationPO().getStatus())){
+
+		if (decorationContractPO != null) {
+			if (noUpdateStatus.contains(decorationContractPO.getDecorationPO().getStatus())) {
 				throw new FLException(140005, "订单合同不能修改");
 			}
-		}else{
+		} else {
 			decorationContractPO = new DecorationContractPO();
 		}
-	
+
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationContractVO.getOrderId());
-		
-		StringBuffer contractCode= new StringBuffer(SystemConfig.getString("contractStartWith", "FLJ-"));
+
+		StringBuffer contractCode = new StringBuffer(SystemConfig.getString("contractStartWith", "FLJ-"));
 		contractCode.append(decorationPO.getOrderId());
-		
+
 		decorationContractPO.setAdditionalInfo(decorationContractVO.getAdditionalInfo());
 		decorationContractPO.setEndTime(decorationContractVO.getEndTime());
 		decorationContractPO.setStartTime(decorationContractVO.getStartTime());
 		decorationContractPO.setDecorationPO(decorationPO);
 		decorationContractPO.setContractCode(contractCode.toString());
 		decorationContractPO.setWorkingDuration(decorationContractVO.getWorkingDuration());
-		
-		SystemConfigPO querySystemConfig = SystemConfigDao.querySystemConfig("contractPath", company);
-		
-		decorationContractPO.setTemplateHtml(querySystemConfig == null ? "default.html" : querySystemConfig.getValue());
-		
+
+		decorationContractPO.setTemplateHtml(systemConfigDao.querySystemConfig("contractPath", company).value("default.html"));
+
 		decorationContractPO.setSignTime(DateUtil.getDateToTimestamp(new Date()));
-	
+
 		decorationContractDao.saveOrUpdate(decorationContractPO);
-		
+
 		return 0;
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public int signDecorationContract(DecorationContractVO decorationContractVO, Authentication authentication) throws FLException{
-		
-		List<Short> noUpdateStatus = Arrays.asList(new Short[]{DecorationPO.STATUS_SIGNED_INT, DecorationPO.STATUS_COMPLETED_INT, DecorationPO.STATUS_WASTE_INT, DecorationPO.STATUS_TERMINATION_INT}); // 已签约, 已完工, 废单, 合同终止
-		String[] paymentStatus = new String[]{DecorationPaymentPO.PAYMENTSTATUS_PAY_STR,DecorationPaymentPO.PAYMENTSTATUS_CONFIRM_STR};
-		
+	@Transactional(rollbackFor = Exception.class)
+	public int signDecorationContract(DecorationContractVO decorationContractVO, Authentication authentication) throws FLException {
+
+		List<Short> status = Arrays.asList(new Short[] { DecorationPO.STATUS_INIT_INT, DecorationPO.STATUS_DEPOSIT_INT, DecorationPO.STATUS_PROSIGN_INT, DecorationPO.STATUS_RESIGNED_INT });
+		Short[] paymentStatus = new Short[] { DecorationPaymentPO.PAYMENTSTATUS_PAY_INT, DecorationPaymentPO.PAYMENTSTATUS_CONFIRM_INT };
+
 		boolean resignFlag = false;
 		String orderId = decorationContractVO.getOrderId();
 		String userId = authentication.getUserId();
-				
+
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
-		
-		if(decorationPO == null){
+
+		if (decorationPO == null) {
 			throw new FLException(140013, "订单不存在");
 		}
-		
-		if(noUpdateStatus.contains(decorationPO.getStatus())){
+
+		if (!status.contains(decorationPO.getStatus())) {
 			throw new FLException(140005, "订单合同不能修改");
 		}
-		
-		List<DecorationPaymentPO> decorationPayments = decorationPaymentDao.queryDecorationPaymentByOrderIdAStatusAOneTypeATwoType(decorationPO.getOrderId(),paymentStatus,DecorationPaymentPO.ONETYPE_ADD_INT,DecorationPaymentPO.TWOTYPE_DEAL_INT);		
-		
-		if(decorationPayments == null || decorationPayments.size() == 0){
+
+		List<DecorationPaymentPO> decorationPayments = decorationPaymentDao.queryDecorationPaymentByOrderIdAStatusAOneTypeATwoType(decorationPO.getOrderId(), paymentStatus, DecorationPaymentPO.ONETYPE_ADD_INT, DecorationPaymentPO.TWOTYPE_DEAL_INT);
+
+		if (decorationPayments == null || decorationPayments.size() == 0) {
 			throw new FLException(140006, "订单没有进行款项交付,不能签订合同");
 		}
-		
-		if(approvalDao.countApprovalForInitByIdent(orderId) > 0){
+
+		if (approvalDao.countApprovalForInitByIdent(orderId) > 0) {
 			throw new FLException(140037, "订单存在未处理审批项");
 		}
-		
+
 		DecorationContractPO decorationContractPO = decorationContractDao.queryDecorationContractByOrderId(orderId);
-		
-		if(decorationContractPO == null){
+
+		if (decorationContractPO == null) {
 			decorationContractPO = new DecorationContractPO();
 			decorationContractPO.setDecorationPO(decorationPO);
 		}
-		
+
 		QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(orderId);
-		
-		if(quotationPO == null){
+
+		if (quotationPO == null) {
 			throw new FLException(140008, "订单没有报价信息");
 		}
-		
+
 		quotationDao.updateQuotationForStatusByOrderId(orderId, QuotationPO.STATUS_DISABLED_SHORT);
-		
-		if(DecorationPO.STATUS_RESIGNED_INT == decorationPO.getStatus()){
+
+		if (DecorationPO.STATUS_RESIGNED_INT == decorationPO.getStatus()) {
 			resignFlag = true;
 		}
-		
+
 		UserPO operater = userDao.queryUserByUserId(userId);
-		
+
 		decorationPO.setNetperfor(decorationContractVO.getNetperfor());
 		decorationPO.setComperfor(decorationContractVO.getComperfor());
 		decorationPO.setStatus(DecorationPO.STATUS_SIGNED_INT);
 		decorationPO.setContractCode(decorationContractPO.getContractCode());
 		decorationPO.setContracter(operater);
-		
-		List<DecorationBelongPO> designerOrderBelongInfoPOs = orderBelongInfoDao.queryOrderBelongInfoForCurrentByOrderIdAType(decorationContractVO.getOrderId(), DecorationBelongPO.BELONGTYPE_DESIGN_INT);
-		List<DecorationBelongPO> salemsanOrderBelongInfoPOs = orderBelongInfoDao.queryOrderBelongInfoForCurrentByOrderIdAType(decorationContractVO.getOrderId(), DecorationBelongPO.BELONGTYPE_SALESMAN_INT);
+
+		List<DecorationBelongPO> designerOrderBelongInfoPOs = orderBelongInfoDao.queryDecorationBelongForCurrentByOrderIdAType(decorationContractVO.getOrderId(), DecorationBelongPO.BELONGTYPE_DESIGN_INT);
+		List<DecorationBelongPO> salemsanOrderBelongInfoPOs = orderBelongInfoDao.queryDecorationBelongForCurrentByOrderIdAType(decorationContractVO.getOrderId(), DecorationBelongPO.BELONGTYPE_SALESMAN_INT);
 		DecorationAdditionPO decorationAdditionPO = decorationAdditionDao.queryDecorationAdditionByOrderId(orderId);
-		
-		if(!resignFlag){
+
+		if (!resignFlag) {
 			decorationPO.setContractTime(DateUtil.getDateToTimestamp(new Date()));
 		}
-		
+
 		decorationDao.update(decorationPO);
-		
-		DecorationOperatePO decorationOperatePO = new DecorationOperatePO();
-		decorationOperatePO.setOrderId(decorationPO.getOrderId());
-		decorationOperatePO.setOperater(operater);
-		decorationOperatePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
-		decorationOperatePO.setStatus(DecorationOperatePO.STATUS_INIT_INT);
-		decorationOperatePO.setComment("签订合同");
-		decorationOperatePO.setValue(decorationPO.getOrderTotalPrice());
-		
-		if(!resignFlag){
-			
+
+		DecorationOperatePO decorationOperatePO = new DecorationOperatePO().sign(orderId, operater, decorationPO.getOrderTotalPrice());
+
+		if (!resignFlag) {
+
 			decorationAdditionPO.clearDesign();
 			decorationAdditionPO.clearSales();
-			
-			//更新归属信息的部门和大区, 更新附加信息
-			for(DecorationBelongPO orderBelongInfoPO: designerOrderBelongInfoPOs){
-				orderBelongInfoPO.setDepartment(orderBelongInfoPO.getBelonger().getDept());
-				orderBelongInfoPO.setRegion(orderBelongInfoPO.getBelonger().getDept().getFatherDept());
-				
-				decorationAdditionPO.setDesign(orderBelongInfoPO.getBelonger().getCurrentName(), orderBelongInfoPO.getBelonger().getDept().getName(), orderBelongInfoPO.getBelonger().getDept().getFatherDept().getName());
 
-				orderBelongInfoDao.update(orderBelongInfoPO);
+			// 更新归属信息的部门和大区, 更新附加信息
+			for (DecorationBelongPO decorationBelongPO : designerOrderBelongInfoPOs) {
+				decorationBelongPO.setDepartment(decorationBelongPO.getBelonger().getDept());
+				decorationBelongPO.setRegion(decorationBelongPO.getBelonger().getDept().getFatherDept());
+
+				decorationAdditionPO.setDesign(decorationBelongPO.getBelonger().getCurrentName(), decorationBelongPO.getBelonger().getDept().getName(), decorationBelongPO.getBelonger().getDept().getFatherDept().getName());
+
+				orderBelongInfoDao.update(decorationBelongPO);
 			}
-			
-			for(DecorationBelongPO orderBelongInfoPO: salemsanOrderBelongInfoPOs){
-				orderBelongInfoPO.setDepartment(orderBelongInfoPO.getBelonger().getDept());
-				orderBelongInfoPO.setRegion(orderBelongInfoPO.getBelonger().getDept().getFatherDept());
-				
-				decorationAdditionPO.setSales(orderBelongInfoPO.getBelonger().getCurrentName(), orderBelongInfoPO.getBelonger().getDept().getName(), orderBelongInfoPO.getBelonger().getDept().getFatherDept().getName());
-				
-				orderBelongInfoDao.update(orderBelongInfoPO);
+
+			for (DecorationBelongPO decorationBelongPO : salemsanOrderBelongInfoPOs) {
+				decorationBelongPO.setDepartment(decorationBelongPO.getBelonger().getDept());
+				decorationBelongPO.setRegion(decorationBelongPO.getBelonger().getDept().getFatherDept());
+
+				decorationAdditionPO.setSales(decorationBelongPO.getBelonger().getCurrentName(), decorationBelongPO.getBelonger().getDept().getName(), decorationBelongPO.getBelonger().getDept().getFatherDept().getName());
+
+				orderBelongInfoDao.update(decorationBelongPO);
 			}
-			
+
 			decorationAdditionDao.update(decorationAdditionPO);
 			decorationOperatePO.setType(DecorationOperatePO.TYPE_SIGN_DECORATION_ORDER_INT);
-			
-		}else{
+
+		} else {
 			decorationOperatePO.setType(DecorationOperatePO.TYPE_SIGNED_DECORATION_ORDER_INT);
 		}
-		
+
 		decorationOperateDao.save(decorationOperatePO);
-		
-		// 生成业务员对应设计师的合同额信息
-		DecorationOperateServiceImpl.makeDecorationOperateForDecorationContract(decorationOperateDao, decorationPO, salemsanOrderBelongInfoPOs, designerOrderBelongInfoPOs, operater, decorationPO.getOrderTotalPrice(), 1, decorationOperatePO.getType());
-		
+
 		return 0;
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
+	@Transactional(rollbackFor = Exception.class)
 	public int resignDecorationContract(DecorationContractVO decorationContractVO, String userId) throws FLException {
-		
+
 		String orderId = decorationContractVO.getOrderId();
-		
+
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 
-		if(decorationPO == null){
+		if (decorationPO == null) {
 			throw new FLException(140013, "订单不存在");
 		}
-		
-		if(DecorationPO.STATUS_SIGNED_INT != (decorationPO.getStatus())){
+
+		if (DecorationPO.STATUS_RESIGNED_INT != (decorationPO.getStatus())) {//判断装修单状态为4(重签) , 其他状态不能重签
 			throw new FLException(140027, "订单状态不能重签合同");
 		}
-		
-		if(approvalDao.countApprovalForInitByIdent(orderId) > 0){
+
+		if (approvalDao.countApprovalForInitByIdent(orderId) > 0) {
 			throw new FLException(140037, "订单存在未处理审批项");
 		}
-		
-		if(addReduceDao.countAddReduceByOrderId(orderId)>0){
+
+		if (addReduceDao.countAddReduceByOrderId(orderId) > 0) {
 			throw new FLException(140041, "订单存在增减项,不能重新签单");
 		}
-		
+
 		decorationPO.setStatus(DecorationPO.STATUS_RESIGNED_INT);
-		
+
 		decorationDao.update(decorationPO);
-		
+
 		UserPO operater = userDao.queryUserByUserId(userId);
+
+		decorationOperateDao.save(new DecorationOperatePO().resign(orderId, operater, -decorationPO.getOrderTotalPrice()));
 		
-		DecorationOperatePO decorationOperatePO = new DecorationOperatePO();
-		decorationOperatePO.setOrderId(decorationPO.getOrderId());
-		decorationOperatePO.setOperater(operater);
-		decorationOperatePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
-		decorationOperatePO.setType(DecorationOperatePO.TYPE_RESIGN_DECORATION_ORDER_INT);
-		decorationOperatePO.setStatus(DecorationOperatePO.STATUS_INIT_INT);
-		decorationOperatePO.setValue(-decorationPO.getOrderTotalPrice());
-		
-		decorationOperatePO.setComment("重签合同");
-		
-		decorationOperateDao.save(decorationOperatePO);
-		
-		List<DecorationBelongPO> designerOrderBelongInfoPOs = orderBelongInfoDao.queryOrderBelongInfoForCurrentByOrderIdAType(decorationContractVO.getOrderId(), DecorationBelongPO.BELONGTYPE_DESIGN_INT);
-		List<DecorationBelongPO> salemsanOrderBelongInfoPOs = orderBelongInfoDao.queryOrderBelongInfoForCurrentByOrderIdAType(decorationContractVO.getOrderId(), DecorationBelongPO.BELONGTYPE_SALESMAN_INT);
-		
-		DecorationOperateServiceImpl.makeDecorationOperateForDecorationContract(decorationOperateDao, decorationPO, salemsanOrderBelongInfoPOs, designerOrderBelongInfoPOs, operater, decorationPO.getOrderTotalPrice(), -1, decorationOperatePO.getType());
-		
+//		重签处理过程 , 需要冲减之前计算的设计师/业务员业绩信息
+//		List<DecorationBelongPO> designerOrderBelongInfoPOs = orderBelongInfoDao.queryDecorationBelongForCurrentByOrderIdAType(decorationContractVO.getOrderId(), DecorationBelongPO.BELONGTYPE_DESIGN_INT);
+//		List<DecorationBelongPO> salemsanOrderBelongInfoPOs = orderBelongInfoDao.queryDecorationBelongForCurrentByOrderIdAType(decorationContractVO.getOrderId(), DecorationBelongPO.BELONGTYPE_SALESMAN_INT);
+//		DecorationOperateServiceImpl.makeDecorationOperateForDecorationContract(decorationOperateDao, decorationPO, salemsanOrderBelongInfoPOs, designerOrderBelongInfoPOs, operater, decorationPO.getOrderTotalPrice(), -1, decorationOperatePO.getType());
+
 		return 0;
 	}
 

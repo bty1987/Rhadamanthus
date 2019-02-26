@@ -16,6 +16,8 @@ public class CustomerPhonePO implements Serializable {
 	
 	public static final String COLUMN_STATUS_STR = "status";
 	
+	public static final String COLUMN_DEFAULTS_STR = "defaults";
+	
 	public static final short STATUS_ENABLE_INT = 0;
 	
 	public static final short STATUS_DISABLE_INT = 1;

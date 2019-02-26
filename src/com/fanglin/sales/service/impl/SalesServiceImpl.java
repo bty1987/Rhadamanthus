@@ -23,6 +23,8 @@ import com.fanglin.communion.vo.VillageVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.security.AESHelper;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.information.dao.ActivityDao;
+import com.fanglin.information.po.ActivityPO;
 import com.fanglin.inventory.dao.GoodsDao;
 import com.fanglin.inventory.po.ColorPO;
 import com.fanglin.inventory.po.FormatPO;
@@ -70,6 +72,9 @@ public class SalesServiceImpl implements SalesService {
 	
 	@Autowired
 	private BrandDao brandDao;
+	
+	@Autowired
+	private ActivityDao activityDao;
 	
 	@Override
 	public List<SalesVO> pageSales(List<SalesPO> salesPOs) {
@@ -261,6 +266,9 @@ public class SalesServiceImpl implements SalesService {
 		salesPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		salesPO.setCompany(company);
 		salesPO.setDompany(dompany);
+		
+		ActivityPO activityPO = activityDao.queryActivityForDefault(SalesPO.FULLPAYSTATUS_PAYED_SHORT);
+		salesPO.setActivityId(activityPO == null ? 0 : activityPO.getAid());
 			
 		salesDao.save(salesPO);
 		

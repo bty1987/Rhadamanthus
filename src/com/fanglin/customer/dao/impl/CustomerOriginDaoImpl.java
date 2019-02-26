@@ -13,8 +13,7 @@ import com.fanglin.customer.po.CustomerOriginPO;
 import com.fanglin.utils.Paging;
 
 @Repository("customerOriginDao")
-public class CustomerOriginDaoImpl extends DaoImpl<CustomerOriginPO> implements
-		CustomerOriginDao {
+public class CustomerOriginDaoImpl extends DaoImpl<CustomerOriginPO> implements CustomerOriginDao {
 
 	public CustomerOriginDaoImpl() {
 		super(CustomerOriginPO.class);
@@ -37,10 +36,11 @@ public class CustomerOriginDaoImpl extends DaoImpl<CustomerOriginPO> implements
 				if ("customerSourcePhone".equals(filter.getField())) {
 					query.add(query.getCriterion("phone", filter.getData(),filter.getOp()));
 				} else if ("belonger".equals(filter.getField())) {
-					query.alias("belonger", "belonger");
-					query.add(query.getCriterion("belonger.userId", filter.getData(), filter.getOp()));
+					query.add(Restrictions.eq(CustomerOriginPO.COLUMN_BUID_STR , Integer.valueOf(filter.getData())));
 				} else if ("belonger.uid".equals(filter.getField())) {
 					query.add(Restrictions.sqlRestriction("buid is ? ", null, Hibernate.STRING));
+				} else if ("designer".equals(filter.getField())) {
+					query.add(Restrictions.eq(CustomerOriginPO.COLUMN_DESIGNER_STR, Integer.valueOf(filter.getData())));
 				}
 			}
 		}

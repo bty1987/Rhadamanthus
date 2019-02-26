@@ -11,5 +11,5 @@ public interface EcustomerService {
 
 	public void pageEcustomer(Paging paging, List<Filter> filters);
 	
-	public void addEcustomer(EcustomerVO ecustomerVO) throws FLException;
+	public void addEcustomer(EcustomerVO ecustomerVO, String securityCode, String verifyCode) throws FLException;
 }

@@ -79,4 +79,13 @@ public class MaterialRefundDaoImpl extends DaoImpl<MaterialRefundPO> implements 
 				.list();
 	}
 
+	@Override
+	public void updateMaterialRefundForStatusByMpId(long mpId, int status) {
+		
+		String sql="update material.materialrefund set status= :status where mpId= :mpId";
+		
+		session().createSQLQuery(sql).setLong("mpId", mpId).setInteger("status", status).executeUpdate();
+		
+	}
+
 }

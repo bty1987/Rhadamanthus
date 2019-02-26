@@ -29,7 +29,7 @@ public class ActivityItemDaoImpl extends DaoImpl<ActivityItemPO> implements Acti
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<ActivityItemPO> queryActivityItemByAId(long aId) {
+	public List<ActivityItemPO> queryActivityItemByAid(long aId) {
 		return session().createCriteria(ActivityItemPO.class).add(Restrictions.eq(ActivityItemPO.COLUMN_AID_STR, aId)).list();
 	}
 

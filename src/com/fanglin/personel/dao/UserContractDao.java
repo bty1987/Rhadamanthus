@@ -18,7 +18,7 @@ import com.fanglin.utils.Paging;
 public interface UserContractDao extends Dao<UserContractPO> {
 
 	public List<UserContractPO> pageUserContractByUserId(Paging paging, String userId);
-	
+
 	public List<UserContractPO> queryUserContractByUserId(String userId);
 
 }

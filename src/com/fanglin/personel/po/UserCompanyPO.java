@@ -20,15 +20,15 @@ public class UserCompanyPO implements Serializable {
 	private static final long serialVersionUID = -9073486016937854510L;
 
 	private long ucid;
-	
+
 	private int uid;
-	
+
 	private CompanyPO company;
-	
+
 	public UserCompanyPO() {
 		super();
 	}
-	
+
 	public UserCompanyPO(CompanyPO company) {
 		super();
 		this.company = company;
@@ -42,16 +42,15 @@ public class UserCompanyPO implements Serializable {
 
 	@Id
 	@GeneratedValue
-	@Column(name = "ucid") 
+	@Column(name = "ucid")
 	public long getUcid() {
 		return ucid;
 	}
-	
-	
+
 	public void setUcid(long ucid) {
 		this.ucid = ucid;
 	}
-	
+
 	@Column(name = "uid")
 	public int getUid() {
 		return uid;
@@ -71,6 +70,4 @@ public class UserCompanyPO implements Serializable {
 		this.company = company;
 	}
 
-
-	
 }

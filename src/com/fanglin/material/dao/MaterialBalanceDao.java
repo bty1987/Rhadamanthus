@@ -19,7 +19,7 @@ import com.fanglin.material.po.MaterialBalancePO;
 import com.fanglin.utils.Paging;
 
 public interface MaterialBalanceDao extends Dao<MaterialBalancePO> {
-	
-	public List<MaterialBalancePO> pageMaterialBalance(Paging paging, List<Filter> filters,int company);
-	
+
+	public List<MaterialBalancePO> pageMaterialBalance(Paging paging, List<Filter> filters, int company);
+
 }

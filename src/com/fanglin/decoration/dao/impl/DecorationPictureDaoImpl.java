@@ -24,7 +24,7 @@ import com.fanglin.decoration.po.DecorationPicturePO;
 @Repository("orderDesignPictureDao")
 public class DecorationPictureDaoImpl extends DaoImpl<DecorationPicturePO> implements DecorationPictureDao {
 
-	public DecorationPictureDaoImpl(){
+	public DecorationPictureDaoImpl() {
 		super(DecorationPicturePO.class);
 	}
 
@@ -36,11 +36,11 @@ public class DecorationPictureDaoImpl extends DaoImpl<DecorationPicturePO> imple
 
 	@Override
 	public int countDecorationPicture(String orderId, Integer type) {
-		
+
 		String sql = "select count(*) from decoration.decorationpicture where orderId = :orderId and type = :type and status = 0";
 		BigInteger count = (BigInteger) session().createSQLQuery(sql).setString("orderId", orderId).setInteger("type", type).uniqueResult();
 
 		return count.intValue();
 	}
-	
+
 }

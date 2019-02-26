@@ -34,8 +34,8 @@ import com.fanglin.customer.service.DecorationService;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.vo.DecorationActivityItemVO;
-import com.fanglin.information.service.MemberCardService;
 import com.fanglin.material.dao.MaterialDao;
+import com.fanglin.material.dao.MaterialItemDao;
 import com.fanglin.material.dao.MaterialRefundDao;
 import com.fanglin.material.po.MaterialPO;
 import com.fanglin.material.po.MaterialRefundPO;
@@ -78,9 +78,6 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 	private AdvancePaymentService advancePaymentService;
 	
 	@Autowired
-	private MemberCardService memberCardService;
-
-	@Autowired
 	private MaterialDao materialDao;
 
 	@Autowired
@@ -100,6 +97,9 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 	
 	@Autowired
 	private DecorationService decorationService;
+	
+	@Autowired
+	private MaterialItemDao materialItemDao;
 
 	@Override
 	public void pageMaterialPaymentForInit(Paging paging, List<Filter> filters, int company) {
@@ -347,10 +347,11 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 		}
 
 	}
-
+	
+	//生成定金主材款
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public void addMaterialPayment(MaterialPaymentVO materialPaymentVO, String userId) throws FLException{
+	public void addMaterialPaymentForDeposit(MaterialPaymentVO materialPaymentVO, String userId) throws FLException{
 
 		long msoId = materialPaymentVO.getMaterial().getMid();
 
@@ -363,66 +364,104 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 		if(materialPaymentVO.getReferMoney() < 0){
 			throw new FLException(150025, "款项金额不正确");
 		}
+		
+		//当前主材单不能有任何款项信息
+		List<MaterialPaymentPO>  materialPaymentPOs = materialPaymentDao.queryMaterialPaymentByMidAType(msoId, null);
+		if(materialPaymentPOs.size() > 0){
+			throw new FLException(150029, "款项不可提交");
+		}
 
-		if(materialPaymentDao.countMaterialPaymentByMidAType(msoId,materialPaymentVO.getPaymentType()) > 0){
+		//api上错误信息是: 150029, "款项不可提交", 暂时先保留原本信息
+		if(materialPaymentDao.countMaterialPaymentByMidAType(msoId, MaterialPaymentPO.PAYMENTTYPE_TYPE_DEPOSIT_INT) > 0){
 			throw new FLException(150033, "款项类型已存在");
 		}
 
-		if(materialPO.getTotal() == 0 && materialPaymentVO.getPaymentType() == MaterialPaymentPO.PAYMENTTYPE_TYPE_FULL_INT){
-			throw new FLException(180021, "主材单总金额为0");
+		MaterialPaymentPO materialPaymentPO = new MaterialPaymentPO();
+		BeanUtil.copyProperties(materialPaymentVO, materialPaymentPO, Arrays.asList("materialReceipt", "material", "creater"));
+
+		materialPaymentPO.setMaterial(materialPO);
+		materialPaymentPO.setCategory(materialPO.getCategory());
+		materialPaymentPO.setBrand(materialPO.getBrand());
+		materialPaymentPO.setPaymentType(MaterialPaymentPO.PAYMENTTYPE_TYPE_DEPOSIT_INT);
+		materialPaymentPO.setPaymentStatus(MaterialPaymentPO.PAYMENTSTATUS_TYPE_INIT_INT);
+
+		UserPO userPO = userDao.queryUserByUserId(userId);
+		materialPaymentPO.setCreater(userPO);
+		materialPaymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+		materialPaymentPO.setCompany(materialPO.getCompany());
+		
+		materialPO.setDepositPayment(materialPaymentPO.getReferMoney());
+		materialPO.setDepositStatus(MaterialPO.FINANCE_STATUS_TYPE_COMMIT_INT);
+		materialDao.update(materialPO);
+
+		materialPaymentDao.save(materialPaymentPO);
+
+	}
+	
+	//生成补款主材款
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public void addMaterialPaymentForFullpay(MaterialPaymentVO materialPaymentVO, String userId) throws FLException{
+
+		long msoId = materialPaymentVO.getMaterial().getMid();
+
+		MaterialPO materialPO = materialDao.get(msoId);
+		
+		if(materialPaymentDao.countMaterialPaymentByMidAType(msoId, MaterialPaymentPO.PAYMENTTYPE_TYPE_FULL_INT) > 0){
+			throw new FLException(150040, "补款已存在");
+		}
+		
+		List<MaterialPaymentPO> materialPaymentPOs = materialPaymentDao.queryMaterialPaymentByMidAType(msoId, MaterialPaymentPO.PAYMENTTYPE_TYPE_DEPOSIT_INT);
+		
+		if(materialPaymentPOs.size() > 0){
+			MaterialPaymentPO depositMaterialPaymentPO = materialPaymentPOs.get(0);
+			if(depositMaterialPaymentPO.getPaymentStatus() == MaterialPaymentPO.PAYMENTSTATUS_TYPE_INIT_INT){
+				throw new FLException(150041, "定金状态不可操作");
+			}
+		}
+		
+		float couponValue = materialPO.getCoupon();
+		float venderMalingValue = materialPO.getVenderMaling();
+		float subMaterialMoney = Arith.add(couponValue, venderMalingValue);
+		float sumMaterialMoney = Arith.add(materialPaymentPOs.size() == 0 ? 0 : materialPaymentPOs.get(0).getReferMoney(), materialPaymentVO.getReferMoney());
+		
+		if(materialPO.getTotal() != Arith.add(subMaterialMoney, sumMaterialMoney)){
+			throw new FLException(150017, "项目总额与款项额不符");
+		}
+		
+		if(materialPO.getTotal() != materialItemDao.queryMaterialItemByTotal(msoId)){
+			throw new FLException(150017, "项目总额与款项额不符");
 		}
 
 		MaterialPaymentPO materialPaymentPO = new MaterialPaymentPO();
-		BeanUtil.copyProperties(materialPaymentVO, materialPaymentPO, Arrays.asList("materialReceipt","material","creater"));
+		BeanUtil.copyProperties(materialPaymentVO, materialPaymentPO, Arrays.asList("materialReceipt", "material", "creater"));
 
 		materialPaymentPO.setMaterial(materialPO);
-		materialPaymentPO.setCategory(materialPaymentVO.getCategory());
-		materialPaymentPO.setBrand(materialPaymentVO.getBrand());
-		materialPaymentPO.setCompany(materialPO.getCompany());
-
+		materialPaymentPO.setCategory(materialPO.getCategory());
+		materialPaymentPO.setBrand(materialPO.getBrand());
+		
+		if(materialPaymentVO.getReferMoney() > 0){
+			materialPaymentPO.setPaymentType(MaterialPaymentPO.PAYMENTTYPE_TYPE_FULL_INT);
+		}else if(materialPaymentVO.getReferMoney() < 0){
+			materialPaymentPO.setPaymentType(MaterialPaymentPO.PAYMENTTYPE_TYPE_FULL_REFUND_INT);
+		}
+		
+		materialPaymentPO.setReferMoney(Math.abs(materialPaymentVO.getReferMoney()));
+		materialPaymentPO.setPaymentStatus(MaterialPaymentPO.PAYMENTSTATUS_TYPE_INIT_INT);
+		
 		UserPO userPO = userDao.queryUserByUserId(userId);
-		if(userPO != null){
-			materialPaymentPO.setMaterial(materialPO);
-			materialPaymentPO.setCreater(userPO);
-			materialPaymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-		}
-
-		int materialPaymentType = materialPaymentPO.getPaymentType();
-
-		if(materialPaymentType == MaterialPaymentPO.PAYMENTTYPE_TYPE_DEPOSIT_INT){
-
-			if(materialPaymentDao.countMaterialPaymentByMidAType(materialPaymentVO.getMaterial().getMid(),MaterialPaymentPO.PAYMENTTYPE_TYPE_FULL_INT)>0){
-				throw new FLException(150036, "补款已提交");
-			}
-			materialPO.setDepositStatus(MaterialPO.FINANCE_STATUS_TYPE_COMMIT_INT);
-			materialPO.setDepositPayment(materialPaymentPO.getReferMoney());
-
-		}else if(materialPaymentType == MaterialPaymentPO.PAYMENTTYPE_TYPE_FULL_INT){
-
-			List<MaterialPaymentPO> materialPaymentPOs = materialPaymentDao.queryMaterialPaymentByMidAType(msoId, MaterialPaymentPO.PAYMENTTYPE_TYPE_DEPOSIT_INT);
-
-			if(materialPaymentPOs.size() == 1){
-				MaterialPaymentPO depositPayment = materialPaymentPOs.get(0);
-
-				if(depositPayment.getPaymentStatus() == MaterialPaymentPO.PAYMENTSTATUS_TYPE_INIT_INT){
-					throw new FLException(150029, "款项不可提交");
-				}
-			}
-			materialPO.setFullStatus(MaterialPO.FINANCE_STATUS_TYPE_COMMIT_INT);
-			materialPO.setFullPayment(materialPaymentPO.getReferMoney());
-
-		}else if(materialPaymentType == MaterialPaymentPO.PAYMENTTYPE_TYPE_FULL_REFUND_INT){
-
-			materialPO.setFullStatus(MaterialPO.FINANCE_STATUS_TYPE_COMMIT_INT);
-			materialPO.setFullPayment(-materialPaymentPO.getReferMoney());
-
-		}
+		materialPaymentPO.setCreater(userPO);
+		materialPaymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+		materialPaymentPO.setCompany(materialPO.getCompany());
+		
+		materialPO.setFullPayment(materialPaymentVO.getReferMoney());
+		materialPO.setFullStatus(MaterialPO.FINANCE_STATUS_TYPE_COMMIT_INT);
 		
 		materialPO.setNo(materialPO.getNo());
 
 		materialDao.update(materialPO);
 
-		materialPaymentDao.save(materialPaymentPO); 
+		materialPaymentDao.save(materialPaymentPO);
 
 	}
 	
@@ -473,7 +512,7 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 			materialPaymentDao.update(materialPaymentPO);
 
 			ServiceRecordPO serviceRecordPO = new ServiceRecordPO();
-			serviceRecordPO.setType(ServiceRecordPO.TYPE_TYPE_CHANGE_MATERIALPAYMENT_TIME_INT);
+			serviceRecordPO.setType(ServiceRecordPO.TYPE_CHANGE_PAYMENT_INT);
 			serviceRecordPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 			serviceRecordPO.setOperateUserId(userId);
 
@@ -502,7 +541,7 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 		}
 		
 		if(materialPaymentPO.getPaymentStatus() != MaterialPaymentPO.PAYMENTSTATUS_TYPE_INIT_INT){
-			throw new FLException(150008, "款项不能进行收款");
+			throw new FLException(150036, "款项状态不可操作");
 		}
 
 		MaterialReceiptPO materialReceiptPO = new MaterialReceiptPO();
@@ -600,6 +639,10 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 			if(advancePaymentPO == null){
 				throw new FLException(150010, "预付款余额不足");
 			}
+			
+			if(advancePaymentPO.getMaterialBalance() < materialPaymentVO.getAdvance()){
+				throw new FLException(150010, "预付款余额不足");
+			}
 
 			if(advanceType == MaterialPaymentPO.ADVANCETYPE_TYPE_MATERIAL_INT){
 				customerAdvance = advancePaymentPO.getMaterialBalance();
@@ -624,8 +667,6 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 
 		materialPaymentVO.setMrId(materialReceiptPO.getMrId());
 
-		memberCardService.IncreaseMemberCardIntegraldivider(materialPO, materialPaymentPO, userPO);
-		
 		decorationService.sendMessage(materialPaymentPO.getMaterial().getOrderId(), "主材单", String.format("主材交款金额%s元", materialPaymentPO.getReferMoney()));
 
 		return 0;
@@ -707,6 +748,10 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 			if(advancePaymentPO == null){
 				throw new FLException(150010, "预付款余额不足");
 			}
+			
+			if(advancePaymentPO.getMaterialBalance() < advance){
+				throw new FLException(150010, "预付款余额不足");
+			}
 
 			if(advanceType == MaterialPaymentPO.ADVANCETYPE_TYPE_MATERIAL_INT){
 				customerAdvance = advancePaymentPO.getMaterialBalance();
@@ -731,6 +776,10 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 
 			if(materialPaymentPO == null){
 				throw new FLException(150003, "款项不存在");
+			}
+			
+			if(materialPaymentPO.getPaymentStatus() != MaterialPaymentPO.PAYMENTSTATUS_TYPE_INIT_INT){
+				throw new FLException(150036, "款项状态不可操作");
 			}
 			
 			referMoney = Arith.add(referMoney,materialPaymentPO.getReferMoney());
@@ -764,16 +813,12 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 
 			int paymentType = materialPaymentPO.getPaymentType();
 
-			float count = 0;
-
 			if(materialPO != null){
 				if(MaterialPaymentPO.PAYMENTTYPE_TYPE_DEPOSIT_INT == paymentType){
 					materialPO.setDepositStatus(MaterialPO.FINANCE_STATUS_TYPE_COLLECT_INT);					
-					count = materialPaymentPO.getReferMoney();//这个count什么作用
 				}else if(MaterialPaymentPO.PAYMENTTYPE_TYPE_FULL_INT == paymentType){
 					materialPO.setFullStatus(MaterialPO.FINANCE_STATUS_TYPE_COLLECT_INT);
 					materialPO.setFullpayTime(materialReceiptPO.getCollectTime());
-					count = Arith.add(Arith.add(count, materialPaymentPO.getReferMoney()), materialPO.getCoupon());
 				}
 
 				materialDao.update(materialPO);
@@ -788,8 +833,6 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 
 			materialReceiptVO.setMrId(materialReceiptPO.getMrId());
 
-			memberCardService.IncreaseMemberCardIntegraldivider(materialPO, materialPaymentPO, userPO);
-			
 			totalMoney = totalMoney + materialPaymentPO.getReferMoney();
 		}
 		
@@ -798,17 +841,21 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 		return 0;
 	}
 
+	//主材退款收款
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int collectMaterialPaymentForRefund(MaterialPaymentVO materialPaymentVO, String userId, Integer company) throws FLException{
+	public int refundMaterialPayment(MaterialPaymentVO materialPaymentVO, String userId, Integer company) throws FLException{
 
 		float real = 0;
-		float count = 0;
-
+		
 		MaterialPaymentPO materialPaymentPO = materialPaymentDao.get(materialPaymentVO.getMpId());
-
+	
 		if(materialPaymentPO == null){
 			throw new FLException(150003, "款项不存在");
+		}
+		
+		if(materialPaymentPO.getPaymentStatus() != MaterialPaymentPO.PAYMENTSTATUS_TYPE_INIT_INT){
+			throw new FLException(150036, "款项状态不可操作");
 		}
 
 		MaterialReceiptPO materialReceiptPO = new MaterialReceiptPO();
@@ -856,26 +903,18 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 
 		materialPaymentPO.setPaymentStatus(MaterialPaymentPO.PAYMENTSTATUS_TYPE_COLLECT_INT);
 
-		if(paymentType == MaterialPaymentPO.PAYMENTTYPE_TYPE_FULL_REFUND_INT || paymentType == MaterialPaymentPO.PAYMENTTYPE_TYPE_DEPOSIT_REFUND_INT){
-
-			if(paymentType == MaterialPaymentPO.PAYMENTTYPE_TYPE_FULL_REFUND_INT){
-				materialPO.setFullStatus(MaterialPO.FINANCE_STATUS_TYPE_COLLECT_INT);
-				materialPO.setFullpayTime(materialReceiptPO.getCollectTime());
-				
-				materialDao.update(materialPO);
-			}
-
-			count = Arith.add(Arith.sub(count, materialPaymentPO.getReferMoney()), materialPO.getCoupon());
+		if(paymentType == MaterialPaymentPO.PAYMENTTYPE_TYPE_DEPOSIT_REFUND_INT){
+			//定金退款
+			materialPO.setDepositPayment(0);
+			materialPO.setDepositStatus(MaterialPO.STATUS_TYPE_INIT_INT);
+			materialDao.update(materialPO);
+		}else if(paymentType == MaterialPaymentPO.PAYMENTTYPE_TYPE_FULL_REFUND_INT){
+			//2 已付款
+			materialPO.setFullStatus(MaterialPO.FINANCE_STATUS_TYPE_COLLECT_INT);
+			materialPO.setFullpayTime(materialReceiptPO.getCollectTime());
+			materialDao.update(materialPO);
 		}else if(paymentType == MaterialPaymentPO.PAYMENTTYPE_TYPE_REJECT_INT){
-			List<MaterialRefundPO> materialRefundPOs = materialRefundDao.queryMaterialRefundByMpId(materialPaymentPO.getMpId());
-
-			for(MaterialRefundPO materialRefundPO: materialRefundPOs){
-				materialRefundPO.setStatus(MaterialRefundPO.STATUS_TYPE_PAYMENTCOLLECT_INT);
-
-				materialRefundDao.update(materialRefundPO);
-			}
-
-			count = Arith.sub(count, materialPaymentPO.getReferMoney());
+			materialRefundDao.updateMaterialRefundForStatusByMpId(materialPaymentPO.getMpId(), MaterialRefundPO.STATUS_TYPE_PAYMENTCOLLECT_INT);
 		}
 
 		UserPO userPO = userDao.queryUserByUserId(userId);
@@ -895,8 +934,6 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 
 		materialPaymentVO.setMrId(materialReceiptPO.getMrId());
 
-		memberCardService.MinusMemberCardIntegraldivider(materialPO, materialPaymentPO, userPO);
-		
 		decorationService.sendMessage(materialPaymentPO.getMaterial().getOrderId(), "主材单", String.format("主材退款金额%s元", materialPaymentPO.getReferMoney()));
 
 		return 0;
@@ -1033,107 +1070,136 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 			}
 		}
 	}
-
-
+	
+	//撤销定金主材款
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int cancelMaterialPayment(MaterialPaymentVO materialPaymentVO) throws FLException{
+	public int cancelMaterialPaymentForDeposit(MaterialPaymentVO materialPaymentVO) throws FLException{
 
 		long msoId = materialPaymentVO.getMaterial().getMid();
-		short paymentType = materialPaymentVO.getPaymentType();
-
-		List<MaterialPaymentPO> materialPaymentPOs = materialPaymentDao.queryMaterialPaymentByMidATypeAStatus(msoId, paymentType, MaterialPaymentPO.PAYMENTSTATUS_TYPE_INIT_INT);
-
-		int materialPaymentLength = materialPaymentPOs.size();
-
-		if(materialPaymentLength == 1){
-			MaterialPaymentPO materialPaymentPO = materialPaymentPOs.get(0);
-
-			MaterialPO materialPO = materialDao.get(materialPaymentVO.getMaterial().getMid());
-
-			if(materialPaymentPO != null){
-				if(materialPaymentPO.getPaymentStatus() == MaterialPaymentPO.PAYMENTSTATUS_TYPE_INIT_INT){
-					materialPaymentDao.delete(materialPaymentPO);
-
-					int depositStatus = materialPO.getDepositStatus();
-					int fullStatus = materialPO.getFullStatus();
-
-					if(materialPO != null){
-						if(paymentType == MaterialPaymentPO.PAYMENTTYPE_TYPE_DEPOSIT_INT && depositStatus == MaterialPO.FINANCE_STATUS_TYPE_COMMIT_INT){
-							materialPO.setDepositPayment(0);
-							materialPO.setDepositStatus(MaterialPO.FINANCE_STATUS_TYPE_INIT_INT);
-						}else if(paymentType == MaterialPaymentPO.PAYMENTTYPE_TYPE_FULL_INT || paymentType == MaterialPaymentPO.PAYMENTTYPE_TYPE_FULL_REFUND_INT){
-							if(fullStatus == MaterialPO.FINANCE_STATUS_TYPE_COMMIT_INT){
-								materialPO.setFullPayment(0);
-								materialPO.setFullStatus(MaterialPO.FINANCE_STATUS_TYPE_INIT_INT);
-							}
-						}
-
-						materialDao.update(materialPO);
-					}
-
-					materialPaymentVO.setPaymentStatus(MaterialPO.FINANCE_STATUS_TYPE_INIT_INT);
-
-					return 0;
-				}
-			}
+		
+		if(materialPaymentDao.countMaterialPaymentByMidAType(msoId, MaterialPaymentPO.PAYMENTTYPE_TYPE_FULL_INT) > 0){
+			throw new FLException(150040, "补款已存在");
+		}
+		
+		List<MaterialPaymentPO> materialPaymentPOs = materialPaymentDao.queryMaterialPaymentByMidAType(msoId, MaterialPaymentPO.PAYMENTTYPE_TYPE_DEPOSIT_INT);
+		
+		if(materialPaymentPOs.size() == 0){
+			throw new FLException(150037, "定金不存在");
+		}
+		
+		MaterialPaymentPO materialPaymentPO = materialPaymentPOs.get(0);
+		
+		if(materialPaymentPO.getPaymentStatus() != MaterialPaymentPO.PAYMENTSTATUS_TYPE_INIT_INT){
+			throw new FLException(150036, "款项状态不可操作");
 		}
 
-		throw new FLException(150019, "款项不能撤销");
-	}
-
-	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public void refundMaterialPayment(MaterialPaymentVO materialPaymentVO, String userId) throws FLException{
-
-		long msoId = materialPaymentVO.getMaterial().getMid();
-		short paymentType = materialPaymentVO.getPaymentType();
-
+		materialPaymentDao.delete(materialPaymentPO);
+		
 		MaterialPO materialPO = materialDao.get(msoId);
 
-		if(materialPO == null){
-			throw new FLException(180001, "主材订单不存在");
+		int depositStatus = materialPO.getDepositStatus();
+
+		if(materialPO != null){
+			if(depositStatus == MaterialPO.FINANCE_STATUS_TYPE_COMMIT_INT){
+				materialPO.setDepositPayment(0);
+				materialPO.setDepositStatus(MaterialPO.FINANCE_STATUS_TYPE_INIT_INT);
+			}
+
+			materialDao.update(materialPO);
 		}
+
+		materialPaymentVO.setPaymentStatus(MaterialPO.FINANCE_STATUS_TYPE_INIT_INT);
+			
+		return 0;
+
+	}
+	
+	//撤销补款主材款
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public int cancelMaterialPaymentForFullpay(MaterialPaymentVO materialPaymentVO) throws FLException{
+
+		long msoId = materialPaymentVO.getMaterial().getMid();
+		
+		List<Short> paymentTypes = Arrays.asList(MaterialPaymentPO.PAYMENTTYPE_TYPE_FULL_INT, MaterialPaymentPO.PAYMENTTYPE_TYPE_FULL_REFUND_INT);
+		
+		List<MaterialPaymentPO> materialPaymentPOs = materialPaymentDao.queryMaterialPaymentByMidATypes(msoId, paymentTypes);
+		
+		if(materialPaymentPOs.size() == 0){
+			throw new FLException(150038, "补款不存在");
+		}
+		
+		MaterialPaymentPO materialPaymentPO = materialPaymentPOs.get(0);
+		
+		if(materialPaymentPO.getPaymentStatus() != MaterialPaymentPO.PAYMENTSTATUS_TYPE_INIT_INT){
+			throw new FLException(150036, "款项状态不可操作");
+		}
+		
+		materialPaymentDao.delete(materialPaymentPO);
+		
+		MaterialPO materialPO = materialDao.get(msoId);
+		
+		int fullStatus = materialPO.getFullStatus();
+
+		if(materialPO != null){
+			if(fullStatus == MaterialPO.FINANCE_STATUS_TYPE_COMMIT_INT){
+				materialPO.setFullPayment(0);
+				materialPO.setFullStatus(MaterialPO.FINANCE_STATUS_TYPE_INIT_INT);
+			}
+
+			materialDao.update(materialPO);
+		}
+
+		materialPaymentVO.setPaymentStatus(MaterialPO.FINANCE_STATUS_TYPE_INIT_INT);
+			
+		return 0;
+		
+	}
+	
+	//生成主材款中定金退款
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public void refundMaterialPaymentForDeposit(MaterialPaymentVO materialPaymentVO, String userId) throws FLException{
+
+		long msoId = materialPaymentVO.getMaterial().getMid();
+		
+		if(materialPaymentDao.countMaterialPaymentByMidAType(msoId, MaterialPaymentPO.PAYMENTTYPE_TYPE_FULL_INT) > 0){
+			throw new FLException(150040, "补款已存在");
+		}
+		
+		List<MaterialPaymentPO> materialPaymentPOs = materialPaymentDao.queryMaterialPaymentByMidAType(msoId, MaterialPaymentPO.PAYMENTTYPE_TYPE_DEPOSIT_INT);
+		
+		if(materialPaymentPOs.size() == 0){
+			throw new FLException(150037, "定金不存在");
+		}
+		
+		MaterialPaymentPO depositMaterialPaymentPO = materialPaymentPOs.get(0);
+		
+		if(depositMaterialPaymentPO.getPaymentStatus() != MaterialPaymentPO.PAYMENTSTATUS_TYPE_CONFIRM_INT){
+			throw new FLException(150012, "款项不能进行退款");
+		}
+		
+		MaterialPO materialPO = materialDao.get(msoId);
 
 		MaterialPaymentPO materialPaymentPO = new MaterialPaymentPO();
 
 		materialPaymentPO.setMaterial(materialPO);
-
-		if(paymentType == MaterialPaymentPO.PAYMENTTYPE_TYPE_DEPOSIT_INT){
-
-			MaterialPaymentPO materialPayment = materialPaymentDao.queryMaterialPaymentByMsoNoAType(materialPO.getNo(), paymentType);
-
-			if( materialPayment.getPaymentStatus() != MaterialPaymentPO.PAYMENTSTATUS_TYPE_CONFIRM_INT){
-				throw new FLException(150005 , "款项状态非已确认,不能退款");
-			}
-
-			materialPaymentPO.setReferMoney(materialPO.getDepositPayment());
-
-			materialPO.setDepositStatus(MaterialPO.FINANCE_STATUS_TYPE_INIT_INT);
-			materialPO.setDepositPayment(0);
-			materialPO.setStatus(MaterialPO.STATUS_TYPE_WASTE_INT);
-
-			materialPaymentPO.setPaymentType(MaterialPaymentPO.PAYMENTTYPE_TYPE_DEPOSIT_REFUND_INT);
-		}else if(paymentType == MaterialPaymentPO.PAYMENTTYPE_TYPE_FULL_INT){
-			materialPaymentPO.setReferMoney(materialPO.getFullPayment());
-
-			materialPO.setFullStatus(MaterialPO.FINANCE_STATUS_TYPE_INIT_INT);
-			materialPO.setFullPayment(0);
-
-			materialPaymentPO.setPaymentType(MaterialPaymentPO.PAYMENTTYPE_TYPE_FULL_REFUND_INT);
-		}
-
-		materialPaymentPO.setPaymentStatus(MaterialPaymentPO.PAYMENTSTATUS_TYPE_INIT_INT);
-
-		UserPO userPO = userDao.queryUserByUserId(userId);
-		if(userPO != null){
-			materialPaymentPO.setCreater(userPO);
-			materialPaymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-		}
-		
 		materialPaymentPO.setCategory(materialPO.getCategory());
 		materialPaymentPO.setBrand(materialPO.getBrand());
+		materialPaymentPO.setPaymentType(MaterialPaymentPO.PAYMENTTYPE_TYPE_DEPOSIT_REFUND_INT);
+		materialPaymentPO.setPaymentStatus(MaterialPaymentPO.PAYMENTSTATUS_TYPE_INIT_INT);
+		
+		UserPO userPO = userDao.queryUserByUserId(userId);
+		materialPaymentPO.setCreater(userPO);
+		materialPaymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+
+		materialPaymentPO.setReferMoney(depositMaterialPaymentPO.getReferMoney());
 		materialPaymentPO.setCompany(materialPO.getCompany());
+
+		materialPO.setDepositPayment(0);
+		materialPO.setDepositStatus(MaterialPO.FINANCE_STATUS_TYPE_INIT_INT);
+		materialPO.setStatus(MaterialPO.STATUS_TYPE_WASTE_INT);
 
 		materialPaymentDao.save(materialPaymentPO);
 
@@ -1145,6 +1211,22 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 	public int refundMaterialPaymentForCoupon(MaterialVO materialVO, String userId) throws FLException{
 
 		long msoId = materialVO.getMid();
+		
+		List<Short> paymentTypes = Arrays.asList(MaterialPaymentPO.PAYMENTTYPE_TYPE_DEPOSIT_INT, MaterialPaymentPO.PAYMENTTYPE_TYPE_FULL_INT);
+		
+		List<MaterialPaymentPO> depositMaterialPaymentPOs = materialPaymentDao.queryMaterialPaymentByMidATypes(msoId, paymentTypes);
+		
+		if(depositMaterialPaymentPOs.size() == 0){
+			throw new FLException(150003, "款项不存在");
+		}
+		
+		if(depositMaterialPaymentPOs.size() == 1){
+			MaterialPaymentPO depositMaterialPaymentPO = depositMaterialPaymentPOs.get(0);
+			
+			if(depositMaterialPaymentPO.getPaymentStatus() == MaterialPaymentPO.PAYMENTSTATUS_TYPE_INIT_INT){
+				throw new FLException(150012, "款项不能进行退款");
+			}
+		}
 
 		MaterialPO materialPO = materialDao.get(materialVO.getMid());
 
@@ -1152,7 +1234,6 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 
 			materialPO.setCoupon(materialVO.getCoupon());
 			materialPO.setCouponInfo(materialVO.getCouponInfo());
-
 			materialDao.update(materialPO);
 
 			List<MaterialPaymentPO> materialPaymentPOs = materialPaymentDao.queryMaterialPaymentByMidAType(msoId, MaterialPaymentPO.PAYMENTTYPE_TYPE_COUPON_REFUND_INT);
@@ -1164,15 +1245,15 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 			MaterialPaymentPO materialPaymentPO = new MaterialPaymentPO();
 
 			materialPaymentPO.setMaterial(materialPO);
-			materialPaymentPO.setReferMoney(materialVO.getCoupon());
-			materialPaymentPO.setPaymentType(MaterialPaymentPO.PAYMENTTYPE_TYPE_COUPON_REFUND_INT);
-			
 			materialPaymentPO.setCategory(materialPO.getCategory());
 			materialPaymentPO.setBrand(materialPO.getBrand());
+			materialPaymentPO.setPaymentType(MaterialPaymentPO.PAYMENTTYPE_TYPE_COUPON_REFUND_INT);
 			
 			UserPO userCreater = userDao.queryUserByUserId(userId);
 			materialPaymentPO.setCreater(userCreater);
 			materialPaymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+			
+			materialPaymentPO.setReferMoney(materialVO.getCoupon());
 			materialPaymentPO.setCompany(materialPO.getCompany());
 
 			materialPaymentDao.save(materialPaymentPO);

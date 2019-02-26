@@ -17,8 +17,7 @@ import com.fanglin.core.dao.Dao;
 import com.fanglin.decoration.po.DecorationActivityPO;
 
 public interface DecorationActivityDao extends Dao<DecorationActivityPO> {
-	
+
 	public List<DecorationActivityPO> queryDecorationActivityByOrderId(String orderId);
-	
 
 }

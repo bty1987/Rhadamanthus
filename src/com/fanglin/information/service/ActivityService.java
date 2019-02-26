@@ -22,11 +22,14 @@ public interface ActivityService {
 	
 	public void pageActivity(Paging paging, List<Filter> filters, String userId,int company);
 	
-	public List<ActivityVO> queryActivityForValid(int company);
+	public List<ActivityVO> queryActivityForValid(ActivityVO activityVO, int company);
 	
 	public void addActivity(ActivityVO activityVO, String userId, String userName, int company);
 	
-	public void updateActivity(ActivityVO activityVO, String userId) throws FLException;
+	public void updateActivity(ActivityVO activityVO) throws FLException;
 	
+	public void updateActivityForStatus(ActivityVO activityVO) throws FLException;
+	
+	public void updateActivityForDefault(ActivityVO activityVO) throws FLException;
 	
 }

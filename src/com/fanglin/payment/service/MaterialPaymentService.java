@@ -40,7 +40,13 @@ public interface MaterialPaymentService {
 	
 	public void checkMaterialPayment(MaterialPaymentVO materialPaymentVO) throws FLException;
 	
-	public void addMaterialPayment(MaterialPaymentVO materialPaymentVO, String userId) throws FLException;
+	public void addMaterialPaymentForDeposit(MaterialPaymentVO materialPaymentVO, String userId) throws FLException;
+	
+	public void addMaterialPaymentForFullpay(MaterialPaymentVO materialPaymentVO, String userId) throws FLException;
+	
+	public int cancelMaterialPaymentForDeposit(MaterialPaymentVO materialPaymentVO) throws FLException;
+	
+	public int cancelMaterialPaymentForFullpay(MaterialPaymentVO materialPaymentVO) throws FLException;
 	
 	public int changeMaterialPaymentForTime(MaterialPaymentVO materialPaymentVO, Timestamp dateTime, String userId) throws FLException;
 	
@@ -48,17 +54,14 @@ public interface MaterialPaymentService {
 	
 	public int collectMaterialPayments(MaterialVO materialVO, List<MaterialPaymentVO> materialPaymentVOs, MaterialReceiptVO materialReceiptVO, String userId, Integer company) throws FLException;
 	
-	public int collectMaterialPaymentForRefund(MaterialPaymentVO materialPaymentVO, String userId, Integer company) throws FLException;
+	public int refundMaterialPayment(MaterialPaymentVO materialPaymentVO, String userId, Integer company) throws FLException;
 	
 	public int updateMaterialPayment(MaterialPaymentVO materialPaymentVO,MaterialReceiptVO materialReceiptVO) throws FLException;
 	
 	public void confirmMaterialPayment(List<Long> mpIds, String userId) throws FLException;
 	
-	public int cancelMaterialPayment(MaterialPaymentVO materialPaymentVO) throws FLException;
-	
-	public void refundMaterialPayment(MaterialPaymentVO materialPaymentVO, String userId) throws FLException;
+	public void refundMaterialPaymentForDeposit(MaterialPaymentVO materialPaymentVO, String userId) throws FLException;
 	
 	public int refundMaterialPaymentForCoupon(MaterialVO materialVO, String userId) throws FLException;
-	
 
 }

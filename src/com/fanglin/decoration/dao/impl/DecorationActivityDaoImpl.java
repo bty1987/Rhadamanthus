@@ -22,11 +22,11 @@ import com.fanglin.decoration.po.DecorationActivityPO;
 
 @Repository("decorationActivityDao")
 public class DecorationActivityDaoImpl extends DaoImpl<DecorationActivityPO> implements DecorationActivityDao {
-	
-	public DecorationActivityDaoImpl(){
+
+	public DecorationActivityDaoImpl() {
 		super(DecorationActivityPO.class);
 	}
-	
+
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<DecorationActivityPO> queryDecorationActivityByOrderId(String orderId) {

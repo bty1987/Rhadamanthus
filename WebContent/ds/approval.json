@@ -11,7 +11,10 @@
         {"key":"9","value":"主材补款提交"},
         {"key":"10","value":"销售退货"},
         {"key":"11","value":"商品库存调拨"},
-        {"key":"12","value":"销售补款提交"}
+        {"key":"12","value":"销售补款提交"},
+		{"key":"13","value":"人资"},
+		{"key":"14","value":"客源转装修单"},
+		{"key":"15","value":"归属"}
     ],
     "errorCode": 0,
     "errorMsg": null

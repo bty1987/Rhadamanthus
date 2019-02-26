@@ -26,6 +26,8 @@ public interface ApprovalDao extends Dao<ApprovalPO> {
 	
 	public ApprovalPO queryApproval(short status,short type, String ident);
 	
+	public ApprovalPO queryApprovalByChange(List<Short> status,short type, String ident);
+	
 	public ApprovalPO queryApprovalByProcessinstanceid(String processinstanceid);
 	
 	public int countApprovalForInitByIdent(String ident);

@@ -25,15 +25,15 @@ public class BackVisitVO implements Serializable {
 	private String orderId;
 
 	private String sender;
-	
+
 	private String senderId;
-	
+
 	private String senderPhoto;
-	
+
 	private Timestamp createTime;
-	
+
 	private String content;
-	
+
 	private List<String> receivers;
 
 	public Long getBvId() {
@@ -67,7 +67,7 @@ public class BackVisitVO implements Serializable {
 	public void setSenderId(String senderId) {
 		this.senderId = senderId;
 	}
-	
+
 	public String getSenderPhoto() {
 		return senderPhoto;
 	}
@@ -76,7 +76,7 @@ public class BackVisitVO implements Serializable {
 		this.senderPhoto = senderPhoto;
 	}
 
-	@JSON(format="yyyy-MM-dd HH:mm:ss")
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getCreateTime() {
 		return createTime;
 	}
@@ -100,7 +100,5 @@ public class BackVisitVO implements Serializable {
 	public void setReceivers(List<String> receivers) {
 		this.receivers = receivers;
 	}
-	
-	
-	
+
 }

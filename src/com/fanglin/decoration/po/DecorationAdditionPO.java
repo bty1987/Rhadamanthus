@@ -3,6 +3,7 @@ package com.fanglin.decoration.po;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -33,6 +34,10 @@ public class DecorationAdditionPO implements Serializable{
 	private String salesDepartment;
 	
 	private String salesRegion;
+	
+	private Timestamp designProtectTime;
+	
+	private Timestamp salesProtectTime;
 	
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -108,12 +113,29 @@ public class DecorationAdditionPO implements Serializable{
 		this.salesRegion = salesRegion;
 	}
 	
+	@Column(name = "designProtectTime")
+	public Timestamp getDesignProtectTime() {
+		return designProtectTime;
+	}
+
+	public void setDesignProtectTime(Timestamp designProtectTime) {
+		this.designProtectTime = designProtectTime;
+	}
+	@Column(name = "salesProtectTime")
+	public Timestamp getSalesProtectTime() {
+		return salesProtectTime;
+	}
+
+	public void setSalesProtectTime(Timestamp salesProtectTime) {
+		this.salesProtectTime = salesProtectTime;
+	}
+
 	public void clearDesign(){
 		this.designer = "";
 		this.designDepartment = "";
 		this.designRegion = "";
 	}
-	
+
 	public void clearSales(){
 		this.salesman = "";
 		this.salesDepartment = "";

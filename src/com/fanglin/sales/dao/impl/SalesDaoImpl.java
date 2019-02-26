@@ -174,4 +174,15 @@ public class SalesDaoImpl extends DaoImpl<SalesPO> implements SalesDao {
 		}
 	}
 
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<Object> querySalesActivityByTotal(String orderId) {
+		
+		String sql="select ac.`name`,sum(s.refermoney) from sales.sales sa,payment.salespayment s,information.activity ac where sa.sid=s.sid and s.status in (1,2) and sa.orderId= :orderId and sa.activityId=ac.aId group by sa.activityId";
+		
+		List<Object> uniqueResult=session().createSQLQuery(sql).setString("orderId", orderId).list();
+		
+		return uniqueResult;
+	}
+
 }

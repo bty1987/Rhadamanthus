@@ -38,117 +38,117 @@ public class UserAction extends BaseListAction {
 
 	@Autowired
 	private UserService userService;
-	
+
 	private UserVO user;
-	
+
 	private UserInfoVO userInfo;
 
 	private String pinyinName;
-	
+
 	private String duty;
-	
+
 	private List<UserBaseVO> userBases;
-	
+
 	private List<String> dutys;
-	
+
 	private List<String> dutysO;
 
 	private List<KeyValueVO> autoFillKeyValue;
-	
-	private List<String> autoFillList;	
-	
+
+	private List<String> autoFillList;
+
 	private String password;
 
 	private String rePassword;
-	
+
 	private DepartmentTypeVO departmentType;
-	
+
 	private List<Integer> uids;
 
 	@Action(value = "pageUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageUser() throws FLException{
-		
+	public String pageUser() throws FLException {
+
 		userService.pageUser(getPaging(), getFilters(), user, queryCompany());
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "queryUserByLoginId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryUserByLoginId() throws FLException{
-		
+	public String queryUserByLoginId() throws FLException {
+
 		user = userService.queryUserByLoginId(user);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "queryUserByUserId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryUserByUserId() throws FLException{
-		
+	public String queryUserByUserId() throws FLException {
+
 		user = userService.queryUserByUserId(user);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "queryUserInfoByUserId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryUserInfoByUserId() throws FLException{
-		
+	public String queryUserInfoByUserId() throws FLException {
+
 		userInfo = userService.queryUserInfoByUserId(userInfo);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "queryUserForSelfByUserId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryUserForSelfByUserId() throws FLException{
-		
+	public String queryUserForSelfByUserId() throws FLException {
+
 		userInfo = new UserInfoVO(new UserVO(queryUserId()));
 		userInfo = userService.queryUserForSelfByUserId(userInfo);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "queryUserByOldUserId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryUserByOldUserId() throws FLException{
-		
-	    user = userService.queryUserByOldUserId(user);
-	    
-	    return SUCCESS;
+	public String queryUserByOldUserId() throws FLException {
+
+		user = userService.queryUserByOldUserId(user);
+
+		return SUCCESS;
 	}
-	
+
 	@Action(value = "queryUserByPinyin", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryUserByPinyin() throws FLException{
-		
-		userBases = userService.queryUserByPinyin(pinyinName,user, departmentType,queryCompany());
-	
+	public String queryUserByPinyin() throws FLException {
+
+		userBases = userService.queryUserByPinyin(pinyinName, user, departmentType, queryCompany());
+
 		packageUserName(userBases);
-		
+
 		return SUCCESS;
 	}
 
 	@Action(value = "queryUserByUids", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryUserByUids() throws FLException{
-		
+	public String queryUserByUids() throws FLException {
+
 		userBases = userService.queryUserByUids(uids);
-		
+
 		packageUserName(userBases);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "resetPassword", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String resetPassword() throws FLException{
-		
+	public String resetPassword() throws FLException {
+
 		if (SystemConfig.getString("communion") == null) {
 			throw new FLException(-1, "无操作权限");
 		}
-		
-		userService.resetPassword(user,queryCompany());
-	
+
+		userService.resetPassword(user, queryCompany());
+
 		return SUCCESS;
 	}
-	
-	@Action(value = "addUser", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
+
+	@Action(value = "addUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addUser() throws FLException {
-		
+
 		if (SystemConfig.getString("communion") == null) {
 			throw new FLException(-1, "无操作权限");
 		}
@@ -158,57 +158,57 @@ public class UserAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "updateUser", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
+	@Action(value = "updateUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateUser() throws FLException {
-		
+
 		if (SystemConfig.getString("communion") == null) {
 			throw new FLException(-1, "无操作权限");
 		}
-		
+
 		userService.updateUser(userInfo, queryCompany());
 
 		return SUCCESS;
 	}
 
-	@Action(value = "updateUserForAdvance", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
+	@Action(value = "updateUserForAdvance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateUserForAdvance() throws FLException {
-		
+
 		if (SystemConfig.getString("communion") == null) {
 			throw new FLException(-1, "无操作权限");
 		}
-		
+
 		userService.updateUserForAdvance(user);
 
 		return SUCCESS;
 	}
-	
-	@Action(value = "defaultPassword", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
+
+	@Action(value = "defaultPassword", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String defaultPassword() throws FLException {
-		
+
 		if (SystemConfig.getString("communion") == null) {
 			throw new FLException(-1, "无操作权限");
 		}
-		
+
 		userService.defaultPassword(user.getUserId(), queryCompany());
 
 		return SUCCESS;
 	}
 
-	@Action(value = "changePassword", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
+	@Action(value = "changePassword", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String changePassword() throws FLException {
-		
+
 		if (SystemConfig.getString("communion") == null) {
 			throw new FLException(-1, "无操作权限");
 		}
-		
+
 		userService.checkUserForPassword(queryUserId(), password, rePassword);
 
 		return SUCCESS;
 	}
 
-	@Action(value = "updateUserForBaseInfo", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
+	@Action(value = "updateUserForBaseInfo", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateUserForBaseInfo() throws FLException {
-	
+
 		if (SystemConfig.getString("communion") == null) {
 			throw new FLException(-1, "无操作权限");
 		}
@@ -217,41 +217,41 @@ public class UserAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
-	@Action(value = "updateUserForProfiles", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
+
+	@Action(value = "updateUserForProfiles", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateUserForProfiles() throws FLException {
-	
+
 		if (SystemConfig.getString("communion") == null) {
 			throw new FLException(-1, "无操作权限");
 		}
-		
+
 		userService.updateUserForProfiles(userInfo);
 
 		return SUCCESS;
 	}
-	
-	private void packageUserName(List<UserBaseVO> users){
-		for(UserBaseVO userBaseVO: users){
+
+	private void packageUserName(List<UserBaseVO> users) {
+		for (UserBaseVO userBaseVO : users) {
 			KeyValueVO keyValueVO = new KeyValueVO();
-			
+
 			StringBuffer value = new StringBuffer();
 			value.append(userBaseVO.getCurrentName());
 			value.append("-");
 			value.append(userBaseVO.getDept().getName());
-			
+
 			keyValueVO.setKey(userBaseVO.getUserId());
 			keyValueVO.setValue(value.toString());
-			
+
 			getAutoFillKeyValue().add(keyValueVO);
 			getAutoFillList().add(userBaseVO.getCurrentName());
 		}
 	}
 
-	public UserVO getUser(){
+	public UserVO getUser() {
 		return user;
 	}
 
-	public void setUser(UserVO user){
+	public void setUser(UserVO user) {
 		this.user = user;
 	}
 
@@ -263,57 +263,57 @@ public class UserAction extends BaseListAction {
 		this.userInfo = userInfo;
 	}
 
-	public List<KeyValueVO> getAutoFillKeyValue(){
-		if(autoFillKeyValue == null){
+	public List<KeyValueVO> getAutoFillKeyValue() {
+		if (autoFillKeyValue == null) {
 			autoFillKeyValue = new ArrayList<KeyValueVO>();
 		}
 		return autoFillKeyValue;
 	}
 
-	public void setAutoFillKeyValue(List<KeyValueVO> autoFillKeyValue){
+	public void setAutoFillKeyValue(List<KeyValueVO> autoFillKeyValue) {
 		this.autoFillKeyValue = autoFillKeyValue;
 	}
 
-	public List<String> getAutoFillList(){
-		if(autoFillList == null){
+	public List<String> getAutoFillList() {
+		if (autoFillList == null) {
 			autoFillList = new ArrayList<String>();
 		}
 		return autoFillList;
 	}
 
-	public void setAutoFillList(List<String> autoFillList){
+	public void setAutoFillList(List<String> autoFillList) {
 		this.autoFillList = autoFillList;
 	}
 
-	public String getPinyinName(){
+	public String getPinyinName() {
 		return pinyinName;
 	}
 
-	public void setPinyinName(String pinyinName){
+	public void setPinyinName(String pinyinName) {
 		this.pinyinName = pinyinName;
 	}
-	
-	public String getDuty(){
+
+	public String getDuty() {
 		return duty;
 	}
 
-	public void setDuty(String duty){
+	public void setDuty(String duty) {
 		this.duty = duty;
 	}
 
-	public List<String> getDutys(){
+	public List<String> getDutys() {
 		return dutys;
 	}
 
-	public void setDutys(List<String> dutys){
+	public void setDutys(List<String> dutys) {
 		this.dutys = dutys;
 	}
 
-	public List<String> getDutysO(){
+	public List<String> getDutysO() {
 		return dutysO;
 	}
 
-	public void setDutysO(List<String> dutysO){
+	public void setDutysO(List<String> dutysO) {
 		this.dutysO = dutysO;
 	}
 
@@ -357,5 +357,4 @@ public class UserAction extends BaseListAction {
 		this.uids = uids;
 	}
 
-	
 }

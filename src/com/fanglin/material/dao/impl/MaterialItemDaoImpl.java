@@ -24,35 +24,27 @@ import com.fanglin.material.po.MaterialItemPO;
 
 @Repository("materialItemDao")
 public class MaterialItemDaoImpl extends DaoImpl<MaterialItemPO> implements MaterialItemDao {
-	
-	public MaterialItemDaoImpl(){
+
+	public MaterialItemDaoImpl() {
 		super(MaterialItemPO.class);
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<MaterialItemPO> queryMaterialItemByMids(List<Long> mids){
+	public List<MaterialItemPO> queryMaterialItemByMids(List<Long> mids) {
 		return session().createCriteria(MaterialItemPO.class).add(Restrictions.in(MaterialItemPO.COLUMN_MID_STR, mids)).list();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<MaterialItemPO> queryMaterialItemByMid(long mid){
-		return session().createCriteria(MaterialItemPO.class)
-				.add(Restrictions.eq(MaterialItemPO.COLUMN_MID_STR, mid))
-				.add(Restrictions.ne(MaterialItemPO.COLUMN_STATUS_STR, MaterialItemPO.STATUS_TYPE_DELETE_INT))
-				.add(Restrictions.ne(MaterialItemPO.COLUMN_REFUNDSTATUS_STR, MaterialItemPO.REFUNDSTATUS_TYPE_REJECT_INT))
-				.list();
+	public List<MaterialItemPO> queryMaterialItemByMid(long mid) {
+		return session().createCriteria(MaterialItemPO.class).add(Restrictions.eq(MaterialItemPO.COLUMN_MID_STR, mid)).add(Restrictions.ne(MaterialItemPO.COLUMN_STATUS_STR, MaterialItemPO.STATUS_TYPE_DELETE_INT)).add(Restrictions.ne(MaterialItemPO.COLUMN_REFUNDSTATUS_STR, MaterialItemPO.REFUNDSTATUS_TYPE_REJECT_INT)).list();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<MaterialItemPO> queryMaterialItemByMidNotRefund(long mid){
-		return session().createCriteria(MaterialItemPO.class)
-				.add(Restrictions.eq(MaterialItemPO.COLUMN_MID_STR, mid))
-				.add(Restrictions.ne(MaterialItemPO.COLUMN_STATUS_STR, MaterialItemPO.STATUS_TYPE_DELETE_INT))
-				.add(Restrictions.ne(MaterialItemPO.COLUMN_REFUNDSTATUS_STR, MaterialItemPO.REFUNDSTATUS_TYPE_REJECT_INT))
-				.list();
+	public List<MaterialItemPO> queryMaterialItemByMidNotRefund(long mid) {
+		return session().createCriteria(MaterialItemPO.class).add(Restrictions.eq(MaterialItemPO.COLUMN_MID_STR, mid)).add(Restrictions.ne(MaterialItemPO.COLUMN_STATUS_STR, MaterialItemPO.STATUS_TYPE_DELETE_INT)).add(Restrictions.ne(MaterialItemPO.COLUMN_REFUNDSTATUS_STR, MaterialItemPO.REFUNDSTATUS_TYPE_REJECT_INT)).list();
 	}
 
 	@Override
@@ -63,40 +55,30 @@ public class MaterialItemDaoImpl extends DaoImpl<MaterialItemPO> implements Mate
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<MaterialItemPO> queryMaterialItemByName(long mid, String name, int limit) {
-		return session().createCriteria(MaterialItemPO.class)
-				.add(Restrictions.eq(MaterialItemPO.COLUMN_MID_STR, mid))
-				.add(Restrictions.ilike(MaterialItemPO.COLUMN_NAME_STR, name, MatchMode.ANYWHERE))
-				.setMaxResults(limit).list();
+		return session().createCriteria(MaterialItemPO.class).add(Restrictions.eq(MaterialItemPO.COLUMN_MID_STR, mid)).add(Restrictions.ilike(MaterialItemPO.COLUMN_NAME_STR, name, MatchMode.ANYWHERE)).setMaxResults(limit).list();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<MaterialItemPO> queryMaterialItemByNo(long mid, String msoNo, int limit) {
-		return session().createCriteria(MaterialItemPO.class)
-				.add(Restrictions.eq(MaterialItemPO.COLUMN_MID_STR, mid))
-				.add(Restrictions.ilike(MaterialItemPO.COLUMN_NO_STR, msoNo, MatchMode.ANYWHERE))
-				.setMaxResults(limit).list();
+		return session().createCriteria(MaterialItemPO.class).add(Restrictions.eq(MaterialItemPO.COLUMN_MID_STR, mid)).add(Restrictions.ilike(MaterialItemPO.COLUMN_NO_STR, msoNo, MatchMode.ANYWHERE)).setMaxResults(limit).list();
 	}
 
 	@Override
-	public void deleteMaterialItemByMid(long mid){
-		String sql= "delete from material.materialitem where mid = ?";
-		
+	public void deleteMaterialItemByMid(long mid) {
+		String sql = "delete from material.materialitem where mid = ?";
+
 		session().createSQLQuery(sql).setLong(0, mid).executeUpdate();
 	}
 
 	@Override
 	public Float queryMaterialItemByTotal(long mid) {
-		
+
 		String sql = "select sum(money) from (select if(packagename = '', sum(total), total) money from material.materialitem where mid = :mid and status = 0 group by packagename) t";
-		
+
 		BigDecimal num = (BigDecimal) session().createSQLQuery(sql).setLong("mid", mid).uniqueResult();
-		
-		if(num == null){
-			num = BigDecimal.ZERO;
-		}
-		
-		return num.floatValue();
-				 
+
+		return num == null ? 0f : num.floatValue();
 	}
+
 }

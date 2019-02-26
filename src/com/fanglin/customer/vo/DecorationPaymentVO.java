@@ -19,7 +19,7 @@ public class DecorationPaymentVO implements Serializable {
 
 	private String couponInfo;
 
-	private String paymentStatus;
+	private Short paymentStatus;
 
 	private String paymentType;
 
@@ -64,11 +64,11 @@ public class DecorationPaymentVO implements Serializable {
 		this.couponInfo = couponInfo;
 	}
 
-	public String getPaymentStatus() {
+	public Short getPaymentStatus() {
 		return paymentStatus;
 	}
 
-	public void setPaymentStatus(String paymentStatus) {
+	public void setPaymentStatus(Short paymentStatus) {
 		this.paymentStatus = paymentStatus;
 	}
 

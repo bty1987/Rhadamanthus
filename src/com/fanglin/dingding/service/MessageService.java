@@ -106,7 +106,7 @@ public class MessageService {
 		
 		if(json == null || json.getInteger("errorCode") == null || json.getInteger("errorCode") != 0){
 			System.out.println(url);
-			System.out.println(String.format("%d-%s", json.getInteger("errorCode"), json.getString("errorMsg")));
+			System.out.println(json);
 		}
 		
 		return 0;
@@ -130,7 +130,7 @@ public class MessageService {
 		
 		if(json == null || json.getInteger("errorCode") == null || json.getInteger("errorCode") != 0){
 			System.out.println(url);
-			System.out.println(String.format("%d-%s", json.getInteger("errorCode"), json.getString("errorMsg")));
+			System.out.println(json);
 		}
 		
 		return 0;

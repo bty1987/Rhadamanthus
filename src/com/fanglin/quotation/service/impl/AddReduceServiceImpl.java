@@ -248,7 +248,7 @@ public class AddReduceServiceImpl implements AddReduceService{
 	@Transactional(rollbackFor=Exception.class)
 	public int submitAddReduce(AddReduceVO addReduceVO, String userId) throws FLException{
 		
-		List<String> paymentStatus = Arrays.asList(DecorationPaymentPO.PAYMENTSTATUS_UNPAY_STR);
+		List<Short> paymentStatus = Arrays.asList(DecorationPaymentPO.PAYMENTSTATUS_UNPAY_INT);
 		List<Integer> status = Arrays.asList(new Integer[]{AddReducePO.STATUS_PAYED_INT, AddReducePO.STATUS_CONFIRMED_INT});
 		
 		AddReducePO addReducePO = addReduceDao.get(addReduceVO.getArId());
@@ -279,7 +279,7 @@ public class AddReduceServiceImpl implements AddReduceService{
 			decorationPaymentPO = new DecorationPaymentPO();
 		}
 		
-		decorationPaymentPO.setPaymentStatus("未付款");
+		decorationPaymentPO.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_UNPAY_INT);
 		decorationPaymentPO.setReferMoney((float) Math.rint(addReducePO.getTotal()));
 		if(addReducePO.getType() == AddReducePO.TYPE_ADD_INT || addReducePO.getType() == AddReducePO.TYPE_LEAKAGE_INT){
 			decorationPaymentPO.setOneType(DecorationPaymentPO.ONETYPE_ADD_INT);

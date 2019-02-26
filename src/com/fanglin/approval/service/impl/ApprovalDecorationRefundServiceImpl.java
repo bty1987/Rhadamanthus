@@ -13,13 +13,12 @@ package com.fanglin.approval.service.impl;
 
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.JSONArray;
 import com.fanglin.approval.dao.ApprovalDao;
 import com.fanglin.approval.dao.ApprovalDecorationRefundDao;
 import com.fanglin.approval.po.ApprovalDecorationRefundPO;
@@ -100,7 +99,7 @@ public class ApprovalDecorationRefundServiceImpl implements ApprovalDecorationRe
 			throw new FLException(140013, "订单不存在");
 		}
 		
-		decorationPaymentPO.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_APPLY_STR);
+		decorationPaymentPO.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_APPLYING_INT);
 		
 		decorationPaymentDao.update(decorationPaymentPO);
 		
@@ -115,8 +114,8 @@ public class ApprovalDecorationRefundServiceImpl implements ApprovalDecorationRe
 		if(systemConfigPO == null){
 			approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_INIT_INT);
 		}else{
-			approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_DINGDING_INT);
-			List<JSONObject> formComponentValues = approvalDDService.getForms("说明", String.format(ApprovalPO.APPROVAL_CONTENTS_DECORATION_REFUND_STR, decorationPaymentPO.getDecoration().getOrderId(), decorationPaymentPO.getPaymentType(), decorationPaymentPO.getReferMoney()));
+			approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_APPROVE_INT);
+			JSONArray formComponentValues = approvalDDService.getForms("说明", String.format(ApprovalPO.APPROVAL_CONTENTS_DECORATION_REFUND_STR, decorationPaymentPO.getDecoration().getOrderId(), decorationPaymentPO.getPaymentType(), decorationPaymentPO.getReferMoney()));
 			String processinstanceid = approvalDDService.initiateApproval(systemConfigPO.getValue(), userId, approvalVO.getReceiver().getUserId(), null, null, formComponentValues, company);
 			approvalPO.setProcessinstanceid(processinstanceid);
 		}
@@ -146,7 +145,6 @@ public class ApprovalDecorationRefundServiceImpl implements ApprovalDecorationRe
 	@Transactional(rollbackFor=Exception.class)
 	public int approvalForDecorationRefund(ApprovalPO approvalPO) throws FLException {
 		
-	
 		ApprovalDecorationRefundPO approvalDecorationRefundPO = approvalDecorationRefundDao.queryApprovalDecorationRefundByAId(approvalPO.getAid());
 		
 		if(approvalDecorationRefundPO == null){
@@ -185,7 +183,7 @@ public class ApprovalDecorationRefundServiceImpl implements ApprovalDecorationRe
 		decorationRefundPO.setPaymentType(decorationPaymentPO.getPaymentType() + DecorationPaymentPO.PAYMENTTYPE_REFUND_STR);
 		decorationRefundPO.setOneType(DecorationPaymentPO.ONETYPE_REFUND_INT);
 		decorationRefundPO.setTwoType(decorationPaymentPO.getTwoType());
-		decorationRefundPO.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_UNPAY_STR);
+		decorationRefundPO.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_UNPAY_INT);
 		decorationRefundPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		decorationRefundPO.setCreater(approvalPO.getSender());
 		decorationRefundPO.setReferMoney(decorationPaymentPO.getReferMoney());
@@ -218,7 +216,7 @@ public class ApprovalDecorationRefundServiceImpl implements ApprovalDecorationRe
 		
 		decorationPaymentPO.setPaymentType(decorationPaymentPO.getPaymentType() + DecorationPaymentPO.PAYMENTTYPE_HISTORY_STR);
 		decorationPaymentPO.setOneType(DecorationPaymentPO.ONETYPE_HISTORY_INT);
-		decorationPaymentPO.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_PASS_STR);
+		decorationPaymentPO.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_HISTORY_INT);
 		
 		decorationPaymentDao.update(decorationPaymentPO);
 		
@@ -241,7 +239,7 @@ public class ApprovalDecorationRefundServiceImpl implements ApprovalDecorationRe
 			throw new FLException(150003, "款项不存在");
 		}
 		
-		decorationPaymentPO.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_CONFIRM_STR);
+		decorationPaymentPO.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_CONFIRM_INT);
 		
 		decorationPaymentDao.update(decorationPaymentPO);
 		

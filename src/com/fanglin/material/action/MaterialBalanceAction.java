@@ -30,117 +30,117 @@ import com.fanglin.material.vo.MaterialVO;
 @ParentPackage("base")
 @Namespace("/")
 @Controller
-public class MaterialBalanceAction extends BaseListAction{
+public class MaterialBalanceAction extends BaseListAction {
 
 	private static final long serialVersionUID = -6255753215095300911L;
-	
+
 	@Autowired
 	private MaterialService materialService;
-	
+
 	@Autowired
 	private MaterialBalanceService materialBalanceService;
-	
+
 	private MaterialVO material;
-	
+
 	private MaterialBalanceVO materialBalance;
-	
+
 	private int caclType;
-	
+
 	public List<Long> mids;
-	
-	@Action(value="pageMaterialBalance", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String pageMaterialBalance() throws FLException{
-		
-		materialBalanceService.pageMaterialBalance(getPaging(), getFilters(),queryCompany());
-		
+
+	@Action(value = "pageMaterialBalance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageMaterialBalance() throws FLException {
+
+		materialBalanceService.pageMaterialBalance(getPaging(), getFilters(), queryCompany());
+
 		return SUCCESS;
 	}
-	
-	@Action(value="pageMaterialBalanceForVender", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String pageMaterialBalanceForVender() throws FLException{
-		
-		materialBalanceService.pageMaterialBalanceForVender(getPaging(), getFilters(), queryUserId(),queryCompany());
-		
+
+	@Action(value = "pageMaterialBalanceForVender", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageMaterialBalanceForVender() throws FLException {
+
+		materialBalanceService.pageMaterialBalanceForVender(getPaging(), getFilters(), queryUserId(), queryCompany());
+
 		return SUCCESS;
 	}
-	
-	@Action(value="pageMaterialForPreBalance", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String pageMaterialForPreBalance() throws FLException{
-		
-		materialService.pageMaterialForPreBalance(getPaging(), getFilters(), queryUserId(),queryCompany());
-		
+
+	@Action(value = "pageMaterialForPreBalance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageMaterialForPreBalance() throws FLException {
+
+		materialService.pageMaterialForPreBalance(getPaging(), getFilters(), queryUserId(), queryCompany());
+
 		return SUCCESS;
 	}
-	
-	@Action(value="updateMaterialBalanceForVBalance", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String updateMaterialBalanceForVBalance() throws FLException{
-		
+
+	@Action(value = "updateMaterialBalanceForVBalance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateMaterialBalanceForVBalance() throws FLException {
+
 		materialBalanceService.updateMaterialBalanceForVBalance(materialBalance);
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value="updateMaterialBalanceForBalance", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String updateMaterialBalanceForBalance() throws FLException{
-		
+
+	@Action(value = "updateMaterialBalanceForBalance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateMaterialBalanceForBalance() throws FLException {
+
 		materialBalanceService.updateMaterialBalanceForBalance(materialBalance);
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value="passBalanceMaterial", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String passBalanceMaterial(){
-		
+
+	@Action(value = "passBalanceMaterial", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String passBalanceMaterial() {
+
 		materialService.passBalanceMaterial(mids);
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value="preBalanceMaterial", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String preBalanceMaterial() throws FLException{
-		
+
+	@Action(value = "preBalanceMaterial", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String preBalanceMaterial() throws FLException {
+
 		materialService.preBalanceMaterial(mids, queryUserId(), queryUserName());
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value="vpostMaterialBalance", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String vpostMaterialBalance() throws FLException{
-		
+
+	@Action(value = "vpostMaterialBalance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String vpostMaterialBalance() throws FLException {
+
 		materialBalanceService.vpostMaterialBalance(materialBalance);
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value="postMaterialBalance", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String postMaterialBalance() throws FLException{
-		
+
+	@Action(value = "postMaterialBalance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String postMaterialBalance() throws FLException {
+
 		materialBalanceService.postMaterialBalance(materialBalance, queryUserId());
-		
+
 		return SUCCESS;
 	}
-	
-	public MaterialVO getMaterial(){
+
+	public MaterialVO getMaterial() {
 		return material;
 	}
 
-	public void setMaterial(MaterialVO material){
+	public void setMaterial(MaterialVO material) {
 		this.material = material;
 	}
 
-	public int getCaclType(){
+	public int getCaclType() {
 		return caclType;
 	}
 
-	public void setCaclType(int caclType){
+	public void setCaclType(int caclType) {
 		this.caclType = caclType;
 	}
 
-	public List<Long> getMids(){
+	public List<Long> getMids() {
 		return mids;
 	}
 
-	public void setMids(List<Long> mids){
+	public void setMids(List<Long> mids) {
 		this.mids = mids;
 	}
 

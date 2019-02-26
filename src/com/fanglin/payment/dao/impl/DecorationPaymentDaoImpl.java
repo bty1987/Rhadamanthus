@@ -12,7 +12,6 @@
 package com.fanglin.payment.dao.impl;
 
 import java.sql.Timestamp;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
@@ -81,17 +80,14 @@ public class DecorationPaymentDaoImpl extends DaoImpl<DecorationPaymentPO> imple
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<DecorationPaymentPO> queryDecorationPaymentByOrderIdAStatusAOneTypeATwoType(String orderId, String[] paymentStatus, short oneType, short twoType){
+	public List<DecorationPaymentPO> queryDecorationPaymentByOrderIdAStatusAOneTypeATwoType(String orderId, Short[] paymentStatus, short oneType, short twoType){
 		return session().createCriteria(DecorationPaymentPO.class).add(Restrictions.eq("decoration.orderId", orderId)).add(Restrictions.in("paymentStatus", paymentStatus)).add(Restrictions.eq("oneType", oneType)).add(Restrictions.eq("twoType", twoType)).list();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<DecorationPaymentPO> queryDecorationPaymentForNotInitByDrId(long drId) {
-		
-		List<String> paymentStatus = Arrays.asList(DecorationPaymentPO.PAYMENTSTATUS_UNPAY_STR);
-		
-		return session().createCriteria(DecorationPaymentPO.class).createAlias("decorationReceipt", "decorationReceipt").add(Restrictions.eq("decorationReceipt.drId", drId)).add(Restrictions.not(Restrictions.in("paymentStatus", paymentStatus))).list();
+		return session().createCriteria(DecorationPaymentPO.class).createAlias("decorationReceipt", "decorationReceipt").add(Restrictions.eq("decorationReceipt.drId", drId)).add(Restrictions.not(Restrictions.eq("paymentStatus", DecorationPaymentPO.PAYMENTSTATUS_UNPAY_INT))).list();
 	}
 
 	@Override
@@ -166,7 +162,7 @@ public class DecorationPaymentDaoImpl extends DaoImpl<DecorationPaymentPO> imple
 							query.add(query.getCriterion("decorationReceipt.collectTime", filter.getData(), filter.getOp()));
 						}
 					}else if("paymentStatus".equals(filter.getField())){
-						query.add(query.getCriterion("paymentStatus", filter.getData(), filter.getOp()));
+						query.add(query.getCriterion("paymentStatus", Short.valueOf(filter.getData()), filter.getOp()));
 					}else if("createTime".equals(filter.getField())){
 						if("between".equals(filter.getOp())){
 							

@@ -24,20 +24,28 @@ public interface SalesPaymentService {
 	
 	public List<SalesPaymentVO> querySalesPaymentForNotInitBySrid(SalesReceiptVO salesReceipt);
 	
-	public int addSalesPayment(SalesPaymentVO salesPaymentVO, String userId) throws FLException;
+	public int addSalesPaymentForDeposit(SalesPaymentVO salesPaymentVO, String userId, int company) throws FLException;
+	
+	public int addSalesPaymentForFullpay(SalesPaymentVO salesPaymentVO, String userId, int company) throws FLException;
 	
 	public int collectSalesPayment(SalesPaymentVO salesPaymentVO, SalesReceiptVO salesReceiptVO, String userId, Integer company) throws FLException;
 	
 	public int collectSalesPayments(List<Long> spids, SalesPaymentVO salesPaymentVO, SalesReceiptVO salesReceiptVO, String userId, Integer company) throws FLException;
 	
-	public int collectSalesPaymentForRefund(SalesPaymentVO salesPaymentVO, SalesReceiptVO salesReceiptVO, String userId, Integer company) throws FLException;
+	public int refundSalesPayment(SalesPaymentVO salesPaymentVO, SalesReceiptVO salesReceiptVO, String userId, Integer company) throws FLException;
 
 	public int confirmSalesPayment(List<Long> spids, String userId) throws FLException;
 	
 	public int cancelSalesPayment(SalesPaymentVO salesPaymentVO) throws FLException;
 	
-	public int refundSalesPayment(SalesPaymentVO salesPaymentVO, String userId) throws FLException;
+	public int cancelSalesPaymentForDeposit(SalesPaymentVO salesPaymentVO) throws FLException;
+	
+	public int cancelSalesPaymentForFullpay(SalesPaymentVO salesPaymentVO) throws FLException;
+	
+	public int refundSalesPaymentForDeposit(SalesPaymentVO salesPaymentVO, String userId) throws FLException;
+	
+	public int refundSalesPaymentForCoupon(SalesVO salesVO, String userId) throws FLException;
 
 	public void updateSalesPayment(SalesPaymentVO salesPayment, SalesReceiptVO salesReceipt) throws FLException;
-	
+
 }

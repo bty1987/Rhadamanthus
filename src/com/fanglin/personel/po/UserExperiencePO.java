@@ -18,7 +18,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-
 @Entity
 @Table(name = "userExperience", catalog = "communion")
 public class UserExperiencePO implements Serializable {
@@ -34,7 +33,7 @@ public class UserExperiencePO implements Serializable {
 	private Timestamp createTime;
 
 	private String comment;
-	
+
 	public UserExperiencePO() {
 		super();
 	}
@@ -49,7 +48,7 @@ public class UserExperiencePO implements Serializable {
 	public void setUpid(long upid) {
 		this.upid = upid;
 	}
-	
+
 	@Column(name = "uid")
 	public int getUid() {
 		return uid;
@@ -67,7 +66,7 @@ public class UserExperiencePO implements Serializable {
 	public void setType(String type) {
 		this.type = type;
 	}
-	
+
 	@Column(name = "createTime")
 	public Timestamp getCreateTime() {
 		return createTime;
@@ -76,7 +75,7 @@ public class UserExperiencePO implements Serializable {
 	public void setCreateTime(Timestamp timestamp) {
 		this.createTime = timestamp;
 	}
-	
+
 	@Column(name = "comment")
 	public String getComment() {
 		return comment;
@@ -86,6 +85,4 @@ public class UserExperiencePO implements Serializable {
 		this.comment = comment;
 	}
 
-	
-	
 }

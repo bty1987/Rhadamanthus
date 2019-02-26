@@ -122,7 +122,7 @@ public class DecorationExportServiceImpl implements DecorationExportService {
 			}
 		}
 		
-		List<DecorationBelongPO> decorationBelongPOs = decorationBelongDao.queryOrderBelongInfoByOrderIds(orderIds);
+		List<DecorationBelongPO> decorationBelongPOs = decorationBelongDao.queryDecorationBelongByOrderIds(orderIds);
 		
 		for(DecorationBelongPO decorationBelongPO: decorationBelongPOs){
 			

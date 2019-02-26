@@ -23,162 +23,165 @@ import com.fanglin.utils.BeanUtil;
 @Entity
 @Table(name = "sales", catalog = "sales")
 public class SalesPO implements Serializable {
-	
-	private static final long serialVersionUID = -2322385203203862761L;
-	
-	public static final short STATUS_INIT_SHORT = 0; 
-	
-	public static final short STATUS_ALLBACK_SHORT = 2; 
-	
-	public static final short STATUS_DBACKORDER_SHORT = 3; 
-		
-	public static final short STATUS_WAST_SHORT = 4; 
-		
-	public static final short STATUS_END_SHORT = 5; 
 
-	public static final short TYPE_DEPOSIT_SHORT = 2; 
-	
-	public static final short TYPE_FULLAMOUNT_SHORT = 3; 
-	
-	public static final short TYPE_REFUNDFULL_SHORT = 5; 
-	
-	public static final short TYPE_REFUNDCOUPON_SHORT = 6; 
-		
-	public static final short TYPE_REFUNDDEPOSIT_SHORT = 7; 
-	
-	public static final short BALANCESTATUS_INIT_SHORT = 0; 
-	
-	public static final short BALANCESTATUS_PRESETTLEMENT_SHORT = 1; 
-	
-	public static final short BALANCESTATUS_VENDORSETTLEMENT_SHORT = 2; 
-		
-	public static final short BALANCESTATUS_SETTLEMENT_SHORT = 3; 
-	
+	private static final long serialVersionUID = -2322385203203862761L;
+
+	public static final short STATUS_INIT_SHORT = 0;
+
+	public static final short STATUS_ALLBACK_SHORT = 2;
+
+	public static final short STATUS_DBACKORDER_SHORT = 3;
+
+	public static final short STATUS_WAST_SHORT = 4;
+
+	public static final short STATUS_END_SHORT = 5;
+
+	public static final short TYPE_DEPOSIT_SHORT = 2;
+
+	public static final short TYPE_FULLAMOUNT_SHORT = 3;
+
+	public static final short TYPE_REFUNDFULL_SHORT = 5;
+
+	public static final short TYPE_REFUNDCOUPON_SHORT = 6;
+
+	public static final short TYPE_REFUNDDEPOSIT_SHORT = 7;
+
+	public static final short BALANCESTATUS_INIT_SHORT = 0;
+
+	public static final short BALANCESTATUS_PRESETTLEMENT_SHORT = 1;
+
+	public static final short BALANCESTATUS_VENDORSETTLEMENT_SHORT = 2;
+
+	public static final short BALANCESTATUS_SETTLEMENT_SHORT = 3;
+
 	public static final short DESPOSITPAYSTATUS_INIT_SHORT = -1;
-	
+
 	public static final short DESPOSITPAYSTATUS_UNPAY_SHORT = 0;
-	
+
 	public static final short DESPOSITPAYSTATUS_PAYED_SHORT = 1;
-	
+
 	public static final short DESPOSITPAYSTATUS_CONFIRM_SHORT = 2;
-	
+
 	public static final short FULLPAYSTATUS_INIT_SHORT = -1;
-	
+
 	public static final short FULLPAYSTATUS_UNPAY_SHORT = 0;
-	
+
 	public static final short FULLPAYSTATUS_PAYED_SHORT = 1;
-	
+
 	public static final short FULLPAYSTATUS_CONFIRM_SHORT = 2;
-	
+
 	public static final String COLUMN_NO_STR = "no";
-	
+
 	public static final String COLUMN_BRAND_STR = "brand";
-	
+
 	public static final String COLUMN_COMPANY_STR = "company";
-	
+
 	public static final String COLUMN_DOMPANY_STR = "dompany";
-	
+
 	public static final String COLUMN_ORDERID_STR = "orderId";
-	
+
 	public static final String COLUMN_INSTORERID_STR = "instorer.userId";
-	
+
 	public static final String COLUMN_SALESMANID_STR = "salesman.uid";
-	
+
 	public static final String COLUMN_GUID_STR = "guider.uid";
-	
+
 	public static final String COLUMN_ISID_STR = "instorer.uid";
-	
+
 	public static final String COLUMN_GUIDERID_STR = "guider.userName";
-	
+
 	public static final String COLUMN_SALESMANUSERID_STR = "salesman.userId";
-	
+
 	public static final String COLUMN_FULLPAYTIME_RANGE_STR = "fullpayTimeRange";
-	
-	public static final String COLUMN_SID_STR ="sid";
-	
-	public static final String COLUMN_DEPT_STR ="dept.name";
-	
+
+	public static final String COLUMN_SID_STR = "sid";
+
+	public static final String COLUMN_DEPT_STR = "dept.name";
+
 	public static final String COLUMN_FULLPAYTIME_STR = "fullpayTime";
-	
+
 	public static final String COLUMN_FULLPAYSTATUS_STR = "fullpayStatus";
-	
+
 	public static final String COLUMN_BALANCESTATUS_STR = "balanceStatus";
-	
+
 	public static final String COLUMN_STATUS_STR = "status";
-	
+
 	private long sid;
-	
+
 	private String no;
-	
+
 	private String orderId;
-	
+
 	private HousePO house;
-	
+
 	private CustomerPO customer;
-	
+
 	private int company;
-	
+
 	private int dompany;
-	
+
 	private UserPO salesman;
-	
+
 	private DepartmentPO dept;
-	
+
 	private DepartmentPO region;
-	
+
 	private UserPO guider;
-	
+
 	private DepartmentPO guideDept;
-	
+
 	private UserPO instorer;
-	
+
 	private String category;
-	
+
 	private long bid;
-	
+
 	private String brand;
-	
+
 	private String comment;
-	
+
 	private Timestamp createTime;
-	
+
 	private Timestamp balanceTime;
-	
+
 	private Timestamp fullpayTime;
-	
+
 	private short status;
-	
+
 	private float depositpay;
-	
+
 	private short depositpayStatus;
-	
+
 	private float fullpay;
-	
+
 	private short fullpayStatus;
-	
+
 	private short balanceStatus;
-	
+
 	private float total;
-	
+
 	private float maling;
-	
+
 	private float venderMaling;
-	
+
 	private float coupon;
-	
+
 	private String couponInfo;
-	
+
 	private short otherStatus;
-	
-	private int activityId;
-	
+
+	private long activityId;
+
 	public SalesPO() {
 		super();
 	}
-	
-	public SalesPO(HousePO house, CustomerPO customer, UserPO salesman,
-			DepartmentPO dept, DepartmentPO region, UserPO guider,
-			DepartmentPO guideDept, UserPO instorer) {
+
+	public SalesPO(long sid) {
+		super();
+		this.sid = sid;
+	}
+
+	public SalesPO(HousePO house, CustomerPO customer, UserPO salesman, DepartmentPO dept, DepartmentPO region, UserPO guider, DepartmentPO guideDept, UserPO instorer) {
 		super();
 		this.house = house;
 		this.customer = customer;
@@ -192,7 +195,7 @@ public class SalesPO implements Serializable {
 
 	@Id
 	@GeneratedValue
-	@Column(name="sid")
+	@Column(name = "sid")
 	public long getSid() {
 		return sid;
 	}
@@ -200,8 +203,8 @@ public class SalesPO implements Serializable {
 	public void setSid(long sid) {
 		this.sid = sid;
 	}
-	
-	@Column(name="no")
+
+	@Column(name = "no")
 	public String getNo() {
 		return no;
 	}
@@ -209,8 +212,8 @@ public class SalesPO implements Serializable {
 	public void setNo(String no) {
 		this.no = no;
 	}
-	
-	@Column(name="orderId")
+
+	@Column(name = "orderId")
 	public String getOrderId() {
 		return orderId;
 	}
@@ -218,9 +221,9 @@ public class SalesPO implements Serializable {
 	public void setOrderId(String orderId) {
 		this.orderId = orderId;
 	}
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, name = "hid", referencedColumnName="hid")
+	@JoinColumn(nullable = false, name = "hid", referencedColumnName = "hid")
 	public HousePO getHouse() {
 		return house;
 	}
@@ -230,7 +233,7 @@ public class SalesPO implements Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, name = "cId", referencedColumnName="cId")
+	@JoinColumn(nullable = false, name = "cId", referencedColumnName = "cId")
 	public CustomerPO getCustomer() {
 		return customer;
 	}
@@ -238,8 +241,8 @@ public class SalesPO implements Serializable {
 	public void setCustomer(CustomerPO customer) {
 		this.customer = customer;
 	}
-	
-	@Column(name="company")
+
+	@Column(name = "company")
 	public int getCompany() {
 		return company;
 	}
@@ -248,7 +251,7 @@ public class SalesPO implements Serializable {
 		this.company = company;
 	}
 
-	@Column(name="dompany")
+	@Column(name = "dompany")
 	public int getDompany() {
 		return dompany;
 	}
@@ -258,7 +261,7 @@ public class SalesPO implements Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, name = "suId", referencedColumnName="uId")
+	@JoinColumn(nullable = false, name = "suId", referencedColumnName = "uId")
 	public UserPO getSalesman() {
 		return salesman;
 	}
@@ -268,7 +271,7 @@ public class SalesPO implements Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, name = "dId", referencedColumnName="dId")
+	@JoinColumn(nullable = false, name = "dId", referencedColumnName = "dId")
 	public DepartmentPO getDept() {
 		return dept;
 	}
@@ -278,7 +281,7 @@ public class SalesPO implements Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, name = "rId", referencedColumnName="dId")
+	@JoinColumn(nullable = false, name = "rId", referencedColumnName = "dId")
 	public DepartmentPO getRegion() {
 		return region;
 	}
@@ -288,7 +291,7 @@ public class SalesPO implements Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = true, name = "guId", referencedColumnName="uId")
+	@JoinColumn(nullable = true, name = "guId", referencedColumnName = "uId")
 	public UserPO getGuider() {
 		return guider;
 	}
@@ -298,7 +301,7 @@ public class SalesPO implements Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = true, name = "gdid", referencedColumnName="dId")
+	@JoinColumn(nullable = true, name = "gdid", referencedColumnName = "dId")
 	public DepartmentPO getGuideDept() {
 		return guideDept;
 	}
@@ -308,7 +311,7 @@ public class SalesPO implements Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, name = "iuid", referencedColumnName="uId")
+	@JoinColumn(nullable = false, name = "iuid", referencedColumnName = "uId")
 	public UserPO getInstorer() {
 		return instorer;
 	}
@@ -316,8 +319,8 @@ public class SalesPO implements Serializable {
 	public void setInstorer(UserPO instorer) {
 		this.instorer = instorer;
 	}
-	
-	@Column(name="category")
+
+	@Column(name = "category")
 	public String getCategory() {
 		return category;
 	}
@@ -325,8 +328,8 @@ public class SalesPO implements Serializable {
 	public void setCategory(String category) {
 		this.category = category;
 	}
-	
-	@Column(name="bid")
+
+	@Column(name = "bid")
 	public long getBid() {
 		return bid;
 	}
@@ -335,7 +338,7 @@ public class SalesPO implements Serializable {
 		this.bid = bid;
 	}
 
-	@Column(name="brand")
+	@Column(name = "brand")
 	public String getBrand() {
 		return brand;
 	}
@@ -343,8 +346,8 @@ public class SalesPO implements Serializable {
 	public void setBrand(String brand) {
 		this.brand = brand;
 	}
-	
-	@Column(name="comment")
+
+	@Column(name = "comment")
 	public String getComment() {
 		return comment;
 	}
@@ -352,8 +355,8 @@ public class SalesPO implements Serializable {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	
-	@Column(name="createTime")
+
+	@Column(name = "createTime")
 	public Timestamp getCreateTime() {
 		return createTime;
 	}
@@ -361,8 +364,8 @@ public class SalesPO implements Serializable {
 	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
 	}
-	
-	@Column(name="balanceTime")
+
+	@Column(name = "balanceTime")
 	public Timestamp getBalanceTime() {
 		return balanceTime;
 	}
@@ -370,8 +373,8 @@ public class SalesPO implements Serializable {
 	public void setBalanceTime(Timestamp balanceTime) {
 		this.balanceTime = balanceTime;
 	}
-	
-	@Column(name="fullpayTime")
+
+	@Column(name = "fullpayTime")
 	public Timestamp getFullpayTime() {
 		return fullpayTime;
 	}
@@ -379,8 +382,8 @@ public class SalesPO implements Serializable {
 	public void setFullpayTime(Timestamp fullpayTime) {
 		this.fullpayTime = fullpayTime;
 	}
-	
-	@Column(name="status")
+
+	@Column(name = "status")
 	public short getStatus() {
 		return status;
 	}
@@ -388,8 +391,8 @@ public class SalesPO implements Serializable {
 	public void setStatus(short status) {
 		this.status = status;
 	}
-	
-	@Column(name="depositpay")
+
+	@Column(name = "depositpay")
 	public float getDepositpay() {
 		return depositpay;
 	}
@@ -398,7 +401,7 @@ public class SalesPO implements Serializable {
 		this.depositpay = depositpay;
 	}
 
-	@Column(name="depositpayStatus")
+	@Column(name = "depositpayStatus")
 	public short getDepositpayStatus() {
 		return depositpayStatus;
 	}
@@ -406,8 +409,8 @@ public class SalesPO implements Serializable {
 	public void setDepositpayStatus(short depositpayStatus) {
 		this.depositpayStatus = depositpayStatus;
 	}
-	
-	@Column(name="fullpay")
+
+	@Column(name = "fullpay")
 	public float getFullpay() {
 		return fullpay;
 	}
@@ -416,7 +419,7 @@ public class SalesPO implements Serializable {
 		this.fullpay = fullpay;
 	}
 
-	@Column(name="fullpayStatus")
+	@Column(name = "fullpayStatus")
 	public short getFullpayStatus() {
 		return fullpayStatus;
 	}
@@ -424,8 +427,8 @@ public class SalesPO implements Serializable {
 	public void setFullpayStatus(short fullpayStatus) {
 		this.fullpayStatus = fullpayStatus;
 	}
-	
-	@Column(name="balanceStatus")
+
+	@Column(name = "balanceStatus")
 	public short getBalanceStatus() {
 		return balanceStatus;
 	}
@@ -433,8 +436,8 @@ public class SalesPO implements Serializable {
 	public void setBalanceStatus(short balanceStatus) {
 		this.balanceStatus = balanceStatus;
 	}
-	
-	@Column(name="total")
+
+	@Column(name = "total")
 	public float getTotal() {
 		return total;
 	}
@@ -442,8 +445,8 @@ public class SalesPO implements Serializable {
 	public void setTotal(float total) {
 		this.total = total;
 	}
-	
-	@Column(name="maling")
+
+	@Column(name = "maling")
 	public float getMaling() {
 		return maling;
 	}
@@ -451,8 +454,8 @@ public class SalesPO implements Serializable {
 	public void setMaling(float maling) {
 		this.maling = maling;
 	}
-	
-	@Column(name="venderMaling")
+
+	@Column(name = "venderMaling")
 	public float getVenderMaling() {
 		return venderMaling;
 	}
@@ -460,8 +463,8 @@ public class SalesPO implements Serializable {
 	public void setVenderMaling(float venderMaling) {
 		this.venderMaling = venderMaling;
 	}
-	
-	@Column(name="coupon")
+
+	@Column(name = "coupon")
 	public float getCoupon() {
 		return coupon;
 	}
@@ -470,7 +473,7 @@ public class SalesPO implements Serializable {
 		this.coupon = coupon;
 	}
 
-	@Column(name="couponInfo")
+	@Column(name = "couponInfo")
 	public String getCouponInfo() {
 		return couponInfo;
 	}
@@ -479,7 +482,7 @@ public class SalesPO implements Serializable {
 		this.couponInfo = couponInfo;
 	}
 
-	@Column(name="otherStatus")
+	@Column(name = "otherStatus")
 	public short getOtherStatus() {
 		return otherStatus;
 	}
@@ -487,29 +490,29 @@ public class SalesPO implements Serializable {
 	public void setOtherStatus(short otherStatus) {
 		this.otherStatus = otherStatus;
 	}
-	
-	@Column(name="activityId")
-	public int getActivityId() {
+
+	@Column(name = "activityId")
+	public long getActivityId() {
 		return activityId;
 	}
 
-	public void setActivityId(int activityId) {
+	public void setActivityId(long activityId) {
 		this.activityId = activityId;
 	}
 
-	public void ptv(SalesVO salesVO){
-		
-		BeanUtil.copyProperties(this, salesVO, Arrays.asList("salesman","dept","region","guider","instorer","guideDept","house","customer"));
-		BeanUtil.copyProperties(this.getSalesman(), salesVO.getSalesman(),Arrays.asList("dept","duty"));
-		BeanUtil.copyProperties(this.getDept(), salesVO.getDept(),Arrays.asList("fatherDept","type","manager"));
-		BeanUtil.copyProperties(this.getRegion(), salesVO.getRegion(),Arrays.asList("fatherDept","type","manager"));
-		BeanUtil.copyProperties(this.getGuider(), salesVO.getGuider(),Arrays.asList("dept","duty"));
-		BeanUtil.copyProperties(this.getInstorer(), salesVO.getInstorer(),Arrays.asList("dept","duty"));
-		BeanUtil.copyProperties(this.getGuideDept(), salesVO.getGuideDept(),Arrays.asList("fatherDept","type","manager"));
-		BeanUtil.copyProperties(this.getHouse(), salesVO.getHouse(),Arrays.asList("village"));
-		BeanUtil.copyProperties(this.getHouse().getVillage(), salesVO.getHouse().getVillage(),Arrays.asList("cityProper"));
+	public void ptv(SalesVO salesVO) {
+
+		BeanUtil.copyProperties(this, salesVO, Arrays.asList("salesman", "dept", "region", "guider", "instorer", "guideDept", "house", "customer"));
+		BeanUtil.copyProperties(this.getSalesman(), salesVO.getSalesman(), Arrays.asList("dept", "duty"));
+		BeanUtil.copyProperties(this.getDept(), salesVO.getDept(), Arrays.asList("fatherDept", "type", "manager"));
+		BeanUtil.copyProperties(this.getRegion(), salesVO.getRegion(), Arrays.asList("fatherDept", "type", "manager"));
+		BeanUtil.copyProperties(this.getGuider(), salesVO.getGuider(), Arrays.asList("dept", "duty"));
+		BeanUtil.copyProperties(this.getInstorer(), salesVO.getInstorer(), Arrays.asList("dept", "duty"));
+		BeanUtil.copyProperties(this.getGuideDept(), salesVO.getGuideDept(), Arrays.asList("fatherDept", "type", "manager"));
+		BeanUtil.copyProperties(this.getHouse(), salesVO.getHouse(), Arrays.asList("village"));
+		BeanUtil.copyProperties(this.getHouse().getVillage(), salesVO.getHouse().getVillage(), Arrays.asList("cityProper"));
 		BeanUtil.copyProperties(this.getCustomer(), salesVO.getCustomer());
-		
+
 	}
-	
+
 }

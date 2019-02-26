@@ -48,6 +48,14 @@ public class CustomerOriginAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
+	@Action(value = "pageCustomerOriginForDesign", results = { @Result ( name = "success", type = "json", params = {"ignoreHierarchy", "false"}) }, params = {"contentType", "text/html"})
+	public String pageCustomerOriginForDesign() throws FLException{
+		
+		customerOriginService.pageCustomerOriginForDesign(getPaging(), getFilters(), queryUserId());
+		
+		return SUCCESS;
+	}
+	
 	@Action(value = "addCustomerOrigin", results = { @Result ( name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addCustomerOrigin() throws FLException{
 		
@@ -68,6 +76,14 @@ public class CustomerOriginAction extends BaseListAction {
 	public String updateCustomerOriginForBelonger() throws FLException{
 		
 		customerOriginService.updateCustomerOriginForBelonger(customerOrigin, queryUserId());
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "bindCustomerOrigin", results = { @Result ( name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String bindCustomerOrigin() throws FLException{
+		
+		customerOriginService.bindCustomerOrigin(customerOrigin);
 		
 		return SUCCESS;
 	}

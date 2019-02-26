@@ -22,7 +22,7 @@ $(function(){
         maxHeight:'100%'
     };
 
-    com.post(api.store.queryMcategoryOnshow, {}, function(res){
+    com.post(api.store.queryMcategory, {}, function(res){
         com.focusPage("#categoryId").bindData(res.mcategorys, "cid", "name");
     });
 
@@ -311,7 +311,7 @@ $(function(){
         'height': '32', // 浏览按钮的高度
         'fileTypeDesc': '支持的格式:', // 在浏览窗口底部的文件类型下拉菜单中显示的文本
         'fileTypeExts': '*.jpg;*.jpge;*.gif;*.png', // 允许上传的文件后缀
-        'fileSizeLimit': '3MB', // 上传文件的大小限制
+        'fileSizeLimit': 3072, // 上传文件的大小限制
         'queueSizeLimit': 25, // 上传数量
         'onUploadSuccess':function(file, data, response){
             var dateObj=eval("("+data+")");

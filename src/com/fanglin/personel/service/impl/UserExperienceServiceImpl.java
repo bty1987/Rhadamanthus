@@ -30,38 +30,34 @@ public class UserExperienceServiceImpl implements UserExperienceService {
 
 	@Autowired
 	private UserExperienceDao userExperienceDao;
-	
+
 	@Autowired
 	private UserDao userDao;
-	
-	
+
 	@Override
-	public List<UserExperienceVO> queryUserExperienceByUid(UserExperienceVO userExperience) throws FLException{
-		
+	public List<UserExperienceVO> queryUserExperienceByUid(UserExperienceVO userExperience) throws FLException {
+
 		List<UserExperienceVO> userExperienceVOs = new ArrayList<UserExperienceVO>();
-	
+
 		UserPO userPO = userDao.get(userExperience.getUid());
-		
-		if(userPO == null){
+
+		if (userPO == null) {
 			throw new FLException(190005, "人员不存在");
 		}
-		
+
 		List<UserExperiencePO> userExperiencePOs = userExperienceDao.queryUserExperiencesByUid(userExperience.getUid());
-		
-		if(userExperiencePOs == null){
-			throw new FLException(190005, "人员不存在");
-		}
-		
-		for(UserExperiencePO userExperiencePO: userExperiencePOs){
-			
+
+
+		for (UserExperiencePO userExperiencePO : userExperiencePOs) {
+
 			UserExperienceVO userExperienceVO = new UserExperienceVO();
-			
+
 			BeanUtil.copyProperties(userExperiencePO, userExperienceVO);
-			
+
 			userExperienceVOs.add(userExperienceVO);
 		}
-	
+
 		return userExperienceVOs;
 	}
-	
+
 }

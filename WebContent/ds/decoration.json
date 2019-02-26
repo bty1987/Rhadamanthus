@@ -16,12 +16,13 @@
 	], "decorationOrderStatus": [
 		{"key":"0", "value":"初始"},
 		{"key":"1", "value":"定金"},
-		{"key":"2", "value":"签约"},
-		{"key":"3", "value":"重签"},
-		{"key":"4", "value":"废单"},
-		{"key":"5", "value":"终止"},
-		{"key":"6", "value":"决算"},
-		{"key":"7", "value":"完结"}
+		{"key":"2", "value":"预签"},
+		{"key":"3", "value":"签约"},
+		{"key":"4", "value":"重签"},
+		{"key":"5", "value":"废单"},
+		{"key":"6", "value":"终止"},
+		{"key":"7", "value":"决算"},
+		{"key":"8", "value":"完结"}
     ], "salesmanType": [
 		{"key":"守园","value":"守园"},
 		{"key":"资源","value":"资源"},
@@ -38,7 +39,8 @@
         {"key":"0", "value":"半包"},
         {"key":"1", "value":"全包"},
         {"key":"2", "value":"半价"},
-		{"key":"3", "value":"满减"}
+		{"key":"3", "value":"满减"},
+		{"key":"4", "value":"减上捡"}
     ], "paymentType": [
 		{"key":"0-0","value":"设计费"},
         {"key":"0-3","value":"主材代购费"},
@@ -50,7 +52,8 @@
 		{"key":"0", "value":"半包"},
 		{"key":"1", "value":"全包"},
 		{"key":"2", "value":"半价"},
-		{"key":"3", "value":"满减"}
+		{"key":"3", "value":"满减"},
+		{"key":"4", "value":"减上捡"}
 	], "perCharge": [
 		{"key":"designer", "value":"9"},
 		{"key":"manager", "value":"1"}
@@ -62,6 +65,21 @@
 	], "auditStatus":[
 		{"key":"已审批","value":"已审批"},
 		{"key":"未审批","value":"未审批"}
+	],  "receiveType":[
+        {"key":"0", "value":"到店"},
+        {"key":"1", "value":"定金"},
+        {"key":"2", "value":"签单"},
+        {"key":"3", "value":"抽奖"},
+        {"key":"4", "value":"特批"},
+        {"key":"5", "value":"购买"},
+        {"key":"6", "value":"其他"}
+    ],"activityItemType":[
+        {"key":"0", "value":"有效"},
+        {"key":"1", "value":"失效"},
+        {"key":"2", "value":"接受"}
+    ], "orderGrade":[
+		{"key":"A", "value":"A"},
+		{"key":"B", "value":"B"}
 	],
     "errorCode": 0,
     "errorMsg": null

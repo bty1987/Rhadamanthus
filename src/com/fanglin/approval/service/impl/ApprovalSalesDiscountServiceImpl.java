@@ -2,13 +2,12 @@
 
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.JSONArray;
 import com.fanglin.approval.dao.ApprovalDao;
 import com.fanglin.approval.dao.ApprovalSalesDiscountDao;
 import com.fanglin.approval.po.ApprovalPO;
@@ -47,20 +46,20 @@ public class ApprovalSalesDiscountServiceImpl implements ApprovalSalesDiscountSe
 
 	@Autowired
 	private SalesPaymentDao salesPaymentDao;
-	
+
 	@Autowired
 	private SystemConfigDao systemConfigDao;
-	
+
 	@Autowired
 	private ApprovalService approvalDDService;
-	
+
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int submitApprovalSalesDiscount(ApprovalVO approvalVO,ApprovalSalesDiscountVO approvalSalesDiscountVO, String userId,int company)throws FLException {
+	public int submitApprovalSalesDiscount(ApprovalVO approvalVO, ApprovalSalesDiscountVO approvalSalesDiscountVO, String userId, int company) throws FLException {
 
 		long sid = approvalSalesDiscountVO.getSid();
 
-		ApprovalPO approvalPO = approvalDao.queryApproval(ApprovalPO.APPROVAL_STATUS_INIT_INT,ApprovalPO.APPROVAL_TYPE_SALES_DIACOUNT_INT,String.valueOf(sid));
+		ApprovalPO approvalPO = approvalDao.queryApproval(ApprovalPO.APPROVAL_STATUS_INIT_INT, ApprovalPO.APPROVAL_TYPE_SALES_DIACOUNT_INT, String.valueOf(sid));
 
 		if (approvalPO != null) {
 			throw new FLException(240004, "正在审批中,不能提交新审批");
@@ -71,41 +70,43 @@ public class ApprovalSalesDiscountServiceImpl implements ApprovalSalesDiscountSe
 		if (salesPO == null) {
 			throw new FLException(260021, "销售单不存在");
 		}
-		if (salesPO.getFullpayStatus() != SalesPO.FULLPAYSTATUS_INIT_SHORT && salesPO.getFullpayStatus() != (short)3) {// 不等于-1
+		
+		if (salesPO.getFullpayStatus() != SalesPO.FULLPAYSTATUS_INIT_SHORT && salesPO.getFullpayStatus() != (short) 3) {// 不等于-1
 			throw new FLException(260012, "销售订单当前状态不能提交补款");
 		}
-		salesPO.setFullpayStatus((short) 3);
 		
+		salesPO.setFullpayStatus((short) 3);
+
 		salesDao.update(salesPO);
 
 		approvalPO = new ApprovalPO();
 
-		BeanUtil.copyProperties(approvalVO, approvalPO,Arrays.asList("receiver","sender"));
+		BeanUtil.copyProperties(approvalVO, approvalPO, Arrays.asList("receiver", "sender"));
 
 		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiver().getUserId());
 		UserPO sender = userDao.queryUserByUserId(userId);
-		
-		SystemConfigPO systemConfigPO = systemConfigDao.querySystemConfig(ApprovalPO.APPROVAL_SYSTEMCONFIG_SALESDISCOUNT_STR,company);
-		
-		if(systemConfigPO == null){
+
+		SystemConfigPO systemConfigPO = systemConfigDao.querySystemConfig(ApprovalPO.APPROVAL_SYSTEMCONFIG_SALESDISCOUNT_STR, company);
+
+		if (systemConfigPO == null) {
 			approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_INIT_INT);
-		}else{
-			approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_DINGDING_INT);
-			List<JSONObject> formComponentValues = approvalDDService.getForms("说明", String.format(ApprovalPO.APPROVAL_CONTENTS_SALES_DISCOUNT_STR,salesPO.getOrderId(), salesPO.getNo(),approvalSalesDiscountVO.getReferMoney()));
+		} else {
+			approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_APPROVE_INT);
+			JSONArray formComponentValues = approvalDDService.getForms("说明", String.format(ApprovalPO.APPROVAL_CONTENTS_SALES_DISCOUNT_STR, salesPO.getOrderId(), salesPO.getNo(), approvalSalesDiscountVO.getReferMoney()));
 			String processinstanceid = approvalDDService.initiateApproval(systemConfigPO.getValue(), userId, approvalVO.getReceiver().getUserId(), null, null, formComponentValues, company);
 			approvalPO.setProcessinstanceid(processinstanceid);
 		}
-		
+
 		approvalPO.setType(ApprovalPO.APPROVAL_TYPE_SALES_DIACOUNT_INT);
 		approvalPO.setIdent(String.valueOf(sid));
 		approvalPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		approvalPO.setApprovalTime(DateUtil.getDateToTimestamp(new Date()));
-		// 订单号:%s,销售单号:%s,应收金额:%s
-		approvalPO.setContents(String.format(ApprovalPO.APPROVAL_CONTENTS_SALES_DISCOUNT_STR,salesPO.getOrderId(), salesPO.getNo(),approvalSalesDiscountVO.getReferMoney()));
+
+		approvalPO.setContents(String.format(ApprovalPO.APPROVAL_CONTENTS_SALES_DISCOUNT_STR, salesPO.getOrderId(), salesPO.getNo(), approvalSalesDiscountVO.getReferMoney())); // 订单号:%s,销售单号:%s,应收金额:%s
 		approvalPO.setReceiver(receiver);
 		approvalPO.setSender(sender);
 		approvalPO.setCompany(company);
-		
+
 		approvalDao.save(approvalPO);
 
 		ApprovalSalesDiscountPO approvalSalesDiscountPO = new ApprovalSalesDiscountPO();
@@ -121,16 +122,15 @@ public class ApprovalSalesDiscountServiceImpl implements ApprovalSalesDiscountSe
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int approvalForSalesDiscount(ApprovalPO approvalPO)throws FLException {
+	public int approvalForSalesDiscount(ApprovalPO approvalPO) throws FLException {
 
 		ApprovalSalesDiscountPO approvalSalesDiscountPO = approvalSalesDiscountDao.queryApprovalSalesDiscountByAId(approvalPO.getAid());
 
 		if (approvalSalesDiscountPO == null) {
 			throw new FLException(240003, "审批信息不完整");
 		}
-		long sid = approvalSalesDiscountPO.getSid();
-
-		SalesPO salesPO = salesDao.get(sid);
+		
+		SalesPO salesPO = salesDao.get(approvalSalesDiscountPO.getSid());
 
 		if (salesPO == null) {
 			throw new FLException(260021, "销售单不存在");
@@ -138,7 +138,7 @@ public class ApprovalSalesDiscountServiceImpl implements ApprovalSalesDiscountSe
 
 		int fullStatus = salesPO.getFullpayStatus();
 
-		if (fullStatus != SalesPO.FULLPAYSTATUS_INIT_SHORT&& fullStatus != (short)3) {
+		if (fullStatus != SalesPO.FULLPAYSTATUS_INIT_SHORT && fullStatus != (short) 3) {
 			throw new FLException(260012, "销售订单当前状态不能提交补款");
 		}
 
@@ -146,8 +146,7 @@ public class ApprovalSalesDiscountServiceImpl implements ApprovalSalesDiscountSe
 
 		SalesPaymentPO salesPaymentPO = new SalesPaymentPO();
 		salesPaymentPO.setSales(salesPO);
-		salesPaymentPO.setType(SalesPaymentPO.COLUMN_REPLENISHMENTTYPE_INT);// 3:
-																			// 补款
+		salesPaymentPO.setType(SalesPaymentPO.COLUMN_REPLENISHMENTTYPE_INT);// 3: 补款
 		salesPaymentPO.setStatus(SalesPaymentPO.COLUMN_SALES_INITIALSTATUS_INT);// 0.销售单初始状态
 		salesPaymentPO.setCategory(salesPO.getCategory());
 		salesPaymentPO.setBrand(salesPO.getBrand());
@@ -156,9 +155,12 @@ public class ApprovalSalesDiscountServiceImpl implements ApprovalSalesDiscountSe
 		salesPaymentPO.setReferMoney(approvalSalesDiscountPO.getReferMoney());
 
 		salesPaymentDao.save(salesPaymentPO);
+		
 		salesPO.setFullpay(approvalSalesDiscountPO.getReferMoney());
 		salesPO.setFullpayStatus(SalesPO.FULLPAYSTATUS_UNPAY_SHORT);// 0: 未付款
+		
 		salesDao.update(salesPO);
+		
 		return 0;
 	}
 
@@ -172,8 +174,7 @@ public class ApprovalSalesDiscountServiceImpl implements ApprovalSalesDiscountSe
 			throw new FLException(240003, "审批信息不完整");
 		}
 
-		long sid = approvalSalesDiscountPO.getSid();
-		SalesPO salesPO = salesDao.get(sid);
+		SalesPO salesPO = salesDao.get(approvalSalesDiscountPO.getSid());
 
 		if (salesPO == null) {
 			throw new FLException(260021, "销售单不存在");
@@ -181,7 +182,7 @@ public class ApprovalSalesDiscountServiceImpl implements ApprovalSalesDiscountSe
 
 		salesPO.setFullpay(0);
 		salesPO.setFullpayStatus(SalesPO.FULLPAYSTATUS_INIT_SHORT);
-		
+
 		salesDao.update(salesPO);
 
 		return 0;

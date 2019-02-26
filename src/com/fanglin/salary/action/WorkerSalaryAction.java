@@ -62,14 +62,6 @@ public class WorkerSalaryAction extends BaseListAction{
 	  return "success";
 	}
   
-	@Action(value="updateWorkerSalary", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String updateWorkerSalary()throws FLException{
-	  
-	  workerSalaryService.updateWorkerSalary(workerSalary);
-    
-	  return "success";
-	}
-  
 	@Action(value="adoptWorkerSalary", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String adoptWorkerSalary() throws FLException{
 	  

@@ -166,14 +166,6 @@ public class SalesAction extends BaseListAction {
 		
 		return SUCCESS;
 	}
-	
-	@Action(value = "countSalesItemForAmount", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String countSalesItemForAmount() throws FLException{
-		
-		sums = salesItemService.countSalesItemForAmount(salesItem);
-		
-		return SUCCESS;
-	}
 
 	public SalesItemVO getSalesItem() {
 		return salesItem;

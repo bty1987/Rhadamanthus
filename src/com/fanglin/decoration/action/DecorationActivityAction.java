@@ -23,76 +23,76 @@ import com.fanglin.decoration.vo.DecorationVO;
 public class DecorationActivityAction extends BaseListAction {
 
 	private static final long serialVersionUID = 2327633841386704953L;
-	
+
 	@Autowired
 	private DecorationActivityService decorationActivityService;
-	
+
 	@Autowired
 	private DecorationActivityItemService decorationActivityItemService;
-	
+
 	private DecorationVO decoration;
-	
+
 	private DecorationActivityVO decorationActivity;
-	
+
 	private List<DecorationActivityVO> decorationActivitys;
-	
+
 	private DecorationActivityItemVO decorationActivityItem;
-	
+
 	private List<DecorationActivityItemVO> decorationActivityItems;
-	
-	@Action(value="queryDecorationActivityByOrderId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryDecorationActivityByOrderId(){
-		
+
+	@Action(value = "queryDecorationActivityByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryDecorationActivityByOrderId() {
+
 		decorationActivitys = decorationActivityService.queryDecorationActivityByOrderId(decorationActivity);
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value="queryDecorationActivityItem", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryDecorationActivityItem(){
-		
+
+	@Action(value = "queryDecorationActivityItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryDecorationActivityItem() {
+
 		decorationActivityItems = decorationActivityItemService.queryDecorationActivityItemByOrderId(decoration);
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value="queryDecorationActivityItemForCouponAVaildByOrderId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryDecorationActivityItemForCouponAVaildByOrderId(){
-		
+
+	@Action(value = "queryDecorationActivityItemForCouponAVaildByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryDecorationActivityItemForCouponAVaildByOrderId() {
+
 		decorationActivityItems = decorationActivityItemService.queryDecorationActivityItemForCouponAVaildByOrderId(decoration);
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value="addDecorationActivity", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String addDecorationActivity() throws FLException{
-		
+
+	@Action(value = "addDecorationActivity", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addDecorationActivity() throws FLException {
+
 		decorationActivityService.addDecorationActivity(decorationActivity);
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value="deleteDecorationActivity", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String deleteDecorationActivity() throws FLException{
-		
+
+	@Action(value = "deleteDecorationActivity", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String deleteDecorationActivity() throws FLException {
+
 		decorationActivityService.deleteDecorationActivity(decorationActivity);
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value="abateDecorationActivityItem", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String abateDecorationActivityItem() throws FLException{
-		
-		decorationActivityItemService.abateDecorationActionItem(decorationActivityItem);
-		
+
+	@Action(value = "abateDecorationActivityItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String abateDecorationActivityItem() throws FLException {
+
+		decorationActivityItemService.abateDecorationActionItem(decorationActivityItem, queryUserId());
+
 		return SUCCESS;
 	}
-	
-	@Action(value="receiveDecorationActivityItem", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String receiveDecorationActivityItem() throws FLException{
-		
+
+	@Action(value = "receiveDecorationActivityItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String receiveDecorationActivityItem() throws FLException {
+
 		decorationActivityItemService.receiveDecorationActivityItem(decorationActivityItem, queryUserId(), queryUserName());
-		
+
 		return SUCCESS;
 	}
 
@@ -108,8 +108,7 @@ public class DecorationActivityAction extends BaseListAction {
 		return decorationActivityItem;
 	}
 
-	public void setDecorationActivityItem(
-			DecorationActivityItemVO decorationActivityItem) {
+	public void setDecorationActivityItem(DecorationActivityItemVO decorationActivityItem) {
 		this.decorationActivityItem = decorationActivityItem;
 	}
 
@@ -117,8 +116,7 @@ public class DecorationActivityAction extends BaseListAction {
 		return decorationActivityItems;
 	}
 
-	public void setDecorationActivityItems(
-			List<DecorationActivityItemVO> decorationActivityItems) {
+	public void setDecorationActivityItems(List<DecorationActivityItemVO> decorationActivityItems) {
 		this.decorationActivityItems = decorationActivityItems;
 	}
 
@@ -134,8 +132,7 @@ public class DecorationActivityAction extends BaseListAction {
 		return decorationActivitys;
 	}
 
-	public void setDecorationActivitys(
-			List<DecorationActivityVO> decorationActivitys) {
+	public void setDecorationActivitys(List<DecorationActivityVO> decorationActivitys) {
 		this.decorationActivitys = decorationActivitys;
 	}
 

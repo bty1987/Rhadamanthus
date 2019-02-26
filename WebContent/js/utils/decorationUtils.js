@@ -241,6 +241,7 @@ var decorationUtils = {
         var widgetMain = $("<div></div>").addClass("widget-main no-padding").appendTo(widgetBody);
         var ul = $("<ul></ul>").addClass("list-unstyled list-striped pricing-table").appendTo(widgetMain);
         var nameLi = $("<li></li>").appendTo(ul);
+
         var nameSpan = $("<span></span>").text(_decorationActivity.activity.name).appendTo(nameLi);
 
         var uiPgDiv = $("<div></div>").addClass("ui-pg-div").appendTo(widgetBody);
@@ -280,20 +281,39 @@ var decorationUtils = {
             var thingCut = 0;
 
             for (var i = 0; i < decorationActivityItems.length; i++) {
-                if (decorationActivityItems[i].type == 0 && decorationActivityItems[i].state != 1) {
+                if (decorationActivityItems[i].type == 0 && decorationActivityItems[i].state != 1) {//0卷
                     couponCut = utils.accAdd(couponCut, utils.accMul(decorationActivityItems[i].money, decorationActivityItems[i].num));
-                } else if (decorationActivityItems[i].type == 1 && decorationActivityItems[i].state != 1) {
+                } else if (decorationActivityItems[i].type == 1 && decorationActivityItems[i].state != 1) {//物品
+                    thingCut = utils.accAdd(thingCut, utils.accMul(decorationActivityItems[i].money, decorationActivityItems[i].num));
+                }else if (decorationActivityItems[i].type == 2 && decorationActivityItems[i].state != 1) {//特殊券
+                    couponCut = utils.accAdd(couponCut, utils.accMul(decorationActivityItems[i].money, decorationActivityItems[i].num));
+                }else if (decorationActivityItems[i].type == 3 && decorationActivityItems[i].state != 1){//特殊物品
                     thingCut = utils.accAdd(thingCut, utils.accMul(decorationActivityItems[i].money, decorationActivityItems[i].num));
                 }
+
                 activityPriceInfo.html("");
                 var couponCutSpan = $("<div></div>").addClass("col-sm-4").append($("<h4></h4>").html("券优惠:").append($('<strong></strong>').addClass("red").html(couponCut))).appendTo(activityPriceInfo);
                 var thingCutSpan = $("<div></div>").addClass("col-sm-4").append($("<h4></h4>").html("物品优惠:").append($('<strong></strong>').addClass("red").html(thingCut))).appendTo(activityPriceInfo);
                 var detailSpan = $("<div></div>").addClass("col-sm-4").append($("<h4></h4>").html("优惠总额:").append($('<strong></strong>').addClass("red").html(utils.accAdd(couponCut, thingCut)))).appendTo(activityPriceInfo);
                 decorationUtils.addActivityItemForDiv(activityItems, decorationActivityItems[i], uiBtnMethod);
-
             }
         });
     }, addActivityItemForDiv: function (_activityItems, _activityItem, uiBtnMethod) {
+
+        var types= {};
+        var states={};
+
+        com.post(api.ds.information, {}, function (res) {
+            $.each(res.activityItemType, function (i, v) {
+                types[v.key] = v.value;
+            });
+        }, null, false);
+
+        com.post(api.ds.decoration, {}, function (res) {
+            $.each(res.activityItemType, function (i, v) {
+                states[v.key] = v.value;
+            });
+        }, null, false);
 
         var pricingSpan = $("<div></div>").addClass("pricing-span").css("margin-right", "10px").attr("id", "pricing_" + _activityItem.daiId).prependTo(_activityItems);
         var widgetBox = $("<div></div>").addClass("widget-box pricing-box-small").appendTo(pricingSpan);
@@ -302,15 +322,23 @@ var decorationUtils = {
         var widgetHeaderH5 = $("<h5></h5>").addClass("bigger lighter").appendTo(widgetHeader);
 
         if (_activityItem.type == 0) {
-            widgetHeaderH5.text("券:" + _activityItem.activityItemName);
+            widgetHeaderH5.text(_activityItem.activityItemName);
         } else if (_activityItem.type == 1) {
-            widgetHeaderH5.text("物品:" + _activityItem.activityItemName);
+            widgetHeaderH5.text(_activityItem.activityItemName);
+        }else if (_activityItem.type == 2) {
+            widgetHeaderH5.text(_activityItem.activityItemName);
+        }else if (_activityItem.type == 3) {
+            widgetHeaderH5.text(_activityItem.activityItemName);
         }
 
         if (_activityItem.state == 0) {
             if (_activityItem.type == 0) {
                 widgetHeader.addClass("header-color-blue");
             } else if (_activityItem.type == 1) {
+                widgetHeader.addClass("header-color-green");
+            }else if(_activityItem.type == 2){
+                widgetHeader.addClass("header-color-blue");
+            }else if(_activityItem.type == 3){
                 widgetHeader.addClass("header-color-green");
             }
         } else if (_activityItem.state == 1) {
@@ -322,8 +350,13 @@ var decorationUtils = {
         var widgetBody = $("<div></div>").addClass("widget-body").appendTo(widgetBox);
         var widgetMain = $("<div></div>").addClass("widget-main no-padding").appendTo(widgetBody);
         var ul = $("<ul></ul>").addClass("list-unstyled list-striped pricing-table").appendTo(widgetMain);
+
         var nameLi = $("<li></li>").appendTo(ul);
         var nameSpan = $("<span></span>").attr("id", "activityItemName_" + _activityItem.daiId).text(_activityItem.name).appendTo(nameLi);
+        var typeLi = $("<li></li>").text("类型:").appendTo(ul);
+        var typeSpan = $("<span></span>").attr("id", "type_" + _activityItem.daiId).text(types[_activityItem.type]).appendTo(typeLi);
+        var stateLi = $("<li></li>").text("状态:").appendTo(ul);
+        var stateSpan = $("<span></span>").attr("id", "state_" + _activityItem.daiId).text(states[_activityItem.state]).appendTo(stateLi);
         var moneyLi = $("<li></li>").text("金额:").appendTo(ul);
         var moneySpan = $("<span></span>").attr("id", "money_" + _activityItem.daiId).text(_activityItem.money).appendTo(moneyLi);
         var numLi = $("<li></li>").text("数量:").appendTo(ul);
@@ -342,6 +375,7 @@ var decorationUtils = {
         var receiveMoney = 0;
         var addMoney = 0;
         var reduceMoney = 0;
+        var paymentStatusArray= ["未付款", "已付款", "已确认", "审批中", "历史"];
 
         var $base = com.focusPage("#basePaymentDiv").html("");
         var $other = com.focusPage("#otherPaymentDiv").html("");
@@ -364,7 +398,7 @@ var decorationUtils = {
         }, null, false);
 
         if (decorationPayments && decorationPayments.length) {
-                
+
                 var sortPayments = decorationPayments.sort(function(a, b){
                 	return a.sort - b.sort;
                 });
@@ -380,7 +414,7 @@ var decorationUtils = {
                     var propertyArr = [
                         ["应收额:", v.referMoney, "grey"],
                         ["收款时间:", v.collectTime, "grey"],
-                        ["状态:", v.paymentStatus, "red"]
+                        ["状态:", paymentStatusArray[v.paymentStatus], "red"]
                     ];
 
                     $.each(propertyArr, function (index, value) {
@@ -430,7 +464,7 @@ var decorationUtils = {
 
                     if (isDesign) {
 
-                        if (v.paymentStatus == "已确认" && v.oneType == 0) {
+                        if (v.paymentStatus == 2 && v.oneType == 0) {
 
                             if (v.twoType != 2) {
                                 $divBtnWrap.append($refundBtn);
@@ -446,13 +480,13 @@ var decorationUtils = {
                         $liLine.appendTo($baseul);
                         if (v.twoType == 1) {
                             totalMoney += v.referMoney;
-                            if ($paymentStatus == '已确认') {
+                            if ($paymentStatus == 2) {
                                 receiveMoney += v.referMoney;
                             }
                         }
                     } else {
                         $liLine.appendTo($otherul);
-                        if ($paymentStatus == '已确认') {
+                        if ($paymentStatus == 2) {
                             if (v.twoType == 2) {
                                 if (v.oneType == 0) {
                                     addMoney += v.referMoney;
@@ -498,7 +532,7 @@ var decorationUtils = {
         var paymentTable = $("<div></div>").addClass('clearfix').css({"margin-top": "15px", "margin-bottom": "15px"});
 
         var inclusiveDiv = $("<div></div>").addClass('row');
-        var inclusiveHeader = $("<div></div>").addClass('widget-header').append($("<h4></h4>").append($('<strong></strong>').html("全包·款项信息")));
+        var inclusiveHeader = $("<div></div>").addClass('widget-header').append($("<h4></h4>").append($('<strong></strong>').html("全包-款项信息")));
         var inclusiveBody = $("<div></div>").addClass('widget-body');
         var inclusiveTable = $("<div></div>").addClass('clearfix').css({"margin-top": "15px", "margin-bottom": "15px"});
 

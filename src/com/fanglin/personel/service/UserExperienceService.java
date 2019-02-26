@@ -13,9 +13,8 @@ import java.util.List;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.personel.vo.UserExperienceVO;
 
-
 public interface UserExperienceService {
-	
-	public List<UserExperienceVO> queryUserExperienceByUid(UserExperienceVO userExperienceVO)throws FLException;
-	
+
+	public List<UserExperienceVO> queryUserExperienceByUid(UserExperienceVO userExperienceVO) throws FLException;
+
 }

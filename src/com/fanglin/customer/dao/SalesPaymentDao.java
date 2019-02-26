@@ -11,4 +11,6 @@ public interface SalesPaymentDao extends Dao<SalesPaymentPO> {
 	
 	public List<SalesPaymentPO> queryCusSalesPayment(Paging paging,List<Filter> filters,String orderId);
 	
+	public Float countCusSalesPaymentForAmount(String orderId);
+	
 }

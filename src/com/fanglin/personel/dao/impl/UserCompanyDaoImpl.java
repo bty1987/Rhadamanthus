@@ -11,7 +11,6 @@ import com.fanglin.personel.po.UserCompanyPO;
 
 @Repository("userCompanyDao")
 public class UserCompanyDaoImpl extends DaoImpl<UserCompanyPO> implements UserCompanyDao {
-	
 
 	public UserCompanyDaoImpl() {
 		super(UserCompanyPO.class);
@@ -20,21 +19,21 @@ public class UserCompanyDaoImpl extends DaoImpl<UserCompanyPO> implements UserCo
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<UserCompanyPO> queryUserCompany(int uid) {
-		return  session().createCriteria(UserCompanyPO.class).add(Restrictions.eq("uid", uid)).list();
+		return session().createCriteria(UserCompanyPO.class).add(Restrictions.eq("uid", uid)).list();
 	}
 
 	@Override
 	public UserCompanyPO queryUserCompany(int uid, int company) {
 		return (UserCompanyPO) session().createCriteria(UserCompanyPO.class).add(Restrictions.eq("uid", uid)).add(Restrictions.eq("company.cid", company)).uniqueResult();
 	}
-	
+
 	@Override
 	public int deleteUserCompany(int uid) {
-		
-		String sql="delete from communion.usercompany where uid= :uid";
+
+		String sql = "delete from communion.usercompany where uid= :uid";
 		session().createSQLQuery(sql).setInteger("uid", uid).executeUpdate();
-		
-		return 0;	
+
+		return 0;
 	}
-	
+
 }

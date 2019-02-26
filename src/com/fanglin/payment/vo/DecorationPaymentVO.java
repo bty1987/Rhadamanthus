@@ -35,7 +35,7 @@ public class DecorationPaymentVO implements Serializable {
 	
 	private String paymentType;
 	
-	private String paymentStatus;
+	private Short paymentStatus;
 	
 	private UserBaseVO creater; 
 	
@@ -144,11 +144,11 @@ public class DecorationPaymentVO implements Serializable {
 		this.paymentType = paymentType;
 	}
 
-	public String getPaymentStatus() {
+	public Short getPaymentStatus() {
 		return paymentStatus;
 	}
 
-	public void setPaymentStatus(String paymentStatus) {
+	public void setPaymentStatus(Short paymentStatus) {
 		this.paymentStatus = paymentStatus;
 	}
 

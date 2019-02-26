@@ -20,52 +20,70 @@ import com.fanglin.personel.po.UserPO;
 public class DecorationActivityItemPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -2215251113218795219L;
-	
+
 	public static final short STATUS_VAILD_INT = 0;
-	
+
 	public static final short STATUS_UNVALID_INT = 1;
-	
+
 	public static final short STATUS_RECEIVE_INT = 2;
-	
-	public static final short TYPE_COUPON_INT = 0;
-	
-	public static final short TYPE_THING_INT = 1;
-	
+
+	public static final short TYPE_COUPON_INT = 0; // 卷
+
+	public static final short TYPE_THING_INT = 1; // 物品
+
+	public static final short TYPE_SPECIALCOUPON_INT = 2; // 特殊卷
+
+	public static final short TYPE_SPECIALARTICLE_INT = 3;// 特殊物品
+
+	public static final short ISPREFOR_CAL_INT = 0; // 业绩标识 0 计算
+
+	public static final short ISSTOCK_CAL_INT = 0;// 库存标识 0 计算
+
 	public static final String COLUMN_DAIID_STR = "daiId";
-	
+
 	public static final String COLUMN_ORDERID_STR = "orderId";
-	
+
 	public static final String COLUMN_STATUS_STR = "state";
-	
+
 	public static final String COLUMN_TYPE_STR = "type";
 
 	private long daiId;
-	
+
 	private long aid;
-	
+
 	private String orderId;
-	
+
 	private String activityName;
-	
+
 	private String activityItemName;
-	
+
 	private short type;
-	
+
 	private short state;
-	
-	private int total;
-	
+
 	private int num;
-	
+
 	private float money;
-	
+
 	private String content;
-	
+
 	private UserPO receiveUserId;
-	
+
 	private String receiveUserName;
-	
+
 	private Timestamp receiveTime;
+
+	private long asid;
+
+	private short stateType;
+
+	private short isStock; // 库存标识
+
+	private short isPrefor; // 业绩标识
+
+	public DecorationActivityItemPO() {
+		super();
+	}
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -132,15 +150,6 @@ public class DecorationActivityItemPO implements java.io.Serializable {
 		this.state = state;
 	}
 
-	@Column(name = "total")
-	public int getTotal() {
-		return total;
-	}
-
-	public void setTotal(int total) {
-		this.total = total;
-	}
-
 	@Column(name = "num")
 	public int getNum() {
 		return this.num;
@@ -169,7 +178,7 @@ public class DecorationActivityItemPO implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = true, name = "ruid",referencedColumnName="uId")
+	@JoinColumn(nullable = true, name = "ruid", referencedColumnName = "uId")
 	public UserPO getReceiveUserId() {
 		return receiveUserId;
 	}
@@ -194,6 +203,42 @@ public class DecorationActivityItemPO implements java.io.Serializable {
 
 	public void setReceiveTime(Timestamp receiveTime) {
 		this.receiveTime = receiveTime;
+	}
+
+	@Column(name = "stateType")
+	public short getStateType() {
+		return stateType;
+	}
+
+	public void setStateType(short stateType) {
+		this.stateType = stateType;
+	}
+
+	@Column(name = "asid")
+	public long getAsid() {
+		return asid;
+	}
+
+	public void setAsid(long asid) {
+		this.asid = asid;
+	}
+
+	@Column(name = "isStock")
+	public short getIsStock() {
+		return isStock;
+	}
+
+	public void setIsStock(short isStock) {
+		this.isStock = isStock;
+	}
+
+	@Column(name = "isPrefor")
+	public short getIsPrefor() {
+		return isPrefor;
+	}
+
+	public void setIsPrefor(short isPrefor) {
+		this.isPrefor = isPrefor;
 	}
 
 }

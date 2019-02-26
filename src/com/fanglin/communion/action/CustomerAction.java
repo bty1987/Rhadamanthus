@@ -32,169 +32,181 @@ import com.fanglin.utils.SystemConfig;
 public class CustomerAction extends BaseListAction {
 
 	private static final long serialVersionUID = -2224739825533869496L;
-	
+
 	@Autowired
 	private CustomerService customerService;
 
 	private CustomerVO customer;
-	
+
 	private List<CustomerPhoneVO> customerPhones;
-	
+
 	private Set<Integer> customerIds;
 
 	private List<KeyValueVO> autoFillCustomer;
 
 	private List<String> autoFillList;
-	
+
 	private List<CustomerVO> customers;
-	
-	private CustomerPhoneVO  customerPhone;
-	
+
+	private CustomerPhoneVO customerPhone;
+
 	private String pinyinName;
-	
+
 	@Action(value = "pageCustomer", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageCustomer() throws FLException{
-		
-		customerService.pageCustomer(getPaging(), getFilters(),queryCompany());
-		
+	public String pageCustomer() throws FLException {
+
+		customerService.pageCustomer(getPaging(), getFilters(), queryCompany());
+
 		return SUCCESS;
 	}
 
 	@Action(value = "queryCustomerById", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryCustomerById() throws FLException{
-		
+	public String queryCustomerById() throws FLException {
+
 		customer = customerService.queryCustomerById(customer);
-		
+
 		return SUCCESS;
 	}
 
 	@Action(value = "queryCustomerForName", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryCustomerForName() throws FLException{
-		
-		customers = customerService.queryCustomerForName(pinyinName,queryCompany());
-		
-		for(CustomerVO customerVO : customers){
+	public String queryCustomerForName() throws FLException {
+
+		customers = customerService.queryCustomerForName(pinyinName, queryCompany());
+
+		for (CustomerVO customerVO : customers) {
 			KeyValueVO keyValueVO = new KeyValueVO();
 			keyValueVO.setKey(String.valueOf(customerVO.getCid()));
 			keyValueVO.setValue(customerVO.getName());
 			getAutoFillCustomer().add(keyValueVO);
 			getAutoFillList().add(customerVO.getName());
 		}
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "checkCustomerForPhone", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String checkCustomerForPhone() throws FLException{
-		
-		 customerService.checkCustomerForPhone(customerPhone,queryCompany());
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "queryCustomerPhoneByCid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryCustomerPhoneByCid() throws FLException{
-		
-		customerPhones= customerService.queryCustomerPhoneByCid(customerPhone);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value="addCustomer", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String addCustomer() throws FLException{
-		
-		if(SystemConfig.getString("communion") == null){
-		    throw new FLException(-1, "无操作权限");
-		}
-		
-		customerService.addCustomer(customer,queryCompany());
-		
-		return "success";
-	}
-	
-	@Action(value="updateCustomer", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String updateCustomer() throws FLException{
-	
-		if(SystemConfig.getString("communion") == null){
-		    throw new FLException(-1, "无操作权限");
-		}
-		
-		customerService.updateCustomer(customer);
-	
-		return "success";
-	}
-	  
-	@Action(value="updateCustomerPhoneForStatus", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String updateCustomerPhoneForStatus() throws FLException{
 
-		if(SystemConfig.getString("communion") == null){
-		    throw new FLException(-1, "无操作权限");
+		return SUCCESS;
+	}
+
+	@Action(value = "queryCustomerPhoneByCid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryCustomerPhoneByCid() throws FLException {
+
+		customerPhones = customerService.queryCustomerPhoneByCid(customerPhone);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "checkCustomerForPhone", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String checkCustomerForPhone() throws FLException {
+
+		customerService.checkCustomerForPhone(customerPhone, queryCompany());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "addCustomer", results = { @org.apache.struts2.convention.annotation.Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addCustomer() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
 		}
-		
+
+		customerService.addCustomer(customer, queryCompany());
+
+		return "success";
+	}
+
+	@Action(value = "existCustomer", results = { @org.apache.struts2.convention.annotation.Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String existCustomer() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
+		}
+
+		customerService.existCustomer(customer, queryCompany());
+
+		return "success";
+	}
+
+	@Action(value = "updateCustomer", results = { @org.apache.struts2.convention.annotation.Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateCustomer() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
+		}
+
+		customerService.updateCustomer(customer);
+
+		return "success";
+	}
+
+	@Action(value = "updateCustomerPhoneForStatus", results = { @org.apache.struts2.convention.annotation.Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateCustomerPhoneForStatus() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
+		}
+
 		customerService.updateCustomerPhoneForStatus(customerPhone);
 
 		return "success";
 	}
 
-	@Action(value="addCustomerPhone", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String addCustomerPhone() throws FLException{
+	@Action(value = "addCustomerPhone", results = { @org.apache.struts2.convention.annotation.Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addCustomerPhone() throws FLException {
 
-		if(SystemConfig.getString("communion") == null){
-		    throw new FLException(-1, "无操作权限");
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
 		}
-		
-		customerService.addCustomerPhone(customerPhone,queryCompany());
+
+		customerService.addCustomerPhone(customerPhone, queryCompany());
 
 		return "success";
 	}
-	
-	@Action(value="updateCustomerPhoneForDefault", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String updateCustomerPhoneForDefault() throws FLException{
 
-		if(SystemConfig.getString("communion") == null){
-		    throw new FLException(-1, "无操作权限");
+	@Action(value = "updateCustomerPhoneForDefault", results = { @org.apache.struts2.convention.annotation.Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateCustomerPhoneForDefault() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
 		}
-		
+
 		customerService.updateCustomerPhoneForDefault(customerPhone);
 
 		return "success";
 	}
-	
-	public CustomerVO getCustomer(){
+
+	public CustomerVO getCustomer() {
 		return customer;
 	}
 
-	public void setCustomer(CustomerVO customer){
+	public void setCustomer(CustomerVO customer) {
 		this.customer = customer;
 	}
 
-	public Set<Integer> getCustomerIds(){
+	public Set<Integer> getCustomerIds() {
 		return customerIds;
 	}
 
-	public void setCustomerIds(Set<Integer> customerIds){
+	public void setCustomerIds(Set<Integer> customerIds) {
 		this.customerIds = customerIds;
 	}
 
-	public List<KeyValueVO> getAutoFillCustomer(){
-		if(autoFillCustomer == null){
+	public List<KeyValueVO> getAutoFillCustomer() {
+		if (autoFillCustomer == null) {
 			autoFillCustomer = new ArrayList<KeyValueVO>();
 		}
 		return autoFillCustomer;
 	}
 
-	public void setAutoFillCustomer(List<KeyValueVO> autoFillCustomer){
+	public void setAutoFillCustomer(List<KeyValueVO> autoFillCustomer) {
 		this.autoFillCustomer = autoFillCustomer;
 	}
 
-	public List<String> getAutoFillList(){
-		if(autoFillList == null){
+	public List<String> getAutoFillList() {
+		if (autoFillList == null) {
 			autoFillList = new ArrayList<String>();
 		}
 		return autoFillList;
 	}
 
-	public void setAutoFillList(List<String> autoFillList){
+	public void setAutoFillList(List<String> autoFillList) {
 		this.autoFillList = autoFillList;
 	}
 

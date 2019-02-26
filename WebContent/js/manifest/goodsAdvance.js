@@ -19,7 +19,7 @@ $(function () {
 
     var taskContents = {};
 
-    $.extend(com.validator,validator);
+    $.extend(com.validator, validator);
 
     com.focusPage(".date-picker").datepicker({autoclose: !0}).on("show", function () {
         setTimeout(function () {
@@ -125,16 +125,16 @@ $(function () {
             //显示字段
             var propertyArr = [
                 //v.gid,
-                [v.no,'blue'],
-                [v.name,'grey'],
-                [v.barcode,'blue'],
-                [v.category,'grey'],
-                [v.brand,'grey'],
-                [v.measurementUnit,'grey'],
-                [v.pieceNum,'blue'],
-                [v.accessoriesType.name,'grey'],
-                [v.type == "0" ? "商品" : "套餐",'red'],
-                [v.status == "0" ? "启用" : "禁用",'red']
+                [v.no, 'blue'],
+                [v.name, 'grey'],
+                [v.barcode, 'blue'],
+                [v.category, 'grey'],
+                [v.brand, 'grey'],
+                [v.measurementUnit, 'grey'],
+                [v.pieceNum, 'blue'],
+                [v.accessoriesType.name, 'grey'],
+                [v.type == "0" ? "商品" : "套餐", 'red'],
+                [v.status == "0" ? "启用" : "禁用", 'red']
             ];
 
 
@@ -196,7 +196,7 @@ $(function () {
                 com.focusPage('#layerAddAdvance').attr('data-gid', v.gid);
                 openlayer(function () {
                     var id = com.focusPage('#layerAddAdvance').attr('data-gid');
-                    if(com.validate('formAdvance'))
+                    if (com.validate('formAdvance'))
                         return;
                     saveData(id, function () {
                         com.clearValidator("#no", true);
@@ -227,9 +227,9 @@ $(function () {
                 openLayerSwitch('goodsPricePopUp', v.gid, '价格', 'views/manifest/priceAdvance.html');
             });
             //套装点击事件
-           /* $btnSuit.click(function () {
-                openLayerSwitch('goodsSuitPopUp', v.gid, '套餐', 'views/data/goodsSuit.html');
-            });*/
+            /* $btnSuit.click(function () {
+                 openLayerSwitch('goodsSuitPopUp', v.gid, '套餐', 'views/data/goodsSuit.html');
+             });*/
             //状态启用事件
             $btnStart.click(function () {
                 layer.confirm('是否启用？', {
@@ -285,7 +285,7 @@ $(function () {
 
     var goodsSeacher = new Searcher();
 
-    var types = [{gid:0,goods : "商品"},{gid:1,goods : "套餐"}];
+    var types = [{gid: 0, goods: "商品"}, {gid: 1, goods: "套餐"}];
 
     com.focusPage('select[name="type"]').bindData(types, "gid", "goods");
 
@@ -300,8 +300,8 @@ $(function () {
 
     com.post(api.inventory.queryAccessoriesType, {}, function (res) {
         var accessoriesTypesStatus = [];
-        $.each(res.accessoriesTypes,function(i,v){
-            if(v.status==0){
+        $.each(res.accessoriesTypes, function (i, v) {
+            if (v.status == 0) {
                 accessoriesTypesStatus.push(v);
             }
         });
@@ -309,12 +309,12 @@ $(function () {
     });
 
     com.focusPage('input[name="category"]').val("");
-    com.initChosen('brand', api.data.queryBrandForPinYinName, "pinyinName", {}, "brands", "bid", "name").on('change', function(e){
-        if($(this).val() == "" || com.focusPage("#brand").val() == "") {
+    com.initChosen('brand', api.data.queryBrandForPinYinName, "pinyinName", {}, "brands", "bid", "name").on('change', function (e) {
+        if ($(this).val() == "" || com.focusPage("#brand").val() == "") {
             com.clearValidator("#brand", true);
             com.focusPage('input[name="category"]').val("");
             return;
-        }else{
+        } else {
             var bid = com.focusPage('#brand').val();
             com.post(api.data.queryBrandByBid, {"brand.bid": bid}, function (res) {
                 var categoryName = res.brand.categoryName;
@@ -327,31 +327,49 @@ $(function () {
         displayFunc.init('resultList', data);
     }, "pagenation", "goodsAdvancePostData", null, false, null, function () {
 
-        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addQuotationVersion').css({'margin-top':'-2px','margin-left':'4px'});
+        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addQuotationVersion').css({
+            'margin-top': '-2px',
+            'margin-left': '4px'
+        });
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
-        var $addaImportGood = $('<a></a>').addClass('btn btn-minier btn-warning pull-left').attr('name', 'importGoods').css({'margin-top':'-2px','margin-left':'4px'});
+        var $addaImportGood = $('<a></a>').addClass('btn btn-minier btn-warning pull-left').attr('name', 'importGoods').css({
+            'margin-top': '-2px',
+            'margin-left': '4px'
+        });
         var $addaGoodi = $('<i></i>').addClass('icon-cloud-upload bigger-110').appendTo($addaImportGood);
         var $addaGoodspan = $('<span></span>').text('导入商品').appendTo($addaImportGood);
 
-        var $addaImportColor = $('<a></a>').addClass('btn btn-minier btn-danger pull-left').attr('name', 'importGoods').css({'margin-top':'-2px','margin-left':'4px'});
+        var $addaImportColor = $('<a></a>').addClass('btn btn-minier btn-danger pull-left').attr('name', 'importGoods').css({
+            'margin-top': '-2px',
+            'margin-left': '4px'
+        });
         var $addaColori = $('<i></i>').addClass('icon-cloud-upload bigger-110').appendTo($addaImportColor);
         var $addaColorspan = $('<span></span>').text('导入颜色').appendTo($addaImportColor);
 
-        var $addaImportFormat = $('<a></a>').addClass('btn btn-minier btn-purple pull-left').attr('name', 'importGoods').css({'margin-top':'-2px','margin-left':'4px'});
+        var $addaImportFormat = $('<a></a>').addClass('btn btn-minier btn-purple pull-left').attr('name', 'importGoods').css({
+            'margin-top': '-2px',
+            'margin-left': '4px'
+        });
         var $addaFormati = $('<i></i>').addClass('icon-cloud-upload bigger-110').appendTo($addaImportFormat);
         var $addaFormatspan = $('<span></span>').text('导入规格').appendTo($addaImportFormat);
 
-        var $addaImportPrice = $('<a></a>').addClass('btn btn-minier btn-pink pull-left').attr('name', 'importGoods').css({'margin-top':'-2px','margin-left':'4px'});
+        var $addaImportPrice = $('<a></a>').addClass('btn btn-minier btn-pink pull-left').attr('name', 'importGoods').css({
+            'margin-top': '-2px',
+            'margin-left': '4px'
+        });
         var $addaPricei = $('<i></i>').addClass('icon-cloud-upload bigger-110').appendTo($addaImportPrice);
         var $addaPricespan = $('<span></span>').text('导入价格').appendTo($addaImportPrice);
 
-        var $deleteImportPrice = $('<a></a>').addClass('btn btn-minier btn-inverse pull-left').attr('name', 'importGoods').css({'margin-top':'-2px','margin-left':'4px'});
+        var $deleteImportPrice = $('<a></a>').addClass('btn btn-minier btn-inverse pull-left').attr('name', 'importGoods').css({
+            'margin-top': '-2px',
+            'margin-left': '4px'
+        });
         var $deletePricei = $('<i></i>').addClass('icon-cloud-upload bigger-110').appendTo($deleteImportPrice);
         var $deletePricespan = $('<span></span>').text('删除价格').appendTo($deleteImportPrice);
 
-        var $addaExportGoods = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'importGoods').css('margin-top','-2px');
+        var $addaExportGoods = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'importGoods').css('margin-top', '-2px');
         var $addaExporti = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($addaExportGoods);
         var $addaExportspan = $('<span></span>').text('商品导出').appendTo($addaExportGoods);
 
@@ -359,7 +377,7 @@ $(function () {
             clearForm('formAdvance');
             closeEditReadOnly();
             openlayer(function (index, layero) {
-                if(com.validate('formAdvance'))
+                if (com.validate('formAdvance'))
                     return;
 
                 saveData(null, function () {
@@ -380,41 +398,41 @@ $(function () {
             });
         });
 
-        $addaImportGood.click(function(){
+        $addaImportGood.click(function () {
 
             openlayerImportGoods();
         });
 
-        $addaImportColor.click(function(){
+        $addaImportColor.click(function () {
 
             openlayerImportColor();
         });
 
-        $addaImportFormat.click(function(){
+        $addaImportFormat.click(function () {
 
             openlayerImportFormat();
         });
-        $addaImportPrice.click(function(){
+        $addaImportPrice.click(function () {
 
             openlayerImportPrice();
         });
 
-        $deleteImportPrice.click(function(){
+        $deleteImportPrice.click(function () {
 
             openlayerImportDeletePrice();
         });
 
-        $addaExportGoods.click(function(){
+        $addaExportGoods.click(function () {
             pageGoodsExport();
         });
 
 
-        return [$addaExportGoods,$addaImportGood,$addaImportColor,$addaImportFormat,$addaImportPrice,$deleteImportPrice,$adda];
+        return [$addaExportGoods, $addaImportGood, $addaImportColor, $addaImportFormat, $addaImportPrice, $deleteImportPrice, $adda];
 
     }, 'resultList');
 
-    function clearForm(formId){
-        var $form = com.focusPage("#"+formId);
+    function clearForm(formId) {
+        var $form = com.focusPage("#" + formId);
         var error = com.focusPage('.alert-error', $form);
         var success = com.focusPage('.alert-success', $form);
         com.focusPage('.control-group').removeClass("success").removeClass("error");
@@ -422,11 +440,11 @@ $(function () {
         com.focusPage(".help-inline").remove();
         success.hide();
         error.hide();
-        com.focusPage("span.checked",$form).removeClass("checked");
+        com.focusPage("span.checked", $form).removeClass("checked");
         com.focusPage("tr.edit-on").removeClass("edit-on");
         $form.removeClass("edit-item");
         com.focusPage(".extra-wrap .control-group:not(.hide)").remove();//去掉辅助项
-        com.focusPage('input[type="hidden"]',$form).val('');
+        com.focusPage('input[type="hidden"]', $form).val('');
         document.getElementById(formId).reset();
     }
 
@@ -437,7 +455,7 @@ $(function () {
             //skin: 'layui-layer-lan',
             title: "添加",
             content: com.focusPage('#layerAddAdvance'),
-            area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
+            area: ($(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620) + "px",
             maxmin: false,
             zIndex: 9000,
             btn: ['确定', '取消'],
@@ -486,6 +504,7 @@ $(function () {
             }
         });
     }
+
     //导入颜色
     function openlayerImportColor() {
         var uploaddiv = com.focusPage("#uploaddiv").removeClass("hide");
@@ -514,6 +533,7 @@ $(function () {
             }
         });
     }
+
     //导入规格
     function openlayerImportFormat() {
         var uploaddiv = com.focusPage("#uploaddiv").removeClass("hide");
@@ -532,7 +552,7 @@ $(function () {
             btn: ['确定', "取消"],
             zIndex: 9000,
             yes: function () {
-                planMission(taskContents["export_format"]);
+                planMission("export_format");
             },
             success: function (layers, index) {
 
@@ -542,6 +562,7 @@ $(function () {
             }
         });
     }
+
     //导入价格
     function openlayerImportPrice() {
         var uploaddiv = com.focusPage("#uploaddiv").removeClass("hide");
@@ -570,6 +591,7 @@ $(function () {
             }
         });
     }
+
     //删除价格
     function openlayerImportDeletePrice() {
         var uploaddiv = com.focusPage("#uploaddiv").removeClass("hide");
@@ -608,7 +630,7 @@ $(function () {
             skin: 'layui-layer-lan',
             title: title,
             content: $PopUp,
-            area: ["1200px", ( $(window).height() * 0.84 < 800 ? $(window).height() * 0.84 : 800 ) + "px"],
+            area: ["1200px", ($(window).height() * 0.84 < 800 ? $(window).height() * 0.84 : 800) + "px"],
             maxmin: false,
             zIndex: 9000,
             success: function (layer, index) {
@@ -622,9 +644,20 @@ $(function () {
         });
     }
 
-    function pageGoodsExport(){
+    //导出商品
+    function pageGoodsExport() {
 
         if (com.focusPage('span[name="totalRecords"]').text() == 0) {
+            com.showAlert(com.warning, "请通过条件进行查询");
+            return false;
+        }
+        var goodsNo = com.focusPage("[name='goodsNo']").val();
+        var goodsName = com.focusPage('[name="goodsName"]').val();
+        var goodsBarcode = com.focusPage('[name="goodsBarcode"]').val();
+        var goodsBrand = com.focusPage('[name="goodsBrand"]').val();
+        var goodsStatus = com.focusPage("[name='goodsStatus']").val();
+
+        if (goodsNo == "" && goodsName == "" && goodsBarcode == "" && goodsBrand == "" && goodsStatus == "") {
             com.showAlert(com.warning, "请通过条件进行查询");
             return false;
         }
@@ -654,7 +687,7 @@ $(function () {
                 if (com.validate())
                     return;
 
-                if("export_inventory_goods" == undefined){
+                if ("export_inventory_goods" == undefined) {
                     com.showAlert(com.error, "任务不存在!");
                     return;
                 }
@@ -664,32 +697,32 @@ $(function () {
                     "plan.task.keyWord": "export_inventory_goods"
                 };
 
-                var opts = {};
                 var args = "";
-                for (var i = 0; i < 4; i++) {
-                    var values = params.goodsPostData["filters[" + i + "].data"];
-                    var keys = params.goodsPostData["filters[" + i + "].field"];
+                //goodsNo 商品编号 no
+                //goodsName 商品名 name
+                //goodsBarcode 条形码 barcode
+                //goodsBrand 商品品牌 brand
+                //goodsNo 状态 0 启用 1 禁用
+                var filtersName = ["goodsNo", "goodsName", "goodsBarcode", "goodsBrand", "goodsStatus"];
 
-                    if (values != undefined && keys != undefined) {
-                        opts[keys] = values;
-                        args = args + keys + "-" + values + ","
+                $.each(filtersName, function (i, v) {
+                    var val = com.focusPage("[name='" + v + "']").val();
+                    var columnName = $("[name='" + v + "']").attr("data-rqs");
+                    if (val != "undefined" && val != null && val != "") {
+                        args = args + columnName + "-" + val + ",";
                     }
 
-                }
+                });
 
                 options["plan.args"] = args;
 
                 var times = itmes.executeDates.val() + ' ' + itmes.executeTimes.val();
-
                 var executeTime = new Date(times);
 
-                var curTime = new Date();
-                curTime.setTime(curTime.setMinutes(curTime.getMinutes() + 15));
-
-                if (executeTime > curTime) {
+                if (planUtils.TimeComparison(executeTime, config.planTimeLimit)) {
                     options["plan.executeTime"] = times;
                 } else {
-                    com.showAlert(com.warning, "执行时间请大于当前时间15分钟!");
+                    com.showAlert(com.warning, "执行时间请大于当前时间" + config.planTimeLimit + "分钟!");
                     return
                 }
 
@@ -706,6 +739,7 @@ $(function () {
             }
         });
     }
+
     //状态启用
     function startGoodsStatus(id, status, callback) {
         if (status == "1") {
@@ -755,33 +789,33 @@ $(function () {
         var atid = $layer.find('select[name="atid"] option:selected').val();
         if (!id) {
             //if (checkRowValue($layer)) {
-                if(goodsType == 0){
-                    com.post(api.inventory.addGoods, {
-                        "goods.no": no,
-                        "goods.name": name,
-                        "goods.barcode": barcode,
-                        "goods.category": category,
-                        "goods.bid": bid,
-                        "goods.measurementUnit": measurementUnit,
-                        "goods.pieceNum": pieceNum,
-                        "goods.accessoriesType.atid": atid == null || atid == "" ? "" : atid
-                    }, function (res) {
-                        layer.closeAll();
-                        goodsSeacher.doSearch();
-                    });
-                }else{
+            if (goodsType == 0) {
+                com.post(api.inventory.addGoods, {
+                    "goods.no": no,
+                    "goods.name": name,
+                    "goods.barcode": barcode,
+                    "goods.category": category,
+                    "goods.bid": bid,
+                    "goods.measurementUnit": measurementUnit,
+                    "goods.pieceNum": pieceNum,
+                    "goods.accessoriesType.atid": atid == null || atid == "" ? "" : atid
+                }, function (res) {
                     layer.closeAll();
-                    params["goods"] = {};
-                    params.goods["goods.no"] = no;
-                    params.goods["goods.name"] = name;
-                    params.goods["goods.barcode"] = barcode;
-                    params.goods["goods.category"] = category;
-                    params.goods["goods.bid"] = bid;
-                    params.goods["goods.measurementUnit"] = measurementUnit;
-                    params.goods["goods.pieceNum"] = pieceNum;
-                    params.goods["goods.accessoriesType.atid"] = atid == null || atid == "" ? "" : atid;
-                    openLayerSwitch('goodsSuitPopUp', null, '套餐', 'views/manifest/goodsSuit.html');
-                }
+                    goodsSeacher.doSearch();
+                });
+            } else {
+                layer.closeAll();
+                params["goods"] = {};
+                params.goods["goods.no"] = no;
+                params.goods["goods.name"] = name;
+                params.goods["goods.barcode"] = barcode;
+                params.goods["goods.category"] = category;
+                params.goods["goods.bid"] = bid;
+                params.goods["goods.measurementUnit"] = measurementUnit;
+                params.goods["goods.pieceNum"] = pieceNum;
+                params.goods["goods.accessoriesType.atid"] = atid == null || atid == "" ? "" : atid;
+                openLayerSwitch('goodsSuitPopUp', null, '套餐', 'views/manifest/goodsSuit.html');
+            }
 
 
             //}
@@ -801,7 +835,7 @@ $(function () {
     function editReadOnly() {
         var $layerAdd = com.focusPage('#layerAddAdvance');
         $layerAdd.find('input[name="no"]').attr('disabled', 'disabled');
-        $layerAdd.find('select[name="type"]').attr('disabled','disabled');
+        $layerAdd.find('select[name="type"]').attr('disabled', 'disabled');
         $layerAdd.find('input[name="name"]').attr('disabled', 'disabled');
         $layerAdd.find('input[name="barcode"]').attr('disabled', 'disabled');
         $layerAdd.find('input[name="category"]').attr('disabled', 'disabled');
@@ -819,7 +853,7 @@ $(function () {
         $layerAdd.find('input[name="name"]').removeAttr('disabled');
         $layerAdd.find('input[name="barcode"]').removeAttr('disabled');
         $layerAdd.find('input[name="category"]').removeAttr('disabled');
-        com.updateChosen('brand',"","");
+        com.updateChosen('brand', "", "");
         $layerAdd.find('select[name="brand"]').removeAttr('disabled');
         $layerAdd.find('select[name="measurementUnit"]').removeAttr('disabled');
         $layerAdd.find('input[name="pieceNum"]').removeAttr('disabled');
@@ -849,16 +883,13 @@ $(function () {
         options["plan.args"] = pathFile;
 
         var times = itmes.executeDates.val() + ' ' + itmes.executeTimes.val();
-
         var executeTime = new Date(times);
 
-        var curTime = new Date();
-        curTime.setTime(curTime.setMinutes(curTime.getMinutes() + 15));
 
-        if (executeTime > curTime) {
+        if (planUtils.TimeComparison(executeTime, config.planTimeLimit)) {
             options["plan.executeTime"] = times;
         } else {
-            com.showAlert(com.warning, "执行时间请大于当前时间15分钟!");
+            com.showAlert(com.warning, "执行时间请大于当前时间" + config.planTimeLimit + "分钟!");
             return
         }
 
@@ -868,7 +899,6 @@ $(function () {
         });
 
     }
-
 
 
 });

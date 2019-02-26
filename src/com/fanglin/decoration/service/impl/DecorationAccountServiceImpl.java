@@ -83,15 +83,7 @@ public class DecorationAccountServiceImpl implements DecorationAccountService{
 		
 		decorationAccountDao.save(decorationAccountPO);
 		
-		DecorationOperatePO accountDecorationOperatePO = new DecorationOperatePO();
-		accountDecorationOperatePO.setOrderId(decorationAccountVO.getOrderId());
-		accountDecorationOperatePO.setOperater(operater);
-		accountDecorationOperatePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
-		accountDecorationOperatePO.setType(DecorationOperatePO.TYPE_ACCOUNT_DECORATION_ORDER_INT);
-		accountDecorationOperatePO.setStatus(DecorationOperatePO.STATUS_INIT_INT);
-		accountDecorationOperatePO.setComment("决算操作");
-		decorationOperateDao.save(accountDecorationOperatePO);
-		
+		decorationOperateDao.save(new DecorationOperatePO().account(decorationAccountVO.getOrderId(), operater));
 	}
 
 }

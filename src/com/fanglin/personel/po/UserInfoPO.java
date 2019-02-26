@@ -18,81 +18,81 @@ public class UserInfoPO implements java.io.Serializable {
 	private static final long serialVersionUID = -3915898990885585486L;
 
 	private long uiid;
-	
+
 	private UserPO user;
-	
+
 	private String employWay;
-	
+
 	private String recommendMan;
-	
+
 	private int jobYears;
-	
+
 	private String employType;
-	
+
 	private String entryTime;
-	
+
 	private String employTime;
-	
+
 	private int serviceYears;
-	
+
 	private int age;
-	
+
 	private String political;
-	
+
 	private String emergencyMan;
-	
+
 	private String emergencyPhone;
-	
+
 	private String isPresentGraduate;
-	
+
 	private String graduateTime;
-	
+
 	private String school;
-	
+
 	private String education;
-	
+
 	private String specialty;
-	
+
 	private String isMarried;
-	
+
 	private String isBirth;
-	
+
 	private String isHouseLoan;
-	
+
 	private String isCarLoan;
-	
+
 	private String houseType;
-	
+
 	private String householdType;
-	
+
 	private String hometownAddress;
-	
+
 	private String address;
-	
+
 	private String isContract;
-	
+
 	private String isInsurance;
-	
+
 	private String insuranceTime;
-	
+
 	private String pensionNum;
-	
+
 	private String medicalNum;
-	
+
 	private float salary;
-	
+
 	private String lover;
-	
+
 	private String bank;
-	
+
 	private String bankCardNum;
-	
+
 	private String qq;
-	
+
 	private String wechat;
-	
+
 	private String email;
-	
+
 	private String profiles;
 
 	@Id
@@ -439,7 +439,7 @@ public class UserInfoPO implements java.io.Serializable {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	
+
 	@Column(name = "profiles")
 	public String getProfiles() {
 		return profiles;

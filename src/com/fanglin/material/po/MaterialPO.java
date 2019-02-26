@@ -17,37 +17,36 @@ import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.communion.po.HousePO;
 import com.fanglin.personel.po.UserPO;
 
-
 @Entity
 @Table(name = "material", catalog = "material")
 public class MaterialPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 5594088406016802710L;
-	
+
 	public static final String CURRENT_TIME_FORMAT_STR = "yyyy-MM-dd";
-	
+
 	public static final String COLUMN_MID_STR = "mid";
-	
+
 	public static final String COLUMN_ORDERID_STR = "orderId";
-	
+
 	public static final String COLUMN_NO_STR = "no";
-	
+
 	public static final String COLUMN_VILLAGE_ID_STR = "village";
-	
+
 	public static final String COLUMN_HOUSE_NUMBER__STR = "houseNumber";
-		
+
 	public static final String COLUMN_SALESMAN_STR = "salesman";
-	
+
 	public static final String COLUMN_SALESMANID_STR = "salesman.userId";
-	
+
 	public static final String COLUMN_MATERIALID_STR = "materialer.userId";
-	
+
 	public static final String COLUMN_INSTOREID_STR = "instorer.userId";
-	
+
 	public static final String COLUMN_REGIONID_STR = "regionName";
-	
+
 	public static final String COLUMN_DEPARTMENTID_STR = "departmentName";
-	
+
 	public static final String COLUMN_MATERIALDEPARTMENT_STR = "materialDepartment";
 
 	public static final String COLUMN_DESIGNERFLAG_STR = "designerFlag";
@@ -61,146 +60,146 @@ public class MaterialPO implements java.io.Serializable {
 	public static final String COLUMN_FULLPAYTIME_STR = "fullpayTime";
 
 	public static final String COLUMN_FULLCOLLECTTIME_RANGE_STR = "fullpayTimeRange";
-	
-	//静态加载品牌名称
-	public static final String COLUMN_MATERIALBRAND_STR="brand";
-	
-	//增加预结算时间
-	public static final String COLUMN_PREBALANCETIME_STR="preBalanceTime";
-	public static final String COLUMN_PREBALANCETIME_RANGE_STR="preBalanceTimeRange";
-	//增加结算时间
-	public static final String COLUMN_POSTBALANCETIME_RANGE_STR="postBalanceTimeRange";
-	public static final String COLUMN_POSTBALANCETIME_STR="postBalanceTime";
-	//增加厂商结算时间
-	public static final String COLUMN_VBALANCETIME_RANGE_STR="vbalanceTimeRange";
-	public static final String COLUMN_VBALANCETIME_STR="vbBalanceTime";
-	
-	public static final short STATUS_TYPE_INIT_INT = 0;//初始
-	
-	public static final short STATUS_TYPE_DELETE_INT = 1;//删除
-	
-	public static final short STATUS_TYPE_REFUND_INT = 2;//退货
-	
-	public static final short STATUS_TYPE_PREBALANCE_INT = 3;//预结算
-	
-	public static final short STATUS_TYPE_ARRIVAL_INT = 4;//？购货
-	
-	public static final short STATUS_TYPE_POSTBALANCE_INT = 5;//结算
-	
-	public static final short STATUS_TYPE_FULLREFUND_INT = 6;//全退（退货的一种）
-	
-	public static final short STATUS_TYPE_DAODAN_INT = 7;//倒单（退货的一部分）
-	
-	public static final short STATUS_TYPE_WASTE_INT = 8;//作废
-	
-	public static final short STATUS_TYPE_FINISH_INT = 9;//完结（订单的状态）
-	
-	public static final short FINANCE_STATUS_TYPE_INIT_INT = 0;//初始（交款状态）
-	
-	public static final short FINANCE_STATUS_TYPE_COMMIT_INT = 1;//提交
-	
-	public static final short FINANCE_STATUS_TYPE_COLLECT_INT = 2;//?
-	
-	public static final short FINANCE_STATUS_TYPE_CONFIRM_INT = 3;//确认
-	
+
+	// 静态加载品牌名称
+	public static final String COLUMN_MATERIALBRAND_STR = "brand";
+
+	// 增加预结算时间
+	public static final String COLUMN_PREBALANCETIME_STR = "preBalanceTime";
+	public static final String COLUMN_PREBALANCETIME_RANGE_STR = "preBalanceTimeRange";
+	// 增加结算时间
+	public static final String COLUMN_POSTBALANCETIME_RANGE_STR = "postBalanceTimeRange";
+	public static final String COLUMN_POSTBALANCETIME_STR = "postBalanceTime";
+	// 增加厂商结算时间
+	public static final String COLUMN_VBALANCETIME_RANGE_STR = "vbalanceTimeRange";
+	public static final String COLUMN_VBALANCETIME_STR = "vbBalanceTime";
+
+	public static final short STATUS_TYPE_INIT_INT = 0;// 初始
+
+	public static final short STATUS_TYPE_DELETE_INT = 1;// 删除
+
+	public static final short STATUS_TYPE_REFUND_INT = 2;// 退货
+
+	public static final short STATUS_TYPE_PREBALANCE_INT = 3;// 预结算
+
+	public static final short STATUS_TYPE_ARRIVAL_INT = 4;// ？购货
+
+	public static final short STATUS_TYPE_POSTBALANCE_INT = 5;// 结算
+
+	public static final short STATUS_TYPE_FULLREFUND_INT = 6;// 全退(退货的一种)
+
+	public static final short STATUS_TYPE_DAODAN_INT = 7;// 倒单(退货的一部分)
+
+	public static final short STATUS_TYPE_WASTE_INT = 8;// 作废
+
+	public static final short STATUS_TYPE_FINISH_INT = 9;// 完结(订单的状态)
+
+	public static final short FINANCE_STATUS_TYPE_INIT_INT = 0;// 初始(交款状态)
+
+	public static final short FINANCE_STATUS_TYPE_COMMIT_INT = 1;// 提交
+
+	public static final short FINANCE_STATUS_TYPE_COLLECT_INT = 2;// ?
+
+	public static final short FINANCE_STATUS_TYPE_CONFIRM_INT = 3;// 确认
+
 	public static final short FINANCE_STATUS_TYPE_APPROVAL_INT = 4;
-	
-	public static final short BALANCE_STATUS_TYPE_INIT_INT = 0;//初始（结算状态）
-	
-	public static final short BALANCE_STATUS_TYPE_PRE_INT = 1;//预结算
-	
-	public static final short BALANCE_STATUS_TYPE_POST_INT = 2;//结算
-	
+
+	public static final short BALANCE_STATUS_TYPE_INIT_INT = 0;// 初始(结算状态)
+
+	public static final short BALANCE_STATUS_TYPE_PRE_INT = 1;// 预结算
+
+	public static final short BALANCE_STATUS_TYPE_POST_INT = 2;// 结算
+
 	public static final short DESIGNERFLAG_TYPE_OTHER_INT = 0;
-	
+
 	public static final short DESIGNERFLAG_TYPE_DESIGNER_INT = 1;
-	
+
 	public static final short DESIGNERFLAG_TYPE_SALESMAN_INT = 2;
-	
+
 	public static final short OTHER_STATUS_FULL_PAYMENT_INT = 1;
-	
-	public static final short OTHER_STATUS_MEND_INT = 2;//修理
-	
+
+	public static final short OTHER_STATUS_MEND_INT = 2;// 修理
+
 	public static final short PACKAGE_DISABLE_INT = 0;
-	
+
 	public static final short PACKAGE_ENABLE_INT = 1;
-	
+
 	private long mid;
-	
+
 	private String no;
-	
+
 	private String orderId;
-	
+
 	private HousePO house;
-	
+
 	private CustomerPO customer;
-	
+
 	private UserPO salesman;
-	
+
 	private UserPO materialer;
-	
+
 	private UserPO instorer;
-	
+
 	private String category;
-	
+
 	private long bid;
-	
+
 	private String brand;
-	
+
 	private short packageFlag;
-	
+
 	private DepartmentPO region;
-	
+
 	private DepartmentPO department;
-	
+
 	private DepartmentPO materialDepartment;
-	
+
 	private Timestamp createTime;
-	
+
 	private Timestamp preBalanceTime;
-	
+
 	private Timestamp postBalanceTime;
-	
+
 	private Timestamp fullpayTime;
-	
+
 	private short type;
-	
+
 	private short status;
-	
+
 	private short otherStatus;
-	
+
 	private short balanceStatus;
-	
+
 	private float depositPayment;
-	
+
 	private short depositStatus;
-	
+
 	private float fullPayment;
-	
+
 	private short fullStatus;
-	
+
 	private float total;
-	
+
 	private float distotal;
-	
+
 	private float maling;
-	
+
 	private float venderMaling;
-	
+
 	private float coupon;
-	
+
 	private String couponInfo;
-	
+
 	private String comment;
-	
+
 	private int company;
-	
-	private int activityId;
-	
-	public MaterialPO(){
+
+	private long activityId;
+
+	public MaterialPO() {
 		super();
 	}
-	
+
 	public MaterialPO(HousePO house, CustomerPO customer, UserPO salesman, UserPO materialer, UserPO instorer, DepartmentPO region, DepartmentPO department, DepartmentPO materialDepartment) {
 		super();
 		this.house = house;
@@ -300,7 +299,7 @@ public class MaterialPO implements java.io.Serializable {
 	public void setCategory(String category) {
 		this.category = category;
 	}
-	
+
 	@Column(name = "bid")
 	public long getBid() {
 		return bid;
@@ -539,12 +538,11 @@ public class MaterialPO implements java.io.Serializable {
 	}
 
 	@Column(name = "activityId")
-	public int getActivityId() {
+	public long getActivityId() {
 		return activityId;
 	}
 
-	public void setActivityId(int activityId) {
+	public void setActivityId(long activityId) {
 		this.activityId = activityId;
 	}
-
 }

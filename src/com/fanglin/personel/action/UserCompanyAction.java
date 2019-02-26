@@ -25,33 +25,33 @@ public class UserCompanyAction extends BaseListAction {
 
 	@Autowired
 	private UserCompanyService userCompanyService;
-	
-	private List<UserCompanyVO>  userCompanys;
-	
+
+	private List<UserCompanyVO> userCompanys;
+
 	private UserBaseVO user;
-	
+
 	private List<String> cids;
-	
+
 	@Action(value = "queryUserCompany", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryUserCompany() throws FLException{
-      
+	public String queryUserCompany() throws FLException {
+
 		userCompanys = userCompanyService.queryUserCompany(user);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "updateUserCompany", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateUserCompany() throws FLException{
-      
+	public String updateUserCompany() throws FLException {
+
 		if (SystemConfig.getString("communion") == null) {
 			throw new FLException(-1, "无操作权限");
 		}
-		
-		 userCompanyService.updateUserCompany(user,cids);
-		
+
+		userCompanyService.updateUserCompany(user, cids);
+
 		return SUCCESS;
 	}
-	
+
 	public List<UserCompanyVO> getUserCompanys() {
 		return userCompanys;
 	}
@@ -76,6 +76,4 @@ public class UserCompanyAction extends BaseListAction {
 		this.cids = cids;
 	}
 
-	
-	
 }

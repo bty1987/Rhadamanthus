@@ -30,123 +30,123 @@ import com.fanglin.material.vo.MaterialVO;
 @ParentPackage("base")
 @Namespace("/")
 @Controller
-public class MaterialAction extends BaseListAction{
+public class MaterialAction extends BaseListAction {
 
 	private static final long serialVersionUID = 9220766337549324904L;
-	
+
 	@Autowired
 	private MaterialService materialService;
-	
+
 	@Autowired
 	private MaterialItemService materialItemService;
-	
+
 	private MaterialVO material;
-	
+
 	private MaterialItemVO materialItem;
-	
+
 	private List<MaterialItemVO> materialItems;
-	
-	@Action(value="pageMaterial", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String pageMaterial(){
-		
+
+	@Action(value = "pageMaterial", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageMaterial() {
+
 		materialService.pageMaterial(getPaging(), getFilters());
-		
-		return SUCCESS;
-	}
-	
-	@Action(value="pageMaterialByUserId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String pageMaterialByUserId() throws FLException{
-		
-		materialService.pageMaterialByUserId(getPaging(), getFilters(), material.getOrderId(), queryUserId());
-		
-		return SUCCESS;
-	}
-	
-	@Action(value="pageMaterialForAdvance", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String pageMaterialForAdvance() throws FLException{
-		
-		materialService.pageMaterialForAdvance(getPaging(), getFilters(), material.getOrderId());
-		
+
 		return SUCCESS;
 	}
 
-	@Action(value="pageMaterialByOrderId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String pageMaterialByOrderId() throws FLException{
-		
-		materialService.pageMaterialByOrderId(getPaging(), getFilters(), material.getOrderId(),queryUserId());
-		
+	@Action(value = "pageMaterialForAdvance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageMaterialForAdvance() throws FLException {
+
+		materialService.pageMaterialForAdvance(getPaging(), getFilters(), material.getOrderId());
+
 		return SUCCESS;
 	}
-	
-	@Action(value="queryMaterialByMid", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryMaterialByMid(){
-		
+
+	@Action(value = "pageMaterialByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageMaterialByOrderId() throws FLException {
+
+		materialService.pageMaterialByOrderId(getPaging(), getFilters(), material.getOrderId(), queryUserId());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "pageMaterialByUserId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageMaterialByUserId() throws FLException {
+
+		materialService.pageMaterialByUserId(getPaging(), getFilters(), material.getOrderId(), queryUserId());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "queryMaterialByMid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryMaterialByMid() throws FLException {
+
 		material = materialService.queryMaterialByMid(material);
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value="queryMaterialByNo", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryMaterialByNo() throws FLException{
-		
+
+	@Action(value = "queryMaterialByNo", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryMaterialByNo() throws FLException {
+
 		material = materialService.queryMaterialByNo(material);
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value="queryMaterialItemByMid", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryMaterialItemByMid(){
-		
+
+	@Action(value = "queryMaterialItemByMid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryMaterialItemByMid() {
+
 		materialItems = materialItemService.queryMaterialItemByMid(materialItem);
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value="addMaterial", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String addMaterial() throws FLException{
-		
-		materialService.addMaterial(material, materialItems, queryUserId(),queryCompany());
-		
+
+	@Action(value = "addMaterial", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addMaterial() throws FLException {
+
+		materialService.addMaterial(material, materialItems, queryUserId(), queryCompany());
+
 		return SUCCESS;
 	}
-	
-	@Action(value="changeMaterialForOrderId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String changeMaterialForOrderId() throws FLException{
-		
+
+	@Action(value = "changeMaterialForOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String changeMaterialForOrderId() throws FLException {
+
 		materialService.changeMaterialForOrderId(material.getNo(), material.getOrderId(), queryUserId());
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value="updateMaterialForCoupon", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String updateMaterialForCoupon(){
-		
+
+	@Action(value = "updateMaterialForCoupon", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateMaterialForCoupon() throws FLException {
+
 		materialService.updateMaterialForCoupon(material);
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value="updateMaterialForMaling", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String updateMaterialForMaling(){
-		
+
+	@Action(value = "updateMaterialForMaling", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateMaterialForMaling() throws FLException {
+
 		materialService.updateMaterialMaling(material);
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value="deleteMaterial", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String deleteMaterial() throws FLException{
-		
+
+	@Action(value = "deleteMaterial", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String deleteMaterial() throws FLException {
+
 		materialService.deleteMaterial(material.getMid());
-		
+
 		return SUCCESS;
 	}
-	
-	public MaterialVO getMaterial(){
+
+	public MaterialVO getMaterial() {
 		return material;
 	}
 
-	public void setMaterial(MaterialVO material){
+	public void setMaterial(MaterialVO material) {
 		this.material = material;
 	}
 
@@ -158,14 +158,12 @@ public class MaterialAction extends BaseListAction{
 		this.materialItem = materialItem;
 	}
 
-	public List<MaterialItemVO> getMaterialItems(){
+	public List<MaterialItemVO> getMaterialItems() {
 		return materialItems;
 	}
 
-	public void setMaterialItems(
-			List<MaterialItemVO> materialItems){
+	public void setMaterialItems(List<MaterialItemVO> materialItems) {
 		this.materialItems = materialItems;
 	}
 
 }
-

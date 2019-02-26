@@ -20,42 +20,41 @@ import com.fanglin.personel.vo.UserVO;
 import com.fanglin.utils.Paging;
 
 public interface UserService {
-	
+
 	public void pageUser(Paging paging, List<Filter> filters, UserVO userVO, Integer company) throws FLException;
-	
+
 	public UserVO queryUserByLoginId(UserVO userVO) throws FLException;
-	
+
 	public UserVO queryUserByUserId(UserVO userVO) throws FLException;
-	
+
 	public UserInfoVO queryUserInfoByUserId(UserInfoVO userInfoVO) throws FLException;
-	
+
 	public UserInfoVO queryUserForSelfByUserId(UserInfoVO userInfoVO) throws FLException;
-	
+
 	public UserVO queryUserByOldUserId(UserVO userVO) throws FLException;
-	
-	public List<UserBaseVO> queryUserByPinyin(String pinyinName,UserVO userVO,DepartmentTypeVO departmentType, int company) throws FLException ;
-			
+
+	public List<UserBaseVO> queryUserByPinyin(String pinyinName, UserVO userVO, DepartmentTypeVO departmentType, int company) throws FLException;
+
 	public UserVO validateUser(String loginId, String password) throws FLException;
-	
+
 	public List<UserBaseVO> queryUserByUids(List<Integer> uids) throws FLException;
-	
-	public int resetPassword(UserVO userVO,Integer company) throws FLException;
-	
+
+	public int resetPassword(UserVO userVO, Integer company) throws FLException;
+
 	public void defaultPassword(String userId, int company) throws FLException;
-	
+
 	public void addUser(UserInfoVO userInfoVO, int company) throws FLException;
-	
+
 	public void updateUser(UserInfoVO userInfoVO, int company) throws FLException;
-	
+
 	public void updateUserForBaseInfo(UserInfoVO userInfoVO) throws FLException;
 
 	public void updateUserForIsLogin(UserVO userVO) throws FLException;
-	
+
 	public void updateUserForAdvance(UserVO userVO) throws FLException;
-	
+
 	public void checkUserForPassword(String userId, String password, String rePassword) throws FLException;
-	
+
 	public void updateUserForProfiles(UserInfoVO userInfoVO) throws FLException;
-	
-	
+
 }

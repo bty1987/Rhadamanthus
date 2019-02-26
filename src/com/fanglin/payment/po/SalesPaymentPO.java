@@ -24,6 +24,8 @@ public class SalesPaymentPO  implements Serializable{
 	
 	public static final String COLUMN_SALES_ORDERID_STR = "sales.orderId";
 	
+	public static final String COLUMN_SALES_SID_STR = "sales.sid";
+	
 	public static final String COLUMN_SALES_SALESMAN_USERID_STR = "salesman.userId";
 	
 	public static final String COLUMN_SALES_NO_STR = "sales.no";
@@ -57,6 +59,8 @@ public class SalesPaymentPO  implements Serializable{
 	public static final String COLUMN_COLLECTTIME_STR ="salesReceipt.collectTime";
 	
 	public static final String COLUMN_CONFIRMTIME_STR ="salesReceipt.confirmTime";
+	
+	public static final String COLUMN_TYPE_STR ="type";
 	
 	public static final short COLUMN_ADVANCETYPECONTRACT_INT = 1;
 	

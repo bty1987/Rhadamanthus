@@ -19,23 +19,25 @@ import com.fanglin.material.po.MaterialPO;
 import com.fanglin.utils.Paging;
 
 public interface MaterialDao extends Dao<MaterialPO> {
-	
+
 	public List<MaterialPO> pageMaterial(Paging paging, List<Filter> filters);
-	
-	public List<MaterialPO> pageMaterialByOrderId(Paging paging, List<Filter> filters, String orderId,String userId);
-	
+
+	public List<MaterialPO> pageMaterialByOrderId(Paging paging, List<Filter> filters, String orderId, String userId);
+
 	public List<MaterialPO> pageMaterialForAdvance(Paging paging, List<Filter> filters, String orderId);
-	
-	public List<MaterialPO> pageMaterialPreBalance(Paging paging, List<Filter> filters,int company);
-	
-	public List<MaterialPO> pageMaterialPostBalance(Paging paging, List<Filter> filters,int company);
-	
+
+	public List<MaterialPO> pageMaterialPreBalance(Paging paging, List<Filter> filters, int company);
+
+	public List<MaterialPO> pageMaterialPostBalance(Paging paging, List<Filter> filters, int company);
+
 	public List<MaterialPO> queryMaterial(List<Filter> filters);
-	
+
 	public List<MaterialPO> queryMaterialByMid(List<Long> mids);
-	
+
 	public List<MaterialPO> queryMaterialByOrderId(String orderId);
-	
+
 	public MaterialPO queryMaterialByNo(String no);
-	
+
+	public List<Object> queryMaterialActivityByTotal(String orderId);
+
 }

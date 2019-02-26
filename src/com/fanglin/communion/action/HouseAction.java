@@ -27,63 +27,75 @@ import com.fanglin.utils.SystemConfig;
 @ParentPackage("base")
 @Namespace("/")
 @Controller
-public class HouseAction extends BaseListAction{
+public class HouseAction extends BaseListAction {
 
 	private static final long serialVersionUID = 369283426907698981L;
-	
+
 	@Autowired
 	private HouseService houseService;
-	
+
 	private HouseVO house;
-	
+
 	@Action(value = "pageHouse", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageHouse() throws FLException{
-	
-		houseService.pageHouse(getPaging(), getFilters(),queryCompany());
-		
+	public String pageHouse() throws FLException {
+
+		houseService.pageHouse(getPaging(), getFilters(), queryCompany());
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "queryHouseByHid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryHouseByHid() throws FLException{
-		
+	public String queryHouseByHid() throws FLException {
+
 		house = houseService.queryHouseByHid(house);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "queryHouseByNoAHnum", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryHouseByNoAHnum() throws FLException{
-		
-		house = houseService.queryHouseByNoAHnum(house,queryCompany());
-		
+	public String queryHouseByNoAHnum() throws FLException {
+
+		house = houseService.queryHouseByNoAHnum(house, queryCompany());
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "addHouse", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addHouse() throws FLException{
-		
-		if(SystemConfig.getString("communion") == null){
-		    throw new FLException(-1, "无操作权限");
+	public String addHouse() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
 		}
-		
-		houseService.addHouse(house,queryCompany());
-		
+
+		houseService.addHouse(house, queryCompany());
+
 		return SUCCESS;
 	}
-	
+
+	@Action(value = "existHouse", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String existHouse() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
+		}
+
+		houseService.existHouse(house, queryCompany());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "updateHouse", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateHouse() throws FLException{
-		
-		if(SystemConfig.getString("communion") == null){
-		    throw new FLException(-1, "无操作权限");
+	public String updateHouse() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
 		}
-		
+
 		houseService.updateHouse(house);
-		
+
 		return SUCCESS;
 	}
-	
+
 	public HouseVO getHouse() {
 		return house;
 	}
@@ -91,5 +103,5 @@ public class HouseAction extends BaseListAction{
 	public void setHouse(HouseVO house) {
 		this.house = house;
 	}
-	
+
 }

@@ -44,180 +44,180 @@ import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
 @Service("materialBalanceService")
-@Transactional(readOnly=true)
+@Transactional(readOnly = true)
 public class MaterialBalanceServiceImpl implements MaterialBalanceService {
-	
+
 	@Autowired
 	private MaterialBalanceDao materialBalanceDao;
-	
+
 	@Autowired
 	private MaterialDao materialDao;
-	
+
 	@Autowired
 	private SupplierDao supplierDao;
-	
+
 	@Autowired
 	private SupplierUserRightDao supplierUserRightDao;
-	
+
 	@Autowired
 	private UserDao userDao;
 
 	@Override
-	public void pageMaterialBalance(Paging paging, List<Filter> filters,int company) {
-		if(filters.size() == 0) return;
-	
-		List<MaterialBalancePO> materialBalancePOs = materialBalanceDao.pageMaterialBalance(paging, filters,company);
+	public void pageMaterialBalance(Paging paging, List<Filter> filters, int company) {
+
+		if (filters.size() == 0)
+			return;
+
+		List<MaterialBalancePO> materialBalancePOs = materialBalanceDao.pageMaterialBalance(paging, filters, company);
 		List<MaterialBalanceVO> materialBalanceVOs = new ArrayList<MaterialBalanceVO>();
-		
+
 		MaterialBalanceVO materialBalanceVO;
-		
-		for(MaterialBalancePO materialBalancePO: materialBalancePOs){
-			
-			materialBalanceVO = new MaterialBalanceVO(new MaterialVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO() ,new DepartmentVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
-			
+
+		for (MaterialBalancePO materialBalancePO : materialBalancePOs) {
+
+			materialBalanceVO = new MaterialBalanceVO(new MaterialVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new DepartmentVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
+
 			BeanUtil.copyProperties(materialBalancePO, materialBalanceVO, Arrays.asList("material", "creater", "instorer", "poster"));
 			BeanUtil.copyProperties(materialBalancePO.getMaterial(), materialBalanceVO.getMaterial(), Arrays.asList("house", "customer", "salesman", "materialer", "instorer", "region", "department", "materialDepartment"));
 			BeanUtil.copyProperties(materialBalancePO.getMaterial().getHouse(), materialBalanceVO.getMaterial().getHouse(), Arrays.asList("village"));
 			BeanUtil.copyProperties(materialBalancePO.getMaterial().getHouse().getVillage(), materialBalanceVO.getMaterial().getHouse().getVillage(), Arrays.asList("cityProper"));
-			
+
 			BeanUtil.copyProperties(materialBalancePO.getMaterial().getCustomer(), materialBalanceVO.getMaterial().getCustomer());
-			
+
 			BeanUtil.copyProperties(materialBalancePO.getMaterial().getSalesman(), materialBalanceVO.getMaterial().getSalesman(), Arrays.asList("dept", "duty"));
 			BeanUtil.copyProperties(materialBalancePO.getMaterial().getMaterialer(), materialBalanceVO.getMaterial().getMaterialer(), Arrays.asList("dept", "duty"));
 			BeanUtil.copyProperties(materialBalancePO.getMaterial().getInstorer(), materialBalanceVO.getMaterial().getInstorer(), Arrays.asList("dept", "duty"));
-			
+
 			BeanUtil.copyProperties(materialBalancePO.getMaterial().getRegion(), materialBalanceVO.getMaterial().getRegion(), Arrays.asList("type", "fatherDept", "manager"));
 			BeanUtil.copyProperties(materialBalancePO.getMaterial().getDepartment(), materialBalanceVO.getMaterial().getDepartment(), Arrays.asList("type", "fatherDept", "manager"));
 			BeanUtil.copyProperties(materialBalancePO.getMaterial().getMaterialDepartment(), materialBalanceVO.getMaterial().getMaterialDepartment(), Arrays.asList("type", "fatherDept", "manager"));
-			
+
 			materialBalanceVO.getCreater().setBaseInfo(materialBalancePO.getCreater());
 			materialBalanceVO.getInstorer().setBaseInfo(materialBalancePO.getInstorer());
 			materialBalanceVO.getPoster().setBaseInfo(materialBalancePO.getPoster());
-			
+
 			materialBalanceVOs.add(materialBalanceVO);
 		}
-		
+
 		paging.setData(materialBalanceVOs);
 	}
 
 	@Override
-	public void pageMaterialBalanceForVender(Paging paging, List<Filter> filters, String userId,int company) throws FLException {
-		
+	public void pageMaterialBalanceForVender(Paging paging, List<Filter> filters, String userId, int company) throws FLException {
+
 		SupplierPO supplierPO = supplierDao.querySupplierByLoginId(userId);
-		
+
 		if (supplierPO == null) {
 			throw new FLException(130008, "厂商不存在");
 		}
-		
+
 		List<SupplierUserRightPO> supplierUserRightPOs = supplierUserRightDao.querySupplierUserRightBySId(supplierPO.getSid());
 		List<String> userIds = new ArrayList<String>();
-		
-		for(SupplierUserRightPO supplierUserRightPO: supplierUserRightPOs){
+
+		for (SupplierUserRightPO supplierUserRightPO : supplierUserRightPOs) {
 			userIds.add(supplierUserRightPO.getUser().getUserId());
 		}
-		
+
 		filters.add(new Filter(MaterialBalancePO.COLUMN_USERID_STR, userIds, "in"));
-		
-		List<MaterialBalancePO> materialBalancePOs = materialBalanceDao.pageMaterialBalance(paging, filters,company);
+
+		List<MaterialBalancePO> materialBalancePOs = materialBalanceDao.pageMaterialBalance(paging, filters, company);
 		List<MaterialBalanceVO> materialBalanceVOs = new ArrayList<MaterialBalanceVO>();
-		
+
 		MaterialBalanceVO materialBalanceVO;
-		
-		for(MaterialBalancePO materialBalancePO: materialBalancePOs){
-			
+
+		for (MaterialBalancePO materialBalancePO : materialBalancePOs) {
+
 			materialBalanceVO = new MaterialBalanceVO(new MaterialVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
-			BeanUtil.copyProperties(materialBalancePO, 	materialBalanceVO, Arrays.asList("material", "creater", "instorer", "poster"));
+			BeanUtil.copyProperties(materialBalancePO, materialBalanceVO, Arrays.asList("material", "creater", "instorer", "poster"));
 			BeanUtil.copyProperties(materialBalancePO.getMaterial(), materialBalanceVO.getMaterial());
-			
+
 			materialBalanceVO.getCreater().setBaseInfo(materialBalancePO.getCreater());
 			materialBalanceVO.getInstorer().setBaseInfo(materialBalancePO.getInstorer());
 			materialBalanceVO.getPoster().setBaseInfo(materialBalancePO.getPoster());
-			
+
 			materialBalanceVOs.add(materialBalanceVO);
 		}
-		
+
 		paging.setData(materialBalanceVOs);
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
+	@Transactional(rollbackFor = Exception.class)
 	public void updateMaterialBalanceForVBalance(MaterialBalanceVO materialBalanceVO) throws FLException {
-		
-		List<Short> status = Arrays.asList(MaterialBalancePO.STATUS_VENDER_BALANCE_INT, MaterialBalancePO.STATUS_FINISH_INT);
-		
+
 		MaterialBalancePO materialBalancePO = materialBalanceDao.get(materialBalanceVO.getMbid());
-		
-		if(materialBalancePO == null){
+
+		if (materialBalancePO == null) {
 			throw new FLException(180018, "主材结算信息不存在");
 		}
-		
-		if(status.contains(materialBalancePO.getStatus())){
+
+		if (materialBalancePO.getStatus() != MaterialBalancePO.STATUS_PRE_BALANCE_INT) {
 			throw new FLException(180019, "主材结算信息状态错误 ");
 		}
-		
+
 		materialBalancePO.setVbalance(materialBalanceVO.getVbalance());
-		
-		materialBalanceDao.update(materialBalancePO);
-	}
- 
-	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public void vpostMaterialBalance(MaterialBalanceVO materialBalanceVO) throws FLException {
-		
-		MaterialBalancePO materialBalancePO = materialBalanceDao.get(materialBalanceVO.getMbid());
-		
-		if(materialBalancePO == null){
-			throw new FLException(180018, "主材结算信息不存在");
-		} 
-		
-		if(materialBalancePO.getStatus() != MaterialBalancePO.STATUS_PRE_BALANCE_INT){
-			throw new FLException(180019, "主材结算信息状态错误 ");
-		}
-		
-		materialBalancePO.setVbalanceTime(DateUtil.getDateToTimestamp(new Date()));
-		materialBalancePO.setStatus(MaterialBalancePO.STATUS_VENDER_BALANCE_INT);
-		
+
 		materialBalanceDao.update(materialBalancePO);
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public void updateMaterialBalanceForBalance(MaterialBalanceVO materialBalanceVO) throws FLException {
-		
+	@Transactional(rollbackFor = Exception.class)
+	public void vpostMaterialBalance(MaterialBalanceVO materialBalanceVO) throws FLException {
+
 		MaterialBalancePO materialBalancePO = materialBalanceDao.get(materialBalanceVO.getMbid());
-		
-		if(materialBalancePO == null){
+
+		if (materialBalancePO == null) {
 			throw new FLException(180018, "主材结算信息不存在");
 		}
-		
-		if(materialBalancePO.getStatus() == MaterialBalancePO.STATUS_FINISH_INT){
+
+		if (materialBalancePO.getStatus() != MaterialBalancePO.STATUS_PRE_BALANCE_INT) {
+			throw new FLException(180019, "主材结算信息状态错误 ");
+		}
+
+		materialBalancePO.setVbalanceTime(DateUtil.getDateToTimestamp(new Date()));
+		materialBalancePO.setStatus(MaterialBalancePO.STATUS_VENDER_BALANCE_INT);
+
+		materialBalanceDao.update(materialBalancePO);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void updateMaterialBalanceForBalance(MaterialBalanceVO materialBalanceVO) throws FLException {
+
+		MaterialBalancePO materialBalancePO = materialBalanceDao.get(materialBalanceVO.getMbid());
+
+		if (materialBalancePO == null) {
+			throw new FLException(180018, "主材结算信息不存在");
+		}
+
+		if (materialBalancePO.getStatus() == MaterialBalancePO.STATUS_FINISH_INT) {
 			throw new FLException(180019, "主材结算信息状态错误 ");
 		}
 		materialBalancePO.setPost(materialBalanceVO.getBalance());
 		materialBalanceDao.update(materialBalancePO);
-	
+
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
+	@Transactional(rollbackFor = Exception.class)
 	public void postMaterialBalance(MaterialBalanceVO materialBalanceVO, String userId) throws FLException {
 
 		MaterialBalancePO materialBalancePO = materialBalanceDao.get(materialBalanceVO.getMbid());
-		
-		if(materialBalancePO == null){
+
+		if (materialBalancePO == null) {
 			throw new FLException(180018, "主材结算信息不存在");
 		}
-		
-		if(materialBalancePO.getStatus() != MaterialBalancePO.STATUS_VENDER_BALANCE_INT){
+
+		if (materialBalancePO.getStatus() != MaterialBalancePO.STATUS_VENDER_BALANCE_INT) {
 			throw new FLException(180019, "主材结算信息状态错误 ");
 		}
-		
+
 		materialBalancePO.setPoster(userDao.queryUserByUserId(userId));
 		materialBalancePO.setPostTime(DateUtil.getDateToTimestamp(new Date()));
 		materialBalancePO.setStatus(MaterialBalancePO.STATUS_FINISH_INT);
-		
+
 		MaterialPO materialPO = materialBalancePO.getMaterial();
-		
+
 		materialPO.setStatus(MaterialPO.STATUS_TYPE_POSTBALANCE_INT);
 		materialPO.setBalanceStatus(MaterialPO.BALANCE_STATUS_TYPE_POST_INT);
 		materialDao.update(materialPO);

@@ -354,6 +354,8 @@ var QuotetionDetail = (function(){
 
                 $.each(quo.machingType,function (i,v) {
 
+                    if (v.v && v.v == 1) return true;
+
                     var materialPrice = utils.changeTwoDecimal(utils.accMul(total,v.mm));
                     var servicePrice = utils.changeTwoDecimal(utils.accMul(materialPrice,v.sr));
                     //余数 = 工程总额%基数

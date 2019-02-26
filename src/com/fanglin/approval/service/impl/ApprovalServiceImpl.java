@@ -22,18 +22,18 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.approval.dao.ApprovalDao;
 import com.fanglin.approval.po.ApprovalPO;
+import com.fanglin.approval.service.ApprovalCustomerOriginTDecorationBelongService;
+import com.fanglin.approval.service.ApprovalCustomerOriginTDecorationService;
 import com.fanglin.approval.service.ApprovalDecorationActivityService;
-//import com.fanglin.approval.service.ApprovalDecorationCustomerService;
+import com.fanglin.approval.service.ApprovalDecorationBelongService;
 import com.fanglin.approval.service.ApprovalDecorationRefundService;
 import com.fanglin.approval.service.ApprovalManifestDBService;
 import com.fanglin.approval.service.ApprovalMaterialFullPaymentService;
 import com.fanglin.approval.service.ApprovalMaterialRefundService;
-import com.fanglin.approval.service.ApprovalDecorationBelongService;
 import com.fanglin.approval.service.ApprovalQuotationDiscountService;
 import com.fanglin.approval.service.ApprovalSalesDiscountService;
 import com.fanglin.approval.service.ApprovalSalesRefundService;
 import com.fanglin.approval.service.ApprovalService;
-//import com.fanglin.approval.service.ApprovalDecorationHouseService;
 import com.fanglin.approval.vo.ApprovalVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
@@ -81,6 +81,12 @@ public class ApprovalServiceImpl implements ApprovalService {
 	
 	@Autowired
 	private ApprovalSalesDiscountService approvalSalesDiscountService;
+	
+	@Autowired
+	private ApprovalCustomerOriginTDecorationService approvalCustomerOriginTDecorationService;
+	
+	@Autowired
+	private ApprovalCustomerOriginTDecorationBelongService approvalCustomerOriginTDecorationBelongService;
 	
 	@Override
 	public void pageApprovalByReceiveId(Paging paging, List<Filter> filters, String userId,int company){
@@ -167,6 +173,12 @@ public class ApprovalServiceImpl implements ApprovalService {
 			case ApprovalPO.APPROVAL_TYPE_SALES_DIACOUNT_INT:
 				approvalSalesDiscountService.approvalForSalesDiscount(approvalPO);
 			    break;
+			case ApprovalPO.APPROVAL_TYPE_CUSTOMER_ORIGIN_T_DECORATION_INT:
+				approvalCustomerOriginTDecorationService.approvalForApprovalForCustomerOriginTDecoration(approvalPO);
+			    break;
+			case ApprovalPO.APPROVAL_TYPE_CUSTOMER_ORIGIN_T_DECORATION_BELONG_INT:
+				approvalCustomerOriginTDecorationBelongService.approvalForApprovalForCustomerOriginTDecorationBelong(approvalPO);
+			    break;
 			default:
 				break;
 		}
@@ -193,11 +205,11 @@ public class ApprovalServiceImpl implements ApprovalService {
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int approveDing(ApprovalVO approvalVO) throws FLException {
+	public int approvalCallback(ApprovalVO approvalVO) throws FLException {
 	
 		ApprovalPO approvalPO = approvalDao.queryApprovalByProcessinstanceid(approvalVO.getProcessinstanceid());
 		
-		if(approvalPO.getStatus() != ApprovalPO.APPROVAL_STATUS_DINGDING_INT){
+		if(approvalPO.getStatus() != ApprovalPO.APPROVAL_STATUS_APPROVE_INT){
 			throw new FLException(240001, "不能重复审批");
 		}
 		
@@ -242,6 +254,12 @@ public class ApprovalServiceImpl implements ApprovalService {
 				break;
 			case ApprovalPO.APPROVAL_TYPE_SALES_DIACOUNT_INT:
 				approvalSalesDiscountService.refuseForSalesDiscount(approvalPO);
+				break;
+			case ApprovalPO.APPROVAL_TYPE_CUSTOMER_ORIGIN_T_DECORATION_INT:
+				approvalCustomerOriginTDecorationService.refuseForApprovalForCustomerOriginTDecoration(approvalPO);
+				break;
+			case ApprovalPO.APPROVAL_TYPE_CUSTOMER_ORIGIN_T_DECORATION_BELONG_INT:
+				approvalCustomerOriginTDecorationBelongService.refuseForApprovalForCustomerOriginTDecorationBelong(approvalPO);
 				break;
 			default:
 				break;

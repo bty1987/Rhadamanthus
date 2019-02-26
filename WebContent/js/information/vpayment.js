@@ -696,7 +696,6 @@ jQuery(function ($) {
                 }
             });
         });
-
     }
 
     baseClick();

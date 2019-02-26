@@ -7,7 +7,7 @@ jQuery(function ($) {
     var materialOrderPostData = "materialOrderPostData";
     if (params['urlLoadParams'].type == 'advance') {
 
-        materialOrderPostData ="materialOrderPostDataAdvancePostData";
+        materialOrderPostData = "materialOrderPostDataAdvancePostData";
         materialUrl = api.material.pageMaterialForAdvance;
     }
 
@@ -91,33 +91,19 @@ jQuery(function ($) {
             return;
         }
 
-        var dingjin = com.focusPage('#realDepositPayment').val()
-        var bukuan =com.focusPage('#fullPayment').val()
-        var moling =com.focusPage('#coupon').val()
-        var juan =com.focusPage('#maling').val()
-        var _total =utils.accAdd(utils.accAdd(utils.accAdd(dingjin,bukuan),moling),juan)
+        var options = {
+            "approval.receiver.userId": com.focusPage('#approveManSel').find('input:checked').attr('userid'),
+            "approval.comment": "",
+            "approvalMaterialFullPayment.mid": materialSubOrderPostData["approvalMaterialFullPayemnt.msoId"],
+            "approvalMaterialFullPayment.referMoney": materialSubOrderPostData["approvalMaterialFullPayment.referMoney"],
+        };
 
-        com.post(api.material.queryMaterialItemByTotal,{"materialItem.mid":materialSubOrderPostData["materialSubOrder.msoId"]},function(res){
-            if(_total != res.num){
-                com.showAlert(com.error,"款项发生改变,请检查...")
-                return false
-            }else{
-                var options = {
-                    "approval.receiver.userId": com.focusPage('#approveManSel').find('input:checked').attr('userid'),
-                    "approval.comment": "",
-                    "approvalMaterialFullPayment.mid": materialSubOrderPostData["approvalMaterialFullPayemnt.msoId"],
-                    "approvalMaterialFullPayment.referMoney": materialSubOrderPostData["approvalMaterialFullPayment.referMoney"],
-                };
+        com.post(api.approval.submitApprovalForMaterialFullPayment, options);
 
-                com.post(api.approval.submitApprovalForMaterialFullPayment, options);
-
-                material.approvalMaterialFullPaymentModal.modal("hide");
-                setTimeout(function () {
-                    searcher.doSearch();
-                }, 400);
-            }
-        })
-
+        material.approvalMaterialFullPaymentModal.modal("hide");
+        setTimeout(function () {
+            searcher.doSearch();
+        }, 400);
 
     });
 
@@ -144,6 +130,7 @@ jQuery(function ($) {
                     //var $btnSend = $('<a></a>').addClass('btn btn-minier btn-grey').html('送货');
                     var $btnPrint = $('<a></a>').addClass('btn btn-minier btn-purple').html('打印');
                     var $btnDel = $('<a></a>').addClass('btn btn-minier btn-yellow').html('删除');
+                    var $btnAti = $('<a></a>').addClass('btn btn-minier btn-grey').html('活动');
 
                     var propertyArr = [
                         ["品类:", v.category, "grey"],
@@ -204,12 +191,16 @@ jQuery(function ($) {
                         deleteMaterialSubOrder(v.mid);
                     });
 
+                    $btnAti.click(function () {
+                        viewMaterialActivityIndex(v);
+                    });
+
                     if ([0, 1, 2, 3, 4, 5].indexOf(v.status) != -1) {
 
                         v.fullStatus == 0 && $divBtnWrap.append($btnAdd);
                         v.fullStatus == 3 && $divBtnWrap.append($btnMend);
 
-                        $divBtnWrap.append($btnSub).append($btnMoney).append($btnCollect).append($btnRefund).append($btnPrint).appendTo($h3);
+                        $divBtnWrap.append($btnSub).append($btnMoney).append($btnCollect).append($btnRefund).append($btnPrint).append($btnAti).appendTo($h3);
                     } else {
                         $divBtnWrap.append($btnSub).append($btnCollect).append($btnRefund).appendTo($h3);
                     }
@@ -230,8 +221,8 @@ jQuery(function ($) {
     })();
 
     var searcher = new Searcher();
+    var orderId = params.orderId;
 
-    var orderId=params.orderId;
     searcher.init([], "condList", materialUrl, function (data) {
         displayFunc.init('resultList', data);
     }, "pagenation", materialOrderPostData, {"material.orderId": orderId}, false, null, function () {
@@ -339,7 +330,6 @@ jQuery(function ($) {
 
                 if (materialSubOrderPostData["materialSubOrder.depositStatus"] == 2 && materialSubOrderPostData["materialSubOrder.fullStatus"] == 0) {
                     material.materialSubOrderItems.depositRefundBtn.css("display", "inline"); // inline
-                    //
                 }
 
                 if (materialSubOrderPostData["materialSubOrder.depositStatus"] == 3 && materialSubOrderPostData["materialSubOrder.fullStatus"] == 0) {
@@ -389,11 +379,9 @@ jQuery(function ($) {
                     material.materialSubOrderItems.fullRefundBtn.css("display", "none");
                 }
                 if (total > 0) {
-//				materialSubOrder.materialSubOrderItems.fullPaymentBtn.css("display", "inline");
                     material.materialSubOrderItems.couponBtn.css("display", "inline");
                     material.materialSubOrderItems.malingBtn.css("display", "inline");
                 } else {
-//				materialSubOrder.materialSubOrderItems.fullPaymentBtn.css("display", "none");
                     material.materialSubOrderItems.couponBtn.css("display", "none");
                     material.materialSubOrderItems.malingBtn.css("display", "none");
                 }
@@ -412,13 +400,9 @@ jQuery(function ($) {
                 } else if (coupon == 0 && materialSubOrderPostData["materialSubOrder.fullStatus"] > 1) {
                     material.materialSubOrderItems.couponRefundBtn.css("display", "none");
                 } else if (coupon != 0 && materialSubOrderPostData["materialSubOrder.fullStatus"] > 1) {
-                    material.materialSubOrderItems.couponRefundBtn.css("display", "inline");
+                    material.materialSubOrderItems.couponRefundBtn.css("display", "none");
+                    // material.materialSubOrderItems.couponRefundBtn.css("display", "inline");
                 }
-                /*if (coupon == 0 && materialSubOrderPostData["materialSubOrder.fullStatus"] > 1) {
-                    materialSubOrder.materialSubOrderItems.couponRefundBtn.css("display", "inline");
-                } else {
-                    materialSubOrder.materialSubOrderItems.couponRefundBtn.css("display", "none");
-                }*/
 
                 material.materialSubOrderItems.depositPayment.attr("readonly", "readonly");
                 material.materialSubOrderItems.fullPayment.val(utils.accSub(utils.accSub(utils.accSub(total, depositPayment), utils.accAdd(maling, venderMaling)), coupon)).attr("readonly", "readonly");
@@ -489,6 +473,7 @@ jQuery(function ($) {
         });
     }
 
+    //定金
     material.materialSubOrderItems.depositPaymentBtn.unbind("click").on("click", function () {
 
         var args = {};
@@ -496,14 +481,8 @@ jQuery(function ($) {
         var fullPayment = material.materialSubOrderItems.fullPayment.val();
 
         args["materialPayment.material.mid"] = materialSubOrderPostData["materialSubOrder.msoId"];
-        args["materialPayment.orderId"] = materialSubOrderPostData["materialSubOrder.orderId"];
-        args["materialPayment.customer.cid"] = materialSubOrderPostData["materialSubOrder.customerId"];
-        args["materialPayment.customer.name"] = materialSubOrderPostData["materialSubOrder.customerName"];
-        args["materialPayment.category"] = materialSubOrderPostData["materialSubOrder.materialType"];
-        args["materialPayment.brand"] = materialSubOrderPostData["materialSubOrder.materialBrand"];
         args["materialPayment.paymentType"] = 2; // 定金
         args["materialPayment.referMoney"] = material.materialSubOrderItems.depositPayment.val();
-
 
         if (args["materialPayment.referMoney"] == 0) {
             com.showAlert(com.warning, "定金款项提交不能为0或者空");
@@ -512,7 +491,7 @@ jQuery(function ($) {
 
         var btn = $(this).button("loading");
 
-        com.post(api.payment.addMaterialPayment, args, function (result) {
+        com.post(api.payment.addMaterialPaymentForDeposit, args, function (result) {
             material.materialSubOrderItems.depositPaymentBtn.css("display", "none");
             material.materialSubOrderItems.depositPaymentInfo.css("display", "inline").text(material.materialSubOrderPaymentStatusData[1]);
             material.materialSubOrderItems.depositPayment.val(result.materialPayment.referMoney).attr("readonly", "readonly");
@@ -541,6 +520,7 @@ jQuery(function ($) {
         return false;
     });
 
+    //定金撤销
     material.materialSubOrderItems.depositCancelBtn.unbind("click").on("click", function () {
 
         var options = {};
@@ -549,7 +529,7 @@ jQuery(function ($) {
 
         var btn = $(this).button("loading");
 
-        com.post(api.payment.cancelMaterialPayment, options, function (result) {
+        com.post(api.payment.cancelMaterialPaymentForDeposit, options, function (result) {
 
             if (result.materialPayment.paymentStatus == 0) {
 
@@ -582,17 +562,18 @@ jQuery(function ($) {
         return false;
     });
 
+    //定金退款
     material.materialSubOrderItems.depositRefundBtn.unbind("click").on("click", function () {
 
         var options = {};
         options["materialPayment.material.mid"] = materialSubOrderPostData["materialSubOrder.msoId"];
-        options["materialPayment.paymentType"] = 2;
+        // options["materialPayment.paymentType"] = 2;
 
         var btn = $(this).button("loading");
 
         bootbox.confirm("是否需要进行定金退款动作?", function (result) {
             if (result) {
-                com.post(api.payment.refundMaterialPayment, options, function (result) {
+                com.post(api.payment.refundMaterialPaymentForDeposit, options, function (result) {
 
                     var _depositPayment = material.materialSubOrderItems.depositPayment.val();
                     var _fullPayment = material.materialSubOrderItems.fullPayment.val();
@@ -623,105 +604,82 @@ jQuery(function ($) {
         return false;
     });
 
+    //补款
     material.materialSubOrderItems.fullPaymentBtn.unbind("click").on("click", function () {
 
         var args = {};
-        var url = api.payment.addMaterialPayment;
+        var url = api.payment.addMaterialPaymentForFullpay;
         var that = $(this);
 
-        var dingjin = com.focusPage('#realDepositPayment').val()
-        var bukuan =com.focusPage('#fullPayment').val()
-        var moling =com.focusPage('#coupon').val()
-        var juan =com.focusPage('#maling').val()
-        var _total =utils.accAdd(utils.accAdd(utils.accAdd(dingjin,bukuan),moling),juan)
+        if ((materialSubOrderPostData["materialSubOrder.otherStatus"] & 1) == 1) {
 
-        com.post(api.material.queryMaterialItemByTotal,{"materialItem.mid":materialSubOrderPostData["materialSubOrder.msoId"]},function(res){
+            materialSubOrderPostData["approvalMaterialFullPayemnt.msoId"] = materialSubOrderPostData["materialSubOrder.msoId"];
+            materialSubOrderPostData["approvalMaterialFullPayment.referMoney"] = material.materialSubOrderItems.fullPayment.val();
 
-            if(_total != res.num){
-                com.showAlert(com.error,"款项发生改变,请检查...")
-                return false
-            }else{
-                if ((materialSubOrderPostData["materialSubOrder.otherStatus"] & 1) == 1) {
+            com.updateChosen('approveManSel', '', '');
 
-                    materialSubOrderPostData["approvalMaterialFullPayemnt.msoId"] = materialSubOrderPostData["materialSubOrder.msoId"];
-                    materialSubOrderPostData["approvalMaterialFullPayment.referMoney"] = material.materialSubOrderItems.fullPayment.val();
+            approvalUtils.initqueryApprovalUser('approveManSel', 9);
+            material.materialSubOrderMoneyModal.modal("hide");
+            material.approvalMaterialFullPaymentModal.modal("show");
+        } else {
+            args["materialPayment.material.mid"] = materialSubOrderPostData["materialSubOrder.msoId"];
+            // args["materialPayment.paymentType"] = 3; // 补款
+            args["materialPayment.referMoney"] = material.materialSubOrderItems.fullPayment.val();
 
-                    com.updateChosen('approveManSel', '', '');
+            var btn = that.button("loading");
 
-                    approvalUtils.initqueryApprovalUser('approveManSel', 9);
-                    material.materialSubOrderMoneyModal.modal("hide");
-                    material.approvalMaterialFullPaymentModal.modal("show");
-                } else {
-                    args["materialPayment.material.mid"] = materialSubOrderPostData["materialSubOrder.msoId"];
-                    args["materialPayment.orderId"] = materialSubOrderPostData["materialSubOrder.orderId"];
-                    args["materialPayment.customer.cid"] = materialSubOrderPostData["materialSubOrder.customerId"];
-                    args["materialPayment.customer.name"] = materialSubOrderPostData["materialSubOrder.customerName"];
-                    args["materialPayment.category"] = materialSubOrderPostData["materialSubOrder.materialType"];
-                    args["materialPayment.brand"] = materialSubOrderPostData["materialSubOrder.materialBrand"];
-                    args["materialPayment.paymentType"] = 3; // 补款
-                    args["materialPayment.referMoney"] = material.materialSubOrderItems.fullPayment.val();
+            com.post(url, args, function (result) {
+                material.materialSubOrderItems.fullPaymentBtn.css("display", "none");
+                material.materialSubOrderItems.fullRefundBtn.css("display", "none");
+                material.materialSubOrderItems.fullPaymentInfo.text(material.materialSubOrderPaymentStatusData[1]).css("display", "inline");
+                material.materialSubOrderItems.fullPayment.val(result.materialPayment.referMoney).attr("readonly", "readonly");
+                material.materialSubOrderItems.realFullPayment.val(result.materialPayment.referMoney);
 
-                    var btn = that.button("loading");
+                materialSubOrderPostData["materialSubOrder.fullStatus"] = 1;
 
-                    com.post(url, args, function (result) {
-                        material.materialSubOrderItems.fullPaymentBtn.css("display", "none");
-                        material.materialSubOrderItems.fullRefundBtn.css("display", "none");
-                        material.materialSubOrderItems.fullPaymentInfo.text(material.materialSubOrderPaymentStatusData[1]).css("display", "inline");
-                        material.materialSubOrderItems.fullPayment.val(result.materialPayment.referMoney).attr("readonly", "readonly");
-                        material.materialSubOrderItems.realFullPayment.val(result.materialPayment.referMoney);
+                material.materialSubOrderItems.depositCancelBtn.css("display", "none");
+                material.materialSubOrderItems.depositRefundBtn.css("display", "none");
 
-                        materialSubOrderPostData["materialSubOrder.fullStatus"] = 1;
-
-                        material.materialSubOrderItems.depositCancelBtn.css("display", "none");
-                        material.materialSubOrderItems.depositRefundBtn.css("display", "none");
-
-                        if (materialSubOrderPostData["materialSubOrder.depositStatus"] == 0) {
-                            material.materialSubOrderItems.depositPayment.attr("readonly", "readonly");
-                            material.materialSubOrderItems.depositCancelBtn.css("display", "none");
-                            material.materialSubOrderItems.depositPaymentBtn.css("display", "none");
-                        }
-
-                        material.materialSubOrderItems.couponBtn.css("display", "none");
-                        material.materialSubOrderItems.couponInfo.css("display", "none");
-
-                        material.materialSubOrderItems.malingBtn.css("display", "none");
-                        material.materialSubOrderItems.malingInfo.css("display", "none");
-
-                        material.materialSubOrderItems.fullCancelBtn.css("display", "inline");
-
-                        searcher.doSearch();
-                    }, null, false);
-
-                    btn.button("reset");
+                if (materialSubOrderPostData["materialSubOrder.depositStatus"] == 0) {
+                    material.materialSubOrderItems.depositPayment.attr("readonly", "readonly");
+                    material.materialSubOrderItems.depositCancelBtn.css("display", "none");
+                    material.materialSubOrderItems.depositPaymentBtn.css("display", "none");
                 }
-            }
 
-        },null,false)
+                material.materialSubOrderItems.couponBtn.css("display", "none");
+                material.materialSubOrderItems.couponInfo.css("display", "none");
+
+                material.materialSubOrderItems.malingBtn.css("display", "none");
+                material.materialSubOrderItems.malingInfo.css("display", "none");
+
+                material.materialSubOrderItems.fullCancelBtn.css("display", "inline");
+
+                searcher.doSearch();
+            }, null, false);
+
+            btn.button("reset");
+        }
 
         return false;
     });
 
+    //补款退款
     material.materialSubOrderItems.fullRefundBtn.unbind("click").on("click", function () {
 
         var args = {};
 
         args["materialPayment.material.mid"] = materialSubOrderPostData["materialSubOrder.msoId"];
-        /* args["materialPayment.orderId"] = materialSubOrderPostData["materialSubOrder.orderId"];
-         args["materialPayment.customer.no"] = materialSubOrderPostData["materialSubOrder.customerId"];
-         args["materialPayment.customer.name"] = materialSubOrderPostData["materialSubOrder.customerName"];*/
-        args["materialPayment.category"] = materialSubOrderPostData["materialSubOrder.materialType"];
-        args["materialPayment.brand"] = materialSubOrderPostData["materialSubOrder.materialBrand"];
-        args["materialPayment.paymentType"] = 5; // 补款退款
-        args["materialPayment.referMoney"] = Math.abs(material.materialSubOrderItems.fullPayment.val());
+        // args["materialPayment.paymentType"] = 5; // 补款退款
+        args["materialPayment.referMoney"] = material.materialSubOrderItems.fullPayment.val();
 
         var btn = $(this).button("loading");
 
-        com.post(api.payment.addMaterialPayment, args, function (result) {
+        com.post(api.payment.addMaterialPaymentForFullpay, args, function (result) {
             material.materialSubOrderItems.fullPaymentBtn.css("display", "none");
             material.materialSubOrderItems.fullRefundBtn.css("display", "none");
             material.materialSubOrderItems.fullPaymentInfo.text(material.materialSubOrderPaymentStatusData[1]).css("display", "inline");
-            material.materialSubOrderItems.fullPayment.val(-result.materialPayment.referMoney).attr("readonly", "readonly");
-            material.materialSubOrderItems.realFullPayment.val(-result.materialPayment.referMoney);
+            material.materialSubOrderItems.fullPayment.val(result.materialPayment.referMoney).attr("readonly", "readonly");
+            material.materialSubOrderItems.realFullPayment.val(result.materialPayment.referMoney);
 
             materialSubOrderPostData["materialSubOrder.fullStatus"] = 1;
 
@@ -750,6 +708,7 @@ jQuery(function ($) {
         return false;
     });
 
+    //补款撤销
     material.materialSubOrderItems.fullCancelBtn.unbind("click").on("click", function () {
 
         var options = {};
@@ -763,11 +722,11 @@ jQuery(function ($) {
         } else {
             options["materialPayment.paymentType"] = 3;
         }
-        options["materialPayment.paymentStatus"] = materialSubOrderPostData["materialSubOrder.fullStatus"];
+        // options["materialPayment.paymentStatus"] = materialSubOrderPostData["materialSubOrder.fullStatus"];
 
         var btn = $(this).button("loading");
 
-        com.post(api.payment.cancelMaterialPayment, options, function (result) {
+        com.post(api.payment.cancelMaterialPaymentForFullpay, options, function (result) {
 
             if (result.materialPayment.paymentStatus == 0) {
                 material.materialSubOrderItems.fullCancelBtn.css("display", "none");
@@ -808,6 +767,7 @@ jQuery(function ($) {
         return false;
     });
 
+    //券修改
     material.materialSubOrderItems.couponBtn.unbind("click").click(function () {
 
         materialSubOrderPostData["couponCommitType"] = 1;
@@ -821,19 +781,21 @@ jQuery(function ($) {
         return false;
     });
 
-    material.materialSubOrderItems.couponRefundBtn.click(function () {
+    //退券
+    // material.materialSubOrderItems.couponRefundBtn.click(function () {
+    //
+    //     materialSubOrderPostData["couponCommitType"] = 2;
+    //
+    //     material.materialSubOrderItems.couponBtn.css("display", "none");
+    //     material.materialSubOrderItems.couponInfo.css("display", "inline");
+    //     material.materialSubOrderItems.couponValue.val(0);
+    //
+    //     $(this).css("display", "none");
+    //
+    //     return false;
+    // });
 
-        materialSubOrderPostData["couponCommitType"] = 2;
-
-        material.materialSubOrderItems.couponBtn.css("display", "none");
-        material.materialSubOrderItems.couponInfo.css("display", "inline");
-        material.materialSubOrderItems.couponValue.val(0);
-
-        $(this).css("display", "none");
-
-        return false;
-    });
-
+    //券提交
     material.materialSubOrderItems.couponCommitBtn.unbind("click").click(function () {
 
         var url = "";
@@ -871,11 +833,10 @@ jQuery(function ($) {
                 material.materialSubOrderItems.couponBtn.css("display", "inline");
             } else {
                 if (material.materialSubOrderItems.coupon.val() == 0) {
-                    //materialSubOrder.materialSubOrderItems.couponRefundBtn.css("display", "inline");
                     material.materialSubOrderItems.couponRefundBtn.css("display", "none");
                 } else {
-                    //materialSubOrder.materialSubOrderItems.couponRefundBtn.css("display", "none");
-                    material.materialSubOrderItems.couponRefundBtn.css("display", "inline");
+                    // material.materialSubOrderItems.couponRefundBtn.css("display", "inline");
+                    material.materialSubOrderItems.couponRefundBtn.css("display", "none");
                 }
             }
 
@@ -889,29 +850,23 @@ jQuery(function ($) {
         return false;
     });
 
+    //券取消
     material.materialSubOrderItems.couponCancelBtn.unbind("click").click(function () {
 
         if (materialSubOrderPostData["materialSubOrder.fullStatus"] == 0) {
             material.materialSubOrderItems.couponBtn.css("display", "inline");
-        } else if (materialSubOrderPostData["materialSubOrder.fullStatus"] != 0 && materialSubOrderPostData["materialSubOrder.fullStatus"] != 1) {
-            material.materialSubOrderItems.couponRefundBtn.css("display", "inline");
         }
-
-        /*if (materialSubOrderPostData["materialSubOrder.fullStatus"] == 0) {
-            materialSubOrder.materialSubOrderItems.couponBtn.css("display", "inline");
-        } else {
-            if (materialSubOrder.materialSubOrderItems.coupon.val() == 0) {
-                materialSubOrder.materialSubOrderItems.couponRefundBtn.css("display", "inline");
-            } else {
-                materialSubOrder.materialSubOrderItems.couponRefundBtn.css("display", "none");
-            }
-        }*/
+        else if (materialSubOrderPostData["materialSubOrder.fullStatus"] != 0 && materialSubOrderPostData["materialSubOrder.fullStatus"] != 1) {
+            // material.materialSubOrderItems.couponRefundBtn.css("display", "inline");
+            material.materialSubOrderItems.couponRefundBtn.css("display", "none");
+        }
 
         material.materialSubOrderItems.couponInfo.css("display", "none");
 
         return false;
     });
 
+    //抹零
     material.materialSubOrderItems.malingBtn.unbind("click").click(function () {
 
         material.materialSubOrderItems.malingBtn.css("display", "none");
@@ -921,6 +876,7 @@ jQuery(function ($) {
         return false;
     });
 
+    //抹零提交
     material.materialSubOrderItems.malingCommitBtn.click(function () {
 
         var malingValue = material.materialSubOrderItems.malingValue.val();
@@ -965,6 +921,7 @@ jQuery(function ($) {
         return false;
     });
 
+    //抹零取消
     material.materialSubOrderItems.malingCancelBtn.click(function () {
 
         material.materialSubOrderItems.malingBtn.css("display", "inline");
@@ -972,6 +929,16 @@ jQuery(function ($) {
 
         return false;
     });
+
+    function viewMaterialActivityIndex(v) {
+
+        params.orderId = v.orderId;
+        params.mid = v.mid;
+        params.no = v.no;
+        params.activityId = v.activityId;
+
+        com.switchPage(api.index.materialActivityIndex.url);
+    }
 
 
 });

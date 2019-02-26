@@ -7,22 +7,22 @@ import org.apache.struts2.json.annotations.JSON;
 
 import com.fanglin.personel.vo.UserBaseVO;
 
-public class AuditVO implements Serializable{
+public class AuditVO implements Serializable {
 
 	private static final long serialVersionUID = 1638493750901554171L;
-	
+
 	private Long aid;
-	
+
 	private DecorationVO decoration;
-	
+
 	private UserBaseVO auditer;
-	
+
 	private Timestamp auditTime;
-	
+
 	private Integer deptDutyUId;
-	
+
 	private String deptDutyName;
-	
+
 	private String deptId;
 
 	private Integer designerId;
@@ -42,7 +42,7 @@ public class AuditVO implements Serializable{
 	public void setDecoration(DecorationVO decoration) {
 		this.decoration = decoration;
 	}
-	
+
 	public UserBaseVO getAuditer() {
 		return auditer;
 	}
@@ -50,8 +50,8 @@ public class AuditVO implements Serializable{
 	public void setAuditer(UserBaseVO auditer) {
 		this.auditer = auditer;
 	}
-	
-	@JSON(format="yyyy-MM-dd")
+
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getAuditTime() {
 		return auditTime;
 	}
@@ -59,7 +59,7 @@ public class AuditVO implements Serializable{
 	public void setAuditTime(Timestamp auditTime) {
 		this.auditTime = auditTime;
 	}
-	
+
 	public Integer getDeptDutyUId() {
 		return deptDutyUId;
 	}
@@ -76,7 +76,6 @@ public class AuditVO implements Serializable{
 		this.deptDutyName = deptDutyName;
 	}
 
-	
 	public String getDeptId() {
 		return deptId;
 	}

@@ -69,7 +69,6 @@ jQuery(function($) {
                     var $divBtnBlock = $('<div></div>').addClass('clearfix col-sm-12');
                     var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
                     var $updateBtn = $('<a></a>').addClass('btn btn-minier btn-yellow').html('完成');
-                    ;
 
                     var propertyArr = [
                         ["装修单号:", v.orderId, "grey"],

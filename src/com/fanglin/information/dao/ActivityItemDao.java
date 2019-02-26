@@ -18,6 +18,6 @@ import com.fanglin.information.po.ActivityItemPO;
 
 public interface ActivityItemDao extends Dao<ActivityItemPO> {
 	
-	public List<ActivityItemPO> queryActivityItemByAId(long aId);
+	public List<ActivityItemPO> queryActivityItemByAid(long aId);
 	
 }

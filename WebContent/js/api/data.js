@@ -51,6 +51,7 @@ $.extend(api, {data: {
     updateCustomerPhoneForStatus:{url:"updateCustomerPhoneForStatus.do", server: "communion"},
     updateCustomerNameAPhone:{url:"updateCustomerNameAPhone.do", server: "communion"},
     updateCustomerPhoneForDefault:{url:"updateCustomerPhoneForDefault.do", server: "communion"},
+    existCustomer:{url:"existCustomer.do", server: "communion"},
 	
     pageVillage: {url: "pageVillage.do", demo: true},
     queryVillage: {url: "queryVillage.do"},
@@ -68,6 +69,7 @@ $.extend(api, {data: {
     queryHouseByNoAHnum:{url:"queryHouseByNoAHnum.do"},
     addHouse:{url:"addHouse.do", server: "communion"},
     updateHouse:{url:"updateHouse.do", server: "communion"},
+    existHouse:{url:"existHouse.do", server: "communion"},
    
     pageDrawlineGroup: {url:"pageDrawlineGroup.do"},
     queryDrawlineGroup:{url:"queryDrawlineGroup.do"},

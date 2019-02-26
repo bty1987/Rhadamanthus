@@ -10,10 +10,9 @@ import org.springframework.stereotype.Controller;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.customer.service.EmemberService;
-import com.fanglin.customer.service.FeedBackService;
+import com.fanglin.customer.service.FeedbackService;
 import com.fanglin.customer.service.GroupService;
-import com.fanglin.customer.vo.DecorationCircleVO;
-import com.fanglin.customer.vo.FeedBackVO;
+import com.fanglin.customer.vo.CircleVO;
 import com.fanglin.customer.vo.GroupVO;
 
 @ParentPackage("base")
@@ -24,7 +23,7 @@ public class BasesAction extends BaseListAction{
 	private static final long serialVersionUID = -6030380600664328L;
 	
 	@Autowired
-	private FeedBackService feedBackService;
+	private FeedbackService feedbackService;
 	
 	@Autowired
 	private EmemberService ememberService;
@@ -34,15 +33,13 @@ public class BasesAction extends BaseListAction{
 	
 	private GroupVO group;
 	
-	private FeedBackVO feedBack;
-	
-	private DecorationCircleVO decorationCircle;
+	private CircleVO decorationCircle;
 
 	
-	@Action(value = "pageFeedBack", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageFeedBack() throws FLException{
+	@Action(value = "pageFeedback", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageFeedback() throws FLException{
 		
-		feedBackService.pageFeedback(getPaging(),getFilters());
+		feedbackService.pageFeedback(getPaging(),getFilters());
 		
 		return SUCCESS;
 	}
@@ -87,14 +84,6 @@ public class BasesAction extends BaseListAction{
 		return SUCCESS;
 	}
 
-	public FeedBackVO getFeedBack() {
-		return feedBack;
-	}
-
-	public void setFeedBack(FeedBackVO feedBack) {
-		this.feedBack = feedBack;
-	}
-
 	public GroupVO getGroup() {
 		return group;
 	}
@@ -103,11 +92,11 @@ public class BasesAction extends BaseListAction{
 		this.group = group;
 	}
 
-	public DecorationCircleVO getDecorationCircle() {
+	public CircleVO getDecorationCircle() {
 		return decorationCircle;
 	}
 
-	public void setDecorationCircle(DecorationCircleVO decorationCircle) {
+	public void setDecorationCircle(CircleVO decorationCircle) {
 		this.decorationCircle = decorationCircle;
 	}
 	

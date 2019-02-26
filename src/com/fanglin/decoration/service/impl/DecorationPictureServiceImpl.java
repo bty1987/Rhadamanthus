@@ -60,7 +60,7 @@ public class DecorationPictureServiceImpl implements DecorationPictureService {
 
 			decorationPictureVOs.add(_decorationPictureVO);
 		}
-		
+
 		return decorationPictureVOs;
 	}
 

@@ -20,14 +20,14 @@ import com.fanglin.personel.po.UserExperiencePO;
 
 @Repository("userExperienceDao")
 public class UserExperienceDaoImpl extends DaoImpl<UserExperiencePO> implements UserExperienceDao {
-	
-	public UserExperienceDaoImpl(){
+
+	public UserExperienceDaoImpl() {
 		super(UserExperiencePO.class);
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<UserExperiencePO> queryUserExperiencesByUid(Integer uid){
+	public List<UserExperiencePO> queryUserExperiencesByUid(Integer uid) {
 		return session().createCriteria(UserExperiencePO.class).add(Restrictions.eq("uid", uid)).list();
 	}
 

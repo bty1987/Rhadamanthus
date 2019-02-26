@@ -23,4 +23,6 @@ public interface SalesDao extends Dao<SalesPO> {
 	
 	public List<SalesPO> querySalesByOrderId(String orderId);
 	
+	public List<Object> querySalesActivityByTotal(String orderId);
+	
 }

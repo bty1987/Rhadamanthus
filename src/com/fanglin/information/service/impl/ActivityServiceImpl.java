@@ -34,95 +34,134 @@ import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
 @Service("activityService")
-@Transactional(readOnly=true)
+@Transactional(readOnly = true)
 public class ActivityServiceImpl implements ActivityService {
-	
+
 	@Autowired
 	private ActivityDao activityDao;
-	
+
 	@Autowired
 	private UserDao userDao;
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public void pageActivity(Paging paging, List<Filter> filters, String userId,int company) {
-		
-		List<ActivityPO> activityPOs = activityDao.pageActivity(paging, filters,company);
+	@Transactional(rollbackFor = Exception.class)
+	public void pageActivity(Paging paging, List<Filter> filters, String userId, int company) {
+
+		List<ActivityPO> activityPOs = activityDao.pageActivity(paging, filters, company);
 		List<ActivityVO> activityVOs = new ArrayList<ActivityVO>();
-		
-		for(ActivityPO activityPO: activityPOs){
-			if(activityPO.getStatus() == ActivityPO.STATUS_VALID_INT && activityPO.getEndTime().getTime() < new Date().getTime()){
+
+		for (ActivityPO activityPO : activityPOs) {
+			if (activityPO.getStatus() == ActivityPO.STATUS_VALID_INT && activityPO.getEndTime().getTime() < new Date().getTime()) {
 				activityPO.setStatus(ActivityPO.STATUS_UNVALID_INT);
 			}
-			
+
 			ActivityVO activityVO = new ActivityVO(new UserBaseVO());
 			BeanUtil.copyProperties(activityPO, activityVO, Arrays.asList("creater"));
 			BeanUtil.copyProperties(activityPO.getCreater(), activityVO.getCreater(), Arrays.asList("dept", "duty"));
-			
+
 			activityVOs.add(activityVO);
 		}
-		
+
 		paging.setData(activityVOs);
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public List<ActivityVO> queryActivityForValid(int company) {
-		
-		List<ActivityPO> activityPOs = activityDao.queryActivityForValid(company);
+	@Transactional(rollbackFor = Exception.class)
+	public List<ActivityVO> queryActivityForValid(ActivityVO activity, int company) {
+
+		List<ActivityPO> activityPOs = activityDao.queryActivityForValid(company, activity.getType());
 		List<ActivityVO> activityVOs = new ArrayList<ActivityVO>();
-		
-		for(ActivityPO activityPO: activityPOs){
-			if(activityPO.getEndTime().getTime() < new Date().getTime()){
+
+		for (ActivityPO activityPO : activityPOs) {
+			if (activityPO.getEndTime().getTime() < new Date().getTime()) {
 				activityPO.setStatus(ActivityPO.STATUS_UNVALID_INT);
-			}else{
+			} else {
 				ActivityVO activityVO = new ActivityVO(new UserBaseVO());
-				BeanUtil.copyProperties(activityPO, activityVO,Arrays.asList("creater"));
+				BeanUtil.copyProperties(activityPO, activityVO, Arrays.asList("creater"));
 				BeanUtil.copyProperties(activityPO.getCreater(), activityVO.getCreater(), Arrays.asList("dept", "duty"));
-				
+
 				activityVOs.add(activityVO);
 			}
 		}
-		
+
 		return activityVOs;
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public void addActivity(ActivityVO activityVO, String userId, String userName,int company){
-		
+	@Transactional(rollbackFor = Exception.class)
+	public void addActivity(ActivityVO activityVO, String userId, String userName, int company) {
+
 		UserPO user = userDao.queryUserByUserId(userId);
-		
+
 		ActivityPO activityPO = new ActivityPO();
+
 		BeanUtil.copyProperties(activityVO, activityPO);
-		
+
 		activityPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-//		activityPO.setCreateUserId(userId);
-//		activityPO.setCreateUserName(userName);
 		activityPO.setCreater(user);
 		activityPO.setCompany(company);
-		
+		activityPO.setDefaults(ActivityPO.DEFAULTS_COMMON_INT);// 普通状态
+
 		activityDao.save(activityPO);
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public void updateActivity(ActivityVO activityVO, String userId) throws FLException {
-		
+	@Transactional(rollbackFor = Exception.class)
+	public void updateActivity(ActivityVO activityVO) throws FLException {
+
 		ActivityPO activityPO = activityDao.get(activityVO.getAid());
-		
-		if(activityPO == null){
+
+		if (activityPO == null) {
 			throw new FLException(160011, "活动信息不存在");
 		}
-		
-		if(activityPO.getStatus() != ActivityPO.STATUS_VALID_INT){
+
+		if (activityPO.getStatus() != ActivityPO.STATUS_VALID_INT) {
 			throw new FLException(160012, "活动当前状态不能修改");
 		}
 		
 		activityPO.setEndTime(activityVO.getEndTime());
 		activityPO.setContent(activityVO.getContent());
-		
+
 		activityDao.update(activityPO);
 	}
 
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void updateActivityForStatus(ActivityVO activityVO) throws FLException {
+
+		ActivityPO activityPO = activityDao.get(activityVO.getAid());
+
+		if (activityPO == null) {
+			throw new FLException(160011, "活动信息不存在");
+		}
+
+		if (activityPO.getStatus() == ActivityPO.STATUS_UNVALID_INT) {// ==无有效的
+			throw new FLException(160012, "活动当前状态不能修改");
+		}
+
+		activityPO.setStatus(activityVO.getStatus());
+
+		activityDao.update(activityPO);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void updateActivityForDefault(ActivityVO activityVO) throws FLException {
+
+		ActivityPO activityPO = activityDao.get(activityVO.getAid());
+
+		if (activityPO == null) {
+			throw new FLException(160011, "活动信息不存在");
+		}
+
+		if (activityPO.getStatus() == ActivityPO.STATUS_UNVALID_INT) {// ==无有效的
+			throw new FLException(160012, "活动当前状态不能修改");
+		}
+
+		activityDao.resetActivityForDefault(activityPO.getType());
+
+		activityPO.setDefaults(ActivityPO.DEFAULTS_DEFAULT_INT); // 更新为0(默认)
+
+		activityDao.update(activityPO);
+	}
 }

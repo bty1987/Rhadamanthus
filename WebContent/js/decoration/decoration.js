@@ -5,7 +5,7 @@
         cancellBtn: null,
         modal: null,
         orderItems: {},
-        type: {0: "半包", 1: "套餐", 2: "半价", 3: "满减"},
+        type: {0: "半包", 1: "套餐", 2: "半价", 3: "满减", 4: "减上捡"},
 
         decorationOrderStatus: {},
 
@@ -415,7 +415,7 @@
                                 $divBtnWrap.append(btnLine);
                                 break;
                             case "contract"://合同
-                                if ([0, 1, 2, 3, 7].indexOf(v.status) != -1) {
+                                if ([0, 1, 2, 3, 4, 8].indexOf(v.status) != -1) {
                                     $divBtnWrap.append(btnContract);
                                 }
                                 break;
@@ -423,17 +423,17 @@
                                 $divBtnWrap.append(btnScal);
                                 break;
                             case "price"://报价
-                                if ([0, 1, 3].indexOf(v.status) != -1) {
+                                if ([0, 1, 2, 4].indexOf(v.status) != -1) {
                                     $divBtnWrap.append(btnPrice);
                                 }
                                 break;
                             case "addminus"://增减项
-                                if ([2, 7].indexOf(v.status) != -1) {
+                                if ([3, 8].indexOf(v.status) != -1) {
                                     $divBtnWrap.append(btnAddMinus);
                                 }
                                 break;
                             case "extension"://扩展项
-                                if ([0, 1, 3, 2, 7].indexOf(v.status) != -1) {
+                                if ([0, 1, 2, 3, 4, 8].indexOf(v.status) != -1) {
                                     $divBtnWrap.append(btnExtension);
                                 }
                                 break;
@@ -441,7 +441,7 @@
                                 $divBtnWrap.append(btnInfo);
                                 break;
                             case "cal"://决算
-                                if ([2, 6, 7].indexOf(v.status) != -1) {
+                                if ([3, 7, 8].indexOf(v.status) != -1) {
                                     $divBtnWrap.append(btnCal);
                                 }
                                 break;
@@ -452,22 +452,22 @@
                                 $divBtnWrap.append(btnActivity);
                                 break;
                             case "delete"://废单
-                                if (v.status != 2 && v.status != 5 && v.status != 4) {
+                                if (v.status != 3 && v.status != 5 && v.status != 6) {
                                     $divBtnWrap.append(btnDelete);
                                 }
                                 break;
                             case "sign"://签订合同
-                                if (v.status == 1 || v.status == 3) {
+                                if (v.status == 1 || v.status == 4) {
                                     $divBtnWrap.append(btnSign);
                                 }
                                 break;
                             case "terminal"://合同终止
-                                if (v.status == 2) {
+                                if (v.status == 3) {
                                     $divBtnWrap.append(btnTerminal);
                                 }
                                 break;
                             case "resign"://重新签合同
-                                if (v.status == 2) {
+                                if (v.status == 3) {
                                     $divBtnWrap.append(btnResign);
                                 }
                                 break;
@@ -696,7 +696,7 @@
                     var paymentStatus = decorationPayment.paymentStatus;
                     var referMoney = decorationPayment.referMoney;
 
-                    if (paymentStatus == "已付款" || paymentStatus == "已确认") {
+                    if (paymentStatus == 1 || paymentStatus == 2) {
                         decorationPaymentInfo += paymentType + ":" + referMoney + "<br/>";
                         refundValue = utils.accAdd(refundValue, referMoney);
                     }

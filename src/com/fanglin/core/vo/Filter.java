@@ -23,7 +23,7 @@ public class Filter implements Serializable{
 	
 	private String data;
 	
-	private List<String> range;
+	private List<?> range;
 	
 	private String Logic;
 	
@@ -31,6 +31,12 @@ public class Filter implements Serializable{
 		super();
 	}
 	
+	public Filter(String field, String op) {
+		super();
+		this.op = op;
+		this.field = field;
+	}
+
 	public Filter(String field, String data, String op){
 		super();
 		setField(field);
@@ -46,7 +52,7 @@ public class Filter implements Serializable{
 		setLogic(logic);
 	}
 	
-	public Filter(String field, List<String> range, String op) {
+	public Filter(String field, List<?> range, String op) {
 		super();
 		this.op = op;
 		this.field = field;
@@ -85,7 +91,7 @@ public class Filter implements Serializable{
 		Logic = logic;
 	}
 
-	public List<String> getRange(){
+	public List<?> getRange(){
 		return range;
 	}
 

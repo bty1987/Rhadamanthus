@@ -150,7 +150,22 @@
 ], "experienceType": [
   "工作经验",
   "管理经验"
+], "perType": [
+  {"key":"0","value":"任务"},
+  {"key":"1","value":"代码"},
+  {"key":"2","value":"文档"},
+  {"key":"3","value":"测试用例"},
+  {"key":"4","value":"bug"},
+  {"key":"5","value":"延期"},
+  {"key":"6","value":"失误"},
+  {"key":"7","value":"考勤"},
+  {"key":"8","value":"加班"}
 ],
+  "level": [
+    {"key":"0","value":"低级"},
+    {"key":"1","value":"中级"},
+    {"key":"2","value":"高级"}
+  ],
   "errorCode": 0,
   "errorMsg": null
 }

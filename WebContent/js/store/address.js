@@ -171,7 +171,7 @@ $(function(){
         var city = com.focusPage("#city").val();
         var proper = com.focusPage("#proper").val();
         var address = com.focusPage("#address").val();
-        com.post(api.store.updateBaseAddress, {
+        com.post(api.store.updateAddress, {
             "muser.unionId": userAddressPopUp.attr("data-unionid"),
             'address.aid':v.aid,
             "address.name": name,

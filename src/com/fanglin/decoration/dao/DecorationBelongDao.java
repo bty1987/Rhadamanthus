@@ -1,5 +1,5 @@
 /**
- * @File Name		: OrderBelongInfoDao
+ * @File Name		: DecorationBelongDao
  * @Package   	: com.fanglin.dao
  * @Version		: 1.0
  * @Date			: 2014-9-21
@@ -17,15 +17,17 @@ import com.fanglin.core.dao.Dao;
 import com.fanglin.decoration.po.DecorationBelongPO;
 
 public interface DecorationBelongDao extends Dao<DecorationBelongPO> {
-	
-	public List<DecorationBelongPO> queryOrderBelongInfoByOrderIdAType(String orderId, Short belongType);
 
-	public List<DecorationBelongPO> queryOrderBelongInfoForCurrentByOrderIdAType(String orderId, Short belongType);
-	
-	public List<DecorationBelongPO> queryOrderBelongInfoByOrderId(String orderId);
-	
-	public List<DecorationBelongPO> queryOrderBelongInfoByOrderIds(List<String> orderIds);
-	
-	public int changeOrderBelongInfoForOrderId(String newOrderId, String oldOrderId);
-	
+	public List<DecorationBelongPO> queryDecorationBelongByOrderIdAType(String orderId, Short belongType);
+
+	public List<DecorationBelongPO> queryDecorationBelongForCurrentByOrderIdAType(String orderId, Short belongType);
+
+	public List<DecorationBelongPO> queryDecorationBelongByOrderId(String orderId);
+
+	public List<DecorationBelongPO> queryDecorationBelongByOrderIds(List<String> orderIds);
+
+	public int changeDecorationBelongForOrderId(String newOrderId, String oldOrderId);
+
+	public int updateDecorationBelongStatusByOrderId(String OrderId, Short status);
+
 }

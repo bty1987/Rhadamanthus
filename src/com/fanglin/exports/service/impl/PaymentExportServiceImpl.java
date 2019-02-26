@@ -12,9 +12,7 @@
 package com.fanglin.exports.service.impl;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -88,14 +86,6 @@ public class PaymentExportServiceImpl implements PaymentExportService {
 	@Override
 	public List<MaterialPaymentExportVO> queryMaterialPaymentExport(List<Filter> filters) {
 		
-		Map<Short, String> types = new HashMap<Short, String>();
-		types.put(MaterialPaymentPO.PAYMENTTYPE_TYPE_DEPOSIT_INT, MaterialPaymentPO.PAYMENTTYPE_TYPE_DEPOSIT_STR);
-		types.put(MaterialPaymentPO.PAYMENTTYPE_TYPE_FULL_INT, MaterialPaymentPO.PAYMENTTYPE_TYPE_FULL_STR);
-		types.put(MaterialPaymentPO.PAYMENTTYPE_TYPE_REJECT_INT, MaterialPaymentPO.PAYMENTTYPE_TYPE_REJECT_STR);
-		types.put(MaterialPaymentPO.PAYMENTTYPE_TYPE_FULL_REFUND_INT, MaterialPaymentPO.PAYMENTTYPE_TYPE_FULL_REFUND_STR);
-		types.put(MaterialPaymentPO.PAYMENTTYPE_TYPE_COUPON_REFUND_INT, MaterialPaymentPO.PAYMENTTYPE_TYPE_COUPON_REFUND_STR);
-		types.put(MaterialPaymentPO.PAYMENTTYPE_TYPE_DEPOSIT_REFUND_INT, MaterialPaymentPO.PAYMENTTYPE_TYPE_DEPOSIT_REFUND_STR);
-		
 		List<MaterialPaymentPO> materialPaymentPOs = materialPaymentDao.queryMaterialPayment(filters);
 		List<MaterialPaymentExportVO> materialPaymentExportVOs = new ArrayList<MaterialPaymentExportVO>();
 		
@@ -121,7 +111,7 @@ public class PaymentExportServiceImpl implements PaymentExportService {
 				materialPaymentExportVO.setMsoCouponInfo(materialPO.getCouponInfo());
 			}
 			
-			materialPaymentExportVO.setPaymentTypeName(types.get(materialPaymentPO.getPaymentType()));
+			materialPaymentExportVO.setPaymentTypeName(String.valueOf(materialPaymentPO.getPaymentType()));
 			
 			materialPaymentExportVOs.add(materialPaymentExportVO);
 		}

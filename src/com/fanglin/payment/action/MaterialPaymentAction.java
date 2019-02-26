@@ -133,18 +133,34 @@ public class MaterialPaymentAction extends BaseListAction{
 		return SUCCESS;
 	}
 	
-	@Action(value="addMaterialPayment", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String addMaterialPayment() throws FLException{
+	@Action(value="addMaterialPaymentForDeposit", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String addMaterialPaymentForDeposit() throws FLException{
 		
-		materialPaymentService.addMaterialPayment(materialPayment, queryUserId());
+		materialPaymentService.addMaterialPaymentForDeposit(materialPayment, queryUserId());
 		
 		return SUCCESS;
 	}
 	
-	@Action(value="changeMaterialPaymentForTime", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String changeMaterialPaymentForTime() throws FLException{
+	@Action(value="addMaterialPaymentForFullpay", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String addMaterialPaymentForFullpay() throws FLException{
 		
-		materialPaymentService.changeMaterialPaymentForTime(materialPayment, dateTime, queryUserId());
+		materialPaymentService.addMaterialPaymentForFullpay(materialPayment, queryUserId());
+		
+		return SUCCESS;
+	}
+	
+	@Action(value="cancelMaterialPaymentForDeposit", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String cancelMaterialPaymentForDeposit() throws FLException{
+		
+		materialPaymentService.cancelMaterialPaymentForDeposit(materialPayment);
+		
+		return SUCCESS;
+	}
+	
+	@Action(value="cancelMaterialPaymentForFullpay", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String cancelMaterialPaymentForFullpay() throws FLException{
+		
+		materialPaymentService.cancelMaterialPaymentForFullpay(materialPayment);
 		
 		return SUCCESS;
 	}
@@ -165,10 +181,26 @@ public class MaterialPaymentAction extends BaseListAction{
 		return SUCCESS;
 	}
 	
-	@Action(value="collectMaterialPaymentForRefund", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String collectMaterialPaymentForRefund() throws FLException{
+	@Action(value="refundMaterialPayment", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String refundMaterialPayment() throws FLException{
 		
-		materialPaymentService.collectMaterialPaymentForRefund(materialPayment, queryUserId(), queryCompany());
+		materialPaymentService.refundMaterialPayment(materialPayment, queryUserId(), queryCompany());
+		
+		return SUCCESS;
+	}
+	
+	@Action(value="refundMaterialPaymentForDeposit", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String refundMaterialPaymentForDeposit() throws FLException{
+		
+		materialPaymentService.refundMaterialPaymentForDeposit(materialPayment, queryUserId());
+		
+		return SUCCESS;
+	}
+	
+	@Action(value="refundMaterialPaymentForCoupon", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String refundMaterialPaymentForCoupon() throws FLException{
+		
+		materialPaymentService.refundMaterialPaymentForCoupon(material, queryUserId());
 		
 		return SUCCESS;
 	}
@@ -176,7 +208,7 @@ public class MaterialPaymentAction extends BaseListAction{
 	@Action(value = "updateMaterialPayment", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateMaterialPayment() throws FLException{
 		
-		materialPaymentService.updateMaterialPayment(materialPayment,materialReceipt);
+		materialPaymentService.updateMaterialPayment(materialPayment, materialReceipt);
 		
 		return SUCCESS;
 	}
@@ -189,26 +221,10 @@ public class MaterialPaymentAction extends BaseListAction{
 		return SUCCESS;
 	}
 	
-	@Action(value="cancelMaterialPayment", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String cancelMaterialPayment() throws FLException{
+	@Action(value="changeMaterialPaymentForTime", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String changeMaterialPaymentForTime() throws FLException{
 		
-		materialPaymentService.cancelMaterialPayment(materialPayment);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value="refundMaterialPayment", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String refundMaterialPayment() throws FLException{
-		
-		materialPaymentService.refundMaterialPayment(materialPayment, queryUserId());
-		
-		return SUCCESS;
-	}
-	
-	@Action(value="refundMaterialPaymentForCoupon", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String refundMaterialPaymentForCoupon() throws FLException{
-		
-		materialPaymentService.refundMaterialPaymentForCoupon(material, queryUserId());
+		materialPaymentService.changeMaterialPaymentForTime(materialPayment, dateTime, queryUserId());
 		
 		return SUCCESS;
 	}
@@ -257,8 +273,7 @@ public class MaterialPaymentAction extends BaseListAction{
 		return decorationActivityItems;
 	}
 
-	public void setDecorationActivityItems(
-			List<DecorationActivityItemVO> decorationActivityItems) {
+	public void setDecorationActivityItems(List<DecorationActivityItemVO> decorationActivityItems) {
 		this.decorationActivityItems = decorationActivityItems;
 	}
 

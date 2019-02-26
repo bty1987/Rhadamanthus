@@ -21,7 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.JSONArray;
 import com.fanglin.approval.dao.ApprovalDao;
 import com.fanglin.approval.dao.ApprovalMaterialRefundDao;
 import com.fanglin.approval.dao.ApprovalMaterialRefundItemDao;
@@ -181,8 +181,8 @@ public class ApprovalMaterialRefundServiceImpl implements ApprovalMaterialRefund
 		if(systemConfigPO == null){
 			approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_INIT_INT);
 		}else{
-			approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_DINGDING_INT);
-			List<JSONObject> formComponentValues = approvalDDService.getForms("说明", String.format(ApprovalPO.APPROVAL_CONTENTS_MATERIAL_REFUND_STR, materialPO.getOrderId(), materialPO.getNo(), materialPO.getBrand(), approvalMaterialRefundVO.getRefund(), approvalMaterialRefundVO.getReferMoney(), refundType));
+			approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_APPROVE_INT);
+			JSONArray formComponentValues = approvalDDService.getForms("说明", String.format(ApprovalPO.APPROVAL_CONTENTS_MATERIAL_REFUND_STR, materialPO.getOrderId(), materialPO.getNo(), materialPO.getBrand(), approvalMaterialRefundVO.getRefund(), approvalMaterialRefundVO.getReferMoney(), refundType));
 			String processinstanceid = approvalDDService.initiateApproval(systemConfigPO.getValue(), userId, approvalVO.getReceiver().getUserId(), null, null, formComponentValues, company);
 			approvalPO.setProcessinstanceid(processinstanceid);
 		}

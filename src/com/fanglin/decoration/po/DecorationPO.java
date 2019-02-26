@@ -45,166 +45,159 @@ import com.fanglin.utils.SystemConfig;
 public class DecorationPO implements Serializable {
 
 	private static final long serialVersionUID = -5971474052433500262L;
+
+	public static final short STATUS_INIT_INT = 0;// 初始
+
+	public static final short STATUS_DEPOSIT_INT = 1;// 定金
+
+	public static final short STATUS_PROSIGN_INT = 2;// 预签
 	
-	public static final short STATUS_INIT_INT = 0;//初始
-	
-	public static final short STATUS_DEPOSIT_INT = 1;//定金
-	
-	public static final short STATUS_SIGNED_INT = 2;//已签约
-	
-	public static final short STATUS_RESIGNED_INT = 3;//重签合同
-	
-	public static final short STATUS_WASTE_INT = 4;//废单
-	
-	public static final short STATUS_TERMINATION_INT = 5;//合同终止
-	
-	public static final short STATUS_FINAL_INT = 6;//决算
-	
-	public static final short STATUS_COMPLETED_INT = 7;//已完工
-	
-	public static final short PROJECTSTATUS_INITIAL_INT = 0;	//工程初始
-	
-	public static final short PROJECTSTATUS_START_INT = 1;		//开工
-	
-	public static final short PROJECTSTATUS_FINISH_INT = 2;		//完工
-	
+	public static final short STATUS_SIGNED_INT = 3;// 签约
+
+	public static final short STATUS_RESIGNED_INT = 4;// 重签
+
+	public static final short STATUS_WASTE_INT = 5;// 废单
+
+	public static final short STATUS_TERMINATION_INT = 6;// 终止
+
+	public static final short STATUS_FINAL_INT = 7;// 决算
+
+	public static final short STATUS_COMPLETED_INT = 8;// 完工
+
+	public static final short PROJECTSTATUS_INITIAL_INT = 0; // 初始
+
+	public static final short PROJECTSTATUS_START_INT = 1; // 开工
+
+	public static final short PROJECTSTATUS_FINISH_INT = 2; // 完工
+
 	public static final short TYPE_PART_INT = 0;
-	
+
 	public static final short TYPE_WHOLE_INT = 1;
-	
+
 	public static final short TYPE_HOLONOMY_INT = 2;
-	
-	public static final String TYPE_HALFPRICE_STRING = "halfprice"; 	//半价
-	
-	public static final String TYPE_FULLSUB_STRING = "fullsub";			//满减
-	
-	
-	
+
+	public static final String CONFIG_KEY_HOLONOMY_STR = "holonomyconfig";
+
 	private long doid;
-	
+
 	private String orderId;
-	
+
 	private CustomerPO customer;
-	
+
 	private HousePO house;
-	
 
 	private UserPO designer;
-	
+
 	private UserPO salesman;
-	
+
 	private UserPO supervisor;
-	
+
 	private UserPO creater;
-	
+
 	private UserPO quoter;
-	
+
 	private UserPO escorter;
-	
+
 	private UserPO contracter;
-	
-	
+
 	private short type;
-	
+
 	private String salesmanType = "守园";
-	
+
 	private String houseType;
-	
+
 	private String houseClass;
-	
-	private int resourceType;
-	
+
+	private short resourceType;
+
 	private float freeArea;
-	
+
 	private DecorationAdditionPO addition;
 
-	
 	private String contractCode;
-	
+
 	private float orderTotalPrice;
-	
+
 	private float quotationPrice;
-	
+
 	private float couponCut;
-	
+
 	private float thingCut;
-	
+
 	private float netperfor;
-	
+
 	private float comperfor;
-	
-	
-	
+
 	private Timestamp contractTime;
-	
+
 	private Timestamp measureTime;
-	
+
 	private Timestamp depositTime;
-	
+
 	private Timestamp createTime;
-	
+
 	private Timestamp accountTime;
-	
+
 	private short status;
-	
+
 	private short projectStatus;
-	
+
 	private int otherStatus;
-	
-	
+
 	private QuotationVersionPO version;
 
 	private float notSalesmanRate = 0f;
-	
+
 	private int quotationTimeLimit;
-	
-	
+
 	private int company;
-	
+
 	private short paySacle;
-	
+
 	private float discount;
 	
+	private String grade;
 	
-	public DecorationPO(){}
-	
+	public DecorationPO() {
+	}
+
 	public DecorationPO(String orderId) {
 		super();
 		this.orderId = orderId;
 	}
-	
+
 	@GeneratedValue
-	@Column(name="doid")
-	public long getDoid(){
+	@Column(name = "doid")
+	public long getDoid() {
 		return doid;
 	}
 
-	public void setDoid(long doid){
+	public void setDoid(long doid) {
 		this.doid = doid;
 	}
-	
+
 	@Id
-	@Column(name="orderId")
-	public String getOrderId(){
+	@Column(name = "orderId")
+	public String getOrderId() {
 		return orderId;
 	}
 
-	public void setOrderId(String orderId){
+	public void setOrderId(String orderId) {
 		this.orderId = orderId;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, name = "customerId",referencedColumnName="cid")
-	public CustomerPO getCustomer(){
+	@JoinColumn(nullable = false, name = "customerId", referencedColumnName = "cid")
+	public CustomerPO getCustomer() {
 		return customer;
 	}
 
-	public void setCustomer(CustomerPO customer){
+	public void setCustomer(CustomerPO customer) {
 		this.customer = customer;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, name = "hid", referencedColumnName="hId")
+	@JoinColumn(nullable = false, name = "hid", referencedColumnName = "hId")
 	public HousePO getHouse() {
 		return house;
 	}
@@ -213,62 +206,62 @@ public class DecorationPO implements Serializable {
 		this.house = house;
 	}
 
-	public String getHouseType(){
+	public String getHouseType() {
 		return houseType;
 	}
 
-	public void setHouseType(String houseType){
+	public void setHouseType(String houseType) {
 		this.houseType = houseType;
 	}
 
-	public String getHouseClass(){
+	public String getHouseClass() {
 		return houseClass;
 	}
 
-	public void setHouseClass(String houseClass){
+	public void setHouseClass(String houseClass) {
 		this.houseClass = houseClass;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = true, name = "dsuid", referencedColumnName="uId")
-	public UserPO getDesigner(){
+	@JoinColumn(nullable = true, name = "dsuid", referencedColumnName = "uId")
+	public UserPO getDesigner() {
 		return designer;
 	}
 
-	public void setDesigner(UserPO designer){
+	public void setDesigner(UserPO designer) {
 		this.designer = designer;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = true, name = "smuid", referencedColumnName="uId")
-	public UserPO getSalesman(){
+	@JoinColumn(nullable = true, name = "smuid", referencedColumnName = "uId")
+	public UserPO getSalesman() {
 		return salesman;
 	}
 
-	public void setSalesman(UserPO salesman){
+	public void setSalesman(UserPO salesman) {
 		this.salesman = salesman;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = true, name = "svuid", referencedColumnName="uId")
-	public UserPO getSupervisor(){
+	@JoinColumn(nullable = true, name = "svuid", referencedColumnName = "uId")
+	public UserPO getSupervisor() {
 		return supervisor;
 	}
 
-	public void setSupervisor(UserPO supervisor){
+	public void setSupervisor(UserPO supervisor) {
 		this.supervisor = supervisor;
 	}
 
-	public String getContractCode(){
+	public String getContractCode() {
 		return contractCode;
 	}
 
-	public void setContractCode(String contractCode){
+	public void setContractCode(String contractCode) {
 		this.contractCode = contractCode;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = true, name = "ctuid", referencedColumnName="uId")
+	@JoinColumn(nullable = true, name = "ctuid", referencedColumnName = "uId")
 	public UserPO getContracter() {
 		return contracter;
 	}
@@ -277,11 +270,11 @@ public class DecorationPO implements Serializable {
 		this.contracter = contracter;
 	}
 
-	public Timestamp getMeasureTime(){
+	public Timestamp getMeasureTime() {
 		return measureTime;
 	}
 
-	public void setMeasureTime(Timestamp measureTime){
+	public void setMeasureTime(Timestamp measureTime) {
 		this.measureTime = measureTime;
 	}
 
@@ -293,11 +286,11 @@ public class DecorationPO implements Serializable {
 		this.depositTime = depositTime;
 	}
 
-	public Timestamp getCreateTime(){
+	public Timestamp getCreateTime() {
 		return createTime;
 	}
 
-	public void setCreateTime(Timestamp createTime){
+	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
 	}
 
@@ -316,7 +309,7 @@ public class DecorationPO implements Serializable {
 	public void setType(short type) {
 		this.type = type;
 	}
-	
+
 	public short getProjectStatus() {
 		return projectStatus;
 	}
@@ -325,71 +318,71 @@ public class DecorationPO implements Serializable {
 		this.projectStatus = projectStatus;
 	}
 
-	public Timestamp getContractTime(){
+	public Timestamp getContractTime() {
 		return contractTime;
 	}
-	
-	public void setContractTime(Timestamp contractTime){
+
+	public void setContractTime(Timestamp contractTime) {
 		this.contractTime = contractTime;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = true, name = "cuid", referencedColumnName="uId")
-	public UserPO getCreater(){
+	@JoinColumn(nullable = true, name = "cuid", referencedColumnName = "uId")
+	public UserPO getCreater() {
 		return creater;
 	}
 
-	public void setCreater(UserPO creater){
+	public void setCreater(UserPO creater) {
 		this.creater = creater;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, name = "versionId", referencedColumnName="versionId")
-	public QuotationVersionPO getVersion(){
+	@JoinColumn(nullable = false, name = "versionId", referencedColumnName = "versionId")
+	public QuotationVersionPO getVersion() {
 		return version;
 	}
 
-	public void setVersion(QuotationVersionPO version){
+	public void setVersion(QuotationVersionPO version) {
 		this.version = version;
 	}
 
-	public float getOrderTotalPrice(){
+	public float getOrderTotalPrice() {
 		return orderTotalPrice;
 	}
-	
-	public void setOrderTotalPrice(float orderTotalPrice){
+
+	public void setOrderTotalPrice(float orderTotalPrice) {
 		this.orderTotalPrice = orderTotalPrice;
 	}
-	
-	public float getFreeArea(){
+
+	public float getFreeArea() {
 		return freeArea;
 	}
-	
-	public void setFreeArea(float freeArea){
+
+	public void setFreeArea(float freeArea) {
 		this.freeArea = freeArea;
 	}
-	
-	public float getNotSalesmanRate(){
+
+	public float getNotSalesmanRate() {
 		return notSalesmanRate;
 	}
-	
-	public void setNotSalesmanRate(float notSalesmanRate){
+
+	public void setNotSalesmanRate(float notSalesmanRate) {
 		this.notSalesmanRate = notSalesmanRate;
 	}
 
-	public String getSalesmanType(){
+	public String getSalesmanType() {
 		return salesmanType;
 	}
 
-	public void setSalesmanType(String salesmanType){
+	public void setSalesmanType(String salesmanType) {
 		this.salesmanType = salesmanType;
 	}
-	
-	public int getOtherStatus(){
+
+	public int getOtherStatus() {
 		return otherStatus;
 	}
 
-	public void setOtherStatus(int otherStatus){
+	public void setOtherStatus(int otherStatus) {
 		this.otherStatus = otherStatus;
 	}
 
@@ -410,7 +403,7 @@ public class DecorationPO implements Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = true, name = "quId", referencedColumnName="uId")
+	@JoinColumn(nullable = true, name = "quId", referencedColumnName = "uId")
 	public UserPO getQuoter() {
 		return quoter;
 	}
@@ -420,7 +413,7 @@ public class DecorationPO implements Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = true, name = "euId", referencedColumnName="uId")
+	@JoinColumn(nullable = true, name = "euId", referencedColumnName = "uId")
 	public UserPO getEscorter() {
 		return escorter;
 	}
@@ -428,15 +421,15 @@ public class DecorationPO implements Serializable {
 	public void setEscorter(UserPO escorter) {
 		this.escorter = escorter;
 	}
-	
-	public int getResourceType() {
+
+	public short getResourceType() {
 		return resourceType;
 	}
 
-	public void setResourceType(int resourceType) {
+	public void setResourceType(short resourceType) {
 		this.resourceType = resourceType;
 	}
-	
+
 	public float getQuotationPrice() {
 		return quotationPrice;
 	}
@@ -444,7 +437,7 @@ public class DecorationPO implements Serializable {
 	public void setQuotationPrice(float quotationPrice) {
 		this.quotationPrice = quotationPrice;
 	}
-	
+
 	public short getPaySacle() {
 		return paySacle;
 	}
@@ -460,7 +453,7 @@ public class DecorationPO implements Serializable {
 	public void setDiscount(float discount) {
 		this.discount = discount;
 	}
-	
+
 	public float getCouponCut() {
 		return couponCut;
 	}
@@ -502,7 +495,7 @@ public class DecorationPO implements Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = true, name = "orderId", referencedColumnName="orderId", insertable=false, updatable=false)
+	@JoinColumn(nullable = true, name = "orderId", referencedColumnName = "orderId", insertable = false, updatable = false)
 	public DecorationAdditionPO getAddition() {
 		return addition;
 	}
@@ -510,19 +503,29 @@ public class DecorationPO implements Serializable {
 	public void setAddition(DecorationAdditionPO addition) {
 		this.addition = addition;
 	}
+	
+	
+	@Column(name = "grade")
+	public String getGrade() {
+		return grade;
+	}
 
-	private void ptv(DecorationVO decorationVO){
-		BeanUtil.copyProperties(this, decorationVO, Arrays.asList("house","customer","designer","salesman","supervisor","version","creater","quoter","escorter","contractUserId"));
-		
-		if(decorationVO.getOrderTotalPrice() == null){
+	public void setGrade(String grade) {
+		this.grade = grade;
+	}
+
+	private void ptv(DecorationVO decorationVO) {
+		BeanUtil.copyProperties(this, decorationVO, Arrays.asList("house", "customer", "designer", "salesman", "supervisor", "version", "creater", "quoter", "escorter", "contractUserId"));
+
+		if (decorationVO.getOrderTotalPrice() == null) {
 			decorationVO.setOrderTotalPrice(new Float(0));
 		}
-		
+
 		decorationVO.setHouse(new HouseVO(new VillageVO(new CityProperVO())));
 		BeanUtil.copyProperties(this.getHouse(), decorationVO.getHouse(), Arrays.asList("village"));
-		BeanUtil.copyProperties(this.getHouse().getVillage(), decorationVO.getHouse().getVillage(), Arrays.asList("cityProper"));		
-		BeanUtil.copyProperties(this.getHouse().getVillage().getCityProper(), decorationVO.getHouse().getVillage().getCityProper(), Arrays.asList("city"));	
-		
+		BeanUtil.copyProperties(this.getHouse().getVillage(), decorationVO.getHouse().getVillage(), Arrays.asList("cityProper"));
+		BeanUtil.copyProperties(this.getHouse().getVillage().getCityProper(), decorationVO.getHouse().getVillage().getCityProper(), Arrays.asList("city"));
+
 		CustomerVO customerVO = new CustomerVO();
 		BeanUtil.copyProperties(this.getCustomer(), customerVO);
 		customerVO.setConfidentialInfo();
@@ -530,68 +533,68 @@ public class DecorationPO implements Serializable {
 
 		decorationVO.setDesigner(new UserBaseVO());
 		decorationVO.setSalesman(new UserBaseVO());
-		
+
 		String startWith = SystemConfig.getString("contractStartWith", "FLJ-");
 		decorationVO.setContractCode(startWith + this.getOrderId());
-		
+
 		decorationVO.getDesigner().setDuty(new DutyVO());
 		decorationVO.getDesigner().setDept(new DepartmentVO());
 		decorationVO.getDesigner().getDept().setFatherDept(new DepartmentVO());
-		
+
 		BeanUtil.copyPropertie(this.getDesigner(), decorationVO.getDesigner(), Arrays.asList("duty", "dept"));
 		BeanUtil.copyPropertie(this.getDesigner().getDuty(), decorationVO.getDesigner().getDuty(), Arrays.asList("departmentType"));
 		BeanUtil.copyPropertie(this.getDesigner().getDept(), decorationVO.getDesigner().getDept(), Arrays.asList("type", "fatherDept", "manager"));
-		BeanUtil.copyPropertie(this.getDesigner().getDept().getFatherDept(), decorationVO.getDesigner().getDept().getFatherDept(), Arrays.asList("type", "fatherDept", "manager"));		
-		
+		BeanUtil.copyPropertie(this.getDesigner().getDept().getFatherDept(), decorationVO.getDesigner().getDept().getFatherDept(), Arrays.asList("type", "fatherDept", "manager"));
+
 		decorationVO.getSalesman().setDuty(new DutyVO());
 		decorationVO.getSalesman().setDept(new DepartmentVO());
 		decorationVO.getSalesman().getDept().setFatherDept(new DepartmentVO());
-		
-		BeanUtil.copyPropertie(this.getSalesman(), decorationVO.getSalesman(), Arrays.asList("duty","dept"));
+
+		BeanUtil.copyPropertie(this.getSalesman(), decorationVO.getSalesman(), Arrays.asList("duty", "dept"));
 		BeanUtil.copyPropertie(this.getSalesman().getDuty(), decorationVO.getSalesman().getDuty(), Arrays.asList("departmentType"));
 		BeanUtil.copyPropertie(this.getSalesman().getDept(), decorationVO.getSalesman().getDept(), Arrays.asList("type", "fatherDept", "manager"));
 		BeanUtil.copyPropertie(this.getSalesman().getDept().getFatherDept(), decorationVO.getSalesman().getDept().getFatherDept(), Arrays.asList("type", "fatherDept", "manager"));
-		
+
 		decorationVO.setVersion(new QuotationVersionVO());
-		
-		BeanUtil.copyPropertie(this.getVersion(), decorationVO.getVersion());	
+
+		BeanUtil.copyPropertie(this.getVersion(), decorationVO.getVersion());
 	}
-	
-	public void ptvcascade(DecorationVO decorationVO){
+
+	public void ptvcascade(DecorationVO decorationVO) {
 
 		ptv(decorationVO);
-		
-		if(decorationVO.getSupervisor() != null && this.getSupervisor() != null){
-			
+
+		if (decorationVO.getSupervisor() != null && this.getSupervisor() != null) {
+
 			decorationVO.getSupervisor().setDuty(new DutyVO());
 			decorationVO.getSupervisor().setDept(new DepartmentVO());
 			decorationVO.getSupervisor().getDept().setFatherDept(new DepartmentVO());
-			
-			BeanUtil.copyPropertie(this.getSupervisor(), decorationVO.getSupervisor(), Arrays.asList("duty","dept"));
+
+			BeanUtil.copyPropertie(this.getSupervisor(), decorationVO.getSupervisor(), Arrays.asList("duty", "dept"));
 			BeanUtil.copyPropertie(this.getSupervisor().getDuty(), decorationVO.getSupervisor().getDuty(), Arrays.asList("departmentType"));
-			BeanUtil.copyPropertie(this.getSupervisor().getDept(), decorationVO.getSupervisor().getDept(), Arrays.asList("type","fatherDept","manager"));
+			BeanUtil.copyPropertie(this.getSupervisor().getDept(), decorationVO.getSupervisor().getDept(), Arrays.asList("type", "fatherDept", "manager"));
 			BeanUtil.copyPropertie(this.getSupervisor().getDept().getFatherDept(), decorationVO.getSupervisor().getDept().getFatherDept(), Arrays.asList("type", "fatherDept", "manager"));
 		}
-		
-		if(decorationVO.getCreater() != null && this.getCreater() != null){
-			
+
+		if (decorationVO.getCreater() != null && this.getCreater() != null) {
+
 			decorationVO.getCreater().setDuty(new DutyVO());
 			decorationVO.getCreater().setDept(new DepartmentVO());
 			decorationVO.getCreater().getDept().setFatherDept(new DepartmentVO());
-			
-			BeanUtil.copyPropertie(this.getCreater(), decorationVO.getCreater(), Arrays.asList("duty","dept"));
+
+			BeanUtil.copyPropertie(this.getCreater(), decorationVO.getCreater(), Arrays.asList("duty", "dept"));
 			BeanUtil.copyPropertie(this.getCreater().getDuty(), decorationVO.getCreater().getDuty(), Arrays.asList("departmentType"));
 			BeanUtil.copyPropertie(this.getCreater().getDept(), decorationVO.getCreater().getDept(), Arrays.asList("type", "fatherDept", "manager"));
 			BeanUtil.copyPropertie(this.getCreater().getDept().getFatherDept(), decorationVO.getCreater().getDept().getFatherDept(), Arrays.asList("type", "fatherDept", "manager"));
 		}
-		
-		if(decorationVO.getQuoter() != null && this.getQuoter() != null){
-			BeanUtil.copyPropertie(this.getQuoter(), decorationVO.getQuoter(), Arrays.asList("duty","dept"));
+
+		if (decorationVO.getQuoter() != null && this.getQuoter() != null) {
+			BeanUtil.copyPropertie(this.getQuoter(), decorationVO.getQuoter(), Arrays.asList("duty", "dept"));
 		}
-		
-		if(decorationVO.getEscorter() != null && this.getEscorter() != null){
-			BeanUtil.copyPropertie(this.getEscorter(), decorationVO.getEscorter(), Arrays.asList("duty","dept"));
+
+		if (decorationVO.getEscorter() != null && this.getEscorter() != null) {
+			BeanUtil.copyPropertie(this.getEscorter(), decorationVO.getEscorter(), Arrays.asList("duty", "dept"));
 		}
 	}
-	
+
 }

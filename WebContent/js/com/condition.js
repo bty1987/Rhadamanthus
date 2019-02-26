@@ -366,7 +366,7 @@ var Condition = function (api) {
             }
         },
         activityStatus: {
-            label: "类型", //中文名
+            label: "状态", //中文名
             type: "select", // 类型
             submitConfig: { // 向后台提交的配置
                 name: "status", // 接口中的参数名
@@ -377,6 +377,22 @@ var Condition = function (api) {
                 url: null, // 获取数据要调用的接口
                 postData: null, // 获取数据时的请求参数
                 listPath: [{key: "0", value: "\u6709\u6548"}, {key: "1", value: "\u65e0\u6548"}], // 响应list的json路径
+                keyPath: "key", // 用来向后台提交的字段的json路径
+                valuePath: "value" // 用来在页面显示的字段的json路径
+            }
+        },
+        activityType: {
+            label: "类型", //中文名
+            type: "select", // 类型
+            submitConfig: { // 向后台提交的配置
+                name: "type", // 接口中的参数名
+                op: "eq", // 查询方式
+                validate: null // 校验规则
+            },
+            dataSource: { // 从后台取数据的各种配置
+                url: null, // 获取数据要调用的接口
+                postData: null, // 获取数据时的请求参数
+                listPath: [{key: "0", value: "\u88c5\u4fee"}, {key: "1", value: "\u4e3b\u6750"}], // 响应list的json路径
                 keyPath: "key", // 用来向后台提交的字段的json路径
                 valuePath: "value" // 用来在页面显示的字段的json路径
             }
@@ -452,6 +468,59 @@ var Condition = function (api) {
                 listPath: "userBases",
                 keyPath: "userId",
                 valuePath: "currentName"
+            }
+        },
+        prizeName: {
+            label: "物品名称",
+            type: "text",
+            submitConfig: {
+                name: "name",
+                op: "eq",
+                validate:null
+            }
+        },
+        prizeNo: {
+            label: "物品编号",
+            type: "text",
+            submitConfig: {
+                name: "no",
+                op: "eq",
+                validate:null
+            }
+        },
+        awardStockType: {
+            label: "类型",
+            type: "select",
+            submitConfig: {
+                name: "type",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {//从后台取数据的各种配置
+                url: api.ds.information,
+                postData: {},
+                listPath: "awardStockType",
+                keyPath: "key",
+                valuePath:"value"
+            }
+        },
+
+        StockDate: {
+            label: "记录时间",
+            type: "dateRangePicker",
+            submitConfig: {
+                name: "awardRecordTimeDateRange",
+                op: "cn",
+                validate: null
+            }
+        },
+        StockName:{
+            label: "物品名称",
+            type: "text",
+            submitConfig: {
+                name: "awardStock.name",
+                op: "eq",
+                validate: null
             }
         },
 
@@ -919,6 +988,40 @@ var Condition = function (api) {
                 listPath: "statusType",
                 keyPath: "key",
                 valuePath:"value"
+            }
+        },
+        performanceType: {
+            label: "绩效类型",
+            type: "select",
+            submitConfig: {
+                name: "type",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {//从后台取数据的各种配置
+                url: api.ds.personel,
+                postData: {},
+                listPath: "perType",
+                keyPath: "key",
+                valuePath:"value"
+            }
+        },
+        performancestartTime: {
+            label: "开始时间",
+            type: "dateRangePicker",
+            submitConfig: {
+                name: "performancestartTime",
+                op: "cn",
+                validate: null
+            }
+        },
+        performanceendTime: {
+            label: "结束时间",
+            type: "dateRangePicker",
+            submitConfig: {
+                name: "performanceendTime",
+                op: "cn",
+                validate: null
             }
         },
         //装修订单-设计 页面的各种查询条件
@@ -1588,16 +1691,7 @@ var Condition = function (api) {
                 op: "between",
                 validate: null
             }
-        }, createVipTime: {
-            label: "创建时间",
-            type: "dateRangePicker",
-            submitConfig: {
-                name: "createTime",
-                op: "between",
-                validate: null
-            }
         },
-
 
         //进销存
         goodsNo: {
@@ -3241,7 +3335,7 @@ var Condition = function (api) {
                 query: "epseron.pinyin"
             }
         },
-		e_supervisor: {
+        e_supervisor: {
             label: "监理",
             type: "autofill",
             submitConfig: {

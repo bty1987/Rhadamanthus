@@ -51,9 +51,9 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 	}
 
 	@Override
-	public List<DecorationPaymentVO> countCusDecorationPaymentForAmount(DecorationPaymentVO decorationPaymentVO) {
+	public List<DecorationPaymentVO> queryCusDecorationPaymentForContract(DecorationPaymentVO decorationPaymentVO) {
 		
-		List<DecorationPaymentPO> decorationPaymentPOs = decorationPaymentDao.countCusDecorationPaymentForAmount(decorationPaymentVO.getOrderId());
+		List<DecorationPaymentPO> decorationPaymentPOs = decorationPaymentDao.queryCusDecorationPaymentForContract(decorationPaymentVO.getOrderId());
 		List<DecorationPaymentVO> decorationPaymentVOs = new ArrayList<DecorationPaymentVO>();
 		
 		if(decorationPaymentPOs != null && decorationPaymentPOs.size() != 0){

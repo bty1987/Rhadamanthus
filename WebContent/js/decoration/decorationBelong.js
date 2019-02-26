@@ -2,6 +2,8 @@
 jQuery(function($) {
 	
 	var decorationBelong = {
+		decorationType: {},
+		
 		decorationOrderStatus: {}
 	};
 	
@@ -9,6 +11,10 @@ jQuery(function($) {
 		$.each(res.decorationOrderStatus, function(i,v){
 			decorationBelong.decorationOrderStatus[v.key] = v.value;
 		});
+		
+		$.each(res.type, function(i, v){
+			decorationbelong.decorationType[v,key] = v.value;
+		})
     }, null, false);
 	
 	var displayFunc  = (function(){
@@ -48,7 +54,7 @@ jQuery(function($) {
                 ["面积:", v.house.buildArea, "blue"],
                 ["合同报价:", v.orderTotalPrice, "blue"],
                 ["量房时间:", v.measureTime, "green"],
-                ["类型:", v.type == 0 ? '半包' : (v.type == 1 ? '全包' : (v.type == 2 ? '半价' : '满减')), "red"],
+                ["类型:", decorationbelong.decorationType[v.type], "red"],
                 ["状态:", decorationBelong.decorationOrderStatus[v.status], "red"]
             ];
             

@@ -11,8 +11,6 @@
 
 package com.fanglin.decoration.action;
 
-import java.io.UnsupportedEncodingException;
-
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
@@ -52,14 +50,6 @@ public class DecorationContractAction extends BaseListAction {
 		
 		decorationContractService.saveDecorationContract(decorationContract, queryCompany());
 		
-		return SUCCESS;
-	}
-	
-	@Action(value = "generateDecorationContract", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String generateDecorationContract() throws UnsupportedEncodingException, FLException{
-		
-		decorationContract = decorationContractService.queryDecorationContractByOrderId(decorationContract);
-	    
 		return SUCCESS;
 	}
 	

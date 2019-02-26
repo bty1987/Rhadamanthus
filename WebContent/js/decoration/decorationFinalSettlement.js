@@ -8,7 +8,8 @@ $(function () {
             0: "半包",
             1: "全包",
             2: "半价",
-            3: "满减"
+            3: "满减",
+            4: "减上捡"
         },
 
         decoration: {},
@@ -173,7 +174,7 @@ $(function () {
         inputMainDiv.append(createCalItem("输入折扣", 'normal'), input,inputButton, accountButton, createCalItem(" ", 'normal  border-top').css({"border-width": "1px 0px 0px 0px"}), createCalItem(" ", 'small border-top').css({"border-width": "1px 0px 0px 0px"}), createCalItem(" ", 'normal border-top').css({"border-width": "1px 0px 0px 0px"}), createCalItem(" ", 'small border-top').css({"border-width": "1px 0px 0px 0px"}), createCalItem(" ", 'normal border-top').css({"border-width": "1px 0px 0px 0px"}), createCalItem(" ", 'normal').css({"border-width": "1px 0px 0px 0px"}), createCalItem("", 'normal border-top ').css({"border-width": "1px 0px 0px 0px"})).appendTo(table);
         table.appendTo(com.focusPage('#step3'));
 
-        if (params.status == 6) {
+        if (params.status == 7) {
             accountButton.addClass("hide");
         } else {
             accountButton.bindClick(function () {
@@ -216,7 +217,7 @@ $(function () {
             com.showAlert(com.error, e.errorMsg);
         }, false);
 
-        if (params.status == 6) {
+        if (params.status == 7) {
             showDecorationAccount();
         }
     }
@@ -284,7 +285,7 @@ $(function () {
         var materialPaidup =com.checkNull(res.materialPaidup,0);//实收主材额
         var servicePaidup = com.checkNull(res.servicePaidup,0);//实收服务额
 
-        if(params.status !=6){
+        if(params.status !=7){
             com.focusPage('#projectPrice').html(utils.changeTwoDecimal(utils.accAdd(com.checkNull(res.projectPrice,0),com.checkNull(managePrice,accountFlag ==false  ? managePrice : quoManagePrice))));
             com.focusPage('#managePrice').html(com.checkNull(managePrice,accountFlag ==false ? managePrice : quoManagePrice));
             managePrice = com.checkNull(managePrice,accountFlag == false ? managePrice : quoManagePrice );

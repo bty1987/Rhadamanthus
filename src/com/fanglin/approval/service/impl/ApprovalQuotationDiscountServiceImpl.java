@@ -19,7 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.JSONArray;
 import com.fanglin.approval.dao.ApprovalDao;
 import com.fanglin.approval.dao.ApprovalQuotationDiscountDao;
 import com.fanglin.approval.po.ApprovalPO;
@@ -110,8 +110,8 @@ public class ApprovalQuotationDiscountServiceImpl implements ApprovalQuotationDi
 		if(systemConfigPO == null){
 			approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_INIT_INT);
 		}else{
-			approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_DINGDING_INT);
-			List<JSONObject> formComponentValues = approvalDDService.getForms("说明", String.format(ApprovalPO.APPROVAL_CONTENTS_QUOTATION_DISCOUNT_STR, orderId, String.valueOf(quotationId), quotationPO.getDiscount(), approvalQuotationDiscountVO.getNewDiscount()));
+			approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_APPROVE_INT);
+			JSONArray formComponentValues = approvalDDService.getForms("说明", String.format(ApprovalPO.APPROVAL_CONTENTS_QUOTATION_DISCOUNT_STR, orderId, String.valueOf(quotationId), quotationPO.getDiscount(), approvalQuotationDiscountVO.getNewDiscount()));
 			String processinstanceid = approvalDDService.initiateApproval(systemConfigPO.getValue(), userId, approvalVO.getReceiver().getUserId(), null, null, formComponentValues, company);
 			approvalPO.setProcessinstanceid(processinstanceid);
 		}

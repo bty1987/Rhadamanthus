@@ -17,29 +17,29 @@ import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.Paging;
 
 public interface UserDao extends Dao<UserPO> {
-	
+
 	public List<UserPO> pageUser(Paging paging, List<Filter> filters, Integer company);
-	
+
 	public UserPO queryUserByLoginId(String loginId);
-	 
+
 	public UserPO queryUserByUserId(String userId);
-	
+
 	public UserPO queryUserByOldUserId(String oldUserId);
-	
-	public List<UserPO> pageUserForNameByPinyinName(Paging paging, String pinyinName,Short status, Integer dtid, Integer company);
-	
+
+	public List<UserPO> pageUserForNameByPinyinName(Paging paging, String pinyin, Short status, Integer dtid, Integer company);
+
 	public List<UserPO> queryUserByPhoneAIdent(String phone, String ident);
-	
+
 	public List<UserPO> queryUserByDeptIdADuty(String deptId, String duty);
 
 	public List<UserPO> queryUserByUserName(String userName);
-   	
+
 	public List<UserPO> queryUserByUserIds(List<String> userIds);
-	
+
 	public List<UserPO> queryUserByUids(List<Integer> uids);
-	
+
 	public int countUserByCompany(int company);
-	
+
 	public int countUserByRoleId(Integer rid);
 
 }

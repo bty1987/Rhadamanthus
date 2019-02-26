@@ -18,30 +18,30 @@ import com.fanglin.decoration.vo.DecorationHolonomyVO;
 public class DecorationHolonomyAction extends BaseListAction {
 
 	private static final long serialVersionUID = 6608494422500416917L;
-	
+
 	@Autowired
 	private DecorationHolonomyService decorationHolonomyService;
-	
+
 	private DecorationHolonomyVO decorationHolonomy;
 
-	@Action(value = "pageDecorationHolonomy", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageDecorationHolonomy() throws FLException{
+	@Action(value = "pageDecorationHolonomy", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageDecorationHolonomy() throws FLException {
 
 		decorationHolonomyService.pageDecorationHolonomy(getPaging(), getFilters(), queryCompany());
 
 		return SUCCESS;
 	}
-	
-	@Action(value = "queryDecorationHolonomy", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryDecorationHolonomy() throws FLException{
+
+	@Action(value = "queryDecorationHolonomy", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryDecorationHolonomy() throws FLException {
 
 		decorationHolonomy = decorationHolonomyService.queryDecorationHolonomy(decorationHolonomy);
 
 		return SUCCESS;
 	}
-	
-	@Action(value = "makeDecorationHolonomy", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String makeDecorationHolonomy() throws FLException{
+
+	@Action(value = "makeDecorationHolonomy", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String makeDecorationHolonomy() throws FLException {
 
 		decorationHolonomyService.makeDecorationHolonomy(decorationHolonomy, queryUserId());
 
@@ -55,6 +55,5 @@ public class DecorationHolonomyAction extends BaseListAction {
 	public void setDecorationHolonomy(DecorationHolonomyVO decorationHolonomy) {
 		this.decorationHolonomy = decorationHolonomy;
 	}
-	
-	
+
 }

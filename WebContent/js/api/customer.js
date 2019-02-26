@@ -29,12 +29,16 @@ $.extend(api, {customer: {
 	pageCustomerOriginForAdvance:{url:"pageCustomerOriginForAdvance.do"},
     
 	pageCustomerOriginForCommunion:{url:"pageCustomerOriginForCommunion.do"},
+	
+	pageCustomerOriginForDesign:{url:"pageCustomerOriginForDesign.do"},
 
 	addCustomerOrigin:{url:"addCustomerOrigin.do"},
     
 	updateCustomerOrigin:{url:"updateCustomerOrigin.do"},
     
 	updateCustomerOriginForBelonger:{url:"updateCustomerOriginForBelonger.do"},
+	
+	bindCustomerOrigin:{url:"bindCustomerOrigin.do"},
     
 	freeCustomerOrigin:{url:"freeCustomerOrigin.do"},
     
@@ -82,8 +86,8 @@ $.extend(api, {customer: {
     queryEmember : {url : "queryEmember.do"},
     addEmember : {url : "addEmember.do"},
     
-    pageFeedBack : {url : "pageFeedBack.do"},
-    addFeedBack : {url : "addFeedBack.do"},
+    pageFeedback : {url : "pageFeedback.do"},
+    addFeedback : {url : "addFeedback.do"},
     
     pageGroup : {url : "pageGroup.do"},
     queryGroup : {url : "queryGroup.do"},

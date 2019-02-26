@@ -132,12 +132,12 @@ $(function(){
         };
     })();
 
-    autoFill(api.store.queryBaseMgoodsByPinyin, "mgoods", "gid", "name");
+    autoFill(api.store.queryMgoodsByPinyin, "mgoods", "gid", "name");
 
     /*分页*/
     var _condArr = ["mgoodsno"];
     var couponSeacher = new Searcher();
-    couponSeacher.init( _condArr, "condList", api.store.pageCouponScope, function(data){
+    couponSeacher.init( _condArr, "condList", api.store.pageCoupon, function(data){
         displayFunc.init('resultList', data);
     }, "pagenation", "couponPostData", null, false, null, function() {
 
@@ -218,7 +218,7 @@ $(function(){
     /*状态信息验证*/
     function startStatus(id, status, callback){
         if(status == "1"){
-            com.post(api.store.updateCouponScopeForStatus,{
+            com.post(api.store.updateCouponForStatus,{
                 "coupon.cid":id,
                 "coupon.status":"0"
             },function(res){
@@ -235,7 +235,7 @@ $(function(){
 
     function stopStatus(id, status, callback){
         if(status == "0"){
-            com.post(api.store.updateCouponScopeForStatus,{
+            com.post(api.store.updateCouponForStatus,{
                 "coupon.cid":id,
                 "coupon.status":"1"
             },function(res){
@@ -269,7 +269,7 @@ $(function(){
         }
         var $layer = com.focusPage('#layerAdd');
         var nameid = $layer.find('input[id="mgoods"]').attr("data-cid");
-        com.post(api.store.addCouponScope, {
+        com.post(api.store.addCoupon, {
             "coupon.mgoods.gid": nameid,
             "coupon.title":coupon.couponItems.title.val(),
             "coupon.value":coupon.couponItems.vprice.val(),
@@ -300,7 +300,7 @@ $(function(){
         var $layer = com.focusPage('#layerAdd');
         var nameid = $layer.find('input[id="mgoods"]').attr("data-cid");
         
-        com.post(api.store.updateCouponScope, {
+        com.post(api.store.updateCoupon, {
             'coupon.cid':v.cid,
             "coupon.mgoods.gid": nameid,
             "coupon.title": coupon.couponItems.title.val(),

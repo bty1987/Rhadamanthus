@@ -3,6 +3,7 @@ package com.fanglin.decoration.po;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.sql.Timestamp;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,6 +15,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.utils.DateUtil;
 
 @Entity
 @Table(name = "decorationoperate", catalog = "decoration")
@@ -224,6 +226,98 @@ public class DecorationOperatePO implements java.io.Serializable {
 
 	public void setSrate(float srate) {
 		this.srate = srate;
+	}
+	
+	public DecorationOperatePO create(String orderId, UserPO operater){
+		
+		setOrderId(orderId);
+		setOperater(operater);
+		setOperateTime(DateUtil.getDateToTimestamp(new Date()));
+		setType(DecorationOperatePO.TYPE_CREATE_DECORATION_ORDER_INT);
+		setStatus(DecorationOperatePO.STATUS_INIT_INT);
+		setComment("Create");
+		
+		return this;
+	}
+	
+	public DecorationOperatePO sign(String orderId, UserPO operater, Float value){
+		
+		setOrderId(orderId);
+		setOperater(operater);
+		setOperateTime(DateUtil.getDateToTimestamp(new Date()));
+		setType(DecorationOperatePO.TYPE_SIGN_DECORATION_ORDER_INT);
+		setStatus(DecorationOperatePO.STATUS_INIT_INT);
+		setValue(value);
+		
+		setComment("Sign");
+		
+		return this;
+	}
+	
+	public DecorationOperatePO resign(String orderId, UserPO operater, Float value){
+		
+		setOrderId(orderId);
+		setOperater(operater);
+		setOperateTime(DateUtil.getDateToTimestamp(new Date()));
+		setType(DecorationOperatePO.TYPE_RESIGN_DECORATION_ORDER_INT);
+		setStatus(DecorationOperatePO.STATUS_INIT_INT);
+		setValue(value);
+		
+		setComment("Resign");
+		
+		return this;
+	}
+	
+	public DecorationOperatePO obsolete(String orderId, UserPO operater){
+		
+		setOrderId(orderId);
+		setOperater(operater);
+		setOperateTime(DateUtil.getDateToTimestamp(new Date()));
+		setType(DecorationOperatePO.TYPE_WASTE_DECORATION_ORDER_INT);
+		setStatus(DecorationOperatePO.STATUS_INIT_INT);
+		
+		setComment("Obsolete");
+		
+		return this;
+	}
+	
+	public DecorationOperatePO terminal(String orderId, UserPO operater){
+		
+		setOrderId(orderId);
+		setOperater(operater);
+		setOperateTime(DateUtil.getDateToTimestamp(new Date()));
+		setType(DecorationOperatePO.TYPE_TERMINATION_DECORATION_ORDER_INT);
+		setStatus(DecorationOperatePO.STATUS_INIT_INT);
+		
+		setComment("Terminal");
+		
+		return this;
+	}
+	
+	public DecorationOperatePO account(String orderId, UserPO operater){
+		
+		setOrderId(orderId);
+		setOperater(operater);
+		setOperateTime(DateUtil.getDateToTimestamp(new Date()));
+		setType(DecorationOperatePO.TYPE_ACCOUNT_DECORATION_ORDER_INT);
+		setStatus(DecorationOperatePO.STATUS_INIT_INT);
+		
+		setComment("Account");
+		
+		return this;
+	}
+	
+	public DecorationOperatePO subnum(String orderId, UserPO operater){
+		
+		setOrderId(orderId);
+		setOperater(operater);
+		setOperateTime(DateUtil.getDateToTimestamp(new Date()));
+		setType(DecorationOperatePO.TYPE_SUB_DECORATION_QUOTATION_NUM_INT);
+		setStatus(DecorationOperatePO.STATUS_INIT_INT);
+
+		setComment("Subnum");
+		
+		return this;
 	}
 	
 }

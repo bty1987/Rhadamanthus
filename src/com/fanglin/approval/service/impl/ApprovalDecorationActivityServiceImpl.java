@@ -19,10 +19,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.JSONArray;
+import com.fanglin.approval.dao.ApprovalDao;
 import com.fanglin.approval.dao.ApprovalDecorationActivityDao;
 import com.fanglin.approval.dao.ApprovalDecorationActivityItemDao;
-import com.fanglin.approval.dao.ApprovalDao;
 import com.fanglin.approval.po.ApprovalDecorationActivityItemPO;
 import com.fanglin.approval.po.ApprovalDecorationActivityPO;
 import com.fanglin.approval.po.ApprovalPO;
@@ -36,11 +36,12 @@ import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationActivityItemPO;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.dingding.service.ApprovalService;
+import com.fanglin.information.dao.AwardStockDao;
+import com.fanglin.information.po.AwardStockPO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.system.po.SystemConfigPO;
-import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 
@@ -71,6 +72,9 @@ public class ApprovalDecorationActivityServiceImpl implements ApprovalDecoration
 	
 	@Autowired
 	private ApprovalService approvalDDService;
+	
+	@Autowired
+	private AwardStockDao awardStockDao;
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
@@ -104,12 +108,12 @@ public class ApprovalDecorationActivityServiceImpl implements ApprovalDecoration
 		if(systemConfigPO == null){
 			approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_INIT_INT);
 		}else{
-			approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_DINGDING_INT);
-			List<JSONObject> formComponentValues = approvalDDService.getForms("说明", String.format(ApprovalPO.APPROVAL_CONTENTS_DECORATION_ACTIVITY_STR, approvalDecorationActivityVO.getOrderId(), approvalDecorationActivityVO.getActivityName()));
+			approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_APPROVE_INT);
+			JSONArray formComponentValues = approvalDDService.getForms("说明", String.format(ApprovalPO.APPROVAL_CONTENTS_DECORATION_ACTIVITY_STR, approvalDecorationActivityVO.getOrderId(), approvalDecorationActivityVO.getActivityName()));
 			String processinstanceid = approvalDDService.initiateApproval(systemConfigPO.getValue(), userId, approvalVO.getReceiver().getUserId(), null, null, formComponentValues, company);
 			approvalPO.setProcessinstanceid(processinstanceid);
 		}
-
+		
 		approvalPO.setType(ApprovalPO.APPROVAL_TYPE_DECORATION_ACTIVITY_INT);
 		approvalPO.setIdent(orderId);
 		approvalPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
@@ -151,33 +155,27 @@ public class ApprovalDecorationActivityServiceImpl implements ApprovalDecoration
 		
 		List<ApprovalDecorationActivityItemPO> approvalDecorationActivityItemPOs = approvalDecorationActivityItemDao.queryApprovalDecorationActivityItemByAaId(approvalDecorationActivityPO.getAdaId());
 		
-		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(approvalDecorationActivityPO.getOrderId());
-		
-		float couponCut = decorationPO.getCouponCut();
-		float thingCut = decorationPO.getThingCut();
-		
 		for(ApprovalDecorationActivityItemPO approvalDecorationActivityItemPO: approvalDecorationActivityItemPOs){
+			
+			AwardStockPO awardStockPO = awardStockDao.get(approvalDecorationActivityItemPO.getAsid());
+			
+			if(awardStockPO == null){
+				throw new FLException(240003, "奖品不存在");
+			}
+			
 			DecorationActivityItemPO decorationActivityItemPO = new DecorationActivityItemPO();
 			BeanUtil.copyProperties(approvalDecorationActivityItemPO, decorationActivityItemPO);
 			
 			decorationActivityItemPO.setAid(approvalDecorationActivityPO.getActivityId());
 			decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_VAILD_INT);
-			decorationActivityItemPO.setTotal(approvalDecorationActivityItemPO.getNum());
+			decorationActivityItemPO.setAsid(awardStockPO.getAsId());
 			decorationActivityItemPO.setReceiveUserName("");
+			decorationActivityItemPO.setIsPrefor(awardStockPO.getIsPrefor());
+			decorationActivityItemPO.setIsStock(awardStockPO.getIsStock());
 			
-			if(approvalDecorationActivityItemPO.getType() == ApprovalDecorationActivityItemPO.COLUMN_COUPON_INT){
-				couponCut += Arith.mul(approvalDecorationActivityItemPO.getMoney(),approvalDecorationActivityItemPO.getNum());
-			}else{
-				thingCut += Arith.mul(approvalDecorationActivityItemPO.getMoney(),approvalDecorationActivityItemPO.getNum());
-			}
 			
 			decorationActivityItemDao.save(decorationActivityItemPO);
 		}
-		
-		decorationPO.setCouponCut(couponCut);
-		decorationPO.setThingCut(thingCut);
-		
-		decorationDao.update(decorationPO);
 		
 		return 0;
 	}

@@ -10,57 +10,57 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.customer.dao.FeedBackDao;
+import com.fanglin.customer.dao.FeedbackDao;
 import com.fanglin.customer.po.FeedbackPO;
-import com.fanglin.customer.service.FeedBackService;
-import com.fanglin.customer.vo.FeedBackVO;
+import com.fanglin.customer.service.FeedbackService;
+import com.fanglin.customer.vo.FeedbackVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
-@Service("feedBackService")
+@Service("feedbackService")
 @Transactional(readOnly=true)
-public class FeedBackServiceImpl implements FeedBackService{
+public class FeedbackServiceImpl implements FeedbackService{
 	
 	@Autowired
-	private FeedBackDao feedBackDao;
+	private FeedbackDao feedbackDao;
 	
 	@Override
 	public void pageFeedback(Paging paging, List<Filter> filters) {
 		
-		List<FeedbackPO> feedbackPOs = feedBackDao.pageFeedback(paging, filters);
+		List<FeedbackPO> feedbackPOs = feedbackDao.pageFeedback(paging, filters);
 		
-		List<FeedBackVO> feedBackVOs = new ArrayList<FeedBackVO>();
+		List<FeedbackVO> feedbackVOs = new ArrayList<FeedbackVO>();
 		
 		if(feedbackPOs.size() != 0 && feedbackPOs != null){
 			
 			for (FeedbackPO feedbackPO : feedbackPOs) {
 				
-				FeedBackVO feedBackVO = new FeedBackVO();
+				FeedbackVO feedbackVO = new FeedbackVO();
 				
-				BeanUtil.copyPropertie(feedbackPO, feedBackVO); 	
+				BeanUtil.copyPropertie(feedbackPO, feedbackVO); 	
 				
-				feedBackVOs.add(feedBackVO);
+				feedbackVOs.add(feedbackVO);
 				
 			}
 			
 		}
 		
-		paging.setData(feedBackVOs);
+		paging.setData(feedbackVOs);
 		
 	}
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int addFeedBack(FeedBackVO feedBackVO) throws FLException {
+	public int addFeedback(FeedbackVO feedbackVO) throws FLException {
 		
 		FeedbackPO feedbackPO = new FeedbackPO();
 		
-		BeanUtil.copyPropertie(feedBackVO, feedbackPO);
+		BeanUtil.copyPropertie(feedbackVO, feedbackPO);
 
 		feedbackPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		
-		feedBackDao.save(feedbackPO);
+		feedbackDao.save(feedbackPO);
 		
 		return 0;
 	}

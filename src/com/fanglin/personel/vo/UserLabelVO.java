@@ -7,20 +7,20 @@ import com.fanglin.data.common.vo.LabelVO;
 public class UserLabelVO implements Serializable {
 
 	private static final long serialVersionUID = 5977340486036732834L;
-	
+
 	private Long ulid;
-	
+
 	private UserBaseVO user;
-	
+
 	private LabelVO label;
-	
+
 	private String scope;
 
-	public UserLabelVO(){
+	public UserLabelVO() {
 		super();
 	}
-	
-	public UserLabelVO(UserBaseVO user){
+
+	public UserLabelVO(UserBaseVO user) {
 		super();
 		this.user = user;
 	}
@@ -62,5 +62,5 @@ public class UserLabelVO implements Serializable {
 	public void setScope(String scope) {
 		this.scope = scope;
 	}
-	
+
 }

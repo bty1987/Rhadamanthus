@@ -76,7 +76,7 @@ public class SalesVO implements Serializable {
 	
 	private Short otherStatus;
 	
-	private Integer activityId;
+	private Long activityId;
 
 	public SalesVO() {
 		super();
@@ -347,11 +347,11 @@ public class SalesVO implements Serializable {
 		this.otherStatus = otherStatus;
 	}
 
-	public Integer getActivityId() {
+	public Long getActivityId() {
 		return activityId;
 	}
 
-	public void setActivityId(Integer activityId) {
+	public void setActivityId(Long activityId) {
 		this.activityId = activityId;
 	}
 

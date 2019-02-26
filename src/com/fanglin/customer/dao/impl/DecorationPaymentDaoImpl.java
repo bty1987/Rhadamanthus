@@ -35,7 +35,8 @@ public class DecorationPaymentDaoImpl extends DaoImpl<DecorationPaymentPO> imple
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<DecorationPaymentPO> countCusDecorationPaymentForAmount(String orderId) {
+	public List<DecorationPaymentPO> queryCusDecorationPaymentForContract(String orderId) {
+		
 		return session().createCriteria(DecorationPaymentPO.class).createAlias("decoration", "decoration").add(Restrictions.eq("decoration.orderId", orderId)).add(Restrictions.eq("oneType", DecorationPaymentPO.ONETYPE_ADD_INT)).add(Restrictions.eq("twoType", DecorationPaymentPO.TWOTYPE_DEAL_INT)).addOrder(Order.asc("sort")).list();
 	}
 

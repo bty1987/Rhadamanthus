@@ -50,4 +50,12 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		paging.setData(salesPaymentVOs);
 	}
 
+	@Override
+	public Float countCusSalesPaymentForAmount(SalesPaymentVO salesPaymentVO) {
+		
+		float total = salesPaymentDao.countCusSalesPaymentForAmount(salesPaymentVO.getOrderId());
+		
+		return total;
+	}
+
 }

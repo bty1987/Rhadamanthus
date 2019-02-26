@@ -46,6 +46,7 @@ jQuery(function($) {
 	var _lastRowId;
 	var autoFillList = [];
 	var autoFillNameList = [];
+    var activityInfo = com.focusPage("#activityInfo");
 
 	if(params.saleType == "mend"){
 		materialSaleOrder.typeahead.queryByNameUrl = api.material.queryMaterialItemForNameByName;
@@ -160,7 +161,7 @@ jQuery(function($) {
 		options["material.salesman.userId"] = com.focusPage('#salesmanName').val();
 		options["material.materialer.userId"] = com.focusPage('#materialerName').val();
 		options["material.instorer.userId"] = com.focusPage('#instoreName').val() ? com.focusPage('#instoreName').val() : "";
-        options["material.bid"] = com.focusPage('#materialBrand').val();;
+        options["material.bid"] = com.focusPage('#materialBrand').val();
 
 		var $list = com.focusPage('li.selected', '#list');
 		$list.length && $list.each(function(i){
@@ -212,6 +213,7 @@ jQuery(function($) {
 			params.customerName = customerName;
 
 			btn.button('reset');
+            com.showAlert(com.info, "添加成功!");
 			com.switchPage(api.index.materialIndex.url);
 		}, function(){
 			btn.button('reset');
