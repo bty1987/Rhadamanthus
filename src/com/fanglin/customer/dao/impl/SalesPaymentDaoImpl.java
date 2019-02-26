@@ -1,5 +1,6 @@
 package com.fanglin.customer.dao.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.hibernate.criterion.Restrictions;
@@ -30,6 +31,20 @@ public class SalesPaymentDaoImpl extends DaoImpl<SalesPaymentPO> implements Sale
 		query.desc("createTime");
 		
 		return query.list();
+	}
+
+	@Override
+	public Float countCusSalesPaymentForAmount(String orderId) {
+		
+		String sql="select sum(IF(payment.salespayment.type in (4,5,6,7),-payment.salespayment.referMoney,payment.salespayment.referMoney)) money from payment.salespayment,sales.sales where sales.sales.sid = payment.salespayment.sid and payment.salespayment.`status` in (1,2) and sales.sales.orderId = :orderId";
+		
+		BigDecimal total = (BigDecimal) session().createSQLQuery(sql).setString("orderId", orderId).setString("orderId", orderId).uniqueResult();
+		
+		if(total==null){
+			total = BigDecimal.ZERO;
+		}
+		
+		return total.floatValue();
 	}
 
 }

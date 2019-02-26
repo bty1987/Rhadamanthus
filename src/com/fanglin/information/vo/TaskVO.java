@@ -21,6 +21,8 @@ public class TaskVO implements Serializable{
 	private Long handle;
 	
 	private Short status;
+	
+	private Short isShow;
 
 	public TaskVO(){
 		super();
@@ -72,6 +74,14 @@ public class TaskVO implements Serializable{
 	
 	public void setStatus(Short status) {
 		this.status = status;
+	}
+
+	public Short getIsShow() {
+		return isShow;
+	}
+
+	public void setIsShow(Short isShow) {
+		this.isShow = isShow;
 	}
 
 	public String getKeyWord() {

@@ -8,7 +8,7 @@ import com.fanglin.personel.po.UserLabelPO;
 public interface UserLabelDao extends Dao<UserLabelPO> {
 
 	public List<UserLabelPO> queryUserLabelByUid(Integer uid);
-	
+
 	public List<UserLabelPO> pickUserLabel(List<Integer> userLabel);
-	
+
 }

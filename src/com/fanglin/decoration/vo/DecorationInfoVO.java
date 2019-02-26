@@ -18,19 +18,19 @@ public class DecorationInfoVO implements Serializable {
 	private static final long serialVersionUID = -2963707929983696191L;
 
 	private Long diid;
-	
+
 	private String orderId;
-	
+
 	private String notSalesmanName;
-	
+
 	private String notSalesmanPhone;
-	
+
 	private String notSalesmanContent;
-	
+
 	private String backOrderName;
-	
+
 	private String backOrderPhone;
-	
+
 	private String backOrderContent;
 
 	public Long getDiid() {
@@ -96,7 +96,5 @@ public class DecorationInfoVO implements Serializable {
 	public void setBackOrderContent(String backOrderContent) {
 		this.backOrderContent = backOrderContent;
 	}
-	
-	
 
 }

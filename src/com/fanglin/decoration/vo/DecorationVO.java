@@ -27,97 +27,85 @@ import com.fanglin.utils.BeanUtil;
 public class DecorationVO implements Serializable {
 
 	private static final long serialVersionUID = 1112545655558888L;
-	
+
 	private Long doid;
-	
+
 	private String orderId;
-	
+
 	private CustomerVO customer;
-	
+
 	private HouseVO house;
-	
-	
 
 	private UserBaseVO designer;
-	
+
 	private UserBaseVO salesman;
-	
+
 	private UserBaseVO supervisor;
-	
+
 	private UserBaseVO creater;
-	
+
 	private UserBaseVO quoter;
-	
+
 	private UserBaseVO escorter;
-	
-	
-	
+
 	private Short type;
-	
+
 	private String salesmanType;
-	
+
 	private String houseType;
-	
+
 	private String houseClass;
-	
-	private Integer resourceType;
-	
+
+	private Short resourceType;
+
 	private Float freeArea;
-	
-	
-	
+
 	private String contractCode;
-	
+
 	private UserBaseVO contractUserId;
-	
-	
-	
+
 	private Timestamp contractTime;
-	
+
 	private Timestamp measureTime;
-	
+
 	private Timestamp depositTime;
-	
+
 	private Timestamp createTime;
-	
+
 	private Timestamp accountTime;
-	
-	
-	
+
 	private Short status;
-		
+
 	private Short projectStatus;
-	
+
 	private Integer otherStatus;
-	
-	
-	
+
 	private QuotationVersionVO version;
-	
+
 	private Float orderTotalPrice;
-	
+
 	private Float quotationPrice;
 
 	private Float notSalesmanRate;
-	
+
 	private Float discount;
-	
+
 	private Float couponCut;
-	
+
 	private Float thingCut;
-	
+
 	private Float netperfor;
-	
+
 	private Float comperfor;
 
-	
 	private String dompany;
-	
+
 	private Short paySacle;
-	
+
 	private String scale;
-
-
+	
+	private String grade;
+	
 	public Long getDoid() {
 		return doid;
 	}
@@ -206,7 +194,7 @@ public class DecorationVO implements Serializable {
 		this.contractCode = contractCode;
 	}
 
-	@JSON(format="yyyy-MM-dd")
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getContractTime() {
 		return contractTime;
 	}
@@ -223,7 +211,7 @@ public class DecorationVO implements Serializable {
 		this.contractUserId = contractUserId;
 	}
 
-	@JSON(format="yyyy-MM-dd")
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getMeasureTime() {
 		return measureTime;
 	}
@@ -232,7 +220,7 @@ public class DecorationVO implements Serializable {
 		this.measureTime = measureTime;
 	}
 
-	@JSON(format="yyyy-MM-dd")
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getDepositTime() {
 		return depositTime;
 	}
@@ -241,7 +229,7 @@ public class DecorationVO implements Serializable {
 		this.depositTime = depositTime;
 	}
 
-	@JSON(format="yyyy-MM-dd")
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getCreateTime() {
 		return createTime;
 	}
@@ -346,11 +334,11 @@ public class DecorationVO implements Serializable {
 		this.escorter = escorter;
 	}
 
-	public Integer getResourceType() {
+	public Short getResourceType() {
 		return resourceType;
 	}
 
-	public void setResourceType(Integer resourceType) {
+	public void setResourceType(Short resourceType) {
 		this.resourceType = resourceType;
 	}
 
@@ -361,7 +349,7 @@ public class DecorationVO implements Serializable {
 	public void setDiscount(Float discount) {
 		this.discount = discount;
 	}
-	
+
 	public Float getQuotationPrice() {
 		return quotationPrice;
 	}
@@ -377,8 +365,8 @@ public class DecorationVO implements Serializable {
 	public void setPaySacle(Short paySacle) {
 		this.paySacle = paySacle;
 	}
-	
-	@JSON(format="yyyy-MM-dd")
+
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getAccountTime() {
 		return accountTime;
 	}
@@ -418,11 +406,19 @@ public class DecorationVO implements Serializable {
 	public void setComperfor(Float comperfor) {
 		this.comperfor = comperfor;
 	}
-
-	public void vtp(DecorationPO decorationPO){
-		BeanUtil.copyProperties(this, decorationPO, Arrays.asList("house","customer","designer","salesman","supervisor","version","createUser","quoter","escorter","contractUserId"));
-	}
 	
+	public String getGrade() {
+		return grade;
+	}
+
+	public void setGrade(String grade) {
+		this.grade = grade;
+	}
+
+	public void vtp(DecorationPO decorationPO) {
+		BeanUtil.copyProperties(this, decorationPO, Arrays.asList("house", "customer", "designer", "salesman", "supervisor", "version", "createUser", "quoter", "escorter", "contractUserId"));
+	}
+
 	public String getScale() {
 		return scale;
 	}

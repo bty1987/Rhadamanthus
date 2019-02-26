@@ -14,24 +14,16 @@ public class ServiceRecordPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 6183347283851549874L;
 	
-	public static final short TYPE_TYPE_CHANGE_DECORATIONORDER_ORDERID_INT = 1;
+	public static final short TYPE_CHANGE_DECORATION_INT = 1;
 	
-	public static final short TYPE_TYPE_CHANGE_DECORATIONORDER_VERSIONID_INT = 2;
+	public static final short TYPE_CHANGE_MATERIAL_INT = 2;
 	
-	public static final short TYPE_TYPE_CHANGE_DECORATIONORDER_DATETIME_INT = 3;
+	public static final short TYPE_CHANGE_QUOTATION_INT = 3;
 	
-	public static final short TYPE_TYPE_CHANGE_MATERIALSUBORDER_ORDERID_INT = 4;
+	public static final short TYPE_CHANGE_PAYMENT_INT = 4;
 	
-	public static final short TYPE_TYPE_CHANGE_DECORATIONORDER_STATUS_INT = 5;
+	public static final short TYPE_REFUND_PAYMENT_INT = 5;
 	
-	public static final short TYPE_TYPE_CHANGE_DECORATIONPAYMENT_TIME_INT = 6;
-	
-	public static final short TYPE_TYPE_CHANGE_MATERIALPAYMENT_TIME_INT = 7;
-	
-	public static final short TYPE_TYPE_REFUND_DECORATIONPAYMENT_INT = 8;
-	
-	public static final short TYPE_TYPE_CHANGE_QUOTATION_STATUS_INT = 9;
-
 	private Long srId;
 	
 	private Short type;

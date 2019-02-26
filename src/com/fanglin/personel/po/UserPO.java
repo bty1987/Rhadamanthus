@@ -30,82 +30,82 @@ import com.fanglin.system.po.RolePO;
 public class UserPO implements Serializable {
 
 	private static final long serialVersionUID = -7041891388073738568L;
-	
+
 	public static final String SUPER_USERID_STR = "1";
-	
+
 	public static final short ISLOGIN_NOT_INT = 0;
-	
+
 	public static final short ISLOGIN_FIP_INT = 1;
-	
+
 	public static final short ISLOGIN_FS_INT = 2;
-	
+
 	public static final short FREEDOM_TIMEOUT_INT = 1;
-	
+
 	public static final short FREEDOM_ROLLCALL_INT = 2;
-	
+
 	public static final short FREEDOM_REQUEST_AUTH_INT = 4;
-	
+
 	public static final short STATUS_ENABLE_INT = 0;
-		
+
 	public static final short STATUS_DISABLE_INT = 1;
-	
+
 	private int uid;
 
 	private String userId;
-	
+
 	private String oldUserId;
-	
+
 	private RolePO role;
-	
+
 	private DepartmentPO dept;
-	
+
 	private int company;
-	
+
 	private String loginId;
-	
+
 	private String password;
-	
+
 	private String userName;
-	
+
 	private String pinYin;
-	
+
 	private String currentName;
-	
+
 	private short status;
-	
+
 	private int dtid;
-	
+
 	private DutyPO duty;
-	
+
 	private String gender;
-	
+
 	private String birthday;
-	
+
 	private String identity;
-	
+
 	private String phone;
-	
+
 	private String userPhoto;
-	
+
 	private short isLogin;
-	
+
 	private short extranet;
-	
+
 	private short freedom;
 
-	public UserPO(){
+	public UserPO() {
 		super();
 	}
-	
+
 	public UserPO(int uid) {
 		super();
 		this.uid = uid;
 	}
 
-	public UserPO(String userId){
+	public UserPO(String userId) {
 		this.userId = userId;
 	}
-	
+
 	public UserPO(DutyPO duty) {
 		super();
 		this.duty = duty;
@@ -113,7 +113,7 @@ public class UserPO implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "uId") 
+	@Column(name = "uId")
 	public int getUid() {
 		return uid;
 	}
@@ -121,69 +121,69 @@ public class UserPO implements Serializable {
 	public void setUid(int uid) {
 		this.uid = uid;
 	}
-	
+
 	@Column(name = "userId")
-	public String getUserId(){
+	public String getUserId() {
 		return userId;
 	}
 
-	public void setUserId(String userId){
+	public void setUserId(String userId) {
 		this.userId = userId;
 	}
 
 	@Column(name = "oldUserId")
-    public String getOldUserId(){
-        return oldUserId;
-    }
-   
-    public void setOldUserId(String oldUserId){
-        this.oldUserId = oldUserId;
-    }
-    
+	public String getOldUserId() {
+		return oldUserId;
+	}
+
+	public void setOldUserId(String oldUserId) {
+		this.oldUserId = oldUserId;
+	}
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "roleId", referencedColumnName = "rid", nullable = false)
-	public RolePO getRole(){
+	public RolePO getRole() {
 		return role;
 	}
 
-	public void setRole(RolePO role){
+	public void setRole(RolePO role) {
 		this.role = role;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "deptId", referencedColumnName = "did", nullable = false)
-	public DepartmentPO getDept(){
+	public DepartmentPO getDept() {
 		return dept;
 	}
-	
-	public void setDept(DepartmentPO dept){
+
+	public void setDept(DepartmentPO dept) {
 		this.dept = dept;
 	}
 
 	@Column(name = "loginId")
-	public String getLoginId(){
+	public String getLoginId() {
 		return loginId;
 	}
 
-	public void setLoginId(String loginId){
+	public void setLoginId(String loginId) {
 		this.loginId = loginId;
 	}
 
 	@Column(name = "password")
-	public String getPassword(){
+	public String getPassword() {
 		return password;
 	}
 
-	public void setPassword(String password){
+	public void setPassword(String password) {
 		this.password = password;
 	}
 
 	@Column(name = "userName")
-	public String getUserName(){
+	public String getUserName() {
 		return userName;
 	}
 
-	public void setUserName(String userName){
+	public void setUserName(String userName) {
 		this.userName = userName;
 	}
 
@@ -197,11 +197,11 @@ public class UserPO implements Serializable {
 	}
 
 	@Column(name = "currentName")
-	public String getCurrentName(){
+	public String getCurrentName() {
 		return currentName;
 	}
 
-	public void setCurrentName(String currentName){
+	public void setCurrentName(String currentName) {
 		this.currentName = currentName;
 	}
 
@@ -215,79 +215,79 @@ public class UserPO implements Serializable {
 	}
 
 	@Column(name = "dtid")
-    public int getDtid() {
+	public int getDtid() {
 		return dtid;
 	}
 
-	
 	public void setDtid(int dtid) {
 		this.dtid = dtid;
 	}
 
-    @ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "did", referencedColumnName = "did", nullable = false)
-	public DutyPO getDuty(){
+	public DutyPO getDuty() {
 		return duty;
 	}
 
-	public void setDuty(DutyPO duty){
+	public void setDuty(DutyPO duty) {
 		this.duty = duty;
 	}
 
 	@Column(name = "gender")
-	public String getGender(){
+	public String getGender() {
 		return gender;
 	}
 
-	public void setGender(String gender){
+	public void setGender(String gender) {
 		this.gender = gender;
 	}
 
 	@Column(name = "birthday")
-	public String getBirthday(){
+	public String getBirthday() {
 		return birthday;
 	}
 
-	public void setBirthday(String birthday){
+	public void setBirthday(String birthday) {
 		this.birthday = birthday;
 	}
 
 	@Column(name = "identity")
-	public String getIdentity(){
+	public String getIdentity() {
 		return identity;
 	}
 
-	public void setIdentity(String identity){
+	public void setIdentity(String identity) {
 		this.identity = identity;
 	}
 
 	@Column(name = "phone")
-	public String getPhone(){
+	public String getPhone() {
 		return phone;
 	}
 
-	public void setPhone(String phone){
+	public void setPhone(String phone) {
 		this.phone = phone;
 	}
 
 	@Column(name = "userPhoto")
-	public String getUserPhoto(){
+	public String getUserPhoto() {
 		return userPhoto;
 	}
 
-	public void setUserPhoto(String userPhoto){
+	public void setUserPhoto(String userPhoto) {
 		this.userPhoto = userPhoto;
 	}
 
 	@Column(name = "isLogin")
-    public short getIsLogin(){
-        return isLogin;
-    }
+	public short getIsLogin() {
+		return isLogin;
+	}
 
-    public void setIsLogin(short isLogin){
-        this.isLogin = isLogin;
-    }
+	public void setIsLogin(short isLogin) {
+		this.isLogin = isLogin;
+	}
 
+	@Column(name = "company")
 	public int getCompany() {
 		return company;
 	}
@@ -305,6 +305,7 @@ public class UserPO implements Serializable {
 		this.extranet = extranet;
 	}
 
+	@Column(name = "freedom")
 	public short getFreedom() {
 		return freedom;
 	}

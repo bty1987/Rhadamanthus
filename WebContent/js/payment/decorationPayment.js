@@ -14,7 +14,8 @@ jQuery(function($) {
 		paymentType: "增项款",
 		orderId: null,
 		bankNums: [],
-		checkvNums: []
+		checkvNums: [],
+		paymentStatusArray: ["未付款", "已付款", "已确认", "审批中", "历史"]
 	};
 
     decorationPayment.items.cashCheckbox = com.focusPage("#cashCheckbox");
@@ -256,7 +257,7 @@ jQuery(function($) {
                ["应收金额:", v.referMoney, "blue"],
                ["收款人:", v.collecter.currentName, "grey"],
                ["收款时间:", v.collectTime, "green"],
-               ["状态:", v.paymentStatus, "red"],
+               ["状态:", decorationPayment.paymentStatusArray[v.paymentStatus], "red"],
                ["备注:", v.comment, "grey"]
             ];
 
@@ -284,18 +285,14 @@ jQuery(function($) {
 				$liProperty.appendTo($ulStyle);
 			});
 
-			if(v.paymentStatus == "已确认" && v.oneType == 0){
-				$divBtnWrap.append($btnPrint);
-				if(v.twoType != 2){
-					$divBtnWrap.append($btnRefund);
-				}
-				$divBtnWrap.appendTo($h3);
-			}else if(v.oneType == 1 || v.oneType == 2){ //退款或者历史
-				$divBtnWrap.append($btnPrint).appendTo($h3);
-			}else{
-				$divBtnWrap.append($btnPrint).append($btnUpdate).appendTo($h3);
+			$divBtnWrap.append($btnPrint);
+			if(v.paymentStatus == 2 && v.oneType == 0 && v.twoType != 2){
+				$divBtnWrap.append($btnRefund);
+			}else if(v.paymentStatus == 1){
+				$divBtnWrap.append($btnUpdate);
 			}
 
+			$divBtnWrap.appendTo($h3);
             $liLine.append($h3).append($ulProperty).append($ulStyle);
 
 			$btnRefund.click(function(){
@@ -360,6 +357,7 @@ jQuery(function($) {
 			if(res){
 				com.post(api.approval.submitApprovalForDecorationRefund, options, function(res){
 					com.showAlert(com.info, "提交成功");
+					hsearcher.doSearch();
 				});
 			}
 
@@ -800,6 +798,7 @@ jQuery(function($) {
 
 				v.installmentBank = v.installment != null && v.installment != "0" ? decorationPayment.bankInfo[v.installmentBank] : '';
 				v.accountsBank = v.accounts != null && v.accounts != "0" ? decorationPayment.accountsInfo[v.accountsBank] : '';
+				v.paymentStatus = decorationPayment.paymentStatusArray[v.paymentStatus];
 			});
 		});
     });

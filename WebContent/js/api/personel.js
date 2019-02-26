@@ -42,4 +42,13 @@ $.extend(api, {personel: {
     queryUserCompany: {url: "queryUserCompany.do"},
     updateUserCompany: {url: "updateUserCompany.do", server: "communion"},
 
+    PageUserRequire:{url: "pageUserRequire.do"},
+    addUserRequire:{url: "addUserRequire.do", server: "communion"},
+    approveUserRequire:{url: "approveUserRequire.do", server: "communion"},
+    finishUserRequire:{url: "finishUserRequire.do", server: "communion"},
+    refuseUserRequire:{url: "refuseUserRequire.do", server: "communion"},
+
+    pagePerformance:{url: "pagePerformance.do"},
+    addPreformance:{url: "addPreformance.do", server: "communion"}
+
 }});

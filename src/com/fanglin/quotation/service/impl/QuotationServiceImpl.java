@@ -279,7 +279,7 @@ public class QuotationServiceImpl implements QuotationService {
 		quotationDao.update(quotationPO);
 		
 		ServiceRecordPO serviceRecordPO = new ServiceRecordPO();
-		serviceRecordPO.setType(ServiceRecordPO.TYPE_TYPE_CHANGE_QUOTATION_STATUS_INT);
+		serviceRecordPO.setType(ServiceRecordPO.TYPE_CHANGE_QUOTATION_INT);
 		serviceRecordPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 		serviceRecordPO.setOperateUserId(userId);
 		serviceRecordPO.setInfo(String.format("装修单:%s,报价ID%d,更新状态", quotationPO.getOrderId(), quotationPO.getQid()));

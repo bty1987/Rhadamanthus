@@ -36,8 +36,7 @@ public class MaterialPaymentDaoImpl extends DaoImpl<MaterialPaymentPO> implement
 	@Override
 	public Float countCusMaterialPaymentForAmount(String orderId) {
 		
-		String sql = "select sum(money) from (select sum(IF(payment.materialpayment.paymentType in (4,5,6,7),-payment.materialpayment.referMoney,payment.materialpayment.referMoney)) money from payment.materialpayment,material.material where material.material.mid = payment.materialpayment.mid and payment.materialpayment.paymentStatus in (1,2) and material.material.orderId = :orderId union all select sum(IF(payment.salespayment.type in (4,5,6,7),-payment.salespayment.referMoney,payment.salespayment.referMoney)) money from payment.salespayment,sales.sales where sales.sales.sid = payment.salespayment.sid and payment.salespayment.`status` in (1,2) and sales.sales.orderId = :orderId) t";
-		
+		String sql="select sum(IF(payment.materialpayment.paymentType in (4,5,6,7),-payment.materialpayment.referMoney,payment.materialpayment.referMoney)) money from payment.materialpayment,material.material where material.material.mid = payment.materialpayment.mid and payment.materialpayment.paymentStatus in (1,2) and material.material.orderId = :orderId";
 		BigDecimal total = (BigDecimal) session().createSQLQuery(sql).setString("orderId", orderId).setString("orderId", orderId).uniqueResult();
 		
 		if(total==null){

@@ -10,15 +10,14 @@ import com.fanglin.decoration.po.DecorationInfoPO;
 @Repository("decorationInfoDao")
 public class DecorationInfoDaoImpl extends DaoImpl<DecorationInfoPO> implements DecorationInfoDao {
 
-	public DecorationInfoDaoImpl(){
+	public DecorationInfoDaoImpl() {
 		super(DecorationInfoPO.class);
 	}
-	
+
 	@Override
 	public DecorationInfoPO queryDecorationInfoByOrderId(String orderId) {
-		
-		return (DecorationInfoPO)session().createCriteria(DecorationInfoPO.class).add(Restrictions.eq("orderId", orderId)).uniqueResult();
+
+		return (DecorationInfoPO) session().createCriteria(DecorationInfoPO.class).add(Restrictions.eq("orderId", orderId)).uniqueResult();
 	}
 
-	
 }

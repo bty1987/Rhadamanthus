@@ -1,6 +1,8 @@
 
 jQuery(function($) {
-	var decorationPaymentCheck = {};
+	var decorationPaymentCheck = {
+		paymentStatusArray: ["未付款", "已付款", "已确认", "审批中", "历史"]
+	};
 
 	com.post(api.common.queryReceiptType, {}, function(res){
 		decorationPaymentCheck.cashInfo = {};
@@ -56,7 +58,7 @@ jQuery(function($) {
                ["应收金额:", v.referMoney, "blue"],
                ["收款人:", v.collecter.currentName, "grey"],
                ["收款时间:", v.collectTime, "green"],
-               ["状态:", v.paymentStatus, "red"],
+               ["状态:", decorationPaymentCheck.paymentStatusArray[v.paymentStatus], "red"],
                ["备注:", v.comment, "grey"]
             ];
             
@@ -168,7 +170,7 @@ jQuery(function($) {
                ["收款时间:", v.collectTime, "green"],
 		       ["确认人:", v.confirmer.currentName, "grey"],
 			   ["确认时间:", v.confirmTime, "green"],
-               ["状态:", v.paymentStatus, "red"],
+               ["状态:", decorationPaymentCheck.paymentStatusArray[v.paymentStatus], "red"],
                ["备注:", v.comment, "grey"]
             ];
 
@@ -313,6 +315,7 @@ jQuery(function($) {
 				
 				v.installmentBank = v.installment != null && v.installment != "0" ? decorationPaymentCheck.bankInfo[v.installmentBank] : '';
 				v.accountsBank = v.accounts != null && v.accounts != "0" ? decorationPaymentCheck.accountsInfo[v.accountsBank] : '';
+				v.paymentStatus = decorationPaymentCheck.paymentStatusArray[v.paymentStatus];
 			});
 		});
     });

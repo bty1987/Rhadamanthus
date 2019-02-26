@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.dingding.po.User;
@@ -30,7 +31,7 @@ public class ApprovalService {
 	@Autowired
 	private SystemConfigDao systemConfigDao;
 
-	public String initiateApproval(String processCode, String sender, String approver, String copy, String copyPosition, List<JSONObject> forms, int company) throws FLException {
+	public String initiateApproval(String processCode, String sender, String approver, String copy, String copyPosition, JSONArray formComponentValues, int company) throws FLException {
 
 		User senderUser = userDDService.getUser(sender, company);
 
@@ -47,12 +48,12 @@ public class ApprovalService {
 		if (copyPosition != null && !"".equals(copyPosition)) {
 			params.put("cc_position", copyPosition);
 		}
-
+		
 		params.put("process_code", processCode);
 		params.put("originator_user_id", sender);
 		params.put("dept_id", senderUser.getDepartment().get(0));
 		params.put("approvers", approver);
-		params.put("form_component_values", forms);
+		params.put("form_component_values", formComponentValues);
 
 		SystemConfigPO oapiHost = systemConfigDao.querySystemConfig("oapiHost");
 		String accessToken = authDDService.getAccessToken(FormatUtil.encodeCompany(company));
@@ -71,9 +72,9 @@ public class ApprovalService {
 		}
 	}
 
-	public List<JSONObject> getForms(String name, String value) {
+	public JSONArray getForms(String name, String value) {
 
-		List<JSONObject> forms = new ArrayList<JSONObject>();
+		JSONArray forms = new JSONArray();
 
 		JSONObject jsonObject = new JSONObject();
 

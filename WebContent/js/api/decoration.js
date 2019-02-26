@@ -13,7 +13,7 @@ $.extend(api.index, {
     decorationTimelineIndex: {url: "/views/decoration/decorationTimeline.html"},
     backVisitIndex: {url: "/views/decoration/backVisit.html"},
     createOrderIndex: {url: "/views/decoration/createOrder.html"},
-    
+
     auditIndex: {url: "/views/decoration/audit.html"},
     auditRecordIndex: {url: "/views/decoration/auditRecord.html"},
 
@@ -37,7 +37,6 @@ $.extend(api, {decoration: {
 
     queryDecorationContractByOrderId: {url: "queryDecorationContractByOrderId.do", demo: true},
     saveDecorationContract: {url: "saveDecorationContract.do"},
-    generateDecorationContract: {url: "../../generateDecorationContract.do"},
     signDecorationContract: {url: "signDecorationContract.do"},
     resignDecorationContract: {url: "resignDecorationContract.do"},
 
@@ -51,9 +50,9 @@ $.extend(api, {decoration: {
     pageDecorationForDesignerManager: {url: "pageDecorationForDesignerManager.do", demo: true},
     pageDecorationForSalesmanManager: {url: "pageDecorationForSalesmanManager.do", demo: true},
     pageDecoration: {url: "pageDecoration.do", demo: true},
-    checkDecoration: {url: "checkDecoration.do"},
+    checkDecoration: {url: "checkDecoration.do", intercept: true},
     queryDecorationByCustomerId: {url: "queryDecorationByCustomerId.do"},
-    queryDecorationForDesignerByOrderId: {url: "queryDecorationForDesignerByOrderId.do", demo: true},
+    queryDecorationByOrderId: {url: "queryDecorationByOrderId.do", demo: true},
     queryDecorationForCommonByOrderId: {url: "queryDecorationForCommonByOrderId.do", demo: true},
     createDecoration: {url: "createDecoration.do"},
     obsoleteDecoration: {url: "obsoleteDecoration.do"},
@@ -73,14 +72,14 @@ $.extend(api, {decoration: {
     queryDecorationPictureByOrderId: {url: "queryDecorationPictureByOrderId.do", demo: true},
     addDecorationPicture: {url: "addDecorationPicture.do", intercept: true},
     deleteDecorationPicture: {url: "deleteDecorationPicture.do"},
-    
+
     changeDecorationForOrderId: {url: "changeDecorationForOrderId.do"},
     changeDecorationForTime: {url: "changeDecorationForTime.do"},
     changeDecorationForVersionId: {url: "changeDecorationForVersionId.do"},
     changeDecorationForStatus: {url: "changeDecorationForStatus.do"},
     changeDecorationForHouse: {url: "changeDecorationForHouse.do"},
     subDecorationForQuotationTime: {url: "subDecorationForQuotationTime.do"},
-	
+
 	pageDecorationHolonomy: {url: "pageDecorationHolonomy.do"},
 	queryDecorationHolonomy: {url: "queryDecorationHolonomy.do"},
 	makeDecorationHolonomy: {url: "makeDecorationHolonomy.do"},
@@ -101,19 +100,19 @@ $.extend(api, {decoration: {
     updateAuditScaleForStatus: {url: "updateAuditScaleForStatus.do"},
     addAuditScale: {url: "addAuditScale.do"},
     deleteAuditScale: {url: "deleteAuditScale.do"},
-    
+
     queryDecorationAccount:{url:"queryDecorationAccount.do"},
     makeDecorationAccount:{url:"makeDecorationAccount.do"},
-    
+
     queryDecorationServiceByOrderId:{url:"queryDecorationServiceByOrderId.do"},
     completeDecorationService:{url:"completeDecorationService.do"},
     addDecorationService:{url:"addDecorationService.do"},
 
     queryDecorationAdditionByOrderId:{url:"queryDecorationAdditionByOrderId.do"},
     queryDecorationConfig: {url: "queryDecorationConfig.do"},
-    
+
     queryDecorationUser:{url:"queryDecorationUser.do"},
     addDecorationUser:{url:"addDecorationUser.do"},
-    deleteDecorationUser:{url:"deleteDecorationUser.do"},
-    
+    deleteDecorationUser:{url:"deleteDecorationUser.do"}
+
 }});

@@ -18,49 +18,49 @@ public class DecorationHolonomyPO implements java.io.Serializable {
 	private static final long serialVersionUID = -301890437525155657L;
 
 	public static final String COLUMN_ORDERID_STR = "decoration.orderId";
-	
+
 	public static final String COLUMN_VILLAGE_STR = "village.no";
-	
+
 	public static final String COLUMN_DESIGNER_STR = "designer.userId";
 
 	public static final String COLUMN_COMPANY_STR = "decoration.company";
-	
+
 	public static final float MONEY_SERVICEPAIDUP_FLOAT = 0f;
-	
+
 	public static final short STATUS_INIT_SHORT = 0;
 	
 	private long dhid;
-	
+
 	private DecorationPO decoration;
-	
+
 	private String name;
-	
+
 	private float maching;
+
+	private float discount;
 	
-	private float discount;	
-	
+	private float discountBase; // 基数
+
+	private float projectBase; // 工程基础
+
 	private float projectPrice;
-	
-	private float managePrice;	
-	
-	private float manageRate;	
-	
-	private float materialPrice;	
-	
-	private float servicePrice;	
-		
+
+	private float managePrice;
+
+	private float manageRate;
+
+	private float materialPrice;
+
+	private float servicePrice;
+
 	private float serviceRate;
-	
-	private float materialPaidup;	
-	
+
+	private float materialPaidup;
+
 	private float servicePaidup;
-	
+
 	private short status;
 
-	private float discountBase; //基数
-	
-	private float projectBase; //工程基础
-	
 	public DecorationHolonomyPO() {
 		super();
 	}
@@ -82,7 +82,7 @@ public class DecorationHolonomyPO implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, name = "orderId", referencedColumnName="orderId")
+	@JoinColumn(nullable = false, name = "orderId", referencedColumnName = "orderId")
 	public DecorationPO getDecoration() {
 		return decoration;
 	}
@@ -90,7 +90,6 @@ public class DecorationHolonomyPO implements java.io.Serializable {
 	public void setDecoration(DecorationPO decoration) {
 		this.decoration = decoration;
 	}
-
 
 	@Column(name = "name")
 	public String getName() {
@@ -199,7 +198,7 @@ public class DecorationHolonomyPO implements java.io.Serializable {
 	public void setStatus(short status) {
 		this.status = status;
 	}
-	
+
 	@Column(name = "discountBase")
 	public float getDiscountBase() {
 		return discountBase;

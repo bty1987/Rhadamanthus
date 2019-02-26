@@ -18,6 +18,12 @@ public class ApprovalDecorationActivityItemPO implements java.io.Serializable {
 	public static final String COLUMN_ORDERID_STR = "orderId";
 	
 	public static final int COLUMN_COUPON_INT = 0;
+	
+	public static final int COLUMN_THING_INT = 1;
+	
+	public static final int COLUMN_SPECIAL_COLUMN_COUPON_INT = 2;
+	
+	public static final int COLUMN_SPECIAL_ARTICLE_INT = 3;
 
 	private long adaiId;
 	
@@ -36,6 +42,10 @@ public class ApprovalDecorationActivityItemPO implements java.io.Serializable {
 	private float money;
 	
 	private String content;
+	
+	private short stateType;
+	
+	private long asid;
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -118,6 +128,24 @@ public class ApprovalDecorationActivityItemPO implements java.io.Serializable {
 
 	public void setContent(String content) {
 		this.content = content;
+	}
+
+	@Column(name = "stateType")
+	public short getStateType() {
+		return stateType;
+	}
+
+	public void setStateType(short stateType) {
+		this.stateType = stateType;
+	}
+
+	@Column(name = "asid")
+	public long getAsid() {
+		return asid;
+	}
+
+	public void setAsid(long asid) {
+		this.asid = asid;
 	}
 
 }

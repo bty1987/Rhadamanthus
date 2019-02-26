@@ -108,5 +108,5 @@ public class MarketPublicAction extends BaseListAction{
 	public void setCardPhoto(CardPhotoVO cardPhoto) {
 		this.cardPhoto = cardPhoto;
 	}
-	
+
 }

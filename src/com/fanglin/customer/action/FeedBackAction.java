@@ -9,35 +9,35 @@ import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.customer.service.FeedBackService;
-import com.fanglin.customer.vo.FeedBackVO;
+import com.fanglin.customer.service.FeedbackService;
+import com.fanglin.customer.vo.FeedbackVO;
 
 @ParentPackage("common")
 @Namespace("/")
 @Controller
-public class FeedBackAction extends BaseListAction{
+public class FeedbackAction extends BaseListAction{
 
 	private static final long serialVersionUID = 136311071541312065L;
 	
 	@Autowired
-	private FeedBackService feedBackService;
+	private FeedbackService feedbackService;
 	
-	private FeedBackVO feedBack;
+	private FeedbackVO feedback;
 	
-	@Action(value = "addFeedBack", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addFeedBack() throws FLException{
+	@Action(value = "addFeedback", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addFeedback() throws FLException{
 		
-		feedBackService.addFeedBack(feedBack);
+		feedbackService.addFeedback(feedback);
 		
 		return SUCCESS;
 	}
-	
-	public FeedBackVO getFeedBack() {
-		return feedBack;
+
+	public FeedbackVO getFeedback() {
+		return feedback;
 	}
 
-	public void setFeedBack(FeedBackVO feedBack) {
-		this.feedBack = feedBack;
+	public void setFeedback(FeedbackVO feedback) {
+		this.feedback = feedback;
 	}
 
 }

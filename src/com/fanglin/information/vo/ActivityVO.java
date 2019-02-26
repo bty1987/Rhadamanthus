@@ -18,6 +18,10 @@ public class ActivityVO implements java.io.Serializable {
 	
 	private Short status;
 	
+	private Short type;
+	
+	private Short defaults;
+	
 	private Timestamp createTime;
 	
 	private Timestamp startTime;
@@ -100,6 +104,22 @@ public class ActivityVO implements java.io.Serializable {
 
 	public void setContent(String content) {
 		this.content = content;
+	}
+
+	public Short getType() {
+		return type;
+	}
+
+	public void setType(Short type) {
+		this.type = type;
+	}
+
+	public Short getDefaults() {
+		return defaults;
+	}
+
+	public void setDefaults(Short defaults) {
+		this.defaults = defaults;
 	}
 
 }

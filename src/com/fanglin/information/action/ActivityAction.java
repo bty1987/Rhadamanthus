@@ -49,15 +49,15 @@ public class ActivityAction extends BaseListAction {
 	@Action(value="queryActivityForValid", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String queryActivityForValid() throws FLException{
 		
-		activitys = activityService.queryActivityForValid(queryCompany());
+		activitys = activityService.queryActivityForValid(activity, queryCompany());
 		
 		return SUCCESS;
 	}
 	
-	@Action(value="queryActivityItemByAId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryActivityItemByAId(){
+	@Action(value="queryActivityItemByAid", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String queryActivityItemByAid(){
 		
-		activityItems = activityItemService.queryActivityItemByAId(activity);
+		activityItems = activityItemService.queryActivityItemByAid(activity);
 		
 		return SUCCESS;
 	}
@@ -81,27 +81,35 @@ public class ActivityAction extends BaseListAction {
 	@Action(value="updateActivity", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String updateActivity() throws FLException{
 		
-		activityService.updateActivity(activity, queryUserId());
+		activityService.updateActivity(activity);
 		
 		return SUCCESS;
 	}
 	
-	@Action(value="updateActivityItem", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String updateActivityItem() throws FLException{
+	@Action(value="updateActivityForStatus", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String updateActivityForStatus() throws FLException{
 		
-		activityItemService.updateActivityItem(activity, activityItem);
+		activityService.updateActivityForStatus(activity);
 		
 		return SUCCESS;
 	}
 	
-	@Action(value="deleteActivityItemByAiId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String deleteActivityItemByAiId(){
+	@Action(value="updateActivityForDefault", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String updateActivityForDefault() throws FLException{
 		
-		activityItemService.deleteActivityItemByAiId(activity, activityItem);
+		activityService.updateActivityForDefault(activity);
 		
 		return SUCCESS;
 	}
-
+	
+	@Action(value="deleteActivityItemByAiid", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String deleteActivityItemByAiid(){
+		
+		activityItemService.deleteActivityItemByAiid(activity, activityItem);
+		
+		return SUCCESS;
+	}
+	
 	public ActivityVO getActivity() {
 		return activity;
 	}

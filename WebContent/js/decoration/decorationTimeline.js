@@ -225,7 +225,7 @@ $(function(){
     };
 
 //    获取订单基本信息
-    com.post(api.decoration.queryDecorationForDesignerByOrderId, {"decoration.orderId": order.oid}, function(req){
+    com.post(api.decoration.queryDecorationByOrderId, {"decorationOrderId": order.oid}, function(req){
         var $info = com.focusPage('#baseinfo');
 
         var decoration = req.decoration;
@@ -397,6 +397,7 @@ $(function(){
     function createPayment(v, i){
 
         var colorArr = ['orange','green', 'blue', 'pink', 'purple','red','brown','default','blue3'];
+        var paymentStatusArray= ["未付款", "已付款", "已确认", "审批中", "历史"];
         var $liLine = $('<li>').addClass('item-orange').addClass('clearfix item-'+ colorArr[i%colorArr.length]);
 
         var $h5 = $('<h5></h5>').addClass('oid').text(v.paymentType);
@@ -405,7 +406,7 @@ $(function(){
 
         var propertyArr = [
             ["金额:", v.realMoney, "grey"],
-            ["状态:", v.paymentStatus, "grey"]
+            ["状态:", paymentStatusArray[v.paymentStatus], "grey"]
         ];
 
         $.each(propertyArr, function (index,value) {

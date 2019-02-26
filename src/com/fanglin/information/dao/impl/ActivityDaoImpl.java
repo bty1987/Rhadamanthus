@@ -1,11 +1,11 @@
 /**
- * @File Name		: ActivityDaoImpl.java
+ * @File Name	: ActivityDaoImpl.java
  * @Package   	: com.fanglin.information.dao.impl
  * @Version		: 1.0
  * @Date			: 2015-11-2
  * @Copyright	: Copyright Creators 2014
  * @Author		: baity
- * @Email			: bty1987@163.com
+ * @Email		: bty1987@163.com
  * @Describing	: 
  */
 
@@ -24,24 +24,26 @@ import com.fanglin.utils.Paging;
 
 @Repository("activityDao")
 public class ActivityDaoImpl extends DaoImpl<ActivityPO> implements ActivityDao {
-	
-	public ActivityDaoImpl(){
+
+	public ActivityDaoImpl() {
 		super(ActivityPO.class);
 	}
 
 	@Override
-	public List<ActivityPO> pageActivity(Paging paging, List<Filter> filters,int company) {
-		
+	public List<ActivityPO> pageActivity(Paging paging, List<Filter> filters, int company) {
+
 		PagingQuery<ActivityPO> query = pagingQuery(paging, ActivityPO.class);
 		query.add(Restrictions.eq("company", company));
 		query.alias("creater", "creater");
-		
-		if(filters != null){
-			for(Filter filter: filters){
-				
-				if(ActivityPO.COLUMN_STATUS_STR.equals(filter.getField())){
+
+		if (filters != null) {
+			for (Filter filter : filters) {
+
+				if (ActivityPO.COLUMN_STATUS_STR.equals(filter.getField())) {
 					query.add(query.getCriterion(filter.getField(), Short.valueOf(filter.getData()), filter.getOp()));
-				}else{
+				} else if(ActivityPO.COLUMN_TYPE_STR.equals(filter.getField())){
+					query.add(query.getCriterion(filter.getField(), Short.valueOf(filter.getData()), filter.getOp()));
+				}else {
 					query.add(query.getCriterion(filter.getField(), filter.getData(), filter.getOp()));
 				}
 			}
@@ -52,8 +54,22 @@ public class ActivityDaoImpl extends DaoImpl<ActivityPO> implements ActivityDao 
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<ActivityPO> queryActivityForValid(int company) {
-		return session().createCriteria(ActivityPO.class).add(Restrictions.eq("company", company)).add(Restrictions.eq(ActivityPO.COLUMN_STATUS_STR, ActivityPO.STATUS_VALID_INT)).list();
+	public List<ActivityPO> queryActivityForValid(int company, short type) {
+		return session().createCriteria(ActivityPO.class).add(Restrictions.eq("company", company)).add(Restrictions.eq(ActivityPO.COLUMN_STATUS_STR, ActivityPO.STATUS_VALID_INT)).add(Restrictions.eq(ActivityPO.COLUMN_TYPE_STR, type)).list();
 	}
-	
+
+	@Override
+	public ActivityPO queryActivityForDefault(short type) {
+		return (ActivityPO) session().createCriteria(ActivityPO.class).add(Restrictions.eq(ActivityPO.COLUMN_DEFAULTS_STR, ActivityPO.DEFAULTS_DEFAULT_INT)).add(Restrictions.eq(ActivityPO.COLUMN_STATUS_STR, ActivityPO.STATUS_VALID_INT)).add(Restrictions.eq(ActivityPO.COLUMN_TYPE_STR, type)).uniqueResult();
+	}
+
+	@Override
+	public int resetActivityForDefault(short type) {
+
+		String sql = "update information.activity set defaults = :defaults where type = :type";
+		session().createSQLQuery(sql).setShort("defaults", ActivityPO.DEFAULTS_COMMON_INT).setFloat("type", type).executeUpdate();
+
+		return 0;
+	}
+
 }

@@ -6,21 +6,17 @@ public class DecorationActivityVO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 3947779921447838919L;
 
-	private Integer daId;
-	
-	private String orderId;
-	
-	private ActivityVO activity;
-	
-	private int type;
-	
-	private int defaults;
+	private Long daId;
 
-	public Integer getDaId() {
+	private String orderId;
+
+	private ActivityVO activity;
+
+	public Long getDaId() {
 		return daId;
 	}
 
-	public void setDaId(Integer daId) {
+	public void setDaId(Long daId) {
 		this.daId = daId;
 	}
 
@@ -39,23 +35,5 @@ public class DecorationActivityVO implements java.io.Serializable {
 	public void setActivity(ActivityVO activity) {
 		this.activity = activity;
 	}
-
-	public int getType() {
-		return type;
-	}
-
-	public void setType(int type) {
-		this.type = type;
-	}
-
-	public int getDefaults() {
-		return defaults;
-	}
-
-	public void setDefaults(int defaults) {
-		this.defaults = defaults;
-	}
-	
-	
 
 }

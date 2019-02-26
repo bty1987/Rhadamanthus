@@ -1,7 +1,6 @@
 $(function(){
 //定义全局变量  json
     var  task= {
-
         saveBtn: com.focusPage("#addTaskBtn").on("click", saveData),//绑定事件
         cancelBtn: null,
         modal: com.focusPage("#addtaskModal").on("show.bs.modal", function(a) {
@@ -29,6 +28,7 @@ $(function(){
     task.taskItems.tasktype = com.focusPage("#tasktype");
     task.taskItems.handle = com.focusPage("#handle");
     task.taskItems.plugins = com.focusPage("#plugins");
+    task.taskItems.isShow = com.focusPage("#isShow");
 
     /**
      * 回调函数必须提供 init(tableId, result.list)方法
@@ -131,6 +131,7 @@ $(function(){
         task.taskItems.filepath.val(row.filepath);
         task.taskItems.name.val(row.name);
         task.taskItems.handle.val(row.handle);
+        task.taskItems.isShow.val(row.isShow);
         com.focusPage("#addTaskBtn").addClass("hide");
     //$("#addTaskBtn"  ,'.modal-footer').css({"display":"none"});
     }
@@ -146,7 +147,8 @@ $(function(){
             "task.filepath":task.taskItems.filepath.val(),
             "task.type":task.taskItems.tasktype.val(),
             "task.handle":task.taskItems.handle.val(),
-            "task.plugins":task.taskItems.plugins.val()
+            "task.plugins":task.taskItems.plugins.val(),
+            "task.isShow":task.taskItems.isShow.val()
         };
 
         if(task.editFlg) {

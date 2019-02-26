@@ -122,7 +122,6 @@ public class UserServiceImpl implements UserService {
 		}
 
 		if (userPO != null && !userPO.getRole().getNo().equals(RolePO.SUPER_NO_STR)) {
-
 			userVO = convertBean(userPO);
 		}
 
@@ -141,12 +140,10 @@ public class UserServiceImpl implements UserService {
 		CompanyPO companyPO = companyDao.get(userPO.getCompany());
 
 		if (companyPO == null) {
-
 			throw new FLException(230015, "公司不存在");
 		}
 
 		userVO = convertBean(userPO);
-
 		userVO.setCompanys(companyPO.getName());
 
 		return userVO;
@@ -166,16 +163,13 @@ public class UserServiceImpl implements UserService {
 		CompanyPO companyPO = companyDao.get(userInfoPO.getUser().getCompany());
 
 		if (companyPO == null) {
-
 			throw new FLException(230015, "公司不存在");
 		}
 
 		BeanUtil.copyProperties(userInfoPO, userInfoVO, Arrays.asList("user"));
 
 		userInfoVO.setUser(convertBean(userInfoPO.getUser()));
-
 		userInfoVO.getUser().setCompanys(companyPO.getName());
-
 		userInfoVO.getUser().setIdentity(userInfoPO.getUser().getIdentity());
 
 		return userInfoVO;
@@ -230,17 +224,13 @@ public class UserServiceImpl implements UserService {
 		int dtid = 0;
 
 		if (departmentType != null && departmentType.getName() != null && departmentType.getName().length() != 0) {
-
 			dtid = departmentTypeDao.queryDepartmentTypeByName(departmentType.getName()).getDtid();
-
 		}
 
 		List<UserPO> userPOs = userDao.pageUserForNameByPinyinName(paging, pinyinName, userVO.getStatus(), dtid, company);
 
 		for (UserPO userPO : userPOs) {
-
 			userBaseVOs.add(convertBaseBean(userPO));
-
 		}
 
 		return userBaseVOs;
@@ -275,9 +265,7 @@ public class UserServiceImpl implements UserService {
 		List<UserPO> userPOs = userDao.queryUserByUids(uids);
 
 		for (UserPO userPO : userPOs) {
-
 			userBaseVOs.add(convertBaseBean(userPO));
-
 		}
 
 		return userBaseVOs;
@@ -286,19 +274,19 @@ public class UserServiceImpl implements UserService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void addUser(UserInfoVO userInfoVO, int company) throws FLException {
-		
+
 		CompanyPO companyPO = companyDao.get(company);
-		
-		if(companyPO == null){
+
+		if (companyPO == null) {
 			throw new FLException(230015, "公司不存在");
 		}
-		
+
 		SystemConfigPO userlimit = systemConfigDao.querySystemConfig("userlimit", company);
-		
-		if(userDao.countUserByCompany(company) >= (userlimit == null ? 100 : Integer.valueOf(userlimit.getValue()))){
+
+		if (userDao.countUserByCompany(company) >= (userlimit == null ? 100 : Integer.valueOf(userlimit.getValue()))) {
 			throw new FLException(190008, "人员数已达上限");
 		}
-		
+
 		UserVO userVO = userInfoVO.getUser();
 
 		List<UserPO> userPOs = userDao.queryUserByPhoneAIdent(userVO.getPhone(), userVO.getIdentity());
@@ -320,7 +308,7 @@ public class UserServiceImpl implements UserService {
 		if (visitor == null) {
 			throw new FLException(230010, "角色不存在");
 		}
-		
+
 		SystemConfigPO password = systemConfigDao.querySystemConfig("password", company);
 
 		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_USER_INT, CountingPO.COUNTING_DATE_SILNLE_STR, company);
@@ -419,7 +407,6 @@ public class UserServiceImpl implements UserService {
 		if (newstatus != oldstatus || newdeptId != olddeptId || !oldduty.equals(newduty)) {
 
 			DepartmentPO ndept = departmentDao.get(newdeptId);
-
 			DepartmentPO odept = departmentDao.get(olddeptId);
 
 			UserExperiencePO userExperiencePO = new UserExperiencePO();
@@ -523,8 +510,10 @@ public class UserServiceImpl implements UserService {
 		try {
 			userPO.setCompany(FormatUtil.decodeCompany(AESHelper.decryptString(userVO.getCompanys(), SystemConfig.getString("encryptKey"))));
 		} catch (Exception e) {
-			if(SystemConfig.getInt("multicompany", 0) == 0) throw new FLException(230017, "公司获取失败");
+			if (SystemConfig.getInt("multicompany", 0) == 0)
+				throw new FLException(230017, "公司获取失败");
 		}
+		
 		userPO.setRole(new RolePO(userVO.getRole().getRid()));
 		userPO.setExtranet(userVO.getExtranet());
 
@@ -619,21 +608,21 @@ public class UserServiceImpl implements UserService {
 
 		return 0;
 	}
-	
+
 	@Override
 	@Transactional
 	public void defaultPassword(String userId, int company) throws FLException {
-		
+
 		UserPO userPO = userDao.queryUserByUserId(userId);
 
 		if (userPO == null) {
 			throw new FLException(220005, "员工不存在");
 		}
-		
+
 		SystemConfigPO password = systemConfigDao.querySystemConfig("password", company);
-		
+
 		userPO.setPassword(MD5Helper.MD5(password == null ? "helloworld" : password.getValue()));
-		
+
 		userDao.update(userPO);
 	}
 
@@ -652,7 +641,6 @@ public class UserServiceImpl implements UserService {
 		userInfoPO.setProfiles(userInfoVO.getProfiles());
 
 		userInfoDao.update(userInfoPO);
-
 	}
 
 	private UserVO convertBean(UserPO userPO) throws FLException {
@@ -688,6 +676,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	private UserBaseVO convertBaseBean(UserPO userPO) throws FLException {
+		
 		UserBaseVO userBaseVO = new UserBaseVO(new DutyVO(), new DepartmentVO());
 
 		BeanUtil.copyProperties(userPO, userBaseVO, Arrays.asList("role", "dept", "duty", "password", "identity", "company"));

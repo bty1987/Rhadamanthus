@@ -29,5 +29,7 @@ public interface MaterialRefundDao extends Dao<MaterialRefundPO> {
 	public MaterialRefundPO queryMaterialRefundByMiid(long miid);
 	
 	public List<MaterialRefundPO> queryMaterialRefundByMpId(long mpId);
+	
+	public void updateMaterialRefundForStatusByMpId(long mpId, int status);
 
 }

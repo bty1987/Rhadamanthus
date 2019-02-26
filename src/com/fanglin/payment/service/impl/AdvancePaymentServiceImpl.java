@@ -145,7 +145,7 @@ public class AdvancePaymentServiceImpl implements AdvancePaymentService {
 			overBalance = Arith.add(balance, recharge);
 		} else {
 			if(balance < recharge){
-				throw new FLException(130001, "当前客户预付款月不足");
+				throw new FLException(150010, "预付款余额不足");
 			}
 			overBalance = Arith.sub(balance, recharge);
 		}

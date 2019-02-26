@@ -31,6 +31,7 @@ jQuery(function($) {
 	orderEntry.orderItems.customerId = com.focusPage("#customerId");
 	orderEntry.orderItems.villageId = com.focusPage("#villageId");
 	orderEntry.orderItems.orderType = com.focusPage("#orderType");
+	orderEntry.orderItems.orderGrade = com.focusPage("#orderGrade");
 	orderEntry.orderItems.houseNumber = com.focusPage("#houseNumber");
 	orderEntry.orderItems.houseType = com.focusPage("#houseType");
 	orderEntry.orderItems.houseClass = com.focusPage("#houseClass");
@@ -137,6 +138,9 @@ jQuery(function($) {
 
 		orderEntry.houseClass = res.houseClass;
 		orderEntry.orderItems.houseClass.bindData(orderEntry.houseClass, 'key', 'value');
+
+        orderEntry.orderGrade = res.orderGrade;
+        orderEntry.orderItems.orderGrade.bindData(orderEntry.orderGrade, 'key', 'value');
 	});
 
 	com.initChosen('customerId', api.data.queryCustomerForName, "pinyinName", {}, "autoFillCustomer", "key", "value").on("change", function (e) {
@@ -309,7 +313,8 @@ jQuery(function($) {
 			"decoration.type": orderEntry.orderItems.orderType.val(),
 			"decoration.quoter.userId": orderEntry.orderItems.quoterId.val(),
 			"decoration.escorter.userId": orderEntry.orderItems.escorterId.val(),
-			"decoration.house.hid": orderEntry.houseItems.hid
+			"decoration.house.hid": orderEntry.houseItems.hid,
+			"decoration.grade": orderEntry.orderItems.orderGrade.val()
 		};
 
 		if (com.validate('createOrder') || orderEntry.repeatFlg || orderEntry.repeatCustomerFlg)
@@ -327,7 +332,6 @@ jQuery(function($) {
 		}
 
 		btn.button('loading');
-
 		com.post(api.decoration.createDecoration, options, function () {
 			com.showAlert(com.info, "操作成功");
 			initCreate();

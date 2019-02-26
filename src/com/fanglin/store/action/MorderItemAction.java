@@ -24,8 +24,6 @@ public class MorderItemAction extends BaseListAction{
 	@Autowired 
 	private MorderItemService morderItemService;
 	
-	private MorderItemVO morderItem;
-	
 	private MorderVO morder;
 	
 	private List<MorderItemVO> morderItems;
@@ -45,14 +43,6 @@ public class MorderItemAction extends BaseListAction{
 
 	public void setMorder(MorderVO morder) {
 		this.morder = morder;
-	}
-
-	public MorderItemVO getMorderItem() {
-		return morderItem;
-	}
-
-	public void setMorderItem(MorderItemVO morderItem) {
-		this.morderItem = morderItem;
 	}
 
 	public List<MorderItemVO> getMorderItems() {

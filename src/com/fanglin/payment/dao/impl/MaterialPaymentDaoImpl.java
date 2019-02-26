@@ -103,6 +103,12 @@ public class MaterialPaymentDaoImpl extends DaoImpl<MaterialPaymentPO> implement
 		
 		return query.list();
 	}
+	
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<MaterialPaymentPO> queryMaterialPaymentByMidATypes(long mid, List<Short> paymentType){
+		return session().createCriteria(MaterialPaymentPO.class).createAlias("material", "material").add(Restrictions.eq("material.mid", mid)).add(Restrictions.in(MaterialPaymentPO.COLUMN_PAYMENTTYPE_STR, paymentType)).list();
+	}
 
 	@Override
 	@SuppressWarnings("unchecked")

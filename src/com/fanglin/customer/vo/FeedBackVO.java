@@ -6,7 +6,7 @@ import java.sql.Timestamp;
 import org.apache.struts2.json.annotations.JSON;
 
 
-public class FeedBackVO implements Serializable{
+public class FeedbackVO implements Serializable{
 
 	private static final long serialVersionUID = -6929197765043316650L;
 	

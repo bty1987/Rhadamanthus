@@ -82,6 +82,15 @@ public class ApprovalDaoImpl extends DaoImpl<ApprovalPO> implements ApprovalDao 
 	}
 	
 	@Override
+	public ApprovalPO queryApprovalByChange(List<Short> status,short type, String ident) {
+		
+		return (ApprovalPO) session().createCriteria(ApprovalPO.class).add(Restrictions.eq(ApprovalPO.COLUMN_TYPE_STR, type))
+				.add(Restrictions.eq(ApprovalPO.COLUMN_IDENT_STR, ident))
+				.add(Restrictions.in(ApprovalPO.COLUMN_STATUS_STR, status))
+				.uniqueResult();
+	}
+	
+	@Override
 	public ApprovalPO queryApprovalByProcessinstanceid(String processinstanceid) {
 		
 		return (ApprovalPO) session().createCriteria(ApprovalPO.class).add(Restrictions.eq(ApprovalPO.COLUMN_PROCESSINSTANCEID_STR, processinstanceid)).uniqueResult();

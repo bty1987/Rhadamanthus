@@ -31,8 +31,8 @@ public interface ApprovalService {
 	
 	public int approve(ApprovalVO approvalVO) throws FLException;
 	
-	public int approveDing(ApprovalVO approvalVO) throws FLException;
+	public int approvalCallback(ApprovalVO approvalVO) throws FLException;
 	
 	public int refuse(ApprovalVO approvalVO) throws FLException;
-
+	
 }

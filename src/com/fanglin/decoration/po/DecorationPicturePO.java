@@ -30,45 +30,45 @@ import com.fanglin.personel.po.UserPO;
 public class DecorationPicturePO implements Serializable {
 
 	private static final long serialVersionUID = 8022061676288156331L;
-	
+
 	public static final String COLUMN_ORDERID_STR = "orderId";
-	
+
 	public static final String COLUMN_STATUS_STR = "status";
-	
+
 	public static final String COLUMN_TYPE_STR = "type";
-	
+
 	public static final int TYPE_EPICTURE_INT = 1;
-	
+
 	public static final short STATUS_ENABLE_INT = 1;
-	
+
 	public static final short STATUS_DISABLE_INT = 0;
 
 	private long dpId;
-	
+
 	private String orderId;
-	
+
 	private String name;
-	
+
 	private String path;
-	
+
 	private Timestamp uploadTime;
-	
+
 	private String content;
-	
+
 	private UserPO userPO;
-	
+
 	private int type;
-	
+
 	private short status;
 
 	@Id
 	@GeneratedValue
 	@Column(name = "dpId")
-	public long getDpId(){
+	public long getDpId() {
 		return dpId;
 	}
 
-	public void setDpId(long dpId){
+	public void setDpId(long dpId) {
 		this.dpId = dpId;
 	}
 
@@ -82,21 +82,21 @@ public class DecorationPicturePO implements Serializable {
 	}
 
 	@Column(name = "uploadTime")
-	public Timestamp getUploadTime(){
+	public Timestamp getUploadTime() {
 		return uploadTime;
 	}
 
-	public void setUploadTime(Timestamp uploadTime){
+	public void setUploadTime(Timestamp uploadTime) {
 		this.uploadTime = uploadTime;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "cuid", referencedColumnName = "uId")
-	public UserPO getUserPO(){
+	public UserPO getUserPO() {
 		return userPO;
 	}
 
-	public void setUserPO(UserPO userPO){
+	public void setUserPO(UserPO userPO) {
 		this.userPO = userPO;
 	}
 
@@ -144,5 +144,5 @@ public class DecorationPicturePO implements Serializable {
 	public void setStatus(short status) {
 		this.status = status;
 	}
-	
+
 }

@@ -108,16 +108,18 @@ public class ReceiptTypeServiceImpl implements ReceiptTypeService {
 		
 		ReceiptTypePO receiptTypePO = receiptTypeDao.get(receiptTypeVO.getRtId());
 		
-		ReceiptTypePO receiptTypeNO = receiptTypeDao.queryReceiptTypeByNo(receiptTypeVO.getNo(),company);
-		
 		if(receiptTypePO == null){
 			throw new FLException(130005, "收据类型不存在");
 		}
-		if(receiptTypeNO != null){
+		
+		ReceiptTypePO receiptTypeNO = receiptTypeDao.queryReceiptTypeByNo(receiptTypeVO.getNo(),company);
+		
+		if(receiptTypeNO != null && receiptTypeNO.getRtId() != receiptTypePO.getRtId()){
 			throw new FLException(130004, "收据类型键值已存在");
 		}
 		
 		BeanUtil.copyPropertie(receiptTypeVO, receiptTypePO);
+		
 		receiptTypeDao.update(receiptTypePO);
 		
 		return 0;

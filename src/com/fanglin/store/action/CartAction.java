@@ -15,7 +15,6 @@ import com.fanglin.store.service.CartService;
 import com.fanglin.store.vo.CartVO;
 import com.fanglin.store.vo.MuserVO;
 
-
 @ParentPackage("common")
 @Namespace("/")
 @Controller
@@ -37,7 +36,7 @@ public class CartAction extends BaseListAction{
 	@Action(value="pageCart", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String pageCart() throws FLException{
 		
-		 cartService.pageCart(getPaging(), getFilters(), muser);
+		cartService.pageCart(getPaging(), getFilters(), muser);
 		
 		return SUCCESS;
 		

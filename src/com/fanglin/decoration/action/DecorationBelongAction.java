@@ -31,62 +31,62 @@ import com.fanglin.decoration.vo.DecorationBelongVO;
 public class DecorationBelongAction extends BaseListAction {
 
 	private static final long serialVersionUID = -1599812124963548192L;
-	
+
 	@Autowired
 	private DecorationBelongService decorationBelongService;
 
 	private DecorationBelongVO decorationBelong;
-	
+
 	private List<DecorationBelongVO> decorationBelongs;
 
-	@Action(value = "queryDecorationBelongForDesignAChangeByOrderId", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryDecorationBelongForDesignAChangeByOrderId(){
+	@Action(value = "queryDecorationBelongForDesignAChangeByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryDecorationBelongForDesignAChangeByOrderId() {
 
 		Short belongType = DecorationBelongPO.BELONGTYPE_DESIGN_INT;
-		
-		decorationBelongs = decorationBelongService.queryOrderBelongInfoForChangeByOrderIdAType(decorationBelong.getOrderId(), belongType);
+
+		decorationBelongs = decorationBelongService.queryDecorationBelongForChangeByOrderIdAType(decorationBelong.getOrderId(), belongType);
 
 		return SUCCESS;
 	}
-	
-	@Action(value = "queryDecorationBelongForDesignByOrderId", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryOrderBelongInfoForDesignByOrderId(){
+
+	@Action(value = "queryDecorationBelongForDesignByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryOrderBelongInfoForDesignByOrderId() {
 
 		Short belongType = DecorationBelongPO.BELONGTYPE_DESIGN_INT;
-		
-		decorationBelongs = decorationBelongService.queryOrderBelongInfoForCurrentByOrderIdAType(decorationBelong.getOrderId(), belongType);
+
+		decorationBelongs = decorationBelongService.queryDecorationBelongForCurrentByOrderIdAType(decorationBelong.getOrderId(), belongType);
 
 		return SUCCESS;
 	}
 
-	@Action(value = "queryDecorationBelongForBusinessnAChangeByOrderId", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryDecorationBelongForBusinessnAChangeByOrderId(){
+	@Action(value = "queryDecorationBelongForBusinessnAChangeByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryDecorationBelongForBusinessnAChangeByOrderId() {
 
 		Short belongType = DecorationBelongPO.BELONGTYPE_SALESMAN_INT;
-		
-		decorationBelongs = decorationBelongService.queryOrderBelongInfoForChangeByOrderIdAType(decorationBelong.getOrderId(), belongType);
-	    
+
+		decorationBelongs = decorationBelongService.queryDecorationBelongForChangeByOrderIdAType(decorationBelong.getOrderId(), belongType);
+
 		return SUCCESS;
 	}
-	
-	@Action(value = "queryDecorationBelongForBusinessnByOrderId", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryOrderBelongInfoForBusinessnByOrderId(){
+
+	@Action(value = "queryDecorationBelongForBusinessnByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryOrderBelongInfoForBusinessnByOrderId() {
 
 		Short belongType = DecorationBelongPO.BELONGTYPE_SALESMAN_INT;
-		
-		decorationBelongs = decorationBelongService.queryOrderBelongInfoForCurrentByOrderIdAType(decorationBelong.getOrderId(), belongType);
-	    
-		return SUCCESS;
-	}
-	
-	@Action(value = "queryDecorationBelongByOrderId", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryOrderBelongInfoByOrderId(){
 
-		decorationBelongs = decorationBelongService.queryOrderBelongInfoByOrderId(decorationBelong);
-	    
+		decorationBelongs = decorationBelongService.queryDecorationBelongForCurrentByOrderIdAType(decorationBelong.getOrderId(), belongType);
+
 		return SUCCESS;
 	}
-	
+
+	@Action(value = "queryDecorationBelongByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryOrderBelongInfoByOrderId() {
+
+		decorationBelongs = decorationBelongService.queryDecorationBelongByOrderId(decorationBelong);
+
+		return SUCCESS;
+	}
+
 	public DecorationBelongVO getDecorationBelong() {
 		return decorationBelong;
 	}

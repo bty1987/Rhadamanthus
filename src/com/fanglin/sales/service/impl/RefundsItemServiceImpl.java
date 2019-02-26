@@ -29,8 +29,8 @@ public class RefundsItemServiceImpl implements RefundsItemService {
 	@Override
 	public List<RefundsItemVO> queryRefundsItemBySid(RefundsVO refundsVO) {
 		
-		List<RefundsItemPO> RefundsItemPOs=refundsItemDao.queryRefundsItemBySid(refundsVO.getSid());
-		List<RefundsItemVO> RefundsItemVOs=new ArrayList<RefundsItemVO>();
+		List<RefundsItemPO> RefundsItemPOs = refundsItemDao.queryRefundsItemBySid(refundsVO.getSid());
+		List<RefundsItemVO> RefundsItemVOs = new ArrayList<RefundsItemVO>();
 		
 		
 		for(RefundsItemPO refundsItemPO:RefundsItemPOs){
@@ -48,5 +48,4 @@ public class RefundsItemServiceImpl implements RefundsItemService {
 		
 		return RefundsItemVOs;
 	}
-
 }

@@ -66,18 +66,18 @@ public class SalesPaymentAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-	@Action(value = "querySalesPaymentBySid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String querySalesPaymentBySid(){
-		
-		salesPayments = salesPaymentService.querySalesPaymentBySid(salesPayment);
-		
-		return SUCCESS;
-	}
-	
 	@Action(value = "querySalesPaymentByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String querySalesPaymentByOrderId(){
 		
 		salesPayments = salesPaymentService.querySalesPaymentByOrderId(sales);
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "querySalesPaymentBySid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String querySalesPaymentBySid(){
+		
+		salesPayments = salesPaymentService.querySalesPaymentBySid(salesPayment);
 		
 		return SUCCESS;
 	}
@@ -90,10 +90,42 @@ public class SalesPaymentAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-	@Action(value = "addSalesPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addSalesPayment() throws FLException{
+	@Action(value = "addSalesPaymentForDeposit", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addSalesPaymentForDeposit() throws FLException{
 		
-		salesPaymentService.addSalesPayment(salesPayment, queryUserId());
+		salesPaymentService.addSalesPaymentForDeposit(salesPayment, queryUserId(), queryCompany());
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "addSalesPaymentForFullpay", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addSalesPaymentForFullpay() throws FLException{
+		
+		salesPaymentService.addSalesPaymentForFullpay(salesPayment, queryUserId(), queryCompany());
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "cancelSalesPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String cancelSalesPayment() throws FLException{
+		
+		salesPaymentService.cancelSalesPayment(salesPayment);
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "cancelSalesPaymentForDeposit", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String cancelSalesPaymentForDeposit() throws FLException{
+		
+		salesPaymentService.cancelSalesPaymentForDeposit(salesPayment);
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "cancelSalesPaymentForFullpay", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String cancelSalesPaymentForFullpay() throws FLException{
+		
+		salesPaymentService.cancelSalesPaymentForFullpay(salesPayment);
 		
 		return SUCCESS;
 	}
@@ -114,34 +146,18 @@ public class SalesPaymentAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-	@Action(value = "collectSalesPaymentForRefund", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String collectSalesPaymentForRefund() throws FLException{
+	@Action(value = "refundSalesPaymentForDeposit", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String refundSalesPaymentForDeposit() throws FLException{
 		
-		salesPaymentService.collectSalesPaymentForRefund(salesPayment, salesReceipt, queryUserId(), queryCompany());
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "confirmSalesPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String confirmSalesPayment() throws FLException{
-		
-		salesPaymentService.confirmSalesPayment(spids, queryUserId());
+		salesPaymentService.refundSalesPaymentForDeposit(salesPayment, queryUserId());
 		
 		return SUCCESS;
 	}
 	
-	@Action(value = "cancelSalesPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String cancelSalesPayment() throws FLException{
+	@Action(value = "refundSalesPaymentForCoupon", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String refundSalesPaymentForCoupon() throws FLException{
 		
-		salesPaymentService.cancelSalesPayment(salesPayment);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "refundSalesPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String refundSalesPayment() throws FLException{
-		
-		salesPaymentService.refundSalesPayment(salesPayment, queryUserId());
+		salesPaymentService.refundSalesPaymentForCoupon(sales, queryUserId());
 		
 		return SUCCESS;
 	}
@@ -150,6 +166,22 @@ public class SalesPaymentAction extends BaseListAction {
 	public String updateSalesPayment() throws FLException{
 		
 		salesPaymentService.updateSalesPayment(salesPayment, salesReceipt);
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "refundSalesPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String refundSalesPayment() throws FLException{
+		
+		salesPaymentService.refundSalesPayment(salesPayment, salesReceipt, queryUserId(), queryCompany());
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "confirmSalesPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String confirmSalesPayment() throws FLException{
+		
+		salesPaymentService.confirmSalesPayment(spids, queryUserId());
 		
 		return SUCCESS;
 	}

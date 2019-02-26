@@ -17,11 +17,11 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.decoration.vo.DecorationPictureVO;
 
 public interface DecorationPictureService {
-	
+
 	public List<DecorationPictureVO> queryDecorationPictureByOrderId(DecorationPictureVO decorationPictureVO);
 
 	public int addDecorationPicture(DecorationPictureVO decorationPictureVO, String userId, int company) throws FLException;
-	
+
 	public int deleteDecorationPicture(DecorationPictureVO decorationPictureVO);
-	
+
 }

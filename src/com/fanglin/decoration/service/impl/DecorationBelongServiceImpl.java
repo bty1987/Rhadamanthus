@@ -1,5 +1,5 @@
 /**
- * @File Name		: OrderBelongInfoServiceImpl
+ * @File Name		: DecorationBelongServiceImpl
  * @Package   	: com.fanglin.service.impl
  * @Version		: 1.0
  * @Date			: 2014-9-27
@@ -28,142 +28,147 @@ import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.utils.BeanUtil;
 
 @Service("orderBelongInfoService")
-@Transactional(readOnly=true)
+@Transactional(readOnly = true)
 public class DecorationBelongServiceImpl implements DecorationBelongService {
 
 	@Autowired
-	private DecorationBelongDao orderBelongInfoDao;
+	private DecorationBelongDao decorationBelongDao;
 	
 	@Override
-	public List<DecorationBelongVO> queryApprovalingOrderBelongInfosByOrderIdAndBelongType(String decorationOrderId,Short belongType){
-		
-		List<DecorationBelongVO> orderBelongInfoVOs = new ArrayList<DecorationBelongVO>();
-		List<DecorationBelongPO> orderBelongInfoPOs = orderBelongInfoDao.queryOrderBelongInfoByOrderIdAType(decorationOrderId, belongType);
-		
-		if(orderBelongInfoPOs == null) {
+	public List<DecorationBelongVO> queryDecorationBelongByOrderIdAType(String orderId, Short belongType) {
+
+		List<DecorationBelongVO> decorationBelongVOs = new ArrayList<DecorationBelongVO>();
+		List<DecorationBelongPO> decorationBelongPOs = decorationBelongDao.queryDecorationBelongByOrderIdAType(orderId, belongType);
+
+		if (decorationBelongPOs == null) {
 			return null;
 		}
-		
-		for(DecorationBelongPO orderBelongInfoPO : orderBelongInfoPOs){
-			DecorationBelongVO orderBelongInfoVO = new DecorationBelongVO();
-			
-			if(orderBelongInfoPO.getOperater() != null){
-				orderBelongInfoVO.setOperater(new UserBaseVO());
-				BeanUtil.copyProperties(orderBelongInfoPO.getOperater(), orderBelongInfoVO.getOperater(), Arrays.asList("dept", "duty"));
-				
-				orderBelongInfoVO.setOperateTime(orderBelongInfoPO.getOperateTime());
+
+		DecorationBelongVO decorationBelongVO;
+
+		for (DecorationBelongPO decorationBelongPO : decorationBelongPOs) {
+			decorationBelongVO = new DecorationBelongVO();
+
+			if (decorationBelongPO.getOperater() != null) {
+				decorationBelongVO.setOperater(new UserBaseVO());
+				BeanUtil.copyProperties(decorationBelongPO.getOperater(), decorationBelongVO.getOperater(), Arrays.asList("dept", "duty"));
+
+				decorationBelongVO.setOperateTime(decorationBelongPO.getOperateTime());
 			}
-			
-			orderBelongInfoVO.setDepartment(new DepartmentVO());
-			BeanUtil.copyProperties(orderBelongInfoPO.getDepartment(), orderBelongInfoVO.getDepartment(), Arrays.asList("type", "fatherDept", "manager"));
-			
-			orderBelongInfoVO.setRegion(new DepartmentVO());
-			if(orderBelongInfoPO.getBelonger() != null){
-				BeanUtil.copyProperties(orderBelongInfoPO.getRegion(), orderBelongInfoVO.getRegion(), Arrays.asList("type", "fatherDept", "manager"));
-			}else{
-				BeanUtil.copyProperties("", orderBelongInfoVO.getRegion());
+
+			decorationBelongVO.setDepartment(new DepartmentVO());
+			BeanUtil.copyProperties(decorationBelongPO.getDepartment(), decorationBelongVO.getDepartment(), Arrays.asList("type", "fatherDept", "manager"));
+
+			decorationBelongVO.setRegion(new DepartmentVO());
+			if (decorationBelongPO.getBelonger() != null) {
+				BeanUtil.copyProperties(decorationBelongPO.getRegion(), decorationBelongVO.getRegion(), Arrays.asList("type", "fatherDept", "manager"));
+			} else {
+				BeanUtil.copyProperties("", decorationBelongVO.getRegion());
 			}
-			orderBelongInfoVO.setBelonger(new UserBaseVO());
-			BeanUtil.copyProperties(orderBelongInfoPO.getBelonger(), orderBelongInfoVO.getBelonger(), Arrays.asList("dept", "duty"));
-			
-			orderBelongInfoVO.setRate(orderBelongInfoPO.getRate());
-			orderBelongInfoVO.setType(orderBelongInfoPO.getType());
-			orderBelongInfoVO.setDbid(orderBelongInfoPO.getDbid());
-			orderBelongInfoVO.setDefaultFlag(orderBelongInfoPO.getDefaultFlag());
-			
-			orderBelongInfoVOs.add(orderBelongInfoVO);
+			decorationBelongVO.setBelonger(new UserBaseVO());
+			BeanUtil.copyProperties(decorationBelongPO.getBelonger(), decorationBelongVO.getBelonger(), Arrays.asList("dept", "duty"));
+
+			decorationBelongVO.setRate(decorationBelongPO.getRate());
+			decorationBelongVO.setType(decorationBelongPO.getType());
+			decorationBelongVO.setDbid(decorationBelongPO.getDbid());
+			decorationBelongVO.setDefaultFlag(decorationBelongPO.getDefaultFlag());
+
+			decorationBelongVOs.add(decorationBelongVO);
 		}
-		
-		return orderBelongInfoVOs;
-	}
-	
-	@Override
-	public List<DecorationBelongVO> queryOrderBelongInfoForChangeByOrderIdAType(String decorationOrderId,Short belongType){
-		
-		List<DecorationBelongVO> orderBelongInfoVOs = queryApprovalingOrderBelongInfosByOrderIdAndBelongType(decorationOrderId, belongType);
-		
-		if(orderBelongInfoVOs == null || orderBelongInfoVOs.size() == 0){
-			orderBelongInfoVOs = queryOrderBelongInfoForCurrentByOrderIdAType(decorationOrderId, belongType);
-		}
-		
-		return orderBelongInfoVOs;
-	}
-	
-	@Override
-	public List<DecorationBelongVO> queryOrderBelongInfoForCurrentByOrderIdAType(String decorationOrderId,Short belongType){
-		List<DecorationBelongVO> orderBelongInfoVOs = new ArrayList<DecorationBelongVO>();
-		List<DecorationBelongPO> orderBelongInfoPOs =  orderBelongInfoDao.queryOrderBelongInfoForCurrentByOrderIdAType(decorationOrderId, belongType);
-		
-		for(DecorationBelongPO orderBelongInfoPO: orderBelongInfoPOs){
-			DecorationBelongVO orderBelongInfoVO = new DecorationBelongVO();
-			
-			if(orderBelongInfoPO.getOperater() != null){
-				orderBelongInfoVO.setOperater(new UserBaseVO());
-				BeanUtil.copyProperties(orderBelongInfoPO.getOperater(), orderBelongInfoVO.getOperater(), Arrays.asList("dept", "duty"));
-				
-				orderBelongInfoVO.setOperateTime(orderBelongInfoPO.getOperateTime());
-			}
-			
-			orderBelongInfoVO.setDepartment(new DepartmentVO());
-			BeanUtil.copyProperties(orderBelongInfoPO.getDepartment(), orderBelongInfoVO.getDepartment(), Arrays.asList("type", "fatherDept", "manager"));
-			
-			orderBelongInfoVO.setRegion(new DepartmentVO());
-			if(orderBelongInfoPO.getRegion() != null){
-				BeanUtil.copyProperties(orderBelongInfoPO.getRegion(), orderBelongInfoVO.getRegion(), Arrays.asList("type", "fatherDept", "manager"));
-			}else{
-				BeanUtil.copyProperties("", orderBelongInfoVO.getRegion());
-			}
-			orderBelongInfoVO.setBelonger(new UserBaseVO());
-			BeanUtil.copyProperties(orderBelongInfoPO.getBelonger(), orderBelongInfoVO.getBelonger(), Arrays.asList("dept", "duty"));
-			
-			orderBelongInfoVO.setRate(orderBelongInfoPO.getRate());
-			orderBelongInfoVO.setType(orderBelongInfoPO.getType());
-			orderBelongInfoVO.setDbid(orderBelongInfoPO.getDbid());
-			orderBelongInfoVO.setDefaultFlag(orderBelongInfoPO.getDefaultFlag());
-			
-			orderBelongInfoVOs.add(orderBelongInfoVO);
-		}
-		
-		return orderBelongInfoVOs;
+
+		return decorationBelongVOs;
 	}
 
 	@Override
-	public List<DecorationBelongVO> queryOrderBelongInfoByOrderId(DecorationBelongVO orderBelongInfoVO) {
-		
-		List<DecorationBelongVO> orderBelongInfoVOs = new ArrayList<DecorationBelongVO>();
-		List<DecorationBelongPO> orderBelongInfoPOs =  orderBelongInfoDao.queryOrderBelongInfoByOrderId(orderBelongInfoVO.getOrderId());
-		
-		for(DecorationBelongPO orderBelongInfoPO: orderBelongInfoPOs){
-			DecorationBelongVO _orderBelongInfoVO = new DecorationBelongVO();
-			
-			if(orderBelongInfoPO.getOperater() != null){
-				_orderBelongInfoVO.setOperater(new UserBaseVO());
-				BeanUtil.copyProperties(orderBelongInfoPO.getOperater(), _orderBelongInfoVO.getOperater(), Arrays.asList("dept", "duty"));
-				
-				_orderBelongInfoVO.setOperateTime(orderBelongInfoPO.getOperateTime());
-			}
-			
-			_orderBelongInfoVO.setDepartment(new DepartmentVO());
-			BeanUtil.copyProperties(orderBelongInfoPO.getDepartment(), _orderBelongInfoVO.getDepartment(), Arrays.asList("type", "fatherDept", "manager"));
-			
-			_orderBelongInfoVO.setRegion(new DepartmentVO());
-			if(orderBelongInfoPO.getRegion() != null){
-				BeanUtil.copyProperties(orderBelongInfoPO.getRegion(), _orderBelongInfoVO.getRegion(), Arrays.asList("type", "fatherDept", "manager"));
-			}else{
-				BeanUtil.copyProperties("", _orderBelongInfoVO.getRegion());
-			}
-			_orderBelongInfoVO.setBelonger(new UserBaseVO());
-			BeanUtil.copyProperties(orderBelongInfoPO.getBelonger(), _orderBelongInfoVO.getBelonger(), Arrays.asList("dept", "duty"));
-			
-			_orderBelongInfoVO.setRate(orderBelongInfoPO.getRate());
-			_orderBelongInfoVO.setType(orderBelongInfoPO.getType());
-			_orderBelongInfoVO.setDbid(orderBelongInfoPO.getDbid());
-			_orderBelongInfoVO.setDefaultFlag(orderBelongInfoPO.getDefaultFlag());
-			
-			orderBelongInfoVOs.add(_orderBelongInfoVO);
+	public List<DecorationBelongVO> queryDecorationBelongForChangeByOrderIdAType(String orderId, Short belongType) {
+
+		List<DecorationBelongVO> decorationBelongVOs = queryDecorationBelongByOrderIdAType(orderId, belongType);
+
+		if (decorationBelongVOs == null || decorationBelongVOs.size() == 0) {
+			decorationBelongVOs = queryDecorationBelongForCurrentByOrderIdAType(orderId, belongType);
 		}
-		
-		return orderBelongInfoVOs;
+
+		return decorationBelongVOs;
 	}
-	
+
+	@Override
+	public List<DecorationBelongVO> queryDecorationBelongForCurrentByOrderIdAType(String orderId, Short belongType) {
+
+		List<DecorationBelongVO> decorationBelongVOs = new ArrayList<DecorationBelongVO>();
+		List<DecorationBelongPO> decorationBelongPOs = decorationBelongDao.queryDecorationBelongForCurrentByOrderIdAType(orderId, belongType);
+
+		DecorationBelongVO decorationBelongVO;
+
+		for (DecorationBelongPO decorationBelongPO : decorationBelongPOs) {
+			decorationBelongVO = new DecorationBelongVO();
+
+			if (decorationBelongPO.getOperater() != null) {
+				decorationBelongVO.setOperater(new UserBaseVO());
+				BeanUtil.copyProperties(decorationBelongPO.getOperater(), decorationBelongVO.getOperater(), Arrays.asList("dept", "duty"));
+
+				decorationBelongVO.setOperateTime(decorationBelongPO.getOperateTime());
+			}
+
+			decorationBelongVO.setDepartment(new DepartmentVO());
+			BeanUtil.copyProperties(decorationBelongPO.getDepartment(), decorationBelongVO.getDepartment(), Arrays.asList("type", "fatherDept", "manager"));
+
+			decorationBelongVO.setRegion(new DepartmentVO());
+			if (decorationBelongPO.getRegion() != null) {
+				BeanUtil.copyProperties(decorationBelongPO.getRegion(), decorationBelongVO.getRegion(), Arrays.asList("type", "fatherDept", "manager"));
+			} else {
+				BeanUtil.copyProperties("", decorationBelongVO.getRegion());
+			}
+			decorationBelongVO.setBelonger(new UserBaseVO());
+			BeanUtil.copyProperties(decorationBelongPO.getBelonger(), decorationBelongVO.getBelonger(), Arrays.asList("dept", "duty"));
+
+			decorationBelongVO.setRate(decorationBelongPO.getRate());
+			decorationBelongVO.setType(decorationBelongPO.getType());
+			decorationBelongVO.setDbid(decorationBelongPO.getDbid());
+			decorationBelongVO.setDefaultFlag(decorationBelongPO.getDefaultFlag());
+
+			decorationBelongVOs.add(decorationBelongVO);
+		}
+
+		return decorationBelongVOs;
+	}
+
+	@Override
+	public List<DecorationBelongVO> queryDecorationBelongByOrderId(DecorationBelongVO decorationBelongVO) {
+
+		List<DecorationBelongVO> decorationBelongVOs = new ArrayList<DecorationBelongVO>();
+		List<DecorationBelongPO> decorationBelongPOs = decorationBelongDao.queryDecorationBelongByOrderId(decorationBelongVO.getOrderId());
+
+		for (DecorationBelongPO decorationBelongPO : decorationBelongPOs) {
+			decorationBelongVO = new DecorationBelongVO();
+
+			if (decorationBelongPO.getOperater() != null) {
+				decorationBelongVO.setOperater(new UserBaseVO());
+				BeanUtil.copyProperties(decorationBelongPO.getOperater(), decorationBelongVO.getOperater(), Arrays.asList("dept", "duty"));
+
+				decorationBelongVO.setOperateTime(decorationBelongPO.getOperateTime());
+			}
+
+			decorationBelongVO.setDepartment(new DepartmentVO());
+			BeanUtil.copyProperties(decorationBelongPO.getDepartment(), decorationBelongVO.getDepartment(), Arrays.asList("type", "fatherDept", "manager"));
+
+			decorationBelongVO.setRegion(new DepartmentVO());
+			if (decorationBelongPO.getRegion() != null) {
+				BeanUtil.copyProperties(decorationBelongPO.getRegion(), decorationBelongVO.getRegion(), Arrays.asList("type", "fatherDept", "manager"));
+			} else {
+				BeanUtil.copyProperties("", decorationBelongVO.getRegion());
+			}
+			decorationBelongVO.setBelonger(new UserBaseVO());
+			BeanUtil.copyProperties(decorationBelongPO.getBelonger(), decorationBelongVO.getBelonger(), Arrays.asList("dept", "duty"));
+
+			decorationBelongVO.setRate(decorationBelongPO.getRate());
+			decorationBelongVO.setType(decorationBelongPO.getType());
+			decorationBelongVO.setDbid(decorationBelongPO.getDbid());
+			decorationBelongVO.setDefaultFlag(decorationBelongPO.getDefaultFlag());
+
+			decorationBelongVOs.add(decorationBelongVO);
+		}
+
+		return decorationBelongVOs;
+	}
+
 }

@@ -6,16 +6,17 @@ import com.fanglin.communion.po.CustomerPhonePO;
 import com.fanglin.core.dao.Dao;
 
 public interface CustomerPhoneDao extends Dao<CustomerPhonePO> {
-	
-	 public  int countCustomerPhone(String phone);
-	
-	 public List<CustomerPhonePO> queryCustomerPhoneByCid(Long cid, Short status);
-	 
-	 public List<CustomerPhonePO> queryCustomerPhoneByPhone(String phone, Short status,Integer company);
-	 
-	 public CustomerPhonePO queryCustomerPhone(Long cid, String phone);
-	 
-	 public int clearCustomerPhoneForDefault(Long cid);
 
-	
+	public List<CustomerPhonePO> queryCustomerPhoneByCid(Long cid, Short status);
+
+	public List<CustomerPhonePO> queryCustomerPhoneByPhone(String phone, Short status, Integer company);
+
+	public CustomerPhonePO queryCustomerPhoneForDefault(String phone, Integer company);
+
+	public CustomerPhonePO queryCustomerPhone(Long cid, String phone);
+
+	public int countCustomerPhone(String phone);
+
+	public int clearCustomerPhoneForDefault(Long cid);
+
 }

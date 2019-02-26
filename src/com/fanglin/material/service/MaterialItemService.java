@@ -19,11 +19,7 @@ import com.fanglin.material.vo.MaterialVO;
 
 public interface MaterialItemService {
 	
-	public List<MaterialItemVO> queryMaterialItemByOrderId(String orderId);
-	
 	public List<MaterialItemVO> queryMaterialItemByMid(MaterialItemVO materialItemVO);
-	
-	public Float queryMaterialItemByTotal(MaterialItemVO materialItem);
 	
 	public MaterialItemVO queryMaterialItemForSaleByMiid(MaterialItemVO materialItemVO);
 	

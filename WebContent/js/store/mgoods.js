@@ -198,8 +198,8 @@ $(function () {
         };
     })();
 
-    autoFill(api.store.queryBaseMbrandByName, "mbrand", "mbrands", "bid", "name");
-    autoFill(api.store.queryBaseMbrandByName, "mgoodsBrands", "mbrands", "bid", "name");
+    autoFill(api.store.queryMbrandByName, "mbrand", "mbrands", "bid", "name");
+    autoFill(api.store.queryMbrandByName, "mgoodsBrands", "mbrands", "bid", "name");
 
     var searcher = new Searcher();
 

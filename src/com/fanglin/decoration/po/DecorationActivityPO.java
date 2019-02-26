@@ -18,28 +18,23 @@ import com.fanglin.information.po.ActivityPO;
 public class DecorationActivityPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 5426521470719770019L;
-	
-	public static final String COLUMN_ORDERID_STR = "orderId";
-	
-	private int daId;
-	
-	private String orderId;
-	
-	private ActivityPO activity;
-	
-	private int type;
-	
-	private int defaults;
 
-	
+	public static final String COLUMN_ORDERID_STR = "orderId";
+
+	private long daId;
+
+	private String orderId;
+
+	private ActivityPO activity;
+
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "daId")
-	public int getDaId() {
+	public long getDaId() {
 		return this.daId;
 	}
 
-	public void setDaId(int daId) {
+	public void setDaId(long daId) {
 		this.daId = daId;
 	}
 
@@ -61,24 +56,5 @@ public class DecorationActivityPO implements java.io.Serializable {
 	public void setActivity(ActivityPO activity) {
 		this.activity = activity;
 	}
-	
-	@Column(name = "type")
-	public int getType() {
-		return type;
-	}
-
-	public void setType(int type) {
-		this.type = type;
-	}
-	
-	@Column(name = "defaults")
-	public int getDefaults() {
-		return defaults;
-	}
-
-	public void setDefaults(int defaults) {
-		this.defaults = defaults;
-	}
-
 
 }

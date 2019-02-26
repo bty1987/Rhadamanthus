@@ -29,6 +29,9 @@ $.extend(api.index, {
     },
     accessoriesPrintIndex: {
         url: "/views/manifest/accessoriesPrint.html"
+    },
+    salesActivityIndex:{
+        url:"/views/sales/salesActivity.html"
     }
 });
 
@@ -449,10 +452,13 @@ $.extend(api, {
         queryPurchaseBySid: {
             url: "queryPurchaseBySid.do"
         },
-        countSalesItemForAmount: {
-            url: "countSalesItemForAmount.do"
-        }
-
+        
+        addSalesActivityItem :{url:"addSalesActivityItem.do"},
+        querySalesActivityItem :{url:"querySalesActivityItem.do"},
+        querySalesActivity :{url:"querySalesActivity.do"},
+        updateSalesForActivity :{url:"updateSalesForActivity.do"},
+        abateSalesActivityItem :{url:"abateSalesActivityItem.do"},
+        receiveSalesActivityItem :{url:"receiveSalesActivityItem.do"}
     }
 });
 

@@ -32,7 +32,7 @@ public class WorkerSalaryImport extends BaseImportAction {
 				workerSalaryImportService.updateWorkerSalaryForAdvance(excels, queryUserId());
 			
 			} catch (Exception e) {
-				
+				System.out.println(e.getMessage());
 				throw new FLException(110009, "导入文件错误");
 			}
 		
@@ -48,7 +48,7 @@ public class WorkerSalaryImport extends BaseImportAction {
 				workerSalaryImportService.importWorkerSalary(excels, queryUserId());
 			
 			} catch (Exception e) {
-				e.printStackTrace();
+				System.out.println(e.getMessage());
 				throw new FLException(110009, "导入文件错误");
 			}
 		

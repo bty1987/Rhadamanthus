@@ -53,7 +53,7 @@ $(function () {
             'height': '45', // 浏览按钮的高度
             'fileTypeDesc': '支持的格式:', // 在浏览窗口底部的文件类型下拉菜单中显示的文本
             'fileTypeExts': '*.jpg;*.jpeg;*.gif;*.png', // 允许上传的文件后缀
-            'fileSizeLimit': '5MB', // 上传文件的大小限制
+            'fileSizeLimit': 5120, // 上传文件的大小限制
             'queueSizeLimit' : 10, // 上传数量
             'onUploadSuccess':function(file, data, response){ //上传到服务器,服务器返回相应信息到data里
                 var dateObj=eval("("+data+")");

@@ -96,7 +96,7 @@ public class MaterialVO implements Serializable {
 	
 	private Integer company;
 	
-	private Integer activityId;
+	private Long activityId;
 	
 	public MaterialVO(){
 		super();
@@ -409,11 +409,11 @@ public class MaterialVO implements Serializable {
 		this.company = company;
 	}
 
-	public Integer getActivityId() {
+	public Long getActivityId() {
 		return activityId;
 	}
 
-	public void setActivityId(Integer activityId) {
+	public void setActivityId(Long activityId) {
 		this.activityId = activityId;
 	}
 	

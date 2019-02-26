@@ -5,8 +5,8 @@ import java.sql.Timestamp;
 
 import org.apache.struts2.json.annotations.JSON;
 
-import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.communion.vo.DepartmentVO;
+import com.fanglin.communion.vo.VillageVO;
 import com.fanglin.personel.vo.UserBaseVO;
 
 public class CustomerOriginVO implements Serializable {
@@ -14,10 +14,14 @@ public class CustomerOriginVO implements Serializable {
 	private static final long serialVersionUID = -4556862985248539773L;
 
 	private Long csid;
+	
+	private Long cid;
 
-	private CustomerVO customer;
+	private String name;
 
 	private String phone;
+	
+	private String gender;
 
 	private String purpose;
 
@@ -36,22 +40,33 @@ public class CustomerOriginVO implements Serializable {
 	private DepartmentVO department;
 
 	private DepartmentVO region;
-
+	
+	private UserBaseVO designer;
+	
+	private VillageVO village;
+	
+	private String houseNumber;
+	
+	private Float buildArea;
+	
+	private Long hid;
+	
 	private Short status;
 
 	private String comment;
-
-	public CustomerOriginVO(CustomerVO customer, UserBaseVO creater, UserBaseVO belonger, DepartmentVO department, DepartmentVO region) {
+	
+	public CustomerOriginVO() {
 		super();
-		this.customer = customer;
+	}
+	
+	public CustomerOriginVO(UserBaseVO creater, UserBaseVO belonger, DepartmentVO department, DepartmentVO region, UserBaseVO designer, VillageVO village) {
+		super();
 		this.creater = creater;
 		this.belonger = belonger;
 		this.department = department;
 		this.region = region;
-	}
-
-	public CustomerOriginVO() {
-		super();
+		this.designer = designer;
+		this.village = village;
 	}
 
 	public Long getCsid() {
@@ -61,13 +76,29 @@ public class CustomerOriginVO implements Serializable {
 	public void setCsid(Long csid) {
 		this.csid = csid;
 	}
-
-	public CustomerVO getCustomer() {
-		return customer;
+	
+	public Long getCid() {
+		return cid;
 	}
 
-	public void setCustomer(CustomerVO customer) {
-		this.customer = customer;
+	public void setCid(Long cid) {
+		this.cid = cid;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getGender() {
+		return gender;
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
 	}
 
 	public String getPhone() {
@@ -151,6 +182,46 @@ public class CustomerOriginVO implements Serializable {
 		this.region = region;
 	}
 
+	public UserBaseVO getDesigner() {
+		return designer;
+	}
+
+	public void setDesigner(UserBaseVO designer) {
+		this.designer = designer;
+	}
+
+	public VillageVO getVillage() {
+		return village;
+	}
+
+	public void setVillage(VillageVO village) {
+		this.village = village;
+	}
+
+	public String getHouseNumber() {
+		return houseNumber;
+	}
+
+	public void setHouseNumber(String houseNumber) {
+		this.houseNumber = houseNumber;
+	}
+
+	public Float getBuildArea() {
+		return buildArea;
+	}
+
+	public void setBuildArea(Float buildArea) {
+		this.buildArea = buildArea;
+	}
+
+	public Long getHid() {
+		return hid;
+	}
+
+	public void setHid(Long hid) {
+		this.hid = hid;
+	}
+
 	public Short getStatus() {
 		return status;
 	}
@@ -166,5 +237,5 @@ public class CustomerOriginVO implements Serializable {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-
+	
 }

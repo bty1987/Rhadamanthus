@@ -1,28 +1,34 @@
 package com.fanglin.decoration.vo;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
-public class DecorationAdditionVO implements Serializable{
+import org.apache.struts2.json.annotations.JSON;
+
+public class DecorationAdditionVO implements Serializable {
 
 	private static final long serialVersionUID = 7595006714231918458L;
 
 	private Long daid;
-	
+
 	private String orderId;
-	
+
 	private String designer;
-	
+
 	private String designDepartment;
-	
+
 	private String designRegion;
-	
+
 	private String salesman;
-	
+
 	private String salesDepartment;
-	
+
 	private String salesRegion;
 
-	
+	private Timestamp designProtectTime;
+
+	private Timestamp salesProtectTime;
+
 	public Long getDaid() {
 		return daid;
 	}
@@ -86,5 +92,23 @@ public class DecorationAdditionVO implements Serializable{
 	public void setSalesRegion(String salesRegion) {
 		this.salesRegion = salesRegion;
 	}
-	
+
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getDesignProtectTime() {
+		return designProtectTime;
+	}
+
+	public void setDesignProtectTime(Timestamp designProtectTime) {
+		this.designProtectTime = designProtectTime;
+	}
+
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getSalesProtectTime() {
+		return salesProtectTime;
+	}
+
+	public void setSalesProtectTime(Timestamp salesProtectTime) {
+		this.salesProtectTime = salesProtectTime;
+	}
+
 }

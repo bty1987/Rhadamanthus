@@ -86,6 +86,10 @@ public class MarketScopeAction extends BaseListAction{
 	
 	private String unionId;
 	
+	private String securityCode;
+	
+	private String verifyCode;
+	
 	@Action(value = "queryEcaseByCid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryEcaseByCid() throws FLException{
 		
@@ -113,7 +117,7 @@ public class MarketScopeAction extends BaseListAction{
 	@Action(value = "addEcustomer", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
 	public String addEcustomer() throws FLException{
 		
-		ecustomerService.addEcustomer(ecustomer);
+		ecustomerService.addEcustomer(ecustomer, securityCode, verifyCode);
 
 		return SUCCESS;
 	}

@@ -775,7 +775,7 @@ $(function () {
                 aboutcollectAndRefundMoney(sid, spid, null, referMoney, _coupon, _couponInfo, "single", api.payment.collectSalesPayment, "collect");
             }else if(salesPayment.collectOrRefundFalg == 2){
                 //退款
-                aboutcollectAndRefundMoney(sid, spid, null, referMoney, _coupon, _couponInfo, "single", api.payment.collectSalesPaymentForRefund, "refund");
+                aboutcollectAndRefundMoney(sid, spid, null, referMoney, _coupon, _couponInfo, "single", api.payment.refundSalesPayment, "refund");
             }
         }else if(salesPayment.collectOrRefundFalg == 3){
             //批量收款

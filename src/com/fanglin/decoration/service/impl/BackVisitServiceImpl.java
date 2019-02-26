@@ -36,115 +36,115 @@ import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
 @Service("backVisitService")
-@Transactional(readOnly=true)
+@Transactional(readOnly = true)
 public class BackVisitServiceImpl implements BackVisitService {
 
 	@Autowired
 	private BackVisitDao backVisitDao;
-	
+
 	@Autowired
-	private DecorationDao  decorationDao;
-	
+	private DecorationDao decorationDao;
+
 	@Autowired
 	private UserDao userDao;
-	
+
 	@Autowired
 	private MessageService messageService;
-	
+
 	@Override
-	public void pageBackVisitByOrderId(Paging paging, List<Filter> filters, BackVisitVO backVisitVO){
-		
+	public void pageBackVisitByOrderId(Paging paging, List<Filter> filters, BackVisitVO backVisitVO) {
+
 		List<BackVisitVO> backVisitVOs = new ArrayList<BackVisitVO>();
 		List<BackVisitPO> backVisitPOs = backVisitDao.pageBackVisitByOrderId(paging, filters, backVisitVO.getOrderId());
-		
-		for(BackVisitPO backVisitPO: backVisitPOs){
+
+		for (BackVisitPO backVisitPO : backVisitPOs) {
 			BackVisitVO _backVisitVO = new BackVisitVO();
-			
+
 			BeanUtil.copyProperties(backVisitPO, _backVisitVO, Arrays.asList("decoration", "sender"));
-			
+
 			UserPO sender = backVisitPO.getSender();
-			
+
 			_backVisitVO.setOrderId(backVisitPO.getDecoration().getOrderId());
 			_backVisitVO.setSender(sender.getCurrentName());
 			_backVisitVO.setSenderId(sender.getUserId());
 			_backVisitVO.setSenderPhoto(sender.getUserPhoto());
-			
+
 			backVisitVOs.add(_backVisitVO);
 		}
-		
+
 		paging.setData(backVisitVOs);
 	}
-	
+
 	@Override
 	public List<BackVisitVO> queryBackVisitByOrderId(BackVisitVO backVisitVO) {
-		
+
 		List<BackVisitPO> backVisitPOs = backVisitDao.queryBackVisitByOrderId(backVisitVO.getOrderId());
 		List<BackVisitVO> backVisitVOs = new ArrayList<BackVisitVO>();
-		
-		for(BackVisitPO backVisitPO: backVisitPOs){
+
+		for (BackVisitPO backVisitPO : backVisitPOs) {
 			BackVisitVO _backVisitVO = new BackVisitVO();
-			
+
 			BeanUtil.copyProperties(backVisitPO, _backVisitVO, Arrays.asList("decoration", "sender"));
-			
+
 			UserPO sender = backVisitPO.getSender();
-			
+
 			_backVisitVO.setOrderId(backVisitPO.getDecoration().getOrderId());
 			_backVisitVO.setSender(sender.getCurrentName());
 			_backVisitVO.setSenderId(sender.getUserId());
 			_backVisitVO.setSenderPhoto(sender.getUserPhoto());
-			
+
 			backVisitVOs.add(_backVisitVO);
 		}
-		
+
 		return backVisitVOs;
 	}
-	
+
 	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public void addBackVisit(BackVisitVO backVisitVO, String userId, int company) throws FLException{
-		
+	@Transactional(rollbackFor = Exception.class)
+	public void addBackVisit(BackVisitVO backVisitVO, String userId, int company) throws FLException {
+
 		String orderId = backVisitVO.getOrderId();
-		
+
 		BackVisitPO backVisitPO = new BackVisitPO();
-		
+
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
-		
-		if(decorationPO == null){
+
+		if (decorationPO == null) {
 			throw new FLException(140013, "订单不存在");
 		}
-		
+
 		UserPO userPO = userDao.queryUserByUserId(userId);
-		
-		if(userPO == null){
+
+		if (userPO == null) {
 			throw new FLException(220005, "员工不存在");
 		}
-		
+
 		BeanUtil.copyProperties(backVisitVO, backVisitPO, Arrays.asList("decoration", "sender"));
-		
+
 		backVisitPO.setDecoration(decorationPO);
 		backVisitPO.setSender(userPO);
 		backVisitPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-		
+
 		StringBuffer receiverIds = new StringBuffer();
-		
-		if(backVisitVO.getReceivers() != null && backVisitVO.getReceivers().size() > 0){
-			
+
+		if (backVisitVO.getReceivers() != null && backVisitVO.getReceivers().size() > 0) {
+
 			List<String> receivers = backVisitVO.getReceivers();
-			
-			for(String receiverId: receivers){	
-				messageService.sendMessage(receiverId.trim(),userPO.getUserId(),backVisitVO.getContent(),(short) 5,company);
+
+			for (String receiverId : receivers) {
+				messageService.sendMessage(receiverId.trim(), userPO.getUserId(), backVisitVO.getContent(), (short) 5, company);
 				receiverIds.append(String.format("%s,", receiverId));
 			}
 		}
-		
+
 		backVisitPO.setReceiverIds(receiverIds.toString());
-		
+
 		backVisitDao.save(backVisitPO);
 	}
-	
+
 	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public void deleteBackVisitById(BackVisitVO orderDesignPicture){	
+	@Transactional(rollbackFor = Exception.class)
+	public void deleteBackVisitById(BackVisitVO orderDesignPicture) {
 		backVisitDao.deleteById(orderDesignPicture.getBvId());
 	}
 

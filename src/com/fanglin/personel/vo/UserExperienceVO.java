@@ -51,8 +51,8 @@ public class UserExperienceVO implements Serializable {
 	public void setType(String type) {
 		this.type = type;
 	}
-	
-	@JSON(format="yyyy-MM-dd HH:mm:ss")
+
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getCreateTime() {
 		return createTime;
 	}
@@ -68,7 +68,5 @@ public class UserExperienceVO implements Serializable {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-
-
 
 }

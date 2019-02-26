@@ -21,61 +21,61 @@ public class DecorationPictureVO implements Serializable {
 	private static final long serialVersionUID = 8552727503707783015L;
 
 	private Long dpId;
-	
+
 	private String orderId;
-	
+
 	private String name;
-	
+
 	private String path;
-	
+
 	private Timestamp uploadTime;
-	
+
 	protected String content;
-	
+
 	private String userId;
-	
+
 	private String userName;
-	
+
 	private Integer type;
 
-	public Long getDpId(){
+	public Long getDpId() {
 		return dpId;
 	}
 
-	public void setDpId(Long dpId){
+	public void setDpId(Long dpId) {
 		this.dpId = dpId;
 	}
 
-	public String getOrderId(){
+	public String getOrderId() {
 		return orderId;
 	}
 
-	public void setOrderId(String orderId){
+	public void setOrderId(String orderId) {
 		this.orderId = orderId;
 	}
 
-	@JSON(format="yyyy-MM-dd HH:mm:ss")
-	public Timestamp getUploadTime(){
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
+	public Timestamp getUploadTime() {
 		return uploadTime;
 	}
 
-	public void setUploadTime(Timestamp uploadTime){
+	public void setUploadTime(Timestamp uploadTime) {
 		this.uploadTime = uploadTime;
 	}
 
-	public String getUserId(){
+	public String getUserId() {
 		return userId;
 	}
 
-	public void setUserId(String userId){
+	public void setUserId(String userId) {
 		this.userId = userId;
 	}
 
-	public String getUserName(){
+	public String getUserName() {
 		return userName;
 	}
 
-	public void setUserName(String userName){
+	public void setUserName(String userName) {
 		this.userName = userName;
 	}
 

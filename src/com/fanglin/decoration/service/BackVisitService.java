@@ -19,11 +19,11 @@ import com.fanglin.decoration.vo.BackVisitVO;
 import com.fanglin.utils.Paging;
 
 public interface BackVisitService {
-	
-	public void pageBackVisitByOrderId(Paging paging,List<Filter> filters, BackVisitVO backVisitVO);
-	
+
+	public void pageBackVisitByOrderId(Paging paging, List<Filter> filters, BackVisitVO backVisitVO);
+
 	public List<BackVisitVO> queryBackVisitByOrderId(BackVisitVO backVisitVO);
-	
+
 	public void addBackVisit(BackVisitVO backVisitVO, String userId, int company) throws FLException;
 
 	public void deleteBackVisitById(BackVisitVO orderDesignPicture);

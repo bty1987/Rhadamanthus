@@ -59,7 +59,7 @@ jQuery(function ($) {
                         viewMaterialSaleOrderIndex(v);
                     });
 
-                    $divBtnWrap.append($btnSub).append($btnSale).appendTo($h3);
+                    $divBtnWrap.append($btnSub).appendTo($h3);
 
                     $liLine.append($h3).append($ulProperty).append($divBtnBlock).appendTo($ul);
                 });

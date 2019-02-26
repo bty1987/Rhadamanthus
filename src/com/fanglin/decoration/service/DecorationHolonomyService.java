@@ -8,11 +8,11 @@ import com.fanglin.decoration.vo.DecorationHolonomyVO;
 import com.fanglin.utils.Paging;
 
 public interface DecorationHolonomyService {
-	
-	public void pageDecorationHolonomy(Paging paging,List<Filter> filters, int company);
-	
+
+	public void pageDecorationHolonomy(Paging paging, List<Filter> filters, int company);
+
 	public DecorationHolonomyVO queryDecorationHolonomy(DecorationHolonomyVO decorationHolonomyVO);
-	
+
 	public void makeDecorationHolonomy(DecorationHolonomyVO decorationHolonomyVO, String userId) throws FLException;
-	
+
 }

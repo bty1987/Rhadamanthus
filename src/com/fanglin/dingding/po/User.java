@@ -45,7 +45,7 @@ public class User {
 				", position:" + position + ", mobile:" + mobile + ", email:" + email + 
 				", openId:" + openId + ", status:" + status +", extattr:" + extattr;
 	}
-
+	
 	public String getUserid() {
 		return userid;
 	}

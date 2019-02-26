@@ -13,6 +13,7 @@ package com.fanglin.decoration.po;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,6 +26,7 @@ import javax.persistence.Table;
 
 import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.utils.DateUtil;
 
 @Entity
 @Table(name = "decorationbelong", catalog = "decoration")
@@ -32,38 +34,40 @@ public class DecorationBelongPO implements Serializable {
 
 	private static final long serialVersionUID = 11111344461146L;
 
-	public static final Short BELONGTYPE_DESIGN_INT = 0;	
-	
-	public static final Short BELONGTYPE_SALESMAN_INT = 1;	
-	
-	public static final Short STATUS_INVALID_INT = 0;		
-	
-	public static final Short STATUS_EFFCTIVE_INT = 1;		
-	
+	public static final Short BELONGTYPE_DESIGN_INT = 0;
+
+	public static final Short BELONGTYPE_SALESMAN_INT = 1;
+
+	public static final Short STATUS_INVALID_INT = 0;
+
+	public static final Short STATUS_EFFCTIVE_INT = 1;
+
 	public static final Short DEFAULTFLAG_TRUE_INT = 1;
-	
+
 	public static final Short DEFAULTFLAG_FALSE_INT = 0;
 
+	public static final Short TYPE_RATE_INT = 1; // 默认比例为1
+
 	private long dbid;
-	
+
 	private String orderId;
-	
+
 	private short type;
-	
+
 	private UserPO belonger;
-	
+
 	private DepartmentPO department;
-	
+
 	private DepartmentPO region;
-	
+
 	private float rate;
-	
+
 	private UserPO operater;
-	
+
 	private Timestamp operateTime;
-	
+
 	private short status;
-	
+
 	private short defaultFlag;
 
 	@Id
@@ -116,7 +120,7 @@ public class DecorationBelongPO implements Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn( name = "rid", referencedColumnName = "did")
+	@JoinColumn(name = "rid", referencedColumnName = "did")
 	public DepartmentPO getRegion() {
 		return region;
 	}
@@ -125,7 +129,6 @@ public class DecorationBelongPO implements Serializable {
 		this.region = region;
 	}
 
-	
 	@JoinColumn(name = "rate")
 	public float getRate() {
 		return rate;
@@ -145,29 +148,66 @@ public class DecorationBelongPO implements Serializable {
 		this.operater = operater;
 	}
 
-	
-	public Timestamp getOperateTime(){
+	public Timestamp getOperateTime() {
 		return operateTime;
 	}
 
-	public void setOperateTime(Timestamp operateTime){
+	public void setOperateTime(Timestamp operateTime) {
 		this.operateTime = operateTime;
 	}
 
-	public short getStatus(){
+	public short getStatus() {
 		return status;
 	}
 
-	public void setStatus(short status){
+	public void setStatus(short status) {
 		this.status = status;
 	}
-	
-	public void setDefaultFlag(short defaultFlag){
+
+	public void setDefaultFlag(short defaultFlag) {
 		this.defaultFlag = defaultFlag;
 	}
 
-	public short getDefaultFlag(){
+	public short getDefaultFlag() {
 		return defaultFlag;
 	}
+
+	public DecorationBelongPO designer(String orderId, UserPO designer, UserPO operater) {
+		
+		setOrderId(orderId);
+
+		setBelonger(designer);
+		setDepartment(designer.getDept());
+		setRegion(designer.getDept().getFatherDept());
+		
+		setOperateTime(DateUtil.getDateToTimestamp(new Date()));
+		setOperater(operater);
+
+		setRate(1);
+		setDefaultFlag(DecorationBelongPO.DEFAULTFLAG_TRUE_INT);
+		setType(DecorationBelongPO.BELONGTYPE_DESIGN_INT);
+		setStatus(DecorationBelongPO.STATUS_INVALID_INT);
+
+		return this;
+	}
 	
+	public DecorationBelongPO salesman(String orderId, UserPO salesman, UserPO operater){
+		
+		setOrderId(orderId);
+		
+		setBelonger(salesman);
+		setDepartment(salesman.getDept());
+		setRegion(salesman.getDept().getFatherDept());
+		
+		setOperateTime(DateUtil.getDateToTimestamp(new Date()));
+		setOperater(operater);
+		
+		setRate(1);
+		setDefaultFlag(DecorationBelongPO.DEFAULTFLAG_TRUE_INT);
+		setType(DecorationBelongPO.BELONGTYPE_SALESMAN_INT);
+		setStatus(DecorationBelongPO.STATUS_INVALID_INT);
+		
+		return this;
+	}
+
 }

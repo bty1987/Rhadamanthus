@@ -119,8 +119,8 @@ public class MuserScopeAction extends BaseListAction {
 		
 	}
 	
-	@Action(value="updateMorder", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String updateMorder() throws FLException{
+	@Action(value="updateMorderForStatus", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String updateMorderForStatus() throws FLException{
 		
 		morderService.updateMorderForStatus(morder);
 		

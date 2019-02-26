@@ -32,6 +32,9 @@ $.extend(api, {approval: {
 	refuseApproval: {url: "refuseApproval.do"},
 	deleteApprover: {url: "deleteApprover.do"},
 	addApprover: {url: "addApprover.do"},
-      
+	
+	updateApprovalForPass : {url : "updateApprovalForPass.do"},
+    submitApprovalForCustomerOriginTDecoration: {url : "submitApprovalForCustomerOriginTDecoration.do"},
+    approvalCallback : {url : "approvalCallback.do"}
     
 }});

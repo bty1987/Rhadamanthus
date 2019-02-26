@@ -22,25 +22,25 @@ public class DecorationBelongVO implements Serializable {
 	private static final long serialVersionUID = -62258203481876631L;
 
 	private Long dbid;
-	
+
 	private String orderId;
-	
+
 	private short type;
-	
+
 	private UserBaseVO belonger;
-	
+
 	private DepartmentVO department;
-	
+
 	private DepartmentVO region;
-	
+
 	private Float rate;
-	
+
 	private UserBaseVO operater;
-	
+
 	private Timestamp operateTime;
-	
+
 	private Short status;
-	
+
 	private Short defaultFlag;
 
 	public Long getDbid() {

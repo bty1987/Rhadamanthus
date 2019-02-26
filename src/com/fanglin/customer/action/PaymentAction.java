@@ -93,10 +93,10 @@ public class PaymentAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-	@Action(value = "countCusDecorationPaymentForAmount", results = {@Result(name = "success", type = "json", params = {"ignoreHierarchy", "false"})}, params = {"contentType", "text/html"})
-	public String countCusDecorationPaymentForAmount(){
+	@Action(value = "queryCusDecorationPaymentForContract", results = {@Result(name = "success", type = "json", params = {"ignoreHierarchy", "false"})}, params = {"contentType", "text/html"})
+	public String queryCusDecorationPaymentForContract(){
 		
-		decorationPayments = decorationPaymentService.countCusDecorationPaymentForAmount(decorationPayment);
+		decorationPayments = decorationPaymentService.queryCusDecorationPaymentForContract(decorationPayment);
 		
 		return SUCCESS;
 	}
@@ -113,6 +113,14 @@ public class PaymentAction extends BaseListAction {
 	public String countCusServicePaymentForAmount(){
 		
 		realMoney = servicePaymentOrderService.countCusServicePaymentForAmount(servicePayment);
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "countCusSalesPaymentForAmount", results = {@Result(name = "success", type = "json", params = {"ignoreHierarchy", "false"})}, params = {"contentType", "text/html"})
+	public String countCusSalesPaymentForAmount(){
+		
+		realMoney = salesPaymentService.countCusSalesPaymentForAmount(salesPayment);
 		
 		return SUCCESS;
 	}

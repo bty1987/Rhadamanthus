@@ -10,6 +10,6 @@ public interface DecorationPaymentService {
 	
 	public void queryCusDecorationPayment(Paging paging, List<Filter> filters, DecorationPaymentVO decorationPaymentVO);
 	
-	public List<DecorationPaymentVO> countCusDecorationPaymentForAmount(DecorationPaymentVO decorationPaymentVO);
+	public List<DecorationPaymentVO> queryCusDecorationPaymentForContract(DecorationPaymentVO decorationPaymentVO);
 
 }

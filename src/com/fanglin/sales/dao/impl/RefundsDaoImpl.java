@@ -12,4 +12,13 @@ public class RefundsDaoImpl extends DaoImpl<RefundsPO> implements RefundsDao{
 	public RefundsDaoImpl(){
 		super(RefundsPO.class);
 	}
+
+	@Override
+	public void updateRefundsForStatusBySpid( Long spid,short status) {
+		
+		String sql="update sales.refunds set status = :status where spid = :spid";
+		
+		session().createSQLQuery(sql).setShort("status", status).setLong("spid", spid).executeUpdate();
+	}
+	
 }

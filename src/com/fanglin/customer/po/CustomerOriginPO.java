@@ -14,8 +14,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.communion.po.DepartmentPO;
+import com.fanglin.communion.po.VillagePO;
 import com.fanglin.personel.po.UserPO;
 
 @Entity
@@ -24,13 +24,25 @@ public class CustomerOriginPO implements Serializable {
 
 	private static final long serialVersionUID = 5940806639925973280L;
 
-	public static final String COLUMN_CID_STR = "belonger.userId";
+	public static final String COLUMN_BUID_STR = "belonger.uid";
 
 	public static final String COLUMN_BELONGER_STR = "belonger";
+	
+	public static final String COLUMN_DESIGNER_STR = "designer.uid";
+	
+	public static final short STATUS_INIT_INT = 0;  //初始
+	
+	public static final short STATUS_APPROVE_INT = 1;
+	
+	public static final short STATUS_CREATE_INT = 2;
+	
+	public static final short STATUS_INVALID_INT = 3;
 
 	private long csid;
 
-	private CustomerPO customer;
+	private String name;
+	
+	private String gender;
 
 	private String phone;
 
@@ -51,18 +63,37 @@ public class CustomerOriginPO implements Serializable {
 	private DepartmentPO department;
 
 	private DepartmentPO region;
-
+	
+	private UserPO designer;
+	
 	private short status;
 
 	private String comment;
-
-	public CustomerOriginPO(UserPO belonger) {
-		super();
-		this.belonger = belonger;
-	}
+	
+	private VillagePO village;
+	
+	private String houseNumber;
+	
+	private float buildArea;
+	
+	private long cid;
+	
+	private long hid;
+	
+	private String orderId;
 
 	public CustomerOriginPO() {
 		super();
+	}
+
+	public CustomerOriginPO(UserPO creater, UserPO belonger, DepartmentPO department, DepartmentPO region, UserPO designer, VillagePO village) {
+		super();
+		this.creater = creater;
+		this.belonger = belonger;
+		this.department = department;
+		this.region = region;
+		this.designer = designer;
+		this.village = village;
 	}
 
 	@Id
@@ -75,15 +106,32 @@ public class CustomerOriginPO implements Serializable {
 	public void setCsid(long csid) {
 		this.csid = csid;
 	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "cid", referencedColumnName = "cid")
-	public CustomerPO getCustomer() {
-		return customer;
+	
+	@Column(name = "cid")
+	public long getCid() {
+		return cid;
 	}
 
-	public void setCustomer(CustomerPO customer) {
-		this.customer = customer;
+	public void setCid(long cid) {
+		this.cid = cid;
+	}
+
+	@Column(name = "name")
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	@Column(name = "gender")
+	public String getGender() {
+		return gender;
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
 	}
 
 	@Column(name = "phone")
@@ -180,6 +228,53 @@ public class CustomerOriginPO implements Serializable {
 		this.region = region;
 	}
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "duid", referencedColumnName = "uid")
+	public UserPO getDesigner() {
+		return designer;
+	}
+
+	public void setDesigner(UserPO designer) {
+		this.designer = designer;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "vid", referencedColumnName = "vid")
+	public VillagePO getVillage() {
+		return village;
+	}
+
+	public void setVillage(VillagePO village) {
+		this.village = village;
+	}
+
+	@Column(name = "houseNumber")
+	public String getHouseNumber() {
+		return houseNumber;
+	}
+
+	public void setHouseNumber(String houseNumber) {
+		this.houseNumber = houseNumber;
+	}
+
+	@Column(name = "buildArea")
+	public float getBuildArea() {
+		return buildArea;
+	}
+
+	public void setBuildArea(float buildArea) {
+		this.buildArea = buildArea;
+	}
+
+	@Column(name = "hid")
+	public long getHid() {
+		return hid;
+	}
+
+	public void setHid(long hid) {
+		this.hid = hid;
+	}
+
 	@Column(name = "status")
 	public short getStatus() {
 		return status;
@@ -196,6 +291,15 @@ public class CustomerOriginPO implements Serializable {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	@Column(name = "orderId")
+	public String getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
 	}
 
 }

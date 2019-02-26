@@ -19,6 +19,8 @@ public class TaskPO implements Serializable{
   
     public static final String COLUMN_STATUS_STR = "status";
     
+    public static final String COLUMN_SHOW_STR = "isShow";
+    
     public static final String COLUMN_KEYWORD_STR = "keyWord";
     
     public static final String COLUMN_PLUGINS_STR = "plugins";
@@ -28,6 +30,8 @@ public class TaskPO implements Serializable{
 	public static final short TYPE_SHELL_INT = 1;
 	
 	public static final Short STATUS_ENABLE_INT = 0;
+	
+	public static final Short SHOW_ABLE_INT = 0;
 	
 	private long tid;
 	
@@ -44,6 +48,8 @@ public class TaskPO implements Serializable{
 	private long handle;
 	
 	private short status;
+	
+	private short isShow;
 
 	public TaskPO(){
 		super();
@@ -109,7 +115,16 @@ public class TaskPO implements Serializable{
 	public void setStatus(short status) {
 		this.status = status;
 	}
-	
+
+	@Column(name = "isShow")
+	public short getIsShow() {
+		return isShow;
+	}
+
+	public void setIsShow(short isShow) {
+		this.isShow = isShow;
+	}
+
 	@Column(name = "keyWord")
 	public String getKeyWord() {
 		return keyWord;

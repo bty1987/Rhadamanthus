@@ -27,9 +27,9 @@ import com.fanglin.personel.po.UserPO;
 public class BackVisitPO implements Serializable {
 
 	private static final long serialVersionUID = 1000000000011112L;
-	
+
 	public static final String COLUMN_ORDERID_STR = "decoration.orderId";
-	
+
 	public static final String COLUMN_CREATETIME_STR = "createTime";
 
 	private long bvId;
@@ -37,11 +37,11 @@ public class BackVisitPO implements Serializable {
 	private DecorationPO decoration;
 
 	private UserPO sender;
-	
+
 	private String receiverIds;
-	
+
 	private Timestamp createTime;
-	
+
 	private String content;
 
 	@Id
@@ -56,7 +56,7 @@ public class BackVisitPO implements Serializable {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false, name = "orderId", referencedColumnName = "orderId")
-	public DecorationPO getDecoration(){
+	public DecorationPO getDecoration() {
 		return decoration;
 	}
 
@@ -82,11 +82,11 @@ public class BackVisitPO implements Serializable {
 		this.receiverIds = receiverIds;
 	}
 
-	public Timestamp getCreateTime(){
+	public Timestamp getCreateTime() {
 		return createTime;
 	}
 
-	public void setCreateTime(Timestamp createTime){
+	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
 	}
 

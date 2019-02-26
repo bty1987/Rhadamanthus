@@ -1,0 +1,159 @@
+<div id="storehousePageContent" class="page-content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="condList" class="fl_search clearfix"></div> <!-- 查询条件-->
+            <div class="clearfix tab-pane active" id="resultList"></div> <!--查询结果-->
+            <div class="fl-page-wrap clearfix" id="pagenation"></div> <!--分页-->
+        </div>
+    </div>
+</div>
+
+<div id="layerAdd1" style="padding: 40px 0;display: none;">
+    <div class="row-fluid">
+        <form class="form-horizontal" novalidate="novalidate" id="form1">
+            <div class="widget-main">
+                <div class="row" style="margin-right: 0px">
+                    <div class="col-xs-12">
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="no">编号</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="col-xs-8 m-wrap v_required" maxlength="11" id="no">
+                                <span class="required"><i class='icon-asterisk'></i></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="name">商品名称</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="col-xs-8 m-wrap v_required" maxlength="11" id="name">
+                                <span class="required"><i class='icon-asterisk'></i></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="num" class="col-sm-3 control-label no-padding-right">数量</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="col-xs-8 m-wrap v_required" maxlength="11" id="num">
+                                <span class="required"><i class='icon-asterisk'></i></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group" id = "moneys">
+                            <label class="col-sm-3 control-label no-padding-right" for="price">商品价格</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="col-xs-8 m-wrap v_required v_amount" maxlength="11" id="price">
+                                <span class="required"><i class='icon-asterisk'></i></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="content">说明</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="col-xs-8 m-wrap" maxlength="11" id="content">
+                            </div>
+                        </div>
+                    <div style="margin-left: -78px">
+                        <div class="form-group">
+
+                            <label class="col-md-4 control-label no-padding-right">奖品类型</label>
+
+                            <div class="col-md-8">
+                                <select class="col-xs-10 col-sm-5 v_required" id="type"  data-required="1" data-toggle="popover" data-trigger='manual' rules="{required:true}" style="width: 258px">
+                                </select>
+                                <span class="required"><i class='icon-asterisk'></i></span>
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+
+                            <label class="col-md-4 control-label no-padding-right">是否加入业绩</label>
+
+                            <div class="col-md-8">
+
+                                <select class="col-xs-10 col-sm-5 v_required" id="isPrefor" data-required="1" data-toggle="popover" data-trigger='manual' rules="{required:true}" style="width: 258px">
+                                </select>
+                                <span class="required"><i class='icon-asterisk'></i></span>
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+
+                            <label class="col-md-4 control-label no-padding-right">是否加入库存</label>
+
+                            <div class="col-md-8">
+                                <select class="col-xs-10 col-sm-5 v_required" id="isStock" data-required="1" data-toggle="popover" data-trigger='manual' rules="{required:true}" style="width: 258px">
+                                </select>
+                                <span class="required"><i class='icon-asterisk'></i></span>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div id="layerAdd2" style="padding: 40px 0;display: none;">
+    <div class="row-fluid">
+        <form class="form-horizontal" novalidate="novalidate" id="form2">
+            <div class="widget-main">
+                <div class="row" style="margin-right: 0px">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="no2">编号</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="col-xs-8 m-wrap v_required" maxlength="11" id="no2">
+                                <span class="required"><i class='icon-asterisk'></i></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="name2">商品名称</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="col-xs-8 m-wrap v_required" maxlength="11" id="name2">
+                                <span class="required"><i class='icon-asterisk'></i></span>
+                            </div>
+                        </div>
+                        <div class="form-group" id="money">
+                            <label class="col-sm-3 control-label no-padding-right" for="price2">价格</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="col-xs-8 m-wrap v_required" maxlength="11" id="price2">
+                                <span class="required"><i class='icon-asterisk'></i></span>
+                            </div>
+                        </div>
+                        <div class="form-group" id="join">
+                            <label class="col-sm-3 control-label no-padding-right" for="Warehousing">数量</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="col-xs-8 m-wrap v_required" maxlength="11" id="Warehousing">
+                                <span class="required"><i class='icon-asterisk'></i></span>
+                            </div>
+                        </div>
+                        <div class="form-group" id="leave">
+                            <label class="col-sm-3 control-label no-padding-right" for="Warehousend">数量</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="col-xs-8 m-wrap v_required" maxlength="11" id="Warehousend">
+                                <span class="required"><i class='icon-asterisk'></i></span>
+                            </div>
+                        </div>
+                        <div class="form-group" id="stock">
+                            <label class="col-sm-3 control-label no-padding-right" for="nownum">数量</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="col-xs-8 m-wrap v_required" maxlength="11" id="nownum">
+                                <span class="required"><i class='icon-asterisk'></i></span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+<div id="stockRecordPopUp" class="portlet box"></div>
+
+<script type="text/javascript">
+    $.loadScript(['js/information/awardStock.js']);
+</script>
+

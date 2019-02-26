@@ -22,7 +22,9 @@ public class ApprovalDecorationActivityItemVO implements java.io.Serializable {
 	
 	private String content;
 
-
+	private Short stateType;
+	
+	private Long asid;
 
 	public Long getAdaiId() {
 		return adaiId;
@@ -94,6 +96,22 @@ public class ApprovalDecorationActivityItemVO implements java.io.Serializable {
 
 	public void setContent(String content) {
 		this.content = content;
+	}
+
+	public Short getStateType() {
+		return stateType;
+	}
+
+	public void setStateType(Short stateType) {
+		this.stateType = stateType;
+	}
+
+	public Long getAsid() {
+		return asid;
+	}
+
+	public void setAsid(Long asid) {
+		this.asid = asid;
 	}
 
 }

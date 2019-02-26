@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpEntity;
@@ -75,12 +76,11 @@ public class HttpHelper {
                 Integer errcode = result.getInteger("errcode");
                 Integer errorCode = result.getInteger("errorCode");
                 
-                if ((errcode != null && errcode == RESPONSE_ERRCODE_SUCCESS_INT) || (errorCode != null && errorCode == RESPONSE_ERRCODE_SUCCESS_INT)) {
-                    return result;
-                } else {
-                    logger.error(String.format(RESPONSE_PRINT_FAIL_STR, url, resultStr));
-                    return result;
+                if ((errcode == null || errcode != RESPONSE_ERRCODE_SUCCESS_INT) && (errorCode == null || errorCode != RESPONSE_ERRCODE_SUCCESS_INT)) {
+                	logger.error(String.format(RESPONSE_PRINT_FAIL_STR, url, resultStr));
                 }
+                    
+                return result;
             }
         } catch (IOException e) {
             logger.error(String.format(RESPONSE_PRINT_EXCEPTION_STR, url, e.getMessage()));
@@ -97,20 +97,43 @@ public class HttpHelper {
         return null;
     }
 	
-	public static JSONObject httpPost(String url, Object data){
+	public static JSONObject httpPost(String url, String params){
+		
+		String contentType = "application/x-www-form-urlencoded; charset=UTF-8";
+		
+		return httpPost(url, params, contentType);
+	}
+	
+	public static JSONObject httpPost(String url, Map<String, String> params){
+		
+		String contentType = "application/x-www-form-urlencoded; charset=UTF-8";
+		String data = JSONObject.toJSONString(params);
+		
+		return httpPost(url, data.toString(), contentType);
+	}
+	
+	public static JSONObject httpPost(String url, JSONObject params){
+		
+		String contentType = "application/json; charset=UTF-8";
+		String data = JSONObject.toJSONString(params);
+		
+		return httpPost(url, data, contentType);
+	}
+	
+	public static JSONObject httpPost(String url, String data, String contentType){
         HttpPost httpPost = new HttpPost(url);
         CloseableHttpResponse response = null;
         CloseableHttpClient httpClient = HttpClients.createDefault();
         RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(SOCKET_TIMEOUT_INT).setConnectTimeout(CONNECT_TIMEOUT_INT).build();
         httpPost.setConfig(requestConfig);
-        httpPost.addHeader("Content-Type", "application/json");
+        httpPost.addHeader("Content-Type", contentType);
         
         try {
-        	StringEntity requestEntity = new StringEntity(JSON.toJSONString(data), "utf-8");
+        	StringEntity requestEntity = new StringEntity(data, "utf-8");
             httpPost.setEntity(requestEntity);
             
             response = httpClient.execute(httpPost, new BasicHttpContext());
-
+            
             if (response.getStatusLine().getStatusCode() != RESPONSE_CODE_SUCCESS_INT) {
             	logger.error(String.format(RESPONSE_PRINT_ISSUES_STR, response.getStatusLine().getStatusCode(), url));
                 return null;
@@ -120,15 +143,17 @@ public class HttpHelper {
             
             if (entity != null) {
                 String resultStr = EntityUtils.toString(entity, "utf-8");
-
+                
                 JSONObject result = JSON.parseObject(resultStr);
                 
-                if (result.getInteger("errcode") == RESPONSE_ERRCODE_SUCCESS_INT) {
-                    return result;
-                } else {
+                Integer errcode = result.getInteger("errcode");
+                Integer errorCode = result.getInteger("errorCode");
+                
+                if ((errcode == null || errcode != RESPONSE_ERRCODE_SUCCESS_INT) && (errorCode == null || errorCode != RESPONSE_ERRCODE_SUCCESS_INT)) {
                 	logger.error(String.format(RESPONSE_PRINT_FAIL_STR, url, resultStr));
-                	return result;
                 }
+                
+                return result;
             }
         } catch (IOException e) {
         	logger.error(String.format(RESPONSE_PRINT_EXCEPTION_STR, url, e.getMessage()));

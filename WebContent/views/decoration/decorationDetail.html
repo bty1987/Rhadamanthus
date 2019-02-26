@@ -494,10 +494,18 @@
 
                 <div class="modal-body">
                     <form class="form-horizontal">
+
                         <div class="form-group">
                             <label for="activity" class="col-sm-3 control-label no-padding-right">活动</label>
                             <div class="col-sm-9">
                                 <select class='col-xs-10 col-sm-5 v_required' id='activity' data-toggle="popover"
+                                        data-trigger='manual'></select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="activity" class="col-sm-3 control-label no-padding-right">状态类型</label>
+                            <div class="col-sm-9">
+                                <select class='col-xs-10 col-sm-5 v_required' id='receiveTypes' data-toggle="popover"
                                         data-trigger='manual'></select>
                             </div>
                         </div>
@@ -550,21 +558,42 @@
 
                 <div class="modal-body">
                     <form class="form-horizontal">
+
                         <div class="form-group">
-                            <label for="activity" class="col-sm-3 control-label no-padding-right">类型</label>
+                            <label for="activity" class="col-sm-3 control-label no-padding-right">选择活动</label>
                             <div class="col-sm-9">
-                                <select class='col-xs-10 col-sm-5 v_required' id='activityType' data-toggle="popover"
+                                <select class='col-xs-10 col-sm-5 v_required' id='selectAtivity' data-toggle="popover"
                                         data-trigger='manual'></select>
                             </div>
                         </div>
                         <div class="space-4"></div>
 
+
                         <div id="couponInfo">
+                            <div class="form-group">
+                                <label for="activity" class="col-sm-3 control-label no-padding-right">类型</label>
+                                <div class="col-sm-9">
+                                    <select class='col-xs-10 col-sm-5 v_required' id='activityType' data-toggle="popover"
+                                            data-trigger='manual'></select>
+                                </div>
+                            </div>
+                            <div class="space-4"></div>
+
+                            <div class="form-group">
+                                <label for="activity" class="col-sm-3 control-label no-padding-right">状态类型</label>
+                                <div class="col-sm-9">
+                                    <select class='col-xs-10 col-sm-5 v_required' id='receiveType' data-toggle="popover"
+                                            data-trigger='manual'></select>
+                                    <div></div>
+                                </div>
+                            </div>
+                            <div class="space-4"></div>
+
                         <div class="form-group">
-                            <label for="activity" class="col-sm-3 control-label no-padding-right">名称</label>
-                            <div class="col-sm-9">
-                                <input type="text" class='col-xs-10 col-sm-5 v_required v_NameVerification' id='activityItemName'
-                                       maxlength="10" data-toggle="popover" data-trigger='manual'>
+                            <label for="activity" class="col-sm-3 control-label no-padding-right">奖品名称</label>
+                            <div class="col-sm-9" id="awardNameDiv">
+                                <select class='col-xs-10 col-sm-5 v_required' id='awardStockName' data-toggle="popover"
+                                        data-trigger='manual'></select>
                             </div>
                         </div>
                         <div class="space-4"></div>

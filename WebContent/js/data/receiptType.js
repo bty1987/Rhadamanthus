@@ -108,7 +108,7 @@ $(function ($) {
     })();
 
     var searcher = new Searcher();
-    var _condArr = [];
+    var _condArr = ["receiptTypeName","receiptType","receiptTypeStatus"];
 
     searcher.init(_condArr, "condList", api.common.pageReceiptType, function (data) {
         displayFunc.init('resultList', data);
@@ -132,7 +132,7 @@ $(function ($) {
             "receiptType.no" : receiptType.items.no.val(),
             "receiptType.type" : receiptType.items.type.val(),
             "receiptType.kino" : receiptType.items.kino.val(),
-            "receiptType.kiname" : receiptType.items.kino.val(),
+            "receiptType.kiname" : receiptType.items.kiname.val(),
             "receiptType.assistant" : receiptType.items.assistant.val()
         };
 

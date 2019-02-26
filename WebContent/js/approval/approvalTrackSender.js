@@ -47,7 +47,6 @@ jQuery(function($) {
 
 
 			var propertyArr = [
-
 				[ "审批人:", v.receiver.userName, "grey" ],
 				[ "提交时间:", v.createTime, "grey" ],
 				[ "审批时间:", v.approvalTime, "grey" ],
@@ -63,7 +62,7 @@ jQuery(function($) {
 
 			var $content = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix')
 													.append($('<li></li>').append($('<strong></strong>')
-													.append($('<b></b>').text(v.contents).addClass("grey"))));
+													.append($('<b></b>').text(v.contents == null ? "" : v.contents).addClass("grey"))));
 
 			var typeName = v.type;
 

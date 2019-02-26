@@ -24,15 +24,19 @@ public class ActivityItemPO implements java.io.Serializable {
 	
 	private long aid;
 	
-	private String activityName;
+	private long asid;
 	
 	private String name;
-	
-	private int num;
 	
 	private short type;
 	
 	private float money;
+	
+	private String activity;
+	
+	public ActivityItemPO(){
+		super();
+	}
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -54,15 +58,6 @@ public class ActivityItemPO implements java.io.Serializable {
 		this.aid = aid;
 	}
 
-	@Column(name = "activityName")
-	public String getActivityName() {
-		return this.activityName;
-	}
-
-	public void setActivityName(String activityName) {
-		this.activityName = activityName;
-	}
-
 	@Column(name = "name")
 	public String getName() {
 		return name;
@@ -70,15 +65,6 @@ public class ActivityItemPO implements java.io.Serializable {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	@Column(name = "num")
-	public int getNum() {
-		return this.num;
-	}
-
-	public void setNum(int num) {
-		this.num = num;
 	}
 
 	@Column(name = "type")
@@ -89,14 +75,31 @@ public class ActivityItemPO implements java.io.Serializable {
 	public void setType(short type) {
 		this.type = type;
 	}
+	
+	@Column(name = "asid")
+	public long getAsid() {
+		return asid;
+	}
+
+	public void setAsid(long asid) {
+		this.asid = asid;
+	}
 
 	@Column(name = "money")
 	public float getMoney() {
-		return this.money;
+		return money;
 	}
 
 	public void setMoney(float money) {
 		this.money = money;
 	}
+	
+	@Column(name = "activity")
+	public String getActivity() {
+		return activity;
+	}
 
+	public void setActivity(String activity) {
+		this.activity = activity;
+	}
 }

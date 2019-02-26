@@ -53,7 +53,7 @@ public class SystemConfigPO implements Serializable{
 		this.scid = scid;
 	}
 
-	@Column(name="[key]")
+	@Column(name="key")
 	public String getKey() {
 		return key;
 	}
@@ -62,7 +62,7 @@ public class SystemConfigPO implements Serializable{
 		this.key = key;
 	}
 
-	@Column(name="[value]")
+	@Column(name="value")
 	public String getValue() {
 		return value;
 	}
@@ -90,7 +90,7 @@ public class SystemConfigPO implements Serializable{
 		this.createTime = createTime;
 	}
 
-	@Column(name="[comment]")
+	@Column(name="comment")
 	public String getComment() {
 		return comment;
 	}
@@ -106,4 +106,9 @@ public class SystemConfigPO implements Serializable{
 	public void setCompany(int company) {
 		this.company = company;
 	}
+	
+	public String value(String defaultValue){
+		return getValue() == null ? defaultValue : getValue();
+	}
+	
 }

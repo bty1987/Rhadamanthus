@@ -230,12 +230,4 @@ public class SalesItemServiceImpl implements SalesItemService {
 		return 0;
 	}
 
-	@Override
-	public Float countSalesItemForAmount(SalesItemVO salesItemVO)throws FLException {
-		
-		Float amount = salesItemDao.countSalesItemForAmount(salesItemVO.getSid());
-		
-		return amount;
-	}
-
 }

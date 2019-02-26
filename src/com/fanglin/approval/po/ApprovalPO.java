@@ -44,13 +44,19 @@ public class ApprovalPO implements java.io.Serializable {
 	
 	public static final short APPROVAL_TYPE_SALES_DIACOUNT_INT=12;
 	
+	public static final short APPROVAL_TYPE_HR_INT = 13;
+	
+	public static final short APPROVAL_TYPE_CUSTOMER_ORIGIN_T_DECORATION_INT = 14;
+	
+	public static final short APPROVAL_TYPE_CUSTOMER_ORIGIN_T_DECORATION_BELONG_INT = 15;
+	
 	public static final short APPROVAL_STATUS_INIT_INT = 0;
 
 	public static final short APPROVAL_STATUS_APPROVAL_INT = 1;
 
 	public static final short APPROVAL_STATUS_REFUSE_INT = 2;
 	
-	public static final short APPROVAL_STATUS_DINGDING_INT = 3;
+	public static final short APPROVAL_STATUS_APPROVE_INT = 3;
 
 	public static final String COLUMN_TYPE_STR = "type";
 
@@ -115,6 +121,8 @@ public class ApprovalPO implements java.io.Serializable {
 	public static final String APPROVAL_SYSTEMCONFIG_INCREASE_OR_DECREASE_STR = "increaseOrDecrease";//增减项
 	
 	public static final String APPROVAL_SYSTEMCONFIG_RESIGNATION_STR = "resignation";//人员离职
+	
+	public static final String APPROVAL_CHANGE_RESIGNATION_STR = "change";//客源转装修单
 
 	private long aid;
 

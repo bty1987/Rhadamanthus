@@ -20,50 +20,50 @@ import com.fanglin.personel.vo.UserLabelVO;
 public class UserLabelAction extends BaseListAction {
 
 	private static final long serialVersionUID = -6066824785113715938L;
-	
+
 	@Autowired
 	private UserLabelService userlabelService;
-	
+
 	private UserLabelVO userlabel;
-	
+
 	private List<LabelVO> labels;
-	
+
 	private List<UserLabelVO> userlabels;
-	
+
 	private List<Integer> userLabel;
-	
-	@Action(value="queryUserLabelByUid", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryUserLabelByUid(){
-		
+
+	@Action(value = "queryUserLabelByUid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryUserLabelByUid() {
+
 		userlabels = userlabelService.queryUserLabelByUid(userlabel);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value="pickUserLabel", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String pickUserLabel(){
-		
-		userlabels =  userlabelService.pickUserLabel(userLabel);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value="addUserLabel", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String addUserLabel(){
-		
-		 userlabelService.addUserLabel(userlabel);
-		
+
 		return SUCCESS;
 	}
 
-	@Action(value="deleteUserLabel", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String deleteUserLabel(){
-		
-		 userlabelService.deleteUserLabel(userlabel);
-		
+	@Action(value = "pickUserLabel", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pickUserLabel() {
+
+		userlabels = userlabelService.pickUserLabel(userLabel);
+
 		return SUCCESS;
 	}
-	
+
+	@Action(value = "addUserLabel", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addUserLabel() {
+
+		userlabelService.addUserLabel(userlabel);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "deleteUserLabel", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String deleteUserLabel() {
+
+		userlabelService.deleteUserLabel(userlabel);
+
+		return SUCCESS;
+	}
+
 	public UserLabelVO getUserlabel() {
 		return userlabel;
 	}
@@ -95,5 +95,5 @@ public class UserLabelAction extends BaseListAction {
 	public void setUserLabel(List<Integer> userLabel) {
 		this.userLabel = userLabel;
 	}
-	
+
 }

@@ -11,6 +11,22 @@ $(function () {
         total: null,
     };
 
+    var status = {
+        "0": "初始",
+        "2": "全退",
+        "3": "倒单",
+        "4": "废单",
+        "5": "完结"
+    };
+
+    var balanceStatus = {
+        "0": "初始",
+        "1": "预结算",
+        "2": "厂商结算",
+        "3": "结算"
+    };
+
+    //查询仓库名称
     com.post(api.inventory.queryStorehouseForSelf, {}, function (res) {
         var storehousesStatus = [];
 
@@ -37,42 +53,6 @@ $(function () {
                     var $h3 = $('<h3></h3>').addClass('oid');
                     var $btnDiv = $('<div></div>').addClass('action-buttons pull-right');
 
-                    var status = "";
-                    var balanceStatus = "";
-
-                    switch (v.status) {
-                        case 0:
-                            status = "初始";
-                            break;
-                        case 2:
-                            status = "全退";
-                            break;
-                        case 3:
-                            status = "倒单";
-                            break;
-                        case 4:
-                            status = "废单";
-                            break;
-                        case 5:
-                            status = "完结";
-                            break;
-                    }
-
-                    switch (v.balanceStatus) {
-                        case 0:
-                            balanceStatus = "初始";
-                            break;
-                        case 1:
-                            balanceStatus = "预结算";
-                            break;
-                        case 2:
-                            balanceStatus = " 厂商结算";
-                            break;
-                        case 3:
-                            balanceStatus = " 结算";
-                            break;
-                    }
-
                     var $btnSwitch = $('<a></a>').addClass('btn btn-minier btn-yellow').html('转出库单');
 
                     var propertyArr = [
@@ -90,8 +70,8 @@ $(function () {
                         ["创建时间:", v.createTime, "green"],
                         ["结算时间:", v.balanceTime, "green"],
                         ["全款时间:", v.fullpayTime, "green"],
-                        ["状态:", status, "red"],
-                        ["结算状态:", balanceStatus, "red"],
+                        ["状态:", status[v.status], "red"],
+                        ["结算状态:", balanceStatus[v.balanceStatus], "red"],
                         ["总额:", v.total, "blue"],
                         ["抹零:", v.maling, "blue"],
                         ["厂商抹零:", v.venderMaling, "blue"],
@@ -146,7 +126,7 @@ $(function () {
                             viewSalesItems(v.sid);
                             openlayer($btnSwitch.html(), function () {
                                 savePurchase(_params);
-                            },v.sid);
+                            }, v.sid);
                         } else {
                             layer.msg('此销售单补款未确认,无法转出库单', {time: 2e3});
                         }
@@ -222,7 +202,7 @@ $(function () {
 
             }
         );
-        return [];
+        return [$adda];
 
     }, 'resultList');
 
@@ -256,7 +236,7 @@ $(function () {
             "manifest.type": 3,
         };
 
-        $.extend(options,sids);
+        $.extend(options, sids);
 
         var checkList = com.focusPage('input[name="siids"]:checked', '#resultListItem');
         var $liline = checkList.parents('.oid');
@@ -278,6 +258,7 @@ $(function () {
                     layer.msg('添加成功');
                     com.focusPage('#resultListItem').empty();
                     com.focusPage('input[name="manifestTime"]').val("");
+                    com.focusPage('input[name="comment"]').val("");
                 }, function (e) {
                     com.showAlert(com.error, e.errorMsg);
                 });
@@ -324,7 +305,7 @@ $(function () {
                         'color': 'grey',
                         'font-size': '20px',
                         "font-weight": "bold",
-                        "width":"100%"
+                        "width": "100%"
                     });
 
                     var inputSpan = $('<label></label>').addClass('pull-right').css({
@@ -437,15 +418,15 @@ $(function () {
     })();
 
 
-    function openlayer(title, callback,sid) {
-    	com.focusPage('#layerAdd').attr({'data-sid': sid});
+    function openlayer(title, callback, sid) {
+        com.focusPage('#layerAdd').attr({'data-sid': sid});
         layer.closeAll();
         layer.open({
             type: 1,
             skin: 'layui-layer-lan',
             title: title,
             content: com.focusPage('#layerAdd'),
-            area: ["1200px", ( $(window).height() * 0.84 < 800 ? $(window).height() * 0.84 : 800 ) + "px"],
+            area: ["1200px", ($(window).height() * 0.84 < 800 ? $(window).height() * 0.84 : 800) + "px"],
             //maxmin: true,
             zIndex: 9000,
             btn: ['确定', '取消'],
@@ -467,6 +448,7 @@ $(function () {
         });
     }
 
+    //检查输入数量是否正确
     function checkRowValue($line) {
 
         var flag = true;
@@ -474,7 +456,7 @@ $(function () {
         $.each($line, function (i, v) {
             var num = $(v).find('input.inputNumber');
 
-            if (!(priceRex.test(num.val()) && parseFloat(num.val()) > 0 )){
+            if (!(priceRex.test(num.val()) && parseFloat(num.val()) > 0)) {
                 num.focus().select();
                 num.addClass('tooltip-info').attr({
                     "data-rel": "popover",
@@ -484,7 +466,7 @@ $(function () {
                     "data-content": "出库数量需大于0!"
                 }).popover('show');
                 flag = false;
-            }else {
+            } else {
                 num.popover('destroy');
             }
 
@@ -493,6 +475,7 @@ $(function () {
         return flag;
     }
 
+    //计算总价
     function cyclTotal() {
 
         var _total = 0;

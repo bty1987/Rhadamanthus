@@ -1,8 +1,25 @@
 {
-  "activityItemType": [
-    {"key":"","value":""},
-    {"key":"0","value":"券"},
+  "awardStockType": [
+    {"key":"0","value":"劵"},
     {"key":"1","value":"物品"}
+  ],
+  "activityItemType": [
+    {"key":"0","value":"劵"},
+    {"key":"1","value":"物品"},
+    {"key":"2","value":"特殊劵"},
+    {"key":"3","value":"特殊物品"}
+  ],
+  "isPreforType": [
+    {"key":"0","value":"计算业绩"},
+    {"key":"1","value":"不计算业绩"}
+  ],
+  "isStockType": [
+    {"key":"0","value":"加入库存"},
+    {"key":"1","value":"不加入库存"}
+  ],
+  "activityTypes" :[
+    {"key":"0","value":"装修"},
+    {"key":"1","value":"主材/销售"}
   ],
   "noticeType": [
     {"key":"1","value":"通知"},

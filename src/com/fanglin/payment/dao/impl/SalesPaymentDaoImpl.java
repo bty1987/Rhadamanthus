@@ -78,6 +78,17 @@ public class SalesPaymentDaoImpl extends DaoImpl<SalesPaymentPO> implements Sale
 	public List<SalesPaymentPO> querySalesPaymentForNotInitBySrid(long srid) {
 		return session().createCriteria(SalesPaymentPO.class).createAlias("salesReceipt", "salesReceipt").add(Restrictions.eq("salesReceipt.srId", srid)).add(Restrictions.sqlRestriction(" status!=0")).list();
 	}
+	
+	@Override
+	public SalesPaymentPO querySalesPaymentsBySidAndType(long sid, short type) {
+		return (SalesPaymentPO) session().createCriteria(SalesPaymentPO.class).add(Restrictions.eq(SalesPaymentPO.COLUMN_SALES_SID_STR, sid)).add(Restrictions.eq(SalesPaymentPO.COLUMN_TYPE_STR, type)).uniqueResult();
+	}
+	
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<SalesPaymentPO> querySalesPaymentsBySidAndTypes(long sid, List<Short> types) {
+		return session().createCriteria(SalesPaymentPO.class).add(Restrictions.eq(SalesPaymentPO.COLUMN_SALES_SID_STR, sid)).add(Restrictions.in(SalesPaymentPO.COLUMN_TYPE_STR, types)).list();
+	}
 
 	@Override
 	public int countSalesPaymentBySid(long sid) {

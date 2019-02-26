@@ -6,70 +6,166 @@
             <div id="pagenation" class="fl-page-wrap clearfix"></div><!--分页-->
         </div>
     </div>
-</div>
 
-<div id="sustomersource" style="padding: 40px 0; display: none">
-    <div class="row-fluid">
-        <form class="form-horizontal" novalidate="novalidate" id="form1">
-            <div class="widget-main">
-                <div class="row" style="margin-right: 0px">
-                    <div class="col-xs-12">
+    <div class="modal fade" id="sustomersource" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title" id="sustomersourceDialog"></h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="villageNo">楼盘信息</label>
+                            <div class="col-sm-9">
+                                <div class="col-sm-7 no-padding-left">
+                                    <select class="chosen-select col-sm-6 v_required" id="villageNo">
+                                        <option value="">&nbsp;</option>
+                                    </select>
+                                </div>
+                                <div id="bindHouseDiv" class="col-sm-5 no-padding-left"><button type="button" id="bindHouse" class="btn btn-xs btn-info">绑定楼盘</button></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" id="houseNumberGroup">
+                            <label for="houseNumber" class="col-sm-3 control-label no-padding-right">楼牌号</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="m-wrap col-xs-6 v_required" id="houseNumber" maxlength="30">
+                                <div class="col-md-12" style="padding: 0px;" >
+                                    <span id="rule" class="red"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" id="houseNumberGroupTwo">
+                            <label for="built" class="col-sm-3 control-label no-padding-right">楼牌号</label>
+                            <div class="col-sm-9">
+                                <input type="text" maxlength="7" style="width: 10%;"  id="built">
+                                <select id="builtrule" style="padding: 0px;font-size: 1px; width: 10%!important; height: 25px; vertical-align: bottom"></select>
+                                <input type="text" maxlength="3"  style="float: none; width: 10%;"  id="unit">
+                                <select  id="unitrule" style="padding: 0px;font-size: 1px; width: 10%!important; height: 25px; vertical-align: bottom"></select>
+                                <input type="text" maxlength="3"  style="float: none; width: 10%;" id="floor">
+                                <select id="floorrule" style="padding: 0px;font-size: 1px; width: 10%!important; height: 25px; vertical-align: bottom"></select>
+                                <input type="text" maxlength="3"  style="float: none; width: 10%;"  id="door">
+                                <select id="doorrule" style="padding: 0px;font-size: 1px; width: 10%!important; height: 25px; vertical-align: bottom"></select>
+                                <span id="errMsg"></span>
+                                <div class="col-md-12" style="padding: 0px;" >
+                                    <span id="ruleTwo" class="red"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" id="buildAreaGroup">
+                            <label class="col-sm-3 control-label no-padding-right" for="buildArea">建筑面积</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="buildArea" maxlength="7" class="col-xs-6 col-sm-6 v_required v_float" />
+                                <span style = "margin-left: 10px; line-height: 34px">平</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">姓名</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="m-wrap col-xs-6 v_required" maxlength="32" id="name" style="margin-right: 35px;">
+                                <div id="bindCustomerDiv"><button type="button" id="bindCustomer" class="btn btn-xs btn-info">绑定客户</button></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" id="genderGroup">
+                            <label class="col-sm-3 control-label no-padding-right" for="gender">性别</label>
+                            <div class="col-sm-9">
+                                <input type="checkbox" id="gender" />
+                            </div>
+                        </div>
 
                         <div class="form-group">
                             <label class="col-sm-3 control-label no-padding-right">电话</label>
-                            <div class="col-sm-8">
-                                <input type="text" class=" m-wrap col-xs-8 " id="phone">
+                            <div class="col-sm-9">
+                                <input type="text" class="m-wrap col-xs-6 v_required v_phone" id="phone">
                             </div>
                         </div>
 
-                        <div class="space5"></div>
-
-                        <div class="form-group">
+                        <div class="form-group" id="purposeGroup">
                             <label class="col-sm-3 control-label no-padding-right">目的</label>
-                            <div class="col-sm-8">
-                                <input type="text" class=" m-wrap col-xs-8 " id="purpose">
+                            <div class="col-sm-9">
+                                <input type="text" class=" m-wrap col-xs-6" id="purpose">
                             </div>
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group" id="intentionGroup">
                             <label class="col-sm-3 control-label no-padding-right">意向</label>
-                            <div class="col-sm-8">
-                                <input type="text" class=" m-wrap col-xs-8 " id="intention">
+                            <div class="col-sm-9">
+                                <input type="text" class=" m-wrap col-xs-6 v_required" id="intention">
                             </div>
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group" id="priceGroup">
                             <label class="col-sm-3 control-label no-padding-right">需求价格</label>
-                            <div class="col-sm-8">
-                                <input type="text" class=" m-wrap col-xs-8" id="price">
+                            <div class="col-sm-9">
+                                <input type="text" class=" m-wrap col-xs-6 v_required" id="price">
                             </div>
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group" id="gradeGroup">
                             <label class="col-sm-3 control-label no-padding-right">客户等级</label>
-                            <div class="col-sm-8">
-                                <select type="text" class="col-xs-8 m-wrap" id="grade">
+                            <div class="col-sm-9">
+                                <select type="text" class="col-xs-6 m-wrap v_required" id="grade"></select>
+                            </div>
+                        </div>
+
+                        <div class="form-group" id="commentGroup">
+                            <label class="col-sm-3 control-label no-padding-right">备注</label>
+                            <div class="col-sm-9">
+                                <textarea id="comment" class=" m-wrap col-xs-6" maxlength="128" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer" style="text-align: center">
+                    <button type="button" id="updateAndApprovalBtn" class="btn btn-primary" data-loading-text="提交中...">保存</button>
+                    <button type="button" id="createSustomersourceCancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="updateDesigner" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title" id="updateDesignerDialog">归属设计师</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="designer">设计师</label>
+                            <div class="col-sm-9">
+                                <select class="chosen-select col-sm-8 v_required" id="designer">
+                                    <option value="">&nbsp;</option>
                                 </select>
                             </div>
                         </div>
-
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right">备注</label>
-                            <div class="col-sm-8">
-                                <input type="text" class=" m-wrap col-xs-8 " id="comment">
-                            </div>
-                        </div>
-                    </div>
+                    </form>
+                </div>
+                <div class="modal-footer" style="text-align: center">
+                    <button type="button" id="saveDesignerBtn" class="btn btn-primary" data-loading-text="提交中...">保存</button>
+                    <button type="button" id="cancelDesignerBtn" class="btn btn-default" data-dismiss="modal">取消</button>
                 </div>
             </div>
-        </form>
+        </div>
     </div>
+
 </div>
 
 <!--查看信息弹窗-->
 <div id="customerRecord" class="portlet box"></div>
 
-
 <script type="text/javascript">
-    $.loadScript(['js/customer/customerSource.js']);
+    $.loadScript(['js/customer/customerSource.js', 'js/utils/houseUtils.js']);
 </script>

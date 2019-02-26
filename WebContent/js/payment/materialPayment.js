@@ -868,7 +868,7 @@ jQuery(function($) {
 			return false;
 		}
 
-		url = api.payment.collectMaterialPaymentForRefund;
+		url = api.payment.refundMaterialPayment;
 
 		var _info = materialPaymentPostData.paymentInfo[0];
 

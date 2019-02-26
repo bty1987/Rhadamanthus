@@ -54,19 +54,15 @@ public class DecorationPaymentPO implements Serializable {
 	
 	public static final String PAYMENTTYPE_OTHER_STR = "其他退款";
 	
-	public static final String PAYMENTSTATUS_UNPAY_STR = "未付款";
+	public static final short PAYMENTSTATUS_UNPAY_INT = 0;
 	
-	public static final String PAYMENTSTATUS_PAY_STR = "已付款";
+	public static final short PAYMENTSTATUS_PAY_INT = 1;
 	
-	public static final String PAYMENTSTATUS_CONFIRM_STR = "已确认";
+	public static final short PAYMENTSTATUS_CONFIRM_INT = 2;
 	
-	public static final String PAYMENTSTATUS_APPLY_STR = "申请审批";
+	public static final short PAYMENTSTATUS_APPLYING_INT = 3;
 	
-	public static final String PAYMENTSTATUS_UNPASS_STR = "审批未通过";
-	
-	public static final String PAYMENTSTATUS_PASS_STR = "审批通过";
-	
-	public static final String PAYMENTSTATUS_REFUND_STR = "申请退款";
+	public static final short PAYMENTSTATUS_HISTORY_INT = 4;
 	
 	public static final short CHARSCALE_COUNT_INT = 0;
 	
@@ -96,7 +92,7 @@ public class DecorationPaymentPO implements Serializable {
 	
 	private String paymentType;
 	
-	private String paymentStatus;
+	private short paymentStatus;
 	
 	private UserPO creater;
 	
@@ -171,11 +167,11 @@ public class DecorationPaymentPO implements Serializable {
 	}
 
 	@Column(name = "paymentStatus")
-	public String getPaymentStatus(){
+	public short getPaymentStatus() {
 		return paymentStatus;
 	}
 
-	public void setPaymentStatus(String paymentStatus){
+	public void setPaymentStatus(short paymentStatus) {
 		this.paymentStatus = paymentStatus;
 	}
 	

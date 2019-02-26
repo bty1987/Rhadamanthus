@@ -21,7 +21,7 @@ public class PictureDaoImpl extends DaoImpl<PicturePO> implements PictureDao {
 	@Override
 	public List<PicturePO> queryPictureByGid(Long gid) {
 		
-		return session().createCriteria(PicturePO.class).add(Restrictions.eq(PicturePO.COLUMN_GID_STR, gid)).list();
+		return session().createCriteria(PicturePO.class).add(Restrictions.eq(PicturePO.COLUMN_GID_STR, gid)).addOrder(Order.asc("sort")).list();
 	}
 	
 	@Override

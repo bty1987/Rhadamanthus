@@ -35,76 +35,76 @@ public class UserContractAction extends BaseListAction {
 	private UserContractService userContractService;
 
 	private List<UserContractVO> userContractList;
-	
+
 	private List<String> userContractIds;
-	
+
 	private String editUserId;
-	
+
 	@Action(value = "pageUserContractByUserId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageUserContractByUserId(){
-		
+	public String pageUserContractByUserId() {
+
 		userContractService.pageUserContractByUserId(getPaging(), getEditUserId());
-		
+
 		return SUCCESS;
 	}
 
-	 @Action(value="addUserContract", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	  public String addUserContract() throws FLException{
-		 
-		if(SystemConfig.getString("communion") == null){
-		    throw new FLException(-1, "无操作权限");
-		}
-		
-	    userContractService.saveOrUpdateUserContract(getUserContractList());
+	@Action(value = "addUserContract", results = { @org.apache.struts2.convention.annotation.Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addUserContract() throws FLException {
 
-	    return "success";
-	  }
-
-	  @Action(value="updateUserContract", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	  public String updateUserContract() throws FLException{
-		  
-	    if(SystemConfig.getString("communion") == null){
-		    throw new FLException(-1, "无操作权限");
-		}
-	    
-	    userContractService.saveOrUpdateUserContract(getUserContractList());
-
-	    return "success";
-	  }
-
-	  @Action(value="deleteUserContract", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	  public String deleteUserContract() throws FLException{
-		  
-		if(SystemConfig.getString("communion") == null){
+		if (SystemConfig.getString("communion") == null) {
 			throw new FLException(-1, "无操作权限");
 		}
-		
-	    userContractService.deleteUserContract(getUserContractIds());
 
-	    return "success";
-	  }
-	
-	public List<UserContractVO> getUserContractList(){
+		userContractService.saveOrUpdateUserContract(getUserContractList());
+
+		return "success";
+	}
+
+	@Action(value = "updateUserContract", results = { @org.apache.struts2.convention.annotation.Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateUserContract() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
+		}
+
+		userContractService.saveOrUpdateUserContract(getUserContractList());
+
+		return "success";
+	}
+
+	@Action(value = "deleteUserContract", results = { @org.apache.struts2.convention.annotation.Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String deleteUserContract() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
+		}
+
+		userContractService.deleteUserContract(getUserContractIds());
+
+		return "success";
+	}
+
+	public List<UserContractVO> getUserContractList() {
 		return userContractList;
 	}
 
-	public void setUserContractList(List<UserContractVO> userContractList){
+	public void setUserContractList(List<UserContractVO> userContractList) {
 		this.userContractList = userContractList;
 	}
 
-	public List<String> getUserContractIds(){
+	public List<String> getUserContractIds() {
 		return userContractIds;
 	}
 
-	public void setUserContractIds(List<String> userContractIds){
+	public void setUserContractIds(List<String> userContractIds) {
 		this.userContractIds = userContractIds;
 	}
 
-	public String getEditUserId(){
+	public String getEditUserId() {
 		return editUserId;
 	}
 
-	public void setEditUserId(String editUserId){
+	public void setEditUserId(String editUserId) {
 		this.editUserId = editUserId;
 	}
 

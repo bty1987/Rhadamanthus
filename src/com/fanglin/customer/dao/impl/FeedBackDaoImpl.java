@@ -8,15 +8,15 @@ import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.customer.dao.FeedBackDao;
+import com.fanglin.customer.dao.FeedbackDao;
 import com.fanglin.customer.po.FeedbackPO;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
-@Repository("feedBackDao")
-public class FeedBackDaoImpl extends DaoImpl<FeedbackPO> implements FeedBackDao{
+@Repository("feedbackDao")
+public class FeedbackDaoImpl extends DaoImpl<FeedbackPO> implements FeedbackDao{
 	
-	public FeedBackDaoImpl(){
+	public FeedbackDaoImpl(){
 		super(FeedbackPO.class);
 	}
 

@@ -21,8 +21,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.information.dao.ActivityDao;
 import com.fanglin.information.dao.ActivityItemDao;
+import com.fanglin.information.dao.AwardStockDao;
 import com.fanglin.information.po.ActivityItemPO;
 import com.fanglin.information.po.ActivityPO;
+import com.fanglin.information.po.AwardStockPO;
 import com.fanglin.information.service.ActivityItemService;
 import com.fanglin.information.vo.ActivityItemVO;
 import com.fanglin.information.vo.ActivityVO;
@@ -37,15 +39,22 @@ public class ActivityItemServiceImpl implements ActivityItemService {
 	
 	@Autowired
 	private ActivityDao activityDao;
+	
+	@Autowired
+	private AwardStockDao awardStockDao;
 
 	@Override
-	public List<ActivityItemVO> queryActivityItemByAId(ActivityVO activityVO) {
+	public List<ActivityItemVO> queryActivityItemByAid(ActivityVO activityVO) {
 		
-		List<ActivityItemPO> activityItemPOs = activityItemDao.queryActivityItemByAId(activityVO.getAid());
+		List<ActivityItemPO> activityItemPOs = activityItemDao.queryActivityItemByAid(activityVO.getAid());
 		List<ActivityItemVO> activityItemVOs = new ArrayList<ActivityItemVO>();
 		
 		for(ActivityItemPO activityItemPO: activityItemPOs){
+			
 			ActivityItemVO activityItemVO = new ActivityItemVO();
+			
+			if(activityItemPO.getAsid() == 0) continue;
+			
 			BeanUtil.copyProperties(activityItemPO, activityItemVO);
 			
 			activityItemVOs.add(activityItemVO);
@@ -64,11 +73,14 @@ public class ActivityItemServiceImpl implements ActivityItemService {
 			throw new FLException(160011, "活动信息不存在");
 		}
 		
+		AwardStockPO awardStockPO = awardStockDao.get(activityItemVO.getAsid());
+		
 		ActivityItemPO activityItemPO = new ActivityItemPO();
+		
 		BeanUtil.copyProperties(activityItemVO, activityItemPO);
 		
+		activityItemPO.setName(awardStockPO.getName());
 		activityItemPO.setAid(activityPO.getAid());
-		activityItemPO.setActivityName(activityPO.getName());
 		
 		activityItemDao.save(activityItemPO);
 		
@@ -76,33 +88,13 @@ public class ActivityItemServiceImpl implements ActivityItemService {
 		
 		return 0;
 	}
-
+	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int updateActivityItem(ActivityVO activityVO, ActivityItemVO activityItemVO) throws FLException {
-		
-		ActivityItemPO activityItemPO = activityItemDao.get(activityItemVO.getAiid());
-		
-		if(activityItemPO == null){
-			throw new FLException(160013, "活动物品不存在");
-		}
-		
-		activityItemPO.setName(activityItemVO.getName());
-		activityItemPO.setType(activityItemVO.getType());
-		activityItemPO.setMoney(activityItemVO.getMoney());
-		
-		activityItemDao.update(activityItemPO);
-		
-		return 0;
-	}
-
-	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public int deleteActivityItemByAiId(ActivityVO activityVO, ActivityItemVO activityItemVO) {
+	public int deleteActivityItemByAiid(ActivityVO activityVO, ActivityItemVO activityItemVO) {
 		
 		activityItemDao.deleteById(activityItemVO.getAiid());
 		
 		return 0;
 	}
-	
 }

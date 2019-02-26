@@ -83,7 +83,7 @@ $(function(){
 
     var searcher = new Searcher();
 
-    searcher.init(['feedbackCreateTime'], "condList",api.customer.pageFeedBack, function(res){
+    searcher.init(['feedbackCreateTime'], "condList",api.customer.pageFeedback, function(res){
         displayFunc.init("resultList",res);
     },"pagenation");
 

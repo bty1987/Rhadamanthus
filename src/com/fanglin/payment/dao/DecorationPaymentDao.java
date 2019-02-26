@@ -32,7 +32,7 @@ public interface DecorationPaymentDao extends Dao<DecorationPaymentPO> {
 	
 	public DecorationPaymentPO queryDecorationPaymentByOrderIdAType(String orderId, String paymentType);
 	
-	public List<DecorationPaymentPO> queryDecorationPaymentByOrderIdAStatusAOneTypeATwoType(String orderId, String[] paymentStatus, short oneType, short twoType);
+	public List<DecorationPaymentPO> queryDecorationPaymentByOrderIdAStatusAOneTypeATwoType(String orderId, Short[] paymentStatus, short oneType, short twoType);
 	
 	public List<DecorationPaymentPO> queryDecorationPaymentForNotInitByDrId(long drId);
 	

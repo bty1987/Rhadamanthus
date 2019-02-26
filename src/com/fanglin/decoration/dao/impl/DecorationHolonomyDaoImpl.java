@@ -15,45 +15,44 @@ import com.fanglin.utils.Paging;
 public class DecorationHolonomyDaoImpl extends DaoImpl<DecorationHolonomyPO> implements DecorationHolonomyDao {
 
 	@Override
-	public List<DecorationHolonomyPO> pagedecorationHolonomy(Paging paging,List<Filter> filters, int company) {
-		
+	public List<DecorationHolonomyPO> pagedecorationHolonomy(Paging paging, List<Filter> filters, int company) {
+
 		PagingQuery<DecorationHolonomyPO> query = pagingQuery(paging, DecorationHolonomyPO.class);
-		
+
 		query.add(query.getCriterion(DecorationHolonomyPO.COLUMN_COMPANY_STR, company, "eq"));
-		
+
 		queryFilterExcute(paging, filters, query);
-		
+
 		return query.list();
 	}
-	
+
 	@Override
 	public DecorationHolonomyPO queryDecorationHolonomyByOrderId(String orderId) {
-		return (DecorationHolonomyPO) session().createCriteria(DecorationHolonomyPO.class).add(Restrictions.eq("decoration.orderId",orderId)).uniqueResult();
+		return (DecorationHolonomyPO) session().createCriteria(DecorationHolonomyPO.class).add(Restrictions.eq("decoration.orderId", orderId)).uniqueResult();
 	}
 
-	private void queryFilterExcute(Paging paging,List<Filter> filters,PagingQuery<DecorationHolonomyPO> query){
-		if(filters != null){
-			for(Filter filter:filters){
-				
+	private void queryFilterExcute(Paging paging, List<Filter> filters, PagingQuery<DecorationHolonomyPO> query) {
+		if (filters != null) {
+			for (Filter filter : filters) {
+
 				String field = filter.getField();
 				String data = filter.getData();
 				String op = filter.getOp();
-				
+
 				query.alias("decoration", "decoration");
 				query.alias("decoration.house", "house");
 				query.alias("house.village", "village");
 				query.alias("decoration.designer", "designer");
-				
-				if("orderId".equals(field)){
+
+				if ("orderId".equals(field)) {
 					query.add(query.getCriterion(DecorationHolonomyPO.COLUMN_ORDERID_STR, data, op));
-				}else if("designer".equals(field)){
+				} else if ("designer".equals(field)) {
 					query.add(query.getCriterion(DecorationHolonomyPO.COLUMN_DESIGNER_STR, data, op));
-				}else if("villageId".equals(field)){
+				} else if ("villageId".equals(field)) {
 					query.add(query.getCriterion(DecorationHolonomyPO.COLUMN_VILLAGE_STR, data, op));
 				}
 			}
 		}
 	}
 
-	
 }

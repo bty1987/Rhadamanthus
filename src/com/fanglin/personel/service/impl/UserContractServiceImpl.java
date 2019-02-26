@@ -30,77 +30,74 @@ public class UserContractServiceImpl implements UserContractService {
 
 	@Autowired
 	private UserContractDao userContractDao;
-	
+
 	@Override
-	public void pageUserContractByUserId(Paging paging, String userId){
-		
-		if(userId != null && !userId.equals("")){
-			List<UserContractPO> userContractPOs = userContractDao.pageUserContractByUserId(paging, userId);
-			List<UserContractVO> userContractVOs = new ArrayList<UserContractVO>();
-			
-			for(UserContractPO userContractPO: userContractPOs){
-				UserContractVO userContractVO = new UserContractVO();
-				BeanUtil.copyProperties(userContractPO, userContractVO);
-				userContractVOs.add(userContractVO);
-			}
-			
-			paging.setData(userContractVOs);
-		}
-	}
-	
-	@Override
-	public List<UserContractVO> queryUserContractByUserId(String userId){
+	public void pageUserContractByUserId(Paging paging, String userId) {
+
+		List<UserContractPO> userContractPOs = userContractDao.pageUserContractByUserId(paging, userId);
 		List<UserContractVO> userContractVOs = new ArrayList<UserContractVO>();
-		
-		if(userId != null && !userId.equals("")){
-			List<UserContractPO> userContractPOs = userContractDao.queryUserContractByUserId(userId);
-			
-			for(UserContractPO userContractPO: userContractPOs){
-				UserContractVO userContractVO = new UserContractVO();
-				BeanUtil.copyProperties(userContractPO, userContractVO);
-				
-				userContractVOs.add(userContractVO);
-			}
+
+		for (UserContractPO userContractPO : userContractPOs) {
+			UserContractVO userContractVO = new UserContractVO();
+
+			BeanUtil.copyProperties(userContractPO, userContractVO);
+
+			userContractVOs.add(userContractVO);
 		}
+
+		paging.setData(userContractVOs);
+	}
+
+	@Override
+	public List<UserContractVO> queryUserContractByUserId(String userId) {
+		
+		List<UserContractVO> userContractVOs = new ArrayList<UserContractVO>();
+		List<UserContractPO> userContractPOs = userContractDao.queryUserContractByUserId(userId);
+
+		for (UserContractPO userContractPO : userContractPOs) {
+
+			UserContractVO userContractVO = new UserContractVO();
+
+			BeanUtil.copyProperties(userContractPO, userContractVO);
+
+			userContractVOs.add(userContractVO);
+		}
+
 		return userContractVOs;
 	}
-	
+
 	@Transactional
-	  public void saveOrUpdateUserContract(UserContractVO userContractVO) {
-	    
+	public void saveOrUpdateUserContract(UserContractVO userContractVO) {
+
 		UserContractPO userContractPO = new UserContractPO();
 
-	    BeanUtil.copyProperties(userContractVO, userContractPO);
-	    
-	    userContractPO.setCreateTime(DateUtil.current("yyyy-MM-dd HH:mm:ss"));
+		BeanUtil.copyProperties(userContractVO, userContractPO);
 
-	    userContractDao.saveOrUpdate(userContractPO);
-	  
+		userContractPO.setCreateTime(DateUtil.current("yyyy-MM-dd HH:mm:ss"));
+
+		userContractDao.saveOrUpdate(userContractPO);
 	}
 
-	  @Transactional
-	  public void saveOrUpdateUserContract(List<UserContractVO> userContractVOs){
-	   
-		  for (UserContractVO userContractVO : userContractVOs)
-			  
-			  saveOrUpdateUserContract(userContractVO);
-	  
-	  }
+	@Transactional
+	public void saveOrUpdateUserContract(List<UserContractVO> userContractVOs) {
 
-	  @Transactional
-	  public void deleteUserContractById(String id){
-	    
-		  userContractDao.deleteById(id);
-	  
-	  }
+		for (UserContractVO userContractVO : userContractVOs) {
+			saveOrUpdateUserContract(userContractVO);
+		}
 
-	  @Transactional
-	  public void deleteUserContract(List<String> ids){
-	   
-		  for (String id : ids)
-	      
-			  userContractDao.deleteById(id);
-	 
-	  }
+	}
+
+	@Transactional
+	public void deleteUserContractById(String id) {
+		userContractDao.deleteById(id);
+	}
+
+	@Transactional
+	public void deleteUserContract(List<String> ids) {
+
+		for (String id : ids) {
+			userContractDao.deleteById(id);
+		}
+	}
 
 }

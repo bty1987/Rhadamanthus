@@ -19,16 +19,31 @@ import com.fanglin.personel.po.UserPO;
 public class AuditPO implements Serializable {
 
 	private static final long serialVersionUID = -6062235951940054913L;
-	
+
 	public static final String COLUMN_ORDERID_STR = "decoration.orderId";
-	
+
 	private long aid;
-	
+
 	private DecorationPO decoration;
-	
-	private UserPO auditer ;
-	
+
+	private UserPO auditer;
+
 	private Timestamp auditTime;
+
+	public AuditPO() {
+		super();
+	}
+
+	public AuditPO(DecorationPO decoration) {
+		super();
+		this.decoration = decoration;
+	}
+
+	public AuditPO(DecorationPO decoration, UserPO auditer) {
+		super();
+		this.decoration = decoration;
+		this.auditer = auditer;
+	}
 
 	@Id
 	@GeneratedValue
@@ -40,6 +55,7 @@ public class AuditPO implements Serializable {
 	public void setAid(long aid) {
 		this.aid = aid;
 	}
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "orderId", referencedColumnName = "orderId")
 	public DecorationPO getDecoration() {
@@ -49,6 +65,7 @@ public class AuditPO implements Serializable {
 	public void setDecoration(DecorationPO decoration) {
 		this.decoration = decoration;
 	}
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "auid", referencedColumnName = "uid")
 	public UserPO getAuditer() {
@@ -64,19 +81,8 @@ public class AuditPO implements Serializable {
 		return auditTime;
 	}
 
-
 	public void setAuditTime(Timestamp auditTime) {
 		this.auditTime = auditTime;
-	}
-	
-	public AuditPO() {
-		super();
-	}
-
-	public AuditPO(DecorationPO decoration, UserPO auditer) {
-		super();
-		this.decoration = decoration;
-		this.auditer = auditer;
 	}
 
 }

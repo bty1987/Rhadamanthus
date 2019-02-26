@@ -5,41 +5,41 @@ import java.io.Serializable;
 public class DecorationHolonomyVO implements Serializable {
 
 	private static final long serialVersionUID = -3908006385443580348L;
-	
+
 	private Long dhid;
-	
+
 	private DecorationVO decoration;
-	
+
 	private String name;
-	
+
 	private Float maching;
-	
-	private Float discount;	
-	
+
+	private Float discount;
+
 	private Float projectPrice;
-	
-	private Float managePrice;	
-	
-	private Float manageRate;	
-	
-	private Float materialPrice;	
-	
-	private Float servicePrice;	
-		
+
+	private Float managePrice;
+
+	private Float manageRate;
+
+	private Float materialPrice;
+
+	private Float servicePrice;
+
 	private Float serviceRate;
-	
-	private Float materialPaidup;	
-	
+
+	private Float materialPaidup;
+
 	private Float servicePaidup;
-	
+
 	private Short status;
-	
+
 	private Long psId;
-	
+
 	private Float discountBase;
-	
+
 	private Float projectBase;
-	
+
 	public DecorationHolonomyVO() {
 		super();
 	}
@@ -48,7 +48,6 @@ public class DecorationHolonomyVO implements Serializable {
 		super();
 		this.decoration = decoration;
 	}
-
 
 	public Long getDhid() {
 		return dhid;
@@ -185,5 +184,5 @@ public class DecorationHolonomyVO implements Serializable {
 	public void setProjectBase(Float projectBase) {
 		this.projectBase = projectBase;
 	}
-	
+
 }

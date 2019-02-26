@@ -4,5 +4,7 @@ import com.fanglin.core.dao.Dao;
 import com.fanglin.sales.po.RefundsPO;
 
 public interface RefundsDao extends Dao<RefundsPO>{
+	
+	public void updateRefundsForStatusBySpid(Long spid, short status);
 
 }

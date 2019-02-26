@@ -23,16 +23,16 @@ public class UserExperienceAction extends BaseListAction {
 
 	@Autowired
 	private UserExperienceService userExperienceService;
-	
+
 	private List<UserExperienceVO> userExperiences;
 
 	private UserExperienceVO userExperience;
-	
+
 	@Action(value = "queryUserExperienceByUid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryUserExperienceByUid() throws FLException{
-		
+	public String queryUserExperienceByUid() throws FLException {
+
 		userExperiences = userExperienceService.queryUserExperienceByUid(userExperience);
-		
+
 		return SUCCESS;
 	}
 
@@ -51,5 +51,5 @@ public class UserExperienceAction extends BaseListAction {
 	public void setUserExperience(UserExperienceVO userExperience) {
 		this.userExperience = userExperience;
 	}
-	
+
 }
