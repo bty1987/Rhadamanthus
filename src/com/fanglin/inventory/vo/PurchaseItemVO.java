@@ -18,6 +18,8 @@ public class PurchaseItemVO  implements Serializable{
 	
 	private FormatVO format;
 	
+	private SupplierVO supplier;
+	
 	private StorehouseVO storehouse;
 	
 	private Float unitPrice;
@@ -30,11 +32,13 @@ public class PurchaseItemVO  implements Serializable{
 		super();
 	}
 	
-	public PurchaseItemVO(GoodsVO goods, ColorVO color, FormatVO format) {
+	public PurchaseItemVO(GoodsVO goods, ColorVO color, FormatVO format,
+			SupplierVO supplier) {
 		super();
 		this.goods = goods;
 		this.color = color;
 		this.format = format;
+		this.supplier = supplier;
 	}
 
 	public Long getPiId() {
@@ -83,6 +87,14 @@ public class PurchaseItemVO  implements Serializable{
 
 	public void setFormat(FormatVO format) {
 		this.format = format;
+	}
+
+	public SupplierVO getSupplier() {
+		return supplier;
+	}
+
+	public void setSupplier(SupplierVO supplier) {
+		this.supplier = supplier;
 	}
 
 	public StorehouseVO getStorehouse() {

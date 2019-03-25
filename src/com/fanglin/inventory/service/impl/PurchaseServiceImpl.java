@@ -17,6 +17,7 @@ import com.fanglin.inventory.po.FormatPO;
 import com.fanglin.inventory.po.GoodsPO;
 import com.fanglin.inventory.po.PurchaseItemPO;
 import com.fanglin.inventory.po.PurchasePO;
+import com.fanglin.inventory.po.SupplierPO;
 import com.fanglin.inventory.service.PurchaseService;
 import com.fanglin.inventory.vo.PurchaseItemVO;
 import com.fanglin.inventory.vo.PurchaseVO;
@@ -170,14 +171,15 @@ public class PurchaseServiceImpl  implements PurchaseService{
 		
 		for(PurchaseItemVO purchaseItemVO:purchaseItemVOs){
 						
-			purchaseItemPO = new PurchaseItemPO(new GoodsPO(),new ColorPO(),new FormatPO());
+			purchaseItemPO = new PurchaseItemPO(new GoodsPO(),new ColorPO(),new FormatPO(),new SupplierPO());
 			
 			purchaseItemPO.setPid(purchasePO.getPid());
 			
-			BeanUtil.copyProperties(purchaseItemVO, purchaseItemPO, Arrays.asList("goods","color","format"));
+			BeanUtil.copyProperties(purchaseItemVO, purchaseItemPO, Arrays.asList("goods","color","format","supplier"));
 			BeanUtil.copyProperties(purchaseItemVO.getGoods(), purchaseItemPO.getGoods());
 			BeanUtil.copyProperties(purchaseItemVO.getColor(), purchaseItemPO.getColor());
 			BeanUtil.copyProperties(purchaseItemVO.getFormat(), purchaseItemPO.getFormat());
+			BeanUtil.copyProperties(purchaseItemVO.getSupplier(), purchaseItemPO.getSupplier());
 			
 			purchaseItemPO.setSurplus(purchaseItemVO.getNum());
 			

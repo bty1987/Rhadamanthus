@@ -64,6 +64,10 @@ public class GoodsPO implements java.io.Serializable {
 	
 	private String measurementUnit;
 	
+	private float purchase;
+	
+	private float selling;
+	
 	private float pieceNum;
 	
 	private AccessoriesTypePO accessoriesType;
@@ -171,6 +175,24 @@ public class GoodsPO implements java.io.Serializable {
 		this.measurementUnit = measurementUnit;
 	}
 	
+	@Column(name = "purchase")
+	public float getPurchase() {
+		return purchase;
+	}
+
+	public void setPurchase(float purchase) {
+		this.purchase = purchase;
+	}
+
+	@Column(name = "selling")
+	public float getSelling() {
+		return selling;
+	}
+
+	public void setSelling(float selling) {
+		this.selling = selling;
+	}
+
 	@Column(name = "pieceNum")
 	public float getPieceNum() {
 		return pieceNum;

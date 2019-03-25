@@ -296,8 +296,12 @@ public class GoodsServiceImpl implements GoodsService {
 			AccessoriesTypePO accessoriesTypePO = accessoriesTypeDao.get(goodsVO.getAccessoriesType().getAtid());
 			
 			goodsPO.setAccessoriesType(accessoriesTypePO);
+			goodsPO.setPurchase(goodsVO.getPurchase());
+			goodsPO.setSelling(goodsVO.getSelling());
 		}else{
 			goodsPO.setAccessoriesType(null);
+			goodsPO.setPurchase(goodsVO.getPurchase());
+			goodsPO.setSelling(goodsVO.getSelling());
 		}
 		
 		goodsDao.update(goodsPO);

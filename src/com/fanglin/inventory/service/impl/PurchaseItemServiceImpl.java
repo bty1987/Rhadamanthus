@@ -7,9 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.inventory.dao.ColorDao;
-import com.fanglin.inventory.dao.FormatDao;
-import com.fanglin.inventory.dao.GoodsDao;
 import com.fanglin.inventory.dao.PurchaseDao;
 import com.fanglin.inventory.dao.PurchaseItemDao;
 import com.fanglin.inventory.po.ColorPO;
@@ -17,12 +14,14 @@ import com.fanglin.inventory.po.FormatPO;
 import com.fanglin.inventory.po.GoodsPO;
 import com.fanglin.inventory.po.PurchaseItemPO;
 import com.fanglin.inventory.po.PurchasePO;
+import com.fanglin.inventory.po.SupplierPO;
 import com.fanglin.inventory.service.PurchaseItemService;
 import com.fanglin.inventory.vo.ColorVO;
 import com.fanglin.inventory.vo.FormatVO;
 import com.fanglin.inventory.vo.GoodsVO;
 import com.fanglin.inventory.vo.PurchaseItemVO;
 import com.fanglin.inventory.vo.PurchaseVO;
+import com.fanglin.inventory.vo.SupplierVO;
 import com.fanglin.utils.BeanUtil;
 
 @Service("purchaseItemService")
@@ -35,15 +34,6 @@ public class PurchaseItemServiceImpl  implements PurchaseItemService{
 	@Autowired
 	private PurchaseItemDao purchaseItemDao;
 	
-	@Autowired
-	private GoodsDao goodsDao;
-	
-	@Autowired
-	private ColorDao colorDao;
-	
-	@Autowired
-	private FormatDao formatDao;
-	
 	@Override
 	public List<PurchaseItemVO> queryPurchaseItemByPids(List<Long> pids) {
 		
@@ -54,12 +44,13 @@ public class PurchaseItemServiceImpl  implements PurchaseItemService{
 		
 		for(PurchaseItemPO purchaseItemPO: purchaseItemPOs){
 			
-			purchaseItemVO = new PurchaseItemVO(new GoodsVO(),new ColorVO(),new FormatVO());
+			purchaseItemVO = new PurchaseItemVO(new GoodsVO(),new ColorVO(),new FormatVO(),new SupplierVO());
 			
-			BeanUtil.copyProperties(purchaseItemPO, purchaseItemVO, Arrays.asList("goods","color","format"));
+			BeanUtil.copyProperties(purchaseItemPO, purchaseItemVO, Arrays.asList("goods","color","format","supplier"));
 			BeanUtil.copyProperties(purchaseItemPO.getGoods(), purchaseItemVO.getGoods(),Arrays.asList("accessoriesType"));
 			BeanUtil.copyProperties(purchaseItemPO.getColor(), purchaseItemVO.getColor());
 			BeanUtil.copyProperties(purchaseItemPO.getFormat(), purchaseItemVO.getFormat());
+			BeanUtil.copyProperties(purchaseItemPO.getSupplier(), purchaseItemVO.getSupplier());
 			
 			purchaseItemVOs.add(purchaseItemVO);
 			
@@ -78,12 +69,13 @@ public class PurchaseItemServiceImpl  implements PurchaseItemService{
 		
 		for(PurchaseItemPO purchaseItemPO: purchaseItemPOs){
 			
-			purchaseItemVO = new PurchaseItemVO(new GoodsVO(),new ColorVO(),new FormatVO());
+			purchaseItemVO = new PurchaseItemVO(new GoodsVO(),new ColorVO(),new FormatVO(),new SupplierVO());
 			
-			BeanUtil.copyProperties(purchaseItemPO, purchaseItemVO, Arrays.asList("goods","color","format"));
+			BeanUtil.copyProperties(purchaseItemPO, purchaseItemVO, Arrays.asList("goods","color","format","supplier"));
 			BeanUtil.copyProperties(purchaseItemPO.getGoods(), purchaseItemVO.getGoods(),Arrays.asList("accessoriesType"));
 			BeanUtil.copyProperties(purchaseItemPO.getColor(), purchaseItemVO.getColor());
 			BeanUtil.copyProperties(purchaseItemPO.getFormat(), purchaseItemVO.getFormat());
+			BeanUtil.copyProperties(purchaseItemPO.getSupplier(), purchaseItemVO.getSupplier());
 			
 			purchaseItemVOs.add(purchaseItemVO);
 			
@@ -102,7 +94,7 @@ public class PurchaseItemServiceImpl  implements PurchaseItemService{
 		if(purchaseItemPOs==null){
 			throw new FLException(260019, "采购项不存在");
 		}
-		if(purchasePO.getStatus()==2){
+		if(purchasePO.getStatus()==PurchasePO.COLUMN_TOTALSTATUS_STR){
 			throw new FLException(260018, "采购单状态不可操作");
 		}
 		
@@ -118,21 +110,25 @@ public class PurchaseItemServiceImpl  implements PurchaseItemService{
 		PurchasePO purchasePO = purchaseDao.get(purchaseVO.getPid());
 		PurchaseItemPO purchaseItemPO = new PurchaseItemPO();
 		
-		if(purchasePO.getStatus()==0){
+		if(purchasePO.getStatus()==PurchasePO.COLUMN_STATUS_STR){
 			
 			purchaseItemPO.setPid(purchasePO.getPid());
 			
-			GoodsPO goodsPO = goodsDao.get(purchaseItemVOs.getGoods().getGid());
+			GoodsPO goodsPO = new GoodsPO(purchaseItemVOs.getGoods().getGid());
 			
 			purchaseItemPO.setGoods(goodsPO);
 			
-			ColorPO colorPO = colorDao.get(purchaseItemVOs.getColor().getCid());
+			ColorPO colorPO = new ColorPO(purchaseItemVOs.getColor().getCid());
 			
 			purchaseItemPO.setColor(colorPO);
 			
-			FormatPO formatPO = formatDao.get(purchaseItemVOs.getFormat().getFid());
+			FormatPO formatPO = new FormatPO(purchaseItemVOs.getFormat().getFid());
 			
 			purchaseItemPO.setFormat(formatPO);
+			
+			SupplierPO supplierPO = new SupplierPO(purchaseItemVOs.getSupplier().getSid());
+			
+			purchaseItemPO.setSupplier(supplierPO);
 			purchaseItemPO.setUnitPrice(purchaseItemVOs.getUnitPrice());
 			purchaseItemPO.setNum(purchaseItemVOs.getNum());
 			purchaseItemPO.setSurplus(purchaseItemVOs.getNum());
@@ -158,7 +154,7 @@ public class PurchaseItemServiceImpl  implements PurchaseItemService{
 			throw new FLException(260019, "采购项不存在");
 		}
 		
-		if(purchasePO.getStatus()==2){
+		if(purchasePO.getStatus()==PurchasePO.COLUMN_TOTALSTATUS_STR){
 			throw new FLException(260018, "采购单状态不可操作");
 		}
 		

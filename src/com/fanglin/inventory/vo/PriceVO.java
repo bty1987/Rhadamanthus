@@ -12,6 +12,8 @@ public class PriceVO implements Serializable{
 	
 	private String name;
 	
+	private Short type; // 0-正价/1-特价
+	
 	private Float purchase; //进价
 	
 	private Float selling;//售价
@@ -44,6 +46,14 @@ public class PriceVO implements Serializable{
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public Short getType() {
+		return type;
+	}
+
+	public void setType(Short type) {
+		this.type = type;
 	}
 
 	public Float getPurchase() {

@@ -45,6 +45,8 @@ public class PurchaseItemPO  implements Serializable{
 	
 	private FormatPO format;
 	
+	private SupplierPO supplier;
+	
 	private float unitPrice;
 	
 	private float num; 
@@ -55,13 +57,15 @@ public class PurchaseItemPO  implements Serializable{
 		super();
 	}
 	
-	public PurchaseItemPO(GoodsPO goods, ColorPO color, FormatPO format) {
+	public PurchaseItemPO(GoodsPO goods, ColorPO color, FormatPO format,
+			SupplierPO supplier) {
 		super();
 		this.goods = goods;
 		this.color = color;
 		this.format = format;
+		this.supplier = supplier;
 	}
-	
+
 	public PurchaseItemPO(Long pid) {
 		super();
 		this.pid = pid;
@@ -124,6 +128,16 @@ public class PurchaseItemPO  implements Serializable{
 
 	public void setFormat(FormatPO format) {
 		this.format = format;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "sid", referencedColumnName = "sid")
+	public SupplierPO getSupplier() {
+		return supplier;
+	}
+
+	public void setSupplier(SupplierPO supplier) {
+		this.supplier = supplier;
 	}
 
 	@Column(name="unitPrice")
