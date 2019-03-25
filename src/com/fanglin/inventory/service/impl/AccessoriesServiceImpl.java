@@ -122,7 +122,16 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int addAccessories(AccessoriesVO accessoriesVO,List<AccessoriesItemVO> accessoriesItemVOs, String creater,String approver,int company) throws FLException {
+	public int addAccessories(AccessoriesVO accessoriesVO,List<AccessoriesItemVO> accessoriesItemVOs, String creater,String approver) throws FLException {
+		
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(accessoriesVO.getOrderId());
+		
+		if(decorationPO == null){
+			throw new FLException(140013, "订单不存在");
+		}
+		
+		HousePO housePO = decorationPO.getHouse();
+		int company = decorationPO.getCompany();
 		
 		CompanyPO companyPO = companyDao.get(company);
 		
@@ -134,18 +143,9 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 		String currentDate = DateUtil.current("yyMMdd").toString();
 		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_AO_INT,currentDate, company);
 		String endNo = FormatUtil.fillZero(FormatUtil.offset(count), "0000");
-		
 		String no = companyPO.getShortname() + String.valueOf(word) + currentDate + endNo;
 		
 		AccessoriesPO accessoriesPO = new AccessoriesPO(no);
-		
-		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(accessoriesVO.getOrderId());
-		
-		if(decorationPO == null){
-			throw new FLException(140013, "订单不存在");
-		}
-		
-		HousePO housePO = decorationPO.getHouse();
 		
 		if(accessoriesVO.getSupervisor()!= null){
 			UserPO supervisorPO = userDao.queryUserByUserId(accessoriesVO.getSupervisor().getUserId());
@@ -192,15 +192,6 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 	@Transactional(rollbackFor=Exception.class)
 	public int refundAccessories(AccessoriesVO accessoriesVO,List<AccessoriesItemVO> accessoriesItemVOs, String creater,String approver, int company) throws FLException {
 		//创建一条辅料单
-		String word = "AO";
-		
-		String currentDate = DateUtil.current("yyMMdd").toString();
-		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_AO_INT,currentDate, company);
-		String endNo = FormatUtil.fillZero(FormatUtil.offset(count), "0000");
-		
-		String no = String.valueOf(word) + currentDate + endNo;
-		
-		AccessoriesPO accessoriesPO = new AccessoriesPO(no);
 		
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(accessoriesVO.getOrderId());
 		
@@ -209,6 +200,19 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 		}
 		
 		HousePO housePO = decorationPO.getHouse();
+		int accessoriesCompany = decorationPO.getCompany();
+		
+		String word = "AO";
+		
+		String currentDate = DateUtil.current("yyMMdd").toString();
+		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_AO_INT,currentDate, accessoriesCompany);
+		String endNo = FormatUtil.fillZero(FormatUtil.offset(count), "0000");
+		
+		String no = String.valueOf(word) + currentDate + endNo;
+		
+		AccessoriesPO accessoriesPO = new AccessoriesPO(no);
+		
+		
 		
 		if(accessoriesVO.getSupervisor()!= null){
 			UserPO supervisorPO = userDao.queryUserByUserId(accessoriesVO.getSupervisor().getUserId());
@@ -230,22 +234,31 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 		Date date = DateUtil.parseDate(accessoriesVO.getFetchTime(), "yyyy-MM-dd");
 		Timestamp end = DateUtil.getDateToTimestamp(date);
 		accessoriesPO.setFetchTime(end);
-		accessoriesPO.setCompany(company);
+		accessoriesPO.setCompany(accessoriesCompany);
 		accessoriesPO.setStatus(AccessoriesPO.STATUS_RETURN_INT);
 		accessoriesDao.save(accessoriesPO);
 		
 		//创建一条辅料类型的货单
+		
+		CompanyPO companyPO = companyDao.get(company);
+		
+		if(companyPO == null){
+			throw new FLException(230015, "公司不存在");
+		}
+		
 		float total = 0f;
 		float totals = 0f;
 		String month = DateUtil.getDateToDateString(new Date(), "yyyyMM");
 		
-		String wordAS = "AS";
+		String word1 = "AS";
 		String comment = "";
 		
 		UserPO userPO = userDao.queryUserByUserId(creater);
 		
-		int countAS = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_AS_INT, CountingPO.COUNTING_DATE_SILNLE_STR, company);
-		String manifestId = String.valueOf(wordAS) + FormatUtil.fillZero(countAS, "00000000");
+		String currentDate1 = DateUtil.current("yyMMdd").toString();
+		int count1 = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_AS_INT,currentDate1, company);
+		String endNo1 = FormatUtil.fillZero(FormatUtil.offset(count1), "0000");
+		String manifestId = companyPO.getShortname() + String.valueOf(word1) + currentDate1 + endNo1;
 		
 		ManifestPO manifestPO = new ManifestPO(manifestId);
 		

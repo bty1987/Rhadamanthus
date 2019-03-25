@@ -48,7 +48,7 @@ public class AccessoriesAction extends BaseListAction{
 	@Action(value = "addAccessories", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addAccessories() throws FLException{
 		
-		accessoriesService.addAccessories(accessories, accessoriesItems, queryUserId() ,"",queryCompany());
+		accessoriesService.addAccessories(accessories, accessoriesItems, queryUserId() ,""); 
 		
 		return SUCCESS;
 	}

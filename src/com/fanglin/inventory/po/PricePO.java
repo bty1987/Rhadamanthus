@@ -33,6 +33,8 @@ public class PricePO implements Serializable{
 	
 	private String name;
 	
+	private short type;
+	
 	private float purchase;
 	
 	private float selling;
@@ -70,6 +72,15 @@ public class PricePO implements Serializable{
 		this.name = name;
 	}
 	
+	@Column(name = "type")
+	public short getType() {
+		return type;
+	}
+
+	public void setType(short type) {
+		this.type = type;
+	}
+
 	@Column(name = "purchase")
 	public float getPurchase() {
 		return purchase;

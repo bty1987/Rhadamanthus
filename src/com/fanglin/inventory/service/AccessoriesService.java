@@ -13,7 +13,7 @@ public interface AccessoriesService {
 	
 	public void pageAccessories(Paging paging, List<Filter> filters,int company);
 	
-	public int addAccessories(AccessoriesVO accessoriesVO,List<AccessoriesItemVO> accessoriesItemVOs, String creater, String approver,int company) throws FLException;
+	public int addAccessories(AccessoriesVO accessoriesVO,List<AccessoriesItemVO> accessoriesItemVOs, String creater, String approver) throws FLException;
 	
 	public int refundAccessories(AccessoriesVO accessoriesVO,List<AccessoriesItemVO> accessoriesItemVOs, String creater, String approver,int company) throws FLException;
 	

@@ -23,6 +23,10 @@ public class GoodsVO implements java.io.Serializable {
 	
 	private String measurementUnit;
 	
+	private Float purchase;
+	
+	private Float selling;
+	
 	private Float pieceNum;
 	
 	private AccessoriesTypeVO accessoriesType;
@@ -110,6 +114,22 @@ public class GoodsVO implements java.io.Serializable {
 
 	public void setMeasurementUnit(String measurementUnit) {
 		this.measurementUnit = measurementUnit;
+	}
+
+	public Float getPurchase() {
+		return purchase;
+	}
+
+	public void setPurchase(Float purchase) {
+		this.purchase = purchase;
+	}
+
+	public Float getSelling() {
+		return selling;
+	}
+
+	public void setSelling(Float selling) {
+		this.selling = selling;
 	}
 
 	public Float getPieceNum() {
