@@ -321,6 +321,14 @@ public class MaterialServiceImpl implements MaterialService {
 
 		String no = String.format("M%s%s%s", companyPO.getShortname(), currentDate, FormatUtil.fillZero(FormatUtil.offset(count), "0000"));
 
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(materialVO.getOrderId());
+		
+		if(decorationPO.getGrade().equals("C") && decorationPO.getCompany() == 1 && company == 1){
+			materialPO.setGrade("B");
+		} else {
+			materialPO.setGrade("");
+		}
+		
 		// 赋值默认活动信息
 		ActivityPO activityPO = activityDao.queryActivityForDefault(MaterialPO.PACKAGE_ENABLE_INT);
 		materialPO.setActivityId(activityPO == null ? 0 : activityPO.getAid());

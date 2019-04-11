@@ -57,6 +57,7 @@ jQuery(function($) {
 				["总价:", v.total, "grey"],
 				["类别:", typeDict[v.type + ''], "grey"],
 				["状态:", statusDict[v.status], "red"],
+                ["管理费:", v.managePrice, "grey"],
 				["添加时间:", v.createTime, "grey"]
 			];
 
@@ -73,6 +74,7 @@ jQuery(function($) {
 			//查看按钮点击事件
 			$btnLook.click(function(){
 				params["addReduce.type"] = v.type;
+				params["addReduce"] = v;
 				viewDetailAddReduce(v.arId);
 			});
 

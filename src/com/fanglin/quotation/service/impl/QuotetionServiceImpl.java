@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.po.QuotationVersionPO;
 import com.fanglin.data.quotation.dao.QuotationVersionDao;
@@ -208,7 +209,7 @@ public class QuotetionServiceImpl implements QuotetionService {
 			throw new FLException(200001, "报价已经达到数量上限");
 		}
 
-		quotetionPO.ptp(copyQuotationPO.getQuotationName(), decorationDao.queryDecorationByOrderId(copyQuotationPO.getOrderId()).getVersion().getVersionId(), userPO.getUid());
+		quotetionPO.ptp(copyQuotationPO.getQuotationName(), decorationDao.queryDecorationByOrderId(copyQuotationPO.getOrderId()).getVersion().getNo(), userPO.getUid());
 
 		quotetionDao.save(quotetionPO);
 
@@ -392,6 +393,7 @@ public class QuotetionServiceImpl implements QuotetionService {
 		quotetionPO.setManageRate(quotetionVO.getManageRate());
 		quotetionPO.setTrafficPrice(quotetionVO.getTrafficPrice());
 		quotetionPO.setTrafficRate(quotetionVO.getTrafficRate());
+		quotetionPO.setBasePrice(quotetionVO.getBasePrice());
 	}
 	
 	private void convertQuotetionPOForAdvance(QuotetionFunctionAreaItemPO quotetionFunctionAreaItemPO,String name, String measurementUnit, String workType, float unitPrice, String formula ,float num, short type, short discount, QuotetionFunctionAreaPO quotetionFunctionArea, String content,short subtype){

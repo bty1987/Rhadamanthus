@@ -53,9 +53,9 @@ $(function () {
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html(
                 $('<div></div>').addClass('cell index'));
             var $contentWrap = $('<div></div>').addClass(
-                'line-wrap  content col5');
+                'line-wrap  content col7');
 
-            var titleName = '价格说明,进价,售价,结算类型,结算值';
+            var titleName = '价格说明,进价,售价,结算类型,结算值,类型';
 
             $.each(titleName.split(','), function (i, v) {
                 var $cell = $('<div></div>').addClass('cell').html(v);
@@ -78,7 +78,7 @@ $(function () {
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html(
                 $('<div></div>').addClass('cell index').html(i + 1));
             var $contentWrap = $('<div></div>').addClass(
-                'line-wrap  content col5');
+                'line-wrap  content col7');
 
             var propertyArr = [
                 // v.gid,
@@ -86,7 +86,8 @@ $(function () {
                 [v.purchase,'blue'],
                 [v.selling,'blue'],
                 [v.ctype == "0" ? "底价" : "点位",'red'],
-                [v.cvalue,'blue']
+                [v.cvalue,'blue'],
+                [v.type == "0" ? "正价" : "特价",'red']
             ];
 
             $.each(propertyArr, function (i, v) {
@@ -158,14 +159,15 @@ $(function () {
 
         var $line = $('<li></li>').addClass('line');
         var $indexWrap = $('<div></div>').addClass('line-wrap order').append($('<div></div>').addClass('cell index').text(lineindex));
-        var $lineInfoWrap = $('<div></div>').addClass('line-wrap content col5');
+        var $lineInfoWrap = $('<div></div>').addClass('line-wrap content col7');
         var $optWrap = $('<div></div>').addClass('line-wrap action');
         var _lineInfoSet = [
             {cellClass : "name", hasInput : !0},//名称
             {cellClass : "purchase", hasInput : !0},//名称
             {cellClass : "selling", hasInput : !0},//名称
-            {cellClass : "ctype", hasSelectCtype : !0},//名称
-            {cellClass : "cvalue", hasInput : !0}//名称
+            {cellClass : "ctype", hasSelect : !0},//名称
+            {cellClass : "cvalue", hasInput : !0},//名称
+            {cellClass : "type", hasSelect : !0}
         ];
         var $btncheck = $('<a class="color-green green" style="font-size: 18px"><i class="icon-ok"></i></a>');
         var $btndel = $('<a class="color-red red" style="font-size: 18px"><i class=" icon-remove"></i></a>');
@@ -177,7 +179,7 @@ $(function () {
                 $input = $('<input>').prop({'type': 'text', 'autocomplete': 'off'}).attr('data-toggle','popover').attr('data-placement','bottom').addClass('editable v_required');
                 $cell.append($input);
             }
-            if(v.hasSelectCtype){
+            if(v.hasSelect){
                 $select = $('<select style="width: 100%;"></select>');
                 $cell.append($select);
             }
@@ -195,6 +197,7 @@ $(function () {
 
         com.post(api.ds.manifest,{},function(res){
             $lineInfoWrap.find('.ctype select').bindData(res.priceTypes,'key','value');
+            $lineInfoWrap.find('.type select').bindData(res.type, 'key','value');
         });
 
         $btncheck.click(function (e) {
@@ -215,7 +218,8 @@ $(function () {
                 "price.purchase": $lineInfoWrap.find('.purchase input').val(),
                 "price.selling": $lineInfoWrap.find('.selling input').val(),
                 "price.ctype": $lineInfoWrap.find('.ctype select').val(),
-                "price.cvalue": $lineInfoWrap.find('.cvalue input').val()
+                "price.cvalue": $lineInfoWrap.find('.cvalue input').val(),
+                "price.type": $lineInfoWrap.find('.type select').val()
             };
 
 

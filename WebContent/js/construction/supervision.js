@@ -3,7 +3,7 @@ $(function () {
     var constructionNodes = {};
     com.post(api.data.queryConstructionNode, {}, function (res) {
         $.each(res.constructionNodes, function (i, v) {
-            constructionNodes[v.cnid] = v.name;
+            constructionNodes[v.sort] = v.name;
         });
         constructionNodes[0] = "初始";
         constructionNodes[1] = "开工";
@@ -19,7 +19,6 @@ $(function () {
             if (listData && listData.length) {
                 $.each(listData, function (i, v) {
                     var $liLine = creatLine(v);
-
                     $liLine.appendTo($ul);
                 });
 

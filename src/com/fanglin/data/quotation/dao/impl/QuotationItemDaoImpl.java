@@ -51,7 +51,8 @@ public class QuotationItemDaoImpl extends DaoImpl<QuotationItemPO> implements Qu
 	public QuotationItemPO queryQuotationItemByIdAVersionId(String itemId,String versionId){
 		return (QuotationItemPO)session().createCriteria(QuotationItemPO.class)
 				.add(Restrictions.eq("itemId", itemId))
-				.add(Restrictions.eq("quotationVersion.versionId", versionId))
+				.add(Restrictions.eq("quotationVersion.no", versionId))
+				.add(Restrictions.eq("status", QuotationItemPO.STATUS_ENABLE_INT))
 				.uniqueResult();
 	}
 	
@@ -84,7 +85,7 @@ public class QuotationItemDaoImpl extends DaoImpl<QuotationItemPO> implements Qu
 				}else if("quotationSmallCategoryId".equals(filter.getField())){
 					query.add(query.getCriterion("quotationSmallCategory.id", Integer.parseInt(filter.getData()), filter.getOp()));
 				}else if("versionId".equals(filter.getField())){
-					query.add(query.getCriterion("quotationVersion.versionId", (filter.getData()), filter.getOp()));
+					query.add(query.getCriterion("quotationVersion.no", (filter.getData()), filter.getOp()));
 				}else if("quotationWorkTypeId".equals(filter.getField())){
 					query.add(query.getCriterion("workType.id", Integer.parseInt(filter.getData()), filter.getOp()));
 				}else if("company".equals(filter.getField())){

@@ -46,7 +46,7 @@ public class WorkerSalaryDaoImpl extends DaoImpl<WorkerSalaryPO> implements Work
 	@Override
 	public List<WorkerSalaryPO> queryWorkerSalary(String userId, Long cid) {
 
-		return session().createCriteria(WorkerSalaryPO.class).createAlias("user", "user").add(Restrictions.eq(WorkerSalaryPO.COLUMN_USER_USERID_STR, userId)).add(Restrictions.eq(WorkerSalaryPO.COLUMN_CSID_STR, cid)).list();
+		return session().createCriteria(WorkerSalaryPO.class).createAlias("user", "user").add(Restrictions.eq(WorkerSalaryPO.COLUMN_USERID_STR, userId)).add(Restrictions.eq(WorkerSalaryPO.COLUMN_CSID_STR, cid)).list();
 	}
 
 	@Override
@@ -82,6 +82,10 @@ public class WorkerSalaryDaoImpl extends DaoImpl<WorkerSalaryPO> implements Work
 					query.alias("decoration", "decoration");
 					query.add(query.getCriterion("decoration.orderId", data, op));
 				}
+				
+				if("schedule".equals(filet)){
+					query.add(Restrictions.eq("schedule", Short.valueOf(data)));
+				}
 
 				if ("duty".equals(filet)) {
 					query.alias("user", "user");
@@ -91,7 +95,7 @@ public class WorkerSalaryDaoImpl extends DaoImpl<WorkerSalaryPO> implements Work
 				}
 
 				if ("status".equals(filet)) {
-					query.add(query.getCriterion(WorkerSalaryPO.STATUS_INIT_STRA, Short.parseShort(data), op));
+					query.add(query.getCriterion(WorkerSalaryPO.COLUMN_STATUS_STR, Short.parseShort(data), op));
 				}
 
 				if ("approveTime".equals(filter.getField())) {
@@ -105,8 +109,8 @@ public class WorkerSalaryDaoImpl extends DaoImpl<WorkerSalaryPO> implements Work
 					Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
 					Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
 
-					query.add(query.getCriterion(WorkerSalaryPO.COLUMN_APPROVETIME, eTimestamp, "le"));
-					query.add(query.getCriterion(WorkerSalaryPO.COLUMN_APPROVETIME, sTimestamp, "ge"));
+					query.add(query.getCriterion(WorkerSalaryPO.COLUMN_APPROVETIME_STR, eTimestamp, "le"));
+					query.add(query.getCriterion(WorkerSalaryPO.COLUMN_APPROVETIME_STR, sTimestamp, "ge"));
 				}
 				if ("createTime".equals(filter.getField())) {
 
@@ -119,8 +123,8 @@ public class WorkerSalaryDaoImpl extends DaoImpl<WorkerSalaryPO> implements Work
 					Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
 					Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
 
-					query.add(query.getCriterion(WorkerSalaryPO.COLUMN_CREATETIME, eTimestamp, "le"));
-					query.add(query.getCriterion(WorkerSalaryPO.COLUMN_CREATETIME, sTimestamp, "ge"));
+					query.add(query.getCriterion(WorkerSalaryPO.COLUMN_CREATETIME_STR, eTimestamp, "le"));
+					query.add(query.getCriterion(WorkerSalaryPO.COLUMN_CREATETIME_STR, sTimestamp, "ge"));
 				}
 			}
 		}

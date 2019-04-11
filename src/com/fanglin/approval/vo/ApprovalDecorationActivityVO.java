@@ -13,6 +13,7 @@ public class ApprovalDecorationActivityVO implements java.io.Serializable {
 	private String orderId;
 	
 	private String activityName;
+	
 
 	Long getAdaId() {
 		return adaId;
@@ -53,5 +54,6 @@ public class ApprovalDecorationActivityVO implements java.io.Serializable {
 	public void setActivityName(String activityName) {
 		this.activityName = activityName;
 	}
+
 
 }

@@ -38,7 +38,7 @@ public class QuotationVO implements Serializable {
 	
 	private Float notSalesmanRate;
 	
-	private String versionId;
+	private String no;
 
 	private String quotationName;
 	
@@ -73,6 +73,8 @@ public class QuotationVO implements Serializable {
 	private Float disPrice;
 	
 	private Float trafficRate;
+	
+	private Float basePrice;
 	
 	public QuotationVO() {
 		super();
@@ -219,13 +221,13 @@ public class QuotationVO implements Serializable {
 	public Float getTotalPrice(){
 		return totalPrice;
 	}
-
-	public void setVersionId(String versionId){
-		this.versionId = versionId;
+	
+	public String getNo() {
+		return no;
 	}
 
-	public String getVersionId(){
-		return versionId;
+	public void setNo(String no) {
+		this.no = no;
 	}
 
 	public Float getNotSalesmanRate() {
@@ -299,4 +301,13 @@ public class QuotationVO implements Serializable {
 	public void setTrafficRate(Float trafficRate) {
 		this.trafficRate = trafficRate;
 	}
+
+	public Float getBasePrice() {
+		return basePrice;
+	}
+
+	public void setBasePrice(Float basePrice) {
+		this.basePrice = basePrice;
+	}
+	
 }

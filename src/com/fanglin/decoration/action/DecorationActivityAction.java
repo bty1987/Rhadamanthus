@@ -79,6 +79,22 @@ public class DecorationActivityAction extends BaseListAction {
 
 		return SUCCESS;
 	}
+	
+	@Action(value = "lockDecorationActivity", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String lockDecorationActivity() throws FLException {
+
+		decorationActivityService.lockDecorationActivity(decorationActivity);
+
+		return SUCCESS;
+	}
+	
+	@Action(value = "unlockDecorationActivity", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String unlockDecorationActivity() throws FLException {
+
+		decorationActivityService.unlockDecorationActivity(decorationActivity);
+
+		return SUCCESS;
+	}
 
 	@Action(value = "abateDecorationActivityItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String abateDecorationActivityItem() throws FLException {
@@ -92,6 +108,46 @@ public class DecorationActivityAction extends BaseListAction {
 	public String receiveDecorationActivityItem() throws FLException {
 
 		decorationActivityItemService.receiveDecorationActivityItem(decorationActivityItem, queryUserId(), queryUserName());
+
+		return SUCCESS;
+	}
+	
+	@Action(value = "deliveDecorationActivityItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String deliveDecorationActivityItem() throws FLException {
+
+		decorationActivityItemService.deliveDecorationActivityItem(decorationActivityItem, queryUserId());
+
+		return SUCCESS;
+	}
+	
+	@Action(value = "unrefundDecorationActivityItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String unrefundDecorationActivityItem() throws FLException {
+
+		decorationActivityItemService.unrefundDecorationActivityItem(decorationActivityItem, queryUserId());
+
+		return SUCCESS;
+	}
+	
+	@Action(value = "upgradeDecorationAtivityItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String upgradeDecorationAtivityItem() throws FLException {
+
+		decorationActivityItemService.upgradeDecorationAtivityItem(decorationActivityItem, queryUserId());
+
+		return SUCCESS;
+	}
+	
+	@Action(value = "refundDecorationActivityItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String refundDecorationActivityItem() throws FLException {
+
+		decorationActivityItemService.refundDecorationActivityItem(decorationActivityItem, queryUserId());
+
+		return SUCCESS;
+	}
+	
+	@Action(value = "expendDecorationActivityItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String expendDecorationActivityItem() throws FLException {
+
+		decorationActivityItemService.expendDecorationActivityItem(decorationActivityItem, queryUserId());
 
 		return SUCCESS;
 	}

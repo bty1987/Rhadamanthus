@@ -242,7 +242,7 @@ var paymentUtils = {
             _bank = utils.accAdd(parseFloat(bankMoney), _bank);
         });
 
-        return [_bank, _bankInfo]
+        return [_bank, _bankInfo];
     },
 
     splitBankInfo: function(bank, bankInfo, bankArray){
@@ -257,5 +257,22 @@ var paymentUtils = {
             info += bankArray[bankInfo] + " " + bank;
         }
         return info;
+    },
+
+    //通过grade筛选符合条件的参数
+    getValueForGrade: function(bank, checkBank, gradeParam){
+        var bankUtilForGrade = [], checkBankUtilForGrade = [];
+        $.each(bank, function(i, v){
+            if (v.grade == gradeParam) {
+                bankUtilForGrade.push({"key": v.no, "value": v.name});
+            }
+        });
+
+        $.each(checkBank, function(i, v){
+            if (v.grade == gradeParam) {
+                checkBankUtilForGrade.push({"key": v.no, "value": v.name});
+            }
+        });
+        return [bankUtilForGrade, checkBankUtilForGrade];
     }
 };

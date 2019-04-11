@@ -20,6 +20,8 @@ public class ReceiptTypePO implements java.io.Serializable {
 	
 	public static final String COLUMN_STATUS_STR = "status";
 	
+	public static final String COLUMN_GRADE_STR = "grade";
+	
 	public static final short TYPE_CASH_INT = 1;
 	
 	public static final short TYPE_BANK_INT = 2;
@@ -57,6 +59,8 @@ public class ReceiptTypePO implements java.io.Serializable {
 	private short status;
 	
 	private int company;
+	
+	private String grade;
 	
 	private String kino;
 	
@@ -163,6 +167,15 @@ public class ReceiptTypePO implements java.io.Serializable {
 
 	public void setCompany(int company) {
 		this.company = company;
+	}
+
+	@Column(name = "grade")
+	public String getGrade() {
+		return grade;
+	}
+
+	public void setGrade(String grade) {
+		this.grade = grade;
 	}
 
 	@Column(name = "kino")

@@ -33,13 +33,13 @@ public class QuotationPO implements Serializable {
 
 	private static final long serialVersionUID = 3361405245563596740L;
 
-	public static final short 	DEFAULTS_NONDEFAULT_SHORT = 0;
+	public static final short 	DEFAULTS_NONDEFAULT_INT = 0;
 	
-	public static final short 	DEFAULTS_DEFAULT_SHORT = 1;
+	public static final short 	DEFAULTS_DEFAULT_INT = 1;
 	
-	public static final short STATUS_DISABLED_SHORT = 1;
+	public static final short STATUS_LOCK_INT = 1;
 	
-	public static final short STATUS_ENABLED_SHORT = 0;
+	public static final short STATUS_INIT_INT = 0;
 
 	private long qid;
 	
@@ -74,6 +74,8 @@ public class QuotationPO implements Serializable {
 	private float trafficPrice;
 	
 	private float trafficRate;
+	
+	private float basePrice;
 
 	public QuotationPO(long qid){
 		this.qid = qid;
@@ -239,6 +241,15 @@ public class QuotationPO implements Serializable {
 		this.trafficRate = trafficRate;
 	}
 	
+	@Column(name = "basePrice")
+	public float getBasePrice() {
+		return basePrice;
+	}
+
+	public void setBasePrice(float basePrice) {
+		this.basePrice = basePrice;
+	}
+
 	public void ptp(String orderId,UserPO userPO,String name,String style){
 		
 		this.setOrderId(orderId);
@@ -249,6 +260,6 @@ public class QuotationPO implements Serializable {
 		this.setDiscount(10);
 		this.setTotalPrice(0);
 		this.setContent("");
-		this.setDefaults(QuotationPO.DEFAULTS_DEFAULT_SHORT); // 设置复制报价为默认报价
+		this.setDefaults(QuotationPO.DEFAULTS_DEFAULT_INT); // 设置复制报价为默认报价
 	}
 }

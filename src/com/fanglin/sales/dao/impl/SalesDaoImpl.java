@@ -83,6 +83,7 @@ public class SalesDaoImpl extends DaoImpl<SalesPO> implements SalesDao {
 		query.desc("sid");
 		
 		return query.list();
+		
 	}
 	
 	@Override
@@ -104,7 +105,41 @@ public class SalesDaoImpl extends DaoImpl<SalesPO> implements SalesDao {
 		
 		return query.list();
 	}
-
+	
+	@Override
+	public List<SalesPO> pageSalesForPompany(Paging paging, List<Filter> filters, int pompany) {
+		
+		PagingQuery<SalesPO> query = pagingQuery(paging, SalesPO.class);
+		
+		query.add(query.getCriterion(SalesPO.COLUMN_POMPANY_STR, pompany,"eq"));
+		
+		queryFilterExcute(query, filters);
+		
+		query.desc("sid");
+		
+		return query.list();
+	}
+	
+	@Override
+	public List<SalesPO> pageSalesForBalanceByPompany(Paging paging, List<Filter> filters, int pompany) {
+		
+		PagingQuery<SalesPO> query = pagingQuery(paging, SalesPO.class);
+		
+		query.add(query.getCriterion(SalesPO.COLUMN_POMPANY_STR, pompany,"eq"));
+		
+		query.add(query.getCriterion(SalesPO.COLUMN_FULLPAYSTATUS_STR,SalesPO.FULLPAYSTATUS_CONFIRM_SHORT,"eq"));
+		
+		query.add(query.getCriterion(SalesPO.COLUMN_BALANCESTATUS_STR,SalesPO.BALANCESTATUS_INIT_SHORT,"eq"));
+		
+		query.add(query.getCriterion(SalesPO.COLUMN_STATUS_STR,SalesPO.STATUS_INIT_SHORT,"eq"));
+		
+		queryFilterExcute(query, filters);
+		
+		query.desc("sid");
+		
+		return query.list();
+	}
+	
 	@Override
 	public SalesPO querySalesByNo(String no) {
 		return (SalesPO) createCriteria(SalesPO.class).add(Restrictions.eq(SalesPO.COLUMN_NO_STR, no)).uniqueResult();

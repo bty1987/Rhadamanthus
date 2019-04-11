@@ -85,8 +85,8 @@ public class DesignerSalaryDaoImol  extends DaoImpl<DesignerSalaryPO> implements
 					Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
 					Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
 					
-					query.add(query.getCriterion(WorkerSalaryPO.COLUMN_APPROVETIME, eTimestamp, "le"));
-					query.add(query.getCriterion(WorkerSalaryPO.COLUMN_APPROVETIME, sTimestamp, "ge"));
+					query.add(query.getCriterion(WorkerSalaryPO.COLUMN_APPROVETIME_STR, eTimestamp, "le"));
+					query.add(query.getCriterion(WorkerSalaryPO.COLUMN_APPROVETIME_STR, sTimestamp, "ge"));
 				}
 				 if("createTime".equals(filters.getField())){
 						
@@ -99,8 +99,8 @@ public class DesignerSalaryDaoImol  extends DaoImpl<DesignerSalaryPO> implements
 						Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
 						Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
 						
-						query.add(query.getCriterion(WorkerSalaryPO.COLUMN_CREATETIME, eTimestamp, "le"));
-						query.add(query.getCriterion(WorkerSalaryPO.COLUMN_CREATETIME, sTimestamp, "ge"));
+						query.add(query.getCriterion(WorkerSalaryPO.COLUMN_CREATETIME_STR, eTimestamp, "le"));
+						query.add(query.getCriterion(WorkerSalaryPO.COLUMN_CREATETIME_STR, sTimestamp, "ge"));
 					}
 			
 			}

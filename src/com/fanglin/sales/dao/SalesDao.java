@@ -19,6 +19,10 @@ public interface SalesDao extends Dao<SalesPO> {
 	
 	public List<SalesPO> pageSalesForBalanceByDompany(Paging paging, List<Filter> filter,int dompany);
 	
+	public List<SalesPO> pageSalesForPompany(Paging paging, List<Filter> filter,int pompany);
+	
+	public List<SalesPO> pageSalesForBalanceByPompany(Paging paging, List<Filter> filter,int pompany);
+	
 	public SalesPO querySalesByNo(String no);
 	
 	public List<SalesPO> querySalesByOrderId(String orderId);

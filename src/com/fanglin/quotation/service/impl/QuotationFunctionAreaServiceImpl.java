@@ -267,7 +267,7 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 			throw new FLException(200003, "报价不存在");
 		}
 		
-		if(quotationPO.getStatus() == QuotationPO.STATUS_DISABLED_SHORT){
+		if(quotationPO.getStatus() == QuotationPO.STATUS_LOCK_INT){
 			throw new FLException(200030, "报价状态不可操作");
 		}
 		

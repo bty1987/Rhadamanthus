@@ -23,17 +23,24 @@ jQuery(function ($) {
 
     //获取所有节点
     com.post(api.data.queryConstructionNode, {}, function (res) {
-        $.each(res.constructionNodes, function (i, v) {
-            constructionNode[v.cnid] = v.name;
+        var newNodes = res.constructionNodes.sort(function(a, b){
+            return a.sort - b.sort;
+        });
+        $.each(newNodes, function (i, v) {
+            constructionNode[v.sort] = v.name;
         })
     }, null, false);
 
     //动态获取节点轴
     com.post(api.construction.queryConstructionScheduleByOrderId, {"constructionSchedule.orderId": params.orderId}, function (res) {
 
-        var constructionSchedule = res.constructionSchedules;
+        var newSchedules = res.constructionSchedules.sort(function(a, b){
+            return a.schedule - b.schedule;
+        });
 
-        customerServiceDetail.constructionSchedules = res.constructionSchedules;
+        var constructionSchedule = newSchedules;
+
+        customerServiceDetail.constructionSchedules = newSchedules;
 
         $.each(constructionSchedule, function (i, v) {
             customerServiceNode("#stepIds", v.schedule);

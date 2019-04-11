@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.sales.vo.SalesActivityItemVO;
-import com.fanglin.sales.vo.SalesVO;
 
 public interface SalesActivityService {
 	
@@ -14,9 +13,23 @@ public interface SalesActivityService {
 	
 	public Object querySalesActivity(String orderId);
 	
-	public int updateSalesForActivity(SalesVO salesVO) throws FLException;
-	
 	public int abateSalesActivityItem(SalesActivityItemVO salesActivityItemVO, String userId) throws FLException;
 
 	public int receiveSalesActivityItem(SalesActivityItemVO salesActivityItemVO, String userId,String userName) throws FLException;
+	
+	//配送销售活动项
+	public void deliveSalesActivityItem(SalesActivityItemVO salesActivityItemVO) throws FLException;
+	
+	//未退装修活动 , 已审批未退货
+	public void unrefundSalesActivityItem(SalesActivityItemVO salesActivityItemVO) throws FLException;
+	
+	//升级装修活动 , 升级状态同时等同于领取
+	public void upgradeSalesActivityItem(SalesActivityItemVO salesActivityItemVO) throws FLException;
+	
+	//退货销售活动项
+	public void refundSalesActivityItem(SalesActivityItemVO salesActivityItemVO, String userId) throws FLException;
+	
+	//消耗销售活动项
+	public void expendSalesActivityItem(SalesActivityItemVO salesActivityItemVO) throws FLException;
+	
 }

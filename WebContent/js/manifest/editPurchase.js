@@ -51,6 +51,7 @@ jQuery(function ($) {
         {value: '单位'},
         {value: '颜色'},
         {value: '规格'},
+        {value: '供应商'},
         {value: '采购单价'},
         {value: '数量'},
         {value: '件数'}
@@ -178,6 +179,8 @@ jQuery(function ($) {
 
         _lineInfoSet[_lineInfoSet.length] = {cellClass: "format grey", value: v ? v.format.info : null};                    //规格
 
+        _lineInfoSet[_lineInfoSet.length] = {cellClass: "supplier grey", value: v ? v.supplier.name : null};                    //供应商
+
         _lineInfoSet[_lineInfoSet.length] = {cellClass: "unitPrice", hasInput: !0, value: v ? v.unitPrice : null};   //单价
 
         _lineInfoSet[_lineInfoSet.length] = {cellClass: "number", hasInput: !0, value: v ? v.num : null};                //数量
@@ -192,7 +195,7 @@ jQuery(function ($) {
 
         var $line = $('<li></li>').addClass('line');
         var $indexWrap = $('<div></div>').addClass('line-wrap order').append($('<div></div>').addClass('cell index').text(lineindex));
-        var $lineInfoWrap = $('<div></div>').addClass('line-wrap content col10');
+        var $lineInfoWrap = $('<div></div>').addClass('line-wrap content col11');
         var $optWrap = $('<div></div>').addClass('line-wrap action');
         var _lineInfoSet = [
             {cellClass: "no blue"},                         //商品编号
@@ -202,6 +205,7 @@ jQuery(function ($) {
             {cellClass: "measurementUnit grey"},            //单位
             {cellClass: "color grey", hasSelectColor: !0},    //颜色
             {cellClass: "format grey", hasSelectFormat: !0},  //规格
+            {cellClass: "supplier grey", hasSelectSupplier: !0},  //供应商
             {cellClass: "unitPrice", hasInput: !0},   //采购单价
             {cellClass: "number", hasInput: !0},         //数量
             {cellClass: "pieceNum blue"}                   //件数
@@ -232,6 +236,10 @@ jQuery(function ($) {
                 $cell.append($select);
             }
             if (v.hasSelectFormat) {
+                $select = $('<select class="v_required"></select>');
+                $cell.append($select);
+            }
+            if (v.hasSelectSupplier) {
                 $select = $('<select class="v_required"></select>');
                 $cell.append($select);
             }
@@ -279,6 +287,11 @@ jQuery(function ($) {
                             "format.gid": val.gid
                         }, function (res) {
                             com.focusPage('li[data-gid="' + val.gid + '_' + lineindex + '"] .format select').bindData(res.formats, "fid", "info");
+                        });
+                        com.post(api.inventory.querySupplierForEnableByGid, {
+                            "supplier.gid": val.gid
+                        }, function (res) {
+                            com.focusPage('li[data-gid="' + val.gid + '_' + lineindex + '"] .supplier select').bindData(res.suppliers, "sid", "name");
                         });
                     }
                 });
@@ -342,7 +355,7 @@ jQuery(function ($) {
 
         var $line = $('<li></li>').addClass('line');
         var $indexWrap = $('<div></div>').addClass('line-wrap order').append($('<div></div>').addClass('cell index').text(lineindex));
-        var $lineInfoWrap = $('<div></div>').addClass('line-wrap content col10');
+        var $lineInfoWrap = $('<div></div>').addClass('line-wrap content col11');
         var $optWrap = $('<div></div>').addClass('line-wrap action');
 
         $.each(_lineInfoSet, function (i, v) {
@@ -606,6 +619,7 @@ jQuery(function ($) {
             "purchaseItem.goods.gid": $line.attr('data-pgid'),
             "purchaseItem.color.cid": $line.find('.color select').val(),
             "purchaseItem.format.fid": $line.find('.format select').val(),
+            "purchaseItem.supplier.sid": $line.find('.supplier select').val(),
             "purchaseItem.unitPrice": $line.find('.unitPrice input').val(),
             "purchaseItem.num": $line.find('.number input').val()
         };

@@ -28,9 +28,7 @@ public class ApproverAction extends BaseListAction {
 
 	private ApproverVO approver;
 	
-	private List<ApproverVO> approvalUsers;
-	
-	private List<Integer> approverIds;
+	private List<ApproverVO> approvers;
 	
 	private List<KeyValueVO> autoFillKeyValue;
 	
@@ -45,7 +43,7 @@ public class ApproverAction extends BaseListAction {
 	@Action(value = "queryApproverByType", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryApproverByType() throws FLException{
 		
-		approvalUsers = approverService.queryApprovalUserByType(approver,queryCompany());
+		approvers = approverService.queryApprovalUserByType(approver, queryCompany());
 		
 		return SUCCESS;
 	}
@@ -59,9 +57,9 @@ public class ApproverAction extends BaseListAction {
 	}
 
 	@Action(value = "deleteApprover", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String deleteApprover(){
-		
-		approverService.deleteApprover(approverIds);
+	public String deleteApprover() throws FLException {
+
+		approverService.deleteApprover(approver);
 		
 		return SUCCESS;
 	}
@@ -74,20 +72,12 @@ public class ApproverAction extends BaseListAction {
 		this.approver = approver;
 	}
 
-	public List<ApproverVO> getApprovalUsers() {
-		return approvalUsers;
+	public List<ApproverVO> getApprovers() {
+		return approvers;
 	}
 
-	public void setApprovalUsers(List<ApproverVO> approvalUsers) {
-		this.approvalUsers = approvalUsers;
-	}
-
-	public List<Integer> getApproverIds() {
-		return approverIds;
-	}
-
-	public void setApproverIds(List<Integer> approverIds) {
-		this.approverIds = approverIds;
+	public void setApprovers(List<ApproverVO> approvers) {
+		this.approvers = approvers;
 	}
 
 	public List<KeyValueVO> getAutoFillKeyValue() {

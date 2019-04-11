@@ -65,7 +65,7 @@ public class QuotationVersionServiceImpl implements QuotationVersionService {
 	@Override
 	public QuotationVersionVO queryQuotationVersionById(QuotationVersionVO quotationVersionVO){
 
-		QuotationVersionPO quotationVersionPO = quotationVersionDao.get(quotationVersionVO.getVersionId());
+		QuotationVersionPO quotationVersionPO = quotationVersionDao.get(quotationVersionVO.getNo());
 		
 		BeanUtil.copyProperties(quotationVersionPO, quotationVersionVO);
 		
@@ -116,7 +116,7 @@ public class QuotationVersionServiceImpl implements QuotationVersionService {
 		
 		String no = String.format("%sQV_%s", companyPO.getShortname(), FormatUtil.fillZero(count, "000"));
 		
-		quotationVersionPO.setVersionId(no);
+		quotationVersionPO.setNo(no);
 		quotationVersionPO.setCompany(company);
 		quotationVersionDao.save(quotationVersionPO);
 	}
@@ -125,7 +125,7 @@ public class QuotationVersionServiceImpl implements QuotationVersionService {
 	@Transactional(rollbackFor=Exception.class)
 	public void updateQuotationVersion(QuotationVersionVO quotationVersionVO){
 		
-		QuotationVersionPO sourceQuotationVersionPO = quotationVersionDao.get(quotationVersionVO.getVersionId());
+		QuotationVersionPO sourceQuotationVersionPO = quotationVersionDao.get(quotationVersionVO.getNo());
 		
 		if(quotationVersionVO.getDefaultFlag() == 1){
 			List<QuotationVersionPO> defaultFlagQuotationVersionPOs = quotationVersionDao.queryQuotationVersionByDefaultFlag(sourceQuotationVersionPO.getCompany(),1);

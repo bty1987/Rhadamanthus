@@ -21,6 +21,12 @@ jQuery(function($) {
 		com.clearValidator();
 	});
 
+	//隐藏触发
+	com.focusPage("#baseItemModal").on('hidden.bs.modal', function () {
+		servicePayment.bankUtilForGrade = [];
+		servicePayment.checkBankUtilForGrade = [];
+	});
+
 	com.focusPage("#refundBankCard").on("click",function(e) {
 		com.focusPage("#refundCashInfoDiv").addClass("hide");
 
@@ -49,6 +55,9 @@ jQuery(function($) {
 	servicePayment.cashUtil = [];
 	servicePayment.bankUtil = [];
 	servicePayment.checkBankUtil = [];
+
+	servicePayment.bankUtilForGrade = [];
+	servicePayment.checkBankUtilForGrade = [];
 
 	servicePayment.cashInfo = {};
 	servicePayment.bankInfo = {};
@@ -87,7 +96,7 @@ jQuery(function($) {
 		var maxNum = $(this).attr("maxnum");
 		maxNum = parseInt(maxNum)+1;
 		$(this).attr("maxnum", maxNum);
-		paymentUtils.addBankUtil(maxNum, "bankDiv", "#servicebankDivGroup", servicePayment.bankNums, servicePayment.bankUtil, "service");
+		paymentUtils.addBankUtil(maxNum, "bankDiv", "#servicebankDivGroup", servicePayment.bankNums, servicePayment.bankUtilForGrade, "service");
 
 		return false;
 	});
@@ -100,7 +109,7 @@ jQuery(function($) {
 		var maxNum = $(this).attr("maxnum");
 		maxNum = parseInt(maxNum)+1;
 		$(this).attr("maxnum", maxNum);
-		paymentUtils.addBankUtil(maxNum, "checkvDiv", "#servicecheckvDivGroup", servicePayment.checkvNums, servicePayment.checkBankUtil, "service");
+		paymentUtils.addBankUtil(maxNum, "checkvDiv", "#servicecheckvDivGroup", servicePayment.checkvNums, servicePayment.checkBankUtilForGrade, "service");
 
 		return false;
 	});
@@ -135,6 +144,7 @@ jQuery(function($) {
 				["客户:", v.decoration.customer.name, "grey"],
 				["设计师:", v.decoration.designer.currentName, "grey"],
 				["设计部:", v.decoration.designer.dept.name, "grey"],
+				["等级:", v.decoration.grade, "red"],
 				["主材金额:", v.materialPrice, "blue"],
 				["服务费:", v.servicePrice, "blue"],
 				["工程造价:", v.projectPrice, "blue"],
@@ -229,6 +239,7 @@ jQuery(function($) {
                 ["客户:", v.decoration.customer.name, "grey"],
                 ["设计师:", v.decoration.designer.currentName, "grey"],
                 ["设计部:", v.decoration.designer.dept.name, "grey"],
+				["等级:", v.decoration.grade, "red"],
                 ["预付款金额:", v.advanceMoney, "blue"],
                 ["服务费:", v.serviceMoney, "blue"],
                 ["收款人:", v.serviceReceipt.collecter.currentName, "grey"],
@@ -388,7 +399,7 @@ jQuery(function($) {
 		 });
 	 });
 
-	function initBaseModal(){
+	function initBaseModal(v){
 		com.focusPage("#historyUpdateS").addClass("hide");
 		for(var i = 0; i<servicePayment.paymentModelNameData.length; i++){
 			var _name = servicePayment.paymentModelNameData[i];
@@ -425,12 +436,24 @@ jQuery(function($) {
 
 		paymentUtils.EmptyChosen('servicecashInfo');
 
+		//根据装修单等级获取收据类型等级
+		var gradeParam;
+		if(v.decoration.grade == "A" || v.decoration.grade == "C"){
+			gradeParam = "A";
+		}else{
+			gradeParam = "";
+		}
+
+		// 根据等级在数组中筛选出符合要求的用于显示
+		var returnGradeParams = paymentUtils.getValueForGrade(servicePayment.bank, servicePayment.checkBank, gradeParam);
+		servicePayment.bankUtilForGrade = returnGradeParams[0];
+		servicePayment.checkBankUtilForGrade = returnGradeParams[1];
 	}
 
 	function dialogPayment(v){
         com.cleanItems(servicePayment.items);
 
-		initBaseModal();
+		initBaseModal(v);
         if(servicePayment.baseModal.attr("ChargeType")==1){
 			com.focusPage("#myModalLabel").text("付款信息");
 			com.focusPage("#collectBtn").text("收款");

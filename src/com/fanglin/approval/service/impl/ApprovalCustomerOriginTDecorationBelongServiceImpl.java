@@ -83,7 +83,7 @@ public class ApprovalCustomerOriginTDecorationBelongServiceImpl implements Appro
 			throw new FLException(140013, "订单不存在");
 		}
 		
-		List<Short> status = Arrays.asList(DecorationPO.STATUS_INIT_INT, DecorationPO.STATUS_DEPOSIT_INT);
+		List<Short> status = Arrays.asList(DecorationPO.STATUS_INIT_INT, DecorationPO.STATUS_DEPOSIT_INT, DecorationPO.STATUS_PROSIGN_INT);
 		
 		if(!status.contains(decorationPO.getStatus())){
 			throw new FLException(140004, "装修单状态不可操作");

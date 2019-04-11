@@ -1,95 +1,137 @@
 <div id="managementPageContent" class="page-content">
 	<div id="fl-statement"></div>
 
+	<h4>装修</h4>
+	<hr />
 	<div class="row">
 		<div class="col-xs-12">
-			<p>
-				<button id="changeDecorationOrderForOrderId" class="btn btn-success btn-margin" style="margin: 2px;">
+				<button id="changeDecorationForOrderId" class="btn btn-success btn-margin" style="margin: 2px;">
 					<i class="icon-edit"></i>
-					装修单号
+					<span>装修单号修改</span>
 				</button>
 			
-				<button id="changeDecorationOrderForTime" class="btn btn-success btn-margin" style="margin: 2px;">
+				<button id="changeDecorationForTime" class="btn btn-success btn-margin" style="margin: 2px;">
 					<i class="icon-edit"></i>
-					订单相关时间
+					<span>装修单相关时间修改</span>
 				</button>
 			
-				<button id="changeDecorationOrderForVersionId" class="btn btn-success btn-margin" style="margin: 2px;">
+				<button id="changeDecorationForVersionId" class="btn btn-success btn-margin" style="margin: 2px;">
 					<i class="icon-edit"></i>
-					订单报价版本
+					<span>装修单报价版本修改</span>
 				</button>
 				
-				<button id="changeDecorationOrderForStatus" class="btn btn-success" style="margin: 2px;">
+				<button id="changeDecorationForStatus" class="btn btn-success" style="margin: 2px;">
 					<i class="icon-edit"></i>
-					订单状态
+					<span>装修单状态修改</span>
 				</button>
 				
-				<button id="changeDecorationPyamentForTime" class="btn btn-success" style="margin: 2px;">
+				<button id="changeDecorationForGrade" class="btn btn-success" style="margin: 2px;">
 					<i class="icon-edit"></i>
-					订单款项收款时间
+					<span>装修单等级修改</span>
 				</button>
 				
-				<!--<button id="refundOrderForOrderId" class="btn btn-success" style="margin: 2px;">-->
-					<!--<i class="icon-edit"></i>-->
-					<!--订单款项退款-->
-				<!--</button>-->
-				
-				<button id="changeMaterialSubOrderForOrderId" class="btn btn-success" style="margin: 2px;">
+				<button id="subDecorationForQuotationTime" class="btn btn-success" style="margin: 2px;">
 					<i class="icon-edit"></i>
-					主材子装修单号
+					<span>装修单报价复制次数</span>
 				</button>
 				
-				<button id="changeMaterialPyamentForTime" class="btn btn-success" style="margin: 2px;">
-					<i class="icon-edit"></i>
-					主材款项收款时间
-				</button>
-				
-				<button id="subDecorationOrderForQuotationTime" class="btn btn-success" style="margin: 2px;">
-					<i class="icon-edit"></i>
-					报价复制次数修改
-				</button>
-				
-				<button id="updateQuotationFunctionItemForManageRate" class="btn btn-success" style="margin: 2px;">
-					<i class="icon-edit"></i>
-					报价管理费比例
-				</button>
-
-				<button id="updateQuotationForStatus" class="btn btn-success" style="margin: 2px;">
-					<i class="icon-edit"></i>
-					报价状态
-				</button>
-			</p>
 		</div>
-		
-		<div class="col-xs-12">
-			<p>
-				<button id="exportMaterialPayment" class="btn btn-info" style="margin: 2px;">
-					<i class="icon-cloud-download"></i>
-					主材收款信息
-				</button>
-				
-				<button id="exportDecorationOrderForContractTime" class="btn btn-info" style="margin: 2px;">
-					<i class="icon-cloud-download"></i>
-					订单签单信息
-				</button>
-
-				<button id="exportDecorationPaymentForContractTime" class="btn btn-info" style="margin: 2px;">
-					<i class="icon-cloud-download"></i>
-					装修收款信息
-				</button>
-			</p>
-		</div>
-		
-		<div class="col-xs-12">
-            <p>
-                <button id="updateFR" class="btn btn-info" style="margin: 2px;">
-                    <i class="icon-cloud-download"></i>更新FR
-                </button>
-            </p>
-        </div>
 	</div>
 	
-	<div class="modal fade" id="decorationOrderForOrderIdModal" tabindex="-1">
+	<h4>报价</h4>
+	<hr />
+	<div class="row">
+		<div class="col-xs-12">
+			<button id="updateQuotationFunctionItemForManageRate" class="btn btn-danger" style="margin: 2px;">
+				<i class="icon-edit"></i>
+				<span>报价管理费比例修改</span>
+			</button>
+			
+			<button id="updateQuotationForStatus" class="btn btn-danger" style="margin: 2px;">
+				<i class="icon-edit"></i>
+				<span>报价状态修改</span>
+			</button>
+		</div>
+	</div>
+	
+	<h4>主材</h4>
+	<hr />
+	<div class="row">
+		<div class="col-xs-12">
+			<button id="changeMaterialForOrderId" class="btn btn-pink" style="margin: 2px;">
+				<i class="icon-edit"></i>
+				<span>主材单归属装修单号修改</span>
+			</button>
+		</div>
+	</div>
+	
+	<h4>销售</h4>
+	<hr />
+	<div class="row">
+		<div class="col-xs-12">
+			<button id="changeSalesForGrade" class="btn btn-purple" style="margin: 2px;">
+				<i class="icon-edit"></i>
+				<span>销售单等级修改</span>
+			</button>
+		</div>
+	</div>
+	
+	<h4>款项</h4>
+	<hr />
+	<div class="row">
+		<div class="col-xs-12">
+			<button id="changeDecorationPyamentForTime" class="btn btn-warning" style="margin: 2px;">
+				<i class="icon-edit"></i>
+				<span>装修款收款时间修改</span>
+			</button>
+		
+			<button id="changeMaterialPyamentForTime" class="btn btn-warning" style="margin: 2px;">
+				<i class="icon-edit"></i>
+				<span>主材款收款时间修改</span>
+			</button>
+			
+			<!--
+			<button id="refundOrderForOrderId" class="btn btn-success" style="margin: 2px;">
+				<i class="icon-edit"></i>
+				<span>订单款项退款</span>
+			</button>
+			-->
+		</div>
+	</div>
+	
+	<h4>导出</h4>
+	<hr />
+	<div class="row">
+		<div class="col-xs-12">
+			<button id="exportDecorationForContractTime" class="btn btn-info" style="margin: 2px;">
+				<i class="icon-cloud-download"></i>
+				<span>装修单签单信息导出(签单时间)</span>
+			</button>
+			
+			<button id="exportDecorationPaymentForContractTime" class="btn btn-info" style="margin: 2px;">
+				<i class="icon-cloud-download"></i>
+				<span>装修款信息导出(签单时间)</span>
+			</button>
+			
+			<button id="exportMaterialPayment" class="btn btn-info" style="margin: 2px;">
+				<i class="icon-cloud-download"></i>
+				<span>主材款信息导出</span>
+			</button>
+		</div>
+	</div>
+	
+	<h4>其他</h4>
+	<hr />
+	<div class="row">
+		<div class="col-xs-12">
+			<button id="updateFR" class="btn btn-inverse" style="margin: 2px;">
+				<i class="icon-cloud-download"></i>
+				<span>更新FR</span>
+			</button>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="decorationForOrderIdModal" tabindex="-1">
 		<div class="modal-dialog">
 			<div class="modal-content col-md-12">
 				<div class="modal-header">
@@ -123,7 +165,7 @@
 		</div>
 	</div>
 	
-	<div class="modal fade" id="decorationOrderForTimeModal" tabindex="-1">
+	<div class="modal fade" id="decorationForTimeModal" tabindex="-1">
 		<div class="modal-dialog">
 			<div class="modal-content col-md-12">
 				<div class="modal-header">
@@ -168,7 +210,7 @@
 		</div>
 	</div>
 	
-	<div class="modal fade" id="decorationOrderForVersionIdModal" tabindex="-1">
+	<div class="modal fade" id="decorationForVersionIdModal" tabindex="-1">
 		<div class="modal-dialog">
 			<div class="modal-content col-md-12">
 				<div class="modal-header">
@@ -202,7 +244,7 @@
 		</div>
 	</div>
 	
-	<div class="modal fade" id="decorationOrderForStatusModal" tabindex="-1">
+	<div class="modal fade" id="decorationForStatusModal" tabindex="-1">
 		<div class="modal-dialog">
 			<div class="modal-content col-md-12">
 				<div class="modal-header">
@@ -281,6 +323,45 @@
 		</div>
 	</div>
 	
+	<div class="modal fade" id="changeDecorationForGradeModal" tabindex="-1">
+		<div class="modal-dialog">
+			<div class="modal-content col-md-12">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span>&times;</span><span class="sr-only">Close</span>
+					</button>
+					<h4 class="modal-title">装修单等级修改</h4>
+				</div>
+				<div class="modal-body">
+					<form class="form-horizontal">
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="refundOrderId">装修单号</label>
+							<div class="col-sm-9">
+								<input type="text" id="orderIdOfDecorationGrade" class="col-xs-10 col-sm-5 v_required"  maxlength='15' data-toggle="popover" data-trigger='manual'/>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="decorationGrade">等级</label>
+							<div class="col-sm-4">
+								<select id="decorationGrade" class="form-control v_required" data-toggle="popover" data-trigger='manual'>
+									<option value="">无</option>
+									<option value="A">A</option>
+									<option value="B">B</option>
+									<option value="C">C</option>
+								</select>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" id="changeDecorationGradeBtn" class="btn btn-primary">保存</button>
+					<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
 	<div class="modal fade" id="refundOrderPaymentByOrderModal" tabindex="-1">
 		<div class="modal-dialog">
 			<div class="modal-content col-md-12">
@@ -315,7 +396,7 @@
 		</div>
 	</div>
 	
-	<div class="modal fade" id="materialSubOrderForOrderIdModal" tabindex="-1">
+	<div class="modal fade" id="MaterialForOrderIdModal" tabindex="-1">
 		<div class="modal-dialog">
 			<div class="modal-content col-md-12">
 				<div class="modal-header">
@@ -342,7 +423,7 @@
 					</form>
 				</div>
 				<div class="modal-footer">
-					<button type="button" id="saveMaterialSubOrderOrderIdBtn" class="btn btn-primary">保存</button>
+					<button type="button" id="saveMaterialOrderIdBtn" class="btn btn-primary">保存</button>
 					<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
 				</div>
 			</div>
@@ -394,7 +475,7 @@
 		</div>
 	</div>
 	
-	<div class="modal fade" id="subDecorationOrderForQuotationTimeModal" tabindex="-1">
+	<div class="modal fade" id="subDecorationForQuotationTimeModal" tabindex="-1">
 		<div class="modal-dialog">
 			<div class="modal-content col-md-12">
 				<div class="modal-header">
@@ -414,7 +495,7 @@
 					</form>
 				</div>
 				<div class="modal-footer">
-					<button type="button" id="saveDecorationOrderForQuotationTimeBtn" class="btn btn-primary">保存</button>
+					<button type="button" id="saveDecorationForQuotationTimeBtn" class="btn btn-primary">保存</button>
 					<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
 				</div>
 			</div>
@@ -508,6 +589,43 @@
 		</div>
 	</div>
 	
+	<div class="modal fade" id="changeSalesForGradeModal" tabindex="-1">
+		<div class="modal-dialog">
+			<div class="modal-content col-md-12">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span>&times;</span><span class="sr-only">Close</span>
+					</button>
+					<h4 class="modal-title">销售单等级修改</h4>
+				</div>
+				<div class="modal-body">
+					<form class="form-horizontal">
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right">销售单号</label>
+							<div class="col-sm-9">
+								<input type="text" id="changeSalesNo" class="col-xs-10 col-sm-5 v_required"  maxlength='15' data-toggle="popover" data-trigger='manual'/>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right">等级</label>
+							<div class="col-sm-4">
+								<select id="salesGrade" class="form-control v_required" data-toggle="popover" data-trigger='manual'>
+									<option value="">无</option>
+									<option value="B">B</option>
+								</select>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" id="changeSalesGradeBtn" class="btn btn-primary">保存</button>
+					<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
 	<div class="modal fade" id="exportMaterialPaymentModal" tabindex="-1">
 		<div class="modal-dialog">
 			<div class="modal-content col-md-12">
@@ -535,7 +653,7 @@
 		</div>
 	</div>
 	
-	<div class="modal fade" id="exportDecorationOrderForContractTimeModal" tabindex="-1">
+	<div class="modal fade" id="exportDecorationForContractTimeModal" tabindex="-1">
 		<div class="modal-dialog">
 			<div class="modal-content col-md-12">
 				<div class="modal-header">
@@ -555,7 +673,7 @@
 					</form>
 				</div>
 				<div class="modal-footer">
-					<button type="button" id="exportDecorationOrderForContractTimeBtn" class="btn btn-primary">导出</button>
+					<button type="button" id="exportDecorationForContractTimeBtn" class="btn btn-primary">导出</button>
 					<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
 				</div>
 			</div>
@@ -588,6 +706,8 @@
 			</div>
 		</div>
 	</div>
+	
+	
 </div>
 
 <script type="text/javascript">

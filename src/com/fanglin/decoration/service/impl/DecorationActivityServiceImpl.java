@@ -88,6 +88,10 @@ public class DecorationActivityServiceImpl implements DecorationActivityService 
 			throw new FLException(160011, "活动信息不存在");
 		}
 		
+		if(decorationActivityDao.countDecorationActivity(decorationPO.getOrderId(), null) >= 1){
+			throw new FLException(140061, "已参加活动");
+		}
+		
 		if(activityPO.getEndTime().getTime() < DateUtil.getDateToTimestamp(new Date()).getTime()){
 			throw new FLException(140032, "活动已过期");
 		}
@@ -129,6 +133,48 @@ public class DecorationActivityServiceImpl implements DecorationActivityService 
 		}
 		
 		decorationActivityDao.delete(decorationActivityPO);
+		
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public int lockDecorationActivity(DecorationActivityVO decorationActivityVO) throws FLException {
+		
+		DecorationActivityPO decorationActivityPO = decorationActivityDao.get(decorationActivityVO.getDaId());
+		
+		if(decorationActivityPO == null){
+			throw new FLException(140033, "订单活动信息不存在");
+		}
+		
+		if(decorationActivityPO.getStatus() != DecorationActivityPO.STATUS_INIT_INT){
+			throw new FLException(140059, "订单活动状态不可操作");
+		}
+		
+		decorationActivityPO.setStatus(DecorationActivityPO.STATUS_LOCK_INT);
+		
+		decorationActivityDao.update(decorationActivityPO);
+		
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public int unlockDecorationActivity(DecorationActivityVO decorationActivityVO) throws FLException {
+		
+		DecorationActivityPO decorationActivityPO = decorationActivityDao.get(decorationActivityVO.getDaId());
+		
+		if(decorationActivityPO == null){
+			throw new FLException(140033, "订单活动信息不存在");
+		}
+		
+		if(decorationActivityPO.getStatus() != DecorationActivityPO.STATUS_LOCK_INT){
+			throw new FLException(140059, "订单活动状态不可操作");
+		}
+		
+		decorationActivityPO.setStatus(DecorationActivityPO.STATUS_INIT_INT);
+		
+		decorationActivityDao.update(decorationActivityPO);
 		
 		return 0;
 	}

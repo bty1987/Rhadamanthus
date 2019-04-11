@@ -14,6 +14,8 @@ public class ReceiptTypeVO implements java.io.Serializable {
 	
 	private Short status;
 	
+	private String grade;
+	
 	private String kino;
 	
 	private String kiname;
@@ -58,6 +60,14 @@ public class ReceiptTypeVO implements java.io.Serializable {
 
 	public void setStatus(Short status) {
 		this.status = status;
+	}
+
+	public String getGrade() {
+		return grade;
+	}
+
+	public void setGrade(String grade) {
+		this.grade = grade;
 	}
 
 	public String getKino() {

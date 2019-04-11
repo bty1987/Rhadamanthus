@@ -70,7 +70,7 @@ public class MaterialActivityAction extends BaseListAction {
 	@Action(value = "abateMaterialActivityItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String abateMaterialActivityItem() throws FLException {
 
-		materialActivityService.abateMaterialActivityItem(materialActivityItem, queryUserId());
+		materialActivityService.abateMaterialActivityItem(materialActivityItem);
 
 		return SUCCESS;
 	}
@@ -79,6 +79,46 @@ public class MaterialActivityAction extends BaseListAction {
 	public String receiveMaterialActivityItem() throws FLException {
 
 		materialActivityService.receiveMaterialActivityItem(materialActivityItem, queryUserId(), queryUserName());
+
+		return SUCCESS;
+	}
+	
+	@Action(value = "deliveMaterialActivityItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String deliveMaterialActivityItem() throws FLException {
+
+		materialActivityService.deliveMaterialActivityItem(materialActivityItem);
+
+		return SUCCESS;
+	}
+	
+	@Action(value = "unrefundMaterialActivityItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String unrefundMaterialActivityItem() throws FLException {
+
+		materialActivityService.unrefundMaterialActivityItem(materialActivityItem);
+
+		return SUCCESS;
+	}
+	
+	@Action(value = "upgradeMaterialActivityItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String upgradeMaterialActivityItem() throws FLException {
+
+		materialActivityService.upgradeMaterialActivityItem(materialActivityItem);
+
+		return SUCCESS;
+	}
+	
+	@Action(value = "expendMaterialActivityItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String expendMaterialActivityItem() throws FLException {
+
+		materialActivityService.expendMaterialActivityItem(materialActivityItem);
+
+		return SUCCESS;
+	}
+	
+	@Action(value = "refundMaterialActivityItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String refundMaterialActivityItem() throws FLException {
+
+		materialActivityService.refundMaterialActivityItem(materialActivityItem, queryUserId(), queryUserName());
 
 		return SUCCESS;
 	}

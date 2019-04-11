@@ -46,18 +46,25 @@ jQuery(function ($) {
 
     //获取节点名称
     com.post(api.data.queryConstructionNode, {}, function (res) {
-        $.each(res.constructionNodes, function (i, v) {
+
+        var newNodes = res.constructionNodes.sort(function(a, b){
+            return a.sort - b.sort;
+        });
+        $.each(newNodes, function (i, v) {
             constructionNodes["num" + v.cnid] = v.cnid;
-            constructionNodes[v.cnid] = v.name;
+            constructionNodes[v.sort] = v.name;
         });
     }, null, false);
 
     //动态获取节点轴
     com.post(api.construction.queryConstructionScheduleByOrderId, {"constructionSchedule.orderId": params.orderId}, function (res) {
 
-        var constructionSchedule = res.constructionSchedules;
+        var newSchedules = res.constructionSchedules.sort(function(a, b){
+            return a.schedule - b.schedule;
+        });
+        var constructionSchedule = newSchedules;
 
-        supervisionDetail.constructionSchedules = res.constructionSchedules;
+        supervisionDetail.constructionSchedules = newSchedules;
 
         $.each(constructionSchedule, function (i, v) {
 
@@ -393,6 +400,7 @@ jQuery(function ($) {
     //画节点信息轴
     function constructionNode(stepul, schedule) {
         var stepLi = $("<li></li>").attr("data-targe", "#step" + schedule).addClass("complete").appendTo(stepul);
+        console.log(schedule)
         var stepSpan = $("<span></span>").addClass("step").html(schedule).appendTo(stepLi);
         var stepSpan = $("<span></span>").addClass("title").html(constructionNodes[schedule]).appendTo(stepLi);
     }

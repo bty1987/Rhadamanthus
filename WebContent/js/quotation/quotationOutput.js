@@ -290,7 +290,7 @@ function printCustomerTable(subtype,companyfullname,orderType){
 	contentHtml += '<td>8、园区进不去车情况下,发生二次搬运时会产生园区搬运费.乙方负责将垃圾运至小区指定地点,如需运出小区,所发生费用由甲方承担.</td>';
 	contentHtml += '</tr><tr>';
 	contentHtml += '</tr><tr>';
-	contentHtml += '<td>9、原建筑没有电线情况下,需要公司提供施工、重新布线,需要在收取正常电路改造费用基础上,另按30元每平米加收费用.</td>';
+	contentHtml += '<td>9、原建筑没有电线情况下,需要公司提供施工、重新布线，需另计费用。</td>';
 	contentHtml += '</tr><tr>';
 	contentHtml += '</tr><tr>';
 	contentHtml += '<td>10、如甲方要求乙方铺设波化砖上墙及仿古砖,需要瓷砖粘贴剂及厂家加工费用时,其由甲方负责.如甲方购砖不确定产品尺寸规格,应按实际购砖规格补齐预算差额后,乙方再进  &nbsp;&nbsp;&nbsp;行施工(详见瓷砖铺设工艺做法及材料说明).</td>';
@@ -458,7 +458,7 @@ jQuery(function($) {
 	com.post(url, {"quotation.qid":params.quotationId }, function(res){
 		quotationUtils.quotationDetail.quotation = res.quotation;
 	}, null, false);
-
+	
 	url = api.quotation.queryQuotationFunctionAreaByQuotationId;
 
 	com.post(url, {"quotation.qid":params.quotationId }, function(res){
@@ -494,17 +494,17 @@ jQuery(function($) {
 		quotationUtils.quotationDetail.addReduceItems = res.addReduceItems;
 	}, null, false);
 
-    com.post(api.decoration.queryDecorationHolonomy, {
+    /*com.post(api.decoration.queryDecorationHolonomy, {
         "decorationHolonomy.decoration.orderId": params.decorationOrderId
 	}, function(res){
         db = res.decorationHolonomy.discountBase == null || res.decorationHolonomy.discountBase == "" || res.decorationHolonomy.discountBase == undefined ? 1 : res.decorationHolonomy.discountBase;
-    }, null, false);
+    }, null, false);*/
 
 	quotationUtils.statisticalQuotationItem(quotationUtils.quotationDetail.quotationFunctionAreas,quotationUtils.quotationDetail.addReduceItems,quotationUtils.quotationDetail.extensions);
 
 	quotationUtils.initQuotationDetailItem(quotationUtils.quotationDetail.quotation,quotationUtils.quotationDetail.quotationFunctionAreas,quotationUtils.quotationDetail.addReduceItems,quotationUtils.quotationDetail.extensions,params.orderType,false);
 
-	quotationUtils.quotationDetail.UndisPrice = quotationUtils.quotationCalculator(quotationUtils.quotationDetail.quotation.discount,params.orderType,db);
+	quotationUtils.quotationDetail.UndisPrice = quotationUtils.quotationCalculator(quotationUtils.quotationDetail.quotation.discount,quotationUtils.quotationDetail.quotation.basePrice);
 
 	quotationUtils.quotationDetail.TotalPrice = quotationUtils.quotationTotal();
 

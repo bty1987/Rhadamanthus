@@ -56,10 +56,10 @@ public class MaterialItemAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "queryMaterialItemForSaleByMiid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryMaterialItemForSaleByMiid() {
+	@Action(value = "queryMaterialItemByMiid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryMaterialItemByMiid() {
 
-		materialItem = materialItemService.queryMaterialItemForSaleByMiid(materialItem);
+		materialItem = materialItemService.queryMaterialItemByMiid(materialItem);
 
 		return SUCCESS;
 	}

@@ -4,6 +4,7 @@ import java.math.BigInteger;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
@@ -62,9 +63,16 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 		PagingQuery<UserPO> query = pagingQuery(paging, UserPO.class);
 
 		query.alias("role", "role");
-
+		
 		if (StringUtils.isNotEmpty(pinyinName)) {
-			query.add(Restrictions.or(Restrictions.like("currentName", pinyinName, MatchMode.START), Restrictions.like("pinYin", pinyinName, MatchMode.START)));
+			
+		    Disjunction pinyinDisjunction = Restrictions.disjunction();
+
+		    pinyinDisjunction.add(Restrictions.like("currentName", pinyinName, MatchMode.START));
+		    pinyinDisjunction.add(Restrictions.like("pinYin", pinyinName, MatchMode.START));
+		    pinyinDisjunction.add(Restrictions.like("userId", pinyinName, MatchMode.START));
+
+		    query.add(pinyinDisjunction);
 		}
 
 		query.add(Restrictions.ne("role.no", RolePO.SUPER_NO_STR));

@@ -55,8 +55,8 @@ public class QuotationVersionDaoImpl extends DaoImpl<QuotationVersionPO> impleme
 	}
 	
 	@Override
-	public QuotationVersionPO queryQuotationVersionByVersionId(String versionId) {
-		return (QuotationVersionPO) session().createCriteria(QuotationVersionPO.class).add(Restrictions.eq("versionId", versionId)).uniqueResult();
+	public QuotationVersionPO queryQuotationVersionByVersionId(String no) {
+		return (QuotationVersionPO) session().createCriteria(QuotationVersionPO.class).add(Restrictions.eq("no", no)).uniqueResult();
 	}
 
 	private void queryFliterExcute(PagingQuery<?> query, List<Filter> filters){

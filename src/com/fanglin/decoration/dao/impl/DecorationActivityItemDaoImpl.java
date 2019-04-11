@@ -13,7 +13,9 @@ package com.fanglin.decoration.dao.impl;
 
 import java.util.List;
 
+import org.hibernate.SQLQuery;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.type.StandardBasicTypes;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
@@ -39,8 +41,18 @@ public class DecorationActivityItemDaoImpl extends DaoImpl<DecorationActivityIte
 		return session().createCriteria(DecorationActivityItemPO.class)
 				.add(Restrictions.eq(DecorationActivityItemPO.COLUMN_ORDERID_STR, orderId))
 				.add(Restrictions.eq(DecorationActivityItemPO.COLUMN_TYPE_STR, DecorationActivityItemPO.TYPE_COUPON_INT))
-				.add(Restrictions.eq(DecorationActivityItemPO.COLUMN_STATUS_STR, DecorationActivityItemPO.STATUS_VAILD_INT))
+				.add(Restrictions.eq(DecorationActivityItemPO.COLUMN_STATUS_STR, DecorationActivityItemPO.STATUS_INIT_INT))
 				.list();
+	}
+	
+	@Override
+	public float amountDecorationActivityItemForIsPayment(String orderId, short isPayment) {
+		
+		String sql = "select COALESCE(SUM(money*num),0) as priceSum from decoration.decorationActivityitem where orderId =:orderId and type = 0 and isPayment =:isPayment";
+	    SQLQuery sqlQuery = session().createSQLQuery(sql);
+	    sqlQuery.addScalar("priceSum", StandardBasicTypes.FLOAT).setString("orderId", orderId).setShort("isPayment", isPayment);
+	    
+	    return ((Float) sqlQuery.uniqueResult()).floatValue();
 	}
 
 }

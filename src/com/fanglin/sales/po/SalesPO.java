@@ -77,6 +77,8 @@ public class SalesPO implements Serializable {
 	public static final String COLUMN_COMPANY_STR = "company";
 
 	public static final String COLUMN_DOMPANY_STR = "dompany";
+	
+	public static final String COLUMN_POMPANY_STR = "pompany";
 
 	public static final String COLUMN_ORDERID_STR = "orderId";
 
@@ -119,6 +121,10 @@ public class SalesPO implements Serializable {
 	private int company;
 
 	private int dompany;
+	
+	private int pompany;
+	
+	private String grade;
 
 	private UserPO salesman;
 
@@ -159,6 +165,8 @@ public class SalesPO implements Serializable {
 	private short balanceStatus;
 
 	private float total;
+	
+	private float amount;
 
 	private float maling;
 
@@ -258,6 +266,24 @@ public class SalesPO implements Serializable {
 
 	public void setDompany(int dompany) {
 		this.dompany = dompany;
+	}
+	
+	@Column(name = "pompany")
+	public int getPompany() {
+		return pompany;
+	}
+
+	public void setPompany(int pompany) {
+		this.pompany = pompany;
+	}
+
+	@Column(name = "grade")
+	public String getGrade() {
+		return grade;
+	}
+
+	public void setGrade(String grade) {
+		this.grade = grade;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -444,6 +470,15 @@ public class SalesPO implements Serializable {
 
 	public void setTotal(float total) {
 		this.total = total;
+	}
+	
+	@Column(name = "amount")
+	public float getAmount() {
+		return amount;
+	}
+
+	public void setAmount(float amount) {
+		this.amount = amount;
 	}
 
 	@Column(name = "maling")

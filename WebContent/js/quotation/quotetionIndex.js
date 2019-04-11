@@ -22,9 +22,9 @@ $(function() {
     quotetion.quotetionItems.content = com.focusPage("#content");
     com.post(api.quotation.queryQuotationVersion, {}, function (res) {
         $.each(res.quotationVersions, function (i, val) {
-            quotetion.version[val.versionId] = val.versionName;
+            quotetion.version[val.no] = val.name;
         });
-        quotetion.quotetionItems.quotationVersion.bindData(res.quotationVersions, 'versionId', 'versionName');
+        quotetion.quotetionItems.quotationVersion.bindData(res.quotationVersions, 'no', 'name');
     }, null, false);
     //拷贝报价
     quotetion.quotetionItems.replicaType = com.focusPage("#replicaType"); //拷贝类型

@@ -50,7 +50,6 @@ $.extend(api, {payment: {
 	queryDecorationPaymentForContractByOrderId: {url: "queryDecorationPaymentForContractByOrderId.do"},
 	checkDecorationPayment: {url: "checkDecorationPayment.do"},
 	addDecorationPayment: {url: "addDecorationPayment.do"},
-	makeDecorationPayment: {url: "makeDecorationPayment.do"},
 	updateDecorationPayment: {url: "updateDecorationPayment.do"},
 	collectDecorationPayment: {url: "collectDecorationPayment.do"},
 	refundDecorationPayment: {url: "refundDecorationPayment.do"},

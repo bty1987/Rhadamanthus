@@ -11,7 +11,7 @@ $.extend(api.index, {
     resetPasswordIndex: {url: "/views/system/resetPassword.html"},
     versionIndex: {url: "/version.html"},
     faqIndex: {url: "/faq.html"},
-    homeIndex:{url: "/home.html"},
+    homeIndex:{url: "/home-antv.html"},
     companyConfig:{url: "/views/system/companyConfig.html"}
 });
 

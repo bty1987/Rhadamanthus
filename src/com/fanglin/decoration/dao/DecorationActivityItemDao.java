@@ -22,4 +22,6 @@ public interface DecorationActivityItemDao extends Dao<DecorationActivityItemPO>
 	
 	public List<DecorationActivityItemPO> queryDecorationActivityItemForCouponAVaildByOrderId(String orderId);
 	
+	public float amountDecorationActivityItemForIsPayment(String orderId, short isPayment);
+	
 }

@@ -475,7 +475,7 @@ var Condition = function (api) {
             type: "text",
             submitConfig: {
                 name: "name",
-                op: "eq",
+                op: "cn",
                 validate:null
             }
         },
@@ -500,6 +500,22 @@ var Condition = function (api) {
                 url: api.ds.information,
                 postData: {},
                 listPath: "awardStockType",
+                keyPath: "key",
+                valuePath:"value"
+            }
+        },
+        awardStoreRoom: {
+            label: "库房信息",
+            type: "select",
+            submitConfig: {
+                name: "storeroom",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {//从后台取数据的各种配置
+                url: api.ds.information,
+                postData: {},
+                listPath: "awardStoreRoom",
                 keyPath: "key",
                 valuePath:"value"
             }
@@ -529,7 +545,7 @@ var Condition = function (api) {
             label: "版本名称",
             type: "text",
             submitConfig: {
-                name: "versionName",
+                name: "name",
                 op: "cn",
                 validate: null
             }
@@ -620,8 +636,8 @@ var Condition = function (api) {
                 url: api.quotation.queryQuotationVersion,
                 postData: {},
                 listPath: "quotationVersions",
-                keyPath: "versionId",
-                valuePath: "versionName"
+                keyPath: "no",
+                valuePath: "name"
             }
         },
         quotationWorkTypeId: {
@@ -1639,8 +1655,22 @@ var Condition = function (api) {
                 keyPath: "key",
                 valuePath: "value"
             }
-        },
-        approveTime: {
+        }, salaryschedule: {
+            label: "施工节点",
+            type: "select",
+            submitConfig: {
+                name: "schedule",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {
+                url: api.ds.construction,
+                postData: {},
+                listPath: "constructionSchedule",
+                keyPath: "key",
+                valuePath: "value"
+            }
+        }, approveTime: {
             label: "审批时间",
             type: "dateRangePicker",
             submitConfig: {
@@ -1657,6 +1687,53 @@ var Condition = function (api) {
                 name: "createTime",
                 op: "between",
                 validate: null
+            }
+        },
+
+        operateTime:{
+            label: "操作时间",
+            type: "dateRangePicker",
+            submitConfig: {
+                name: "operateTime",
+                op: "between",
+                validate: null
+            }
+        },
+        s_status: {
+            label: "状态",
+            type: "select",
+            submitConfig: {
+                name: "status",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {
+                url: null,
+                postData: null,
+                listPath: [
+                    {key: "0", value: "初始"},
+                    {key: "1", value: "通过"},
+                    {key: "2", value: "拒绝"},
+                    {key: "3", value: "撤销"}
+                ],
+                keyPath: "key",
+                valuePath: "value"
+            }
+        },
+        s_user: {
+            label: "姓名",
+            type: "autofill",
+            submitConfig: {
+                name: "userName",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {
+                url: api.personel.queryUserByPinyin,
+                postData: {"user.status":"" },
+                listPath: "autoFillKeyValue",
+                keyPath: "key",
+                valuePath: "value"
             }
         },
         salaryWorkduty: {

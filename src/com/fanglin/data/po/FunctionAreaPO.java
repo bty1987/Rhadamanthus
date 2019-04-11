@@ -79,7 +79,7 @@ public class FunctionAreaPO implements Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, name = "versionId")
+	@JoinColumn(nullable = false, name = "versionId" , referencedColumnName = "no")
 	public QuotationVersionPO getQuotationVersion(){
 		return quotationVersion;
 	}

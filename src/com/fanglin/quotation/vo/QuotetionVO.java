@@ -38,6 +38,8 @@ public class QuotetionVO implements Serializable {
 	private Float trafficPrice;
 	
 	private Float trafficRate;
+	
+	private Float basePrice;
 
 	public Long getQid() {
 		return qid;
@@ -160,4 +162,11 @@ public class QuotetionVO implements Serializable {
 		this.trafficRate = trafficRate;
 	}
 
+	public Float getBasePrice() {
+		return basePrice;
+	}
+
+	public void setBasePrice(Float basePrice) {
+		this.basePrice = basePrice;
+	}
 }

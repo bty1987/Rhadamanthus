@@ -11,6 +11,8 @@ public class DecorationActivityVO implements java.io.Serializable {
 	private String orderId;
 
 	private ActivityVO activity;
+	
+	private Short status;
 
 	public Long getDaId() {
 		return daId;
@@ -34,6 +36,14 @@ public class DecorationActivityVO implements java.io.Serializable {
 
 	public void setActivity(ActivityVO activity) {
 		this.activity = activity;
+	}
+
+	public Short getStatus() {
+		return status;
+	}
+
+	public void setStatus(Short status) {
+		this.status = status;
 	}
 
 }

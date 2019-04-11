@@ -1,20 +1,20 @@
 $.extend(api, {
     ds: {
-        approval: {url: "ds/approval.json", demo: true},
-        construction: {url: "ds/construction.json", demo: true},
-        decoration: {url: "ds/decoration.json", demo: true},
-        department: {url: "ds/department.json", demo: true},
-        information: {url: "ds/information.json", demo: true},
-        payment: {url: "ds/payment.json", demo: true},
-        personel: {url: "ds/personel.json", demo: true},
-        salary: {url: "ds/salary.json", demo: true},
-        data: {url: "ds/data.json", demo: true},
-        manifest: {url: "ds/manifest.json", demo: true},
-        quotation: {url: "ds/quotation.json", demo: true},
-        building: {url: "ds/building.json", demo: true},
-        production: {url: "ds/production.json", demo: true},
-        store: {url: "ds/store.json", demo: true},
-        market: {url: "ds/market.json", demo: true},
-        help: {url: "ds/help.json", demo: true}
+        approval: {url: "ds/approval.json", demo: true, cache: "jsonapproval"},
+        construction: {url: "ds/construction.json", demo: true, cache: "jsonconstruction"},
+        decoration: {url: "ds/decoration.json", demo: true, cache: "jsondecoration"},
+        department: {url: "ds/department.json", demo: true, cache: "jsondepartment"},
+        information: {url: "ds/information.json", demo: true, cache: "jsoninformation"},
+        payment: {url: "ds/payment.json", demo: true, cache: "jsonpayment"},
+        personel: {url: "ds/personel.json", demo: true, cache: "jsonpersonel"},
+        salary: {url: "ds/salary.json", demo: true, cache: "jsonsalary"},
+        data: {url: "ds/data.json", demo: true, cache: "jsondata"},
+        manifest: {url: "ds/manifest.json", demo: true, cache: "jsonmanifest"},
+        quotation: {url: "ds/quotation.json", demo: true, cache: "jsonquotation"},
+        building: {url: "ds/building.json", demo: true, cache: "jsonbuilding"},
+        production: {url: "ds/production.json", demo: true, cache: "jsonproduction"},
+        store: {url: "ds/store.json", demo: true, cache: "jsonstore"},
+        market: {url: "ds/market.json", demo: true, cache: "jsonmarket"},
+        help: {url: "ds/help.json", demo: true, cache: "jsonhelp"}
     }
 });

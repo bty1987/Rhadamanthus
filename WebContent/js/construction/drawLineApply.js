@@ -58,17 +58,17 @@ jQuery(function ($) {
         var creatLine = function (v) {
 
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.orderId));
+            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.decoration.orderId));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
             var $btnDraw = $('<a></a>').addClass('btn btn-minier btn-yellow').html('放线');
 
             var propertyArr = [
-                ["楼盘地址:", v.village + ' ' + v.houseNumber, "grey"],
-                ["设计师:", v.designer, "grey"],
-                ["面积:", v.houseArea, "blue"],
-                ["申请人:", v.applayUser, "grey"],
+                ["楼盘地址:", v.decoration.house.village.name + ' ' + v.decoration.house.houseNumber, "grey"],
+                ["设计师:", v.decoration.designer.currentName, "grey"],
+                ["面积:", v.decoration.house.buildArea, "blue"],
+                ["申请人:", v.applayUser.currentName, "grey"],
                 ["申请时间:", v.applayTime, "green"],
                 ["放线次数:", v.count, "blue"],
                 ["描述:", v.content, "grey"]
@@ -152,13 +152,11 @@ jQuery(function ($) {
 
                     "drawLine.dlId": drawLineApply.drawLineApplyItems.dlId.val(),
 
-                    "drawLine.actualDate": drawLineApply.drawLineApplyItems.actualDate.val(),
+                    "drawLine.startTime":drawLineApply.drawLineApplyItems.actualDate.val()+" "+drawLineApply.drawLineApplyItems.startTime.val(),
 
-                    "drawLine.startTime": drawLineApply.drawLineApplyItems.startTime.val(),
+                    "drawLine.endTime": drawLineApply.drawLineApplyItems.actualDate.val()+" "+drawLineApply.drawLineApplyItems.endTime.val(),
 
-                    "drawLine.endTime": drawLineApply.drawLineApplyItems.endTime.val(),
-
-                    "drawLine.gid": drawLineApply.drawLineApplyItems.drawLineGroup.val()
+                    "drawLine.drawLineGroup.gid": drawLineApply.drawLineApplyItems.drawLineGroup.val()
                 };
 
                 com.post(api.drawline.resetDrawLine, options, function (res) {

@@ -16,6 +16,8 @@ public interface SalesBalanceService {
 	
 	public void pageSalesBalanceForDompany(Paging paging,List<Filter> filter,int dompany);
 	
+	public void pageSalesBalanceForPompany(Paging paging,List<Filter> filter,int pompany);
+	
 	public int updateSalesBalanceForVBalance(SalesBalanceVO salesBalanceVO) throws FLException;
 	
 	public int updateSalesBalanceForPBalance(SalesBalanceVO salesBalanceVO) throws FLException;

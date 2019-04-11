@@ -49,7 +49,11 @@ public class QuotationItemVO implements Serializable{
 	
 	private String quotationItemDes;
 	
+	private Float addPrice;
+	
 	private Float unitPrice;
+	
+	private Float subPrice;
 	
 	private String versionId;
 	
@@ -194,12 +198,12 @@ public class QuotationItemVO implements Serializable{
 	public void setUnitPrice(Float unitPrice){
 		this.unitPrice = unitPrice;
 	}
-
-	public String getVersionId(){
+	
+	public String getVersionId() {
 		return versionId;
 	}
 
-	public void setVersionId(String versionId){
+	public void setVersionId(String versionId) {
 		this.versionId = versionId;
 	}
 
@@ -225,6 +229,22 @@ public class QuotationItemVO implements Serializable{
 
 	public void setDiscount(Short discount) {
 		this.discount = discount;
+	}
+
+	public Float getAddPrice() {
+		return addPrice;
+	}
+
+	public void setAddPrice(Float addPrice) {
+		this.addPrice = addPrice;
+	}
+
+	public Float getSubPrice() {
+		return subPrice;
+	}
+
+	public void setSubPrice(Float subPrice) {
+		this.subPrice = subPrice;
 	}
 	
 }

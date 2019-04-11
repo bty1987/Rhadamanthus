@@ -38,7 +38,7 @@ public class ConstructionNodeDaoImpl extends DaoImpl<ConstructionNodePO> impleme
 				
 			}
 		}
-		return query.list();
+		return query.asc("sort").list();
 	}
 
 	@Override

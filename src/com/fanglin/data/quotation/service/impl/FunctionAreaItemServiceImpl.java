@@ -60,7 +60,7 @@ public class FunctionAreaItemServiceImpl implements FunctionAreaItemService {
 			functionAreaVO.setFaId(FunctionAreaPO.getFaId());
 			functionAreaVO.setFunctionAreaId(FunctionAreaPO.getFunctionAreaId());
 			functionAreaVO.setFunctionAreaName(FunctionAreaPO.getFunctionAreaName());
-			functionAreaVO.setVersion(FunctionAreaPO.getQuotationVersion().getVersionName());
+			functionAreaVO.setVersion(FunctionAreaPO.getQuotationVersion().getName());
 			
 			FunctionAreaItemVO _functionAreaItemVO = new FunctionAreaItemVO();
 			_functionAreaItemVO.setFaiId(functionAreaItemPO.getFaiId());
@@ -90,8 +90,8 @@ public class FunctionAreaItemServiceImpl implements FunctionAreaItemService {
 			quotationItemVO.setQuotationType(quotationTypePO.getName());
 			quotationItemVO.setQuotationTypeId(quotationTypePO.getId());
 			
-			quotationItemVO.setVersion(quotationVersionPO.getVersionName());
-			quotationItemVO.setVersionId(quotationVersionPO.getVersionId());
+			quotationItemVO.setVersion(quotationVersionPO.getName());
+			quotationItemVO.setVersionId(quotationVersionPO.getNo());
 			
 			_functionAreaItemVO.setQuotationItem(quotationItemVO);
 			

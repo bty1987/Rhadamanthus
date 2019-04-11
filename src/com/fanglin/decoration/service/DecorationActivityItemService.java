@@ -27,4 +27,13 @@ public interface DecorationActivityItemService {
 	
 	public int receiveDecorationActivityItem(DecorationActivityItemVO decorationActivityItemVO, String userId, String userName) throws FLException;
 	
+	public int deliveDecorationActivityItem(DecorationActivityItemVO decorationActivityItemVO, String userId) throws FLException;
+	
+	public int unrefundDecorationActivityItem(DecorationActivityItemVO decorationActivityItemVO, String userId) throws FLException;
+	
+	public int upgradeDecorationAtivityItem(DecorationActivityItemVO decorationActivityItemVO, String userId) throws FLException;
+	
+	public int refundDecorationActivityItem(DecorationActivityItemVO decorationActivityItemVO, String userId) throws FLException;
+	
+	public int expendDecorationActivityItem(DecorationActivityItemVO decorationActivityItemVO, String userId) throws FLException;
 }

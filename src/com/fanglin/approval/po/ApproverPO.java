@@ -30,7 +30,7 @@ public class ApproverPO implements Serializable{
 
     public static final String COLUMN_TYPE_STR = "type";
     
-    private int aid;
+	private long aid;
     
     private UserPO  user;
    
@@ -50,11 +50,11 @@ public class ApproverPO implements Serializable{
     @Id
     @GeneratedValue
     @Column(name = "aid")
-    public int getAid() {
+	public long getAid() {
 		return aid;
 	}
 
-	public void setAid(int aid) {
+	public void setAid(long aid) {
 		this.aid = aid;
 	}
 

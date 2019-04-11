@@ -131,16 +131,20 @@ public class MaterialActivityServiceImpl implements MaterialActivityService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int abateMaterialActivityItem(MaterialActivityItemVO materialActivityItemVO, String userId) throws FLException {
+	public int abateMaterialActivityItem(MaterialActivityItemVO materialActivityItemVO) throws FLException {
 
 		MaterialActivityItemPO materialActivityItemPO = materialActivityDao.get(materialActivityItemVO.getMaiid());
 
 		if (materialActivityItemPO == null) {
 			throw new FLException(140030, "订单活动物品不存在");
 		}
+		
+		if(materialActivityItemPO.getState() != MaterialActivityItemPO.STATUS_INIT_INT){
+			throw new FLException(140057, "订单活动奖品不可操作");
+		}
 
 		materialActivityItemPO.setState(MaterialActivityItemPO.STATUS_UNVALID_INT);
-		materialActivityItemPO.setIsStock(MaterialActivityItemPO.STATUS_UNVALID_INT);
+		materialActivityItemPO.setIsStock(MaterialActivityItemPO.STOCK_NC_INT);
 
 		materialActivityDao.update(materialActivityItemPO);
 
@@ -157,8 +161,12 @@ public class MaterialActivityServiceImpl implements MaterialActivityService {
 			throw new FLException(140030, "订单活动物品不存在");
 		}
 
+		if(materialActivityItemPO.getState() != MaterialActivityItemPO.STATUS_INIT_INT){
+			throw new FLException(140057, "订单活动奖品不可操作");
+		}
+		
 		materialActivityItemPO.setState(MaterialActivityItemPO.STATUS_RECEIVE_INT);
-		materialActivityItemPO.setIsStock(MaterialActivityItemPO.STATUS_VALID_INT);
+		materialActivityItemPO.setIsStock(MaterialActivityItemPO.STOCK_NUMBER_INT);
 		materialActivityItemPO.setReceiveUserId(userDao.queryUserByUserId(userId));
 		materialActivityItemPO.setReceiveUserName(userName);
 		materialActivityItemPO.setReceiveTime(DateUtil.getDateToTimestamp(new Date()));
@@ -171,7 +179,7 @@ public class MaterialActivityServiceImpl implements MaterialActivityService {
 			float num = Arith.sub(awardStockPO.getNum(), materialActivityItemPO.getNum());
 
 			if (num < 0) {
-				throw new FLException(160038, "奖品库存数量不足!");
+				throw new FLException(160038, "库存不足!");
 			}
 
 			awardStockPO.setNum((int) Arith.sub(awardStockPO.getNum(), materialActivityItemPO.getNum()));
@@ -186,11 +194,150 @@ public class MaterialActivityServiceImpl implements MaterialActivityService {
 			awardRecordPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 			awardRecordPO.setTotalPrice(Arith.mul(materialActivityItemPO.getMoney(), materialActivityItemPO.getNum()));
 			awardRecordPO.setUnitPrice(materialActivityItemPO.getMoney());
-			awardRecordPO.setType(AwardRecordPO.TYPE_XG_INT);
+			awardRecordPO.setType(AwardRecordPO.TYPE_RECEIVE_INT);
+			awardRecordPO.setOnetype(AwardRecordPO.ONETYPE_MATERIAL_INT);
 			awardRecordPO.setContent("领取活动奖品");
 
 			awardRecordDao.save(awardRecordPO);
 		}
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int deliveMaterialActivityItem(MaterialActivityItemVO materialActivityItemVO) throws FLException {
+		
+		MaterialActivityItemPO materialActivityItemPO = materialActivityDao.get(materialActivityItemVO.getMaiid());
+
+		if (materialActivityItemPO == null) {
+			throw new FLException(140030, "订单活动物品不存在");
+		}
+		
+		if(materialActivityItemPO.getState() != MaterialActivityItemPO.STATUS_INIT_INT){
+			throw new FLException(140057, "订单活动奖品不可操作");
+		}
+		
+		materialActivityItemPO.setState(MaterialActivityItemPO.STATUS_DELIVERY_INT);
+		materialActivityItemPO.setIsStock(MaterialActivityItemPO.STOCK_NC_INT);
+
+		materialActivityDao.update(materialActivityItemPO);
+		
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int unrefundMaterialActivityItem(MaterialActivityItemVO materialActivityItemVO) throws FLException {
+
+		MaterialActivityItemPO materialActivityItemPO = materialActivityDao.get(materialActivityItemVO.getMaiid());
+
+		if (materialActivityItemPO == null) {
+			throw new FLException(140030, "订单活动物品不存在");
+		}
+		
+		if(materialActivityItemPO.getState() != MaterialActivityItemPO.STATUS_RECEIVE_INT){
+			throw new FLException(140057, "订单活动奖品不可操作");
+		}
+		
+		materialActivityItemPO.setState(MaterialActivityItemPO.STATUS_WAIT_INT);
+		materialActivityItemPO.setIsStock(MaterialActivityItemPO.STOCK_NC_INT);
+
+		materialActivityDao.update(materialActivityItemPO);
+		
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int upgradeMaterialActivityItem(MaterialActivityItemVO materialActivityItemVO) throws FLException {
+
+		MaterialActivityItemPO materialActivityItemPO = materialActivityDao.get(materialActivityItemVO.getMaiid());
+
+		if (materialActivityItemPO == null) {
+			throw new FLException(140030, "订单活动物品不存在");
+		}
+		
+		if(materialActivityItemPO.getState() != MaterialActivityItemPO.STATUS_INIT_INT){
+			throw new FLException(140057, "订单活动奖品不可操作");
+		}
+		
+		materialActivityItemPO.setState(MaterialActivityItemPO.STATUS_UPGRADE_INT);
+		materialActivityItemPO.setIsStock(MaterialActivityItemPO.STOCK_NC_INT);
+
+		materialActivityDao.update(materialActivityItemPO);
+		
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int refundMaterialActivityItem(MaterialActivityItemVO materialActivityItemVO, String userId,String userName) throws FLException {
+
+		MaterialActivityItemPO materialActivityItemPO = materialActivityDao.get(materialActivityItemVO.getMaiid());
+		List<Short> status = Arrays.asList(new Short[] {MaterialActivityItemPO.STATUS_RECEIVE_INT, MaterialActivityItemPO.STATUS_WAIT_INT});
+		
+		if (materialActivityItemPO == null) {
+			throw new FLException(140030, "订单活动物品不存在");
+		}
+		
+		if(!status.contains(materialActivityItemPO.getState())){
+			throw new FLException(140057, "订单活动奖品不可操作");
+		}
+		
+		materialActivityItemPO.setState(MaterialActivityItemPO.STATUS_RETREAT_INT);
+		materialActivityItemPO.setIsStock(MaterialActivityItemPO.STOCK_NUMBER_INT);
+
+		materialActivityDao.update(materialActivityItemPO);
+		
+		if (materialActivityItemPO.getIsStock() == 0) {
+
+			AwardStockPO awardStockPO = awardStockDao.get(materialActivityItemPO.getAsid());
+			float num = Arith.add(awardStockPO.getNum(), materialActivityItemPO.getNum());
+
+			if (num < 0) {
+				throw new FLException(160038, "库存不足!");
+			}
+
+			awardStockPO.setNum((int) Arith.add(awardStockPO.getNum(), materialActivityItemPO.getNum()));
+
+			awardStockDao.update(awardStockPO);
+
+			AwardRecordPO awardRecordPO = new AwardRecordPO();
+			awardRecordPO.setAwardStock(awardStockPO);
+			awardRecordPO.setCreater(userDao.queryUserByUserId(userId));
+			awardRecordPO.setOrderId(materialActivityItemPO.getOrderId());
+			awardRecordPO.setNum(materialActivityItemPO.getNum());
+			awardRecordPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
+			awardRecordPO.setTotalPrice(Arith.mul(materialActivityItemPO.getMoney(), materialActivityItemPO.getNum()));
+			awardRecordPO.setUnitPrice(materialActivityItemPO.getMoney());
+			awardRecordPO.setType(AwardRecordPO.TYPE_REFUND_INT);
+			awardRecordPO.setOnetype(AwardRecordPO.ONETYPE_MATERIAL_INT);
+			awardRecordPO.setContent("");
+
+			awardRecordDao.save(awardRecordPO);
+		}
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int expendMaterialActivityItem(MaterialActivityItemVO materialActivityItemVO) throws FLException {
+
+		MaterialActivityItemPO materialActivityItemPO = materialActivityDao.get(materialActivityItemVO.getMaiid());
+
+		if (materialActivityItemPO == null) {
+			throw new FLException(140030, "订单活动物品不存在");
+		}
+		
+		if(materialActivityItemPO.getState() != MaterialActivityItemPO.STATUS_RECEIVE_INT){
+			throw new FLException(140057, "订单活动奖品不可操作");
+		}
+		
+		materialActivityItemPO.setState(MaterialActivityItemPO.STATUS_CONSUME_INT);
+		materialActivityItemPO.setIsStock(MaterialActivityItemPO.STOCK_NC_INT);
+
+		materialActivityDao.update(materialActivityItemPO);
+		
 		return 0;
 	}
 

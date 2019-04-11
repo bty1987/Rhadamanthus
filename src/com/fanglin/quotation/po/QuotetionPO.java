@@ -49,6 +49,8 @@ public class QuotetionPO implements Serializable {
 	
 	private float trafficRate;
 	
+	private float basePrice;
+	
 	public QuotetionPO() {
 		super();
 	}
@@ -195,6 +197,15 @@ public class QuotetionPO implements Serializable {
 		this.trafficRate = trafficRate;
 	}
 	
+	@Column(name = "basePrice")
+	public float getBasePrice() {
+		return basePrice;
+	}
+
+	public void setBasePrice(float basePrice) {
+		this.basePrice = basePrice;
+	}
+
 	public void ptp(String name,String version,long cuid){
 		
 		this.setName(name);
@@ -205,6 +216,7 @@ public class QuotetionPO implements Serializable {
 		this.setDiscount(10);
 		this.setTotalPrice(0);
 		this.setContent("");
+		this.setBasePrice(0);
 		
 	}
 	

@@ -18,13 +18,19 @@ public class AwardStockVO implements java.io.Serializable {
 	
 	private Short type;
 	
+	private Short storeroom;
+	
 	private short isPrefor; //是否计算业绩
 	
 	private short isStock; //是否计算库存
 	
+	private short isPayment;//是否计入金额
+	
 	private String content;
 	
 	private Integer company;
+	
+	private String format;
 	
 	public Long getAsId() {
 		return asId;
@@ -98,6 +104,15 @@ public class AwardStockVO implements java.io.Serializable {
 		this.isStock = isStock;
 	}
 
+	
+	public short getIsPayment() {
+		return isPayment;
+	}
+
+	public void setIsPayment(short isPayment) {
+		this.isPayment = isPayment;
+	}
+
 	public String getContent() {
 		return content;
 	}
@@ -113,4 +128,21 @@ public class AwardStockVO implements java.io.Serializable {
 	public void setCompany(Integer company) {
 		this.company = company;
 	}
+
+	public Short getStoreroom() {
+		return storeroom;
+	}
+
+	public void setStoreroom(Short storeroom) {
+		this.storeroom = storeroom;
+	}
+
+	public String getFormat() {
+		return format;
+	}
+
+	public void setFormat(String format) {
+		this.format = format;
+	}
+	
 }

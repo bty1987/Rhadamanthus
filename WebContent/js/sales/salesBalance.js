@@ -10,6 +10,15 @@ $(function () {
         postData = "salesBalanceForDompanyPostData";
     }
 
+    if(params['urlLoadParams'].type == "supplier"){
+        postData = "salesBalanceForSuppleirPostData";
+    }
+
+    if(params['urlLoadParams'].type == "pompany"){
+        url = api.inventory.pageSalesBalanceForPompany;
+        postData = "salesBalanceForPompanyPostData";
+    }
+
     com.post(api.common.queryReceiptType, {}, function (res) {
         salesPaymentForStatus.cash = [];
         salesPaymentForStatus.bank = [];
@@ -146,10 +155,16 @@ $(function () {
 
                     if(params['urlLoadParams'].type == "dompany") {
                         $btnDiv.append($btnPayment).append($btnBalanceItem);
-
-                    }else{
-                        $btnDiv.append($btnVbalanceValue).append($btnVbalance).append($btnBalanceValue).append($btnBalance).append($btnPayment).append($btnBalanceItem);
+                    }else if(params['urlLoadParams'].type == "supplier"){
+                        $btnDiv.append($btnVbalanceValue).append($btnVbalance).append($btnPayment).append($btnBalanceItem);
+                    }else if(params['urlLoadParams'].type == "pompany"){
+                        $btnDiv.append($btnBalanceValue).append($btnBalance).append($btnPayment).append($btnBalanceItem);
+                    }else {
+                        $btnDiv.append($btnBalanceValue).append($btnBalance).append($btnPayment).append($btnBalanceItem);
                     }
+
+
+
                     $small.appendTo($h3);
                     $btnDiv.appendTo($h3);
 
@@ -531,7 +546,7 @@ $(function () {
                         ["总价:", v.total, "blue", "total"],
                         ["结算方式:", v.ctype==0?"底价":"点位", "red", "ctype"],
                         ["结算值:", v.cvalue, "blue", "cvalue"],
-                        ["备注:", v.comment, "grey", "conment"],
+                        ["备注:", v.comment, "grey", "conment"]
                     ];
 
                     $.each(propertyArr, function (index, value) {
@@ -577,7 +592,16 @@ $(function () {
             return false;
         }
 
-        com.post(url, $.extend({}, params['urlLoadParams'].type == "dompany"?params.salesBalanceForDompanyPostData:params.salesBalancePostData, {"paging.noPage": 1}), function (res) {
+        var historicalRecord = null;
+        if(params['urlLoadParams'].type == "dompany"){
+            historicalRecord = params.salesBalanceForDompanyPostData
+        }else if(params['urlLoadParams'].type == "pompany"){
+            historicalRecord = params.salesBalanceForPompanyPostData
+        }else{
+            historicalRecord = params.salesBalancePostData;
+        }
+
+        com.post(url, $.extend({}, historicalRecord, {"paging.noPage": 1}), function (res) {
             $.exceler({
                 column: [
                     ['装修单号', 'sales.orderId'],
@@ -605,7 +629,7 @@ $(function () {
                     ["状态:", 'status'],
                     ["类型:", 'type']
                 ],
-                list: res.paging.data,
+                list: res.paging.data
 
             },function(v){
                 v.venderTime = v.venderTime == null? '':v.venderTime;

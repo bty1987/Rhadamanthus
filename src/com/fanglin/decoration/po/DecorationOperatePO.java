@@ -49,6 +49,8 @@ public class DecorationOperatePO implements java.io.Serializable {
 	
 	public static final short TYPE_ACCOUNT_DECORATION_ORDER_INT = 11;
 	
+	public static final short TYPE_PROSIGN_DECORATION_ORDER_INT = 12;// 预签
+	
 	private long doid;
 	
 	private String orderId;
@@ -316,6 +318,19 @@ public class DecorationOperatePO implements java.io.Serializable {
 		setStatus(DecorationOperatePO.STATUS_INIT_INT);
 
 		setComment("Subnum");
+		
+		return this;
+	}
+	
+	public DecorationOperatePO prosign(String orderId, UserPO operater){
+		
+		setOrderId(orderId);
+		setOperater(operater);
+		setOperateTime(DateUtil.getDateToTimestamp(new Date()));
+		setType(DecorationOperatePO.TYPE_PROSIGN_DECORATION_ORDER_INT);
+		setStatus(DecorationOperatePO.STATUS_INIT_INT);
+
+		setComment("Prosign");
 		
 		return this;
 	}

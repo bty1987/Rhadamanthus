@@ -1,59 +1,52 @@
-<div>
-    <div class="flex-wrap" id="form">
+<div class="row">
+    <div class="flex-wrap pull-right header" id="form">
+        <label>单据日期 : </label>
+        <input id="purchaseCreateTime" name="date" readonly="readonly" type="text" value=""/>
+    </div>
+</div>
 
-        <div style="text-align: right">
+<div class="row">
+	<ul class="flex-table">
+	    <li class="line table-title">
+	        <div class="line-wrap order">
+	            <div class="cell index"></div>
+	        </div>
+	        <div class="line-wrap content col13">
+	            <div class="cell">商品编号</div>
+	            <div class="cell">商品名称</div>
+	            <div class="cell">商品类别</div>
+	            <div class="cell">品牌</div>
+	            <div class="cell">单位</div>
+	            <div class="cell">颜色</div>
+	            <div class="cell">规格</div>
+	            <div class="cell">供应商</div>
+	            <div class="cell">单价</div>
+	            <div class="cell">总数量</div>
+	            <div class="cell">剩余数量</div>
+	            <div class="cell">仓库</div>
+	            <div class="cell">入库数量</div>
+	        </div>
+	    </li>
+	</ul>
+	<ul class="flex-table" id="list"></ul>
+</div>
 
-            <div class="inline">
+<hr />
 
-                <label>单据日期</label>
-                <div class="inline">
-                    <input name="date" class="m-wrap m-ctrl-medium date-picker" readonly size="16" type="text"
-                           value=""/>
-                </div>
+<div class="row">
 
-            </div>
-
-            <div class="devide-line"></div>
-
+    <div class="inline col-sm-6">
+        <label>说明 : </label>
+        <div class="inline long">
+            <input type="text" id="comment">
         </div>
     </div>
-
-    <ul class="flex-table">
-        <li class="line table-title">
-            <div class="line-wrap order">
-                <div class="cell index"></div>
-            </div>
-            <div class="line-wrap content col12">
-                <div class="cell">商品编号</div>
-                <div class="cell">商品名称</div>
-                <div class="cell">商品类别</div>
-                <div class="cell">品牌</div>
-                <div class="cell">单位</div>
-                <div class="cell">颜色</div>
-                <div class="cell">规格</div>
-                <div class="cell">单价</div>
-                <div class="cell">总数量</div>
-                <div class="cell">剩余数量</div>
-                <div class="cell">仓库</div>
-                <div class="cell">入库数量</div>
-            </div>
-        </li>
-    </ul>
-
-    <ul class="flex-table" id="list"></ul>
-
-    <div style="margin-top: 15px;">
-
-
-        <div class="inline">
-
-            <label>说明</label>
-            <div class="inline long">
-                <input type="text" id="comment">
-            </div>
-        </div>
-
+    
+    <div class="pull-right inline col-sm-2">
+        <a class="btn btn-info btn-sm" id="warehouseBtn">入库</a>
+        <a class="btn btn-grey btn-sm" id="cancelBtn">取消</a>
     </div>
+    
 </div>
 
 <script type="text/javascript">

@@ -11,6 +11,7 @@
 
 package com.fanglin.construction.action;
 
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -59,7 +60,7 @@ public class DrawLineAction extends BaseListAction{
 	public String pageDrawLineForAssign() throws FLException{
 		
 		getFilters().add(new Filter("status", "0", "ne"));
-		getFilters().add(new Filter("drawLineGroupName", drawLine.getDrawLineGroupName(), "eq"));
+		getFilters().add(new Filter("drawLineGroupName", drawLine.getDrawLineGroup().getName(), "eq"));
 		
 		drawLines = drawLineService.pageDrawLine(getPaging(), getFilters(), queryCompany());
 	
@@ -75,7 +76,7 @@ public class DrawLineAction extends BaseListAction{
 	}
 	
 	@Action(value = "countDrawLineByDate", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String countDrawLineByDate() throws FLException{
+	public String countDrawLineByDate() throws FLException, ParseException{
 		
 		drawLineDateCount = drawLineService.countDrawLineByDate(drawLine, queryCompany());
 		

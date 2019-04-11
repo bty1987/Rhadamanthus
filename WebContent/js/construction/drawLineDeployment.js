@@ -161,7 +161,7 @@ jQuery(function ($) {
                 if (v.drawLineGroupName == null) {
                     v.drawLineGroupName = "无"
                 }
-                var groupStrong = $("<strong></strong>").text(v.drawLineGroupName).appendTo(groupH5);
+                var groupStrong = $("<strong></strong>").text(v.drawLineGroup.name).appendTo(groupH5);
                 var groupWidgetBody = $("<div></div>").addClass("widget-body").appendTo(groupWidgetBox);
                 var groupWidgetBodyInner = $("<div></div>").addClass("widget-body-inner").css("display", "block").appendTo(groupWidgetBody);
                 var resultList = $('<div></div>').attr("id", "group" + nub).addClass("clearfix tab-pane active").appendTo(groupWidgetBodyInner);
@@ -171,7 +171,7 @@ jQuery(function ($) {
 
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable').appendTo($tableWrap);
             var $liLine = $('<li></li>').addClass('item-orange clearfix').appendTo($ul);
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.orderId));
+            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.decoration.orderId));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
@@ -187,18 +187,22 @@ jQuery(function ($) {
                     statusName=statusNum.value
                 }
             });
+            
+            var startTime=v.actualStartTime.substr(11);
+            var endTime=v.actualEndTime.substr(11);
+            var actualtime=v.actualStartTime.substr(0,10);
 
             var propertyArr = [
-                ["楼盘地址:", v.village + ' ' + v.houseNumber, "grey"],
-                ["面积:", v.houseArea, "blue"],
-                ["合同额:", v.orderTotalPrice, "blue"],
+                ["楼盘地址:", v.decoration.house.village.name + ' ' + v.decoration.house.houseNumber , "grey"],
+                ["面积:", v.decoration.house.buildArea, "blue"],
+                ["合同额:", v.decoration.orderTotalPrice, "blue"],
                 // ["折扣:", v.discount, "blue"],
-                ["申请人:", v.applayUser, "grey"],
-                ["监理:", v.supervisor, "grey"],
-                ["放线时间:", v.actualDate, "green"],
-                ["开始时间:", v.startTime, "green"],
-                ["结束时间:", v.endTime, "green"],
-                ["报价版本:", v.versionName, "green"],
+                ["申请人:", v.applayUser.currentName, "grey"],
+                ["监理:", v.decoration.supervisor.currentName, "grey"],
+                ["放线时间:", actualtime, "green"],
+                ["开始时间:", startTime, "green"],
+                ["结束时间:", endTime, "green"],
+                ["报价版本:", v.decoration.version.name, "green"],
                 ["状态:", statusName, "red"],
                 ["描述:", v.content, "grey"]
             ];
@@ -263,10 +267,10 @@ jQuery(function ($) {
 
     function updateDeployed(v) {
         com.focusPage("#dlId").val(v.dlId);
-        com.focusPage("#actualDate").datepicker('update', v.actualDate);
-        com.focusPage("#startTime").val(v.startTime);
-        com.focusPage("#endTime").val(v.endTime);
-        com.focusPage("#drawLineGroup").val(v.gid);
+        com.focusPage("#actualDate").datepicker('update', v.actualStartTime.substr(0,10));
+        com.focusPage("#startTime").val(v.actualStartTime.substr(11));
+        com.focusPage("#endTime").val(v.actualEndTime.substr(11));
+        com.focusPage("#drawLineGroup").val(v.drawLineGroup.gid);
         drawLineDeployment.drawLineModal.modal("show");
         if (drawLineDeployment.up) {
             bootbox.alert("无可用放线小组");
@@ -276,7 +280,7 @@ jQuery(function ($) {
 
     function deployed(v) {
         var options = {
-            "construction.orderId": v.orderId
+            "construction.orderId": v.decoration.orderId
         };
         com.post(api.construction.queryConstructionByOrderId, options, function (res) {
 
@@ -298,8 +302,8 @@ jQuery(function ($) {
             }
         });
 
-        drawLineDeploymentPostData.orderId = v.orderId;
-        com.focusPage("#orderInfos").html(v.orderId + " " + v.village);
+        drawLineDeploymentPostData.orderId = v.decoration.orderId;
+        com.focusPage("#orderInfos").html(v.decoration.orderId + " " + v.decoration.house.village.name);
         drawLineDeployment.drawLineDeploymentModal.modal("show");
     }
 
@@ -329,10 +333,9 @@ jQuery(function ($) {
 
         var options = {
             "drawLine.dlId": com.focusPage("#dlId").val(),
-            "drawLine.actualDate": com.focusPage("#actualDate").val(),
-            "drawLine.startTime": com.focusPage("#startTime").val(),
-            "drawLine.endTime": com.focusPage("#endTime").val(),
-            "drawLine.gid": com.focusPage("#drawLineGroup").val()
+            "drawLine.startTime":com.focusPage("#actualDate").val()+" "+com.focusPage("#startTime").val(),
+            "drawLine.endTime": com.focusPage("#actualDate").val()+" "+com.focusPage("#endTime").val(),
+            "drawLine.drawLineGroup.gid": com.focusPage("#drawLineGroup").val()
         };
         com.post(api.drawline.resetDrawLine, options, function (res) {
             com.showAlert(com.info, "操作成功");

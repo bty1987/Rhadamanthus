@@ -250,6 +250,7 @@ $(function () {
             options["purchaseItems[" + i + "].format.fid"] = $this.attr('data-fid');//– 规格
             options["purchaseItems[" + i + "].unitPrice"] = $this.parents('.oid').find('input.unitPrice').val();  //单价
             options["purchaseItems[" + i + "].num"] = $this.parents('.oid').find('input.inputNumber').val();           //– 数量
+            options["purchaseItems[" + i + "].supplier.sid"] = 1;
         });
 
         if (checkList.length != 0) {
@@ -434,7 +435,7 @@ $(function () {
 
     function checkRowValue($line) {
         var flag = true;
-        var priceRex = /^\d{1,8}(\.\d{1,2})?$/;
+        var priceRex = /^\d{1,8}(\.\d{1,3})?$/;
         $.each($line, function (i, v) {
 
             var num = $(v).find('input.inputNumber');

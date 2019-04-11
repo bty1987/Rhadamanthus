@@ -59,14 +59,6 @@ public class SalesActivityAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-	@Action(value="updateSalesForActivity", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String updateSalesForActivity() throws FLException{
-		
-		salesActivityService.updateSalesForActivity(sales);
-		
-		return SUCCESS;
-	}
-	
 	@Action(value="abateSalesActivityItem", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String abateSalesActivityItem() throws FLException{
 		
@@ -79,6 +71,46 @@ public class SalesActivityAction extends BaseListAction {
 	public String receiveSalesActivityItem() throws FLException{
 		
 		salesActivityService.receiveSalesActivityItem(salesActivityItem, queryUserId(), queryUserName());
+		
+		return SUCCESS;
+	}
+	
+	@Action(value="deliveSalesActivityItem", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String deliveSalesActivityItem() throws FLException{
+		
+		salesActivityService.deliveSalesActivityItem(salesActivityItem);
+		
+		return SUCCESS;
+	}
+	
+	@Action(value="unrefundSalesActivityItem", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String unrefundSalesActivityItem() throws FLException{
+		
+		salesActivityService.unrefundSalesActivityItem(salesActivityItem);
+		
+		return SUCCESS;
+	}
+	
+	@Action(value="upgradeSalesActivityItem", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String upgradeSalesActivityItem() throws FLException{
+		
+		salesActivityService.upgradeSalesActivityItem(salesActivityItem);
+		
+		return SUCCESS;
+	}
+	
+	@Action(value="refundSalesActivityItem", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String refundSalesActivityItem() throws FLException{
+		
+		salesActivityService.refundSalesActivityItem(salesActivityItem, queryUserId());
+		
+		return SUCCESS;
+	}
+	
+	@Action(value="expendSalesActivityItem", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String expendSalesActivityItem() throws FLException{
+		
+		salesActivityService.expendSalesActivityItem(salesActivityItem);
 		
 		return SUCCESS;
 	}

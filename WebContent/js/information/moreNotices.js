@@ -79,7 +79,13 @@ $(function(){
 			$liLine.append($h3).append($ulProperty);
 			
 			$btnDown.click(function(){
-            	window.open(config.media + v.filePath);
+				
+            	if(parent.window.isPC){
+            		nw.Window.open(config.media + v.filePath, {}, function(new_win) { if(new_win) new_win.maximize();});
+            	}else{
+            		window.open(config.media + v.filePath);
+            	}
+            	
             	return false;
             });
 

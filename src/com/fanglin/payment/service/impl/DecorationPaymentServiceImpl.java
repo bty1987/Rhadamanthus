@@ -29,7 +29,9 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.service.DecorationService;
 import com.fanglin.data.common.dao.PaymentScaleItemDao;
 import com.fanglin.data.po.PaymentScaleItemPO;
+import com.fanglin.decoration.dao.DecorationActivityItemDao;
 import com.fanglin.decoration.dao.DecorationDao;
+import com.fanglin.decoration.po.DecorationActivityItemPO;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.vo.DecorationActivityItemVO;
 import com.fanglin.decoration.vo.DecorationVO;
@@ -94,6 +96,9 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 	
 	@Autowired
 	private DecorationService decorationService;
+	
+	@Autowired
+	private DecorationActivityItemDao decorationActivityItemDao;
 
 	@Override
 	public void pageDecorationPaymentForCommit(Paging paging, List<Filter> filters, int company) {
@@ -261,99 +266,116 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int makeDecorationPayment(DecorationPaymentVO decorationPaymentVO, String createUserId) throws FLException {
+	public int makeDecorationPayment(DecorationPO decorationPO, float money, long psid, String createUserId) throws FLException {
 
-		String orderId = decorationPaymentVO.getDecoration().getOrderId();
-		float sumMoney = decorationPaymentVO.getReferMoney();
-
-		List<Short> status = Arrays.asList(new Short[] { DecorationPO.STATUS_INIT_INT, DecorationPO.STATUS_DEPOSIT_INT, DecorationPO.STATUS_RESIGNED_INT });
+		String orderId = decorationPO.getOrderId();
+		float sumMoney = (float) Math.floor(money);
+		
 		Short[] paymentStatus = new Short[] { DecorationPaymentPO.PAYMENTSTATUS_PAY_INT, DecorationPaymentPO.PAYMENTSTATUS_CONFIRM_INT, DecorationPaymentPO.PAYMENTSTATUS_APPLYING_INT};
 
-		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
-
-		short decorationStatus = decorationPO.getStatus();
 		int company = decorationPO.getCompany();
+		
+		List<DecorationPaymentPO> decorationPayments = decorationPaymentDao.queryDecorationPaymentByOrderIdAStatusAOneTypeATwoType(decorationPO.getOrderId(), paymentStatus, DecorationPaymentPO.ONETYPE_ADD_INT, DecorationPaymentPO.TWOTYPE_DEAL_INT);
 
-		if (status.contains(decorationStatus)) {
-
-			List<DecorationPaymentPO> decorationPayments = decorationPaymentDao.queryDecorationPaymentByOrderIdAStatusAOneTypeATwoType(decorationPO.getOrderId(), paymentStatus, DecorationPaymentPO.ONETYPE_ADD_INT, DecorationPaymentPO.TWOTYPE_DEAL_INT);
-
-			if (decorationPayments != null && decorationPayments.size() > 0) {
-				throw new FLException(150001, "款项已付,不可修改");
-			}
-
-			List<PaymentScaleItemPO> paymentScaleItems = paymentScaleitemDao.queryPaymentScaleItemByPsid(decorationPaymentVO.getPsId());
-
-			if (paymentScaleItems.size() <= DecorationPaymentPO.CHARSCALE_COUNT_INT) {
-				throw new FLException(150037, "款项比例不正确");
-			} else {
-
-				decorationPaymentDao.deleteDecorationPaymentForBase(orderId);
-
-				if (paymentScaleItems.size() == 1) {
-					DecorationPaymentPO decorationPayment = new DecorationPaymentPO();
-					float all = Float.valueOf(paymentScaleItems.get(0).getScale());
-					decorationPayment.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-					UserPO user = userDao.queryUserByUserId(createUserId);
-					decorationPayment.setCreater(user);
-					decorationPayment.setReferMoney((float) (Math.floor(sumMoney * (all / 100))));
-					decorationPayment.setPaymentType(paymentScaleItems.get(0).getName());
-					decorationPayment.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_UNPAY_INT);
-					decorationPayment.setDecoration(decorationPO);
-					decorationPayment.setOneType(DecorationPaymentPO.ONETYPE_ADD_INT);
-					decorationPayment.setTwoType(DecorationPaymentPO.TWOTYPE_DEAL_INT);
-					decorationPayment.setCompany(company);
-					decorationPayment.setSort(paymentScaleItems.get(0).getSort());
-
-					decorationPaymentDao.save(decorationPayment);
-				} else {
-					float totalMoney = 0;
-					for (int i = 0; i < paymentScaleItems.size() - 1; i++) {
-
-						DecorationPaymentPO decorationPayment = new DecorationPaymentPO();
-						float all = Float.valueOf(paymentScaleItems.get(i).getScale());
-						decorationPayment.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-						UserPO user = userDao.queryUserByUserId(createUserId);
-						decorationPayment.setCreater(user);
-						float referMoney = (float) (Math.ceil((sumMoney * (all / 100)) / 100) * 100);
-						decorationPayment.setReferMoney(referMoney);
-						decorationPayment.setPaymentType(paymentScaleItems.get(i).getName());
-						decorationPayment.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_UNPAY_INT);
-						decorationPayment.setDecoration(decorationPO);
-						decorationPayment.setOneType(DecorationPaymentPO.ONETYPE_ADD_INT);
-						decorationPayment.setTwoType(DecorationPaymentPO.TWOTYPE_DEAL_INT);
-						decorationPayment.setCompany(company);
-						decorationPayment.setSort(paymentScaleItems.get(i).getSort());
-
-						decorationPaymentDao.save(decorationPayment);
-						
-						totalMoney += referMoney;
-					}
-
-					DecorationPaymentPO decorationPayment = new DecorationPaymentPO();
-					decorationPayment.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-					UserPO user = userDao.queryUserByUserId(createUserId);
-					decorationPayment.setCreater(user);
-					decorationPayment.setReferMoney(sumMoney - totalMoney);
-					decorationPayment.setPaymentType(paymentScaleItems.get(paymentScaleItems.size() - 1).getName());
-					decorationPayment.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_UNPAY_INT);
-					decorationPayment.setDecoration(decorationPO);
-					decorationPayment.setOneType(DecorationPaymentPO.ONETYPE_ADD_INT);
-					decorationPayment.setTwoType(DecorationPaymentPO.TWOTYPE_DEAL_INT);
-					decorationPayment.setCompany(company);
-					decorationPayment.setSort(paymentScaleItems.get(paymentScaleItems.size() - 1).getSort());
-					
-					decorationPaymentDao.save(decorationPayment);
-				}
-			}
-
-			decorationPO.setOrderTotalPrice(sumMoney);
-			decorationDao.saveOrUpdate(decorationPO);
-
-			return 0;
-		} else {
-			throw new FLException(150002, "合同已签订不可修改");
+		if (decorationPayments != null && decorationPayments.size() > 0) {
+			throw new FLException(150001, "款项已付,不可修改");
 		}
+
+		List<PaymentScaleItemPO> paymentScaleItems = paymentScaleitemDao.queryPaymentScaleItemByPsid(psid);
+
+		if (paymentScaleItems.size() <= 0) {
+			throw new FLException(150037, "款项比例不正确");
+		}
+		
+		// 获取当前订单的活动项的总额
+		float couponCut = decorationActivityItemDao.amountDecorationActivityItemForIsPayment(orderId, DecorationActivityItemPO.ISPAYMENT_CAL_INT);
+		
+		// 生成款项金额 = 提交额 - 优惠额 , 装修单签单额 = 提交额 
+		float paymentMoney = Arith.sub(sumMoney, couponCut);
+
+		decorationPaymentDao.deleteDecorationPaymentForBase(orderId);
+		
+		UserPO creater = userDao.queryUserByUserId(createUserId);
+
+		if (paymentScaleItems.size() == 1) {
+			
+			PaymentScaleItemPO scaleItem = paymentScaleItems.get(0);
+			
+			DecorationPaymentPO decorationPayment = new DecorationPaymentPO();
+			
+			float all = Float.valueOf(scaleItem.getScale());
+			
+			decorationPayment.setReferMoney((float) (Math.floor(paymentMoney * (all / 100))));
+			decorationPayment.setPaymentType(paymentScaleItems.get(0).getName());
+			decorationPayment.setSort(scaleItem.getSort());
+			decorationPayment.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+			
+			decorationPayment.setCreater(creater);
+			decorationPayment.setDecoration(decorationPO);
+			decorationPayment.setCompany(company);
+			
+			decorationPayment.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_UNPAY_INT);
+			decorationPayment.setOneType(DecorationPaymentPO.ONETYPE_ADD_INT);
+			decorationPayment.setTwoType(DecorationPaymentPO.TWOTYPE_DEAL_INT);
+
+			decorationPaymentDao.save(decorationPayment);
+		} else {
+			
+			float totalMoney = 0;
+			
+			for (int i = 0; i < paymentScaleItems.size() - 1; i++) {
+				
+				PaymentScaleItemPO scaleItem = paymentScaleItems.get(i);
+
+				DecorationPaymentPO decorationPayment = new DecorationPaymentPO();
+				
+				float all = Float.valueOf(scaleItem.getScale());
+				float referMoney = (float) (Math.ceil((paymentMoney * (all / 100)) / 100) * 100);
+				
+				decorationPayment.setReferMoney(referMoney);
+				decorationPayment.setPaymentType(scaleItem.getName());
+				decorationPayment.setSort(scaleItem.getSort());
+				decorationPayment.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+				
+				decorationPayment.setCreater(creater);
+				decorationPayment.setDecoration(decorationPO);
+				decorationPayment.setCompany(company);
+				
+				decorationPayment.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_UNPAY_INT);
+				decorationPayment.setOneType(DecorationPaymentPO.ONETYPE_ADD_INT);
+				decorationPayment.setTwoType(DecorationPaymentPO.TWOTYPE_DEAL_INT);
+
+				decorationPaymentDao.save(decorationPayment);
+				
+				totalMoney = Arith.add(totalMoney, referMoney);
+			}
+			
+			PaymentScaleItemPO scaleItem = paymentScaleItems.get(paymentScaleItems.size() - 1);
+
+			DecorationPaymentPO decorationPayment = new DecorationPaymentPO();
+			
+			decorationPayment.setReferMoney(Arith.sub(paymentMoney, totalMoney));
+			decorationPayment.setPaymentType(scaleItem.getName());
+			decorationPayment.setSort(scaleItem.getSort());
+			decorationPayment.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+			
+			decorationPayment.setCreater(creater);
+			decorationPayment.setDecoration(decorationPO);
+			decorationPayment.setCompany(company);
+			
+			decorationPayment.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_UNPAY_INT);
+			decorationPayment.setOneType(DecorationPaymentPO.ONETYPE_ADD_INT);
+			decorationPayment.setTwoType(DecorationPaymentPO.TWOTYPE_DEAL_INT);
+			
+			decorationPaymentDao.save(decorationPayment);
+		}
+
+		decorationPO.setOrderTotalPrice(sumMoney);
+		decorationPO.setFactPrice(paymentMoney);
+		
+		decorationDao.update(decorationPO);
+
+		return 0;
 	}
 
 	@Override

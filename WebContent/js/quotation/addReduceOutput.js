@@ -14,7 +14,7 @@ jQuery(function($) {
 	// 装修单类型  0: 半包 , 装修单 , 不包括主材单 , 1: 套餐 , 装修+主材单 , 2: 半价 , 主材配比 , 装修打折
 	var $decorationType = params.decorationType;
 	var addReduceDetail = {
-		addReduceDetails: null,
+		addReduceDetails: [],
 		addItems: {},
 		reduceItems: {}
 	};
@@ -51,12 +51,16 @@ jQuery(function($) {
 	}, null ,false);
 
 	var $addReduceIds = {};
+	var $manage = [];
 	//通过订单编号获取增减项信息 查出该订单下所有的增减项
 	url = api.addReduce.queryAddReduceByOrderId;
 	com.post(url, {"addReduce.orderId":_orderId}, function (res) {
 		var addReduces = res.addReduces;
 		$.each(addReduces, function (i, v) {
 			$addReduceIds["addReduceIds[" + i + "]"] = v.arId;
+			if (params.addReduceIds.indexOf(v.arId) >= 0) {
+                $manage.push({"arId":v.arId,"manageRate":v.manageRate,"managePrice":v.managePrice})
+			}
 		});
 	}, null, false);
 
@@ -137,15 +141,33 @@ jQuery(function($) {
 				}
 				//选择增减项对应的增减项详情
 			}
+
 		}
+
+        $.each(addReduceDetail.addItems, function (i, e) {
+            var arId = i.substring(0, i.indexOf('-'));
+            $.each($manage, function (k, v) {
+                if ($manage[k].arId == arId && $manage[k].managePrice){
+                	var manage = {
+                		"arId": arId,
+						"itemName": "管理费",
+						"quotationFunctionAreaName": "-",
+						"measurementUnit": "-",
+						"num": "-",
+						"unitPrice": "-",
+						"total":$manage[k].managePrice
+					};
+                    addReduceDetail.addItems[i].push(manage);
+                }
+            });
+        })
 	}
-	
+
 	// 画每个报价详情的信息
 	function generateAddReduceItem(addReduceItems){
 
 		var addReduceTotalPrice = 0;
 		var html = "";
-
 		$.each(addReduceItems, function (i, v) {
 			var addReduceType = i.split('-')[1];
 			var addReduceTotal = 0;
@@ -178,8 +200,10 @@ jQuery(function($) {
 				html += '<td>' + qv.unitPrice + '</td>';
 				html += '<td>' + qv.total + '</td>';
 				html += '</tr>';
-				addReduceTotal = utils.changeThrDecimal(utils.accAdd(qv.total, addReduceTotal));
-			});
+
+                addReduceTotal = utils.changeThrDecimal(utils.accAdd(qv.total, addReduceTotal));
+
+            });
 
 			html += '</tbody></table>';
 			html += addReduceType + '金额:' + utils.changeThrDecimal(addReduceTotal)  + '元';

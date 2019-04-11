@@ -4,7 +4,7 @@ $(function () {
 
     com.post(api.data.queryConstructionNode, {}, function (res) {
         $.each(res.constructionNodes, function (i, v) {
-            constructionNodes[v.cnid] = v.name;
+            constructionNodes[v.sort] = v.name;
         });
         constructionNodes[0] = "初始";
         constructionNodes[1] = "开工";
@@ -45,7 +45,6 @@ $(function () {
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
             var $btnView = $('<a></a>').addClass('btn btn-minier btn-yellow').html("查看");
-
 
             var propertyArr = [
                 ["楼盘名:", v.house.village.name, "grey"],

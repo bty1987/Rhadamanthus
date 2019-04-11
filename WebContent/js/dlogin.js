@@ -80,9 +80,9 @@ jQuery(function (a) {
             }
         });
     } else if (!location.hostname.startsWith('192.168')){
-        $("#unamePwdContainer").remove();
-        $("#QRLogin").remove();
-        $("#WXLogin").remove();
+//        $("#unamePwdContainer").remove();
+//        $("#QRLogin").remove();
+//        $("#WXLogin").remove();
     }
 
     config.demo && (config.server = 'result/', config.communion = 'result/', config.media = 'result/', QRCode = '/QRCode.json', queryVode = '/queryVode.json');

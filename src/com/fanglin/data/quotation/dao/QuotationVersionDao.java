@@ -26,6 +26,6 @@ public interface QuotationVersionDao extends Dao<QuotationVersionPO> {
 
 	public List<QuotationVersionPO> queryQuotationVersion(int company);
 	
-	public QuotationVersionPO queryQuotationVersionByVersionId(String versionId);
+	public QuotationVersionPO queryQuotationVersionByVersionId(String no);
 
 }

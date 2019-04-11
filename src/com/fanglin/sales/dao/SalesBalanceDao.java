@@ -13,4 +13,6 @@ public interface SalesBalanceDao extends Dao<SalesBalancePO>{
 	
 	public List<SalesBalancePO> pageSalesBalanceForDompany(Paging paging, List<Filter> filter,int dompany);
 	
+	public List<SalesBalancePO> pageSalesBalanceForPompany(Paging paging, List<Filter> filter,int pompany);
+	
 }

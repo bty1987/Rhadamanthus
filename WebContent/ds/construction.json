@@ -2,13 +2,15 @@
     "constructionSchedule": [
 	    {"key":"3", "value":"铲大白", "name":"chan"},
 		{"key":"4", "value":"放线", "name":"putline"},
-		{"key":"5", "value":"水力电", "name":"waterwayCircuitPower"},
-		{"key":"6", "value":"瓦工", "name":"bricklay"},
-		{"key":"7", "value":"地面找平", "name":"groundLeveling"},
-		{"key":"8", "value":"木工", "name":"carpent"},
-		{"key":"9", "value":"油工", "name":"oil"},
-		{"key":"10", "value":"水电验收", "name":"waterwayCircuitCheck"},
-		{"key":"11", "value":"保洁", "name":"cleaning"}
+		{"key":"5", "value":"水工", "name":"waterwayCircuitPower"},
+		{"key":"6", "value":"力工", "name":"force"},
+		{"key":"7", "value":"电工", "name":"electrician"},
+		{"key":"8", "value":"瓦工", "name":"bricklay"},
+		{"key":"9", "value":"地面找平", "name":"groundLeveling"},
+		{"key":"10", "value":"木工", "name":"carpent"},
+		{"key":"11", "value":"油工", "name":"oil"},
+		{"key":"12", "value":"水电验收", "name":"waterwayCircuitCheck"},
+		{"key":"13", "value":"保洁", "name":"cleaning"}
     ], "scheduleInfos": {
     	"铲大白":[10, "progress-bar-primary"], 
     	"放线":[10, "progress-bar-warning"], 
@@ -33,9 +35,9 @@
 		{"key":"11", "value":"保洁工"}
 	],"drawLineStatus":[
 		{"key":"0", "value":"排队" },
-		{"key":"1", "value":"申请放线"},
-		{"key":"2", "value":"成功放线"},
-		{"key":"3", "value":"失败放线"}
+	{"key":"1", "value":"申请放线"},
+	{"key":"2", "value":"成功放线"},
+	{"key":"3", "value":"失败放线"}
 	],
     "errorCode": 0,
     "errorMsg": null

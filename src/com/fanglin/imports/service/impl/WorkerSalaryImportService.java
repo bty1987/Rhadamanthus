@@ -80,7 +80,7 @@ public class WorkerSalaryImportService implements com.fanglin.imports.service.Wo
 			WorkerSalaryPO workerSalarypo =new WorkerSalaryPO(user,creater);
 		
 			if (subtype <= SUBTYPY_SHORTTHREE && subtype >SUBTYPY_SHORTONE){
-				workerSalarypo.setType(WorkerSalaryPO.STATUS_INIT_STR);
+				workerSalarypo.setType(WorkerSalaryPO.STATUS_INIT_INT);
 				
 			}else{
 				workerSalarypo.setType(WorkerSalaryPO.TYPE_SALARY_STRONE);
@@ -93,7 +93,7 @@ public class WorkerSalaryImportService implements com.fanglin.imports.service.Wo
 			workerSalarypo.setSalary(salary);
 			workerSalarypo.setCreater(creater);
 			workerSalarypo.setCreateTime(new Timestamp(System.currentTimeMillis()));
-			workerSalarypo.setCsid(WorkerSalaryPO.CSID_INIT_STR);
+			workerSalarypo.setCsid(0);
 			
 			workerSalaryDao.save(workerSalarypo);
 			}

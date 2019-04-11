@@ -410,7 +410,7 @@ $(function () {
         $checkApprovalDiv.empty();
 
         com.post(api.approval.queryApproverByType, {"approver.type": type}, function (res) {
-            $.each(res.approvalUsers, function (i, v) {
+            $.each(res.approvers, function (i, v) {
                 var $approvaler = $('<label></label>');
                 var $div = $('<div></div>').addClass("radio no-padding").attr("style", "margin-bottom:10px");
                 var $input = $('<input>').attr({

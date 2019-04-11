@@ -50,6 +50,8 @@ public class SalesBalancePO implements Serializable{
 			
 	public static final String COLUMN_SALESDOMPANY_STR = "sales.dompany";
 	
+	public static final String COLUMN_SALESPOMPANY_STR = "sales.pompany";
+	
 	public static final short STATUS_PREBALANCE_INT = 0;
 	
 	public static final short STATUS_VENDORBALANCE_INT = 1;

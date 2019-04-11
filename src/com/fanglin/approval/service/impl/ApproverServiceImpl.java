@@ -39,43 +39,44 @@ public class ApproverServiceImpl implements ApproverService {
 
 	@Autowired
 	private UserDao userDao;
-	
+
 	@Override
-	public void pageApprover(Paging paging, List<Filter> filters,int company) {
-		
-		List<ApproverPO> approverPOs = approverDao.pageApprover(paging, filters,company);
+	public void pageApprover(Paging paging, List<Filter> filters, int company) {
+
+		List<ApproverPO> approverPOs = approverDao.pageApprover(paging, filters, company);
 		List<ApproverVO> approverVOs = new ArrayList<ApproverVO>();
 
 		for (ApproverPO approverPO : approverPOs) {
-	
-			ApproverVO approverVO = new ApproverVO(new UserBaseVO(new DutyVO()));
-			
-			BeanUtil.copyProperties(approverPO, approverVO,Arrays.asList("user"));
 
-			BeanUtil.copyProperties(approverPO.getUser(),approverVO.getUserBase(), Arrays.asList( "dept","duty"));
-			BeanUtil.copyProperties(approverPO.getUser().getDuty(),approverVO.getUserBase().getDuty(), Arrays.asList("departmentType"));
-			
+			ApproverVO approverVO = new ApproverVO(new UserBaseVO(new DutyVO()));
+
+			BeanUtil.copyProperties(approverPO, approverVO, Arrays.asList("user"));
+
+			BeanUtil.copyProperties(approverPO.getUser(), approverVO.getUserBase(), Arrays.asList("dept", "duty"));
+			BeanUtil.copyProperties(approverPO.getUser().getDuty(), approverVO.getUserBase().getDuty(), Arrays.asList("departmentType"));
+
 			approverVOs.add(approverVO);
-			}
+		}
 		paging.setData(approverVOs);
 	}
+
 	@Override
 	public List<ApproverVO> queryApprovalUserByType(ApproverVO userApproveVO, int company) {
 
-		List<ApproverPO> approverPOs = approverDao.queryApprovalUserByType(userApproveVO.getType(),company);
-		
+		List<ApproverPO> approverPOs = approverDao.queryApprovalUserByType(userApproveVO.getType(), company);
+
 		List<ApproverVO> approverVOs = new ArrayList<ApproverVO>();
-		
+
 		for (ApproverPO approverPO : approverPOs) {
-		
+
 			ApproverVO approverVO = new ApproverVO();
-			BeanUtil.copyProperties(approverPO,approverVO,Arrays.asList("user"));
+			BeanUtil.copyProperties(approverPO, approverVO, Arrays.asList("user"));
 			approverVO.setUserBase(new UserBaseVO());
-			BeanUtil.copyProperties(approverPO.getUser(),approverVO.getUserBase(), Arrays.asList("dept","duty"));
-			
+			BeanUtil.copyProperties(approverPO.getUser(), approverVO.getUserBase(), Arrays.asList("dept", "duty"));
+
 			approverVOs.add(approverVO);
 		}
-		
+
 		return approverVOs;
 	}
 
@@ -86,37 +87,30 @@ public class ApproverServiceImpl implements ApproverService {
 		List<ApproverPO> approvers = approverDao.queryApproverByUserId(approverVO.getUserBase().getUserId());
 
 		for (ApproverPO approver : approvers) {
-			if (approver.getType()==approverVO.getType()) {
+			if (approver.getType() == approverVO.getType()) {
 				throw new FLException(230008, "审批人员已有该审批权限");
 			}
 		}
 
 		ApproverPO approverPO = new ApproverPO();
-		UserPO user= userDao.queryUserByUserId(approverVO.getUserBase().getUserId());
+		UserPO user = userDao.queryUserByUserId(approverVO.getUserBase().getUserId());
 		approverPO.setType(approverVO.getType());
 		approverPO.setUser(user);
 		approverPO.setComment(approverVO.getComment());
-		
+
 		approverDao.save(approverPO);
 
 		return 0;
 	}
 
-
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void deleteApprover(List<Integer> ids) {
+	public void deleteApprover(ApproverVO approver) throws FLException {
 
-		for (Integer id : ids) {
-			deleteApproverById(id);
-		}
-	}
+		ApproverPO approverPO = approverDao.get(approver.getAid());
 
-	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public void deleteApproverById(Integer approveId) {
+		approverDao.delete(approverPO);
 
-		approverDao.deleteById(approveId);
 	}
 
 }

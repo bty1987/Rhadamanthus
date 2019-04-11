@@ -41,9 +41,9 @@ $(function () {
             var $liTitle = $('<li></li>').addClass('line table-title');
 
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>'));
-            var $contentWrap = $('<div></div>').addClass('line-wrap  content col10');
+            var $contentWrap = $('<div></div>').addClass('line-wrap  content col12');
 
-            var titleName = '编号,商品,条形码,品类,品牌,单位,件数,辅类,类型,状态';
+            var titleName = '编号,商品,条形码,品类,品牌,单位,进价,售价,件数,辅类,类型,状态';
 
             $.each(titleName.split(','), function (i, v) {
                 var $cell = $('<div></div>').addClass('cell').html(v);
@@ -65,7 +65,7 @@ $(function () {
             var $liLine = $('<li></li>').addClass('line');
 
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(i + 1));
-            var $contentWrap = $('<div></div>').addClass('line-wrap  content col10');
+            var $contentWrap = $('<div></div>').addClass('line-wrap  content col12');
             //显示字段
             var propertyArr = [
                 //v.gid,
@@ -75,6 +75,8 @@ $(function () {
                 [v.category,'grey'],
                 [v.brand,'grey'],
                 [v.measurementUnit,'grey'],
+                [v.purchase,'blue'],
+                [v.selling,'blue'],
                 [v.pieceNum,'blue'],
                 [v.accessoriesType.name,'grey'],
                 [v.type == "0" ? "商品" : "套餐",'red'],
@@ -98,6 +100,7 @@ $(function () {
             var $btnColor = $('<li></li>').append($('<a></a>').html('颜色'));
             var $btnFormat = $('<li></li>').append($('<a></a>').html('规格'));
             var $btnPrice = $('<li></li>').append($('<a></a>').html('价格'));
+            var $btnSupplier = $('<li></li>').append($('<a></a>').html('供应商'));
             //var $btnSuit = $('<li></li>').append($('<a></a>').html('查看'));
             var $btnStart = $('<li></li>').append($('<a></a>').html('启用'));
             var $btnStop = $('<li></li>').append($('<a></a>').html('禁用'));
@@ -107,7 +110,7 @@ $(function () {
                 .append($btnColor)
                 .append($btnFormat)
                 .append($btnPrice)
-                //.append($btnSuit)
+                .append($btnSupplier)
                 .append($btnStart)
                 .append($btnStop);
 
@@ -134,6 +137,11 @@ $(function () {
             $btnPrice.click(function () {
                 openLayerSwitch('goodsPricePopUp', v.gid, '价格', 'views/manifest/price.html');
             });
+            //供应商点击事件
+            $btnSupplier.click(function () {
+                openLayerSwitch('goodsSupplierPopUp', v.gid, '供应商', 'views/manifest/supplier.html');
+            });
+
             //套装点击事件
             /* $btnSuit.click(function () {
              openLayerSwitch('goodsSuitPopUp', v.gid, '套餐', 'views/data/goodsSuit.html');
@@ -246,11 +254,12 @@ $(function () {
 
         $adda.click(function () {
             clearForm('formGoods');
+            var purchase = com.focusPage("#layerAddgood").find('input[name="purchase"]').val("0");
+            var selling = com.focusPage("#layerAddgood").find('input[name="selling"]').val("0");
             closeEditReadOnly();
             openlayer(function (index, layero) {
                 if(com.validate('formGoods'))
                     return;
-
                 saveData(null, function () {
                     com.clearValidator("#no", true);
                     com.clearValidator("#type", true);
@@ -259,6 +268,8 @@ $(function () {
                     com.clearValidator("#category", true);
                     com.clearValidator("#brand", true);
                     com.clearValidator("#measurementUnit", true);
+                    com.clearValidator("#purchase", true);
+                    com.clearValidator("#selling", true);
                     com.clearValidator("#pieceNum", true);
                     com.clearValidator("#atid", true);
                     com.clearValidator();
@@ -308,16 +319,17 @@ $(function () {
             btn: ['确定', '取消'],
             yes: function (index, layero) {
                 callback(index, layero);
-                closeEditReadOnly();
             },
             btn2: function (index, layero) {
                 //按钮【按钮二】的回调
                 closeEditReadOnly();
                 com.clearValidator();
+                layer.closeAll();
             },
             cancel: function () {
                 //右上角关闭回调
                 closeEditReadOnly();
+                layer.closeAll();
             }
         });
     }
@@ -423,10 +435,11 @@ $(function () {
         var category = $layer.find('input[name="category"]').val();
         var bid = com.focusPage('#brand').val();
         var measurementUnit = $layer.find('select[name="measurementUnit"] option:selected').text();
+        var purchase = $layer.find('input[name="purchase"]').val();
+        var selling = $layer.find('input[name="selling"]').val();
         var pieceNum = $layer.find('input[name="pieceNum"]').val();
         var atid = $layer.find('select[name="atid"] option:selected').val();
         if (!id) {
-            //if (checkRowValue($layer)) {
             if(goodsType == 0){
                 com.post(api.inventory.addGoods, {
                     "goods.no": no,
@@ -435,6 +448,8 @@ $(function () {
                     "goods.category": category,
                     "goods.bid": bid,
                     "goods.measurementUnit": measurementUnit,
+                    "goods.purchase": purchase,
+                    "goods.selling": selling,
                     "goods.pieceNum": pieceNum,
                     "goods.accessoriesType.atid": atid == null || atid == "" ? "" : atid
                 }, function (res) {
@@ -450,13 +465,12 @@ $(function () {
                 params.goods["goods.category"] = category;
                 params.goods["goods.bid"] = bid;
                 params.goods["goods.measurementUnit"] = measurementUnit;
+                params.goods["goods.purchase"] = pieceNum;
+                params.goods["goods.selling"] = pieceNum;
                 params.goods["goods.pieceNum"] = pieceNum;
                 params.goods["goods.accessoriesType.atid"] = atid == null || atid == "" ? "" : atid;
                 openLayerSwitch('goodsSuitPopUp', null, '套餐', 'views/manifest/goodsSuit.html');
             }
-
-
-            //}
         } else {
             com.post(api.inventory.updateGoods, {
                 "goods.gid": id,
@@ -480,7 +494,6 @@ $(function () {
         $layerAdd.find('input[name="brand"]').attr('disabled', 'disabled');
         $layerAdd.find('select[name="measurementUnit"]').attr('disabled', 'disabled');
         $layerAdd.find('input[name="pieceNum"]').attr('disabled', 'disabled');
-
     }
 
     function closeEditReadOnly() {
@@ -493,10 +506,9 @@ $(function () {
         com.updateChosen('brand',"","");
         $layerAdd.find('select[name="brand"]').removeAttr('disabled');
         $layerAdd.find('select[name="measurementUnit"]').removeAttr('disabled');
+        $layerAdd.find('input[name="purchase"]').removeAttr('disabled');
+        $layerAdd.find('input[name="selling"]').removeAttr('disabled');
         $layerAdd.find('input[name="pieceNum"]').removeAttr('disabled');
     }
-
-
-
 
 });

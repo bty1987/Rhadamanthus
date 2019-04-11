@@ -22,14 +22,14 @@
         com._post_(api.home.library, {
             "userId":params.userInfo.user.userId,
             "loginTime":window.loginTime,
-            "mc":"",
+            "redis": 0,
 			"api": "system.login.login"
         });
         
         interval = setInterval(function(){
             com._post_(api.home.library,{
                 "userId":params.userInfo.user.userId,
-                "mc":"",
+                "redis": 0,
                 "api": "system.login.index",
                 "loginTime": window.loginTime
             }, function(res){
@@ -554,14 +554,14 @@
                     com._post_(api.home.library, {
                         "userId":params.userInfo.user.userId,
                         "loginTime":window.loginTime,
-                        "mc":"",
+                        "redis": 0,
                         "api": "system.login.login"
                     });
 
                     interval = setInterval(function(){
                         com._post_(api.home.library,{
-                            "userId":params.userInfo.user.userId,
-                            "mc":"",
+                            "userId": params.userInfo.user.userId,
+                            "redis": 0,
                             "api": "system.login.index",
                             "loginTime": window.loginTime
                         }, function(res){

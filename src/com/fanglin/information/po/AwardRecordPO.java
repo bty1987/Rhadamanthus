@@ -31,6 +31,18 @@ public class AwardRecordPO implements java.io.Serializable {
 	
 	public static final short TYPE_LOSSES_INT = 3; // 盘亏
 	
+	public static final short TYPE_RECEIVE_INT = 4; // 领取
+	
+	public static final short TYPE_REFUND_INT = 5; // 退货
+	
+	public static final short ONETYPE_NOT_INT = 0;// 无
+	
+	public static final short ONETYPE_DECORATION_INT = 1;// 装修
+	
+	public static final short ONETYPE_SALES_INT = 2;// 销售
+	
+	public static final short ONETYPE_MATERIAL_INT = 3;// 主材
+	
 	private int arid;
 	
 	private String orderId;
@@ -38,6 +50,8 @@ public class AwardRecordPO implements java.io.Serializable {
 	private AwardStockPO awardStock;
 
 	private short type;
+	
+	private short onetype;
 
 	private float num;
 
@@ -98,6 +112,15 @@ public class AwardRecordPO implements java.io.Serializable {
 
 	public void setType(short type) {
 		this.type = type;
+	}
+	
+	@Column(name = "onetype")
+	public short getOnetype() {
+		return onetype;
+	}
+
+	public void setOnetype(short onetype) {
+		this.onetype = onetype;
 	}
 	
 	@Column(name = "num")

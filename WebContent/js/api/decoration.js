@@ -32,13 +32,22 @@ $.extend(api, {decoration: {
     queryDecorationActivityItemForCouponAVaildByOrderId: {url: "queryDecorationActivityItemForCouponAVaildByOrderId.do"},
     addDecorationActivity: {url: "addDecorationActivity.do"},
     deleteDecorationActivity: {url: "deleteDecorationActivity.do"},
+    lockDecorationActivity : {url : "lockDecorationActivity.do"},
+    unlockDecorationActivity : {url : "unlockDecorationActivity.do"},
     abateDecorationActivityItem: {url: "abateDecorationActivityItem.do"},
     receiveDecorationActivityItem: {url: "receiveDecorationActivityItem.do"},
+    deliveDecorationActivityItem: {url: "deliveDecorationActivityItem.do"},
+    unrefundDecorationActivityItem: {url: "unrefundDecorationActivityItem.do"},
+    upgradeDecorationAtivityItem: {url: "upgradeDecorationAtivityItem.do"},
+    refundDecorationActivityItem: {url: "refundDecorationActivityItem.do"},
+    expendDecorationActivityItem: {url: "expendDecorationActivityItem.do"},
 
     queryDecorationContractByOrderId: {url: "queryDecorationContractByOrderId.do", demo: true},
     saveDecorationContract: {url: "saveDecorationContract.do"},
     signDecorationContract: {url: "signDecorationContract.do"},
     resignDecorationContract: {url: "resignDecorationContract.do"},
+    presignDecorationContract: {url: "presignDecorationContract.do"},
+    makeDecorationMidpack : {url: "makeDecorationMidpack.do"},
 
     pageDecorationForGeneral: {url: "pageDecorationForGeneral.do", demo: true},
     pageDecorationForCommon: {url: "pageDecorationForCommon.do", demo: true},
@@ -113,6 +122,9 @@ $.extend(api, {decoration: {
 
     queryDecorationUser:{url:"queryDecorationUser.do"},
     addDecorationUser:{url:"addDecorationUser.do"},
-    deleteDecorationUser:{url:"deleteDecorationUser.do"}
+    deleteDecorationUser:{url:"deleteDecorationUser.do"},
+    
+    queryDecorationBalance : {url : "queryDecorationBalance.do"},
+    makeDecorationBalance : {url : "makeDecorationBalance.do"}
 
 }});

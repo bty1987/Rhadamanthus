@@ -21,7 +21,7 @@ public interface MaterialItemService {
 	
 	public List<MaterialItemVO> queryMaterialItemByMid(MaterialItemVO materialItemVO);
 	
-	public MaterialItemVO queryMaterialItemForSaleByMiid(MaterialItemVO materialItemVO);
+	public MaterialItemVO queryMaterialItemByMiid(MaterialItemVO materialItemVO);
 	
 	public List<MaterialItemVO> queryMaterialItemForNameByName(MaterialItemVO materialItemVO);
 	

@@ -1,59 +1,45 @@
 
-
-
-<div class="page-content" style="padding: 40px 20px">
+<div class="page-content">
     <div class="row">
         <div class="col-xs-12">
             <div class="clearfix relative" id="form">
 
                 <div class="inline">
-                    <button class="btn btn-yellow" id="addSaleOrder">添加一条主材信息</button>
-
-                    <button id="submitSaleOrder" class="btn btn-info" data-loading-text="提交中..." type="submit"><i
-                            class="icon-ok"></i>保存
+                    <button id="addManifestItem" class="btn btn-yellow">添加货单项</button>
+                    <button id="submitManifest" class="btn btn-info" data-loading-text="提交中..." type="submit">
+                        <i class="icon-ok"></i>
+                        <span>保存</span>
                     </button>
-
                 </div>
 
-                <div class="pull-right" style="margin-bottom: 1%">
-
+                <div class="pull-right" id="timelement">
                     <div class="inline">
-
                         <label>单据类型</label>
                         <div class="inline">
-                            <select class="m-ctrl-medium" name="mtype"></select>
+                            <select class="m-ctrl-medium" id="manifestType"></select>
                         </div>
-
                     </div>
 
                     <div class="inline">
-
                         <label>单据日期</label>
                         <div class="inline">
-                            <input name="date" class="m-wrap m-ctrl-medium date-picker" readonly size="16" type="text"
-                                   value=""/>
+                            <input id="manifestTime" class="m-wrap m-ctrl-medium date-picker v_required" placement="top" readonly size="16" type="text" value=""/>
                         </div>
 
                     </div>
                     <div class="inline">
-
                         <label>选择模板</label>
                         <div class="inline">
-                            <select class="m-ctrl-medium" name="manifest"></select>
-
+                            <select class="m-ctrl-medium" id="manifestTemplate"></select>
                         </div>
+                        
                         <div class="inline" id="addManifestStyle">
-                            <a href="javascript:void(0);" class="btn btn-xs pull-left" name="addQuotationVersion" >添加</a>
+                            <a class="btn btn-xs pull-left">添加</a>
                         </div>
                     </div>
-
-
                 </div>
-
-
-                <div class="devide-line"></div>
-
             </div>
+            
             <ul class="flex-table">
                 <li class="line table-title">
                     <div class="line-wrap order">
@@ -80,25 +66,17 @@
             <ul class="flex-table" id="list"></ul>
 
             <div style="margin-top: 15px;">
-
-
                 <div class="inline-group">
-
                     <label>备注</label>
                     <div class="item long">
                         <input type="text" id="comment" maxlength="64">
                     </div>
                 </div>
 
-
                 <div style="margin-top: 10px" class="col-sm-1 pull-right inline">
                     <span>总价:</span><span id="totalSpan">0</span>
                 </div>
             </div>
-
-            <!--查看配置弹窗-->
-            <div id="viewDecoration" class="portlet box"></div>
-
         </div>
     </div>
 </div>

@@ -24,7 +24,7 @@ $(function(){
 
         var creatLine = function(v){
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.versionName));
+            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.name));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
@@ -32,12 +32,12 @@ $(function(){
 
 
             var propertyArr = [
-                ["编号:", v.versionId, "blue"],
+                ["编号:", v.no, "blue"],
                 ["车运费比例:", v.trafficRate, "blue"],
                 ["车运费折扣:", v.trafficDiscount == 0 ? '不打折' : v.trafficDiscount == 1 ?  '打折' : '-', "red"],
                 ["管理费比例:", v.manageRate, "blue"],
                 ["管理费比例:", v.manageDiscount == 0 ? '不打折' : v.manageDiscount == 1 ?  '打折' : '-', "red"],
-                ["信息:", v.versionDes ? v.versionDes : '-', "grey"],
+                ["信息:", v.comment ? v.comment : '-', "grey"],
                 ["默认版本:", v.defaultFlag == 0 ? '否' : v.defaultFlag == 1 ?  '是' : '-', "red"],
             ];
 
@@ -89,38 +89,38 @@ $(function(){
         cancellBtn: com.focusPage("#cancelBtn"),
         modal: com.focusPage("#qtModal").on("show.bs.modal", function(a) {
             com.clearValidator();
-            com.clearValidator("#versionId", !0);
+            com.clearValidator("#no", !0);
         }),
 
         cancelCopyVersionBtn : com.focusPage("#cancelCopyVersionBtn"),
         modalCopyVersion : com.focusPage("#copyVersionModal").on("show.bs.modal", function(a) {
             com.clearValidator();
-            com.clearValidator("#copyVersionId", !0);
+            com.clearValidator("#copyNo", !0);
         }),
         quotationVersionItems: {
-            copyVersionId: com.focusPage("#copyVersionId").on("blur", function () {
+            copyNo: com.focusPage("#copyNo").on("blur", function () {
                 $this = com.focusPage(this);
                 var b = {
-                    "quotationVersion.versionId": $this.val()
+                    "quotationVersion.no": $this.val()
                 };
                 com.post(api.quotation.queryQuotationVersionByVersionId, b, function (a) {
-                    a.quotationVersion && a.quotationVersion.qvId ? (com.showTips($this, "\u8be5\u7248\u672c\u7f16\u53f7\u5df2\u5b58\u5728", !0), quotationVersion.repeatFlg = !0) : (com.clearValidator("#copyVersionId", !0), quotationVersion.repeatFlg = !1);
+                    a.quotationVersion && a.quotationVersion.qvId ? (com.showTips($this, "\u8be5\u7248\u672c\u7f16\u53f7\u5df2\u5b58\u5728", !0), quotationVersion.repeatFlg = !0) : (com.clearValidator("#copyNo", !0), quotationVersion.repeatFlg = !1);
                 });
             }),
-            copyVersionName: com.focusPage("#copyVersionName"),
+            copyName: com.focusPage("#copyName"),
             copyTrafficRate: com.focusPage("#copyTrafficRate"),
             copyManageRate: com.focusPage("#copyManageRate"),
-            copyVersionDes: com.focusPage("#copyVersionDes"),
-            versionId: com.focusPage("#versionId").on("blur", function () {
+            copyComment: com.focusPage("#copyComment"),
+            no: com.focusPage("#no").on("blur", function () {
                 $this = $(this);
                 var b = {
-                    "quotationVersion.versionId": $this.val()
+                    "quotationVersion.no": $this.val()
                 };
                 com.post(api.quotation.queryQuotationVersionByVersionId, b, function (a) {
-                    a.quotationVersion && a.quotationVersion.qvId ? (com.showTips($this, "\u8be5\u7248\u672c\u7f16\u53f7\u5df2\u5b58\u5728", !0), quotationVersion.repeatFlg = !0) : (com.clearValidator("#versionId", !0), quotationVersion.repeatFlg = !1);
+                    a.quotationVersion && a.quotationVersion.qvId ? (com.showTips($this, "\u8be5\u7248\u672c\u7f16\u53f7\u5df2\u5b58\u5728", !0), quotationVersion.repeatFlg = !0) : (com.clearValidator("#no", !0), quotationVersion.repeatFlg = !1);
                 });
             }),
-            versionName: com.focusPage("#versionName"),
+            name: com.focusPage("#name"),
             trafficRate: com.focusPage("#trafficRate"),
             trafficDiscount : com.focusPage("#trafficDiscount").switchBtn("discount-lbl").on("click", function(a) {
                 quotationVersion.quotationVersionItems.trafficDiscount.value = 0 == quotationVersion.quotationVersionItems.trafficDiscount.value ? 1 : 0;
@@ -129,7 +129,7 @@ $(function(){
             manageDiscount : com.focusPage("#manageDiscount").switchBtn("discount-lbl").on("click", function(a) {
                 quotationVersion.quotationVersionItems.manageDiscount.value = 0 == quotationVersion.quotationVersionItems.manageDiscount.value ? 1 : 0;
             }),
-            versionDes: com.focusPage("#versionDes"),
+            comment: com.focusPage("#comment"),
             defaultFlag : com.focusPage("#defaultFlag").switchBtn().on("click", function(a) {
                 quotationVersion.quotationVersionItems.defaultFlag.value = 0 == quotationVersion.quotationVersionItems.defaultFlag.value ? 1 : 0;
             })
@@ -148,22 +148,22 @@ $(function(){
     $.extend(com.validator, quotationVersion.validator);
 
     com.focusPage('a[name="addQuotationVersion"]','#pagenation').click(function(){
-        quotationVersion.quotationVersionItems.versionId.css("display", "none");
+        quotationVersion.quotationVersionItems.no.css("display", "none");
         quotationVersion.editFlag = !1;
         com.cleanItems(quotationVersion.quotationVersionItems);
-        quotationVersion.quotationVersionItems.versionId.prop("disabled", !1);
+        quotationVersion.quotationVersionItems.no.prop("disabled", !1);
         quotationVersion.modal.modal("show");
     });
 
     function editLine(b){
 
         quotationVersion.editFlag = !0;
-        quotationVersion.quotationVersionItems.versionId.val(b.versionId);
+        quotationVersion.quotationVersionItems.no.val(b.no);
         quotationVersion.quotationVersionItems.trafficRate.val(b.trafficRate);
         quotationVersion.quotationVersionItems.manageRate.val(b.manageRate);
-        quotationVersion.quotationVersionItems.versionName.val(b.versionName);
-        quotationVersion.quotationVersionItems.versionDes.val(b.versionDes);
-        quotationVersion.quotationVersionItems.versionId.prop("disabled", !0).css("display", "block");
+        quotationVersion.quotationVersionItems.name.val(b.name);
+        quotationVersion.quotationVersionItems.comment.val(b.comment);
+        quotationVersion.quotationVersionItems.no.prop("disabled", !0).css("display", "block");
         
         void 0 == quotationVersion.quotationVersionItems.trafficDiscount.value ? 1 == b.trafficDiscount && quotationVersion.quotationVersionItems.trafficDiscount.click() : quotationVersion.quotationVersionItems.trafficDiscount.value != b.trafficDiscount && quotationVersion.quotationVersionItems.trafficDiscount.click();
         quotationVersion.quotationVersionItems.trafficDiscount.value = b.trafficDiscount;
@@ -181,17 +181,17 @@ $(function(){
 
     function saveData() {
         com.clearValidator();
-        com.clearValidator("#versionId", !0);
+        com.clearValidator("#no", !0);
         if (!com.validate("qtModal") && !quotationVersion.repeatFlg) {
             var options = {
-                "quotationVersion.versionId": quotationVersion.quotationVersionItems.versionId.val(),
-                "quotationVersion.versionName": quotationVersion.quotationVersionItems.versionName.val(),
+                "quotationVersion.no": quotationVersion.quotationVersionItems.no.val(),
+                "quotationVersion.name": quotationVersion.quotationVersionItems.name.val(),
                 "quotationVersion.trafficRate": quotationVersion.quotationVersionItems.trafficRate.val(),
                 "quotationVersion.trafficDiscount": quotationVersion.quotationVersionItems.trafficDiscount.prop("checked") ? 1 : 0,
                 "quotationVersion.manageRate": quotationVersion.quotationVersionItems.manageRate.val(),
                 "quotationVersion.manageDiscount": quotationVersion.quotationVersionItems.manageDiscount.prop("checked") ? 1 : 0,
                 "quotationVersion.defaultFlag": quotationVersion.quotationVersionItems.defaultFlag.prop("checked") ? 1 : 0,
-                "quotationVersion.versionDes": quotationVersion.quotationVersionItems.versionDes.val()
+                "quotationVersion.comment": quotationVersion.quotationVersionItems.comment.val()
             };
             com.post(quotationVersion.editFlag ? api.quotation.updateQuotationVersion: api.quotation.addQuotationVersion, options, successCallback);
             quotationVersion.modal.modal("hide");

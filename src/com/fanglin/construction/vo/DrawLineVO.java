@@ -16,176 +16,109 @@ import java.sql.Timestamp;
 
 import org.apache.struts2.json.annotations.JSON;
 
+import com.fanglin.data.common.vo.DrawLineGroupVO;
+import com.fanglin.decoration.vo.DecorationVO;
+import com.fanglin.personel.vo.UserVO;
+
 public class DrawLineVO implements Serializable {
 
 	private static final long serialVersionUID = -6225111181876631L;
 
-	private Long dlId;
+	private long dlId;
 	
-	private String orderId;
-	
-	private String customer;
-	
-	private String cityProper;
-	
-	private String village;
-	
-	private String houseNumber;
-	
-	private float houseArea;
-	
-	private short orderStatus;
-	
-	private Float orderTotalPrice;
-	
-	private String supervisor;
-	
-	private Timestamp contractTime;
-	
-	private String designer;
-	
-	private String versionId;
-	
-	private String versionName;
-	
-	private Float discount;
-	
-	private Timestamp  applayTime;
+	private DecorationVO decoration;
+
+	private Timestamp applayTime;
 	
 	private String content;
 	
-	private String actualDate;
+	private Timestamp actualStartTime;
 	
-	private String startTime;
-	
-	private String endTime;
+	private Timestamp actualEndTime;
 	
 	private short status;
 	
 	private Integer count;
 	
-	private String applayUser;
+	private UserVO applayUser;
 	
-	private String applayUserId;
+	private DrawLineGroupVO drawLineGroup;
 	
-	private Long   gid;
+	private UserVO drawLineUser;
 	
-	private String drawLineGroupName;
+	private String startTime;
 	
-	private String drawLineUser;
+	private String endTime;
 	
-	private String drawLineUserId;
+	public DrawLineVO(){
+		super();
+	}
 	
-	public Long getDlId(){
-		return dlId;
+	public DrawLineVO(DecorationVO decoration, UserVO applayUser,
+			DrawLineGroupVO drawLineGroup, UserVO drawLineUser) {
+		super();
+		this.decoration = decoration;
+		this.applayUser = applayUser;
+		this.drawLineGroup = drawLineGroup;
+		this.drawLineUser = drawLineUser;
 	}
 
-	public void setDlId(Long dlId){
+	public void setDlId(long dlId) {
 		this.dlId = dlId;
 	}
 
-	public String getOrderId(){
-		return orderId;
+	public Long getDlId() {
+		return dlId;
 	}
 
-	public void setOrderId(String orderId){
-		this.orderId = orderId;
+	public DecorationVO getDecoration() {
+		return decoration;
 	}
 
-	public short getOrderStatus() {
-		return orderStatus;
-	}
-
-	public void setOrderStatus(short orderStatus) {
-		this.orderStatus = orderStatus;
-	}
-
-	public String getCustomer(){
-		return customer;
-	}
-
-	public void setCustomer(String customer){
-		this.customer = customer;
-	}
-
-	public String getVillage(){
-		return village;
-	}
-
-	public void setVillage(String village){
-		this.village = village;
-	}
-
-	public String getHouseNumber(){
-		return houseNumber;
-	}
-
-	public void setHouseNumber(String houseNumber){
-		this.houseNumber = houseNumber;
-	}
-
-	public Float getOrderTotalPrice(){
-		return orderTotalPrice;
-	}
-
-	public void setOrderTotalPrice(Float orderTotalPrice){
-		this.orderTotalPrice = orderTotalPrice;
-	}
-
-	public String getVersionId(){
-		return versionId;
-	}
-
-	public void setVersionId(String versionId){
-		this.versionId = versionId;
-	}
-
-	public String getVersionName(){
-		return versionName;
-	}
-
-	public void setVersionName(String versionName){
-		this.versionName = versionName;
+	public void setDecoration(DecorationVO decoration) {
+		this.decoration = decoration;
 	}
 
 	@JSON(format="yyyy-MM-dd")
-	public Timestamp getApplayTime(){
+	public Timestamp getApplayTime() {
 		return applayTime;
 	}
 
-	public void setApplayTime(Timestamp applayTime){
+	public void setApplayTime(Timestamp applayTime) {
 		this.applayTime = applayTime;
 	}
 
-	public String getActualDate(){
-		return actualDate;
+	public String getContent() {
+		return content;
 	}
 
-	public void setActualDate(String actualDate){
-		this.actualDate = actualDate;
+	public void setContent(String content) {
+		this.content = content;
 	}
 
-	public String getStartTime(){
-		return startTime;
+	@JSON(format="yyyy-MM-dd HH:mm:ss")
+	public Timestamp getActualStartTime() {
+		return actualStartTime;
 	}
 
-	public void setStartTime(String startTime){
-		this.startTime = startTime;
+	public void setActualStartTime(Timestamp actualStartTime) {
+		this.actualStartTime = actualStartTime;
 	}
 
-	public String getEndTime(){
-		return endTime;
+	@JSON(format="yyyy-MM-dd HH:mm:ss")
+	public Timestamp getActualEndTime() {
+		return actualEndTime;
 	}
 
-	public void setEndTime(String endTime){
-		this.endTime = endTime;
+	public void setActualEndTime(Timestamp actualEndTime) {
+		this.actualEndTime = actualEndTime;
 	}
 
-	public short getStatus(){
+	public short getStatus() {
 		return status;
 	}
 
-	public void setStatus(short status){
+	public void setStatus(short status) {
 		this.status = status;
 	}
 
@@ -197,109 +130,44 @@ public class DrawLineVO implements Serializable {
 		this.count = count;
 	}
 
-	public String getApplayUser(){
+	public UserVO getApplayUser() {
 		return applayUser;
 	}
 
-	public void setApplayUser(String applayUser){
+	public void setApplayUser(UserVO applayUser) {
 		this.applayUser = applayUser;
 	}
 
-	public String getApplayUserId(){
-		return applayUserId;
+	public DrawLineGroupVO getDrawLineGroup() {
+		return drawLineGroup;
 	}
 
-	public void setApplayUserId(String applayUserId){
-		this.applayUserId = applayUserId;
+	public void setDrawLineGroup(DrawLineGroupVO drawLineGroup) {
+		this.drawLineGroup = drawLineGroup;
 	}
 
-	@JSON(format="yyyy-MM-dd")
-	public Timestamp getContractTime(){
-		return contractTime;
-	}
-
-	public void setContractTime(Timestamp contractTime){
-		this.contractTime = contractTime;
-	}
-
-	public String getContent() {
-		return content;
-	}
-
-	public void setContent(String content) {
-		this.content = content;
-	}
-
-	public void setHouseArea(float houseArea){
-		this.houseArea = houseArea;
-	}
-
-	public float getHouseArea(){
-		return houseArea;
-	}
-	
-	public Long getGid() {
-		return gid;
-	}
-
-	public void setGid(Long gid) {
-		this.gid = gid;
-	}
-
-	public void setDrawLineGroupName(String drawLineGroupName){
-		this.drawLineGroupName = drawLineGroupName;
-	}
-
-	public String getDrawLineGroupName(){
-		return drawLineGroupName;
-	}
-
-	public void setDrawLineUser(String drawLineUser){
-		this.drawLineUser = drawLineUser;
-	}
-
-	public String getDrawLineUser(){
+	public UserVO getDrawLineUser() {
 		return drawLineUser;
 	}
 
-	public void setDrawLineUserId(String drawLineUserId){
-		this.drawLineUserId = drawLineUserId;
+	public void setDrawLineUser(UserVO drawLineUser) {
+		this.drawLineUser = drawLineUser;
 	}
 
-	public String getDrawLineUserId(){
-		return drawLineUserId;
+	public String getStartTime() {
+		return startTime;
 	}
 
-	public void setDiscount(Float discount){
-		this.discount = discount;
+	public void setStartTime(String startTime) {
+		this.startTime = startTime;
 	}
 
-	public Float getDiscount(){
-		return discount;
+	public String getEndTime() {
+		return endTime;
 	}
 
-	public void setCityProper(String cityProper){
-		this.cityProper = cityProper;
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
 	}
-
-	public String getCityProper(){
-		return cityProper;
-	}
-
-	public String getDesigner(){
-		return designer;
-	}
-
-	public void setDesigner(String designer){
-		this.designer = designer;
-	}
-
-	public String getSupervisor(){
-		return supervisor;
-	}
-
-	public void setSupervisor(String supervisor){
-		this.supervisor = supervisor;
-	}
-
+	
 }

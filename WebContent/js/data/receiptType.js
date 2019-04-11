@@ -7,7 +7,8 @@ $(function ($) {
         modal: null,
         items: {},
         editFlg: false,
-        cleanItemsitems:{}
+        cleanItemsitems:{},
+        typeArray: ["现金", "银行", "转账", "对公账户", "券"]
     };
 
     $.extend(com.validate(),receiptType.validator);
@@ -18,9 +19,14 @@ $(function ($) {
     receiptType.items.name = com.focusPage("#name");
     receiptType.items.no = com.focusPage("#no");
     receiptType.items.type = com.focusPage("#type");
+    receiptType.items.grade = com.focusPage("#grade");
     receiptType.items.kino = com.focusPage("#kino");
     receiptType.items.kiname = com.focusPage("#kiname");
     receiptType.items.assistant = com.focusPage("#assistant");
+
+    com.post(api.ds.data, {}, function(res){
+        receiptType.items.grade.bindData(res.grade, "key", "value");
+    }, null, false);
 
     var displayFunc = (function () {
         var renderList = function (tableId, listData) {
@@ -54,6 +60,7 @@ $(function ($) {
                 ["键值:", v.no, "grey"],
                 ["类型:", v.type, "red"],
                 ["状态:", v.status == 1 ? "启用" : "禁用", "red"],
+                ["等级:", com.checkNull(v.grade, "无"), "red"],
                 ["金蝶编号:", com.checkNull(v.kino, "无"), "grey"],
                 ["金蝶名称:", com.checkNull(v.kiname, "无"), "grey"],
                 ["辅核项:", com.checkNull(v.assistant, "无"), "grey"]
@@ -85,6 +92,8 @@ $(function ($) {
                 receiptType.items.rtId.val(v.rtId);
                 receiptType.items.name.val(v.name);
                 receiptType.items.no.val(v.no);
+                receiptType.items.type.val(utils.accAdd($.inArray(v.type, receiptType.typeArray), 1));
+                receiptType.items.grade.val(v.grade);
                 receiptType.items.kino.val(v.kino);
                 receiptType.items.kiname.val(v.kiname);
                 receiptType.items.assistant.val(v.assistant);
@@ -131,6 +140,7 @@ $(function ($) {
             "receiptType.name" : receiptType.items.name.val(),
             "receiptType.no" : receiptType.items.no.val(),
             "receiptType.type" : receiptType.items.type.val(),
+            "receiptType.grade" : receiptType.items.grade.val(),
             "receiptType.kino" : receiptType.items.kino.val(),
             "receiptType.kiname" : receiptType.items.kiname.val(),
             "receiptType.assistant" : receiptType.items.assistant.val()

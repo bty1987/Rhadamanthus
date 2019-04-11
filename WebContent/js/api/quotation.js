@@ -82,6 +82,8 @@ $.extend(api, {quotation: {
     cloneQuotation:{url:"cloneQuotation.do"},
     copyQuotation: {url: "copyQuotation.do"},
     changeQuotationForDefault: {url: "changeQuotationForDefault.do"},
+    lockQuotation: {url: "lockQuotation.do"},
+    unlockQuotation: {url: "unlockQuotation.do"},
 
     queryQuotationFunctionAreaForCommonByQuotationId: {url: "queryQuotationFunctionAreaForCommonByQuotationId.do", demo: true},
     queryQuotationFunctionAreaByQuotationId: {url: "queryQuotationFunctionAreaByQuotationId.do", demo: true},

@@ -7,62 +7,6 @@
         </div>
     </div>
 
-    <div class="modal fade" id="workersalaryModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
-                    <h4 class="modal-title" id="myModalLabelss">添加工费</h4>
-                </div>
-                <div class="modal-body">
-                    <form class="form-horizontal" id="workersalaryId">
-                        <div class="form-group " >
-                            <label class="col-sm-3 control-label no-padding-right " for="workersalaryuser">姓名</label>
-                            <div class="col-md-9">
-                                <select id="workersalaryuser" class="chosen-select col-xs-10 col-sm-6 v_required "  data-toggle="popover" data-trigger='manual'>
-                                    <option value="">&nbsp;</option>
-                                </select>
-
-                            </div>
-                        </div>
-                        <div class="space-4"></div>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right" for="workersalarys">金额</label>
-                            <div class="col-sm-9">
-                                <input type="text" maxlength="64" id="workersalarys" class="col-xs-10 col-sm-6 v_salary v_required" data-toggle="popover" data-trigger='manual'/>
-
-                                <span style="color: red;padding: 10px" >
-								<b>* 扣款项请输入负数，如：-123 !</b>
-								</span>
-                            </div>
-                        </div>
-                        <div class="space-4"></div>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right" for="salaryTwotype">类型</label>
-                            <div class="col-sm-9">
-                                <select  maxlength="64" id="salaryTwotype" class="col-xs-10 col-sm-6  v_required" data-toggle="popover" data-trigger='manual'/>
-                            </div>
-
-                        </div>
-                        <div class="space-4" ></div>
-
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right" for="workersalarycomment">备注</label>
-                            <div class="col-sm-9">
-                                <textarea id="workersalarycomment" maxlength="128" class="col-xs-10 col-sm-6  "  rows="3"></textarea>
-                            </div>
-                        </div>
-                        <div class="space-4"></div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" id="addSaveBtn" class="btn btn-primary">保存</button>
-                    <button type="button" id="addCancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div id="workerBalance" style="padding: 10px 0;display: none">
         <div class="modal-header">
             <h4 class="modal-title" id="myModalLabel">工人质保金</h4>
@@ -89,6 +33,26 @@
         </div>
         <div class="modal-footer">
             <span id="paymentInfo" class="alert-danger pull-left inline"></span>
+        </div>
+    </div>
+
+    <div id="updateBalance" style="padding: 10px 0;display: none">
+        <div class="modal-header">
+            <h4 class="modal-title" id="myWorkerLabel">工人质保金</h4>
+        </div>
+        <div class="modal-body">
+            <form class="form-horizontal" id="balanceform">
+                <div class="form-group" style="padding-top: 20px">
+                    <label class="col-sm-3 control-label no-padding-right" for="toplimit">质保金上限</label>
+                    <div class="col-md-9">
+                        <input type="text" id="toplimit" class="col-xs-10 col-sm-6 v_required v_float"
+                               data-toggle="popover" data-trigger='manual'/>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <span id="balanceInfo" class="alert-danger pull-left inline"></span>
         </div>
     </div>
 
@@ -164,7 +128,7 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label no-padding-right" for="workertransfermoney">转款金额</label>
                             <div class="col-md-9">
-                                <input type="text" id="workertransfermoney" class="col-xs-10 col-sm-5 v_required v_float"
+                                <input type="text" id="workertransfermoney" class="col-xs-10 col-sm-6 v_required v_float"
                                        data-toggle="popover" data-trigger='manual'/>
                             </div>
                         </div>

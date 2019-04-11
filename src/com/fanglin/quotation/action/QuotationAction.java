@@ -148,6 +148,22 @@ public class QuotationAction extends BaseListAction {
 		
 		return SUCCESS;
 	}
+	
+	@Action(value = "lockQuotation", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String lockQuotation() throws FLException{ 
+		
+		quotationService.lockQuotation(quotation, queryUserId());
+	    
+		return SUCCESS;
+	}
+	
+	@Action(value = "unlockQuotation", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String unlockQuotation() throws FLException{ 
+		
+		quotationService.unlockQuotation(quotation, queryUserId());
+	    
+		return SUCCESS;
+	}
 
 	public QuotationVO getQuotation(){
 		return quotation;

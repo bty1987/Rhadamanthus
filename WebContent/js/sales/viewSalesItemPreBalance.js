@@ -4,6 +4,72 @@ $(function(){
 
     var dompanyFlag = com.focusPage('#viewPopUp').attr('data-dompany');
 
+    if(dompanyFlag=='true'){
+
+        com.post(api.inventory.querySalesBySid,{"sales.sid" : _sid}, function (res) {
+            var v = res.sales;
+            var $ul = $('<ul></ul>').addClass('item-list ui-sortable  fl-table-list');
+            var $liLine = $('<li></li>').addClass('item-orange clearfix');
+            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+            var $h3 = $('<h3></h3>').addClass('oid');
+            var $small = $('<small></small>').addClass('blue').html(v.orderId);
+            var $btnPre = $('<a></a>').addClass('btn btn-minier btn-yellow').html('预结算');
+            var $btnDiv = $('<div></div>').addClass('action-buttons pull-right');
+
+            var propertyArr = [
+                ["楼盘地址:", v.house.village.name + " " + v.house.houseNumber, "grey"],
+                ["客户名:", v.customer.name, "grey"],
+                ["渠道:", v.salesman.currentName, "grey"],
+                ["部门:", v.dept.name, "grey"],
+                ["分区:", v.region.name, "grey"],
+                ["导购:", v.guider.currentName, "grey"],
+                ["驻店:", v.instorer.currentName, "grey"],
+                ["品牌:", v.brand, "grey"],
+                ["定金:", v.depositpay, "blue"],
+                ["补款:", v.fullpay, "blue"],
+                ["总额:", v.total, "grey"],
+                ["抹零:", v.maling, "blue"],
+                ["厂商抹零:", v.venderMaling, "blue"],
+                ["券值:", v.coupon, "blue"],
+                ["券信息:", v.couponInfo, "grey"],
+                ["创建时间:", v.createTime, "green"],
+                ["结算时间:", v.balanceTime, "green"],
+                ["补款时间:", v.fullpayTime, "green"],
+                ["备注:", v.comment, "grey"]
+            ];
+            $.each(propertyArr, function (index, value) {
+                var $liProperty = $('<li></li>').css({"border-bottom": "0px"});
+                $('<strong></strong>').attr('name', value[3]).html(value[0]).appendTo($liProperty);
+                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+                $liProperty.appendTo($ulProperty);
+            });
+            $liLine.appendTo($ul);
+            $small.appendTo($h3);
+            $btnDiv.append($btnPre).appendTo($h3);
+            $liLine.append($h3).append($ulProperty);
+            $ul.appendTo(com.focusPage("#condList1"));
+
+            $btnPre.click(function () {
+
+                var _option = {};
+
+                _option["sid[0]"] = v.sid;
+
+                layer.confirm('确定要将单号为 ' + v.no + ' 的销售单进行预结算吗?', {
+                    btn: ['确定', '取消'] //按钮
+                }, function (index, layero) {
+                    com.post(api.inventory.preSalesBalance, _option, function (res) {
+                        layer.closeAll();
+                        layer.msg('预结算成功');
+                    });
+                });
+
+            });
+
+        });
+
+    }
+
     var initList = (function () {
 
         var renderList = function (tableId, listData) {
@@ -13,7 +79,7 @@ $(function(){
             if (listData && listData.length) {
                 $.each(listData, function (i, v) {
                     var $liLine = $('<li></li>').addClass('item-orange clearfix');
-                    var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix')
+                    var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
                     var $h3 = $('<h3></h3>').addClass('oid');
                     var $small = $('<small></small>').addClass('blue').html(v.goods.name);
                     var $btnDiv = $('<div></div>').addClass('action-buttons pull-right');
@@ -117,7 +183,6 @@ $(function(){
                     $liLine.append($h3).append($ulProperty);
 
 
-
                 });
 
                 $ul.appendTo($tableWrap);
@@ -133,7 +198,6 @@ $(function(){
         };
 
     })();
-
 
     viewSalesItems(_sid);
 

@@ -32,416 +32,436 @@ $.extend(api.index, {
     },
     salesActivityIndex:{
         url:"/views/sales/salesActivity.html"
+    },
+    salesSupplement: {
+        url: "views/sales/salesSupplement.html"
     }
 });
 
 $.extend(api, {
     inventory: {
         pageCheckList: {
-            url: "pageCheckList.do",
+            url: "pageCheckList.do"
         },
 
         pageStorehouse: {
-            url: "pageStorehouse.do",
+            url: "pageStorehouse.do"
         },
         queryStorehouse: {
-            url: "queryStorehouse.do",
+            url: "queryStorehouse.do"
         },
         queryStorehouseByUId: {
-            url: "queryStorehouseByUId.do",
+            url: "queryStorehouseByUId.do"
         },
         queryStorehouseForSelf: {
-            url: "queryStorehouseForSelf.do",
+            url: "queryStorehouseForSelf.do"
         },
         addStorehouse: {
-            url: "addStorehouse.do",
+            url: "addStorehouse.do"
         },
         updateStorehouseForStatus: {
-            url: "updateStorehouseForStatus.do",
+            url: "updateStorehouseForStatus.do"
         },
 
         queryStorehouseUserByUserId: {
-            url: "queryStorehouseUserByUserId.do",
+            url: "queryStorehouseUserByUserId.do"
         },
         updateStorehouseUser: {
-            url: "updateStorehouseUser.do",
+            url: "updateStorehouseUser.do"
         },
 
         pageGoods: {
-            url: "pageGoods.do",
+            url: "pageGoods.do"
         },
         pageGoodsForAdvance: {
-            url: "pageGoodsForAdvance.do",
+            url: "pageGoodsForAdvance.do"
         },
         queryGoods: {
-            url: "queryGoods.do",
+            url: "queryGoods.do"
         },
         queryGoodsByNo: {
-            url: "queryGoodsByNo.do",
+            url: "queryGoodsByNo.do"
         },
         queryGoodsByName: {
-            url: "queryGoodsByName.do",
+            url: "queryGoodsByName.do"
         },
         queryGoodsByBarcode: {
-            url: "queryGoodsByBarcode.do",
+            url: "queryGoodsByBarcode.do"
         },
         queryGoodsByAtid: {
-            url: "queryGoodsByAtid.do",
+            url: "queryGoodsByAtid.do"
         },
         queryGoodsByGId: {
-            url: "queryGoodsByGId.do",
+            url: "queryGoodsByGId.do"
         },
         queryPackage: {
-            url: "queryPackage.do",
+            url: "queryPackage.do"
         },
         addGoods: {
-            url: "addGoods.do",
+            url: "addGoods.do"
         },
         addPackage: {
-            url: "addPackage.do",
+            url: "addPackage.do"
         },
         updateGoods: {
-            url: "updateGoods.do",
+            url: "updateGoods.do"
         },
         updateGoodsForStatus: {
-            url: "updateGoodsForStatus.do",
+            url: "updateGoodsForStatus.do"
         },
         bindGoodsForPackage: {
-            url: "bindGoodsForPackage.do",
+            url: "bindGoodsForPackage.do"
         },
         deleteGoodsForPackage: {
-            url: "deleteGoodsForPackage.do",
+            url: "deleteGoodsForPackage.do"
         },
         queryColorByGid: {
-            url: "queryColorByGid.do",
+            url: "queryColorByGid.do"
         },
         queryColorForEnableByGid: {
-            url: "queryColorForEnableByGid.do",
+            url: "queryColorForEnableByGid.do"
         },
         addColor: {
-            url: "addColor.do",
+            url: "addColor.do"
         },
         updateColorForStatus: {
-            url: "updateColorForStatus.do",
+            url: "updateColorForStatus.do"
         },
 
         queryFormatByGid: {
-            url: "queryFormatByGid.do",
+            url: "queryFormatByGid.do"
         },
         queryFormatForEnableByGid: {
-            url: "queryFormatForEnableByGid.do",
+            url: "queryFormatForEnableByGid.do"
         },
         addFormat: {
-            url: "addFormat.do",
+            url: "addFormat.do"
         },
         updateFormatForStatus: {
-            url: "updateFormatForStatus.do",
+            url: "updateFormatForStatus.do"
         },
 
         queryPriceByGid: {
-            url: "queryPriceByGid.do",
+            url: "queryPriceByGid.do"
         },
         addPrice: {
-            url: "addPrice.do",
+            url: "addPrice.do"
         },
         deletePrice: {
-            url: "deletePrice.do",
+            url: "deletePrice.do"
         },
-
+        querySupplierByGid: {
+            url: "querySupplierByGid.do"
+        },
+        querySupplierForEnableByGid: {
+            url: "querySupplierForEnableByGid.do"
+        },
+        addSupplier: {
+            url: "addSupplier.do"
+        },
+        updateSupplierForStatus: {
+            url: "updateSupplierForStatus.do"
+        },
         pageGoodsStorehouseStock: {
-            url: "pageGoodsStorehouseStock.do",
+            url: "pageGoodsStorehouseStock.do"
         },
         checkGoodsStorehouseStock: {
-            url: "checkGoodsStorehouseStock.do",
+            url: "checkGoodsStorehouseStock.do"
         },
         queryGoodsStorehouseStockByShIdAGId: {
-            url: "queryGoodsStorehouseStockByShIdAGId.do",
+            url: "queryGoodsStorehouseStockByShIdAGId.do"
         },
         queryGoodsStorehouseStockByGid: {
-            url: "queryGoodsStorehouseStockByGid.do",
+            url: "queryGoodsStorehouseStockByGid.do"
         },
         makeGoodsStorehouseStock: {
-            url: "makeGoodsStorehouseStock.do",
+            url: "makeGoodsStorehouseStock.do"
         },
         mergePackage: {
-            url: "mergePackage.do",
+            url: "mergePackage.do"
         },
         splitPackage: {
-            url: "splitPackage.do",
+            url: "splitPackage.do"
         },
 
         pageManifestTemplate: {
-            url: "pageManifestTemplate.do",
+            url: "pageManifestTemplate.do"
         },
         queryManifestTemplate: {
-            url: "queryManifestTemplate.do",
+            url: "queryManifestTemplate.do"
         },
         queryManifestTemplateByMtId: {
-            url: "queryManifestTemplateByMtId.do",
+            url: "queryManifestTemplateByMtId.do"
         },
         queryManifestTemplateItemByMtId: {
-            url: "queryManifestTemplateItemByMtId.do",
+            url: "queryManifestTemplateItemByMtId.do"
         },
         queryManifestItemByMtId: {
-            url: "queryManifestItemByMtId.do",
+            url: "queryManifestItemByMtId.do"
         },
         queryManifestItemBySiids: {
-            url: "queryManifestItemBySiids.do",
+            url: "queryManifestItemBySiids.do"
         },
         addManifestTemplate: {
-            url: "addManifestTemplate.do",
+            url: "addManifestTemplate.do"
         },
         addManifestTemplateItem: {
-            url: "addManifestTemplateItem.do",
+            url: "addManifestTemplateItem.do"
         },
         updateManifestTemplate: {
-            url: "updateManifestTemplate.do",
+            url: "updateManifestTemplate.do"
         },
         updateManifestTemplateForStatus: {
-            url: "updateManifestTemplateForStatus.do",
+            url: "updateManifestTemplateForStatus.do"
         },
         deleteManifestTemplate: {
-            url: "deleteManifestTemplate.do",
+            url: "deleteManifestTemplate.do"
         },
         deleteManifestTemplateItem: {
-            url: "deleteManifestTemplateItem.do",
+            url: "deleteManifestTemplateItem.do"
         },
 
         pageManifest: {
-            url: "pageManifest.do",
+            url: "pageManifest.do"
         },
         queryManifestByMid: {
-            url: "queryManifestByMid.do",
+            url: "queryManifestByMid.do"
         },
         queryManifestItemByMid: {
-            url: "queryManifestItemByMid.do",
+            url: "queryManifestItemByMid.do"
         },
         addManifestForCG: {
-            url: "addManifestForCG.do",
+            url: "addManifestForCG.do"
         },
         addManifestForXG: {
-            url: "addManifestForXG.do",
+            url: "addManifestForXG.do"
         },
         addManifestForCR: {
-            url: "addManifestForCR.do",
+            url: "addManifestForCR.do"
         },
         addManifestForXB: {
-            url: "addManifestForXB.do",
+            url: "addManifestForXB.do"
         },
         addManifestForDB: {
-            url: "addManifestForDB.do",
+            url: "addManifestForDB.do"
         },
         addManifestForPU: {
-            url: "addManifestForPU.do",
+            url: "addManifestForPU.do"
         },
         addManifestForAS: {
-            url: "addManifestForAS.do",
+            url: "addManifestForAS.do"
         },
         addManifestItem: {
-            url: "addManifestItem.do",
+            url: "addManifestItem.do"
         },
         updateManifest: {
-            url: "updateManifest.do",
+            url: "updateManifest.do"
         },
         updateManifestItem: {
-            url: "updateManifestItem.do",
+            url: "updateManifestItem.do"
         },
         confirmManifest: {
-            url: "confirmManifest.do",
+            url: "confirmManifest.do"
         },
         deleteManifestItem: {
-            url: "deleteManifestItem.do",
+            url: "deleteManifestItem.do"
         },
 
         queryStorehouseStock: {
-            url: "queryStorehouseStock.do",
+            url: "queryStorehouseStock.do"
         },
         queryPurchaseAmount: {
-            url: "queryPurchaseAmount.do",
+            url: "queryPurchaseAmount.do"
         },
 
         pagePurchase: {
-            url: "pagePurchase.do",
+            url: "pagePurchase.do"
         },
 
         pagePurchaseObDelivery: {
-            url: "pagePurchaseObDelivery.do",
+            url: "pagePurchaseObDelivery.do"
         },
 
         addPurchase: {
-            url: "addPurchase.do",
+            url: "addPurchase.do"
         },
         addPurchaseItem: {
-            url: "addPurchaseItem.do",
+            url: "addPurchaseItem.do"
         },
         queryPurchaseItemByPid: {
-            url: "queryPurchaseItemByPid.do",
+            url: "queryPurchaseItemByPid.do"
         },
         queryPurchaseByPid: {
-            url: "queryPurchaseByPid.do",
+            url: "queryPurchaseByPid.do"
         },
         updatePurchase: {
-            url: "updatePurchase.do",
+            url: "updatePurchase.do"
         },
         updatePurchaseForStatus: {
-            url: "updatePurchaseForStatus.do",
+            url: "updatePurchaseForStatus.do"
         },
         updatePurchaseForBalanceStatus: {
-            url: "updatePurchaseForBalanceStatus.do",
+            url: "updatePurchaseForBalanceStatus.do"
         },
         updatePurchaseItem: {
-            url: "updatePurchaseItem.do",
+            url: "updatePurchaseItem.do"
         },
         deletePurchaseItem: {
-            url: "deletePurchaseItem.do",
+            url: "deletePurchaseItem.do"
         },
         queryPurchaseItemByPids: {
-            url: "queryPurchaseItemByPids.do",
+            url: "queryPurchaseItemByPids.do"
         },
         queryPurchaseBalanceByPid: {
-            url: "queryPurchaseBalanceByPid.do",
+            url: "queryPurchaseBalanceByPid.do"
         },
         addPurchaseBalance: {
-            url: "addPurchaseBalance.do",
+            url: "addPurchaseBalance.do"
         },
         updatePurchaseBalance: {
-            url: "updatePurchaseBalance.do",
+            url: "updatePurchaseBalance.do"
         },
         updatePurchaseBalanceForStatus: {
-            url: "updatePurchaseBalanceForStatus.do",
+            url: "updatePurchaseBalanceForStatus.do"
         },
         pageAccessoriesType: {
-            url: "pageAccessoriesType.do",
+            url: "pageAccessoriesType.do"
         },
         queryAccessoriesType: {
-            url: "queryAccessoriesType.do",
+            url: "queryAccessoriesType.do"
         },
         queryAccessoriesTypeByWtid: {
-            url: "queryAccessoriesTypeByWtid.do",
+            url: "queryAccessoriesTypeByWtid.do"
         },
         updateAccessoriesTypeForStatus: {
-            url: "updateAccessoriesTypeForStatus.do",
+            url: "updateAccessoriesTypeForStatus.do"
         },
         addAccessoriesType: {
-            url: "addAccessoriesType.do",
+            url: "addAccessoriesType.do"
         },
         updateAccessoriesType: {
-            url: "updateAccessoriesType.do",
+            url: "updateAccessoriesType.do"
         },
 
         pageAccessories: {
-            url: "pageAccessories.do",
+            url: "pageAccessories.do"
         },
         queryAccessoriesItemByAid: {
-            url: "queryAccessoriesItemByAid.do",
+            url: "queryAccessoriesItemByAid.do"
         },
         queryAccessoriesItemByAids: {
-            url: "queryAccessoriesItemByAids.do",
+            url: "queryAccessoriesItemByAids.do"
         },
         addAccessories: {
-            url: "addAccessories.do",
+            url: "addAccessories.do"
         },
         refundAccessories: {
-            url: "refundAccessories.do",
+            url: "refundAccessories.do"
         },
         updateAccessoriesForStatus: {
-            url: "updateAccessoriesForStatus.do",
+            url: "updateAccessoriesForStatus.do"
         },
         addAccessoriesItem: {
-            url: "addAccessoriesItem.do",
+            url: "addAccessoriesItem.do"
         },
         updateAccessoriesItem: {
-            url: "updateAccessoriesItem.do",
+            url: "updateAccessoriesItem.do"
         },
         deleteAccessoriesItem: {
-            url: "deleteAccessoriesItem.do",
+            url: "deleteAccessoriesItem.do"
         },
         queryManifestByAid: {
             url: "queryManifestByAid.do"
         },
 
         addSales: {
-            url: "addSales.do",
+            url: "addSales.do"
         },
         pageSales: {
-            url: "pageSales.do",
+            url: "pageSales.do"
         },
         pageSalesForAdvance: {
-            url: "pageSalesForAdvance.do",
+            url: "pageSalesForAdvance.do"
         },
         pageSalesForBalance: {
-            url: "pageSalesForBalance.do",
+            url: "pageSalesForBalance.do"
         },
         pageSalesForDompany: {
-            url: "pageSalesForDompany.do",
+            url: "pageSalesForDompany.do"
         },
         pageSalesForBalanceByDompany: {
-            url: "pageSalesForBalanceByDompany.do",
+            url: "pageSalesForBalanceByDompany.do"
         },
         querySalesBySid: {
-            url: "querySalesBySid.do",
+            url: "querySalesBySid.do"
         },
         querySalesByNo: {
-            url: "querySalesByNo.do",
+            url: "querySalesByNo.do"
+        },
+        updateSales: {
+            url: "updateSales.do"
         },
         updateSalesForCoupon: {
-            url: "updateSalesForCoupon.do",
+            url: "updateSalesForCoupon.do"
         },
         updateSalesForMaling: {
-            url: "updateSalesForMaling.do",
+            url: "updateSalesForMaling.do"
+        },
+        querySalesForGrade:{
+            url: "querySalesForGrade.do"
         },
         querySalesItemBySid: {
-            url: "querySalesItemBySid.do",
+            url: "querySalesItemBySid.do"
         },
         querySalesItemBySids: {
-            url: "querySalesItemBySids.do",
+            url: "querySalesItemBySids.do"
         },
         addSalesItem: {
-            url: "addSalesItem.do",
+            url: "addSalesItem.do"
         },
         updateSalesItem: {
-            url: "updateSalesItem.do",
+            url: "updateSalesItem.do"
         },
         updateSalesItemForBalance: {
-            url: "updateSalesItemForBalance.do",
+            url: "updateSalesItemForBalance.do"
         },
         deleteSalesItem: {
-            url: "deleteSalesItem.do",
+            url: "deleteSalesItem.do"
         },
 
         queryRefundsItemBySid: {
-            url: "queryRefundsItemBySid.do",
+            url: "queryRefundsItemBySid.do"
         },
 
         queryPriceByPid: {
-            url: "queryPriceByPid.do",
+            url: "queryPriceByPid.do"
         },
         pageSalesBalance: {
-            url: "pageSalesBalance.do",
+            url: "pageSalesBalance.do"
         },
         pageSalesBalanceForDompany: {
-            url: "pageSalesBalanceForDompany.do",
+            url: "pageSalesBalanceForDompany.do"
         },
         updateSalesBalanceForVBalance: {
-            url: "updateSalesBalanceForVBalance.do",
+            url: "updateSalesBalanceForVBalance.do"
         },
         updateSalesBalanceForPBalance: {
-            url: "updateSalesBalanceForPBalance.do",
+            url: "updateSalesBalanceForPBalance.do"
         },
         passSalesBalance: {
-            url: "passSalesBalance.do",
+            url: "passSalesBalance.do"
         },
         preSalesBalance: {
-            url: "preSalesBalance.do",
+            url: "preSalesBalance.do"
         },
         vpostSalesBalance: {
-            url: "vpostSalesBalance.do",
+            url: "vpostSalesBalance.do"
         },
         postSalesBalance: {
-            url: "postSalesBalance.do",
+            url: "postSalesBalance.do"
         },
         querySalesBalanceItemBySbid: {
-            url: "querySalesBalanceItemBySbid.do",
+            url: "querySalesBalanceItemBySbid.do"
         },
         queryManifestForPUByPids: {
             url: "queryManifestForPUByPids.do"
@@ -458,7 +478,16 @@ $.extend(api, {
         querySalesActivity :{url:"querySalesActivity.do"},
         updateSalesForActivity :{url:"updateSalesForActivity.do"},
         abateSalesActivityItem :{url:"abateSalesActivityItem.do"},
-        receiveSalesActivityItem :{url:"receiveSalesActivityItem.do"}
+        receiveSalesActivityItem :{url:"receiveSalesActivityItem.do"},
+        
+        deliveSalesActivityItem :{url:"deliveSalesActivityItem.do"},
+        unrefundSalesActivityItem :{url:"unrefundSalesActivityItem.do"},
+        upgradeSalesActivityItem :{url:"upgradeSalesActivityItem.do"},
+        refundSalesActivityItem :{url:"refundSalesActivityItem.do"},
+        expendSalesActivityItem :{url:"expendSalesActivityItem.do"},
+        pageSalesForPompany :{url:"pageSalesForPompany.do"},
+        pageSalesForBalanceByPompany :{url:"pageSalesForBalanceByPompany.do"},
+        pageSalesBalanceForPompany:{url:"pageSalesBalanceForPompany.do"}
     }
 });
 
