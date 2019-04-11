@@ -31,13 +31,13 @@ public class AwardRecordServiceImpl implements AwardRecordService {
 
 		if (awardRecord.getAwardStock().getAsId() != null) {
 			filters.add(new Filter("awardStock", String.valueOf(awardRecord.getAwardStock().getAsId()), "eq"));
-		}
 
+		}
 		List<AwardRecordPO> AwardRecordPOs = awardRecordDao.pageAwardRecord(paging, filters, company);
 		List<AwardRecordVO> awardRecordVOs = new ArrayList<AwardRecordVO>();
 
 		AwardRecordVO awardRecordVO = null;
-
+  
 		for (AwardRecordPO awardRecordPO : AwardRecordPOs) {
 
 			awardRecordVO = new AwardRecordVO(new AwardStockVO(), new UserVO());

@@ -1,9 +1,9 @@
 jQuery(function ($) {
-    drawNode.draw(params.viewNode);
 
     var decorationActivityItem = {
         items: {}
     };
+
     var ActivityOrderId = params.decorationOrderId;
     var activityInfo = com.focusPage("#activityInfo");
     var things = com.focusPage("#things");
@@ -38,7 +38,7 @@ jQuery(function ($) {
                         activityItemName: _activityItem.name + " 金额:" + _activityItem.money
                     });
                 }
-            }
+        }
 
             things.chosen("destroy");
             things.chosen({width: "216px", multi_type: "input"});
@@ -140,37 +140,52 @@ jQuery(function ($) {
         com.clearValidator();
     });
 
+    initdraw(decorationActivityItem.decorationOrderId);
+
     //初始化
     function initdraw(orderId) {
+
         decorationUtils.decorationActivityItemInfo(decorationActivityItem.items.activityItems, decorationActivityItem.items.decorationActivityItems1, uiBtnMethod, orderId);
         decorationUtils.decorationActivityInfo(decorationActivityItem.items.decorationActivityItems, activityBtnMethod, orderId);
     }
 
-    initdraw(ActivityOrderId);
+
 
     function uiBtnMethod(uiPgDiv, activityItem) {
 
-        var abateBtn = $("<span></span>").addClass("ui-icon icon-ban-circle red").attr("id", "abate_" + activityItem.daiId).appendTo(uiPgDiv);
-
-
-        var receiveBtn = $("<span></span>").addClass("ui-icon icon-bookmark").attr("id", "receive_" + activityItem.daiId).appendTo(uiPgDiv);
-
+        var btnViewBtn= $("<a></a>").addClass("btn btn-minier btn-yellow").html("失效").css("margin", "0px 3px").attr("id", "abate_" + activityItem.daiId).appendTo(uiPgDiv);
+        var receiveBtn= $("<a></a>").addClass("btn btn-minier btn-success").html("领取").css("margin", "0px 3px").attr("id", "receive_" + activityItem.daiId).appendTo(uiPgDiv);
+        var refundBtn= $("<a></a>").addClass("btn btn-minier btn-warning").html("退货").css("margin", "0px 3px").attr("id", "receive_" + activityItem.daiId).appendTo(uiPgDiv);
+        var deliveryBtn= $("<a></a>").addClass("btn btn-minier btn-inverse").html("配送").css("margin", "0px 3px").attr("id", "receive_" + activityItem.daiId).appendTo(uiPgDiv);
+        var unrefundBtn= $("<a></a>").addClass("btn btn-minier btn-danger").html("未退").css("margin", "0px 3px").attr("id", "receive_" + activityItem.daiId).appendTo(uiPgDiv);
+        var upgradeBtn= $("<a></a>").addClass("btn btn-minier btn-pink").html("升级").css("margin", "0px 3px").attr("id", "receive_" + activityItem.daiId).appendTo(uiPgDiv);
+        var expendBtn= $("<a></a>").addClass("btn btn-minier btn-purple ").html("消耗").css("margin", "0px 3px").attr("id", "receive_" + activityItem.daiId).appendTo(uiPgDiv);
 
         if (activityItem.state == 0) {
-
-            abateBtn.on("click", function () {
+            btnViewBtn.on("click", function () {
                 abateDecorationActivityItem(activityItem.daiId, activityItem.activityItemName);
             });
 
             receiveBtn.on("click", function () {
-                if (activityItem.state == 2) {
-                    com.showAlert(com.warning, "已领取!!");
-                } else {
-                    receiveDecorationActivityItem(activityItem.daiId, activityItem.activityItemName);
-                }
+                receiveDecorationActivityItem(activityItem.daiId, activityItem.activityItemName);
 
             });
         }
+        refundBtn.on("click", function () {
+            refundDecorationActivityItem(activityItem.daiId, activityItem.activityItemName);
+        });
+        deliveryBtn.on("click", function () {
+            deliveDecorationActivityItem(activityItem.daiId, activityItem.activityItemName);
+        });
+        unrefundBtn.on("click", function () {
+            unrefundDecorationActivityItem(activityItem.daiId, activityItem.activityItemName);
+        });
+        upgradeBtn.on("click", function () {
+            upgradeDecorationAtivityItem(activityItem.daiId, activityItem.activityItemName);
+        });
+        expendBtn.on("click", function () {
+            expendDecorationActivityItem(activityItem.daiId, activityItem.activityItemName);
+        });
 
     }
 
@@ -190,7 +205,6 @@ jQuery(function ($) {
 
                     com.focusPage("#convert_" + daiId).unbind();
                     com.focusPage("#abate_" + daiId).unbind();
-                    com.focusPage("#widgetHeader_" + daiId).addClass("header-color-orange");
                     initdraw(ActivityOrderId);
                 });
             }
@@ -244,6 +258,10 @@ jQuery(function ($) {
             for (var i = 0; i < decorationActivitys.length; i++) {
                 var _decorationActivity = decorationActivitys[i];
 
+                if(_decorationActivity.status == 1){
+                    continue;
+                }
+
                 _activitys.push({
                     aid: _decorationActivity.activity.aid,
                     activityName: _decorationActivity.activity.name,
@@ -273,6 +291,10 @@ jQuery(function ($) {
 
             for (var i = 0; i < decorationActivitys.length; i++) {
                 var _decorationActivity = decorationActivitys[i];
+
+                if(_decorationActivity.status == 1){
+                    continue;
+                }
 
                 _activitys.push({
                     aid: _decorationActivity.activity.aid,
@@ -306,8 +328,7 @@ jQuery(function ($) {
         };
         com.post(api.decoration.addDecorationActivity, options, function (res) {
             var decorationActivity = res.decorationActivity;
-            decorationUtils.addDecorationActivityForDiv(decorationActivityItem.activitys, decorationActivity, activityBtnMethod);
-            initdraw(ActivityOrderId);
+            decorationUtils.addDecorationActivityForDiv(decorationActivityItem.items.decorationActivityItems, decorationActivity, activityBtnMethod);
         });
         decorationActivityItem.joinDecorationActivityModal.modal("hide");
     });
@@ -331,12 +352,14 @@ jQuery(function ($) {
             return;
         }
 
+
         var submitFlag = true;
 
         var orderId = ActivityOrderId;
         var activityName = decorationActivityItem.activity.activity.find("option:selected").text();
         var stateType = com.focusPage("#receiveTypes").val();
         var activityId = com.focusPage("#activity").val();
+
         var index = 0;
         var options = {
             "approval.receiver.userId": receiverId,
@@ -441,16 +464,29 @@ jQuery(function ($) {
             com.showAlert(com.info, "提交成功");
         });
         decorationActivityItem.applySpecialDecorationActivityItemModal.modal("hide");
+
     });
 
     function activityBtnMethod(uiPgDiv, decorationActivity) {
 
-        var deleteBtn = $("<span></span>").addClass("ui-icon icon-ban-circle red").attr("id", "delete_" + decorationActivity.daId).appendTo(uiPgDiv);
+        var deleteBtn = $("<a></a>").addClass("btn btn-minier btn-yellow").html("删除").css("margin", "0px 3px").attr("id", "delete_" + decorationActivity.daId).appendTo(uiPgDiv);
+        var unlockBtn = $("<a></a>").addClass("btn btn-minier btn-success").html("解锁").css("margin", "0px 3px").attr("id", "unlock_" + decorationActivity.daId).appendTo(uiPgDiv);
+        var lockBtn = $("<a></a>").addClass("btn btn-minier btn-warning").html("锁定").css("margin", "0px 3px").attr("id", "lock_" + decorationActivity.daId).appendTo(uiPgDiv);
+
+
 
         deleteBtn.on("click", function () {
+            if(com.focusPage("#dactivity_" + decorationActivity.daId).attr("status") == 0){
             deleteDecorationActivity(decorationActivity.daId);
+            }
         });
 
+        unlockBtn.on("click", function () {
+            unlockDecorationActivity(decorationActivity.daId);
+        });
+        lockBtn.on("click", function () {
+            lockDecorationActivity(decorationActivity.daId);
+        })
 
     }
 
@@ -459,15 +495,42 @@ jQuery(function ($) {
         com.switchPage(api.index.decorationIndex.url);
     });
 
+    //删除活动
     function deleteDecorationActivity(daId) {
-
         var options = {
             "decorationActivity.daId": daId
         };
 
         com.post(api.decoration.deleteDecorationActivity, options, function (res) {
             com.focusPage("#dactivity_" + res.decorationActivity.daId).remove();
-            initdraw(ActivityOrderId);
+        });
+    }
+
+    //解锁
+    function unlockDecorationActivity(daId) {
+
+        var options = {
+            "decorationActivity.daId": daId
+        };
+
+        com.post(api.decoration.unlockDecorationActivity, options, function (res) {
+            var daId = res.decorationActivity;
+            com.focusPage("#state_" + daId.daId).text("初始")
+            com.focusPage("#dactivity_" + daId.daId).attr("status", "0")
+        });
+    }
+
+    //锁定
+    function lockDecorationActivity(daId) {
+
+        var options = {
+            "decorationActivity.daId": daId
+        };
+
+        com.post(api.decoration.lockDecorationActivity, options, function (res) {
+            var daId = res.decorationActivity;
+            com.focusPage("#state_" + daId.daId).text("锁定")
+            com.focusPage("#dactivity_" + daId.daId).attr("status", "1")
         });
     }
 
@@ -485,12 +548,12 @@ jQuery(function ($) {
 
                     var daiId = res.decorationActivityItem.daiId;
 
+                    com.focusPage("#state_" + daiId).text("失效");
+
                     com.focusPage("#convert_" + daiId).unbind();
                     com.focusPage("#abate_" + daiId).unbind();
 
                     com.focusPage("#receive_" + daiId).unbind();
-                    com.focusPage("#widgetHeader_" + daiId).addClass("header-color-grey");
-                    initdraw(ActivityOrderId);
                 });
             }
         });
@@ -510,7 +573,7 @@ jQuery(function ($) {
 
                 var options = {
                     "decorationActivityItem.daiId": daiId,
-                }
+                };
 
                 com.post(api.decoration.receiveDecorationActivityItem, options, function (res) {
 
@@ -520,9 +583,133 @@ jQuery(function ($) {
                     com.focusPage("#abate_" + daiId).unbind();
 
                     com.focusPage("#receive_" + daiId).unbind();
-                    com.focusPage("#widgetHeader_" + daiId).addClass("header-color-orange");
                 })
             }
+        });
+    }
+
+    //退货装修活动项
+    function refundDecorationActivityItem(daiId, activityItemName) {
+
+        bootbox.confirm("是否确认退货" + activityItemName + "活动物品?", function (result) {
+            if(result){
+
+                var options = {
+                    "decorationActivityItem.daiId": daiId,
+                };
+
+                com.post(api.decoration.refundDecorationActivityItem, options, function (res) {
+
+                    var daiId = res.decorationActivityItem.daiId;
+                    com.focusPage("#state_" + daiId).text("退货");
+
+                    com.focusPage("#convert_" + daiId).unbind();
+                    com.focusPage("#abate_" + daiId).unbind();
+
+                    com.focusPage("#receive_" + daiId).unbind();
+                })
+            }
+
+        });
+    }
+
+    //配送装修活动项
+    function deliveDecorationActivityItem(daiId, activityItemName) {
+
+        bootbox.confirm("是否确认配送" + activityItemName + "活动物品?", function (result) {
+            if(result){
+
+                var options = {
+                    "decorationActivityItem.daiId": daiId,
+                };
+
+                com.post(api.decoration.deliveDecorationActivityItem, options, function (res) {
+
+                    var daiId = res.decorationActivityItem.daiId;
+                    com.focusPage("#state_" + daiId).text("配送");
+
+                    com.focusPage("#convert_" + daiId).unbind();
+                    com.focusPage("#abate_" + daiId).unbind();
+
+                    com.focusPage("#receive_" + daiId).unbind();
+                })
+            }
+
+        });
+    }
+
+    //未退装修活动
+    function unrefundDecorationActivityItem(daiId, activityItemName) {
+
+        bootbox.confirm("是否确认未退" + activityItemName + "活动物品?", function (result) {
+            if(result){
+
+                var options = {
+                    "decorationActivityItem.daiId": daiId,
+                };
+
+                com.post(api.decoration.unrefundDecorationActivityItem, options, function (res) {
+
+                    var daiId = res.decorationActivityItem.daiId;
+                    com.focusPage("#state_" + daiId).text("未退");
+
+                    com.focusPage("#convert_" + daiId).unbind();
+                    com.focusPage("#abate_" + daiId).unbind();
+
+                    com.focusPage("#receive_" + daiId).unbind();
+                })
+            }
+
+        });
+    }
+
+    //升级装修活动
+    function upgradeDecorationAtivityItem(daiId, activityItemName) {
+
+        bootbox.confirm("是否确认升级" + activityItemName + "活动物品?", function (result) {
+            if(result){
+
+                var options = {
+                    "decorationActivityItem.daiId": daiId,
+                };
+
+                com.post(api.decoration.upgradeDecorationAtivityItem, options, function (res) {
+
+                    var daiId = res.decorationActivityItem.daiId;
+                    com.focusPage("#state_" + daiId).text("升级");
+
+                    com.focusPage("#convert_" + daiId).unbind();
+                    com.focusPage("#abate_" + daiId).unbind();
+
+                    com.focusPage("#receive_" + daiId).unbind();
+                })
+            }
+
+        });
+    }
+
+    //消耗装修活动项
+    function expendDecorationActivityItem(daiId, activityItemName) {
+
+        bootbox.confirm("是否确认消耗" + activityItemName + "活动物品?", function (result) {
+            if(result){
+
+                var options = {
+                    "decorationActivityItem.daiId": daiId,
+                };
+
+                com.post(api.decoration.expendDecorationActivityItem, options, function (res) {
+
+                    var daiId = res.decorationActivityItem.daiId;
+                    com.focusPage("#state_" + daiId).text("消耗");
+
+                    com.focusPage("#convert_" + daiId).unbind();
+                    com.focusPage("#abate_" + daiId).unbind();
+
+                    com.focusPage("#receive_" + daiId).unbind();
+                })
+            }
+
         });
     }
 });

@@ -11,6 +11,7 @@
 
 package com.fanglin.construction.service;
 
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -25,7 +26,7 @@ public interface DrawLineService {
 	
 	public List<DrawLineVO> queryDrawLine(List<Filter> filters, Integer company) throws FLException;
 	
-	public HashMap<String, HashMap<String, Integer>> countDrawLineByDate(DrawLineVO decorationOrderDrawLineVO, Integer company);
+	public HashMap<String, HashMap<String, Integer>> countDrawLineByDate(DrawLineVO decorationOrderDrawLineVO, Integer company) throws ParseException;
 
 	public int applayDrawLine(DrawLineVO drawLine, String userId) throws FLException;
 

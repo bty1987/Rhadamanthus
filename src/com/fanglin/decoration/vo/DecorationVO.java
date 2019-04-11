@@ -58,10 +58,6 @@ public class DecorationVO implements Serializable {
 
 	private Short resourceType;
 
-	private Float freeArea;
-
-	private String contractCode;
-
 	private UserBaseVO contractUserId;
 
 	private Timestamp contractTime;
@@ -73,6 +69,8 @@ public class DecorationVO implements Serializable {
 	private Timestamp createTime;
 
 	private Timestamp accountTime;
+	
+	private Timestamp precontractTime;
 
 	private Short status;
 
@@ -97,6 +95,8 @@ public class DecorationVO implements Serializable {
 	private Float netperfor;
 
 	private Float comperfor;
+	
+	private Float precontractPrice;
 
 	private String dompany;
 
@@ -106,6 +106,18 @@ public class DecorationVO implements Serializable {
 	
 	private String grade;
 	
+	private Float factPrice;
+	
+	public DecorationVO(){
+		super();
+	}
+	
+	public DecorationVO(CustomerVO customer, HouseVO house) {
+		super();
+		this.customer = customer;
+		this.house = house;
+	}
+
 	public Long getDoid() {
 		return doid;
 	}
@@ -154,14 +166,6 @@ public class DecorationVO implements Serializable {
 		this.houseClass = houseClass;
 	}
 
-	public Float getFreeArea() {
-		return freeArea;
-	}
-
-	public void setFreeArea(Float freeArea) {
-		this.freeArea = freeArea;
-	}
-
 	public UserBaseVO getDesigner() {
 		return designer;
 	}
@@ -185,15 +189,7 @@ public class DecorationVO implements Serializable {
 	public void setSupervisor(UserBaseVO supervisor) {
 		this.supervisor = supervisor;
 	}
-
-	public String getContractCode() {
-		return contractCode;
-	}
-
-	public void setContractCode(String contractCode) {
-		this.contractCode = contractCode;
-	}
-
+	
 	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getContractTime() {
 		return contractTime;
@@ -236,6 +232,15 @@ public class DecorationVO implements Serializable {
 
 	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
+	}
+	
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getPrecontractTime() {
+		return precontractTime;
+	}
+
+	public void setPrecontractTime(Timestamp precontractTime) {
+		this.precontractTime = precontractTime;
 	}
 
 	public Short getStatus() {
@@ -407,6 +412,14 @@ public class DecorationVO implements Serializable {
 		this.comperfor = comperfor;
 	}
 	
+	public Float getPrecontractPrice() {
+		return precontractPrice;
+	}
+
+	public void setPrecontractPrice(Float precontractPrice) {
+		this.precontractPrice = precontractPrice;
+	}
+
 	public String getGrade() {
 		return grade;
 	}
@@ -425,6 +438,14 @@ public class DecorationVO implements Serializable {
 
 	public void setScale(String scale) {
 		this.scale = scale;
+	}
+
+	public Float getFactPrice() {
+		return factPrice;
+	}
+
+	public void setFactPrice(Float factPrice) {
+		this.factPrice = factPrice;
 	}
 
 }

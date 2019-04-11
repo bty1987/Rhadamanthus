@@ -1,4 +1,3 @@
-
 package com.fanglin.approval.service.impl;
 
 import java.util.ArrayList;
@@ -49,177 +48,174 @@ import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 
-
 @Service("approvalSalesRefundService")
-@Transactional(readOnly=true)
-public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundService{
-	
+@Transactional(readOnly = true)
+public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundService {
+
 	@Autowired
 	private ApprovalDao approvalDao;
-	
+
 	@Autowired
 	private ApprovalSalesRefundDao approvalSalesRefundDao;
-	
+
 	@Autowired
 	private ApprovalSalesRefundItemDao approvalSalesRefundItemDao;
-	
+
 	@Autowired
 	private SalesItemDao salesItemDao;
-	
+
 	@Autowired
 	private SalesDao salesDao;
-	
+
 	@Autowired
 	private RefundsItemDao refundsItemDao;
-	
+
 	@Autowired
 	private SalesPaymentDao salesPaymentDao;
-	
+
 	@Autowired
 	private RefundsDao refundsDao;
 
 	@Autowired
 	private UserDao userDao;
-	
+
 	@Autowired
 	private SalesBalanceDao salesBalanceDao;
 
 	@Autowired
 	private SalesBalanceItemDao salesBalanceItemDao;
-	
+
 	@Autowired
 	private SystemConfigDao systemConfigDao;
-	
+
 	@Autowired
 	private ApprovalService approvalDDService;
-	
-    //获取销售退货审批向信息
+
+	// 获取销售退货审批向信息
 	@Override
 	public List<ApprovalSalesRefundItemVO> queryApprovalSalesRefundItem(ApprovalVO approvalVO) throws FLException {
-		
-	    ApprovalPO approvalPO = approvalDao.get(approvalVO.getAid());
-	    
-	    if (approvalPO == null) {
-			throw new FLException(240009 , "审批信息不存在");
+
+		ApprovalPO approvalPO = approvalDao.get(approvalVO.getAid());
+
+		if (approvalPO == null) {
+			throw new FLException(240009, "审批信息不存在");
 		}
-	    
-	    ApprovalSalesRefundPO approvalSalesRefundPO = approvalSalesRefundDao.queryApprovalSalesRefundByAId(approvalPO.getAid());
-	    
-	    if (approvalSalesRefundPO == null) {
+
+		ApprovalSalesRefundPO approvalSalesRefundPO = approvalSalesRefundDao.queryApprovalSalesRefundByAId(approvalPO.getAid());
+
+		if (approvalSalesRefundPO == null) {
 			throw new FLException(240003, "审批信息不完整");
 		}
-	    
-	    List<ApprovalSalesRefundItemPO> approvalSalesRefundItemPOs = approvalSalesRefundItemDao.queryApprovalSalesRefundItemByAsrId(approvalSalesRefundPO.getAsrid());
-	    List<ApprovalSalesRefundItemVO> approvalSalesRefundItemVOs = new ArrayList<ApprovalSalesRefundItemVO>();
-	    
-	    ApprovalSalesRefundItemVO approvalSalesRefundItemVO;
-	    
-	    for (ApprovalSalesRefundItemPO approvalSalesRefundItemPO : approvalSalesRefundItemPOs) {
-			
-	    	approvalSalesRefundItemVO = new ApprovalSalesRefundItemVO(new SalesItemVO(new GoodsVO(), new ColorVO(), new FormatVO()));
-	    	
-	    	BeanUtil.copyProperties(approvalSalesRefundItemPO, approvalSalesRefundItemVO, Arrays.asList("salesItem"));
-	    	BeanUtil.copyProperties(approvalSalesRefundItemPO.getSalesItem(), approvalSalesRefundItemVO.getSalesItem(), Arrays.asList("goods","color","format"));
-			BeanUtil.copyProperties(approvalSalesRefundItemPO.getSalesItem().getGoods(), approvalSalesRefundItemVO.getSalesItem().getGoods(),Arrays.asList("accessoriesType"));
+
+		List<ApprovalSalesRefundItemPO> approvalSalesRefundItemPOs = approvalSalesRefundItemDao.queryApprovalSalesRefundItemByAsrId(approvalSalesRefundPO.getAsrid());
+		List<ApprovalSalesRefundItemVO> approvalSalesRefundItemVOs = new ArrayList<ApprovalSalesRefundItemVO>();
+
+		ApprovalSalesRefundItemVO approvalSalesRefundItemVO;
+
+		for (ApprovalSalesRefundItemPO approvalSalesRefundItemPO : approvalSalesRefundItemPOs) {
+
+			approvalSalesRefundItemVO = new ApprovalSalesRefundItemVO(new SalesItemVO(new GoodsVO(), new ColorVO(), new FormatVO()));
+
+			BeanUtil.copyProperties(approvalSalesRefundItemPO, approvalSalesRefundItemVO, Arrays.asList("salesItem"));
+			BeanUtil.copyProperties(approvalSalesRefundItemPO.getSalesItem(), approvalSalesRefundItemVO.getSalesItem(), Arrays.asList("goods", "color", "format"));
+			BeanUtil.copyProperties(approvalSalesRefundItemPO.getSalesItem().getGoods(), approvalSalesRefundItemVO.getSalesItem().getGoods(), Arrays.asList("accessoriesType"));
 			BeanUtil.copyProperties(approvalSalesRefundItemPO.getSalesItem().getColor(), approvalSalesRefundItemVO.getSalesItem().getColor());
 			BeanUtil.copyProperties(approvalSalesRefundItemPO.getSalesItem().getFormat(), approvalSalesRefundItemVO.getSalesItem().getFormat());
-	    	approvalSalesRefundItemVOs.add(approvalSalesRefundItemVO);
+			approvalSalesRefundItemVOs.add(approvalSalesRefundItemVO);
 		}
-	    
+
 		return approvalSalesRefundItemVOs;
 	}
 
-    //	提交销售退货审批
+	// 提交销售退货审批
 	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public int submitApprovalForSalesRefund(ApprovalVO approvalVO,ApprovalSalesRefundVO approvalSalesRefundVO,List<ApprovalSalesRefundItemVO> approvalSalesRefundItemVOs,String userId,int company) throws FLException {
+	@Transactional(rollbackFor = Exception.class)
+	public int submitApprovalForSalesRefund(ApprovalVO approvalVO, ApprovalSalesRefundVO approvalSalesRefundVO, List<ApprovalSalesRefundItemVO> approvalSalesRefundItemVOs, String userId, int company) throws FLException {
 
 		long sid = approvalSalesRefundVO.getSid();
+
+		ApprovalPO approvalPO = approvalDao.queryApproval(ApprovalPO.APPROVAL_STATUS_INIT_INT, ApprovalPO.APPROVAL_TYPE_SALESREFUND_PAYMENT_INT, String.valueOf(sid));
+
+		if (approvalPO != null) {
+			throw new FLException(240004, "正在审批中,不能提交新审批");
+		}
 		
-		ApprovalPO approvalPO = approvalDao.queryApproval(ApprovalPO.APPROVAL_STATUS_INIT_INT,ApprovalPO.APPROVAL_TYPE_SALESREFUND_PAYMENT_INT, String.valueOf(sid));
-		
-		if(approvalPO != null){
-			if(approvalPO.getStatus() == 0){
-				throw new FLException(240004, "正在审批中,不能提交新审批");
-			}
+		SalesPO salesPO = salesDao.get(sid);
+
+		if (salesPO == null) {
+			throw new FLException(260021, "销售单不存在");
 		}
 
-		SalesPO salesPO = salesDao.get(sid);
-		
-		if (salesPO == null) {
-			throw new FLException(260021 , "销售单不存在");
-		}
-	
 		approvalPO = new ApprovalPO();
-		
-		BeanUtil.copyProperties(approvalVO, approvalPO,Arrays.asList("receiver","sender"));
-		
+
+		BeanUtil.copyProperties(approvalVO, approvalPO, Arrays.asList("receiver", "sender"));
+
 		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiver().getUserId());
 		UserPO sender = userDao.queryUserByUserId(userId);
-		
+
 		String refundType = approvalSalesRefundVO.getType() == SalesPO.STATUS_ALLBACK_SHORT ? "全退" : approvalSalesRefundVO.getType() == SalesPO.STATUS_DBACKORDER_SHORT ? "倒单" : "退货";
-		
-		SystemConfigPO systemConfigPO = systemConfigDao.querySystemConfig(ApprovalPO.APPROVAL_SYSTEMCONFIG_SALESREFUND_STR,company);
-		
-		if(systemConfigPO == null){
+
+		SystemConfigPO systemConfigPO = systemConfigDao.querySystemConfig(ApprovalPO.APPROVAL_SYSTEMCONFIG_SALESREFUND_STR, company);
+
+		if (systemConfigPO == null) {
 			approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_INIT_INT);
-		}else{
+		} else {
 			approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_APPROVE_INT);
-			JSONArray formComponentValues = approvalDDService.getForms("说明", String.format(ApprovalPO.APPROVAL_CONTENTS_SALES_REFUND_STR, salesPO.getOrderId(),salesPO.getNo(),salesPO.getBrand(),approvalSalesRefundVO.getRefund(),approvalSalesRefundVO.getRefundTotal(),refundType));
+			JSONArray formComponentValues = approvalDDService.getForms("说明", String.format(ApprovalPO.APPROVAL_CONTENTS_SALES_REFUND_STR, salesPO.getOrderId(), salesPO.getNo(), salesPO.getBrand(), approvalSalesRefundVO.getRefund(), approvalSalesRefundVO.getRefundTotal(), refundType));
 			String processinstanceid = approvalDDService.initiateApproval(systemConfigPO.getValue(), userId, approvalVO.getReceiver().getUserId(), null, null, formComponentValues, company);
 			approvalPO.setProcessinstanceid(processinstanceid);
 		}
-		
-		approvalPO.setType(ApprovalPO.APPROVAL_TYPE_SALESREFUND_PAYMENT_INT);//销售退货
+
+		approvalPO.setType(ApprovalPO.APPROVAL_TYPE_SALESREFUND_PAYMENT_INT);// 销售退货
 		approvalPO.setIdent(String.valueOf(sid));
 		approvalPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		approvalPO.setApprovalTime(DateUtil.getDateToTimestamp(new Date()));
-		//过滤条件     订单号:%s,销售单号:%s,品牌:%s,退款金额:%s,类型:%s
-		approvalPO.setContents(String.format(ApprovalPO.APPROVAL_CONTENTS_SALES_REFUND_STR, salesPO.getOrderId(),salesPO.getNo(),salesPO.getBrand(),approvalSalesRefundVO.getRefund(),approvalSalesRefundVO.getRefundTotal(),refundType));
+		// 过滤条件 订单号:%s,销售单号:%s,品牌:%s,退款金额:%s,类型:%s
+		approvalPO.setContents(String.format(ApprovalPO.APPROVAL_CONTENTS_SALES_REFUND_STR, salesPO.getOrderId(), salesPO.getNo(), salesPO.getBrand(), approvalSalesRefundVO.getRefund(), approvalSalesRefundVO.getRefundTotal(), refundType));
 		approvalPO.setReceiver(receiver);
 		approvalPO.setSender(sender);
 		approvalPO.setCompany(company);
-		
+
 		approvalDao.save(approvalPO);
-		
+
 		ApprovalSalesRefundPO approvalSalesRefundPO = new ApprovalSalesRefundPO();
 		approvalSalesRefundPO.setAid(approvalPO.getAid());
 		approvalSalesRefundPO.setSid(sid);
 		approvalSalesRefundPO.setRefund(approvalSalesRefundVO.getRefund());
 		approvalSalesRefundPO.setType(approvalSalesRefundVO.getType());
-		
+
 		approvalSalesRefundDao.save(approvalSalesRefundPO);
-		
+
 		for (ApprovalSalesRefundItemVO approvalSalesRefundItemVO : approvalSalesRefundItemVOs) {
-			if(approvalSalesRefundItemVO!=null){
-			SalesItemPO salesItemPO = salesItemDao.get(approvalSalesRefundItemVO.getSalesItem().getSiid());
-			
-			salesItemPO.setNum(Arith.sub(salesItemPO.getNum(), approvalSalesRefundItemVO.getNum()));
-			salesItemPO.setTotal(Arith.sub(salesItemPO.getTotal(), approvalSalesRefundItemVO.getTotal()));
-			
-			salesItemDao.update(salesItemPO);
-			
-			ApprovalSalesRefundItemPO approvalSalesRefundItemPO = new ApprovalSalesRefundItemPO();
-			
-			approvalSalesRefundItemPO.setNum(approvalSalesRefundItemVO.getNum());//退货数量
-			approvalSalesRefundItemPO.setTotal(approvalSalesRefundItemVO.getTotal());//退货金额
-			approvalSalesRefundItemPO.setAsrid(approvalSalesRefundPO.getAsrid());
-			approvalSalesRefundItemPO.setSid(sid);
-			approvalSalesRefundItemPO.setSalesItem(salesItemPO);//销售单型号信息类
-			
-			approvalSalesRefundItemDao.save(approvalSalesRefundItemPO);
-		       }
+			if (approvalSalesRefundItemVO != null) {
+				SalesItemPO salesItemPO = salesItemDao.get(approvalSalesRefundItemVO.getSalesItem().getSiid());
+
+				salesItemPO.setNum(Arith.sub(salesItemPO.getNum(), approvalSalesRefundItemVO.getNum()));
+				salesItemPO.setTotal(Arith.sub(salesItemPO.getTotal(), approvalSalesRefundItemVO.getTotal()));
+
+				salesItemDao.update(salesItemPO);
+
+				ApprovalSalesRefundItemPO approvalSalesRefundItemPO = new ApprovalSalesRefundItemPO();
+
+				approvalSalesRefundItemPO.setNum(approvalSalesRefundItemVO.getNum());// 退货数量
+				approvalSalesRefundItemPO.setTotal(approvalSalesRefundItemVO.getTotal());// 退货金额
+				approvalSalesRefundItemPO.setAsrid(approvalSalesRefundPO.getAsrid());
+				approvalSalesRefundItemPO.setSid(sid);
+				approvalSalesRefundItemPO.setSalesItem(salesItemPO);// 销售单型号信息类
+
+				approvalSalesRefundItemDao.save(approvalSalesRefundItemPO);
+			}
 		}
 		return 0;
 	}
 
 	// 批准销售退款
 	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public int approvalForSalesRefund(ApprovalPO approvalPO) throws FLException { 
-		
+	@Transactional(rollbackFor = Exception.class)
+	public int approvalForSalesRefund(ApprovalPO approvalPO) throws FLException {
+
 		ApprovalSalesRefundPO approvalSalesRefundPO = approvalSalesRefundDao.queryApprovalSalesRefundByAId(approvalPO.getAid());
-		
+
 		if (approvalSalesRefundPO == null) {
 			throw new FLException(240003, "审批信息不完整");
 		}
@@ -227,29 +223,29 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 		SalesPO salesPO = salesDao.get(approvalSalesRefundPO.getSid());
 
 		if (salesPO == null) {
-			throw new FLException(260021 , "销售单不存在");
+			throw new FLException(260021, "销售单不存在");
 		}
-		
+
 		float refundMoney = 0;
 		short balanceStatus = salesPO.getBalanceStatus();
-		
+
 		SalesPaymentPO salesPaymentPO = new SalesPaymentPO();
-		
+
 		salesPaymentPO.setSales(salesPO);
-		
+
 		salesPaymentPO.setCreater(approvalPO.getSender());
 		salesPaymentPO.setCategory(salesPO.getCategory());
-		salesPaymentPO.setReferMoney(approvalSalesRefundPO.getRefund());//退款金额
-		salesPaymentPO.setBrand(salesPO.getBrand());//品牌
+		salesPaymentPO.setReferMoney(approvalSalesRefundPO.getRefund());// 退款金额
+		salesPaymentPO.setBrand(salesPO.getBrand());// 品牌
 		salesPaymentPO.setStatus(SalesPO.STATUS_INIT_SHORT);
 		salesPaymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		salesPaymentPO.setType(SalesPaymentPO.COLUMN_REFUNDSTYPE_INT);
-		
+
 		salesPaymentDao.save(salesPaymentPO);
-		
+
 		UserPO userPO = userDao.queryUserByUserId(approvalPO.getSender().getUserId());
 		RefundsPO refundsPO = new RefundsPO();
-		
+
 		refundsPO.setSid(salesPO.getSid());
 		refundsPO.setSpid(salesPaymentPO.getSpid());
 		refundsPO.setCreater(userPO);
@@ -257,42 +253,41 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 		refundsPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		refundsPO.setStatus(RefundsPO.STATUS_TYPE_REFUNDS_INT);
 		refundsPO.setComment(approvalPO.getContents());
-		
+
 		refundsDao.save(refundsPO);
-		
-		SalesBalancePO salesBalancePO = new SalesBalancePO ();
-		
-		if (balanceStatus==SalesPO.BALANCESTATUS_PRESETTLEMENT_SHORT||balanceStatus==SalesPO.BALANCESTATUS_SETTLEMENT_SHORT || balanceStatus == SalesPO.BALANCESTATUS_VENDORSETTLEMENT_SHORT) {
-				
-		salesBalancePO.setSales(salesPO);
-		salesBalancePO.setRefunds(refundsPO);
-		salesBalancePO.setCreater(approvalPO.getReceiver());
-		salesBalancePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-		salesBalancePO.setTotal(Arith.sub(0, approvalSalesRefundPO.getRefund()));
-		salesBalancePO.setBalance(refundMoney);
-		salesBalancePO.setVbalance(0f);
-		salesBalancePO.setPbalance(0f);
-		salesBalancePO.setType(balanceStatus==SalesPO.BALANCESTATUS_SETTLEMENT_SHORT ? SalesBalancePO.TYPE_BALANCEREFUNDS_INT : SalesBalancePO.TYPE_PREBALANCEREFUNDS_INT);
-		salesBalancePO.setStatus(SalesBalancePO.STATUS_PREBALANCE_INT);
-		salesBalancePO.setComment(salesPO.getComment());
-		
-		salesBalanceDao.save(salesBalancePO);
-		
+
+		SalesBalancePO salesBalancePO = new SalesBalancePO();
+
+		if (balanceStatus == SalesPO.BALANCESTATUS_PRESETTLEMENT_SHORT || balanceStatus == SalesPO.BALANCESTATUS_SETTLEMENT_SHORT || balanceStatus == SalesPO.BALANCESTATUS_VENDORSETTLEMENT_SHORT) {
+
+			salesBalancePO.setSales(salesPO);
+			salesBalancePO.setRefunds(refundsPO);
+			salesBalancePO.setCreater(approvalPO.getReceiver());
+			salesBalancePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+			salesBalancePO.setTotal(Arith.sub(0, approvalSalesRefundPO.getRefund()));
+			salesBalancePO.setBalance(refundMoney);
+			salesBalancePO.setVbalance(0f);
+			salesBalancePO.setPbalance(0f);
+			salesBalancePO.setType(balanceStatus == SalesPO.BALANCESTATUS_SETTLEMENT_SHORT ? SalesBalancePO.TYPE_BALANCEREFUNDS_INT : SalesBalancePO.TYPE_PREBALANCEREFUNDS_INT);
+			salesBalancePO.setStatus(SalesBalancePO.STATUS_PREBALANCE_INT);
+			salesBalancePO.setComment(salesPO.getComment());
+
+			salesBalanceDao.save(salesBalancePO);
 		}
-		
+
 		List<ApprovalSalesRefundItemPO> approvalSalesRefundItemPOs = approvalSalesRefundItemDao.queryApprovalSalesRefundItemByAsrId(approvalSalesRefundPO.getAsrid());
-		
+
 		for (ApprovalSalesRefundItemPO approvalSalesRefundItemPO : approvalSalesRefundItemPOs) {
-			
+
 			SalesItemPO salesItemPO = approvalSalesRefundItemPO.getSalesItem();
 
-			float price=salesItemPO.getPrice();//折让价
-			float disPrice=salesItemPO.getDisPrice();//折扣价
+			float price = salesItemPO.getPrice();// 折让价
+			float disPrice = salesItemPO.getDisPrice();// 折扣价
 			RefundsItemPO refundsItemPO = new RefundsItemPO();
-			
-			float num = approvalSalesRefundItemPO.getNum();//退货数量
-			float total = approvalSalesRefundItemPO.getTotal();//退货金额
-			
+
+			float num = approvalSalesRefundItemPO.getNum();// 退货数量
+			float total = approvalSalesRefundItemPO.getTotal();// 退货金额
+
 			BeanUtil.copyProperties(salesItemPO, refundsItemPO);
 			refundsItemPO.setRid(refundsPO.getRid());
 			refundsItemPO.setTotal(total);
@@ -301,19 +296,22 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 			refundsItemPO.setSalesItem(approvalSalesRefundItemPO.getSalesItem());
 
 			refundsItemDao.save(refundsItemPO);
-			
-			if (balanceStatus==SalesPO.BALANCESTATUS_PRESETTLEMENT_SHORT||balanceStatus==SalesPO.BALANCESTATUS_SETTLEMENT_SHORT || balanceStatus == SalesPO.BALANCESTATUS_VENDORSETTLEMENT_SHORT) {
-                 //0: 底价 , 1: 点位	
-				float cvalue=salesItemPO.getCvalue();//结算值
-				
-	             //利润 = (折让价 - 底价) * 数量
-				if (salesItemPO.getCtype()==SalesItemPO.CTYPE_RESERVEPRICE_INT) {//0: 底价
+
+			if (balanceStatus == SalesPO.BALANCESTATUS_PRESETTLEMENT_SHORT || balanceStatus == SalesPO.BALANCESTATUS_SETTLEMENT_SHORT || balanceStatus == SalesPO.BALANCESTATUS_VENDORSETTLEMENT_SHORT) {
+				// 0: 底价 , 1: 点位
+				float cvalue = salesItemPO.getCvalue();// 结算值
+
+				if (salesItemPO.getCtype() == SalesItemPO.CTYPE_RESERVEPRICE_INT) {// 0:
+					// 底价
+					// 利润 = (折让价 - 底价) * 数量
 					refundMoney = Arith.sub(refundMoney, Arith.mul(Arith.sub(price, cvalue), num));
-					}else if (salesItemPO.getCtype()==SalesItemPO.CTYPE_POINT_INT) { //1: 点位
-						//利润 = (折让价 - 折扣价 * (1 - 点位)) * 数量   == (折让价 - 折扣价+折扣价 *点位)* 数量
-						refundMoney =  Arith.sub(refundMoney, Arith.mul(Arith.sub(Arith.mul(disPrice, cvalue), Arith.sub(disPrice, price)), num));
-					}
-				SalesBalanceItemPO salesBalanceItemPO = new SalesBalanceItemPO ();
+				} else if (salesItemPO.getCtype() == SalesItemPO.CTYPE_POINT_INT) { // 1:
+					// 点位
+					// 利润 = (折让价 - 折扣价 * (1 - 点位)) * 数量 
+					// 利润 = (折让价 - 折扣价 + 折扣价 *点位) * 数量
+					refundMoney = Arith.sub(refundMoney, Arith.mul(Arith.sub(Arith.mul(disPrice, cvalue), Arith.sub(disPrice, price)), num));
+				}
+				SalesBalanceItemPO salesBalanceItemPO = new SalesBalanceItemPO();
 				salesBalanceItemPO.setCtype(salesItemPO.getCtype());
 				salesBalanceItemPO.setCvalue(cvalue);
 				salesBalanceItemPO.setNum(approvalSalesRefundItemPO.getNum());
@@ -323,58 +321,58 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 				salesBalanceItemPO.setSbid(salesBalancePO.getSbid());
 				salesBalanceItemPO.setTotal(Arith.sub(0, approvalSalesRefundItemPO.getTotal()));
 				salesBalanceItemDao.save(salesBalanceItemPO);
-				
+
 			}
 		}
-		
-		if (balanceStatus==SalesPO.BALANCESTATUS_PRESETTLEMENT_SHORT||balanceStatus==SalesPO.BALANCESTATUS_SETTLEMENT_SHORT || balanceStatus == SalesPO.BALANCESTATUS_VENDORSETTLEMENT_SHORT) {
+
+		if (balanceStatus == SalesPO.BALANCESTATUS_PRESETTLEMENT_SHORT || balanceStatus == SalesPO.BALANCESTATUS_SETTLEMENT_SHORT || balanceStatus == SalesPO.BALANCESTATUS_VENDORSETTLEMENT_SHORT) {
 			salesBalancePO.setBalance(refundMoney);
-		
+
 			salesBalanceDao.update(salesBalancePO);
-			}
-		
-		if (approvalSalesRefundPO.getType() != 0) {
+		}
+
+		if (approvalSalesRefundPO.getType() != ApprovalSalesRefundPO.TYPE_REFUND_INT) {
 			salesPO.setStatus(approvalSalesRefundPO.getType());
 		}
 		
+		salesPO.setAmount(salesItemDao.countSalesItemForAmount(salesPO.getSid()));
+
 		salesDao.update(salesPO);
-		
+
 		return 0;
 	}
 
-	//拒绝销售退款
+	// 拒绝销售退款
 	@Override
-	@Transactional(rollbackFor=Exception.class)
+	@Transactional(rollbackFor = Exception.class)
 	public int refuseForSalesRefund(ApprovalPO approvalPO) throws FLException {
-		
+
 		ApprovalSalesRefundPO approvalSalesRefundPO = approvalSalesRefundDao.queryApprovalSalesRefundByAId(approvalPO.getAid());
-		
+
 		if (approvalSalesRefundPO == null) {
 			throw new FLException(240003, "审批信息不完整");
 		}
-		
+
 		SalesPO salesPO = salesDao.get(approvalSalesRefundPO.getSid());
-		
+
 		if (salesPO == null) {
-			throw new FLException(260021 , "销售单不存在");
+			throw new FLException(260021, "销售单不存在");
 		}
-		
+
 		salesPO.setStatus(SalesPO.STATUS_INIT_SHORT);
 		salesDao.update(salesPO);
-		
-		
+
 		List<ApprovalSalesRefundItemPO> approvalSalesRefundItemPOs = approvalSalesRefundItemDao.queryApprovalSalesRefundItemByAsrId(approvalSalesRefundPO.getAsrid());
-		
+
 		for (ApprovalSalesRefundItemPO approvalSalesRefundItemPO : approvalSalesRefundItemPOs) {
 			SalesItemPO salesItemPO = salesItemDao.get(approvalSalesRefundItemPO.getSalesItem().getSiid());
-			
+
 			salesItemPO.setNum(Arith.add(salesItemPO.getNum(), approvalSalesRefundItemPO.getNum()));
 			salesItemPO.setTotal(Arith.add(salesItemPO.getTotal(), approvalSalesRefundItemPO.getTotal()));
-			
+
 			salesItemDao.update(salesItemPO);
-			
 		}
-		
+
 		return 0;
 	}
 

@@ -10,51 +10,55 @@ var quotationUtils = {
         return _items;
     },
     loadQuotationDetail: function () {
+    	
         quotationUtils.quotationDetail = {};
+        
         com.post(api.quotation.queryQuotationForDefaultByOrderId, {
             "quotation.orderId": params.decorationOrderId,
         }, function (res) {
             quotationUtils.quotationDetail.quotation = res.quotation;
         }, null, false);
+        
         var quotationId = quotationUtils.quotationDetail.quotation.qid;
+        var status = quotationUtils.quotationDetail.quotation.status;
+        
         if (quotationId) {
             $("#printProjectBtn").click(function () {
                 params.quotationId = quotationId;
                 params.type = 1;
                 params.subtype = -1;
-             com.popup("打印报价",api.index.quotationOutputIndex.url,null,null,true);
+                com.popup("打印报价", api.index.quotationOutputIndex.url, null, null, !!status);
              });
              $("#printFinanceBtn").click(function () {
                  params.quotationId = quotationId;
                  params.type = 2;
                  params.subtype = -1;
-             com.popup("打印报价",api.index.quotationOutputIndex.url,null,null,true);
+                 com.popup("打印报价", api.index.quotationOutputIndex.url, null, null, !!status);
              });
              $("#printCustomerBtn").click(function () {
                  params.quotationId = quotationId;
                  params.type = 3;
                  params.subtype = -1;
-             com.popup("打印报价",api.index.quotationOutputIndex.url,null,null,true);
+                 com.popup("打印报价", api.index.quotationOutputIndex.url, null, null, !!status);
              });
             $("#printEngineeringBtn").click(function () {
                 params.quotationId = quotationId;
                 params.type = 3;
                 params.subtype = 1;
-                com.popup("打印报价",api.index.quotationOutputIndex.url,null,null,true);
+                com.popup("打印报价", api.index.quotationOutputIndex.url, null, null, !!status);
             });
             $("#printMaterialBtn").click(function () {
                 params.quotationId = quotationId;
                 params.type = 3;
                 params.subtype = 2;
-                com.popup("打印报价",api.index.quotationOutputIndex.url,null,null,true);
+                com.popup("打印报价", api.index.quotationOutputIndex.url, null, null, !!status);
             });
             $("#printWorkBtn").click(function(){
                 params.quotationId = quotationId;
                 params.type = 4;
                 params.subtype = -1;
-                com.popup("打印报价",api.index.quotationOutputIndex.url,null,null,true);
+                com.popup("打印报价", api.index.quotationOutputIndex.url, null, null, !!status);
             });
-
 
             com.post(api.quotation.queryQuotationFunctionAreaByQuotationId, {"quotation.qid": quotationId}, function (res) {
                 quotationUtils.quotationDetail.quotationFunctionAreas = res.quotationFunctionAreas;
@@ -219,7 +223,6 @@ var quotationUtils = {
             eiId: {},
             qfaiId: {},
         };
-
 
         var quotationFunctionAreaLength = quotationFunctionAreas.length;
 
@@ -472,7 +475,7 @@ var quotationUtils = {
         }, null, false);
 
 
-        var $total = quotationUtils.quotationCalculator(quotationUtils.quotationDetail.quotation.discount,params.orderType,db);
+        var $total = quotationUtils.quotationCalculator(quotationUtils.quotationDetail.quotation.discount,quotationUtils.quotationDetail.quotation.basePrice);
         $domain = $('<div></div>').addClass('widget-box transparent').css({"margin-bottom": "20px"}).appendTo(quotationItemListDiv);
         $dhead = $('<div></div>').addClass('widget-header').appendTo($domain);
         $dname = $('<h4></h4>').append($('<strong></strong>').css('color', '#E2737D').html("总额: " + $total)).appendTo($dhead);
@@ -550,7 +553,7 @@ var quotationUtils = {
         return _quotationMaterial
     },
     //计算工程额
-    quotationCalculator: function (discount,decorationOrderType,db) {
+    quotationCalculator: function (discount,basePrice) {
         var $quotationUndisPrice = quotationUtils.quotationDetail.quotationUndisPrice;//报价项折扣总额
         var $quotationTotalPrice = quotationUtils.quotationDetail.quotationTotalPrice;//报价项非折扣总额
         var $addReduceTotal = quotationUtils.quotationDetail.addReduceTotal;//增项总额
@@ -559,30 +562,25 @@ var quotationUtils = {
         var $minusAddReduceTotal = quotationUtils.quotationDetail.minusAddReduceTotal;//减项中的增项总额
         var $minusExtensionTotalPrice = quotationUtils.quotationDetail.minusExtensionTotalPrice;//减项中的扩展项总额
         var $extensionItemTotalPrice = quotationUtils.quotationDetail.extensionItemTotalPrice;//扩展项总额
-        var $decorationtype = decorationOrderType;
-        var $discount = discount;
 
+        var $discount = discount;
+        var $basePrice = basePrice;
         var $managePrice = quotationUtils.quotationDetail.manageDiscount == 1 ? utils.changeThrDecimal(utils.accMul(quotationUtils.quotationDetail.quotation.managePrice,utils.accDiv($discount, 10))) : quotationUtils.quotationDetail.quotation.managePrice ;
         var $trafficPrice = quotationUtils.quotationDetail.trafficDiscount == 1  ? utils.changeThrDecimal(utils.accMul(quotationUtils.quotationDetail.quotation.trafficPrice,utils.accDiv($discount, 10))) : quotationUtils.quotationDetail.quotation.trafficPrice ;
-        var $Total = 0;
-        var _$Total = 0;
-        if ($decorationtype == 0) {
-            $Total = utils.changeThrDecimal(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(utils.accMul($quotationUndisPrice, utils.accDiv($discount, 10)), $quotationTotalPrice), $extensionItemTotalPrice), $addReduceTotal), utils.accMul($minusQuoUndisPrice, utils.accDiv($discount, 10))), $minusQuoTotalPrice), $minusExtensionTotalPrice), $minusAddReduceTotal));
-        } else if ($decorationtype == 1) {
-            $Total = utils.changeThrDecimal(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(utils.accMul($quotationUndisPrice, utils.accDiv($discount, 10)), $quotationTotalPrice), $extensionItemTotalPrice), $addReduceTotal), (utils.accMul($minusQuoUndisPrice, utils.accDiv($discount, 10)))), $minusQuoTotalPrice), $minusExtensionTotalPrice), $minusAddReduceTotal));
-        } else if ($decorationtype == 2 || $decorationtype == 3) {
-            var _projectPrice = utils.accAdd(utils.accAdd($quotationUndisPrice,$quotationTotalPrice),quotationUtils.quotationDetail.quotation.trafficPrice);
-            var _balance = _projectPrice % db;
-            //折后工程总额= (工程总额-余数)*折扣 + (余数)
-            var _dicProjectPrice = utils.accAdd(utils.accMul(utils.accSub(_projectPrice,_balance),utils.accDiv($discount, 10)),_balance);
+        var $Total=0,_$Total=0;
+
+        if ($basePrice && $basePrice!=0){
+            //(工程基数 - 工程基数 % 基数) * 折扣 + 工程基数 % 基数 + 管理费
+            var total = utils.accAdd(utils.accAdd($quotationUndisPrice,$quotationTotalPrice),quotationUtils.quotationDetail.quotation.trafficPrice);  //工程基数
+            var remainder = utils.changeThrDecimal(total % $basePrice); //余数
+            var _dicProjectPrice = utils.changeThrDecimal(utils.accAdd(utils.accAdd(utils.accMul(utils.accSub(total,remainder),utils.accDiv($discount, 10)),remainder),$managePrice));
             _$Total = utils.changeThrDecimal(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(_dicProjectPrice, $extensionItemTotalPrice),$addReduceTotal),utils.accMul(utils.accAdd($minusQuoTotalPrice,$minusQuoUndisPrice),utils.accDiv($discount, 10))),$minusAddReduceTotal),$minusExtensionTotalPrice));
-            // $Total = utils.changeThrDecimal(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(utils.accMul(utils.accAdd($quotationUndisPrice,$quotationTotalPrice),utils.accDiv($discount, 10)), $extensionItemTotalPrice),$addReduceTotal),utils.accMul(utils.accAdd($minusQuoTotalPrice,$minusQuoUndisPrice),utils.accDiv($discount, 10))),$minusAddReduceTotal),$minusExtensionTotalPrice));
+        }else{
+            $Total = utils.changeThrDecimal(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(utils.accMul($quotationUndisPrice, utils.accDiv($discount, 10)), $quotationTotalPrice), $extensionItemTotalPrice), $addReduceTotal), utils.accMul($minusQuoUndisPrice, utils.accDiv($discount, 10))), $minusQuoTotalPrice), $minusExtensionTotalPrice), $minusAddReduceTotal));
+            $Total = utils.changeThrDecimal(utils.accAdd(utils.accAdd($Total, $managePrice),$trafficPrice));
         }
 
-        $Total = utils.changeThrDecimal(utils.accAdd(utils.accAdd($Total, $managePrice),$trafficPrice));
-        _$Total = utils.changeThrDecimal(utils.accAdd(_$Total, $managePrice));
-
-        return $decorationtype == 2 || $decorationtype == 3 ? _$Total : $Total;
+        return $basePrice && $basePrice!=0 ? _$Total : $Total;
     },
     quotationTotal : function(){
         var $quotationUndisPrice = quotationUtils.quotationDetail.quotationUndisPrice;//报价项折扣总额

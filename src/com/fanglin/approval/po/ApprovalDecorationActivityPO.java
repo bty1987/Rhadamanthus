@@ -1,9 +1,10 @@
 package com.fanglin.approval.po;
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -24,6 +25,7 @@ public class ApprovalDecorationActivityPO implements java.io.Serializable {
 	private String orderId;
 	
 	private String activityName;
+
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)

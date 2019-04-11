@@ -23,7 +23,7 @@ public interface ReceiptTypeDao extends Dao<ReceiptTypePO> {
 	
 	public List<ReceiptTypePO> queryReceiptType(int company);
 	
-	public List<ReceiptTypePO> queryReceiptTypeByType(short type,int company);
+	public List<ReceiptTypePO> queryReceiptTypeByType(short type, String grade, int company);
 	
 	public ReceiptTypePO queryReceiptTypeByNo(String no,int company);
 	

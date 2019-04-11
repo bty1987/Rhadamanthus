@@ -25,4 +25,6 @@ public interface ApprovalDecorationActivityService {
 	
 	public int approvalForDecorationActivity(ApprovalPO approvalPO) throws FLException;
 
+	public List<ApprovalDecorationActivityItemVO> queryApprovalDecorationActivity(ApprovalVO approvalVO) throws FLException;
+
 }

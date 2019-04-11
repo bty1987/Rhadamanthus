@@ -18,6 +18,8 @@ public class AwardRecordVO implements Serializable {
 	private AwardStockVO awardStock;
 
 	private Short type;
+	
+	private Short onetype;
 
 	private Float num;
 
@@ -71,6 +73,14 @@ public class AwardRecordVO implements Serializable {
 
 	public void setType(Short type) {
 		this.type = type;
+	}
+	
+	public Short getOnetype() {
+		return onetype;
+	}
+
+	public void setOnetype(Short onetype) {
+		this.onetype = onetype;
 	}
 	
 	public Float getNum() {

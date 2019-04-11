@@ -16,8 +16,18 @@ public interface MaterialActivityService {
 	
 	public int updateMaterialForActivity(MaterialVO materialVO) throws FLException;
 	
-	public int abateMaterialActivityItem(MaterialActivityItemVO materialActivityItemVO, String userId) throws FLException;
+	public int abateMaterialActivityItem(MaterialActivityItemVO materialActivityItemVO) throws FLException;
 
 	public int receiveMaterialActivityItem(MaterialActivityItemVO materialActivityItemVO, String userId,String userName) throws FLException;
+
+	public int deliveMaterialActivityItem(MaterialActivityItemVO materialActivityItemVO) throws FLException;
+
+	public int unrefundMaterialActivityItem(MaterialActivityItemVO materialActivityItemVO) throws FLException;
+
+	public int upgradeMaterialActivityItem(MaterialActivityItemVO materialActivityItemVO) throws FLException;
+
+	public int refundMaterialActivityItem(MaterialActivityItemVO materialActivityItemVO, String userId,String userName) throws FLException;
+
+	public int expendMaterialActivityItem(MaterialActivityItemVO materialActivityItemVO) throws FLException;
 
 }

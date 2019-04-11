@@ -73,13 +73,16 @@ jQuery(function ($) {
     decorationDetail.items.businessDepartment = com.focusPage("#businessDepartment");
 
     decorationDetail.items.houseArea = com.focusPage("#houseArea");
-    decorationDetail.items.freeArea = com.focusPage("#freeArea");
     decorationDetail.items.status = com.focusPage("#status");
     decorationDetail.items.measureTime = com.focusPage("#measureTime");
 
     decorationDetail.items.houseType = com.focusPage('#houseType');
     decorationDetail.items.houseClass = com.focusPage('#houseClass');
     decorationDetail.items.orderType = com.focusPage('#orderType');
+    decorationDetail.items.grade = com.focusPage('#grade');
+    decorationDetail.items.detailOrderType = com.focusPage('#detailOrderType');
+    decorationDetail.items.detailHouseType = com.focusPage('#detailHouseType');
+
 
     decorationDetail.items.backOrderName = com.focusPage('#backOrderName');
     decorationDetail.items.backOrderPhone = com.focusPage('#backOrderPhone');
@@ -252,6 +255,7 @@ jQuery(function ($) {
     decorationDetail.activity.convertActivityItemMoney = com.focusPage("#convertActivityItemMoney");
 
     decorationDetail.activity.activityType = com.focusPage("#activityType").on("change", function () {
+
         var activityType = com.focusPage("#activityType").val();
 
         var list = [];
@@ -304,6 +308,8 @@ jQuery(function ($) {
         decorationDetail.items.orderType.bindData(res.type, 'key', 'value');
         decorationDetail.items.houseType.bindData(res.houseType, 'key', 'value');
         decorationDetail.items.houseClass.bindData(res.houseClass, 'key', 'value');
+        decorationDetail.items.grade.bindData(res.orderGrade, 'key', 'value');
+
     }, null, false);
 
     com.initChosen('quoterId', api.personel.queryUserByPinyin, "pinyinName", {
@@ -316,7 +322,7 @@ jQuery(function ($) {
     }, "autoFillKeyValue", "key", "value");
     com.initChosen('no', api.data.queryVillageForNameByPinyin, "pinyinName", {}, "autoFillKeyValue", "key", "value");
 
-    if (decorationDetail.orderType in [2, 3, 4]) { // 半价/满减/捡捡
+    if ([2, 3, 4].indexOf(decorationDetail.orderType) != -1 ) { // 半价/满减/捡捡
         decorationUtils.initDecorationHolonomy(decorationDetail.decorationOrderId);
     }
     if (decorationDetail.orderType == 0) {
@@ -455,6 +461,7 @@ jQuery(function ($) {
             com.showAlert(com.info, "提交成功");
         });
         decorationDetail.applyDecorationActivityItemModal.modal("hide");
+
     });
 
     //特批活动物品 保存按钮
@@ -500,6 +507,7 @@ jQuery(function ($) {
         });
 
         decorationDetail.applySpecialDecorationActivityItemModal.modal("hide");
+
     });
 
     com.focusPage("#joinActivityBtn").on("click", function () {
@@ -542,10 +550,16 @@ jQuery(function ($) {
 
             var decorationActivitys = res.decorationActivitys;
 
+
+
             var _activitys = [{aid: -1, activityName: ""}];
 
             for (var i = 0; i < decorationActivitys.length; i++) {
                 var _decorationActivity = decorationActivitys[i];
+
+                if(_decorationActivity.status == 1){
+                    continue;
+                }
 
                 _activitys.push({
                     aid: _decorationActivity.activity.aid,
@@ -579,6 +593,10 @@ jQuery(function ($) {
 
             for (var i = 0; i < decorationActivitys.length; i++) {
                 var _decorationActivity = decorationActivitys[i];
+
+                if(_decorationActivity.status == 1){
+                    continue;
+                }
 
                 _activitys.push({
                     aid: _decorationActivity.activity.aid,
@@ -662,20 +680,24 @@ jQuery(function ($) {
     com.focusPage("#btnSetDecorationPaymentInfo").on('click', function (res) {
         com.clearValidator();
 
-        if (decorationDetail.orderType in [2, 3, 4]) { // 半价/满减/捡捡
+        if ([2, 3, 4].indexOf(decorationDetail.orderType) != -1) { // 半价/满减/捡捡
             com.post(api.decoration.queryDecorationConfig, {"decoration.type": decorationDetail.orderType}, function (res) {
 
                 com.focusPage('#decorationDiscount').bindData(res.config.machingType, "id", "dd", false, null, '');
-                
+
                 $.each(res.config.machingType, function(i, v){
                 	decorationMachingTypes[v.id] = v;
                 })
             });
         }
 
+        var orderType = com.focusPage('#detailOrderType').attr("orderType")
+        decorationDetail.items.detailOrderType.html(orderType == 0 ? "半包" : (orderType == 1 ? "全包" : (orderType == 2 ? "半价" : (orderType == 3 ? "满减" : "减上捡"))));
+        decorationDetail.items.detailHouseType.html(com.focusPage('#detailHouseType').attr("houseType"));
+
         com.focusPage("#decorationTotalMoney").val("");
 
-        if (decorationDetail.orderType in [2, 3, 4]) { // 半价/满减/捡捡
+        if ([2, 3, 4].indexOf(decorationDetail.orderType) != -1) { // 半价/满减/捡捡
             com.focusPage('#forDiscount').removeClass('hide');
         }
 
@@ -818,13 +840,12 @@ jQuery(function ($) {
         }
 
         var options = {
-            "decorationPayment.referMoney": com.focusPage("#decorationTotalMoney").val(),
-            "decorationPayment.decoration.orderId": decorationDetail.decorationOrderId,
-            "decorationPayment.psId": psId
+            "decorationMidpack.decoration.orderId": decorationDetail.decorationOrderId,
+            "decorationMidpack.psId": psId
         };
 
 
-        if (decorationDetail.orderType in [2, 3, 4]) { // 半价/满减/捡捡
+        if ([2, 3, 4].indexOf(decorationDetail.orderType) != -1) { // 半价/满减/捡捡
 
             var manageRate = 0;
             //通过订单编号获取默认报价信息
@@ -845,7 +866,6 @@ jQuery(function ($) {
 
             var id = com.focusPage('#decorationDiscount').val();//maching
             var discout = com.focusPage('#decorationDiscount').find("option:selected").text();
-            var projectBase = Math.ceil(parseFloat(com.focusPage("#decorationTotalMoney").val()));
 
             var dict = decorationMachingTypes[id];
 
@@ -854,7 +874,6 @@ jQuery(function ($) {
             var maching = dict.mm;
             var names = dict.n;
 
-            //var serviceRate = config.serviceRate;
             options = {
                 "decorationHolonomy.decoration.orderId": decorationDetail.decorationOrderId,
                 "decorationHolonomy.maching": maching,  // 主材配比
@@ -864,8 +883,7 @@ jQuery(function ($) {
                 "decorationHolonomy.status": 0,
                 "decorationHolonomy.psId": psId,
                 "decorationHolonomy.discountBase": discountBase,
-                "decorationHolonomy.name": names,
-                "decorationHolonomy.projectBase": projectBase
+                "decorationHolonomy.name": names
             };
 
             com.post(api.decoration.makeDecorationHolonomy, options, function (res) {
@@ -913,7 +931,8 @@ jQuery(function ($) {
                 com.showAlert(com.error, e.errorMsg);
             });
         } else {
-            com.post(api.payment.makeDecorationPayment, options, function (res) {
+            com.post(api.decoration.makeDecorationMidpack, options, function (res) {
+                com.showAlert(com.info, "保存成功");
                 decorationUtils.initPayment(decorationDetail, true);
             });
         }
@@ -945,11 +964,13 @@ jQuery(function ($) {
         decorationDetail.items.houseType.val(decoration.houseType);
         decorationDetail.items.houseClass.val(decoration.houseClass);
         decorationDetail.items.houseArea.val(decoration.house.buildArea);
-        decorationDetail.items.freeArea.val(decoration.freeArea);
         decorationDetail.items.status.val(decorationDetail.decorationOrderStatus[decoration.status]);
         decorationDetail.items.measureTime.val(decoration.measureTime);
         decorationDetail.items.notSalesmanRate.val(decoration.notSalesmanRate);
         decorationDetail.notSalesmanRate = decoration.notSalesmanRate;
+        decorationDetail.items.grade.val(decoration.grade);
+        com.focusPage("#detailOrderType").attr("orderType", decoration.type);
+        com.focusPage("#detailHouseType").attr("houseType", decoration.houseType);
 
         if (decoration.status != 7) {
             decorationDetail.accountFlg = true;
@@ -1001,7 +1022,6 @@ jQuery(function ($) {
                     "decoration.type": decorationDetail.items.orderType.val(),
                     "decoration.houseType": decorationDetail.items.houseType.val(),
                     "decoration.houseClass": decorationDetail.items.houseClass.val(),
-                    "decoration.freeArea": decorationDetail.items.freeArea.val(),
                     "decoration.notSalesmanRate": decorationDetail.items.notSalesmanRate.val(),
                     "decorationInfo.notSalesmanName": decorationDetail.items.notSalesmanName.val(),
                     "decorationInfo.notSalesmanPhone": decorationDetail.items.notSalesmanPhone.val(),
@@ -1089,9 +1109,8 @@ jQuery(function ($) {
                     if (!$.isEmptyObject(params.viewNode[info.step - 1].wizard)) $.extend(true, wizard, params.viewNode[info.step - 1].wizard);
                     params.convertActivityItemId = decorationDetail.convertActivityItemId;
                     params.activity = decorationDetail.activity;
-
                     decorationUtils.decorationActivityInfo(decorationDetail.activitys, wizard["activityBtnMethod"], decorationDetail.decorationOrderId);
-                    decorationUtils.decorationActivityItemInfo(decorationDetail.activityPriceInfo, decorationDetail.activityItems, uiBtnMethod, decorationDetail.decorationOrderId);
+                    decorationUtils.decorationActivityItemInfo(decorationDetail.activityPriceInfo, decorationDetail.activityItems, wizard["uiBtnMethod"], decorationDetail.decorationOrderId);
                     break;
                 case "belong":
                     decorationUtils.initDecorationBelong(decorationDetail.decorationOrderId);
@@ -1119,28 +1138,24 @@ jQuery(function ($) {
 
     function activityBtnMethod(uiPgDiv, decorationActivity) {
 
-        var deleteBtn = $("<span></span>").addClass("ui-icon icon-ban-circle red").attr("id", "delete_" + decorationActivity.daId).appendTo(uiPgDiv);
+        var deleteBtn = $("<a></a>").addClass("btn btn-minier btn-yellow").html("删除").css("margin", "0px 3px").attr("id", "delete_" + decorationActivity.daId).appendTo(uiPgDiv);
 
         deleteBtn.on("click", function () {
-            deleteDecorationActivity(decorationActivity.daId);
+            if(com.focusPage("#dactivity_" + decorationActivity.daId).attr("status") == 0){
+                deleteDecorationActivity(decorationActivity.daId);
+            }
         });
     }
 
     function uiBtnMethod(uiPgDiv, activityItem) {
 
-        var abateBtn = $("<span></span>").addClass("ui-icon icon-ban-circle red").attr("id", "abate_" + activityItem.daiId).appendTo(uiPgDiv);
+        var btnViewBtn= $("<a></a>").addClass("btn btn-minier btn-yellow").html("失效").css("margin", "0px 3px").attr("id", "abate_" + activityItem.daiId).appendTo(uiPgDiv);
 
-        var receiveBtn = $("<span></span>").addClass("ui-icon icon-bookmark").attr("id", "receive_" + activityItem.daiId).appendTo(uiPgDiv);
-        if (activityItem.state == 0) {
 
-            abateBtn.on("click", function () {
+            btnViewBtn.on("click", function () {
                 abateDecorationActivityItem(activityItem.daiId, activityItem.activityItemName);
             });
 
-            receiveBtn.on("click", function () {
-                receiveDecorationActivityItem(activityItem.daiId, activityItem.activityItemName);
-            });
-        }
     }
 
     function deleteDecorationActivity(daId) {
@@ -1153,6 +1168,7 @@ jQuery(function ($) {
             com.focusPage("#dactivity_" + res.decorationActivity.daId).remove();
         });
     }
+
 
     function abateDecorationActivityItem(daiId, activityItemName) {
 
@@ -1167,13 +1183,13 @@ jQuery(function ($) {
 
                     var daiId = res.decorationActivityItem.daiId;
 
-                    com.focusPage("#state_" + daiId).val("失效");
+                    com.focusPage("#state_" + daiId).text("失效");
 
                     com.focusPage("#convert_" + daiId).unbind();
+
                     com.focusPage("#abate_" + daiId).unbind();
 
                     com.focusPage("#receive_" + daiId).unbind();
-                    com.focusPage("#widgetHeader_" + daiId).addClass("header-color-grey");
 
                 });
             }
@@ -1456,31 +1472,4 @@ jQuery(function ($) {
         });
     }
 
-    //领取活动物品
-    function receiveDecorationActivityItem(daiId, activityItemName) {
-
-        bootbox.confirm("是否确认领取" + activityItemName + "活动物品?", function (result) {
-            if (result) {
-
-                var options = {
-                    "decorationActivityItem.daiId": daiId,
-                };
-
-                com.post(api.decoration.receiveDecorationActivityItem, options, function (res) {
-
-                    var daiId = res.decorationActivityItem.daiId;
-
-                    com.focusPage("#state_" + daiId).val("接收");
-
-                    com.focusPage("#convert_" + daiId).unbind();
-                    com.focusPage("#abate_" + daiId).unbind();
-
-                    com.focusPage("#receive_" + daiId).unbind();
-                    com.focusPage("#widgetHeader_" + daiId).addClass("header-color-orange");
-
-
-                })
-            }
-        });
-    }
 });

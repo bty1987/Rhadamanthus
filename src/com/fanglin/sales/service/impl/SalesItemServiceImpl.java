@@ -114,6 +114,7 @@ public class SalesItemServiceImpl implements SalesItemService {
 			
 			SalesItemPO salesItemPO = new SalesItemPO(new GoodsPO(), new ColorPO(), new FormatPO());
 			
+			
 			BeanUtil.copyProperties(salesItemVO, salesItemPO, Arrays.asList("goods","color","format"));
 			BeanUtil.copyProperties(salesItemVO.getGoods(), salesItemPO.getGoods(),Arrays.asList("accessoriesType"));
 			BeanUtil.copyProperties(salesItemVO.getColor(), salesItemPO.getColor());
@@ -129,6 +130,8 @@ public class SalesItemServiceImpl implements SalesItemService {
 			
 		}
 		
+		
+		
 		if(_total!=salesVO.getTotal()){
 			
 			throw new FLException(150025, "款项金额不正确");
@@ -136,6 +139,7 @@ public class SalesItemServiceImpl implements SalesItemService {
 		}
 		
 		salesPO.setTotal(Arith.add(total, _total));
+		salesPO.setAmount(Arith.add(total, _total));
 		
 		salesDao.update(salesPO);
 		
@@ -166,7 +170,10 @@ public class SalesItemServiceImpl implements SalesItemService {
 			throw new FLException(260022, "销售单状态不可操作");
 		}
 		
-		salesPO.setTotal(Arith.add(Arith.sub(salesPO.getTotal(), salesItemPO.getTotal()), salesItemVO.getTotal()));
+		float money = Arith.add(Arith.sub(salesPO.getTotal(), salesItemPO.getTotal()), salesItemVO.getTotal());
+		
+		salesPO.setTotal(money);
+		salesPO.setAmount(money);
 		
 		salesItemPO.setNum(salesItemVO.getNum());
 		salesItemPO.setTotal(salesItemVO.getTotal());

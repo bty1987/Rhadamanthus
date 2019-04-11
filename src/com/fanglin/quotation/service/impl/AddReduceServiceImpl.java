@@ -167,6 +167,7 @@ public class AddReduceServiceImpl implements AddReduceService{
 		
 		addReducePO.setTotal(addReduceVO.getTotal());
 		addReducePO.setManagePrice(addReduceVO.getManagePrice());
+		addReducePO.setManageRate(addReduceVO.getManageRate());
 		
 		addReduceDao.update(addReducePO);
 		
@@ -279,21 +280,28 @@ public class AddReduceServiceImpl implements AddReduceService{
 			decorationPaymentPO = new DecorationPaymentPO();
 		}
 		
-		decorationPaymentPO.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_UNPAY_INT);
-		decorationPaymentPO.setReferMoney((float) Math.rint(addReducePO.getTotal()));
-		if(addReducePO.getType() == AddReducePO.TYPE_ADD_INT || addReducePO.getType() == AddReducePO.TYPE_LEAKAGE_INT){
-			decorationPaymentPO.setOneType(DecorationPaymentPO.ONETYPE_ADD_INT);
-			decorationPaymentPO.setTwoType(DecorationPaymentPO.TWOTYPE_ADD_REDUCE_INT);
-		}else{
-			decorationPaymentPO.setOneType(DecorationPaymentPO.ONETYPE_REFUND_INT);
-			decorationPaymentPO.setTwoType(DecorationPaymentPO.TWOTYPE_ADD_REDUCE_INT);
+		if (addReducePO.getStatus() == AddReducePO.STATUS_UNSUBMIT_INT) {
+			// 初始
+			decorationPaymentPO.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_UNPAY_INT);
+			decorationPaymentPO.setReferMoney((float) Math.rint(addReduceVO.getTotal()));
+			if(addReducePO.getType() == AddReducePO.TYPE_ADD_INT || addReducePO.getType() == AddReducePO.TYPE_LEAKAGE_INT){
+				decorationPaymentPO.setOneType(DecorationPaymentPO.ONETYPE_ADD_INT);
+				decorationPaymentPO.setTwoType(DecorationPaymentPO.TWOTYPE_ADD_REDUCE_INT);
+			}else{
+				decorationPaymentPO.setOneType(DecorationPaymentPO.ONETYPE_REFUND_INT);
+				decorationPaymentPO.setTwoType(DecorationPaymentPO.TWOTYPE_ADD_REDUCE_INT);
+			}
+			decorationPaymentPO.setDecoration(decorationPO);
+			decorationPaymentPO.setCreater(userDao.queryUserByUserId(userId));
+			decorationPaymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+			
+			decorationPaymentPO.setPaymentType(addReducePO.getType() == 0 ? DecorationPaymentPO.PAYMENTTYPE_ADD_STR : DecorationPaymentPO.PAYMENTTYPE_REDUCE_STR);
+			decorationPaymentPO.setCompany(decorationPO.getCompany());
+			
+		}else if (addReducePO.getStatus() == AddReducePO.STATUS_SUBMIT_INT){
+			// 提交
+			decorationPaymentPO.setReferMoney((float) Math.rint(addReduceVO.getTotal()));
 		}
-		decorationPaymentPO.setDecoration(decorationPO);
-		decorationPaymentPO.setCreater(userDao.queryUserByUserId(userId));
-		decorationPaymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-		
-		decorationPaymentPO.setPaymentType(addReducePO.getType() == 0 ? DecorationPaymentPO.PAYMENTTYPE_ADD_STR : DecorationPaymentPO.PAYMENTTYPE_REDUCE_STR);
-		decorationPaymentPO.setCompany(decorationPO.getCompany());
 		
 		decorationPaymentDao.saveOrUpdate(decorationPaymentPO);
 		
@@ -301,6 +309,7 @@ public class AddReduceServiceImpl implements AddReduceService{
 		addReducePO.setDpId(decorationPaymentPO.getDpid());
 		addReducePO.setTotal(addReduceVO.getTotal());
 		addReducePO.setManagePrice(addReduceVO.getManagePrice());
+		addReducePO.setManageRate(addReduceVO.getManageRate());
 		
 		addReduceDao.update(addReducePO);
 		

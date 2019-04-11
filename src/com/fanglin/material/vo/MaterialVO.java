@@ -98,6 +98,8 @@ public class MaterialVO implements Serializable {
 	
 	private Long activityId;
 	
+	private String grade;
+	
 	public MaterialVO(){
 		super();
 	}
@@ -415,6 +417,14 @@ public class MaterialVO implements Serializable {
 
 	public void setActivityId(Long activityId) {
 		this.activityId = activityId;
+	}
+
+	public String getGrade() {
+		return grade;
+	}
+
+	public void setGrade(String grade) {
+		this.grade = grade;
 	}
 	
 }

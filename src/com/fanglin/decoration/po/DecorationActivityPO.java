@@ -20,12 +20,18 @@ public class DecorationActivityPO implements java.io.Serializable {
 	private static final long serialVersionUID = 5426521470719770019L;
 
 	public static final String COLUMN_ORDERID_STR = "orderId";
+	
+	public static final short STATUS_INIT_INT = 0; // 初始
+	
+	public static final short STATUS_LOCK_INT = 1; // 锁定
 
 	private long daId;
 
 	private String orderId;
 
 	private ActivityPO activity;
+	
+	private short status;
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -56,5 +62,16 @@ public class DecorationActivityPO implements java.io.Serializable {
 	public void setActivity(ActivityPO activity) {
 		this.activity = activity;
 	}
+	
+	@Column(name = "status")
+	public short getStatus() {
+		return status;
+	}
+
+	public void setStatus(short status) {
+		this.status = status;
+	}
+	
+	
 
 }

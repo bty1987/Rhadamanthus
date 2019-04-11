@@ -48,7 +48,9 @@ $(function(){
                 ["单位:", v.measurementUnit, "red"],
                 ["工种:", v.workType, "red"],
                 ["说明:", v.quotationItemDes, "grey"],
+                ["增补价:",v.addPrice,"blue"],
                 ["单价:", v.unitPrice, "blue"],
+                ["退减价:",v.subPrice,"blue"],
                 ["版本:", v.version, "blue"],
             ];
 
@@ -149,6 +151,8 @@ $(function(){
             workType: com.focusPage("#workType"),
             quotationItemDes: com.focusPage("#quotationItemDes"),
             unitPrice: com.focusPage("#unitPrice"),
+            addPrice: com.focusPage("#addPrice"),
+            subPrice: com.focusPage("#subPrice"),
             version: com.focusPage("#version").on("change",function () {
                 $this = $(this);
                 if ("" != quotationItem.quotationItemItems.itemId.val()) {
@@ -254,8 +258,8 @@ $(function(){
     });
     com.post(api.quotation.queryQuotationVersion, {}, function(a) {
         quotationItem.data.VersionData = a.quotationVersions;
-        quotationItem.quotationItemItems.version.bindData(quotationItem.data.VersionData, "versionId", "versionName");
-        com.focusPage("#importVersion").bindData(quotationItem.data.VersionData, "versionId", "versionName");
+        quotationItem.quotationItemItems.version.bindData(quotationItem.data.VersionData, "no", "name");
+        com.focusPage("#importVersion").bindData(quotationItem.data.VersionData, "no", "name");
     });
     //导出按钮
     com.focusPage('a[name="import"]').on("click", function () {
@@ -326,7 +330,9 @@ $(function(){
 					['单位', 'measurementUnit'],
 					['工种', 'workType'],
 					['说明','quotationItemDes'],
+					['增补价','addPrice'],
 					['单价', 'unitPrice'],
+					['退减价','subPrice'],
 					['版本', 'version'],
                     ['是否打折', 'discount'],
                     ['启用/禁用', 'status'],
@@ -355,6 +361,8 @@ $(function(){
         quotationItem.quotationItemItems.quotationItemDes.val(b.quotationItemDes);
         quotationItem.quotationItemItems.unitPrice.val(b.unitPrice);
         quotationItem.quotationItemItems.version.val(b.versionId);
+        quotationItem.quotationItemItems.addPrice.val(b.addPrice);
+        quotationItem.quotationItemItems.subPrice.val(b.subPrice);
         quotationItem.quotationItemItems.itemId.prop("disabled", !0);
         quotationItem.quotationItemItems.version.prop("disabled", !0);
         quotationItem.modal.modal("show");
@@ -401,7 +409,9 @@ $(function(){
                 "quotationItem.workTypeId": quotationItem.quotationItemItems.workType.val(),
                 "quotationItem.workType": "",
                 "quotationItem.quotationItemDes": quotationItem.quotationItemItems.quotationItemDes.val(),
-                "quotationItem.unitPrice": quotationItem.quotationItemItems.unitPrice.val()
+                "quotationItem.unitPrice": quotationItem.quotationItemItems.unitPrice.val(),
+                "quotationItem.addPrice": quotationItem.quotationItemItems.addPrice.val(),
+                "quotationItem.subPrice": quotationItem.quotationItemItems.subPrice.val()
             };
             quotationItem.editFlg ? (a = api.quotation.updateQuotationItem, c["quotationItem.versionId"] = quotationItem.quotationItemItems.version.val(), c["quotationItem.version"] = "", c["quotationItem.qiId"] = quotationItem.quotationItemItems.qiId.val()) : (c["quotationItem.versionId"] = quotationItem.quotationItemItems.version.val(), c["quotationItem.version"] = "", a = api.quotation.addQuotationItem);
             com.post(a, c, successCallback, failCallback);

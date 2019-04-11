@@ -9,8 +9,8 @@ import com.fanglin.utils.Paging;
 
 public interface WorkerBalanceDao extends Dao<WorkerBalancePO> {
 	
-	public List<WorkerBalancePO> pageWorkerBalance(Paging paging,List<Filter> filters);
+	public List<WorkerBalancePO> pageWorkerBalance(Paging paging,List<Filter> filters, int company);
 	
-	public WorkerBalancePO queryWorkerBalanceByUserId(int uid);
+	public WorkerBalancePO queryWorkerBalanceByUserId(int uid, int company);
 
 }

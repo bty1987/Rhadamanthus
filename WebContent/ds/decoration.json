@@ -74,12 +74,18 @@
         {"key":"5", "value":"购买"},
         {"key":"6", "value":"其他"}
     ],"activityItemType":[
-        {"key":"0", "value":"有效"},
+        {"key":"0", "value":"初始"},
         {"key":"1", "value":"失效"},
-        {"key":"2", "value":"接受"}
+        {"key":"2", "value":"已领"},
+        {"key":"3", "value":"退货"},
+        {"key":"4", "value":"配送"},
+        {"key":"5", "value":"未退"},
+        {"key":"6", "value":"升级"},
+        {"key":"7", "value":"消耗"}
     ], "orderGrade":[
 		{"key":"A", "value":"A"},
-		{"key":"B", "value":"B"}
+		{"key":"B", "value":"B"},
+		{"key":"C", "value":"C"}
 	],
     "errorCode": 0,
     "errorMsg": null

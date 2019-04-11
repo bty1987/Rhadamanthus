@@ -48,7 +48,11 @@ public class QuotationItemPO implements Serializable {
 	
 	private String itemName;
 	
-	private float unitPrice;
+	private float addPrice;  //增补价
+	
+	private float unitPrice; //单价
+	
+	private float subPrice;  //退减价
 	
 	private QuotationTypePO quotationType;
 	
@@ -178,6 +182,15 @@ public class QuotationItemPO implements Serializable {
 		this.quotationItemDes = quotationItemDes;
 	}
 
+	@Column(name="addPrice")
+	public float getAddPrice() {
+		return addPrice;
+	}
+
+	public void setAddPrice(float addPrice) {
+		this.addPrice = addPrice;
+	}
+	
 	@Column(name="unitPrice")
 	public float getUnitPrice(){
 		return unitPrice;
@@ -187,8 +200,17 @@ public class QuotationItemPO implements Serializable {
 		this.unitPrice = unitPrice;
 	}
 
+	@Column(name="subPrice")
+	public float getSubPrice() {
+		return subPrice;
+	}
+
+	public void setSubPrice(float subPrice) {
+		this.subPrice = subPrice;
+	}
+
 	@javax.persistence.ManyToOne(fetch=FetchType.LAZY)
-	@javax.persistence.JoinColumn(nullable=false, name="versionId")
+	@javax.persistence.JoinColumn(nullable=false, name="versionId",referencedColumnName = "no")
 	public QuotationVersionPO getQuotationVersion(){
 		return quotationVersion;
 	}

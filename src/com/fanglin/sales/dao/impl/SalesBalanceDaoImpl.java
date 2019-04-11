@@ -48,6 +48,20 @@ public class SalesBalanceDaoImpl extends DaoImpl<SalesBalancePO> implements Sale
 		return query.list();
 	}
 	
+	@Override
+	public List<SalesBalancePO> pageSalesBalanceForPompany(Paging paging, List<Filter> filters, int pompany) {
+		
+		PagingQuery<SalesBalancePO> query = pagingQuery(paging, SalesBalancePO.class);
+		
+		query.alias("sales", "sales").add(query.getCriterion(SalesBalancePO.COLUMN_SALESPOMPANY_STR, pompany, "eq"));
+		
+		queryFilterExcute(query, filters);
+		
+		query.desc("sbid");
+		
+		return query.list();
+	}
+	
 	private void queryFilterExcute(PagingQuery<SalesBalancePO> query,List<Filter> filters) {
 		
 		if(filters != null){

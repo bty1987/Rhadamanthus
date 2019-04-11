@@ -120,11 +120,11 @@ $(function () {
             , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "业务人员类型", "salesmanType"), createDiv("col-sm-9").append(createInput("salesmanType", "col-xs-10 col-sm-5", true, "text")))
         ));
         var right1 = createDiv("col-xs-12 col-sm-5").append(createDiv("control-group").append(
-            createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "订单类型", "orderType"), createDiv("col-sm-9").append(createSelect("orderType", "col-xs-10 col-sm-5", [], null, null, "popover", "manual")))
+        	  createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "等级", "grade"), createDiv("col-sm-9").append(createSelect("grade", "col-xs-10 col-sm-5", [], null, null, "popover", "manual")))
+            , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "订单类型", "orderType"), createDiv("col-sm-9").append(createSelect("orderType", "col-xs-10 col-sm-5", [], null, null, "popover", "manual")))
             , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "房屋类别", "houseType"), createDiv("col-sm-9").append(createSelect("houseType", "col-xs-10 col-sm-5", [], null, null, "popover", "manual")))
             , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "房屋类型", "houseClass"), createDiv("col-sm-9").append(createSelect("houseClass", "col-xs-10 col-sm-5", [], null, null, "popover", "manual")))
             , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "建筑面积", "houseArea"), createDiv("col-sm-9").append(createInput("houseArea", "col-xs-10 col-sm-5 v_float v_required", true, "text", "0")))
-            , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "赠送面积", "freeArea"), createDiv("col-sm-9").append(createInput("freeArea", "col-xs-10 col-sm-5 v_float v_required", true, "text", "0")))
             , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "订单状态", "status"), createDiv("col-sm-9").append(createInput("status", "col-xs-10 col-sm-5", true, "text", "0")))
             , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "量房时间", "measureTime"), createDiv("col-sm-9").append(createInput("measureTime", "col-xs-10 col-sm-5", true, "text", "0")))
             , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "报价员", "quoterId"), createDiv("col-sm-9").append(createSelect("quoterId", "chosen-select col-md-4", [{
@@ -208,8 +208,8 @@ $(function () {
 
     function drawActivity(conf) {
         var row = createDiv("row").append(
-            createDiv("col-md-12").append(createButton(conf, "joinActivityBtn", "btn btn-info", "参加活动", "button", '<i class="icon-cog bigger-110"></i>'), createButton(conf, "applyActivityItemBtn", "btn btn-info", "申领活动物品", "button", '<i class="icon-cog bigger-110"></i>'), createButton(conf, "applySpecialActivityItemBtn", "btn btn-info", "特批活动物品", "button", '<i class="icon-cog bigger-110"></i>'), createDiv("col-sm-6", "activityPriceInfo").attr("style", "padding:0px;float:right;text-align:right;"))
-            , createDiv("col-md-12 hr"), createDiv("col-md-12", "activitys"), createDiv("col-md-12 hr"), createDiv("col-md-12", "activityItems")
+            createDiv("col-md-12").append(createButton(conf, "joinActivityBtn", "btn btn-info", "参加活动", "button", '<i class="icon-cog bigger-110"></i>'), createButton(conf, "applyActivityItemBtn", "btn btn-info", "申领活动物品", "button", '<i class="icon-cog bigger-110"></i>'), createDiv("col-sm-6", "activityPriceInfo").attr("style", "padding:0px;float:right;text-align:right;"))
+            , createDiv("col-md-12 hr"), createDiv("col-md-12", null, "padding: 0;margin: 0 8px;font-size: 24px;color: #2679b5;").html("活动"), createDiv("col-md-12", "activitys"), createDiv("col-md-12 hr"), createDiv("col-md-12", null, "padding: 0;margin: 0 8px;font-size: 24px;color: #2679b5;").html("奖品"), createDiv("col-md-12", "activityItems")
         );
 
         return [row];
@@ -262,7 +262,7 @@ $(function () {
 
     }
 
-    var _propertyArr = ["楼盘地址", "客户名", "设计部", "设计师", "业务部", "业务员", "面积", "签单额", "报价金额", "量房时间", "签单时间", "定金时间", "创建时间", "类型", "状态", "工程状态", "折扣"];
+    var _propertyArr = ["楼盘地址", "客户名", "设计部", "设计师", "业务部", "业务员", "面积", "预签额", "签单额", "报价额", "券优惠", "实收额", "创建时间", "量房时间", "定金时间", "预签时间", "签单时间", "类型", "状态", "工程状态", "折扣"];
     var propertyArrs = ["楼盘地址", "设计部", "设计师", "业务部", "业务员", "面积", "状态"];
 
     //页面显示控制参数 装修单号,楼盘,设计师/部门,业务员/部门,面积,状态
@@ -287,7 +287,7 @@ $(function () {
         },
         "designer": {
             "apiPage": api.decoration.pageDecorationForDesigner,
-            "pageBtn": ["view", "revie", "line", "price", "sca  zl", "contract", "extension", "addminus", "cal", "services"],
+            "pageBtn": ["view", "prosign", "revie", "line", "price", "sca  zl", "contract", "extension", "addminus", "cal", "services"],
             "postDataName": "designerPostData",
             "nodes": [{
                 type: "basic",
@@ -308,7 +308,7 @@ $(function () {
         },
         "designermanager": {
             "apiPage": api.decoration.pageDecorationForDesignerManager,
-            "pageBtn": ["view", "revie", "line", "price", "scal", "contract", "extension", "addminus", "cal", "services"],
+            "pageBtn": ["view", "revie", "line", "price", "scal", "contract", "extension", "addminus", "cal", "services", "balance"],
             "postDataName": "designermanagerPostData",
             "nodes": [{
                 type: "basic",
@@ -366,7 +366,7 @@ $(function () {
         },
         "finance": {
             "apiPage": api.decoration.pageDecorationForCommon,
-            "pageBtn": ["view", "delete", "sign", "terminal", "resign"],
+            "pageBtn": ["view", "delete", "prosign", "sign", "terminal", "resign"],
             "postDataName": "financePostData",
             "nodes": [{
                 type: "basic",
@@ -489,16 +489,18 @@ $(function () {
 
     function activityBtnMethod(uiPgDiv, decorationActivity) {
 
-        var deleteBtn = $("<span></span>").addClass("ui-icon icon-ban-circle red").attr("id", "delete_" + decorationActivity.daId).appendTo(uiPgDiv);
+        var deleteBtn = $("<a></a>").addClass("btn btn-minier btn-yellow").html("删除").css("margin", "0px 3px").attr("id", "delete_" + decorationActivity.daId).appendTo(uiPgDiv);
 
         deleteBtn.on("click", function () {
-            deleteDecorationActivity(decorationActivity.daId);
+            if(com.focusPage("#dactivity_" + decorationActivity.daId).attr("status") == 0){
+                deleteDecorationActivity(decorationActivity.daId);
+            }
         });
     }
 
     function uiBtnMethod(uiPgDiv, activityItem) {
 
-        var abateBtn = $("<span></span>").addClass("ui-icon icon-ban-circle red").attr("id", "abate_" + activityItem.daiId).appendTo(uiPgDiv);
+        var abateBtn = $("<a></a>").addClass("btn btn-minier btn-yellow").html("失效").css("margin", "0px 3px").attr("id", "abate_" + activityItem.daiId).appendTo(uiPgDiv);
 
         if (activityItem.state == 0) {
 

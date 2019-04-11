@@ -127,29 +127,26 @@ jQuery(function ($) {
             var noTr = $('<tr></tr>').appendTo(noTable);
             var noTd = $('<td colspan="3"></td>').appendTo(noTr);
             var headReceiptDiv = $('<div style="text-align: center; background-color:#ffffff"></div>').appendTo(center);
-            var headReceiptH2 = $('<h2 style="margin: 1px"></h2>').text(parent.params.company.name + "专用收款收据").appendTo(headReceiptDiv);
+            var headReceiptH2 = $('<h2 style="margin: 1px"></h2>').text(parent.params.company.name + "专用收据").appendTo(headReceiptDiv);
 
             var receiptTable = $('<table border="1" style="width: 100%; border-collapse:collapse;" cellpadding="0" cellspacing="0">').appendTo(center);
 
             var presonReceiptTr = $('<tr></tr>').appendTo(receiptTable);
-            var customerReceiptTd = $('<td style="width: 33%"></td>').text('客 户 名: ' + commonInfo["customerName"]).appendTo(presonReceiptTr);
+            var customerReceiptTd = $('<td style="width: 25%" colspan="2"></td>').text('客 户 名: ' + commonInfo["customerName"]).appendTo(presonReceiptTr);
             var timeReceiptTd = $('<td colspan="3"></td>').text('收款日期: ' + commonInfo["collectTime"]).appendTo(presonReceiptTr);
 
             for (var k = 0; k < orderInfo.length; k++) {
                 var $order = orderInfo[k];
 
                 var orderReceiptTr = $('<tr></tr>').appendTo(receiptTable);
-                var noReceiptTd = $('<td style="width: 33%"></td>').text('装修单号: ' + $order.orderId).appendTo(orderReceiptTr);
+                var noReceiptTd = $('<td style="width: 25%" colspan="2"></td>').text('装修单号: ' + $order.orderId).appendTo(orderReceiptTr);
                 var timeReceiptTd = $('<td colspan="3" style="width: 33%"></td>').text('楼盘: ' + $order.house.village.name + ' ' + $order.house.houseNumber).appendTo(orderReceiptTr);
                 var orderReceiptTr = $('<tr></tr>').appendTo(receiptTable);
-                var designerNameTd = $('<td style="width: 35%"></td>').html('设计师:' + $order.designer.currentName + "-" + $order.designer.dept.name + " " + $order.designer.phone).appendTo(orderReceiptTr);
-                var salesmanNameTd = $('<td style="width: 30%" colspan="2"></td>').html('').appendTo(orderReceiptTr);
-                var supervisorNameTd = $('<td style="width: 35%"></td>').html('监理: ' + ($order.supervisor.currentName == null ? "" : $order.supervisor.currentName) + "-" + ($order.supervisor.phone == null ? "" : $order.supervisor.phone)).appendTo(orderReceiptTr);
             }
 
             var receReceiptTr = $('<tr></tr>').appendTo(receiptTable);
-            var typeReceiptTd = $('<td style="width: 35%; text-align: center;" ></td>').html('<strong>收款类型</strong>').appendTo(receReceiptTr);
-            var balanceReceiptTd = $('<td style="width: 30%; text-align: center;" colspan="2"></td>').html('<strong>结算方式</strong>').appendTo(receReceiptTr);
+            var typeReceiptTd = $('<td style="width: 25%; text-align: center;" ></td>').html('<strong>收款类型</strong>').appendTo(receReceiptTr);
+            var balanceReceiptTd = $('<td style="width: 40%; text-align: center;" colspan="2"></td>').html('<strong>结算方式</strong>').appendTo(receReceiptTr);
             var amountReceiptTd = $('<td style="width: 35%; text-align: center;"></td>').html('<strong>收款金额(元)</strong>').appendTo(receReceiptTr);
 
             var total = 0;
@@ -158,19 +155,19 @@ jQuery(function ($) {
                 var receiptItems = paymentInfo[i][j];
                 if (receiptItems["paymentWay"] == "刷卡" || receiptItems["paymentWay"] == "转账") {
                     var InfoReceiptTr = $('<tr></tr>').appendTo(receiptTable);
-                    var typeInfoReceiptTd = $('<td style="width: 35%; text-align: center;" rowspan="' + (receiptItems.bankInfo.length + 1) + '"></td>').text(receiptItems["paymentType"]).appendTo(InfoReceiptTr);
-                    var bankInfoReceiptTd = $('<td style="width: 20%; text-align: center;" rowspan="' + (receiptItems.bankInfo.length + 1) + '"></td>').text(receiptItems.paymentWay).appendTo(InfoReceiptTr);
+                    var typeInfoReceiptTd = $('<td style="width: 25%; text-align: center;" rowspan="' + (receiptItems.bankInfo.length + 1) + '"></td>').text(receiptItems["paymentType"]).appendTo(InfoReceiptTr);
+                    var bankInfoReceiptTd = $('<td style="width: 12%; text-align: center;" rowspan="' + (receiptItems.bankInfo.length + 1) + '"></td>').text(receiptItems.paymentWay).appendTo(InfoReceiptTr);
 
                     for (var k = 0; k < receiptItems.bankInfo.length; k++) {
                         var bankTr = $('<tr></tr>').appendTo(receiptTable);
-                        var balanceInfoReceiptTd = $('<td style="width: 15%; text-align: center;"></td>').text(receiptItems["bankInfo"][k].key).appendTo(bankTr);
-                        var amountInfoReceiptTd = $('<td style="width: 35%; text-align: center;"></td>').text(receiptItems["bankInfo"][k].value).appendTo(bankTr);
+                        var balanceInfoReceiptTd = $('<td style="width: 28%; text-align: center;"></td>').text(receiptItems["bankInfo"][k].key).appendTo(bankTr);
+                        var amountInfoReceiptTd = $('<td style="width: 40%; text-align: center;"></td>').text(receiptItems["bankInfo"][k].value).appendTo(bankTr);
                     }
                 } else {
                     var receInfoReceiptTr = $('<tr></tr>').appendTo(receiptTable);
-                    var typeInfoReceiptTd = $('<td style="width: 35%; text-align: center;"></td>').text(receiptItems["paymentType"]).appendTo(receInfoReceiptTr);
+                    var typeInfoReceiptTd = $('<td style="width: 25%; text-align: center;"></td>').text(receiptItems["paymentType"]).appendTo(receInfoReceiptTr);
 
-                    var balanceInfoReceiptTd = $('<td style="width: 30%; text-align: center;"colspan="2" ></td>').text(receiptItems["paymentWay"]).appendTo(receInfoReceiptTr);
+                    var balanceInfoReceiptTd = $('<td style="width: 40%; text-align: center;"colspan="2" ></td>').text(receiptItems["paymentWay"]).appendTo(receInfoReceiptTr);
                     var amountInfoReceiptTd = $('<td style="width: 35%; text-align: center;"></td>').text(receiptItems["money"]).appendTo(receInfoReceiptTr);
 
                 }
@@ -188,9 +185,6 @@ jQuery(function ($) {
             var summaryReceiptDiv = $('<div style="text-align: right; padding-right: 150px;"></div>').appendTo(summaryReceiptTd);
             var receReceiptSpan = $('<span></span>').text('收款人:' + commonInfo["collectUserName"]).appendTo(summaryReceiptDiv);
             var cashierReceiptSpan = $('<span></span>').text(' 交款人:').appendTo(summaryReceiptDiv);
-
-            var desTr = $('<tr></tr>').appendTo(receiptTable);
-            var desTd = $('<td colspan="4"></td>').text('备注: ' + commonInfo["comment"]).appendTo(desTr);
 
         }
     }

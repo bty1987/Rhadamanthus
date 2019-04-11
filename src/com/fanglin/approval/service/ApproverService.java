@@ -14,7 +14,6 @@ import java.util.List;
 import com.fanglin.approval.vo.ApproverVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
-
 import com.fanglin.utils.Paging;
 
 public interface ApproverService {
@@ -25,7 +24,7 @@ public interface ApproverService {
 	
 	public int addApprover(ApproverVO userApproveVO) throws FLException;
 
-	public void deleteApprover(List<Integer> ids);
+	public void deleteApprover(ApproverVO approver) throws FLException;
 
-	public void deleteApproverById(Integer approveId);
+
 }

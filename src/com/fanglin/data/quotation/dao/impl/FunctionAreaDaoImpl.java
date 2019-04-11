@@ -37,7 +37,7 @@ public class FunctionAreaDaoImpl extends DaoImpl<FunctionAreaPO> implements Func
 		if(filters != null){
 			for(Filter filter: filters){
 				if("versionId".equals(filter.getField())){
-					query.add(query.getCriterion("quotationVersion.versionId", (filter.getData()), filter.getOp()));
+					query.add(query.getCriterion("quotationVersion.no", (filter.getData()), filter.getOp()));
 				}else{
 					query.add(query.getCriterion(filter.getField(), filter.getData(), filter.getOp()));
 				}
@@ -51,7 +51,7 @@ public class FunctionAreaDaoImpl extends DaoImpl<FunctionAreaPO> implements Func
 	@SuppressWarnings("unchecked")
 	public List<FunctionAreaPO> queryFunctionAreaByVersionId(String versionId){
 		return createCriteria(FunctionAreaPO.class)
-				.add(Restrictions.eq("quotationVersion.versionId", versionId))
+				.add(Restrictions.eq("quotationVersion.no", versionId))
 				.addOrder(Order.asc("functionAreaOrder"))
 				.list();
 	}
@@ -60,7 +60,7 @@ public class FunctionAreaDaoImpl extends DaoImpl<FunctionAreaPO> implements Func
 	public FunctionAreaPO queryFunctionAreaByIdAVersionId(String functionAreaId, String versionId){
 		return (FunctionAreaPO)session().createCriteria(FunctionAreaPO.class)
 				.add(Restrictions.eq("functionAreaId", functionAreaId))
-				.add(Restrictions.eq("quotationVersion.versionId", versionId))
+				.add(Restrictions.eq("quotationVersion.no", versionId))
 				.uniqueResult();
 	}
 	
@@ -69,7 +69,7 @@ public class FunctionAreaDaoImpl extends DaoImpl<FunctionAreaPO> implements Func
 	public List<FunctionAreaPO> queryFunctionAreaForCommonByVersionId(String versionId){
 		return createCriteria(FunctionAreaPO.class)
 				.add(Restrictions.not(Restrictions.eq("functionAreaId", "")))
-				.add(Restrictions.eq("quotationVersion.versionId", versionId))
+				.add(Restrictions.eq("quotationVersion.no", versionId))
 				.add(Restrictions.eq("functionAreaType",  "普通"))
 				.addOrder(Order.asc("functionAreaOrder"))
 				.list();
@@ -80,7 +80,7 @@ public class FunctionAreaDaoImpl extends DaoImpl<FunctionAreaPO> implements Func
 	public List<FunctionAreaPO> queryFunctionAreaForSpecialByVersionId(String versionId){
 		return createCriteria(FunctionAreaPO.class)
 				.add(Restrictions.not(Restrictions.eq("functionAreaId", "")))
-				.add(Restrictions.eq("quotationVersion.versionId", versionId))
+				.add(Restrictions.eq("quotationVersion.no", versionId))
 				.add(Restrictions.ne("functionAreaType", "普通"))
 				.addOrder(Order.asc("functionAreaOrder"))
 				.list();

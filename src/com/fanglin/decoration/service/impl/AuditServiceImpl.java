@@ -61,8 +61,8 @@ public class AuditServiceImpl implements AuditService{
 			auditPO.getDecoration().ptvcascade(auditVO.getDecoration()); 
 			
 			auditVO.getDecoration().setVersion(new QuotationVersionVO());
-			auditVO.getDecoration().getVersion().setVersionId(auditPO.getDecoration().getVersion().getVersionId());			
-			auditVO.getDecoration().getVersion().setVersionName(auditPO.getDecoration().getVersion().getVersionName());
+			auditVO.getDecoration().getVersion().setNo(auditPO.getDecoration().getVersion().getNo());			
+			auditVO.getDecoration().getVersion().setName(auditPO.getDecoration().getVersion().getName());
 
 			UserPO designer = auditPO.getDecoration().getDesigner();
 			auditVO.getDecoration().getDesigner().setDuty(new DutyVO());

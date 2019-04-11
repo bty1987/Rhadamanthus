@@ -9,6 +9,8 @@ $(function(){
         taskItems: {},
         editFlg: false,
         taskType:["python","shell"],
+        isShow:["显示","不显示"],
+
 
 };
     var taskRegular ={
@@ -63,12 +65,14 @@ $(function(){
             //启用禁用
             var $btnStatus = $('<div></div>').addClass('pull-right');
             var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({"type" : "checkbox"});
+            var $isShowSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({"type" : "checkbox"});
             var $span = $('<span></span>').addClass('lbl');
 
             var propertyArr = [
                 ["文件路径:", v.filepath, "grey"],
                 ["类型:", task.taskType[v.type], "grey"],
-                ["配置:", v.plugins, "grey"]
+                ["配置:", v.plugins, "grey"],
+                ["显示标识:", task.isShow[v.isShow],"grey"]
             ];
 
             $.each(propertyArr, function(index,value) {
@@ -78,7 +82,7 @@ $(function(){
                 $liProperty.appendTo($ulProperty);
             });
 
-            $btnStatus.append($statusSwitch).append($span);
+            $btnStatus.append($statusSwitch).append($isShowSwitch).append($span);
 
             $divBtnWrap.append($btnEdit).append($btnStatus).appendTo($h3);
 
@@ -93,6 +97,11 @@ $(function(){
             !v.status && $statusSwitch.prop("checked", true);
             $statusSwitch.switchBtn("status-lbl").on("click",function() {
                 $statusSwitch.prop("checked") ? (updateStatus(v.tid, 0, function(){$statusSwitch.removeAttr("checked");})) : (updateStatus(v.tid, 1,function(){$statusSwitch.prop("checked");}));
+            });
+
+            !v.isShow && $isShowSwitch.prop("checked", true);
+            $isShowSwitch.switchBtn("status-lbl").on("click",function() {
+                $isShowSwitch.prop("checked") ? (updateIsShow(v.tid, 0, function(){$isShowSwitch.removeAttr("checked");})) : (updateIsShow(v.tid, 1,function(){$isShowSwitch.prop("checked");}));
             });
             return $liLine;
         };
@@ -185,6 +194,20 @@ $(function(){
         }, function () {
             failcallBack && failcallBack();
         });
+    }
+
+    //显示与不显示
+    function updateIsShow(id,isShow,failcallBack){
+
+        com.post(api.information.updateTaskForIsShow, {
+            "task.tid": id,
+            "task.isShow": isShow
+        },function(){
+
+        },function () {
+            failcallBack && failcallBack();
+        });
+
     }
     //刷新
     function successCallback(){

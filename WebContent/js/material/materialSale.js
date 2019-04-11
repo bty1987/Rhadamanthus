@@ -51,7 +51,7 @@ jQuery(function($) {
 	if(params.saleType == "mend"){
 		materialSaleOrder.typeahead.queryByNameUrl = api.material.queryMaterialItemForNameByName;
 		materialSaleOrder.typeahead.queryByNoUrl = api.material.queryMaterialItemForNameByNo;
-		materialSaleOrder.typeahead.queryItemUrl = api.material.queryMaterialItemForSaleByMiid;
+		materialSaleOrder.typeahead.queryItemUrl = api.material.queryMaterialItemByMiid;
 
 		materialSaleOrder.typeahead.materialModels = "materialItems";
 		materialSaleOrder.typeahead.itemId = "miid";

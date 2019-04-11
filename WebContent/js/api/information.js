@@ -66,8 +66,10 @@ $.extend(api, {
 
         pageTask: {url: "pageTask.do"},
         queryTask: {url: "queryTask.do"},
+
         addTask: {url: "addTask.do"},
         updateTaskForStatus: {url: "updateTaskForStatus.do"},
+        updateTaskForIsShow: {url: "updateTaskForIsShow.do"},
 
         pagePlan: {url: "pagePlan.do"},
         createPlan: {url: "createPlan.do"},

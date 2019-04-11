@@ -51,6 +51,8 @@ public class WorkerSalaryVO  implements Serializable{
 	private Short onetype;
 	
 	private Short twotype;
+	
+	private Short schedule;
 
 	public WorkerSalaryVO() {
 		super();
@@ -224,6 +226,14 @@ public class WorkerSalaryVO  implements Serializable{
 
 	public void setTwotype(Short twotype) {
 		this.twotype = twotype;
+	}
+
+	public Short getSchedule() {
+		return schedule;
+	}
+
+	public void setSchedule(Short schedule) {
+		this.schedule = schedule;
 	}
 	
 }

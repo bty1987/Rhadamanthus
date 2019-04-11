@@ -19,9 +19,11 @@ public class WorkerBalanceDaoImpl extends DaoImpl<WorkerBalancePO> implements Wo
 	}
 	
 	@Override
-	public List<WorkerBalancePO> pageWorkerBalance(Paging paging,List<Filter> filters) {
+	public List<WorkerBalancePO> pageWorkerBalance(Paging paging,List<Filter> filters, int company) {
 
 		PagingQuery<WorkerBalancePO> query = pagingQuery(paging, WorkerBalancePO.class);
+		
+		query.add(Restrictions.eq("company", company));
 
 		queryFilterExcuteForWorker(query, filters);
 
@@ -29,9 +31,9 @@ public class WorkerBalanceDaoImpl extends DaoImpl<WorkerBalancePO> implements Wo
 	}
 	
 	@Override
-	public WorkerBalancePO queryWorkerBalanceByUserId(int uid) {
+	public WorkerBalancePO queryWorkerBalanceByUserId(int uid, int company) {
 		
-		return  (WorkerBalancePO) session().createCriteria(WorkerBalancePO.class).createAlias("user", "user").add(Restrictions.eq(WorkerBalancePO.COLUMN_USER_UID_STR, uid)).uniqueResult();
+		return (WorkerBalancePO) session().createCriteria(WorkerBalancePO.class).createAlias("user", "user").add(Restrictions.eq(WorkerBalancePO.COLUMN_UID_STR, uid)).add(Restrictions.eq("company", company)).uniqueResult();
 	}
 	
 	private void queryFilterExcuteForWorker(PagingQuery<?> query,List<Filter> filters) {

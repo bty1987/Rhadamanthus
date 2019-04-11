@@ -61,7 +61,7 @@ public class ReceiptTypeServiceImpl implements ReceiptTypeService {
 	@Override
 	public List<ReceiptTypeVO> queryReceiptTypeByType(ReceiptTypeVO receiptTypeVO,int company) {
 
-		List<ReceiptTypePO> receiptTypePOs = receiptTypeDao.queryReceiptTypeByType(receiptTypeVO.getType(),company);
+		List<ReceiptTypePO> receiptTypePOs = receiptTypeDao.queryReceiptTypeByType(receiptTypeVO.getType(), receiptTypeVO.getGrade(), company);
 		List<ReceiptTypeVO> receiptTypeVOs = new ArrayList<ReceiptTypeVO>();
 		
 		for(ReceiptTypePO receiptTypePO: receiptTypePOs){

@@ -27,6 +27,7 @@ jQuery(function ($) {
     salary.modal = com.focusPage("#workersalaryModal");
     salary.items.workersalary = com.focusPage("#workersalary");
     salary.items.workersalaryuser = com.focusPage("#workersalaryuser");
+    salary.items.workersalarySubtype = com.focusPage("#workersalarySubtype");
     salary.items.workersalarycomment = com.focusPage("#workersalarycomment");
 
     $.extend(com.validator, salary.validator);
@@ -63,13 +64,15 @@ jQuery(function ($) {
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.user.userName));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-            var $adopt = $('<a></a>').addClass('btn btn-minier btn-yellow').html('通过');
-            var $btnrefuse = $('<a></a>').addClass('btn btn-minier btn-success').html('驳回');
-            var $btnDel = $('<a></a>').addClass('btn btn-minier btn-warning').html('删除');
+            var $adopt = $('<a></a>').addClass('btn btn-minier btn-success').html('通过');
+            var $btnrefuse = $('<a></a>').addClass('btn btn-minier btn-danger').html('驳回');
+            var $btnDel = $('<a></a>').addClass('btn btn-minier btn-yellow').html('撤销');
 
             var propertyArr = [
                 ["创建人:", v.creater.userName, "grey"],
                 ["创建时间:", v.createTime, "green"],
+                ["工人工号:", v.user.userId, "grey"],
+                ["工程节点:", v.schedule == 0 ? "---" : v.schedule == 3 ? "铲大白" : v.schedule == 4 ? "放线" : v.schedule == 5 ? "水工" : v.schedule == 6 ? "力工" : v.schedule == 7 ? "电工" : v.schedule == 8 ? "瓦工" : v.schedule == 9 ? "地面找平" : v.schedule == 10 ? "木工" : v.schedule == 11 ? "油工" : v.schedule == 12 ? "水电验收" : "保洁", "grey"],
                 ["审批人:", v.approver.userName == null ? "无" : v.approver.userName, "grey"],
                 ["审批时间:", v.approveTime == null ? "无" : v.approveTime, "green"],
                 ["订单号:", v.decoration == null ? "无" : v.decoration.orderId, "blue"],
@@ -102,25 +105,20 @@ jQuery(function ($) {
 
             });
 
-            $divBtnWrap.append($adopt).append($btnrefuse).append($btnDel).appendTo($h3);
+            $divBtnWrap.append($adopt).append($btnDel).append($btnrefuse).appendTo($h3);
             $label.append($input).append($span).prependTo($h3);
             $liLine.append($h3).append($ulProperty);
 
             $btnDel.click(function () {
-
                 deletebystatus(v.wsId);
             });
 
             $adopt.click(function () {
-
                 adopt(v.wsId);
-
             });
 
             $btnrefuse.click(function () {
-
                 refuse(v.wsId);
-
             });
 
             return $liLine;
@@ -139,7 +137,7 @@ jQuery(function ($) {
     })();
 
     var searcher = new Searcher();
-    var _condArr = ['orderId', 'salaryWorkduty', 'jober', 'salarystatus', 'cerateTime', 'approveTime'];
+    var _condArr = ['orderId', 'salaryWorkduty', 'jober', 'salaryschedule', 'salarystatus', 'cerateTime', 'approveTime'];
 
     searcher.init(_condArr, "condList", api.salary.pageWorkerSalary, function (data) {
         displayFunc.init('resultList', data);
@@ -153,7 +151,7 @@ jQuery(function ($) {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-success').attr('name', 'add').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
-        var $addspan = $('<span></span>').text('创建').appendTo($adda);
+        var $addspan = $('<span></span>').text('创建工费').appendTo($adda);
 
         var $exporta = $('<a></a>').addClass('btn btn-minier btn-inverse').attr('name', 'export').css("margin", "0px 3px");
         var $exporti = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($exporta);
@@ -190,7 +188,9 @@ jQuery(function ($) {
     com.focusPage('a[name="add"]', '#pagenation').on("click", function () {
 
         com.cleanItems(salary.items);
+        com.clearValidator();
         com.focusPage('#workersalaryModal').modal("show");
+        com.updateChosen("workersalaryuser", "", "");
         com.initChosen('workersalaryuser', api.personel.queryUserByPinyin, "pinyinName", {
             "user.status": "0"
         }, "autoFillKeyValue", "key", "value");
@@ -265,18 +265,24 @@ jQuery(function ($) {
         var options = {};
         var groupCheckbox = com.focusPage('input[name="check"]:checked');
         var cwsIdArr = [];
-        var cwsId=[];
+        var cwsId = [];
 
         $.each(groupCheckbox, function (i, v) {
             var $v = $(v);
             cwsIdArr.push($v.attr('cwsid'));
             options["workerSalarys[" + i + "].wsId"] = $v.attr('value');
         });
-        $.each(cwsIdArr,function (i,v) {
+        $.each(cwsIdArr, function (i, v) {
             if ($.inArray(v, cwsId) == -1) {
                 cwsId.push(v);
             }
         });
+
+        if (!groupCheckbox.length) {
+            com.showAlert(com.warning, "请选择工人工费信息");
+            return false;
+        }
+
         if (cwsId.length != 1) {
             com.showAlert(com.error, "转款不允许批量通过");
             return false;
@@ -290,7 +296,7 @@ jQuery(function ($) {
     });
 
     com.post(api.ds.salary, {}, function (data) {
-        var SalaryType = data.SalaryType;
+        var SalaryType = data.SalaryTwoType;
 
         if (SalaryType && SalaryType.length) {
             $.each(SalaryType, function (i, v) {
@@ -303,74 +309,56 @@ jQuery(function ($) {
     function saveData(options) {
 
         if (!com.validate("workersalaryModal")) {
-
-            var url = api.salary.addWorkerSalary;
-            var options = {};
-
-            if (com.focusPage("#workersalarySubtype").val() == 1 || com.focusPage("#workersalarySubtype").val() == 2 || com.focusPage("#workersalarySubtype").val() == 3
-                || com.focusPage("#workersalarySubtype").val() == 10 || com.focusPage("#workersalarySubtype").val() == 11 || com.focusPage("#workersalarySubtype").val() == 12
-                || com.focusPage("#workersalarySubtype").val() == 13
-
-            ) {
-                options["workerSalary.type"] = 0;
-            } else if (com.focusPage("#workersalarySubtype").val() == 4 && com.focusPage('#workersalary').val() > 0) {
-                options["workerSalary.type"] = 0;
-            } else {
-                options["workerSalary.type"] = 1;
-            }
-            options["workerSalary.user.userId"] = com.focusPage('#workersalaryuser').val();
-            options["workerSalary.salary"] = com.focusPage('#workersalary').val();
-            options["workerSalary.subtype"] = com.focusPage("#workersalarySubtype").val();
-            options["workerSalary.comment"] = com.focusPage("#workersalarycomment").val();
-
-            com.post(url, options, function () {
+            var user = com.focusPage("#workersalaryuser").val();
+            var money = com.focusPage("#workersalary").val();
+            var twotype = com.focusPage("#workersalarySubtype").val();
+            var comment = com.focusPage("#workersalarycomment").val();
+            var option = {
+                "workerSalary.user.userId": user,
+                "workerSalary.money": money,
+                "workerSalary.twotype": twotype,
+                "workerSalary.comment": comment
+            };
+            com.post(api.salary.addWorkerSalary, option, function (res) {
                 searcher.doSearch();
+                com.showAlert(com.info, "操作成功");
             });
-
-            com.focusPage('#workersalaryModal').modal('hide');
+            com.focusPage('#workersalaryModal').modal("hide");
         }
-
     }
 
     function deletebystatus(wsId) {
-
         var options = {};
         options["workerSalary.wsId"] = wsId;
         com.post(api.salary.deleteWorkerSalary, options, function (res) {
-
             searcher.doSearch();
-
         }, function (e) {
             com.showAlert(com.error, e.errorMsg);
         });
     }
 
     function adopt(wsId) {
-
         var options = {};
-
         options["workerSalarys[0].wsId"] = wsId;
-
         com.post(api.salary.adoptWorkerSalary, options, function () {
             searcher.doSearch();
-
         }, function (e) {
             com.showAlert(com.error, e.errorMsg);
         });
     }
 
     function refuse(wsId) {
-
-        var options = {};
-
-        options["workerSalary.wsId"] = wsId;
-
-        com.post(api.salary.rejectWorkerSalary, options, function () {
-            searcher.doSearch();
-
-        }, function (e) {
-            com.showAlert(com.error, e.errorMsg);
-        });
+        bootbox.confirm("是否将已通过的薪资驳回", function (result) {
+            if (result) {
+                var options = {};
+                options["workerSalary.wsId"] = wsId;
+                com.post(api.salary.rejectWorkerSalary, options, function () {
+                    searcher.doSearch();
+                }, function (e) {
+                    com.showAlert(com.error, e.errorMsg);
+                });
+            }
+        })
     }
 
     com.focusPage('#import').Huploadify({

@@ -43,6 +43,8 @@ public class DecorationActivityItemVO implements java.io.Serializable {
 	private Short isStock; // 库存标识
 
 	private Short isPrefor; // 业绩标识
+	
+	private Short isPayment; // 金额标识
 
 	public DecorationActivityItemVO() {
 		super();
@@ -183,6 +185,14 @@ public class DecorationActivityItemVO implements java.io.Serializable {
 
 	public void setIsPrefor(Short isPrefor) {
 		this.isPrefor = isPrefor;
+	}
+
+	public Short getIsPayment() {
+		return isPayment;
+	}
+
+	public void setIsPayment(Short isPayment) {
+		this.isPayment = isPayment;
 	}
 
 }

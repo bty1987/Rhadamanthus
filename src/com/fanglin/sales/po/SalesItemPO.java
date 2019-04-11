@@ -64,6 +64,8 @@ public class SalesItemPO implements Serializable {
 	private	short ctype;
 	
 	private	float cvalue;
+	
+	private	short priceType;
 
 	public SalesItemPO() {
 		super();
@@ -242,6 +244,15 @@ public class SalesItemPO implements Serializable {
 
 	public void setCvalue(float cvalue) {
 		this.cvalue = cvalue;
+	}
+	
+	@Column(name="priceType")
+	public short getPriceType() {
+		return priceType;
+	}
+
+	public void setPriceType(short priceType) {
+		this.priceType = priceType;
 	}
 
 }

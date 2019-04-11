@@ -1,7 +1,5 @@
 package com.fanglin.decoration.action;
 
-import java.util.List;
-
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
@@ -24,14 +22,12 @@ public class AuditAction extends BaseListAction {
 	@Autowired
 	private AuditService auditService;
 
-	private List<AuditVO> auditVOs;
-
-	private AuditVO auditVO;
+	private AuditVO audit;
 
 	@Action(value = "pageAudit", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageAudit() throws FLException {
 
-		auditVOs = auditService.pageAudit(getPaging(), getFilters(), queryCompany());
+		auditService.pageAudit(getPaging(), getFilters(), queryCompany());
 
 		return SUCCESS;
 	}
@@ -39,25 +35,17 @@ public class AuditAction extends BaseListAction {
 	@Action(value = "applyAudit", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String applyAudit() throws FLException {
 
-		auditService.applyAudit(auditVO, queryUserId());
+		auditService.applyAudit(audit, queryUserId());
 
 		return SUCCESS;
 	}
 
-	public List<AuditVO> getAuditVOs() {
-		return auditVOs;
+	public AuditVO getAudit() {
+		return audit;
 	}
 
-	public void setAuditVOs(List<AuditVO> auditVOs) {
-		this.auditVOs = auditVOs;
-	}
-
-	public AuditVO getAuditVO() {
-		return auditVO;
-	}
-
-	public void setAuditVO(AuditVO auditVO) {
-		this.auditVO = auditVO;
+	public void setAudit(AuditVO audit) {
+		this.audit = audit;
 	}
 
 }

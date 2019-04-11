@@ -1,6 +1,7 @@
 package com.fanglin.information.service;
 
 import java.util.List;
+
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.information.vo.TaskVO;
@@ -16,4 +17,6 @@ public interface TaskService {
 	
 	public int updateTaskForStatus(TaskVO taskVO) throws FLException;
 	
+	public int updateTaskForIsShow(TaskVO taskVO) throws FLException;
+
 }

@@ -40,6 +40,10 @@ public class AwardStockDaoImpl extends DaoImpl<AwardStockPO> implements AwardSto
 					
 					query.add(query.getCriterion(filter.getField(), Short.valueOf(filter.getData()), filter.getOp()));
 					
+				}else if(AwardStockPO.STATUS_STOREROOM_STR.equals(filter.getField())){
+					
+					query.add(query.getCriterion(filter.getField(), Short.valueOf(filter.getData()), filter.getOp()));
+					
 				}
 			}
 		}

@@ -2,7 +2,8 @@
 jQuery(function($) {
 	
 	var audit = {
-		decorationOrderStatus: {}
+		decorationOrderStatus: {},
+        type: {0: "半包", 1: "套餐", 2: "半价", 3: "满减", 4: "减上捡"}
 	};
 	
 	com.post(api.ds.decoration, {}, function (res) {
@@ -54,7 +55,7 @@ jQuery(function($) {
                 ["面积:", v.decoration.house.buildArea, "blue "],
                 ["量房时间:", v.decoration.measureTime , "green"],
                 ["签单时间:", v.decoration.contractTime, "green"],
-                ["类型:", v.decoration.type == 0 ? '半包' : (v.type == 1 ? '全包' : (v.type == 2 ? '半价' : '满减')), "red"],
+                ["类型:",  audit.type[v.decoration.type], "red"],
                 ["状态:", audit.decorationOrderStatus[v.decoration.status], "red"],
                 ["审核状态:", v.auditer?'已审核':'未审核', "red"]
             ];
@@ -133,7 +134,7 @@ jQuery(function($) {
         bootbox.confirm("确认审核吗?",function(res){
             //如果为ture
             if(res){
-                com.post(api.decoration.applyAudit, {"auditVO.aid":aid}, function(res){
+                com.post(api.decoration.applyAudit, {"audit.aid":aid}, function(res){
                     com.showAlert(com.info, "操作成功");
                     searcher.doSearch();
                 });

@@ -118,10 +118,11 @@ jQuery(function($) {
 		approve.modal.modal("show");
     });
 
-	function deleteApprovalUser(approveId){
-		
+	function deleteApprovalUser(approverAid){
+
+
 		var options = {
-			"approverIds[0]": approveId
+			"approver.aid": approverAid
 		};
 		
 		com.post(api.approval.deleteApprover, options, function(){

@@ -19,6 +19,8 @@ public class WorkerBalanceVO implements Serializable {
 	private Float toplimit;
 	
 	private Short status;
+	
+	private Integer company;
 
 	public WorkerBalanceVO(){
 		super();
@@ -75,6 +77,14 @@ public class WorkerBalanceVO implements Serializable {
 
 	public void setStatus(Short status) {
 		this.status = status;
+	}
+
+	public Integer getCompany() {
+		return company;
+	}
+
+	public void setCompany(Integer company) {
+		this.company = company;
 	} 
 	
 }

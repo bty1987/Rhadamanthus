@@ -80,9 +80,16 @@ $.extend(api, {salary: {
     pageWorkerSalaryByUserId: {url: "pageWorkerSalaryByUserId.do"},
     
     pageWorkerBalance : { url : "pageWorkerBalance.do" },
+    updateWorkerBalance:{ url : "updateWorkerBalance.do"},
     payWorkerSalary : { url : "payWorkerSalary.do" },
     collectWorkerDeposit : { url : "collectWorkerDeposit.do" },
     drawWorkerDeposit : { url : "drawWorkerDeposit.do"},
     cutWorkerSalary : { url : "cutWorkerSalary.do"},
-    tranWorkerSalary :{ url : "tranWorkerSalary.do"}
+    tranWorkerSalary :{ url : "tranWorkerSalary.do"},
+    
+    pageSalary:{url : "pageSalary.do"},
+    addSalary:{url : "addSalary.do"},
+    passSalary:{url : "passSalary.do"},
+    rejectSalary:{url : "rejectSalary.do"},
+    cancelSalary:{url : "cancelSalary.do"}
 }});

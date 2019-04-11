@@ -22,20 +22,26 @@ $(function () {
 
     //获取所有节点
     com.post(api.data.queryConstructionNode, {}, function (res) {
-        $.each(res.constructionNodes, function (i, v) {
-            constructionNode[v.cnid] = v.name;
+
+        var newNodes = res.constructionNodes.sort(function(a, b){
+            return a.sort - b.sort;
+        });
+        $.each(newNodes, function (i, v) {
+            constructionNode[v.sort] = v.name;
         })
+        console.log(constructionNode)
     }, null, false);
 
     //动态获取节点轴
     com.post(api.construction.queryConstructionScheduleByOrderId, {"constructionSchedule.orderId": params.orderId}, function (res) {
 
-        var constructionSchedule = res.constructionSchedules;
-
-        workerAllocationDetail.constructionSchedules = res.constructionSchedules;
-
-        $.each(constructionSchedule, function (i, v) {
-            constructerNode("#stepId1", v.schedule);
+        var newSchedules = res.constructionSchedules.sort(function(a, b){
+            return a.schedule - b.schedule;
+        });
+        var constructionSchedule = newSchedules;
+        workerAllocationDetail.constructionSchedules = newSchedules;
+            $.each(constructionSchedule, function (i, v) {
+                constructerNode("#stepId1", v.schedule);
             constructerPane("#step-container1", v.schedule, v.schedule);
         });
 

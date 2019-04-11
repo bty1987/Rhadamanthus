@@ -147,7 +147,7 @@ $(function () {
         partDiv.appendTo(table);
 
         $.each(machingType, function (i, v) {
-            var projectPrice = quotationUtils.quotationCalculator(v["dd"], v["dt"], v["db"]); // 半价折后总价
+            var projectPrice = quotationUtils.quotationCalculator(v["dd"], v["db"]); // 半价折后总价
             var materialPrice = quotationUtils.quotationMaterial(v["mm"]);//半价主材总额
             var servicePrice = utils.changeTwoDecimal(utils.accMul(materialPrice, parseFloat(serviceRates)));//半价服务费
             var total = utils.changeTwoDecimal(utils.accAdd(projectPrice, utils.accAdd(materialPrice, servicePrice)));  //半价总额

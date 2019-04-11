@@ -11,8 +11,10 @@
 
 package com.fanglin.decoration.dao.impl;
 
+import java.math.BigInteger;
 import java.util.List;
 
+import org.hibernate.SQLQuery;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -31,6 +33,27 @@ public class DecorationActivityDaoImpl extends DaoImpl<DecorationActivityPO> imp
 	@SuppressWarnings("unchecked")
 	public List<DecorationActivityPO> queryDecorationActivityByOrderId(String orderId) {
 		return session().createCriteria(DecorationActivityPO.class).add(Restrictions.eq(DecorationActivityPO.COLUMN_ORDERID_STR, orderId)).list();
+	}
+
+	@Override
+	public int countDecorationActivity(String orderId, Short status) {
+		
+		StringBuffer sql = new StringBuffer();
+		
+		sql.append("select count(*) from decoration.decorationactivity where orderId = :orderId");
+		
+		if(status != null){
+			sql.append(" and status = :status");
+			
+		}
+		SQLQuery sqlQuery = session().createSQLQuery(sql.toString());
+		sqlQuery.setString("orderId", orderId);
+		
+		if(status != null){
+		sqlQuery.setShort("status", status);
+		}
+		
+		return ((BigInteger) sqlQuery.uniqueResult()).intValue();
 	}
 
 }

@@ -38,7 +38,6 @@ import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.system.vo.CityProperVO;
 import com.fanglin.utils.BeanUtil;
-import com.fanglin.utils.SystemConfig;
 
 @Entity
 @Table(name = "decoration", catalog = "decoration")
@@ -75,8 +74,12 @@ public class DecorationPO implements Serializable {
 	public static final short TYPE_WHOLE_INT = 1;
 
 	public static final short TYPE_HOLONOMY_INT = 2;
+	
+	public static final short TYPE_FULLSUB_INT = 3;
+	
+	public static final short TYPE_DOUSUB_INT = 4;
 
-	public static final String CONFIG_KEY_HOLONOMY_STR = "holonomyconfig";
+	public static final String CONFIG_KEY_HOLONOMY_STR = "fullsub%s";
 
 	private long doid;
 
@@ -110,11 +113,7 @@ public class DecorationPO implements Serializable {
 
 	private short resourceType;
 
-	private float freeArea;
-
 	private DecorationAdditionPO addition;
-
-	private String contractCode;
 
 	private float orderTotalPrice;
 
@@ -127,6 +126,8 @@ public class DecorationPO implements Serializable {
 	private float netperfor;
 
 	private float comperfor;
+	
+	private float precontractPrice;
 
 	private Timestamp contractTime;
 
@@ -137,6 +138,8 @@ public class DecorationPO implements Serializable {
 	private Timestamp createTime;
 
 	private Timestamp accountTime;
+	
+	private Timestamp precontractTime;
 
 	private short status;
 
@@ -157,6 +160,8 @@ public class DecorationPO implements Serializable {
 	private float discount;
 	
 	private String grade;
+	
+	private float factPrice;
 	
 	public DecorationPO() {
 	}
@@ -251,15 +256,7 @@ public class DecorationPO implements Serializable {
 	public void setSupervisor(UserPO supervisor) {
 		this.supervisor = supervisor;
 	}
-
-	public String getContractCode() {
-		return contractCode;
-	}
-
-	public void setContractCode(String contractCode) {
-		this.contractCode = contractCode;
-	}
-
+	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = true, name = "ctuid", referencedColumnName = "uId")
 	public UserPO getContracter() {
@@ -292,6 +289,14 @@ public class DecorationPO implements Serializable {
 
 	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
+	}
+	
+	public Timestamp getPrecontractTime() {
+		return precontractTime;
+	}
+
+	public void setPrecontractTime(Timestamp precontractTime) {
+		this.precontractTime = precontractTime;
 	}
 
 	public Short getStatus() {
@@ -337,7 +342,7 @@ public class DecorationPO implements Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, name = "versionId", referencedColumnName = "versionId")
+	@JoinColumn(nullable = false, name = "versionId", referencedColumnName = "no")
 	public QuotationVersionPO getVersion() {
 		return version;
 	}
@@ -352,14 +357,6 @@ public class DecorationPO implements Serializable {
 
 	public void setOrderTotalPrice(float orderTotalPrice) {
 		this.orderTotalPrice = orderTotalPrice;
-	}
-
-	public float getFreeArea() {
-		return freeArea;
-	}
-
-	public void setFreeArea(float freeArea) {
-		this.freeArea = freeArea;
 	}
 
 	public float getNotSalesmanRate() {
@@ -485,6 +482,14 @@ public class DecorationPO implements Serializable {
 	public void setComperfor(float comperfor) {
 		this.comperfor = comperfor;
 	}
+	
+	public float getPrecontractPrice() {
+		return precontractPrice;
+	}
+
+	public void setPrecontractPrice(float precontractPrice) {
+		this.precontractPrice = precontractPrice;
+	}
 
 	public Timestamp getAccountTime() {
 		return accountTime;
@@ -493,7 +498,7 @@ public class DecorationPO implements Serializable {
 	public void setAccountTime(Timestamp accountTime) {
 		this.accountTime = accountTime;
 	}
-
+	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = true, name = "orderId", referencedColumnName = "orderId", insertable = false, updatable = false)
 	public DecorationAdditionPO getAddition() {
@@ -512,6 +517,15 @@ public class DecorationPO implements Serializable {
 
 	public void setGrade(String grade) {
 		this.grade = grade;
+	}
+	
+	@Column(name = "factPrice")
+	public float getFactPrice() {
+		return factPrice;
+	}
+
+	public void setFactPrice(float factPrice) {
+		this.factPrice = factPrice;
 	}
 
 	private void ptv(DecorationVO decorationVO) {
@@ -533,9 +547,6 @@ public class DecorationPO implements Serializable {
 
 		decorationVO.setDesigner(new UserBaseVO());
 		decorationVO.setSalesman(new UserBaseVO());
-
-		String startWith = SystemConfig.getString("contractStartWith", "FLJ-");
-		decorationVO.setContractCode(startWith + this.getOrderId());
 
 		decorationVO.getDesigner().setDuty(new DutyVO());
 		decorationVO.getDesigner().setDept(new DepartmentVO());

@@ -74,7 +74,7 @@ $.extend(api, {
 
         queryMaterialItemByOrderId: {url: "queryMaterialItemByOrderId.do"},
         queryMaterialItemByMid: {url: "queryMaterialItemByMid.do", demo: true},
-        queryMaterialItemForSaleByMiid: {url: "queryMaterialItemForSaleByMiid.do", demo: true},
+        queryMaterialItemByMiid: {url: "queryMaterialItemByMiid.do", demo: true},
         queryMaterialItemForNameByName: {url: "queryMaterialItemForNameByName.do", demo: true},
         queryMaterialItemForNameByNo: {url: "queryMaterialItemForNameByNo.do"},
         addMaterialItem: {url: "addMaterialItem.do"},
@@ -102,7 +102,12 @@ $.extend(api, {
         queryMaterialActivity: {url: "queryMaterialActivity.do"},
         updateMaterialForActivity: {url: "updateMaterialForActivity.do"},
         abateMaterialActivityItem: {url: "abateMaterialActivityItem.do"},
-        receiveMaterialActivityItem: {url: "receiveMaterialActivityItem.do"}
+        receiveMaterialActivityItem: {url: "receiveMaterialActivityItem.do"},
+        deliveMaterialActivityItem: {url: "deliveMaterialActivityItem.do"},
+        unrefundMaterialActivityItem: {url: "unrefundMaterialActivityItem.do"},
+        upgradeMaterialActivityItem: {url: "upgradeMaterialActivityItem.do"},
+        expendMaterialActivityItem: {url: "expendMaterialActivityItem.do"},
+        refundMaterialActivityItem: {url: "refundMaterialActivityItem.do"}
     }
 });
 

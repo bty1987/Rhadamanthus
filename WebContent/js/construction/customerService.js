@@ -4,7 +4,7 @@ jQuery(function ($) {
 
     com.post(api.data.queryConstructionNode, {}, function (res) {
         $.each(res.constructionNodes, function (i, v) {
-            constructionNodes[v.cnid] = v.name;
+            constructionNodes[v.sort] = v.name;
         });
         constructionNodes[0] = "初始";
         constructionNodes[1] = "开工";

@@ -19,11 +19,11 @@ public class QuotationVersionVO implements Serializable {
 	
 	private Integer qvId;
 	
-	private String versionId;
+	private String no;
 	
-	private String versionName;
+	private String name;
 	
-	protected String versionDes;
+	protected String comment;
 	
 	private Integer defaultFlag;
 	
@@ -43,28 +43,28 @@ public class QuotationVersionVO implements Serializable {
 		this.qvId = qvId;
 	}
 
-	public String getVersionId(){
-		return versionId;
+	public String getNo() {
+		return no;
 	}
 
-	public void setVersionId(String versionId){
-		this.versionId = versionId;
+	public void setNo(String no) {
+		this.no = no;
 	}
 
-	public String getVersionName(){
-		return versionName;
+	public String getName() {
+		return name;
 	}
 
-	public void setVersionName(String versionName){
-		this.versionName = versionName;
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	public String getComment() {
+		return comment;
 	}
 
-	public String getVersionDes(){
-		return versionDes;
-	}
-
-	public void setVersionDes(String versionDes){
-		this.versionDes = versionDes;
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
 	public Integer getDefaultFlag(){

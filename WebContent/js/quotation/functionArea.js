@@ -132,8 +132,8 @@ $(function(){
             },
             oldFunctionAreaType: null,
             quotationVersionList: [],
-            quotationVersionKey: "versionId",
-            quotationVersionValue: "versionName",
+            quotationVersionKey: "no",
+            quotationVersionValue: "name",
             postParam: {},
             validator: {
                 region: {

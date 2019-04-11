@@ -2,6 +2,50 @@ jQuery(function($) {
 
 	var approvalTrack = {
 		postParam : {},
+		type: ["劵","物品"]
+	};
+
+	var approvalItemInfo = {
+		"6": {
+			"api": api.approval.queryApprovalMaterialRefundItem,
+			"title": "主材信息",
+			"resultname": "approvalMaterialRefundItems",
+			"args": [
+				['10', '型号  : ', "materialItem.name"],
+				['40', '品类  : ', "materialItem.category"],
+				['40', '品牌  : ', "materialItem.brand"],
+				['10', '售价  : ', "materialItem.price"],
+				['40', '退货数量  : ', "num"],
+				['40', '退货金额  : ', "total"]
+			]
+		},
+		"8": {
+			"api": api.approval.queryApprovalDecorationActivity,
+			"title": "活动信息",
+			"resultname": "approvalDecorationActivityItems",
+			"args": [
+				['10', '活动名称  : ', "activityName"],
+				['40', '活动项  : ', "activityItemName"],
+				['40', '物品类型  : ', "type"],
+				['10', '金额  : ', "money"],
+				['40', '数量  : ', "num"],
+				['40', '备注  : ', "content"]
+			],
+			"totalMoney" : []
+		},
+		"10": {
+			"api": api.approval.queryApprovalSalesRefundItem,
+			"title": "销售信息",
+			"resultname": "approvalSalesRefundItem",
+			"args": [
+				['10', '名称  : ', "salesItem.goods.name"],
+				['40', '颜色  : ', "salesItem.color.name"],
+				['40', '规格  : ', "salesItem.format.info"],
+				['10', '售价  : ', "salesItem.selling"],
+				['40', '退货数量  : ', "num"],
+				['40', '退货金额  : ', "total"]
+			]
+		}
 	};
 
 	com.post(api.ds.approval, {
@@ -22,7 +66,7 @@ jQuery(function($) {
 		var renderList = function(tableId, listData) {
 			var $tableWrap = com.focusPage('#' + tableId);
 			var $ul = $('<ul></ul>').addClass(
-					'item-list fl-table-list ui-sortable');
+				'item-list fl-table-list ui-sortable');
 
 			if (listData && listData.length) {
 				$.each(listData, function(i, v) {
@@ -62,12 +106,10 @@ jQuery(function($) {
 
 			var $content = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix').append($('<li></li>').append($('<strong></strong>').append($('<b></b>').text(v.contents).addClass("grey"))));
 
-			var typeName = v.type;
 
-			if (v.status == 0) {
-				if (typeName == "6"||typeName == "10") {
-					$divBtnWrap.append($btnDetails).append($btnPass).append($btnRefuse).appendTo($h3);
-				}
+			$divBtnWrap.appendTo($h3);
+
+			if(v.status == 0){
 				$divBtnWrap.append($btnPass).append($btnRefuse).appendTo($h3);
 			}
 
@@ -80,10 +122,17 @@ jQuery(function($) {
 				approve(v.aid,api.approval.refuseApproval);
 			});
 
-			// 详细信息按钮
-			$btnDetails.bindClick(function() {
-				queryMaterialSubOrder(v.aid, v.type);
-			});
+			if([6,8,10].indexOf(v.type) != -1){
+
+				$divBtnWrap.append($btnDetails).appendTo($h3);
+
+				// 详细信息按钮
+				$btnDetails.bindClick(function() {
+					queryInformationItem(v.aid, v.type);
+				});
+
+			}
+
 			return $liLine;
 		};
 
@@ -101,9 +150,9 @@ jQuery(function($) {
 	var searcher = new Searcher();
 
 	searcher.init([ "approval_senderName", "approval_Type" ], "condList",
-			api.approval.pageApprovalByReceiveId, function(data) {
-				displayFunc.init('resultList', data);
-			}, "pagenation", "approvalTrackPostData");
+		api.approval.pageApprovalByReceiveId, function(data) {
+			displayFunc.init('resultList', data);
+		}, "pagenation", "approvalTrackPostData");
 
 	function approve(aid,url,$this) {
 		com.post(url,{"approval.aid" : aid}, function(res) {
@@ -111,46 +160,54 @@ jQuery(function($) {
 		},null,false);
 	}
 
-	function queryMaterialSubOrder(aId,type,$this) {
+	function queryInformationItem(aid, type)	{
 
 		if (com.focusPage('#materialInfoList').children()) {
 			com.focusPage('#materialInfoList').empty();
 		}
-		if(type=="6"){
-			com.post(api.approval.queryApprovalMaterialRefundItem,{"approval.aid" : aId}, function(res) {
-				com.focusPage("#materialInfo").html("主材信息");
-				$.each(res.approvalMaterialRefundItems, function(i, v) {
-					com.focusPage('#materialInfoList')
-						.append(approvalUtils.addspan('10', '型号  : ', v.materialItem.name))
-						.append(approvalUtils.addspan('40', '品类  : ', v.materialItem.category))
-						.append(approvalUtils.addspan('40', '品牌  : ', v.materialItem.brand))
-						.append('<br/>')
-						.append(approvalUtils.addspan('10', '售价  : ', v.materialItem.price))
-						.append(approvalUtils.addspan('40', '退货数量  : ', v.num))
-						.append(approvalUtils.addspan('40', '退货金额  : ', v.total))
-						.append('<hr/>');
-				});
-				com.focusPage('#msoiModel').modal("show");
-			}, null, false);
-		}
-		if(type=="10"){
-			com.post(api.approval.queryApprovalSalesRefundItem,{"approval.aid" : aId}, function(res) {
-				com.focusPage("#materialInfo").html("销售信息");
-				$.each(res.approvalSalesRefundItem, function(i, v) {
-					com.focusPage('#materialInfoList')
-						.append(approvalUtils.addspan('10', '名称  : ', v.salesItem.goods.name))
-						.append(approvalUtils.addspan('40', '颜色  : ', v.salesItem.color.name))
-						.append(approvalUtils.addspan('40', '规格  : ', v.salesItem.format.info))
-						.append('<br/>')
-						.append(approvalUtils.addspan('10', '售价  : ', v.salesItem.selling))
-						.append(approvalUtils.addspan('40', '退货数量  : ', v.num))
-						.append(approvalUtils.addspan('40', '退货金额  : ', v.total))
-						.append('<hr/>');
-				});
-				com.focusPage('#msoiModel').modal("show");
-			}, null, false);
-		}
-	}
 
+		var itemInfo = approvalItemInfo[type];
+		var infoList = com.focusPage('#materialInfoList');
+
+		com.post(itemInfo.api, {"approval.aid" : aid}, function(res) {
+
+			com.focusPage("#materialInfo").html(itemInfo.title);
+
+			$.each(res[itemInfo.resultname], function(i, v) {
+
+				$.each(itemInfo.args, function(j, e){
+					if(e[2] == "type") infoList.append(approvalUtils.addspan(e[0], e[1], approvalTrack.type[getElement(v, e[2].split('.'))]))
+
+					else infoList.append(approvalUtils.addspan(e[0], e[1], getElement(v, e[2].split('.'))))
+
+				});
+
+				if(itemInfo.totalMoney){
+					itemInfo.totalMoney.push(v.money);
+					com.focusPage('#totalMoneyList').html("总金额:"+sum(itemInfo.totalMoney));
+				}
+
+				infoList.append('<hr />')
+			});
+
+			com.focusPage('#msoiModel').modal("show");
+
+		}, null, false);
+	}
+	function sum(totalMoney){
+		return eval(totalMoney.join('+'))
+	}
+	function getElement(o, props){
+
+		var prop = props.shift();
+
+		if(props.length == 0){
+			return o[prop];
+		}else if(o[prop]){
+			return getElement(o[prop], props);
+		}
+
+		return "";
+	}
 });
 

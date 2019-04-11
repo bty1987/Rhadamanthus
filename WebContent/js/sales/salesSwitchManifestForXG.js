@@ -452,7 +452,7 @@ $(function () {
     function checkRowValue($line) {
 
         var flag = true;
-        var priceRex = /^\d{1,8}(\.\d{1,2})?$/;
+        var priceRex = /^\d{1,8}(\.\d{1,3})?$/;
         $.each($line, function (i, v) {
             var num = $(v).find('input.inputNumber');
 

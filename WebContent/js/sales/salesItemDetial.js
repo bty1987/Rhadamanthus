@@ -34,7 +34,7 @@ $(function () {
         type: "approvalSalesRefund.type"
     };
 
-    if ((fullpayStatus != 2 && status != 4) || dompany == "dompany") {
+    if ((fullpayStatus != 2 && status != 4) || dompany == "dompany" || dompany == "pompany") {
         hideButtons([refundBtn, refundCancelBtn, refundCommitBtn, fullRefundBtn, reOrderBtn]);
     }
 
@@ -63,7 +63,7 @@ $(function () {
 
     refundCommitBtn.click(function () {
 
-        if (!calcRefundData(false)) return
+        if (!calcRefundData(false)) return;
 
         approvalUtils.initqueryApprovalUser("approver", 10);
 
@@ -120,7 +120,7 @@ $(function () {
         }
 
         recordMoney(true);
-        if (!calcRefundData(true)) return
+        if (!calcRefundData(true)) return;
 
         approvalUtils.initqueryApprovalUser("approver", 10);
 
@@ -169,8 +169,8 @@ $(function () {
         }
 
         recordMoney(true);
-        console.log(calcRefundData(true));
-        if (!calcRefundData(true)) return
+        
+        if (!calcRefundData(true)) return;
 
         approvalUtils.initqueryApprovalUser("approver", 10);
 
@@ -234,7 +234,8 @@ $(function () {
                     ["折让价:", v.price, "blue"],
                     ["数量:", v.num, "blue"],
                     ["总价:", v.total, "blue"],
-                    ["备注:", v.comment, "grey"],
+                    ["类型:", v.priceType == "0" ? "正价" : "特价", "red"],
+                    ["备注:", v.comment, "grey"]
                 ];
 
                 $.each(propertyArr, function (index, value) {
@@ -247,7 +248,7 @@ $(function () {
                 $liLine.appendTo($ul);
                 $liLine.append($h3).append($ulProperty);
 
-                if(dompany!="dompany"){
+                if(dompany!="dompany" && dompany!="pompany"){
                     if (fullpayStatus == -1 && status != 4) {
                         $btnDiv.append($btnEdit).append($btnDelete);
                     }

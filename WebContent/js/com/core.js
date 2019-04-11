@@ -12,19 +12,19 @@
     },
     resizeContainer: function () {
     },
-    post: function (url, options, callback, failCallback, asyncFlag) {
+    post: function (api, options, callback, failCallback, asyncFlag) {
 
-        if (url == null) {
+        if (api == null) {
             return;
         }
 
-        var method = url.url;
+        var method = api.url;
         var target = method.substring(0, method.indexOf('.'));
         var reg = new RegExp(/query*|page*|report*|count*|[a-z]*\/[a-z]*/);
         var timestamp = new Date().getTime();
 
         if (!reg.test(target)) {
-            if (!url.intercept) { // 该接口不拦截)
+            if (!api.intercept) { // 该接口不拦截)
                 if (params.apiHistory.hasOwnProperty(target)) {   // 存在请求方法
                     if (utils.accSub(timestamp, params.apiHistory[target]) <= config.spacing * 1000) {
                         // 指定秒数之内重复请求
@@ -58,23 +58,32 @@
         } else {
             params.loginTime = $ct.getTime();
         }
+        
+        if(api.cache && params[api.cache]){
+        	var res = params[api.cache]
+        	if (callback) {
+                return callback(res);
+            } else {
+                return res;
+            }
+        }
 
         var server = "";
-        if (url.server && config[url.server]) {
-            server = config[url.server];
+        if (api.server && config[api.server]) {
+            server = config[api.server];
         } else {
             server = config.server;
         }
 
         if (config.demo) {
-            if (!url.demo) {
+            if (!api.demo) {
                 com.showAlert(com.warning, "Demo状态不能完成此操作");
                 return;
             }
 
-            url = 'result/' + url.url.split('.')[0] + '.json';
+            url = 'result/' + api.url.split('.')[0] + '.json';
         } else {
-            url = server + url.url;
+            url = server + api.url;
             opts["authentication"] = params.authentication;
         }
 
@@ -88,8 +97,13 @@
                 if (res == null) {
                     return;
                 }
-
+                
                 if (res.errorCode == 0) {
+                	
+                	if(api.cache) {
+                		params[api.cache] = res;
+                	}
+                	
                     if (callback) {
                         callback(res);
                     } else {
@@ -464,8 +478,9 @@
 
         var homeNav = $("#homeNav.nav.nav-tabs");
         var tabDel = $('<div class="removePage"><i class="icon-remove"></i></div>');
+        var tabRefresh = $('<div class="removePage"><i class="icon-refresh"></i></div>');
         var tabLi = $('<li class="flpage nav-tab active" data-page="'+ page +'"></li>');
-        var taba = $('<a data-toggle="tab" href="#'+ menuId +'" id="tab_'+ menuId +'">'+ $features.attr("menuText") +'</a>').append(tabDel);
+        var taba = $('<a data-toggle="tab" href="#'+ menuId +'" id="tab_'+ menuId +'">'+ $features.attr("menuText") +'</a>').append(tabRefresh).append(tabDel);
         var tabPane = $('<div id="'+ menuId +'" class="flpage tab-pane in active"></div>').attr({
             'icon': $features.attr('icon'),
             'helpKey': $features.attr('helpKey'),
@@ -514,6 +529,15 @@
                 $("#home .flpage.tab-content div.flpage.tab-pane:last").addClass("active");
             }
             tabClose.removeClass('show');
+        });
+        tabRefresh.on(ace.click_event, function(){
+            var target = $($(this).parent().attr("href"));
+            var height = parseInt(target.get(0).offsetHeight)-300;
+            target.append($("<div><h1 style='margin-top: "+height/2+"px'><i class='icon-spinner icon-spin bigger-450'></i></h1></div>").addClass("tab-mask"));
+            setTimeout(function(){
+                tabPane.load(page);
+                target.removeClass("tab-mask");
+            }, 1200)
         });
 
         var breadcrumb = function(){

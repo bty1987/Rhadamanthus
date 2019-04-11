@@ -228,8 +228,8 @@ public class QuotationItemServiceImpl implements QuotationItemService {
 		quotationItemVO.setQuotationSmallCategoryId(quotationSmallCategoryPO.getId());
 		quotationItemVO.setQuotationSmallCategory(quotationSmallCategoryPO.getName());
 		
-		quotationItemVO.setVersionId(quotationVersionPO.getVersionId());
-		quotationItemVO.setVersion(quotationVersionPO.getVersionName());
+		quotationItemVO.setVersionId(quotationVersionPO.getNo());
+		quotationItemVO.setVersion(quotationVersionPO.getName());
 		
 		quotationItemVO.setMeasurementUnitId(measurementUnitPO.getId());
 		quotationItemVO.setMeasurementUnit(measurementUnitPO.getName());

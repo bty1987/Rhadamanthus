@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.communion.vo.DutyVO;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.salary.dao.WorkerBalanceDao;
@@ -27,9 +28,9 @@ public class WorkerBalanceServiceImpl implements WorkerBalanceService {
 	private WorkerBalanceDao workerBalanceDao;
 
 	@Override
-	public void pageWorkerBalance(Paging paging, List<Filter> filters) {
+	public void pageWorkerBalance(Paging paging, List<Filter> filters,int company) {
 		
-		List<WorkerBalancePO> workerBalancePOs=workerBalanceDao.pageWorkerBalance(paging, filters);
+		List<WorkerBalancePO> workerBalancePOs=workerBalanceDao.pageWorkerBalance(paging, filters,company);
 		List<WorkerBalanceVO> workerBalanceVOs=new ArrayList<WorkerBalanceVO>();
 		
 		for(WorkerBalancePO workerBalancePO:workerBalancePOs){
@@ -45,6 +46,23 @@ public class WorkerBalanceServiceImpl implements WorkerBalanceService {
 			
 		}
 		paging.setData(workerBalanceVOs);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int updateWorkerBalance(WorkerBalanceVO workerBalanceVO)throws FLException {
+		
+		WorkerBalancePO workerBalancePO = workerBalanceDao.get(workerBalanceVO.getWbid());
+		
+		if (workerBalancePO == null) {
+			throw new FLException(280004, "工人帐户不存在");
+		}
+		
+		workerBalancePO.setToplimit(workerBalanceVO.getToplimit());
+		
+		workerBalanceDao.update(workerBalancePO);
+		
+		return 0;
 	}
 
 }

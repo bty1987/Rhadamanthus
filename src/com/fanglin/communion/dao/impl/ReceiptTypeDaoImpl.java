@@ -13,6 +13,7 @@ package com.fanglin.communion.dao.impl;
 
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
@@ -52,8 +53,15 @@ public class ReceiptTypeDaoImpl extends DaoImpl<ReceiptTypePO> implements Receip
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<ReceiptTypePO> queryReceiptTypeByType(short type,int company) {
-		return session().createCriteria(ReceiptTypePO.class).add(Restrictions.eq("company", company)).add(Restrictions.eq(ReceiptTypePO.COLUMN_TYPE_STR, type)).list();
+	public List<ReceiptTypePO> queryReceiptTypeByType(short type, String grade, int company) {
+		
+		Criteria criteria = session().createCriteria(ReceiptTypePO.class).add(Restrictions.eq("company", company)).add(Restrictions.eq(ReceiptTypePO.COLUMN_TYPE_STR, type));
+		
+		if(grade != null){
+			criteria.add(Restrictions.eq(ReceiptTypePO.COLUMN_GRADE_STR, grade));
+		}
+		
+		return criteria.list();
 	}
 	
 	@Override

@@ -10,7 +10,7 @@ $.extend(api, {personel: {
     pageUser: {url: "pageUser.do", demo: true},
     queryUserByLoginId: {url: "queryUserByLoginId.do"},
     queryUserByUserId: {url: "queryUserByUserId.do", demo: true},
-    queryUserInfoByUserId: {url: "queryUserInfoByUserId.do",},
+    queryUserInfoByUserId: {url: "queryUserInfoByUserId.do"},
     queryUserForSelfByUserId: {url: "queryUserForSelfByUserId.do", demo: true ,server:"communion"},
     queryUserByOldUserId: {url: "queryUserByOldUserId.do"},
     queryUserByPinyin: {url: "queryUserByPinyin.do"},

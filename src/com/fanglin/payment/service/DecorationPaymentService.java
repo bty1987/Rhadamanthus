@@ -16,6 +16,7 @@ import java.util.List;
 
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.vo.DecorationActivityItemVO;
 import com.fanglin.payment.vo.DecorationPaymentVO;
 import com.fanglin.payment.vo.DecorationReceiptVO;
@@ -43,7 +44,7 @@ public interface DecorationPaymentService {
 	
 	public int addDecorationPayment(DecorationPaymentVO decorationPaymentVO, String userId) throws FLException;
 	
-	public int makeDecorationPayment(DecorationPaymentVO decorationPaymentVO, String createUserId) throws FLException;
+	public int makeDecorationPayment(DecorationPO decorationPO, float money, long psid, String createUserId) throws FLException;
 	
 	public int changeDecorationPaymentForTime(DecorationPaymentVO decorationPaymentVO, Timestamp dateTime, String userId);
 	

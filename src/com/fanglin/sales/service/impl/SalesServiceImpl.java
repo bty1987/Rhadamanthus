@@ -23,6 +23,8 @@ import com.fanglin.communion.vo.VillageVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.security.AESHelper;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.decoration.dao.DecorationDao;
+import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.information.dao.ActivityDao;
 import com.fanglin.information.po.ActivityPO;
 import com.fanglin.inventory.dao.GoodsDao;
@@ -76,6 +78,9 @@ public class SalesServiceImpl implements SalesService {
 	@Autowired
 	private ActivityDao activityDao;
 	
+	@Autowired
+	private DecorationDao decorationDao;
+	
 	@Override
 	public List<SalesVO> pageSales(List<SalesPO> salesPOs) {
 		
@@ -112,9 +117,10 @@ public class SalesServiceImpl implements SalesService {
 		Integer id = userPO.getUid();
 		
 		List<SalesPO> salesPOs = salesDao.pageSales(paging, filter,company,id);
+		
 		List<SalesVO> salesVOs = pageSales(salesPOs);
 		
-		paging.setData(salesVOs); 
+		paging.setData(salesVOs);
 
 	}
 	
@@ -156,7 +162,7 @@ public class SalesServiceImpl implements SalesService {
 		List<SalesPO> salesPOs = salesDao.pageSalesForDompany(paging, filter, dompany);
 		List<SalesVO> salesVOs = pageSales(salesPOs);
 		
-		paging.setData(salesVOs); 
+		paging.setData(salesVOs);
 
 	}
 	
@@ -172,7 +178,35 @@ public class SalesServiceImpl implements SalesService {
 		
 		paging.setData(salesVOs); 
 	}
-
+	
+	@Override
+	public void pageSalesForPompany(Paging paging, List<Filter> filter, String userId, int pompany) {
+		
+		UserPO userPO = userDao.queryUserByUserId(userId);
+		
+		if(userPO == null) return;
+		
+		List<SalesPO> salesPOs = salesDao.pageSalesForPompany(paging, filter, pompany);
+		List<SalesVO> salesVOs = pageSales(salesPOs);
+		
+		paging.setData(salesVOs); 
+		
+	}
+	
+	@Override
+	public void pageSalesForBalanceByPompany(Paging paging, List<Filter> filter, String userId, int pompany) {
+		
+		UserPO userPO = userDao.queryUserByUserId(userId);
+		
+		if(userPO == null) return;
+		
+		List<SalesPO> salesPOs = salesDao.pageSalesForBalanceByPompany(paging, filter, pompany);
+		List<SalesVO> salesVOs = pageSales(salesPOs);
+		
+		paging.setData(salesVOs); 
+		
+	}
+	
 	@Override
 	public SalesVO querySalesBySid(SalesVO salesVO) throws FLException{
 		
@@ -204,7 +238,7 @@ public class SalesServiceImpl implements SalesService {
 		
 		return salesVO;
 	}
-
+	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public int addSales(SalesVO salesVO, List<SalesItemVO> salesItemVOs, int company) throws FLException {
@@ -266,6 +300,15 @@ public class SalesServiceImpl implements SalesService {
 		salesPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		salesPO.setCompany(company);
 		salesPO.setDompany(dompany);
+		salesPO.setAmount(salesPO.getTotal());
+		
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(salesVO.getOrderId());
+		
+		if(decorationPO.getGrade().equals("C") && decorationPO.getCompany() == 1 && company == 1){
+			salesPO.setGrade("B");
+		}else{
+			salesPO.setGrade("");
+		}
 		
 		ActivityPO activityPO = activityDao.queryActivityForDefault(SalesPO.FULLPAYSTATUS_PAYED_SHORT);
 		salesPO.setActivityId(activityPO == null ? 0 : activityPO.getAid());
@@ -276,24 +319,27 @@ public class SalesServiceImpl implements SalesService {
 			
 			for(SalesItemVO salesItemVO: salesItemVOs){
 				
-				GoodsPO goodsPO = goodsDao.get(salesItemVO.getGoods().getGid());
+				if(salesItemVO != null){
 					
-				if(!goodsPO.getBrand().equals(salesBrand)){
-					throw new FLException(260033, "品牌不一致");
+					GoodsPO goodsPO = goodsDao.get(salesItemVO.getGoods().getGid());
+					
+					if(!goodsPO.getBrand().equals(salesBrand)){
+						throw new FLException(260033, "品牌不一致");
+					}
+					
+					SalesItemPO salesItemPO = new SalesItemPO(new GoodsPO(), new ColorPO(), new FormatPO());
+					
+					BeanUtil.copyProperties(salesItemVO, salesItemPO, Arrays.asList("goods","color","format"));
+					BeanUtil.copyProperties(salesItemVO.getGoods(), salesItemPO.getGoods(),Arrays.asList("accessoriesType"));
+					BeanUtil.copyProperties(salesItemVO.getColor(), salesItemPO.getColor());
+					BeanUtil.copyProperties(salesItemVO.getFormat(), salesItemPO.getFormat());
+					salesItemPO.setSid(salesPO.getSid());
+					
+					salesItemDao.save(salesItemPO);
+					
+					totalMoney = Arith.add(totalMoney, salesItemPO.getTotal());
+					
 				}
-				
-				SalesItemPO salesItemPO = new SalesItemPO(new GoodsPO(), new ColorPO(), new FormatPO());
-				
-				BeanUtil.copyProperties(salesItemVO, salesItemPO, Arrays.asList("goods","color","format"));
-				BeanUtil.copyProperties(salesItemVO.getGoods(), salesItemPO.getGoods(),Arrays.asList("accessoriesType"));
-				BeanUtil.copyProperties(salesItemVO.getColor(), salesItemPO.getColor());
-				BeanUtil.copyProperties(salesItemVO.getFormat(), salesItemPO.getFormat());
-				salesItemPO.setSid(salesPO.getSid());
-				
-				salesItemDao.save(salesItemPO);
-				
-				totalMoney = Arith.add(totalMoney, salesItemPO.getTotal());
-				
 			}
 		}
 		
@@ -303,7 +349,24 @@ public class SalesServiceImpl implements SalesService {
 		
 		return 0;
 	}
-
+	
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public int updateSales(SalesVO salesVO) throws FLException {
+		
+		SalesPO salesPO = salesDao.get(salesVO.getSid());
+		
+		if(salesPO == null){
+			throw new FLException(260021, "销售单不存在");
+		}
+		
+		salesPO.setGrade(salesVO.getGrade());
+		
+		salesDao.update(salesPO);
+		
+		return 0;
+	}
+	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public int updateSalesForCoupon(SalesVO salesVO) throws FLException {
@@ -337,6 +400,23 @@ public class SalesServiceImpl implements SalesService {
 		
 		salesDao.update(salesPO);
 		
+		return 0;
+	}
+	
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int updateSalesForActivity(SalesVO salesVO) throws FLException {
+		
+		SalesPO salesPO = salesDao.get(salesVO.getSid());
+
+		if (salesPO == null) {
+			throw new FLException(260021, "销售单不存在");
+		}
+
+		salesPO.setActivityId(salesVO.getActivityId());
+
+		salesDao.update(salesPO);
+
 		return 0;
 	}
 

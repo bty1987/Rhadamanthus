@@ -164,9 +164,9 @@ public class QuotationServiceImpl implements QuotationService {
 		quotationPO.setDiscount(10);
 		QuotationPO defaultQuotationPO = quotationDao.queryQuotationForDefaultByOrderId(orderId);
 		if(defaultQuotationPO == null){
-			quotationPO.setDefaults(QuotationPO.DEFAULTS_DEFAULT_SHORT);
+			quotationPO.setDefaults(QuotationPO.DEFAULTS_DEFAULT_INT);
 		}else{
-			quotationPO.setDefaults(QuotationPO.DEFAULTS_NONDEFAULT_SHORT);
+			quotationPO.setDefaults(QuotationPO.DEFAULTS_NONDEFAULT_INT);
 		}
 		
 		quotationDao.save(quotationPO);
@@ -213,20 +213,16 @@ public class QuotationServiceImpl implements QuotationService {
 	@Transactional(rollbackFor=Exception.class)
 	public int changeQuotationForDefault(QuotationVO quotationVO) throws FLException{
 		
-		QuotationPO quotationPO = quotationDao.get(quotationVO.getQid());
-		
-		if(quotationPO == null){
-			throw new FLException(200003, "报价不存在");
-		}
+		QuotationPO quotationPO  = checkQuotationForStatusByEnabled(quotationVO.getQid());
 		
 		DecorationPO decorationPO = checkQuotationForDefaultByOrderId(quotationPO.getOrderId());
 		
-		if(quotationPO.getDefaults() == QuotationPO.DEFAULTS_NONDEFAULT_SHORT){
+		if(quotationPO.getDefaults() == QuotationPO.DEFAULTS_NONDEFAULT_INT){
 			
 			decorationPO.setQuotationPrice(quotationPO.getTotalPrice());
 			decorationPO.setDiscount(quotationPO.getDiscount());
 			
-			quotationPO.setDefaults(QuotationPO.DEFAULTS_DEFAULT_SHORT);
+			quotationPO.setDefaults(QuotationPO.DEFAULTS_DEFAULT_INT);
 			
 			quotationDao.clearQuotationForDefaultByOrderId(quotationVO.getOrderId());
 			
@@ -249,7 +245,7 @@ public class QuotationServiceImpl implements QuotationService {
 		
 		convertQuotationVOToPOForAdvance(quotationVO, quotationPO);
 		
-		if(quotationPO.getDefaults() == QuotationPO.DEFAULTS_DEFAULT_SHORT){
+		if(quotationPO.getDefaults() == QuotationPO.DEFAULTS_DEFAULT_INT){
 			
 			DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(quotationPO.getOrderId());
 			
@@ -291,6 +287,48 @@ public class QuotationServiceImpl implements QuotationService {
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
+	public int lockQuotation(QuotationVO quotationVO, String userId) throws FLException {
+		
+		QuotationPO quotationPO = quotationDao.get(quotationVO.getQid());
+		
+		if(quotationPO == null){
+			throw new FLException(200003, "报价不存在");
+		}
+		
+		quotationPO.setStatus(QuotationPO.STATUS_LOCK_INT);
+		
+		quotationDao.update(quotationPO);
+		
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public int unlockQuotation(QuotationVO quotationVO, String userId) throws FLException {
+		
+		QuotationPO quotationPO = quotationDao.get(quotationVO.getQid());
+		
+		if(quotationPO == null){
+			throw new FLException(200003, "报价不存在");
+		}
+		
+		quotationPO.setStatus(QuotationPO.STATUS_INIT_INT);
+		
+		quotationDao.update(quotationPO);
+		
+		ServiceRecordPO serviceRecordPO = new ServiceRecordPO();
+		serviceRecordPO.setType(ServiceRecordPO.TYPE_CHANGE_QUOTATION_INT);
+		serviceRecordPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
+		serviceRecordPO.setOperateUserId(userId);
+		serviceRecordPO.setInfo(String.format("装修单:%s,报价ID%d,解锁", quotationPO.getOrderId(), quotationPO.getQid()));
+		
+		serviceRecordDao.save(serviceRecordPO);
+		
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor=Exception.class)
 	public int cloneQuotation(QuotationVO quotationVO, String no,String userId,int company) throws FLException {
 		
 		String orderId = quotationVO.getOrderId();
@@ -324,7 +362,7 @@ public class QuotationServiceImpl implements QuotationService {
 		
 		quotationPO.ptp(orderId,userPO,copyQuotetionPO.getName(),"其他");
 		
-		if(!decorationPO.getVersion().getVersionId().equals(copyQuotetionPO.getVersion())){
+		if(!decorationPO.getVersion().getNo().equals(copyQuotetionPO.getVersion())){
 			throw new FLException(200002, "复制报价与当前报价版本不同,不能拷贝");
 		}
 		
@@ -425,7 +463,7 @@ public class QuotationServiceImpl implements QuotationService {
 			throw new FLException(200019, "拷贝报价不能在订单内完成");
 		}
 		
-		if(!decorationPO.getVersion().getVersionId().equals(_decorationPO.getVersion().getVersionId())){
+		if(!decorationPO.getVersion().getNo().equals(_decorationPO.getVersion().getNo())){
 			throw new FLException(200002, "复制报价与当前报价版本不同,不能拷贝");
 		}
 		
@@ -482,9 +520,9 @@ public class QuotationServiceImpl implements QuotationService {
 		quotationPO.setTotalPrice(copyPO.getTotalPrice());
 		QuotationPO defaultQuotationPO = quotationDao.queryQuotationForDefaultByOrderId(orderId);
 		if(defaultQuotationPO == null){
-			quotationPO.setDefaults(QuotationPO.DEFAULTS_DEFAULT_SHORT);
+			quotationPO.setDefaults(QuotationPO.DEFAULTS_DEFAULT_INT);
 		}else{
-			quotationPO.setDefaults(QuotationPO.DEFAULTS_NONDEFAULT_SHORT);
+			quotationPO.setDefaults(QuotationPO.DEFAULTS_NONDEFAULT_INT);
 		}
 		quotationDao.save(quotationPO);
 		
@@ -503,7 +541,7 @@ public class QuotationServiceImpl implements QuotationService {
 		
 		checkQuotationForDefaultByOrderId(quotationPO.getOrderId());
 		
-		if(quotationPO.getDefaults() == QuotationPO.DEFAULTS_DEFAULT_SHORT){
+		if(quotationPO.getDefaults() == QuotationPO.DEFAULTS_DEFAULT_INT){
 			throw new FLException(200014, "默认报价不能删除");
 		}
 		
@@ -522,6 +560,7 @@ public class QuotationServiceImpl implements QuotationService {
 		quotationPO.setUndisPrice(quotationVO.getUndisPrice());
 		quotationPO.setTrafficRate(quotationVO.getTrafficRate());
 		quotationPO.setDisPrice(quotationVO.getDisPrice());
+		quotationPO.setBasePrice(quotationVO.getBasePrice());
 	}
 	
 	@Transactional(rollbackFor=Exception.class)
@@ -607,7 +646,7 @@ public class QuotationServiceImpl implements QuotationService {
 			quotationVO.setHouseArea(decorationPO.getHouse().getBuildArea());
 			quotationVO.setNotSalesmanRate(decorationPO.getNotSalesmanRate());
 			
-			quotationVO.setVersionId(decorationPO.getVersion().getVersionId());
+			quotationVO.setNo(decorationPO.getVersion().getNo());
 			
 			if(decorationPO.getSupervisor() != null){
 				quotationVO.setSupervisorName(decorationPO.getSupervisor().getCurrentName());
@@ -633,7 +672,7 @@ public class QuotationServiceImpl implements QuotationService {
 			_quotationVO.setCreaterName(createUser.getCurrentName());
 			_quotationVO.setOrderId(quotationPO.getOrderId());
 			_quotationVO.setNotSalesmanRate(decorationPO.getNotSalesmanRate());
-			_quotationVO.setVersionId(decorationPO.getVersion().getVersionId());
+			_quotationVO.setNo(decorationPO.getVersion().getNo());
 			quotationVOs.add(_quotationVO);
 		}
 	};
@@ -642,7 +681,7 @@ public class QuotationServiceImpl implements QuotationService {
 		
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 		
-		List<Short> status = Arrays.asList(new Short[]{DecorationPO.STATUS_INIT_INT, DecorationPO.STATUS_DEPOSIT_INT, DecorationPO.STATUS_RESIGNED_INT});
+		List<Short> status = Arrays.asList(new Short[]{DecorationPO.STATUS_INIT_INT, DecorationPO.STATUS_DEPOSIT_INT, DecorationPO.STATUS_PROSIGN_INT, DecorationPO.STATUS_RESIGNED_INT});
 		
 		if(decorationPO == null){
 			throw new FLException(140013, "订单不存在");
@@ -662,7 +701,7 @@ public class QuotationServiceImpl implements QuotationService {
 			throw new FLException(200003, "报价不存在");
 		}
 		
-		if(quotationPO.getStatus() == QuotationPO.STATUS_DISABLED_SHORT){
+		if(quotationPO.getStatus() == QuotationPO.STATUS_LOCK_INT){
 			throw new FLException(200030, "报价状态不可操作");
 		}
 		

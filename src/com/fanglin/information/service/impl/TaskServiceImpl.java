@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.information.dao.TaskDao;
@@ -88,4 +89,20 @@ public class TaskServiceImpl implements TaskService {
 		return 0;
 	}
 
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int updateTaskForIsShow(TaskVO taskVO) throws FLException {
+
+		TaskPO taskPO = taskDao.get(taskVO.getTid());
+
+		if (taskPO == null) {
+			throw new FLException(160027, "任务不存在");
+		}
+
+		taskPO.setIsShow(taskVO.getIsShow());
+
+		taskDao.update(taskPO);
+
+		return 0;
+	}
 }

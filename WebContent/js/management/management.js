@@ -5,8 +5,8 @@ jQuery(function($) {
 		
 		items: [],
 			
-		decorationOrderTimeTypeMap: [{"key":"1", "value":"录入时间"}, {"key":"2", "value":"签单时间"}, ],
-		decorationOrderStatusMap: [],
+		decorationTimeTypeMap: [{"key":"1", "value":"录入时间"}, {"key":"2", "value":"签单时间"}, {"key": 3, "value": "预签时间"}],
+		decorationStatusMap: [],
 		decorationPaymentTypeMap: [{"key":"首付款", "value":"首付款"}, {"key":"首付二期款", "value":"首付二期款"}, {"key":"二期款", "value":"二期款"}, {"key":"尾款", "value":"尾款"}, ],
 		decorationPaymentRefundMap: [{"key":"设计费", "value":"设计费"}, {"key":"定金", "value":"定金"}, ],
 		materialPaymentTypeMap: [{"key":"2", "value":"定金"}, {"key":"3", "value":"补款"},{"key":"4", "value":"退款"}, {"key":"5", "value":"补款退款"},{"key":"6", "value":"券退款"},],
@@ -21,6 +21,8 @@ jQuery(function($) {
 	
 	management.items.orderIdForVersionId = com.focusPage("#orderIdForVersionId");
 	management.items.versionId = com.focusPage("#versionId");
+	
+	management.items.orderIdOfDecorationGrade = com.focusPage("#orderIdOfDecorationGrade");
 	
 	management.items.orderIdForStatus = com.focusPage("#orderIdForStatus");
 	
@@ -52,23 +54,25 @@ jQuery(function($) {
 	management.items.quotationForOrderId = com.focusPage("#quotationForOrderId");
 	management.items.quotationData = com.focusPage("#quotationData");
 	management.items.quotationStatus = com.focusPage("#quotationStatus");
+	
+	management.items.changeSalesNo = com.focusPage("#changeSalesNo");
 
-	management.decorationOrderForOrderIdModal = com.focusPage("#decorationOrderForOrderIdModal").on('show.bs.modal', function(e){
+	management.decorationForOrderIdModal = com.focusPage("#decorationForOrderIdModal").on('show.bs.modal', function(e){
 		com.cleanItems(management.items);
 		com.clearValidator();
 	});
 	
-	management.decorationOrderForTimeModal = com.focusPage("#decorationOrderForTimeModal").on('show.bs.modal', function(e){
+	management.decorationForTimeModal = com.focusPage("#decorationForTimeModal").on('show.bs.modal', function(e){
 		com.cleanItems(management.items);
 		com.clearValidator();
 	});
 	
-	management.decorationOrderForVersionIdModal = com.focusPage("#decorationOrderForVersionIdModal").on('show.bs.modal', function(e){
+	management.decorationForVersionIdModal = com.focusPage("#decorationForVersionIdModal").on('show.bs.modal', function(e){
 		com.cleanItems(management.items);
 		com.clearValidator();
 	});
 	
-	management.decorationOrderForStatusModal = com.focusPage("#decorationOrderForStatusModal").on('show.bs.modal', function(e){
+	management.decorationForStatusModal = com.focusPage("#decorationForStatusModal").on('show.bs.modal', function(e){
 		com.cleanItems(management.items);
 		com.clearValidator();
 	});
@@ -83,7 +87,7 @@ jQuery(function($) {
 		com.clearValidator();
 	});
 	
-	management.materialSubOrderForOrderIdModal = com.focusPage("#materialSubOrderForOrderIdModal").on('show.bs.modal', function(e){
+	management.MaterialForOrderIdModal = com.focusPage("#MaterialForOrderIdModal").on('show.bs.modal', function(e){
 		com.cleanItems(management.items);
 		com.clearValidator();
 	});
@@ -93,7 +97,7 @@ jQuery(function($) {
 		com.clearValidator();
 	});
 	
-	management.subDecorationOrderForQuotationTimeModal = com.focusPage("#subDecorationOrderForQuotationTimeModal").on('show.bs.modal', function(e){
+	management.subDecorationForQuotationTimeModal = com.focusPage("#subDecorationForQuotationTimeModal").on('show.bs.modal', function(e){
 		com.cleanItems(management.items);
 		com.clearValidator();
 	});
@@ -110,7 +114,7 @@ jQuery(function($) {
 		com.clearValidator();
 	});
 	
-	management.exportDecorationOrderForContractTimeModal = com.focusPage("#exportDecorationOrderForContractTimeModal").on('show.bs.modal', function(e){
+	management.exportDecorationForContractTimeModal = com.focusPage("#exportDecorationForContractTimeModal").on('show.bs.modal', function(e){
 		com.cleanItems(management.items);
 		com.clearValidator();
 	});
@@ -121,6 +125,16 @@ jQuery(function($) {
 	});
 
 	management.updateQuotationForStatusModal = com.focusPage("#updateQuotationForStatusModal").on('show.bs.modal', function(e){
+		com.cleanItems(management.items);
+		com.clearValidator();
+	});
+	
+	management.changeDecorationForGradeModal = com.focusPage("#changeDecorationForGradeModal").on('show.bs.modal', function(e){
+		com.cleanItems(management.items);
+		com.clearValidator();
+	});
+	
+	management.changeSalesForGradeModal = com.focusPage("#changeSalesForGradeModal").on('show.bs.modal', function(e){
 		com.cleanItems(management.items);
 		com.clearValidator();
 	});
@@ -154,33 +168,37 @@ jQuery(function($) {
 		});
 	});
 	
-	com.focusPage("#changeDecorationOrderForOrderId").click(function(){
-		management.decorationOrderForOrderIdModal.modal("show");
+	com.focusPage("#changeDecorationForOrderId").click(function(){
+		management.decorationForOrderIdModal.modal("show");
 	});
 	
-	com.focusPage("#changeDecorationOrderForTime").click(function(){
-		
-		com.focusPage("#timeType").bindData(management.decorationOrderTimeTypeMap, 'key', 'value');
-		
-		management.decorationOrderForTimeModal.modal("show");
+	com.focusPage("#changeDecorationForGrade").click(function(){
+		management.changeDecorationForGradeModal.modal("show");
 	});
 	
-	com.focusPage("#changeDecorationOrderForVersionId").click(function(){
+	com.focusPage("#changeDecorationForTime").click(function(){
+		
+		com.focusPage("#timeType").bindData(management.decorationTimeTypeMap, 'key', 'value');
+		
+		management.decorationForTimeModal.modal("show");
+	});
+	
+	com.focusPage("#changeDecorationForVersionId").click(function(){
 		
 		com.post(api.quotation.queryQuotationVersion, {}, function(res){
-			com.focusPage("#versionId").bindData(res.quotationVersions, 'versionId', 'versionName');
+			com.focusPage("#versionId").bindData(res.quotationVersions, 'no', 'name');
 		});
 		
-		management.decorationOrderForVersionIdModal.modal("show");
+		management.decorationForVersionIdModal.modal("show");
 	});
 	
-	com.focusPage("#changeDecorationOrderForStatus").click(function(){
+	com.focusPage("#changeDecorationForStatus").click(function(){
+		
 		com.post(api.ds.decoration,{},function (res) {
 			com.focusPage("#orderStatus").bindData(res.decorationOrderStatus, 'key', 'value');
-		})
-
+		});
 		
-		management.decorationOrderForStatusModal.modal("show");
+		management.decorationForStatusModal.modal("show");
 	});
 	
 	com.focusPage("#changeDecorationPyamentForTime").click(function(){
@@ -197,9 +215,9 @@ jQuery(function($) {
 	// 	management.refundOrderPaymentByOrderModal.modal("show");
 	// });
 	
-	com.focusPage("#changeMaterialSubOrderForOrderId").click(function(){
+	com.focusPage("#changeMaterialForOrderId").click(function(){
 		
-		management.materialSubOrderForOrderIdModal.modal("show");
+		management.MaterialForOrderIdModal.modal("show");
 	});
 	
 	com.focusPage("#changeMaterialPyamentForTime").click(function(){
@@ -209,9 +227,9 @@ jQuery(function($) {
 		management.materialPaymentForTimeModal.modal("show");
 	});
 	
-	com.focusPage("#subDecorationOrderForQuotationTime").click(function(){
+	com.focusPage("#subDecorationForQuotationTime").click(function(){
 		
-		management.subDecorationOrderForQuotationTimeModal.modal("show");
+		management.subDecorationForQuotationTimeModal.modal("show");
 	});
 	
 	com.focusPage("#updateQuotationFunctionItemForManageRate").click(function(){
@@ -219,14 +237,19 @@ jQuery(function($) {
 		management.updateQuotationFunctionItemForManageRateModal.modal("show");
 	});
 	
+	com.focusPage("#changeSalesForGrade").click(function(){
+		
+		management.changeSalesForGradeModal.modal("show");
+	});
+	
 	com.focusPage("#exportMaterialPayment").click(function(){
 		
 		management.exportMaterialPaymentModal.modal("show");
 	});
 	
-	com.focusPage("#exportDecorationOrderForContractTime").click(function(){
+	com.focusPage("#exportDecorationForContractTime").click(function(){
 		
-		management.exportDecorationOrderForContractTimeModal.modal("show");
+		management.exportDecorationForContractTimeModal.modal("show");
 	});
 
 	com.focusPage("#exportDecorationPaymentForContractTime").click(function(){
@@ -247,14 +270,14 @@ jQuery(function($) {
 
 		var options = {
 			"decoration.orderId": com.focusPage("#oldOrderId").val(),
-			"decorationOrderId": com.focusPage("#newOrderId").val(),
+			"decorationId": com.focusPage("#newOrderId").val(),
 		};
 
 		com.post(api.decoration.changeDecorationForOrderId, options, function(res){
 			com.showAlert(com.info, "操作成功");
 		});
 
-		management.decorationOrderForOrderIdModal.modal("hide");
+		management.decorationForOrderIdModal.modal("hide");
 	});
 	
 	com.focusPage("#saveOrderDateBtn").click(function(){
@@ -273,7 +296,7 @@ jQuery(function($) {
 			com.showAlert(com.info, "操作成功");
 		});
 		
-		management.decorationOrderForTimeModal.modal("hide");
+		management.decorationForTimeModal.modal("hide");
 	});
 	
 	com.focusPage("#saveVersionIdBtn").click(function(){
@@ -284,14 +307,14 @@ jQuery(function($) {
 		
 		var options = {
 			"decoration.orderId": com.focusPage("#orderIdForVersionId").val(),
-			"decoration.version.versionId": com.focusPage("#versionId").val(),
+			"decoration.version.no": com.focusPage("#versionId").val(),
 		};
 		
 		com.post(api.decoration.changeDecorationForVersionId, options, function(res){
 			com.showAlert(com.info, "操作成功");
 		});
 		
-		management.decorationOrderForVersionIdModal.modal("hide");
+		management.decorationForVersionIdModal.modal("hide");
 	});
 	
 	com.focusPage("#saveOrderPaymentDateBtn").click(function(){
@@ -331,7 +354,7 @@ jQuery(function($) {
 		management.refundOrderPaymentByOrderModal.modal("hide");
 	});
 	
-	com.focusPage("#saveMaterialSubOrderOrderIdBtn").click(function(){
+	com.focusPage("#saveMaterialOrderIdBtn").click(function(){
 		
 		if(com.validate()){
 			return;
@@ -346,7 +369,40 @@ jQuery(function($) {
 			com.showAlert(com.info, "操作成功");
 		});
 		
-		management.materialSubOrderForOrderIdModal.modal("hide");
+		management.MaterialForOrderIdModal.modal("hide");
+	});
+	
+	com.focusPage("#changeDecorationGradeBtn").click(function(){
+		
+		if(com.validate("orderIdOfDecorationGrade")){
+			return;
+		}
+		
+		var options = {
+			"decoration.orderId": com.focusPage("#orderIdOfDecorationGrade").val(),
+			"decoration.grade": com.focusPage("#decorationGrade").val()
+		}
+		
+		var decoration = null;
+		
+		com.post(api.decoration.queryDecorationForCommonByOrderId, options, function(res){
+			decoration = res.decoration;
+		}, null, false);
+		
+		if(decoration != null){
+			
+			options["decoration.houseType"] = decoration.houseType;
+			options["decoration.houseClass"] = decoration.houseClass;
+			options["decoration.type"] = decoration.type;
+			
+			com.post(api.decoration.changeDecorationForAdvance, options, function(res){
+				com.showAlert(com.info, "操作成功");
+			}, null, false);
+		}else{
+			com.showAlert(com.warning, "装修单不存在");
+		}
+		
+		management.changeDecorationForGradeModal.modal("hide");
 	});
 	
 	com.focusPage("#saveStatusBtn").click(function(){
@@ -364,7 +420,7 @@ jQuery(function($) {
 			com.showAlert(com.info, "操作成功");
 		});
 		
-		management.decorationOrderForStatusModal.modal("hide");
+		management.decorationForStatusModal.modal("hide");
 	});
 	
 	com.focusPage("#saveMaterialPaymentDateBtn").click(function(){
@@ -386,7 +442,7 @@ jQuery(function($) {
 		management.materialPaymentForTimeModal.modal("hide");
 	});
 	
-	com.focusPage("#saveDecorationOrderForQuotationTimeBtn").click(function(){
+	com.focusPage("#saveDecorationForQuotationTimeBtn").click(function(){
 		
 		if(com.validate()){
 			return;
@@ -400,7 +456,7 @@ jQuery(function($) {
 			com.showAlert(com.info, "操作成功");
 		});
 		
-		management.subDecorationOrderForQuotationTimeModal.modal("hide");
+		management.subDecorationForQuotationTimeModal.modal("hide");
 	});
 	
 	com.focusPage("#saveQuotationFunctionItemForManageRateBtn").click(function(){
@@ -440,6 +496,37 @@ jQuery(function($) {
 
 	});
 	
+	com.focusPage("#changeSalesGradeBtn").click(function(){
+		
+		if(com.validate("changeSalesNo")){
+			return;
+		}
+		
+		var options = {
+			"sales.no": com.focusPage("#changeSalesNo").val(),
+			"sales.grade": com.focusPage("#salesGrade").val()
+		}
+		
+		var sales = null;
+		
+		com.post(api.inventory.querySalesByNo, options, function(res){
+			sales = res.sales;
+		}, null, false);
+		
+		if(sales != null){
+			
+			options["sales.sid"] = sales.sid;
+			
+			com.post(api.inventory.updateSales, options, function(res){
+				com.showAlert(com.info, "操作成功");
+			}, null, false);
+		}else{
+			com.showAlert(com.warning, "销售单不存在");
+		}
+		
+		management.changeSalesForGradeModal.modal("hide");
+	});
+	
 	com.focusPage("#exportMaterialPaymentBtn").click(function(){
 		if(com.validate()){
 			return;
@@ -450,7 +537,7 @@ jQuery(function($) {
 		window.open(decodeURI(url));
 	});
 	
-	com.focusPage("#exportDecorationOrderForContractTimeBtn").click(function(){
+	com.focusPage("#exportDecorationForContractTimeBtn").click(function(){
 		if(com.validate()){
 			return;
 		}

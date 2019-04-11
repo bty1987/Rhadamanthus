@@ -47,14 +47,14 @@ jQuery(function(a) {
     user.items.userId = com.focusPage("#userId");
     user.items.oldUserId = com.focusPage("#oldUserId").on("blur", function(){
         $this = a(this);
-        void 0 == $this.val() || "" == $this.val().trim() || $this.val() == user.editLoginId ? (com.focusPage("#oldUserId").css("border", "1px solid #d5d5d5").popover("destroy"),   user.eEditFlg = true) : com.post(api.personel.queryUserByLoginId, {
+        void 0 == $this.val() || "" == $this.val().trim() || $this.val() == user.editLoginId ? (com.focusPage("#oldUserId").css("border", "1px solid #d5d5d5").popover("destroy"),   user.eEditFlg = true) : com.post(api.personel.queryUserByOldUserId, {
             "user.oldUserId": $this.val()
         }, function(res) {
-            user.eEditFlg = true;
-            $("#oldUserId").css("border", "1px solid #d5d5d5").popover("destroy")
-        }, function(res){
             user.eEditFlg = false;
             com.showPopover(com.focusPage("#oldUserId"),{errorMsg: "该原始工号已经存在"},  "right");
+        }, function(res){
+            user.eEditFlg = true;
+            $("#oldUserId").css("border", "1px solid #d5d5d5").popover("destroy");
         });
     });
 
@@ -281,7 +281,7 @@ jQuery(function(a) {
                 "userInfo.medicalNum": user.items.medicalNum.val(),
                 "userInfo.salary": user.items.salary.val(),
                 "userInfo.bank": user.items.bank.val(),
-                "userInfo.bankCardNum": user.items.bankCardNum.val(),
+                "userInfo.bankCardNum": user.items.bankCardNum.val()
             };
 
             for (a = 0; a < user.experienceList.length; a++) b["user.experiences[" + a + "].userId"] = b["user.userId"],

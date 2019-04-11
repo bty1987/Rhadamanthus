@@ -114,6 +114,19 @@ public class SalesBalanceServiceImpl implements SalesBalanceService{
 		paging.setData(salesBalanceVOs); 
 		
 	}
+	
+	@Override
+	public void pageSalesBalanceForPompany(Paging paging, List<Filter> filters, int pompany) {
+		
+		if(filters.size() == 0) return;
+		
+		List<SalesBalancePO> salesBalancePOs = salesBalanceDao.pageSalesBalanceForPompany(paging, filters, pompany);
+		
+		List<SalesBalanceVO> salesBalanceVOs = pageSalesBalance(salesBalancePOs);
+		
+		paging.setData(salesBalanceVOs); 
+		
+	}
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)

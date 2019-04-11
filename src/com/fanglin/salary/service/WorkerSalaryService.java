@@ -16,11 +16,11 @@ public interface WorkerSalaryService {
 	
 	public int addWorkerSalary(WorkerSalaryVO workerSalaryVO,String userId,int company)throws FLException;
 	
-	public int adoptWorkerSalary(List<WorkerSalaryVO> workerSalarys,String userId) throws FLException;
+	public int adoptWorkerSalary(List<WorkerSalaryVO> workerSalarys,String userId, int company) throws FLException;
 	
-	public int rejectWorkerSalary(WorkerSalaryVO workerSalarys,String userId) throws FLException;
+	public int rejectWorkerSalary(WorkerSalaryVO workerSalarys,String userId, int company) throws FLException;
 	
-	public int deleteWorkerSalary(WorkerSalaryVO workerSalarys,String userId) throws FLException;
+	public int deleteWorkerSalary(WorkerSalaryVO workerSalarys,String userId, int company) throws FLException;
 	
 	public int collectWorkerDeposit(WorkerSalaryVO workerSalarys, String userId, int company) throws FLException;
 	

@@ -21,19 +21,11 @@ public class WorkerBalancePO implements Serializable {
 
 	private static final long serialVersionUID = -4634252524595404538L;
 
-	public static final String COLUMN_USER_UID_STR = "user.uid";
+	public static final String COLUMN_UID_STR = "user.uid";
 	
-	public static final String COLUMN_USER_USERID_STR = "user.userId";
-
-	public static final String COLUMN_USER_USERNAME = "user.userName";
-
-	public static final String COLUMN_USER_USERDUTY = "user.duty.name";
-
 	public static final short STATUS_VALID_INT = 0;// 有效
 
 	public static final short STATUS_NULL_INT = 1;// 无效
-
-	public static final float COLUMN_ZERO_INT = 0;// 扣工人工费为0
 
 	private long wbid;
 
@@ -46,6 +38,8 @@ public class WorkerBalancePO implements Serializable {
 	private float toplimit;
 
 	private short status;
+	
+	private int company;
 
 	public WorkerBalancePO() {
 		super();
@@ -106,6 +100,15 @@ public class WorkerBalancePO implements Serializable {
 
 	public void setStatus(short status) {
 		this.status = status;
+	}
+
+	@Column(name = "company")
+	public int getCompany() {
+		return company;
+	}
+
+	public void setCompany(int company) {
+		this.company = company;
 	}
 
 }

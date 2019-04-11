@@ -42,9 +42,11 @@ public class QuotationItemImportService implements com.fanglin.imports.service.Q
 			int measurementUnitId = (int)Double.parseDouble(_quoitem.get(8));
 			int workId = (int)Double.parseDouble(_quoitem.get(9));
 			String quotationItemDes = _quoitem.get(10);
-			float unitPrice = Float.parseFloat(_quoitem.get(11));
-			short status = (short)Double.parseDouble(_quoitem.get(12));
-			short discount = (short)Double.parseDouble(_quoitem.get(13));
+			float addPrice = Float.parseFloat(_quoitem.get(11));
+			float unitPrice = Float.parseFloat(_quoitem.get(12));
+			float subPrice = Float.parseFloat(_quoitem.get(13));
+			short status = (short)Double.parseDouble(_quoitem.get(14));
+			short discount = (short)Double.parseDouble(_quoitem.get(15));
 			
 			QuotationItemPO quoItem = new QuotationItemPO();
 			quoItem.setItemId(itemId);
@@ -57,7 +59,9 @@ public class QuotationItemImportService implements com.fanglin.imports.service.Q
 			quoItem.setMeasurementUnit(new MeasurementUnitPO(measurementUnitId));
 			quoItem.setWorkType(new WorkTypePO(workId));
 			quoItem.setQuotationItemDes(quotationItemDes);
+			quoItem.setAddPrice(addPrice);
 			quoItem.setUnitPrice(unitPrice);
+			quoItem.setSubPrice(subPrice);
 			quoItem.setStatus(status);
 			quoItem.setDiscount(discount);
 			

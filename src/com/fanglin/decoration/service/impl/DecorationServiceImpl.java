@@ -746,7 +746,7 @@ public class DecorationServiceImpl implements DecorationService {
 			decorationVO = new DecorationVO();
 
 			decorationVO.setOrderId(decorationPO.getOrderId());
-
+			
 			decorationVO.setDesigner(new UserBaseVO());
 			decorationVO.getDesigner().setDuty(new DutyVO());
 			decorationVO.getDesigner().setDept(new DepartmentVO());
@@ -813,7 +813,6 @@ public class DecorationServiceImpl implements DecorationService {
 			decorationPO.setNotSalesmanRate(decorationVO.getNotSalesmanRate());
 		}
 
-		decorationPO.setFreeArea(0f);
 		decorationPO.setHouseClass(decorationVO.getHouseClass());
 		decorationPO.setHouseType(decorationVO.getHouseType());
 		decorationPO.setStatus(DecorationPO.STATUS_INIT_INT);
@@ -928,10 +927,21 @@ public class DecorationServiceImpl implements DecorationService {
 			decorationPO.setNotSalesmanRate(decorationVO.getNotSalesmanRate());
 		}
 
-		decorationPO.setHouseType(decorationVO.getHouseType());
-		decorationPO.setFreeArea(decorationVO.getFreeArea());
-		decorationPO.setHouseClass(decorationVO.getHouseClass());
-		decorationPO.setType(type);
+		if(decorationVO.getGrade() != null){
+			decorationPO.setGrade(decorationVO.getGrade());
+		}
+		
+		if(decorationVO.getHouseType() != null){
+			decorationPO.setHouseType(decorationVO.getHouseType());
+		}
+
+		if(decorationVO.getHouseClass() != null){
+			decorationPO.setHouseClass(decorationVO.getHouseClass());
+		}
+		
+		if(type != null){
+			decorationPO.setType(type);
+		}
 
 		DecorationInfoPO decorationInfoPO = decorationInfoDao.queryDecorationInfoByOrderId(orderId);
 
@@ -1038,28 +1048,31 @@ public class DecorationServiceImpl implements DecorationService {
 			throw new FLException(140013, "订单不存在");
 		}
 
-		if (decorationPO != null) {
+		switch (timeType) {
+		case 1:
+			oldTime = decorationPO.getMeasureTime();
+			decorationPO.setMeasureTime(dateTime);
+			break;
+		case 2:
+			oldTime = decorationPO.getContractTime();
+			decorationPO.setContractTime(dateTime);
+			break;
+		case 3:
+			oldTime = decorationPO.getPrecontractTime();
+			decorationPO.setPrecontractTime(dateTime);
+			break;
 
-			if (timeType == 1) {
-				oldTime = decorationPO.getMeasureTime();
-
-				decorationPO.setMeasureTime(dateTime);
-			} else if (timeType == 2) {
-				oldTime = decorationPO.getContractTime();
-
-				decorationPO.setContractTime(dateTime);
-			}
-
-			decorationDao.update(decorationPO);
-
-			ServiceRecordPO serviceRecordPO = new ServiceRecordPO();
-			serviceRecordPO.setType(ServiceRecordPO.TYPE_CHANGE_DECORATION_INT);
-			serviceRecordPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
-			serviceRecordPO.setOperateUserId(userId);
-			serviceRecordPO.setInfo(String.format("装修单:%s,类型为:%s,录入时间修改,原录入时间:%s,修改录入时间为:%s.", orderId, timeType == 1 ? "录入时间" : "签单时间", oldTime != null ? oldTime.toString() : "空", dateTime.toString()));
-
-			serviceRecordDao.save(serviceRecordPO);
 		}
+
+		decorationDao.update(decorationPO);
+
+		ServiceRecordPO serviceRecordPO = new ServiceRecordPO();
+		serviceRecordPO.setType(ServiceRecordPO.TYPE_CHANGE_DECORATION_INT);
+		serviceRecordPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
+		serviceRecordPO.setOperateUserId(userId);
+		serviceRecordPO.setInfo(String.format("装修单:%s,类型为:%s,录入时间修改,原录入时间:%s,修改录入时间为:%s.", orderId, timeType == 1 ? "录入时间" : "签单时间", oldTime != null ? oldTime.toString() : "空", dateTime.toString()));
+
+		serviceRecordDao.save(serviceRecordPO);
 	}
 
 	@Override
@@ -1067,7 +1080,7 @@ public class DecorationServiceImpl implements DecorationService {
 	public void changeDecorationForVersionId(DecorationVO decorationVO, String userId) throws FLException {
 
 		String orderId = decorationVO.getOrderId();
-		String versionId = decorationVO.getVersion().getVersionId();
+		String versionId = decorationVO.getVersion().getNo();
 
 		List<Short> status = Arrays.asList(new Short[] { DecorationPO.STATUS_INIT_INT, DecorationPO.STATUS_DEPOSIT_INT, DecorationPO.STATUS_PROSIGN_INT, DecorationPO.STATUS_RESIGNED_INT });
 
@@ -1082,7 +1095,7 @@ public class DecorationServiceImpl implements DecorationService {
 			throw new FLException(140004, "装修单状态不可操作");
 		}
 
-		oldVersionId = decorationPO.getVersion().getVersionId();
+		oldVersionId = decorationPO.getVersion().getNo();
 
 		decorationPO.setVersion(new QuotationVersionPO(versionId));
 

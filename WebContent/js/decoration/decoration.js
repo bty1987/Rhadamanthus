@@ -43,6 +43,7 @@
     order.refundContractModal = com.focusPage("#refundContractModal");
     order.customerInfoModal = com.focusPage("#customerInfoModal");
     order.drawContractModal = com.focusPage("#drawContractModal");
+    order.prosignModal = com.focusPage("#prosignModal");
     order.contractBtn = com.focusPage("#contractBtn");
 
     var contract = {
@@ -227,7 +228,7 @@
 
     com.post(api.data.queryConstructionNode, {}, function (res) {
         $.each(res.constructionNodes, function (i, v) {
-            order.projectStatusArr[v.cnid] = v.name;
+            order.projectStatusArr[v.sort] = v.name;
         });
     }, null, false);
 
@@ -272,13 +273,15 @@
                     var btnSign = $('<a></a>').addClass('btn btn-minier btn-pink').html('签订合同');
                     var btnTerminal = $('<a></a>').addClass('btn btn-minier btn-purple').html('合同终止');
                     var btnResign = $('<a></a>').addClass('btn btn-minier btn-yellow').html('重签合同');
+                    var btnProsign = $('<a></a>').addClass('btn btn-minier btn-blue').html('预签');
+                    var btnBalance = $('<a></a>').addClass('btn btn-minier btn-warning').html('结算');
 
                     var propertyArr = [];
 
                     $.each(pageConfig.propertyArr, function (pi, pv) {
                         switch (pv) {
                             case "楼盘地址":
-                                propertyArr.push(["楼盘地址:", (v.house.village.cityProper == null ? "" : v.house.village.cityProper.name ) + " " + v.house.village.name + " " + (v.house.houseNumber == null ? "" : v.house.houseNumber), "grey"]);
+                                propertyArr.push(["楼盘地址:", (v.house.village.cityProper == null ? "" : v.house.village.cityProper.name) + " " + v.house.village.name + " " + (v.house.houseNumber == null ? "" : v.house.houseNumber), "grey"]);
                                 break;
                             case "客户名":
                                 propertyArr.push(["客户名:", v.customer.name, "grey"]);
@@ -301,23 +304,35 @@
                             case "折扣":
                                 propertyArr.push(["折扣:", com.checkNull(v.discount, 10), "blue"]);
                                 break;
-                            case "签单额":
-                                propertyArr.push(["签单额:", v.orderTotalPrice, "grey"]);
+                            case "预签额":
+                                propertyArr.push(["预签额:", v.precontractPrice, "blue"]);
                                 break;
-                            case "报价金额":
-                                propertyArr.push(["报价金额:", v.quotationPrice, "grey"]);
+                            case "签单额":
+                                propertyArr.push(["签单额:", v.orderTotalPrice, "blue"]);
+                                break;
+                            case "报价额":
+                                propertyArr.push(["报价额:", v.quotationPrice, "blue"]);
+                                break;
+                            case "券优惠":
+                                propertyArr.push(["券优惠:", v.couponCut, "blue"]);
+                                break;
+                            case "实收额":
+                                propertyArr.push(["实收额:", v.factPrice, "blue"]);
+                                break;
+                            case "创建时间":
+                                propertyArr.push(["创建时间:", v.createTime, "green"]);
                                 break;
                             case "量房时间":
                                 propertyArr.push(["量房时间:", v.measureTime, "green"]);
                                 break;
-                            case "签单时间":
-                                propertyArr.push(["签单时间:", v.contractTime, "green"]);
-                                break;
                             case "定金时间":
                                 propertyArr.push(["定金时间:", v.depositTime, "green"]);
                                 break;
-                            case "创建时间":
-                                propertyArr.push(["创建时间:", v.createTime, "green"]);
+                            case "预签时间":
+                                propertyArr.push(["预签时间:", v.precontractTime, "green"]);
+                                break;
+                            case "签单时间":
+                                propertyArr.push(["签单时间:", v.contractTime, "green"]);
                                 break;
                             case "类型":
                                 propertyArr.push(["类型:", order.type[v.type], "red"]);
@@ -403,10 +418,24 @@
                         resignOrder(v.orderId);
                     });
 
+                    //预签
+                    btnProsign.click(function () {
+                        prosignOrder(v.orderId, v.precontractPrice);
+                    });
+
+                    btnBalance.click(function () {
+                        balanceOrder(v.orderId);
+
+                    });
                     $.each(pageConfig.pageBtn, function (k, b) {
                         switch (b) {
                             case "view"://查看
                                 $divBtnWrap.append(btnView);
+                                break;
+                            case "prosign"://预签
+                                if ([0, 1, 2].indexOf(v.status) != -1) {
+                                    $divBtnWrap.append(btnProsign);
+                                }
                                 break;
                             case "revie"://回访
                                 $divBtnWrap.append(btnRevie);
@@ -457,7 +486,7 @@
                                 }
                                 break;
                             case "sign"://签订合同
-                                if (v.status == 1 || v.status == 4) {
+                                if ([1, 2, 4].indexOf(v.status) != -1) {
                                     $divBtnWrap.append(btnSign);
                                 }
                                 break;
@@ -470,6 +499,9 @@
                                 if (v.status == 3) {
                                     $divBtnWrap.append(btnResign);
                                 }
+                                break;
+                            case "balance"://重新签合同
+                                    $divBtnWrap.append(btnBalance);
                                 break;
                         }
                     });
@@ -562,6 +594,7 @@
             params.historyPage = api.index.decorationIndex.url;
             com.switchPage(api.index.extensionIndex.url);
         };
+
         //决算
         function viewDecorationFinalSettlement(decorationOrderId, type, status) {
             params.decorationOrderId = decorationOrderId;
@@ -732,6 +765,55 @@
             });
         }
 
+        //预签
+        function prosignOrder(orderId, precontractPrice) {
+            com.focusPage("#prosignPrice").val(precontractPrice);
+            order.prosignModal.modal("show");
+
+            com.focusPage("#prosignBtn").unbind('click').on("click", function () {
+                if (com.validate()) {
+                    return false;
+                }
+                var prosignVal = com.focusPage("#prosignPrice").val();
+
+                var options = {
+                    "decoration.orderId": orderId,
+                    "decoration.precontractPrice": prosignVal
+                };
+
+                com.post(api.decoration.presignDecorationContract, options, function () {
+                    order.prosignModal.modal("hide");
+                    com.showAlert(com.info, "操作成功");
+                    searcher.doSearch();
+                }, null, false);
+            });
+        }
+
+        function balanceOrder(orderId) {
+            com.post(api.decoration.queryDecorationBalance, {"decoration.orderId" : orderId}, function (data) {
+                var balance = data.decorationBalance.balance;
+                com.focusPage("#dalanceModal").modal("show");
+                com.focusPage("#deocBalance").val(balance == null ? " " : balance);
+
+                com.focusPage("#saveBtnBalance").on("click", function () {
+
+                    if(com.validate())
+                        return;
+
+                    var options = {
+                        "decorationBalance.decoration.orderId" : orderId,
+                        "decorationBalance.balance" : com.focusPage("#balance").val()
+                    };
+
+                    com.post(api.decoration.makeDecorationBalance, options, function () {
+                        com.showAlert(com.info, "编辑成功");
+                    });
+                    com.focusPage("#dalanceModal").modal("hide");
+                })
+                com.clearValidator();
+            })
+        }
+
         return {
             init: function (tableId, listData) {
                 com.focusPage('#' + tableId).html(null);
@@ -744,8 +826,8 @@
     var pageName = params['urlLoadParams'].depage;
 
     if (pageName == "streamlinedDesign" || pageName == "streamlinedBusiness") {
-        extraParam["statusas[0]"] = 2;//签约
-        extraParam["statusas[1]"] = 6;//决算
+        extraParam["statusas[0]"] = 3;//签约
+        extraParam["statusas[1]"] = 7;//决算
     }
     var searcher = new Searcher();
 

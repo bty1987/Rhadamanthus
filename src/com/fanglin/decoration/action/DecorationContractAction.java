@@ -22,6 +22,8 @@ import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.decoration.service.DecorationContractService;
 import com.fanglin.decoration.vo.DecorationContractVO;
+import com.fanglin.decoration.vo.DecorationMidpackVO;
+import com.fanglin.decoration.vo.DecorationVO;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -32,7 +34,11 @@ public class DecorationContractAction extends BaseListAction {
 
 	private DecorationContractVO decorationContract;
 	
+	private DecorationVO decoration;
+	
 	private String decorationOrderId;
+	
+	private DecorationMidpackVO decorationMidpack;
 	
 	@Autowired
 	private DecorationContractService decorationContractService;
@@ -69,6 +75,22 @@ public class DecorationContractAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
+	@Action(value = "presignDecorationContract", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String presignDecorationContract() throws FLException{
+		
+		decorationContractService.presignDecorationContract(decoration, queryUserId());
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "makeDecorationMidpack", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String makeDecorationMidpack() throws FLException{
+		
+		decorationContractService.makeDecorationMidpack(decorationMidpack, queryUserId());
+		
+		return SUCCESS;
+	}
+	
 	public String getDecorationOrderId(){
 		return decorationOrderId;
 	}
@@ -85,4 +107,20 @@ public class DecorationContractAction extends BaseListAction {
 		return decorationContract;
 	}
 
+	public DecorationVO getDecoration() {
+		return decoration;
+	}
+
+	public void setDecoration(DecorationVO decoration) {
+		this.decoration = decoration;
+	}
+
+	public DecorationMidpackVO getDecorationMidpack() {
+		return decorationMidpack;
+	}
+
+	public void setDecorationMidpack(DecorationMidpackVO decorationMidpack) {
+		this.decorationMidpack = decorationMidpack;
+	}
+	
 }

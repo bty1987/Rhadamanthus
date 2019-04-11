@@ -17,9 +17,28 @@
     {"key":"0","value":"加入库存"},
     {"key":"1","value":"不加入库存"}
   ],
+  "StockType": [
+    {"key":"0","value":"入库"},
+    {"key":"1","value":"出库"},
+    {"key":"2","value":"盘盈"},
+    {"key":"3","value":"盘亏"},
+    {"key":"4","value":"领取"},
+    {"key":"5","value":"退货"}
+  ],
   "activityTypes" :[
     {"key":"0","value":"装修"},
     {"key":"1","value":"主材/销售"}
+  ],
+  "awardStockOneType": [
+    {"key":"0","value":"无"},
+    {"key":"1","value":"装修"},
+    {"key":"2","value":"销售"},
+    {"key":"3","value":"主材"}
+  ],
+  "awardStoreRoom": [
+    {"key":"1","value":"装修"},
+    {"key":"2","value":"销售"},
+    {"key":"3","value":"主材"}
   ],
   "noticeType": [
     {"key":"1","value":"通知"},

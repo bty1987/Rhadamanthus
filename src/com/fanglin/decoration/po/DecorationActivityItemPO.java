@@ -20,12 +20,22 @@ import com.fanglin.personel.po.UserPO;
 public class DecorationActivityItemPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -2215251113218795219L;
-
-	public static final short STATUS_VAILD_INT = 0;
-
-	public static final short STATUS_UNVALID_INT = 1;
-
-	public static final short STATUS_RECEIVE_INT = 2;
+	
+	public static final short STATUS_INIT_INT = 0;// 初始
+	
+	public static final short STATUS_UNVALID_INT = 1; // 失效
+	
+	public static final short STATUS_RECEIVE_INT = 2; // 已领
+	
+	public static final short STATUS_RETREAT_INT = 3; // 退货
+	
+	public static final short STATUS_DELIVERY_INT = 4; // 配送
+	
+	public static final short STATUS_WAIT_INT = 5; // 未退
+	
+	public static final short STATUS_UPGRADE_INT = 6; // 升级
+	
+	public static final short STATUS_CONSUME_INT = 7; // 消耗
 
 	public static final short TYPE_COUPON_INT = 0; // 卷
 
@@ -39,6 +49,8 @@ public class DecorationActivityItemPO implements java.io.Serializable {
 
 	public static final short ISSTOCK_CAL_INT = 0;// 库存标识 0 计算
 
+	public static final short ISPAYMENT_CAL_INT = 0;// 金额标识 0 计算
+
 	public static final String COLUMN_DAIID_STR = "daiId";
 
 	public static final String COLUMN_ORDERID_STR = "orderId";
@@ -46,7 +58,7 @@ public class DecorationActivityItemPO implements java.io.Serializable {
 	public static final String COLUMN_STATUS_STR = "state";
 
 	public static final String COLUMN_TYPE_STR = "type";
-
+	
 	private long daiId;
 
 	private long aid;
@@ -80,6 +92,8 @@ public class DecorationActivityItemPO implements java.io.Serializable {
 	private short isStock; // 库存标识
 
 	private short isPrefor; // 业绩标识
+	
+	private short isPayment; // 金额标识
 
 	public DecorationActivityItemPO() {
 		super();
@@ -239,6 +253,15 @@ public class DecorationActivityItemPO implements java.io.Serializable {
 
 	public void setIsPrefor(short isPrefor) {
 		this.isPrefor = isPrefor;
+	}
+
+	@Column(name = "isPayment")
+	public short getIsPayment() {
+		return isPayment;
+	}
+
+	public void setIsPayment(short isPayment) {
+		this.isPayment = isPayment;
 	}
 
 }

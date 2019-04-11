@@ -79,6 +79,22 @@ public class SalesAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
+	@Action(value = "pageSalesForPompany", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageSalesForPompany() throws FLException{
+		
+		salesService.pageSalesForPompany(getPaging(), getFilters(),queryUserId(),queryCompany());
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "pageSalesForBalanceByPompany", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageSalesForBalanceByPompany() throws FLException{
+		
+		salesService.pageSalesForBalanceByPompany(getPaging(), getFilters(),queryUserId(),queryCompany());
+		
+		return SUCCESS;
+	}
+	
 	@Action(value = "querySalesBySid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String querySalesBySid() throws FLException{
 		
@@ -99,6 +115,14 @@ public class SalesAction extends BaseListAction {
 	public String addSales() throws FLException{
 		
 		salesService.addSales(sales, salesItems,queryCompany()); 
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "updateSales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateSales() throws FLException{
+		
+		salesService.updateSales(sales);
 		
 		return SUCCESS;
 	}
@@ -163,6 +187,14 @@ public class SalesAction extends BaseListAction {
 	public String deleteSalesItem() throws FLException{
 		
 		salesItemService.deleteSalesItem(salesItem);
+		
+		return SUCCESS;
+	}
+	
+	@Action(value="updateSalesForActivity", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String updateSalesForActivity() throws FLException{
+		
+		salesService.updateSalesForActivity(sales);
 		
 		return SUCCESS;
 	}

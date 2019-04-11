@@ -1,11 +1,23 @@
 
 $(function(){
+    var type = {};
+    var onetype = {};
     var awardRecord = {
         awardRecordItems:{},
         editFlg: false,
         repeatFlg: false
     };
 
+    com.post(api.ds.information, {}, function(res){
+        $.each(res.StockType,function(i,v){
+            type[v.key]=v.value;
+        });
+        
+        $.each(res.awardStockOneType,function(i,v){
+            onetype[v.key]=v.value;
+        });
+    }, null, false);
+    
     var displayFunc  = (function(){
         /*表格样式*/
         var renderList = function(tableId,listData){
@@ -29,8 +41,8 @@ $(function(){
             var $liTitle = $('<li></li>').addClass('line table-title');
 
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>'));
-            var $contentWrap = $('<div></div>').addClass('line-wrap  content col8');
-            var titleName ='奖品,类型,数量,总价,单价,提交人,时间,说明';
+            var $contentWrap = $('<div></div>').addClass('line-wrap  content col9');
+            var titleName ='奖品,类型,一类,数量,总价,单价,提交人,时间,说明';
 
             $.each(titleName.split(','), function (i, v) {
                 var $cell = $('<div></div>').addClass('cell').html(v);
@@ -46,17 +58,11 @@ $(function(){
             var $liLine = $('<li></li>').addClass('line');
             var id = i + 1;
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(id));
-            var $contentWrap = $('<div></div>').addClass('line-wrap content col8');
-            var type = {
-                "0": "入库",
-                "1": "出库",
-                "2": "盘盈",
-                "3": "盘亏"
-            };
-
+            var $contentWrap = $('<div></div>').addClass('line-wrap content col9');
                 var propertyArr = [
                     [v.awardStock.name,'grey'],
                     [type[v.type],'grey'],
+                    [onetype[v.onetype] , 'grey'],
                     [v.num,'grey'],
                     [v.totalPrice,'grey'],
                     [v.unitPrice, 'grey'],

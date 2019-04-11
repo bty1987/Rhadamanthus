@@ -23,5 +23,9 @@ public interface DecorationActivityService {
 	public int addDecorationActivity(DecorationActivityVO decorationActivityVO) throws FLException;
 	
 	public int deleteDecorationActivity(DecorationActivityVO decorationActivityVO) throws FLException;
+	
+	public int lockDecorationActivity(DecorationActivityVO decorationActivityVO) throws FLException;
+	
+	public int unlockDecorationActivity(DecorationActivityVO decorationActivityVO) throws FLException;
 
 }

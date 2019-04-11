@@ -110,7 +110,7 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 			throw new FLException(140013, "订单不存在");
 		}
 		
-		List<Short> unstatus = Arrays.asList(new Short[]{DecorationPO.STATUS_INIT_INT, DecorationPO.STATUS_DEPOSIT_INT, DecorationPO.STATUS_RESIGNED_INT});
+		List<Short> unstatus = Arrays.asList(new Short[]{DecorationPO.STATUS_INIT_INT, DecorationPO.STATUS_DEPOSIT_INT, DecorationPO.STATUS_PROSIGN_INT, DecorationPO.STATUS_RESIGNED_INT});
 		List<Short> belongTypes = Arrays.asList(new Short[]{DecorationBelongPO.BELONGTYPE_DESIGN_INT, DecorationBelongPO.BELONGTYPE_SALESMAN_INT});
 		
 		if(!unstatus.contains(decorationPO.getStatus())){

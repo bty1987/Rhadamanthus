@@ -18,6 +18,10 @@ public class AwardStockPO implements java.io.Serializable{
 	
 	public static final String STATUS_TYPE_STR = "type";
 	
+	public static final String STATUS_STOREROOM_STR = "storeroom";
+	
+	public static final String COLUMN_FORMAT_STR = "format";
+	
 	public static final String COLUMN_NO_STR = "no";
 	
 	public static final String COLUMN_STATUS_STR = "status";
@@ -38,6 +42,14 @@ public class AwardStockPO implements java.io.Serializable{
 	
 	public static final short TYPE_LOSSES_INT = 3; // 盘亏
 	
+	public static final short STOREROOM_DECORATION_INT = 1; // 装修
+	
+	public static final short STOREROOM_SALES_INT = 2; // 销售
+	
+	public static final short STOREROOM_MATERIAL_INT = 3; // 主材
+	
+	public static final short ISPAYMENT_CAL_INT = 0; // 计入金额
+	
 	private long asId;
 	
 	private String no;
@@ -50,13 +62,19 @@ public class AwardStockPO implements java.io.Serializable{
 	
 	private short type;
 	
+	private short storeroom;
+	
 	private short isPrefor; //是否计算业绩
 	
 	private short isStock; //是否计算库存
 	
+	private short isPayment;//是否计入金额
+	
 	private String content;
 	
 	private int company;
+	
+	private String format; 
 	
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -113,6 +131,15 @@ public class AwardStockPO implements java.io.Serializable{
 	public void setType(short type) {
 		this.type = type;
 	}
+
+	@Column(name = "storeroom")
+	public short getStoreroom() {
+		return storeroom;
+	}
+
+	public void setStoreroom(short storeroom) {
+		this.storeroom = storeroom;
+	}
 	
 	@Column(name = "isPrefor")
 	public short getIsPrefor() {
@@ -132,6 +159,15 @@ public class AwardStockPO implements java.io.Serializable{
 		this.isStock = isStock;
 	}
 
+	@Column(name = "isPayment")
+	public short getIsPayment() {
+		return isPayment;
+	}
+
+	public void setIsPayment(short isPayment) {
+		this.isPayment = isPayment;
+	}
+
 	@Column(name = "content")
 	public String getContent() {
 		return content;
@@ -149,4 +185,15 @@ public class AwardStockPO implements java.io.Serializable{
 	public void setCompany(int company) {
 		this.company = company;
 	}
+
+	@Column(name = "format")
+	public String getFormat() {
+		return format;
+	}
+
+	public void setFormat(String format) {
+		this.format = format;
+	}
+	
+	
 }

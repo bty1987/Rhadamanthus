@@ -26,6 +26,10 @@ public class SalesVO implements Serializable {
 	
 	private String dompanys;
 	
+	private Integer pompany;
+	
+	private String grade;
+	
 	private UserBaseVO salesman;
 	
 	private DepartmentVO dept;
@@ -65,6 +69,8 @@ public class SalesVO implements Serializable {
 	private Short balanceStatus;
 	
 	private Float total;
+	
+	private Float amount;
 	
 	private Float maling;
 	
@@ -142,6 +148,22 @@ public class SalesVO implements Serializable {
 
 	public void setDompanys(String dompanys) {
 		this.dompanys = dompanys;
+	}
+
+	public Integer getPompany() {
+		return pompany;
+	}
+
+	public void setPompany(Integer pompany) {
+		this.pompany = pompany;
+	}
+
+	public String getGrade() {
+		return grade;
+	}
+
+	public void setGrade(String grade) {
+		this.grade = grade;
 	}
 
 	public UserBaseVO getSalesman() {
@@ -301,6 +323,14 @@ public class SalesVO implements Serializable {
 
 	public Float getTotal() {
 		return total;
+	}
+
+	public Float getAmount() {
+		return amount;
+	}
+
+	public void setAmount(Float amount) {
+		this.amount = amount;
 	}
 
 	public void setTotal(Float total) {

@@ -15,6 +15,8 @@ public class ApprovalSalesRefundPO implements java.io.Serializable {
 	private static final long serialVersionUID = 2272182475271119881L;
 
 	public static final String COLUMN_AID_STR = "aid";
+	
+	public static final short TYPE_REFUND_INT = 0;
 
 	private long asrid;
 

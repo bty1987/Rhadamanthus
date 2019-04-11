@@ -53,7 +53,7 @@ public class MaterialItemServiceImpl implements MaterialItemService {
 	}
 
 	@Override
-	public MaterialItemVO queryMaterialItemForSaleByMiid(MaterialItemVO materialItemVO) {
+	public MaterialItemVO queryMaterialItemByMiid(MaterialItemVO materialItemVO) {
 
 		MaterialItemPO materialItemPO = materialItemDao.queryMaterialItemByMiid(materialItemVO.getMiid());
 

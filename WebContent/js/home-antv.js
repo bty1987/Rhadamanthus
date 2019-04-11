@@ -34,6 +34,7 @@ $(function () {
             return $cont;
         },
         getNoticeDOM: function (notice) {
+        	
             var $wrap = $('<div class="alert alert-info clearfix" style="padding: 1px 12px;"></div>');
             var $title = $('<div><i class="icon-hand-right green"></i></div>');
             var $theme = $('<strong style="margin-left:7px;">' + notice.theme + ' </strong>').appendTo($title);
@@ -69,7 +70,15 @@ $(function () {
                 + notice.startTime + ' 至 ' + notice.endTime + '</span>&nbsp;&nbsp;<span><i class="icon-user bigger-110"></i>&nbsp;'
                 + notice.creater.userName + '</span>&nbsp;&nbsp;</div></small>');
             if (notice.filePath != undefined && notice.filePath != null && notice.filePath != "") {
-                $(".pull-right", $bottomInfo).append('<span><i class="icon-download-alt bigger-110"></i>&nbsp;<a href=' + config.media + notice.filePath + "?t=" + new Date().getTime() + ' onclick="window.open(this.href); return false;">下载附件</a></span>');
+            	var openWin = "";
+            	
+            	if(parent.window.isPC){
+            		openWin = "nw.Window.open('" + config.media + notice.filePath + "', {}, function(new_win) { if(new_win) new_win.maximize();});";
+            	}else{
+            		openWin = "window.open('" + config.media + notice.filePath + "');";
+            	}
+            	
+                $(".pull-right", $bottomInfo).append('<span><i class="icon-download-alt bigger-110"></i>&nbsp;<a href=' + config.media + notice.filePath + "?t=" + new Date().getTime() + ' onclick="' + openWin + ' return false;">下载附件</a></span>');
             }
 
             $wrap.append($title).append($contents).append($bottomInfo);
@@ -81,16 +90,21 @@ $(function () {
 
                 if(e == "null" || e == null){
                     com.post(api.information.pageNoticeForSeenByType, {"paging.rows": 5, "paging.page": 1, "notice.type": 1}, function (data) {
+                        if (data.paging.data.length == 0) return;
                         e = JSON.stringify(data.paging.data);
                         com._post_(api.home.library, $.extend({}, {"noticeType": 1, "api": "information.notice.setNotice", "ntoiceResult": JSON.stringify(data)}, Signing.noticeOptions));
                     }, null, false)
                 }
-                
+
+
                 e = JSON.parse(e);
                 $("#noticeList").empty();
-                $.each(e, function(i, v){
-                	Signing.getNoticeDOM(v).appendTo($("#noticeList"));
-                });
+                if (e != null) {
+                    $.each(e, function (i, v) {
+                        v = Signing.toJson(v);
+                        Signing.getNoticeDOM(v).appendTo($("#noticeList"));
+                    });
+                }
             });
         },
         loadActivities: function () {
@@ -98,16 +112,20 @@ $(function () {
 
             	if(e == "null"|| e == null){
                     com.post(api.information.pageNoticeForSeenByType, {"paging.rows": 5, "paging.page": 1, "notice.type": 2}, function (data) {
+                        if (data.paging.data.length == 0) return;
                         e = JSON.stringify(data.paging.data);
                         com._post_(api.home.library, $.extend({}, {"noticeType": 2, "api": "information.notice.setNotice", "ntoiceResult": JSON.stringify(data)}, Signing.noticeOptions));
                     }, null, false)
                 }
 
+
                 e = JSON.parse(e);
-                $("#activityList").empty();
-                $.each(e, function (i, v) {
-                    Signing.getNoticeDOM(v).appendTo($("#activityList"));
-                });
+            	$("#activityList").empty();
+                if (e != null) {
+                    $.each(e, function (i, v) {
+                        Signing.getNoticeDOM(Signing.toJson(v)).appendTo($("#activityList"));
+                    });
+                }
             });
         },
         getZF: function (num) {     //转换日期加0
@@ -147,6 +165,16 @@ $(function () {
         toDecimalPlaces: function (num) {
             return (num || 0).toString().replace(/([0-9]+\.[0-9]{2})[0-9]*/g, "$1");
         },
+        toJson: function (data) {
+        	if (typeof data == 'string'){
+        		if (data.indexOf('"{"') >= 0 && data.indexOf('"}"') >= 0){
+        			data = data.replace('"{"','{"');
+        			data = data.replace('"}"','"}');
+        		}
+        		return JSON.parse(data);
+        	}
+        	return data;
+        },
         /**
         * 配置设计
         */
@@ -155,21 +183,21 @@ $(function () {
 
             var contractTotalAmount = {api: "decoration.index.contractTotalAmount"};
             com._post_(api.home.library, $.extend({}, contractTotalAmount, Signing.options), function (e) {
-                $("#billingAmount").find("b").html(Signing.toThousands(eval("(" + e + ")").aggregations["1"].value));
+                $("#billingAmount").find("b").html(Signing.toThousands(Signing.toJson(eval("(" + e + ")")).aggregations["1"].value));
             }, function (ex) {
                 console.log(ex)
             });
 
             var createTotalNumber = {api: "decoration.index.createTotalNumber"};
             com._post_(api.home.library, $.extend({}, createTotalNumber, Signing.options), function (e) {
-                $("#billingCreate").find("b").html(Signing.toThousands(eval("(" + e + ")").aggregations["1"].value));
+                $("#billingCreate").find("b").html(Signing.toThousands(Signing.toJson(eval("(" + e + ")")).aggregations["1"].value));
             }, function (ex) {
                 console.log(ex);
             });
 
             var contractTotalNumber = {api: "decoration.index.contractTotalNumber"};
             com._post_(api.home.library, $.extend({}, contractTotalNumber, Signing.options), function (e) {
-                $("#billingNumber").find("b").html(Signing.toThousands(eval("(" + e + ")").aggregations["1"].value));
+                $("#billingNumber").find("b").html(Signing.toThousands(Signing.toJson(eval("(" + e + ")")).aggregations["1"].value));
             }, function (ex) {
                 console.log(ex);
             });
@@ -180,7 +208,7 @@ $(function () {
             var designerAmount = {api: "decoration.index.amount"};
             com._post_(api.home.library, $.extend({}, designerAmount, Signing.options), function (e) {
                 var data = [];
-                $.each(eval("(" + e + ")").aggregations['2'].buckets, function (i, v) {
+                $.each(Signing.toJson(eval("(" + e + ")")).aggregations['2'].buckets, function (i, v) {
                     data.push({"designerName": v.key, "designerAmount": Signing.toDecimalPlaces(v["1"].value)});
                 });
 
@@ -205,7 +233,7 @@ $(function () {
             var designerDeptAmount = {api: "decoration.index.deptAmount"};
             com._post_(api.home.library, $.extend({}, designerDeptAmount, Signing.options), function (e) {
                 var data = [];
-                $.each(eval("(" + e + ")").aggregations['2'].buckets, function (i, v) {
+                $.each(Signing.toJson(eval("(" + e + ")")).aggregations['2'].buckets, function (i, v) {
                     data.push({"deptName": v.key, "deptAmount": Signing.toDecimalPlaces(v["1"].value)});
                 });
 
@@ -231,7 +259,7 @@ $(function () {
             com._post_(api.home.library, $.extend({}, createNumber, Signing.options), function (o) {
                 var dataCreate = [];
                 var userId = [];
-                $.each(eval("(" + o + ")").aggregations['2'].buckets, function (i, v) {
+                $.each(Signing.toJson(eval("(" + o + ")")).aggregations['2'].buckets, function (i, v) {
                     userId.push(v.key);
                     $.each(v['3'].buckets, function (index, value) {
                         var temp = {};
@@ -245,7 +273,7 @@ $(function () {
                 var contractNumber = {api: "decoration.index.contractNumber"};
                 com._post_(api.home.library, $.extend({}, contractNumber, Signing.options), function (e) {
                     var dataSign = [];
-                    $.each(eval("(" + e + ")").aggregations['2'].buckets, function (i, v) {
+                    $.each(Signing.toJson(eval("(" + e + ")")).aggregations['2'].buckets, function (i, v) {
                         var _data = {};
                         _data['times'] = Signing.convertDate(v.key);
                         $.each(v['3'].buckets, function (index, value) {
@@ -329,21 +357,21 @@ $(function () {
 
             var contractTotalAmount = {api: "decoration.index.contractTotalAmount", "salesman": true};
             com._post_(api.home.library, $.extend({}, contractTotalAmount, Signing.options), function (e) {
-                $("#salesmanAmount").find("b").html(Signing.toThousands(eval("(" + e + ")").aggregations["1"].value));
+                $("#salesmanAmount").find("b").html(Signing.toThousands(Signing.toJson(eval("(" + e + ")")).aggregations["1"].value));
             }, function (ex) {
                 console.log(ex)
             });
 
             var createTotalNumber = {api: "decoration.index.createTotalNumber", "salesman": true};
             com._post_(api.home.library, $.extend({}, createTotalNumber, Signing.options), function (e) {
-                $("#salesmanCreate").find("b").html(Signing.toThousands(eval("(" + e + ")").aggregations["1"].value));
+                $("#salesmanCreate").find("b").html(Signing.toThousands(Signing.toJson(eval("(" + e + ")")).aggregations["1"].value));
             }, function (ex) {
                 console.log(ex);
             });
 
             var contractTotalNumber = {api: "decoration.index.contractTotalNumber", "salesman": true};
             com._post_(api.home.library, $.extend({}, contractTotalNumber, Signing.options), function (e) {
-                $("#salesmanNumber").find("b").html(Signing.toThousands(eval("(" + e + ")").aggregations["1"].value));
+                $("#salesmanNumber").find("b").html(Signing.toThousands(Signing.toJson(eval("(" + e + ")")).aggregations["1"].value));
             }, function (ex) {
                 console.log(ex);
             });
@@ -354,7 +382,7 @@ $(function () {
             var designerAmount = {api: "decoration.index.amount", "salesman": true};
             com._post_(api.home.library, $.extend({}, designerAmount, Signing.options), function (e) {
                 var data = [];
-                $.each(eval("(" + e + ")").aggregations['2'].buckets, function (i, v) {
+                $.each(Signing.toJson(eval("(" + e + ")")).aggregations['2'].buckets, function (i, v) {
                     data.push({"salesmanName": v.key, "salesmanAmount": Signing.toDecimalPlaces(v["1"].value)});
                 });
 
@@ -379,7 +407,7 @@ $(function () {
             var designerDeptAmount = {api: "decoration.index.deptAmount", "salesman": true};
             com._post_(api.home.library, $.extend({}, designerDeptAmount, Signing.options), function (e) {
                 var data = [];
-                $.each(eval("(" + e + ")").aggregations['2'].buckets, function (i, v) {
+                $.each(Signing.toJson(eval("(" + e + ")")).aggregations['2'].buckets, function (i, v) {
                     data.push({"deptName": v.key, "deptAmount": Signing.toDecimalPlaces(v["1"].value)});
                 });
 
@@ -405,7 +433,7 @@ $(function () {
             com._post_(api.home.library, $.extend({}, createNumber, Signing.options), function (o) {
                 var dataCreate = [];
                 var userId = [];
-                $.each(eval("(" + o + ")").aggregations['2'].buckets, function (i, v) {
+                $.each(Signing.toJson(eval("(" + o + ")")).aggregations['2'].buckets, function (i, v) {
                     userId.push(v.key);
                     $.each(v['3'].buckets, function (index, value) {
                         var temp = {};
@@ -419,7 +447,7 @@ $(function () {
                 var contractNumber = {api: "decoration.index.contractNumber", "salesman": true};
                 com._post_(api.home.library, $.extend({}, contractNumber, Signing.options), function (e) {
                     var dataSign = [];
-                    $.each(eval("(" + e + ")").aggregations['2'].buckets, function (i, v) {
+                    $.each(Signing.toJson(eval("(" + e + ")")).aggregations['2'].buckets, function (i, v) {
                         var _data = {};
                         _data['times'] = Signing.convertDate(v.key);
                         $.each(v['3'].buckets, function (index, value) {
@@ -556,13 +584,13 @@ $(function () {
         options: {
             "user": params.userInfo.user.uid,
             "companyName": params.company.name,
-            "mc": true,
+            "redis": 0,
             "es": true
         },
         noticeOptions:{
         	"deptId": params.userInfo.user.dept.no,
-            "companyName": params.company.name,
-            "mc": true
+            "company": params.company.no,
+            "redis": 0
         }
     };
 

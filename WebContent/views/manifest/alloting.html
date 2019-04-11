@@ -1,50 +1,24 @@
-<div class="page-content" style="padding: 40px 20px">
+<div class="page-content">
     <div class="row">
         <div class="col-xs-12">
             <div class="clearfix relative" id="form">
-
                 <div class="inline">
-                    <button class="btn btn-yellow" id="addSaleOrder">添加一条调拨信息</button>
-
-                    <button id="submitSaleOrder" class="btn btn-info" data-loading-text="提交中..." type="submit"><i
-                            class="icon-ok"></i>提交
+                    <button id="addManifestItem" class="btn btn-yellow">添加商品</button>
+                    <button id="submitManifest" class="btn btn-info" data-loading-text="提交中..." type="submit">
+                        <i class="icon-ok"></i>
+                        <span>提交</span>
                     </button>
-
                 </div>
 
-                <div class="pull-right" style="margin-bottom: 1%;width: 25%">
-
+                <div class="pull-right" id="timelement">
                     <div class="inline">
-
                         <label>单据日期</label>
                         <div class="inline">
-                            <input name="date" class="m-wrap m-ctrl-medium date-picker" readonly size="16" type="text"
-                                   value=""/>
+                            <input id="manifestTime" class="m-wrap m-ctrl-medium date-picker v_required" placement="top" readonly size="16" type="text" value=""/>
                         </div>
-
                     </div>
-
-                    <!--<div class="inline-group">-->
-
-                    <!--<label>审批人</label>-->
-                    <!--<div class="item">-->
-                    <!--<input name="receiverId" class="m-wrap m-ctrl-medium" size="16" type="text" value="" />-->
-                    <!--</div>-->
-
-                    <!--</div>-->
-
-
-                    <!--<div class="inline-group">-->
-
-                    <!--<div class="item">-->
-                    <!--</div>-->
-
-                    <!--</div>-->
-
                 </div>
-                <div class="devide-line"></div>
             </div>
-
 
             <ul class="flex-table">
                 <li class="line table-title">
@@ -72,38 +46,26 @@
             <ul class="flex-table" id="list"></ul>
 
             <div style="margin-top: 15px;">
-
-
                 <div class="inline-group">
-
                     <label>备注</label>
                     <div class="item long">
                         <input type="text" id="comment" maxlength="64">
                     </div>
                 </div>
-
-
             </div>
 
             <!--审批调拨提交弹窗-->
-            <div id="layerSubmit" style="padding: 40px 0;display: none">
+            <div id="approvalSubmit" style="padding: 40px 0;display: none">
                 <div class="row-fluid">
-
                     <form class="form-horizontal">
-
-
                         <div class="form-group" style="margin-right: 0">
                             <label class="col-xs-3 control-label " for="approver">审批人</label>
-                            <div class="col-xs-9 controls" id="approver">
-
-                            </div>
+                            <div class="col-xs-9 controls" id="approver"></div>
                         </div>
                         <div class="space5"></div>
 
                         <div class="space5"></div>
-
                     </form>
-
                 </div>
             </div>
         </div>

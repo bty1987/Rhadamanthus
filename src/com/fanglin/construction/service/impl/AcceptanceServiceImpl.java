@@ -68,7 +68,6 @@ public class AcceptanceServiceImpl implements AcceptanceService{
 		if(decorationPO != null){
 			acceptanceVO.setCustomer(decorationPO.getCustomer().getName());
 			acceptanceVO.setOrderAddr(decorationPO.getHouse().getVillage().getName()+" "+decorationPO.getHouse().getHouseNumber());
-			acceptanceVO.setContractCode(decorationPO.getContractCode());
 			acceptanceVO.setDesigner(decorationPO.getDesigner().getCurrentName());
 		}
 		

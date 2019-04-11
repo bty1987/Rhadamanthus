@@ -8,7 +8,7 @@ jQuery(function () {
             gid: "goods.gid",
             pricegid: "price.gid",
             colorgid: "color.gid",
-            formatgid: "format.gid",
+            formatgid: "format.gid"
         },
         gids: null,
         gtype: null,
@@ -17,7 +17,7 @@ jQuery(function () {
         cid: null,
         salesmanid: null,
         flag: true,
-        salePostData: {},
+        salePostData: {}
     };
 
     //销售项区 自动赋值
@@ -71,7 +71,8 @@ jQuery(function () {
                     }, function (data) {
                         com.focusPage('#bid').attr({
                             'data-ctype': data.price.ctype,
-                            "data-cvalue": data.price.cvalue
+                            "data-cvalue": data.price.cvalue,
+                            "data-priceType": data.price.type
                         }).val(data.price.purchase);
                     });
                     com.focusPage('#discount').val(1);
@@ -125,7 +126,7 @@ jQuery(function () {
         com.post(api.inventory.queryPriceByPid, {
             "price.pid": com.focusPage('#purchase').val()
         }, function (data) {
-            com.focusPage('#bid').attr({'data-ctype': data.price.ctype, "data-cvalue": data.price.cvalue}).val(data.price.purchase);
+            com.focusPage('#bid').attr({'data-ctype': data.price.ctype, "data-cvalue": data.price.cvalue, "data-priceType": data.price.type}).val(data.price.purchase);
         });
     });
     //点击添加按钮
@@ -169,9 +170,24 @@ jQuery(function () {
             if (sales.gtype == 1) {
                 $h4.append($edit);
             }
-            $liList.append(addSpan('品类：', 's_category', com.focusPage('#category').val(), " ", 'b_category', null)).append(addSpan('品牌：', 's_brand', com.focusPage('#brand').val(), " ", 'b_brand', null)).append(addSpan('单位：', 's_unit', com.focusPage('#measurementUnit').val(), " ", 'b_unit', null)).append(addSpan('颜色：', 's_color', com.focusPage('#color').find("option:selected").text(), " ", 'b_color', sales.colorids)).append(addSpan('规格：', 's_format', com.focusPage('#format').find("option:selected").text(), " ", 'b_format', sales.formatids)).append(addSpan('售价：', 's_selling', com.focusPage('#purchase').find("option:selected").attr("other"), 'blue', 'b_selling', null)).//append(addSpan('折扣：','s_count',com.focusPage('#discount').val(),'red','b_count',null)).
-            append(addSpan('折扣价：', 's_countSelling', com.focusPage('#disPrice').val(), 'blue', 'b_countSelling', null)).//append(addSpan('折让：','s_zherang',com.focusPage('#postDis').val(),'red','b_zherang',null)).
-            append(addSpan('折让价：', 's_price', com.focusPage('#selling').val(), 'blue', 'b_price', null)).append(addSpan('数量：', 's_number', com.focusPage('#num').val(), 'red', 'b_number')).append(addSpan('总价：', 's_total', com.focusPage('#total').val(), 'blue', 'b_total', null)).append(addSpan('备注：', 's_remark', com.focusPage('#remark').val(), " ", 'b_remark', null)).append($('<span></span>').css('display', 'none').text(com.focusPage('#bid').val()).attr("id", "invisiblePurchase")).append($('<span></span>').css('display', 'none').text(com.focusPage('#bid').attr('data-ctype')).attr("id", "invisibleCtype")).append($('<span></span>').css('display', 'none').text(com.focusPage('#bid').attr('data-cvalue')).attr("id", "invisibleCvalue"));
+
+            var currentPriceType = com.focusPage('#bid').attr('data-priceType');
+
+            $liList.append(addSpan('品类：', 's_category', com.focusPage('#category').val(), " ", 'b_category', null))
+                .append(addSpan('品牌：', 's_brand', com.focusPage('#brand').val(), " ", 'b_brand', null))
+                .append(addSpan('单位：', 's_unit', com.focusPage('#measurementUnit').val(), " ", 'b_unit', null))
+                .append(addSpan('颜色：', 's_color', com.focusPage('#color').find("option:selected").text(), " ", 'b_color', sales.colorids))
+                .append(addSpan('规格：', 's_format', com.focusPage('#format').find("option:selected").text(), " ", 'b_format', sales.formatids))
+                .append(addSpan('售价：', 's_selling', com.focusPage('#purchase').find("option:selected").attr("other"), 'blue', 'b_selling', null))
+                .append(addSpan('折扣价：', 's_countSelling', com.focusPage('#disPrice').val(), 'blue', 'b_countSelling', null))
+                .append(addSpan('折让价：', 's_price', com.focusPage('#selling').val(), 'blue', 'b_price', null))
+                .append(addSpan('数量：', 's_number', com.focusPage('#num').val(), 'red', 'b_number'))
+                .append(addSpan('总价：', 's_total', com.focusPage('#total').val(), 'blue', 'b_total', null))
+                .append(addSpan('备注：', 's_remark', com.focusPage('#remark').val(), " ", 'b_remark', null))
+                .append($('<span></span>').css('display', 'none').text(com.focusPage('#bid').val()).attr("id", "invisiblePurchase"))
+                .append($('<span></span>').css('display', 'none').text(com.focusPage('#bid').attr('data-ctype')).attr("id", "invisibleCtype"))
+                .append($('<span></span>').css('display', 'none').text(com.focusPage('#bid').attr('data-cvalue')).attr("id", "invisibleCvalue"))
+                .append($('<span></span>').css('display', 'none').text(currentPriceType).attr("id", "invisiblePriceType"));
             com.focusPage('#salesItemList').append($liList);
             //给最后一个li标签加上底框,除了最后一个li 其他的li均无底框
             //$('.list-group-item').css("border-bottom", "none");
@@ -389,7 +405,7 @@ jQuery(function () {
             var brands = data["brands"];
             $.each(brands,function(i,v){
                 v.name = v.name + "-" + v.categoryName;
-            })
+            });
 
             this.options.list = data["brands"];
             this.flprocess(this.options.list, ["bid"], ["name"]);
@@ -429,7 +445,7 @@ jQuery(function () {
                 "sales.maling": com.focusPage('#maling').val() != "" ? parseFloat(com.focusPage('#maling').val()) : 0,
                 "sales.total": isNaN(parseFloat(com.focusPage('#totals').val())) ? 0 : parseFloat(com.focusPage('#totals').val()),
                 "sales.house.hid": sales.salePostData["sales.house.hid"],
-                "sales.dompanys": sales.salePostData["sales.dompanys"],
+                "sales.dompanys": sales.salePostData["sales.dompanys"]
             };
 
             //客户id
@@ -460,7 +476,9 @@ jQuery(function () {
             _option["sales.otherStatus"] = $otherStatus;
 
             $lis && $lis.length && $.each($lis, function (i, v) {
+
                 var $v = $(v);
+
                 _option["salesItems[" + i + "].goods.gid"] = $v.find('h4').attr('adddata');
                 _option["salesItems[" + i + "].color.cid"] = $v.find('.b_color').attr('adddata');
                 _option["salesItems[" + i + "].format.fid"] = $v.find('.b_format').attr('adddata');
@@ -477,6 +495,7 @@ jQuery(function () {
                 _option["salesItems[" + i + "].rawCvalue"] = $v.find("#invisibleCvalue").text();
                 _option["salesItems[" + i + "].ctype"] = $v.find("#invisibleCtype").text();
                 _option["salesItems[" + i + "].cvalue"] = $v.find("#invisibleCvalue").text();
+                _option["salesItems[" + i + "].priceType"] = $v.find("#invisiblePriceType").text();
             });
 
             com.post(api.inventory.addSales, _option, function (data) {

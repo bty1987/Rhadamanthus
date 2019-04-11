@@ -28,11 +28,11 @@ public class QuotationVersionPO implements Serializable{
 	
 	private int qvId;
 	
-	private String versionId;
+	private String no;
 	
-	private String versionName;
+	private String name;
 	
-	private String versionDes;
+	private String comment;
 	
 	private int defaultFlag;
 	
@@ -48,8 +48,8 @@ public class QuotationVersionPO implements Serializable{
 	
 	public QuotationVersionPO(){}
 	
-	public QuotationVersionPO(String versionId){
-		this.versionId = versionId;
+	public QuotationVersionPO(String no){
+		this.no = no;
 	}
 
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,33 +61,33 @@ public class QuotationVersionPO implements Serializable{
 	public void setQvId(int qvId) {
 		this.qvId = qvId;
 	}
-
+	
 	@Id
-	@Column(name="versionId", nullable=false)
-	public String getVersionId(){
-		return versionId;
+	@Column(name="no", nullable=false)
+	public String getNo() {
+		return no;
 	}
 
-	public void setVersionId(String versionId){
-		this.versionId = versionId;
+	public void setNo(String no) {
+		this.no = no;
+	}
+	
+	@Column(name="name", nullable=false)
+	public String getName() {
+		return name;
 	}
 
-	@Column(name="versionName", nullable=false)
-	public String getVersionName(){
-		return versionName;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public void setVersionName(String versionName){
-		this.versionName = versionName;
+	@Column(name="comment")
+	public String getComment() {
+		return comment;
 	}
 
-	@Column(name="versionDes")
-	public String getVersionDes(){
-		return versionDes;
-	}
-
-	public void setVersionDes(String versionDes){
-		this.versionDes = versionDes;
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
 	@Column(name="defaultFlag", nullable=false)
@@ -143,6 +143,7 @@ public class QuotationVersionPO implements Serializable{
 	public void setCompany(int company) {
 		this.company = company;
 	}
+
 	
 	
 	

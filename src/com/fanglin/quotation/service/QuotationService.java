@@ -37,6 +37,10 @@ public interface QuotationService {
 	
 	public int updateQuotationForStatus(QuotationVO quotationVO, String userId) throws FLException;
 	
+	public int lockQuotation(QuotationVO quotationVO, String userId) throws FLException;
+	
+	public int unlockQuotation(QuotationVO quotationVO, String userId) throws FLException;
+	
 	public int replicaQuotation(QuotationVO quotationVO, String userId, int company) throws FLException;
 	
 	public int cloneQuotation(QuotationVO quotationVO,String no, String userId, int company) throws FLException;

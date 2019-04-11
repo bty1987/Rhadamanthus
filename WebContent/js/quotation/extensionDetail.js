@@ -339,6 +339,14 @@ var ExtensionDetail = (function(){
                 if($this.val() && com.focusPage('input[data-qiid="' + $this.val() +'"]', '#addReduceItemDiv').length){
                     return;
                 }
+
+                var unitPrice = parseFloat($li.find("li .unitPrice").text() ? $li.find("li .unitPrice").text() : 0);
+                if (extensionDetail.type == 0){ //增项,增补价
+                    unitPrice = parseFloat($li.find("li .addPrice").text() ? $li.find("li .addPrice").text() : unitPrice);
+                }else if(extensionDetail.type == 1){ //减项,退减价
+                    unitPrice = parseFloat($li.find("li .subPrice").text() ? $li.find("li .subPrice").text() : unitPrice);
+                }
+
                 var _quotval = {
                     "num" : 0,//工程预算量
                     "itemName" : $li.find('.lbl').text(),//名称
@@ -346,7 +354,8 @@ var ExtensionDetail = (function(){
                     "quotationFunctionAreaName" : modalEventBinding.functionAreaName,//功能区
                     "quotationBigCategory" : $li.find("li .quotationBigCategory").text(),//大类
                     "measurementUnit" : $li.find("li .measurementUnit").text(),//单位
-                    "unitPrice" : parseFloat($li.find("li .unitPrice").text() ? $li.find("li .unitPrice").text() : 0),//单价(折后单价、总价为计算值)
+                    // "unitPrice" : parseFloat($li.find("li .unitPrice").text() ? $li.find("li .unitPrice").text() : 0),//单价(折后单价、总价为计算值)
+                    "unitPrice" : unitPrice,
                     "content" : $li.find("li .quotationItemDes").text(),//工艺说明
                     "workType" : $li.find("li .workType").text(),//工种
                     //操作
@@ -538,7 +547,9 @@ var ExtensionDetail = (function(){
                 ["大类:", v.quotationBigCategory, "grey quotationBigCategory"],
                 ["单位:", v.measurementUnit, "grey measurementUnit"],
                 ["工种:", v.workType, "grey workType"],
+                ["增补价", v.addPrice, "grey addPrice"],
                 ["单价:", v.unitPrice, "grey unitPrice"],
+                ["退减价", v.subPrice, "grey subPrice"],
                 ["工程量:", v.num, "grey"],
                 ["说明:", v.quotationItemDes, "grey quotationItemDes"],
                 ["是否打折:", v.discount == 1 ? '打折' : '不打折', "red"]
@@ -650,6 +661,7 @@ var ExtensionDetail = (function(){
         init : function(){
             extensionDetail.type = params.extensionType;
             com.focusPage('#sumLabType').text((extensionDetail.type == 0 ? '增项' : '减项'));
+            com.focusPage('.unitprice .cell-wrap').text((extensionDetail.type == 0 ? '增补价' : '退减价'));
             //com.focusPage('#addNewItemBtn').removeClass('hide');
 
             extensionDetail.$Extensiontype = params.extensionType;

@@ -24,11 +24,25 @@ public class MaterialActivityItemPO implements Serializable {
 
 	public static final String COLUMN_ORDERID_STR = "orderId";
 	
-	public static final short STATUS_VALID_INT = 0;
+	public static final short STATUS_INIT_INT = 0;//初始
 	
-	public static final short STATUS_UNVALID_INT = 1;
+	public static final short STATUS_UNVALID_INT = 1;//失效
 	
-	public static final short STATUS_RECEIVE_INT = 2;
+	public static final short STATUS_RECEIVE_INT = 2;//已领
+	
+	public static final short STATUS_RETREAT_INT = 3;//退货
+	
+	public static final short STATUS_DELIVERY_INT = 4;//配送
+	
+	public static final short STATUS_WAIT_INT = 5;//未退
+	
+	public static final short STATUS_UPGRADE_INT = 6;//升级
+	
+	public static final short STATUS_CONSUME_INT = 7;//消耗
+	
+	public static final short STOCK_NUMBER_INT = 0;//计入
+	
+	public static final short STOCK_NC_INT = 1;//不计入
 
 	private long maiid;
 

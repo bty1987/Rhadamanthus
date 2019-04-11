@@ -12,6 +12,9 @@ $(function () {
     if (params['urlLoadParams'].type == "dompany") {
         url = api.inventory.pageSalesForBalanceByDompany;
         postData = "salesPreBalanceForDompanyPostData";
+    }else if(params['urlLoadParams'].type == "pompany"){
+        url = api.inventory.pageSalesForBalanceByPompany;
+        postData = "salesPreBalanceForPompanyPostData";
     }
 
 
@@ -124,7 +127,7 @@ $(function () {
 
                     $label.appendTo($h3);
 
-                    if (params['urlLoadParams'].type == "dompany") {
+                    if (params['urlLoadParams'].type == "dompany" || params['urlLoadParams'].type == "pompany") {
                         $btnDiv.append($btnSwitch).appendTo($h3);
                     } else {
                         $btnDiv.append($btnSwitch).append($btnWipeZero).append($btnPre).appendTo($h3);
@@ -136,7 +139,7 @@ $(function () {
 
                     $btnSwitch.click(function () {
                         var flag = true;
-                        if (params['urlLoadParams'].type == "dompany") {
+                        if (params['urlLoadParams'].type == "dompany" || params['urlLoadParams'].type == "pompany") {
                             flag = false;
                         }
                         openlayerView(v.sid, v.no, flag);
@@ -310,7 +313,7 @@ $(function () {
 
         });
 
-        if (params['urlLoadParams'].type == "dompany") {
+        if (params['urlLoadParams'].type == "dompany" || params['urlLoadParams'].type == "pompany") {
             return [];
         } else {
             return [$adda, $addaEnd];

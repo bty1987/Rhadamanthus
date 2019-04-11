@@ -23,11 +23,13 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fanglin.approval.dao.ApprovalDao;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Authentication;
+import com.fanglin.decoration.dao.DecorationActivityDao;
 import com.fanglin.decoration.dao.DecorationAdditionDao;
 import com.fanglin.decoration.dao.DecorationBelongDao;
 import com.fanglin.decoration.dao.DecorationContractDao;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.dao.DecorationOperateDao;
+import com.fanglin.decoration.po.DecorationActivityPO;
 import com.fanglin.decoration.po.DecorationAdditionPO;
 import com.fanglin.decoration.po.DecorationBelongPO;
 import com.fanglin.decoration.po.DecorationContractPO;
@@ -35,8 +37,11 @@ import com.fanglin.decoration.po.DecorationOperatePO;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.service.DecorationContractService;
 import com.fanglin.decoration.vo.DecorationContractVO;
+import com.fanglin.decoration.vo.DecorationMidpackVO;
+import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.payment.dao.DecorationPaymentDao;
 import com.fanglin.payment.po.DecorationPaymentPO;
+import com.fanglin.payment.service.DecorationPaymentService;
 import com.fanglin.payment.vo.DecorationPaymentVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
@@ -84,7 +89,13 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 
 	@Autowired
 	private DecorationAdditionDao decorationAdditionDao;
-
+	
+	@Autowired
+	private DecorationPaymentService decorationPaymentService;
+	
+	@Autowired
+	private DecorationActivityDao decorationActivityDao;
+	
 	@Override
 	public DecorationContractVO queryDecorationContractByOrderId(DecorationContractVO decorationContractVO) throws FLException {
 
@@ -216,7 +227,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 			throw new FLException(140008, "订单没有报价信息");
 		}
 
-		quotationDao.updateQuotationForStatusByOrderId(orderId, QuotationPO.STATUS_DISABLED_SHORT);
+		quotationDao.updateQuotationForStatusByOrderId(orderId, QuotationPO.STATUS_LOCK_INT);
 
 		if (DecorationPO.STATUS_RESIGNED_INT == decorationPO.getStatus()) {
 			resignFlag = true;
@@ -227,7 +238,6 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		decorationPO.setNetperfor(decorationContractVO.getNetperfor());
 		decorationPO.setComperfor(decorationContractVO.getComperfor());
 		decorationPO.setStatus(DecorationPO.STATUS_SIGNED_INT);
-		decorationPO.setContractCode(decorationContractPO.getContractCode());
 		decorationPO.setContracter(operater);
 
 		List<DecorationBelongPO> designerOrderBelongInfoPOs = orderBelongInfoDao.queryDecorationBelongForCurrentByOrderIdAType(decorationContractVO.getOrderId(), DecorationBelongPO.BELONGTYPE_DESIGN_INT);
@@ -290,7 +300,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 			throw new FLException(140013, "订单不存在");
 		}
 
-		if (DecorationPO.STATUS_RESIGNED_INT != (decorationPO.getStatus())) {//判断装修单状态为4(重签) , 其他状态不能重签
+		if (DecorationPO.STATUS_SIGNED_INT != (decorationPO.getStatus())) {//判断装修单状态为3(签约), 其他状态不能重签
 			throw new FLException(140027, "订单状态不能重签合同");
 		}
 
@@ -318,4 +328,74 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		return 0;
 	}
 
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int presignDecorationContract(DecorationVO decorationVO, String userId) throws FLException {
+		
+		String orderId = decorationVO.getOrderId();
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
+		
+		List<Short> status = Arrays.asList(new Short[] { DecorationPO.STATUS_INIT_INT, DecorationPO.STATUS_DEPOSIT_INT, DecorationPO.STATUS_PROSIGN_INT });
+		
+		if (decorationPO == null) {
+			throw new FLException(140013, "订单不存在");
+		}
+		
+		if (!status.contains(decorationPO.getStatus())) {
+			throw new FLException(140005, "订单合同不能修改");
+		}
+		
+		decorationPO.setPrecontractPrice(decorationVO.getPrecontractPrice());
+		decorationPO.setPrecontractTime(DateUtil.getDateToTimestamp(new Date()));
+		decorationPO.setStatus(DecorationPO.STATUS_PROSIGN_INT); // 预签
+		
+		decorationDao.update(decorationPO);
+		
+		UserPO operater = userDao.queryUserByUserId(userId);
+		decorationOperateDao.save(new DecorationOperatePO().prosign(orderId, operater)); // 创建装修单操作信息
+		
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int makeDecorationMidpack(DecorationMidpackVO decorationMidpackVO, String userId) throws FLException {
+		
+		String orderId = decorationMidpackVO.getDecoration().getOrderId();
+		
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
+		
+		if (decorationPO == null) {
+			throw new FLException(140013, "订单不存在");
+		}
+		
+		List<Short> status = Arrays.asList(new Short[] { DecorationPO.STATUS_INIT_INT, DecorationPO.STATUS_DEPOSIT_INT, DecorationPO.STATUS_PROSIGN_INT, DecorationPO.STATUS_RESIGNED_INT });
+		
+		if (!status.contains(decorationPO.getStatus())){
+			throw new FLException(150002, "合同已签订不可修改");
+		}
+		
+		QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(orderId);
+
+		if (quotationPO == null) {
+			throw new FLException(200003, "报价不存在");
+		}
+		
+		if(quotationPO.getStatus() != QuotationPO.STATUS_LOCK_INT){
+			throw new FLException(200031, "报价未锁定");
+		}
+		
+		if(decorationActivityDao.countDecorationActivity(orderId, null) == 0){
+			throw new FLException(140033, "订单活动信息不存在");
+		}
+		
+		if(decorationActivityDao.countDecorationActivity(orderId, DecorationActivityPO.STATUS_INIT_INT) > 0){
+			throw new FLException(140060, "活动未锁定");
+		}
+		
+		decorationPaymentService.makeDecorationPayment(decorationPO, quotationPO.getTotalPrice(), decorationMidpackVO.getPsId(), userId);
+		
+		return 0;
+	}
+	
 }

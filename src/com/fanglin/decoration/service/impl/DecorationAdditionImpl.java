@@ -1,7 +1,7 @@
 package com.fanglin.decoration.service.impl;
 
+import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.fanglin.decoration.dao.DecorationAdditionDao;
 import com.fanglin.decoration.po.DecorationAdditionPO;
 import com.fanglin.decoration.po.DecorationPO;
@@ -47,24 +46,20 @@ public class DecorationAdditionImpl implements DecorationAdditionService {
 
 		Map<String, Object> config = new HashMap<String, Object>();
 		
-		short type = decorationVO != null && decorationVO.getType() != null ? decorationVO.getType() : -1;
-
-		List<SystemConfigPO> systemConfigs = systemConfigDao.obtainSystemConfig(DecorationPO.CONFIG_KEY_HOLONOMY_STR, company);
-
+		List<Short> types = Arrays.asList(DecorationPO.TYPE_HOLONOMY_INT, DecorationPO.TYPE_FULLSUB_INT, DecorationPO.TYPE_DOUSUB_INT);
+		
 		JSONArray holonomyConfigs = new JSONArray();
+		
+		if(decorationVO != null && decorationVO.getType() != null){
+			SystemConfigPO _config = systemConfigDao.querySystemConfig(String.format(DecorationPO.CONFIG_KEY_HOLONOMY_STR, decorationVO.getType()), company);
+			holonomyConfigs.addAll(JSONArray.parseArray(_config == null ? "[]" : _config.value("[]")));
+		}else{
+			for(Short type: types){
+				SystemConfigPO _config = systemConfigDao.querySystemConfig(String.format(DecorationPO.CONFIG_KEY_HOLONOMY_STR, type), company);
+				holonomyConfigs.addAll(JSONArray.parseArray(_config == null ? "[]" : _config.value("[]")));
+			}
+		}
 
-		for (SystemConfigPO systemConfig : systemConfigs) {
-			holonomyConfigs.addAll(JSONArray.parseArray(systemConfig.getValue()));
-		}
-		
-		Iterator<Object> iterator = holonomyConfigs.iterator();
-		
-		while(iterator.hasNext()){
-			JSONObject _config = JSONObject.parseObject(iterator.next().toString());
-			
-			if(type != -1 && _config.getShortValue("dt") != type) iterator.remove();
-		}
-		
 		config.put("machingType", holonomyConfigs);
 
 		return config;

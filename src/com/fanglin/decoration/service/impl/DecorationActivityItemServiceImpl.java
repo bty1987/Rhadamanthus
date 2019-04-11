@@ -104,6 +104,10 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		if (decorationActivityItemPO == null) {
 			throw new FLException(140030, "订单活动物品不存在");
 		}
+		
+		if (decorationActivityItemPO.getState() != DecorationActivityItemPO.STATUS_INIT_INT){
+			throw new FLException(140057, "订单活动奖品不可操作");
+		}
 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationActivityItemPO.getOrderId());
 
@@ -116,8 +120,22 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		if (!statuses.contains(decorationPO.getStatus())) {
 			throw new FLException(140004, "装修单已签约");
 		}
-
+		
 		decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_UNVALID_INT);
+		
+		float couponCut = decorationPO.getCouponCut();
+		float thingCut = decorationPO.getThingCut();
+		
+		if (Arrays.asList(DecorationActivityItemPO.TYPE_COUPON_INT, DecorationActivityItemPO.TYPE_SPECIALCOUPON_INT).contains(decorationActivityItemPO.getType())
+				&& decorationActivityItemPO.getIsPrefor() == DecorationActivityItemPO.ISPREFOR_CAL_INT) {
+			couponCut = Arith.sub(couponCut, Arith.mul(decorationActivityItemPO.getMoney(), decorationActivityItemPO.getNum()));
+		} else if (Arrays.asList(DecorationActivityItemPO.TYPE_THING_INT, DecorationActivityItemPO.TYPE_SPECIALARTICLE_INT).contains(decorationActivityItemPO.getType())
+				&& decorationActivityItemPO.getIsPrefor() == DecorationActivityItemPO.ISPREFOR_CAL_INT) {
+			thingCut = Arith.sub(thingCut, Arith.mul(decorationActivityItemPO.getMoney(), decorationActivityItemPO.getNum()));
+		}
+		
+		decorationPO.setCouponCut(couponCut);
+		decorationPO.setThingCut(thingCut);
 
 		decorationActivityItemDao.update(decorationActivityItemPO);
 
@@ -141,26 +159,6 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 
 		decorationActivityItemDao.update(decorationActivityItemPO);
 
-		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationActivityItemPO.getOrderId());
-
-		float couponCut = decorationPO.getCouponCut();
-		float thingCut = decorationPO.getThingCut();
-
-		if (decorationActivityItemPO.getType() == DecorationActivityItemPO.TYPE_COUPON_INT && decorationActivityItemPO.getIsPrefor() == DecorationActivityItemPO.ISPREFOR_CAL_INT) {
-			couponCut = Arith.add(couponCut, Arith.mul(decorationActivityItemPO.getMoney(), decorationActivityItemPO.getNum()));
-		} else if (decorationActivityItemPO.getType() == DecorationActivityItemPO.TYPE_THING_INT && decorationActivityItemPO.getIsPrefor() == DecorationActivityItemPO.ISPREFOR_CAL_INT) {
-			thingCut = Arith.add(thingCut, Arith.mul(decorationActivityItemPO.getMoney(), decorationActivityItemPO.getNum()));
-		} else if (decorationActivityItemPO.getType() == DecorationActivityItemPO.TYPE_SPECIALCOUPON_INT && decorationActivityItemPO.getIsPrefor() == DecorationActivityItemPO.ISPREFOR_CAL_INT) {
-			couponCut = Arith.add(couponCut, Arith.mul(decorationActivityItemPO.getMoney(), decorationActivityItemPO.getNum()));
-		} else if (decorationActivityItemPO.getType() == DecorationActivityItemPO.TYPE_SPECIALARTICLE_INT && decorationActivityItemPO.getIsPrefor() == DecorationActivityItemPO.ISPREFOR_CAL_INT) {
-			thingCut = Arith.add(thingCut, Arith.mul(decorationActivityItemPO.getMoney(), decorationActivityItemPO.getNum()));
-		}
-
-		decorationPO.setCouponCut(couponCut);
-		decorationPO.setThingCut(thingCut);
-
-		decorationDao.update(decorationPO);
-
 		if (decorationActivityItemPO.getIsStock() == DecorationActivityItemPO.ISSTOCK_CAL_INT) {
 
 			AwardStockPO awardStockPO = awardStockDao.get(decorationActivityItemPO.getAsid());
@@ -181,13 +179,145 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 			awardRecordPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 			awardRecordPO.setTotalPrice(Arith.mul(decorationActivityItemPO.getMoney(), decorationActivityItemPO.getNum()));
 			awardRecordPO.setUnitPrice(decorationActivityItemPO.getMoney());
-			awardRecordPO.setType(AwardRecordPO.TYPE_XG_INT);
+			awardRecordPO.setType(AwardRecordPO.TYPE_RECEIVE_INT);
+			awardRecordPO.setOnetype(AwardRecordPO.ONETYPE_DECORATION_INT);
 			awardRecordPO.setContent("领取活动奖品");
 			awardRecordPO.setOrderId(decorationActivityItemPO.getOrderId());
 
 			awardRecordDao.save(awardRecordPO);
 		}
 
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int deliveDecorationActivityItem(DecorationActivityItemVO decorationActivityItemVO, String userId) throws FLException {
+		
+		DecorationActivityItemPO decorationActivityItemPO = decorationActivityItemDao.get(decorationActivityItemVO.getDaiId());
+
+		if (decorationActivityItemPO == null) {
+			throw new FLException(140030, "订单活动物品不存在");
+		}
+		
+		if (decorationActivityItemPO.getState() != DecorationActivityItemPO.STATUS_INIT_INT){
+			throw new FLException(140057, "订单活动奖品不可操作");
+		}
+		
+		decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_DELIVERY_INT);
+		
+		decorationActivityItemDao.update(decorationActivityItemPO);
+		
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int unrefundDecorationActivityItem(DecorationActivityItemVO decorationActivityItemVO, String userId) throws FLException {
+		
+		DecorationActivityItemPO decorationActivityItemPO = decorationActivityItemDao.get(decorationActivityItemVO.getDaiId());
+
+		if (decorationActivityItemPO == null) {
+			throw new FLException(140030, "订单活动物品不存在");
+		}
+		
+		if (decorationActivityItemPO.getState() != DecorationActivityItemPO.STATUS_RECEIVE_INT){
+			throw new FLException(140057, "订单活动奖品不可操作");
+		}
+		
+		decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_WAIT_INT);
+		
+		decorationActivityItemDao.update(decorationActivityItemPO);
+		
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int upgradeDecorationAtivityItem(DecorationActivityItemVO decorationActivityItemVO, String userId) throws FLException {
+		
+		DecorationActivityItemPO decorationActivityItemPO = decorationActivityItemDao.get(decorationActivityItemVO.getDaiId());
+
+		if (decorationActivityItemPO == null) {
+			throw new FLException(140030, "订单活动物品不存在");
+		}
+		
+		if (decorationActivityItemPO.getState() != DecorationActivityItemPO.STATUS_INIT_INT){
+			throw new FLException(140057, "订单活动奖品不可操作");
+		}
+		
+		decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_UPGRADE_INT);
+		
+		decorationActivityItemDao.update(decorationActivityItemPO);
+		
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int refundDecorationActivityItem(DecorationActivityItemVO decorationActivityItemVO, String userId) throws FLException {
+		
+		DecorationActivityItemPO decorationActivityItemPO = decorationActivityItemDao.get(decorationActivityItemVO.getDaiId());
+
+		if (decorationActivityItemPO == null) {
+			throw new FLException(140030, "订单活动物品不存在");
+		}
+		
+		List<Short> status = Arrays.asList(new Short[] {DecorationActivityItemPO.STATUS_RECEIVE_INT, DecorationActivityItemPO.STATUS_WAIT_INT});
+		
+		if(!status.contains(decorationActivityItemPO.getState())){
+			throw new FLException(140057, "订单活动奖品不可操作");
+		}
+		
+		decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_RETREAT_INT);
+		
+		decorationActivityItemDao.update(decorationActivityItemPO);
+		
+		if (decorationActivityItemPO.getIsStock() == DecorationActivityItemPO.ISSTOCK_CAL_INT) {
+
+			AwardStockPO awardStockPO = awardStockDao.get(decorationActivityItemPO.getAsid());
+			float num = Arith.add(awardStockPO.getNum(), decorationActivityItemPO.getNum());
+
+			awardStockPO.setNum(num);
+
+			awardStockDao.update(awardStockPO);
+
+			AwardRecordPO awardRecordPO = new AwardRecordPO();
+			awardRecordPO.setAwardStock(awardStockPO);
+			awardRecordPO.setCreater(userDao.queryUserByUserId(userId));
+			awardRecordPO.setNum(decorationActivityItemPO.getNum());
+			awardRecordPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
+			awardRecordPO.setTotalPrice(Arith.mul(decorationActivityItemPO.getMoney(), decorationActivityItemPO.getNum()));
+			awardRecordPO.setUnitPrice(decorationActivityItemPO.getMoney());
+			awardRecordPO.setType(AwardRecordPO.TYPE_REFUND_INT);
+			awardRecordPO.setOnetype(AwardRecordPO.ONETYPE_DECORATION_INT);
+			awardRecordPO.setContent(decorationActivityItemPO.getContent());
+			awardRecordPO.setOrderId(decorationActivityItemPO.getOrderId());
+
+			awardRecordDao.save(awardRecordPO);
+		}
+		
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int expendDecorationActivityItem(DecorationActivityItemVO decorationActivityItemVO, String userId) throws FLException {
+		
+		DecorationActivityItemPO decorationActivityItemPO = decorationActivityItemDao.get(decorationActivityItemVO.getDaiId());
+
+		if (decorationActivityItemPO == null) {
+			throw new FLException(140030, "订单活动物品不存在");
+		}
+		
+		if(decorationActivityItemPO.getState() != DecorationActivityItemPO.STATUS_RECEIVE_INT){
+			throw new FLException(140057, "订单活动奖品不可操作");
+		}
+		
+		decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_CONSUME_INT);
+		
+		decorationActivityItemDao.update(decorationActivityItemPO);
+		
 		return 0;
 	}
 

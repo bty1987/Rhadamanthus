@@ -20,10 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fanglin.communion.dao.SupplierDao;
-import com.fanglin.communion.dao.SupplierUserRightDao;
-import com.fanglin.communion.po.SupplierPO;
-import com.fanglin.communion.po.SupplierUserRightPO;
 import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.communion.vo.HouseVO;
@@ -52,12 +48,6 @@ public class MaterialBalanceServiceImpl implements MaterialBalanceService {
 
 	@Autowired
 	private MaterialDao materialDao;
-
-	@Autowired
-	private SupplierDao supplierDao;
-
-	@Autowired
-	private SupplierUserRightDao supplierUserRightDao;
 
 	@Autowired
 	private UserDao userDao;
@@ -105,40 +95,6 @@ public class MaterialBalanceServiceImpl implements MaterialBalanceService {
 	@Override
 	public void pageMaterialBalanceForVender(Paging paging, List<Filter> filters, String userId, int company) throws FLException {
 
-		SupplierPO supplierPO = supplierDao.querySupplierByLoginId(userId);
-
-		if (supplierPO == null) {
-			throw new FLException(130008, "厂商不存在");
-		}
-
-		List<SupplierUserRightPO> supplierUserRightPOs = supplierUserRightDao.querySupplierUserRightBySId(supplierPO.getSid());
-		List<String> userIds = new ArrayList<String>();
-
-		for (SupplierUserRightPO supplierUserRightPO : supplierUserRightPOs) {
-			userIds.add(supplierUserRightPO.getUser().getUserId());
-		}
-
-		filters.add(new Filter(MaterialBalancePO.COLUMN_USERID_STR, userIds, "in"));
-
-		List<MaterialBalancePO> materialBalancePOs = materialBalanceDao.pageMaterialBalance(paging, filters, company);
-		List<MaterialBalanceVO> materialBalanceVOs = new ArrayList<MaterialBalanceVO>();
-
-		MaterialBalanceVO materialBalanceVO;
-
-		for (MaterialBalancePO materialBalancePO : materialBalancePOs) {
-
-			materialBalanceVO = new MaterialBalanceVO(new MaterialVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
-			BeanUtil.copyProperties(materialBalancePO, materialBalanceVO, Arrays.asList("material", "creater", "instorer", "poster"));
-			BeanUtil.copyProperties(materialBalancePO.getMaterial(), materialBalanceVO.getMaterial());
-
-			materialBalanceVO.getCreater().setBaseInfo(materialBalancePO.getCreater());
-			materialBalanceVO.getInstorer().setBaseInfo(materialBalancePO.getInstorer());
-			materialBalanceVO.getPoster().setBaseInfo(materialBalancePO.getPoster());
-
-			materialBalanceVOs.add(materialBalanceVO);
-		}
-
-		paging.setData(materialBalanceVOs);
 	}
 
 	@Override

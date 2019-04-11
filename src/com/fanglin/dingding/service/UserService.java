@@ -93,7 +93,7 @@ public class UserService {
 
 		String url = String.format(DDApi.DDAPI_ADD_USER_STR, oapiHost.getValue(), accessToken);
 
-		JSONObject json = HttpHelper.httpPost(url, JSONObject.toJSONString(user));
+		JSONObject json = HttpHelper.httpPost(url, JSONObject.parseObject(JSONObject.toJSONString(user)));
 
 		if (json == null) {
 			throw new FLException(270004, "添加人员信息失败");
@@ -122,7 +122,7 @@ public class UserService {
 
 		String url = String.format(DDApi.DDAPI_UPDATE_USER_STR, oapiHost.getValue(), accessToken);
 
-		JSONObject json = HttpHelper.httpPost(url, JSONObject.toJSONString(user));
+		JSONObject json = HttpHelper.httpPost(url, JSONObject.parseObject(JSONObject.toJSONString(user)));
 		
 		if (json == null) {
 			throw new FLException(270005, "更新人员信息失败");

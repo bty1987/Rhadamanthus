@@ -175,6 +175,9 @@ var Searcher = function(){
                     list: [],
                     postData: _rpostParam,
                     source: function (query, process) {
+                    	
+                    	if(query.length < 2) return false;
+                    	
                         var _option = {};
                         if(_rquery != undefined){
                             if(typeof _rquery == "object"){
@@ -195,8 +198,8 @@ var Searcher = function(){
                         this.options.list = data[_rresult];
                         this.flprocess(this.options.list,[_rkey],[_rvalue]);
                     },
-                    isResultTypeMap: true //必填值为true,获取key,value的标识,
-                    , flupdater: function (k, v) {//下拉列表选中时的一些处理,必填对选中项的key和value做处理
+                    isResultTypeMap: true, //必填值为true,获取key,value的标识,
+                    flupdater: function (k, v) {//下拉列表选中时的一些处理,必填对选中项的key和value做处理
                         if(v.indexOf('-')!=-1){
                             v = v.split('-')[0]
                         }

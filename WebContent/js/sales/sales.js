@@ -17,13 +17,16 @@ $(function () {
     } else if (params['urlLoadParams'].type == "dompany") {
         url = api.inventory.pageSalesForDompany;
         postData = "salesForDompanyPostData";
+    }else if(params['urlLoadParams'].type == "pompany"){
+        url = api.inventory.pageSalesForPompany;
+        postData = "salesForPompanyPostData";
     }
 
     var type = {
         depositPayment: 2,         //定金交款
         fullPayment: 3,           //补款交款
         depositPaymentRefund: 7, //定金退款
-        fullPaymentRefund: 5,    //补款退款
+        fullPaymentRefund: 5   //补款退款
     };
 
     var salesPostDataString = {
@@ -103,11 +106,13 @@ $(function () {
 
                     var $btnAdd = $('<a></a>').addClass(' btn btn-minier btn-yellow').html('添项');
                     var $btnSub = $('<a></a>').addClass(' btn btn-minier btn-success').html('子项');
+                    var $btnSupplement = $('<a></a>').addClass('btn btn-minier btn-primary').html('补单');
                     var $btnMoney = $('<a></a>').addClass(' btn btn-minier btn-warning').html('款项');
                     var $btnCollect = $('<a></a>').addClass(' btn btn-minier btn-inverse').html('收款');
                     var $btnRefund = $('<a></a>').addClass(' btn btn-minier btn-danger').html('退货');
                     var $btnPrint = $('<a></a>').addClass(' btn btn-minier btn-pink').html('打印');
                     var $btnAct = $('<a></a>').addClass(' btn btn-minier btn-grey').html('活动');
+                    var $btnDecoration = $('<a></a>').addClass('btn btn-minier btn-purple').html('装修单');
 
                     var status = "";
                     var balanceStatus = "";
@@ -166,6 +171,7 @@ $(function () {
                         ["状态:", status, "red"],
                         ["结算状态:", balanceStatus, "red"],
                         ["总额:", v.total, "blue"],
+                        ["当前总额:", v.amount, "blue"],
                         ["抹零:", v.maling, "blue"],
                         ["厂商抹零:", v.venderMaling, "blue"],
                         ["券值:", v.coupon, "blue"],
@@ -183,11 +189,17 @@ $(function () {
                     $liLine.appendTo($ul);
                     $liLine.append($h3).append($ulProperty);
                     $small.appendTo($h3);
+
+                    $btnDiv.append($btnDecoration);
                     if (params['urlLoadParams'].type == "dompany") {
+                        $btnDiv.append($btnSub).append($btnCollect).append($btnAct).append($btnRefund).appendTo($h3);
+                    }else if(params['urlLoadParams'].type == "pompany"){
                         $btnDiv.append($btnSub).append($btnCollect).append($btnRefund).appendTo($h3);
                     } else {
                         if (v.fullpayStatus == -1 && v.status != 4) {
                             $btnDiv.append($btnAdd);
+                        }else{
+                            $btnDiv.append($btnSupplement);
                         }
 
                         if (v.status != 4) {
@@ -196,6 +208,7 @@ $(function () {
                             $btnDiv.append($btnSub).append($btnCollect).append($btnRefund).appendTo($h3);
                         }
                     }
+                    $btnDiv.appendTo($h3);
 
                     $btnAdd.click(function () {
                         params["sid"] = v.sid;
@@ -213,9 +226,37 @@ $(function () {
                         com.switchPage(api.index.salesItemDetialIndex.url);
                     });
 
+                    //补单按钮
+                    $btnSupplement.click(function () {
+                        params["sid"] = v.sid;
+                        params["bid"] = v.bid;
+                        params["fullpayStatus"] = v.fullpayStatus;
+                        params["status"] = v.status;
+                        params["depositpayStatus"] = v.depositpayStatus;
+                        params["dompany"] = params['urlLoadParams'].type;
+                        com.switchPage(api.index.salesSupplement.url);
+                    });
+
                     $btnCollect.click(function () {
                         params["sid"] = v.sid;
                         com.switchPage(api.index.salesCollectionIndex.url);
+                    });
+
+
+
+                    //装修单显示详情
+                    $btnDecoration.click(function(){
+
+                        com.focusPage("text").css("line-height", "27px");
+                        com.post(api.decoration.queryDecorationByOrderId, {"decorationOrderId" : v.orderId}, function(res){
+                            var decorationInfo = res.decoration;
+                            com.focusPage("#orderId").html(decorationInfo.orderId);//装修单号
+                            com.focusPage("#address").html(decorationInfo.house.village.name +''+ decorationInfo.house.houseNumber);//装修楼盘地址
+                            com.focusPage("#designer").html(decorationInfo.designer.currentName);//装修设计师
+                            com.focusPage("#supervisor").html(decorationInfo.supervisor.currentName);//装修监理
+                            com.focusPage("#decorationInfo").modal("show");
+                        });
+
                     });
 
                     $btnMoney.click(function () {

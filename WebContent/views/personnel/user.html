@@ -95,6 +95,556 @@
 	</div>
 </div>
 
+<div class="modal fade" id="simpleAddUserModal" tabindex="-1">
+	<div class="modal-dialog">
+		<div class="modal-content col-md-12">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">
+					<span id="closeModel">&times;</span><span class="sr-only">Close</span>
+				</button>
+				<h4 class="modal-title">添加员工</h4>
+			</div>
+			<div class="modal-body">
+				<form class="form-horizontal">
+					<div class="timeline-items">
+						<div class="timeline-item clearfix">
+							<div class="widget-box transparent" style="margin:0px;border-left:0px ">
+								<div class="widget-header widget-header-small" style="background-color: white">
+									<h5 class="smaller" Style="font-size: 15px; ">个人基本信息</h5>
+									<span class="widget-toolbar " style="float:initial ;position: initial">
+										 <a href="#" data-action="collapse">
+											 <i class="icon-chevron-up"></i>
+										 </a>
+									</span>
+								</div>
+
+								<div class="widget-body">
+									<div class="widget-body-inner"  style="display: block; background-color: white !important;">
+										<div class="widget-main" >
+											<form class="form-horizontal" style=" clear: inherit">
+												<div class="form-group">
+													<label class="col-sm-3 control-label no-padding-right orange" for="userName">姓名</label>
+													<div class="col-sm-9">
+														<input type="text" maxlength="32" id="userName" class="col-sm-7 col-xs-10 v_required" data-toggle="popover" data-trigger='manual'/>
+														<span class='star'></span>
+													</div>
+												</div>
+
+												<div class="form-group"  style=" clear: inherit">
+													<label class="col-sm-3 control-label no-padding-right orange" for="currentName">现用名</label>
+													<div class="col-sm-9">
+														<input type="text" maxlength="32" id="currentName" class="col-sm-7 col-xs-10 v_required" />
+														<span class='star'></span>
+													</div>
+												</div>
+
+												<div class="form-group"  style=" clear: inherit">
+													<label class="col-sm-3 control-label no-padding-right orange" for="gender">性别</label>
+													<div class="col-sm-9">
+														<input type="checkbox" id="gender" class="col-sm-7 col-xs-10"/>
+													</div>
+												</div >
+
+												<div class="form-group"  style=" clear: inherit">
+													<label class="col-sm-3 control-label no-padding-right orange" for="birthday">出生日期</label>
+													<div class="col-sm-9">
+														<input class="col-sm-7 col-xs-10  date-picker  v_required " id="birthday" type="text" data-date-format="yyyy-mm-dd">
+														<span class='star'></span>
+													</div>
+												</div>
+
+												<div class="form-group"  style=" clear: inherit">
+													<label class="col-sm-3 control-label no-padding-right orange" for="identity">身份证号</label>
+													<div class="col-sm-9">
+														<input type="text" maxlength="21" id="identity" class="col-sm-7 col-xs-10 v_required v_identity" data-toggle="popover" data-trigger='manual'/>
+														<span class='star'></span>
+													</div>
+												</div>
+
+												<div class="form-group"  style=" clear: inherit">
+													<label class="col-sm-3 control-label no-padding-right orange" for="phone">手机号</label>
+													<div class="col-sm-9">
+														<input type="text" id="phone" class="col-sm-7 col-xs-10 v_required v_phones" data-toggle="popover" data-trigger='manual'/>
+														<span class='star'></span>
+													</div>
+												</div>
+											</form>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="timeline-item clearfix">
+							<div class="widget-box transparent" style="margin:0px ;border-left:0px ">
+								<div class="widget-header widget-header-small" style="background-color: white !important">
+									<h5 class="smaller" Style="font-size: 15px; ">入职基本信息</h5>
+									<span class="widget-toolbar " style="float:initial ;position: initial">
+										 <a href="#" data-action="collapse">
+											 <i class="icon-chevron-up"></i>
+										 </a>
+									</span>
+								</div>
+
+								<div class="widget-body" id="basicInfo">
+									<div class="widget-body-inner" style="display: block; background-color: white !important;">
+										<div class="widget-main">
+											<form class="form-horizontal" style=" clear: inherit">
+												<div class="form-group" style=" clear: inherit">
+													<label class="col-sm-3 control-label no-padding-right orange" for="loginId">用户名</label>
+													<div class="col-sm-9">
+														<input type="text" maxlength="32" id="loginId" class="col-sm-7 col-xs-10 " data-toggle="popover" data-trigger='manual'/>
+														<span class='star'></span>
+													</div>
+												</div>
+
+												<div class="form-group" style=" clear: inherit">
+													<label class="col-sm-3 control-label no-padding-right orange" for="deptTypeSel">部门类型</label>
+													<div class="col-sm-9">
+														<select class="col-sm-7 col-xs-10 v_required" id="deptTypeSel" data-toggle="popover" data-trigger='manual'></select>
+														<span class='star'></span>
+													</div>
+												</div>
+
+												<div class="form-group" style=" clear: inherit">
+													<label class="col-sm-3 control-label no-padding-right orange" for="deptSel">部门</label>
+													<div class="col-sm-9">
+														<select class="col-sm-7 col-xs-10 v_required" id="deptSel" data-toggle="popover" data-trigger='manual'></select>
+														<span class='star'></span>
+													</div>
+												</div>
+
+												<div class="form-group" style=" clear: inherit">
+													<label class="col-sm-3 control-label no-padding-right orange" for="dutySel">职位</label>
+													<div class="col-sm-9">
+														<select class="col-sm-7 col-xs-10 v_required" id="dutySel" data-toggle="popover" data-trigger='manual'></select>
+														<span class='star'></span>
+													</div>
+												</div>
+
+												<div class="form-group" style=" clear: inherit">
+													<label class="col-sm-3 control-label no-padding-right orange" for="statusSel">状态</label>
+													<div class="col-sm-9">
+														<select class="col-sm-7 col-xs-10 v_required" id="statusSel" data-toggle="popover" data-trigger='manual'></select>
+														<span class='star'></span>
+													</div>
+												</div>
+											</form>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer" style="align-content: center;">
+				<button type="button" id="saveUserBtn" class="btn btn-primary">保存</button>
+				<button type="button" id="cancelUserBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- 查看 -->
+<div class="modal fade" id="checkUserInfo" tabindex="-1">
+	<div class="modal-dialog" style="width: 60%;">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">
+					<span>&times;</span><span class="sr-only">Close</span>
+				</button>
+				<h4 class="modal-title" id="checkUserInfoDialog">人员信息</h4>
+			</div>
+			<div class="modal-body">
+				<form class="form-horizontal">
+					<div class="timeline-items">
+						<div class="timeline-item clearfix">
+							<div class="widget-box transparent" style="margin:0px;border-left:0px ">
+								<div class="widget-header widget-header-small" style="background-color: white">
+									<h5 class="smaller" Style="font-size: 15px; ">个人基本信息</h5>
+									<span class="widget-toolbar " style="float:initial ;position: initial">
+										 <a href="#" data-action="collapse">
+											 <i class="icon-chevron-up"></i>
+										 </a>
+									</span>
+								</div>
+
+								<div class="widget-body">
+									<div class="widget-body-inner"  style="display: block; background-color: white !important;">
+										<div class="widget-main" >
+											<form class="form-horizontal" style=" clear: inherit">
+												<div class="form-group col-sm-6">
+													<label class="col-sm-4 control-label no-padding-right orange">姓名</label>
+													<div class="col-sm-8">
+														<text type="text" maxlength="32" id="userNameCheck"></text>
+													</div>
+												</div>
+
+												<div class="form-group col-sm-6"  style=" clear: inherit">
+													<label class="col-sm-4 control-label no-padding-right orange">现用名</label>
+													<div class="col-sm-8">
+														<text type="text" maxlength="32" id="currentNameCheck"></text>
+													</div>
+												</div>
+
+												<div class="form-group col-sm-6"  style=" clear: inherit">
+													<label class="col-sm-4 control-label no-padding-right orange">性别</label>
+													<div class="col-sm-8">
+														<text type="checkbox" id="genderCheck"></text>
+													</div>
+												</div >
+
+												<div class="form-group col-sm-6"  style=" clear: inherit">
+													<label class="col-sm-4 control-label no-padding-right orange">年龄</label>
+													<div class="col-sm-8">
+														<text type="text" maxlength="2" id="ageCheck"></text>
+													</div>
+												</div>
+
+												<div class="form-group col-sm-6"  style=" clear: inherit">
+													<label class="col-sm-4 control-label no-padding-right orange">出生日期</label>
+													<div class="col-sm-8">
+														<text id="birthdayCheck" type="text"></text>
+													</div>
+												</div>
+
+												<div class="form-group col-sm-6"  style=" clear: inherit">
+													<label class="col-sm-4 control-label no-padding-right">政治面貌</label>
+													<div class="col-sm-8">
+														<text id="politicalSelCheck"></text>
+													</div>
+												</div>
+
+												<div class="form-group col-sm-6"  style=" clear: inherit">
+													<label class="col-sm-4 control-label no-padding-right">工作年限</label>
+													<div class="col-sm-8">
+														<text type="text" maxlength="2" id="jobYearsCheck"></text>
+													</div>
+												</div>
+
+												<div class="form-group col-sm-6"  style=" clear: inherit">
+													<label class="col-sm-4 control-label no-padding-right orange">身份证号</label>
+													<div class="col-sm-8">
+														<text type="text" maxlength="21" id="identityCheck"></text>
+													</div>
+												</div>
+
+												<div class="form-group col-sm-6"  style=" clear: inherit">
+													<label class="col-sm-4 control-label no-padding-right orange">手机号</label>
+													<div class="col-sm-8">
+														<text type="text" id="phoneCheck"></text>
+													</div>
+												</div>
+
+												<div class="form-group col-sm-6"  style=" clear: inherit">
+													<label class="col-sm-4 control-label no-padding-right orange">现住地址</label>
+													<div class="col-sm-8">
+														<text type="text" maxlength="128" id="addressCheck"></text>
+													</div>
+												</div>
+
+												<div class="form-group col-sm-6"  style=" clear: inherit">
+													<label class="col-sm-4 control-label no-padding-right orange">户籍地址</label>
+													<div class="col-sm-8">
+														<text type="text" maxlength="128" id="hometownAddressCheck"></text>
+													</div>
+												</div>
+
+												<div class="form-group col-sm-6"  style=" clear: inherit">
+													<label class="col-sm-4 control-label no-padding-right">户籍类型</label>
+													<div class="col-sm-8">
+														<text id="householdSelCheck"></text>
+													</div>
+												</div>
+
+												<div class="form-group col-sm-6"  style=" clear: inherit">
+													<label class="col-sm-4 control-label no-padding-right orange">紧急联系人</label>
+													<div class="col-sm-8">
+														<text type="text" maxlength="32" id="emergencyManCheck"></text>
+													</div>
+												</div>
+
+												<div class="form-group col-sm-6"  style=" clear: inherit">
+													<label class="col-sm-4 control-label no-padding-right orange">紧急联系人电话</label>
+													<div class="col-sm-8">
+														<text type="text" id="emergencyPhoneCheck"></text>
+													</div>
+												</div>
+
+												<div class="form-group col-sm-6"  style=" clear: inherit">
+													<label class="col-sm-4 control-label no-padding-right">应届生</label>
+													<div class="col-sm-8">
+														<text type="checkbox" id="isPresentGraduateCheck"></text>
+													</div>
+												</div>
+
+												<div class="form-group col-sm-6"  style=" clear: inherit">
+													<label class="col-sm-4 control-label no-padding-right">毕业时间</label>
+													<div class="col-sm-8">
+														<div class="input-group col-sm-7 col-xs-10 no-padding">
+															<text id="graduateTimeCheck" type="text"></text>
+														</div>
+													</div>
+												</div>
+
+												<div class="form-group col-sm-6"  style=" clear: inherit">
+													<label class="col-sm-4 control-label no-padding-right">毕业学校</label>
+													<div class="col-sm-8">
+														<text type="text" maxlength="32" id="schoolCheck"></text>
+													</div>
+												</div>
+
+												<div class="form-group col-sm-6"  style=" clear: inherit">
+													<label class="col-sm-4 control-label no-padding-right">学历</label>
+													<div class="col-sm-8">
+														<text id="educationSelCheck"></text>
+													</div>
+												</div>
+
+												<div class="form-group col-sm-6"  style=" clear: inherit">
+													<label class="col-sm-4 control-label no-padding-right">专业</label>
+													<div class="col-sm-8">
+														<text type="text" maxlength='32' id="specialtyCheck"></text>
+													</div>
+												</div>
+
+												<div class="form-group col-sm-6"  style=" clear: inherit">
+													<label class="col-sm-4 control-label no-padding-right">住房类型</label>
+													<div class="col-sm-8">
+														<text id="houseTypeSelCheck"></text>
+													</div>
+												</div>
+
+												<div class="form-group col-sm-6"  style=" clear: inherit">
+													<label class="col-sm-4 control-label no-padding-right">婚姻状况</label>
+													<div class="col-sm-8">
+														<text type="checkbox" id="isMarriedCheck"></text>
+													</div>
+												</div>
+
+												<div class="form-group col-sm-6"  style=" clear: inherit">
+													<label class="col-sm-4 control-label no-padding-right">生育状况</label>
+													<div class="col-sm-8">
+														<text type="checkbox" id="isBirthCheck"></text>
+													</div>
+												</div>
+
+												<div class="form-group col-sm-6"  style=" clear: inherit">
+													<label class="col-sm-4 control-label no-padding-right">房贷</label>
+													<div class="col-sm-8">
+														<text type="checkbox" id="isHouseLoanCheck"></text>
+													</div>
+												</div>
+
+												<div class="form-group col-sm-6"  style=" clear: inherit">
+													<label class="col-sm-4 control-label no-padding-right">车贷</label>
+													<div class="col-sm-8">
+														<text type="checkbox" id="isCarLoanCheck"></text>
+													</div>
+												</div>
+
+												<div class="form-group col-sm-6" style=" clear: inherit">
+													<label class="col-sm-4 control-label no-padding-right">配偶</label>
+													<div class="col-sm-8">
+														<text type="text" maxlength="32" id="loverCheck"></text>
+													</div>
+												</div>
+											</form>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="timeline-item clearfix">
+							<div class="widget-box transparent" style="margin:0px ;border-left:0px ">
+								<div class="widget-header widget-header-small" style="background-color: white !important">
+									<h5 class="smaller" Style="font-size: 15px; ">入职基本信息</h5>
+									<span class="widget-toolbar " style="float:initial ;position: initial">
+										 <a href="#" data-action="collapse">
+											 <i class="icon-chevron-up"></i>
+										 </a>
+									</span>
+								</div>
+
+								<div class="widget-body">
+									<div class="widget-body-inner" style="display: block; background-color: white !important;">
+										<div class="widget-main">
+											<form class="form-horizontal" style=" clear: inherit">
+												<div class="form-group col-sm-6" style=" clear: inherit">
+													<label class="col-sm-4 control-label no-padding-right">工号</label>
+													<div class="col-sm-8">
+														<text type="text" maxlength="15" id="userIdCheck"></text>
+													</div>
+												</div>
+
+												<div class="form-group col-sm-6" style=" clear: inherit">
+													<label class="col-sm-4 control-label no-padding-right">原始工号</label>
+													<div class="col-sm-8">
+														<text type="text" maxlength="15" id="oldUserIdCheck"></text>
+													</div>
+												</div>
+
+												<div class="form-group col-sm-6" style=" clear: inherit">
+													<label class="col-sm-4 control-label no-padding-right orange">用户名</label>
+													<div class="col-sm-8">
+														<text type="text" maxlength="32" id="loginIdCheck"></text>
+													</div>
+												</div>
+
+												<div class="form-group col-sm-6" style=" clear: inherit">
+													<label class="col-sm-4 control-label no-padding-right">公司</label>
+													<div class="col-sm-8">
+														<text type="text" id="companyCheck"></text>
+													</div>
+												</div>
+
+												<div class="form-group col-sm-6" style=" clear: inherit">
+													<label class="col-sm-4 control-label no-padding-right orange">部门类型</label>
+													<div class="col-sm-8">
+														<text id="deptTypeSelCheck"></text>
+													</div>
+												</div>
+
+												<div class="form-group col-sm-6" style=" clear: inherit">
+													<label class="col-sm-4 control-label no-padding-right orange">部门</label>
+													<div class="col-sm-8">
+														<text id="deptSelCheck"></text>
+													</div>
+												</div>
+
+												<div class="form-group col-sm-6" style=" clear: inherit">
+													<label class="col-sm-4 control-label no-padding-right orange">职位</label>
+													<div class="col-sm-8">
+														<text id="dutySelCheck"></text>
+													</div>
+												</div>
+
+												<div class="form-group col-sm-6" style=" clear: inherit">
+													<label class="col-sm-4 control-label no-padding-right orange">状态</label>
+													<div class="col-sm-8">
+														<text id="statusSelCheck"></text>
+													</div>
+												</div>
+
+												<div class="form-group col-sm-6" style=" clear: inherit">
+													<label class="col-sm-4 control-label no-padding-right">招聘渠道</label>
+													<div class="col-sm-8">
+														<text id="employWaySelCheck"></text>
+													</div>
+												</div>
+
+												<div class="form-group col-sm-6" style=" clear: inherit">
+													<label class="col-sm-4 control-label no-padding-right">录用类型</label>
+													<div class="col-sm-8">
+														<text id="employTypeSelCheck"></text>
+													</div>
+												</div>
+
+												<div class="form-group col-sm-6" style=" clear: inherit">
+													<label class="col-sm-4 control-label no-padding-right">推荐人</label>
+													<div class="col-sm-8">
+														<text type="text" maxlength="32" id="recommendManCheck"></text>
+													</div>
+												</div>
+
+												<div class="form-group col-sm-6" style=" clear: inherit">
+													<label class="col-sm-4 control-label no-padding-right orange">入职时间</label>
+													<div class="col-sm-8">
+														<text id="entryTimeCheck" type="text"></text>
+													</div>
+												</div>
+
+												<div class="form-group col-sm-6 clear-both" style=" clear: inherit">
+													<label class="col-sm-4 control-label no-padding-right">转正时间</label>
+													<div class="col-sm-8">
+														<div class="input-group col-sm-7 col-xs-10 no-padding">
+															<text id="employTimeCheck" type="text"></text>
+														</div>
+													</div>
+												</div>
+
+												<div class="form-group col-sm-6" style=" clear: inherit">
+													<label class="col-sm-4 control-label no-padding-right">签订劳动合同</label>
+													<div class="col-sm-8">
+														<text type="checkbox" id="isContractCheck"></text>
+													</div>
+												</div>
+
+												<div class="form-group col-sm-6" style=" clear: inherit">
+													<label class="col-sm-4 control-label no-padding-right">上保险</label>
+													<div class="col-sm-8">
+														<text type="checkbox" id="isInsuranceCheck"></text>
+													</div>
+												</div>
+
+												<div class="form-group col-sm-6" style=" clear: inherit">
+													<label class="col-sm-4 control-label no-padding-right">服务年限</label>
+													<div class="col-sm-8">
+														<text type="text" maxlength="2" id="serviceYearsCheck"></text>
+													</div>
+												</div>
+
+												<div class="form-group col-sm-6" style=" clear: inherit">
+													<label class="col-sm-4 control-label no-padding-right">保险起始时间</label>
+													<div class="col-sm-8">
+														<div class="input-group col-sm-7 col-xs-10 no-padding">
+															<text id="insuranceTimeCheck" type="text"></text>
+														</div>
+													</div>
+												</div>
+
+												<div class="form-group col-sm-6" style=" clear: inherit">
+													<label class="col-sm-4 control-label no-padding-right">养老编号</label>
+													<div class="col-sm-8">
+														<text type="text" maxlength="32" id="pensionNumCheck"></text>
+													</div>
+												</div>
+
+												<div class="form-group col-sm-6" style=" clear: inherit">
+													<label class="col-sm-4 control-label no-padding-right">医疗编号</label>
+													<div class="col-sm-8">
+														<text type="text" maxlength="32" id="medicalNumCheck"></text>
+													</div>
+												</div>
+
+												<div class="form-group col-sm-6" style=" clear: inherit">
+													<label class="col-sm-4 control-label no-padding-right orange">工资</label>
+													<div class="col-sm-8">
+														<text type="text" id="salaryCheck"></text>
+													</div>
+												</div>
+
+												<div class="form-group col-sm-6" style=" clear: inherit">
+													<label class="col-sm-4 control-label no-padding-right orange">开户行</label>
+													<div class="col-sm-8">
+														<text type="text" maxlength="10" id="bankCheck"></text>
+													</div>
+												</div>
+
+												<div class="form-group col-sm-6" style=" clear: inherit">
+													<label class="col-sm-4 control-label no-padding-right orange">银行卡号</label>
+													<div class="col-sm-8">
+														<text type="text" maxlength="32" id="bankCardNumCheck"></text>
+													</div>
+												</div>
+											</form>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer" style="text-align: center">
+				<button type="button" id="checkUserInfoCancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+			</div>
+		</div>
+	</div>
+</div>
+
 <script type="text/javascript">
 	$.loadScript(['js/personnel/user.js']);
 </script>

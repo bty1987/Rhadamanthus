@@ -2,9 +2,10 @@ $(function () {
 
     var salesActivityItem = {
         items: {},
-        activity: {},
+        activity: {}
     };
 
+    var activityItemType = {};
     var paramsOrderId = params.orderId;
     var ssid = params.sid;
     var salesno = params.no;
@@ -20,6 +21,13 @@ $(function () {
     salesActivityItem.salesActivityModal = com.focusPage("#salesActivityModal").on('show.bs.modal', function (e) {
         com.clearValidator();
     });
+
+    com.post(api.ds.manifest, {}, function (res) {
+        $.each(res.salesActivityItemType,function(i,v){
+            activityItemType[v.key]= v.value;
+        })
+    }, null, false);
+
     salesActivityItem.activity.activity = com.focusPage("#activity").on("change", function () {
         var $this = $(this);
 
@@ -140,7 +148,7 @@ $(function () {
     }
 
     var options = {
-        "orderId": paramsOrderId,
+        "orderId": paramsOrderId
     };
 
     //查询活动信息
@@ -176,46 +184,36 @@ $(function () {
 
             $.each(salesActivityItems, function (i, v) {
 
-                var pricingSpan = $("<div></div>").addClass("col-sm-3").css({
-                    "display": "inline-block",
-                    "float": "none"
-                }).attr("id", "pricing_" + v.saiid);
-                var widgetBox = $("<div></div>").addClass("widget-box pricing-box-small").appendTo(pricingSpan);
+                var pricingSpan = $("<div></div>").addClass("col-md-6").css("margin", "5px 0px").attr("id", "pricing_" + v.saiid);
 
-                var widgetHeader = $("<div></div>").addClass("widget-header").attr("id", "widgetHeader_" + v.saiid).appendTo(widgetBox);
-                var widgetHeaderH5 = $("<h5></h5>").addClass("bigger lighter").appendTo(widgetHeader);
+                var widgetBox = $("<div></div>").addClass("module_activity_border").appendTo(pricingSpan);
 
-                if (v.type == 0) {
-                    widgetHeaderH5.text(v.activity);
-                    widgetHeader.addClass("header-color-blue");
-                } else if (v.type == 1) {
-                    widgetHeaderH5.text(v.activity);
-                    widgetHeader.addClass("header-color-green");
-                }
-                if (v.state == 1) {
-                    widgetHeader.addClass("header-color-grey");
-                } else if (v.state == 2) {
-                    widgetHeader.addClass("header-color-orange");
-                }
-
-                var widgetBody = $("<div></div>").addClass("widget-body").appendTo(widgetBox);
+                var widgetBody = $("<div></div>").appendTo(widgetBox);
                 var widgetMain = $("<div></div>").addClass("widget-main no-padding").appendTo(widgetBody);
 
-                var ul = $("<ul></ul>").addClass("list-unstyled list-striped pricing-table").appendTo(widgetMain);
-                var nameLi = $("<li></li>").text("物品:").appendTo(ul);
+                var widgetHeader = $("<div></div>").attr("id", "widgetHeader_" + v.saiid).appendTo(widgetMain);
+                var widgetHeaderH5 = $("<h4></h4>").addClass("bigger lighter").css("padding-left", "12px").appendTo(widgetHeader).text(v.activity);
+
+                var ul = $("<ul></ul>").addClass("list-unstyled fl-inline-list clearfix").css("padding-left", "12px").appendTo(widgetMain);
+                var nameLi = $("<li></li>").appendTo(ul);
+                var nameStr = $("<strong></strong>").text("物品:").appendTo(nameLi);
                 var nameSpan = $("<span></span>").attr("id", "activityItemName_" + v.saiid).text(v.name).appendTo(nameLi);
 
-                var moneyLi = $("<li></li>").text("金额:").appendTo(ul);
-                var moneySpan = $("<span></span>").attr("id", "money_" + v.saiid).text(v.money).appendTo(moneyLi);
+                var moneyLi = $("<li></li>").appendTo(ul);
+                var moneyStr = $("<strong></strong>").text("金额:").appendTo(moneyLi);
+                var moneySpan = $("<span></span>").addClass("blue").attr("id", "money_" + v.saiid).text(v.money).appendTo(moneyLi);
 
-                var numLi = $("<li></li>").text("数量:").appendTo(ul);
+                var numLi = $("<li></li>").appendTo(ul);
+                var numStr = $("<strong></strong>").text("数量:").appendTo(numLi);
                 var numSpan = $("<span></span>").attr("id", "money_" + v.saiid).text(v.num).appendTo(numLi);
 
-                var stateLi = $("<li></li>").text("状态:").appendTo(ul);
-                var stateSpan = $("<span></span>").attr("id", "money_" + v.saiid).text(v.state == 0 ? "有效" : v.state == 1 ? "失效" : "接收").appendTo(stateLi);
+                var stateLi = $("<li></li>").appendTo(ul);
+                var stateStr = $("<strong></strong>").text("状态:").appendTo(stateLi);
+                var stateSpan = $("<span></span>").addClass("red").attr("id", "money_" + v.saiid).text(activityItemType[v.state]).appendTo(stateLi);
 
-                var totalLi = $("<li></li>").text("合计:").appendTo(ul);
-                var totalSpan = $("<span></span>").attr("id", "money_" + v.saiid).text(utils.accMul(v.money, v.num)).appendTo(totalLi);
+                var totalLi = $("<li></li>").appendTo(ul);
+                var totalStr = $("<strong></strong>").text("合计:").appendTo(totalLi);
+                var totalSpan = $("<span></span>").addClass("blue").attr("id", "money_" + v.saiid).text(utils.accMul(v.money, v.num)).appendTo(totalLi);
 
                 var uiPgDiv = $("<div></div>").addClass("ui-pg-div").appendTo(widgetBody);
                 if (uiBtnMethod != null) {
@@ -227,77 +225,169 @@ $(function () {
     }
 
     function uiBtnMethod(uiPgDiv, activityItem) {
+        //0: 初始 , 1: 失效 , 2: 已领 , 3: 退货 , 4: 配送 , 5: 未退 , 6: 升级 , 7: 消耗
+        //失效
+        var abateBtn = $("<span></span>").addClass("btn btn-minier btn-yellow").html("失效").css("margin", "3px").appendTo(uiPgDiv);
+        //领取
+        var receiveBtn = $("<span></span>").addClass("btn btn-minier btn-success").html("领取").css("margin", "3px").appendTo(uiPgDiv);
+        //退货
+        var refundBtn = $("<span></span>").addClass("btn btn-minier btn-warning").html("退货").css("margin", "3px").appendTo(uiPgDiv);
+        //配送
+        var deliveBtn = $("<span></span>").addClass("btn btn-minier btn-inverse").html("配送").css("margin", "3px").appendTo(uiPgDiv);
+        //未退
+        var unrefundBtn = $("<span></span>").addClass("btn btn-minier btn-danger").html("未退").css("margin", "3px").appendTo(uiPgDiv);
+        //升级
+        var upgradeBtn = $("<span></span>").addClass("btn btn-minier btn-pink").html("升级").css("margin", "3px").appendTo(uiPgDiv);
+        //消耗
+        var expendBtn = $("<span></span>").addClass("btn btn-minier btn-purple").html("消耗").css("margin", "3px").appendTo(uiPgDiv);
 
-        var abateBtn = $("<span></span>").addClass("ui-icon icon-ban-circle red").attr("id", "abate_" + activityItem.saiid).appendTo(uiPgDiv);
+        //失效按钮
+        abateBtn.on("click", function () {
+            abateSalesActivityItem(activityItem.saiid, activityItem.activity);
+        });
 
+        //领取按钮
+        receiveBtn.on("click", function () {
+            if (activityItem.state == 0) {
+                receiveSalesActivityItem(activityItem.saiid, activityItem.activity);
+            }else{
+                com.showAlert(com.warning, "订单活动奖品不可操作!!");
+            }
+        });
 
-        var receiveBtn = $("<span></span>").addClass("ui-icon icon-bookmark").attr("id", "receive_" + activityItem.saiid).appendTo(uiPgDiv);
+    //点击退货按钮
+    refundBtn.click(function () {
+        refundSalesActivityItem(activityItem.saiid, activityItem.activity);
+    });
 
+    //点击配送按钮
+    deliveBtn.click(function () {
+        deliveSalesActivityItem(activityItem.saiid, activityItem.activity);
+    });
 
-        if (activityItem.state == 0) {
+    //点击未退按钮
+    unrefundBtn.click(function () {
+        unrefundSalesActivityItem(activityItem.saiid, activityItem.activity);
+    });
 
-            abateBtn.on("click", function () {
-                abateSalesActivityItem(activityItem.saiid, activityItem.activity);
-            });
+    //点击升级按钮
+    upgradeBtn.click(function () {
+        upgradeSalesActivityItem(activityItem.saiid, activityItem.activity);
+    });
 
-            receiveBtn.on("click", function () {
-                if (activityItem.state == 2) {
-                    com.showAlert(com.warning, "已领取!!");
-                } else {
-                    receiveSalesActivityItem(activityItem.saiid, activityItem.activity);
-                }
-            });
-        }
+    //点击消耗按钮
+    expendBtn.click(function () {
+        expendSalesActivityItem(activityItem.saiid, activityItem.activity);
+    });
+
     }
-
+    
+    //0: 初始 , 1: 失效 , 2: 已领 , 3: 退货 , 4: 配送 , 5: 未退 , 6: 升级 , 7: 消耗
+    //失效
     function abateSalesActivityItem(saiid, activityItemName) {
 
         bootbox.confirm("是否确认失效" + activityItemName + "活动物品?", function (result) {
             if (result) {
 
                 var options = {
-                    "salesActivityItem.saiid": saiid,
+                    "salesActivityItem.saiid": saiid
                 };
 
                 com.post(api.inventory.abateSalesActivityItem, options, function (res) {
-
-                    var saiid = res.salesActivityItem.saiid;
-
-                    com.focusPage("#convert_" + saiid).unbind();
-                    com.focusPage("#abate_" + saiid).unbind();
-
-                    com.focusPage("#receive_" + saiid).unbind();
-                    com.focusPage("#widgetHeader_" + saiid);
+                    com.showAlert(com.info, "失效成功!");
                     querySalesActivityItem();
                 });
             }
         });
     }
-
+    //领取
     function receiveSalesActivityItem(saiid, activityItemName) {
 
         bootbox.confirm("是否确认领取" + activityItemName + "活动物品?", function (result) {
             if (result) {
 
                 var options = {
-                    "salesActivityItem.saiid": saiid,
+                    "salesActivityItem.saiid": saiid
                 };
 
                 com.post(api.inventory.receiveSalesActivityItem, options, function (res) {
-
-                    var saiid = res.salesActivityItem.saiid;
-
-                    com.focusPage("#convert_" + saiid).unbind();
-                    com.focusPage("#abate_" + saiid).unbind();
-
-                    com.focusPage("#receive_" + saiid).unbind();
-                    com.focusPage("#widgetHeader_" + saiid);
                     com.showAlert(com.info, "领取成功!");
                     querySalesActivityItem();
                 })
             }
         });
     }
+    //退货
+    function refundSalesActivityItem(saiid, activityItemName) {
+        bootbox.confirm("是否确认退货" + activityItemName + "活动物品?", function (result) {
+            if(result){
+                var options = {
+                    "salesActivityItem.saiid": saiid
+                };
+                com.post(api.inventory.refundSalesActivityItem, options, function (res) {
+                    com.showAlert(com.info, "退货成功!");
+                    querySalesActivityItem();
+                });
+            }
+        });
+    }
+    //配送
+    function deliveSalesActivityItem(saiid, activityItemName){
+        bootbox.confirm("是否确认配送" + activityItemName + "活动物品?", function (result) {
+            if(result){
+                var options = {
+                    "salesActivityItem.saiid": saiid
+                };
+                com.post(api.inventory.deliveSalesActivityItem, options, function (res) {
+                    com.showAlert(com.info, "配送成功!");
+                    querySalesActivityItem();
+                });
+            }
+        });
+    }
+    //未退
+    function unrefundSalesActivityItem(saiid, activityItemName) {
+        bootbox.confirm("是否确认未退" + activityItemName + "活动物品?", function (result) {
+            if(result){
+                var options = {
+                    "salesActivityItem.saiid": saiid
+                };
+                com.post(api.inventory.unrefundSalesActivityItem, options, function (res) {
+                    com.showAlert(com.info, "未退成功!");
+                    querySalesActivityItem();
+                });
+            }
+        });
+    }
+    //升级
+    function upgradeSalesActivityItem(saiid, activityItemName) {
+        bootbox.confirm("是否确认升级" + activityItemName + "活动物品?", function (result) {
+            if(result){
+                var options = {
+                    "salesActivityItem.saiid": saiid
+                };
+                com.post(api.inventory.upgradeSalesActivityItem, options, function (res) {
+                    com.showAlert(com.info, "升级成功!");
+                    querySalesActivityItem();
+                });
+            }
+        });
+    }
+    //消耗
+    function expendSalesActivityItem(saiid, activityItemName) {
+        bootbox.confirm("是否确认消耗" + activityItemName + "活动物品?", function (result) {
+            if(result){
+                var options = {
+                    "salesActivityItem.saiid": saiid
+                };
+                com.post(api.inventory.expendSalesActivityItem, options, function (res) {
+                    com.showAlert(com.info, "消耗成功!");
+                    querySalesActivityItem();
+                });
+            }
+        });
+    }
+
 
     //修改活动
     com.focusPage("#submitSalesActivityBtn").on("click", function () {

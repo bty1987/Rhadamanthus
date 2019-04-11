@@ -20,7 +20,7 @@ jQuery(function($) {
 	var decoration;
 	var decorationContract;
 	
-	com.post(api.decoration.generateDecorationContract, {"decorationContract.orderId": orderId}, function(res) {
+	com.post(api.decoration.queryDecorationContractByOrderId, {"decorationContract.orderId": orderId}, function(res) {
 		decorationContract = res.decorationContract;
 	}, null, false);
 	
@@ -44,7 +44,7 @@ jQuery(function($) {
 
 	var payments = decorationContract.payments;
 	var payFlag = false;
-	var baseStatus = ["未付款", "已付款", "已确认", "申请审批"];
+	var baseStatus = [0, 1, 2, 3];
 	var typeCounts = 0;
 
 	$.each(payments,function (i,v) {
@@ -81,7 +81,7 @@ jQuery(function($) {
 	
 	$(".WordSection1").css("display", "block");
 	
-	var orderTotalMoney = parseFloat(decoration.orderTotalPrice);
+	var orderTotalMoney = parseFloat(decoration.orderTotalPrice) - parseFloat(decoration.couponCut);
 
 	if (decorationContract.signTime != null && decorationContract.signTime != "") {
 		var signSplit = decorationContract.signTime.split('-');
@@ -132,9 +132,9 @@ jQuery(function($) {
 		alert("款项数量有误!");
 	}
 
-	$("#orderTotalPrice").html(	decoration.orderTotalPrice);
+	$("#orderTotalPrice").html(	orderTotalMoney);
 
-	var totalCN = utils.getCNMoney(decoration.orderTotalPrice);
+	var totalCN = utils.getCNMoney(orderTotalMoney);
 	$("#orderTotalPriceCN").html(totalCN);
 	$("#disgner").html(decoration.designer);
 	$("#disgnerPhone").html(decoration.designerPhone);

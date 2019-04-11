@@ -62,10 +62,10 @@
     {"key" : "1", "value" : "擅长面积"},
     {"key" : "2", "value" : "小区"}
   ],"serviceNodeType":[
-  {"key" : "0", "value" : "装修"},
-  {"key" : "1", "value" : "主材"},
-  {"key" : "2", "value" : "工程"}
-],
+    {"key" : "0", "value" : "装修"},
+    {"key" : "1", "value" : "主材"},
+    {"key" : "2", "value" : "工程"}
+  ],
   "vscoreRecordtype":[
     {"key" : "0", "value" : "新增"},
     {"key" : "1", "value" : "提取"}
@@ -80,6 +80,12 @@
     {"key" : "3", "value" : "转账"},
     {"key" : "4", "value" : "对公账户"},
     {"key" : "5", "value" : "券"}
+  ],
+  "grade":[
+    {"key" : "", "value" : "无"},
+    {"key" : "A", "value" : "A"},
+    {"key" : "B", "value" : "B"},
+    {"key" : "C", "value" : "C"}
   ],
 
   "errorCode": 0,

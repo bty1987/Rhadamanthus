@@ -440,7 +440,7 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 		materialPaymentPO.setCategory(materialPO.getCategory());
 		materialPaymentPO.setBrand(materialPO.getBrand());
 		
-		if(materialPaymentVO.getReferMoney() > 0){
+		if(materialPaymentVO.getReferMoney() >= 0){
 			materialPaymentPO.setPaymentType(MaterialPaymentPO.PAYMENTTYPE_TYPE_FULL_INT);
 		}else if(materialPaymentVO.getReferMoney() < 0){
 			materialPaymentPO.setPaymentType(MaterialPaymentPO.PAYMENTTYPE_TYPE_FULL_REFUND_INT);

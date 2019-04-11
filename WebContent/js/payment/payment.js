@@ -22,6 +22,12 @@ jQuery(function($) {
 		com.focusPage("#paymentInfo").text("");
 	});
 
+	//隐藏触发
+	com.focusPage("#paymentModal").on('hidden.bs.modal', function () {
+		payment.bankUtilForGrade = [];
+		payment.checkBankUtilForGrade = [];
+	});
+
 	payment.items.cashCheckbox = com.focusPage("#cashCheckbox");
 	payment.items.bankCheckbox = com.focusPage("#bankCheckbox");
 	payment.items.checkvCheckbox = com.focusPage("#checkvCheckbox");
@@ -57,6 +63,21 @@ jQuery(function($) {
 		}
 	});
 
+	//切换合同和主材预付款
+	com.focusPage("#paymentTypeSel").on("change", function(){
+		var gradeParam = [];
+		payment.bankUtilForGrade = [];
+		payment.checkBankUtilForGrade = [];
+		payment.bankNums = [];
+		payment.checkvNums = [];
+
+		com.focusPage("#paymentbankDivGroup").empty();
+		com.focusPage("#paymentcheckvDivGroup").empty();
+
+		var currentGrade = com.focusPage("#paymentModal").attr("grade");
+		getReceiptTypeForGrade(com.focusPage("#paymentTypeSel").val(), currentGrade);
+	});
+
 	payment.cash = [];
 	payment.bank = [];
 	payment.bankUtil = [];
@@ -66,6 +87,9 @@ jQuery(function($) {
 	payment.cashUtil = [];
 	payment.bankUtil = [];
 	payment.checkBankUtil = [];
+
+	payment.bankUtilForGrade = [];
+	payment.checkBankUtilForGrade = [];
 
 	payment.cashInfo = {};
 	payment.bankInfo = {};
@@ -103,7 +127,7 @@ jQuery(function($) {
 		var maxNum = $(this).attr("maxnum");
 		maxNum = parseInt(maxNum)+1;
 		$(this).attr("maxnum", maxNum);
-		paymentUtils.addBankUtil(maxNum, "bankDiv", "#paymentbankDivGroup", payment.bankNums, payment.bankUtil, "payment");
+		paymentUtils.addBankUtil(maxNum, "bankDiv", "#paymentbankDivGroup", payment.bankNums, payment.bankUtilForGrade, "payment");
 
 		return false;
 	});
@@ -116,7 +140,7 @@ jQuery(function($) {
 		var maxNum = $(this).attr("maxnum");
 		maxNum = parseInt(maxNum)+1;
 		$(this).attr("maxnum", maxNum);
-		paymentUtils.addBankUtil(maxNum, "checkvDiv", "#paymentcheckvDivGroup", payment.checkvNums, payment.checkBankUtil, "payment");
+		paymentUtils.addBankUtil(maxNum, "checkvDiv", "#paymentcheckvDivGroup", payment.checkvNums, payment.checkBankUtilForGrade, "payment");
 
 		return false;
 	});
@@ -167,12 +191,14 @@ jQuery(function($) {
             $btnCollect.click(function(){
             	v.paymentType="收款";
 				payment.typeUpdate = 1;
+				com.focusPage("#paymentModal").attr("grade", v.grade);
             	showPaymentModal(v);
             });
             
             $btnCashout.click(function(){
 				v.paymentType="提款";
 				payment.typeUpdate = 2;
+				com.focusPage("#paymentModal").attr("grade", v.grade);
 				com.post(api.payment.queryAdvancePaymentByCustomerId, {"customer.cid": v.customer.cid}, function(res){
 					showPaymentModal(v,res);
 				});
@@ -309,6 +335,7 @@ jQuery(function($) {
 
 			$btnUpdateP.click(function(){
 				payment.typeUpdate = 3;
+				v.grade = "allGrade";
 				dialogPaymentUpdate(v);
 			});
             
@@ -346,6 +373,9 @@ jQuery(function($) {
 		com.focusPage("#des").removeAttr("disabled");
 
 		paymentUtils.EmptyChosen('paymentcashInfo');
+
+		// 根据等级在数组中筛选出符合要求的用于显示
+		getReceiptTypeForGrade(0, v.grade);
 
 		if(v.paymentType.search('收款') != -1 || v.paymentType=="收款"){
 			com.focusPage("#myModalLabel").text("收款信息");
@@ -396,6 +426,9 @@ jQuery(function($) {
 		payment.bankNums=[];
 		payment.checkvNums=[];
 
+		// 根据等级在数组中筛选出符合要求的用于显示
+		getReceiptTypeForGrade(v.paymentType, v.grade);
+
 		com.focusPage("#myModalLabel").text("收款信息");
 		com.focusPage("#paymentMethod").text("付款方式");
 		com.focusPage("#historyUpdateP").removeClass("hide");
@@ -421,6 +454,7 @@ jQuery(function($) {
 		com.focusPage("#des").val(v.comment);
 		com.focusPage("#des").attr("disabled","disabled");
 		com.focusPage("#paymentTypeSel").attr("disabled","disabled");
+		com.focusPage("#paymentTypeSel").val(v.paymentType);
 
 		//历史收款信息
 		com.focusPage("#cashHistoryP").text("现金: "+com.checkNull(payment.cashInfo[v.cashInfo],"")+" "+com.checkNull(v.cash,"无"));
@@ -501,6 +535,7 @@ jQuery(function($) {
 				com.focusPage("#paymentInfo").text("提款金额不能大于余额!");
 				return false;
 			}
+
 			if(parseFloat(total)!=parseFloat(refund)){
 				com.focusPage("#paymentInfo").text("当前提款项总数与提款金额不等,请核实再进行提交!!");
 				return false;
@@ -622,4 +657,31 @@ jQuery(function($) {
 			});
 		});
     });
+
+	function getReceiptTypeForGrade(paymentType, decorationGrade){
+		var gradeParam;
+
+		if(decorationGrade == "allGrade"){
+			payment.bankUtilForGrade = payment.bankUtil;
+			payment.checkBankUtilForGrade = payment.checkBankUtil;
+		}else{
+			if(paymentType == 0){
+				if(decorationGrade == "A" || decorationGrade == "C"){
+					gradeParam = "A";
+				}else{
+					gradeParam = "";
+				}
+			}else if(paymentType  == 2){
+				if(decorationGrade == "C"){
+					gradeParam = "B";
+				}else{
+					gradeParam = "";
+				}
+			}
+
+			var returnGradeParams = paymentUtils.getValueForGrade(payment.bank, payment.checkBank, gradeParam);
+			payment.bankUtilForGrade = returnGradeParams[0];
+			payment.checkBankUtilForGrade = returnGradeParams[1];
+		}
+	}
 });

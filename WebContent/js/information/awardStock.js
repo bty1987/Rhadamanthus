@@ -1,6 +1,7 @@
 
 $(function(){
-    var awardStockType = {};
+    var type = {};
+    var storeroom = {};
     var awardStock = {
         awardStockItems:{}
     };
@@ -9,21 +10,33 @@ $(function(){
     awardStock.awardStockItems.name = com.focusPage("#name");
     awardStock.awardStockItems.num = com.focusPage("#num");
     awardStock.awardStockItems.type = com.focusPage("#type");
+    awardStock.awardStockItems.storeroom = com.focusPage("#storeroom");
     awardStock.awardStockItems.price = com.focusPage("#price");
     awardStock.awardStockItems.content = com.focusPage("#content");
+    awardStock.awardStockItems.format = com.focusPage("#format");
     awardStock.awardStockItems.Warehousing = com.focusPage("#Warehousing");
     awardStock.awardStockItems.Warehousend = com.focusPage("#Warehousend");
     awardStock.awardStockItems.no2 = com.focusPage("#no2");
     awardStock.awardStockItems.name2 = com.focusPage("#name2");
     awardStock.awardStockItems.nownum = com.focusPage("#nownum");
-    awardStock.awardStockItems.isPrefor  = com.focusPage("#isPrefor");
+    // awardStock.awardStockItems.isPrefor  = com.focusPage("#isPrefor");
     awardStock.awardStockItems.isStock =  com.focusPage("#isStock");
     awardStock.awardStockItems.price2 =  com.focusPage("#price2");
-
-
-    bindingType("type");
-    bindingisPrefor("isPrefor");
-    bindingisStock("isStock");
+    
+    com.post(api.ds.information, {}, function (res) {
+        awardStock.awardStockItems.storeroom.bindData(res.awardStoreRoom, "key", "value", false);
+        awardStock.awardStockItems.type.bindData(res.awardStockType, "key", "value", false);
+        // awardStock.awardStockItems.isPrefor.bindData(res.isPreforType, "key", "value", false);
+        awardStock.awardStockItems.isStock.bindData(res.isStockType, "key", "value", false);
+        
+        $.each(res.awardStoreRoom,function(i,v){
+            storeroom[v.key]=v.value;
+        });
+        
+        $.each(res.awardStockType,function(i,v){
+            type[v.key]=v.value;
+        })
+    },null,false);
 
     var displayFunc  = (function(){
         /*表格样式*/
@@ -48,8 +61,8 @@ $(function(){
             var $liTitle = $('<li></li>').addClass('line table-title');
 
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>'));
-            var $contentWrap = $('<div></div>').addClass('line-wrap  content col8');
-            var titleName ='编号,名称,数量,类型,备注,状态,库存标识,业绩标识';
+            var $contentWrap = $('<div></div>').addClass('line-wrap  content col10');
+            var titleName ='编号,名称,数量,类型,备注,库房信息,规格,状态,库存标识,业绩标识';
 
             $.each(titleName.split(','), function (i, v) {
                 var $cell = $('<div></div>').addClass('cell').html(v);
@@ -67,17 +80,15 @@ $(function(){
             var $liLine = $('<li></li>').addClass('line');
             var id = i + 1;
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(id));
-            var $contentWrap = $('<div></div>').addClass('line-wrap content col8');
-            var type = {
-                "0": "劵",
-                "1": "物品"
-            };
+            var $contentWrap = $('<div></div>').addClass('line-wrap content col10');
             var propertyArr = [
                 [v.no,'grey'],
                 [v.name,'grey'],
                 [v.num,'grey'],
                 [type[v.type],'grey'],
                 [v.content,'grey'],
+                [ storeroom[v.storeroom] , "grey"],
+                [v.format,'grey'],
                 [v.status =="0" ? "启用" : "禁用",'red'],
                 [v.isStock=="0" ? "加入库存" : "不加入库存",'red'],
                 [v.isPrefor=="0" ? "计算业绩" : "不计算业绩",'red']
@@ -219,7 +230,7 @@ $(function(){
     })();
 
     /*分页*/
-    var _condArr = ['prizeName','prizeNo','awardStockType'];
+    var _condArr = ['prizeName','prizeNo','awardStockType','awardStoreRoom'];
     var awardStockSeacher = new Searcher();
     awardStockSeacher.init( _condArr, "condList", api.information.pageAwardStock, function(data){
         displayFunc.init('resultList', data);
@@ -322,42 +333,30 @@ $(function(){
             });
         }
     }
-
-    function bindingType(idName) {
-        com.post(api.ds.information, {}, function (res) {
-            com.focusPage("#" + idName).bindData(res.awardStockType, "key", "value", true)
-        });
-    }
-    function bindingisPrefor(idName) {
-        com.post(api.ds.information, {}, function (res) {
-            com.focusPage("#" + idName).bindData(res.isPreforType, "key", "value", true)
-        });
-    }
-    function bindingisStock(idName) {
-        com.post(api.ds.information, {}, function (res) {
-            com.focusPage("#" + idName).bindData(res.isStockType, "key", "value", true)
-        });
-    }
     /*添加信息*/
     function saveData(callback){
 
         var no = awardStock.awardStockItems.no.val();
         var name = awardStock.awardStockItems.name.val();
         var type = awardStock.awardStockItems.type.val();
+        var storeroom = awardStock.awardStockItems.storeroom.val();
         var num = awardStock.awardStockItems.num.val();
         var price = awardStock.awardStockItems.price.val();
         var content = awardStock.awardStockItems.content.val();
-        var isPrefor  = awardStock.awardStockItems.isPrefor.val();
+        var format = awardStock.awardStockItems.format.val();
+        // var isPrefor  = awardStock.awardStockItems.isPrefor.val();
         var isStock = awardStock.awardStockItems.isStock.val();
 
         com.post(api.information.addAwardStock, {
             "awardStock.no": no,
             "awardStock.name":name,
             "awardStock.type":type,
+            "awardStock.storeroom":storeroom,
             "awardStock.num": num,
             "awardStock.price":price,
             "awardStock.content":content,
-            "awardStock.isPrefor": isPrefor,
+            "awardStock.format":format,
+            "awardStock.isPrefor": 0,
             "awardStock.isStock": isStock
         }, function(res){
             callback();
@@ -367,13 +366,17 @@ $(function(){
     
     function updateAll(v, callback) {
         var content = awardStock.awardStockItems.content.val();
-        var isPrefor  = awardStock.awardStockItems.isPrefor.val();
+        // var isPrefor  = awardStock.awardStockItems.isPrefor.val();
         var isStock = awardStock.awardStockItems.isStock.val();
+        var storeroom = awardStock.awardStockItems.storeroom.val();
+        var format = awardStock.awardStockItems.format.val();
         com.post(api.information.updateAwardStock, {
             "awardStock.asId": v.asId,
             "awardStock.content":content,
-            "awardStock.isPrefor": isPrefor,
-            "awardStock.isStock": isStock
+            "awardStock.isPrefor": 0,
+            "awardStock.isStock": isStock,
+            "awardStock.storeroom": storeroom,
+            "awardStock.format": format
         }, function(res){
             callback();
             awardStockSeacher.doSearch();
@@ -388,7 +391,7 @@ $(function(){
 
             "awardStock.asId": v.asId,
             "awardStock.num": warehousend,
-            "awardStock.price":price2
+            "awardStock.price":price2,
         }, function(res){
             callback();
             awardStockSeacher.doSearch();
@@ -444,7 +447,10 @@ $(function(){
         awardStock.awardStockItems.no.val(v.no);
         awardStock.awardStockItems.name.val(v.name);
         awardStock.awardStockItems.num.val(v.num);
+        awardStock.awardStockItems.format.val(v.format);
         awardStock.awardStockItems.content.val(v.content);
+        awardStock.awardStockItems.storeroom.val(v.storeroom);
+        awardStock.awardStockItems.isStock.val(v.isStock);
         var $layerAdd = com.focusPage('#layerAdd1');
         $layerAdd.find("#no").attr('disabled', 'disabled');
         $layerAdd.find("#name").attr('disabled', 'disabled');
@@ -460,6 +466,7 @@ $(function(){
         $layerAdd.find('#name').removeAttr('disabled');
         $layerAdd.find('#num').removeAttr('disabled');
         $layerAdd.find('#type').removeAttr('disabled');
+        $layerAdd.find('#storeroom').removeAttr('disabled');
     }
 
 });

@@ -64,8 +64,8 @@ public class FunctionAreaServiceImpl implements FunctionAreaService {
 
 			QuotationVersionPO quotationVersionPO = functionAreaPO.getQuotationVersion();
 
-			functionAreaVO.setVersion(quotationVersionPO.getVersionName());
-			functionAreaVO.setVersionId(quotationVersionPO.getVersionId());
+			functionAreaVO.setVersion(quotationVersionPO.getName());
+			functionAreaVO.setVersionId(quotationVersionPO.getNo());
 			functionAreaVOs.add(functionAreaVO);
 		}
 
@@ -84,8 +84,8 @@ public class FunctionAreaServiceImpl implements FunctionAreaService {
 		QuotationVersionPO quotationVersionPO = functionAreaPO.getQuotationVersion();
 
 		BeanUtil.copyProperties(functionAreaPO, functionAreaVO);
-		functionAreaVO.setVersion(quotationVersionPO.getVersionName());
-		functionAreaVO.setVersionId(quotationVersionPO.getVersionId());
+		functionAreaVO.setVersion(quotationVersionPO.getName());
+		functionAreaVO.setVersionId(quotationVersionPO.getNo());
 
 		return functionAreaVO;
 	}
@@ -108,8 +108,8 @@ public class FunctionAreaServiceImpl implements FunctionAreaService {
 
 			BeanUtil.copyProperties(functionAreaPO, _functionAreaVO);
 
-			_functionAreaVO.setVersion(quotationVersionPO.getVersionName());
-			_functionAreaVO.setVersionId(quotationVersionPO.getVersionId());
+			_functionAreaVO.setVersion(quotationVersionPO.getName());
+			_functionAreaVO.setVersionId(quotationVersionPO.getNo());
 
 			functionAreaVOs.add(_functionAreaVO);
 		}

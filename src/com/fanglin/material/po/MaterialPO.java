@@ -195,6 +195,8 @@ public class MaterialPO implements java.io.Serializable {
 	private int company;
 
 	private long activityId;
+	
+	private String grade;
 
 	public MaterialPO() {
 		super();
@@ -545,4 +547,14 @@ public class MaterialPO implements java.io.Serializable {
 	public void setActivityId(long activityId) {
 		this.activityId = activityId;
 	}
+
+	@Column(name = "grade")
+	public String getGrade() {
+		return grade;
+	}
+
+	public void setGrade(String grade) {
+		this.grade = grade;
+	}
+	
 }

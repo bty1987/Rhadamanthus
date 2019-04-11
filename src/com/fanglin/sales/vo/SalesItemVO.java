@@ -46,7 +46,9 @@ public class SalesItemVO implements Serializable {
 	private	Short ctype;
 	
 	private	Float cvalue;
-
+	
+	private	Short priceType;
+	
 	public SalesItemVO() {
 		super();
 	}
@@ -202,4 +204,11 @@ public class SalesItemVO implements Serializable {
 		this.cvalue = cvalue;
 	}
 
+	public Short getPriceType() {
+		return priceType;
+	}
+
+	public void setPriceType(Short priceType) {
+		this.priceType = priceType;
+	}
 }

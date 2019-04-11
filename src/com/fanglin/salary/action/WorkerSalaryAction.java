@@ -65,7 +65,7 @@ public class WorkerSalaryAction extends BaseListAction{
 	@Action(value="adoptWorkerSalary", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String adoptWorkerSalary() throws FLException{
 	  
-	  workerSalaryService.adoptWorkerSalary(workerSalarys, queryUserId());
+	  workerSalaryService.adoptWorkerSalary(workerSalarys, queryUserId(), queryCompany());
     
 	  return "success";
 	}
@@ -73,7 +73,7 @@ public class WorkerSalaryAction extends BaseListAction{
 	@Action(value="rejectWorkerSalary", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String rejectWorkerSalary()throws FLException{
 	  
-		workerSalaryService.rejectWorkerSalary(workerSalary, queryUserId());
+		workerSalaryService.rejectWorkerSalary(workerSalary, queryUserId(), queryCompany());
 	  
 		return "success";
 	}
@@ -81,7 +81,7 @@ public class WorkerSalaryAction extends BaseListAction{
 	@Action(value="deleteWorkerSalary", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String deleteWorkerSalary()throws FLException{
 	  
-		workerSalaryService.deleteWorkerSalary(workerSalary,queryUserId());
+		workerSalaryService.deleteWorkerSalary(workerSalary,queryUserId(), queryCompany());
     
 		return "success";
 	}
