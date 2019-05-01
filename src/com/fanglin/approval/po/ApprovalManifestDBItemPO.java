@@ -22,32 +22,30 @@ public class ApprovalManifestDBItemPO implements java.io.Serializable {
 	private static final long serialVersionUID = -2816996256600150880L;
 
 	public static final String COLUMN_AMDBID_STR = "amdbid";
-	
+
 	private long amdbiid;
-	
+
 	private long amdbid;
-	
+
 	private GoodsPO goods;
-	
+
 	private ColorPO color;
-	
+
 	private FormatPO format;
-	
+
 	private StorehousePO instorehouse;
-	
+
 	private StorehousePO outstorehouse;
-	
+
 	private float num;
-	
+
 	private String comment;
 
 	public ApprovalManifestDBItemPO() {
 		super();
 	}
 
-	public ApprovalManifestDBItemPO(GoodsPO goods, ColorPO color,
-			FormatPO format, StorehousePO instorehouse,
-			StorehousePO outstorehouse) {
+	public ApprovalManifestDBItemPO(GoodsPO goods, ColorPO color, FormatPO format, StorehousePO instorehouse, StorehousePO outstorehouse) {
 		super();
 		this.goods = goods;
 		this.color = color;
@@ -66,6 +64,7 @@ public class ApprovalManifestDBItemPO implements java.io.Serializable {
 	public void setAmdbiid(long amdbiid) {
 		this.amdbiid = amdbiid;
 	}
+
 	@Column(name = "amdbid")
 	public long getAmdbid() {
 		return amdbid;
@@ -74,7 +73,7 @@ public class ApprovalManifestDBItemPO implements java.io.Serializable {
 	public void setAmdbid(long amdbid) {
 		this.amdbid = amdbid;
 	}
-	
+
 	@ManyToOne
 	@JoinColumn(name = "gid", referencedColumnName = "gid")
 	public GoodsPO getGoods() {
@@ -84,7 +83,7 @@ public class ApprovalManifestDBItemPO implements java.io.Serializable {
 	public void setGoods(GoodsPO goods) {
 		this.goods = goods;
 	}
-	
+
 	@ManyToOne
 	@JoinColumn(name = "cid", referencedColumnName = "cid")
 	public ColorPO getColor() {
@@ -94,7 +93,7 @@ public class ApprovalManifestDBItemPO implements java.io.Serializable {
 	public void setColor(ColorPO color) {
 		this.color = color;
 	}
-	
+
 	@ManyToOne
 	@JoinColumn(name = "fid", referencedColumnName = "fid")
 	public FormatPO getFormat() {
@@ -114,6 +113,7 @@ public class ApprovalManifestDBItemPO implements java.io.Serializable {
 	public void setInstorehouse(StorehousePO instorehouse) {
 		this.instorehouse = instorehouse;
 	}
+
 	@ManyToOne
 	@JoinColumn(name = "oshid", referencedColumnName = "shid")
 	public StorehousePO getOutstorehouse() {
@@ -123,6 +123,7 @@ public class ApprovalManifestDBItemPO implements java.io.Serializable {
 	public void setOutstorehouse(StorehousePO outstorehouse) {
 		this.outstorehouse = outstorehouse;
 	}
+
 	@Column(name = "num")
 	public float getNum() {
 		return num;
@@ -131,6 +132,7 @@ public class ApprovalManifestDBItemPO implements java.io.Serializable {
 	public void setNum(float num) {
 		this.num = num;
 	}
+
 	@Column(name = "comment")
 	public String getComment() {
 		return comment;

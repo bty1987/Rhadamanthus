@@ -18,7 +18,7 @@ public class ManifestVO implements java.io.Serializable {
 	
 	private Timestamp manifestTime;
 	
-	private UserBaseVO createUser;
+	private UserBaseVO creater;
 	
 	private Float total;
 	
@@ -36,9 +36,9 @@ public class ManifestVO implements java.io.Serializable {
 		super();
 	}
 
-	public ManifestVO(UserBaseVO createUser) {
+	public ManifestVO(UserBaseVO creater) {
 		super();
-		this.createUser = createUser;
+		this.creater = creater;
 	}
 
 	public Long getMid() {
@@ -75,12 +75,12 @@ public class ManifestVO implements java.io.Serializable {
 		this.manifestTime = manifestTime;
 	}
 
-	public UserBaseVO getCreateUser() {
-		return createUser;
+	public UserBaseVO getCreater() {
+		return creater;
 	}
 
-	public void setCreateUser(UserBaseVO createUser) {
-		this.createUser = createUser;
+	public void setCreater(UserBaseVO creater) {
+		this.creater = creater;
 	}
 
 	public Float getTotal() {

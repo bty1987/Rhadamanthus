@@ -130,7 +130,7 @@ public class PurchaseBalanceServiceImpl implements PurchaseBalanceService {
 		
 		purchaseBalancePO.setStatus(PurchaseBalancePO.STATUS_DONE_INT);
 		
-		purchasePO.setBalanceStatus(PurchasePO.COLUMN_DONEBALANCESTATUS_STR);
+		purchasePO.setBalanceStatus(PurchasePO.BALANCESTATUS_BALANCE_INT);
 		
 		purchaseDao.update(purchasePO);
 		purchaseBalanceDao.update(purchaseBalancePO);

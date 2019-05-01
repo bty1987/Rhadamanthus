@@ -1542,7 +1542,7 @@ var QuotationDetail = (function(){
                     "quotation.basePrice" :data.quotation.basePrice//基数
 				};
 				//报价版本存入
-				quo.versionId = data.quotation.versionId;
+				quo.versionId = data.quotation.no;
 				//非业务人员提点比例
 				quo.notSalesmanRate = data.quotation.notSalesmanRate;
 				//左上角显示的折扣

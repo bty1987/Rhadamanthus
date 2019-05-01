@@ -3,49 +3,105 @@ jQuery(function($) {
 	var materialPaymentCheck = {
 		materialPaymentTypeData: {},
 		materialPaymentRevTypeData: {},
-		ouponType: {}
+		ouponType: {},
+		paymentModelNameData: ["cash", "bank", "checkv", "advance", "coupon"],
+		bankNums:[],
+		checkvNums: [],
+		couponType: {},
+		items: {},
+		htmlName: "materialCheck"
 	};
 
-	com.post(api.common.queryReceiptType, {}, function(res){
-		materialPaymentCheck.cash = [];
-		materialPaymentCheck.bank = [];
-		materialPaymentCheck.checkBank = [];
-		materialPaymentCheck.accounts = [];
-		materialPaymentCheck.couponType = [];
+	var materialPaymentCheckPostData = {};
 
-		materialPaymentCheck.cashInfo = {};
-		materialPaymentCheck.bankInfo = {};
-		materialPaymentCheck.checkBankInfo = {};
-		materialPaymentCheck.accountsInfo = {};
-		materialPaymentCheck.couponTypeData = {};
+	materialPaymentCheck.baseModal = com.focusPage("#baseItemModalMaterialCheck").on('show.bs.modal', function(e){
+		com.clearValidator();
+		com.focusPage("#paymentInfo").val("");
+	});
 
-		$.each(res.receiptTypes, function(i, v){
-			if(v.type == 1){
-				materialPaymentCheck.cash.push(v);
-				materialPaymentCheck.cashInfo[v.no] = v.name;
-			}else if(v.type == 2){
-				materialPaymentCheck.bank.push(v);
-				materialPaymentCheck.bankInfo[v.no] = v.name;
-			}else if(v.type == 3){
-				materialPaymentCheck.checkBank.push(v);
-				materialPaymentCheck.checkBankInfo[v.no] = v.name;
-			}else if(v.type == 4){
-				materialPaymentCheck.accounts.push(v);
-				materialPaymentCheck.accountsInfo[v.no] = v.name;
-			}else if(v.type == 5){
-				materialPaymentCheck.couponType.push(v);
-				materialPaymentCheck.couponTypeData[v.no] = [v.no, v.name];
-			}
-		});
-	}, null, false);
+	//隐藏触发
+	com.focusPage("#baseItemModalMaterialCheck").on('hidden.bs.modal', function () {
+		materialPaymentCheck.bankUtilForGrade = [];
+		materialPaymentCheck.checkBankUtilForGrade = [];
+		paymentUtils.EmptyChosen('materialCheckcashInfo');
+	});
+
+	materialPaymentCheck.saveBtn = com.focusPage("#saveBtn").bindClick(function(){
+		paymentUtils.materialPayment(materialPaymentCheck, materialPaymentCheckPostData, searcher, hsearcher);
+	});
+
+	materialPaymentCheck.items.cashCheckbox = com.focusPage("#cashCheckbox");
+	materialPaymentCheck.items.bankCheckbox = com.focusPage("#bankCheckbox");
+	materialPaymentCheck.items.checkvCheckbox = com.focusPage("#checkvCheckbox");
+	materialPaymentCheck.items.couponCheckbox = com.focusPage("#couponCheckbox");
+	materialPaymentCheck.items.advanceCheckbox = com.focusPage("#advanceCheckbox");
+	materialPaymentCheck.items.couponType = com.focusPage("#couponType");
+	materialPaymentCheck.items.advanceType = com.focusPage("#advanceType");
+
+	materialPaymentCheck.cash = [];
+	materialPaymentCheck.bank = [];
+	materialPaymentCheck.checkBank = [];
+	materialPaymentCheck.accounts = [];
+	materialPaymentCheck.couponType = [];
+
+	materialPaymentCheck.cashInfo = {};
+	materialPaymentCheck.bankInfo = {};
+	materialPaymentCheck.checkBankInfo = {};
+	materialPaymentCheck.accountsInfo = {};
+	materialPaymentCheck.couponTypeData = {};
+
+	materialPaymentCheck.cashUtil = [];
+	materialPaymentCheck.bankUtil = [];
+	materialPaymentCheck.checkBankUtil = [];
+
+	materialPaymentCheck.bankUtilForGrade = [];
+	materialPaymentCheck.checkBankUtilForGrade = [];
+
+	paymentUtils.getReceiptType(materialPaymentCheck);
+
+	com.focusPage("#baseItemModalMaterialCheck :checkbox").on("change", function(){
+		$(this).prop("checked") ? com.focusPage("[referCheckbox="+this.id+"]").show()  : com.focusPage("[referCheckbox="+this.id+"]").hide()
+	});
 	
 	com.post(api.ds.payment, {}, function(res){
+		com.focusPage("#advanceType").bindData(res.advanceType, 'key', 'value');
+
 		for(var i=0;i<res.materialPaymentType.length;i++){
 			var paymentType = res.materialPaymentType[i];
 			materialPaymentCheck.materialPaymentTypeData[paymentType.key] = paymentType.value;
 			materialPaymentCheck.materialPaymentRevTypeData[paymentType.value] = paymentType.key;
 		}
 	}, null, false);
+
+	com.focusPage("#couponType").chosen({width: "216px", multi_type: "input"});
+
+	paymentUtils.dynamicChosen('baseItemModalMaterialCheck',"materialCheckcashInfo",materialPaymentCheck.cashUtil,"key","value");
+
+	com.focusPage("#materialCheckbankAdd").click(function(){
+		var num = $(this).attr("num");
+		var nextNum = parseInt(num)+1;
+		$(this).attr("num", nextNum);
+
+		var maxNum = $(this).attr("maxnum");
+		maxNum = parseInt(maxNum)+1;
+		$(this).attr("maxnum", maxNum);
+
+		paymentUtils.addBankUtil(maxNum, "bankDiv", "#materialCheckbankDivGroup", materialPaymentCheck.bankNums, materialPaymentCheck.bankUtilForGrade, materialPaymentCheck.htmlName, 'baseItemModalMaterialCheck');
+
+		return false;
+	});
+
+	com.focusPage("#materialCheckcheckvAdd").click(function(){
+		var num = $(this).attr("num");
+		var nextNum = parseInt(num)+1;
+		$(this).attr("num", nextNum);
+
+		var maxNum = $(this).attr("maxnum");
+		maxNum = parseInt(maxNum)+1;
+		$(this).attr("maxnum", maxNum);
+		paymentUtils.addBankUtil(maxNum, "checkvDiv", "#materialCheckcheckvDivGroup", materialPaymentCheck.checkvNums, materialPaymentCheck.checkBankUtilForGrade, materialPaymentCheck.htmlName, 'baseItemModalMaterialCheck');
+		return false;
+	});
 
 	com.focusPage("#materialPaymentHistoryList").removeClass("active");
 	
@@ -68,7 +124,8 @@ jQuery(function($) {
             var $h3 = $('<h3></h3>').addClass('oid');
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $ulStyle = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons').appendTo($h3);
+			var $btnUpdateM = $('<a></a>').addClass('btn btn-minier btn-success').html('更新').appendTo($divBtnWrap);
 
             var propertyArr = [
                ["订单号:", v.material.orderId, "blue"],
@@ -101,19 +158,10 @@ jQuery(function($) {
             });
             
             var styleArr = [];
-			
+
 			v.cash != null && v.cash != "0" ? styleArr.push(["现金:", v.cash, "blue"]) : true;
-			v.bank != null && v.bank != "0" ? styleArr.push(["银行:", (function(bank, bankInfo){
-				  var info = bank + ", ";
-				  var _s = bankInfo.split('#');
-				  for(var i=1;i<_s.length-1;i++){
-				    var _i = _s[i].split('|');
-				    info += materialPaymentCheck.bankInfo[_i[0]] + " " + _i[1] + ", ";
-				  }
-				  
-				  return info;
-			})(v.bank, v.bankInfo), "blue"]) : true;
-			v.checkv != null && v.checkv != "0" ? styleArr.push(["转账:", v.checkv, "blue"]) : true;
+			v.bank != null && v.bank != "0" ? styleArr.push(["银行:", paymentUtils.splitBankInfo(v.bank, v.bankInfo, materialPaymentCheck.bankInfo), "blue"]) : true;
+			v.checkv != null && v.checkv != "0" ? styleArr.push(["转账:", paymentUtils.splitBankInfo(v.checkv, v.checkvBank, materialPaymentCheck.checkBankInfo), "blue"]) : true;
 			v.installment != null && v.installment != "0" ? styleArr.push(["分期:", v.installment, "blue"]) : true;
 			v.accounts != null && v.accounts != "0" ? styleArr.push(["对公帐户:", v.accounts, "blue"]) : true;
 			v.advance != null && v.advance != "0" ? styleArr.push(["预付款:", v.advance, "blue"]) : true;
@@ -129,6 +177,16 @@ jQuery(function($) {
             $label.append($input).append($span).appendTo($h3);
            
             $liLine.append($h3).append($ulProperty).append($ulStyle);
+
+			//更新
+			$btnUpdateM.click(function(){
+				materialPaymentCheck.typeUpdate = 2;
+				var returnMaterialParams = paymentUtils.materialDialogPaymentUpdate(v, materialPaymentCheck);
+				materialPaymentCheckPostData.orderId = returnMaterialParams[0];
+				materialPaymentCheckPostData.customerId = returnMaterialParams[1];
+				materialPaymentCheckPostData.paymentInfo = returnMaterialParams[2];
+				materialPaymentCheck.couponUpdate = returnMaterialParams[3];
+			});
             
             return $liLine;
         };
@@ -210,19 +268,10 @@ jQuery(function($) {
             });
             
             var styleArr = [];
-			
+
 			v.cash != null && v.cash != "0" ? styleArr.push(["现金:", v.cash, "blue"]) : true;
-			v.bank != null && v.bank != "0" ? styleArr.push(["银行:", (function(bank, bankInfo){
-				  var info = bank + ", ";
-				  var _s = bankInfo.split('#');
-				  for(var i=1;i<_s.length-1;i++){
-				    var _i = _s[i].split('|');
-				    info += materialPaymentCheck.bankInfo[_i[0]] + " " + _i[1] + ", ";
-				  }
-				  
-				  return info;
-			})(v.bank, v.bankInfo), "blue"]) : true;
-			v.checkv != null && v.checkv != "0" ? styleArr.push(["转账:", v.checkv, "blue"]) : true;
+			v.bank != null && v.bank != "0" ? styleArr.push(["银行:", paymentUtils.splitBankInfo(v.bank, v.bankInfo, materialPaymentCheck.bankInfo), "blue"]) : true;
+			v.checkv != null && v.checkv != "0" ? styleArr.push(["转账:", paymentUtils.splitBankInfo(v.checkv, v.checkvBank, materialPaymentCheck.checkBankInfo), "blue"]) : true;
 			v.installment != null && v.installment != "0" ? styleArr.push(["分期:", v.installment, "blue"]) : true;
 			v.accounts != null && v.accounts != "0" ? styleArr.push(["对公帐户:", v.accounts, "blue"]) : true;
 			v.advance != null && v.advance != "0" ? styleArr.push(["预付款:", v.advance, "blue"]) : true;

@@ -11,6 +11,7 @@
 
 package com.fanglin.information.dao.impl;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.hibernate.criterion.Restrictions;
@@ -33,22 +34,12 @@ public class ActivityDaoImpl extends DaoImpl<ActivityPO> implements ActivityDao 
 	public List<ActivityPO> pageActivity(Paging paging, List<Filter> filters, int company) {
 
 		PagingQuery<ActivityPO> query = pagingQuery(paging, ActivityPO.class);
+		
+		query.add(Restrictions.in("status", Arrays.asList(ActivityPO.STATUS_VALID_INT, ActivityPO.STATUS_UNVALID_INT)));
 		query.add(Restrictions.eq("company", company));
-		query.alias("creater", "creater");
-
-		if (filters != null) {
-			for (Filter filter : filters) {
-
-				if (ActivityPO.COLUMN_STATUS_STR.equals(filter.getField())) {
-					query.add(query.getCriterion(filter.getField(), Short.valueOf(filter.getData()), filter.getOp()));
-				} else if(ActivityPO.COLUMN_TYPE_STR.equals(filter.getField())){
-					query.add(query.getCriterion(filter.getField(), Short.valueOf(filter.getData()), filter.getOp()));
-				}else {
-					query.add(query.getCriterion(filter.getField(), filter.getData(), filter.getOp()));
-				}
-			}
-		}
-		query.asc("status");
+		
+		queryFilterExcute(query, filters);
+		
 		return query.list();
 	}
 
@@ -70,6 +61,25 @@ public class ActivityDaoImpl extends DaoImpl<ActivityPO> implements ActivityDao 
 		session().createSQLQuery(sql).setShort("defaults", ActivityPO.DEFAULTS_COMMON_INT).setFloat("type", type).executeUpdate();
 
 		return 0;
+	}
+	
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
+		
+		query.alias("creater", "creater");
+		
+		if (filters != null) {
+			for (Filter filter : filters) {
+
+				if (ActivityPO.COLUMN_STATUS_STR.equals(filter.getField())) {
+					query.add(query.getCriterion(filter.getField(), Short.valueOf(filter.getData()), filter.getOp()));
+				} else if(ActivityPO.COLUMN_TYPE_STR.equals(filter.getField())){
+					query.add(query.getCriterion(filter.getField(), Short.valueOf(filter.getData()), filter.getOp()));
+				}else {
+					query.add(query.getCriterion(filter.getField(), filter.getData(), filter.getOp()));
+				}
+			}
+		}
+		
 	}
 
 }

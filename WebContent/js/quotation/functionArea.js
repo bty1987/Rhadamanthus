@@ -193,7 +193,7 @@ $(function(){
 
 
     //功能区添加按钮
-    $('a[name="addFunctionArea"]', '#pagenation').on('click', function () {
+    com.focusPage('a[name="addFunctionArea"]', '#pagenation').on('click', function () {
         functionArea.editFlg = !1;
         com.cleanItems(functionArea.functionAreaItems);
         bindVersion();

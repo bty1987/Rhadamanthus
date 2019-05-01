@@ -7,8 +7,9 @@ $.extend(api.index, {
 $.extend(api, {
     approval: {
 
-        pageApprovalByReceiveId: {url: "pageApprovalByReceiveId.do", demo: true},
-        pageApprovalBySenderId: {url: "pageApprovalBySenderId.do", demo: true},
+        pageApprovalForReceive: {url: "pageApprovalForReceive.do", demo: true},
+        pageApprovalForSend: {url: "pageApprovalForSend.do", demo: true},
+        pageApprovalForReceiveDept:{url:"pageApprovalForReceiveDept.do",demo:true},
         pageApprover: {url: "pageApprover.do", demo: true},
         queryApprovalByAId: {url: "queryApprovalByAId.do"},
         queryApprovalSalesRefundItem: {url: "queryApprovalSalesRefundItem.do"},
@@ -17,7 +18,8 @@ $.extend(api, {
         queryApproverByType: {url: "queryApproverByType.do"},
         queryApprovalDecorationActivity:{url:"queryApprovalDecorationActivity.do"},
 
-//	submitApprovalForDecorationCustomer: {url: "submitApprovalForDecorationCustomer.do"},
+        submitApprovalForCustomerOriginTDecoration:{url:"submitApprovalForCustomerOriginTDecoration.do"},
+        // submitApprovalForDecorationCustomer: {url: "submitApprovalForDecorationCustomer.do"},
 //	submitApprovalForDecorationHouse: {url: "submitApprovalForDecorationHouse.do"},
         submitApprovalForDecorationBelong: {url: "submitApprovalForDecorationBelong.do"},
         submitApprovalForQuotationDiscount: {url: "submitApprovalForQuotationDiscount.do"},

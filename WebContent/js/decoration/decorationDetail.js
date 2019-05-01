@@ -1044,9 +1044,9 @@ jQuery(function ($) {
     }
 
     function initWizard(decorationDetail) {
-        var wizard = {"activityBtnMethod": null, "uiBtnMethod": null, "isDesign": false, "editPicture": false};
+        var wizard = {"activityBtnMethod": null, "uiBtnMethod": null, "isDesign": false};
 
-        decorationUtils.initDecorationPicture("designPictures", "projectPictures", "CADProjectPicture", "ContractPictures", "OriginalPicture", decorationDetail.decorationOrderId, wizard["editPicture"]);
+        decorationUtils.initDecorationPicture("designPictures", "projectPictures", "CADProjectPicture", "ContractPictures", "OriginalPicture", decorationDetail.decorationOrderId);
 
         com.focusPage('#fuelux-wizard').ace_wizard({"status": true}).on('change', function (e, info) {
             var curstep = 0;
@@ -1062,7 +1062,7 @@ jQuery(function ($) {
                     break;
                 case "picture":
                     if (!$.isEmptyObject(params.viewNode[curstep].wizard)) $.extend(true, wizard, params.viewNode[curstep].wizard);
-                    decorationUtils.initDecorationPicture("designPictures", "projectPictures", "CADProjectPicture", "ContractPictures", "OriginalPicture", decorationDetail.decorationOrderId, wizard["editPicture"]);
+                    decorationUtils.initDecorationPicture("designPictures", "projectPictures", "CADProjectPicture", "ContractPictures", "OriginalPicture", decorationDetail.decorationOrderId);
                     break;
                 case "material":
                     decorationUtils.initMaterial(decorationDetail);
@@ -1100,7 +1100,7 @@ jQuery(function ($) {
                     break;
                 case "picture":
                     if (!$.isEmptyObject(params.viewNode[info.step - 1].wizard)) $.extend(true, wizard, params.viewNode[info.step - 1].wizard);
-                    decorationUtils.initDecorationPicture("designPictures", "projectPictures", "CADProjectPicture", "ContractPictures", "OriginalPicture", decorationDetail.decorationOrderId, wizard["editPicture"]);
+                    decorationUtils.initDecorationPicture("designPictures", "projectPictures", "CADProjectPicture", "ContractPictures", "OriginalPicture", decorationDetail.decorationOrderId);
                     break;
                 case "material":
                     decorationUtils.initMaterial(decorationDetail);
@@ -1471,5 +1471,4 @@ jQuery(function ($) {
             com.focusPage("#" + idName).bindData(res.receiveType, "key", "value", true)
         });
     }
-
 });

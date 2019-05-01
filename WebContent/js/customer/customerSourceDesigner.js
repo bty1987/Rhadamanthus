@@ -5,7 +5,6 @@ $(function () {
         currentCustomerSource: {},
         typeArray: {},
         isUpdateOrApproval: null,
-        checkUser: [],
         currentVillageName: null,
         currentHid: 0,
         currentCid: 0
@@ -28,7 +27,6 @@ $(function () {
     customerSourceDesigner.items.orderType = com.focusPage("#orderType");
     customerSourceDesigner.items.resourceType = com.focusPage("#resourceType");
     customerSourceDesigner.items.approveComment = com.focusPage("#approveComment");
-    customerSourceDesigner.items.checkApproveMan = com.focusPage("#checkApproveMan");
 
     customerSourceDesigner.items.built = com.focusPage("#built");
     customerSourceDesigner.items.unit = com.focusPage("#unit");
@@ -70,7 +68,6 @@ $(function () {
         com.focusPage("#rule").html("");
         com.focusPage("#houseNumber").removeAttr("data-content");
         com.focusPage("#name").removeAttr("data-content");
-        customerSourceDesigner.checkUser = [];
         customerSourceDesigner.currentHid = 0;
         customerSourceDesigner.currentCid = 0;
         com.focusPage("#bindHouseDiv").removeAttr("style");
@@ -122,10 +119,11 @@ $(function () {
                 ["归属人: ", v.belonger.currentName, "grey"],
                 ["归属部门: ", v.department.name, "grey"],
                 ["归属分区: ", v.region.name, "grey"],
-                ["归属设计师: ", com.checkNull(v.designer.currentName,'无'), "grey"],
-                ["楼盘名: ",com.checkNull(v.village.name,'无'), "grey"],
+                ["归属设计师: ", com.checkNull(v.designer.currentName, '无'), "grey"],
+                ["楼盘名: ", com.checkNull(v.village.name, '无'), "grey"],
                 ["楼牌号: ", v.houseNumber, "blue"],
                 ["建筑面积: ", v.buildArea, "blue"],
+                ["装修单号: ", com.checkNull(v.orderId, '无'), "blue"],
                 ["备注: ", com.checkNull(v.comment, '无'), "grey"]
             ];
 
@@ -136,6 +134,7 @@ $(function () {
                 $liProperty.appendTo($ulProperty);
             });
 
+            //审批拒绝的情况下，status是3，失效的客源不能再编辑转装修单要重新录入
             if(v.status == 0){
                 $divBtnWrap.append($btnView).append($btnApproval);
             }
@@ -167,7 +166,7 @@ $(function () {
 
             //转装修单提交审批
             $btnApproval.click(function () {
-                initqueryApprovalUserForCheckbox("approveMan", 14, "checkApproveMan");
+                initqueryApprovalUserForCheckbox("approveMan", 14);
                 customerSourceDesigner.currentCustomerSource = v;
                 customerSourceDesigner.currentHid = v.hid;
                 customerSourceDesigner.currentCid = v.cid;
@@ -271,8 +270,9 @@ $(function () {
             });
         }else if(customerSourceDesigner.isUpdateOrApproval == "approval"){
             //审批创建装修单
-            if(customerSourceDesigner.checkUser.length == 0){
-                com.showAlert(com.warning, "请选择审批人!");
+            var receiverId = com.focusPage("#approveMan").find('input:checked').attr('userid');
+            if(receiverId == null || receiverId == ""){
+                com.showAlert(com.error,"请选择审批人!");
                 return;
             }
 
@@ -305,13 +305,11 @@ $(function () {
 
                         com.post(api.approval.submitApprovalForCustomerOriginTDecoration,
                             {
-                                "forms": JSON.stringify(approvalShowParams),
-                                "code" : "PROC-FFYJ18LV-JLD1B6W443T9FANLI17V2-0NYO7WPJ-81",
-                                "approver" : customerSourceDesigner.checkUser.join(','),
+                                "approval.receiver.userId": receiverId,
                                 "approvalCustomerOriginTDecoration.csid" : customerSourceDesigner.currentCustomerSource.csid,
-                                "approvalCustomerOriginTDecoration.houseType": customerSourceDesigner.items.houseType.val(),
+                                "approvalCustomerOriginTDecoration.type": customerSourceDesigner.items.orderType.val(),
                                 "approvalCustomerOriginTDecoration.salesmanType": customerSourceDesigner.items.salesmanType.val(),
-                                "decoration.type": customerSourceDesigner.items.orderType.val(),
+                                "approvalCustomerOriginTDecoration.houseType": customerSourceDesigner.items.houseType.val(),
                                 "approvalCustomerOriginTDecoration.resourceType": customerSourceDesigner.items.resourceType.val()
                             }, function (res) {
                                 if(res.errorCode == 0){
@@ -340,7 +338,6 @@ $(function () {
             com.focusPage("#orderTypeGroup").removeAttr("style");
             com.focusPage("#resourceTypeGroup").removeAttr("style");
             com.focusPage("#approveManGroup").removeAttr("style");
-            com.focusPage("#checkApproveManGroup").removeAttr("style");
             com.focusPage("#approveCommentGroup").removeAttr("style");
             com.focusPage("#houseNumberGroupTwo").removeAttr("style");
             com.focusPage("#bindHouse").removeAttr("style");
@@ -368,7 +365,6 @@ $(function () {
             com.focusPage("#orderTypeGroup").css("display", "none");
             com.focusPage("#resourceTypeGroup").css("display", "none");
             com.focusPage("#approveManGroup").css("display", "none");
-            com.focusPage("#checkApproveManGroup").css("display", "none");
             com.focusPage("#approveCommentGroup").css("display", "none");
             com.focusPage("#houseNumberGroupTwo").css("display", "none");
             com.focusPage("#bindHouse").css("display", "none");
@@ -404,17 +400,15 @@ $(function () {
 
     function initqueryApprovalUserForCheckbox (id, type, checkId) {
         var $approvalDiv = com.focusPage('#' + id);
-        var $checkApprovalDiv = com.focusPage('#' + checkId);
 
         $approvalDiv.empty();
-        $checkApprovalDiv.empty();
 
         com.post(api.approval.queryApproverByType, {"approver.type": type}, function (res) {
             $.each(res.approvers, function (i, v) {
                 var $approvaler = $('<label></label>');
                 var $div = $('<div></div>').addClass("radio no-padding").attr("style", "margin-bottom:10px");
                 var $input = $('<input>').attr({
-                    "type": "checkBox",
+                    "type": "radio",
                     "name": "form-field-radio",
                     "class": "ace",
                     "id": v.userBase.uid,
@@ -428,18 +422,6 @@ $(function () {
                 $comment.appendTo($approvaler);
                 $approvaler.appendTo($div);
                 $div.appendTo($approvalDiv);
-
-                $input.on('change',function(){
-                    if($input.prop('checked')){
-                        var li = $('<li style="width: 50%; float: left; padding-bottom: 10px; list-style-type:none;" data-userId="'+v.userBase.userId+'">'+v.userBase.currentName+'</li>');
-                        $checkApprovalDiv.append(li);
-                        customerSourceDesigner.checkUser.push(v.userBase.userId)
-                    }else{
-                        var li = $('li[data-userId="'+v.userBase.userId+'"]');
-                        li.remove();
-                        customerSourceDesigner.checkUser.splice(customerSourceDesigner.checkUser.indexOf(v.userBase.userId),1);
-                    }
-                });
             });
         });
     }

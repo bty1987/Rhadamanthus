@@ -2,24 +2,24 @@ package com.fanglin.customer.vo;
 
 import java.io.Serializable;
 
-public class EmemberVO implements Serializable{
+public class EmemberVO implements Serializable {
 
 	private static final long serialVersionUID = 8729287447985186934L;
-	
+
 	private Long emid;
-	
+
 	private String no;
-	
+
 	private String name;
-	
+
 	private String phone;
-	
+
 	private String address;
-	
+
 	private String unionId;
-	
+
 	private String ticket;
-	
+
 	private Short status;
 
 	public Long getEmid() {
@@ -85,5 +85,5 @@ public class EmemberVO implements Serializable{
 	public void setStatus(Short status) {
 		this.status = status;
 	}
-	
+
 }

@@ -12,6 +12,8 @@ public interface ExtensionItemDao extends Dao< ExtensionItemPO> {
 	
 	public List<ExtensionItemPO> queryExtensionItemByEids(List<Long> extensionItemIDs);
 	
-	public long countQuotationFunctionAreaByEids(List<QuotationFunctionAreaPO> quotationFunctionAreas);
+	public int countExtensionItemForFunctionArea(long qfaid);
+	
+	public int countExtensionItemForFunctionArea(List<QuotationFunctionAreaPO> quotationFunctionAreas);
 
 }

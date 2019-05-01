@@ -4,7 +4,7 @@ public class ManifestTemplateVO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 2007729210713616447L;
 
-	private Long mtId;
+	private Long mtid;
 	
 	private String name;
 	
@@ -12,12 +12,12 @@ public class ManifestTemplateVO implements java.io.Serializable {
 	
 	private Short status;
 
-	public Long getMtId() {
-		return this.mtId;
+	public Long getMtid() {
+		return this.mtid;
 	}
 
-	public void setMtId(Long mtId) {
-		this.mtId = mtId;
+	public void setMtid(Long mtid) {
+		this.mtid = mtid;
 	}
 
 	public String getName() {

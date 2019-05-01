@@ -281,7 +281,7 @@ jQuery(function ($) {
                 var vsubtype, vstatus;
 
                 com.post(api.ds.salary, {}, function (res) {
-                    vsubtype = res.SalaryType[v.subtype - 1].name;
+                    vsubtype = res.SalaryTwoType[v.twotype - 1].name;
                 }, null, false);
 
                 switch (v.status) {
@@ -298,7 +298,7 @@ jQuery(function ($) {
                 var workerSalary = $('<div></div>').prop("id", "salary" + i);
                 workerSalary.append(addspan('10', '姓名  : ', v.user.userName))
                     .append(addspan('40', '创建时间  : ', v.createTime))
-                    .append(addspan('40', '薪资  : ', v.salary))
+                    .append(addspan('40', '薪资  : ', v.money))
                     .append(addspan('40', '类型  : ', vsubtype))
                     .append(addspan('40', '状态  : ', vstatus))
                     .append($('<button>删除</button>').addClass("btn btn-xs btn-danger pull-right").css("margin-left", "35px").attr("id", "deleteBtn" + i)
@@ -329,7 +329,7 @@ jQuery(function ($) {
             var salaryTypeS = $('<select></select>').attr("id", "salaryType").css("width", "320px").css("height", "30px").appendTo($item);
 
             com.post(api.ds.salary, {}, function (data) {
-                var constructerSalaryType = data.SalaryType;
+                var constructerSalaryType = data.SalaryTwoType;
                 if (constructerSalaryType && constructerSalaryType.length) {
                     $.each(constructerSalaryType, function (i, v) {
                         $('<option></option>').attr("value", v.key).html(v.name).appendTo(salaryTypeS);
@@ -389,8 +389,8 @@ jQuery(function ($) {
             options["workerSalary.type"] = 1;
         }
 
-        options["workerSalary.salary"] = com.focusPage('#salary').val();
-        options["workerSalary.subtype"] = com.focusPage("#salaryType").val();
+        options["workerSalary.money"] = com.focusPage('#salary').val();
+        options["workerSalary.twotype"] = com.focusPage("#salaryType").val();
         options["workerSalary.comment"] = com.focusPage("#comment").val();
 
         com.post(url, options);

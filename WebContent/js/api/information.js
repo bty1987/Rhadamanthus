@@ -39,7 +39,6 @@ $.extend(api, {
         updateActivityForDefault:{url: "updateActivityForDefault.do"},
         deleteActivityItemByAiid: {url: "deleteActivityItemByAiid.do"},
 
-
         queryEvent: {url: "queryEvent.do", demo: true},
         addEvent: {url: "addEvent.do"},
         deleteEvent: {url: "deleteEvent.do"},
@@ -48,6 +47,14 @@ $.extend(api, {
         phoneCall: {url: "phoneCall.do"},
         updatePhoneCallForInfo: {url: "updatePhoneCallForInfo.do"},
         updatePhoneCallForRecord: {url: "updatePhoneCallForRecord.do"},
+        
+        pageVactivity: {url: "pageVactivity.do"},
+        queryVactivity: {url: "queryVactivity.do"},
+        
+        pageVprize: {url: "pageVprize.do"},
+        addVprize: {url: "addVprize.do"},
+        updateVprize: {url: "updateVprize.do"},
+        updateVprizeForStatus: {url: "updateVprizeForStatus.do"},
 
         pageVticket: {url: "pageVticket.do"},
         pageVticketForBelonger: {url: "pageVticketForBelonger.do"},

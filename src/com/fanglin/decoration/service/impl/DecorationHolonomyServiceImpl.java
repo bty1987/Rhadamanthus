@@ -154,7 +154,7 @@ public class DecorationHolonomyServiceImpl implements DecorationHolonomyService 
 		}
 
 		// 管理费比例
-		Float manageRate = quotationPO.getManageRate();
+		Float manageRate = Arith.add(quotationPO.getManageRate(), decorationPO.getNotSalesmanRate());
 
 		// 折前工程总额 = 选择报价总金额(工程总额)/(1+管理费比例)
 		//Float projectPrice = (float) Arith.div(decorationHolonomyVO.getProjectBase(), Arith.add(1, manageRate));

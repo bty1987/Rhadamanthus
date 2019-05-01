@@ -23,6 +23,7 @@ import org.springframework.stereotype.Controller;
 import com.fanglin.construction.service.ConstructionScheduleService;
 import com.fanglin.construction.vo.ConstructionScheduleVO;
 import com.fanglin.core.action.BaseListAction;
+import com.fanglin.core.interceptor.FLException;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -54,18 +55,18 @@ public class ConstructionScheduleAction extends BaseListAction{
 		return SUCCESS;
 	}
 	
-	@Action(value = "setConstructionScheduleForStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String setConstructionScheduleForStatus(){
+	@Action(value = "beginConstructionSchedule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String beginConstructionSchedule() throws FLException{
 		
-		constructionScheduleService.setConstructionScheduleForStatus(constructionSchedule);
+		constructionScheduleService.beginConstructionSchedule(constructionSchedule);
 		
 		return SUCCESS;
 	}
 	
-	@Action(value = "setConstructionScheduleForInfo", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String setConstructionScheduleForInfo(){
+	@Action(value = "finishConstructionSchedule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String finishConstructionSchedule() throws FLException{
 		
-		constructionScheduleService.setConstructionScheduleForInfo(constructionSchedule);
+		constructionScheduleService.finishConstructionSchedule(constructionSchedule);
 		
 		return SUCCESS;
 	}

@@ -17,9 +17,9 @@ import com.fanglin.core.dao.Dao;
 import com.fanglin.inventory.po.StorehouseStockPO;
 
 public interface StorehouseStockDao extends Dao<StorehouseStockPO> {
-	
+
 	public List<StorehouseStockPO> queryStorehouseStock();
-	
-	public StorehouseStockPO queryStorehouseStockByShIdAMonth(long shId, String month);
+
+	public StorehouseStockPO queryStorehouseStockByShidAMonth(long shid, String month);
 
 }

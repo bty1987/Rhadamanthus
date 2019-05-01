@@ -20,61 +20,61 @@ import com.fanglin.information.vo.VticketVO;
 public class VticketAction extends BaseListAction {
 
 	private static final long serialVersionUID = 2327633842496704953L;
-	
+
 	@Autowired
 	private VticketService vticketService;
-	
+
 	private List<VticketVO> vtickets;
-	
+
 	private List<?> counts;
-	
+
 	private VticketVO vticket;
 
-	@Action(value="pageVticket", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String pageVticket(){
-		
+	@Action(value = "pageVticket", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageVticket() {
+
 		vticketService.pageVticket(getPaging(), getFilters());
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value="pageVticketForBelonger", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String pageVticketForBelonger() throws FLException{
-		
+
+	@Action(value = "pageVticketForBelonger", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageVticketForBelonger() throws FLException {
+
 		vticketService.pageVticketForBelonger(getPaging(), getFilters(), queryUserId());
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value="createVticket", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String createVticket() throws FLException{
-		
+
+	@Action(value = "createVticket", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String createVticket() throws FLException {
+
 		vticketService.createVticket(vticket, queryUserId());
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value="updateVticket", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String updateVticket() throws FLException{
-		
+
+	@Action(value = "updateVticket", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateVticket() throws FLException {
+
 		vticketService.updateVticket(vticket);
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value="comeVticket", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+
+	@Action(value = "comeVticket", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String comeVticket() throws FLException {
-		
+
 		vticketService.comeVticket(vticket);
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value="registVticket", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String registVticket(){
-		
+
+	@Action(value = "registVticket", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String registVticket() throws FLException {
+
 		vticketService.registVticket(vticket);
-		
+
 		return SUCCESS;
 	}
 
@@ -101,5 +101,5 @@ public class VticketAction extends BaseListAction {
 	public void setVticket(VticketVO vticket) {
 		this.vticket = vticket;
 	}
-	
+
 }

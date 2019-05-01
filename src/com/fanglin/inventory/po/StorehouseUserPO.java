@@ -23,7 +23,7 @@ public class StorehouseUserPO implements java.io.Serializable {
 	
 	public static final String COLUMN_USERID_STR = "user.userId";
 	
-	private long shuId;
+	private long shuid;
 	
 	private UserPO user;
 	
@@ -41,17 +41,17 @@ public class StorehouseUserPO implements java.io.Serializable {
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "shuId")
-	public long getShuId() {
-		return this.shuId;
+	@Column(name = "shuid")
+	public long getShuid() {
+		return this.shuid;
 	}
 
-	public void setShuId(long shuId) {
-		this.shuId = shuId;
+	public void setShuid(long shuid) {
+		this.shuid = shuid;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "uId", referencedColumnName = "uId")
+	@JoinColumn(name = "uid", referencedColumnName = "uid")
 	public UserPO getUser() {
 		return user;
 	}
@@ -61,7 +61,7 @@ public class StorehouseUserPO implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "shId", referencedColumnName = "shId")
+	@JoinColumn(name = "shid", referencedColumnName = "shid")
 	public StorehousePO getStorehouse() {
 		return storehouse;
 	}

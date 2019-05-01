@@ -92,7 +92,7 @@ public class ManifestTemplateServiceImpl implements ManifestTemplateService {
 	@Transactional(rollbackFor=Exception.class)
 	public int updateManifestTemplate(ManifestTemplateVO manifestTemplateVO) throws FLException {
 		
-		ManifestTemplatePO manifestTemplatePO = manifestTemplateDao.get(manifestTemplateVO.getMtId());
+		ManifestTemplatePO manifestTemplatePO = manifestTemplateDao.get(manifestTemplateVO.getMtid());
 		
 		if(manifestTemplatePO == null){
 			throw new FLException(260001, "商品模版不存在");
@@ -110,7 +110,7 @@ public class ManifestTemplateServiceImpl implements ManifestTemplateService {
 	@Transactional(rollbackFor=Exception.class)
 	public int updateManifestTemplateForStatus(ManifestTemplateVO manifestTemplateVO) throws FLException {
 		
-		ManifestTemplatePO manifestTemplatePO = manifestTemplateDao.get(manifestTemplateVO.getMtId());
+		ManifestTemplatePO manifestTemplatePO = manifestTemplateDao.get(manifestTemplateVO.getMtid());
 		
 		if(manifestTemplatePO == null){
 			throw new FLException(260001, "商品模版不存在");
@@ -127,10 +127,10 @@ public class ManifestTemplateServiceImpl implements ManifestTemplateService {
 	@Transactional(rollbackFor=Exception.class)
 	public int deleteManifestTemplate(ManifestTemplateVO manifestTemplateVO) {
 		
-		long mtId = manifestTemplateVO.getMtId();
+		long mtid = manifestTemplateVO.getMtid();
 		
-		manifestTemplateItemDao.deleteManifestTemplateItemByMtId(mtId);
-		manifestTemplateDao.deleteById(mtId);
+		manifestTemplateItemDao.deleteManifestTemplateItemByMtid(mtid);
+		manifestTemplateDao.deleteById(mtid);
 		
 		return 0;
 	}

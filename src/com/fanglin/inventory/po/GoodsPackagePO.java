@@ -12,28 +12,27 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
 @Entity
 @Table(name = "goodspackage", catalog = "inventory")
-public class GoodsPackagePO implements Serializable{
+public class GoodsPackagePO implements Serializable {
 
 	private static final long serialVersionUID = -2129826916198144693L;
-	
+
 	public static final String COLUMN_PIG_STR = "pid";
-	
-	public static final String COLUMN_GOODS_GID_STR = "goods.gid";
-	
+
 	private long gpid;
-	
-	private long pid; //被绑商品ID
-	
-	private GoodsPO goods;	//绑定商品ID
-	
+
+	private long pid; // 被绑商品ID
+
+	private GoodsPO goods; // 绑定商品ID
+
 	private ColorPO color;
-	
+
 	private FormatPO format;
-	
+
 	private float num;
-	
+
 	public GoodsPackagePO() {
 		super();
 	}
@@ -60,7 +59,7 @@ public class GoodsPackagePO implements Serializable{
 	public void setGpid(long gpid) {
 		this.gpid = gpid;
 	}
-	
+
 	@Column(name = "pid")
 	public long getPid() {
 		return pid;
@@ -69,7 +68,7 @@ public class GoodsPackagePO implements Serializable{
 	public void setPid(long pid) {
 		this.pid = pid;
 	}
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "gid", referencedColumnName = "gid")
 	public GoodsPO getGoods() {
@@ -79,7 +78,7 @@ public class GoodsPackagePO implements Serializable{
 	public void setGoods(GoodsPO goods) {
 		this.goods = goods;
 	}
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "cid", referencedColumnName = "cid")
 	public ColorPO getColor() {
@@ -89,7 +88,7 @@ public class GoodsPackagePO implements Serializable{
 	public void setColor(ColorPO color) {
 		this.color = color;
 	}
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "fid", referencedColumnName = "fid")
 	public FormatPO getFormat() {
@@ -99,7 +98,7 @@ public class GoodsPackagePO implements Serializable{
 	public void setFormat(FormatPO format) {
 		this.format = format;
 	}
-	
+
 	@Column(name = "num")
 	public float getNum() {
 		return num;

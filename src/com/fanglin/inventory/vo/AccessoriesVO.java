@@ -5,36 +5,35 @@ import java.sql.Timestamp;
 
 import org.apache.struts2.json.annotations.JSON;
 
-
 import com.fanglin.communion.vo.HouseVO;
 import com.fanglin.personel.vo.UserBaseVO;
 
-public class AccessoriesVO implements Serializable{
+public class AccessoriesVO implements Serializable {
 
 	private static final long serialVersionUID = -8463165642821021875L;
-	
+
 	private Long aid;
-	
+
 	private String no;
-	
+
 	private String orderId;
-	
+
 	private HouseVO house;
-	
+
 	private UserBaseVO creater;
-	
+
 	private Timestamp createTime;
-	
+
 	private UserBaseVO approver;
-	
+
 	private Timestamp approverTime;
-	
+
 	private UserBaseVO supervisor;
-	
+
 	private String fetchTime;
-	
+
 	private Short status;
-	
+
 	public AccessoriesVO() {
 		super();
 	}
@@ -44,8 +43,7 @@ public class AccessoriesVO implements Serializable{
 		this.creater = creater;
 	}
 
-	public AccessoriesVO(HouseVO house, UserBaseVO creater, UserBaseVO approver,
-			UserBaseVO supervisor) {
+	public AccessoriesVO(HouseVO house, UserBaseVO creater, UserBaseVO approver, UserBaseVO supervisor) {
 		super();
 		this.house = house;
 		this.creater = creater;
@@ -75,7 +73,7 @@ public class AccessoriesVO implements Serializable{
 
 	public void setOrderId(String orderId) {
 		this.orderId = orderId;
-	}	
+	}
 
 	public HouseVO getHouse() {
 		return house;
@@ -92,8 +90,8 @@ public class AccessoriesVO implements Serializable{
 	public void setCreater(UserBaseVO creater) {
 		this.creater = creater;
 	}
-	
-	@JSON(format="yyyy-MM-dd")
+
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getCreateTime() {
 		return createTime;
 	}
@@ -109,8 +107,8 @@ public class AccessoriesVO implements Serializable{
 	public void setApprover(UserBaseVO approver) {
 		this.approver = approver;
 	}
-	
-	@JSON(format="yyyy-MM-dd")
+
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getApproverTime() {
 		return approverTime;
 	}
@@ -118,7 +116,7 @@ public class AccessoriesVO implements Serializable{
 	public void setApproverTime(Timestamp approverTime) {
 		this.approverTime = approverTime;
 	}
-	
+
 	public UserBaseVO getSupervisor() {
 		return supervisor;
 	}
@@ -126,7 +124,7 @@ public class AccessoriesVO implements Serializable{
 	public void setSupervisor(UserBaseVO supervisor) {
 		this.supervisor = supervisor;
 	}
-	
+
 	public String getFetchTime() {
 		return fetchTime;
 	}

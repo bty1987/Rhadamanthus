@@ -19,63 +19,66 @@ import com.fanglin.core.interceptor.FLException;
 @ParentPackage("base")
 @Namespace("/")
 @Controller
-public class ApprovalManifestDBAction extends BaseListAction{
-
+public class ApprovalManifestDBAction extends BaseListAction {
 
 	private static final long serialVersionUID = -3887295167120478138L;
-	
+
 	@Autowired
 	private ApprovalManifestDBService approvalManifestDBService;
 
 	private ApprovalVO approval;
-	
+
 	private ApprovalManifestDBVO approvalManifestDB;
 
 	private List<ApprovalManifestDBItemVO> approvalManifestDBItems;
-	
+
 	private ApprovalManifestDBItemVO approvalManifestDBItem;
-	
-	@Action(value = "queryApprovalManifestDBItem", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
+
+	@Action(value = "queryApprovalManifestDBItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryApprovalManifestDBItem() throws FLException {
 
 		approvalManifestDBItems = approvalManifestDBService.queryApprovalManifestDBItem(approval);
 
 		return SUCCESS;
 	};
-	@Action(value = "submitApprovalForManifestDB", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
+
+	@Action(value = "submitApprovalForManifestDB", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String submitApprovalForManifestDB() throws FLException {
 
-		approvalManifestDBService.submitApprovalForManifestDB(approval,approvalManifestDB, approvalManifestDBItems, queryUserId(), queryCompany());
+		approvalManifestDBService.submitApprovalForManifestDB(approval, approvalManifestDB, approvalManifestDBItems, queryUserId(), queryCompany());
 
 		return SUCCESS;
-
 	}
-	
 
 	public ApprovalVO getApproval() {
 		return approval;
 	}
+
 	public void setApproval(ApprovalVO approval) {
 		this.approval = approval;
 	}
+
 	public ApprovalManifestDBVO getApprovalManifestDB() {
 		return approvalManifestDB;
 	}
+
 	public void setApprovalManifestDB(ApprovalManifestDBVO approvalManifestDB) {
 		this.approvalManifestDB = approvalManifestDB;
 	}
+
 	public List<ApprovalManifestDBItemVO> getApprovalManifestDBItems() {
 		return approvalManifestDBItems;
 	}
-	public void setApprovalManifestDBItems(
-			List<ApprovalManifestDBItemVO> approvalManifestDBItems) {
+
+	public void setApprovalManifestDBItems(List<ApprovalManifestDBItemVO> approvalManifestDBItems) {
 		this.approvalManifestDBItems = approvalManifestDBItems;
 	}
+
 	public ApprovalManifestDBItemVO getApprovalManifestDBItem() {
 		return approvalManifestDBItem;
 	}
-	public void setApprovalManifestDBItem(
-			ApprovalManifestDBItemVO approvalManifestDBItem) {
+
+	public void setApprovalManifestDBItem(ApprovalManifestDBItemVO approvalManifestDBItem) {
 		this.approvalManifestDBItem = approvalManifestDBItem;
 	}
 

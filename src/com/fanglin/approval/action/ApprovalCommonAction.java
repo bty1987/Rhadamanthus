@@ -7,6 +7,7 @@ import org.apache.struts2.convention.annotation.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
+import com.fanglin.approval.service.ApprovalCommonService;
 import com.fanglin.approval.service.ApprovalService;
 import com.fanglin.approval.vo.ApprovalVO;
 import com.fanglin.core.action.BaseListAction;
@@ -20,8 +21,23 @@ public class ApprovalCommonAction extends BaseListAction {
 
 	@Autowired
 	private ApprovalService approvalService;
+	
+	@Autowired
+	private ApprovalCommonService approvalCommonService;
 
 	private ApprovalVO approval;
+	
+	private String code;
+	
+	private String forms;
+	
+	@Action(value = "submitApprovalForDing", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
+	public String submitApprovalForDing() throws FLException {
+
+		approvalCommonService.submitApprovalForDing(code, forms, queryUserId(), queryCompany());
+
+		return SUCCESS;
+	}
 	
 	@Action(value = "approvalCallback", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
 	public String approvalCallback() throws FLException {
@@ -37,6 +53,22 @@ public class ApprovalCommonAction extends BaseListAction {
 
 	public void setApproval(ApprovalVO approval) {
 		this.approval = approval;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public String getForms() {
+		return forms;
+	}
+
+	public void setForms(String forms) {
+		this.forms = forms;
 	}
 
 }

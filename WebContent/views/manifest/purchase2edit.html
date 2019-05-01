@@ -1,0 +1,65 @@
+<div class="row">
+    <div class="col-xs-12">
+        <div class="flex-wrap" id="form">
+            <div class="stay-bottom inline">
+                <button class="btn btn-yellow" id="addPurchaseItem" >添加采购项</button>
+            </div>
+
+            <div class="inline pull-right">
+                <div class="inline">
+                    <label>单据日期 : </label>
+                    <div class="inline">
+                        <input id="createTime" name="" class="m-wrap m-ctrl-medium date-picker v_required" placement="left" readonly="readonly" type="text" value="" />
+                    </div>
+                </div>
+
+                <div class="devide-line"></div>
+            </div>
+        </div>
+
+        <ul class="flex-table" id="title">
+            <li class="line table-title">
+	            <div class="line-wrap order">
+	                <div class="cell index"></div>
+	            </div>
+	            <div class="line-wrap content col10">
+	                <div class="cell">商品编号</div>
+	                <div class="cell">名称</div>
+	                <div class="cell">品类</div>
+	                <div class="cell">品牌</div>
+	                <div class="cell">单位</div>
+	                <div class="cell">颜色</div>
+	                <div class="cell">规格</div>
+	                <div class="cell">件数</div>
+	                <div class="cell">采购单价</div>
+	                <div class="cell">数量</div>
+	            </div>
+	            <div class="line-wrap action">
+	                <div class="cell option">操作</div>
+	            </div>
+	        </li>
+        </ul>
+        <ul class="flex-table" id="list"></ul>
+
+        <div style="margin-top: 15px;">
+            <div class="inline">
+                <label>说明 : </label>
+                <div class="inline long">
+                    <input type="text" id="comment" maxlength="64">
+                </div>
+            </div>
+        </div>
+        
+        <div class="pull-right">
+            <a class="btn btn-success btn-sm" id="submitBtn">提交</a>
+            <a class="btn btn-sm" id="cancelBtn">取消</a>
+        </div>
+
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    $.loadScript(['js/manifest/purchase2edit.js']);
+</script>
+

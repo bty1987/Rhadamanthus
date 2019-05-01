@@ -682,7 +682,7 @@ $(function () {
         }, getConfig: function (page) {
 
             var pageConfig = {};
-            pageConfig.condArr = ['orderId', 'village', 'houseNumber', 'houseArea', 'designer', 'salesman', 'orderType', 'salesmanType', 'quoter', 'escorter', 'designerRegionId', 'designerDepartmentId', 'salesmanRegionId', 'salesmanDepartmentId', 'measureTimeDateRange', 'depositTimeDateRange', 'signTimeDateRange', 'createTimeDateRange', 'houseClass', 'status'];
+            pageConfig.condArr = ['orderId', 'village', 'houseNumber', 'houseArea', 'designer', 'salesman', 'orderType', 'salesmanType', 'quoter', 'escorter', 'designerRegionId', 'designerDepartmentId', 'salesmanRegionId', 'salesmanDepartmentId', 'measureTimeDateRange', 'depositTimeDateRange', 'signTimeDateRange', 'createTimeDateRange', 'precontractTime', 'houseClass', 'status'];
 
             if (page == "salesmanmanager") {
                 pageConfig.condArr.push("selectCompany")

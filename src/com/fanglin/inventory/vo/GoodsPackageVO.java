@@ -2,20 +2,20 @@ package com.fanglin.inventory.vo;
 
 import java.io.Serializable;
 
-public class GoodsPackageVO implements Serializable{
+public class GoodsPackageVO implements Serializable {
 
 	private static final long serialVersionUID = -3150381870201634575L;
-	
+
 	private Long gpid;
-	
+
 	private Long pid;
-	
+
 	private GoodsVO goods;
-	
+
 	private ColorVO color;
-	
+
 	private FormatVO format;
-	
+
 	private Float num;
 
 	public GoodsPackageVO() {
@@ -81,5 +81,5 @@ public class GoodsPackageVO implements Serializable{
 	public void setNum(Float num) {
 		this.num = num;
 	}
-	
+
 }

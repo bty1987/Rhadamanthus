@@ -14,82 +14,74 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
-@Table(name="purchase", catalog = "inventory")
-public class PurchasePO implements Serializable{
+@Table(name = "purchase", catalog = "inventory")
+public class PurchasePO implements Serializable {
 
 	private static final long serialVersionUID = -3959134790545293130L;
 
-	public static final String COLUMN_CURRENT_TIME_FORMAT_STR = "yyyy-MM-dd";
-	
-	public static final String COLUMN_PID_STR = "pid";                  //采购单ID
-	
-	public static final String COLUMN_NO_STR = "no";                    //编号
-	
-	public static final String COLUMN_USER_UID_STR = "user.uid";        //员工编号
-	
-	public static final String COLUMN_USER_NAME_STR = "user.userName";  //创建人名字
-	
-	public static final String COLUMN_USER_USERID_STR = "user.userId";	//创建人ID
-	
-	public static final String COLUMN_CREATETIME_STR = "createTime";    //创建时间
-	
-	public static final String COLUMN_BALANCETIME_STR = "balanceTime";  //结算时间
-	
-	public static final String COLUMN_ALLSTATUS_STR = "status";			//入库状态
-	
-	public static final short COLUMN_STATUS_STR = 0;                    //初始入库状态
-	
-	public static final short COLUMN_SECTIONSTATUS_STR = 1;             //部分入库状态
-	
-	public static final short COLUMN_TOTALSTATUS_STR = 2;				//全部入库状态
-	
-	public static final short COLUMN_BALANCESTATUS_STR = 0;             //结算状态初始
-	
-	public static final short COLUMN_DONEBALANCESTATUS_STR = 1;			//结算状态已结算
-	
-	public static final short COLUMN_ALLDONEBALANCESTATUS_STR = 2;		//结算状态已完结
-	
-	public static final String COLUMN_COMMENT_STR = "comment";          //说明
+	public static final String COLUMN_PID_STR = "pid"; // 采购单ID
+
+	public static final String COLUMN_NO_STR = "no"; // 编号
+
+	public static final String COLUMN_USER_USERID_STR = "user.userId"; // 创建人ID
+
+	public static final String COLUMN_CREATETIME_STR = "createTime"; // 创建时间
+
+	public static final String COLUMN_BALANCETIME_STR = "balanceTime"; // 结算时间
+
+	public static final String COLUMN_STATUS_STR = "status"; // 入库状态
 	
 	public static final String COLUMN_COMPANY_STR = "company";
+
+	public static final short STATUS_INIT_INT = 0;
+
+	public static final short STATUS_BATCHIN_PART_INT = 1;
+
+	public static final short STATUS_BATCHIN_ALL_INT = 2;
 	
+	public static final short BALANCESTATUS_INIT_INT = 0;
+	
+	public static final short BALANCESTATUS_BALANCE_INT = 1;
+	
+	public static final short BALANCESTATUS_FINISH_INT = 2;
+
 	private long pid;
-	
+
 	private String no;
-	
+
 	private UserPO user;
-	
+
 	private Timestamp createTime;
-	
+
 	private Timestamp balanceTime;
-	
+
 	private Timestamp deliveryTime;
-	
+
 	private short status;
-	
+
 	private short balanceStatus;
-	
+
 	private String comment;
-	
+
 	private int company;
-	
+
 	public PurchasePO() {
 		super();
 	}
-	
+
 	public PurchasePO(String no) {
 		super();
 		this.no = no;
 	}
-	
+
 	public PurchasePO(Long pid) {
 		super();
 		this.pid = pid;
 	}
-	
+
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name="pid")
+	@Column(name = "pid")
 	public long getPid() {
 		return pid;
 	}
@@ -98,7 +90,7 @@ public class PurchasePO implements Serializable{
 		this.pid = pid;
 	}
 
-	@Column(name="no")
+	@Column(name = "no")
 	public String getNo() {
 		return no;
 	}
@@ -116,8 +108,8 @@ public class PurchasePO implements Serializable{
 	public void setUser(UserPO user) {
 		this.user = user;
 	}
-	
-	@Column(name="createTime")
+
+	@Column(name = "createTime")
 	public Timestamp getCreateTime() {
 		return createTime;
 	}
@@ -126,7 +118,7 @@ public class PurchasePO implements Serializable{
 		this.createTime = createTime;
 	}
 
-	@Column(name="balanceTime")
+	@Column(name = "balanceTime")
 	public Timestamp getBalanceTime() {
 		return balanceTime;
 	}
@@ -134,8 +126,8 @@ public class PurchasePO implements Serializable{
 	public void setBalanceTime(Timestamp balanceTime) {
 		this.balanceTime = balanceTime;
 	}
-	
-	@Column(name="deliveryTime")
+
+	@Column(name = "deliveryTime")
 	public Timestamp getDeliveryTime() {
 		return deliveryTime;
 	}
@@ -144,7 +136,7 @@ public class PurchasePO implements Serializable{
 		this.deliveryTime = deliveryTime;
 	}
 
-	@Column(name="status")
+	@Column(name = "status")
 	public short getStatus() {
 		return status;
 	}
@@ -153,7 +145,7 @@ public class PurchasePO implements Serializable{
 		this.status = status;
 	}
 
-	@Column(name="balanceStatus")
+	@Column(name = "balanceStatus")
 	public short getBalanceStatus() {
 		return balanceStatus;
 	}
@@ -162,7 +154,7 @@ public class PurchasePO implements Serializable{
 		this.balanceStatus = balanceStatus;
 	}
 
-	@Column(name="comment")
+	@Column(name = "comment")
 	public String getComment() {
 		return comment;
 	}
@@ -171,7 +163,7 @@ public class PurchasePO implements Serializable{
 		this.comment = comment;
 	}
 
-	@Column(name="company")
+	@Column(name = "company")
 	public int getCompany() {
 		return company;
 	}
@@ -179,5 +171,5 @@ public class PurchasePO implements Serializable{
 	public void setCompany(int company) {
 		this.company = company;
 	}
-	
+
 }

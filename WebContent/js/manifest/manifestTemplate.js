@@ -1,11 +1,14 @@
 
 $(function(){
+	
+	var manifestTemplate = {
+		items: {
+			mtid: com.focusPage("#mtid"),
+			name: com.focusPage("#name"),
+			comment: com.focusPage("#comment"),
+		}
+	}
 
-    /**
-     * 回调函数必须提供 init(tableId, result.list)方法
-     * tableId ，用来显示的div的id
-     * result.list 列表的json数组
-     * */
     var displayFunc  = (function(){
 
         var renderList = function(tableId,listData){
@@ -18,13 +21,12 @@ $(function(){
                 $tableWrap.append($ulTitle).append($ulData);
 
                 $.each(listData,function(i, v){
-                    var $liLine = creatLine(i, v, i == listData.length - 1);
+                    var $liLine = creatLine(i, v);
 
                     $liLine.appendTo($ulTitle);
                 });
             }
         };
-
 
         var createTableTitle = function(){
 
@@ -43,16 +45,12 @@ $(function(){
 
             var $optionWrap = $('<div></div>').addClass('line-wrap action').html($('<div>操作</div>').addClass('cell option'));
 
-            $liTitle.append($indexWrap)
-                .append($contentWrap)
-                .append($optionWrap)
-                .appendTo($ulTitle);
+            $liTitle.append($indexWrap).append($contentWrap).append($optionWrap).appendTo($ulTitle);
 
             return $ulTitle;
         };
 
         var creatLine = function(i, v, lastFlag){
-
 
             var $liLine = $('<li></li>').addClass('line');
 
@@ -60,12 +58,10 @@ $(function(){
             var $contentWrap = $('<div></div>').addClass('line-wrap  content col3');
 
             var propertyArr = [
-
                 [v.name,'grey'],
                 [v.comment,'grey'],
                 [v.status == "0" ? "启用" : "禁用",'red']
             ];
-
 
             $.each(propertyArr, function (i, v) {
                 var $cell = $('<div></div>').addClass('cell ' + v[1]).html(v[0]);
@@ -87,119 +83,88 @@ $(function(){
             var $btnBinbing = $('<li></li>').append($('<a></a>').html('绑定'));
 
 
-            $btnUl
-                .append($btnEdit)
-                .append($btnStart)
-                .append($btnStop)
-                .append($btnDel)
-                .append($btnBinbing);
-
-            $btnGroup
-                .append($btn)
-                .append($btnUl)
-                .appendTo($cellOption);
-
+            $btnUl.append($btnEdit).append($btnStart).append($btnStop).append($btnDel).append($btnBinbing);
+            $btnGroup.append($btn).append($btnUl).appendTo($cellOption);
             $cellOption.appendTo($optionWrap);
 
-            $liLine.append($indexWrap)
-                .append($contentWrap)
-                .append($optionWrap);
-
-
+            $liLine.append($indexWrap).append($contentWrap).append($optionWrap);
 
             $btnEdit.click(function(){
+            	
+            	
+            	manifestTemplate.items.mtid.val(v.mtid);
+            	manifestTemplate.items.name.val(v.name);
+            	manifestTemplate.items.comment.val(v.comment);
 
-
-                var name = com.focusPage('#layerAdd').find('input[name="name"]').val( v.name);
-                var comment = com.focusPage('#layerAdd').find('input[name="comment"]').val(v.comment);
-
-
-                com.focusPage('#layerAdd').attr('data-mtid', v.mtId);
-                //com.clearForm('form1')
-                openlayer(function(){
-                    var id = com.focusPage('#layerAdd').attr('data-mtid');
-                    if(com.validate('form1'))
-                        return;
+                openlayer("编辑", function(){
+                	
+                    if(com.validate('form1')){
+                        return false;
+                    }
 
                     saveData(id, function(){
-                        com.clearValidator("#name", true);
-                        com.clearValidator("#comment", true);
-                        com.clearValidator();
+                    	com.clearValidator();
                         layer.closeAll();
                     });
-
-
-
-
                 });
             });
+            
             $btnStart.click(function () {
-                layer.confirm('是否启用？', {
-                    btn: ['确定','取消'] //按钮
-                }, function(index, layero){
-                    com.focusPage('#layerAdd').attr('data-mtId', v.mtId);
-                    com.focusPage('#layerAdd').attr('data-status', v.status);
-                    var id = com.focusPage('#layerAdd').attr('data-mtId');
-                    var status = com.focusPage('#layerAdd').attr('data-status');
-                    startStatus(id,status,function(){
-                        layer.closeAll();
-                        layer.msg('启用成功',{icon:1,time:2000});
-                    });
-                }, function(){
-
+            	
+            	if(v.status == 0){
+            		layer.msg('已启用');
+            		return false;
+            	}
+            	
+            	com.post(api.inventory.updateManifestTemplateForStatus,{
+                    "manifestTemplate.mtid": v.mtid,
+                    "manifestTemplate.status": 0
+                }, function(res){
+                    searcher.doSearch();
                 });
             });
+            
             $btnStop.click(function () {
-                layer.confirm('是否禁用？', {
-                    btn: ['确定','取消'] //按钮
-                }, function(index, layero){
-                    com.focusPage('#layerAdd').attr('data-mtId', v.mtId);
-                    com.focusPage('#layerAdd').attr('data-status', v.status);
-                    var id = com.focusPage('#layerAdd').attr('data-mtId');
-                    var status = com.focusPage('#layerAdd').attr('data-status');
-                    stopStatus(id,status,function(){
-                        layer.closeAll();
-                        layer.msg('禁用成功',{icon:1,time:2000});
-                    });
-                }, function(){
-
+            	
+            	if(v.status == 1){
+            		layer.msg('已禁用');
+            		return false;
+            	}
+            	
+            	com.post(api.inventory.updateManifestTemplateForStatus,{
+                    "manifestTemplate.mtid": v.mtid,
+                    "manifestTemplate.status": 1
+                }, function(res){
+                    searcher.doSearch();
                 });
             });
+            
             $btnDel.click(function(){
-                layer.confirm('是否确定删除？', {
+                layer.confirm('是否确定删除?', {
                     btn: ['确定','取消'] //按钮
                 }, function(index, layero){
-                    com.focusPage('#layerAdd').attr('data-mtId', v.mtId);
-                    var id = com.focusPage('#layerAdd').attr('data-mtId');
-                   deleteManifestTemplate(id,function(){
-                       layer.closeAll();
-                       layer.msg('删除成功',{icon:1,time:2000});
-                   });
-                }, function(){
-
+                    
+                    com.post(api.inventory.deleteManifestTemplate,{
+                        "manifestTemplate.mtid": v.mtid
+                    }, function (res) {
+                        searcher.doSearch();
+                    });
                 });
-
             });
 
             /*绑定*/
-            $btnBinbing.click(function(mtId){
-                com.focusPage('#layerAdd').attr('data-mtid', v.mtId);
-                mtId = com.focusPage('#layerAdd').attr('data-mtid');
-                params.mtid = mtId;
+            $btnBinbing.click(function(mtid){
+                params["manifestTemplate.mtid"] = v.mtid;
                 com.switchPage('views/manifest/manifestTemplateItem.html');
-
             });
 
-
             return $liLine;
-
         };
 
         return {
             init : function(tableId,listData){
                 com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
-
             },
             drawLine : function(v){
                 return creatLine(v);
@@ -207,12 +172,10 @@ $(function(){
         };
     })();
 
+    var searcher = new Searcher();
 
-    var manifestSeacher = new Searcher();
-
-    manifestSeacher.init( ['manifestTemplateName'], "condList", api.inventory.pageManifestTemplate, function(data){
+    searcher.init( ['manifestTemplateName'], "condList", api.inventory.pageManifestTemplate, function(data){
         displayFunc.init('resultList', data);
-
     }, "pagenation", "manifestTemplatePostData", null, false, null, function(){
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addQuotationVersion').css('margin', '0px 3px');
@@ -221,18 +184,14 @@ $(function(){
 
         $adda.click(function(){
             clearForm('form1');
-            openlayer(function(index, layero){
+            openlayer("添加", function(index, layero){
                 if(com.validate('form1'))
                     return;
 
                 saveData(null, function(){
-                    com.clearValidator("#name", true);
-                    com.clearValidator("#comment", true);
                     com.clearValidator();
                     layer.closeAll();
                 });
-
-
             });
         });
 
@@ -241,117 +200,54 @@ $(function(){
     },'resultList');
 
     function clearForm(formId){
-        var $form = com.focusPage("#"+formId);
-        var error = $('.alert-error', $form);
-        var success = $('.alert-success', $form);
-        com.focusPage('.control-group').removeClass("success").removeClass("error");
-        com.focusPage(".ok").remove();
-        com.focusPage(".help-inline").remove();
-        success.hide();
-        error.hide();
-        $("span.checked",$form).removeClass("checked");
-        com.focusPage("tr.edit-on").removeClass("edit-on");
-        $form.removeClass("edit-item");
-        com.focusPage(".extra-wrap .control-group:not(.hide)").remove();//去掉辅助项
-        $('input[type="hidden"]',$form).val('');
-        document.getElementById(formId).reset();
+        
+        com.clearValidator();
+        
+        manifestTemplate.items.name.val("");
+        manifestTemplate.items.comment.val("");
     }
 
-    function openlayer(callback){
+    function openlayer(title, callback){
+    	
         layer.closeAll();
         layer.open({
             type: 1,
-            //skin: 'layui-layer-lan',
-            title:"添加",
+            title: title,
             content: com.focusPage('#layerAdd'),
             area: ( $(window).width()*0.6 < 620 ?  $(window).height()*0.6 : 620 )+"px",
             maxmin: false,
-            zIndex:9000,
             btn: ['确定', '取消'],
             yes: function(index, layero){
                 callback(index,layero);
-
             },
             btn2: function(index, layero){
-                //按钮【按钮二】的回调
+            	layer.closeAll();
             },
             cancel: function(){
-                //右上角关闭回调
+            	layer.closeAll();
             }
         });
     }
 
-
-    function startStatus(id,status,callback){
-        if(status=="1"){
-            com.post(api.inventory.updateManifestTemplateForStatus,{
-                "manifestTemplate.mtId":id,
-                "manifestTemplate.status":"0"
-            },function(res){
-                callback();
-                manifestSeacher.doSearch();
-            });
-        }else{
-            layer.alert('已经启用', {
-                icon: 0,
-                skin: 'layer-ext-moon' //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
-            });
-        }
-    }
-    //状态禁用
-    function stopStatus(id,status,callback){
-        if(status=="0"){
-            com.post(api.inventory.updateManifestTemplateForStatus,{
-                "manifestTemplate.mtId":id,
-                "manifestTemplate.status":"1"
-            },function(res){
-                callback();
-                manifestSeacher.doSearch();
-            });
-        }else{
-            layer.alert('已经禁用', {
-                icon: 0,
-                skin: 'layer-ext-moon' //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
-            });
-        }
-    }
-
-    function deleteManifestTemplate(id,callback){
-        com.post(api.inventory.deleteManifestTemplate,{
-            "manifestTemplate.mtId":id
-        }, function (res) {
-            callback();
-            manifestSeacher.doSearch();
-        });
-    }
-
-    function saveData(id,callback){
+    function saveData(mtid, callback){
+    	
         var $layer = com.focusPage('#layerAdd');
-        var name = $layer.find('input[name="name"]').val();
-        var comment = $layer.find('input[name="comment"]').val();
-
-        if(!id){
-
-            com.post(api.inventory.addManifestTemplate, {
-                "manifestTemplate.name": name,
-                "manifestTemplate.comment": comment
-            }, function(res){
-                callback();
-                manifestSeacher.doSearch();
-            });
-
-        }else{
-
-            com.post(api.inventory.updateManifestTemplate, {
-                "manifestTemplate.mtId": id,
-                "manifestTemplate.name": name,
-                "manifestTemplate.comment": comment
-            }, function(res){
-                callback();
-                manifestSeacher.doSearch();
-            });
-
+        
+        var url = api.inventory.addManifestTemplate;
+        var options = {
+        	"manifestTemplate.name": manifestTemplate.items.name.val(),
+        	"manifestTemplate.comment": manifestTemplate.items.comment.val()
         }
+        
+        if(mtid){
+        	url = api.inventory.updateManifestTemplate;
+        	options["manifestTemplate.mtid"] = mtid;
+        }
+        
+        com.post(api.inventory.addManifestTemplate, options, function(res){
+            callback();
+            searcher.doSearch();
+        });
     }
 
 });

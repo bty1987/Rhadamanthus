@@ -1305,8 +1305,8 @@ public class DecorationServiceImpl implements DecorationService {
 	@Transactional(rollbackFor = Exception.class)
 	public String tranDecorationFromCustomerOrigin(DecorationVO decorationVO, long csid, int company) throws FLException {
 		
-		String approver = "";
-
+		String orderId = null;
+		
 		CustomerOriginPO customerOriginPO = customerOriginDao.get(csid);
 
 		// 判断客源信息是否存在
@@ -1328,63 +1328,15 @@ public class DecorationServiceImpl implements DecorationService {
 
 			customerOriginPO.setOrderId(decorationVO.getOrderId());
 			customerOriginPO.setStatus(CustomerOriginPO.STATUS_CREATE_INT);
-		} else {// 撞尺
-			
-			// 保护时间判断方式 , 利用装修单量尺时间加上保护期时间进行判断
-			
-			long dsdays = 7L * 24L * 60L * 60L * 1000L;// 设计7天保护期
-			long smdays = 30L * 24L * 60L * 60L * 1000L;// 业务30天保护期
-			
-			long measureTime = decorationPO.getMeasureTime().getTime();// 量尺时间
-			long nowTime = DateUtil.getDateToTimestamp(new Date()).getTime();// 当前时间
-			
-			long designProtectTimeDays = measureTime + dsdays; // 设计 : (量尺时间 + 设计7天保护期)
-			long salesProtectTimeDays = measureTime + smdays;// 业务:(量尺时间 + 业务30天保护期)
-			
-			if (nowTime <= designProtectTimeDays && nowTime <= salesProtectTimeDays) { // 都在保护期 , 审批人为设计部经理和业务部经理
-
-				String designManager = customerOriginPO.getDesigner().getDept().getManager().getUserId();
-				String salesManager = customerOriginPO.getBelonger().getDept().getManager().getUserId();
-
-				approver = String.format("%s,%s", designManager, salesManager);
-			} else if (nowTime <= designProtectTimeDays) { // 设计在保护 , 审批人为设计部经理
-				approver = customerOriginPO.getDesigner().getDept().getManager().getUserId();
-			} else if (nowTime <= salesProtectTimeDays) { // 业务在保护 , 审批人为设计部经理
-				approver = customerOriginPO.getBelonger().getDept().getManager().getUserId();
-			} else if (nowTime > designProtectTimeDays && nowTime > salesProtectTimeDays) {// 都在不在保护期可直接修改
-				
-				String orderId = decorationPO.getOrderId();
-				
-				UserPO designer = customerOriginPO.getDesigner();
-				UserPO salesman = customerOriginPO.getBelonger();
-				
-				decorationPO.setDesigner(designer);
-				decorationPO.setSalesman(salesman);
-				decorationPO.setMeasureTime(DateUtil.getDateToTimestamp(new Date()));
-
-				decorationDao.update(decorationPO);
-
-				// 更改装修单归属信息
-				decorationBelongDao.updateDecorationBelongStatusByOrderId(customerOriginPO.getOrderId(), DecorationBelongPO.STATUS_EFFCTIVE_INT);
-
-				decorationBelongDao.save(new DecorationBelongPO().designer(orderId, designer, operater));
-				decorationBelongDao.save(new DecorationBelongPO().salesman(orderId, salesman, operater));
-
-				// 更新装修单附加信息
-				DecorationAdditionPO decorationAdditionPO = decorationAdditionDao.queryDecorationAdditionByOrderId(decorationPO.getOrderId());
-
-				decorationAdditionPO.setSales(salesman.getCurrentName(), salesman.getDept().getName(), salesman.getDept().getFatherDept().getName());
-				decorationAdditionPO.setDesign(designer.getCurrentName(), designer.getDept().getName(), designer.getDept().getFatherDept().getName());
-
-				decorationAdditionDao.update(decorationAdditionPO);
-			}
+		} else {
+			orderId = decorationPO.getOrderId();
 			
 			customerOriginPO.setOrderId(decorationPO.getOrderId());
 		}
 		
 		customerOriginDao.save(customerOriginPO);
 		
-		return approver;
+		return orderId;
 	}
 
 	private DecorationPO checkOverDecoration(long hid, int company) {

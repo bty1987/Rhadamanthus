@@ -15,18 +15,18 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "accessoriesmanifest", catalog = "inventory")
-public class AccessoriesManifestPO implements Serializable{
+public class AccessoriesManifestPO implements Serializable {
 
 	private static final long serialVersionUID = 6057547291570119006L;
-	
+
 	public static final String COLUMN_AID_STR = "accessories.aid";
-	
+
 	private long amid;
-	
+
 	private AccessoriesPO accessories;
-	
+
 	private ManifestPO manifest;
-	
+
 	public AccessoriesManifestPO() {
 		super();
 	}
@@ -47,7 +47,7 @@ public class AccessoriesManifestPO implements Serializable{
 	public void setAmid(long amid) {
 		this.amid = amid;
 	}
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "aid", referencedColumnName = "aid")
 	public AccessoriesPO getAccessories() {
@@ -57,7 +57,7 @@ public class AccessoriesManifestPO implements Serializable{
 	public void setAccessories(AccessoriesPO accessories) {
 		this.accessories = accessories;
 	}
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "mid", referencedColumnName = "mid")
 	public ManifestPO getManifest() {
@@ -67,13 +67,5 @@ public class AccessoriesManifestPO implements Serializable{
 	public void setManifest(ManifestPO manifest) {
 		this.manifest = manifest;
 	}
-	
-	
-	
-	
-	
-	
 
-	
-	
 }

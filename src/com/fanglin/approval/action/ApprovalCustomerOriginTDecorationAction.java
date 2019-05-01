@@ -38,16 +38,10 @@ public class ApprovalCustomerOriginTDecorationAction extends BaseListAction {
 	
 	private ApprovalCustomerOriginTDecorationVO approvalCustomerOriginTDecoration;
 	
-	private String code;
-	
-	private String forms;
-	
-	private String approver;
-	
 	@Action(value = "submitApprovalForCustomerOriginTDecoration", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String submitApprovalForCustomerOriginTDecoration() throws FLException {
 
-		approvalCustomerOriginTDecorationService.submitApprovalForCustomerOriginTDecoration(queryUserId(), code, forms, approver, approvalCustomerOriginTDecoration, queryCompany());
+		approvalCustomerOriginTDecorationService.submitApprovalForCustomerOriginTDecoration(approval, approvalCustomerOriginTDecoration, queryUserId(), queryCompany());
 
 		return SUCCESS;
 	}
@@ -66,30 +60,6 @@ public class ApprovalCustomerOriginTDecorationAction extends BaseListAction {
 
 	public void setApprovalCustomerOriginTDecoration(ApprovalCustomerOriginTDecorationVO approvalCustomerOriginTDecoration) {
 		this.approvalCustomerOriginTDecoration = approvalCustomerOriginTDecoration;
-	}
-
-	public String getCode() {
-		return code;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
-	}
-
-	public String getForms() {
-		return forms;
-	}
-
-	public void setForms(String forms) {
-		this.forms = forms;
-	}
-
-	public String getApprover() {
-		return approver;
-	}
-
-	public void setApprover(String approver) {
-		this.approver = approver;
 	}
 
 }

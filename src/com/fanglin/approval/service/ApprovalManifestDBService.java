@@ -17,5 +17,4 @@ public interface ApprovalManifestDBService {
 	
 	public int approvalManifestDB(ApprovalPO approvalPO) throws FLException;
 	
-	public int refuseManifestDB(ApprovalPO approvalPO) throws FLException;
 }

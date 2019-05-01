@@ -1,11 +1,5 @@
+
 $(function () {
-
-
-    /**
-     * 回调函数必须提供 init(tableId, result.list)方法
-     * tableId ，用来显示的div的id
-     * result.list 列表的json数组
-     * */
 
     var flagSiid = true;
 
@@ -28,7 +22,6 @@ $(function () {
             }
         };
 
-
         var createTableTitle = function () {
 
             var $ulTitle = $('<ul></ul>').addClass('flex-table');
@@ -46,10 +39,7 @@ $(function () {
 
             var $optionWrap = $('<div></div>').addClass('line-wrap action').html($('<div>操作</div>').addClass('cell option'));
 
-            $liTitle.append($indexWrap)
-                .append($contentWrap)
-                .append($optionWrap)
-                .appendTo($ulTitle);
+            $liTitle.append($indexWrap).append($contentWrap).append($optionWrap).appendTo($ulTitle);
 
             return $ulTitle;
         };
@@ -60,18 +50,15 @@ $(function () {
 
             var _label = $('<label></label>');
 
-            var $input = $('<input>').attr({
-                "type": "checkbox"
-            }).css('width', '0px').addClass('ace ace-checkbox-2');
-
+            var $input = $('<input>').attr({"type": "checkbox"}).addClass('ace ace-checkbox-2 hide').attr('data-status', v.status).attr({
+                "data-pid": v.pid,
+                "data-status": v.status
+            });
             var _span = $('<span></span>').addClass('lbl grey bigger-150').css('font-weight', 'bold');
 
             _label.append($input).append(_span);
 
-            var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(_label).attr({
-                "value": v.pid
-                , "data-type": v.status
-            }));
+            var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(_label));
             var $contentWrap = $('<div></div>').addClass('line-wrap  content col9');
 
             var propertyArr = [
@@ -85,7 +72,6 @@ $(function () {
                 [v.comment, 'grey']
             ];
 
-
             $.each(propertyArr, function (i, v) {
                 var $cell = $('<div></div>').addClass('cell ' + v[1]).html(v[0]);
                 $cell.appendTo($contentWrap);
@@ -98,83 +84,55 @@ $(function () {
             var $btn = $('<button></button>').addClass('btn btn-info dropdown-toggle').attr('data-toggle', 'dropdown').append('操作').append('<i class="icon-angle-down"></i>');
             var $btnUl = $('<ul></ul>').addClass('dropdown-menu').addClass(lastFlag ? 'bottom-up' : '');
 
-
             var $btnView = $('<li></li>').append($('<a></a>').html('查看'));
             var $btnEdit = $('<li></li>').append($('<a></a>').html('修改'));
-            var $btnWarehousing = $('<li></li>').append($('<a></a>').html('入库'));
-            var $btnAllWarehousing = $('<li></li>').append($('<a></a>').html('全部入库'));
+            var $btnIn = $('<li></li>').append($('<a></a>').html('入库'));
+            var $btnAllIn = $('<li></li>').append($('<a></a>').html('全部入库'));
 
-
-            $btnUl
-                .append($btnView);
+            $btnUl.append($btnView);
 
             if (v.status != 2) {
-                $btnUl
-                    .append($btnEdit)
-                    .append($btnWarehousing)
-                    .append($btnAllWarehousing);
+                $btnUl.append($btnEdit).append($btnIn).append($btnAllIn);
             }
 
-            $btnGroup
-                .append($btn)
-                .append($btnUl)
-                .appendTo($cellOption);
-
+            $btnGroup.append($btn).append($btnUl).appendTo($cellOption);
             $cellOption.appendTo($optionWrap);
-
-            $liLine.append($indexWrap)
-                .append($contentWrap)
-                .append($optionWrap);
+            $liLine.append($indexWrap).append($contentWrap).append($optionWrap);
 
             $btnView.click(function () {
-                viewGoods(v.pid, v.no);
+                params["purchase.pid"] = v.pid;
+                showLayer("查看__采购单号 : " + v.no, "views/manifest/purchase4view.html");
             });
 
             $btnEdit.click(function () {
-                var flagEdit = true;
-                com.post(api.inventory.queryPurchaseItemByPid, {
-                    "purchase.pid": v.pid
-                }, function (res) {
-                    $.each(res.purchaseItems, function (i, v) {
-                        if (v.siid == 0) {
-                            flagEdit = true;
-                        } else {
-                            flagEdit = false;
-                        }
+                
+                // TODO 销售转采购不可以修改
 
-                    });
-                }, null, false);
-
-
-                if (v.status != 0) {
-                    layer.msg("当前订单已部分入库不允许修改！", {time: 3000});
-                } else if (flagEdit == false) {
-                    layer.msg("当前订单已绑定销售单,不可修改！", {time: 3000});
-                } else if (v.status == 0 && flagEdit == true) {
-
-                    editPurchase(v.pid, v.no);
+                if(v.status != 0){
+                	layer.msg("采购单状态不可操作");
+                	return false;
                 }
-
+                
+                params["purchase.pid"] = v.pid;
+                showLayer("修改__采购单号 : " + v.no, "views/manifest/purchase2edit.html");
             });
 
-            $btnWarehousing.click(function () {
-                warehousingPurchase(v.pid, v.no, v.type, v.sid);
+            $btnIn.click(function () {
+                params["purchase.pid"] = v.pid;
+                showLayer("入库__采购单号 : " + v.no, "views/manifest/purchase2in.html");
             });
 
-            $btnAllWarehousing.click(function (e) {
-                e.stopPropagation();
-                allWarehousingPurchase(v.pid);
+            $btnAllIn.click(function (e) {
+                batchin4All(v.pid);
             });
 
             return $liLine;
-
         };
 
         return {
             init: function (tableId, listData) {
                 com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
-
             },
             drawLine: function (v) {
                 return creatLine(v);
@@ -183,190 +141,85 @@ $(function () {
     })();
 
 
-    var goodsSeacher = new Searcher();
+    var purchaseSearcher = new Searcher();
 
-    goodsSeacher.init(["purchaseNo", "purchaseUserName", "purchaseTime"], "condList", api.inventory.pagePurchaseObDelivery, function (data) {
+    purchaseSearcher.init(["purchaseNo", "purchaseUserName", "purchaseTime"], "condList", api.inventory.pagePurchaseObDelivery, function (data) {
         displayFunc.init('resultList', data);
     }, "pagenation", "purchasePostData", null, false, null, function () {
 
-        var $batchs = $('<a></a>').addClass('btn btn-minier btn-info pull-left').attr('name', 'addBatch').css({
-            'margin-top': '-2px',
-            'margin-left': '4px'
-        });
+        var $batchs = $('<a></a>').addClass('btn btn-minier btn-info pull-left').attr('name', 'addBatch');
         var $addaGoodi = $('<i></i>').addClass('icon-cloud-upload bigger-110').appendTo($batchs);
         var $addaGoodspan = $('<span></span>').text('批量入库').appendTo($batchs);
-        var $impa = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'import').css('margin-top', '-2px');
+        
+        var $impa = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'import');
         var $impi = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($impa);
         var $impspan = $('<span></span>').text('导出').appendTo($impa);
 
         //导出点击事件
         $impa.click(function () {
-            pagePurchaseImport();
+        	exportPurchase();
         });
 
         //批量入库点击事件
         $batchs.click(function () {
-            ItemsClick();
+            batchin();
         });
 
         return [$impa];
     }, 'resultList');
-
-    //查看采购单
-    function viewGoods(pid, no) {
-        var $popup = com.focusPage('#viewPopUp');
-        $popup.attr({'data-pid': pid});
-        //弹出即全屏
-        var index = layer.open({
+    
+    function showLayer(title, page){
+    	
+    	var $popup = com.focusPage("#layerPopUp");
+    	
+    	layer.open({
             type: 1,
+            title: title,
             skin: 'layui-layer-lan',
-            title: "查看__采购单号：" + no,
             content: $popup,
             area: [($(window).width() * 0.7 < 1000 ? $(window).width() * 0.7 : 1000) + "px", ($(window).height() * 0.84 < 620 ? $(window).height() * 0.84 : 620) + "px"],
             maxmin: false,
-            zIndex: 9000,
-            btn: ['导出', '取消'],
-            btn1: function () {
-                queryPurchaseItemByPidImport(pid);
-            },
             success: function (layer, index) {
-                $popup.load("views/manifest/viewPurchase.html");
+                $popup.load(page);
             },
             end: function () {
-                $popup.attr('data-pid', null);
-                $popup.empty();
-                goodsSeacher.doSearch();
-            }
-        });
-    }
-
-    //编辑采购单
-    function editPurchase(pid, no, type) {
-
-        var $popup = com.focusPage('#editPopUp');
-        $popup.attr({'data-pid': pid});
-        //弹出即全屏
-        var index = layer.open({
-            type: 1,
-            skin: 'layui-layer-lan',
-            title: "修改__采购单号：" + no,
-            content: $popup,
-            area: [($(window).width() * 0.7 < 1000 ? $(window).width() * 0.7 : 1000) + "px", ($(window).height() * 0.84 < 620 ? $(window).height() * 0.84 : 620) + "px"],
-            maxmin: false,
-            zIndex: 9000,
-            success: function (layer, index) {
-                $popup.load("views/manifest/editPurchase.html");
-            },
-            end: function () {
-                $popup.attr({'data-pid': null, 'data-type': null});
-                $popup.empty();
-                goodsSeacher.doSearch();
-            }
-        });
-    }
-
-    //采购单单条入库
-    function warehousingPurchase(pid, no, type, sid) {
-
-        var $popup = com.focusPage('#warehousingPopUp');
-        $popup.attr({'data-pid': pid, 'data-type': type, 'data-sid': sid});
-        //弹出即全屏
-        var index = layer.open({
-            type: 1,
-            skin: 'layui-layer-lan',
-            title: "入库__采购单号：" + no,
-            content: $popup,
-            area: [($(window).width() * 0.7 < 1000 ? $(window).width() * 0.7 : 1000) + "px", ($(window).height() * 0.84 < 620 ? $(window).height() * 0.84 : 620) + "px"],
-            maxmin: false,
-            zIndex: 9000,
-            success: function (layer, index) {
-                $popup.load("views/manifest/warehousingPurchase.html");
-            },
-            end: function () {
-                $popup.attr({'data-pid': null, 'data-type': null});
-                $popup.empty();
-                goodsSeacher.doSearch();
-            }
-        });
-    }
-
-    // 采购单批量入库
-    function viewPurchaseItems() {
-        var $popup = com.focusPage('#viewPurchaseItemsPopUp');
-        //弹出即全屏
-        var index = layer.open({
-            type: 1,
-            skin: 'layui-layer-lan',
-            title: "采购单批量入库",
-            content: $popup,
-            area: [($(window).width() * 0.7 < 1000 ? $(window).width() * 0.87 : 1200) + "px", ($(window).height() * 0.84 < 620 ? $(window).height() * 0.84 : 620) + "px"],
-            maxmin: false,
-            zIndex: 9000,
-            success: function (layer, index) {
-                $popup.load("views/manifest/viewPurchaseItems.html");
-            },
-            end: function () {
-                $popup.attr({'data-pid': null, 'data-type': null});
-                $popup.empty();
-                goodsSeacher.doSearch();
+                layer.closeAll();
+                purchaseSearcher.doSearch();
             }
         });
     }
 
     // 批量入库校验
-    function ItemsClick() {
-        var _params = {};
-        var _purchases = {};
-        var flag = true;
-        var $menus = com.focusPage('input[type="checkbox"]:checked', '#resultList');
+    function batchin() {
+    	
+    	var $checks = $('input[type="checkbox"]:checked', '.resultList');
         var $pids = [];
-        $.each($menus, function (i, v) {
-            var $v = $(v);
-            $pids.push([$v.parents("div.cell.index").attr('value'), $v.parents("div.cell.index").attr('data-type')]);
-        });
-
-        $menus.length && $menus.each(function (i) {
-
-            if ($pids[i][1] == 0 && flag) {
-
-                _params["pids[" + i + "]"] = $pids[i][0];
-                _purchases["purchases[" + i + "].pid"] = $pids[i][0];
-
-
-            } else {
-
-                _params["pids[" + i + "]"] = $pids[i][0];
-                _purchases["purchases[" + i + "].pid"] = $pids[i][0];
-
-                flag = false;
-            }
-        });
-        if (_params["pids[0]"]) {
-
-            com.post(api.inventory.queryPurchaseItemByPids, _params, function (res) {
-                $.each(res.purchaseItems, function (i, v) {
-                    if (v.siid == 0) {
-                        flagSiid = true;
-                    } else {
-                        flagSiid = false;
-                    }
-                });
-            });
-
+        
+        if($checks.length == 0){
+        	com.showAlert(com.warning, "请选择采购单");
+        	return false;
         }
-        if ($menus.length > 0 && flag == true) {
-            params.pids = _params;
-            params["purchases.pids"] = _purchases;
-            viewPurchaseItems();
-        } else if ($menus.length == 0 && flag == true) {
-            layer.msg('请选择需要入库的采购单!', {time: 2e3});
-        } else if ($menus.length > 0 && flag == false) {
-            layer.msg('请选择入库状态为：初始的采购单!', {time: 2e3});
+        
+        for(var i=0;i<$checks.length;i++){
+        	
+        	var $check = $checks[i];
+        	
+        	if($check.attr("data-status") != 0){
+        		com.showAlert(com.warning, "采购单状态不可操作");
+        		return false;
+        	}
+        	
+        	$pids.push($check.attr("data-pid"));
         }
+        
+        params["purchase.pids"] = $pids;
+        
+        showLayer("批量入库", "views/manifest/purchase2batchin.html");
     }
 
     //导出excel
-    function pagePurchaseImport() {
+    function exportPurchase() {
+    	
         if (com.focusPage('span[name="totalRecords"]').text() == 0) {
             com.showAlert(com.warning, "请通过条件进行查询");
             return false;
@@ -401,46 +254,18 @@ $(function () {
         });
     }
 
-    //导出单条明细
-    function queryPurchaseItemByPidImport(pid) {
-        com.post(api.inventory.queryPurchaseItemByPid, {"purchase.pid": pid}, function (res) {
-
-            $.exceler({
-                column: [
-                    ['商品编号', 'goods.gid'],
-                    ['商品型号', 'goods.no'],
-                    ['商品名称', 'goods.name'],
-                    ['商品类别', 'goods.category'],
-                    ['品牌', 'goods.brand'],
-                    ['单位', 'goods.measurementUnit'],
-                    ['颜色', 'color.name'],
-                    ['规格', 'format.info'],
-                    ['采购单价', 'unitPrice'],
-                    ['数量', 'num'],
-                    ['件数', 'goods.pieceNum'],
-                    ['剩余数量', 'surplus']
-                ],
-                list: res.purchaseItems
-            });
-
-        });
-    }
-
-    function allWarehousingPurchase(pid) {
-        layer.confirm('是否确认全部入库？', {
+    function batchin4All(pid) {
+        layer.confirm('是否确认全部入库?', {
             btn: ['确定', '取消']
         }, function (indexo, layero) {
             com.post(api.inventory.updatePurchaseForStatus, {
                 "purchase.pid": pid,
                 "purchase.status": "2"
             }, function (res) {
-                goodsSeacher.doSearch();
-            }, function (e) {
-                com.showAlert(com.error, e.errorMsg);
+                purchaseSearcher.doSearch();
             });
 
             layer.close(indexo);
-
         });
     }
 

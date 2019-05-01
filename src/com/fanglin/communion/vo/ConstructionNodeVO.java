@@ -10,7 +10,13 @@ public class ConstructionNodeVO implements Serializable{
 	
 	private String name;
 	
+	private Float precheck;
+	
+	private Float postcheck;
+	
 	private Short status;
+	
+	private Short checkout;
 	
 	private Short sort;
 
@@ -30,12 +36,36 @@ public class ConstructionNodeVO implements Serializable{
 		this.name = name;
 	}
 
+	public Float getPrecheck() {
+		return precheck;
+	}
+
+	public void setPrecheck(Float precheck) {
+		this.precheck = precheck;
+	}
+
+	public Float getPostcheck() {
+		return postcheck;
+	}
+
+	public void setPostcheck(Float postcheck) {
+		this.postcheck = postcheck;
+	}
+
 	public Short getStatus() {
 		return status;
 	}
 
 	public void setStatus(Short status) {
 		this.status = status;
+	}
+
+	public Short getCheckout() {
+		return checkout;
+	}
+
+	public void setCheckout(Short checkout) {
+		this.checkout = checkout;
 	}
 
 	public Short getSort() {

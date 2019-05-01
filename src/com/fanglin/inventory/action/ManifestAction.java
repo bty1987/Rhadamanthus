@@ -38,172 +38,172 @@ import com.fanglin.sales.vo.SalesVO;
 public class ManifestAction extends BaseListAction {
 
 	private static final long serialVersionUID = -2834769288100660292L;
-	
+
 	@Autowired
 	private ManifestService manifestService;
-	
+
 	@Autowired
 	private ManifestItemService manifestItemService;
-	
+
 	private ManifestVO manifest;
-	
+
 	private List<Long> sids;
-	
+
 	private List<Long> siids;
-	
+
 	private List<Long> aids;
-	
+
 	private List<Long> pids;
-	
+
 	private List<PurchaseVO> purchases;
-	
+
 	private List<ManifestVO> manifests;
-	
+
 	private List<PurchaseItemVO> purchaseItems;
-	
+
 	private List<ManifestItemVO> manifestItems;
-	
+
 	private List<AccessoriesVO> accessories;
-	
+
 	private List<AccessoriesItemVO> accessoriesItems;
-	
+
 	private ManifestItemVO manifestItem;
-	
+
 	private SalesVO sales;
-	
+
 	@Action(value = "pageManifest", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageManifest() throws FLException{
-		
-		manifestService.pageManifest(getPaging(), getFilters(),queryCompany());
-		
+	public String pageManifest() throws FLException {
+
+		manifestService.pageManifest(getPaging(), getFilters(), queryCompany());
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "queryManifestByMid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryManifestByMid(){
-		
+	public String queryManifestByMid() {
+
 		manifest = manifestService.queryManifestByMid(manifest);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "queryManifestItemByMid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryManifestItemByMid(){
-		
+	public String queryManifestItemByMid() {
+
 		manifestItems = manifestItemService.queryManifestItemByMid(manifest);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "queryManifestItemBySiids", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryManifestItemBySiids(){
-		
+	public String queryManifestItemBySiids() {
+
 		manifestItems = manifestItemService.queryManifestItemBySiids(siids);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "queryManifestForPUByPids", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryManifestForPUByPids(){
-		
+	public String queryManifestForPUByPids() {
+
 		manifests = manifestService.queryManifestForPUByPids(pids);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "queryManifestForXGBySid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryManifestForXGBySid(){
-		
+	public String queryManifestForXGBySid() {
+
 		manifests = manifestService.queryManifestForXGBySid(sales);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "addManifestForCG", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addManifestForCG() throws FLException{
-		
-		manifestService.addManifestForCG(manifest, manifestItems,queryUserId(),queryCompany());
-		
+	public String addManifestForCG() throws FLException {
+
+		manifestService.addManifestForCG(manifest, manifestItems, queryUserId(), queryCompany());
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "addManifestForXG", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addManifestForXG() throws FLException{
-		
-		manifestService.addManifestForXG(manifest, sids,manifestItems, queryUserId(),queryCompany());
-		
+	public String addManifestForXG() throws FLException {
+
+		manifestService.addManifestForXG(manifest, manifestItems, sids, queryUserId(), queryCompany());
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "addManifestForCR", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addManifestForCR() throws FLException{
-		
-		manifestService.addManifestForCR(manifest, manifestItems, queryUserId(),queryCompany());
-		
+	public String addManifestForCR() throws FLException {
+
+		manifestService.addManifestForCR(manifest, manifestItems, queryUserId(), queryCompany());
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "addManifestForXB", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addManifestForXB() throws FLException{
-		
-		manifestService.addManifestForXB(manifest, manifestItems,queryUserId(),queryCompany());
-		
+	public String addManifestForXB() throws FLException {
+
+		manifestService.addManifestForXB(manifest, manifestItems, queryUserId(), queryCompany());
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "addManifestForPU", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addManifestForPU() throws FLException{
-		
-		manifestService.addManifestForPU(purchases,purchaseItems, queryUserId(), queryCompany());
-		
+	public String addManifestForPU() throws FLException {
+
+		manifestService.addManifestForPU(purchases, purchaseItems, queryUserId(), queryCompany());
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "addManifestForAS", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addManifestForAS() throws FLException{
-		
-		manifestService.addManifestForAS(accessories, accessoriesItems,queryUserId(),queryCompany());
-		
+	public String addManifestForAS() throws FLException {
+
+		manifestService.addManifestForAS(accessories, accessoriesItems, queryUserId(), queryCompany());
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "addManifestItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addManifestItem() throws FLException{
-		
+	public String addManifestItem() throws FLException {
+
 		manifestItemService.addManifestItem(manifest, manifestItem);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "updateManifest", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateManifest() throws FLException{
-		
+	public String updateManifest() throws FLException {
+
 		manifestService.updateManifest(manifest);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "updateManifestItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateManifestItem() throws FLException{
-		
+	public String updateManifestItem() throws FLException {
+
 		manifestItemService.updateManifestItem(manifest, manifestItem);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "confirmManifest", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String confirmManifest() throws FLException{
-		
+	public String confirmManifest() throws FLException {
+
 		manifestService.confirmManifest(manifest);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "deleteManifestItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String deleteManifestItem() throws FLException{
-		
+	public String deleteManifestItem() throws FLException {
+
 		manifestItemService.deleteManifestItem(manifest, manifestItem);
-		
+
 		return SUCCESS;
 	}
 

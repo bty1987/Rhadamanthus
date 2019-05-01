@@ -60,7 +60,7 @@ public class StorehouseStockServiceImpl implements StorehouseStockService {
 	@Transactional(rollbackFor=Exception.class)
 	public int updateStorehouseStock(long shId, String month, float num) {
 		
-		StorehouseStockPO storehouseStockPO = storehouseStockDao.queryStorehouseStockByShIdAMonth(shId, month);
+		StorehouseStockPO storehouseStockPO = storehouseStockDao.queryStorehouseStockByShidAMonth(shId, month);
 		
 		if(storehouseStockPO == null){
 			storehouseStockPO = new StorehouseStockPO();

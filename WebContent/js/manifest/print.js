@@ -38,7 +38,7 @@ $(function(){
         com.focusPage('#mtype').text(typeTxt); //– 类型
         com.focusPage('#createDate').text(res.manifest.manifestTime);//– 货单时间
         com.focusPage('#total').text(res.manifest.total);// – 总价
-        com.focusPage('#creator').text(res.manifest.createUser.currentName );// – 创建人
+        com.focusPage('#creator').text(res.manifest.creater.currentName );// – 创建人
         //res.total;
     });
     //获取货单下商品

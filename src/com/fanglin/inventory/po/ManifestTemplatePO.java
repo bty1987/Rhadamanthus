@@ -13,7 +13,7 @@ public class ManifestTemplatePO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -4378871277910572592L;
 	
-	public static final String COLUMN_MTID_STR = "mtId";
+	public static final String COLUMN_MTID_STR = "mtid";
 	
 	public static final String COLUMN_NAME_STR = "name";
 	
@@ -23,7 +23,7 @@ public class ManifestTemplatePO implements java.io.Serializable {
 	
 	public static final short STATUS_DISABLE_INT = 1;
 	
-	private long mtId;
+	private long mtid;
 	
 	private String name;
 	
@@ -37,20 +37,20 @@ public class ManifestTemplatePO implements java.io.Serializable {
 		super();
 	}
 
-	public ManifestTemplatePO(long mtId) {
+	public ManifestTemplatePO(long mtid) {
 		super();
-		this.mtId = mtId;
+		this.mtid = mtid;
 	}
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "mtId")
-	public long getMtId() {
-		return this.mtId;
+	@Column(name = "mtid")
+	public long getMtid() {
+		return this.mtid;
 	}
 
-	public void setMtId(long mtId) {
-		this.mtId = mtId;
+	public void setMtid(long mtid) {
+		this.mtid = mtid;
 	}
 
 	@Column(name = "name")

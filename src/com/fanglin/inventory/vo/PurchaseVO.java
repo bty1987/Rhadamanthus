@@ -7,33 +7,32 @@ import org.apache.struts2.json.annotations.JSON;
 
 import com.fanglin.personel.vo.UserBaseVO;
 
-public class PurchaseVO implements Serializable{
+public class PurchaseVO implements Serializable {
 
 	private static final long serialVersionUID = -7698195603201057229L;
 
 	private Long pid;
-	
+
 	private String no;
-	
+
 	private UserBaseVO user;
-	
+
 	private Timestamp createTime;
-	
+
 	private Timestamp balanceTime;
-	
+
 	private Timestamp deliveryTime;
-	
+
 	private Short status;
-	
+
 	private Short balanceStatus;
-	
+
 	private String comment;
-	
-	
+
 	public PurchaseVO() {
 		super();
 	}
-	
+
 	public PurchaseVO(UserBaseVO user) {
 		super();
 		this.user = user;
@@ -63,7 +62,7 @@ public class PurchaseVO implements Serializable{
 		this.user = user;
 	}
 
-	@JSON(format="yyyy-MM-dd")
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getCreateTime() {
 		return createTime;
 	}
@@ -72,7 +71,7 @@ public class PurchaseVO implements Serializable{
 		this.createTime = createTime;
 	}
 
-	@JSON(format="yyyy-MM-dd")
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getBalanceTime() {
 		return balanceTime;
 	}
@@ -80,8 +79,8 @@ public class PurchaseVO implements Serializable{
 	public void setBalanceTime(Timestamp balanceTime) {
 		this.balanceTime = balanceTime;
 	}
-	
-	@JSON(format="yyyy-MM-dd")
+
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getDeliveryTime() {
 		return deliveryTime;
 	}
@@ -113,5 +112,5 @@ public class PurchaseVO implements Serializable{
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	
+
 }

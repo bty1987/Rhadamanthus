@@ -19,9 +19,9 @@ import com.fanglin.inventory.vo.ManifestTemplateVO;
 
 public interface ManifestTemplateItemService {
 	
-	public List<ManifestTemplateItemVO> queryManifestTemplateItemByMtId(ManifestTemplateVO manifestTemplateVO);
+	public List<ManifestTemplateItemVO> queryManifestTemplateItemByMtid(ManifestTemplateVO manifestTemplateVO);
 	
-	public List<GoodsVO> queryGoodsByMtId(ManifestTemplateVO manifestTemplateVO);
+	public List<GoodsVO> queryGoodsByMtid(ManifestTemplateVO manifestTemplateVO);
 	
 	public int addManifestTemplateItem(ManifestTemplateVO manifestTemplateVO, List<Long> miIds);
 	

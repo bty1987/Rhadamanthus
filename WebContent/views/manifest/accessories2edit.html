@@ -1,0 +1,35 @@
+<div>
+
+    <div class="flex-wrap" id="form">
+        <div class="stay-bottom">
+            <button class="btn btn-yellow" id="addAccessoriesItem" >添加辅料项</button>
+        </div>
+    </div>
+
+    <ul class="flex-table">
+        <li class="line table-title">
+            <div class="line-wrap order">
+                <div class="cell index"></div>
+            </div>
+            <div class="line-wrap content col7">
+                <div class="cell">商品编号</div>
+                <div class="cell">名称</div>
+                <div class="cell">品类</div>
+                <div class="cell">品牌</div>
+                <div class="cell">单位</div>
+                <div class="cell">数量</div>
+                <div class="cell">件数</div>
+            </div>
+            <div class="line-wrap action">
+                <div class="cell option">操作</div>
+            </div>
+        </li>
+    </ul>
+
+    <ul class="flex-table" id="list"></ul>
+
+</div>
+
+<script type="text/javascript">
+    $.loadScript(['js/manifest/accessories2edit.js']);
+</script>

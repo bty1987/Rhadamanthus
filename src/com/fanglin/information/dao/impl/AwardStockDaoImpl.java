@@ -53,7 +53,7 @@ public class AwardStockDaoImpl extends DaoImpl<AwardStockPO> implements AwardSto
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<AwardStockPO> queryAwardStock(short type, int company) {
-		return session().createCriteria(AwardStockPO.class).add(Restrictions.eq(AwardStockPO.COLUMN_STATUS_STR, AwardStockPO.STATUS_ABLE_SHORT)).add(Restrictions.eq(AwardStockPO.STATUS_TYPE_STR,type)).list();
+		return session().createCriteria(AwardStockPO.class).add(Restrictions.eq("company", company)).add(Restrictions.eq(AwardStockPO.COLUMN_STATUS_STR, AwardStockPO.STATUS_ABLE_SHORT)).add(Restrictions.eq(AwardStockPO.STATUS_TYPE_STR,type)).list();
 		
 	}
 

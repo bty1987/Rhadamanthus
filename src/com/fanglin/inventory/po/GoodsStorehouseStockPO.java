@@ -27,7 +27,7 @@ public class GoodsStorehouseStockPO implements java.io.Serializable {
 	
 	public static final String COLUMN_CID_STR = "color.cid";
 	
-	public static final String COLUMN_SHID_STR = "storehouse.shId";
+	public static final String COLUMN_SHID_STR = "storehouse.shid";
 	
 	public static final String COLUMN_SNAME_STR = "name";
 	
@@ -35,7 +35,7 @@ public class GoodsStorehouseStockPO implements java.io.Serializable {
 	
 	public static final String COLUMN_STOREHOUSNAME_STR = "storehouse.name";
 	
-	private long gshsId;
+	private long gshsid;
 	
 	private GoodsPO goods;
 	
@@ -61,13 +61,13 @@ public class GoodsStorehouseStockPO implements java.io.Serializable {
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "gshsId")
-	public long getGshsId() {
-		return gshsId;
+	@Column(name = "gshsid")
+	public long getGshsid() {
+		return gshsid;
 	}
 
-	public void setGshsId(long gshsId) {
-		this.gshsId = gshsId;
+	public void setGshsid(long gshsid) {
+		this.gshsid = gshsid;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -100,7 +100,7 @@ public class GoodsStorehouseStockPO implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "shId", referencedColumnName = "shId")
+	@JoinColumn(name = "shid", referencedColumnName = "shid")
 	public StorehousePO getStorehouse() {
 		return storehouse;
 	}

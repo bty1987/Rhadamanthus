@@ -4,7 +4,7 @@ public class StorehouseStockVO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -7595345354718957137L;
 
-	private Long shsId;
+	private Long shsid;
 	
 	private StorehouseVO storehouse;
 	
@@ -21,12 +21,12 @@ public class StorehouseStockVO implements java.io.Serializable {
 		this.storehouse = storehouse;
 	}
 
-	public Long getShsId() {
-		return this.shsId;
+	public Long getShsid() {
+		return this.shsid;
 	}
 
-	public void setShsId(Long shsId) {
-		this.shsId = shsId;
+	public void setShsid(Long shsid) {
+		this.shsid = shsid;
 	}
 
 	public StorehouseVO getStorehouse() {

@@ -19,7 +19,7 @@ public class ManifestTemplateItemPO implements java.io.Serializable {
 	
 	public static final String COLUMN_MTID_STR = "manifestTemplate.mtId";
 	
-	private long mtiId;
+	private long mtiid;
 	
 	private ManifestTemplatePO manifestTemplate;
 	
@@ -37,17 +37,17 @@ public class ManifestTemplateItemPO implements java.io.Serializable {
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "mtiId")
-	public long getMtiId() {
-		return this.mtiId;
+	@Column(name = "mtiid")
+	public long getMtiid() {
+		return this.mtiid;
 	}
 
-	public void setMtiId(long mtiId) {
-		this.mtiId = mtiId;
+	public void setMtiid(long mtiid) {
+		this.mtiid = mtiid;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "mtId", referencedColumnName = "mtId")
+	@JoinColumn(name = "mtid", referencedColumnName = "mtid")
 	public ManifestTemplatePO getManifestTemplate() {
 		return manifestTemplate;
 	}

@@ -488,28 +488,31 @@
             'parentText': $($features.parents('li').find('a:first')).attr("menuText")
         });
 
-        var tabClose = $('<ul class="dropdown-menu dropdown-info"><li><a>关闭所有页面</a></li></ul>').css({'cursor':'pointer'});
+        var tabClose = $("#dropdown");
 
         $(".flpage.nav-tab").removeClass("active");
         $(".flpage.tab-pane").removeClass("active");
 
-        homeNav.append(tabLi.append(taba)).append($('.dropdown-menu.dropdown-info').length>0?'':tabClose);
+        homeNav.append(tabLi.append(taba));
         $(".flpage.tab-content").append(tabPane);
 
         tabPane.load(page);
 
         tabDel.on(ace.click_event, function(){
             params['urlLoadParams'] = com.splitUrl($(this).parents('li.flpage').prev().attr('data-page'));
+            
             $(this).parents('li.flpage').prev('li.flpage').addClass('active');
             $($(this).parent("a").attr("href")).prev('div.flpage').addClass('active');
             $(this).parents('li.flpage').remove();
             $($(this).parent("a").attr("href")).remove();
         });
+        
         taba.on(ace.click_event, function(){
             tabClose.removeClass('show');
             params['urlLoadParams'] = com.splitUrl(page);
             breadcrumb();
         });
+        
         homeNav.bind({
             contextmenu: function() {
                 return false;
@@ -518,18 +521,7 @@
                 if (3 == e.which) tabClose.css({'top': 1,'left': e.pageX - 190}).addClass('show');  // 右击
             }
         });
-        tabClose.on('mouseout', function () { tabClose.removeClass('show'); });
-        tabClose.on(ace.click_event, function(){
-            if($("#home #homeNav.nav.nav-tabs .flpage.nav-tab").length > 2) {
-                $(".flpage.nav-tab").removeClass("active");
-                $(".flpage.tab-pane").removeClass("active");
-                $("#home #homeNav.nav.nav-tabs .flpage.nav-tab:gt(1)").remove();
-                $("#home .flpage.tab-content div.flpage.tab-pane:gt(1)").remove();
-                $("#home #homeNav.nav.nav-tabs .flpage.nav-tab:last").addClass("active");
-                $("#home .flpage.tab-content div.flpage.tab-pane:last").addClass("active");
-            }
-            tabClose.removeClass('show');
-        });
+        
         tabRefresh.on(ace.click_event, function(){
             var target = $($(this).parent().attr("href"));
             var height = parseInt(target.get(0).offsetHeight)-300;

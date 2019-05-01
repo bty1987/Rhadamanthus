@@ -17,11 +17,11 @@ import com.fanglin.core.dao.Dao;
 import com.fanglin.inventory.po.ManifestTemplateItemPO;
 
 public interface ManifestTemplateItemDao extends Dao<ManifestTemplateItemPO> {
-	
-	public List<ManifestTemplateItemPO> queryManifestTemplateItemByMtId(long mtId);
-	
-	public int deleteManifestTemplateItemByMtId(long mtId);
-	
-	public int deleteManifestTemplateItemByMtiIds(List<Long> mtiIds);
+
+	public List<ManifestTemplateItemPO> queryManifestTemplateItemByMtid(long mtid);
+
+	public int deleteManifestTemplateItemByMtid(long mtid);
+
+	public int deleteManifestTemplateItemByMtiids(List<Long> mtiis);
 
 }

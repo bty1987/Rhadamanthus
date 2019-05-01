@@ -6,7 +6,7 @@ public class StorehouseUserVO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 3674173621146889170L;
 
-	private Long shuId;
+	private Long shuid;
 	
 	private UserBaseVO user;
 	
@@ -22,12 +22,12 @@ public class StorehouseUserVO implements java.io.Serializable {
 		this.storehouse = storehouse;
 	}
 
-	public Long getShuId() {
-		return this.shuId;
+	public Long getShuid() {
+		return this.shuid;
 	}
 
-	public void setShuId(Long shuId) {
-		this.shuId = shuId;
+	public void setShuid(Long shuid) {
+		this.shuid = shuid;
 	}
 
 	public UserBaseVO getUser() {

@@ -24,18 +24,18 @@ import com.fanglin.utils.Paging;
 
 @Repository("storehouseDao")
 public class StorehouseDaoImpl extends DaoImpl<StorehousePO> implements StorehouseDao {
-	
-	public StorehouseDaoImpl(){
+
+	public StorehouseDaoImpl() {
 		super(StorehousePO.class);
 	}
 
 	@Override
 	public List<StorehousePO> pageStorehouse(Paging paging, List<Filter> filters) {
-		
+
 		PagingQuery<StorehousePO> query = pagingQuery(paging, StorehousePO.class);
-		
+
 		queryFilterExcute(query, filters);
-		
+
 		return query.list();
 	}
 
@@ -43,31 +43,31 @@ public class StorehouseDaoImpl extends DaoImpl<StorehousePO> implements Storehou
 	public List<StorehousePO> queryStorehouse(List<Filter> filters) {
 
 		PagingQuery<StorehousePO> query = pagingQuery(new Paging(), StorehousePO.class);
-		
+
 		queryFilterExcute(query, filters);
-		
+
 		query.notPaging();
-		
+
 		return query.list();
 	}
-	
+
 	@Override
 	public StorehousePO queryStroehouseByCode(String code) {
 		return (StorehousePO) session().createCriteria(StorehousePO.class).add(Restrictions.eq(StorehousePO.COLUMN_STATUS_STR, StorehousePO.STATUS_ENABLE_INT)).add(Restrictions.eq(StorehousePO.COLUMN_CODE_STR, code)).uniqueResult();
 	}
-	
-	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){
-		
-		if(filters != null){
-			for(Filter filter: filters){
-				
+
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
+
+		if (filters != null) {
+			for (Filter filter : filters) {
+
 				String field = filter.getField();
 				String data = filter.getData();
 				String op = filter.getOp();
-				
-				if(StorehousePO.COLUMN_NAME_STR.equals(field)){
+
+				if (StorehousePO.COLUMN_NAME_STR.equals(field)) {
 					query.add(query.getCriterion(StorehousePO.COLUMN_NAME_STR, data, op));
-				}else if(StorehousePO.COLUMN_CODE_STR.equals(field)){
+				} else if (StorehousePO.COLUMN_CODE_STR.equals(field)) {
 					query.add(query.getCriterion(StorehousePO.COLUMN_CODE_STR, data, op));
 				}
 			}

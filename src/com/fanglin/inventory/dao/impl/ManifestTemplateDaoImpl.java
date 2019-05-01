@@ -48,8 +48,8 @@ public class ManifestTemplateDaoImpl extends DaoImpl<ManifestTemplatePO> impleme
 	}
 
 	@Override
-	public ManifestTemplatePO queryManifestTemplateByMtId(long mtId) {
-		return (ManifestTemplatePO) session().createCriteria(ManifestTemplatePO.class).add(Restrictions.eq(ManifestTemplatePO.COLUMN_MTID_STR, mtId)).uniqueResult();
+	public ManifestTemplatePO queryManifestTemplateByMtid(long mtid) {
+		return (ManifestTemplatePO) session().createCriteria(ManifestTemplatePO.class).add(Restrictions.eq(ManifestTemplatePO.COLUMN_MTID_STR, mtid)).uniqueResult();
 	}
 	
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){

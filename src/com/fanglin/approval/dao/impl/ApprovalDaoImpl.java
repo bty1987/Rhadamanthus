@@ -29,137 +29,152 @@ import com.fanglin.utils.Paging;
 @Repository("approvalDao")
 public class ApprovalDaoImpl extends DaoImpl<ApprovalPO> implements ApprovalDao {
 
-	public ApprovalDaoImpl(){
+	public ApprovalDaoImpl() {
 		super(ApprovalPO.class);
 	}
 
 	@Override
-	public List<ApprovalPO> pageApprovalByReceiveId(Paging paging, List<Filter> filters, String userId,int company) {
-		
+	public List<ApprovalPO> pageApprovalForReceive(Paging paging, List<Filter> filters, String userId, int company) {
+
 		PagingQuery<ApprovalPO> query = pagingQuery(paging, ApprovalPO.class);
-		
+
 		query.alias("receiver", "receiver");
 		query.add(Restrictions.eq("receiver.userId", userId));
 		query.add(Restrictions.eq("company", company));
-		
-		if(filters != null){
+
+		if (filters != null) {
 			queryFilterExcute(filters, query);
 		}
-		
+
 		query.asc("status");
 		query.desc("createTime");
-		
+
 		return query.list();
 	}
 
 	@Override
-	public List<ApprovalPO> pageApprovalBySenderId(Paging paging, List<Filter> filters, String userId,int company) {
-		
+	public List<ApprovalPO> pageApprovalForSend(Paging paging, List<Filter> filters, String userId, int company) {
+
 		PagingQuery<ApprovalPO> query = pagingQuery(paging, ApprovalPO.class);
-		
+
 		query.alias("sender", "sender");
 		query.add(Restrictions.eq("sender.userId", userId));
 		query.add(Restrictions.eq("company", company));
-		
-		if(filters != null){
+
+		if (filters != null) {
 			queryFilterExcute(filters, query);
 		}
-		
+
 		query.asc("status");
 		query.desc("createTime");
-		
+
 		return query.list();
 	}
-	
-//	通过类型识别初始化查询审批
+
 	@Override
-	public ApprovalPO queryApproval(short status,short type, String ident) {
+	public List<ApprovalPO> pageApprovalForReceiveDept(Paging paging, List<Filter> filters, int department, int company) {
+
+		PagingQuery<ApprovalPO> query = pagingQuery(paging, ApprovalPO.class);
 		
-		return (ApprovalPO) session().createCriteria(ApprovalPO.class).add(Restrictions.eq(ApprovalPO.COLUMN_TYPE_STR, type))
-				.add(Restrictions.eq(ApprovalPO.COLUMN_IDENT_STR, ident))
-				.add(Restrictions.eq(ApprovalPO.COLUMN_STATUS_STR, status))
+		query.alias("receiver", "receiver");
+		query.add(Restrictions.eq("receiver.dept.did", department));
+		query.add(Restrictions.eq("company", company));
+
+		if (filters != null) {
+			queryFilterExcute(filters, query);
+		}
+
+		query.desc("createTime");
+
+		return query.list();
+
+	}
+
+	// 通过类型识别初始化查询审批
+	@Override
+	public ApprovalPO queryApproval(short status, short type, String ident) {
+
+		return (ApprovalPO) session().createCriteria(ApprovalPO.class).add(Restrictions.eq(ApprovalPO.COLUMN_TYPE_STR, type)).add(Restrictions.eq(ApprovalPO.COLUMN_IDENT_STR, ident)).add(Restrictions.eq(ApprovalPO.COLUMN_STATUS_STR, status))
 				.uniqueResult();
 	}
-	
+
 	@Override
-	public ApprovalPO queryApprovalByChange(List<Short> status,short type, String ident) {
-		
-		return (ApprovalPO) session().createCriteria(ApprovalPO.class).add(Restrictions.eq(ApprovalPO.COLUMN_TYPE_STR, type))
-				.add(Restrictions.eq(ApprovalPO.COLUMN_IDENT_STR, ident))
-				.add(Restrictions.in(ApprovalPO.COLUMN_STATUS_STR, status))
+	public ApprovalPO queryApprovalByChange(List<Short> status, short type, String ident) {
+
+		return (ApprovalPO) session().createCriteria(ApprovalPO.class).add(Restrictions.eq(ApprovalPO.COLUMN_TYPE_STR, type)).add(Restrictions.eq(ApprovalPO.COLUMN_IDENT_STR, ident)).add(Restrictions.in(ApprovalPO.COLUMN_STATUS_STR, status))
 				.uniqueResult();
 	}
-	
+
 	@Override
 	public ApprovalPO queryApprovalByProcessinstanceid(String processinstanceid) {
-		
+
 		return (ApprovalPO) session().createCriteria(ApprovalPO.class).add(Restrictions.eq(ApprovalPO.COLUMN_PROCESSINSTANCEID_STR, processinstanceid)).uniqueResult();
-				
+
 	}
 
 	@Override
 	public int countApprovalForInitByIdent(String ident) {
-		
+
 		String sql = "select count(*) from approval.approval where ident = :ident and status = 0";
 		BigInteger count = (BigInteger) session().createSQLQuery(sql).setString("ident", ident).uniqueResult();
-		
+
 		return count.intValue();
 	}
-	
-	public void queryFilterExcute( List<Filter> filters,PagingQuery<ApprovalPO> query){
 
-		for(Filter filter: filters){
-			if("status".equals(filter.getField())){
+	public void queryFilterExcute(List<Filter> filters, PagingQuery<ApprovalPO> query) {
+
+		for (Filter filter : filters) {
+			if ("status".equals(filter.getField())) {
 				query.add(query.getCriterion("status", Short.valueOf(filter.getData()), filter.getOp()));
-			}else if("type".equals(filter.getField())){
+			} else if ("type".equals(filter.getField())) {
 				query.add(query.getCriterion("type", Short.valueOf(filter.getData()), filter.getOp()));
-			}else if("senderName".equals(filter.getField())){
+			} else if ("senderName".equals(filter.getField())) {
 				query.alias("sender", "sender");
 				query.add(query.getCriterion("sender.userId", filter));
-			}else if("receiverName".equals(filter.getField())){
+			} else if ("receiverName".equals(filter.getField())) {
 				query.alias("receiver", "receiver");
 				query.add(query.getCriterion("receiver.userId", filter));
-			}else if("dateRange".equals(filter.getField())){
+			} else if ("dateRange".equals(filter.getField())) {
 				String sTime = filter.getData().split("-")[0].replaceAll("/", "-");
 				String eTime = filter.getData().split("-")[1].replaceAll("/", "-");
 				query.add(query.getCriterion("createTime", eTime, "le"));
 				query.add(query.getCriterion("createTime", sTime, "ge"));
-			}else if("dateRange".equals(filter.getField())){
+			} else if ("dateRange".equals(filter.getField())) {
 				String sTime = filter.getData().split("-")[0].replaceAll("/", "-");
 				String eTime = filter.getData().split("-")[1].replaceAll("/", "-");
 				query.add(query.getCriterion("createTime", eTime, "le"));
 				query.add(query.getCriterion("createTime", sTime, "ge"));
-			}else if(ApprovalPO.COLUMN_CREATETIME_STR.equals(filter.getField())){
+			} else if (ApprovalPO.COLUMN_CREATETIME_STR.equals(filter.getField())) {
 				String data = filter.getData();
-				
+
 				String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
 				String eTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
-				
+
 				Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
 				Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
-				
+
 				Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
 				Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
-				
+
 				query.add(query.getCriterion(ApprovalPO.COLUMN_CREATETIME_STR, eTimestamp, "le"));
 				query.add(query.getCriterion(ApprovalPO.COLUMN_CREATETIME_STR, sTimestamp, "ge"));
-			}else if(ApprovalPO.COLUMN_APPROVALTIME_STR.equals(filter.getField())){
+			} else if (ApprovalPO.COLUMN_APPROVALTIME_STR.equals(filter.getField())) {
 				String data = filter.getData();
-				
+
 				String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
 				String eTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
-				
+
 				Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
 				Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
-				
+
 				Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
 				Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
-				
+
 				query.add(query.getCriterion(ApprovalPO.COLUMN_APPROVALTIME_STR, eTimestamp, "le"));
 				query.add(query.getCriterion(ApprovalPO.COLUMN_APPROVALTIME_STR, sTimestamp, "ge"));
 			}
 		}
-	
+
 	}
 
 }

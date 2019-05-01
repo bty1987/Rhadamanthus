@@ -69,7 +69,7 @@
                 var options = {
                     "drawLine.content": com.focusPage("#applayDes").val(),
                     "drawLine.applayTime": com.focusPage("#applayTime").val() + " 00:00:00",
-                    "drawLine.orderId": com.focusPage("#dischargeLineOrderId").val(),
+                    "drawLine.decoration.orderId": com.focusPage("#dischargeLineOrderId").val(),
                 };
 
                 com.post(api.drawline.applayDrawLine, options);

@@ -30,10 +30,6 @@ public class ApprovalCustomerOriginTDecorationPO implements Serializable {
 
 	private short resourceType;
 	
-	private String code;
-	
-	private String forms;
-	
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "acodid")
@@ -97,24 +93,6 @@ public class ApprovalCustomerOriginTDecorationPO implements Serializable {
 
 	public void setResourceType(short resourceType) {
 		this.resourceType = resourceType;
-	}
-
-	@Column(name = "code")
-	public String getCode() {
-		return code;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
-	}
-
-	@Column(name = "forms")
-	public String getForms() {
-		return forms;
-	}
-
-	public void setForms(String forms) {
-		this.forms = forms;
 	}
 
 }

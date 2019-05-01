@@ -26,10 +26,154 @@
 					</div>
 				</div>
 			</div>
+
+			<div class="modal fade" id="baseItemModalMaterialCheck" tabindex="-1">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+							<h4 class="modal-title" id="myModalLabel">付款信息</h4>
+						</div>
+						<div class="modal-body">
+							<form class="form-horizontal">
+								<div class="block clearfix">
+									<label class="col-md-3 control-label" >付款方式</label>
+									<label class="inline">
+										<input type="checkbox" class="ace" checked="checked" id="cashCheckbox" key="cash" select="0">
+										<span class="lbl"> 现金</span>
+									</label>
+									<label class="inline">
+										<input type="checkbox" class="ace" id="bankCheckbox" key="bank" select="0">
+										<span class="lbl"> 刷卡</span>
+									</label>
+									<label class="inline">
+										<input type="checkbox" class="ace" id="checkvCheckbox" key="checkv" select="1">
+										<span class="lbl"> 转账</span>
+									</label>
+									<label class="inline">
+										<input type="checkbox" class="ace" id="advanceCheckbox" key="advance" select="1">
+										<span class="lbl"> 预付款</span>
+									</label>
+									<label class="inline">
+										<input type="checkbox" class="ace" id="couponCheckbox" key="coupon" select="0">
+										<span class="lbl"> 优惠券</span>
+									</label>
+								</div>
+								<div id="infoDiv">
+									<h4 class="header blue bolder smaller">基本信息</h4>
+									<div class="form-group" >
+										<label class="col-sm-3 control-label no-padding-right" for="referMoney" >应收金额</label>
+										<div class="col-md-9">
+											<input type="text" id="referMoney" class="col-xs-10 col-sm-5 v_required" style="min-width: 50%; width: 170px;"  data-toggle="popover" data-trigger='manual' />
+										</div>
+									</div>
+									<div class="space-4 "></div>
+									<div class="form-group" >
+										<label class="col-sm-3 control-label no-padding-right" for="des" >说明</label>
+										<div class="col-md-9">
+											<textarea id="des" class="col-md-6 v_name v_required" rows="3" data-toggle="popover" data-trigger='manual' maxlength="40"></textarea>
+										</div>
+									</div>
+									<div class="space-1" id="historyUpdateM">
+										<h4 class="header blue bolder smaller">历史收款</h4>
+										<span id="cashHistoryM" class="blue" style="font-size: 14px; margin-left: 20px;"></span><br/>
+										<span id="bankHistoryM" class="blue" style="font-size: 14px; margin-left: 20px;"></span><br/>
+										<span id="checkvHistoryM" class="blue" style="font-size: 14px; margin-left: 20px;"></span>
+										<span id="installmentHistoryM" class="blue" style="font-size: 14px; margin-left: 20px;"></span><br/>
+										<span id="accountsHistoryM" class="blue" style="font-size: 14px; margin-left: 20px;"></span>
+									</div>
+								</div>
+
+								<div id="cashDiv" referCheckbox="cashCheckbox"  style="display: none;">
+									<h4 class="header blue bolder smaller">现金</h4>
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="materialCheckcashInfo">类型</label>
+										<div class="col-md-9">
+											<select id="materialCheckcashInfo" class="chosen-select col-xs-10 col-sm-5 v_required "></select>
+										</div>
+									</div>
+									<div class="space-4"></div>
+
+									<div class="form-group">
+										<label for="cash" class="col-sm-3 control-label no-padding-right" >现金金额</label>
+										<span class="col-md-9">
+											<input type="text" id="cash" class="col-xs-10 col-sm-5 v_required v_float" style="min-width: 50%; width: 170px;"  data-toggle="popover" data-trigger='manual' />
+										</span>
+									</div>
+									<div class="space-4"></div>
+								</div>
+
+								<div id="bankDiv" referCheckbox="bankCheckbox" style="display: none;">
+									<h4 class="header blue bolder smaller">
+										银行卡
+										<button id="materialCheckbankAdd" class="btn btn-minier btn-success pull-right inline" num="0" maxnum="0">添加</button>
+									</h4>
+									<div id="materialCheckbankDivGroup"></div>
+								</div>
+
+								<div id="checkvDiv" referCheckbox="checkvCheckbox" style="display: none;">
+									<h4 class="header blue bolder smaller">
+										转账
+										<button id="materialCheckcheckvAdd" class="btn btn-minier btn-success pull-right inline" num="0" maxnum="0">添加</button>
+									</h4>
+									<div id="materialCheckcheckvDivGroup"></div>
+								</div>
+
+								<div id="advanceDiv" referCheckbox="advanceCheckbox" style="display: none;">
+									<h4 class="header blue bolder smaller">预付款</h4>
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="advanceType">类型</label>
+										<div class="col-sm-9">
+											<select id="advanceType" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual' style="min-width: 50%; width: 170px;"></select>
+										</div>
+									</div>
+									<div class="space-4"></div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="materialAdvance" >主材余额</label>
+										<div class="col-sm-9">
+											<input type="text" id="materialAdvance"  class="col-xs-10 col-sm-5"  data-toggle="popover" data-trigger='manual' >
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="zaterialAdvance" >正林余额</label>
+										<div class="col-sm-9">
+											<input type="text" id="zaterialAdvance"  class="col-xs-10 col-sm-5"  data-toggle="popover" data-trigger='manual' >
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="advance" >金额</label>
+										<div class="col-sm-9">
+											<input type="text" id="advance" class="col-xs-10 col-sm-5 v_required v_float"  data-toggle="popover" data-trigger='manual' >
+										</div>
+									</div>
+									<div class="space-4 "></div>
+								</div>
+
+								<div id="couponDiv" referCheckbox="couponCheckbox" style="display: none;">
+									<h4 class="header blue bolder smaller">优惠券</h4>
+									<div class="form-group">
+										<div class="col-sm-12">
+											<select id="couponType" multiple="multiple" class="chosen-select tag-input-style v_required" data-placeholder="..." data-toggle="popover" data-trigger='manual'></select>
+										</div>
+									</div>
+									<div class="space-4"></div>
+								</div>
+
+							</form>
+						</div>
+
+						<div class="modal-footer">
+							<span id="paymentInfo" class="alert-danger pull-left inline"></span>
+							<button type="button" id="saveBtn" class="btn btn-primary">收款</button>
+							<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
 
 <script type="text/javascript">
-	$.loadScript(['js/payment/materialPaymentCheck.js']);
+	$.loadScript(['js/utils/paymentUtils.js', 'js/payment/materialPaymentCheck.js']);
 </script>

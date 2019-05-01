@@ -35,22 +35,30 @@ public class ApprovalAction extends BaseListAction {
 
 	private ApprovalVO approval;
 	
-	@Action(value = "pageApprovalByReceiveId", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
-	public String pageApprovalByReceiveId() throws FLException {
+	@Action(value = "pageApprovalForReceive", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageApprovalForReceive() throws FLException {
 		
-		approvalService.pageApprovalByReceiveId(getPaging(), getFilters(),queryUserId(),queryCompany());
+		approvalService.pageApprovalForReceive(getPaging(), getFilters(), queryUserId(), queryCompany());
 		
 		return SUCCESS;
 	}
 
-	@Action(value = "pageApprovalBySenderId", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
-	public String pageApprovalBySenderId() throws FLException {
+	@Action(value = "pageApprovalForSend", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageApprovalForSend() throws FLException {
 
-		approvalService.pageApprovalBySenderId(getPaging(), getFilters(),queryUserId(),queryCompany());
+		approvalService.pageApprovalForSend(getPaging(), getFilters(), queryUserId(), queryCompany());
 
 		return SUCCESS;
 	}
 	
+	@Action(value = "pageApprovalForReceiveDept", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageApprovalForReceiveDept() throws FLException {
+
+		approvalService.pageApprovalForReceiveDept(getPaging(), getFilters(), queryUserId(), queryCompany());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "queryApprovalByAId", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
 	public String queryApprovalByAId() throws FLException {
 		

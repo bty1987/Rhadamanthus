@@ -12,24 +12,25 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
 @Entity
 @Table(name = "accessoriesitem", catalog = "inventory")
-public class AccessoriesItemPO implements Serializable{
+public class AccessoriesItemPO implements Serializable {
 
 	private static final long serialVersionUID = -7755475355194951377L;
-	
+
 	public static final String COLUMN_AOID_STR = "aid";
-	
+
 	public static final String COLUMN_AOIDS_STR = "aids";
-	
+
 	private long aiid;
-	
+
 	private long aid;
-	
+
 	private GoodsPO goods;
-	
+
 	private float num;
-	
+
 	public AccessoriesItemPO() {
 		super();
 	}
@@ -40,7 +41,7 @@ public class AccessoriesItemPO implements Serializable{
 	}
 
 	@Id
-	@GeneratedValue(strategy = IDENTITY) 
+	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "aiid")
 	public long getAiid() {
 		return aiid;
@@ -49,7 +50,7 @@ public class AccessoriesItemPO implements Serializable{
 	public void setAiid(long aiid) {
 		this.aiid = aiid;
 	}
-	
+
 	@Column(name = "aid")
 	public long getAid() {
 		return aid;
@@ -58,7 +59,7 @@ public class AccessoriesItemPO implements Serializable{
 	public void setAid(long aid) {
 		this.aid = aid;
 	}
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "gid", referencedColumnName = "gid")
 	public GoodsPO getGoods() {
@@ -68,7 +69,7 @@ public class AccessoriesItemPO implements Serializable{
 	public void setGoods(GoodsPO goods) {
 		this.goods = goods;
 	}
-	
+
 	@Column(name = "num")
 	public float getNum() {
 		return num;

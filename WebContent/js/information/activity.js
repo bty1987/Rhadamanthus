@@ -59,9 +59,14 @@ $(function(){
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
             var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
-            var $invalid = $('<a></a>').addClass('btn btn-minier btn-success').html('修改状态');
+            var $btnDelStatus = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
             var $default = $('<a></a>').addClass('btn btn-minier btn-warning').html('默认');
             var $btnView = $('<a></a>').addClass('btn btn-minier btn-inverse').html("\u6d3b\u52a8\u7269\u54c1");// 活动物品
+
+            //状态启用禁用
+            var $invalid = $('<div></div>').addClass('pull-right');
+            var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({"type" : "checkbox"});
+            var $span = $('<span></span>').addClass('lbl status-lbl');
 
             var propertyArr = [
                 ["创建人:", v.creater.currentName, "grey"],
@@ -80,32 +85,26 @@ $(function(){
                 $liProperty.appendTo($ulProperty);
             });
 
-            if(v.creater.uid == params.userInfo.user.uid){
-                $divBtnWrap.append($btnEdit).append($btnView).append($invalid).append($default).appendTo($h3);
-            }
+                $invalid.append($statusSwitch).append($span);
+                $divBtnWrap.append($btnEdit).append($btnView).append($invalid).append($btnDelStatus).append($default).appendTo($h3);
+
             $liLine.append($h3).append($ulProperty);
 
             $btnEdit.click(function(){
                 activity.editFlg = !0;
                 var a = v;
-                void 0 != a && (activity.items.aid = a.aid, activity.items.status = a.status, activity.items.activityName.val(a.name).attr("disabled", "disabled"), activity.items.startTime.val(a.startTime).attr("disabled", "disabled"),activity.items.types.val(a.type).attr("disabled", "disabled"), activity.items.endTime.val(a.endTime),activity.items.content.val(a.content), activity.modal.modal("show"));
+                void 0 != a && (activity.items.aid = a.aid, activity.items.status = a.status, activity.items.activityName.val(a.name), activity.items.startTime.val(a.startTime).attr("disabled", "disabled"),activity.items.types.val(a.type).attr("disabled", "disabled"), activity.items.endTime.val(a.endTime),activity.items.content.val(a.content), activity.modal.modal("show"));
             });
 
-            $invalid.click(function(){
-                if (v.status == 0){
-                    newstatus = 1
-                }else {
-                    newstatus = 0
-                }
+            $btnDelStatus.click(function(){
                 com.post(api.information.updateActivityForStatus, {
                     "activity.aid": v.aid,
-                    "activity.status": newstatus
+                    "activity.status": 2
                 }, function(res){
                     ActivitySeacher.doSearch();
                 });
             });
-
-
+            !v.status && $statusSwitch.prop("checked", true);
             $default.click(function(){
 
                 if(v.defaults == 0){
@@ -118,7 +117,15 @@ $(function(){
                     ActivitySeacher.doSearch();
                 });
             });
-
+            $invalid.click(function(){
+                var cvalue = $statusSwitch.prop("checked");
+                if(cvalue){
+                    cvalue = 0;
+                }else{
+                    cvalue = 1;
+                }
+                updatastatus(v.aid, cvalue);
+            });
             $btnView.click(function(){
                 viewActivityItemIndex(v);
             });
@@ -189,5 +196,14 @@ $(function(){
     function successCallback() {
         com.showAlert(com.info, "\u64cd\u4f5c\u6210\u529f");
         ActivitySeacher.doSearch();
+    }
+    function updatastatus(aid, newstatus){
+        var options = {};
+        options[ "activity.aid"] = aid;
+        options["activity.status"] = newstatus;
+
+        com.post(api.information.updateActivityForStatus, options, function(res){
+            ActivitySeacher.doSearch();
+        })
     }
 });

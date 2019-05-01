@@ -207,7 +207,11 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 
 		if (workerBalancePO == null) {
 			workerBalance.setUser(user);
-			workerBalance.setToplimit(Float.parseFloat(systemConfigPO.getValue()));
+			if (systemConfigPO == null) {
+				workerBalance.setToplimit(0f);
+			}else{
+				workerBalance.setToplimit(Float.parseFloat(systemConfigPO.getValue()));
+			}
 			workerBalance.setDeposit(0f);
 			workerBalance.setSalary(0f);
 			workerBalance.setStatus(WorkerBalancePO.STATUS_VALID_INT);
@@ -307,8 +311,8 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 			if (_workerSalary.getType() == WorkerSalaryPO.TYPE_ADD_INT) {// 类型加
 																			// 减
 				if (Arith.sub(workerBalancePO.getSalary(),_workerSalary.getMoney()) < 0) {
+					workerBalancePO.setDeposit(Arith.sub(workerBalancePO.getDeposit(),Arith.sub(_workerSalary.getMoney(),workerBalancePO.getSalary())));
 					workerBalancePO.setSalary(0f);
-					workerBalancePO.setDeposit(Arith.sub(workerBalancePO.getDeposit(),Arith.sub(workerBalancePO.getSalary(), _workerSalary.getMoney())));
 				}else{
 					workerBalancePO.setSalary(Arith.sub(workerBalancePO.getSalary(),_workerSalary.getMoney()));
 					workerBalancePO.setDeposit(workerBalancePO.getDeposit());
@@ -529,7 +533,11 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 			SystemConfigPO systemConfigPO = systemConfigDao.querySystemConfig("workerDepositLimit", company);
 			WorkerBalancePO workerBalance = new WorkerBalancePO();
 			workerBalance.setUser(source);
-			workerBalance.setToplimit(Float.parseFloat(systemConfigPO.getValue()));
+			if (systemConfigPO == null) {
+				workerBalance.setToplimit(0f);
+			}else{
+				workerBalance.setToplimit(Float.parseFloat(systemConfigPO.getValue()));
+			}
 			workerBalance.setDeposit(0f);
 			workerBalance.setSalary(0f);
 			workerBalance.setStatus(WorkerBalancePO.STATUS_VALID_INT);
@@ -546,7 +554,11 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 			SystemConfigPO systemConfigPO = systemConfigDao.querySystemConfig("workerDepositLimit", company);
 			WorkerBalancePO workerBalance = new WorkerBalancePO();
 			workerBalance.setUser(target);
-			workerBalance.setToplimit(Float.parseFloat(systemConfigPO.getValue()));
+			if (systemConfigPO == null) {
+				workerBalance.setToplimit(0f);
+			}else{
+				workerBalance.setToplimit(Float.parseFloat(systemConfigPO.getValue()));
+			}
 			workerBalance.setDeposit(0f);
 			workerBalance.setSalary(0f);
 			workerBalance.setStatus(WorkerBalancePO.STATUS_VALID_INT);
@@ -611,6 +623,7 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 
 		workerSalaryPO.setCompany(company);
 		workerSalaryPO.setCreater(userPO);
+		workerSalaryPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
 		workerSalaryPO.setUser(user);
 		workerSalaryPO.setType(WorkerSalaryPO.TYPE_SUB_INT);
 		workerSalaryPO.setOnetype(WorkerSalaryPO.ONETYPE_CUT_INT);

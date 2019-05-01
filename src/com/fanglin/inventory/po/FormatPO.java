@@ -12,28 +12,28 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "format", catalog = "inventory")
-public class FormatPO implements Serializable{
+public class FormatPO implements Serializable {
 
 	private static final long serialVersionUID = -260512360916421162L;
-	
+
 	public static final String COLUMN_GID_STR = "gid";
-	
+
 	public static final String COLUMN_INFO_STR = "info";
-	
+
 	public static final String COLUMN_STATUS_STR = "status";
-	
+
 	public static final short STATUS_ENABLE_INT = 0;
-	
+
 	public static final short STATUS_DISABLE_INT = 1;
-	
+
 	private long fid;
-	
+
 	private long gid;
-	
+
 	private String info;
-	
+
 	private short status;
-	
+
 	public FormatPO() {
 		super();
 	}
@@ -53,7 +53,7 @@ public class FormatPO implements Serializable{
 	public void setFid(long fid) {
 		this.fid = fid;
 	}
-	
+
 	@Column(name = "gid")
 	public long getGid() {
 		return gid;
@@ -62,7 +62,7 @@ public class FormatPO implements Serializable{
 	public void setGid(long gid) {
 		this.gid = gid;
 	}
-	
+
 	@Column(name = "info")
 	public String getInfo() {
 		return info;
@@ -71,7 +71,7 @@ public class FormatPO implements Serializable{
 	public void setInfo(String info) {
 		this.info = info;
 	}
-	
+
 	@Column(name = "status")
 	public short getStatus() {
 		return status;
@@ -80,5 +80,5 @@ public class FormatPO implements Serializable{
 	public void setStatus(short status) {
 		this.status = status;
 	}
-	
+
 }

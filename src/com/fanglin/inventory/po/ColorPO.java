@@ -9,30 +9,32 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+
 @Entity
 @Table(name = "color", catalog = "inventory")
-public class ColorPO implements Serializable{
+public class ColorPO implements Serializable {
 
 	private static final long serialVersionUID = 7932119609397630378L;
-	
+
 	public static final String COLUMN_GID_STR = "gid";
-	
+
 	public static final String COLUMN_NAME_STR = "name";
-	
+
 	public static final String COLUMN_STATUS_STR = "status";
-	
+
 	public static final short STATUS_ENABLE_INT = 0;
-	
+
 	public static final short STATUS_DISABLE_INT = 1;
-	
+
 	private long cid;
-	
+
 	private long gid;
-	
+
 	private String name;
-	
+
 	private short status;
-	
+
 	public ColorPO() {
 		super();
 	}
@@ -52,7 +54,7 @@ public class ColorPO implements Serializable{
 	public void setCid(long cid) {
 		this.cid = cid;
 	}
-	
+
 	@Column(name = "gid")
 	public long getGid() {
 		return gid;
@@ -61,7 +63,7 @@ public class ColorPO implements Serializable{
 	public void setGid(long gid) {
 		this.gid = gid;
 	}
-	
+
 	@Column(name = "name")
 	public String getName() {
 		return name;
@@ -70,7 +72,7 @@ public class ColorPO implements Serializable{
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	@Column(name = "status")
 	public short getStatus() {
 		return status;

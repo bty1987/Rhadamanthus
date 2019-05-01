@@ -35,6 +35,8 @@ public class ActivityPO implements java.io.Serializable {
 	
 	public static final short STATUS_UNVALID_INT = 1;
 	
+	public static final short STATUS_DELETE_INT = 2;
+	
 	public static final short DEFAULTS_DEFAULT_INT = 0;
 	
 	public static final short DEFAULTS_COMMON_INT = 1;

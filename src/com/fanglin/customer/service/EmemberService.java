@@ -8,11 +8,11 @@ import com.fanglin.customer.vo.EmemberVO;
 import com.fanglin.utils.Paging;
 
 public interface EmemberService {
-	
-	public void pageEmember(Paging paging,List<Filter> filters);
-	
+
+	public void pageEmember(Paging paging, List<Filter> filters);
+
 	public EmemberVO queryEmember(EmemberVO ememberVO);
-	
-	public int addEmember(EmemberVO ememberVO,String securityCode,String verifyCode) throws FLException;
+
+	public int addEmember(EmemberVO ememberVO, String securityCode, String verifyCode) throws FLException;
 
 }

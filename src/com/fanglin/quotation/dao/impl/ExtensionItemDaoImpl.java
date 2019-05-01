@@ -1,6 +1,7 @@
 package com.fanglin.quotation.dao.impl;
 
 
+import java.math.BigInteger;
 import java.util.List;
 
 import org.hibernate.criterion.Projections;
@@ -33,8 +34,18 @@ public class ExtensionItemDaoImpl extends DaoImpl<ExtensionItemPO> implements Ex
 	}
 	
 	@Override
-	public long countQuotationFunctionAreaByEids(List<QuotationFunctionAreaPO> quotationFunctionAreas){
-		return (Long)createCriteria(ExtensionItemPO.class).add(Restrictions.in("quotationFunctionArea", quotationFunctionAreas)).setProjection(Projections.rowCount()).uniqueResult();
+	public int countExtensionItemForFunctionArea(long qfaid) {
+		
+		String sql = "select count(*) from quotation.extensionitem where quotationFunctionAreaId =:qfaid";
+
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setLong("qfaid", qfaid).uniqueResult();
+
+		return count.intValue();
+	}
+
+	@Override
+	public int countExtensionItemForFunctionArea(List<QuotationFunctionAreaPO> quotationFunctionAreas){
+		return (Integer) createCriteria(ExtensionItemPO.class).add(Restrictions.in("quotationFunctionArea", quotationFunctionAreas)).setProjection(Projections.rowCount()).uniqueResult();
 	}
 	
 }

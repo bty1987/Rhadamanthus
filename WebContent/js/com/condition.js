@@ -427,7 +427,58 @@ var Condition = function (api) {
                 }
             }
         },
-
+        
+        vactivityName: {
+        	label: "名称",
+            type: "text",
+            submitConfig: {
+                name: "name",
+                op: "eq",
+                validate: null
+            }
+        },
+        vactivityStatus: {
+        	label: "状态",
+            type: "select",
+            submitConfig: {
+                name: "status",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {
+                url: null,
+                postData: null,
+                listPath: [{key: "0", value: "启用"}, {key: "1", value: "禁用"}],
+                keyPath: "key",
+                valuePath: "value"
+            }
+        },
+        vprizeName: {
+        	label: "名称",
+            type: "text",
+            submitConfig: {
+                name: "name",
+                op: "eq",
+                validate: null
+            }
+        },
+        vprizeStatus: {
+        	label: "状态",
+            type: "select",
+            submitConfig: {
+                name: "status",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {
+                url: null,
+                postData: null,
+                listPath: [{key: "0", value: "启用"}, {key: "1", value: "禁用"}],
+                keyPath: "key",
+                valuePath: "value"
+            }
+        },
+        
         //大活动--活动款
         vp_mno: {
             label: "会员号",
@@ -1252,6 +1303,15 @@ var Condition = function (api) {
             type:"dateRangePicker",
             submitConfig : {
                 name : "depositTimeDateRange",
+                op : "cn",
+                validate:null
+            }
+        },
+        precontractTime : {
+            label:"预签时间",
+            type:"dateRangePicker",
+            submitConfig : {
+                name : "precontractTime",
                 op : "cn",
                 validate:null
             }
