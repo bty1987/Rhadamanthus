@@ -1,0 +1,45 @@
+<div class="row">
+    <div class="flex-wrap pull-right" id="form" style="margin-bottom: 15px">
+        <label>单据日期 : </label>
+        <input id="createTime" name="date" readonly="readonly" type="text" value=""/>
+    </div>
+</div>
+
+<div class="row">
+	<ul class="flex-table">
+	    <li class="line table-title">
+	        <div class="line-wrap order">
+	            <div class="cell index"></div>
+	        </div>
+	        <div class="line-wrap content col12">
+	            <div class="cell">商品编号</div>
+	            <div class="cell">商品名称</div>
+	            <div class="cell">商品类别</div>
+	            <div class="cell">品牌</div>
+	            <div class="cell">单位</div>
+	            <div class="cell">颜色</div>
+	            <div class="cell">规格</div>
+	            <div class="cell">单价</div>
+	            <div class="cell">总数量</div>
+	            <div class="cell">剩余数量</div>
+	            <div class="cell">仓库</div>
+	            <div class="cell">入库数量</div>
+	        </div>
+	    </li>
+	</ul>
+	<ul class="flex-table" id="list"></ul>
+</div>
+
+<div class="row" style="margin-top: 15px">
+
+    <div class="pull-right inline">
+        <a class="btn btn-info btn-sm" id="warehouseBtn">入库</a>
+        <a class="btn btn-grey btn-sm" id="cancelBtn">取消</a>
+    </div>
+    
+</div>
+
+<script type="text/javascript">
+    $.loadScript(['js/manifest/purchase2in.js']);
+</script>
+

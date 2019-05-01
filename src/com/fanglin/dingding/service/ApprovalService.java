@@ -49,10 +49,13 @@ public class ApprovalService {
 			params.put("cc_position", copyPosition);
 		}
 		
+		if (approver != null && !"".equals(approver)){
+			params.put("approvers", approver);
+		}
+		
 		params.put("process_code", processCode);
 		params.put("originator_user_id", sender);
 		params.put("dept_id", senderUser.getDepartment().get(0));
-		params.put("approvers", approver);
 		params.put("form_component_values", formComponentValues);
 
 		SystemConfigPO oapiHost = systemConfigDao.querySystemConfig("oapiHost");

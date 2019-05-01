@@ -55,7 +55,7 @@ public class CheckListServiceImpl implements CheckListService {
 			
 			for (StorehouseUserPO storehouseUserPO : storehouseUserPOs) {
 				
-				long shid = storehouseUserPO.getStorehouse().getShId();
+				long shid = storehouseUserPO.getStorehouse().getShid();
 				
 				shids.add(shid);
 			}

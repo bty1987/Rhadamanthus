@@ -32,7 +32,7 @@ public class CheckListPO implements java.io.Serializable {
 	
 	public static final String COLUMN_BRAND_STR = "goods.brand";
 	
-	public static final String COLUMN_STOREHOUSE_SHID_STR = "storehouse.shId";
+	public static final String COLUMN_STOREHOUSE_SHID_STR = "storehouse.shid";
 	
 	private long clId;
 	
@@ -93,7 +93,7 @@ public class CheckListPO implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "shId", referencedColumnName = "shId")
+	@JoinColumn(name = "shid", referencedColumnName = "shid")
 	public StorehousePO getStorehouse() {
 		return storehouse;
 	}

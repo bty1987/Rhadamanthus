@@ -21,10 +21,12 @@ import com.fanglin.utils.Paging;
 
 public interface ApprovalService {
 	
-	public void pageApprovalByReceiveId(Paging paging, List<Filter> filters, String userId,int company);
+	public void pageApprovalForReceive(Paging paging, List<Filter> filters, String userId, int company);
 	
-	public void pageApprovalBySenderId(Paging paging, List<Filter> filters, String userId,int company);
+	public void pageApprovalForSend(Paging paging, List<Filter> filters, String userId, int company);
 	
+	public void pageApprovalForReceiveDept(Paging paging, List<Filter> filters, String userId, int company);
+
 	public ApprovalVO queryApprovalByAId(ApprovalVO approvalVO) throws FLException;
 	
 	public ApprovalPO approve(ApprovalPO approvalPO) throws FLException;
@@ -34,5 +36,5 @@ public interface ApprovalService {
 	public int approvalCallback(ApprovalVO approvalVO) throws FLException;
 	
 	public int refuse(ApprovalVO approvalVO) throws FLException;
-	
+
 }

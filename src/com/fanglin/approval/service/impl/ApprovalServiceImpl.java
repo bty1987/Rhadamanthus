@@ -37,6 +37,8 @@ import com.fanglin.approval.service.ApprovalService;
 import com.fanglin.approval.vo.ApprovalVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.personel.dao.UserDao;
+import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
@@ -87,11 +89,15 @@ public class ApprovalServiceImpl implements ApprovalService {
 	
 	@Autowired
 	private ApprovalCustomerOriginTDecorationBelongService approvalCustomerOriginTDecorationBelongService;
+
+	@Autowired
+	private UserDao userDao;
+
 	
 	@Override
-	public void pageApprovalByReceiveId(Paging paging, List<Filter> filters, String userId,int company){
+	public void pageApprovalForReceive(Paging paging, List<Filter> filters, String userId, int company) {
 		
-		List<ApprovalPO> approvalPOs = approvalDao.pageApprovalByReceiveId(paging, filters, userId,company);
+		List<ApprovalPO> approvalPOs = approvalDao.pageApprovalForReceive(paging, filters, userId, company);
 		List<ApprovalVO> approvalVOs = new ArrayList<ApprovalVO>();
 		
 		for(ApprovalPO approvalPO: approvalPOs){
@@ -102,15 +108,32 @@ public class ApprovalServiceImpl implements ApprovalService {
 	}
 	
 	@Override
-	public void pageApprovalBySenderId(Paging paging, List<Filter> filters, String userId,int company){
+	public void pageApprovalForSend(Paging paging, List<Filter> filters, String userId, int company) {
 		
-		List<ApprovalPO> approvalPOs = approvalDao.pageApprovalBySenderId(paging, filters, userId,company);
+		List<ApprovalPO> approvalPOs = approvalDao.pageApprovalForSend(paging, filters, userId, company);
 		List<ApprovalVO> approvalVOs = new ArrayList<ApprovalVO>();
 		
 		for(ApprovalPO approvalPO: approvalPOs){
 			approvalVOs.add(convertBean(approvalPO));
 		}	
 		
+		paging.setData(approvalVOs);
+	}
+
+	@Override
+	public void pageApprovalForReceiveDept(Paging paging, List<Filter> filters, String userId, int company) {
+		
+		UserPO user = userDao.queryUserByUserId(userId);
+		int department = user.getDept().getDid();
+		List<ApprovalPO> approvalPOs = approvalDao.pageApprovalForReceiveDept(paging, filters, department, company);
+		List<ApprovalVO> approvalVOs = new ArrayList<ApprovalVO>();
+		
+		for(ApprovalPO approvalPO: approvalPOs){
+
+			approvalVOs.add(convertBean(approvalPO));
+
+		}
+
 		paging.setData(approvalVOs);
 	}
 	
@@ -183,6 +206,8 @@ public class ApprovalServiceImpl implements ApprovalService {
 				break;
 		}
 		
+		approvalDao.update(approvalPO);
+		
 		return approvalPO;
 	}
 	
@@ -248,9 +273,6 @@ public class ApprovalServiceImpl implements ApprovalService {
 				break;
 			case ApprovalPO.APPROVAL_TYPE_SALESREFUND_PAYMENT_INT:
 				approvalSalesRefundService.refuseForSalesRefund(approvalPO);
-				break;
-			case ApprovalPO.APPROVAL_TYPE_MANIFESTDB_INT:
-				approvalManifestDBService.refuseManifestDB(approvalPO);
 				break;
 			case ApprovalPO.APPROVAL_TYPE_SALES_DIACOUNT_INT:
 				approvalSalesDiscountService.refuseForSalesDiscount(approvalPO);

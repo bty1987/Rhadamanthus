@@ -2,22 +2,22 @@ package com.fanglin.inventory.vo;
 
 import java.io.Serializable;
 
-public class AccessoriesItemVO implements Serializable{
+public class AccessoriesItemVO implements Serializable {
 
 	private static final long serialVersionUID = -4448576124164007315L;
-	
+
 	private Long aiid;
-	
+
 	private Long aid;
-	
+
 	private GoodsVO goods;
-	
+
 	private ColorVO color;
-	
+
 	private FormatVO format;
-	
+
 	private StorehouseVO storehouse;
-	
+
 	private Float num;
 
 	public AccessoriesItemVO() {
@@ -28,7 +28,7 @@ public class AccessoriesItemVO implements Serializable{
 		super();
 		this.goods = goods;
 	}
-	
+
 	public Long getAiid() {
 		return aiid;
 	}

@@ -8,35 +8,33 @@ import com.fanglin.inventory.vo.GoodsVO;
 
 import com.fanglin.inventory.vo.StorehouseVO;
 
-public class ApprovalManifestDBItemVO implements Serializable{
+public class ApprovalManifestDBItemVO implements Serializable {
 
 	private static final long serialVersionUID = 2363581968985577616L;
-	
+
 	private Long amdbiid;
-	
+
 	private Long amdbid;
-	
+
 	private GoodsVO goods;
-	
+
 	private ColorVO color;
-	
+
 	private FormatVO format;
-	
-	private StorehouseVO instorehouse; 
-	
+
+	private StorehouseVO instorehouse;
+
 	private StorehouseVO outstorehouse;
-	
-	private Float num ;
-	
+
+	private Float num;
+
 	private String comment;
-	
-	public ApprovalManifestDBItemVO(){
+
+	public ApprovalManifestDBItemVO() {
 		super();
 	}
 
-	public ApprovalManifestDBItemVO(GoodsVO goods, ColorVO color,
-			FormatVO format, StorehouseVO instorehouse,
-			StorehouseVO outstorehouse) {
+	public ApprovalManifestDBItemVO(GoodsVO goods, ColorVO color, FormatVO format, StorehouseVO instorehouse, StorehouseVO outstorehouse) {
 		super();
 		this.goods = goods;
 		this.color = color;
@@ -48,16 +46,19 @@ public class ApprovalManifestDBItemVO implements Serializable{
 	public Long getAmdbiid() {
 		return amdbiid;
 	}
+
 	public void setAmdbiid(Long amdbiid) {
 		this.amdbiid = amdbiid;
 	}
+
 	public Long getAmdbid() {
 		return amdbid;
 	}
+
 	public void setAmdbid(Long amdbid) {
 		this.amdbid = amdbid;
 	}
-	
+
 	public GoodsVO getGoods() {
 		return goods;
 	}
@@ -85,27 +86,33 @@ public class ApprovalManifestDBItemVO implements Serializable{
 	public StorehouseVO getInstorehouse() {
 		return instorehouse;
 	}
+
 	public void setInstorehouse(StorehouseVO instorehouse) {
 		this.instorehouse = instorehouse;
 	}
+
 	public StorehouseVO getOutstorehouse() {
 		return outstorehouse;
 	}
+
 	public void setOutstorehouse(StorehouseVO outstorehouse) {
 		this.outstorehouse = outstorehouse;
 	}
+
 	public Float getNum() {
 		return num;
 	}
+
 	public void setNum(Float num) {
 		this.num = num;
 	}
+
 	public String getComment() {
 		return comment;
 	}
+
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	
-	
+
 }

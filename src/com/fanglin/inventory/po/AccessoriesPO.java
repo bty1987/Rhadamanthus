@@ -19,77 +19,70 @@ import com.fanglin.personel.po.UserPO;
 
 @Entity
 @Table(name = "accessories", catalog = "inventory")
-public class AccessoriesPO implements Serializable{
+public class AccessoriesPO implements Serializable {
 
 	private static final long serialVersionUID = -6891774270799222927L;
 
-	public static final String COLUMN_CREATER_UID_STR = "creater.uid";
-	
-	public static final String COLUMN_CREATER_NAME_STR = "creater.userName";
-	
 	public static final String COLUMN_CREATER_USERID_STR = "creater.userId";
-	
-	public static final String COLUMN_APPROVER_NAME_STR = "approver.userName";
-	
+
 	public static final String COLUMN_APPROVER_USERID_STR = "approver.userId";
-	
+
 	public static final String COLUMN_CREATETIME_STR = "createTime";
-	
+
 	public static final String COLUMN_APPROVERTIME_STR = "approverTime";
-	
+
 	public static final String COLUMN_ORDERID_STR = "orderId";
-	
+
 	public static final String COLUMN_STATUS_STR = "status";
-	
+
 	public static final String COLUMN_COMPANY_STR = "company";
-	
+
 	public static final String COLUMN_NO_STR = "no";
-	
-	public static final short STATUS_ENABLE_INT = 0;
-	
-	public static final short STATUS_DISABLE_INT = 1;
-	
+
+	public static final short STATUS_INIT_INT = 0;
+
+	public static final short STATUS_BATCHOUT_INT = 1;
+
 	public static final short STATUS_REJECT_INT = 2;
-	
+
 	public static final short STATUS_UNDO_INT = 3;
-	
-	public static final short STATUS_RETURN_INT = 4;//退回
-	
-	private long aid;	
-	
+
+	public static final short STATUS_RETURN_INT = 4;
+
+	private long aid;
+
 	private String no;
-	
+
 	private String orderId;
-	
+
 	private HousePO house;
-	
+
 	private UserPO creater;
-	
+
 	private Timestamp createTime;
-	
+
 	private UserPO approver;
-	
+
 	private Timestamp approverTime;
-	
+
 	private UserPO supervisor;
-	
+
 	private Timestamp fetchTime;
-	
+
 	private short status;
-	
+
 	private int company;
-	
+
 	public AccessoriesPO() {
 		super();
 	}
-	
+
 	public AccessoriesPO(String no) {
 		super();
 		this.no = no;
 	}
 
-	public AccessoriesPO(HousePO house, UserPO creater, UserPO approver,
-			UserPO supervisor) {
+	public AccessoriesPO(HousePO house, UserPO creater, UserPO approver, UserPO supervisor) {
 		super();
 		this.house = house;
 		this.creater = creater;
@@ -98,7 +91,7 @@ public class AccessoriesPO implements Serializable{
 	}
 
 	@Id
-	@GeneratedValue(strategy = IDENTITY) //主键由数据库自动生成
+	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "aid")
 	public long getAid() {
 		return aid;
@@ -145,7 +138,7 @@ public class AccessoriesPO implements Serializable{
 	public void setCreater(UserPO creater) {
 		this.creater = creater;
 	}
-	
+
 	@Column(name = "createTime")
 	public Timestamp getCreateTime() {
 		return createTime;
@@ -164,7 +157,7 @@ public class AccessoriesPO implements Serializable{
 	public void setApprover(UserPO approver) {
 		this.approver = approver;
 	}
-	
+
 	@Column(name = "approverTime")
 	public Timestamp getApproverTime() {
 		return approverTime;
@@ -183,7 +176,7 @@ public class AccessoriesPO implements Serializable{
 	public void setSupervisor(UserPO supervisor) {
 		this.supervisor = supervisor;
 	}
-	
+
 	@Column(name = "fetchTime")
 	public Timestamp getFetchTime() {
 		return fetchTime;
@@ -192,12 +185,12 @@ public class AccessoriesPO implements Serializable{
 	public void setFetchTime(Timestamp fetchTime) {
 		this.fetchTime = fetchTime;
 	}
-	
+
 	@Column(name = "status")
 	public short getStatus() {
 		return status;
 	}
-	
+
 	public void setStatus(short status) {
 		this.status = status;
 	}
@@ -210,6 +203,5 @@ public class AccessoriesPO implements Serializable{
 	public void setCompany(int company) {
 		this.company = company;
 	}
-	
-	
+
 }

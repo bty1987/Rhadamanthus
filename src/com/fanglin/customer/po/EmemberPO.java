@@ -10,37 +10,39 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "emember", catalog = "customer")
-public class EmemberPO implements Serializable{
+public class EmemberPO implements Serializable {
 
 	private static final long serialVersionUID = 3597024739732045249L;
-	
+
 	public static final String COLUMN_UNIONID_STR = "unionId";
-	
+
 	public static final String COLUMN_NO_STR = "no";
-	
+
 	public static final String COLUMN_PHONE_STR = "phone";
-	
-	public static final short STATUS_INIT_SHORT = 0;
-	
+
+	public static final String COLUMN_STATUS_STR = "status";
+
+	public static final short STATUS_INIT_INT = 0;
+
 	private long emid;
-	
+
 	private String no;
-	
+
 	private String name;
-	
+
 	private String phone;
-	
+
 	private String address;
-	
+
 	private String unionId;
-	
+
 	private String ticket;
-	
+
 	private short status;
 
 	@Id
 	@GeneratedValue
-	@Column(name="emid")
+	@Column(name = "emid")
 	public long getEmid() {
 		return emid;
 	}
@@ -48,8 +50,8 @@ public class EmemberPO implements Serializable{
 	public void setEmid(long emid) {
 		this.emid = emid;
 	}
-	
-	@Column(name="no")
+
+	@Column(name = "no")
 	public String getNo() {
 		return no;
 	}
@@ -57,8 +59,8 @@ public class EmemberPO implements Serializable{
 	public void setNo(String no) {
 		this.no = no;
 	}
-	
-	@Column(name="name")
+
+	@Column(name = "name")
 	public String getName() {
 		return name;
 	}
@@ -66,8 +68,8 @@ public class EmemberPO implements Serializable{
 	public void setName(String name) {
 		this.name = name;
 	}
-	
-	@Column(name="phone")
+
+	@Column(name = "phone")
 	public String getPhone() {
 		return phone;
 	}
@@ -75,8 +77,8 @@ public class EmemberPO implements Serializable{
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
-	
-	@Column(name="address")
+
+	@Column(name = "address")
 	public String getAddress() {
 		return address;
 	}
@@ -84,8 +86,8 @@ public class EmemberPO implements Serializable{
 	public void setAddress(String address) {
 		this.address = address;
 	}
-	
-	@Column(name="unionId")
+
+	@Column(name = "unionId")
 	public String getUnionId() {
 		return unionId;
 	}
@@ -93,8 +95,8 @@ public class EmemberPO implements Serializable{
 	public void setUnionId(String unionId) {
 		this.unionId = unionId;
 	}
-	
-	@Column(name="ticket")
+
+	@Column(name = "ticket")
 	public String getTicket() {
 		return ticket;
 	}
@@ -102,8 +104,8 @@ public class EmemberPO implements Serializable{
 	public void setTicket(String ticket) {
 		this.ticket = ticket;
 	}
-	
-	@Column(name="status")
+
+	@Column(name = "status")
 	public short getStatus() {
 		return status;
 	}
@@ -111,5 +113,5 @@ public class EmemberPO implements Serializable{
 	public void setStatus(short status) {
 		this.status = status;
 	}
-	
+
 }

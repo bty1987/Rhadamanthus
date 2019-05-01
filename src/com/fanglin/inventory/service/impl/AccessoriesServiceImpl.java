@@ -168,7 +168,7 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 		Timestamp end = DateUtil.getDateToTimestamp(date);
 		accessoriesPO.setFetchTime(end);
 		accessoriesPO.setCompany(company);
-		accessoriesPO.setStatus(AccessoriesPO.STATUS_ENABLE_INT);
+		accessoriesPO.setStatus(AccessoriesPO.STATUS_INIT_INT);
 		accessoriesDao.save(accessoriesPO);
 		
 		AccessoriesItemPO accessoriesItemPO;
@@ -264,17 +264,15 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 		
 		manifestPO.setAttachment("");
 		manifestPO.setComment(comment);
-		manifestPO.setCreateUser(userPO);
-		manifestPO.setTotal(ManifestPO.COLUMN_TOTAL_STR);
+		manifestPO.setCreater(userPO);
+		manifestPO.setTotal(0);
 		manifestPO.setType(ManifestPO.TYPE_AS_INT);
 		manifestPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		manifestPO.setManifestTime(DateUtil.getDateToTimestamp(new Date()));
-		manifestPO.setCreateUser(userPO);
-		manifestPO.setStatus(ManifestPO.STATUS_DISABLE_INT);
+		manifestPO.setStatus(ManifestPO.STATUS_CONFIRM_INT);
 		manifestPO.setCompany(company);
 		
 		manifestDao.save(manifestPO);
-		
 		
 		//创建一条上方辅料单对应的货单项
 		//创建一条上方辅料货单对应的货单项
@@ -302,10 +300,10 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 			
 			if(accessoriesItemVO.getStorehouse() != null){
 				
-				long oshId = accessoriesItemVO.getStorehouse().getShId();//仓库
+				long oshid = accessoriesItemVO.getStorehouse().getShid();//仓库
 				
-				manifestItemPO.setInstorehouse(goodsStorehouseStockService.instorehouse(gid,cid,fid, oshId, -num));
-				storehouseStockService.updateStorehouseStock(oshId, month, -num);
+				manifestItemPO.setInstorehouse(goodsStorehouseStockService.instorehouse(gid,cid,fid, oshid, -num));
+				storehouseStockService.updateStorehouseStock(oshid, month, -num);
 				
 				float _total = Arith.sub(total, manifestItemPO.getUnitPrice());
 				totals = Arith.add(totals,Arith.mul(_total, num));

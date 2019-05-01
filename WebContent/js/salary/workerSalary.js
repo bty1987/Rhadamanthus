@@ -234,9 +234,14 @@ jQuery(function ($) {
                     ["订单号", "decoration.orderId"],
                     ['楼盘地址', "decoration.house"],
                     ['监理', 'decoration.supervisor'],
-                    ['金额', 'salary'],
+                    ['操作金额', 'money'],
+                    ['工费', 'salary'],
+                    ['质保金', 'deposit'],
+                    ['施工节点', 'schedule'],
                     ['工种', 'user.duty.name'],
-                    ['类型', 'subtype'],
+                    ['类型', 'type'],
+                    ['一类', 'onetype'],
+                    ['二类', 'twotype'],
                     ['备注', 'comment'],
                     ['状态', "status"]
                 ],
@@ -253,7 +258,10 @@ jQuery(function ($) {
                 v.decoration.house = (v.decoration.house == null ? "" : v.decoration.house.village.name + "" + v.decoration.house.houseNumber);
 
                 v.status = v.status == 0 ? "初始" : (v.status == 1 ? "已通过" : v.status == 2 ? "已驳回" : "已撤销");
-                v.subtype = salaryType[v.subtype];
+                v.schedule = v.schedule == 0 ? "" : v.schedule == 3 ? "铲大白" : v.schedule == 4 ? "放线" : v.schedule == 5 ? "水工" : v.schedule == 6 ? "力工" : v.schedule == 7 ? "电工" : v.schedule == 8 ? "瓦工" : v.schedule == 9 ? "地面找平" : v.schedule == 10 ? "木工" : v.schedule == 11 ? "油工" : v.schedule == 12 ? "水电验收" : "保洁";
+                v.type = v.type == 0 ? "加" : "减";
+                v.onetype = v.onetype == 0 ? "工费" : v.onetype == 1 ? "扣/罚" : v.onetype == 2 ? "转款" : "其他";
+                v.twotype = salaryType[v.twotype];
 
             });
         });

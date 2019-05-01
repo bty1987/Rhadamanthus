@@ -1,17 +1,13 @@
-/**
- * Created by 袁帅 on 2016/10/4.
- */
-
 
 $(function(){
+	
+	var mtid = params["manifestTemplate.mtid"];
+	
+	com.post(api.inventory.queryManifestTemplateItemByMtid, {"manifestTemplate.mtid": mtid}, function (res) {
+        displayFunc.init('resultList', res.manifestTemplateItems);
+    });
 
-    /**
-     * 回调函数必须提供 init(tableId, result.list)方法
-     * tableId ，用来显示的div的id
-     * result.list 列表的json数组
-     * */
     var displayFunc  = (function(){
-
 
         var renderList = function(tableId,listData){
             var $tableWrap = com.focusPage('#' + tableId);
@@ -30,7 +26,6 @@ $(function(){
             }
         };
 
-
         var createTableTitle = function(){
 
             var $ulTitle = $('<ul></ul>').addClass('flex-table');
@@ -45,11 +40,9 @@ $(function(){
                 var $cell = $('<div></div>').addClass('cell').html(v);
                 $cell.appendTo($contentWrap);
             });
+            
             var $optionWrap = $('<div></div>').addClass('line-wrap action').html($('<div>操作</div>').addClass('cell option'));
-            $liTitle.append($indexWrap)
-                .append($contentWrap)
-                .append($optionWrap)
-                .appendTo($ulTitle);
+            $liTitle.append($indexWrap).append($contentWrap).append($optionWrap).appendTo($ulTitle);
 
             return $ulTitle;
         };
@@ -62,18 +55,17 @@ $(function(){
             var $contentWrap = $('<div></div>').addClass('line-wrap  content col10');
 
             var propertyArr = [
-                [v.manifestTemplate.name,'grey'],
-                [v.manifestTemplate.comment,'grey'],
-                [v.goods.no,'blue'],
-                [v.goods.name,'grey'],
-                [v.goods.barcode,'blue'],
-                [v.goods.category,'grey'],
-                [v.goods.brand,'grey'],
-                [v.goods.measurementUnit,'grey'],
-                [v.goods.type==0?"商品":"套餐",'red'],
-                [v.goods.pieceNum,'blue']
+                [v.manifestTemplate.name, 'grey'],
+                [v.manifestTemplate.comment, 'grey'],
+                [v.goods.no, 'blue'],
+                [v.goods.name, 'grey'],
+                [v.goods.barcode, 'blue'],
+                [v.goods.category, 'grey'],
+                [v.goods.brand, 'grey'],
+                [v.goods.measurementUnit, 'grey'],
+                [v.goods.type == 0 ? "商品" : "套餐", 'red'],
+                [v.goods.pieceNum, 'blue']
             ];
-
 
             $.each(propertyArr, function (i, v) {
                 var $cell = $('<div></div>').addClass('cell ' + v[1]).html(v[0]);
@@ -89,63 +81,48 @@ $(function(){
 
             var $btnDelete = $('<li></li>').append($('<a></a>').html('删除')) ;
 
-
-            //var $btnstorehouse = $('<li></li>').append($('<a></a>').html('仓库')) ;
-
-            $btnUl
-            .append($btnDelete);
-
-            $btnGroup
-                .append($btn)
-                .append($btnUl)
-                .appendTo($cellOption);
-
+            $btnUl.append($btnDelete);
+            $btnGroup.append($btn).append($btnUl).appendTo($cellOption);
             $cellOption.appendTo($optionWrap);
 
-            $liLine.append($indexWrap)
-                .append($contentWrap)
-                .append($optionWrap);
+            $liLine.append($indexWrap).append($contentWrap).append($optionWrap);
 
             $btnDelete.click(function() {
-                layer.confirm('是否确定删除？', {
+                layer.confirm('是否确定删除?', {
                     btn: ['确定','取消'] //按钮
                 }, function(index, layero){
                     com.post(api.inventory.deleteManifestTemplateItem, {
-                        "manifestTemplate.mtId": params.mtid,
-                        "mtiIds[0]": v.mtiId
+                        "manifestTemplate.mtid": mtid,
+                        "mtiids[0]": v.mtiid
                     }, function(){
-                        layer.msg('删除成功', {icon: 1});
-                        com.switchPage('views/manifest/manifestTemplateItem.html');
+                        layer.msg('操作成功');
+                        $line.remove();
                     });
-                }, function(){
-
                 });
-
             });
 
             return $liLine;
-
         };
 
         return {
             init : function(tableId,listData){
                 com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
-
             },
             drawLine : function(v){
                 return creatLine(v);
             }
         };
     })();
+    
     var binding = {
         //操作配置
-        optAction : function(mtId, manifestTemplate){
+        optAction : function(mtid, manifestTemplate){
 
             var $popup = com.focusPage("#optPopUp");
-            $popup.attr('data-mtId', mtId);
-            //$popup.attr('data-name', name);
-            //弹出即全屏
+            
+            $popup.attr('data-mtid', mtid);
+            
             var index = layer.open({
                 type: 1,
                 skin: 'layui-layer-lan',
@@ -157,35 +134,24 @@ $(function(){
 
                 success: function(){
                     params["promissionManifestTemplate"] = manifestTemplate;
-                    $popup.load("views/manifest/addmanifestTemplateItem.html");
+                    $popup.load("views/manifest/manifestTemplateItem2add.html");
                 },
                 end:function(){
-                    $popup.attr('data-mtId', null);
+                    $popup.attr('data-mtid', null);
                 }
             });
         }
     };
 
-
-
     var $adda = com.focusPage('a[name="addQuotationVersion"]');
     var $return = com.focusPage('a[name="returnQuotationVersion"]');
 
-    $adda.click(function(v){
-        binding.optAction(v.mtId,v);
+    com.focusPage("#addBtn").click(function(v){
+        binding.optAction(v.mtid,v);
     });
     
-    $return.click(function () {
+    com.focusPage("#backBtn").click(function () {
         com.switchPage("views/manifest/manifestTemplate.html");
     });
-
-    com.post(api.inventory.queryManifestTemplateItemByMtId,{
-        "manifestTemplate.mtId": params.mtid
-    }, function (res) {
-        displayFunc.init('resultList', res.manifestTemplateItems);
-
-    });
-
-
 
 });

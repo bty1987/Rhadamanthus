@@ -7,6 +7,7 @@
     <div class="row clearfix">
         <div class="col-xs-12 pricing-span-body" id="home">
             <div class="tabbable">
+                <ul class="dropdown-menu dropdown-info" style="cursor: pointer;" id="dropdown"><li><a>关闭所有页面</a></li></ul>
                 <ul class="nav nav-tabs padding-12" id="homeNav">
                     <li class="flpage nav-tab active" id="homeTab">
                         <a data-toggle="tab" href="#homePage" id="tab_homePage">首页</a>
@@ -25,10 +26,10 @@
                                 <div class="widget-header widget-header-flat">
                                     <h4 class="lighter">
                                         <i class="icon-bullhorn"></i>
-                                        最近通知
+                                        <span>最近通知</span>
                                     </h4>
                                     <div class="widget-toolbar action-buttons">
-                                        <a href="javascript:void(0);" name="updateNotices" data-action="reload" data-rel="tooltip" data-original-title="更新">
+                                        <a href="javascript:void(0);" id="updateNotices" data-action="reload" data-rel="tooltip" data-original-title="更新">
                                             <i class="icon-refresh"></i>
                                         </a>&nbsp;
                                         <a href='#' id='moreNotice' class="moreLink">更多</a>
@@ -49,10 +50,10 @@
                                 <div class="widget-header widget-header-flat">
                                     <h4 class="lighter">
                                         <i class="icon-flag"></i>
-                                        最近活动
+                                        <span>最近活动</span>
                                     </h4>
                                     <div class="widget-toolbar action-buttons" >
-                                        <a href="javascript:void(0);" name="updateActivities" data-action="reload" data-rel="tooltip" data-original-title="更新">
+                                        <a href="javascript:void(0);" id="updateActivities" data-action="reload" data-rel="tooltip" data-original-title="更新">
                                             <i class="icon-refresh"></i>
                                         </a>&nbsp;
                                         <a href='#' id='moreActivity' class="moreLink">更多</a>
@@ -65,7 +66,6 @@
                                     </div>
                                 </div>
                             </div>
-
                         </div>
 
                         <div class="col-sm-12" id="customize"></div>
@@ -92,7 +92,6 @@
             <span>配置您的可见内容</span>
         </div>
 
-
         <div>设计</div>
         <div>
             <input type="checkbox" class="ace ace-checkbox-2" name="designer" id="amount_ds" value="1" key="amount_ds"/>
@@ -100,7 +99,7 @@
         </div>
         <div>
             <input type="checkbox" class="ace ace-checkbox-2" name="designer" id="trend_ds" value="2" key="designerSigning"/>
-            <label class="lbl" for="trend_ds"> 签单&量尺走势 </label>
+            <label class="lbl" for="trend_ds"> 签单/量尺走势 </label>
         </div>
         <input type="checkbox" class="ace ace-checkbox-2" name="designer" id="ranking_ds" value="3" key="designerTotal"/>
         <label class="lbl" for="ranking_ds"> 设计师排名 </label>
@@ -117,7 +116,7 @@
         </div>
         <div>
             <input type="checkbox" class="ace ace-checkbox-2" name="designer" id="trend_sm" value="6" key="salesmanSigning"/>
-            <label class="lbl" for="trend_sm"> 签单&量尺走势 </label>
+            <label class="lbl" for="trend_sm"> 签单/量尺走势 </label>
         </div>
         <div>
             <input type="checkbox" class="ace ace-checkbox-2" name="designer" id="ranking_sm" value="7" key="salesmanTotal"/>

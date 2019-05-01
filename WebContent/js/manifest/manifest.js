@@ -1,10 +1,12 @@
-$(function () {
 
-    /**
-     * 回调函数必须提供 init(tableId, result.list)方法
-     * tableId ，用来显示的div的id
-     * result.list 列表的json数组
-     * */
+$(function () {
+	
+	var manifest = {
+		items: {
+			
+		},
+		manifestType: ['进货', '进退', '出货', '出返', '调拨', '采购', '辅料', '套合', '套拆']
+	}
 
     var displayFunc = (function () {
 
@@ -25,7 +27,6 @@ $(function () {
             }
         };
 
-
         var createTableTitle = function () {
 
             var $ulTitle = $('<ul></ul>').addClass('flex-table');
@@ -43,47 +44,28 @@ $(function () {
 
             var $optionWrap = $('<div></div>').addClass('line-wrap action').html($('<div>操作</div>').addClass('cell option'));
 
-            $liTitle.append($indexWrap)
-                .append($contentWrap)
-                .append($optionWrap)
-                .appendTo($ulTitle);
+            $liTitle.append($indexWrap).append($contentWrap).append($optionWrap).appendTo($ulTitle);
 
             return $ulTitle;
         };
 
         var creatLine = function (i, v, lastFlag) {
 
-
-            var typeList = [
-                '进货',//1
-                '进退',//2
-                '出货',//3
-                '出返',//4
-                '调拨',//5
-                '采购',//6
-                '辅料',//7
-                '套合',//8
-                '套拆'//9
-            ];
-
-
             var $liLine = $('<li></li>').addClass('line');
 
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(i + 1));
             var $contentWrap = $('<div></div>').addClass('line-wrap content col8');
 
-
             var propertyArr = [
-                [v.code,'blue'],
-                [v.createTime,'green'],
-                [v.createUser.currentName ? v.createUser.currentName : '---','grey'],
-                [v.manifestTime,'green'],
-                [v.total,'blue'],
-                [v.status == "0" ? "初始" : "已确认",'red'],
-                [v.comment == null ? "":v.comment,'grey'],
-                [typeList[parseInt(v.type) - 1] ? typeList[parseInt(v.type) - 1] : '---','red']
+                [v.code, 'blue'],
+                [v.createTime, 'green'],
+                [v.creater.currentName ? v.creater.currentName : '---', 'grey'],
+                [v.manifestTime, 'green'],
+                [v.total, 'blue'],
+                [v.status == "0" ? "初始" : "已确认", 'red'],
+                [v.comment == null ? "" : v.comment, 'grey'],
+                [manifest.manifestType[parseInt(v.type) - 1] ? manifest.manifestType[parseInt(v.type) - 1] : '---','red']
             ];
-
 
             $.each(propertyArr, function (index, v) {
                 var $cell = $('<div></div>').addClass('cell ' + v[1]).html(v[0]);
@@ -97,116 +79,118 @@ $(function () {
             var $btn = $('<button></button>').addClass('btn btn-info dropdown-toggle').attr('data-toggle', 'dropdown').append('操作').append('<i class="icon-angle-down"></i>');
             var $btnUl = $('<ul></ul>').addClass('dropdown-menu').addClass(lastFlag ? 'bottom-up' : '');
 
-
             var $btnView = $('<li></li>').append($('<a></a>').html('查看'));
-            //var $btnEdit = $('<li></li>').append($('<a></a>').html('修改'));
+            var $btnEdit = $('<li></li>').append($('<a></a>').html('修改'));
             var $btnConfirm = $('<li></li>').append($('<a></a>').html('确认'));
-            var $btnAAR = $('<li></li>').append($('<a></a>').html('进退'));
-            var $btnRO = $('<li></li>').append($('<a></a>').html('出返'));
+            var $btnCR = $('<li></li>').append($('<a></a>').html('进退'));
+            var $btnXB = $('<li></li>').append($('<a></a>').html('出返'));
             //var $btnCA = $('<li></li>').append($('<a></a>').html('冲销'));
             var $btnImport = $('<li></li>').append($('<a></a>').html('导出'));
             var $btnPrint = $('<li></li>').append($('<a></a>').html('打印'));
 
-
-            $btnUl
-                .append($btnView)
-                //.append($btnEdit)
-                .append($btnConfirm)
-                .append($btnImport)
-                .append($btnPrint);
+            $btnUl.append($btnView).append($btnConfirm).append($btnImport).append($btnPrint);
+                
             if (v.type == 1) {
-                $btnUl.append($btnAAR);
+                $btnUl.append($btnCR);
             } else if (v.type == 3) {
-                $btnUl.append($btnRO);
+                $btnUl.append($btnXB);
             }
-            //else if (v.type == 6) {
-                //$btnUl.append($btnCA);
-            //}
 
-
-            $btnGroup
-                .append($btn)
-                .append($btnUl)
-                .appendTo($cellOption);
-
+            $btnGroup.append($btn).append($btnUl).appendTo($cellOption);
             $cellOption.appendTo($optionWrap);
+            $liLine.append($indexWrap).append($contentWrap).append($optionWrap);
 
-            $liLine.append($indexWrap)
-                .append($contentWrap)
-                .append($optionWrap);
-
-            //查看货单
             $btnView.click(function () {
-                viewManifest(v.mid, v.code);
+                params["manifest.mid"] = v.mid;
+                showLayer("查看__货单号 : " + v.code, "views/manifest/manifest4view.html");
             });
 
-            //修改货单
-          /*  $btnEdit.click(function () {
-                if (v.status == 0) {
-                    editManifest(v.mid, v.code, v.type, v.status);
-                } else {
-                    layer.msg('订单已确认,无法修改', {icon: 2})
-                }
+            $btnEdit.click(function () {
+            	
+            	if(v.status != 0){
+            		layer.msg('货单状态不可操作');
+            		return false;
+            	}
+            	
+            	params["manifest.mid"] = v.mid;
+                showLayer("编辑__货单号 : " + v.code, "views/manifest/manifest2edit.html");
+            });
 
-            });*/
-
-            //确认货单
             $btnConfirm.click(function(){
-                if(v.status == 0){
-                    confirmManifest(v.mid);
-                }else{
-                    layer.msg('无法重复确认订单',{icon:2});
-                }
+            	
+            	if(v.status != 0){
+            		layer.msg('货单状态不可操作');
+            		return false;
+            	}
+            	
+            	layer.confirm('是否确认订单?', {
+                    btn: ['确定', '取消']
+                }, function (indexo, layero) {
+                    com.post(api.inventory.confirmManifest, {"manifest.mid": v.mid}, function(res){
+                        layer.msg('操作成功');
+                        seacher.doSearch();
+                    });
+                });
             });
 
-
-            //货单退货
-            $btnAAR.click(function(){
-                if(v.status == 1){
-                    advanceRetreatManifest(v.mid, v.status);
-                }else{
-                    layer.msg('订单没有确认,无法退货',{icon:2});
-                }
+            $btnCR.click(function(){
+            	
+            	if(v.status != 1){
+            		layer.msg('货单状态不可操作');
+            		return false;
+            	}
+            	
+//                advanceRetreatManifest(v.mid, v.status);
+            	
+            	params["manifest.mid"] = v.mid;
+                showLayer("进退__货单号 : " + v.code, "views/manifest/manifest2cr.html");
             });
 
-            //货单出返
-            $btnRO.click(function(){
-                if(v.status == 1){
-                    sendReturnManifest(v.mid, v.status, v.sid);
-                }else{
-                    layer.msg('订单没有确认,无法出返',{icon:2});
-                }
+            $btnXB.click(function(){
+            	
+            	if(v.status != 1){
+            		layer.msg('货单状态不可操作');
+            		return false;
+            	}
+            	
+//                sendReturnManifest(v.mid, v.status, v.sid);
+            	
+            	params["manifest.mid"] = v.mid;
+                showLayer("出返__货单号 : " + v.code, "views/manifest/manifest2xb.html");
             });
 
             $btnImport.click(function(){
-            	queryManifestItemByMid(v.mid);
+            	exportManifest(v.mid);
             });
-
 
             //打印按钮
             $btnPrint.click(function () {
 
                 params["code"] = v.code;
                 params["createTime"] = v.createTime;
-                params["createUser.userName"] = v.createUser.userName;
+                params["creater.userName"] = v.creater.userName;
                 params["manifestTime"] = v.manifestTime;
                 params["mid"] = v.mid;
                 params["status"] = v.status;
                 params["total"] = v.total;
                 params["type"] = v.type;
 
-                printManifest(v.mid,v.code);
+//                printManifest(v.mid,v.code);
+                
+                params["manifest.mid"] = v.mid;
+                
+                com.popup("货单号 : " + v.code, api.index.manifestPrintIndex.url, function () {
+                    parent.layer.getFrameIndex(window.name);
+                }, null, true);
             });
 
             return $liLine;
-
         };
 
         return {
             init: function (tableId, listData) {
                 com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
-
             },
             drawLine: function (v) {
                 return creatLine(v);
@@ -220,125 +204,30 @@ $(function () {
     var seacher = new Searcher();
 
     seacher.init(_condArr, "condList", api.inventory.pageManifest, function (data) {
-
         displayFunc.init('resultList', data);
-
     }, "pagenation", "manifestPostData", null, false, null, null, 'resultList');
 
-
-    function viewManifest(mid, code) {
-        var $popup = com.focusPage('#viewPopUp');
-        $popup.attr({'data-mid': mid});
-        //弹出即全屏
-        var index = layer.open({
+    function showLayer(title, page){
+    	
+    	var $popup = com.focusPage("#layerPopUp");
+    	
+    	layer.open({
             type: 1,
-            skin: 'layui-layer-molv',
-            title: "查看货单" + code,
-            content: $popup,
-            area: [( $(window).width() * 0.7 < 1000 ? $(window).width() * 0.7 : 1000 ) + "px", ( $(window).height() * 0.84 < 620 ? $(window).height() * 0.84 : 620 ) + "px"],
-            maxmin: false,
-            zIndex: 9000,
-            btn: ['取消'],
-            success: function (layer, index) {
-                $popup.load("views/manifest/viewManifest.html");
-            },
-            end: function () {
-                $popup.attr('data-mid', null);
-            }
-        });
-    }
-
-    function editManifest(mid, code, type, status) {
-
-        var $popup = com.focusPage('#editPopUp');
-        $popup.attr({'data-mid': mid, 'data-type': type, 'data-status': status});
-        //弹出即全屏
-        var index = layer.open({
-            type: 1,
+            title: title,
             skin: 'layui-layer-lan',
-            title: "修改货单" + code,
             content: $popup,
-            area: [( $(window).width() * 0.7 < 1000 ? $(window).width() * 0.7 : 1000 ) + "px", ( $(window).height() * 0.84 < 620 ? $(window).height() * 0.84 : 620 ) + "px"],
+            area: [($(window).width() * 0.7 < 1000 ? $(window).width() * 0.7 : 1000) + "px", ($(window).height() * 0.84 < 620 ? $(window).height() * 0.84 : 620) + "px"],
             maxmin: false,
-            zIndex: 9000,
-            btn: ['确定'],
             success: function (layer, index) {
-                $popup.load("views/manifest/editManifest.html");
+                $popup.load(page);
             },
             end: function () {
-                $popup.attr('data-mid', null);
-                $popup.empty();
-                seacher.doSearch();
+                layer.closeAll();
             }
         });
     }
 
-    function confirmManifest(mid){
-        layer.confirm('是否确认订单？', {
-            btn: ['确定', '取消'] //按钮
-        }, function (indexo, layero) {
-            com.post(api.inventory.confirmManifest,{
-                "manifest.mid":mid
-            },function(res){
-                layer.msg('订单确认成功',{icon:1});
-                seacher.doSearch();
-            },function(){
-                layer.msg('订单确认失败',{icon:2});
-            });
-        }, function () {
-
-        });
-
-    }
-
-    function advanceRetreatManifest(mid,status){
-        var $popup = com.focusPage('#AARPopUp');
-        $popup.attr({'data-mid': mid,'data-status': status});
-        //弹出即全屏
-        var index = layer.open({
-            type: 1,
-            skin: 'layui-layer-lan',
-            title: "退货",
-            content: $popup,
-            area: ["1200px", ( $(window).height() * 0.84 < 700 ? $(window).height() * 0.84 : 700 ) + "px"],
-            maxmin: false,
-            zIndex: 9000,
-            success: function (layer, index) {
-                $popup.load("views/manifest/advanceRetreatManifest.html");
-            },
-            end: function () {
-                $popup.attr({'data-mid': null,'data-status':null});
-                $popup.empty();
-                seacher.doSearch();
-            }
-        });
-    }
-
-    function sendReturnManifest(mid,status,sid){
-        var $popup = com.focusPage('#ROPopUp');
-        $popup.attr({'data-mid': mid,'data-status': status,'data-sid': sid});
-        //弹出即全屏
-        var index = layer.open({
-            type: 1,
-            skin: 'layui-layer-lan',
-            title: "进退",
-            content: $popup,
-            area: ["1200px", ( $(window).height() * 0.84 < 700 ? $(window).height() * 0.84 : 700 ) + "px"],
-            maxmin: false,
-            zIndex: 9000,
-            success: function (layer, index) {
-                $popup.load("views/manifest/sendReturnManifest.html");
-            },
-            end: function () {
-                $popup.attr({'data-mid': null,'data-status':null});
-                $popup.empty();
-                seacher.doSearch();
-            }
-        });
-    }
-
-    //导出货单项事件
-    function queryManifestItemByMid(mid){
+    function exportManifest(mid){
         com.post(api.inventory.queryManifestItemByMid, {"manifest.mid": mid}, function(res){
 
             $.exceler({
@@ -359,21 +248,8 @@ $(function () {
             }, function(v){
                 v.instorehouse.name = v.instorehouse.name == null ? "---" : v.instorehouse.name;
                 v.outstorehouse.name = v.outstorehouse.name == null ? "---" : v.outstorehouse.name;
-            })
-
-        })
-
-    }
-
-    //打印货单项
-    function printManifest(mid,code){
-        params.manifestMid = mid;
-
-        com.popup("货单编号" + code, api.index.manifestPrintIndex.url, function () {
-            parent.layer.getFrameIndex(window.name);
-        }, null, true);
-
-
+            });
+        });
     }
 
 });

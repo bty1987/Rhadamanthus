@@ -17,6 +17,10 @@
     {"key":"0","value":"加入库存"},
     {"key":"1","value":"不加入库存"}
   ],
+  "isPaymentType": [
+    {"key":"0","value":"计入金额"},
+    {"key":"1","value":"不计入金额"}
+  ],
   "StockType": [
     {"key":"0","value":"入库"},
     {"key":"1","value":"出库"},

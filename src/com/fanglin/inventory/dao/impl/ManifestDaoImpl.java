@@ -26,74 +26,63 @@ import com.fanglin.utils.Paging;
 
 @Repository("manifestDao")
 public class ManifestDaoImpl extends DaoImpl<ManifestPO> implements ManifestDao {
-	
-	public ManifestDaoImpl(){
+
+	public ManifestDaoImpl() {
 		super(ManifestPO.class);
 	}
 
 	@Override
-	public List<ManifestPO> pageManifest(Paging paging, List<Filter> filters , int company) {
-		
+	public List<ManifestPO> pageManifest(Paging paging, List<Filter> filters, int company) {
+
 		PagingQuery<ManifestPO> query = pagingQuery(paging, ManifestPO.class);
-		
-		query.add(query.getCriterion(ManifestPO.COLUMN_COMPANY_STR,company,"eq"));
-		
+
+		query.add(query.getCriterion(ManifestPO.COLUMN_COMPANY_STR, company, "eq"));
+
 		queryFilterExecute(query, filters);
-		
+
 		query.desc("mid");
-		
+
 		return query.list();
 	}
 
 	@Override
 	public List<ManifestPO> queryManifest(List<Filter> filters) {
-		
+
 		PagingQuery<ManifestPO> query = pagingQuery(new Paging(), ManifestPO.class);
-		
+
 		queryFilterExecute(query, filters);
-		
+
 		return query.list();
 	}
 
-	private void queryFilterExecute(PagingQuery<?> query, List<Filter> filters){
-		
-		if(filters != null && filters.size() > 0){
-			
-			for(Filter filter: filters){
-				
+	private void queryFilterExecute(PagingQuery<?> query, List<Filter> filters) {
+
+		if (filters != null && filters.size() > 0) {
+
+			for (Filter filter : filters) {
+
 				String field = filter.getField();
 				String data = filter.getData();
 				String op = filter.getOp();
-				
-				if("orderId".equals(field)){
+
+				if ("orderId".equals(field)) {
 					query.add(query.getCriterion(ManifestPO.COLUMN_ORDERID_STR, data, op));
-				}else if("manifestTime".equals(field)){
-				/*	String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
-					String eTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
-					
-					Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
-					Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
-					
-					Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
-					Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
-					
-					query.add(query.getCriterion(ManifestPO.COLUMN_MANIFESTTIME_STR, eTimestamp, "le"));
-					query.add(query.getCriterion(ManifestPO.COLUMN_MANIFESTTIME_STR, sTimestamp, "ge"));*/
+				} else if ("manifestTime".equals(field)) {
 					String sTime = data + " 00:00:00";
 					String eTime = data + " 23:59:59";
 					Date sdate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
 					Date edate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
-					
+
 					Timestamp stimestamp = DateUtil.getDateToTimestamp(sdate);
 					Timestamp etimestamp = DateUtil.getDateToTimestamp(edate);
-					
+
 					query.add(query.getCriterion(ManifestPO.COLUMN_MANIFESTTIME_STR, stimestamp, "ge"));
 					query.add(query.getCriterion(ManifestPO.COLUMN_MANIFESTTIME_STR, etimestamp, "le"));
-					
-				}else if(ManifestPO.COLUMN_CODE_STR.equals(field)){
+
+				} else if (ManifestPO.COLUMN_CODE_STR.equals(field)) {
 					query.add(query.getCriterion(ManifestPO.COLUMN_CODE_STR, data, op));
-				}else if("createrName".equals(field)){
-					query.alias("createUser", "createUser");
+				} else if ("createrName".equals(field)) {
+					query.alias("creater", "creater");
 					query.add(query.getCriterion(ManifestPO.COLUMN_CREATEUSER_USERID_STR, data, op));
 				}
 			}

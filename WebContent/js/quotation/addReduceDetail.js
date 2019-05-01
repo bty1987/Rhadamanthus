@@ -934,7 +934,7 @@ var AddReduceDetail = (function(){
 				com.focusPage('#sumLabDiscount').text(addReduceDetail.discount);
 
 				addReduceDetail.qid = res.quotation.qid;
-				addReduceDetail.versionid = res.quotation.versionId;
+				addReduceDetail.versionid = res.quotation.no;
 
 				// 报价中的管理费
                 com.focusPage('#manageRate').text(res.quotation.manageRate);

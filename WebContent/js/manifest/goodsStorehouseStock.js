@@ -1,12 +1,5 @@
-/**
- * Created by Administrator on 2016/9/20.
- */
+
 $(function () {
-    /**
-     * 回调函数必须提供 init(tableId, result.list)方法
-     * tableId ，用来显示的div的id
-     * result.list 列表的json数组
-     * */
 
     com.focusPage('#layerAddGoodsStorehouseStock').find('input[name="name"]').typeahead({
         url: api.inventory.queryGoodsByName,
@@ -25,8 +18,8 @@ $(function () {
             this.options.list = data['goodes'];
             this.flprocess(this.options.list, 'gid', 'name');
         },
-        isResultTypeMap: true
-        , flupdater: function (k, v) {
+        isResultTypeMap: true,
+        flupdater: function (k, v) {
             //k: key, v:value
             com.focusPage('#layerAddGoodsStorehouseStock').find('input[name="name"]').attr('data-gid', k);
             com.post(api.inventory.queryColorForEnableByGid, {
@@ -42,7 +35,6 @@ $(function () {
 
             return v;
         }
-
     });
 
     com.post(api.inventory.queryStorehouseForSelf, {}, function (res) {
@@ -53,7 +45,7 @@ $(function () {
                 storehousesStatus.push(v);
             }
         });
-        com.focusPage('#layerAddGoodsStorehouseStock').find('select[name="storehouse"]').bindData(storehousesStatus, 'shId', 'name');
+        com.focusPage('#layerAddGoodsStorehouseStock').find('select[name="storehouse"]').bindData(storehousesStatus, 'shid', 'name');
     }, null, false);
 
     var displayFunc = (function () {
@@ -76,30 +68,32 @@ $(function () {
             }
         };
 
-        /*表格头*/
         var createTableTitle = function () {
+        	
             var $ulTitle = $('<ul></ul>').addClass('flex-table');
             var $liTitle = $('<li></li>').addClass('line table-title');
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>'));
             var $contentWrap = $('<div></div>').addClass('line-wrap  content col12');
+            
             var titleName = '仓库名称,商品编号,商品名称,条形码,品类,品牌,颜色,规格,单位,类型,件数,数量';
+            
             $.each(titleName.split(','), function (i, v) {
                 var $cell = $('<div></div>').addClass('cell').html(v);
                 $cell.appendTo($contentWrap);
             });
+            
             var $optionWrap = $('<div></div>').addClass('line-wrap action').html($('<div>操作</div>').addClass('cell option'));
-            $liTitle.append($indexWrap)
-                .append($contentWrap)
-                .append($optionWrap)
-                .appendTo($ulTitle);
+            $liTitle.append($indexWrap).append($contentWrap).append($optionWrap).appendTo($ulTitle);
+            
             return $ulTitle;
         };
 
-        /*表格体*/
         var creatLine = function (i, v, lastFlag) {
+        	
             var $liLine = $('<li></li>').addClass('line');
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(i + 1));
             var $contentWrap = $('<div></div>').addClass('line-wrap  content col12');
+            
             var propertyArr = [
                 //v.storehouse.code,
                 [v.storehouse.name,'grey'],
@@ -115,10 +109,12 @@ $(function () {
                 [v.goods.pieceNum,'blue'],
                 [v.num,'blue']
             ];
+            
             $.each(propertyArr, function (i, v) {
                 var $cell = $('<div></div>').addClass('cell ' + v[1]).html(v[0]);
                 $cell.appendTo($contentWrap);
             });
+            
             var $optionWrap = $('<div></div>').addClass('line-wrap action');
             var $cellOption = $('<div></div>').addClass('cell option');
             var $btnGroup = $('<div></div>').addClass('btn-group');
@@ -136,16 +132,11 @@ $(function () {
                 $btnUl.append($btnSplit).append($btnMerge);
             }
 
-            $btnGroup
-                .append($btn)
-                .append($btnUl)
-                .appendTo($cellOption);
+            $btnGroup.append($btn).append($btnUl).appendTo($cellOption);
 
             $cellOption.appendTo($optionWrap);
 
-            $liLine.append($indexWrap)
-                .append($contentWrap)
-                .append($optionWrap);
+            $liLine.append($indexWrap).append($contentWrap).append($optionWrap);
 
             $btnCheck.click(function () {
 
@@ -155,20 +146,20 @@ $(function () {
 
                 com.focusPage('#layerAddStrore').attr({
                     'data-gid': v.goods.gid,
-                    'data-shId': v.storehouse.shId,
+                    'data-shid': v.storehouse.shid,
                     'data-cid': v.color.cid,
                     'data-fid': v.format.fid
                 });
 
                 openlayer(function () {
                     var gid = com.focusPage('#layerAddStrore').attr('data-gid');
-                    var shId = com.focusPage('#layerAddStrore').attr('data-shId');
+                    var shid = com.focusPage('#layerAddStrore').attr('data-shid');
                     var cid = com.focusPage('#layerAddStrore').attr('data-cid');
                     var fid = com.focusPage('#layerAddStrore').attr('data-fid');
                     if(com.validate('formStore'))
                         return;
 
-                    saveData(gid, shId, cid, fid, function () {
+                    saveData(gid, shid, cid, fid, function () {
                         com.clearValidator("#newNum", true);
                         com.clearValidator();
                         layer.closeAll();
@@ -179,12 +170,12 @@ $(function () {
 
             //拆分按钮点击事件
             $btnSplit.click(function () {
-                openlayerPackage(v, $btnSplit.text(), "views/manifest/splitAndMerge.html")
+                openlayerPackage(v, $btnSplit.text(), "views/manifest/goods2ms.html")
             });
 
             //合并按钮点击事件
             $btnMerge.click(function () {
-                openlayerPackage(v, $btnMerge.text(), "views/manifest/splitAndMerge.html")
+                openlayerPackage(v, $btnMerge.text(), "views/manifest/goods2ms.html")
             });
 
             return $liLine;
@@ -200,8 +191,6 @@ $(function () {
             }
         };
     })();
-
-    /*分页*/
 
     var goodsStorehouseSeacher = new Searcher();
 
@@ -381,13 +370,13 @@ $(function () {
         });
     }
 
-    function saveData(gid, shId, cid, fid, callback) {
+    function saveData(gid, shid, cid, fid, callback) {
         var $layer = com.focusPage('#layerAddStrore');
         var num = $layer.find('input[name="num"]').val();
         var newNum = $layer.find('input[name="newNum"]').val();
         com.post(api.inventory.checkGoodsStorehouseStock, {
             "checkList.goods.gid": gid,
-            "checkList.storehouse.shId": shId,
+            "checkList.storehouse.shid": shid,
             "checkList.color.cid": cid,
             "checkList.format.fid": fid,
             "checkList.type": parseFloat(num) > parseFloat(newNum) ? 1 : 0,
@@ -404,13 +393,13 @@ $(function () {
         var gid = $layer.find('input[name="name"]').attr('data-gid');
         var cid = $layer.find('select[name="color"] option:selected').val();
         var fid = $layer.find('select[name="format"] option:selected').val();
-        var shId = $layer.find('select[name="storehouse"] option:selected').val();
+        var shid = $layer.find('select[name="storehouse"] option:selected').val();
 
         com.post(api.inventory.makeGoodsStorehouseStock, {
             "goodsStorehouseStock.goods.gid": gid,
             "goodsStorehouseStock.color.cid": cid,
             "goodsStorehouseStock.format.fid": fid,
-            "goodsStorehouseStock.storehouse.shId": shId
+            "goodsStorehouseStock.storehouse.shid": shid
         }, function (res) {
             callback();
             emptyAdd();

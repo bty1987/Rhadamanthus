@@ -19,11 +19,11 @@ import com.fanglin.inventory.po.ManifestTemplatePO;
 import com.fanglin.utils.Paging;
 
 public interface ManifestTemplateDao extends Dao<ManifestTemplatePO> {
-	
-	public List<ManifestTemplatePO> pageManifestTemplate(Paging paging, List<Filter> filters,int company);
-	
+
+	public List<ManifestTemplatePO> pageManifestTemplate(Paging paging, List<Filter> filters, int company);
+
 	public List<ManifestTemplatePO> queryManifestTemplate();
-	
-	public ManifestTemplatePO queryManifestTemplateByMtId(long mtId);
+
+	public ManifestTemplatePO queryManifestTemplateByMtid(long mtid);
 
 }

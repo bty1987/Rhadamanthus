@@ -12,6 +12,7 @@
 package com.fanglin.construction.vo;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 public class ConstructionScheduleVO implements Serializable {
 
@@ -23,11 +24,13 @@ public class ConstructionScheduleVO implements Serializable {
 	
 	private String orderId;
 	
-	private String startTime;
+	private Timestamp startTime;
 	
-	private String endTime;
+	private Timestamp endTime;
 	
 	private Short status;
+	
+	private Short checkout;
 	
 	private Short schedule;
 
@@ -55,19 +58,19 @@ public class ConstructionScheduleVO implements Serializable {
 		this.orderId = orderId;
 	}
 
-	public String getStartTime() {
+	public Timestamp getStartTime() {
 		return startTime;
 	}
 
-	public void setStartTime(String startTime) {
+	public void setStartTime(Timestamp startTime) {
 		this.startTime = startTime;
 	}
 
-	public String getEndTime() {
+	public Timestamp getEndTime() {
 		return endTime;
 	}
 
-	public void setEndTime(String endTime) {
+	public void setEndTime(Timestamp endTime) {
 		this.endTime = endTime;
 	}
 	
@@ -77,6 +80,14 @@ public class ConstructionScheduleVO implements Serializable {
 
 	public void setStatus(Short status) {
 		this.status = status;
+	}
+
+	public Short getCheckout() {
+		return checkout;
+	}
+
+	public void setCheckout(Short checkout) {
+		this.checkout = checkout;
 	}
 
 	public Short getSchedule() {

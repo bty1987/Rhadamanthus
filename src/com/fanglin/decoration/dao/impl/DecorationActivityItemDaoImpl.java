@@ -48,7 +48,7 @@ public class DecorationActivityItemDaoImpl extends DaoImpl<DecorationActivityIte
 	@Override
 	public float amountDecorationActivityItemForIsPayment(String orderId, short isPayment) {
 		
-		String sql = "select COALESCE(SUM(money*num),0) as priceSum from decoration.decorationActivityitem where orderId =:orderId and type = 0 and isPayment =:isPayment";
+		String sql = "select COALESCE(SUM(money*num), 0) as priceSum from decoration.decorationActivityitem where orderId =:orderId and type = 0 and isPayment =:isPayment and state = 0";
 	    SQLQuery sqlQuery = session().createSQLQuery(sql);
 	    sqlQuery.addScalar("priceSum", StandardBasicTypes.FLOAT).setString("orderId", orderId).setShort("isPayment", isPayment);
 	    

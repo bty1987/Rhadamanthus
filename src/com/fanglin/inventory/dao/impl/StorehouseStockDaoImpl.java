@@ -22,7 +22,7 @@ import com.fanglin.inventory.po.StorehouseStockPO;
 @Repository("storehouseStockDao")
 public class StorehouseStockDaoImpl extends DaoImpl<StorehouseStockPO> implements com.fanglin.inventory.dao.StorehouseStockDao {
 
-	public StorehouseStockDaoImpl(){
+	public StorehouseStockDaoImpl() {
 		super(StorehouseStockPO.class);
 	}
 
@@ -33,8 +33,8 @@ public class StorehouseStockDaoImpl extends DaoImpl<StorehouseStockPO> implement
 	}
 
 	@Override
-	public StorehouseStockPO queryStorehouseStockByShIdAMonth(long shId, String month) {
-		return (StorehouseStockPO) session().createCriteria(StorehouseStockPO.class).createAlias("storehouse", "storehouse").add(Restrictions.eq(StorehouseStockPO.COLUMN_SHID_STR, shId)).add(Restrictions.eq(StorehouseStockPO.COLUMN_MONTH_STR, month)).uniqueResult();
+	public StorehouseStockPO queryStorehouseStockByShidAMonth(long shid, String month) {
+		return (StorehouseStockPO) session().createCriteria(StorehouseStockPO.class).createAlias("storehouse", "storehouse").add(Restrictions.eq(StorehouseStockPO.COLUMN_SHID_STR, shid)).add(Restrictions.eq(StorehouseStockPO.COLUMN_MONTH_STR, month)).uniqueResult();
 	}
-	
+
 }

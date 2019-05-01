@@ -11,16 +11,17 @@
 
 package com.fanglin.quotation.dao.impl;
 
+import java.math.BigInteger;
 import java.util.List;
 
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.core.vo.Filter;
 import com.fanglin.quotation.dao.AddReduceItemDao;
 import com.fanglin.quotation.po.AddReduceItemPO;
-import com.fanglin.utils.Paging;
+import com.fanglin.quotation.po.QuotationFunctionAreaPO;
 
 @Repository("addReduceItemDao")
 public class AddReduceItemDaoImpl extends DaoImpl<AddReduceItemPO> implements AddReduceItemDao {
@@ -29,24 +30,6 @@ public class AddReduceItemDaoImpl extends DaoImpl<AddReduceItemPO> implements Ad
 		super(AddReduceItemPO.class);
 	}
 	
-	@Override
-	public List<AddReduceItemPO> pageAddReduceItem(Paging paging, List<Filter> filters) {
-		
-		PagingQuery<AddReduceItemPO> query = pagingQuery(paging, AddReduceItemPO.class);
-		
-		return query.list();
-	}
-
-	@Override
-	public List<AddReduceItemPO> pageAddReduceItemByAddReduceId(Paging paging, List<Filter> filters, int arId) {
-		
-		PagingQuery<AddReduceItemPO> query = pagingQuery(paging, AddReduceItemPO.class);
-		
-		query.add(Restrictions.eq(AddReduceItemPO.COLUMN_ARID_STR, arId));
-		
-		return query.list();
-	}
-
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<AddReduceItemPO> queryAddReduceItemByAddReduceId(int addReduceId) {
@@ -60,12 +43,18 @@ public class AddReduceItemDaoImpl extends DaoImpl<AddReduceItemPO> implements Ad
 	}
 
 	@Override
-	public int deleteAddReductItemByAddReduceId(int addReduceId) {
+	public int countAddReduceItemForFunctionArea(long qfaid) {
 		
-		String sqlUpdate = "delete from quotation.addreduceitem where arId = :arId";
-		int deletedEntities = session().createSQLQuery( sqlUpdate ).setInteger("arId", addReduceId ).executeUpdate();
-		
-		return deletedEntities;
+		String sql = "select count(*) from quotation.addreduceitem where quotationFunctionAreaId =:qfaid";
+
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setLong("qfaid", qfaid).uniqueResult();
+
+		return count.intValue();
+	}
+
+	@Override
+	public int countAddReduceItemForFunctionArea(List<QuotationFunctionAreaPO> quotationFunctionAreas) {
+		return (Integer) createCriteria(AddReduceItemPO.class).add(Restrictions.in("quotationFunctionArea", quotationFunctionAreas)).setProjection(Projections.rowCount()).uniqueResult();
 	}
 
 }

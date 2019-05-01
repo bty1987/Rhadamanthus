@@ -650,7 +650,7 @@ var decorationUtils = {
         } else {
             com.showAlert(com.error, dateObj.errorMsg);
         }
-    }, initDecorationPicture: function (designId, pictureId, cadId, contractId,originalId, orderId, dFlag) {
+    }, initDecorationPicture: function (designId, pictureId, cadId, contractId,originalId, orderId) {
 
         var $desgin = com.focusPage("#" + designId).html("");
         var $picture = com.focusPage("#" + pictureId).html("");
@@ -666,15 +666,15 @@ var decorationUtils = {
                 var decorationPicture = decorationPictures[i];
 
                 if (decorationPicture.type == 0) {
-                    decorationUtils.addCAD($cad, decorationPicture, dFlag);
+                    decorationUtils.addCAD($cad, decorationPicture);
                 } else if (decorationPicture.type == 1) {
-                    decorationUtils.addPicture($desgin, decorationPicture, dFlag);
+                    decorationUtils.addPicture($desgin, decorationPicture);
                 } else if (decorationPicture.type == 2) {
-                    decorationUtils.addPicture($picture, decorationPicture, dFlag);
+                    decorationUtils.addPicture($picture, decorationPicture);
                 } else if (decorationPicture.type == 3) {
-                    decorationUtils.addPicture($contract, decorationPicture, dFlag);
+                    decorationUtils.addPicture($contract, decorationPicture);
                 } else if (decorationPicture.type == 4) {
-                    decorationUtils.addPicture($original, decorationPicture, dFlag);
+                    decorationUtils.addPicture($original, decorationPicture);
                 }
             }
 
@@ -690,7 +690,7 @@ var decorationUtils = {
                 maxHeight: '100%'
             });
         });
-    }, addPicture: function (e, i, dFlag) {
+    }, addPicture: function (e, i) {
         var $li = $('<li></li>').attr("id", "imgLi_" + i.dpId).appendTo(e);
         var $img = $('<img></img>').attr('width', 200).attr('height', 200);
         var $imgA = $('<a></a>').attr('data-rel', 'colorbox').addClass('cboxElement').attr('href', com.showImg($img, i.path, 200, 200, '200x200')).attr('target', '_blank').append($img).appendTo($li);
@@ -705,7 +705,6 @@ var decorationUtils = {
         var $toolLabel = $('<label></label>').appendTo($tools);
         var $downA = $('<a></a>').addClass("icon-download-alt").appendTo($tools);
 
-        if (dFlag) {
             var $delA = $('<a></a>').addClass("icon-remove").appendTo($tools);
 
             $delA.click(function () {
@@ -713,11 +712,10 @@ var decorationUtils = {
                     com.focusPage("#imgLi_" + res.decorationPicture.dpId).remove();
                 });
             });
-        }
 
         com.downloadFile($downA, i.path, i.name);
 
-    }, addCAD: function (e, i, dFlag) {
+    }, addCAD: function (e, i) {
 
         var $name = i.name;
 
@@ -733,7 +731,6 @@ var decorationUtils = {
         var $infoboxContent = $('<div></div>').addClass('infobox-content').text(i.uploadTime).appendTo($infoboxLeft);
 
 
-        if (dFlag) {
             var $delA = $('<a></a>').addClass("icon-remove").css({
                 'float': 'right',
                 'font-size': '22px',
@@ -745,7 +742,6 @@ var decorationUtils = {
                     com.focusPage("#cad_" + res.decorationPicture.dpId).remove();
                 });
             });
-        }
     }, initConstructionScheduleInfo: function () {
 
         var options = {};

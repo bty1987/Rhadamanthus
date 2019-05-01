@@ -16,37 +16,37 @@ import javax.persistence.Table;
 public class ManifestItemPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -2665091838341550211L;
-	
+
 	public static final String COLUMN_MID_STR = "mid";
-	
+
 	public static final String COLUMN_SIID_STR = "siid";
-	
-	private long miId;
-	
+
+	private long miid;
+
 	private long mid;
-	
+
 	private long siid;
-	
+
 	private GoodsPO goods;
-	
+
 	private ColorPO color;
-	
+
 	private FormatPO format;
-	
+
 	private StorehousePO instorehouse;
-	
+
 	private StorehousePO outstorehouse;
-	
+
 	private float num;
-	
+
 	private float unitPrice;
-	
+
 	private String comment;
 
 	public ManifestItemPO() {
 		super();
 	}
-	
+
 	public ManifestItemPO(GoodsPO goods) {
 		super();
 		this.goods = goods;
@@ -61,13 +61,13 @@ public class ManifestItemPO implements java.io.Serializable {
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "miId")
-	public long getMiId() {
-		return this.miId;
+	@Column(name = "miid")
+	public long getMiid() {
+		return this.miid;
 	}
 
-	public void setMiId(long miId) {
-		this.miId = miId;
+	public void setMiid(long miid) {
+		this.miid = miid;
 	}
 
 	@Column(name = "mId")
@@ -78,7 +78,7 @@ public class ManifestItemPO implements java.io.Serializable {
 	public void setMid(long mid) {
 		this.mid = mid;
 	}
-	
+
 	@Column(name = "siid")
 	public long getSiid() {
 		return siid;
@@ -97,7 +97,7 @@ public class ManifestItemPO implements java.io.Serializable {
 	public void setGoods(GoodsPO goods) {
 		this.goods = goods;
 	}
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "cid", referencedColumnName = "cid")
 	public ColorPO getColor() {
@@ -107,7 +107,7 @@ public class ManifestItemPO implements java.io.Serializable {
 	public void setColor(ColorPO color) {
 		this.color = color;
 	}
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "fid", referencedColumnName = "fid")
 	public FormatPO getFormat() {
@@ -119,7 +119,7 @@ public class ManifestItemPO implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "ishId", referencedColumnName = "shId")
+	@JoinColumn(name = "ishid", referencedColumnName = "shid")
 	public StorehousePO getInstorehouse() {
 		return instorehouse;
 	}
@@ -129,7 +129,7 @@ public class ManifestItemPO implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "oshId", referencedColumnName = "shId")
+	@JoinColumn(name = "oshid", referencedColumnName = "shid")
 	public StorehousePO getOutstorehouse() {
 		return outstorehouse;
 	}
@@ -163,6 +163,24 @@ public class ManifestItemPO implements java.io.Serializable {
 
 	public float getUnitPrice() {
 		return unitPrice;
+	}
+	
+	public ManifestItemPO init(long mid, Long siid, long gid, long cid, long fid, float unitPrice, float num, StorehousePO inStorehousePO, StorehousePO outStorehousePO){
+		
+		setMid(mid);
+		setSiid(siid);
+		
+		setGoods(new GoodsPO(gid));
+		setColor(new ColorPO(cid));
+		setFormat(new FormatPO(fid));
+		
+		setUnitPrice(unitPrice);
+		setNum(num);
+		
+		setInstorehouse(inStorehousePO);
+		setOutstorehouse(outStorehousePO);
+		
+		return this;
 	}
 
 }

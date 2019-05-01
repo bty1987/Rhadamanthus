@@ -389,7 +389,7 @@ $(function () {
                             "goodsStorehouseStock.storehouse.shId": $liLine.find('select.outStroehouse').val(),
                         };
 
-                        com.post(api.inventory.queryGoodsStorehouseStockByShIdAGId, optionStroe, function (res) {
+                        com.post(api.inventory.queryGoodsStorehouseStockByShidAGid, optionStroe, function (res) {
                             if (res.goodsStorehouseStock.num == null) {
                                 layer.msg("该仓库没有此商品", {time: 3e3});
                             } else {

@@ -12,77 +12,73 @@ import javax.persistence.FetchType;
 import java.io.Serializable;
 
 @Entity
-@Table(name="purchaseItem", catalog = "inventory")
-public class PurchaseItemPO  implements Serializable{
-	
+@Table(name = "purchaseItem", catalog = "inventory")
+public class PurchaseItemPO implements Serializable {
+
 	private static final long serialVersionUID = -6693806406372510849L;
 
-	public static final String COLUMN_PID_STR = "pid";                //采购单ID
-	
-	public static final String COLUMN_SIID_STR ="siid";				  //销售单ID
-	
-	public static final String COLUMN_PIID_STR = "piId";              //采购项ID
-	
-	public static final String COLUMN_GOODS_STR = "goods.goods";      //商品类型
-	
-	public static final String COLUMN_COLOR_STR = "color.color";      //商品颜色类型
-	
-	public static final String COLUMN_FORMAT_STR = "format.format";   //商品规格
-	
-	public static final String COLUMN_NUM_STR = "num";                //数量
-	
-	public static final String COLUMN_SPRPLUS_STR = "surplus";        //剩余数量
-	
-	private long piId;
-	
+	public static final String COLUMN_PID_STR = "pid"; // 采购单ID
+
+	public static final String COLUMN_SIID_STR = "siid"; // 销售单ID
+
+	public static final String COLUMN_PIID_STR = "piId"; // 采购项ID
+
+	public static final String COLUMN_GOODS_STR = "goods.goods"; // 商品类型
+
+	public static final String COLUMN_COLOR_STR = "color.color"; // 商品颜色类型
+
+	public static final String COLUMN_FORMAT_STR = "format.format"; // 商品规格
+
+	public static final String COLUMN_NUM_STR = "num"; // 数量
+
+	public static final String COLUMN_SPRPLUS_STR = "surplus"; // 剩余数量
+
+	private long piid;
+
 	private long pid;
-	
+
 	private long siid;
-	
+
 	private GoodsPO goods;
 
 	private ColorPO color;
-	
+
 	private FormatPO format;
-	
-	private SupplierPO supplier;
-	
+
 	private float unitPrice;
-	
-	private float num; 
-	
+
+	private float num;
+
 	private float surplus;
-	
+
 	public PurchaseItemPO() {
 		super();
 	}
-	
-	public PurchaseItemPO(GoodsPO goods, ColorPO color, FormatPO format,
-			SupplierPO supplier) {
+
+	public PurchaseItemPO(GoodsPO goods, ColorPO color, FormatPO format) {
 		super();
 		this.goods = goods;
 		this.color = color;
 		this.format = format;
-		this.supplier = supplier;
 	}
 
 	public PurchaseItemPO(Long pid) {
 		super();
 		this.pid = pid;
 	}
-	
+
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name="piId")
-	public long getPiId() {
-		return piId;
+	@Column(name = "piid")
+	public long getPiid() {
+		return piid;
 	}
 
-	public void setPiId(long piId) {
-		this.piId = piId;
+	public void setPiid(long piid) {
+		this.piid = piid;
 	}
-	
-	@Column(name="pid")
+
+	@Column(name = "pid")
 	public long getPid() {
 		return pid;
 	}
@@ -90,8 +86,8 @@ public class PurchaseItemPO  implements Serializable{
 	public void setPid(long pid) {
 		this.pid = pid;
 	}
-	
-	@Column(name="siid")
+
+	@Column(name = "siid")
 	public long getSiid() {
 		return siid;
 	}
@@ -130,17 +126,7 @@ public class PurchaseItemPO  implements Serializable{
 		this.format = format;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "sid", referencedColumnName = "sid")
-	public SupplierPO getSupplier() {
-		return supplier;
-	}
-
-	public void setSupplier(SupplierPO supplier) {
-		this.supplier = supplier;
-	}
-
-	@Column(name="unitPrice")
+	@Column(name = "unitPrice")
 	public float getUnitPrice() {
 		return unitPrice;
 	}
@@ -149,7 +135,7 @@ public class PurchaseItemPO  implements Serializable{
 		this.unitPrice = unitPrice;
 	}
 
-	@Column(name="num")
+	@Column(name = "num")
 	public float getNum() {
 		return num;
 	}
@@ -158,7 +144,7 @@ public class PurchaseItemPO  implements Serializable{
 		this.num = num;
 	}
 
-	@Column(name="surplus")
+	@Column(name = "surplus")
 	public float getSurplus() {
 		return surplus;
 	}

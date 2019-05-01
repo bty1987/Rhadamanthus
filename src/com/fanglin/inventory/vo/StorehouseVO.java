@@ -4,7 +4,7 @@ public class StorehouseVO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -3979432865722880416L;
 
-	private Long shId;
+	private Long shid;
 	
 	private String code;
 	
@@ -12,12 +12,21 @@ public class StorehouseVO implements java.io.Serializable {
 	
 	private Short status;
 
-	public Long getShId() {
-		return this.shId;
+	public StorehouseVO() {
+		super();
 	}
 
-	public void setShId(Long shId) {
-		this.shId = shId;
+	public StorehouseVO(Long shid) {
+		super();
+		this.shid = shid;
+	}
+
+	public Long getShid() {
+		return shid;
+	}
+
+	public void setShid(Long shid) {
+		this.shid = shid;
 	}
 
 	public String getCode() {

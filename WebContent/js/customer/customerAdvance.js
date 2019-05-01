@@ -55,6 +55,7 @@ $(function () {
                 ["楼盘名: ",com.checkNull(v.village.name,'无'), "grey"],
                 ["楼牌号: ", v.houseNumber, "blue"],
                 ["建筑面积: ", v.buildArea, "blue"],
+                ["装修单号: ", com.checkNull(v.orderId, '无'), "blue"],
                 ["备注: ", com.checkNull(v.comment, '无'), "grey"]
             ];
             $.each(propertyArr, function (index, value) {

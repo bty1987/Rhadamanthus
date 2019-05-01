@@ -28,8 +28,6 @@ public class PurchaseDaoImpl extends DaoImpl<PurchasePO> implements PurchaseDao 
 
 		queryFilterExecute(query, filters);
 
-		query.asc("deliveryTime");
-
 		return query.list();
 	}
 
@@ -39,12 +37,9 @@ public class PurchaseDaoImpl extends DaoImpl<PurchasePO> implements PurchaseDao 
 		PagingQuery<PurchasePO> query = pagingQuery(paging, PurchasePO.class);
 
 		query.add(query.getCriterion(PurchasePO.COLUMN_COMPANY_STR, company, "eq"));
+		query.add(query.getCriterion(PurchasePO.COLUMN_STATUS_STR, PurchasePO.STATUS_BATCHIN_ALL_INT, "ne"));
 
 		queryFilterExecute(query, filters);
-
-		query.add(query.getCriterion(PurchasePO.COLUMN_ALLSTATUS_STR, (short) 2, "ne"));
-
-		query.asc("deliveryTime");
 
 		return query.list();
 	}

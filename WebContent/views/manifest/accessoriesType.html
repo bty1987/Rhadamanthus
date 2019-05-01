@@ -1,126 +1,75 @@
 <div id="accessoriesTypePageContent" class="page-content">
-
     <div class="row">
-
         <div class="col-xs-12">
-
             <div id="condList" class="fl_search clearfix"></div>
-
             <div class="clearfix" id="resultList"></div>
-
             <div class="fl-page-wrap clearfix pagination" id="pagenation" style="display: block;"></div>
-
         </div>
-
     </div>
-
 </div>
 
-<div id="layerAdd" style="padding: 40px 0;display:none;">
+<div id="layerAdd" style="display: none;">
     <div class="row-fluid">
         <form class="form-horizontal" novalidate="novalidate" id="form1">
 
             <div class="widget-main">
-                <div class="row" style="margin: 0px;">
+                <div class="row" style="margin:0px;">
                     <div class="col-md-11">
-
                         <div class="form-group">
-                            <label class="col-md-4 control-label no-padding-right">名称</label>
+                            <label class="col-md-4 control-label no-padding-right orange">名称</label>
                             <div class="col-md-8">
-                                <input type="text" class="col-xs-10 col-sm-5 v_required" id="name" name="name" data-required="1" data-toggle="popover" data-trigger='manual' rules="{required:true}" >
-                                <span class="required"><i class='icon-asterisk'></i></span>
+                                <input type="hidden" id="atid">
+                                <input type="text" class="v_required" id="name" name="name" data-required="1" data-toggle="popover" data-trigger='manual' />
                             </div>
                         </div>
                         <div class="form-group">
-
-                            <label class="col-md-4 control-label no-padding-right">工种</label>
-
+                            <label class="col-md-4 control-label no-padding-right orange">工种</label>
                             <div class="col-md-8">
-
-                                <select class="col-xs-10 col-sm-5 v_required" id="workType" name="workType" data-required="1" data-toggle="popover" data-trigger='manual' rules="{required:true}"></select>
-                                <span class="required"><i class='icon-asterisk'></i></span>
+                                <select class="v_required" id="workType" name="workType" data-required="1" data-toggle="popover" data-trigger='manual'></select>
                             </div>
-
                         </div>
 
                         <div class="form-group">
-
-                            <label class="col-md-4 control-label no-padding-right">说明</label>
-
+                            <label class="col-md-4 control-label no-padding-right orange">说明</label>
                             <div class="col-md-8">
-
-                                <input type="text" class="col-xs-10 col-sm-5 v_required" id="comment" name="comment" data-required="1" data-toggle="popover" data-trigger='manual' rules="{required:true}">
-                                <span class="required"><i class='icon-asterisk'></i></span>
+                                <input type="text" class="v_required" id="comment" name="comment" data-required="1" data-toggle="popover" data-trigger='manual'>
                             </div>
-
                         </div>
-
                     </div>
                 </div>
             </div>
-
-
-
-
-
         </form>
     </div>
 </div>
 
-<div id="importAccessoriesType" style="padding: 40px 0;display: none;">
+<div id="importLayer" style="display: none;">
     <div class="row-fluid">
         <form class="form-horizontal" novalidate="novalidate" id="form2">
 
-            <div class="alert alert-error hide">
-
-                <button data-dismiss="alert" class="close"></button>
-
-                You have some form errors. Please check below.
-
+            <div class="form-group" style="margin:0px;">
+                <div style="margin-left : 10%;font-size : 16px;color : red;font-family : 微软雅黑">上传字段均为文本类型</div>
+            </div>
+            <div class="form-group" style="margin:0px;">
+                <div style="margin-left : 10%;font-size : 16px;color : red;font-family : 微软雅黑">上传格式 : 名称 工种ID 说明</div>
+            </div>
+            <div class="form-group" style="margin:0px;">
+                <div style="margin-left : 10%;font-size : 16px;color : red;font-family : 微软雅黑">注意 : 上传文件中请填写具体内容，不显示表头</div>
+            </div>
+            <div class="form-group" style="margin:0px;">
+                <div style="margin-left : 10%;font-size : 16px;color : red;font-family : 微软雅黑">例 : </div>
             </div>
 
-            <div class="alert alert-success hide">
-
-                <button data-dismiss="alert" class="close"></button>
-
-                Your form validation is successful!
-
-            </div>
-            <div class="form-group" style="margin: 0px;">
-
-                <div style="margin-left:10%;font-size:16px;color:red;font-family:微软雅黑">上传字段均为文本类型</div>
-
-            </div>
-
-
-            <div class="form-group" style="margin: 0px;">
-
-                <div style="margin-left:10%;font-size:16px;color:red;font-family:微软雅黑">上传格式 : 名称 工种ID 说明</div>
-
-            </div>
-
-            <div class="form-group" style="margin: 0px;">
-
-                <div style="margin-left:10%;font-size:16px;color:red;font-family:微软雅黑">注意：上传文件中请填写具体内容，不显示表头</div>
-
-            </div>
-            <div class="form-group" style="margin: 0px;">
-
-                <div style="margin-left:10%;font-size:16px;color:red;font-family:微软雅黑">例 : </div>
-
-            </div>
-
-            <div class="form-group" style="margin:10px;">
+            <div class="form-group" style="margin : 10px;">
                 <ul class="flex-table">
                     <li class="">
-                        <div class="line-wrap content col3" style="width:100%;">
+                        <div class="line-wrap content col3" style="width : 100%;">
                             <div class="cell">名称</div>
                             <div class="cell">工种ID</div>
                             <div class="cell">说明</div>
                         </div>
                     </li>
                     <li class="">
-                        <div class="line-wrap content col3" style="width:100%;">
+                        <div class="line-wrap content col3" style="width : 100%;">
                             <div class="cell">油工</div>
                             <div class="cell">7</div>
                             <div class="cell">油工说明</div>
@@ -129,22 +78,15 @@
                 </ul>
             </div>
 
-            <div class="form-group" style="margin: 0px;">
-                <form class="form-horizontal" >
-                    <div class="form-group" style="margin: 0px;">
-                        <div style="margin-left: 9%" id="importSelectAccessoriesType"></div>
-                    </div>
-                </form>
+            <div class="form-group" style="margin:0px;">
+	            <div class="form-group" style="margin:0px;">
+	                <div style="margin-left: 9%" id="importSelectAccessoriesType"></div>
+	            </div>
             </div>
-
         </form>
     </div>
-
 </div>
 
 <script type="text/javascript">
     $.loadScript(['js/manifest/accessoriesType.js']);
 </script>
-
-
-

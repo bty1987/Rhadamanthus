@@ -14,20 +14,17 @@ package com.fanglin.quotation.dao;
 import java.util.List;
 
 import com.fanglin.core.dao.Dao;
-import com.fanglin.core.vo.Filter;
 import com.fanglin.quotation.po.AddReduceItemPO;
-import com.fanglin.utils.Paging;
+import com.fanglin.quotation.po.QuotationFunctionAreaPO;
 
 public interface AddReduceItemDao extends Dao<AddReduceItemPO> {
-	
-	public List<AddReduceItemPO> pageAddReduceItem(Paging paging, List<Filter> filters);
-	
-	public List<AddReduceItemPO> pageAddReduceItemByAddReduceId(Paging paging, List<Filter> filters, int arId);
 	
 	public List<AddReduceItemPO> queryAddReduceItemByAddReduceId(int addReduceId);
 	
 	public List<AddReduceItemPO> queryAddReduceItemByAddReduceIds(List<Integer> addReduceIds);
 	
-	public int deleteAddReductItemByAddReduceId(int addReduceId);
-
+	public int countAddReduceItemForFunctionArea(long qfaid);
+	
+	public int countAddReduceItemForFunctionArea(List<QuotationFunctionAreaPO> quotationFunctionAreas);
+	
 }

@@ -56,7 +56,7 @@ public class StorehouseUserServiceImpl implements StorehouseUserService {
 			
 			storehouseUserVO = new StorehouseUserVO(new UserBaseVO(), new StorehouseVO());
 			
-			storehouseUserVO.setShuId(storehouseUserPO.getShuId());
+			storehouseUserVO.setShuid(storehouseUserPO.getShuid());
 			storehouseUserVO.getUser().setBaseInfo(storehouseUserPO.getUser());
 			
 			BeanUtil.copyProperties(storehouseUserPO.getStorehouse(), storehouseUserVO.getStorehouse());
@@ -69,7 +69,7 @@ public class StorehouseUserServiceImpl implements StorehouseUserService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int updateStorehouseUser(UserBaseVO userVO, List<Long> shIds) throws FLException {
+	public int updateStorehouseUser(UserBaseVO userVO, List<Long> shids) throws FLException {
 		
 		UserPO userPO = userDao.queryUserByUserId(userVO.getUserId());
 		
@@ -79,15 +79,15 @@ public class StorehouseUserServiceImpl implements StorehouseUserService {
 		
 		int uid = userPO.getUid();
 		
-		storehouseUserDao.deleteStorehouseUserByUId(uid);
+		storehouseUserDao.deleteStorehouseUserByUid(uid);
 		
-		if(shIds != null && shIds.size() > 0){
-			for(Long shId: shIds){
+		if(shids != null && shids.size() > 0){
+			for(Long shid: shids){
 				
-				StorehousePO storehousePO = storehouseDao.get(shId);
+				StorehousePO storehousePO = storehouseDao.get(shid);
 				
 				if(storehousePO != null){
-					storehouseUserDao.save(new StorehouseUserPO(userPO, new StorehousePO(shId)));
+					storehouseUserDao.save(new StorehouseUserPO(userPO, new StorehousePO(shid)));
 				}
 			}
 		}

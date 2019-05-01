@@ -115,13 +115,11 @@ var QuotetionDetail = (function(){
                 });
             }, null, false);
             //初始化报价项选择弹层
-            var extraParams  = {"quotationItem.no":  quo.basicParams["quotetion.version"]};
+            var extraParams  = {"quotationItem.versionId":  quo.basicParams["quotetion.version"]};
             var _condArr = ['itemName', 'quotationBigCategoryId', 'quotationSmallCategoryId', 'quotationWorkTypeId'];
             var quotetionItemSeacher = new Searcher();
             // 通过报价版本编号获取分页方式获取状态为启用报价项信息
             quotetionItemSeacher.init( _condArr, "condList", api.quotation.pageQuotationItemByVersionId,  function(data){
-                console.log(data)
-                console.log(condList)
                 var $tableWrap =com.focusPage('#resultList').empty();
                 var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
                 if(data && data.length){
@@ -670,7 +668,7 @@ var QuotetionDetail = (function(){
             com.focusPage("#discount").prop("disabled","disabled");
             com.post(api.decoration.queryDecorationConfig, {}, function (res) {
                 $.each(res.config.machingType, function(i, v){
-                    if (v['v'] && v['v']==2) return;
+                    if (v['v'] && v['v']==2) return;  // 原报价显示v=0/2, 新报价显示v=0/1
                     var radio = $('<div class="radio no-padding" style="margin-bottom:10px"></div>');
                     var lableInput = $('<label> <input type="radio" name="basePrice" class="ace" value="'+ v['db'] +'" data-baseDiscount="'+ v['dd'] +'" data-name="'+ v['n'] +'"/> <sapn class="lbl"></sapn></label>');
                     var lbl1 = $('<label>'+ v['n'] +'</label>').addClass('quotation-base-price-radio').addClass('quotation-base-price-radio-width15');

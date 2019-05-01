@@ -21,6 +21,6 @@ public interface VticketService {
 	
 	public void comeVticket(VticketVO vticketVO)throws FLException;
 	
-	public void registVticket(VticketVO vticketVO);
+	public void registVticket(VticketVO vticketVO) throws FLException;
 	
 }

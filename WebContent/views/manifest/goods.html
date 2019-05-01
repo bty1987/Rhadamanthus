@@ -1,188 +1,108 @@
 
 <div id="goodsPageContent" class="page-content">
-
     <div class="row">
-
         <div class="col-xs-12">
-
             <div id="condList" class="fl_search clearfix"></div> <!-- 查询条件-->
-
             <div class="clearfix" id="resultList"></div> <!--查询结果-->
-
             <div class="fl-page-wrap clearfix pagination" id="pagenation" style="display: block;"></div> <!--分页-->
-
         </div>
-
     </div>
-
 </div>
 
-
-
-<div id="layerAddgood"  style="padding: 40px 0;display: none;">
-    <div class="row-fluid">
+<div id="addLayer" class="page-content" style="display: none;">
+    <div class="row">
         <form class="form-horizontal" novalidate="novalidate" id="formGoods">
 
             <div class="widget-main">
-                <div class="row" style="margin: 0px;">
-                    <div class="col-md-11">
-
-                        <div class="form-group">
-
-                            <label class="col-md-4 control-label no-padding-right">商品编号</label>
-
-                            <div class="col-md-8">
-
-                                <input type="text" class="col-xs-10 col-sm-7 v_required" id="no" name="no" >
-                                <span class="required" style="margin-left: 3px;"><i class='icon-asterisk'></i></span>
-                            </div>
-
-                        </div>
-
-                        <div class="form-group">
-
-                            <label class="col-md-4 control-label no-padding-right">添加类型</label>
-
-                            <div class="col-md-8">
-                                <select id="type" name="type" class="col-xs-10 col-sm-7 v_required" data-required="1" data-toggle="popover" data-trigger='manual' rules="{required:true}">
-
-                                </select>
-                                <span class="required" style="margin-left: 3px;"><i class='icon-asterisk'></i></span>
-                            </div>
-
-                        </div>
-
-                        <div class="form-group">
-
-                            <label class="col-md-4 control-label no-padding-right">名称</label>
-
-                            <div class="col-md-8">
-
-                                <input type="text" class="col-xs-10 col-sm-7 v_required" id="name" name="name" data-required="1" data-toggle="popover" data-trigger='manual' rules="{required:true}" >
-                                <span class="required" style="margin-left: 3px;"><i class='icon-asterisk'></i></span>
-                            </div>
-
-                        </div>
-
-                        <div class="form-group">
-
-                            <label class="col-md-4 control-label no-padding-right">条形码</label>
-
-                            <div class="col-md-8">
-
-                                <input type="text" class="col-xs-10 col-sm-7" id="barcode" name="barcode" data-required="1" data-toggle="popover" data-trigger='manual' rules="{required:false}">
-                                <span class="required"></span>
-                            </div>
-
-                        </div>
-                        <div class="form-group">
-
-                            <label class="col-md-4 control-label no-padding-right">品牌</label>
-
-                            <div class="col-md-8">
-                                <select class="chosen-select col-xs-10 col-sm-7 v_required" id="brand" name="brand" data-placeholder="请输入品牌" data-toggle="popover" style="padding: 0px;width: 54.5%">
-                                    <option value=""></option>
-                                </select>
-                                <span class="required"><i class='icon-asterisk' style="margin: 0px;"></i></span>
-                            </div>
-
-                        </div>
-                        <div class="form-group">
-
-                            <label class="col-md-4 control-label no-padding-right">品类</label>
-
-                            <div class="col-md-8">
-                                <input type="text" class="col-xs-10 col-sm-7 v_required" id="category" name="category" readonly="readonly" data-required="1" data-toggle="popover" data-trigger='manual' rules="{required:true}">
-                                <span class="required" style="margin-left: 3px;"><i class='icon-asterisk'></i></span>
-                            </div>
-
-                        </div>
-                        <div class="form-group">
-
-                            <label class="col-md-4 control-label no-padding-right">单位</label>
-
-                            <div class="col-md-8">
-
-                                <select class="col-xs-10 col-sm-7 v_required" id="measurementUnit" name="measurementUnit" data-required="1" data-toggle="popover" data-trigger='manual' rules="{required:true}">
-
-                                </select>
-                                <span class="required" style="margin-left: 3px;"><i class='icon-asterisk'></i></span>
-                            </div>
-
-                        </div>
-                        <div class="form-group">
-
-                            <label class="col-md-4 control-label no-padding-right">进价</label>
-
-                            <div class="col-md-8">
-
-                                <input type="text" class="col-xs-10 col-sm-7 v_float" id="purchase" name="purchase" data-required="1" data-toggle="popover" data-trigger='manual' rules="{required:true}">
-                            </div>
-
-                        </div>
-                        <div class="form-group">
-
-                            <label class="col-md-4 control-label no-padding-right">售价</label>
-
-                            <div class="col-md-8">
-
-                                <input type="text" class="col-xs-10 col-sm-7 v_float" id="selling" name="selling" data-required="1" data-toggle="popover" data-trigger='manual' rules="{required:true}">
-                            </div>
-
-                        </div>
-                        <div class="form-group">
-
-                            <label class="col-md-4 control-label no-padding-right">件数</label>
-
-                            <div class="col-md-8">
-
-                                <input type="text" class="col-xs-10 col-sm-7 v_goods" id="pieceNum" name="pieceNum" data-required="1" data-toggle="popover" data-trigger='manual' rules="{required:true}">
-                                <span class="required" style="margin-left: 3px;"><i class='icon-asterisk'></i></span>
-                            </div>
-
-                        </div>
-                        <div class="form-group">
-
-                            <label class="col-md-4 control-label no-padding-right">辅类</label>
-
-                            <div class="col-md-8">
-
-                                <select class="col-xs-10 col-sm-7" id="atid" name="atid" data-required="1" data-toggle="popover" data-trigger='manual' rules="{required:true}">
-
-                                </select>
-                                <span class="required"></span>
-                            </div>
-
-                        </div>
-
+                <div class="form-group">
+                    <label class="col-md-3 control-label no-padding-right orange">商品编号</label>
+                    <div class="col-md-9">
+                        <input type="text" class="col-xs-10 col-sm-7 v_required" id="no" name="no" >
                     </div>
                 </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label no-padding-right orange">添加类型</label>
+                    <div class="col-md-9">
+                        <select id="type" name="type" class="col-xs-10 col-sm-7 v_required" data-required="1" data-toggle="popover" data-trigger='manual'></select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label no-padding-right orange">名称</label>
+                    <div class="col-md-9">
+                        <input type="text" class="col-xs-10 col-sm-7 v_required" id="name" name="name" data-required="1" data-toggle="popover" data-trigger='manual' >
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label no-padding-right">条形码</label>
+                    <div class="col-md-9">
+                        <input type="text" class="col-xs-10 col-sm-7" id="barcode" name="barcode" data-required="1" data-toggle="popover" data-trigger='manual' rules="{required:false}">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label no-padding-right orange">品牌</label>
+                    <div class="col-md-9">
+                        <input type="text" autocomplete="off" id="brand" class="col-xs-10 col-sm-7 editable v_required">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label no-padding-right orange">品类</label>
+                    <div class="col-md-9">
+                        <input type="text" class="col-xs-10 col-sm-7 v_required" id="category" name="category" readonly="readonly" data-required="1" data-toggle="popover" data-trigger='manual' >
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label no-padding-right orange">单位</label>
+                    <div class="col-md-9">
+                        <select class="col-xs-10 col-sm-7 v_required" id="measurementUnit" name="measurementUnit" data-required="1" data-toggle="popover" data-trigger='manual'></select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label no-padding-right orange">进价</label>
+                    <div class="col-md-9">
+                        <input type="text" class="col-xs-10 col-sm-7 v_float_3" id="purchase" name="purchase" data-required="1" data-toggle="popover" data-trigger='manual'>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label no-padding-right orange">售价</label>
+                    <div class="col-md-9">
+                        <input type="text" class="col-xs-10 col-sm-7 v_float_3" id="selling" name="selling" data-required="1" data-toggle="popover" data-trigger='manual'>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label no-padding-right orange">件数</label>
+                    <div class="col-md-9">
+                        <input type="text" class="col-xs-10 col-sm-7 v_float_3" id="pieceNum" name="pieceNum" data-required="1" data-toggle="popover" data-trigger='manual'>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label no-padding-right">辅类</label>
+                    <div class="col-md-9">
+                        <select class="col-xs-10 col-sm-7" id="accessoriesType" name="accessoriesType" data-required="1" data-toggle="popover" data-trigger='manual'></select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <div class="col-md-offset-3 col-md-9">
+                        <a class="btn btn-success btn-sm" id="submitBtn">提交</a>
+                    </div>
+                </div>
+
             </div>
-
-
         </form>
     </div>
-
 </div>
 
-<div id="goodsSuitPopUp" class="portlet box"></div>
-
-<div id="goodsColorPopUp" class="portlet box"></div>
-
-<div id="goodsFormatPopUp" class="portlet box"></div>
-
-<div id="goodsPricePopUp" class="portlet box"></div>
-
-<div id="goodsSupplierPopUp" class="portlet box"></div>
-
-<div id="layerAdd" class="hide" style="padding: 40px 0;">
-    <div class="row-fluid">
-        <div class="progress" data-percent="0%">
-            <div class="progress-bar" style="width:0%;"></div>
-        </div>
-    </div>
-</div>
-
+<div id="layerPopUp" class="portlet box page-content"></div>
 
 <script type="text/javascript">
     $.loadScript(['js/manifest/goods.js']);

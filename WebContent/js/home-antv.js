@@ -628,10 +628,10 @@ $(function () {
         $('.breadcrumb .nav3').hide();
     });
 
-    $('a[name="updateNotices"]').click(function () {
+    $('#updateNotices').click(function () {
         Signing.loadNotices();
     });
-    $('a[name="updateActivities"]').click(function () {
+    $('#updateActivities').click(function () {
         Signing.loadActivities();
     });
 
@@ -847,7 +847,29 @@ $(function () {
         },
         weekMode: 'variable'
     });
+    
+    $("#dropdown").on('mouseout', function () { 
+    	$(this).removeClass('show');
+    }).on(ace.click_event, function(){
+        if($("#home #homeNav.nav.nav-tabs .flpage.nav-tab").length > 2) {
+            $(".flpage.nav-tab").removeClass("active");
+            $(".flpage.tab-pane").removeClass("active");
+            $("#home #homeNav.nav.nav-tabs .flpage.nav-tab:gt(1)").remove();
+            $("#home .flpage.tab-content div.flpage.tab-pane:gt(1)").remove();
+            $("#home #homeNav.nav.nav-tabs .flpage.nav-tab:last").addClass("active");
+            $("#home .flpage.tab-content div.flpage.tab-pane:last").addClass("active");
+        }
+        $(this).removeClass('show');
+    });
 
+    $('.flpage.nav-tab').bind({
+        contextmenu: function() {
+            return false;
+        },
+        mousedown: function(e) {
+            if (3 == e.which) $("#dropdown").css({'top': 1,'left': e.pageX - 190}).addClass('show');  // 右击
+        }
+    });
     $('#calendarTab').removeClass('active');
     $('#calendarPage').removeClass('in active');
     $('#calendarTab').click(function () {

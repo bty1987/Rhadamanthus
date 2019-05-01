@@ -1,37 +1,24 @@
-<div id="manifestTemplatePageContent" class="page-content">
-
+<div class="page-content">
     <div class="row">
-
         <div class="col-xs-12">
-            <div id="condList" class="fl_search clearfix"></div>
-
             <div class="clearfix" id="resultList"></div>
 
-            <div class="fl-page-wrap clearfix pagination" id="pagenation" style="display: block;">
-                <a class="btn btn-minier btn-primary pull-left" name="addQuotationVersion" style="margin-top: -2px;">
+            <div class="fl-page-wrap clearfix pagination" id="pagenation">
+                <a id="addBtn" class="btn btn-minier btn-success btn-primary pull-left" >
                     <i class="icon-plus bigger-110"></i>
                     <span>添加</span>
                 </a>
-                <a name="returnQuotationVersion" class="btn btn-minier btn-primary pull-left" style="margin-top: -2px;margin-left: 4px;">
+                <a id="backBtn" class="btn btn-minier btn-primary pull-left" style="margin-left: 4px;">
                     <i class="icon-mail-forward bigger-110"></i>
                     <span>返回</span>
                 </a>
-
             </div>
         </div>
 
     </div>
 </div>
 
-
-
-
-
-
-<div id="optPopUp"  class="portlet box">
-
-
-</div>
+<div id="optPopUp" class="portlet box page-content"></div>
 
 <script type="text/javascript">
     $.loadScript(['js/manifest/manifestTemplateItem.js']);

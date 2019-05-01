@@ -122,6 +122,7 @@ public class AwardStockServiceImpl implements AwardStockService {
 		awardStockPO.setContent(awardStockVO.getContent());
 		awardStockPO.setFormat(awardStockVO.getFormat());
 		awardStockPO.setStoreroom(awardStockVO.getStoreroom());
+		awardStockPO.setIsPayment(awardStockVO.getIsPayment());
 		
 		awardStockDao.update(awardStockPO);
 	}

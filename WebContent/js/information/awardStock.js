@@ -19,15 +19,17 @@ $(function(){
     awardStock.awardStockItems.no2 = com.focusPage("#no2");
     awardStock.awardStockItems.name2 = com.focusPage("#name2");
     awardStock.awardStockItems.nownum = com.focusPage("#nownum");
-    // awardStock.awardStockItems.isPrefor  = com.focusPage("#isPrefor");
+    awardStock.awardStockItems.isPrefor  = com.focusPage("#isPrefor");
     awardStock.awardStockItems.isStock =  com.focusPage("#isStock");
+    awardStock.awardStockItems.isPayment =  com.focusPage("#isPayment");
     awardStock.awardStockItems.price2 =  com.focusPage("#price2");
     
     com.post(api.ds.information, {}, function (res) {
         awardStock.awardStockItems.storeroom.bindData(res.awardStoreRoom, "key", "value", false);
         awardStock.awardStockItems.type.bindData(res.awardStockType, "key", "value", false);
-        // awardStock.awardStockItems.isPrefor.bindData(res.isPreforType, "key", "value", false);
+        awardStock.awardStockItems.isPrefor.bindData(res.isPreforType, "key", "value", false);
         awardStock.awardStockItems.isStock.bindData(res.isStockType, "key", "value", false);
+        awardStock.awardStockItems.isPayment.bindData(res.isPaymentType, "key", "value", false);
         
         $.each(res.awardStoreRoom,function(i,v){
             storeroom[v.key]=v.value;
@@ -61,8 +63,8 @@ $(function(){
             var $liTitle = $('<li></li>').addClass('line table-title');
 
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>'));
-            var $contentWrap = $('<div></div>').addClass('line-wrap  content col10');
-            var titleName ='编号,名称,数量,类型,备注,库房信息,规格,状态,库存标识,业绩标识';
+            var $contentWrap = $('<div></div>').addClass('line-wrap  content col11');
+            var titleName ='编号,名称,数量,类型,备注,库房信息,规格,状态,库存标识,业绩标识,金额标识';
 
             $.each(titleName.split(','), function (i, v) {
                 var $cell = $('<div></div>').addClass('cell').html(v);
@@ -80,7 +82,7 @@ $(function(){
             var $liLine = $('<li></li>').addClass('line');
             var id = i + 1;
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(id));
-            var $contentWrap = $('<div></div>').addClass('line-wrap content col10');
+            var $contentWrap = $('<div></div>').addClass('line-wrap content col11');
             var propertyArr = [
                 [v.no,'grey'],
                 [v.name,'grey'],
@@ -91,7 +93,8 @@ $(function(){
                 [v.format,'grey'],
                 [v.status =="0" ? "启用" : "禁用",'red'],
                 [v.isStock=="0" ? "加入库存" : "不加入库存",'red'],
-                [v.isPrefor=="0" ? "计算业绩" : "不计算业绩",'red']
+                [v.isPrefor=="0" ? "计算业绩" : "不计算业绩",'red'],
+                [v.isPayment=="0" ? "计入金额" : "不计入金额",'red']
 
             ];
 
@@ -344,9 +347,9 @@ $(function(){
         var price = awardStock.awardStockItems.price.val();
         var content = awardStock.awardStockItems.content.val();
         var format = awardStock.awardStockItems.format.val();
-        // var isPrefor  = awardStock.awardStockItems.isPrefor.val();
+        var isPrefor  = awardStock.awardStockItems.isPrefor.val();
         var isStock = awardStock.awardStockItems.isStock.val();
-
+        var isPayment  = awardStock.awardStockItems.isPayment.val();
         com.post(api.information.addAwardStock, {
             "awardStock.no": no,
             "awardStock.name":name,
@@ -356,8 +359,9 @@ $(function(){
             "awardStock.price":price,
             "awardStock.content":content,
             "awardStock.format":format,
-            "awardStock.isPrefor": 0,
-            "awardStock.isStock": isStock
+            "awardStock.isPrefor": isPrefor,
+            "awardStock.isStock": isStock,
+            "awardStock.isPayment": isPayment
         }, function(res){
             callback();
             awardStockSeacher.doSearch();
@@ -366,15 +370,17 @@ $(function(){
     
     function updateAll(v, callback) {
         var content = awardStock.awardStockItems.content.val();
-        // var isPrefor  = awardStock.awardStockItems.isPrefor.val();
         var isStock = awardStock.awardStockItems.isStock.val();
         var storeroom = awardStock.awardStockItems.storeroom.val();
         var format = awardStock.awardStockItems.format.val();
+        var isPrefor = awardStock.awardStockItems.isPrefor.val();
+        var isPayment = awardStock.awardStockItems.isPayment.val();
         com.post(api.information.updateAwardStock, {
             "awardStock.asId": v.asId,
             "awardStock.content":content,
-            "awardStock.isPrefor": 0,
+            "awardStock.isPrefor": isPrefor,
             "awardStock.isStock": isStock,
+            "awardStock.isPayment": isPayment,
             "awardStock.storeroom": storeroom,
             "awardStock.format": format
         }, function(res){

@@ -68,9 +68,9 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 			
 		    Disjunction pinyinDisjunction = Restrictions.disjunction();
 
-		    pinyinDisjunction.add(Restrictions.like("currentName", pinyinName, MatchMode.START));
-		    pinyinDisjunction.add(Restrictions.like("pinYin", pinyinName, MatchMode.START));
-		    pinyinDisjunction.add(Restrictions.like("userId", pinyinName, MatchMode.START));
+		    pinyinDisjunction.add(Restrictions.like("currentName", pinyinName, MatchMode.ANYWHERE));
+		    pinyinDisjunction.add(Restrictions.like("pinYin", pinyinName, MatchMode.ANYWHERE));
+		    pinyinDisjunction.add(Restrictions.like("userId", pinyinName, MatchMode.ANYWHERE));
 
 		    query.add(pinyinDisjunction);
 		}

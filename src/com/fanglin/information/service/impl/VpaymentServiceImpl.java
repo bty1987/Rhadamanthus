@@ -11,11 +11,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.customer.dao.EmemberDao;
+import com.fanglin.customer.po.EmemberPO;
 import com.fanglin.dingding.service.MessageService;
 import com.fanglin.information.dao.VpaymentDao;
 import com.fanglin.information.dao.VreceiptDao;
+import com.fanglin.information.dao.VticketDao;
 import com.fanglin.information.po.VpaymentPO;
 import com.fanglin.information.po.VreceiptPO;
+import com.fanglin.information.po.VticketPO;
 import com.fanglin.information.service.VpaymentService;
 import com.fanglin.information.vo.VpaymentVO;
 import com.fanglin.information.vo.VreceiptVO;
@@ -34,6 +38,9 @@ public class VpaymentServiceImpl implements VpaymentService {
 	private VpaymentDao vpaymentDao;
 
 	@Autowired
+	private VticketDao vticketDao;
+
+	@Autowired
 	private VreceiptDao vreceiptDao;
 
 	@Autowired
@@ -42,11 +49,14 @@ public class VpaymentServiceImpl implements VpaymentService {
 	@Autowired
 	private MessageService messageService;
 
+	@Autowired
+	private EmemberDao ememberDao;
+
 	@Override
 	public void pageVpayment(Paging paging, List<Filter> filters, VpaymentVO vpaymentVO) {
-		
+
 		Short status = vpaymentVO == null ? null : vpaymentVO.getStatus();
-		
+
 		List<VpaymentPO> vpaymentPOs = vpaymentDao.pageVpayment(paging, filters, status);
 		List<VpaymentVO> vpaymentVOs = new ArrayList<VpaymentVO>();
 
@@ -152,6 +162,16 @@ public class VpaymentServiceImpl implements VpaymentService {
 			}
 		}
 
+		VticketPO vticketPO = vticketDao.queryVticketByTno(mno);
+
+		if (vticketPO == null) {
+			throw new FLException(160026, "活动票不存在");
+		}
+
+		if (vticketPO.getIscome() != VticketPO.ISCOME_YES_INT) {
+			throw new FLException(160046, "活动票未到场");
+		}
+
 		if (Arith.sub(referMoney, realMoney) != VreceiptPO.COLUMN_CASH_INT) {
 			throw new FLException(160034, "活动款金额不正确");
 		}
@@ -166,9 +186,11 @@ public class VpaymentServiceImpl implements VpaymentService {
 			vpaymentDao.update(vpaymentPO);
 		}
 
-		String comment = vreceiptPO.getComment();
+		EmemberPO ememberPO = ememberDao.queryEmemberByNo(mno);
 
-		messageService.sendMessage(0, "活动款", mno, realMoney, comment);
+		if (ememberPO != null) {
+			messageService.sendMessage(ememberPO.getUnionId(), "活动收款", mno, String.format("活动收款总额: %f", realMoney) );
+		}
 
 		return 0;
 	}

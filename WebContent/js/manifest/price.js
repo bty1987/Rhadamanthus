@@ -1,30 +1,25 @@
-/**
- * Created by Administrator on 2017/4/6.
- */
 
 $(function () {
 
-    /**
-     * 回调函数必须提供 init(tableId, result.list)方法 tableId ，用来显示的div的id result.list
-     * 列表的json数组
-     */
     var goodsPricePopUp = com.focusPage('#goodsPricePopUp');
+    
+    var goods = {
+    	gid: params["goods.gid"]
+    }
 
     var validator = {
-        num: {
-            type: "v_num",
-            regex: /^(\d+|\d+\.[0-9]{1,4})$/,
-            errorMsg: "数量输入内容格式错误"
-        },
-        priceType: {
-            type: "v_priceType",
-            regex: /^(0([\.]?\d*[0-9]+)|0|1)$/,
-            errorMsg: "结算值在0-1之间"
+		float3: {
+            type: "v_float_3",
+            regex: /^([0-9]+|[0-9]+\.[0-9]{1,3})$/,
+            errorMsg: "数量格式错误"
         }
     };
 
     $.extend(com.validator, validator);
-
+    
+    com.post(api.inventory.queryPriceByGid, {"price.gid": goods.gid}, function (res) {
+        displayFunc.init('resultListPrice', res.prices);
+    });
 
     var displayFunc = (function () {
 
@@ -65,8 +60,7 @@ $(function () {
             //var $optionWrap = $('<div></div>').addClass('line-wrap action')
             //    .html($('<div>操作</div>').addClass('cell option'));
 
-            $liTitle.append($indexWrap).append($contentWrap)
-                .appendTo($ulTitle);//.append($optionWrap)
+            $liTitle.append($indexWrap).append($contentWrap).appendTo($ulTitle);//.append($optionWrap)
 
             return $ulTitle;
         };
@@ -75,10 +69,8 @@ $(function () {
 
             var $liLine = $('<li></li>').addClass('line');
 
-            var $indexWrap = $('<div></div>').addClass('line-wrap order').html(
-                $('<div></div>').addClass('cell index').html(i + 1));
-            var $contentWrap = $('<div></div>').addClass(
-                'line-wrap  content col5');
+            var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(i + 1));
+            var $contentWrap = $('<div></div>').addClass('line-wrap  content col5');
 
             var propertyArr = [
                 // v.gid,
@@ -136,32 +128,11 @@ $(function () {
             init: function (tableId, listData) {
                 com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
-
             },
             drawLine: function (v) {
                 return creatLine(v);
             }
         }
     })();
-
-    function doSearcher() {
-        com.post(api.inventory.queryPriceByGid, {
-            "price.gid": goodsPricePopUp.attr('data-gid')
-        }, function (res) {
-            displayFunc.init('resultListPrice', res.prices);
-        })
-    }
-
-    doSearcher();
-
-    com.focusPage('.layui-layer-content').css('overflow', 'hidden');
-    com.focusPage('#showPrice').css('height', '560px');
-    com.focusPage('#resultListPrice').css({
-        'width': '96%',
-        'margin': '0 auto',
-        'height': '560px',
-        'marigin-top': '20px',
-        'overflow-y': 'scroll'
-    })
 
 });

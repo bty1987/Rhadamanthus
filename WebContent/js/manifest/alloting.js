@@ -105,8 +105,8 @@ jQuery(function($) {
                 options["approvalManifestDBItems["+i+"].color.cid"] = $this.find('.color select').val();//– 颜色id
                 options["approvalManifestDBItems["+i+"].format.fid"] = $this.find('.format select').val();//– 规格id
 
-                options["approvalManifestDBItems["+i+"].instorehouse.shId"] = $this.find('.instorehouse select').val();// – 仓库ID
-                options["approvalManifestDBItems["+i+"].outstorehouse.shId"] = $this.find('.outstorehouse select').val();//– 仓库ID
+                options["approvalManifestDBItems["+i+"].instorehouse.shid"] = $this.find('.instorehouse select').val();// – 仓库ID
+                options["approvalManifestDBItems["+i+"].outstorehouse.shid"] = $this.find('.outstorehouse select').val();//– 仓库ID
 
                 options["approvalManifestDBItems["+i+"].num"] = $this.find('.number input').val();//– 数量
                 options["approvalManifestDBItems["+i+"].comment"] = $this.find('.des input').val();// – 说明
@@ -222,16 +222,15 @@ jQuery(function($) {
             isResultTypeMap: true,
             flupdater: function(k,v){
             	
+            	if(com.focusPage('li[data-pgid="' + k +'"]').length != 0){
+            		com.showAlert(com.error, "商品已存在");
+            		return "";
+            	}
+            	
                 var list = this.options.list;
                 
                 $.each(list, function(index, val){
                     if(val.gid == k){
-                    	
-                    	if(com.focusPage('li[data-pgid="' + val.gid +'"]').length != 0){
-                    		com.showAlert(com.error, "商品已存在");
-                    		v = ""
-                    		return false;
-                    	}
                     	
                         $lineInfoWrap.find('.no').text(val.no);
                         $lineInfoWrap.find('.measurementUnit').text(val.measurementUnit);
@@ -239,8 +238,8 @@ jQuery(function($) {
                         $line.attr('data-pgid',val.gid);
                         $line.attr('data-gid',val.gid + '_' + lineindex);
                         
-                        $lineInfoWrap.find('.instorehouse select').bindData(manifest.storehouses,"shId","name");
-                        $lineInfoWrap.find('.outstorehouse select').bindData(manifest.storehouses,"shId","name");
+                        $lineInfoWrap.find('.instorehouse select').bindData(manifest.storehouses,"shid","name");
+                        $lineInfoWrap.find('.outstorehouse select').bindData(manifest.storehouses,"shid","name");
 
                         com.post(api.inventory.queryColorForEnableByGid,{
                             "color.gid": val.gid

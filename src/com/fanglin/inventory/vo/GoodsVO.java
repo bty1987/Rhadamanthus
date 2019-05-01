@@ -1,42 +1,46 @@
 package com.fanglin.inventory.vo;
 
-
 public class GoodsVO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 5543447445422987680L;
 
 	private Long gid;
-	
+
 	private String no;
-	
+
 	private String name;
-	
+
 	private String pinyin;
-	
+
 	private String barcode;
-	
+
 	private String category;
-	
+
 	private Long bid;
- 
+
 	private String brand;
-	
+
 	private String measurementUnit;
-	
+
 	private Float purchase;
-	
+
 	private Float selling;
-	
+
 	private Float pieceNum;
-	
+
 	private AccessoriesTypeVO accessoriesType;
-	
+
 	private Short type;
-	
+
 	private Short status;
-	
+
 	public GoodsVO() {
 		super();
+	}
+
+	public GoodsVO(Long gid) {
+		super();
+		this.gid = gid;
 	}
 
 	public GoodsVO(AccessoriesTypeVO accessoriesType) {

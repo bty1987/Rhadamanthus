@@ -45,6 +45,8 @@ public class VticketPO implements java.io.Serializable {
 	
 	private String tno;
 	
+	private long vaid;
+	
 	private UserPO creater;
 	
 	private Timestamp createTime;
@@ -99,6 +101,15 @@ public class VticketPO implements java.io.Serializable {
 
 	public void setTno(String tno) {
 		this.tno = tno;
+	}
+
+	@Column(name = "vaid")
+	public long getVaid() {
+		return vaid;
+	}
+
+	public void setVaid(long vaid) {
+		this.vaid = vaid;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)

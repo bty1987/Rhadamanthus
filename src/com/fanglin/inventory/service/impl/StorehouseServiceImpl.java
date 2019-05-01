@@ -112,7 +112,7 @@ public class StorehouseServiceImpl implements StorehouseService{
 		
 		storehousePO = new StorehousePO();
 		
-		BeanUtil.copyProperties(storehouseVO, storehousePO, "shId", "status");
+		BeanUtil.copyProperties(storehouseVO, storehousePO, "shid", "status");
 		
 		storehouseDao.save(storehousePO);
 		
@@ -123,7 +123,7 @@ public class StorehouseServiceImpl implements StorehouseService{
 	@Transactional(rollbackFor=Exception.class)
 	public int updateStorehouseForStatus(StorehouseVO storehouseVO) throws FLException {
 		
-		StorehousePO storehousePO = storehouseDao.get(storehouseVO.getShId());
+		StorehousePO storehousePO = storehouseDao.get(storehouseVO.getShid());
 		
 		if(storehousePO == null){
 			throw new FLException(260005, "仓库不存在");

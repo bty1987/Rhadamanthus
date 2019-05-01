@@ -4,7 +4,7 @@ public class GoodsStorehouseStockVO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -2766361593114200646L;
 
-	private Long gshsId;
+	private Long gshsid;
 	
 	private GoodsVO goods;
 	
@@ -28,12 +28,12 @@ public class GoodsStorehouseStockVO implements java.io.Serializable {
 		this.storehouse = storehouse;
 	}
 
-	public Long getGshsId() {
-		return gshsId;
+	public Long getGshsid() {
+		return gshsid;
 	}
 
-	public void setGshsId(Long gshsId) {
-		this.gshsId = gshsId;
+	public void setGshsid(Long gshsid) {
+		this.gshsid = gshsid;
 	}
 
 	public GoodsVO getGoods() {

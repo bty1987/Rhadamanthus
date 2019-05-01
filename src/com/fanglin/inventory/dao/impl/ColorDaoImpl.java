@@ -8,12 +8,12 @@ import com.fanglin.inventory.dao.ColorDao;
 import com.fanglin.inventory.po.ColorPO;
 
 @Repository("colorDao")
-public class ColorDaoImpl extends DaoImpl<ColorPO> implements ColorDao{
-	
-	public ColorDaoImpl(){
+public class ColorDaoImpl extends DaoImpl<ColorPO> implements ColorDao {
+
+	public ColorDaoImpl() {
 		super(ColorPO.class);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<ColorPO> queryColorByGid(long gid) {
@@ -23,14 +23,13 @@ public class ColorDaoImpl extends DaoImpl<ColorPO> implements ColorDao{
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<ColorPO> queryColorForEnableByGid(long gid) {
-		return session().createCriteria(ColorPO.class).add(Restrictions.eq(ColorPO.COLUMN_GID_STR, gid)).add(Restrictions.eq(ColorPO.COLUMN_STATUS_STR,ColorPO.STATUS_ENABLE_INT)).list();
+		return session().createCriteria(ColorPO.class).add(Restrictions.eq(ColorPO.COLUMN_GID_STR, gid)).add(Restrictions.eq(ColorPO.COLUMN_STATUS_STR, ColorPO.STATUS_ENABLE_INT)).list();
 	}
 
 	@Override
-	public ColorPO queryColorByName(long gid,String name) {
-		
+	public ColorPO queryColorByName(long gid, String name) {
+
 		return (ColorPO) session().createCriteria(ColorPO.class).add(Restrictions.eq(ColorPO.COLUMN_GID_STR, gid)).add(Restrictions.eq(ColorPO.COLUMN_NAME_STR, name)).uniqueResult();
 	}
 
-	
 }

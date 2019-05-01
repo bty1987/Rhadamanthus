@@ -191,9 +191,8 @@ var ExtensionDetail = (function(){
                     "quotationFunctionAreaItem.quotationFunctionAreaId" : funcid
                 };
                 com.post(api.quotation.queryQuotationFunctionAreaItemByQuotationFunctionAreaId, _params, function(res){
-                    var $tableWrap = com.focusPage('#quolist', extensionDetail.$modals.quotationItemModal).empty();
+                    var $tableWrap = com.focusPage('#resultListn', extensionDetail.$modals.quotationItemModal).empty();
                     var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
-
                     if(res.quotationFunctionAreaItems && res.quotationFunctionAreaItems.length){
                         $.each(res.quotationFunctionAreaItems,function(i, v){
                             v.quotationItemDes = v.content;
@@ -674,7 +673,7 @@ var ExtensionDetail = (function(){
                 extensionDetail.discount = 10;
                 extensionDetail.qid = res.quotation.qid;
 
-                extensionDetail.versionid = res.quotation.versionId;
+                extensionDetail.versionid = res.quotation.no;
             }, null, false);
 
             com.post(api.quotation .queryExtensionItemByEid, {"extensionItem.eid" : extensionDetail.eid}, function(res){

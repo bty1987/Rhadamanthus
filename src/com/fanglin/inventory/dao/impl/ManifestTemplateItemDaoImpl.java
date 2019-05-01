@@ -22,32 +22,32 @@ import com.fanglin.inventory.po.ManifestTemplateItemPO;
 
 @Repository("manifestTemplateItemDao")
 public class ManifestTemplateItemDaoImpl extends DaoImpl<ManifestTemplateItemPO> implements ManifestTemplateItemDao {
-	
-	public ManifestTemplateItemDaoImpl(){
+
+	public ManifestTemplateItemDaoImpl() {
 		super(ManifestTemplateItemPO.class);
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<ManifestTemplateItemPO> queryManifestTemplateItemByMtId(long mtId) {
-		return session().createCriteria(ManifestTemplateItemPO.class).createAlias("manifestTemplate", "manifestTemplate").add(Restrictions.eq(ManifestTemplateItemPO.COLUMN_MTID_STR, mtId)).list();
+	public List<ManifestTemplateItemPO> queryManifestTemplateItemByMtid(long mtid) {
+		return session().createCriteria(ManifestTemplateItemPO.class).createAlias("manifestTemplate", "manifestTemplate").add(Restrictions.eq(ManifestTemplateItemPO.COLUMN_MTID_STR, mtid)).list();
 	}
 
 	@Override
-	public int deleteManifestTemplateItemByMtId(long mtId) {
-		
-		String sql = "delete from inventory.manifesttemplateitem where mtId = :mtId";
-		session().createSQLQuery(sql).setLong("mtId", mtId).executeUpdate();
-		
+	public int deleteManifestTemplateItemByMtid(long mtid) {
+
+		String sql = "delete from inventory.manifesttemplateitem where mtid = :mtid";
+		session().createSQLQuery(sql).setLong("mtid", mtid).executeUpdate();
+
 		return 0;
 	}
 
 	@Override
-	public int deleteManifestTemplateItemByMtiIds(List<Long> mtiId) {
-		
-		String sql = "delete from inventory.manifesttemplateitem where mtiId in :mtiId";
-		session().createSQLQuery(sql).setParameterList("mtiId", mtiId).executeUpdate();
-		
+	public int deleteManifestTemplateItemByMtiids(List<Long> mtiids) {
+
+		String sql = "delete from inventory.manifesttemplateitem where mtiid in :mtiid";
+		session().createSQLQuery(sql).setParameterList("mtiid", mtiids).executeUpdate();
+
 		return 0;
 	}
 

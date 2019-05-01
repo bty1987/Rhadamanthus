@@ -25,6 +25,10 @@ public class ConstructionNodePO implements Serializable {
 	
 	private String name;
 	
+	private Float precheck;
+	
+	private Float postcheck;
+	
 	private short status;
 	
 	private short sort;
@@ -49,6 +53,22 @@ public class ConstructionNodePO implements Serializable {
 		this.name = name;
 	}
 	
+	public Float getPrecheck() {
+		return precheck;
+	}
+
+	public void setPrecheck(Float precheck) {
+		this.precheck = precheck;
+	}
+
+	public Float getPostcheck() {
+		return postcheck;
+	}
+
+	public void setPostcheck(Float postcheck) {
+		this.postcheck = postcheck;
+	}
+
 	@Column(name="status")
 	public short getStatus() {
 		return status;

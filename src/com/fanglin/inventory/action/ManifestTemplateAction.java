@@ -51,9 +51,9 @@ public class ManifestTemplateAction extends BaseListAction {
 	
 	private List<GoodsVO> goodes;
 	
-	private List<Long> miIds;
+	private List<Long> miids;
 	
-	private List<Long> mtiIds;
+	private List<Long> mtiids;
 	
 	@Action(value = "pageManifestTemplate", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageManifestTemplate() throws FLException{
@@ -71,18 +71,18 @@ public class ManifestTemplateAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-	@Action(value = "queryManifestTemplateItemByMtId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryManifestTemplateItemByMtId(){
+	@Action(value = "queryManifestTemplateItemByMtid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryManifestTemplateItemByMtid(){
 		
-		manifestTemplateItems = manifestTemplateItemService.queryManifestTemplateItemByMtId(manifestTemplate);
+		manifestTemplateItems = manifestTemplateItemService.queryManifestTemplateItemByMtid(manifestTemplate);
 		
 		return SUCCESS;
 	}
 	
-	@Action(value = "queryManifestItemByMtId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryManifestItemByMtId(){
+	@Action(value = "queryManifestItemByMtid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryManifestItemByMtid(){
 		
-		goodes = manifestTemplateItemService.queryGoodsByMtId(manifestTemplate);
+		goodes = manifestTemplateItemService.queryGoodsByMtid(manifestTemplate);
 		
 		return SUCCESS;
 	}
@@ -98,7 +98,7 @@ public class ManifestTemplateAction extends BaseListAction {
 	@Action(value = "addManifestTemplateItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addManifestTemplateItem(){
 		
-		manifestTemplateItemService.addManifestTemplateItem(manifestTemplate, miIds);
+		manifestTemplateItemService.addManifestTemplateItem(manifestTemplate, miids);
 		
 		return SUCCESS;
 	} 
@@ -130,7 +130,7 @@ public class ManifestTemplateAction extends BaseListAction {
 	@Action(value = "deleteManifestTemplateItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteManifestTemplateItem(){
 		
-		manifestTemplateItemService.deleteManifestTemplateItem(mtiIds);
+		manifestTemplateItemService.deleteManifestTemplateItem(mtiids);
 		
 		return SUCCESS;
 	}
@@ -175,20 +175,20 @@ public class ManifestTemplateAction extends BaseListAction {
 		this.goodes = goodes;
 	}
 
-	public List<Long> getMiIds() {
-		return miIds;
+	public List<Long> getMiids() {
+		return miids;
 	}
 
-	public void setMiIds(List<Long> miIds) {
-		this.miIds = miIds;
+	public void setMiids(List<Long> miids) {
+		this.miids = miids;
 	}
 
-	public List<Long> getMtiIds() {
-		return mtiIds;
+	public List<Long> getMtiids() {
+		return mtiids;
 	}
 
-	public void setMtiIds(List<Long> mtiIds) {
-		this.mtiIds = mtiIds;
+	public void setMtiids(List<Long> mtiids) {
+		this.mtiids = mtiids;
 	}
 
 }

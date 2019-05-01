@@ -22,8 +22,8 @@ import com.fanglin.inventory.po.StorehouseUserPO;
 
 @Repository("storehouseUserDao")
 public class StorehouseUserDaoImpl extends DaoImpl<StorehouseUserPO> implements StorehouseUserDao {
-	
-	public StorehouseUserDaoImpl(){
+
+	public StorehouseUserDaoImpl() {
 		super(StorehouseUserPO.class);
 	}
 
@@ -34,11 +34,11 @@ public class StorehouseUserDaoImpl extends DaoImpl<StorehouseUserPO> implements 
 	}
 
 	@Override
-	public int deleteStorehouseUserByUId(int uId) {
-		
+	public int deleteStorehouseUserByUid(int uid) {
+
 		String sql = "delete from inventory.storehouseuser where uid = :uid";
-		session().createSQLQuery(sql).setInteger("uid", uId).executeUpdate();
-		
+		session().createSQLQuery(sql).setInteger("uid", uid).executeUpdate();
+
 		return 0;
 	}
 

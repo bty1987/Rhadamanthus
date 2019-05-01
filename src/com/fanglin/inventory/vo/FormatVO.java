@@ -2,17 +2,26 @@ package com.fanglin.inventory.vo;
 
 import java.io.Serializable;
 
-public class FormatVO implements Serializable{
+public class FormatVO implements Serializable {
 
 	private static final long serialVersionUID = 3260050753581191133L;
-	
+
 	private Long fid;
-	
+
 	private Long gid;
-	
+
 	private String info;
-	
+
 	private Short status;
+
+	public FormatVO() {
+		super();
+	}
+
+	public FormatVO(Long fid) {
+		super();
+		this.fid = fid;
+	}
 
 	public Long getFid() {
 		return fid;
@@ -45,5 +54,5 @@ public class FormatVO implements Serializable{
 	public void setStatus(Short status) {
 		this.status = status;
 	}
-	
+
 }

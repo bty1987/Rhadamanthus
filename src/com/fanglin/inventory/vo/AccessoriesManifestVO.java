@@ -2,16 +2,16 @@ package com.fanglin.inventory.vo;
 
 import java.io.Serializable;
 
-public class AccessoriesManifestVO implements Serializable{
+public class AccessoriesManifestVO implements Serializable {
 
 	private static final long serialVersionUID = 7764011939608561432L;
 
 	private Long amid;
-	
+
 	private AccessoriesVO accessories;
-	
+
 	private ManifestVO manifest;
-	
+
 	public AccessoriesManifestVO() {
 		super();
 	}
@@ -45,5 +45,5 @@ public class AccessoriesManifestVO implements Serializable{
 	public void setManifest(ManifestVO manifest) {
 		this.manifest = manifest;
 	}
-	
+
 }

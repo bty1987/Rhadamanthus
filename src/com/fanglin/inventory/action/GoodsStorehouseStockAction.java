@@ -32,71 +32,71 @@ import com.fanglin.inventory.vo.GoodsStorehouseStockVO;
 public class GoodsStorehouseStockAction extends BaseListAction {
 
 	private static final long serialVersionUID = 6626731189288920005L;
-	
+
 	@Autowired
 	private GoodsStorehouseStockService goodsStorehouseStockService;
-	
+
 	private GoodsStorehouseStockVO goodsStorehouseStock;
-	
+
 	private List<GoodsStorehouseStockVO> goodsStorehouseStocks;
-	
+
 	private CheckListVO checkList;
-	
+
 	private Float nums;
-	
+
 	@Action(value = "pageGoodsStorehouseStock", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageGoodsStorehouseStock() throws FLException{
-		
+	public String pageGoodsStorehouseStock() throws FLException {
+
 		goodsStorehouseStockService.pageGoodsStorehouseStock(getPaging(), getFilters(), queryUserId());
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value = "checkGoodsStorehouseStock", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String checkGoodsStorehouseStock() throws FLException{
-		
-		goodsStorehouseStockService.checkGoodsStorehouseStock(checkList, queryUserId());
-		
+
+	@Action(value = "queryGoodsStorehouseStockByShidAGid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryStorehouseStockByShidAGid() {
+
+		goodsStorehouseStock = goodsStorehouseStockService.queryStorehouseStockByShidAGid(goodsStorehouseStock);
+
 		return SUCCESS;
 	}
-	
-	@Action(value = "queryGoodsStorehouseStockByShIdAGId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryStorehouseStockByShIdAGId() {
-		
-		goodsStorehouseStock = goodsStorehouseStockService.queryStorehouseStockByShIdAGId(goodsStorehouseStock);
-		
-		return SUCCESS;
-	}
-	
+
 	@Action(value = "queryGoodsStorehouseStockByGid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryGoodsStorehouseStockByGid() {
-		
+
 		nums = goodsStorehouseStockService.queryGoodsStorehouseStockByGid(goodsStorehouseStock);
-				
+
 		return SUCCESS;
 	}
-	
+
+	@Action(value = "checkGoodsStorehouseStock", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String checkGoodsStorehouseStock() throws FLException {
+
+		goodsStorehouseStockService.checkGoodsStorehouseStock(checkList, queryUserId(), queryCompany());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "makeGoodsStorehouseStock", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String makeGoodsStorehouseStock()throws FLException{
-		
+	public String makeGoodsStorehouseStock() throws FLException {
+
 		goodsStorehouseStockService.makeGoodsStorehouseStock(goodsStorehouseStock);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "splitPackage", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String splitPackage() throws FLException{
-		
+	public String splitPackage() throws FLException {
+
 		goodsStorehouseStockService.splitPackage(goodsStorehouseStock, queryUserId(), queryCompany());
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "mergePackage", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String mergePackage() throws FLException{
-		
+	public String mergePackage() throws FLException {
+
 		goodsStorehouseStockService.mergePackage(goodsStorehouseStock, queryUserId(), queryCompany());
-		
+
 		return SUCCESS;
 	}
 
@@ -120,8 +120,7 @@ public class GoodsStorehouseStockAction extends BaseListAction {
 		return goodsStorehouseStocks;
 	}
 
-	public void setGoodsStorehouseStocks(
-			List<GoodsStorehouseStockVO> goodsStorehouseStocks) {
+	public void setGoodsStorehouseStocks(List<GoodsStorehouseStockVO> goodsStorehouseStocks) {
 		this.goodsStorehouseStocks = goodsStorehouseStocks;
 	}
 

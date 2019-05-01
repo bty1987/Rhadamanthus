@@ -1,6 +1,82 @@
 
 jQuery(function($) {
-	var servicePaymentCheck = {};
+	var servicePaymentCheck = {
+		paymentModelNameData: ["cash", "bank", "checkv"],
+		bankNums: [],
+		checkvNums: [],
+		items: {},
+		moreMsg: {},
+		htmlName: "serviceCheck"
+	};
+
+	servicePaymentCheck.items.cashCheckbox = com.focusPage("#cashCheckbox");
+	servicePaymentCheck.items.bankCheckbox = com.focusPage("#bankCheckbox");
+	servicePaymentCheck.items.checkvCheckbox = com.focusPage("#checkvCheckbox");
+
+	com.focusPage("#collectBtn").bindClick(function(){
+		paymentUtils.servicePaymentCollect(servicePaymentCheck, searcher, hsearcher);
+	});
+
+	servicePaymentCheck.baseModal = com.focusPage("#baseItemModalServiceCheck").on('show.bs.modal',function(e){
+		com.clearValidator();
+	});
+
+	//隐藏触发
+	com.focusPage("#baseItemModalServiceCheck").on('hidden.bs.modal', function () {
+		servicePaymentCheck.bankUtilForGrade = [];
+		servicePaymentCheck.checkBankUtilForGrade = [];
+	});
+
+	com.focusPage("#baseItemModalServiceCheck :checkbox").on("change", function(){
+		$(this).prop("checked") ? com.focusPage("[referCheckbox="+this.id+"]").show() : com.focusPage("[referCheckbox="+this.id+"]").hide()
+	});
+
+	servicePaymentCheck.cash = [];
+	servicePaymentCheck.bank = [];
+	servicePaymentCheck.checkBank = [];
+	servicePaymentCheck.accounts = [];
+
+	servicePaymentCheck.cashUtil = [];
+	servicePaymentCheck.bankUtil = [];
+	servicePaymentCheck.checkBankUtil = [];
+
+	servicePaymentCheck.bankUtilForGrade = [];
+	servicePaymentCheck.checkBankUtilForGrade = [];
+
+	servicePaymentCheck.cashInfo = {};
+	servicePaymentCheck.bankInfo = {};
+	servicePaymentCheck.checkBankInfo = {};
+	servicePaymentCheck.accountsInfo = {};
+
+	paymentUtils.getReceiptType(servicePaymentCheck);
+
+	paymentUtils.dynamicChosen('baseItemModalServiceCheck', "serviceCheckcashInfo", servicePaymentCheck.cashUtil, "key", "value");
+
+	com.focusPage("#serviceCheckbankAdd").click(function(){
+		var num = $(this).attr("num");
+		var nextNum = parseInt(num)+1;
+		$(this).attr("num", nextNum);
+
+		var maxNum = $(this).attr("maxnum");
+		maxNum = parseInt(maxNum)+1;
+		$(this).attr("maxnum", maxNum);
+		paymentUtils.addBankUtil(maxNum, "bankDiv", "#serviceCheckbankDivGroup", servicePaymentCheck.bankNums, servicePaymentCheck.bankUtilForGrade, servicePaymentCheck.htmlName, 'baseItemModalServiceCheck');
+
+		return false;
+	});
+
+	com.focusPage("#serviceCheckcheckvAdd").click(function(){
+		var num = $(this).attr("num");
+		var nextNum = parseInt(num)+1;
+		$(this).attr("num", nextNum);
+
+		var maxNum = $(this).attr("maxnum");
+		maxNum = parseInt(maxNum)+1;
+		$(this).attr("maxnum", maxNum);
+		paymentUtils.addBankUtil(maxNum, "checkvDiv", "#serviceCheckcheckvDivGroup", servicePaymentCheck.checkvNums, servicePaymentCheck.checkBankUtilForGrade, servicePaymentCheck.htmlName, 'baseItemModalServiceCheck');
+
+		return false;
+	});
 
 	com.focusPage("#servicePaymentHistoryList").removeClass("active");
 
@@ -22,6 +98,9 @@ jQuery(function($) {
 			var $liLine = $('<li></li>').addClass('item-orange clearfix');
 			var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.type == "0" ? "收款" : (v.type == "1" ? "退款" : "")));
 			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+			var $ulStyle = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+			var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons').appendTo($h3);
+			var $btnUpdate = $('<a></a>').addClass('btn btn-minier btn-success').html('更新').appendTo($divBtnWrap);
 
 			var propertyArr = [
 				["订单号:", v.decoration.orderId, "blue"],
@@ -53,9 +132,32 @@ jQuery(function($) {
 				$liProperty.appendTo($ulProperty);
 			});
 
+			//详情显示
+			var styleArr = [];
+
+			v.serviceReceipt.cash != null && v.serviceReceipt.cash != "0" ? styleArr.push(["现金:", v.serviceReceipt.cash, "blue"]) : true;
+			v.serviceReceipt.bank != null && v.serviceReceipt.bank != "0" ? styleArr.push(["银行:", paymentUtils.splitBankInfo(v.serviceReceipt.bank, v.serviceReceipt.bankInfo, servicePaymentCheck.bankInfo), "blue"]) : true;
+			v.serviceReceipt.checkv != null && v.serviceReceipt.checkv != "0" ? styleArr.push(["转账:", paymentUtils.splitBankInfo(v.serviceReceipt.checkv, v.serviceReceipt.checkvBank, servicePaymentCheck.checkBankInfo), "blue"]) : true;
+			v.serviceReceipt.installment != null && v.serviceReceipt.installment != "0" ? styleArr.push(["分期:", v.serviceReceipt.installment, "blue"]) : true;
+			v.serviceReceipt.accounts != null && v.serviceReceipt.accounts != "0" ? styleArr.push(["对公帐户:", v.serviceReceipt.accounts, "blue"]) : true;
+
+			$.each(styleArr, function (index, value) {
+				var $liProperty = $('<li></li>');
+				$('<strong></strong>').html(value[0]).appendTo($liProperty);
+				$('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+				$liProperty.appendTo($ulStyle);
+			});
+
 			$label.append($input).append($span).prependTo($h3);
 
-			$liLine.append($h3).append($ulProperty);
+			$liLine.append($h3).append($ulProperty).append($ulStyle);
+
+			$btnUpdate.click(function(){
+				servicePaymentCheck.baseModal.attr("ChargeType","4");
+				servicePaymentCheck.spid = v.spid;
+				servicePaymentCheck.pid = v.pid;
+				paymentUtils.serviceDialogPayment(v, servicePaymentCheck);
+			});
 
 			return $liLine;
 		};
@@ -70,34 +172,6 @@ jQuery(function($) {
 			}
 		};
 	})();
-	
-	com.post(api.common.queryReceiptType, {}, function(res){
-		servicePaymentCheck.cash = [];
-		servicePaymentCheck.bank = [];
-		servicePaymentCheck.checkBank = [];
-		servicePaymentCheck.accounts = [];
-
-		servicePaymentCheck.cashInfo = {};
-		servicePaymentCheck.bankInfo = {};
-		servicePaymentCheck.checkBankInfo = {};
-		servicePaymentCheck.accountsInfo = {};
-
-		$.each(res.receiptTypes, function(i, v){
-			if(v.type == 1){
-				servicePaymentCheck.cash.push(v);
-				servicePaymentCheck.cashInfo[v.no] = v.name;
-			}else if(v.type == 2){
-				servicePaymentCheck.bank.push(v);
-				servicePaymentCheck.bankInfo[v.no] = v.name;
-			}else if(v.type == 3){
-				servicePaymentCheck.checkBank.push(v);
-				servicePaymentCheck.checkBankInfo[v.no] = v.name;
-			}else if(v.type == 4){
-				servicePaymentCheck.accounts.push(v);
-				servicePaymentCheck.accountsInfo[v.no] = v.name;
-			}
-		});
-	}, null, false);
 
 	var searcher = new Searcher();
 
@@ -200,6 +274,7 @@ jQuery(function($) {
 			var $liLine = $('<li></li>').addClass('item-orange clearfix');
 			var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.type == "0" ? "收款" : (v.type == "1" ? "退款" : "")));
 			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+			var $ulStyle = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 			var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 			var $btnPrint = $('<a></a>').addClass('btn btn-minier');
 
@@ -226,9 +301,25 @@ jQuery(function($) {
 				$liProperty.appendTo($ulProperty);
 			});
 
+			//详情显示
+			var styleArr = [];
+
+			v.serviceReceipt.cash != null && v.serviceReceipt.cash != "0" ? styleArr.push(["现金:", v.serviceReceipt.cash, "blue"]) : true;
+			v.serviceReceipt.bank != null && v.serviceReceipt.bank != "0" ? styleArr.push(["银行:", paymentUtils.splitBankInfo(v.serviceReceipt.bank, v.serviceReceipt.bankInfo, servicePaymentCheck.bankInfo), "blue"]) : true;
+			v.serviceReceipt.checkv != null && v.serviceReceipt.checkv != "0" ? styleArr.push(["转账:", paymentUtils.splitBankInfo(v.serviceReceipt.checkv, v.serviceReceipt.checkvBank, servicePaymentCheck.checkBankInfo), "blue"]) : true;
+			v.serviceReceipt.installment != null && v.serviceReceipt.installment != "0" ? styleArr.push(["分期:", v.serviceReceipt.installment, "blue"]) : true;
+			v.serviceReceipt.accounts != null && v.serviceReceipt.accounts != "0" ? styleArr.push(["对公帐户:", v.serviceReceipt.accounts, "blue"]) : true;
+
+			$.each(styleArr, function (index, value) {
+				var $liProperty = $('<li></li>');
+				$('<strong></strong>').html(value[0]).appendTo($liProperty);
+				$('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+				$liProperty.appendTo($ulStyle);
+			});
+
 			$btnPrint.text('打印').addClass("btn btn-minier btn-primary");
 
-			$liLine.append($h3).append($ulProperty);
+			$liLine.append($h3).append($ulProperty).append($ulStyle);
 
 			return $liLine;
 		};

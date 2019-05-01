@@ -40,7 +40,7 @@ public class StorehouseUserAction extends BaseListAction {
 	
 	private UserBaseVO user;
 	
-	private List<Long> shIds;
+	private List<Long> shids;
 	
 	@Action(value = "queryStorehouseUserByUserId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryStorehouseUserByUserId(){
@@ -53,7 +53,7 @@ public class StorehouseUserAction extends BaseListAction {
 	@Action(value = "updateStorehouseUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateStorehouseUser() throws FLException{
 		
-		storehouseUserService.updateStorehouseUser(user, shIds);
+		storehouseUserService.updateStorehouseUser(user, shids);
 		
 		return SUCCESS;
 	}
@@ -66,12 +66,12 @@ public class StorehouseUserAction extends BaseListAction {
 		this.user = user;
 	}
 
-	public List<Long> getShIds() {
-		return shIds;
+	public List<Long> getShids() {
+		return shids;
 	}
 
-	public void setShIds(List<Long> shIds) {
-		this.shIds = shIds;
+	public void setShids(List<Long> shids) {
+		this.shids = shids;
 	}
 
 	public List<StorehouseUserVO> getStorehouseUsers() {

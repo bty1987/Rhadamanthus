@@ -199,7 +199,7 @@ public class DrawLineServiceImpl implements DrawLineService {
 		// 设置装修订单的初始进度
 		List<ConstructionNodeCompanyPO> constructionNodeCompanyPOs = constructionNodeDao.queryConstructionNodeCompanyByCid(decorationPO.getCompany());
 		
-		String currentTime = DateUtil.current(ConstructionSchedulePO.CURRENT_TIME_FORMAT_STR);
+		Timestamp currentTime = DateUtil.getDateToTimestamp(new Date());
 
 		ConstructionPO constructionPO = constructionDao.queryConstructionByOrderId(orderId);
 
@@ -214,7 +214,7 @@ public class DrawLineServiceImpl implements DrawLineService {
 
 			for (ConstructionNodeCompanyPO constructionNodeCompanyPO : constructionNodeCompanyPOs) {
 
-				ConstructionSchedulePO constructionSchedulePO = new ConstructionSchedulePO(cid, orderId, currentTime, currentTime, (short) constructionNodeCompanyPO.getConstructionNode().getSort());
+				ConstructionSchedulePO constructionSchedulePO = new ConstructionSchedulePO(cid, orderId, currentTime, currentTime, constructionNodeCompanyPO.getConstructionNode().getSort());
 				constructionScheduleDao.save(constructionSchedulePO);
 			}
 		}

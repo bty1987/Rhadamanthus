@@ -10,7 +10,8 @@ jQuery(function($) {
 		bankNums: [],
 		checkvNums: [],
 		spid: null,
-		pid: null
+		pid: null,
+		htmlName: "service"
 	};
 
     servicePayment.items.cashCheckbox = com.focusPage("#cashCheckbox");
@@ -64,27 +65,7 @@ jQuery(function($) {
 	servicePayment.checkBankInfo = {};
 	servicePayment.accountsInfo = {};
 
-	com.post(api.common.queryReceiptType, {}, function(res){
-		$.each(res.receiptTypes, function(i, v){
-			if(v.type == 1){
-				servicePayment.cash.push(v);
-				servicePayment.cashUtil.push({"key":v.no,"value":v.name});
-				servicePayment.cashInfo[v.no] = v.name;
-			}else if(v.type == 2){
-				servicePayment.bank.push(v);
-				servicePayment.bankUtil.push({"key":v.no,"value":v.name});
-				servicePayment.bankInfo[v.no] = v.name;
-			}else if(v.type == 3){
-				servicePayment.checkBank.push(v);
-				servicePayment.checkBankUtil.push({"key":v.no,"value":v.name});
-				servicePayment.checkBankInfo[v.no] = v.name;
-			}else if(v.type == 4){
-				servicePayment.accounts.push(v);
-				servicePayment.accountsInfo[v.no] = v.name;
-			}
-		});
-	}, null, false);
-
+	paymentUtils.getReceiptType(servicePayment);
 
 	paymentUtils.dynamicChosen('baseItemModal',"servicecashInfo",servicePayment.cashUtil,"key","value");
 
@@ -96,7 +77,7 @@ jQuery(function($) {
 		var maxNum = $(this).attr("maxnum");
 		maxNum = parseInt(maxNum)+1;
 		$(this).attr("maxnum", maxNum);
-		paymentUtils.addBankUtil(maxNum, "bankDiv", "#servicebankDivGroup", servicePayment.bankNums, servicePayment.bankUtilForGrade, "service");
+		paymentUtils.addBankUtil(maxNum, "bankDiv", "#servicebankDivGroup", servicePayment.bankNums, servicePayment.bankUtilForGrade, servicePayment.htmlName, 'baseItemModal');
 
 		return false;
 	});
@@ -109,7 +90,7 @@ jQuery(function($) {
 		var maxNum = $(this).attr("maxnum");
 		maxNum = parseInt(maxNum)+1;
 		$(this).attr("maxnum", maxNum);
-		paymentUtils.addBankUtil(maxNum, "checkvDiv", "#servicecheckvDivGroup", servicePayment.checkvNums, servicePayment.checkBankUtilForGrade, "service");
+		paymentUtils.addBankUtil(maxNum, "checkvDiv", "#servicecheckvDivGroup", servicePayment.checkvNums, servicePayment.checkBankUtilForGrade, servicePayment.htmlName, 'baseItemModal');
 
 		return false;
 	});
@@ -168,7 +149,7 @@ jQuery(function($) {
 
 			$btnCollect.click(function(){
 				servicePayment.baseModal.attr("ChargeType","1");
-				dialogPayment(v);
+				paymentUtils.serviceDialogPayment(v, servicePayment);
 			});
 
 			$btnService.click(function(){
@@ -177,7 +158,7 @@ jQuery(function($) {
                     return false;
                 }
 				servicePayment.baseModal.attr("ChargeType","2");
-				dialogPayment(v);
+				paymentUtils.serviceDialogPayment(v, servicePayment);
 			});
 
             $btnRefunds.click(function(){
@@ -186,7 +167,7 @@ jQuery(function($) {
                     return false;
                 }
                 servicePayment.baseModal.attr("ChargeType","3");
-                dialogPayment(v);
+				paymentUtils.serviceDialogPayment(v, servicePayment);
             });
 
 			return $liLine;
@@ -299,7 +280,7 @@ jQuery(function($) {
 				servicePayment.baseModal.attr("ChargeType","4");
 				servicePayment.spid = v.spid;
 				servicePayment.pid = v.pid;
-				dialogPayment(v);
+				paymentUtils.serviceDialogPayment(v, servicePayment);
 			});
 
             $liLine.append($h3).append($ulProperty).append($ulStyle);
@@ -399,220 +380,9 @@ jQuery(function($) {
 		 });
 	 });
 
-	function initBaseModal(v){
-		com.focusPage("#historyUpdateS").addClass("hide");
-		for(var i = 0; i<servicePayment.paymentModelNameData.length; i++){
-			var _name = servicePayment.paymentModelNameData[i];
-			var _checkboxId = "#" + _name + "Checkbox";
-			var _divId = "#" + _name + "Div";
-			var _inputId = "#" + _name;
-			var _selectId = "";
-			if(_name != "bank"){
-				_selectId = "#"+ _name + "BankName";
-			}else{
-				_selectId = "#" + _name + "Name";
-			}
-
-			com.focusPage(_checkboxId).removeAttr("checked").removeAttr("disabled");
-
-			com.focusPage(_inputId).val("");
-
-			if(_name == "bank"){
-				com.focusPage("#servicebankDivGroup").html("");
-				com.focusPage("#servicebankAdd").attr("num", 0).attr("maxnum",0);
-			}
-
-			if(_name == "checkv"){
-				com.focusPage("#servicecheckvDivGroup").html("");
-				com.focusPage("#servicecheckvAdd").attr("num", 0).attr("maxnum",0);
-			}
-		}
-
-		servicePayment.bankNums=[];
-		servicePayment.checkvNums=[];
-
-		com.focusPage("#collectDes").val("").removeAttr("readonly");
-        com.focusPage("#referMoney").removeAttr("readonly");
-
-		paymentUtils.EmptyChosen('servicecashInfo');
-
-		//根据装修单等级获取收据类型等级
-		var gradeParam;
-		if(v.decoration.grade == "A" || v.decoration.grade == "C"){
-			gradeParam = "A";
-		}else{
-			gradeParam = "";
-		}
-
-		// 根据等级在数组中筛选出符合要求的用于显示
-		var returnGradeParams = paymentUtils.getValueForGrade(servicePayment.bank, servicePayment.checkBank, gradeParam);
-		servicePayment.bankUtilForGrade = returnGradeParams[0];
-		servicePayment.checkBankUtilForGrade = returnGradeParams[1];
-	}
-
-	function dialogPayment(v){
-        com.cleanItems(servicePayment.items);
-
-		initBaseModal(v);
-        if(servicePayment.baseModal.attr("ChargeType")==1){
-			com.focusPage("#myModalLabel").text("付款信息");
-			com.focusPage("#collectBtn").text("收款");
-			com.focusPage("#serviceMoney").css("display","none");
-            com.focusPage("#referMoney").val("");
-            com.focusPage("#collectDes").val("");
-        }else if(servicePayment.baseModal.attr("ChargeType")==2){
-			com.focusPage("#myModalLabel").text("付款信息");
-			com.focusPage("#collectBtn").text("收款");
-			com.focusPage("#serviceMoney").css("display","block");
-			com.focusPage("#sMoney").val(v.servicePrice - v.servicePaidup);
-			com.focusPage("#sMoney").attr("readonly","readonly");
-			com.focusPage("#referMoney").val("");
-			com.focusPage("#collectDes").val("");
-        }else if(servicePayment.baseModal.attr("ChargeType")==3){
-            com.focusPage("#myModalLabel").text("退款信息");
-            com.focusPage("#collectBtn").text("退款");
-			com.focusPage("#serviceMoney").css("display","none");
-            com.focusPage("#referMoney").val(v.servicePaidup);
-            com.focusPage("#referMoney").attr("readonly","readonly");
-			com.focusPage("#collectDes").val("");
-        }else if(servicePayment.baseModal.attr("ChargeType")==4){
-			com.focusPage("#historyUpdateS").removeClass("hide");
-			com.focusPage("#myModalLabel").text("更新付款信息");
-			com.focusPage("#collectBtn").text("收款");
-			com.focusPage("#serviceMoney").css("display","none");
-			com.focusPage("#referMoney").val(v.serviceMoney+ v.advanceMoney).attr("readonly", "readonly");
-			com.focusPage("#collectDes").val(v.comment).attr("readonly", "readonly");
-
-			//历史收款信息
-			com.focusPage("#cashHistoryS").text("现金: "+com.checkNull(servicePayment.cashInfo[v.serviceReceipt.cashInfo],"")+" "+com.checkNull(v.serviceReceipt.cash,"无"));
-			com.focusPage("#bankHistoryS").text("银行卡: " + (v.serviceReceipt.bank == 0 ? "无" : paymentUtils.splitBankInfo(v.serviceReceipt.bank, v.serviceReceipt.bankInfo, servicePayment.bankInfo)));
-			com.focusPage("#checkvHistoryS").text("转账: " + (v.serviceReceipt.checkv == 0 ? "无" : paymentUtils.splitBankInfo(v.serviceReceipt.checkv, v.serviceReceipt.checkvBank, servicePayment.checkBankInfo)));
-			com.focusPage("#installmentHistoryS").text("分期: "+com.checkNull(servicePayment.bankInfo[v.serviceReceipt.installmentBank],"")+" "+com.checkNull(v.serviceReceipt.installment,"无"));
-			com.focusPage("#accountsHistoryS").text("对公账户: "+com.checkNull(servicePayment.accountsInfo[v.serviceReceipt.accountsBank],"")+" "+com.checkNull(v.serviceReceipt.accounts,"无"));
-
-		}
-
-		servicePayment.baseModal.modal("show");
-
-		servicePayment.moreMsg[0]=$.extend({},v);
-	}
-
-	com.focusPage("#collectBtn").bindClick(payment);
-
-	function payment(){
-		if(com.validate()){
-			return;
-		}
-
-		var v = servicePayment.moreMsg[0];
-		var referMoney = com.focusPage("#referMoney").val();
-		var des = com.focusPage("#collectDes").val();
-
-		var cash = 0;
-		var cashbInfo = "";
-		var bank = 0;
-		var bankInfo = "";
-		var checkv = 0;
-		var checkvBank = "";
-
-		if(com.focusPage("#cashCheckbox").prop("checked")){
-			cash = com.focusPage("#cash").val();
-			cashbInfo = com.focusPage("#servicecashInfo").val();
-		}
-
-		if(com.focusPage("#bankCheckbox").prop("checked")){
-			var aboutBankParams = paymentUtils.returnBankParams(servicePayment.bankNums, "servicebank");
-			bank = aboutBankParams[0];
-			bankInfo = aboutBankParams[1];
-		}
-
-		if(com.focusPage("#checkvCheckbox").prop("checked")){
-			var aboutChenckvParams = paymentUtils.returnBankParams(servicePayment.checkvNums, "servicecheckv");
-			checkv = aboutChenckvParams[0];
-			checkvBank = aboutChenckvParams[1];
-		}
-
-		var realMoney = utils.accAdd(utils.accAdd(cash, bank), checkv);
-
-        if (referMoney != realMoney) {
-            com.showAlert(com.error, "当前实收款项总数与应收款项不等,请核实再进行提交!");
-            return false;
-        }
-
-		if(servicePayment.baseModal.attr("ChargeType")==2) {
-			var sMoney = com.focusPage("#sMoney").val();
-			if (realMoney > sMoney) {
-				com.showAlert(com.error, "当前所收服务费多于剩余服务费,不能收款!");
-				return false;
-			}
-		}
-
-		var option = {
-			"servicePayment.decoration.orderId" : v.decoration.orderId,
-			"servicePayment.referMoney" : referMoney,
-			"servicePayment.comment" : des,
-
-            "serviceReceipt.cash" : cash,
-            "serviceReceipt.cashInfo" : cashbInfo,
-            "serviceReceipt.bank" : bank,
-            "serviceReceipt.bankInfo" : bankInfo,
-            "serviceReceipt.checkv" : checkv,
-            "serviceReceipt.checkvBank" : checkvBank,
-			"serviceReceipt.comment" : des
-		};
-
-		var reg = /^[0-9]*$/;
-		if(reg.test(com.focusPage("#referMoney").val()) != true){
-			com.showAlert(com.error, "应收款只能为数字");
-			return false;
-		}
-		if(com.focusPage("#referMoney").val() == null || com.focusPage("#referMoney").val() == ""){
-            com.showAlert(com.error, "应收款不能为空");
-            return false;
-        }
-
-		var currentUrl;
-		var currentOption;
-		var successMessage;
-		var failMessage;
-
-		if(servicePayment.baseModal.attr("ChargeType")==1){
-			currentUrl = api.payment.collectServicePayment;
-			currentOption = option;
-			successMessage = "收款成功";
-			failMessage = "收款失败";
-		}else if(servicePayment.baseModal.attr("ChargeType")==2){
-			currentUrl = api.payment.collectServicePaymentForService;
-			currentOption = option;
-			successMessage = "收款成功";
-			failMessage = "收款失败";
-		}else if(servicePayment.baseModal.attr("ChargeType")==3){
-			currentUrl = api.payment.refundServicePaymentForService;
-			currentOption = option;
-			successMessage = "退款成功";
-			failMessage = "退款失败";
-		}else if(servicePayment.baseModal.attr("ChargeType")==4){
-			currentUrl = api.payment.updateServicePayment;
-			currentOption = option;
-			currentOption["servicePayment.spid"] = servicePayment.spid;
-			currentOption["servicePayment.pid"] = servicePayment.pid;
-			successMessage = "更新成功";
-			failMessage = "更新失败";
-		}
-
-		com.post(currentUrl, currentOption, function () {
-			searcher.doSearch();
-			if(servicePayment.baseModal.attr("ChargeType")==4) {
-				hsearcher.doSearch();
-			}
-			com.showAlert(com.info, successMessage);
-			servicePayment.baseModal.modal("hide");
-		}, function () {
-			searcher.doSearch();
-			com.showAlert(com.error, failMessage);
-			servicePayment.baseModal.modal("hide");
-		});
-	}
+	com.focusPage("#collectBtn").bindClick(function(){
+		paymentUtils.servicePaymentCollect(servicePayment, searcher, hsearcher);
+	});
 
 	com.focusPage("#historyService").removeClass("active");
 });

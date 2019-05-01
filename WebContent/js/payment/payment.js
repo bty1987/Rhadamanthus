@@ -11,10 +11,13 @@ jQuery(function($) {
 		paymentTypeData: [],
 		statusData: [],
 		bankNums: [],
-		checkvNums: []
+		checkvNums: [],
+		htmlName: "payment"
 	};
 	
-	payment.saveBtn = com.focusPage("#collectBtn").bindClick(saveData);
+	payment.saveBtn = com.focusPage("#collectBtn").bindClick(function(){
+		paymentUtils.paymentSaveData(payment, hsearcher);
+	});
 	payment.cancelBtn = com.focusPage("#cancelBtn");
 	payment.modal = com.focusPage("#paymentModal").on('show.bs.modal',function(e){
 		com.clearValidator();
@@ -96,26 +99,8 @@ jQuery(function($) {
 	payment.checkBankInfo = {};
 	payment.accountsInfo = {};
 
-	com.post(api.common.queryReceiptType, {}, function(res){
-		$.each(res.receiptTypes, function(i, v){
-			if(v.type == 1){
-				payment.cash.push(v);
-				payment.cashUtil.push({"key":v.no,"value":v.name});
-				payment.cashInfo[v.no] = v.name;
-			}else if(v.type == 2){
-				payment.bank.push(v);
-				payment.bankUtil.push({"key":v.no,"value":v.name});
-				payment.bankInfo[v.no] = v.name;
-			}else if(v.type == 3){
-				payment.checkBank.push(v);
-				payment.checkBankUtil.push({"key":v.no,"value":v.name});
-				payment.checkBankInfo[v.no] = v.name;
-			}else if(v.type == 4){
-				payment.accounts.push(v);
-				payment.accountsInfo[v.no] = v.name;
-			}
-		});
-	}, null, false);
+	//info信息是分页显示信息的, util是下拉框信息
+	paymentUtils.getReceiptType(payment);
 
 	paymentUtils.dynamicChosen('paymentModal',"paymentcashInfo",payment.cashUtil,"key","value");
 
@@ -127,7 +112,7 @@ jQuery(function($) {
 		var maxNum = $(this).attr("maxnum");
 		maxNum = parseInt(maxNum)+1;
 		$(this).attr("maxnum", maxNum);
-		paymentUtils.addBankUtil(maxNum, "bankDiv", "#paymentbankDivGroup", payment.bankNums, payment.bankUtilForGrade, "payment");
+		paymentUtils.addBankUtil(maxNum, "bankDiv", "#paymentbankDivGroup", payment.bankNums, payment.bankUtilForGrade, payment.htmlName, 'paymentModal');
 
 		return false;
 	});
@@ -140,7 +125,7 @@ jQuery(function($) {
 		var maxNum = $(this).attr("maxnum");
 		maxNum = parseInt(maxNum)+1;
 		$(this).attr("maxnum", maxNum);
-		paymentUtils.addBankUtil(maxNum, "checkvDiv", "#paymentcheckvDivGroup", payment.checkvNums, payment.checkBankUtilForGrade, "payment");
+		paymentUtils.addBankUtil(maxNum, "checkvDiv", "#paymentcheckvDivGroup", payment.checkvNums, payment.checkBankUtilForGrade, payment.htmlName, 'paymentModal');
 
 		return false;
 	});
@@ -212,7 +197,7 @@ jQuery(function($) {
 						com.focusPage("#"+v.orderId+"materialBalance").html(res.materialAdvance);
 						com.focusPage("#"+v.orderId+"zaterialBalance").html(res.zaterialAdvance);
 					}else{
-						paymentUl(v,res);
+						paymentUtils.paymentUl(v,res);
 					}
 				});
 			});
@@ -230,21 +215,6 @@ jQuery(function($) {
             }
         }
     })();
-
-	function paymentUl(v,res) {
-		ul = com.focusPage("#"+v.orderId+"ul");
-		paymentBalance(ul,"合同预付款 ",res.balanceAdvance,"blue",v.orderId+"contractBalance");
-		paymentBalance(ul,"工程预付款 ",res.projectAdvance,"blue",v.orderId+"projectBalance");
-		paymentBalance(ul,"主材预付款 ",res.materialAdvance,"blue",v.orderId+"materialBalance");
-		paymentBalance(ul,"正林预付款 ",res.zaterialAdvance,"blue",v.orderId+"zaterialBalance");
-	}
-	
-	function paymentBalance($ulProperty,key,value,cls,id) {
-		var $liProperty = $('<li></li>');
-		$('<strong></strong>').html(key).appendTo($liProperty);
-		$('<b></b>').html(value).attr("id",id).addClass(cls).appendTo($liProperty);
-		$liProperty.appendTo($ulProperty);
-	}
 	
 	var searcher = new Searcher();
 	
@@ -336,7 +306,7 @@ jQuery(function($) {
 			$btnUpdateP.click(function(){
 				payment.typeUpdate = 3;
 				v.grade = "allGrade";
-				dialogPaymentUpdate(v);
+				paymentUtils.paymentDialogPaymentUpdate(v, payment);
 			});
             
             return $liLine;
@@ -422,176 +392,6 @@ jQuery(function($) {
 		payment.temp = v;
 	}
 	
-	function dialogPaymentUpdate(v) {
-		payment.bankNums=[];
-		payment.checkvNums=[];
-
-		// 根据等级在数组中筛选出符合要求的用于显示
-		getReceiptTypeForGrade(v.paymentType, v.grade);
-
-		com.focusPage("#myModalLabel").text("收款信息");
-		com.focusPage("#paymentMethod").text("付款方式");
-		com.focusPage("#historyUpdateP").removeClass("hide");
-		com.focusPage("#collectBtn").text("收款");
-		com.focusPage("#refundSumBalanceDiv").addClass("hide");
-		com.focusPage("#refundSumWithdrawDiv").addClass("hide");
-
-		params.orderId = v.orderId;
-		payment.paymentTypes = null;
-
-		com.focusPage("#paymentbankDivGroup").html("");
-		com.focusPage("#paymentbankAdd").attr("num", 0).attr("maxnum",0);
-
-		com.focusPage("#paymentcheckvDivGroup").html("");
-		com.focusPage("#paymentcheckvAdd").attr("num", 0).attr("maxnum",0);
-
-		com.cleanItems(payment.items);
-
-		paymentUtils.EmptyChosen('paymentcashInfo');
-		payment.modal.modal("show");
-
-		com.focusPage("#paymentTypeDiv").css("display", "inline");
-		com.focusPage("#des").val(v.comment);
-		com.focusPage("#des").attr("disabled","disabled");
-		com.focusPage("#paymentTypeSel").attr("disabled","disabled");
-		com.focusPage("#paymentTypeSel").val(v.paymentType);
-
-		//历史收款信息
-		com.focusPage("#cashHistoryP").text("现金: "+com.checkNull(payment.cashInfo[v.cashInfo],"")+" "+com.checkNull(v.cash,"无"));
-		com.focusPage("#bankHistoryP").text("银行卡: " + (v.bank == 0 ? "无" : paymentUtils.splitBankInfo(v.bank, v.bankInfo, payment.bankInfo)));
-		com.focusPage("#checkvHistoryP").text("转账: " + (v.checkv == 0 ? "无" : paymentUtils.splitBankInfo(v.checkv, v.checkvBank, payment.checkBankInfo)));
-		com.focusPage("#installmentHistoryP").text("分期: "+com.checkNull(payment.bankInfo[v.installmentBank],"")+" "+com.checkNull(v.installment,"无"));
-		com.focusPage("#accountsHistoryP").text("对公账户: "+com.checkNull(payment.accountsInfo[v.accountsBank],"")+" "+com.checkNull(v.accounts,"无"));
-
-		payment.temp = v;
-		payment.historyPayment = utils.accAdd(utils.accAdd(v.cash,v.bank),v.checkv);
-	}
-	
-	function saveData(){
-		com.focusPage('.payWayError').hide();
-		
-		if(com.validate("paymentModal")){
-			return;
-		}
-		
-		if(com.focusPage(".pay_way input:checkbox:checked").length == 0){
-			com.focusPage('.payWayError').show();
-			return; 
-		}
-		
-		var url = "";
-		var total = 0;
-		var options = {};
-
-		options["payment.customer.cid"] = payment.temp.customer.cid;
-		options["payment.balance"] = payment.temp.balance;
-		options["payment.paymentType"] = com.focusPage("#paymentTypeSel").val();
-		options["payment.orderId"] = params.orderId;
-
-		if(com.focusPage("#cashCheckbox").prop("checked")){
-			options["payment.cash"] = com.focusPage("#cash").val().trim();
-			options["payment.cashInfo"] = com.focusPage("#paymentcashInfo").val().trim();
-			
-			total = utils.accAdd(parseFloat(com.focusPage("#cash").val()), total);
-		}
-
-		if(com.focusPage("#bankCheckbox").prop("checked")){
-			var bankParams = paymentUtils.returnBankParams(payment.bankNums, "paymentbank");
-
-			total = utils.accAdd(bankParams[0], total);
-			
-			options["payment.bank"] = bankParams[0];
-			options["payment.bankInfo"] = bankParams[1];
-		}
-
-		if(com.focusPage("#checkvCheckbox").prop("checked")){
-			var checkvParams = paymentUtils.returnBankParams(payment.checkvNums, "paymentcheckv");
-
-			total = utils.accAdd(checkvParams[0], total);
-
-			options["payment.checkv"] = checkvParams[0];
-			options["payment.checkvBank"] = checkvParams[1];
-		}
-
-		if(payment.typeUpdate == 1 && payment.paymentTypes == "收款"){
-			url = api.payment.collectPayment;
-			options["payment.type"] = 1; //收款
-			options["payment.comment"] = com.focusPage("#des").val().trim();
-			options["payment.uniqueid"] = new Date().getTime();
-			if(parseFloat(total) <= 0){
-				com.showAlert(com.warning, "收款金额需要大于零!");
-				return false;
-			}
-		}else if(payment.typeUpdate == 2){
-			var refund = com.focusPage("#refund").val();
-			var refundSum = com.focusPage("#refundSum").val();
-
-			if(parseFloat(refund) <= 0){
-				com.focusPage("#paymentInfo").text("提款金额需要大于零!");
-				return false;
-			}
-
-			if(parseFloat(refundSum) < parseFloat(refund)){
-				com.focusPage("#paymentInfo").text("提款金额不能大于余额!");
-				return false;
-			}
-
-			if(parseFloat(total)!=parseFloat(refund)){
-				com.focusPage("#paymentInfo").text("当前提款项总数与提款金额不等,请核实再进行提交!!");
-				return false;
-			}
-
-			url = api.payment.withdrawPayment;
-			options["payment.type"] = 0;
-			options["payment.comment"] = com.focusPage("#des").val().trim();
-			options["payment.uniqueid"] = new Date().getTime();
-
-		}else if(payment.typeUpdate == 3){
-			if(parseFloat(total) <= 0){
-				com.focusPage("#paymentInfo").text("提款金额需要大于零!");
-				return false;
-			}
-
-			if(parseFloat(total) != parseFloat(payment.historyPayment)){
-				com.focusPage("#paymentInfo").text("当前更新款项金额与原收款金额不等,请核实再进行提交!!");
-				return false;
-			}
-
-			url = api.payment.updatePayment;
-			options["payment.pid"] = payment.temp.pid;
-		}
-
-		com.post(url, options, function(res){
-			hsearcher.doSearch();
-
-			com.post(api.payment.queryAdvancePaymentByCustomerId, {"customer.cid": res.payment.customer.cid}, function(resBalance){
-				if(com.focusPage("#"+params.orderId+"contractBalance").length>0){
-					com.focusPage("#"+params.orderId+"contractBalance").html(resBalance.balanceAdvance);
-					com.focusPage("#"+params.orderId+"projectBalance").html(resBalance.projectAdvance);
-					com.focusPage("#"+params.orderId+"materialBalance").html(resBalance.materialAdvance);
-					com.focusPage("#"+params.orderId+"zaterialBalance").html(resBalance.zaterialAdvance);
-				}else{
-					paymentUl(params,resBalance);
-				}
-			});
-
-			if(payment.paymentTypes != null){
-				if(payment.paymentTypes.search('收款') != -1 || payment.paymentTypes == "收款" && payment.typeUpdate == 1){
-					bootbox.confirm("是否需要打印当前收款对应的收据信息?", function(result) {
-						if(result){
-							params.paymentPaymentId = res.payment.pid;
-							com.popup("专用收款收据__装修单号:" + res.payment.orderId  ,api.index.paymentReceiptIndex.url,function () {
-								parent.layer.getFrameIndex(window.name);
-							},null,true)
-						}
-					});
-				}
-			}
-		});
-		
-		payment.modal.modal("hide");
-	}
-
 	com.focusPage('a[name="import"]', '#hpagenation').click(function () {
     	if(com.focusPage('span[name="totalRecords"]').text() == 0){
 			com.showAlert(com.warning, "请通过条件进行查询");

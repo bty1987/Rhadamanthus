@@ -20,6 +20,6 @@ public interface StorehouseUserDao extends Dao<StorehouseUserPO> {
 	
 	public List<StorehouseUserPO> queryStorehouseUserByUserId(String userId);
 	
-	public int deleteStorehouseUserByUId(int uId);
+	public int deleteStorehouseUserByUid(int uid);
 
 }

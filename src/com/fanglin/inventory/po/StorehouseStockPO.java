@@ -17,11 +17,11 @@ public class StorehouseStockPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 730392365817913862L;
 	
-	public static final String COLUMN_SHID_STR = "storehouse.shId";
+	public static final String COLUMN_SHID_STR = "storehouse.shid";
 	
 	public static final String COLUMN_MONTH_STR = "month";
 	
-	private long shsId;
+	private long shsid;
 	
 	private StorehousePO storehouse;
 	
@@ -31,17 +31,17 @@ public class StorehouseStockPO implements java.io.Serializable {
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "shsId")
-	public long getShsId() {
-		return this.shsId;
+	@Column(name = "shsid")
+	public long getShsid() {
+		return this.shsid;
 	}
 
-	public void setShsId(long shsId) {
-		this.shsId = shsId;
+	public void setShsid(long shsid) {
+		this.shsid = shsid;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "shId", referencedColumnName = "shId")
+	@JoinColumn(name = "shid", referencedColumnName = "shid")
 	public StorehousePO getStorehouse() {
 		return storehouse;
 	}

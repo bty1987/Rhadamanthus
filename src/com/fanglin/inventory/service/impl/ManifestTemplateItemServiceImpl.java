@@ -38,9 +38,9 @@ public class ManifestTemplateItemServiceImpl implements ManifestTemplateItemServ
 	private ManifestTemplateItemDao manifestTemplateItemDao;
 
 	@Override
-	public List<ManifestTemplateItemVO> queryManifestTemplateItemByMtId(ManifestTemplateVO manifestTemplateVO) {
+	public List<ManifestTemplateItemVO> queryManifestTemplateItemByMtid(ManifestTemplateVO manifestTemplateVO) {
 		
-		List<ManifestTemplateItemPO> manifestTemplateItemPOs = manifestTemplateItemDao.queryManifestTemplateItemByMtId(manifestTemplateVO.getMtId());
+		List<ManifestTemplateItemPO> manifestTemplateItemPOs = manifestTemplateItemDao.queryManifestTemplateItemByMtid(manifestTemplateVO.getMtid());
 		List<ManifestTemplateItemVO> manifestTemplateItemVOs = new ArrayList<ManifestTemplateItemVO>();
 		
 		ManifestTemplateItemVO manifestTemplateItemVO;
@@ -49,7 +49,7 @@ public class ManifestTemplateItemServiceImpl implements ManifestTemplateItemServ
 			
 			manifestTemplateItemVO = new ManifestTemplateItemVO(new GoodsVO(), new ManifestTemplateVO());
 			
-			manifestTemplateItemVO.setMtiId(manifestTemplateItemPO.getMtiId());
+			manifestTemplateItemVO.setMtiid(manifestTemplateItemPO.getMtiid());
 			
 			BeanUtil.copyProperties(manifestTemplateItemPO.getGoods(), manifestTemplateItemVO.getGoods(), Arrays.asList("accessoriesType"));
 			BeanUtil.copyProperties(manifestTemplateItemPO.getManifestTemplate(), manifestTemplateItemVO.getManifestTemplate());
@@ -61,9 +61,9 @@ public class ManifestTemplateItemServiceImpl implements ManifestTemplateItemServ
 	}
 
 	@Override
-	public List<GoodsVO> queryGoodsByMtId(ManifestTemplateVO manifestTemplateVO) {
+	public List<GoodsVO> queryGoodsByMtid(ManifestTemplateVO manifestTemplateVO) {
 		
-		List<ManifestTemplateItemPO> manifestTemplateItemPOs = manifestTemplateItemDao.queryManifestTemplateItemByMtId(manifestTemplateVO.getMtId());
+		List<ManifestTemplateItemPO> manifestTemplateItemPOs = manifestTemplateItemDao.queryManifestTemplateItemByMtid(manifestTemplateVO.getMtid());
 		List<GoodsVO> goodsVOs = new ArrayList<GoodsVO>();
 		
 		GoodsVO goodsVO;
@@ -84,12 +84,12 @@ public class ManifestTemplateItemServiceImpl implements ManifestTemplateItemServ
 	@Transactional(rollbackFor=Exception.class)
 	public int addManifestTemplateItem(ManifestTemplateVO manifestTemplateVO, List<Long> gids) {
 		
-		long mtId = manifestTemplateVO.getMtId();
+		long mtid = manifestTemplateVO.getMtid();
 		
 		if(gids != null && gids.size() > 0){
 			
 			for(Long gid: gids){
-				manifestTemplateItemDao.save(new ManifestTemplateItemPO(new ManifestTemplatePO(mtId), new GoodsPO(gid)));
+				manifestTemplateItemDao.save(new ManifestTemplateItemPO(new ManifestTemplatePO(mtid), new GoodsPO(gid)));
 			}
 		}
 		
@@ -98,9 +98,9 @@ public class ManifestTemplateItemServiceImpl implements ManifestTemplateItemServ
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int deleteManifestTemplateItem(List<Long> mtiIds) {
+	public int deleteManifestTemplateItem(List<Long> mtiids) {
 		
-		manifestTemplateItemDao.deleteManifestTemplateItemByMtiIds(mtiIds);
+		manifestTemplateItemDao.deleteManifestTemplateItemByMtiids(mtiids);
 		
 		return 0;
 	}

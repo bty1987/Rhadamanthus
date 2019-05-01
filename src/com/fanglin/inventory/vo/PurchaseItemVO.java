@@ -2,53 +2,49 @@ package com.fanglin.inventory.vo;
 
 import java.io.Serializable;
 
-public class PurchaseItemVO  implements Serializable{
-	
+public class PurchaseItemVO implements Serializable {
+
 	private static final long serialVersionUID = -2810451235285442491L;
 
-	private Long piId;
-	
+	private Long piid;
+
 	private Long pid;
-	
+
 	private Long siid;
-	
+
 	private GoodsVO goods;
 
 	private ColorVO color;
-	
+
 	private FormatVO format;
-	
-	private SupplierVO supplier;
-	
+
 	private StorehouseVO storehouse;
-	
+
 	private Float unitPrice;
-	
-	private Float num; 
-	
+
+	private Float num;
+
 	private Float surplus;
-	
+
 	public PurchaseItemVO() {
 		super();
 	}
-	
-	public PurchaseItemVO(GoodsVO goods, ColorVO color, FormatVO format,
-			SupplierVO supplier) {
+
+	public PurchaseItemVO(GoodsVO goods, ColorVO color, FormatVO format) {
 		super();
 		this.goods = goods;
 		this.color = color;
 		this.format = format;
-		this.supplier = supplier;
 	}
 
-	public Long getPiId() {
-		return piId;
+	public Long getPiid() {
+		return piid;
 	}
 
-	public void setPiId(Long piId) {
-		this.piId = piId;
+	public void setPiid(Long piid) {
+		this.piid = piid;
 	}
-	
+
 	public Long getPid() {
 		return pid;
 	}
@@ -87,14 +83,6 @@ public class PurchaseItemVO  implements Serializable{
 
 	public void setFormat(FormatVO format) {
 		this.format = format;
-	}
-
-	public SupplierVO getSupplier() {
-		return supplier;
-	}
-
-	public void setSupplier(SupplierVO supplier) {
-		this.supplier = supplier;
 	}
 
 	public StorehouseVO getStorehouse() {

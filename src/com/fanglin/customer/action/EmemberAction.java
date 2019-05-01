@@ -15,32 +15,32 @@ import com.fanglin.customer.vo.EmemberVO;
 @ParentPackage("common")
 @Namespace("/")
 @Controller
-public class EmemberAction extends BaseListAction{
+public class EmemberAction extends BaseListAction {
 
 	private static final long serialVersionUID = 2772611663435444344L;
-	
+
 	@Autowired
 	private EmemberService ememberService;
-	
+
 	private String securityCode;
-	
+
 	private String verifyCode;
-	
+
 	private EmemberVO emember;
-	
+
 	@Action(value = "queryEmember", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryEmember() throws FLException{
-		
+	public String queryEmember() throws FLException {
+
 		emember = ememberService.queryEmember(emember);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "addEmember", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addEmember() throws FLException{
-		
-		ememberService.addEmember(emember,securityCode,verifyCode);
-		
+	public String addEmember() throws FLException {
+
+		ememberService.addEmember(emember, securityCode, verifyCode);
+
 		return SUCCESS;
 	}
 

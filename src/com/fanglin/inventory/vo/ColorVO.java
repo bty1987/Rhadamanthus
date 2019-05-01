@@ -2,17 +2,26 @@ package com.fanglin.inventory.vo;
 
 import java.io.Serializable;
 
-public class ColorVO implements Serializable{
+public class ColorVO implements Serializable {
 
 	private static final long serialVersionUID = 50729235722901174L;
-	
+
 	private Long cid;
-	
+
 	private Long gid;
-	
+
 	private String name;
-	
+
 	private Short status;
+
+	public ColorVO() {
+		super();
+	}
+
+	public ColorVO(Long cid) {
+		super();
+		this.cid = cid;
+	}
 
 	public Long getCid() {
 		return cid;

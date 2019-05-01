@@ -4,34 +4,34 @@ public class ManifestItemVO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 5004663304502267708L;
 
-	private Long miId;
-	
+	private Long miid;
+
 	private Long mid;
-	
+
 	private Long siid;
-	
+
 	private GoodsVO goods;
-	
+
 	private ColorVO color;
-	
+
 	private FormatVO format;
-	
+
 	private StorehouseVO instorehouse;
-	
+
 	private StorehouseVO outstorehouse;
-	
+
 	private Float num;
-	
+
 	private Float unitPrice;
-	
+
 	private String comment;
 
-	public Long getMiId() {
-		return this.miId;
+	public Long getMiid() {
+		return this.miid;
 	}
 
-	public void setMiId(Long miId) {
-		this.miId = miId;
+	public void setMiid(Long miid) {
+		this.miid = miid;
 	}
 
 	public ManifestItemVO() {
@@ -44,8 +44,7 @@ public class ManifestItemVO implements java.io.Serializable {
 		this.outstorehouse = outstorehouse;
 	}
 
-	public ManifestItemVO(GoodsVO goods, ColorVO color, FormatVO format,
-			StorehouseVO instorehouse, StorehouseVO outstorehouse) {
+	public ManifestItemVO(GoodsVO goods, ColorVO color, FormatVO format, StorehouseVO instorehouse, StorehouseVO outstorehouse) {
 		super();
 		this.goods = goods;
 		this.color = color;
@@ -132,6 +131,21 @@ public class ManifestItemVO implements java.io.Serializable {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+	
+	public ManifestItemVO init(long gid, long cid, long fid, Long in, Long out, float unitPrice, float num){
+		
+		setGoods(new GoodsVO(gid));
+		setColor(new ColorVO(cid));
+		setFormat(new FormatVO(fid));
+		
+		if(in != null) setInstorehouse(new StorehouseVO(in));
+		if(out != null) setOutstorehouse(new StorehouseVO(out));
+		
+		setUnitPrice(unitPrice);
+		setNum(num);
+		
+		return this;
 	}
 
 }

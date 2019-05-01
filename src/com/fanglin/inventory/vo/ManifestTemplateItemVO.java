@@ -5,7 +5,7 @@ public class ManifestTemplateItemVO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 6009033959954676623L;
 
-	private Long mtiId;
+	private Long mtiid;
 	
 	private ManifestTemplateVO manifestTemplate;
 	
@@ -21,12 +21,12 @@ public class ManifestTemplateItemVO implements java.io.Serializable {
 		this.goods = goods;
 	}
 
-	public Long getMtiId() {
-		return this.mtiId;
+	public Long getMtiid() {
+		return this.mtiid;
 	}
 
-	public void setMtiId(Long mtiId) {
-		this.mtiId = mtiId;
+	public void setMtiid(Long mtiid) {
+		this.mtiid = mtiid;
 	}
 
 	public ManifestTemplateVO getManifestTemplate() {
