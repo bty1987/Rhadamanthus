@@ -43,18 +43,18 @@ public class AddReduceItemDaoImpl extends DaoImpl<AddReduceItemPO> implements Ad
 	}
 
 	@Override
-	public int countAddReduceItemForFunctionArea(long qfaid) {
+	public long countAddReduceItemForFunctionArea(long qfaid) {
 		
 		String sql = "select count(*) from quotation.addreduceitem where quotationFunctionAreaId =:qfaid";
 
 		BigInteger count = (BigInteger) session().createSQLQuery(sql).setLong("qfaid", qfaid).uniqueResult();
 
-		return count.intValue();
+		return count.longValue();
 	}
 
 	@Override
-	public int countAddReduceItemForFunctionArea(List<QuotationFunctionAreaPO> quotationFunctionAreas) {
-		return (Integer) createCriteria(AddReduceItemPO.class).add(Restrictions.in("quotationFunctionArea", quotationFunctionAreas)).setProjection(Projections.rowCount()).uniqueResult();
+	public long countAddReduceItemForFunctionArea(List<QuotationFunctionAreaPO> quotationFunctionAreas) {
+		return (Long) createCriteria(AddReduceItemPO.class).add(Restrictions.in("quotationFunctionArea", quotationFunctionAreas)).setProjection(Projections.rowCount()).uniqueResult();
 	}
 
 }

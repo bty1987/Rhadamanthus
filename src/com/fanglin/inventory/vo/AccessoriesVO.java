@@ -10,27 +10,31 @@ import com.fanglin.personel.vo.UserBaseVO;
 
 public class AccessoriesVO implements Serializable {
 
-	private static final long serialVersionUID = -8463165642821021875L;
+	private static final long serialVersionUID = -867433293177361277L;
 
 	private Long aid;
 
 	private String no;
-
+	
 	private String orderId;
-
+	
+	private Long csid;
+	
 	private HouseVO house;
+	
+	private UserBaseVO supervisor;
 
 	private UserBaseVO creater;
+	
+	private UserBaseVO approver;
 
 	private Timestamp createTime;
 
-	private UserBaseVO approver;
-
 	private Timestamp approverTime;
 
-	private UserBaseVO supervisor;
-
-	private String fetchTime;
+	private Timestamp fetchTime;
+	
+	private Short schedule;
 
 	private Short status;
 
@@ -73,6 +77,14 @@ public class AccessoriesVO implements Serializable {
 
 	public void setOrderId(String orderId) {
 		this.orderId = orderId;
+	}
+
+	public Long getCsid() {
+		return csid;
+	}
+
+	public void setCsid(Long csid) {
+		this.csid = csid;
 	}
 
 	public HouseVO getHouse() {
@@ -125,12 +137,20 @@ public class AccessoriesVO implements Serializable {
 		this.supervisor = supervisor;
 	}
 
-	public String getFetchTime() {
+	public Timestamp getFetchTime() {
 		return fetchTime;
 	}
 
-	public void setFetchTime(String fetchTime) {
+	public void setFetchTime(Timestamp fetchTime) {
 		this.fetchTime = fetchTime;
+	}
+
+	public Short getSchedule() {
+		return schedule;
+	}
+
+	public void setSchedule(Short schedule) {
+		this.schedule = schedule;
 	}
 
 	public Short getStatus() {

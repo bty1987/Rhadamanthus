@@ -17,8 +17,14 @@ public class AccessoriesItemVO implements Serializable {
 	private FormatVO format;
 
 	private StorehouseVO storehouse;
+	
+	private Float selling;
+	
+	private Float outprice;
 
 	private Float num;
+	
+	private Float surplus;
 
 	public AccessoriesItemVO() {
 		super();
@@ -77,12 +83,36 @@ public class AccessoriesItemVO implements Serializable {
 		this.storehouse = storehouse;
 	}
 
+	public Float getSelling() {
+		return selling;
+	}
+
+	public void setSelling(Float selling) {
+		this.selling = selling;
+	}
+
+	public Float getOutprice() {
+		return outprice;
+	}
+
+	public void setOutprice(Float outprice) {
+		this.outprice = outprice;
+	}
+
 	public Float getNum() {
 		return num;
 	}
 
 	public void setNum(Float num) {
 		this.num = num;
+	}
+
+	public Float getSurplus() {
+		return surplus;
+	}
+
+	public void setSurplus(Float surplus) {
+		this.surplus = surplus;
 	}
 
 }

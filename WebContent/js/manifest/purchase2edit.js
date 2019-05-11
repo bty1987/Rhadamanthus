@@ -47,7 +47,7 @@ jQuery(function ($) {
             
             $line.find('div.pieceNum').text(v.goods.pieceNum);
             
-            $line.find('div.unitPrice input').val(v.unitPrice);
+            $line.find('div.inprice input').val(v.inprice);
             $line.find('div.number input').val(v.num);
         });
     });
@@ -102,7 +102,7 @@ jQuery(function ($) {
             {cellClass: "color grey", hasSelect: true},
             {cellClass: "format grey", hasSelect: true},
             {cellClass: "pieceNum blue"},
-            {cellClass: "unitPrice", hasInput: true, validate: "v_float_3"},
+            {cellClass: "inprice", hasInput: true, validate: "v_float_3"},
             {cellClass: "number", hasInput: true, validate: "v_float_3"}
         ];
 
@@ -184,7 +184,6 @@ jQuery(function ($) {
                         }, function (res) {
                             com.focusPage('li[data-gid="' + val.gid + '"] .format select').bindData(res.formats, "fid", "info");
                         });
-                        
                     }
                 });
 
@@ -229,7 +228,7 @@ jQuery(function ($) {
             "purchase.pid": purchase.pid,
             "purchaseItem.piid": piid,
             "purchaseItem.num": $line.find('.number input').val(),
-            "purchaseItem.unitPrice": $line.find('.unitPrice input').val()
+            "purchaseItem.inprice": $line.find('.inprice input').val()
         };
         
         if(!piid){

@@ -1,6 +1,8 @@
 package com.fanglin.approval.po;
 
 import java.sql.Timestamp;
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -13,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.utils.DateUtil;
 
 @Entity
 @Table(name = "approval", catalog = "approval")
@@ -71,58 +74,6 @@ public class ApprovalPO implements java.io.Serializable {
 	public static final String COLUMN_APPROVALTIME_STR = "approvalTime";
 	
 	public static final String COLUMN_PROCESSINSTANCEID_STR = "processinstanceid";
-
-	public static final String APPROVAL_CONTENTS_CUSTOMER_STR = "客户名:%s,修改为客户名:%s,新增电话:%s";
-
-	public static final String APPROVAL_CONTENTS_VILLAGE_STR = "订单号:%s,楼盘:%s,楼号:%s,修改为楼盘:%s,楼号:%s";
-
-	public static final String APPROVAL_CONTENTS_ORDER_BELONG_STR = "订单号:%s,类型:%s,现归属:%s比例:%s修改为归属:%s比例:%s";
-
-	public static final String APPROVAL_CONTENTS_QUOTATION_DISCOUNT_STR = "订单号:%s,报价编号:%s,折扣:%s,修改为折扣:%s";
-
-	public static final String APPROVAL_CONTENTS_DECORATION_REFUND_STR = "订单号:%s,退款类型:%s,金额:%s";
-
-	public static final String APPROVAL_CONTENTS_MATERIAL_REFUND_STR = "订单号:%s,主材订单号:%s,品牌:%s,退款金额:%s,应退金额:%s,类型:%s";
-
-	public static final String APPROVAL_CONTENTS_MATERIAL_OUTSIDE_REFUND_STR = "订单号:%s,楼盘地址:%s,客户名:%s,金额:%s,利润:%s";
-
-	public static final String APPROVAL_CONTENTS_DECORATION_ACTIVITY_STR = "订单号:%s,参与活动:%s";
-
-	public static final String APPROVAL_CONTENTS_MATERIAL_FULL_PAYMENT_STR = "订单号:%s,子订单号:%s,金额:%s,补款审批";
-	
-	public static final String APPROVAL_CONTENTS_SALES_REFUND_STR = "订单号:%s,销售单号:%s,品牌:%s,退款金额:%s,应退金额:%s,类型:%s";
-	
-	public static final String APPROVAL_CONTENTS_MANIFESTDB_STR = "";
-	
-	public static final String APPROVAL_CONTENTS_SALES_DISCOUNT_STR ="订单号:%s,销售单号:%s,应收金额:%s";
-	
-	public static final String APPROVAL_SYSTEMCONFIG_DECORATIONACTIVITY_STR = "decorationActivity"; //活动归属
-	
-	public static final String APPROVAL_SYSTEMCONFIG_DECORATIONBELONG_STR = "decorationBelong"; //装修单归属
-	
-	public static final String APPROVAL_SYSTEMCONFIG_CUSTOMER_STR = "customer"; //客户信息
-	
-	public static final String APPROVAL_SYSTEMCONFIG_DECORATIONHOUSE_STR = "decorationHouse"; //楼盘信息
-	
-	public static final String APPROVAL_SYSTEMCONFIG_DECORATIONREFUND_STR = "decorationRefund"; //装修退款
-	
-	public static final String APPROVAL_SYSTEMCONFIG_MANIFESTDB_STR = "manifestDB"; //调拨
-	
-	public static final String APPROVAL_SYSTEMCONFIG_MATERIALDISCOUNT_STR = "materialDiscount"; //主材补款
-	
-	public static final String APPROVAL_SYSTEMCONFIG_MATERIALREFUND_STR = "materialRefund"; //主材退款
-	
-	public static final String APPROVAL_SYSTEMCONFIG_QUOTATIONDISCOUNT_STR = "quotationDiscount"; //报价折扣
-	
-	public static final String APPROVAL_SYSTEMCONFIG_SALESDISCOUNT_STR = "salesDiscount"; //销售补款
-	
-	public static final String APPROVAL_SYSTEMCONFIG_SALESREFUND_STR = "salesRefund"; //销售退款
-	
-	public static final String APPROVAL_SYSTEMCONFIG_INCREASE_OR_DECREASE_STR = "increaseOrDecrease";//增减项
-	
-	public static final String APPROVAL_SYSTEMCONFIG_RESIGNATION_STR = "resignation";//人员离职
-	
-	public static final String APPROVAL_CHANGE_RESIGNATION_STR = "change";//客源转装修单
 
 	private long aid;
 
@@ -257,6 +208,24 @@ public class ApprovalPO implements java.io.Serializable {
 
 	public void setProcessinstanceid(String processinstanceid) {
 		this.processinstanceid = processinstanceid;
+	}
+	
+	public ApprovalPO init(UserPO sender, UserPO receiver, String ident, short type, String content, int company){
+		
+		setSender(sender);
+		setReceiver(receiver);
+		
+		setIdent(ident);
+		setType(type);
+		
+		setStatus(ApprovalPO.APPROVAL_STATUS_INIT_INT);
+		setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+		setComment("");
+		
+		setContents(content);
+		setCompany(company);
+		
+		return this;
 	}
 	
 }

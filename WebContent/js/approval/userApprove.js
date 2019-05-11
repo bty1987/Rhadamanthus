@@ -1,38 +1,37 @@
 ﻿
 jQuery(function($) {
-	
-	var approve = {
-		saveBtn: null,
-		cancelBtn: null,
-		modal: null,
-		items:{},
-		
-		editFlg: false,
-		postParam: {},
-	};
-	
-	
-	approve.saveBtn = com.focusPage("#saveBtn").bindClick(saveData);
-	approve.cancelBtn = com.focusPage("#cancelBtn");  
-	approve.modal = com.focusPage("#approveModal");
-	approve.items.userSel = com.focusPage("#userSel");
-	approve.items.comment = com.focusPage("#comment");
-	com.post(api.ds.approval, {"timestamp": new Date().getTime()}, function(res){
-		approve.approvalType = res.approvalType;
-		
-		approve.approvalTypeData = {};
-		
-		for(var i=0;i<approve.approvalType.length;i++){
-			var _ = approve.approvalType[i];
-			approve.approvalTypeData[_["key"]] = _["value"];
-		}
-	}, null, false);
+    
+    var approve = {
+        saveBtn: null,
+        cancelBtn: null,
+        modal: null,
+        items:{},
+        
+        editFlg: false,
+        postParam: {},
+    };
+    
+    approve.saveBtn = com.focusPage("#saveBtn").bindClick(saveData);
+    approve.cancelBtn = com.focusPage("#cancelBtn");  
+    approve.modal = com.focusPage("#approveModal");
+    approve.items.userSel = com.focusPage("#userSel");
+    approve.items.comment = com.focusPage("#comment");
+    com.post(api.ds.approval, {"timestamp": new Date().getTime()}, function(res){
+        approve.approvalType = res.approvalType;
+        
+        approve.approvalTypeData = {};
+        
+        for(var i=0;i<approve.approvalType.length;i++){
+            var _ = approve.approvalType[i];
+            approve.approvalTypeData[_["key"]] = _["value"];
+        }
+    }, null, false);
+    
+    com.initAutoFill("userSel", api.personel.queryUserByPinyin, "pinyinName", {"user.status":"0", "departmentType.name":""}, "userBases", "userId", "currentName", null);
 
-	com.initChosen('userSel', api.personel.queryUserByPinyin, "pinyinName", {"user.status":"0","departmentType.name":""}, "autoFillKeyValue", "key", "value");
-
-	approve.items.type = com.focusPage("#type").bindData(approve.approvalType, "key", "value", false);
-	
-	var displayFunc  = (function(){
+    approve.items.type = com.focusPage("#type").bindData(approve.approvalType, "key", "value", false);
+    
+    var displayFunc  = (function(){
 
         var renderList = function(tableId,listData){
             var $tableWrap = com.focusPage('#' + tableId);
@@ -50,8 +49,8 @@ jQuery(function($) {
         };
 
         var creatLine = function(v){
-        	var userBase = v.userBase;
-        	
+            var userBase = v.userBase;
+            
             var $liLine = $('<li></li>').addClass('item-blue clearfix');
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + userBase.currentName));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
@@ -79,7 +78,7 @@ jQuery(function($) {
 
 
             $btnDel.bindClick(function(){
-            	deleteApprovalUser(v.aid);
+                deleteApprovalUser(v.aid);
             });
             
             return $liLine;
@@ -95,61 +94,61 @@ jQuery(function($) {
             }
         };
     })();
-	
-	var searcher = new Searcher();
+    
+    var searcher = new Searcher();
 
-	searcher.init(["approval_senderName", "approval_Type"], "condList", api.approval.pageApprover, function(data){
-		displayFunc.init('resultList', data);
-	}, "pagenation", "approvalUserPostData", null, false, null, function(){
-		
-		var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addApprovalUser').css("margin", "0px 3px");
-    	var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
-    	var $addspan = $('<span></span>').text('添加').appendTo($adda);
-    	
-    	return [$adda];
-	});
-
-	com.focusPage('a[name="addApprovalUser"]', '#pagenation').click(function(){
-		editFlg = false;
-		com.clearValidator();
-		com.updateChosen('userSel', '', '');
-		approve.items.userSel.prop("disabled", false).trigger("chosen:updated");
-		com.cleanItems(approve.items);
-		approve.modal.modal("show");
+    searcher.init(["approval_senderName", "approval_Type"], "condList", api.approval.pageApprover, function(data){
+        displayFunc.init('resultList', data);
+    }, "pagenation", "approvalUserPostData", null, false, null, function(){
+        
+        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addApprovalUser').css("margin", "0px 3px");
+        var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+        var $addspan = $('<span></span>').text('添加').appendTo($adda);
+        
+        return [$adda];
     });
 
-	function deleteApprovalUser(approverAid){
+    com.focusPage('a[name="addApprovalUser"]', '#pagenation').click(function(){
+        editFlg = false;
+        com.clearValidator();
+        com.updateChosen('userSel', '', '');
+        approve.items.userSel.prop("disabled", false).trigger("chosen:updated");
+        com.cleanItems(approve.items);
+        approve.modal.modal("show");
+    });
+
+    function deleteApprovalUser(approverAid){
 
 
-		var options = {
-			"approver.aid": approverAid
-		};
-		
-		com.post(api.approval.deleteApprover, options, function(){
-			com.showAlert(com.info, "操作成功");
-			searcher.doSearch();
-		},null,false);
-	}
+        var options = {
+            "approver.aid": approverAid
+        };
+        
+        com.post(api.approval.deleteApprover, options, function(){
+            com.showAlert(com.info, "操作成功");
+            searcher.doSearch();
+        },null,false);
+    }
 
-	function saveData(){
-		
-		if(com.validate()){
-			return;
-			}
-		
-		var url;
-		var options = {
-			'approver.userBase.userId': approve.items.userSel.val(),
-			'approver.type': approve.items.type.val(),
-			'approver.comment': approve.items.comment.val(),
-		};
-			url = api.approval.addApprover;
-			
-		com.post(url, options, function(res){
-			searcher.doSearch();
-		},null,false);
+    function saveData(){
+        
+        if(com.validate()){
+            return;
+            }
+        
+        var url;
+        var options = {
+            'approver.userBase.userId': approve.items.userSel.attr('data-typeahead-key'),
+            'approver.type': approve.items.type.val(),
+            'approver.comment': approve.items.comment.val(),
+        };
+            url = api.approval.addApprover;
+            
+        com.post(url, options, function(res){
+            searcher.doSearch();
+        },null,false);
 
-		approve.modal.modal("hide");
-	}
+        approve.modal.modal("hide");
+    }
 
 });

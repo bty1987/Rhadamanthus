@@ -35,51 +35,48 @@ import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
 
 @Service("checkListService")
-@Transactional(readOnly=true)
+@Transactional(readOnly = true)
 public class CheckListServiceImpl implements CheckListService {
-	
+
 	@Autowired
 	private CheckListDao checkListDao;
-	
+
 	@Autowired
 	private StorehouseUserDao storehouseUserDao;
-	
+
 	@Override
 	public void pageCheckList(Paging paging, List<Filter> filters, String userId) {
-		
+
 		List<StorehouseUserPO> storehouseUserPOs = storehouseUserDao.queryStorehouseUserByUserId(userId);
+		
 		List<Long> shids = new ArrayList<Long>();
 		List<CheckListVO> checkListVOs = new ArrayList<CheckListVO>();
-		
-		if(storehouseUserPOs.size() != 0){
-			
-			for (StorehouseUserPO storehouseUserPO : storehouseUserPOs) {
-				
-				long shid = storehouseUserPO.getStorehouse().getShid();
-				
-				shids.add(shid);
-			}
-			
-			List<CheckListPO> checkListPOs = checkListDao.pageCheckList(paging, filters, shids);
-			CheckListVO checkListVO;
-		
-			for(CheckListPO checkListPO: checkListPOs){
-				
-				checkListVO = new CheckListVO(new GoodsVO(), new ColorVO(), new FormatVO(), new StorehouseVO(), new UserBaseVO());
-				
-				BeanUtil.copyProperties(checkListPO, checkListVO, Arrays.asList("goods", "color","format","storehouse", "createUser"));
-				BeanUtil.copyProperties(checkListPO.getGoods(), checkListVO.getGoods(),Arrays.asList("accessoriesType"));
-				BeanUtil.copyProperties(checkListPO.getColor(), checkListVO.getColor());
-				BeanUtil.copyProperties(checkListPO.getFormat(), checkListVO.getFormat());
-				BeanUtil.copyProperties(checkListPO.getStorehouse(), checkListVO.getStorehouse());
-				
-				checkListVO.getCreateUser().setBaseInfo(checkListPO.getCreateUser());
-				
-				checkListVOs.add(checkListVO);
-			}
-			
+
+		if (storehouseUserPOs.size() == 0) return;
+
+		for (StorehouseUserPO storehouseUserPO : storehouseUserPOs) {
+			shids.add(storehouseUserPO.getStorehouse().getShid());
 		}
+
+		List<CheckListPO> checkListPOs = checkListDao.pageCheckList(paging, filters, shids);
 		
+		CheckListVO checkListVO;
+
+		for (CheckListPO checkListPO : checkListPOs) {
+
+			checkListVO = new CheckListVO(new GoodsVO(), new ColorVO(), new FormatVO(), new StorehouseVO(), new UserBaseVO());
+
+			BeanUtil.copyProperties(checkListPO, checkListVO, Arrays.asList("goods", "color", "format", "storehouse", "creater"));
+			BeanUtil.copyProperties(checkListPO.getGoods(), checkListVO.getGoods(), Arrays.asList("accessoriesType"));
+			BeanUtil.copyProperties(checkListPO.getColor(), checkListVO.getColor());
+			BeanUtil.copyProperties(checkListPO.getFormat(), checkListVO.getFormat());
+			BeanUtil.copyProperties(checkListPO.getStorehouse(), checkListVO.getStorehouse());
+
+			checkListVO.getCreater().setBaseInfo(checkListPO.getCreater());
+
+			checkListVOs.add(checkListVO);
+		}
+
 		paging.setData(checkListVOs);
 	}
 

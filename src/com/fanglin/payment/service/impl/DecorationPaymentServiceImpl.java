@@ -588,8 +588,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		decorationPaymentVO.setDrId(decorationReceiptPO.getDrId());
 
 		if (decorationPO.getSupervisor() != null) {
-			short num = MessagePO.MESSAGE_TYPE_PAYMENT_STR;
-			messageService.sendMessage(decorationPO.getSupervisor().getUserId(), "", String.format("订单:%s,地址:%s %s,款项金额:%s,%s完成收款", decorationPO.getOrderId(), decorationPO.getHouse().getVillage().getName(), decorationPO.getHouse().getHouseNumber(), decorationPaymentPO.getReferMoney(), decorationPaymentPO.getPaymentType()), num, decorationPO.getCompany());
+			messageService.sendMessage(decorationPO.getSupervisor().getUserId(), "", String.format("订单:%s,地址:%s %s,款项金额:%s,%s完成收款", decorationPO.getOrderId(), decorationPO.getHouse().getVillage().getName(), decorationPO.getHouse().getHouseNumber(), decorationPaymentPO.getReferMoney(), decorationPaymentPO.getPaymentType()), MessagePO.TYPE_PAYMENT_INT, decorationPO.getCompany());
 		}
 		
 		decorationService.sendMessage(decorationPaymentPO.getDecoration().getOrderId(), "装修单", String.format("装修交款金额%s元", decorationPaymentPO.getReferMoney()));

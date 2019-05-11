@@ -34,14 +34,6 @@ public class AwardStockPO implements java.io.Serializable{
 	
 	public static final short ISSTOCK_CAL_INT = 0; // 计算库存
 	
-	public static final short TYPE_CG_INT = 0; // 入库
-	
-	public static final short TYPE_XG_INT = 1; // 出库
-	
-	public static final short TYPE_SURPLUS_INT = 2; // 盘盈
-	
-	public static final short TYPE_LOSSES_INT = 3; // 盘亏
-	
 	public static final short STOREROOM_DECORATION_INT = 1; // 装修
 	
 	public static final short STOREROOM_SALES_INT = 2; // 销售

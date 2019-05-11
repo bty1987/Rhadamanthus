@@ -38,7 +38,7 @@ jQuery(function ($) {
     		$line.find('div.category').text(v.goods.category);
     		$line.find('div.brand').text(v.goods.brand);
     		$line.find('div.measurementUnit').text(v.goods.measurementUnit);
-    		$line.find('div.unitPrice').text(v.unitPrice);
+    		$line.find('div.inprice').text(v.inprice);
     		$line.find('div.color').text(v.color.name);
     		$line.find('div.format').text(v.format.info);
     		$line.find('div.number').text(v.num);
@@ -116,7 +116,7 @@ jQuery(function ($) {
             {cellClass: "measurementUnit grey"},
             {cellClass: "color grey"},
             {cellClass: "format grey"},
-            {cellClass: "unitPrice blue"},
+            {cellClass: "inprice blue"},
             {cellClass: "number blue"},
             {cellClass: "surplus blue"},
             {cellClass: "storehouse", hasSelect: true},

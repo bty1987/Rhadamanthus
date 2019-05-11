@@ -2,7 +2,6 @@
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +34,6 @@ import com.fanglin.personel.po.UserPO;
 import com.fanglin.system.dao.CompanyDao;
 import com.fanglin.system.po.CompanyPO;
 import com.fanglin.utils.BeanUtil;
-import com.fanglin.utils.DateUtil;
 
 @Service("approvalManifestDBService")
 @Transactional(readOnly = true)
@@ -98,23 +96,10 @@ public class ApprovalManifestDBServiceImpl implements ApprovalManifestDBService 
 	@Transactional(rollbackFor = Exception.class)
 	public int submitApprovalForManifestDB(ApprovalVO approvalVO, ApprovalManifestDBVO approvalManifestDBVO, List<ApprovalManifestDBItemVO> approvalManifestDBItemVOs, String userId, int company) throws FLException {
 
-		ApprovalPO approvalPO = new ApprovalPO();
-
-		BeanUtil.copyProperties(approvalVO, approvalPO, Arrays.asList("receiver", "sender"));
-
 		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiver().getUserId());
 		UserPO sender = userDao.queryUserByUserId(userId);
 
-		approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_INIT_INT);
-		approvalPO.setType(ApprovalPO.APPROVAL_TYPE_MANIFESTDB_INT);
-		approvalPO.setIdent("");
-		approvalPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-		approvalPO.setApprovalTime(DateUtil.getDateToTimestamp(new Date()));
-		approvalPO.setComment(approvalVO.getComment());
-		approvalPO.setContents(approvalVO.getContents());
-		approvalPO.setReceiver(receiver);
-		approvalPO.setSender(sender);
-		approvalPO.setCompany(company);
+		ApprovalPO approvalPO = new ApprovalPO().init(sender, receiver, "", ApprovalPO.APPROVAL_TYPE_MANIFESTDB_INT, approvalVO.getContents(), company);
 
 		approvalDao.save(approvalPO);
 
@@ -135,12 +120,12 @@ public class ApprovalManifestDBServiceImpl implements ApprovalManifestDBService 
 			BeanUtil.copyProperties(approvalManifestDBItemVO.getFormat(), approvalManifestDBItemPO.getFormat());
 			BeanUtil.copyProperties(approvalManifestDBItemVO.getInstorehouse(), approvalManifestDBItemPO.getInstorehouse());
 			BeanUtil.copyProperties(approvalManifestDBItemVO.getOutstorehouse(), approvalManifestDBItemPO.getOutstorehouse());
-			
+
 			approvalManifestDBItemPO.setAmdbid(approvalManifestDBPO.getAmdbid());
-			
+
 			approvalManifestDBItemDao.save(approvalManifestDBItemPO);
 		}
-		
+
 		return 0;
 	}
 
@@ -166,11 +151,11 @@ public class ApprovalManifestDBServiceImpl implements ApprovalManifestDBService 
 		if (approvalManifestDBItemPOs == null || approvalManifestDBItemPOs.size() <= 0) {
 			throw new FLException(260007, "货单无商品信息");
 		}
-		
+
 		List<ManifestItemVO> manifestItemVOs = new ArrayList<ManifestItemVO>();
-		
-		for(ApprovalManifestDBItemPO approvalManifestDBItemPO:approvalManifestDBItemPOs){
-			manifestItemVOs.add(new ManifestItemVO().init(approvalManifestDBItemPO.getGoods().getGid(), approvalManifestDBItemPO.getColor().getCid(), approvalManifestDBItemPO.getFormat().getFid(), approvalManifestDBItemPO.getInstorehouse().getShid(), approvalManifestDBItemPO.getOutstorehouse().getShid(), 0, approvalManifestDBItemPO.getNum()));
+
+		for (ApprovalManifestDBItemPO approvalManifestDBItemPO : approvalManifestDBItemPOs) {
+			manifestItemVOs.add(new ManifestItemVO().init(approvalManifestDBItemPO.getGoods().getGid(), approvalManifestDBItemPO.getColor().getCid(), approvalManifestDBItemPO.getFormat().getFid(), approvalManifestDBItemPO.getInstorehouse().getShid(), approvalManifestDBItemPO.getOutstorehouse().getShid(), 0, 0, approvalManifestDBItemPO.getNum()));
 		}
 
 		manifestService.addManifestForDB(manifestItemVOs, approvalPO.getReceiver().getUserId(), companyPO.getCid());

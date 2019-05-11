@@ -146,10 +146,10 @@ public class SalesActivityServiceImpl implements SalesActivityService {
 
 		salesActivityDao.update(salesActivityItemPO);
 		
+		AwardStockPO awardStockPO = awardStockDao.get(salesActivityItemPO.getAsid());
+		
 		if (salesActivityItemPO.getIsStock() == SalesActivityItemPO.STATUS_VALID_INT) {//0--初始
 
-			AwardStockPO awardStockPO = awardStockDao.get(salesActivityItemPO.getAsid());
-			
 			if(awardStockPO == null){
 				throw new FLException(160043, "物品不存在!");
 			}
@@ -164,20 +164,12 @@ public class SalesActivityServiceImpl implements SalesActivityService {
 
 			awardStockDao.update(awardStockPO);
 
-			AwardRecordPO awardRecordPO = new AwardRecordPO();
-			awardRecordPO.setAwardStock(awardStockPO);
-			awardRecordPO.setCreater(userDao.queryUserByUserId(userId));
-			awardRecordPO.setOrderId(salesActivityItemPO.getOrderId());
-			awardRecordPO.setNum(salesActivityItemPO.getNum());
-			awardRecordPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
-			awardRecordPO.setTotalPrice(Arith.mul(salesActivityItemPO.getMoney(), salesActivityItemPO.getNum()));
-			awardRecordPO.setUnitPrice(salesActivityItemPO.getMoney());
-			awardRecordPO.setOnetype(AwardRecordPO.ONETYPE_SALES_INT);//销售--2
-			awardRecordPO.setType(AwardRecordPO.TYPE_RECEIVE_INT);//领取--4
-			awardRecordPO.setContent("领取活动奖品");
-
-			awardRecordDao.save(awardRecordPO);
 		}
+		
+		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, userDao.queryUserByUserId(userId), AwardRecordPO.TYPE_RECEIVE_INT, AwardRecordPO.ONETYPE_SALES_INT, salesActivityItemPO.getIsStock(), salesActivityItemPO.getMoney(), salesActivityItemPO.getNum(), "领取活动奖品");
+		
+		awardRecordDao.save(awardRecordPO);
+		
 		return 0;
 	}
 
@@ -259,28 +251,19 @@ public class SalesActivityServiceImpl implements SalesActivityService {
 		
 		salesActivityDao.update(salesActivityItemPO);
 		
+		AwardStockPO awardStockPO = awardStockDao.get(salesActivityItemPO.getAsid());
+		
 		if(salesActivityItemPO.getIsStock() == SalesActivityItemPO.ISSTOCK_COUNTIN_INT){//0--计入库存
-			
-			AwardStockPO awardStockPO = awardStockDao.get(salesActivityItemPO.getAsid());
 			
 			awardStockPO.setNum(Arith.add(awardStockPO.getNum(), salesActivityItemPO.getNum()));
 			
 			awardStockDao.update(awardStockPO);
 			
-			AwardRecordPO awardRecordPO = new AwardRecordPO();
-			
-			awardRecordPO.setAwardStock(awardStockPO);
-			awardRecordPO.setNum(salesActivityItemPO.getNum());
-			awardRecordPO.setContent("");
-			awardRecordPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
-			awardRecordPO.setCreater(userDao.queryUserByUserId(userId));
-			awardRecordPO.setOrderId(salesActivityItemPO.getOrderId());
-			awardRecordPO.setUnitPrice(salesActivityItemPO.getMoney());
-			awardRecordPO.setOnetype(AwardRecordPO.ONETYPE_SALES_INT);//销售--2
-			awardRecordPO.setType(AwardRecordPO.TYPE_REFUND_INT);//退货--5
-			awardRecordPO.setTotalPrice(Arith.mul(salesActivityItemPO.getMoney(), salesActivityItemPO.getNum()));
-			awardRecordDao.save(awardRecordPO);
 		}
+		
+		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, userDao.queryUserByUserId(userId), AwardRecordPO.TYPE_REFUND_INT, AwardRecordPO.ONETYPE_SALES_INT, salesActivityItemPO.getIsStock(), salesActivityItemPO.getMoney(), salesActivityItemPO.getNum(), "");
+		
+		awardRecordDao.save(awardRecordPO);
 		
 	}
 

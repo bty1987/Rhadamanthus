@@ -1332,9 +1332,10 @@ public class DecorationServiceImpl implements DecorationService {
 			orderId = decorationPO.getOrderId();
 			
 			customerOriginPO.setOrderId(decorationPO.getOrderId());
+			customerOriginPO.setStatus(CustomerOriginPO.STATUS_INVALID_INT);
 		}
 		
-		customerOriginDao.save(customerOriginPO);
+		customerOriginDao.update(customerOriginPO);
 		
 		return orderId;
 	}

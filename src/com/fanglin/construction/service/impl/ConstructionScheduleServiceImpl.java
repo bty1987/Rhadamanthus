@@ -41,18 +41,18 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 	@Override
 	public List<ConstructionScheduleVO> queryConstructionScheduleByOrderId(ConstructionScheduleVO constructionScheduleVO) {
 
-		String orderId = constructionScheduleVO.getOrderId();
-		Short schedule = constructionScheduleVO.getSchedule();
-
-		List<ConstructionSchedulePO> constructionSchedulePOs = constructionScheduleDao.queryConstructionScheduleByOrderId(orderId, schedule);
+		List<ConstructionSchedulePO> constructionSchedulePOs = constructionScheduleDao.queryConstructionScheduleByOrderId(constructionScheduleVO.getOrderId());
 		List<ConstructionScheduleVO> constructionScheduleVOs = new ArrayList<ConstructionScheduleVO>();
+		
+		ConstructionScheduleVO constructionSchedule;
 
 		for (ConstructionSchedulePO constructionSchedulePO : constructionSchedulePOs) {
-			if (constructionSchedulePO != null) {
-				ConstructionScheduleVO constructionSchedule = new ConstructionScheduleVO();
-				BeanUtil.copyProperties(constructionSchedulePO, constructionSchedule);
-				constructionScheduleVOs.add(constructionSchedule);
-			}
+			
+			constructionSchedule = new ConstructionScheduleVO();
+			
+			BeanUtil.copyProperties(constructionSchedulePO, constructionSchedule);
+			
+			constructionScheduleVOs.add(constructionSchedule);
 		}
 
 		return constructionScheduleVOs;
@@ -61,215 +61,249 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 	@Override
 	public List<ConstructionScheduleVO> queryConstructionScheduleByCid(ConstructionScheduleVO constructionScheduleVO) {
 
-		Long cid = constructionScheduleVO.getCid();
-		Short schedule = constructionScheduleVO.getSchedule();
-
-		List<ConstructionSchedulePO> constructionSchedulePOs = constructionScheduleDao.queryConstructionScheduleByCid(cid, schedule);
+		List<ConstructionSchedulePO> constructionSchedulePOs = constructionScheduleDao.queryConstructionScheduleByCid(constructionScheduleVO.getCid());
 		List<ConstructionScheduleVO> constructionScheduleVOs = new ArrayList<ConstructionScheduleVO>();
 
+		ConstructionScheduleVO constructionSchedule;
+
 		for (ConstructionSchedulePO constructionSchedulePO : constructionSchedulePOs) {
-			if (constructionSchedulePO != null) {
-				ConstructionScheduleVO constructionSchedule = new ConstructionScheduleVO();
-				BeanUtil.copyProperties(constructionSchedulePO, constructionSchedule);
-				constructionScheduleVOs.add(constructionSchedule);
-			}
+			constructionSchedule = new ConstructionScheduleVO();
+
+			BeanUtil.copyProperties(constructionSchedulePO, constructionSchedule);
+
+			constructionScheduleVOs.add(constructionSchedule);
 		}
 
 		return constructionScheduleVOs;
 	}
 
 	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public int beginConstructionSchedule(ConstructionScheduleVO constructionScheduleVO) throws FLException {
+	public ConstructionScheduleVO queryConstructionScheduleByOrderIdASchedule(ConstructionScheduleVO constructionScheduleVO) throws FLException {
 		
-		ConstructionSchedulePO constructionSchedulePO = constructionScheduleDao.get(constructionScheduleVO.getCsId());
+		ConstructionSchedulePO constructionSchedulePO = constructionScheduleDao.queryConstructionScheduleByOrderId(constructionScheduleVO.getOrderId(), constructionScheduleVO.getSchedule());
 		
-		if(constructionSchedulePO == null){
+		if (constructionSchedulePO == null) {
 			throw new FLException(120024, "工程环节不存在");
 		}
 		
-		ConstructionPO constructionPO = constructionDao.get(constructionSchedulePO.getCid());
+		ConstructionScheduleVO constructionSchedule = new ConstructionScheduleVO();
 		
-		if(constructionPO == null) {
-			throw new FLException(120020, "工程信息不存在");
-		}
+		BeanUtil.copyProperties(constructionSchedulePO, constructionSchedule);
 		
-		if(constructionSchedulePO.getStatus() != ConstructionSchedulePO.STATUS_TYPE_INIT_INT){
-			throw new FLException(120025, "工程环节不可操作");
-		}
-		
-		long cnid = constructionSchedulePO.getSchedule();
-		
-		DecorationPO decorationPO = constructionPO.getDecoration();
-		ConstructionNodePO constructionNodePO = constructionNodeDao.get(cnid);
-		
-		if(constructionSchedulePO.getCheckout() == ConstructionSchedulePO.CHECKOUT_VALID_INT && decorationPO.getPaySacle() < constructionNodePO.getPrecheck()){
-			throw new FLException(120018, "装修款比例不足");
-		}
-		
-		constructionSchedulePO.setStatus(ConstructionSchedulePO.STATUS_BEGIN_INT);
-		constructionSchedulePO.setStartTime(DateUtil.getDateToTimestamp(new Date()));
-		
-		constructionScheduleDao.update(constructionSchedulePO);
-		
-		return 0;
+		return constructionSchedule;
 	}
 
-	
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int finishConstructionSchedule(ConstructionScheduleVO constructionScheduleVO) throws FLException {
-		
-		ConstructionSchedulePO constructionSchedulePO = constructionScheduleDao.get(constructionScheduleVO.getCsId());
-		
-		if(constructionSchedulePO == null){
+	public int beginConstructionSchedule(ConstructionScheduleVO constructionScheduleVO) throws FLException {
+
+		ConstructionSchedulePO constructionSchedulePO = constructionScheduleDao.get(constructionScheduleVO.getCsid());
+
+		if (constructionSchedulePO == null) {
 			throw new FLException(120024, "工程环节不存在");
 		}
-		
+
 		ConstructionPO constructionPO = constructionDao.get(constructionSchedulePO.getCid());
-		
-		if(constructionPO == null) {
+
+		if (constructionPO == null) {
 			throw new FLException(120020, "工程信息不存在");
 		}
-		
-		if(constructionSchedulePO.getStatus() != ConstructionSchedulePO.STATUS_BEGIN_INT){
+
+		if (constructionSchedulePO.getStatus() != ConstructionSchedulePO.STATUS_INIT_INT) {
 			throw new FLException(120025, "工程环节不可操作");
 		}
-		
-		long cnid = constructionSchedulePO.getSchedule();
-		
+
+		short schedule = constructionSchedulePO.getSchedule();
+
 		DecorationPO decorationPO = constructionPO.getDecoration();
-		ConstructionNodePO constructionNodePO = constructionNodeDao.get(cnid);
 		
-		if(constructionSchedulePO.getCheckout() == ConstructionSchedulePO.CHECKOUT_VALID_INT && decorationPO.getPaySacle() < constructionNodePO.getPostcheck()){
-			throw new FLException(120018, "装修款比例不足");
+		ConstructionNodePO constructionNodePO = constructionNodeDao.queryConstructionNodeBySort(schedule, decorationPO.getCompany());
+		
+		if(constructionNodePO == null){
+			throw new FLException(130026, "工程节点不存在");
 		}
 		
-		constructionSchedulePO.setStatus(ConstructionSchedulePO.STATUS_FINISH_INT);
-		constructionSchedulePO.setEndTime(DateUtil.getDateToTimestamp(new Date()));
-		
+		if (constructionSchedulePO.getCheckout() == ConstructionSchedulePO.CHECKOUT_VALID_INT && decorationPO.getPaySacle() < constructionNodePO.getPrecheck()) {
+			throw new FLException(120018, "装修款比例不足");
+		}
+
+		constructionSchedulePO.setStatus(ConstructionSchedulePO.STATUS_BEGIN_INT);
+		constructionSchedulePO.setStartTime(DateUtil.getDateToTimestamp(new Date()));
+
 		constructionScheduleDao.update(constructionSchedulePO);
 		
 		Short projectStatus = decorationPO.getProjectStatus();
-		Short schedule = constructionSchedulePO.getSchedule();
-		
+
 		if (projectStatus != DecorationPO.PROJECTSTATUS_FINISH_INT && projectStatus < schedule) {
 			decorationPO.setProjectStatus(schedule);
 			decorationDao.update(decorationPO);
-			
+
 			constructionPO.setSchedule(schedule);
 			constructionDao.update(constructionPO);
 		}
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int finishConstructionSchedule(ConstructionScheduleVO constructionScheduleVO) throws FLException {
+
+		ConstructionSchedulePO constructionSchedulePO = constructionScheduleDao.get(constructionScheduleVO.getCsid());
+
+		if (constructionSchedulePO == null) {
+			throw new FLException(120024, "工程环节不存在");
+		}
+
+		ConstructionPO constructionPO = constructionDao.get(constructionSchedulePO.getCid());
+
+		if (constructionPO == null) {
+			throw new FLException(120020, "工程信息不存在");
+		}
+
+		if (constructionSchedulePO.getStatus() != ConstructionSchedulePO.STATUS_BEGIN_INT) {
+			throw new FLException(120025, "工程环节不可操作");
+		}
+
+		short schedule = constructionSchedulePO.getSchedule();
+
+		DecorationPO decorationPO = constructionPO.getDecoration();
+
+		ConstructionNodePO constructionNodePO = constructionNodeDao.queryConstructionNodeBySort(schedule, decorationPO.getCompany());
 		
+		if(constructionNodePO == null){
+			throw new FLException(130026, "工程节点不存在");
+		}
+
+		if (constructionSchedulePO.getCheckout() == ConstructionSchedulePO.CHECKOUT_VALID_INT && decorationPO.getPaySacle() < constructionNodePO.getPostcheck()) {
+			throw new FLException(120018, "装修款比例不足");
+		}
+
+		constructionSchedulePO.setStatus(ConstructionSchedulePO.STATUS_FINISH_INT);
+		constructionSchedulePO.setEndTime(DateUtil.getDateToTimestamp(new Date()));
+
+		constructionScheduleDao.update(constructionSchedulePO);
+
 		return 0;
 	}
 
 	@Override
 	public int checkoutConstructionSchedule(ConstructionScheduleVO constructionScheduleVO) throws FLException {
-		
-		ConstructionSchedulePO constructionSchedulePO = constructionScheduleDao.get(constructionScheduleVO.getCsId());
-		
-		if(constructionSchedulePO == null){
+
+		ConstructionSchedulePO constructionSchedulePO = constructionScheduleDao.get(constructionScheduleVO.getCsid());
+
+		if (constructionSchedulePO == null) {
 			throw new FLException(120024, "工程环节不存在");
 		}
-		
-		if(constructionScheduleVO.getCheckout() == ConstructionSchedulePO.CHECKOUT_PASS_INT){
+
+		if (constructionScheduleVO.getCheckout() == ConstructionSchedulePO.CHECKOUT_PASS_INT) {
 			constructionSchedulePO.setCheckout(ConstructionSchedulePO.CHECKOUT_PASS_INT);
-		}else{
+		} else {
 			ConstructionPO constructionPO = constructionDao.get(constructionSchedulePO.getCid());
-			
-			if(constructionPO == null) {
+
+			if (constructionPO == null) {
 				throw new FLException(120020, "工程信息不存在");
 			}
-			
+
 			long cnid = constructionSchedulePO.getSchedule();
-			
+
 			DecorationPO decorationPO = constructionPO.getDecoration();
 			ConstructionNodePO constructionNodePO = constructionNodeDao.get(cnid);
-			
-			
-			if(constructionSchedulePO.getCheckout() == ConstructionSchedulePO.CHECKOUT_VALID_INT && decorationPO.getPaySacle() < constructionNodePO.getPostcheck()){
+
+			if (constructionSchedulePO.getCheckout() == ConstructionSchedulePO.CHECKOUT_VALID_INT && decorationPO.getPaySacle() < constructionNodePO.getPostcheck()) {
 				throw new FLException(120018, "装修款比例不足");
 			}
-			
+
 			constructionSchedulePO.setCheckout(ConstructionSchedulePO.CHECKOUT_VALID_INT);
 		}
-		
+
 		constructionScheduleDao.update(constructionSchedulePO);
-		
+
 		return 0;
 	}
 
-//	@Override
-//	@SuppressWarnings("static-access")
-//	@Transactional(rollbackFor = Exception.class)
-//	public void setConstructionScheduleForStatus(ConstructionScheduleVO constructionScheduleVO) {
-//
-//		short status = constructionScheduleVO.getStatus();
-//
-//		ConstructionSchedulePO constructionSchedulePO = constructionScheduleDao.get(constructionScheduleVO.getCsId());
-//		ConstructionPO _constructionPO = constructionDao.queryConstructionByOrderId(constructionScheduleVO.getOrderId());
-//
-//		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(constructionSchedulePO.getOrderId());
-//
-//		Short projectStatus = decorationPO.getProjectStatus();
-//		Short schedule = constructionSchedulePO.getSchedule();
-//
-//		ConstructionNodePO _constructionNodePO = constructionNodeDao.get((long) (constructionSchedulePO.getSchedule()));
-//
-//		if (projectStatus != decorationPO.PROJECTSTATUS_FINISH_INT) {
-//			if (projectStatus < _constructionNodePO.getSort()) {
-//
-//				decorationPO.setProjectStatus((short) schedule);
-//				decorationDao.update(decorationPO);
-//
-//				if (_constructionPO != null) {
-//					_constructionPO.setSchedule(schedule);
-//					constructionDao.update(_constructionPO);
-//				}
-//
-//			}
-//		}
-//
-//		if (constructionSchedulePO != null) {
-//			constructionSchedulePO.setStatus(status);
-//
-//			if (constructionSchedulePO.getSchedule() == ConstructionSchedulePO.COLUMN_SCHEDULE_ONE) {
-//				ConstructionPO constructionPO = constructionDao.get(constructionSchedulePO.getCid());
-//				if (constructionPO != null) {
-//					constructionScheduleDao.update(constructionSchedulePO);
-//
-//				}
-//
-//				if (status == ConstructionSchedulePO.STATUS_TYPE_FAIL_INT) {
-//					List<DrawLinePO> drawLinePOs = drawLineDao.queryDrawLineByOrderId(constructionSchedulePO.getOrderId());
-//					if (drawLinePOs != null && drawLinePOs.size() > 0) {
-//						drawLinePOs.get(0).setStatus(DrawLinePO.DRAWLINE_STATUS_FAIL_SHORT);
-//						drawLineDao.update(drawLinePOs.get(0));
-//					}
-//				}
-//			}
-//
-//			if (constructionSchedulePO.getSchedule() == ConstructionSchedulePO.COLUMN_SCHEDULE_TWO) {
-//				List<DrawLinePO> drawLinePOs = drawLineDao.queryDrawLineByOrderId(constructionSchedulePO.getOrderId());
-//
-//				if (drawLinePOs != null && drawLinePOs.size() > 0) {
-//
-//					DrawLinePO drawLinePO = drawLinePOs.get(0);
-//
-//					if (constructionScheduleVO.getStatus() == ConstructionSchedulePO.STATUS_TYPE_SUCCESS_INT) {
-//						drawLinePO.setStatus(DrawLinePO.DRAWLINE_STATUS_SUCCESS_SHORT);
-//
-//					} else if (constructionScheduleVO.getStatus() == ConstructionSchedulePO.STATUS_TYPE_FAIL_INT) {
-//						drawLinePO.setStatus(DrawLinePO.DRAWLINE_STATUS_FAIL_SHORT);
-//					}
-//
-//					drawLineDao.update(drawLinePO);
-//				}
-//			}
-//
-//			constructionScheduleDao.update(constructionSchedulePO);
-//		}
-//	}
+	// @Override
+	// @SuppressWarnings("static-access")
+	// @Transactional(rollbackFor = Exception.class)
+	// public void setConstructionScheduleForStatus(ConstructionScheduleVO
+	// constructionScheduleVO) {
+	//
+	// short status = constructionScheduleVO.getStatus();
+	//
+	// ConstructionSchedulePO constructionSchedulePO =
+	// constructionScheduleDao.get(constructionScheduleVO.getCsId());
+	// ConstructionPO _constructionPO =
+	// constructionDao.queryConstructionByOrderId(constructionScheduleVO.getOrderId());
+	//
+	// DecorationPO decorationPO =
+	// decorationDao.queryDecorationByOrderId(constructionSchedulePO.getOrderId());
+	//
+	// Short projectStatus = decorationPO.getProjectStatus();
+	// Short schedule = constructionSchedulePO.getSchedule();
+	//
+	// ConstructionNodePO _constructionNodePO = constructionNodeDao.get((long)
+	// (constructionSchedulePO.getSchedule()));
+	//
+	// if (projectStatus != decorationPO.PROJECTSTATUS_FINISH_INT) {
+	// if (projectStatus < _constructionNodePO.getSort()) {
+	//
+	// decorationPO.setProjectStatus((short) schedule);
+	// decorationDao.update(decorationPO);
+	//
+	// if (_constructionPO != null) {
+	// _constructionPO.setSchedule(schedule);
+	// constructionDao.update(_constructionPO);
+	// }
+	//
+	// }
+	// }
+	//
+	// if (constructionSchedulePO != null) {
+	// constructionSchedulePO.setStatus(status);
+	//
+	// if (constructionSchedulePO.getSchedule() ==
+	// ConstructionSchedulePO.COLUMN_SCHEDULE_ONE) {
+	// ConstructionPO constructionPO =
+	// constructionDao.get(constructionSchedulePO.getCid());
+	// if (constructionPO != null) {
+	// constructionScheduleDao.update(constructionSchedulePO);
+	//
+	// }
+	//
+	// if (status == ConstructionSchedulePO.STATUS_TYPE_FAIL_INT) {
+	// List<DrawLinePO> drawLinePOs =
+	// drawLineDao.queryDrawLineByOrderId(constructionSchedulePO.getOrderId());
+	// if (drawLinePOs != null && drawLinePOs.size() > 0) {
+	// drawLinePOs.get(0).setStatus(DrawLinePO.DRAWLINE_STATUS_FAIL_SHORT);
+	// drawLineDao.update(drawLinePOs.get(0));
+	// }
+	// }
+	// }
+	//
+	// if (constructionSchedulePO.getSchedule() ==
+	// ConstructionSchedulePO.COLUMN_SCHEDULE_TWO) {
+	// List<DrawLinePO> drawLinePOs =
+	// drawLineDao.queryDrawLineByOrderId(constructionSchedulePO.getOrderId());
+	//
+	// if (drawLinePOs != null && drawLinePOs.size() > 0) {
+	//
+	// DrawLinePO drawLinePO = drawLinePOs.get(0);
+	//
+	// if (constructionScheduleVO.getStatus() ==
+	// ConstructionSchedulePO.STATUS_TYPE_SUCCESS_INT) {
+	// drawLinePO.setStatus(DrawLinePO.DRAWLINE_STATUS_SUCCESS_SHORT);
+	//
+	// } else if (constructionScheduleVO.getStatus() ==
+	// ConstructionSchedulePO.STATUS_TYPE_FAIL_INT) {
+	// drawLinePO.setStatus(DrawLinePO.DRAWLINE_STATUS_FAIL_SHORT);
+	// }
+	//
+	// drawLineDao.update(drawLinePO);
+	// }
+	// }
+	//
+	// constructionScheduleDao.update(constructionSchedulePO);
+	// }
+	// }
 
 }

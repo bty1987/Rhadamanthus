@@ -4,18 +4,27 @@ jQuery(function ($) {
     var accessories = {
         orderId: params["accessories.orderId"],
         aid: params["accessories.aid"],
+        validator: {
+            float3: {
+                type: "v_float_3",
+                regex: /^(\d+|\d+\.[0-9]{1,4})$/,
+                errorMsg: "单价输入内容格式错误"
+            }
+        },
         items: {
             customerName: com.focusPage("#customer"),
             des: com.focusPage("#comment")
         },
         record: {},
         storehouses: [],
-        decorationStatuses: {}
+        decorationStatus: {}
     };
+    
+    $.extend(com.validator, accessories.validator);
     
     com.post(api.ds.decoration, {}, function(res){
     	$.each(res.decorationOrderStatus, function(i, e){
-    		accessories.decorationStatuses[e.key] = e.value;
+    		accessories.decorationStatus[e.key] = e.value;
     	})
     }, null, false);
 
@@ -55,10 +64,12 @@ jQuery(function ($) {
         $lines.length && $lines.each(function (i, e) {
             var $this = $(e);
 
+            options["accessoriesItems[" + i + "].aiid"] = $this.attr('data-aiid');//– 商品id
             options["accessoriesItems[" + i + "].goods.gid"] = $this.attr('data-gid');//– 商品id
             options["accessoriesItems[" + i + "].color.cid"] = $this.find('.color select').val();
             options["accessoriesItems[" + i + "].format.fid"] = $this.find('.format select').val();
             options["accessoriesItems[" + i + "].storehouse.shid"] = $this.find('.storehouse select').val();//– 仓库ID
+            options["accessoriesItems[" + i + "].outprice"] = $this.find('.outprice input').val();//– 仓库ID
             options["accessoriesItems[" + i + "].num"] = $this.find('.number').text();//– 数量
         });
 
@@ -101,8 +112,8 @@ jQuery(function ($) {
             {cellClass: "format", hasSelect: true},//规格
             {cellClass: "measurementUnit grey"},//单位
             {cellClass: "storehouse grey", hasSelect: true},//仓库
+            {cellClass: "outprice", hasInput: true},
             {cellClass: "number blue"},//数量
-            {cellClass: "des grey", hasInput: true}//备注
         ];
 
         $.each(_lineInfoSet, function (i, v) {
@@ -112,6 +123,11 @@ jQuery(function ($) {
             
             if (v.hasSelect) {
                 $cell.append($('<select class="v_required"></select>'));
+            }
+            
+            if (v.hasInput) {
+                var $input = $('<input>').prop({'type': 'text', 'autocomplete': 'off'}).addClass('editable v_float_3').val(0);
+                $cell.append($input);
             }
 
             $cell.appendTo($lineInfoWrap);
@@ -127,7 +143,7 @@ jQuery(function ($) {
         var $list = com.focusPage('#list');
         var $line = addline(1 + $list.length).appendTo($list);
         
-        $line.attr({"data-gid": item.goods.gid});
+        $line.attr({"data-gid": item.goods.gid, "data-aiid": item.aiid});
         
         $line.find('.no').text(item.goods.no);
         $line.find('.name').text(item.goods.name);
@@ -154,9 +170,7 @@ jQuery(function ($) {
         com.focusPage('#' + tableId).html(null);
         var $tableWrap = com.focusPage('#' + tableId);
         var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-        var status ={
-            '0':'初始', '1':'定金' , '2' : '签约' ,'3' : '重签' , '4' : '废单','5' : '终止','6' : '决算','7' : '完结'
-        };
+        
         var propertyArr = [
             ["楼盘地址:", v.house.village.name + " " + v.house.houseNumber, "grey"],
             ["客户名:", v.customer.name, "grey"],
@@ -168,7 +182,7 @@ jQuery(function ($) {
             ["合同报价:", v.orderTotalPrice, "blue"],
             ["签单时间:", v.contractTime == null || "" ? "----" : v.contractTime, "green"],
             ["量房时间:", v.measureTime == null || "" ? "----" : v.measureTime, "green"],
-            ["状态:", status[v.status], "red"]
+            ["状态:", accessories.decorationStatus[v.status], "red"]
         ];
         $.each(propertyArr, function (index, value) {
             var $liProperty = $('<li></li>');

@@ -12,14 +12,12 @@
 package com.fanglin.approval.service.impl;
 
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.alibaba.fastjson.JSONArray;
 import com.fanglin.approval.dao.ApprovalDao;
 import com.fanglin.approval.dao.ApprovalQuotationDiscountDao;
 import com.fanglin.approval.po.ApprovalPO;
@@ -30,157 +28,132 @@ import com.fanglin.approval.vo.ApprovalVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
-import com.fanglin.dingding.service.ApprovalService;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.MessageService;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.po.QuotationPO;
-import com.fanglin.system.dao.SystemConfigDao;
-import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.BeanUtil;
-import com.fanglin.utils.DateUtil;
 
 @Service("approvalQuotationDiscountService")
-@Transactional(readOnly=true)
+@Transactional(readOnly = true)
 public class ApprovalQuotationDiscountServiceImpl implements ApprovalQuotationDiscountService {
-	
+
 	@Autowired
 	private ApprovalDao approvalDao;
-	
+
 	@Autowired
 	private ApprovalQuotationDiscountDao approvalQuotationDiscountDao;
-	
+
 	@Autowired
 	private DecorationDao decorationDao;
-	
+
 	@Autowired
 	private QuotationDao quotationDao;
-	
+
 	@Autowired
 	private UserDao userDao;
-	
+
 	@Autowired
 	private MessageService messageService;
-	
-	@Autowired
-	private SystemConfigDao systemConfigDao;
-	
-	@Autowired
-	private ApprovalService approvalDDService;
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
+	@Transactional(rollbackFor = Exception.class)
 	public int submitApprovalForQuotationDiscount(ApprovalVO approvalVO, ApprovalQuotationDiscountVO approvalQuotationDiscountVO, String userId, int company) throws FLException {
-		
-		List<Short> status = Arrays.asList(new Short[]{DecorationPO.STATUS_INIT_INT, DecorationPO.STATUS_DEPOSIT_INT, DecorationPO.STATUS_PROSIGN_INT, DecorationPO.STATUS_RESIGNED_INT});
-		
+
+		List<Short> status = Arrays.asList(new Short[] { DecorationPO.STATUS_INIT_INT, DecorationPO.STATUS_DEPOSIT_INT, DecorationPO.STATUS_PROSIGN_INT, DecorationPO.STATUS_RESIGNED_INT });
+
 		String orderId = approvalQuotationDiscountVO.getOrderId();
-		
-		Long quotationId = approvalQuotationDiscountVO.getQid();
-		
-		ApprovalPO approvalPO = approvalDao.queryApproval(ApprovalPO.APPROVAL_STATUS_INIT_INT,ApprovalPO.APPROVAL_TYPE_QUOTATION_DISCOUNT_INT, String.valueOf(quotationId));
-		
-		if(approvalPO != null){
+
+		Long qid = approvalQuotationDiscountVO.getQid();
+
+		ApprovalPO approvalPO = approvalDao.queryApproval(ApprovalPO.APPROVAL_STATUS_INIT_INT, ApprovalPO.APPROVAL_TYPE_QUOTATION_DISCOUNT_INT, String.valueOf(qid));
+
+		if (approvalPO != null) {
 			throw new FLException(240004, "正在审批中,不能提交新审批");
 		}
-		
+
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
-		
-		if(!status.contains(decorationPO.getStatus())){
+
+		if (!status.contains(decorationPO.getStatus())) {
 			throw new FLException(200007, "订单合同已签订不可折扣修改");
 		}
-		
-		QuotationPO quotationPO = quotationDao.get(quotationId);
-		
-		if(quotationPO == null){
+
+		QuotationPO quotationPO = quotationDao.get(qid);
+
+		if (quotationPO == null) {
 			throw new FLException(200003, "报价不存在");
 		}
-		
+
 		approvalPO = new ApprovalPO();
-		
-		BeanUtil.copyProperties(approvalVO, approvalPO,Arrays.asList("receiver","sender"));
-		
+
+		BeanUtil.copyProperties(approvalVO, approvalPO, Arrays.asList("receiver", "sender"));
+
 		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiver().getUserId());
 		UserPO sender = userDao.queryUserByUserId(userId);
-		
-		SystemConfigPO systemConfigPO = systemConfigDao.querySystemConfig(ApprovalPO.APPROVAL_SYSTEMCONFIG_QUOTATIONDISCOUNT_STR,company);
-		
-		if(systemConfigPO == null){
-			approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_INIT_INT);
-		}else{
-			approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_APPROVE_INT);
-			JSONArray formComponentValues = approvalDDService.getForms("说明", String.format(ApprovalPO.APPROVAL_CONTENTS_QUOTATION_DISCOUNT_STR, orderId, String.valueOf(quotationId), quotationPO.getDiscount(), approvalQuotationDiscountVO.getNewDiscount()));
-			String processinstanceid = approvalDDService.initiateApproval(systemConfigPO.getValue(), userId, approvalVO.getReceiver().getUserId(), null, null, formComponentValues, company);
-			approvalPO.setProcessinstanceid(processinstanceid);
-		}
 
-		approvalPO.setType(ApprovalPO.APPROVAL_TYPE_QUOTATION_DISCOUNT_INT);
-		approvalPO.setIdent(String.valueOf(quotationId));
-		approvalPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-		approvalPO.setContents(String.format(ApprovalPO.APPROVAL_CONTENTS_QUOTATION_DISCOUNT_STR, orderId, String.valueOf(quotationId), quotationPO.getDiscount(), approvalQuotationDiscountVO.getNewDiscount()));
-		approvalPO.setReceiver(receiver);
-		approvalPO.setSender(sender);
-		approvalPO.setCompany(company);
-		
+		String content = String.format("订单号:%s,报价编号:%s,折扣:%s,修改为折扣:%s", orderId, String.valueOf(qid), quotationPO.getDiscount(), approvalQuotationDiscountVO.getNewDiscount());
+
+		approvalPO = new ApprovalPO().init(sender, receiver, String.valueOf(qid), ApprovalPO.APPROVAL_TYPE_QUOTATION_DISCOUNT_INT, content, company);
+
 		approvalDao.save(approvalPO);
-		
+
 		ApprovalQuotationDiscountPO approvalQuotationDiscountPO = new ApprovalQuotationDiscountPO();
 		BeanUtil.copyProperties(approvalQuotationDiscountVO, approvalQuotationDiscountPO);
-		
+
 		approvalQuotationDiscountPO.setAid(approvalPO.getAid());
 		approvalQuotationDiscountPO.setOldDiscount(quotationPO.getDiscount());
-		
+
 		approvalQuotationDiscountDao.save(approvalQuotationDiscountPO);
 
-		messageService.sendMessage(approvalPO.getReceiver().getUserId(),approvalPO.getSender().getUserId(),approvalPO.getContents(), MessagePO.MESSAGE_TYPE_SEND_APPROVAL_STR,company);	
+		messageService.sendMessage(approvalPO.getReceiver().getUserId(), approvalPO.getSender().getUserId(), approvalPO.getContents(), MessagePO.TYPE_SEND_APPROVAL_INT, company);
 
-	return 0;
+		return 0;
 	}
-	
+
 	@Override
-	@Transactional(rollbackFor=Exception.class)
+	@Transactional(rollbackFor = Exception.class)
 	public int approvalForQuotationDiscount(ApprovalPO approvalPO) throws FLException {
-		
+
 		ApprovalQuotationDiscountPO approvalQuotationDiscountPO = approvalQuotationDiscountDao.queryApprovalQuotationDiscountByAId(approvalPO.getAid());
-		
-		if(approvalQuotationDiscountPO == null){
+
+		if (approvalQuotationDiscountPO == null) {
 			throw new FLException(240003, "审批信息不完整");
 		}
-		
+
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(approvalQuotationDiscountPO.getOrderId());
-		
-		if(decorationPO == null){
+
+		if (decorationPO == null) {
 			throw new FLException(140013, "订单不存在");
 		}
-		
+
 		List<Short> status = Arrays.asList(DecorationPO.STATUS_INIT_INT, DecorationPO.STATUS_DEPOSIT_INT, DecorationPO.STATUS_PROSIGN_INT);
-		
-		if(!status.contains(decorationPO.getStatus())){
+
+		if (!status.contains(decorationPO.getStatus())) {
 			approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_REFUSE_INT);
 			approvalPO.setComment(String.format("%s 订单状态:%s,不支持该操作通过.", approvalPO.getComment(), decorationPO.getStatus()));
-		}else{
+		} else {
 			QuotationPO quotationPO = quotationDao.get(approvalQuotationDiscountPO.getQid());
-			
-			if(quotationPO == null){
+
+			if (quotationPO == null) {
 				throw new FLException(200003, "报价不存在");
 			}
-			
-			if(!status.contains(decorationPO.getStatus())){
+
+			if (!status.contains(decorationPO.getStatus())) {
 				throw new FLException(200005, "报价不能修改");
 			}
-			
+
 			quotationPO.setDiscount(approvalQuotationDiscountPO.getNewDiscount());
-			
+
 			if (quotationPO.getDefaults() == QuotationPO.DEFAULTS_DEFAULT_INT) {
 				decorationPO.setDiscount(quotationPO.getDiscount());
-				
+
 				decorationDao.update(decorationPO);
 			}
-			
+
 			quotationDao.update(quotationPO);
-		}		
+		}
 		return 0;
 	}
 

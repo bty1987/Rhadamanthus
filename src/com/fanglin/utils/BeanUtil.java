@@ -29,7 +29,7 @@ public class BeanUtil extends org.springframework.beans.BeanUtils {
 			return ;
 		}
 		
-		if(target == null) throw new IllegalArgumentException("TOarget must not be null");
+		if(target == null) throw new IllegalArgumentException("Target must not be null");
 		
 		Class<?> actualEditable = target.getClass();
 		PropertyDescriptor[] targetPds = getPropertyDescriptors(actualEditable);

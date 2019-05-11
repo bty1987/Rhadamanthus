@@ -54,7 +54,7 @@ public class SalesActivityItemPO implements Serializable {
 
 	private String name;
 
-	private int num;
+	private float num;
 
 	private float money;
 
@@ -133,11 +133,11 @@ public class SalesActivityItemPO implements Serializable {
 	}
 
 	@Column(name = "num")
-	public int getNum() {
+	public float getNum() {
 		return num;
 	}
 
-	public void setNum(int num) {
+	public void setNum(float num) {
 		this.num = num;
 	}
 

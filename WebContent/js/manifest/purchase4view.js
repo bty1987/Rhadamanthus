@@ -26,9 +26,9 @@ $(function(){
             var $liTitle = $('<li></li>').addClass('line table-title');
 
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index'));
-            var $contentWrap = $('<div></div>').addClass('line-wrap  content col12');
+            var $contentWrap = $('<div></div>').addClass('line-wrap  content col11');
 
-            var titleName = '商品编号,商品名称,商品类别,品牌,单位,颜色,规格,供应商,采购单价,件数,剩余数量,数量';
+            var titleName = '编号,名称,类别,品牌,单位,颜色,规格,件数,采购单价,数量,剩余数量';
 
             $.each(titleName.split(','), function (i, v) {
                 $('<div></div>').addClass('cell').html(v).appendTo($contentWrap);
@@ -53,10 +53,10 @@ $(function(){
                 [v.goods.measurementUnit, 'grey'],
                 [v.color.name, 'grey'],
                 [v.format.info,  'grey'],
-                [v.unitPrice, 'blue'],
-                [v.surplus, 'blue'],
                 [v.goods.pieceNum, 'blue'],
-                [v.num,'blue']
+                [v.inprice, 'blue'],
+                [v.num,'blue'],
+                [v.surplus, 'blue']
             ];
 
             $.each(propertyArr, function (i, v) {
@@ -102,7 +102,7 @@ $(function(){
                     ['单位', 'goods.measurementUnit'],
                     ['颜色', 'color.name'],
                     ['规格', 'format.info'],
-                    ['采购单价', 'unitPrice'],
+                    ['采购单价', 'inprice'],
                     ['数量', 'num'],
                     ['件数', 'goods.pieceNum'],
                     ['剩余数量', 'surplus']

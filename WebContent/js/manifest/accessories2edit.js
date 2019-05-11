@@ -26,7 +26,8 @@ jQuery(function ($) {
         	
             var $line = addline(1 + $lines.length).appendTo($list).attr({
                 'data-gid': v.goods.gid,
-                'data-aiid': v.aiid
+                'data-aiid': v.aiid,
+                'data-selling': v.selling
             });
             
             $line.find('div.no').text(v.goods.no);
@@ -34,7 +35,7 @@ jQuery(function ($) {
             $line.find('div.category').text(v.goods.category);
             $line.find('div.brand').text(v.goods.brand);
             $line.find('div.measurementUnit').text(v.goods.measurementUnit);
-            $line.find('div.number input').val(v.num);
+            $line.find('div.number input').val(v.surplus);
             $line.find('div.pieceNum').text(v.goods.pieceNum);
         });
     });
@@ -115,7 +116,7 @@ jQuery(function ($) {
                         $lineInfoWrap.find('.brand').text(val.brand);
                         $lineInfoWrap.find('.pieceNum').text(val.pieceNum);
                         
-                        $line.attr({'data-gid': val.gid});
+                        $line.attr({'data-gid': val.gid, 'data-selling': val.selling});
                     }
                 });
 
@@ -135,6 +136,7 @@ jQuery(function ($) {
             
             var aiid = $line.attr('data-aiid');
             var gid = $line.attr('data-gid');
+            var selling = $line.attr('data-selling');
             var name = $line.find(".name input").val();
             var num = $line.find('.number input').val();
 
@@ -142,7 +144,8 @@ jQuery(function ($) {
             var options = {
                 "accessories.aid": accessories.aid,
                 "accessoriesItem.goods.gid": gid,
-                "accessoriesItem.num": num
+                "accessoriesItem.num": num,
+                "accessoriesItem.selling": selling,
             };
             
             if(aiid){

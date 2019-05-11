@@ -17,7 +17,7 @@ public class ManifestTemplateItemPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -5581067815805537836L;
 	
-	public static final String COLUMN_MTID_STR = "manifestTemplate.mtId";
+	public static final String COLUMN_MTID_STR = "manifestTemplate.mtid";
 	
 	private long mtiid;
 	

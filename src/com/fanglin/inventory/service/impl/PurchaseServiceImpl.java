@@ -74,17 +74,6 @@ public class PurchaseServiceImpl implements PurchaseService {
 
 	}
 
-	@Override
-	public void pagePurchaseObDelivery(Paging paging, List<Filter> filters, int company) {
-
-		List<PurchasePO> purchasePOs = purchaseDao.pagePurchaseObDelivery(paging, filters, company);
-
-		List<PurchaseVO> purchaseVOs = purchasePage(purchasePOs);
-
-		paging.setData(purchaseVOs);
-
-	}
-
 	public List<PurchaseVO> purchasePage(List<PurchasePO> purchasePOs) {
 
 		List<PurchaseVO> purchaseVOs = new ArrayList<PurchaseVO>();

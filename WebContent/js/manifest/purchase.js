@@ -1,7 +1,23 @@
 
 $(function () {
 
-    var flagSiid = true;
+	var purchase = {
+		items: {},
+		
+		status: {},
+		balanceStatus: {}
+	}
+	
+	com.post(api.ds.manifest, {}, function(res){
+    	
+    	$.each(res.purchaseStatus, function(i, v){
+    		purchase.status[v.key] = v.value;
+    	});
+    	
+    	$.each(res.purchaseBalanceStatus, function(i, v){
+    		purchase.balanceStatus[v.key] = v.value;
+    	});
+    }, null, false);
 
     var displayFunc = (function () {
 
@@ -67,8 +83,8 @@ $(function () {
                 [v.createTime, 'green'],
                 [v.balanceTime, 'green'],
                 [v.deliveryTime, 'green'],
-                [v.status == "0" ? "初始" : (v.status == "1" ? "部分入库" : "全部入库"), 'red'],
-                [v.balanceStatus == "0" ? "初始" : (v.balanceStatus == "1" ? "已结算" : "已完结"), 'red'],
+                [purchase.status[v.status], 'red'],
+                [purchase.balanceStatus[v.balanceStatus], 'red'],
                 [v.comment, 'grey']
             ];
 
@@ -87,12 +103,11 @@ $(function () {
             var $btnView = $('<li></li>').append($('<a></a>').html('查看'));
             var $btnEdit = $('<li></li>').append($('<a></a>').html('修改'));
             var $btnIn = $('<li></li>').append($('<a></a>').html('入库'));
-            var $btnAllIn = $('<li></li>').append($('<a></a>').html('全部入库'));
 
             $btnUl.append($btnView);
 
             if (v.status != 2) {
-                $btnUl.append($btnEdit).append($btnIn).append($btnAllIn);
+                $btnUl.append($btnEdit).append($btnIn);
             }
 
             $btnGroup.append($btn).append($btnUl).appendTo($cellOption);
@@ -106,8 +121,6 @@ $(function () {
 
             $btnEdit.click(function () {
                 
-                // TODO 销售转采购不可以修改
-
                 if(v.status != 0){
                 	layer.msg("采购单状态不可操作");
                 	return false;
@@ -120,10 +133,6 @@ $(function () {
             $btnIn.click(function () {
                 params["purchase.pid"] = v.pid;
                 showLayer("入库__采购单号 : " + v.no, "views/manifest/purchase2in.html");
-            });
-
-            $btnAllIn.click(function (e) {
-                batchin4All(v.pid);
             });
 
             return $liLine;
@@ -143,7 +152,7 @@ $(function () {
 
     var purchaseSearcher = new Searcher();
 
-    purchaseSearcher.init(["purchaseNo", "purchaseUserName", "purchaseTime"], "condList", api.inventory.pagePurchaseObDelivery, function (data) {
+    purchaseSearcher.init(["purchaseNo", "purchaseUserName", "purchaseTime", "purchaseStatus"], "condList", api.inventory.pagePurchase, function (data) {
         displayFunc.init('resultList', data);
     }, "pagenation", "purchasePostData", null, false, null, function () {
 
@@ -230,7 +239,7 @@ $(function () {
             return false;
         }
 
-        com.post(api.inventory.pagePurchaseObDelivery, $.extend({}, params.purchasePostData, {"paging.noPage": 1}), function (res) {
+        com.post(api.inventory.pagePurchase, $.extend({}, params.purchasePostData, {"paging.noPage": 1}), function (res) {
 
             $.each(res.paging.data, function (i, v) {
                 v.balanceStatus = (v.balanceStatus == "0" ? "初始" : "已结算");
@@ -251,21 +260,6 @@ $(function () {
                 list: res.paging.data
             });
 
-        });
-    }
-
-    function batchin4All(pid) {
-        layer.confirm('是否确认全部入库?', {
-            btn: ['确定', '取消']
-        }, function (indexo, layero) {
-            com.post(api.inventory.updatePurchaseForStatus, {
-                "purchase.pid": pid,
-                "purchase.status": "2"
-            }, function (res) {
-                purchaseSearcher.doSearch();
-            });
-
-            layer.close(indexo);
         });
     }
 

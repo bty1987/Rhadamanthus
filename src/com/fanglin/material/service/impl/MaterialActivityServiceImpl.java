@@ -25,6 +25,7 @@ import com.fanglin.material.service.MaterialActivityService;
 import com.fanglin.material.vo.MaterialActivityItemVO;
 import com.fanglin.material.vo.MaterialVO;
 import com.fanglin.personel.dao.UserDao;
+import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
@@ -173,33 +174,25 @@ public class MaterialActivityServiceImpl implements MaterialActivityService {
 
 		materialActivityDao.update(materialActivityItemPO);
 
+		AwardStockPO awardStockPO = awardStockDao.get(materialActivityItemPO.getAsid());
+		UserPO creater = userDao.queryUserByUserId(userId);
+		
 		if (materialActivityItemPO.getIsStock() == 0) {
 
-			AwardStockPO awardStockPO = awardStockDao.get(materialActivityItemPO.getAsid());
 			float num = Arith.sub(awardStockPO.getNum(), materialActivityItemPO.getNum());
 
 			if (num < 0) {
 				throw new FLException(160038, "库存不足!");
 			}
 
-			awardStockPO.setNum((int) Arith.sub(awardStockPO.getNum(), materialActivityItemPO.getNum()));
+			awardStockPO.setNum(Arith.sub(awardStockPO.getNum(), materialActivityItemPO.getNum()));
 
 			awardStockDao.update(awardStockPO);
-
-			AwardRecordPO awardRecordPO = new AwardRecordPO();
-			awardRecordPO.setAwardStock(awardStockPO);
-			awardRecordPO.setCreater(userDao.queryUserByUserId(userId));
-			awardRecordPO.setOrderId(materialActivityItemPO.getOrderId());
-			awardRecordPO.setNum(materialActivityItemPO.getNum());
-			awardRecordPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
-			awardRecordPO.setTotalPrice(Arith.mul(materialActivityItemPO.getMoney(), materialActivityItemPO.getNum()));
-			awardRecordPO.setUnitPrice(materialActivityItemPO.getMoney());
-			awardRecordPO.setType(AwardRecordPO.TYPE_RECEIVE_INT);
-			awardRecordPO.setOnetype(AwardRecordPO.ONETYPE_MATERIAL_INT);
-			awardRecordPO.setContent("领取活动奖品");
-
-			awardRecordDao.save(awardRecordPO);
 		}
+		
+		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, creater, AwardRecordPO.TYPE_RECEIVE_INT, AwardRecordPO.ONETYPE_MATERIAL_INT, materialActivityItemPO.getIsStock(), materialActivityItemPO.getMoney(), materialActivityItemPO.getNum(), "领取活动奖品");
+		awardRecordDao.save(awardRecordPO);
+		
 		return 0;
 	}
 
@@ -289,33 +282,26 @@ public class MaterialActivityServiceImpl implements MaterialActivityService {
 
 		materialActivityDao.update(materialActivityItemPO);
 		
+		AwardStockPO awardStockPO = awardStockDao.get(materialActivityItemPO.getAsid());
+		UserPO creater = userDao.queryUserByUserId(userId);
+		
 		if (materialActivityItemPO.getIsStock() == 0) {
 
-			AwardStockPO awardStockPO = awardStockDao.get(materialActivityItemPO.getAsid());
 			float num = Arith.add(awardStockPO.getNum(), materialActivityItemPO.getNum());
 
 			if (num < 0) {
 				throw new FLException(160038, "库存不足!");
 			}
 
-			awardStockPO.setNum((int) Arith.add(awardStockPO.getNum(), materialActivityItemPO.getNum()));
+			awardStockPO.setNum(Arith.add(awardStockPO.getNum(), materialActivityItemPO.getNum()));
 
 			awardStockDao.update(awardStockPO);
 
-			AwardRecordPO awardRecordPO = new AwardRecordPO();
-			awardRecordPO.setAwardStock(awardStockPO);
-			awardRecordPO.setCreater(userDao.queryUserByUserId(userId));
-			awardRecordPO.setOrderId(materialActivityItemPO.getOrderId());
-			awardRecordPO.setNum(materialActivityItemPO.getNum());
-			awardRecordPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
-			awardRecordPO.setTotalPrice(Arith.mul(materialActivityItemPO.getMoney(), materialActivityItemPO.getNum()));
-			awardRecordPO.setUnitPrice(materialActivityItemPO.getMoney());
-			awardRecordPO.setType(AwardRecordPO.TYPE_REFUND_INT);
-			awardRecordPO.setOnetype(AwardRecordPO.ONETYPE_MATERIAL_INT);
-			awardRecordPO.setContent("");
-
-			awardRecordDao.save(awardRecordPO);
 		}
+		
+		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, creater, AwardRecordPO.TYPE_REFUND_INT, AwardRecordPO.ONETYPE_MATERIAL_INT, materialActivityItemPO.getIsStock(), materialActivityItemPO.getMoney(), materialActivityItemPO.getNum(), "");
+		awardRecordDao.save(awardRecordPO);
+		
 		return 0;
 	}
 

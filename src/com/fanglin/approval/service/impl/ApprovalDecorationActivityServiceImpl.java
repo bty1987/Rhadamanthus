@@ -13,14 +13,12 @@ package com.fanglin.approval.service.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.alibaba.fastjson.JSONArray;
 import com.fanglin.approval.dao.ApprovalDao;
 import com.fanglin.approval.dao.ApprovalDecorationActivityDao;
 import com.fanglin.approval.dao.ApprovalDecorationActivityItemDao;
@@ -38,16 +36,12 @@ import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationActivityItemPO;
 import com.fanglin.decoration.po.DecorationActivityPO;
 import com.fanglin.decoration.po.DecorationPO;
-import com.fanglin.dingding.service.ApprovalService;
 import com.fanglin.information.dao.AwardStockDao;
 import com.fanglin.information.po.AwardStockPO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
-import com.fanglin.system.dao.SystemConfigDao;
-import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
-import com.fanglin.utils.DateUtil;
 
 @Service("approvalDecorationActivityService")
 @Transactional(readOnly = true)
@@ -72,12 +66,6 @@ public class ApprovalDecorationActivityServiceImpl implements ApprovalDecoration
 	private DecorationDao decorationDao;
 
 	@Autowired
-	private SystemConfigDao systemConfigDao;
-
-	@Autowired
-	private ApprovalService approvalDDService;
-
-	@Autowired
 	private AwardStockDao awardStockDao;
 
 	@Autowired
@@ -85,8 +73,7 @@ public class ApprovalDecorationActivityServiceImpl implements ApprovalDecoration
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int submitApprovalForDecorationActivity(ApprovalVO approvalVO, ApprovalDecorationActivityVO approvalDecorationActivityVO, List<ApprovalDecorationActivityItemVO> approvalDecorationActivityItemVOs, String userId, int company)
-			throws FLException {
+	public int submitApprovalForDecorationActivity(ApprovalVO approvalVO, ApprovalDecorationActivityVO approvalDecorationActivityVO, List<ApprovalDecorationActivityItemVO> approvalDecorationActivityItemVOs, String userId, int company) throws FLException {
 
 		String orderId = approvalDecorationActivityVO.getOrderId();
 
@@ -104,32 +91,12 @@ public class ApprovalDecorationActivityServiceImpl implements ApprovalDecoration
 			throw new FLException(240004, "正在审批中,不能提交新审批");
 		}
 
-
-		approvalPO = new ApprovalPO();
-
-		BeanUtil.copyProperties(approvalVO, approvalPO, Arrays.asList("receiver", "sender"));
-
 		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiver().getUserId());
 		UserPO sender = userDao.queryUserByUserId(userId);
 
-		SystemConfigPO systemConfigPO = systemConfigDao.querySystemConfig(ApprovalPO.APPROVAL_SYSTEMCONFIG_DECORATIONACTIVITY_STR, company);
+		String content = String.format("订单号:%s,参与活动:%s", approvalDecorationActivityVO.getOrderId(), approvalDecorationActivityVO.getActivityName());
 
-		if (systemConfigPO == null) {
-			approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_INIT_INT);
-		} else {
-			approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_APPROVE_INT);
-			JSONArray formComponentValues = approvalDDService.getForms("说明", String.format(ApprovalPO.APPROVAL_CONTENTS_DECORATION_ACTIVITY_STR, approvalDecorationActivityVO.getOrderId(), approvalDecorationActivityVO.getActivityName()));
-			String processinstanceid = approvalDDService.initiateApproval(systemConfigPO.getValue(), userId, approvalVO.getReceiver().getUserId(), null, null, formComponentValues, company);
-			approvalPO.setProcessinstanceid(processinstanceid);
-		}
-
-		approvalPO.setType(ApprovalPO.APPROVAL_TYPE_DECORATION_ACTIVITY_INT);
-		approvalPO.setIdent(orderId);
-		approvalPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-		approvalPO.setContents(String.format(ApprovalPO.APPROVAL_CONTENTS_DECORATION_ACTIVITY_STR, approvalDecorationActivityVO.getOrderId(), approvalDecorationActivityVO.getActivityName()));
-		approvalPO.setReceiver(receiver);
-		approvalPO.setSender(sender);
-		approvalPO.setCompany(company);
+		approvalPO = new ApprovalPO().init(sender, receiver, orderId, ApprovalPO.APPROVAL_TYPE_DECORATION_ACTIVITY_INT, content, company);
 
 		approvalDao.save(approvalPO);
 
@@ -188,11 +155,9 @@ public class ApprovalDecorationActivityServiceImpl implements ApprovalDecoration
 			decorationActivityItemPO.setIsStock(awardStockPO.getIsStock());
 			decorationActivityItemPO.setIsPayment(awardStockPO.getIsPayment());
 
-			if (Arrays.asList(DecorationActivityItemPO.TYPE_COUPON_INT, DecorationActivityItemPO.TYPE_SPECIALCOUPON_INT).contains(decorationActivityItemPO.getType())
-					&& decorationActivityItemPO.getIsPrefor() == DecorationActivityItemPO.ISPREFOR_CAL_INT) {
+			if (Arrays.asList(DecorationActivityItemPO.TYPE_COUPON_INT, DecorationActivityItemPO.TYPE_SPECIALCOUPON_INT).contains(decorationActivityItemPO.getType()) && decorationActivityItemPO.getIsPrefor() == DecorationActivityItemPO.ISPREFOR_CAL_INT) {
 				couponCut = Arith.add(couponCut, Arith.mul(decorationActivityItemPO.getMoney(), decorationActivityItemPO.getNum()));
-			} else if (Arrays.asList(DecorationActivityItemPO.TYPE_THING_INT, DecorationActivityItemPO.TYPE_SPECIALARTICLE_INT).contains(decorationActivityItemPO.getType())
-					&& decorationActivityItemPO.getIsPrefor() == DecorationActivityItemPO.ISPREFOR_CAL_INT) {
+			} else if (Arrays.asList(DecorationActivityItemPO.TYPE_THING_INT, DecorationActivityItemPO.TYPE_SPECIALARTICLE_INT).contains(decorationActivityItemPO.getType()) && decorationActivityItemPO.getIsPrefor() == DecorationActivityItemPO.ISPREFOR_CAL_INT) {
 				thingCut = Arith.add(thingCut, Arith.mul(decorationActivityItemPO.getMoney(), decorationActivityItemPO.getNum()));
 			}
 

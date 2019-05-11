@@ -23,8 +23,8 @@ public interface AddReduceItemDao extends Dao<AddReduceItemPO> {
 	
 	public List<AddReduceItemPO> queryAddReduceItemByAddReduceIds(List<Integer> addReduceIds);
 	
-	public int countAddReduceItemForFunctionArea(long qfaid);
+	public long countAddReduceItemForFunctionArea(long qfaid);
 	
-	public int countAddReduceItemForFunctionArea(List<QuotationFunctionAreaPO> quotationFunctionAreas);
+	public long countAddReduceItemForFunctionArea(List<QuotationFunctionAreaPO> quotationFunctionAreas);
 	
 }

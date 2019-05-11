@@ -27,19 +27,8 @@ public class PurchaseDaoImpl extends DaoImpl<PurchasePO> implements PurchaseDao 
 		query.add(query.getCriterion(PurchasePO.COLUMN_COMPANY_STR, company, "eq"));
 
 		queryFilterExecute(query, filters);
-
-		return query.list();
-	}
-
-	@Override
-	public List<PurchasePO> pagePurchaseObDelivery(Paging paging, List<Filter> filters, int company) {
-
-		PagingQuery<PurchasePO> query = pagingQuery(paging, PurchasePO.class);
-
-		query.add(query.getCriterion(PurchasePO.COLUMN_COMPANY_STR, company, "eq"));
-		query.add(query.getCriterion(PurchasePO.COLUMN_STATUS_STR, PurchasePO.STATUS_BATCHIN_ALL_INT, "ne"));
-
-		queryFilterExecute(query, filters);
+		
+		query.desc("pid");
 
 		return query.list();
 	}
@@ -59,21 +48,19 @@ public class PurchaseDaoImpl extends DaoImpl<PurchasePO> implements PurchaseDao 
 				String data = filter.getData();
 				String op = filter.getOp();
 
-				query.alias("user", "user");
-
 				if ("purchaseUserName".equals(field)) {
+					query.alias("user", "user");
 					query.add(query.getCriterion(PurchasePO.COLUMN_USER_USERID_STR, data, op));
 				} else if (PurchasePO.COLUMN_NO_STR.equals(field)) {
 					query.add(query.getCriterion(PurchasePO.COLUMN_NO_STR, data, op));
 				} else if ("purchaseStatus".equals(field)) {
-					query.add(query.getCriterion("status", data, op));
+					query.add(query.getCriterion("status", Short.valueOf(data), op));
+				}else if("purchaseBalanceStatus".equals(field)){
+					query.add(query.getCriterion("balanceStatus", Short.valueOf(data), op));
 				} else if ("createTime".equals(field)) {
 
-					String sTime = data + " 00:00:00";
-					String eTime = data + " 23:59:59";
-
-					Date sdate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
-					Date edate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
+					Date sdate = DateUtil.parseDate(data + " 00:00:00", "yyyy-MM-dd HH:mm:ss");
+					Date edate = DateUtil.parseDate(data + " 23:59:59", "yyyy-MM-dd HH:mm:ss");
 
 					Timestamp stimestamp = DateUtil.getDateToTimestamp(sdate);
 					Timestamp etimestamp = DateUtil.getDateToTimestamp(edate);

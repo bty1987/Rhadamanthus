@@ -90,7 +90,7 @@ jQuery(function($) {
             options["purchaseItems["+i+"].color.cid"] = $this.find('.color select').val();  //– 颜色
             options["purchaseItems["+i+"].format.fid"] = $this.find('.format select').val();//– 规格
             options["purchaseItems["+i+"].num"] = $this.find('.number input').val();           //– 数量
-            options["purchaseItems["+i+"].unitPrice"] = $this.find('.unitPrice input').val();  //- 单价
+            options["purchaseItems["+i+"].inprice"] = $this.find('.inprice input').val();  //- 单价
         });
 
         com.post(api.inventory.addPurchase, options, function(data){
@@ -128,7 +128,7 @@ jQuery(function($) {
             {cellClass : "format", hasSelect: true}, //规格
             {cellClass : "number", hasInput: true},         //数量
             {cellClass : "pieceNum"},                   //件数
-            {cellClass : "unitPrice", hasInput: true}   //单价
+            {cellClass : "inprice", hasInput: true}   //单价
         ];
 
         var $btncheck = $('<a class="green" style="font-size: 18px"><i class="icon-ok"></i></a>');
@@ -146,7 +146,7 @@ jQuery(function($) {
                     $input.addClass('v_required');
                 }
                 
-                if(v.cellClass == "number" || v.cellClass == "unitPrice"){
+                if(v.cellClass == "number" || v.cellClass == "inprice"){
                     $input.addClass('v_float_3');
                 }
                 
@@ -264,11 +264,11 @@ jQuery(function($) {
         	
             var $this = $(this);
             
-            if($this.find('.unitPrice input').val()){
+            if($this.find('.inprice input').val()){
             	
-            	var unitPrice = parseFloat($this.find('.unitPrice input').val());
+            	var inprice = parseFloat($this.find('.inprice input').val());
             	var num = parseFloat($this.find('.number input').val());
-                var $sum = utils.accMul(unitPrice, num);//单个商品的总价
+                var $sum = utils.accMul(inprice, num);//单个商品的总价
                 
                 _total = utils.accAdd($sum, _total);//采购单总价
             }

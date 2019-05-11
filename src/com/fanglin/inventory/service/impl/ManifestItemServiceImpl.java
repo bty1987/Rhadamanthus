@@ -13,7 +13,6 @@ package com.fanglin.inventory.service.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,14 +22,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.inventory.dao.ManifestDao;
 import com.fanglin.inventory.dao.ManifestItemDao;
-import com.fanglin.inventory.po.ColorPO;
-import com.fanglin.inventory.po.FormatPO;
-import com.fanglin.inventory.po.GoodsPO;
 import com.fanglin.inventory.po.ManifestItemPO;
 import com.fanglin.inventory.po.ManifestPO;
 import com.fanglin.inventory.service.GoodsStorehouseStockService;
 import com.fanglin.inventory.service.ManifestItemService;
-import com.fanglin.inventory.service.StorehouseStockService;
 import com.fanglin.inventory.vo.ColorVO;
 import com.fanglin.inventory.vo.FormatVO;
 import com.fanglin.inventory.vo.GoodsVO;
@@ -38,7 +33,6 @@ import com.fanglin.inventory.vo.ManifestItemVO;
 import com.fanglin.inventory.vo.ManifestVO;
 import com.fanglin.inventory.vo.StorehouseVO;
 import com.fanglin.utils.BeanUtil;
-import com.fanglin.utils.DateUtil;
 
 @Service("manifestItemService")
 @Transactional(readOnly = true)
@@ -53,9 +47,6 @@ public class ManifestItemServiceImpl implements ManifestItemService {
 	@Autowired
 	private GoodsStorehouseStockService goodsStorehouseStockService;
 
-	@Autowired
-	private StorehouseStockService storehouseStockService;
-
 	@Override
 	public List<ManifestItemVO> queryManifestItemByMid(ManifestVO manifestVO) {
 
@@ -66,39 +57,39 @@ public class ManifestItemServiceImpl implements ManifestItemService {
 
 		for (ManifestItemPO manifestItemPO : manifestItemPOs) {
 
-			manifestItemVO = new ManifestItemVO(new GoodsVO(), new ColorVO(),new FormatVO(), new StorehouseVO(), new StorehouseVO());
+			manifestItemVO = new ManifestItemVO(new GoodsVO(), new ColorVO(), new FormatVO(), new StorehouseVO(), new StorehouseVO());
 
-			BeanUtil.copyProperties(manifestItemPO, manifestItemVO, Arrays.asList("goods", "color", "format", "instorehouse","outstorehouse"));
-			BeanUtil.copyProperties(manifestItemPO.getGoods(),manifestItemVO.getGoods(), Arrays.asList("accessoriesType"));
-			BeanUtil.copyProperties(manifestItemPO.getColor(),manifestItemVO.getColor());
-			BeanUtil.copyProperties(manifestItemPO.getFormat(),manifestItemVO.getFormat());
-			BeanUtil.copyProperties(manifestItemPO.getInstorehouse(),manifestItemVO.getInstorehouse());
-			BeanUtil.copyProperties(manifestItemPO.getOutstorehouse(),manifestItemVO.getOutstorehouse());
+			BeanUtil.copyProperties(manifestItemPO, manifestItemVO, Arrays.asList("goods", "color", "format", "instorehouse", "outstorehouse"));
+			BeanUtil.copyProperties(manifestItemPO.getGoods(), manifestItemVO.getGoods(), Arrays.asList("accessoriesType"));
+			BeanUtil.copyProperties(manifestItemPO.getColor(), manifestItemVO.getColor());
+			BeanUtil.copyProperties(manifestItemPO.getFormat(), manifestItemVO.getFormat());
+			BeanUtil.copyProperties(manifestItemPO.getInstorehouse(), manifestItemVO.getInstorehouse());
+			BeanUtil.copyProperties(manifestItemPO.getOutstorehouse(), manifestItemVO.getOutstorehouse());
 
 			manifestItemVOs.add(manifestItemVO);
 		}
 
 		return manifestItemVOs;
 	}
-	
+
 	@Override
 	public List<ManifestItemVO> queryManifestItemBySiids(List<Long> siids) {
-		
+
 		List<ManifestItemPO> manifestItemPOs = manifestItemDao.queryManifestItemBySiids(siids);
 		List<ManifestItemVO> manifestItemVOs = new ArrayList<ManifestItemVO>();
 
 		ManifestItemVO manifestItemVO;
-		
+
 		for (ManifestItemPO manifestItemPO : manifestItemPOs) {
 
-			manifestItemVO = new ManifestItemVO(new GoodsVO(), new ColorVO(),new FormatVO(), new StorehouseVO(), new StorehouseVO());
+			manifestItemVO = new ManifestItemVO(new GoodsVO(), new ColorVO(), new FormatVO(), new StorehouseVO(), new StorehouseVO());
 
-			BeanUtil.copyProperties(manifestItemPO, manifestItemVO, Arrays.asList("goods", "color", "format", "instorehouse","outstorehouse"));
-			BeanUtil.copyProperties(manifestItemPO.getGoods(),manifestItemVO.getGoods(), Arrays.asList("accessoriesType"));
-			BeanUtil.copyProperties(manifestItemPO.getColor(),manifestItemVO.getColor());
-			BeanUtil.copyProperties(manifestItemPO.getFormat(),manifestItemVO.getFormat());
-			BeanUtil.copyProperties(manifestItemPO.getInstorehouse(),manifestItemVO.getInstorehouse());
-			BeanUtil.copyProperties(manifestItemPO.getOutstorehouse(),manifestItemVO.getOutstorehouse());
+			BeanUtil.copyProperties(manifestItemPO, manifestItemVO, Arrays.asList("goods", "color", "format", "instorehouse", "outstorehouse"));
+			BeanUtil.copyProperties(manifestItemPO.getGoods(), manifestItemVO.getGoods(), Arrays.asList("accessoriesType"));
+			BeanUtil.copyProperties(manifestItemPO.getColor(), manifestItemVO.getColor());
+			BeanUtil.copyProperties(manifestItemPO.getFormat(), manifestItemVO.getFormat());
+			BeanUtil.copyProperties(manifestItemPO.getInstorehouse(), manifestItemVO.getInstorehouse());
+			BeanUtil.copyProperties(manifestItemPO.getOutstorehouse(), manifestItemVO.getOutstorehouse());
 
 			manifestItemVOs.add(manifestItemVO);
 		}
@@ -108,7 +99,7 @@ public class ManifestItemServiceImpl implements ManifestItemService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int addManifestItem(ManifestVO manifestVO,ManifestItemVO manifestItemVO) throws FLException {
+	public int addManifestItem(ManifestVO manifestVO, ManifestItemVO manifestItemVO) throws FLException {
 
 		ManifestPO manifestPO = manifestDao.get(manifestVO.getMid());
 
@@ -116,52 +107,31 @@ public class ManifestItemServiceImpl implements ManifestItemService {
 			throw new FLException(260009, "货单不存在");
 		}
 
-		short stutas = manifestPO.getStatus();
-
-		if (stutas != 0) {
+		if (manifestPO.getStatus() != ManifestPO.STATUS_INIT_INT) {
 			throw new FLException(260027, "货单状态不可操作");
 		}
 
-		String comment = "";
-		String month = DateUtil.getDateToDateString(new Date(), "yyyyMM");
 		short type = manifestVO.getType();
-
-		ManifestItemPO manifestItemPO = new ManifestItemPO(new GoodsPO(),new ColorPO(), new FormatPO());
 
 		long gid = manifestItemVO.getGoods().getGid();
 		long cid = manifestItemVO.getColor().getCid();
 		long fid = manifestItemVO.getFormat().getFid();
+
+		float inprice = manifestItemVO.getInprice();
+		float outprice = manifestItemVO.getOutprice();
 		float num = manifestItemVO.getNum();
 
-		BeanUtil.copyProperties(manifestItemVO, manifestItemPO, Arrays.asList("goods", "color", "format", "instorehouse", "outstorehouse"));
-		BeanUtil.copyProperties(manifestItemVO.getGoods(),manifestItemPO.getGoods(), Arrays.asList("accessoriesType"));
-		BeanUtil.copyProperties(manifestItemVO.getColor(),manifestItemPO.getColor());
-		BeanUtil.copyProperties(manifestItemVO.getFormat(),manifestItemPO.getFormat());
+		ManifestItemPO manifestItemPO = new ManifestItemPO().init(manifestPO.getMid(), null, null, null, null, gid, cid, fid, manifestPO.getType(), inprice, outprice, num, null, null);
 
 		if (type == 1 && manifestItemVO.getInstorehouse() != null) {
-			long ishid = manifestItemVO.getInstorehouse().getShid();
-
-			manifestItemPO.setInstorehouse(goodsStorehouseStockService.instorehouse(gid, cid, fid, ishid, num));
-			storehouseStockService.updateStorehouseStock(ishid, month, num);
-
+			manifestItemPO.setInstorehouse((goodsStorehouseStockService.instorehouse(gid, cid, fid, manifestItemVO.getInstorehouse().getShid(), num)));
 		}
+
 		if (type == 3 && manifestItemVO.getOutstorehouse() != null) {
-			long oshid = manifestItemVO.getOutstorehouse().getShid();
-
-			manifestItemPO.setOutstorehouse(goodsStorehouseStockService.outstorehouse(gid, cid, fid, oshid, num));
-			storehouseStockService.updateStorehouseStock(oshid, month, -num);
-
+			manifestItemPO.setOutstorehouse(goodsStorehouseStockService.outstorehouse(gid, cid, fid, manifestItemVO.getOutstorehouse().getShid(), num));
 		}
 
-		manifestItemPO.setUnitPrice(manifestItemVO.getUnitPrice());
-		manifestItemPO.setNum(manifestItemVO.getNum());
-		manifestItemPO.setMid(manifestVO.getMid());
 		manifestItemPO.setComment(manifestItemVO.getComment());
-
-		manifestPO.setTotal(manifestVO.getTotal());
-		manifestPO.setComment(comment);
-		
-		manifestDao.update(manifestPO);
 
 		manifestItemDao.save(manifestItemPO);
 
@@ -172,12 +142,16 @@ public class ManifestItemServiceImpl implements ManifestItemService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int updateManifestItem(ManifestVO manifestVO,ManifestItemVO manifestItemVO) throws FLException {
+	public int updateManifestItem(ManifestVO manifestVO, ManifestItemVO manifestItemVO) throws FLException {
 
 		ManifestPO manifestPO = manifestDao.get(manifestVO.getMid());
 
 		if (manifestPO == null) {
 			throw new FLException(260009, "货单不存在");
+		}
+
+		if (manifestPO.getStatus() != ManifestPO.STATUS_INIT_INT) {
+			throw new FLException(260027, "货单状态不可操作");
 		}
 
 		ManifestItemPO manifestItemPO = manifestItemDao.get(manifestItemVO.getMiid());
@@ -189,61 +163,50 @@ public class ManifestItemServiceImpl implements ManifestItemService {
 		long gid = manifestItemPO.getGoods().getGid();
 		long cid = manifestItemPO.getColor().getCid();
 		long fid = manifestItemPO.getFormat().getFid();
-		float num = manifestItemPO.getNum();
-		String month = DateUtil.getDateToDateString(new Date(), "yyyyMM");
+		
+		float surplus = manifestItemPO.getSurplus();
+		float num = manifestItemVO.getNum();
+		
+		if(num > surplus){
+			throw new FLException(260026, "货单项数量不符");
+		}
 
 		if (manifestItemPO.getInstorehouse() != null) {
-
-			long shid = manifestItemPO.getInstorehouse().getShid();
-
-			goodsStorehouseStockService.outstorehouse(gid, cid, fid, shid, num);
-			storehouseStockService.updateStorehouseStock(shid, month, num);
+			goodsStorehouseStockService.outstorehouse(gid, cid, fid, manifestItemPO.getInstorehouse().getShid(), surplus);
 		}
 
 		if (manifestItemPO.getOutstorehouse() != null) {
-
-			long shid = manifestItemPO.getOutstorehouse().getShid();
-
-			goodsStorehouseStockService.instorehouse(gid, cid, fid, shid, num);
-			storehouseStockService.updateStorehouseStock(shid, month, -num);
+			goodsStorehouseStockService.instorehouse(gid, cid, fid, manifestItemPO.getOutstorehouse().getShid(), surplus);
 		}
 		
-		manifestPO.setTotal(manifestVO.getTotal());
-
-		BeanUtil.copyProperties(manifestItemVO, manifestItemPO,Arrays.asList("instorehouse", "outstorehouse"));
-
-		num = manifestItemVO.getNum();
+		manifestItemPO.setNum(num);
+		manifestItemPO.setSurplus(num);
 
 		if (manifestItemVO.getInstorehouse() != null) {
-
-			long shid = manifestItemVO.getInstorehouse().getShid();
-
-			manifestItemPO.setInstorehouse(goodsStorehouseStockService.instorehouse(gid, cid, fid, shid, num));
-			storehouseStockService.updateStorehouseStock(shid, month, num);
+			manifestItemPO.setInstorehouse(goodsStorehouseStockService.instorehouse(gid, cid, fid, manifestItemVO.getInstorehouse().getShid(), num));
 		}
 
 		if (manifestItemVO.getOutstorehouse() != null) {
-
-			long shid = manifestItemVO.getOutstorehouse().getShid();
-
-			manifestItemPO.setOutstorehouse(goodsStorehouseStockService.outstorehouse(gid, cid, fid, shid, num));
-			storehouseStockService.updateStorehouseStock(shid, month, -num);
+			manifestItemPO.setOutstorehouse(goodsStorehouseStockService.outstorehouse(gid, cid, fid, manifestItemVO.getOutstorehouse().getShid(), num));
 		}
-
+		
 		manifestItemDao.update(manifestItemPO);
-		manifestDao.update(manifestPO);
 
 		return 0;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int deleteManifestItem(ManifestVO manifestVO,ManifestItemVO manifestItemVO) throws FLException {
+	public int deleteManifestItem(ManifestVO manifestVO, ManifestItemVO manifestItemVO) throws FLException {
 
 		ManifestPO manifestPO = manifestDao.get(manifestVO.getMid());
 
 		if (manifestPO == null) {
 			throw new FLException(260009, "货单不存在");
+		}
+
+		if (manifestPO.getStatus() != ManifestPO.STATUS_INIT_INT) {
+			throw new FLException(260027, "货单状态不可操作");
 		}
 
 		ManifestItemPO manifestItemPO = manifestItemDao.get(manifestItemVO.getMiid());
@@ -255,29 +218,18 @@ public class ManifestItemServiceImpl implements ManifestItemService {
 		long gid = manifestItemPO.getGoods().getGid();
 		long cid = manifestItemPO.getColor().getCid();
 		long fid = manifestItemPO.getFormat().getFid();
-		float num = manifestItemPO.getNum();
-		String month = DateUtil.getDateToDateString(new Date(), "yyyyMM");
+		
+		float surplus = manifestItemPO.getSurplus();
 
 		if (manifestItemPO.getInstorehouse() != null) {
-
-			long shid = manifestItemPO.getInstorehouse().getShid();
-
-			goodsStorehouseStockService.outstorehouse(gid, cid, fid, shid, num);
-			storehouseStockService.updateStorehouseStock(shid, month, num);
+			goodsStorehouseStockService.outstorehouse(gid, cid, fid, manifestItemPO.getInstorehouse().getShid(), surplus);
 		}
 
 		if (manifestItemPO.getOutstorehouse() != null) {
-
-			long shid = manifestItemPO.getOutstorehouse().getShid();
-
-			goodsStorehouseStockService.instorehouse(gid, cid, fid, shid, num);
-			storehouseStockService.updateStorehouseStock(shid, month, -num);
+			goodsStorehouseStockService.instorehouse(gid, cid, fid, manifestItemPO.getOutstorehouse().getShid(), surplus);
 		}
 
-		manifestPO.setTotal(manifestVO.getTotal());
-
 		manifestItemDao.delete(manifestItemPO);
-		manifestDao.update(manifestPO);
 
 		return 0;
 	}

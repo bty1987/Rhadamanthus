@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.alibaba.fastjson.JSONArray;
 import com.fanglin.approval.dao.ApprovalDao;
 import com.fanglin.approval.dao.ApprovalSalesRefundDao;
 import com.fanglin.approval.dao.ApprovalSalesRefundItemDao;
@@ -21,7 +20,6 @@ import com.fanglin.approval.vo.ApprovalSalesRefundItemVO;
 import com.fanglin.approval.vo.ApprovalSalesRefundVO;
 import com.fanglin.approval.vo.ApprovalVO;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.dingding.service.ApprovalService;
 import com.fanglin.inventory.vo.ColorVO;
 import com.fanglin.inventory.vo.FormatVO;
 import com.fanglin.inventory.vo.GoodsVO;
@@ -42,8 +40,6 @@ import com.fanglin.sales.po.SalesBalancePO;
 import com.fanglin.sales.po.SalesItemPO;
 import com.fanglin.sales.po.SalesPO;
 import com.fanglin.sales.vo.SalesItemVO;
-import com.fanglin.system.dao.SystemConfigDao;
-import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
@@ -84,12 +80,6 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 
 	@Autowired
 	private SalesBalanceItemDao salesBalanceItemDao;
-
-	@Autowired
-	private SystemConfigDao systemConfigDao;
-
-	@Autowired
-	private ApprovalService approvalDDService;
 
 	// 获取销售退货审批向信息
 	@Override
@@ -139,7 +129,7 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 		if (approvalPO != null) {
 			throw new FLException(240004, "正在审批中,不能提交新审批");
 		}
-		
+
 		SalesPO salesPO = salesDao.get(sid);
 
 		if (salesPO == null) {
@@ -154,27 +144,9 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 		UserPO sender = userDao.queryUserByUserId(userId);
 
 		String refundType = approvalSalesRefundVO.getType() == SalesPO.STATUS_ALLBACK_SHORT ? "全退" : approvalSalesRefundVO.getType() == SalesPO.STATUS_DBACKORDER_SHORT ? "倒单" : "退货";
+		String content = String.format("订单号:%s,销售单号:%s,品牌:%s,退款金额:%s,应退金额:%s,类型:%s", salesPO.getOrderId(), salesPO.getNo(), salesPO.getBrand(), approvalSalesRefundVO.getRefund(), approvalSalesRefundVO.getRefundTotal(), refundType);
 
-		SystemConfigPO systemConfigPO = systemConfigDao.querySystemConfig(ApprovalPO.APPROVAL_SYSTEMCONFIG_SALESREFUND_STR, company);
-
-		if (systemConfigPO == null) {
-			approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_INIT_INT);
-		} else {
-			approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_APPROVE_INT);
-			JSONArray formComponentValues = approvalDDService.getForms("说明", String.format(ApprovalPO.APPROVAL_CONTENTS_SALES_REFUND_STR, salesPO.getOrderId(), salesPO.getNo(), salesPO.getBrand(), approvalSalesRefundVO.getRefund(), approvalSalesRefundVO.getRefundTotal(), refundType));
-			String processinstanceid = approvalDDService.initiateApproval(systemConfigPO.getValue(), userId, approvalVO.getReceiver().getUserId(), null, null, formComponentValues, company);
-			approvalPO.setProcessinstanceid(processinstanceid);
-		}
-
-		approvalPO.setType(ApprovalPO.APPROVAL_TYPE_SALESREFUND_PAYMENT_INT);// 销售退货
-		approvalPO.setIdent(String.valueOf(sid));
-		approvalPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-		approvalPO.setApprovalTime(DateUtil.getDateToTimestamp(new Date()));
-		// 过滤条件 订单号:%s,销售单号:%s,品牌:%s,退款金额:%s,类型:%s
-		approvalPO.setContents(String.format(ApprovalPO.APPROVAL_CONTENTS_SALES_REFUND_STR, salesPO.getOrderId(), salesPO.getNo(), salesPO.getBrand(), approvalSalesRefundVO.getRefund(), approvalSalesRefundVO.getRefundTotal(), refundType));
-		approvalPO.setReceiver(receiver);
-		approvalPO.setSender(sender);
-		approvalPO.setCompany(company);
+		approvalPO = new ApprovalPO().init(sender, receiver, String.valueOf(sid), ApprovalPO.APPROVAL_TYPE_SALESREFUND_PAYMENT_INT, content, company);
 
 		approvalDao.save(approvalPO);
 
@@ -307,7 +279,7 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 					refundMoney = Arith.sub(refundMoney, Arith.mul(Arith.sub(price, cvalue), num));
 				} else if (salesItemPO.getCtype() == SalesItemPO.CTYPE_POINT_INT) { // 1:
 					// 点位
-					// 利润 = (折让价 - 折扣价 * (1 - 点位)) * 数量 
+					// 利润 = (折让价 - 折扣价 * (1 - 点位)) * 数量
 					// 利润 = (折让价 - 折扣价 + 折扣价 *点位) * 数量
 					refundMoney = Arith.sub(refundMoney, Arith.mul(Arith.sub(Arith.mul(disPrice, cvalue), Arith.sub(disPrice, price)), num));
 				}
@@ -334,7 +306,7 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 		if (approvalSalesRefundPO.getType() != ApprovalSalesRefundPO.TYPE_REFUND_INT) {
 			salesPO.setStatus(approvalSalesRefundPO.getType());
 		}
-		
+
 		salesPO.setAmount(salesItemDao.countSalesItemForAmount(salesPO.getSid()));
 
 		salesDao.update(salesPO);

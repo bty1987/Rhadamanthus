@@ -550,7 +550,7 @@ jQuery(function ($) {
             return true;
         }, callback: function (data) {
             this.options.list = data["brands"];
-            this.flprocess(this.options.list, ["bid"], ["brandName"]);
+            this.flprocess(this.options.list, ["bid"], ["name"]);
         },
         isResultTypeMap: true //必填值为true，获取key，value的标识，
         , flupdater: function (k, v) {//下拉列表选中时的一些处理，必填对选中项的key和value做处理

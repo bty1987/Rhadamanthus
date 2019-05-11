@@ -254,7 +254,7 @@ jQuery(function ($) {
     })();
 
     var searcher = new Searcher();
-    searcher.init(["c_orderId", "c_drawLineStatus", "c_actualDate"], "condList", api.drawline.queryDrawLine, function (data) {
+    searcher.init(["c_orderId", "c_drawLineStatus", "c_actualDate"], "condList", api.construction.queryDrawLine, function (data) {
         com.focusPage("#resultList").html("");
         displayFunc.init('resultList', data);
 
@@ -411,7 +411,7 @@ jQuery(function ($) {
                     "drawLine.endTime": endTime
                 };
 
-                com.post(api.drawline.countDrawLineByDate, options, function (res) {
+                com.post(api.construction.countDrawLine, options, function (res) {
                     drawLineDeployment.drawLineDateCount = res.drawLineDateCount;
 
                     var events = [];

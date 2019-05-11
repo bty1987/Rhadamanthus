@@ -91,6 +91,7 @@ $.extend(api, {
         addManifestForDB: {url: "addManifestForDB.do"},
         addManifestForPU: {url: "addManifestForPU.do"},
         addManifestForAS: {url: "addManifestForAS.do"},
+        addManifestForAR: {url: "addManifestForAR.do"},
         addManifestItem: {url: "addManifestItem.do"},
         updateManifest: {url: "updateManifest.do"},
         updateManifestItem: {url: "updateManifestItem.do"},
@@ -101,9 +102,6 @@ $.extend(api, {
         queryPurchaseAmount: {url: "queryPurchaseAmount.do"},
 
         pagePurchase: {url: "pagePurchase.do"},
-
-        pagePurchaseObDelivery: {url: "pagePurchaseObDelivery.do"},
-
         addPurchase: {url: "addPurchase.do"},
         addPurchaseItem: {url: "addPurchaseItem.do"},
         queryPurchaseItemByPid: {url: "queryPurchaseItemByPid.do"},

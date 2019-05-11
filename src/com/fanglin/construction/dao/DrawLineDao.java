@@ -21,14 +21,16 @@ import com.fanglin.utils.Paging;
 
 public interface DrawLineDao extends Dao<DrawLinePO> {
 	
-	public List<DrawLinePO> pageDrawLine(Paging paging, List<Filter> filters, Integer company);
+	public List<DrawLinePO> pageDrawLine(Paging paging, List<Filter> filters, int company);
 	
-	public List<DrawLinePO> queryDrawLine(List<Filter> filters, Integer company);
+	public List<DrawLinePO> queryDrawLine(List<Filter> filters, int company);
 
-	public List<DrawLinePO> queryDrawLine(Timestamp startTime, Timestamp endTime, Integer company);
-	
 	public List<DrawLinePO> queryDrawLineByOrderId(String orderId);
 	
-	public List<DrawLinePO> queryDrawLineByGroupATime(long gid, Timestamp startTime, Timestamp endTime, Integer company);
+	public int countDrawLine(String orderId);
+	
+	public int countDrawLine(long gid, Timestamp startTime, Timestamp endTime, int company);
+	
+	public List<?> countDrawLine(long startTime, long endTime, int company);
 	
 }

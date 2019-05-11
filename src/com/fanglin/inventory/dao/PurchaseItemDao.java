@@ -11,4 +11,6 @@ public interface PurchaseItemDao extends Dao<PurchaseItemPO> {
 	
 	public List<PurchaseItemPO> queryPurchaseItemByPids(List<Long> pids);
 	
+	public float amountPurchaseItemForNum(long pid);
+	
 }

@@ -45,11 +45,28 @@ public class PurchaseItemPO implements Serializable {
 
 	private FormatPO format;
 
-	private float unitPrice;
+	private float inprice;
 
 	private float num;
 
 	private float surplus;
+	
+	public PurchaseItemPO init(long pid, Long siid, long gid, long cid, long fid, float inprice, float num){
+		
+		setPid(pid);
+		
+		if(siid != null) setSiid(siid);
+		
+		setGoods(new GoodsPO(gid));
+		setColor(new ColorPO(cid));
+		setFormat(new FormatPO(fid));
+		
+		setInprice(inprice);
+		setNum(num);
+		setSurplus(num);
+		
+		return this;
+	}
 
 	public PurchaseItemPO() {
 		super();
@@ -126,15 +143,15 @@ public class PurchaseItemPO implements Serializable {
 		this.format = format;
 	}
 
-	@Column(name = "unitPrice")
-	public float getUnitPrice() {
-		return unitPrice;
+	@Column(name = "inprice")
+	public float getInprice() {
+		return inprice;
 	}
-
-	public void setUnitPrice(float unitPrice) {
-		this.unitPrice = unitPrice;
+	
+	public void setInprice(float inprice) {
+		this.inprice = inprice;
 	}
-
+	
 	@Column(name = "num")
 	public float getNum() {
 		return num;

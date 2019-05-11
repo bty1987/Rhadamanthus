@@ -34,7 +34,7 @@ public class CheckListPO implements java.io.Serializable {
 	
 	public static final String COLUMN_STOREHOUSE_SHID_STR = "storehouse.shid";
 	
-	private long clId;
+	private long clid;
 	
 	private GoodsPO goods;
 	
@@ -50,21 +50,21 @@ public class CheckListPO implements java.io.Serializable {
 	
 	private Timestamp createTime;
 	
-	private UserPO createUser;
+	private UserPO creater;
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "clId")
-	public long getClId() {
-		return this.clId;
+	@Column(name = "clid")
+	public long getClid() {
+		return clid;
 	}
 
-	public void setClId(long clId) {
-		this.clId = clId;
+	public void setClid(long clid) {
+		this.clid = clid;
 	}
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "gId", referencedColumnName = "gId")
+	@JoinColumn(name = "gid", referencedColumnName = "gid")
 	public GoodsPO getGoods() {
 		return goods;
 	}
@@ -74,7 +74,7 @@ public class CheckListPO implements java.io.Serializable {
 	}
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "cId", referencedColumnName = "cId")
+	@JoinColumn(name = "cid", referencedColumnName = "cid")
 	public ColorPO getColor() {
 		return color;
 	}
@@ -83,7 +83,7 @@ public class CheckListPO implements java.io.Serializable {
 		this.color = color;
 	}
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "fId", referencedColumnName = "fId")
+	@JoinColumn(name = "fid", referencedColumnName = "fid")
 	public FormatPO getFormat() {
 		return format;
 	}
@@ -130,13 +130,13 @@ public class CheckListPO implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "uId", referencedColumnName = "uId")
-	public UserPO getCreateUser() {
-		return createUser;
+	@JoinColumn(name = "uid", referencedColumnName = "uid")
+	public UserPO getCreater() {
+		return creater;
 	}
 
-	public void setCreateUser(UserPO createUser) {
-		this.createUser = createUser;
+	public void setCreater(UserPO creater) {
+		this.creater = creater;
 	}
 
 }

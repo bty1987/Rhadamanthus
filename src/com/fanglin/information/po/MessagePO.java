@@ -17,56 +17,48 @@ import com.fanglin.personel.po.UserPO;
 public class MessagePO implements Serializable {
 
 	private static final long serialVersionUID = 7068359813579637502L;
-	
-	public static final short MESSAGE_STATUS_READED_STR = 1;    
-	
-	public static final short MESSAGE_STATUS_UNREAD_STR = 0;  
-	
-	public static final short MESSAGE_DRESULT_SUCCESS_STR = 0;    
-	
-	public static final short MESSAGE_DRESULT_FAIL_STR = 1;  
-	
-	public static final String MESSAGE_TYPE_RETURN_STR = "退货消息";       
-	
-	public static final String MESSAGE_TYPE_DELIVER_STR = "放线消息";  
-	
-	public static final String MESSAGE_TYPE_APPROVAL_STR = "审批消息";  
-	
-	public static final String MESSAGE_TYPE_BUDGET_AUDIT_STR = "预算审核消息";  
-	
-	public static final short MESSAGE_TYPE_PAYMENT_STR = 0 ;  
-	
-	public static final short MESSAGE_TYPE_SEND_APPROVAL_STR = 1 ; 
-	
-	public static final short MESSAGE_TYPE_SEND_BLONG_STR = 2 ; 
-	
-	public static final short MESSAGE_TYPE_SEND_CONSTRUCTION_STR = 3 ; 
-	
-	public static final short MESSAGE_TYPE_SEND_PERSONEL_STR = 4 ;
-	
-	public static final short MESSAGE_TYPE_SEND_VISIT_STR = 5 ;
-	
+
+	public static final short STATUS_READED_INT = 1;
+
+	public static final short STATUS_UNREAD_INT = 0;
+
+	public static final short DRESULT_SUCCESS_INT = 0;
+
+	public static final short DRESULT_FAIL_INT = 1;
+
+	public static final short TYPE_PAYMENT_INT = 0;
+
+	public static final short TYPE_SEND_APPROVAL_INT = 1;
+
+	public static final short TYPE_SEND_BLONG_INT = 2;
+
+	public static final short TYPE_SEND_CONSTRUCTION_INT = 3;
+
+	public static final short TYPE_SEND_PERSONEL_INT = 4;
+
+	public static final short TYPE_SEND_VISIT_INT = 5;
+
 	private int mid;
-	
+
 	private UserPO receiver;
-	
+
 	private UserPO sender;
-	
+
 	private short type;
-	
+
 	private String contents;
-	
+
 	private Timestamp createTime;
-	
+
 	private short status;
-	
+
 	private String args;
-	
+
 	private int company;
-	
+
 	private short dresult;
-	
-	public MessagePO(){
+
+	public MessagePO() {
 		super();
 	}
 
@@ -82,21 +74,21 @@ public class MessagePO implements Serializable {
 
 	@javax.persistence.ManyToOne(fetch = FetchType.LAZY)
 	@javax.persistence.JoinColumn(nullable = false, name = "ruid", referencedColumnName = "uid")
-	public UserPO getReceiver(){
+	public UserPO getReceiver() {
 		return receiver;
 	}
 
-	public void setReceiver(UserPO receiver){
+	public void setReceiver(UserPO receiver) {
 		this.receiver = receiver;
 	}
 
 	@javax.persistence.ManyToOne(fetch = FetchType.LAZY)
 	@javax.persistence.JoinColumn(name = "suid", referencedColumnName = "uid")
-	public UserPO getSender(){
+	public UserPO getSender() {
 		return sender;
 	}
 
-	public void setSender(UserPO sender){
+	public void setSender(UserPO sender) {
 		this.sender = sender;
 	}
 
@@ -110,20 +102,20 @@ public class MessagePO implements Serializable {
 	}
 
 	@Column(nullable = false)
-	public String getContents(){
+	public String getContents() {
 		return contents;
 	}
 
-	public void setContents(String contents){
+	public void setContents(String contents) {
 		this.contents = contents;
 	}
 
 	@Column(nullable = false)
-	public Timestamp getCreateTime(){
+	public Timestamp getCreateTime() {
 		return createTime;
 	}
 
-	public void setCreateTime(Timestamp createTime){
+	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
 	}
 
@@ -135,17 +127,17 @@ public class MessagePO implements Serializable {
 	public void setStatus(short status) {
 		this.status = status;
 	}
-	
-	@Column(name="args")
-	public String getArgs(){
+
+	@Column(name = "args")
+	public String getArgs() {
 		return args;
 	}
 
-	public void setArgs(String args){
+	public void setArgs(String args) {
 		this.args = args;
 	}
 
-	@Column(name="company")
+	@Column(name = "company")
 	public int getCompany() {
 		return company;
 	}
@@ -162,5 +154,5 @@ public class MessagePO implements Serializable {
 	public void setDresult(short dresult) {
 		this.dresult = dresult;
 	}
-	
+
 }

@@ -31,7 +31,7 @@ jQuery(function($) {
 	});
 	
 	com.post(api.information.queryVactivity, {}, function(res){
-		vprize.items.vactivity.bindData(res.vactivitys, "vpid", "name");
+		vprize.items.vactivity.bindData(res.vactivitys, "vaid", "name");
 	});
 
 	var displayFunc  = (function(){
@@ -63,7 +63,7 @@ jQuery(function($) {
 			var propertyArr = [
 				["名称: ", v.name, "grey"],
 				["价格: ", v.price, "blue"],
-				["状态: ", v.isregist == 0 ? "启用" : "禁用", "red"]
+				["状态: ", v.status == 0 ? "启用" : "禁用", "red"]
 			];
 
 			$.each(propertyArr, function (index, value) {

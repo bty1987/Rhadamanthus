@@ -3,6 +3,7 @@ package com.fanglin.information.po;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.sql.Timestamp;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,6 +15,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.utils.Arith;
+import com.fanglin.utils.DateUtil;
 
 @Entity
 @Table(name = "awardrecord", catalog = "information")
@@ -52,6 +55,8 @@ public class AwardRecordPO implements java.io.Serializable {
 	private short type;
 	
 	private short onetype;
+	
+	private short isStock;
 
 	private float num;
 
@@ -123,6 +128,15 @@ public class AwardRecordPO implements java.io.Serializable {
 		this.onetype = onetype;
 	}
 	
+	@Column(name = "isStock")
+	public short getIsStock() {
+		return isStock;
+	}
+
+	public void setIsStock(short isStock) {
+		this.isStock = isStock;
+	}
+
 	@Column(name = "num")
 	public float getNum() {
 		return num;
@@ -176,6 +190,27 @@ public class AwardRecordPO implements java.io.Serializable {
 
 	public void setContent(String content) {
 		this.content = content;
+	}
+	
+	public AwardRecordPO init(AwardStockPO awardStock, UserPO creater, short type, short onetype, short isStock, Float unitPrice, Float num, String content){
+		
+		unitPrice = unitPrice == null ? 0 : unitPrice;
+		
+		setAwardStock(awardStock);
+		setCreater(creater);
+		
+		setType(type);
+		setOnetype(onetype);
+		setIsStock(isStock);
+		
+		setUnitPrice(unitPrice);
+		setNum(num);
+		setTotalPrice(Arith.mul(unitPrice, num));
+		
+		setOperateTime(DateUtil.getDateToTimestamp(new Date()));
+		setContent(content);
+		
+		return this;
 	}
 
 }

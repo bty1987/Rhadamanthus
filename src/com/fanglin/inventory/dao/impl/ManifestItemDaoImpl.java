@@ -29,8 +29,8 @@ public class ManifestItemDaoImpl extends DaoImpl<ManifestItemPO> implements Mani
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<ManifestItemPO> queryManifestItemByMid(long mId) {
-		return session().createCriteria(ManifestItemPO.class).add(Restrictions.eq(ManifestItemPO.COLUMN_MID_STR, mId)).list();
+	public List<ManifestItemPO> queryManifestItemByMid(long mid) {
+		return session().createCriteria(ManifestItemPO.class).add(Restrictions.eq(ManifestItemPO.COLUMN_MID_STR, mid)).list();
 	}
 
 	@SuppressWarnings("unchecked")

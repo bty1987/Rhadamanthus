@@ -172,7 +172,7 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 			throw new FLException(260021, "半价信息不存在");
 		}
 
-		DecorationPO decoration = decorationDao.queryDecorationByOrderId(servicePaymentVO.getDecoration().getOrderId());
+		DecorationPO decoration = decorationHolonomy.getDecoration();
 		
 		ServicePaymentPO servicePaymentPO = new ServicePaymentPO(new DecorationPO());
 		BeanUtil.copyProperties(servicePaymentVO, servicePaymentPO, Arrays.asList("decoration","creater","collecter","confirmer","serviceReceipt"));
@@ -185,7 +185,7 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 		servicePaymentPO.setType(ServicePaymentPO.COLUMN_STYPE_INT);
 		servicePaymentPO.setCompany(company);
 		
-		SystemConfigPO servicePaymentRatio = systemConfigDao.querySystemConfig("servicePaymentRatio", decoration.getCompany());
+		SystemConfigPO servicePaymentRatio = systemConfigDao.querySystemConfig(String.format("servicePaymentRatio%d", decoration.getType()), decoration.getCompany());
 		
 		float ratio = servicePaymentRatio != null ? Float.parseFloat(servicePaymentRatio.getValue()) : 1.1f;
 

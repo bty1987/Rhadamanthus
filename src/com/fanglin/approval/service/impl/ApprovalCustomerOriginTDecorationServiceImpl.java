@@ -11,7 +11,6 @@
 
 package com.fanglin.approval.service.impl;
 
-import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.List;
 
@@ -72,25 +71,16 @@ public class ApprovalCustomerOriginTDecorationServiceImpl implements ApprovalCus
 			throw new FLException(330001, "客源不存在");
 		}
 
-		ApprovalPO approval = approvalDao.queryApprovalByChange(status, ApprovalPO.APPROVAL_TYPE_CUSTOMER_ORIGIN_T_DECORATION_INT, String.valueOf(csid));
+		ApprovalPO approvalPO = approvalDao.queryApprovalByChange(status, ApprovalPO.APPROVAL_TYPE_CUSTOMER_ORIGIN_T_DECORATION_INT, String.valueOf(csid));
 
-		if (approval != null) {
+		if (approvalPO != null) {
 			throw new FLException(240004, "正在审批中,不能提交新审批");
 		}
-
 
 		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiver().getUserId());
 		UserPO sender = userDao.queryUserByUserId(userId);
 
-		ApprovalPO approvalPO = new ApprovalPO();
-
-		approvalPO.setSender(sender);
-		approvalPO.setReceiver(receiver);
-		approvalPO.setIdent(String.valueOf(approvalCustomerOriginTDecorationVO.getCsid()));
-		approvalPO.setType(ApprovalPO.APPROVAL_TYPE_CUSTOMER_ORIGIN_T_DECORATION_INT);
-		approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_INIT_INT);
-		approvalPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
-		approvalPO.setCompany(company);
+		approvalPO = new ApprovalPO().init(sender, receiver, String.valueOf(approvalCustomerOriginTDecorationVO.getCsid()), ApprovalPO.APPROVAL_TYPE_CUSTOMER_ORIGIN_T_DECORATION_INT, "", company);
 
 		approvalDao.save(approvalPO);
 

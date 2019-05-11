@@ -12,7 +12,6 @@
 package com.fanglin.construction.action;
 
 import java.text.ParseException;
-import java.util.HashMap;
 import java.util.List;
 
 import org.apache.struts2.convention.annotation.Action;
@@ -28,126 +27,103 @@ import com.fanglin.construction.vo.DrawLineVO;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+
 @ParentPackage("base")
 @Namespace("/")
 @Controller
-public class DrawLineAction extends BaseListAction{
+public class DrawLineAction extends BaseListAction {
 
-	private static final long serialVersionUID = -5435918796969497133L;
-	
+	private static final long serialVersionUID = 8955425553415726162L;
+
 	@Autowired
 	private DrawLineService drawLineService;
-	
+
 	private DrawLineVO drawLine;
-	
+
 	private List<DrawLineVO> drawLines;
-	
-	private HashMap<String, HashMap<String, Integer>> drawLineDateCount;
-	
-	private String date;
-	
+
+	private List<?> count;
+
 	@Action(value = "pageDrawLineForPlan", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageDrawLineForPlan() throws FLException{
-		
-		getFilters().add(new Filter("status", "0", "eq"));
-		
+	public String pageDrawLineForPlan() throws FLException {
+
+		getFilters().add(new Filter("status", String.valueOf(DrawLinePO.STATUS_QUEUE_INT), "eq"));
+
 		drawLines = drawLineService.pageDrawLine(getPaging(), getFilters(), queryCompany());
-	
+
 		return SUCCESS;
 	}
 
-	@Action(value = "pageDrawLineForAssign", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageDrawLineForAssign() throws FLException{
-		
-		getFilters().add(new Filter("status", "0", "ne"));
-		getFilters().add(new Filter("drawLineGroupName", drawLine.getDrawLineGroup().getName(), "eq"));
-		
-		drawLines = drawLineService.pageDrawLine(getPaging(), getFilters(), queryCompany());
-	
-		return SUCCESS;
-	}
-	
 	@Action(value = "queryDrawLine", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryDrawLine() throws FLException{
-		
+	public String queryDrawLine() throws FLException {
+
 		drawLines = drawLineService.queryDrawLine(getFilters(), queryCompany());
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value = "countDrawLineByDate", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String countDrawLineByDate() throws FLException, ParseException{
+
+	@Action(value = "countDrawLine", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String countDrawLine() throws FLException, ParseException {
 		
-		drawLineDateCount = drawLineService.countDrawLineByDate(drawLine, queryCompany());
-		
+		count = drawLineService.countDrawLine(drawLine, queryCompany());
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "applayDrawLine", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String applayDecorationOrderDrawLine() throws FLException{
-		
+	public String applayDecorationOrderDrawLine() throws FLException {
+
 		drawLineService.applayDrawLine(drawLine, queryUserId());
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "resetDrawLine", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String resetDrawLine() throws FLException{
-		
-		drawLineService.resetDrawLine(drawLine, queryCompany());
-	
+	public String resetDrawLine() throws FLException {
+
+		drawLineService.resetDrawLine(drawLine);
+
 		return SUCCESS;
 	}
-	
-	@Action(value = "setDrawLineForSuccess", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String setDrawLineForSuccess() throws FLException{
-		
-		drawLine.setStatus(DrawLinePO.DRAWLINE_STATUS_SUCCESS_SHORT);
-		drawLineService.updateDrawLineForStatus(drawLine, queryUserId(), queryCompany());
-	
+
+	@Action(value = "successDrawLine", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String setDrawLineForSuccess() throws FLException {
+
+		drawLineService.updateDrawLineForStatus(drawLine, queryUserId());
+
 		return SUCCESS;
 	}
-	
-	@Action(value = "setDrawLineForFailure", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String setDrawLineForFailure() throws FLException{
-		
-		drawLine.setStatus(DrawLinePO.DRAWLINE_STATUS_FAIL_SHORT);
-		
-		drawLineService.updateDrawLineForStatus(drawLine, queryUserId(), queryCompany());
-	
+
+	@Action(value = "failureDrawLine", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String setDrawLineForFailure() throws FLException {
+
+		drawLineService.updateDrawLineForStatus(drawLine, queryUserId());
+
 		return SUCCESS;
 	}
-	
-	public void setDrawLine(DrawLineVO drawLine){
+
+	public void setDrawLine(DrawLineVO drawLine) {
 		this.drawLine = drawLine;
 	}
 
-	public DrawLineVO getDrawLine(){
+	public DrawLineVO getDrawLine() {
 		return drawLine;
 	}
 
-	public void setDrawLines(List<DrawLineVO> drawLines){
+	public void setDrawLines(List<DrawLineVO> drawLines) {
 		this.drawLines = drawLines;
 	}
 
-	public List<DrawLineVO> getDrawLines(){
+	public List<DrawLineVO> getDrawLines() {
 		return drawLines;
 	}
 
-	public void setDrawLineDateCount(HashMap<String, HashMap<String, Integer>> drawLineDateCount){
-		this.drawLineDateCount = drawLineDateCount;
+	public List<?> getCount() {
+		return count;
 	}
 
-	public HashMap<String, HashMap<String, Integer>> getDrawLineDateCount(){
-		return drawLineDateCount;
-	}
-
-	public String getDate(){
-		return date;
-	}
-
-	public void setDate(String date){
-		this.date = date;
+	public void setCount(List<?> count) {
+		this.count = count;
 	}
 
 }

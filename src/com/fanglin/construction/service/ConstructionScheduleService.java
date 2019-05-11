@@ -11,6 +11,8 @@ public interface ConstructionScheduleService {
 	
 	public List<ConstructionScheduleVO> queryConstructionScheduleByCid(ConstructionScheduleVO constructionScheduleVO);
 	
+	public ConstructionScheduleVO queryConstructionScheduleByOrderIdASchedule(ConstructionScheduleVO constructionScheduleVO) throws FLException;
+	
 	public int beginConstructionSchedule(ConstructionScheduleVO constructionScheduleVO) throws FLException;
 	
 	public int finishConstructionSchedule(ConstructionScheduleVO constructionScheduleVO) throws FLException;

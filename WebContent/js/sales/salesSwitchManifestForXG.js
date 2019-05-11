@@ -233,21 +233,23 @@ $(function () {
             "manifest.manifestTime": com.focusPage('#layerAdd input[name="manifestTime"]').val(),
             "manifest.total": com.focusPage('#layerAdd input[name="total"]').val(),
             "manifest.attachment": "",
-            "manifest.type": 3,
+            "manifest.type": 3
         };
 
         $.extend(options, sids);
 
         var checkList = com.focusPage('input[name="siids"]:checked', '#resultListItem');
+        
         var $liline = checkList.parents('.oid');
         $.each(checkList, function (i, v) {
             var $this = $(v);
+           
             options["manifestItems[" + i + "].siid"] = $this.attr('data-siid');
             options["manifestItems[" + i + "].goods.gid"] = $this.attr('data-gid');            //– 商品编号
             options["manifestItems[" + i + "].color.cid"] = $this.attr('data-cid');  //– 颜色
             options["manifestItems[" + i + "].format.fid"] = $this.attr('data-fid');//– 规格
-            options["manifestItems[" + i + "].outstorehouse.shId"] = $this.parents('.oid').find('select.outStroehouse').val();//– 仓库
-            options["manifestItems[" + i + "].unitPrice"] = $this.parents('.oid').find('input.unitPrice').val();  //单价
+            options["manifestItems[" + i + "].outstorehouse.shid"] = $this.parents('.oid').find('select.outStroehouse').val();//– 仓库
+            options["manifestItems[" + i + "].outprice"] = $this.parents('.oid').find('input.unitPrice').val();  //单价
             options["manifestItems[" + i + "].num"] = $this.parents('.oid').find('input.inputNumber').val();           //– 数量
         });
 
@@ -298,7 +300,7 @@ $(function () {
                         ["原结算值:", v.rawCvalue, "blue", "rawCvalue"],
                         ["结算方式:", v.ctype == 0 ? "底价" : "点位", "red", "ctype"],
                         ["结算值:", v.cvalue, "blue", "cvalue"],
-                        ["备注:", v.comment, "grey", "conment"],
+                        ["备注:", v.comment, "grey", "conment"]
                     ];
 
                     var $label = $('<label></label>').addClass('control-label').css({
@@ -314,7 +316,7 @@ $(function () {
                     }).html('售价:');
                     var inputNum = $('<input>').addClass('unitPrice').css({
                         'margin-left': '20px',
-                        'width': '40%',
+                        'width': '40%'
                     }).appendTo(inputSpan).attr('readOnly', 'readOnly').val(v.price);
 
                     var inputSpanNum = $('<label></label>').addClass('pull-right').css({
@@ -330,19 +332,19 @@ $(function () {
                     var inputSpanOutStroehouse = $('<label></label>').addClass('pull-right').css({
                         'font-size': '14px',
                         'font-weight': 'bold',
-                        'margin-top': '-4px',
+                        'margin-top': '-4px'
                     }).html('出货仓库:');
 
                     var inputOutStroehouse = $('<select></select>').addClass('outStroehouse').css({
-                        'margin-left': '20px',
+                        'margin-left': '20px'
                     }).appendTo(inputSpanOutStroehouse);
 
-                    inputOutStroehouse.bindData(manifest.storehouses, 'shId', 'name');
+                    inputOutStroehouse.bindData(manifest.storehouses, 'shid', 'name');
 
                     var btnSpanSearchStroeStock = $('<label></label>').addClass('pull-right').css({
                         'font-size': '20px',
                         'font-weight': 'bold',
-                        'margin-top': '-4px',
+                        'margin-top': '-4px'
                     });
                     var btnSearchStroeStock = $('<button></button>').addClass('btn btn-xs btn-info btn-search').attr('name', 'search').css("margin", "0px 3px").html('库存').appendTo(btnSpanSearchStroeStock);
 
@@ -386,7 +388,7 @@ $(function () {
                             "goodsStorehouseStock.goods.gid": v.goods.gid,
                             "goodsStorehouseStock.color.cid": v.color.cid,
                             "goodsStorehouseStock.format.fid": v.format.fid,
-                            "goodsStorehouseStock.storehouse.shId": $liLine.find('select.outStroehouse').val(),
+                            "goodsStorehouseStock.storehouse.shid": $liLine.find('select.outStroehouse').val()
                         };
 
                         com.post(api.inventory.queryGoodsStorehouseStockByShidAGid, optionStroe, function (res) {

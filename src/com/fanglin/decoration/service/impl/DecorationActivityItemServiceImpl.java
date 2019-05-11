@@ -33,6 +33,7 @@ import com.fanglin.information.dao.AwardStockDao;
 import com.fanglin.information.po.AwardRecordPO;
 import com.fanglin.information.po.AwardStockPO;
 import com.fanglin.personel.dao.UserDao;
+import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
@@ -156,12 +157,15 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		decorationActivityItemPO.setReceiveUserId(userDao.queryUserByUserId(userId));
 		decorationActivityItemPO.setReceiveUserName(userName);
 		decorationActivityItemPO.setReceiveTime(DateUtil.getDateToTimestamp(new Date()));
-
+		
 		decorationActivityItemDao.update(decorationActivityItemPO);
+		
+		AwardStockPO awardStockPO = awardStockDao.get(decorationActivityItemPO.getAsid());
+		
+		UserPO creater = userDao.queryUserByUserId(userId);
 
 		if (decorationActivityItemPO.getIsStock() == DecorationActivityItemPO.ISSTOCK_CAL_INT) {
-
-			AwardStockPO awardStockPO = awardStockDao.get(decorationActivityItemPO.getAsid());
+			
 			float num = Arith.sub(awardStockPO.getNum(), decorationActivityItemPO.getNum());
 
 			if (num < 0) {
@@ -171,22 +175,12 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 			awardStockPO.setNum(num);
 
 			awardStockDao.update(awardStockPO);
-
-			AwardRecordPO awardRecordPO = new AwardRecordPO();
-			awardRecordPO.setAwardStock(awardStockPO);
-			awardRecordPO.setCreater(userDao.queryUserByUserId(userId));
-			awardRecordPO.setNum(decorationActivityItemPO.getNum());
-			awardRecordPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
-			awardRecordPO.setTotalPrice(Arith.mul(decorationActivityItemPO.getMoney(), decorationActivityItemPO.getNum()));
-			awardRecordPO.setUnitPrice(decorationActivityItemPO.getMoney());
-			awardRecordPO.setType(AwardRecordPO.TYPE_RECEIVE_INT);
-			awardRecordPO.setOnetype(AwardRecordPO.ONETYPE_DECORATION_INT);
-			awardRecordPO.setContent("领取活动奖品");
-			awardRecordPO.setOrderId(decorationActivityItemPO.getOrderId());
-
-			awardRecordDao.save(awardRecordPO);
 		}
 
+		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, creater, AwardRecordPO.TYPE_RECEIVE_INT, AwardRecordPO.ONETYPE_DECORATION_INT, decorationActivityItemPO.getIsStock(), decorationActivityItemPO.getMoney(), decorationActivityItemPO.getNum(), "领取活动奖品");
+		
+		awardRecordDao.save(awardRecordPO);
+		
 		return 0;
 	}
 
@@ -273,29 +267,22 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		
 		decorationActivityItemDao.update(decorationActivityItemPO);
 		
+		AwardStockPO awardStockPO = awardStockDao.get(decorationActivityItemPO.getAsid());
+		
+		UserPO creater = userDao.queryUserByUserId(userId);
+		
 		if (decorationActivityItemPO.getIsStock() == DecorationActivityItemPO.ISSTOCK_CAL_INT) {
-
-			AwardStockPO awardStockPO = awardStockDao.get(decorationActivityItemPO.getAsid());
+			
 			float num = Arith.add(awardStockPO.getNum(), decorationActivityItemPO.getNum());
 
 			awardStockPO.setNum(num);
 
 			awardStockDao.update(awardStockPO);
-
-			AwardRecordPO awardRecordPO = new AwardRecordPO();
-			awardRecordPO.setAwardStock(awardStockPO);
-			awardRecordPO.setCreater(userDao.queryUserByUserId(userId));
-			awardRecordPO.setNum(decorationActivityItemPO.getNum());
-			awardRecordPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
-			awardRecordPO.setTotalPrice(Arith.mul(decorationActivityItemPO.getMoney(), decorationActivityItemPO.getNum()));
-			awardRecordPO.setUnitPrice(decorationActivityItemPO.getMoney());
-			awardRecordPO.setType(AwardRecordPO.TYPE_REFUND_INT);
-			awardRecordPO.setOnetype(AwardRecordPO.ONETYPE_DECORATION_INT);
-			awardRecordPO.setContent(decorationActivityItemPO.getContent());
-			awardRecordPO.setOrderId(decorationActivityItemPO.getOrderId());
-
-			awardRecordDao.save(awardRecordPO);
 		}
+		
+		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, creater, AwardRecordPO.TYPE_REFUND_INT, AwardRecordPO.ONETYPE_DECORATION_INT, decorationActivityItemPO.getIsStock(), decorationActivityItemPO.getMoney(), decorationActivityItemPO.getNum(), "");
+		
+		awardRecordDao.save(awardRecordPO);
 		
 		return 0;
 	}

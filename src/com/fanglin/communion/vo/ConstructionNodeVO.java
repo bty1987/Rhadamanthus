@@ -19,6 +19,8 @@ public class ConstructionNodeVO implements Serializable{
 	private Short checkout;
 	
 	private Short sort;
+	
+	private Integer company;
 
 	public Long getCnid() {
 		return cnid;
@@ -74,6 +76,14 @@ public class ConstructionNodeVO implements Serializable{
 
 	public void setSort(Short sort) {
 		this.sort = sort;
+	}
+
+	public Integer getCompany() {
+		return company;
+	}
+
+	public void setCompany(Integer company) {
+		this.company = company;
 	}
 	
 }

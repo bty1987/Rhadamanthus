@@ -1968,13 +1968,54 @@ var Condition = function (api) {
                 validata: null
             }
         },
-        manifestTime: {
+        manifestCreateTime: {
             label: "创建时间",
+            type: "datePicker",
+            submitConfig: {
+                name: "createTime",
+                op: "between",
+                validata: null
+            }
+        },
+        manifestTime: {
+            label: "货单时间",
             type: "datePicker",
             submitConfig: {
                 name: "manifestTime",
                 op: "between",
                 validata: null
+            }
+        },
+        manifestType: {
+            label: "类型",
+            type: "select",
+            submitConfig: {
+                name: "manifestType",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {
+                url: api.ds.manifest,
+                postData: {},
+                listPath: "manifestType",
+                keyPath: "key",
+                valuePath: "value"
+            }
+        },
+        manifestStatus: {
+            label: "状态",
+            type: "select",
+            submitConfig: {
+                name: "manifestStatus",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {
+                url: api.ds.manifest,
+                postData: {},
+                listPath: "manifestStatus",
+                keyPath: "key",
+                valuePath: "value"
             }
         },
         CheckListGoodsName: {
@@ -2030,6 +2071,38 @@ var Condition = function (api) {
                 validate: null
             }
         },
+        purchaseStatus: {
+            label: "状态",
+            type: "select",
+            submitConfig: {
+                name: "purchaseStatus",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {
+                url: api.ds.manifest,
+                postData: {},
+                listPath: "purchaseStatus",
+                keyPath: "key",
+                valuePath: "value"
+            }
+        },
+        purchaseBalanceStatus: {
+            label: "结算状态",
+            type: "select",
+            submitConfig: {
+                name: "purchaseBalanceStatus",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {
+                url: api.ds.manifest,
+                postData: {},
+                listPath: "purchaseBalanceStatus",
+                keyPath: "key",
+                valuePath: "value"
+            }
+        },
         createrName: {
             label: "创建人",
             type: "autofill",
@@ -2040,10 +2113,10 @@ var Condition = function (api) {
             },
             dataSource: {
                 url: api.personel.queryUserByPinyin,
-                postData: {"user.status":"" },
+                postData: {"user.status": ""},
                 listPath: "userBases",
-                keyPath: "userId",//后台i
-                valuePath: "currentName"//前台
+                keyPath: "userId",
+                valuePath: "currentName"
             }
         },
         accessoriesNo: {

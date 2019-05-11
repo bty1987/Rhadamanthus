@@ -15,7 +15,7 @@ public class PurchaseAmountPO implements java.io.Serializable {
 	
 	public static final String COLUMN_MONTH_STR = "month";
 	
-	private long paId;
+	private long paid;
 	
 	private String month;
 	
@@ -23,13 +23,13 @@ public class PurchaseAmountPO implements java.io.Serializable {
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "paId")
-	public long getPaId() {
-		return this.paId;
+	@Column(name = "paid")
+	public long getPaid() {
+		return paid;
 	}
 
-	public void setPaId(long paId) {
-		this.paId = paId;
+	public void setPaid(long paid) {
+		this.paid = paid;
 	}
 
 	@Column(name = "month")

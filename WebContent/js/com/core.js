@@ -325,7 +325,7 @@
 
         $.each(com.validator, function (k, value) {
 
-            $(_scopeID + " ." + value.type + ":visible").each(function (i, v) {
+            com.focusPage(_scopeID + " ." + value.type + ":visible").each(function (i, v) {
 
                 var $this = $(v);
 
@@ -557,6 +557,43 @@
             monthNames: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月']
         }
     },
+    calendardefault: {
+        buttonText: {
+            today: '今天', month: '月', week: '周', day: '日', prev: '上一月', next: '下一月'
+        },
+        dayNames: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"],
+        dayNamesShort: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"],
+        monthNames: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"]
+    },
+    initTypeahead: function (id, url, name, args, result, key, value, callback){
+        
+        var $ele = com.focusPage('#' + id).typeahead({
+            url: url,
+            list: [],
+            postData: {},
+            source: function (query, process) {
+                var options = {};
+                options[name] = query;
+                com.post(this.options.url, $.extend(options, args), $.proxy(this.options.callback, this));
+            }, matcher: function (item) {
+                return true;
+            }, callback: function (data) {
+                this.options.list = data[result];
+                this.flprocess(this.options.list, key, value);
+            },
+            isResultTypeMap: true,
+            flupdater: function (k, v) {
+            	if(callback) return callback(this.options.list, k, v);
+            	else return v;
+            }
+    	});
+    },
+    updateTypeahead: function(id, key, value){
+        com.focusPage('#' + id).val(value).attr('data-typeahead-key', key);
+    },
+    cleanTypeahead: function(id){
+        com.focusPage('#' + id).val("").removeAttr('data-typeahead-key');
+    },
     initChosen: function (id, url, name, post, result, key, value) {
 
         var $e = com.focusPage('#' + id);
@@ -658,8 +695,7 @@
                     divM.append(div1,div2).appendTo($('.layui-layer-title'));
 
                 }
-                }
-            );
+            });
 
             layerPra.skin = "layui-layer-hong"
 

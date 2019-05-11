@@ -20,6 +20,8 @@ public class AwardRecordVO implements Serializable {
 	private Short type;
 	
 	private Short onetype;
+	
+	private Short isStock;
 
 	private Float num;
 
@@ -83,6 +85,14 @@ public class AwardRecordVO implements Serializable {
 		this.onetype = onetype;
 	}
 	
+	public Short getIsStock() {
+		return isStock;
+	}
+
+	public void setIsStock(Short isStock) {
+		this.isStock = isStock;
+	}
+
 	public Float getNum() {
 		return num;
 	}

@@ -14,27 +14,26 @@ import com.fanglin.inventory.vo.AccessoriesVO;
 import com.fanglin.inventory.vo.ManifestVO;
 import com.fanglin.utils.BeanUtil;
 
-
 @Service("accessoriesManifestService")
 @Transactional(readOnly = true)
 public class AccessoriesManifestServiceImpl implements AccessoriesManifestService {
-	
+
 	@Autowired
 	private AccessoriesManifestDao accessoriesManifestDao;
 
 	@Override
 	public ManifestVO queryManifestByAid(AccessoriesVO accessoriesVO) {
-		
+
 		AccessoriesManifestPO accessoriesManifestPO = accessoriesManifestDao.queryManifestByAid(accessoriesVO.getAid());
-		
+
 		ManifestPO manifestPO = accessoriesManifestPO.getManifest();
-		
+
 		ManifestVO manifestVO = new ManifestVO();
-		
-		BeanUtil.copyProperties(manifestPO, manifestVO, Arrays.asList("createUser","quoteManifest"));
-		
+
+		BeanUtil.copyProperties(manifestPO, manifestVO, Arrays.asList("creater", "quoteManifest"));
+
 		return manifestVO;
-				
+
 	}
 
 }

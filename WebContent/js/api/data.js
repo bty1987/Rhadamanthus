@@ -85,10 +85,8 @@ $.extend(api, {data: {
 
     pageConstructionNode:{url:"pageConstructionNode.do"},
     queryConstructionNode:{url:"queryConstructionNode.do"},
-    queryConstructionNodeByCid:{url:"queryConstructionNodeByCid.do"},
     addConstructionNode:{url:"addConstructionNode.do"},
     updateConstructionNodeForStatus:{url:"updateConstructionNodeForStatus.do"},
-    updateConstructionNodeCompany:{url:"updateConstructionNodeCompany.do"},
 	
     queryPaymentScaleByCid:{url:"queryPaymentScaleByCid.do"},
     addPaymentScale: {url:"addPaymentScale.do"},

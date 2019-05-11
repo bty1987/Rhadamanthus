@@ -68,7 +68,6 @@
                                 <span>添加</span>
                             </button>
                             <button id="submit" type="button" class="btn btn-success pull-left col-xs-4">
-
                                 <span>提交</span>
                             </button>
                             <button id="refresh" type="button" class="btn btn-danger pull-left col-xs-4">
@@ -108,9 +107,16 @@
                                         <input id="orderAddr" type="text" class="order_inputinfo" readonly="readonly" />
                                     </div>
                                 </div>
-
                             </div>
+                            
                             <div class="form-group">
+                                <div class="lable_input col-xs-4">
+                                    <label for="fetchTime" class="col-sm-3 control-label no-padding-right orange">施工环节</label>
+                                    <div class="col-sm-9">
+                                        <select id="schedule" type="text" class="col-sm-9 v_required" placement="left"></select>
+                                    </div>
+                                </div>
+                            
                                 <div class="lable_input col-xs-4">
                                     <label for="fetchTime" class="col-sm-3 control-label no-padding-right orange">领取时间</label>
                                     <div class="col-sm-9">
@@ -123,7 +129,7 @@
                 </div>
                 
                 <div class="form-horizontal">
-                    <ul id="accessoriesItemList" class="widget-main col-xs-11" style="overflow: auto; height: 520px;width: 98%;"></ul>
+                    <ul id="accessoriesItemList" class="widget-main col-xs-12" style="margin: 0px"></ul>
                 </div>
             </div>
         </div>

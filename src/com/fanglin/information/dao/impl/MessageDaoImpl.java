@@ -44,7 +44,7 @@ public class MessageDaoImpl extends DaoImpl<MessagePO> implements MessageDao {
 		query.add(Restrictions.eq("company", company));
 		query.createAlias("receiver", "receiver");
 		query.add(Restrictions.eq("receiver.userId", userId));
-		query.add(Restrictions.eq("status", MessagePO.MESSAGE_STATUS_UNREAD_STR));
+		query.add(Restrictions.eq("status", MessagePO.STATUS_UNREAD_INT));
 
 		return query.list();
 	}
@@ -54,7 +54,7 @@ public class MessageDaoImpl extends DaoImpl<MessagePO> implements MessageDao {
 
 		String sql = "select count(*) from information.message where ruid = :ruid and status = :status and company = :company";
 
-		BigInteger count = (BigInteger) session().createSQLQuery(sql).setInteger("status", MessagePO.MESSAGE_STATUS_UNREAD_STR).setInteger("ruid", uid).setInteger("company", company).uniqueResult();
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setInteger("status", MessagePO.STATUS_UNREAD_INT).setInteger("ruid", uid).setInteger("company", company).uniqueResult();
 
 		return count.intValue();
 	}
@@ -62,7 +62,7 @@ public class MessageDaoImpl extends DaoImpl<MessagePO> implements MessageDao {
 	@Override
 	public int updateMessageForRead(List<Integer> mids) {
 		String sql = "update information.message set status = :status where mid in :mids";
-		session().createSQLQuery(sql).setInteger("status", MessagePO.MESSAGE_STATUS_READED_STR).setParameterList("mids", mids).executeUpdate();
+		session().createSQLQuery(sql).setInteger("status", MessagePO.STATUS_READED_INT).setParameterList("mids", mids).executeUpdate();
 
 		return 0;
 	}

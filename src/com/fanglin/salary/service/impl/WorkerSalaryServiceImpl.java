@@ -177,7 +177,7 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 
 			ConstructionSchedulePO constructionSchedulePO = constructionScheduleDao.get(workerSalaryVO.getCsid());
 
-			if (constructionSchedulePO.getStatus() != WorkerSalaryPO.STATUS_CONSTRUCTION_INT) {
+			if (constructionSchedulePO.getStatus() != ConstructionSchedulePO.STATUS_FINISH_INT) {
 				throw new FLException(280003, "施工环节未完工");
 			}
 
@@ -467,7 +467,7 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 
 			ConstructionSchedulePO constructionSchedulePO = constructionScheduleDao.get(workerSalaryVO.getCsid());
 
-			if (constructionSchedulePO.getStatus() != WorkerSalaryPO.STATUS_CONSTRUCTION_INT) {
+			if (constructionSchedulePO.getStatus() != ConstructionSchedulePO.STATUS_FINISH_INT) {
 				throw new FLException(280003, "施工环节未完工");
 			}
 

@@ -5,8 +5,19 @@ $(function () {
 		items: {
 			
 		},
-		manifestType: ['进货', '进退', '出货', '出返', '调拨', '采购', '辅料', '套合', '套拆']
+		manifestType: [],
+		status: {}
 	}
+	
+	com.post(api.ds.manifest, {}, function(res){
+        $.each(res.manifestType, function(i, v){
+        	manifest.manifestType.push(v.value);
+        });
+        
+        $.each(res.manifestStatus, function(i, v){
+        	manifest.status[v.key] = v.value;
+        });
+    }, null, false);
 
     var displayFunc = (function () {
 
@@ -33,9 +44,9 @@ $(function () {
             var $liTitle = $('<li></li>').addClass('line table-title');
 
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>'));
-            var $contentWrap = $('<div></div>').addClass('line-wrap  content col8');
+            var $contentWrap = $('<div></div>').addClass('line-wrap  content col7');
 
-            var titleName = "编号,创建时间,创建人,货单时间,总金额,状态,备注,类型";
+            var titleName = "编号,创建人,创建时间,货单时间,状态,类型,备注";
 
             $.each(titleName.split(','), function (i, v) {
                 var $cell = $('<div></div>').addClass('cell').html(v);
@@ -54,17 +65,16 @@ $(function () {
             var $liLine = $('<li></li>').addClass('line');
 
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(i + 1));
-            var $contentWrap = $('<div></div>').addClass('line-wrap content col8');
+            var $contentWrap = $('<div></div>').addClass('line-wrap content col7');
 
             var propertyArr = [
                 [v.code, 'blue'],
-                [v.createTime, 'green'],
                 [v.creater.currentName ? v.creater.currentName : '---', 'grey'],
+                [v.createTime, 'green'],
                 [v.manifestTime, 'green'],
-                [v.total, 'blue'],
-                [v.status == "0" ? "初始" : "已确认", 'red'],
-                [v.comment == null ? "" : v.comment, 'grey'],
-                [manifest.manifestType[parseInt(v.type) - 1] ? manifest.manifestType[parseInt(v.type) - 1] : '---','red']
+                [manifest.status[v.status], 'red'],
+                [manifest.manifestType[parseInt(v.type) - 1] ? manifest.manifestType[parseInt(v.type) - 1] : '---','red'],
+                [v.comment == null ? "" : v.comment, 'grey']
             ];
 
             $.each(propertyArr, function (index, v) {
@@ -199,7 +209,7 @@ $(function () {
     })();
 
 
-    var _condArr = ["manifestCode", "createrName", "manifestTime"];
+    var _condArr = ["manifestCode", "createrName", "manifestCreateTime", "manifestTime", "manifestType", "manifestStatus"];
 
     var seacher = new Searcher();
 
@@ -239,9 +249,10 @@ $(function () {
                     ['规格','format.info'],
                     ['进货仓库','instorehouse.name'],
                     ['出货仓库','outstorehouse.name'],
+                    ['入库价','inprice'],
+                    ['出库价','outprice'],
                     ['数量','num'],
                     ['件数','goods.pieceNum'],
-                    ['采购价','unitPrice'],
                     ['备注','comment']
                 ],
                 list: res.manifestItems

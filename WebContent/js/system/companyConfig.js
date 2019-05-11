@@ -278,7 +278,7 @@ jQuery(function ($) {
         }, null, false);
     }
 
-    com.post(api.data.queryConstructionNodeByCid, {"constructionNodeCompany.cid": params.company.cid}, function(res){
+    com.post(api.data.queryConstructionNode, {}, function(res){
         displayFunc.init("constructionNode", ["公司名称","节点名称"], res.constructionNodes,  "constructionNode");
     }, null, false);
 

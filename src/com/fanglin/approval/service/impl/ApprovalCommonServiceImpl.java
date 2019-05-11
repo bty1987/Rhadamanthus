@@ -19,20 +19,19 @@ import com.fanglin.approval.service.ApprovalCommonService;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.dingding.service.ApprovalService;
 
-
 @Service("approvalCommonService")
 public class ApprovalCommonServiceImpl implements ApprovalCommonService {
-	
+
 	@Autowired
 	private ApprovalService approvalDDService;
 
 	@Override
 	public int submitApprovalForDing(String code, String forms, String userId, int company) throws FLException {
-		
+
 		JSONArray form = JSONArray.parseArray(forms);
-		
+
 		approvalDDService.initiateApproval(code, userId, null, null, null, form, company);
-		
+
 		return 0;
 	}
 

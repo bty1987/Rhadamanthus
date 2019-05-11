@@ -72,57 +72,57 @@ public class MessageServiceImpl implements MessageService {
 	}
 
 	@Override
-	public MessageVO queryMessageByMid(MessageVO message){
-		
+	public MessageVO queryMessageByMid(MessageVO message) {
+
 		MessagePO messagePO = messageDao.get(message.getMid());
-		
+
 		MessageVO messageVO = convertBean(messagePO);
-		
+
 		return messageVO;
 	}
-	
+
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void sendMessage(MessageVO messageVO, int company) throws FLException {
 
 		if (messageVO.getSender() != null) {
-		 sendMessage(messageVO.getReceiver().getUserId(),messageVO.getSender().getUserId(),messageVO.getContents(),messageVO.getType(),company);		
-		}else{
-			sendMessage(messageVO.getReceiver().getUserId(),"",messageVO.getContents(),messageVO.getType(),company);
+			sendMessage(messageVO.getReceiver().getUserId(), messageVO.getSender().getUserId(), messageVO.getContents(), messageVO.getType(), company);
+		} else {
+			sendMessage(messageVO.getReceiver().getUserId(), "", messageVO.getContents(), messageVO.getType(), company);
 		}
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void sendMessage(String receiver, String sender, String contents, short type,int company) throws FLException {
-		
+	public void sendMessage(String receiver, String sender, String contents, short type, int company) throws FLException {
+
 		MessagePO messagePO = new MessagePO();
 
 		messagePO.setReceiver(userDao.queryUserByUserId(receiver));
 		messagePO.setType(type);
 		messagePO.setContents(contents);
 		messagePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-		messagePO.setStatus(MessagePO.MESSAGE_STATUS_UNREAD_STR);
+		messagePO.setStatus(MessagePO.STATUS_UNREAD_INT);
 		messagePO.setCompany(company);
-		
+
 		String userName = "";
-	   
-		if (!sender.equals("") && sender !=null) {
+
+		if (!sender.equals("") && sender != null) {
 			UserPO userPO = userDao.queryUserByUserId(sender);
 			userName = userPO.getUserName();
 			messagePO.setSender(userPO);
 		}
 
 		messageDao.save(messagePO);
-		
-		messageDDService.sendMessage(receiver, userName, contents,messagePO.getMid(),company);
+
+		messageDDService.sendMessage(receiver, userName, contents, messagePO.getMid(), company);
 
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void updateMessageForRead(List<Integer> ids) {
-	
+
 		messageDao.updateMessageForRead(ids);
 	}
 

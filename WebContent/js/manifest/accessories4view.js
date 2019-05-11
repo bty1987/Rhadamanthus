@@ -1,11 +1,7 @@
 
 $(function(){
-    /**
-     * 回调函数必须提供 init(tableId, result.list)方法
-     * tableId ，用来显示的div的id
-     * result.list 列表的json数组
-     * */
-    var displayFunc  = (function(){
+
+	var displayFunc  = (function(){
 
         var renderList = function(tableId,listData){
         	
@@ -31,9 +27,9 @@ $(function(){
             var $liTitle = $('<li></li>').addClass('line table-title');
 
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index'));
-            var $contentWrap = $('<div></div>').addClass('line-wrap  content col12');
+            var $contentWrap = $('<div></div>').addClass('line-wrap  content col13');
 
-            var titleName = '商品编号,名称,品类,品牌,单位,颜色,规格,进货仓库,出货仓库,数量,件数,采购价';
+            var titleName = '商品编号,名称,品类,品牌,单位,颜色,规格,进货仓库,出货仓库,件数,入库价,出库价,数量';
 
             $.each(titleName.split(','), function (i, v) {
                 $('<div></div>').addClass('cell').html(v).appendTo($contentWrap);
@@ -49,7 +45,7 @@ $(function(){
             var $liLine = $('<li></li>').addClass('line');
 
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(i + 1));
-            var $contentWrap = $('<div></div>').addClass('line-wrap  content col12');
+            var $contentWrap = $('<div></div>').addClass('line-wrap  content col13');
             
             var propertyArr = [
                 [v.goods.no,'blue'],
@@ -61,9 +57,10 @@ $(function(){
                 [v.format.info,'grey'],
                 [v.instorehouse.name,'grey'],
                 [v.outstorehouse.name,'grey'],
-                [v.num,'blue'],
                 [v.goods.pieceNum,'blue'],
-                [v.unitPrice,'blue']
+                [v.inprice,'blue'],
+                [v.outprice,'blue'],
+                [v.num,'blue']
             ];
             
             $.each(propertyArr, function (i, v) {

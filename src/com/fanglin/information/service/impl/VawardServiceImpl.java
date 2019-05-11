@@ -108,7 +108,7 @@ public class VawardServiceImpl implements VawardService {
 		EmemberPO ememberPO = ememberDao.queryEmemberByNo(no);
 
 		if (ememberPO != null) {
-			messageService.sendMessage(ememberPO.getUnionId(), "活动奖品", no, String.format("活动奖品: %s(%.2f), 领取成功", vprizePO.getName(), vawardVO.getNum()));
+			messageService.sendMessage(ememberPO.getUnionId(), "活动奖品", no, String.format("活动奖品: %s, 数量: %.2f, 领取成功", vprizePO.getName(), vawardVO.getNum()));
 		}
 		
 		return 0;
