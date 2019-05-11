@@ -19,10 +19,14 @@ public class ManifestItemVO implements java.io.Serializable {
 	private StorehouseVO instorehouse;
 
 	private StorehouseVO outstorehouse;
+	
+	private Float inprice;
+	
+	private Float outprice;
 
 	private Float num;
-
-	private Float unitPrice;
+	
+	private Float surplus;
 
 	private String comment;
 
@@ -109,6 +113,22 @@ public class ManifestItemVO implements java.io.Serializable {
 		this.outstorehouse = outstorehouse;
 	}
 
+	public Float getInprice() {
+		return inprice;
+	}
+
+	public void setInprice(Float inprice) {
+		this.inprice = inprice;
+	}
+
+	public Float getOutprice() {
+		return outprice;
+	}
+
+	public void setOutprice(Float outprice) {
+		this.outprice = outprice;
+	}
+
 	public Float getNum() {
 		return this.num;
 	}
@@ -117,12 +137,12 @@ public class ManifestItemVO implements java.io.Serializable {
 		this.num = num;
 	}
 
-	public Float getUnitPrice() {
-		return unitPrice;
+	public Float getSurplus() {
+		return surplus;
 	}
 
-	public void setUnitPrice(Float unitPrice) {
-		this.unitPrice = unitPrice;
+	public void setSurplus(Float surplus) {
+		this.surplus = surplus;
 	}
 
 	public String getComment() {
@@ -133,7 +153,7 @@ public class ManifestItemVO implements java.io.Serializable {
 		this.comment = comment;
 	}
 	
-	public ManifestItemVO init(long gid, long cid, long fid, Long in, Long out, float unitPrice, float num){
+	public ManifestItemVO init(long gid, long cid, long fid, Long in, Long out, float inprice, float outprice, float num){
 		
 		setGoods(new GoodsVO(gid));
 		setColor(new ColorVO(cid));
@@ -142,7 +162,8 @@ public class ManifestItemVO implements java.io.Serializable {
 		if(in != null) setInstorehouse(new StorehouseVO(in));
 		if(out != null) setOutstorehouse(new StorehouseVO(out));
 		
-		setUnitPrice(unitPrice);
+		setInprice(inprice);
+		setOutprice(outprice);
 		setNum(num);
 		
 		return this;

@@ -85,7 +85,7 @@ public class MessageService {
 //			throw new FLException(json.getInteger("errcode"),  json.getString("errmsg"));
 		}
 		
-		return json == null ? MessagePO.MESSAGE_DRESULT_FAIL_STR : json.getShort("errcode");
+		return json == null ? MessagePO.DRESULT_FAIL_INT : json.getShort("errcode");
 	}
 	
 	public int sendMessage(int type, String name, String orderId, float money, String comment){

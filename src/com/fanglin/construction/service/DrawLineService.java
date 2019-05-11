@@ -11,8 +11,6 @@
 
 package com.fanglin.construction.service;
 
-import java.text.ParseException;
-import java.util.HashMap;
 import java.util.List;
 
 import com.fanglin.construction.vo.DrawLineVO;
@@ -22,16 +20,16 @@ import com.fanglin.utils.Paging;
 
 public interface DrawLineService {
 	
-	public List<DrawLineVO> pageDrawLine(Paging paging, List<Filter> filters, Integer company);
+	public List<DrawLineVO> pageDrawLine(Paging paging, List<Filter> filters, int company);
 	
-	public List<DrawLineVO> queryDrawLine(List<Filter> filters, Integer company) throws FLException;
+	public List<DrawLineVO> queryDrawLine(List<Filter> filters, int company) throws FLException;
 	
-	public HashMap<String, HashMap<String, Integer>> countDrawLineByDate(DrawLineVO decorationOrderDrawLineVO, Integer company) throws ParseException;
+	public List<?> countDrawLine(DrawLineVO drawLineVO, int company);
 
 	public int applayDrawLine(DrawLineVO drawLine, String userId) throws FLException;
 
-	public int resetDrawLine(DrawLineVO drawLine, Integer company) throws FLException;
+	public int resetDrawLine(DrawLineVO drawLine) throws FLException;
 
-	public int updateDrawLineForStatus(DrawLineVO drawLine, String userId, Integer company) throws FLException;
+	public int updateDrawLineForStatus(DrawLineVO drawLine, String userId) throws FLException;
 
 }

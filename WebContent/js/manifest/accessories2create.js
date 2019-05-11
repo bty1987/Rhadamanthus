@@ -2,44 +2,78 @@ jQuery(function () {
 
     if (jQuery().datepicker) {
         com.focusPage('.date-picker').datepicker({
-            format: 'yyyy-mm-dd',//yyyy-mm-dd hh:ii,
+            format: 'yyyy-mm-dd',
             autoclose:true
         });
     }
 
     var accessories = {
-        typeahead: {
-            goodes: "goodes",
-            goods: "goods",
-            gid: "goods.gid",
-            pricegid: "price.gid"
-        },
-        gids: null,
-        gtype: null,
-        userId: null,
-        salesmanid: null,
-        flag: true,
-        fetchTime:null,
         
-        postData: {},
+        postData: {
+            orderId: null,
+            supervisor: null,
+            house: null,
+            fetchTime:null,
+        },
+        itemlist: com.focusPage('#accessoriesItemList'),
+        leftitems: {
+            goodsHidden: com.focusPage('#goodsHidden'),
+            goodsName: com.focusPage('#goodsName'),
+            goodsNo: com.focusPage('#goodsNo'),
+            category: com.focusPage('#category'),
+            brand: com.focusPage('#brand'),
+            measurementUnit: com.focusPage('#measurementUnit'),
+            num: com.focusPage('#num')
+        },
+        rightitems: {
+            orderId: com.focusPage('#orderId'),
+            supervisorName: com.focusPage('#supervisorName'),
+            orderAddr: com.focusPage('#orderAddr'),
+            schedule: com.focusPage('#schedule'),
+            fetchTime: com.focusPage('#fetchTime')
+        },
+        constructionNode: {}
     };
+    
+    com.post(api.data.queryConstructionNode, {}, function(res){
+        $.each(res.constructionNodes, function(i, v){
+            accessories.constructionNode[v.sort] = v.name;
+        });
+    });
+    
+    com.initAutoFill("goodsName", api.inventory.queryGoodsByName, "goods.pinyin", {}, "goodes", "gid", "name", function(list, k, v){
+    	if(com.focusPage('li[data-gid="' + k +'"]').length != 0){
+            com.showAlert(com.error, "商品已存在");
+            return "";
+        }
+    	
+        $.each(list, function (index, val) {
+            
+            if (val.gid == k) {
+                
+                accessories.leftitems.goodsHidden.attr('data-gid', val.gid).attr('data-type', val.type).attr('data-selling', val.selling);
+                
+                accessories.leftitems.goodsNo.attr('data-no', val.no).val(val.no);
+                accessories.leftitems.category.attr('data-category', val.category).val(val.category);
+                accessories.leftitems.brand.attr('data-brand', val.brand).val(val.brand);
+                accessories.leftitems.measurementUnit.attr('data-measurementUnit', val.measurementUnit).val(val.measurementUnit);
+            }
+        });
 
-    //销售项区 自动赋值
-    com.focusPage('#goodsName').typeahead({
+        return v;
+    });
+    
+    /*
+    accessories.leftitems.goodsName.typeahead({
         url: api.inventory.queryGoodsByName,
         list: [],
         postData: {},
         source: function (query, process) {
-            var params = $.extend({
-                "goods.name": query,
-                "goods.pinyin": query,
-                "goods.no": query
-            }, this.options.postData);
+            var params = {"goods.pinyin": query};
             com.post(this.options.url, params, $.proxy(this.options.callback, this));
         }, matcher: function (item) {
             return true;
         }, callback: function (data) {
-            accessories.flag = true;
             this.options.list = data['goodes'];
             this.flprocess(this.options.list, 'gid', 'name');
         },
@@ -47,48 +81,48 @@ jQuery(function () {
         flupdater: function (k, v) {
 
             if(com.focusPage('li[data-gid="' + k +'"]').length != 0){
-        		com.showAlert(com.error, "商品已存在");
-        		v = ""
-        		return false;
-        	}
+                com.showAlert(com.error, "商品已存在");
+                return "";
+            }
             
             var list = this.options.list;
 
             $.each(list, function (index, val) {
-            	
+                
                 if (val.gid == k) {
-                	
-                    com.focusPage("#goodsHidden").attr('data-gid', val.gid).attr('data-type', val.type);
                     
-                    com.focusPage('#goodsName').attr('data-name', val.name);
-                    com.focusPage('#goodsNo').attr('data-no',val.no).val(val.no);
-                    com.focusPage('#category').attr('data-category', val.category).val(val.category);
-                    com.focusPage('#brand').attr('data-brand', val.brand).val(val.brand);
-                    com.focusPage('#measurementUnit').attr('data-measurementUnit', val.measurementUnit).val(val.measurementUnit);
+                    accessories.leftitems.goodsHidden.attr('data-gid', val.gid).attr('data-type', val.type).attr('data-selling', val.selling);
+                    
+                    accessories.leftitems.goodsNo.attr('data-no', val.no).val(val.no);
+                    accessories.leftitems.category.attr('data-category', val.category).val(val.category);
+                    accessories.leftitems.brand.attr('data-brand', val.brand).val(val.brand);
+                    accessories.leftitems.measurementUnit.attr('data-measurementUnit', val.measurementUnit).val(val.measurementUnit);
                 }
             });
 
             return v;
         }
     });
+    */
 
     com.focusPage("#add").click(function () {
-    	
-    	if(com.validate("left", "left")){
-    		return false;
-    	}
-    	
-    	var gid = com.focusPage('#goodsHidden').attr('data-gid');
-    	var type = com.focusPage('#goodsHidden').attr('data-type');
-    	
-    	var name = com.focusPage('#goodsName').attr('data-name');
-    	var no = com.focusPage('#goodsNo').attr('data-no');
-    	var category = com.focusPage('#category').val();
-    	var brand = com.focusPage('#brand').val();
-    	var measurementUnit = com.focusPage('#measurementUnit').val();
-    	var num = com.focusPage('#num').val();
-    	
-        var $liList = $('<li></li>').addClass('list-group-item').attr("data-gid", gid).attr("data-num", num);
+        
+        if(com.validate("left", "left")){
+            return false;
+        }
+        
+        var gid = accessories.leftitems.goodsHidden.attr('data-gid');
+        var type = accessories.leftitems.goodsHidden.attr('data-type');
+        var selling = accessories.leftitems.goodsHidden.attr('data-selling');
+        
+        var name = accessories.leftitems.goodsName.val();
+        var no = accessories.leftitems.goodsNo.val();
+        var category = accessories.leftitems.category.val();
+        var brand = accessories.leftitems.brand.val();
+        var measurementUnit = accessories.leftitems.measurementUnit.val();
+        var num = accessories.leftitems.num.val();
+        
+        var $liList = $('<li></li>').addClass('list-group-item').attr("data-gid", gid).attr("data-num", num).attr("data-selling", selling);
         var $h4 = $('<h4></h4>').html(name + ' ' + no).attr('gid', gid);
 
         var $delete = $('<div></div>').addClass('pull-right action-button').append($('<a></a>').addClass('btn btn-danger btn-minier').html('删除'));
@@ -97,33 +131,25 @@ jQuery(function () {
         });
 
         $h4.append($delete).appendTo($liList);
-        if (accessories.gtype == 1) {
+        
+        if (type == 1) {
             $h4.append($query);
         }
         
         $liList.append(addSpan('品类 : ', 's_category', category, " ", 'b_category', null)).append(addSpan('品牌 : ', 's_brand', brand, " ", 'b_brand', null)).append(addSpan('单位 : ', 's_unit', measurementUnit, " ", 'b_unit', null)).append(addSpan('数量 : ', 's_number', num, 'red', 'b_number'));
-        com.focusPage('#accessoriesItemList').append($liList);
         
-        com.focusPage('#left').find('input').val("");
-        com.focusPage('#left').find('select').empty();
-        com.focusPage('#goodsName').removeAttr('data-name');
-        com.focusPage('#category').removeAttr('data-category');
-        com.focusPage('#brand').removeAttr('data-brand');
-        com.focusPage('#measurementUnit').removeAttr('data-measurementUnit');
+        accessories.itemlist.append($liList);
+        
+        com.cleanItems(accessories.leftitems);
         
         $delete.click(function () {
-        	
-            var $this = $(this);
-            
-            $this.parents('.list-group-item').remove();
-            
+            $(this).parents('.list-group-item').remove();
             com.focusPage('.list-group-item:last').css("border-bottom", "solid 1px");
         });
     });
 
     com.focusPage('#refresh').click(function () {
-        com.focusPage('#left').find('input').popover('destroy').css('border-color', "#b5b5b5").val("");
-        com.focusPage('#left').find('select').empty();
+        com.cleanItems(accessories.leftitems);
     });
 
     function addSpan(sValue, sclass, bValue, color, attrs, addData) {
@@ -142,66 +168,78 @@ jQuery(function () {
         return $span;
     }
     
-    com.focusPage('#orderId').on("change", function () {
-    	
-    	var orderId = com.focusPage('#orderId').val();
+    accessories.rightitems.orderId.on("change", function () {
+        
+        var orderId = accessories.rightitems.orderId.val();
 
         var option = {
-        	"decoration.orderId": orderId
+            "decoration.orderId": orderId
         };
         
         com.post(api.decoration.queryDecorationForCommonByOrderId, option, function (data) {
-
-            com.focusPage("#supervisorName").val(data.decoration.supervisor.userId != null ? data.decoration.supervisor.currentName : "---");
-            com.focusPage("#orderAddr").val(data.decoration.house.village.name + " " + data.decoration.house.houseNumber);
-
-            accessories.userId = data.decoration.supervisor.userId;
             
-            accessories.postData["orderId"] = orderId;
-            accessories.postData["accessories.supervisor.userId"] = data.decoration.supervisor.userId;
-            accessories.postData["accessories.house.hid"] = data.decoration.house.hid;
-            accessories.postData["accessories.dompanys"] = data.decoration.dompany;
+            accessories.rightitems.supervisorName.val(data.decoration.supervisor.userId != null ? data.decoration.supervisor.currentName : "---");
+            accessories.rightitems.orderAddr.val(data.decoration.house.village.name + " " + data.decoration.house.houseNumber);
 
+            accessories.postData.orderId = data.decoration.orderId;
+            accessories.postData.supervisor = data.decoration.supervisor.userId;
+            accessories.postData.house = data.decoration.house.hid;
+            
         }, function (e) {
-            com.showAlert(com.warning, "装修单不存在!");
+            com.showAlert(com.warning, "装修单不存在");
             
-            com.focusPage("#supervisorName").val(null);
-            com.focusPage("#orderAddr").val(null);
+            com.focusPage("#supervisorName").val("");
+            com.focusPage("#orderAddr").val("");
+        });
+        
+        com.post(api.construction.queryConstructionScheduleByOrderId, {"constructionSchedule.orderId": orderId}, function(res){
+        	
+        	var schedules = res.constructionSchedules;
+            
+            $.each(schedules, function(i, v){
+                v.name = accessories.constructionNode[v.schedule];
+            });
+            
+            console.log(schedules);
+            
+            accessories.rightitems.schedule.bindData(res.constructionSchedules, "schedule", "name");
         });
     });
 
     com.focusPage('#submit').click(function () {
-    	
-    	var $list = com.focusPage('.list-group-item');
+        
+        var $list = com.focusPage('.list-group-item');
 
         if($list.length == 0){
-            com.showAlert(com.warning, "请添加辅料项！");
+            com.showAlert(com.warning, "请添加辅料项!");
             return false;
         }
         
         if(com.validate('searchInfo', 'left')){
-        	return false;
+            return false;
         }
-
-        var _option = {
-            "accessories.orderId": accessories.postData["orderId"],
-            "accessories.supervisor.userId": accessories.postData["accessories.supervisor.userId"],
-            "accessories.fetchTime": com.focusPage("#fetchTime").val()
+        
+        var options = {
+            "accessories.orderId": accessories.postData.orderId,
+            "accessories.supervisor.userId": accessories.postData.supervisor,
+            "accessories.fetchTime": accessories.rightitems.fetchTime.val() + " 00:00:00",
+            "accessories.schedule": accessories.rightitems.schedule.val()
         };
 
         $list && $list.length && $.each($list, function (i, v) {
             var $v = $(v);
-            _option["accessoriesItems[" + i + "].goods.gid"] = $v.attr('data-gid');
-            _option["accessoriesItems[" + i + "].num"] = $v.attr('data-num')
+            options["accessoriesItems[" + i + "].goods.gid"] = $v.attr('data-gid');
+            options["accessoriesItems[" + i + "].num"] = $v.attr('data-num');
+            options["accessoriesItems[" + i + "].selling"] = $v.attr('data-selling');
         });
+        
+        console.log(options);
 
-        com.post(api.inventory.addAccessories, _option, function (data) {
+        com.post(api.inventory.addAccessories, options, function (data) {
             com.showAlert(com.info, "操作成功");
 
-            com.focusPage('#salesItemList').empty();
-            
-            com.focusPage('.order_inputinfo').val(null);
-            com.focusPage('[name="date"]', '#searchInfo').val(null);
+            com.cleanItems(accessories.rightitems);
+            accessories.itemlist.html("");
         });
     });
 

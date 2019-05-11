@@ -12,8 +12,6 @@ public interface PurchaseService {
 	
 	public void pagePurchase(Paging paging, List<Filter> filters,int company);
 	
-	public void pagePurchaseObDelivery(Paging paging, List<Filter> filters, int company);
-	
 	public PurchaseVO queryPurchaseByPid(PurchaseVO purchaseVO);
 	
 	public List<PurchaseVO> queryPurchaseBySid(SalesVO salesVO);

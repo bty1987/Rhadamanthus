@@ -1,7 +1,42 @@
 {
-    "manifestTypes": [
+    "manifestType": [
+        {"key":"1","value":"进货"},
+        {"key":"2","value":"进退"},
+        {"key":"3","value":"出货"},
+        {"key":"4","value":"出返"},
+        {"key":"5","value":"调拨"},
+        {"key":"6","value":"采购"},
+        {"key":"7","value":"辅料"},
+        {"key":"8","value":"辅退"},
+        {"key":"9","value":"套合"},
+        {"key":"10","value":"套拆"},
+        {"key":"11","value":"盘盈"},
+        {"key":"12","value":"盘亏"}
+    ],
+    "manifestStatus": [
+        {"key":"0","value":"初始"},
+        {"key":"1","value":"已确认"}
+    ],
+    "createManifestTypes": [
         {"key":"1","value":"进货"},
         {"key":"3","value":"出货"}
+    ],
+    "accessoriesStatus": [
+        {"key":"0","value":"初始"},
+        {"key":"1","value":"出货"},
+        {"key":"2","value":"撤销"},
+        {"key":"3","value":"拒绝"},
+        {"key":"4","value":"退回"}
+    ],
+    "purchaseStatus": [
+        {"key":"0","value":"初始"},
+        {"key":"1","value":"部分入库"},
+        {"key":"2","value":"全部入库"}
+    ],
+    "purchaseBalanceStatus": [
+        {"key":"0","value":"初始"},
+        {"key":"1","value":"结算"},
+        {"key":"2","value":"完结"}
     ],
     "priceTypes": [
         {"key":"0","value":"底价"},

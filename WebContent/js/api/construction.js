@@ -28,7 +28,8 @@ $.extend(api.index, {
     supervisionReworkDrawingIndex: {url: "/views/construction/supervisionReworkDrawing.html"},
 
     workerAllocationIndex: {url: "/views/construction/workerAllocation.html"},
-    workerAllocationDetailIndex: {url: "/views/construction/workerAllocationDetail.html"}
+    workerAllocationDetailIndex: {url: "/views/construction/workerAllocationDetail.html"},
+    
 });
 
 $.extend(api, {construction: {
@@ -44,8 +45,9 @@ $.extend(api, {construction: {
 
     queryConstructionScheduleByOrderId: {url: "queryConstructionScheduleByOrderId.do"},
     queryConstructionScheduleByCid: {url: "queryConstructionScheduleByCid.do"},
-    setConstructionScheduleForStatus: {url: "setConstructionScheduleForStatus.do"},
-    setConstructionScheduleForInfo: {url: "setConstructionScheduleForInfo.do"},
+    queryConstructionScheduleByOrderIdASchedule: {url: "queryConstructionScheduleByOrderIdASchedule.do"},
+    beginConstructionSchedule: {url: "beginConstructionSchedule.do"},
+    finishConstructionSchedule: {url: "finishConstructionSchedule.do"},
 
     queryConstructionDrawingByOrderId: {url: "queryConstructionDrawingByOrderId.do"},
     queryConstructionDrawingByCid: {url: "queryConstructionDrawingByCid.do"},
@@ -88,5 +90,13 @@ $.extend(api, {construction: {
     addConstructer:{url: "addConstructer.do"},
     deleteConstructer:{url: "deleteConstructer.do"},
     queryConstructerCidByUserId:{url: "queryConstructerCidByUserId.do"},
-    updateConstructerForRate: {url: "updateConstructerForRate.do"}
+    updateConstructerForRate: {url: "updateConstructerForRate.do"},
+    
+    pageDrawLineForPlan: {url: "pageDrawLineForPlan.do", demo: true},
+    queryDrawLine: {url: "queryDrawLine.do", demo: true},
+    countDrawLine: {url: "countDrawLine.do"},
+    resetDrawLine: {url: "resetDrawLine.do"},
+    applayDrawLine: {url: "applayDrawLine.do"},
+    successDrawLine: {url: "successDrawLine.do"},
+    failureDrawLine: {url: "failureDrawLine.do"}
 }});

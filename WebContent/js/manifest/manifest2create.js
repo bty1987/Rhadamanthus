@@ -15,7 +15,6 @@ jQuery(function($) {
         	manifestType: com.focusPage("#manifestType"),
         	manifestTime: com.focusPage("#manifestTime"),
         	manifestTemplate: com.focusPage("#manifestTemplate"),
-        	totalSpan: com.focusPage("#totalSpan"),
         	comment: com.focusPage("#comment")
         },
         record: {},
@@ -32,26 +31,15 @@ jQuery(function($) {
     $.extend(com.validator, manifest.validator);
 
     com.post(api.inventory.queryStorehouseForSelf, {}, function(res){
-        $.each(res.storehouses, function(i,v){
-            if(v.status == 0){
-            	manifest.storehouses.push(v);
-            }
-        });
+        manifest.storehouses = res.storehouses;
     }, null, false);
 
-
     com.post(api.ds.manifest, {}, function(res){
-        manifest.items.manifestType.bindData(res.manifestTypes, "key", "value");
+        manifest.items.manifestType.bindData(res.createManifestTypes, "key", "value");
     }, null, false);
 
     com.post(api.inventory.queryManifestTemplate,{},function(res){
-        var manifestTemplatesStatus = [];
-        $.each(res.manifestTemplates,function(i,v){
-            if(v.status == 0){
-                manifestTemplatesStatus.push(v);
-            }
-        });
-        manifest.items.manifestTemplate.bindData(manifestTemplatesStatus,'mtid','name');
+        manifest.items.manifestTemplate.bindData(res.manifestTemplates, 'mtid', 'name');
     });
 
     //添加一条空行
@@ -65,8 +53,6 @@ jQuery(function($) {
         
         var num = com.focusPage('.line', '#list').length;
 
-        cyclTotal();
-        
         var $line = addline(num + 1);
         $line.appendTo(com.focusPage('#list'));
     });
@@ -88,19 +74,16 @@ jQuery(function($) {
             return false;
         }
         
-        cyclTotal();
-    	
         var manifestTime = manifest.items.manifestTime.val();
         var manifestType = manifest.items.manifestType.val();
         var comment = manifest.items.comment.val();
         
-        var total = manifest.items.totalSpan.val();
-
         var url = "";
-        var storehouse = ""
+        var storehouse = "";
+        var priceinfo = "";
+        
         var options = {
             "manifest.manifestTime": manifestTime,
-            "manifest.total": total,
             "manifest.type": manifestType,
             "manifest.comment": comment,
             "manifest.attachment": ""//– 附件路径
@@ -109,9 +92,11 @@ jQuery(function($) {
         if(manifestType == 1){
         	url = api.inventory.addManifestForCG;
         	storehouse = "instorehouse";
+        	priceinfo = "inprice";
         }else if(manifestType == 3){
             url = api.inventory.addManifestForXG;
         	storehouse = "outstorehouse";
+        	priceinfo = "outprice";
         }
 
         var $list = com.focusPage('li.line', '#list');
@@ -124,7 +109,7 @@ jQuery(function($) {
             options["manifestItems["+i+"].color.cid"] = $this.find('.color select').val();//– 商品编号
             options["manifestItems["+i+"].format.fid"] = $this.find('.format select').val();//– 商品名
             options["manifestItems["+i+"].num"] = $this.find('.number input').val();//– 数量
-            options["manifestItems["+i+"].unitPrice"] = $this.find('.price input').val();//– 进货价
+            options["manifestItems["+i+"]." + priceinfo] = $this.find('.price input').val();//– 进货价
             options["manifestItems["+i+"].comment"] = $this.find('.des input').val();// – 说明
             
             options["manifestItems["+i+"]." + storehouse + ".shid"] = $this.find('.storehouse select').val();
@@ -138,7 +123,6 @@ jQuery(function($) {
             manifest.items.manifestType.val(1); // 恢复类型
             manifest.items.manifestTime.val(null);
             manifest.items.comment.val("");
-            manifest.items.totalSpan.text(0);
             
             addline(1).addClass('current').appendTo(com.focusPage('#list')); // 添加一条空行
         });
@@ -263,13 +247,11 @@ jQuery(function($) {
         		return false;
         	}
         	
-			cyclTotal();
          });
 
          $btndel.click(function(e){
              $line.remove();
              reorder();
-             cyclTotal();
          });
 
         return $line;
@@ -326,29 +308,6 @@ jQuery(function($) {
             }
         });
     });
-
-
-    //计算总价的和
-    function cyclTotal(){
-
-        var _total = 0;
-
-        var $list = com.focusPage('.line', '#list');
-        
-        $list.length && $list.each(function(i, e){
-        	
-            var $this = $(e);
-            
-            if($this.find('.price input').val()){
-            	var price = parseFloat($this.find('.price input').val());
-            	var num = parseFloat($this.find('.number input').val());
-            	
-                _total = utils.accAdd(utils.accMul(price, num), _total);
-            }
-        });
-
-        manifest.items.totalSpan.text(utils.changeThrDecimal(_total));
-    }
 
     //重排序
     function reorder(){

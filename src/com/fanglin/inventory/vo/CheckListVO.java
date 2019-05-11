@@ -11,34 +11,34 @@ public class CheckListVO implements java.io.Serializable {
 	private static final long serialVersionUID = -141013481684201527L;
 
 	private Long clId;
-	
+
 	private GoodsVO goods;
-	
+
 	private ColorVO color;
-	
+
 	private FormatVO format;
-	
+
 	private StorehouseVO storehouse;
-	
+
 	private Short type;
-	
+
 	private Float num;
-	
+
 	private Timestamp createTime;
-	
-	private UserBaseVO createUser;
+
+	private UserBaseVO creater;
 
 	public CheckListVO() {
 		super();
 	}
 
-	public CheckListVO(GoodsVO goods, ColorVO color,FormatVO format,StorehouseVO storehouse, UserBaseVO createUser) {
+	public CheckListVO(GoodsVO goods, ColorVO color, FormatVO format, StorehouseVO storehouse, UserBaseVO creater) {
 		super();
 		this.goods = goods;
 		this.color = color;
 		this.format = format;
 		this.storehouse = storehouse;
-		this.createUser = createUser;
+		this.creater = creater;
 	}
 
 	public Long getClId() {
@@ -48,7 +48,7 @@ public class CheckListVO implements java.io.Serializable {
 	public void setClId(Long clId) {
 		this.clId = clId;
 	}
-	
+
 	public GoodsVO getGoods() {
 		return goods;
 	}
@@ -64,6 +64,7 @@ public class CheckListVO implements java.io.Serializable {
 	public void setStorehouse(StorehouseVO storehouse) {
 		this.storehouse = storehouse;
 	}
+
 	public ColorVO getColor() {
 		return color;
 	}
@@ -96,7 +97,7 @@ public class CheckListVO implements java.io.Serializable {
 		this.num = num;
 	}
 
-	@JSON(format="yyyy-MM-dd")
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getCreateTime() {
 		return this.createTime;
 	}
@@ -105,12 +106,12 @@ public class CheckListVO implements java.io.Serializable {
 		this.createTime = createTime;
 	}
 
-	public UserBaseVO getCreateUser() {
-		return createUser;
+	public UserBaseVO getCreater() {
+		return creater;
 	}
 
-	public void setCreateUser(UserBaseVO createUser) {
-		this.createUser = createUser;
+	public void setCreater(UserBaseVO creater) {
+		this.creater = creater;
 	}
 
 }

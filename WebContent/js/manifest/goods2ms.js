@@ -251,7 +251,7 @@ $(function(){
                     "goodsStorehouseStock.goods.gid": gid,
                     "goodsStorehouseStock.color.cid": cid,
                     "goodsStorehouseStock.format.fid": fid,
-                    "goodsStorehouseStock.storehouse.shId": shid,
+                    "goodsStorehouseStock.storehouse.shid": shid,
                     "goodsStorehouseStock.num": num
                 },function(res){
                     layer.closeAll();
@@ -263,7 +263,7 @@ $(function(){
                     "goodsStorehouseStock.goods.gid": gid,
                     "goodsStorehouseStock.color.cid": cid,
                     "goodsStorehouseStock.format.fid": fid,
-                    "goodsStorehouseStock.storehouse.shId": shid,
+                    "goodsStorehouseStock.storehouse.shid": shid,
                     "goodsStorehouseStock.num": num
                 },function(res){
                     layer.closeAll();

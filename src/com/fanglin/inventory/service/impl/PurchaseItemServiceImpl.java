@@ -11,9 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.inventory.dao.PurchaseDao;
 import com.fanglin.inventory.dao.PurchaseItemDao;
-import com.fanglin.inventory.po.ColorPO;
-import com.fanglin.inventory.po.FormatPO;
-import com.fanglin.inventory.po.GoodsPO;
 import com.fanglin.inventory.po.PurchaseItemPO;
 import com.fanglin.inventory.po.PurchasePO;
 import com.fanglin.inventory.service.PurchaseItemService;
@@ -95,17 +92,7 @@ public class PurchaseItemServiceImpl implements PurchaseItemService {
 			throw new FLException(260018, "采购单状态不可操作");
 		}
 
-		PurchaseItemPO purchaseItemPO = new PurchaseItemPO();
-
-		purchaseItemPO.setPid(purchasePO.getPid());
-
-		purchaseItemPO.setGoods(new GoodsPO(purchaseItemVO.getGoods().getGid()));
-		purchaseItemPO.setColor(new ColorPO(purchaseItemVO.getColor().getCid()));
-		purchaseItemPO.setFormat(new FormatPO(purchaseItemVO.getFormat().getFid()));
-
-		purchaseItemPO.setUnitPrice(purchaseItemVO.getUnitPrice());
-		purchaseItemPO.setNum(purchaseItemVO.getNum());
-		purchaseItemPO.setSurplus(purchaseItemVO.getNum());
+		PurchaseItemPO purchaseItemPO = new PurchaseItemPO().init(purchasePO.getPid(), purchaseItemVO.getSiid(), purchaseItemVO.getGoods().getGid(), purchaseItemVO.getColor().getCid(), purchaseItemVO.getFormat().getFid(), purchaseItemVO.getInprice(), purchaseItemVO.getNum());
 
 		purchaseItemDao.save(purchaseItemPO);
 
@@ -130,7 +117,7 @@ public class PurchaseItemServiceImpl implements PurchaseItemService {
 
 		PurchaseItemPO purchaseItemPO = purchaseItemDao.get(purchaseItemVO.getPiid());
 
-		purchaseItemPO.setUnitPrice(purchaseItemVO.getUnitPrice());
+		purchaseItemPO.setInprice(purchaseItemVO.getInprice());
 		purchaseItemPO.setNum(purchaseItemVO.getNum());
 		purchaseItemPO.setSurplus(purchaseItemVO.getNum());
 
@@ -153,13 +140,13 @@ public class PurchaseItemServiceImpl implements PurchaseItemService {
 			throw new FLException(260018, "采购单状态不可操作");
 		}
 
-		PurchaseItemPO purchaseItemPOs = purchaseItemDao.get(purchaseItemVOs.getPiid());
+		PurchaseItemPO purchaseItemPO = purchaseItemDao.get(purchaseItemVOs.getPiid());
 
-		if (purchaseItemPOs == null) {
+		if (purchaseItemPO == null) {
 			throw new FLException(260019, "采购项不存在");
 		}
 
-		purchaseItemDao.delete(purchaseItemPOs);
+		purchaseItemDao.delete(purchaseItemPO);
 
 		return 0;
 	}

@@ -19,7 +19,9 @@ public class ConstructionNodePO implements Serializable {
 	
 	public static final String COLUMN_STATUS_STR = "status";
 	
-	public static final short STATUS_START_SHORT = 0;
+	public static final String COLUMN_SORT_STR = "sort";
+	
+	public static final short STATUS_INIT_SHORT = 0;
 	
 	private long cnid;
 	
@@ -32,6 +34,8 @@ public class ConstructionNodePO implements Serializable {
 	private short status;
 	
 	private short sort;
+	
+	private int company;
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -85,6 +89,15 @@ public class ConstructionNodePO implements Serializable {
 
 	public void setSort(short sort) {
 		this.sort = sort;
+	}
+
+	@Column(name="company")
+	public int getCompany() {
+		return company;
+	}
+
+	public void setCompany(int company) {
+		this.company = company;
 	}
 
 }

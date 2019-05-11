@@ -43,8 +43,6 @@ public class WorkerSalaryPO implements Serializable {
 
 	public static final String COLUMN_STATUS_STR = "status";
 
-	public static final short STATUS_CONSTRUCTION_INT = 1;//工程状态
-
 	public static final short TYPE_ADD_INT = 0;// 加
 
 	public static final short TYPE_SUB_INT = 1;// 减

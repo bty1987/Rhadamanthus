@@ -20,8 +20,6 @@ public class ManifestVO implements java.io.Serializable {
 	
 	private UserBaseVO creater;
 	
-	private Float total;
-	
 	private Short type;
 	
 	private Short status;
@@ -81,14 +79,6 @@ public class ManifestVO implements java.io.Serializable {
 
 	public void setCreater(UserBaseVO creater) {
 		this.creater = creater;
-	}
-
-	public Float getTotal() {
-		return this.total;
-	}
-
-	public void setTotal(Float total) {
-		this.total = total;
 	}
 
 	public Short getType() {

@@ -116,7 +116,7 @@ jQuery(function ($) {
             {cellClass: "measurementUnit grey", value: v.goods.measurementUnit},
             {cellClass: "color grey", value: v.color.name},
             {cellClass: "format grey", value: v.format.info},
-            {cellClass: "unitPrice blue", value: v.unitPrice},
+            {cellClass: "inprice blue", value: v.inprice},
             {cellClass: "number blue", value: v.num},
             {cellClass: "surplus blue", value: v.surplus + ""},
             {cellClass: "storehouses", hasSelect: true},

@@ -34,7 +34,7 @@ jQuery(function($) {
 
 			var propertyArr = [
 				["名称: ", v.name, "grey"],
-				["状态: ", v.isregist == 0 ? "启用" : "禁用", "red"]
+				["状态: ", v.status == 0 ? "启用" : "禁用", "red"]
 			];
 
 			$.each(propertyArr, function (index, value) {

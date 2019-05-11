@@ -248,7 +248,7 @@ $(function () {
             options["purchaseItems[" + i + "].goods.gid"] = $this.attr('data-gid');            //– 商品编号
             options["purchaseItems[" + i + "].color.cid"] = $this.attr('data-cid');  //– 颜色
             options["purchaseItems[" + i + "].format.fid"] = $this.attr('data-fid');//– 规格
-            options["purchaseItems[" + i + "].unitPrice"] = $this.parents('.oid').find('input.unitPrice').val();  //单价
+            options["purchaseItems[" + i + "].inprice"] = $this.parents('.oid').find('input.unitPrice').val();  //单价
             options["purchaseItems[" + i + "].num"] = $this.parents('.oid').find('input.inputNumber').val();           //– 数量
             options["purchaseItems[" + i + "].supplier.sid"] = 1;
         });

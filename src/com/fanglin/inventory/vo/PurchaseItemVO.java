@@ -20,7 +20,7 @@ public class PurchaseItemVO implements Serializable {
 
 	private StorehouseVO storehouse;
 
-	private Float unitPrice;
+	private Float inprice;
 
 	private Float num;
 
@@ -93,12 +93,12 @@ public class PurchaseItemVO implements Serializable {
 		this.storehouse = storehouse;
 	}
 
-	public Float getUnitPrice() {
-		return unitPrice;
+	public Float getInprice() {
+		return inprice;
 	}
 
-	public void setUnitPrice(Float unitPrice) {
-		this.unitPrice = unitPrice;
+	public void setInprice(Float inprice) {
+		this.inprice = inprice;
 	}
 
 	public Float getNum() {

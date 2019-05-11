@@ -33,15 +33,19 @@ public class DrawLinePO implements Serializable {
 
 	private static final long serialVersionUID = 1344461146L;
 	
-	public static final short DRAWLINE_STATUS_QUEUE_SHORT = 0;
+	public static final String COLUMN_STARTTIME_STR = "startTime";
 	
-	public static final short DRAWLINE_STATUS_APPLICATION_SHORT = 1; 
+	public static final String COLUMN_ENDTIME_STR = "endTime";
 	
-	public static final short DRAWLINE_STATUS_SUCCESS_SHORT = 2; 
+	public static final short STATUS_QUEUE_INT = 0;
 	
-	public static final short DRAWLINE_STATUS_FAIL_SHORT = 3; 
+	public static final short STATUS_APPLICATION_INT = 1; 
 	
-	private long dlId;
+	public static final short STATUS_SUCCESS_INT = 2; 
+	
+	public static final short STATUS_FAIL_INT = 3; 
+	
+	private long dlid;
 	
 	private DecorationPO decoration;
 
@@ -49,29 +53,33 @@ public class DrawLinePO implements Serializable {
 	
 	private String content;
 	
-	private Timestamp actualStartTime;
+	private long actualTime;
 	
-	private Timestamp actualEndTime;
+	private Timestamp startTime;
+	
+	private Timestamp endTime;
 	
 	private short status;
 	
 	private Integer count;
 	
-	private UserPO applayUser;
+	private UserPO appler;
 	
-	private DrawLineGroupPO drawLineGroup;
+	private DrawLineGroupPO group;
 	
-	private UserPO drawLineUser;
+	private UserPO drawer;
+	
+	private int company;
 
 	@Id
 	@GeneratedValue
-	@Column(name = "dlId")
-	public long getDlId(){
-		return dlId;
+	@Column(name = "dlid")
+	public long getDlid() {
+		return dlid;
 	}
 
-	public void setDlId(long dlId){
-		this.dlId = dlId;
+	public void setDlid(long dlid) {
+		this.dlid = dlid;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -86,12 +94,12 @@ public class DrawLinePO implements Serializable {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = true, name = "auid", referencedColumnName = "uid")
-	public UserPO getApplayUser(){
-		return applayUser;
+	public UserPO getAppler() {
+		return appler;
 	}
 
-	public void setApplayUser(UserPO applayUser){
-		this.applayUser = applayUser;
+	public void setAppler(UserPO appler) {
+		this.appler = appler;
 	}
 
 	@Column(name = "applayTime")
@@ -112,22 +120,31 @@ public class DrawLinePO implements Serializable {
 		this.content = content;
 	}
 
-	@Column(name = "actualStartTime")
-	public Timestamp getActualStartTime(){
-		return actualStartTime;
+	@Column(name = "actualTime")
+	public long getActualTime() {
+		return actualTime;
 	}
 
-	public void setActualStartTime(Timestamp actualStartTime){
-		this.actualStartTime = actualStartTime;
+	public void setActualTime(long actualTime) {
+		this.actualTime = actualTime;
 	}
 
-	@Column(name = "actualEndTime")
-	public Timestamp getActualEndTime(){
-		return actualEndTime;
+	@Column(name = "startTime")
+	public Timestamp getStartTime() {
+		return startTime;
 	}
 
-	public void setActualEndTime(Timestamp actualEndTime){
-		this.actualEndTime = actualEndTime;
+	public void setStartTime(Timestamp startTime) {
+		this.startTime = startTime;
+	}
+
+	@Column(name = "endTime")
+	public Timestamp getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(Timestamp endTime) {
+		this.endTime = endTime;
 	}
 
 	@Column(name = "status")
@@ -148,25 +165,32 @@ public class DrawLinePO implements Serializable {
 		this.count = count;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(nullable = true,name = "dgid", referencedColumnName = "gid")
-	public DrawLineGroupPO getDrawLineGroup() {
-		return drawLineGroup;
+	public DrawLineGroupPO getGroup() {
+		return group;
 	}
 
-	public void setDrawLineGroup(DrawLineGroupPO drawLineGroup) {
-		this.drawLineGroup = drawLineGroup;
+	public void setGroup(DrawLineGroupPO group) {
+		this.group = group;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(nullable = true, name = "dluid", referencedColumnName = "uid")
-	public UserPO getDrawLineUser(){
-		return drawLineUser;
+	public UserPO getDrawer() {
+		return drawer;
 	}
-	
-	public void setDrawLineUser(UserPO drawLineUser){
-		this.drawLineUser = drawLineUser;
+
+	public void setDrawer(UserPO drawer) {
+		this.drawer = drawer;
 	}
-	
+
+	public int getCompany() {
+		return company;
+	}
+
+	public void setCompany(int company) {
+		this.company = company;
+	}
 	
 }

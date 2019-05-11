@@ -12,7 +12,15 @@ jQuery(function($) {
     params.authentication = parent.params.authentication;
     
     var mid = params["manifest.mid"];
+    
+    var manifestTypes = [''];
     var commonInfo = {};
+    
+    com.post(api.ds.manifest, {}, function(res){
+        $.each(res.manifestType, function(i, e){
+        	manifestTypes.push(e.value);
+        });
+    }, null, false);
 
     com.post(api.inventory.queryManifestByMid, {"manifest.mid": mid}, function(res){
         var manifest = res.manifest;
@@ -39,16 +47,7 @@ jQuery(function($) {
 
         var packageNames = [];
 
-        var type;
-        (commonInfo.type == 1) && (type = "进货");
-        (commonInfo.type == 2) && (type = "进退");
-        (commonInfo.type == 3) && (type = "出货");
-        (commonInfo.type == 4) && (type = "出返");
-        (commonInfo.type == 5) && (type = "调拨");
-        (commonInfo.type == 6) && (type = "采购");
-        (commonInfo.type == 7) && (type = "辅料");
-        (commonInfo.type == 8) && (type = "套合");
-        (commonInfo.type == 9) && (type = "套拆");
+        var type = manifestTypes[commonInfo.type];
 
         var status;
         (commonInfo.status == 0) && (status = "初始");
@@ -74,13 +73,9 @@ jQuery(function($) {
 
         var presonReceiptTr = $('<tr></tr>').appendTo(receiptTable);
         var createrTd = $('<td colspan="5" style="height: 30px;padding-left: 10px;"></td>').text('创 建 人: ' + commonInfo.creater);
-        var designerReceiptTd = $('<td colspan="6" id="manifestType" style="padding-left: 10px;"></td>').text('货单类型: ' + type);
-        presonReceiptTr.append(createrTd).append(designerReceiptTd);
-
-        var totalReceiptTr = $('<tr></tr>').appendTo(receiptTable);
-        var totalTd = $('<td colspan="5" style="height: 30px;padding-left: 10px;"></td>').text('总金额: ' + commonInfo.total + '元');
-        var statusTd = $('<td colspan="6" style="padding-left: 10px;"></td>').text('状   态: ' + status);
-        totalReceiptTr.append(totalTd).append(statusTd);
+        var designerReceiptTd = $('<td colspan="2" id="manifestType" style="padding-left: 10px;"></td>').text('货单类型: ' + type);
+        var statusTd = $('<td colspan="4" style="padding-left: 10px;"></td>').text('状   态: ' + status);
+        presonReceiptTr.append(createrTd).append(designerReceiptTd).append(statusTd);
 
         var receReceiptTr = $('<tr></tr>').appendTo(receiptTable);
         var goodsNoTd = $('<td style="text-align: center;height: 30px;"></td>').html('<strong>商品编号</strong>').appendTo(receReceiptTr);
@@ -90,10 +85,10 @@ jQuery(function($) {
         var measurementUnitNameTd = $('<td style="text-align: center;"></td>').html('<strong>规格</strong>').appendTo(receReceiptTr);
         var instorehouseNameTd = $('<td style="text-align: center;"></td>').html('<strong>进货仓库</strong>').appendTo(receReceiptTr);
         var outstorehouseNameTd = $('<td style="text-align: center;"></td>').html('<strong>出货仓库</strong>').appendTo(receReceiptTr);
-        var numTd = $('<td style="text-align: center;"></td>').html('<strong>数量</strong>').appendTo(receReceiptTr);
         var pieceNumTd = $('<td style="text-align: center;"></td>').html('<strong>件数</strong>').appendTo(receReceiptTr);
-        var unitPriceTd = $('<td style="text-align: center;"></td>').html('<strong>采购价</strong>').appendTo(receReceiptTr);
-        var commentTd = $('<td style="text-align: center;"></td>').html('<strong>备注</strong>').appendTo(receReceiptTr);
+        var inpriceTd = $('<td style="text-align: center;"></td>').html('<strong>入库价</strong>').appendTo(receReceiptTr);
+        var outpriceTd = $('<td style="text-align: center;"></td>').html('<strong>出库价</strong>').appendTo(receReceiptTr);
+        var numTd = $('<td style="text-align: center;"></td>').html('<strong>数量</strong>').appendTo(receReceiptTr);
 
         $.each(itemInfo,function(i,v){
             var instorehouseName = v.instorehouse.name == null ? "---" : v.instorehouse.name;
@@ -107,10 +102,10 @@ jQuery(function($) {
             var measurementUnitNameTd = $('<td style="text-align: center;"></td>').html(v.format.info).appendTo(receReceiptTr);
             var instorehouseNameTd = $('<td style="text-align: center;"></td>').html(instorehouseName).appendTo(receReceiptTr);
             var outstorehouseNameTd = $('<td style="text-align: center;"></td>').html(outstorehouseName).appendTo(receReceiptTr);
-            var numTd = $('<td style="text-align: center;"></td>').html(v.num).appendTo(receReceiptTr);
             var pieceNumTd = $('<td style="text-align: center;"></td>').html(v.goods.pieceNum).appendTo(receReceiptTr);
-            var unitPriceTd = $('<td style="text-align: center;"></td>').html(v.unitPrice).appendTo(receReceiptTr);
-            var commentTd = $('<td style="text-align: center;"></td>').html(v.comment).appendTo(receReceiptTr);
+            var inpriceTd = $('<td style="text-align: center;"></td>').html(v.inprice).appendTo(receReceiptTr);
+            var outpriceTd = $('<td style="text-align: center;"></td>').html(v.outprice).appendTo(receReceiptTr);
+            var numTd = $('<td style="text-align: center;"></td>').html(v.surplus).appendTo(receReceiptTr);
         });
 
     }

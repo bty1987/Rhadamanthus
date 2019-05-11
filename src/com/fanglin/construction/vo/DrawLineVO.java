@@ -18,57 +18,54 @@ import org.apache.struts2.json.annotations.JSON;
 
 import com.fanglin.data.common.vo.DrawLineGroupVO;
 import com.fanglin.decoration.vo.DecorationVO;
-import com.fanglin.personel.vo.UserVO;
+import com.fanglin.personel.vo.UserBaseVO;
 
 public class DrawLineVO implements Serializable {
 
 	private static final long serialVersionUID = -6225111181876631L;
 
-	private long dlId;
-	
+	private Long dlid;
+
 	private DecorationVO decoration;
 
 	private Timestamp applayTime;
-	
+
 	private String content;
 	
-	private Timestamp actualStartTime;
-	
-	private Timestamp actualEndTime;
-	
-	private short status;
-	
+	private Long actualTime;
+
+	private Timestamp startTime;
+
+	private Timestamp endTime;
+
+	private Short status;
+
 	private Integer count;
-	
-	private UserVO applayUser;
-	
-	private DrawLineGroupVO drawLineGroup;
-	
-	private UserVO drawLineUser;
-	
-	private String startTime;
-	
-	private String endTime;
-	
-	public DrawLineVO(){
+
+	private UserBaseVO appler;
+
+	private DrawLineGroupVO group;
+
+	private UserBaseVO drawer;
+
+	public DrawLineVO() {
 		super();
 	}
-	
-	public DrawLineVO(DecorationVO decoration, UserVO applayUser,
-			DrawLineGroupVO drawLineGroup, UserVO drawLineUser) {
+
+	public DrawLineVO(DecorationVO decoration, UserBaseVO appler, DrawLineGroupVO group, UserBaseVO drawer) {
 		super();
 		this.decoration = decoration;
-		this.applayUser = applayUser;
-		this.drawLineGroup = drawLineGroup;
-		this.drawLineUser = drawLineUser;
+		this.appler = appler;
+		this.group = group;
+		this.drawer = drawer;
 	}
 
-	public void setDlId(long dlId) {
-		this.dlId = dlId;
+	public Long getDlid() {
+		return dlid;
 	}
 
-	public Long getDlId() {
-		return dlId;
+	public void setDlid(Long dlid) {
+		this.dlid = dlid;
 	}
 
 	public DecorationVO getDecoration() {
@@ -79,7 +76,7 @@ public class DrawLineVO implements Serializable {
 		this.decoration = decoration;
 	}
 
-	@JSON(format="yyyy-MM-dd")
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getApplayTime() {
 		return applayTime;
 	}
@@ -96,29 +93,37 @@ public class DrawLineVO implements Serializable {
 		this.content = content;
 	}
 
-	@JSON(format="yyyy-MM-dd HH:mm:ss")
-	public Timestamp getActualStartTime() {
-		return actualStartTime;
+	public Long getActualTime() {
+		return actualTime;
 	}
 
-	public void setActualStartTime(Timestamp actualStartTime) {
-		this.actualStartTime = actualStartTime;
+	public void setActualTime(Long actualTime) {
+		this.actualTime = actualTime;
 	}
 
-	@JSON(format="yyyy-MM-dd HH:mm:ss")
-	public Timestamp getActualEndTime() {
-		return actualEndTime;
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
+	public Timestamp getStartTime() {
+		return startTime;
 	}
 
-	public void setActualEndTime(Timestamp actualEndTime) {
-		this.actualEndTime = actualEndTime;
+	public void setStartTime(Timestamp startTime) {
+		this.startTime = startTime;
 	}
 
-	public short getStatus() {
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
+	public Timestamp getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(Timestamp endTime) {
+		this.endTime = endTime;
+	}
+
+	public Short getStatus() {
 		return status;
 	}
 
-	public void setStatus(short status) {
+	public void setStatus(Short status) {
 		this.status = status;
 	}
 
@@ -130,44 +135,28 @@ public class DrawLineVO implements Serializable {
 		this.count = count;
 	}
 
-	public UserVO getApplayUser() {
-		return applayUser;
+	public UserBaseVO getAppler() {
+		return appler;
 	}
 
-	public void setApplayUser(UserVO applayUser) {
-		this.applayUser = applayUser;
+	public void setAppler(UserBaseVO appler) {
+		this.appler = appler;
 	}
 
-	public DrawLineGroupVO getDrawLineGroup() {
-		return drawLineGroup;
+	public DrawLineGroupVO getGroup() {
+		return group;
 	}
 
-	public void setDrawLineGroup(DrawLineGroupVO drawLineGroup) {
-		this.drawLineGroup = drawLineGroup;
+	public void setGroup(DrawLineGroupVO group) {
+		this.group = group;
 	}
 
-	public UserVO getDrawLineUser() {
-		return drawLineUser;
+	public UserBaseVO getDrawer() {
+		return drawer;
 	}
 
-	public void setDrawLineUser(UserVO drawLineUser) {
-		this.drawLineUser = drawLineUser;
+	public void setDrawer(UserBaseVO drawer) {
+		this.drawer = drawer;
 	}
 
-	public String getStartTime() {
-		return startTime;
-	}
-
-	public void setStartTime(String startTime) {
-		this.startTime = startTime;
-	}
-
-	public String getEndTime() {
-		return endTime;
-	}
-
-	public void setEndTime(String endTime) {
-		this.endTime = endTime;
-	}
-	
 }

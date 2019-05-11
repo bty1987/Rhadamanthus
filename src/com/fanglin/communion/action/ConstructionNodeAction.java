@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import com.fanglin.communion.service.ConstructionNodeService;
-import com.fanglin.communion.vo.ConstructionNodeCompanyVO;
 import com.fanglin.communion.vo.ConstructionNodeVO;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
@@ -31,30 +30,28 @@ public class ConstructionNodeAction extends BaseListAction {
 	
 	private List<ConstructionNodeVO> constructionNodes;
 	
-	private ConstructionNodeCompanyVO constructionNodeCompany;
-	
-	private List<Long> cnids;
+	private String orderId;
 	
 	@Action(value = "pageConstructionNode", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageConstructionNode(){
+	public String pageConstructionNode() throws FLException{
 		
-		constructionNodeService.pageConstructionNode(getPaging(), getFilters());
+		constructionNodeService.pageConstructionNode(getPaging(), getFilters(), queryCompany());
 		
 		return SUCCESS;
 	}
 	
 	@Action(value = "queryConstructionNode", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryConstructionNode(){
+	public String queryConstructionNode() throws FLException{
 		
-		constructionNodes = constructionNodeService.queryConstructionNode(constructionNode);
+		constructionNodes = constructionNodeService.queryConstructionNode(queryCompany());
 		
 		return SUCCESS;
 	}
 	
-	@Action(value = "queryConstructionNodeByCid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryConstructionNodeByCid() throws FLException{
+	@Action(value = "queryConstructionNodeByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryConstructionNodeByOrderId() throws FLException{
 		
-		constructionNodes = constructionNodeService.queryConstructionNodeByCid(constructionNodeCompany);
+		constructionNodes = constructionNodeService.queryConstructionNodeByOrderId(orderId);
 		
 		return SUCCESS;
 	}
@@ -83,18 +80,6 @@ public class ConstructionNodeAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-	@Action(value = "updateConstructionNodeCompany", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateConstructionNodeCompany() throws FLException{
-
-		if(SystemConfig.getString("communion") == null){
-		    throw new FLException(-1, "无操作权限");
-		}
-		
-		constructionNodeService.updateConstructionNodeCompany(constructionNodeCompany, cnids);
-		
-		return SUCCESS;
-	}
-	
 	public ConstructionNodeService getConstructionNodeService() {
 		return constructionNodeService;
 	}
@@ -119,21 +104,12 @@ public class ConstructionNodeAction extends BaseListAction {
 		this.constructionNodes = constructionNodes;
 	}
 
-	public ConstructionNodeCompanyVO getConstructionNodeCompany() {
-		return constructionNodeCompany;
+	public String getOrderId() {
+		return orderId;
 	}
 
-	public void setConstructionNodeCompany(
-			ConstructionNodeCompanyVO constructionNodeCompany) {
-		this.constructionNodeCompany = constructionNodeCompany;
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
 	}
 
-	public List<Long> getCnids() {
-		return cnids;
-	}
-
-	public void setCnids(List<Long> cnids) {
-		this.cnids = cnids;
-	}
-	
 }

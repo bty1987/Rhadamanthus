@@ -28,8 +28,12 @@ public class AccessoriesItemPO implements Serializable {
 	private long aid;
 
 	private GoodsPO goods;
+	
+	private float selling;
 
 	private float num;
+	
+	private float surplus;
 
 	public AccessoriesItemPO() {
 		super();
@@ -70,6 +74,15 @@ public class AccessoriesItemPO implements Serializable {
 		this.goods = goods;
 	}
 
+	@Column(name = "selling")
+	public float getSelling() {
+		return selling;
+	}
+
+	public void setSelling(float selling) {
+		this.selling = selling;
+	}
+
 	@Column(name = "num")
 	public float getNum() {
 		return num;
@@ -77,6 +90,28 @@ public class AccessoriesItemPO implements Serializable {
 
 	public void setNum(float num) {
 		this.num = num;
+	}
+	
+	@Column(name = "surplus")
+	public float getSurplus() {
+		return surplus;
+	}
+
+	public void setSurplus(float surplus) {
+		this.surplus = surplus;
+	}
+
+	public AccessoriesItemPO init(long aid, long gid, float selling, float num){
+		
+		setAid(aid);
+		
+		setGoods(new GoodsPO(gid));
+		
+		setSelling(selling);
+		setNum(num);
+		setSurplus(num);
+		
+		return this;
 	}
 
 }

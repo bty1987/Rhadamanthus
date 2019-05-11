@@ -99,38 +99,43 @@ jQuery(function ($) {
 
         addActive(schedule);
 
-        var elementPostData = {};
-        elementPostData["constructionSchedule.orderId"] = params.orderId;
-        elementPostData["constructionSchedule.schedule"] = schedule;
+        var elementPostData = {
+            "constructionSchedule.orderId": params.orderId,
+            "constructionSchedule.schedule": schedule
+        };
+        
         supervisionDetail.controlCondition = false;
         var workerInfoCondition = false;
 
-        com.post(api.construction.queryConstructionScheduleByOrderId, elementPostData, function (res) {
+        com.post(api.construction.queryConstructionScheduleByOrderIdASchedule, elementPostData, function (res) {
 
-            var element = res.constructionSchedules;
-            var csids = res.constructionSchedules[0].csId;
-            supervisionDetail["constructionSchedule.csId"] = element[0].csId;
+            var constructionSchedule = res.constructionSchedule;
+            
+            supervisionDetail["constructionSchedule.csid"] = constructionSchedule.csid;
 
-            if (schedule == element[0].schedule) {
-                com.focusPage("#" + operate + "StartTime").val(element[0].startTime);
-                com.focusPage("#" + operate + "EndTime").val(element[0].endTime);
+            if (schedule == constructionSchedule.schedule) {
+                com.focusPage("#" + operate + "StartTime").val(constructionSchedule.startTime);
+                com.focusPage("#" + operate + "EndTime").val(constructionSchedule.endTime);
 
                 var otherename = schedule;
-                var otherStatus = res.constructionSchedules[0].status;
+                var otherStatus = constructionSchedule.status;
 
                 updatastatusDiv(otherStatus, otherename);
-                var options = {};
-                options["constructer.orderId"] = params.orderId;
-                options["constructer.schedule"] = schedule;
+                
+                var options = {
+                    "constructer.orderId": params.orderId,
+                    "constructer.schedule": schedule
+                };
 
                 //查询施工人员
                 com.post(api.construction.queryConstructerByOrderId, options, function (res) {
-                    workerInfoCondition = queryConstructer(operate, res, csids);
+                    workerInfoCondition = queryConstructer(operate, res, constructionSchedule.csid);
                 }, null, false);
             }
 
-            var options = {};
-            options["constructionDrawing.cid"] = params.cid;
+            var options = {
+                "constructionDrawing.cid": params.cid
+            };
 
             //获取工程图片信息
             //可以同过工程ID以及施工进度获取图片信息
@@ -148,7 +153,7 @@ jQuery(function ($) {
                     }
                 }
             });
-            initUploadBtn(operate, element, constructionNodes["num" + schedule]);
+            initUploadBtn(operate, constructionSchedule, constructionNodes["num" + schedule]);
             com.focusPage('#' + operate + "Drawing").removeClass("active");
 
             if (com.focusPage('#' + operate + "NavTab" + ' li:last-of-type').hasClass("active")) {
@@ -494,14 +499,17 @@ jQuery(function ($) {
         com.focusPage("#step" + schedule).removeClass("step-pane");
         com.focusPage("#step" + schedule).addClass("active");
     }
-
-    function updatastatusDiv(Status, statusDiv) {
+    
+    function updatastatusDiv(status, statusDiv) {
 
         var statusDiv = com.focusPage("#" + statusDiv + "Status").html("");
-        if (Status == 1) {
-            $("<span></span>").addClass("label label-success col-sm-1").text("完结").appendTo(statusDiv);
+        
+        if (status == 0) {
+            $("<span></span>").addClass("label label-grey").text("初始").appendTo(statusDiv);
+        }else if (status == 1) {
+            $("<span></span>").addClass("label label-info").text("开工").appendTo(statusDiv);
         } else {
-            $("<span></span>").addClass("label label-grey col-sm-1").text("初始").appendTo(statusDiv);
+            $("<span></span>").addClass("label label-success").text("完工").appendTo(statusDiv);
         }
     }
 

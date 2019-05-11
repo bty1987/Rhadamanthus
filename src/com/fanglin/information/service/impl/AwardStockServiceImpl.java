@@ -1,7 +1,6 @@
 package com.fanglin.information.service.impl;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,6 @@ import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
-import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
 @Service("awardStockService")
@@ -101,10 +99,11 @@ public class AwardStockServiceImpl implements AwardStockService {
 
 		awardStockDao.save(awardStockPO);
 		
-		if (awardStockVO.getIsStock() == AwardStockPO.ISSTOCK_CAL_INT) {// 0:计算
-			saveAwardRecord(awardStockPO, awardStockVO, userId, AwardStockPO.TYPE_CG_INT);//po.入库-0
-		}
+		UserPO creater = userdDao.queryUserByUserId(userId);
 		
+		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, creater, AwardRecordPO.TYPE_CG_INT, AwardRecordPO.ONETYPE_NOT_INT, awardStockPO.getIsStock(), awardStockVO.getPrice(), awardStockVO.getNum(), awardStockVO.getContent());
+		
+		awardRecordDao.save(awardRecordPO);
 	}
 
 	@Override
@@ -145,11 +144,16 @@ public class AwardStockServiceImpl implements AwardStockService {
 			throw new FLException(160038, "库存不足");
 		}
 		
-		awardStockPO.setNum(Arith.sub(awardStockPO.getNum(), awardStockVO.getNum()));
+		float num = awardStockVO.getNum();
+		
+		awardStockPO.setNum(Arith.sub(awardStockPO.getNum(), num));
 
-		saveAwardRecord(awardStockPO, awardStockVO, userId, AwardStockPO.TYPE_XG_INT);
+		UserPO creater = userdDao.queryUserByUserId(userId);
+		
+		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, creater, AwardRecordPO.TYPE_XG_INT, AwardRecordPO.ONETYPE_NOT_INT, AwardStockPO.ISSTOCK_CAL_INT, awardStockVO.getPrice(), num, awardStockVO.getContent());
 		
 		awardStockDao.update(awardStockPO);
+		awardRecordDao.save(awardRecordPO);
 	}
 
 	@Override
@@ -164,12 +168,17 @@ public class AwardStockServiceImpl implements AwardStockService {
 		if (awardStockPO.getIsStock() != AwardStockPO.ISSTOCK_CAL_INT) {// 0:不计算
 			throw new FLException(160041, "物品不能入库");
 		}
-
-		awardStockPO.setNum(Arith.add(awardStockPO.getNum(), awardStockVO.getNum()));
 		
-		saveAwardRecord(awardStockPO, awardStockVO, userId, AwardStockPO.TYPE_CG_INT);
+		float num = awardStockVO.getNum();
+
+		awardStockPO.setNum(Arith.add(awardStockPO.getNum(), num));
+		
+		UserPO creater = userdDao.queryUserByUserId(userId);
+		
+		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, creater, AwardRecordPO.TYPE_CG_INT, AwardRecordPO.ONETYPE_NOT_INT, AwardStockPO.ISSTOCK_CAL_INT, awardStockVO.getPrice(), num, awardStockVO.getContent());
 		
 		awardStockDao.update(awardStockPO);
+		awardRecordDao.save(awardRecordPO);
 	}
 
 	@Override
@@ -186,16 +195,19 @@ public class AwardStockServiceImpl implements AwardStockService {
 			throw new FLException(160042, "该种类型的物品不能盘点");
 		}
 		
-		short type = awardStockPO.getNum() > awardStockVO.getNum() ? AwardStockPO.TYPE_LOSSES_INT : AwardStockPO.TYPE_SURPLUS_INT;
+		short type = awardStockPO.getNum() > awardStockVO.getNum() ? AwardRecordPO.TYPE_LOSSES_INT : AwardRecordPO.TYPE_SURPLUS_INT;
 		
 		float num = awardStockVO.getNum();
 		
 		awardStockVO.setNum(Math.abs(Arith.sub(awardStockPO.getNum(), awardStockVO.getNum())));
 		awardStockPO.setNum(num);
 		
-		saveAwardRecord(awardStockPO, awardStockVO, userId, type);
-
+		UserPO creater = userdDao.queryUserByUserId(userId);
+		
+		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, creater, type, AwardRecordPO.ONETYPE_NOT_INT, AwardStockPO.ISSTOCK_CAL_INT, awardStockVO.getPrice(), num, awardStockVO.getContent());
+		
 		awardStockDao.update(awardStockPO);
+		awardRecordDao.save(awardRecordPO);
 	}
 
 	@Override
@@ -210,28 +222,6 @@ public class AwardStockServiceImpl implements AwardStockService {
 		awardStockPO.setStatus(awardStockVO.getStatus());
 
 		awardStockDao.update(awardStockPO);
-
 	}
 
-	public void saveAwardRecord(AwardStockPO awardStockPO, AwardStockVO awardStockVO, String userId, short type) {
-		
-		UserPO user = userdDao.queryUserByUserId(userId);
-		
-		float price = awardStockVO.getPrice() == null ? 0 : awardStockVO.getPrice();
-		
-		AwardRecordPO awardRecordPO = new AwardRecordPO();
-
-		awardRecordPO.setAwardStock(awardStockPO);
-		awardRecordPO.setType(type);
-		awardRecordPO.setUnitPrice(price);
-		awardRecordPO.setTotalPrice(Arith.mul(price, awardStockVO.getNum()));
-		awardRecordPO.setNum(awardStockVO.getNum());
-		awardRecordPO.setCreater(user);
-		awardRecordPO.setContent(awardStockVO.getContent());
-		awardRecordPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
-		awardRecordPO.setOnetype(AwardRecordPO.ONETYPE_NOT_INT);
-	
-		awardRecordDao.save(awardRecordPO);
-	}
-	
 }

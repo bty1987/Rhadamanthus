@@ -65,25 +65,33 @@ public class ManifestDaoImpl extends DaoImpl<ManifestPO> implements ManifestDao 
 				String data = filter.getData();
 				String op = filter.getOp();
 
-				if ("orderId".equals(field)) {
-					query.add(query.getCriterion(ManifestPO.COLUMN_ORDERID_STR, data, op));
+				if (ManifestPO.COLUMN_CODE_STR.equals(field)) {
+					query.add(query.getCriterion(ManifestPO.COLUMN_CODE_STR, data, op));
+				} else if ("manifestType".equals(field)) {
+					query.add(query.getCriterion("type", Short.valueOf(data), op));
+				} else if ("manifestStatus".equals(field)) {
+					query.add(query.getCriterion("status", Short.valueOf(data), op));
+				} else if ("createrName".equals(field)) {
+					query.alias("creater", "creater");
+					query.add(query.getCriterion(ManifestPO.COLUMN_CREATER_STR, data, op));
+				} else if ("createTime".equals(field)) {
+					Date sdate = DateUtil.parseDate(data + " 00:00:00", "yyyy-MM-dd HH:mm:ss");
+					Date edate = DateUtil.parseDate(data + " 23:59:59", "yyyy-MM-dd HH:mm:ss");
+
+					Timestamp stimestamp = DateUtil.getDateToTimestamp(sdate);
+					Timestamp etimestamp = DateUtil.getDateToTimestamp(edate);
+
+					query.add(query.getCriterion(ManifestPO.COLUMN_CREATETIME_STR, stimestamp, "ge"));
+					query.add(query.getCriterion(ManifestPO.COLUMN_CREATETIME_STR, etimestamp, "le"));
 				} else if ("manifestTime".equals(field)) {
-					String sTime = data + " 00:00:00";
-					String eTime = data + " 23:59:59";
-					Date sdate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
-					Date edate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
+					Date sdate = DateUtil.parseDate(data + " 00:00:00", "yyyy-MM-dd HH:mm:ss");
+					Date edate = DateUtil.parseDate(data + " 23:59:59", "yyyy-MM-dd HH:mm:ss");
 
 					Timestamp stimestamp = DateUtil.getDateToTimestamp(sdate);
 					Timestamp etimestamp = DateUtil.getDateToTimestamp(edate);
 
 					query.add(query.getCriterion(ManifestPO.COLUMN_MANIFESTTIME_STR, stimestamp, "ge"));
 					query.add(query.getCriterion(ManifestPO.COLUMN_MANIFESTTIME_STR, etimestamp, "le"));
-
-				} else if (ManifestPO.COLUMN_CODE_STR.equals(field)) {
-					query.add(query.getCriterion(ManifestPO.COLUMN_CODE_STR, data, op));
-				} else if ("createrName".equals(field)) {
-					query.alias("creater", "creater");
-					query.add(query.getCriterion(ManifestPO.COLUMN_CREATEUSER_USERID_STR, data, op));
 				}
 			}
 		}

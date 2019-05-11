@@ -39,7 +39,7 @@ jQuery(function ($) {
             $line.find('div.storehouse').text(v.instorehouse.name);
             
             $line.find('div.pieceNum').text(v.goods.pieceNum);
-            $line.find('div.number').text(v.num);
+            $line.find('div.number').text(v.surplus);
         });
     });
 

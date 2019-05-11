@@ -166,6 +166,14 @@ public class ManifestAction extends BaseListAction {
 
 		return SUCCESS;
 	}
+	
+	@Action(value = "addManifestForAR", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addManifestForAR() throws FLException {
+
+		manifestService.addManifestForAR(accessories, accessoriesItems, queryUserId(), queryCompany());
+
+		return SUCCESS;
+	}
 
 	@Action(value = "addManifestItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addManifestItem() throws FLException {

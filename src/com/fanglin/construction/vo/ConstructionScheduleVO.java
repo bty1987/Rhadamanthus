@@ -14,11 +14,13 @@ package com.fanglin.construction.vo;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
+import org.apache.struts2.json.annotations.JSON;
+
 public class ConstructionScheduleVO implements Serializable {
 
 	private static final long serialVersionUID = -8887915345535064194L;
 	
-	private Long csId;
+	private Long csid;
 	
 	private Long cid;
 	
@@ -34,12 +36,12 @@ public class ConstructionScheduleVO implements Serializable {
 	
 	private Short schedule;
 
-	public Long getCsId() {
-		return csId;
+	public Long getCsid() {
+		return csid;
 	}
 
-	public void setCsId(Long csId) {
-		this.csId = csId;
+	public void setCsid(Long csid) {
+		this.csid = csid;
 	}
 
 	public Long getCid() {
@@ -58,6 +60,7 @@ public class ConstructionScheduleVO implements Serializable {
 		this.orderId = orderId;
 	}
 
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getStartTime() {
 		return startTime;
 	}
@@ -66,6 +69,7 @@ public class ConstructionScheduleVO implements Serializable {
 		this.startTime = startTime;
 	}
 
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getEndTime() {
 		return endTime;
 	}

@@ -7,7 +7,23 @@ $(function(){
         });
     }
 
-    var flagSiid = true;
+    var purchaseBalance = {
+    	items: {},
+    	
+    	status: {},
+    	balanceStatus: {}
+    }
+    
+    com.post(api.ds.manifest, {}, function(res){
+    	
+    	$.each(res.purchaseStatus, function(i, v){
+    		purchaseBalance.status[v.key] = v.value;
+    	});
+    	
+    	$.each(res.purchaseBalanceStatus, function(i, v){
+    		purchaseBalance.balanceStatus[v.key] = v.value;
+    	});
+    }, null, false);
 
     var displayFunc  = (function(){
 
@@ -61,14 +77,14 @@ $(function(){
             var $contentWrap = $('<div></div>').addClass('line-wrap  content col9');
 
             var propertyArr = [
-                [v.no,'blue'],
-                [v.user.userName,'grey'],
-                [v.createTime,'green'],
-                [v.balanceTime,'green'],
-                [v.deliveryTime,'green'],
-                [v.status == "0" ? "初始" :  (v.status == "1"? "部分入库" : "全部入库"),'red'],
-                [v.balanceStatus == "0" ? "初始" :  (v.balanceStatus == "1" ? "已结算" : "已完结"),'red'],
-                [v.comment,'grey']
+                [v.no, 'blue'],
+                [v.user.userName, 'grey'],
+                [v.createTime, 'green'],
+                [v.balanceTime, 'green'],
+                [v.deliveryTime, 'green'],
+                [purchaseBalance.status[v.status], 'red'],
+                [purchaseBalance.balanceStatus[v.balanceStatus], 'red'],
+                [v.comment, 'grey']
             ];
 
             $.each(propertyArr, function (i, v) {
@@ -142,7 +158,7 @@ $(function(){
 
     var purchaseBalanceSearcher = new Searcher();
 
-    purchaseBalanceSearcher.init( ["purchaseNo", "purchaseUserName", "purchaseTime"], "condList", api.inventory.pagePurchase, function(data){
+    purchaseBalanceSearcher.init( ["purchaseNo", "purchaseUserName", "purchaseTime", "purchaseStatus", "purchaseBalanceStatus"], "condList", api.inventory.pagePurchase, function(data){
         displayFunc.init('resultList', data);
     }, "pagenation", "purchasePostData", null, false, null, function(){
 
@@ -157,7 +173,7 @@ $(function(){
             exportPurchase();
         });
 
-        return [$impa];//$batchs,
+        return [$impa];
     },'resultList');
     
     function showLayer(title, page){

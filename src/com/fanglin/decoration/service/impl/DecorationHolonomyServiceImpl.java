@@ -137,7 +137,7 @@ public class DecorationHolonomyServiceImpl implements DecorationHolonomyService 
 		DecorationHolonomyPO decorationHolonomyPO = decorationHolonomyDao.queryDecorationHolonomyByOrderId(orderId);
 		
 		// 服务款比例
-		SystemConfigPO servicePaymentRatio = systemConfigDao.querySystemConfig("servicePaymentRatio", decorationPO.getCompany());
+		SystemConfigPO servicePaymentRatio = systemConfigDao.querySystemConfig(String.format("servicePaymentRatio%d", decorationPO.getType()), decorationPO.getCompany());
 
 		float ratio = Arith.sub(servicePaymentRatio != null ? Float.parseFloat(servicePaymentRatio.getValue()) : 1.1f, 1f);
 

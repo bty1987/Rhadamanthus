@@ -36,8 +36,6 @@ public class ConstructionSchedulePO implements Serializable{
 	
 	public static final String COLUMN_SCHEDULE_STR = "schedule";
 	
-	public static final short STATUS_TYPE_INIT_INT = 0;
-	
 	public static final short STATUS_INIT_INT = 0;
 	
 	public static final short STATUS_BEGIN_INT = 1;
@@ -48,7 +46,7 @@ public class ConstructionSchedulePO implements Serializable{
 	
 	public static final short CHECKOUT_PASS_INT = 1;
 	
-	private long csId;
+	private long csid;
 	
 	private long cid;
 	
@@ -80,12 +78,12 @@ public class ConstructionSchedulePO implements Serializable{
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "csid")
-	public long getCsId() {
-		return csId;
+	public long getCsid() {
+		return csid;
 	}
 
-	public void setCsId(long csId) {
-		this.csId = csId;
+	public void setCsid(long csid) {
+		this.csid = csid;
 	}
 
 	@Column(name = "cid")

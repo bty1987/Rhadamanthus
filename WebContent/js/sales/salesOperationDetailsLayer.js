@@ -71,7 +71,7 @@ $(function () {
                                                     ["出货仓库:", v.outstorehouse.name, "grey"],
                                                     ["数量:", v.num, "blue"],
                                                     ["件数:", v.goods.pieceNum, "blue"],
-                                                    ["价格:", v.unitPrice, "blue"],
+                                                    ["价格:", v.outprice, "blue"]
                                                 ];
 
                                                 $.each(propertyArrManifestItem, function (index, value) {
@@ -176,7 +176,7 @@ $(function () {
                     var $purchaseItempid = $('<div id="resultListPurchaseItem' + v.pid + '"></div>').addClass('clearfix tab-pane active').appendTo($purchaseItemscol);
 
                     var propertyArr = [
-                        ["采购单号:", v.no, "grey"],
+                        ["采购单号:", v.no, "grey"]
                     ];
 
                     $.each(propertyArr, function (index, value) {
@@ -215,7 +215,7 @@ $(function () {
                                                     ["单位:", v.goods.measurementUnit, "grey"],
                                                     ["数量:", v.num, "blue"],
                                                     ["件数:", v.goods.pieceNum, "blue"],
-                                                    ["价格:", v.unitPrice, "blue"],
+                                                    ["价格:", v.inprice, "blue"]
                                                 ];
 
                                                 $.each(propertyArrPurchaseItem, function (index, value) {
@@ -311,7 +311,7 @@ $(function () {
                     var $btnDiv = $('<div></div>').addClass('pull-right action-buttons');
 
                     var $btnSalesItem = $('<a></a>').addClass(' btn btn-minier btn-yellow').html('采购货单详情');
-                    var $iicon = $('<i></i>').addClass('icon-chevron-down').appendTo($btnSalesItem)
+                    var $iicon = $('<i></i>').addClass('icon-chevron-down').appendTo($btnSalesItem);
 
                     var $purchaseManifestItems = $('<div></div>').attr('data-mid', v.mid).addClass('page-content').hide();
                     var $purchaseManifestItemsrow = $('<div></div>').addClass('row').appendTo($purchaseManifestItems);
@@ -319,7 +319,7 @@ $(function () {
                     var $purchaseManifestItemmid = $('<div id="resultListPurchaseManifestItem' + v.mid + '"></div>').addClass('clearfix tab-pane active').appendTo($purchaseManifestItemscol);
 
                     var propertyArr = [
-                        ["货单号:", v.code, "grey"],
+                        ["货单号:", v.code, "grey"]
                     ];
 
                     $.each(propertyArr, function (index, value) {
@@ -359,7 +359,7 @@ $(function () {
                                                     ["进货仓库:", v.instorehouse.name, "grey"],
                                                     ["数量:", v.num, "blue"],
                                                     ["件数:", v.goods.pieceNum, "blue"],
-                                                    ["价格:", v.unitPrice, "blue"],
+                                                    ["价格:", v.inprice, "blue"]
                                                 ];
 
                                                 $.each(propertyArrPurchaseManifestItem, function (index, value) {

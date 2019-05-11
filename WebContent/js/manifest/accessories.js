@@ -2,15 +2,22 @@
 $(function () {
 	
 	var accessories = {
-		statuses: {
-			0: "初始",
-			1: "出货",
-			2: "撤销",
-			3: "拒绝",
-			4: "退回"
-		}
+		status: {},
+		schedule: {}
 	}
-
+	
+	com.post(api.ds.manifest, {}, function(res){
+		$.each(res.accessoriesStatus, function(i, v){
+			accessories.status[v.key] = v.value;
+		});
+	}, null, false);
+	
+	com.post(api.data.queryConstructionNode, {}, function(res){
+        $.each(res.constructionNodes, function(i, v){
+            accessories.schedule[v.sort] = v.name;
+        });
+    }, null, false);
+	
     var displayFunc = (function () {
 
         var renderList = function (tableId, listData) {
@@ -20,12 +27,11 @@ $(function () {
 
                 var $ulTitle = createTableTitle();
                 var $ulData = $('<ul></ul>').addClass('flex-table');
+                
                 $tableWrap.append($ulTitle).append($ulData);
 
                 $.each(listData, function (i, v) {
-                    var $liLine = creatLine(i, v, i == listData.length - 1);
-
-                    $liLine.appendTo($ulTitle);
+                    creatLine(i, v, i == listData.length - 1).appendTo($ulTitle);
                 });
             }
         };
@@ -36,9 +42,9 @@ $(function () {
             var $liTitle = $('<li></li>').addClass('line table-title');
 
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>'));
-            var $contentWrap = $('<div></div>').addClass('line-wrap  content col7');
+            var $contentWrap = $('<div></div>').addClass('line-wrap  content col8');
 
-            var titleName = '辅料单号,装修单号,创建人,创建时间,审批人,审批时间,状态';
+            var titleName = '辅料单号,装修单号,创建人,创建时间,审批人,审批时间,施工环节,状态';
 
             $.each(titleName.split(','), function (i, v) {
                 var $cell = $('<div></div>').addClass('cell').html(v);
@@ -66,7 +72,7 @@ $(function () {
             _label.append($input).append(_span);
             
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(_label));
-            var $contentWrap = $('<div></div>').addClass('line-wrap  content col7');
+            var $contentWrap = $('<div></div>').addClass('line-wrap  content col8');
 
             var propertyArr = [
                 [v.no, 'blue'],
@@ -75,7 +81,8 @@ $(function () {
                 [v.createTime, 'green'],
                 [v.approver.userName, 'grey'],
                 [v.approverTime, 'green'],
-                [accessories.statuses[v.status], 'red'],
+                [accessories.schedule[v.schedule], 'red'],
+                [accessories.status[v.status], 'red'],
             ];
 
             $.each(propertyArr, function (i, v) {

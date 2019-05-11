@@ -4,6 +4,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,6 +17,7 @@ import javax.persistence.Table;
 
 import com.fanglin.communion.po.HousePO;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.utils.DateUtil;
 
 @Entity
 @Table(name = "accessories", catalog = "inventory")
@@ -54,25 +56,29 @@ public class AccessoriesPO implements Serializable {
 	private String no;
 
 	private String orderId;
-
+	
+	private long csid;
+	
 	private HousePO house;
+	
+	private UserPO supervisor;
 
 	private UserPO creater;
+	
+	private UserPO approver;
 
 	private Timestamp createTime;
 
-	private UserPO approver;
-
 	private Timestamp approverTime;
-
-	private UserPO supervisor;
 
 	private Timestamp fetchTime;
 
 	private short status;
+	
+	private short schedule;
 
 	private int company;
-
+	
 	public AccessoriesPO() {
 		super();
 	}
@@ -82,9 +88,8 @@ public class AccessoriesPO implements Serializable {
 		this.no = no;
 	}
 
-	public AccessoriesPO(HousePO house, UserPO creater, UserPO approver, UserPO supervisor) {
+	public AccessoriesPO(UserPO creater, UserPO approver, UserPO supervisor) {
 		super();
-		this.house = house;
 		this.creater = creater;
 		this.approver = approver;
 		this.supervisor = supervisor;
@@ -119,6 +124,14 @@ public class AccessoriesPO implements Serializable {
 		this.orderId = orderId;
 	}
 
+	public long getCsid() {
+		return csid;
+	}
+
+	public void setCsid(long csid) {
+		this.csid = csid;
+	}
+	
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "hid", referencedColumnName = "hid")
 	public HousePO getHouse() {
@@ -128,15 +141,35 @@ public class AccessoriesPO implements Serializable {
 	public void setHouse(HousePO house) {
 		this.house = house;
 	}
+	
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "suid", referencedColumnName = "uid")
+	public UserPO getSupervisor() {
+		return supervisor;
+	}
+
+	public void setSupervisor(UserPO supervisor) {
+		this.supervisor = supervisor;
+	}
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "createrId", referencedColumnName = "uId")
+	@JoinColumn(name = "cuid", referencedColumnName = "uid")
 	public UserPO getCreater() {
 		return creater;
 	}
 
 	public void setCreater(UserPO creater) {
 		this.creater = creater;
+	}
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "auid", referencedColumnName = "uid")
+	public UserPO getApprover() {
+		return approver;
+	}
+
+	public void setApprover(UserPO approver) {
+		this.approver = approver;
 	}
 
 	@Column(name = "createTime")
@@ -147,17 +180,7 @@ public class AccessoriesPO implements Serializable {
 	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
 	}
-
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "approverId", referencedColumnName = "uId")
-	public UserPO getApprover() {
-		return approver;
-	}
-
-	public void setApprover(UserPO approver) {
-		this.approver = approver;
-	}
-
+	
 	@Column(name = "approverTime")
 	public Timestamp getApproverTime() {
 		return approverTime;
@@ -167,16 +190,6 @@ public class AccessoriesPO implements Serializable {
 		this.approverTime = approverTime;
 	}
 
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "supervisorId", referencedColumnName = "uId")
-	public UserPO getSupervisor() {
-		return supervisor;
-	}
-
-	public void setSupervisor(UserPO supervisor) {
-		this.supervisor = supervisor;
-	}
-
 	@Column(name = "fetchTime")
 	public Timestamp getFetchTime() {
 		return fetchTime;
@@ -184,6 +197,14 @@ public class AccessoriesPO implements Serializable {
 
 	public void setFetchTime(Timestamp fetchTime) {
 		this.fetchTime = fetchTime;
+	}
+
+	public short getSchedule() {
+		return schedule;
+	}
+
+	public void setSchedule(short schedule) {
+		this.schedule = schedule;
 	}
 
 	@Column(name = "status")
@@ -203,5 +224,23 @@ public class AccessoriesPO implements Serializable {
 	public void setCompany(int company) {
 		this.company = company;
 	}
-
+	
+	public AccessoriesPO init(String no, String orderId, long csid, HousePO house, UserPO creater, Timestamp fetchTime, short schedule, int company){
+		
+		setNo(no);
+		setOrderId(orderId);
+		setCsid(csid);
+		setHouse(house);
+		
+		setCreater(creater);
+		setFetchTime(fetchTime);
+		
+		setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+		setSchedule(schedule);
+		setStatus(AccessoriesPO.STATUS_INIT_INT);
+		
+		setCompany(company);
+		
+		return this;
+	}
 }

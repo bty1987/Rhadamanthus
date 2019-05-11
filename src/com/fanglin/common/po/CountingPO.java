@@ -151,6 +151,10 @@ public class CountingPO implements Serializable{
 	
 	public static int TYPE_MATERIAL_ORDER_INT = 40; // 主材单
 	
+	public static int TYPE_INVENTORY_CP_INT = 41; // 主材单
+	
+	public static int TYPE_INVENTORY_CL_INT = 42; // 主材单
+	
 	public static String COLUMN_DATE_STR = "date";
 	
 	public static String COLUMN_TYPE_STR = "type";

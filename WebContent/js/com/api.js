@@ -34,7 +34,6 @@ var Api = function(){
             fillApi(path + 'data.js');
             fillApi(path + 'decoration.js');
             fillApi(path + 'dingding.js');
-            fillApi(path + 'drawline.js');
             fillApi(path + 'information.js');
             fillApi(path + 'inventory.js');
             fillApi(path + 'log.js');

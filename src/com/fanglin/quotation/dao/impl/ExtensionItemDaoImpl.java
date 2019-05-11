@@ -34,18 +34,18 @@ public class ExtensionItemDaoImpl extends DaoImpl<ExtensionItemPO> implements Ex
 	}
 	
 	@Override
-	public int countExtensionItemForFunctionArea(long qfaid) {
+	public long countExtensionItemForFunctionArea(long qfaid) {
 		
 		String sql = "select count(*) from quotation.extensionitem where quotationFunctionAreaId =:qfaid";
 
 		BigInteger count = (BigInteger) session().createSQLQuery(sql).setLong("qfaid", qfaid).uniqueResult();
 
-		return count.intValue();
+		return count.longValue();
 	}
 
 	@Override
-	public int countExtensionItemForFunctionArea(List<QuotationFunctionAreaPO> quotationFunctionAreas){
-		return (Integer) createCriteria(ExtensionItemPO.class).add(Restrictions.in("quotationFunctionArea", quotationFunctionAreas)).setProjection(Projections.rowCount()).uniqueResult();
+	public long countExtensionItemForFunctionArea(List<QuotationFunctionAreaPO> quotationFunctionAreas){
+		return (Long) createCriteria(ExtensionItemPO.class).add(Restrictions.in("quotationFunctionArea", quotationFunctionAreas)).setProjection(Projections.rowCount()).uniqueResult();
 	}
 	
 }

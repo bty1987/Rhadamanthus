@@ -166,11 +166,11 @@ public class GoodsStorehouseStockServiceImpl implements GoodsStorehouseStockServ
 		List<ManifestItemVO> manifestItemVOs = new ArrayList<ManifestItemVO>();
 		
 		if (type == 0) { // type 0: 盘盈 , 1: 盘亏
-			manifestItemVOs.add(new ManifestItemVO().init(checkListVO.getGoods().getGid(), checkListVO.getColor().getCid(), checkListVO.getFormat().getFid(), shid, null, 0, num));
+			manifestItemVOs.add(new ManifestItemVO().init(checkListVO.getGoods().getGid(), checkListVO.getColor().getCid(), checkListVO.getFormat().getFid(), shid, null, 0, 0, num));
 			
 			manifestService.addManifestForCP(manifestItemVOs, userId, company);
 		} else if (type == 1) {
-			manifestItemVOs.add(new ManifestItemVO().init(checkListVO.getGoods().getGid(), checkListVO.getColor().getCid(), checkListVO.getFormat().getFid(), null, shid, 0, num));
+			manifestItemVOs.add(new ManifestItemVO().init(checkListVO.getGoods().getGid(), checkListVO.getColor().getCid(), checkListVO.getFormat().getFid(), null, shid, 0, 0, num));
 			
 			manifestService.addManifestForCL(manifestItemVOs, userId, company);
 		}
@@ -192,12 +192,12 @@ public class GoodsStorehouseStockServiceImpl implements GoodsStorehouseStockServ
 		float num = goodsStorehouseStockVO.getNum();
 		long shid = goodsStorehouseStockVO.getStorehouse().getShid();
 
-		manifestItemVOs.add(new ManifestItemVO().init(goodsStorehouseStockVO.getGoods().getGid(), goodsStorehouseStockVO.getColor().getCid(), goodsStorehouseStockVO.getFormat().getFid(), shid, null, 0, num));
+		manifestItemVOs.add(new ManifestItemVO().init(goodsStorehouseStockVO.getGoods().getGid(), goodsStorehouseStockVO.getColor().getCid(), goodsStorehouseStockVO.getFormat().getFid(), shid, null, 0, 0, num));
 
 		List<GoodsPackagePO> goodsPackagePOs = goodsPackageDao.queryPackage(goodsStorehouseStockVO.getGoods().getGid());
 
 		for (GoodsPackagePO goodsPackagePO : goodsPackagePOs) {
-			manifestItemVOs.add(new ManifestItemVO().init(goodsPackagePO.getGoods().getGid(), goodsPackagePO.getColor().getCid(), goodsPackagePO.getFormat().getFid(), null, shid, 0, Arith.mul(num, goodsPackagePO.getNum())));
+			manifestItemVOs.add(new ManifestItemVO().init(goodsPackagePO.getGoods().getGid(), goodsPackagePO.getColor().getCid(), goodsPackagePO.getFormat().getFid(), null, shid, 0, 0, Arith.mul(num, goodsPackagePO.getNum())));
 		}
 
 		manifestService.addManifestForPM(manifestItemVOs, userId, company);
@@ -220,12 +220,12 @@ public class GoodsStorehouseStockServiceImpl implements GoodsStorehouseStockServ
 		float num = goodsStorehouseStockVO.getNum();
 		long shid = goodsStorehouseStockVO.getStorehouse().getShid();
 
-		manifestItemVOs.add(new ManifestItemVO().init(goodsStorehouseStockVO.getGoods().getGid(), goodsStorehouseStockVO.getColor().getCid(), goodsStorehouseStockVO.getFormat().getFid(), null, shid, 0, num));
+		manifestItemVOs.add(new ManifestItemVO().init(goodsStorehouseStockVO.getGoods().getGid(), goodsStorehouseStockVO.getColor().getCid(), goodsStorehouseStockVO.getFormat().getFid(), null, shid, 0, 0, num));
 
 		List<GoodsPackagePO> goodsPackagePOs = goodsPackageDao.queryPackage(goodsStorehouseStockVO.getGoods().getGid());
 
 		for (GoodsPackagePO goodsPackagePO : goodsPackagePOs) {
-			manifestItemVOs.add(new ManifestItemVO().init(goodsPackagePO.getGoods().getGid(), goodsPackagePO.getColor().getCid(), goodsPackagePO.getFormat().getFid(), shid, null, 0, Arith.mul(num, goodsPackagePO.getNum())));
+			manifestItemVOs.add(new ManifestItemVO().init(goodsPackagePO.getGoods().getGid(), goodsPackagePO.getColor().getCid(), goodsPackagePO.getFormat().getFid(), shid, null, 0, 0, Arith.mul(num, goodsPackagePO.getNum())));
 		}
 
 		manifestService.addManifestForPS(manifestItemVOs, userId, company);

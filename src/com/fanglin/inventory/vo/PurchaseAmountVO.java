@@ -4,18 +4,18 @@ public class PurchaseAmountVO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -4972158168590827580L;
 
-	private Long paId;
+	private Long paid;
 	
 	private String month;
 	
 	private Float money;
 
-	public Long getPaId() {
-		return this.paId;
+	public Long getPaid() {
+		return paid;
 	}
 
-	public void setPaId(Long paId) {
-		this.paId = paId;
+	public void setPaid(Long paid) {
+		this.paid = paid;
 	}
 
 	public String getMonth() {

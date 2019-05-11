@@ -472,7 +472,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 			
 			for(int i = 0; i < couponInfos.length; i++){
 				if(couponInfos[i].indexOf(":") > -1){
-					sumCoupon = Arith.add(sumCoupon, Short.valueOf(couponInfos[i].split(":")[1]));
+					sumCoupon = Arith.add(sumCoupon, Float.valueOf(couponInfos[i].split(":")[1]));
 				}
 			}
 			

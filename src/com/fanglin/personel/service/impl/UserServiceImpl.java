@@ -568,7 +568,7 @@ public class UserServiceImpl implements UserService {
 
 		String api = "sendMessage.do";
 
-		String params = String.format("message.receiver.userId=%s&message.sender.userId=%s&message.type=%s&message.contents=%s&company=%s", userVO.getUserId(), "", MessagePO.MESSAGE_TYPE_SEND_PERSONEL_STR, "修改密码为:" + newPassword, company);
+		String params = String.format("message.receiver.userId=%s&message.sender.userId=%s&message.type=%s&message.contents=%s&company=%s", userVO.getUserId(), "", MessagePO.TYPE_SEND_PERSONEL_INT, "修改密码为:" + newPassword, company);
 
 		String communion = systemConfigDao.querySystemConfig("communion").getValue();
 		String code = systemConfigDao.querySystemConfig("tokenkey").getValue();

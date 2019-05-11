@@ -11,8 +11,6 @@ public interface PurchaseDao extends Dao<PurchasePO> {
 
 	public List<PurchasePO> pagePurchase(Paging paging, List<Filter> filters,int company);
 	
-	public List<PurchasePO> pagePurchaseObDelivery(Paging paging, List<Filter> filters, int company);
-	
 	public PurchasePO queryPurchaseByPid(long pid);
 	
 }

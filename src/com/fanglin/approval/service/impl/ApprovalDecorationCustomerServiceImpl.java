@@ -11,14 +11,10 @@
 
 package com.fanglin.approval.service.impl;
 
-import java.util.Arrays;
-import java.util.Date;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.alibaba.fastjson.JSONArray;
 import com.fanglin.approval.dao.ApprovalDao;
 import com.fanglin.approval.dao.ApprovalDecorationCustomerDao;
 import com.fanglin.approval.po.ApprovalDecorationCustomerPO;
@@ -29,127 +25,97 @@ import com.fanglin.approval.vo.ApprovalVO;
 import com.fanglin.communion.dao.CustomerDao;
 import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.dingding.service.ApprovalService;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.AssassinService;
 import com.fanglin.information.service.MessageService;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
-import com.fanglin.system.dao.SystemConfigDao;
-import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.BeanUtil;
-import com.fanglin.utils.DateUtil;
 
 @Service("approvalDecorationCustomerService")
-@Transactional(readOnly=true)
+@Transactional(readOnly = true)
 public class ApprovalDecorationCustomerServiceImpl implements ApprovalDecorationCustomerService {
-	
+
 	@Autowired
 	private ApprovalDao approvalDao;
-	
+
 	@Autowired
 	private ApprovalDecorationCustomerDao approvalDecorationCustomerDao;
-	
+
 	@Autowired
 	private AssassinService assassinService;
-	
+
 	@Autowired
 	private CustomerDao customerDao;
-	
+
 	@Autowired
 	private MessageService messageService;
 
 	@Autowired
 	private UserDao userDao;
-	
-	@Autowired
-	private SystemConfigDao systemConfigDao;
-	
-	@Autowired
-	private ApprovalService approvalDDService;
-	
+
 	@Override
-	@Transactional(rollbackFor=Exception.class)
+	@Transactional(rollbackFor = Exception.class)
 	public int submitApprovalForCustomer(ApprovalVO approvalVO, ApprovalDecorationCustomerVO approvalDecorationCustomerVO, String userId, int company) throws FLException {
-		
+
 		int customerId = approvalDecorationCustomerVO.getCustomerId();
-	
-		ApprovalPO approvalPO = approvalDao.queryApproval(ApprovalPO.APPROVAL_STATUS_INIT_INT,ApprovalPO.APPROVAL_TYPE_CUSTOMER_INT, String.valueOf(customerId));
-		
-		if(approvalPO != null){
+
+		ApprovalPO approvalPO = approvalDao.queryApproval(ApprovalPO.APPROVAL_STATUS_INIT_INT, ApprovalPO.APPROVAL_TYPE_CUSTOMER_INT, String.valueOf(customerId));
+
+		if (approvalPO != null) {
 			throw new FLException(240004, "正在审批中,不能提交新审批");
 		}
-		
+
 		CustomerPO customerPO = customerDao.get(customerId);
-		
-		if(customerPO == null){
+
+		if (customerPO == null) {
 			throw new FLException(130002, "客户信息不存在");
 		}
-		
-		String customerName = customerPO.getName();
-		
-		approvalPO = new ApprovalPO();
-		BeanUtil.copyProperties(approvalVO, approvalPO,Arrays.asList("receiver","sender"));
-		
+
 		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiver().getUserId());
 		UserPO sender = userDao.queryUserByUserId(userId);
-		
-		SystemConfigPO systemConfigPO = systemConfigDao.querySystemConfig(ApprovalPO.APPROVAL_SYSTEMCONFIG_CUSTOMER_STR,company);
-		
-		if(systemConfigPO == null){
-			approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_INIT_INT);
-		}else{
-			approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_APPROVE_INT);
-			JSONArray formComponentValues = approvalDDService.getForms("说明", String.format(ApprovalPO.APPROVAL_CONTENTS_CUSTOMER_STR, customerName, approvalDecorationCustomerVO.getNewCustomerName(),approvalDecorationCustomerVO.getNewCustomerPhone()));
-			String processinstanceid = approvalDDService.initiateApproval(systemConfigPO.getValue(), userId, approvalVO.getReceiver().getUserId(), null, null, formComponentValues, company);
-			approvalPO.setProcessinstanceid(processinstanceid);
-		}
-		
-		approvalPO.setType(ApprovalPO.APPROVAL_TYPE_CUSTOMER_INT);
-		approvalPO.setIdent(String.valueOf(customerId));
-		approvalPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-		approvalPO.setContents(String.format(ApprovalPO.APPROVAL_CONTENTS_CUSTOMER_STR, customerName, approvalDecorationCustomerVO.getNewCustomerName(),approvalDecorationCustomerVO.getNewCustomerPhone()));
-		approvalPO.setReceiver(receiver);
-		approvalPO.setSender(sender);
-		approvalPO.setCompany(company);
-		
+
+		String content = String.format("客户名:%s,修改为客户名:%s,新增电话:%s", customerPO.getName(), approvalDecorationCustomerVO.getNewCustomerName(), approvalDecorationCustomerVO.getNewCustomerPhone());
+
+		approvalPO = new ApprovalPO().init(sender, receiver, String.valueOf(customerId), ApprovalPO.APPROVAL_TYPE_CUSTOMER_INT, content, company);
+
 		approvalDao.save(approvalPO);
-		
+
 		ApprovalDecorationCustomerPO approvalDecorationCustomerPO = new ApprovalDecorationCustomerPO();
 		BeanUtil.copyProperties(approvalDecorationCustomerVO, approvalDecorationCustomerPO);
-		
+
 		approvalDecorationCustomerPO.setAid(approvalPO.getAid());
-		
-		approvalDecorationCustomerDao.save(approvalDecorationCustomerPO);	 
-		
-		messageService.sendMessage(approvalPO.getReceiver().getUserId(),approvalPO.getSender().getUserId(),approvalPO.getContents(), MessagePO.MESSAGE_TYPE_SEND_APPROVAL_STR,company);	
-		
+
+		approvalDecorationCustomerDao.save(approvalDecorationCustomerPO);
+
+		messageService.sendMessage(approvalPO.getReceiver().getUserId(), approvalPO.getSender().getUserId(), approvalPO.getContents(), MessagePO.TYPE_SEND_APPROVAL_INT, company);
+
 		return 0;
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
+	@Transactional(rollbackFor = Exception.class)
 	public int approvalForCustomer(ApprovalPO approvalPO) throws FLException {
-		
+
 		ApprovalDecorationCustomerPO approvalDecorationCustomerPO = approvalDecorationCustomerDao.queryApprovalDecorationCustomerByAId(approvalPO.getAid());
-		
-		if(approvalDecorationCustomerPO == null){
+
+		if (approvalDecorationCustomerPO == null) {
 			throw new FLException(240003, "审批信息不完整");
 		}
-		
+
 		CustomerPO customerPO = customerDao.get(approvalDecorationCustomerPO.getCustomerId());
-		
-		if(customerPO == null){
+
+		if (customerPO == null) {
 			throw new FLException(130002, "客户信息不存在");
 		}
-		
+
 		String customerName = approvalDecorationCustomerPO.getNewCustomerName();
-		
-		String api = "updateCustomerNameAPhone.do";//接口暂定
+
+		String api = "updateCustomerNameAPhone.do";// 接口暂定
 		String params = String.format("customer.cid=%s&customer.name=%s&customer.phone=%s", approvalDecorationCustomerPO.getCustomerId(), customerName, approvalDecorationCustomerPO.getNewCustomerPhone());
-		String content = String.format("客户编号:%s,新客户名称:%s,新客户电话:%s",approvalDecorationCustomerPO.getCustomerId(),customerName,approvalDecorationCustomerPO.getNewCustomerPhone());
-		
-		assassinService.proxy("communion", api, params, content, approvalPO.getSender());		
+		String content = String.format("客户编号:%s,新客户名称:%s,新客户电话:%s", approvalDecorationCustomerPO.getCustomerId(), customerName, approvalDecorationCustomerPO.getNewCustomerPhone());
+
+		assassinService.proxy("communion", api, params, content, approvalPO.getSender());
 		return 0;
 	}
 

@@ -28,14 +28,16 @@ public class ManifestPO implements java.io.Serializable {
 	public static final String COLUMN_MID_STR = "mid";
 
 	public static final String COLUMN_CODE_STR = "code";
+	
+	public static final String COLUMN_CREATER_STR = "creater.userId";
 
-	public static final String COLUMN_ORDERID_STR = "orderId";
+	public static final String COLUMN_CREATETIME_STR = "createTime";
 
 	public static final String COLUMN_MANIFESTTIME_STR = "manifestTime";
 
 	public static final String COLUMN_STATUS_STR = "status";
 
-	public static final String COLUMN_CREATEUSER_USERID_STR = "creater.userId";
+	
 	
 	public static final short STATUS_INIT_INT = 0;
 
@@ -74,8 +76,6 @@ public class ManifestPO implements java.io.Serializable {
 	private Timestamp createTime;
 
 	private Timestamp manifestTime;
-
-	private float total;
 
 	private short type;
 
@@ -158,15 +158,6 @@ public class ManifestPO implements java.io.Serializable {
 
 	public void setCreater(UserPO creater) {
 		this.creater = creater;
-	}
-
-	@Column(name = "total")
-	public float getTotal() {
-		return this.total;
-	}
-
-	public void setTotal(float total) {
-		this.total = total;
 	}
 
 	@Column(name = "type")

@@ -189,7 +189,7 @@ public class VpaymentServiceImpl implements VpaymentService {
 		EmemberPO ememberPO = ememberDao.queryEmemberByNo(mno);
 
 		if (ememberPO != null) {
-			messageService.sendMessage(ememberPO.getUnionId(), "活动收款", mno, String.format("活动收款总额: %f", realMoney) );
+			messageService.sendMessage(ememberPO.getUnionId(), "活动收款", mno, String.format("活动收款总额: %.2f", realMoney) );
 		}
 
 		return 0;

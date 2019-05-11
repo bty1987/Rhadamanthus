@@ -72,7 +72,7 @@
                     "drawLine.decoration.orderId": com.focusPage("#dischargeLineOrderId").val(),
                 };
 
-                com.post(api.drawline.applayDrawLine, options);
+                com.post(api.decoration.applayDrawLine, options);
             }
 
             order.drawLineModal.modal("hide");

@@ -6,7 +6,6 @@ jQuery(function ($) {
         manifestType: params["manifest.type"],
         items: {
         	list: com.focusPage('#list'),
-        	totalSpan: com.focusPage("#totalSpan")
         },
         record: {},
         validator: {
@@ -47,12 +46,13 @@ jQuery(function ($) {
             
             $line.find('div.pieceNum').text(v.goods.pieceNum);
             
-            $line.find('div.unitPrice input').val(v.unitPrice);
-            $line.find('div.number input').val(v.num);
+            $line.find('div.inprice input').val(v.inprice);
+            $line.find('div.outprice input').val(v.outprice);
+            $line.find('div.number input').val(v.surplus);
     		
     	});
-    })
-
+    });
+    
     com.focusPage('#addManifestItem').click(function () {
         var num = com.focusPage('.line', '#list').length;
         var $line = addline(num + 1).appendTo(manifest.items.list);
@@ -63,7 +63,7 @@ jQuery(function ($) {
 
         var $line = $('<li></li>').addClass('line');
         var $indexWrap = $('<div></div>').addClass('line-wrap order').append($('<div></div>').addClass('cell index').text(lineindex));
-        var $lineInfoWrap = $('<div></div>').addClass('line-wrap content col10');
+        var $lineInfoWrap = $('<div></div>').addClass('line-wrap content col12');
         var $optWrap = $('<div></div>').addClass('line-wrap action');
 
         var _lineInfoSet = [
@@ -76,7 +76,8 @@ jQuery(function ($) {
             {cellClass: "format", hasSelect: true},
             {cellClass: "storehouse", hasSelect: true},
             {cellClass: "pieceNum"},
-            {cellClass: "price", hasInput: true},
+            {cellClass: "inprice", hasInput: true},
+            {cellClass: "outprice", hasInput: true},
             {cellClass: "num", hasInput: true}
         ];
 
@@ -162,15 +163,14 @@ jQuery(function ($) {
         	}
         	
         	var miid = $line.attr("data-miid");
-        	var total = manifest.items.totalSpan.text();
         	
         	var num = $line.find(".num input").val();
-        	var unitPrice = $line.find(".price input").val();
+        	var inprice = $line.find(".inprice input").val();
+        	var outprice = $line.find(".outprice input").val();
         	
         	var url = api.inventory.updateManifestItem;
         	var options = {
         		"manifest.mid": manifest.mid,
-        		"manifest.total": total,
         		"manifestItem.miid": miid
         	}
         	
@@ -198,7 +198,6 @@ jQuery(function ($) {
                 
                 $line.attr('data-miid', manifestItem.miid);
                 
-                cyclTotal();
             }, function (e) {
                 btn.button('reset');
                 com.showAlert(com.error, e.errorMsg);
@@ -212,7 +211,6 @@ jQuery(function ($) {
         	if(miid){
         		com.post(api.inventory.deleteManifestItem, {
                     "manifest.mid": manifest.mid,
-                    "manifest.total":manifest.items.totalSpan.text(),
                     "manifestItem.miid": miid
                 }, function(res){
                 	$line.remove();
@@ -223,211 +221,6 @@ jQuery(function ($) {
         });
 
         return $line;
-
-    }
-
-    function accessoriesAdd() {
-        var index = com.focusPage('.line', '#list').length;
-        
-        com.post(api.inventory.queryManifestItemByMid, {
-            "manifest.mid": manifest.mid
-        }, function (res) {
-            for (var i = 0; i < res.manifestItems.length; i++) {
-                index = com.focusPage('.line', '#list').length;
-                autoAddline(index);
-            }
-            function autoAddline(index) {
-                index = com.focusPage('.line', '#list').length;
-                addline(1 + index).appendTo(com.focusPage('#list'));
-                var $lineInfoWrap1 = com.focusPage('#list li:nth-of-type(' + (index + 1) + ') div.content');
-                com.focusPage('#list li:nth-of-type(' + (index + 1) + ')').attr({
-                    'data-gid': res.manifestItems[i].goods.gid,
-                    'data-miid': res.manifestItems[i].miid
-                });
-                $lineInfoWrap1.find('div.no').text(res.manifestItems[i].goods.no);
-                $lineInfoWrap1.find('div.name').text(res.manifestItems[i].goods.name);
-                $lineInfoWrap1.find('div.measurementUnit').text(res.manifestItems[i].goods.measurementUnit);
-                $lineInfoWrap1.find('div.color').text(res.manifestItems[i].color.name);
-                $lineInfoWrap1.find('div.format').text(res.manifestItems[i].format.info);
-                $lineInfoWrap1.find('div.pieceNum').text(res.manifestItems[i].goods.pieceNum);
-                if (manifest.mtype == 1) {
-                    $lineInfoWrap1.find('div.storehouse').attr('data-storehouse', res.manifestItems[i].instorehouse.shid).text(res.manifestItems[i].instorehouse.name);
-                } else if (manifest.mtype == 3) {
-                    $lineInfoWrap1.find('div.storehouse').attr('data-storehouse', res.manifestItems[i].outstorehouse.shid).text(res.manifestItems[i].outstorehouse.name);
-                }
-                $lineInfoWrap1.find('div.num input').val(res.manifestItems[i].num);
-                $lineInfoWrap1.find('div.price input').val(res.manifestItems[i].purchasePrice);
-            }
-        })
-    }
-
-    accessoriesAdd();
-
-    function checkRowValue($line) {
-
-        var flag = true;
-
-        var num = $line.find('.num input');
-        var numRex = /^(\d+|\d+\.[0-9]{1,4})$/;
-        if (!(numRex.test(num.val()) && parseFloat(num.val()) > 0)) {
-            num.focus().select();
-            num.addClass('tooltip-info').attr({
-                "data-rel": "popover",
-                "data-placement": "top",
-                "data-original-title": "",
-                "title": "",
-                "data-content": "数量输入内容格式错误!"
-            }).popover('show');
-            flag = false;
-        } else {
-            num.popover('destroy');
-        }
-
-        var price = $line.find('.price input');
-        var priceRex = /^([0-9]+|[0-9]+\.[0-9]{1,2})$/;
-        if (!(priceRex.test(price.val()) && parseFloat(price.val()) > 0)) {
-            price.focus().select();
-            price.addClass('tooltip-info').attr({
-                "data-rel": "popover",
-                "data-placement": "top",
-                "data-original-title": "",
-                "title": "",
-                "data-content": "售价输入内容格式错误!"
-
-            }).popover('show');
-            flag = false;
-        } else {
-            price.popover('destroy');
-        }
-
-        var des = $line.find('.des input');
-        if (des.val() && des.val().length > 128) {
-            des.focus().select();
-            des.addClass('tooltip-info').attr({
-                "data-rel": "popover",
-                "data-placement": "top",
-                "data-original-title": "",
-                "title": "",
-                "data-content": "备注信息长度需要小于128!"
-            }).popover('show');
-            flag = false;
-        } else {
-            des.popover('destroy');
-        }
-
-        return flag;
-    }
-
-    function checkRowValueByNew($line) {
-
-        var flag = true;
-
-        var name = $line.find('.name input');
-        if (!name.val()) {
-            name.focus().select();
-
-            name.addClass('popover-notitle').attr({
-                "data-rel": "popover",
-                "data-placement": "top",
-                "data-original-title": "",
-                "title": "",
-                "data-content": "请填写主材名称"
-
-            }).popover('show');
-
-            flag = false;
-        } else {
-            name.popover('destroy');
-        }
-
-
-        var storehouse = $line.find('.storehouse select');
-        if (!storehouse.val()) {
-            storehouse.focus().select();
-
-            storehouse.addClass('popover-notitle').attr({
-                "data-rel": "popover",
-                "data-placement": "top",
-                "data-original-title": "",
-                "title": "",
-                "data-content": "请填写仓库名称"
-
-            }).popover('show');
-
-            flag = false;
-        } else {
-            storehouse.popover('destroy');
-        }
-
-
-        var num = $line.find('.num input');
-        var numRex = /^(\d+|\d+\.[0-9]{1,4})$/;
-        if (!(numRex.test(num.val()) && parseFloat(num.val()) > 0)) {
-            num.focus().select();
-            num.addClass('tooltip-info').attr({
-                "data-rel": "popover",
-                "data-placement": "top",
-                "data-original-title": "",
-                "title": "",
-                "data-content": "数量输入内容格式错误!"
-            }).popover('show');
-            flag = false;
-        } else {
-            num.popover('destroy');
-        }
-
-
-        var price = $line.find('.price input');
-        var priceRex = /^([0-9]+|[0-9]+\.[0-9]{1,2})$/;
-        if (!(priceRex.test(price.val()) && parseFloat(price.val()) > 0)) {
-            price.focus().select();
-            price.addClass('tooltip-info').attr({
-                "data-rel": "popover",
-                "data-placement": "top",
-                "data-original-title": "",
-                "title": "",
-                "data-content": "售价输入内容格式错误!"
-
-            }).popover('show');
-            flag = false;
-        } else {
-            price.popover('destroy');
-        }
-
-
-        var des = $line.find('.des input');
-        if (des.val() && des.val().length > 128) {
-            des.focus().select();
-            des.addClass('tooltip-info').attr({
-                "data-rel": "popover",
-                "data-placement": "top",
-                "data-original-title": "",
-                "title": "",
-                "data-content": "备注信息长度需要小于128!"
-            }).popover('show');
-            flag = false;
-        } else {
-            des.popover('destroy');
-        }
-
-        return flag;
-    }
-
-    function cyclTotal() {
-
-        var _total = 0;
-
-        var $list = com.focusPage('.line', '#list');
-        $list.length && $list.each(function () {
-            var $this = $(this);
-            if ($this.find('.price input').val()) {
-                _total = utils.accAdd(utils.accMul(parseFloat($this.find('.price input').val() + ''),$this.find('.num input').val()), _total);
-            }
-        });
-
-        manifest.totalSum = _total;
-
-        com.focusPage("#totalSpan").text(_total);
     }
 
     function reorder() {

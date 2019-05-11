@@ -22,14 +22,9 @@ $(function () {
 
     //获取所有节点
     com.post(api.data.queryConstructionNode, {}, function (res) {
-
-        var newNodes = res.constructionNodes.sort(function(a, b){
-            return a.sort - b.sort;
-        });
-        $.each(newNodes, function (i, v) {
+        $.each(res.constructionNodes, function (i, v) {
             constructionNode[v.sort] = v.name;
-        })
-        console.log(constructionNode)
+        });
     }, null, false);
 
     //动态获取节点轴
@@ -49,7 +44,7 @@ $(function () {
         initWizardSept(stepnum, stepnum);
 
         com.focusPage('#fuelux-wizard').ace_wizard({status: true}).on('finished', function (e) {
-            com.showAlert(com.info, "工程已经结束,之后可以进行验收工作!");
+            com.showAlert(com.info, "工程已经结束,之后可以进行验收工作");
         }).on('stepclick', function (e, info) {
             var stepId = com.focusPage("[flag]").eq(info.step - 1).attr("id");
             var sd = stepId.substring(4);
@@ -70,68 +65,59 @@ $(function () {
     });
 
     function initWizardSept(operate, schedule) {
+        
         addActive(schedule);
 
-        var elementPostData = {};
+        var elementPostData = {
+            "constructionSchedule.orderId": params.orderId,
+            "constructionSchedule.schedule": schedule
+        };
 
-        var orderId = params.orderId;
-        elementPostData["constructionSchedule.orderId"] = params.orderId;
-        elementPostData["constructionSchedule.schedule"] = schedule;
+        com.post(api.construction.queryConstructionScheduleByOrderIdASchedule, elementPostData, function (res) {
 
-        com.post(api.construction.queryConstructionScheduleByOrderId, elementPostData, function (res) {
-
-            var element = res.constructionSchedules;
+            var constructionSchedule = res.constructionSchedule;
 
             com.initChosen(operate + "WorkerName", api.personel.queryUserByPinyin, "pinyinName", {
                 "departmentType.name": "工程部",
                 "user.status": 0
             }, "autoFillKeyValue", "key", "value");
 
-            com.focusPage("#" + operate + "StartTime").val(element[0].startTime);
-            com.focusPage("#" + operate + "EndTime").val(element[0].endTime);
+            com.focusPage("#" + operate + "StartTime").val(constructionSchedule.startTime);
+            com.focusPage("#" + operate + "EndTime").val(constructionSchedule.endTime);
 
             var otherename = schedule;
-            var otherStatus = res.constructionSchedules[0].status;
+            var otherStatus = constructionSchedule.status;
 
             var otherSuccessBtn = com.focusPage("#" + otherename + "Success");
             var othereFailBtn = com.focusPage("#" + otherename + "Fail");
-
+            
             updatastatusDiv(otherStatus, otherename);
 
-            if (otherStatus == 1) {
-                otherSuccessBtn.attr("disabled", "disabled");
-                othereFailBtn.attr("disabled", "disabled");
-            }
-
             otherSuccessBtn.click(function () {
-                var options = {};
-                options["constructionSchedule.csId"] = element[0].csId;
-                options["constructionSchedule.orderId"] = orderId;
-                options["constructionSchedule.status"] = 1;
-
-                com.post(api.construction.setConstructionScheduleForStatus, options, function (res) {
-                    com.showAlert(com.info, "完结成功!");
-                    otherSuccessBtn.attr("disabled", "disabled");
-                    othereFailBtn.attr("disabled", "disabled");
+                
+                var options = {
+                    "constructionSchedule.csid": constructionSchedule.csid
+                };
+                
+                com.post(api.construction.beginConstructionSchedule, options, function (res) {
+                    com.showAlert(com.info, "操作成功");
                     updatastatusDiv(1, otherename);
                 });
+                
                 return false;
             });
 
             othereFailBtn.click(function () {
-                var options = {};
+                
+                var options = {
+                    "constructionSchedule.csid": constructionSchedule.csid
+                };
 
-                options["constructionSchedule.csId"] = element[0].csId;
-                options["constructionSchedule.orderId"] = orderId;
-                options["constructionSchedule.status"] = 0;
-
-                com.post(api.construction.setConstructionScheduleForStatus, options, function (res) {
-                    com.showAlert(com.warning, "初始!");
-                    otherSuccessBtn.attr("disabled", "disabled");
-                    othereFailBtn.attr("disabled", "disabled");
-
-                    updatastatusDiv(0, otherename);
+                com.post(api.construction.finishConstructionSchedule, options, function (res) {
+                    com.showAlert(com.info, "操作成功");
+                    updatastatusDiv(2, otherename);
                 });
+                
                 return false;
             });
 
@@ -148,12 +134,12 @@ $(function () {
             com.focusPage("#" + operate + "WorkerSubmit").on("click", function () {
 
                 if (com.focusPage("#" + operate + "WorkerName_chosen span")[0].textContent.replace(/\s+/g, "") == "") {
-                    com.showAlert(com.error, "工人名称不能为空!");
+                    com.showAlert(com.error, "工人名称不能为空");
                     return false;
                 }
 
                 var args = {};
-                args["constructer.cid"] = element[0].cid;
+                args["constructer.cid"] = constructionSchedule.cid;
                 args["constructer.schedule"] = schedule;
                 args["constructer.user.userId"] = com.focusPage('#' + operate + "WorkerName").val();
 
@@ -167,18 +153,20 @@ $(function () {
             com.focusPage('#' + operate + "Drawing").removeClass("active");
 
             return false;
-
         });
     }
 
     //添加初始完结按钮
-    function updatastatusDiv(Status, statusDiv) {
+    function updatastatusDiv(status, statusDiv) {
 
         var statusDiv = com.focusPage("#" + statusDiv + "Status").html("");
-        if (Status == 1) {
-            $("<span></span>").addClass("label label-success col-sm-1").text("完结").appendTo(statusDiv);
+        
+        if (status == 0) {
+            $("<span></span>").addClass("label label-grey").text("初始").appendTo(statusDiv);
+        }else if (status == 1) {
+            $("<span></span>").addClass("label label-info").text("开工").appendTo(statusDiv);
         } else {
-            $("<span></span>").addClass("label label-grey col-sm-1").text("初始").appendTo(statusDiv);
+            $("<span></span>").addClass("label label-success").text("完工").appendTo(statusDiv);
         }
     }
 
@@ -291,24 +279,22 @@ $(function () {
         var paneWorkerSpace = $("<div></div>").addClass("space-4").appendTo(paneWorkerGroupTwo);
 
         //完工时间
-        if (schedule != 4) {
-            var paneWorkerGroupTh = $("<div></div>").addClass("form-group").appendTo(paneWorkerGroup);
-            var paneWorkerEnd = $("<label></label>").addClass("col-sm-2 control-label no-padding-right").attr("for", name + "EndTime").html("完工时间").appendTo(paneWorkerGroupTh);
-            var paneWorkerSmTh = $("<div></div>").addClass("col-sm-4").appendTo(paneWorkerGroupTh);
-            var paneWorkerInputTwo = $("<input/>").attr("id", name + "EndTime").attr("type", "text").addClass("col-sm-12").attr("readonly", "readonly").attr("data-toggle", "popover").attr("data-trigger", "manual").appendTo(paneWorkerSmTh);
-            var paneWorkerSpaceTwo = $("<div></div>").addClass("space-4").appendTo(paneWorkerGroupTwo);
-        }
+        var paneWorkerGroupTh = $("<div></div>").addClass("form-group").appendTo(paneWorkerGroup);
+        var paneWorkerEnd = $("<label></label>").addClass("col-sm-2 control-label no-padding-right").attr("for", name + "EndTime").html("完工时间").appendTo(paneWorkerGroupTh);
+        var paneWorkerSmTh = $("<div></div>").addClass("col-sm-4").appendTo(paneWorkerGroupTh);
+        var paneWorkerInputTwo = $("<input/>").attr("id", name + "EndTime").attr("type", "text").addClass("col-sm-12").attr("readonly", "readonly").attr("data-toggle", "popover").attr("data-trigger", "manual").appendTo(paneWorkerSmTh);
+        var paneWorkerSpaceTwo = $("<div></div>").addClass("space-4").appendTo(paneWorkerGroupTwo);
 
-        //铲大白放线状态
         var paneWorkerGroupF = $("<div></div>").addClass("form-group").appendTo(paneWorkerGroup);
         var paneWorkerLab = $("<label></label>").addClass("col-sm-2 control-label no-padding-right").attr("for", name + "Status").html(constructionNode[schedule] + "状态").appendTo(paneWorkerGroupF);
-        var paneWorkerLabDiv = $("<div></div>").attr("id", name + "Status").addClass("col-sm-6").appendTo(paneWorkerGroupF);
+        var paneWorkerLabDiv = $("<div></div>").attr("id", name + "Status").addClass("col-sm-2").appendTo(paneWorkerGroupF);
         var paneWorkerSpaceTh = $("<div></div>").addClass("space-4").appendTo(paneWorkerGroupF);
 
         var paneWorkerGroupFive = $("<div></div>").addClass("form-group").attr("id", name + "Operate").appendTo(paneWorkerGroup);
         var paneWorkerSmFive = $("<div></div>").addClass("col-sm-offset-2").appendTo(paneWorkerGroupFive);
 
-        var paneWorkerBtnS = $("<button></button>").attr("id", name + "Success").addClass("btn btn-xs btn-success").html("完结").attr("style", "margin-right:5px").appendTo(paneWorkerSmFive);
+        var paneWorkerBtnS = $("<button></button>").attr("id", name + "Success").addClass("btn btn-xs btn-info").html("开工").attr("style", "margin-right:5px").appendTo(paneWorkerSmFive);
+        var paneWorkerBtnS = $("<button></button>").attr("id", name + "Fail").addClass("btn btn-xs btn-success").html("完工").attr("style", "margin-right:5px").appendTo(paneWorkerSmFive);
         var paneWorkerGroupS = $("<div></div>").addClass("form-group").appendTo(paneWorkerForm);
         var paneWorkerSmS = $("<div></div>").addClass("col-sm-12").appendTo(paneWorkerGroupS);
         var paneWorkerHTh = $("<h3></h3>").addClass("header smaller lighter blue").appendTo(paneWorkerSmS);

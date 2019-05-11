@@ -23,7 +23,7 @@ public class SalesActivityItemVO implements Serializable {
 
 	private String name;
 
-	private Integer num;
+	private Float num;
 
 	private Float money;
 
@@ -92,12 +92,12 @@ public class SalesActivityItemVO implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
-
-	public Integer getNum() {
+	
+	public Float getNum() {
 		return num;
 	}
 
-	public void setNum(Integer num) {
+	public void setNum(Float num) {
 		this.num = num;
 	}
 

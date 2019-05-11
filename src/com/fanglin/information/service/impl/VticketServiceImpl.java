@@ -12,8 +12,11 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.customer.dao.EmemberDao;
+import com.fanglin.customer.po.EmemberPO;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
+import com.fanglin.dingding.service.MessageService;
 import com.fanglin.information.dao.VticketDao;
 import com.fanglin.information.po.VticketPO;
 import com.fanglin.information.service.VticketService;
@@ -36,6 +39,12 @@ public class VticketServiceImpl implements VticketService {
 
 	@Autowired
 	private DecorationDao decorationDao;
+	
+	@Autowired
+	private EmemberDao ememberDao;
+	
+	@Autowired
+	private MessageService messageService;
 
 	@Override
 	public void pageVticket(Paging paging, List<Filter> filters) {
@@ -141,8 +150,10 @@ public class VticketServiceImpl implements VticketService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void comeVticket(VticketVO vticketVO) throws FLException {
+		
+		String no = vticketVO.getTno();
 
-		VticketPO vticketPO = vticketDao.queryVticketByTno(vticketVO.getTno());
+		VticketPO vticketPO = vticketDao.queryVticketByTno(no);
 
 		if (vticketPO == null) {
 			throw new FLException(160026, "活动票不存在");
@@ -159,6 +170,12 @@ public class VticketServiceImpl implements VticketService {
 		vticketPO.setIscome(VticketPO.ISCOME_YES_INT);
 
 		vticketDao.update(vticketPO);
+		
+		EmemberPO ememberPO = ememberDao.queryEmemberByNo(no);
+
+		if (ememberPO != null) {
+			messageService.sendMessage(ememberPO.getUnionId(), "活动", no, "已到场");
+		}
 	}
 
 	public VticketVO ptv(VticketPO vticketPO) {

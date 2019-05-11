@@ -1,14 +1,14 @@
 package com.fanglin.inventory.po;
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-
-import static javax.persistence.GenerationType.IDENTITY;
-import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
@@ -26,6 +26,12 @@ public class ManifestItemPO implements java.io.Serializable {
 	private long mid;
 
 	private long siid;
+	
+	private long piid;
+	
+	private long aiid;
+	
+	private long qiid;
 
 	private GoodsPO goods;
 
@@ -36,10 +42,16 @@ public class ManifestItemPO implements java.io.Serializable {
 	private StorehousePO instorehouse;
 
 	private StorehousePO outstorehouse;
+	
+	private short type;
+	
+	private float inprice;
+	
+	private float outprice;
 
 	private float num;
-
-	private float unitPrice;
+	
+	private float surplus;
 
 	private String comment;
 
@@ -70,7 +82,7 @@ public class ManifestItemPO implements java.io.Serializable {
 		this.miid = miid;
 	}
 
-	@Column(name = "mId")
+	@Column(name = "mid")
 	public long getMid() {
 		return mid;
 	}
@@ -86,6 +98,30 @@ public class ManifestItemPO implements java.io.Serializable {
 
 	public void setSiid(long siid) {
 		this.siid = siid;
+	}
+
+	public long getPiid() {
+		return piid;
+	}
+
+	public void setPiid(long piid) {
+		this.piid = piid;
+	}
+
+	public long getAiid() {
+		return aiid;
+	}
+
+	public void setAiid(long aiid) {
+		this.aiid = aiid;
+	}
+
+	public long getQiid() {
+		return qiid;
+	}
+
+	public void setQiid(long qiid) {
+		this.qiid = qiid;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -137,6 +173,32 @@ public class ManifestItemPO implements java.io.Serializable {
 	public void setOutstorehouse(StorehousePO outstorehouse) {
 		this.outstorehouse = outstorehouse;
 	}
+	
+	public short getType() {
+		return type;
+	}
+
+	public void setType(short type) {
+		this.type = type;
+	}
+
+	@Column(name = "inprice")
+	public float getInprice() {
+		return inprice;
+	}
+
+	public void setInprice(float inprice) {
+		this.inprice = inprice;
+	}
+
+	@Column(name = "outprice")
+	public float getOutprice() {
+		return outprice;
+	}
+
+	public void setOutprice(float outprice) {
+		this.outprice = outprice;
+	}
 
 	@Column(name = "num")
 	public float getNum() {
@@ -146,10 +208,14 @@ public class ManifestItemPO implements java.io.Serializable {
 	public void setNum(float num) {
 		this.num = num;
 	}
+	
+	@Column(name = "surplus")
+	public float getSurplus() {
+		return surplus;
+	}
 
-	@Column(name = "unitPrice")
-	public void setUnitPrice(float unitPrice) {
-		this.unitPrice = unitPrice;
+	public void setSurplus(float surplus) {
+		this.surplus = surplus;
 	}
 
 	public void setComment(String comment) {
@@ -160,22 +226,25 @@ public class ManifestItemPO implements java.io.Serializable {
 	public String getComment() {
 		return this.comment;
 	}
-
-	public float getUnitPrice() {
-		return unitPrice;
-	}
 	
-	public ManifestItemPO init(long mid, Long siid, long gid, long cid, long fid, float unitPrice, float num, StorehousePO inStorehousePO, StorehousePO outStorehousePO){
+	public ManifestItemPO init(long mid, Long siid, Long piid, Long aiid, Long qiid, long gid, long cid, long fid, short type, float inprice, float outprice, float num, StorehousePO inStorehousePO, StorehousePO outStorehousePO){
 		
 		setMid(mid);
-		setSiid(siid);
+		
+		if(siid != null) setSiid(siid);
+		if(piid != null) setPiid(piid);
+		if(aiid != null) setAiid(aiid);
+		if(qiid != null) setQiid(qiid);
 		
 		setGoods(new GoodsPO(gid));
 		setColor(new ColorPO(cid));
 		setFormat(new FormatPO(fid));
 		
-		setUnitPrice(unitPrice);
+		setType(type);
+		setInprice(inprice);
+		setOutprice(outprice);
 		setNum(num);
+		setSurplus(num);
 		
 		setInstorehouse(inStorehousePO);
 		setOutstorehouse(outStorehousePO);
