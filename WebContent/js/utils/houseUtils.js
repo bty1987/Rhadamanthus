@@ -31,17 +31,10 @@ var houseUtils={
             prehouse.house = res.house;
             prehouse.Flag =true;
             if(Whether){
-                errid.removeAttr("data-placement").attr({
-                    "data-rel":"popover",
-                    "data-placement": "right",
-                    "data-content": "该房产已存在"
-                }).removeAttr("data-toggle").popover('show');
+                com.showAlert(com.warning, "房产已存在");
             }
         }, function(res){
             prehouse.Flag =false;
-            if(Whether){
-                errid.popover("destroy");
-            }
         }, false);
         return prehouse;
 

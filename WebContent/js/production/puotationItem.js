@@ -50,7 +50,7 @@ $(function () {
                 
                 $btnDelete.click(function (e) {
                     e.stopPropagation();
-                    layer.confirm('确定要删除吗？', {
+                    layer.confirm('确定要删除吗?', {
                         btn: ['确定', '取消'] //按钮
                     }, function (indexo, layero) {
                     	 com.post(api.production.deletePuotationItem, {"puotationItem.qiid": v.qiid}, function () {

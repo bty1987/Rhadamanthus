@@ -34,7 +34,7 @@ jQuery(function ($) {
 
     drawline.items.setupModal = com.focusPage("#setupModal").on('hide.bs.modal', function () {
         com.cleanTypeahead("supervisor");
-    });
+    });;
     drawline.items.editModal = com.focusPage("#editModal");
     drawline.items.applyModal = com.focusPage("#applyModal").on('shown.bs.modal', function (e) {
         initPlan();
@@ -48,11 +48,11 @@ jQuery(function ($) {
 
     com.post(api.data.queryDrawlineGroup, {}, function (res) {
         com.focusPage("#drawLineGroup").bindData(res.drawLineGroups, 'gid', 'name');
-    }, null, false);
 
-    //com.focusPage('#actualDate').daterangepicker(com.dateramgepickerdefault).prev().on(ace.click_event, function () {
-    //    com.focusPage(this).next().focus();
-    //});
+        $.each(res.drawLineGroups, function (i, v) {
+            drawline.drawLineGroup.push(v.name);
+        });
+    }, null, false);
 
     com.focusPage('.timepicker').timepicker({
         minuteStep: 1,
@@ -215,13 +215,11 @@ jQuery(function ($) {
     }
 
     function reset(dlid) {
-        bootbox.confirm("确认重置申请吗?", function (res) {
-            if (res) {
-                com.post(api.construction.failureDrawLine, {"drawLine.dlid": dlid}, function (res) {
-                    com.showAlert(com.info, "操作成功");
-                    searcher.doSearch();
-                });
-            }
+        com.showConfirm("确认重置申请吗?", function(){
+            com.post(api.construction.failureDrawLine, {"drawLine.dlid": dlid}, function (res) {
+                com.showAlert(com.info, "操作成功");
+                searcher.doSearch();
+            });
         });
     }
 
@@ -239,7 +237,7 @@ jQuery(function ($) {
         var end = Date.parse(_date.replace("-", "/") + " " + _end);
 
         if (start == NaN || end == NaN || start >= end) {
-            bootbox.alert("起始时间和结束时间非法");
+            com.showAlert(com.warning, "起始时间和结束时间非法");
             return false;
         }
 
@@ -250,7 +248,7 @@ jQuery(function ($) {
             "drawLine.group.gid": drawline.items.drawLineGroup.val()
         };
         
-        com.post(api.drawline.resetDrawLine, options, function (res) {
+        com.post(api.construction.resetDrawLine, options, function (res) {
             com.showAlert(com.info, "操作成功");
             searcher.doSearch();
             
@@ -266,7 +264,7 @@ jQuery(function ($) {
 
         var options = {
             "construction.orderId": drawline.orderId,
-            "construction.supervisor.userId": drawline.items.supervisor.attr('data-typeahead-key')
+            "construction.supervisor.userId": com.typeahead("supervisor")
         };
 
         com.post(api.construction.updateConstructionByOrderId, options, function (res) {
@@ -286,18 +284,6 @@ jQuery(function ($) {
             searcher.doSearch();
         });
     }
-    
-    function format(time){
-        var datetime = new Date();
-        datetime.setTime(time);
-        var year = datetime.getFullYear();
-        var month = datetime.getMonth() + 1 < 10 ? "0" + (datetime.getMonth() + 1) : datetime.getMonth() + 1;
-        var date = datetime.getDate() < 10 ? "0" + datetime.getDate() : datetime.getDate();
-        var hour = datetime.getHours()< 10 ? "0" + datetime.getHours() : datetime.getHours();
-        var minute = datetime.getMinutes()< 10 ? "0" + datetime.getMinutes() : datetime.getMinutes();
-        var second = datetime.getSeconds()< 10 ? "0" + datetime.getSeconds() : datetime.getSeconds();
-        return year + "-" + month + "-" + date+" "+hour+":"+minute+":"+second;
-    }
 
     function initPlan() {
 
@@ -307,24 +293,27 @@ jQuery(function ($) {
         com.focusPage('#calendar').fullCalendar($.extend(com.calendardefault, {
             events: function (start, end, callback) {
                 
+                var startTime = com.dateFormat(new Date(start));
+                var endTime = com.dateFormat(new Date(end));
+
                 var options = {
-                    "drawLine.startTime": format(start),
-                    "drawLine.endTime": format(end)
+                    "drawLine.startTime": startTime,
+                    "drawLine.endTime": endTime
                 };
 
                 com.post(api.construction.countDrawLine, options, function (res) {
                     
                     var counts = res.count;
                     var events = [];
-                    
+
                     for (var i in counts) {
 
                         var _ = counts[i];
                         var _date = _[1] + "";
-                        
+
                         var event = {
                             title: _[0] + _[2] + "个",
-                            start: new Date(_date.substr(0, 4), _date.substr(4, 2) -1, _date.substr(6, 2)),
+                            start: new Date(_date.substr(0, 4), _date.substr(4, 2) - 1, _date.substr(6, 2)),
                             allDay: true
                         };
 

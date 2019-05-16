@@ -174,7 +174,7 @@ jQuery(function($) {
 
         if(eperson.items.path.val() == ""){
             com.focusPage("#imgUrl").html("");
-            var $text = $('<span></span>').html('请上传头像！').css("color", "red").appendTo(com.focusPage("#imgUrl"));
+            var $text = $('<span></span>').html('请上传头像').css("color", "red").appendTo(com.focusPage("#imgUrl"));
             return;
         }
 
@@ -194,13 +194,13 @@ jQuery(function($) {
                 options["eperson.imgUrl"] = eperson.imgUrl;
             }
             com.post(api.market.updateEperson, options, function(res){
-                com.showAlert(com.info, "信息修改成功！");
+                com.showAlert(com.info, "信息修改成功");
                 searcher.doSearch();
             });
         }else {
             options["eperson.imgUrl"] = eperson.imgUrl;
             com.post(api.market.addEperson, options, function(res){
-                com.showAlert(com.info, "创建成功！");
+                com.showAlert(com.info, "创建成功");
                 searcher.doSearch();
             });
         }

@@ -1,53 +1,67 @@
 ﻿
 jQuery(function($) {
     
+    /**
+     * 当前页变量声明 , 利用一个页面变量包含页面整体需要的变量类型 
+     * 其中modals代表页面使用的modal集合(弹窗) , items代表页面输入元素集合(input/select/...) , 同时初始化(赋值)集合中的元素
+     * 另外 , 声明一些状态/类型等信息 , 按钮等元素对象
+     */
     var approve = {
-        saveBtn: null,
-        cancelBtn: null,
-        modal: null,
-        items:{},
+            
+        saveBtn: com.focusPage("#saveBtn"),
+        cancelBtn: com.focusPage("#cancelBtn"),
         
-        editFlg: false,
-        postParam: {},
-    };
-    
-    approve.saveBtn = com.focusPage("#saveBtn").bindClick(saveData);
-    approve.cancelBtn = com.focusPage("#cancelBtn");  
-    approve.modal = com.focusPage("#approveModal");
-    approve.items.userSel = com.focusPage("#userSel");
-    approve.items.comment = com.focusPage("#comment");
-    com.post(api.ds.approval, {"timestamp": new Date().getTime()}, function(res){
-        approve.approvalType = res.approvalType;
-        
-        approve.approvalTypeData = {};
-        
-        for(var i=0;i<approve.approvalType.length;i++){
-            var _ = approve.approvalType[i];
-            approve.approvalTypeData[_["key"]] = _["value"];
+        modals: {
+            approveModal: com.focusPage("#approveModal")
         }
+        items:{
+            approver: com.focusPage("#approver"),
+            type: com.focusPage("#type"),
+            comment: com.focusPage("#comment")
+        },
+        
+        approvalType: {}
+    };
+
+    /**
+     * 声明按钮/modal事件 , 初始化部分元素控件 , 例如typeahead/date控件等
+     */
+    approve.saveBtn.bindClick(saveData);
+    
+    com.initTypeahead("approver", api.personel.queryUserByPinyin, "pinyinName", {"user.status":"0", "departmentType.name":""}, "userBases", "userId", "currentName", null);
+    
+    /**
+     * 初始化页面变量中的状态/类型等信息 , 同时判断是否需要绑定数据
+     */
+    com.post(api.ds.approval, {"timestamp": new Date().getTime()}, function(res){
+        
+        $.each(res.approvalType, function(i, v){
+            approve.approvalType[v["key"]] = v["value"];
+        })
+        
+        approve.items.type.bindData(approve.approvalType, "key", "value", false);
     }, null, false);
     
-    com.initAutoFill("userSel", api.personel.queryUserByPinyin, "pinyinName", {"user.status":"0", "departmentType.name":""}, "userBases", "userId", "currentName", null);
-
-    approve.items.type = com.focusPage("#type").bindData(approve.approvalType, "key", "value", false);
-    
+    /**
+     * 分页中 , 显示数据(每行)的处理方法 , 每行显示内容大致分为三个部分 , 行标题 , 行内容 , 行按钮集
+     */
     var displayFunc  = (function(){
 
+        // 通过数据集完成每行数据对应的展现处理过程 , 利用creatLine完成每行对应数据的渲染
         var renderList = function(tableId,listData){
             var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if(listData && listData.length){ 
                 $.each(listData,function(i, v){
-                    var $liLine = creatLine(v);
-
-                    $liLine.appendTo($ul);
+                    creatLine(v).appendTo($ul);
                 });
 
                 $ul.appendTo($tableWrap);
             }
         };
 
+        // 行渲染处理方法
         var creatLine = function(v){
             var userBase = v.userBase;
             
@@ -61,7 +75,7 @@ jQuery(function($) {
             var propertyArr = [
                 ["编号:", userBase.userId, "grey"],
                 ["职位:", userBase.duty.name, "grey"],
-                ["类型:", approve.approvalTypeData[v.type], "red"],
+                ["类型:", approve.approvalType[v.type], "red"],
                 ["说明:", v.comment, "grey"]
             ];
 
@@ -76,14 +90,14 @@ jQuery(function($) {
             
             $liLine.append($h3).append($ulProperty);
 
-
             $btnDel.bindClick(function(){
-                deleteApprovalUser(v.aid);
+                deleteApprover(v.aid);
             });
             
             return $liLine;
         };
       
+        // 返回结果给searcher , searcher利用返回的方法完成具体分页显示的过程
         return {
             init : function(tableId,listData){
                 com.focusPage('#' + tableId).html(null);
@@ -95,6 +109,10 @@ jQuery(function($) {
         };
     })();
     
+    
+    /**
+     * searcher声明过程 , 参数: 查询条件集/条件元素ID/请求API/数据渲染方法/分页工具元素ID/条件缓存名称/请求参数/是否分页标识/响应结果名/响应结果/自定义按钮
+     */
     var searcher = new Searcher();
 
     searcher.init(["approval_senderName", "approval_Type"], "condList", api.approval.pageApprover, function(data){
@@ -108,20 +126,26 @@ jQuery(function($) {
         return [$adda];
     });
 
+    /**
+     * 自定义按钮绑定事件
+     */
     com.focusPage('a[name="addApprovalUser"]', '#pagenation').click(function(){
-        editFlg = false;
+        
         com.clearValidator();
-        com.updateChosen('userSel', '', '');
-        approve.items.userSel.prop("disabled", false).trigger("chosen:updated");
+        com.cleanTypeahead('approver');
         com.cleanItems(approve.items);
-        approve.modal.modal("show");
+        
+        approve.modals.approveModal.modal("show");
     });
 
-    function deleteApprovalUser(approverAid){
+    /**
+     * 事件声明 , 包括行数据中按钮事件/modal中使用按钮事件等
+     */
+    function deleteApprover(aid){
 
 
         var options = {
-            "approver.aid": approverAid
+            "approver.aid": aid
         };
         
         com.post(api.approval.deleteApprover, options, function(){
@@ -133,22 +157,21 @@ jQuery(function($) {
     function saveData(){
         
         if(com.validate()){
-            return;
-            }
+            return false;
+        }
         
-        var url;
+        var url = api.approval.addApprover;
         var options = {
-            'approver.userBase.userId': approve.items.userSel.attr('data-typeahead-key'),
+            'approver.userBase.userId': com.typeahead("approver"),
             'approver.type': approve.items.type.val(),
             'approver.comment': approve.items.comment.val(),
         };
-            url = api.approval.addApprover;
-            
+        
         com.post(url, options, function(res){
             searcher.doSearch();
-        },null,false);
+        }, null, false);
 
-        approve.modal.modal("hide");
+        approve.modals.approveModal.modal("hide");
     }
 
 });

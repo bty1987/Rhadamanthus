@@ -38,8 +38,6 @@ public class RoleAction extends BaseListAction {
 
 	private RoleVO role;
 
-	private Integer rid;
-
 	private List<RoleVO> roleList;
 
 	@Action(value = "pageRole", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
@@ -105,7 +103,7 @@ public class RoleAction extends BaseListAction {
 		    throw new FLException(-1, "无操作权限");
 		}
 		
-		roleService.deleteRoleByRid(rid);
+		roleService.deleteRoleByRid(role, queryRoleId());
 		
 		return SUCCESS;
 	}
@@ -125,14 +123,5 @@ public class RoleAction extends BaseListAction {
 	public void setRoleList(List<RoleVO> roleList){
 		this.roleList = roleList;
 	}
-
-	public Integer getRid() {
-		return rid;
-	}
-
-	public void setRid(Integer rid) {
-		this.rid = rid;
-	}
-	
 	
 }

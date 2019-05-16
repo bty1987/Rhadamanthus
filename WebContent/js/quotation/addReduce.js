@@ -79,9 +79,9 @@ jQuery(function($) {
 			});
 
 			$btnDel.click(function(){
-				bootbox.confirm("确认删除吗?",function(flag) {
-					flag && removeRow(v.arId);
-				});
+			    com.showConfirm("是否确认删除", function() {
+                    removeRow(v.arId);
+                });
 			});
 
 			return $liLine;

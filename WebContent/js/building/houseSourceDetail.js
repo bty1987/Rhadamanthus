@@ -227,7 +227,7 @@ jQuery(function($) {
 	//编辑
 	function updateHouseSource(){
 		if(houseSourceDetail.currentHsStatus != 3){
-			com.showAlert(com.warning, "只有已通过房源可以修改房源信息！");
+			com.showAlert(com.warning, "只有已通过房源可以修改房源信息");
 			return;
 		}
 

@@ -253,23 +253,27 @@ $(function () {
         com.cleanItems(deposit.items);
         com.clearValidator();
         com.focusPage('#transferModal').modal("show");
-        com.updateChosen("workertransferuser", "", "");
-        com.updateChosen("workercollectuser", "", "");
+        com.updateTypeahead("workertransferuser", "", "");
+        com.updateTypeahead("workercollectuser", "", "");
 
-        com.initChosen('workertransferuser', api.personel.queryUserByPinyin, "pinyinName", {
+        com.initTypeahead('workertransferuser', api.personel.queryUserByPinyin, "pinyinName", {
             "user.status": "0"
-        }, "autoFillKeyValue", "key", "value");
+        }, "autoFillKeyValue", "key", "value",function(list,key,value){
+        	return value;
+        });
 
-        com.initChosen('workercollectuser', api.personel.queryUserByPinyin, "pinyinName", {
+        com.initTypeahead('workercollectuser', api.personel.queryUserByPinyin, "pinyinName", {
             "user.status": "0"
-        }, "autoFillKeyValue", "key", "value");
+        }, "autoFillKeyValue", "key", "value",function(list,key,value){
+        	return value;
+        });
     });
 
     //转款
     function saveData() {
         if (!com.validate("transferModal")) {
-            var transferuser = com.focusPage("#workertransferuser").val();
-            var collectuser = com.focusPage("#workercollectuser").val();
+            var transferuser = com.typeahead("workertransferuser");
+            var collectuser = com.typeahead("workercollectuser");
             var tranmoney = com.focusPage("#workertransfermoney").val();
             var trancomment = com.focusPage("#workercomment").val();
 

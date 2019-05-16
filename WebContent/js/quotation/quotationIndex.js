@@ -168,181 +168,6 @@ $(function () {
 
         decorationQuotation.replicaQuotationModal.modal("hide");
     }, 5000);
-//新增对比
-    //报价对比
-
-    decorationQuotation.compareQuotationModal = com.focusPage('#compareQuotationModal ');
-    decorationQuotation.quotationItems.leftQuotationNo = com.focusPage("#leftQuotationNo");
-    decorationQuotation.quotationItems.leftType = com.focusPage("#leftType");
-    decorationQuotation.quotationItems.leftType.bindData(decorationQuotation.compareType, 'key', 'value');
-    decorationQuotation.quotationItems.leftType.on("change", function (e) {
-        
-        $this = $(this);
-        
-        if ($this.val() == 0) {
-            com.focusPage("#leftquono").removeClass("hide");
-            com.focusPage("#leftOrd").addClass("hide");
-            decorationQuotation.quotationItems.leftQuotationNo.val("");
-            com.focusPage("#leftQuotationNo").css("border", "1px solid #d5d5d5").popover("destroy");
-        } else {
-            com.focusPage("#leftquono").addClass("hide");
-            com.focusPage("#leftOrd").removeClass("hide");
-            decorationQuotation.quotationItems.leftOrderId.val("");
-        }
-    }).trigger("change");
-
-    decorationQuotation.quotationItems.leftQuotationNo.on("change", function (e) {
-        com.post(api.quotation.queryQuotetionByNo, {"quotetion.no": $(this).val()}, function (res) {
-
-            if (res.quotetion.qid == null) {
-                decorationQuotation.leftflg = false;
-                com.showPopover(com.focusPage("#leftQuotationNo"), {errorMsg: "编号不合法"}, "right");
-            }
-            else {
-                decorationQuotation.leftflg = true;
-                com.focusPage("#leftQuotationNo").css("border", "1px solid #d5d5d5").popover("destroy");
-            }
-        }, null, false);
-    }).trigger("change");
-
-    decorationQuotation.quotationItems.leftQuotationNames = com.focusPage("#leftQuotationNames");
-    decorationQuotation.quotationItems.leftOrderId = com.focusPage('#leftOrderId').on("blur", function () {
-        var options = {
-            "quotation.orderId": $(this).val()
-        };
-        com.post(api.quotation.queryQuotationByOrderId, options, function (res) {
-            decorationQuotation.quotationItems.leftQuotationNames.bindData(res.quotations, 'qid', 'quotationName');
-        });
-    });
-
-    decorationQuotation.quotationItems.rightQuotationNo = com.focusPage("#rightQuotationNo");
-    decorationQuotation.quotationItems.rightType = com.focusPage("#rightType");
-    decorationQuotation.quotationItems.rightType.bindData(decorationQuotation.compareType, 'key', 'value');
-    decorationQuotation.quotationItems.rightType.on("change", function (e) {
-        
-        $this = $(this);
-        
-        if ($this.val() == 0) {
-            com.focusPage("#rightquono").removeClass("hide");
-            com.focusPage("#rightOrd").addClass("hide");
-            decorationQuotation.quotationItems.rightQuotationNo.val("");
-            com.focusPage("#rightQuotationNo").css("border", "1px solid #d5d5d5").popover("destroy");
-        } else {
-            com.focusPage("#rightquono").addClass("hide");
-            com.focusPage("#rightOrd").removeClass("hide");
-            decorationQuotation.quotationItems.rightOrderId.val("");
-        }
-    }).trigger("change");
-
-    decorationQuotation.quotationItems.rightQuotationNo.on("change", function (e) {
-        com.post(api.quotation.queryQuotetionByNo, {"quotetion.no": $(this).val()}, function (res) {
-
-            if (res.quotetion.qid == null) {
-                decorationQuotation.rightflg = false;
-                com.showPopover(com.focusPage("#rightQuotationNo"), {errorMsg: "编号不合法"}, "right");
-            }
-            else {
-                decorationQuotation.rightflg = true;
-                com.focusPage("#rightQuotationNo").css("border", "1px solid #d5d5d5").popover("destroy");
-            }
-        }, null, false);
-    }).trigger("change");
-
-    decorationQuotation.quotationItems.rightQuotationNames = com.focusPage("#rightQuotationNames");
-    decorationQuotation.quotationItems.rightOrderId = com.focusPage('#rightOrderId').on("blur", function () {
-        var options = {
-            "quotation.orderId": $(this).val()
-        };
-        com.post(api.quotation.queryQuotationByOrderId, options, function (res) {
-            decorationQuotation.quotationItems.rightQuotationNames.bindData(res.quotations, 'qid', 'quotationName');
-        });
-    });
-
-    com.focusPage('#compareQuotation').on(ace.click_event, function () {
-        com.clearValidator();
-        com.cleanItems(decorationQuotation.quotationItems);
-        decorationQuotation.quotationItems.leftType.on("change", function (e) {
-            $this = $(this);
-            if ($this.val() == 0) {
-                com.focusPage("#leftquono").removeClass("hide");
-                com.focusPage("#leftOrd").addClass("hide");
-            } else {
-                com.focusPage("#leftquono").addClass("hide");
-                com.focusPage("#leftOrd").removeClass("hide");
-            }
-        }).trigger("change");
-        decorationQuotation.quotationItems.rightType.on("change", function (e) {
-            $this = $(this);
-            if ($this.val() == 0) {
-                com.focusPage("#rightquono").removeClass("hide");
-                com.focusPage("#rightOrd").addClass("hide");
-            } else {
-                com.focusPage("#rightquono").addClass("hide");
-                com.focusPage("#rightOrd").removeClass("hide");
-            }
-        }).trigger("change");
-
-        decorationQuotation.quotationItems.leftQuotationNames.bindData([], 'qid', 'quotationName');
-        decorationQuotation.quotationItems.rightQuotationNames.bindData([], 'qid', 'quotationName');
-        decorationQuotation.compareQuotationModal.modal("show");
-    });
-
-    com.focusPage("#compareQuotationBtn").on(ace.click_event, function () {
-        if (decorationQuotation.quotationItems.leftType.val() == 0 && decorationQuotation.quotationItems.rightType.val() == 0) {
-            if (com.validate() || (decorationQuotation.leftflg == false) || (decorationQuotation.rightflg == false)) {
-                if (decorationQuotation.leftflg == false) {
-                    com.showPopover(com.focusPage("#leftQuotationNo"), {errorMsg: "编号不合法"}, "right");
-                }
-                if (decorationQuotation.rightflg == false) {
-                    com.showPopover(com.focusPage("#rightQuotationNo"), {errorMsg: "编号不合法"}, "right");
-                }
-                return;
-            }
-        } else if (decorationQuotation.quotationItems.leftType.val() == 0) {
-            if (com.validate() || (decorationQuotation.leftflg == false)) {
-                if (decorationQuotation.leftflg == false) {
-                    com.showPopover(com.focusPage("#leftQuotationNo"), {errorMsg: "编号不合法"}, "right");
-                }
-                return;
-            }
-        } else if (decorationQuotation.quotationItems.rightType.val() == 0) {
-            if (com.validate() || (decorationQuotation.rightflg == false)) {
-                if (decorationQuotation.rightflg == false) {
-                    com.showPopover(com.focusPage("#rightQuotationNo"), {errorMsg: "编号不合法"}, "right");
-                }
-                return;
-            }
-        } else {
-            if (com.validate()) {
-                return;
-            }
-        }
-
-        params["historyQuotation"] = api.index.quotationIndex.url;
-        params["leftType"] = decorationQuotation.quotationItems.leftType.val();
-        params["rightType"] = decorationQuotation.quotationItems.rightType.val();
-        if (decorationQuotation.quotationItems.leftType.val() == 0) {
-            params["leftqId"] = decorationQuotation.quotationItems.leftQuotationNo.val();
-        } else {
-            params["leftqId"] = decorationQuotation.quotationItems.leftQuotationNames.val();
-        }
-
-        if (decorationQuotation.quotationItems.rightType.val() == 0) {
-            params["rightqId"] = decorationQuotation.quotationItems.rightQuotationNo.val();
-        } else {
-            params["rightqId"] = decorationQuotation.quotationItems.rightQuotationNames.val();
-        }
-
-        if(params["leftqId"] ==  params["rightqId"]){
-            com.showAlert(com.warning,"请对比不同的报价");
-        }else{
-            decorationQuotation.compareQuotationModal.modal("hide");
-            com.focusPage('#compareQuotationModal').on('hidden.bs.modal', function () {
-                com.switchPage(api.index.quotetionCompareIndex.url);
-            });
-        }
-
-    });
 
     initQuotationList();
 
@@ -508,21 +333,17 @@ $(function () {
         deleteBtn.on(ace.click_event, function () {
             
             if (com.focusPage("#defaultQuotation_" + $(this).attr("data")).hasClass("hide")) {
-                bootbox.alert("默认报价不能删除");
-                return;
+                com.showAlert(com.warning, "默认报价不能删除");
+                return false;
             }
 
             var autoData = $(this).attr("data");
+            var dataname = $(this).attr("dataname");
             
-            bootbox.confirm("确定要删除报价(" + $(this).attr("dataname") + ")?", function (result) {
-                if (result) {
-                    com.post(api.quotation.deleteQuotationById, {
-                        "quotation.qid": autoData,
-                        "quotation.orderId": decorationQuotation.decorationOrderId
-                    }, function (res) {
-                        com.focusPage("#quotationDiv_" + autoData).remove();
-                    }, null, false);
-                }
+            com.showConfirm("确定要删除报价: " + dataname, function(){
+                com.post(api.quotation.deleteQuotationById, {"quotation.qid": autoData, "quotation.orderId": decorationQuotation.decorationOrderId}, function (res) {
+                    com.focusPage("#quotationDiv_" + autoData).remove();
+                }, null, false);
             });
         });
 

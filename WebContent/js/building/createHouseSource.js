@@ -331,7 +331,7 @@ jQuery(function($) {
 				createHouseSource.isAddHouseSource == true;
 			}, function(e){
 				createHouseSource.isAddHouseSource == false;
-				com.showAlert(com.error, "房产已存在！");
+				com.showAlert(com.error, "房产已存在");
 			}, false);
 		}else{
 			options["houseSource.house.hid"]= createHouseSource.houseId;
@@ -339,7 +339,7 @@ jQuery(function($) {
 
 		if(createHouseSource.isAddHouseSource){
 			com.post(api.building.addHouseSource, options, function(res){
-				com.showAlert(com.info, "房源创建成功！");
+				com.showAlert(com.info, "房源创建成功");
 				deleteDate();
 			});
 		}
@@ -391,7 +391,7 @@ jQuery(function($) {
 			com.focusPage("#customerModal").modal("hide");
 
 		}, function(e){
-			com.showAlert(com.warning, "客户电话已存在！");
+			com.showAlert(com.warning, "客户电话已存在");
 		}, false);
 	}
 
@@ -487,7 +487,7 @@ jQuery(function($) {
 		if( cardParam.val() != "" ){
 			if(reg.test(cardParam.val()) == false){
 				createHouseSource.cardFlag = true;
-				com.showPopover(cardParam,{errorMsg: "请输入正确的证件号码！"}, "right");
+				com.showPopover(cardParam,{errorMsg: "请输入正确的证件号码"}, "right");
 			}else{
 				createHouseSource.cardFlag = false;
 				cardParam.css("border", "1px solid #d5d5d5").popover("destroy")

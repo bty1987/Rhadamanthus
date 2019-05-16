@@ -16,13 +16,7 @@ $(function () {
         valideteresult: null
     };
 
-    house.items.no = com.focusPage("#no").on("change", function (e) {
-        deleteVillageData("no");
-        com.post(api.data.queryVillageById, {"village.no": house.items.no.val()}, function (res) {
-            house.items.rule.html("推荐楼牌号规则：" + (res.village.rule ? res.village.rule : "暂无推荐规则"));
-        }, null, false)
-    });
-
+    house.items.no = com.focusPage("#no");
     house.items.built = com.focusPage("#built").on("change", function (e) {
         deleteVillageData("built");
     });
@@ -52,10 +46,9 @@ $(function () {
     house.items.waterVapour = com.focusPage("#waterVapour");
     house.items.parlourType = com.focusPage("#parlourType");
     house.items.heatingType = com.focusPage("#heatingType");
-    house.items.errMsg = com.focusPage("#errMsg");
 
     house.saveHouseBtn = com.focusPage("#saveHouseBtn").on("click", saveHouse);
-    house.cancelHouselBtn = com.focusPage("#cancelHouselBtn").on("click", inithouse);
+    house.cancelHouselBtn = com.focusPage("#cancelHouselBtn");
     house.items.builtrule = com.focusPage("#builtrule");
     house.items.unitrule = com.focusPage("#unitrule");
     house.items.floorrule = com.focusPage("#floorrule");
@@ -73,7 +66,6 @@ $(function () {
     house.items.doorrule.on("blur", function (e) {
         validatehouse()
     });
-
 
     com.post(api.ds.building, {}, function (res) {
         house.items.type.bindData(res.houseType, "key", "value");
@@ -114,7 +106,19 @@ $(function () {
         com.clearValidator();
     });
 
-    com.initChosen('no', api.data.queryVillageForNameByPinyin, "pinyinName", {}, "autoFillKeyValue", "key", "value");
+    com.initTypeahead('no', api.data.queryVillageForNameByPinyin,"pinyinName", {}, "autoFillKeyValue", "key", "value", function(list, key, value){
+        
+        deleteVillageData("no");
+        
+        com.post(api.data.queryVillageById, {"village.no": key}, function (res) {
+            house.items.rule.html("推荐楼牌号规则：" + (res.village.rule ? res.village.rule : "暂无推荐规则"));
+        }, function(){
+            com.show(com.warning, "楼盘信息不存在");
+            key = "", value = "";
+        }, false);
+        
+        return value;
+    });
 
     var displayFunc = (function () {
 
@@ -124,9 +128,7 @@ $(function () {
 
             if (listData && listData.length) {
                 $.each(listData, function (i, v) {
-                    var $liLine = creatLine(v);
-
-                    $liLine.appendTo($ul);
+                    creatLine(v).appendTo($ul);
                 });
 
                 $ul.appendTo($tableWrap);
@@ -201,33 +203,39 @@ $(function () {
 
     //添加按钮
     $('a[name="addHouse"]', com.focusPage('#pagenation')).click(function () {
+        
         house.editFlag = false;
+        
         inithouse();
-        addTypeclass()
+        
         com.focusPage("#ohousetype").css({"display": "none"});
         com.focusPage("#ohouseNumber").css({"display": "none"});
         com.focusPage("#nhouseNumber").css({"display": "block"});
 
         house.items.no.prop("disabled", false);
-        house.cancelHouselBtn.prop("disabled", false)
+        house.cancelHouselBtn.prop("disabled", false);
+        
+        com.cleanTypeahead('no');
+        
         house.modal.modal("show");
-        com.focusPage("#errMsg").css("border", "0px");
     });
 
     //编辑按钮
     function editHouse(b) {
-        inithouse()
+        
+        inithouse();
+        
         house.editFlag = true;
         house.houseFlag = false;
 
-        house.modal.modal("show");
-        removeTypeclass()
-        com.focusPage("#nhouseNumber").css({"display": "none"});
         com.focusPage("#ohousetype").css({"display": "block"});
         com.focusPage("#ohouseNumber").css({"display": "block"});
+        com.focusPage("#nhouseNumber").css({"display": "none"});
+        
         house.cancelHouselBtn.prop("disabled", true);
         house.items.no.prop("disabled", true);
-        com.updateChosen('no', b.village.no, b.village.name);
+        
+        com.updateTypeahead('no', b.village.no, b.village.name);
 
         house.items.hid = b.hid;
         house.items.houseNumber = b.houseNumber;
@@ -242,108 +250,76 @@ $(function () {
         house.items.waterVapour.val(b.waterVapour);
         house.items.parlourType.val(b.parlourType);
         house.items.heatingType.val(b.heatingType);
-        com.focusPage("#errMsg").css("border", "0px");
+        
+        house.modal.modal("show");
     }
 
-//保存
     function saveHouse() {
-//增加验证,或是取消验证v_required v_number
 
-        if (house.editFlag && (house.items.houseTypeOne.val() != "" || house.items.houseTypeTwo.val() != "" || house.items.houseTypeThr.val() != "" || house.items.houseTypeFour.val() != "")) {
-            addTypeclass()
-        } else if (house.editFlag && (house.items.houseTypeOne.val() == "" && house.items.houseTypeTwo.val() == "" && house.items.houseTypeThr.val() == "" && house.items.houseTypeFour.val() == "")) {
-            removeTypeclass()
+        if (com.validate("houseModal", "right")) {
+            return false;
         }
 
-        if (com.validate(null, "right") || house.houseFlag) {
-            validatehouse()
-            return;
-        }
+        var options = {}
 
-        var btn = $(this);
-        var houseOptions = {}
+        options["house.built"] = house.items.built.val().trim();
+        options["house.unit"] = house.items.unit.val().trim();
+        options["house.floor"] = house.items.floor.val().trim();
+        options["house.door"] = house.items.door.val().trim();
+        options["house.type"] = house.items.type.val();
+        options["house.buildArea"] = utils.changeThrDecimal(house.items.buildArea.val());
+        options["house.maxFloor"] = house.items.maxFloor.val();
+        options["house.through"] = house.items.through.val();
+        options["house.orientation"] = house.items.orientation.val();
+        options["house.feature"] = house.items.feature.val();
+        options["house.waterVapour"] = house.items.waterVapour.val();
+        options["house.parlourType"] = house.items.parlourType.val();
+        options["house.heatingType"] = house.items.heatingType.val();
 
-        houseOptions["house.village.no"] = house.items.no.val();
-        houseOptions["house.built"] = house.items.built.val().trim();
-        houseOptions["house.unit"] = house.items.unit.val().trim();
-        houseOptions["house.floor"] = house.items.floor.val().trim();
-        houseOptions["house.door"] = house.items.door.val().trim();
-        houseOptions["house.type"] = house.items.type.val();
-        houseOptions["house.buildArea"] = utils.changeThrDecimal(house.items.buildArea.val());
-        houseOptions["house.maxFloor"] = house.items.maxFloor.val();
-        houseOptions["house.through"] = house.items.through.val();
-        houseOptions["house.orientation"] = house.items.orientation.val();
-        houseOptions["house.feature"] = house.items.feature.val();
-        houseOptions["house.waterVapour"] = house.items.waterVapour.val();
-        houseOptions["house.parlourType"] = house.items.parlourType.val();
-        houseOptions["house.heatingType"] = house.items.heatingType.val();
-
-        var url;
+        var url = api.data.updateHouse
 
         if (house.editFlag) {
             url = api.data.updateHouse;
-            houseOptions['house.hid'] = house.items.hid;
+            options['house.hid'] = house.items.hid;
 
             if (house.items.houseTypeOne.val() == "" && house.items.houseTypeTwo.val() == "" && house.items.houseTypeThr.val() == "" && house.items.houseTypeFour.val() == "") {
-                houseOptions["house.houseType"] = house.items.oldhousetype.val();
-            }
-            else if (house.items.houseTypeOne.val() != "" || house.items.houseTypeTwo.val() != "" || house.items.houseTypeThr.val() != "" || house.items.houseTypeFour.val() != "") {
-                houseOptions["house.roomNum"] = house.items.houseTypeOne.val();
-                houseOptions["house.houseType"] = house.items.houseTypeOne.val() + "室" + house.items.houseTypeTwo.val() + "厅" + house.items.houseTypeThr.val() + "厨" + house.items.houseTypeFour.val() + "卫";
+                options["house.houseType"] = house.items.oldhousetype.val();
+            } else if (house.items.houseTypeOne.val() != "" || house.items.houseTypeTwo.val() != "" || house.items.houseTypeThr.val() != "" || house.items.houseTypeFour.val() != "") {
+                options["house.roomNum"] = house.items.houseTypeOne.val();
+                options["house.houseType"] = house.items.houseTypeOne.val() + "室" + house.items.houseTypeTwo.val() + "厅" + house.items.houseTypeThr.val() + "厨" + house.items.houseTypeFour.val() + "卫";
             }
 
         } else {
             url = api.data.addHouse;
-            houseOptions["house.houseNumber"] = house.items.houseNumber;
-            houseOptions["house.village.no"] = house.items.no.val();
-            houseOptions["house.roomNum"] = house.items.houseTypeOne.val();
-            houseOptions["house.houseType"] = house.items.houseTypeOne.val() + "室" + house.items.houseTypeTwo.val() + "厅" + house.items.houseTypeThr.val() + "厨" + house.items.houseTypeFour.val() + "卫";
+            
+            options["house.village.no"] = com.typeahead("no");
+            options["house.houseNumber"] = house.items.houseNumber;
+            options["house.roomNum"] = house.items.houseTypeOne.val();
+            options["house.houseType"] = house.items.houseTypeOne.val() + "室" + house.items.houseTypeTwo.val() + "厅" + house.items.houseTypeThr.val() + "厨" + house.items.houseTypeFour.val() + "卫";
         }
-        btn.button('loading');
 
-        com.post(url, houseOptions, function () {
+        com.post(url, options, function () {
+            
             com.showAlert(com.info, "操作成功");
 
-            btn.button('reset');
-            house.modal.modal("hide");
-            inithouse();
             searcher.doSearch();
-
-        }, function () {
-            btn.button('reset');
+            house.modal.modal("hide");
         });
     }
 
-//清空
     function inithouse() {
+        
         house.items.rule.html("");
-        house.items.no.prop("disabled", false);
-        house.items.no.get(0).selectedIndex = 0;
 
-        com.cleanItems(house.items)
-        house.items.built.val("").removeAttr("readonly", "readonly");
-        house.items.unit.val("").removeAttr("readonly", "readonly");
-        house.items.floor.val("").removeAttr("readonly", "readonly");
-        house.items.door.val("").removeAttr("readonly", "readonly");
-        com.updateChosen("no", '', '');
         com.clearValidator();
-        com.focusPage("#errMsg").css("border", "0px");
-
-    }
-
-    function removeTypeclass() {
-        house.items.houseTypeOne.removeClass("v_required v_number");
-        house.items.houseTypeTwo.removeClass("v_required v_number");
-        house.items.houseTypeThr.removeClass("v_required v_number");
-        house.items.houseTypeFour.removeClass("v_required v_number");
-    }
-
-    function addTypeclass() {
-        house.items.houseTypeOne.addClass("v_required v_number");
-        house.items.houseTypeTwo.addClass("v_required v_number");
-        house.items.houseTypeThr.addClass("v_required v_number");
-        house.items.houseTypeFour.addClass("v_required v_number");
-
+        com.cleanItems(house.items)
+        
+        com.cleanTypeahead("no");
+        
+        house.items.built.removeAttr("readonly", "readonly");
+        house.items.unit.removeAttr("readonly", "readonly");
+        house.items.floor.removeAttr("readonly", "readonly");
+        house.items.door.removeAttr("readonly", "readonly");
     }
 
     function deleteVillageData(paramFlag) {
@@ -370,7 +346,6 @@ $(function () {
                 house.items.floorrule.get(0).selectedIndex = 0;
                 house.items.doorrule.get(0).selectedIndex = 0;
                 com.focusPage("#door").css("border", "1px solid #d5d5d5").popover("destroy");
-                com.focusPage("#errMsg").popover("destroy");
                 break;
         }
     }

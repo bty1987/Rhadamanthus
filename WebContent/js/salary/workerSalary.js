@@ -190,10 +190,12 @@ jQuery(function ($) {
         com.cleanItems(salary.items);
         com.clearValidator();
         com.focusPage('#workersalaryModal').modal("show");
-        com.updateChosen("workersalaryuser", "", "");
-        com.initChosen('workersalaryuser', api.personel.queryUserByPinyin, "pinyinName", {
+        com.updateTypeahead("workersalaryuser", "", "");
+        com.initTypeahead('workersalaryuser', api.personel.queryUserByPinyin, "pinyinName", {
             "user.status": "0"
-        }, "autoFillKeyValue", "key", "value");
+        }, "autoFillKeyValue", "key", "value",function(list,key,value){
+        	return value;
+        });
 
     });
 
@@ -317,7 +319,7 @@ jQuery(function ($) {
     function saveData(options) {
 
         if (!com.validate("workersalaryModal")) {
-            var user = com.focusPage("#workersalaryuser").val();
+            var user = com.typeahead("workersalaryuser");
             var money = com.focusPage("#workersalary").val();
             var twotype = com.focusPage("#workersalarySubtype").val();
             var comment = com.focusPage("#workersalarycomment").val();
@@ -356,7 +358,7 @@ jQuery(function ($) {
     }
 
     function refuse(wsId) {
-        bootbox.confirm("是否将已通过的薪资驳回", function (result) {
+    	com.showConfirm("是否将已通过的薪资驳回", function (result) {
             if (result) {
                 var options = {};
                 options["workerSalary.wsId"] = wsId;

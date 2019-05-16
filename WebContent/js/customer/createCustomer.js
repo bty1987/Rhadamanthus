@@ -56,7 +56,7 @@ jQuery(function ($) {
         options["customerOrigin.buildArea"] = createcustomerOrigin.items.buildArea.val();
 
         com.post(api.customer.addCustomerOrigin, options, function (res) {
-            com.showAlert(com.info, "客源创建成功！");
+            com.showAlert(com.info, "客源创建成功");
             deleteDate();
         });
     }

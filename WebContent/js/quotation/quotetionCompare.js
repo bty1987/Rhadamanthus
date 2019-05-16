@@ -775,13 +775,13 @@ var QuotetionDetail = (function () {
 })();
 
 $(function () {
+    
     com.focusPage("#compareBackBtn").on(ace.click_event, function () {
-        bootbox.confirm("确定返回上一页?", function (result) {
-            if (result) {
-                com.switchPage(params["historyQuotation"]);
-            }
+        com.showConfirm("是否确定返回上一页", function () {
+            com.switchPage(params["historyQuotation"]);
         });
     });
+    
     QuotetionDetail.init();
 
 });

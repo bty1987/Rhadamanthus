@@ -17,7 +17,6 @@ var Api = function(){
                 dataType: 'script',
                 async: false
             });
-
         }
     };
 
@@ -53,6 +52,7 @@ var Api = function(){
             fillApi(path + 'customer.js');
 			fillApi(path + 'store.js');
 			fillApi(path + 'market.js');
+			
             return dtd.promise();
         }
     }

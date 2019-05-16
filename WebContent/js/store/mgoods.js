@@ -151,7 +151,7 @@ $(function () {
 
             //状态启用事件
             $btnStart.click(function () {
-                layer.confirm('是否启用？', {
+                layer.confirm('是否启用?', {
                     btn: ['确定', '取消'] //按钮
                 }, function (index, layero) {
                     com.focusPage('#layerAdd').attr('data-gid', v.gid);
@@ -169,7 +169,7 @@ $(function () {
             });
             //状态禁用事件
             $btnStop.click(function () {
-                layer.confirm('是否禁用？', {
+                layer.confirm('是否禁用?', {
                     btn: ['确定', '取消'] //按钮
                 }, function (index, layero) {
                     com.focusPage('#layerAdd').attr('data-gid', v.gid);

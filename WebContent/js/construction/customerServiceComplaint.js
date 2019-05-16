@@ -97,7 +97,7 @@ jQuery(function ($) {
             });
             $btnDel.click(function () {
                 if (v.status == 1) {
-                    com.showAlert(com.warning, "当前信息已处理，不能删除！");
+                    com.showAlert(com.warning, "当前信息已处理，不能删除");
                     return;
                 }
                 removeRow(v.cscId);
@@ -218,10 +218,10 @@ jQuery(function ($) {
 
     function removeRow(id) {
 
-        bootbox.confirm("确认删除投诉吗？", function (res) {
-            if (res) {
+        com.showConfirm("确认删除投诉吗?", function () {
+
                 com.post(api.construction.deleteCustomerServiceComplaint, {"cscIds[0]": id}, successCallback);
-            }
+            
         });
     }
 

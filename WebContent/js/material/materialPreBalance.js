@@ -86,7 +86,7 @@ jQuery(function($) {
                             "packageFlag": v.packageFlag,
                         }).val(v.arId);
                         var $span = $('<span></span>').addClass('lbl blue bigger-150').text(v.no);
-                        //固定的写法？
+                        //固定的写法?
                         $.each(propertyArr, function (index,value) {
                             var $liProperty = $('<li></li>');
                             $('<strong></strong>').html(value[0]).appendTo($liProperty);

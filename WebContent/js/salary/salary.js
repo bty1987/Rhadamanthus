@@ -154,9 +154,9 @@ $(function () {
 
         com.cleanItems(salary.items);
         com.focusPage('#salaryModal').modal("show");
-        com.initChosen('salaryuser', api.personel.queryUserByPinyin, "pinyinName", {
-            "user.status": "0"
-        }, "autoFillKeyValue", "key", "value");
+        com.initTypeahead('salaryuser', api.personel.queryUserByPinyin, "pinyinName", {"user.status": "0"}, "autoFillKeyValue", "key", "value",function(list,key,value){
+        	return value;
+        });
 
         cleanType([1, 2, 3, 4]);
         com.post(api.ds.salary, {}, function (res) {
@@ -189,14 +189,14 @@ $(function () {
             });
         });
 
-        com.updateChosen("salaryuser", "", "");
+        com.updateTypeahead("salaryuser", "", "");
         com.clearValidator();
     });
 
     function saveData() {
 
         if (!com.validate("salaryModal")) {
-            var user = com.focusPage("#salaryuser").val();
+            var user = com.typeahead("salaryuser");
             var type = com.focusPage("#type1").val();
             var oneType = com.focusPage("#type2").val();
             var twotype = com.focusPage("#type3").val();
@@ -220,7 +220,7 @@ $(function () {
                 com.showAlert(com.info, "添加成功");
             });
             com.focusPage('#salaryModal').modal("hide");
-            com.updateChosen("salaryuser", "", "");
+            com.updateTypeahead("salaryuser", "", "");
         }
     }
 

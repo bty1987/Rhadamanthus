@@ -889,7 +889,7 @@ var AddReduceDetail = (function(){
 			//查看
 			$btnInfo.click(function(e){
 				e.stopPropagation();
-				qv.content && com.showInfo(qv.content);
+				qv.content && com.showTip(this, qv.content, 'left');
 			});
 
 			 $item.attr('data-totalprice', utils.changeTwoDecimal(utils.accMul(qv.num ,  qv.unitPrice)));

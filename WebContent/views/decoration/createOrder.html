@@ -1,9 +1,6 @@
 <div class="page-content" id='createOrder'>
-	<div id="fl-statement">
-		<div class="page-header"></div>
-		<div class="orange">*橙色名称标签为必填信息</div>
-	</div>
-
+	<div id="fl-statement"></div>
+    <div class="orange">*橙色名称标签为必填信息</div>
 	<div class="row">
 		<div class="col-xs-12">
 			<form class="form-horizontal">
@@ -17,10 +14,8 @@
 										<div class="form-group">
 											<label for="customerId" class="col-sm-3 control-label no-padding-right orange">客户名</label>
 											<div class="col-md-9">
-												<select class="chosen-select col-md-4 v_required" id="customerId" data-placeholder="请输入客户" data-toggle="popover" data-trigger='manual' style="display: none;">
-													<option value="">&nbsp;</option>
-												</select>
-												<button type="button" id="createCustomer" class="btn btn-xs btn-info">创建客户</button>
+												<input type="text" class="col-xs-10 col-sm-5 v_typeahead v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="customerId" placeholder="客户">
+												<button type="button" id="createCustomer" class="btn btn-xs btn-info" style="margin-left: 5px;">创建客户</button>
 											</div>
 										</div>
 
@@ -37,7 +32,7 @@
 											<label for="houseNumber" class="col-sm-3 control-label no-padding-right orange">楼牌号</label>
 											<div class="col-sm-9">
 												<input type="text" class="col-xs-10 col-sm-5 v_required" id="houseNumber" data-toggle="popover" data-trigger='manual' maxlength="30">
-												<button type="button" id="createHouse" class="btn btn-xs btn-info">创建房产</button>
+												<button type="button" id="createHouse" class="btn btn-xs btn-info" style="margin-left: 5px;">创建房产</button>
 											</div>
 										</div>
 

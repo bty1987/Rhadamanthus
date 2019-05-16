@@ -184,7 +184,7 @@ jQuery(function($) {
 			com.focusPage("#customerModal").modal("hide");
 
 		}, function(e){
-			com.showAlert(com.warning, "客户电话已存在！");
+			com.showAlert(com.warning, "客户电话已存在");
 		}, false);
 	}
 
@@ -197,7 +197,7 @@ jQuery(function($) {
 
 		if(parseInt(priceHigh) < parseInt(priceLow) || parseInt(priceHigh) == parseInt(priceLow)){
 			com.focusPage("#priceHigh").removeClass("v_required");
-			com.showPopover(com.focusPage("#priceHigh"),{errorMsg: "请填写可接受的最高价格！"}, "right");
+			com.showPopover(com.focusPage("#priceHigh"),{errorMsg: "请填写可接受的最高价格"}, "right");
 			createCustomerSource.priceFlag = true;
 		}else{
 			com.focusPage("#priceHigh").addClass("v_required");
@@ -207,7 +207,7 @@ jQuery(function($) {
 
 		if(parseInt(areaHigh) < parseInt(areaLow) || parseInt(areaHigh) == parseInt(areaLow)){
 			com.focusPage("#areaHigh").removeClass("v_required");
-			com.showPopover(com.focusPage("#areaHigh"),{errorMsg: "请填写需求面积的最大值！"}, "right");
+			com.showPopover(com.focusPage("#areaHigh"),{errorMsg: "请填写需求面积的最大值"}, "right");
 			createCustomerSource.areaFlag = true;
 		}else{
 			com.focusPage("#areaHigh").addClass("v_required");
@@ -234,7 +234,7 @@ jQuery(function($) {
 		options["customerSource.comment"] = createCustomerSource.items.comment.val();
 
 		com.post(api.building.addCustomerSource, options, function(res){
-			com.showAlert(com.info, "客源创建成功！");
+			com.showAlert(com.info, "客源创建成功");
 			deleteDate();
 		});
 
@@ -244,7 +244,7 @@ jQuery(function($) {
 		if( cardParam.val() != "" ){
 			if(reg.test(cardParam.val()) == false){
 				createCustomerSource.cardFlag = true;
-				com.showPopover(cardParam,{errorMsg: "请输入正确的证件号码！"}, "right");
+				com.showPopover(cardParam,{errorMsg: "请输入正确的证件号码"}, "right");
 			}else{
 				createCustomerSource.cardFlag = false;
 				cardParam.css("border", "1px solid #d5d5d5").popover("destroy")

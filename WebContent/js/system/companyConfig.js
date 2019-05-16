@@ -73,7 +73,7 @@ jQuery(function ($) {
                         "quotationVersion.versionId": $this.val()
                     };
                     com.post(api.quotation.queryQuotationVersionByVersionId, b, function (a) {
-                        a.quotationVersion && a.quotationVersion.qvId ? (com.showTips($this, "\u8be5\u7248\u672c\u7f16\u53f7\u5df2\u5b58\u5728", !0), companyConfig.quotationVersion.repeatFlg = !0) : (com.clearValidator("#versionId", !0), companyConfig.quotationVersion.repeatFlg = !1)
+                        a.quotationVersion && a.quotationVersion.qvId ? (com.showTips($this, "该版本编号已存在", true), companyConfig.quotationVersion.repeatFlg = true) : (com.clearValidator("#versionId", true), companyConfig.quotationVersion.repeatFlg = false)
                     })
                 }),
                 versionName: com.focusPage("#versionName"),
@@ -94,7 +94,7 @@ jQuery(function ($) {
                 roleId: {
                     type: "v_versionId",
                     regex: /^QV_\d{3}$/,
-                    errorMsg: "\u8bf7\u8f93\u5165QV_\u6570\u5b57,\u5982QV_001."
+                    errorMsg: "请输入QV_数字,如QV_001"
                 }
             },
             repeatFlg: false,
@@ -283,23 +283,23 @@ jQuery(function ($) {
     }, null, false);
 
 
-    com.focusPage('[name="addQuotationVersion"]').click(function(){
+    com.focusPage('#addQuotationVersion').click(function(){
         companyConfig.quotationVersion.editFlag = false;
         com.cleanItems(companyConfig.quotationVersion.items);
         companyConfig.quotationVersion.items.versionId.prop("disabled", false);
         companyConfig.quotationVersion.modal.modal("show")
     });
-    com.focusPage('[name="addPaymentScale"]').click(function(){
+    com.focusPage('#addPaymentScale').click(function(){
         com.cleanItems(companyConfig.paymentScale.items);
         com.focusPage("#paymentScaleModal").modal("show");
     });
-    com.focusPage('[name="addLineGroup"]').click(function(){
+    com.focusPage('#addLineGroup').click(function(){
         companyConfig.drawLine.editFlg = true;
         com.cleanItems(companyConfig.drawLine.groupadd);
         companyConfig.drawLine.addmodal.modal("show");
         popoverInitDrawLine();
     });
-    com.focusPage('[name="addReceiptType"]').click(function(){
+    com.focusPage('#addReceiptType').click(function(){
         com.cleanItems(companyConfig.receiptType.items);
         companyConfig.receiptType.editFlg = true;
         companyConfig.receiptType.modal.modal("show")
@@ -308,7 +308,7 @@ jQuery(function ($) {
     // 1.
     function saveQuotation() {
         com.clearValidator();
-        com.clearValidator("#versionId", !0);
+        com.clearValidator("#versionId", true);
         if (!com.validate("quotationVersionModal") && !companyConfig.quotationVersion.repeatFlg) {
             var options = {
                 "quotationVersion.versionId": companyConfig.quotationVersion.items.versionId.val(),

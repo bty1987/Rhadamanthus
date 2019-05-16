@@ -273,12 +273,12 @@ jQuery(function($) {
             decorationCase.editFlag = false;
             options["caser.cid"] = decorationCase.cid;
             com.post(api.market.updateEcase, options, function(res){
-                com.showAlert(com.info, "修改成功！");
+                com.showAlert(com.info, "修改成功");
                 searcher.doSearch();
             });
         }else{
             com.post(api.market.addEcase, options, function(res){
-                com.showAlert(com.info, "创建成功！");
+                com.showAlert(com.info, "创建成功");
                 searcher.doSearch();
             });
         }
@@ -360,7 +360,7 @@ jQuery(function($) {
             options["caser.defaultUrl"] = imgUrl;
 
             com.post(defaultUrl, options, function(res){
-                com.showAlert(com.info, "图片设置成功！");
+                com.showAlert(com.info, "图片设置成功");
             });
         }).appendTo(toolsDiv);
         $("<i></i>").addClass("icon-ok green").appendTo(toolsB);

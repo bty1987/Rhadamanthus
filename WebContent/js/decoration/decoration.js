@@ -72,7 +72,7 @@
                     "drawLine.decoration.orderId": com.focusPage("#dischargeLineOrderId").val(),
                 };
 
-                com.post(api.decoration.applayDrawLine, options);
+                com.post(api.construction.applayDrawLine, options);
             }
 
             order.drawLineModal.modal("hide");
@@ -193,7 +193,7 @@
 
         com.post(api.quotation.queryQuotationForDefaultByOrderId, {"quotation.orderId": params["decoration.orderId"]}, function (res) {
             if (utils.accSub(com.focusPage("#customerInfoDialog").attr("totalPrice"), res.quotation.totalPrice) > 100) {
-                bootbox.confirm("合同金额与报价金额相差大于100，确认签单？", function (yes) {
+                bootbox.confirm("合同金额与报价金额相差大于100，确认签单?", function (yes) {
                     if (yes) {
                         com.post(api.decoration.signDecorationContract, options, function (res) {
                             searcher.doSearch();
@@ -683,7 +683,7 @@
                     options["decorationContract.comperfor"] = comperfor;
 
                     if (utils.accSub(orderTotalPrice, res.quotation.totalPrice) > 100) {
-                        bootbox.confirm("合同金额与报价金额相差大于100，确认签单？", function (yes) {
+                        bootbox.confirm("合同金额与报价金额相差大于100，确认签单?", function (yes) {
                             if (yes) {
                                 com.post(api.decoration.signDecorationContract, options, function (res) {
                                     order.drawContractModal.modal("hide");
@@ -692,7 +692,7 @@
                             }
                         });
                     } else {
-                        bootbox.confirm("确认签单？", function (yes) {
+                        bootbox.confirm("确认签单?", function (yes) {
                             if (yes) {
                                 com.post(api.decoration.signDecorationContract, options, function (res) {
                                     order.drawContractModal.modal("hide");
@@ -869,73 +869,7 @@
 
     //-----------------------------------------------------合同-----------------------------------------
     function initializeContent() {
-        com.focusPage('#additionalInfo').ace_wysiwyg({
-            toolbar: ['font', null, 'fontSize', null, {name: 'bold', className: 'btn-info'}, {
-                name: 'italic',
-                className: 'btn-info'
-            }, {name: 'strikethrough', className: 'btn-info'},
-                {name: 'underline', className: 'btn-info'}, null, {
-                    name: 'insertunorderedlist',
-                    className: 'btn-success'
-                }, {name: 'insertorderedlist', className: 'btn-success'},
-                {name: 'outdent', className: 'btn-purple'}, {
-                    name: 'indent',
-                    className: 'btn-purple'
-                }, null, {name: 'justifyleft', className: 'btn-primary'},
-                {name: 'justifycenter', className: 'btn-primary'}, {
-                    name: 'justifyright',
-                    className: 'btn-primary'
-                }, {name: 'justifyfull', className: 'btn-inverse'}, null,
-                null, null, null, null, null, 'foreColor', null, {name: 'undo', className: 'btn-grey'},
-                {name: 'redo', className: 'btn-grey'}],
-            'wysiwyg': {fileUploadError: showErrorAlert}
-        }).prev().addClass('wysiwyg-style2');
-
-        if (typeof jQuery.ui !== 'undefined' && /applewebkit/.test(navigator.userAgent.toLowerCase())) {
-            var lastResizableImg = null;
-
-            function destroyResizable() {
-                if (lastResizableImg == null) return;
-                lastResizableImg.resizable("destroy");
-                lastResizableImg.removeData('resizable');
-                lastResizableImg = null;
-            }
-
-            var enableImageResize = function () {
-                com.focusPage('.wysiwyg-editor').on('mousedown', function (e) {
-                    var target = $(e.target);
-                    if (e.target instanceof HTMLImageElement) {
-                        if (!target.data('resizable')) {
-                            target.resizable({
-                                aspectRatio: e.target.width / e.target.height
-                            });
-                            target.data('resizable', true);
-
-                            if (lastResizableImg != null) { // disable previous resizable image
-                                lastResizableImg.resizable("destroy");
-                                lastResizableImg.removeData('resizable');
-                            }
-                            lastResizableImg = target;
-                        }
-                    }
-                }).on('click', function (e) {
-                    if (lastResizableImg != null && !(e.target instanceof HTMLImageElement)) {
-                        destroyResizable();
-                    }
-                }).on('keydown', function () {
-                    destroyResizable();
-                });
-            };
-            enableImageResize();
-        }
-    }
-
-    function showErrorAlert(reason, detail) {
-        var msg = '';
-        if (reason === 'unsupported-file-type') {
-            msg = "Unsupported format " + detail;
-        }
-        $('<div class="alert"> <button type="button" class="close" data-dismiss="alert">&times;</button><strong>File upload error</strong> ' + msg + ' </div>').prependTo(com.focusPage('#alerts'));
+        com.focusPage('#additionalInfo').wysiwyg();
     }
 
 });

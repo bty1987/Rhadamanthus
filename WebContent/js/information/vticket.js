@@ -22,7 +22,9 @@ jQuery(function($) {
 		com.clearValidator();
 	});
 
-	com.initChosen('belonger', api.personel.queryUserByPinyin, "pinyinName", {"departmentType.name":"", "user.status":0}, "autoFillKeyValue", "key", "value");
+	com.initTypeahead('belonger', api.personel.queryUserByPinyin, "pinyinName", {"departmentType.name":"", "user.status":0}, "autoFillKeyValue", "key", "value",function(list,key,value){
+		return value;
+	});
 
 	var displayFunc  = (function(){
 
@@ -51,7 +53,7 @@ jQuery(function($) {
 			var $btnViews = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
 
 			$btnViews.click(function(){
-				com.updateChosen("belonger", v.belonger.userId, v.belonger.userName);
+				com.updateTypeahead("belonger", v.belonger.userId, v.belonger.userName);
 				vticket.items.tno.attr("readOnly", true);
 				vticket.items.vtid.val(v.vtid);
 				vticket.items.tno.val(v.tno);
@@ -117,7 +119,7 @@ jQuery(function($) {
 	//添加
 	com.focusPage('a[name="addVticket"]', '#pagenation').click(function(){
 		vticket.items.tno.attr("readOnly", false);
-		com.updateChosen("belonger", "", "");
+		com.updateTypeahead("belonger", "", "");
 		com.cleanItems(vticket.items);
 		com.focusPage("#vticketModal").modal("show");
 	});
@@ -127,7 +129,7 @@ jQuery(function($) {
 			return;
 		}
 		var options = {
-			'vticket.belonger.userId': vticket.items.belonger.val(),
+			'vticket.belonger.userId': com.typeahead("belonger"),
 			'vticket.orderId': vticket.items.orderId.val(),
 			'vticket.name': vticket.items.name.val(),
 			'vticket.phone': vticket.items.phone.val(),

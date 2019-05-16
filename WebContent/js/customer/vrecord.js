@@ -89,7 +89,7 @@ jQuery(function($) {
 		};
 		com.post(api.customer.addVrecord, options, function(res){
 			searcher.doSearch();
-			com.showAlert(com.info, "保存成功！");
+			com.showAlert(com.info, "保存成功");
 			com.focusPage("#vrecordModal").modal("hide");
 		});
 	});

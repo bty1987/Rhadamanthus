@@ -65,7 +65,7 @@ $(function () {
     });
 
     function initWizardSept(operate, schedule) {
-        
+
         addActive(schedule);
 
         var elementPostData = {
@@ -77,10 +77,11 @@ $(function () {
 
             var constructionSchedule = res.constructionSchedule;
 
-            com.initChosen(operate + "WorkerName", api.personel.queryUserByPinyin, "pinyinName", {
+            com.initTypeahead(operate + "WorkerName", api.personel.queryUserByPinyin, "pinyinName", {
                 "departmentType.name": "工程部",
                 "user.status": 0
             }, "autoFillKeyValue", "key", "value");
+
 
             com.focusPage("#" + operate + "StartTime").val(constructionSchedule.startTime);
             com.focusPage("#" + operate + "EndTime").val(constructionSchedule.endTime);
@@ -90,25 +91,25 @@ $(function () {
 
             var otherSuccessBtn = com.focusPage("#" + otherename + "Success");
             var othereFailBtn = com.focusPage("#" + otherename + "Fail");
-            
+
             updatastatusDiv(otherStatus, otherename);
 
             otherSuccessBtn.click(function () {
-                
+
                 var options = {
                     "constructionSchedule.csid": constructionSchedule.csid
                 };
-                
+
                 com.post(api.construction.beginConstructionSchedule, options, function (res) {
                     com.showAlert(com.info, "操作成功");
                     updatastatusDiv(1, otherename);
                 });
-                
+
                 return false;
             });
 
             othereFailBtn.click(function () {
-                
+
                 var options = {
                     "constructionSchedule.csid": constructionSchedule.csid
                 };
@@ -117,7 +118,7 @@ $(function () {
                     com.showAlert(com.info, "操作成功");
                     updatastatusDiv(2, otherename);
                 });
-                
+
                 return false;
             });
 
@@ -130,10 +131,10 @@ $(function () {
             }, null, false);
 
             com.focusPage("#" + operate + "WorkerSubmit").unbind("click");
-
             com.focusPage("#" + operate + "WorkerSubmit").on("click", function () {
+                console.log(com.focusPage("#" + operate + "WorkerName"))
 
-                if (com.focusPage("#" + operate + "WorkerName_chosen span")[0].textContent.replace(/\s+/g, "") == "") {
+                if (com.focusPage("#" + operate + "WorkerName").val().replace(/\s+/g, "") == "") {
                     com.showAlert(com.error, "工人名称不能为空");
                     return false;
                 }
@@ -141,9 +142,10 @@ $(function () {
                 var args = {};
                 args["constructer.cid"] = constructionSchedule.cid;
                 args["constructer.schedule"] = schedule;
-                args["constructer.user.userId"] = com.focusPage('#' + operate + "WorkerName").val();
+                args["constructer.user.userId"] = com.focusPage('#' + operate + "WorkerName").attr("data-typeahead-key");
 
                 com.post(api.construction.addConstructer, args, function (res) {
+                    console.log(res)
                     setWorkerUrl(operate, res);
                 });
 
@@ -160,7 +162,7 @@ $(function () {
     function updatastatusDiv(status, statusDiv) {
 
         var statusDiv = com.focusPage("#" + statusDiv + "Status").html("");
-        
+
         if (status == 0) {
             $("<span></span>").addClass("label label-grey").text("初始").appendTo(statusDiv);
         }else if (status == 1) {
@@ -305,8 +307,7 @@ $(function () {
         var paneWorkerEnter = $("<div></div>").attr("id", name + "WorkerEnter").appendTo(paneWorkerGroupSe);
         var paneWorkerEnlab = $("<lable></lable>").addClass("col-sm-1 control-label").attr("for", name + "WorkerName").html("工人姓名").appendTo(paneWorkerEnter);
         var paneWorkerSelDiv = $("<div></div>").addClass("col-sm-4").appendTo(paneWorkerEnter);
-        var paneWorkerSel = $("<select></select>").attr("id", name + "WorkerName").addClass("chosen-select col-sm-2 v_required").attr("data-placeholder", "请输入工人名称").attr("data-toggle", "popover").attr("data-trigger", "manual").appendTo(paneWorkerSelDiv);
-        var paneWorkerOp = $("<option></option>").attr("value", "").html("&nbsp;").appendTo(paneWorkerSel);
+        var paneWorkerSel = $("<input></input>").attr("id", name + "WorkerName").addClass("col-xs-10 col-sm-6 v_required").attr("data-placeholder", "请输入工人名称").attr("data-placement", "bottom").attr("data-toggle", "popover").attr("data-trigger", "manual").attr("type", "text").appendTo(paneWorkerSelDiv);
 
         var paneWorkerGroupEi = $("<div></div>").addClass("form-group").appendTo(paneWorkerForm);
         var paneWorkerSmEi = $("<div></div>").addClass("col-sm-offset-1").appendTo(paneWorkerGroupEi);

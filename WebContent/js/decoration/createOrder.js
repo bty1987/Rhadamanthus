@@ -95,7 +95,6 @@ jQuery(function($) {
 
 	orderEntry.houseItems.built = com.focusPage("#built").on("blur", function (e) {
 		deleteVillageData("built",orderEntry.houseItems);
-
 	});
 
 	orderEntry.houseItems.unit = com.focusPage("#unit").on("blur", function (e) {
@@ -142,26 +141,26 @@ jQuery(function($) {
         orderEntry.orderGrade = res.orderGrade;
         orderEntry.orderItems.orderGrade.bindData(orderEntry.orderGrade, 'key', 'value');
 	});
+	
+	com.initTypeahead('customerId', api.data.queryCustomerForName, "pinyinName", {}, "autoFillCustomer", "key", "value", function(list, key, value){
+	    
+	    
+	    com.post(api.decoration.queryDecorationByCustomerId, {"decoration.customer.cid": key}, function (res) {
+            if (res.decorations && res.decorations.length > 0) {
 
-	com.initChosen('customerId', api.data.queryCustomerForName, "pinyinName", {}, "autoFillCustomer", "key", "value").on("change", function (e) {
-		if ($(this).val() == "" || com.focusPage("#customerId").val() == "") {
-			com.clearValidator("#customerId", true);
-			orderEntry.repeatCustomerFlg = false;
-			return;
-		}
+                var decoration = res.decorations[0];
 
-		com.post(api.decoration.queryDecorationByCustomerId, {"decoration.customer.cid": com.focusPage("#customerId").val()}, function (res) {
-			if (res.decorations && res.decorations.length > 0) {
-
-				var decoration = res.decorations[0];
-
-				com.showTips(com.focusPage("#customerId"), "订单已存在.订单号:" + decoration.orderId + ",订单所属设计师:" + decoration.designer.currentName, true);
-				orderEntry.repeatCustomerFlg = true;
-			} else {
-				com.clearValidator("#customerId", true);
-				orderEntry.repeatCustomerFlg = false;
-			}
-		}, null, false);
+                com.showTip(com.focusPage("#customerId"), "订单已存在.订单号:" + decoration.orderId + ",订单所属设计师:" + decoration.designer.currentName, "left");
+                orderEntry.repeatCustomerFlg = true;
+                
+                key = "" , value = "";
+            } else {
+                com.clearValidator("#customerId", true);
+                orderEntry.repeatCustomerFlg = false;
+            }
+        }, null, false);
+	    
+	    return value;
 	});
 
 	com.initChosen('villageId', api.data.queryVillageForNameByPinyin, "pinyinName", {}, "autoFillKeyValue", "key", "value");
@@ -191,7 +190,7 @@ jQuery(function($) {
 					com.showTips($("#houseNumber"), "订单已存在：订单号：" + des.decoration.orderId + " 订单所属设计师:" + des.decoration.designer.currentName, true);
 					orderEntry.repeatFlg = true;
 				} else {
-					bootbox.confirm("已有该房产信息，是否绑定？", function (yes) {
+					bootbox.confirm("已有该房产信息，是否绑定?", function (yes) {
 						if (yes) {
 							orderEntry.houseItems.hid = res.house.hid;
 							orderEntry.repeatFlg = false;
@@ -295,7 +294,7 @@ jQuery(function($) {
 		var btn = com.focusPage("#saveBtn");
 
 		var options = {
-			"decoration.customer.cid": orderEntry.orderItems.customerId.val(),
+			"decoration.customer.cid": com.typeahead("customerId"),
 			"decoration.houseType": orderEntry.orderItems.houseType.val(),
 			"decoration.houseClass": orderEntry.orderItems.houseClass.val(),
 			"decoration.designer.userId": orderEntry.orderItems.designerId.val(),
@@ -321,7 +320,7 @@ jQuery(function($) {
 			return;
 
 		if (orderEntry.houseItems.hid == null) {
-			com.showAlert(com.error, "房产信息未填写！");
+			com.showAlert(com.error, "房产信息未填写");
 			return;
 		}
 
@@ -343,9 +342,11 @@ jQuery(function($) {
 	}
 
 	function initCreate() {
+	    
+	    com.cleanTypeahead("customerId");
+	    
 		orderEntry.orderItems.decorationFlag.attr("checked", "checked");
 		orderEntry.orderItems.materialOrderFlag.removeAttr("checked");
-		orderEntry.orderItems.customerId.get(0).selectedIndex = 0;
 		orderEntry.orderItems.villageId.get(0).selectedIndex = 0;
 		orderEntry.orderItems.houseNumber.val("");
 		orderEntry.orderItems.houseType.get(0).selectedIndex = 0;
@@ -364,7 +365,6 @@ jQuery(function($) {
 		orderEntry.orderItems.backOrderContent.val("");
 		orderEntry.orderItems.status.get(0).selectedIndex = 0;
 
-		com.updateChosen("customerId", '', '');
 		com.updateChosen("villageId", '', '');
 		com.updateChosen("designerId", '', '');
 		com.updateChosen("salesmanId", '', '');
@@ -372,7 +372,6 @@ jQuery(function($) {
 		com.focusPage(".chosen-single span").html("");
 
 		com.clearValidator("#houseNumber", true);
-		com.clearValidator("#customerId", true);
 		com.clearValidator();
 
 		orderEntry.repeatFlg = false;
@@ -472,9 +471,8 @@ jQuery(function($) {
 
 		com.post(url, options, function (res) {
 			com.showAlert(com.info, "创建用户成功");
-
-			com.focusPage("#customerId").html('<option value="' + res.customer.cid + '">' + res.customer.name + '-' + res.customer.phone + '</option>');
-			com.focusPage("#customerId").trigger("chosen:updated");
+			
+			com.updateTypeahead('customerId', res.customer.cid, res.customer.name + '-' + res.customer.phone)
 
 			com.focusPage("#customerModal").modal("hide");
 		}, function (e) {

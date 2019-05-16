@@ -21,22 +21,22 @@
                 <div class="modal-body">
                     <form class="form-horizontal">
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right" for="versionNo">版本号</label>
+                            <label class="col-sm-3 control-label no-padding-right orange" for="no">版本号</label>
                             <div class="col-sm-9">
-                                <input type="text" id="versionNo" maxlength="64" class="col-xs-10 col-sm-7 v_required" data-toggle="popover" data-trigger='manual'/>
-                                <span class='star'></span>
+                                <input type="hidden" id="vid" />
+                                <input type="text" id="no" maxlength="64" class="col-xs-10 col-sm-7 v_required" data-toggle="popover" data-trigger='manual'/>
                             </div>
                         </div>
+                        
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right" for="createTime">创建时间</label>
+                            <label class="col-sm-3 control-label no-padding-right orange" for="createTime">创建时间</label>
                             <div class="col-sm-9">
                                 <input type="text" id="createTime" maxlength="64" class="col-xs-10 col-sm-7 v_required date-picker" data-toggle="popover" data-trigger='manual'/>
-                                <span class='star'></span>
                             </div>
                         </div>
 
-                        <div class="form-group"  style="padding: 0 10px;">
-                            <div class="wysiwyg-editor" id="contents" data-toggle="popover" data-trigger='manual'></div>
+                        <div class="form-group">
+                            <div class="wysiwyg-editor" id="comment" data-toggle="popover" data-trigger='manual'></div>
                         </div>
                     </form>
                 </div>
@@ -49,6 +49,6 @@
     </div>
 </div>
 
-<script type="text/javascript">
+<script type="text/javascript" src="js/system/version.js">
 	$.loadScript(['js/system/version.js']);
 </script>

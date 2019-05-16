@@ -25,7 +25,7 @@ $(function () {
                         "village.no": $this.val()
                     },
                     function (a) {
-                        0 < a.village.no ? (com.showTips($this, "\u8be5\u697c\u76d8\u7f16\u53f7\u5df2\u7ecf\u5b58\u5728", !0), village.repeatFlg = !0) : (com.clearValidator("#no", !0), village.repeatFlg = !1)
+                        0 < a.village.no ? (com.showTips($this, "该楼盘编号已经存在", !0), village.repeatFlg = !0) : (com.clearValidator("#no", !0), village.repeatFlg = !1)
                     })
             }),
             nameRuleSel: com.focusPage("#nameRuleSel"),
@@ -43,7 +43,7 @@ $(function () {
             no: {
                 type: "v_no",
                 regex: /^P_\d{4}$/g,
-                errorMsg: "\u8bf7\u4ee5P_\u4f5c\u4e3a\u524d\u7f00 , \u4e4b\u540e\u4ee5\u56db\u4f4d\u6570\u5b57\u7ec4\u6210(\u5982P_0001)."
+                errorMsg: "请以P_作为前缀 , 之后以四位数字组成(如P_0001)."
             }
         },
         editFlag: !1,

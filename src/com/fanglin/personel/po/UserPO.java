@@ -48,6 +48,10 @@ public class UserPO implements Serializable {
 	public static final short STATUS_ENABLE_INT = 0;
 
 	public static final short STATUS_DISABLE_INT = 1;
+	
+	public static final short COLUMN_ISUPDATE_UPDATE_INT = 1;
+	
+	public static final short COLUMN_ISUPDATE_ADD_INT = 2;
 
 	private int uid;
 
@@ -92,6 +96,8 @@ public class UserPO implements Serializable {
 	private short extranet;
 
 	private short freedom;
+	
+	private short isUpdate;
 
 	public UserPO() {
 		super();
@@ -312,6 +318,15 @@ public class UserPO implements Serializable {
 
 	public void setFreedom(short freedom) {
 		this.freedom = freedom;
+	}
+
+	@Column(name = "isUpdate")
+	public short getIsUpdate() {
+		return isUpdate;
+	}
+
+	public void setIsUpdate(short isUpdate) {
+		this.isUpdate = isUpdate;
 	}
 
 }

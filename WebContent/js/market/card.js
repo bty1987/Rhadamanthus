@@ -162,7 +162,7 @@ jQuery(function($) {
         }
 
         com.post(api.market.updateCard, options, function(res){
-            com.showAlert(com.info, "修改成功！");
+            com.showAlert(com.info, "修改成功");
             searcher.doSearch();
         });
 

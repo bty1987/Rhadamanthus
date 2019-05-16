@@ -80,7 +80,7 @@ jQuery(function($) {
             com.post(api.personel.queryUserInfoByUserId, {"userInfo.user.userId" : checkUser.userid}, function(res){
                 com.focusPage("#content").html(res.userInfo.profiles);
             });
-            com.showAlert(com.info, "编辑个人简介成功！");
+            com.showAlert(com.info, "编辑个人简介成功");
             select(com.focusPage("#text"), com.focusPage("#btn"), com.focusPage("#content"));
         });
     }

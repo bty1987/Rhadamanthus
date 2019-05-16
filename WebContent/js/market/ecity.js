@@ -104,7 +104,7 @@ jQuery(function($) {
         };
 
         com.post(api.market.addEcity, options, function(res){
-            com.showAlert(com.info, "创建成功！");
+            com.showAlert(com.info, "创建成功");
             searcher.doSearch();
         });
 

@@ -226,7 +226,8 @@ $(function(){
     //功能区保存按钮点击事件
     function saveFunctionArea() {
         if (!com.validate("functionAreaModal") && !functionArea.repeatFunctionIdFlg) {
-            var a, b = {
+            
+            var options = {
                 "functionArea.functionAreaId": functionArea.functionAreaItems.functionAreaId.val(),
                 "functionArea.functionAreaName": functionArea.functionAreaItems.functionAreaName.val(),
                 "functionArea.functionAreaOrder": functionArea.functionAreaItems.functionAreaOrder.val(),
@@ -234,25 +235,45 @@ $(function(){
                 "functionArea.versionId": functionArea.functionAreaItems.versionId.val(),
                 "functionArea.type": functionArea.functionAreaItems.type.val(),
                 "functionArea.total": functionArea.functionAreaItems.total.val() ? functionArea.functionAreaItems.total.val() : 0
-            };
-            functionArea.editFlg ? (
-                a = api.quotation.updateFunctionArea,
-                b["functionArea.faId"] = functionArea.functionAreaItems.faId.val(),
-                functionArea.oldFunctionAreaType != functionArea.functionAreaItems.functionAreaType.val() ? bootbox.confirm("功能区的类型修改，会清空以前包含的报价项，确认修改吗？",function(c) {
-                    c && (com.post(a, b, successFunctionAreaCallback), functionArea.modal.modal("hide"));
-                }) : (com.post(a, b, successFunctionAreaCallback), functionArea.modal.modal("hide"))) : (a = api.quotation.addFunctionArea, com.post(a, b, successFunctionAreaCallback), functionArea.modal.modal("hide"));
+            }
+            
+            if(functionArea.editFlg){
+                options["functionArea.faId"] = functionArea.functionAreaItems.faId.val();
+                
+                com.showConfirm("功能区的类型修改,会清空以前包含的报价项,是否确认修改?", function() {
+                    com.post(api.quotation.updateFunctionArea, options, function(){
+                        com.showAlert(com.info, "操作成功");
+                        
+                        functionAreaSeacher.doSearch();
+                        
+                        functionArea.modal.modal("hide");
+                    });
+                });
+            }else{
+                com.post(api.quotation.addFunctionArea, options, function(res){
+                    
+                    com.showAlert(com.info, "操作成功");
+                    
+                    functionAreaSeacher.doSearch();
+                    
+                    functionArea.modal.modal("hide");
+                });
+            }
         }
     }
+    
     //功能区删除事件
     function removeFunctionArea(id) {
-
-        bootbox.confirm("确认删除报价项吗？",function(flag) {
-
-            var c = {"ids[0]" : id};
-
-            flag && com.post(api.quotation.deleteFunctionArea, c, successFunctionAreaCallback);
+        com.showConfirm("是否确认删除", function() {
+            com.post(api.quotation.deleteFunctionArea, {"ids[0]" : id}, function(){
+                
+                com.showAlert(com.info, "操作成功");
+                
+                functionAreaSeacher.doSearch();
+            });
         });
     }
+    
     //分配报价项
     function assignQuotationItemIndex(a, b, c) {
         com.focusPage("#selectFunctionAreaId").val(a);
@@ -265,8 +286,8 @@ $(function(){
         functionAreaItem.postParam["functionAreaItem.functionArea.faId"] = a;
         functionAreaItem.postParam["functionAreaItem.functionArea.functionAreaType"] = c;
         initFunctionAreaItemList();
-
     }
+    
     //功能区弹窗向下拉列表绑定数据
     function bindVersion(a) {
         com.post(api.quotation.queryQuotationVersion, {}, function(b) {
@@ -274,11 +295,6 @@ $(function(){
             functionArea.functionAreaItems.versionId.bindData(functionArea.quotationVersionList, functionArea.quotationVersionKey, functionArea.quotationVersionValue);
             "undefined" == typeof a || null == a ? functionArea.functionAreaItems.versionId.get(0).selectedIndex = 0 : functionArea.functionAreaItems.versionId.val(a);
         });
-    }
-    //功能区弹窗保存成功回调函数
-    function successFunctionAreaCallback() {
-        com.showAlert(com.info, "操作成功");
-        functionAreaSeacher.doSearch();
     }
 
     //显示报价项信息列表
@@ -341,10 +357,9 @@ $(function(){
         com.focusPage("#functionAreaList").removeClass("hide");
     }
     //删除报价项
-    function removeFunctionAreaItem(c) {
-        bootbox.confirm("确认删除报价项吗？",function(flag) {
-
-            flag && com.post(api.quotation.deleteFunctionAreaItemByIds, c, successFunctionAreaItemCallback);
+    function removeFunctionAreaItem(options) {
+        com.showConfirm("是否确认删除报价项", function() {
+            com.post(api.quotation.deleteFunctionAreaItemByIds, options, successFunctionAreaItemCallback);
         });
     }
 

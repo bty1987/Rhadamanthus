@@ -177,7 +177,11 @@ public class UserAction extends BaseListAction {
 			throw new FLException(-1, "无操作权限");
 		}
 
-		userService.updateUserForAdvance(user);
+		if (queryUserId().equals(user.getUserId())) {
+			throw new FLException(-1, "无操作权限");
+		}
+
+		userService.updateUserForAdvance(user, queryRoleId());
 
 		return SUCCESS;
 	}

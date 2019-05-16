@@ -61,7 +61,7 @@ $(function(){
             });
 
             $btnDelete.click(function() {
-                bootbox.confirm("确定删除吗？", function(result) {
+                bootbox.confirm("确定删除吗?", function(result) {
                     if(result) {
                         deleteMaterial(v.mmId);
                     }

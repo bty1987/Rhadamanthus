@@ -97,13 +97,18 @@ $(function(){
             });
 
             $btnDelStatus.click(function(){
+            	com.showConfirm("确定删除吗?", function(result) {
+            		
                 com.post(api.information.updateActivityForStatus, {
                     "activity.aid": v.aid,
                     "activity.status": 2
                 }, function(res){
                     ActivitySeacher.doSearch();
-                });
+                    com.showAlert(com.info, "操作成功");
+                	});
+            	});
             });
+            
             !v.status && $statusSwitch.prop("checked", true);
             $default.click(function(){
 
@@ -155,8 +160,11 @@ $(function(){
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
         $adda.click(function(){
+            
             activity.editFlg = !1;
+            
             com.cleanItems(activity.items);
+            
             activity.items.activityName.removeAttr("disabled", "disabled");
             activity.items.startTime.removeAttr("disabled", "disabled");
             activity.items.types.removeAttr("disabled", "disabled");
@@ -169,8 +177,8 @@ $(function(){
     function viewActivityItemIndex(v) {
         params.aid = v.aid;
     	params.activityName = v.name;
+    	
         com.focusPage("#activityPageContent").load(api.index.activityItemIndex.url);
-
     }
 
     function bindingisType(idName) {
@@ -178,23 +186,25 @@ $(function(){
             com.focusPage("#" + idName).bindData(res.activityTypes, "key", "value", true)
         });
     }
+    
     function saveData() {
-        if (!com.validate() && !activity.repeatFlg) {
-
-            var a = activity.items.startTime.val(),
-                b = activity.items.endTime.val();
-            a > b ? com.showAlert(com.warning, "\u5f00\u59cb\u65f6\u95f4\u4e0d\u80fd\u5927\u4e8e\u7ed3\u675f\u65f6\u95f4") : (b = {
-                "activity.name": activity.items.activityName.val(),
-                "activity.startTime": activity.items.startTime.val(),
-                "activity.endTime": String(activity.items.endTime.val()).substring(0,10)+ " 23:59:59",
-                "activity.type" : activity.items.types.val(),
-                "activity.content": activity.items.content.val()
-            },
-                activity.editFlg ? (a = api.information.updateActivity, b["activity.aid"] = activity.items.aid): a = api.information.addActivity, com.post(a, b, successCallback), activity.modal.modal("hide"));
+        
+        if (com.validate() || activity.repeatFlg) {
+            return false;
         }
+        
+        var a = activity.items.startTime.val(), b = activity.items.endTime.val();
+        
+        a > b ? com.showAlert(com.warning, "开始时间不能大于结束时间") : (b = {
+            "activity.name": activity.items.activityName.val(),
+            "activity.startTime": activity.items.startTime.val(),
+            "activity.endTime": String(activity.items.endTime.val()).substring(0,10)+ " 23:59:59",
+            "activity.type" : activity.items.types.val(),
+            "activity.content": activity.items.content.val()
+        }, activity.editFlg ? (a = api.information.updateActivity, b["activity.aid"] = activity.items.aid): a = api.information.addActivity, com.post(a, b, successCallback), activity.modal.modal("hide"));
     }
     function successCallback() {
-        com.showAlert(com.info, "\u64cd\u4f5c\u6210\u529f");
+        com.showAlert(com.info, "操作成功");
         ActivitySeacher.doSearch();
     }
     function updatastatus(aid, newstatus){

@@ -114,7 +114,7 @@ $(function () {
                     com.focusPage("#gallery_li" + imgId).insertBefore(com.focusPage("#gallery_li" + imgId).prev());
                 });
             }else{
-                com.showAlert(com.warning, "当前图片为第一张,不能再向前更换！");
+                com.showAlert(com.warning, "当前图片为第一张,不能再向前更换");
             }
         });
 
@@ -150,7 +150,7 @@ $(function () {
 
             com.post(api.store.updateMgoods, options, function(res){
                 com.focusPage("#goodsPicturePopUp").attr({'data-flag': true});
-                com.showAlert(com.info, "图片设置成功！");
+                com.showAlert(com.info, "图片设置成功");
             });
         });
 
@@ -174,7 +174,7 @@ $(function () {
                     com.focusPage("#gallery_li" + imgId).insertAfter(com.focusPage("#gallery_li" + imgId).next());
                 });
             }else{
-                com.showAlert(com.warning, "当前图片为最后一张,不能再向后更换！");
+                com.showAlert(com.warning, "当前图片为最后一张,不能再向后更换");
             }
 
         });

@@ -22,6 +22,8 @@ public class RolePO implements Serializable {
 	private String no;
 
 	private String name;
+	
+	private short level;
 
 	private String content;
 	
@@ -68,6 +70,15 @@ public class RolePO implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	@Column(name = "level")
+	public short getLevel() {
+		return level;
+	}
+
+	public void setLevel(short level) {
+		this.level = level;
 	}
 
 	@Column(name = "content")

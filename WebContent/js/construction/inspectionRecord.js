@@ -153,12 +153,12 @@ jQuery(function ($) {
     }
 
     function delRecord(irId) {
-        bootbox.confirm("确认删除吗?", function (res) {
-            if (res) {
+        com.showConfirm("确认删除吗?", function () {
+
                 com.post(api.construction.deleteInspectionRecord, {"irIds[0]": irId}, function (res) {
                     searcher.doSearch();
                 });
-            }
+
         });
     }
 

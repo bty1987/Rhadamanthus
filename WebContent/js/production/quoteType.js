@@ -103,7 +103,7 @@ $(function () {
 
             //状态启用事件
             $btnStart.click(function(){
-                layer.confirm( '是否启用？', {
+                layer.confirm( '是否启用?', {
                     btn: ['确定', '取消']
                 }, function (index, layero) {
                     changeQuoteTypeStatus(v.qtid, 0,(v.status == 0), function () {
@@ -114,7 +114,7 @@ $(function () {
             });
             //状态禁用事件
             $btnStop.click(function(){
-                layer.confirm('是否禁用？', {
+                layer.confirm('是否禁用?', {
                     btn: ['确定', '取消']
                 }, function (index, layero) {
                     changeQuoteTypeStatus(v.qtid, 1,(v.status == 1), function () {

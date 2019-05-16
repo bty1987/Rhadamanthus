@@ -65,6 +65,8 @@ public class UserVO implements Serializable {
 	private Short freedom;
 
 	private String dutyName;
+	
+	private short isUpdate;
 
 	public UserVO() {
 		super();
@@ -277,6 +279,14 @@ public class UserVO implements Serializable {
 
 	public void setDutyName(String dutyName) {
 		this.dutyName = dutyName;
+	}
+
+	public short getIsUpdate() {
+		return isUpdate;
+	}
+
+	public void setIsUpdate(short isUpdate) {
+		this.isUpdate = isUpdate;
 	}
 
 	public UserVO setBaseInfo(UserPO userPO) {

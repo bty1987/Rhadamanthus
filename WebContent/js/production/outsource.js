@@ -113,7 +113,7 @@ $(function(){
                     });
 
                     $btnReceipt.click(function () {
-                        layer.confirm('确定到货？', {
+                        layer.confirm('确定到货?', {
                             btn: ['确定','取消'] //按钮
                         }, function(index, layero){
                             outsourceArrived(v.oid,function(){
@@ -127,7 +127,7 @@ $(function(){
                     });
 
                     $btnaBolition.click(function () {
-                        layer.confirm('是否废除？', {
+                        layer.confirm('是否废除?', {
                             btn: ['确定','取消'] //按钮
                         }, function(index, layero){
                             outsourceDestory(v.oid,function(){

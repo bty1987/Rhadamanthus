@@ -32,7 +32,7 @@ import com.fanglin.utils.Paging;
 public class RoleServiceImpl implements RoleService {
 
 	protected Logger log = LoggerFactory.getLogger(getClass());
-	
+
 	@Autowired
 	private CompanyDao companyDao;
 
@@ -112,13 +112,13 @@ public class RoleServiceImpl implements RoleService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int addRole(RoleVO roleVO, Integer company) throws FLException {
-		
+
 		CompanyPO companyPO = companyDao.get(company);
-		
-		if(companyPO == null){
+
+		if (companyPO == null) {
 			throw new FLException(230015, "公司不存在");
 		}
-		
+
 		RolePO rolePO = new RolePO();
 
 		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_ROLE_INT, CountingPO.COUNTING_DATE_SILNLE_STR, company);
@@ -140,10 +140,13 @@ public class RoleServiceImpl implements RoleService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int updateRole(RoleVO roleVO) {
+
 		RolePO rolePO = roleDao.get(roleVO.getRid());
 
 		if (rolePO != null) {
+
 			BeanUtil.copyProperties(roleVO, rolePO, Arrays.asList("no"));
+
 			roleDao.saveOrUpdate(rolePO);
 		}
 
@@ -161,24 +164,37 @@ public class RoleServiceImpl implements RoleService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int deleteRoleByRid(Integer rid) throws FLException {
+	public int deleteRoleByRid(RoleVO roleVO, int qid) throws FLException {
+		
+		int rid = roleVO.getRid();
 
 		RolePO rolePO = roleDao.get(rid);
-
-		if (rolePO != null) {
-
-			int count = userDao.countUserByRoleId(rid);
-
-			if (count > 0) {
-				throw new FLException(230006, String.format("角色编号[%s]已被引用, 不能被删除", rid));
-			}
-
-			roleModuleDao.deleteRoleModuleByRid(rolePO.getRid());
-			roleOperationDao.deleteRoleOperationByRid(rolePO.getRid());
-
-			roleDao.delete(rolePO);
+		
+		if(rolePO == null){
+			throw new FLException(230010, "角色不存在");
 		}
 
+		int count = userDao.countUserByRoleId(rid);
+
+		if (count > 0) {
+			throw new FLException(230006, String.format("角色编号[%s]已被引用, 不能被删除", rid));
+		}
+		
+		RolePO roleCO = roleDao.get(qid);
+		
+		if(roleCO == null){
+			throw new FLException(230010, "角色不存在");
+		}
+		
+		if(roleCO.getLevel() < rolePO.getLevel()){
+			throw new FLException(-1, "无操作权限");
+		}
+
+		roleModuleDao.deleteRoleModuleByRid(rolePO.getRid());
+		roleOperationDao.deleteRoleOperationByRid(rolePO.getRid());
+
+		roleDao.delete(rolePO);
+			
 		return 0;
 	}
 

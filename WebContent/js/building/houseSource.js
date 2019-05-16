@@ -99,14 +99,14 @@ jQuery(function($) {
 		com.post(api.building.queryCustomerSourceByNo, {"customerSource.no" : houseSource.buildItems.csNo.val()}, function(res){
 			if(res.customerSource.status != 0){
 				houseSource.repeatFlg = true;
-				com.showPopover(com.focusPage("#csNo"),{errorMsg: "客源已签约或失效！"}, "right");
+				com.showPopover(com.focusPage("#csNo"),{errorMsg: "客源已签约或失效"}, "right");
 			}else{
 				houseSource.repeatFlg = false;
 				houseSource.csid = res.customerSource.csid;
 				com.focusPage("#csNo").css("border", "1px solid #d5d5d5").popover("destroy");
 			}
 		}, function(data){
-			com.showPopover(com.focusPage("#csNo"),{errorMsg: "请正确输入客源编号！"}, "right");
+			com.showPopover(com.focusPage("#csNo"),{errorMsg: "请正确输入客源编号"}, "right");
 			houseSource.repeatFlg = true;
 		}, false);
 	});
@@ -193,11 +193,11 @@ jQuery(function($) {
 					options["houseSource.hsid"] = v.hsid;
 					options["houseSource.status"] = 0;
 					com.post(api.building.updateHouseSourceForStatus, options, function(res){
-						com.showAlert(com.info, "申请成功！");
+						com.showAlert(com.info, "申请成功");
 						searcher.doSearch();
 					});
 				}else{
-					com.showAlert(com.warning, "当前房源信息状态不符合！");
+					com.showAlert(com.warning, "当前房源信息状态不符合");
 				}
 			});
 
@@ -229,7 +229,7 @@ jQuery(function($) {
 			//绑定客源
 			$btnBind.click(function(){
 				if(v.status != 3 ){
-					com.showAlert(com.warning, "当前房源状态不符合，不能绑定客源！");
+					com.showAlert(com.warning, "当前房源状态不符合，不能绑定客源");
 					return;
 				}
 				deleteData();
@@ -260,7 +260,7 @@ jQuery(function($) {
 					if(v.status != 1){
 						updateHouseSourceStatus(v.hsid, 0);
 					}else{
-						com.showAlert(com.warning, "当前房源已签约不能修改状态！");
+						com.showAlert(com.warning, "当前房源已签约不能修改状态");
 					}
 				}
 			});
@@ -318,7 +318,7 @@ jQuery(function($) {
 		};
 
 		com.post(api.building.bindBuilding, options, function(res){
-			com.showAlert(com.info, "成功绑定客源！");
+			com.showAlert(com.info, "成功绑定客源");
 			searcher.doSearch();
 		});
 
@@ -407,7 +407,7 @@ jQuery(function($) {
 			options["houseSource.path"] = imgUrl;
 
 			com.post(defaultUrl, options, function(res){
-				com.showAlert(com.info, "图片设置成功！");
+				com.showAlert(com.info, "图片设置成功");
 			});
 		}).appendTo(toolsDiv);
 		$("<i></i>").addClass("icon-ok green").appendTo(toolsB);

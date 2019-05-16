@@ -305,14 +305,13 @@ jQuery(function($) {
 			return false;
 		}
 		
-		bootbox.confirm("确定要将符合条件的所有收款项目,置为已确认状态吗?", function(result) {
-			if(result) {
-				com.post(api.payment.confirmDecorationPayment, options, function(res){
-					searcher.doSearch();
-					hsearcher.doSearch();
-				});
-			}
-		});
+		com.showConfirm("确定要将符合条件的所有收款项目,置为已确认状态吗?", function(result) {
+			com.post(api.payment.confirmDecorationPayment, options, function(res){
+				searcher.doSearch();
+				hsearcher.doSearch();
+				com.showAlert(com.info, "确认成功")
+			});
+		};
 	});
 
 	com.focusPage('a[name="import"]', '#pagenation').click(function () {

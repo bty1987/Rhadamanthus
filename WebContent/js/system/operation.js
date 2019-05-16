@@ -132,12 +132,10 @@ $(function(){
     }
 
     function deleteOperation(oid){
-        bootbox.confirm("确定删除吗?", function(result) {
-            if(result) {
-                com.post(api.system.deleteOperation, {"operation.oid": oid}, function(){
-                    search();
-                });
-            }
+        com.showConfirm("是否确定删除", function() {
+            com.post(api.system.deleteOperation, {"operation.oid": oid}, function(){
+                search();
+            });
         });
     }
 
