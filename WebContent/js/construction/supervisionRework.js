@@ -148,12 +148,11 @@ jQuery(function ($) {
     }
 
     function removeRow(id) {
-        bootbox.confirm("确认申请放线吗?", function (res) {
-            if (res) {
+        com.showConfirm("确认申请放线吗?", function () {
                 com.post(api.construction.deleteRework, {"rwIds[0]": id}, function (res) {
                     searcher.doSearch();
                 });
-            }
+
         });
     }
 

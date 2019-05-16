@@ -69,7 +69,7 @@ $(function () {
             com.post(api.customer.queryCustomerRecord, {"customerRecord.csid": csid}, function (res) {
                 displayFunc.init('resultList1', res.customerRecords);
             });
-            com.showAlert(com.info, "记录创建成功！");
+            com.showAlert(com.info, "记录创建成功");
             deleteDate();
         });
     }

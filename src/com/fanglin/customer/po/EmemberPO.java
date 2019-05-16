@@ -39,6 +39,8 @@ public class EmemberPO implements Serializable {
 	private String ticket;
 
 	private short status;
+	
+	private long activity;
 
 	@Id
 	@GeneratedValue
@@ -112,6 +114,15 @@ public class EmemberPO implements Serializable {
 
 	public void setStatus(short status) {
 		this.status = status;
+	}
+
+	@Column(name = "activity")
+	public long getActivity() {
+		return activity;
+	}
+
+	public void setActivity(long activity) {
+		this.activity = activity;
 	}
 
 }

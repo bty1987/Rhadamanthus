@@ -34,6 +34,7 @@ var Searcher = function(){
             var that = this;
             var $searchBtn = $('<button></button>').addClass('btn btn-xs btn-info btn-search').html('查询');
             var $cleanBtn = $('<button></button>').addClass('btn btn-xs btn-danger btn-clean').css('margin', '0px 3px').html('重置');
+            var $tendBtn = $('<button></button>').addClass('btn btn-xs btn-warning btn-clean').html('收|展');
 
             basicConf.$searcher.empty();
 
@@ -46,6 +47,7 @@ var Searcher = function(){
                 }),
                     basicConf.$searcher.append($searchBtn),
                     basicConf.$searcher.append($cleanBtn),
+                    basicConf.$searcher.append($tendBtn),
                     $searchBtn.click(function(){
                         if(basicConf.noPagingFlag){
                             _params = getParams();
@@ -66,8 +68,13 @@ var Searcher = function(){
                         }
                     }),
                     $cleanBtn.click(function(){
-                        basicConf.$searcher.find('.inline').each(function(i, v){
+                        basicConf.$searcher.find('.fl-filter-inline').each(function(i, v){
                             $($(v).children()[1]) && $($(v).children()[1]).removeAttr('data-typeahead-key').val('');
+                        });
+                    }),
+                    $tendBtn.click(function(){
+                        basicConf.$searcher.find('.fl-filter-inline').each(function(i, v){
+                            if(i > 3) $(v).toggle();
                         });
                     })
             );
@@ -82,7 +89,7 @@ var Searcher = function(){
          * */
         createCondItem : function(condCode, condRule){
 
-            var $item = $('<span></span>').addClass('inline');
+            var $item = $('<span></span>').addClass('fl-filter-inline');
             var $label = $('<label></label>');
 
             var $showItem,$valueItem;

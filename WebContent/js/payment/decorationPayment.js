@@ -355,13 +355,11 @@ jQuery(function($) {
 			"approvalDecorationRefund.paymentId": decorationPayment.paymentId
 		};
 
-		bootbox.confirm("确认要提交退款申请吗?", function(res) {
-			if(res){
-				com.post(api.approval.submitApprovalForDecorationRefund, options, function(res){
-					com.showAlert(com.info, "提交成功");
-					hsearcher.doSearch();
-				});
-			}
+		com.showConfirm("确认要提交退款申请吗?", function(res) {
+			com.post(api.approval.submitApprovalForDecorationRefund, options, function(res){
+				com.showAlert(com.info, "提交成功");
+				hsearcher.doSearch();
+			});
 
 			decorationPayment.refundDecorationPaymentModal.modal("hide");
 		});
@@ -530,16 +528,13 @@ jQuery(function($) {
 			decorationPayment.baseModal.modal("hide");
 			var argsDrId = result.decorationPayment.drId;
 
-			bootbox.confirm("是否需要打印当前收款对应的收据信息?", function(result) {
-
-				if(result){
-					params.decorationOrderOrderId = orderId;
-					params.decorationPaymentOrderId = orderId;
-					params.decorationReceiptDrId = argsDrId;
-					com.popup("专用收款收据__装修单号:" + orderId  ,api.index.decorationPaymentReceiptIndex.url,function () {
-						parent.layer.getFrameIndex(window.name);
-					},null,true);
-				}
+			com.showConfirm("是否需要打印当前收款对应的收据信息?", function(result) {
+				params.decorationOrderOrderId = orderId;
+				params.decorationPaymentOrderId = orderId;
+				params.decorationReceiptDrId = argsDrId;
+				com.popup("专用收款收据__装修单号:" + orderId  ,api.index.decorationPaymentReceiptIndex.url,function () {
+					parent.layer.getFrameIndex(window.name);
+				},null,true);
 			});
 		});
 

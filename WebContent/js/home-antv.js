@@ -599,6 +599,23 @@ $(function () {
 
     Signing.loadNotices();
     Signing.loadActivities();
+    
+    com.post(api.ds.system, {}, function(res){
+        res.alertInfo && (layer.open({
+            type: 1,
+            title: false,
+            closeBtn: false,
+            area: '300px',
+            shade: 0.8,
+            id: 'homeAlert',
+            btn: ['了解了'],
+            moveType: 1,
+            content: '<div class="home-layer-content"><div>' + res.alertInfo + '</div></div>',
+            success: function(layero){
+                layero.find('.layui-layer-btn').css('text-align', 'center');
+            }
+        }));
+    });
 
     loadMessageCount();
 
@@ -611,21 +628,23 @@ $(function () {
         url = 'url("' + img.src + '")';
         $("#fl-container").css('background-size', '300px').css('background-image', url).css('bottom', '0');
     }, null, false);
+    
+    $("#homeTab").click(function() {
+        $('.breadcrumb').empty().append('<i class="fa fa-fw icon-home"></i>&nbsp;&nbsp;&nbsp;首页');
+    });
+    
+    $("#calendarTab").click(function() {
+        $('.breadcrumb').empty().append('<i class="fa fa-fw icon-calendar"></i>&nbsp;&nbsp;&nbsp;日历');
+    });
 
     $('#moreActivity').click(function () {
         params["notice.type"] = 2;
-        $('.breadcrumb .nav1').empty().append('<i class="icon-bookmark"></i>&nbsp;通知/活动');
-        com.switchPage(api.index.moreNoticesIndex.url);
-        $('.breadcrumb .nav2').hide();
-        $('.breadcrumb .nav3').hide();
+        com.loadPage(api.index.moreNoticesIndex.url, $(this));
     });
 
     $('#moreNotice').click(function () {
         params["notice.type"] = 1;
-        $('.breadcrumb .nav1').empty().append('<i class="icon-bookmark"></i>&nbsp;通知/活动');
-        com.switchPage(api.index.moreNoticesIndex.url);
-        $('.breadcrumb .nav2').hide();
-        $('.breadcrumb .nav3').hide();
+        com.loadPage(api.index.moreNoticesIndex.url, $(this));
     });
 
     $('#updateNotices').click(function () {

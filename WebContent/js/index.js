@@ -2,7 +2,10 @@
 
     Api().init('js/api/');
     Condition = Condition(api);
+    Validator().init();
+    
     var interval = null;
+    
     params.authentication = window.authentication;
     params.loginTime = window.loginTime;
 
@@ -249,7 +252,7 @@
             if($("#caller").val() != $this.val()){
                 sameFalg=true;
             }else{
-                bootbox.alert("主叫号码与被叫号码一致");
+                com.showAlert(com.warning, "主叫号码与被叫号码一致");
                 sameFalg=false;
             }
         });
@@ -318,8 +321,11 @@
             com.switchPage('home-antv.html', true);
             params.homeLoader = true;
         }
+        
+        $(".navbar-logo").fadeIn();
+        $("#navbar").fadeIn();
     });
-
+    
     function createMenu(data){
 
         var menuArr = {

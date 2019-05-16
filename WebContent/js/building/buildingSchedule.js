@@ -37,7 +37,7 @@ jQuery(function($) {
 		});
 
 		com.focusPage('#fuelux-wizard').ace_wizard({status:true}).on('finished', function(e) {
-			com.showAlert(com.info, "当前房产单流转已完成！");
+			com.showAlert(com.info, "当前房产单流转已完成");
 		}).on('stepclick', function(e, info){
 			var stepId = com.focusPage("[flag]").eq(info.step-1).attr("id");
 			var sd = stepId.substring(4);
@@ -85,7 +85,7 @@ jQuery(function($) {
 		com.focusPage("#" + sore + "btnUpdate").unbind("click");
 		com.focusPage("#" + sore + "btnUpdate").on("click", function(){
 			if(buildingSchedules[sore].status == 2){
-				com.showAlert(com.warning, "当前节点已完成，不能修改节点信息！");
+				com.showAlert(com.warning, "当前节点已完成，不能修改节点信息");
 				return;
 			}
 
@@ -99,7 +99,7 @@ jQuery(function($) {
 				buildingSchedules[sore].operatTime = getCurrentDate();
 				scheduleStatus(sore);
 				scheduleMessage(sore);
-				com.showAlert(com.info, "更新成功！");
+				com.showAlert(com.info, "更新成功");
 			});
 		});
 
@@ -140,7 +140,7 @@ jQuery(function($) {
 
 			}else if(sore == buildingNodes[buildingNodes.length-1]){
 				if(buildingSchedules[sore].status == 2){
-					com.showAlert(com.warning, "当前房产单流转已完成！");
+					com.showAlert(com.warning, "当前房产单流转已完成");
 					return;
 				}
 
@@ -162,7 +162,7 @@ jQuery(function($) {
 					buildingSchedules[sore].status = 2;
 					com.focusPage("#sstep" + sore).addClass("complete");
 					scheduleStatus(sore);
-					com.showAlert(com.info, "当前房产单流转已完成！");
+					com.showAlert(com.info, "当前房产单流转已完成");
 				});
 			}
 

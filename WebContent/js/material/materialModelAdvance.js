@@ -69,7 +69,7 @@ $(function(){
             });
 
             $btnDelete.click(function() {
-                bootbox.confirm("确定删除吗？", function(result) {
+                bootbox.confirm("确定删除吗?", function(result) {
                     if(result) {
                         deleteMaterial(v.mmId);
                     }
@@ -136,7 +136,7 @@ $(function(){
             materialModelNo : com.focusPage("#materialModelNo").on("blur",function() {
                 $this = $(this);
                 void 0 != $this.val() && "" != $this.val().trim() && com.post(api.material.queryMaterialModelByNo, {"materialModel.materialModelNo": $this.val()},function(a) {
-                	a.materialModel.mmId != null ? (com.showTips($this, "\u8be5\u578b\u53f7\u7f16\u53f7\u5df2\u5b58\u5728", !0), materialModel.repeatFlg = false) : (com.clearValidator("#materialModelNo", true), materialModel.repeatFlg = true);
+                	a.materialModel.mmId != null ? (com.showTips($this, "该型号编号已存在", true), materialModel.repeatFlg = false) : (com.clearValidator("#materialModelNo", true), materialModel.repeatFlg = true);
                 });
             }),
             materialModelName : com.focusPage("#materialModelName"),

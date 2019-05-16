@@ -74,7 +74,6 @@ $(function(){
     })();
 
     var searcher = new Searcher();
-    //查询的字段名称,查询框DIV的ID,API地址,成功回调函数,分页DIV的ID,保存历史查询的查询名
     searcher.init(['measurementUnitName'], "condList", api.data.pageMeasurementUnit, function(data){
         displayFunc.init('resultList', data);
     }, "pagenation", "measurementData", null, false, null, function(){
@@ -102,24 +101,19 @@ $(function(){
     });
 
     function saveData(){
+        
+        if(com.validate()){
+            return false;
+        }
 
         var measurement = measurementUnit.Unit.name.val();
 
-        if(measurement == null || measurement == ''){
-            bootbox.alert("单位不能为空");
-            return;
-        }
-        var url;
-
+        var url = api.data.addMeasurementUnit;
         var options = {
             "measurementUnit.id" : measurementUnit.Unit.id.val(),
-
             "measurementUnit.name": measurementUnit.Unit.name.val(),
-
             "measurementUnit.unitDes": measurementUnit.Unit.unitDes.val(),
-
         };
-
 
         if(measurementUnit.editFlg){
             url = api.data.addMeasurementUnit;
@@ -128,14 +122,10 @@ $(function(){
         }
 
         com.post(url, options, function (res) {
-            //刷新页面所有条件,点击保存之后 刷新页面条件 重新载入
             com.showAlert(com.info, "操作成功");
             searcher.doSearch();
         });
-        //隐藏动态框
         measurementUnit.addmodal.modal("hide");
-
     }
-
 
 })

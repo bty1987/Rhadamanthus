@@ -79,7 +79,7 @@
 
                 $btnDelete.click(function (e) {
                     e.stopPropagation();
-                    layer.confirm('确定要删除吗？', {
+                    layer.confirm('确定要删除吗?', {
                         btn: ['确定', '取消'] //按钮
                     }, function (indexo, layero) {
                         com.post(api.production.deletePuotation, {"puotation.qid": v.qid}, function () {
@@ -97,7 +97,7 @@
 
                 $btnStatus.click(function (e) {
                     e.stopPropagation();
-                    layer.confirm('确定更改状态为'+(v.status==0?"正使用":"未使用")+'吗？', {
+                    layer.confirm('确定更改状态为'+(v.status==0?"正使用":"未使用")+'吗?', {
                         btn: ['确定', '取消'] //按钮
                     }, function (indexo, layero) {
                         com.post(api.production.updatePuotationForDefault, {"puotation.qid": v.qid}, function () {

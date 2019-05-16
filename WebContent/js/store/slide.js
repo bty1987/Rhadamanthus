@@ -358,7 +358,7 @@ $(function () {
         openlayer(function (index, layero) {
             if(com.focusPage("#path").val() == null || com.focusPage("#path").val() == ""){
                 com.focusPage("#slideImg").html("");
-                var $text = $('<span></span>').html('请上传图片！').css("color", "red").appendTo($("#slideImg"));
+                var $text = $('<span></span>').html('请上传图片').css("color", "red").appendTo($("#slideImg"));
                 return;
             }
             if(com.validate('form1')){

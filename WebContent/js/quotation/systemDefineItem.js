@@ -316,11 +316,8 @@ $(function(){
 
     //删除
      function removeSystemDefine(id) {
-
-        bootbox.confirm("删除所选记录？",function(flag) {
-            var c = {"ids[0]" :id};
-
-            flag && com.post(api.quotation.deleteSystemDefineItemByIds, c, successCallback);
+        com.showConfirm("是否删除所选记录", function() {
+            com.post(api.quotation.deleteSystemDefineItemByIds, {"ids[0]" :id}, successCallback);
         });
     }
 

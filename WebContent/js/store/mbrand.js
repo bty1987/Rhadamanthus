@@ -167,7 +167,7 @@ $(function(){
             openlayer(function(index, layero){
                 if(com.focusPage("#path").val() == null || com.focusPage("#path").val() == ""){
                     com.focusPage("#brandImg").html("");
-                    var $text = $('<span></span>').html('请上传图片！').css("color", "red").appendTo(com.focusPage("#brandImg"));
+                    var $text = $('<span></span>').html('请上传图片').css("color", "red").appendTo(com.focusPage("#brandImg"));
                     return;
                 }
 

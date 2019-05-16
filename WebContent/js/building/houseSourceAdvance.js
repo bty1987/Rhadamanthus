@@ -103,14 +103,14 @@ jQuery(function($) {
 		com.post(api.building.queryCustomerSourceByNo, {"customerSource.no" : houseSource.buildItems.csNo.val()}, function(res){
 			if(res.customerSource.status != 0){
 				houseSource.repeatFlg = true;
-				com.showPopover(com.focusPage("#csNo"),{errorMsg: "客源已签约或失效！"}, "right");
+				com.showPopover(com.focusPage("#csNo"),{errorMsg: "客源已签约或失效"}, "right");
 			}else{
 				houseSource.repeatFlg = false;
 				houseSource.csid = res.customerSource.csid;
 				com.focusPage("#csNo").css("border", "1px solid #d5d5d5").popover("destroy");
 			}
 		}, function(data){
-			com.showPopover(com.focusPage("#csNo"),{errorMsg: "请正确输入客源编号！"}, "right");
+			com.showPopover(com.focusPage("#csNo"),{errorMsg: "请正确输入客源编号"}, "right");
 			houseSource.repeatFlg = true;
 		}, false);
 	});
@@ -227,7 +227,7 @@ jQuery(function($) {
 			//转移房源
 			$btnFollow.click(function(){
 				if(v.status == 1 || v.status == 2 || v.status == 4){
-					com.showAlert(com.warning, "当前房源已签约或已失效，不能转移房源！");
+					com.showAlert(com.warning, "当前房源已签约或已失效，不能转移房源");
 					return;
 				}
 
@@ -243,7 +243,7 @@ jQuery(function($) {
 			//绑定客源
 			$btnBind.click(function(){
 				if(v.status == 1 || v.status == 2 || v.status == 4){
-					com.showAlert(com.warning, "当前房源已签约或已失效，不能绑定客源！");
+					com.showAlert(com.warning, "当前房源已签约或已失效，不能绑定客源");
 					return;
 				}
 				deleteData();
@@ -268,22 +268,22 @@ jQuery(function($) {
 			$btnSuccess.click(function(){
 				if(v.status == 0){
 					com.post(api.building.updateHouseSourceForStatus, {"houseSource.hsid": v.hsid, "houseSource.status":3}, function(res){
-						com.showAlert(com.info, "房源信息已通过！");
+						com.showAlert(com.info, "房源信息已通过");
 						searcher.doSearch();
 					});
 				}else{
-					com.showAlert(com.warning, "当前房源信息状态不能操作！");
+					com.showAlert(com.warning, "当前房源信息状态不能操作");
 				}
 			});
 			//拒绝
 			$btnFail.click(function(){
 				if(v.status == 0){
 					com.post(api.building.updateHouseSourceForStatus, {"houseSource.hsid": v.hsid, "houseSource.status":4}, function(res){
-						com.showAlert(com.info, "房源信息已驳回！");
+						com.showAlert(com.info, "房源信息已驳回");
 						searcher.doSearch();
 					});
 				}else{
-					com.showAlert(com.warning, "当前房源信息状态不能操作！");
+					com.showAlert(com.warning, "当前房源信息状态不能操作");
 				}
 			});
 
@@ -343,7 +343,7 @@ jQuery(function($) {
 		options["houseSource.followUser.userId"] = com.focusPage("#belongUser").val();
 
 		com.post(api.building.updateHouseSourceForBelong, options, function(res){
-			com.showAlert(info, "房源转移成功！")
+			com.showAlert(info, "房源转移成功")
 		});
 		com.focusPage("#houseSourceBelongModal").modal("hide");
 
@@ -354,7 +354,7 @@ jQuery(function($) {
 	//更新收钥匙人
 	function updateKeyer(){
 		com.post(api.building.updateHouseSourceForKeyer, {"houseSource.hsid":houseSource.keyHsid, "houseSource.keyer.userId":com.focusPage("#keyer").val()}, function(){
-			com.showAlert(com.info, "收钥匙人已更新！");
+			com.showAlert(com.info, "收钥匙人已更新");
 		});
 
 		com.focusPage("#houseSourceKeyerModal").modal("hide");
@@ -393,7 +393,7 @@ jQuery(function($) {
 		};
 
 		com.post(api.building.bindBuilding, options, function(res){
-			com.showAlert(com.info, "成功绑定客源！");
+			com.showAlert(com.info, "成功绑定客源");
 			searcher.doSearch();
 		});
 
@@ -482,7 +482,7 @@ jQuery(function($) {
 			options["houseSource.path"] = imgUrl;
 
 			com.post(defaultUrl, options, function(res){
-				com.showAlert(com.info, "图片设置成功！");
+				com.showAlert(com.info, "图片设置成功");
 			});
 		}).appendTo(toolsDiv);
 		$("<i></i>").addClass("icon-ok green").appendTo(toolsB);

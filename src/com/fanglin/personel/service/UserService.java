@@ -51,7 +51,7 @@ public interface UserService {
 
 	public void updateUserForIsLogin(UserVO userVO) throws FLException;
 
-	public void updateUserForAdvance(UserVO userVO) throws FLException;
+	public void updateUserForAdvance(UserVO userVO, int rid) throws FLException;
 
 	public void checkUserForPassword(String userId, String password, String rePassword) throws FLException;
 

@@ -125,7 +125,7 @@ $(function(){
         cancelBtn: com.focusPage("#cancelBtn"),
         modal: com.focusPage("#quotationItemModal").on("shown.bs.modal",function(a) {
             com.clearValidator();
-            com.clearValidator("#itemId", !0);
+            com.clearValidator("#itemId", true);
             0 == quotationItem.editFlg && (quotationItem.quotationItemItems.quotationType.get(0).selectedIndex = 0, quotationItem.quotationItemItems.quotationClassification.get(0).selectedIndex = 0, quotationItem.quotationItemItems.quotationBigCategory.get(0).selectedIndex = 0, quotationItem.quotationItemItems.quotationSmallCategory.get(0).selectedIndex = 0, quotationItem.quotationItemItems.workType.get(0).selectedIndex = 0, quotationItem.quotationItemItems.measurementUnit.get(0).selectedIndex = 0, quotationItem.quotationItemItems.version.get(0).selectedIndex = 0);
         }),
         quotationItemItems: {
@@ -137,7 +137,7 @@ $(function(){
                         "quotationItem.versionId": com.focusPage("#version").val()
                     };
                     com.post(api.quotation.queryQuotationItemByItemIdAVersionId, b,function (a) {
-                            a.quotationItem && a.quotationItem.itemId ? (com.showTips($this, "\u8be5\u7248\u672c\u7684\u9879\u76ee\u7f16\u53f7\u5df2\u5b58\u5728", !0), quotationItem.repeatFlg = !0) : (com.clearValidator("#itemId", !0), quotationItem.repeatFlg = !1);
+                        a.quotationItem && a.quotationItem.itemId ? (com.showTips($this, "该版本的项目编号已存在", true), quotationItem.repeatFlg = true) : (com.clearValidator("#itemId", true), quotationItem.repeatFlg = false);
                     });
                 }
             }),
@@ -161,7 +161,7 @@ $(function(){
                         "quotationItem.versionId": com.focusPage("#version").val()
                     };
                     com.post(api.quotation.queryQuotationItemByItemIdAVersionId, b, function (a) {
-                        a.quotationItem && a.quotationItem.itemId ? (com.showTips(quotationItem.quotationItemItems.itemId, "\u8be5\u7248\u672c\u7684\u9879\u76ee\u7f16\u53f7\u5df2\u5b58\u5728", !0), quotationItem.repeatFlg = !0) : (com.clearValidator("#itemId", !0), quotationItem.repeatFlg = !1);
+                        a.quotationItem && a.quotationItem.itemId ? (com.showTips(quotationItem.quotationItemItems.itemId, "该版本的项目编号已存在", true), quotationItem.repeatFlg = true) : (com.clearValidator("#itemId", true), quotationItem.repeatFlg = false);
                     });
                 }
             }),
@@ -175,13 +175,13 @@ $(function(){
             workTypeData: {},
             versionData: {}
         },
-        editFlag: !1,
-        repeatFlg: !1,
+        editFlag: false,
+        repeatFlg: false,
         validator: {
             region: {
                 type: "v_itemId",
                 regex: /^QI_\d{5}$/g,
-                errorMsg: "\u8bf7\u4ee5QI_\u4f5c\u4e3a\u524d\u7f00 , \u4e4b\u540e\u4ee5\u4e94\u4e2a\u4f4d\u6570\u5b57\u7ec4\u6210(\u5982QI_00001)."
+                errorMsg: "请以QI_作为前缀 , 之后以五个位数字组成(如QI_00001)."
             }
         }
     };
@@ -288,7 +288,7 @@ $(function(){
 
         	var dateObj = eval("("+data+")");
             if(data.indexOf("导入文件错误") > 0 ){
-                bootbox.alert("导入文件错误");
+                com.showAlert(com.warning, "导入文件错误);
             }
             quotationItemSeacher.doSearch();
         }
@@ -296,11 +296,11 @@ $(function(){
 
     //添加按钮
     com.focusPage('a[name="add"]', '#pagenation').click(function () {
-        quotationItem.editFlg = !1;
+        quotationItem.editFlg = false;
         
         com.cleanItems(quotationItem.quotationItemItems);
-        quotationItem.quotationItemItems.itemId.prop("disabled", !1);
-        quotationItem.quotationItemItems.version.prop("disabled", !1);
+        quotationItem.quotationItemItems.itemId.prop("disabled", false);
+        quotationItem.quotationItemItems.version.prop("disabled", false);
         
         quotationItem.modal.modal("show");
     });
@@ -348,7 +348,7 @@ $(function(){
     //编辑按钮
     function edit(b) {
 
-        quotationItem.editFlg = !0;
+        quotationItem.editFlg = true;
         quotationItem.quotationItemItems.qiId.val(b.qiId);
         quotationItem.quotationItemItems.itemId.val(b.itemId);
         quotationItem.quotationItemItems.itemName.val(b.itemName);
@@ -363,8 +363,8 @@ $(function(){
         quotationItem.quotationItemItems.version.val(b.versionId);
         quotationItem.quotationItemItems.addPrice.val(b.addPrice);
         quotationItem.quotationItemItems.subPrice.val(b.subPrice);
-        quotationItem.quotationItemItems.itemId.prop("disabled", !0);
-        quotationItem.quotationItemItems.version.prop("disabled", !0);
+        quotationItem.quotationItemItems.itemId.prop("disabled", true);
+        quotationItem.quotationItemItems.version.prop("disabled", true);
         quotationItem.modal.modal("show");
     }
 
@@ -375,13 +375,13 @@ $(function(){
 
         if (quotationItem.quotationItemItems.unitPrice.val().indexOf(".") != -1){
             if (quotationItem.quotationItemItems.unitPrice.val().substring(0, quotationItem.quotationItemItems.unitPrice.val().indexOf(".")).length > 7) {
-                bootbox.alert("输入金额过长");
-                return;
+                com.showAlert(com.warning, "输入金额过长");
+                return false;
             }
         }else{
             if (quotationItem.quotationItemItems.unitPrice.val().length > 7) {
-                bootbox.alert("输入金额过长");
-                return;
+                com.showAlert(com.warning, "输入金额过长");
+                return false;
             }
         }
 
@@ -389,7 +389,7 @@ $(function(){
         var _quotationBigCategory = com.focusPage('#quotationBigCategory').val() == 0 || com.focusPage('#quotationBigCategory').val() == '0';
         var _quotationSmallCategory = com.focusPage('#quotationSmallCategory').val() == 0 || com.focusPage('#quotationSmallCategory').val() == '0';
         if(_quotationType || _quotationBigCategory || _quotationSmallCategory){
-            bootbox.alert("请选择类型以及大类小类");
+            com.showAlert(com.warning, "请选择类型以及大类小类");
             return;
         }
         if (!com.validate() && !quotationItem.repeatFlg) {

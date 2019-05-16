@@ -143,7 +143,7 @@ $(function(){
 
                     //废除按钮
                     $btnDestory.click(function () {
-                        layer.confirm('是否删除？', {
+                        layer.confirm('是否删除?', {
                             btn: ['确定','取消'] //按钮
                         }, function(index, layero){
                             hardwareDestory(v.hid,function(){
@@ -157,7 +157,7 @@ $(function(){
 
                     //已到货按钮
                     $btnArrival.click(function () {
-                        layer.confirm('确定到货？', {
+                        layer.confirm('确定到货?', {
                             btn: ['确定','取消'] //按钮
                         }, function(index, layero){
                             hardwareArrived(v.hid,function(){

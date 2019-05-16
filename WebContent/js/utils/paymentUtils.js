@@ -450,15 +450,13 @@ var paymentUtils = {
             decorationPaymentPostData.paymentInfo = null;
 
             if(decorationPayment.typeUpdate == 1){
-                bootbox.confirm("是否需要打印当前收款对应的收据信息?", function(result) {
-                    if(result){
-                        params.decorationOrderOrderId = orderId;
-                        params.decorationPaymentOrderId = orderId;
-                        params.decorationReceiptDrId = argsDrId;
-                        com.popup("专用收款收据__装修单号:" + orderId  ,api.index.decorationPaymentReceiptIndex.url,function () {
-                            parent.layer.getFrameIndex(window.name);
-                        },null,true);
-                    }
+            	com.showConfirm("是否需要打印当前收款对应的收据信息?", function(result) {
+                    params.decorationOrderOrderId = orderId;
+                    params.decorationPaymentOrderId = orderId;
+                    params.decorationReceiptDrId = argsDrId;
+                    com.popup("专用收款收据__装修单号:" + orderId  ,api.index.decorationPaymentReceiptIndex.url,function () {
+                        parent.layer.getFrameIndex(window.name);
+                    },null,true);
                 });
             }
         });
@@ -680,14 +678,12 @@ var paymentUtils = {
 
             if(materialPayment.typeUpdate == 1){
                 var mrId = result.materialReceipt.mrId;
-                bootbox.confirm("是否需要打印当前收款对应的收据信息?", function(result) {
-                    if(result){
-                        params.mrId = mrId;
-                        params.decorationOrderMOrderId = materialPaymentPostData.orderId;
-                        com.popup("专用收款收据__装修单号:" + materialPaymentPostData.orderId  ,api.index.materialPaymentReceiptIndex.url ,function () {
-                            parent.layer.getFrameIndex(window.name);
-                        },null,true)
-                    }
+                com.showConfirm("是否需要打印当前收款对应的收据信息?", function(result) {
+                    params.mrId = mrId;
+                    params.decorationOrderMOrderId = materialPaymentPostData.orderId;
+                    com.popup("专用收款收据__装修单号:" + materialPaymentPostData.orderId  ,api.index.materialPaymentReceiptIndex.url ,function () {
+                        parent.layer.getFrameIndex(window.name);
+                    },null,true)
                 });
             }
         });
@@ -1142,13 +1138,11 @@ var paymentUtils = {
 
             if(payment.paymentTypes != null){
                 if(payment.paymentTypes.search('收款') != -1 || payment.paymentTypes == "收款" && payment.typeUpdate == 1){
-                    bootbox.confirm("是否需要打印当前收款对应的收据信息?", function(result) {
-                        if(result){
-                            params.paymentPaymentId = res.payment.pid;
-                            com.popup("专用收款收据__装修单号:" + res.payment.orderId  ,api.index.paymentReceiptIndex.url,function () {
-                                parent.layer.getFrameIndex(window.name);
-                            },null,true)
-                        }
+                	com.showConfirm("是否需要打印当前收款对应的收据信息?", function(result) {
+                        params.paymentPaymentId = res.payment.pid;
+                        com.popup("专用收款收据__装修单号:" + res.payment.orderId  ,api.index.paymentReceiptIndex.url,function () {
+                            parent.layer.getFrameIndex(window.name);
+                        },null,true)
                     });
                 }
             }

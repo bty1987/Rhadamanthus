@@ -75,7 +75,7 @@ public class DrawLineDaoImpl extends DaoImpl<DrawLinePO> implements DrawLineDao 
 		List<Short> status = Arrays.asList(DrawLinePO.STATUS_QUEUE_INT, DrawLinePO.STATUS_APPLICATION_INT);
 		
 		String sql = "select count(*) from construction.drawline where orderId = :orderId and status in :status";
-		BigInteger count = (BigInteger) session().createSQLQuery(sql).setString("orderId", orderId).setParameter("status", status).uniqueResult();
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setString("orderId", orderId).setParameterList("status", status).uniqueResult();
 		
 		return count.intValue();
 	}

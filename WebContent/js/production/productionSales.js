@@ -65,7 +65,7 @@ $(function(){
                         ];
                         creatureRow(propertyArr,v,$ul,data);
                     },function (e) {
-                       layer.msg("未查询到此订单！",{icon: 2,time:2e3});
+                       layer.msg("未查询到此订单",{icon: 2,time:2e3});
                         propertyArr = {};
                     });
 
@@ -116,7 +116,7 @@ $(function(){
                         creatureRow(propertyArr,v,$ul,data);
 
                     },function (e) {
-                       layer.msg("未查询到此订单！",{icon: 2,time:2e3});
+                       layer.msg("未查询到此订单",{icon: 2,time:2e3});
                        propertyArr = {};
                     });
                 }
@@ -212,7 +212,7 @@ $(function(){
                 productionSalesPostData["production.total"] = data.sales.total;
 
             },function (e) {
-               layer.msg("未查询到此订单！",{icon: 2,time:2e3});
+               layer.msg("未查询到此订单",{icon: 2,time:2e3});
                 $layerBind.find("input[name='brand']").val(null);
             });
 
@@ -239,7 +239,7 @@ $(function(){
                 productionSalesPostData["production.total"] = data.material.total;
 
             },function (e) {
-               layer.msg("未查询到此订单！",{icon: 2,time:2e3});
+               layer.msg("未查询到此订单",{icon: 2,time:2e3});
                $layerBind.find("input[name='brand']").val(null);
             });
         }

@@ -140,14 +140,14 @@ jQuery(function($) {
 		com.post(api.building.queryHouseSourceByNo, {"houseSource.no" : customerSource.buildItems.hsNo.val()}, function(res){
 			if(res.houseSource.status != 3){
 				customerSource.dataFlag = true;
-				com.showPopover(com.focusPage("#hsNo"),{errorMsg: "房源处于待审核、已签约或失效状态, 无法签约！"}, "right");
+				com.showPopover(com.focusPage("#hsNo"),{errorMsg: "房源处于待审核、已签约或失效状态, 无法签约"}, "right");
 			}else{
 				customerSource.dataFlag = false;
 				customerSource.hsid = res.houseSource.hsid;
 				com.focusPage("#hsNo").css("border", "1px solid #d5d5d5").popover("destroy");
 			}
 		}, function(data){
-			com.showPopover(com.focusPage("#hsNo"),{errorMsg: "请正确输入房源编号！"}, "right");
+			com.showPopover(com.focusPage("#hsNo"),{errorMsg: "请正确输入房源编号"}, "right");
 			customerSource.dataFlag = true;
 		}, false);
 	});
@@ -324,7 +324,7 @@ jQuery(function($) {
 			//绑定房源
 			$btnBind.click(function(){
 				if(v.status != 0){
-					com.showAlert(com.warning, "当前客源已签约或已失效，不能绑定房源！");
+					com.showAlert(com.warning, "当前客源已签约或已失效，不能绑定房源");
 					return;
 				}
 				deleteData();
@@ -368,7 +368,7 @@ jQuery(function($) {
 	//编辑OR添加
 	function updateCustomerSource(){
 		if(customerSource.csStatus != 0){
-			com.showAlert(com.warning, "当前客源已签约或已失效，不能修改客源信息！");
+			com.showAlert(com.warning, "当前客源已签约或已失效，不能修改客源信息");
 			return;
 		}
 		var priceHigh = customerSource.items.priceHigh.val();
@@ -378,7 +378,7 @@ jQuery(function($) {
 
 		if(parseInt(priceHigh) < parseInt(priceLow) || parseInt(priceHigh) == parseInt(priceLow)){
 			com.focusPage("#priceHigh").removeClass("v_required");
-			com.showPopover(com.focusPage("#priceHigh"),{errorMsg: "请填写可接受的最高价格！"}, "right");
+			com.showPopover(com.focusPage("#priceHigh"),{errorMsg: "请填写可接受的最高价格"}, "right");
 			customerSource.priceFlg = true;
 		}else{
 			com.focusPage("#priceHigh").addClass("v_required");
@@ -388,7 +388,7 @@ jQuery(function($) {
 
 		if(parseInt(areaHigh) < parseInt(areaLow) || parseInt(areaHigh) == parseInt(areaLow)){
 			com.focusPage("#areaHigh").removeClass("v_required");
-			com.showPopover(com.focusPage("#areaHigh"),{errorMsg: "请填写需求面积的最大值！"}, "right");
+			com.showPopover(com.focusPage("#areaHigh"),{errorMsg: "请填写需求面积的最大值"}, "right");
 			customerSource.areaFlg = true;
 		}else{
 			com.focusPage("#areaHigh").addClass("v_required");
@@ -469,7 +469,7 @@ jQuery(function($) {
 		};
 
 		com.post(api.building.bindBuilding, options, function(res){
-			com.showAlert(com.info, "成功绑定房源！");
+			com.showAlert(com.info, "成功绑定房源");
 			searcher.doSearch();
 		});
 

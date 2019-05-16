@@ -94,14 +94,14 @@ jQuery(function($) {
 		com.post(api.building.queryHouseSourceByNo, {"houseSource.no" : building.items.hsNo.val()}, function(res){
 			if(res.houseSource.status != 0){
 				building.dataFlag = true;
-				com.showPopover(com.focusPage("#hsNo"),{errorMsg: "房源已签约或失效！"}, "right");
+				com.showPopover(com.focusPage("#hsNo"),{errorMsg: "房源已签约或失效"}, "right");
 			}else{
 				building.dataFlag = false;
 				building.hsid = res.houseSource.hsid;
 				com.focusPage("#hsNo").css("border", "1px solid #d5d5d5").popover("destroy");
 			}
 		}, function(data){
-			com.showPopover(com.focusPage("#hsNo"),{errorMsg: "请正确输入房源编号！"}, "right");
+			com.showPopover(com.focusPage("#hsNo"),{errorMsg: "请正确输入房源编号"}, "right");
 			building.dataFlag = true;
 		}, false);
 	});
@@ -110,14 +110,14 @@ jQuery(function($) {
 		com.post(api.building.queryCustomerSourceByNo, {"customerSource.no" : building.items.csNo.val()}, function(res){
 			if(res.customerSource.status != 0){
 				building.dataFlag = true;
-				com.showPopover(com.focusPage("#csNo"),{errorMsg: "客源已签约或失效！"}, "right");
+				com.showPopover(com.focusPage("#csNo"),{errorMsg: "客源已签约或失效"}, "right");
 			}else{
 				building.dataFlag = false;
 				building.csid = res.customerSource.csid;
 				com.focusPage("#csNo").css("border", "1px solid #d5d5d5").popover("destroy");
 			}
 		}, function(data){
-			com.showPopover(com.focusPage("#csNo"),{errorMsg: "请正确输入客源编号！"}, "right");
+			com.showPopover(com.focusPage("#csNo"),{errorMsg: "请正确输入客源编号"}, "right");
 			building.dataFlag = true;
 		}, false);
 	});
@@ -307,7 +307,7 @@ jQuery(function($) {
 		};
 
 		com.post(api.building.bindBuilding, options, function(res){
-			com.showAlert(com.info, "成功创建房产单！");
+			com.showAlert(com.info, "成功创建房产单");
 			searcher.doSearch();
 		});
 
@@ -317,7 +317,7 @@ jQuery(function($) {
 	//更改支付方式
 	function updatePayTypeFun(){
 		if(buildingPayType == com.focusPage("#payTypes").val()){
-			com.showAlert(com.warning, "两次支付方式不能相同！");
+			com.showAlert(com.warning, "两次支付方式不能相同");
 			return;
 		}
 
@@ -381,7 +381,7 @@ jQuery(function($) {
 			com.showAlert(com.info, "创建用户成功");
 			com.focusPage("#customerModal").modal("hide");
 		}, function(e){
-			com.showAlert(com.warning, "客户电话已存在！");
+			com.showAlert(com.warning, "客户电话已存在");
 		}, false);
 	}
 
@@ -390,7 +390,7 @@ jQuery(function($) {
 		if( cardParam.val() != "" ){
 			if(reg.test(cardParam.val()) == false){
 				building.cardFlag = true;
-				com.showPopover(cardParam,{errorMsg: "请输入正确的证件号码！"}, "right");
+				com.showPopover(cardParam,{errorMsg: "请输入正确的证件号码"}, "right");
 			}else{
 				building.cardFlag = false;
 				cardParam.css("border", "1px solid #d5d5d5").popover("destroy")

@@ -1,53 +1,33 @@
 jQuery(function ($) {
 
-    var constructionNodes = {};
-    var decorationOrderStatus = {};
-
-    var personInfo = {
-        cancellBtn: null,
-        modal: null,
-        personInfoItems: {},
-
-        editFlag: false
-    };
-    
     var drawline = {
-        
-        saveBtn: null,
-        cancellBtn: null,
-        
-        deployedBtn: null,
-        
+       
         orderId: null,
         
-        items: {
+        cancelBtn: com.focusPage("#cancelBtn"),
+        deployedBtn: com.focusPage("#deployedBtn"),
+        
+        setupModal: com.focusPage("#setupModal"),
             
-            dlid: com.focusPage("#dlid"),
-            
-            orderInfos: com.focusPage("#orderInfos"),
-            supervisor: com.focusPage("#supervisor")
-        },
+        items: {},
         
         decorationStatus: {},
         constructionSchedule: {0: "初始", 1: "开工", 2: "完工"}
-    };
+    }
+
+    drawline.deployedBtn.on("click", deployed);
     
     com.post(api.data.queryConstructionNode, {}, function (res) {
         $.each(res.constructionNodes, function (i, v) {
-            drawline.constructionSchedule[v.schedule] = v.name;
-        });
-    }, null, false);
-
-    com.post(api.ds.decoration, {}, function (res) {
-        $.each(res.decorationOrderStatus, function(i, v){
-            drawline.decorationStatus[v.key] = v.value;
+            drawline.constructionSchedule[v.sort] = v.name;
         });
     }, null, false);
     
-    drawline.cancelBtn = com.focusPage("#cancelBtn");
-    drawline.deployedBtn = com.focusPage("#deployedBtn").on("click", deployed);
-
-    drawline.setupModal = com.focusPage("#setupModal");
+    com.post(api.ds.decoration, {}, function (res) {
+        $.each(res.decorationOrderStatus, function (i, v) {
+            drawline.decorationStatus[v.key] = v.value;
+        });
+    }, null, false);
 
     com.initTypeahead('supervisor', api.personel.queryUserByPinyin, "pinyinName", {"departmentType.name": "工程部", "user.status": 0}, "userBases", "userId", "currentName", null);
 
@@ -81,10 +61,9 @@ jQuery(function ($) {
             var propertyArr = [
                 ["楼盘地址:", v.house.village.name + ' ' + v.house.houseNumber, "grey"],
                 ["客户:", v.customer.name, "grey"],
+                ["设计师:", v.designer.userName, "grey"],
                 ["面积:", v.house.buildArea, "blue"],
                 ["创建时间:", v.createTime, "green"],
-                ["设计师:", v.designer.currentName, "grey"],
-                ["设计师:", v.supervisor.currentName, "grey"],
                 ["进度:", drawline.constructionSchedule[v.projectStatus], "red"],
                 ["状态:", drawline.decorationStatus[v.status], "red"]
             ];
@@ -158,7 +137,7 @@ jQuery(function ($) {
             com.showAlert(com.info, "操作成功");
             searcher.doSearch();
             
-            drawline.setupModal.modal("hide");
+            drawline.items.setupModal.modal("hide");
         });
     }
 

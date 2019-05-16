@@ -35,10 +35,10 @@ var planUtils = {
                         alert("文件 [" + a.name + "] 大小超出系统限制的" + com.focusPage("#file_upload").uploadify("settings", "fileSizeLimit") + "大小!");
                         break;
                     case -120:
-                        alert("文件 [" + a.name + "] 大小异常！");
+                        alert("文件 [" + a.name + "] 大小异常");
                         break;
                     case -130:
-                        alert("文件 [" + a.name + "] 类型不正确！");
+                        alert("文件 [" + a.name + "] 类型不正确");
                 }
             },
             onUploadSuccess: function (a, b, c) {

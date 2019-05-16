@@ -645,7 +645,7 @@ var ExtensionDetail = (function(){
             //查看
             $btnInfo.click(function(e){
                 e.stopPropagation();
-                qv.content && com.showInfo(qv.content);
+                qv.content && com.showTip(this, qv.content, 'left');
             });
 
 

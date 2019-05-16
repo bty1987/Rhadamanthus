@@ -407,7 +407,7 @@ jQuery(function($) {
 			}else{
 				$total = utils.accAdd($total, $referMoney);
 			}
-		}), com.showInfo('<h3>合计金额: ' + $total + '</h3>'));
+		}), layer.msg('<h3>合计金额: ' + $total + '</h3>'));
 
 	});
 
@@ -694,14 +694,12 @@ jQuery(function($) {
 			materialPayment.historyFlag = false;
 			var mrId = res.materialPayment.mrId;
 
-			bootbox.confirm("是否需要打印当前收款对应的收据信息?", function(result) {
-				if(result){
-					params.mrId = mrId;
-					params.decorationOrderMOrderId = materialPaymentPostData.orderId;
-					com.popup("专用收款收据__装修单号:" + materialPaymentPostData.orderId  ,api.index.materialPaymentReceiptIndex.url ,function () {
-						parent.layer.getFrameIndex(window.name);
-					},null,true);
-				}
+			com.showConfirm("是否需要打印当前收款对应的收据信息?", function(result) {
+				params.mrId = mrId;
+				params.decorationOrderMOrderId = materialPaymentPostData.orderId;
+				com.popup("专用收款收据__装修单号:" + materialPaymentPostData.orderId  ,api.index.materialPaymentReceiptIndex.url ,function () {
+					parent.layer.getFrameIndex(window.name);
+				},null,true);
 			});
 		});
 

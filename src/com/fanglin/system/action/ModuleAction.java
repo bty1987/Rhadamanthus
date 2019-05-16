@@ -34,102 +34,101 @@ import com.fanglin.utils.SystemConfig;
 public class ModuleAction extends BaseListAction {
 
 	private static final long serialVersionUID = -5295311320323779589L;
-	
+
 	@Autowired
 	private ModuleService moduleService;
 
 	private ModuleVO module;
-	
+
 	private RoleVO role;
-	
+
 	private UserVO user;
-	
+
 	private List<ModuleVO> modules;
-	
+
 	private List<Integer> mids;
-	
-	@Action(value = "pageModule", results = { @Result(name = "success", type = "json" , params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" } )
-	public String pageModule(){
-		
+
+	@Action(value = "pageModule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageModule() {
+
 		moduleService.pageModule(getPaging(), getFilters());
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value = "queryModule", results = { @Result(name = "success", type = "json" , params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" } )
-	public String queryModule(){
-		
+
+	@Action(value = "queryModule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryModule() {
+
 		modules = moduleService.queryModuleBySystem(module);
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value = "queryModuleForLogin", results = { @Result(name = "success", type = "json" , params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" } )
-	public String queryModuleForLogin() throws FLException{
-		
+
+	@Action(value = "queryModuleForLogin", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryModuleForLogin() throws FLException {
+
 		modules = moduleService.queryModuleByRid(module, new RoleVO(queryRoleId()));
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value = "queryModuleByUserId", results = { @Result(name = "success", type = "json" , params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" } )
-	public String queryModuleByUserId() throws FLException{
-		
+
+	@Action(value = "queryModuleByUserId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryModuleByUserId() throws FLException {
+
 		modules = moduleService.queryModuleByUserId(module, user);
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value = "queryModuleByRid", results = { @Result(name = "success", type = "json" , params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" } )
-	public String queryModuleByRid() throws FLException{
-		
+
+	@Action(value = "queryModuleByRid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryModuleByRid() throws FLException {
+
 		modules = moduleService.queryModuleByRid(module, role);
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value = "addModule", results = { @Result(name = "success", type = "json" , params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" } )
-	public String addModule() throws FLException{
-		
-		if(SystemConfig.getString("communion") == null){
-		    throw new FLException(-1, "无操作权限");
+
+	@Action(value = "addModule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addModule() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
 		}
-		
+
 		moduleService.addModule(module);
-		
-		return SUCCESS;
-	}
-	
 
-	@Action(value = "updateRoleModuleByRid", results = { @Result(name = "success", type = "json" , params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" } )
-	public String updateRoleModuleByRid() throws FLException{
-		
-		if(SystemConfig.getString("communion") == null){
-		    throw new FLException(-1, "无操作权限");
-		}
-		
-		moduleService.updateRoleModuleByRid(module, role, mids);
-		
 		return SUCCESS;
 	}
-	
-	@Action(value = "deleteModule", results = { @Result(name = "success", type = "json" , params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" } )
-	public String deleteModule() throws FLException{
-		
-		if(SystemConfig.getString("communion") == null){
-		    throw new FLException(-1, "无操作权限");
+
+	@Action(value = "updateRoleModuleByRid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateRoleModuleByRid() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
 		}
-		
+
+		moduleService.updateRoleModuleByRid(module, role, mids, queryRoleId());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "deleteModule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String deleteModule() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
+		}
+
 		moduleService.deleteModule(module);
-		
+
 		return SUCCESS;
 	}
 
-	public ModuleVO getModule(){
+	public ModuleVO getModule() {
 		return module;
 	}
 
-	public void setModule(ModuleVO module){
+	public void setModule(ModuleVO module) {
 		this.module = module;
 	}
 

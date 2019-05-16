@@ -97,24 +97,27 @@ public class EmemberServiceImpl implements EmemberService {
 		if (ememberPO != null) {
 			throw new FLException(330013, "电子会员已存在");
 		}
+		
+		VticketPO vticketPO = vticketDao.queryVticketByTno(no);
+		
+		if(vticketPO == null){
+			throw new FLException(160026, "活动票不存在");
+		}
 
 		ememberPO = new EmemberPO();
 
 		BeanUtil.copyPropertie(ememberVO, ememberPO);
-
+		
+		ememberPO.setActivity(vticketPO.getVaid());
 		ememberPO.setStatus(EmemberPO.STATUS_INIT_INT);
 
 		ememberDao.save(ememberPO);
 
 		BeanUtil.copyPropertie(ememberPO, ememberVO);
 		
-		VticketPO vticketPO = vticketDao.queryVticketByTno(ememberPO.getTicket());
+		vticketPO.setIsregist(VticketPO.ISREGIST_YES_INT);
 		
-		if(vticketPO != null){
-			vticketPO.setIsregist(VticketPO.ISREGIST_YES_INT);
-			
-			vticketDao.update(vticketPO);
-		}
+		vticketDao.update(vticketPO);
 		
 		messageService.sendMessage(unionId, "活动票", no, String.format("活动票: %s, 注册成功", no));
 

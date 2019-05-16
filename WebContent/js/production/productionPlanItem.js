@@ -51,7 +51,7 @@ jQuery(function ($) {
                     hidBtn($btnDel,$productionPlanStatus);
 
                     $btnDel.click(function () {
-                        layer.confirm('是否删除？', {
+                        layer.confirm('是否删除?', {
                             btn: ['确定', '取消'] //按钮
                         }, function (index, layero) {
                             var ppiid = v.ppiid;

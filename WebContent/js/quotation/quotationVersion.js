@@ -89,13 +89,13 @@ $(function(){
         cancellBtn: com.focusPage("#cancelBtn"),
         modal: com.focusPage("#qtModal").on("show.bs.modal", function(a) {
             com.clearValidator();
-            com.clearValidator("#no", !0);
+            com.clearValidator("#no", true);
         }),
 
         cancelCopyVersionBtn : com.focusPage("#cancelCopyVersionBtn"),
         modalCopyVersion : com.focusPage("#copyVersionModal").on("show.bs.modal", function(a) {
             com.clearValidator();
-            com.clearValidator("#copyNo", !0);
+            com.clearValidator("#copyNo", true);
         }),
         quotationVersionItems: {
             copyNo: com.focusPage("#copyNo").on("blur", function () {
@@ -104,7 +104,7 @@ $(function(){
                     "quotationVersion.no": $this.val()
                 };
                 com.post(api.quotation.queryQuotationVersionByVersionId, b, function (a) {
-                    a.quotationVersion && a.quotationVersion.qvId ? (com.showTips($this, "\u8be5\u7248\u672c\u7f16\u53f7\u5df2\u5b58\u5728", !0), quotationVersion.repeatFlg = !0) : (com.clearValidator("#copyNo", !0), quotationVersion.repeatFlg = !1);
+                    a.quotationVersion && a.quotationVersion.qvId ? (com.showTips($this, "该版本编号已存在", true), quotationVersion.repeatFlg = true) : (com.clearValidator("#copyNo", true), quotationVersion.repeatFlg = false);
                 });
             }),
             copyName: com.focusPage("#copyName"),
@@ -117,7 +117,7 @@ $(function(){
                     "quotationVersion.no": $this.val()
                 };
                 com.post(api.quotation.queryQuotationVersionByVersionId, b, function (a) {
-                    a.quotationVersion && a.quotationVersion.qvId ? (com.showTips($this, "\u8be5\u7248\u672c\u7f16\u53f7\u5df2\u5b58\u5728", !0), quotationVersion.repeatFlg = !0) : (com.clearValidator("#no", !0), quotationVersion.repeatFlg = !1);
+                    a.quotationVersion && a.quotationVersion.qvId ? (com.showTips($this, "该版本编号已存在", true), quotationVersion.repeatFlg = true) : (com.clearValidator("#no", true), quotationVersion.repeatFlg = false);
                 });
             }),
             name: com.focusPage("#name"),
@@ -141,29 +141,29 @@ $(function(){
                 errorMsg: "\u8bf7\u8f93\u5165QV_\u6570\u5b57,\u5982QV_001."
             }
         },
-        repeatFlg: !1,
-        editFlag: !1
+        repeatFlg: false,
+        editFlag: false
     };
 
     $.extend(com.validator, quotationVersion.validator);
 
     com.focusPage('a[name="addQuotationVersion"]','#pagenation').click(function(){
         quotationVersion.quotationVersionItems.no.css("display", "none");
-        quotationVersion.editFlag = !1;
+        quotationVersion.editFlag = false;
         com.cleanItems(quotationVersion.quotationVersionItems);
-        quotationVersion.quotationVersionItems.no.prop("disabled", !1);
+        quotationVersion.quotationVersionItems.no.prop("disabled", false);
         quotationVersion.modal.modal("show");
     });
 
     function editLine(b){
 
-        quotationVersion.editFlag = !0;
+        quotationVersion.editFlag = true;
         quotationVersion.quotationVersionItems.no.val(b.no);
         quotationVersion.quotationVersionItems.trafficRate.val(b.trafficRate);
         quotationVersion.quotationVersionItems.manageRate.val(b.manageRate);
         quotationVersion.quotationVersionItems.name.val(b.name);
         quotationVersion.quotationVersionItems.comment.val(b.comment);
-        quotationVersion.quotationVersionItems.no.prop("disabled", !0).css("display", "block");
+        quotationVersion.quotationVersionItems.no.prop("disabled", true).css("display", "block");
         
         void 0 == quotationVersion.quotationVersionItems.trafficDiscount.value ? 1 == b.trafficDiscount && quotationVersion.quotationVersionItems.trafficDiscount.click() : quotationVersion.quotationVersionItems.trafficDiscount.value != b.trafficDiscount && quotationVersion.quotationVersionItems.trafficDiscount.click();
         quotationVersion.quotationVersionItems.trafficDiscount.value = b.trafficDiscount;
@@ -181,7 +181,7 @@ $(function(){
 
     function saveData() {
         com.clearValidator();
-        com.clearValidator("#no", !0);
+        com.clearValidator("#no", true);
         if (!com.validate("qtModal") && !quotationVersion.repeatFlg) {
             var options = {
                 "quotationVersion.no": quotationVersion.quotationVersionItems.no.val(),

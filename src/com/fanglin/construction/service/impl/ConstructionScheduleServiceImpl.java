@@ -17,6 +17,7 @@ import com.fanglin.construction.po.ConstructionSchedulePO;
 import com.fanglin.construction.service.ConstructionScheduleService;
 import com.fanglin.construction.vo.ConstructionScheduleVO;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.customer.service.DecorationService;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.utils.BeanUtil;
@@ -37,6 +38,9 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 
 	@Autowired
 	private ConstructionDao constructionDao;
+	
+	@Autowired
+	private DecorationService decorationService;
 
 	@Override
 	public List<ConstructionScheduleVO> queryConstructionScheduleByOrderId(ConstructionScheduleVO constructionScheduleVO) {
@@ -141,6 +145,8 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 			constructionPO.setSchedule(schedule);
 			constructionDao.update(constructionPO);
 		}
+		
+		decorationService.sendMessage(decorationPO.getOrderId(), "工程", String.format("%s已开工", constructionNodePO.getName()));
 
 		return 0;
 	}
@@ -183,6 +189,8 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 		constructionSchedulePO.setEndTime(DateUtil.getDateToTimestamp(new Date()));
 
 		constructionScheduleDao.update(constructionSchedulePO);
+		
+		decorationService.sendMessage(decorationPO.getOrderId(), "工程", String.format("%s已完工", constructionNodePO.getName()));
 
 		return 0;
 	}

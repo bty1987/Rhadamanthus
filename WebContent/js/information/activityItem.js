@@ -149,20 +149,19 @@ jQuery(function($) {
 		activityItem.items.activityItemModal.modal("hide");
 	}
 
+
 	function deleteActivityItem(aiId, activityItemName){
 		
-		bootbox.confirm("是否需要删除" + activityItemName + "活动物品?", function(result) {
-			if(result){
+		com.showConfirm("是否需要删除" + activityItemName + "活动物品?", function(result) {
 				
-				var options = {
-					"activityItem.aiid": aiId
-				};
-				com.post(api.information.deleteActivityItemByAiid, options, function(res){
-					com.showAlert(com.info, "操作成功");
+			var options = {
+				"activityItem.aiid": aiId
+			};
+			com.post(api.information.deleteActivityItemByAiid, options, function(res){
+				com.showAlert(com.info, "操作成功");
 
-					com.focusPage("#pricing_" + aiId).remove();
-				});
-			}
+				com.focusPage("#pricing_" + aiId).remove();
+			});
 		});
 	}
 

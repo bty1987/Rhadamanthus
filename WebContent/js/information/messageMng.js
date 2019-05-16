@@ -19,7 +19,9 @@ $(function(){
 		repeatFlg: false,
 	};
 	
-	com.initChosen('receiver', api.personel.queryUserByPinyin, "pinyinName", {"duty": "", "user.status":0}, "autoFillKeyValue", "key", "value");
+	com.initTypeahead('receiver', api.personel.queryUserByPinyin, "pinyinName", {"duty": "", "user.status":0}, "autoFillKeyValue", "key", "value",function(list,key,value){
+		return value;
+	});
 
 	com.focusPage("#returnBtn").on("click", function(){
 		com.focusPage(".sysMessage").text("系统消息");
@@ -115,7 +117,7 @@ $(function(){
 
 			com.cleanItems(message.messageItems);
 
-			com.updateChosen('receiver', '', '');
+			com.updateTypeahead('receiver', '', '');
 
 			message.modal.modal("show");
 		});
@@ -145,7 +147,7 @@ $(function(){
 			return;
 
 		var options = {
-			"message.receiver.userId": message.messageItems.receiver.val(),
+			"message.receiver.userId": com.typeahead("receiver"),
 			"message.contents": message.messageItems.contents.val(),
 			"message.type": 4,
 		};

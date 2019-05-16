@@ -405,11 +405,11 @@ public class HouseSourceServiceImpl implements HouseSourceService {
 		}
 		
 		if(houseSourcePO.getDepartment() != null){
-			BeanUtil.copyProperties(houseSourcePO.getDepartment(), houseSourceVO.getDepartment(), Arrays.asList("type", "fatherDept", "cityProper"));
+			BeanUtil.copyProperties(houseSourcePO.getDepartment(), houseSourceVO.getDepartment(), Arrays.asList("type", "fatherDept", "manager"));
 		}
 		
 		if(houseSourcePO.getRegion() != null){
-			BeanUtil.copyProperties(houseSourcePO.getRegion(), houseSourceVO.getRegion(), Arrays.asList("type", "fatherDept", "cityProper"));
+			BeanUtil.copyProperties(houseSourcePO.getRegion(), houseSourceVO.getRegion(), Arrays.asList("type", "fatherDept", "manager"));
 		}
 		
 		//customer

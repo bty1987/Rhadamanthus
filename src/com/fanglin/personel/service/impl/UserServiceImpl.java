@@ -48,6 +48,7 @@ import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.personel.vo.UserInfoVO;
 import com.fanglin.personel.vo.UserVO;
 import com.fanglin.system.dao.CompanyDao;
+import com.fanglin.system.dao.RoleDao;
 import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.system.po.CompanyPO;
 import com.fanglin.system.po.RolePO;
@@ -85,6 +86,9 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private DutyDao dutyDao;
+	
+	@Autowired
+	private RoleDao roleDao;
 
 	@Autowired
 	private CountingService countingService;
@@ -335,6 +339,8 @@ public class UserServiceImpl implements UserService {
 		List<String> pinyins = PinYin4Util.getPinyin(userVO.getCurrentName());
 
 		userPO.setPinYin(pinyins.get(0));
+		
+		userPO.setIsUpdate(UserPO.COLUMN_ISUPDATE_ADD_INT);
 
 		userDao.save(userPO);
 
@@ -401,6 +407,7 @@ public class UserServiceImpl implements UserService {
 		List<String> pinyins = PinYin4Util.getPinyin(userVO.getCurrentName());
 
 		userPO.setPinYin(pinyins.get(0));
+		userPO.setIsUpdate(UserPO.COLUMN_ISUPDATE_UPDATE_INT);
 
 		userDao.update(userPO);
 
@@ -480,12 +487,28 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void updateUserForAdvance(UserVO userVO) throws FLException {
+	public void updateUserForAdvance(UserVO userVO, int rid) throws FLException {
 
 		UserPO userPO = userDao.queryUserByUserId(userVO.getUserId());
 
 		if (userPO == null) {
 			throw new FLException(190005, "人员不存在");
+		}
+		
+		RolePO roleCO = roleDao.get(rid);
+		
+		if(roleCO == null){
+			throw new FLException(230010, "角色不存在");
+		}
+		
+		RolePO rolePO = roleDao.get(userVO.getRole().getRid());
+		
+		if(rolePO == null){
+			throw new FLException(230010, "角色不存在");
+		}
+		
+		if(roleCO.getLevel() < rolePO.getLevel()){
+			throw new FLException(-1, "无操作权限");
 		}
 
 		Short isLogin = userVO.getIsLogin();
@@ -514,8 +537,9 @@ public class UserServiceImpl implements UserService {
 				throw new FLException(230017, "公司获取失败");
 		}
 		
-		userPO.setRole(new RolePO(userVO.getRole().getRid()));
+		userPO.setRole(rolePO);
 		userPO.setExtranet(userVO.getExtranet());
+		userPO.setIsUpdate(UserPO.COLUMN_ISUPDATE_UPDATE_INT);
 
 		userDao.update(userPO);
 

@@ -153,23 +153,10 @@ $(function () {
 
     // 撤销计划
     function cancel(v) {
-        var btn = $(this);
-        var span = btn.find('span');
-        btn.find('i').remove();
-        var loading = $('<i></i>').addClass('icon-spinner icon-spin white bigger-125');
-        span.prepend(loading);
-        var message = "<p>确定要撤销该计划吗?</p>";
-        bootbox.confirm(message, function (result) {
-            if (result) {
-                com.post(api.information.cancelPlan, {"plan.pid": v.pid}, function (res) {
-                    planSeacher.doSearch();
-                });
-            }
-            else {
-                btn.find('i').remove();
-                var prepared = $('<i></i>').addClass('icon-ok bigger-110');
-                span.prepend(prepared);
-            }
+        com.showConfirm('是否确认撤销计划', function () {
+            com.post(api.information.cancelPlan, {"plan.pid": v.pid}, function (res) {
+                planSeacher.doSearch();
+            });
         });
     }
 
@@ -177,7 +164,7 @@ $(function () {
     function saveData() {
 
         if (com.validate())
-            return;
+            return false;
 
         var keyWord = com.focusPage("#task").val();
         var url;
@@ -185,7 +172,6 @@ $(function () {
         var options = {
             "plan.task.keyWord": keyWord
         };
-
 
         var cuts = plugins[keywordName];
         var results = cuts.split(",");

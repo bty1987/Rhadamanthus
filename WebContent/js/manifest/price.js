@@ -107,7 +107,7 @@ $(function () {
             $liLine.append($indexWrap).append($contentWrap);//.append($optionWrap)
 
             //$btnDelete.click(function () {
-            //    layer.confirm('是否确定删除？', {
+            //    layer.confirm('是否确定删除?', {
             //        btn: ['确定', '取消']
             //        // 按钮
             //    }, function (index, layero) {

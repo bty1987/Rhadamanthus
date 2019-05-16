@@ -169,7 +169,7 @@ jQuery(function($) {
 				buildingRecord.dataFlag = false;
 			}, function(data){
 				buildingRecord.dataFlag = true;
-				com.showAlert(com.warning, "请正确输入房源编号！");
+				com.showAlert(com.warning, "请正确输入房源编号");
 			}, false);
 		}
 
@@ -179,7 +179,7 @@ jQuery(function($) {
 				buildingRecord.dataFlag = false;
 			}, function(data){
 				buildingRecord.dataFlag = true;
-				com.showAlert(com.warning, "请正确输入客源编号！");
+				com.showAlert(com.warning, "请正确输入客源编号");
 			}, false);
 		}
 
@@ -196,7 +196,7 @@ jQuery(function($) {
 		};
 
 		com.post(api.building.addBuildingRecord, options, function(){
-			com.showAlert(com.info, "添加成功！");
+			com.showAlert(com.info, "添加成功");
 			buildingRecord.hsid = null;
 			buildingRecord.csid = null;
 			searcher.doSearch();

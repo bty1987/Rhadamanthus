@@ -180,7 +180,7 @@ $(function(){
     //保存
     function saveData() {
         if (com.validate()) {
-            return;
+            return false;
         }
 
         var params = {
@@ -200,12 +200,10 @@ $(function(){
     }
 
     function deleteModule(mid){
-        bootbox.confirm("确定删除吗?", function(result) {
-            if(result) {
-                com.post(api.system.deleteModule, {"module.mid": mid}, function(){
-                    search();
-                });
-            }
+        com.showConfirm("是否确定删除", function() {
+            com.post(api.system.deleteModule, {"module.mid": mid}, function(){
+                search();
+            });
         });
     }
 

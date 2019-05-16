@@ -56,7 +56,7 @@ $(function () {
                     //删除按钮
                     $btnDelete.click(function (e) {
                         e.stopPropagation();
-                        layer.confirm('确定要删除吗？', {
+                        layer.confirm('确定要删除吗?', {
                             btn: ['确定', '取消']
                         }, function (index, layero) {
                             com.post(api.production.deleteOutsourceItem, {"outsourceItem.oiid": v.oiid}, function () {

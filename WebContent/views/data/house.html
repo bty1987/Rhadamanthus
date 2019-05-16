@@ -23,13 +23,13 @@
 
                                     <div class="form-group">
                                         <label class="col-sm-2 control-label no-padding-right" for="type">房产类型</label>
-                                        <div class="col-sm-3">
-                                            <select class="col-xs-10 col-sm-12 v_required" id="type" ></select>
+                                        <div class="col-sm-4">
+                                            <select class="col-xs-10 col-sm-7 v_required" id="type" ></select>
                                         </div>
 
                                         <label for="no" class="col-sm-2 control-label no-padding-right orange">楼盘名</label>
-                                        <div class="col-md-5">
-                                            <select class="chosen-select col-md-4 v_required" id="no" style="display: none;"></select>
+                                        <div class="col-md-4">
+                                            <input type="text" class="col-xs-10 col-sm-7 v_required" id="no" />
                                         </div>
                                     </div>
 
@@ -51,7 +51,6 @@
                                             <select id="floorrule" style="padding: 0px;font-size: 1px; width: 7%!important; height: 25px; vertical-align: bottom"></select>
                                             <input type="text" class="v_required col-sm-1" maxlength="3"  style="float: none;"  id="door">
                                             <select id="doorrule" style="padding: 0px;font-size: 1px; width: 7%!important; height: 25px; vertical-align: bottom"></select>
-                                            <span id="errMsg"></span>
                                             <div class="col-md-12" style="padding: 0px;" >
                                                 <span id="rule" class="red"></span>
                                             </div>
@@ -68,59 +67,59 @@
                                     <div class="form-group">
                                         <label class="col-sm-2 control-label no-padding-right orange">户型</label>
                                         <div class="col-sm-9">
-                                            <input type="text" class="col-sm-1" style="float: none;" id="houseTypeOne" /> 室
-                                            <input type="text" class="col-sm-1" style="float: none;" id="houseTypeTwo" /> 厅
-                                            <input type="text" class="col-sm-1" style="float: none;" id="houseTypeThr" /> 厨
-                                            <input type="text" class="col-sm-1" style="float: none;" id="houseTypeFour" /> 卫
+                                            <input type="text" class="col-sm-1 v_required v_number" style="float: none;" id="houseTypeOne" /> 室
+                                            <input type="text" class="col-sm-1 v_required v_number" style="float: none;" id="houseTypeTwo" /> 厅
+                                            <input type="text" class="col-sm-1 v_required v_number" style="float: none;" id="houseTypeThr" /> 厨
+                                            <input type="text" class="col-sm-1 v_required v_number" style="float: none;" id="houseTypeFour" /> 卫
                                         </div>
                                     </div>
 
                                     <div class="form-group">
                                         <label class="col-sm-2 control-label no-padding-right" for="buildArea">建筑面积</label>
-                                        <div class="col-sm-3">
-                                            <input type="text" id="buildArea" maxlength="7" class="col-xs-10 col-sm-9 v_required v_float" />
-                                            <span style = "margin-left: 10px; line-height: 34px">平</span>
+                                        <div class="col-sm-4">
+                                            <input type="text" id="buildArea" maxlength="7" class="col-xs-10 col-sm-6 v_required v_float" />
+                                            <span style = "margin-left: 5px; line-height: 34px">平</span>
                                         </div>
 
                                         <label class="col-sm-2 control-label no-padding-right" for="maxFloor">最高楼层</label>
-                                        <div class="col-sm-3">
-                                            <input type="text" id="maxFloor" maxlength="3" class="col-xs-10 col-sm-12 v_number "/>
+                                        <div class="col-sm-4">
+                                            <input type="text" id="maxFloor" maxlength="3" class="col-xs-10 col-sm-7 v_number "/>
                                         </div>
                                     </div>
 
                                     <div class="form-group">
                                         <label for="through" class="col-sm-2 control-label no-padding-right">是否越层</label>
-                                        <div class="col-sm-3">
-                                            <select class='col-xs-10 col-sm-12' id='through' ></select>
+                                        <div class="col-sm-4">
+                                            <select class='col-xs-10 col-sm-7' id='through' ></select>
                                         </div>
 
                                         <label for="orientation" class="col-sm-2 control-label no-padding-right">房屋朝向</label>
-                                        <div class="col-sm-3">
-                                            <select class='col-xs-10 col-sm-12' id='orientation' ></select>
+                                        <div class="col-sm-4">
+                                            <select class='col-xs-10 col-sm-7' id='orientation' ></select>
                                         </div>
                                     </div>
 
                                     <div class="form-group">
                                         <label for="parlourType" class="col-sm-2 control-label no-padding-right">客厅类型</label>
-                                        <div class="col-sm-3">
-                                            <select class='col-xs-10 col-sm-12' id='parlourType' ></select>
+                                        <div class="col-sm-4">
+                                            <select class='col-xs-10 col-sm-7' id='parlourType' ></select>
                                         </div>
 
                                         <label for="heatingType" class="col-sm-2 control-label no-padding-right">供暖类型</label>
-                                        <div class="col-sm-3">
-                                            <select class='col-xs-10 col-sm-12' id='heatingType'></select>
+                                        <div class="col-sm-4">
+                                            <select class='col-xs-10 col-sm-7' id='heatingType'></select>
                                         </div>
                                     </div>
 
                                     <div class="form-group">
                                         <label for="waterVapour" class="col-sm-2 control-label no-padding-right">水气设施</label>
-                                        <div class="col-sm-3">
-                                            <select class='col-xs-10 col-sm-12' id='waterVapour' ></select>
+                                        <div class="col-sm-4">
+                                            <select class='col-xs-10 col-sm-7' id='waterVapour' ></select>
                                         </div>
 
                                         <label class="col-sm-2 control-label no-padding-right" for="feature">三不</label>
-                                        <div class="col-sm-3">
-                                            <textarea id="feature" maxlength="50" class="col-xs-10 col-sm-12"  ></textarea>
+                                        <div class="col-sm-4">
+                                            <textarea id="feature" maxlength="50" class="col-xs-10 col-sm-7"  ></textarea>
                                         </div>
                                     </div>
 
@@ -141,5 +140,7 @@
     </div>
 </div>
 <script type="text/javascript">
-    $.loadScript(['js/data/house.js','js/utils/houseUtils.js']);
+    //$.loadScript(['js/data/house.js','js/utils/houseUtils.js']);
 </script>
+<script src="js/data/house.js"></script>
+<script src="js/utils/houseUtils.js"></script>

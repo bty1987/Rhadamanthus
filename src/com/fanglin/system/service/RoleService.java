@@ -23,6 +23,6 @@ public interface RoleService {
 
 	public int deleteRole(RoleVO roleVO);
 
-	public int deleteRoleByRid(Integer rid) throws FLException;
+	public int deleteRoleByRid(RoleVO roleVO, int qid) throws FLException;
 	
 }

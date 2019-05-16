@@ -1,17 +1,49 @@
-﻿com = {
-    alertDiv: 'fl-alert',
-    error: 'error',
-    warning: 'warning',
-    info: 'info',
+﻿var com = {
+    /**
+     * 提醒信息弹窗等级
+     */
+    info: {typeclass: "layer-alert-info", outtime: 1000},
+    warning: {typeclass: "layer-alert-warning", outtime: 3000},
+    error: {typeclass: "layer-alert-error", outtime: 5000},
+    /**
+     * checkbox/switch内容对应信息
+     */
     genderType: {"女": true, "男": false, "true": "女", "false": "男"},
     isOrNotType: {"是": true, "否": false, "true": "是", "false": "否"},
-    deptType: {"designRegion": "设计大区", "businessRegion": "业务大区", "designDept": "设计部", "businessDept": "业务部", "materialDept": "主材部", "engineeringDept": "工程部", "qualityDept": "质检部", "supervisionDept": "监理部", "dutyDept": "职能部", "adminDept": "行政部", "financeDept": "财务部"},
-    currentTime: function () {
-        var date = new Date();
-        return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + " " + date.getHours() + ':' + date.getSeconds();
+    /**
+     * 时间空间初始化中文默认配置
+     */
+    dateramgepickerdefault: {
+        format: 'YYYY/MM/DD',
+        separator: '-',
+        locale: {
+            applyLabel: '确定',
+            cancelLabel: '取消',
+            fromLabel: '从',
+            toLabel: '到',
+            daysOfWeek: ['日', '一', '二', '三', '四', '五', '六'],
+            monthNames: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月']
+        }
     },
-    resizeContainer: function () {
+    /**
+     * 日历初始化中文默认配置
+     */
+    calendardefault: {
+        buttonText: {
+            today: '今天', month: '月', week: '周', day: '日', prev: '上一月', next: '下一月'
+        },
+        dayNames: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"],
+        dayNamesShort: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"],
+        monthNames: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"]
     },
+    /**
+     * 接口请求方法 , 主要使用post方式 , 根据api对应的接口对象信息完成请求动作
+     * @param api 接口对象
+     * @param options 请求参数
+     * @param callback 成功回调方法
+     * @param failCallback 失败回调方法
+     * @param asyncFlag 异步标识
+     */
     post: function (api, options, callback, failCallback, asyncFlag) {
 
         if (api == null) {
@@ -39,7 +71,7 @@
         }
 
         if (window.notOperate) {
-            com.showAlert(com.warning, "已锁屏不能进行操作！");
+            com.showAlert(com.warning, "已锁屏不能进行操作");
             return;
         }
 
@@ -125,14 +157,22 @@
                     }
                 }
             }, error: function (msg) {
-                com.showAlert(com.error, msg);
+                console.error(msg);
+                com.showAlert(com.error, "功能问题,请稍后再试");
                 if (failCallback) {
                     failCallback(msg);
                 }
             }
         });
-
     },
+    /**
+     * 简化版POST请求 , 主要用于library相关服务请求
+     * @param url 请求地址
+     * @param data 请求参数
+     * @param callback 成功回调方法
+     * @param failcallback 失败回调方法
+     * @param async 异步标识
+     */
     _post_: function (url, data, callback, failcallback, async) {
 
         var server = "";
@@ -169,153 +209,28 @@
             }
         });
     },
-    adaptDataArray: function (obj, callback) {
-        var result = [];
-        if (obj != undefined) {
-            for (var i = 0; i < obj.length; i++) {
-                var node = callback(obj[i], i);
-                result.push(node);
-            }
-        }
-
-        return result;
-    },
+    /**
+     * 清空元素/标签/空间内容
+     * @param items 元素列表
+     */
     cleanItems: function (items) {
         for (var i in items) {
             if (typeof items[i] != 'object') continue;
             if (items[i][0].type == 'checkbox') {
                 items[i].prop("checked", false).trigger("change");
-                continue;
             } else if (items[i][0].type == 'select-one') {
-                if (items[i][0].options[0] != undefined)
-                    items[i][0].options[0].selected = true;
+                if (items[i][0].options[0] != undefined) items[i][0].options[0].selected = true;
             } else {
-                items[i].val("");
+                items[i].val("").removeAttr('data-typeahead-key');
             }
         }
     },
-    validator: {
-        required: {
-            type: "v_required",
-            errorMsg: "内容不能为空",
-            func: function (obj) {
-                if (obj.val() == null || obj.val() == undefined)
-                    return true;
-                if (toString.apply(obj.val()) === '[object Array]')
-                    return obj.val().toString().trim().length == 0 ? true : false;
-                return obj.val().trim().length == 0 ? true : false;
-            }
-        },
-        typeahead: {
-            type: "v_typeahead",
-            errorMsg: "请使用匹配数据",
-            func: function (obj) {
-                if (obj.attr('data-typeahead-key') == null || obj.attr('data-typeahead-key') == undefined)
-                    return true;
-                if (toString.apply(obj.attr('data-typeahead-key')) === '[object Array]')
-                    return obj.attr('data-typeahead-key').toString().trim().length == 0 ? true : false;
-                return obj.attr('data-typeahead-key').trim().length == 0 ? true : false;
-            }
-        },
-        number: {
-            type: "v_number",
-            regex: /^[0-9]*$/,
-            errorMsg: "请输入数字."
-        },
-        float: {
-            type: "v_float",
-            regex: /^(((\d)+(\.)?(\d)*)|(\d)*)$/,
-            errorMsg: "请输入浮点数."
-        },
-        name: {
-            type: "v_name",
-            regex: /^[\w\u4e00-\u9fa5-.@&!, \/()%\[\]（）*，;。；！、：:?？><]*$/,
-            errorMsg: "内容可以由汉字, 字母, 数字,基本标点符号,'-','>','<','_', '.', '@'组成."
-        },
-        nameen: {
-            type: "v_name_en",
-            regex: /^[\w-_]*$/,
-            errorMsg: "内容可以由字母, 数字, '-', '_'组成."
-        },
-        email: {
-            type: "v_email",
-            regex: /^(([a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+)|(\s)*)$/,
-            errorMsg: "内容可以由字母, 数字, '-', '_', '.', '@'组成.(如:muzh@163.com)"
-        },
-        dateTime: {
-            type: "v_dateTime",
-            regex: /^((((1[6-9]|[2-9]\d)\d{2})-(0?[13578]|1[02])-(0?[1-9]|[12]\d|3[01]))|(((1[6-9]|[2-9]\d)\d{2})-(0?[13456789]|1[012])-(0?[1-9]|[12]\d|30))|(((1[6-9]|[2-9]\d)\d{2})-0?2-(0?[1-9]|1\d|2[0-8]))|(((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))-0?2-29-))(\s(20|21|22|23|[0-1]?\d):[0-5]?\d(:[0-5]?\d)?)?$/,
-            errorMsg: "请输入正确格式的日期.(YYYY-MM-DD hh:mm:ss)"
-        },
-        date: {
-            type: "v_date",
-            regex: /^((((1[6-9]|[2-9]\d)\d{2})-(0?[13578]|1[02])-(0?[1-9]|[12]\d|3[01]))|(((1[6-9]|[2-9]\d)\d{2})-(0?[13456789]|1[012])-(0?[1-9]|[12]\d|30))|(((1[6-9]|[2-9]\d)\d{2})-0?2-(0?[1-9]|1\d|2[0-8]))|(((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))-0?2-29-))(\s(20|21|22|23|[0-1]?\d):[0-5]?\d(:[0-5]?\d)?)?$/,
-            errorMsg: "请输入正确格式的日期.(YYYY-MM-DD)"
-        },
-        time: {
-            type: "v_time",
-            regex: /^(([01][0-9])|(2[0-3])):[0-5][0-9]:[0-5][0-9]$/,
-            errorMsg: "请输入正确格式的时间.(hh:mm:ss)"
-        },
-        phone: {
-            type: "v_phone",
-            regex: /^((1[0-9]{10})*)$/,
-            errorMsg: "请输入正确的手机格式 (如:13619181918)."
-        },
-        phones: {
-            type: "v_phones",
-            regex: /^(1[0-9]{10})((#1[0-9]{10})){0,4}$/,
-            errorMsg: "请输入正确的手机格式 (如:13619181918).如果为多条电话请用#号分隔"
-        },
-        phones2: {
-            type: "v_phones2",
-            regex: /^((1[0-9]{10})|(0[0-9]{10}))((#(([0-9]{11})))){0,4}$/,
-            errorMsg: "请输入正确的手机号或固定电话 (如:13619181918#02425601918).如果为多条号码请用#号分隔"
-        },
-        identity: {
-            type: "v_identity",
-            /*
-             * xxxxxx yyyy MM dd 375 0     十八位
-             * xxxxxx   yy MM dd  75 0     十五位
-             * 地区： [1-9]\d{5}
-             * 年的前两位： (18|19|([23]\d))        1800-2399
-             * 年的后两位： \d{2}
-             * 月份： ((0[1-9])|(10|11|12))
-             * 天数： (([0-2][1-9])|10|20|30|31)    闰年不能禁止29+
-             * 三位顺序码： \d{3}
-             * 两位顺序码： \d{2}
-             * 校验码： [0-9Xx]
-             * */
-            regex: /^\s*$|(^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$)|(^[1-9]\d{5}\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{2}[0-9Xx]$)/,
-            errorMsg: "请输入正确的身份证号码."
-        },
-        price: {
-            type: "v_price",
-            regex: /^[0-9]+(\.[0-9]{1,2})?$/,
-            errorMsg: "请输入正确的金额格式."
-        },
-        discount: {                     // 折扣 0到1之间两位小数
-            type: "v_discount",
-            regex: /^(1\.0{1,2}|1|0\.[0-9]{1,2})$/,
-            errorMsg: "请输入0到1之间的两位小数."
-        },
-        numberAll: {                   // 正数或负数 小数两位
-            type: "v_numberAll",
-            regex: /^(\d{0,8}|\d{0,8}\.[0-9]{1,2})$|^-(\d{0,8}|\d{0,8}\.[0-9]{1,2})$/,
-            errorMsg: "请输入正数或负数."
-        },
-        officer: {
-            type: "v_officer",
-            regex: /^\s*$|^[\u4e00-\u9fa5]{3}\d{8}[\u4e00-\u9fa5]$/,
-            errorMsg: "请输入正确的军官证号."
-        },
-        amount: {   // 小数点前最多8位,小数点后最多两位
-            type: "v_amount",
-            regex: /^\s*$|^\d{1,8}(\.\d{1,2})?$/,   // ^\s*$表示验证可以为空，可以是空格和制表符
-            errorMsg: "请输入正确的金额格式."
-        }
-
-    },
+    validator: {},
+    /**
+     * 验证 , 利用validator中class过滤需要验证内容的标签/元素
+     * @param scopeID 页面标签/元素ID
+     * @param placement 提醒显示方向
+     */
     validate: function (scopeID, placement) {
 
         var _scopeID = scopeID == "" || scopeID == null || scopeID == undefined ? '.flpage.tab-pane.active' : "#" + com.focusPage("#" + scopeID).attr("id");
@@ -361,6 +276,11 @@
 
         return _count == 0 ? false : true;
     },
+    /**
+     * 清空验证提示
+     * @param id 页面标签/元素ID
+     * @param _isTip 是否为Tip样式显示
+     */
     clearValidator: function(id, _isTip){
         isTip = _isTip || false;
 
@@ -376,9 +296,16 @@
             if($(this).data("addBorderStyle")){  $(this).css("border-style", "none"); }
 
             $(this).css("border", "1px solid #d5d5d5").popover("destroy");
-
         });
-
+    },
+    /**
+     * 提示
+     * @param type 类型 , 可以使用com.info, com.warning, com.error
+     * @param contents 显示内容
+     */
+    showTip: function (obj, msg, direc) {
+        direc = direc ? ["", "top", "right", "bottom", "left"].indexOf(direc) : "top"
+        layer.tips(msg, obj, direc);
     },
     showTips: function ($obj, msg, isTip) {
         $obj = com.focusPage($obj);
@@ -399,44 +326,51 @@
             $obj.data("tip", isTip);
         }
     },
+    /**
+     * 提示窗口
+     * @param type 类型 , 可以使用com.info, com.warning, com.error
+     * @param contents 显示内容
+     */
     showAlert: function (type, contents) {
-
-        var outtime = 1000;
-        var gritterTypeClass = "gritter-info";
-        var gritterLightClass = "gritter-light";
-
-        if ($.alert[type] == undefined) {
-            console.log("提示类型只能为<error>, <warning> 和 <info>");
-        }
-
-        if (type == com.error) {
-            gritterTypeClass = "gritter-error";
-            gritterLightClass = "";
-            outtime = 5000;
-        } else if (type == com.warning) {
-            gritterTypeClass = "gritter-warning";
-            gritterLightClass = "";
-            outtime = 3000;
-        }
-
-        $.gritter.add({
-            title: $.alert[type],
-            text: contents,
-            class_name: gritterTypeClass + ' gritter-center ' + gritterLightClass,
-            time: outtime
+        if(!type) type = com.info;
+        layer.msg(contents, {skin: type.typeclass, time: type.outtime});
+    },
+    /**
+     * 确认窗口
+     * @param content 确认提示内容
+     * @param success 确认按钮回调方法
+     * @param cancel 取消按钮回调方法
+     */
+    showConfirm: function(content, success, cancel){
+        layer.confirm(content, {title: false, closeBtn: false}, function(index){
+            success && success();
+            layer.close(index);
+        }, function(index){
+            cancel && cancel();
         });
     },
+    /**
+     * 提示信息
+     * @param title 表头信息
+     * @param contents 提示内容
+     */
     showInfo: function (title, contents) {
-        $.gritter.removeAll();
-
-        setTimeout(function () {
-            $.gritter.add({
-                title: title,
-                text: contents,
-                class_name: 'gritter-info',
-                time: 5000
-            });
-        }, 500)
+        layer.alert(contents, {title: title, btn: [], shade: false, time: 5000});
+    },
+    /**
+     * 贴示 , 吸附元素对象
+     * @param $obj 元素ID或者元素对象
+     * @param msg 提示信息
+     * @param placement 显示方向 , 默认为右侧
+     */
+    showPopover: function ($obj, msg, placement) {
+        
+        $obj = com.focusPage($obj);
+        $obj.focus().select();
+        
+        var _ = ["", "top", "right", "bottom", "left"].indexOf(placement);
+        
+        layer.tips(msg.errorMsg, $obj, {tips: [_ == -1 ? 2 : _, '#fd6b6b'], tipsMore: true, time: 5000});
     },
     /**
      * 加载页面，切换页面功能
@@ -467,12 +401,27 @@
         }
 
         var menuId = $features.attr("mid");
+        
+        var breadcrumb = function(tabPane){
+            var temp = [];
+            if (tabPane.attr('parentText')) temp.push(tabPane.attr('parentText'));
+            if (tabPane.attr('text')) temp.push(tabPane.attr('text'));
+            $.breadcrumb(tabPane.attr('icon'), temp);
+            $.showHelp('.breadcrumb', tabPane.attr('helpKey'));
+        };
 
         if ($("#homeNav .flpage.nav-tab a#tab_"+ menuId +"").length > 0 ) {
-            $("#tab_"+ menuId +"").parent().siblings().removeClass("active");
-            $("#tab_"+ menuId +"").parent().addClass("active");
-            $("#"+ menuId +"").siblings().removeClass("active");
-            $("#"+ menuId +"").addClass("active");
+            
+            var _tab = $("#tab_"+ menuId +"");
+            var _tabPane = $("#"+ menuId +"");
+            
+            _tab.parent().siblings().removeClass("active");
+            _tab.parent().addClass("active");
+            _tabPane.siblings().removeClass("active");
+            _tabPane.addClass("active");
+            
+            breadcrumb(_tabPane);
+            
             return false;
         }
 
@@ -510,7 +459,7 @@
         taba.on(ace.click_event, function(){
             tabClose.removeClass('show');
             params['urlLoadParams'] = com.splitUrl(page);
-            breadcrumb();
+            breadcrumb(tabPane);
         });
         
         homeNav.bind({
@@ -525,6 +474,7 @@
         tabRefresh.on(ace.click_event, function(){
             var target = $($(this).parent().attr("href"));
             var height = parseInt(target.get(0).offsetHeight)-300;
+            
             target.append($("<div><h1 style='margin-top: "+height/2+"px'><i class='icon-spinner icon-spin bigger-450'></i></h1></div>").addClass("tab-mask"));
             setTimeout(function(){
                 tabPane.load(page);
@@ -532,39 +482,41 @@
             }, 1200)
         });
 
-        var breadcrumb = function(){
-            var temp = [];
-            if (tabPane.attr('parentText')) temp.push(tabPane.attr('parentText'));
-            if (tabPane.attr('text')) temp.push(tabPane.attr('text'));
-            $.breadcrumb(tabPane.attr('icon'), temp);
-            $.showHelp('.breadcrumb', tabPane.attr('helpKey'));
-        };
-        breadcrumb();
+        breadcrumb(tabPane);
     },
+    /**
+     * 获取当前使用标签页面对应选择器内容的页面元素
+     * @param selecter 选择器
+     * @param contianer 指定元素内
+     * @return 元素对象
+     */
     focusPage: function(selecter, contianer){
         if(!contianer){ return $('.flpage.tab-pane.active').find(selecter); }
         else { return $('.flpage.tab-pane.active').find(contianer).find(selecter); }
     },
-    dateramgepickerdefault: {
-        format: 'YYYY/MM/DD',
-        separator: '-',
-        locale: {
-            applyLabel: '确定',
-            cancelLabel: '取消',
-            fromLabel: '从',
-            toLabel: '到',
-            daysOfWeek: ['日', '一', '二', '三', '四', '五', '六'],
-            monthNames: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月']
-        }
+    /**
+     * 获取自动补全key值
+     * @param id 页面标签/元素ID
+     * @param defaults 请求地址
+     * @param isKey 是否获取key , 否则为val的信息
+     * @return 自动补全的key/value
+     */
+    typeahead: function(id, defaults, isKey){
+        var _ = com.focusPage('#' + id).attr('data-typeahead-key');
+        if(isKey) _ = com.focusPage('#' + id).val();
+        if(!defaults) defaults = '';
+        return  _ ? _ : defaults;
     },
-    calendardefault: {
-        buttonText: {
-            today: '今天', month: '月', week: '周', day: '日', prev: '上一月', next: '下一月'
-        },
-        dayNames: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"],
-        dayNamesShort: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"],
-        monthNames: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"]
-    },
+    /**
+     * 初始化自动补全 , 利用接口完成基础数据获取
+     * @param id 页面标签/元素ID
+     * @param url 请求地址
+     * @param args 请求参数
+     * @param result 返回结果名称
+     * @param key 补全元素key值
+     * @param value 补全元素value值
+     * @param callback 回调方法 , 选中元素之后执行
+     */
     initTypeahead: function (id, url, name, args, result, key, value, callback){
         
         var $ele = com.focusPage('#' + id).typeahead({
@@ -572,6 +524,7 @@
             list: [],
             postData: {},
             source: function (query, process) {
+                if(query.length < 2) return false;
                 var options = {};
                 options[name] = query;
                 com.post(this.options.url, $.extend(options, args), $.proxy(this.options.callback, this));
@@ -588,9 +541,68 @@
             }
     	});
     },
+    /**
+     * 初始化自动补全 , 提供基础数据 , 无需发生请求
+     * @param id 页面标签/元素ID
+     * @param data 基础数据
+     * @param key 补全元素key值
+     * @param value 补全元素value值
+     * @param callback 回调方法 , 选中元素之后执行
+     */
+    selectTypeahead: function (id, data, key, value, callback){
+        var $ele = com.focusPage('#' + id).typeahead({
+            list: [],
+            source: function (query, process) {
+                
+                var res = [];
+                
+                if(query.length < 2){
+                    res = data.slice(0, 5);
+                }else{
+                    $.each(data, function(i, v){
+                        if(v[value].indexOf(query) != -1) res.push(v);
+                    });
+                }
+                $.proxy(this.options.callback, this)(res)
+            }, matcher: function (item) {
+                return true;
+            }, callback: function (list) {
+                this.options.list = list;
+                this.flprocess(list, key, value);
+            },
+            isResultTypeMap: true,
+            flupdater: function (k, v) {
+                if(callback) return callback(this.options.list, k, v);
+                else return v;
+            }
+        });
+    },
+    /**
+     * 初始化自动补全 , 利用接口完成基础数据获取
+     * @param id 页面标签/元素ID
+     * @param url 请求地址
+     * @param args 请求参数
+     * @param result 返回结果名称
+     * @param key 补全元素key值
+     * @param value 补全元素value值
+     * @param callback 回调方法 , 选中元素之后执行
+     */
+    autoTypeahead: function (id, url, name, args, result, key, value, callback){
+        com.initTypeahead(id, url, name, args, result, key, value, callback);
+    },
+    /**
+     * 更新自动补全 , 显示内容 , 对应key值
+     * @param id 页面标签/元素ID
+     * @param key 补全元素key值
+     * @param value 补全元素value值
+     */
     updateTypeahead: function(id, key, value){
         com.focusPage('#' + id).val(value).attr('data-typeahead-key', key);
     },
+    /**
+     * 获取自动补全对应key值
+     * @param id 页面标签/元素ID
+     */
     cleanTypeahead: function(id){
         com.focusPage('#' + id).val("").removeAttr('data-typeahead-key');
     },
@@ -638,6 +650,16 @@
     updateChosen: function (id, key, value) {
         return com.focusPage("#" + id).html($('<option></option>').attr('value', key).text(value)).trigger("chosen:updated");
     },
+    /**
+     * 显示图片 , 图片标签赋值地址 , 返回显示图片地址
+     * @param $e 图片元素对象
+     * @param url 图片路径
+     * @param width 宽度
+     * @param height 高度
+     * @param alt alt信息
+     * @param defaultUrl 默认地址
+     * @param type 类型 , 0: 本地 , 1: 钉钉
+     */
     showImg: function ($e, url, width, height, alt, defaultUrl, type) {
 
         var $media = '', imgUrl = '';
@@ -659,6 +681,14 @@
     downloadFile: function ($e, url, name) {
         $e.attr('href', config.media + api.common.downloadFile.url + "?downloadFilePath=" + url + "&fileName=" + name).attr('target', '_blank');
     },
+    /**
+     * 弹窗 , 显示指定url地址内容
+     * @param title 标题
+     * @param url 地址
+     * @param success 成功回调方法
+     * @param cancel 取消回调方法
+     * @param isPrint 是否显示打印按钮
+     */
     popup: function (title, url, success, cancel, isPrint) {
         var layerPra = {
             type: 2,
@@ -684,7 +714,7 @@
                     var body = layer.getChildFrame('body', index);
                     var iframeWin = window[layero.find('iframe')[0]['name']];
                     iframeWin.print();
-                },success:function (index, layero) {
+                }, success:function (index, layero) {
                     $('.layui-layer-title').text("");
 
                     var divM = $("<div></div>");
@@ -698,7 +728,6 @@
             });
 
             layerPra.skin = "layui-layer-hong"
-
         }
 
         layer.full(
@@ -708,6 +737,10 @@
     sealJournal: function (level, content) {
         (config.logflag) && console[level](content);
     },
+    /**
+     * 拆分url参数
+     * @param url 地址信息
+     */
     splitUrl: function (url) {
 
         var _url = url == "" || url == undefined || url == null ? location.href : url;
@@ -723,22 +756,34 @@
         }
 
         return result;
-
     },
-    showPopover: function ($obj, msg, placement) {
-        $obj = com.focusPage($obj);
-        $obj.css('border', '1px red solid');
-        $obj.focus().select();
-        $obj.removeAttr("data-placement").attr({
-            "data-rel": "popover",
-            "data-placement": placement,
-            "data-content": msg.errorMsg
-        }).removeAttr("data-toggle").popover('show');
-
-    },
+    /**
+     * 验证对象是否为null
+     * @param obj 验证对象
+     * @param rep 替换对象
+     */
     checkNull: function (obj, rep) {
         return obj == null || obj == undefined || obj == "" ? rep : obj;
     },
+    /**
+     * 获取cookie值
+     * @param name 名称
+     * @return cookie值
+     */
+    getCookie: function (name) {
+        var arr, reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
+        if (arr = document.cookie.match(reg)) {
+            return unescape(arr[2]);
+        } else {
+            return null;
+        }
+    },
+    /**
+     * 设置cookie值
+     * @param name 名称
+     * @param value 值
+     * @param minutes 有效时间 , 分钟为单位
+     */
     setCookie: function (name, value, minutes) {
         var expires = "";
         if (minutes) {
@@ -748,14 +793,10 @@
         }
         document.cookie = name + "=" + value + "; " + expires;
     },
-    getCookie: function (name) {
-        var arr, reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
-        if (arr = document.cookie.match(reg)) {
-            return unescape(arr[2]);
-        } else {
-            return null;
-        }
-    },
+    /**
+     * 删除cookie值
+     * @param name 名称
+     */
     deleteCookie: function (name) {
         var exp = new Date();
         exp.setTime(exp.getTime() - 1);
@@ -763,72 +804,71 @@
         if (cval != null) {
             document.cookie = name + "=" + cval + ";expires=" + exp.toGMTString();
         }
-    }
-};
-
-Array.prototype.formatArrayMapToStr = function (k, v) {
-    var str = "";
-    for (var i in this) {
-        var _i = this[i];
-        if (typeof _i === "object" && _i != null) {
-            str += _i[k] + ":" + _i[v] + ";";
-        }
-    }
-    return str;
-};
-
-Array.prototype.contains = function (v) {
-    for (var i in this) {
-        if (this[i] === v) {
-            return this[i];
-        }
-    }
-    return undefined;
-};
-
-$.extend($, {
-    jsonToString: function (jsonObj) {
-        var THIS = this;
-        switch (typeof (jsonObj)) {
-            case 'string':
-                return '"' + jsonObj.replace(/(["\\])/g, '\\$1') + '"';
-            case 'array':
-                return '[' + jsonObj.map(THIS.jsonToString).join(',') + ']';
-            case 'object':
-                if (jsonObj instanceof Array) {
-                    var strArr = [];
-                    var len = jsonObj.length;
-                    for (var i = 0; i < len; i++) {
-                        strArr.push(THIS.jsonToString(jsonObj[i]));
-                    }
-                    return '[' + strArr.join(',') + ']';
-                } else if (jsonObj == null) {
-                    return 'null';
-                } else {
-                    var string = [];
-                    for (var property in jsonObj) {
-                        string.push(THIS.jsonToString(property) + ':' + THIS.jsonToString(jsonObj[property]));
-                    }
-                    return '{' + string.join(',') + '}';
-                }
-            case 'number':
-                return jsonObj;
-            case 'false':
-                return jsonObj;
-        }
     },
-    breadcrumb: function (i, e) {
+    adaptDataArray: function (obj, callback) {
+        
+        var result = [];
+        
+        if (obj != undefined) {
+            for (var i = 0; i < obj.length; i++) {
+                var node = callback(obj[i], i);
+                result.push(node);
+            }
+        }
+
+        return result;
+    },
+    /**
+     * 格式化日期信息 , 格式为yyyy-MM-dd hh:mm:ss
+     * @param name 名称
+     */
+    dateFormat: function(datetime, format){
+        var year = datetime.getFullYear();
+        var month = datetime.getMonth() + 1 < 10 ? "0" + (datetime.getMonth() + 1) : datetime.getMonth() + 1;
+        var date = datetime.getDate() < 10 ? "0" + datetime.getDate() : datetime.getDate();
+        var hour = datetime.getHours()< 10 ? "0" + datetime.getHours() : datetime.getHours();
+        var minute = datetime.getMinutes()< 10 ? "0" + datetime.getMinutes() : datetime.getMinutes();
+        var second = datetime.getSeconds()< 10 ? "0" + datetime.getSeconds() : datetime.getSeconds();
+        return year + "-" + month + "-" + date + " " + hour + ":" + minute + ":" + second;
+    },
+    /**
+     * 当前时间 , 格式为yyyy-MM-dd hh:mm:ss
+     * @param name 名称
+     */
+    currentTime: function () {
+        var date = new Date();
+        return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + " " + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+    }
+};
+
+(function ($) {
+    
+    /**
+     * 判断数组中是否包含某元素
+     * @param value 判断元素
+     * @param defaults 默认值
+     * @return 如果存在返回判断元素 , 否则返回默认值
+     */
+    Array.prototype.contains = function (value, defaults) {
+        return $.inArray(value, this) != -1 ? value : defaults;
+    };
+    
+    /**
+     * 面包屑显示
+     * @param icon 图标 , 开始位置显示
+     * @param items 面包屑元素列表
+     */
+    $.breadcrumb = function (icon, items) {
+        
         $('.breadcrumb').empty();
-        if ($.isArray(e)) {
-            $.each(e, function (k, o) {
-                if (o) {
-                    $('.breadcrumb').append($('<li class="nav' + (k + 1) + '"></li>').append(k == 0 ? '<i class="fa fa-fw ' + i + '"></i>&nbsp;&nbsp;&nbsp;' + o : o, '&nbsp;&nbsp;'));
-                }
-            });
-        } else {
-            com.showAlert(com.warning, "使用breadcrumb必须传入数组!");
-        }
-    },
+        
+        if (!$.isArray(items)) return false;
+        
+        $.each(items, function (k, o) {
+            $('.breadcrumb').append($('<li class="nav' + (k + 1) + '"></li>').append(k == 0 ? '<i class="fa fa-fw ' + icon + '"></i>&nbsp;&nbsp;&nbsp;' + o : o, '&nbsp;&nbsp;'));
+        });
+    }
+    
     /**
      * 显示帮助文档
      * @param container 显示帮助按钮的块级元素 (必须传入标识符, 例如：(".breadcrumb")符号不可省略)
@@ -836,25 +876,22 @@ $.extend($, {
      * 例：$.showHelp(".breadcrumb", "decoration-create")
      *  执行：从help.json中获取key为"decoration-create"的数据，将在标识为".breadcrumb"的元素之后显示帮助按钮并在点击帮助按钮后显示帮助信息
      */
-    showHelp: function (container, key) {
+    $.showHelp = function (container, key) {
 
-        var o = function (v) {
+        var addHelpBtn = function (v) {
             $(container).append(
-                $('<span class="help-button">?</span>')
-                    .on(ace.click_event, function () {
-                        layer.open({
-                            type: 1,
-                            title: v.title,
-                            area: ["40%", ( $(window).height() * 0.84 < 750 ? $(window).height() * 0.84 : 750 ) + "px"],
-                            maxmin: false,
-                            zIndex: 9000,
-                            content: '<div class="help-content">'+ c(v.content) +'</div>'
-                        });
-                    })
-                    .css({"cursor": "pointer", "line-height": "18px", "font-size": "15px"})
-                    .attr({"data-rel": "popover", "data-trigger": "hover", "data-content": "对此页面有疑问 ?"}).popover('show')
+                $('<span class="badge badge-purple">帮助</span>').on(ace.click_event, function () {
+                    layer.open({
+                        type: 1,
+                        title: v.title,
+                        area: ["40%", ( $(window).height() * 0.84 < 750 ? $(window).height() * 0.84 : 750 ) + "px"],
+                        maxmin: false,
+                        zIndex: 9000,
+                        content: '<div class="help-content">'+ showHelpInfo(v.content) +'</div>'
+                    });
+                }).css({"cursor": "pointer", "line-height": "18px"})
             );
-            var c = function (content) {
+            var showHelpInfo = function (content) {
                 var container = $('<div></div>');
                 if ($.isArray(content)) {
                     $.each(content, function(i, o){
@@ -864,13 +901,13 @@ $.extend($, {
                                 if (k == 'content') container.append($('<div>'+ e +'</div>'));
                                 if (k == 'img') container.append($('<image src="'+ e +'"></image>'));
                                 if (k == 'p') {
-                                	if($.isArray(e)) {
-                                		$.each(e, function(pi, p){
-                                			container.append($('<p>'+ p +'</p>'));
-                                		});
-                                	}else{
-                                		container.append($('<p>'+ e +'</p>'));
-                                	}
+                                    if($.isArray(e)) {
+                                        $.each(e, function(pi, p){
+                                            container.append($('<p>'+ p +'</p>'));
+                                        });
+                                    }else{
+                                        container.append($('<p>'+ e +'</p>'));
+                                    }
                                 }
                             })
                         } else {
@@ -884,88 +921,104 @@ $.extend($, {
             }
         };
 
-        var f = function (r) {
-            if (r.constructor == String) return;
-            $.each(r, function (i, v) {
-                if (key == i) {
-                    if (!v.hasOwnProperty("title")) {  // 字典类型不存在属性title
-                        f(v)
-                    } else {
-                        o(v)
-                    }
-                } else {
-                    f(v)
-                }
-            })
+        var getHelpInfo = function (res) {
+            
+            var _help = res[key];
+            
+            if(!_help) return false;
+            
+            if (!_help.hasOwnProperty("title")) {
+                getHelpInfo(_help)
+            } else {
+                addHelpBtn(_help)
+            }
         };
-
-        $.getJSON(api.ds.help.url, function (d) {
-            f(d);
-        })
+        
+        com.post(api.ds.help, {}, function(res){
+            getHelpInfo(res);
+        });
     }
-});
-
-(function ($) {
-
-    $.extend(true, $.jgrid, com.jgrid);
-    $.alert = {
-        error: "错误",
-        warning: '警告',
-        info: '成功'
-    };
-
+    
+    /**
+     * 页面表头信息
+     * @param title 标题
+     * @parma detail 详细信息
+     */
     $.fn.statement = function (title, detail) {
-        return this.each(function () {
-            $(this).empty().append("<div class='page-header'><h1>" + title + "<small><i class='icon-double-angle-right'></i> " + detail + "</small></h1></div>");
-        });
-    };
-
-    $.fn.bindData = function (d, k, v, all, cb, o) {
-        if (this[0] != undefined && this[0].nodeName.toLowerCase() == "select" && d != undefined) {
-            this.empty();
-
-            var optionHTML = "";
-
-            if (all) {
-                optionHTML = "<option value=''>全部</option>";
-            }
-
-            for (var i = 0; i < d.length; i++) {
-                if (typeof d[i] == 'object') {
-                    if (k == undefined || v == undefined || k == "" || v == "") {
-                        console.log("该控件无法绑定列表数据");
-                        return this;
-                    }
-                    var _o = o ? "other='" + d[i][o] + "'" : "";
-                    optionHTML = optionHTML + "<option value='" + d[i][k] + "'" + _o + ">" + d[i][v] + "</option>";
-                } else {
-                    optionHTML = optionHTML + "<option value='" + d[i] + "' multikey='multikey'>" + d[i] + "</option>";
-                }
-            }
-
-            $(optionHTML).appendTo(this);
-
-            if (cb) {
-                cb();
-            }
-        } else {
+        return $(this).prepend("<div class='page-header'><h1>" + title + "<small><i class='icon-double-angle-right'></i> " + detail + "</small></h1></div>");
+    }
+    
+    /**
+     * select标签绑定数据
+     * @param data 绑定数据
+     * @param key 数据项key值
+     * @param value 数据项value值
+     * @param all 全部选项标识
+     * @param callback 回调方法 , 
+     * @param other 其他属性
+     * @return select标签对象
+     */
+    $.fn.bindData = function (data, key, value, all, callback, other) {
+        
+        var $this = this;
+        
+        if ($this[0] == undefined || $this[0].nodeName.toLowerCase() != "select" || data == undefined){
             console.log("该控件无法绑定列表数据");
+            return $this;
         }
-        return this;
-    };
-    $.fn.switchBtn = function (c) {
-        return this.each(function () {
-            $this = $(this);
-            _c = c || "";
+        
+        if (key == undefined || value == undefined || key == "" || value == "") {
+            console.log("该控件无法绑定列表数据");
+            return $this;
+        }
+        
+        $this.empty();
 
-            if (this.type != "checkbox") {
-                return;
+        var optionHTML = "";
+
+        if (all) {
+            optionHTML = "<option value=''>全部</option>";
+        }
+
+        for (var i = 0; i < data.length; i++) {
+            
+            var item = data[i];
+            
+            if (typeof item == 'object') {
+                var _o = other ? "other='" + item[other] + "'" : "";
+                optionHTML = optionHTML + "<option value='" + item[key] + "'" + _o + ">" + item[value] + "</option>";
+            } else {
+                optionHTML = optionHTML + "<option value='" + item + "' multikey='multikey'>" + item + "</option>";
             }
+        }
 
-            $this.addClass('ace ace-switch ace-switch-5').after("<span class='lbl " + _c + "'></span>");
+        $(optionHTML).appendTo($this);
+
+        if (callback)  callback();
+        
+        return $this;
+    }
+
+    /**
+     * 开关switch样式初始化
+     * @param clazz 样式 , 显示内容 , 需要提前定义
+     */
+    $.fn.switchBtn = function (clazz) {
+        return this.each(function () {
+            
+            var $this = $(this);
+            
+            if ($this.type != "checkbox") return false;
+
+            $this.addClass('ace ace-switch ace-switch-5').after("<span class='lbl " + clazz || "" + "'></span>");
         });
     };
 
+    /**
+     * 绑定点击事件 , 按钮增加加载效果
+     * @param callback 点击事件执行内容
+     * @param delayTime 延迟事件
+     */
     $.fn.bindClick = function (callback, delayTime) {
 
         var dfd = $.Deferred();

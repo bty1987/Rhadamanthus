@@ -17,25 +17,13 @@ jQuery(function ($) {
     drawline.saveBtn = com.focusPage("#saveBtn").on("click", saveData);
     drawline.cancelBtn = com.focusPage("#cancelBtn");
 
-    drawline.applyModal = com.focusPage("#applyModal").on('shown.bs.modal', function (e) {
-        initPlan();
-    });
+    drawline.applyModal = com.focusPage("#applyModal");
     drawline.editModal = com.focusPage("#editModal");
-    
-    //com.focusPage('#actualDate').daterangepicker(com.dateramgepickerdefault).prev().on(ace.click_event, function () {
-    //    com.focusPage(this).next().focus();
-    //});
-
-    com.focusPage('.timepicker').timepicker({
-        minuteStep: 1,
-        showSeconds: false,
-        showMeridian: false
-    });
 
     com.post(api.data.queryDrawlineGroup, {}, function (res) {
         drawline.items.drawLineGroup.bindData(res.drawLineGroups, 'gid', 'name');
     });
-    
+
     var displayFunc = (function () {
 
         var renderList = function (tableId, listData) {
@@ -103,11 +91,7 @@ jQuery(function ($) {
     searcher.init(["c_orderId", "c_designer", "c_salesman"], "condList", api.construction.pageDrawLineForPlan, function (data) {
         displayFunc.init('resultList', data);
     }, "pagenation", "drawLineApplyPostData");
-    com.focusPage("#condList").append('<button id="countDrawLineInfos" style="marg" class="btn btn-xs btn-yellow btn-search">申请信息</button>');
-    
-    com.focusPage('#countDrawLineInfos').click(function () {
-        drawline.applyModal.modal("show");
-    });
+    com.focusPage("#condList").append('<button id="showDrawLineApplyInfos" style="marg" class="btn btn-xs btn-yellow btn-search">申请信息</button>');
 
     function showEdit(v) {
 
@@ -132,13 +116,13 @@ jQuery(function ($) {
         var end = Date.parse(drawline.items.actualDate.val().replace("-", "/") + " " + drawline.items.endTime.val());
 
         if (start == NaN || end == NaN || start >= end) {
-            bootbox.alert("起始时间和结束时间非法");
+            com.showAlert(com.info,"起始时间和结束时间非法");
             return;
         }
         
         var Group = drawline.items.drawLineGroup.val();
         if (Group == null || Group == '') {
-            bootbox.alert("放线小组不能为空");
+            com.showAlert(com.info,"放线小组不能为空");
             return false;
         }
         
@@ -149,7 +133,7 @@ jQuery(function ($) {
             "drawLine.drawLineGroup.gid": drawline.items.drawLineGroup.val()
         };
 
-        com.post(api.drawline.resetDrawLine, options, function (res) {
+        com.post(api.construction.resetDrawLine, options, function (res) {
             com.showAlert(com.info, "操作成功");
             searcher.doSearch();
         });
@@ -157,17 +141,29 @@ jQuery(function ($) {
         drawline.editModal.modal("hide");
     }
 
-    function format(time){
-        var datetime = new Date();
-        datetime.setTime(time);
-        var year = datetime.getFullYear();
-        var month = datetime.getMonth() + 1 < 10 ? "0" + (datetime.getMonth() + 1) : datetime.getMonth() + 1;
-        var date = datetime.getDate() < 10 ? "0" + datetime.getDate() : datetime.getDate();
-        var hour = datetime.getHours()< 10 ? "0" + datetime.getHours() : datetime.getHours();
-        var minute = datetime.getMinutes()< 10 ? "0" + datetime.getMinutes() : datetime.getMinutes();
-        var second = datetime.getSeconds()< 10 ? "0" + datetime.getSeconds() : datetime.getSeconds();
-        return year + "-" + month + "-" + date+" "+hour+":"+minute+":"+second;
-    }
+    com.focusPage('#showDrawLineApplyInfos').click(function () {
+        drawline.applyModal.modal("show");
+    });
+
+    com.focusPage('.date-picker').datepicker().next().on(ace.click_event, function () {
+        com.focusPage(this).prev().focus();
+    });
+
+    com.focusPage('#startTime').timepicker({
+        minuteStep: 1,
+        showSeconds: false,
+        showMeridian: false
+    });
+
+    com.focusPage('#endTime').timepicker({
+        minuteStep: 1,
+        showSeconds: false,
+        showMeridian: false
+    });
+
+    drawline.applyModal.on('shown.bs.modal', function (e) {
+        initPlan();
+    });
 
     function initPlan() {
 
@@ -177,24 +173,27 @@ jQuery(function ($) {
         com.focusPage('#calendar').fullCalendar($.extend(com.calendardefault, {
             events: function (start, end, callback) {
                 
+                var startTime = com.dateFormat(new Date(start));
+                var endTime = com.dateFormat(new Date(end));
+
                 var options = {
-                    "drawLine.startTime": format(start),
-                    "drawLine.endTime": format(end)
+                    "drawLine.startTime": startTime,
+                    "drawLine.endTime": endTime
                 };
 
                 com.post(api.construction.countDrawLine, options, function (res) {
                     
                     var counts = res.count;
                     var events = [];
-                    
+
                     for (var i in counts) {
 
                         var _ = counts[i];
                         var _date = _[1] + "";
-                        
+
                         var event = {
                             title: _[0] + _[2] + "个",
-                            start: new Date(_date.substr(0, 4), _date.substr(4, 2) -1, _date.substr(6, 2)),
+                            start: new Date(_date.substr(0, 4), _date.substr(4, 2) - 1, _date.substr(6, 2)),
                             allDay: true
                         };
 
@@ -206,5 +205,4 @@ jQuery(function ($) {
             }
         }));
     }
-    
 });

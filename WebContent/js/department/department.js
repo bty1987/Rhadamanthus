@@ -22,7 +22,7 @@ jQuery(function ($) {
     department.modal.on('show.bs.modal', function (e) {
         com.clearValidator();
         com.clearValidator("#no", true);
-        com.updateChosen("manager", "", "");
+        com.cleanTypeahead("manager");
     });
 
     com.post(api.communion.queryDepartment, {}, function (res) {
@@ -32,8 +32,8 @@ jQuery(function ($) {
     com.post(api.communion.queryDepartmentType, {}, function (res) {
         department.items.deptype.bindData(res.departmentTypes, "dtid", "name", false);
     });
-
-    com.initChosen('manager', api.personel.queryUserByPinyin, "pinyinName", {"departmentType.name":"", "user.status":0}, "autoFillKeyValue", "key", "value");
+    
+    com.initTypeahead('manager', api.personel.queryUserByPinyin, "pinyinName", {"departmentType.name":"", "user.status":0}, "autoFillKeyValue", "key", "value");
 
     var displayFunc = (function () {
 
@@ -129,10 +129,12 @@ jQuery(function ($) {
     });
 
     function editdepartment(dept) {
-        department.modal.modal("show");
+        
         department.editFlg = true;
+        
         $("#ndeptId").css({"display":"block"});
-        department.items.did=dept.did;
+        
+        department.items.did = dept.did;
         department.items.no.val(dept.no);
         department.items.deptype.val(dept.type.dtid);
         department.items.name.val(dept.name);
@@ -140,19 +142,26 @@ jQuery(function ($) {
         department.items.kino.val(dept.kino);
         department.items.kiname.val(dept.kiname);
         department.items.comment .val(dept.comment );
-        com.updateChosen("manager", dept.manager != null && dept.manager.userId != null ? dept.manager.userId : "" , dept.manager != null && dept.manager.userId != null ? dept.manager.userName : "");
+        
+        if(dept.manager) com.updateTypeahead("manager", dept.manager.userId, dept.manager.currentName);
+        
+        department.modal.modal("show");
     }
 
     function updateStatus(did, cvalue) {
+        
         var options = {};
+        
         options["dept.did"] = did;
         options["dept.status"] = cvalue;
+        
         com.post(api.communion.updateDepartmentForStatus, options, function (res) {
             searcher.doSearch();
         });
     }
 
     function saveData() {
+        
         if (com.validate()) {
             return false;
         }
@@ -164,11 +173,11 @@ jQuery(function ($) {
             'dept.fatherDept.did': department.items.fatherdept.val() ? department.items.fatherdept.val() :null ,
             'dept.kino': department.items.kino.val(),
             'dept.kiname': department.items.kiname.val(),
-            'dept.manager.userId': department.items.manager.val(),
+            'dept.manager.userId': com.typeahead("manager"),
             'dept.comment': department.items.comment.val()
         };
-        department.editFlg ? (url=api.communion.updateDepartment,options['dept.did'] = department.items.did):
-            (url = api.communion.addDepartment);
+        
+        department.editFlg ? (url=api.communion.updateDepartment,options['dept.did'] = department.items.did) : (url = api.communion.addDepartment);
 
         com.post(url, options, function (res) {
             department.modal.modal("hide");

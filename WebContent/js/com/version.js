@@ -2,6 +2,6 @@ $(function(){
 
     console.log("version config");
     
-    config.versionCode = '3.0.003.001';
+    config.versionCode = '3.0.003.002';
 
 });

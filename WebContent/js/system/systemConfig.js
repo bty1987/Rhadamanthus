@@ -106,19 +106,14 @@
     });
 
     function saveData(){
+        
+        if(com.validate()){
+            return false;
+        }
 
         var key = system.config.key.val();
         var value = system.config.value.val();
         
-        if(key == null || key == ''){
-            bootbox.alert("Key不能为空");
-            return;
-        }
-
-        if(value == null || value == ''){
-            bootbox.alert("Value不能为空");
-            return;
-        }
         var options = {
         	"systemConfig.scid": system.scid,
             "systemConfig.key" : system.config.key.val(),
@@ -127,10 +122,10 @@
         };
 
         com.post(api.system.updateSystemConfig, options, function (res) {
-            //刷新页面所有条件,点击保存之后 刷新页面条件 重新载入
             com.showAlert(com.info, "操作成功");
             searcher.doSearch();
         });
+        
         system.modal.modal('hide');
     }
 

@@ -38,11 +38,9 @@ var QuotationDetail = (function(){
 				}),
 				//返回
 				$btnBack : com.focusPage('#detailBckBtn').on(ace.click_event, function(){
-					bootbox.confirm("当前页面存在重要数据,是否进行当前操作?", function(result) {
-						if(result){
-							com.switchPage(api.index.quotationIndex.url);
-						}
-					});
+				    com.showConfirm("当前页面存在重要数据,是否进行当前操作", function() {
+                        com.switchPage(api.index.quotationIndex.url);
+                    });
 				}),
 				//展开
 				$btnSpread : com.focusPage('#openFunctionAreasBtn').click(function(){
@@ -137,18 +135,10 @@ var QuotationDetail = (function(){
 
 			//初始化自定义报价项弹层
 			com.post(api.common.queryMeasurementUnit, {}, function(res){
-				if(res.errorCode == 0){
-					com.focusPage("#measurementUnit").bindData(res.measurementUnits, "name", "name");
-				}else{
-					bootbox.alert("系统异常");
-				}
+				com.focusPage("#measurementUnit").bindData(res.measurementUnits, "name", "name");
 			}, null, false);
 			com.post(api.common.queryWorkType, {} ,function(res){
-				if(res.errorCode == 0){
-					com.focusPage("#workType").bindData(res.workTypes, "name", "name");
-				}else{
-					bootbox.alert("系统异常");
-				}
+				com.focusPage("#workType").bindData(res.workTypes, "name", "name");
 			}, null, false);
 
 			return that;
@@ -335,20 +325,17 @@ var QuotationDetail = (function(){
 		//删除功能区
 		deletDomain : function($domain){
 
-			bootbox.confirm("确定要删除功能区吗？", function(res){
-				if(res){
+			com.showConfirm("是否确定要删除功能区", function(){
+			    
+				$domain.remove();
+				com.focusPage('[data-qfaid="'+ $domain.attr('data-qfaid') +'"]', '#functionAreaSumList').remove();
+				quo.calculateQuoFees();
 
-					$domain.remove();
-					com.focusPage('[data-qfaid="'+ $domain.attr('data-qfaid') +'"]', '#functionAreaSumList').remove();
-					quo.calculateQuoFees();
+				var _params = $.extend({}, {
+					'quotationFunctionArea.qfaId' : $domain.attr('data-qfaid') , //功能区Id
+				}, quo.basicParams);
 
-					var _params = $.extend({}, {
-						'quotationFunctionArea.qfaId' : $domain.attr('data-qfaid') , //功能区Id
-					}, quo.basicParams);
-
-					com.post(api.quotation.deleteQuotationFunctionArea, _params, function(){
-					}, null, false);
-				}
+				com.post(api.quotation.deleteQuotationFunctionArea, _params, function(){}, null, false);
 			});
 		},
 		//保存功能区修改
@@ -968,7 +955,7 @@ var QuotationDetail = (function(){
 			//查看
 			$btnInfo.click(function(e){
 				e.stopPropagation();
-				qv.content && com.showInfo(qv.content);
+				qv.content && com.showTip(this, qv.content, 'left');
 			});
 
 			$item.attr('data-totalprice',utils.changeThrDecimal(utils.accMul(qv.num ,  qv.unitPrice)));

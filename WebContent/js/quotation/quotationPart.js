@@ -49,11 +49,9 @@ var QuotationDetail = (function(){
 				}),
 				//返回
 				$btnBack : com.focusPage('#detailBckBtn').on(ace.click_event, function(){
-					bootbox.confirm("当前页面存在重要数据,是否进行当前操作?", function(result) {
-						if(result){
-							com.switchPage(api.index.quotationIndex.url);
-						}
-					});
+				    com.showConfirm("当前页面存在重要数据,是否进行当前操作", function(result) {
+                        com.switchPage(api.index.quotationIndex.url);
+                    });
 				}),
 				//展开
 				$btnSpread : com.focusPage('#openFunctionAreasBtn').click(function(){
@@ -139,18 +137,10 @@ var QuotationDetail = (function(){
 
 			//初始化自定义报价项弹层
 			com.post(api.common.queryMeasurementUnit, {}, function(res){
-				if(res.errorCode == 0){
-					com.focusPage("#measurementUnit").bindData(res.measurementUnits, "name", "name");
-				}else{
-					bootbox.alert("系统异常");
-				}
+				com.focusPage("#measurementUnit").bindData(res.measurementUnits, "name", "name");
 			}, null, false);
 			com.post(api.common.queryWorkType, {} ,function(res){
-				if(res.errorCode == 0){
-					com.focusPage("#workType").bindData(res.workTypes, "name", "name");
-				}else{
-					bootbox.alert("系统异常");
-				}
+				com.focusPage("#workType").bindData(res.workTypes, "name", "name");
 			}, null, false);
 			//初始化自定义报价中的类型
 			com.post(api.quotation.queryQuotationType, {},function(res) {
@@ -473,23 +463,19 @@ var QuotationDetail = (function(){
 		},
 		//删除功能区
 		deletDomain : function($domain){
+		    
+		    com.showConfirm("是否确定要删除功能区", function(res){
+		        
+                $domain.remove();
+                com.focusPage('[data-qfaid="'+ $domain.attr('data-qfaid') +'"]', '#functionAreaSumList').remove();
+                quo.calculateQuoFees();
 
-			bootbox.confirm("确定要删除功能区吗？", function(res){
-				if(res){
+                var _params = $.extend({}, {
+                    'quotationFunctionArea.qfaId' : $domain.attr('data-qfaid') , //功能区Id
+                }, quo.basicParams);
 
-					$domain.remove();
-					com.focusPage('[data-qfaid="'+ $domain.attr('data-qfaid') +'"]', '#functionAreaSumList').remove();
-					quo.calculateQuoFees();
-
-					var _params = $.extend({}, {
-						'quotationFunctionArea.qfaId' : $domain.attr('data-qfaid') , //功能区Id
-
-					}, quo.basicParams);
-
-					com.post(api.quotation.deleteQuotationFunctionArea, _params, function(){
-					}, null, false);
-				}
-			});
+                com.post(api.quotation.deleteQuotationFunctionArea, _params, function(){}, null, false);
+            });
 		},
 		calculateTotal: function(){
 			com.focusPage('#calculateTotalFeeBtn').on(ace.click_event, function(){
@@ -519,7 +505,7 @@ var QuotationDetail = (function(){
 			com.focusPage('#saveDisCountBtn').on(ace.click_event, function(){ //折扣保存
 				
 				if(com.validate()){
-					return;
+					return false;
 				}
 				
 				var dis = com.focusPage("#discount").val();
@@ -532,19 +518,22 @@ var QuotationDetail = (function(){
 				}else{
                     com.focusPage("#discount").css("border","1px solid #d5d5d5").popover("destroy");
 				}
+				
+				quo.quoModals.$domainDiscountModal.modal("hide");
 
 				if(!disableFlag && parseFloat(dis) < config.quotationLimitDiscount){
 					approvalUtils.initqueryApprovalUser("approveManSel",4);
+					
 					com.focusPage("#customerApproveModal").modal("show");
 					com.focusPage("#cApproveSaveBtn").bindClick( function(){
 						if(com.validate()){
-							return;
+						    return false;
 						}
 						quo.basicParams['quotation.discount'] = config.quotationLimitDiscount;
 						var receiverId = com.focusPage("#approveManSel").find('input:checked').attr('userid');
 						if(receiverId == null || receiverId == ""){
 							com.showAlert(com.error,"请选择审批人!");
-							return;
+							return false;
 						}
 						var options = {
 							"approval.comment": com.focusPage('#customerDes').val(),
@@ -564,19 +553,19 @@ var QuotationDetail = (function(){
 				}else{
 					quo.basicParams['quotation.discount'] =  Math.round(parseFloat(dis) * 1000) / 1000;
 					com.focusPage('#sumLabDiscount').text(quo.basicParams['quotation.discount']);
+					
+					quo.basicParams['quotation.basePrice'] = parseInt(basePrice);
+	                quo.calculateQuoFees(function($domain){
+	                    var dfee = quo.calculateDomainFees($domain, function($quote){
+	                        quo.calculateQuoteFee($quote);
+	                    });
+	                    com.focusPage('[data-qfaid="'+ $domain.attr('data-qfaid') +'"]', '#functionAreaSumList').find('label.no-padding-left').text(dfee);
+	                });
+
+//	                com.post(api.quotation.updateQuotationForAdvance, quo.basicParams, function(res){
+//	                    quo.quoModals.$domainDiscountModal.modal("hide");
+//	                }, null, false);
 				}
-
-				quo.basicParams['quotation.basePrice'] = parseInt(basePrice);
-				quo.calculateQuoFees(function($domain){
-					var dfee = quo.calculateDomainFees($domain, function($quote){
-						quo.calculateQuoteFee($quote);
-					});
-					com.focusPage('[data-qfaid="'+ $domain.attr('data-qfaid') +'"]', '#functionAreaSumList').find('label.no-padding-left').text(dfee);
-				});
-
-				com.post(api.quotation.updateQuotationForAdvance, quo.basicParams, function(res){
-					quo.quoModals.$domainDiscountModal.modal("hide");
-				});
 			});
 		},
 		//保存功能区修改
@@ -1395,7 +1384,7 @@ var QuotationDetail = (function(){
 				//查看
 				$btnInfo.click(function(e){
 					e.stopPropagation();
-					qv.content && com.showInfo(qv.content);
+					qv.content && com.showTip(this, qv.content, 'left');
 				});
 				//向上移动
 				$up.click(function(e){
