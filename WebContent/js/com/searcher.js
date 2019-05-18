@@ -163,7 +163,7 @@ var Searcher = function(){
                     "data-type":_rtype
                 }).appendTo($item);
 
-                $showItem.datepicker({format:'yyyy-mm-dd' , autoclose:true});
+                $showItem.datepicker(com.datepickerdefault);
             }
 
             if(_rtype=="autofill"){

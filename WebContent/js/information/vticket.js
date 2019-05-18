@@ -22,9 +22,8 @@ jQuery(function($) {
 		com.clearValidator();
 	});
 
-	com.initTypeahead('belonger', api.personel.queryUserByPinyin, "pinyinName", {"departmentType.name":"", "user.status":0}, "autoFillKeyValue", "key", "value",function(list,key,value){
-		return value;
-	});
+	com.initTypeahead('belonger', api.personel.queryUserByPinyin, "pinyinName", {"departmentType.name":"", "user.status":0}, "autoFillKeyValue", "key", "value",null);
+
 
 	var displayFunc  = (function(){
 

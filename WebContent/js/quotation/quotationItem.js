@@ -288,7 +288,7 @@ $(function(){
 
         	var dateObj = eval("("+data+")");
             if(data.indexOf("导入文件错误") > 0 ){
-                com.showAlert(com.warning, "导入文件错误);
+                com.showAlert(com.warning, "导入文件错误");
             }
             quotationItemSeacher.doSearch();
         }

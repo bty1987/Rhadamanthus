@@ -1311,8 +1311,11 @@ textarea[readonly] {
 }
 
 #homePage .alert.alert-info.clearfix {
-    background-color: #f3f4f5;
+    background-color: #ffffff;
     color: #2a779c;
+    border-bottom: 1px solid #e0e0e0 !important;
+    margin-bottom: 0px;
+    padding: 5px 10px;
 }
 
 .amount-li li {
@@ -1480,4 +1483,18 @@ body .layer-alert-warning {
 body .layer-alert-error {
     background-color: rgba(243, 77, 77, 0.92);
     color: #fff;
+}
+
+/* index */
+
+.btn.btn-app.btn-fastlink {
+    color: #3983c2 !important;
+    background-color: #ffffff !important;
+    text-shadow: 0 0px 0 rgba(0, 0, 0, 0) !important;
+}
+
+.infobox.homeindex {
+	height: 100px;
+    padding: 20px 15px;
+    border: 0px;
 }

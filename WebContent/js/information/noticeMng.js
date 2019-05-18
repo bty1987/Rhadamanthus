@@ -191,7 +191,7 @@ $(function(){
             });
 
                 $btnDel.click(function(){
-                	com.showConfirm("确定删除吗?", function(result) {
+                    com.showConfirm("确定删除吗?", function(result) {
                         if(result) {
                             removeRow(v.nid);
                         }
@@ -235,27 +235,27 @@ $(function(){
             if ("" == notice.items.contents.val().trim()){
                 com.showTips(notice.items.contents, "内容不能为空.");
             }else if(notice.items.startTime.val() > notice.items.endTime.val()){
-            	com.showAlert(com.warning,"结束时间不能小于开始时间");
+                com.showAlert("结束时间不能小于开始时间");
 
-            }else{
-                var a, b = {
-                    "notice.nid":notice.items.nid,
-                    "notice.theme": notice.items.theme.val(),
-                    "notice.type": notice.items.typeSel.val(),
-                    "notice.priority": notice.items.prioritySel.val(),
-                    "notice.creater.userId": notice.items.userId,
-                    "notice.startTime": notice.items.startTime.val(),
-                    "notice.endTime": notice.items.endTime.val(),
-                    "notice.isPublic": notice.items.isPublic.prop("checked") ? 0 : 1,
-                    "notice.contents": notice.items.contents.val(),
-                    "notice.filePath": com.focusPage("#filePath").val()
-               };
+                }else{
+                    var a, b = {
+                        "notice.nid":notice.items.nid,
+                        "notice.theme": notice.items.theme.val(),
+                        "notice.type": notice.items.typeSel.val(),
+                        "notice.priority": notice.items.prioritySel.val(),
+                        "notice.creater.userId": notice.items.userId,
+                        "notice.startTime": notice.items.startTime.val(),
+                        "notice.endTime": notice.items.endTime.val(),
+                        "notice.isPublic": notice.items.isPublic.prop("checked") ? 0 : 1,
+                        "notice.contents": notice.items.contents.val(),
+                        "notice.filePath": com.focusPage("#filePath").val()
+                    };
                     notice.editFlg ? (a = api.information.updateNotice,b["notice.noticeId"] = notice.items.noticeId) : a = api.information.addNotice;
                     com.post(a, b, successCallback);
                     notice.modal.modal("hide");
                 }
-         }
-     }
+        }
+    }
 
     function removeRow(id) {
         com.post(api.information.deleteNotice, {"notice.nid" : id}, successCallback);

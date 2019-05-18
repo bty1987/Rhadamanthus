@@ -11,7 +11,16 @@
     genderType: {"女": true, "男": false, "true": "女", "false": "男"},
     isOrNotType: {"是": true, "否": false, "true": "是", "false": "否"},
     /**
-     * 时间空间初始化中文默认配置
+     * 时间控件初始化中文默认配置
+     */
+    datepickerdefault: {
+        language: "zh",
+        format : 'yyyy-mm-dd',
+        clearBtn: true,
+        todayHighlight: true
+    },
+    /**
+     * 时间控件初始化中文默认配置
      */
     dateramgepickerdefault: {
         format: 'YYYY/MM/DD',
@@ -32,9 +41,19 @@
         buttonText: {
             today: '今天', month: '月', week: '周', day: '日', prev: '上一月', next: '下一月'
         },
+        header: {
+            left: 'prev,next', center: 'title', right: 'month'
+        },
+        monthNames: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+        monthNamesShort: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"],
         dayNames: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"],
-        dayNamesShort: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"],
-        monthNames: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"]
+        dayNamesShort: ["日", "一", "二", "三", "四", "五", "六"],
+        today: ["今天"],
+        titleFormat: {
+            month: "yyyy年 MM月",
+            week: " yyyy年",
+            day: "yyyy年MM日dd "
+        },
     },
     /**
      * 接口请求方法 , 主要使用post方式 , 根据api对应的接口对象信息完成请求动作
@@ -215,13 +234,19 @@
      */
     cleanItems: function (items) {
         for (var i in items) {
-            if (typeof items[i] != 'object') continue;
-            if (items[i][0].type == 'checkbox') {
-                items[i].prop("checked", false).trigger("change");
-            } else if (items[i][0].type == 'select-one') {
-                if (items[i][0].options[0] != undefined) items[i][0].options[0].selected = true;
+            
+            var item = items[i]
+            
+            if (typeof item != 'object') continue;
+            if (item[0].type == 'checkbox') {
+                item.prop("checked", false).trigger("change");
+            } else if (item[0].type == 'select-one') {
+                if (item[0].options[0] != undefined) item[0].options[0].selected = true;
             } else {
-                items[i].val("").removeAttr('data-typeahead-key');
+                
+                if(item.hasClass("date-picker")) item.datepicker('clearDates');
+                
+                item.val("").removeAttr('data-typeahead-key');
             }
         }
     },
@@ -237,11 +262,11 @@
         var _placement = placement == "" || placement == null || placement == undefined ? 'right' : placement;
 
         var _count = 0;
-
+        
         $.each(com.validator, function (k, value) {
-
+            
             com.focusPage(_scopeID + " ." + value.type + ":visible").each(function (i, v) {
-
+                
                 var $this = $(v);
 
                 if (!$this.prop("disabled")) {
@@ -258,8 +283,6 @@
                         } else {
                             $this.css('border-color', "#b5b5b5");
                             $this.popover('destroy')
-
-
                         }
                         return true;
                     } else {
@@ -425,7 +448,7 @@
             return false;
         }
 
-        var homeNav = $("#homeNav.nav.nav-tabs");
+        var opearteTab = $("#homeNav > #operateTab");
         var tabDel = $('<div class="removePage"><i class="icon-remove"></i></div>');
         var tabRefresh = $('<div class="removePage"><i class="icon-refresh"></i></div>');
         var tabLi = $('<li class="flpage nav-tab active" data-page="'+ page +'"></li>');
@@ -442,7 +465,7 @@
         $(".flpage.nav-tab").removeClass("active");
         $(".flpage.tab-pane").removeClass("active");
 
-        homeNav.append(tabLi.append(taba));
+        opearteTab.before(tabLi.append(taba));
         $(".flpage.tab-content").append(tabPane);
 
         tabPane.load(page);
@@ -460,15 +483,6 @@
             tabClose.removeClass('show');
             params['urlLoadParams'] = com.splitUrl(page);
             breadcrumb(tabPane);
-        });
-        
-        homeNav.bind({
-            contextmenu: function() {
-                return false;
-            },
-            mousedown: function(e) {
-                if (3 == e.which) tabClose.css({'top': 1,'left': e.pageX - 190}).addClass('show');  // 右击
-            }
         });
         
         tabRefresh.on(ace.click_event, function(){
@@ -1038,6 +1052,22 @@
 
         return dfd.promise();
     };
+    
+    /**
+     * 时间控件默认配置
+     */
+    $.fn.datepicker.dates['zh'] = {
+        days: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"],
+        daysShort: ["日", "一", "二", "三", "四", "五", "六"],
+        daysMin: ["日", "一", "二", "三", "四", "五", "六"],
+        months: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+        monthsShort: ["一", "二", "三", "四", "五", "六", "七", "八", "九", "十", "十一", "十二"],
+        today: "今天",
+        clear: "清空",
+        format: "mm/dd/yyyy",
+        titleFormat: "MM yyyy",
+        weekStart: 0
+    };
 
     bootbox.setDefaults({
         locale: "zh_CN",
@@ -1047,5 +1077,6 @@
         animate: true,
         className: "my-modal"
     });
+    
 })(jQuery);
 
