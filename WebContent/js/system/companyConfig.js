@@ -27,11 +27,11 @@ jQuery(function ($) {
             ['versionId','编号','hide col-xs-10 col-sm-5 v_required v_versionId','text'],
             ['versionName','名称','col-xs-10 col-sm-7 v_name v_required','text'],
             ['trafficRate','车运费比例','col-xs-10 col-sm-7 v_float v_required','text'],
-            ['trafficDiscount','车运费折扣','col-xs-10 col-sm-7','checkbox'],
+            ['trafficDiscount','车运费折扣','ace col-xs-10 col-sm-7','checkbox'],
             ['manageRate','管理费比例','col-xs-10 col-sm-7 v_float v_required','text'],
-            ['manageDiscount','管理费折扣','col-xs-10 col-sm-7','checkbox'],
+            ['manageDiscount','管理费折扣','ace col-xs-10 col-sm-7','checkbox'],
             ['versionDes','信息','col-xs-10 col-sm-7 v_name','textarea'],
-            ['defaultFlag','默认','','checkbox']
+            ['defaultFlag','默认','ace','checkbox']
         ],['saveQuotationBtn','cancelQuotationBtn']
     );
     // 3.款项
@@ -433,6 +433,7 @@ jQuery(function ($) {
                     break;
                 case 'checkbox':
                     $input = $('<input type="checkbox" id="'+ v[0] +'" />').addClass(v[2]).appendTo($col);
+                    $span = $('<span class="lbl"></span>').appendTo($col);
                     break;
                 case 'textarea':
                     $input = $('<textarea id="'+ v[0] +'" data-toggle="popover" data-trigger="manual" ></textarea>').addClass(v[2]).appendTo($col);

@@ -7,7 +7,6 @@
     <div class="row clearfix">
         <div class="col-xs-12 pricing-span-body" id="home">
             <div class="tabbable">
-                <ul class="dropdown-menu dropdown-info" style="cursor: pointer;" id="dropdown"><li><a>关闭所有页面</a></li></ul>
                 <ul class="nav nav-tabs padding-12" id="homeNav">
                     <li class="flpage nav-tab active" id="homeTab">
                         <a data-toggle="tab" href="#homePage" id="tab_homePage">首页</a>
@@ -16,65 +15,268 @@
                     <li class="flpage nav-tab" id="calendarTab">
                         <a data-toggle="tab" href="#calendarPage">日历</a>
                     </li>
+                    
+                    <li class="dropdown" id="operateTab">
+                        <a data-toggle="dropdown" href="#operatePage" class="dropdown-toggle">
+                            <i class="icon-caret-down bigger-110 width-auto"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-info">
+                             <li id="closeAllPage">
+                                 <a data-toggle="tab">关闭所有页面</a>
+                             </li>
+                         </ul>
+                    </li>
                 </ul>
 
                 <div class="flpage tab-content no-border">
                     <div id="homePage" class="flpage tab-pane in active">
-
-                        <div class='col-sm-6 declare'>
-                            <div class="widget-box transparent col-xs-12">
-                                <div class="widget-header widget-header-flat">
-                                    <h4 class="lighter">
-                                        <i class="icon-bullhorn"></i>
-                                        <span>最近通知</span>
-                                    </h4>
-                                    <div class="widget-toolbar action-buttons">
-                                        <a href="javascript:void(0);" id="updateNotices" data-action="reload" data-rel="tooltip" data-original-title="更新">
-                                            <i class="icon-refresh"></i>
-                                        </a>&nbsp;
-                                        <a href='#' id='moreNotice' class="moreLink" mid="moreNotices" icon="icon-list-alt" menuText="通知">更多</a>
+                    
+                        <div class="row">
+                            <div class="col-sm-4" style="min-height: 230px; background-color: #ffffffe0">
+	                            <div class="widget-box transparent">
+	                                <div class="widget-header widget-header-flat">
+	                                    <h4 class="lighter">
+	                                        <span>快捷</span>
+	                                    </h4>
+	                                </div>
+	                                
+	                                <div class="widget-body">
+	                                    <div class="widget-main padding-8">
+                                            <p>
+	                                            <a class="btn btn-app btn-fastlink no-radius no-hover col-xs-3">
+                                                    <i class="icon-home bigger-160"></i>
+                                                    <span>首页</span>
+                                                </a>
+	                                            
+	                                            <a class="btn btn-app btn-fastlink no-radius no-hover col-xs-3">
+                                                    <i class="icon-dashboard bigger-160"></i>
+                                                    <span>系统</span>
+                                                </a>
+                                                
+                                                <a class="btn btn-app btn-fastlink no-radius no-hover col-xs-3">
+                                                    <i class="icon-exchange bigger-160"></i>
+                                                    <span>审批</span>
+                                                </a>
+                                                
+                                                <a class="btn btn-app btn-fastlink no-radius no-hover col-xs-3">
+                                                    <i class="icon-print bigger-160"></i>
+                                                    Print
+                                                </a>
+                                                
+                                                <a class="btn btn-app btn-fastlink no-radius no-hover col-xs-3">
+                                                    <i class="icon-print bigger-160"></i>
+                                                    Print
+                                                </a>
+                                                
+                                                <a class="btn btn-app btn-fastlink no-radius no-hover col-xs-3">
+                                                    <i class="icon-print bigger-160"></i>
+                                                    Print
+                                                </a>
+                                                
+                                                <a class="btn btn-app btn-fastlink no-radius no-hover col-xs-3">
+                                                    <i class="icon-print bigger-160"></i>
+                                                    Print
+                                                </a>
+                                                
+	                                            <a class="btn btn-app btn-fastlink no-radius no-hover col-xs-3">
+	                                                <i class="icon-print bigger-160"></i>
+	                                                Print
+	                                            </a>
+	                                        </p>
+	                                    </div>
+	                                </div>
+	                            </div>
+                            </div>
+                            
+                            <div class="col-sm-4" style="min-height: 230px; background-color: #ffffffe0">
+                                <div class="widget-box transparent">
+                                    <div class="widget-header widget-header-flat">
+                                        <h4 class="lighter">
+                                            <span>待办</span>
+                                        </h4>
+                                    </div>
+                                    
+                                    <div class="widget-body">
+                                        <div class="widget-main padding-8">
+                                            <div class="infobox-container">
+                                                <div class="infobox infobox-red homeindex">
+		                                            <div class="infobox-icon">
+		                                                <i class="icon-envelope"></i>
+		                                            </div>
+		
+		                                            <div class="infobox-data">
+		                                                <span class="infobox-data-number">8</span>
+		                                                <div class="infobox-content">
+		                                                    <span>消息</span>
+		                                                    <span class="text-danger">未读</span>
+		                                                </div>
+		                                            </div>
+		                                        </div>
+		                                        
+		                                        <div class="infobox infobox-orange homeindex">
+		                                            <div class="infobox-icon">
+		                                                <i class="icon-twitter"></i>
+		                                            </div>
+		
+		                                            <div class="infobox-data">
+		                                                <span class="infobox-data-number">11</span>
+		                                                <div class="infobox-content">
+		                                                    <span>审批-提交</span>
+		                                                    <span class="text-danger">未处理</span>
+		                                                </div>
+		                                            </div>
+		                                        </div>
+		                                        
+		                                        <div class="infobox infobox-orange2 homeindex">
+                                                    <div class="infobox-icon">
+                                                        <i class="icon-shopping-cart"></i>
+                                                    </div>
+        
+                                                    <div class="infobox-data">
+                                                        <span class="infobox-data-number">8</span>
+                                                        <div class="infobox-content">
+                                                            <span>审批-接收</span>
+                                                            <span class="text-danger">未处理</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="infobox infobox-blue2 homeindex">
+                                                    <div class="infobox-icon">
+                                                        <i class="icon-shopping-cart"></i>
+                                                    </div>
+        
+                                                    <div class="infobox-data">
+                                                        <span class="infobox-data-number">8</span>
+                                                        <div class="infobox-content">new orders</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-
-                                <div class="widget-body">
-                                    <div class="widget-main padding-8">
-                                        <div id="noticeList" class="profile-feed"></div>
+                            </div>
+                            
+                            <div class="col-sm-4" style="min-height: 230px; background-color: #ffffffe0">
+                                <div class="widget-box transparent">
+                                    <div class="widget-header widget-header-flat">
+                                        <h4 class="lighter">
+                                            <span>版本</span>
+                                        </h4>
+                                    </div>
+                                    
+                                    <div class="widget-body">
+                                        <div class="widget-main padding-8">
+                                            <h4 class="text-primary">3.0.003.002</h4>
+                                            <div class="space-4"></div>
+                                            <p>
+	                                            Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec ullamcorper nulla non metus auctor fringilla. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Donec ullamcorper nulla non metus auctor fringilla.
+	                                        </p>
+	                                        <p>
+                                                Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit.
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-                        <div class="col-sm-6 declare" style="border-left: 1px solid #e5e8ea;">
-
-                            <div class="widget-box transparent col-xs-12">
-                                <div class="widget-header widget-header-flat">
-                                    <h4 class="lighter">
-                                        <i class="icon-flag"></i>
-                                        <span>最近活动</span>
-                                    </h4>
-                                    <div class="widget-toolbar action-buttons" >
-                                        <a href="javascript:void(0);" id="updateActivities" data-action="reload" data-rel="tooltip" data-original-title="更新">
-                                            <i class="icon-refresh"></i>
-                                        </a>&nbsp;
-                                        <a href='#' id='moreActivity' class="moreLink" mid="moreActivitys" icon="icon-list-alt" menuText="活动">更多</a>
-                                    </div>
-                                </div>
-
-                                <div class="widget-body">
-                                    <div class="widget-main padding-8">
-                                        <div id="activityList" class="profile-feed"></div>
-                                    </div>
-                                </div>
-                            </div>
+                        
+                        <hr />
+                        
+                        <div class="row">
+	                        <div class='col-sm-6 declare'>
+	                            <div class="widget-box transparent col-sm-12">
+	                                <div class="widget-header widget-header-flat">
+	                                    <h4 class="lighter">
+	                                        <i class="icon-bullhorn"></i>
+	                                        <span>通知</span>
+	                                    </h4>
+	                                    <div class="widget-toolbar action-buttons">
+	                                        <a href="javascript:void(0);" id="updateNotices" data-action="reload" data-rel="tooltip" data-original-title="更新">
+	                                            <i class="icon-refresh"></i>
+	                                        </a>&nbsp;
+	                                        <a href='#' id='moreNotice' class="moreLink" mid="moreNotices" icon="icon-list-alt" menuText="通知">更多</a>
+	                                    </div>
+	                                </div>
+	
+	                                <div class="widget-body">
+	                                    <div class="widget-main padding-8">
+	                                        <div id="noticeList"></div>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                        </div>
+	
+	                        <div class="col-sm-6 declare" style="border-left: 1px solid #e5e8ea;">
+	
+	                            <div class="widget-box transparent col-xs-12">
+	                                <div class="widget-header widget-header-flat">
+	                                    <h4 class="lighter">
+	                                        <i class="icon-flag"></i>
+	                                        <span>活动</span>
+	                                    </h4>
+	                                    <div class="widget-toolbar action-buttons" >
+	                                        <a href="javascript:void(0);" id="updateActivities" data-action="reload" data-rel="tooltip" data-original-title="更新">
+	                                            <i class="icon-refresh"></i>
+	                                        </a>&nbsp;
+	                                        <a href='#' id='moreActivity' class="moreLink" mid="moreActivitys" icon="icon-list-alt" menuText="活动">更多</a>
+	                                    </div>
+	                                </div>
+	
+	                                <div class="widget-body">
+	                                    <div class="widget-main padding-8">
+	                                        <div id="activityList"></div>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                        </div>
+	
+	                        <div class="col-sm-12" id="customize"></div>
                         </div>
-
-                        <div class="col-sm-12" id="customize"></div>
+                        
                     </div>
 
                     <div id="calendarPage" class="flpage tab-pane in active">
                         <div class="row">
                             <div id="calendar"></div>
                         </div>
+                        <div id="addEvent" class="page-content" style="display: none;">
+						    <div class="row" style="margin-top:20px">
+						        <div class="col-sm-3">
+						            <label>标题:</label>
+						        </div>
+						        <div class="col-sm-9">
+						            <input class="col-xs-10 v_required" autocomplete="off" type="text" name="title" data-toggle="popover" data-trigger="manual">
+						        </div>
+						    </div>
+						    <div class="row" style="margin-top:10px">
+                                <div class="col-sm-3">
+                                    <label>内容:</label>
+                                </div>
+						        <div class="col-sm-9">
+                                    <textarea class="col-xs-10 v_required" name="content" data-toggle="popover" data-trigger="manual"></textarea>
+                                </div>
+						    </div>
+						</div>
+						
+						<div id="showEvent" class="page-content" style="display: none;">
+						    <div class="row" style="margin-top:20px">
+						        <div class="col-sm-4"><label>标题:</label></div>
+						        <div class="col-sm-8"><label name="title"></label></div>
+						    </div>
+						    <div class="row">
+						        <div class="col-sm-4"><label>内容:</label></div>
+						        <div class="col-sm-8"><label name="content"></label></div>
+						    </div>
+                            <div class="row">
+						        <div class="col-sm-4"><label>创建人:</label></div>
+						        <div class="col-sm-8"><label name="creater"></label></div>
+						    </div>
+                            <div class="row">
+						        <div class="col-sm-4"><label>创建时间:</label></div>
+						        <div class="col-sm-8"><label name="createTime"></label></div>
+						    </div>
+						</div>
                     </div>
                 </div>
             </div>
@@ -82,56 +284,12 @@
     </div>
 </div>
 
-<div class="ace-settings-container" id="ace-settings-container">
-    <div class="btn btn-app btn-xs btn-warning ace-settings-btn" id="ace-settings-btn">
-        <i class="icon-eye-open bigger-150"></i>
-    </div>
-
-    <div class="ace-settings-box" id="ace-settings-box">
-        <div>
-            <span>配置您的可见内容</span>
-        </div>
-
-        <div>设计</div>
-        <div>
-            <input type="checkbox" class="ace ace-checkbox-2" name="designer" id="amount_ds" value="1" key="amount_ds"/>
-            <label class="lbl" for="amount_ds"> 业绩统计 </label>
-        </div>
-        <div>
-            <input type="checkbox" class="ace ace-checkbox-2" name="designer" id="trend_ds" value="2" key="designerSigning"/>
-            <label class="lbl" for="trend_ds"> 签单/量尺走势 </label>
-        </div>
-        <input type="checkbox" class="ace ace-checkbox-2" name="designer" id="ranking_ds" value="3" key="designerTotal"/>
-        <label class="lbl" for="ranking_ds"> 设计师排名 </label>
-        <div>
-            <input type="checkbox" class="ace ace-checkbox-2" name="designer" id="ranking_dept_ds" value="4" key="designerDept"/>
-            <label class="lbl" for="ranking_dept_ds"> 部门排名 </label>
-        </div>
-
-
-        <div>业务</div>
-        <div>
-            <input type="checkbox" class="ace ace-checkbox-2" name="designer" id="amount_sm" value="5" key="amount_sm"/>
-            <label class="lbl" for="amount_sm"> 业绩统计 </label>
-        </div>
-        <div>
-            <input type="checkbox" class="ace ace-checkbox-2" name="designer" id="trend_sm" value="6" key="salesmanSigning"/>
-            <label class="lbl" for="trend_sm"> 签单/量尺走势 </label>
-        </div>
-        <div>
-            <input type="checkbox" class="ace ace-checkbox-2" name="designer" id="ranking_sm" value="7" key="salesmanTotal"/>
-            <label class="lbl" for="ranking_sm"> 业务员排名 </label>
-        </div>
-        <div>
-            <input type="checkbox" class="ace ace-checkbox-2" name="designer" id="ranking_dept_sm" value="8" key="salesmanDept"/>
-            <label class="lbl" for="ranking_dept_sm"> 部门排名 </label>
-        </div>
-    </div>
-</div>
+<script src="js/home-antv.js"></script>
 <script>
     $(function(){
-        $.loadScript(['js/home-antv.js']);
+        //$.loadScript(['js/home-antv.js']);
     });
+    
     $("#ace-settings-btn").on(ace.click_event, function () {
         $(this).toggleClass("open");
         $("#ace-settings-box").toggleClass("open")

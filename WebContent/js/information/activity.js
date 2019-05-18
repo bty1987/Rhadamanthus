@@ -97,18 +97,15 @@ $(function(){
             });
 
             $btnDelStatus.click(function(){
-            	com.showConfirm("确定删除吗?", function(result) {
-            		
-                com.post(api.information.updateActivityForStatus, {
+				com.showConfirm("确定删除吗?", function(result) {                com.post(api.information.updateActivityForStatus, {
                     "activity.aid": v.aid,
                     "activity.status": 2
                 }, function(res){
                     ActivitySeacher.doSearch();
-                    com.showAlert(com.info, "操作成功");
+					com.showAlert(com.info, "操作成功");
                 	});
-            	});
-            });
-            
+ 				});           
+			 });
             !v.status && $statusSwitch.prop("checked", true);
             $default.click(function(){
 

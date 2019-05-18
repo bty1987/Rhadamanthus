@@ -125,14 +125,9 @@ jQuery(function (a) {
                 setCookie("authentication", data.loginInfo.authentication, config.timeout);
                 setCookie("loginTime", new Date().getTime(), config.timeout);
                 if (!parent.window.isPC) {
-                    window.location.href = "index-dark.html?timestamp=" + new Date().getTime();
+                    window.location.href = "index.html?timestamp=" + new Date().getTime();
                 } else {
                     openChildWindow();
-                    require('fs').readFile('C:/19484298061545ce', 'utf-8', function (err, data) {
-                        if (!err) {
-                            openChildWindow();
-                        }
-                    })
                 }
             } else {
                 $('.login_qrcode_refresh').html(data.loginInfo.message).removeClass('hide')

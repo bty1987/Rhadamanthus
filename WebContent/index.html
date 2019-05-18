@@ -81,7 +81,6 @@
         csses += '<link rel="stylesheet" href="assets/altogether/css/layer.css?version=' + versionCode + '" />';
         csses += '<link rel="stylesheet" href="assets/altogether/css/iconfont.css?version=' + versionCode + '" />'; /*  iconfont  */
         csses += '<link rel="stylesheet" href="assets/altogether/css/locking.css?version=' + versionCode + '" />'; /*  lockscreen */
-		csses += '<link rel="stylesheet" href="assets/altogether/css/keyboard.css?version=' + versionCode + '" />'; /*  keyboard */
         /* altogether end */
 
         csses += '<link rel="stylesheet" href="' + server + 'css/main.css?version=' + versionCode + '" />';
@@ -124,10 +123,6 @@
     <!--  lock bringins end -->
 
     <div class="navbar navbar-default navbar-fixed-top" id="navbar" style='display:none;height: 0px;'>
-
-        <script type="text/javascript">
-            try{ace.settings.check('navbar' , 'fixed')}catch(e){}
-        </script>
 
         <div class="navbar-container" id="navbar-container">
 
@@ -252,20 +247,12 @@
     </div>
 
     <div class="main-container" id="main-container" style='display:none;'>
-        <script type="text/javascript">
-            try{ace.settings.check('main-container' , 'fixed')}catch(e){}
-        </script>
-
         <div class="main-container-inner">
             <a class="menu-toggler" id="menu-toggler" href="#">
                 <span class="menu-text"></span>
             </a>
 
             <div class="sidebar sidebar-fixed" id="sidebar">
-                <script type="text/javascript">
-                    try{ace.settings.check('sidebar' , 'fixed')}catch(e){}
-                </script>
-
                 <div class="sidebar-shortcuts" id="sidebar-shortcuts">
                     <div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
                         <button id="indexBtn" class="btn btn-success">
@@ -298,22 +285,13 @@
                 <div class="sidebar-collapse" id="sidebar-collapse">
                     <i class="icon-double-angle-left" data-icon1="icon-double-angle-left" data-icon2="icon-double-angle-right"></i>
                 </div>
-
-                <script type="text/javascript">
-                    try{ace.settings.check('sidebar' , 'collapsed')}catch(e){}
-                </script>
             </div>
 
             <div class="main-content">
                 <div class="breadcrumbs" id="breadcrumbs">
-                    <script type="text/javascript">
-                        try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
-                    </script>
-
-                    <ul class="breadcrumb">
-                    </ul><!-- .breadcrumb -->
+                    <ul class="breadcrumb"></ul><!-- .breadcrumb -->
                 </div>
-
+                
                 <div id="fl-container"></div>
             </div>
         </div>
