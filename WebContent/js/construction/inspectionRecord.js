@@ -3,30 +3,28 @@ jQuery(function ($) {
     com.focusPage('#fl-statement').statement("巡检控制", "巡检记录");
 
     var record = {
-        saveBtn: null,
-        cancellBtn: null,
-        modal: null,
-        recordItems: {},
+        saveBtn: com.focusPage("#saveBtn").on("click", saveData),
+        cancellBtn: com.focusPage("#cancelBtn"),
+        modal: com.focusPage("#recordModal").on('show.bs.modal', function (e) {
+            com.clearValidator();
+        }),
+
+        recordItems: {
+            orderId : com.focusPage("#orderId"),
+            orderAddr : com.focusPage("#orderAddr"),
+            startDate : com.focusPage("#startDate"),
+            startTime : com.focusPage("#startTime"),
+            endDate : com.focusPage("#endDate"),
+            endTime : com.focusPage("#endTime"),
+            recordDes : com.focusPage("#recordDes")
+        },
 
         editFlag: false,
         repeatFlg: false
     };
 
-    record.saveBtn = com.focusPage("#saveBtn").on("click", saveData);
-    record.cancelBtn = com.focusPage("#cancelBtn");
-    record.modal = com.focusPage("#recordModal").on('show.bs.modal', function (e) {
-        com.clearValidator();
-    });
-
-    record.recordItems.orderId = com.focusPage("#orderId");
-    record.recordItems.orderAddr = com.focusPage("#orderAddr");
-    record.recordItems.startDate = com.focusPage("#startDate");
-    record.recordItems.startTime = com.focusPage("#startTime");
-    record.recordItems.endDate = com.focusPage("#endDate");
-    record.recordItems.endTime = com.focusPage("#endTime");
-    record.recordItems.recordDes = com.focusPage("#recordDes");
-
     com.focusPage('.date-picker').datepicker({autoclose: true});
+
     record.recordItems.startTime.timepicker({minuteStep: 1, showSeconds: true, showMeridian: false});
     record.recordItems.endTime.timepicker({minuteStep: 1, showSeconds: true, showMeridian: false});
 

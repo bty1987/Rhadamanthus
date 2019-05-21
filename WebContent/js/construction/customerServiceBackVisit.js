@@ -2,27 +2,25 @@ jQuery(function ($) {
     com.focusPage('#fl-statement').statement("客服控制", "回访信息列表");
 
     var backVisit = {
-        saveBtn: null,
-        cancellBtn: null,
-        modal: null,
-        backVisitItems: {},
+        saveBtn: com.focusPage("#saveBtn"),
+        cancellBtn: com.focusPage("#cancelBtn"),
+        modal: com.focusPage("#backVisitModal"),
+        backVisitItems: {
+            orderId : com.focusPage("#orderId"),
+            orderAddr : com.focusPage("#orderAddr"),
+            customerName : com.focusPage("#customerName"),
+            backVisitTime : com.focusPage("#backVisitTime"),
+            backVisitType : com.focusPage("#backVisitType"),
+            backVisitDes : com.focusPage("#backVisitDes")
+        },
         levelDict: {"0": "普通", "1": "重要"},
         backVisitTypeData: [{"id": "1", "name": "普通"}],
         editFlag: false,
         repeatFlg: false
     };
 
-    backVisit.saveBtn = com.focusPage("#saveBtn").on("click", saveData);
-    backVisit.cancelBtn = com.focusPage("#cancelBtn");
-    backVisit.modal = com.focusPage("#backVisitModal");
-
-    backVisit.backVisitItems.orderId = com.focusPage("#orderId");
-    backVisit.backVisitItems.orderAddr = com.focusPage("#orderAddr");
-    backVisit.backVisitItems.customerName = com.focusPage("#customerName");
-    backVisit.backVisitItems.backVisitTime = com.focusPage("#backVisitTime");
-    backVisit.backVisitItems.backVisitType = com.focusPage("#backVisitType");
-    backVisit.backVisitItems.backVisitDes = com.focusPage("#backVisitDes");
-
+    backVisit.saveBtn.bindClick(saveData);
+    
     backVisit.backVisitItems.backVisitType.bindData(backVisit.backVisitTypeData, "id", "name", false);
 
     com.focusPage('.date-picker').datepicker({autoclose: true});
@@ -189,9 +187,7 @@ jQuery(function ($) {
     function removeRow(id) {
 
         com.showConfirm("确认删除吗?", function () {
-            
-                com.post(api.construction.deleteCustomerServiceBackVisit, {"csbvIds[0]": id}, successCallback, failCallback);
-
+            com.post(api.construction.deleteCustomerServiceBackVisit, {"csbvIds[0]": id}, successCallback, failCallback);
         });
 
     }

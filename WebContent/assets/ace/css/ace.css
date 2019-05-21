@@ -49,8 +49,7 @@ body.breadcrumbs-fixed {
     position: relative
 }
 
-.container.main-container .sidebar.sidebar-fixed,.container.main-container .sidebar.sidebar-fixed:before
-    {
+.container.main-container .sidebar.sidebar-fixed,.container.main-container .sidebar.sidebar-fixed:before {
     left: auto
 }
 
@@ -2804,7 +2803,7 @@ li [class ^="icon-"],li [class *=" icon-"],.nav-list li [class ^="icon-"],.nav-l
 }
 
 .menu-min .nav-list li.active.open>.submenu>li.active>a:after {
-    display: none
+    display: none;
 }
 
 .menu-toggler {
@@ -8859,7 +8858,6 @@ th .lbl:only-child,td .lbl:only-child {
     font-size: 13px;
     text-align: left;
     line-height: 21px;
-    min-width: 130px;
     padding-left: 8px;
     position: relative;
     top: 0
@@ -8870,7 +8868,6 @@ th .lbl:only-child,td .lbl:only-child {
     font-size: 22px;
     margin: 2px 0 4px;
     position: relative;
-    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.15)
 }
 
 .infobox>.infobox-data>.infobox-text {

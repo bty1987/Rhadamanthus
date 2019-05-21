@@ -5,7 +5,9 @@ jQuery(function($) {
 		vpid: null,
 		saveBtn: null,
 		modal: null,
-		items:{},
+		addVprizeModal : com.focusPage("#addVprizeModal"),
+
+		items : {},
 	};
 	
 	var validator = {
@@ -24,8 +26,7 @@ jQuery(function($) {
 	vprize.items.name = com.focusPage("#addVprizeModal").find("#name");
 	vprize.items.price = com.focusPage("#addVprizeModal").find("#price");
 	
-	vprize.addVprizeModal = com.focusPage("#addVprizeModal");
-	
+
 	vprize.addVprizeModal.on('show.bs.modal',function(e){
 		com.clearValidator();
 	});

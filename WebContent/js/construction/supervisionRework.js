@@ -36,7 +36,6 @@ jQuery(function ($) {
         var creatLine = function (v) {
             var that = this;
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            //var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html());
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons').css('padding-top', '2px');
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix col-xs-6').css('padding-top', '2px');
 

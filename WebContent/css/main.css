@@ -1487,6 +1487,11 @@ body .layer-alert-error {
 
 /* index */
 
+.homePanel {
+	min-height: 230px; 
+	background-color: #ffffffe0;
+}
+
 .btn.btn-app.btn-fastlink {
     color: #3983c2 !important;
     background-color: #ffffff !important;
@@ -1495,6 +1500,11 @@ body .layer-alert-error {
 
 .infobox.homeindex {
 	height: 100px;
-    padding: 20px 15px;
+    padding: 20px 5px;
     border: 0px;
+    width: 170px;
+}
+
+.btn.btn-app.btn-fastlink>i {
+    font-size: 30px !important;
 }

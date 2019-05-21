@@ -1,0 +1,128 @@
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Login</title>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <link rel="stylesheet" href="assets/ace/css/bootstrap.min.css">
+        <link rel="stylesheet" href="assets/altogether/css/font-awesome.min.css">
+
+        <link rel="stylesheet" href="assets/ace/css/ace.css">
+        
+        <script>
+	          var hostServer = "";
+	        var cookies = document.cookie.split(";");
+	
+	        for(var i=0;i<cookies.length;i++){
+	            var cookie = cookies[i];
+	            if(cookie.indexOf("hostServer") != -1){
+	                //hostServer = cookie.split("=")[1];
+	                window.hostServer = unescape(hostServer);
+	                break;
+	            }
+	        }
+	
+	        var csses = "";
+	        /* ace */
+	        csses += '<link rel="stylesheet" href="' + hostServer + 'assets/ace/css/bootstrap.min.css" />'; // basic styles
+	        csses += '<link rel="stylesheet" href="' + hostServer + 'assets/altogether/css/font-awesome.min.css" />';
+	        csses += '<link rel="stylesheet" href="' + hostServer + 'assets/altogether/css/iconfont.css" />'; /* iconfont */
+	        csses += '<link rel="stylesheet" href="' + hostServer + 'assets/ace/css/ace.css" />'; // ace styles
+	        /* ace end */
+	
+	        csses += '<link rel="stylesheet" href="' + hostServer + 'css/nlogin.css" />';
+	
+	        document.write(csses);
+	    </script>
+        
+    </head>
+
+    <body>
+
+        <div id="login-box" class="loginBox">
+            <div class="loginPanel">
+            
+                <div class="col-sm-3 uplogin" id="uplogin">
+                    <h1>
+                        <i class="icon-leaf green"></i>
+                        <span class="red">Fanglin</span>
+                        <span class="blue">IP</span>
+                    </h1>
+                    
+                    <label id="errorMsg" class="block clearfix red center errorMsg"></label>
+                    
+                    <label class="block clearfix uplabel">
+                        <span class="block input-icon input-icon-right">
+                            <input type="text" class="form-control" placeholder="用户名" id="userId" maxlength="32">
+                            <i class="icon-user"></i>
+                        </span>
+                    </label>
+                    
+                    <label class="block clearfix uplabel">
+                        <span class="block input-icon input-icon-right">
+                            <input type="password" class="form-control" placeholder="密码" id="password" maxlength="32">
+                            <i class="icon-lock"></i>
+                        </span>
+                    </label>
+                    <label class="block clearfix uplabel">
+                        <span class="input-icon input-icon-right">
+                            <input type="text" class="form-control" placeholder="验证码" id="nowCode" maxlength="8">
+                        </span>
+                        <img class="pull-right verifyImg hide" id="verify"/>
+                    </label>
+                    
+                    <div class="loginBtnStack">
+                        <button type="button" class="btn btn-sm btn-primary" id="loginBtn">
+                            <span>登陆</span>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-success pull-right" id="wechatQR">
+                            <span>微信</span>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-warning pull-right" id="dingtalkQR">
+                            <span>钉钉</span>
+                        </button>
+                    </div>
+
+                    <div class="space-4"></div>
+                </div>
+                
+                <div class="col-sm-3 qrlogin" align="center" id="qrlogin">
+                    <div>
+                        <img alt="" src="" class="hide qrcode" id="qrcode">
+                        <div class="qrcode_mask hide" style="display: block;">二维码已失效</div>
+                    </div>
+                    
+                    <div class="qrinfo">
+                        <p><b class="qrtype" style="margin-right: 5px;">钉钉</b><span>扫描二维码登录</span></p>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+
+        <script src="assets/altogether/js/jquery-2.0.3.min.js"></script>
+        
+        <script type="text/javascript">
+        
+              if(parent.window.isPC){
+		        var gui = require('nw.gui');
+		        var win = gui.Window.get();
+            }
+		
+		    var jses = "";
+		
+		    if(!parent.window.isEncryption){
+		        jses += '<script src="' + hostServer + 'js/com/config.js"><\/script>';
+		        jses += '<script src="' + hostServer + 'js/com/server.js"><\/script>';
+		        jses += '<script src="' + hostServer + 'js/nlogin.js"><\/script>';
+		    }else if(parent.window.isPC && parent.window.isEncryption){
+		        win.evalNWBin(null, 'js/com/config.bin');
+		        win.evalNWBin(null, 'js/dlogin.bin');
+		    }
+		
+		    document.write(jses);
+        </script>
+
+    </body>
+</html>

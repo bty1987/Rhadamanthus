@@ -1,22 +1,20 @@
 $(function () {
 
     var salary = {
-        saveBtn: null,
-        cancelBtn: null,
-        modal: null,
-        items: {},
+        saveBtn: com.focusPage("#saveBtn").on("click", saveData),
+        cancelBtn: com.focusPage("#cancelBtn"),
+        modal: com.focusPage("#salaryModal"),
+        items: {
+        	salaryuser:com.focusPage("#salaryuser"),
+        	money : com.focusPage("#money"),
+    		type : com.focusPage("#type1"),
+    		salaryOnetype : com.focusPage("#type2"),
+        	salaryTwotype : com.focusPage("#type3"),
+        	salaryThrType : com.focusPage("#type4"),
+        	salarycomment : com.focusPage("#salarycomment"),
+        },
     };
 
-    salary.saveBtn = com.focusPage("#saveBtn").on("click", saveData);
-    salary.cancelBtn = com.focusPage("#cancelBtn");
-    salary.modal = com.focusPage("#salaryModal");
-    salary.items.salaryuser = com.focusPage("#salaryuser");
-    salary.items.money = com.focusPage("#money");
-    salary.items.type = com.focusPage("#type1");
-    salary.items.salaryOnetype = com.focusPage("#type2");
-    salary.items.salaryTwotype = com.focusPage("#type3");
-    salary.items.salaryThrType = com.focusPage("#type4");
-    salary.items.salarycomment = com.focusPage("#salarycomment");
 
     var displayFunc = (function () {
         var renderList = function (tableId, listData) {

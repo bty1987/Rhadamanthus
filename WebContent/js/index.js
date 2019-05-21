@@ -174,142 +174,113 @@
         window.location.href = '/';
     });
 
-    $("a.userProfile").on("click", function(e){
-        foldMenu();
+    $("a.userProfile").attr({"mid": "userProfileTab", "menuText": "个人资料", "icon": "icon-user"}).on("click", function(e){
 
-        $this = $(this);
+        var $this = $(this);
+        
+        foldMenu();
         navControl($this);
 
-        e.preventDefault();
-
-        var hrefStr = $this.attr("href");
-        if(hrefStr != "#" && hrefStr!="null" && hrefStr!=undefined){
-            $this.attr({"mid": "userProfileTab", "menuText": "个人资料", "icon": "icon-user"});
-            com.loadPage(hrefStr, $this);
-        }
+        com.loadPage($this.attr("href"), $this);
+        
         $.breadcrumb('icon-user', ['个人资料']);
-    });
-
-    $("a.changePassword").on("click", function(e){
-        foldMenu();
-
-        $this = $(this);
-        navControl($this);
-
-        e.preventDefault();
-        var hrefStr = $this.attr("href");
-        if(hrefStr != "#" && hrefStr!="null" && hrefStr!=undefined){
-            $this.attr({"mid": "changePasswordTab", "menuText": "修改密码", "icon": "icon-cog"});
-            com.loadPage(hrefStr, $this);
-        }
-        $.breadcrumb('icon-cog', ['修改密码']);
-    });
-
-    $("#indexBtn").on("click", function(e){
-        foldMenu();
-        $(this).attr({"mid": "homePage","menuText": "首页"});
-        com.loadPage('home-antv.html', $(this));
-        $.breadcrumb('icon-home', ['首页']);
+        
         return false;
     });
 
-    $(".messageList").on("click", function(e){
+    $("a.changePassword").attr({"mid": "changePasswordTab", "menuText": "修改密码", "icon": "icon-cog"}).on("click", function(e){
+        
+        var $this = $(this);
+        
         foldMenu();
-        $this = $(this);
         navControl($this);
 
-        e.preventDefault();
-        var hrefStr = $this.attr("href");
-        if(hrefStr != "#" && hrefStr!="null" && hrefStr!=undefined){
-            $this.attr({"mid": "messageListTab", "menuText": "消息查看", "icon": "icon-envelope"});
-            com.loadPage(hrefStr, $this);
-        }
+        com.loadPage($this.attr("href"), $this);
+        
+        $.breadcrumb('icon-cog', ['修改密码']);
+        
+        return false;
+    });
+
+    $("#indexBtn").attr({"mid": "homePage","menuText": "首页"}).on("click", function(e){
+        
+        foldMenu();
+        
+        com.loadPage('home-antv.html', $(this));
+        
+        $.breadcrumb('icon-home', ['首页']);
+        
+        return false;
+    });
+
+    $(".messageList").attr({"mid": "messageListTab", "menuText": "消息查看", "icon": "icon-envelope"}).on("click", function(e){
+        
+        var $this = $(this);
+        
+        foldMenu();
+        navControl($this);
+
+        com.loadPage($this.attr("href"), $this);
+        
         $.breadcrumb('icon-envelope', ['消息查看']);
+        
+        return false;
     });
 
-    $("#versionInfo").on("click", function(e){
+    $("#versionInfo").attr({"mid": "versionInfoTab", "menuText": "版本", "icon": "icon-bookmark"}).on("click", function(e){
+        
+        var $this = $(this);
+        
         foldMenu();
-        $(this).attr({"mid": "versionInfoTab", "menuText": "版本", "icon": "icon-bookmark"});
+        
         com.loadPage(api.index.versionIndex.url, $(this));
+        
         $.breadcrumb('icon-bookmark', ['版本']);
+        
+        return false;
     });
 
-    $("#faqInfo").on("click", function(e){
+    $("#faqInfo").attr({"mid": "faqInfoTab", "menuText": "帮助", "icon": "icon-key"}).on("click", function(e){
+        
         foldMenu();
-        $(this).attr({"mid": "faqInfoTab", "menuText": "帮助", "icon": "icon-key"});
+        
         com.loadPage(api.index.faqIndex.url, $(this));
+        
         $.breadcrumb('icon-bookmark', ['帮助']);
+        
+        return false;
     });
-    $("#called").unbind().bind('click',function(){
-        var sameFalg=true;
-        $("#phonecallModal").modal("show");
-        $("#username").val(params.userInfo.user.currentName);
-        $("#caller").val(params.userInfo.user.phone);
-        $("#callee").val("");
-
-        $("#callee").on("blur",function(){
-            $this = $(this);
-            if($("#caller").val() != $this.val()){
-                sameFalg=true;
-            }else{
-                com.showAlert(com.warning, "主叫号码与被叫号码一致");
-                sameFalg=false;
-            }
-        });
-
-        $("#save").unbind().bind('click',function(){
-
-            if(com.validate()||!sameFalg){
-                return;
-            }
-            var param = {
-                "phoneCall.operater.userId":params.userInfo.user.userId,
-                "phoneCall.caller":params.userInfo.user.phone,
-                "phoneCall.callee":$("#callee").val()
-            };
-
-            com.post(api.information.phoneCall, param, function(res){
-                com.showAlert(com.info, "电话拨叫中.....");
-            });
-            $('#phonecallModal').modal("hide");
-
-        })
-
-    });
-
+    
     $("#userLock").on("click",function(i){
         doLocking();
     });
 
-    $("button.userProfile").on("click", function(e){
-        foldMenu();
+    $("button.userProfile").attr({"mid": "userProfileTab", "menuText": "个人资料", "icon": "icon-cogs"}).on("click", function(e){
 
-        $this = $(this);
+        var $this = $(this);
+        
+        foldMenu();
         navControl($this);
 
-        e.preventDefault();
-
-        var hrefStr = $this.attr("href");
-        if(hrefStr != "#" && hrefStr!="null" && hrefStr!=undefined){
-            $this.attr({"mid": "userProfileTab", "menuText": "个人资料", "icon": "icon-cogs"});
-            com.loadPage(hrefStr, $this);
-        }
+        com.loadPage($this.attr("href"), $this);
+        
         $.breadcrumb('icon-user', ['个人资料']);
+        
+        return false;
     });
 
-    $("button.changePassword").on("click", function(e){
-        foldMenu();
+    $("button.changePassword").attr({"mid": "changePasswordTab", "menuText": "修改密码", "icon": "icon-user"}).on("click", function(e){
 
-        $this = $(this);
+        var $this = $(this);
+        
+        foldMenu();
         navControl($this);
 
-        e.preventDefault();
-        var hrefStr = $this.attr("href");
-        if(hrefStr != "#" && hrefStr!="null" && hrefStr!=undefined){
-            $this.attr({"mid": "changePasswordTab", "menuText": "修改密码", "icon": "icon-user"});
-            com.loadPage(hrefStr, $this);
-        }
+        com.loadPage($this.attr("href"), $this);
+        
         $.breadcrumb('icon-cog', ['修改密码']);
+        
+        return false;
     });
 
     params.homeLoader = false;
@@ -448,6 +419,7 @@
             e.preventDefault();
         });
     }
+    
     function navControl($this){
         if($this.data('level') == 1){
             $('.level1').removeClass('level1');

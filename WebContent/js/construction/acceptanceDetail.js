@@ -1,7 +1,10 @@
 jQuery(function ($) {
 
-    var constructionScheName = {};
+    
+
     var acceptanceDetail = {
+        constructionScheName : {},
+
         ratyLength: 22,
 
         baseInfos: [
@@ -24,10 +27,10 @@ jQuery(function ($) {
         options: {}
     };
 
-    //获取所有节点的name
+    
     com.post(api.data.queryConstructionNode, {}, function (res) {
         $.each(res.constructionNodes, function (i, v) {
-            constructionScheName[v.cnid] = v.name;
+            acceptanceDetail.constructionScheName[v.cnid] = v.name;
         })
     }, null, false);
 
@@ -56,16 +59,16 @@ jQuery(function ($) {
         }
     });
 
-    //查询当前订单的施工节点
+    
     com.post(api.construction.queryConstructionScheduleByOrderId, {"constructionSchedule.orderId": params.orderId}, function (res) {
         var constructionSchedule = res.constructionSchedules;
 
         $.each(constructionSchedule, function (i, v) {
-            var nodeDiv = $("<div></div>").attr("id", constructionScheName[v.schedule]).appendTo(com.focusPage("#constructerDiv"));
+            var nodeDiv = $("<div></div>").attr("id", acceptanceDetail.constructionScheName[v.schedule]).appendTo(com.focusPage("#constructerDiv"));
         });
     }, null, false);
 
-    //显示施工人员
+   
     com.post(api.construction.queryConstructerByOrderId, {"constructer.orderId": params.orderId}, function (res) {
         constructers = res.constructers;
 
@@ -111,10 +114,10 @@ jQuery(function ($) {
         com.switchPage(api.index.acceptanceIndex.url);
     });
 
-    //工程图片 名字 工种
+   
     function constructerImg(imgPath, name, duty, schedule) {
 
-        var pane = $("<div ></div>").addClass("col-xs-3 col-md-3 widget-container-span ui-sortable").appendTo(com.focusPage("#" + constructionScheName[schedule]));
+        var pane = $("<div ></div>").addClass("col-xs-3 col-md-3 widget-container-span ui-sortable").appendTo(com.focusPage("#" + acceptanceDetail.constructionScheName[schedule]));
 
         var imgDiv = $('<div></div>').css({"border": "1px solid #ccc","width": "50px","float":"left","height":"50px","margin-right":"20px","margin-bottom":"10px"}).appendTo(pane);
         var img = $('<img />').css("margin-right", "20px").css("margin-bottom", "10px").appendTo(imgDiv);

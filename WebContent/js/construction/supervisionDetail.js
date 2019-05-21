@@ -1,6 +1,5 @@
 jQuery(function ($) {
 
-    //从服务器查询出来的所有工人
     var constructionScheduleWorkers;
     var constructionNodes = {};
     var supervisionDetail = {
@@ -44,7 +43,7 @@ jQuery(function ($) {
     $.extend(com.validator, supervisionDetail.validator);
     var orderId = params.orderId;
 
-    //获取节点名称
+
     com.post(api.data.queryConstructionNode, {}, function (res) {
 
         var newNodes = res.constructionNodes.sort(function(a, b){
@@ -56,7 +55,7 @@ jQuery(function ($) {
         });
     }, null, false);
 
-    //动态获取节点轴
+
     com.post(api.construction.queryConstructionScheduleByOrderId, {"constructionSchedule.orderId": params.orderId}, function (res) {
 
         var newSchedules = res.constructionSchedules.sort(function(a, b){

@@ -2,10 +2,15 @@ jQuery(function ($) {
 
     var salary = {
 
-        saveBtn: null,
-        cancelBtn: null,
-        modal: null,
-        items: {},
+        saveBtn:com.focusPage("#saveBtn").on("click", saveData),
+        cancelBtn: com.focusPage("#cancelBtn"),
+        modal: com.focusPage("#workersalaryModal"),
+        items: {
+        	workersalary : com.focusPage("#workersalary"),
+            workersalaryuser : com.focusPage("#workersalaryuser"),
+            workersalarySubtype : com.focusPage("#workersalarySubtype"),
+            workersalarycomment : com.focusPage("#workersalarycomment"),
+        },
         validator: {
 
             workersalary: {
@@ -16,19 +21,10 @@ jQuery(function ($) {
 
 
         },
+        salaryType : [],
         repeatFlg: false
 
     };
-
-    var salaryType = [];
-
-    salary.saveBtn = com.focusPage("#saveBtn").on("click", saveData);
-    salary.cancelBtn = com.focusPage("#cancelBtn");
-    salary.modal = com.focusPage("#workersalaryModal");
-    salary.items.workersalary = com.focusPage("#workersalary");
-    salary.items.workersalaryuser = com.focusPage("#workersalaryuser");
-    salary.items.workersalarySubtype = com.focusPage("#workersalarySubtype");
-    salary.items.workersalarycomment = com.focusPage("#workersalarycomment");
 
     $.extend(com.validator, salary.validator);
 
@@ -36,8 +32,7 @@ jQuery(function ($) {
         var SalaryType = data.SalaryType;
 
         $.each(SalaryType, function (i, y) {
-            salaryType[y.key] = y.name;
-
+        	salary.salaryType[y.key] = y.name;
         });
     }, null, false);
 
@@ -263,7 +258,7 @@ jQuery(function ($) {
                 v.schedule = v.schedule == 0 ? "" : v.schedule == 3 ? "铲大白" : v.schedule == 4 ? "放线" : v.schedule == 5 ? "水工" : v.schedule == 6 ? "力工" : v.schedule == 7 ? "电工" : v.schedule == 8 ? "瓦工" : v.schedule == 9 ? "地面找平" : v.schedule == 10 ? "木工" : v.schedule == 11 ? "油工" : v.schedule == 12 ? "水电验收" : "保洁";
                 v.type = v.type == 0 ? "加" : "减";
                 v.onetype = v.onetype == 0 ? "工费" : v.onetype == 1 ? "扣/罚" : v.onetype == 2 ? "转款" : "其他";
-                v.twotype = salaryType[v.twotype];
+                v.twotype = salary.salaryType[v.twotype];
 
             });
         });

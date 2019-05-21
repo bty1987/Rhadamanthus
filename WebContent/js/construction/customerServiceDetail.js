@@ -1,10 +1,10 @@
 jQuery(function ($) {
-
-    var constructionNode = {};
+    
     var customerServiceDetail = {
-
+        constructionNode : {},
         constructionSchedules: {},
-
+        commitFlag : false,
+        workerIdsData : [],
         wizardSept: {
             "1": false,
             "2": false,
@@ -17,21 +17,19 @@ jQuery(function ($) {
 
     };
 
-    var orderId = params;
-    var commitFlag = false;
-    var workerIdsData = [];
+    
 
-    //获取所有节点
+
     com.post(api.data.queryConstructionNode, {}, function (res) {
         var newNodes = res.constructionNodes.sort(function(a, b){
             return a.sort - b.sort;
         });
         $.each(newNodes, function (i, v) {
-            constructionNode[v.sort] = v.name;
+            customerServiceDetail.constructionNode[v.sort] = v.name;
         })
     }, null, false);
 
-    //动态获取节点轴
+
     com.post(api.construction.queryConstructionScheduleByOrderId, {"constructionSchedule.orderId": params.orderId}, function (res) {
 
         var newSchedules = res.constructionSchedules.sort(function(a, b){
@@ -76,13 +74,13 @@ jQuery(function ($) {
         elementPostData["constructer.orderId"] = params.orderId;
         elementPostData["constructer.schedule"] = schedule;
 
-        //得到全部的施工人员
+    
         com.post(api.construction.queryConstructerByOrderId, elementPostData, function (res) {
             constructers = res.constructers;
             com.focusPage("#btnSave").unbind("click");
             if (schedule) {
-                workerIdsData = [];
-                commitFlag = false;
+                customerServiceDetail.workerIdsData = [];
+                customerServiceDetail.commitFlag = false;
                 com.focusPage("#" + schedule + "WorkerInfos").html("");
 
                 if (constructers.length != 0) {
@@ -111,10 +109,10 @@ jQuery(function ($) {
                         setWorkerRaty('#' + workerInfo.crid + "workerRaty", workerInfo.rate);
                         setWorkerDes("#" + workerInfo.crid + "workerRatyDes", workerInfo.assessment);
 
-                        workerIdsData.push(constructers[i].crid);
+                        customerServiceDetail.workerIdsData.push(constructers[i].crid);
                     });
 
-                    commitFlag = true;
+                    customerServiceDetail.commitFlag = true;
                 } else {
                     $('<div class="alert alert-info">').text("当前进度没有分配工人!").appendTo($("#" + schedule + "WorkerInfos"));
                 }
@@ -123,13 +121,13 @@ jQuery(function ($) {
                     var successFlag = false;
 
                     var options = {};
-                    for (var i = 0; i < workerIdsData.length; i++) {
-                        options["constructers["+i+"].crid"] = workerIdsData[i];
-                        options["constructers["+i+"].rate"] = com.focusPage("#" + workerIdsData[i] + "workerRaty-score").val();
-                        options["constructers["+i+"].assessment"] = com.focusPage("#" + workerIdsData[i] + "workerRatyDes").val();
+                    for (var i = 0; i < customerServiceDetail.workerIdsData.length; i++) {
+                        options["constructers["+i+"].crid"] = customerServiceDetail.workerIdsData[i];
+                        options["constructers["+i+"].rate"] = com.focusPage("#" + customerServiceDetail.workerIdsData[i] + "workerRaty-score").val();
+                        options["constructers["+i+"].assessment"] = com.focusPage("#" + customerServiceDetail.workerIdsData[i] + "workerRatyDes").val();
                     }
 
-                    if (commitFlag) {
+                    if (customerServiceDetail.commitFlag) {
                         com.post(api.construction.updateConstructerForRate, options, function (res) {
                             successFlag = true;
                         },null,false);
@@ -168,7 +166,7 @@ jQuery(function ($) {
     function customerServiceNode(stepul, schedule) {
         var stepLi = $("<li></li>").attr("data-targe", "#step" + schedule).addClass("complete").appendTo(stepul);
         var stepSpan = $("<span></span>").addClass("step").html(schedule).appendTo(stepLi);
-        var stepSpan = $("<span></span>").addClass("title").html(constructionNode[schedule]).appendTo(stepLi);
+        var stepSpan = $("<span></span>").addClass("title").html(customerServiceDetail.constructionNode[schedule]).appendTo(stepLi);
     }
 
     //画面板
@@ -181,7 +179,7 @@ jQuery(function ($) {
         var paneCusCent = $("<div></div>").addClass("text-center").appendTo(paneCusSm);
         var paneCusH3 = $("<h3></h3>").addClass("header smaller lighter green").appendTo(paneCusCent);
         var paneCusI = $("<i></i>").addClass("icon-group").appendTo(paneCusH3);
-        var paneCusSpan = $("<span></span>").html(constructionNode[schedule] + "工人信息").appendTo(paneCusH3);
+        var paneCusSpan = $("<span></span>").html(customerServiceDetail.constructionNode[schedule] + "工人信息").appendTo(paneCusH3);
         var paneCusInfo = $("<div></div>").attr("id", scheduleNodeNamePinyin + "WorkerInfos").appendTo(paneCusCent);
         var paneCusSpace = $("<div></div>").addClass("space-4").appendTo(paneCusForm);
     }

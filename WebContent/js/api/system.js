@@ -49,6 +49,7 @@ $.extend(api, {system: {
 
     queryModule: {url: "queryModule.do", demo: true},
     queryModuleForLogin: {url: "queryModuleForLogin.do", demo: true},
+    queryModuleForLink: {url: "queryModuleForLink.do", demo: true},
     queryModuleByUserId: {url: "queryModuleByUserId.do", demo: true},
     queryModuleByRid: {url: "queryModuleByRid.do", demo: true},
     addModule: {url: "addModule.do", server: "communion"},

@@ -2,10 +2,10 @@ jQuery(function ($) {
     
     var drawline = {
             
-        saveBtn: null,
-        cancellBtn: null,
+        saveBtn: com.focusPage("#saveBtn"),
+        cancelBtn: com.focusPage("#cancelBtn"),
         
-        deployedBtn: null,
+        deployedBtn: com.focusPage("#deployedBtn"),
         
         orderId: null,
         
@@ -19,7 +19,16 @@ jQuery(function ($) {
             drawLineGroup: com.focusPage("#drawLineGroup"),
             
             orderInfos: com.focusPage("#orderInfos"),
-            supervisor: com.focusPage("#supervisor")
+            supervisor: com.focusPage("#supervisor"),
+
+            deployedBtn: com.focusPage("#setupModal"),
+            cancelBtn : com.focusPage("#cancelBtn"),
+
+            setupModal : com.focusPage("#setupModal"),
+
+            editModal : com.focusPage("#editModal")
+
+
         },
         
         drawLineGroup: [],
@@ -27,18 +36,9 @@ jQuery(function ($) {
         status: {}
     };
 
-    drawline.saveBtn = com.focusPage("#saveBtn").on("click", saveData);
+        drawline.items.setupModal.on('hide.bs.modal', function () {com.cleanTypeahead("supervisor")});
+        drawline.items.setupModal.on('shown.bs.modal', function (e) {initPlan()});
 
-    drawline.deployedBtn = com.focusPage("#deployedBtn").on("click", deploved);
-    drawline.cancelBtn = com.focusPage("#cancelBtn");
-
-    drawline.items.setupModal = com.focusPage("#setupModal").on('hide.bs.modal', function () {
-        com.cleanTypeahead("supervisor");
-    });;
-    drawline.items.editModal = com.focusPage("#editModal");
-    drawline.items.applyModal = com.focusPage("#applyModal").on('shown.bs.modal', function (e) {
-        initPlan();
-    });
 
     com.post(api.ds.construction, {}, function(res){
         $.each(res.drawLineStatus, function(i, v){
@@ -111,7 +111,7 @@ jQuery(function ($) {
             var actualTime=v.actualTime;
 
             var propertyArr = [
-                ["楼盘地址:", v.decoration.house.village.name + ' ' + v.decoration.house.houseNumber , "grey"],
+                ["楼盘地址:", v.decoration.house.village.name + ' ' + v.decoration.house.houseNumber, "grey"],
                 ["面积:", v.decoration.house.buildArea, "blue"],
                 ["合同额:", v.decoration.orderTotalPrice, "blue"],
                 ["申请人:", v.appler.currentName, "grey"],
@@ -327,3 +327,5 @@ jQuery(function ($) {
     }
 
 });
+
+

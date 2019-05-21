@@ -26,6 +26,7 @@ jQuery(function ($) {
 
     com.focusPage('#fl-statement').statement("监理控制", "返工图纸");
 
+
     drawing.galleryId = "reworkDrawingGallery";
 
     drawing.mediaServer = window.mediaServer;

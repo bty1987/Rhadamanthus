@@ -1,10 +1,15 @@
 $(function () {
 
     var deposit = {
-        saveBtn: null,
-        cancelBtn: null,
-        modal: null,
-        items: {},
+        saveBtn: com.focusPage("#saveBtn").on("click", saveData),
+        cancelBtn: com.focusPage("#cancelBtn"),
+        modal: com.focusPage("#transferModal"),
+        items: {
+        	workertransferuser:com.focusPage("#workertransferuser"),
+        	workercollectuser:com.focusPage("#workercollectuser"),
+        	workertransfermoney:com.focusPage("#workertransfermoney"),
+        	workercomment:com.focusPage("#workercomment"),
+        },
         validator: {
             workersalary: {
                 type: "v_salary",
@@ -15,14 +20,6 @@ $(function () {
         repeatFlg: false
     };
 
-    deposit.saveBtn = com.focusPage("#saveBtn").on("click", saveData);
-    deposit.modal = com.focusPage("#transferModal");
-    deposit.cancelBtn = com.focusPage("#cancelBtn");
-
-    deposit.items.workertransferuser = com.focusPage("#workertransferuser");
-    deposit.items.workercollectuser = com.focusPage("#workercollectuser");
-    deposit.items.workertransfermoney = com.focusPage("#workertransfermoney");
-    deposit.items.workercomment = com.focusPage("#workercomment");
 
     $.extend(com.validator, deposit.validator);
 

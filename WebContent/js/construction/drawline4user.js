@@ -115,7 +115,7 @@ jQuery(function ($) {
             }else{
                 com.cleanTypeahead("supervisor");
             }
-            
+
             drawline.setupModal.modal("show");
         });
         
@@ -130,7 +130,7 @@ jQuery(function ($) {
 
         var options = {
             "construction.orderId": drawline.orderId,
-            "construction.supervisor.userId": drawline.items.supervisor.attr('data-typeahead-key')
+            "construction.supervisor.userId": com.typeahead("supervisor")
         };
 
         com.post(api.construction.updateConstructionByOrderId, options, function (res) {

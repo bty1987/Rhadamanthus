@@ -17,10 +17,13 @@ $.extend(api, {
         queryApprovalMaterialRefundItem: {url: "queryApprovalMaterialRefundItem.do"},
         queryApproverByType: {url: "queryApproverByType.do"},
         queryApprovalDecorationActivity:{url:"queryApprovalDecorationActivity.do"},
+        
+        countApprovalForReceive:{url:"countApprovalForReceive.do"},
+        countApprovalForSend:{url:"countApprovalForSend.do"},
 
         submitApprovalForCustomerOriginTDecoration:{url:"submitApprovalForCustomerOriginTDecoration.do"},
         // submitApprovalForDecorationCustomer: {url: "submitApprovalForDecorationCustomer.do"},
-//	submitApprovalForDecorationHouse: {url: "submitApprovalForDecorationHouse.do"},
+        // submitApprovalForDecorationHouse: {url: "submitApprovalForDecorationHouse.do"},
         submitApprovalForDecorationBelong: {url: "submitApprovalForDecorationBelong.do"},
         submitApprovalForQuotationDiscount: {url: "submitApprovalForQuotationDiscount.do"},
         submitApprovalForDecorationRefund: {url: "submitApprovalForDecorationRefund.do"},

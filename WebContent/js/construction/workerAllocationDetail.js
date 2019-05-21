@@ -19,15 +19,13 @@ $(function () {
     };
 
     var orderId = params.orderId;
-
-    //获取所有节点
+    
     com.post(api.data.queryConstructionNode, {}, function (res) {
         $.each(res.constructionNodes, function (i, v) {
             constructionNode[v.sort] = v.name;
         });
     }, null, false);
 
-    //动态获取节点轴
     com.post(api.construction.queryConstructionScheduleByOrderId, {"constructionSchedule.orderId": params.orderId}, function (res) {
 
         var newSchedules = res.constructionSchedules.sort(function(a, b){
@@ -213,8 +211,7 @@ $(function () {
             $('<div class="alert alert-info">').text("当前进度没有分配工人!").appendTo(com.focusPage("#" + operate + "WorkerInfos"));
         }
     }
-
-    //添加
+    
     function setWorkerUrl(operate, res) {
 
         var worker = res.constructer;

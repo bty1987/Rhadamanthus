@@ -3,27 +3,27 @@ $(function(){
     var type = {};
     var storeroom = {};
     var awardStock = {
-        awardStockItems:{}
+        awardStockItems : {
+            no : com.focusPage("#no"),
+            name : com.focusPage("#name"),
+            num : com.focusPage("#num"),
+            type : com.focusPage("#type"),
+            storeroom : com.focusPage("#storeroom"),
+            price : com.focusPage("#price"),
+            content : com.focusPage("#content"),
+            format : com.focusPage("#format"),
+            Warehousing : com.focusPage("#Warehousing"),
+            Warehousend : com.focusPage("#Warehousend"),
+            no2 : com.focusPage("#no2"),
+            name2 : com.focusPage("#name2"),
+            nownum : com.focusPage("#nownum"),
+            isPrefor  : com.focusPage("#isPrefor"),
+            isStock :  com.focusPage("#isStock"),
+            isPayment :  com.focusPage("#isPayment"),
+            price2 :  com.focusPage("#price2")
+        }
     };
 
-    awardStock.awardStockItems.no = com.focusPage("#no");
-    awardStock.awardStockItems.name = com.focusPage("#name");
-    awardStock.awardStockItems.num = com.focusPage("#num");
-    awardStock.awardStockItems.type = com.focusPage("#type");
-    awardStock.awardStockItems.storeroom = com.focusPage("#storeroom");
-    awardStock.awardStockItems.price = com.focusPage("#price");
-    awardStock.awardStockItems.content = com.focusPage("#content");
-    awardStock.awardStockItems.format = com.focusPage("#format");
-    awardStock.awardStockItems.Warehousing = com.focusPage("#Warehousing");
-    awardStock.awardStockItems.Warehousend = com.focusPage("#Warehousend");
-    awardStock.awardStockItems.no2 = com.focusPage("#no2");
-    awardStock.awardStockItems.name2 = com.focusPage("#name2");
-    awardStock.awardStockItems.nownum = com.focusPage("#nownum");
-    awardStock.awardStockItems.isPrefor  = com.focusPage("#isPrefor");
-    awardStock.awardStockItems.isStock =  com.focusPage("#isStock");
-    awardStock.awardStockItems.isPayment =  com.focusPage("#isPayment");
-    awardStock.awardStockItems.price2 =  com.focusPage("#price2");
-    
     com.post(api.ds.information, {}, function (res) {
         awardStock.awardStockItems.storeroom.bindData(res.awardStoreRoom, "key", "value", false);
         awardStock.awardStockItems.type.bindData(res.awardStockType, "key", "value", false);

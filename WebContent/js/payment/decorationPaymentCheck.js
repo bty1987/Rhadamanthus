@@ -311,7 +311,7 @@ jQuery(function($) {
 				hsearcher.doSearch();
 				com.showAlert(com.info, "确认成功")
 			});
-		};
+		});
 	});
 
 	com.focusPage('a[name="import"]', '#pagenation').click(function () {
