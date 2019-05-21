@@ -1,10 +1,15 @@
 jQuery(function ($) {
 
     var guarantee = {
-        saveBtn: null,
-        cancellBtn: null,
-        modal: null,
-        guaranteeItems: {},
+        saveBtn: com.focusPage("#saveBtn").on("click", saveData),
+        cancellBtn: com.focusPage("#cancelBtn"),
+        modal: com.focusPage("#guaranteeModal"),
+        guaranteeItems: {
+            orderId : com.focusPage("#orderId"),
+            customerName : com.focusPage("#customerName"),
+            guaranteeTime : com.focusPage("#guaranteeTime"),
+            guaranteeDes : com.focusPage("#guaranteeDes"),
+        },
 
         levelDict: {"0": "普通", "1": "重要"},
 
@@ -13,16 +18,8 @@ jQuery(function ($) {
     };
 
     com.focusPage('#fl-statement').statement("客服控制", "保修信息列表");
-
-    guarantee.saveBtn = com.focusPage("#saveBtn").on("click", saveData);
-    guarantee.cancelBtn = com.focusPage("#cancelBtn");
-    guarantee.modal = com.focusPage("#guaranteeModal");
-
-    guarantee.guaranteeItems.orderId = com.focusPage("#orderId");
-    guarantee.guaranteeItems.customerName = com.focusPage("#customerName");
-    guarantee.guaranteeItems.guaranteeTime = com.focusPage("#guaranteeTime");
-    guarantee.guaranteeItems.guaranteeDes = com.focusPage("#guaranteeDes");
-
+    com.focusPage('.date-picker').datepicker({autoclose: true});
+    
 
     var displayFunc = (function () {
         var renderList = function (tableId, listData) {
@@ -85,6 +82,7 @@ jQuery(function ($) {
 
                 guarantee.modal.modal("show");
             });
+
             $btnDel.click(function () {
                 removeRow(v.csgId);
             });
@@ -139,8 +137,6 @@ jQuery(function ($) {
     com.focusPage('a[name="back"]', '#pagenation').click(function () {
         com.switchPage(api.index.customerServiceIndex.url);
     });
-
-    com.focusPage('.date-picker').datepicker({autoclose: true});
 
     function levelFormat(cellvalue, options, rowdata) {
 

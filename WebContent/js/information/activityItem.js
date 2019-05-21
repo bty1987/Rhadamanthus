@@ -3,7 +3,20 @@ jQuery(function($) {
 	
 	var activityItem = {
 		activityType: null,
-		items:{}
+		items : {
+			activityName : com.focusPage("#activityName"),
+			activityItems : com.focusPage("#activityItems"),
+			activityItemName : com.focusPage("#activityItemName"),
+			moneyInfo : com.focusPage("#moneyInfo"),
+		    name : com.focusPage("#awardStocksname"),
+		    awardStockstype : com.focusPage("#awardStockstype"),
+		    awardStockshide : com.focusPage("#awardStockshide"),
+		    money : com.focusPage("#money"),
+		    cancelBtn : com.focusPage("#cancelBtn"),
+			activityItemModal : com.focusPage("#activityItemModal").on('show.bs.modal',function(e){
+				com.clearValidator();
+			})
+		}
 	};
 	
 	var activityItemPostData = {};
@@ -15,18 +28,7 @@ jQuery(function($) {
 	com.post(api.ds.information, {"timestamp": new Date().getTime()}, function(res){
 	}, null, false);
 
-	activityItem.items.activityName = com.focusPage("#activityName");
-	activityItem.items.activityItems = com.focusPage("#activityItems");
-	activityItem.items.activityItemName = com.focusPage("#activityItemName");
-	activityItem.items.moneyInfo = com.focusPage("#moneyInfo");
-    activityItem.items.name = com.focusPage("#awardStocksname");
-    activityItem.items.awardStockstype = com.focusPage("#awardStockstype");
-    activityItem.items.awardStockshide = com.focusPage("#awardStockshide");
-    activityItem.items.money = com.focusPage("#money");
-    activityItem.items.cancelBtn = com.focusPage("#cancelBtn");
-	activityItem.items.activityItemModal = com.focusPage("#activityItemModal").on('show.bs.modal',function(e){
-		com.clearValidator();
-	});
+
 	bindingType("awardStockstype");
 
 	function bindingType(idName) {

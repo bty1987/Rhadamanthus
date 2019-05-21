@@ -1,74 +1,71 @@
 jQuery(function($){
 
     var approvalTrack = {
+        approvalTypeData:{},
         postParam: {},
-        type: ["劵", "物品"]
-    };
-
-    var approvalItemInfo = {
-        "6": {
-            "api": api.approval.queryApprovalMaterialRefundItem,
-            "title": "主材信息",
-            "resultname": "approvalMaterialRefundItems",
-            "args": [
-                ['10', '型号  : ', "materialItem.name"],
-                ['40', '品类  : ', "materialItem.category"],
-                ['40', '品牌  : ', "materialItem.brand"],
-                ['10', '售价  : ', "materialItem.price"],
-                ['40', '退货数量  : ', "num"],
-                ['40', '退货金额  : ', "total"]
-            ]
-        },
-        "8": {
-            "api": api.approval.queryApprovalDecorationActivity,
-            "title": "活动信息",
-            "resultname": "approvalDecorationActivityItems",
-            "args": [
-                ['10', '活动名称  : ', "activityName"],
-                ['40', '活动项  : ', "activityItemName"],
-                ['40', '物品类型  : ', "type"],
-                ['10', '金额  : ', "money"],
-                ['40', '数量  : ', "num"],
-                ['40', '备注  : ', "content"]
-            ],
-            "totalMoney": []
-        },
-        "10": {
-            "api": api.approval.queryApprovalSalesRefundItem,
-            "title": "销售信息",
-            "resultname": "approvalSalesRefundItem",
-            "args": [
-                ['10', '名称  : ', "salesItem.goods.name"],
-                ['40', '颜色  : ', "salesItem.color.name"],
-                ['40', '规格  : ', "salesItem.format.info"],
-                ['10', '售价  : ', "salesItem.selling"],
-                ['40', '退货数量  : ', "num"],
-                ['40', '退货金额  : ', "total"]
-            ]
+        type: ["劵", "物品"],
+        url : null,
+        postData : null,
+        approvalItemInfo : {
+            "6": {
+                "api": api.approval.queryApprovalMaterialRefundItem,
+                "title": "主材信息",
+                "resultname": "approvalMaterialRefundItems",
+                "args": [
+                    ['10', '型号  : ', "materialItem.name"],
+                    ['40', '品类  : ', "materialItem.category"],
+                    ['40', '品牌  : ', "materialItem.brand"],
+                    ['10', '售价  : ', "materialItem.price"],
+                    ['40', '退货数量  : ', "num"],
+                    ['40', '退货金额  : ', "total"]
+                ]
+            },
+            "8": {
+                "api": api.approval.queryApprovalDecorationActivity,
+                "title": "活动信息",
+                "resultname": "approvalDecorationActivityItems",
+                "args": [
+                    ['10', '活动名称  : ', "activityName"],
+                    ['40', '活动项  : ', "activityItemName"],
+                    ['40', '物品类型  : ', "type"],
+                    ['10', '金额  : ', "money"],
+                    ['40', '数量  : ', "num"],
+                    ['40', '备注  : ', "content"]
+                ],
+                "totalMoney": []
+            },
+            "10": {
+                "api": api.approval.queryApprovalSalesRefundItem,
+                "title": "销售信息",
+                "resultname": "approvalSalesRefundItem",
+                "args": [
+                    ['10', '名称  : ', "salesItem.goods.name"],
+                    ['40', '颜色  : ', "salesItem.color.name"],
+                    ['40', '规格  : ', "salesItem.format.info"],
+                    ['10', '售价  : ', "salesItem.selling"],
+                    ['40', '退货数量  : ', "num"],
+                    ['40', '退货金额  : ', "total"]
+                ]
+            }
         }
     };
 
-    var url = null;
-    var postData = null;
-
     if (params['urlLoadParams'].type == 'send') {
-        url = api.approval.pageApprovalForSend;
-        postData = "approvalSenderTrackPostData"
+        approvalTrack.url = api.approval.pageApprovalForSend;
+        approvalTrack.postData = "approvalSenderTrackPostData"
     } else if (params['urlLoadParams'].type == 'receive') {
-        url = api.approval.pageApprovalForReceive;
-        postData = "approvalReceiveTrackPostData"
+        approvalTrack.url = api.approval.pageApprovalForReceive;
+        approvalTrack.postData = "approvalReceiveTrackPostData"
     } else if (params['urlLoadParams'].type == 'dept') {
-        url = api.approval.pageApprovalForReceiveDept;
-        postData = "approvalDeptTrackPostData"
+        approvalTrack.url = api.approval.pageApprovalForReceiveDept;
+        approvalTrack.postData = "approvalDeptTrackPostData"
     }
-
 
     com.post(api.ds.approval, {
         "timestamp": new Date().getTime()
     }, function (res) {
         approvalTrack.approvalType = res.approvalType;
-
-        approvalTrack.approvalTypeData = {};
+        //approvalTrack.approvalTypeData = {};
 
         for (var i = 0; i < approvalTrack.approvalType.length; i++) {
             var _ = approvalTrack.approvalType[i];
@@ -166,28 +163,24 @@ jQuery(function($){
     var searcher = new Searcher();
 
     if (params['urlLoadParams'].type == 'send') {
-        searcher.init(["approval_receiverName", "approval_Type", "approval_createTime", "approval_Time"], "condList",
-            url, function (data) {
+        searcher.init(["approval_receiverName", "approval_Type", "approval_createTime", "approval_Time"], "condList", approvalTrack.url, function (data) {
                 displayFunc.init('resultList', data);
-            }, "pagenation", postData);
+            }, "pagenation", approvalTrack.postData);
 
 
     } else if (params['urlLoadParams'].type == 'receive') {
-        searcher.init(["approval_senderName", "approval_Type"], "condList",
-            url, function (data) {
+        searcher.init(["approval_senderName", "approval_Type"], "condList", approvalTrack.url, function (data) {
                 displayFunc.init('resultList', data);
             },
-            "pagenation", postData);
+            "pagenation", approvalTrack.postData);
 
     } else if (params['urlLoadParams'].type == 'dept') {
-        searcher.init(["approval_senderName", "approval_Type"], "condList",
-            url, function (data) {
+        searcher.init(["approval_senderName", "approval_Type"], "condList", approvalTrack.url, function (data) {
                 displayFunc.init('resultList', data);
             },
-            "pagenation", postData);
+            "pagenation", approvalTrack.postData);
 
     }
-
 
     function approve(aid, url, $this) {
         com.post(url, {"approval.aid": aid}, function (res) {
@@ -201,13 +194,12 @@ jQuery(function($){
             com.focusPage('#materialInfoList').empty();
         }
 
-        var itemInfo = approvalItemInfo[type];
+        var itemInfo = approvalTrack.approvalItemInfo[type];
         var infoList = com.focusPage('#materialInfoList');
         itemInfo.totalMoney=[];
         com.post(itemInfo.api, {"approval.aid": aid}, function (res) {
 
             com.focusPage("#materialInfo").html(itemInfo.title);
-
 
             $.each(res[itemInfo.resultname], function (i, v) {
 

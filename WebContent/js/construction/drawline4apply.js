@@ -2,9 +2,10 @@
 jQuery(function ($) {
 
     var drawline = {
-        saveBtn: null,
-        cancellBtn: null,
-
+        saveBtn : com.focusPage("#saveBtn").on("click", saveData),
+        cancellBtn : com.focusPage("#cancelBtn"),
+        applyModal : com.focusPage("#applyModal"),
+        editModal : com.focusPage("#editModal"),
         items: {
             dlid: com.focusPage("#dlid"),
             actualDate: com.focusPage("#actualDate"),
@@ -14,11 +15,6 @@ jQuery(function ($) {
         }
     };
 
-    drawline.saveBtn = com.focusPage("#saveBtn").on("click", saveData);
-    drawline.cancelBtn = com.focusPage("#cancelBtn");
-
-    drawline.applyModal = com.focusPage("#applyModal");
-    drawline.editModal = com.focusPage("#editModal");
 
     com.post(api.data.queryDrawlineGroup, {}, function (res) {
         drawline.items.drawLineGroup.bindData(res.drawLineGroups, 'gid', 'name');
@@ -109,7 +105,7 @@ jQuery(function ($) {
     function saveData() {
 
         if (com.validate("editModal")) {
-            return falsse;
+            return false;
         }
 
         var start = Date.parse(drawline.items.actualDate.val().replace("-", "/") + " " + drawline.items.startTime.val());
@@ -125,14 +121,13 @@ jQuery(function ($) {
             com.showAlert(com.info,"放线小组不能为空");
             return false;
         }
-        
+
         var options = {
             "drawLine.dlid": drawline.items.dlid.val(),
             "drawLine.startTime":drawline.items.actualDate.val()+" "+drawline.items.startTime.val(),
             "drawLine.endTime": drawline.items.actualDate.val()+" "+drawline.items.endTime.val(),
-            "drawLine.drawLineGroup.gid": drawline.items.drawLineGroup.val()
+            "drawLine.group.gid": drawline.items.drawLineGroup.val()
         };
-
         com.post(api.construction.resetDrawLine, options, function (res) {
             com.showAlert(com.info, "操作成功");
             searcher.doSearch();

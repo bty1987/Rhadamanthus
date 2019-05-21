@@ -150,11 +150,6 @@ jQuery(function (a) {
                     window.location.href = "index.html?timestamp=" + new Date().getTime();
                 } else {
                     openChildWindow();
-                    require('fs').readFile('C:/19484298061545ce', 'utf-8', function (err, data) {
-                        if (!err) {
-                            openChildWindow();
-                        }
-                    })
                 }
             } else {
                 $('.login_wxcode_refresh').html(data.loginInfo.message).removeClass('hide')
@@ -231,8 +226,8 @@ jQuery(function (a) {
             type: "POST",
             dataType: "json",
             success: function (data) {
-                params.securityCode = data.securityCode;
-                $("#Verify").attr("src", config.communion + "/verifyCode.do?timestamp=" + new Date().getTime() + "&securityCode=" + data.securityCode);
+                params.securityCode = data.securityCode.replace(/[\r\n]/g,"");
+                $("#Verify").attr("src", config.communion + "/verifyCode.do?timestamp=" + new Date().getTime() + "&securityCode=" + data.securityCode.replace(/[\r\n]/g,"").replace(/\+/g, "%2B"));
             }
         });
     }
@@ -258,25 +253,20 @@ jQuery(function (a) {
             },
             success: function (data) {
                 initPage();
-
+                
                 if (data.errorCode == 1) {
                     $("#newCodeIcon").attr("class", "icon-remove red");
                     $("#newCodeIcon").attr("data-content", data.errorMsg);
                     $("#errorMsg").html(data.errorMsg);
                     verifyCode();
                 } else if (data.errorCode == 0) {
-                    setCookie("authentication", data.authentication, config.timeout);
+                    setCookie("authentication", data.authentication.replace(/[\r\n]/g,""), config.timeout);
                     setCookie("loginTime", new Date().getTime(), config.timeout);
                     setCookie("versionCode", config.versionCode, config.timeout);
                     if (!parent.window.isPC) {
                         document.location.href = "index.html?timestamp=" + new Date().getTime();
                     } else {
                         openChildWindow();
-                        require('fs').readFile('C:/19484298061545ce', 'utf-8', function (err, data) {
-                            if (!err) {
-                                openChildWindow();
-                            }
-                        })
                     }
                 } else {
                     $("#passwordIcon").attr("class", "icon-remove red");

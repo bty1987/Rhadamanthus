@@ -1,49 +1,52 @@
-
 jQuery(function($) {
 
 	var vticket = {
 		saveBtn: null,
 		modal: null,
-		items:{},
+		
+		modal : com.focusPage("#vticketModal"),
+	
+		items : {
+			vtid : com.focusPage("#vtid"),
+			tno : com.focusPage("#tno"),
+			belonger : com.focusPage("#belonger"),
+			orderId : com.focusPage("#orderId"),
+			name : com.focusPage("#name"),
+			phone : com.focusPage("#phone"),
+			address : com.focusPage("#address"),
+		},
 	};
 
 	vticket.saveBtn = com.focusPage("#saveBtn").on("click", saveData);
 
-	vticket.items.vtid = com.focusPage("#vtid");
-	vticket.items.tno = com.focusPage("#tno");
-	vticket.items.belonger  = com.focusPage("#belonger");
-	vticket.items.orderId = com.focusPage("#orderId");
-	vticket.items.name = com.focusPage("#name");
-	vticket.items.phone = com.focusPage("#phone");
-	vticket.items.address = com.focusPage("#address");
-
-	vticket.modal = com.focusPage("#vticketModal");
-	vticket.modal.on('show.bs.modal',function(e){
+	vticket.modal.on('show.bs.modal', function(e) {
 		com.clearValidator();
 	});
 
-	com.initTypeahead('belonger', api.personel.queryUserByPinyin, "pinyinName", {"departmentType.name":"", "user.status":0}, "autoFillKeyValue", "key", "value",null);
+	com.initTypeahead('belonger', api.personel.queryUserByPinyin, "pinyinName",
+			{
+				"departmentType.name" : "",
+				"user.status" : 0
+			}, "autoFillKeyValue", "key", "value");
 
+		var displayFunc = (function() {
 
-	var displayFunc  = (function(){
+			var renderList = function(tableId, listData) {
+				var $tableWrap = com.focusPage('#' + tableId);
+				var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
-		var renderList = function(tableId,listData){
-			var $tableWrap = com.focusPage('#' + tableId);
-			var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+				if(listData && listData.length) {
+					$.each(listData, function(i, v) {
+						var $liLine = creatLine(v);
 
-			if(listData && listData.length){
-				$.each(listData,function(i, v){
-					var $liLine = creatLine(v);
-
-					$liLine.appendTo($ul);
-				});
+						$liLine.appendTo($ul);
+					});
 
 				$ul.appendTo($tableWrap);
 			}
 		};
 
-		var creatLine = function(v){
-
+		var creatLine = function(v) {
 			var $liLine = $('<li></li>').addClass('item-orange clearfix');
 			var $h3 = $('<h3></h3>').addClass("oid").append($('<small></small>').addClass('blue').html(v.tno));
 			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
@@ -51,8 +54,8 @@ jQuery(function($) {
 
 			var $btnViews = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
 
-			$btnViews.click(function(){
-				com.updateTypeahead("belonger", v.belonger.userId, v.belonger.userName);
+			$btnViews.click(function() {
+				com.updateTypeahead("belonger", v.belonger.userId,v.belonger.userName);
 				vticket.items.tno.attr("readOnly", true);
 				vticket.items.vtid.val(v.vtid);
 				vticket.items.tno.val(v.tno);
@@ -63,21 +66,19 @@ jQuery(function($) {
 				com.focusPage("#vticketModal").modal("show");
 			});
 
-			var propertyArr = [
-				["姓名:", v.name, "grey"],
-				["电话:", v.phone, "grey"],
-				["地址:", v.address, "grey"],
-				["装修单号:", v.orderId, "grey"],
-				["归属人:", v.belonger.userName, "grey"],
-				["归属部门:", v.department.name, "grey"],
-				["归属分区:", v.region.name, "grey"],
-				["创建人:", v.creater.userName, "grey"],
-				["创建时间:", v.createTime, "grey"],
-				["是否注册:", v.isregist == 0 ? "未注册" : "已注册", "red"],
-				["是否到场:", v.iscome == 0 ? "未到场" : "已到场", "red"]
-			];
+			var propertyArr = [ 
+					[ "姓名:", v.name, "grey" ],
+					[ "电话:", v.phone, "grey" ], [ "地址:", v.address, "grey" ],
+					[ "装修单号:", v.orderId, "grey" ],
+					[ "归属人:", v.belonger.userName, "grey" ],
+					[ "归属部门:", v.department.name, "grey" ],
+					[ "归属分区:", v.region.name, "grey" ],
+					[ "创建人:", v.creater.userName, "grey" ],
+					[ "创建时间:", v.createTime, "grey" ],
+					[ "是否注册:", v.isregist == 0 ? "未注册" : "已注册", "red" ],
+					[ "是否到场:", v.iscome == 0 ? "未到场" : "已到场", "red" ] ];
 
-			$.each(propertyArr, function (index, value) {
+			$.each(propertyArr, function(index, value) {
 				var $liProperty = $('<li></li>');
 				$('<strong></strong>').html(value[0]).appendTo($liProperty);
 				$('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
@@ -92,11 +93,11 @@ jQuery(function($) {
 		};
 
 		return {
-			init : function(tableId,listData){
+			init : function(tableId, listData) {
 				com.focusPage('#' + tableId).html(null);
-				renderList(tableId,listData);
+				renderList(tableId, listData);
 			},
-			drawLine : function(v){
+			drawLine : function(v) {
 				return creatLine(v);
 			}
 		};
@@ -104,19 +105,19 @@ jQuery(function($) {
 
 	var searcher = new Searcher();
 
-	searcher.init(["inf_tno", "inf_orderId", "inf_userName"], "condList", api.information.pageVticket, function(data){
-		displayFunc.init('resultList', data);
-	}, "pagenation", "vticketPostData",null, false, null, function(){
+	searcher.init([ "inf_tno", "inf_orderId", "inf_userName" ], "condList",api.information.pageVticket, function(data) {
+				displayFunc.init('resultList', data);
+			}, "pagenation", "vticketPostData", null, false, null, function() {
 
-		var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addVticket').css("margin", "0px 3px");
-		var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
-		var $addspan = $('<span></span>').text('添加').appendTo($adda);
+				var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name','addVticket').css("margin", "0px 3px");
+				var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+				var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
-		return [$adda];
-	});
+				return [ $adda ];
+			});
 
-	//添加
-	com.focusPage('a[name="addVticket"]', '#pagenation').click(function(){
+	// 添加
+	com.focusPage('a[name="addVticket"]', '#pagenation').click(function() {
 		vticket.items.tno.attr("readOnly", false);
 		com.updateTypeahead("belonger", "", "");
 		com.cleanItems(vticket.items);

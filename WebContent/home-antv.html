@@ -32,7 +32,7 @@
                     <div id="homePage" class="flpage tab-pane in active">
                     
                         <div class="row">
-                            <div class="col-sm-4" style="min-height: 230px; background-color: #ffffffe0">
+                            <div class="homePanel col-sm-4" id="fastlink">
 	                            <div class="widget-box transparent">
 	                                <div class="widget-header widget-header-flat">
 	                                    <h4 class="lighter">
@@ -42,53 +42,18 @@
 	                                
 	                                <div class="widget-body">
 	                                    <div class="widget-main padding-8">
-                                            <p>
+                                            <p id="linklist">
 	                                            <a class="btn btn-app btn-fastlink no-radius no-hover col-xs-3">
                                                     <i class="icon-home bigger-160"></i>
                                                     <span>首页</span>
                                                 </a>
-	                                            
-	                                            <a class="btn btn-app btn-fastlink no-radius no-hover col-xs-3">
-                                                    <i class="icon-dashboard bigger-160"></i>
-                                                    <span>系统</span>
-                                                </a>
-                                                
-                                                <a class="btn btn-app btn-fastlink no-radius no-hover col-xs-3">
-                                                    <i class="icon-exchange bigger-160"></i>
-                                                    <span>审批</span>
-                                                </a>
-                                                
-                                                <a class="btn btn-app btn-fastlink no-radius no-hover col-xs-3">
-                                                    <i class="icon-print bigger-160"></i>
-                                                    Print
-                                                </a>
-                                                
-                                                <a class="btn btn-app btn-fastlink no-radius no-hover col-xs-3">
-                                                    <i class="icon-print bigger-160"></i>
-                                                    Print
-                                                </a>
-                                                
-                                                <a class="btn btn-app btn-fastlink no-radius no-hover col-xs-3">
-                                                    <i class="icon-print bigger-160"></i>
-                                                    Print
-                                                </a>
-                                                
-                                                <a class="btn btn-app btn-fastlink no-radius no-hover col-xs-3">
-                                                    <i class="icon-print bigger-160"></i>
-                                                    Print
-                                                </a>
-                                                
-	                                            <a class="btn btn-app btn-fastlink no-radius no-hover col-xs-3">
-	                                                <i class="icon-print bigger-160"></i>
-	                                                Print
-	                                            </a>
 	                                        </p>
 	                                    </div>
 	                                </div>
 	                            </div>
                             </div>
                             
-                            <div class="col-sm-4" style="min-height: 230px; background-color: #ffffffe0">
+                            <div class="homePanel col-sm-4" id="backlog">
                                 <div class="widget-box transparent">
                                     <div class="widget-header widget-header-flat">
                                         <h4 class="lighter">
@@ -105,7 +70,7 @@
 		                                            </div>
 		
 		                                            <div class="infobox-data">
-		                                                <span class="infobox-data-number">8</span>
+		                                                <span class="infobox-data-number" name="messageCount">0</span>
 		                                                <div class="infobox-content">
 		                                                    <span>消息</span>
 		                                                    <span class="text-danger">未读</span>
@@ -115,11 +80,11 @@
 		                                        
 		                                        <div class="infobox infobox-orange homeindex">
 		                                            <div class="infobox-icon">
-		                                                <i class="icon-twitter"></i>
+		                                                <i class="icon-exchange"></i>
 		                                            </div>
 		
 		                                            <div class="infobox-data">
-		                                                <span class="infobox-data-number">11</span>
+		                                                <span class="infobox-data-number" name="approvalSendCount">0</span>
 		                                                <div class="infobox-content">
 		                                                    <span>审批-提交</span>
 		                                                    <span class="text-danger">未处理</span>
@@ -129,11 +94,11 @@
 		                                        
 		                                        <div class="infobox infobox-orange2 homeindex">
                                                     <div class="infobox-icon">
-                                                        <i class="icon-shopping-cart"></i>
+                                                        <i class="icon-exchange"></i>
                                                     </div>
         
                                                     <div class="infobox-data">
-                                                        <span class="infobox-data-number">8</span>
+                                                        <span class="infobox-data-number" name="approvalReceiveCount">0</span>
                                                         <div class="infobox-content">
                                                             <span>审批-接收</span>
                                                             <span class="text-danger">未处理</span>
@@ -141,23 +106,13 @@
                                                     </div>
                                                 </div>
                                                 
-                                                <div class="infobox infobox-blue2 homeindex">
-                                                    <div class="infobox-icon">
-                                                        <i class="icon-shopping-cart"></i>
-                                                    </div>
-        
-                                                    <div class="infobox-data">
-                                                        <span class="infobox-data-number">8</span>
-                                                        <div class="infobox-content">new orders</div>
-                                                    </div>
-                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             
-                            <div class="col-sm-4" style="min-height: 230px; background-color: #ffffffe0">
+                            <div class="homePanel col-sm-4" id="versionInfo">
                                 <div class="widget-box transparent">
                                     <div class="widget-header widget-header-flat">
                                         <h4 class="lighter">
@@ -167,14 +122,8 @@
                                     
                                     <div class="widget-body">
                                         <div class="widget-main padding-8">
-                                            <h4 class="text-primary">3.0.003.002</h4>
+                                            <h4 class="text-primary" name="versionCode"></h4>
                                             <div class="space-4"></div>
-                                            <p>
-	                                            Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec ullamcorper nulla non metus auctor fringilla. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Donec ullamcorper nulla non metus auctor fringilla.
-	                                        </p>
-	                                        <p>
-                                                Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit.
-                                            </p>
                                         </div>
                                     </div>
                                 </div>

@@ -6,6 +6,19 @@ $(function(){
         modal: com.focusPage("#addtaskModal").on("show.bs.modal", function(a) {
             com.clearValidator();
         }),
+        
+        cancelBtn : com.focusPage("#cancelTaskBtn"),
+        modal : com.focusPage("#addtaskModal"),
+        
+        taskItems : {
+	        name : com.focusPage("#taskName"),
+	        filepath : com.focusPage("#filepath"),
+	        tasktype : com.focusPage("#tasktype"),
+	        handle : com.focusPage("#handle"),
+	        plugins : com.focusPage("#plugins"),
+	        isShow : com.focusPage("#isShow"),
+        },
+    
         taskItems: {},
         editFlg: false,
         taskType:["python","shell"],
@@ -22,15 +35,7 @@ $(function(){
         }
     };
     $.extend(com.validator, taskRegular.validator);
-    //给全局变量赋值(主要操作是制定页面标签)
-    task.cancelBtn = com.focusPage("#cancelTaskBtn");
-    task.modal = com.focusPage("#addtaskModal");
-    task.taskItems.name = com.focusPage("#taskName");
-    task.taskItems.filepath = com.focusPage("#filepath");
-    task.taskItems.tasktype = com.focusPage("#tasktype");
-    task.taskItems.handle = com.focusPage("#handle");
-    task.taskItems.plugins = com.focusPage("#plugins");
-    task.taskItems.isShow = com.focusPage("#isShow");
+
 
     /**
      * 回调函数必须提供 init(tableId, result.list)方法

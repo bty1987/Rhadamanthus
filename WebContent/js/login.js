@@ -5,7 +5,8 @@ jQuery(function($) {
 //	}
 	
 	$("#Verify").click(function(){
-		$(this).attr("src","verifyCode.do?timestamp="+ new Date().getTime());
+		//$(this).attr("src","verifyCode.do?timestamp="+ new Date().getTime());
+	    $(this).attr("src","images/verifyCode.jpg?timestamp="+ new Date().getTime());
 	});
 	
 	$('[data-rel=popover]').popover({container:'body'});

@@ -12,7 +12,20 @@ jQuery(function ($) {
         handleModal: com.focusPage("#complaintHandleModal").on('show.bs.modal', function (e) {
             com.clearValidator();
         }),
-        complaintItems: {},
+        complaintItems: {
+            orderId : com.focusPage("#orderId"),
+            customerName : com.focusPage("#customerName"),
+            complaintLevel : com.focusPage("#complaintLevel"),
+            complaintTime : com.focusPage("#complaintTime"),
+            complaintDes : com.focusPage("#complaintDes"),
+            complaintType : com.focusPage("#complaintType"),
+
+            handleOrderId : com.focusPage("#handleOrderId"),
+            handleCustomerName : com.focusPage("#handleCustomerName"),
+            handleComplaintLevel : com.focusPage("#handleComplaintLevel"),
+            handleComplaintType : com.focusPage("#handleComplaintType"),
+            complaintHandleDes : com.focusPage("#complaintHandleDes")
+        },
 
         levelDict: {"0": "普通", "1": "重要"},
         typeDict: {"0": "装修", "1": "主材"},
@@ -20,20 +33,7 @@ jQuery(function ($) {
         editFlag: false,
         repeatFlg: false
     };
-
-    complaint.complaintItems.orderId = com.focusPage("#orderId");
-    complaint.complaintItems.customerName = com.focusPage("#customerName");
-    complaint.complaintItems.complaintLevel = com.focusPage("#complaintLevel");
-    complaint.complaintItems.complaintTime = com.focusPage("#complaintTime");
-    complaint.complaintItems.complaintDes = com.focusPage("#complaintDes");
-    complaint.complaintItems.complaintType = com.focusPage("#complaintType");
-
-    complaint.complaintItems.handleOrderId = com.focusPage("#handleOrderId");
-    complaint.complaintItems.handleCustomerName = com.focusPage("#handleCustomerName");
-    complaint.complaintItems.handleComplaintLevel = com.focusPage("#handleComplaintLevel");
-    complaint.complaintItems.handleComplaintType = com.focusPage("#handleComplaintType");
-    complaint.complaintItems.complaintHandleDes = com.focusPage("#complaintHandleDes");
-
+    
     com.focusPage('.date-picker').datepicker({autoclose: true});
 
     var displayFunc = (function () {

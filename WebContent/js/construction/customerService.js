@@ -47,7 +47,6 @@ jQuery(function ($) {
                 ["设计师:", v.designer.userName, "grey"],
                 ["监理:", v.supervisor.userName, "grey"],
                 ["总价:", v.orderTotalPrice, "blue"],
-                //["折扣:", v.discount, "blue"],
                 ["面积:", v.house.buildArea, "blue"],
                 ["进度:", constructionNodes[v.projectStatus], "red"]
             ];

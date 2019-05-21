@@ -262,11 +262,11 @@
         var _placement = placement == "" || placement == null || placement == undefined ? 'right' : placement;
 
         var _count = 0;
-        
+
         $.each(com.validator, function (k, value) {
-            
+
             com.focusPage(_scopeID + " ." + value.type + ":visible").each(function (i, v) {
-                
+
                 var $this = $(v);
 
                 if (!$this.prop("disabled")) {

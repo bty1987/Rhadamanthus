@@ -44,7 +44,6 @@ var Api = function(){
             fillApi(path + 'right.js');
             fillApi(path + 'salary.js');
             fillApi(path + 'system.js');
-			fillApi(path + 'member.js');
 			fillApi(path + 'production.js');
             fillApi(path + 'ds.js');
             fillApi(path + 'building.js');

@@ -2,7 +2,7 @@ jQuery(function ($) {
     com.focusPage('#fl-statement').statement("工程验收", "订单信息列表");
 
     var constructionNodes = {};
-
+    
     com.post(api.data.queryConstructionNode, {}, function (res) {
         $.each(res.constructionNodes, function (i, v) {
             constructionNodes[v.sort] = v.name;

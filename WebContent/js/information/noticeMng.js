@@ -1,10 +1,11 @@
 
 $(function(){
+
     var noticeType = {};
-    var  noticePriority={};
+    var noticePriority={};
     var noticeIsPublic={};
     var notice = {
-        saveBtn: com.focusPage("#saveBtn").on("click", saveData),
+        saveBtn: com.focusPage("#saveBtn").on("click",saveData),
         cancelBtn: com.focusPage("#cancelBtn"),
         modal: com.focusPage("#noticeModal").on("show.bs.modal", function(a) {
             com.clearValidator();
@@ -41,7 +42,7 @@ $(function(){
 
 
     bindUploadfiy();
-//Datepicker是绑在一个标准的形式输入字段
+    //Datepicker是绑在一个标准的形式输入字段
     com.focusPage(".date-picker").datepicker({autoclose : !0}).on("show", function() {
         setTimeout(function() {
             com.focusPage(".dropdown-menu").css("z-index", 1060);
@@ -72,10 +73,8 @@ $(function(){
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
-
             var $btnDown = $('<a></a>').addClass('btn btn-minier btn-yellow').html('下载');
             var $management = $('<a></a>').addClass('btn btn-minier btn-success').html('管理');
-
 
             var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-warning').html('编辑');
             var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
@@ -117,7 +116,7 @@ $(function(){
 
             if(v.filePath != undefined && v.filePath != null && v.filePath != ""){
                 //插入btnDown
-            	$divBtnWrap.append($btnDown);
+                $divBtnWrap.append($btnDown);
         	}
 
             if(v.creater.uid == params.userInfo.user.uid){
@@ -137,7 +136,7 @@ $(function(){
                     $liLine.append($h3).append($ulProperty);
                 }
             }else{
-                    $liLine.append($h3).append($ulProperty);
+                $liLine.append($h3).append($ulProperty);
             }
             $btnDown.click(function(){
             	window.open(config.media + v.filePath);
@@ -162,43 +161,41 @@ $(function(){
             });
 
             $management.unbind().bind('click',function(){
-                     showDepaermentModal();
-                    com.focusPage('#managements').modal('show');
-                     var noticedids=[];
-                      com.post(api.information.queryNoticeDepartment, {"notice.nid": v.nid},function(res){
-                          $.each(res.noticeDepartments,function(i,val){
-                                 noticedids[i]=(val.did);
-                                 $wrap.find('input[value="'+ val.did +'"]').prop('checked', true);
-                         });
-                      });
-
-                com.focusPage("#manageBtn").unbind().bind('click',function(){
-                          var list = com.focusPage('input[name="module"]:checked', com.focusPage('#managements'));
-                          var params = {"notice.nid": v.nid};
-                        
-                          list.length && (
-                              $.each(list, function(i, v){
-                                  var $v = $(this).val();
-                                  params["dids" + "[" + i + "]"] = $v;
-                                  if($v == -1 || $v == '全部') 
-                                	  return false;
-                              }),
-                              com.post(api.information.updateNoticeDepartment, params,function(res){
-                                  com.focusPage('#managements').modal("hide");
-                                 },null,false)
-                          );
-                });
-            });
-
-                $btnDel.click(function(){
-                    com.showConfirm("确定删除吗?", function(result) {
-                        if(result) {
-                            removeRow(v.nid);
-                        }
+                showDepaermentModal();
+                com.focusPage('#managements').modal('show');
+                var noticedids=[];
+                com.post(api.information.queryNoticeDepartment, {"notice.nid": v.nid},function(res){
+                    $.each(res.noticeDepartments,function(i,val){
+                        noticedids[i]=(val.did);
+                        $wrap.find('input[value="'+ val.did +'"]').prop('checked', true);
                     });
                 });
 
-                return $liLine;
+                com.focusPage("#manageBtn").unbind().bind('click',function(){
+                    var list = com.focusPage('input[name="module"]:checked', com.focusPage('#managements'));
+                    var params = {"notice.nid": v.nid};
+                        
+                    list.length && (
+                        $.each(list, function(i, v){
+                            var $v = $(this).val();
+                            params["dids" + "[" + i + "]"] = $v;
+                            if($v == -1 || $v == '全部')
+                                return false;
+                        }),
+                        com.post(api.information.updateNoticeDepartment, params,function(res){
+                            com.focusPage('#managements').modal("hide");
+                        }, null, false)
+                    );
+                });
+            });
+
+            $btnDel.click(function(){
+                com.showConfirm("确定删除吗?", function() {
+                        removeRow(v.nid);
+                });
+            });
+
+            return $liLine;
         };
 
         return {
@@ -235,27 +232,27 @@ $(function(){
             if ("" == notice.items.contents.val().trim()){
                 com.showTips(notice.items.contents, "内容不能为空.");
             }else if(notice.items.startTime.val() > notice.items.endTime.val()){
-                com.showAlert("结束时间不能小于开始时间");
+            	com.showAlert(com.warning,"结束时间不能小于开始时间");
 
-                }else{
-                    var a, b = {
-                        "notice.nid":notice.items.nid,
-                        "notice.theme": notice.items.theme.val(),
-                        "notice.type": notice.items.typeSel.val(),
-                        "notice.priority": notice.items.prioritySel.val(),
-                        "notice.creater.userId": notice.items.userId,
-                        "notice.startTime": notice.items.startTime.val(),
-                        "notice.endTime": notice.items.endTime.val(),
-                        "notice.isPublic": notice.items.isPublic.prop("checked") ? 0 : 1,
-                        "notice.contents": notice.items.contents.val(),
-                        "notice.filePath": com.focusPage("#filePath").val()
-                    };
+            }else{
+                var a, b = {
+                    "notice.nid":notice.items.nid,
+                    "notice.theme": notice.items.theme.val(),
+                    "notice.type": notice.items.typeSel.val(),
+                    "notice.priority": notice.items.prioritySel.val(),
+                    "notice.creater.userId": notice.items.userId,
+                    "notice.startTime": notice.items.startTime.val(),
+                    "notice.endTime": notice.items.endTime.val(),
+                    "notice.isPublic": notice.items.isPublic.prop("checked") ? 0 : 1,
+                    "notice.contents": notice.items.contents.val(),
+                    "notice.filePath": com.focusPage("#filePath").val()
+               };
                     notice.editFlg ? (a = api.information.updateNotice,b["notice.noticeId"] = notice.items.noticeId) : a = api.information.addNotice;
                     com.post(a, b, successCallback);
                     notice.modal.modal("hide");
                 }
-        }
-    }
+         }
+     }
 
     function removeRow(id) {
         com.post(api.information.deleteNotice, {"notice.nid" : id}, successCallback);

@@ -3186,7 +3186,7 @@ var Condition = function (api) {
             label: "监理",//中文名
             type: "autofill",//类型
             submitConfig: {//向后台提交的配置
-                name: "supervisor",//接口中的参数名
+                name: "supervisors",//接口中的参数名
                 op: "eq",//查询方式
                 validate: null//校验规则
             },

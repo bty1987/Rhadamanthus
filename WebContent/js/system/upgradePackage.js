@@ -16,7 +16,13 @@ jQuery(function($) {
         },
     };
 
-    com.focusPage('.date-picker').datepicker(com.datepickerdefault);
+    if (jQuery().datepicker) {
+        com.focusPage('.date-picker').datepicker({
+            format : 'yyyy-mm-dd',// yyyy-mm-dd hh:ii,
+            autoclose : true,
+        });
+
+    }
 
     var displayFunc = (function() {
 
@@ -87,25 +93,35 @@ jQuery(function($) {
 
     var _condArr = [ 'upgradeNumber', 'upgradeCreateTime' ];
     var upgradeSeacher = new Searcher();
-    upgradeSeacher.init(_condArr, "condList", api.upgrade.pageUpgrade, function(list) {
-        displayFunc.init('resultList', list);
-    }, "pagenation", "upgradePostData", null, false, null, function() {
+    upgradeSeacher.init(_condArr, "condList", api.upgrade.pageUpgrade,
+            function(list) {
+                displayFunc.init('resultList', list);
+                if (jQuery().datepicker) {
+                    com.focusPage('[name="upgradeCreateTime"]').datepicker({
+                        format : 'yyyy-mm-dd',// yyyy-mm-dd hh:ii,
+                        autoclose : true,
+                    });
+                }
+            }, "pagenation", "upgradePostData", null, false, null, function() {
 
-        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addUpgrade').css("margin", "0px 3px");
-        var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
-        var $addspan = $('<span></span>').text('添加').appendTo($adda);
+                var $adda = $('<a></a>').addClass(
+                        'btn btn-minier btn-primary pull-left').attr('name',
+                        'addUpgrade').css("margin", "0px 3px");
+                var $addi = $('<i></i>').addClass('icon-plus bigger-110')
+                        .appendTo($adda);
+                var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
-        $adda.click(function() {
-            upgrade.modal.modal("show")
-        });
+                $adda.click(function() {
+                    upgrade.modal.modal("show")
+                });
 
-        return [ $adda ];
-    });
+                return [ $adda ];
+            });
 
     function saveData() {
         
         if (com.validate("upgradeModal")) {
-            return false;
+            return false
         }
         
         var option = {

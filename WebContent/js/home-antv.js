@@ -59,7 +59,7 @@ $(function () {
                 if (data.paging.data.length == 0) return;
                 
                 $.each(data.paging.data, function (i, v) {
-                    Signing.getNoticeDOM(v).appendTo($("#noticeList"));
+                    Signing.getNoticeDOM(v).appendTo($("#noticeList").html(''));
                 });
             }, null, false);
 
@@ -70,7 +70,7 @@ $(function () {
                 if (data.paging.data.length == 0) return;
                 
                 $.each(data.paging.data, function (i, v) {
-                    Signing.getNoticeDOM(v).appendTo($("#activityList"));
+                    Signing.getNoticeDOM(v).appendTo($("#activityList").html(''));
                 });
             }, null, false);
 
@@ -85,7 +85,12 @@ $(function () {
     Signing.loadNotices();
     Signing.loadActivities();
     
+    com.focusPage("h4[name='versionCode']").text(config.versionCode);
+    
     com.post(api.ds.system, {}, function(res){
+        
+        com.focusPage("h4[name='versionCode']").after($(res.versionInfo ? res.versionInfo : "<p>版本信息</p>"));
+        
         res.alertInfo && (layer.open({
             type: 1,
             title: false,
@@ -100,6 +105,35 @@ $(function () {
                 layero.find('.layui-layer-btn').css('text-align', 'center');
             }
         }));
+    });
+    
+    com.post(api.system.queryModuleForLink, {"module.system": 1}, function(res){
+        
+        var linklist = com.focusPage("#linklist").html('');
+        
+        $.each(res.modules, function(i, v){
+            
+            if(!v.url || v.url == "") return true;
+            if($(".btn-fastlink").length >= 8) return false;
+            
+            var $a = $('<a></a>').addClass("btn btn-app btn-fastlink no-radius no-hover col-xs-3").attr({href: v.url, mid: v.mid, menutext: v.name, icon: v.icon}).appendTo(linklist);
+            var $i = $('<i></i>').addClass(v.icon).appendTo($a);
+            var $span = $('<span></span>').text(v.name).appendTo($a);
+            
+            $a.click(function(){
+                params['urlLoadParams'] = com.splitUrl(v.url);
+                com.loadPage(v.url, $(this));
+                return false;
+            });
+        });
+    });
+    
+    com.post(api.approval.countApprovalForSend, {}, function(res){
+        res.count && $("span[name='approvalSendCount']").text(res.count);
+    });
+    
+    com.post(api.approval.countApprovalForReceive, {}, function(res){
+        res.count && $("span[name='approvalReceiveCount']").text(res.count);
     });
 
     loadMessageCount();
@@ -317,6 +351,7 @@ function loadMessageCount() {
                 $("#messageCount").text(res.messageCount);
             }
         }
+        $("span[name='messageCount']").text(res.messageCount);
     }, function (res) {
         console.log("get message count fail...");
     });

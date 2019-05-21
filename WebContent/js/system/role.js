@@ -159,6 +159,15 @@ jQuery(function($) {
                     var $label = $('<label></label>').append($input).append('<span class="lbl"></span>');
 
                     $indexCheck.append($label).appendTo($div);
+                    
+                    if(v.url && v.url != ''){
+                        var $inputL = $('<input>').attr({type : 'checkbox', name : 'link'}).addClass('ace').val(v.mid);
+
+                        var $checkL = $('<div></div>').addClass('checkbox pull-right').css({'margin-bottom':'0', 'margin-top' : '-5px', 'margin-left': '5px'});
+                        var $labelL = $('<label></label>').append($inputL).append('<span class="lbl"></span>');
+
+                        $checkL.append($labelL).appendTo($div);
+                    }
 
                     menuObj.level2[v.mid] = $li;
 
@@ -189,6 +198,15 @@ jQuery(function($) {
                     var $label = $('<label></label>').append($input).append('<span class="lbl"></span>');
 
                     $indexCheck.append($label).appendTo($div);
+                    
+                    if(v.url && v.url != ''){
+                        var $inputL = $('<input>').attr({type : 'checkbox', name : 'link'}).addClass('ace').val(v.mid);
+
+                        var $checkL = $('<div></div>').addClass('checkbox pull-right').css({'margin-bottom':'0', 'margin-top' : '-5px', 'margin-left': '5px'});
+                        var $labelL = $('<label></label>').append($inputL).append('<span class="lbl"></span>');
+
+                        $checkL.append($labelL).appendTo($div);
+                    }
 
                     menuObj.level2[v.mid] = $li;
 
@@ -224,12 +242,10 @@ jQuery(function($) {
 
         //获取角色的模块
         com.post(api.system.queryModuleByRid, {'module.system' : 1, "role.rid": roleId}, function(data){
-            if(data.modules.length){
-                $.each(data.modules, function(i, v){
-                    $wrap.find('input[value="'+ v.mid +'"]').prop('checked', true);
-                });
-            }
-        }, null, false);
+            $.each(data.modules, function(i, v){
+                $wrap.find('input[name="module"][value="'+ v.mid +'"]').prop('checked', true);
+            });
+        });
     }
     com.post(api.data.queryChainPage,{},function(res){
         role.chainPage = res.chainPages ;
@@ -420,7 +436,12 @@ jQuery(function($) {
 
         if(idarrs.length){
             idarrs.each(function(i){
-                params['mids[' + i + ']'] = $(this).val();
+                
+                var _mid = $(this).val();
+                var _link = role.moduleModal.find('input[name="link"][value="' + _mid + '"]:checked').length;
+                
+                params['modules[' + i + '].mid'] = $(this).val();
+                params['modules[' + i + '].link'] = _link == 0 ? 1 : 0;
             });
         }
 

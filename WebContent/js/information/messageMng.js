@@ -6,6 +6,10 @@ $(function(){
 		messageList : com.focusPage("#messageList"),
 	 	messageDetail : com.focusPage("#messageDetail"),
 		isPerformance : com.focusPage("#isPerformance").switchBtn("isOrNot"),
+		
+		status : {},
+		messageType : {},
+		
 		modal : com.focusPage("#messageModal").on('show.bs.modal',function(e){
 			com.clearValidator();
 		}),
@@ -30,19 +34,16 @@ $(function(){
 		
 		message.messageDetail.hide();
 	});
-	var status={};
-	var messageType={} ;
+
 	com.post(api.ds.information,{},function(res){
 
 		$.each(res.messageStatus,function (i,va) {
-			status[va.key] = va.value;
+			message.status[va.key] = va.value;
 		});
 		$.each(res.messageType,function (i,v) {
-			messageType[v.key] = v.value;
+			message.messageType[v.key] = v.value;
 		});
 	},null,false);
-
-
 
 	var displayFunc  = (function(){
 
@@ -71,8 +72,8 @@ $(function(){
 			var $span = $('<span></span>').addClass('lbl blue bigger-150').text(v.contents);
 
 			var propertyArr = [
-				["消息分类:",messageType[v.type], "grey"],
-				["状态:", status[v.status], "red"],
+				["消息分类:",message.messageType[v.type], "grey"],
+				["状态:", message.status[v.status], "red"],
 				["发送人:", v.sender ? v.sender.userName :"", "grey"],
 				["时间:", v.createTime, "grey"]
 			];
