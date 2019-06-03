@@ -91,14 +91,6 @@ public class SalesActivityAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-	@Action(value="upgradeSalesActivityItem", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String upgradeSalesActivityItem() throws FLException{
-		
-		salesActivityService.upgradeSalesActivityItem(salesActivityItem);
-		
-		return SUCCESS;
-	}
-	
 	@Action(value="refundSalesActivityItem", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String refundSalesActivityItem() throws FLException{
 		

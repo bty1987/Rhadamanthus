@@ -57,10 +57,7 @@ $(function () {
                 $cell.appendTo($contentWrap);
             });
 
-            //var $optionWrap = $('<div></div>').addClass('line-wrap action')
-            //    .html($('<div>操作</div>').addClass('cell option'));
-
-            $liTitle.append($indexWrap).append($contentWrap).appendTo($ulTitle);//.append($optionWrap)
+            $liTitle.append($indexWrap).append($contentWrap).appendTo($ulTitle);
 
             return $ulTitle;
         };
@@ -86,39 +83,9 @@ $(function () {
                 $cell.appendTo($contentWrap);
             });
 
-            //var $optionWrap = $('<div></div>').addClass('line-wrap action');
             var $cellOption = $('<div></div>').addClass('cell option');
 
-            //var $btnGroup = $('<div></div>').addClass('btn-group');
-            //var $btn = $('<button></button>').addClass(
-            //    'btn btn-primary dropdown-toggle').attr('data-toggle', 'dropdown')
-            //    .append('操作').append('<i class="icon-angle-down"></i>');
-            //var $btnUl = $('<ul></ul>').addClass('dropdown-menu').addClass(
-            //    lastFlag ? 'bottom-up' : '');
-
-            //var $btnDelete = $('<li></li>').append($('<a></a>').html('删除'));
-
-            //$btnUl.append($btnDelete);
-
-            //$btnGroup.append($btn).append($btnUl).appendTo($cellOption);
-
-            //$cellOption.appendTo($optionWrap);
-
-            $liLine.append($indexWrap).append($contentWrap);//.append($optionWrap)
-
-            //$btnDelete.click(function () {
-            //    layer.confirm('是否确定删除?', {
-            //        btn: ['确定', '取消']
-            //        // 按钮
-            //    }, function (index, layero) {
-            //        deleteManifestTemplate(v.pid, function () {
-            //            layer.msg('删除成功', {icon:1});
-            //            doSearcher();
-            //        });
-            //    }, function (e) {
-            //        com.showAlert(com.error, e.errorMsg);
-            //    });
-            //})
+            $liLine.append($indexWrap).append($contentWrap);
 
             return $liLine;
 

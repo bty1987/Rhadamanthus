@@ -3,7 +3,7 @@
  */
 var planUtils = {
     bindDatePicker: function (tag, index) {
-        com.focusPage(tag).datepicker({autoclose: !0}).on("show", function () {
+        com.focusPage(tag).datepicker(com.datepickerdefault).on("show", function () {
             setTimeout(function () {
                 $(".dropdown-menu").css("z-index", index);
             }, 0);
@@ -55,15 +55,12 @@ var planUtils = {
             $(this).next().focus();
         });
     },
+    
     bindExecuteTimeBtn: function (tag) {
-        com.focusPage(tag).timepicker({
-            minuteStep: 1,
-            showSeconds: false,
-            showMeridian: false
-        });
+    	com.focusPage(tag).timepicker(com.timepickerdefault);
     },
+    
     TimeComparison: function (executeTime, m) {
-
         var curTime = new Date();
         curTime.setTime(curTime.setMinutes(curTime.getMinutes() + m));
         if (executeTime > curTime) {

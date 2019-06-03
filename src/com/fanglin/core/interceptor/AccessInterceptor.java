@@ -62,9 +62,7 @@ public class AccessInterceptor extends AbstractInterceptor {
 					throw new FLException(110005, "登陆超时");
 				}
 				
-				String encryptKey = SystemConfig.getString("encryptKey");
-				
-				String decryptString = AESHelper.decryptString($authentication, encryptKey);
+				String decryptString = AESHelper.decrypt($authentication, SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv"));
 				
 				if(decryptString == null || "".equals(decryptString)){
 					LogUtils.logging(logger, actionName, 0, "aseerror");

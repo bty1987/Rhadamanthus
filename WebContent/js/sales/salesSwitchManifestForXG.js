@@ -1,14 +1,9 @@
 $(function () {
 
-    if (jQuery().datepicker) {
-        com.focusPage('#layerAdd input[name="manifestTime"]').datepicker({
-            autoclose: true,
-            format: 'yyyy-mm-dd',//yyyy-mm-dd hh:ii,
-        });
-    }
-
+    com.focusPage('#layerAdd input[name="manifestTime"]').datepicker(com.datepickerdefault);
+    
     var manifest = {
-        total: null,
+        total: null
     };
 
     var status = {
@@ -128,7 +123,7 @@ $(function () {
                                 savePurchase(_params);
                             }, v.sid);
                         } else {
-                            layer.msg('此销售单补款未确认,无法转出库单', {time: 2e3});
+                            com.showAlert(com.warning, "此销售单补款未确认,无法转出库单");
                         }
 
                     });
@@ -193,11 +188,11 @@ $(function () {
                             savePurchase(_params);
                         });
                     } else if (fullPayStatusFlag == false && flag == true || fullPayStatusFlag == false && flag == false) {
-                        layer.msg('销售单中有补款未确认,无法转出库单', {time: 2e3});
+                        com.showAlert(com.warning, "销售单中有补款未确认,无法转出库单");
                     }
 
                 } else {
-                    layer.msg("请选择销售单", {time: 2e3});
+                    com.showAlert(com.warning, "请选择销售单");
                 }
 
             }
@@ -257,7 +252,7 @@ $(function () {
             if (checkRowValue($liline)) {
                 com.post(api.inventory.addManifestForXG, options, function () {
                     layer.closeAll();
-                    layer.msg('添加成功');
+                    com.showAlert(com.info, "添加成功");
                     com.focusPage('#resultListItem').empty();
                     com.focusPage('input[name="manifestTime"]').val("");
                     com.focusPage('input[name="comment"]').val("");
@@ -266,7 +261,7 @@ $(function () {
                 });
             }
         } else {
-            layer.msg("请选择需要转出库单的商品");
+            com.showAlert(com.warning, "请选择需要转出库单的商品");
         }
 
     }
@@ -286,7 +281,7 @@ $(function () {
                     });
                     var $h3 = $('<h3></h3>').addClass('oid');
                     var $btnDiv = $('<div></div>').addClass('action-buttons pull-right').attr('data-num', v.num).attr('data-selling', v.price).attr('data-siid', v.siid);
-
+                    
                     var propertyArr = [
                         ["商品品类:", v.goods.category, "grey", "category"],
                         ["商品颜色:", v.color.name, "grey", "color"],
@@ -300,7 +295,7 @@ $(function () {
                         ["原结算值:", v.rawCvalue, "blue", "rawCvalue"],
                         ["结算方式:", v.ctype == 0 ? "底价" : "点位", "red", "ctype"],
                         ["结算值:", v.cvalue, "blue", "cvalue"],
-                        ["备注:", v.comment, "grey", "conment"]
+                        ["备注:", v.comment, "grey", "comment"]
                     ];
 
                     var $label = $('<label></label>').addClass('control-label').css({
@@ -359,7 +354,7 @@ $(function () {
                         "data-cid": v.color.cid,
                         "data-fid": v.format.fid,
                         "data-gid": v.goods.gid,
-                        "data-num": v.num,
+                        "data-num": v.num
                     }).addClass('ace ace-checkbox-2');
 
                     var _span = $('<span></span>').addClass('lbl blue bigger-150').css('font-weight', 'bold').html(v.goods.name + ' ' + v.goods.no);
@@ -393,9 +388,9 @@ $(function () {
 
                         com.post(api.inventory.queryGoodsStorehouseStockByShidAGid, optionStroe, function (res) {
                             if (res.goodsStorehouseStock.num == null) {
-                                layer.msg("该仓库没有此商品", {time: 3e3});
+                                com.showAlert(com.warning, "该仓库没有此商品");
                             } else {
-                                layer.msg("该仓库商品剩余库存:" + res.goodsStorehouseStock.num, {time: 3e3});
+                                com.showAlert(com.warning, "该仓库商品剩余库存:" + res.goodsStorehouseStock.num);
                             }
                         }, function (e) {
                             btn.button('reset');

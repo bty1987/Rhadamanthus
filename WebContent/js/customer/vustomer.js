@@ -97,27 +97,12 @@ jQuery(function($) {
 	}
 
 	function release(vid){
-		var btn = $(this);
-		var span = btn.find('span');
-		btn.find('i').remove();
-		var loading = $('<i></i>').addClass('icon-spinner icon-spin white bigger-125');
-		span.prepend(loading);
-		var message = "<p>确定要释放大客户吗?</p>";
-		bootbox.confirm(message, function(result) {
-			if(result){
-				var options={
-					"vustomer.vid": vid
-				};
-				com.post(api.customer.freeVustomer,options,function(res){
-					searcher.doSearch();
-					com.showAlert(com.info,'释放成功');
-				});
-			}else{
-				btn.find('i').remove();
-				var prepared = $('<i></i>').addClass('icon-ok bigger-110');
-				span.prepend(prepared);
-			}
-		});
+	    com.showConfirm("是否确认释放客户", function(){
+	        com.post(api.customer.freeVustomer, {"vustomer.vid": vid}, function(res){
+                searcher.doSearch();
+                com.showAlert(com.info,'释放成功');
+            });
+	    });
 	}
 
 });

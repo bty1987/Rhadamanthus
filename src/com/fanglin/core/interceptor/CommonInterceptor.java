@@ -36,9 +36,7 @@ public class CommonInterceptor extends AbstractInterceptor {
 			
 			String $authentication = request.getParameter("authentication");
 			
-			String encryptKey = SystemConfig.getString("encryptKey");
-			
-			String decryptString = AESHelper.decryptString($authentication, encryptKey);
+			String decryptString = AESHelper.decrypt($authentication, SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv"));
 			
 			if(decryptString == null || "".equals(decryptString)){
 				throw new FLException(-2, "无操作权限");

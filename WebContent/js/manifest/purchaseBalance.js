@@ -1,18 +1,14 @@
 ﻿
 $(function(){
 
-    if (jQuery().datepicker) {
-        com.focusPage('.date-picker').datepicker({
-            format: 'yyyy-mm-dd',//yyyy-mm-dd hh:ii,
-        });
-    }
-
     var purchaseBalance = {
     	items: {},
     	
     	status: {},
     	balanceStatus: {}
-    }
+    };
+    
+    com.focusPage('.date-picker').datepicker(com.datepickerdefault);
     
     com.post(api.ds.manifest, {}, function(res){
     	
@@ -122,24 +118,22 @@ $(function(){
             $btnFinish.click(function(e){
             	
             	if(v.balanceStatus == 2){
-            		layer.msg('采购单已完结');
+            		com.showAlert(com.warning, "采购单已完结");
             		return false;
             	}
             	
             	var options = {
             		"purchase.pid": v.pid,
             		"purchase.balanceStatus": 2
-            	}
-            	
-            	layer.confirm('确认完结采购单?', {
-                    btn: ['确定','取消'] //按钮
-                }, function(indexo, layero){
+            	};
+
+                com.showConfirm('确认完结采购单?', function(indexo){
                     com.post(api.inventory.updatePurchaseForBalanceStatus, options, function(res){
                         purchaseBalanceSearcher.doSearch();
                     });
-
                     layer.close(indexo);
                 });
+
             });
 
             return $liLine;

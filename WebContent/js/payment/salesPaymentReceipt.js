@@ -61,7 +61,7 @@ jQuery(function($) {
 
             commonInfo["orderId"] = salesPayment.sales.orderId;
             commonInfo["no"] = salesPayment.sales.no;
-            commonInfo["orderAddr"] = salesPayment.sales.house.village.name + " " + salesPayment.sales.house.houseNumber;
+            commonInfo["orderAddr"] = salesPayment.sales.house.village.cityProper.city.name + ' ' + salesPayment.sales.house.village.cityProper.name + ' ' + salesPayment.sales.house.village.name + " " + salesPayment.sales.house.houseNumber;
             commonInfo["customerName"] = salesPayment.sales.customer.name;
             commonInfo["salesmanName"] = salesPayment.sales.salesman.currentName;
             commonInfo["departmentName"] = salesPayment.sales.dept.name;

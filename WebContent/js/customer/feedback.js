@@ -38,21 +38,14 @@ $(function(){
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
-            //var $urldiv ;
-            //$.each(v, function(i, val){
-
             var  $urldiv = $('<div style="border: 1px solid #ccc;"></div>').addClass('divimg').css("width", "75px").css("height","75px").css("margin-right", "10px");
             var img = $('<img/>');
             var imgA = $('<a></a>').attr("data-rel", "colorbox").attr("display", "none").addClass('cboxElement').attr("href", com.showImg(img, v.picture, 75, 75, '', null, 0)).attr("target","_blank").css("height", "150px").append(img).appendTo($urldiv);
 
-
-
-            //})
-
             var propertyArr = [
-                ["图片：", $urldiv, "grey"],
-                ["说明：", v.content, "grey"],
-                ["创建时间：",  v.createTime, "grey"]
+                ["图片: ", $urldiv, "grey"],
+                ["说明: ", v.content, "grey"],
+                ["创建时间: ",  v.createTime, "grey"]
             ];
 
             $.each(propertyArr, function (index, value) {
@@ -86,14 +79,5 @@ $(function(){
     searcher.init(['feedbackCreateTime'], "condList",api.customer.pageFeedback, function(res){
         displayFunc.init("resultList",res);
     },"pagenation");
-
-    //function picture(v){
-    //    //$.each()
-    //    var  $urldiv = $('<div style="border: 1px solid #ccc;"></div>').addClass('divimg').css("width", "75px").css("height","75px").css("margin-right", "10px");
-    //    var img = $('<img/>');
-    //    var imgA = $('<a></a>').attr("data-rel", "colorbox").attr("display", "none").addClass('cboxElement').attr("href", com.showImg(img, v.picture, 75, 75, '', null, 0)).attr("target","_blank").css("height", "150px").append(img).appendTo($urldiv);
-    //
-    //    imgA.colorbox(colorboxArgs);
-    //}
 
 })();

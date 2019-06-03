@@ -1,7 +1,9 @@
 
 $(function(){
-    var type = {};
     var storeroom = {};
+    var subtype = {};
+    var type = {};
+    var recordSubtype = {};
     var awardStock = {
         awardStockItems : {
             no : com.focusPage("#no"),
@@ -9,6 +11,7 @@ $(function(){
             num : com.focusPage("#num"),
             type : com.focusPage("#type"),
             storeroom : com.focusPage("#storeroom"),
+            subtype : com.focusPage("#subtype"),
             price : com.focusPage("#price"),
             content : com.focusPage("#content"),
             format : com.focusPage("#format"),
@@ -20,24 +23,35 @@ $(function(){
             isPrefor  : com.focusPage("#isPrefor"),
             isStock :  com.focusPage("#isStock"),
             isPayment :  com.focusPage("#isPayment"),
-            price2 :  com.focusPage("#price2")
+            price2 :  com.focusPage("#price2"),
+            awardRecordSubtype: com.focusPage("#awardRecordSubtype")
         }
     };
 
     com.post(api.ds.information, {}, function (res) {
         awardStock.awardStockItems.storeroom.bindData(res.awardStoreRoom, "key", "value", false);
+        awardStock.awardStockItems.subtype.bindData(res.awardSubtype, "key", "value", false);
         awardStock.awardStockItems.type.bindData(res.awardStockType, "key", "value", false);
         awardStock.awardStockItems.isPrefor.bindData(res.isPreforType, "key", "value", false);
         awardStock.awardStockItems.isStock.bindData(res.isStockType, "key", "value", false);
         awardStock.awardStockItems.isPayment.bindData(res.isPaymentType, "key", "value", false);
-        
+        awardStock.awardStockItems.awardRecordSubtype.bindData(res.awardRecordSubtype, "key", "value", false);
+
         $.each(res.awardStoreRoom,function(i,v){
             storeroom[v.key]=v.value;
+        });
+        
+        $.each(res.awardSubtype,function(i,v){
+        	subtype[v.key]=v.value;
         });
         
         $.each(res.awardStockType,function(i,v){
             type[v.key]=v.value;
         })
+
+        $.each(res.awardRecordSubtype,function(i,v){
+            recordSubtype[v.key]=v.value;
+        });
     },null,false);
 
     var displayFunc  = (function(){
@@ -63,8 +77,8 @@ $(function(){
             var $liTitle = $('<li></li>').addClass('line table-title');
 
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>'));
-            var $contentWrap = $('<div></div>').addClass('line-wrap  content col11');
-            var titleName ='编号,名称,数量,类型,备注,库房信息,规格,状态,库存标识,业绩标识,金额标识';
+            var $contentWrap = $('<div></div>').addClass('line-wrap  content col12');
+            var titleName ='编号,名称,数量,类型,子类,备注,库房信息,规格,状态,库存标识,业绩标识,金额标识';
 
             $.each(titleName.split(','), function (i, v) {
                 var $cell = $('<div></div>').addClass('cell').html(v);
@@ -82,14 +96,15 @@ $(function(){
             var $liLine = $('<li></li>').addClass('line');
             var id = i + 1;
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(id));
-            var $contentWrap = $('<div></div>').addClass('line-wrap content col11');
+            var $contentWrap = $('<div></div>').addClass('line-wrap content col12');
             var propertyArr = [
                 [v.no,'grey'],
                 [v.name,'grey'],
                 [v.num,'grey'],
                 [type[v.type],'grey'],
+                [subtype[v.subtype] , "grey"],
                 [v.content,'grey'],
-                [ storeroom[v.storeroom] , "grey"],
+                [storeroom[v.storeroom] , "grey"],
                 [v.format,'grey'],
                 [v.status =="0" ? "启用" : "禁用",'red'],
                 [v.isStock=="0" ? "加入库存" : "不加入库存",'red'],
@@ -129,7 +144,7 @@ $(function(){
             $btnStart.click(function(){
                 startStatus(v.asId, v.status, function(){
                     layer.closeAll();
-                    layer.msg('启用成功',{icon:1});
+                    com.showAlert(com.info,"启用成功");
                 });
             });
 
@@ -137,7 +152,7 @@ $(function(){
             $btnBan.click(function(){
                 stopStatus(v.asId, v.status, function(){
                     layer.closeAll();
-                    layer.msg('禁用成功',{icon:1});
+                    com.showAlert(com.info,"禁用成功");
                 });
             });
 
@@ -153,8 +168,14 @@ $(function(){
                 com.focusPage("#stock").hide();
                 com.focusPage("#money").show();
                 com.focusPage("#leave").show();
+                com.focusPage("[for=awardRecordSubtype]").show();
+                awardStock.awardStockItems.awardRecordSubtype.show();
+                com.focusPage("#awardRecordSubtype option:eq(0)").attr("selected",false);
+                com.focusPage("#awardRecordSubtype option:eq(1)").attr("selected",true);
+                com.focusPage("#awardRecordSubtype option:odd").show();
+                com.focusPage("#awardRecordSubtype option:even").hide();
                 openlayer(function(index, layero){
-                    if(com.validate('form2'))
+                    if(com.validate('checkstorer'))
                         return;
                     updateDataEnd(v, function(){
                         layer.closeAll();
@@ -167,6 +188,7 @@ $(function(){
                     com.showAlert(com.warning, "此商品禁止入库!");
                     return
                 }
+
                 com.cleanItems(awardStock.awardStockItems);
                 editBrand2(v);
                 editReadOnly2();
@@ -174,8 +196,14 @@ $(function(){
                 com.focusPage("#stock").hide();
                 com.focusPage("#money").show();
                 com.focusPage("#join").show();
+                com.focusPage("[for=awardRecordSubtype]").show();
+                awardStock.awardStockItems.awardRecordSubtype.show();
+                com.focusPage("#awardRecordSubtype option:eq(1)").attr("selected",false);
+                com.focusPage("#awardRecordSubtype option:eq(0)").attr("selected",true);
+                com.focusPage("#awardRecordSubtype option:odd").hide();
+                com.focusPage("#awardRecordSubtype option:even").show();
                 openlayer(function(index, layero){
-                    if(com.validate('form2'))
+                    if(com.validate('checkstorer'))
                         return;
                     updateDataIng(v, function(){
                         layer.closeAll();
@@ -186,7 +214,7 @@ $(function(){
             $update.click(function () {
                 editBrand1(v);
                 openlayer(function(index, layero){
-                    if(com.validate('form1'))
+                    if(com.validate('redact'))
                         return;
                     updateAll(v, function(){
                         layer.closeAll();
@@ -202,12 +230,14 @@ $(function(){
                 com.cleanItems(awardStock.awardStockItems);
                 editBrand2(v);
                 editReadOnly2();
+                com.focusPage("[for=awardRecordSubtype]").hide();
+                awardStock.awardStockItems.awardRecordSubtype.hide();
                 com.focusPage("#join").hide();
                 com.focusPage("#leave").hide();
                 com.focusPage("#money").hide();
                 com.focusPage("#stock").show();
                 openlayer(function(index, layero){
-                    if(com.validate('form2'))
+                    if(com.validate('checkstorer'))
                         return;
                     updateData(v, function(){
                         layer.closeAll();
@@ -246,7 +276,7 @@ $(function(){
             com.cleanItems(awardStock.awardStockItems);
             RemoveEditReadOnly1();
             openlayer(function(index, layero) {
-                if (com.validate('form1'))
+                if (com.validate('redact'))
                     return;
                 saveData(function () {
                     layer.closeAll();
@@ -313,10 +343,7 @@ $(function(){
                 awardStockSeacher.doSearch();
             });
         }else{
-            layer.alert('已经启用', {
-                icon: 0,
-                skin: 'layer-ext-moon'
-            });
+            com.showAlert(com.info,'已经启用');
         }
     }
 
@@ -330,10 +357,7 @@ $(function(){
                 awardStockSeacher.doSearch();
             });
         }else{
-            layer.alert('已经禁用', {
-                icon: 0,
-                skin: 'layer-ext-moon'
-            });
+            com.showAlert(com.info,'已经禁用');
         }
     }
     /*添加信息*/
@@ -343,6 +367,7 @@ $(function(){
         var name = awardStock.awardStockItems.name.val();
         var type = awardStock.awardStockItems.type.val();
         var storeroom = awardStock.awardStockItems.storeroom.val();
+        var subtype = awardStock.awardStockItems.subtype.val();
         var num = awardStock.awardStockItems.num.val();
         var price = awardStock.awardStockItems.price.val();
         var content = awardStock.awardStockItems.content.val();
@@ -355,13 +380,14 @@ $(function(){
             "awardStock.name":name,
             "awardStock.type":type,
             "awardStock.storeroom":storeroom,
+            "awardStock.subtype":subtype,
             "awardStock.num": num,
             "awardStock.price":price,
             "awardStock.content":content,
             "awardStock.format":format,
             "awardStock.isPrefor": isPrefor,
             "awardStock.isStock": isStock,
-            "awardStock.isPayment": isPayment
+            "awardStock.isPayment": isPayment,
         }, function(res){
             callback();
             awardStockSeacher.doSearch();
@@ -372,6 +398,7 @@ $(function(){
         var content = awardStock.awardStockItems.content.val();
         var isStock = awardStock.awardStockItems.isStock.val();
         var storeroom = awardStock.awardStockItems.storeroom.val();
+        var subtype = awardStock.awardStockItems.subtype.val();
         var format = awardStock.awardStockItems.format.val();
         var isPrefor = awardStock.awardStockItems.isPrefor.val();
         var isPayment = awardStock.awardStockItems.isPayment.val();
@@ -382,6 +409,7 @@ $(function(){
             "awardStock.isStock": isStock,
             "awardStock.isPayment": isPayment,
             "awardStock.storeroom": storeroom,
+            "awardStock.subtype": subtype,
             "awardStock.format": format
         }, function(res){
             callback();
@@ -394,10 +422,10 @@ $(function(){
         var warehousend = awardStock.awardStockItems.Warehousend.val();
         var price2 =  awardStock.awardStockItems.price2.val();
         com.post(api.information.updateAwardStockForXG, {
-
             "awardStock.asId": v.asId,
             "awardStock.num": warehousend,
             "awardStock.price":price2,
+            "awardStock.subtype": awardStock.awardStockItems.awardRecordSubtype.val()
         }, function(res){
             callback();
             awardStockSeacher.doSearch();
@@ -409,7 +437,8 @@ $(function(){
         com.post(api.information.updateAwardStockForCG, {
             "awardStock.asId": v.asId,
             "awardStock.num": warehousing,
-            "awardStock.price":price2
+            "awardStock.price":price2,
+            "awardStock.subtype": awardStock.awardStockItems.awardRecordSubtype.val()
         }, function(res){
             callback();
             awardStockSeacher.doSearch();
@@ -456,6 +485,7 @@ $(function(){
         awardStock.awardStockItems.format.val(v.format);
         awardStock.awardStockItems.content.val(v.content);
         awardStock.awardStockItems.storeroom.val(v.storeroom);
+        awardStock.awardStockItems.subtype.val(v.subtype);
         awardStock.awardStockItems.isStock.val(v.isStock);
         var $layerAdd = com.focusPage('#layerAdd1');
         $layerAdd.find("#no").attr('disabled', 'disabled');
@@ -473,6 +503,7 @@ $(function(){
         $layerAdd.find('#num').removeAttr('disabled');
         $layerAdd.find('#type').removeAttr('disabled');
         $layerAdd.find('#storeroom').removeAttr('disabled');
+        $layerAdd.find('#subtype').removeAttr('subtype');
     }
 
 });

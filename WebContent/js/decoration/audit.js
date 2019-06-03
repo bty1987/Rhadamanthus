@@ -35,7 +35,7 @@ jQuery(function($) {
         };
 
         var creatLine = function (v) {
-            com.sealJournal("info",v);
+
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.decoration.orderId));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
@@ -81,7 +81,6 @@ jQuery(function($) {
             });
 
             $btnPrice.click(function(){
-                com.sealJournal("info",v);
                 viewAuditRecord(v.decoration.orderId, v.decoration.designer.uid,v.decoration.designer.dept.no);
             });
 
@@ -131,14 +130,12 @@ jQuery(function($) {
 
 
     function applyAudit(aid){
-        bootbox.confirm("确认审核吗?",function(res){
+        com.showConfirm("确认审核吗?",function(){
             //如果为ture
-            if(res){
-                com.post(api.decoration.applyAudit, {"audit.aid":aid}, function(res){
-                    com.showAlert(com.info, "操作成功");
-                    searcher.doSearch();
-                });
-            }
+            com.post(api.decoration.applyAudit, {"audit.aid":aid}, function(res){
+                com.showAlert(com.info, "操作成功");
+                searcher.doSearch();
+            });
         });
 
     }

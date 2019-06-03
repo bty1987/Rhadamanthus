@@ -7,9 +7,9 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.information.po.AwardStockPO;
 import com.fanglin.utils.Paging;
 
-public interface AwardStockDao extends Dao<AwardStockPO>{
-	
+public interface AwardStockDao extends Dao<AwardStockPO> {
+
 	public List<AwardStockPO> pageAwardStock(Paging paging, List<Filter> filters, int company);
-	
-	public List<AwardStockPO> queryAwardStock(short type, int company);
+
+	public List<AwardStockPO> queryAwardStock(short type, short storeroom,int company);
 }

@@ -23,9 +23,7 @@ $(function(){
 		repeatFlg: false,
 	};
 	
-	com.initTypeahead('receiver', api.personel.queryUserByPinyin, "pinyinName", {"duty": "", "user.status":0}, "autoFillKeyValue", "key", "value",function(list,key,value){
-		return value;
-	});
+	com.initTypeahead('receiver', api.personel.queryUserByPinyin, "pinyinName", {"duty": "", "user.status":0}, "autoFillKeyValue", "key", "value", null);
 
 	com.focusPage("#returnBtn").on("click", function(){
 		com.focusPage(".sysMessage").text("系统消息");
@@ -118,7 +116,7 @@ $(function(){
 
 			com.cleanItems(message.messageItems);
 
-			com.updateTypeahead('receiver', '', '');
+			com.cleanTypeahead('receiver');
 
 			message.modal.modal("show");
 		});

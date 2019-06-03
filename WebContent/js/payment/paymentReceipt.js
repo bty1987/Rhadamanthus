@@ -140,7 +140,7 @@ jQuery(function ($) {
 
                 var orderReceiptTr = $('<tr></tr>').appendTo(receiptTable);
                 var noReceiptTd = $('<td style="width: 25%" colspan="2"></td>').text('装修单号: ' + $order.orderId).appendTo(orderReceiptTr);
-                var timeReceiptTd = $('<td colspan="3" style="width: 33%"></td>').text('楼盘: ' + $order.house.village.name + ' ' + $order.house.houseNumber).appendTo(orderReceiptTr);
+                var timeReceiptTd = $('<td colspan="3" style="width: 33%"></td>').text('楼盘: ' + $order.house.village.cityProper.city.name + ' ' + $order.house.village.cityProper.name + ' ' + $order.house.village.name + ' ' + $order.house.houseNumber).appendTo(orderReceiptTr);
                 var orderReceiptTr = $('<tr></tr>').appendTo(receiptTable);
             }
 

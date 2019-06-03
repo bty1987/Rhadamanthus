@@ -43,7 +43,7 @@ $(function(){
 
     bindUploadfiy();
     //Datepicker是绑在一个标准的形式输入字段
-    com.focusPage(".date-picker").datepicker({autoclose : !0}).on("show", function() {
+    com.focusPage(".date-picker").datepicker(com.datepickerdefault).on("show", function() {
         setTimeout(function() {
             com.focusPage(".dropdown-menu").css("z-index", 1060);
         },0);
@@ -191,7 +191,7 @@ $(function(){
 
             $btnDel.click(function(){
                 com.showConfirm("确定删除吗?", function() {
-                        removeRow(v.nid);
+                    removeRow(v.nid);
                 });
             });
 

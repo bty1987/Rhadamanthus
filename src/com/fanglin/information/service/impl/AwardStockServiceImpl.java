@@ -41,7 +41,7 @@ public class AwardStockServiceImpl implements AwardStockService {
 		List<AwardStockVO> awardStockVOs = new ArrayList<AwardStockVO>();
 
 		for (AwardStockPO awardStockPO : awardStockPOs) {
-			
+
 			AwardStockVO awardStockVO = new AwardStockVO();
 
 			BeanUtil.copyProperties(awardStockPO, awardStockVO);
@@ -55,7 +55,7 @@ public class AwardStockServiceImpl implements AwardStockService {
 	@Override
 	public List<AwardStockVO> queryAwardStockByType(AwardStockVO awardStock, int company) {
 
-		List<AwardStockPO> awardStockPOs = awardStockDao.queryAwardStock(awardStock.getType(), company);
+		List<AwardStockPO> awardStockPOs = awardStockDao.queryAwardStock(awardStock.getType(), awardStock.getStoreroom(), company);
 		List<AwardStockVO> awardStockVOs = new ArrayList<AwardStockVO>();
 
 		for (AwardStockPO awardStockPO : awardStockPOs) {
@@ -89,19 +89,19 @@ public class AwardStockServiceImpl implements AwardStockService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void addAwardStock(AwardStockVO awardStockVO, String userId, int company) throws FLException {
-		
+
 		AwardStockPO awardStockPO = new AwardStockPO();
 
 		BeanUtil.copyProperties(awardStockVO, awardStockPO);
-		
+
 		awardStockPO.setStatus(AwardStockPO.STATUS_ABLE_SHORT);
 		awardStockPO.setCompany(company);
 
 		awardStockDao.save(awardStockPO);
-		
+
 		UserPO creater = userdDao.queryUserByUserId(userId);
-		
-		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, creater, AwardRecordPO.TYPE_CG_INT, AwardRecordPO.ONETYPE_NOT_INT, awardStockPO.getIsStock(), awardStockVO.getPrice(), awardStockVO.getNum(), awardStockVO.getContent());
+
+		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, creater, AwardRecordPO.TYPE_CG_INT, AwardRecordPO.TYPE_CG_INT, AwardRecordPO.ONETYPE_NOT_INT, awardStockPO.getIsStock(), awardStockVO.getPrice(), awardStockVO.getNum(), awardStockVO.getContent());
 		
 		awardRecordDao.save(awardRecordPO);
 	}
@@ -115,14 +115,15 @@ public class AwardStockServiceImpl implements AwardStockService {
 		if (awardStockPO == null) {
 			throw new FLException(160043, "物品不存在");
 		}
-		
+
 		awardStockPO.setIsPrefor(awardStockVO.getIsPrefor());
 		awardStockPO.setIsStock(awardStockVO.getIsStock());
 		awardStockPO.setContent(awardStockVO.getContent());
 		awardStockPO.setFormat(awardStockVO.getFormat());
 		awardStockPO.setStoreroom(awardStockVO.getStoreroom());
 		awardStockPO.setIsPayment(awardStockVO.getIsPayment());
-		
+		awardStockPO.setSubtype(awardStockVO.getSubtype());
+
 		awardStockDao.update(awardStockPO);
 	}
 
@@ -143,15 +144,15 @@ public class AwardStockServiceImpl implements AwardStockService {
 		if (awardStockVO.getNum() > awardStockPO.getNum()) {
 			throw new FLException(160038, "库存不足");
 		}
-		
+
 		float num = awardStockVO.getNum();
-		
+
 		awardStockPO.setNum(Arith.sub(awardStockPO.getNum(), num));
 
 		UserPO creater = userdDao.queryUserByUserId(userId);
-		
-		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, creater, AwardRecordPO.TYPE_XG_INT, AwardRecordPO.ONETYPE_NOT_INT, AwardStockPO.ISSTOCK_CAL_INT, awardStockVO.getPrice(), num, awardStockVO.getContent());
-		
+
+		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, creater, AwardRecordPO.TYPE_XG_INT, awardStockVO.getSubtype(), AwardRecordPO.ONETYPE_NOT_INT, AwardStockPO.ISSTOCK_CAL_INT, awardStockVO.getPrice(), num, awardStockVO.getContent());
+
 		awardStockDao.update(awardStockPO);
 		awardRecordDao.save(awardRecordPO);
 	}
@@ -168,14 +169,14 @@ public class AwardStockServiceImpl implements AwardStockService {
 		if (awardStockPO.getIsStock() != AwardStockPO.ISSTOCK_CAL_INT) {// 0:不计算
 			throw new FLException(160041, "物品不能入库");
 		}
-		
+
 		float num = awardStockVO.getNum();
 
 		awardStockPO.setNum(Arith.add(awardStockPO.getNum(), num));
-		
+
 		UserPO creater = userdDao.queryUserByUserId(userId);
-		
-		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, creater, AwardRecordPO.TYPE_CG_INT, AwardRecordPO.ONETYPE_NOT_INT, AwardStockPO.ISSTOCK_CAL_INT, awardStockVO.getPrice(), num, awardStockVO.getContent());
+
+		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, creater, AwardRecordPO.TYPE_CG_INT, awardStockVO.getSubtype(), AwardRecordPO.ONETYPE_NOT_INT, AwardStockPO.ISSTOCK_CAL_INT, awardStockVO.getPrice(), num, awardStockVO.getContent());
 		
 		awardStockDao.update(awardStockPO);
 		awardRecordDao.save(awardRecordPO);
@@ -187,25 +188,25 @@ public class AwardStockServiceImpl implements AwardStockService {
 
 		AwardStockPO awardStockPO = awardStockDao.get(awardStockVO.getAsId());
 
-		if (awardStockPO == null) {   
+		if (awardStockPO == null) {
 			throw new FLException(160043, "物品不存在");
 		}
 
 		if (awardStockPO.getIsStock() != AwardStockPO.ISSTOCK_CAL_INT) {// 0:不计算
 			throw new FLException(160042, "该种类型的物品不能盘点");
 		}
-		
+
 		short type = awardStockPO.getNum() > awardStockVO.getNum() ? AwardRecordPO.TYPE_LOSSES_INT : AwardRecordPO.TYPE_SURPLUS_INT;
-		
+
 		float num = awardStockVO.getNum();
-		
+
 		awardStockVO.setNum(Math.abs(Arith.sub(awardStockPO.getNum(), awardStockVO.getNum())));
 		awardStockPO.setNum(num);
-		
+
 		UserPO creater = userdDao.queryUserByUserId(userId);
-		
-		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, creater, type, AwardRecordPO.ONETYPE_NOT_INT, AwardStockPO.ISSTOCK_CAL_INT, awardStockVO.getPrice(), num, awardStockVO.getContent());
-		
+
+		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, creater, type, type, AwardRecordPO.ONETYPE_NOT_INT, AwardStockPO.ISSTOCK_CAL_INT, awardStockVO.getPrice(), num, awardStockVO.getContent());
+
 		awardStockDao.update(awardStockPO);
 		awardRecordDao.save(awardRecordPO);
 	}

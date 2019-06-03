@@ -107,19 +107,15 @@ $(function(){
                 });
             });
 
-         /*不显示 ==》显示*/
             $btnStart.click(function(){
                 com.focusPage('#layerAdd').attr('data-cid', v.cid);
                 com.focusPage('#layerAdd').attr('data-status', v.isShow);
 
                 var id = com.focusPage('#layerAdd').attr('data-cid');
                 var status = com.focusPage('#layerAdd').attr('data-status');
-                startStatus(id,status,function(){
-                    layer.closeAll();
-                    layer.msg('首页不显示',{icon:1});
-                });
+                startStatus(id, status);
             });
-            /*显示 ==》不显示*/
+            
             $btnBan.click(function(){
                 com.focusPage('#layerAdd').attr('data-bid', v.cid);
                 com.focusPage('#layerAdd').attr('data-status', v.isShow);
@@ -127,11 +123,9 @@ $(function(){
                 var id = com.focusPage('#layerAdd').attr('data-bid');
                 var status = com.focusPage('#layerAdd').attr('data-status');
 
-                stopStatus(id,status,function(){
-                    layer.closeAll();
-                    layer.msg('首页显示',{icon:1});
-                });
+                stopStatus(id, status);
             });
+            
             return $liLine;
         };
 
@@ -199,38 +193,22 @@ $(function(){
     }
 
     /*状态信息验证*/
-    function startStatus(id,isShow,callback){
-        if(isShow == "0"){
-            com.post(api.store.updateMcategoryForShow,{
-                "mcategory.cid": id,
-                "mcategory.isShow": 1
-            },function(res){
-                callback();
-                mcategorySeacher.doSearch();
-            });
-        }else{
-            layer.alert('已经不显示', {
-                icon: 0,
-                skin: 'layer-ext-moon' //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
-            });
-        }
+    function startStatus(id,isShow){
+        com.post(api.store.updateMcategoryForShow,{
+            "mcategory.cid": id,
+            "mcategory.isShow": 1
+        },function(res){
+            mcategorySeacher.doSearch();
+        });
     }
 
     function stopStatus(id, isShow, callback){
-        if(isShow == "1"){
-            com.post(api.store.updateMcategoryForShow,{
-                "mcategory.cid": id,
-                "mcategory.isShow": 0
-            },function(res){
-                callback();
-                mcategorySeacher.doSearch();
-            });
-        }else{
-            layer.alert('已经显示', {
-                icon: 0,
-                skin: 'layer-ext-moon'
-            });
-        }
+        com.post(api.store.updateMcategoryForShow,{
+            "mcategory.cid": id,
+            "mcategory.isShow": 0
+        },function(res){
+            mcategorySeacher.doSearch();
+        });
     }
 
     /*添加信息*/

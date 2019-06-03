@@ -93,35 +93,23 @@ $(function () {
 
                 openlayer("编辑", function () {
                     if (!com.validate("layerAdd", null)) {
-                        saveData(v.qtid, function () {
-                            layer.closeAll();
-                            quoteTypeSeacher.doSearch();
-                        })
+                        saveData(v.qtid)
                     }
                 });
             });
 
             //状态启用事件
             $btnStart.click(function(){
-                layer.confirm( '是否启用?', {
-                    btn: ['确定', '取消']
-                }, function (index, layero) {
-                    changeQuoteTypeStatus(v.qtid, 0,(v.status == 0), function () {
-                        layer.closeAll();
-                        layer.msg('启用成功', {icon: 1, time: 2e3});
-                    });
-                }, function () {});
+                changeQuoteTypeStatus(v.qtid, 0, (v.status == 0), function () {
+                    com.showAlert(com.info, "操作成功");
+                });
             });
+            
             //状态禁用事件
             $btnStop.click(function(){
-                layer.confirm('是否禁用?', {
-                    btn: ['确定', '取消']
-                }, function (index, layero) {
-                    changeQuoteTypeStatus(v.qtid, 1,(v.status == 1), function () {
-                        layer.closeAll();
-                        layer.msg('禁用成功', {icon: 2, time: 2e3});
-                    });
-                }, function () {});
+                changeQuoteTypeStatus(v.qtid, 1, (v.status == 1), function () {
+                    com.showAlert(com.info, "操作成功");
+                });
             })
 
             return $liLine;
@@ -154,12 +142,8 @@ $(function () {
                 com.clearValidator();
                 openlayer("添加", function (index, layero) {
                     if (!com.validate("layerAdd", null)) {
-                        saveData(null, function () {
-                            layer.closeAll();
-                            quoteTypeSeacher.doSearch();
-                        });
+                        saveData(null);
                     }
-
                 });
             });
 
@@ -191,7 +175,7 @@ $(function () {
     }
 
     //添加数据
-    function saveData(qtid, callback) {
+    function saveData(qtid) {
         var name = $quoteTypeName.val();
 
         if (qtid) {
@@ -199,15 +183,15 @@ $(function () {
                 "quoteType.qtid": qtid,
                 "quoteType.name": name
             }, function (res) {
-                callback();
-                layer.msg('编辑成功', {time: 2e3});
+                quoteTypeSeacher.doSearch();
+                com.showAlert(com.info, "操作成功");
             });
         } else {
             com.post(api.production.addQuoteType, {
                 "quoteType.name": name
             }, function (res) {
-                callback();
-                layer.msg('添加成功', {icon: 1, time: 2e3});
+                quoteTypeSeacher.doSearch();
+                com.showAlert(com.info, "操作成功");
             });
         }
 
@@ -215,22 +199,14 @@ $(function () {
 
     /*btnType:0 启用功能,1 禁用功能
       statusFlag:当前状态是否与想要完成的功能相冲 */
-    function changeQuoteTypeStatus(id,btnType,statusFlag ,callback) {
-
-        if(!statusFlag){
-            com.post(api.production.updateQuoteTypeForStatus, {
-                "quoteType.qtid": id,
-                "quoteType.status": btnType
-            }, function (res) {
-                callback();
-                quoteTypeSeacher.doSearch();
-            });
-        }else{
-            layer.alert(btnType == 0 ? '已经启用':'已经禁用', {
-                icon: 0,
-                skin: 'layer-ext-moon'
-            });
-        }
+    function changeQuoteTypeStatus(id,btnType,statusFlag) {
+        com.post(api.production.updateQuoteTypeForStatus, {
+            "quoteType.qtid": id,
+            "quoteType.status": btnType
+        }, function (res) {
+            quoteTypeSeacher.doSearch();
+            com.showAlert(com.info, "操作成功");
+        });
     }
 
 });

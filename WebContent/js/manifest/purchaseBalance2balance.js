@@ -32,7 +32,7 @@ $(function () {
     });
 
     var initList = function (listData) {
-    	
+
         var $tableWrap = com.focusPage('#list');
         var $ul = $('<ul></ul>').addClass('item-list ui-sortable  fl-table-list');
 
@@ -97,10 +97,7 @@ $(function () {
                         }
 
                         if(v.status == 1){
-                            layer.alert('采购结算状态不可操作', {
-                                icon: 0,
-                                skin: 'layer-ext-moon'
-                            });
+                            com.showAlert(com.warning,'采购结算状态不可操作');
                         }else if(v.status == 0) {
                             com.post(api.inventory.updatePurchaseBalance, editArr, function () {
                                 com.focusPage('#list ul.item-list').remove();
@@ -119,15 +116,9 @@ $(function () {
                 $btnUpdate.click(function (e) {
                     e.stopPropagation();
 
-                    layer.confirm('确定要修改为已付款状态?', {
-                        btn: ['确定', '取消'] //按钮
-                    }, function (indexo, layero) {
-
+                    com.showConfirm('确定要修改为已付款状态?', function(index){
                         if(v.status == 1){
-                            layer.alert('采购结算状态不可操作', {
-                                icon: 0,
-                                skin: 'layer-ext-moon'
-                            });
+                            com.showAlert(com.warning,'采购结算状态不可操作', )
                         }else if(v.status == 0){
                             com.post(api.inventory.updatePurchaseBalanceForStatus, {"purchaseBalance.pbid": v.pbid,"purchaseBalance.status" : v.status}, function () {
                                 com.focusPage('#list ul.item-list').remove();
@@ -136,8 +127,7 @@ $(function () {
                                 com.showAlert(com.error, e.errorMsg);
                             });
                         }
-
-                        layer.close(indexo);
+                        layer.close(index);
                     });
                 });
             });
@@ -224,9 +214,9 @@ $(function () {
             if(com.validate('layerEdit')){
                 return false;
             }
-            
+
             com.post(api.inventory.addPurchaseBalance, editArr, function () {
-            	
+
                 com.focusPage('#list ul.item-list').remove();
                 queryPurchaseBalanceByPid(pid);
                 layer.closeAll();

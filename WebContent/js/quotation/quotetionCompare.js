@@ -362,7 +362,7 @@ var QuotetionDetail = (function () {
                 }
                 var _dcp = 0;
                 if (lqv.type < 2) {
-                    _dcp = utils.accMul(lqv.unitPrice, (lqv.discount == 1 ? ldiscount : 1));//折后单价1打折，0不打折
+                    _dcp = utils.accMul(lqv.unitPrice, (lqv.discount == 1 ? ldiscount : 1));//折后单价1打折,0不打折
                     _dcp = utils.changeThrDecimal(_dcp);
                 }
                 if (lqv.type == 2) {
@@ -422,7 +422,7 @@ var QuotetionDetail = (function () {
                 }
                 var _dcp = 0;
                 if (rqv.type < 2) {
-                    _dcp = utils.accMul(rqv.unitPrice, (rqv.discount == 1 ? rdiscount : 1));//折后单价1打折，0不打折
+                    _dcp = utils.accMul(rqv.unitPrice, (rqv.discount == 1 ? rdiscount : 1));//折后单价1打折,0不打折
                     _dcp = utils.changeThrDecimal(_dcp);
                 }
                 if (rqv.type == 2) {

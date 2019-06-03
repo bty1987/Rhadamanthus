@@ -1,69 +1,58 @@
 $(function () {
-	
-	var goods = {
-		gid: null,
-		keyword: null,
-	}
+
+    var goods = {
+        gid: null,
+        keyword: null,
+    };
 
     var validator = {
-		float3: {
+        float3: {
             type: "v_float_3",
             regex: /^([0-9]+|[0-9]+\.[0-9]{1,3})$/,
             errorMsg: "数量格式错误"
         }
     };
-    
+
     var items = {
-    		
-    	no: com.focusPage("#no"),
-    	type: com.focusPage("#type"),
-    	name: com.focusPage("#name"),
-    	barcode: com.focusPage("#barcode"),
-    	category: com.focusPage("#category"),
-    	brand: com.focusPage("#brand"),
-    	measurementUnit: com.focusPage("#measurementUnit"),
-    	purchase: com.focusPage("#purchase"),
-    	selling: com.focusPage("#selling"),
-    	pieceNum: com.focusPage("#pieceNum"),
-    	accessoriesType: com.focusPage("#accessoriesType"),
-    		
-    	executeTimes: com.focusPage("#executeTimes"),
-    	executeDates: com.focusPage("#executeDates"),
-    	
-    	filePath: com.focusPage("#filePath"),
-    	
-    	submitBtn: com.focusPage("#submitBtn"),
-    	importBtn: com.focusPage("#importBtn"),
-    	exportBtn: com.focusPage("#exportBtn")
+
+        no: com.focusPage("#no"),
+        type: com.focusPage("#type"),
+        name: com.focusPage("#name"),
+        barcode: com.focusPage("#barcode"),
+        category: com.focusPage("#category"),
+        brand: com.focusPage("#brand"),
+        measurementUnit: com.focusPage("#measurementUnit"),
+        purchase: com.focusPage("#purchase"),
+        selling: com.focusPage("#selling"),
+        pieceNum: com.focusPage("#pieceNum"),
+        accessoriesType: com.focusPage("#accessoriesType"),
+
+        executeTimes: com.focusPage("#executeTimes"),
+        executeDates: com.focusPage("#executeDates"),
+
+        filePath: com.focusPage("#filePath"),
+
+        submitBtn: com.focusPage("#submitBtn"),
+        importBtn: com.focusPage("#importBtn"),
+        exportBtn: com.focusPage("#exportBtn")
     };
 
     $.extend(com.validator, validator);
-    
-    items.submitBtn.click(function(){
-    	saveData();
-    });
-    
-    items.importBtn.click(function(){
-    	planMission("import");
-    });
-    
-    items.exportBtn.click(function(){
-    	planMission("export");
+
+    items.submitBtn.click(function () {
+        saveData();
     });
 
-    com.focusPage(".date-picker").datepicker({autoclose: !0}).on("show", function () {
-        setTimeout(function () {
-            com.focusPage(".dropdown-menu").css("z-index", 9999)
-        }, 0)
-    }).next().on(ace.click_event, function () {
-        a(this).prev().focus()
+    items.importBtn.click(function () {
+        planMission("import");
     });
 
-    com.focusPage('#executeTimes').timepicker({
-        minuteStep: 1,
-        showSeconds: false,
-        showMeridian: false
+    items.exportBtn.click(function () {
+        planMission("export");
     });
+
+    com.focusPage('.date-picker').datepicker(com.datepickerdefault);
+    com.focusPage('#executeTimes').timepicker(com.timepickerdefault);
 
     com.focusPage("#attachment").Huploadify({
         auto: !0,
@@ -100,38 +89,21 @@ $(function () {
         },
         itemTemplate: '<div id="${fileID}" class="uploadify-queue-item" style="position:absolute;top:-30px;width:200px;left:-200px;">\r\n\t\t\t<div class="cancel">\r\n\t\t\t\t<a href="javascript:$(\'#${instanceID}\').uploadify(\'cancel\', \'${fileID}\')">X</a>\r\n\t\t\t</div>\r\n\t\t\t<span class="fileName">${fileName} (${fileSize})</span><span class="data"></span>\r\n\t\t\t<div class="uploadify-progress">\r\n\t\t\t\t<div class="uploadify-progress-bar"><!--Progress Bar--></div>\r\n\t\t\t</div>\r\n\t\t</div>'
     });
-    
-    com.focusPage("#brand").typeahead({
-        url: api.data.queryBrandForPinYinName,
-        list: [],
-        postData: {},
-        source: function (query, process) {
-            com.post(this.options.url, {"pinyinName": query}, $.proxy(this.options.callback, this));
-        }, matcher: function (item) {
-            return true;
-        }, callback: function (data) {
-            this.options.list = data['brands'];
-            this.flprocess(this.options.list, 'bid', 'name');
-        },
-        isResultTypeMap: true,
-        flupdater: function (k, v) {
-        	
-            var list = this.options.list;
-            
-            $.each(list, function (index, val) {
-            	
-                if (val.bid == k) {
-                	
-                	goods.bid = k;
-                	
-                	com.post(api.data.queryBrandByBid, {"brand.bid": k}, function (res) {
-                        items.category.val(res.brand.categoryName);
-                    });
-                }
-            });
 
-            return v;
-        }
+    com.initTypeahead("brand", api.data.queryBrandForPinYinName, "pinyinName", {}, "brands", "bid", "name", function (list, k, v) {
+        $.each(list, function (index, val) {
+
+            if (val.bid == k) {
+
+                goods.bid = k;
+
+                com.post(api.data.queryBrandByBid, {"brand.bid": k}, function (res) {
+                    items.category.val(res.brand.categoryName);
+                });
+            }
+        });
+
+        return v;
     });
 
     var displayFunc = (function () {
@@ -225,70 +197,70 @@ $(function () {
             $cellOption.appendTo($optionWrap);
 
             $liLine.append($indexWrap).append($contentWrap).append($optionWrap);
-            
+
             $btnEdit.click(function () {
-            	
-            	readonly("disabled");
-            	
+
+                readonly("disabled");
+
 //            	com.updateChosen('brand', v.bid, v.brand);
-            	
-            	goods.gid = v.gid;
-            	goods.bid = v.bid;
-            	
-            	items.no.val(v.no);
-            	items.type.val(v.type);
-            	items.name.val(v.name);
-            	items.barcode.val(v.barcode);
-            	items.brand.val(v.brand);
-            	items.category.val(v.category);
-            	
-            	items.measurementUnit.val(v.measurementUnit);
-            	items.purchase.val(v.purchase);
-            	items.selling.val(v.selling);
-            	items.pieceNum.val(v.pieceNum);
-            	items.accessoriesType.val(v.accessoriesType.atid);
-            	
+
+                goods.gid = v.gid;
+                goods.bid = v.bid;
+
+                items.no.val(v.no);
+                items.type.val(v.type);
+                items.name.val(v.name);
+                items.barcode.val(v.barcode);
+                items.brand.val(v.brand);
+                items.category.val(v.category);
+
+                items.measurementUnit.val(v.measurementUnit);
+                items.purchase.val(v.purchase);
+                items.selling.val(v.selling);
+                items.pieceNum.val(v.pieceNum);
+                items.accessoriesType.val(v.accessoriesType.atid);
+
                 showLayer("编辑", "#addLayer");
             });
-            
+
             $btnColor.click(function () {
-            	params["goods.gid"] = v.gid;
-            	skipLayer('颜色', 'views/manifest/color.html');
+                params["goods.gid"] = v.gid;
+                skipLayer('颜色', 'views/manifest/color.html');
             });
-            
+
             $btnFormat.click(function () {
-            	params["goods.gid"] = v.gid;
-            	skipLayer('规格', 'views/manifest/format.html');
+                params["goods.gid"] = v.gid;
+                skipLayer('规格', 'views/manifest/format.html');
             });
-            
+
             $btnPrice.click(function () {
-            	params["goods.gid"] = v.gid;
-            	skipLayer('价格', 'views/manifest/price4advance.html');
+                params["goods.gid"] = v.gid;
+                skipLayer('价格', 'views/manifest/price4advance.html');
             });
 
             /* $btnSuit.click(function () {
 				 params["goods.gid"] = v.gid;
                  skipLayer('套餐', 'views/data/goods4package.html');
              });*/
-            
+
             $btnStart.click(function () {
-            	
-            	if(v.status == 0){
-            		com.showAlert(com.warning, "已启用");
-            		return false;
-            	}
-            	
-            	updateStatus(v.gid, 0);
+
+                if (v.status == 0) {
+                    com.showAlert(com.warning, "已启用");
+                    return false;
+                }
+
+                updateStatus(v.gid, 0);
             });
-            
+
             $btnStop.click(function () {
-            	
-            	if(v.status == 1){
-            		com.showAlert(com.warning, "已禁用");
-            		return false;
-            	}
-            	
-            	updateStatus(v.gid, 1);
+
+                if (v.status == 1) {
+                    com.showAlert(com.warning, "已禁用");
+                    return false;
+                }
+
+                updateStatus(v.gid, 1);
             });
 
             return $liLine;
@@ -354,126 +326,126 @@ $(function () {
         var $addaExportspan = $('<span></span>').text('商品导出').appendTo($addaExportGoods);
 
         $adda.click(function () {
-        	
+
             com.cleanItems(items);
-            
+
             readonly(null);
-            
+
             goods.gid = null;
             goods.bid = null;
-            
+
             showLayer("添加", "#addLayer");
         });
 
         $addaImportGood.click(function () {
-        	
-        	goods.keyword = "import_goods";
-        	
-        	var form = com.focusPage("#importGoodsForm");
-        	
-        	com.focusPage("#uploaddiv").removeClass("hide").appendTo(form);
-        	com.focusPage("#fileUpload").removeClass("hide");
-        	
-        	items.importBtn.removeClass("hide");
-        	items.exportBtn.addClass("hide");
-            
+
+            goods.keyword = "import_goods";
+
+            var form = com.focusPage("#importGoodsForm");
+
+            com.focusPage("#uploaddiv").removeClass("hide").appendTo(form);
+            com.focusPage("#fileUpload").removeClass("hide");
+
+            items.importBtn.removeClass("hide");
+            items.exportBtn.addClass("hide");
+
             showLayer("导入商品", "#importGoods");
         });
 
         $addaImportColor.click(function () {
-        	
-        	goods.keyword = "import_color";
-        	
-        	var form = com.focusPage("#importColorForm");
-        	
-        	com.focusPage("#uploaddiv").removeClass("hide").appendTo(form);
-        	com.focusPage("#fileUpload").removeClass("hide");
-        	
-        	items.importBtn.removeClass("hide");
-        	items.exportBtn.addClass("hide");
-            
+
+            goods.keyword = "import_color";
+
+            var form = com.focusPage("#importColorForm");
+
+            com.focusPage("#uploaddiv").removeClass("hide").appendTo(form);
+            com.focusPage("#fileUpload").removeClass("hide");
+
+            items.importBtn.removeClass("hide");
+            items.exportBtn.addClass("hide");
+
             showLayer("导入颜色", "#importColor");
         });
 
         $addaImportFormat.click(function () {
-        	
-        	goods.keyword = "import_format";
-        	
-        	var form = com.focusPage("#importFormatForm");
-        	
-        	com.focusPage("#uploaddiv").removeClass("hide").appendTo(form);
-        	com.focusPage("#fileUpload").removeClass("hide");
-        	
-        	items.importBtn.removeClass("hide");
-        	items.exportBtn.addClass("hide");
-            
+
+            goods.keyword = "import_format";
+
+            var form = com.focusPage("#importFormatForm");
+
+            com.focusPage("#uploaddiv").removeClass("hide").appendTo(form);
+            com.focusPage("#fileUpload").removeClass("hide");
+
+            items.importBtn.removeClass("hide");
+            items.exportBtn.addClass("hide");
+
             showLayer("导入规格", "#importFormat");
         });
-        
+
         $addaImportPrice.click(function () {
-        	
-        	goods.keyword = "import_price";
-        	
-        	var form = com.focusPage("#importPriceForm");
-        	
-        	com.focusPage("#uploaddiv").removeClass("hide").appendTo(form);
-        	com.focusPage("#fileUpload").removeClass("hide");
-        	
-        	items.importBtn.removeClass("hide");
-        	items.exportBtn.addClass("hide");
-            
+
+            goods.keyword = "import_price";
+
+            var form = com.focusPage("#importPriceForm");
+
+            com.focusPage("#uploaddiv").removeClass("hide").appendTo(form);
+            com.focusPage("#fileUpload").removeClass("hide");
+
+            items.importBtn.removeClass("hide");
+            items.exportBtn.addClass("hide");
+
             showLayer("导入价格", "#importPrice");
         });
 
         $deleteImportPrice.click(function () {
-        	
-        	goods.keyword = "delete_price";
-        	
-        	var form = com.focusPage("#deletePriceForm");
-        	
-        	com.focusPage("#uploaddiv").removeClass("hide").appendTo(form);
-        	com.focusPage("#fileUpload").removeClass("hide");
-        	
-        	items.importBtn.removeClass("hide");
-        	items.exportBtn.addClass("hide");
-            
+
+            goods.keyword = "delete_price";
+
+            var form = com.focusPage("#deletePriceForm");
+
+            com.focusPage("#uploaddiv").removeClass("hide").appendTo(form);
+            com.focusPage("#fileUpload").removeClass("hide");
+
+            items.importBtn.removeClass("hide");
+            items.exportBtn.addClass("hide");
+
             showLayer("删除价格", "#deletePrice");
         });
 
         $addaExportGoods.click(function () {
-        	
-        	var total = com.focusPage('span[name="totalRecords"]').text();
+
+            var total = com.focusPage('span[name="totalRecords"]').text();
 
             if (total == 0) {
                 com.showAlert(com.warning, "请通过条件进行查询");
                 return false;
             }
-            
+
             if (com.focusPage('span[name="totalRecords"]').text() > 1000) {
                 com.showAlert(com.warning, "查询结果大于阀值 , 导出失败");
                 return false;
             }
-            
+
             goods.keyword = "export_inventory_goods";
-        	
-        	var form = com.focusPage("#exportGoodsForm");
-        	
-        	com.focusPage("#uploaddiv").removeClass("hide").appendTo(form);
-        	com.focusPage("#fileUpload").addClass("hide");
-        	
-        	items.importBtn.addClass("hide");
-        	items.exportBtn.removeClass("hide");
-        	
-        	showLayer("导出商品", "#exportGoods");
+
+            var form = com.focusPage("#exportGoodsForm");
+
+            com.focusPage("#uploaddiv").removeClass("hide").appendTo(form);
+            com.focusPage("#fileUpload").addClass("hide");
+
+            items.importBtn.addClass("hide");
+            items.exportBtn.removeClass("hide");
+
+            showLayer("导出商品", "#exportGoods");
         });
 
         return [$addaExportGoods, $addaImportGood, $addaImportColor, $addaImportFormat, $addaImportPrice, $deleteImportPrice, $adda];
     }, 'resultList');
-    
+
     function showLayer(title, layerId) {
-    	
-    	var $content = com.focusPage(layerId);
-    	
+
+        var $content = com.focusPage(layerId);
+
         layer.open({
             type: 1,
             title: title,
@@ -483,18 +455,18 @@ $(function () {
             move: false,
             zIndex: 9000,
             cancel: function () {
-            	com.clearValidator();
+                com.clearValidator();
                 layer.closeAll();
-                
+
                 items.executeDates.val("");
                 items.executeTimes.val("");
             }
         });
     }
-    
+
     function skipLayer(title, url) {
         var $PopUp = com.focusPage('#layerPopUp');
-        
+
         var index = layer.open({
             type: 1,
             skin: 'layui-layer-lan',
@@ -505,7 +477,7 @@ $(function () {
             move: false,
             zIndex: 9000,
             success: function (layer, index) {
-            	$PopUp.load(url);
+                $PopUp.load(url);
             },
             end: function () {
                 goodsSeacher.doSearch();
@@ -514,64 +486,64 @@ $(function () {
     }
 
     function updateStatus(gid, status, callback) {
-    	
-    	var options = {
-			"goods.gid": gid,
+
+        var options = {
+            "goods.gid": gid,
             "goods.status": status
-    	}
-    	
-    	com.post(api.inventory.updateGoodsForStatus, options, function (res) {
-    		com.showAlert(com.info, "操作成功");
+        };
+
+        com.post(api.inventory.updateGoodsForStatus, options, function (res) {
+            com.showAlert(com.info, "操作成功");
             goodsSeacher.doSearch();
         });
     }
 
     function saveData() {
-    	
-    	if(com.validate("formAdvance", "right")){
-    		return false;
-    	}
-    	
-    	var gid = goods.gid;
+
+        if (com.validate("formAdvance", "right")) {
+            return false;
+        }
+
+        var gid = goods.gid;
         var atid = items.accessoriesType.val();
-        
-        var url = api.inventory.updateGoods
+
+        var url = api.inventory.updateGoods;
         var options = {
-        	"goods.type": items.type.val(),
-        	"goods.purchase": items.purchase.val(),
-        	"goods.selling": items.selling.val(),
-        	"goods.accessoriesType.atid": atid == null || atid == "" ? "" : atid
+            "goods.type": items.type.val(),
+            "goods.purchase": items.purchase.val(),
+            "goods.selling": items.selling.val(),
+            "goods.accessoriesType.atid": atid == null || atid == "" ? "" : atid
+        };
+
+        if (!gid) {
+            url = api.inventory.addGoods;
+            options["goods.no"] = items.no.val();
+            options["goods.name"] = items.name.val();
+            options["goods.barcode"] = items.barcode.val();
+            options["goods.bid"] = goods.bid;
+            options["goods.category"] = items.category.val();
+            options["goods.measurementUnit"] = items.measurementUnit.val();
+            options["goods.pieceNum"] = items.pieceNum.val();
+        } else {
+            options["goods.gid"] = goods.gid;
         }
-        
-        if(!gid){
-        	url = api.inventory.addGoods;
-        	options["goods.no"] = items.no.val();
-        	options["goods.name"] = items.name.val();
-        	options["goods.barcode"] = items.barcode.val();
-        	options["goods.bid"] = goods.bid;
-        	options["goods.category"] = items.category.val();
-        	options["goods.measurementUnit"] = items.measurementUnit.val();
-        	options["goods.pieceNum"] = items.pieceNum.val();
-        }else{
-        	options["goods.gid"] = goods.gid;
-        }
-        
+
         com.post(url, options, function (res) {
             layer.closeAll();
             goodsSeacher.doSearch();
         });
     }
-    
-    function readonly(disabled){
-    	
-    	items.no.attr("disabled", disabled);
-    	items.type.attr("disabled", disabled);
-    	items.name.attr("disabled", disabled);
-    	items.barcode.attr("disabled", disabled);
-    	items.category.attr("disabled", disabled);
-    	items.brand.attr("disabled", disabled);
-    	items.measurementUnit.attr("disabled", disabled);
-    	items.pieceNum.attr("disabled", disabled);
+
+    function readonly(disabled) {
+
+        items.no.attr("disabled", disabled);
+        items.type.attr("disabled", disabled);
+        items.name.attr("disabled", disabled);
+        items.barcode.attr("disabled", disabled);
+        items.category.attr("disabled", disabled);
+        items.brand.attr("disabled", disabled);
+        items.measurementUnit.attr("disabled", disabled);
+        items.pieceNum.attr("disabled", disabled);
     }
 
     //导入创建计划
@@ -580,11 +552,11 @@ $(function () {
         if (com.validate("uploaddiv")) {
             return false;
         }
-        
+
         var args = "";
-        
-        if(type == "export"){
-        	
+
+        if (type == "export") {
+
             var filtersName = ["goodsNo", "goodsName", "goodsBarcode", "goodsBrand", "goodsStatus"];
 
             $.each(filtersName, function (i, v) {
@@ -594,26 +566,26 @@ $(function () {
                     args = args + columnName + "-" + val + ",";
                 }
             });
-            
-            if(args == null || args == ""){
-            	com.showAlert(com.warning, "请通过条件进行查询");
+
+            if (args == null || args == "") {
+                com.showAlert(com.warning, "请通过条件进行查询");
                 return false;
             }
-            
-        }else if(type == "import"){
-        	
-        	var filePath = items.filePath.val();
+
+        } else if (type == "import") {
+
+            var filePath = items.filePath.val();
 
             if (filePath == null || filePath == "") {
                 com.showAlert(com.warning, "上传文件不能为空");
                 return false;
             }
-            
+
             args = filePath;
-        }else{
-        	return false;
+        } else {
+            return false;
         }
-        
+
         var times = items.executeDates.val() + ' ' + items.executeTimes.val();
         var executeTime = new Date(times);
 

@@ -39,7 +39,7 @@ $(function () {
 
     com.initChosen('users', api.personel.queryUserByPinyin, "pinyinName", {"departmentType.name":"", "user.status":0}, "autoFillKeyValue", "key", "value");
 
-    com.focusPage(".date-picker").datepicker({autoclose : !0}).on("show", function() {
+    com.focusPage(".date-picker").datepicker(com.datepickerdefault).on("show", function() {
         setTimeout(function() {
             com.focusPage(".dropdown-menu").css("z-index", 1060);
         },0);

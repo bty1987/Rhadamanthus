@@ -34,4 +34,8 @@ public interface ApprovalDao extends Dao<ApprovalPO> {
 	
 	public int countApprovalForInitByIdent(String ident);
 	
+	public int countApprovalForReceive(short status, int ruid, int company);
+	
+	public int countApprovalForSend(short status, int suid, int company);
+	
 }

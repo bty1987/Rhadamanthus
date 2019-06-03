@@ -1872,14 +1872,15 @@ blockquote,blockquote.pull-right {
 
 .nav-search .nav-search-input {
     border: 1px solid #6fb3e0;
-    width: 152px;
     height: 28px !important;
     border-radius: 4px !important;
     font-size: 13px;
     color: #666 !important;
     z-index: 11;
     -webkit-transition: width ease .15s;
-    transition: width ease .15s
+    transition: width ease .15s;
+    padding-left: 24px;
+    padding-right: 6px;
 }
 
 .nav-search .nav-search-input+.dropdown-menu {

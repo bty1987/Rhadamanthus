@@ -79,7 +79,7 @@ public class EmemberServiceImpl implements EmemberService {
 		String unionId = ememberVO.getUnionId();
 
 		try {
-			if (!verifyCode.equals(AESHelper.decryptString(securityCode, SystemConfig.getString("encryptKey")))) {
+			if (!verifyCode.equals(AESHelper.decrypt(securityCode, SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv")))) {
 				throw new FLException(330012, "验证失败,重新验证");
 			}
 		} catch (Exception e) {

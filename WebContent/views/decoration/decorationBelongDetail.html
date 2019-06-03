@@ -24,9 +24,8 @@
 										<div class="form-group">
 											<label for="belongUserId" class="col-sm-3 control-label no-padding-right">人员姓名</label>
 											<div class="col-md-9">
-												<select class="chosen-select col-md-6 v_required" id="belongUserId" data-placeholder="请输入人员" data-toggle="popover" data-trigger='manual' style="display: none;">
-													<option value="">&nbsp;</option>
-												</select> <i class='icon-asterisk'></i>
+												<input type="text" class="col-xs-10 col-sm-5 v_typeahead v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="belongUserId" placeholder="请输入人员">
+												<i class='icon-asterisk'></i>
 											</div>
 										</div>
 										<div class="space-4"></div>
@@ -41,7 +40,8 @@
 										<div class="form-group">
 											<label class="col-sm-3 control-label no-padding-right" for="isPresentGraduate">是否默认</label>
 											<div class="col-sm-9">
-												<input type="checkbox" id="defaultFlag" />
+												<input type="checkbox" id="defaultFlag"  class="col-sm-7 col-xs-10 ace ace-switch ace-switch-5"/>
+												<span class="lbl isOrNot"></span>
 											</div>
 										</div>
 										<div class="space-4"></div>
@@ -156,7 +156,8 @@
 		                <div class="form-group">
 		                    <label class="col-sm-3 control-label no-padding-right" for="updateDefaultFlag">是否默认</label>
 		                    <div class="col-sm-9">
-		                        <input type="checkbox" id="updateDefaultFlag" />
+		                        <input type="checkbox" id="updateDefaultFlag" class="col-sm-7 col-xs-10 ace ace-switch ace-switch-5"/>
+								<span class="lbl isOrNot"></span>
 		                    </div>
 		                </div>
 		                <div class="space-4"></div>

@@ -1431,8 +1431,8 @@ textarea[readonly] {
     color: #F9F0DA;
 }
 
-.black {
-    background: #000;
+.marksearch {
+    background: #79ceff75;
 }
 
 .quotation-base-price-radio {

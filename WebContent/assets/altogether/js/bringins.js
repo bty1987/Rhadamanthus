@@ -10,7 +10,7 @@ $(document).ready(function () {
         var t = {
             position: "right",
             width: "50%",
-            margin: 50,
+            margin: "0px",
             color: "rgba(0,0,0,.7)",
             closeButton: "rgb(102,102,102)",
             zIndex: ""

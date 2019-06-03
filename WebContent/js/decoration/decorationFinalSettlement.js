@@ -252,7 +252,7 @@ $(function () {
 
 
     function saveDecorationAccount() {
-        if (com.validate()) {
+        if (com.validate("applyDecorationAccount")) {
             return;
         }
 

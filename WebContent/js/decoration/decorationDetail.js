@@ -122,18 +122,26 @@ jQuery(function ($) {
         $.each(res.relationshipType, function (i, k) {
             decorationDetail.customerItems.relationshipTypes.push(k.key);
         });
-        decorationDetail.customerItems.relationshipType.bindData(decorationDetail.customerItems.relationshipTypes);
+        decorationDetail.customerItems.relationshipType.bindData(decorationDetail.customerItems.relationshipTypes, "key", "value", false);
 
     }, null, false);
 
     decorationDetail.houseItems.no = com.focusPage("#no");
     decorationDetail.houseItems.rule = com.focusPage("#rule");
     decorationDetail.houseItems.errMsg = com.focusPage("#errMsg");
-    decorationDetail.houseItems.no.on('change', function () {
-        deleteVillageData("no", decorationDetail.houseItems);
-        com.post(api.data.queryVillageById, {"village.no": decorationDetail.houseItems.no.val()}, function (res) {
-            decorationDetail.houseItems.rule.html("推荐楼牌号规则:" + res.village.rule);
-        }, null, false);
+
+    com.initTypeahead('no', api.data.queryVillageForNameByPinyin,"pinyinName", {}, "autoFillKeyValue", "key", "value", function(list, key, value){
+
+        deleteVillageData("no");
+
+        com.post(api.data.queryVillageById, {"village.no": key}, function (res) {
+            decorationDetail.houseItems.rule.html("推荐楼牌号规则：" + (res.village.rule ? res.village.rule : "暂无推荐规则"));
+        }, function(){
+            com.show(com.warning, "楼盘信息不存在");
+            key = "", value = "";
+        }, false);
+
+        return value;
     });
     decorationDetail.houseItems.built = com.focusPage("#built").on("blur", function (e) {
         deleteVillageData("built", decorationDetail.houseItems);
@@ -146,7 +154,7 @@ jQuery(function ($) {
     });
     decorationDetail.houseItems.door = com.focusPage("#door").on("blur", function (e) {
         //验证房产是否存在
-        validatehouse(decorationDetail.houseItems.no.val(), houseUtils.anytimevalidate(decorationDetail.houseItems, 0, false));
+        validatehouse(com.typeahead("no"), houseUtils.anytimevalidate(decorationDetail.houseItems, 0, false));
     });
     decorationDetail.houseItems.builtrule = com.focusPage("#builtrule");
     decorationDetail.houseItems.unitrule = com.focusPage("#unitrule");
@@ -312,15 +320,15 @@ jQuery(function ($) {
 
     }, null, false);
 
-    com.initChosen('quoterId', api.personel.queryUserByPinyin, "pinyinName", {
+    com.initTypeahead('quoterId', api.personel.queryUserByPinyin, "pinyinName", {
         "user.status": 0,
         "departmentType.name": ""
     }, "autoFillKeyValue", "key", "value");
-    com.initChosen('escorterId', api.personel.queryUserByPinyin, "pinyinName", {
+    com.initTypeahead('escorterId', api.personel.queryUserByPinyin, "pinyinName", {
         "user.status": 0,
         "departmentType.name": ""
     }, "autoFillKeyValue", "key", "value");
-    com.initChosen('no', api.data.queryVillageForNameByPinyin, "pinyinName", {}, "autoFillKeyValue", "key", "value");
+    com.initTypeahead('no', api.data.queryVillageForNameByPinyin, "pinyinName", {}, "autoFillKeyValue", "key", "value");
 
     if ([2, 3, 4].indexOf(decorationDetail.orderType) != -1 ) { // 半价/满减/捡捡
         decorationUtils.initDecorationHolonomy(decorationDetail.decorationOrderId);
@@ -356,7 +364,7 @@ jQuery(function ($) {
     //参加活动 保存按钮
     com.focusPage("#submitDecorationActivityBtn").on(ace.click_event, function () {
 
-        if (com.validate()) {
+        if (com.validate("joinDecorationActivityModal")) {
             return;
         }
 
@@ -378,7 +386,7 @@ jQuery(function ($) {
     // 申领活动物品 保存按钮
     com.focusPage("#submitDecorationActivityItemBtn").on(ace.click_event, function () {
 
-        if (com.validate()) {
+        if (com.validate("applyDecorationActivityItemModal")) {
             return;
         }
 
@@ -467,7 +475,7 @@ jQuery(function ($) {
     //特批活动物品 保存按钮
     com.focusPage("#submitSpecialDecorationActivityItemBtn").on(ace.click_event, function () {
 
-        if (com.validate()) {
+        if (com.validate("applySpecialDecorationActivityItemModal")) {
             return;
         }
 
@@ -512,7 +520,7 @@ jQuery(function ($) {
 
     com.focusPage("#joinActivityBtn").on("click", function () {
 
-        com.post(api.information.queryActivityForValid, {"activity.type": 0}, function (res) {
+        com.post(api.information.queryActivityForValid, {"activity.type": 1}, function (res) {
             var activitys = res.activitys;
 
             var _activitys = [{aid: -1, activityName: ""}];
@@ -782,13 +790,11 @@ jQuery(function ($) {
                 "approvalDecorationRefund.paymentId": com.focusPage('#autoId').val(),
             };
 
-            bootbox.confirm("确认要提交退款申请吗?", function (res) {
-                if (res) {
-                    com.post(api.approval.submitApprovalForDecorationRefund, options, function (res) {
-                        com.showAlert(com.info, "提交成功");
-                        decorationUtils.initPayment(decorationDetail, true);
-                    });
-                }
+            com.showConfirm("确认要提交退款申请吗?", function () {
+                com.post(api.approval.submitApprovalForDecorationRefund, options, function (res) {
+                    com.showAlert(com.info, "提交成功");
+                    decorationUtils.initPayment(decorationDetail, true);
+                });
 
                 decorationDetail.refundDecorationPaymentModal.modal("hide");
             });
@@ -828,14 +834,14 @@ jQuery(function ($) {
         }
 
         if (parseFloat(com.focusPage("#decorationTotalMoney").val()) <= 0.0000001) {
-            bootbox.alert("合同款不能小于1元");
+            com.showAlert(com.warning,"合同款不能小于1元");
             return;
         }
 
         var psId = com.focusPage("#paymentScale").find('input:checked').attr('psid');
 
         if (psId == null || psId == "") {
-            com.showAlert(com.error, "请选择款项比例!");
+            com.showAlert(com.warning, "请选择款项比例!");
             return;
         }
 
@@ -1015,27 +1021,25 @@ jQuery(function ($) {
 
         var btn = com.focusPage("#btnSaveBasedecorationInfo");
         btn.button('loading');
-        bootbox.confirm("确定要保存基本信息吗?", function (result) {
-            if (result) {
-                var options = {
-                    "decoration.orderId": decorationDetail.decorationOrderId,
-                    "decoration.type": decorationDetail.items.orderType.val(),
-                    "decoration.houseType": decorationDetail.items.houseType.val(),
-                    "decoration.houseClass": decorationDetail.items.houseClass.val(),
-                    "decoration.notSalesmanRate": decorationDetail.items.notSalesmanRate.val(),
-                    "decorationInfo.notSalesmanName": decorationDetail.items.notSalesmanName.val(),
-                    "decorationInfo.notSalesmanPhone": decorationDetail.items.notSalesmanPhone.val(),
-                    "decorationInfo.notSalesmanContent": decorationDetail.items.notSalesmanContent.val(),
-                    "decoration.quoter.userId": decorationDetail.items.quoterId.val(),
-                    "decoration.escorter.userId": decorationDetail.items.escorterId.val(),
-                };
-                com.post(api.decoration.changeDecorationForAdvance, options, function () {
-                    com.showAlert(com.info, "操作成功");
-                    btn.button('reset');
-                });
-            } else {
+        com.showConfirm("确定要保存基本信息吗?", function () {
+            var options = {
+                "decoration.orderId": decorationDetail.decorationOrderId,
+                "decoration.type": decorationDetail.items.orderType.val(),
+                "decoration.houseType": decorationDetail.items.houseType.val(),
+                "decoration.houseClass": decorationDetail.items.houseClass.val(),
+                "decoration.notSalesmanRate": decorationDetail.items.notSalesmanRate.val(),
+                "decorationInfo.notSalesmanName": decorationDetail.items.notSalesmanName.val(),
+                "decorationInfo.notSalesmanPhone": decorationDetail.items.notSalesmanPhone.val(),
+                "decorationInfo.notSalesmanContent": decorationDetail.items.notSalesmanContent.val(),
+                "decoration.quoter.userId": com.typeahead("quoterId"),
+                "decoration.escorter.userId": com.typeahead("escorterId"),
+            };
+            com.post(api.decoration.changeDecorationForAdvance, options, function () {
+                com.showAlert(com.info, "操作成功");
                 btn.button('reset');
-            }
+            });
+        }, function () {
+            btn.button('reset');
         });
     }
 
@@ -1172,27 +1176,25 @@ jQuery(function ($) {
 
     function abateDecorationActivityItem(daiId, activityItemName) {
 
-        bootbox.confirm("是否确认失效" + activityItemName + "活动物品?", function (result) {
-            if (result) {
+        com.showConfirm("是否确认失效" + activityItemName + "活动物品?", function () {
 
-                var options = {
-                    "decorationActivityItem.daiId": daiId,
-                };
+            var options = {
+                "decorationActivityItem.daiId": daiId,
+            };
 
-                com.post(api.decoration.abateDecorationActivityItem, options, function (res) {
+            com.post(api.decoration.abateDecorationActivityItem, options, function (res) {
 
-                    var daiId = res.decorationActivityItem.daiId;
+                var daiId = res.decorationActivityItem.daiId;
 
-                    com.focusPage("#state_" + daiId).text("失效");
+                com.focusPage("#state_" + daiId).text("失效");
 
-                    com.focusPage("#convert_" + daiId).unbind();
+                com.focusPage("#convert_" + daiId).unbind();
 
-                    com.focusPage("#abate_" + daiId).unbind();
+                com.focusPage("#abate_" + daiId).unbind();
 
-                    com.focusPage("#receive_" + daiId).unbind();
+                com.focusPage("#receive_" + daiId).unbind();
 
-                });
-            }
+            });
         });
     }
 
@@ -1251,13 +1253,11 @@ jQuery(function ($) {
                     decorationDetail.repeatFlg = true;
 
                 } else {
-                    bootbox.confirm("已有该房产信息，是否绑定?", function (yes) {
-                        if (yes) {
-                            decorationDetail.houseItems.thid = res.house.hid;
-                            decorationDetail.houseItems.villageName = res.house.village.name;
-                            decorationDetail.houseItems.houseNumber = res.house.houseNumber;
-                            decorationDetail.repeatFlg = false;
-                        }
+                    com.showConfirm("已有该房产信息，是否绑定?", function () {
+                        decorationDetail.houseItems.thid = res.house.hid;
+                        decorationDetail.houseItems.villageName = res.house.village.name;
+                        decorationDetail.houseItems.houseNumber = res.house.houseNumber;
+                        decorationDetail.repeatFlg = false;
                     });
                 }
             }, null, false);
@@ -1265,7 +1265,6 @@ jQuery(function ($) {
             com.showAlert(com.warning, "房产不存在");
             com.focusPage("#door").css("border", "1px solid #d5d5d5").popover("destroy");
         }, false);
-
     }
 
     function showPhone(tableId, listData) {
@@ -1401,7 +1400,7 @@ jQuery(function ($) {
 
     function saveCustomer() {
         com.clearValidator();
-        if (com.validate()) {
+        if (com.validate("customerChangeModal")) {
             return;
         }
         var url;
@@ -1432,7 +1431,7 @@ jQuery(function ($) {
         decorationDetail.houseItems.no.prop("disabled", false);
         decorationDetail.houseItems.no.get(0).selectedIndex = 0;
         com.cleanItems(decorationDetail.houseItems);
-        com.updateChosen("no", '', '');
+        com.cleanTypeahead("no");
         com.clearValidator();
         com.focusPage("#errMsg").css("border", "0px");
     }

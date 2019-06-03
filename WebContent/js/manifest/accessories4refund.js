@@ -1,27 +1,26 @@
 
 jQuery(function ($) {
 
-    if (jQuery().datepicker) {
-        com.focusPage('.date-picker').datepicker({
-            format: 'yyyy-mm-dd',//yyyy-mm-dd hh:ii,
-            autoclose:true
-        });
-    }
-
     var accessories = {
+            
         orderId: com.focusPage('#refundPopUp').attr('data-orderId'),
         aid: com.focusPage('#refundPopUp').attr('data-aid'),
+        
         createTime: com.focusPage('#refundPopUp').attr('data-createTime'),
         status: com.focusPage('#refundPopUp').attr('data-status'),
         saveBtn: com.focusPage("#saveBtn"),
         cancellBtn: com.focusPage("#cancelBtn"),
+        
         manifestItems: {
             customerName: com.focusPage("#customer"),
             des: com.focusPage("#comment")
         },
+        
         record: {},
         supervisorId: null
     };
+    
+    com.focusPage('.date-picker').datepicker(com.datepickerdefault);
 
     com.post(api.decoration.queryDecorationForCommonByOrderId, {
         "decoration.orderId": accessories.orderId
@@ -56,14 +55,15 @@ jQuery(function ($) {
     $div.append($btnConfirm).append($btnCancel).appendTo($condList1);
 
     $btnConfirm.click(function () {
+        
         if (com.validate('list', 'bottom')) {
-            return;
+            return false;
         }
         var $lines = com.focusPage('li.line', '#list');
         var flag = true;
         if (!$lines.length) {
-            layer.msg("辅料单不能为空");
-            return;
+            com.showAlert(com.warning, "辅料单不能为空");
+            return false;
         }
 
         var options = {};
@@ -72,10 +72,7 @@ jQuery(function ($) {
         var $fetchTime = com.focusPage('[name="date"]','#fetchTime');
 
         if($fetchTime.val() == null || $fetchTime.val() == ""){
-            layer.alert('请选择领取时间', {
-                icon: 0,
-                skin: 'layer-ext-moon' //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
-            });
+            com.showAlert(com.warning,'请选择领取时间', );
             return;
         }
 
@@ -96,11 +93,8 @@ jQuery(function ($) {
         });
 
         com.post(api.inventory.refundAccessories, options, function (data) {
-            layer.closeAll();
-            layer.msg('添加成功!', {icon: 1}, function () {
-                //清空页面
-                com.focusPage('#list').empty();
-            });
+            com.showAlert(com.info, "操作成功");
+            com.focusPage('#list').empty();
         }, function (e) {
             com.showAlert(com.error, e.errorMsg);
         });

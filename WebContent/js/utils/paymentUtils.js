@@ -1,57 +1,4 @@
 var paymentUtils = {
-    dynamicChosen: function (modelId ,id, data,key,value) {
-        var $e = com.focusPage('#' + id);
-        $e.html("");
-        $e.val("");
-        $('<option value="">&nbsp;</option>').appendTo($e);
-        $.each(data, function (i, v) {
-            $('<option value="' +v[key]+ '">' + v[value]+ '</option>').appendTo($e);
-        });
-
-        $e.chosen({allow_single_deselect: true});
-        com.focusPage('#' + id + '_chosen input').bind("input", function () {
-            var val = $(this).val();
-            if (val != "") {
-                deployChosen(val);
-            } else {
-                deployChosen();
-            }
-        });
-
-        com.focusPage('#' + id + '_chosen').bind('click', function () {
-            var val = $('#' + id + '_chosen a span').html();
-            if ('' + val + '' == '&nbsp;') {
-                deployChosen();
-            }
-        });
-        var deployChosen = function (val) {
-            var html = '<option value="">&nbsp;</option>';
-            var kv = data;
-            var length = kv.length;
-            for (var i = 0; i < length; i++) {
-
-                var _ = kv[i];
-                if (val) {
-                    if (_[value].match(val)) {
-                        html += '<option value="'+_[key]+ '">' + _[value] + '</option>';
-                    }
-                } else {
-                    html += '<option value="'+_[key]+'">' + _[value]+ '</option>';
-                }
-            }
-            $e.html(html).trigger("chosen:updated");
-        };
-
-        com.focusPage('#' + id + '_chosen').css('min-width','50%').css('width','170px');
-
-        com.focusPage('#' +modelId+' input').css('min-width','50%').css('width','170px');
-    },
-
-    EmptyChosen : function(id){
-        com.focusPage('#' + id).val("");
-        com.focusPage('#' + id + '_chosen a span').html("");
-    },
-
     addBankUtil : function (index, divName, divGroup, bankArray, bankUtil, pageName, baseItemModal){
         var d = new Date();
         var name;
@@ -74,7 +21,7 @@ var paymentUtils = {
         var bankNameDiv_ = $('<div></div>').addClass('form-group').appendTo(bankDiv);
         var bankNameLabel = $('<label></label>').addClass('col-sm-3 control-label no-padding-right').text('开户行').appendTo(bankNameDiv_);
         var bankNameDiv = $('<div></div>').addClass('col-sm-8').appendTo(bankNameDiv_);
-        var bankNameSelect = $('<select></select>').addClass('chosen-select col-sm-6 v_required').attr("id", pageName + name + "Name_" + index).attr("data-toggle", "popover").attr("data-trigger", "manual").appendTo(bankNameDiv);
+        var bankNameSelect = $('<input/>').addClass('col-xs-10 col-sm-6 v_typeahead v_required').attr({'type': 'text', 'id': pageName + name + "Name_" + index, 'data-toggle': 'popover', 'data-trigger': 'manual', 'data-placement': 'bottom'}).appendTo(bankNameDiv);
         var bankDelDiv = $('<div></div>').addClass('col-sm-1').appendTo(bankNameDiv_);
         var bankDelBtn = $('<button></button>').addClass('btn btn-minier btn-danger pull-right inline').text("删除").attr("id", pageName + name + "Del_" + index).attr("index", index).appendTo(bankDelDiv).click(function(){
 
@@ -99,7 +46,7 @@ var paymentUtils = {
         var bankDateDiv_ = $('<div></div>').addClass('form-group').appendTo(bankDiv);
         var bankDateLabel = $('<label></label>').addClass('col-sm-3 control-label no-padding-right').text('日期').appendTo(bankDateDiv_);
         var bankDateDiv = $('<div></div>').addClass('col-sm-8').appendTo(bankDateDiv_);
-        var bankDateInput = $('<input/>').addClass("date-picker-date col-sm-6 v_required").attr("readonly", "readonly").attr("data-toggle", "popover").attr("data-trigger", "manual").attr("type", "text").attr("id", pageName + name + "Date_"+index).attr("data-date-format", "yyyy-mm-dd").val(currentData).datepicker({autoclose:true}).appendTo(bankDateDiv);
+        var bankDateInput = $('<input/>').addClass("date-picker-date col-sm-6 v_required").attr("readonly", "readonly").attr("data-toggle", "popover").attr("data-trigger", "manual").attr("type", "text").attr("id", pageName + name + "Date_"+index).attr("data-date-format", "yyyy-mm-dd").val(currentData).datepicker(com.datepickerdefault).appendTo(bankDateDiv);
 
         var bankTimeDiv_ = $('<div></div>').addClass('form-group').appendTo(bankDiv);
         var bankTimeLabel = $('<label></label>').addClass('col-sm-3 control-label no-padding-right').text('时间').appendTo(bankTimeDiv_);
@@ -107,7 +54,7 @@ var paymentUtils = {
         var bankTimePicker = $('<div></div>').addClass('bootstrap-timepicker').appendTo(bankTimeDiv);
         var bankTimeInput =  $('<input/>').addClass('col-sm-6 v_time v_required').attr("type", "text").attr("id", pageName + name + "Time_"+index).attr("data-toggle", "popover").attr("data-trigger", "manual").mask('99:99:99').appendTo(bankTimePicker);
 
-        paymentUtils.dynamicChosen(baseItemModal, pageName + bankUtilName +index, bankUtil, "key", "value");
+        com.selectTypeahead(pageName + bankUtilName +index, bankUtil, "key", "value", null);
     },
 
     getBankInfoParams:  function(nameData, htmlName, bankNums, checkvNums, couponCount, typeUpdate, couponUpdate, _paymentInfo){//1.decorationPayment.paymentModelNameData, 2."material"装修的是空"" 3.decorationPayment.bankNums, 4 decorationPayment.checkvNums 5、couponCount 6. decorationPayment.typeUpdate 7. decorationPayment.couponUpdate 8: 收款还是退款 payment/refund
@@ -140,7 +87,7 @@ var paymentUtils = {
 
                 if(_paymentName == "cash"){
                     args["cash"] = com.focusPage("#cash").val();
-                    args["cashInfo"] = com.focusPage("#" + htmlName + "cashInfo").val();
+                    args["cashInfo"] = com.typeahead(htmlName + "cashInfo");
 
                     _payment = com.focusPage("#cash").val();
                 }else if(_paymentName == "bank" || _paymentName == "checkv"){
@@ -212,7 +159,7 @@ var paymentUtils = {
         var _bankInfo = "#";
 
         $.each(nameNums, function(i,v){
-            var bankName = com.focusPage("#" + name + "Name_"+v).val();
+            var bankName = com.typeahead(name + "Name_"+v);
             var bankMoney = com.focusPage("#" + name + "_"+v).val();
             var bankDate = com.focusPage("#" + name + "Date_"+v).val();
             var bankTime = com.focusPage("#" + name + "Time_"+v).val();
@@ -275,7 +222,7 @@ var paymentUtils = {
 
         com.focusPage("#collectDes").val("");
 
-        paymentUtils.EmptyChosen('cashInfo');
+        com.cleanTypeahead('cashInfo');
 
         decorationPayment.bankNums = [];
         decorationPayment.checkvNums = [];
@@ -312,7 +259,7 @@ var paymentUtils = {
         com.focusPage("#historyUpdate").removeClass("hide");
         com.focusPage("#saveRefundBtn").addClass("hide");
         com.focusPage("#collectBtn").removeClass("hide");
-        paymentUtils.EmptyChosen('cashInfo');
+        com.cleanTypeahead('cashInfo');
 
         paymentUtils.initBaseModal(payment,  decorationPayment);
         com.focusPage("#advanceCheckbox").attr("disabled","disabled");
@@ -375,7 +322,7 @@ var paymentUtils = {
 
     //装修款收款
     payment: function(decorationPayment, decorationPaymentPostData, searcher, hsearcher){
-        if(com.validate()){
+        if(com.validate(decorationPayment.modelId)){
             return;
         }
 
@@ -462,7 +409,7 @@ var paymentUtils = {
         });
     },
 
-    //主材初始化模态框（刚粘贴过来，参数还没有修改）
+    //主材初始化模态框
     materialInitBaseModal: function(grade, materialPayment){
         com.focusPage("#couponDiv div.form-group").removeClass("hide");
         com.focusPage('.couponBlue').remove();
@@ -504,7 +451,7 @@ var paymentUtils = {
 
         com.focusPage("des").val("");
 
-        paymentUtils.EmptyChosen(materialPayment.htmlName + 'cashInfo');
+        com.cleanTypeahead(materialPayment.htmlName + 'cashInfo');
 
         materialPayment.items.couponType.chosen("destroy");
         materialPayment.items.couponType.chosen({width: "100%", multi_type: "input"});
@@ -600,7 +547,7 @@ var paymentUtils = {
 
     //主材支付
     materialPayment: function(materialPayment, materialPaymentPostData, searcher, hsearcher){
-        if(com.validate()){
+        if(com.validate(materialPayment.modelId)){
             return;
         }
 
@@ -786,7 +733,7 @@ var paymentUtils = {
 
     //销售收款
     aboutcollectAndRefundMoney: function(sid, spid, spids, referMoney, coupon, couponInfo, singleFlag, url, collectOrRefund, salesPayment){
-        if(com.validate()){
+        if(com.validate(salesPayment.modelId)){
             return;
         }
 
@@ -818,7 +765,7 @@ var paymentUtils = {
 
         if(com.focusPage("#cashCheckbox").prop("checked")){
             cash = layerAdd.find('#cash').val() != "" ? layerAdd.find('#cash').val() : 0;
-            cashInfo = layerAdd.find('#' + salesPayment.htmlName + 'cashInfo').val();
+            cashInfo = com.typeahead(salesPayment.htmlName + 'cashInfo')
         }
 
         if(com.focusPage("#bankCheckbox").prop("checked")){
@@ -1005,7 +952,7 @@ var paymentUtils = {
 
     	com.cleanItems(payment.items);
 
-    	paymentUtils.EmptyChosen(payment.htmlName + 'cashInfo');
+    	com.cleanTypeahead(payment.htmlName + 'cashInfo');
 
         payment.modal.modal("show");
 
@@ -1030,7 +977,7 @@ var paymentUtils = {
     paymentSaveData: function(payment, hsearcher){
         com.focusPage('.payWayError').hide();
 
-        if(com.validate()){
+        if(com.validate(payment.modelId)){
             return;
         }
 
@@ -1050,7 +997,7 @@ var paymentUtils = {
 
         if(com.focusPage("#cashCheckbox").prop("checked")){
             options["payment.cash"] = com.focusPage("#cash").val().trim();
-            options["payment.cashInfo"] = com.focusPage("#" + payment.htmlName + "cashInfo").val().trim();
+            options["payment.cashInfo"] = com.typeahead(payment.htmlName + "cashInfo").trim();
 
             total = utils.accAdd(parseFloat(com.focusPage("#cash").val()), total);
         }
@@ -1202,7 +1149,7 @@ var paymentUtils = {
         com.focusPage("#collectDes").val("").removeAttr("readonly");
         com.focusPage("#referMoney").removeAttr("readonly");
 
-        paymentUtils.EmptyChosen(servicePayment.htmlName + 'cashInfo');
+        com.cleanTypeahead(servicePayment.htmlName + 'cashInfo');
 
         //根据装修单等级获取收据类型等级
         var gradeParam;
@@ -1268,7 +1215,7 @@ var paymentUtils = {
 
     //服务款交款
     servicePaymentCollect: function(servicePayment, searcher, hsearcher){
-        if(com.validate()){
+        if(com.validate(servicePayment.modelId)){
             return;
         }
 
@@ -1285,7 +1232,7 @@ var paymentUtils = {
 
         if(com.focusPage("#cashCheckbox").prop("checked")){
             cash = com.focusPage("#cash").val();
-            cashbInfo = com.focusPage("#" + servicePayment.htmlName + "cashInfo").val();
+            cashbInfo = com.typeahead(servicePayment.htmlName + "cashInfo");
         }
 
         if(com.focusPage("#bankCheckbox").prop("checked")){
@@ -1418,5 +1365,18 @@ var paymentUtils = {
                 }
             });
         }, null, false);
+    },
+
+    //显示装修单信息
+    decorationInfoShow: function(orderId, decorationType){
+        com.focusPage("text").css("line-height", "27px");
+        com.post(api.decoration.queryDecorationByOrderId, {"decorationOrderId" : orderId}, function(res){
+            var decorationInfo = res.decoration;
+            com.focusPage("#orderId").html(decorationInfo.orderId);
+            com.focusPage("#address").html(decorationInfo.house.village.cityProper.city.name + ' ' + decorationInfo.house.village.cityProper.name + ' ' + decorationInfo.house.village.name +' '+ decorationInfo.house.houseNumber);
+            com.focusPage("#type").html(decorationType[decorationInfo.type].value);
+            com.focusPage("#grade").html(decorationInfo.grade);
+            com.focusPage("#decorationInfo").modal("show");
+        });
     }
 };

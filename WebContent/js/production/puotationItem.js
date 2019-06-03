@@ -49,21 +49,12 @@ $(function () {
                 $h3.append($title).append($btnDiv);
                 
                 $btnDelete.click(function (e) {
-                    e.stopPropagation();
-                    layer.confirm('确定要删除吗?', {
-                        btn: ['确定', '取消'] //按钮
-                    }, function (indexo, layero) {
-                    	 com.post(api.production.deletePuotationItem, {"puotationItem.qiid": v.qiid}, function () {
-                             com.focusPage('#list ul.item-list').remove();
-                          queryPuotationItemByQid(v.qid);
-                        }, function (e) {
-                            com.showAlert(com.error, e.errorMsg);
-                        });
-                        layer.close(indexo);
-                    }, function () {
-
+                    com.showConfirm("是否确认删除", function(){
+                        com.post(api.production.deletePuotationItem, {"puotationItem.qiid": v.qiid}, function () {
+                            com.focusPage('#list ul.item-list').remove();
+                            queryPuotationItemByQid(v.qid);
+                       });
                     });
-
                 });
                 
             });

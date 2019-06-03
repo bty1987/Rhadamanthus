@@ -73,9 +73,14 @@ body {
 
 .qrinfo {
 	position: absolute;
-	bottom: 20px;
+	bottom: 10px;
 	left: 0px;
 	text-align: center;
 	width: 100%;
 	color: #fff;
+}
+
+.qrtype {
+	margin-right: 5px;
+	font-size: 17px;
 }

@@ -25,7 +25,7 @@ public class AwardStockAction extends BaseListAction {
 	private AwardStockService awardStockService;
 
 	private AwardStockVO awardStock;
-
+	
 	private List<AwardStockVO> awardStocks;
 
 	@Action(value = "pageAwardStock", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
@@ -78,7 +78,7 @@ public class AwardStockAction extends BaseListAction {
 
 	@Action(value = "updateAwardStockForCG", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateAwardStockForCG() throws FLException {
-
+		
 		awardStockService.updateAwardStockForCG(awardStock, queryUserId());
 
 		return SUCCESS;
@@ -115,5 +115,5 @@ public class AwardStockAction extends BaseListAction {
 	public void setAwardStocks(List<AwardStockVO> awardStocks) {
 		this.awardStocks = awardStocks;
 	}
-	
+
 }

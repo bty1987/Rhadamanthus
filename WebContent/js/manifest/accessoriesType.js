@@ -8,7 +8,7 @@ $(function(){
 			workType: com.focusPage('#workType'),
 			comment: com.focusPage('#comment')
 		}
-	}
+	};
 
     var displayFunc  = (function(){
     	
@@ -232,7 +232,7 @@ $(function(){
     	var options = {
 			"accessoriesType.atid": atid,
 			"accessoriesType.status": status
-    	}
+    	};
     	
     	com.post(api.inventory.updateAccessoriesTypeForStatus, options, function(res){
             accessoriesTypeSearcher.doSearch();
@@ -257,7 +257,7 @@ $(function(){
         	"accessoriesType.name": name,
         	"accessoriesType.workType.id": workType,
         	"accessoriesType.comment": comment
-        }
+        };
         
         if(atid > 0){
         	url = api.inventory.updateAccessoriesType;

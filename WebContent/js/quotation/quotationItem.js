@@ -2,7 +2,7 @@ $(function(){
 
     /**
      * 回调函数必须提供 init(tableId, result.list)方法
-     * tableId ，用来显示的div的id
+     * tableId ,用来显示的div的id
      * result.list 列表的json数组
      * */
     var displayFunc  = (function(){
@@ -280,11 +280,11 @@ $(function(){
         'fileObjName':'strutsUploads', // 服务器端脚本使用的文件对象的名称 $_FILES个['upload']
         'uploader': config.server + "importQuotationItem.do", // 上传处理程序
         'height':'30', // 浏览按钮的高度
-        'fileTypeDesc':'支持的格式：',  // 在浏览窗口底部的文件类型下拉菜单中显示的文本
+        'fileTypeDesc':'支持的格式: ',  // 在浏览窗口底部的文件类型下拉菜单中显示的文本
         'fileTypeExts':'*.xls;*.xlsx;', // 允许上传的文件后缀
         'fileSizeLimit':'2MB', // 上传文件的大小限制
         'queueSizeLimit' : 1, // 上传数量
-        'onUploadSuccess':function(file, data, response){ //上传到服务器，服务器返回相应信息到data里
+        'onUploadSuccess':function(file, data, response){ //上传到服务器,服务器返回相应信息到data里
 
         	var dateObj = eval("("+data+")");
             if(data.indexOf("导入文件错误") > 0 ){

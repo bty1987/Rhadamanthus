@@ -36,13 +36,7 @@ jQuery(function($) {
 		maxHeight:'100%'
 	};
 
-	com.focusPage(".date-picker").datepicker({autoclose: !0}).on("show",function() {
-		setTimeout(function() {
-			com.focusPage(".dropdown-menu").css("z-index", 1060)
-		},0)
-	}).next().on(ace.click_event,function() {
-		a(this).prev().focus()
-	});
+	com.focusPage(".date-picker").datepicker(com.datepickerdefault);
 
 	houseSource.deployedBtn = com.focusPage("#deployedBtn").on("click", updateFollowUser);
 	houseSource.bsaveBtn = com.focusPage("#bsaveBtn").on("click", saveBuildingData);
@@ -54,8 +48,11 @@ jQuery(function($) {
 	});
 
 	$.extend(com.validator, houseSource.validator);
-	com.initChosen("belongUser", api.personel.queryUserByPinyin, "pinyinName", {"departmentType.name":"", "user.status":0}, "autoFillKeyValue", "key", "value");
-	com.initChosen("keyer", api.personel.queryUserByPinyin, "pinyinName", {"departmentType.name":"", "user.status":0}, "autoFillKeyValue", "key", "value");
+	
+	com.initTypeahead("belongUser", api.personel.queryUserByPinyin, "pinyinName", {"departmentType.name":"", "user.status":0}, "autoFillKeyValue", "key", "value");
+	com.initTypeahead("keyer", api.personel.queryUserByPinyin, "pinyinName", {"departmentType.name":"", "user.status":0}, "autoFillKeyValue", "key", "value");
+	com.initTypeahead('hsAUser', api.data.queryCustomerForName, "pinyinName", {}, "autoFillCustomer", "key", "value");
+    com.initTypeahead('csAUser', api.data.queryCustomerForName, "pinyinName", {}, "autoFillCustomer", "key", "value");
 
 	houseSource.buildItems.hsNo = com.focusPage("#hsNo");
 	houseSource.buildItems.csNo = com.focusPage("#csNo");
@@ -227,31 +224,35 @@ jQuery(function($) {
 			//转移房源
 			$btnFollow.click(function(){
 				if(v.status == 1 || v.status == 2 || v.status == 4){
-					com.showAlert(com.warning, "当前房源已签约或已失效，不能转移房源");
+					com.showAlert(com.warning, "当前房源已签约或已失效,不能转移房源");
 					return;
 				}
 
 				houseSource.houseSourceId = v.hsid;
+				
 				if(v.followUser.userId != null){
-					com.updateChosen("belongUser", v.followUser.userId, v.followUser.userName);
+					com.updateTypeahead("belongUser", v.followUser.userId, v.followUser.userName);
 				}else{
-					com.updateChosen("belongUser", "", "");
+					com.cleanTypeahead("belongUser");
 				}
+				
 				com.focusPage("#houseSourceBelongModal").modal("show");
 			});
 
 			//绑定客源
 			$btnBind.click(function(){
+			    
 				if(v.status == 1 || v.status == 2 || v.status == 4){
-					com.showAlert(com.warning, "当前房源已签约或已失效，不能绑定客源");
-					return;
+					com.showAlert(com.warning, "当前房源已签约或已失效,不能绑定客源");
+					return false;
 				}
+				
 				deleteData();
+				
 				houseSource.buildItems.hsNo.val(v.no);
 				houseSource.hsid = v.hsid;
 				houseSource.buildItems.hsNo.prop("readOnly", true);
-				com.initChosen('hsAUser', api.data.queryCustomerForName, "pinyinName", {}, "autoFillCustomer", "key", "value");
-				com.initChosen('csAUser', api.data.queryCustomerForName, "pinyinName", {}, "autoFillCustomer", "key", "value");
+				
 				com.focusPage("#buildingModal").modal("show");
 			});
 
@@ -290,13 +291,13 @@ jQuery(function($) {
 			//收钥匙人
 			$btnKey.click(function(){
 				if(v.status == 1 || v.status == 2){
-					return;
+					return false;
 				}
 
 				if(v.keyer.userId != null){
-					com.updateChosen("keyer", v.keyer.userId, v.keyer.userName);
+					com.updateTypeahead("keyer", v.keyer.userId, v.keyer.userName);
 				}else{
-					com.updateChosen("keyer", "", "");
+					com.cleanTypeahead("keyer");
 				}
 
 				houseSource.keyHsid = v.hsid;
@@ -347,7 +348,7 @@ jQuery(function($) {
 		});
 		com.focusPage("#houseSourceBelongModal").modal("hide");
 
-		com.updateChosen("belongUser", "", "");
+		com.cleanTypeahead("belongUser");
 		searcher.doSearch();
 	}
 
@@ -373,17 +374,18 @@ jQuery(function($) {
 		});
 	}
 
-	//绑定客源，创建房产单
+	//绑定客源,创建房产单
 	function saveBuildingData(){
-		if(com.validate() || houseSource.repeatFlg){
-			return;
+	    
+		if(com.validate("buildingModal") || houseSource.repeatFlg){
+			return false;
 		}
 
 		var options = {
 			'building.houseSource.hsid': houseSource.hsid,
 			'building.customerSource.csid': houseSource.csid,
-			'building.houseSourceAgent.cid': houseSource.buildItems.hsAUser.val(),
-			'building.customerSourceAgent.cid': houseSource.buildItems.csAUser.val(),
+			'building.houseSourceAgent.cid': com.typeahead('hsAUser'),
+			'building.customerSourceAgent.cid': com.typeahead('csAUser'),
 			'building.signingTime': houseSource.buildItems.signingTime.val(),
 			'building.tradePrice': houseSource.buildItems.tradePrice.val(),
 			'building.downpayment': houseSource.buildItems.downpayment.val(),
@@ -403,8 +405,8 @@ jQuery(function($) {
 	//删除房产单数据
 	function deleteData(){
 		com.clearValidator("buildingModal");
-		com.updateChosen('hsAUser', "", "");
-		com.updateChosen('csAUser', "", "");
+		com.cleanTypeahead('hsAUser');
+		com.cleanTypeahead('csAUser');
 		com.cleanItems(houseSource.buildItems);
 	}
 

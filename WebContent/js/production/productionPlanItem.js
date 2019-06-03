@@ -28,11 +28,8 @@ jQuery(function ($) {
                         ["高:",v.height,"blue"],
                         ["宽:",v.width,"blue"],
                         ["厚:",v.thick,"blue"],
-                        //["面积(平方米):",utils.accMul(parseFloat(utils.accDiv(v.height,100)),parseFloat(utils.accDiv(v.width,100))),"grey"],
                         ["颜色:",v.color,"grey"],
-                        //["单价:",v.unitprice,"grey"],
                         ["数量:",v.num,"blue"],
-                        //["总价:",v.total,"grey"],
                         ["说明:",v.comment,"grey"],
                     ];
 
@@ -51,12 +48,8 @@ jQuery(function ($) {
                     hidBtn($btnDel,$productionPlanStatus);
 
                     $btnDel.click(function () {
-                        layer.confirm('是否删除?', {
-                            btn: ['确定', '取消'] //按钮
-                        }, function (index, layero) {
-                            var ppiid = v.ppiid;
-                            deleteProductionPlanItem(ppiid);
-                        }, function () {
+                        com.showConfirm("是否确认删除", function(){
+                            deleteProductionPlanItem(v.ppiid);
                         });
                     });
 
@@ -173,12 +166,10 @@ jQuery(function ($) {
         option["productionPlanItem.total"] = 0;
         option["productionPlanItem.comment"] = com.focusPage('#comment').val();
         com.post(api.production.addProductionPlanItem,option,function (res) {
-            layer.msg("添加成功");
+            com.showAlert(com.info, "操作成功");
             searcher.doSearch();
             productionUtils.clearForm('form1');
-        },function () {
-            layer.msg("添加失败");
-        })
+        });
 
     }
 
@@ -188,11 +179,8 @@ jQuery(function ($) {
                 "productionPlanItem.ppiid":id
             },function (res) {
                 searcher.doSearch();
-                layer.closeAll();
-                layer.msg('删除成功');
-            },function () {
-                layer.msg('删除失败')
-            })
+                com.showAlert(com.info, "操作成功");
+            });
         }
     }
 
@@ -205,20 +193,5 @@ jQuery(function ($) {
         }
 
     }
-
-    //$('#layerAddItem').find(".num input").on("change",function(){
-    //    com.clearValidator();
-    //    if(com.validate("layerAddItem","top")){
-    //        return false;
-    //    }
-    //    calcTotal();
-    //})
-
-    //function calcTotal(){
-    //    var _num =  $('#layerAddItem').find('.num input').val();
-    //    var _unitPrice =  $('#layerAddItem').find('.unitPrice').attr('data-unitPrice');
-    //    var _total = utils.accMul(parseFloat(_num+''),parseFloat(_unitPrice+''));
-    //    $('#layerAddItem').find('.total').text(_total);
-    //}
 
 });

@@ -2,6 +2,7 @@
 $(function(){
 
     var statusDict = { "0" : ["\u6709\u6548", "red"], "1" : ["\u65e0\u6548", "red"]};
+    var types = {};
     var activity = {
         saveBtn: com.focusPage("#saveBtn").on("click", saveData),
         cancelBtn: com.focusPage("#cancelBtn").on("show.bs.modal", function(a){
@@ -23,10 +24,15 @@ $(function(){
         com.clearValidator();
     });
 
-    bindingisType("type");
+    com.post(api.ds.information, {}, function (res) {
+        activity.items.types.bindData(res.activityTypes, "key", "value", true);
+        $.each(res.activityTypes, function(i,v){
+            types[v["key"]] = v["value"];
+        });
+    });
 
     $.extend(com.validator, activity.validator);
-    com.focusPage(".date-picker").datepicker({autoclose : !0}).on("show", function() {
+    com.focusPage(".date-picker").datepicker(com.datepickerdefault).on("show", function() {
         setTimeout(function() {
             com.focusPage(".dropdown-menu").css("z-index", 1060);
         },0);
@@ -35,7 +41,6 @@ $(function(){
     });
 
     var displayFunc  = (function(){
-
 
         var renderList = function(tableId,listData){
             var $tableWrap = com.focusPage('#' + tableId).empty();
@@ -67,13 +72,12 @@ $(function(){
             var $invalid = $('<div></div>').addClass('pull-right');
             var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({"type" : "checkbox"});
             var $span = $('<span></span>').addClass('lbl status-lbl');
-
             var propertyArr = [
                 ["创建人:", v.creater.currentName, "grey"],
                 ["开始时间:", v.startTime, "green"],
                 ["结束时间:", v.endTime, "green"],
                 ["状态:", statusDict[v.status][0], statusDict[v.status][1]],
-                ["类型:",v.type == 0 ? "装修" : "主材","red" ],
+                ["类型:",types[v.type],"red" ],
                 ["默认标识:",v.defaults == 0 ? "默认" : "普通", "grey" ],
                 ["说明:",v.content, "grey"]
             ];
@@ -97,12 +101,10 @@ $(function(){
             });
 
             $btnDelStatus.click(function(){
-				com.showConfirm("确定删除吗?", function(result) {                com.post(api.information.updateActivityForStatus, {
-                    "activity.aid": v.aid,
-                    "activity.status": 2
-                }, function(res){
-                    ActivitySeacher.doSearch();
-					com.showAlert(com.info, "操作成功");
+				com.showConfirm("确定删除吗?", function(reslut) {
+				    com.post(api.information.updateActivityForStatus, {"activity.aid": v.aid, "activity.status": 2}, function(res){
+                        ActivitySeacher.doSearch();
+					    com.showAlert(com.info, "操作成功");
                 	});
  				});           
 			 });
@@ -110,7 +112,7 @@ $(function(){
             $default.click(function(){
 
                 if(v.defaults == 0){
-                    com.showAlert(com.warning, "该活动已是默认活动！！！！！！！！！!");
+                    com.showAlert(com.warning, "该活动已是默认活动");
                     return
                 }
                 com.post(api.information.updateActivityForDefault, {
@@ -174,14 +176,8 @@ $(function(){
     function viewActivityItemIndex(v) {
         params.aid = v.aid;
     	params.activityName = v.name;
-    	
+    	params.type = v.type;
         com.focusPage("#activityPageContent").load(api.index.activityItemIndex.url);
-    }
-
-    function bindingisType(idName) {
-        com.post(api.ds.information, {}, function (res) {
-            com.focusPage("#" + idName).bindData(res.activityTypes, "key", "value", true)
-        });
     }
     
     function saveData() {

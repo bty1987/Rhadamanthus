@@ -53,6 +53,15 @@ public class QuotationDaoImpl extends DaoImpl<QuotationPO> implements QuotationD
 	}
 
 	@Override
+	public int countQuotationByOrderId(String orderId, short status) {
+		
+		String sql = "select count(*) from quotation.quotation where orderId = :orderId and status = :status";
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setString("orderId", orderId).setShort("status", status).uniqueResult();
+		
+		return count.intValue();
+	}
+
+	@Override
 	public int updateQuotationForStatusByOrderId(String orderId, short status) {
 		String hql = "update  QuotationPO set status = :status where orderId = :orderId";
 		session().createQuery(hql).setShort("status", status).setString("orderId", orderId).executeUpdate();

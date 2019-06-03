@@ -144,47 +144,37 @@ $(function () {
     //通过
     function currency(v) {
 
-        bootbox.confirm("是否确认通过审批?", function (result) {
-            if (result) {
-                var options = {
-                    "userRequire.urid": v.urid,
-                };
-
-                com.post(api.personel.approveUserRequire, options, function (res) {
-                    com.showAlert(com.info, "审批通过!");
-                    userRequire.modal.modal("hide");
-                    seacher.doSearch();
-                });
-
-            }
+    	com.showConfirm("是否确认通过审批?", function(result){
+            var options = {
+                "userRequire.urid": v.urid,
+             };
+            com.post(api.personel.approveUserRequire, options, function (res) {
+            	com.showAlert(com.info, "审批通过!");
+            	userRequire.modal.modal("hide");
+            	seacher.doSearch();
+            });
         });
     }
 
     //拒绝
     function refuse(v) {
 
-        bootbox.confirm("是否确认拒绝审批?", function (result) {
-            if (result) {
-
-                var options = {
-                    "userRequire.urid": v.urid,
-                };
-                com.post(api.personel.refuseUserRequire, options, function (res) {
-
-                    com.showAlert(com.info, "审批拒绝!");
-                    userRequire.modal.modal("hide");
-                    seacher.doSearch();
-                });
-            }
+    	com.showConfirm("是否确认拒绝审批?", function(result){
+            var options = {
+               "userRequire.urid": v.urid,
+            };
+            com.post(api.personel.refuseUserRequire, options, function (res) {
+                com.showAlert(com.info, "审批拒绝!");
+                userRequire.modal.modal("hide");
+                seacher.doSearch();
+             });
         });
     }
 
     //完成
     function complete(v) {
 
-        bootbox.confirm("是否确认完成审批?", function (result) {
-            if (result) {
-
+    	com.showConfirm("是否确认完成审批?", function(result){
                 var options = {
                     "userRequire.urid": v.urid,
                 };
@@ -194,7 +184,6 @@ $(function () {
                     userRequire.modal.modal("hide");
                     seacher.doSearch();
                 });
-            }
         });
     }
 });

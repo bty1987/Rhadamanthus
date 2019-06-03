@@ -111,7 +111,7 @@ $(function () {
         deleteVillageData("no");
         
         com.post(api.data.queryVillageById, {"village.no": key}, function (res) {
-            house.items.rule.html("推荐楼牌号规则：" + (res.village.rule ? res.village.rule : "暂无推荐规则"));
+            house.items.rule.html("推荐楼牌号规则: " + (res.village.rule ? res.village.rule : "暂无推荐规则"));
         }, function(){
             com.show(com.warning, "楼盘信息不存在");
             key = "", value = "";

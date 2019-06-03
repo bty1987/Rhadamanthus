@@ -11,11 +11,8 @@ $(function () {
     createCustomerSource.items.grade = com.focusPage("#grade");
     createCustomerSource.items.comment = com.focusPage("#comment");
     createCustomerSource.items.comments = com.focusPage("#comments");
-    createCustomerSource.items.grade.bindData(createCustomerSource.grade);
-    com.initChosen('belonger', api.personel.queryUserByPinyin, "pinyinName", {
-        "duty": "",
-        "user.status": 0
-    }, "userBases", "uid", "currentName");
+    createCustomerSource.items.grade.bindData(createCustomerSource.grade, "key", "value", false);
+    com.initTypeahead('belonger', api.personel.queryUserByPinyin, "pinyinName", { "duty": "", "user.status": 0}, "userBases", "uid", "currentName", null);
 
     var displayFunc = (function () {
         var renderList = function (tableId, listData) {
@@ -97,16 +94,15 @@ $(function () {
 
     function changeBelonger(d) {
         com.clearValidator();
-        com.updateChosen("belonger", d.belonger.uid, com.checkNull(d.belonger.userName, ''));
+        com.updateTypeahead("belonger", d.belonger.uid, com.checkNull(d.belonger.userName, ''));
 
         openlayer("编辑归属人", com.focusPage('#customersourceforbelonger'), function () {
             if (!com.validate("customersourceforbelonger", null)) {
                 var option = {
                     "customerOrigin.csid": d.csid,
-                    "customerOrigin.belonger.uid": com.focusPage("#belonger").val()
+                    "customerOrigin.belonger.uid": com.typeahead("belonger")
                 };
                 com.post(api.customer.updateCustomerOriginForBelonger, option, function () {
-                    layer.closeAll();
                     searcher.doSearch();
                     com.showAlert(com.info, '修改成功');
                 });

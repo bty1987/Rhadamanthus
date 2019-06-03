@@ -98,5 +98,11 @@ $.extend(api, {construction: {
     resetDrawLine: {url: "resetDrawLine.do"},
     applayDrawLine: {url: "applayDrawLine.do"},
     successDrawLine: {url: "successDrawLine.do"},
-    failureDrawLine: {url: "failureDrawLine.do"}
+    failureDrawLine: {url: "failureDrawLine.do"},
+    
+    queryConstructionInfo: {url: "queryConstructionInfo.do"},
+    updateConstructionInfo: {url: "updateConstructionInfo.do"},
+    queryConstructionInfoByOrderId: {url: "queryConstructionInfoByOrderId.do"},
+    updateConstructionInfoByOrderId: {url: "updateConstructionInfoByOrderId.do"}
+    
 }});

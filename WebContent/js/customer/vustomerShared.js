@@ -67,26 +67,11 @@ $(function(){
     }, "pagenation", "vustomerSharedPostData", null, false, null, null);
 
     function btnclaim(v) {
-        var btn = $(this);
-        var span = btn.find("span");
-        btn.find('i').remove();
-        var loading = $('<i></i>').addClass('icon-spinner icon-spin white bigger-125');
-        span.prepend(loading);
-        var message = "<p>确定要领取该大客户吗?</p>";
-        bootbox.confirm(message, function (result) {
-            if (result) {
-                var options = {
-                    "vustomer.vid": v.vid
-                };
-                com.post(api.customer.takeVustomer, options, function (res) {
-                    searcher.doSearch();
-                    com.showAlert(com.info,'领取成功');
-                });
-            }else{
-                btn.find('i').remove();
-                var prepared=$('<i></i>').addClass('icon-ok bigger-110');
-                span.prepend(prepared);
-            }
+        com.showConfirm("是否确认领取客户", function(){
+            com.post(api.customer.takeVustomer, {"vustomer.vid": v.vid}, function (res) {
+                searcher.doSearch();
+                com.showAlert(com.info,'领取成功');
+            });
         });
     }
 

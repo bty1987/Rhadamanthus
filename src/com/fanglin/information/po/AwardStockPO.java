@@ -10,64 +10,68 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "awardstock", catalog = "information")
-public class AwardStockPO implements java.io.Serializable{
-	
+public class AwardStockPO implements java.io.Serializable {
+
 	private static final long serialVersionUID = 3752534956399849803L;
-	
+
 	public static final short STATUS_ABLE_SHORT = 0;
-	
+
 	public static final String STATUS_TYPE_STR = "type";
-	
+
 	public static final String STATUS_STOREROOM_STR = "storeroom";
-	
+
 	public static final String COLUMN_FORMAT_STR = "format";
-	
+
 	public static final String COLUMN_NO_STR = "no";
-	
+
 	public static final String COLUMN_STATUS_STR = "status";
-	
+
 	public static final String COLUMN_NAME_STR = "name";
-	
+
+	public static final String COLUMN_SUBTYPE_STR = "subtype";
+
 	public static final String COLUMN_COMPANY_STR = "company";
-	
+
 	public static final short ISPREFOR_CAL_INT = 0; // 计算业绩
-	
+
 	public static final short ISSTOCK_CAL_INT = 0; // 计算库存
-	
+
 	public static final short STOREROOM_DECORATION_INT = 1; // 装修
-	
+
 	public static final short STOREROOM_SALES_INT = 2; // 销售
-	
+
 	public static final short STOREROOM_MATERIAL_INT = 3; // 主材
-	
+
 	public static final short ISPAYMENT_CAL_INT = 0; // 计入金额
-	
+
 	private long asId;
-	
+
 	private String no;
-	
+
 	private String name;
-	
+
 	private float num;
-	
+
 	private short status;
-	
+
 	private short type;
-	
+
+	private short subtype;
+
 	private short storeroom;
-	
-	private short isPrefor; //是否计算业绩
-	
-	private short isStock; //是否计算库存
-	
-	private short isPayment;//是否计入金额
-	
+
+	private short isPrefor; // 是否计算业绩
+
+	private short isStock; // 是否计算库存
+
+	private short isPayment;// 是否计入金额
+
 	private String content;
-	
+
 	private int company;
-	
-	private String format; 
-	
+
+	private String format;
+
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "asId")
@@ -78,7 +82,7 @@ public class AwardStockPO implements java.io.Serializable{
 	public void setAsId(long asId) {
 		this.asId = asId;
 	}
-	
+
 	@Column(name = "no")
 	public String getNo() {
 		return no;
@@ -87,7 +91,7 @@ public class AwardStockPO implements java.io.Serializable{
 	public void setNo(String no) {
 		this.no = no;
 	}
-	
+
 	@Column(name = "name")
 	public String getName() {
 		return name;
@@ -96,7 +100,7 @@ public class AwardStockPO implements java.io.Serializable{
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	@Column(name = "num")
 	public float getNum() {
 		return num;
@@ -105,7 +109,7 @@ public class AwardStockPO implements java.io.Serializable{
 	public void setNum(float num) {
 		this.num = num;
 	}
-	
+
 	@Column(name = "status")
 	public short getStatus() {
 		return status;
@@ -114,7 +118,7 @@ public class AwardStockPO implements java.io.Serializable{
 	public void setStatus(short status) {
 		this.status = status;
 	}
-	
+
 	@Column(name = "type")
 	public short getType() {
 		return type;
@@ -122,6 +126,15 @@ public class AwardStockPO implements java.io.Serializable{
 
 	public void setType(short type) {
 		this.type = type;
+	}
+
+	@Column(name = "subtype")
+	public short getSubtype() {
+		return subtype;
+	}
+
+	public void setSubtype(short subtype) {
+		this.subtype = subtype;
 	}
 
 	@Column(name = "storeroom")
@@ -132,7 +145,7 @@ public class AwardStockPO implements java.io.Serializable{
 	public void setStoreroom(short storeroom) {
 		this.storeroom = storeroom;
 	}
-	
+
 	@Column(name = "isPrefor")
 	public short getIsPrefor() {
 		return isPrefor;
@@ -141,7 +154,7 @@ public class AwardStockPO implements java.io.Serializable{
 	public void setIsPrefor(short isPrefor) {
 		this.isPrefor = isPrefor;
 	}
-	
+
 	@Column(name = "isStock")
 	public short getIsStock() {
 		return isStock;
@@ -168,7 +181,7 @@ public class AwardStockPO implements java.io.Serializable{
 	public void setContent(String content) {
 		this.content = content;
 	}
-	
+
 	@Column(name = "company")
 	public int getCompany() {
 		return company;
@@ -186,6 +199,5 @@ public class AwardStockPO implements java.io.Serializable{
 	public void setFormat(String format) {
 		this.format = format;
 	}
-	
-	
+
 }

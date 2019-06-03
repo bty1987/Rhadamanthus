@@ -16,7 +16,8 @@ jQuery(function($) {
 		bankNums: [],
 		checkvNums: [],
 		paymentStatusArray: ["未付款", "已付款", "已确认", "审批中", "历史"],
-		htmlName: ""
+		htmlName: "",
+		modelId: "baseItemModal"
 	};
 
     decorationPayment.items.cashCheckbox = com.focusPage("#cashCheckbox");
@@ -72,7 +73,6 @@ jQuery(function($) {
 	com.focusPage("#advanceType").bindData([{"key":"1", "value":"合同"}, {"key":"2", "value":"工程"}], 'key', 'value');
 
 	com.focusPage("#couponType").chosen({width: "216px", multi_type: "input"});
-	com.focusPage("#refundCouponType").chosen({width: "216px", multi_type: "input"});
 
 	decorationPayment.cash = [];
 	decorationPayment.bank = [];
@@ -97,9 +97,10 @@ jQuery(function($) {
 	paymentUtils.getReceiptType(decorationPayment);
 
 	//现金方式
-	paymentUtils.dynamicChosen('baseItemModal', "cashInfo", decorationPayment.cashUtil, "key", "value");
+	com.selectTypeahead("cashInfo", decorationPayment.cashUtil, "key", "value", null);
 
-	com.focusPage("#couponType").bindData(decorationPayment.couponType, 'no', 'no');
+	//优惠券方式
+	com.focusPage("#couponType").bindData(decorationPayment.couponType, 'no', 'name');
 	com.focusPage("#couponType").trigger("chosen:updated");
 
 	//刷卡方式
@@ -152,7 +153,7 @@ jQuery(function($) {
             
             var propertyArr = [
 				["订单号:", v.decoration.orderId, "blue"],
-                ["楼盘地址:", v.decoration.house.village.name + ''+v.decoration.house.houseNumber, "grey"],
+                ["楼盘地址:", v.decoration.house.village.cityProper.city.name + ' ' + v.decoration.house.village.cityProper.name + ' ' + v.decoration.house.village.name + ' '+ v.decoration.house.houseNumber, "grey"],
                 ["客户:", v.decoration.customer.name, "grey"],
                 ["设计师:", v.decoration.designer.currentName, "grey"],
                 ["设计部:", v.decoration.designer.dept.name, "grey"],
@@ -246,7 +247,7 @@ jQuery(function($) {
 
             var propertyArr = [
                 ["订单号:", v.decoration.orderId, "blue"],
-                ["楼盘地址:", v.decoration.house.village.name +''+ v.decoration.house.houseNumber, "grey"],
+                ["楼盘地址:", v.decoration.house.village.cityProper.city.name + ' ' + v.decoration.house.village.cityProper.name + ' ' + v.decoration.house.village.name +' '+ v.decoration.house.houseNumber, "grey"],
                 ["客户:", v.decoration.customer.name, "grey"],
                 ["设计师:", v.decoration.designer.currentName, "grey"],
                 ["设计部:", v.decoration.designer.dept.name, "grey"],
@@ -389,7 +390,7 @@ jQuery(function($) {
 		com.focusPage("#advance").removeAttr("readonly");
 		com.focusPage('.couponBlue').remove();
 
-		paymentUtils.EmptyChosen('cashInfo');
+		com.cleanTypeahead('cashInfo');
 
 		if(payment.oneType == 1){// 退款
 			paymentUtils.initBaseModal(payment, decorationPayment);
@@ -479,7 +480,7 @@ jQuery(function($) {
     }
 
 	function refund(){
-		if(com.validate()){
+		if(com.validate('baseItemModal')){
 			return;
 		}
 
@@ -556,7 +557,7 @@ jQuery(function($) {
 			$.exceler({
 				column : [
 					["订单号","decoration.orderId"],
-					['楼盘地址',['decoration.house.village.name', 'decoration.house.houseNumber']],
+					['楼盘地址',['decoration.house.village.cityProper.city.name', 'decoration.house.village.cityProper.name', 'decoration.house.village.name', 'decoration.house.houseNumber']],
 					['客户','decoration.customer.name'],
 					['设计师','decoration.designer.currentName'],
 					['设计部','decoration.designer.dept.name'],

@@ -6,7 +6,7 @@ $(function () {
 		
 		status: {},
 		balanceStatus: {}
-	}
+	};
 	
 	com.post(api.ds.manifest, {}, function(res){
     	
@@ -122,7 +122,7 @@ $(function () {
             $btnEdit.click(function () {
                 
                 if(v.status != 0){
-                	layer.msg("采购单状态不可操作");
+                	com.showAlert(com.warning, "采购单状态不可操作");
                 	return false;
                 }
                 

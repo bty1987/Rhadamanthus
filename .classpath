@@ -3,6 +3,7 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="conf"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.7.0_67"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jst.server.core.container/org.eclipse.jst.server.tomcat.runtimeTarget/Apache Tomcat v7.0"/>
 	<classpathentry kind="lib" path="E:/Git/Medusa/98.Jars/Other/antlr-2.7.7.jar"/>
 	<classpathentry kind="lib" path="E:/Git/Medusa/98.Jars/Other/aopalliance-1.0.jar"/>
 	<classpathentry kind="lib" path="E:/Git/Medusa/98.Jars/Other/asm-6.2.jar"/>
@@ -76,10 +77,10 @@
 	<classpathentry kind="lib" path="E:/Git/Medusa/98.Jars/Other/transactions-jta-4.0.6.jar"/>
 	<classpathentry kind="lib" path="E:/Git/Medusa/98.Jars/Other/xmpcore-6.1.10.jar"/>
 	<classpathentry kind="lib" path="E:/Git/Medusa/98.Jars/Other/xwork-core-2.3.34.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jst.server.core.container/org.eclipse.jst.server.tomcat.runtimeTarget/Apache Tomcat v7.0"/>
 	<classpathentry kind="lib" path="E:/Git/Medusa/98.Jars/Other/aliyun-oss/aliyun-sdk-oss-2.5.0.jar"/>
 	<classpathentry kind="lib" path="E:/Git/Medusa/98.Jars/Other/aliyun-oss/commons-codec-1.9.jar"/>
 	<classpathentry kind="lib" path="E:/Git/Medusa/98.Jars/Other/aliyun-oss/hamcrest-core-1.1.jar"/>
 	<classpathentry kind="lib" path="E:/Git/Medusa/98.Jars/Other/aliyun-oss/jdom-1.1.jar"/>
-	<classpathentry kind="output" path="build/classes"/>
+	<classpathentry kind="lib" path="E:/Git/Medusa/98.Jars/Other/lippi-oapi-encrpt.jar"/>
+	<classpathentry kind="output" path="classes"/>
 </classpath>

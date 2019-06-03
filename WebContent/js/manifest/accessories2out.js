@@ -74,10 +74,8 @@ jQuery(function ($) {
         });
 
         com.post(api.inventory.addManifestForAS, options, function (data) {
-            layer.closeAll();
-            layer.msg('添加成功!', {icon: 1}, function () {
-                com.focusPage('#list').empty();
-            });
+            com.showAlert(com.info, "操作成功");
+            com.focusPage('#list').empty();
         });
     });
 
@@ -86,11 +84,10 @@ jQuery(function ($) {
     	var options = {
 			"accessories.aid": accessories.aid,
             "accessories.status": 2
-    	}
+    	};
     	
         com.post(api.inventory.updateAccessoriesForStatus, options, function (data) {
-            layer.closeAll();
-            layer.msg('拒绝成功');
+            com.showAlert(com.info, "操作成功");
         });
     });
 

@@ -122,16 +122,14 @@ $(function(){
             /*状态启用*/
             $btnStart.click(function(){
                 startStatus(v.bid, v.status, function(){
-                    layer.closeAll();
-                    layer.msg('启用成功',{icon:1});
+                    com.showAlert(com.info, "操作成功");
                 });
             });
 
             /*状态禁用*/
             $btnBan.click(function(){
                 stopStatus(v.bid, v.status, function(){
-                    layer.closeAll();
-                    layer.msg('禁用成功',{icon:1});
+                    com.showAlert(com.info, "操作成功");
                 });
             });
             return $liLine;
@@ -196,7 +194,7 @@ $(function(){
             yes: function(index, layero){
                 var img =com.focusPage('#showImg').attr('src');
                 if(img == "#"){
-                    layer.msg("请上传图片");
+                    com.showAlert(com.warning, "请上传图片");
                 }else{
                     callback(index,layero);
                 }
@@ -213,37 +211,23 @@ $(function(){
 
     /*状态信息验证*/
     function startStatus(id, status, callback){
-        if(status == "1"){
-            com.post(api.store.updateMbrandForStatus,{
-                "mbrand.bid" : id,
-                "mbrand.status" : "0"
-            },function(res){
-                callback();
-                mbrandSeacher.doSearch();
-            });
-        }else{
-            layer.alert('已经启用', {
-                icon: 0,
-                skin: 'layer-ext-moon' //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
-            });
-        }
+        com.post(api.store.updateMbrandForStatus,{
+            "mbrand.bid" : id,
+            "mbrand.status" : "0"
+        },function(res){
+            callback();
+            mbrandSeacher.doSearch();
+        });
     }
 
     function stopStatus(id, status, callback){
-        if(status == "0"){
-            com.post(api.store.updateMbrandForStatus,{
-                "mbrand.bid" : id,
-                "mbrand.status" : "1"
-            },function(res){
-                callback();
-                mbrandSeacher.doSearch();
-            });
-        }else{
-            layer.alert('已经禁用', {
-                icon: 0,
-                skin: 'layer-ext-moon'
-            });
-        }
+        com.post(api.store.updateMbrandForStatus,{
+            "mbrand.bid" : id,
+            "mbrand.status" : "1"
+        },function(res){
+            callback();
+            mbrandSeacher.doSearch();
+        });
     }
 
     /*添加信息*/
@@ -266,10 +250,6 @@ $(function(){
         var cid = mbrand.mbrandItems.cid.val();
         var name = mbrand.mbrandItems.name.val();
         var path = com.focusPage("#path").val();
-
-        if(name == v.name){
-            layer.msg("你未修改品牌");
-        }
 
         com.post(api.store.updateMbrand, {
             'mbrand.bid' : v.bid,

@@ -34,7 +34,7 @@ $(function () {
                     ["原结算值:", v.salesItem.rawCvalue, "blue"],
                     ["结算方式:", v.salesItem.ctype==0?"底价":"点位", "red"],
                     ["结算值:", v.salesItem.cvalue, "blue"],
-                    ["备注:", v.salesItem.comment, "grey"],
+                    ["备注:", v.salesItem.comment, "grey"]
                 ];
 
                 $.each(propertyArr, function (index, value) {

@@ -48,9 +48,7 @@ var AddWorkflow = (function(){
                 _params["productionWorkPlan.workplan.wpid"] = $(this).val();
 
                 com.post(api.production.addProductionWorkPlan, _params, function(data){
-                    layer.closeAll();
-                    layer.msg("添加成功", {icon : 1}, function(){
-                    });
+                    com.showAlert(com.info, "操作成功");
                 });
             });
         },

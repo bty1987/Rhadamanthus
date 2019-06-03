@@ -247,7 +247,7 @@ public class SalesServiceImpl implements SalesService {
 		
 		try {
 			
-			dompany = FormatUtil.decodeCompany(AESHelper.decryptString(salesVO.getDompanys(), SystemConfig.getString("encryptKey")));
+			dompany = FormatUtil.decodeCompany(AESHelper.decrypt(salesVO.getDompanys(), SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv")));
 			
 		} catch (Exception e) {
 			
@@ -304,7 +304,7 @@ public class SalesServiceImpl implements SalesService {
 		
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(salesVO.getOrderId());
 		
-		if(decorationPO.getGrade().equals("C") && decorationPO.getCompany() == 1 && company == 1){
+		if(decorationPO.getGrade().equals("C")){
 			salesPO.setGrade("B");
 		}else{
 			salesPO.setGrade("");

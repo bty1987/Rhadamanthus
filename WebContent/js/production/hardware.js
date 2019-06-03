@@ -5,11 +5,6 @@ $(function(){
     var $pid = params["pid"];
     var $status = params["status"];
 
-    /**
-     * 回调函数必须提供 init(tableId, result.list)方法
-     * tableId ，用来显示的div的id
-     * result.list 列表的json数组
-     **/
     var displayFunc  = (function(){
 
         var renderList = function(tableId,listData){
@@ -77,14 +72,9 @@ $(function(){
 
                             if(!com.validate("layerAdd",null)){
                                 saveData(id, function(){
-                                    layer.closeAll();
-                                    layer.msg("修改成功",{icon:1,time:2000});
-                                },function(){
-                                    layer.closeAll();
-                                    layer.msg("修改失败");
+                                    com.showAlert(com.info, "操作成功");
                                 });
                             }
-
                         });
                     });
 
@@ -125,7 +115,6 @@ $(function(){
                             'queueSizeLimit': 1, // 上传数量
                             'onUploadSuccess': function (file, data, response) {
                                 updateHardwarePath(data, v.hid);
-                                // 上传到服务器，服务器返回相应信息到data里
                             }});
 
                     });
@@ -143,30 +132,20 @@ $(function(){
 
                     //废除按钮
                     $btnDestory.click(function () {
-                        layer.confirm('是否删除?', {
-                            btn: ['确定','取消'] //按钮
-                        }, function(index, layero){
-                            hardwareDestory(v.hid,function(){
-                                layer.closeAll();
-                                layer.msg('删除成功',{icon:1,time:2000});
+                        com.showConfirm("是否确认删除", function(){
+                            hardwareDestory(v.hid, function(){
+                                com.showAlert(com.info, "操作成功");
                             });
-                        }, function(){
-
                         });
                     });
 
                     //已到货按钮
                     $btnArrival.click(function () {
-                        layer.confirm('确定到货?', {
-                            btn: ['确定','取消'] //按钮
-                        }, function(index, layero){
+                        com.showConfirm("是否确认到货", function(){
                             hardwareArrived(v.hid,function(){
-                                layer.closeAll();
-                                layer.msg('到货成功',{icon:1,time:2000});
+                                com.showAlert(com.info, "操作成功");
                             });
-                        }, function(){
-
-                        });
+                        }, cancel)
                     });
                 });
                 $ul.appendTo($tableWrap);
@@ -206,11 +185,7 @@ $(function(){
             openlayer($title,function(index, layero){
                 if(!com.validate("layerAdd",null)){
                     saveData(null, function(){
-                        layer.closeAll();
-                        layer.msg("添加成功");
-                    },function(){
-                        layer.closeAll();
-                        layer.msg("添加失败");
+                        com.showAlert(com.info, "操作成功");
                     });
                 }
             });
@@ -307,9 +282,6 @@ $(function(){
             },function(res){
                 callback();
                 hardwareSeacher.doSearch();
-            },function(e){
-                layer.closeAll();
-                layer.msg('确认失败',{icon:2,time:2000});
             });
 
     }
@@ -323,9 +295,6 @@ $(function(){
             },function(res){
                 callback();
                 hardwareSeacher.doSearch();
-            },function(e){
-                layer.closeAll();
-                layer.msg('废除失败',{icon:2,time:2000});
             });
 
     }
@@ -340,18 +309,13 @@ $(function(){
         if (dateObj.errorCode == 0) {
             option["hardware.path"] = dateObj.resUrl;
         }else{
-            layer.msg('上传失败',{icon:2,time:2000});
+            com.showAlert(com.warning, "上传失败");
         }
 
         com.post(api.production.updateHardware,option,function(res){
-            layer.closeAll();
-            layer.msg('上传成功',{icon:1,time:2000});
+            com.showAlert(com.info, "操作成功");
             hardwareSeacher.doSearch();
-        },function(){
-            layer.closeAll();
-            layer.msg('上传失败',{icon:2,time:2000});
-            hardwareSeacher.doSearch();
-        })
+        });
     }
 
 

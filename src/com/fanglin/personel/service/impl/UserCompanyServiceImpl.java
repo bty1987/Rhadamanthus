@@ -45,7 +45,7 @@ public class UserCompanyServiceImpl implements UserCompanyService {
 			BeanUtil.copyProperties(userCompanyPO.getCompany(), userCompanyVO.getCompany(), Arrays.asList("cid"));
 
 			try {
-				userCompanyVO.getCompany().setCid(AESHelper.encryptToString(FormatUtil.encodeCompany(userCompanyPO.getCompany().getCid()), SystemConfig.getString("encryptKey")));
+				userCompanyVO.getCompany().setCid(AESHelper.encrypt(FormatUtil.encodeCompany(userCompanyPO.getCompany().getCid()), SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv")));
 			} catch (Exception e) {
 				throw new FLException(230015, "公司不存在");
 			}
@@ -68,7 +68,7 @@ public class UserCompanyServiceImpl implements UserCompanyService {
 		if (cids != null) {
 			for (String cid : cids) {
 				try {
-					userCompanyDao.save(new UserCompanyPO(uid, new CompanyPO(FormatUtil.decodeCompany(AESHelper.decryptString(cid, SystemConfig.getString("encryptKey"))))));
+					userCompanyDao.save(new UserCompanyPO(uid, new CompanyPO(FormatUtil.decodeCompany(AESHelper.decrypt(cid, SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv"))))));
 				} catch (Exception e) {
 					throw new FLException(230015, "公司不存在");
 				}

@@ -8,11 +8,12 @@ jQuery(function($) {
 		bankNums: [],
 		checkvNums: [],
 		items: {},
-		htmlName: "paymentCheck"
+		htmlName: "paymentCheck",
+		modelId: 'paymentCheckModal'
 	};
 
 	paymentCheck.saveBtn = com.focusPage("#collectBtn").bindClick(function(){
-		paymentUtils.paymentSaveData(paymentCheck, hsearcher);
+		paymentUtils.paymentSaveData(paymentCheck, searcher);
 	});
 
 	paymentCheck.modal = com.focusPage("#paymentCheckModal").on('show.bs.modal',function(e){
@@ -58,7 +59,7 @@ jQuery(function($) {
 
 	paymentUtils.getReceiptType(paymentCheck);
 
-	paymentUtils.dynamicChosen('paymentCheckModal', "paymentCheckcashInfo", paymentCheck.cashUtil, "key", "value");
+	com.selectTypeahead("paymentCheckcashInfo", paymentCheck.cashUtil, "key", "value", null);
 
 	com.focusPage("#paymentCheckbankAdd").click(function(){
 		var num = $(this).attr("num");
@@ -141,7 +142,7 @@ jQuery(function($) {
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $ulStyle = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons').appendTo($h3);
-			var $btnUpdate = $('<a></a>').addClass('btn btn-minier btn-success').html('更新').appendTo($divBtnWrap);
+			var $btnUpdate = $('<a></a>').addClass('btn btn-minier btn-success').html('更新');
 
             var propertyArr = [
                ["客户:", v.customer.name, "grey"],
@@ -190,6 +191,10 @@ jQuery(function($) {
 				$('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
 				$liProperty.appendTo($ulStyle);
 			});
+
+			if(v.transfer == 0){
+				$btnUpdate.appendTo($divBtnWrap);
+			}
            
             $liLine.append($h3).append($ulProperty).append($ulStyle);
 
@@ -360,7 +365,8 @@ jQuery(function($) {
 					['银行', ['bank', 'bankInfo']],
 					['转账', ['checkv', 'checkvBank']],
 					['分期', ['installment', 'installmentBank']],
-					['对公', ['accounts', 'accountsBank']]
+					['对公', ['accounts', 'accountsBank']],
+					['预付款转换', 'transfer']
 				],
 				list: res.paging.data
 			}, function(v){

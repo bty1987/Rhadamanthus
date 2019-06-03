@@ -22,8 +22,8 @@ jQuery(function ($) {
     backVisit.saveBtn.bindClick(saveData);
     
     backVisit.backVisitItems.backVisitType.bindData(backVisit.backVisitTypeData, "id", "name", false);
-
-    com.focusPage('.date-picker').datepicker({autoclose: true});
+                                             
+    com.focusPage('.date-picker').datepicker(com.datepickerdefault);
 
     var displayFunc = (function () {
         var renderList = function (tableId, listData) {

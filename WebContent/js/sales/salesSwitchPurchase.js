@@ -1,11 +1,6 @@
 $(function () {
 
-    if (jQuery().datepicker) {
-        com.focusPage('#layerAdd input[name="deliveryTime"]').datepicker({
-            autoclose: true,
-            format: 'yyyy-mm-dd',//yyyy-mm-dd hh:ii,
-        });
-    }
+    com.focusPage('#layerAdd input[name="deliveryTime"]').datepicker(com.datepickerdefault);
 
     var displayFunc = (function () {
 
@@ -133,7 +128,7 @@ $(function () {
                                 savePurchase(_params);
                             },v.sid);
                         } else {
-                            layer.msg('此销售单补款未确认,无法转采购单', {time: 2e3});
+                            com.showAlert(com.warning, "此销售单补款未确认,无法转采购单");
                         }
 
                     });
@@ -198,11 +193,11 @@ $(function () {
                             savePurchase(_params);
                         });
                     } else if (fullPayStatusFlag == false && flag == true || fullPayStatusFlag == false && flag == false) {
-                        layer.msg('销售单中有补款未确认,无法转采购单', {time: 2e3});
+                        com.showAlert(com.warning, "销售单中有补款未确认,无法转采购单");
                     }
 
                 } else {
-                    layer.msg("请选择销售单", {time: 2e3});
+                    com.showAlert(com.warning, "请选择销售单");
                 }
 
             }
@@ -257,7 +252,7 @@ $(function () {
             if (checkRowValue($liline)) {
                 com.post(api.inventory.addPurchase, options, function () {
                     layer.closeAll();
-                    layer.msg('添加成功');
+                    com.showAlert(com.info, "添加成功");
                     com.focusPage('#resultListItem').empty();
                     com.focusPage('input[name="deliveryTime"]').val("");
                 }, function (e) {
@@ -265,7 +260,7 @@ $(function () {
                 });
             }
         } else {
-            layer.msg("请选择需要转采购单的商品");
+            com.showAlert(com.warning, "请选择需要转采购单的商品");
         }
 
     }
@@ -299,7 +294,7 @@ $(function () {
                         ["原结算值:", v.rawCvalue, "blue", "rawCvalue"],
                         ["结算方式:", v.ctype == 0 ? "底价" : "点位", "red", "ctype"],
                         ["结算值:", v.cvalue, "blue", "cvalue"],
-                        ["备注:", v.comment, "grey", "conment"],
+                        ["备注:", v.comment, "grey", "comment"]
                     ];
 
                     var $label = $('<label></label>').addClass('control-label').css({
@@ -347,7 +342,7 @@ $(function () {
                         "data-cid": v.color.cid,
                         "data-fid": v.format.fid,
                         "data-gid": v.goods.gid,
-                        "data-num": v.num,
+                        "data-num": v.num
                     }).addClass('ace ace-checkbox-2');
 
                     var _span = $('<span></span>').addClass('lbl blue bigger-150').css('font-weight', 'bold').html(v.goods.name + ' ' + v.goods.no);
@@ -374,13 +369,13 @@ $(function () {
                             "goodsStorehouseStock.goods.gid": v.goods.gid,
                             "goodsStorehouseStock.color.cid": v.color.cid,
                             "goodsStorehouseStock.format.fid": v.format.fid
-                        }
+                        };
 
                         com.post(api.inventory.queryGoodsStorehouseStockByGid, _option, function (res) {
                             if (res.nums == null) {
-                                layer.msg('该商品没有库存', {time: 3e3});
+                                com.showAlert(com.warning, "该商品没有库存");
                             } else {
-                                layer.msg('该商品剩余库存:' + res.nums);
+                                com.showAlert(com.warning, '该商品剩余库存:' + res.nums);
                             }
                         });
                     });

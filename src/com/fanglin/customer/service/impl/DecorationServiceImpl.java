@@ -156,7 +156,7 @@ public class DecorationServiceImpl extends DaoImpl<DecorationPO> implements Deco
 	public int bindingCusDecoration(DecorationVO decorationVO, String unionId, String securityCode, String verifyCode) throws FLException {
 
 		try {
-			if (!verifyCode.equals(AESHelper.decryptString(securityCode, SystemConfig.getString("encryptKey")))) {
+			if (!verifyCode.equals(AESHelper.decrypt(securityCode, SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv")))) {
 				throw new FLException(330010, "绑定订单失败,验证码错误");
 			}
 		} catch (Exception e) {

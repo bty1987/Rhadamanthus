@@ -195,7 +195,7 @@ public class UserServiceImpl implements UserService {
 		userInfoVO.setUser(convertBean(userInfoPO.getUser()));
 
 		try {
-			userInfoVO.getUser().setCompanys(AESHelper.encryptToString(FormatUtil.encodeCompany(userInfoPO.getUser().getCompany()), SystemConfig.getString("encryptKey")));
+			userInfoVO.getUser().setCompanys(AESHelper.encrypt(FormatUtil.encodeCompany(userInfoPO.getUser().getCompany()), SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv")));
 		} catch (Exception e) {
 			throw new FLException(230015, "公司不存在");
 		}
@@ -407,7 +407,10 @@ public class UserServiceImpl implements UserService {
 		List<String> pinyins = PinYin4Util.getPinyin(userVO.getCurrentName());
 
 		userPO.setPinYin(pinyins.get(0));
-		userPO.setIsUpdate(UserPO.COLUMN_ISUPDATE_UPDATE_INT);
+		
+		if(userPO.getIsUpdate() == 0){
+			userPO.setIsUpdate(UserPO.COLUMN_ISUPDATE_UPDATE_INT);
+		}
 
 		userDao.update(userPO);
 
@@ -531,7 +534,7 @@ public class UserServiceImpl implements UserService {
 		}
 
 		try {
-			userPO.setCompany(FormatUtil.decodeCompany(AESHelper.decryptString(userVO.getCompanys(), SystemConfig.getString("encryptKey"))));
+			userPO.setCompany(FormatUtil.decodeCompany(AESHelper.decrypt(userVO.getCompanys(), SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv"))));
 		} catch (Exception e) {
 			if (SystemConfig.getInt("multicompany", 0) == 0)
 				throw new FLException(230017, "公司获取失败");

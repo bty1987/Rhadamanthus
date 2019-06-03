@@ -280,7 +280,7 @@ var QuotetionDetail = (function(){
         calculateQuoteFee : function($quote){
             var _num = parseFloat($quote.find('.num .cell-wrap').text());
             var _unitprice = parseFloat($quote.find('.unitprice .cell-wrap').text());
-            var _discountFlag = $quote.find('.discountprice').attr('data-discount');//1打折，0不打折
+            var _discountFlag = $quote.find('.discountprice').attr('data-discount');//1打折,0不打折
             var _discountprice = utils.changeThrDecimal(utils.accMul(_unitprice, (_discountFlag == 1 ? utils.accDiv(quo.basicParams['quotetion.discount'], 10) : 1)));
             var _totalprice,_totalpriced;
             _totalprice = utils.changeThrDecimal(utils.accMul(_num,  _unitprice));
@@ -301,7 +301,7 @@ var QuotetionDetail = (function(){
                 if(['3'].indexOf($quote.find(".cell.line").attr('data-areatype')) != -1) return true;
                 var _num = parseFloat($quote.find('.num .cell-wrap').text());
                 var _unitprice = parseFloat($quote.find('.unitprice .cell-wrap').text());
-                var _discountFlag = $quote.find('.discountprice').attr('data-discount');//1打折，0不打折
+                var _discountFlag = $quote.find('.discountprice').attr('data-discount');//1打折,0不打折
                 var _discountprice = utils.changeThrDecimal(utils.accMul(_unitprice, (_discountFlag == 1 ?_discount : 1)));
                 var _totalprice = utils.accMul(_num,  _unitprice);
                 var _totalpriced =  utils.accMul(_num,  _discountprice);
@@ -552,10 +552,10 @@ var QuotetionDetail = (function(){
         /*
          * 将功能区添加到功能区列表中
          * 参数:
-         * 	order ：功能区排序
-         * 	$domain ：正在编辑的功能区
-         * 	$aimDomains ： 参与排序的其他功能区（不包含当前要插入的功能区）
-         * 	existed ： 是否已存在功能区列表中
+         * 	order : 功能区排序
+         * 	$domain : 正在编辑的功能区
+         * 	$aimDomains :  参与排序的其他功能区（不包含当前要插入的功能区）
+         * 	existed :  是否已存在功能区列表中
          * */
         insertDomainByOrder : function(order, $domain, $aimDomains, existed){
             var that = this;
@@ -662,12 +662,12 @@ var QuotetionDetail = (function(){
                     var radio = $('<div class="radio no-padding" style="margin-bottom:10px"></div>');
                     var lableInput = $('<label> <input type="radio" name="basePrice" class="ace" value="'+ v['db'] +'" data-baseDiscount="'+ v['dd'] +'" data-name="'+ v['n'] +'"/> <sapn class="lbl"></sapn></label>');
                     var lbl1 = $('<label>'+ v['n'] +'</label>').addClass('quotation-base-price-radio').addClass('quotation-base-price-radio-width15');
-                    var lbl2 = $('<label> 折扣数：'+v['dd'] +'</label>').addClass('quotation-base-price-lbl');
-                    var lbl3 = $('<label> 基数：'+v['db'] +'</label>').addClass('quotation-base-price-lbl').addClass('hide');
+                    var lbl2 = $('<label> 折扣数: '+v['dd'] +'</label>').addClass('quotation-base-price-lbl');
+                    var lbl3 = $('<label> 基数: '+v['db'] +'</label>').addClass('quotation-base-price-lbl').addClass('hide');
 
                     radio.append(lableInput).append(lbl1).append(lbl2).append(lbl3).appendTo(com.focusPage("#showBaseVersion"));
                 });
-                var customInput = $('<label> <input type="radio" name="basePrice" class="ace" value="'+ 0 +'" data-customDiscount="true"/> <sapn class="lbl"></sapn></label>');  // 以上类型之外，自定义折扣数
+                var customInput = $('<label> <input type="radio" name="basePrice" class="ace" value="'+ 0 +'" data-customDiscount="true"/> <sapn class="lbl"></sapn></label>');  // 以上类型之外,自定义折扣数
                 var customlbl = $('<label>半包/全包</label>').addClass('quotation-base-price-radio');
                 var customlb2 = $('<label>请自定义折扣数</label>').addClass('quotation-base-price-lbl').addClass('quotation-base-price-lbl-left23');
                 com.focusPage("#showBaseVersion").append(customInput).append(customlbl).append(customlb2);
@@ -971,7 +971,7 @@ var QuotetionDetail = (function(){
         },
         /*添加报价项的时候记住上一页选中的报价项
          * 参数
-         * $input ：正在操作的input标签
+         * $input : 正在操作的input标签
          * ischecked : 选举中或取消选中
          * */
         recordQuots : function($input, ischecked){
@@ -1246,7 +1246,7 @@ var QuotetionDetail = (function(){
             var _dcp = 0 ;
             if(qv.type < 2){
                 //计算是否打折计算出折扣后的价格    单价
-                _dcp = utils.accMul(qv.unitPrice, (qv.discount == 1 ? utils.accDiv(quo.basicParams['quotetion.discount'], 10) : 1));//折后单价1打折，0不打折
+                _dcp = utils.accMul(qv.unitPrice, (qv.discount == 1 ? utils.accDiv(quo.basicParams['quotetion.discount'], 10) : 1));//折后单价1打折,0不打折
                 //取小数后三位
                 _dcp = utils.changeThrDecimal(_dcp);
             }

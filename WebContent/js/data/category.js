@@ -62,8 +62,8 @@ jQuery(function($) {
             var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
 
             var propertyArr = [
-                ["金蝶编号：", com.checkNull(v.kino, "无"), "grey"],
-                ["金蝶名称：", com.checkNull(v.kiname, "无"), "grey"]
+                ["金蝶编号: ", com.checkNull(v.kino, "无"), "grey"],
+                ["金蝶名称: ", com.checkNull(v.kiname, "无"), "grey"]
             ];
 
             $.each(propertyArr, function (index,value) {

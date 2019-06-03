@@ -23,9 +23,6 @@ public interface SalesActivityService {
 	//未退装修活动 , 已审批未退货
 	public void unrefundSalesActivityItem(SalesActivityItemVO salesActivityItemVO) throws FLException;
 	
-	//升级装修活动 , 升级状态同时等同于领取
-	public void upgradeSalesActivityItem(SalesActivityItemVO salesActivityItemVO) throws FLException;
-	
 	//退货销售活动项
 	public void refundSalesActivityItem(SalesActivityItemVO salesActivityItemVO, String userId) throws FLException;
 	

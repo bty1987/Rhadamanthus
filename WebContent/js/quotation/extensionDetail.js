@@ -303,7 +303,7 @@ var ExtensionDetail = (function(){
         },
         /*添加报价项的时候记住上一页选中的报价项
          * 参数
-         * $input ：正在操作的input标签
+         * $input : 正在操作的input标签
          * ischecked : 选举中或取消选中
          * */
         recordQuots : function($input, ischecked){

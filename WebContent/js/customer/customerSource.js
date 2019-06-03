@@ -32,7 +32,7 @@ $(function () {
 
     customerSource.items.rule = com.focusPage("#rule");
 
-    customerSource.items.grade.bindData(customerSource.grade);
+    customerSource.items.grade.bindData(customerSource.grade, "key", "value", false);
     customerSource.items.gender.switchBtn("gender");
 
     com.post(api.ds.building, {}, function (res) {
@@ -42,12 +42,12 @@ $(function () {
         customerSource.items.doorrule.bindData(res.buildrule, "key", "value");
     }, null, false);
 
-    com.initChosen('villageNo', api.data.queryVillageForNameByPinyin, "pinyinName", {}, "autoFillKeyValue", "key", "value");
-    com.initChosen('designer', api.personel.queryUserByPinyin, "pinyinName", {"user.status": 0}, 'autoFillKeyValue', 'key', 'value');
+    com.initTypeahead('villageNo', api.data.queryVillageForNameByPinyin, "pinyinName", {}, "autoFillKeyValue", "key", "value", null);
+    com.initTypeahead('designer', api.personel.queryUserByPinyin, "pinyinName", {"user.status": 0}, 'autoFillKeyValue', 'key', 'value', null);
 
     customerSource.items.villageNo.on('change', function () {
         com.post(api.data.queryVillageById, {"village.no": customerSource.items.villageNo.val()}, function (res) {
-            customerSource.items.rule.html("推荐楼牌号规则：" + res.village.rule);
+            customerSource.items.rule.html("推荐楼牌号规则: " + res.village.rule);
         }, null, false);
     });
 
@@ -162,9 +162,9 @@ $(function () {
             $btnDesigner.click(function () {
                 customerSource.currentCustomerSource = v;
                 if(v.designer != null && v.designer.uid != null){
-                    com.updateChosen("designer", v.designer.userId, v.designer.currentName);
+                    com.updateTypeahead("designer", v.designer.userId, v.designer.currentName);
                 }else{
-                    com.updateChosen("designer", "", "");
+                    com.cleanTypeahead("designer");
                 }
                 com.clearValidator("#designer", true);
                 com.focusPage("#updateDesigner").modal("show");
@@ -213,9 +213,9 @@ $(function () {
         }
 
         if(d.village != null && d.village.name != null){
-            com.updateChosen('villageNo', d.village.no, d.village.name + "-" + d.village.cityProper.name);
+            com.updateTypeahead('villageNo', d.village.no, d.village.name + "-" + d.village.cityProper.name);
         }else{
-            com.updateChosen('villageNo', "", "");
+            com.cleanTypeahead('villageNo');
         }
         com.focusPage("#sustomersource").modal("show");
     }
@@ -236,7 +236,7 @@ $(function () {
             "customerOrigin.price": customerSource.items.price.val(),
             "customerOrigin.grade": customerSource.items.grade.val(),
             "customerOrigin.comment": customerSource.items.comment.val(),
-            "customerOrigin.village.no": customerSource.items.villageNo.val(),
+            "customerOrigin.village.no": com.typeahead("villageNo"),
             "customerOrigin.houseNumber": customerSource.items.houseNumber.val(),
             "customerOrigin.buildArea": customerSource.items.buildArea.val()
         };
@@ -256,7 +256,7 @@ $(function () {
 
         var options = {
             "customerOrigin.csid": customerSource.currentCustomerSource.csid,
-            "customerOrigin.designer.userId": customerSource.items.designer.val()
+            "customerOrigin.designer.userId": com.typeahead("designer")
         };
 
         com.post(api.customer.bindCustomerOrigin, options, function (res) {
@@ -267,26 +267,11 @@ $(function () {
     }
 
     function release(csid) {
-        var btn = $(this);
-        var span = btn.find('span');
-        btn.find('i').remove();
-        var loading = $('<i></i>').addClass('icon-spinner icon-spin white bigger-125');
-        span.prepend(loading);
-        var message = "<p>确定要释放该客源吗?</p>";
-        bootbox.confirm(message, function (result) {
-            if (result) {
-                var options = {
-                    "customerOrigin.csid": csid
-                };
-                com.post(api.customer.freeCustomerOrigin, options, function (res) {
-                    searcher.doSearch();
-                    com.showAlert(com.info, '释放成功');
-                });
-            } else {
-                btn.find('i').remove();
-                var prepared = $('<i></i>').addClass('icon-ok bigger-110');
-                span.prepend(prepared);
-            }
+        com.showConfirm("是否确认释放客源", function(){
+            com.post(api.customer.freeCustomerOrigin, {"customerOrigin.csid": csid}, function (res) {
+                searcher.doSearch();
+                com.showAlert(com.info, '释放成功');
+            });
         });
     }
 
@@ -312,7 +297,6 @@ $(function () {
 
     function aboutCustomerAndHouse(){
         com.focusPage("#villageNo").prop("disabled", false);
-        com.focusPage("#villageNo").parent().find(".chosen-container").removeClass("chosen-disabled");
         com.focusPage("#houseNumber").removeAttr("readOnly");
         com.focusPage("#buildArea").removeAttr("readOnly");
         com.focusPage("#name").removeAttr("readOnly");
@@ -374,7 +358,7 @@ $(function () {
         var houseNumber = createHouseNumber();
 
         var houseOption = {
-            "house.village.no" : customerSource.items.villageNo.val(),
+            "house.village.no" : com.typeahead("villageNo"),
             "house.houseNumber" : houseNumber,
             "house.built" : customerSource.items.built.val(),
             "house.unit" : customerSource.items.unit.val(),
@@ -424,7 +408,6 @@ $(function () {
 
     function aboutBindHouse(){
         com.focusPage("#villageNo").prop("disabled", true);
-        com.focusPage("#villageNo").parent().find(".chosen-container").addClass("chosen-disabled");
         com.focusPage("#houseNumber").attr("readOnly", "readOnly");
         com.focusPage("#buildArea").attr("readOnly", "readOnly");
         com.focusPage("#bindHouseDiv").css("display", "none");

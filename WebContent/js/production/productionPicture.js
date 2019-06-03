@@ -104,7 +104,7 @@ $(function(){
             'queueSizeLimit': 1, // 上传数量
             'onUploadSuccess': function (file, data, response) {
                 addProductionPicture(data);
-                // 上传到服务器，服务器返回相应信息到data里
+                // 上传到服务器,服务器返回相应信息到data里
             }});
 
     });
@@ -132,46 +132,6 @@ $(function(){
 
 
     function addProductionPicture(data){
-
-        //存在非废弃状态的图纸项
-        //if($pictureStatus){
-        //    var option = {};
-        //    var dateObj = eval("(" + data + ")");
-        //
-        //    if (dateObj.errorCode == 0) {
-        //        option["productionPicture.pid"] = $pid;
-        //        option["productionPicture.name"] = dateObj.strutsUploadsFileName;
-        //        option["productonPicture.path"] = dateObj.resUrl;
-        //        option["productionPicture.comment"] = $layerImport.find("input[name='pictureComment']");
-        //        option["productionPicture.status"] = 0;
-        //    }
-        //
-        //    com.post(api.production.deleteProductionPicture,$replacePicture,function(res){
-        //    },function(e){
-        //        com.showAlert(com.info, "替换失败")
-        //        return false;
-        //    })
-        //
-        //    com.post(api.production.addProductionPicture,option,function(data){
-        //    },function(e){
-        //    });
-        //
-        //}else{
-        //    var option = {};
-        //    var dateObj = eval("(" + data + ")");
-        //
-        //    if (dateObj.errorCode == 0) {
-        //        option["productionPicture.pid"] = $pid;
-        //        option["productionPicture.name"] = dateObj.strutsUploadsFileName;
-        //        option["productonPicture.path"] = dateObj.resUrl;
-        //        option["productionPicture.comment"] = $layerImport.find("input[name='pictureComment']");
-        //        option["productionPicture.status"] = 0;
-        //    }
-        //
-        //    com.post(api.production.addProductionPicture,option,function(data){
-        //    },function(e){
-        //    });
-        //}
 
         var option = {};
         var dateObj = eval("(" + data + ")");

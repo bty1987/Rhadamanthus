@@ -7,7 +7,7 @@ $(function () {
 		},
 		manifestType: [],
 		status: {}
-	}
+	};
 	
 	com.post(api.ds.manifest, {}, function(res){
         $.each(res.manifestType, function(i, v){
@@ -118,7 +118,7 @@ $(function () {
             $btnEdit.click(function () {
             	
             	if(v.status != 0){
-            		layer.msg('货单状态不可操作');
+            		com.showAlert(com.warning, "货单状态不可操作");
             		return false;
             	}
             	
@@ -129,24 +129,22 @@ $(function () {
             $btnConfirm.click(function(){
             	
             	if(v.status != 0){
-            		layer.msg('货单状态不可操作');
+            	    com.showAlert(com.warning, "货单状态不可操作");
             		return false;
             	}
-            	
-            	layer.confirm('是否确认订单?', {
-                    btn: ['确定', '取消']
-                }, function (indexo, layero) {
+
+            	com.showConfirm('是否确认订单?', function (result) {
                     com.post(api.inventory.confirmManifest, {"manifest.mid": v.mid}, function(res){
-                        layer.msg('操作成功');
+                        com.showAlert(com.info, "操作成功");
                         seacher.doSearch();
                     });
-                });
+                })
             });
 
             $btnCR.click(function(){
             	
             	if(v.status != 1){
-            		layer.msg('货单状态不可操作');
+            	    com.showAlert(com.warning, "货单状态不可操作");
             		return false;
             	}
             	
@@ -159,7 +157,7 @@ $(function () {
             $btnXB.click(function(){
             	
             	if(v.status != 1){
-            		layer.msg('货单状态不可操作');
+            	    com.showAlert(com.warning, "货单状态不可操作");
             		return false;
             	}
             	

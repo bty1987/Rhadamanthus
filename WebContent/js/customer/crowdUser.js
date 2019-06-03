@@ -27,10 +27,7 @@ jQuery(function ($) {
         }
     }, null, false);
 
-    com.initChosen('userSel', api.personel.queryUserByPinyin, "pinyinName", {
-        "user.status": "0",
-        "departmentType.name": ""
-    }, "autoFillKeyValue", "key", "value");
+    com.initTypeahead('userSel', api.personel.queryUserByPinyin, "pinyinName", {"user.status": "0", "departmentType.name": ""}, "autoFillKeyValue", "key", "value", null);
 
     approve.items.type = com.focusPage("#type").bindData(approve.approvalType, "key", "value", false);
 
@@ -117,8 +114,7 @@ jQuery(function ($) {
     com.focusPage('a[name="addGroupUser"]', '#pagenation').click(function () {
         editFlg = false;
         com.clearValidator();
-        com.updateChosen('userSel', '', '');
-        approve.items.userSel.prop("disabled", false).trigger("chosen:updated");
+        com.cleanTypeahead('userSel');
         approve.modal.modal("show");
     });
 
@@ -147,9 +143,9 @@ jQuery(function ($) {
 
         var url;
         var options = {
-            'decorationUser.user.userId': approve.items.userSel.val(),
+            'decorationUser.user.userId': com.typeahead("userSel"),
             'decorationUser.orderId': approve.gorderId,
-            'decorationUser.content': approve.items.comment.val(),
+            'decorationUser.content': approve.items.comment.val()
         };
         url = api.decoration.addDecorationUser;
 

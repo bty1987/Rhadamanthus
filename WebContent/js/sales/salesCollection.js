@@ -50,7 +50,7 @@ jQuery(function () {
     com.post(api.payment.querySalesPaymentBySid,salesCollectionPostData, function (listData) {
         createLine('resultList', listData);
     }, function (e) {
-        com.showAlert(null, "没有对应信息");
+        com.showAlert(com.warning, "没有对应信息");
     });
     function createLine(tableId, listData) {
         var $tableWrap = com.focusPage('#' + tableId);

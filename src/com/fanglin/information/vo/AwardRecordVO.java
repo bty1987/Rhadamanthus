@@ -1,11 +1,11 @@
 package com.fanglin.information.vo;
 
 import java.io.Serializable;
-
-import com.fanglin.personel.vo.UserVO;
 import java.sql.Timestamp;
 
 import org.apache.struts2.json.annotations.JSON;
+
+import com.fanglin.personel.vo.UserVO;
 
 public class AwardRecordVO implements Serializable {
 
@@ -21,6 +21,8 @@ public class AwardRecordVO implements Serializable {
 	
 	private Short onetype;
 	
+	private Short subtype;
+	
 	private Short isStock;
 
 	private Float num;
@@ -34,7 +36,7 @@ public class AwardRecordVO implements Serializable {
 	private Timestamp operateTime;
 
 	private String content;
-
+	
 	public AwardRecordVO(AwardStockVO awardStock, UserVO creater) {
 		super();
 		this.awardStock = awardStock;
@@ -77,6 +79,14 @@ public class AwardRecordVO implements Serializable {
 		this.type = type;
 	}
 	
+	public Short getSubtype() {
+		return subtype;
+	}
+
+	public void setSubtype(Short subtype) {
+		this.subtype = subtype;
+	}
+
 	public Short getOnetype() {
 		return onetype;
 	}
@@ -142,4 +152,6 @@ public class AwardRecordVO implements Serializable {
 	public void setContent(String content) {
 		this.content = content;
 	}
+
+	
 }

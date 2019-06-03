@@ -70,10 +70,8 @@ jQuery(function ($) {
 
 
         com.post(api.inventory.addManifestForAS, options, function (data) {
-            layer.closeAll();
-            layer.msg('保存成功!', {icon: 1}, function () {
-                com.focusPage('#list').empty();
-            });
+            com.showAlert(com.info, "操作成功");
+            com.focusPage('#list').empty();
         }, function (e) {
             com.showAlert(com.error, e.errorMsg);
         });

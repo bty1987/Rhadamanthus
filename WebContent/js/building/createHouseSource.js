@@ -1,5 +1,6 @@
 
 jQuery(function($) {
+    
 	var createHouseSource = {
 		houseSources: {},
 		saveBtn: null,
@@ -30,35 +31,11 @@ jQuery(function($) {
 		cardFlag: false,
 		isAddHouseSource: true
 	};
+	
+	com.focusPage('#fl-statement').statement("房源", "创建房源");
 
-	var tag_input = com.focusPage("#indoores");
-	var tag_inputTwo = com.focusPage("#feature");
-
-	tag_input.tag({
-		placeholder:tag_input.attr('placeholder'),
-		isStaticResource : false,
-		flsource: {
-			url : null,
-			postData : {},
-			resultList : "autoFillKeyValue",
-			keyPath : "key",
-			valuePath : "value",
-			isResultTypeMap : true //是否是key - value 形式的列表
-		}
-	});
-
-	tag_inputTwo.tag({
-		placeholder:tag_input.attr('placeholder'),
-		isStaticResource : false,
-		flsource: {
-			url : null,
-			postData : {},
-			resultList : "autoFillKeyValue",
-			keyPath : "key",
-			valuePath : "value",
-			isResultTypeMap : true //是否是key - value 形式的列表
-		}
-	});
+	com.initTag("indoores");
+	com.initTag("feature");
 
 	com.focusPage("#history").bindData(createHouseSource.history);
 	com.focusPage("#cardType").bindData(createHouseSource.cardType);
@@ -173,30 +150,17 @@ jQuery(function($) {
 		createHouseSource.customerItems.relationshipType.bindData(res.relationshipType, "key", "value");
 	}, null, false);
 
-	com.initChosen('followId', api.personel.queryUserByPinyin, "pinyinName", {"departmentType.name":"", "user.status":0}, "autoFillKeyValue", "key", "value");
-	com.initChosen('keyerId', api.personel.queryUserByPinyin, "pinyinName", {"departmentType.name":"", "user.status":0}, "autoFillKeyValue", "key", "value");
-	com.initChosen('customerId', api.data.queryCustomerForName, "pinyinName", {}, "autoFillCustomer", "key", "value").on("change", function(e){
-		if($(this).val() == "" || com.focusPage("#customerId").val() == "") {
-			com.clearValidator("#customerId", true);
-			createHouseSource.repeatCustomerFlg = false;
-			return;
-		}
-	});
+	com.initTypeahead('followId', api.personel.queryUserByPinyin, "pinyinName", {"departmentType.name":"", "user.status":0}, "autoFillKeyValue", "key", "value");
+	com.initTypeahead('keyerId', api.personel.queryUserByPinyin, "pinyinName", {"departmentType.name":"", "user.status":0}, "autoFillKeyValue", "key", "value");
+	com.initTypeahead('customerId', api.data.queryCustomerForName, "pinyinName", {}, "autoFillCustomer", "key", "value");
+	com.initTypeahead('villageId', api.data.queryVillageForNameByPinyin, "pinyinName", {}, "autoFillKeyValue", "key", "value", function(list, key, value){
+	    houseItemsReadOnlyFlag(false);
 
-	com.initChosen('no', api.data.queryVillageForNameByPinyin, "pinyinName", {}, "autoFillKeyValue", "key", "value").on("change", function(e){
-		if(com.focusPage("#no").val() == null || com.focusPage("#no").val() == ""){
-			return;
-		}
-	});
-
-	//清空数据
-	createHouseSource.houseItems.no = com.focusPage("#no").on("change",function(e){
-		deleteVillageData("no");
-		houseItemsReadOnlyFlag(false);
-
-		com.post(api.data.queryVillageById, {"village.no" : createHouseSource.houseItems.no.val()}, function(res){
-			createHouseSource.houseItems.rule.html("推荐楼牌号规则：" + res.village.rule ? res.village.rule :"暂无推荐规则");
-		}, null, false)
+        com.post(api.data.queryVillageById, {"village.no" : key}, function(res){
+            createHouseSource.houseItems.rule.html("推荐楼牌号规则: " + res.village.rule ? res.village.rule :"暂无推荐规则");
+        }, null, false);
+        
+        return value;
 	});
 
 	createHouseSource.houseItems.built = com.focusPage("#built").on("change", function(e){
@@ -264,8 +228,6 @@ jQuery(function($) {
 		createHouseSource.items.unitPrice.val(utils.accDiv(com.focusPage("#totalPrice").val(), com.focusPage("#buildArea").val()));
 	});
 
-	com.focusPage('#fl-statement').statement("房源", "创建房源");
-
 	//创建客户
 	com.focusPage("#createCustomer").click(function(){
 		com.cleanItems(createHouseSource.customerItems);
@@ -275,15 +237,15 @@ jQuery(function($) {
 	//编辑OR添加
 	function addHouseSource(){
 
-		if(com.validate() || createHouseSource.repeatFlg){
-			return;
+		if(com.validate("createHouseRow") || createHouseSource.repeatFlg){
+			return false;
 		}
 		var options = {};
 		var houseOptions = {};
 		
 		options["houseSource.type"] = createHouseSource.items.hsType.val();
 		options["houseSource.sourceType"] = createHouseSource.items.sourceType.val();
-		options["houseSource.customer.cid"] = createHouseSource.items.customerId.val();
+		options["houseSource.customer.cid"] = com.typeahead("customerId");
 		options["houseSource.deedNum"] = createHouseSource.items.deedNum.val();
 		options["houseSource.deedValue"] = createHouseSource.items.deedValue.val();
 		options["houseSource.unitPrice"] = createHouseSource.items.unitPrice.val();
@@ -301,12 +263,12 @@ jQuery(function($) {
 		options["houseSource.allowLoan"] = createHouseSource.items.allowLoan.val();
 		options["houseSource.beingLoan"] = createHouseSource.items.beingLoan.val();
 		options["houseSource.checkingTime"] = createHouseSource.items.checkingTime.val();
-		options["houseSource.followUser.userId"] = createHouseSource.items.followId.val();
-		options["houseSource.keyer.userId"] = createHouseSource.items.keyerId.val();
+		options["houseSource.followUser.userId"] = com.typeahead("followId");
+		options["houseSource.keyer.userId"] = com.typeahead("keyerId");
 		options["houseSource.housingGrade"] = createHouseSource.items.housingGrade.val();
 		options["houseSource.comment"] = createHouseSource.items.comment.val();
 
-		houseOptions["house.village.no"] =  createHouseSource.houseItems.no.val();
+		houseOptions["house.village.no"] =  com.typeahead("villageId");
 		houseOptions["house.houseNumber"] = createHouseSource.houseNumber;
 		houseOptions["house.built"] = createHouseSource.houseItems.built.val();
 		houseOptions["house.unit"] = createHouseSource.houseItems.unit.val();
@@ -385,9 +347,6 @@ jQuery(function($) {
 			com.showAlert(com.info, "创建用户成功");
 			createHouseSource.customerId = res.customer.cid;
 
-			com.focusPage("#customerId").html('<option value="'+res.customer.cid+'">'+res.customer.name+'-'+res.customer.phone+'</option>');
-			com.focusPage("#customerId").trigger("chosen:updated");
-
 			com.focusPage("#customerModal").modal("hide");
 
 		}, function(e){
@@ -397,41 +356,34 @@ jQuery(function($) {
 
 	//清除数据
 	function deleteDate(){
+	    
 		houseItemsReadOnlyFlag(false);
-		com.updateChosen("customerId", "", "");
-		com.updateChosen("no", "", "");
-		com.updateChosen("followId", "", "");
-		com.updateChosen("keyerId", "", "");
-
+		
+		com.cleanTypeahead("followId");
+        com.cleanTypeahead("keyerId");
+		com.cleanTypeahead("customerId");
+		com.cleanTypeahead("villageId");
+		
 		com.focusPage(".tag").remove();
 		createHouseSource.houseItems.rule.html("");
 		com.focusPage("#ohousetype").css("display", "none");
 		com.focusPage("#nhousetype").removeAttr("style");
+		
 		com.cleanItems(createHouseSource.items);
 		com.cleanItems(createHouseSource.houseItems);
 		com.cleanItems(createHouseSource.customerItems);
+		
 		com.clearValidator();
 	}
 
 	//删除房产数据
 	function deleteHouseData(){
+	    
 		com.focusPage("#ohousetype").css("display", "none");
 		com.focusPage("#nhousetype").removeAttr("style");
 		com.focusPage(".tag").remove();
-
-		createHouseSource.houseItems.houseTypeOne.val("");
-		createHouseSource.houseItems.houseTypeTwo.val("");
-		createHouseSource.houseItems.houseTypeThr.val("");
-		createHouseSource.houseItems.houseTypeFour.val("");
-		createHouseSource.houseItems.type.val(0);
-		createHouseSource.houseItems.buildArea.val("");
-		createHouseSource.houseItems.maxFloor.val("");
-		createHouseSource.houseItems.through.val(0);
-		createHouseSource.houseItems.orientation.val(0);
-		createHouseSource.houseItems.feature.val("");
-		createHouseSource.houseItems.waterVapour.val(0);
-		createHouseSource.houseItems.parlourType.val(0);
-		createHouseSource.houseItems.heatingType.val(0);
+		
+		com.cleanItems(createHouseSource.houseItems);
 	}
 
 	//检查房产以及房源是否存在
@@ -467,9 +419,12 @@ jQuery(function($) {
 
 	//绑定房产数据
 	function bindHouseData(houses){
-		com.updateChosen("no", houses.village.no, houses.village.name);
+	    
+	    com.updateTypeahead("no", houses.village.no, houses.village.name);
+	    
 		com.focusPage("#nhousetype").css("display", "none");
 		com.focusPage("#ohousetype").removeAttr("style");
+		
 		createHouseSource.houseItems.type.val(houses.type);
 		createHouseSource.houseItems.buildArea.val(houses.buildArea);
 		createHouseSource.houseItems.maxFloor.val(houses.maxFloor);

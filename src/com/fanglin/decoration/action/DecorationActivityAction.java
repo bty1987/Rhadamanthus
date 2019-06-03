@@ -128,14 +128,6 @@ public class DecorationActivityAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-	@Action(value = "upgradeDecorationAtivityItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String upgradeDecorationAtivityItem() throws FLException {
-
-		decorationActivityItemService.upgradeDecorationAtivityItem(decorationActivityItem, queryUserId());
-
-		return SUCCESS;
-	}
-	
 	@Action(value = "refundDecorationActivityItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String refundDecorationActivityItem() throws FLException {
 

@@ -21,45 +21,17 @@ jQuery(function($) {
 	};
 
 	createCustomerSource.customerItems.gender = com.focusPage("#gender").switchBtn("gender");
-
-	var tag_input = com.focusPage("#conditions");
-	var tag_inputTwo = com.focusPage("#intention");
-
-	tag_input.tag({
-		placeholder:tag_input.attr('placeholder'),
-		isStaticResource : false,
-		flsource: {
-			url : null,
-			postData : {},
-			resultList : "autoFillKeyValue",
-			keyPath : "key",
-			valuePath : "value",
-			isResultTypeMap : true //是否是key - value 形式的列表
-		}
-	});
-
-	tag_inputTwo.tag({
-		placeholder:tag_input.attr('placeholder'),
-		isStaticResource : false,
-		flsource: {
-			url : null,
-			postData : {},
-			resultList : "autoFillKeyValue",
-			keyPath : "key",
-			valuePath : "value",
-			isResultTypeMap : false //是否是key - value 形式的列表
-		}
-	});
+	
+	com.initTag("conditions");
+    com.initTag("intention");
 
 	com.focusPage("#cardType").bindData(createCustomerSource.cardType);
 	com.focusPage("#grade").bindData(createCustomerSource.grade);
-
-	com.initChosen('customerId', api.data.queryCustomerForName, "pinyinName", {}, "autoFillCustomer", "key", "value").on("change", function(e){
-		if($(this).val() == "" || com.focusPage("#customerId").val() == "") {
-			com.clearValidator("#customerId", true);
-			createCustomerSource.repeatCustomerFlg = false;
-			return;
-		}
+	
+	com.initTypeahead('customerId', api.data.queryCustomerForName, "pinyinName", {}, "autoFillCustomer", "key", "value", function(list, key, value){
+	    com.cleanItems(createCustomerSource.items);
+	    
+	    return value;
 	});
 
 	createCustomerSource.saveBtn = com.focusPage("#saveBtn").on("click", addCustomerSource);
@@ -105,10 +77,6 @@ jQuery(function($) {
 
 	com.post(api.ds.data, {}, function(res){
 		createCustomerSource.customerItems.relationshipType.bindData(res.relationshipType, "key", "value");
-	});
-
-	com.focusPage("#customerId").on("change", function(){
-		deleteCsDate();
 	});
 
 	//检查电话号是否已存在
@@ -178,9 +146,6 @@ jQuery(function($) {
 			com.showAlert(com.info, "创建用户成功");
 			createCustomerSource.customerId = res.customer.cid;
 
-			com.focusPage("#customerId").html('<option value="'+ res.customer.cid + '">'+res.customer.name + '-' + res.customer.phone + '</option>');
-			com.focusPage("#customerId").trigger("chosen:updated");
-
 			com.focusPage("#customerModal").modal("hide");
 
 		}, function(e){
@@ -215,13 +180,13 @@ jQuery(function($) {
 			createCustomerSource.areaFlag = false;
 		}
 
-		if(com.validate() || createCustomerSource.repeatFlg || createCustomerSource.areaFlag || createCustomerSource.priceFlag){
-			return;
+		if(com.validate("createCustomerRow") || createCustomerSource.repeatFlg || createCustomerSource.areaFlag || createCustomerSource.priceFlag){
+			return false;
 		}
 
 		var options = {};
 
-		options["customerSource.customer.cid"] = createCustomerSource.items.customerId.val();
+		options["customerSource.customer.cid"] = com.typeahead("customerId");
 		options["customerSource.type"] = createCustomerSource.items.csType.val();
 		options["customerSource.purpose"] = createCustomerSource.items.purpose.val();
 		options["customerSource.intention"] = createCustomerSource.items.intention.val();
@@ -257,24 +222,13 @@ jQuery(function($) {
 
 	//清除数据
 	function deleteDate(){
-		com.updateChosen("customerId", "", "");
+	    
+	    com.cleanTypeahead("customerId");
+	    
 		com.cleanItems(createCustomerSource.items);
 		com.cleanItems(createCustomerSource.customerItems);
 		com.focusPage(".tag").remove();
 		com.clearValidator();
-	}
-
-	function deleteCsDate(){
-		com.focusPage(".tag").remove();
-		createCustomerSource.items.purpose.val("");
-		createCustomerSource.items.priceLow.val("");
-		createCustomerSource.items.priceHigh.val("");
-		createCustomerSource.items.areaLow.val("");
-		createCustomerSource.items.areaHigh.val("");
-		createCustomerSource.items.familyType.val("");
-		createCustomerSource.items.orientation.val(0);
-		createCustomerSource.items.grade.val("A");
-		createCustomerSource.items.comment.val("");
 	}
 
 });

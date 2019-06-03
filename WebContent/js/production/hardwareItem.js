@@ -49,23 +49,14 @@ $(function () {
 
                     //删除按钮
                     $btnDelete.click(function (e) {
-                        e.stopPropagation();
-                        layer.confirm('确定要删除吗?', {
-                            btn: ['确定', '取消']
-                        }, function (index, layero) {
+                        com.showConfirm("是否确认删除", function(){
                             com.post(api.production.deleteHardwareItem, {"hardwareItem.hiid": v.hiid}, function () {
-                                layer.closeAll();
                                 hardwareItemSearcher.doSearch();
                                 com.showAlert(com.info, "删除成功");
-                            }, function (e) {
-                                layer.closeAll();
-                                com.showAlert(com.error, e.exception.errorMessage);
                             });
-                        }, function () {
-
                         });
                     });
-
+                    
                 });
                 $ul.appendTo($tableWrap);
             }

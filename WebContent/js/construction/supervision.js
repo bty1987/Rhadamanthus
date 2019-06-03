@@ -1,6 +1,26 @@
 $(function () {
 
-    var constructionNodes = {};
+    var constructionNodes = {
+
+        constructionInfoModal : com.focusPage("#constructionInfoModal"),
+        saveBtn: com.focusPage("#saveBtn").on("click", saveData),
+
+        infoItems: {
+            ishovel  : com.focusPage("#ishovel"),
+            iskey  : com.focusPage("#iskey"),
+            isCeremony  : com.focusPage("#isCeremony"),
+            comment   : com.focusPage("#comment")
+        },
+
+    };
+
+    com.post(api.ds.construction, {}, function (res) {
+
+        constructionNodes.infoItems.ishovel.bindData(res.isHovel, "key", "value", false);
+        constructionNodes.infoItems.iskey.bindData(res.isKey, "key", "value", false);
+        constructionNodes.infoItems.isCeremony.bindData(res.isCeremony, "key", "value", false);
+    });
+
     com.post(api.data.queryConstructionNode, {}, function (res) {
         $.each(res.constructionNodes, function (i, v) {
             constructionNodes[v.sort] = v.name;
@@ -34,10 +54,11 @@ $(function () {
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
-            var $btnView = $('<a></a>').addClass('btn btn-minier btn-yellow').html("查看");
-            var $btnAddReduce = $('<a></a>').addClass('btn btn-minier btn-success').html('增减项');
-            var $btnRe = $('<a></a>').addClass('btn btn-minier btn-warning').html('返工');
-            var $btnMoney = $('<a></a>').addClass('btn btn-minier btn-inverse').html('扣款');
+            var $btnInfo= $('<a></a>').addClass('btn btn-minier btn-yellow').html("信息");
+            var $btnView = $('<a></a>').addClass('btn btn-minier btn-success').html("查看");
+            var $btnAddReduce = $('<a></a>').addClass('btn btn-minier btn-warning').html('增减项');
+            var $btnRe = $('<a></a>').addClass('btn btn-minier btn-inverse').html('返工');
+            var $btnMoney = $('<a></a>').addClass('btn btn-minier btn-info').html('扣款');
 
             var propertyArr = [
                 ["楼盘名:", v.house.village.name + " " + v.house.houseNumber, "grey"],
@@ -55,12 +76,19 @@ $(function () {
                 $liProperty.appendTo($ulProperty);
             });
 
-            $divBtnWrap.append($btnView).append($btnAddReduce).append($btnRe).append($btnMoney).appendTo($h3);
+            $divBtnWrap.append($btnInfo).append($btnView).append($btnAddReduce).append($btnRe).append($btnMoney).appendTo($h3);
 
             $liLine.append($h3).append($ulProperty);
 
             $btnView.click(function () {
                 viewSupervisionDetail(v.orderId);
+            });
+
+            $btnInfo.click(function(){
+                com.post(api.construction.queryConstructionByOrderId, {"construction.orderId": v.orderId}, function (res) {
+
+                    viewConstructionInfo(res.construction.cid);
+                })
             });
 
             $btnAddReduce.click(function () {
@@ -118,6 +146,43 @@ $(function () {
         params['auditStatusType'] = 'select';
         params['historyPage'] = api.index.supervisionIndex.url;
         com.switchPage(api.index.auditRecordIndex.url);
+    }
+
+    function viewConstructionInfo(cid) {
+
+        com.post(api.construction.queryConstructionInfo, {"constructionInfo.cid": cid}, function (res) {
+
+            data =res.constructionInfo;
+
+            constructionNodes.infoItems.cid = cid;
+            constructionNodes.infoItems.ishovel.val(data.ishovel);
+            constructionNodes.infoItems.iskey.val(data.iskey);
+            constructionNodes.infoItems.isCeremony.val(data.isCeremony);
+            constructionNodes.infoItems.comment.val(data.comment);
+        }, null, false);
+
+        constructionNodes.constructionInfoModal.modal("show");
+
+    }
+
+    function saveData() {
+
+        var options = {
+            "constructionInfo.cid" : constructionNodes.infoItems.cid,
+            "constructionInfo.ishovel": constructionNodes.infoItems.ishovel.val(),
+            "constructionInfo.iskey": constructionNodes.infoItems.iskey.val(),
+            "constructionInfo.isCeremony": constructionNodes.infoItems.isCeremony.val(),
+            "constructionInfo.comment": constructionNodes.infoItems.comment.val()
+        };
+
+        com.post(api.construction.updateConstructionInfo,options,function (res) {
+
+           com.showAlert(com.info,"操作成功");
+
+             constructionNodes.constructionInfoModal.modal("hide");
+
+
+        });
     }
 
 });

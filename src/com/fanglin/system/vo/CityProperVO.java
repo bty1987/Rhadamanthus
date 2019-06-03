@@ -32,6 +32,11 @@ public class CityProperVO implements Serializable {
 	public CityProperVO() {
 		super();
 	}
+	
+	public CityProperVO(CityVO city) {
+	    super();
+	    this.city = city;
+	}
 
 	public Integer getCpid() {
 		return cpid;

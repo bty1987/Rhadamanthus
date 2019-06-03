@@ -25,43 +25,14 @@ jQuery(function($) {
 		dataFlag: false,
 		validator: {}
 	};
+	
+	com.initTag("conditions");
+	com.initTag("intention");
 
-	var tag_input = com.focusPage("#conditions");
-	var tag_inputTwo = com.focusPage("#intention");
-
-	tag_input.tag({
-		placeholder:tag_input.attr('placeholder'),
-		isStaticResource : false,
-		flsource: {
-			url : null,
-			postData : {},
-			resultList : "autoFillKeyValue",
-			keyPath : "key",
-			valuePath : "value",
-			isResultTypeMap : true //是否是key - value 形式的列表
-		}
-	});
-
-	tag_inputTwo.tag({
-		placeholder:tag_input.attr('placeholder'),
-		isStaticResource : false,
-		flsource: {
-			url : null,
-			postData : {},
-			resultList : "autoFillKeyValue",
-			keyPath : "key",
-			valuePath : "value",
-			isResultTypeMap : true //是否是key - value 形式的列表
-		}
-	});
-
-	com.focusPage(".date-picker").datepicker({autoclose: !0}).on("show",function() {
-		setTimeout(function() {
-			com.focusPage(".dropdown-menu").css("z-index", 1060)
-		},0)
-	}).next().on(ace.click_event,function() {
-		a(this).prev().focus()
-	});
+	com.focusPage(".date-picker").datepicker(com.datepickerdefault);
+	
+    com.initTypeahead('hsAUser', api.data.queryCustomerForName, "pinyinName", {}, "autoFillCustomer", "key", "value");
+    com.initTypeahead('csAUser', api.data.queryCustomerForName, "pinyinName", {}, "autoFillCustomer", "key", "value");
 
 	com.focusPage("#cardType").bindData(customerSource.cardType);
 	com.focusPage("#grade").bindData(customerSource.grade);
@@ -323,16 +294,18 @@ jQuery(function($) {
 
 			//绑定房源
 			$btnBind.click(function(){
+			    
 				if(v.status != 0){
-					com.showAlert(com.warning, "当前客源已签约或已失效，不能绑定房源");
-					return;
+					com.showAlert(com.warning, "当前客源已签约或已失效,不能绑定房源");
+					return false;
 				}
+				
 				deleteData();
+				
 				customerSource.buildItems.csNo.val(v.no);
 				customerSource.csid = v.csid;
 				customerSource.buildItems.csNo.prop("readOnly", true);
-				com.initChosen('hsAUser', api.data.queryCustomerForName, "pinyinName", {}, "autoFillCustomer", "key", "value");
-				com.initChosen('csAUser', api.data.queryCustomerForName, "pinyinName", {}, "autoFillCustomer", "key", "value");
+				
 				com.focusPage("#buildingModal").modal("show");
 			});
 
@@ -368,7 +341,7 @@ jQuery(function($) {
 	//编辑OR添加
 	function updateCustomerSource(){
 		if(customerSource.csStatus != 0){
-			com.showAlert(com.warning, "当前客源已签约或已失效，不能修改客源信息");
+			com.showAlert(com.warning, "当前客源已签约或已失效,不能修改客源信息");
 			return;
 		}
 		var priceHigh = customerSource.items.priceHigh.val();
@@ -396,8 +369,8 @@ jQuery(function($) {
 			customerSource.areaFlg = false;
 		}
 
-		if(com.validate() || customerSource.priceFlg || customerSource.areaFlg){
-			return;
+		if(com.validate("buildingModal") || customerSource.priceFlg || customerSource.areaFlg){
+			return false;
 		}
 
 		var options = {};
@@ -449,7 +422,7 @@ jQuery(function($) {
 		customerSource.customerItems.phone.prop("readonly", flag);
 	}
 
-	//绑定客源，创建房产单
+	//绑定客源,创建房产单
 	function saveBuildingData(){
 		if(com.validate() || customerSource.dataFlag){
 			return;
@@ -458,8 +431,8 @@ jQuery(function($) {
 		var options = {
 			'building.houseSource.hsid': customerSource.hsid,
 			'building.customerSource.csid': customerSource.csid,
-			'building.houseSourceAgent.cid': customerSource.buildItems.hsAUser.val(),
-			'building.customerSourceAgent.cid': customerSource.buildItems.csAUser.val(),
+			'building.houseSourceAgent.cid': com.typeahead("hsAUser"),
+			'building.customerSourceAgent.cid': com.typeahead("csAUser"),
 			'building.signingTime': customerSource.buildItems.signingTime.val(),
 			'building.tradePrice': customerSource.buildItems.tradePrice.val(),
 			'building.downpayment': customerSource.buildItems.downpayment.val(),
@@ -479,8 +452,8 @@ jQuery(function($) {
 	//删除房产单数据
 	function deleteData(){
 		com.clearValidator("buildingModal");
-		com.updateChosen('hsAUser', "", "");
-		com.updateChosen('csAUser', "", "");
+		com.cleanTypeahead("hsAUser");
+		com.cleanTypeahead("csAUser");
 		com.cleanItems(customerSource.buildItems);
 	}
 });

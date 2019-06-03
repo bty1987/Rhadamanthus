@@ -31,7 +31,6 @@
                     var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.userName));
                     var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
                     var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-
                     var $qrcode = $('<a></a>').addClass('btn btn-minier btn-yellow').html('二维码');
                     var $btnCheck = $('<a></a>').addClass('btn btn-minier btn-blue').html('查看');
                     var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-success').html('编辑');
@@ -211,7 +210,7 @@
                     com.focusPage('#closeM').click(function(){
                         com.focusPage("#tree3").removeData("tree");
                     });
-//同步钉钉信息
+                    //同步钉钉信息
                     $updateDD.click(function(){
                         var btn = $(this);
                         var span = btn.find('span');
@@ -219,42 +218,36 @@
                         var loading = $('<i></i>').addClass('icon-spinner icon-spin white bigger-125');
                         span.prepend(loading);
                         var message = "<p>确定要将该员工信息同步到钉钉吗?</p>";
-                        bootbox.confirm(message, function(result) {
-                            if(result) {
-                                var selectedDepts = [];
-                                var phone;
-                                com.post(api.dd.queryDDUser, {"user.userid": v.userId}, function (res) {
-                                    selectedDepts = res.user.department;
-                                    phone = res.user.mobile;
-                                    if (selectedDepts == null) {
-                                        com.showAlert(com.error, "该员工还没有添加到钉钉部门");
-                                        return;
-                                    }
+                        com.showConfirm(message, function(result) {
+                            var selectedDepts = [];
+                            var phone;
+                            com.post(api.dd.queryDDUser, {"user.userid": v.userId}, function (res) {
+                            selectedDepts = res.user.department;
+                            phone = res.user.mobile;
+                            if (selectedDepts == null){
+                                com.showAlert(com.error, "该员工还没有添加到钉钉部门");
+                                return;
+                              }
 
-                                    var params = {
-                                        "user.userid": v.userId,
-                                        "user.name": v.currentName,
-                                        "user.Mobile": phone,
-                                        "user.Position": v.duty.name,
-                                        "dids": selectedDepts
-                                    };
+                            var params = {
+                                "user.userid": v.userId,
+                                "user.name": v.currentName,
+                                "user.Mobile": phone,
+                                "user.Position": v.duty.name,
+                                 "dids": selectedDepts
+                              };
 
-                                    com.post(api.dd.updateDDUser, params, function (data) {
-                                        if ($.trim(data.errcode) == $.trim(0)) {
-                                            com.showAlert(com.info, "更新成功");
-                                        } else {
-                                            com.showAlert(com.error, "更新失败");
-                                        }
-                                    });
-                                }, null, false);
-                            }else{
-                                btn.find('i').remove();
-                                var prepared = $('<i></i>').addClass('icon-ok bigger-110');
-                                span.prepend(prepared);
-                            }
+                             com.post(api.dd.updateDDUser, params, function (data) {
+                                  if ($.trim(data.errcode) == $.trim(0)) {
+                                       com.showAlert(com.info, "更新成功");
+                                    } else {
+                                       com.showAlert(com.error, "更新失败");
+                                     }
+                                  });
+                              }, null, false);
                         });
                     });
-//删除点击事件
+                    //删除点击事件
                     $deleteDD.click(function(){
                         var btn = $(this);
                         var span = btn.find('span');
@@ -262,24 +255,20 @@
                         var loading = $('<i></i>').addClass('icon-spinner icon-spin white bigger-125');
                         span.prepend(loading);
                         var message = "<p>确定要删除该员工吗?</p>";
-                        bootbox.confirm(message, function(result) {
-                            if(result){
-                                com.post(api.dd.queryDDUser, {"user.userid": v.userId}, function (res) {
-                                    if(res.user.name != null){
-                                        com.post(api.dd.deleteDDUser, {"user.userid":  v.userId}, function(data){
-                                            if($.trim(data.errcode) == $.trim(0) ){
-                                                com.showAlert(com.info, "删除成功");}
-                                            else{com.showAlert(com.error,"删除失败");}
-                                        });
-                                    }else{
-                                        com.showAlert(com.error, "钉钉中没有该用户, 无法删除");
+                        com.showConfirm(message, function(result) {
+                            com.post(api.dd.queryDDUser, {"user.userid": v.userId}, function (res) {
+                                if(res.user.name != null){
+                                   com.post(api.dd.deleteDDUser, {"user.userid":  v.userId}, function(data){
+                                	   if($.trim(data.errcode) == $.trim(0) ){
+                                		   com.showAlert(com.info, "删除成功");
+                                		   } else {
+                                       	   com.showAlert(com.error,"删除失败");
+                                       	   }
+                                       });
+                                  }else{
+                                    com.showAlert(com.error, "钉钉中没有该用户, 无法删除");
                                     }
-                                });
-                            }else{
-                                btn.find('i').remove();
-                                var prepared = $('<i></i>').addClass('icon-ok bigger-110');
-                                span.prepend(prepared);
-                            }
+                             });
                         });
                     });
 
@@ -434,7 +423,7 @@
 
     user.items.statusSel = com.focusPage("#statusSel").bindData(user.statusType,"key", "value");
 
-    com.focusPage(".date-picker").datepicker({autoclose: !0}).on("show",function() {
+    com.focusPage(".date-picker").datepicker(com.datepickerdefault).on("show",function() {
         setTimeout(function() {
             com.focusPage(".dropdown-menu").css("z-index", 1060)
         },0)
@@ -456,7 +445,7 @@
             var options = {
                 "userInfo.user.userName": user.items.userName.val().trim(),
                 "userInfo.user.currentName": user.items.currentName.val(),
-                "userInfo.user.gender": com.genderType[user.items.gender.prop("checked")],
+                "userInfo.user.gender":  com.genderType[user.items.gender.prop("checked")],
                 "userInfo.user.birthday": user.items.birthday.val(),
                 "userInfo.user.identity": user.items.identity.val(),
                 "userInfo.user.phone": user.items.phone.val(),
@@ -542,4 +531,5 @@
         com.focusPage("#bankCheck").html(com.checkNull($userInfo.bank, "无"));
         com.focusPage("#bankCardNumCheck").html(com.checkNull($userInfo.bankCardNum, "无"));
     }
+
 });

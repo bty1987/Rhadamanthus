@@ -34,7 +34,7 @@ jQuery(function ($) {
         repeatFlg: false
     };
     
-    com.focusPage('.date-picker').datepicker({autoclose: true});
+    com.focusPage('.date-picker').datepicker(com.datepickerdefault);
 
     var displayFunc = (function () {
         var renderList = function (tableId, listData) {

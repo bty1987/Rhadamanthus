@@ -135,8 +135,7 @@ $(function(){
         });
         
         com.post(api.inventory.addManifestTemplateItem, _params, function(data){
-            layer.closeAll();
-            layer.msg("设置成功", {icon : 1});
+            com.showAlert(com.info, "操作成功");
             com.switchPage('views/manifest/manifestTemplateItem.html');
         });
     }

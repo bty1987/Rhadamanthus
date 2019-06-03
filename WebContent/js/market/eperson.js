@@ -54,7 +54,7 @@ jQuery(function($) {
         })
     }, null, false);
 
-    com.initChosen('city', api.market.queryEcityByPinYin, "ecity.pinyin", {}, "autoFillKeyValue", "key", "value");
+    com.initTypeahead('city', api.market.queryEcityByPinYin, "ecity.pinyin", {}, "autoFillKeyValue", "key", "value");
 
     initUploadBtn();
 
@@ -113,20 +113,25 @@ jQuery(function($) {
 
             //编辑
             $btnEdit.click(function(){
+                
                 eperson.items.imgUrl.html("");
-                com.updateChosen('city', v.cityId, eperson.ecityItem[v.cityId]);
+                
+                com.updateTypeahead('city', v.cityId, eperson.ecityItem[v.cityId]);
+                
                 eperson.items.name.val(v.name);
                 eperson.items.phone.val(v.phone);
                 eperson.items.experience.val(v.experience);
                 eperson.items.type.val(v.type);
                 eperson.items.info.val(v.info);
                 eperson.items.path.val(v.imgUrl);
+                
                 eperson.euid = v.euid;
                 eperson.editFlag = true;
 
                 if(v.imgUrl != ""){
                     appendGalleryElement("imgUrl", v.imgUrl, 0);
                 }
+                
                 com.focusPage("#epersonModal").modal("show");
             });
 
@@ -160,26 +165,30 @@ jQuery(function($) {
 
     //添加
     com.focusPage('a[name="addeperson"]', '#pagenation').click(function(){
+        
         com.cleanItems(eperson.items);
         com.clearValidator("epersonModal");
+        
         eperson.items.imgUrl.html("");
-        com.updateChosen('city', "", "");
+        com.cleanTypeahead('city');
+        
         com.focusPage("#epersonModal").modal("show");
     });
 
     function saveData(){
-        if(com.validate() ){
-            return;
+        
+        if(com.validate("epersonModal")){
+            return false;
         }
 
         if(eperson.items.path.val() == ""){
             com.focusPage("#imgUrl").html("");
             var $text = $('<span></span>').html('请上传头像').css("color", "red").appendTo(com.focusPage("#imgUrl"));
-            return;
+            return false;
         }
 
         var options = {
-            "eperson.cityId": eperson.items.city.val(),
+            "eperson.cityId": com.typeahead("city"),
             "eperson.name": eperson.items.name.val(),
             "eperson.phone": eperson.items.phone.val(),
             "eperson.experience": eperson.items.experience.val(),

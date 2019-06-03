@@ -2,7 +2,6 @@
 jQuery(function($) {
 	
 	var activityItem = {
-		activityType: null,
 		items : {
 			activityName : com.focusPage("#activityName"),
 			activityItems : com.focusPage("#activityItems"),
@@ -24,42 +23,23 @@ jQuery(function($) {
 	activityItemPostData.aid = params.aid;
 
 	activityItemPostData.activityName = params.activityName;
-	
-	com.post(api.ds.information, {"timestamp": new Date().getTime()}, function(res){
-	}, null, false);
 
+	com.post(api.ds.information, {"timestamp": new Date().getTime()}, function(res){}, null, false);
 
-	bindingType("awardStockstype");
+	com.post(api.ds.information, {}, function (res) {
+		activityItem.items.awardStockstype.bindData(res.activityItemType, "key", "value", true);
 
-	function bindingType(idName) {
-		com.post(api.ds.information, {}, function (res) {
-			com.focusPage("#" + idName).bindData(res.activityItemType, "key", "value", true)
-		});
-	}
+	});
 
 	activityItem.items.addBtn = com.focusPage("#addBtn").on("click", function(){
 
-        com.focusPage("#awardStockstype").on("click", function () {
-
-            if(activityItem.items.awardStockstype.val()!=""){
-				var awardStockstypes = activityItem.items.awardStockstype.val();
-				awardStockstypes = awardStockstypes==2?0:(awardStockstypes==3?1:awardStockstypes);
-                var options = {
-                    "awardStock.type":awardStockstypes
-                };
-				activityItem.items.awardStockshide.removeClass("hide");
-                com.post(api.information.queryAwardStockByType, options, function(res){
-                    com.focusPage("#awardStocksname").bindData(res.awardStocks, "asId", "name",true);
-
-                });
-            }
-        });
+		com.focusPage("#awardStockstype").on("click",changeAwardStock);
 
 		activityItem.items.activityItemModal.modal("show");
 
 		activityItem.editFlag = false;
 	});
-	
+
 	activityItem.items.backBtn = com.focusPage("#backBtn").on("click", function(){
 		com.focusPage("#activityPageContent").load(api.index.activityIndex.url);
 	});
@@ -151,6 +131,21 @@ jQuery(function($) {
 		activityItem.items.activityItemModal.modal("hide");
 	}
 
+	function changeAwardStock () {
+		if(activityItem.items.awardStockstype.val()!=""){
+			var awardStockstypes = activityItem.items.awardStockstype.val();
+			awardStockstypes = awardStockstypes==2?0:(awardStockstypes==3?1:awardStockstypes);
+			var options = {
+				"awardStock.type": awardStockstypes,
+				"awardStock.storeroom": params.type
+			};
+			activityItem.items.awardStockshide.removeClass("hide");
+			com.post(api.information.queryAwardStockByType, options, function(res){
+
+				com.focusPage("#awardStocksname").bindData(res.awardStocks, "asId", "name",true);
+			});
+		}
+	}
 
 	function deleteActivityItem(aiId, activityItemName){
 		

@@ -127,7 +127,7 @@ $(function () {
 
                     $label.appendTo($h3);
 
-                    if (params['urlLoadParams'].type == "dompany" || params['urlLoadParams'].type == "pompany") {
+                    if (params['urlLoadParams'].type == "dompany") {
                         $btnDiv.append($btnSwitch).appendTo($h3);
                     } else {
                         $btnDiv.append($btnSwitch).append($btnWipeZero).append($btnPre).appendTo($h3);
@@ -139,7 +139,7 @@ $(function () {
 
                     $btnSwitch.click(function () {
                         var flag = true;
-                        if (params['urlLoadParams'].type == "dompany" || params['urlLoadParams'].type == "pompany") {
+                        if (params['urlLoadParams'].type == "dompany") {
                             flag = false;
                         }
                         openlayerView(v.sid, v.no, flag);
@@ -178,12 +178,10 @@ $(function () {
 
                         _option["sid[0]"] = v.sid;
 
-                        layer.confirm('确定要将单号为 ' + v.no + ' 的销售单进行预结算吗?', {
-                            btn: ['确定', '取消'] //按钮
-                        }, function (index, layero) {
+                        com.showConfirm('确定要将单号为 ' + v.no + ' 的销售单进行预结算吗?', function (index, layero) {
                             com.post(api.inventory.preSalesBalance, _option, function (res) {
-                                layer.closeAll();
-                                layer.msg('预结算成功');
+                                // layer.closeAll();
+                                com.showAlert(com.info, "预结算成功");
                                 salesPreBalance.doSearch();
                             });
 
@@ -239,7 +237,7 @@ $(function () {
 
             if (!$inputs.length) {
 
-                layer.msg('请选择需要进行预结算的销售单.');
+                com.showAlert(com.warning, "请选择需要进行预结算的销售单");
 
                 return;
 
@@ -253,13 +251,11 @@ $(function () {
 
             });
 
-            layer.confirm('确定要将选中的销售单进行预结算吗?', {
-                btn: ['确定', '取消'] //按钮
-            }, function (index, layero) {
+            com.showConfirm('确定要将选中的销售单进行预结算吗?', function (index, layero) {
                 com.post(api.inventory.preSalesBalance, _option, function (res) {
 
-                    layer.closeAll();
-                    layer.msg('操作成功');
+                    // layer.closeAll();
+                    com.showAlert(com.info, "操作成功");
                     salesPreBalance.doSearch();
 
                 });
@@ -280,7 +276,7 @@ $(function () {
 
             if (!$inputs.length) {
 
-                layer.msg('请选择需要进行完结的销售单.');
+                com.showAlert(com.warning, "请选择需要进行完结的销售单");
 
                 return;
 
@@ -294,13 +290,11 @@ $(function () {
 
             });
 
-            layer.confirm('确定要将选中的销售单进行完结吗?', {
-                btn: ['确定', '取消'] //按钮
-            }, function (index, layero) {
+            com.showConfirm('确定要将选中的销售单进行完结吗?', function (index, layero) {
                 com.post(api.inventory.passSalesBalance, _option, function (res) {
 
-                    layer.closeAll();
-                    layer.msg('操作成功');
+                    // layer.closeAll();
+                    com.showAlert(com.info, "操作成功");
                     salesPreBalance.doSearch();
 
                 });
@@ -313,7 +307,7 @@ $(function () {
 
         });
 
-        if (params['urlLoadParams'].type == "dompany" || params['urlLoadParams'].type == "pompany") {
+        if (params['urlLoadParams'].type == "dompany") {
             return [];
         } else {
             return [$adda, $addaEnd];

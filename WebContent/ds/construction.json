@@ -33,12 +33,22 @@
 		{"key":"9", "value":"木工"}, 
 		{"key":"10", "value":"油工"},
 		{"key":"11", "value":"保洁工"}
-	],"drawLineStatus":[
+	],"drawLineStatus": [
 		{"key":"0", "value":"排队" },
-	{"key":"1", "value":"申请放线"},
-	{"key":"2", "value":"成功放线"},
-	{"key":"3", "value":"失败放线"}
+		{"key":"1", "value":"申请放线"},
+		{"key":"2", "value":"成功放线"},
+		{"key":"3", "value":"失败放线"}
+	],"isHovel" :[
+		{"key":"0", "value":"公司" },
+		{"key":"1", "value":"客户"}
+	],"isKey" :[
+		{"key":"0", "value":"工程中心" },
+		{"key":"1", "value":"客户"}
+	],"isCeremony" :[
+		{"key":"0", "value":"有" },
+		{"key":"1", "value":"无"}
 	],
+
     "errorCode": 0,
     "errorMsg": null
 }

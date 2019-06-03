@@ -34,10 +34,6 @@ public class AwardRecordPO implements java.io.Serializable {
 	
 	public static final short TYPE_LOSSES_INT = 3; // 盘亏
 	
-	public static final short TYPE_RECEIVE_INT = 4; // 领取
-	
-	public static final short TYPE_REFUND_INT = 5; // 退货
-	
 	public static final short ONETYPE_NOT_INT = 0;// 无
 	
 	public static final short ONETYPE_DECORATION_INT = 1;// 装修
@@ -46,6 +42,10 @@ public class AwardRecordPO implements java.io.Serializable {
 	
 	public static final short ONETYPE_MATERIAL_INT = 3;// 主材
 	
+	public static final short SUBTYPE_RECEIVE_INT = 4;// 领取
+	
+	public static final short SUBTYPE_REFUND_INT = 5;// 退货
+	
 	private int arid;
 	
 	private String orderId;
@@ -53,6 +53,8 @@ public class AwardRecordPO implements java.io.Serializable {
 	private AwardStockPO awardStock;
 
 	private short type;
+	
+	private short subtype;
 	
 	private short onetype;
 	
@@ -69,7 +71,7 @@ public class AwardRecordPO implements java.io.Serializable {
 	private Timestamp operateTime;
 
 	private String content;
-
+	
 	public AwardRecordPO(AwardStockPO awardStock, UserPO creater) {
 		super();
 		this.awardStock = awardStock;
@@ -119,6 +121,15 @@ public class AwardRecordPO implements java.io.Serializable {
 		this.type = type;
 	}
 	
+	@Column(name = "subtype")
+	public short getSubtype() {
+		return subtype;
+	}
+
+	public void setSubtype(short subtype) {
+		this.subtype = subtype;
+	}
+
 	@Column(name = "onetype")
 	public short getOnetype() {
 		return onetype;
@@ -191,8 +202,8 @@ public class AwardRecordPO implements java.io.Serializable {
 	public void setContent(String content) {
 		this.content = content;
 	}
-	
-	public AwardRecordPO init(AwardStockPO awardStock, UserPO creater, short type, short onetype, short isStock, Float unitPrice, Float num, String content){
+
+	public AwardRecordPO init(AwardStockPO awardStock, UserPO creater, short type, short subtype, short onetype, short isStock, Float unitPrice, Float num, String content){
 		
 		unitPrice = unitPrice == null ? 0 : unitPrice;
 		
@@ -200,6 +211,7 @@ public class AwardRecordPO implements java.io.Serializable {
 		setCreater(creater);
 		
 		setType(type);
+		setSubtype(subtype);
 		setOnetype(onetype);
 		setIsStock(isStock);
 		

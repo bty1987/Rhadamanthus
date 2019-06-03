@@ -53,9 +53,9 @@ jQuery(function($) {
         decorationCase.items.livingRoom.bindData(res.livingRoom, "key", "value");
     }, null, false);
 
-    com.initChosen('city', api.market.queryEcityByPinYin, "ecity.pinyin", {}, "autoFillKeyValue", "key", "value");
-    com.initChosen('designer', api.market.queryEpersonByPinYin, "eperson.pinyin", {}, "autoFillKeyValue", "key", "value");
-    com.initChosen('supervisor', api.market.queryEpersonByPinYin, "eperson.pinyin", {}, "autoFillKeyValue", "key", "value");
+    com.initTypeahead('city', api.market.queryEcityByPinYin, "ecity.pinyin", {}, "autoFillKeyValue", "key", "value");
+    com.initTypeahead('designer', api.market.queryEpersonByPinYin, "eperson.pinyin", {}, "autoFillKeyValue", "key", "value");
+    com.initTypeahead('supervisor', api.market.queryEpersonByPinYin, "eperson.pinyin", {}, "autoFillKeyValue", "key", "value");
 
     decorationCase.items.cycle.attr("disabled", "disabled");
 
@@ -141,11 +141,14 @@ jQuery(function($) {
 
             //编辑
             $btnEdit.click(function(){
+                
                 decorationCase.items.type.unbind("change");
+                
                 cycleChange(decorationCase.items.type, v.cycle);
+                
                 com.focusPage("#validateDiv").attr("style", "display:none");
-                com.updateChosen('designer', "", "");
-                com.updateChosen('supervisor', "", "");
+                com.cleanTypeahead('designer');
+                com.cleanTypeahead('supervisor');
 
                 if(v.type == 0){
                     decorationCase.items.cycle.attr("disabled", "disabled");
@@ -153,14 +156,14 @@ jQuery(function($) {
                     decorationCase.items.cycle.removeAttr("disabled");
                 }
 
-                com.updateChosen('city', v.cityId, decorationCase.ecityItem[v.cityId]);
+                com.updateTypeahead('city', v.cityId, decorationCase.ecityItem[v.cityId]);
 
                 if(v.designer.name != null){
-                    com.updateChosen('designer', v.designer.euid, v.designer.name);
+                    com.updateTypeahead('designer', v.designer.euid, v.designer.name);
                 }
 
                 if(v.supervisor.name != null){
-                    com.updateChosen('supervisor', v.supervisor.euid, v.supervisor.name);
+                    com.updateTypeahead('supervisor', v.supervisor.euid, v.supervisor.name);
                 }
 
                 decorationCase.items.villageName.val(v.villageName);
@@ -234,33 +237,40 @@ jQuery(function($) {
 
     //添加
     com.focusPage('a[name="addCase"]', '#pagenation').click(function(){
+        
         decorationCase.items.type.unbind("change");
+        
         cycleChange(decorationCase.items.type, null);
+        
         com.cleanItems(decorationCase.items);
         com.clearValidator("caseModal");
-        com.updateChosen('city', "", "");
-        com.updateChosen('designer', "", "");
-        com.updateChosen('supervisor', "", "");
+        
+        com.cleanTypeahead('city');
+        com.cleanTypeahead('designer');
+        com.cleanTypeahead('supervisor');
+        
         decorationCase.items.cycle.attr("disabled", "disabled");
+        
         com.focusPage("#validateDiv").attr("style", "display:none");
         com.focusPage("#caseModal").modal("show");
     });
 
     function saveCaseData(){
-        if(com.validate() ){
-            return;
+        
+        if(com.validate("caseModal")){
+            return false;
         }
 
         if(decorationCase.items.designer.val() == "" && decorationCase.items.supervisor.val() == ""){
             com.focusPage("#validateDiv").attr("style", "display:display");
-            return;
+            return false;
         }
 
         var options = {
-            'caser.cityId': decorationCase.items.city.val(),
+            'caser.cityId': com.typeahead('city'),
             'caser.villageName': decorationCase.items.villageName.val(),
-            'caser.designer.euid': decorationCase.items.designer.val(),
-            'caser.supervisor.euid': decorationCase.items.supervisor.val(),
+            'caser.designer.euid': com.typeahead('designer'),
+            'caser.supervisor.euid': com.typeahead('supervisor'),
             'caser.style': decorationCase.items.style.val(),
             'caser.type': decorationCase.items.type.val(),
             'caser.houseType': decorationCase.items.room.val() + decorationCase.items.livingRoom.val(),
@@ -288,6 +298,7 @@ jQuery(function($) {
 
     //更新状态
     function updateCaseStatus(cid, cvalue){
+        
         var options = {};
         options["caser.cid"] = cid;
         options["caser.status"] = cvalue;

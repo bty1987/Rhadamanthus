@@ -39,101 +39,81 @@ jQuery(function () {
     /**销售项区 自动赋值 (校验同品牌)
      * 带出商品信息
      */
-    //销售项区 自动赋值
-    com.focusPage('#goodsName').typeahead({
-        url: api.inventory.queryGoodsByName,
-        list: [],
-        postData: {},
-        source: function (query, process) {
-            var params = $.extend({
-                "goods.name": query,
-                "goods.pinyin": query,
-                "goods.no": query
-            }, this.options.postData);
-            com.post(this.options.url, params, $.proxy(this.options.callback, this));
-        }, matcher: function (item) {
-            return true;
-        }, callback: function (data) {
-            sales.flag = true;
-            this.options.list = data['goodes'];
-            this.flprocess(this.options.list, 'gid', 'name');
-            com.focusPage('.typeahead').css("left", "33px");
-        },
-        isResultTypeMap: true
-        , flupdater: function (k, v) {
-            //k---gid  v---name
-            var $content = com.focusPage('#left');
-            sales.gids = k;
-            //赋值商品信息
-            var list = this.options.list;
-            $.each(list, function (index, val) {
-                if (val.gid == k) {
-                    sales.gtype = val.type;
-                    com.focusPage('#goodsName').attr('data-name', val.name);
-                    com.focusPage('#goodsNo').attr('data-no', val.no).val(val.no);
-                    com.focusPage('#category').attr('data-category', val.category).val(val.category);
-                    com.focusPage('#brand').attr('data-brand', val.brand).val(val.brand);
-                    com.focusPage('#measurementUnit').attr('data-measurementUnit', val.measurementUnit).val(val.measurementUnit);
-                }
-            });
-            //赋值售价信息
-            com.post(api.inventory.queryPriceByGid, {"price.gid": k}, function (priceData) {
-                if (priceData.prices.length != 0) {
-                    var $purchase = com.focusPage('#purchase');
-                    $purchase.bindData(priceData.prices, "pid", "content",false,null,"selling");
-                    com.post(api.inventory.queryPriceByPid, {
-                        "price.pid": com.focusPage('#purchase').val()
-                    }, function (data) {
-                        com.focusPage('#bid').attr({
-                            'data-ctype': data.price.ctype,
-                            "data-cvalue": data.price.cvalue,
-                            "data-priceType": data.price.type
-                        }).val(data.price.purchase);
 
-                    });
-                    com.focusPage('#discount').val(1);
-                    com.focusPage('#disPrice').val(utils.accMul(parseFloat(com.focusPage('#purchase').find('option:selected').attr("other")), parseFloat(com.focusPage('#discount').val())));
-                    com.focusPage('#postDis').val(1);
-                    com.focusPage('#selling').val(utils.accMul(parseFloat(com.focusPage('#disPrice').val()), parseFloat(com.focusPage('#postDis').val())));
-                    com.focusPage('#num').val(1);
-                    com.focusPage('#total').val(utils.accMul(parseFloat(com.focusPage('#selling').val()), parseFloat(com.focusPage('#num').val())));
-                } else {
-                    com.showAlert(com.warning, "该商品暂无价格信息,请录入");
-                    sales.flag = false;
-                }
-            }, function () {
-                com.showAlert(null, "获取售价信息失败");
-            });
-            //赋值颜色信息
-            com.post(api.inventory.queryColorForEnableByGid, {"color.gid": k}, function (colorData) {
-                if (colorData.colors.length != 0) {
-                    var color = com.focusPage('#color');
-                    $content.find('#color').bindData(colorData.colors, "cid", "name");
-                    sales.colorids = color.find('option:selected').val();
-                } else {
-                    com.showAlert(com.warning, "该商品暂无颜色信息,请录入");
-                    sales.flag = false;
-                }
-            }, function () {
-                com.showAlert(null, "获取颜色信息失败");
-            });
-            //赋值规格信息
-            com.post(api.inventory.queryFormatForEnableByGid, {"format.gid": k}, function (formatData) {
-                if (formatData.formats.length != 0) {
-                    $content.find('#format').bindData(formatData.formats, "fid", "info");
-                    sales.formatids = com.focusPage('#format').find('option:selected').val();
-                } else {
-                    com.showAlert(com.warning, "该商品暂无规格信息,请录入");
-                    sales.flag = false;
-                }
-            }, function () {
-                com.showAlert(null, "获取规格信息失败");
-            });
-            return v;
-        }
+    com.initTypeahead('goodsName', api.inventory.queryGoodsByName, "goods.name", {}, 'goodes', 'gid', 'name', function (list, k, v) {
+        
+        var $content = com.focusPage('#left');
+        sales.gids = k;
+        //赋值商品信息
+        $.each(list, function (index, val) {
+            if (val.gid == k) {
+                sales.gtype = val.type;
+                com.focusPage('#goodsName').attr('data-name', val.name);
+                com.focusPage('#goodsNo').attr('data-no', val.no).val(val.no);
+                com.focusPage('#category').attr('data-category', val.category).val(val.category);
+                com.focusPage('#brand').attr('data-brand', val.brand).val(val.brand);
+                com.focusPage('#measurementUnit').attr('data-measurementUnit', val.measurementUnit).val(val.measurementUnit);
+            }
+        });
+        //赋值售价信息
+        com.post(api.inventory.queryPriceByGid, {"price.gid": k}, function (priceData) {
+            if (priceData.prices.length != 0) {
+                var $purchase = com.focusPage('#purchase');
+                $purchase.bindData(priceData.prices, "pid", "content",false,null,"selling");
+                com.post(api.inventory.queryPriceByPid, {
+                    "price.pid": com.focusPage('#purchase').val()
+                }, function (data) {
+                    com.focusPage('#bid').attr({
+                        'data-ctype': data.price.ctype,
+                        "data-cvalue": data.price.cvalue,
+                        "data-priceType": data.price.type
+                    }).val(data.price.purchase);
+
+                });
+                com.focusPage('#discount').val(1);
+                com.focusPage('#disPrice').val(utils.accMul(parseFloat(com.focusPage('#purchase').find('option:selected').attr("other")), parseFloat(com.focusPage('#discount').val())));
+                com.focusPage('#postDis').val(1);
+                com.focusPage('#selling').val(utils.accMul(parseFloat(com.focusPage('#disPrice').val()), parseFloat(com.focusPage('#postDis').val())));
+                com.focusPage('#num').val(1);
+                com.focusPage('#total').val(utils.accMul(parseFloat(com.focusPage('#selling').val()), parseFloat(com.focusPage('#num').val())));
+                sales.flag = true;
+            } else {
+                com.showAlert(com.warning, "该商品暂无价格信息,请录入");
+                sales.flag = false;
+            }
+        }, function () {
+            com.showAlert(com.warning, "获取售价信息失败");
+        });
+        //赋值颜色信息
+        com.post(api.inventory.queryColorForEnableByGid, {"color.gid": k}, function (colorData) {
+            if (colorData.colors.length != 0) {
+                var color = com.focusPage('#color');
+                $content.find('#color').bindData(colorData.colors, "cid", "name");
+                sales.colorids = color.find('option:selected').val();
+                sales.flag = true;
+            } else {
+                com.showAlert(com.warning, "该商品暂无颜色信息,请录入");
+                sales.flag = false;
+            }
+        }, function () {
+            com.showAlert(com.warning, "获取颜色信息失败");
+        });
+        //赋值规格信息
+        com.post(api.inventory.queryFormatForEnableByGid, {"format.gid": k}, function (formatData) {
+            if (formatData.formats.length != 0) {
+                $content.find('#format').bindData(formatData.formats, "fid", "info");
+                sales.formatids = com.focusPage('#format').find('option:selected').val();
+                sales.flag = true;
+            } else {
+                com.showAlert(com.warning, "该商品暂无规格信息,请录入");
+                sales.flag = false;
+            }
+        }, function () {
+            com.showAlert(com.warning, "获取规格信息失败");
+        });
+        return v;
     });
 
-    //若 颜色和规格改变动态取ID
     com.focusPage('#color').on("change", function () {
         sales.colorids = com.focusPage('#color').find('option:selected').val();
     });
@@ -151,7 +131,6 @@ jQuery(function () {
     com.focusPage("#add").click(function () {
 
         if (com.validate('left', 'bottom') == false && sales.flag == true) {
-
             //折让价
             var $selling = parseFloat(com.focusPage('#selling').val());
             //折扣价
@@ -211,6 +190,7 @@ jQuery(function () {
             com.focusPage('.list-group-item').css("border-bottom", "none");
             com.focusPage('.list-group-item:last').css("border-bottom", "grey solid 1px");
             //清空左侧
+            com.cleanTypeahead("goodsName");
             com.focusPage('#left').find('input').val("");
             com.focusPage('#left').find('select').empty();
             com.focusPage('#goodsName').removeAttr('data-name');
@@ -353,7 +333,7 @@ jQuery(function () {
                 $preTotals.val(utils.accAdd(parseFloat($preTotals.val()), parseFloat($total.val())));
                 //更新总额
                 com.focusPage('#totals').val("");
-                com.showAlert(null, "添加成功");
+                com.showAlert(com.info, "添加成功");
             });
         }
 
@@ -384,7 +364,7 @@ jQuery(function () {
                 if (_brand != $v.find('.s_brand').find('.b_brand').text().trim()) {
                     $v.css("border", "solid red 2px");
                     var r = i + 1;
-                    com.showAlert(null, "销售项第" + r + "项中品牌与主材品牌不符,请检查");
+                    com.showAlert(com.warning, "销售项第" + r + "项中品牌与主材品牌不符,请检查");
                     flag = false;
                 }
             });
@@ -393,7 +373,7 @@ jQuery(function () {
         var length = com.focusPage('#salesItemList').find('.list-group-item').length;
         if (length == 0) {
             flag = false;
-            com.showAlert(null, "请添加商品信息");
+            com.showAlert(com.warning, "请添加商品信息");
         }
         return flag;
 

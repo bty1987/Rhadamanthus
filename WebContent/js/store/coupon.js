@@ -106,16 +106,14 @@ $(function(){
             /*状态启用*/
             $btnStart.click(function(){
                 startStatus(v.cid, v.status, function(){
-                    layer.closeAll();
-                    layer.msg('启用成功',{icon:1});
+                    com.showAlert(com.info, "操作成功");
                 });
             });
 
             /*状态禁用*/
             $btnBan.click(function(){
                 stopStatus(v.cid, v.status, function(){
-                    layer.closeAll();
-                    layer.msg('禁用成功',{icon:1});
+                    com.showAlert(com.info, "操作成功");
                 });
             });
             return $liLine;
@@ -217,37 +215,23 @@ $(function(){
 
     /*状态信息验证*/
     function startStatus(id, status, callback){
-        if(status == "1"){
-            com.post(api.store.updateCouponForStatus,{
-                "coupon.cid":id,
-                "coupon.status":"0"
-            },function(res){
-                callback();
-                couponSeacher.doSearch();
-            });
-        }else{
-            layer.alert('已经启用', {
-                icon: 0,
-                skin: 'layer-ext-moon' //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
-            });
-        }
+        com.post(api.store.updateCouponForStatus,{
+            "coupon.cid":id,
+            "coupon.status":"0"
+        },function(res){
+            callback();
+            couponSeacher.doSearch();
+        });
     }
 
     function stopStatus(id, status, callback){
-        if(status == "0"){
-            com.post(api.store.updateCouponForStatus,{
-                "coupon.cid":id,
-                "coupon.status":"1"
-            },function(res){
-                callback();
-                couponSeacher.doSearch();
-            });
-        }else{
-            layer.alert('已经禁用', {
-                icon: 0,
-                skin: 'layer-ext-moon'
-            });
-        }
+        com.post(api.store.updateCouponForStatus,{
+            "coupon.cid":id,
+            "coupon.status":"1"
+        },function(res){
+            callback();
+            couponSeacher.doSearch();
+        });
     }
 
     /*添加信息*/
@@ -255,16 +239,16 @@ $(function(){
         if(coupon.couponItems.type.val() == 0){
             var regex = /^[0-9]+\.{0,1}[0-9]{0,2}$/;
             if(!regex.test(coupon.couponItems.vprice.val())){
-                layer.msg("请输入正确的劵值");
-                return;
+                com.showAlert(com.warning, "请输入正确的劵值");
+                return false;
             }
         }
 
         if(coupon.couponItems.type.val() == 1){
             var postDiscountRex =/^(1\.0{1,2}|1|0\.[0-9]{1,2})$/;
             if(!postDiscountRex.test(coupon.couponItems.vprice.val())){
-                layer.msg("请输入正确的折扣价");
-                return;
+                com.showAlert(com.warning, "请输入正确的折扣价");
+                return false;
             }
         }
         var $layer = com.focusPage('#layerAdd');
@@ -276,7 +260,6 @@ $(function(){
             "coupon.type":coupon.couponItems.type.val()
         }, function(res){
             couponSeacher.doSearch();
-            layer.closeAll();
         });
     }
 
@@ -284,16 +267,16 @@ $(function(){
         if(coupon.couponItems.type.val() == 0){
             var regex =  /^[0-9]+\.{0,1}[0-9]{0,2}$/;
             if(!regex.test(coupon.couponItems.vprice.val())){
-                layer.msg("请输入正确的劵值");
-                return;
+                com.showAlert(com.warning, "请输入正确的劵值");
+                return false;
             }
         }
 
         if(coupon.couponItems.type.val() == 1){
             var postDiscountRex =/^(1\.0{1,2}|1|0\.[0-9]{1,2})$/;
             if(!postDiscountRex.test(coupon.couponItems.vprice.val())){
-                layer.msg("请输入正确的折扣价");
-                return;
+                com.showAlert(com.info, "请输入正确的折扣价");
+                return false;
             }
         }
 

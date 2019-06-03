@@ -16,105 +16,84 @@ jQuery(function () {
         formatids: null,
         cid: null,
         salesmanid: null,
-        flag: true,
-        salePostData: {}
+        flag: false,
+        salePostData: {},
+        brandData:{}
     };
+    com.initTypeahead('goodsName', api.inventory.queryGoodsByName, "goods.name", {}, 'goodes', 'gid', 'name',function (list, k, v) {
+        com.focusPage('#left').find('input').val("");
+        com.focusPage('#left').find('select').empty();
+        //查询商品信息
+        sales.gids = k;
 
-    //销售项区 自动赋值
-    com.focusPage('#goodsName').typeahead({
-        url: api.inventory.queryGoodsByName,
-        list: [],
-        postData: {},
-        source: function (query, process) {
-            var params = $.extend({
-                "goods.name": query,
-                "goods.pinyin": query,
-                "goods.no": query
-            }, this.options.postData);
-            com.post(this.options.url, params, $.proxy(this.options.callback, this));
-        }, matcher: function (item) {
-            return true;
-        }, callback: function (data) {
-            sales.flag = true;
-            this.options.list = data['goodes'];
-            this.flprocess(this.options.list, 'gid', 'name');
-        },
-        isResultTypeMap: true
-        , flupdater: function (k, v) {
+        $.each(list, function (index, val) {
+            if (val.gid == k) {
+                sales.gtype = val.type;
+                com.focusPage('#goodsName').attr('data-name', val.name);
+                com.focusPage('#goodsNo').attr('data-no',val.no).val(val.no);
+                com.focusPage('#category').attr('data-category', val.category).val(val.category);
+                com.focusPage('#brand').attr('data-brand', val.brand).val(val.brand);
+                com.focusPage('#measurementUnit').attr('data-measurementUnit', val.measurementUnit).val(val.measurementUnit);
+            }
+        });
+        //赋值售价信息
+        com.post(api.inventory.queryPriceByGid, {"price.gid": k}, function (priceData) {
+            if (priceData.prices.length != 0) {
 
-            com.focusPage('#left').find('input').val("");
-            com.focusPage('#left').find('select').empty();
+                com.focusPage('#purchase').bindData(priceData.prices, "pid", "content",false,null,"selling");
+                var pid = com.focusPage('#purchase').val();
+                com.post(api.inventory.queryPriceByPid, {
+                    "price.pid": pid
+                }, function (data) {
+                    com.focusPage('#bid').attr({
+                        'data-ctype': data.price.ctype,
+                        "data-cvalue": data.price.cvalue,
+                        "data-priceType": data.price.type
+                    }).val(data.price.purchase);
+                });
+                com.focusPage('#discount').val(1);
+                com.focusPage('#disPrice').val(utils.accMul(parseFloat(com.focusPage('#purchase').find('option:selected').attr('other')), parseFloat(com.focusPage('#discount').val())));
+                com.focusPage('#postDis').val(1);
+                com.focusPage('#selling').val(utils.accMul(parseFloat(com.focusPage('#disPrice').val()), parseFloat(com.focusPage('#postDis').val())));
+                com.focusPage('#num').val(1);
+                com.focusPage('#total').val(utils.accMul(parseFloat(com.focusPage('#selling').val()), parseFloat(com.focusPage('#num').val())));
+                sales.flag = true;
+            } else {
+                sales.flag = false;
+                com.showAlert(com.warning, "该商品暂无价格信息,请录入");
+            }
+        }, function () {
+            com.showAlert(com.error, "获取售价信息失败");
+        });
+        //赋值颜色信息
+        com.post(api.inventory.queryColorForEnableByGid, {"color.gid": k}, function (colorData) {
+            if (colorData.colors.length != 0) {
+                com.focusPage('#color').bindData(colorData.colors, "cid", "name");
+                sales.colorids = com.focusPage('#color').find('option:selected').val();
+                sales.flag = true;
+            } else {
+                sales.flag = false;
+                com.showAlert(com.warning, "该商品暂无颜色信息,请录入");
+            }
+        }, function () {
+            com.showAlert(com.error, "获取颜色信息失败");
+        });
+        //赋值规格信息
+        com.post(api.inventory.queryFormatForEnableByGid, {"format.gid": k}, function (formatData) {
+            if (formatData.formats.length != 0) {
+                com.focusPage('#format').bindData(formatData.formats, "fid", "info");
+                sales.formatids = com.focusPage('#format').find('option:selected').val();
+                sales.flag = true;
+            } else {
+                sales.flag = false;
+                com.showAlert(com.warning, "该商品暂无规格信息,请录入");
+            }
+        }, function () {
+            com.showAlert(com.error, "获取规格信息失败");
+        });
+        return v;
+});
 
-            //查询商品信息
-            var list = this.options.list;
-
-            sales.gids = k;
-
-            $.each(list, function (index, val) {
-                if (val.gid == k) {
-                    sales.gtype = val.type;
-                    com.focusPage('#goodsName').attr('data-name', val.name);
-                    com.focusPage('#goodsNo').attr('data-no',val.no).val(val.no);
-                    com.focusPage('#category').attr('data-category', val.category).val(val.category);
-                    com.focusPage('#brand').attr('data-brand', val.brand).val(val.brand);
-                    com.focusPage('#measurementUnit').attr('data-measurementUnit', val.measurementUnit).val(val.measurementUnit);
-                }
-            });
-            //赋值售价信息
-            com.post(api.inventory.queryPriceByGid, {"price.gid": k}, function (priceData) {
-                if (priceData.prices.length != 0) {
-
-                    com.focusPage('#purchase').bindData(priceData.prices, "pid", "content",false,null,"selling");
-                    var pid = com.focusPage('#purchase').val();
-                    com.post(api.inventory.queryPriceByPid, {
-                        "price.pid": pid
-                    }, function (data) {
-                        com.focusPage('#bid').attr({
-                            'data-ctype': data.price.ctype,
-                            "data-cvalue": data.price.cvalue,
-                            "data-priceType": data.price.type
-                        }).val(data.price.purchase);
-                    });
-                    com.focusPage('#discount').val(1);
-                    com.focusPage('#disPrice').val(utils.accMul(parseFloat(com.focusPage('#purchase').find('option:selected').attr('other')), parseFloat(com.focusPage('#discount').val())));
-                    com.focusPage('#postDis').val(1);
-                    com.focusPage('#selling').val(utils.accMul(parseFloat(com.focusPage('#disPrice').val()), parseFloat(com.focusPage('#postDis').val())));
-                    com.focusPage('#num').val(1);
-                    com.focusPage('#total').val(utils.accMul(parseFloat(com.focusPage('#selling').val()), parseFloat(com.focusPage('#num').val())));
-                } else {
-                    sales.flag = false;
-                    com.showAlert(com.warning, "该商品暂无价格信息,请录入");
-                }
-            }, function () {
-                com.showAlert(com.error, "获取售价信息失败");
-            });
-            //赋值颜色信息
-            com.post(api.inventory.queryColorForEnableByGid, {"color.gid": k}, function (colorData) {
-                if (colorData.colors.length != 0) {
-                    com.focusPage('#color').bindData(colorData.colors, "cid", "name");
-                    sales.colorids = com.focusPage('#color').find('option:selected').val();
-                } else {
-                    sales.flag = false;
-                    com.showAlert(com.warning, "该商品暂无颜色信息,请录入");
-                }
-            }, function () {
-                com.showAlert(com.error, "获取颜色信息失败");
-            });
-            //赋值规格信息
-            com.post(api.inventory.queryFormatForEnableByGid, {"format.gid": k}, function (formatData) {
-                if (formatData.formats.length != 0) {
-                    com.focusPage('#format').bindData(formatData.formats, "fid", "info");
-                    sales.formatids = com.focusPage('#format').find('option:selected').val();
-                } else {
-                    sales.flag = false;
-                    com.showAlert(com.warning, "该商品暂无规格信息,请录入");
-                }
-            }, function () {
-                com.showAlert(com.error, "获取规格信息失败");
-            });
-            return v;
-        }
-    });
     //颜色和规格改变取ID
     com.focusPage('#color').on("change", function () {
         sales.colorids = com.focusPage('#color').find('option:selected').val();
@@ -327,95 +306,27 @@ jQuery(function () {
             sales.salePostData["sales.dompanys"] = data.decoration.dompany;
 
         }, function (e) {
-            com.showAlert(null, "未查询到此订单!");
+            com.showAlert(com.warning, "未查询到此订单!");
             com.focusPage("#customerName").val(null);
             com.focusPage("#salesmanName").val(null);
             com.focusPage("#orderAddr").val(null);
         });
     });
+    
+    com.initTypeahead('salesmanName', api.personel.queryUserByPinyin, "pinyinName", {"user.status":0,"departmentType.name":""}, 'autoFillKeyValue', 'key', 'value',null);
+    com.initTypeahead('instorer', api.personel.queryUserByPinyin, "pinyinName", {"user.status":0,"departmentType.name":""}, 'autoFillKeyValue', 'key', 'value',null);
+    com.initTypeahead('guider', api.personel.queryUserByPinyin, "pinyinName", {"user.status":0,"departmentType.name":""}, 'autoFillKeyValue', 'key', 'value',null);
+    com.initTypeahead('brands', api.data.queryBrandForPinYinNameAname, "pinyinName", {}, 'brands', 'no', 'alias',function (list, k, v) {
+        $.each(list, function (index, val){
+            keyVal = val["no"];
+            valVal= [val["alias"]];
+            valVal.push(val["bid"]);
+            sales.brandData[keyVal] = valVal
+        });
+        return v
+    });
 
-    //业务员发生改变
-    com.focusPage('#salesmanName').typeahead({
-        url: api.personel.queryUserByPinyin,//获取下拉列表的接口
-        list: [],
-        postData: {},//获取下拉列表的参数
-        source: function (query, process) {
-            var options = $.extend({pinyinName: query,"user.status":0,"departmentType.name":""}, this.options.postData);
-            com.post(this.options.url, options, $.proxy(this.options.callback, this));
-        }, matcher: function (item) {
-            return true;
-        }, callback: function (data) {
-            this.options.list = data["autoFillKeyValue"];
-            this.flprocess(this.options.list, ["key"], ["value"]);
-        },
-        isResultTypeMap: true //必填值为true,获取key,value的标识,
-        , flupdater: function (k, v) {//下拉列表选中时的一些处理,必填对选中项的key和value做处理
-            return v;
-        }
-    });
-    //主材驻店
-    com.focusPage('#instorer').typeahead({
-        url: api.personel.queryUserByPinyin,//获取下拉列表的接口
-        list: [],
-        postData: {},//获取下拉列表的参数
-        source: function (query, process) {
-            var options = $.extend({pinyinName: query,"user.status":0,"departmentType.name":""}, this.options.postData);
-            com.post(this.options.url, options, $.proxy(this.options.callback, this));
-        }, matcher: function (item) {
-            return true;
-        }, callback: function (data) {
-            this.options.list = data["autoFillKeyValue"];
-            this.flprocess(this.options.list, ["key"], ["value"]);
-        },
-        isResultTypeMap: true //必填值为true,获取key,value的标识,
-        , flupdater: function (k, v) {//下拉列表选中时的一些处理,必填对选中项的key和value做处理
-            return v;
-        }
-    });
-    //主材导购
-    com.focusPage('#guider').typeahead({
-        url: api.personel.queryUserByPinyin,
-        list: [],
-        postData: {},//获取下拉列表的参数
-        source: function (query, process) {
-            var options = $.extend({pinyinName: query,"user.status":0,"departmentType.name":""}, this.options.postData);
-            com.post(this.options.url, options, $.proxy(this.options.callback, this));
-        }, matcher: function (item) {
-            return true;
-        }, callback: function (data) {
-            this.options.list = data["autoFillKeyValue"];
-            this.flprocess(this.options.list, ["key"], ["value"]);
-        },
-        isResultTypeMap: true //必填值为true,获取key,value的标识,
-        , flupdater: function (k, v) {//下拉列表选中时的一些处理,必填对选中项的key和value做处理
-            return v;
-        }
-    });
-    //主材品牌
-    com.focusPage('#brands').typeahead({
-        url: api.data.queryBrandForPinYinNameAname,
-        list: [],
-        postData: {},//获取下拉列表的参数
-        source: function (query, process) {
-            var options = $.extend({pinyinName: query}, this.options.postData);
-            com.post(this.options.url, options, $.proxy(this.options.callback, this));
-        }, matcher: function (item) {
-            return true;
-        }, callback: function (data) {
-            var brands = data["brands"];
-            $.each(brands,function(i,v){
-                v.name = v.name + "-" + v.categoryName;
-            });
 
-            this.options.list = data["brands"];
-            this.flprocess(this.options.list, ["bid"], ["name"]);
-        },
-        isResultTypeMap: true //必填值为true,获取key,value的标识,
-        , flupdater: function (k, v) {//下拉列表选中时的一些处理,必填对选中项的key和value做处理
-            com.focusPage('#brands').attr('data-brand', v);
-            return v;
-        }
-    });
     //绑定券信息
     com.post(api.ds.payment, {}, function (res) {
         com.focusPage("#couponInfo").bindData(res.materialCouponTypes, 'key', 'value', false);
@@ -424,6 +335,7 @@ jQuery(function () {
     // 销售单区 提交
     //进行主材品类的校验不是同一品牌不能提交
     //取参数添加
+   
     com.focusPage('#submit').click(function () {
 
         var _option = {};
@@ -437,9 +349,9 @@ jQuery(function () {
             _option = {
                 "sales.orderId": com.focusPage('#orderId').val(),
                 "sales.customer.cid": sales.cid,
-                "sales.guider.userId": com.focusPage('#guider').attr('data-typeahead-key'),
-                "sales.instorer.userId": com.focusPage('#instorer').attr('data-typeahead-key'),
-                "sales.bid": com.focusPage('#brands').attr('data-typeahead-key'),
+                "sales.guider.userId": com.typeahead("guider"),
+                "sales.instorer.userId": com.typeahead("instorer"),
+                "sales.bid": sales.brandData[com.typeahead("brands")][1],
                 "sales.coupon": com.focusPage('#coupon').val() != "" ? parseFloat(com.focusPage('#coupon').val()) : 0,
                 "sales.comment": com.focusPage('#comment').val(),
                 "sales.maling": com.focusPage('#maling').val() != "" ? parseFloat(com.focusPage('#maling').val()) : 0,
@@ -450,8 +362,8 @@ jQuery(function () {
 
             //客户id
             //业务员(有问题)
-            if (com.focusPage('#salesmanName').attr('data-typeahead-key')!=undefined) {
-                _option["sales.salesman.userId"] = com.focusPage('#salesmanName').attr('data-typeahead-key');
+            if (com.typeahead("salesmanName")) {
+                _option["sales.salesman.userId"] = com.typeahead("salesmanName");
             } else {
                 _option["sales.salesman.userId"] = sales.salesmanid;
             }
@@ -499,7 +411,7 @@ jQuery(function () {
             });
 
             com.post(api.inventory.addSales, _option, function (data) {
-                com.showAlert(null, "添加成功");
+                com.showAlert(com.info, "添加成功");
 
                 //清空销售项
                 com.focusPage('#salesItemList').empty();
@@ -507,10 +419,10 @@ jQuery(function () {
                 com.focusPage('.order_inputinfo').val(null);
 
                 //删除data-typeahead-key属性
-                com.focusPage('#salesmanName').removeAttr('data-typeahead-key');
-                com.focusPage('#instorer').removeAttr('data-typeahead-key');
-                com.focusPage('#guider').removeAttr('data-typeahead-key');
-                com.focusPage('#brands').removeAttr('data-brand');
+                com.cleanTypeahead('salesmanName');
+                com.cleanTypeahead('instorer');
+                com.cleanTypeahead('guider');
+                com.cleanTypeahead('brands');
 
             }, function (e) {
                 com.showAlert(com.error, "添加失败");
@@ -522,14 +434,12 @@ jQuery(function () {
     function submitCheck() {
 
         var flag = true;
-
-        var $_brand = com.focusPage('#brands');
         var _brand = "";
-        if ($_brand.attr('data-brand')) {
-            _brand = $_brand.attr('data-brand').split('-')[0];
+
+        if (com.typeahead("brands")) {
+            _brand = sales.brandData[com.typeahead("brands")][0].split('-')[0];
             _brand = _brand.trim();
         }
-
         //判断品牌差异
         var $_lis = com.focusPage('.list-group-item');
         $.each($_lis, function (i, v) {
@@ -537,7 +447,7 @@ jQuery(function () {
             if (_brand != $v.find('.b_brand').text().trim()) {
                 $v.css("border", "solid red 2px");
                 var r = i + 1;
-                com.showAlert(null, "销售项第" + r + "项中品牌与主材品牌不符,请检查");
+                com.showAlert(com.warning, "销售项第" + r + "项中品牌与主材品牌不符,请检查");
                 flag = false;
             }
         });

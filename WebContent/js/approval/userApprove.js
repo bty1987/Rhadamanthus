@@ -13,7 +13,7 @@ jQuery(function($) {
         
         modals: {
             approveModal: com.focusPage("#approveModal")
-        }
+        },
         items:{
             approver: com.focusPage("#approver"),
             type: com.focusPage("#type"),
@@ -34,12 +34,12 @@ jQuery(function($) {
      * 初始化页面变量中的状态/类型等信息 , 同时判断是否需要绑定数据
      */
     com.post(api.ds.approval, {"timestamp": new Date().getTime()}, function(res){
-        
+
         $.each(res.approvalType, function(i, v){
             approve.approvalType[v["key"]] = v["value"];
         })
         
-        approve.items.type.bindData(approve.approvalType, "key", "value", false);
+        approve.items.type.bindData(res.approvalType, "key", "value", false);
     }, null, false);
     
     /**

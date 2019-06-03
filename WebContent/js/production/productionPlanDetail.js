@@ -114,11 +114,11 @@ jQuery(function ($) {
                 option["productionWorkPlan.ppid"] = ppid;
 
                 com.post(api.production.deleteProductionWorkPlan,option,function (res) {
-                    layer.msg("删除成功");
+                    com.showAlert(com.info, "操作成功");
                     $topspan.remove();
                 },null,true);
             }else{
-                layer.msg('该生产计划单已经进行生产，不允许更改工序组');
+                com.showAlert(com.warning, "该生产计划单已经进行生产,不允许更改工序组");
             }
 
         });
@@ -135,7 +135,7 @@ jQuery(function ($) {
         if(workstatus == 0 && $productionStatus != 4 && $productionStatus != 5 ){
             addProductionWorkPlans(ppid);
         }else{
-            layer.msg('该生产计划单已经进行生产，不允许更改工序组');
+            com.showAlert(com.warning, "该生产计划单已经进行生产,不允许更改工序组");
         }
 
     });

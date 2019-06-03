@@ -30,7 +30,9 @@ public interface ModuleService {
 	
 	public List<ModuleVO> queryModuleByRid(ModuleVO moduleVO, RoleVO roleVO) throws FLException;
 	
-	public int updateRoleModuleByRid(ModuleVO moduleVO, RoleVO roleVO, List<Integer> mids, int rid) throws FLException;
+	public List<ModuleVO> queryModuleForLinkByRid(ModuleVO moduleVO, RoleVO roleVO) throws FLException;
+	
+	public int updateRoleModuleByRid(ModuleVO moduleVO, RoleVO roleVO, List<ModuleVO> moduleVOs, int rid) throws FLException;
 	
 	public List<ModuleVO> queryModuleByUserId(ModuleVO moduleVO, UserVO userVO) throws FLException;
 	

@@ -127,7 +127,7 @@ jQuery(function ($) {
                             'queueSizeLimit': 1, // 上传数量
                             'onUploadSuccess': function (file, data, response) {
                                 updateProductionPlanPath(data, v.ppid);
-                                // 上传到服务器，服务器返回相应信息到data里
+                                // 上传到服务器,服务器返回相应信息到data里
                             }});
 
                     });
@@ -149,15 +149,12 @@ jQuery(function ($) {
                                     "productionPlan.endTime" : endTime,
                                     "productionPlan.comment" : comment
                                 },function (res) {
-                                    layer.closeAll();
                                     $('#layerAdd').find('input').val("");
-                                    layer.msg("修改成功");
+                                    com.showAlert(com.info, "操作成功");
                                     searcher.doSearch();
-                                },function () {
-                                    layer.msg("修改失败");
                                 })
                             }else{
-                                layer.msg("请检查投料时间和出货时间");
+                                com.showAlert(com.warning, "请检查投料时间和出货时间");
                             }
                         });
                     });
@@ -170,9 +167,9 @@ jQuery(function ($) {
                             "productionPlan.ppid" : ppid,
                             "productionPlan.status" : 1
                         },function (res) {
-                            layer.msg("已入库");
+                            com.showAlert(com.info, "操作成功");
                             searcher.doSearch();
-                        })
+                        });
                     });
 
                     $product.click(function () {
@@ -180,7 +177,7 @@ jQuery(function ($) {
                         var ppid = v.ppid;
 
                         if($productionStatus == 0 || $productionStatus == 1){
-                            layer.msg("未审核无法进行生产");
+                            com.showAlert(com.warning, "未审核无法进行生产");
                             return false;
                         }
                         //将生产单的状态更改为生产
@@ -190,13 +187,11 @@ jQuery(function ($) {
                         },function (res) {
                             searcher.doSearch();
                             if($productionStatus != 3 ){
-                                com.post(api.production.updateProductionForStatus,{"production.pid":pid,"production.status":3}
-                                ,function (res) {
-                                        $productionStatus = 3;//更改当前js文件内的状态，防止多次生产报错
-                                        layer.msg("开始进行生产");
-                                    },null,false)
+                                com.post(api.production.updateProductionForStatus,{"production.pid":pid,"production.status":3}, function (res) {
+                                    $productionStatus = 3;
+                                    com.showAlert(com.info, "操作成功");
+                                },null,false);
                             }
-
                         })
                     });
 
@@ -208,7 +203,7 @@ jQuery(function ($) {
                             "productionPlan.ppid" : ppid,
                             "productionPlan.status" : 2
                         },function (res) {
-                            layer.msg("已送货");
+                            com.showAlert(com.info, "操作成功");
                             searcher.doSearch();
                         })
                     });
@@ -243,9 +238,8 @@ jQuery(function ($) {
                 if(submitValidate() == true && checkTime() == true){
                     addProduction();
                 }else{
-                    layer.msg("请检查投料时间和出货时间");
+                    com.showAlert(com.warning, "请检查投料时间和出货时间");
                 }
-
             });
         });
 
@@ -310,11 +304,11 @@ jQuery(function ($) {
     var submitValidate = function () {
         var flag = true;
         if(com.focusPage('#startTime').val() == ""){
-            layer.msg("请填写投料时间");
+            com.showAlert(com.warning, "请填写投料时间");
             flag = false;
         }
         if(com.focusPage('#endTime').val() == ""){
-            layer.msg("请填写出货时间");
+            com.showAlert(com.warning, "请填写出货时间");
             flag = false;
         }
         return flag;
@@ -338,22 +332,18 @@ jQuery(function ($) {
     }
 
     function addProduction() {
-            var startTime = com.focusPage('#startTime').val();
-            var endTime = com.focusPage('#endTime').val();
-            var comment = com.focusPage('#comment').val();
-            com.post(api.production.addProductionPlan,{
-                "productionPlan.pid" : pid,
-                "productionPlan.startTime" : startTime,
-                "productionPlan.endTime" : endTime,
-                "productionPlan.comment" : comment
-            },function () {
-                layer.closeAll();
-                layer.msg("添加成功");
-                searcher.doSearch();
-            },function () {
-                layer.msg("添加失败");
-            });
-
+        var startTime = com.focusPage('#startTime').val();
+        var endTime = com.focusPage('#endTime').val();
+        var comment = com.focusPage('#comment').val();
+        com.post(api.production.addProductionPlan,{
+            "productionPlan.pid" : pid,
+            "productionPlan.startTime" : startTime,
+            "productionPlan.endTime" : endTime,
+            "productionPlan.comment" : comment
+        },function () {
+            com.showAlert(com.info, "操作成功");
+            searcher.doSearch();
+        });
     }
 
     function openlayerImport(){
@@ -375,7 +365,6 @@ jQuery(function ($) {
             }
         });
     }
-
 
     function createLine(path, comment){
 
@@ -410,18 +399,13 @@ jQuery(function ($) {
         if (dateObj.errorCode == 0) {
             option["productionPlan.path"] = dateObj.resUrl;
         }else{
-            layer.msg('上传失败',{icon:2,time:2000});
+            com.showAlert(com.warning, "上传失败");
         }
 
         com.post(api.production.updateProductionPlan,option,function(res){
-            layer.closeAll();
-            layer.msg('上传成功',{icon:1,time:2000});
+            com.showAlert(com.info, "操作成功");
             searcher.doSearch();
-        },function(){
-            layer.closeAll();
-            layer.msg('上传失败',{icon:2,time:2000});
-            searcher.doSearch();
-        })
+        });
     }
 
     function hidBtn(btnId,otherStatus){

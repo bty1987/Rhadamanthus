@@ -23,7 +23,8 @@ $(function () {
         firstSid: 0,
         spids: [],
         decorationType: [],
-        htmlName: "sales"
+        htmlName: "sales",
+        modelId: 'layerAdd'
     };
 
     var salesPaymentPostData = {};
@@ -56,7 +57,7 @@ $(function () {
     com.focusPage("#couponType").bindData(salesPayment.couponType, 'no', 'name');
     com.focusPage("#couponType").trigger("chosen:updated");
 
-    paymentUtils.dynamicChosen('layerAdd', "salescashInfo", salesPayment.cashUtil, "key", "value");
+    com.selectTypeahead("salescashInfo", salesPayment.cashUtil, "key", "value", null);
 
     $.extend(com.validator, salesPayment.validator);
 
@@ -160,7 +161,7 @@ $(function () {
             var propertyArr = [
                 ["订单号:", v.sales.orderId, "blue"],
                 ["销售单:", v.sales.no, "blue"],
-                ["楼盘地址:", v.sales.house.village.name + " " + v.sales.house.houseNumber, "grey"],
+                ["楼盘地址:", v.sales.house.village.cityProper.city.name + ' ' + v.sales.house.village.cityProper.name + ' ' + v.sales.house.village.name + " " + v.sales.house.houseNumber, "grey"],
                 ["客户:", v.sales.customer.name, "grey"],
                 ["品牌:", v.sales.brand, "grey"],
                 ["操作人:", v.creater.currentName, "grey"],
@@ -256,7 +257,7 @@ $(function () {
 
             //查看装修单
             $btnDecorationInfo.click(function(){
-                decorationInfoShow(v);
+                paymentUtils.decorationInfoShow(v.sales.orderId, salesPayment.decorationType);
             });
             return $liLine;
         };
@@ -432,7 +433,7 @@ $(function () {
                 } else {
                     $total = utils.accAdd($total, $referMoney);
                 }
-            }), showInfo('<h3>合计金额: ' + $total + '</h3>'));
+            }), com.showAlert(com.info, '<h3>合计金额: ' + $total + '</h3>'));
         });
 
         return [$adda, $showa];
@@ -466,7 +467,7 @@ $(function () {
             var propertyArr = [
                 ["订单号:", v.sales.orderId, "blue"],
                 ["销售单号:", v.sales.no, "blue"],
-                ["楼盘地址:", v.sales.house.village.name + " " + v.sales.house.houseNumber, "grey"],
+                ["楼盘地址:",  v.sales.house.village.cityProper.city.name + ' ' + v.sales.house.village.cityProper.name + ' ' + v.sales.house.village.name + " " + v.sales.house.houseNumber, "grey"],
                 ["客户:", v.sales.customer.name, "grey"],
                 ["品牌:", v.sales.brand, "grey"],
                 ["操作人:", v.creater.currentName, "grey"],
@@ -528,7 +529,7 @@ $(function () {
 
             //查看装修单
             $decorationInfoBtn.click(function(){
-                decorationInfoShow(v);
+                paymentUtils.decorationInfoShow(v.sales.orderId, salesPayment.decorationType);
             });
 
             $btnPrint.click(function () {
@@ -588,10 +589,6 @@ $(function () {
 
     baseClick();
 
-    function showInfo(msg) {
-        layer.msg(msg);
-    }
-
     function salesPaymentForNotInitImport() {
         if (com.focusPage('span[name="totalRecords"]').text() == 0) {
             com.showAlert(com.warning, "请通过条件进行查询");
@@ -608,7 +605,7 @@ $(function () {
                 column: [
                     ["订单号", "sales.orderId"],
                     ["销售单号", "sales.no"],
-                    ['楼盘地址', ['sales.house.village.name', 'sales.house.houseNumber']],
+                    ['楼盘地址', ['sales.house.village.cityProper.city.name', 'sales.house.village.cityProper.name', 'sales.house.village.name', 'sales.house.houseNumber']],
                     ['品牌', 'sales.brand'],
                     ['应收金额', 'referMoney'],
                     ['收款人', 'salesReceipt.collecter.currentName'],
@@ -702,7 +699,7 @@ $(function () {
             });
 
             if (!flagCoupon) {
-                layer.msg('代金券价格填写错误');
+                com.showAlert(com.warning, '代金券价格填写错误');
                 return;
             }
             if(salesPayment.collectOrRefundFalg == 1){
@@ -748,18 +745,6 @@ $(function () {
         com.focusPage('.search-choice').find('input').val('');
         com.focusPage('#collectDes').val("");
 
-        paymentUtils.EmptyChosen('salescashInfo');
+        com.cleanTypeahead('salescashInfo');
     });
-
-    function decorationInfoShow(v){
-        com.focusPage("text").css("line-height", "27px");
-        com.post(api.decoration.queryDecorationByOrderId, {"decorationOrderId" : v.sales.orderId}, function(res){
-            var decorationInfo = res.decoration;
-            com.focusPage("#orderId").html(decorationInfo.orderId);
-            com.focusPage("#address").html(decorationInfo.house.village.name +''+ decorationInfo.house.houseNumber);
-            com.focusPage("#type").html(salesPayment.decorationType[decorationInfo.type].value);
-            com.focusPage("#grade").html(decorationInfo.grade);
-            com.focusPage("#decorationInfo").modal("show");
-        });
-    }
 });

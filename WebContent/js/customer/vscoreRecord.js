@@ -181,7 +181,7 @@ jQuery(function($){
         searcher.init(["vscoreRecordType"], "condList", api.customer.pageVscoreRecordByUnionId, function(data){
             displayFunc.init('resultList', data);
         },"pagenation", "VscoreRecordPostData", {"unionId" : vscore.unionId}, false, null, function(){
-            //
+            
             var $adda = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'addVscore').css("margin", "0px 3px");
             var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
             var $addspan = $('<span></span>').text('添加积分').appendTo($adda);
@@ -204,65 +204,32 @@ jQuery(function($){
         });
 
         function alterPass(v){
-
-            var btn = $(this);
-            var span = btn.find('span');
-            btn.find('i').remove();
-            var loading = $('<i></i>').addClass('icon-spinner icon-spin white bigger-125');
-            span.prepend(loading);
-            var message = "<p>确定要通过积分吗?</p>";
-            bootbox.confirm(message, function(result) {
-                if(result){
-                    var options = {
-                        "vscoreRecord.vsrid" : v.vsrid,
-                        "vscoreRecord.status" : 1
-                    };
-                    com.post(api.customer.updateVscoreRecordForStatus,options,function(res){
-                        searcher.doSearch();
-                        com.showAlert(com.info,'通过成功');
-                        check();
-                    });
-                }else{
-                    btn.find('i').remove();
-                    var prepared = $('<i></i>').addClass('icon-ok bigger-110');
-                    span.prepend(prepared);
-                }
+            com.showConfirm("是否确认通过积分", function(){
+                com.post(api.customer.updateVscoreRecordForStatus, {"vscoreRecord.vsrid" : v.vsrid, "vscoreRecord.status" : 1}, function(res){
+                    com.showAlert(com.info, '操作成功');
+                    searcher.doSearch();
+                    check();
+                });
             });
         }
 
         function alterdown(v){
-            var btn = $(this);
-            var span = btn.find('span');
-            btn.find('i').remove();
-            var loading = $('<i></i>').addClass('icon-spinner icon-spin white bigger-125');
-            span.prepend(loading);
-            var message = "<p>确定要拒绝积分吗?</p>";
-            bootbox.confirm(message, function(result) {
-                if(result){
-                    var options = {
-                        "vscoreRecord.vsrid" : v.vsrid,
-                        "vscoreRecord.status" : 2
-                    };
-                    com.post(api.customer.updateVscoreRecordForStatus,options,function(res){
-                        searcher.doSearch();
-                        com.showAlert(com.info,'拒绝成功');
-                        check();
-                    });
-                }else{
-                    btn.find('i').remove();
-                    var prepared = $('<i></i>').addClass('icon-ok bigger-110');
-                    span.prepend(prepared);
-                }
+            com.showConfirm("是否确认拒绝积分", function(){
+                com.post(api.customer.updateVscoreRecordForStatus, {"vscoreRecord.vsrid" : v.vsrid, "vscoreRecord.status" : 2}, function(res){
+                    com.showAlert(com.info, '操作成功');
+                    searcher.doSearch();
+                    check();
+                });
             });
         }
 
         function vscoreSaveBtn(){
             if(com.validate()){
-                return;
+                return false;
             }
             var options = {
-                "vscore.unionId" : vscore.unionId,
-                "vscore.score" : com.focusPage("#vscore").val()
+                "vscore.unionId": vscore.unionId,
+                "vscore.score": com.focusPage("#vscore").val()
             };
             com.post(api.customer.raiseVscore, options, function(){
                 com.showAlert(com.info, "增加积分成功");
@@ -273,8 +240,7 @@ jQuery(function($){
         }
 
         function check(){
-            com.post(api.customer.queryVscoreByUnionId, {"vscore.unionId" :  vscore.unionId}, function(res){
-
+            com.post(api.customer.queryVscoreByUnionId, {"vscore.unionId": vscore.unionId}, function(res){
                 com.focusPage("#result").html(res.vscore.score == null ? 0 : res.vscore.score);
             });
         }

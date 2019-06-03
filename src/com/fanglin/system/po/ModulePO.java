@@ -19,6 +19,8 @@ import javax.persistence.Table;
 public class ModulePO implements Serializable {
 	
 	private static final long serialVersionUID = -8993777631048468352L;
+	
+	public static final short LINK_LINK_INT = 0;
 
 	private int mid;
 	

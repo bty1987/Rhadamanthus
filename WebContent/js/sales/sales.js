@@ -1,7 +1,6 @@
 var salesSubOrderPostData = {};
 
 $(function () {
-
     var salesPostData = {};
     var salesPaymentPostData = [];
     var refundPostData = [];
@@ -194,7 +193,12 @@ $(function () {
                     if (params['urlLoadParams'].type == "dompany") {
                         $btnDiv.append($btnSub).append($btnCollect).append($btnAct).append($btnRefund).appendTo($h3);
                     }else if(params['urlLoadParams'].type == "pompany"){
-                        $btnDiv.append($btnSub).append($btnCollect).append($btnRefund).appendTo($h3);
+                        if (v.fullpayStatus == -1 && v.status != 4) {
+                            $btnDiv.append($btnAdd);
+                        }else{
+                            $btnDiv.append($btnSupplement);
+                        }
+                        $btnDiv.append($btnSub).append($btnMoney).append($btnCollect).append($btnRefund).append($btnPrint).append($btnAct).appendTo($h3);
                     } else {
                         if (v.fullpayStatus == -1 && v.status != 4) {
                             $btnDiv.append($btnAdd);
@@ -262,7 +266,7 @@ $(function () {
                     $btnMoney.click(function () {
 
                         if (v.fullpayStatus == 3) {
-                            layer.msg("款项正在审批中,无法进行操作");
+                            com.showAlert(com.warning, "款项正在审批中,无法进行操作");
                             return false;
                         }
 
@@ -309,9 +313,9 @@ $(function () {
 
                     /*$btnPrint.click(function () {
 
-                        printPayment(v.orderId, v.sid);
+                     printPayment(v.orderId, v.sid);
 
-                    });*/
+                     });*/
 
                     if (!salesDic[v.sid]) {
                         salesDic[v.sid] = $.extend({}, v);
@@ -335,7 +339,7 @@ $(function () {
     })();
 
     /*分页*/
-    var _condArr = ['sales_no', 'sales_orderId', 'sales_instorer', 'sales_salesman', 'sales_deptName'];
+    var _condArr = ['sales_no', 'sales_orderId', 'sales_instorer', 'sales_salesman', 'sales_bid',  'sales_deptName'];
 
     var salesSearcher = new Searcher();
 
@@ -525,7 +529,7 @@ $(function () {
                         }
 
                         if (radios == null || radios == "") {
-                            layer.msg('请选择审批人', {time: 3e3});
+                            com.showAlert(com.warning, "请选择审批人");
                             return false;
                         }
 
@@ -538,7 +542,7 @@ $(function () {
                         com.post(api.approval.submitApprovalForSalesDiscount, _options, function (res) {
                             closefullPaymentlayer();
                             layer.closeAll();
-                            layer.msg("补款申请已提交.");
+                            com.showAlert(com.warning, "补款申请已提交");
                             com.focusPage('#approver').empty();
                         }, function (e) {
                             com.showAlert(com.error, e.errorMsg);
@@ -645,7 +649,7 @@ $(function () {
                 calcFullpayment(sales.total);
                 hideButtons([querySales.fullPaymentRefundBtn, querySales.couponBtn, querySales.malingBtn, querySales.depositCancelBtn, querySales.depositPaymentBtn, querySales.depositRefundBtn]);
                 showButtons([querySales.fullCancelBtn]);
-                addReadonly([querySales.depositPayment])
+                addReadonly([querySales.depositPayment]);
                 furspid = res.salesPayment.spid;
 
             }, function (e) {

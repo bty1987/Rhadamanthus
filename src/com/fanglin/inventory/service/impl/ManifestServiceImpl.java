@@ -837,7 +837,7 @@ public class ManifestServiceImpl implements ManifestService {
 			float outprice = manifestItemVO.getOutprice();
 			float num = manifestItemVO.getNum();
 
-			StorehousePO outStorehousePO = goodsStorehouseStockService.instorehouse(gid, cid, fid, manifestItemVO.getOutstorehouse().getShid(), num);
+			StorehousePO outStorehousePO = goodsStorehouseStockService.outstorehouse(gid, cid, fid, manifestItemVO.getOutstorehouse().getShid(), num);
 			manifestItemPO = new ManifestItemPO().init(manifestPO.getMid(), null, null, null, null, gid, cid, fid, ManifestPO.TYPE_CL_INT, 0, outprice, num, null, outStorehousePO);
 
 			manifestItemDao.save(manifestItemPO);

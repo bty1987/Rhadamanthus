@@ -18,7 +18,7 @@ jQuery(function($) {
 			var options = {};
 			options["materialItem.mid"] = materialSubOrderPostData["materialSubOrder.msoId"];
 			com.post(api.material.queryMaterialItemByMid, options, function(res){
-				
+
 				$.exceler({
 					column : [
 						["名称","name"],
@@ -51,13 +51,13 @@ jQuery(function($) {
 
 			$checkedItems.each(function(i, e){
 				var $this = $(this);
-				
+
 				var $line = $this.parents('.line');
-				
+
 				if($line.attr('packageName') != ''){
 					$.each(com.focusPage('[packageName=' + $line.attr('packageName') + ']'), function(i, v){
 						var $li = $(v);
-						
+
 						var $option = $li.find('.option');
 						var $check = $option.find('label');
 						var $refund = $option.children('input[name="refundnum"]').val(null);
@@ -72,7 +72,7 @@ jQuery(function($) {
 					$refund.removeClass('hide');
 				}
 			});
-			
+
 			$(this).addClass('hide');
 			materialSubOrderDetail.refundCommitBtn.removeClass('hide');
 			materialSubOrderDetail.refundCancelBtn.removeClass('hide');
@@ -118,32 +118,32 @@ jQuery(function($) {
 		}),
 		//退货确认按钮
 		refundCommitBtn : com.focusPage("#refundCommitBtn").click(function(){
-			
+
 			com.focusPage('.popover.fade').remove(); // 取消提示信息
 
 			var $checkedItems = com.focusPage("[name='refundnum']:visible", '#list');
-			
+
 			var index = 0;
 			var numRex = /^(\d+|\d+\.[0-9]{1,4})$/;
 			var refundFlag = true;
 			var totalPrice = 0;
 			var options = {};
-			
+
 			$checkedItems.each(function(i, e){
 				var linetotal = 0;
-				
+
 				var $this = $(this);
 				var $line = $this.parents('li.line');
-				
+
 				if($line.attr('level') == 0 && $line.attr('isleaf') == 'false'){
 					var $numOld = $line.find('.total'), $numNew = $this.parents('.option').children('input[name="refundnum"]');
 				}else{
 					var $numOld = $line.find('.num'), $numNew = $this.parents('.option').children('input[name="refundnum"]');
 				}
 				var _numOld = parseFloat($numOld.text()), _numNew = parseFloat($numNew.val());
-				
+
 				var _price = parseFloat($line.find('.price').text());
-				
+
 				if(!numRex.test(_numNew)){
 					$numNew.focus().select();
 					$numNew.addClass('tooltip-info').attr({
@@ -169,9 +169,9 @@ jQuery(function($) {
 					refundFlag = false;
 					return false;
 				}
-				
+
 				$numNew.popover('destroy');
-				
+
 				if($line.attr('level') == 0 && $line.attr('isleaf') == 'true'){
 
 					linetotal= utils.changeTwoDecimal(utils.accMul(_numNew, _price));
@@ -179,7 +179,7 @@ jQuery(function($) {
 					options["approvalMaterialRefundItems[" + index + "].materialItem.miid"] = $line.attr('msoiid');
 					options["approvalMaterialRefundItems[" + index + "].num"] = _numNew;
 					options["approvalMaterialRefundItems[" + index + "].total"] = linetotal;
-					
+
 					index++;
 				}else if($line.attr('level') == 1 && $line.attr('isleaf') == 'true'){
 					_numNew = utils.changeTwoDecimal(parseFloat($line.find('input').val()));
@@ -187,14 +187,14 @@ jQuery(function($) {
 					options["approvalMaterialRefundItems[" + index + "].materialItem.miid"] = $line.attr('msoiid');
 					options["approvalMaterialRefundItems[" + index + "].num"] = _numNew;
 					options["approvalMaterialRefundItems[" + index + "].total"] = _totalNew;
-					
+
 					index++;
 				}else{
 					linetotal = utils.changeTwoDecimal(parseFloat($line.find('input[name="refundnum"]').val()));
 					totalPrice = utils.changeTwoDecimal(parseFloat(utils.accAdd(totalPrice, linetotal)));
 
 				}
-				
+
 				$numNew.attr({
 					"data-resnum" : utils.accSub(_numOld,_numNew),
 					//"data-restotal" : utils.changeTwoDecimal(utils.accMul(utils.accSub(_numOld,_numNew), _price))
@@ -202,14 +202,14 @@ jQuery(function($) {
 
 				});
 			});
-			
+
 			if(!refundFlag){
 				return;
 			}
-			
+
 			com.focusPage("#refundTotal").val(totalPrice);
 			refundMaterialSubOrderItemData = options;
-			
+
 			materialSubOrderDetail.refundType = 0;
 			approvalUtils.initqueryApprovalUser('approvalUser',6);
 			materialSubOrderDetail.rejectMaterialSubOrderModal.modal("show");
@@ -217,19 +217,19 @@ jQuery(function($) {
 		}),
 		//退货取消按钮
 		refundCancelBtn : com.focusPage("#refundCancelBtn").click(function(){
-			
+
 			com.focusPage('.popover.fade').remove(); // 取消提示信息
-			
+
 			var $checkedItems = com.focusPage("[name='refund']:checked", '#list');
 			$checkedItems.each(function(i, e){
 				var $this = $(this);
-				
+
 				var $line = $this.parents('.line');
-				
+
 				if($line.attr('packageName') != ''){
 					$.each($('[packageName=' + $line.attr('packageName') + ']'), function(i, v){
 						var $li = $(v);
-						
+
 						var $option = $li.find('.option');
 						var $check = $option.find('label');
 						var $refund = $option.children('input[name="refundnum"]').val(null);
@@ -243,7 +243,7 @@ jQuery(function($) {
 					$check.removeClass('hide');
 					$refund.addClass('hide');
 				}
-				
+
 				$this.removeAttr('checked');
 			});
 
@@ -256,7 +256,7 @@ jQuery(function($) {
 
 		modal: null,
 		materialSubOrderDetailItems: {},
-		
+
 		refundType: 0,
 
 		columnNames:["materialModelNo", "materialModelName", "materialTypeName", "materialBrandName", "measurementUnitName"],
@@ -289,7 +289,7 @@ jQuery(function($) {
 	materialSubOrderItemPostData["materialSubOrder.venderMaling"] = materialSubOrderPostData["materialSubOrder.venderMaling"];
 
 	com.initChosen('approver', api.system.queryApproveUserForNameByType, "user.userNamePinYin", {"approveUser.type": 6}, "autoFillKeyValue", "key", "value");
-	
+
 	function initList(){
 		var options = {};
 		options["materialItem.mid"] = materialSubOrderPostData["materialSubOrder.msoId"];
@@ -301,7 +301,7 @@ jQuery(function($) {
 			});
 		}, null, false);
 	}
-	
+
 	initList();
 
 	//添加一行
@@ -415,7 +415,7 @@ jQuery(function($) {
 			}else if(fullStatus == 2 || fullStatus == 3){
 				$check = $('<label></label>').append($('<input>').addClass('cbox ace').attr({name: "refund", type: "checkbox" , role: "checkbox"}).css({"width": "auto"})).append('<span class="lbl align-top"></span>');
 				$refund = $('<input type="text" name="refundnum" placeholder="总数">').addClass('hide');
-				
+
 				if($line.attr('level') == '1' && $line.attr('isleaf') == 'true'){
 					$option.append($refund);
 				}else{
@@ -454,59 +454,55 @@ jQuery(function($) {
 	}
 
 	function deleteAll($line, v){
-		bootbox.confirm("确认删除吗?", function(res){
-			if(res){
-				var options = {};
-				var materialSubOrderItem = v;
+        com.showConfirm("确认删除吗?", function () {
+            var options = {};
+            var materialSubOrderItem = v;
 
-				var arr = com.focusPage( 'li.line[packageName="'+ v.packageName +'"][isLeaf="true"]','#list');
+            var arr = com.focusPage('li.line[packageName="' + v.packageName + '"][isLeaf="true"]', '#list');
 
-				options["mid"] = materialSubOrderItem.mid;
+            options["mid"] = materialSubOrderItem.mid;
 
-				arr.each(function(i){
-					var $this = $(this);
-					options["miids["+i+"]"] = $this.attr('msoiId');
-				});
+            arr.each(function (i) {
+                var $this = $(this);
+                options["miids[" + i + "]"] = $this.attr('msoiId');
+            });
 
-				com.post(api.material.deleteMaterialItem, options, function(result){
-					com.showAlert(com.info, "数据删除成功!");
-					initList();
+            com.post(api.material.deleteMaterialItem, options, function (result) {
+                com.showAlert(com.info, "数据删除成功!");
+                initList();
 
-				}, function(result){
-					com.showAlert(com.error, "数据删除失败!");
-				});
-			}
-		});
+            }, function (result) {
+                com.showAlert(com.error, "数据删除失败!");
+            });
+        });
 	}
 
 	function deleteMaterialSubOrderItem($line, v){ // 删除
 
-		bootbox.confirm("确认删除吗?", function(res){
-			if(res){
-				var options = {};
-				var materialSubOrderItem = v;
+        com.showConfirm("确认删除吗?", function () {
+            var options = {};
+            var materialSubOrderItem = v;
 
-				options["mid"] = materialSubOrderItem.mid;
-				options["miids[0]"] = materialSubOrderItem.miid;
+            options["mid"] = materialSubOrderItem.mid;
+            options["miids[0]"] = materialSubOrderItem.miid;
 
-				com.post(api.material.deleteMaterialItem, options, function(result){
-					com.showAlert(com.info, "数据删除成功!");
-					$line.remove();
-					if(result.redirect == 1 || result.redirect == "1"){
-						com.focusPage("#materialOrderPageContent").load(api.index.materialIndex.url);
-					}else{
-						reorder();
-					}
+            com.post(api.material.deleteMaterialItem, options, function (result) {
+                com.showAlert(com.info, "数据删除成功!");
+                $line.remove();
+                if (result.redirect == 1 || result.redirect == "1") {
+                    com.focusPage("#materialOrderPageContent").load(api.index.materialIndex.url);
+                } else {
+                    reorder();
+                }
 
-				}, function(result){
-					alert(result);
-					console.log(result);
-					com.showAlert(com.error, "数据删除失败!");
-				});
-			}
-		});
+            }, function (result) {
+                alert(result);
+                console.log(result);
+                com.showAlert(com.error, "数据删除失败!");
+            });
+        });
 	}
-	
+
 	function reorder(){ // 重排序
 		var $list = com.focusPage('.line', '#list');
 		$list.length && $list.each(function(i){
@@ -614,7 +610,7 @@ jQuery(function($) {
 
 		_price = parseFloat(materialSubOrderItem.price);
 		_total = utils.changeTwoDecimal(utils.accMul(_price, _numNew));
-		
+
 		var options = {};
 		options["materialItem.miid"] = materialSubOrderItem.miid;
 		options["materialItem.no"] = materialSubOrderItem.no;
@@ -700,34 +696,34 @@ jQuery(function($) {
 			com.showAlert(com.info, "数据提交成功!");
 
 			initList();
-			
+
 			materialSubOrderDetail.refundBtn.removeClass('hide');
 			materialSubOrderDetail.refundCommitBtn.addClass('hide');
 			materialSubOrderDetail.refundCancelBtn.addClass('hide');
-			
+
 			materialSubOrderDetail.saveRefundBtn.button('reset');
-			
+
 			materialSubOrderDetail.rejectMaterialSubOrderModal.modal("hide");
 		}, function(result){
 			com.showAlert(com.error, result.errorMsg);
 			materialSubOrderDetail.saveRefundBtn.button('reset');
 		});
 	}
-	
+
 	function fullFunctionData(options){
-		
+
 		var index = 0;
 		var total = 0;
 		var totalPrice = 0;
 
 		com.focusPage('#list>li').each(function(i, e){
-			  
+
 			  var linetotal = 0;
-			  
+
 			  var $line = $(e);
-			  
+
 			  if($line.attr('level') == 0 && $line.attr('isleaf') == 'true'){
-			    
+
 			    totalPrice = utils.changeTwoDecimal(utils.accAdd(totalPrice, parseFloat($line.attr('total'))));
 
 			    options["approvalMaterialRefundItems[" + index + "].materialItem.miid"] = $line.attr('msoiid');
@@ -746,7 +742,7 @@ jQuery(function($) {
 			    totalPrice = utils.changeTwoDecimal(utils.accAdd(totalPrice, $line.attr('total')));
 			  }
 		});
-		
+
 		return totalPrice;
 	}
 

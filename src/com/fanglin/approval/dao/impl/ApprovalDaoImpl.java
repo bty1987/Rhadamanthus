@@ -120,7 +120,23 @@ public class ApprovalDaoImpl extends DaoImpl<ApprovalPO> implements ApprovalDao 
 
 		return count.intValue();
 	}
+	
 
+	@Override
+	public int countApprovalForReceive(short status, int ruid, int company) {
+		String sql = "SELECT COUNT(*) from approval.approval where ruid = :ruid and `status` = :status and company = :company";
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setShort("status", status).setInteger("ruid", ruid).setInteger("company", company).uniqueResult();
+		return count.intValue();
+	}
+	
+
+	@Override
+	public int countApprovalForSend(short status, int suid, int company) {
+		String sql = "SELECT COUNT(*) from approval.approval where suid = :suid and `status` = :status and company = :company";
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setShort("status", status).setInteger("suid", suid).setInteger("company", company).uniqueResult();
+		return count.intValue();
+	}
+	
 	public void queryFilterExcute(List<Filter> filters, PagingQuery<ApprovalPO> query) {
 
 		for (Filter filter : filters) {
@@ -176,5 +192,6 @@ public class ApprovalDaoImpl extends DaoImpl<ApprovalPO> implements ApprovalDao 
 		}
 
 	}
+
 
 }

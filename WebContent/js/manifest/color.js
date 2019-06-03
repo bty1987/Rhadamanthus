@@ -3,7 +3,7 @@ $(function(){
 	
 	var goods = {
 		gid: params["goods.gid"],
-	}
+	};
 
     var displayFunc  = (function(){
 
@@ -81,7 +81,7 @@ $(function(){
             $btnStart.click(function(){
             	
             	if(v.status == 0){
-            		layer.msg('已启动');
+            		com.showAlert(com.warning, "已启动");
             		return false;
             	}
             	
@@ -91,7 +91,7 @@ $(function(){
             $btnBan.click(function(){
             	
             	if(v.status == 1){
-            		layer.msg('已禁用');
+            		com.showAlert(com.warning, "已禁用");
             		return false;
             	}
             	
@@ -125,7 +125,7 @@ $(function(){
     	var options = {
 			"color.cid": cid,
             "color.status": status
-    	}
+    	};
     	
     	com.post(api.inventory.updateColorForStatus, options, function (res) {
             doSearcher();

@@ -1,12 +1,5 @@
 jQuery(function () {
 
-    if (jQuery().datepicker) {
-        com.focusPage('.date-picker').datepicker({
-            format: 'yyyy-mm-dd',
-            autoclose:true
-        });
-    }
-
     var accessories = {
         
         postData: {
@@ -35,24 +28,22 @@ jQuery(function () {
         constructionNode: {}
     };
     
+    com.focusPage('.date-picker').datepicker(com.datepickerdefault);
+    
     com.post(api.data.queryConstructionNode, {}, function(res){
         $.each(res.constructionNodes, function(i, v){
             accessories.constructionNode[v.sort] = v.name;
         });
     });
     
-    com.initAutoFill("goodsName", api.inventory.queryGoodsByName, "goods.pinyin", {}, "goodes", "gid", "name", function(list, k, v){
-    	if(com.focusPage('li[data-gid="' + k +'"]').length != 0){
-            com.showAlert(com.error, "商品已存在");
-            return "";
-        }
-    	
+    com.initTypeahead("goodsName", api.inventory.queryGoodsByName, "goods.name", {}, "goodes", "gid", "name", function(list, k, v){
+
         $.each(list, function (index, val) {
-            
+
             if (val.gid == k) {
-                
+
                 accessories.leftitems.goodsHidden.attr('data-gid', val.gid).attr('data-type', val.type).attr('data-selling', val.selling);
-                
+
                 accessories.leftitems.goodsNo.attr('data-no', val.no).val(val.no);
                 accessories.leftitems.category.attr('data-category', val.category).val(val.category);
                 accessories.leftitems.brand.attr('data-brand', val.brand).val(val.brand);
@@ -63,48 +54,6 @@ jQuery(function () {
         return v;
     });
     
-    /*
-    accessories.leftitems.goodsName.typeahead({
-        url: api.inventory.queryGoodsByName,
-        list: [],
-        postData: {},
-        source: function (query, process) {
-            var params = {"goods.pinyin": query};
-            com.post(this.options.url, params, $.proxy(this.options.callback, this));
-        }, matcher: function (item) {
-            return true;
-        }, callback: function (data) {
-            this.options.list = data['goodes'];
-            this.flprocess(this.options.list, 'gid', 'name');
-        },
-        isResultTypeMap: true,
-        flupdater: function (k, v) {
-
-            if(com.focusPage('li[data-gid="' + k +'"]').length != 0){
-                com.showAlert(com.error, "商品已存在");
-                return "";
-            }
-            
-            var list = this.options.list;
-
-            $.each(list, function (index, val) {
-                
-                if (val.gid == k) {
-                    
-                    accessories.leftitems.goodsHidden.attr('data-gid', val.gid).attr('data-type', val.type).attr('data-selling', val.selling);
-                    
-                    accessories.leftitems.goodsNo.attr('data-no', val.no).val(val.no);
-                    accessories.leftitems.category.attr('data-category', val.category).val(val.category);
-                    accessories.leftitems.brand.attr('data-brand', val.brand).val(val.brand);
-                    accessories.leftitems.measurementUnit.attr('data-measurementUnit', val.measurementUnit).val(val.measurementUnit);
-                }
-            });
-
-            return v;
-        }
-    });
-    */
-
     com.focusPage("#add").click(function () {
         
         if(com.validate("left", "left")){

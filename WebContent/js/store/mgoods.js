@@ -151,40 +151,32 @@ $(function () {
 
             //状态启用事件
             $btnStart.click(function () {
-                layer.confirm('是否启用?', {
-                    btn: ['确定', '取消'] //按钮
-                }, function (index, layero) {
+                
+                com.showConfirm("是否确认启用", function(){
                     com.focusPage('#layerAdd').attr('data-gid', v.gid);
                     com.focusPage('#layerAdd').attr('data-status', v.status);
+                    
                     var id = com.focusPage('#layerAdd').attr('data-gid');
                     var status = com.focusPage('#layerAdd').attr('data-status');
-                    startGoodsStatus(id, status, function () {
-                        layer.closeAll();
-                        layer.msg('启用成功', {icon: 1, time: 2e3});
-                        com.focusPage('#layerAdd').attr({'data-gid': null, 'data-status': null});
-                    });
-                }, function () {
-
+                    
+                    startGoodsStatus(id, status);
                 });
             });
+            
             //状态禁用事件
             $btnStop.click(function () {
-                layer.confirm('是否禁用?', {
-                    btn: ['确定', '取消'] //按钮
-                }, function (index, layero) {
+                
+                com.showConfirm("是否确认禁用", function(){
                     com.focusPage('#layerAdd').attr('data-gid', v.gid);
                     com.focusPage('#layerAdd').attr('data-status', v.status);
+                    
                     var id = com.focusPage('#layerAdd').attr('data-gid');
                     var status = com.focusPage('#layerAdd').attr('data-status');
-                    stopGoodsStatus(id, status, function () {
-                        layer.closeAll();
-                        layer.msg('禁用成功', {icon: 1, time: 2e3});
-                        com.focusPage('#layerAdd').attr({'data-gid': null, 'data-status': null});
-                    });
-                }, function () {
-
+                    
+                    stopGoodsStatus(id, status);
                 });
             });
+            
             return $liLine;
         };
         return {
@@ -357,39 +349,23 @@ $(function () {
     }
 
     //状态启用
-    function startGoodsStatus(id, status, callback) {
-        if (status == "1") {
-            com.post(api.store.updateMgoodsForStatus, {
-                "mgoods.gid": id,
-                "mgoods.status": "0"
-            }, function (res) {
-                callback();
-                searcher.doSearch();
-            });
-        } else {
-            layer.alert('已经启用', {
-                icon: 0,
-                skin: 'layer-ext-moon' //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
-            });
-        }
+    function startGoodsStatus(id, status) {
+        com.post(api.store.updateMgoodsForStatus, {
+            "mgoods.gid": id,
+            "mgoods.status": "0"
+        }, function (res) {
+            searcher.doSearch();
+        });
     }
 
     //状态禁用
-    function stopGoodsStatus(id, status, callback) {
-        if (status == "0") {
-            com.post(api.store.updateMgoodsForStatus, {
-                "mgoods.gid": id,
-                "mgoods.status": "1"
-            }, function (res) {
-                callback();
-                searcher.doSearch();
-            });
-        } else {
-            layer.alert('已经禁用', {
-                icon: 0,
-                skin: 'layer-ext-moon' //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
-            });
-        }
+    function stopGoodsStatus(id, status) {
+        com.post(api.store.updateMgoodsForStatus, {
+            "mgoods.gid": id,
+            "mgoods.status": "1"
+        }, function (res) {
+            searcher.doSearch();
+        });
     }
 
     function edits(v) {

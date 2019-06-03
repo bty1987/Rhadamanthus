@@ -129,10 +129,8 @@ $(function () {
 
                 var id = com.focusPage('#layerAdd').attr('data-fid');
                 var status = com.focusPage('#layerAdd').attr('data-status');
-                zero(id, status, function () {
-                    layer.msg('设置成功', {icon: 1});
-                    doSearcher();
-                });
+                
+                zero(id, status);
             });
             /*无效状态*/
             $btnStop.click(function () {
@@ -142,10 +140,7 @@ $(function () {
                 var id = com.focusPage('#layerAdd').attr('data-fid');
                 var status = com.focusPage('#layerAdd').attr('data-status');
 
-                one(id, status, function () {
-                    layer.msg('设置成功', {icon: 1});
-                    doSearcher()
-                });
+                one(id, status);
             });
 
             /*人气状态*/
@@ -155,10 +150,8 @@ $(function () {
 
                 var id = com.focusPage('#layerAdd').attr('data-fid');
                 var status = com.focusPage('#layerAdd').attr('data-status');
-                two(id, status, function () {
-                    layer.msg('设置成功', {icon: 1});
-                    doSearcher();
-                });
+                
+                two(id, status);
             });
 
             /*推荐状态*/
@@ -168,10 +161,8 @@ $(function () {
 
                 var id = com.focusPage('#layerAdd').attr('data-fid');
                 var status = com.focusPage('#layerAdd').attr('data-status');
-                three(id, status, function () {
-                    layer.msg('设置成功', {icon: 1});
-                    doSearcher();
-                });
+                
+                three(id, status);
             });
             return $liLine;
         };
@@ -335,72 +326,41 @@ $(function () {
     addline(1).addClass('current').appendTo('#list');
 
     /*状态信息验证*/
-    function zero(id, status, callback) {
-        if (status != "0") {
-            com.post(api.store.updateMpriceForStatus, {
-                "mprice.pid": id,
-                "mprice.status": "0"
-            }, function (res) {
-                callback();
-                doSearcher()
-            })
-        } else {
-            layer.alert('已是有效状态', {
-                icon: 0,
-                skin: 'layer-ext-moon' //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
-            })
-        }
+    function zero(id, status) {
+        com.post(api.store.updateMpriceForStatus, {
+            "mprice.pid": id,
+            "mprice.status": "0"
+        }, function (res) {
+            doSearcher()
+        });
     }
 
-    function one(id, status, callback) {
-        if (status != "1") {
-            com.post(api.store.updateMpriceForStatus, {
-                "mprice.pid": id,
-                "mprice.status": "1"
-            }, function (res) {
-                callback();
-                doSearcher()
-            })
-        } else {
-            layer.alert('已是无效状态', {
-                icon: 0,
-                skin: 'layer-ext-moon' //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
-            })
-        }
+    function one(id, status) {
+        com.post(api.store.updateMpriceForStatus, {
+            "mprice.pid": id,
+            "mprice.status": "1"
+        }, function (res) {
+            doSearcher()
+        });
     }
 
-    function two(id, status, callback) {
-        if (status != "2") {
-            com.post(api.store.updateMpriceForStatus, {
-                "mprice.pid": id,
-                "mprice.status": "2"
-            }, function (res) {
-                callback();
-                doSearcher()
-            })
-        } else {
-            layer.alert('已是人气状态', {
-                icon: 0,
-                skin: 'layer-ext-moon' //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
-            })
-        }
+    function two(id, status) {
+        com.post(api.store.updateMpriceForStatus, {
+            "mprice.pid": id,
+            "mprice.status": "2"
+        }, function (res) {
+            doSearcher()
+        });
     }
 
-    function three(id, status, callback) {
-        if (status != "3") {
-            com.post(api.store.updateMpriceForStatus, {
-                "mprice.pid": id,
-                "mprice.status": "3"
-            }, function (res) {
-                callback();
-                doSearcher()
-            })
-        } else {
-            layer.alert('已是推荐状态', {
-                icon: 0,
-                skin: 'layer-ext-moon' //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
-            })
-        }
+    function three(id, status) {
+        com.post(api.store.updateMpriceForStatus, {
+            "mprice.pid": id,
+            "mprice.status": "3"
+        }, function (res) {
+            callback();
+            doSearcher()
+        });
     }
 
     com.focusPage('.layui-layer-content').css('overflow', 'hidden');

@@ -434,7 +434,7 @@ $(function () {
         div.appendChild(arrow);
 
         circle.appendChild(div);
-        return circle;// 当调用map.removeOverlay或者map.clearOverlays方法时,API会自动将initialize方法返回的DOM元素进行移除。
+        return circle;// 当调用map.removeOverlay或者map.clearOverlays方法时,API会自动将initialize方法返回的DOM元素进行移除.
     };
 
     ComplexCustomOverlay.prototype.draw = function () {

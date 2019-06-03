@@ -39,10 +39,6 @@ import com.opensymphony.xwork2.ActionSupport;
 @ParentPackage("common")
 @Namespace("/")
 @Controller
-/*@Results({ 
-	@Result(name = BaseAction.BACKVALUE_LOGIN_STR, location = "login", type = "chain")
-})
-@ExceptionMappings({ @ExceptionMapping(exception = "java.lange.RuntimeException", result = "error") }) */
 public class BaseAction extends ActionSupport implements ServletRequestAware, ServletResponseAware {
 
 	private static final long serialVersionUID = 1638203239536571772L;
@@ -66,8 +62,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 			String authentication = getAuthentication();
 		
 			if(authentication != null){
-				String encryptKey = SystemConfig.getString("encryptKey");
-				String decryptString = AESHelper.decryptString(authentication, encryptKey);
+				String decryptString = AESHelper.decrypt(authentication, SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv"));
 				
 				Authentication authenticationUtil = new Authentication(decryptString);
 				if(authenticationUtil.getUpdateTime() != -1){
@@ -88,8 +83,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 			String authentication = getAuthentication();
 		
 			if(authentication != null){
-				String encryptKey = SystemConfig.getString("encryptKey");
-				String decryptString = AESHelper.decryptString(authentication, encryptKey);
+				String decryptString = AESHelper.decrypt(authentication, SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv"));
 				
 				Authentication au = new Authentication(decryptString);
 				if(au.getUpdateTime() != -1){
@@ -110,8 +104,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 			String authentication = getAuthentication();
 		
 			if(authentication != null){
-				String encryptKey = SystemConfig.getString("encryptKey");
-				String decryptString = AESHelper.decryptString(authentication, encryptKey);
+				String decryptString = AESHelper.decrypt(authentication, SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv"));
 				
 				Authentication au = new Authentication(decryptString);
 				if(au.getUpdateTime() != -1){
@@ -134,7 +127,8 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 			
 			if(authentication != null){
 				String encryptKey = SystemConfig.getString("encryptKey");
-				String decryptString = AESHelper.decryptString(authentication, encryptKey);
+				String encryptIv = SystemConfig.getString("encryptIv");
+				String decryptString = AESHelper.decrypt(authentication, encryptKey, encryptIv);
 				
 				Authentication au = new Authentication(decryptString);
 				if(au.getUpdateTime() != -1){
@@ -163,7 +157,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 				throw new FLException(110005, "系统处理问题");
 			}
 			
-			authentication = new Authentication(AESHelper.decryptString(au, SystemConfig.getString("encryptKey")));
+			authentication = new Authentication(AESHelper.decrypt(au, SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv")));
 		} catch (Exception e) {
 			throw new FLException(110005, "系统处理问题");
 		}

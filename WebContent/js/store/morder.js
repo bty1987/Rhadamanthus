@@ -100,14 +100,14 @@ jQuery(function ($) {
 
             $deliver.click(function () {
                 one(v.oid, status, function () {
-                    layer.msg('成功', {icon: 1});
+                    com.showAlert(com.info, "操作成功");
                     searcher.doSearch();
                 });
             });
 
             $collect.click(function () {
                 two(v.oid, status, function () {
-                    layer.msg('成功', {icon: 1});
+                    com.showAlert(com.info, "操作成功");
                     searcher.doSearch();
                 });
             });
@@ -117,36 +117,28 @@ jQuery(function ($) {
             });
 
             function one(id, status, callback) {
-                bootbox.confirm("确认发货吗?", function (res) {
-                    if (res) {
-                        if (status != "1") {
-                            com.post(api.store.updateMorderForStatus, {
-                                "morder.oid": id,
-                                "morder.status": "2"
-                            }, function (res) {
-                                callback();
-                                searcher.doSearch();
-                            })
-                        }
+                com.showConfirm("是否确认发货", function(){
+                    if (status != "1") {
+                        com.post(api.store.updateMorderForStatus, {"morder.oid": id, "morder.status": "2"}, function (res) {
+                            callback();
+                            searcher.doSearch();
+                        })
                     }
-                })
+                });
             }
 
             function two(id, status, callback) {
-                bootbox.confirm("确认收货吗?", function (res) {
-                    if (res) {
-                        if (status != "2") {
-                            com.post(api.store.updateMorderForStatus, {
-                                "morder.oid": id,
-                                "morder.status": "3"
-                            }, function (res) {
-                                callback();
-                                searcher.doSearch();
-                            })
-                        }
+                
+                com.showConfirm("是否确认收货", function(){
+                    if (status != "2") {
+                        com.post(api.store.updateMorderForStatus, {"morder.oid": id, "morder.status": "3"}, function (res) {
+                            callback();
+                            searcher.doSearch();
+                        })
                     }
-                })
+                });
             }
+            
             return $liLine;
         };
 

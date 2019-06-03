@@ -65,7 +65,6 @@ jQuery(function($){
         "timestamp": new Date().getTime()
     }, function (res) {
         approvalTrack.approvalType = res.approvalType;
-        //approvalTrack.approvalTypeData = {};
 
         for (var i = 0; i < approvalTrack.approvalType.length; i++) {
             var _ = approvalTrack.approvalType[i];
@@ -116,7 +115,7 @@ jQuery(function($){
                 $liProperty.appendTo($ulProperty);
             });
 
-            var $content = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix').append($('<li></li>').append($('<strong></strong>').append($('<b></b>').text(v.contents).addClass("grey"))));
+            var $content = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix').append($('<li></li>').append($('<strong></strong>').append($('<b></b>').text(v.contents==null?"":v.contents).addClass("grey"))));
 
 
             $divBtnWrap.appendTo($h3);

@@ -23,14 +23,17 @@ public class RoleModulePO implements java.io.Serializable {
 	
 	private ModulePO module;
 	
+	private short link;
+	
 	public RoleModulePO() {
 		super();
 	}
 	
-	public RoleModulePO(ModulePO module, int rid) {
+	public RoleModulePO(ModulePO module, int rid, short link) {
 		super();
 		this.module = module;
 		this.rid = rid;
+		this.link = link;
 	}
 
 	@Id
@@ -61,6 +64,14 @@ public class RoleModulePO implements java.io.Serializable {
 
 	public void setModule(ModulePO module) {
 		this.module = module;
+	}
+
+	public short getLink() {
+		return link;
+	}
+
+	public void setLink(short link) {
+		this.link = link;
 	}
 
 }
