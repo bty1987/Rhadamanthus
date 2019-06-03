@@ -5,7 +5,11 @@ $(function () {
         saveBtn: com.focusPage("#addplanBtn").on("click", saveData),// 绑定事件
         cancelBtn: com.focusPage("#cancelplanBtn"),//取消
         modal: com.focusPage("#addplanModal"),//添加
-        planItems: {},
+        planItems: {
+            executeDate : com.focusPage("#executeDate"),
+            executeTime : com.focusPage("#executeTime"),
+            task : com.focusPage("#task")
+        },
         editFlg: false,
         currentTime: getNowFormatDate().substr(2, 10),
         taskContent: {}
@@ -16,9 +20,7 @@ $(function () {
     planUtils.bindDateRangePicker("input[name='date-range-picker']", 1070);
     planUtils.bindExecuteTimeBtn("#executeTime");
     var lists = {};
-    plan.planItems.executeDate = com.focusPage("#executeDate");
-    plan.planItems.executeTime = com.focusPage("#executeTime");
-    plan.planItems.task = com.focusPage("#task");
+    
     var idValue;
     var letter;
     var keywordName;

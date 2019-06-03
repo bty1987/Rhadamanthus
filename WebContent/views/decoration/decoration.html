@@ -98,11 +98,61 @@
                 <div class="modal-body">
                     <form class="form-horizontal">
 
-                        <div class="well">
-                            <h4 class="green smaller lighter">说明</h4>
-                            <p>申请放线时间不等同于最终放线时间 .</p>
+                        <h4 class="oid">合同信息</h4>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">工期:</label>
+                            <span class="col-xs-10 col-sm-6" style="margin-top: 5px;" id="working"></span>
                         </div>
 
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">开工时间:</label>
+                            <span class="col-xs-10 col-sm-6" style="margin-top: 5px;" id="start"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">完工时间:</label>
+                            <span class="col-xs-10 col-sm-6" style="margin-top: 5px" id="end"></span>
+                        </div>
+                        <hr>
+                        <h4 class="oid">客户信息</h4>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">姓名:</label>
+                            <span class="col-xs-10 col-sm-6" style="margin-top: 5px;" id="customerCurrentName"></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">身份证信息:</label>
+                            <span class="col-xs-10 col-sm-6" style="margin-top: 5px;" id="identity"></span>
+                        </div>
+                        <hr>
+                        <h4 class="oid">工程信息</h4>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">铲大白</label>
+                            <div class="col-md-9">
+                                <select id='ishovel' class='col-xs-10 col-sm-6'></select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">钥匙</label>
+                            <div class="col-sm-9">
+                                <select id='iskey' class='col-xs-10 col-sm-6'></select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">开工仪式</label>
+                            <div class="col-sm-9">
+                                <select id='isCeremony' class='col-xs-10 col-sm-6'></select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">备注说明</label>
+                            <div class="col-md-9">
+                                <textarea id="comment" maxlength="128" class="col-xs-10 col-sm-6" rows="3"></textarea>
+                                <button type="button" id="updateProject" class="btn btn-minier btn-yellow" style="margin-left: 155px;margin-top: 30px;">修改</button>
+                            </div>
+                        </div>
+                        <hr>
+                        <h4 class="oid">放线说明</h4>
                         <div class="form-group">
                             <input class="hide" id="dischargeLineOrderId" type="text"/>
                             <label for="applayTime" class="col-sm-3 control-label no-padding-right">放线时间</label>

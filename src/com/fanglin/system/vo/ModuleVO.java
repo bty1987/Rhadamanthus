@@ -29,6 +29,8 @@ public class ModuleVO implements Serializable {
 	
 	private String helpKey;
 	
+	private Short link;
+	
 	public Integer getMid() {
 		return mid;
 	}
@@ -115,6 +117,14 @@ public class ModuleVO implements Serializable {
 
 	public void setHelpKey(String helpKey) {
 		this.helpKey = helpKey;
+	}
+
+	public Short getLink() {
+		return link;
+	}
+
+	public void setLink(Short link) {
+		this.link = link;
 	}
 	
 }

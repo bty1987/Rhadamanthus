@@ -23,7 +23,7 @@ jQuery(function ($) {
         repeatFlg: false
     };
 
-    com.focusPage('.date-picker').datepicker({autoclose: true});
+    com.focusPage('.date-picker').datepicker(com.datepickerdefault);
 
     record.recordItems.startTime.timepicker({minuteStep: 1, showSeconds: true, showMeridian: false});
     record.recordItems.endTime.timepicker({minuteStep: 1, showSeconds: true, showMeridian: false});

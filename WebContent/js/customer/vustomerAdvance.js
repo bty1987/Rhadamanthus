@@ -13,7 +13,7 @@ $(function(){
     vustomer.bindSaveBtn = com.focusPage("#bindSaveBtn").on("click", bindOrderData);
     vustomer.vustomerSaveBtn = com.focusPage('#vustomerSaveBtn').on('click', changeBelonger);
 
-    com.initChosen('belonger', api.personel.queryUserByPinyin, "pinyinName", {"duty":"", "user.status":0}, "userBases", "uid", "currentName");
+    com.initTypeahead('belonger', api.personel.queryUserByPinyin, "pinyinName", {"duty":"", "user.status":0}, "userBases", "uid", "currentName", null);
     var displayFunc  = (function(){
 
         var renderList = function(tableId,listData){
@@ -99,7 +99,7 @@ $(function(){
             $edit.click(function(){
                 vustomer.vid = v.vid;
                 com.focusPage("#belongerModal").modal("show");
-                com.updateChosen("belonger", v.belonger.uid, com.checkNull(v.belonger.userName,''));
+                com.updateTypeahead("belonger", v.belonger.uid, com.checkNull(v.belonger.userName,''));
             });
 
             return $liLine;
@@ -126,7 +126,7 @@ $(function(){
         com.clearValidator();
         var option={
             "vustomer.vid": vustomer.vid,
-            "vustomer.belonger.uid":com.focusPage("#belonger").val()
+            "vustomer.belonger.uid":com.typeahead("belonger")
         };
         com.post(api.customer.updateVustomerForBelonger,option,function(){
             searcher.doSearch();
@@ -142,7 +142,7 @@ $(function(){
 
         var options = {
             'vustomer.vid': vustomer.vid,
-            'vustomer.orderId': vustomer.items.orderId.val(),
+            'vustomer.orderId': vustomer.items.orderId.val()
         };
 
         com.post(api.customer.updateVustomer, options, function(res){

@@ -2,7 +2,8 @@
 	var userAdvance = {
 		postData: {},
 		postParam: {},
-		userAdvanceItems: {}
+		userAdvanceItems: {},
+		companysel:{}
 	};
 	var $wrap = null;
 
@@ -44,7 +45,7 @@
 				}
 				if(aa){
 					if(va.fatherDept.did != null && va.fatherDept.did != 0)
-					menuArr.level2.push(va.fatherDept);
+						menuArr.level2.push(va.fatherDept);
 				}
 				if(va.fatherDept.did == null || va.fatherDept.did == 0){
 					childtree.push(va)
@@ -191,20 +192,16 @@
 		userAdvance.userAdvanceModal.modal("hide");
 		return false;
 	}
-	
+
 	function resetPassword(userId,userName){
-		bootbox.confirm("确定要重置("+userName+")的密码吗?",function(result){
-			if(result == true){
-				com.post(api.personel.resetPassword, {'user.userId': userId});
-			}
+		com.showConfirm("确定要重置("+userName+")的密码吗?",function(result){
+			com.post(api.personel.resetPassword, {'user.userId': userId});
 		});
 	}
-	
+
 	function defaultPassword(userId,userName){
-		bootbox.confirm("确定要重置("+userName+")密码为默认密码?",function(result){
-			if(result == true){
-				com.post(api.personel.defaultPassword, {'user.userId': userId});
-			}
+		com.showConfirm("确定要重置("+userName+")密码为默认密码?",function(result){
+			com.post(api.personel.defaultPassword, {'user.userId': userId});
 		});
 	}
 
@@ -215,9 +212,6 @@
 	userAdvance.userAdvanceItems.extranet = com.focusPage("#extranet").switchBtn("isOrNot");
 	userAdvance.userAdvanceItems.roleSel = com.focusPage("#roleSel");
 	userAdvance.userAdvanceItems.company = com.focusPage("#company");
-	userAdvance.userAdvanceItems.companysel = com.focusPage("#companyse").chosen({
-		width: "200px"
-	});
 	userAdvance.userAdvanceItems.currentcompany=com.focusPage("#currentcompany");
 	userAdvance.userAdvanceItems.oldcompany=com.focusPage("#oldcompany");
 	userAdvance.userAdvanceItems.advanceSaveBtn = com.focusPage("#advanceSaveBtn").on("click", saveData);
@@ -226,7 +220,6 @@
 	com.post(api.system.queryRole, {"timestamp": new Date().getTime()}, function(res){
 		userAdvance.roleList = res.roleList;
 	}, null, false);
-
 	com.post(api.system.queryCompany,{},function(res){
 		userAdvance.companysel = res.companys;
 	}, null, false);
@@ -269,52 +262,61 @@
 						$liProperty.appendTo($ulProperty);
 					});
 
-					$company.unbind().bind('click',function(){
-						userAdvance.userAdvanceItems.companysel.bindData(userAdvance.companysel , "cid", "name");
-						userAdvance.userCompanyModal.modal("show");
+					$company.unbind().bind('click', function () {
+						$("#companydiv").empty();
+						var userCompanys = {};
+						var cids = [];
+						var companyname = [];
 						var options = {
 							"user.uid": v.uid
 						};
-						var userCompanys={};
-						var cids=[];
-						var companyname=[];
-						com.post(api.personel.queryUserCompany, options, function(res){
+						userAdvance.userCompanyModal.modal("show");
+						com.post(api.personel.queryUserCompany, options, function (res) {
 							userCompanys = res.userCompanys;
-							$.each(userCompanys,function(i,va){
+							$.each(userCompanys, function (i, va) {
 								companyname.push(va.company.name);
 							});
 						}, null, false);
-
+						$.each(userAdvance.companysel, function (i, va) {
+							var  $div=$('<div class="tag"></div>');
+							var $input = $('<input/>').attr({
+								"type" : "checkbox",
+								"value": va.name,
+								"name" : "corporab",
+								"id": va.cid,
+								"class" : "ace"
+							});
+							var $span = $('<span></span>').addClass('lbl');
+							var $spans=$('<span></span>').html(va.name);
+							$div.append($input).append($span).append($spans).appendTo(com.focusPage("#companydiv"));
+							if(companyname.indexOf(va.name)!= -1){
+								$input.attr("checked",true);
+							}
+						});
 						userAdvance.userAdvanceItems.currentcompany.html("");
-						companyname && companyname.length && $.each(companyname, function(i, v){
-						    var $div=$('<div></div>');
-							var $span=$('<span class="tag"></span>').html(v).appendTo($div);
+						companyname && companyname.length && $.each(companyname, function (i, v) {
+							var $div = $('<div></div>');
+							var $span = $('<span class="tag"></span>').html(v).appendTo($div);
 							userAdvance.userAdvanceItems.currentcompany.append($div)
 						});
-
-						userAdvance.userAdvanceItems.companysel.trigger("chosen:updated");
-
-						com.focusPage('button[name="saveCompanyBtn"]').unbind().bind('click',function(){
-							var newcids=[];
+						com.focusPage('button[name="saveCompanyBtn"]').unbind().bind('click', function () {
+							var $inputs = com.focusPage('input[name="corporab"]:checked');
 							userAdvance.userCompanyModal.modal("hide");
-							var params={
+							var params = {
 								"user.uid": v.uid
-							};
-							if(userAdvance.userAdvanceItems.companysel.val() != null){
-								$.each(userAdvance.userAdvanceItems.companysel.val().splice(','),function(i,value){
-									newcids.push(value)
-								});
-								$.each(newcids, function(i, val){
-									params["cids" + "[" + i + "]"] = val;
-								});
-								com.post(api.personel.updateUserCompany, params,function (res) {
-
-								},null,false)
-							}else{
-								params["cids"]=[];
-								com.post(api.personel.updateUserCompany, params,function (res) {
-								},null,false)
 							}
+							$.each($inputs, function (i, v) {
+								var $input = $(v);
+								var row = {
+									"vpid": $input.attr('id')
+								};
+								params["cids[" + i + "]"] = row.vpid;
+							});
+							com.post(api.personel.updateUserCompany, params, function (res) {
+								if (res != null) {
+									com.showAlert(com.info, "操作成功");
+								}
+							}, null, false);
 						});
 					});
 
@@ -341,15 +343,15 @@
 					$btnCustomer.click(function(){
 						binding.openCustomerDialog(v.userId);
 					});
-					
+
 					$resetPassword.click(function(){
 						resetPassword(v.userId,v.userName);
 					});
-					
+
 					$defaultPassword.click(function(){
 						defaultPassword(v.userId, v.userName);
 					});
-					
+
 					$divBtnWrap.append($company).append($btnRight).append($btnDesigne).append($btnSales).append($btnStatus).append($btnHouse).append($btnCustomer).append($resetPassword).append($defaultPassword).appendTo($h3);
 
 					$liLine.append($h3).append($ulProperty).appendTo($ul);
@@ -483,9 +485,9 @@
 							params[postConf.name + "[" + i + "]"] = $v;
 							if($v == -1 || $v == '全部') return false;
 						}),
-						com.post(postConf.path, params, function(data){
-							$dialog.modal("hide");
-						})
+							com.post(postConf.path, params, function(data){
+								$dialog.modal("hide");
+							})
 					);
 				});
 			}
@@ -512,5 +514,4 @@
 	displayFunc.setAdvance();
 
 });
-
 

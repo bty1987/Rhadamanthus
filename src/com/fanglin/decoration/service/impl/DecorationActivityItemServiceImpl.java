@@ -177,7 +177,7 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 			awardStockDao.update(awardStockPO);
 		}
 
-		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, creater, AwardRecordPO.TYPE_RECEIVE_INT, AwardRecordPO.ONETYPE_DECORATION_INT, decorationActivityItemPO.getIsStock(), decorationActivityItemPO.getMoney(), decorationActivityItemPO.getNum(), "领取活动奖品");
+		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, creater, AwardRecordPO.TYPE_XG_INT, AwardRecordPO.SUBTYPE_RECEIVE_INT, AwardRecordPO.ONETYPE_DECORATION_INT, decorationActivityItemPO.getIsStock(), decorationActivityItemPO.getMoney(), decorationActivityItemPO.getNum(), "领取活动奖品");
 		
 		awardRecordDao.save(awardRecordPO);
 		
@@ -228,27 +228,6 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int upgradeDecorationAtivityItem(DecorationActivityItemVO decorationActivityItemVO, String userId) throws FLException {
-		
-		DecorationActivityItemPO decorationActivityItemPO = decorationActivityItemDao.get(decorationActivityItemVO.getDaiId());
-
-		if (decorationActivityItemPO == null) {
-			throw new FLException(140030, "订单活动物品不存在");
-		}
-		
-		if (decorationActivityItemPO.getState() != DecorationActivityItemPO.STATUS_INIT_INT){
-			throw new FLException(140057, "订单活动奖品不可操作");
-		}
-		
-		decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_UPGRADE_INT);
-		
-		decorationActivityItemDao.update(decorationActivityItemPO);
-		
-		return 0;
-	}
-
-	@Override
-	@Transactional(rollbackFor = Exception.class)
 	public int refundDecorationActivityItem(DecorationActivityItemVO decorationActivityItemVO, String userId) throws FLException {
 		
 		DecorationActivityItemPO decorationActivityItemPO = decorationActivityItemDao.get(decorationActivityItemVO.getDaiId());
@@ -280,7 +259,7 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 			awardStockDao.update(awardStockPO);
 		}
 		
-		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, creater, AwardRecordPO.TYPE_REFUND_INT, AwardRecordPO.ONETYPE_DECORATION_INT, decorationActivityItemPO.getIsStock(), decorationActivityItemPO.getMoney(), decorationActivityItemPO.getNum(), "");
+		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, creater, AwardRecordPO.TYPE_CG_INT, AwardRecordPO.SUBTYPE_REFUND_INT, AwardRecordPO.ONETYPE_DECORATION_INT, decorationActivityItemPO.getIsStock(), decorationActivityItemPO.getMoney(), decorationActivityItemPO.getNum(), "");
 		
 		awardRecordDao.save(awardRecordPO);
 		

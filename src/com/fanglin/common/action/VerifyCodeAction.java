@@ -48,8 +48,9 @@ public class VerifyCodeAction extends BaseAction {
 		try {
 			String tmp = SecurityCodeHelper.getSecurityCode();
 			String key = SystemConfig.getString("encryptKey");
+			String iv = SystemConfig.getString("encryptIv");
 			
-			securityCode = AESHelper.encryptToString(tmp, key);
+			securityCode = AESHelper.encrypt(tmp, key, iv);
 		} catch (Exception e) {
 			setErrorCode(110000);
 			setErrorMsg("系统处理问题");
@@ -64,7 +65,7 @@ public class VerifyCodeAction extends BaseAction {
 	public String verifyCode() throws FLException{
 		
 		try {
-			imageStream = SecurityImageHelper.getImageAsInputStream(AESHelper.decryptString(securityCode, SystemConfig.getString("encryptKey")));
+			imageStream = SecurityImageHelper.getImageAsInputStream(AESHelper.decrypt(securityCode, SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv")));
 		} catch (Exception e) {
 			setErrorCode(110000);
 			setErrorMsg("系统处理问题");

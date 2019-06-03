@@ -71,8 +71,7 @@
         {"key":"2", "value":"签单"},
         {"key":"3", "value":"抽奖"},
         {"key":"4", "value":"特批"},
-        {"key":"5", "value":"购买"},
-        {"key":"6", "value":"其他"}
+		{"key":"7", "value":"升级"}
     ],"activityItemType":[
         {"key":"0", "value":"初始"},
         {"key":"1", "value":"失效"},

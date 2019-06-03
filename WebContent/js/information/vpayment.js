@@ -170,7 +170,7 @@ jQuery(function ($) {
                     });
 
                     if (!flagCoupon) {
-                        layer.msg('代金券价格填写错误');
+                    	com.showAlert(com.warning,"代金券价格填写错误");
                         return
                     }
 
@@ -216,10 +216,10 @@ jQuery(function ($) {
             var _mno = "";
             var vpid = [];
             var mnoId = [];
-            var vpids = [];
             var mnoIdArr = [];
             var referMoney = 0;
             var flags = [];
+            var vpids = [];
             var flag = 0;
             var _paymentType = 0;
 
@@ -304,7 +304,7 @@ jQuery(function ($) {
                 });
 
                 if (!flagCoupon) {
-                    layer.msg('代金券价格填写错误');
+                	com.showAlert(com.warning,"代金券价格填写错误");
                     return
                 }
 
@@ -318,7 +318,7 @@ jQuery(function ($) {
 
     //添加
     com.focusPage('a[name="createVpayment"]', '#pagenation').click(function () {
-        com.updateChosen("collecter", "", "");
+        com.cleanTypeahead("collecter");
         com.cleanItems(vpayment.items);
         com.focusPage("#vpaymentModal").modal("show");
         var $_modalBody = $('.modal-body');
@@ -619,7 +619,7 @@ jQuery(function ($) {
             com.post(api.information.collectVpayment, option, function () {
 
                 layer.closeAll();
-                layer.msg('收款成功', {icon: 1});
+                com.showAlert(com.info,"收款成功");
                 closeLayer();
 
             });
@@ -671,7 +671,7 @@ jQuery(function ($) {
 
         var bankDateLabel = $('<label></label>').addClass('col-sm-3 control-label no-padding-right').text('日期').appendTo(bankDiv);
         var bankDateDiv = $('<div></div>').addClass('col-sm-8').appendTo(bankDiv);
-        var bankDateInput = $('<input></input>').addClass("date-picker-date col-sm-6 v_required").attr("data-toggle", "popover").attr("data-trigger", "manual").attr("type", "text").attr("id", "bankDate_" + index).attr("data-date-format", "yyyy-mm-dd").val(currentData).datepicker({autoclose: true}).appendTo(bankDateDiv);
+        var bankDateInput = $('<input></input>').addClass("date-picker-date col-sm-6 v_required").attr("data-toggle", "popover").attr("data-trigger", "manual").attr("type", "text").attr("id", "bankDate_" + index).attr("data-date-format", "yyyy-mm-dd").val(currentData).datepicker(com.datepickerdefault).appendTo(bankDateDiv);
 
         var bankTimeLabel = $('<label></label>').addClass('col-sm-3 control-label no-padding-right').text('时间').appendTo(bankDiv);
         var bankTimeDiv = $('<div></div>').addClass('col-sm-8').appendTo(bankDiv);

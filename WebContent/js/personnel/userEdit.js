@@ -87,25 +87,25 @@ jQuery(function(a) {
     user.items.gender = com.focusPage("#gender").switchBtn("gender");
     user.items.age = com.focusPage("#age");
     user.items.birthday = com.focusPage("#birthday");
-    user.items.politicalSel = com.focusPage("#politicalSel").bindData(user.politicalType);
+    user.items.politicalSel = com.focusPage("#politicalSel").bindData(user.politicalType,"key","value");
     user.items.jobYears = com.focusPage("#jobYears");
     user.items.identity = com.focusPage("#identity");
     user.items.phone = com.focusPage("#phone");
     user.items.address = com.focusPage("#address");
     user.items.hometownAddress = com.focusPage("#hometownAddress");
-    user.items.householdSel = com.focusPage("#householdSel").bindData(user.householdType);
+    user.items.householdSel = com.focusPage("#householdSel").bindData(user.householdType,"key","value");
     user.items.emergencyMan = com.focusPage("#emergencyMan");
     user.items.emergencyPhone = com.focusPage("#emergencyPhone");
     user.items.isPresentGraduate = com.focusPage("#isPresentGraduate").switchBtn("isOrNot");
     user.items.graduateTime = com.focusPage("#graduateTime");
     user.items.school = com.focusPage("#school");
-    user.items.educationSel = com.focusPage("#educationSel").bindData(user.educationType);
+    user.items.educationSel = com.focusPage("#educationSel").bindData(user.educationType,"key","value");
     user.items.specialty = com.focusPage("#specialty");
     user.items.isMarried = com.focusPage("#isMarried").switchBtn("isOrNot");
     user.items.isBirth = com.focusPage("#isBirth").switchBtn("isOrNot");
     user.items.isHouseLoan = com.focusPage("#isHouseLoan").switchBtn("isOrNot");
     user.items.isCarLoan = com.focusPage("#isCarLoan").switchBtn("isOrNot");
-    user.items.houseTypeSel = com.focusPage("#houseTypeSel").bindData(user.houseType);
+    user.items.houseTypeSel = com.focusPage("#houseTypeSel").bindData(user.houseType,"key","value");
     user.items.lover = com.focusPage("#lover");
     user.items.company = com.focusPage("#company");
     //获取部门类型
@@ -130,8 +130,8 @@ jQuery(function(a) {
     }).trigger("change");
 
     user.items.statusSel = com.focusPage("#statusSel").bindData(user.statusType,"key", "value");
-    user.items.employWaySel = com.focusPage("#employWaySel").bindData(user.employWayType);
-    user.items.employTypeSel = com.focusPage("#employTypeSel").bindData(user.employType);
+    user.items.employWaySel = com.focusPage("#employWaySel").bindData(user.employWayType,"key", "value");
+    user.items.employTypeSel = com.focusPage("#employTypeSel").bindData(user.employType,"key", "value");
     user.items.recommendMan = com.focusPage("#recommendMan");
     user.items.entryTime = com.focusPage("#entryTime");
     user.items.employTime = com.focusPage("#employTime");
@@ -216,7 +216,7 @@ jQuery(function(a) {
         });
     }
 
-    com.focusPage(".date-picker").datepicker({autoclose: !0}).on("show",function() {
+    com.focusPage(".date-picker").datepicker(com.datepickerdefault).on("show",function() {
         setTimeout(function() {
             a(".dropdown-menu").css("z-index", 1060)
         },0)

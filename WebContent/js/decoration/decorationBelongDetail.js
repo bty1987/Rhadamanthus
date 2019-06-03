@@ -16,20 +16,24 @@ jQuery(function($) {
 	decorationBelong.decorationOrderID = params.orderId;
 	decorationBelong.type = params.orderBelongType;
 	
-	com.initChosen('belongUserId', api.personel.queryUserByPinyin, "pinyinName", {"user.status":0,"departmentType.name":""},'autoFillKeyValue','key','value').on("change",function(e){
-		if(com.focusPage("#belongUserId").val() == null || com.focusPage("#belongUserId").val() == ""){
-			return;
-		}
+    com.initTypeahead('belongUserId', api.personel.queryUserByPinyin, "pinyinName", {"user.status":0,"departmentType.name":""},'autoFillKeyValue','key','value',function(list, key, value){
+
+    	if(value == null || value == ""){
+            return;
+        }
 		
-		com.post(api.personel.queryUserByUserId, {"user.userId":com.focusPage("#belongUserId").val()}, function(res){
+		com.post(api.personel.queryUserByUserId, {"user.userId":key}, function(res){
+
 			com.focusPage("#belongUser").val(res.user.currentName);
-			com.focusPage("#belongDept").val(res.user.dept.neame);
+			com.focusPage("#belongDept").val(res.user.dept.name);
 			com.focusPage("#belongRegion").val(res.user.dept.fatherDept.name);
 			com.focusPage("#belongDeptId").val(res.user.dept.no);
 			com.focusPage("#belongRegionId").val(res.user.dept.fatherDept.no);
 		});
+
+		return value
 	});
-	
+
 	com.focusPage("#defaultFlag").switchBtn("isOrNot");
 	com.focusPage("#updateDefaultFlag").switchBtn("isOrNot");
 	
@@ -38,49 +42,49 @@ jQuery(function($) {
 	});
 	
 	com.focusPage('#saveBelongInfoBtn').on(ace.click_event, saveOrderBelongInfo);
-		
-	com.focusPage("#addNewUserBtn").on(ace.click_event, function(event){
-		com.clearValidator();
-		
-		if(com.validate("addUserModal"))
-			return false;
-		
-		var addRow = {};
 
-		addRow.belonger = {};
-		addRow.department = {};
+    com.focusPage("#addNewUserBtn").on(ace.click_event, function(event){
+        com.clearValidator();
+
+        if(com.validate("addUserModal"))
+            return false;
+
+        var addRow = {};
+
+        addRow.belonger = {};
+        addRow.department = {};
         addRow.region = {};
-		addRow.belonger.userId = com.focusPage("#belongUserId").val();
-		addRow.belonger.currentName = com.focusPage("#belongUser").val();
-		addRow.department.deptName = com.focusPage("#belongDept").val();
-		addRow.region.deptName = com.focusPage("#belongRegion").val();
-		addRow.rate = com.focusPage("#belongRate").val();
-		addRow.department.deptId = com.focusPage("#belongDeptId").val();
-		addRow.region.deptId = com.focusPage("#belongRegionId").val();
-		addRow.defaultFlag = com.isOrNotType[com.focusPage("#defaultFlag").prop("checked")];
-		
-		if(!/^(0\.\d{1,2})|1|0$/.test(addRow.rate)){
-			bootbox.alert("分配比例输入错误 , 为0到1之间的小数");
-			return false;
-		}
-		
-		var belongInfos = com.focusPage('.item-orange');
-		
-		for(var i=0;i<belongInfos.length;i++){
-			var $v = $(belongInfos[i]);
-			
-			if($v.attr('belongUserId') == addRow.belonger.userId){
-				bootbox.alert("员工编号("+addRow.belonger.userId+")已存在不能重复添加");
-				return false;
-			}
-		}
-		
-		com.focusPage('#resultList').append(displayFunc(addRow));
-		
-		changeItem();
-		
-		return false;
-	});
+        addRow.belonger.userId = com.typeahead("belongUserId");
+        addRow.belonger.currentName = com.focusPage("#belongUser").val();
+        addRow.department.name = com.focusPage("#belongDept").val();
+        addRow.region.name = com.focusPage("#belongRegion").val();
+        addRow.rate = com.focusPage("#belongRate").val();
+        addRow.department.deptId = com.focusPage("#belongDeptId").val();
+        addRow.region.deptId = com.focusPage("#belongRegionId").val();
+        addRow.defaultFlag = com.isOrNotType[com.focusPage("#defaultFlag").prop("checked")] == "是" ? 1 : 0;
+
+        if(!/^(0\.\d{1,2})|1|0$/.test(addRow.rate)){
+            com.showAlert(com.warning,"分配比例输入错误 , 为0到1之间的小数");
+            return false;
+        }
+
+        var belongInfos = com.focusPage('.item-orange');
+
+        for(var i=0;i<belongInfos.length;i++){
+            var $v = $(belongInfos[i]);
+
+            if($v.attr('belongUserId') == addRow.belonger.userId){
+                com.showAlert(com.warning,"员工编号("+addRow.belonger.userId+")已存在不能重复添加");
+                return false;
+            }
+        }
+
+        com.focusPage('#resultList').append(displayFunc(addRow));
+
+        changeItem();
+
+        return false;
+    });
 	
 	com.focusPage("#cApproveSaveBtn").on("click", function(){
 		com.clearValidator();
@@ -108,9 +112,8 @@ jQuery(function($) {
 			
 			var $belongRate = utils.changeTwoDecimal($v.attr('belongRate'));
 			var $defaultFlag = $v.attr('defaultFlag');
-
 			options["approvalDecorationBelongItems["+num+"].orderId"] = decorationBelong.decorationOrderID;
-			options["approvalDecorationBelongItems["+num+"].userId"] = $v.attr('belongUserId');
+			options["approvalDecorationBelongItems["+num+"].userId"] = $v.attr("belongUserId");
 			options["approvalDecorationBelongItems["+num+"].rate"] = $belongRate;
 			options["approvalDecorationBelongItems["+num+"].defaultFlag"] = $defaultFlag == '是' ? 1 : 0;
 			
@@ -123,12 +126,12 @@ jQuery(function($) {
 		});
 		
 		if(rate != 1){
-			bootbox.alert("分配比例的和必须是1");
+            com.showAlert(com.warning, "分配比例的和必须是1");
 			return;
 		}
 		
 		if(defaultCount != 1){
-			bootbox.alert("必须有一个是默认归属用户");
+            com.showAlert(com.warning, "必须有一个是默认归属用户");
 			return;
 		}
 			
@@ -145,34 +148,35 @@ jQuery(function($) {
 		
 		com.focusPage("#approveModal").modal("hide");
 	});
-	
-	com.focusPage('#updateBtn').on('click', function(){
-		com.clearValidator();
-		
-		if(com.validate("updateModal")){
-			return;
-		}
-		
-		var rate = com.focusPage('#updateBelongRate').val();
-		var flag = com.isOrNotType[com.focusPage("#updateDefaultFlag").prop("checked")];
-		
-		if(!/^(0\.\d{1,2})|1|0$/.test(rate)){
-			bootbox.alert("分配比例输入错误 , 为0到1之间的小数");
-			return false;
-		}
-		
-		var $e = com.focusPage('#' + decorationBelong.belongUserId);
 
-		$e.attr('belongrate', rate);
-		$e.attr('defaultflag', flag);
-		
-		$e.find('li :eq(7)').text(rate);
-		$e.find('li :eq(9)').text(flag);
-		
-		com.focusPage('#updateModal').modal('hide');
-	});
+    com.focusPage('#updateBtn').on('click', function(){
+        com.clearValidator();
+
+        if(com.validate("updateModal")){
+            return;
+        }
+
+        var rate = com.focusPage('#updateBelongRate').val();
+        var flag = com.isOrNotType[com.focusPage("#updateDefaultFlag").prop("checked")];
+
+        if(!/^(0\.\d{1,2})|1|0$/.test(rate)){
+            com.showAlert(com.warning,"分配比例输入错误 , 为0到1之间的小数");
+            return false;
+        }
+
+        var $e = com.focusPage('#' + decorationBelong.belongUserId);
+
+        $e.attr('belongrate', rate);
+        $e.attr('defaultflag', flag);
+
+        $e.find('li :eq(21)').text(rate);
+        $e.find('li :eq(25)').text(flag);
+
+        com.focusPage('#updateModal').modal('hide');
+    });
 	
-	function displayFunc(v){
+	function  displayFunc(v){
+
 		var $liLine = $('<li></li>').addClass('item-orange clearfix');
 		var $h4 = $('<h4></h4>').addClass('oid').append($('<b></b>').html(v.belonger.currentName));
 		var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
@@ -199,7 +203,7 @@ jQuery(function($) {
 		});
 		
 		$btnUpdate.click(function(){
-			dialogUpdate(v.belonger.userId);
+			dialogUpdate(v.belonger.userId, v.defaultFlag);
 		});
 		
 		$btnDel.click(function(){
@@ -213,23 +217,31 @@ jQuery(function($) {
 		
 		return $liLine;
 	}
-	
-	function dialogUpdate(belongUserId){
-		decorationBelong.belongUserId = belongUserId;
-		
-		var $info = com.focusPage('#' + belongUserId);
-		
-		com.focusPage('#updateBelongRate').val($info.attr('belongrate'));
-		
-		com.focusPage('#updateModal').modal('show');
-	}
+
+
+    function dialogUpdate(belongUserId, defaultFlag){
+        decorationBelong.belongUserId = belongUserId;
+
+        var $info = com.focusPage('#' + belongUserId);
+
+		if(defaultFlag){
+            com.focusPage("#updateDefaultFlag").attr("checked", "checked")
+		} else {
+            com.focusPage("#updateDefaultFlag").attr("checked", "false")
+		}
+
+
+        com.focusPage('#updateBelongRate').val($info.attr('belongrate'));
+
+        com.focusPage('#updateModal').modal('show');
+    }
 	
 	function delRow(id){
 		com.focusPage('#' + id).remove();
 	}
 	
 	function changeItem(){
-		com.updateChosen('belongUserId', '', '');
+		com.cleanTypeahead('belongUserId');
 		com.focusPage('#belongRate').val(0);
 	}
 

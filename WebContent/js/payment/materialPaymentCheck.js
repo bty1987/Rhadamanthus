@@ -9,7 +9,8 @@ jQuery(function($) {
 		checkvNums: [],
 		couponType: {},
 		items: {},
-		htmlName: "materialCheck"
+		htmlName: "materialCheck",
+		modelId: 'baseItemModalMaterialCheck'
 	};
 
 	var materialPaymentCheckPostData = {};
@@ -23,7 +24,7 @@ jQuery(function($) {
 	com.focusPage("#baseItemModalMaterialCheck").on('hidden.bs.modal', function () {
 		materialPaymentCheck.bankUtilForGrade = [];
 		materialPaymentCheck.checkBankUtilForGrade = [];
-		paymentUtils.EmptyChosen('materialCheckcashInfo');
+		com.cleanTypeahead('materialCheckcashInfo');
 	});
 
 	materialPaymentCheck.saveBtn = com.focusPage("#saveBtn").bindClick(function(){
@@ -75,7 +76,7 @@ jQuery(function($) {
 
 	com.focusPage("#couponType").chosen({width: "216px", multi_type: "input"});
 
-	paymentUtils.dynamicChosen('baseItemModalMaterialCheck',"materialCheckcashInfo",materialPaymentCheck.cashUtil,"key","value");
+	com.selectTypeahead("materialCheckcashInfo", materialPaymentCheck.cashUtil, "key", "value", null);
 
 	com.focusPage("#materialCheckbankAdd").click(function(){
 		var num = $(this).attr("num");
@@ -130,7 +131,7 @@ jQuery(function($) {
             var propertyArr = [
                ["订单号:", v.material.orderId, "blue"],
                ["主材号:", v.material.no, "blue"],
-               ["楼盘地址:", v.material.house.village.name+ '' +v.material.house.houseNumber, "grey"],
+               ["楼盘地址:", v.material.house.village.cityProper.city.name + ' ' + v.material.house.village.cityProper.name + ' ' + v.material.house.village.name + ' ' + v.material.house.houseNumber, "grey"],
                ["客户:", v.material.customer.name, "grey"],
                ["品牌:", v.material.brand, "grey"],
                ["操作人:", v.creater.currentName, "grey"],
@@ -247,7 +248,7 @@ jQuery(function($) {
             var propertyArr = [
                ["订单号:", v.material.orderId, "blue"],
                ["主材号:", v.material.no, "blue"],
-               ["楼盘地址:", v.material.house.village.name+ '' +v.material.house.houseNumber, "grey"],
+               ["楼盘地址:", v.material.house.village.cityProper.city.name + ' ' + v.material.house.village.cityProper.name + ' ' + v.material.house.village.name + ' ' + v.material.house.houseNumber, "grey"],
                ["客户:", v.material.customer.name, "grey"],
                ["品牌:", v.material.brand, "grey"],
                ["操作人:", v.creater.currentName, "grey"],
@@ -348,7 +349,7 @@ jQuery(function($) {
 				column : [
 					["订单号","material.orderId"],
 					["主材号","material.no"],
-					['楼盘地址',['material.house.village.name', 'material.house.houseNumber']],
+					['楼盘地址',['material.house.village.cityProper.city.name', 'material.house.village.cityProper.name', 'material.house.village.name', 'material.house.houseNumber']],
 					['品牌','material.brand'],
 					['应收金额', 'referMoney'],
 					['收款人', 'collecter.currentName'],

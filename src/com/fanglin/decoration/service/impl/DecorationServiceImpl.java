@@ -32,7 +32,6 @@ import com.fanglin.communion.po.HousePO;
 import com.fanglin.communion.po.ServiceNodePO;
 import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.communion.vo.DepartmentVO;
-import com.fanglin.communion.vo.DutyVO;
 import com.fanglin.communion.vo.HouseVO;
 import com.fanglin.communion.vo.VillageVO;
 import com.fanglin.core.interceptor.FLException;
@@ -182,8 +181,9 @@ public class DecorationServiceImpl implements DecorationService {
 
 		List<DecorationPO> decorationPOs = decorationDao.pageDecoration(paging, filters);
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
-
+		
 		for (DecorationPO decorationPO : decorationPOs) {
+			
 			DecorationVO decorationVO = new DecorationVO();
 			decorationVO.setOrderId(decorationPO.getOrderId());
 			decorationVO.setStatus(decorationPO.getStatus());
@@ -195,23 +195,23 @@ public class DecorationServiceImpl implements DecorationService {
 			houseVO.setBuildArea(housePO.getBuildArea());
 			houseVO.setVillage(villageVO);
 			decorationVO.setHouse(houseVO);
-
-			UserPO DuserPO = userDao.get(decorationPO.getDesigner().getUid());
+			
 			UserBaseVO duserBaseVO = new UserBaseVO();
 			DepartmentVO ddepartmentVO = new DepartmentVO();
-			ddepartmentVO.setName(DuserPO.getDept().getName());
+			ddepartmentVO.setName(decorationPO.getAddition().getDesignDepartment());
 			duserBaseVO.setDept(ddepartmentVO);
 			duserBaseVO.setCurrentName(decorationPO.getDesigner().getUserName());
 			decorationVO.setDesigner(duserBaseVO);
 
-			UserPO suserPO = userDao.get(decorationPO.getSalesman().getUid());
 			UserBaseVO suserBaseVO = new UserBaseVO();
 			DepartmentVO sdepartmentVO = new DepartmentVO();
-			sdepartmentVO.setName(suserPO.getDept().getName());
+			sdepartmentVO.setName(decorationPO.getAddition().getSalesDepartment());
 			suserBaseVO.setDept(sdepartmentVO);
 			suserBaseVO.setCurrentName(decorationPO.getSalesman().getUserName());
 			decorationVO.setSalesman(suserBaseVO);
-
+			
+			decorationPO.ptvcascade(decorationVO);
+			
 			decorationVOs.add(decorationVO);
 		}
 
@@ -240,6 +240,8 @@ public class DecorationServiceImpl implements DecorationService {
 			decorationVO.setQuoter(new UserBaseVO());
 
 			decorationPO.ptvcascade(decorationVO);
+			
+			addition(decorationPO.getAddition(), decorationVO);
 
 			decorationVOs.add(decorationVO);
 		}
@@ -426,6 +428,8 @@ public class DecorationServiceImpl implements DecorationService {
 			DecorationVO decorationVO = new DecorationVO();
 
 			decorationPO.ptvcascade(decorationVO);
+			
+			addition(decorationPO.getAddition(), decorationVO);
 
 			decorationVOs.add(decorationVO);
 		}
@@ -634,6 +638,8 @@ public class DecorationServiceImpl implements DecorationService {
 			decorationVO.setOrderTotalPrice(decorationPO.getOrderTotalPrice());
 
 			decorationVO.setDiscount(decorationPO.getDiscount());
+			
+			addition(decorationPO.getAddition(), decorationVO);
 
 			decorationVOs.add(decorationVO);
 		}
@@ -686,7 +692,7 @@ public class DecorationServiceImpl implements DecorationService {
 		}
 
 		try {
-			decorationVO.setDompany(AESHelper.encryptToString(FormatUtil.encodeCompany(decorationPO.getCompany()), SystemConfig.getString("encryptKey")));
+			decorationVO.setDompany(AESHelper.encrypt(FormatUtil.encodeCompany(decorationPO.getCompany()), SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv")));
 		} catch (Exception e) {
 			throw new FLException(230015, "公司不存在");
 		}
@@ -747,25 +753,9 @@ public class DecorationServiceImpl implements DecorationService {
 
 			decorationVO.setOrderId(decorationPO.getOrderId());
 			
-			decorationVO.setDesigner(new UserBaseVO());
-			decorationVO.getDesigner().setDuty(new DutyVO());
-			decorationVO.getDesigner().setDept(new DepartmentVO());
-			decorationVO.getDesigner().getDept().setFatherDept(new DepartmentVO());
-
-			BeanUtil.copyPropertie(decorationPO.getDesigner(), decorationVO.getDesigner(), Arrays.asList("duty", "dept"));
-			BeanUtil.copyPropertie(decorationPO.getDesigner().getDuty(), decorationVO.getDesigner().getDuty(), Arrays.asList("departmentType"));
-			BeanUtil.copyPropertie(decorationPO.getDesigner().getDept(), decorationVO.getDesigner().getDept(), Arrays.asList("type", "fatherDept", "manager"));
-			BeanUtil.copyPropertie(decorationPO.getDesigner().getDept().getFatherDept(), decorationVO.getDesigner().getDept().getFatherDept(), Arrays.asList("type", "fatherDept", "manager"));
-
-			decorationVO.setSalesman(new UserBaseVO());
-			decorationVO.getSalesman().setDuty(new DutyVO());
-			decorationVO.getSalesman().setDept(new DepartmentVO());
-			decorationVO.getSalesman().getDept().setFatherDept(new DepartmentVO());
-
-			BeanUtil.copyPropertie(decorationPO.getSalesman(), decorationVO.getSalesman(), Arrays.asList("duty", "dept"));
-			BeanUtil.copyPropertie(decorationPO.getSalesman().getDuty(), decorationVO.getSalesman().getDuty(), Arrays.asList("departmentType"));
-			BeanUtil.copyPropertie(decorationPO.getSalesman().getDept(), decorationVO.getSalesman().getDept(), Arrays.asList("type", "fatherDept", "manager"));
-			BeanUtil.copyPropertie(decorationPO.getSalesman().getDept().getFatherDept(), decorationVO.getSalesman().getDept().getFatherDept(), Arrays.asList("type", "fatherDept", "manager"));
+			decorationPO.ptvcascade(decorationVO);
+			
+			addition(decorationPO.getAddition(), decorationVO);
 
 			decorationVOs.add(decorationVO);
 		}

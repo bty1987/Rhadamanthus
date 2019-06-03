@@ -1,4 +1,4 @@
-<div class="page-content">
+<div>
     <div class="row">
         <div class="col-xs-12">
             <div id="condList" class="fl_search clearfix"></div><!---c查询条件有就写没有 也写上 在js 里面不传参就行--->
@@ -81,9 +81,8 @@
                         <div class="form-group">
                             <label for="belonger" class="col-sm-2 control-label no-padding-right">归属人</label>
                             <div class="col-sm-10">
-                                <select class="chosen-select col-md-4 v_required" id="belonger" data-placeholder="请输入归属人"  style="display: none;">
-                                    <option value="">&nbsp;</option>
-                                </select> <i id="designerId_asterisk" class='material icon-asterisk'></i>
+                                <input type="text" class="col-md-4 v_typeahead v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="belonger" placeholder="归属人">
+                                <i id="designerId_asterisk" class='material icon-asterisk'></i>
                             </div>
                         </div>
                     </div>

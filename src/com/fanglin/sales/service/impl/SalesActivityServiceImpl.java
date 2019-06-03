@@ -166,7 +166,7 @@ public class SalesActivityServiceImpl implements SalesActivityService {
 
 		}
 		
-		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, userDao.queryUserByUserId(userId), AwardRecordPO.TYPE_RECEIVE_INT, AwardRecordPO.ONETYPE_SALES_INT, salesActivityItemPO.getIsStock(), salesActivityItemPO.getMoney(), salesActivityItemPO.getNum(), "领取活动奖品");
+		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, userDao.queryUserByUserId(userId), AwardRecordPO.TYPE_XG_INT, AwardRecordPO.SUBTYPE_RECEIVE_INT, AwardRecordPO.ONETYPE_SALES_INT, salesActivityItemPO.getIsStock(), salesActivityItemPO.getMoney(), salesActivityItemPO.getNum(), "领取活动奖品");
 		
 		awardRecordDao.save(awardRecordPO);
 		
@@ -215,26 +215,6 @@ public class SalesActivityServiceImpl implements SalesActivityService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void upgradeSalesActivityItem(SalesActivityItemVO salesActivityItemVO) throws FLException {
-		
-		SalesActivityItemPO salesActivityItemPO = salesActivityDao.get(salesActivityItemVO.getSaiid());
-		
-		if(salesActivityItemPO == null){
-			throw new FLException(140030, "订单活动物品不存在");
-		}
-		
-		if(salesActivityItemPO.getState() != SalesActivityItemPO.STATUS_VALID_INT){//0--初始
-			throw new FLException(140057, "订单活动奖品不可操作");
-		}
-		
-		salesActivityItemPO.setState(SalesActivityItemPO.STATUS_UPGRADE_INT);//更改为状态6--升级
-		
-		salesActivityDao.update(salesActivityItemPO);
-		
-	}
-
-	@Override
-	@Transactional(rollbackFor = Exception.class)
 	public void refundSalesActivityItem(SalesActivityItemVO salesActivityItemVO, String userId) throws FLException {
 		
 		SalesActivityItemPO salesActivityItemPO = salesActivityDao.get(salesActivityItemVO.getSaiid());
@@ -261,7 +241,7 @@ public class SalesActivityServiceImpl implements SalesActivityService {
 			
 		}
 		
-		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, userDao.queryUserByUserId(userId), AwardRecordPO.TYPE_REFUND_INT, AwardRecordPO.ONETYPE_SALES_INT, salesActivityItemPO.getIsStock(), salesActivityItemPO.getMoney(), salesActivityItemPO.getNum(), "");
+		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, userDao.queryUserByUserId(userId), AwardRecordPO.TYPE_CG_INT, AwardRecordPO.SUBTYPE_REFUND_INT, AwardRecordPO.ONETYPE_SALES_INT, salesActivityItemPO.getIsStock(), salesActivityItemPO.getMoney(), salesActivityItemPO.getNum(), "");
 		
 		awardRecordDao.save(awardRecordPO);
 		

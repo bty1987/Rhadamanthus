@@ -103,7 +103,7 @@ $(function(){
     });
 
     function saveData() {
-        if (!com.validate()) {
+        if (!com.validate('backVisitModal')) {
             var a = {
                 "backVisit.orderId" : params.decorationOrderId,
                 "backVisit.content": backVisit.backVisitItems.backVisitContent.val()

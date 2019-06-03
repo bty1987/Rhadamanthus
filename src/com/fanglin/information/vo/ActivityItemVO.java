@@ -17,7 +17,7 @@ public class ActivityItemVO implements java.io.Serializable {
 	private Float money;
 	
 	private String activity;
-
+	
 	public ActivityItemVO() {
 		super();
 	}
@@ -77,4 +77,5 @@ public class ActivityItemVO implements java.io.Serializable {
 	public void setActivity(String activity) {
 		this.activity = activity;
 	}
+	
 }

@@ -1,20 +1,34 @@
-
 jQuery(function ($) {
 
     var drawline = {
+        constructionInfoModal : com.focusPage("#constructionInfoModal"),
+        saveInfoBtn : com.focusPage("#saveInfoBtn").on("click",saveInfoData),
+
         saveBtn : com.focusPage("#saveBtn").on("click", saveData),
         cancellBtn : com.focusPage("#cancelBtn"),
         applyModal : com.focusPage("#applyModal"),
         editModal : com.focusPage("#editModal"),
+
         items: {
             dlid: com.focusPage("#dlid"),
             actualDate: com.focusPage("#actualDate"),
             startTime: com.focusPage("#startTime"),
             endTime: com.focusPage("#endTime"),
-            drawLineGroup: com.focusPage("#drawLineGroup")
-        }
+            drawLineGroup: com.focusPage("#drawLineGroup"),
+
+            ishovel  : com.focusPage("#ishovel"),
+            iskey  : com.focusPage("#iskey"),
+            isCeremony  : com.focusPage("#isCeremony"),
+            comment   : com.focusPage("#comment")
+        },
     };
 
+    com.post(api.ds.construction, {}, function (res) {
+        drawline.items.ishovel.bindData(res.isHovel, "key", "value", false);
+        drawline.items.iskey.bindData(res.isKey, "key", "value", false);
+        drawline.items.isCeremony.bindData(res.isCeremony, "key", "value", false);
+
+    });
 
     com.post(api.data.queryDrawlineGroup, {}, function (res) {
         drawline.items.drawLineGroup.bindData(res.drawLineGroups, 'gid', 'name');
@@ -41,8 +55,8 @@ jQuery(function ($) {
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.decoration.orderId));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-
-            var $btnDraw = $('<a></a>').addClass('btn btn-minier btn-yellow').html('放线');
+            var $btnInfo = $('<a></a>').addClass('btn btn-minier btn-yellow').html("信息");
+            var $btnDraw = $('<a></a>').addClass('btn btn-minier btn-success').html('放线');
 
             var propertyArr = [
                 ["楼盘地址:", v.decoration.house.village.name + ' ' + v.decoration.house.houseNumber, "grey"],
@@ -61,9 +75,15 @@ jQuery(function ($) {
                 $liProperty.appendTo($ulProperty);
             });
 
-            $divBtnWrap.append($btnDraw).appendTo($h3);
+            $divBtnWrap.append($btnInfo).append($btnDraw).appendTo($h3);
 
             $liLine.append($h3).append($ulProperty);
+
+            $btnInfo.click(function(){
+
+                viewConstructionInfo(v.decoration.orderId);
+
+            });
 
             $btnDraw.click(function () {
                 showEdit(v);
@@ -87,8 +107,9 @@ jQuery(function ($) {
     searcher.init(["c_orderId", "c_designer", "c_salesman"], "condList", api.construction.pageDrawLineForPlan, function (data) {
         displayFunc.init('resultList', data);
     }, "pagenation", "drawLineApplyPostData");
+    
     com.focusPage("#condList").append('<button id="showDrawLineApplyInfos" style="marg" class="btn btn-xs btn-yellow btn-search">申请信息</button>');
-
+    
     function showEdit(v) {
 
         com.clearValidator();
@@ -140,21 +161,15 @@ jQuery(function ($) {
         drawline.applyModal.modal("show");
     });
 
-    com.focusPage('.date-picker').datepicker().next().on(ace.click_event, function () {
+    com.focusPage('.date-picker').datepicker(com.datepickerdefault).next().on(ace.click_event, function () {
         com.focusPage(this).prev().focus();
     });
 
-    com.focusPage('#startTime').timepicker({
-        minuteStep: 1,
-        showSeconds: false,
-        showMeridian: false
-    });
+    com.focusPage('#startTime').timepicker(com.timepickerdefault);
 
-    com.focusPage('#endTime').timepicker({
-        minuteStep: 1,
-        showSeconds: false,
-        showMeridian: false
-    });
+
+    com.focusPage('#endTime').timepicker(com.timepickerdefault);
+
 
     drawline.applyModal.on('shown.bs.modal', function (e) {
         initPlan();
@@ -200,4 +215,41 @@ jQuery(function ($) {
             }
         }));
     }
+
+    function viewConstructionInfo(orderId) {
+
+        com.post(api.construction.queryConstructionInfoByOrderId, {"constructionInfo.orderId": orderId}, function (res) {
+
+            data = res.constructionInfo;
+
+            drawline.items.orderId = orderId;
+            drawline.items.ishovel.val(data.ishovel);
+            drawline.items.iskey.val(data.iskey);
+            drawline.items.isCeremony.val(data.isCeremony);
+            drawline.items.comment.val(data.comment);
+        }, null, false);
+
+        drawline.constructionInfoModal.modal("show");
+
+    }
+
+    function saveInfoData() {
+
+        var options = {
+            "constructionInfo.orderId" : drawline.items.orderId,
+            "constructionInfo.ishovel": drawline.items.ishovel.val(),
+            "constructionInfo.iskey": drawline.items.iskey.val(),
+            "constructionInfo.isCeremony" : drawline.items.isCeremony.val(),
+            "constructionInfo.comment": drawline.items.comment.val()
+        };
+
+        com.post(api.construction.updateConstructionInfoByOrderId,options,function (res) {
+
+            com.showAlert(com.info,"操作成功");
+
+            drawline.constructionInfoModal.modal("hide");
+
+        });
+    }
+
 });

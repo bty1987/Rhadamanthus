@@ -18,7 +18,7 @@ jQuery(function ($) {
     };
 
     com.focusPage('#fl-statement').statement("客服控制", "保修信息列表");
-    com.focusPage('.date-picker').datepicker({autoclose: true});
+    com.focusPage('.date-picker').datepicker(com.datepickerdefault);
     
 
     var displayFunc = (function () {

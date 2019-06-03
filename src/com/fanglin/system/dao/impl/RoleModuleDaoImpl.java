@@ -19,6 +19,7 @@ import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.system.dao.RoleModuleDao;
+import com.fanglin.system.po.ModulePO;
 import com.fanglin.system.po.RoleModulePO;
 
 @Repository("roleModuleDao")
@@ -30,14 +31,20 @@ public class RoleModuleDaoImpl extends DaoImpl<RoleModulePO> implements RoleModu
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<RoleModulePO> queryRoleModuleByRid(int rid, short system) {
+	public List<RoleModulePO> queryRoleModule(int rid, short system) {
 		return session().createCriteria(RoleModulePO.class).createAlias("module", "module").add(Restrictions.eq("rid", rid)).add(Restrictions.eq("module.system", system)).list();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<RoleModulePO> queryRoleModuleByRidALevel(int rid, int level, short system) {
+	public List<RoleModulePO> queryRoleModule(int rid, int level, short system) {
 		return session().createCriteria(RoleModulePO.class).createAlias("module", "module").add(Restrictions.eq("rid", rid)).add(Restrictions.eq("module.level", level)).add(Restrictions.eq("module.system", system)).list();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<RoleModulePO> queryRoleModuleForLink(int rid, short system) {
+		return session().createCriteria(RoleModulePO.class).createAlias("module", "module").add(Restrictions.eq("rid", rid)).add(Restrictions.eq("link", ModulePO.LINK_LINK_INT)).add(Restrictions.eq("module.system", system)).list();
 	}
 
 	@Override

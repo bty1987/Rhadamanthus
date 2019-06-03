@@ -109,6 +109,8 @@ $(function () {
     
     com.post(api.system.queryModuleForLink, {"module.system": 1}, function(res){
         
+        if(res.modules.length == 0) return false;
+        
         var linklist = com.focusPage("#linklist").html('');
         
         $.each(res.modules, function(i, v){

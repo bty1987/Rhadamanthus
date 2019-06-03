@@ -55,6 +55,8 @@ import com.fanglin.payment.vo.PaymentVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.system.vo.CityProperVO;
+import com.fanglin.system.vo.CityVO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
@@ -117,14 +119,16 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 
 		for(MaterialPaymentPO materialPaymentPO: materialPaymentPOs){
 
-			materialPaymentVO = new MaterialPaymentVO(new MaterialVO(new HouseVO(new VillageVO()),new CustomerVO()),new UserBaseVO());
+			materialPaymentVO = new MaterialPaymentVO(new MaterialVO(new HouseVO(new VillageVO(new CityProperVO(new CityVO()))),new CustomerVO()),new UserBaseVO());
 
-			BeanUtil.copyProperties(materialPaymentPO, materialPaymentVO,Arrays.asList("material","creater"));
-			BeanUtil.copyProperties(materialPaymentPO.getCreater(), materialPaymentVO.getCreater(),Arrays.asList("dept","duty"));
-			BeanUtil.copyProperties(materialPaymentPO.getMaterial(), materialPaymentVO.getMaterial(),Arrays.asList("house","customer","salesman","materialer","instorer","region","department","materialDepartment"));
+			BeanUtil.copyProperties(materialPaymentPO, materialPaymentVO, Arrays.asList("material","creater"));
+			BeanUtil.copyProperties(materialPaymentPO.getCreater(), materialPaymentVO.getCreater(), Arrays.asList("dept","duty"));
+			BeanUtil.copyProperties(materialPaymentPO.getMaterial(), materialPaymentVO.getMaterial(), Arrays.asList("house","customer","salesman","materialer","instorer","region","department","materialDepartment"));
 			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getCustomer(), materialPaymentVO.getMaterial().getCustomer());
-			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getHouse(), materialPaymentVO.getMaterial().getHouse(),Arrays.asList("village"));
-			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getHouse().getVillage(), materialPaymentVO.getMaterial().getHouse().getVillage(),Arrays.asList("cityProper"));
+			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getHouse(), materialPaymentVO.getMaterial().getHouse(), Arrays.asList("village"));
+			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getHouse().getVillage(), materialPaymentVO.getMaterial().getHouse().getVillage(), Arrays.asList("cityProper"));
+			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getHouse().getVillage().getCityProper(), materialPaymentVO.getMaterial().getHouse().getVillage().getCityProper(), Arrays.asList("city"));
+			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getHouse().getVillage().getCityProper().getCity(), materialPaymentVO.getMaterial().getHouse().getVillage().getCityProper().getCity(), Arrays.asList("region"));
 
 			materialPaymentVOs.add(materialPaymentVO);
 		}
@@ -148,19 +152,24 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 
 		for(MaterialPaymentPO materialPaymentPO: materialPaymentPOs){
 
-			materialPaymentVO = new MaterialPaymentVO(new MaterialVO(new HouseVO(new VillageVO()),new CustomerVO()),new UserBaseVO());
+			materialPaymentVO = new MaterialPaymentVO(new MaterialVO(new HouseVO(new VillageVO(new CityProperVO(new CityVO()))),new CustomerVO()),new UserBaseVO());
 
 			BeanUtil.copyProperties(materialPaymentPO, materialPaymentVO,Arrays.asList("material","creater","collecter","confirmer"));
 
 			if(materialPaymentPO.getMaterialReceipt() != null){
 				BeanUtil.copyProperties(materialPaymentPO.getMaterialReceipt(), materialPaymentVO,Arrays.asList("material","creater","collecter","confirmer"));
 			}
+			
 			BeanUtil.copyProperties(materialPaymentPO.getCreater(), materialPaymentVO.getCreater(),Arrays.asList("duty","dept"));
 			BeanUtil.copyProperties(materialPaymentPO.getMaterial(), materialPaymentVO.getMaterial(),Arrays.asList("house","customer","salesman","materialer","instorer","region","department","materialDepartment"));
 			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getHouse(), materialPaymentVO.getMaterial().getHouse(),Arrays.asList("village"));
 			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getHouse().getVillage(), materialPaymentVO.getMaterial().getHouse().getVillage(),Arrays.asList("cityProper"));
+			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getHouse().getVillage().getCityProper(), materialPaymentVO.getMaterial().getHouse().getVillage().getCityProper(), Arrays.asList("city"));
+			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getHouse().getVillage().getCityProper().getCity(), materialPaymentVO.getMaterial().getHouse().getVillage().getCityProper().getCity(), Arrays.asList("region"));
 			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getCustomer(), materialPaymentVO.getMaterial().getCustomer());
+			
 			MaterialReceiptPO materialReceipt = materialPaymentPO.getMaterialReceipt();
+			
 			if(materialReceipt != null){
 				materialPaymentVO.setCollecter(new UserBaseVO());
 				BeanUtil.copyProperties(materialReceipt.getCollecter(), materialPaymentVO.getCollecter(), Arrays.asList("duty","dept"));
@@ -187,19 +196,21 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 
 		for(MaterialPaymentPO materialPaymentPO: materialPaymentPOs){
 
-			materialPaymentVO = new MaterialPaymentVO(new MaterialVO(new HouseVO(new VillageVO()),new CustomerVO()),new UserBaseVO());
+			materialPaymentVO = new MaterialPaymentVO(new MaterialVO(new HouseVO(new VillageVO(new CityProperVO(new CityVO()))),new CustomerVO()),new UserBaseVO());
 
-			BeanUtil.copyProperties(materialPaymentPO, materialPaymentVO,Arrays.asList("material","creater","collecter","confirmer"));
+			BeanUtil.copyProperties(materialPaymentPO, materialPaymentVO, Arrays.asList("material","creater","collecter","confirmer"));
 			
 			if(materialPaymentPO.getMaterialReceipt() != null){
-				BeanUtil.copyProperties(materialPaymentPO.getMaterialReceipt(), materialPaymentVO,Arrays.asList("material","creater","collecter","confirmer"));
+				BeanUtil.copyProperties(materialPaymentPO.getMaterialReceipt(), materialPaymentVO, Arrays.asList("material","creater","collecter","confirmer"));
 			}
 			
-			BeanUtil.copyProperties(materialPaymentPO.getCreater(), materialPaymentVO.getCreater(),Arrays.asList("dept","duty"));
-			BeanUtil.copyProperties(materialPaymentPO.getMaterial(), materialPaymentVO.getMaterial(),Arrays.asList("house","customer","salesman","materialer","instorer","region","department","materialDepartment"));
+			BeanUtil.copyProperties(materialPaymentPO.getCreater(), materialPaymentVO.getCreater(), Arrays.asList("dept","duty"));
+			BeanUtil.copyProperties(materialPaymentPO.getMaterial(), materialPaymentVO.getMaterial(), Arrays.asList("house","customer","salesman","materialer","instorer","region","department","materialDepartment"));
 			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getCustomer(), materialPaymentVO.getMaterial().getCustomer());
-			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getHouse(), materialPaymentVO.getMaterial().getHouse(),Arrays.asList("village"));
-			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getHouse().getVillage(), materialPaymentVO.getMaterial().getHouse().getVillage(),Arrays.asList("cityProper"));
+			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getHouse(), materialPaymentVO.getMaterial().getHouse(), Arrays.asList("village"));
+			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getHouse().getVillage(), materialPaymentVO.getMaterial().getHouse().getVillage(), Arrays.asList("cityProper"));
+			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getHouse().getVillage().getCityProper(), materialPaymentVO.getMaterial().getHouse().getVillage().getCityProper(), Arrays.asList("city"));
+			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getHouse().getVillage().getCityProper().getCity(), materialPaymentVO.getMaterial().getHouse().getVillage().getCityProper().getCity(), Arrays.asList("region"));
 			
 			MaterialReceiptPO materialReceipt = materialPaymentPO.getMaterialReceipt();
 			
@@ -229,27 +240,29 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 
 		for(MaterialPaymentPO materialPaymentPO: materialPaymentPOs){
 
-			materialPaymentVO = new MaterialPaymentVO(new MaterialVO(new HouseVO(new VillageVO()),new CustomerVO()),new UserBaseVO());
+			materialPaymentVO = new MaterialPaymentVO(new MaterialVO(new HouseVO(new VillageVO(new CityProperVO(new CityVO()))),new CustomerVO()),new UserBaseVO());
 
-			BeanUtil.copyProperties(materialPaymentPO, materialPaymentVO,Arrays.asList("material","creater","collecter","confirmer"));
+			BeanUtil.copyProperties(materialPaymentPO, materialPaymentVO, Arrays.asList("material","creater","collecter","confirmer"));
 
 			if(materialPaymentPO.getMaterialReceipt() != null){
-				BeanUtil.copyProperties(materialPaymentPO.getMaterialReceipt(), materialPaymentVO,Arrays.asList("material","creater","collecter","confirmer"));
+				BeanUtil.copyProperties(materialPaymentPO.getMaterialReceipt(), materialPaymentVO, Arrays.asList("material","creater","collecter","confirmer"));
 			}
 			
-			BeanUtil.copyProperties(materialPaymentPO.getCreater(), materialPaymentVO.getCreater(),Arrays.asList("dept","duty"));
-			BeanUtil.copyProperties(materialPaymentPO.getMaterial(), materialPaymentVO.getMaterial(),Arrays.asList("house","customer","salesman","materialer","instorer","region","department","materialDepartment"));
+			BeanUtil.copyProperties(materialPaymentPO.getCreater(), materialPaymentVO.getCreater(), Arrays.asList("dept","duty"));
+			BeanUtil.copyProperties(materialPaymentPO.getMaterial(), materialPaymentVO.getMaterial(), Arrays.asList("house","customer","salesman","materialer","instorer","region","department","materialDepartment"));
 			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getCustomer(), materialPaymentVO.getMaterial().getCustomer());
-			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getHouse(), materialPaymentVO.getMaterial().getHouse(),Arrays.asList("village"));
-			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getHouse().getVillage(), materialPaymentVO.getMaterial().getHouse().getVillage(),Arrays.asList("cityProper"));
+			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getHouse(), materialPaymentVO.getMaterial().getHouse(), Arrays.asList("village"));
+			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getHouse().getVillage(), materialPaymentVO.getMaterial().getHouse().getVillage(), Arrays.asList("cityProper"));
+			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getHouse().getVillage().getCityProper(), materialPaymentVO.getMaterial().getHouse().getVillage().getCityProper(), Arrays.asList("city"));
+			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getHouse().getVillage().getCityProper().getCity(), materialPaymentVO.getMaterial().getHouse().getVillage().getCityProper().getCity(), Arrays.asList("region"));
 			
 			MaterialReceiptPO materialReceipt = materialPaymentPO.getMaterialReceipt();
 			
 			if(materialReceipt != null){
 				materialPaymentVO.setCollecter(new UserBaseVO());
 				materialPaymentVO.setConfirmer(new UserBaseVO());
-				BeanUtil.copyProperties(materialReceipt.getCollecter(), materialPaymentVO.getCollecter(),Arrays.asList("dept","duty"));
-				BeanUtil.copyProperties(materialReceipt.getConfirmer(), materialPaymentVO.getConfirmer(),Arrays.asList("dept","duty"));
+				BeanUtil.copyProperties(materialReceipt.getCollecter(), materialPaymentVO.getCollecter(), Arrays.asList("dept","duty"));
+				BeanUtil.copyProperties(materialReceipt.getConfirmer(), materialPaymentVO.getConfirmer(), Arrays.asList("dept","duty"));
 			}
 			
 			materialPaymentVOs.add(materialPaymentVO);

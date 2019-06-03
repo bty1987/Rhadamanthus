@@ -1,7 +1,5 @@
 jQuery(function ($) {
 
-    
-
     var acceptanceDetail = {
         constructionScheName : {},
 
@@ -108,7 +106,7 @@ jQuery(function ($) {
     };
 
     com.focusPage("#saveBtn").bindClick(save);
-    com.focusPage('.date-picker').datepicker({autoclose: true});
+    com.focusPage('.date-picker').datepicker(com.datepickerdefault);
 
     com.focusPage("#backBtn").click(function () {
         com.switchPage(api.index.acceptanceIndex.url);

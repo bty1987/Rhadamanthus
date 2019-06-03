@@ -206,7 +206,7 @@ var QuotationDetail = (function(){
 		calculateQuoteFee : function($quote){
 			var _num = parseFloat($quote.find('.num .cell-wrap').text());
 			var _unitprice = parseFloat($quote.find('.unitprice .cell-wrap').text());
-			var _discountFlag = $quote.find('.discountprice').attr('data-discount');//1打折，0不打折
+			var _discountFlag = $quote.find('.discountprice').attr('data-discount');//1打折,0不打折
 			var _discountprice = utils.changeThrDecimal(utils.accMul(_unitprice, (_discountFlag == 1 ? utils.accDiv(quo.basicParams['quotation.discount'], 10) : 1)));
 			var _totalprice,_totalpriced;
 			_totalprice = utils.changeThrDecimal(utils.accMul(_num,  _unitprice));
@@ -229,7 +229,7 @@ var QuotationDetail = (function(){
 				
 				var _num = parseFloat($quote.find('.num .cell-wrap').text());
 				var _unitprice = parseFloat($quote.find('.unitprice .cell-wrap').text());
-				var _discountFlag = $quote.find('.discountprice').attr('data-discount');//1打折，0不打折
+				var _discountFlag = $quote.find('.discountprice').attr('data-discount');//1打折,0不打折
 				var _discountprice = utils.changeThrDecimal(utils.accMul(_unitprice, (_discountFlag == 1 ? utils.accDiv(discount, 10) : 1)));
 				
 				var _totalprice = utils.accMul(_num,  _unitprice);
@@ -442,10 +442,10 @@ var QuotationDetail = (function(){
 		/*
 		* 将功能区添加到功能区列表中
 		* 参数:
-		* 	order ：功能区排序
-		* 	$domain ：功能区
-		* 	$aimDomains ： 参与排序的其他功能区（不包含当前要插入的功能区）
-		* 	existed ： 是否已存在功能区列表中
+		* 	order : 功能区排序
+		* 	$domain : 功能区
+		* 	$aimDomains :  参与排序的其他功能区(不包含当前要插入的功能区)
+		* 	existed :  是否已存在功能区列表中
 		* */
 		insertDomainByOrder : function(order, $domain, $aimDomains, existed){
 			var that = this;
@@ -761,7 +761,7 @@ var QuotationDetail = (function(){
 		},
 		/*添加报价项的时候记住上一页选中的报价项
 		* 参数
-		* $input ：正在操作的input标签
+		* $input : 正在操作的input标签
 		* ischecked : 选举中或取消选中
 		* */
 		recordQuots : function($input, ischecked){

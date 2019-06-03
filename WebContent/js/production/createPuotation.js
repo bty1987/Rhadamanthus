@@ -61,18 +61,18 @@ jQuery(function () {
             var $delete = $('<div></div>').addClass('pull-right action-button').append($('<a></a>').addClass('btn btn-minier btn-danger _delete').html('删除'));
             var $h4 = $('<h4></h4>').html(_name).attr('data-qutoName',_name);
             $h4.append($delete).appendTo($liList);
-            $liList.append(addSpan(' 类型： ','s_brand',$('#brand').val()," ",'b_brand',puotation.quoteTypes)).
-                append(addSpan(' 单位： ','s_unit',$('#measurementunit').val()," ",'b_unit',null)).
-                append(addSpan(' 规格：','s_format',$('#format1').val()," ",'b_format',null)).
-                append(addSpan(' 长度：','s_height',$('#height').val()," ",'b_height',null)).
-                append(addSpan(' 宽度：','s_width',$('#width').val()," ",'b_width',null)).
-                append(addSpan(' 厚度：','s_thick',$('#thick').val()," ",'b_thick',null)).
-                append(addSpan(' 面积：','s_area',$('#area').val()," ",'b_area',null)).
-                append(addSpan(' 售价：','s_unitprice',$('#unitprice').val(),'blue','b_unitprice',null)).
-                append(addSpan(' 数量：','s_number',$('#num').val(),'red','b_number')).
-                append(addSpan(' 总价：','s_total',$('#total').val(),'blue','b_total',null)).
-                append(addSpan(' 备注：','s_remark',$('#remark').val()," ",'b_remark',null)).
-                append(addSpan(' 特型：','s_specil',$('#specil').val()," ",'b_specil',null)).
+            $liList.append(addSpan(' 类型:  ','s_brand',$('#brand').val()," ",'b_brand',puotation.quoteTypes)).
+                append(addSpan(' 单位:  ','s_unit',$('#measurementunit').val()," ",'b_unit',null)).
+                append(addSpan(' 规格: ','s_format',$('#format1').val()," ",'b_format',null)).
+                append(addSpan(' 长度: ','s_height',$('#height').val()," ",'b_height',null)).
+                append(addSpan(' 宽度: ','s_width',$('#width').val()," ",'b_width',null)).
+                append(addSpan(' 厚度: ','s_thick',$('#thick').val()," ",'b_thick',null)).
+                append(addSpan(' 面积: ','s_area',$('#area').val()," ",'b_area',null)).
+                append(addSpan(' 售价: ','s_unitprice',$('#unitprice').val(),'blue','b_unitprice',null)).
+                append(addSpan(' 数量: ','s_number',$('#num').val(),'red','b_number')).
+                append(addSpan(' 总价: ','s_total',$('#total').val(),'blue','b_total',null)).
+                append(addSpan(' 备注: ','s_remark',$('#remark').val()," ",'b_remark',null)).
+                append(addSpan(' 特型: ','s_specil',$('#specil').val()," ",'b_specil',null)).
                 append($('<span></span>').text($('#bid').val()).attr("id","invisiblePurchase"));
                 $('#puotationItemList').append($liList);
                 //给最后一个li标签加上底框,除了最后一个li 其他的li均无底框
@@ -95,7 +95,7 @@ jQuery(function () {
                 //$('.list-group-item:last').css("border-bottom","solid 1px");
             });
         }else if(puotation.flag == false){
-            com.showAlert(com.warning,"商品信息不完善，请先完善商品信息");
+            com.showAlert(com.warning,"商品信息不完善,请先完善商品信息");
         }
         com.focusPage('#totals').val(cycTotals());
 
@@ -222,7 +222,7 @@ jQuery(function () {
                 if(_brand != $v.find('.s_brand').find('.b_brand').text()){
                     $v.css("border", "solid red 2px");
                     var r = i+1;
-                    com.showAlert(null,"报价项第"+r+"项中类型与品牌不符，请检查");
+                    com.showAlert(null,"报价项第"+r+"项中类型与品牌不符,请检查");
                     flag = false;
                 }
             });

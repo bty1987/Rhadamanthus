@@ -113,7 +113,7 @@
 		repeatFlg:false
 	};
     	
-   //给全局变量赋值（主要操作是制定页面标签）
+   //给全局变量赋值(主要操作是制定页面标签)
 //	company.saveBtn = com.focusPage("#saveAddItemBtn").on("click", saveData);
     company.cancelBtn = com.focusPage("#cancelBtn");
 	company.modal = com.focusPage("#addItemModal");

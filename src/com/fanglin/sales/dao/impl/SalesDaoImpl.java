@@ -162,13 +162,14 @@ public class SalesDaoImpl extends DaoImpl<SalesPO> implements SalesDao {
 				query.alias("instorer", "instorer");
 				query.alias("salesman", "salesman");
 				query.alias("dept", "dept");
-				
 				if(SalesPO.COLUMN_NO_STR.equals(field)){
 					query.add(query.getCriterion(field, data, op));
-					
 				}else if(SalesPO.COLUMN_ORDERID_STR.equals(field)){
 					query.add(query.getCriterion(field, data, op));
-					
+				}else if(SalesPO.COLUMN_BRAND_STR.equals(field)){
+					query.add(query.getCriterion(SalesPO.COLUMN_BRAND_STR, data, op));
+				}else if(SalesPO.COLUMN_BID_STR.equals(field)){
+					query.add(query.getCriterion(SalesPO.COLUMN_BID_STR, Long.valueOf(data), op));
 				}else if("instorer".equals(field)){
 					query.add(query.getCriterion(SalesPO.COLUMN_INSTORERID_STR, data, op));
 				}else if("salesman".equals(field)){
@@ -201,10 +202,7 @@ public class SalesDaoImpl extends DaoImpl<SalesPO> implements SalesDao {
 					
 					query.add(query.getCriterion(field, stimestamp, "ge"));
 					query.add(query.getCriterion(field, etimestamp, "le"));
-				}else if(SalesPO.COLUMN_BRAND_STR.equals(field)){
-					query.add(query.getCriterion(SalesPO.COLUMN_BRAND_STR, data, op));
 				}
-				
 			}
 		}
 	}

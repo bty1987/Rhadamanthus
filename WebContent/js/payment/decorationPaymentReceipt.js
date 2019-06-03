@@ -166,7 +166,7 @@ jQuery(function ($) {
 
             var orderReceiptTr = $('<tr></tr>').appendTo(receiptTable);
             var noReceiptTd = $('<td style="width: 25%"></td>').text('装修单号: ' + receipt.order.orderId).appendTo(orderReceiptTr);
-            var addrReceiptTd = $('<td style="width: 40%" colspan="2"></td>').text('客户地址: ' + receipt.order.house.village.name + receipt.order.house.houseNumber).appendTo(orderReceiptTr);
+            var addrReceiptTd = $('<td style="width: 40%" colspan="2"></td>').text('客户地址: ' + receipt.order.house.village.cityProper.city.name + ' ' + receipt.order.house.village.cityProper.name + ' ' + receipt.order.house.village.name + receipt.order.house.houseNumber).appendTo(orderReceiptTr);
             var timeReceiptTd = $('<td style="width: 35%" colspan="2"></td>').html('收款日期: ' + first.collectTime).appendTo(orderReceiptTr);
 
             var sumMoney = 0;

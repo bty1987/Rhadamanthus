@@ -90,13 +90,13 @@ jQuery(function ($) {
         });
 
         if (checkbox.length == 0) {
-            layer.msg("请选择标签");
+            com.showAlert(com.warning, "请选择标签");
         } else {
             var userlabels = null;
 
             com.post(api.data.pickUserLabel, option, function (res) {
                 if (res.userlabels == null || res.userlabels.length == 0) {
-                    layer.msg("没有符合的人员");
+                    com.showAlert(com.warning, "没有符合的人员");
                 }
 
                 userlabels = res.userlabels;

@@ -132,7 +132,7 @@ public class ModuleServiceImpl implements ModuleService {
 			return moduleVOs;
 		}else{
 			
-			List<RoleModulePO> roleModulePOs = roleModuleDao.queryRoleModuleByRid(rolePO.getRid(), moduleVO.getSystem());
+			List<RoleModulePO> roleModulePOs = roleModuleDao.queryRoleModule(rolePO.getRid(), moduleVO.getSystem());
 			
 			Map<Integer, ModuleVO> modules = new HashMap<Integer, ModuleVO>();
 			
@@ -142,6 +142,26 @@ public class ModuleServiceImpl implements ModuleService {
 			
 			return new ArrayList<ModuleVO>(modules.values());
 		}
+	}
+
+	@Override
+	public List<ModuleVO> queryModuleForLinkByRid(ModuleVO moduleVO, RoleVO roleVO) throws FLException {
+		
+		RolePO rolePO = roleDao.get(roleVO.getRid());
+		
+		if(rolePO == null){
+			throw new FLException(230010, "角色不存在");
+		}
+		
+		List<RoleModulePO> roleModulePOs = roleModuleDao.queryRoleModuleForLink(rolePO.getRid(), moduleVO.getSystem());
+		
+		Map<Integer, ModuleVO> modules = new HashMap<Integer, ModuleVO>();
+		
+		for(RoleModulePO roleModulePO: roleModulePOs){
+			convertModule(modules, roleModulePO.getModule());
+		}
+		
+		return new ArrayList<ModuleVO>(modules.values());
 	}
 
 	@Override
@@ -167,7 +187,7 @@ public class ModuleServiceImpl implements ModuleService {
 			
 			return moduleVOs;
 		}else{
-			List<RoleModulePO> roleModulePOs = roleModuleDao.queryRoleModuleByRid(userPO.getRole().getRid(), moduleVO.getSystem());
+			List<RoleModulePO> roleModulePOs = roleModuleDao.queryRoleModule(userPO.getRole().getRid(), moduleVO.getSystem());
 			
 			Map<Integer, ModuleVO> modules = new HashMap<Integer, ModuleVO>();
 			
@@ -181,7 +201,7 @@ public class ModuleServiceImpl implements ModuleService {
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int updateRoleModuleByRid(ModuleVO moduleVO, RoleVO roleVO, List<Integer> mids, int rid) throws FLException {
+	public int updateRoleModuleByRid(ModuleVO moduleVO, RoleVO roleVO, List<ModuleVO> modules, int rid) throws FLException {
 		
 		RolePO rolePO = roleDao.get(roleVO.getRid());
 		
@@ -205,9 +225,10 @@ public class ModuleServiceImpl implements ModuleService {
 		
 		roleModuleDao.deleteRoleModuleByRid(rolePO.getRid(), moduleVO.getSystem());
 		
-		if(mids != null && mids.size() > 0){
-			for(Integer mid: mids){
-				RoleModulePO userModulePO = new RoleModulePO(new ModulePO(mid), rolePO.getRid());
+		if(modules != null && modules.size() > 0){
+			for(ModuleVO module: modules){
+				
+				RoleModulePO userModulePO = new RoleModulePO(new ModulePO(module.getMid()), rolePO.getRid(), module.getLink());
 				
 				roleModuleDao.save(userModulePO);
 			}

@@ -55,12 +55,9 @@ $(function(){
 
                 _option["sid[0]"] = v.sid;
 
-                layer.confirm('确定要将单号为 ' + v.no + ' 的销售单进行预结算吗?', {
-                    btn: ['确定', '取消'] //按钮
-                }, function (index, layero) {
+                com.showConfirm('确定要将单号为 ' + v.no + ' 的销售单进行预结算吗?', function (index, layero) {
                     com.post(api.inventory.preSalesBalance, _option, function (res) {
-                        layer.closeAll();
-                        layer.msg('预结算成功');
+                        com.showAlert(com.info, "预结算成功");
                     });
                 });
 
@@ -102,7 +99,7 @@ $(function(){
                     }else{
                         profit = utils.accMul(utils.accSub(v.price, v.cvalue),v.num);
                     }
-
+                    
                     var propertyArr = [
                         ["商品品类:", v.goods.category, "grey", "category"],
                         ["商品颜色:", v.color.name, "grey", "color"],
@@ -117,7 +114,7 @@ $(function(){
                         ["结算方式:", v.ctype==0?"底价":"点位", "red", "ctype"],
                         ["结算值:", v.cvalue, "blue", "cvalue"],
                         ["利润:", profit, "blue", "profit"],
-                        ["备注:", v.comment, "grey", "conment"],
+                        ["备注:", v.comment, "grey", "comment"]
                     ];
 
                     $.each(propertyArr, function (index, value) {
@@ -152,11 +149,11 @@ $(function(){
                            var _option = {
                                "salesItem.siid":v.siid,
                                "salesItem.ctype":ctype,
-                               "salesItem.cvalue":cvalue,
+                               "salesItem.cvalue":cvalue
                            };
 
                            com.post(api.inventory.updateSalesItemForBalance,_option,function(res){
-                               layer.msg('更改成功');
+                               com.showAlert(com.info, "更改成功");
                                viewSalesItems(_sid);
                            });
                        }
@@ -205,7 +202,6 @@ $(function(){
         com.post(api.inventory.querySalesItemBySid, {
             "sales.sid": sid
         }, function (res) {
-
             initList.init('resultList1', res.salesItems);
 
         });

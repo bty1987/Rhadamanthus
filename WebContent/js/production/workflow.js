@@ -80,37 +80,17 @@ $(function(){
                 com.focusPage('#layerAdd').find('input[name="name"]').val(v.name);
                 openlayer("编辑",function(){
                     if(!com.validate("layerAdd",null)){
-                        saveData(v.wfid, function(){
-                            Seacher.doSearch();
-                            layer.closeAll();
-                        });
+                        saveData(v.wfid);
                     }
                 });
             });
 
             $btnStart.click(function () {
-
-                layer.confirm('是否启用?', {
-                    btn: ['确定','取消'] //按钮
-                }, function(index, layero){
-                    changeQuoteTypeStatus(v.wfid,0,(v.status == 0) ,function(){
-                        layer.closeAll();
-                        layer.msg('启用成功',{icon:1,time:2e3});
-                    });
-                }, function(){});
-
+                changeQuoteTypeStatus(v.wfid, 0, (v.status == 0));
             });
 
             $btnStop.click(function () {
-
-                layer.confirm('是否禁用?', {
-                    btn: ['确定','取消'] //按钮
-                }, function(index, layero){
-                    changeQuoteTypeStatus(v.wfid,1,(v.status == 1),function(){
-                        layer.closeAll();
-                        layer.msg('禁用成功',{icon:1,time:2e3});
-                    });
-                }, function(){});
+                changeQuoteTypeStatus(v.wfid, 1, (v.status == 1));
             });
 
         return $liLine;
@@ -143,10 +123,7 @@ $(function(){
                 com.clearValidator();
                 openlayer("添加",function(index, layero){
                     if(!com.validate("layerAdd",null)){
-                        saveData(null, function(){
-                            Seacher.doSearch();
-                            layer.closeAll();
-                        });
+                        saveData(null);
                     }
 
                 });
@@ -177,15 +154,15 @@ $(function(){
         });
     }
 
-    function saveData(id,callback){
+    function saveData(id){
         var name = com.focusPage('#layerAdd').find('input[name="name"]').val();
 
         if(!id){
             com.post(api.production.addWorkflow, {
                 "workflow.name": name
             }, function(res){
-                callback();
-                layer.msg('添加成功',{icon:1,time:2e3});
+                Seacher.doSearch();
+                com.showAlert(com.info, "操作成功");
             });
         }
         else{
@@ -193,32 +170,22 @@ $(function(){
                 "workflow.wfid": id,
                 "workflow.name": name
             }, function(res){
-                callback();
-                layer.alert('操作完成', {
-                    icon: 1,
-                    skin: 'layer-ext-moon'
-                });
+                Seacher.doSearch();
+                com.showAlert(com.info, "操作成功");
             });
         }
     }
 
     /*btnType:0 启用功能,1 禁用功能
      statusFlag:当前状态是否与想要完成的功能相冲 */
-    function changeQuoteTypeStatus(qtid,btnType,statusFlag ,callback) {
+    function changeQuoteTypeStatus(qtid,btnType,statusFlag) {
 
-        if(!statusFlag){
-            com.post(api.production.updateWorkflowForStatus, {
-                "workflow.wfid": qtid,
-                "workflow.status": btnType
-            }, function (res) {
-                callback();
-                Seacher.doSearch();
-            });
-        }else{
-            layer.alert(btnType == 0 ? '已经启用':'已经禁用', {
-                icon: 0,
-                skin: 'layer-ext-moon'
-            });
-        }
+        com.post(api.production.updateWorkflowForStatus, {
+            "workflow.wfid": qtid,
+            "workflow.status": btnType
+        }, function (res) {
+            Seacher.doSearch();
+            com.showAlert(com.info, "操作成功");
+        });
     }
 });

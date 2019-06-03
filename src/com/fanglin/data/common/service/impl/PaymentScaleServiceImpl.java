@@ -32,7 +32,7 @@ public class PaymentScaleServiceImpl implements PaymentScaleService {
 		int companys;
 		
 		try {
-			companys = FormatUtil.decodeCompany(AESHelper.decryptString(paymentScale.getCid(), SystemConfig.getString("encryptKey")));
+			companys = FormatUtil.decodeCompany(AESHelper.decrypt(paymentScale.getCid(), SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv")));
 		} catch (Exception e) {
 			throw new FLException(230015 , "公司不存在");
 		}
@@ -43,7 +43,7 @@ public class PaymentScaleServiceImpl implements PaymentScaleService {
 		for (PaymentScalePO paymentScalePO : paymentScalePOS) {
 			
 		  	try {
-		  		company = AESHelper.encryptToString(FormatUtil.encodeCompany(paymentScalePO.getCid()),SystemConfig.getString("encryptKey"));
+		  		company = AESHelper.encrypt(FormatUtil.encodeCompany(paymentScalePO.getCid()),SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv"));
 		    } catch (Exception e) {
 		    	throw new FLException(230015 , "公司不存在");
 		    }
@@ -67,7 +67,7 @@ public class PaymentScaleServiceImpl implements PaymentScaleService {
 			PaymentScalePO paymentScalePO = new  PaymentScalePO();
 		
 			 try { 
-				 	company = FormatUtil.decodeCompany(AESHelper.decryptString(paymentScale.getCid(), SystemConfig.getString("encryptKey")));
+				 	company = FormatUtil.decodeCompany(AESHelper.decrypt(paymentScale.getCid(), SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv")));
 			 } catch (Exception e) {
 				 throw new FLException(230015 , "公司不存在");
 			 }

@@ -23,11 +23,7 @@ jQuery(function($) {
 		com.clearValidator();
 	});
 
-	com.initTypeahead('belonger', api.personel.queryUserByPinyin, "pinyinName",
-			{
-				"departmentType.name" : "",
-				"user.status" : 0
-			}, "autoFillKeyValue", "key", "value");
+	com.initTypeahead('belonger', api.personel.queryUserByPinyin, "pinyinName", {"departmentType.name" : "", "user.status" : 0}, "autoFillKeyValue", "key", "value", null);
 
 		var displayFunc = (function() {
 
@@ -119,7 +115,7 @@ jQuery(function($) {
 	// 添加
 	com.focusPage('a[name="addVticket"]', '#pagenation').click(function() {
 		vticket.items.tno.attr("readOnly", false);
-		com.updateTypeahead("belonger", "", "");
+		com.cleanTypeahead("belonger");
 		com.cleanItems(vticket.items);
 		com.focusPage("#vticketModal").modal("show");
 	});

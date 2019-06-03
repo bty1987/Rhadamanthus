@@ -2,7 +2,7 @@ $(function(){
 
     /**
      * 回调函数必须提供 init(tableId, result.list)方法
-     * tableId ，用来显示的div的id
+     * tableId ,用来显示的div的id
      * result.list 列表的json数组
      * */
     var displayFunc  = (function(){
@@ -162,7 +162,7 @@ $(function(){
 		repeatFlg:false
 	};
     	
-   //给全局变量赋值（主要操作是制定页面标签）
+   //给全局变量赋值(主要操作是制定页面标签)
 	//systemDefineItem.saveBtn = $("#saveAddItemBtn").on("click", saveData);
 	systemDefineItem.cancelBtn = com.focusPage("#cancelBtn");
 	systemDefineItem.modal = com.focusPage("#addItemModal");
@@ -349,8 +349,8 @@ $(function(){
 	}
 		
     function successCallback(){
-    	//$('button.btn-search','#condList').click();//调用成功后，执行查询操作  
-    	systemDefineItemSeacher.doSearch();//调用成功后，执行com.Seacher中的doSeach方法
+    	//$('button.btn-search','#condList').click();//调用成功后,执行查询操作  
+    	systemDefineItemSeacher.doSearch();//调用成功后,执行com.Seacher中的doSeach方法
     }
     
 });

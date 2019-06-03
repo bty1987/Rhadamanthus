@@ -25,7 +25,8 @@ jQuery(function($) {
 		bankNums:[],
 		checkvNums: [],
 		decorationType: [],
-		htmlName: "material"
+		htmlName: "material",
+		modelId: "baseItemModal"
 	};
 
 	materialPayment.baseModal = com.focusPage("#baseItemModal").on('show.bs.modal', function(e){
@@ -109,7 +110,7 @@ jQuery(function($) {
 
 	com.focusPage("#couponType").chosen({width: "216px", multi_type: "input"});
 
-	paymentUtils.dynamicChosen('baseItemModal',"materialcashInfo",materialPayment.cashUtil,"key","value");
+	com.selectTypeahead("materialcashInfo", materialPayment.cashUtil, "key", "value", null);
 
 	com.focusPage("#materialbankAdd").click(function(){
 		var num = $(this).attr("num");
@@ -164,7 +165,7 @@ jQuery(function($) {
             var propertyArr = [
                ["订单号:",  v.material.orderId, "blue"],
                ["主材号:", v.material.no, "blue"],
-               ["楼盘地址:", v.material.house.village.name +''+ v.material.house.houseNumber, "grey"],
+               ["楼盘地址:", v.material.house.village.cityProper.city.name + ' ' + v.material.house.village.cityProper.name + ' ' + v.material.house.village.name + ' ' + v.material.house.houseNumber, "grey"],
                ["客户:", v.material.customer.name, "grey"],
                ["品牌:", v.brand, "grey"],
                ["操作人:", v.creater.currentName, "grey"],
@@ -211,7 +212,7 @@ jQuery(function($) {
 
 			//显示装修单信息
 			$btnDecoration.click(function(){
-				decorationInfoShow(v);
+				paymentUtils.decorationInfoShow(v.material.orderId, materialPayment.decorationType);
 			});
 
             return $liLine;
@@ -275,7 +276,7 @@ jQuery(function($) {
             var propertyArr = [
                ["订单号:", v.material.orderId, "blue"],
                ["主材号:", v.material.no, "blue"],
-               ["楼盘地址:", v.material.house.village.name +''+ v.material.house.houseNumber, "grey"],
+               ["楼盘地址:", v.material.house.village.cityProper.city.name + ' ' + v.material.house.village.cityProper.name + ' ' + v.material.house.village.name + ' ' + v.material.house.houseNumber, "grey"],
                ["客户:", v.material.customer.name, "grey"],
                ["品牌:", v.brand, "grey"],
                ["操作人:", v.creater.currentName, "grey"],
@@ -355,7 +356,7 @@ jQuery(function($) {
 
 			//显示装修单信息
 			$decorationInfoBtn.click(function(res){
-				decorationInfoShow(v);
+				paymentUtils.decorationInfoShow(v.material.orderId, materialPayment.decorationType);
 			});
 
 			$btnUpdateM.click(function(){
@@ -407,7 +408,7 @@ jQuery(function($) {
 			}else{
 				$total = utils.accAdd($total, $referMoney);
 			}
-		}), layer.msg('<h3>合计金额: ' + $total + '</h3>'));
+		}), com.showAlert(com.info, '<h3>合计金额: ' + $total + '</h3>'));
 
 	});
 
@@ -551,7 +552,7 @@ jQuery(function($) {
 				column : [
 					["订单号","material.orderId"],
 					["主材号","material.no"],
-					['楼盘地址',['material.house.village.name', 'material.house.houseNumber']],
+					['楼盘地址',['material.house.village.cityProper.city.name', 'material.house.village.cityProper.name', 'material.house.village.name', 'material.house.houseNumber']],
 					['品牌','brand'],
 					['应收金额', 'referMoney'],
 					['收款人', 'collecter.currentName'],
@@ -644,7 +645,7 @@ jQuery(function($) {
 	}
 
 	function refund(){
-		if(com.validate()){
+		if(com.validate('baseItemModal')){
 			return;
 		}
 
@@ -706,17 +707,5 @@ jQuery(function($) {
 		materialPayment.baseModal.modal("hide");
 
 		materialPaymentPostData.paymentInfo = []
-	}
-
-	function decorationInfoShow(v){
-		com.focusPage("text").css("line-height", "27px");
-		com.post(api.decoration.queryDecorationByOrderId, {"decorationOrderId" : v.material.orderId}, function(res){
-			var decorationInfo = res.decoration;
-			com.focusPage("#orderId").html(decorationInfo.orderId);
-			com.focusPage("#address").html(decorationInfo.house.village.name +''+ decorationInfo.house.houseNumber);
-			com.focusPage("#type").html(materialPayment.decorationType[decorationInfo.type].value);
-			com.focusPage("#grade").html(decorationInfo.grade);
-			com.focusPage("#decorationInfo").modal("show");
-		});
 	}
 });

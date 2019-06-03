@@ -40,32 +40,16 @@ $(function(){
                         }
 
                         propertyArr = [
-                           // ["装修单号:", data.orderId, "grey"],
-                           // ["楼盘地址:", data.village.villageName + " " + data.houseNumber, "grey"],
                             ["客户名:", data.customer.name, "grey"],
-                           // ["渠道:", data.salesman.userName, "grey"],
-                           // ["部门:", data.dept.deptName, "grey"],
-                           // ["分区:", data.region.deptName, "grey"],
-                           // ["导购:", data.guider.userName, "grey"],
-                           // ["驻店:", data.instorer.currentName, "grey"],
-                           // ["主材部:", data.guideDept.deptName, "grey"],
                             ["品类:", data.category, "grey"],
                             ["品牌:", data.brand, "grey"],
                             ["创建时间:", data.createTime , "green"],
-                            //["结算时间:", data.balanceTime, "grey"],
-                            //["全款时间:", data.fullpayTime, "grey"],
-                            //["状态:", status, "grey"],
-                            //["结算状态:", balanceStatus, "grey"],
                             ["总价:", data.total, "blue"],
-                            //["抹零:", data.maling , "grey"],
-                            //["厂商抹零:", data.venderMaling, "grey"],
-                            //["券值:", data.coupon, "grey"],
-                            //["券信息:", data.couponInfo, "grey"],
                             ["备注:", data.comment, "grey"]
                         ];
                         creatureRow(propertyArr,v,$ul,data);
                     },function (e) {
-                       layer.msg("未查询到此订单",{icon: 2,time:2e3});
+                        com.showAlert(com.warning, "未查询到此订单");
                         propertyArr = {};
                     });
 
@@ -97,26 +81,17 @@ $(function(){
                         }
 
                         propertyArr = [
-                            ["客户名:", data.customer.name, "grey"],
-                            ["品类:", data.category, "grey"],
-                            ["品牌:", data.brand, "grey"],
-                            ["创建时间:", data.createTime, "green"],
-                            //["类型:", data.createTime, "grey"],
-                            ["总价:", data.total, "blue"],
-                            //["折扣总价：",data.distotal,"grey"],
-                            //["定金:", data.depositPayment, "grey"],
-                            //["补款:", data.fullPayment, "grey"],
-                            //["抹零:", data.maling, "grey"],
-                            //["厂商抹零:", data.venderMaling, "grey"],
-                            //["券额:", data.coupon, "grey"],
-                            //["券信息:", data.couponInfo, "grey"],
-                            //["状态:", status, "grey"],
-                            ["备注:", data.des, "grey"],
+                            ["客户名: ", data.customer.name, "grey"],
+                            ["品类: ", data.category, "grey"],
+                            ["品牌: ", data.brand, "grey"],
+                            ["创建时间: ", data.createTime, "green"],
+                            ["总价: ", data.total, "blue"],
+                            ["备注: ", data.des, "grey"],
                         ];
                         creatureRow(propertyArr,v,$ul,data);
 
                     },function (e) {
-                       layer.msg("未查询到此订单",{icon: 2,time:2e3});
+                       com.showAlert(com.warning, "未查询到此订单");
                        propertyArr = {};
                     });
                 }
@@ -153,13 +128,9 @@ $(function(){
     function createPage(){
 
         com.post(api.production.queryProductionSalesByPid,{"productionSales.pid":transferData.pid},function(data){
-
             initList('resultList',data.productionSaless);
-
         },function(e){
-
-            layer.msg("未查到此生产单下的生产销售单",{icon: 2,time:2e3});
-
+            com.showAlert(com.warning, "未查到此生产单下的生产销售单");
         });
     }
 
@@ -178,9 +149,7 @@ $(function(){
 
 
         openBindlayer(function (index, layero) {
-            bindSales(function () {
-                layer.closeAll();
-            });
+            bindSales();
         });
     });
 
@@ -198,12 +167,12 @@ $(function(){
             com.post(api.inventory.querySalesByNo,option,function (data) {
 
                 if(transferData.orderId != data.sales.orderId){
-                   layer.msg("此销售单与生产单非同一装修订单,无法绑定",{icon: 2,time:2e3});
+                   com.showAlert(com.warning, "此销售单与生产单非同一装修订单,无法绑定");
                     return false;
                 }
 
                 if(data.sales.fullpayStatus  == -1 || data.sales.fullpayStatus == 0){
-                   layer.msg("此销售订单未提交补款,无法绑定",{icon: 2,time:2e3});
+                   com.showAlert(com.warning, "此销售订单未提交补款,无法绑定");
                     return false;
                 }
 
@@ -211,9 +180,9 @@ $(function(){
                 productionSalesPostData["productionSales.sid"] = data.sales.sid;
                 productionSalesPostData["production.total"] = data.sales.total;
 
-            },function (e) {
-               layer.msg("未查询到此订单",{icon: 2,time:2e3});
-                $layerBind.find("input[name='brand']").val(null);
+            }, function (e) {
+               com.showAlert(com.warning, "未查询到此订单");
+               $layerBind.find("input[name='brand']").val(null);
             });
 
         }else{
@@ -224,12 +193,12 @@ $(function(){
             com.post(api.material.queryMaterialByNo,option,function (data) {
 
                 if(transferData.orderId != data.material.orderId){
-                   layer.msg("此主材单与生产单非同一装修订单,无法绑定",{icon: 2,time:2e3});
+                    com.showAlert(com.warning, "此主材单与生产单非同一装修订单,无法绑定");
                     return false;
                 }
 
                 if(data.material.fullStatus == 0 || data.material.fullStatus == 1){
-                   layer.msg("此主材订单未提交补款,无法绑定",{icon: 2,time:2e3});
+                   com.showAlert(com.warning, "此主材订单未提交补款,无法绑定");
                     return false;
                 }
 
@@ -239,7 +208,7 @@ $(function(){
                 productionSalesPostData["production.total"] = data.material.total;
 
             },function (e) {
-               layer.msg("未查询到此订单",{icon: 2,time:2e3});
+               com.showAlert(com.warning, "未查询到此订单");
                $layerBind.find("input[name='brand']").val(null);
             });
         }
@@ -271,18 +240,14 @@ $(function(){
     }
 
     //绑定调用方法
-    function bindSales(callback){
+    function bindSales(){
         if(!com.validate("layerBind",null)){
             productionSalesPostData["productionSales.pid"] = transferData.pid;
 
             com.post(api.production.bindProductionSales,productionSalesPostData,function(data){
-                callback();
-                layer.msg('绑定成功', {icon: 1, time: 2e3});
+                com.showAlert(com.info, "操作成功");
                 com.focusPage("#resultList ul.ui-sortable").remove();
                 createPage();
-            },function(e){
-                callback();
-                layer.msg('绑定失败', {icon: 2, time: 2e3});
             });
         }
     }

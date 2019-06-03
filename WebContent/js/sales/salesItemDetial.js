@@ -83,7 +83,7 @@ $(function () {
                 }
 
                 if (radios == null || radios == "") {
-                    layer.msg('请选择审批人', {time: 3e3});
+                    com.showAlert(com.warning, "请选择审批人");
                     return false;
                 }
 
@@ -92,7 +92,7 @@ $(function () {
                         refundCancelBtn.trigger('click');
                         refreshPage();
                         refundLayerOut();
-                        layer.msg("退货申请已提交.");
+                        com.showAlert(com.info, "退货申请已提交");
                         com.focusPage('#approver').empty();
                     }, function (e) {
                         com.showAlert(com.error, e.errorMsg);
@@ -131,7 +131,7 @@ $(function () {
             var radio = _approval.find('input:checked').attr('userid');
 
             if (radio == null || radio == "") {
-                layer.msg('请选择审批人', {time: 3e3});
+                com.showAlert(com.warning, "请选择审批人");
                 return false;
             }
 
@@ -150,7 +150,7 @@ $(function () {
                         com.focusPage('#list div.action-buttons label').remove();
                         refreshPage();
                         refundLayerOut();
-                        layer.msg("全退申请已提交.");
+                        com.showAlert(com.info, "全退申请已提交");
                         com.focusPage('#approver').empty();
                     }, function (e) {
                         com.showAlert(com.error, e.errorMsg);
@@ -181,8 +181,7 @@ $(function () {
             var radio = _approval.find('input:checked').attr('userid');
 
             if (radio == null || radio == "") {
-                layer.msg('请选择审批人', {time: 3e3});
-
+                com.showAlert(com.warning, "请选择审批人");
                 return false;
             }
 
@@ -199,7 +198,7 @@ $(function () {
                         com.focusPage('#list div.action-buttons label').remove();
                         refreshPage();
                         refundLayerOut();
-                        layer.msg("倒单申请已提交.");
+                        com.showAlert(com.info, "倒单申请已提交");
                         com.focusPage('#approver').empty();
                     }, function (e) {
                         com.showAlert(com.error, e.errorMsg);
@@ -260,9 +259,7 @@ $(function () {
                 $btnDelete.click(function (e) {
                     e.stopPropagation();
 
-                    layer.confirm('确定要删除吗?', {
-                        btn: ['确定', '取消'] //按钮
-                    }, function (indexo, layero) {
+                    com.showConfirm('确定要删除吗?', function (indexo, layero) {
                         com.post(api.inventory.deleteSalesItem, {"salesItem.siid": v.siid}, function () {
 
                             $btnDelete.parents('li.clearfix').remove();
@@ -271,7 +268,7 @@ $(function () {
                             com.showAlert(com.error, e.errorMsg);
                         });
 
-                        layer.close(indexo);
+                        // layer.close(indexo);
                     }, function () {
 
                     });
@@ -560,7 +557,7 @@ $(function () {
                     ['单价', 'price'],
                     ['数量', 'num'],
                     ['金额', 'total'],
-                    ["备注", 'comment'],
+                    ["备注", 'comment']
                 ],
                 list: data.salesItems
             });

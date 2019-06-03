@@ -16,7 +16,6 @@ import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.construction.dao.ConstructionDao;
@@ -24,15 +23,10 @@ import com.fanglin.construction.po.ConstructionPO;
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.decoration.po.DecorationPO;
-import com.fanglin.personel.dao.UserDao;
-import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.Paging;
 
 @Repository("constructionDao")
 public class ConstructionDaoImpl extends DaoImpl<ConstructionPO> implements ConstructionDao {
-	
-	@Autowired
-	private UserDao userDao;
 	
 	public ConstructionDaoImpl(){
 		super(ConstructionPO.class);
@@ -125,13 +119,6 @@ public class ConstructionDaoImpl extends DaoImpl<ConstructionPO> implements Cons
 				String data = filter.getData();
 				String op = filter.getOp();
 				
-				//监理控制查询条件
-				if(ConstructionPO.COLUMN_SUPERVISORQUALITYID_STR.equals(field)){
-					UserPO userPO = userDao.queryUserByUserId(data);
-					query.add(query.getCriterion("supervisor.uid", userPO.getUid(), "eq"));
-					query.add(Restrictions.eq(field, data));
-				}
-				
 				if(field.startsWith("design")){
 					query.alias("decoration.designer", "designer");
 				}else if((field.startsWith("business") || field.startsWith("salesman"))){
@@ -151,7 +138,7 @@ public class ConstructionDaoImpl extends DaoImpl<ConstructionPO> implements Cons
 				}else if("salesman".equals(field)){
 					query.add(query.getCriterion("salesman.userId", data, op));
 				}else if("supervisor".equals(field)){
-					query.alias("decoration.supervisor", "supervisor");
+					query.alias("supervisor", "supervisor");
 					query.add(query.getCriterion("supervisor.userId", data, op));
 				}else if("village".equals(field)){ 
 					query.add(query.getCriterion("village.no", data, op));

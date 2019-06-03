@@ -85,7 +85,7 @@ jQuery(function($) {
 		com.focusPage("#" + sore + "btnUpdate").unbind("click");
 		com.focusPage("#" + sore + "btnUpdate").on("click", function(){
 			if(buildingSchedules[sore].status == 2){
-				com.showAlert(com.warning, "当前节点已完成，不能修改节点信息");
+				com.showAlert(com.warning, "当前节点已完成,不能修改节点信息");
 				return;
 			}
 

@@ -1,14 +1,17 @@
 jQuery(function ($) {
     
     var drawline = {
-            
+
+        constructionInfoModal : com.focusPage("#constructionInfoModal"),
+        saveInfoBtn : com.focusPage("#saveInfoBtn").on("click",saveInfoData),
+
         saveBtn: com.focusPage("#saveBtn"),
         cancelBtn: com.focusPage("#cancelBtn"),
-        
+        applyModal : com.focusPage("#applyModal"),
         deployedBtn: com.focusPage("#deployedBtn"),
-        
-        orderId: null,
-        
+        setupModal : com.focusPage("#setupModal"),
+        editModal : com.focusPage("#editModal"),
+
         items: {
             
             dlid: com.focusPage("#dlid"),
@@ -21,13 +24,10 @@ jQuery(function ($) {
             orderInfos: com.focusPage("#orderInfos"),
             supervisor: com.focusPage("#supervisor"),
 
-            deployedBtn: com.focusPage("#setupModal"),
-            cancelBtn : com.focusPage("#cancelBtn"),
-
-            setupModal : com.focusPage("#setupModal"),
-
-            editModal : com.focusPage("#editModal")
-
+            ishovel  : com.focusPage("#ishovel"),
+            iskey  : com.focusPage("#iskey"),
+            isCeremony  : com.focusPage("#isCeremony"),
+            comment   : com.focusPage("#comment"),
 
         },
         
@@ -36,9 +36,12 @@ jQuery(function ($) {
         status: {}
     };
 
-        drawline.items.setupModal.on('hide.bs.modal', function () {com.cleanTypeahead("supervisor")});
-        drawline.items.setupModal.on('shown.bs.modal', function (e) {initPlan()});
+    com.post(api.ds.construction, {}, function (res) {
+        drawline.items.ishovel.bindData(res.isHovel, "key", "value", false);
+        drawline.items.iskey.bindData(res.isKey, "key", "value", false);
+        drawline.items.isCeremony.bindData(res.isCeremony, "key", "value", false);
 
+    });
 
     com.post(api.ds.construction, {}, function(res){
         $.each(res.drawLineStatus, function(i, v){
@@ -54,11 +57,7 @@ jQuery(function ($) {
         });
     }, null, false);
 
-    com.focusPage('.timepicker').timepicker({
-        minuteStep: 1,
-        showSeconds: false,
-        showMeridian: false
-    });
+    com.focusPage('.timepicker').timepicker(com.timepickerdefault);
 
     com.initTypeahead('supervisor', api.personel.queryUserByPinyin, "pinyinName", {"departmentType.name": "工程部", "user.status": 0}, "userBases", "userId", "currentName", null);
 
@@ -96,15 +95,16 @@ jQuery(function ($) {
             }
 
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable').appendTo($tableWrap);
-            var $liLine = $('<li></li>').addClass('item-orange clearfix').appendTo($ul);
+            var $liLine = $('<li></li>').addClass('ite m-orange clearfix').appendTo($ul);
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.decoration.orderId));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
-            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
-            var $btnDeplory = $('<a></a>').addClass('btn btn-minier btn-success').html('人员部署');
-            var $btnReset = $('<a></a>').addClass('btn btn-minier btn-warning').html('重置');
-            var $successBtn = $('<a></a>').addClass('btn btn-minier btn-inverse').html('放线');
+            var $btnInfo = $('<a></a>').addClass('btn btn-minier btn-yellow').html("信息");
+            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-success').html('编辑');
+            var $btnDeplory = $('<a></a>').addClass('btn btn-minier btn-warning').html('人员部署');
+            var $btnReset = $('<a></a>').addClass('btn btn-minier btn-inverse').html('重置');
+            var $successBtn = $('<a></a>').addClass('btn btn-minier btn-info').html('放线');
 
             var startTime=v.startTime.substr(11);
             var endTime=v.endTime.substr(11);
@@ -132,10 +132,16 @@ jQuery(function ($) {
             });
 
             if (v.status == 1) {
-                $divBtnWrap.append($btnEdit).append($btnDeplory).append($btnReset).append($successBtn).appendTo($h3);
+                $divBtnWrap.append($btnInfo).append($btnEdit).append($btnDeplory).append($btnReset).append($successBtn).appendTo($h3);
             }
 
             $liLine.append($h3).append($ulProperty);
+
+            $btnInfo.click(function(){
+
+                viewConstructionInfo(v.decoration.orderId);
+
+            });
 
             $btnEdit.click(function () {
                 showEdit(v);
@@ -169,23 +175,21 @@ jQuery(function ($) {
     searcher.init(["c_orderId", "c_drawLineStatus", "c_actualDate"], "condList", api.construction.queryDrawLine, function (data) {
         com.focusPage("#resultList").html("");
         displayFunc.init('resultList', data);
-
     }, "pagenation", "drawLineSetupPostData", null, true, "drawLines");
-
     com.focusPage("#condList").append('<button id="showDrawLineApplyInfos" style="marg" class="btn btn-xs btn-yellow btn-search">申请信息</button>');
     com.focusPage('#showDrawLineApplyInfos').on('click', function () {
-        drawline.items.applyModal.modal("show");
+        drawline.applyModal.modal("show");
     });
 
     function showEdit(v) {
-        
+
         drawline.items.dlid.val(v.dlid);
-        drawline.items.actualDate.datepicker('update', v.startTime.substr(0,10));
+        drawline.actualDate.datepicker('update', v.startTime.substr(0,10));
         drawline.items.startTime.val(v.startTime.substr(11, 5));
         drawline.items.endTime.val(v.endTime.substr(11, 5));
         drawline.items.drawLineGroup.val(v.group.gid);
-        
-        drawline.items.editModal.modal("show");
+        drawline.applyModal.modal("show");
+
     }
 
     function showSetup(v) {
@@ -285,6 +289,11 @@ jQuery(function ($) {
         });
     }
 
+
+    drawline.applyModal.on('shown.bs.modal', function (e) {
+        initPlan();
+    });
+
     function initPlan() {
 
         com.focusPage('#calendar').fullCalendar('destroy');
@@ -292,7 +301,7 @@ jQuery(function ($) {
 
         com.focusPage('#calendar').fullCalendar($.extend(com.calendardefault, {
             events: function (start, end, callback) {
-                
+
                 var startTime = com.dateFormat(new Date(start));
                 var endTime = com.dateFormat(new Date(end));
 
@@ -302,7 +311,7 @@ jQuery(function ($) {
                 };
 
                 com.post(api.construction.countDrawLine, options, function (res) {
-                    
+
                     var counts = res.count;
                     var events = [];
 
@@ -324,6 +333,43 @@ jQuery(function ($) {
                 });
             }
         }));
+    }
+
+    function viewConstructionInfo(orderId) {
+
+        com.post(api.construction.queryConstructionInfoByOrderId, {"constructionInfo.orderId": orderId}, function (res) {
+
+            data = res.constructionInfo;
+
+            drawline.items.orderId = orderId;
+            drawline.items.ishovel.val(data.ishovel);
+            drawline.items.iskey.val(data.iskey);
+            drawline.items.isCeremony.val(data.isCeremony);
+            drawline.items.comment.val(data.comment);
+        }, null, false);
+
+        drawline.constructionInfoModal.modal("show");
+
+    }
+
+    function saveInfoData() {
+
+        var options = {
+            "constructionInfo.cid" : drawline.items.cid,
+            "constructionInfo.orderId" : drawline.items.orderId,
+            "constructionInfo.ishovel": drawline.items.ishovel.val(),
+            "constructionInfo.iskey": drawline.items.iskey.val(),
+            "constructionInfo.isCeremony" : drawline.items.isCeremony.val(),
+            "constructionInfo.comment": drawline.items.comment.val()
+        };
+
+        com.post(api.construction.updateConstructionInfoByOrderId,options,function (res) {
+
+            com.showAlert(com.info,"操作成功");
+
+            drawline.constructionInfoModal.modal("hide");
+
+        });
     }
 
 });

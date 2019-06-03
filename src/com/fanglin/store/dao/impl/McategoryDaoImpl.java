@@ -42,7 +42,7 @@ public class McategoryDaoImpl extends DaoImpl<McategoryPO> implements McategoryD
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<McategoryPO> queryMcategory() {
-		return session().createCriteria(McategoryPO.class).addOrder(Order.desc("isShow")).addOrder(Order.asc("cid")).list();
+		return session().createCriteria(McategoryPO.class).addOrder(Order.asc("isShow")).addOrder(Order.asc("cid")).list();
 	}
 	
 	@Override

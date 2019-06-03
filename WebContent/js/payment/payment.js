@@ -12,7 +12,9 @@ jQuery(function($) {
 		statusData: [],
 		bankNums: [],
 		checkvNums: [],
-		htmlName: "payment"
+		decorationType: [],
+		htmlName: "payment",
+		modelId: 'paymentModal'
 	};
 	
 	payment.saveBtn = com.focusPage("#collectBtn").bindClick(function(){
@@ -51,6 +53,10 @@ jQuery(function($) {
 		$.each(res.status, function (i,v) {
 			payment.statusData[v.key] = v.value;
 		});
+	}, null, false);
+
+	com.post(api.ds.decoration, {}, function(res){
+		payment.decorationType = res.type;
 	}, null, false);
 	
 	com.focusPage("#paymentModal :checkbox").on("change", function(){
@@ -102,7 +108,7 @@ jQuery(function($) {
 	//info信息是分页显示信息的, util是下拉框信息
 	paymentUtils.getReceiptType(payment);
 
-	paymentUtils.dynamicChosen('paymentModal',"paymentcashInfo",payment.cashUtil,"key","value");
+	com.selectTypeahead("paymentcashInfo", payment.cashUtil, "key", "value", null);
 
 	com.focusPage("#paymentbankAdd").click(function(){
 		var num = $(this).attr("num");
@@ -153,13 +159,14 @@ jQuery(function($) {
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
             var $btnCollect = $('<a></a>').addClass('btn btn-minier btn-primary').html('收款');
-            var $btnCashout = $('<a></a>').addClass('btn btn-minier btn-yellow').html('提款');
+            var $btnCashout = $('<a></a>').addClass('btn btn-minier btn-warning').html('提款');
 			var $btnBalance = $('<a></a>').addClass('btn btn-minier btn-danger').html('余额');
 
             var propertyArr = [
-               ["客户:", v.customer.name, "grey"],
-               ["楼盘地址:", v.house.village.name + " " + v.house.houseNumber, "grey"],
-               ["设计师:", v.designer.currentName, "grey"]
+				["客户:", v.customer.name, "grey"],
+				["楼盘地址:", v.house.village.cityProper.city.name + ' ' + v.house.village.cityProper.name + ' ' + v.house.village.name + " " + v.house.houseNumber, "grey"],
+				["设计师:", v.designer.currentName, "grey"],
+				["等级:", v.grade, "red"]
             ];
             
             $.each(propertyArr, function (index,value) {
@@ -172,7 +179,7 @@ jQuery(function($) {
             $divBtnWrap.append($btnCollect).append($btnCashout).append($btnBalance).appendTo($h3);
            
             $liLine.append($h3).append($ulProperty);
-            
+
             $btnCollect.click(function(){
             	v.paymentType="收款";
 				payment.typeUpdate = 1;
@@ -243,19 +250,20 @@ jQuery(function($) {
             var $ulStyle = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
+			var $btnDecorationInfo = $('<a></a>').addClass('btn btn-minier btn-yellow').html('装修单信息');
             var $btnPrint = $('<a></a>').addClass('btn btn-minier btn-info').html('打印');
 			var $btnUpdateP = $('<a></a>').addClass('btn btn-minier btn-success').html('更新');
             
             var propertyArr = [
-               ["客户:", v.customer.name, "grey"],
-               ["收款类型:", payment.typeData[v.type], "red"],
-               ["预付款类型:", payment.paymentTypeData[v.paymentType], "red"],
-               ["操作金额:", v.recharge, "blue"],
-               ["余额:", v.balance, "blue"],
-               ["收款人:", v.collectUser.userName, "grey"],
-               ["收款时间:", v.collectTime, "green"],
-               ["状态:", payment.statusData[v.status], "red"],
-               ["备注:", v.comment, "grey"]
+				["客户:", v.customer.name, "grey"],
+                ["收款类型:", payment.typeData[v.type], "red"],
+                ["预付款类型:", payment.paymentTypeData[v.paymentType], "red"],
+                ["操作金额:", v.recharge, "blue"],
+                ["余额:", v.balance, "blue"],
+                ["收款人:", v.collectUser.userName, "grey"],
+                ["收款时间:", v.collectTime, "green"],
+                ["状态:", payment.statusData[v.status], "red"],
+                ["备注:", v.comment, "grey"]
             ];
             
             $.each(propertyArr, function (index,value) {
@@ -283,14 +291,19 @@ jQuery(function($) {
 				$liProperty.appendTo($ulStyle);
 			});
            
-            $divBtnWrap.append($btnPrint).appendTo($h3);
+            $divBtnWrap.append($btnDecorationInfo).append($btnPrint).appendTo($h3);
 
 			if(v.status == 1 && v.type != 2 && v.transfer == 0){
 				$divBtnWrap.append($btnUpdateP).appendTo($h3);
 			}
            
             $liLine.append($h3).append($ulProperty).append($ulStyle);
-            
+
+			//查看装修单
+			$btnDecorationInfo.click(function(){
+				paymentUtils.decorationInfoShow(v.orderId, payment.decorationType);
+			});
+
 			$btnPrint.click(function(){
 				if(v.collectUser.userId!=params.userInfo.user.userId){
 					com.showAlert(com.warning, "收款人不匹配, 不能打印");
@@ -342,7 +355,7 @@ jQuery(function($) {
 		com.focusPage("#paymentTypeSel").removeAttr("disabled");
 		com.focusPage("#des").removeAttr("disabled");
 
-		paymentUtils.EmptyChosen('paymentcashInfo');
+		com.cleanTypeahead('paymentcashInfo');
 
 		// 根据等级在数组中筛选出符合要求的用于显示
 		getReceiptTypeForGrade(0, v.grade);
@@ -418,7 +431,8 @@ jQuery(function($) {
 					['银行', ['bank', 'bankInfo']],
 					['转账', ['checkv', 'checkvBank']],
 					['分期', ['installment', 'installmentBank']],
-					['对公', ['accounts', 'accountsBank']]
+					['对公', ['accounts', 'accountsBank']],
+					['预付款转换', 'transfer']
 				],
 				list: res.paging.data
 			}, function(v){

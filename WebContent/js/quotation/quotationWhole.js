@@ -386,10 +386,10 @@ var QuotationDetail = (function(){
 		/*
 		* 将功能区添加到功能区列表中
 		* 参数:
-		* 	order ：功能区排序
-		* 	$domain ：功能区
-		* 	$aimDomains ： 参与排序的其他功能区（不包含当前要插入的功能区）
-		* 	existed ： 是否已存在功能区列表中
+		* 	order : 功能区排序
+		* 	$domain : 功能区
+		* 	$aimDomains :  参与排序的其他功能区(不包含当前要插入的功能区)
+		* 	existed :  是否已存在功能区列表中
 		* */
 		insertDomainByOrder : function(order, $domain, $aimDomains, existed){
 			var that = this;
@@ -677,7 +677,7 @@ var QuotationDetail = (function(){
 		},
 		/*添加报价项的时候记住上一页选中的报价项
 		* 参数
-		* $input ：正在操作的input标签
+		* $input : 正在操作的input标签
 		* ischecked : 选举中或取消选中
 		* */
 		recordQuots : function($input, ischecked){
@@ -967,7 +967,7 @@ var QuotationDetail = (function(){
 		createDomainTemplete : function(v){
 			var $label = $('<label></label>').addClass('col-xs-6');
 			var $radio = $('<input>').addClass('ace').attr({"name" : "quotempl", "type" : "checkbox"}).val(v.faId);
-			var $span = $('<span></span>').addClass('lbl').text(v.functionAreaName + (v.type == 2 ? '(总价固定)' : v.type == 3 ? '(基础，不计算)' : ''));
+			var $span = $('<span></span>').addClass('lbl').text(v.functionAreaName + (v.type == 2 ? '(总价固定)' : v.type == 3 ? '(基础,不计算)' : ''));
 			$label.append($radio).append($span);
 			return $label;
 		},

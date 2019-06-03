@@ -39,12 +39,12 @@ jQuery(function ($) {
     });
 
     //表单提交
-    $("#warehouseBtn").click(function () {
+    com.focusPage("#warehouseBtn").click(function () {
     	inware();
     });
 
     //关闭弹窗
-    $("#cancelBtn").click(function () {
+    com.focusPage("#cancelBtn").click(function () {
         layer.closeAll();
     });
 
@@ -54,7 +54,7 @@ jQuery(function ($) {
         var $checks = com.focusPage('input[type="checkbox"]:checked', "#list");
         
         if($checks.length == 0){
-        	layer.msg('请选择入库商品!');
+        	com.showAlert(com.warning, "请选择入库商品");
         	return false;
         }
         
@@ -79,7 +79,7 @@ jQuery(function ($) {
             var ishid = $line.find('.storehouses select').val();
             
             if (utils.accSub(surplus, rnum) < 0){
-            	layer.msg("采购项剩余数量不足");
+            	com.showAlert(com.warning, "采购项剩余数量不足");
             	rnumInput.select();
             	return false;
             }
@@ -89,10 +89,7 @@ jQuery(function ($) {
             options["purchaseItems[" + i + "].num"] = rnum;
         }
         
-        com.post(api.inventory.addManifestForPU, options, function (data) {
-            layer.closeAll();
-            layer.msg("操作成功", {icon: 1});
-        });
+        com.post(api.inventory.addManifestForPU, options);
     }
 
     function addline(lineindex, v) {

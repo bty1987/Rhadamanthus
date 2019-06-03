@@ -60,7 +60,7 @@ public class LoginServiceImpl implements LoginService {
 				throw new FLException(110008, "验证信息错误");
 			}
 			
-			if(code == null || secret == null || !code.equals(AESHelper.decryptString(secret, SystemConfig.getString("encryptKey")))){
+			if(code == null || secret == null || !code.equals(AESHelper.decrypt(secret, SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv")))){
 				throw new FLException(110008, "验证信息错误");
 			}
 			
@@ -79,7 +79,7 @@ public class LoginServiceImpl implements LoginService {
 			authentication = new Authentication(userPO.getUserId(), userPO.getCurrentName(), userPO.getRole().getRid(), (new Date()).getTime(), true, $company, userPO.getFreedom());
 			authentication.setTimout((short) 1);
 			
-			return AESHelper.encryptToString(authentication.getAuthenticationStr(), SystemConfig.getString("encryptKey"));
+			return AESHelper.encrypt(authentication.getAuthenticationStr(), SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv"));
 		} catch (FLException e) {
 			throw e;
 		}  catch (Exception e) {
@@ -92,9 +92,9 @@ public class LoginServiceImpl implements LoginService {
 	public String changeAuthCode(String auth, String company) throws FLException {
 		
 		try {
-			Authentication authentication = new Authentication(AESHelper.decryptString(auth, SystemConfig.getString("encryptKey")));
+			Authentication authentication = new Authentication(AESHelper.decrypt(auth, SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv")));
 			
-			CompanyPO companyPO = companyDao.get(FormatUtil.decodeCompany(AESHelper.decryptString(company, SystemConfig.getString("encryptKey"))));
+			CompanyPO companyPO = companyDao.get(FormatUtil.decodeCompany(AESHelper.decrypt(company, SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv"))));
 			
 			if(companyPO == null){
 				throw new FLException(110011, "无权限登陆");
@@ -114,7 +114,7 @@ public class LoginServiceImpl implements LoginService {
 			
 			authentication.setCompany(companyPO.getCid());
 			
-			return AESHelper.encryptToString(authentication.getAuthenticationStr(), SystemConfig.getString("encryptKey"));
+			return AESHelper.encrypt(authentication.getAuthenticationStr(), SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv"));
 			
 		} catch (FLException e) {
 			throw e;
@@ -129,7 +129,7 @@ public class LoginServiceImpl implements LoginService {
 	public String updateAuthCode(String auth, String password) throws FLException {
 		
 		try {
-			Authentication authentication = new Authentication(AESHelper.decryptString(auth, SystemConfig.getString("encryptKey")));
+			Authentication authentication = new Authentication(AESHelper.decrypt(auth, SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv")));
 			
 			UserPO userPO = userDao.queryUserByUserId(authentication.getUserId());
 			
@@ -143,7 +143,7 @@ public class LoginServiceImpl implements LoginService {
 			
 			authentication.setUpdateTime(new Date().getTime());
 			
-			return AESHelper.encryptToString(authentication.getAuthenticationStr(), SystemConfig.getString("encryptKey"));
+			return AESHelper.encrypt(authentication.getAuthenticationStr(), SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv"));
 		} catch (FLException e) {
 			throw e;
 		} catch (Exception e) {

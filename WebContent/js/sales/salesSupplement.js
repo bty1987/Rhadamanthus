@@ -14,7 +14,6 @@ jQuery(function () {
             formatgid: "format.gid"
         },
         cid: null,
-        salesmanid: null,
         flag: true,
         salePostData: {},
         priceArray: []
@@ -25,65 +24,9 @@ jQuery(function () {
 
     var backBtn = com.focusPage('#backBtn');
 
-    //渠道
-    com.focusPage('#salesmanName').typeahead({
-        url: api.personel.queryUserByPinyin,//获取下拉列表的接口
-        list: [],
-        postData: {},//获取下拉列表的参数
-        source: function (query, process) {
-            var options = $.extend({pinyinName: query,"user.status":0,"departmentType.name":""}, this.options.postData);
-            com.post(this.options.url, options, $.proxy(this.options.callback, this));
-        }, matcher: function (item) {
-            return true;
-        }, callback: function (data) {
-            this.options.list = data["autoFillKeyValue"];
-            this.flprocess(this.options.list, ["key"], ["value"]);
-        },
-        isResultTypeMap: true //必填值为true,获取key,value的标识,
-        , flupdater: function (k, v) {//下拉列表选中时的一些处理,必填对选中项的key和value做处理
-            return v;
-        }
-    });
-
-
-    //主材驻店
-    com.focusPage('#instorer').typeahead({
-        url: api.personel.queryUserByPinyin,//获取下拉列表的接口
-        list: [],
-        postData: {},//获取下拉列表的参数
-        source: function (query, process) {
-            var options = $.extend({pinyinName: query,"user.status":0,"departmentType.name":""}, this.options.postData);
-            com.post(this.options.url, options, $.proxy(this.options.callback, this));
-        }, matcher: function (item) {
-            return true;
-        }, callback: function (data) {
-            this.options.list = data["autoFillKeyValue"];
-            this.flprocess(this.options.list, ["key"], ["value"]);
-        },
-        isResultTypeMap: true //必填值为true,获取key,value的标识,
-        , flupdater: function (k, v) {//下拉列表选中时的一些处理,必填对选中项的key和value做处理
-            return v;
-        }
-    });
-    //主材导购
-    com.focusPage('#guider').typeahead({
-        url: api.personel.queryUserByPinyin,
-        list: [],
-        postData: {},//获取下拉列表的参数
-        source: function (query, process) {
-            var options = $.extend({pinyinName: query,"user.status":0,"departmentType.name":""}, this.options.postData);
-            com.post(this.options.url, options, $.proxy(this.options.callback, this));
-        }, matcher: function (item) {
-            return true;
-        }, callback: function (data) {
-            this.options.list = data["autoFillKeyValue"];
-            this.flprocess(this.options.list, ["key"], ["value"]);
-        },
-        isResultTypeMap: true //必填值为true,获取key,value的标识,
-        , flupdater: function (k, v) {//下拉列表选中时的一些处理,必填对选中项的key和value做处理
-            return v;
-        }
-    });
+    com.initTypeahead('salesmanName', api.personel.queryUserByPinyin, "pinyinName", {"user.status":0,"departmentType.name":""}, 'autoFillKeyValue', 'key', 'value', null);
+    com.initTypeahead('instorer', api.personel.queryUserByPinyin, "pinyinName", {"user.status":0,"departmentType.name":""}, 'autoFillKeyValue', 'key', 'value', null);
+    com.initTypeahead('guider', api.personel.queryUserByPinyin, "pinyinName", {"user.status":0,"departmentType.name":""}, 'autoFillKeyValue', 'key', 'value', null);
 
     //绑定券信息
     com.post(api.ds.payment, {}, function (res) {
@@ -118,7 +61,7 @@ jQuery(function () {
 
                 var $supplementDiv = $("<div></div>").addClass("pull-right col-sm-2").appendTo($h3);
                 var $supplementLabel = $('<label></label>').addClass("col-sm-4").css("line-height", "28px").html("数量:").appendTo($supplementDiv);
-                var $supplementInput = $('<input/>').addClass("col-sm-6 v_number").css("font-size","14px").css("margin-right","5px").css("width","100px").css("height","26px").attr("name", "inputNumber").appendTo($supplementDiv);
+                var $supplementInput = $('<input/>').addClass("col-sm-6 v_float").css("font-size","14px").css("margin-right","5px").css("width","100px").css("height","26px").attr("name", "inputNumber").appendTo($supplementDiv);
 
                 $supplementInput.on("change", function () {
 
@@ -210,6 +153,7 @@ jQuery(function () {
 
     com.focusPage('#submit').click(function () {
 
+        var flg = false;
         var _option = {};
 
         if (com.validate('searchInfo', 'bottom') == false) {
@@ -217,12 +161,13 @@ jQuery(function () {
             if (submitCheck() == false) {
                 return;
             }
-
+            
             _option = {
                 "sales.orderId": com.focusPage('#orderId').val(),
                 "sales.customer.cid": sales.cid,
-                "sales.guider.userId": com.focusPage('#guider').attr('data-typeahead-key'),
-                "sales.instorer.userId": com.focusPage('#instorer').attr('data-typeahead-key'),
+                "sales.guider.userId": com.typeahead("guider"),
+                "sales.instorer.userId": com.typeahead("instorer"),
+                "sales.salesman.userId":com.typeahead("salesmanName"),
                 "sales.bid": bid,
                 "sales.coupon": com.focusPage('#coupon').val() != "" ? parseFloat(com.focusPage('#coupon').val()) : 0,
                 "sales.comment": com.focusPage('#comment').val(),
@@ -231,8 +176,6 @@ jQuery(function () {
                 "sales.house.hid": sales.salePostData["sales.house.hid"],
                 "sales.dompanys": sales.salePostData["sales.dompanys"]
             };
-
-            _option["sales.salesman.userId"] = sales.salesmanid;
 
             if (com.focusPage('#coupon').val() == "" || com.focusPage('#coupon').val() == 0) {
                 _option["sales.couponInfo"] = " ";
@@ -253,10 +196,10 @@ jQuery(function () {
                 if ($status == 1) {
                     $otherStatus = 1;
                 }
-
                 var numberParam = $v.find("input[name='inputNumber']").val();
-
+                
                 if(numberParam != ""){
+                    flg = true;
                     _option["salesItems[" + i + "].goods.gid"] = $v.attr("data-gid");
                     _option["salesItems[" + i + "].color.cid"] = $v.attr("data-cid");
                     _option["salesItems[" + i + "].format.fid"] = $v.attr("data-fid");
@@ -274,26 +217,30 @@ jQuery(function () {
                     _option["salesItems[" + i + "].ctype"] = $v.attr("data-rawCtype");
                     _option["salesItems[" + i + "].cvalue"] = $v.attr("data-rawCvalue");
                     _option["salesItems[" + i + "].priceType"] = $v.attr("data-priceType");
+
                 }
             });
+            if(flg){
+                com.post(api.inventory.addSales, _option, function (data) {
 
-            com.post(api.inventory.addSales, _option, function (data) {
+                    com.showAlert(com.info, "补单成功");
 
-                com.showAlert(com.info, "补单成功");
+                    //清空类为order_inputinfo的input
+                    com.focusPage('.order_inputinfo').val(null);
+                    com.focusPage('#salesItemList').find("input[name='inputNumber']").val("");
+                    //删除data-typeahead-key属性
+                    com.cleanTypeahead("salesmanName");
+                    com.cleanTypeahead("instorer");
+                    com.cleanTypeahead("guider");
 
-                //清空类为order_inputinfo的input
-                com.focusPage('.order_inputinfo').val(null);
-                com.focusPage('#salesItemList').find("input[name='inputNumber']").val("");
-                //删除data-typeahead-key属性
-                com.focusPage('#salesmanName').removeAttr('data-typeahead-key');
-                com.focusPage('#instorer').removeAttr('data-typeahead-key');
-                com.focusPage('#guider').removeAttr('data-typeahead-key');
-                com.focusPage('#brands').removeAttr('data-brand');
+                    com.focusPage('#brands').removeAttr('data-brand');
 
-            }, function (e) {
-                com.showAlert(com.error, "补单失败");
-            });
-
+                }, function (e) {
+                    com.showAlert(com.error, "补单失败");
+                });
+            }else {
+                com.showAlert(com.warning, "请填写下面的补单数量")
+            }
         }
     });
 
@@ -316,8 +263,6 @@ jQuery(function () {
         sales.salePostData["sales.dompanys"] = data.decoration.dompany;
         //客户Id
         sales.cid = data.decoration.customer.cid;
-        //业务员Id
-        sales.salesmanid = data.decoration.designer.userId;
         //楼盘id
         sales.salePostData["sales.house.hid"] = data.decoration.house.hid;
     },null, false);

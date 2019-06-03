@@ -77,31 +77,21 @@ $(function(){
 
             //启用功能
             $btnStart.click(function () {
-                layer.confirm('是否启用?', {
-                    btn: ['确定', '取消'] //按钮
-                }, function (index, layero) {
-                    changeQuoteTypeStatus(v.qiid, 0,(v.status == 0) ,function(){
-                        layer.closeAll();
-                        layer.msg('启用成功', {icon: 1, time: 2e3});
-                    });
+                changeQuoteTypeStatus(v.qiid, 0,(v.status == 0) ,function(){
+                    com.showAlert(com.info, "操作成功");
                 });
             });
 
             //禁用功能
             $btnStop.click(function () {
-                layer.confirm('是否禁用?', {
-                    btn: ['确定', '取消'] //按钮
-                }, function (index, layero) {
-                    changeQuoteTypeStatus(v.qiid,1,(v.status == 1) ,function () {
-                    layer.closeAll();
-                    layer.msg('禁用成功', {icon: 1, time: 2e3});
-                    });
+                changeQuoteTypeStatus(v.qiid, 0,(v.status == 0) ,function(){
+                    com.showAlert(com.info, "操作成功");
                 });
             });
 
             $btnEdit.click(function () {
                 if(v.status == 1){
-                    layer.msg("禁用状态下不允许修改");
+                    com.showAlert(com.warning, "禁用状态下不允许修改");
                     return false;
                 }
 
@@ -115,10 +105,7 @@ $(function(){
                 $layeradd.find('select[name = "quoteType"]').val(v.quoteType.qtid);
 
                 openlayer("添加",function(){
-                    saveData(v.qiid,function(){
-                        layer.closeAll();
-                        searcher.doSearch();
-                    })
+                    saveData(v.qiid);
                 });
 
             });
@@ -153,10 +140,7 @@ $(function(){
             productionUtils.clearForm("form1");
             closeEditReadOnly();
             openlayer("添加",function(){
-                saveData(null,function(){
-                    layer.closeAll();
-                    searcher.doSearch();
-                })
+                saveData(null);
             });
         });
 
@@ -189,21 +173,13 @@ $(function(){
     /*btnType:0 启用功能,1 禁用功能
      statusFlag:当前状态是否与想要完成的功能相冲 */
     function changeQuoteTypeStatus(id,btnType,statusFlag ,callback) {
-
-        if(!statusFlag){
-            com.post(api.production.updateQuoteItemForStatus, {
-                "quoteItem.qiid": id,
-                "quoteItem.status": btnType
-            }, function (res) {
-                callback();
-                searcher.doSearch();
-            });
-        }else{
-            layer.alert(btnType == 0 ? '已经启用':'已经禁用', {
-                icon: 0,
-                skin: 'layer-ext-moon'
-            });
-        }
+        com.post(api.production.updateQuoteItemForStatus, {
+            "quoteItem.qiid": id,
+            "quoteItem.status": btnType
+        }, function (res) {
+            callback();
+            searcher.doSearch();
+        });
     }
     
     function editOnly() {
@@ -228,7 +204,7 @@ $(function(){
     });
 
     //添加方法
-    function saveData(id,callback) {
+    function saveData(id) {
         var name = $layeradd.find('input[name="name"]').val();
         var format = $layeradd.find('input[name="format"]').val();
         var measureunit = $layeradd.find('select[name="measureunit"] option:selected').text();
@@ -236,6 +212,7 @@ $(function(){
         var quoteType = $layeradd.find('select[name="quoteType"]').val();
 
         com.clearValidator();
+        
         if(com.validate("layerAdd",null)){
             return false;
         }
@@ -246,8 +223,8 @@ $(function(){
                 "quoteItem.format" : format,
                 "quoteItem.unitprice" : unitprice
             },function () {
-                callback();
-                layer.msg("编辑成功",{icon: 1, time: 2e3});
+                searcher.doSearch();
+                com.showAlert(com.info, "操作成功");
             });
         }else{
             com.post(api.production.addQuoteItem,{
@@ -257,8 +234,8 @@ $(function(){
                 "quoteItem.unitprice" : unitprice,
                 "quoteItem.quoteType.qtid" : quoteType
             },function () {
-                callback();
-                layer.msg("添加成功",{icon: 1, time: 2e3});
+                searcher.doSearch();
+                com.showAlert(com.info, "操作成功");
             });
         }
 

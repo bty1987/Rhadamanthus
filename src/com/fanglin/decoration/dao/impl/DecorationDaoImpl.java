@@ -351,7 +351,7 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 					query.add(query.getCriterion("village.name", data, op));
 				} else if ("company".equals(field)) {
 					try {
-						int cid = FormatUtil.decodeCompany(AESHelper.decryptString(filter.getData(), SystemConfig.getString("encryptKey")));
+						int cid = FormatUtil.decodeCompany(AESHelper.decrypt(filter.getData(), SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv")));
 						query.add(query.getCriterion("company", cid, op));
 					} catch (Exception e) {
 					}

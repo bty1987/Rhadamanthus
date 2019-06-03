@@ -27,7 +27,7 @@ jQuery(function ($) {
         com.post(api.decoration.queryDecorationForCommonByOrderId, {"decoration.orderId": commonInfo["orderId"]}, function (data) {
             commonInfo["address"] = data.decoration.house.village.name + " " + data.decoration.house.houseNumber;
             commonInfo["supervisor"] = data.decoration.supervisor.userName == null?"---":data.decoration.supervisor.userName;
-        }, null, false)
+        }, null, false);
 
         com.post(api.inventory.queryManifestItemByMid, {"manifest.mid":manifest.mid}, function(res){
             createReceiptTable(commonInfo, res.manifestItems);

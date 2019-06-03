@@ -53,7 +53,7 @@ jQuery(function($) {
 		var commonInfo = {};
 		
 		commonInfo["orderId"] = decorationOrder.orderId;
-		commonInfo["orderAddr"] = decorationOrder.house.village.name + " " + decorationOrder.house.houseNumber;
+		commonInfo["orderAddr"] = decorationOrder.house.village.cityProper.city.name + ' ' + decorationOrder.house.village.cityProper.name + ' ' + decorationOrder.house.village.name + " " + decorationOrder.house.houseNumber;
 		commonInfo["customerName"] = decorationOrder.customer.name;
 		commonInfo["salesmanName"] = decorationOrder.designer.currentName;
 		commonInfo["supervisorName"] = decorationOrder.supervisor.currentName == null ? "" : decorationOrder.supervisor.currentName;

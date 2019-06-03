@@ -82,10 +82,8 @@ $(function(){
 
                 var id = com.focusPage('#layerAdd').attr('data-cid');
                 var status = com.focusPage('#layerAdd').attr('data-status');
-                startStatus(id,status,function(){
-                    layer.msg('启用成功',{icon:1});
-                    doSearcher()
-                });
+                
+                startStatus(id, status);
             });
             
             /*状态禁用*/
@@ -96,10 +94,7 @@ $(function(){
                 var id = com.focusPage('#layerAdd').attr('data-cid');
                 var status = com.focusPage('#layerAdd').attr('data-status');
 
-                stopStatus(id,status,function(){
-                    layer.msg('禁用成功',{icon:1});
-                    doSearcher();
-                });
+                stopStatus(id, status);
             });
 
             return $liLine;
@@ -125,40 +120,25 @@ $(function(){
             displayFunc.init('resultListColor',res.mcolors);
         })
     }
+    
     doSearcher();
 
-    /*状态信息验证*/
     function startStatus(id, status, callback){
-        if(status == "1"){
-            com.post(api.store.updateMcolorForStatus,{
-                "mcolor.cid":id,
-                "mcolor.status":"0"
-            },function(res){
-                callback();
-                doSearcher();
-            })
-        }else{
-            layer.alert('已经启用', {
-                icon: 0,
-                skin: 'layer-ext-moon' //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
-            })
-        }
+        com.post(api.store.updateMcolorForStatus,{
+            "mcolor.cid":id,
+            "mcolor.status":"0"
+        },function(res){
+            doSearcher();
+        });
     }
+    
     function stopStatus(id, status, callback){
-        if(status == "0"){
-            com.post(api.store.updateMcolorForStatus,{
-                "mcolor.cid" : id,
-                "mcolor.status" : "1"
-            },function(res){
-                callback();
-                doSearcher();
-            })
-        }else{
-            layer.alert('已经禁用', {
-                icon: 1,
-                skin: 'layer-ext-moon' //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
-            })
-        }
+        com.post(api.store.updateMcolorForStatus,{
+            "mcolor.cid" : id,
+            "mcolor.status" : "1"
+        },function(res){
+            doSearcher();
+        });
     }
 
     function addline(lineindex) {

@@ -6,10 +6,8 @@ jQuery(function ($) {
         cancelBtn: null
     };
 
-    com.initChosen('designerId', api.personel.queryUserByPinyin, "pinyinName", {"user.status": 0}, 'autoFillKeyValue', 'key', 'value');
-    com.initChosen('villageNoCreate', api.data.queryVillageForNameByPinyin, "pinyinName", {}, "autoFillKeyValue", "key", "value");
-
-    com.focusPage("#designerId_chosen").css("width", "200px");
+    com.initTypeahead('designerId', api.personel.queryUserByPinyin, "pinyinName", {"user.status": 0}, 'autoFillKeyValue', 'key', 'value', null);
+    com.initTypeahead('villageNoCreate', api.data.queryVillageForNameByPinyin, "pinyinName", {}, "autoFillKeyValue", "key", "value", null);
 
     createcustomerOrigin.saveBtn = com.focusPage("#saveBtn").on("click", addcustomerOrigin);
     createcustomerOrigin.cancelBtn = com.focusPage("#cancelBtn").on("click", deleteDate);
@@ -29,12 +27,12 @@ jQuery(function ($) {
     createcustomerOrigin.items.houseNumber = com.focusPage("#houseNumber");
     createcustomerOrigin.items.buildArea = com.focusPage("#buildArea");
 
-    createcustomerOrigin.items.grade.bindData(createcustomerOrigin.grade);
+    createcustomerOrigin.items.grade.bindData(createcustomerOrigin.grade, "key", "value", false);
     createcustomerOrigin.items.gender.switchBtn("gender");
 
     com.focusPage("#villageNoCreate").on("change", function (e) {
         com.post(api.data.queryVillageById, {"village.no": createcustomerOrigin.items.villageNoCreate.val()}, function (res) {
-            createcustomerOrigin.items.rule.html("推荐楼牌号规则：" + (res.village.rule == null || res.village.rule == "" ? "暂无推荐规则" : res.village.rule));
+            createcustomerOrigin.items.rule.html("推荐楼牌号规则: " + (res.village.rule == null || res.village.rule == "" ? "暂无推荐规则" : res.village.rule));
         }, null, false)
     });
 
@@ -50,8 +48,8 @@ jQuery(function ($) {
         options["customerOrigin.price"] = createcustomerOrigin.items.price.val();
         options["customerOrigin.grade"] = createcustomerOrigin.items.grade.val();
         options["customerOrigin.comment"] = createcustomerOrigin.items.comment.val();
-        options["customerOrigin.designer.userId"] = createcustomerOrigin.items.designerId.val();
-        options["customerOrigin.village.no"] = createcustomerOrigin.items.villageNoCreate.val();
+        options["customerOrigin.designer.userId"] = com.typeahead("designerId");
+        options["customerOrigin.village.no"] = com.typeahead("villageNoCreate");
         options["customerOrigin.houseNumber"] = createcustomerOrigin.items.houseNumber.val();
         options["customerOrigin.buildArea"] = createcustomerOrigin.items.buildArea.val();
 
@@ -62,8 +60,8 @@ jQuery(function ($) {
     }
 
     function deleteDate() {
-        com.updateChosen("designerId", "", "");
-        com.updateChosen("villageNoCreate", "", "");
+        com.cleanTypeahead("designerId");
+        com.cleanTypeahead("villageNoCreate");
         com.cleanItems(createcustomerOrigin.items);
         com.cleanItems(createcustomerOrigin.customerItems);
         com.clearValidator();

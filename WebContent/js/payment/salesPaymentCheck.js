@@ -12,6 +12,7 @@ $(function () {
         coupon: 0,
         couponInfo: null,
         htmlName: "salesCheck",
+        modelId: 'layerAddSalesCheck',
         validator: {
             price: {
                 type: 'v_price',
@@ -69,7 +70,7 @@ $(function () {
         com.focusPage('.search-choice').find('input').val('');
         com.focusPage('#collectDes').val("");
 
-        paymentUtils.EmptyChosen('salesCheckcashInfo');
+        com.cleanTypeahead('salesCheckcashInfo');
     });
 
     baseClick();
@@ -77,7 +78,7 @@ $(function () {
     com.focusPage("#advanceType").bindData([{"key": "1", "value": "合同预付款"}, {"key": "2", "value": "工程预付款"}, {"key": "3", "value": "主材预付款"}, {"key": "4", "value": "正林预付款"}], 'key', 'value');
 
     //现金 转账 刷卡
-    paymentUtils.dynamicChosen('layerAddSalesCheck', "salesCheckcashInfo", salesPaymentForStatus.cashUtil, "key", "value");
+    com.selectTypeahead("salesCheckcashInfo", salesPaymentForStatus.cashUtil, "key", "value", null);
 
     com.focusPage("#salesCheckbankAdd").on('click',function(){
         var num = $(this).attr("num");
@@ -144,7 +145,7 @@ $(function () {
             var propertyArr = [
                 ["订单号:", v.sales.orderId, "blue"],
                 ["销售单号:", v.sales.no, "blue"],
-                ["楼盘地址:", v.sales.house.village.name+" "+ v.sales.house.houseNumber, "grey"],
+                ["楼盘地址:",  v.sales.house.village.cityProper.city.name + ' ' + v.sales.house.village.cityProper.name + ' ' + v.sales.house.village.name + " " + v.sales.house.houseNumber, "grey"],
                 ["客户:", v.sales.customer.name, "grey"],
                 ["品牌:", v.sales.brand, "grey"],
                 ["应收金额:", v.referMoney, "blue"],
@@ -273,7 +274,7 @@ $(function () {
             var propertyArr = [
                 ["订单号:", v.sales.orderId, "blue"],
                 ["销售单号:", v.sales.no, "blue"],
-                ["楼盘地址:", v.sales.house.village.name+" "+ v.sales.house.houseNumber, "grey"],
+                ["楼盘地址:",  v.sales.house.village.cityProper.city.name + ' ' + v.sales.house.village.cityProper.name + ' ' + v.sales.house.village.name + " " + v.sales.house.houseNumber, "grey"],
                 ["客户:", v.sales.customer.name, "grey"],
                 ["品牌:", v.sales.brand, "grey"],
                 ["应收金额:", v.referMoney, "blue"],
@@ -365,7 +366,7 @@ $(function () {
                 column: [
                     ["订单号", "sales.orderId"],
                     ["销售单号", "sales.no"],
-                    ['楼盘地址', ['sales.house.village.name','sales.house.houseNumber']],
+                    ['楼盘地址', ['sales.house.village.cityProper.city.name', 'sales.house.village.cityProper.name', 'sales.house.village.name','sales.house.houseNumber']],
                     ['品牌', 'sales.brand'],
                     ['应收金额', 'referMoney'],
                     ['收款人', 'salesReceipt.collecter.currentName'],
@@ -435,7 +436,7 @@ $(function () {
                 column: [
                     ["订单号", "sales.orderId"],
                     ["销售单号", "sales.no"],
-                    ['楼盘地址', ['sales.house.village.name','sales.house.houseNumber']],
+                    ['楼盘地址', ['sales.house.village.cityProper.city.name', 'sales.house.village.cityProper.name', 'sales.house.village.name','sales.house.houseNumber']],
                     ['品牌', 'sales.brand'],
                     ['应收金额', 'referMoney'],
                     ['收款人', 'salesReceipt.collecter.currentName'],
@@ -511,17 +512,13 @@ $(function () {
             option["spids[" + index + "]"] = value;
         });
 
-        layer.confirm('确定要将符合条件的所有收款项目,置为已确认状态吗?', {
-            btn: ['确定', '取消'] //按钮
-        }, function (index, layero) {
+        com.showConfirm('确定要将符合条件的所有收款项目,置为已确认状态吗?', function (index, layero) {
             com.post(api.payment.confirmSalesPayment, option, function (res) {
                 salesPaymentSearcher.doSearch();
                 hsearcher.doSearch();
-                layer.msg('确认成功', {icon: 1})
+                com.showAlert(com.info, '确认成功');
             })
-        }, function () {
-
-        });
+        }, null);
     }
 
     function printPayment(orderId,srId,v){

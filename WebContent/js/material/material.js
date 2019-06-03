@@ -571,32 +571,30 @@ jQuery(function ($) {
 
         var btn = $(this).button("loading");
 
-        bootbox.confirm("是否需要进行定金退款动作?", function (result) {
-            if (result) {
-                com.post(api.payment.refundMaterialPaymentForDeposit, options, function (result) {
+        com.showConfirm("是否需要进行定金退款动作?", function () {
+            com.post(api.payment.refundMaterialPaymentForDeposit, options, function (result) {
 
-                    var _depositPayment = material.materialSubOrderItems.depositPayment.val();
-                    var _fullPayment = material.materialSubOrderItems.fullPayment.val();
+                var _depositPayment = material.materialSubOrderItems.depositPayment.val();
+                var _fullPayment = material.materialSubOrderItems.fullPayment.val();
 
-                    material.materialSubOrderItems.fullPayment.val(utils.accAdd(parseFloat(_depositPayment), parseFloat(_fullPayment)));
+                material.materialSubOrderItems.fullPayment.val(utils.accAdd(parseFloat(_depositPayment), parseFloat(_fullPayment)));
 
-                    material.materialSubOrderItems.depositPayment.removeAttr("readonly").val("0");
-                    material.materialSubOrderItems.depositCancelBtn.css("display", "none");
-                    material.materialSubOrderItems.depositPaymentInfo.css("display", "none").text("");
-                    material.materialSubOrderItems.realDepositPayment.val(0);
+                material.materialSubOrderItems.depositPayment.removeAttr("readonly").val("0");
+                material.materialSubOrderItems.depositCancelBtn.css("display", "none");
+                material.materialSubOrderItems.depositPaymentInfo.css("display", "none").text("");
+                material.materialSubOrderItems.realDepositPayment.val(0);
 
-                    materialSubOrderPostData["materialSubOrder.depositStatus"] = 0;
+                materialSubOrderPostData["materialSubOrder.depositStatus"] = 0;
 
-                    material.materialSubOrderItems.depositPaymentBtn.css("display", "none");
-                    material.materialSubOrderItems.depositRefundBtn.css("display", "none");
-                    material.materialSubOrderItems.fullPaymentBtn.css("display", "none");
-                    material.materialSubOrderItems.fullRefundBtn.css("display", "none");
-                    material.materialSubOrderItems.couponBtn.css("display", "none");
-                    material.materialSubOrderItems.malingBtn.css("display", "none");
+                material.materialSubOrderItems.depositPaymentBtn.css("display", "none");
+                material.materialSubOrderItems.depositRefundBtn.css("display", "none");
+                material.materialSubOrderItems.fullPaymentBtn.css("display", "none");
+                material.materialSubOrderItems.fullRefundBtn.css("display", "none");
+                material.materialSubOrderItems.couponBtn.css("display", "none");
+                material.materialSubOrderItems.malingBtn.css("display", "none");
 
-                    searcher.doSearch();
-                }, null, false);
-            }
+                searcher.doSearch();
+            }, null, false);
         });
 
         btn.button("reset");
@@ -855,8 +853,7 @@ jQuery(function ($) {
 
         if (materialSubOrderPostData["materialSubOrder.fullStatus"] == 0) {
             material.materialSubOrderItems.couponBtn.css("display", "inline");
-        }
-        else if (materialSubOrderPostData["materialSubOrder.fullStatus"] != 0 && materialSubOrderPostData["materialSubOrder.fullStatus"] != 1) {
+        } else if (materialSubOrderPostData["materialSubOrder.fullStatus"] != 0 && materialSubOrderPostData["materialSubOrder.fullStatus"] != 1) {
             // material.materialSubOrderItems.couponRefundBtn.css("display", "inline");
             material.materialSubOrderItems.couponRefundBtn.css("display", "none");
         }

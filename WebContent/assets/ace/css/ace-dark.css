@@ -1885,7 +1885,7 @@ blockquote,blockquote.pull-right {
 
 .nav-search {
     position: absolute;
-    top: 6px;
+    top: 3px;
     right: 22px;
     line-height: 24px
 }
@@ -1895,15 +1895,16 @@ blockquote,blockquote.pull-right {
 }
 
 .nav-search .nav-search-input {
-    border: 1px solid #6fb3e0;
-    width: 152px;
+    border: 1px solid #bbbbbb;
     height: 28px !important;
     border-radius: 4px !important;
     font-size: 13px;
     color: #666 !important;
     z-index: 11;
     -webkit-transition: width ease .15s;
-    transition: width ease .15s
+    transition: width ease .15s;
+    padding-left: 24px;
+    padding-right: 6px;
 }
 
 .nav-search .nav-search-input+.dropdown-menu {
@@ -1918,7 +1919,7 @@ blockquote,blockquote.pull-right {
 }
 
 .nav-search .nav-search-icon {
-    color: #6fb3e0 !important;
+    color: #bbbbbb !important;
     font-size: 14px !important;
     line-height: 24px !important
 }

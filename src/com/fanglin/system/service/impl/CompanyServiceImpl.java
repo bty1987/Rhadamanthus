@@ -42,7 +42,7 @@ public class CompanyServiceImpl implements CompanyService{
 			BeanUtil.copyProperties(companyPO, companyVO, Arrays.asList("cid"));
 			
 			try {
-				companyVO.setCid(AESHelper.encryptToString(FormatUtil.encodeCompany(companyPO.getCid()), SystemConfig.getString("encryptKey")));
+				companyVO.setCid(AESHelper.encrypt(FormatUtil.encodeCompany(companyPO.getCid()), SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv")));
 			} catch (Exception e) {
 				throw new FLException(230017, "公司获取失败");
 			}
@@ -68,7 +68,7 @@ public class CompanyServiceImpl implements CompanyService{
 			BeanUtil.copyProperties(companyPO, companyVO, Arrays.asList("cid"));
 			
 			try {
-				companyVO.setCid(AESHelper.encryptToString(FormatUtil.encodeCompany(companyPO.getCid()), SystemConfig.getString("encryptKey")));
+				companyVO.setCid(AESHelper.encrypt(FormatUtil.encodeCompany(companyPO.getCid()), SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv")));
 			} catch (Exception e) {
 				throw new FLException(230017, "公司获取失败");
 			}
@@ -85,7 +85,7 @@ public class CompanyServiceImpl implements CompanyService{
 		CompanyPO companyPO;
 		
 		try {
-			companyPO = companyDao.get(FormatUtil.decodeCompany(AESHelper.decryptString(companyVO.getCid(), SystemConfig.getString("encryptKey"))));
+			companyPO = companyDao.get(FormatUtil.decodeCompany(AESHelper.decrypt(companyVO.getCid(), SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv"))));
 		} catch (Exception e) {
 			throw new FLException(230017, "公司获取失败");
 		}
@@ -97,7 +97,7 @@ public class CompanyServiceImpl implements CompanyService{
 		BeanUtil.copyProperties(companyPO, companyVO, Arrays.asList("cid"));
 		
 		try {
-			companyVO.setCid(AESHelper.encryptToString(FormatUtil.encodeCompany(companyPO.getCid()), SystemConfig.getString("encryptKey")));
+			companyVO.setCid(AESHelper.encrypt(FormatUtil.encodeCompany(companyPO.getCid()), SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv")));
 		} catch (Exception e) {
 			throw new FLException(230017, "公司获取失败");
 		}
@@ -110,7 +110,7 @@ public class CompanyServiceImpl implements CompanyService{
 	public int createCompany(CompanyVO companyVO, String securityCode, String verifyCode) throws FLException {
 		
 		try {
-			String code = AESHelper.decryptString(securityCode, SystemConfig.getString("encryptKey"));
+			String code = AESHelper.decrypt(securityCode, SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv"));
 			
 			if(code == null || !code.equals(verifyCode)){
 				throw new FLException(110001, "验证码错误");
@@ -169,7 +169,7 @@ public class CompanyServiceImpl implements CompanyService{
 		CompanyPO companyPO;
 		
 		try {
-			companyPO = companyDao.get(FormatUtil.decodeCompany(AESHelper.decryptString(companyVO.getCid(), SystemConfig.getString("encryptKey"))));
+			companyPO = companyDao.get(FormatUtil.decodeCompany(AESHelper.decrypt(companyVO.getCid(), SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv"))));
 		} catch (Exception e) {
 			throw new FLException(230017, "公司获取失败");
 		}
@@ -196,7 +196,7 @@ public class CompanyServiceImpl implements CompanyService{
 		CompanyPO companyPO;
 		
 		try {
-			companyPO = companyDao.get(FormatUtil.decodeCompany(AESHelper.decryptString(companyVO.getCid(), SystemConfig.getString("encryptKey"))));
+			companyPO = companyDao.get(FormatUtil.decodeCompany(AESHelper.decrypt(companyVO.getCid(), SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv"))));
 		} catch (Exception e) {
 			throw new FLException(230017, "公司获取失败");
 		}

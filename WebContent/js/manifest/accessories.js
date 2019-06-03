@@ -4,18 +4,14 @@ $(function () {
 	var accessories = {
 		status: {},
 		schedule: {}
-	}
+	};
 	
 	com.post(api.ds.manifest, {}, function(res){
-		$.each(res.accessoriesStatus, function(i, v){
-			accessories.status[v.key] = v.value;
-		});
+		accessories.status = res.accessoriesStatus.split("key", "value");
 	}, null, false);
 	
 	com.post(api.data.queryConstructionNode, {}, function(res){
-        $.each(res.constructionNodes, function(i, v){
-            accessories.schedule[v.sort] = v.name;
-        });
+        accessories.schedule = res.constructionNodes.split("sort", "name");
     }, null, false);
 	
     var displayFunc = (function () {
@@ -121,7 +117,7 @@ $(function () {
             	
             	params["accessories.aid"] = v.aid;
             	
-                showLayer("辅料单 : " + v.no, '#layerPopUp', "views/manifest/accessories4view.html");
+            	com.popup4page('#layerPopUp', "views/manifest/accessories4view.html", "辅料单 : " + v.no);
             });
 
             $btnOut.click(function () {
@@ -134,7 +130,7 @@ $(function () {
             	params["accessories.aid"] = v.aid;
             	params["accessories.orderId"] = v.orderId;
             	
-                showLayer("辅料单 : " + v.no, '#layerPopUp', "views/manifest/accessories2out.html");
+                com.popup4page('#layerPopUp', "views/manifest/accessories2out.html", "辅料单 : " + v.no);
             });
 
             $btnEdit.click(function () {
@@ -146,7 +142,7 @@ $(function () {
             	
             	params["accessories.aid"] = v.aid;
 
-                showLayer("辅料单 : " + v.no, '#layerPopUp', "views/manifest/accessories2edit.html");
+                com.popup4page('#layerPopUp', "views/manifest/accessories2edit.html", "辅料单 : " + v.no);
             });
 
             $btnPrint.click(function(){
@@ -159,7 +155,7 @@ $(function () {
                 params["accessories.manifestTime"] = v.approverTime;
 
                 printAccessoriesItem(v.aid,v.no);
-            })
+            });
 
             return $liLine;
         };
@@ -168,7 +164,6 @@ $(function () {
             init: function (tableId, listData) {
                 com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
-
             },
             drawLine: function (v) {
                 return creatLine(v);
@@ -191,26 +186,6 @@ $(function () {
         return [];
     }, 'resultList');
     
-    function showLayer(title, element, page){
-    	
-    	var $popup = com.focusPage(element);
-    	
-    	layer.open({
-            type: 1,
-            title: title,
-            skin: 'layui-layer-lan',
-            content: $popup,
-            area: [($(window).width() * 0.7 < 1000 ? $(window).width() * 0.7 : 1000) + "px", ($(window).height() * 0.84 < 620 ? $(window).height() * 0.84 : 620) + "px"],
-            maxmin: false,
-            success: function (layer, index) {
-                $popup.load(page);
-            },
-            end: function () {
-                layer.closeAll();
-            }
-        });
-    }
-
     function batchout() {
     	
         var $checks = $('input[type="checkbox"]:checked', '.line');
@@ -235,12 +210,14 @@ $(function () {
         
         params["accessories.aids"] = $aids;
         
-        showLayer("批量出货", '#layerPopUp', "views/manifest/accessories2batchout.html");
+        com.popup4page('#layerPopUp', "views/manifest/accessories2batchout.html", "批量出货", function(){
+            goodsSeacher.doSearch();
+        });
     }
 
     //打印货单项
     function printAccessoriesItem(aid, no){
-        com.popup("辅料单号" + no, api.index.accessoriesPrintIndex.url, function () {
+        com.popup4frame("辅料单号" + no, api.index.accessoriesPrintIndex.url, function () {
             parent.layer.getFrameIndex(window.name);
         }, null, true);
     }

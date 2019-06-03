@@ -110,24 +110,12 @@ $(function(){
                     $h3.append($title).append($btnDiv);
 
                     $btnsigned.click(function(){
-                        var options = {};
-
-                        options["production.pid"] = v.pid;
-                        options["production.status"] = 1;
-
-                        layer.confirm('确认订单已签约 ?', {
-                            btn: ['确定', '取消']
-                        }, function (index, layero) {
-                            com.post(api.production.updateProductionForStatus, options, function (res) {
+                        com.showConfirm("是否确认签约", function(){
+                            com.post(api.production.updateProductionForStatus, {"production.pid": v.pid, "production.status": 1}, function (res) {
                                 productionSearcher.doSearch();
-                                layer.msg('确认成功', {icon: 1});
-                            }, function () {
-                                layer.msg('确认失败', {icon: 2});
+                                com.showAlert(com.info, "操作成功");
                             });
-                        }, function () {
-
                         });
-
                     });
 
                     $btnBind.click(function () {
@@ -142,42 +130,20 @@ $(function(){
                     });
 
                     $btnAbandon.click(function(){
-                        var options = {};
-
-                        options["production.pid"] = v.pid;
-                        options["production.status"] = 4;
-
-                        layer.confirm('确定要将此条生产单废弃,废弃后无法恢复 ?', {
-                            btn: ['确定', '取消']
-                        }, function (index, layero) {
-                            com.post(api.production.updateProductionForStatus, options, function (res) {
+                        com.showConfirm("是否确认废弃", function(){
+                            com.post(api.production.updateProductionForStatus, {"production.pid": v.pid, "production.status": 4}, function (res) {
                                 productionSearcher.doSearch();
-                                layer.msg('确认成功', {icon: 1});
-                            }, function () {
-                                layer.msg('确认失败', {icon: 2});
+                                com.showAlert(com.info, "操作成功");
                             });
-                        }, function () {
-
                         });
                     });
 
                     $btndeliver.click(function(){
-                        var options = {};
-
-                        options["production.pid"] = v.pid;
-                        options["production.diliverystatus"] = 1;
-
-                        layer.confirm('确认生产完毕开始送货 ?', {
-                            btn: ['确定', '取消']
-                        }, function (index, layero) {
-                            com.post(api.production.updateProductionForDeliveryStatus, options, function (res) {
+                        com.showConfirm("是否确认送货", function(){
+                            com.post(api.production.updateProductionForDeliveryStatus, {"production.pid": v.pid, "production.diliverystatus": 1}, function (res) {
                                 productionSearcher.doSearch();
-                                layer.msg('确认成功', {icon: 1});
-                            }, function () {
-                                layer.msg('确认失败', {icon: 2});
+                                com.showAlert(com.info, "操作成功");
                             });
-                        }, function () {
-
                         });
                     });
 
@@ -191,11 +157,7 @@ $(function(){
                         $layerAdd.find("input[name = 'designer']").val(v.designer.userName);
 
                         com.post(api.decoration.queryDecorationForCommonByOrderId,{"decoration.orderId":v.orderId},function (data) {
-
                                 $layerAdd.find("input[name='orderAddr']").val(data.decoration.house.village.name+"  "+data.decoration.house.houseNumber);
-
-                                //productionOptions["production.village.villageId"] = data.decorationOrder.village.villageId;
-
                             });
 
                         openlayer(function (index, layero) {
@@ -212,8 +174,7 @@ $(function(){
                                 productionOptions["production.timeLimit"] = $layerAdd.find("input[name='timeLimit']").val();
 
                                 com.post(api.production.addProduction,productionOptions,function(res){
-                                    layer.closeAll();
-                                    layer.msg('添加成功', {icon: 1, time: 2e3});
+                                    com.showAlert(com.info, "操作成功");
                                     productionSearcher.doSearch();
                                 });
                             }
@@ -223,22 +184,11 @@ $(function(){
                     });
 
                     $btnconfirm.click(function(){
-
-                        var option = {};
-                        option["production.pid"] = v.pid;
-                        option["production.status"] = 2;
-
-                        layer.confirm('确定已经核对生产单信息并进行流转?', {
-                            btn: ['确定', '取消']
-                        }, function (index, layero) {
-                            com.post(api.production.updateProductionForStatus, option, function (res) {
+                        com.showConfirm("是否确认进入流转", function(){
+                            com.post(api.production.updateProductionForStatus, {"production.pid": v.pid, "production.status": 2}, function (res) {
                                 productionSearcher.doSearch();
-                                layer.msg('确认成功', {icon: 1});
-                            }, function () {
-                                layer.msg('确认失败', {icon: 2});
+                                com.showAlert(com.info, "操作成功");
                             });
-                        }, function () {
-
                         });
                     });
 
@@ -311,10 +261,7 @@ $(function(){
             com.clearValidator();
             productionPostData = {};
             openlayer(function (index, layero) {
-                    saveData(function () {
-                        layer.closeAll();
-                        productionSearcher.doSearch();
-                    });
+                saveData();
             });
         });
         return [$adda];
@@ -356,8 +303,8 @@ $(function(){
             this.options.list = data["autoFillKeyValue"];
             this.flprocess(this.options.list,["key"], ["value"]);
         },
-        isResultTypeMap : true //必填值为true，获取key，value的标识，
-        , flupdater: function(k,v){//下拉列表选中时的一些处理，必填对选中项的key和value做处理
+        isResultTypeMap : true //必填值为true,获取key,value的标识
+        , flupdater: function(k,v){//下拉列表选中时的一些处理,必填对选中项的key和value做处理
             return v;
         }
     });
@@ -397,9 +344,9 @@ $(function(){
             productionPostData["production.timeLimit"] = $layerAdd.find("input[name = 'timeLimit']").val();
 
             com.post(api.production.addProduction,productionPostData,function(res){
-                        callback();
-                        layer.msg('添加成功', {icon: 1, time: 2e3});
-                    });
+                productionSearcher.doSearch();
+                com.showAlert(com.info, "操作成功");
+            });
         }
     }
 

@@ -35,6 +35,8 @@ public class ApprovalAction extends BaseListAction {
 
 	private ApprovalVO approval;
 	
+	private int count;
+	
 	@Action(value = "pageApprovalForReceive", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageApprovalForReceive() throws FLException {
 		
@@ -82,7 +84,23 @@ public class ApprovalAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-
+	
+	@Action(value = "countApprovalForReceive", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
+	public String countApprovalForReceive() throws FLException {
+		
+		count = approvalService.countApprovalForReceive(queryUserId(),queryCompany());
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "countApprovalForSend", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
+	public String countApprovalForSend() throws FLException {
+		
+		count = approvalService.countApprovalForSend( queryUserId(),queryCompany());
+		
+		return SUCCESS;
+	}
+	
 	public ApprovalVO getApproval() {
 		return approval;
 	}
@@ -90,5 +108,14 @@ public class ApprovalAction extends BaseListAction {
 	public void setApproval(ApprovalVO approval) {
 		this.approval = approval;
 	}
+
+	public int getCount() {
+		return count;
+	}
+
+	public void setCount(int count) {
+		this.count = count;
+	}
+	
 
 }

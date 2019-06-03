@@ -390,9 +390,9 @@ var Condition = function (api) {
                 validate: null // 校验规则
             },
             dataSource: { // 从后台取数据的各种配置
-                url: null, // 获取数据要调用的接口
+                url: api.ds.information, // 获取数据要调用的接口
                 postData: null, // 获取数据时的请求参数
-                listPath: [{key: "0", value: "\u88c5\u4fee"}, {key: "1", value: "\u4e3b\u6750"}], // 响应list的json路径
+                listPath: "activityTypes", // 响应list的json路径
                 keyPath: "key", // 用来向后台提交的字段的json路径
                 valuePath: "value" // 用来在页面显示的字段的json路径
             }
@@ -2843,6 +2843,23 @@ var Condition = function (api) {
         /*-------房产building : end----*/
 
         /*-------销售sales : start----*/
+		sales_bid:{
+            label: "品牌",
+            type: "autofill",
+            submitConfig: {
+                name: "bid",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {
+                url: api.data.queryBrandForPinYinNameAname,
+                postData: {},
+                listPath: "brands",
+                keyPath: "bid",
+                valuePath: "name"
+            }
+        },
+		
         sales_no : {
             label:"销售单号",
             type:"text",
@@ -3186,7 +3203,7 @@ var Condition = function (api) {
             label: "监理",//中文名
             type: "autofill",//类型
             submitConfig: {//向后台提交的配置
-                name: "supervisors",//接口中的参数名
+                name: "supervisor",//接口中的参数名
                 op: "eq",//查询方式
                 validate: null//校验规则
             },

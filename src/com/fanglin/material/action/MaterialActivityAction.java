@@ -99,14 +99,6 @@ public class MaterialActivityAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-	@Action(value = "upgradeMaterialActivityItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String upgradeMaterialActivityItem() throws FLException {
-
-		materialActivityService.upgradeMaterialActivityItem(materialActivityItem);
-
-		return SUCCESS;
-	}
-	
 	@Action(value = "expendMaterialActivityItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String expendMaterialActivityItem() throws FLException {
 

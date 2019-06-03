@@ -77,10 +77,7 @@ $(function(){
                 com.focusPage('#layerAdd').find('input[name="comment"]').val(v.comment);
                 openlayer("编辑",function(){
                     if(!com.validate("layerAdd",null)){
-                        saveData(v.wpid, function(){
-                            layer.closeAll();
-                            workplanSeacher.doSearch();
-                        });
+                        saveData(v.wpid);
                     }
                 });
             });
@@ -91,27 +88,15 @@ $(function(){
             });
 
             $btnStart.click(function(){
-                layer.confirm('是否启用?', {
-                    btn: ['确定','取消'] //按钮
-                }, function(index, layero){
-                    changeQuoteTypeStatus(v.wpid, 0,(v.status == 0) ,function(){
-                        layer.closeAll();
-                        workplanSeacher.doSearch();
-                        layer.msg('启用成功',{icon:1,time:2e3});
-                    });
-                }, function(){});
+                changeQuoteTypeStatus(v.wpid, 0, (v.status == 0) ,function(){
+                    com.showAlert(com.info, "操作成功");
+                });
             });
 
             $btnStop.click(function () {
-                layer.confirm('是否禁用?', {
-                    btn: ['确定','取消'] //按钮
-                }, function(index, layero){
-                    changeQuoteTypeStatus(v.wpid,1,(v.status == 1) ,function(){
-                        layer.closeAll();
-                        workplanSeacher.doSearch();
-                        layer.msg('禁用成功',{icon:1,time:2e3});
-                    });
-                }, function(){});
+                changeQuoteTypeStatus(v.wpid, 1, (v.status == 1) ,function(){
+                    com.showAlert(com.info, "操作成功");
+                });
             });
 
             return $liLine;
@@ -146,10 +131,7 @@ $(function(){
             com.clearValidator();
             openlayer("添加",function(index, layero){
                 if(!com.validate("layerAdd",null)){
-                    saveData(null, function(){
-                        layer.closeAll();
-                        workplanSeacher.doSearch();
-                    });
+                    saveData(null);
                 }
             });
         });
@@ -204,26 +186,16 @@ $(function(){
         });
     }
 
-    /*btnType:0 启用功能,1 禁用功能
-     statusFlag:当前状态是否与想要完成的功能相冲 */
     function changeQuoteTypeStatus(qtid,btnType,statusFlag ,callback) {
-
-        if(!statusFlag){
-            com.post(api.production.updateWorkplanForStatus, {
-                "workplan.wpid": qtid,
-                "workplan.status": btnType
-            }, function (res) {
-                callback();
-            });
-        }else{
-            layer.alert(btnType == 0 ? '已经启用':'已经禁用', {
-                icon: 0,
-                skin: 'layer-ext-moon'
-            });
-        }
+        com.post(api.production.updateWorkplanForStatus, {
+            "workplan.wpid": qtid,
+            "workplan.status": btnType
+        }, function (res) {
+            callback();
+        });
     }
 
-    function saveData(id,callback){
+    function saveData(id){
         var $layer = com.focusPage('#layerAdd');
         var name = $layer.find('input[name="name"]').val();
         var workshop = $layer.find('select[name="workshop"] option:selected').val();
@@ -235,7 +207,8 @@ $(function(){
                 "workplan.comment": comment,
                 "workplan.workshop.wsid": workshop
             }, function(res){
-                callback();
+                workplanSeacher.doSearch();
+                com.showAlert(com.info, "操作成功");
             });
         }else{
             com.post(api.production.updateWorkplan, {
@@ -244,7 +217,8 @@ $(function(){
                 "workplan.comment": comment,
                 "workplan.workshop.wsid": workshop
             }, function(res){
-                callback();
+                workplanSeacher.doSearch();
+                com.showAlert(com.info, "操作成功");
             });
         }
     }

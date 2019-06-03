@@ -91,7 +91,6 @@ $(function(){
                             'queueSizeLimit': 1, // 上传数量
                             'onUploadSuccess': function (file, data, response) {
                                 updateoutsourcePath(data, v.oid);
-                                // 上传到服务器，服务器返回相应信息到data里
                             }
                         });
                     });
@@ -113,29 +112,18 @@ $(function(){
                     });
 
                     $btnReceipt.click(function () {
-                        layer.confirm('确定到货?', {
-                            btn: ['确定','取消'] //按钮
-                        }, function(index, layero){
+                        com.showConfirm("是否确认到货", function(){
                             outsourceArrived(v.oid,function(){
-                                layer.closeAll();
-                                layer.msg('到货成功',{icon:1,time:2000});
+                                com.showAlert(com.info, "操作成功");
                             });
-                        }, function(){
-
                         });
-
                     });
 
                     $btnaBolition.click(function () {
-                        layer.confirm('是否废除?', {
-                            btn: ['确定','取消'] //按钮
-                        }, function(index, layero){
+                        com.showConfirm("是否确认废除", function(){
                             outsourceDestory(v.oid,function(){
-                                layer.closeAll();
-                                layer.msg('废除成功',{icon:1,time:2000});
+                                com.showAlert(com.info, "操作成功");
                             });
-                        }, function(){
-
                         });
                     });
 
@@ -152,25 +140,20 @@ $(function(){
             }
         };
 
-
         return {
             init : function(tableId,listData){
                 com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
             }
         };
-
-
-
     })();
+    
     var _condArr = [];
 
     var salesSearcher = new Searcher();
 
     salesSearcher.init( _condArr, "condList", api.production.pageOutsource, function(data){
-
         displayFunc.init('resultList', data);
-
     }, "pagenation", "outsourcePostData",{"pid":$pid}, false, null,function () {
 
         var $adda = $('<a></a>').addClass('btn btn-xs btn-info pull-left').attr('name', 'add').css("margin", "0px 3px");
@@ -199,7 +182,6 @@ $(function(){
 
     },"resultList");
 
-
     function outsourceArrived(id,callback){
 
         com.post(api.production.updateOutsourceForStatus, {
@@ -208,12 +190,9 @@ $(function(){
         },function(res){
             callback();
             salesSearcher.doSearch();
-        },function(e){
-            layer.closeAll();
-            layer.msg('确认失败',{icon:2,time:2000});
         });
-
     }
+    
     function outsourceDestory(id,callback){
 
         com.post(api.production.updateOutsourceForStatus,{
@@ -222,11 +201,7 @@ $(function(){
         },function(res){
             callback();
             salesSearcher.doSearch();
-        },function(e){
-            layer.closeAll();
-            layer.msg('废除失败',{icon:2,time:2000});
         });
-
     }
 
     function openlayer(callback) {
@@ -275,7 +250,6 @@ $(function(){
                 //右上角关闭回调
             }
         });
-
     }
 
     function saveData(id, callback) {
@@ -291,11 +265,8 @@ $(function(){
                 "outsource.pid": $pid,
                 "outsource.comment": comment
             }, function (res) {
-
                 salesSearcher.doSearch();
-                layer.closeAll();
-                layer.msg('添加成功', {icon: 1, time: 2e3});
-
+                com.showAlert(com.info, "操作成功");
             });
 
         }else {
@@ -305,8 +276,7 @@ $(function(){
                 "outsource.comment": commen
             }, function (res) {
                 salesSearcher.doSearch();
-                layer.closeAll();
-                layer.msg("修改成功",{icon: 1,time:2e3})
+                com.showAlert(com.info, "操作成功");
             });
 
         }
@@ -351,7 +321,6 @@ $(function(){
         $iconGrouop.append($icondownload);
         $box.append($iconGrouop).append($dataGrouop);
         $line.append($box)
-
     }
 
     function updateoutsourcePath(data,oid){
@@ -364,16 +333,11 @@ $(function(){
         if (dateObj.errorCode == 0) {
             option["outsource.path"] = dateObj.resUrl;
         }else{
-            layer.msg('上传失败',{icon:2,time:2000});
+            com.showAlert(com.warning, "上传失败");
         }
 
         com.post(api.production.updateOutsource,option,function(res){
-            layer.closeAll();
-            layer.msg('上传成功',{icon:1,time:2000});
-            salesSearcher.doSearch();
-        },function(){
-            layer.closeAll();
-            layer.msg('上传失败',{icon:2,time:2000});
+            com.showAlert(com.info, "操作成功");
             salesSearcher.doSearch();
         })
     }

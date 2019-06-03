@@ -48,13 +48,13 @@ jQuery(function ($) {
     	var $checks = com.focusPage('input[type="checkbox"]:checked', '#list');
     	
     	if($checks.length == 0){
-    		layer.msg('请选择商品');
+    		com.showAlert(com.warning, "请选择商品");
     		return false;
     	}
     	
     	var options = {
     		"manifest.mid": manifest.mid
-    	}
+    	};
     	
     	for(var i=0;i<$checks.length;i++){
     		
@@ -71,7 +71,7 @@ jQuery(function ($) {
     		var crnum = crnumInput.val();
     		
     		if (utils.accSub(num, crnum) < 0){
-            	layer.msg("货单项出返数不足");
+            	com.showAlert(com.warning, "货单项出返数不足");
             	crnumInput.select();
             	return false;
             }
@@ -80,11 +80,7 @@ jQuery(function ($) {
     		options["manifestItems[" + i + "].num"] = crnum;
     	}
     	
-    	com.post(api.inventory.addManifestForXB, options, function (data) {
-    		
-            layer.closeAll();
-            layer.msg('操作成功');
-        });
+    	com.post(api.inventory.addManifestForXB, options);
     });
 
     com.focusPage("#cancelBtn").click(function () {

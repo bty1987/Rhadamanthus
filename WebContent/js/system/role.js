@@ -49,9 +49,7 @@ jQuery(function($) {
     role.roleItems.name = com.focusPage("#roleName");
     role.chainPageModal = com.focusPage("#chainPageModal");
     role.roleItems.currentchainPage = com.focusPage("#currentchainPage");
-    role.roleItems.chainPage = com.focusPage("#chainPage").chosen({
-        width: "200px"
-    });
+    role.roleItems.chainPage = com.focusPage("#chainPage");
 
     role.modal.on('show.bs.modal',function(e){
         com.clearValidator();
@@ -324,7 +322,6 @@ jQuery(function($) {
                 var cpids=[];
                 var chainPage=[];
                 role.roleItems.chainPage.bindData(role.chainPage , "cpid", "name");
-                role.roleItems.chainPage.trigger("chosen:updated");
                 
                 com.post(api.right.queryRoleChainPageByRid,options, function(res){
                     chainPages = res.chainPages;

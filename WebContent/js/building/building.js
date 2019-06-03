@@ -40,6 +40,7 @@ jQuery(function($) {
 	building.items.downpayment = com.focusPage("#downpayment");
 	building.items.loanPrice = com.focusPage("#loanPrice");
 	building.items.payType = com.focusPage("#payType");
+	building.items.payTypes = com.focusPage("#payTypes");
 	building.items.balanceStatus = com.focusPage("#balanceStatus");
 
 	building.customerItems.customerName = com.focusPage("#customerName");
@@ -53,17 +54,13 @@ jQuery(function($) {
 	building.customerItems.address = com.focusPage("#address");
 	building.customerItems.phone = com.focusPage("#phone");
 
-	//修改支付状态用的
-	building.items.payTypes = com.focusPage("#payTypes");
-
 	building.customerItems.gender = com.focusPage("#gender").switchBtn("gender");
 
-	com.focusPage(".date-picker").datepicker({autoclose: !0}).on("show",function() {
-		setTimeout(function() {
-			com.focusPage(".dropdown-menu").css("z-index", 1060)
-		},0)
-	});
-
+	com.focusPage(".date-picker").datepicker(com.datepickerdefault);
+	
+	com.initTypeahead('hsAUser', api.data.queryCustomerForName, "pinyinName", {}, "autoFillCustomer", "key", "value");
+	com.initTypeahead('csAUser', api.data.queryCustomerForName, "pinyinName", {}, "autoFillCustomer", "key", "value");
+	
 	com.post(api.ds.building, {}, function(res){
 		building.items.payType.bindData(res.payType,"key", "value");
 		building.items.balanceStatus.bindData(res.balanceStatus,"key", "value");
@@ -201,7 +198,7 @@ jQuery(function($) {
 			//更改支付方式
 			$btnType.unbind("click");
 			$btnType.click(function(){
-				//这里目前关于支付方式更改是涉及到的贷款服务费没有处理，页面用该有一个生成款项的入口
+				//这里目前关于支付方式更改是涉及到的贷款服务费没有处理,页面用该有一个生成款项的入口
 				updatePayType(v.bid);
 			});
 
@@ -212,7 +209,7 @@ jQuery(function($) {
 
 			//合同终止
 			$btnEnd.click(function(){
-				//这里应该弹出退款框，合同终止的情况下将中介费，贷款服务费退还
+				//这里应该弹出退款框,合同终止的情况下将中介费,贷款服务费退还
 				buildingEnd(v.bid);
 			});
 
@@ -240,7 +237,7 @@ jQuery(function($) {
 		var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
 		var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
-		var $addb = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'createAuser').css("margin", "0px 3px");
+		var $addb = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'createAuser').css("margin", "0px 3px");
 		var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($addb);
 		var $addspan = $('<span></span>').text('创建代理人').appendTo($addb);
 
@@ -250,8 +247,7 @@ jQuery(function($) {
 	//添加
 	com.focusPage('a[name="addBuilding"]', '#pagenation').click(function(){
 		deleteData();
-		com.initChosen('hsAUser', api.data.queryCustomerForName, "pinyinName", {}, "autoFillCustomer", "key", "value");
-		com.initChosen('csAUser', api.data.queryCustomerForName, "pinyinName", {}, "autoFillCustomer", "key", "value");
+		
 		com.focusPage("#buildingModal").modal("show");
 	});
 
@@ -268,7 +264,7 @@ jQuery(function($) {
 	}
 
 	function updatePayType(bid){
-		//这里目前有一个问题，就是款项，如果是全款转贷款，或者贷款转全款的时候，涉及到的贷款服务费的问题
+		//这里目前有一个问题,就是款项,如果是全款转贷款,或者贷款转全款的时候,涉及到的贷款服务费的问题
 		building.bid = bid;
 		com.post(api.building.queryBuildingByBid, {"building.bid" : bid}, function(res){
 			buildingPayType = res.building.payType;
@@ -289,15 +285,15 @@ jQuery(function($) {
 	}
 
 	function saveData(){
-		if(com.validate() || building.dataFlag){
+		if(com.validate("buildingModal") || building.dataFlag){
 			return;
 		}
 
 		var options = {
 			'building.houseSource.hsid': building.hsid,
 			'building.customerSource.csid': building.csid,
-			'building.houseSourceAgent.cid': building.items.hsAUser.val(),
-			'building.customerSourceAgent.cid': building.items.csAUser.val(),
+			'building.houseSourceAgent.cid': com.typeahead("hsAUser"),
+			'building.customerSourceAgent.cid': com.typeahead("csAUser"),
 			'building.signingTime': building.items.signingTime.val(),
 			'building.tradePrice': building.items.tradePrice.val(),
 			'building.downpayment': building.items.downpayment.val(),
@@ -335,7 +331,7 @@ jQuery(function($) {
 
 	//合同终止
 	function buildingEnd(bid){
-		//因为涉及到款项(中介费和贷款服务费)，所以还没有写
+		//因为涉及到款项(中介费和贷款服务费),所以还没有写
 	}
 
 	//创建客户
@@ -402,9 +398,10 @@ jQuery(function($) {
 	}
 
 	function deleteData(){
-		com.clearValidator("buildingModal");
-		com.updateChosen('hsAUser', "", "");
-		com.updateChosen('csAUser', "", "");
+	    
+	    com.clearValidator("buildingModal");
+	    com.cleanTypeahead("hsAUser");
+	    com.cleanTypeahead("csAUser");
 		com.cleanItems(building.items);
 	}
 });

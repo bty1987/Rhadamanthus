@@ -3,6 +3,7 @@ $(function () {
     var materialActivityItem = {
         items: {},
         activity: {},
+        activityItem:{}
     };
 
     var paramsOrderId = params.orderId;
@@ -87,7 +88,7 @@ $(function () {
             coupon.bindData([{aid: -1, activityName: ""}], "aid", "activityName", "money");
             coupon.trigger("chosen:updated");
 
-            com.post(api.information.queryActivityForValid, {"activity.type": 1}, function (res) {
+            com.post(api.information.queryActivityForValid, {"activity.type": 2}, function (res) {
                 var activitys = res.activitys;
 
                 var _activitys = [];
@@ -100,46 +101,49 @@ $(function () {
                 materialActivityItem.activity.bindData(_activitys, "aid", "activityName", "money", false);
             });
 
-            approvalUtils.initqueryApprovalUser("approveActivityItemManSel", 8);
-
             materialActivityItem.materialActivityItemModal.modal("show")
         });
 
         return $divWarp;
     }
 
-    function materialNo() {
+    com.post(api.information.queryActivityForValid, {"activity.type": 2}, function (res) {
+        $.each(res.activitys, function (i, v) {
+            materialActivityItem.activityItem[v.aid] = v.name;
+        });
+
+    },null,false);
+
+    function materialNo(aid) {
+        var $activityName=com.focusPage("#paramsNo").empty();
 
         var $btnSub = $('<a></a>').addClass('btn btn-minier btn-success').html('修改活动');
         var $h4 = $('<h4></h4>').addClass('oid').append($('<small></small>').addClass('blue')).html("主材单号:" + paramsNo);
+        var $activity = $('<h4></h4>').addClass('oid').append($('<small></small>').addClass('blue')).html(materialActivityItem.activityItem[aid] == null ? "当前活动:无" : "当前活动:" + materialActivityItem.activityItem[aid]);
         var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-        var $divWarp = com.focusPage("#paramsNo").append($h4);
-        $divBtnWrap.append($btnSub).appendTo($h4);
+        $activityName.append($h4).append($activity);
+        $divBtnWrap.append($btnSub).appendTo($activity);
 
         $btnSub.click(function () {
 
-            com.post(api.information.queryActivityForValid, {"activity.type": 1}, function (res) {
+            com.post(api.information.queryActivityForValid, {"activity.type": 2}, function (res) {
 
                 var activitys = res.activitys;
                 var _activitys = [];
 
                 for (var i = 0; i < activitys.length; i++) {
                     var _activity = activitys[i];
-
-                    if (_activity.aid == activityId) {
-                        com.focusPage("#activityName").val(_activity.name)
-                    }
-                    _activitys.push({aid: _activity.aid, activityName: _activity.name, money: _activitys.money});
+                    _activitys.push({aid: _activity.aid, activityName: _activity.name});
                 }
                 activityInfo.bindData(_activitys, "aid", "activityName", "money", false);
             });
             materialActivityItem.materialActivityModal.modal("show")
         });
-        return $divWarp
+        return $activityName
     }
 
     orderList();
-    materialNo();
+    materialNo(activityId);
 
     var options = {
         "orderId": paramsOrderId,
@@ -203,7 +207,7 @@ $(function () {
 
                 var stateLi = $("<li></li>").appendTo(ul);
                 var stateStr = $("<strong></strong>").text("状态:").appendTo(stateLi);
-                var stateSpan = $("<span></span>").addClass("red").attr("id", "state_" + v.maiid).text(v.state == 0 ? "初始" : v.state == 1 ? "失效" : v.state == 2 ? "已领" : v.state == 3 ? "退货" : v.state == 4 ? "配送" : v.state == 5 ? "未退" : v.state == 6 ? "升级" : "消耗").appendTo(stateLi);
+                var stateSpan = $("<span></span>").addClass("red").attr("id", "state_" + v.maiid).text(v.state == 0 ? "初始" : v.state == 1 ? "失效" : v.state == 2 ? "已领" : v.state == 3 ? "退货" : v.state == 4 ? "配送" : v.state == 5 ? "未退" : "消耗").appendTo(stateLi);
 
                 var totalLi = $("<li></li>").appendTo(ul);
                 var totalStr = $("<strong></strong>").text("合计:").appendTo(totalLi);
@@ -224,9 +228,8 @@ $(function () {
         var receiveBtn = $("<span></span>").addClass("btn btn-minier btn-success").html("领取").css("margin", "3px 3px").attr("id", "receive_" + activityItem.maiid).appendTo(uiPgDiv);
         var deliveBtn = $("<span></span>").addClass("btn btn-minier btn-warning").html("配送").css("margin", "3px 3px").attr("id", "delive_" + activityItem.maiid).appendTo(uiPgDiv);
         var unredundBtn = $("<span></span>").addClass("btn btn-minier btn-inverse").html("未退").css("margin", "3px 3px").attr("id", "unrefund_" + activityItem.maiid).appendTo(uiPgDiv);
-        var upgradeBtn = $("<span></span>").addClass("btn btn-minier btn-danger").html("升级").css("margin", "3px 3px").attr("id", "upgrade_" + activityItem.maiid).appendTo(uiPgDiv);
-        var refundBtn = $("<span></span>").addClass("btn btn-minier btn-pink").html("退货").css("margin", "3px 3px").attr("id", "refund_" + activityItem.maiid).appendTo(uiPgDiv);
-        var expendBtn = $("<span></span>").addClass("btn btn-minier btn-purple").html("消耗").css("margin", "3px 3px").attr("id", "expend_" + activityItem.maiid).appendTo(uiPgDiv);
+        var refundBtn = $("<span></span>").addClass("btn btn-minier btn-danger").html("退货").css("margin", "3px 3px").attr("id", "refund_" + activityItem.maiid).appendTo(uiPgDiv);
+        var expendBtn = $("<span></span>").addClass("btn btn-minier btn-pink").html("消耗").css("margin", "3px 3px").attr("id", "expend_" + activityItem.maiid).appendTo(uiPgDiv);
 
         abateBtn.on("click", function () {
             abateMaterialActivityItem(activityItem.maiid, activityItem.activity);
@@ -234,10 +237,6 @@ $(function () {
 
         deliveBtn.on("click", function () {
             deliveMaterialActivityItem(activityItem.maiid, activityItem.activity);
-        });
-
-        upgradeBtn.on("click", function () {
-            upgradeMaterialActivityItem(activityItem.maiid, activityItem.activity);
         });
 
         receiveBtn.on("click", function () {
@@ -259,123 +258,94 @@ $(function () {
 
     function abateMaterialActivityItem(maiid, activityItemName) {
 
-        bootbox.confirm("是否确认失效" + activityItemName + "活动物品?", function (result) {
-            if (result) {
+        com.showConfirm("是否确认失效" + activityItemName + "活动物品?", function () {
 
-                var options = {
-                    "materialActivityItem.maiid": maiid
-                };
+            var options = {
+                "materialActivityItem.maiid": maiid
+            };
 
-                com.post(api.material.abateMaterialActivityItem, options, function (res) {
-                    com.showAlert(com.info, "操作成功!");
-                    queryMaterialActivityItem();
-                });
-            }
+            com.post(api.material.abateMaterialActivityItem, options, function (res) {
+                com.showAlert(com.info, "操作成功!");
+                queryMaterialActivityItem();
+            });
         });
     }
 
     function deliveMaterialActivityItem(maiid, activityItemName) {
 
-        bootbox.confirm("是否确认配送" + activityItemName + "的活动物品?", function (result) {
-            if (result) {
+        com.showConfirm("是否确认配送" + activityItemName + "的活动物品?", function () {
 
-                var options = {
-                    "materialActivityItem.maiid": maiid,
-                };
+            var options = {
+                "materialActivityItem.maiid": maiid,
+            };
 
-                com.post(api.material.deliveMaterialActivityItem, options, function (res) {
-                    com.showAlert(com.info, "操作成功!");
-                    queryMaterialActivityItem();
-                })
-            }
+            com.post(api.material.deliveMaterialActivityItem, options, function (res) {
+                com.showAlert(com.info, "操作成功!");
+                queryMaterialActivityItem();
+            })
         });
     }
 
     function unredundMaterialActivityItem(maiid, activityItemName) {
 
-        bootbox.confirm("是否确认未退" + activityItemName + "的活动物品?", function (result) {
-            if (result) {
+        com.showConfirm("是否确认未退" + activityItemName + "的活动物品?", function () {
 
-                var options = {
-                    "materialActivityItem.maiid": maiid,
-                };
+            var options = {
+                "materialActivityItem.maiid": maiid,
+            };
 
-                com.post(api.material.unrefundMaterialActivityItem, options, function (res) {
-                    com.showAlert(com.info, "操作成功!");
-                    queryMaterialActivityItem();
-                })
-            }
-        });
-    }
-
-    function upgradeMaterialActivityItem(maiid, activityItemName) {
-
-        bootbox.confirm("是否确认升级" + activityItemName + "的活动物品?", function (result) {
-            if (result) {
-
-                var options = {
-                    "materialActivityItem.maiid": maiid,
-                };
-
-                com.post(api.material.upgradeMaterialActivityItem, options, function (res) {
-                    com.showAlert(com.info, "操作成功!");
-                    queryMaterialActivityItem();
-                })
-            }
+            com.post(api.material.unrefundMaterialActivityItem, options, function (res) {
+                com.showAlert(com.info, "操作成功!");
+                queryMaterialActivityItem();
+            })
         });
     }
 
     function refundMaterialActivityItem(maiid, activityItemName) {
 
-        bootbox.confirm("是否确认退货" + activityItemName + "的活动物品?", function (result) {
-            if (result) {
+        com.showConfirm("是否确认退货" + activityItemName + "的活动物品?", function () {
 
-                var options = {
-                    "materialActivityItem.maiid": maiid,
-                };
+            var options = {
+                "materialActivityItem.maiid": maiid,
+            };
 
-                com.post(api.material.refundMaterialActivityItem, options, function (res) {
+            com.post(api.material.refundMaterialActivityItem, options, function (res) {
 
-                    var maiid = res.materialActivityItem.maiid;
-                    com.focusPage("#refund_" + maiid).unbind();
-                    com.showAlert(com.info, "操作成功!");
-                    queryMaterialActivityItem();
-                })
-            }
+                var maiid = res.materialActivityItem.maiid;
+                com.focusPage("#refund_" + maiid).unbind();
+                com.showAlert(com.info, "操作成功!");
+                queryMaterialActivityItem();
+            })
         });
     }
 
     function expendMaterialActivityItem(maiid, activityItemName) {
 
-        bootbox.confirm("是否消耗" + activityItemName + "的活动物品?", function (result) {
-            if (result) {
+        com.showConfirm("是否消耗" + activityItemName + "的活动物品?", function () {
 
-                var options = {
-                    "materialActivityItem.maiid": maiid,
-                };
+            var options = {
+                "materialActivityItem.maiid": maiid,
+            };
 
-                com.post(api.material.expendMaterialActivityItem, options, function (res) {
-                    com.showAlert(com.info, "操作成功!");
-                    queryMaterialActivityItem();
-                })
-            }
+            com.post(api.material.expendMaterialActivityItem, options, function (res) {
+                com.showAlert(com.info, "操作成功!");
+                queryMaterialActivityItem();
+            })
         });
     }
 
     function receiveMaterialActivityItem(maiid, activityItemName) {
 
-        bootbox.confirm("是否确认领取" + activityItemName + "的活动物品?", function (result) {
-            if (result) {
+        com.showConfirm("是否确认领取" + activityItemName + "的活动物品?", function () {
 
-                var options = {
-                    "materialActivityItem.maiid": maiid,
-                };
+            var options = {
+                "materialActivityItem.maiid": maiid,
+            };
 
-                com.post(api.material.receiveMaterialActivityItem, options, function (res) {
-                    com.showAlert(com.info, "领取成功!");
-                    queryMaterialActivityItem();
-                })
-            }
+            com.post(api.material.receiveMaterialActivityItem, options, function (res) {
+                com.showAlert(com.info, "领取成功!");
+                queryMaterialActivityItem();
+            })
         });
     }
 
@@ -394,6 +364,7 @@ $(function () {
         };
         com.post(api.material.updateMaterialForActivity, options, function (res) {
             queryMaterialActivity();
+            materialNo(res.material.activityId);
             com.showAlert(com.info, "修改成功")
         });
 

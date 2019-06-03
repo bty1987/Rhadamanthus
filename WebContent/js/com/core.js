@@ -11,7 +11,15 @@
     genderType: {"女": true, "男": false, "true": "女", "false": "男"},
     isOrNotType: {"是": true, "否": false, "true": "是", "false": "否"},
     /**
-     * 时间控件初始化中文默认配置
+     * 时间控件初始化默认配置
+     */
+    timepickerdefault: {
+        minuteStep: 1,
+        showSeconds: false,
+        showMeridian: false 
+    },
+    /**
+     * 时间控件初始化默认配置
      */
     datepickerdefault: {
         language: "zh",
@@ -56,6 +64,17 @@
         },
     },
     /**
+     * 图表默认配置 , Echarts
+     */
+    chartdefault: {
+        toolbox: {
+            show : true,
+            feature : {
+                saveAsImage : {show: true}
+            }
+        }
+    },
+    /**
      * 接口请求方法 , 主要使用post方式 , 根据api对应的接口对象信息完成请求动作
      * @param api 接口对象
      * @param options 请求参数
@@ -66,7 +85,7 @@
     post: function (api, options, callback, failCallback, asyncFlag) {
 
         if (api == null) {
-            return;
+            return false;
         }
 
         var method = api.url;
@@ -91,7 +110,7 @@
 
         if (window.notOperate) {
             com.showAlert(com.warning, "已锁屏不能进行操作");
-            return;
+            return false;
         }
 
         var opts = $.extend({}, options || {});
@@ -129,7 +148,7 @@
         if (config.demo) {
             if (!api.demo) {
                 com.showAlert(com.warning, "Demo状态不能完成此操作");
-                return;
+                return false;
             }
 
             url = 'result/' + api.url.split('.')[0] + '.json';
@@ -146,7 +165,7 @@
             async: optAsync, //设为false就是同步请求
             success: function (res) {
                 if (res == null) {
-                    return;
+                    return false;
                 }
                 
                 if (res.errorCode == 0) {
@@ -396,7 +415,7 @@
         layer.tips(msg.errorMsg, $obj, {tips: [_ == -1 ? 2 : _, '#fd6b6b'], tipsMore: true, time: 5000});
     },
     /**
-     * 加载页面，切换页面功能
+     * 加载页面 , 切换页面功能
      * @param url 页面地址
      * @param notTab 页面不在flpage.active中显示
      * @param data 页面携带参数
@@ -523,7 +542,7 @@
     },
     /**
      * 初始化自动补全 , 利用接口完成基础数据获取
-     * @param id 页面标签/元素ID
+     * @param id 页面标签/元素ID/样式class
      * @param url 请求地址
      * @param args 请求参数
      * @param result 返回结果名称
@@ -533,7 +552,9 @@
      */
     initTypeahead: function (id, url, name, args, result, key, value, callback){
         
-        var $ele = com.focusPage('#' + id).typeahead({
+        id = !/\W+/.test(id) ? '#' + id : id;
+        
+        var $ele = com.focusPage(id).typeahead({
             url: url,
             list: [],
             postData: {},
@@ -557,14 +578,17 @@
     },
     /**
      * 初始化自动补全 , 提供基础数据 , 无需发生请求
-     * @param id 页面标签/元素ID
+     * @param id 页面标签/元素ID/样式class
      * @param data 基础数据
      * @param key 补全元素key值
      * @param value 补全元素value值
      * @param callback 回调方法 , 选中元素之后执行
      */
     selectTypeahead: function (id, data, key, value, callback){
-        var $ele = com.focusPage('#' + id).typeahead({
+        
+        id = !/\W+/.test(id) ? '#' + id : id;
+        
+        var $ele = com.focusPage(id).typeahead({
             list: [],
             source: function (query, process) {
                 
@@ -593,7 +617,7 @@
     },
     /**
      * 初始化自动补全 , 利用接口完成基础数据获取
-     * @param id 页面标签/元素ID
+     * @param id 页面标签/元素ID/样式class
      * @param url 请求地址
      * @param args 请求参数
      * @param result 返回结果名称
@@ -702,14 +726,17 @@
      * @param success 成功回调方法
      * @param cancel 取消回调方法
      * @param isPrint 是否显示打印按钮
+     * @returns 弹窗索引
      */
     popup: function (title, url, success, cancel, isPrint) {
-        var layerPra = {
+        
+        var options = {
             type: 2,
             skin: 'layui-layer-lan',
             title: title,
             content: url,
             zIndex: 9999,
+            maxmin: false,
             move: false,
             success: function () {
                 if (success != null && typeof(success) == 'function') {
@@ -724,32 +751,137 @@
         };
 
         if(isPrint){
-            $.extend(layerPra,{btn:["打印"],btn1:function(index, layero){
+            
+            var _width = $(window).width();
+            var _height = $(window).height();
+            
+            var _area = [_width + "px", _height + "px"];
+            
+            var printConf = {
+                skin: "layui-layer-hong",
+                area: _area,
+                btn: ["打印"],
+                btn1: function(index, layero){
                     var body = layer.getChildFrame('body', index);
                     var iframeWin = window[layero.find('iframe')[0]['name']];
                     iframeWin.print();
-                }, success:function (index, layero) {
-                    $('.layui-layer-title').text("");
+                }, 
+                success: function (index, layero) {
+                    var $title = $('.layui-layer-title').text("");
 
-                    var divM = $("<div></div>");
-                    var div1 = $("<div></div>").attr("id","FL-titleDiv").css({"float":"left","width":"33%"}).text(title);
-                    var div2 = $(".layui-layer-btn").css({"float":"right","width":"65%"});
-
-                    divM.append(div1,div2).appendTo(com.focusPage('.layui-layer-title'));
-                    divM.append(div1,div2).appendTo($('.layui-layer-title'));
-
+                    var divM = $("<div></div>").appendTo($title);
+                    var div1 = $("<div></div>").attr("id","FL-titleDiv").css({"float":"left","width":"33%"}).text(title).appendTo(divM);
+                    var div2 = $(".layui-layer-btn").css({"float":"right","width":"65%"}).appendTo(divM);
+                    
+                    if (success != null && typeof(success) == 'function') {
+                        success();
+                    }
                 }
-            });
-
-            layerPra.skin = "layui-layer-hong"
+            }
+            
+            $.extend(options, printConf);
+        }
+        
+        return layer.open(options);
+    },
+    /**
+     * 弹窗 , 编辑页类型
+     * @param holder 页面容器
+     * @param title 标题
+     * @param success 成功回调
+     * @param cancel 取消回调
+     * @returns 弹窗索引
+     */
+    popup4model: function(holder, title, success, cancel){
+        
+        var _holder = com.focusPage(holder);
+        
+        var _width = (_holder.width() > 521 ? _holder.width() + 50 : 521);
+        
+        var options = {
+            type: 1,
+            skin: 'layui-layer-lan',
+            title: title,
+            content: _holder,
+            area: _width + "px",
+            maxmin: false,
+            move: false,
+            zIndex: 9999,
+            success: function (layer, index) {
+                if(success && typeof(success) == 'function') success();
+            },
+            cancel: function () {
+                layer.closeAll();
+                if(cancel && typeof(cancel) == 'function') cancel();
+            }
+        }
+        
+        return layer.open(options);
+    },
+    /**
+     * 弹窗 , 内嵌页类型
+     * @param holder 页面容器
+     * @param url 地址
+     * @param title 标题
+     * @param success 成功回调
+     * @param cancel 取消回调
+     * @returns 弹窗索引
+     */
+    popup4page: function(holder, url, title, success, cancel){
+        
+        var _holder = com.focusPage(holder);
+        
+        var _width = $(window).width() * 0.8;
+        var _height = $(window).height() * 0.8;
+        
+        var _area = [_width + "px", _height + "px"]
+        
+        var options = {
+            type: 1,
+            skin: 'layui-layer-lan',
+            title: title,
+            content: _holder,
+            area: _area,
+            maxmin: false,
+            move: false,
+            zIndex: 9000,
+            success: function (layer, index) {
+                _holder.load(url);
+                if(success && typeof(success) == 'function') success();
+            },
+            cancel: function () {
+                layer.closeAll();
+                if(cancel && typeof(cancel) == 'function') cancel();
+            }
         }
 
-        layer.full(
-            layer.open(layerPra)
-        );
+        return layer.open(options);
     },
-    sealJournal: function (level, content) {
-        (config.logflag) && console[level](content);
+    /**
+     * 弹窗 , 单页类型 , 支持打印
+     * @param title 标题
+     * @param url 地址
+     * @param success 成功回调方法
+     * @param cancel 取消回调方法
+     * @param isPrint 是否显示打印按钮
+     * @returns 弹窗索引
+     */
+    popup4frame: function(title, url, success, cancel, isPrint){
+        com.popup(title, url, success, cancel, isPrint);
+    },
+    /**
+     * 日志打印信息
+     * @param content 内容
+     */
+    info: function (content) {
+        (config.logflag && config.logflag > 1) && console.info(content);
+    },
+    /**
+     * 日志打印信息
+     * @param content 内容
+     */
+    error: function(content){
+        (config.logflag && config.logflag > 0) && console.error(content);
     },
     /**
      * 拆分url参数
@@ -852,6 +984,37 @@
     currentTime: function () {
         var date = new Date();
         return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + " " + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+    },
+    /**
+     * 图标工具方法
+     * @param parentId 图表容器ID
+     * @param elementId 图标元素ID
+     * @param args 请求参数
+     * @param styles 图标元素样式
+     */
+    charts: function(parentId, elementId, args, clazz, styles){
+        
+        if(!echarts) return false;
+        
+        var $parent = com.focusPage("#" + parentId);
+        
+        if (!$parent) return false;
+        
+        styles = styles ? styles : {};
+        
+        var $element = $("<div></div>").attr("id", elementId).addClass(clazz).css(styles).appendTo($parent);
+        
+        if ($element.length == 0) return false;
+        
+        var $options = $.extend({}, com.chartdefault);
+        var $chart = echarts.init($element[0], "light");
+        
+        $chart.showLoading();
+        
+        com._post_(api.home.library, args, function(res){
+            $chart.hideLoading();
+            $chart.setOption($.extend($options, res));
+        });
     }
 };
 
@@ -866,7 +1029,19 @@
     Array.prototype.contains = function (value, defaults) {
         return $.inArray(value, this) != -1 ? value : defaults;
     };
-    
+    /**
+     * 拆分数组 , 数组元素为规律对象 , 利用元素中key和value值返回对象结构
+     * @param key 数组元素key值
+     * @param value 数组元素value值
+     * @returns 对象结构
+     */
+    Array.prototype.split = function(key, value){
+        var _pack = {};
+        $.each(this, function(i, v){
+            _pack[v[key]] = v[value];
+        });
+        return _pack;
+    };
     /**
      * 面包屑显示
      * @param icon 图标 , 开始位置显示
@@ -885,10 +1060,10 @@
     
     /**
      * 显示帮助文档
-     * @param container 显示帮助按钮的块级元素 (必须传入标识符, 例如：(".breadcrumb")符号不可省略)
-     * @param key 显示帮助文档的内容关键词，与help.json中key值至少相同一个
-     * 例：$.showHelp(".breadcrumb", "decoration-create")
-     *  执行：从help.json中获取key为"decoration-create"的数据，将在标识为".breadcrumb"的元素之后显示帮助按钮并在点击帮助按钮后显示帮助信息
+     * @param container 显示帮助按钮的块级元素 (必须传入标识符, 例如: (".breadcrumb")符号不可省略)
+     * @param key 显示帮助文档的内容关键词 , 与help.json中key值至少相同一个
+     * 例: $.showHelp(".breadcrumb", "decoration-create")
+     *  执行: 从help.json中获取key为"decoration-create"的数据, 将在标识为".breadcrumb"的元素之后显示帮助按钮并在点击帮助按钮后显示帮助信息
      */
     $.showHelp = function (container, key) {
 

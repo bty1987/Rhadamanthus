@@ -2,7 +2,8 @@ $(function () {
 
     var salesActivityItem = {
         items: {},
-        activity: {}
+        activity: {},
+        name: {}
     };
 
     var activityItemType = {};
@@ -95,7 +96,7 @@ $(function () {
             coupon.bindData([{aid: -1, activityName: ""}], "aid", "activityName", "money");
             coupon.trigger("chosen:updated");
 
-            com.post(api.information.queryActivityForValid, {"activity.type": 1}, function (res) {
+            com.post(api.information.queryActivityForValid, {"activity.type": 3}, function (res) {
                 var activitys = res.activitys;
 
                 var _activitys = [];
@@ -114,20 +115,27 @@ $(function () {
         return $divWarp;
     }
 
+    com.post(api.information.queryActivityForValid, {"activity.type": 3}, function (res) {
+        $.each(res.activitys, function (i, v) {
+            salesActivityItem.name[v.aid] = v.name;
+        });
+    },null,false);
+
     orderList();
-    salesNo();
+    salesNo(activityId);
 
-    function salesNo() {
-
+    function salesNo(activityId) {
+        var $divWarp = com.focusPage("#paramsNo").empty();
         var $btnSub = $('<a></a>').addClass('btn btn-minier btn-success').html('修改活动');
         var $h4 = $('<h4></h4>').addClass('oid').append($('<small></small>').addClass('blue')).html("销售单号:" + salesno);
+        var $h4Name = $('<h4></h4>').addClass('oid').append($('<small></small>').addClass('blue')).html(salesActivityItem.name[activityId] == null ? "当前活动:无" : "当前活动名称:" + salesActivityItem.name[activityId]);
         var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-        var $divWarp = com.focusPage("#paramsNo").append($h4);
+        $divWarp.append($h4).append($h4Name);
         $divBtnWrap.append($btnSub).appendTo($h4);
 
         $btnSub.click(function () {
 
-            com.post(api.information.queryActivityForValid, {"activity.type": 1}, function (res) {
+            com.post(api.information.queryActivityForValid, {"activity.type": 3}, function (res) {
 
                 var activitys = res.activitys;
                 var _activitys = [];
@@ -135,14 +143,14 @@ $(function () {
                 for (var i = 0; i < activitys.length; i++) {
 
                     var _activity = activitys[i];
-                    if (_activity.aid == activityId) {
-                        com.focusPage("#activityName").val(_activity.name);
-                    }
+                    // if (_activity.aid == activityId) {
+                    //     com.focusPage("#activityName").val(_activity.name);
+                    // }
                     _activitys.push({aid: _activity.aid, activityName: _activity.name, money: _activitys.money});
                 }
                 activityInfo.bindData(_activitys, "aid", "activityName", "money", false);
             });
-            salesActivityItem.salesActivityModal.modal("show")
+            salesActivityItem.salesActivityModal.modal("show");
         });
         return $divWarp
     }
@@ -236,8 +244,6 @@ $(function () {
         var deliveBtn = $("<span></span>").addClass("btn btn-minier btn-inverse").html("配送").css("margin", "3px").appendTo(uiPgDiv);
         //未退
         var unrefundBtn = $("<span></span>").addClass("btn btn-minier btn-danger").html("未退").css("margin", "3px").appendTo(uiPgDiv);
-        //升级
-        var upgradeBtn = $("<span></span>").addClass("btn btn-minier btn-pink").html("升级").css("margin", "3px").appendTo(uiPgDiv);
         //消耗
         var expendBtn = $("<span></span>").addClass("btn btn-minier btn-purple").html("消耗").css("margin", "3px").appendTo(uiPgDiv);
 
@@ -270,11 +276,6 @@ $(function () {
         unrefundSalesActivityItem(activityItem.saiid, activityItem.activity);
     });
 
-    //点击升级按钮
-    upgradeBtn.click(function () {
-        upgradeSalesActivityItem(activityItem.saiid, activityItem.activity);
-    });
-
     //点击消耗按钮
     expendBtn.click(function () {
         expendSalesActivityItem(activityItem.saiid, activityItem.activity);
@@ -286,105 +287,89 @@ $(function () {
     //失效
     function abateSalesActivityItem(saiid, activityItemName) {
 
-        bootbox.confirm("是否确认失效" + activityItemName + "活动物品?", function (result) {
-            if (result) {
+        com.showConfirm("是否确认失效" + activityItemName + "活动物品?", function () {
 
-                var options = {
-                    "salesActivityItem.saiid": saiid
-                };
+            var options = {
+                "salesActivityItem.saiid": saiid
+            };
 
-                com.post(api.inventory.abateSalesActivityItem, options, function (res) {
-                    com.showAlert(com.info, "失效成功!");
-                    querySalesActivityItem();
-                });
-            }
+            com.post(api.inventory.abateSalesActivityItem, options, function (res) {
+                com.showAlert(com.info, "失效成功!");
+                querySalesActivityItem();
+            });
+
         });
     }
     //领取
     function receiveSalesActivityItem(saiid, activityItemName) {
 
-        bootbox.confirm("是否确认领取" + activityItemName + "活动物品?", function (result) {
-            if (result) {
+        com.showConfirm("是否确认领取" + activityItemName + "活动物品?", function () {
 
-                var options = {
-                    "salesActivityItem.saiid": saiid
-                };
+            var options = {
+                "salesActivityItem.saiid": saiid
+            };
 
-                com.post(api.inventory.receiveSalesActivityItem, options, function (res) {
-                    com.showAlert(com.info, "领取成功!");
-                    querySalesActivityItem();
-                })
-            }
+            com.post(api.inventory.receiveSalesActivityItem, options, function (res) {
+                com.showAlert(com.info, "领取成功!");
+                querySalesActivityItem();
+            })
         });
     }
     //退货
     function refundSalesActivityItem(saiid, activityItemName) {
-        bootbox.confirm("是否确认退货" + activityItemName + "活动物品?", function (result) {
-            if(result){
-                var options = {
-                    "salesActivityItem.saiid": saiid
-                };
-                com.post(api.inventory.refundSalesActivityItem, options, function (res) {
-                    com.showAlert(com.info, "退货成功!");
-                    querySalesActivityItem();
-                });
-            }
+        com.showConfirm("是否确认退货" + activityItemName + "活动物品?", function () {
+
+            var options = {
+                "salesActivityItem.saiid": saiid
+            };
+            com.post(api.inventory.refundSalesActivityItem, options, function (res) {
+                com.showAlert(com.info, "退货成功!");
+                querySalesActivityItem();
+            });
+
         });
     }
     //配送
     function deliveSalesActivityItem(saiid, activityItemName){
-        bootbox.confirm("是否确认配送" + activityItemName + "活动物品?", function (result) {
-            if(result){
-                var options = {
-                    "salesActivityItem.saiid": saiid
-                };
-                com.post(api.inventory.deliveSalesActivityItem, options, function (res) {
-                    com.showAlert(com.info, "配送成功!");
-                    querySalesActivityItem();
-                });
-            }
+        com.showConfirm("是否确认配送" + activityItemName + "活动物品?", function () {
+
+            var options = {
+                "salesActivityItem.saiid": saiid
+            };
+            com.post(api.inventory.deliveSalesActivityItem, options, function (res) {
+                com.showAlert(com.info, "配送成功!");
+                querySalesActivityItem();
+            });
+
         });
     }
     //未退
     function unrefundSalesActivityItem(saiid, activityItemName) {
-        bootbox.confirm("是否确认未退" + activityItemName + "活动物品?", function (result) {
-            if(result){
-                var options = {
-                    "salesActivityItem.saiid": saiid
-                };
-                com.post(api.inventory.unrefundSalesActivityItem, options, function (res) {
-                    com.showAlert(com.info, "未退成功!");
-                    querySalesActivityItem();
-                });
-            }
+        com.showConfirm("是否确认未退" + activityItemName + "活动物品?", function () {
+
+            var options = {
+                "salesActivityItem.saiid": saiid
+            };
+            com.post(api.inventory.unrefundSalesActivityItem, options, function (res) {
+                com.showAlert(com.info, "未退成功!");
+                querySalesActivityItem();
+            });
+
         });
     }
-    //升级
-    function upgradeSalesActivityItem(saiid, activityItemName) {
-        bootbox.confirm("是否确认升级" + activityItemName + "活动物品?", function (result) {
-            if(result){
-                var options = {
-                    "salesActivityItem.saiid": saiid
-                };
-                com.post(api.inventory.upgradeSalesActivityItem, options, function (res) {
-                    com.showAlert(com.info, "升级成功!");
-                    querySalesActivityItem();
-                });
-            }
-        });
-    }
+
     //消耗
     function expendSalesActivityItem(saiid, activityItemName) {
-        bootbox.confirm("是否确认消耗" + activityItemName + "活动物品?", function (result) {
-            if(result){
-                var options = {
-                    "salesActivityItem.saiid": saiid
-                };
-                com.post(api.inventory.expendSalesActivityItem, options, function (res) {
-                    com.showAlert(com.info, "消耗成功!");
-                    querySalesActivityItem();
-                });
-            }
+        com.showConfirm("是否确认消耗" + activityItemName + "活动物品?", function () {
+
+            var options = {
+                "salesActivityItem.saiid": saiid
+            };
+            com.post(api.inventory.expendSalesActivityItem, options, function (res) {
+                com.showAlert(com.info, "消耗成功!");
+                querySalesActivityItem();
+            });
+
         });
     }
 
@@ -392,7 +377,7 @@ $(function () {
     //修改活动
     com.focusPage("#submitSalesActivityBtn").on("click", function () {
 
-        if (com.validate()) {
+        if (com.validate("salesActivityModal","")) {
             return;
         }
 
@@ -404,6 +389,7 @@ $(function () {
         };
         com.post(api.inventory.updateSalesForActivity, options, function (res) {
             querySalesActivity();
+            salesNo(res.sales.activityId);
             com.showAlert(com.info, "修改成功")
         });
 
@@ -413,7 +399,7 @@ $(function () {
     //领取物品
     com.focusPage("#submitSalesActivityItemBtn").on("click", function () {
 
-        if (com.validate()) {
+        if (com.validate("salesActivityItemModal", "")) {
             return;
         }
         if (things.val() == null && coupons.val() == null) {

@@ -4,7 +4,7 @@ $(function(){
 	var items = {
 		code: com.focusPage("#code"),
 		name: com.focusPage("#name")
-	}
+	};
 
     var displayFunc  = (function(){
 
@@ -164,7 +164,7 @@ $(function(){
     	var options = {
 			"storehouse.shid": shid,
             "storehouse.status": status
-    	}
+    	};
     	
     	com.post(api.inventory.updateStorehouseForStatus, options, function (res) {
     		com.showAlert(com.info, "操作成功");
@@ -181,7 +181,7 @@ $(function(){
     	var options = {
     		"storehouse.code": items.code.val(),
     		"storehouse.name": items.name.val()
-    	}
+    	};
     	
     	com.post(api.inventory.addStorehouse, options, function(res){
     		com.showAlert(com.info, "操作成功");

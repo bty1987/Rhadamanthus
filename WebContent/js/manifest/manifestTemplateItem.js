@@ -1,8 +1,8 @@
 
 $(function(){
-	
+
 	var mtid = params["manifestTemplate.mtid"];
-	
+
 	com.post(api.inventory.queryManifestTemplateItemByMtid, {"manifestTemplate.mtid": mtid}, function (res) {
         displayFunc.init('resultList', res.manifestTemplateItems);
     });
@@ -40,7 +40,7 @@ $(function(){
                 var $cell = $('<div></div>').addClass('cell').html(v);
                 $cell.appendTo($contentWrap);
             });
-            
+
             var $optionWrap = $('<div></div>').addClass('line-wrap action').html($('<div>操作</div>').addClass('cell option'));
             $liTitle.append($indexWrap).append($contentWrap).append($optionWrap).appendTo($ulTitle);
 
@@ -88,14 +88,12 @@ $(function(){
             $liLine.append($indexWrap).append($contentWrap).append($optionWrap);
 
             $btnDelete.click(function() {
-                layer.confirm('是否确定删除?', {
-                    btn: ['确定','取消'] //按钮
-                }, function(index, layero){
+                com.showConfirm('是否确定删除?', function () {
                     com.post(api.inventory.deleteManifestTemplateItem, {
                         "manifestTemplate.mtid": mtid,
                         "mtiids[0]": v.mtiid
-                    }, function(){
-                        layer.msg('操作成功');
+                    }, function () {
+                        com.showAlert(com.info, "操作成功");
                         $line.remove();
                     });
                 });
@@ -114,15 +112,15 @@ $(function(){
             }
         };
     })();
-    
+
     var binding = {
         //操作配置
         optAction : function(mtid, manifestTemplate){
 
             var $popup = com.focusPage("#optPopUp");
-            
+
             $popup.attr('data-mtid', mtid);
-            
+
             var index = layer.open({
                 type: 1,
                 skin: 'layui-layer-lan',
@@ -149,7 +147,7 @@ $(function(){
     com.focusPage("#addBtn").click(function(v){
         binding.optAction(v.mtid,v);
     });
-    
+
     com.focusPage("#backBtn").click(function () {
         com.switchPage("views/manifest/manifestTemplate.html");
     });

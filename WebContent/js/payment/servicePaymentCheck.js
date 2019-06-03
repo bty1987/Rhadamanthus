@@ -6,7 +6,8 @@ jQuery(function($) {
 		checkvNums: [],
 		items: {},
 		moreMsg: {},
-		htmlName: "serviceCheck"
+		htmlName: "serviceCheck",
+		modelId: 'baseItemModalServiceCheck'
 	};
 
 	servicePaymentCheck.items.cashCheckbox = com.focusPage("#cashCheckbox");
@@ -50,7 +51,7 @@ jQuery(function($) {
 
 	paymentUtils.getReceiptType(servicePaymentCheck);
 
-	paymentUtils.dynamicChosen('baseItemModalServiceCheck', "serviceCheckcashInfo", servicePaymentCheck.cashUtil, "key", "value");
+	com.selectTypeahead("serviceCheckcashInfo", servicePaymentCheck.cashUtil, "key", "value", null);
 
 	com.focusPage("#serviceCheckbankAdd").click(function(){
 		var num = $(this).attr("num");
@@ -104,7 +105,7 @@ jQuery(function($) {
 
 			var propertyArr = [
 				["订单号:", v.decoration.orderId, "blue"],
-				["楼盘地址:", v.decoration.house.village.name + ''+v.decoration.house.houseNumber, "grey"],
+				["楼盘地址:", v.decoration.house.village.cityProper.city.name + ' ' + v.decoration.house.village.cityProper.name + ' ' + v.decoration.house.village.name + ' '+ v.decoration.house.houseNumber, "grey"],
 				["客户:", v.decoration.customer.name, "grey"],
 				["设计师:", v.decoration.designer.currentName, "grey"],
 				["设计部:", v.decoration.designer.dept.name, "grey"],
@@ -204,7 +205,7 @@ jQuery(function($) {
 			$.exceler({
 				column : [
 					["订单号","decoration.orderId"],
-					['楼盘地址',['decoration.house.village.name', 'decoration.house.houseNumber']],
+					['楼盘地址',['decoration.house.village.cityProper.city.name', 'decoration.house.village.cityProper.name', 'decoration.house.village.name', 'decoration.house.houseNumber']],
 					['客户','decoration.customer.name'],
 					['设计师','decoration.designer.currentName'],
 					['设计部','decoration.designer.dept.name'],
@@ -280,7 +281,7 @@ jQuery(function($) {
 
 			var propertyArr = [
 				["订单号:", v.decoration.orderId, "blue"],
-				["楼盘地址:", v.decoration.house.village.name + ''+v.decoration.house.houseNumber, "grey"],
+				["楼盘地址:", v.decoration.house.village.cityProper.city.name + ' ' + v.decoration.house.village.cityProper.name + ' ' + v.decoration.house.village.name + ' '+ v.decoration.house.houseNumber, "grey"],
 				["客户:", v.decoration.customer.name, "grey"],
 				["设计师:", v.decoration.designer.currentName, "grey"],
 				["设计部:", v.decoration.designer.dept.name, "grey"],

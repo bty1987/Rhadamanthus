@@ -76,44 +76,23 @@
     }, null, false);
 
     com.post(api.system.queryModuleForLogin, {"module.system": 1}, createMenu);
-
-    if(parent.window.isPC){
-
-        $("#logout").remove();
-        $(".divider").remove();
-
-        $(document).keyup(function (event) {
-            if (event.ctrlKey && event.keyCode === 70) {
-                $('#search_container').fadeToggle(function () {
-                    $(this).find('input').focus().val("")
-                    $('#fl-container').find('.black').removeClass('black')
-                })
-            }
-        });
-
-        $('#close').click(function(){
-            $('#search_container').fadeOut(function () {
-                $(this).find('input').val("")
-                $('#fl-container').find('.black').removeClass('black')
-            })
-        })
-
-        document.getElementById("searchInput").addEventListener("input", function (e) {
-            var data = $(this).val()
-            if(data == ""){
-                $('.flpage.tab-pane.active').find('.black').removeClass('black')
-            }else{
-                $('.flpage.tab-pane.active').find('.black').removeClass('black')
-                var l = $('.flpage.tab-pane.active').find(":contains('" + data + "')");
-                $.each(l, function (i, e) {
-                    var _e = $(e);
-                    if(_e.children().length == 0){
-                        _e.addClass('black')
-                    }
-                });
-            }
-        });
-    }
+    
+    $(".nav-search .nav-search-input").keyup(function(){
+        
+        com.focusPage(".marksearch").removeClass("marksearch");
+        
+        var data = $(this).val();
+        
+        if(data != ""){
+            var elements = com.focusPage(":contains('" + data + "')");
+            $.each(elements, function (i, e) {
+                var _e = $(e);
+                if(_e.children().length == 0){
+                    _e.addClass('marksearch');
+                }
+            });
+        }
+    });
 
     $("#versionCode").text(config.versionCode);
 
@@ -455,7 +434,7 @@
     }
 
     function doLocking(){
-
+        
         $("#userNameLock").text(window.userLockName);
 
         com.showImg($("#personalPicLock"), window.userLockPhoto, 180, 180, '');
@@ -486,7 +465,6 @@
         };
 
         $("#lockSubmit").on("click",function(){  lockSubmit();  });
-
     }
 
     function clearLocking(){

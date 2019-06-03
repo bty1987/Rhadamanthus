@@ -16,6 +16,7 @@ jQuery(function (a) {
     
     var qrcodeType = 0;
     var qrcodeMask = $(".qrcode_mask");
+    var qrtype = $(".qrtype");
 
     var setCookie = function (cname, cvalue, minutes) {
         var d = new Date();
@@ -98,6 +99,8 @@ jQuery(function (a) {
         count = 0;
         qrcodeType = type;
         
+        qrtype.html(type == 0 ? "钉钉" : "微信");
+        
         $.ajax(config.communion + QRCode + "?timestamp=" + new Date().getTime() + "&prefix=" + config.prefix + "&type=" + type).done(function (data) {
             $('#qrcode').prop('src', data.QRCode).removeClass("hide");
         }).fail(function () {
@@ -109,7 +112,7 @@ jQuery(function (a) {
     };
 
     var checkQRLogin = function (flag) {
-        count == 15 ? qrcodeMask.removeClass('hide') : $.post(config.communion + "/queryLoginInfoByLoginFlag.do", {"loginInfo.loginFlag": flag}).done(function (data) {
+        count == 20 ? qrcodeMask.removeClass('hide') : $.post(config.communion + "/queryLoginInfoByLoginFlag.do", {"loginInfo.loginFlag": flag}).done(function (data) {
             count++;
             var statusCode = data.loginInfo.code;
 

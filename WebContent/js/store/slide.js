@@ -129,10 +129,7 @@ $(function () {
                 var id = com.focusPage('#layerAdd').attr('data-sid');
                 var status = com.focusPage('#layerAdd').attr('data-status');
 
-                startStatus(id, status, function () {
-                    layer.closeAll();
-                    layer.msg('禁用成功', {icon: 1});
-                });
+                startStatus(id, status);
             });
 
             $btnStart.click(function () {
@@ -142,10 +139,7 @@ $(function () {
                 var id = com.focusPage('#layerAdd').attr('data-sid');
                 var status = com.focusPage('#layerAdd').attr('data-status');
 
-                stopStatus(id, status, function () {
-                    layer.closeAll();
-                    layer.msg('启用成功', {icon: 1});
-                });
+                stopStatus(id, status);
             });
 
             return $liLine;
@@ -209,7 +203,7 @@ $(function () {
             yes: function (index, layero) {
                 var img =com.focusPage('#showImg').attr('src');
                 if(img == "#"){
-                    layer.msg("请上传图片");
+                    com.showAlert(com.warning, "请上传图片");
                 }else{
                     callback(index,layero);
                 }
@@ -228,38 +222,22 @@ $(function () {
         });
     }
 
-    function startStatus(id, status, callback) {
-        if (status == "0") {
-            com.post(api.store.updateSlideForStatus, {
-                "slide.sid": id,
-                "slide.status": "1"
-            }, function (res) {
-                callback();
-                doSearcher();
-            });
-        } else {
-            layer.alert('已经禁用', {
-                icon: 0,
-                skin: 'layer-ext-moon'
-            });
-        }
+    function startStatus(id, status) {
+        com.post(api.store.updateSlideForStatus, {
+            "slide.sid": id,
+            "slide.status": "1"
+        }, function (res) {
+            doSearcher();
+        });
     }
 
-    function stopStatus(id, status, callback) {
-        if (status == "1") {
-            com.post(api.store.updateSlideForStatus, {
-                "slide.sid": id,
-                "slide.status": "0"
-            }, function (res) {
-                callback();
-                doSearcher();
-            });
-        } else {
-            layer.alert('已经启用', {
-                icon: 0,
-                skin: 'layer-ext-moon'
-            });
-        }
+    function stopStatus(id, status) {
+        com.post(api.store.updateSlideForStatus, {
+            "slide.sid": id,
+            "slide.status": "0"
+        }, function (res) {
+            doSearcher();
+        });
     }
 
     /*添加信息*/

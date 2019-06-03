@@ -1,4 +1,4 @@
-<div class="page-content">
+<div>
     <div class="row">
         <div class="col-xs-12">
             <div id="condList" class="fl_search clearfix"></div><!---c查询条件有就写没有 也写上 在js 里面不传参就行--->
@@ -22,9 +22,7 @@
                             <label class="col-sm-3 control-label no-padding-right" for="villageNo">楼盘信息</label>
                             <div class="col-sm-9">
                                 <div class="col-sm-7 no-padding-left">
-                                    <select class="chosen-select col-sm-6 v_required" id="villageNo">
-                                        <option value="">&nbsp;</option>
-                                    </select>
+                                    <input type="text" class="col-sm-6 v_typeahead v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="villageNo">
                                 </div>
                                 <div id="bindHouseDiv" class="col-sm-5 no-padding-left"><button type="button" id="bindHouse" class="btn btn-xs btn-info">绑定楼盘</button></div>
                             </div>
@@ -146,9 +144,7 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label no-padding-right" for="designer">设计师</label>
                             <div class="col-sm-9">
-                                <select class="chosen-select col-sm-8 v_required" id="designer">
-                                    <option value="">&nbsp;</option>
-                                </select>
+                                <input type="text" class="col-sm-8 v_typeahead v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="designer">
                             </div>
                         </div>
                     </form>

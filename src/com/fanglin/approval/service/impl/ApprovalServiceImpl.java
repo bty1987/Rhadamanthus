@@ -295,6 +295,30 @@ public class ApprovalServiceImpl implements ApprovalService {
 		return 0;
 	}
 	
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public int countApprovalForReceive(String userId, int company) throws FLException {
+		
+		UserPO userPO = userDao.queryUserByUserId(userId);
+		int ruId = userPO.getUid();
+		
+		int count=approvalDao.countApprovalForReceive(ApprovalPO.APPROVAL_STATUS_INIT_INT, ruId, company);
+		
+		return count;
+	}
+	
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public int countApprovalForSend(String userId, int company) throws FLException {
+		
+		UserPO userPO = userDao.queryUserByUserId(userId);
+		int suId = userPO.getUid();
+		
+		int count=approvalDao.countApprovalForSend(ApprovalPO.APPROVAL_STATUS_INIT_INT,suId, company);
+		
+		return count;
+	}
+	
 	private ApprovalVO convertBean(ApprovalPO approvalPO) {
 		
 		ApprovalVO approvalVO = new ApprovalVO(new UserBaseVO(),new UserBaseVO());

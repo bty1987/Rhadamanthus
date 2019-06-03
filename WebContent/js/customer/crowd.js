@@ -1,11 +1,11 @@
 $(function(){
 
     var group = {
-        bindSaveBtn : null,
-        bindSaveOrderBtn:null,
-        items:{},
-        gid:null,
-        opengid:null,
+        bindSaveBtn: null,
+        bindSaveOrderBtn: null,
+        items: {},
+        gid: null,
+        opengid: null,
     };
 
     group.items.name = com.focusPage("#name");
@@ -22,8 +22,7 @@ $(function(){
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
             if(listData && listData.length){
                 $.each(listData,function(i, v){
-                    var $liLine = creatLine(v);
-                    $liLine.appendTo($ul);
+                    creatLine(v).appendTo($ul);
                 });
                 $ul.appendTo($tableWrap);
             }
@@ -41,9 +40,9 @@ $(function(){
             var $btnunbind= $("<a></a>").addClass("btn btn-minier btn-warning").html("解绑");
 
             var propertyArr = [
-                ["群编号：", v.opengid, "grey"],
-                ["装修单号：", v.orderId, "grey"],
-                ["说明：", v.content, "grey"],
+                ["群编号: ", v.opengid, "grey"],
+                ["装修单号: ", v.orderId, "grey"],
+                ["说明: ", v.content, "grey"],
             ]
 
             $.each(propertyArr, function (index, value) {
@@ -71,11 +70,9 @@ $(function(){
                 params.opengid = v.opengid;
 
                 com.focusPage("#bindOrderModal").modal("show");
-
             });
 
             $btnunbind.click(function(){
-
                 bindGrop(v.gid);
             });
 
@@ -111,8 +108,9 @@ $(function(){
     },"pagenation");
 
     function bindgroup (){
+        
         if(com.validate()){
-            return;
+            return false;
         }
 
        var option = {
@@ -131,7 +129,7 @@ $(function(){
     function bindgroupOrder(){
 
         if(com.validate()){
-            return;
+            return false;
         }
 
         var option = {
@@ -145,30 +143,14 @@ $(function(){
             com.showAlert(com.info,'绑定成功');
             com.focusPage("#bindOrderModal").modal("hide");
         });
-
     }
 
     function  bindGrop(id){
-        var btn = $(this);
-        var span = btn.find("span");
-        btn.find('i').remove();
-        var loading = $('<i></i>').addClass('icon-spinner icon-spin white bigger-125');
-        span.prepend(loading);
-        var message = "<p>确定要解除绑定么?</p>";
-        bootbox.confirm(message, function (result) {
-            if (result) {
-                var options = {
-                    "group.gid": id
-                };
-                com.post(api.customer.unbindGroup, options, function (res) {
-                    searcher.doSearch();
-                    com.showAlert(com.info,'解除成功');
-                });
-            }else{
-                btn.find('i').remove();
-                var prepared=$('<i></i>').addClass('icon-ok bigger-110');
-                span.prepend(prepared);
-            }
+        com.showConfirm("确定要解除绑定", function(){
+            com.post(api.customer.unbindGroup, {"group.gid": id}, function (res) {
+                searcher.doSearch();
+                com.showAlert(com.info,'解除成功');
+            });
         });
     }
 

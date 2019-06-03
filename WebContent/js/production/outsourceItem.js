@@ -53,22 +53,12 @@ $(function () {
 
                     hidBtn($btnDelete,outsourceStatus);
 
-                    //删除按钮
                     $btnDelete.click(function (e) {
-                        e.stopPropagation();
-                        layer.confirm('确定要删除吗?', {
-                            btn: ['确定', '取消']
-                        }, function (index, layero) {
+                        com.showConfirm("是否确认删除", function(){
                             com.post(api.production.deleteOutsourceItem, {"outsourceItem.oiid": v.oiid}, function () {
-                                layer.closeAll();
                                 outsourceSeacher.doSearch();
-                                com.showAlert(com.info, "删除成功");
-                            }, function (e) {
-                                layer.closeAll();
-                                com.showAlert(com.error, e.exception.errorMessage);
+                                com.showAlert(com.info, "操作成功");
                             });
-                        }, function () {
-
                         });
                     });
 

@@ -159,9 +159,8 @@ $(function () {
             "workerSalary.comment": comment
         };
         com.post(api.salary.collectWorkerDeposit, option, function (res) {
-            layer.closeAll();
             searcher.doSearch();
-            layer.msg('收取成功', {icon: 1});
+            com.showAlert(com.info,"收取成功");
         });
     }
 
@@ -175,9 +174,8 @@ $(function () {
             "workerSalary.comment": comment
         };
         com.post(api.salary.drawWorkerDeposit, option, function (res) {
-            layer.closeAll();
             searcher.doSearch();
-            layer.msg('提现成功', {icon: 1});
+            com.showAlert(com.info, "提现成功");
         });
     }
 
@@ -189,9 +187,8 @@ $(function () {
             "workerBalance.toplimit": toplimit
         };
         com.post(api.salary.updateWorkerBalance, option, function (res) {
-            layer.closeAll();
             searcher.doSearch();
-            layer.msg('操作成功', {icon: 1});
+            com.showAlert(com.info,"操作成功");
         })
     }
 
@@ -205,9 +202,8 @@ $(function () {
             "workerSalary.comment": comment
         };
         com.post(api.salary.payWorkerSalary, option, function (res) {
-            layer.closeAll();
             searcher.doSearch();
-            layer.msg('操作成功', {icon: 1});
+            com.showAlert(com.showAlert,"操作成功");
         });
     }
 
@@ -221,9 +217,8 @@ $(function () {
             "workerSalary.comment": comment
         };
         com.post(api.salary.cutWorkerSalary, option, function (res) {
-            layer.closeAll();
             searcher.doSearch();
-            layer.msg('操作成功', {icon: 1});
+            com.showAlert(com.info, "操作成功");
         });
     }
 

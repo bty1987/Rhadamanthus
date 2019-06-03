@@ -38,7 +38,7 @@ jQuery(function ($) {
             $line.appendTo('#list');
             reorder();
         }else{
-            layer.msg("没有任何标签");
+            com.showAlert(com.warning, "没有任何标签");
         }
     });
 
@@ -90,7 +90,9 @@ jQuery(function ($) {
                     "userlabel.label.lid": com.focusPage("#lid").val(),
                     "userlabel.scope": com.focusPage("#value").val()
                 }, function (res) {
-                    layer.msg('贴标签成功!', {icon: 1});
+                    
+                    com.showAlert(com.info, "操作成功");
+                    
                     $line.find('.name').html($selectValue);
                     $line.find('.value').html(com.focusPage("#value").val());
                     $lines.remove();
@@ -105,7 +107,7 @@ jQuery(function ($) {
                 $line.remove();
             }else{
                 com.post(api.data.deleteUserLabel, {"userlabel.ulid" : $line.attr('data-ulid')}, function(res){
-                    layer.msg('移除标签成功!', {icon: 1});
+                    com.showAlert(com.info, "操作成功");
                     $line.remove();
                     reorder();
                 })

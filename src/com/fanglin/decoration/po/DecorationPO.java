@@ -37,6 +37,7 @@ import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.system.vo.CityProperVO;
+import com.fanglin.system.vo.CityVO;
 import com.fanglin.utils.BeanUtil;
 
 @Entity
@@ -535,10 +536,11 @@ public class DecorationPO implements Serializable {
 			decorationVO.setOrderTotalPrice(new Float(0));
 		}
 
-		decorationVO.setHouse(new HouseVO(new VillageVO(new CityProperVO())));
+		decorationVO.setHouse(new HouseVO(new VillageVO(new CityProperVO(new CityVO()))));
 		BeanUtil.copyProperties(this.getHouse(), decorationVO.getHouse(), Arrays.asList("village"));
 		BeanUtil.copyProperties(this.getHouse().getVillage(), decorationVO.getHouse().getVillage(), Arrays.asList("cityProper"));
 		BeanUtil.copyProperties(this.getHouse().getVillage().getCityProper(), decorationVO.getHouse().getVillage().getCityProper(), Arrays.asList("city"));
+		BeanUtil.copyProperties(this.getHouse().getVillage().getCityProper().getCity(), decorationVO.getHouse().getVillage().getCityProper().getCity(), Arrays.asList("region"));
 
 		CustomerVO customerVO = new CustomerVO();
 		BeanUtil.copyProperties(this.getCustomer(), customerVO);

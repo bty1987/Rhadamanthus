@@ -57,7 +57,7 @@ public class VprizeDaoImpl extends DaoImpl<VprizePO> implements VprizeDao {
 				if(field.equals("name")){
 					query.add(query.getCriterion(field, data, op));
 				}else if(field.equals("status")){
-					query.add(query.getCriterion(field, data, op));
+					query.add(query.getCriterion(field, Short.valueOf(data), op));
 				}
 			}
 		}

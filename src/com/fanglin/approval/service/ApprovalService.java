@@ -36,5 +36,9 @@ public interface ApprovalService {
 	public int approvalCallback(ApprovalVO approvalVO) throws FLException;
 	
 	public int refuse(ApprovalVO approvalVO) throws FLException;
+	
+	public int countApprovalForReceive(String userId, int company) throws FLException;
+	
+	public int countApprovalForSend(String userId, int company) throws FLException;
 
 }

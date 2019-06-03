@@ -71,8 +71,8 @@ public class GoodsDaoImpl extends DaoImpl<GoodsPO> implements GoodsDao {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<GoodsPO> queryGoodsByName(String name, String pinyin, String no, int limit, int company) {
-		return session().createCriteria(GoodsPO.class).add(Restrictions.eq(GoodsPO.COLUMN_COMPANY_STR, company)).add(Restrictions.eq(GoodsPO.COLUMN_STATUS_STR, GoodsPO.STATUS_ENABLE_INT)).add(Restrictions.or(Restrictions.or(Restrictions.ilike(GoodsPO.COLUMN_NAME_STR, name, MatchMode.ANYWHERE), Restrictions.ilike(GoodsPO.COLUMN_NO_STR, no, MatchMode.ANYWHERE)), Restrictions.ilike(GoodsPO.COLUMN_PINYIN_STR, pinyin, MatchMode.ANYWHERE))).setMaxResults(limit).list();
+	public List<GoodsPO> queryGoodsByName(String name, int limit, int company) {
+		return session().createCriteria(GoodsPO.class).add(Restrictions.eq(GoodsPO.COLUMN_COMPANY_STR, company)).add(Restrictions.eq(GoodsPO.COLUMN_STATUS_STR, GoodsPO.STATUS_ENABLE_INT)).add(Restrictions.or(Restrictions.or(Restrictions.ilike(GoodsPO.COLUMN_NAME_STR, name, MatchMode.ANYWHERE), Restrictions.ilike(GoodsPO.COLUMN_NO_STR, name, MatchMode.ANYWHERE)), Restrictions.ilike(GoodsPO.COLUMN_PINYIN_STR, name, MatchMode.ANYWHERE))).setMaxResults(limit).list();
 	}
 
 	@Override

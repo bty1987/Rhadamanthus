@@ -43,7 +43,7 @@ $(function(){
                     $liLine.appendTo($ulTitle);
                 });
 
-                com.focusPage('#resultListSplit').css({'width':'96%','margin':'0 auto','height':'540px','overflow-y':listData.length > 1 ? 'scroll': 'visible','marigin-top':'20px'})
+                com.focusPage('#resultListSplit').css({'width':'96%','margin':'0 auto','height':'540px','overflow-y':listData.length > 1 ? 'scroll': 'visible','marigin-top':'20px'});
                 com.focusPage('#resultListMerge').css({'width':'96%','margin':'0 auto','height':'540px','overflow-y':listData.length > 1 ? 'scroll': 'visible','marigin-top':'20px'})
 
             }
@@ -254,8 +254,7 @@ $(function(){
                     "goodsStorehouseStock.storehouse.shid": shid,
                     "goodsStorehouseStock.num": num
                 },function(res){
-                    layer.closeAll();
-                    layer.msg('拆分成功')
+                    com.showAlert(com.info, "操作成功");
                 })
             }else{
                 var num =com.focusPage('#mergeList').find('.inputNum input').val();
@@ -266,8 +265,7 @@ $(function(){
                     "goodsStorehouseStock.storehouse.shid": shid,
                     "goodsStorehouseStock.num": num
                 },function(res){
-                    layer.closeAll();
-                    layer.msg('合并成功')
+                    com.showAlert(com.info, "操作成功");
                 })
             }
         //}

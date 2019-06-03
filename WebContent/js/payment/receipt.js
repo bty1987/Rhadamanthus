@@ -8,7 +8,7 @@ jQuery(function ($) {
     receipt.items.executeDates = com.focusPage("#executeDates");
     receipt.items.executeTimes = com.focusPage("#executeTimes");
 
-    com.focusPage(".date-picker").datepicker({autoclose: !0}).on("show", function () {
+    com.focusPage(".date-picker").datepicker(com.datepickerdefault).on("show", function () {
         setTimeout(function () {
             com.focusPage(".dropdown-menu").css("z-index", 9999)
         }, 0)
@@ -113,7 +113,7 @@ jQuery(function ($) {
 
     //导出收据
     com.focusPage("#saveBtn").on("click", function () {
-        if (com.validate())
+        if (com.validate("receiptModal"))
             return;
 
         if ("export_payment_receipt" == undefined) {

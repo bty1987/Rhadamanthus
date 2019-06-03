@@ -24,8 +24,6 @@ public interface MaterialActivityService {
 
 	public int unrefundMaterialActivityItem(MaterialActivityItemVO materialActivityItemVO) throws FLException;
 
-	public int upgradeMaterialActivityItem(MaterialActivityItemVO materialActivityItemVO) throws FLException;
-
 	public int refundMaterialActivityItem(MaterialActivityItemVO materialActivityItemVO, String userId,String userName) throws FLException;
 
 	public int expendMaterialActivityItem(MaterialActivityItemVO materialActivityItemVO) throws FLException;

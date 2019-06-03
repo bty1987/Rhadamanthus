@@ -78,40 +78,21 @@
                 });
 
                 $btnDelete.click(function (e) {
-                    e.stopPropagation();
-                    layer.confirm('确定要删除吗?', {
-                        btn: ['确定', '取消'] //按钮
-                    }, function (indexo, layero) {
+                    com.showConfirm("是否确认删除", function(){
                         com.post(api.production.deletePuotation, {"puotation.qid": v.qid}, function () {
                             com.focusPage('#list ul.item-list').remove();
                             queryPuotationByPid(v.pid);
-                        }, function (e) {
-                            com.showAlert(com.error, e.errorMsg);
                         });
-                        layer.close(indexo);
-                    }, function () {
-
                     });
-
                 });
 
                 $btnStatus.click(function (e) {
-                    e.stopPropagation();
-                    layer.confirm('确定更改状态为'+(v.status==0?"正使用":"未使用")+'吗?', {
-                        btn: ['确定', '取消'] //按钮
-                    }, function (indexo, layero) {
+                    com.showConfirm("确定更改状态为" + (v.status == 0 ? "正使用" : "未使用"), function(){
                         com.post(api.production.updatePuotationForDefault, {"puotation.qid": v.qid}, function () {
-                            layer.msg('修改成功',{icon:1,time:2e3});
                             com.focusPage('#list ul.item-list').remove();
                             queryPuotationByPid(v.pid);
-                        }, function (e) {
-                            com.showAlert(com.error, e.errorMsg);
                         });
-                        layer.close(indexo);
-                    }, function () {
-
                     });
-
                 });
                 
                 $btnEdit.click(function(){
@@ -121,10 +102,7 @@
                     com.focusPage('#layerAdd').attr('data-qid', v.qid);
                     openlayer(function(){
                         var id = com.focusPage('#layerAdd').attr('data-qid');
-                        saveData(id, function(){
-                            layer.closeAll();
-                        });
-
+                        saveData(id);
                     });
                 });
 
@@ -139,9 +117,7 @@
                     openlayer2(function(){
                         var id = com.focusPage('#layerAdd2').attr('data-qid');
                         if(!com.validate("layerAdd2",null)){
-                            saveDis(id, function(){
-                                layer.closeAll();
-                            });
+                            saveDis(id);
                         }
                     });
                 });
@@ -210,7 +186,7 @@
         });
     }
 
-    function saveData(id,callback){
+    function saveData(id){
         var $layer = com.focusPage('#layerAdd');
         var name = $layer.find('input[name="name"]').val();
         var comment = $layer.find('input[name="comment"]').val();
@@ -219,12 +195,9 @@
                 "puotation.name": name,
                 "puotation.comment": comment
             }, function(res){
-                callback();
-                layer.msg("修改成功",{icon: 1,time:2e3});
+                com.showAlert(com.info, "操作成功");
                 com.focusPage('#list ul.item-list').remove();
                 queryPuotationByPid(pid);
-            },function(e){
-                layer.msg(e.exception.errorMessage,{icon: 1,time:2e3});
             });
     }
 
@@ -242,7 +215,7 @@
     //    }
     //});
 
-    function saveDis(id,callback){
+    function saveDis(id){
         var $layer = com.focusPage('#layerAdd2');
         var dis = $layer.find('input[name="dis"]').val();
         var total = $layer.find('input[name="total"]').val();
@@ -251,7 +224,6 @@
                 "puotation.discount": dis,
                 "puotation.total": total
             }, function(res){
-                callback();
                 com.focusPage('#list ul.item-list').remove();
                 queryPuotationByPid(pid);
             });   

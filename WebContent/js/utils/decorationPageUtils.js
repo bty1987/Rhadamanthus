@@ -127,14 +127,8 @@ $(function () {
             , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "建筑面积", "houseArea"), createDiv("col-sm-9").append(createInput("houseArea", "col-xs-10 col-sm-5 v_float v_required", true, "text", "0")))
             , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "订单状态", "status"), createDiv("col-sm-9").append(createInput("status", "col-xs-10 col-sm-5", true, "text", "0")))
             , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "量房时间", "measureTime"), createDiv("col-sm-9").append(createInput("measureTime", "col-xs-10 col-sm-5", true, "text", "0")))
-            , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "报价员", "quoterId"), createDiv("col-sm-9").append(createSelect("quoterId", "chosen-select col-md-4", [{
-                "text": "",
-                "value": ""
-            }], "display: none;", "请输入报价员", "popover", "manual")))
-            , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "跟单员", "escorterId"), createDiv("col-sm-9").append(createSelect("escorterId", "chosen-select col-md-4", [{
-                "text": "",
-                "value": ""
-            }], "display: none;", "请输入跟单员", "popover", 'manual')))
+            , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "报价员", "quoterId"), createDiv("col-sm-9").append(createInput("quoterId", "col-xs-10 col-sm-5",[], null, null, "popover", "manual")))
+            , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "跟单员", "escorterId"), createDiv("col-sm-9").append(createInput("escorterId", "col-xs-10 col-sm-5", [], null, null, "popover", 'manual')))
         ));
         form1.append(left1, right1).appendTo(row1);
 
@@ -264,7 +258,6 @@ $(function () {
 
     var _propertyArr = ["楼盘地址", "客户名", "设计部", "设计师", "业务部", "业务员", "面积", "预签额", "签单额", "报价额", "券优惠", "实收额", "创建时间", "量房时间", "定金时间", "预签时间", "签单时间", "类型", "状态", "工程状态", "折扣"];
     var propertyArrs = ["楼盘地址", "设计部", "设计师", "业务部", "业务员", "面积", "状态"];
-
     //页面显示控制参数 装修单号,楼盘,设计师/部门,业务员/部门,面积,状态
 
     var decorationPage = {
@@ -291,7 +284,7 @@ $(function () {
             "postDataName": "designerPostData",
             "nodes": [{
                 type: "basic",
-                opt: {btn: ["customerInfosBtn"], show: ["orderType", "houseType", "houseClass"]}
+                opt: {btn: ["customerInfosBtn"], show: ["houseType", "houseClass"]}
             }, {type: "quotaion", opt: {btn: ["btnPrintDefaultQuotationInfo"]}}, {
                 type: "picture",
                 opt: {show: ["designPictureUpload", "projectPictureUpload", "CADUpload", "ContractUpload","OriginalUpload"]}
@@ -423,7 +416,7 @@ $(function () {
             "postDataName": "planPostData",
             "nodes": [{
                 type: "basic",
-                opt: {btn: ["customerInfosBtn"], show: ["orderType", "houseType", "houseClass"]}
+                opt: {btn: ["customerInfosBtn"], show: ["houseType", "houseClass"]}
             }, {type: "quotaion", opt: {btn: ["btnPrintDefaultQuotationInfo"]}}, {
                 type: "picture",
                 opt: {show: ["designPictureUpload", "projectPictureUpload", "CADUpload", "ContractUpload","OriginalUpload"]}
@@ -484,7 +477,28 @@ $(function () {
             "nodes": [],
             "propertyArr": propertyArrs,
             "hasExport": false
-        }
+        },
+        "synthesize": {
+            "apiPage": api.decoration.pageDecorationForCommon,
+            "pageBtn": ["view", "line", "contract"],
+            "postDataName": "csynthesizePostData",
+            "nodes": [{
+                type: "basic",
+                opt: {btn: ["customerInfosBtn"], show: ["orderType", "houseType", "houseClass"]}
+            }, {type: "quotaion", opt: {btn: ["btnPrintDefaultQuotationInfo"]}}, {
+                type: "picture",
+                opt: {show: ["designPictureUpload", "projectPictureUpload", "CADUpload", "ContractUpload","OriginalUpload"]}
+            }, {type: "material"}, {
+                type: "activity",
+                opt: {btn: ["joinActivityBtn", "applyActivityItemBtn", "applySpecialActivityItemBtn"]},
+                wizard: {"activityBtnMethod": activityBtnMethod, "uiBtnMethod": uiBtnMethod}
+            }, {
+                type: "payment",
+                opt: {btn: ["btnSetDecorationPaymentInfo", "btnOtherPayment"]},
+                wizard: {"isDesign": true}
+            }, {type: "belong"}, {type: "addreduce"}, {type: "account"}, {type: "service"}],
+            "hasExport": false
+        },
     };
 
     function activityBtnMethod(uiPgDiv, decorationActivity) {
@@ -523,24 +537,22 @@ $(function () {
 
     function abateDecorationActivityItem(daiId, activityItemName) {
 
-        bootbox.confirm("是否确认失效" + activityItemName + "活动物品?", function (result) {
-            if (result) {
+        com.showConfirm("是否确认失效" + activityItemName + "活动物品?", function () {
 
-                var options = {
-                    "decorationActivityItem.daiId": daiId,
-                };
+            var options = {
+                "decorationActivityItem.daiId": daiId,
+            };
 
-                com.post(api.decoration.abateDecorationActivityItem, options, function (res) {
+            com.post(api.decoration.abateDecorationActivityItem, options, function (res) {
 
-                    var daiId = res.decorationActivityItem.daiId;
+                var daiId = res.decorationActivityItem.daiId;
 
-                    com.focusPage("#convert_" + daiId).unbind();
-                    com.focusPage("#abate_" + daiId).unbind();
-                    com.focusPage("#widgetHeader_" + daiId).addClass("header-color-grey");
-                    decorationUtils.decorationActivityItemInfo(com.focusPage("#activityPriceInfo"), com.focusPage("#activityItems"), uiBtnMethod, params["decorationOrderId"]);
+                com.focusPage("#convert_" + daiId).unbind();
+                com.focusPage("#abate_" + daiId).unbind();
+                com.focusPage("#widgetHeader_" + daiId).addClass("header-color-grey");
+                decorationUtils.decorationActivityItemInfo(com.focusPage("#activityPriceInfo"), com.focusPage("#activityItems"), uiBtnMethod, params["decorationOrderId"]);
 
-                });
-            }
+            });
         });
     }
 

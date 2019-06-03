@@ -120,8 +120,8 @@ jQuery(function ($) {
         com.post(api.production.updateWorkflowPlan,options,function(res){
             $lines.remove()
             layer.closeAll();
-            layer.msg("保存成功",{icon: 1,time:2e3})
             workflowAdd();
+            com.showAlert(com.info, "操作成功");
         })
     });
 

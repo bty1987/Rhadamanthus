@@ -139,7 +139,7 @@ $(function () {
                         ["抹零:", v.sales.maling, "blue"],
                         ["厂商抹零:", v.sales.venderMaling, "blue"],
                         ["状态:", status, "red"],
-                        ["类型:", type, "red"],
+                        ["类型:", type, "red"]
 
                     ];
 
@@ -172,7 +172,7 @@ $(function () {
                         e.stopPropagation();
 
                         if (v.status != 0) {
-                            layer.msg('非预结算状态下不允许进行厂商结算.');
+                            com.showAlert(com.warning, "非预结算状态下不允许进行厂商结算");
                             return
                         }
 
@@ -190,7 +190,7 @@ $(function () {
                                 }, function (res) {
 
                                     layer.closeAll();
-                                    layer.msg('更新成功');
+                                    com.showAlert(com.info, "更新成功");
                                     clearinput(com.focusPage('#vbalanceValue'));
                                     salesBalanceSearcher.doSearch();
 
@@ -204,21 +204,23 @@ $(function () {
 
                     $btnVbalance.click(function (e) {
                         e.stopPropagation();
-
+                        
                         if (v.status != 0) {
-                            layer.msg('非预结算状态下不允许进行厂商结算.');
-                            return
+                            com.showAlert(com.warning, "非预结算状态下不允许进行厂商结算");
+                            return;
                         }
 
-                        layer.confirm('确定要将单号为 ' + v.sales.no + ' 的销售单进行厂商结算吗?', {
-                            btn: ['确定', '取消'] //按钮
-                        }, function (index, layero) {
+                        if(v.vbalance == 0){
+                            com.showAlert(com.warning,"厂商结算值未填写，请检查");
+                            return;
+                        }
+
+                        com.showConfirm('确定要将单号为 ' + v.sales.no + ' 的销售单进行厂商结算吗?', function (index, layero) {
 
                             com.post(api.inventory.vpostSalesBalance, {
                                 "salesBalance.sbid": v.sbid
                             }, function (res) {
-                                layer.closeAll();
-                                layer.msg('厂商结算成功');
+                                com.showAlert(com.info, "厂商结算成功");
                                 salesBalanceSearcher.doSearch();
                             });
 
@@ -234,7 +236,7 @@ $(function () {
                         e.stopPropagation();
 
                         if (v.status != 1) {
-                            layer.msg('非厂商结算状态下不允许进行结算.');
+                            com.showAlert(com.warning, "非厂商结算状态下不允许进行结算");
                             return
                         }
 
@@ -253,7 +255,7 @@ $(function () {
                                 }, function (res) {
 
                                     layer.closeAll();
-                                    layer.msg('更新成功');
+                                    com.showAlert(com.info, "更新成功");
                                     clearinput(com.focusPage('#pbalanceValue'));
                                     salesBalanceSearcher.doSearch();
 
@@ -266,24 +268,26 @@ $(function () {
                     });
 
                     $btnBalance.click(function (e) {
-
+                        
                         e.stopPropagation();
 
                         if (v.status != 1) {
-                            layer.msg('非厂商结算状态下不允许进行结算.');
-                            return
+                            com.showAlert(com.warning, "非厂商结算状态下不允许进行结算");
+                            return;
                         }
 
-                        layer.confirm('确定要将单号为 ' + v.sales.no + ' 的销售单进行结算吗?', {
-                            btn: ['确定', '取消'] //按钮
-                        }, function (index, layero) {
+                        if(v.pbalance == 0){
+                            com.showAlert(com.warning,"结算值未填写，请检查");
+                            return;
+                        }
+
+                        com.showConfirm('确定要将单号为 ' + v.sales.no + ' 的销售单进行结算吗?', function (index, layero) {
 
                             com.post(api.inventory.postSalesBalance, {
                                 "salesBalance.sbid": v.sbid
                             }, function (res) {
 
-                                layer.closeAll();
-                                layer.msg('结算成功');
+                                com.showAlert(com.info, "结算成功");
                                 salesBalanceSearcher.doSearch();
                             });
 
@@ -534,7 +538,7 @@ $(function () {
                     var $h3 = $('<h3></h3>').addClass('oid');//.addClass('siid')
                     var $small = $('<small></small>').addClass('blue').html(v.salesItem.goods.name);
                     var $btnDiv = $('<div></div>').addClass('action-buttons pull-right');
-
+                    
                     var propertyArr = [
                         ["商品品类:", v.salesItem.goods.category, "grey", "category"],
                         ["商品颜色:", v.salesItem.color.name, "grey", "color"],
@@ -546,7 +550,7 @@ $(function () {
                         ["总价:", v.total, "blue", "total"],
                         ["结算方式:", v.ctype==0?"底价":"点位", "red", "ctype"],
                         ["结算值:", v.cvalue, "blue", "cvalue"],
-                        ["备注:", v.comment, "grey", "conment"]
+                        ["备注:", v.salesItem.comment, "grey", "comment"]
                     ];
 
                     $.each(propertyArr, function (index, value) {

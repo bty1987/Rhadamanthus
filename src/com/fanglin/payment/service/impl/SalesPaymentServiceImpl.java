@@ -37,6 +37,8 @@ import com.fanglin.sales.dao.SalesItemDao;
 import com.fanglin.sales.po.SalesPO;
 import com.fanglin.sales.service.SalesBalanceService;
 import com.fanglin.sales.vo.SalesVO;
+import com.fanglin.system.vo.CityProperVO;
+import com.fanglin.system.vo.CityVO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
@@ -95,7 +97,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 		for (SalesPaymentPO salesPaymentPO : salesPaymentPOs) {
 
-			salesPaymentVO = new SalesPaymentVO(new UserBaseVO(), new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO()), new SalesReceiptVO());
+			salesPaymentVO = new SalesPaymentVO(new UserBaseVO(), new SalesVO(new HouseVO(new VillageVO(new CityProperVO(new CityVO()))), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO()), new SalesReceiptVO());
 
 			salesPaymentVO = salesPaymentPOToVO(salesPaymentPO, salesPaymentVO);
 
@@ -124,7 +126,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 		for (SalesPaymentPO salesPaymentPO : salesPaymentPOs) {
 
-			salesPaymentVO = new SalesPaymentVO(new UserBaseVO(), new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO()), new SalesReceiptVO(new UserBaseVO(), new UserBaseVO()));
+			salesPaymentVO = new SalesPaymentVO(new UserBaseVO(), new SalesVO(new HouseVO(new VillageVO(new CityProperVO(new CityVO()))), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO()), new SalesReceiptVO(new UserBaseVO(), new UserBaseVO()));
 
 			salesPaymentVO = salesPaymentPOToVO(salesPaymentPO, salesPaymentVO);
 
@@ -154,7 +156,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 		for (SalesPaymentPO salesPaymentPO : salesPaymentPOs) {
 
-			salesPaymentVO = new SalesPaymentVO(new UserBaseVO(), new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO()), new SalesReceiptVO(new UserBaseVO()));
+			salesPaymentVO = new SalesPaymentVO(new UserBaseVO(), new SalesVO(new HouseVO(new VillageVO(new CityProperVO(new CityVO()))), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO()), new SalesReceiptVO(new UserBaseVO()));
 
 			salesPaymentVO = salesPaymentPOToVO(salesPaymentPO, salesPaymentVO);
 
@@ -183,7 +185,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 		for (SalesPaymentPO salesPaymentPO : salesPaymentPOs) {
 
-			salesPaymentVO = new SalesPaymentVO(new UserBaseVO(), new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO()), new SalesReceiptVO(new UserBaseVO(), new UserBaseVO()));
+			salesPaymentVO = new SalesPaymentVO(new UserBaseVO(), new SalesVO(new HouseVO(new VillageVO(new CityProperVO(new CityVO()))), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO()), new SalesReceiptVO(new UserBaseVO(), new UserBaseVO()));
 
 			salesPaymentVO = salesPaymentPOToVO(salesPaymentPO, salesPaymentVO);
 
@@ -206,7 +208,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 		for (SalesPaymentPO salesPaymentPO : salesPaymentPOs) {
 
-			salesPaymentVO = new SalesPaymentVO(new UserBaseVO(), new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO()), new SalesReceiptVO());
+			salesPaymentVO = new SalesPaymentVO(new UserBaseVO(), new SalesVO(new HouseVO(new VillageVO(new CityProperVO(new CityVO()))), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO()), new SalesReceiptVO());
 
 			salesPaymentVO = salesPaymentPOToVO(salesPaymentPO, salesPaymentVO);
 
@@ -242,7 +244,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 		for (SalesPaymentPO salesPaymentPO : salesPaymentPOs) {
 
-			salesPaymentVO = new SalesPaymentVO(new UserBaseVO(), new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO()), new SalesReceiptVO(new UserBaseVO(), new UserBaseVO()));
+			salesPaymentVO = new SalesPaymentVO(new UserBaseVO(), new SalesVO(new HouseVO(new VillageVO(new CityProperVO(new CityVO()))), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO()), new SalesReceiptVO(new UserBaseVO(), new UserBaseVO()));
 
 			salesPaymentVO = salesPaymentPOToVO(salesPaymentPO, salesPaymentVO);
 
@@ -265,7 +267,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 		for (SalesPaymentPO salesPaymentPO : salesPaymentPOs) {
 
-			salesPaymentVO = new SalesPaymentVO(new UserBaseVO(), new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO()), new SalesReceiptVO(new UserBaseVO(), new UserBaseVO()));
+			salesPaymentVO = new SalesPaymentVO(new UserBaseVO(), new SalesVO(new HouseVO(new VillageVO(new CityProperVO(new CityVO()))), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO()), new SalesReceiptVO(new UserBaseVO(), new UserBaseVO()));
 
 			salesPaymentVO = salesPaymentPOToVO(salesPaymentPO, salesPaymentVO);
 
@@ -1188,6 +1190,8 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		BeanUtil.copyProperties(salesPO, salesVO, Arrays.asList("house", "customer", "salesman", "dept", "region", "guider", "instorer", "guideDept"));
 		BeanUtil.copyProperties(salesPO.getHouse(), salesVO.getHouse(), Arrays.asList("village"));
 		BeanUtil.copyProperties(salesPO.getHouse().getVillage(), salesVO.getHouse().getVillage(), Arrays.asList("cityProper"));
+		BeanUtil.copyProperties(salesPO.getHouse().getVillage().getCityProper(), salesVO.getHouse().getVillage().getCityProper(), Arrays.asList("city"));
+		BeanUtil.copyProperties(salesPO.getHouse().getVillage().getCityProper().getCity(), salesVO.getHouse().getVillage().getCityProper().getCity(), Arrays.asList("region"));
 		BeanUtil.copyProperties(salesPO.getCustomer(), salesVO.getCustomer());
 		BeanUtil.copyProperties(salesPO.getSalesman(), salesVO.getSalesman(), Arrays.asList("role", "dept", "duty"));
 		BeanUtil.copyProperties(salesPO.getDept(), salesVO.getDept(), Arrays.asList("fatherDept", "type", "manager"));

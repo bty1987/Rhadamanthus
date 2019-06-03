@@ -45,9 +45,7 @@ public class ModuleAction extends BaseListAction {
 	private UserVO user;
 
 	private List<ModuleVO> modules;
-
-	private List<Integer> mids;
-
+	
 	@Action(value = "pageModule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageModule() {
 
@@ -68,6 +66,14 @@ public class ModuleAction extends BaseListAction {
 	public String queryModuleForLogin() throws FLException {
 
 		modules = moduleService.queryModuleByRid(module, new RoleVO(queryRoleId()));
+
+		return SUCCESS;
+	}
+	
+	@Action(value = "queryModuleForLink", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryModuleForLink() throws FLException {
+
+		modules = moduleService.queryModuleForLinkByRid(module, new RoleVO(queryRoleId()));
 
 		return SUCCESS;
 	}
@@ -107,7 +113,7 @@ public class ModuleAction extends BaseListAction {
 			throw new FLException(-1, "无操作权限");
 		}
 
-		moduleService.updateRoleModuleByRid(module, role, mids, queryRoleId());
+		moduleService.updateRoleModuleByRid(module, role, modules, queryRoleId());
 
 		return SUCCESS;
 	}
@@ -138,14 +144,6 @@ public class ModuleAction extends BaseListAction {
 
 	public void setModules(List<ModuleVO> modules) {
 		this.modules = modules;
-	}
-
-	public List<Integer> getMids() {
-		return mids;
-	}
-
-	public void setMids(List<Integer> mids) {
-		this.mids = mids;
 	}
 
 	public RoleVO getRole() {
