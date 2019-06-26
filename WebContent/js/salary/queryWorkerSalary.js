@@ -4,31 +4,39 @@ jQuery(function ($) {
     var Project = (function () {
 
         var project = {
-            usernames: $("#usernames"),
-            riqi: $('#riqi'),
-            phone: $("#phone"),
-            list: $("#list"),
+            querybtn :com.focusPage("#querybtn"),
+            keyboard:com.focusPage("#keyboard"),
+            bigScreen:com.focusPage("#bigScreen"),
+
+            modals: {
+                viewPopUp: com.focusPage("#viewPopUp")
+            },
+            items:{
+                usernames: com.focusPage("#usernames"),
+                riqi: com.focusPage('#riqi'),
+                list: com.focusPage("#list")
+            },
+
         };
 
         var binding = {
             Cmtbtn: function () {
-                $("#cmtbtn").click(function () {
-
-                    if (com.validate()) {
-                        return;
-                    }
+                project.querybtn.click(function () {
 
                     $("#jianpan").hide();
-                    var riqi = $('#riqi').val();
+                    var riqi = project.items.riqi.val();
                     riqiarr = riqi.split("-");
 
-                    var userId = $('#usernames').attr('data-typeahead-key');
-                    var username = $('#usernames').val();
-
+                    var userId = project.items.usernames.attr('data-typeahead-key');
+                    var username = project.items.usernames.val();
+                    if(riqi == "" || riqi == null){
+                        com.showAlert(com.warning, "请输入日期后再点击查询!");
+                        return;
+                    }
                     if (userId != "undefined" && userId != null) {
                         binding.openView(userId, username, riqiarr[0], riqiarr[1]);
-                        project.usernames.val("");
-                        project.riqi.val("");
+                        com.cleanTypeahead("riqi");
+                        com.cleanTypeahead("usernames");
                     } else {
                         com.showAlert(com.warning, "请选择下拉框中您的名字后再点击查询!");
                     }
@@ -40,52 +48,38 @@ jQuery(function ($) {
 
                 binding.autoFill(api.personel.queryUserByPinyin, "usernames", "autoFillKeyValue", "key", "value");
                 //姓名输入
-                project.usernames.click(function () {
+                project.items.usernames.click(function () {
                     binding.BindingXfjianpan("usernames");
                 });
                 //关闭键盘
-                $("#xjianpan").click(function () {
+                project.keyboard.click(function () {
                     binding.BindingXfjianpan(false);
                 });
                 //全屏
-                $('#bigScreen').click(function () {
-                    $('#close').show();
-                    $('#bigScreen').parents('.page-content').addClass('salary-Screen');
+                project.bigScreen.click(function () {
+
+                    project.bigScreen.parents('.page-content').addClass('salary-Screen');
                     $('#jianpan').attr('style', 'left: 30%;text-align: center;top :65%');//37 65
-                    $('#bigScreen').hide();
+                    project.bigScreen.hide();
                 });
                 //绑定键盘
                 $(document).keyup(function (event) {
                     if (event.keyCode == 27) {
-                        $('#bigScreen').parents('.page-content').removeClass('salary-Screen');
-                        $('#bigScreen').show();
+                        project.bigScreen.parents('.page-content').removeClass('salary-Screen');
+                        project.bigScreen.show();
                         $('#jianpan').attr('style', 'left: 37%;text-align: center;top :65%');
                     }
                 });
             },
 
             openView: function (userId, username, startTime, endTime) {
-                var $popup = $('#viewPopUp');
+                var $popup =project.modals.viewPopUp;
                 $popup.attr({'data-userId': userId});
                 $popup.attr({'data-startTime': startTime});
                 $popup.attr({'data-endTime': endTime});
                 $popup.css({'overflow': 'hidden'});
-                var index = layer.open({
-                    type: 1,
-                    skin: 'layui-layer-molv',
-                    title: username + "工费列表",
-                    content: $popup,
-                    //area: ["100%", ( $(window).height() * 0.84 < 720 ? $(window).height() * 0.84 : 720 ) + "px"],
-                    area: ["100%", "100%"],
-                    //maxmin: true,
-                    zIndex: 9999,
-                    btn: ['确定'],
-                    success: function (layer, index) {
-                        $popup.load("views/salary/viewSalaryWindow.html");
-                    },
-                    end: function () {
-                        $popup.attr('data-gid', null);
-                    }
+                com.popup4page(project.modals.viewPopUp,"views/salary/viewSalaryWindow.html", username + "工费列表",null,function() {
+                    $popup.attr('data-gid', null);
                 });
             },
 
@@ -112,7 +106,7 @@ jQuery(function ($) {
             },
 
             Bindingdate: function () {
-                $('#riqi').daterangepicker(com.dateramgepickerdefault).prev().on(ace.click_event, function () {
+                project.items.riqi.daterangepicker(com.dateramgepickerdefault).prev().on(ace.click_event, function () {
                     $(this).next().focus();
                 });
                 $('div.daterangepicker.dropdown-menu.opensright').css('z-index', 9991);
@@ -121,7 +115,7 @@ jQuery(function ($) {
             BindingXfjianpan: function (id) {
                 $("#jianpan .title").css("line-height", $("#jianpan").height() / 5 + "px");
 
-                project.list.empty();
+                project.items.list.empty();
                 var jpnub = $("#xfjp td").length;
 
                 binding.move("jianpan");

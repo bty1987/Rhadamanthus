@@ -5,9 +5,39 @@ jQuery(function($) {
 		paymentModelNameData: ["cash", "bank", "checkv", "advance", "coupon"],
 		bankNums: [],
 		checkvNums: [],
-		items: {},
+		items: {
+			cashCheckbox: com.focusPage("#cashCheckbox"),
+			bankCheckbox: com.focusPage("#bankCheckbox"),
+			checkvCheckbox: com.focusPage("#checkvCheckbox"),
+			advanceCheckbox: com.focusPage("#advanceCheckbox"),
+			couponCheckbox: com.focusPage("#couponCheckbox"),
+			couponType: com.focusPage("#couponType"),
+			advanceType: com.focusPage("#advanceType")
+		},
 		htmlName: "decorationCheck",
-		modelId: "baseItemModalDecorationCheck"
+		modelId: "baseItemModalDecorationCheck",
+		modals: {
+			baseModal: com.focusPage("#baseItemModalDecorationCheck")
+		},
+
+		cash: [],
+		bank: [],
+		checkBank: [],
+		accounts: [],
+		couponType: [],
+
+		cashUtil: [],
+		bankUtil: [],
+		checkBankUtil: [],
+
+		cashInfo: {},
+		bankInfo: {},
+		checkBankInfo: {},
+		accountsInfo: {},
+		couponTypeData: {},
+
+		bankUtilForGrade: [],
+		checkBankUtilForGrade: []
 	};
 
 	var decorationPaymentCheckPostData = {};
@@ -17,12 +47,12 @@ jQuery(function($) {
 	});
 
 	//这里面的内容在刷卡和转账中的点击日期，日期插件show的时候也会执行，所以要谨慎添加内容
-	decorationPaymentCheck.baseModal = com.focusPage("#baseItemModalDecorationCheck").on('show.bs.modal',function(e){
+	decorationPaymentCheck.modals.baseModal.on('show.bs.modal',function(e){
 		com.clearValidator();
 	});
 
 	//隐藏触发
-	com.focusPage("#baseItemModalDecorationCheck").on('hidden.bs.modal', function () {
+	decorationPaymentCheck.modals.baseModal.on('hidden.bs.modal', function () {
 		decorationPaymentCheck.bankUtilForGrade = [];
 		decorationPaymentCheck.checkBankUtilForGrade = [];
 		com.cleanTypeahead('decorationCheckcashInfo');
@@ -34,41 +64,11 @@ jQuery(function($) {
 		$(this).prop("checked") ? com.focusPage("[referCheckbox="+this.id+"]").show() : com.focusPage("[referCheckbox="+this.id+"]").hide()
 	});
 
-	decorationPaymentCheck.items.cashCheckbox = com.focusPage("#cashCheckbox");
-	decorationPaymentCheck.items.bankCheckbox = com.focusPage("#bankCheckbox");
-	decorationPaymentCheck.items.checkvCheckbox = com.focusPage("#checkvCheckbox");
-	decorationPaymentCheck.items.advanceCheckbox = com.focusPage("#advanceCheckbox");
-	decorationPaymentCheck.items.couponCheckbox = com.focusPage("#couponCheckbox");
-	decorationPaymentCheck.items.couponType = com.focusPage("#couponType");
-	decorationPaymentCheck.items.advanceType = com.focusPage("#advanceType");
-
-	decorationPaymentCheck.cash = [];
-	decorationPaymentCheck.bank = [];
-	decorationPaymentCheck.checkBank = [];
-	decorationPaymentCheck.accounts = [];
-	decorationPaymentCheck.couponType = [];
-
-	decorationPaymentCheck.cashUtil = [];
-	decorationPaymentCheck.bankUtil = [];
-	decorationPaymentCheck.checkBankUtil = [];
-
-	decorationPaymentCheck.cashInfo = {};
-	decorationPaymentCheck.bankInfo = {};
-	decorationPaymentCheck.checkBankInfo = {};
-	decorationPaymentCheck.accountsInfo = {};
-	decorationPaymentCheck.couponTypeData = {};
-
-	decorationPaymentCheck.bankUtilForGrade = [];
-	decorationPaymentCheck.checkBankUtilForGrade = [];
-
 	//绑定收款单位的基础信息
 	paymentUtils.getReceiptType(decorationPaymentCheck);
 
 	//现金方式
 	com.selectTypeahead("decorationCheckcashInfo", decorationPaymentCheck.cashUtil, "key", "value", null);
-
-	com.focusPage("#couponType").bindData(decorationPaymentCheck.couponType, 'no', 'no');
-	com.focusPage("#couponType").trigger("chosen:updated");
 
 	//刷卡方式
 	com.focusPage("#decorationCheckbankAdd").click(function(){

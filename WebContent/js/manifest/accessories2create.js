@@ -28,7 +28,7 @@ jQuery(function () {
         constructionNode: {}
     };
     
-    com.focusPage('.date-picker').datepicker(com.datepickerdefault);
+    com.datetime(accessories.rightitems.fetchTime,"date",false);
     
     com.post(api.data.queryConstructionNode, {}, function(res){
         $.each(res.constructionNodes, function(i, v){
@@ -76,7 +76,8 @@ jQuery(function () {
 
         var $delete = $('<div></div>').addClass('pull-right action-button').append($('<a></a>').addClass('btn btn-danger btn-minier').html('删除'));
         var $query = $('<div></div>').css('margin-right', '5px').addClass('pull-right action-button').append($('<a></a>').addClass('btn btn-primary btn-minier').html('查看')).click(function () {
-            openPackageGoods(gid);
+            com.focusPage('#viewPopUp').attr({'data-gid': gid});
+            com.popup4page('#viewPopUp',"views/sales/viewSalesPackageGoods.html","查看套餐")
         });
 
         $h4.append($delete).appendTo($liList);
@@ -149,8 +150,6 @@ jQuery(function () {
                 v.name = accessories.constructionNode[v.schedule];
             });
             
-            console.log(schedules);
-            
             accessories.rightitems.schedule.bindData(res.constructionSchedules, "schedule", "name");
         });
     });
@@ -182,8 +181,6 @@ jQuery(function () {
             options["accessoriesItems[" + i + "].selling"] = $v.attr('data-selling');
         });
         
-        console.log(options);
-
         com.post(api.inventory.addAccessories, options, function (data) {
             com.showAlert(com.info, "操作成功");
 
@@ -191,27 +188,5 @@ jQuery(function () {
             accessories.itemlist.html("");
         });
     });
-
-    //查看套餐弹窗
-    function openPackageGoods(gid) {
-        var $popup = com.focusPage('#viewPopUp');
-        $popup.attr({'data-gid': gid});
-        //弹出即全屏
-        var index = layer.open({
-            type: 1,
-            skin: 'layui-layer-molv',
-            title: "查看套餐",
-            content: $popup,
-            area: ["1400px", ( $(window).height() * 0.84 < 720 ? $(window).height() * 0.84 : 720 ) + "px"],
-            zIndex: 9000,
-            btn: ['确定'],
-            success: function (layer, index) {
-                $popup.load("views/sales/viewSalesPackageGoods.html");
-            },
-            end: function () {
-                $popup.attr('data-gid', null);
-            }
-        });
-    }
 
 });

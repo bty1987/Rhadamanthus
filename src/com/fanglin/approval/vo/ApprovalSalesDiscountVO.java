@@ -12,6 +12,7 @@ public class ApprovalSalesDiscountVO implements java.io.Serializable {
 
 	private Float referMoney;
 
+	private Short paymentType;
 
 	public ApprovalSalesDiscountVO() {
 		super();
@@ -54,4 +55,13 @@ public class ApprovalSalesDiscountVO implements java.io.Serializable {
 		this.referMoney = referMoney;
 	}
 
+
+	public Short getPaymentType() {
+		return paymentType;
+	}
+
+	public void setPaymentType(Short paymentType) {
+		this.paymentType = paymentType;
+	}
+	
 }

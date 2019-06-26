@@ -7,7 +7,7 @@ jQuery(function($) {
 	materialSaleOrderPostData["materialSubOrder.customerId"] = params.customerId;//.indexOf('--') != -1 ? "" : params.customerId;
 	materialSaleOrderPostData["materialSubOrder.designerId"] = params.designerId.indexOf('--') != -1 ? "" : params.designerId;
 	materialSaleOrderPostData["materialSubOrder.designerName"] = params.designerName.indexOf('--') != -1 ? "" : params.designerName;
-	
+
 	var materialSaleOrder = {
 		saveBtn:  com.focusPage("#saveBtn"),
 		cancellBtn: com.focusPage("#cancelBtn"),
@@ -34,6 +34,7 @@ jQuery(function($) {
 			itemId: "mmId",
 			itemName: "materialModel",
 
+            value:"materialModelName",
 			optionName: "materialModel.materialModelName",
 			optionNo: "materialModel.materialModelNo",
 			optionMsoId: "",
@@ -46,7 +47,7 @@ jQuery(function($) {
 	var _lastRowId;
 	var autoFillList = [];
 	var autoFillNameList = [];
-    var activityInfo = com.focusPage("#activityInfo");
+	var activityInfo = com.focusPage("#activityInfo");
 
 	if(params.saleType == "mend"){
 		materialSaleOrder.typeahead.queryByNameUrl = api.material.queryMaterialItemForNameByName;
@@ -56,22 +57,23 @@ jQuery(function($) {
 		materialSaleOrder.typeahead.materialModels = "materialItems";
 		materialSaleOrder.typeahead.itemId = "miid";
 		materialSaleOrder.typeahead.itemName = "materialItem";
+        materialSaleOrder.typeahead.value = "name";
 
 		materialSaleOrder.typeahead.optionName = "materialItem.name";
 		materialSaleOrder.typeahead.optionNo = "materialItem.no";
 		materialSaleOrder.typeahead.optionMsoId = "materialItem.mid";
 		materialSaleOrder.typeahead.optionItemId = "materialItem.miid";
 	}
-	
-	if(params.saleType == "add"){
-		
-	}else{
-		com.initChosen('salesmanName', api.personel.queryUserByPinyin  , "pinyinName", {"user.status":"0","departmentType.name":""}, "autoFillKeyValue", "key", "value");
-		com.initChosen('materialerName', api.personel.queryUserByPinyin  , "pinyinName", {"user.status":"0","departmentType.name":"主材部"}, "autoFillKeyValue", "key", "value");
-		com.initChosen('instoreName', api.personel.queryUserByPinyin , "pinyinName", {"user.status":"0","departmentType.name":"主材部"}, "autoFillKeyValue", "key", "value");
-		com.initChosen('materialBrand', api.data.queryBrandForPinYinNameAname, "pinyinName", {}, "brands", "bid", "alias");
 
-		com.updateChosen("salesmanName", materialSaleOrderPostData["materialSubOrder.designerId"], materialSaleOrderPostData["materialSubOrder.designerName"]);
+	if(params.saleType == "add"){
+
+	}else{
+		com.initTypeahead('salesmanName', api.personel.queryUserByPinyin  , "pinyinName", {"user.status":"0","departmentType.name":""}, "autoFillKeyValue", "key", "value",null);
+		com.initTypeahead('materialerName', api.personel.queryUserByPinyin  , "pinyinName", {"user.status":"0","departmentType.name":"主材部"}, "autoFillKeyValue", "key", "value",null);
+		com.initTypeahead('instoreName', api.personel.queryUserByPinyin , "pinyinName", {"user.status":"0","departmentType.name":"主材部"}, "autoFillKeyValue", "key", "value",null);
+		com.initTypeahead('materialBrand', api.data.queryBrandForPinYinNameAname, "pinyinName", {}, "brands", "bid", "alias",null);
+
+		com.updateTypeahead("salesmanName", materialSaleOrderPostData["materialSubOrder.designerId"], materialSaleOrderPostData["materialSubOrder.designerName"]);
 
 		com.post(api.ds.payment, {}, function(res){
 			materialSaleOrder.materialOrderType = res.materialOrderType;
@@ -81,8 +83,8 @@ jQuery(function($) {
 	}
 
 	//添加一条空行
-	addline(1).addClass('current').appendTo('#list');
-	addline(2).addClass('current').appendTo('#list');
+	addline(1).addClass('current');
+	addline(2).addClass('current');
 
 	com.focusPage('#addSaleOrder').click(function(){
 		var num = com.focusPage('.line', '#list').length;
@@ -100,8 +102,7 @@ jQuery(function($) {
 		if(returnFlag) return;
 
 		cyclTotal();
-		var $line = addline(num + 1);
-		$line.appendTo('#list');
+		addline(num + 1);
 	});
 
 	com.focusPage('#submitSaleOrder').bindClick(addmaterial);
@@ -161,7 +162,7 @@ jQuery(function($) {
 		options["material.salesman.userId"] = com.focusPage('#salesmanName').val();
 		options["material.materialer.userId"] = com.focusPage('#materialerName').val();
 		options["material.instorer.userId"] = com.focusPage('#instoreName').val() ? com.focusPage('#instoreName').val() : "";
-        options["material.bid"] = com.focusPage('#materialBrand').val();
+		options["material.bid"] = com.focusPage('#materialBrand').val();
 
 		var $list = com.focusPage('li.selected', '#list');
 		$list.length && $list.each(function(i){
@@ -213,7 +214,7 @@ jQuery(function($) {
 			params.customerName = customerName;
 
 			btn.button('reset');
-            com.showAlert(com.info, "添加成功!");
+			com.showAlert(com.info, "添加成功!");
 			com.switchPage(api.index.materialIndex.url);
 		}, function(){
 			btn.button('reset');
@@ -221,13 +222,13 @@ jQuery(function($) {
 	};
 
 	com.focusPage("#backBtn").on("click", function(){
-		com.switchPage(api.index.decorationMaterialIndex.url);
+		com.switchPage(api.index.materialIndex.url);
 	});
 
 	//添加一个空行
 	function addline(lineindex){
 
-		var $line = $('<li></li>').addClass('line');
+		var $line = $('<li></li>').addClass('line').appendTo(com.focusPage('#list'));
 		var $indexWrap = $('<div></div>').addClass('line-wrap order').append($('<div></div>').addClass('cell index').text(lineindex));
 		var $lineInfoWrap = $('<div></div>').addClass('line-wrap content');
 		var $optWrap= $('<div></div>').addClass('line-wrap action');
@@ -254,52 +255,12 @@ jQuery(function($) {
 			var $input;
 			var $cell = $('<div></div>').addClass('cell '+ v.cellClass);
 			if(v.hasInput){
-				$input = $('<input>').prop('type', 'text').addClass('editable');
+				$input = $('<input>').prop({'type': 'text','autocomplete': 'off'}).addClass('editable');
 				$cell.append($input);
 			}
 			$cell.appendTo($lineInfoWrap);
 			if($cell.hasClass('total')){
 				$input.attr('disabled', true);
-			}
-			if($cell.hasClass('materialModelName')){
-				$input.typeahead({
-					url: materialSaleOrder.typeahead.queryByNameUrl.url,
-					//reverseFlag: limitFlag,
-					source: function (query, process) {
-						var options = {};
-
-						if(params.saleType == "mend"){
-							options[materialSaleOrder.typeahead.optionMsoId] = params.msoId;
-						}
-						
-						options[materialSaleOrder.typeahead.optionName] = query;
-
-						if(typeof this.options.url !== "string")
-							com.showAlert(com.error, "the autoFillText has no any url.");
-						com.post(materialSaleOrder.typeahead.queryByNameUrl, options, function(data){
-							var materialModels = data[materialSaleOrder.typeahead.materialModels];
-							autoFillList = [];
-							autoFillNameList = [];
-							for(var i=0;i<materialModels.length;i++){
-
-								var _ = materialModels[i];
-								if(params.saleType == "mend"){
-									autoFillList[i] = _.name;
-								}else {
-									autoFillList[i] = _.materialModelName;
-								}
-								autoFillNameList[i] = _[materialSaleOrder.typeahead.itemId];
-							}
-							process(autoFillList);
-						});
-					},
-					matcher: function (item) {
-						return true;
-					}
-				}).attr("autocomplete", "off").on("change", function(){
-					fillData($(this).val(), $line);
-					$line.addClass('selected');
-				});
 			}
 
 			if($cell.hasClass('salePrice') || $cell.hasClass('postDiscount')){
@@ -335,6 +296,24 @@ jQuery(function($) {
 		$optWrap.append($('<div></div>').addClass('cell option').append($btncheck).append($btndel));
 
 		$line.append($indexWrap).append($lineInfoWrap).append($optWrap);
+		var options = {};
+		if(params.saleType == "mend"){
+			options[materialSaleOrder.typeahead.optionMsoId] = params.msoId;
+			options[materialSaleOrder.typeahead.optionName]=""
+		}
+        com.initTypeahead(".name input", materialSaleOrder.typeahead.queryByNameUrl, params.saleType == "mend" ? "" : materialSaleOrder.typeahead.optionName, options, materialSaleOrder.typeahead.materialModels, materialSaleOrder.typeahead.itemId, materialSaleOrder.typeahead.value, function (list, k, v) {
+
+            $.each(list, function (index, val) {
+                if (val[materialSaleOrder.typeahead.itemId] == k) {
+                    $lineInfoWrap.find(".name input").val(val[materialSaleOrder.typeahead.value]);
+                    $lineInfoWrap.find(".name input").on("change", function () {
+                        fillData(val[materialSaleOrder.typeahead.itemId], $line);
+                        $line.addClass('selected');
+                    });
+                }
+            });
+            return v
+        });
 
 		$line.click(function(){
 			com.focusPage('.current').removeClass('current');
@@ -354,18 +333,17 @@ jQuery(function($) {
 			reorder();
 			cyclTotal();
 		});
-		
+
 		return $line;
 	}
-	
+
 	//获取主材信息
-	function fillData(content, $line){
+	function fillData(mmId, $line){
 
 		var options = {};
-		var itemId = autoFillNameList[autoFillList.indexOf(content)];
 
-		if(itemId){
-			options[materialSaleOrder.typeahead.optionItemId] = itemId;
+		if(mmId){
+			options[materialSaleOrder.typeahead.optionItemId] = mmId;
 		}else{
 			return false;
 		}
@@ -381,7 +359,7 @@ jQuery(function($) {
 
 		//materialSaleOrder.record[id] = true;
 	}
-	
+
 	//给一行赋值
 	function columnActionInit($line, data, flag){
 
@@ -569,7 +547,7 @@ jQuery(function($) {
 				"data-content" : "请检查套餐名称(套餐名称长度必须小于8且只能由汉字、数字和字母组成)!"
 			}).popover('show');
 			flag =  false;
-        }else{
+		}else{
 			packageName.popover('destroy');
 		}
 

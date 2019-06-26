@@ -1,9 +1,12 @@
 $(function () {
 
     var salary = {
-        saveBtn: com.focusPage("#saveBtn").on("click", saveData),
+        saveBtn: com.focusPage("#saveBtn"),
         cancelBtn: com.focusPage("#cancelBtn"),
-        modal: com.focusPage("#salaryModal"),
+
+        modals: {
+             salaryModal: com.focusPage("#salaryModal")
+        },
         items: {
         	salaryuser:com.focusPage("#salaryuser"),
         	money : com.focusPage("#money"),
@@ -11,10 +14,25 @@ $(function () {
     		salaryOnetype : com.focusPage("#type2"),
         	salaryTwotype : com.focusPage("#type3"),
         	salaryThrType : com.focusPage("#type4"),
-        	salarycomment : com.focusPage("#salarycomment"),
+            salarycomment : com.focusPage("#salarycomment")
         },
+
+        status:{},
+        type:{},
     };
 
+    salary.saveBtn.bindClick(saveData);
+
+    com.initTypeahead('salaryuser', api.personel.queryUserByPinyin, "pinyinName", {"user.status": "0"}, "autoFillKeyValue", "key", "value",function(list,key,value){
+        return value;
+    });
+
+    com.post(api.ds.salary, {}, function (data) {
+
+        salary.status=data.status.split("key", "value");
+        salary.type=data.type.split("id", "name");
+
+    }, null, false);
 
     var displayFunc = (function () {
         var renderList = function (tableId, listData) {
@@ -47,10 +65,10 @@ $(function () {
             var _label = $('<label></label>');
 
             var propertyArr = [
-                ["类型:", v.type == 0 ? "加" : "减", "red"],
+                ["类型:", salary.type[v.type], "red"],
                 ["操作金额:", v.money, "blue"],
                 ["创建时间:", v.createTime, "green"],
-                ["状态:", v.status == 0 ? "初始" : v.status == 1 ? "通过" : v.status == 2 ? "拒绝" : "撤销", "red"],
+                ["状态:", salary.status[v.status], "red"],
                 ["操作人:", v.operater.currentName, "grey"],
                 ["操作时间:", v.operateTime, "green"],
                 ["说明:", v.comment, "grey"],
@@ -98,44 +116,8 @@ $(function () {
         };
     })();
 
-    function adoptstatus(sid) {
-
-        var options = {};
-
-        options["salary.sid"] = sid;
-
-        com.post(api.salary.passSalary, options, function () {
-            searcher.doSearch();
-
-        }, function (e) {
-            com.showAlert(com.error, e.errorMsg);
-        });
-    }
-
-    function rejectstatus(sid) {
-
-        var options = {};
-        options["salary.sid"] = sid;
-        com.post(api.salary.rejectSalary, options, function () {
-            searcher.doSearch();
-
-        }, function (e) {
-            com.showAlert(com.error, e.errorMsg);
-        });
-    }
-
-    function cancelstatus(sid) {
-
-        var options = {};
-        options["salary.sid"] = sid;
-        com.post(api.salary.cancelSalary, options, function () {
-            searcher.doSearch();
-        }, function (e) {
-            com.showAlert(com.error, e.errorMsg);
-        });
-    }
-
     var searcher = new Searcher();
+
     var _condArr = ['s_user', 's_status', 'cerateTime', 'operateTime'];
     searcher.init(_condArr, "condList", api.salary.pageSalary, function (data) {
         displayFunc.init('resultList', data);
@@ -151,14 +133,11 @@ $(function () {
     com.focusPage('a[name="add"]', '#pagenation').on("click", function () {
 
         com.cleanItems(salary.items);
-        com.focusPage('#salaryModal').modal("show");
-        com.initTypeahead('salaryuser', api.personel.queryUserByPinyin, "pinyinName", {"user.status": "0"}, "autoFillKeyValue", "key", "value",function(list,key,value){
-        	return value;
-        });
+        salary.modals.salaryModal.modal("show");
 
         cleanType([1, 2, 3, 4]);
         com.post(api.ds.salary, {}, function (res) {
-            $.each(res.oneType, function (i, v) {
+            $.each(res.type, function (i, v) {
                 salary.items.type.append($('<option value="' + v['id'] + '">' + v['name'] + '</option>'));
             });
             salary.items.type.change(function () {
@@ -187,39 +166,49 @@ $(function () {
             });
         });
 
-        com.updateTypeahead("salaryuser", "", "");
+        com.cleanTypeahead('salaryuser');
         com.clearValidator();
     });
 
-    function saveData() {
+    function adoptstatus(sid) {
 
-        if (!com.validate("salaryModal")) {
-            var user = com.typeahead("salaryuser");
-            var type = com.focusPage("#type1").val();
-            var oneType = com.focusPage("#type2").val();
-            var twotype = com.focusPage("#type3").val();
-            var thrtype = com.focusPage("#type4").val();
-            var money = com.focusPage("#money").val();
-            var comment = com.focusPage("#salarycomment").val();
+        var options = {};
 
-            var options = {
-                "salary.user.userId": user,
-                "salary.type": type,
-                "salary.onetype": oneType,
-                "salary.twotype": twotype,
-                "salary.thrtype": thrtype,
-                "salary.money": money,
-                "salary.comment": comment
-            };
-            com.post(api.salary.addSalary, options, function (res) {
-                searcher.doSearch();
-                com.cleanItems(salary.items);
-                com.clearValidator();
-                com.showAlert(com.info, "添加成功");
-            });
-            com.focusPage('#salaryModal').modal("hide");
-            com.updateTypeahead("salaryuser", "", "");
-        }
+        options["salary.sid"] = sid;
+
+        com.post(api.salary.passSalary, options, function () {
+            searcher.doSearch();
+
+        }, function (e) {
+            com.showAlert(com.error, e.errorMsg);
+        });
+    }
+
+    function rejectstatus(sid) {
+
+        var options = {};
+
+        options["salary.sid"] = sid;
+
+        com.post(api.salary.rejectSalary, options, function () {
+            searcher.doSearch();
+
+        }, function (e) {
+            com.showAlert(com.error, e.errorMsg);
+        });
+    }
+
+    function cancelstatus(sid) {
+
+        var options = {};
+
+        options["salary.sid"] = sid;
+
+        com.post(api.salary.cancelSalary, options, function () {
+            searcher.doSearch();
+        }, function (e) {
+            com.showAlert(com.error, e.errorMsg);
+        });
     }
 
     function cleanType(num) {
@@ -227,6 +216,30 @@ $(function () {
             com.focusPage("#type" + v + "").empty();
             com.focusPage("#type" + v + "").append($('<option value="">请选择</option>'));
         });
+    }
+
+    function saveData() {
+
+        if (!com.validate("salaryModal")) {
+
+            var options = {
+                "salary.user.userId": com.typeahead("salaryuser"),
+                "salary.type": salary.items.type.val(),
+                "salary.onetype": salary.items.salaryOnetype.val(),
+                "salary.twotype": salary.items.salaryTwotype.val(),
+                "salary.thrtype": salary.items.salaryThrType.val(),
+                "salary.money": salary.items.money.val(),
+                "salary.comment": salary.items.salarycomment.val()
+            };
+            com.post(api.salary.addSalary, options, function (res) {
+                searcher.doSearch();
+                com.cleanItems(salary.items);
+                com.clearValidator();
+                com.showAlert(com.info, "添加成功");
+            });
+            salary.modals.salaryModal.modal("hide");
+            com.cleanTypeahead('salaryuser');
+        }
     }
 
 });

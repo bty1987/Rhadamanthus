@@ -2,24 +2,34 @@ jQuery(function ($) {
 
     var drawline = {
        
-        orderId: null,
-        
-        cancelBtn: com.focusPage("#cancelBtn"),
-        deployedBtn: com.focusPage("#deployedBtn"),
-        
-        setupModal: com.focusPage("#setupModal"),
+        btns: {
+            cancelBtn: com.focusPage("#cancelBtn"),
+            deployedBtn: com.focusPage("#deployedBtn")
+        },
+
+        modals: {
+            setupModal: com.focusPage("#setupModal")
+        },
             
-        items: {},
+        items: {
+            orderId: com.focusPage("#orderId")
+        },
         
         decorationStatus: {},
-        constructionSchedule: {0: "初始", 1: "开工", 2: "完工"}
-    }
+        constructionSchedul :{}
+    };
 
-    drawline.deployedBtn.on("click", deployed);
-    
+    drawline.btns.deployedBtn.bindClick(deployed);
+
+    com.initTypeahead('supervisor', api.personel.queryUserByPinyin, "pinyinName", {"departmentType.name": "工程部", "user.status": 0}, "userBases", "userId", "currentName", null);
+
     com.post(api.data.queryConstructionNode, {}, function (res) {
-        $.each(res.constructionNodes, function (i, v) {
-            drawline.constructionSchedule[v.sort] = v.name;
+        drawline.constructionSchedul = res.constructionNodes.split("sort", "name");
+    }, null, false);
+
+    com.post(api.ds.construction, {}, function (res) {
+        $.each(res.constructionSchedul, function (i, v) {
+            drawline.constructionSchedul[v["key"]] = v["value"];
         });
     }, null, false);
     
@@ -28,8 +38,6 @@ jQuery(function ($) {
             drawline.decorationStatus[v.key] = v.value;
         });
     }, null, false);
-
-    com.initTypeahead('supervisor', api.personel.queryUserByPinyin, "pinyinName", {"departmentType.name": "工程部", "user.status": 0}, "userBases", "userId", "currentName", null);
 
     var displayFunc = (function () {
 
@@ -64,7 +72,7 @@ jQuery(function ($) {
                 ["设计师:", v.designer.userName, "grey"],
                 ["面积:", v.house.buildArea, "blue"],
                 ["创建时间:", v.createTime, "green"],
-                ["进度:", drawline.constructionSchedule[v.projectStatus], "red"],
+                ["进度:", drawline.constructionSchedul[v.projectStatus], "red"],
                 ["状态:", drawline.decorationStatus[v.status], "red"]
             ];
 
@@ -116,10 +124,10 @@ jQuery(function ($) {
                 com.cleanTypeahead("supervisor");
             }
 
-            drawline.setupModal.modal("show");
+            drawline.modals.setupModal.modal("show");
         });
         
-        drawline.orderId = v.orderId;
+        drawline.items.orderId = v.orderId;
     }
 
     function deployed() {
@@ -129,7 +137,7 @@ jQuery(function ($) {
         }
 
         var options = {
-            "construction.orderId": drawline.orderId,
+            "construction.orderId": drawline.items.orderId,
             "construction.supervisor.userId": com.typeahead("supervisor")
         };
 
@@ -137,7 +145,7 @@ jQuery(function ($) {
             com.showAlert(com.info, "操作成功");
             searcher.doSearch();
             
-            drawline.items.setupModal.modal("hide");
+            drawline.items.modals.setupModal.modal("hide");
         });
     }
 

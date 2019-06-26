@@ -1,10 +1,7 @@
 <div>
 	<div class="page-header">
 		<h1>
-			<span id="activityName"></span>
-			<label class="pull-right inline">
-				<button class="btn btn-danger" id="backBtn">返回</button>
-			</label>
+			<span id="activityNames"></span>
 			<label class="pull-right inline">
 				<button class="btn btn-success" id="addBtn">添加</button>
 			</label>
@@ -12,7 +9,7 @@
 	</div>
 	
 	<div class="row">
-		<div class="col-xs-12 col-sm-12 pricing-span-body">
+		<div class="col-xs-12 col-sm-12 pricing-span-body" style="margin-left: 30px">
 			<div id="activityItems"></div>
 		</div>
 	</div>
@@ -26,7 +23,7 @@
       			</div>
 
       			<div class="modal-body">
-		      		<form class="form-horizontal">
+		      		<form class="form-horizontal" id="form">
 
 						<div class="form-group">
 
@@ -53,7 +50,7 @@
 						<div class="form-group">
 							<label class="col-sm-3 control-label no-padding-right" for="money">金额</label>
 							<div class="col-sm-9">
-								<input type="text"  id="money" class="col-sm-7 col-xs-10 v_number v_required"/>
+								<input type="text"  id="money" class="col-sm-7 col-xs-10 v_float_3"/>
 								<span class='star'></span>
 							</div>
 						</div>
@@ -63,7 +60,7 @@
 					</form>
       			</div>
 				<div class="modal-footer">
-					<button type="button" id="saveBtn" class="btn btn-primary">保存</button>
+					<button type="button" id="saveActivityItemBtn" class="btn btn-primary">保存</button>
 		        	<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
 		      	</div>
     		</div>

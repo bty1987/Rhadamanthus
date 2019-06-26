@@ -70,11 +70,11 @@ public class ExtensionItemServiceImpl implements ExtensionItemService {
 		if (extensionPO == null) {
 			throw new FLException(200027, "扩展项不存在");
 		}
+		
+		ExtensionItemPO extensionItemPO;
 
 		checkExtensionItemForStatusByOrderId(extensionPO.getOrderId());
 
-		ExtensionItemPO extensionItemPO = null;
-		
 		if (extensionItemVO.getEiId() == null) {
 			
 			extensionItemPO = new ExtensionItemPO();
@@ -85,10 +85,6 @@ public class ExtensionItemServiceImpl implements ExtensionItemService {
 		} else {
 			
 			extensionItemPO = extensionItemDao.get(extensionItemVO.getEiId());
-			
-			if (extensionItemPO == null) {
-				throw new FLException(200027, "扩展项不存在");
-			}
 			
 			BeanUtil.copyProperties(extensionItemVO, extensionItemPO, Arrays.asList("quotationFunctionArea"));
 			

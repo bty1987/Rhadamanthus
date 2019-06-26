@@ -438,11 +438,9 @@
 							<form class="form-horizontal">
 
 								<div class="form-group">
-									<label class="col-sm-3 control-label no-padding-right" for="customerDes">审批说明</label>
+									<label class="col-sm-3 control-label no-padding-right orange" for="customerDes">审批说明</label>
 									<div class="col-sm-9">
-										<textarea id="customerDes" maxlength="128" class="col-xs-10 col-sm-6 v_required"
-											  rows="3" data-toggle="popover" data-trigger='manual'></textarea>
-										<span class='star'></span>
+										<textarea id="customerDes" maxlength="128" class="col-xs-10 col-sm-6 v_required" rows="3" data-toggle="popover" data-trigger='manual'></textarea>
 									</div>
 								</div>
 								<div class="space-4"></div>
@@ -450,9 +448,7 @@
 								<div class="form-group">
 									<label for="approveManSel" class="col-sm-3 control-label no-padding-right">审批人</label>
 									<div class="col-sm-9">
-										<div id="approveManSel" class="control-group col-xs-10 col-sm-6">
-
-										</div>
+										<div id="approveManSel" class="control-group col-xs-10 col-sm-6"></div>
 									</div>
 								</div>
 								<div class="space-4"></div>
@@ -478,29 +474,5 @@
 </div>
 
 <script type="text/javascript">
-	$.loadScript(['js/utils/approvalUtils.js?version=' + versionCode,'js/quotation/quotationPart.js?version=' + versionCode]);
+	$.loadScript(['js/utils/approvalUtils.js','js/quotation/quotationPart.js']);
 </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

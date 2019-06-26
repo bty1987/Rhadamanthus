@@ -37,14 +37,6 @@
             </div>
         </div>
     </div>
-
-    <div class="text-right col-md-12">
-        <div class="hr"></div>
-        <button id="backBtn" type="button" class="btn btn-info">
-            <i class="icon-mail-forward bigger-110"></i>
-            返回
-        </button>
-    </div>
 </div>
 
 <!--参加活动-->
@@ -102,26 +94,43 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="things" class="col-sm-3 control-label no-padding-right">物品</label>
+                        <div class="col-sm-3"></div>
                         <div class="col-sm-9">
-                            <select id="things" multiple="multiple"
-                                    class="col-sm-7 col-xs-10 chosen-select tag-input-style" data-placeholder="..."
-                                    data-toggle="popover" data-trigger='manual'></select>
+                            <ul id="things" class="item-list list-inline"></ul>
+                        </div>
+
+                        <div class="col-sm-12" id="thingsInputs">
+                            <label for="activity" class="col-sm-3 control-label no-padding-right">物品</label>
+                            <div class="col-sm-9">
+                                <div id="thingsDiv">
+                                    <input type="text" id="thingsName" class="col-xs-10 col-sm-5 v_typeahead v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" placeholder="请选择物品"/>
+                                </div>
+                            <input type="text" id="thingsNum" class="col-xs-10 col-sm-4 v_float_3 v_required" placeholder="请输入数量" style="margin: 0 10px">
+                            <button type="button" id="thingsAdd" class="btn btn-info btn-minier" style="width: 50px; line-height: 30px">添加</button>
+                            </div>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="coupons" class="col-sm-3 control-label no-padding-right">券</label>
+                        <div class="col-sm-3"></div>
                         <div class="col-sm-9">
-                            <select id="coupons" multiple="multiple"
-                                    class="col-sm-7 col-xs-10 chosen-select tag-input-style" data-placeholder="..."
-                                    data-toggle="popover" data-trigger='manual'></select>
+                            <ul id="coupons" class="item-list list-inline"></ul>
+                        </div>
+                        <div class="col-sm-12" id="couponInputs">
+                            <label for="activity" class="col-sm-3 control-label no-padding-right">劵</label>
+                            <div class="col-sm-9">
+                                <div id="couponsDiv">
+                                    <input type="text" id="couponsName" class="col-xs-10 col-sm-5 v_typeahead v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" placeholder="请选择券"/>
+                                </div>
+                            <input type="text" id="couponsNum" class="col-xs-10 col-sm-4 v_float_3 v_required" placeholder="请输入数量" style="margin: 0 10px">
+                            <button type="button" id="couponsAdd" class="btn btn-info btn-minier" style="width: 50px; line-height: 30px">添加</button>
+                            </div>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="salesActivityItemContent" class="col-sm-3 control-label no-padding-right">说明</label>
+                        <label for="salesActivityItemContent"
+                               class="col-sm-3 control-label no-padding-right">说明</label>
                         <div class="col-sm-9">
-                            <textarea id="salesActivityItemContent" class="col-xs-10 col-sm-6 "
-                                      style="height: 100px"></textarea>
+                            <textarea id="salesActivityItemContent" class="col-xs-10 col-sm-6 " style="height: 100px"></textarea>
                         </div>
                     </div>
                     <div class="space-4"></div>
@@ -130,7 +139,7 @@
 
             <div class="modal-footer">
                 <button type="button" id="submitSalesActivityItemBtn" class="btn btn-primary">保存</button>
-                <button type="button" id="" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" id="cancel" class="btn btn-default" data-dismiss="modal">取消</button>
             </div>
         </div>
     </div>

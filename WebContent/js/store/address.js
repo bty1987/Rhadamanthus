@@ -98,7 +98,7 @@ $(function(){
                         com.clearValidator("#aid", true);
                         com.clearValidator("#name", true);
                         com.clearValidator();
-                        layer.closeAll();
+                        com.closePopup();
                     });
                 });
             });

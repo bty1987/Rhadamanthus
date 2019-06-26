@@ -1,15 +1,18 @@
 jQuery(function ($) {
-    com.focusPage('#fl-statement').statement("工程验收", "订单信息列表");
 
-    var constructionNodes = {};
-    
+    var constructionNodes = {
+
+        constructionSchedul :{}
+    };
+
     com.post(api.data.queryConstructionNode, {}, function (res) {
-        $.each(res.constructionNodes, function (i, v) {
-            constructionNodes[v.sort] = v.name;
+        constructionNodes.constructionSchedul = res.constructionNodes.split("sort", "name");
+    }, null, false);
+
+    com.post(api.ds.construction, {}, function (res) {
+        $.each(res.constructionSchedul, function (i, v) {
+            constructionNodes.constructionSchedul[v["key"]] = v["value"];
         });
-        constructionNodes[0] = "初始";
-        constructionNodes[1] = "开工";
-        constructionNodes[2] = "完工";
     }, null, false);
 
     var displayFunc = (function () {
@@ -30,7 +33,6 @@ jQuery(function ($) {
         };
 
         var creatLine = function (v) {
-            var that = this;
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.orderId));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
@@ -44,7 +46,7 @@ jQuery(function ($) {
                 ["设计师:", v.designer.userName, "grey"],
                 ["监理:", v.supervisor.userName, "grey"],
                 ["面积:", v.house.buildArea, "blue"],
-                ["进度:", constructionNodes[v.projectStatus], "red"]
+                ["进度:", constructionNodes.constructionSchedul[v.projectStatus], "red"]
             ];
 
             $.each(propertyArr, function (index, value) {
@@ -83,7 +85,7 @@ jQuery(function ($) {
 
     function viewAcceptanceDetailIndex(orderId) {
         params.orderId = orderId;
-        com.switchPage(api.index.acceptanceDetailIndex.url);
+        com.popup4page("#stockRecordPopUp","/views/construction/acceptanceDetail.html","查看");
     }
 
 });

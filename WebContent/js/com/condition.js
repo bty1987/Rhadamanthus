@@ -1807,7 +1807,7 @@ var Condition = function (api) {
             dataSource: {//从后台取数据的各种配置
                 url: api.ds.construction,
                 postData: {},
-                listPath: "workType",
+                listPath: "constructionSchedule",
                 keyPath: "value",
                 valuePath: "value"
             }

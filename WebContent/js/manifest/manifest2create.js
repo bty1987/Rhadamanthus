@@ -12,21 +12,11 @@ jQuery(function ($) {
             comment: com.focusPage("#comment")
         },
 
-        validator: {
-            float3: {
-                type: "v_float_3",
-                regex: /^(\d+|\d+\.[0-9]{1,3})$/,
-                errorMsg: "单价输入内容格式错误"
-            }
-        },
-
         record: {},
         storehouses: []
     };
 
-    $.extend(com.validator, manifest.validator);
-
-    com.focusPage('.date-picker').datepicker(com.datepickerdefault);
+    com.datetime(manifest.items.manifestTime,"date",false);
 
     com.post(api.inventory.queryStorehouseForSelf, {}, function (res) {
         manifest.storehouses = res.storehouses;

@@ -48,10 +48,12 @@ public class UserPO implements Serializable {
 	public static final short STATUS_ENABLE_INT = 0;
 
 	public static final short STATUS_DISABLE_INT = 1;
+	 
+	public static final short ISUPDATE_INIT_INT = 0;
 	
-	public static final short COLUMN_ISUPDATE_UPDATE_INT = 1;
+	public static final short ISUPDATE_UPDATE_INT = 1;
 	
-	public static final short COLUMN_ISUPDATE_ADD_INT = 2;
+	public static final short ISUPDATE_ADD_INT = 2;
 
 	private int uid;
 

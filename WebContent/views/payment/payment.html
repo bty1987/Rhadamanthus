@@ -1,5 +1,5 @@
 
-<div class="page-content">
+<div>
 	<div class="row">
 		<div class="col-xs-12">
 			<div class="paymentTab">
@@ -68,7 +68,7 @@
 						<div class="form-group" id="refundSumBalanceDiv">
 							<label for="refundSum" class="col-md-3 control-label">余额</label>
 							<span class="col-md-9">
-								<input type="text" id="refundSum" class="col-md-5 v_required v_float" disabled/>
+								<input type="text" id="refundSum" class="col-md-5 v_required v_float_3" disabled/>
 							</span>
 						</div>
 						<div class="space-4 "></div>
@@ -76,7 +76,7 @@
 						<div class="form-group" id="refundSumWithdrawDiv">
 							<label for="refundSum" class="col-md-3 control-label">提现金额</label>
 							<div class="col-md-9">
-								<input type="text" id="refund" class="col-md-5 v_required v_float"/>
+								<input type="text" id="refund" class="col-md-5 v_required v_float_3"/>
 							</div>
 						</div>
 						<div class="space-4 "></div>
@@ -110,7 +110,7 @@
 				      		<div class="form-group">
 								<label for="cash" class="col-md-3 control-label">现金金额</label>
 								<div class="col-sm-9">
-									<input type="text" id="cash" class="col-xs-10 col-sm-5 v_required v_float"  data-toggle="popover" data-trigger='manual'/>
+									<input type="text" id="cash" class="col-xs-10 col-sm-5 v_required v_float_3"  data-toggle="popover" data-trigger='manual'/>
 									<span style='height:34px; line-height:34px;'>&nbsp;元</span>
 								</div>
 							</div>
@@ -136,7 +136,6 @@
       			</div>
       			
 				<div class="modal-footer ">
-					<span id="paymentInfo" class="alert-danger pull-left inline"></span>
 					<button type="button" id="collectBtn" class="btn btn-primary">收款</button>
 		        	<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
 		      	</div>
@@ -184,7 +183,7 @@
 				      		<div class="form-group">
 								<label for="cash_h" class="col-md-3 control-label">现金金额</label>
 								<span class="col-md-9 block no-padding-right">
-									<input disabled type="text" id="cash_h" class="col-xs-10 col-sm-5 v_required v_float" data-toggle="popover" data-trigger='manual'/>
+									<input disabled type="text" id="cash_h" class="col-xs-10 col-sm-5 v_required v_float_3" data-toggle="popover" data-trigger='manual'/>
 									<span class='star'></span>
 								</span>
 							</div>
@@ -203,7 +202,7 @@
 							<div class="form-group">
 								<label class="col-sm-3 control-label no-padding-right" for="swipe_h" >刷卡金额</label>
 								<div class="col-sm-9">
-									<input disabled type="text" id="swipe_h" class="col-xs-10 col-sm-5 v_required v_float historyEditItem" data-toggle="popover" data-trigger='manual'/>
+									<input disabled type="text" id="swipe_h" class="col-xs-10 col-sm-5 v_required v_float_3 historyEditItem" data-toggle="popover" data-trigger='manual'/>
 									<span class='star'></span>
 								</div>
 							</div>
@@ -231,7 +230,7 @@
 							<div class="form-group">
 								<label class="col-sm-3 control-label no-padding-right" for="checkPay_h">转账金额</label>
 								<div class="col-sm-9">
-									<input disabled type="text" id="checkPay_h" class="col-xs-10 col-sm-5 v_required v_float historyEditItem" data-toggle="popover" data-trigger='manual'/>
+									<input disabled type="text" id="checkPay_h" class="col-xs-10 col-sm-5 v_required v_float_3 historyEditItem" data-toggle="popover" data-trigger='manual'/>
 									<span class='star'></span>
 								</div>
 							</div>

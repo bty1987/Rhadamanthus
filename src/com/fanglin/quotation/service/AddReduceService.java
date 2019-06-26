@@ -19,23 +19,25 @@ import com.fanglin.quotation.vo.AddReduceVO;
 import com.fanglin.utils.Paging;
 
 public interface AddReduceService {
-	
-	public void pageAddReduceByOrderId(Paging paging, List<Filter> filters,  AddReduceVO addReduceVO);
-	
+
+	public void pageAddReduceByOrderId(Paging paging, List<Filter> filters, AddReduceVO addReduceVO);
+
 	public List<AddReduceVO> queryAddReduceByOrderId(AddReduceVO addReduceVO);
-	
+
 	public List<AddReduceVO> queryAddReduceForPayedByOrderId(AddReduceVO addReduceVO);
-	
-	public AddReduceVO queryAddReduceByDecorationPaymentId(AddReduceVO addReduceVO) throws FLException ;
-	
+
+	public AddReduceVO queryAddReduceByArid(AddReduceVO addReduceVO) throws FLException;
+
+	public AddReduceVO queryAddReduceByDecorationPaymentId(AddReduceVO addReduceVO) throws FLException;
+
 	public int addAddReduce(AddReduceVO addReduceVO);
-	
+
 	public int updateAddReduce(AddReduceVO addReduceVO) throws FLException;
-	
+
 	public int updateAddReduceForAdvance(AddReduceVO addReduceVO) throws FLException;
-	
+
 	public int deleteAddReduceByArId(AddReduceVO addReduceVO) throws FLException;
-	
+
 	public int submitAddReduce(AddReduceVO addReduceVO, String userId) throws FLException;
-	
+
 }

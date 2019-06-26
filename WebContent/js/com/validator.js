@@ -27,17 +27,27 @@ var Validator = function(){
         number: {
             type: "v_number",
             regex: /^[0-9]*$/,
-            errorMsg: "请输入数字."
+            errorMsg: "输入内容格式错误(整数)"
+        },
+        anumber: {
+            type: "v_anumber",
+            regex: /^\-{0,1}[0-9]*$/,
+            errorMsg: "输入内容格式错误(整数)"
         },
         float: {
             type: "v_float",
             regex: /^(((\d)+(\.)?(\d)*)|(\d)*)$/,
-            errorMsg: "请输入浮点数."
+            errorMsg: "输入内容格式错误(小数)"
         },
         float3: {
             type: "v_float_3",
             regex: /^(\d+|\d+\.[0-9]{1,3})$/,
-            errorMsg: "单价输入内容格式错误"
+            errorMsg: "输入内容格式错误(小数)"
+        },
+        afloat3: {
+            type: "v_afloat_3",
+            regex: /^\-{0,1}(\d+|\d+\.[0-9]{1,3})$/,
+            errorMsg: "输入内容格式错误(小数)"
         },
         name: {
             type: "v_name",
@@ -94,15 +104,10 @@ var Validator = function(){
             regex: /^[0-9]+(\.[0-9]{1,2})?$/,
             errorMsg: "请输入正确的金额格式."
         },
-        discount: {                     // 折扣 0到1之间两位小数
+        discount: { // 折扣 0到1之间两位小数
             type: "v_discount",
             regex: /^(1\.0{1,2}|1|0\.[0-9]{1,2})$/,
             errorMsg: "请输入0到1之间的两位小数."
-        },
-        numberAll: {                   // 正数或负数 小数两位
-            type: "v_number",
-            regex: /^(\d{0,8}|\d{0,8}\.[0-9]{1,2})$|^-(\d{0,8}|\d{0,8}\.[0-9]{1,2})$/,
-            errorMsg: "请输入正数或负数."
         },
         officer: {
             type: "v_officer",

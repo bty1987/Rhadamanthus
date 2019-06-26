@@ -25,6 +25,8 @@ public interface AddReduceItemService {
 	
 	public int updateAddReduceItem(AddReduceVO addReduceVO, AddReduceItemVO addReduceItemVO) throws FLException;
 	
+	public int updateAddReduceItemForAdvance(AddReduceVO addReduceVO, AddReduceItemVO addReduceItemVO) throws FLException;
+	
 	public int deleteAddReduceItem(AddReduceVO addReduceVO, AddReduceItemVO addReduceItemVO) throws FLException;
 	
 }

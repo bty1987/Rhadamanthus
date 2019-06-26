@@ -1,2 +1,55 @@
-<div id="reportDiv"></div>
-<script src="js/report/api.js"></script>
+<div class="page-content">
+    <div class="row">
+        <div>
+            <a href="#0" class="btn" id="fullScreen">Fire Modal Window</a>
+        </div>
+        <!--第一块大屏-->
+        <div class="col-sm-6" style="height: 520px">
+            <div class="col-sm-12" >
+                <div id="InterfaceRequestsForMouth"></div> <!--M-4-天级请求数走势-->
+            </div>
+            <div class="col-sm-12">
+                <div id="InterfaceRequestsForDayAll"></div> <!--M-2-服务器天级请求总数-->
+            </div>
+        </div>
+        <!--第二块大屏-->
+        <div class="col-sm-6" style="height: 520px">
+            <div class="col-sm-4">
+                <div class="col-sm-12">
+                    <h3>总请求数</h3>
+                    <div id="InterfaceRequestsForAll" style="height: 150px; font-size: 40px; line-height : 140px;font-weight: bold;text-align: center"></div> <!--M-6-请求数-->
+                </div>
+                <div class="col-sm-12">
+                    <h3>24小时请求总数</h3>
+                    <div id="InterfaceRequestsDay" style="height: 150px; font-size: 40px; line-height : 140px;;font-weight: bold;text-align: center"></div> <!--M-1-24小时请求总数-->
+                </div>
+            </div>
+            <div class="col-sm-8">
+                <h3>8小时服务器温度走势</h3>
+                <div id="TemperatureTrend"></div> <!--M-5-8小时服务器温度走势-->
+            </div>
+        </div>
+        <!--第三块大屏-->
+        <div class="col-sm-6" style="height: 520px">
+            <div class="col-sm-6" >
+                <div id="InterfaceRequestsForDayByUserId" style="margin-top: 20px;"></div>
+            </div>
+            <div class="col-sm-6">
+                <div id="ApiInterfaceRequestsForDay" style="margin-top: 20px;"></div>
+            </div>
+        </div>
+        <!--第四块大屏-->
+        <div class="col-sm-6" style="height: 520px">
+            <div class="col-sm-12">
+                <h3>地图</h3>
+                <div id="map"></div> <!--M-7-天级API请求数(TOP10)-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--<script src="assets/altogether/js/g2.min.js"></script>-->
+<!--<script src="assets/altogether/js/g6.min.js"></script>-->
+<script type="text/javascript">
+    $.loadScript(['js/report/api.js']);
+</script>

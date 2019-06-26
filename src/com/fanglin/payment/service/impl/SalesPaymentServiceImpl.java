@@ -946,10 +946,10 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int cancelSalesPaymentForDeposit(SalesPaymentVO salesPaymentVO) throws FLException {
-
-		SalesPaymentPO salesPayment = salesPaymentDao.get(salesPaymentVO.getSpid());
 		
-		long sid = salesPayment.getSales().getSid();
+		long sid = salesPaymentVO.getSales().getSid();
+
+		SalesPaymentPO salesPayment = salesPaymentDao.querySalesPaymentsBySidAndType(sid, salesPaymentVO.getType());
 		
 		if(salesPaymentDao.countSalesPaymentBySidAType(sid, SalesPaymentPO.COLUMN_REPLENISHMENTTYPE_INT) > 0){
 			throw new FLException(150040, "补款已存在");
@@ -981,10 +981,10 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int cancelSalesPaymentForFullpay(SalesPaymentVO salesPaymentVO) throws FLException {
-
-		SalesPaymentPO salesPayment = salesPaymentDao.get(salesPaymentVO.getSpid());
 		
-		long sid = salesPayment.getSales().getSid();
+		long sid = salesPaymentVO.getSales().getSid();
+
+		SalesPaymentPO salesPayment = salesPaymentDao.querySalesPaymentsBySidAndType(sid, salesPaymentVO.getType());
 		
 		List<Short> types = Arrays.asList(SalesPaymentPO.COLUMN_REPLENISHMENTTYPE_INT, SalesPaymentPO.COLUMN_MAKEAREFUNDTYPE_INT);
 

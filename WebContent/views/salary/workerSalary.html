@@ -19,10 +19,6 @@
 						<div class="form-group " >
 								<label class="col-sm-3 control-label no-padding-right " for="workersalaryuser">姓名</label>
 								<div class="col-md-9">
-									<!--  <select id="workersalaryuser" class="chosen-select col-xs-10 col-sm-6 v_required "  data-toggle="popover" data-trigger='manual'>
-										<option value="">&nbsp;</option>
-										</select>
-										-->
 									<input id="workersalaryuser" class="col-xs-10 col-sm-6 v_typeahead v_required " type="text" data-toggle="popover" data-placement="bottom" data-trigger='manual'/>
 									<span class='star'></span>
 								</div>
@@ -31,7 +27,7 @@
 						<div class="form-group">
 							<label class="col-sm-3 control-label no-padding-right" for="workersalary">工费</label>
 							<div class="col-sm-9">
-								<input type="text" maxlength="64" id="workersalary" class="col-xs-10 col-sm-6 v_salary v_required" data-toggle="popover" data-trigger='manual'/>
+								<input type="text" maxlength="64" id="workersalary" class="col-xs-10 col-sm-6 v_afloat_3 v_required" data-toggle="popover" data-trigger='manual'/>
 
 								<span style="color: red;padding: 10px" >
 								<b>* 扣款项请输入负数，如：-123 !</b>
@@ -74,10 +70,7 @@
 					<h4 class="modal-title">导入</h4>
 					<h6><span style="color: purple;padding: 10px">上传字段均为文本类型</span></h6>
 					<h6><span style="color: purple;padding: 10px"> 上传格式： 用户id 姓名 工费 类型 备注</span></h6>
-					<h6><span style="color: purple;padding: 10px">类型： 1(工费), 2(增项), 3(油工一级奖励), 4(维修款), 5(罚款), 6(工程质保金), 7(工具押金), 8(借款), 9(工人家属保险),10(砌墙工费),11(水电工费),12(水暖工费),13(电工费)
-</span></h6>
-
-
+					<h6><span style="color: purple;padding: 10px">类型： 1(工费), 2(增项), 3(油工一级奖励), 4(维修款), 5(罚款), 6(工程质保金), 7(工具押金), 8(借款), 9(工人家属保险),10(砌墙工费),11(水电工费),12(水暖工费),13(电工费)</span></h6>
 				</div>
 				<div class="modal-body">
 					<form class="form-horizontal" >
@@ -93,27 +86,6 @@
 		</div>
 	</div>
 
-	<div class="modal fade" id="batchImportModal" tabindex="-1">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
-					<h4 class="modal-title">导入</h4>
-					<h6><span style="color: purple;padding: 10px">只允许两个文本类型字段 id 和 状态(0，1，2)</span></h6>
-				</div>
-				<div class="modal-body">
-					<form class="form-horizontal">
-						<div class="form-group">
-							<div class="col-sm-12" id="batchImport"></div>
-						</div>
-					</form>
-				</div>
-				<div class="modal-footer">
-					<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
-				</div>
-			</div>
-		</div>
-	</div>
 
 </div>
 

@@ -102,7 +102,7 @@ $(function(){
                         com.clearValidator("#cid", true);
                         com.clearValidator("#name", true);
                         com.clearValidator();
-                        layer.closeAll();
+                        com.closePopup();
                     });
                 });
             });
@@ -162,7 +162,7 @@ $(function(){
                     com.clearValidator("#cid", true);
                     com.clearValidator("#name", true);
                     com.clearValidator();
-                    layer.closeAll();
+                    com.closePopup();
                 });
             });
         });
@@ -170,7 +170,7 @@ $(function(){
     },'resultList');
 
     function openlayer(callback){
-        layer.closeAll();
+        com.closePopup();
         layer.open({
             type: 1,
             title:" ",

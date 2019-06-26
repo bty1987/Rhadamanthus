@@ -28,96 +28,104 @@ import com.fanglin.quotation.vo.AddReduceVO;
 @ParentPackage("base")
 @Namespace("/")
 @Controller
-public class AddReduceAction extends BaseListAction{
+public class AddReduceAction extends BaseListAction {
 
 	private static final long serialVersionUID = 2068579060275398311L;
-	
+
 	@Autowired
 	private AddReduceService addReduceService;
-	
+
 	private List<AddReduceVO> addReduces;
-	
+
 	private AddReduceVO addReduce;
-	
+
 	private List<Integer> arIds;
-	
+
 	@Action(value = "pageAddReduceByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageAddReduceByOrderId(){
-		
+	public String pageAddReduceByOrderId() {
+
 		addReduceService.pageAddReduceByOrderId(getPaging(), getFilters(), addReduce);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "queryAddReduceByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryAddReduceByOrderId(){
-		
+	public String queryAddReduceByOrderId() {
+
 		addReduces = addReduceService.queryAddReduceByOrderId(addReduce);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "queryAddReduceForPayedByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryAddReduceForPayedByOrderId(){
-		
+	public String queryAddReduceForPayedByOrderId() {
+
 		addReduces = addReduceService.queryAddReduceForPayedByOrderId(addReduce);
-		
+
 		return SUCCESS;
 	}
-	
+
+	@Action(value = "queryAddReduceByArid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryAddReduceByArid() throws FLException {
+
+		addReduce = addReduceService.queryAddReduceByArid(addReduce);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "queryAddReduceByDecorationPaymentId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryAddReduceByDecorationPaymentId() throws FLException{
-		
+	public String queryAddReduceByDecorationPaymentId() throws FLException {
+
 		addReduce = addReduceService.queryAddReduceByDecorationPaymentId(addReduce);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "addAddReduce", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addAddReduce(){
-		
+	public String addAddReduce() {
+
 		addReduceService.addAddReduce(addReduce);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "updateAddReduce", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateAddReduce() throws FLException{
-		
+	public String updateAddReduce() throws FLException {
+
 		addReduceService.updateAddReduce(addReduce);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "updateAddReduceForAdvance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateAddReduceForAdvance() throws FLException{
-		
+	public String updateAddReduceForAdvance() throws FLException {
+
 		addReduceService.updateAddReduceForAdvance(addReduce);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "deleteAddReduce", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String deleteAddReduce() throws FLException{
-		
+	public String deleteAddReduce() throws FLException {
+
 		addReduceService.deleteAddReduceByArId(addReduce);
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value = "submitAddReduce", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String submitAddReduce() throws FLException{
-		
+
+	@Action(value = "submitAddReduce", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String submitAddReduce() throws FLException {
+
 		addReduceService.submitAddReduce(addReduce, queryUserId());
-		
+
 		return SUCCESS;
 	}
-	
-	public AddReduceVO getAddReduce(){
+
+	public AddReduceVO getAddReduce() {
 		return addReduce;
 	}
 
-	public void setAddReduce(AddReduceVO addReduce){
+	public void setAddReduce(AddReduceVO addReduce) {
 		this.addReduce = addReduce;
 	}
 
@@ -129,11 +137,11 @@ public class AddReduceAction extends BaseListAction{
 		this.addReduces = addReduces;
 	}
 
-	public List<Integer> getArIds(){
+	public List<Integer> getArIds() {
 		return arIds;
 	}
 
-	public void setArIds(List<Integer> arIds){
+	public void setArIds(List<Integer> arIds) {
 		this.arIds = arIds;
 	}
 

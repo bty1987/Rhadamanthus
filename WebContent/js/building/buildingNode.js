@@ -25,8 +25,6 @@ jQuery(function($) {
 		com.clearValidator();
 	});
 
-	$.extend(com.validator, buildingNode.validator);
-	
 	com.post(api.ds.building, {}, function(res){
         com.focusPage("#buildingNodeType").bindData(res.payType, "key", "value");
         $.each(res.payType,function (i,val) {

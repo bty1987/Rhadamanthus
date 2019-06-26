@@ -32,43 +32,43 @@ import com.fanglin.personel.po.UserPO;
 public class DrawLinePO implements Serializable {
 
 	private static final long serialVersionUID = 1344461146L;
-	
+
 	public static final String COLUMN_STARTTIME_STR = "startTime";
-	
+
 	public static final String COLUMN_ENDTIME_STR = "endTime";
-	
+
 	public static final short STATUS_QUEUE_INT = 0;
-	
-	public static final short STATUS_APPLICATION_INT = 1; 
-	
-	public static final short STATUS_SUCCESS_INT = 2; 
-	
-	public static final short STATUS_FAIL_INT = 3; 
-	
+
+	public static final short STATUS_APPLICATION_INT = 1;
+
+	public static final short STATUS_SUCCESS_INT = 2;
+
+	public static final short STATUS_FAIL_INT = 3;
+
 	private long dlid;
-	
+
 	private DecorationPO decoration;
 
-	private Timestamp  applayTime;
-	
+	private Timestamp applayTime;
+
 	private String content;
-	
+
 	private long actualTime;
-	
+
 	private Timestamp startTime;
-	
+
 	private Timestamp endTime;
-	
+
 	private short status;
-	
+
 	private Integer count;
-	
+
 	private UserPO appler;
-	
+
 	private DrawLineGroupPO group;
-	
+
 	private UserPO drawer;
-	
+
 	private int company;
 
 	@Id
@@ -84,14 +84,14 @@ public class DrawLinePO implements Serializable {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false, name = "orderId", referencedColumnName = "orderId")
-	public DecorationPO getDecoration(){
+	public DecorationPO getDecoration() {
 		return decoration;
 	}
 
-	public void setDecoration(DecorationPO decoration){
+	public void setDecoration(DecorationPO decoration) {
 		this.decoration = decoration;
 	}
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = true, name = "auid", referencedColumnName = "uid")
 	public UserPO getAppler() {
@@ -103,11 +103,11 @@ public class DrawLinePO implements Serializable {
 	}
 
 	@Column(name = "applayTime")
-	public Timestamp getApplayTime(){
+	public Timestamp getApplayTime() {
 		return applayTime;
 	}
 
-	public void setApplayTime(Timestamp applayTime){
+	public void setApplayTime(Timestamp applayTime) {
 		this.applayTime = applayTime;
 	}
 
@@ -148,11 +148,11 @@ public class DrawLinePO implements Serializable {
 	}
 
 	@Column(name = "status")
-	public short getStatus(){
+	public short getStatus() {
 		return status;
 	}
 
-	public void setStatus(short status){
+	public void setStatus(short status) {
 		this.status = status;
 	}
 
@@ -166,7 +166,7 @@ public class DrawLinePO implements Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(nullable = true,name = "dgid", referencedColumnName = "gid")
+	@JoinColumn(nullable = true, name = "dgid", referencedColumnName = "gid")
 	public DrawLineGroupPO getGroup() {
 		return group;
 	}
@@ -192,5 +192,5 @@ public class DrawLinePO implements Serializable {
 	public void setCompany(int company) {
 		this.company = company;
 	}
-	
+
 }

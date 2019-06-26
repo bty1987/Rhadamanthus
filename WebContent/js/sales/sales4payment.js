@@ -1,0 +1,114 @@
+
+
+jQuery(function () {
+
+    var salesPaymentForStatus = {
+        cash : [],
+        bank : [],
+        checkBank : [],
+        accounts : [],
+        couponType : [],
+
+        cashInfo : {},
+        bankInfo : {},
+        checkBankInfo : {},
+        accountsInfo : {},
+        couponTypeData : {}
+
+    };
+
+    com.post(api.common.queryReceiptType, {}, function (res) {
+        
+        $.each(res.receiptTypes, function (i, v) {
+            if (v.type == 1) {
+                salesPaymentForStatus.cash.push(v);
+                salesPaymentForStatus.cashInfo[v.no] = v.name;
+            } else if (v.type == 2) {
+                salesPaymentForStatus.bank.push(v);
+                salesPaymentForStatus.bankInfo[v.no] = v.name;
+            } else if (v.type == 3) {
+                salesPaymentForStatus.checkBank.push(v);
+                salesPaymentForStatus.checkBankInfo[v.no] = v.name;
+            } else if (v.type == 4) {
+                salesPaymentForStatus.accounts.push(v);
+                salesPaymentForStatus.accountsInfo[v.no] = v.name;
+            } else if (v.type == 5) {
+                salesPaymentForStatus.couponType.push(v);
+                salesPaymentForStatus.couponTypeData[v.no] = [v.no, v.name];
+            }
+        });
+
+    },null,false);
+
+    var salesCollectionPostData = {};
+    
+    salesCollectionPostData["salesPayment.sales.sid"] = params.sid;
+
+    com.post(api.ds.payment, {}, function(res){
+        salesPaymentForStatus.salesPaymentType = res.materialPaymentType.split("key", "value");
+    }, null, false);
+
+    com.post(api.payment.querySalesPaymentBySid,salesCollectionPostData, function (listData) {
+        createLine('resultLists', listData);
+    }, function (e) {
+        com.showAlert(com.warning, "没有对应信息");
+    });
+    function createLine(tableId, listData) {
+        var $tableWrap = com.focusPage('#' + tableId);
+        var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+        if (listData && listData.salesPayments.length) {
+            $.each(listData.salesPayments, function (i, v) {
+                var $liLine = $('<li></li>').addClass('item-orange  clearfix');
+                var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+                var $h3 = $('<h3></h3>').addClass('oid');
+                var $small = $('<small></small>').addClass('blue').html(salesPaymentForStatus.salesPaymentType[v.type]);
+
+                var propertyArr = [
+                    ["销售单号:", v.sales.no, "blue"],
+                    ["品类：", v.sales.category, "grey"],
+                    ["品牌：", v.sales.brand, "grey"],
+                    ["应收额：", v.referMoney, "blue"],
+                    ["收款时间：", v.salesReceipt.collectTime, "grey"],
+                    ["确认时间：", v.salesReceipt.confirmTime, "grey"],
+                    ["状态：", v.status == 0 ? '初始' : v.status == 1 ? '待确认' : '已确认', "red"]
+                ];
+
+                $.each(propertyArr, function (index, value) {
+                    var $liProperty = $('<li></li>');
+                    $('<strong></strong>').html(value[0]).appendTo($liProperty);
+                    $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+                    $liProperty.appendTo($ulProperty);
+                });
+
+                var addPropertyArr = [];
+                v.salesReceipt.cash != null && v.salesReceipt.cash != "0" ? addPropertyArr.push(["现金:", v.salesReceipt.cash, "blue"]) : true;
+                v.salesReceipt.bank != null && v.salesReceipt.bank != "0" ? addPropertyArr.push(["银行信息：", (function (bank, bankInfo) {
+
+                    var info = bank + ", ";
+                    var _s = bankInfo.split('#');
+                    for (var i = 1; i < _s.length - 1; i++) {
+                        var _i = _s[i].split('|');
+                        info += salesPaymentForStatus.bankInfo[_i[0]] + " " + _i[1] + ", ";
+                    }
+
+                    return info;
+                })(v.salesReceipt.bank, v.salesReceipt.bankInfo), "blue"]) : true;
+                v.salesReceipt.checkv != null && v.salesReceipt.checkv != "0" ? addPropertyArr.push(["转账:", v.salesReceipt.checkv, "blue"]) : true;
+                v.salesReceipt.installment != null && v.salesReceipt.installment != "0" ? addPropertyArr.push(["分期:", v.salesReceipt.installment, "blue"]) : true;
+                v.salesReceipt.accounts != null && v.salesReceipt.accounts != "0" ? addPropertyArr.push(["对公帐户:", v.salesReceipt.accounts, "blue"]) : true;
+                v.salesReceipt.advance != null && v.salesReceipt.advance != "0" ? addPropertyArr.push(["预付款:", v.salesReceipt.advance, "blue"]) : true;
+                v.salesReceipt.coupon != null && v.salesReceipt.coupon != "0" ? addPropertyArr.push(["优惠券:", v.salesReceipt.coupon + v.salesReceipt.couponInfo.split('#').join(' '), "blue"]) : true;
+
+                $.each(addPropertyArr, function (index, value) {
+                    var $liPropertys = $('<li></li>');
+                    $('<strong></strong>').html(value[0]).appendTo($liPropertys);
+                    $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liPropertys);
+                    $liPropertys.appendTo($ulProperty);
+                });
+                $small.appendTo($h3);
+                $liLine.append($h3).append($ulProperty).appendTo($ul);
+            });
+            $ul.appendTo($tableWrap);
+        }
+    }
+});

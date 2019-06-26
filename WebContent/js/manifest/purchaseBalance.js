@@ -5,9 +5,8 @@ $(function(){
     	items: {},
     	
     	status: {},
-    	balanceStatus: {}
+    	balanceStatus: {},
     };
-    
     com.focusPage('.date-picker').datepicker(com.datepickerdefault);
     
     com.post(api.ds.manifest, {}, function(res){
@@ -106,13 +105,12 @@ $(function(){
 
             $btnView.click(function () {
                 params["purchase.pid"] = v.pid;
-                showLayer("查看__采购单号 : " + v.no, "views/manifest/purchase4view.html");
+                com.popup4page("#layerPopUp","views/manifest/purchase4view.html","查看__采购单号 : " + v.no);
             });
 
             $btnBalance.click(function(){
                 params["purchase.pid"] = v.pid;
-                com.switchPage(api.index.purchaseBalance2balanceIndex.url);
-                //showLayer("结算__采购单号 : " + v.no, "views/manifest/purchaseBalance2balance.html");
+                com.popup4page("#layerPopUp","views/manifest/purchaseBalance2balance.html","结算");
             });
 
             $btnFinish.click(function(e){
@@ -131,7 +129,6 @@ $(function(){
                     com.post(api.inventory.updatePurchaseForBalanceStatus, options, function(res){
                         purchaseBalanceSearcher.doSearch();
                     });
-                    layer.close(indexo);
                 });
 
             });
@@ -169,27 +166,6 @@ $(function(){
 
         return [$impa];
     },'resultList');
-    
-    function showLayer(title, page){
-    	
-    	var $popup = com.focusPage("#layerPopUp");
-    	
-    	layer.open({
-            type: 1,
-            title: title,
-            skin: 'layui-layer-lan',
-            content: $popup,
-            area: [($(window).width() * 0.7 < 1000 ? $(window).width() * 0.7 : 1000) + "px", ($(window).height() * 0.84 < 620 ? $(window).height() * 0.84 : 620) + "px"],
-            maxmin: false,
-            success: function (layer, index) {
-                $popup.load(page);
-            },
-            end: function () {
-                layer.closeAll();
-                purchaseSearcher.doSearch();
-            }
-        });
-    }
 
     //导出excel
     function exportPurchase(){
@@ -224,10 +200,8 @@ $(function(){
                 ],
                 list: res.paging.data
             });
-
         });
     }
-
 });
 
 

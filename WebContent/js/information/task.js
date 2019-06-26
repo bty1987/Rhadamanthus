@@ -24,7 +24,6 @@ $(function(){
         taskType:["python","shell"],
         isShow:["显示","不显示"],
 
-
 };
     var taskRegular ={
         validator: {

@@ -32,7 +32,8 @@ jQuery(function ($) {
     drawing.mediaServer = window.mediaServer;
 
     com.focusPage("#btnBack").click(function () {
-        com.switchPage(api.index.supervisionReworkIndex.url);
+        com.closePopup();
+        com.popup4page("#stockRecordPopUp", "/views/construction/supervisionRework.html", "返工");
     });
 
     com.post(api.construction.queryReworkDrawingByReworkId, {

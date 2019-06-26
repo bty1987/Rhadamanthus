@@ -1,4 +1,18 @@
 $(function(){
+
+    var salary = {
+        modals: {
+            viewPopUp:com.focusPage('#viewPopUp')
+        },
+        status:{}
+    }
+
+    com.post(api.ds.salary, {}, function (data) {
+
+        salary.status=data.status.split("key", "value");
+
+    }, null, false);
+
     var displayFunc = (function () {
 
         var renderList = function (tableId, listData) {
@@ -47,7 +61,7 @@ $(function(){
             var $contentWrap = $('<div></div>').addClass('line-wrap  content col4');
             var propertyArr = [
                 v.salary,
-                v.status == 0 ? "初始" : v.status == 1 ? "通过" : "驳回",
+                salary.status[v.status],
                 v.createTime,
                 v.comment,
             ];
@@ -79,7 +93,7 @@ $(function(){
         }
     })();
 
-    var $popup = com.focusPage('#viewPopUp');
+    var $popup = salary.modals.viewPopUp;
     var userId = $popup.attr('data-userId');
     var startTime = $popup.attr('data-startTime');
     var endTime = $popup.attr('data-endTime');

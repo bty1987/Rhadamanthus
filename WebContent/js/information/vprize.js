@@ -2,35 +2,24 @@
 jQuery(function($) {
 
 	var vprize = {
-		vpid: null,
-		saveBtn: null,
-		modal: null,
-		addVprizeModal : com.focusPage("#addVprizeModal"),
 
-		items : {},
+		saveBtn: com.focusPage("#saveBtn"),
+
+		modals: {
+			addVprizeModal : com.focusPage("#addVprizeModal")
+		},
+		items : {
+			vactivity: com.focusPage("#vactivity"),
+			name: com.focusPage("#name"),
+			price: com.focusPage("#price")
+
+		},
+
+		vpid: null
 	};
-	
-	var validator = {
-		float3: {
-            type: "v_float_3",
-            regex: /^([0-9]+|[0-9]+\.[0-9]{1,3})$/,
-            errorMsg: "数量格式错误"
-        }
-    };
-	
-	$.extend(com.validator, validator);
 
-	vprize.saveBtn = com.focusPage("#saveBtn").on("click", saveData);
+	vprize.saveBtn.bindClick(saveData);
 
-	vprize.items.vactivity = com.focusPage("#addVprizeModal").find("#vactivity");
-	vprize.items.name = com.focusPage("#addVprizeModal").find("#name");
-	vprize.items.price = com.focusPage("#addVprizeModal").find("#price");
-	
-
-	vprize.addVprizeModal.on('show.bs.modal',function(e){
-		com.clearValidator();
-	});
-	
 	com.post(api.information.queryVactivity, {}, function(res){
 		vprize.items.vactivity.bindData(res.vactivitys, "vaid", "name");
 	});
@@ -79,14 +68,14 @@ jQuery(function($) {
 			$liLine.append($h3).append($ulProperty);
 			
 			$btnViews.click(function(){
-				
+				vprize.items.vactivity.attr("disabled", "disabled");
 				vprize.vpid = v.vpid;
 				
 				vprize.items.vactivity.val(v.vaid);
 				vprize.items.name.val(v.name);
 				vprize.items.price.val(v.price);
 				
-				vprize.addVprizeModal.modal("show");
+				vprize.modals.addVprizeModal.modal("show");
 			});
 
 			return $liLine;
@@ -109,21 +98,22 @@ jQuery(function($) {
 		displayFunc.init('resultList', data);
 	}, "pagenation", "vprizePostData",null, false, null, function(){
 
-		var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addVprize').css("margin", "0px 3px");
+		var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'addVprize').css("margin", "0px 3px");
 		var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
 		var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
 		return [$adda];
 	});
 
-	//添加
-	com.focusPage('a[name="addVprize"]', '#pagenation').click(function(){
-		
+	com.focusPage('#addVprize', '#pagenation').click(function(){
+
+		vprize.items.vactivity.removeAttr("disabled", "disabled");
 		vprize.vpid = null;
-		
+
+		com.clearValidator();
 		com.cleanItems(vprize.items);
 		
-		vprize.addVprizeModal.modal("show");
+		vprize.modals.addVprizeModal.modal("show");
 	});
 
 	function saveData(){
@@ -138,7 +128,7 @@ jQuery(function($) {
 			'vprize.name': vprize.items.name.val(),
 			'vprize.price': vprize.items.price.val()
 		};
-		
+
 		if(vprize.vpid){
 			url = api.information.updateVprize;
 			
@@ -150,7 +140,7 @@ jQuery(function($) {
 			com.showAlert(com.info, "操作成功");
 			
 			searcher.doSearch();
-			vprize.addVprizeModal.modal("hide");
+			vprize.modals.addVprizeModal.modal("hide");
 		});
 	}
 

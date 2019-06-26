@@ -1,0 +1,118 @@
+<div>
+	<div class="row">
+		<div id="roleList" class="col-xs-12">
+			<div id="condList" class="fl_search clearfix"></div> <!-- 查询条件-->
+			<div id="resultList" class="clearfix tab-pane active"></div> <!--查询结果-->
+			<div id="pagenation" class="fl-page-wrap clearfix"></div> <!--分页-->
+		</div>
+		
+		<div id="roleRightDiv" class="col-xs-12 hidden">
+			<div>
+				<span id="roleRightContent"></span>
+			</div>
+			<div class="col-xs-4">
+				<ul id="treeDemo" class="ztree"></ul>
+			</div>
+			<input id="roleRightRoleId" class="col-xs-10 col-sm-5 hidden" >
+			<div class="col-xs-8">
+				<span >说明:
+					<br/>&nbsp;&nbsp;&nbsp;&nbsp;选择功能文件夹可以控制该角色左侧功能树形菜单的可见权限.
+					<br/>&nbsp;&nbsp;&nbsp;&nbsp;选择从能文件夹下的子项可以控制该角色对哪些action有权限.
+				</span>
+			</div>
+			<div class="col-xs-12 space-5 form-group"></div>
+			<div class="col-xs-12">
+				<button type="button" id="saveRoleRightBtn" class="btn btn-primary">保存</button>
+	        	<button type="button" id="cancelRoleRightBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="roleModal" tabindex="-1">
+		<div class="modal-dialog">
+			<div class="modal-content">
+      			<div class="modal-header">
+        			<button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+        			<h4 class="modal-title" id="myModalLabel">角色信息</h4>
+      			</div>
+      			<div class="modal-body">
+		      		<form class="form-horizontal">
+			      		<div class="form-group">
+				      		<div class="block clearfix">
+								<label for="roleId" class="col-sm-3 control-label no-padding-right" >角色编号</label>
+								<span class="col-md-9 block   ">
+									<input type="text" id="roleId" class="col-xs-10 col-sm-5 v_required v_roleId"  data-toggle="popover" data-trigger='manual' maxlength="4"/>
+								</span>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="roleName">角色名称</label>
+							<div class="col-sm-9">
+								<input type="text" id="roleName" class="col-xs-10 col-sm-5 v_required v_name" data-toggle="popover" data-trigger='manual' maxlength="8"/>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="roleDes" >角色描述</label>
+							<div class="col-sm-9">
+								<textarea id="roleDes" class="col-xs-10 col-sm-5 v_name" rows="3" data-toggle="popover" data-trigger='manual' maxlength="20"></textarea>
+							</div>
+						</div>
+						<div class="space-4 "></div>
+					</form>
+      			</div>
+      			
+				<div class="modal-footer ">
+					<button type="button" id="saveBtn" class="btn btn-primary">保存</button>
+		        	<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+		      	</div>
+    		</div>
+  		</div>
+  	</div>
+
+	<!--操作配置-->
+	<div class="modal fade" id="operationModal" tabindex="-1">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+					<h4 class="modal-title">操作配置</h4>
+				</div>
+				<div class="modal-body">
+
+				</div>
+				<div class="modal-footer">
+					<button type="button" name="saveBtn" class="btn btn-primary">保存</button>
+					<button type="button" name="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!--模块配置-->
+	<div class="modal fade" id="moduleModal" tabindex="-1">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+					<h4 class="modal-title">模块配置</h4>
+				</div>
+				<div class="modal-body">
+
+				</div>
+
+				<div class="modal-footer">
+					<button type="button" name="saveBtn" class="btn btn-primary">保存</button>
+					<button type="button" name="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$.loadScript(['js/system/role4base.js']);
+</script>
+
+

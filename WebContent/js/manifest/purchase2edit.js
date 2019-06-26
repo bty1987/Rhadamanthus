@@ -10,16 +10,7 @@ jQuery(function ($) {
             comment: com.focusPage('#comment')
         },
         record: {},
-        validator: {
-            float3: {
-                type: "v_float_3",
-                regex: /^(\d+|\d+\.[0-9]{1,4})$/,
-                errorMsg: "单价输入内容格式错误"
-            }
-        }
     };
-
-    $.extend(com.validator, purchase.validator);
 
     com.post(api.inventory.queryPurchaseByPid, {"purchase.pid": purchase.pid}, function (res) {
         purchase.items.createTime.val(res.purchase.createTime);
@@ -67,7 +58,7 @@ jQuery(function ($) {
 
     //关闭弹窗
     com.focusPage('#cancelBtn').click(function () {
-        layer.closeAll();
+        com.closePopup();
     });
 
     //表单提交
@@ -78,7 +69,9 @@ jQuery(function ($) {
             "purchase.comment": purchase.items.comment.val()
         };
 
-        com.post(api.inventory.updatePurchase, options);
+        com.post(api.inventory.updatePurchase, options,function (res) {
+            com.closePopup();
+        });
     });
 
     //添加一个空行

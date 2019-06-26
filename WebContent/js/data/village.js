@@ -1,4 +1,5 @@
 $(function () {
+    
     var village = {
         saveBtn: com.focusPage("#saveBtn").on("click", saveData),
         cancellBtn: com.focusPage("#cancelBtn"),
@@ -73,6 +74,8 @@ $(function () {
     }, null, false);
 
     village.items.nameRuleSel.bindData(village.nameRuleList, village.nameRuleValue, village.nameRuleValue, !1).trigger("change");
+    
+    com.datetime(village.items.deliveryTime);
 
     initUploadBtn();
 
@@ -455,10 +458,6 @@ $(function () {
     com.focusPage('[name="resetMapBtn"]').click(function () {
         // mp.reset();
         drawMap();
-    });
-
-    com.focusPage(".date-picker").datepicker({autoclose: !0}).next().on(ace.click_event, function () {
-        $(this).prev().focus()
     });
 
     //确认位置

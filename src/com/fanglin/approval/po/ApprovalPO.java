@@ -53,6 +53,8 @@ public class ApprovalPO implements java.io.Serializable {
 	
 	public static final short APPROVAL_TYPE_CUSTOMER_ORIGIN_T_DECORATION_BELONG_INT = 15;
 	
+	public static final short APPROVAL_TYPE_DECORATION_HOLONOMY_INT = 16;
+	
 	public static final short APPROVAL_STATUS_INIT_INT = 0;
 
 	public static final short APPROVAL_STATUS_APPROVAL_INT = 1;

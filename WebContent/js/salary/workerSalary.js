@@ -2,38 +2,45 @@ jQuery(function ($) {
 
     var salary = {
 
-        saveBtn:com.focusPage("#saveBtn").on("click", saveData),
+        saveBtn:com.focusPage("#saveBtn"),
         cancelBtn: com.focusPage("#cancelBtn"),
-        modal: com.focusPage("#workersalaryModal"),
+
+        modals: {
+            workersalaryModal: com.focusPage("#workersalaryModal"),
+            importModal:com.focusPage("#importModal"),
+        },
         items: {
         	workersalary : com.focusPage("#workersalary"),
             workersalaryuser : com.focusPage("#workersalaryuser"),
             workersalarySubtype : com.focusPage("#workersalarySubtype"),
             workersalarycomment : com.focusPage("#workersalarycomment"),
         },
-        validator: {
-
-            workersalary: {
-                type: "v_salary",
-                regex: /^-?(([1-9]\d{0,6})|(([1-9]\d{0,6}\.\d{1,3})|(0\.[1-9]{1,3})))$/,
-                errorMsg: "请正确输入工人工费，小数点后最多保留3位"
-            },
-
-
-        },
-        salaryType : [],
+        salaryStatus: {},
+        type:{},
+        oneType:{},
+        constructionSchedule:{},
+        salaryType : {},
+        twoType:{},
         repeatFlg: false
 
     };
 
-    $.extend(com.validator, salary.validator);
+    salary.saveBtn.bindClick(saveData);
+
+    com.initTypeahead('workersalaryuser', api.personel.queryUserByPinyin, "pinyinName", {"user.status": "0"}, "autoFillKeyValue", "key", "value",function(list,key,value){return value;});
 
     com.post(api.ds.salary, {}, function (data) {
-        var SalaryType = data.SalaryType;
 
-        $.each(SalaryType, function (i, y) {
-        	salary.salaryType[y.key] = y.name;
-        });
+        salary.salaryStatus=data.status.split("key", "value");
+        salary.type=data.type.split("id", "name");
+        salary.oneType=data.oneType.split("id", "name");
+        salary.twoType=data.SalaryTwoType.split("key", "oneType");
+        salary.items.workersalarySubtype.bindData(data.SalaryTwoType,"key","name");
+
+    }, null, false);
+
+    com.post(api.ds.construction, {}, function (data) {
+        salary.constructionSchedule=data.constructionSchedule.split("key", "value");
     }, null, false);
 
     var displayFunc = (function () {
@@ -67,17 +74,17 @@ jQuery(function ($) {
                 ["创建人:", v.creater.userName, "grey"],
                 ["创建时间:", v.createTime, "green"],
                 ["工人工号:", v.user.userId, "grey"],
-                ["工程节点:", v.schedule == 0 ? "---" : v.schedule == 3 ? "铲大白" : v.schedule == 4 ? "放线" : v.schedule == 5 ? "水工" : v.schedule == 6 ? "力工" : v.schedule == 7 ? "电工" : v.schedule == 8 ? "瓦工" : v.schedule == 9 ? "地面找平" : v.schedule == 10 ? "木工" : v.schedule == 11 ? "油工" : v.schedule == 12 ? "水电验收" : "保洁", "grey"],
+                ["工程节点:", v.schedule == 0 ? "---" : salary.constructionSchedule[v.schedule], "grey"],
                 ["审批人:", v.approver.userName == null ? "无" : v.approver.userName, "grey"],
                 ["审批时间:", v.approveTime == null ? "无" : v.approveTime, "green"],
                 ["订单号:", v.decoration == null ? "无" : v.decoration.orderId, "blue"],
                 ["楼盘地址:", (v.decoration.house) == null ? "无" : (v.decoration.house.village.name + " " + v.decoration.house.houseNumber), "grey"],
                 ["监理:", v.decoration.supervisor == null ? "无" : v.decoration.supervisor.userName, "grey"],
-                ["类型：", v.type == 0 ? "加" : "减", "red"],
+                ["类型：",salary.type[v.type], "red"],
                 ["操作金额:", v.type == 0 ? v.money : -v.money, "blue"],
                 ["工费:", v.type == 0 ? v.salary : -v.salary, "blue"],
                 ["质保金:", v.type == 0 ? v.deposit : -v.deposit, "blue"],
-                ["状态:", v.status == 0 ? "初始" : (v.status == 1 ? "已通过" : v.status == 2 ? "已驳回" : "已撤销"), "red"]
+                ["状态:", salary.salaryStatus[v.status], "red"],
             ];
 
             var $label = $('<label></label>');
@@ -132,11 +139,11 @@ jQuery(function ($) {
     })();
 
     var searcher = new Searcher();
+
     var _condArr = ['orderId', 'salaryWorkduty', 'jober', 'salaryschedule', 'salarystatus', 'cerateTime', 'approveTime'];
 
     searcher.init(_condArr, "condList", api.salary.pageWorkerSalary, function (data) {
         displayFunc.init('resultList', data);
-
     }, "pagenation", "workersalaryPostData", null, false, null, function () {
 
 
@@ -167,7 +174,16 @@ jQuery(function ($) {
         return [$selecta, $adda, $adopta, $exporta, $importa];
     });
 
-    com.focusPage('a[name="select"]').on("click", function () {
+    com.focusPage('a[name="add"]', '#pagenation').click(function () {
+
+        com.clearValidator();
+        com.cleanTypeahead("workersalaryuser");
+        com.cleanItems(salary.items);
+
+        salary.modals.workersalaryModal.modal("show");
+    });
+
+    com.focusPage('a[name="select"]').click(function () {
 
         if (com.focusPage('input[type="checkbox"]').prop('checked')) {
             com.focusPage('input[type="checkbox"]').removeAttr('checked');
@@ -180,32 +196,15 @@ jQuery(function ($) {
         }
     });
 
-    com.focusPage('a[name="add"]', '#pagenation').on("click", function () {
-
-        com.cleanItems(salary.items);
-        com.clearValidator();
-        com.focusPage('#workersalaryModal').modal("show");
-        com.updateTypeahead("workersalaryuser", "", "");
-        com.initTypeahead('workersalaryuser', api.personel.queryUserByPinyin, "pinyinName", {
-            "user.status": "0"
-        }, "autoFillKeyValue", "key", "value",function(list,key,value){
-        	return value;
-        });
-
+    com.focusPage('a[name="import"]', '#pagenation').click(function () {
+        salary.modals.importModal.modal("show");
     });
 
-    com.focusPage('a[name="import"]', '#pagenation').on("click", function () {
-
-        com.focusPage('#importModal').modal("show");
+    com.focusPage('a[name="batchImport"]', '#pagenation').click(function () {
+       salary.modals.workersalaryModal.modal("show");
     });
 
-    com.focusPage('a[name="batchImport"]', '#pagenation').on("click", function () {
-        com.focusPage('#batchImportModal').modal("show");
-
-    });
-
-    com.focusPage('a[name="export"]', '#pagenation').on("click", function () {
-
+    com.focusPage('a[name="export"]', '#pagenation').click(function () {
 
         if (com.focusPage('span[name="totalRecords"]').text() == 0) {
             com.showAlert(com.warning, "请通过条件进行查询");
@@ -254,18 +253,17 @@ jQuery(function ($) {
 
                 v.decoration.house = (v.decoration.house == null ? "" : v.decoration.house.village.name + "" + v.decoration.house.houseNumber);
 
-                v.status = v.status == 0 ? "初始" : (v.status == 1 ? "已通过" : v.status == 2 ? "已驳回" : "已撤销");
-                v.schedule = v.schedule == 0 ? "" : v.schedule == 3 ? "铲大白" : v.schedule == 4 ? "放线" : v.schedule == 5 ? "水工" : v.schedule == 6 ? "力工" : v.schedule == 7 ? "电工" : v.schedule == 8 ? "瓦工" : v.schedule == 9 ? "地面找平" : v.schedule == 10 ? "木工" : v.schedule == 11 ? "油工" : v.schedule == 12 ? "水电验收" : "保洁";
-                v.type = v.type == 0 ? "加" : "减";
-                v.onetype = v.onetype == 0 ? "工费" : v.onetype == 1 ? "扣/罚" : v.onetype == 2 ? "转款" : "其他";
-                v.twotype = salary.salaryType[v.twotype];
+                v.status = salary.salaryStatus[v.status];
+                v.schedule = v.schedule == 0 ? "" :salary.constructionSchedule[v.schedule];
+                v.type = salary.type[v.type];
+                v.onetype = salary.oneType[v.onetype];
 
             });
         });
 
     });
 
-    com.focusPage('a[name="adopt"]', '#pagenation').on("click", function (v) {
+    com.focusPage('a[name="adopt"]', '#pagenation').click(function (v) {
 
         var options = {};
         var groupCheckbox = com.focusPage('input[name="check"]:checked');
@@ -277,6 +275,7 @@ jQuery(function ($) {
             cwsIdArr.push($v.attr('cwsid'));
             options["workerSalarys[" + i + "].wsId"] = $v.attr('value');
         });
+
         $.each(cwsIdArr, function (i, v) {
             if ($.inArray(v, cwsId) == -1) {
                 cwsId.push(v);
@@ -292,6 +291,7 @@ jQuery(function ($) {
             com.showAlert(com.error, "转款不允许批量通过");
             return false;
         }
+
         com.post(api.salary.adoptWorkerSalary, options, function () {
             searcher.doSearch();
         }, function () {
@@ -299,38 +299,6 @@ jQuery(function ($) {
         });
 
     });
-
-    com.post(api.ds.salary, {}, function (data) {
-        var SalaryType = data.SalaryTwoType;
-
-        if (SalaryType && SalaryType.length) {
-            $.each(SalaryType, function (i, v) {
-                $('<option></option>').attr("value", v.key).html(v.name).appendTo(com.focusPage("#workersalarySubtype"));
-            });
-        }
-    }, null, false);
-
-
-    function saveData(options) {
-
-        if (!com.validate("workersalaryModal")) {
-            var user = com.typeahead("workersalaryuser");
-            var money = com.focusPage("#workersalary").val();
-            var twotype = com.focusPage("#workersalarySubtype").val();
-            var comment = com.focusPage("#workersalarycomment").val();
-            var option = {
-                "workerSalary.user.userId": user,
-                "workerSalary.money": money,
-                "workerSalary.twotype": twotype,
-                "workerSalary.comment": comment
-            };
-            com.post(api.salary.addWorkerSalary, option, function (res) {
-                searcher.doSearch();
-                com.showAlert(com.info, "操作成功");
-            });
-            com.focusPage('#workersalaryModal').modal("hide");
-        }
-    }
 
     function deletebystatus(wsId) {
         var options = {};
@@ -353,17 +321,33 @@ jQuery(function ($) {
     }
 
     function refuse(wsId) {
-    	com.showConfirm("是否将已通过的薪资驳回", function (result) {
-            if (result) {
-                var options = {};
-                options["workerSalary.wsId"] = wsId;
-                com.post(api.salary.rejectWorkerSalary, options, function () {
-                    searcher.doSearch();
-                }, function (e) {
-                    com.showAlert(com.error, e.errorMsg);
-                });
-            }
+        com.showConfirm("是否将已通过的薪资驳回", function () {
+            var options = {};
+            options["workerSalary.wsId"] = wsId;
+            com.post(api.salary.rejectWorkerSalary, options, function () {
+                searcher.doSearch();
+            }, function (e) {
+                com.showAlert(com.error, e.errorMsg);
+            });
         })
+    }
+
+    function saveData(options) {
+
+        if(com.validate("workersalaryModal")) return  false;
+
+        var option = {
+            "workerSalary.user.userId": com.typeahead("workersalaryuser"),
+            "workerSalary.money":salary.items.workersalary.val(),
+            "workerSalary.onetype": salary.twoType[salary.items.workersalarySubtype.val()],
+            "workerSalary.twotype":salary.items.workersalarySubtype.val() ,
+            "workerSalary.comment": salary.items.workersalarycomment.val()
+        };
+        com.post(api.salary.addWorkerSalary, option, function (res) {
+            searcher.doSearch();
+            com.showAlert(com.info, "操作成功");
+        });
+       salary.modals.workersalaryModal.modal("hide");
     }
 
     com.focusPage('#import').Huploadify({
@@ -387,30 +371,6 @@ jQuery(function ($) {
 
             var dateObj = eval("(" + data + ")");
             searcher.doSearch();
-
-        }
-    });
-
-    com.focusPage('#batchImport').Huploadify({
-
-        'debug': false, // 开启调试
-        'auto': true, // 是否自动上传
-        'successTimeout': config.uploadTimeout, // 超时时间
-        'formData': {
-            'uploadType': 4
-        },
-        'buttonClass': 'btn btn-success col-sm-12',
-        'overrideEvents': ['onDialogClose'], // 不执行默认的onSelect事件
-        'fileObjName': 'strutsUploads', // 服务器端脚本使用的文件对象的名称 $_FILES个['upload']
-        'uploader': config.server + 'batchImportWorkerSalary.do', // 上传处理程序
-        'height': '30', // 浏览按钮的高度
-        'fileTypeDesc': '支持的格式：',  // 在浏览窗口底部的文件类型下拉菜单中显示的文本
-        'fileTypeExts': '*.xls;*.xlsx', // 允许上传的文件后缀
-        'fileSizeLimit': '2MB', // 上传文件的大小限制
-        'queueSizeLimit': 1, // 上传数量
-        'onUploadSuccess': function (file, data, response) { //上传到服务器，服务器返回相应信息到data里
-
-            var dateObj = eval("(" + data + ")");
 
         }
     });

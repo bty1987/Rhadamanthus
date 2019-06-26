@@ -2,20 +2,21 @@ jQuery(function ($) {
     
     var drawline = {
 
-        constructionInfoModal : com.focusPage("#constructionInfoModal"),
-        saveInfoBtn : com.focusPage("#saveInfoBtn").on("click",saveInfoData),
+        btns: {
+            saveInfoBtn : com.focusPage("#saveInfoBtn"),
+            saveBtn: com.focusPage("#saveBtn"),
+            deployedBtn: com.focusPage("#deployedBtn")
+        },
 
-        saveBtn: com.focusPage("#saveBtn"),
-        cancelBtn: com.focusPage("#cancelBtn"),
-        applyModal : com.focusPage("#applyModal"),
-        deployedBtn: com.focusPage("#deployedBtn"),
-        setupModal : com.focusPage("#setupModal"),
-        editModal : com.focusPage("#editModal"),
+        modals : {
+            setupModal : com.focusPage("#setupModal"),
+            editModal : com.focusPage("#editModal"),
+            applyModal : com.focusPage("#applyModal"),
+            constructionInfoModal : com.focusPage("#constructionInfoModal")
+        },
 
         items: {
-            
             dlid: com.focusPage("#dlid"),
-            
             actualDate: com.focusPage("#actualDate"),
             startTime: com.focusPage("#startTime"),
             endTime: com.focusPage("#endTime"),
@@ -27,14 +28,23 @@ jQuery(function ($) {
             ishovel  : com.focusPage("#ishovel"),
             iskey  : com.focusPage("#iskey"),
             isCeremony  : com.focusPage("#isCeremony"),
-            comment   : com.focusPage("#comment"),
-
+            comment   : com.focusPage("#comment")
         },
         
         drawLineGroup: [],
-
         status: {}
     };
+
+    drawline.btns.saveBtn.bindClick(saveData);
+    drawline.btns.saveInfoBtn.bindClick(saveInfoData);
+    drawline.btns.deployedBtn.bindClick(deploved);
+
+    com.initTypeahead('supervisor', api.personel.queryUserByPinyin, "pinyinName", {"departmentType.name": "工程部", "user.status": 0}, "userBases", "userId", "currentName", null);
+
+    com.datetime(drawline.items.actualDate);
+
+    com.datetime(drawline.items.startTime, "time");
+    com.datetime(drawline.items.endTime, "time");
 
     com.post(api.ds.construction, {}, function (res) {
         drawline.items.ishovel.bindData(res.isHovel, "key", "value", false);
@@ -50,16 +60,12 @@ jQuery(function ($) {
     }, null, false);
 
     com.post(api.data.queryDrawlineGroup, {}, function (res) {
-        com.focusPage("#drawLineGroup").bindData(res.drawLineGroups, 'gid', 'name');
+        drawline.items.drawLineGroup.bindData(res.drawLineGroups, 'gid', 'name');
 
         $.each(res.drawLineGroups, function (i, v) {
             drawline.drawLineGroup.push(v.name);
         });
     }, null, false);
-
-    com.focusPage('.timepicker').timepicker(com.timepickerdefault);
-
-    com.initTypeahead('supervisor', api.personel.queryUserByPinyin, "pinyinName", {"departmentType.name": "工程部", "user.status": 0}, "userBases", "userId", "currentName", null);
 
     var displayFunc = (function () {
 
@@ -115,7 +121,7 @@ jQuery(function ($) {
                 ["面积:", v.decoration.house.buildArea, "blue"],
                 ["合同额:", v.decoration.orderTotalPrice, "blue"],
                 ["申请人:", v.appler.currentName, "grey"],
-                ["监理:", v.decoration.supervisor.currentName, "grey"],
+                ["监理:", v.decoration.supervisor == null ? "" : v.decoration.supervisor.currentName, "grey"],
                 ["放线时间:", actualTime, "green"],
                 ["开始时间:", startTime, "green"],
                 ["结束时间:", endTime, "green"],
@@ -137,10 +143,9 @@ jQuery(function ($) {
 
             $liLine.append($h3).append($ulProperty);
 
+
             $btnInfo.click(function(){
-
                 viewConstructionInfo(v.decoration.orderId);
-
             });
 
             $btnEdit.click(function () {
@@ -178,18 +183,18 @@ jQuery(function ($) {
     }, "pagenation", "drawLineSetupPostData", null, true, "drawLines");
     com.focusPage("#condList").append('<button id="showDrawLineApplyInfos" style="marg" class="btn btn-xs btn-yellow btn-search">申请信息</button>');
     com.focusPage('#showDrawLineApplyInfos').on('click', function () {
-        drawline.applyModal.modal("show");
+        drawline.modals.applyModal.modal("show");
     });
 
     function showEdit(v) {
 
         drawline.items.dlid.val(v.dlid);
-        drawline.actualDate.datepicker('update', v.startTime.substr(0,10));
-        drawline.items.startTime.val(v.startTime.substr(11, 5));
-        drawline.items.endTime.val(v.endTime.substr(11, 5));
+        drawline.items.actualDate.val( v.startTime.substr(0,10));
+        drawline.items.startTime.val( v.startTime.substr(11,5));
+        drawline.items.endTime.val( v.endTime.substr(11,5));
         drawline.items.drawLineGroup.val(v.group.gid);
-        drawline.applyModal.modal("show");
-
+        
+        drawline.modals.editModal.modal("show");
     }
 
     function showSetup(v) {
@@ -197,7 +202,7 @@ jQuery(function ($) {
         if (com.validate("setupModal")) {
             return false;
         }
-        
+
         var options = {
             "construction.orderId": v.decoration.orderId
         };
@@ -215,7 +220,7 @@ jQuery(function ($) {
         
         drawline.orderId = v.decoration.orderId;
         
-        drawline.items.setupModal.modal("show");
+        drawline.modals.setupModal.modal("show");
     }
 
     function reset(dlid) {
@@ -228,36 +233,32 @@ jQuery(function ($) {
     }
 
     function saveData() {
-        
+
         if (com.validate("editModal")) {
             return false;
         }
-        
-        var _date = drawline.items.actualDate.val();
-        var _start = drawline.items.startTime.val();
-        var _end = drawline.items.endTime.val();
 
-        var start = Date.parse(_date.replace("-", "/") + " " + _start);
-        var end = Date.parse(_date.replace("-", "/") + " " + _end);
+        var start = Date.parse(drawline.items.actualDate.val().replace("-", "/") + " " + drawline.items.startTime.val());
+        var end = Date.parse(drawline.items.actualDate.val().replace("-", "/") + " " + drawline.items.endTime.val());
 
         if (start == NaN || end == NaN || start >= end) {
-            com.showAlert(com.warning, "起始时间和结束时间非法");
-            return false;
+            com.showAlert(com.info,"起始时间和结束时间非法");
+            return;
         }
 
         var options = {
             "drawLine.dlid": drawline.items.dlid.val(),
-            "drawLine.startTime": _date + " " + _start,
-            "drawLine.endTime": _date + " " + _end,
+            "drawLine.startTime":drawline.items.actualDate.val()+" "+drawline.items.startTime.val(),
+            "drawLine.endTime": drawline.items.actualDate.val()+" "+drawline.items.endTime.val(),
             "drawLine.group.gid": drawline.items.drawLineGroup.val()
+
         };
-        
         com.post(api.construction.resetDrawLine, options, function (res) {
             com.showAlert(com.info, "操作成功");
             searcher.doSearch();
-            
-            drawline.items.editModal.modal("hide");
         });
+
+        drawline.modals.editModal.modal("hide");
     }
 
     function deploved() {
@@ -275,7 +276,7 @@ jQuery(function ($) {
             com.showAlert(com.info, "操作成功");
             searcher.doSearch();
             
-            drawline.items.setupModal.modal("hide");
+            drawline.modals.setupModal.modal("hide");
         });
     }
 
@@ -289,8 +290,7 @@ jQuery(function ($) {
         });
     }
 
-
-    drawline.applyModal.on('shown.bs.modal', function (e) {
+    drawline.modals.applyModal.on('shown.bs.modal', function (e) {
         initPlan();
     });
 
@@ -300,6 +300,7 @@ jQuery(function ($) {
         com.focusPage('#calendar').fullCalendar('today');
 
         com.focusPage('#calendar').fullCalendar($.extend(com.calendardefault, {
+            select: function () {},
             events: function (start, end, callback) {
 
                 var startTime = com.dateFormat(new Date(start));
@@ -335,6 +336,7 @@ jQuery(function ($) {
         }));
     }
 
+
     function viewConstructionInfo(orderId) {
 
         com.post(api.construction.queryConstructionInfoByOrderId, {"constructionInfo.orderId": orderId}, function (res) {
@@ -342,20 +344,19 @@ jQuery(function ($) {
             data = res.constructionInfo;
 
             drawline.items.orderId = orderId;
+            
             drawline.items.ishovel.val(data.ishovel);
             drawline.items.iskey.val(data.iskey);
             drawline.items.isCeremony.val(data.isCeremony);
             drawline.items.comment.val(data.comment);
-        }, null, false);
+        });
 
-        drawline.constructionInfoModal.modal("show");
-
+        drawline.modals.constructionInfoModal.modal("show");
     }
 
     function saveInfoData() {
 
         var options = {
-            "constructionInfo.cid" : drawline.items.cid,
             "constructionInfo.orderId" : drawline.items.orderId,
             "constructionInfo.ishovel": drawline.items.ishovel.val(),
             "constructionInfo.iskey": drawline.items.iskey.val(),
@@ -367,8 +368,7 @@ jQuery(function ($) {
 
             com.showAlert(com.info,"操作成功");
 
-            drawline.constructionInfoModal.modal("hide");
-
+            drawline.modals.constructionInfoModal.modal("hide");
         });
     }
 

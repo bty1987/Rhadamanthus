@@ -6,7 +6,8 @@ $(function(){
 			atid: com.focusPage('#atid'),
 			name: com.focusPage('#name'),
 			workType: com.focusPage('#workType'),
-			comment: com.focusPage('#comment')
+			comment: com.focusPage('#comment'),
+            submitBtn: com.focusPage("#submitBtn"),
 		}
 	};
 
@@ -88,10 +89,8 @@ $(function(){
                 accessoriesType.items.name.val(v.name);
                 accessoriesType.items.workType.val(v.workType.id);
                 accessoriesType.items.comment.val(v.comment);
-                
-                openlayer(function(){
-                    saveData();
-                });
+
+                com.popup4model('#layerAdd','编辑')
             });
 
             $btnStart.click(function(){
@@ -141,13 +140,15 @@ $(function(){
     },'resultList');
 
     com.focusPage("#addAccessoriesType").click(function(){
-        openlayer(function(index, layero){
-            saveData();
-        });
+        com.popup4model('#layerAdd','添加')
+    });
+
+    accessoriesType.items.submitBtn.click(function () {
+        saveData();
     });
 
     com.focusPage("#import").click(function(){
-        openLayerImport();
+        com.popup4model('#importLayer','导入辅类')
     });
     
     com.focusPage('#importSelectAccessoriesType').Huploadify({
@@ -181,52 +182,10 @@ $(function(){
         accessoriesType.items.name.val("");
         accessoriesType.items.workType.val(0);
         accessoriesType.items.comment.val("");
-        
-        layer.closeAll()
+
+        com.closePopup();
     }
 
-    function openlayer(callback){
-        layer.closeAll();
-        layer.open({
-            type: 1,
-            title:"添加",
-            content: com.focusPage('#layerAdd'),
-            area: ( $(window).width()*0.6 < 620 ?  $(window).height()*0.6 : 620 )+"px",
-            maxmin: false,
-            zIndex:9000,
-            btn: ['确定', '取消'],
-            yes: function(index, layero){
-                callback(index,layero);
-            },
-            btn2: function(index, layero){
-            	clearForm();
-            },
-            cancel: function(){
-            	clearForm();
-            }
-        });
-    }
-
-    function openLayerImport(){
-    	
-    	console.log("openLayerImport");
-
-        layer.closeAll();
-        
-        layer.open({
-            type: 1,
-            title:"导入辅类",
-            content: com.focusPage('#importLayer'),
-            area: ( $(window).width()*0.6 < 620 ?  $(window).height()*0.6 : 620 )+"px",
-            maxmin: false,
-            zIndex:9000,
-            btn: ['确定'],
-            yes: function(){
-            	clearForm();
-            }
-        });
-    }
-    
     function updateStatus(atid, status){
 
     	var options = {
@@ -243,7 +202,7 @@ $(function(){
 
     function saveData(){
     	
-    	if(com.validate('form1')){
+    	if(com.validate('form1',"right")){
             return false;
     	}
         

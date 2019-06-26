@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.fanglin.construction.dao.ConstructionInfoDao;
+
 import com.fanglin.construction.po.ConstructionInfoPO;
 import com.fanglin.construction.service.ConstructionInfoService;
 import com.fanglin.construction.vo.ConstructionInfoVO;
@@ -55,15 +56,15 @@ public class ConstructionInfoServiceImpl implements ConstructionInfoService {
 	@Transactional(rollbackFor = Exception.class)
 	public void updateConstructionInfoByOrderId(ConstructionInfoVO constructionInfoVO) {
 
-		ConstructionInfoPO constructionInfoPO = constructionInfoDao.queryConstructionInfoByOrderId(constructionInfoVO.getOrderId());
+		ConstructionInfoPO constructIoninfoPO = constructionInfoDao.queryConstructionInfoByOrderId(constructionInfoVO.getOrderId());
 
-		if (constructionInfoPO == null) {
-			constructionInfoPO = new ConstructionInfoPO();
+		if (constructIoninfoPO == null) {
+			constructIoninfoPO = new ConstructionInfoPO();
 		}
 
-		BeanUtil.copyPropertie(constructionInfoVO, constructionInfoPO);
+		BeanUtil.copyPropertie(constructionInfoVO, constructIoninfoPO);
 
-		constructionInfoDao.saveOrUpdate(constructionInfoPO);
+		constructionInfoDao.saveOrUpdate(constructIoninfoPO);
 	}
 
 }

@@ -105,7 +105,7 @@ $(function(){
                             var id =  com.focusPage("#layerEdit").attr("attr-oid");
                             if (!com.validate("layerEdit",null)) {
                                 saveData(id,function () {
-                                    layer.closeAll();
+                                    com.closePopup();
                                 });
                             }
                         });
@@ -205,7 +205,7 @@ $(function(){
     }
 
     function openlayer(callback) {
-        layer.closeAll();
+        com.closePopup();
         layer.open({
             type: 1,
             title: "添加",
@@ -229,7 +229,7 @@ $(function(){
 
     }
     function openlayerEdit(callback) {
-        layer.closeAll();
+        com.closePopup();
         layer.open({
             type: 1,
             skin: 'layui-layer-lan',
@@ -283,7 +283,7 @@ $(function(){
     }
 
     function openlayerImport(){
-        layer.closeAll();
+        com.closePopup();
         layer.open({
             type: 1,
             skin: 'layui-layer-lan',

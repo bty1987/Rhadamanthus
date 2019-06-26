@@ -13,11 +13,9 @@ package com.fanglin.construction.dao.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
-
 import com.fanglin.construction.dao.ConstructionDao;
 import com.fanglin.construction.po.ConstructionPO;
 import com.fanglin.core.dao.impl.DaoImpl;
@@ -27,6 +25,7 @@ import com.fanglin.utils.Paging;
 
 @Repository("constructionDao")
 public class ConstructionDaoImpl extends DaoImpl<ConstructionPO> implements ConstructionDao {
+
 	
 	public ConstructionDaoImpl(){
 		super(ConstructionPO.class);
@@ -117,7 +116,7 @@ public class ConstructionDaoImpl extends DaoImpl<ConstructionPO> implements Cons
 					
 				String field = filter.getField();
 				String data = filter.getData();
-				String op = filter.getOp();
+				String op=filter.getOp();
 				
 				if(field.startsWith("design")){
 					query.alias("decoration.designer", "designer");
@@ -138,7 +137,7 @@ public class ConstructionDaoImpl extends DaoImpl<ConstructionPO> implements Cons
 				}else if("salesman".equals(field)){
 					query.add(query.getCriterion("salesman.userId", data, op));
 				}else if("supervisor".equals(field)){
-					query.alias("supervisor", "supervisor");
+					query.alias("decoration.supervisor", "supervisor");
 					query.add(query.getCriterion("supervisor.userId", data, op));
 				}else if("village".equals(field)){ 
 					query.add(query.getCriterion("village.no", data, op));

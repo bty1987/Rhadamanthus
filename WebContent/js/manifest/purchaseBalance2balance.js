@@ -1,34 +1,28 @@
 $(function () {
 
-    var pid = params["purchase.pid"];
-
-    var backBtn = com.focusPage('#backBtn');
-    var importBtn = com.focusPage('#importBtn');
-    var addBtn = com.focusPage('#addBtn');
-
-    var refund = com.focusPage('#refund');
-    var approver = com.focusPage('#approver');
-    var refundDes = com.focusPage('#refundDes');
-
-    var purchaseBalance = {
-    	pid: params["purchase.pid"],
-		validator: {
-            float3: {
-                type: "v_float_3",
-                regex: /^(\d+|\d+\.[0-9]{1,3})$/,
-                errorMsg: "内容格式错误"
-            }
+    var settlement = {
+        pid: params["purchase.pid"],
+        refund: com.focusPage('#refund'),
+        modals: {
+            miniPopUp: com.focusPage('#miniPopUp'),
         },
+        items: {
+            balance: com.focusPage('#balance'),
+            comment: com.focusPage('#comment'),
+        },
+        btns: {
+            backBtn: com.focusPage('#backBtn'),
+            importBtn: com.focusPage('#importBtn'),
+            addBtn: com.focusPage('#addBtn'),
+        }
     };
 
-    $.extend(com.validator, purchaseBalance.validator);
-
-    refund.focus(function () {
-        refund.popover('destroy');
+    settlement.refund.focus(function () {
+        settlement.refund.popover('destroy');
     });
 
-    backBtn.click(function () {
-        com.switchPage(api.index.purchaseBalanceIndex.url);
+    settlement.btns.backBtn.click(function () {
+        com.closePopup();
     });
 
     var initList = function (listData) {
@@ -67,67 +61,40 @@ $(function () {
                 $liLine.appendTo($ul);
                 $liLine.append($h3).append($ulProperty);
 
-                if(params.balanceStatus != 2){
+                if (params.balanceStatus != 2) {
                     if (v.status == 0) {
                         $btnDiv.append($btnEdit).append($btnUpdate);
                     }
-                }else if(params.balanceStatus == 2){
-                    addBtn.addClass("hide");
+                } else if (params.balanceStatus == 2) {
+                    settlement.btns.addBtn.addClass("hide");
                 }
 
                 $btnDiv.appendTo($h3);
 
                 $btnEdit.click(function () {
-
+                    com.popup4mini('#miniPopUp','#layerEdit', "编辑");
                     com.focusPage('#balance').val(v.balance);
                     com.focusPage('#comment').val(v.comment);
-
-                    openMoneylayer(function (index, layero) {
-
-                        var balance = com.focusPage('#balance').val();
-                        var comment = com.focusPage('#comment').val();
-
-                        var editArr = {
-                            "purchaseBalance.pbid": v.pbid,
-                            "purchaseBalance.balance": balance,
-                            "purchaseBalance.comment": comment
-                        };
-                        if(com.validate('layerEdit')){
-                            return;
-                        }
-
-                        if(v.status == 1){
-                            com.showAlert(com.warning,'采购结算状态不可操作');
-                        }else if(v.status == 0) {
-                            com.post(api.inventory.updatePurchaseBalance, editArr, function () {
-                                com.focusPage('#list ul.item-list').remove();
-                                queryPurchaseBalanceByPid(pid);
-                                layer.closeAll();
-
-                            }, function (e) {
-                                com.showAlert(com.error, e.errorMsg);
-                            }, false);
-                        }
-
-                    });
-
+                    settlement.modals.miniPopUp.attr("data-pbid", v.pbid).attr("data-sstu", "0");
                 });
 
                 $btnUpdate.click(function (e) {
                     e.stopPropagation();
 
-                    com.showConfirm('确定要修改为已付款状态?', function(index){
-                        if(v.status == 1){
-                            com.showAlert(com.warning,'采购结算状态不可操作', )
-                        }else if(v.status == 0){
-                            com.post(api.inventory.updatePurchaseBalanceForStatus, {"purchaseBalance.pbid": v.pbid,"purchaseBalance.status" : v.status}, function () {
+                    com.showConfirm('确定要修改为已付款状态?', function (index) {
+                        if (v.status == 1) {
+                            com.showAlert(com.warning, '采购结算状态不可操作')
+                        } else if (v.status == 0) {
+                            com.post(api.inventory.updatePurchaseBalanceForStatus, {
+                                "purchaseBalance.pbid": v.pbid,
+                                "purchaseBalance.status": v.status
+                            }, function () {
                                 com.focusPage('#list ul.item-list').remove();
-                                queryPurchaseBalanceByPid(pid);
+                                queryPurchaseBalanceByPid(settlement.pid);
                             }, function (e) {
                                 com.showAlert(com.error, e.errorMsg);
                             });
                         }
-                        layer.close(index);
                     });
                 });
             });
@@ -136,7 +103,7 @@ $(function () {
         }
     };
 
-    queryPurchaseBalanceByPid(pid);
+    queryPurchaseBalanceByPid(settlement.pid);
 
     function queryPurchaseBalanceByPid(pid) {
         com.post(api.inventory.queryPurchaseBalanceByPid, {"purchaseBalance.pid": pid}, function (data) {
@@ -144,94 +111,54 @@ $(function () {
         }, null, false);
     }
 
-    function openMoneylayer(callback) {
-        layer.closeAll();
-        layer.open({
-            type: 1,
-            title: "编辑",
-            content: com.focusPage('#layerEdit'),
-            area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
-            maxmin: false,
-            zIndex: 9000,
-            btn: ['确定', '取消'],
-            yes: function (index, layero) {
-                callback(index, layero);
-            },
-            btn2: function (index, layero) {
-            	layer.closeAll();
-            },
-            cancel: function () {
-            	layer.closeAll();
-            }
-        });
-    }
-
-    function openAddlayer(callback){
-        layer.closeAll();
-        layer.open({
-            type: 1,
-            //skin: 'layui-layer-lan',
-            title: "添加",
-            content: com.focusPage('#layerEdit'),
-            area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
-            maxmin: false,
-            zIndex: 9000,
-            btn: ['确定', '取消'],
-            yes: function (index, layero) {
-                callback(index, layero);
-            },
-            btn2: function (index, layero) {
-            	layer.closeAll();
-            },
-            cancel: function () {
-            	layer.closeAll();
-            }
-        });
-    }
-
-
     //添加点击事件
-    addBtn.click(function(){
-
-        //com.focusPage('#balance').on('change', function () {
-        //    checkRowValue();
-        //});
-
+    settlement.btns.addBtn.click(function () {
+        com.popup4mini('#miniPopUp','#layerEdit', "添加");
         com.focusPage('#balance').val("");
         com.focusPage('#comment').val("");
-
-        openAddlayer(function (index, layero) {
-
-            var balance = com.focusPage('#balance').val();
-            var comment = com.focusPage('#comment').val();
-
-            var editArr = {
-                "purchaseBalance.pid": pid,
-                "purchaseBalance.balance": balance,
-                "purchaseBalance.comment": comment
-            };
-
-            if(com.validate('layerEdit')){
-                return false;
-            }
-
-            com.post(api.inventory.addPurchaseBalance, editArr, function () {
-
-                com.focusPage('#list ul.item-list').remove();
-                queryPurchaseBalanceByPid(pid);
-                layer.closeAll();
-
-            }, function (e) {
-                com.showAlert(com.error, e.errorMsg);
-            }, false);
-        });
+        settlement.modals.miniPopUp.attr('data-sstu', "1");
     });
 
+    com.focusPage('#submitBtn').click(function () {
+        savaData();
+        com.closePopup(com.focusPage("#submitBtn"));
+    });
+
+    function savaData() {
+        if (com.validate('miniPopUp','right')) {
+            return false
+        }
+        var balance = com.focusPage('#balance').val();
+        var comment = com.focusPage('#comment').val();
+        var sstu = settlement.modals.miniPopUp.attr('data-sstu');
+        var vpid = settlement.modals.miniPopUp.attr('data-pbid');
+        var editArr = {
+            "purchaseBalance.balance": balance,
+            "purchaseBalance.comment": comment
+        };
+        var url;
+        if (sstu == 0) {
+            url = api.inventory.updatePurchaseBalance;
+            editArr["purchaseBalance.pbid"] = vpid;
+        } else if (sstu == 1) {
+            url = api.inventory.addPurchaseBalance;
+            editArr["purchaseBalance.pid"] = settlement.pid;
+        }
+        com.post(url, editArr, function () {
+            com.showAlert(com.info,"操作成功");
+            com.focusPage('#list ul.item-list').remove();
+            queryPurchaseBalanceByPid(settlement.pid);
+            settlement.modals.miniPopUp.removeAttr('data-sstu');
+            settlement.modals.miniPopUp.removeAttr('data-pbid');
+        }, function (e) {
+            com.showAlert(com.error, e.errorMsg);
+        }, false);
+    }
 
     //导出点击事件
-    importBtn.click(function () {
+    settlement.btns.importBtn.click(function () {
 
-        com.post(api.inventory.queryPurchaseBalanceByPid, {"purchaseBalance.pid": pid}, function (data) {
+        com.post(api.inventory.queryPurchaseBalanceByPid, {"purchaseBalance.pid": settlement.pid}, function (data) {
 
             $.exceler({
                 column: [
@@ -242,14 +169,11 @@ $(function () {
                     ["说明:", "comment"]
                 ],
                 list: data.purchaseBalances
-            },function(v){
+            }, function (v) {
                 v.status = v.status == 0 ? "初始" : "已付款";
             });
-        },function (e) {
+        }, function (e) {
             com.showAlert(com.error, e.errorMsg);
         }, false);
-
-
     });
-
 });

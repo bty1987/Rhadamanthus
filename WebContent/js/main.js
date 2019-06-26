@@ -210,12 +210,7 @@ function getNoticeDOM(notice){
 	var priorityStyle = "label-warning";
 	
 	$('<small class="detail" style="cursor:pointer">  [详细]</small>').on(ace.click_event, function(){
-		$.gritter.add({
-			title: notice.theme,
-			text: notice.contents,
-			class_name: 'gritter-info gritter-center'
-		});
-		
+	    com.showInfo(notice.theme, notice.contents);
 		return false;
 	}).appendTo($theme);
 	

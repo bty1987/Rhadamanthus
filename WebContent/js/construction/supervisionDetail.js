@@ -1,12 +1,19 @@
 jQuery(function ($) {
 
     var constructionScheduleWorkers;
-    var constructionNodes = {};
+
+    var constructionNodes = {
+
+        vsubtype : {}
+    };
+
     var supervisionDetail = {
 
         controlCondition: false,
 
         constructionSchedules: {},
+
+        status : {},
 
         wizardSept: {
             "1": false,
@@ -28,6 +35,18 @@ jQuery(function ($) {
         }
     };
 
+    com.post(api.ds.salary, {}, function (res) {
+        $.each(res.status, function (i, v) {
+            supervisionDetail.status[v["key"]] = v["value"];
+        });
+    }, null, false);
+
+    com.post(api.ds.salary, {}, function (res) {
+        $.each(res.SalaryTwoType, function (i, v) {
+            constructionNodes.vsubtype[v.key] = v.name;
+        });
+    }, null, false);
+
     var colorboxArgs = {
         reposition: true,
         scalePhotos: true,
@@ -43,7 +62,6 @@ jQuery(function ($) {
     $.extend(com.validator, supervisionDetail.validator);
     var orderId = params.orderId;
 
-
     com.post(api.data.queryConstructionNode, {}, function (res) {
 
         var newNodes = res.constructionNodes.sort(function(a, b){
@@ -54,7 +72,6 @@ jQuery(function ($) {
             constructionNodes[v.sort] = v.name;
         });
     }, null, false);
-
 
     com.post(api.construction.queryConstructionScheduleByOrderId, {"constructionSchedule.orderId": params.orderId}, function (res) {
 
@@ -89,10 +106,6 @@ jQuery(function ($) {
     com.focusPage('#modal-wizard .modal-header').ace_wizard();
     com.focusPage('#modal-wizard .wizard-actions .btn[data-dismiss=modal]').removeAttr('disabled');
     com.focusPage('[data-rel=popover]').popover({html: true});
-
-    com.focusPage('#btnBack').on(ace.click_event, function () {
-        com.switchPage(api.index.supervisionIndex.url);
-    });
 
     function initWizardSept(operate, schedule) {
 
@@ -282,29 +295,13 @@ jQuery(function ($) {
         }
         com.post(api.salary.queryWorkerSalary, options, function (res) {
             $.each(res.workerSalarys, function (i, v) {
-                var vsubtype, vstatus;
-
-                com.post(api.ds.salary, {}, function (res) {
-                    vsubtype = res.SalaryTwoType[v.twotype - 1].name;
-                }, null, false);
-
-                switch (v.status) {
-                    case 0:
-                        vstatus = "初始";
-                        break;
-                    case 1:
-                        vstatus = "通过";
-                        break;
-                    default:
-                        vstatus = "拒绝"
-                }
 
                 var workerSalary = $('<div></div>').prop("id", "salary" + i);
                 workerSalary.append(addspan('10', '姓名  : ', v.user.userName))
                     .append(addspan('40', '创建时间  : ', v.createTime))
                     .append(addspan('40', '薪资  : ', v.money))
-                    .append(addspan('40', '类型  : ', vsubtype))
-                    .append(addspan('40', '状态  : ', vstatus))
+                    .append(addspan('40', '类型  : ', constructionNodes.vsubtype[v.twotype]))
+                    .append(addspan('40', '状态  : ', supervisionDetail.status[v.status]))
                     .append($('<button>删除</button>').addClass("btn btn-xs btn-danger pull-right").css("margin-left", "35px").attr("id", "deleteBtn" + i)
                         .click(function () {
                             var data = {
@@ -331,15 +328,9 @@ jQuery(function ($) {
             var salaryType = $('<label><b>类型</b></label>').addClass('col-sm-3 control-label no-padding-left').attr("for", "form-field-1").attr("for", "salaryType").appendTo(salaryDivTh);
             var $item = $('<span></span>').addClass('inline').appendTo(salaryDivTh);
             var salaryTypeS = $('<select></select>').attr("id", "salaryType").css("width", "320px").css("height", "30px").appendTo($item);
-
-            com.post(api.ds.salary, {}, function (data) {
-                var constructerSalaryType = data.SalaryTwoType;
-                if (constructerSalaryType && constructerSalaryType.length) {
-                    $.each(constructerSalaryType, function (i, v) {
-                        $('<option></option>').attr("value", v.key).html(v.name).appendTo(salaryTypeS);
-                    })
-                }
-            }, null, false);
+            $.each(constructionNodes.vsubtype, function (i, v) {
+                $('<option></option>').attr("value", i).html(v).appendTo(salaryTypeS);
+            });
 
             var salaryDiv4 = $('<div></div>').addClass("form-group").css("height", "80px").css("margin", "0px 0px 15px 0px");
             var salaryDivF = $('<div></div>').addClass("col-sm-9").appendTo(salaryDiv4);
@@ -404,7 +395,6 @@ jQuery(function ($) {
     //画节点信息轴
     function constructionNode(stepul, schedule) {
         var stepLi = $("<li></li>").attr("data-targe", "#step" + schedule).addClass("complete").appendTo(stepul);
-        console.log(schedule)
         var stepSpan = $("<span></span>").addClass("step").html(schedule).appendTo(stepLi);
         var stepSpan = $("<span></span>").addClass("title").html(constructionNodes[schedule]).appendTo(stepLi);
     }

@@ -1,0 +1,144 @@
+<div id="decorationOrderPageContent">
+<hr>
+    <div class="row">
+        <div class="col-xs-6 col-md-6 widget-container-span ui-sortable">
+            <div class="widget-box transparent">
+                <div class="widget-header center" style="border: 0 solid">
+                    <h3 class="center">
+                        <span>审核信息</span>
+                    </h3>
+                </div>
+                <div class="widget-body" style="border: 0 solid">
+                    <div class="hr"></div>
+                    <div class="row" style="margin-left: 0px;margin-right: 0px;" id="select1">
+                        <button class="btn  pull-left btn-sm" id="addR">添加</button>
+                    </div>
+                    <div class="widget-body" id="auditR"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xs-6 col-md-6 widget-container-span ui-sortable">
+            <div class="widget-box transparent">
+                <div class="widget-header center" style="border: 0 solid">
+                    <h3 class="center">
+                        <span>审核记录</span>
+                    </h3>
+                </div>
+                <div class="widget-body" style="border: 0 solid">
+                    <div class="hr"></div>
+                    <div class="row" style="margin-left: 0px;margin-right: 0px;" id="select2">
+                        <button class="btn  pull-right btn-sm" style="visibility:hidden;" id="addS">添加</button>
+                    </div>
+                    <div class="widget-body-inner" id="auditS"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-right">
+        <div class="hr"></div>
+        <button class="btn btn-info" type="button" id="btnBack">
+            <i class="icon-mail-forward bigger-110"></i>
+            返回
+        </button>
+    </div>
+
+    <div class="modal fade" id="auditRecordModel" tabindex="-1" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content col-md-12">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title" id="auditRecordModelDialog">审核扣款</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="comment">扣款项描述</label>
+                            <div class="col-md-8">
+                                <textarea class="col-md-6 v_required" id="comment"></textarea>
+                            </div>
+                        </div>
+                        <div class="space-4"></div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="untiPrice">单价</label>
+                            <div class="col-md-8">
+                                <input type='text' class="col-md-6 v_required v_float_3" id="untiPrice" maxlength='15' />
+                            </div>
+                        </div>
+                        <div class="space-4"></div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="num">数量</label>
+                            <div class="col-md-8">
+                                <input type='text' class="col-md-6 v_required v_float_3" id="num" maxlength='15' />
+                            </div>
+                        </div>
+                        <div class="space-4"></div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="discount">折扣</label>
+                            <div class="col-md-8">
+                                <input type='text' class="col-md-6 v_required v_float_3" id="discount" maxlength='15' />
+                            </div>
+                        </div>
+                        <div class="space-4"></div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="saveBtn" class="btn btn-primary">保存</button>
+                    <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="auditScaleModel" tabindex="-1" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content col-md-12">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title" id="auditScaleModelDialog">人员扣款</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="userId">被扣款人</label>
+                            <div class="col-md-8">
+                                <input type="text" class="col-xs-10 col-sm-5 v_typeahead v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="userId" placeholder="请输入被扣款人">
+                                <span class='star'></span>
+                            </div>
+                        </div>
+                        <div class="space-4"></div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="deptId">部门</label>
+                            <div class="col-md-8">
+                                <input type='text' class="col-md-6" id="deptId" readonly="readonly" maxlength='15' />
+                            </div>
+                        </div>
+                        <div class="space-4"></div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="money">金额</label>
+                            <div class="col-md-8">
+                                <input type='text' class="col-md-6 v_required v_float_3" id="money" maxlength='15' />
+                            </div>
+                        </div>
+                        <div class="space-4"></div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="saveBtnS" class="btn btn-primary">保存</button>
+                    <button type="button" id="cancelBtnS" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    $.loadScript(['js/decoration/audit4record.js']);
+</script>

@@ -144,7 +144,7 @@
     });
 
     function openlayer(callback){
-        layer.closeAll();
+        com.closePopup();
         layer.open({
             type: 1,
             title:"报价信息",
@@ -165,7 +165,7 @@
         });
     }
     function openlayer2(callback){
-        layer.closeAll();
+        com.closePopup();
         layer.open({
             type: 1,
             title:"报价折让信息",

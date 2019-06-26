@@ -119,7 +119,7 @@ jQuery(function ($) {
 
         com.post(api.production.updateWorkflowPlan,options,function(res){
             $lines.remove()
-            layer.closeAll();
+            com.closePopup();
             workflowAdd();
             com.showAlert(com.info, "操作成功");
         })

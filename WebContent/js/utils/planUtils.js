@@ -80,21 +80,20 @@ var planUtils = {
         Adivs.append(Alabels).append(Adivn);
         Adivs.appendTo(plugins);
 
-        planUtils.bindDateRangePicker("input[id =id"+ida+"]", 1070);
-
+        com.datetime(Ainputs, "date", true);
     },
     PluginsB: function (ida) {
         var Bdivs = $('<div></div>').addClass('form-group').attr('id',"mothRange");
         var Blabels = $('<label>月份区间</label>').addClass('col-sm-3 control-label no-padding-right').attr('for', "id"+ida);
         var Bdivn = $('<div></div>').addClass('col-sm-9');
-        var Binputs = $('<input />').addClass('date-picker col-xs-10 col-sm-5 v_required').attr("id", "id"+ida).attr("type", "text").attr("readonly", "readonly").attr("data-date-format", "yyyy-mm-dd").attr("data-toggle", "popover").attr("data-trigger", "manual");
+        var Binputs = $('<input />').addClass('col-xs-10 col-sm-5').attr("name", "date-range-picker").attr("id", "id"+ida).attr("type", "text").attr("readonly", "readonly");
 
         var plugins = com.focusPage("#pluginss");
         Bdivn.append(Binputs);
         Bdivs.append(Blabels).append(Bdivn);
         Bdivs.appendTo(plugins);
 
-        planUtils.bindDatePicker("#"+"id"+ida, 1070);
+        planUtils.bindDateRangePicker("#"+"id"+ida, 1070);
     },
     PluginsC: function (ida) {
         var Cdivs = $('<div></div>').addClass('form-group').attr('id',"hupload");

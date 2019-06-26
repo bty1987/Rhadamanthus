@@ -268,7 +268,7 @@ $(function(){
     },'resultList');
 
     function openlayer(callback){
-        layer.closeAll();
+        com.closePopup();
         layer.open({
             type: 1,
             title:"添加" ,

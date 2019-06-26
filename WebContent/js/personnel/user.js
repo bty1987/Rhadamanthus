@@ -78,7 +78,9 @@
 
                     $btnEdit.click(function(){
                         params.tempUserId = v.userId;
-                        com.switchPage(api.index.userEditIndex.url);
+                        com.popup4page("#layerPopUp", api.index.userEditIndex.url, "编辑", null, function () {
+                            userSeacher.doSearch();
+                        });
                     });
 
                     //添加点击事件
@@ -95,7 +97,7 @@
                         }, null, false);
 
                         if(deptList == null ){
-                            return;
+                            return false;
                         }
 
                         var deptObj = {
@@ -348,7 +350,10 @@
 
     com.focusPage('a[name="addUser"]','#pagenation').click(function(){
         params.tempUserId = null;
-        com.switchPage(api.index.userEditIndex.url);
+        com.popup4page("#layerPopUp", api.index.userEditIndex.url, "添加", null, function () {
+            com.closePopup();
+            userSeacher.doSearch();
+        });
     });
 
     com.focusPage('a[name="addUserSimple"]','#pagenation').click(function(){
@@ -423,13 +428,7 @@
 
     user.items.statusSel = com.focusPage("#statusSel").bindData(user.statusType,"key", "value");
 
-    com.focusPage(".date-picker").datepicker(com.datepickerdefault).on("show",function() {
-        setTimeout(function() {
-            com.focusPage(".dropdown-menu").css("z-index", 1060)
-        },0)
-    }).next().on(ace.click_event,function() {
-        a(this).prev().focus()
-    });
+    com.datetime(com.focusPage("#birthday"));
 
     function saveData() {
         if( "" == user.items.loginId.val().trim() || user.items.loginId.val() == null) {
@@ -472,9 +471,7 @@
 
             com.post(api.personel.addUser, options, function(res){
                 com.showAlert(com.info, "操作成功");
-                com.focusPage("#simpleAddUserModal").modal("hide");
-            }, function(error){
-                com.showAlert(com.error, error.errorMsg);
+                com.closePopup();
             });
         }
     }

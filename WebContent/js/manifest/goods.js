@@ -1,54 +1,37 @@
 $(function () {
 
-    var items = {
-
-        no: com.focusPage("#no"),
-        type: com.focusPage("#type"),
-        name: com.focusPage("#name"),
-        barcode: com.focusPage("#barcode"),
-        category: com.focusPage("#category"),
-        brand: com.focusPage("#brand"),
-        measurementUnit: com.focusPage("#measurementUnit"),
-        purchase: com.focusPage("#purchase"),
-        selling: com.focusPage("#selling"),
-        pieceNum: com.focusPage("#pieceNum"),
-        accessoriesType: com.focusPage("#accessoriesType"),
-
-        submitBtn: com.focusPage("#submitBtn")
-
-    };
-
     var goods = {
+
         gid: null,
         keyword: null,
+        items:{
+            no: com.focusPage("#no"),
+            type: com.focusPage("#type"),
+            name: com.focusPage("#name"),
+            barcode: com.focusPage("#barcode"),
+            category: com.focusPage("#category"),
+            brand: com.focusPage("#brand"),
+            measurementUnit: com.focusPage("#measurementUnit"),
+            purchase: com.focusPage("#purchase"),
+            selling: com.focusPage("#selling"),
+            pieceNum: com.focusPage("#pieceNum"),
+            accessoriesType: com.focusPage("#accessoriesType"),
+        },
+        submitBtn: com.focusPage("#submitBtn")
     };
 
-    var validator = {
-        float3: {
-            type: "v_float_3",
-            regex: /^([0-9]+|[0-9]+\.[0-9]{1,3})$/,
-            errorMsg: "数量格式错误"
-        }
-    };
-
-    $.extend(com.validator, validator);
-
-    items.submitBtn.click(function () {
-        saveData();
-    });
-
-    items.type.bindData([{gid: 0, goods: "商品"}, {gid: 1, goods: "套餐"}], "gid", "goods");
+    goods.items.type.bindData([{gid: 0, goods: "商品"}, {gid: 1, goods: "套餐"}], "gid", "goods");
 
     com.post(api.data.queryCategory, {}, function (res) {
-        items.category.bindData(res.categorys, "categoryName", "categoryName");
+        goods.items.category.bindData(res.categorys, "categoryName", "categoryName");
     });
 
     com.post(api.common.queryMeasurementUnit, {}, function (res) {
-        items.measurementUnit.bindData(res.measurementUnits, "name", "name");
+        goods.items.measurementUnit.bindData(res.measurementUnits, "name", "name");
     });
 
     com.post(api.inventory.queryAccessoriesType, {}, function (res) {
-        items.accessoriesType.bindData(res.accessoriesTypes, 'atid', 'name', true);
+        goods.items.accessoriesType.bindData(res.accessoriesTypes, 'atid', 'name', true);
     });
 
     com.initTypeahead("brand", api.data.queryBrandForPinYinName, "pinyinName", {}, "brands","bid", "name", function (list, k, v) {
@@ -60,7 +43,7 @@ $(function () {
                 goods.bid = k;
 
                 com.post(api.data.queryBrandByBid, {"brand.bid": k}, function (res) {
-                    items.category.val(res.brand.categoryName);
+                    goods.items.category.val(res.brand.categoryName);
                 });
             }
         });
@@ -162,22 +145,22 @@ $(function () {
 
             $btnColor.click(function () {
                 params["goods.gid"] = v.gid;
-                skipLayer('颜色', 'views/manifest/color.html');
+                com.popup4page('#layerPopUp','views/manifest/color.html','颜色');
             });
 
             $btnFormat.click(function () {
                 params["goods.gid"] = v.gid;
-                skipLayer('规格', 'views/manifest/format.html');
+                com.popup4page('#layerPopUp','views/manifest/format.html','规格');
             });
 
             $btnPrice.click(function () {
                 params["goods.gid"] = v.gid;
-                skipLayer('价格', 'views/manifest/price.html');
+                com.popup4page('#layerPopUp','views/manifest/price.html','价格');
             });
 
             /* $btnSuit.click(function () {
 				 params["goods.gid"] = v.gid;
-                 skipLayer('套餐', 'views/data/goods4package.html');
+                 com.popup4page('#layerPopUp','views/manifest/goods4package.html','套餐');
              });*/
 
             $btnStart.click(function () {
@@ -231,14 +214,14 @@ $(function () {
 
         $adda.click(function () {
 
-            com.cleanItems(items);
+            com.cleanItems(goods.items);
 
             readonly(null);
 
             goods.gid = null;
             goods.bid = null;
 
-            showLayer("添加", "#addLayer");
+            com.popup4model("#addLayer","添加")
         });
 
         $addaExportGoods.click(function () {
@@ -280,45 +263,9 @@ $(function () {
 
     }, 'resultList');
 
-    function showLayer(title, layerId) {
-
-        var $content = com.focusPage(layerId);
-
-        layer.open({
-            type: 1,
-            title: title,
-            content: $content,
-            area: [($(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620) + "px", $content.height() + "px"],
-            maxmin: false,
-            move: false,
-            zIndex: 9000,
-            cancel: function () {
-                com.clearValidator();
-                layer.closeAll();
-            }
-        });
-    }
-
-    function skipLayer(title, url) {
-        var $popUp = com.focusPage('#layerPopUp');
-
-        var index = layer.open({
-            type: 1,
-            skin: 'layui-layer-lan',
-            title: title,
-            content: $popUp,
-            area: ["1200px", ($(window).height() * 0.84 < 800 ? $(window).height() * 0.84 : 800) + "px"],
-            maxmin: false,
-            move: false,
-            zIndex: 9000,
-            success: function (layer, index) {
-                $popUp.load(url);
-            },
-            end: function () {
-                goodsSeacher.doSearch();
-            }
-        });
-    }
+    goods.submitBtn.click(function () {
+        saveData();
+    });
 
     function updateStatus(gid, status) {
 
@@ -333,38 +280,38 @@ $(function () {
         });
     }
 
-    function saveData(id) {
+    function saveData() {
 
-        if (com.validate("formAdvance", "right")) {
+        if (com.validate("formGoods", "right")) {
             return false;
         }
 
         var gid = goods.gid;
-        var atid = items.accessoriesType.val();
+        var atid = goods.items.accessoriesType.val();
 
         var url = api.inventory.updateGoods;
         var options = {
-            "goods.type": items.type.val(),
-            "goods.purchase": items.purchase.val(),
-            "goods.selling": items.selling.val(),
+            "goods.type": goods.items.type.val(),
+            "goods.purchase": goods.items.purchase.val(),
+            "goods.selling": goods.items.selling.val(),
             "goods.accessoriesType.atid": atid == null || atid == "" ? "" : atid
         };
 
         if (!gid) {
             url = api.inventory.addGoods;
-            options["goods.no"] = items.no.val();
-            options["goods.name"] = items.name.val();
-            options["goods.barcode"] = items.barcode.val();
+            options["goods.no"] = goods.items.no.val();
+            options["goods.name"] = goods.items.name.val();
+            options["goods.barcode"] = goods.items.barcode.val();
             options["goods.bid"] = goods.bid;
-            options["goods.category"] = items.category.val();
-            options["goods.measurementUnit"] = items.measurementUnit.val();
-            options["goods.pieceNum"] = items.pieceNum.val();
+            options["goods.category"] = goods.items.category.val();
+            options["goods.measurementUnit"] = goods.items.measurementUnit.val();
+            options["goods.pieceNum"] = goods.items.pieceNum.val();
         } else {
             options["goods.gid"] = goods.gid;
         }
 
         com.post(url, options, function (res) {
-            layer.closeAll();
+            com.closePopup();
             goodsSeacher.doSearch();
         });
 
@@ -372,14 +319,14 @@ $(function () {
 
     function readonly(disabled) {
 
-        items.no.attr("disabled", disabled);
-        items.type.attr("disabled", disabled);
-        items.name.attr("disabled", disabled);
-        items.barcode.attr("disabled", disabled);
-        items.category.attr("disabled", disabled);
-        items.brand.attr("disabled", disabled);
-        items.measurementUnit.attr("disabled", disabled);
-        items.pieceNum.attr("disabled", disabled);
+        goods.items.no.attr("disabled", disabled);
+        goods.items.type.attr("disabled", disabled);
+        goods.items.name.attr("disabled", disabled);
+        goods.items.barcode.attr("disabled", disabled);
+        goods.items.category.attr("disabled", disabled);
+        goods.items.brand.attr("disabled", disabled);
+        goods.items.measurementUnit.attr("disabled", disabled);
+        goods.items.pieceNum.attr("disabled", disabled);
     }
 
 });

@@ -40,14 +40,8 @@ jQuery(function($) {
 	com.focusPage("#history").bindData(createHouseSource.history);
 	com.focusPage("#cardType").bindData(createHouseSource.cardType);
 	com.focusPage("#housingGrade").bindData(createHouseSource.housingGrade);
-
-	com.focusPage(".date-picker").datepicker({autoclose: !0}).on("show",function() {
-		setTimeout(function() {
-			com.focusPage(".dropdown-menu").css("z-index", 1060)
-		}, 0)
-	}).next().on(ace.click_event,function() {
-		a(this).prev().focus()
-	});
+	
+	com.datetime(com.focusPage(".date-picker"), "date");
 
 	createHouseSource.modal = com.focusPage("#createHouseSource");
 	createHouseSource.modal.on('show.bs.modal',function(e){

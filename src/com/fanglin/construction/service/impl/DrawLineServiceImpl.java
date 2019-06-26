@@ -118,11 +118,11 @@ public class DrawLineServiceImpl implements DrawLineService {
 	}
 
 	@Override
-	public List<?> countDrawLine(DrawLineVO drawLineVO, int company){
+	public List<?> countDrawLine(DrawLineVO drawLineVO, int company) {
 
 		Timestamp startTime = drawLineVO.getStartTime();
 		Timestamp endTime = drawLineVO.getEndTime();
-		
+
 		long start = Long.parseLong(DateUtil.getDateToDateString(startTime, "yyyyMMdd"));
 		long end = Long.parseLong(DateUtil.getDateToDateString(endTime, "yyyyMMdd"));
 
@@ -136,15 +136,15 @@ public class DrawLineServiceImpl implements DrawLineService {
 		String orderId = drawLineVO.getDecoration().getOrderId();
 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
-		
-		if(decorationPO == null){
+
+		if (decorationPO == null) {
 			throw new FLException(140013, "订单不存在");
 		}
-		
-		if(drawLineDao.countDrawLine(orderId) != 0){
+
+		if (drawLineDao.countDrawLine(orderId) != 0) {
 			throw new FLException(120013, "已经在队列中,不可重复提交");
 		}
-		
+
 		UserPO appler = userDao.queryUserByUserId(userId);
 
 		DrawLinePO drawLinePO = new DrawLinePO();
@@ -155,7 +155,8 @@ public class DrawLineServiceImpl implements DrawLineService {
 		drawLinePO.setAppler(appler);
 		drawLinePO.setStatus(DrawLinePO.STATUS_QUEUE_INT);
 		drawLinePO.setContent(drawLineVO.getContent());
-		drawLinePO.setActualTime(Long.parseLong(DateUtil.getDateToDateString(drawLineVO.getStartTime(), "yyyyMMdd")));
+		drawLinePO.setActualTime(Long.parseLong(DateUtil.getDateToDateString(drawLineVO.getApplayTime(), "yyyyMMdd")));
+		drawLinePO.setCompany(decorationPO.getCompany());
 
 		drawLineDao.save(drawLinePO);
 
@@ -181,9 +182,9 @@ public class DrawLineServiceImpl implements DrawLineService {
 			}
 		}
 
-		if(decorationPO.getProjectStatus() != DecorationPO.PROJECTSTATUS_INITIAL_INT){
+		if (decorationPO.getProjectStatus() != DecorationPO.PROJECTSTATUS_INITIAL_INT) {
 			decorationPO.setProjectStatus(DecorationPO.PROJECTSTATUS_START_INT);
-			
+
 			decorationDao.update(decorationPO);
 		}
 
@@ -195,11 +196,10 @@ public class DrawLineServiceImpl implements DrawLineService {
 	public int resetDrawLine(DrawLineVO drawLineVO) throws FLException {
 
 		DrawLinePO drawLinePO = drawLineDao.get(drawLineVO.getDlid());
-
 		if (drawLinePO == null) {
 			throw new FLException(120014, "不存在该放线信息");
 		}
-		
+
 		DrawLineGroupPO drawLineGroupPO = drawLineGroupDao.get(drawLineVO.getGroup().getGid());
 
 		if (drawLineGroupPO == null) {
@@ -208,8 +208,8 @@ public class DrawLineServiceImpl implements DrawLineService {
 
 		Timestamp start = drawLineVO.getStartTime();
 		Timestamp end = drawLineVO.getEndTime();
-		
-		if(drawLineDao.countDrawLine(drawLineVO.getGroup().getGid(), start, end, drawLinePO.getCompany()) > 0){
+
+		if (drawLineDao.countDrawLine(drawLineVO.getGroup().getGid(), start, end, drawLinePO.getCompany()) > 0) {
 			throw new FLException(120015, "时间重叠不能申请放线计划");
 		}
 
@@ -220,7 +220,7 @@ public class DrawLineServiceImpl implements DrawLineService {
 
 		drawLineDao.update(drawLinePO);
 
-		return 0;
+		return 1;
 	}
 
 	@Override
@@ -232,15 +232,15 @@ public class DrawLineServiceImpl implements DrawLineService {
 		if (drawLinePO == null) {
 			throw new FLException(120014, "不存在该放线信息");
 		}
-		
-		if(drawLinePO.getStatus() != DrawLinePO.STATUS_APPLICATION_INT){
+
+		if (drawLinePO.getStatus() != DrawLinePO.STATUS_APPLICATION_INT) {
 			throw new FLException(120017, "订单放线状态错误");
 		}
-		
-		if(drawLineVO.getStatus() == DrawLinePO.STATUS_FAIL_INT){
+
+		if (drawLineVO.getStatus() == DrawLinePO.STATUS_FAIL_INT) {
 			messageService.sendMessage(drawLinePO.getDecoration().getDesigner().getUserId(), userId, (String.format("订单:%s,放线失败!请重新申请放线.", drawLinePO.getDecoration().getOrderId())), MessagePO.TYPE_SEND_CONSTRUCTION_INT, drawLinePO.getCompany());
 		}
-		
+
 		drawLinePO.setStatus(drawLineVO.getStatus());
 
 		drawLineDao.update(drawLinePO);

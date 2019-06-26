@@ -137,7 +137,7 @@ $(function () {
     });
 
     function addOutsourceItem(callback){
-        layer.closeAll();
+        com.closePopup();
         layer.open({
             type: 1,
             skin: 'layui-layer-lan',

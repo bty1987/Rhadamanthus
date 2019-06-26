@@ -1,55 +1,49 @@
 
 $(function(){
 
-    var noticeType = {};
-    var noticePriority={};
-    var noticeIsPublic={};
     var notice = {
-        saveBtn: com.focusPage("#saveBtn").on("click",saveData),
+        saveBtn: com.focusPage("#saveBtn"),
         cancelBtn: com.focusPage("#cancelBtn"),
-        modal: com.focusPage("#noticeModal").on("show.bs.modal", function(a) {
-            com.clearValidator();
-        }),
+
+        modals: {
+            noticeModal: com.focusPage("#noticeModal"),
+            managementsModal: com.focusPage('#managements')
+        },
         items: {
             theme : com.focusPage("#theme"),
             typeSel : com.focusPage("#typeSel"),
             prioritySel : com.focusPage("#prioritySel"),
             startTime : com.focusPage("#startTime"),
             endTime : com.focusPage("#endTime"),
-            isPublic : com.focusPage("#isPublic").switchBtn("isOrNot"),
+            isPublic : com.focusPage("#isPublic"),
             contents : com.focusPage("#contents"),
             filePath : com.focusPage("#filePath")
         },
-        editFlg: !1,
-        postParam: {},
-        repeatFlg: !1
+
+        noticeType: {},
+        noticePriority: {},
+        noticeIsPublic: {},
+
+        editFlg: false,
+        postParam: {}
     };
 
+    notice.saveBtn.bindClick(saveData);
+    notice.items.isPublic.switchBtn("isOrNot");
+
     com.post(api.ds.information, {}, function(res){
-        com.focusPage("#prioritySel").bindData(res.noticePriority, "key", "value");
-        com.focusPage("#typeSel").bindData(res.noticeType, "key", "value");
-        $.each(res.noticeType,function (i,v) {
-            noticeType[v.key] = v.value;//类型
-        });
-        $.each(res.noticePriority,function (i,va) {
-            noticePriority[va.key] = va.value;//类型
-        });
-        $.each(res.noticeIsPublic,function (i,val) {
-            noticeIsPublic[val.key] = val.value;//类型
-        });
+        notice.items.prioritySel.bindData(res.noticePriority, "key", "value");
+        notice.items.typeSel.bindData(res.noticeType, "key", "value");
+
+        notice.noticeType = res.noticeType.split("key", "value");
+        notice.noticePriority = res.noticePriority.split("key", "value");
+        notice.noticeIsPublic = res.noticeIsPublic.split("key", "value");
+
     },null,false);
 
-
-
     bindUploadfiy();
-    //Datepicker是绑在一个标准的形式输入字段
-    com.focusPage(".date-picker").datepicker(com.datepickerdefault).on("show", function() {
-        setTimeout(function() {
-            com.focusPage(".dropdown-menu").css("z-index", 1060);
-        },0);
-    }).next().on(ace.click_event, function() {
-        $(this).prev().focus();
-    });
+
+    com.datetime(com.focusPage(".date-picker-date"));
 
     var displayFunc  = (function(){
         var renderList = function(tableId,listData){
@@ -83,23 +77,15 @@ $(function(){
             var starts = new Date(v.startTime);
             var end = new Date(v.endTime);
 
-            var statusStyle="label-success";
-            var status="";
-             if(starts <= myDate && end >=myDate){
-                 status="有效";
-             }else{
-                 status="无效";
-             }
-
             var propertyArr = [
-                ["类型:", noticeType[v.type], "grey"],
-                ["优先级:", noticePriority[v.priority], "green"],
+                ["类型:", notice.noticeType[v.type], "grey"],
+                ["优先级:", notice.noticePriority[v.priority], "green"],
                 ["发布人:", v.creater.currentName, "grey"],
                 ["开始时间:", v.startTime, "grey"],
                 ["结束时间:", v.endTime, "grey"],
-                ["公开:", noticeIsPublic[v.isPublic], "blue"],
+                ["公开:", notice.noticeIsPublic[v.isPublic], "blue"],
                 ["内容:", v.contents, "grey"],
-                ["状态:", status, "blue"]
+                ["状态:", starts <= myDate && end >= myDate ? "有效":"无效", "blue"]
 
             ];
 
@@ -144,25 +130,26 @@ $(function(){
             });
 
             $btnEdit.click(function(){
-                notice.editFlg = !0;
-                var a = v;
-                void 0 != a && (notice.items.nid = a.nid,
-                                notice.items.noticeId = a.noticeId,
-                				notice.items.userId = a.creater.userId,
-                                notice.items.theme.val(a.theme),
-                                notice.items.typeSel.val(a.type),
-                                notice.items.prioritySel.val(a.priority),
-                				notice.items.startTime.val(a.startTime), 
-                				notice.items.endTime.val(a.endTime), 
-                				notice.items.isPublic.prop("checked", a.isPublic == 0), 
-                				notice.items.contents.val(a.contents),
-                                notice.items.filePath.val(a.filePath),
-                                notice.modal.modal("show"));
+                notice.editFlg = true;
+
+                notice.items.nid = v.nid;
+                notice.items.noticeId = v.noticeId;
+                notice.items.userId = v.creater.userId;
+                notice.items.theme.val(v.theme);
+                notice.items.typeSel.val(v.type);
+                notice.items.prioritySel.val(v.priority);
+                notice.items.startTime.val(v.startTime);
+                notice.items.endTime.val(v.endTime);
+                notice.items.isPublic.prop("checked", v.isPublic == 0);
+                notice.items.contents.val(v.contents);
+                notice.items.filePath.val(v.filePath);
+
+                notice.modals.noticeModal.modal("show");
             });
 
             $management.unbind().bind('click',function(){
                 showDepaermentModal();
-                com.focusPage('#managements').modal('show');
+                notice.modals.managementsModal.modal('show');
                 var noticedids=[];
                 com.post(api.information.queryNoticeDepartment, {"notice.nid": v.nid},function(res){
                     $.each(res.noticeDepartments,function(i,val){
@@ -183,7 +170,7 @@ $(function(){
                                 return false;
                         }),
                         com.post(api.information.updateNoticeDepartment, params,function(res){
-                            com.focusPage('#managements').modal("hide");
+                            notice.modals.managementsModal.modal("hide");
                         }, null, false)
                     );
                 });
@@ -209,62 +196,66 @@ $(function(){
         };
     })();
 
-    var _condArr = ['theme', 'dateRange'];
     var NoticeMngSeacher = new Searcher();
-    NoticeMngSeacher.init( _condArr, "condList", api.information.pageNotice, function(list){
+    NoticeMngSeacher.init(['theme', 'dateRange'], "condList", api.information.pageNotice, function(list){
         displayFunc.init('resultList', list);
     }, "pagenation", "noticeMngSeacherPostData", null, false, null, function(){
 
-        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addVillage').css("margin", "0px 3px");
+        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'addMng').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
-        $adda.click(function(){
-            notice.editFlg = !1;
-            com.cleanItems(notice.items);
-            notice.modal.modal("show");
-        });
         return [$adda];
     });
 
-    function saveData() {
-        if (!com.validate() && !notice.repeatFlg){
-            if ("" == notice.items.contents.val().trim()){
-                com.showTips(notice.items.contents, "内容不能为空.");
-            }else if(notice.items.startTime.val() > notice.items.endTime.val()){
-            	com.showAlert(com.warning,"结束时间不能小于开始时间");
+    com.focusPage("#addMng").click(function() {
+        notice.editFlg = false;
+        com.cleanItems(notice.items);
+        notice.modals.noticeModal.modal("show");
+    });
 
-            }else{
-                var a, b = {
-                    "notice.nid":notice.items.nid,
-                    "notice.theme": notice.items.theme.val(),
-                    "notice.type": notice.items.typeSel.val(),
-                    "notice.priority": notice.items.prioritySel.val(),
-                    "notice.creater.userId": notice.items.userId,
-                    "notice.startTime": notice.items.startTime.val(),
-                    "notice.endTime": notice.items.endTime.val(),
-                    "notice.isPublic": notice.items.isPublic.prop("checked") ? 0 : 1,
-                    "notice.contents": notice.items.contents.val(),
-                    "notice.filePath": com.focusPage("#filePath").val()
-               };
-                    notice.editFlg ? (a = api.information.updateNotice,b["notice.noticeId"] = notice.items.noticeId) : a = api.information.addNotice;
-                    com.post(a, b, successCallback);
-                    notice.modal.modal("hide");
-                }
-         }
+    function saveData() {
+        if (com.validate('form')) {
+            return false;
+        }
+        if (notice.items.startTime.val() > notice.items.endTime.val()) {
+            com.showAlert(com.warning,"结束时间不能小于开始时间");
+            return false;
+        }
+
+        var url;
+        var options = {
+            "notice.nid":notice.items.nid,
+            "notice.theme": notice.items.theme.val(),
+            "notice.type": notice.items.typeSel.val(),
+            "notice.priority": notice.items.prioritySel.val(),
+            "notice.creater.userId": notice.items.userId,
+            "notice.startTime": notice.items.startTime.val(),
+            "notice.endTime": notice.items.endTime.val(),
+            "notice.isPublic": notice.items.isPublic.prop("checked") ? 0 : 1,
+            "notice.contents": notice.items.contents.val(),
+            "notice.filePath": notice.items.filePath.val()
+        };
+
+        notice.editFlg ? (url = api.information.updateNotice,options["notice.noticeId"] = notice.items.noticeId) : url = api.information.addNotice;
+
+        com.post(url, options, function successCallback() {
+            com.showAlert(com.info, "操作成功");
+            NoticeMngSeacher.doSearch();
+        });
+        notice.modals.noticeModal.modal("hide");
      }
 
     function removeRow(id) {
-        com.post(api.information.deleteNotice, {"notice.nid" : id}, successCallback);
+        com.post(api.information.deleteNotice, {"notice.nid" : id}, function successCallback() {
+            com.showAlert(com.info, "操作成功");
+            NoticeMngSeacher.doSearch();
+        });
     }
-    function successCallback() {
-        com.showAlert(com.info, "操作成功");
-        NoticeMngSeacher.doSearch();
-    }
-    
+
     function bindUploadfiy() {
         com.focusPage("#attachment").Huploadify({
-            auto: !0,
+            auto: true,
             successTimeout: 99999,
             formData: {
                 username: "用户名",

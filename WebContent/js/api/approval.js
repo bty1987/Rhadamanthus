@@ -1,7 +1,6 @@
 $.extend(api.index, {
-    approvalTrackIndex: {url: "/views/approval/approvalTrack.html"},
-    userApproveIndex: {url: "/views/approval/userApprove.html"},
-    approvalTrackSenderIndex: {url: "/views/approval/approvalTrackSender.html"}
+    approvalTrackIndex: {url: "/views/approval/approval4track.html"},
+    userApproveIndex: {url: "/views/approval/approval4user.html"}
 });
 
 $.extend(api, {
@@ -33,6 +32,7 @@ $.extend(api, {
         submitApprovalForSalesRefund: {url: "submitApprovalForSalesRefund.do"},
         submitApprovalForManifestDB: {url: "submitApprovalForManifestDB.do"},
         submitApprovalForSalesDiscount: {url: "submitApprovalForSalesDiscount.do"},
+        submitApprovalForDecorationHolonomy: {url: "submitApprovalForDecorationHolonomy.do"},
 
         approveApproval: {url: "approveApproval.do"},
         refuseApproval: {url: "refuseApproval.do"},

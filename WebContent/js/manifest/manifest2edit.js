@@ -7,17 +7,8 @@ jQuery(function ($) {
             list: com.focusPage('#list'),
         },
         record: {},
-        validator: {
-            float3: {
-                type: "v_float_3",
-                regex: /^(\d+|\d+\.[0-9]{1,4})$/,
-                errorMsg: "单价输入内容格式错误"
-            }
-        },
         storehouses: []
     };
-
-    $.extend(com.validator, manifest.validator);
 
     com.post(api.inventory.queryStorehouseForSelf, {}, function (res) {
         manifest.storehouses = res.storehouses;

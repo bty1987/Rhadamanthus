@@ -1,25 +1,26 @@
 
 $(function(){
-    var type = {};
-    var onetype = {};
+
     var awardRecord = {
+        type : {},
+        subtype : {},
+        onetype : {},
+
         awardRecordItems:{},
         editFlg: false,
         repeatFlg: false
     };
 
     com.post(api.ds.information, {}, function(res){
-        $.each(res.StockType,function(i,v){
-            type[v.key]=v.value;
-        });
-        
-        $.each(res.awardStockOneType,function(i,v){
-            onetype[v.key]=v.value;
-        });
+
+        awardRecord.type = res.StockType.split("key" ,"value");
+        awardRecord.onetype = res.awardStockOneType.split("key" ,"value");
+        awardRecord.subtype = res.awardRecordSubtype.split("key" ,"value");
+
     }, null, false);
     
     var displayFunc  = (function(){
-        /*表格样式*/
+
         var renderList = function(tableId,listData){
             var $tableWrap = com.focusPage('#' + tableId);
 
@@ -35,14 +36,13 @@ $(function(){
             }
         };
 
-        /*表格头*/
         var createTableTitle = function(){
             var $ulTitle = $('<ul></ul>').addClass('flex-table');
             var $liTitle = $('<li></li>').addClass('line table-title');
 
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>'));
-            var $contentWrap = $('<div></div>').addClass('line-wrap  content col9');
-            var titleName ='奖品,类型,一类,数量,总价,单价,提交人,时间,说明';
+            var $contentWrap = $('<div></div>').addClass('line-wrap  content col10');
+            var titleName ='奖品,类型,子类,一类,数量,总价,单价,提交人,时间,说明';
 
             $.each(titleName.split(','), function (i, v) {
                 var $cell = $('<div></div>').addClass('cell').html(v);
@@ -53,29 +53,34 @@ $(function(){
 
             return $ulTitle;
         };
-        /*表格体*/
-        var creatLine = function (i, v, lastFlag) {
+
+        var creatLine = function (i, v) {
             var $liLine = $('<li></li>').addClass('line');
-            var id = i + 1;
-            var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(id));
-            var $contentWrap = $('<div></div>').addClass('line-wrap content col9');
-                var propertyArr = [
-                    [v.awardStock.name,'grey'],
-                    [type[v.type],'grey'],
-                    [onetype[v.onetype] , 'grey'],
-                    [v.num,'grey'],
-                    [v.totalPrice,'grey'],
-                    [v.unitPrice, 'grey'],
-                    [v.creater.currentName,'grey'],
-                    [v.operateTime,'red'],
-                    [v.content,'grey']
-                ];
-                $liLine.append($indexWrap);
-                $.each(propertyArr, function (i, v) {
-                    var $cell = $('<div></div>').addClass('cell ' + v[1]).html(v[0]);
-                    $cell.appendTo($contentWrap);
-                });
-                $liLine.append($indexWrap).append($contentWrap);
+            var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(i + 1));
+            var $contentWrap = $('<div></div>').addClass('line-wrap content col10');
+
+            var propertyArr = [
+                [v.awardStock.name,'grey'],
+                [awardRecord.type[v.type],'grey'],
+                [awardRecord.subtype[v.subtype],'grey'],
+                [awardRecord.onetype[v.onetype] , 'grey'],
+                [v.num,'grey'],
+                [v.totalPrice,'grey'],
+                [v.unitPrice, 'grey'],
+                [v.creater.currentName,'grey'],
+                [v.operateTime,'red'],
+                [v.content,'grey']
+            ];
+
+            $liLine.append($indexWrap);
+
+            $.each(propertyArr, function (i, v) {
+                var $cell = $('<div></div>').addClass('cell ' + v[1]).html(v[0]);
+                $cell.appendTo($contentWrap);
+            });
+
+            $liLine.append($indexWrap).append($contentWrap);
+
             return $liLine;
         };
 

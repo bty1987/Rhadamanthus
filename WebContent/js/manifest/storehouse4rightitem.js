@@ -51,7 +51,8 @@ var storehouseRight = (function(){
                 that.saveOptionChange();
             });
             com.focusPage('#cancelbtn', $wrapper).click(function(){
-                layer.closeAll();
+                com.focusPage('#optPopUp').attr('data-userId', null);
+                com.closePopup();
             });
         },
         
@@ -66,7 +67,8 @@ var storehouseRight = (function(){
             });
             com.post(api.inventory.updateStorehouseUser, _params, function(data){
                 com.showAlert(com.info, "操作成功");
-                layer.closeAll();
+                com.focusPage('#optPopUp').attr('data-userId', null);
+                com.closePopup();
             });
         },
         init : function($wrapper){

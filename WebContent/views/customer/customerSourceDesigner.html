@@ -21,10 +21,8 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label no-padding-right" for="villageNoDesiger">楼盘信息</label>
                             <div class="col-sm-9">
-                                <div class="col-sm-7 no-padding-left">
-                                    <input type="text" class="col-sm-6 v_typeahead v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="villageNoDesiger">
-                                </div>
-                                <div id="bindHouseDiv" class="col-sm-5 no-padding-left"><button type="button" id="bindHouse" class="btn btn-xs btn-info">绑定楼盘</button></div>
+                                <input type="text" class="col-sm-6 v_typeahead v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="villageNoDesiger" style="margin-right: 35px;" />
+                                <div id="bindHouseDiv"><button type="button" id="bindHouse" class="btn btn-xs btn-info">绑定楼盘</button></div>
                             </div>
                         </div>
 
@@ -59,7 +57,7 @@
                         <div class="form-group" id="buildAreaGroup">
                             <label class="col-sm-3 control-label no-padding-right" for="buildArea">建筑面积</label>
                             <div class="col-sm-9">
-                                <input type="text" id="buildArea" maxlength="7" class="col-xs-6 col-sm-6 v_required v_float" />
+                                <input type="text" id="buildArea" maxlength="7" class="col-xs-6 col-sm-6 v_required v_float_3" />
                                 <span style = "margin-left: 10px; line-height: 34px">平</span>
                             </div>
                         </div>
@@ -75,7 +73,8 @@
                         <div class="form-group" id="genderGroup">
                             <label class="col-sm-3 control-label no-padding-right" for="gender">性别</label>
                             <div class="col-sm-9">
-                                <input type="checkbox" id="gender" />
+                                <input type="checkbox" id="gender" class="ace ace-switch ace-switch-5"/>
+								<span class="lbl gender"></span>
                             </div>
                         </div>
 

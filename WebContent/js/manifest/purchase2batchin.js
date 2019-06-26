@@ -6,18 +6,11 @@ jQuery(function ($) {
         	list: com.focusPage('#list'),
         },
         record: {},
-        validator: {
-            float3: {
-                type: "v_float_3",
-                regex: /^(\d+|\d+\.[0-9]{1,3})$/,
-                errorMsg: "内容格式错误"
-            }
-        },
-        storehouses: []
+        storehouses: [],
+        wareinBtn:com.focusPage('#wareinBtn'),
+        cancelBtn:com.focusPage('#cancelBtn'),
     };
     
-    $.extend(com.validator, purchase.validator);
-
     //获得仓库
     com.post(api.inventory.queryStorehouseForSelf, {}, function (res) {
         purchase.storehouses = res.storehouses;
@@ -46,7 +39,7 @@ jQuery(function ($) {
     	});
     });
 
-    com.focusPage('#wareinBtn').click(function () {
+    purchase.wareinBtn.click(function () {
     	
     	var $checks = com.focusPage('input[type="checkbox"]:checked', "#list");
     	
@@ -87,8 +80,8 @@ jQuery(function ($) {
     	com.post(api.inventory.addManifestForPU, options);
     });
 
-    com.focusPage('#cancelBtn').click(function () {
-        layer.closeAll();
+    purchase.cancelBtn.click(function () {
+        com.closePopup();
     });
 
     function addline(lineindex) {

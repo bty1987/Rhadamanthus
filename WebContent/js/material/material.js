@@ -77,7 +77,7 @@ jQuery(function ($) {
         com.focusPage("#couponType").bindData(material.couponType, 'key', 'value', false);
     }, null, false);
 
-    //com.initChosen('approveManSel', api.system.queryApproveUserForNameByType, "user.userNamePinYin", {"approveUser.type" : 9}, "autoFillKeyValue", "key", "value");
+    //com.initTypeahead('approveManSel', api.system.queryApproveUserForNameByType, "user.userNamePinYin", {"approveUser.type" : 9}, "autoFillKeyValue", "key", "value",null);
 
     material.approveSaveBtn = com.focusPage("#approveSaveBtn").on("click", function () {
         var length = com.focusPage('#approveManSel').find('input:checked').length;
@@ -614,7 +614,7 @@ jQuery(function ($) {
             materialSubOrderPostData["approvalMaterialFullPayemnt.msoId"] = materialSubOrderPostData["materialSubOrder.msoId"];
             materialSubOrderPostData["approvalMaterialFullPayment.referMoney"] = material.materialSubOrderItems.fullPayment.val();
 
-            com.updateChosen('approveManSel', '', '');
+            com.updateTypeahead('approveManSel', '', '');
 
             approvalUtils.initqueryApprovalUser('approveManSel', 9);
             material.materialSubOrderMoneyModal.modal("hide");

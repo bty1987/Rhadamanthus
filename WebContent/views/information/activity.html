@@ -32,7 +32,7 @@
 								<label class="col-sm-3 control-label no-padding-right" for="startTime">开始时间</label>
 								<div class="col-sm-9">
 									<div class="input-group col-xs-10 col-sm-7 no-padding v_required" data-for="startTime" data-toggle="popover" data-trigger='manual'>
-										<input class="form-control date-picker" id="startTime" type="text" data-date-format="yyyy-mm-dd">
+										<input class="form-control date-picker-date" id="startTime" type="text" data-date-format="yyyy-mm-dd">
 										<span class="input-group-addon">
 											<i class="icon-calendar bigger-110"></i>
 										</span>
@@ -45,7 +45,7 @@
 								<label class="col-sm-3 control-label no-padding-right" for="endTime">结束时间</label>
 								<div class="col-sm-9">
 									<div class="input-group col-xs-10 col-sm-7 no-padding v_required" data-for="endTime" data-toggle="popover" data-trigger='manual'>
-										<input class="form-control date-picker" id="endTime" type="text" data-date-format="yyyy-mm-dd">
+										<input class="form-control date-picker-date" id="endTime" type="text" data-date-format="yyyy-mm-dd">
 										<span class="input-group-addon">
 											<i class="icon-calendar bigger-110"></i>
 										</span>
@@ -61,7 +61,7 @@
 								<div class="col-md-8">
 									<select class="col-xs-10 col-sm-5 v_required" id="type" data-required="1" data-toggle="popover" data-trigger='manual' rules="{required:true}" style="width: 235px">
 									</select>
-									<span class="required"><i class='icon-asterisk'></i></span>
+									<span class="required"></span>
 								</div>
 							</div>
 
@@ -85,6 +85,8 @@
 </div>
 
 </div>
+
+<div id="activityItemPopUp" class="portlet box"></div>
 
 <script type="text/javascript">
 	$.loadScript(['js/information/activity.js']);

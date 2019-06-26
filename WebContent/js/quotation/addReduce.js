@@ -157,11 +157,9 @@ jQuery(function($) {
 		search.doSearch();
 	});
 
-
 	function saveData(){
 
-		if(com.validate())
-			return;
+		if(com.validate()) return false;
 
 		var url;
 		var options = {

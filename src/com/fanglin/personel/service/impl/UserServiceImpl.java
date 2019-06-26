@@ -340,7 +340,7 @@ public class UserServiceImpl implements UserService {
 
 		userPO.setPinYin(pinyins.get(0));
 		
-		userPO.setIsUpdate(UserPO.COLUMN_ISUPDATE_ADD_INT);
+		userPO.setIsUpdate(UserPO.ISUPDATE_ADD_INT);
 
 		userDao.save(userPO);
 
@@ -408,8 +408,8 @@ public class UserServiceImpl implements UserService {
 
 		userPO.setPinYin(pinyins.get(0));
 		
-		if(userPO.getIsUpdate() == 0){
-			userPO.setIsUpdate(UserPO.COLUMN_ISUPDATE_UPDATE_INT);
+		if(userPO.getIsUpdate() == UserPO.ISUPDATE_INIT_INT){
+			userPO.setIsUpdate(UserPO.ISUPDATE_UPDATE_INT);
 		}
 
 		userDao.update(userPO);
@@ -542,7 +542,7 @@ public class UserServiceImpl implements UserService {
 		
 		userPO.setRole(rolePO);
 		userPO.setExtranet(userVO.getExtranet());
-		userPO.setIsUpdate(UserPO.COLUMN_ISUPDATE_UPDATE_INT);
+		userPO.setIsUpdate(UserPO.ISUPDATE_UPDATE_INT);
 
 		userDao.update(userPO);
 
@@ -610,7 +610,7 @@ public class UserServiceImpl implements UserService {
 		String authentication;
 
 		if (result != null && result.containsKey("authentication")) {
-			authentication = result.get("authentication").toString();
+			authentication = result.get("authentication").toString().replaceAll("[\\r\\n]", "").replaceAll("\\+", "%2B");
 		} else {
 			throw new FLException(110010, "请求失败");
 		}
@@ -714,5 +714,5 @@ public class UserServiceImpl implements UserService {
 
 		return userBaseVO;
 	}
-
+	
 }

@@ -7,7 +7,7 @@ public class ConstructionInfoVO implements Serializable {
 	private static final long serialVersionUID = -8887915345535064194L;
 
 	private Long ciid;
-	
+
 	private String orderId;
 
 	private Long cid;
@@ -27,7 +27,7 @@ public class ConstructionInfoVO implements Serializable {
 	public void setCiid(Long ciid) {
 		this.ciid = ciid;
 	}
-	
+
 	public String getOrderId() {
 		return orderId;
 	}

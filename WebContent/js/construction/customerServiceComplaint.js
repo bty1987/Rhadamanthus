@@ -1,18 +1,21 @@
 jQuery(function ($) {
-    com.focusPage('#fl-statement').statement("客服控制", "投诉信息列表");
 
     var complaint = {
-        saveBtn: com.focusPage("#saveBtn").on("click", saveData),
-        cancellBtn: com.focusPage("#cancelBtn"),
-        saveHandleBtn: com.focusPage("#saveHandleBtn").on("click", saveHandleData),
-        canceHandlelBtn: com.focusPage("#cancelBtn"),
-        modal: com.focusPage("#complaintModal").on('show.bs.modal', function (e) {
-            com.clearValidator();
-        }),
-        handleModal: com.focusPage("#complaintHandleModal").on('show.bs.modal', function (e) {
-            com.clearValidator();
-        }),
-        complaintItems: {
+
+        btns: {
+            saveBtn: com.focusPage("#saveBtn"),
+            cancellBtn: com.focusPage("#cancelBtn"),
+            saveHandleBtn: com.focusPage("#saveHandleBtn"),
+            canceHandlelBtn: com.focusPage("#cancelBtn")
+        },
+
+        modals: {
+            modal: com.focusPage("#complaintModal"),
+            handleModal: com.focusPage("#complaintHandleModal")
+        },
+
+        items: {
+
             orderId : com.focusPage("#orderId"),
             customerName : com.focusPage("#customerName"),
             complaintLevel : com.focusPage("#complaintLevel"),
@@ -27,14 +30,35 @@ jQuery(function ($) {
             complaintHandleDes : com.focusPage("#complaintHandleDes")
         },
 
-        levelDict: {"0": "普通", "1": "重要"},
-        typeDict: {"0": "装修", "1": "主材"},
+        levelDict: {},
+        typeDict: {},
 
         editFlag: false,
         repeatFlg: false
     };
-    
-    com.focusPage('.date-picker').datepicker(com.datepickerdefault);
+
+    complaint.btns.saveBtn.bindClick(saveData);
+    complaint.btns.saveHandleBtn.bindClick(saveHandleData);
+    complaint.modals.modal.on('show.bs.modal', function (e) {
+        com.clearValidator();
+    });
+    complaint.modals.handleModal.on('show.bs.modal', function (e) {
+        com.clearValidator();
+    });
+
+    com.datetime(complaint.items.complaintTime);
+
+    com.post(api.ds.construction, {}, function (res) {
+        $.each(res.typeDict, function (i, v) {
+            complaint.typeDict[v["key"]] = v["value"];
+        });
+    }, null, false);
+
+    com.post(api.ds.construction, {}, function (res) {
+        $.each(res.levelDict, function (i, v) {
+            complaint.levelDict[v["key"]] = v["value"];
+        });
+    }, null, false);
 
     var displayFunc = (function () {
         var renderList = function (tableId, listData) {
@@ -53,7 +77,6 @@ jQuery(function ($) {
         };
 
         var creatLine = function (v) {
-            var that = this;
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.orderId));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
@@ -124,34 +147,26 @@ jQuery(function ($) {
         "customerServiceComplaint.orderId": params.orderId
     }, false, null, function () {
 
-        var $adda = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'add').css("margin", "0px 3px");
+        var $adda = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('id', 'add').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
-        var $addb = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'back').css("margin", "0px 3px");
-        var $addi = $('<i></i>').addClass('icon-mail-forward bigger-110').appendTo($addb);
-        var $addspan = $('<span></span>').text('返回').appendTo($addb);
-
-        return [$addb, $adda];
+        return [$adda];
     });
 
-    com.focusPage('a[name="add"]', '#pagenation').click(function () {
+    com.focusPage('#add', '#pagenation').click(function () {
         complaint.editFlag = false;
 
-        com.cleanItems(complaint.complaintItems);
+        com.cleanItems(complaint.items);
 
-        complaint.complaintItems.orderId.val(params.orderId);
-        complaint.complaintItems.customerName.val(params.customerName);
+        complaint.items.orderId.val(params.orderId);
+        complaint.items.customerName.val(params.customerName);
 
-        complaint.complaintItems.orderId.attr("disabled", true);
-        complaint.complaintItems.customerName.attr("disabled", true);
-        complaint.complaintItems.complaintTime.attr("disabled", false);
+        complaint.items.orderId.attr("disabled", true);
+        complaint.items.customerName.attr("disabled", true);
+        complaint.items.complaintTime.attr("disabled", false);
 
-        complaint.modal.modal("show");
-    });
-
-    com.focusPage('a[name="back"]', '#pagenation').click(function () {
-        com.switchPage(api.index.customerServiceIndex.url);
+        complaint.modals.modal.modal("show");
     });
 
     function levelInit(levelcode) {
@@ -175,12 +190,12 @@ jQuery(function ($) {
 
         var url;
         var options = {
-            "customerServiceComplaint.orderId": complaint.complaintItems.orderId.val(),
-            "customerServiceComplaint.customerName": complaint.complaintItems.customerName.val(),
-            "customerServiceComplaint.level": complaint.complaintItems.complaintLevel.val(),
-            "customerServiceComplaint.createTime": complaint.complaintItems.complaintTime.val(),
-            "customerServiceComplaint.des": complaint.complaintItems.complaintDes.val(),
-            "customerServiceComplaint.type": complaint.complaintItems.complaintType.val()
+            "customerServiceComplaint.orderId": complaint.items.orderId.val(),
+            "customerServiceComplaint.customerName": complaint.items.customerName.val(),
+            "customerServiceComplaint.level": complaint.items.complaintLevel.val(),
+            "customerServiceComplaint.createTime": complaint.items.complaintTime.val(),
+            "customerServiceComplaint.des": complaint.items.complaintDes.val(),
+            "customerServiceComplaint.type": complaint.items.complaintType.val()
         };
 
         if (complaint.editFlag) {
@@ -194,7 +209,7 @@ jQuery(function ($) {
 
         com.post(url, options, successCallback);
 
-        complaint.modal.modal("hide");
+        complaint.modals.modal.modal("hide");
     }
 
     function saveHandleData() {
@@ -202,18 +217,18 @@ jQuery(function ($) {
             return;
 
         if (complaint["customerServiceComplaint.complaintStatus"] == "1") {
-            complaint.handleModal.modal("hide");
+            complaint.modals.handleModal.modal("hide");
             return false;
         }
 
         var options = {
             "customerServiceComplaint.cscId": complaint["customerServiceComplaint.cscId"],
-            "customerServiceComplaint.handle": complaint.complaintItems.complaintHandleDes.val()
+            "customerServiceComplaint.handle": complaint.items.complaintHandleDes.val()
         };
 
         com.post(api.construction.handleCustomerServiceComplaint, options, successCallback);
 
-        complaint.handleModal.modal("hide");
+        complaint.modals.handleModal.modal("hide");
     }
 
     function removeRow(id) {
@@ -226,26 +241,26 @@ jQuery(function ($) {
     }
 
     function dialogCustomerServiceComplaintHandle(v) {
-        com.cleanItems(complaint.complaintItems);
+        com.cleanItems(complaint.items);
 
         var row = v;
 
         complaint["customerServiceComplaint.cscId"] = row.cscId;
         complaint["customerServiceComplaint.complaintStatus"] = row.complaintStatus;
 
-        complaint.complaintItems.handleOrderId.val(row.orderId).attr('disabled', true);
-        complaint.complaintItems.handleCustomerName.val(row.customerName).attr('disabled', true);
-        complaint.complaintItems.handleComplaintLevel.val(row.level).attr('disabled', true);
-        complaint.complaintItems.handleComplaintType.val(row.type).attr('disabled', true);
-        complaint.complaintItems.complaintHandleDes.val(row.handle);
+        complaint.items.handleOrderId.val(row.orderId).attr('disabled', true);
+        complaint.items.handleCustomerName.val(row.customerName).attr('disabled', true);
+        complaint.items.handleComplaintLevel.val(row.level).attr('disabled', true);
+        complaint.items.handleComplaintType.val(row.type).attr('disabled', true);
+        complaint.items.complaintHandleDes.val(row.handle);
 
         if (row.complaintStatus == "1") {
-            complaint.complaintItems.complaintHandleDes.attr("disabled", true);
+            complaint.items.complaintHandleDes.attr("disabled", true);
         } else {
-            complaint.complaintItems.complaintHandleDes.attr("disabled", false);
+            complaint.items.complaintHandleDes.attr("disabled", false);
         }
 
-        complaint.handleModal.modal("show");
+        complaint.modals.handleModal.modal("show");
     }
 
     function successCallback(result) {

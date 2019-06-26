@@ -3,91 +3,58 @@ $(function () {
     var goods = {
         gid: null,
         keyword: null,
-    };
+        items:{
+            no: com.focusPage("#no"),
+            type: com.focusPage("#type"),
+            name: com.focusPage("#name"),
+            barcode: com.focusPage("#barcode"),
+            category: com.focusPage("#category"),
+            brand: com.focusPage("#brand"),
+            measurementUnit: com.focusPage("#measurementUnit"),
+            purchase: com.focusPage("#purchase"),
+            selling: com.focusPage("#selling"),
+            pieceNum: com.focusPage("#pieceNum"),
+            accessoriesType: com.focusPage("#accessoriesType"),
 
-    var validator = {
-        float3: {
-            type: "v_float_3",
-            regex: /^([0-9]+|[0-9]+\.[0-9]{1,3})$/,
-            errorMsg: "数量格式错误"
+            executeTimes: com.focusPage("#executeTimes"),
+            executeDates: com.focusPage("#executeDates"),
+
+            filePath: com.focusPage("#filePath"),
+        },
+        btns:{
+            submitBtn: com.focusPage("#submitBtn"),
+            importBtn: com.focusPage("#importBtn"),
+            exportBtn: com.focusPage("#exportBtn")
         }
     };
-
-    var items = {
-
-        no: com.focusPage("#no"),
-        type: com.focusPage("#type"),
-        name: com.focusPage("#name"),
-        barcode: com.focusPage("#barcode"),
-        category: com.focusPage("#category"),
-        brand: com.focusPage("#brand"),
-        measurementUnit: com.focusPage("#measurementUnit"),
-        purchase: com.focusPage("#purchase"),
-        selling: com.focusPage("#selling"),
-        pieceNum: com.focusPage("#pieceNum"),
-        accessoriesType: com.focusPage("#accessoriesType"),
-
-        executeTimes: com.focusPage("#executeTimes"),
-        executeDates: com.focusPage("#executeDates"),
-
-        filePath: com.focusPage("#filePath"),
-
-        submitBtn: com.focusPage("#submitBtn"),
-        importBtn: com.focusPage("#importBtn"),
-        exportBtn: com.focusPage("#exportBtn")
-    };
-
-    $.extend(com.validator, validator);
-
-    items.submitBtn.click(function () {
-        saveData();
-    });
-
-    items.importBtn.click(function () {
-        planMission("import");
-    });
-
-    items.exportBtn.click(function () {
-        planMission("export");
-    });
 
     com.focusPage('.date-picker').datepicker(com.datepickerdefault);
     com.focusPage('#executeTimes').timepicker(com.timepickerdefault);
 
-    com.focusPage("#attachment").Huploadify({
-        auto: !0,
-        successTimeout: 60000,
-        formData: {
-            username: "用户名",
-            rnd: "加密密文",
-            uploadType: 3
-        },
-        buttonText: "上传附件",
-        buttonClass: "btn btn-sm btn-primary lineheight0",
-        overrideEvents: ["onDialogClose"],
-        fileObjName: "strutsUploads",
-        uploader: config.media + api.common.uploadOther.url,
-        width: "78",
-        onSelectError: function (a, b, c) {
-            switch (b) {
-                case -100:
-                    alert("上传的文件数量已经超出系统限制的" + com.focusPage("#file_upload").uploadify("settings", "queueSizeLimit") + "个文件!");
-                    break;
-                case -110:
-                    alert("文件 [" + a.name + "] 大小超出系统限制的" + com.focusPage("#file_upload").uploadify("settings", "fileSizeLimit") + "大小!");
-                    break;
-                case -120:
-                    alert("文件 [" + a.name + "] 大小异常!");
-                    break;
-                case -130:
-                    alert("文件 [" + a.name + "] 类型不正确!")
-            }
-        },
-        onUploadSuccess: function (a, b, c) {
-            a = eval("(" + b + ")");
-            0 == a.errorCode ? com.focusPage("#filePath").val(a.resUrl) : alert(b)
-        },
-        itemTemplate: '<div id="${fileID}" class="uploadify-queue-item" style="position:absolute;top:-30px;width:200px;left:-200px;">\r\n\t\t\t<div class="cancel">\r\n\t\t\t\t<a href="javascript:$(\'#${instanceID}\').uploadify(\'cancel\', \'${fileID}\')">X</a>\r\n\t\t\t</div>\r\n\t\t\t<span class="fileName">${fileName} (${fileSize})</span><span class="data"></span>\r\n\t\t\t<div class="uploadify-progress">\r\n\t\t\t\t<div class="uploadify-progress-bar"><!--Progress Bar--></div>\r\n\t\t\t</div>\r\n\t\t</div>'
+    goods.items.type.bindData([{gid: 0, goods: "商品"}, {gid: 1, goods: "套餐"}], "gid", "goods");
+
+    com.post(api.data.queryCategory, {}, function (res) {
+        goods.items.category.bindData(res.categorys, "categoryName", "categoryName");
+    });
+
+    com.post(api.common.queryMeasurementUnit, {}, function (res) {
+        goods.items.measurementUnit.bindData(res.measurementUnits, "name", "name");
+    });
+
+    com.post(api.inventory.queryAccessoriesType, {}, function (res) {
+        goods.items.accessoriesType.bindData(res.accessoriesTypes, 'atid', 'name', true);
+    });
+
+    goods.btns.submitBtn.click(function () {
+        saveData();
+    });
+
+    goods.btns.importBtn.click(function () {
+        planMission("import");
+    });
+
+    goods.btns.exportBtn.click(function () {
+        planMission("export");
     });
 
     com.initTypeahead("brand", api.data.queryBrandForPinYinName, "pinyinName", {}, "brands", "bid", "name", function (list, k, v) {
@@ -98,7 +65,7 @@ $(function () {
                 goods.bid = k;
 
                 com.post(api.data.queryBrandByBid, {"brand.bid": k}, function (res) {
-                    items.category.val(res.brand.categoryName);
+                    goods.items.category.val(res.brand.categoryName);
                 });
             }
         });
@@ -202,45 +169,46 @@ $(function () {
 
                 readonly("disabled");
 
-//            	com.updateChosen('brand', v.bid, v.brand);
+           	// com.updateTypeahead('brand', v.bid, v.brand);
 
                 goods.gid = v.gid;
                 goods.bid = v.bid;
 
-                items.no.val(v.no);
-                items.type.val(v.type);
-                items.name.val(v.name);
-                items.barcode.val(v.barcode);
-                items.brand.val(v.brand);
-                items.category.val(v.category);
+                goods.items.no.val(v.no);
+                goods.items.type.val(v.type);
+                goods.items.name.val(v.name);
+                goods.items.barcode.val(v.barcode);
+                goods.items.brand.val(v.brand);
+                goods.items.category.val(v.category);
 
-                items.measurementUnit.val(v.measurementUnit);
-                items.purchase.val(v.purchase);
-                items.selling.val(v.selling);
-                items.pieceNum.val(v.pieceNum);
-                items.accessoriesType.val(v.accessoriesType.atid);
+                goods.items.measurementUnit.val(v.measurementUnit);
+                goods.items.purchase.val(v.purchase);
+                goods.items.selling.val(v.selling);
+                goods.items.pieceNum.val(v.pieceNum);
+                goods.items.accessoriesType.val(v.accessoriesType.atid);
 
-                showLayer("编辑", "#addLayer");
+                // showLayer("编辑", "#addLayer");
+                com.popup4model("#addLayer","编辑")
             });
 
             $btnColor.click(function () {
                 params["goods.gid"] = v.gid;
-                skipLayer('颜色', 'views/manifest/color.html');
+                com.popup4page('#layerPopUp','views/manifest/color.html','颜色');
             });
 
             $btnFormat.click(function () {
                 params["goods.gid"] = v.gid;
-                skipLayer('规格', 'views/manifest/format.html');
+                com.popup4page('#layerPopUp','views/manifest/format.html','规格');
             });
 
             $btnPrice.click(function () {
                 params["goods.gid"] = v.gid;
-                skipLayer('价格', 'views/manifest/price4advance.html');
+                com.popup4page('#layerPopUp','views/manifest/price4advance.html','价格');
             });
 
             /* $btnSuit.click(function () {
 				 params["goods.gid"] = v.gid;
-                 skipLayer('套餐', 'views/data/goods4package.html');
+                 com.popup4page('#layerPopUp','views/manifest/goods4package.html','套餐');
              });*/
 
             $btnStart.click(function () {
@@ -279,20 +247,6 @@ $(function () {
 
     var goodsSeacher = new Searcher();
 
-    items.type.bindData([{gid: 0, goods: "商品"}, {gid: 1, goods: "套餐"}], "gid", "goods");
-
-    com.post(api.data.queryCategory, {}, function (res) {
-        items.category.bindData(res.categorys, "categoryName", "categoryName");
-    });
-
-    com.post(api.common.queryMeasurementUnit, {}, function (res) {
-        items.measurementUnit.bindData(res.measurementUnits, "name", "name");
-    });
-
-    com.post(api.inventory.queryAccessoriesType, {}, function (res) {
-        items.accessoriesType.bindData(res.accessoriesTypes, 'atid', 'name', true);
-    });
-
     goodsSeacher.init(['goodsNo', 'goodsName', 'goodsBarcode', 'goodsBrand', 'goodsStatus'], "condList", api.inventory.pageGoodsForAdvance, function (data) {
         displayFunc.init('resultList', data);
     }, "pagenation", "goodsAdvancePostData", null, false, null, function () {
@@ -327,14 +281,14 @@ $(function () {
 
         $adda.click(function () {
 
-            com.cleanItems(items);
+            com.cleanItems(goods.items);
 
             readonly(null);
 
             goods.gid = null;
             goods.bid = null;
 
-            showLayer("添加", "#addLayer");
+            com.popup4model("#addLayer","添加")
         });
 
         $addaImportGood.click(function () {
@@ -346,10 +300,10 @@ $(function () {
             com.focusPage("#uploaddiv").removeClass("hide").appendTo(form);
             com.focusPage("#fileUpload").removeClass("hide");
 
-            items.importBtn.removeClass("hide");
-            items.exportBtn.addClass("hide");
+            goods.btns.importBtn.removeClass("hide");
+            goods.btns.exportBtn.addClass("hide");
 
-            showLayer("导入商品", "#importGoods");
+            com.popup4model("#importGoods","导入商品")
         });
 
         $addaImportColor.click(function () {
@@ -361,10 +315,10 @@ $(function () {
             com.focusPage("#uploaddiv").removeClass("hide").appendTo(form);
             com.focusPage("#fileUpload").removeClass("hide");
 
-            items.importBtn.removeClass("hide");
-            items.exportBtn.addClass("hide");
+            goods.btns.importBtn.removeClass("hide");
+            goods.btns.exportBtn.addClass("hide");
 
-            showLayer("导入颜色", "#importColor");
+            com.popup4model("#importColor","导入颜色")
         });
 
         $addaImportFormat.click(function () {
@@ -376,10 +330,10 @@ $(function () {
             com.focusPage("#uploaddiv").removeClass("hide").appendTo(form);
             com.focusPage("#fileUpload").removeClass("hide");
 
-            items.importBtn.removeClass("hide");
-            items.exportBtn.addClass("hide");
+            goods.btns.importBtn.removeClass("hide");
+            goods.btns.exportBtn.addClass("hide");
 
-            showLayer("导入规格", "#importFormat");
+            com.popup4model("#importFormat","导入规格")
         });
 
         $addaImportPrice.click(function () {
@@ -391,10 +345,10 @@ $(function () {
             com.focusPage("#uploaddiv").removeClass("hide").appendTo(form);
             com.focusPage("#fileUpload").removeClass("hide");
 
-            items.importBtn.removeClass("hide");
-            items.exportBtn.addClass("hide");
+            goods.btns.importBtn.removeClass("hide");
+            goods.btns.exportBtn.addClass("hide");
 
-            showLayer("导入价格", "#importPrice");
+            com.popup4model("#importPrice","导入价格")
         });
 
         $deleteImportPrice.click(function () {
@@ -406,10 +360,10 @@ $(function () {
             com.focusPage("#uploaddiv").removeClass("hide").appendTo(form);
             com.focusPage("#fileUpload").removeClass("hide");
 
-            items.importBtn.removeClass("hide");
-            items.exportBtn.addClass("hide");
+            goods.btns.importBtn.removeClass("hide");
+            goods.btns.exportBtn.addClass("hide");
 
-            showLayer("删除价格", "#deletePrice");
+            com.popup4model("#deletePrice","删除价格")
         });
 
         $addaExportGoods.click(function () {
@@ -433,57 +387,14 @@ $(function () {
             com.focusPage("#uploaddiv").removeClass("hide").appendTo(form);
             com.focusPage("#fileUpload").addClass("hide");
 
-            items.importBtn.addClass("hide");
-            items.exportBtn.removeClass("hide");
+            goods.btns.importBtn.addClass("hide");
+            goods.btns.exportBtn.removeClass("hide");
 
-            showLayer("导出商品", "#exportGoods");
+            com.popup4model("#exportGoods","导出商品")
         });
 
         return [$addaExportGoods, $addaImportGood, $addaImportColor, $addaImportFormat, $addaImportPrice, $deleteImportPrice, $adda];
     }, 'resultList');
-
-    function showLayer(title, layerId) {
-
-        var $content = com.focusPage(layerId);
-
-        layer.open({
-            type: 1,
-            title: title,
-            content: $content,
-            area: [($(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620) + "px", $content.height() + "px"],
-            maxmin: false,
-            move: false,
-            zIndex: 9000,
-            cancel: function () {
-                com.clearValidator();
-                layer.closeAll();
-
-                items.executeDates.val("");
-                items.executeTimes.val("");
-            }
-        });
-    }
-
-    function skipLayer(title, url) {
-        var $PopUp = com.focusPage('#layerPopUp');
-
-        var index = layer.open({
-            type: 1,
-            skin: 'layui-layer-lan',
-            title: title,
-            content: $PopUp,
-            area: ["1200px", ($(window).height() * 0.84 < 800 ? $(window).height() * 0.84 : 800) + "px"],
-            maxmin: false,
-            move: false,
-            zIndex: 9000,
-            success: function (layer, index) {
-                $PopUp.load(url);
-            },
-            end: function () {
-                goodsSeacher.doSearch();
-            }
-        });
-    }
 
     function updateStatus(gid, status, callback) {
 
@@ -505,45 +416,45 @@ $(function () {
         }
 
         var gid = goods.gid;
-        var atid = items.accessoriesType.val();
+        var atid = goods.items.accessoriesType.val();
 
         var url = api.inventory.updateGoods;
         var options = {
-            "goods.type": items.type.val(),
-            "goods.purchase": items.purchase.val(),
-            "goods.selling": items.selling.val(),
+            "goods.type": goods.items.type.val(),
+            "goods.purchase": goods.items.purchase.val(),
+            "goods.selling": goods.items.selling.val(),
             "goods.accessoriesType.atid": atid == null || atid == "" ? "" : atid
         };
 
         if (!gid) {
             url = api.inventory.addGoods;
-            options["goods.no"] = items.no.val();
-            options["goods.name"] = items.name.val();
-            options["goods.barcode"] = items.barcode.val();
+            options["goods.no"] = goods.items.no.val();
+            options["goods.name"] = goods.items.name.val();
+            options["goods.barcode"] = goods.items.barcode.val();
             options["goods.bid"] = goods.bid;
-            options["goods.category"] = items.category.val();
-            options["goods.measurementUnit"] = items.measurementUnit.val();
-            options["goods.pieceNum"] = items.pieceNum.val();
+            options["goods.category"] = goods.items.category.val();
+            options["goods.measurementUnit"] = goods.items.measurementUnit.val();
+            options["goods.pieceNum"] = goods.items.pieceNum.val();
         } else {
             options["goods.gid"] = goods.gid;
         }
 
         com.post(url, options, function (res) {
-            layer.closeAll();
+            com.closePopup();
             goodsSeacher.doSearch();
         });
     }
 
     function readonly(disabled) {
 
-        items.no.attr("disabled", disabled);
-        items.type.attr("disabled", disabled);
-        items.name.attr("disabled", disabled);
-        items.barcode.attr("disabled", disabled);
-        items.category.attr("disabled", disabled);
-        items.brand.attr("disabled", disabled);
-        items.measurementUnit.attr("disabled", disabled);
-        items.pieceNum.attr("disabled", disabled);
+        goods.items.no.attr("disabled", disabled);
+        goods.items.type.attr("disabled", disabled);
+        goods.items.name.attr("disabled", disabled);
+        goods.items.barcode.attr("disabled", disabled);
+        goods.items.category.attr("disabled", disabled);
+        goods.items.brand.attr("disabled", disabled);
+        goods.items.measurementUnit.attr("disabled", disabled);
+        goods.items.pieceNum.attr("disabled", disabled);
     }
 
     //导入创建计划
@@ -574,7 +485,7 @@ $(function () {
 
         } else if (type == "import") {
 
-            var filePath = items.filePath.val();
+            var filePath = goods.items.filePath.val();
 
             if (filePath == null || filePath == "") {
                 com.showAlert(com.warning, "上传文件不能为空");
@@ -586,7 +497,7 @@ $(function () {
             return false;
         }
 
-        var times = items.executeDates.val() + ' ' + items.executeTimes.val();
+        var times = goods.items.executeDates.val() + ' ' + goods.items.executeTimes.val();
         var executeTime = new Date(times);
 
         if (!planUtils.TimeComparison(executeTime, config.planTimeLimit)) {
@@ -602,8 +513,44 @@ $(function () {
 
         com.post(api.information.createPlan, options, function (res) {
             com.showAlert(com.info, "计划创建成功");
-            layer.closeAll();
+            com.closePopup();
         });
     }
+
+    com.focusPage("#attachment").Huploadify({
+        auto: !0,
+        successTimeout: 60000,
+        formData: {
+            username: "用户名",
+            rnd: "加密密文",
+            uploadType: 3
+        },
+        buttonText: "上传附件",
+        buttonClass: "btn btn-sm btn-primary lineheight0",
+        overrideEvents: ["onDialogClose"],
+        fileObjName: "strutsUploads",
+        uploader: config.media + api.common.uploadOther.url,
+        width: "78",
+        onSelectError: function (a, b, c) {
+            switch (b) {
+                case -100:
+                    alert("上传的文件数量已经超出系统限制的" + com.focusPage("#file_upload").uploadify("settings", "queueSizeLimit") + "个文件!");
+                    break;
+                case -110:
+                    alert("文件 [" + a.name + "] 大小超出系统限制的" + com.focusPage("#file_upload").uploadify("settings", "fileSizeLimit") + "大小!");
+                    break;
+                case -120:
+                    alert("文件 [" + a.name + "] 大小异常!");
+                    break;
+                case -130:
+                    alert("文件 [" + a.name + "] 类型不正确!")
+            }
+        },
+        onUploadSuccess: function (a, b, c) {
+            a = eval("(" + b + ")");
+            0 == a.errorCode ? com.focusPage("#filePath").val(a.resUrl) : alert(b)
+        },
+        itemTemplate: '<div id="${fileID}" class="uploadify-queue-item" style="position:absolute;top:-30px;width:200px;left:-200px;">\r\n\t\t\t<div class="cancel">\r\n\t\t\t\t<a href="javascript:$(\'#${instanceID}\').uploadify(\'cancel\', \'${fileID}\')">X</a>\r\n\t\t\t</div>\r\n\t\t\t<span class="fileName">${fileName} (${fileSize})</span><span class="data"></span>\r\n\t\t\t<div class="uploadify-progress">\r\n\t\t\t\t<div class="uploadify-progress-bar"><!--Progress Bar--></div>\r\n\t\t\t</div>\r\n\t\t</div>'
+    });
 
 });

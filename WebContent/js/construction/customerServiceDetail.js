@@ -17,9 +17,6 @@ jQuery(function ($) {
 
     };
 
-    
-
-
     com.post(api.data.queryConstructionNode, {}, function (res) {
         var newNodes = res.constructionNodes.sort(function(a, b){
             return a.sort - b.sort;
@@ -62,10 +59,6 @@ jQuery(function ($) {
 
     com.focusPage('#modal-wizard .modal-header').ace_wizard();
     com.focusPage('#modal-wizard .wizard-actions .btn[data-dismiss=modal]').removeAttr('disabled');
-
-    com.focusPage('#btnBack').on(ace.click_event, function () {
-        com.switchPage(api.index.customerServiceIndex.url);
-    });
 
     function initWizardSept(schedule) {
         addActive(schedule);

@@ -145,10 +145,8 @@ var Searcher = function(){
                     "readonly": true,
                     "data-type":_rtype
                 }).appendTo($item);
-
-                $showItem.daterangepicker(com.dateramgepickerdefault).prev().on(ace.click_event, function(){
-                    $(this).next().focus();
-                });
+                
+                com.datetime($showItem, "date", true);
             }
 
             if(_rtype == "datePicker"){
@@ -163,7 +161,7 @@ var Searcher = function(){
                     "data-type":_rtype
                 }).appendTo($item);
 
-                $showItem.datepicker(com.datepickerdefault);
+                com.datetime($showItem);
             }
 
             if(_rtype=="autofill"){
@@ -431,6 +429,8 @@ var Searcher = function(){
                 _params = _pagenation.getParams(),
                 _params && (_params["paging.rows"] = $(this).val(), _pagenation.getDataByPage(_params))
             });
+            
+            return _pagenation;
         }
     };
 

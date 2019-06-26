@@ -1,7 +1,7 @@
 
 $.extend(api.index, {
     userIndex: {url: "/views/personnel/user.html"},
-    userEditIndex: {url: '/views/personnel/userEdit.html'},
+    userEditIndex: {url: '/views/personnel/user2edit.html'},
     userContractIndex: {url: "/views/personnel/userContract.html"},
     userExperienceIndex: {url: "/views/personnel/userExperience.html"}
 });

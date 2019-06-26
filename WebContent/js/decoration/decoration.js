@@ -54,6 +54,10 @@
     order.infoItems.isCeremony  = com.focusPage("#isCeremony");
     order.infoItems.comment = com.focusPage("#comment");
 
+    com.datetime(com.focusPage("#startTime"));
+    com.datetime(com.focusPage("#endTime"));
+    com.datetime(com.focusPage("#applayTime"));
+
     var contract = {
         decorationOrderId: null
     };
@@ -85,9 +89,7 @@
         });
     });
 
-    com.focusPage('.date-picker').datepicker(com.datepickerdefault).next().on(ace.click_event, function () {
-        $(this).prev().focus();
-    });
+
 
     com.focusPage("#additionalInfoBtn").on('click', function (res) {
 
@@ -100,8 +102,8 @@
                 com.focusPage("#additionalTermsModal").modal("show");
             } else {
                 com.focusPage("#workingDuration").val(res.decorationContract.workingDuration);
-                com.focusPage("#startTime").datepicker('update', res.decorationContract.startTime);
-                com.focusPage("#endTime").datepicker('update', res.decorationContract.endTime);
+                com.focusPage("#startTime").val( res.decorationContract.startTime);
+                com.focusPage("#endTime").val(res.decorationContract.endTime);
                 com.focusPage("#additionalInfo").html(res.decorationContract.additionalInfo);
                 com.focusPage("#additionalTermsModal").modal("show");
             }
@@ -239,9 +241,6 @@
         order.infoItems.isCeremony.bindData(res.isCeremony, "key", "value", false);
     });
 
-    com.focusPage('.date-picker').datepicker(com.datepickerdefault).next().on(ace.click_event, function () {
-        com.focusPage(this).prev().focus();
-    });
 
     com.post(api.data.queryConstructionNode, {}, function (res) {
         $.each(res.constructionNodes, function (i, v) {
@@ -897,6 +896,7 @@
                 list: res.paging.data
             }, function (v) {
                 v.status = order.decorationOrderStatus[v.status];
+                v.projectStatus = order.projectStatusArr[v.projectStatus];
             });
 
         });

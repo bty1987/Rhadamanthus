@@ -39,7 +39,7 @@ jQuery(function($) {
 		rejectMaterialSubOrderModal : com.focusPage("#rejectMaterialSubOrderModal").on('show.bs.modal',function(e){
 			com.focusPage("#refund").val("");
 			com.focusPage("#refundDes").val("");
-			com.updateChosen('approver', '', '');
+			com.updateTypeahead('approver', '', '');
 			com.clearValidator();
 			com.clearValidator("#refund", true);
 		}),
@@ -288,7 +288,7 @@ jQuery(function($) {
 	materialSubOrderItemPostData["materialSubOrder.maling"] = materialSubOrderPostData["materialSubOrder.maling"];
 	materialSubOrderItemPostData["materialSubOrder.venderMaling"] = materialSubOrderPostData["materialSubOrder.venderMaling"];
 
-	com.initChosen('approver', api.system.queryApproveUserForNameByType, "user.userNamePinYin", {"approveUser.type": 6}, "autoFillKeyValue", "key", "value");
+	// com.initTypeahead('approver', api.system.queryApproveUserForNameByType, "user.userNamePinYin", {"approveUser.type": 6}, "autoFillKeyValue", "key", "value",null);
 
 	function initList(){
 		var options = {};
@@ -432,13 +432,13 @@ jQuery(function($) {
 			var $numCell = $(this).find('.num');
 			var $numv = $(this).find('.num .numv');
 			$numv.hide();
-			var $editInput = $('<div></div>').addClass('fl-ma-num-input').css('background', 'transparent').append($('<input/>').attr('type', 'text').addClass('v_required v_float')).appendTo($numCell);
+			var $editInput = $('<div></div>').addClass('fl-ma-num-input').css('background', 'transparent').append($('<input/>').attr('type', 'text').addClass('v_required v_float_3')).appendTo($numCell);
 			$editInput.find('input').val($numv.text()).focus().select();
 		});
 		$line.find('.option > button').addClass('hide');
 		$line.find('.option > div').removeClass('hide');
 		var $total = $line.find('.total');
-		var $editInput = $('<input/>').attr('type', 'text').addClass('v_required v_float').val($total.text()).focus().select();
+		var $editInput = $('<input/>').attr('type', 'text').addClass('v_required v_float_3').val($total.text()).focus().select();
 		$total.attr('total',$total.text()).html($editInput);
 	}
 
@@ -446,7 +446,7 @@ jQuery(function($) {
 		var $numCell = $line.find('.num');
 		var $numv = $line.find('.num .numv');
 		$numv.hide();
-		var $editInput = $('<div></div>').addClass('fl-ma-num-input').css('background', 'transparent').append($('<input/>').attr('type', 'text').addClass('v_required v_float')).appendTo($numCell);
+		var $editInput = $('<div></div>').addClass('fl-ma-num-input').css('background', 'transparent').append($('<input/>').attr('type', 'text').addClass('v_required v_float_3')).appendTo($numCell);
 		$editInput.find('input').val($numv.text()).focus().select();
 		$line.find('.option > button').addClass('hide');
 		$line.find('.option > div').removeClass('hide');
@@ -497,7 +497,6 @@ jQuery(function($) {
 
             }, function (result) {
                 alert(result);
-                console.log(result);
                 com.showAlert(com.error, "数据删除失败!");
             });
         });

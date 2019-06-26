@@ -1,6 +1,4 @@
-/**
- * Created by Administrator on 2017/7/26 0026.
- */
+
 jQuery(function ($) {
 
 	var $layerImport = com.focusPage("#layerImport");
@@ -11,12 +9,7 @@ jQuery(function ($) {
         configFlag : false,
     };
 
-    if (jQuery().datepicker) {
-        com.focusPage('.date-picker').datepicker({
-            format: 'yyyy-mm-dd',//yyyy-mm-dd hh:ii,
-            autoclose:true
-        });
-    }
+    com.datetime(com.focusPage(".date-picker"), "date");
 
     var displayFunc = (function () {
         var renderList = function(tableId,listData){
@@ -255,7 +248,7 @@ jQuery(function ($) {
     });
     
     function addProductionPlan(addCallBack) {
-        layer.closeAll();
+        com.closePopup();
         layer.open({
             type: 1,
             skin: 'layui-layer-lan',
@@ -279,7 +272,7 @@ jQuery(function ($) {
     }
 
     function editProductionPlan(callback){
-        layer.closeAll();
+        com.closePopup();
         layer.open({
             type: 1,
             skin: 'layui-layer-lan',
@@ -347,7 +340,7 @@ jQuery(function ($) {
     }
 
     function openlayerImport(){
-        layer.closeAll();
+        com.closePopup();
         layer.open({
             type: 1,
             skin: 'layui-layer-lan',

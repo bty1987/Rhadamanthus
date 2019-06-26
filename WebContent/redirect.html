@@ -23,7 +23,7 @@
         var args = window.location.search.substr(1);
     
 	    if(args.indexOf('authentication=') != -1){
-	        authentication = args.substring(args.indexOf('authentication=')).split('=')[1];
+	        authentication = args.substr(args.indexOf('=') + 1);
 	        
 	        setCookie("authentication" , authentication , config.timeout);
 	        setCookie("loginTime" , new Date().getTime() , config.timeout);

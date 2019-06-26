@@ -161,7 +161,7 @@ $(function () {
     }, 'resultList');
 
     function openlayer(layerType,callback) {
-        layer.closeAll();
+        com.closePopup();
         layer.open({
             type: 1,
             skin: 'layui-layer-lan',
@@ -216,7 +216,7 @@ $(function () {
     function queryWorkplan(id) {
         var $popup = com.focusPage('#viewPopUp');
         $popup.attr('data-wsid', id);
-        layer.closeAll();
+        com.closePopup();
         layer.open({
             type: 1,
             skin: 'layui-layer-lan',

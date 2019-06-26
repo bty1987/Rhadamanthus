@@ -29,10 +29,45 @@
                     </div>
                 </div>
                 <div class="space-4"></div>
+                <div class="form-group col-xs-11 col-sm-11" style="text-align: right;top: -10px;">
+                    <button type="button" id="depositBtn" class="btn btn-primary">确定</button>
+                </div>
             </form>
         </div>
         <div class="modal-footer">
             <span id="paymentInfo" class="alert-danger pull-left inline"></span>
+        </div>
+    </div>
+
+    <div id="workerGold" style="padding: 10px 0;display: none">
+        <div class="modal-header">
+            <h4 class="modal-title" id="myModalLabelGold">工人质保金</h4>
+        </div>
+        <div class="modal-body">
+            <form class="form-horizontal" id="formGold">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right" for="moneyGold">金额</label>
+                    <div class="col-md-9">
+                        <input type="text" id="moneyGold" class="col-xs-10 col-sm-5 v_required v_float"
+                               data-toggle="popover" data-trigger='manual'/>
+                    </div>
+                </div>
+                <div class="space-4"></div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right" for="commentGold">备注</label>
+                    <div class="col-md-9">
+                        <textarea id="commentGold" class="col-md-6 v_name" rows="3" data-toggle="popover"
+                                  data-trigger='manual' maxlength="40"></textarea>
+                    </div>
+                </div>
+                <div class="space-4"></div>
+                <div class="form-group col-xs-11 col-sm-11" style="text-align: right;top: -10px;">
+                    <button type="button" id="goldBtn" class="btn btn-primary">确定</button>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <span id="paymentInfoGold" class="alert-danger pull-left inline"></span>
         </div>
     </div>
 
@@ -48,6 +83,9 @@
                         <input type="text" id="toplimit" class="col-xs-10 col-sm-6 v_required v_float"
                                data-toggle="popover" data-trigger='manual'/>
                     </div>
+                </div>
+                <div class="form-group col-xs-11 col-sm-11" style="text-align: right;top: -10px;">
+                    <button type="button" id="toplimitBtn" class="btn btn-primary">确定</button>
                 </div>
             </form>
         </div>
@@ -85,10 +123,52 @@
                     </div>
                 </div>
                 <div class="space-4"></div>
+                <div class="form-group col-xs-11 col-sm-11" style="text-align: right;top: -10px;">
+                    <button type="button" id="workerBtn" class="btn btn-primary">确定</button>
+                </div>
             </form>
         </div>
         <div class="modal-footer">
             <span id="salaryInfo" class="alert-danger pull-left inline"></span>
+        </div>
+    </div>
+
+    <div id="workerLabor" style="padding: 10px 0;display: none">
+        <div class="modal-header">
+            <h4 class="modal-title" id="myModalLabor">工人工费</h4>
+        </div>
+        <div class="modal-body">
+            <form class="form-horizontal" id="formsLabor">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right" for="workerUserLabor">员工姓名</label>
+                    <div class="col-md-9">
+                        <input type="text" id="workerUserLabor" class="col-xs-10 col-sm-5"
+                               data-toggle="popover" data-trigger='manual'readonly="readonly"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right" for="moneyLabor">金额</label>
+                    <div class="col-md-9">
+                        <input type="text" id="moneyLabor" class="col-xs-10 col-sm-5 v_required v_float"
+                               data-toggle="popover" data-trigger='manual'/>
+                    </div>
+                </div>
+                <div class="space-4"></div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right" for="commentLabor">备注</label>
+                    <div class="col-md-9">
+                        <textarea id="commentLabor" class="col-md-6 v_name" rows="3" data-toggle="popover"
+                                  data-trigger='manual' maxlength="40"></textarea>
+                    </div>
+                </div>
+                <div class="space-4"></div>
+                <div class="form-group col-xs-11 col-sm-11" style="text-align: right;top: -10px;">
+                    <button type="button" id="LaborBtn" class="btn btn-primary">确定</button>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <span id="LaborInfo" class="alert-danger pull-left inline"></span>
         </div>
     </div>
 
@@ -104,10 +184,6 @@
                         <div class="form-group " >
                             <label class="col-sm-3 control-label no-padding-right " for="workertransferuser">转款人</label>
                             <div class="col-md-9">
-                                <!--  <select id="workertransferuser" class="chosen-select col-xs-10 col-sm-6 v_required "  data-toggle="popover" data-trigger='manual'>
-                                    <option value="">&nbsp;</option>
-                                </select>
-                                -->
                                 <input id="workertransferuser" class="col-xs-10 col-sm-6 v_typeahead v_required " type="text" data-toggle="popover" data-placement="bottom" data-trigger='manual'/>
                                 <span class='star'></span>
                             </div>
@@ -117,10 +193,6 @@
                         <div class="form-group " >
                             <label class="col-sm-3 control-label no-padding-right " for="workercollectuser">收款人</label>
                             <div class="col-md-9">
-                               <!-- <select id="workercollectuser" class="chosen-select col-xs-10 col-sm-6 v_required "  data-toggle="popover" data-trigger='manual'>
-                                    <option value="">&nbsp;</option>
-                                </select>
-								-->
 								 <input id="workercollectuser" class="col-xs-10 col-sm-6 v_typeahead v_required " type="text" data-toggle="popover" data-placement="bottom" data-trigger='manual'/>
 								 <span class='star'></span>
                             </div>

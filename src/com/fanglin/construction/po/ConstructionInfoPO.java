@@ -22,10 +22,10 @@ public class ConstructionInfoPO implements Serializable {
 	public static final String COLUMN_ORDERID_STR = "orderId";
 
 	private long ciid;
-	
-	private String orderId;
 
 	private long cid;
+
+	private String orderId;
 
 	private short ishovel;
 
@@ -59,7 +59,7 @@ public class ConstructionInfoPO implements Serializable {
 	public void setCiid(long ciid) {
 		this.ciid = ciid;
 	}
-	
+
 	@Column(name = "orderId")
 	public String getOrderId() {
 		return orderId;
@@ -115,5 +115,4 @@ public class ConstructionInfoPO implements Serializable {
 		this.comment = comment;
 	}
 
-	
 }

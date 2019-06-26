@@ -25,7 +25,7 @@ jQuery(function ($) {
         options: {}
     };
 
-    
+
     com.post(api.data.queryConstructionNode, {}, function (res) {
         $.each(res.constructionNodes, function (i, v) {
             acceptanceDetail.constructionScheName[v.cnid] = v.name;
@@ -106,13 +106,11 @@ jQuery(function ($) {
     };
 
     com.focusPage("#saveBtn").bindClick(save);
-    com.focusPage('.date-picker').datepicker(com.datepickerdefault);
-
+    com.datetime(com.focusPage("#acceptanceTime"));
     com.focusPage("#backBtn").click(function () {
         com.switchPage(api.index.acceptanceIndex.url);
     });
 
-   
     function constructerImg(imgPath, name, duty, schedule) {
 
         var pane = $("<div ></div>").addClass("col-xs-3 col-md-3 widget-container-span ui-sortable").appendTo(com.focusPage("#" + acceptanceDetail.constructionScheName[schedule]));

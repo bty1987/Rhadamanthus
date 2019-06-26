@@ -122,7 +122,7 @@ jQuery(function (a) {
                     checkQRLogin(flag)
                 }, 4000)
             } else if (0 == statusCode) {
-                setCookie("authentication", data.loginInfo.authentication, config.timeout);
+                setCookie("authentication", data.loginInfo.authentication.replace(/[\r\n]/g,""), config.timeout);
                 setCookie("loginTime", new Date().getTime(), config.timeout);
                 if (!parent.window.isPC) {
                     window.location.href = "index.html?timestamp=" + new Date().getTime();
@@ -144,7 +144,7 @@ jQuery(function (a) {
                     checkWXLogin(flag)
                 }, 4000)
             } else if (0 == statusCode) {
-                setCookie("authentication", data.loginInfo.authentication, config.timeout);
+                setCookie("authentication", data.loginInfo.authentication.replace(/[\r\n]/g,""), config.timeout);
                 setCookie("loginTime", new Date().getTime(), config.timeout);
                 if (!parent.window.isPC) {
                     window.location.href = "index.html?timestamp=" + new Date().getTime();

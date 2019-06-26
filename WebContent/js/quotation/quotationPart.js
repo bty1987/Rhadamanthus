@@ -1284,7 +1284,8 @@ var QuotationDetail = (function(){
 			//将说明写入到提示框中
 			var $item = $('<li></li>').addClass('fl-quo-item').prop('title',qv.content);
 
-			var _dcp = 0 ;
+			var _dcp = 0;
+			
 			if(qv.type < 2){
 				//计算是否打折计算出折扣后的价格    单价
 				_dcp = utils.accMul(qv.unitPrice, (qv.discount == 1 ? utils.accDiv(quo.basicParams['quotation.discount'], 10) : 1));//折后单价1打折,0不打折
@@ -1292,13 +1293,11 @@ var QuotationDetail = (function(){
 				_dcp = utils.changeThrDecimal(_dcp);
 			}
 			
-			if(qv.type == 2){
-				//单价
+			if(qv.type == 2){ // 车运费
 				_dcp =  qv.unitPrice;
 			}
 			
-			if(qv.type == 3){
-				//单价+非业务人员提点
+			if(qv.type == 3){ // 管理费 , 单价+非业务人员提点
 				_dcp = qv.unitPrice + quo.notSalesmanRate;
 			}
 

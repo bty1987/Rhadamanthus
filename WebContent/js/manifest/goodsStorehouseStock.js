@@ -1,6 +1,11 @@
 $(function () {
 
-    com.initTypeahead(".col-xs-10", api.inventory.queryGoodsByName, "goods.name", {}, "goodes", "gid", "name", function (list, k, v) {
+    var goodsStorehouseStock = {
+        submitBtn: com.focusPage("#submitBtn"),
+        confirm: com.focusPage("#confirm"),
+    };
+    goodsStorehouseStock.formStore =com.focusPage('#formStore');
+    com.initTypeahead("name", api.inventory.queryGoodsByName, "goods.name", {}, "goodes", "gid", "name", function (list, k, v) {
         com.focusPage('#layerAddGoodsStorehouseStock').find('input[name="name"]').attr('data-gid', k);
         com.post(api.inventory.queryColorForEnableByGid, {
             "color.gid": k
@@ -14,6 +19,10 @@ $(function () {
         });
 
         return v;
+    });
+
+    goodsStorehouseStock.submitBtn.click(function () {
+        addData()
     });
 
     com.post(api.inventory.queryStorehouseForSelf, {}, function (res) {
@@ -121,16 +130,10 @@ $(function () {
                 clearForm('formStore');
 
                 com.focusPage('#layerAddStrore').find('input[name="num"]').val(v.num);
-
-                openlayer(function () {
-
-                    if (com.validate('formStore'))
-                        return false;
-
-                    saveData(v.goods.gid, v.storehouse.shid, v.color.cid, v.format.fid, 0, function () {
-                        com.clearValidator("#newNum", true);
-                        layer.closeAll();
-                    });
+                com.popup4model('#layerAddStrore', '盘盈');
+                goodsStorehouseStock.formStore.attr('_data-type', '0');
+                goodsStorehouseStock.confirm.click(function () {
+                    saveData(v.goods.gid, v.storehouse.shid, v.color.cid, v.format.fid)
                 });
             });
 
@@ -139,27 +142,29 @@ $(function () {
                 clearForm('formStore');
 
                 com.focusPage('#layerAddStrore').find('input[name="num"]').val(v.num);
-
-                openlayer(function () {
-
-                    if (com.validate('formStore'))
-                        return false;
-
-                    saveData(v.goods.gid, v.storehouse.shid, v.color.cid, v.format.fid, 1, function () {
-                        com.clearValidator("#newNum", true);
-                        layer.closeAll();
-                    });
+                com.popup4model('#layerAddStrore', '盘亏');
+                goodsStorehouseStock.formStore.attr('_data-type', '1');
+                goodsStorehouseStock.confirm.click(function () {
+                    saveData(v.goods.gid, v.storehouse.shid, v.color.cid, v.format.fid)
                 });
             });
 
             //拆分按钮点击事件
             $btnSplit.click(function () {
-                openlayerPackage(v, $btnSplit.text(), "views/manifest/goods2ms.html")
+                params['goodsStorehouseStock'] = v;
+                com.focusPage('#splitAndMergePopUp').attr('data-title', $btnSplit.text());
+                com.popup4page('#splitAndMergePopUp', "views/manifest/goods2ms.html", "拆分", function () {
+                    goodsStorehouseSeacher.doSearch();
+                });
             });
 
             //合并按钮点击事件
             $btnMerge.click(function () {
-                openlayerPackage(v, $btnMerge.text(), "views/manifest/goods2ms.html")
+                params['goodsStorehouseStock'] = v;
+                com.focusPage('#splitAndMergePopUp').attr('data-title', $btnMerge.text());
+                com.popup4page('#splitAndMergePopUp', "views/manifest/goods2ms.html", "合并", function () {
+                    goodsStorehouseSeacher.doSearch();
+                });
             });
 
             return $liLine;
@@ -200,22 +205,9 @@ $(function () {
             $adda.click(function () {
 
                 clearForm('formStore2');
-                openlayerAdd(function () {
-                    if (com.validate('formStore2'))
-                        return;
-
-                    addData(function () {
-
-                        com.clearValidator("#name", true);
-                        com.clearValidator("#color", true);
-                        com.clearValidator("#format", true);
-                        com.clearValidator("#storehouse", true);
-                        com.clearValidator();
-
-                        com.showAlert(com.info, "操作成功");
-                    })
-
-                })
+                emptyAdd();
+                com.clearValidator();
+                com.popup4model('#layerAddGoodsStorehouseStock', "添加");
             });
             return [$impa, $adda];
 
@@ -273,83 +265,12 @@ $(function () {
         });
     }
 
-    //盘点弹窗
-    function openlayer(callback) {
-        layer.closeAll();
-        layer.open({
-            type: 1,
-            //skin: 'layui-layer-lan',
-            title: "盘点",
-            content: com.focusPage('#layerAddStrore'),
-            area: ($(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620) + "px",
-            maxmin: false,
-            zIndex: 9000,
-            btn: ['确定', '取消'],
-            yes: function (index, layero) {
-                callback(index, layero);
-            }
-        });
-    }
-
-    //添加弹窗
-    function openlayerAdd(callback) {
-        layer.closeAll();
-        layer.open({
-            type: 1,
-            //skin: 'layui-layer-lan',
-            title: "添加",
-            content: com.focusPage('#layerAddGoodsStorehouseStock'),
-            area: ($(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620) + "px",
-            maxmin: false,
-            zIndex: 9000,
-            btn: ['确定', '取消'],
-            yes: function (index, layero) {
-                callback(index, layero);
-            },
-            btn2: function (index, layero) {
-                //按钮【按钮二】的回调
-                emptyAdd();
-                goodsStorehouseSeacher.doSearch();
-            },
-            cancel: function () {
-                //右上角关闭回调
-                emptyAdd();
-                goodsStorehouseSeacher.doSearch();
-            }
-        })
-    }
-
-    //拆分,合并弹窗
-    function openlayerPackage(v, title, url) {
-
-        var $PopUp = com.focusPage('#splitAndMergePopUp');
-        params['goodsStorehouseStock'] = v;
-        $PopUp.attr({'data-title': title});
-        //弹出即全屏
-        var index = layer.open({
-            type: 1,
-            skin: title == "拆分" ? 'layui-layer-molv' : 'layui-layer-lan',
-            title: title,
-            content: $PopUp,
-            area: ["1200px", ($(window).height() * 0.84 < 800 ? $(window).height() * 0.84 : 800) + "px"],
-            maxmin: false,
-            zIndex: 9000,
-            success: function (layer, index) {
-                $PopUp.load(url);
-            },
-            end: function () {
-                params['goodsStorehouseStock'] = null;
-                $PopUp.attr({'data-title': null});
-                $PopUp.empty();
-                goodsStorehouseSeacher.doSearch();
-            }
-        });
-    }
-
-    function saveData(gid, shid, cid, fid, type, callback) {
-
+    function saveData(gid, shid, cid, fid) {
+        if (com.validate('formStore', "right")) {
+            return false;
+        }
         var $layer = com.focusPage('#layerAddStrore');
-
+        var type = com.focusPage('#formStore').attr('_data-type');
         var newNum = $layer.find('input[name="newNum"]').val();
 
         com.post(api.inventory.checkGoodsStorehouseStock, {
@@ -360,13 +281,18 @@ $(function () {
             "checkList.type": type,
             "checkList.num": Math.abs(parseFloat(newNum))
         }, function (res) {
-            callback();
+            com.clearValidator("#newNum", true);
+            com.focusPage('#formStore').removeAttr('_data-type');
+            com.closePopup();
             goodsStorehouseSeacher.doSearch();
         });
 
     }
 
     function addData(callback) {
+        if (com.validate("formStore2", "right")) {
+            return false;
+        }
         var $layer = com.focusPage('#layerAddGoodsStorehouseStock');
         var gid = $layer.find('input[name="name"]').attr('data-gid');
         var cid = $layer.find('select[name="color"] option:selected').val();
@@ -380,7 +306,8 @@ $(function () {
             "goodsStorehouseStock.storehouse.shid": shid
         }, function (res) {
             callback();
-            emptyAdd();
+
+            com.showAlert(com.info, "操作成功");
             goodsStorehouseSeacher.doSearch();
         })
     }

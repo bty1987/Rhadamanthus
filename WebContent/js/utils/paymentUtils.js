@@ -41,25 +41,27 @@ var paymentUtils = {
         var bankMoneyDiv_ = $('<div></div>').addClass('form-group').appendTo(bankDiv);
         var bankMoneyLabel = $('<label></label>').addClass('col-sm-3 control-label no-padding-right').text('刷卡金额').appendTo(bankMoneyDiv_);
         var bankMoneyDiv = $('<div></div>').addClass('col-sm-8').appendTo(bankMoneyDiv_);
-        var bankMoneyInput = $('<input/>').addClass("col-sm-6 v_required v_float").attr("data-toggle", "popover").attr("data-trigger", "manual").attr("type", "text").attr("id", pageName + name + "_"+index).appendTo(bankMoneyDiv);
+        var bankMoneyInput = $('<input/>').addClass("col-sm-6 v_required v_float_3").attr("data-toggle", "popover").attr("data-trigger", "manual").attr("type", "text").attr("id", pageName + name + "_"+index).appendTo(bankMoneyDiv);
 
         var bankDateDiv_ = $('<div></div>').addClass('form-group').appendTo(bankDiv);
         var bankDateLabel = $('<label></label>').addClass('col-sm-3 control-label no-padding-right').text('日期').appendTo(bankDateDiv_);
         var bankDateDiv = $('<div></div>').addClass('col-sm-8').appendTo(bankDateDiv_);
-        var bankDateInput = $('<input/>').addClass("date-picker-date col-sm-6 v_required").attr("readonly", "readonly").attr("data-toggle", "popover").attr("data-trigger", "manual").attr("type", "text").attr("id", pageName + name + "Date_"+index).attr("data-date-format", "yyyy-mm-dd").val(currentData).datepicker(com.datepickerdefault).appendTo(bankDateDiv);
+        var bankDateInput = $('<input/>').addClass("date-picker-date col-sm-6 v_required").attr("readonly", "readonly").attr("data-toggle", "popover").attr("data-trigger", "manual").attr("type", "text").attr("id", pageName + name + "Date_"+index).attr("data-date-format", "yyyy-mm-dd").val(currentData).appendTo(bankDateDiv);
+        com.datetime(bankDateInput);
 
         var bankTimeDiv_ = $('<div></div>').addClass('form-group').appendTo(bankDiv);
         var bankTimeLabel = $('<label></label>').addClass('col-sm-3 control-label no-padding-right').text('时间').appendTo(bankTimeDiv_);
         var bankTimeDiv = $('<div></div>').addClass('col-sm-8').appendTo(bankTimeDiv_);
         var bankTimePicker = $('<div></div>').addClass('bootstrap-timepicker').appendTo(bankTimeDiv);
-        var bankTimeInput =  $('<input/>').addClass('col-sm-6 v_time v_required').attr("type", "text").attr("id", pageName + name + "Time_"+index).attr("data-toggle", "popover").attr("data-trigger", "manual").mask('99:99:99').appendTo(bankTimePicker);
+        var bankTimeInput = $('<input/>').addClass('timepicker col-sm-6 v_required').attr("type", "text").attr("id", pageName + name + "Time_"+index).appendTo(bankTimePicker);
+        com.datetime(bankTimeInput, "time");
 
         com.selectTypeahead(pageName + bankUtilName +index, bankUtil, "key", "value", null);
     },
 
-    getBankInfoParams:  function(nameData, htmlName, bankNums, checkvNums, couponCount, typeUpdate, couponUpdate, _paymentInfo){//1.decorationPayment.paymentModelNameData, 2."material"装修的是空"" 3.decorationPayment.bankNums, 4 decorationPayment.checkvNums 5、couponCount 6. decorationPayment.typeUpdate 7. decorationPayment.couponUpdate 8: 收款还是退款 payment/refund
+    getBankInfoParams:  function(nameData, htmlName, bankNums, checkvNums, couponCount, typeUpdate, couponUpdate){//1.decorationPayment.paymentModelNameData, 2."material"装修的是空"" 3.decorationPayment.bankNums, 4 decorationPayment.checkvNums 5、couponCount 6. decorationPayment.typeUpdate 7. decorationPayment.couponUpdate
         var realPayment = 0;
-        var args = [];
+        var args = {};
 
         for(var i=0;i<nameData.length;i++){
             var _paymentName = nameData[i];
@@ -67,20 +69,9 @@ var paymentUtils = {
             var _inputId = _paymentName;
             var _selectId = "";
 
-            if(_paymentName == "coupon" || _paymentName == "advance"){
+            if(_paymentName == "advance"){
                 _selectId = _paymentName + "Type";
-                com.focusPage("#" + _selectId).on("change", function(){
-                    com.focusPage(_paymentInfo).text("");
-                });
             }
-
-            com.focusPage("#"+ _paymentName + "Checkbox").on("change", function(){
-                com.focusPage(_paymentInfo).text("");
-            });
-
-            com.focusPage("#"+_paymentName).on("keydown", function(){
-                com.focusPage(_paymentInfo).text("");
-            });
 
             if(com.focusPage(_checkboxId).prop("checked")){
                 var _payment = 0;
@@ -121,10 +112,10 @@ var paymentUtils = {
                     var _coupon = 0;
                     var _couponInfo = "#";
 
-                    com.focusPage("[class='search-choice']", "#couponType_chosen").each(function(i,e){
-                        _couponVal = com.focusPage(e).children('span').children('input').val();
+                    com.focusPage("#couponUl>li").each(function(i, e){
+                        _couponVal = com.focusPage(e).children('span').attr('money');
                         _coupon = utils.accAdd(parseFloat(_coupon), parseFloat(_couponVal));
-                        _couponInfo += com.focusPage(e).children('span').text()+":"+_couponVal+"#";
+                        _couponInfo += com.focusPage(e).children('span').attr('typeName') + ":" + _couponVal +"#";
 
                         couponCount++;
                     });
@@ -142,7 +133,7 @@ var paymentUtils = {
                     _payment = com.focusPage("#"+_inputId).val();
                 }
 
-                if(com.focusPage(_checkboxId).attr("select") == "1" && (_paymentName == "coupon" || _paymentName == "advance")){
+                if(com.focusPage(_checkboxId).attr("select") == "1" && _paymentName == "advance"){
                     args[_selectId] = com.focusPage("#"+_selectId).val();
                 }
 
@@ -227,11 +218,6 @@ var paymentUtils = {
         decorationPayment.bankNums = [];
         decorationPayment.checkvNums = [];
 
-        decorationPayment.items.couponType.chosen("destroy");
-        decorationPayment.items.couponType.chosen({width: "100%", multi_type: "input"});
-        decorationPayment.items.couponType.bindData(decorationPayment.couponType, 'no', 'name');
-        decorationPayment.items.couponType.trigger("chosen:updated");
-
         //根据装修单等级获取收据类型等级
         var gradeParam;
         if(payment.decoration.grade == "A" || payment.decoration.grade == "C"){
@@ -245,7 +231,7 @@ var paymentUtils = {
         decorationPayment.bankUtilForGrade = returnGradeParams[0];
         decorationPayment.checkBankUtilForGrade = returnGradeParams[1];
 
-        decorationPayment.baseModal.modal("show");
+        decorationPayment.modals.baseModal.modal("show");
     },
 
     //装修款更新
@@ -333,18 +319,15 @@ var paymentUtils = {
         var realPayment = 0;
         var dpids = "";
         var orderId = "";
-        var _paymentInfo = "#paymentInfo";
         var couponCount = 0;
 
-        com.focusPage(_paymentInfo).text("");
-
-        var returnParams = paymentUtils.getBankInfoParams(decorationPayment.paymentModelNameData, decorationPayment.htmlName, decorationPayment.bankNums, decorationPayment.checkvNums, couponCount, decorationPayment.typeUpdate, decorationPayment.couponUpdate,  _paymentInfo);
+        var returnParams = paymentUtils.getBankInfoParams(decorationPayment.paymentModelNameData, decorationPayment.htmlName, decorationPayment.bankNums, decorationPayment.checkvNums, couponCount, decorationPayment.typeUpdate, decorationPayment.couponUpdate);
 
         var realPayment = returnParams[0];
         var args = returnParams[1];
 
         if(referPayment != realPayment){
-            com.focusPage("#paymentInfo").text("当前实收款项总数与应收款项不等,请核实再进行提交!");
+            com.showAlert(com.warning, "当前实收款项总数与应收款项不等,请核实再进行提交!");
             return false;
         }
 
@@ -359,7 +342,7 @@ var paymentUtils = {
             }
 
             if(_advance > 0 && _advance < parseFloat(com.focusPage("#advance").val())){
-                com.focusPage("#paymentInfo").text("预付款金额大于当前客户预付款余额!");
+                com.showAlert(com.warning, "预付款金额大于当前客户预付款余额!");
                 return false;
             }
         }
@@ -390,7 +373,7 @@ var paymentUtils = {
         com.post(url, options, function(result){
             searcher.doSearch();
             hsearcher.doSearch();
-            decorationPayment.baseModal.modal("hide");
+            decorationPayment.modals.baseModal.modal("hide");
 
             var argsDrId = result.decorationPayment.drId;
 
@@ -435,12 +418,7 @@ var paymentUtils = {
             com.focusPage(_inputId).val("");
             com.focusPage(_selectId).val("");
 
-            if(_name == "coupon"){
-                com.focusPage("#couponType").chosen("destroy");
-                com.focusPage("#couponType").chosen({width: "216px", multi_type: "input"});
-                com.focusPage("#couponType").bindData(materialPayment.couponType, 'no', 'name');
-                com.focusPage("#couponType").trigger("chosen:updated");
-            }else if(_name == "bank"){
+            if(_name == "bank"){
                 com.focusPage("#" + materialPayment.htmlName + "bankDivGroup").html("");
                 com.focusPage("#" + materialPayment.htmlName + "bankAdd").attr("num", 0).attr("maxnum", 0);
             }else if(_name == "checkv"){
@@ -452,11 +430,6 @@ var paymentUtils = {
         com.focusPage("des").val("");
 
         com.cleanTypeahead(materialPayment.htmlName + 'cashInfo');
-
-        materialPayment.items.couponType.chosen("destroy");
-        materialPayment.items.couponType.chosen({width: "100%", multi_type: "input"});
-        materialPayment.items.couponType.bindData(materialPayment.couponType, 'no', 'name');
-        materialPayment.items.couponType.trigger("chosen:updated");
 
         var gradeParam;
         if(grade == "B"){
@@ -470,7 +443,7 @@ var paymentUtils = {
         materialPayment.bankUtilForGrade = returnGradeParams[0];
         materialPayment.checkBankUtilForGrade = returnGradeParams[1];
 
-        materialPayment.baseModal.modal("show");
+        materialPayment.modals.baseModal.modal("show");
     },
 
     //主材更新
@@ -562,11 +535,7 @@ var paymentUtils = {
 
         var mpIds = "";
 
-        var _paymentInfo = "#paymentInfo";
-
-        com.focusPage(_paymentInfo).text("");
-
-        var returnParams = paymentUtils.getBankInfoParams(materialPayment.paymentModelNameData, materialPayment.htmlName, materialPayment.bankNums, materialPayment.checkvNums, couponCount, materialPayment.typeUpdate,  materialPayment.couponUpdate, _paymentInfo);
+        var returnParams = paymentUtils.getBankInfoParams(materialPayment.paymentModelNameData, materialPayment.htmlName, materialPayment.bankNums, materialPayment.checkvNums, couponCount, materialPayment.typeUpdate, materialPayment.couponUpdate);
 
         var realPayment = returnParams[0];
         var args = returnParams[1];
@@ -635,7 +604,7 @@ var paymentUtils = {
             }
         });
 
-        materialPayment.baseModal.modal("hide");
+        materialPayment.modals.baseModal.modal("hide");
 
         materialPaymentPostData.paymentInfo = []
     },
@@ -644,9 +613,9 @@ var paymentUtils = {
     salesPaymentUpdate: function(payment, salesPayment){
         salesPayment.myModalLabel.html("更新款项信息");
         salesPayment.collectOrRefundFalg = 4;
-        var $layerrAdd = salesPayment.layerAdd;
-        salesPayment.layerAdd.attr('orderId', payment.sales.orderId);
-        salesPayment.layerAdd.attr('spid', payment.spid);
+        var $layerrAdd = salesPayment.modals.layerAdd;
+        salesPayment.modals.layerAdd.attr('orderId', payment.sales.orderId);
+        salesPayment.modals.layerAdd.attr('spid', payment.spid);
         com.focusPage('#collectDes').val(payment.salesReceipt.comment).attr("readonly", "readonly");
         com.focusPage("#historyUpdateSA").removeClass("hide");
 
@@ -728,7 +697,7 @@ var paymentUtils = {
         salesPayment.bankUtilForGrade = returnGradeParams[0];
         salesPayment.checkBankUtilForGrade = returnGradeParams[1];
 
-        salesPayment.layerAdd.modal("show");
+        salesPayment.modals.layerAdd.modal("show");
     },
 
     //销售收款
@@ -737,7 +706,7 @@ var paymentUtils = {
             return;
         }
 
-        var layerAdd = salesPayment.layerAdd;
+        var layerAdd = salesPayment.modals.layerAdd;
         var des = com.focusPage('#collectDes').val();
 
         if(singleFlag == "single"){
@@ -870,13 +839,7 @@ var paymentUtils = {
                 com.showAlert(com.info, '更新成功')
             }
 
-            if(singleFlag == "single" && collectOrRefund != "refund"){
-                salesPayment.items.couponType.chosen("destroy");
-                salesPayment.items.couponType.chosen({width: "100%", multi_type: "input"});
-                salesPayment.items.couponType.bindData(salesPayment.couponType, 'no', 'name');
-                salesPayment.items.couponType.trigger("chosen:updated");
-            }
-            salesPayment.layerAdd.modal("hide");
+            salesPayment.modals.layerAdd.modal("hide");
         });
     },
 
@@ -954,7 +917,7 @@ var paymentUtils = {
 
     	com.cleanTypeahead(payment.htmlName + 'cashInfo');
 
-        payment.modal.modal("show");
+        payment.modals.modal.modal("show");
 
     	com.focusPage("#paymentTypeDiv").css("display", "inline");
     	com.focusPage("#des").val(v.comment);
@@ -1034,17 +997,17 @@ var paymentUtils = {
             var refundSum = com.focusPage("#refundSum").val();
 
             if(parseFloat(refund) <= 0){
-                com.focusPage("#paymentInfo").text("提款金额需要大于零!");
+                com.showAlert(com.warning, "提款金额需要大于零!");
                 return false;
             }
 
             if(parseFloat(refundSum) < parseFloat(refund)){
-                com.focusPage("#paymentInfo").text("提款金额不能大于余额!");
+                com.showAlert(com.warning, "提款金额不能大于余额!");
                 return false;
             }
 
             if(parseFloat(total)!=parseFloat(refund)){
-                com.focusPage("#paymentInfo").text("当前提款项总数与提款金额不等,请核实再进行提交!!");
+                com.showAlert(com.warning, "当前提款项总数与提款金额不等,请核实再进行提交!");
                 return false;
             }
 
@@ -1055,12 +1018,12 @@ var paymentUtils = {
 
         }else if(payment.typeUpdate == 3){
             if(parseFloat(total) <= 0){
-                com.focusPage("#paymentInfo").text("提款金额需要大于零!");
+                com.showAlert(com.warning, "提款金额需要大于零!");
                 return false;
             }
 
             if(parseFloat(total) != parseFloat(payment.historyPayment)){
-                com.focusPage("#paymentInfo").text("当前更新款项金额与原收款金额不等,请核实再进行提交!!");
+                com.showAlert(com.warning, "当前更新款项金额与原收款金额不等,请核实再进行提交!");
                 return false;
             }
 
@@ -1095,7 +1058,7 @@ var paymentUtils = {
             }
         });
 
-        payment.modal.modal("hide");
+        payment.modals.modal.modal("hide");
     },
 
     paymentUl: function(v,res) {
@@ -1170,13 +1133,13 @@ var paymentUtils = {
         com.cleanItems(servicePayment.items);
 
         paymentUtils.serviceInitBaseModal(v, servicePayment);
-        if(servicePayment.baseModal.attr("ChargeType")==1){
+        if(servicePayment.modals.baseModal.attr("ChargeType")==1){
             com.focusPage("#myModalLabel").text("付款信息");
             com.focusPage("#collectBtn").text("收款");
             com.focusPage("#serviceMoney").css("display","none");
             com.focusPage("#referMoney").val("");
             com.focusPage("#collectDes").val("");
-        }else if(servicePayment.baseModal.attr("ChargeType")==2){
+        }else if(servicePayment.modals.baseModal.attr("ChargeType")==2){
             com.focusPage("#myModalLabel").text("付款信息");
             com.focusPage("#collectBtn").text("收款");
             com.focusPage("#serviceMoney").css("display","block");
@@ -1184,14 +1147,14 @@ var paymentUtils = {
             com.focusPage("#sMoney").attr("readonly","readonly");
             com.focusPage("#referMoney").val("");
             com.focusPage("#collectDes").val("");
-        }else if(servicePayment.baseModal.attr("ChargeType")==3){
+        }else if(servicePayment.modals.baseModal.attr("ChargeType")==3){
             com.focusPage("#myModalLabel").text("退款信息");
             com.focusPage("#collectBtn").text("退款");
             com.focusPage("#serviceMoney").css("display","none");
             com.focusPage("#referMoney").val(v.servicePaidup);
             com.focusPage("#referMoney").attr("readonly","readonly");
             com.focusPage("#collectDes").val("");
-        }else if(servicePayment.baseModal.attr("ChargeType")==4){
+        }else if(servicePayment.modals.baseModal.attr("ChargeType")==4){
             com.focusPage("#historyUpdateS").removeClass("hide");
             com.focusPage("#myModalLabel").text("更新付款信息");
             com.focusPage("#collectBtn").text("收款");
@@ -1208,7 +1171,7 @@ var paymentUtils = {
 
         }
 
-        servicePayment.baseModal.modal("show");
+        servicePayment.modals.baseModal.modal("show");
 
         servicePayment.moreMsg[0]=$.extend({},v);
     },
@@ -1250,11 +1213,11 @@ var paymentUtils = {
         var realMoney = utils.accAdd(utils.accAdd(cash, bank), checkv);
 
         if (referMoney != realMoney) {
-            com.showAlert(com.error, "当前实收款项总数与应收款项不等,请核实再进行提交!");
+            com.showAlert(com.warning, "当前实收款项总数与应收款项不等,请核实再进行提交!");
             return false;
         }
 
-        if(servicePayment.baseModal.attr("ChargeType")==2) {
+        if(servicePayment.modals.baseModal.attr("ChargeType")==2) {
             var sMoney = com.focusPage("#sMoney").val();
             if (realMoney > sMoney) {
                 com.showAlert(com.error, "当前所收服务费多于剩余服务费,不能收款!");
@@ -1291,22 +1254,22 @@ var paymentUtils = {
         var successMessage;
         var failMessage;
 
-        if(servicePayment.baseModal.attr("ChargeType")==1){
+        if(servicePayment.modals.baseModal.attr("ChargeType")==1){
             currentUrl = api.payment.collectServicePayment;
             currentOption = option;
             successMessage = "收款成功";
             failMessage = "收款失败";
-        }else if(servicePayment.baseModal.attr("ChargeType")==2){
+        }else if(servicePayment.modals.baseModal.attr("ChargeType")==2){
             currentUrl = api.payment.collectServicePaymentForService;
             currentOption = option;
             successMessage = "收款成功";
             failMessage = "收款失败";
-        }else if(servicePayment.baseModal.attr("ChargeType")==3){
+        }else if(servicePayment.modals.baseModal.attr("ChargeType")==3){
             currentUrl = api.payment.refundServicePaymentForService;
             currentOption = option;
             successMessage = "退款成功";
             failMessage = "退款失败";
-        }else if(servicePayment.baseModal.attr("ChargeType")==4){
+        }else if(servicePayment.modals.baseModal.attr("ChargeType")==4){
             currentUrl = api.payment.updateServicePayment;
             currentOption = option;
             currentOption["servicePayment.spid"] = servicePayment.spid;
@@ -1317,15 +1280,15 @@ var paymentUtils = {
 
         com.post(currentUrl, currentOption, function () {
             searcher.doSearch();
-            if(servicePayment.baseModal.attr("ChargeType")==4) {
+            if(servicePayment.modals.baseModal.attr("ChargeType")==4) {
                 hsearcher.doSearch();
             }
             com.showAlert(com.info, successMessage);
-            servicePayment.baseModal.modal("hide");
+            servicePayment.modals.baseModal.modal("hide");
         }, function () {
             searcher.doSearch();
             com.showAlert(com.error, failMessage);
-            servicePayment.baseModal.modal("hide");
+            servicePayment.modals.baseModal.modal("hide");
         });
     },
 
@@ -1377,6 +1340,19 @@ var paymentUtils = {
             com.focusPage("#type").html(decorationType[decorationInfo.type].value);
             com.focusPage("#grade").html(decorationInfo.grade);
             com.focusPage("#decorationInfo").modal("show");
+        });
+    },
+
+    //创建优惠券
+    createCounpon: function(){
+        var $li = $("<li></li>").css({"background-color":"#91b8d0", "margin-bottom":"5px", "margin-right":"5px"}).appendTo(com.focusPage("#couponUl"));
+        var typeVal = com.focusPage("#couponType").attr("data-typeahead-key");
+        var couponMoney = com.focusPage("#couponVal").val();
+        var $span = $("<span></span>").css({'color':'#fff'}).attr('typeName', typeVal).attr('money', couponMoney).html(typeVal).appendTo($li);
+        var $spanTwo = $("<span></span>").css({'font-size':'16px', 'color':'#fff', 'margin':'0 5px'}).html(couponMoney).appendTo($span);
+        var $a = $("<a></a>").addClass("glyphicon glyphicon-remove").css({'color':'#d15b47'}).appendTo($li);
+        $a.click(function () {
+            $li.remove();
         });
     }
 };

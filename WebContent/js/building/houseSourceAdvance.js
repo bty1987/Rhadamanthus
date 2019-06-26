@@ -20,8 +20,7 @@ jQuery(function($) {
 		payType: [],
 		balanceStatus: [],
 		rentType: [],
-		repeatFlg: null,
-		validator: null
+		repeatFlg: null
 	};
 
 	var colorboxArgs = {
@@ -36,7 +35,7 @@ jQuery(function($) {
 		maxHeight:'100%'
 	};
 
-	com.focusPage(".date-picker").datepicker(com.datepickerdefault);
+	com.datetime(com.focusPage(".date-picker"), "date");
 
 	houseSource.deployedBtn = com.focusPage("#deployedBtn").on("click", updateFollowUser);
 	houseSource.bsaveBtn = com.focusPage("#bsaveBtn").on("click", saveBuildingData);
@@ -47,8 +46,6 @@ jQuery(function($) {
 		com.clearValidator();
 	});
 
-	$.extend(com.validator, houseSource.validator);
-	
 	com.initTypeahead("belongUser", api.personel.queryUserByPinyin, "pinyinName", {"departmentType.name":"", "user.status":0}, "autoFillKeyValue", "key", "value");
 	com.initTypeahead("keyer", api.personel.queryUserByPinyin, "pinyinName", {"departmentType.name":"", "user.status":0}, "autoFillKeyValue", "key", "value");
 	com.initTypeahead('hsAUser', api.data.queryCustomerForName, "pinyinName", {}, "autoFillCustomer", "key", "value");

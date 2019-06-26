@@ -15,48 +15,76 @@
 							<div class="row">
 								<div class="col-md-12">
 									<div class="form-group">
-										<label class=" col-md-4 no-padding-right">类型:</label>
+										<label class=" col-md-5 no-padding-right">类型</label>
 										<label id="sumLabType" class=" col-md-4 no-padding-left"></label>
 									</div>
 								</div>
 
 								<div class="col-md-12">
 									<div class="form-group">
-										<label class=" col-md-4 no-padding-right">总价:</label>
+										<label class=" col-md-5 no-padding-right">总价</label>
 										<label id="sumLabSumMoney" class=" col-md-4 no-padding-left"></label>
 									</div>
 								</div>
 								<div class="col-md-12">
 									<div class="form-group">
-										<label class=" col-md-4 no-padding-right">折扣:</label>
+										<label class=" col-md-5 no-padding-right">折扣</label>
 										<label id="sumLabDiscount" class=" col-md-4 no-padding-left"></label>
 									</div>
 								</div>
 								<div class="col-md-12">
 									<div class="form-group">
-										<label class=" col-md-4 no-padding-right">折扣价:</label>
+										<label class=" col-md-5 no-padding-right">折扣价</label>
 										<label id="sumLabDiscountMoney" class=" col-md-6  no-padding-left"></label>
 									</div>
 								</div>
+								
+								<div class="col-md-12 hr hr-16"></div>
+								
+								<div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class=" col-md-5 no-padding-right">非打折总额</label>
+                                        <label id="undisprice" class=" col-md-4 no-padding-left"></label>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class=" col-md-5 no-padding-right">打折总额</label>
+                                        <label id="disprice" class=" col-md-6  no-padding-left"></label>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class=" col-md-5 no-padding-right">非配比总额</label>
+                                        <label id="uncalprice" class=" col-md-6  no-padding-left"></label>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class=" col-md-5 no-padding-right">配比总额</label>
+                                        <label id="calprice" class=" col-md-4 no-padding-left"></label>
+                                    </div>
+                                </div>
 
 								<div class="col-md-12 hr hr-16"></div>
 
 								<div class="col-md-12">
 									<div class="form-group">
-										<label class=" col-md-4 no-padding-right">管理费比例:</label>
+										<label class=" col-md-5 no-padding-right">管理费比例</label>
 										<label id="manageRate" class=" col-md-6  no-padding-left"></label>
 									</div>
 								</div>
 								<div class="col-md-12">
 									<div class="form-group">
-										<label class=" col-md-4 no-padding-right">管理费价格:</label>
+										<label class=" col-md-5 no-padding-right">管理费价格</label>
 										<label id="managePrice" class=" col-md-6  no-padding-left"></label>
 									</div>
 								</div>
 								<div class="col-md-12">
 									<div class="form-group">
-										<label class=" col-md-5 no-padding-right">管理费是否算入总价:</label>
-											<input type="checkbox" id="isCountManage" />
+										<label class=" col-md-5 no-padding-right">管理费计入</label>
+										<input type="checkbox" id="isCountManage" class="ace"/>
+										<span class="lbl"></span>
 									</div>
 								</div>
 
@@ -66,29 +94,29 @@
 									<div class="ui-pg-div">
 
 										<!--增项的的2个按钮-->
-										<button id="addNormalItemBtn" class="btn btn-minier btn-yellow col-md-4 hide">
+										<button id="addNormalItemBtn" class="btn btn-minier btn-yellow col-md-5 hide">
 											<i class="icon-pencil"></i>报价项
 										</button>
 
-										<button id="addNewItemBtn" class="btn btn-minier btn-pink col-md-4 hide" style="padding-left: 2px;" >
+										<button id="addNewItemBtn" class="btn btn-minier btn-pink col-md-5 hide" style="margin-left: 2px;" >
 											<i class="icon-pencil"></i>新增
 										</button>
 
 										<!--减项的2个按钮-->
 
-										<button id="addQuotaionItemBtn" class="btn btn-minier btn-yellow col-md-3 hide">
+										<button id="addQuotaionItemBtn" class="btn btn-minier btn-yellow col-md-5 hide">
 											<i class="icon-pencil"></i>报价项
 										</button>
 
-										<button id="addSystemDefineItemBtn" class="btn btn-minier btn-pink col-md-3 hide" style="padding-left: 2px;" >
+										<button id="addSystemDefineItemBtn" class="btn btn-minier btn-pink col-md-5 hide" style="margin-left: 2px;" >
 											<i class="icon-pencil"></i>系统定义
 										</button>
 										
-										<button id="addItemBtn" class="btn btn-minier btn-danger col-md-3 hide" style="padding-left: 2px;" >
+										<button id="addItemBtn" class="btn btn-minier btn-danger col-md-5 hide">
                                             <i class="icon-pencil"></i>增项
                                         </button>
 
-										<button id="extensionItemBtn" class="btn btn-minier btn-default col-md-3 hide" style="padding-left: 2px;" >
+										<button id="extensionItemBtn" class="btn btn-minier btn-default col-md-5 hide" style="margin-left: 2px;" >
 											<i class="icon-pencil"></i>扩展项
 										</button>
 									</div>
@@ -96,19 +124,22 @@
 								<div class="col-md-12 space-6"></div>
 								<div class="col-md-12 ">
 									<div class="ui-pg-div">
-									   	<button id="submitAddReduceDetailOKBtn" class="btn btn-minier btn-success col-md-4">
+									   	<button id="submitAddReduceBtn" class="btn btn-minier btn-success col-md-5">
                                             <i class="icon-ok"></i>提交
                                         </button>
-                                        
-										<!-- <button id="saveAddReduceDetailBtn" class="btn btn-minier btn-primary col-md-4" style="padding-left: 2px;" >
-											<i class="icon-save"></i>保存
-										</button> -->
-										
-										<button id="detailBckBtn" class="btn btn-minier btn-info col-md-4" style="padding-left: 2px;" >
-											<i class="icon-mail-forward"></i>返回
+										<button id="updateAddReduceBtn" class="btn btn-minier btn-success col-md-5">
+											<i class="icon-mail-forward"></i>更新
 										</button>
 									</div>
 								</div>
+								<div class="col-md-12 space-6"></div>
+                                <div class="col-md-12 ">
+                                    <div class="ui-pg-div">
+                                        <button id="detailBckBtn" class="btn btn-minier btn-info col-md-5" style="margin-left: 2px;" >
+                                            <i class="icon-mail-forward"></i>返回
+                                        </button>
+                                    </div>
+                                </div>
 							</div>
 						</div>
 					</div>
@@ -149,6 +180,9 @@
 							<div class="cell price totalprice-discount">
 								<div class="cell-wrap">总价</div>
 							</div>
+							<div class="cell price">
+                                <div class="cell-wrap">非配比</div>
+                            </div>
 							<div class="cell btns">
 								<div class="cell-wrap">操作</div>
 							</div>

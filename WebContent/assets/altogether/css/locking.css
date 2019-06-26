@@ -1,5 +1,10 @@
 #outLockingContent{
-    margin: 0px !important;
+    position: absolute;
+    z-index: 9999;
+    background-color: #a7a7a7;
+    height: 100%;
+    width: 100%;
+    top: 0px;
 }
 
 #outLockingContent .login-form {

@@ -4,27 +4,46 @@ jQuery(function($) {
 	var servicePayment = {
 		paymentModelNameData: ["cash", "bank", "checkv"],
 		moreMsg: {},
-		baseModal: null,
-		items: {},
+		items: {
+			cashCheckbox: com.focusPage("#cashCheckbox"),
+			bankCheckbox: com.focusPage("#bankCheckbox"),
+			checkvCheckbox: com.focusPage("#checkvCheckbox")
+		},
 		orderId: null,
 		bankNums: [],
 		checkvNums: [],
 		spid: null,
 		pid: null,
 		htmlName: "service",
-		modelId: 'baseItemModal'
+		modelId: 'baseItemModal',
+		modals: {
+			baseModal: com.focusPage("#baseItemModal")
+		},
+
+		cash: [],
+		bank: [],
+		checkBank: [],
+		accounts: [],
+
+		cashUtil: [],
+		bankUtil: [],
+		checkBankUtil: [],
+
+		cashInfo: {},
+		bankInfo: {},
+		checkBankInfo: {},
+		accountsInfo: {},
+
+		bankUtilForGrade: [],
+		checkBankUtilForGrade: []
 	};
 
-    servicePayment.items.cashCheckbox = com.focusPage("#cashCheckbox");
-    servicePayment.items.bankCheckbox = com.focusPage("#bankCheckbox");
-    servicePayment.items.checkvCheckbox = com.focusPage("#checkvCheckbox");
-
-	servicePayment.baseModal = com.focusPage("#baseItemModal").on('show.bs.modal',function(e){
+	servicePayment.modals.baseModal.on('show.bs.modal',function(e){
 		com.clearValidator();
 	});
 
 	//隐藏触发
-	com.focusPage("#baseItemModal").on('hidden.bs.modal', function () {
+	servicePayment.modals.baseModal.on('hidden.bs.modal', function () {
 		servicePayment.bankUtilForGrade = [];
 		servicePayment.checkBankUtilForGrade = [];
 	});
@@ -47,24 +66,6 @@ jQuery(function($) {
     com.focusPage("#baseItemModal :checkbox").on("change", function(){
         $(this).prop("checked") ? com.focusPage("[referCheckbox="+this.id+"]").show() : com.focusPage("[referCheckbox="+this.id+"]").hide()
     });
-
-	servicePayment.cash = [];
-	servicePayment.bank = [];
-	servicePayment.bankUtil = [];
-	servicePayment.checkBank = [];
-	servicePayment.accounts = [];
-
-	servicePayment.cashUtil = [];
-	servicePayment.bankUtil = [];
-	servicePayment.checkBankUtil = [];
-
-	servicePayment.bankUtilForGrade = [];
-	servicePayment.checkBankUtilForGrade = [];
-
-	servicePayment.cashInfo = {};
-	servicePayment.bankInfo = {};
-	servicePayment.checkBankInfo = {};
-	servicePayment.accountsInfo = {};
 
 	paymentUtils.getReceiptType(servicePayment);
 
@@ -95,6 +96,12 @@ jQuery(function($) {
 
 		return false;
 	});
+
+	com.focusPage("#collectBtn").bindClick(function(){
+		paymentUtils.servicePaymentCollect(servicePayment, searcher, hsearcher);
+	});
+
+	com.focusPage("#historyService").removeClass("active");
 
 	var displayFunc  = (function(){
 		var renderList = function(tableId,listData){
@@ -149,7 +156,7 @@ jQuery(function($) {
 			$liLine.append($h3).append($ulProperty);
 
 			$btnCollect.click(function(){
-				servicePayment.baseModal.attr("ChargeType","1");
+				servicePayment.modals.baseModal.attr("ChargeType","1");
 				paymentUtils.serviceDialogPayment(v, servicePayment);
 			});
 
@@ -158,7 +165,7 @@ jQuery(function($) {
                     com.showAlert(com.error, "当前服务费已交满,不能重复交款!");
                     return false;
                 }
-				servicePayment.baseModal.attr("ChargeType","2");
+				servicePayment.modals.baseModal.attr("ChargeType","2");
 				paymentUtils.serviceDialogPayment(v, servicePayment);
 			});
 
@@ -167,7 +174,7 @@ jQuery(function($) {
                     com.showAlert(com.error, "当前服务费未交,不能退款!");
                     return false;
                 }
-                servicePayment.baseModal.attr("ChargeType","3");
+                servicePayment.modals.baseModal.attr("ChargeType","3");
 				paymentUtils.serviceDialogPayment(v, servicePayment);
             });
 
@@ -278,7 +285,7 @@ jQuery(function($) {
 			}
 
 			$btnUpdate.click(function(){
-				servicePayment.baseModal.attr("ChargeType","4");
+				servicePayment.modals.baseModal.attr("ChargeType","4");
 				servicePayment.spid = v.spid;
 				servicePayment.pid = v.pid;
 				paymentUtils.serviceDialogPayment(v, servicePayment);
@@ -380,11 +387,5 @@ jQuery(function($) {
 			 });
 		 });
 	 });
-
-	com.focusPage("#collectBtn").bindClick(function(){
-		paymentUtils.servicePaymentCollect(servicePayment, searcher, hsearcher);
-	});
-
-	com.focusPage("#historyService").removeClass("active");
 });
 

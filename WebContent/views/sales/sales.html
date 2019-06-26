@@ -1,4 +1,4 @@
-<div class="page-content">
+<div>
     <div class="row">
         <div class="col-xs-12">
             <div id="condList" class="fl_search clearfix"></div> <!-- 查询条件-->
@@ -7,9 +7,9 @@
         </div>
     </div>
 </div>
-<div>
 
-    <div id="layerAdd" style="padding: 40px 0;display: none">
+<div>
+    <div id="layerAdd" class="page-content" style="display: none">
 
         <div class="row-fluid">
 
@@ -17,7 +17,7 @@
                 <div class="form-group" style="margin-right: 0">
                     <label class="col-xs-3 control-label " for="total">总价</label>
                     <div class="col-xs-9">
-                        <input type="text" id="total" class="col-xs-4" readonly="readonly"/>
+                        <input type="text" id="total" readonly="readonly"/>
                     </div>
                 </div>
                 <div class="space5"></div>
@@ -25,7 +25,7 @@
                 <div class="form-group" style="margin-right: 0">
                     <label class="col-xs-3 control-label " for="depositPayment">定金</label>
                     <div class="col-xs-9">
-                        <input type="text" id="depositPayment" class=" col-xs-4 " readonly="readonly"/>
+                        <input type="text" id="depositPayment" class="v_float_3" readonly="readonly"/>
                         <button id="depositPaymentBtn" class="btn small">交款</button>
                         <button id="depositCancelBtn" class="btn small">撤消</button>
                         <button id="depositRefundBtn" class="btn small" >退款</button>
@@ -36,7 +36,7 @@
                 <div class="form-group" style="margin-right: 0">
                     <label class="col-xs-3 control-label " for="realDepositPayment">实收定金</label>
                     <div class="col-xs-9">
-                        <input type="text" id="realDepositPayment" readonly="readonly" class=" col-xs-4 "/>
+                        <input type="text" id="realDepositPayment" readonly="readonly"/>
                         <span id="depositPaymentInfo" class="label label-warning"></span>
                     </div>
                 </div>
@@ -45,7 +45,7 @@
                 <div class="form-group" style="margin-right: 0">
                     <label class="col-xs-3 control-label " for="fullPayment">补款</label>
                     <div class="col-xs-9">
-                        <input type="text" id="fullPayment" readonly="readonly" class=" col-xs-4 "/>
+                        <input type="text" id="fullPayment" readonly="readonly"/>
                         <button id="fullPaymentBtn" class="btn small">交款</button>
                         <button id="fullPaymentRefundBtn" class="btn small">退款</button>
                         <button id="fullCancelBtn" class="btn small ">撤消</button>
@@ -56,26 +56,25 @@
                 <div class="form-group" style="margin-right: 0">
                     <label class="col-xs-3 control-label " for="realFullPayment">实收补款</label>
                     <div class="col-xs-9">
-                        <input type="text" id="realFullPayment" readonly="readonly" class=" col-xs-4 "/>
+                        <input type="text" id="realFullPayment" readonly="readonly"/>
                         <span id="fullPaymentInfo" class="label label-warning"></span>
                     </div>
                 </div>
                 <div class="space5"></div>
 
                 <div class="form-group" style="margin-right: 0">
-                    <label class="col-xs-3 control-label  " for="coupon">券信息</label>
+                    <label class="col-xs-3 control-label" for="coupon">券信息</label>
                     <div class="col-xs-9">
-                        <input type="text" id="couponInf" readonly="readonly" class=" col-xs-4 "/>
+                        <input type="text" id="couponInf" readonly="readonly"/>
                         <button id="couponBtn" class="btn small">修改</button>
                         <button id="couponRefundBtn" class="btn small ">退券</button>
-                        <div id="couponInfo" style="display: none;">
-                            <select id="couponType" class="col-xs-3" data-toggle="popover"
-                                    data-trigger='manual'></select>
-                            <input id="couponValue" type="text" class="col-xs-2" value="0" data-toggle="popover"
-                                   data-trigger='manual'/>
-                            <button id="couponCommitBtn" class="btn small">提交</button>
-                            <button id="couponCancelBtn" class="btn small">取消</button>
-                        </div>
+                    </div>
+                    <label class="col-xs-3"></label>
+                    <div class="col-xs-9" id="couponInfo" style="display: none; margin-top: 5px;">
+                        <select id="couponType" class="col-xs-4" data-toggle="popover" data-trigger='manual'></select>
+                        <input id="couponValue" type="text" class="col-xs-2 v_float_3" value="0" data-toggle="popover" data-trigger='manual'/>
+                        <button id="couponCommitBtn" class="btn small">提交</button>
+                        <button id="couponCancelBtn" class="btn small">取消</button>
                     </div>
                 </div>
                 <div class="space5"></div>
@@ -83,7 +82,7 @@
                 <div class="form-group" style="margin-right: 0">
                     <label class="col-xs-3 control-label  " for="coupon">券值</label>
                     <div class="col-xs-9">
-                        <input type="text" id="coupon" readonly="readonly" class=" col-xs-4 "/>
+                        <input type="text" id="coupon" readonly="readonly"/>
                     </div>
                 </div>
                 <div class="space5"></div>
@@ -91,57 +90,72 @@
                 <div class="form-group" style="margin-right: 0">
                     <label class="col-xs-3 control-label " for="maling">抹零</label>
                     <div class="col-xs-9">
-                        <input type="text" id="maling" readonly="readonly" class=" col-xs-4 "/>
+                        <input type="text" id="maling" readonly="readonly"/>
                         <button id="malingBtn" class="btn small">修改</button>
-                        <div id="malingInfo" style="display: none;">
-                            <input id="malingValue" type="text" class="col-xs-2" value="0" data-toggle="popover"
-                                   data-trigger='manual'/>
-                            <button id="malingCommitBtn" class="btn small">提交</button>
-                            <button id="malingCancelBtn" class="btn small">取消</button>
-                        </div>
+                    </div>
+                    <label class="col-xs-3"></label>
+                    <div id="malingInfo" class="col-xs-9" style="display: none; margin-top: 5px;">
+                        <input id="malingValue" type="text" class="col-xs-3 v_float_3" value="0" data-toggle="popover" data-trigger='manual'/>
+                        <button id="malingCommitBtn" class="btn small">提交</button>
+                        <button id="malingCancelBtn" class="btn small">取消</button>
                     </div>
                 </div>
-                <div class="space5"></div>
 
+                <div class="form-group col-xs-12">
+                    <button type="button" id="saveBtn" class="btn btn-primary pull-right">确定</button>
+                </div>
 
             </form>
         </div>
     </div>
+
+
 
     <!--折让审批弹窗-->
-    <div id="layerSubmit" style="padding: 40px 0;display: none">
-        <div class="row-fluid">
-            <form class="form-horizontal">
+    <div id = "layerSubmit" style="display: none">
+        <div style="padding: 40px 0;">
+            <div class="row-fluid">
+                <form class="form-horizontal">
 
-                <div class="form-group" style="margin-right: 0">
-                    <label class="col-xs-3 control-label " for="fullPaymentTotal">补款总额</label>
-                    <div class="col-xs-9">
-                        <input type="text" id="fullPaymentTotal" class=" col-xs-4" readonly/>
+                    <div class="form-group" style="margin-right: 0">
+                        <label class="col-xs-3 control-label " for="fullPaymentTotal">补款总额</label>
+                        <div class="col-xs-9">
+                            <input type="text" id="fullPaymentTotal" class=" col-xs-4" readonly/>
+                        </div>
                     </div>
-                </div>
-                <div class="space5"></div>
+                    <div class="space5"></div>
 
-                <div class="form-group" style="margin-right: 0">
-                    <label class="col-xs-3 control-label " for="approvalComment">备注信息</label>
-                    <div class="col-xs-9">
-                        <textarea maxlength="128" id="approvalComment" class="col-xs-4 v_required" rows="3"></textarea>
+                    <div class="form-group" style="margin-right: 0">
+                        <label class="col-xs-3 control-label " for="approvalComment">备注信息</label>
+                        <div class="col-xs-9">
+                            <textarea maxlength="128" id="approvalComment" class="col-xs-4 v_required" rows="3"></textarea>
+                        </div>
                     </div>
-                </div>
 
-                <div class="form-group" style="margin-right: 0">
-                    <label class="col-xs-3 control-label " for="approver">审批人</label>
-                    <div class="col-xs-9 controls" id="approver">
+                    <div class="form-group" style="margin-right: 0">
+                        <label class="col-xs-3 control-label " for="approver">审批人</label>
+                        <div class="col-xs-9 controls" id="approver">
 
+                        </div>
                     </div>
-                </div>
-                <div class="space5"></div>
+
+                    <div class="form-group" style="margin-right: 0">
+                        <div class="form-group col-xs-10 col-sm-7" style="text-align: right">
+                            <button type="button" id="fullPaymentCancelBtn" class="btn btn-primary">取消</button>
+                            <button type="button" id="fullPaymentSaveBtn" class="btn btn-success">提交</button>
+                        </div>
+                    </div>
+
+                    <div class="space5"></div>
 
 
-                <div class="space5"></div>
+                    <!--<div class="space5"></div>-->
 
-            </form>
+                </form>
+            </div>
         </div>
     </div>
+
 
     <!-- 装修单信息 -->
     <div class="modal fade" id="decorationInfo" tabindex="-1">
@@ -158,28 +172,28 @@
                         <div class="form-group">
                             <label class="col-sm-4 control-label no-padding-right">装修单号</label>
                             <div class="col-sm-8">
-                                <text id="orderId"></text>
+                                <span id="orderId" style="line-height: 30px"></span>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="col-sm-4 control-label no-padding-right">楼盘地址</label>
                             <div class="col-sm-8">
-                                <text id="address"></text>
+                                <span id="address" style="line-height: 30px"></span>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="col-sm-4 control-label no-padding-right">设计师</label>
                             <div class="col-sm-8">
-                                <text id="designer"></text>
+                                <span id="designer" style="line-height: 30px"></span>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="col-sm-4 control-label no-padding-right">监理</label>
                             <div class="col-sm-8">
-                                <text id="supervisor"></text>
+                                <span id="supervisor" style="line-height: 30px"></span>
                             </div>
                         </div>
                     </form>
@@ -192,7 +206,8 @@
     </div>
 
 </div>
-
+<div id="miniPopUp"></div>
+<div id="layerPopUp" class="portlet box"></div>
 <script type="text/javascript">
     $.loadScript(['js/sales/sales.js','js/utils/approvalUtils.js']);
 </script>

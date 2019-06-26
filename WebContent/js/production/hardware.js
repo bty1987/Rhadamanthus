@@ -202,7 +202,7 @@ $(function(){
 
 
     function openlayerImport(){
-        layer.closeAll();
+        com.closePopup();
         layer.open({
             type: 1,
             skin: 'layui-layer-lan',
@@ -222,7 +222,7 @@ $(function(){
     }
 
     function openlayer($title,callback) {
-        layer.closeAll();
+        com.closePopup();
         layer.open({
             type: 1,
             skin: 'layui-layer-lan',

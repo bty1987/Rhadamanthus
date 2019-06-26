@@ -1,21 +1,9 @@
 
 $(function () {
 
-    var goodsPricePopUp = com.focusPage('#goodsPricePopUp');
-    
     var goods = {
     	gid: params["goods.gid"]
-    }
-
-    var validator = {
-		float3: {
-            type: "v_float_3",
-            regex: /^([0-9]+|[0-9]+\.[0-9]{1,3})$/,
-            errorMsg: "数量格式错误"
-        }
     };
-
-    $.extend(com.validator, validator);
     
     com.post(api.inventory.queryPriceByGid, {"price.gid": goods.gid}, function (res) {
         displayFunc.init('resultListPrice', res.prices);

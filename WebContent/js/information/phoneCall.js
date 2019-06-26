@@ -1,18 +1,17 @@
 
 jQuery(function($) {
-   var  stopReason={};
-   var  recordType={};
-    var stopReasons;
-    var rescordTypes;
+
+    var phoneCall = {
+
+        stopReason: {},
+        recordType: {}
+    };
+
     com.post(api.ds.information, {}, function(res){
-        stopReasons=res.stopReason;
-        rescordTypes=res.recordType;
-        $.each(res.stopReason,function (i,v) {
-            stopReason[v.key] = v.value;
-        });
-        $.each(res.recordType,function (i,va) {
-            recordType[va.key] = va.value;
-        });
+
+        phoneCall.stopReason = res.stopReason.split("key", "value");
+        phoneCall.recordType = res.recordType.split("key", "value");
+
     },null,false);     
     
     var displayFunc  = (function(){
@@ -70,9 +69,9 @@ jQuery(function($) {
                 ["被叫号码:", v.callee,"blue"],
                 ["开始时间:", startTime,"red"],
                 ["结束时间:", endTime,"red"],
-                ["挂断原因:", stopReason[v.stopReason],"green"],
+                ["挂断原因:", phoneCall.stopReason[v.stopReason],"green"],
                 ["通话时长:", v.duration,"grey"],
-                ["录音类型:",  recordType[ v.recordType],"blue"]                
+                ["录音类型:", phoneCall.recordType[ v.recordType],"blue"]
             ];
             $.each(propertyArr, function (index,value) {
                 var $liProperty = $('<li></li>');

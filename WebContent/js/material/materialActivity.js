@@ -3,7 +3,7 @@ $(function () {
     var materialActivityItem = {
         items: {},
         activity: {},
-        activityItem:{}
+        activityItem: {}
     };
 
     var paramsOrderId = params.orderId;
@@ -13,56 +13,109 @@ $(function () {
     var things = com.focusPage("#things");
     var coupons = com.focusPage("#coupons");
     var activityInfo = com.focusPage("#activityInfo");
+
     materialActivityItem.activity = com.focusPage("#activity");
+    materialActivityItem.items.thingsName = com.focusPage("#thingsName");
+    materialActivityItem.items.thingsNum = com.focusPage("#thingsNum");
+    materialActivityItem.items.couponsName = com.focusPage("#couponsName");
+    materialActivityItem.items.couponsNum = com.focusPage("#couponsNum");
     materialActivityItem.items.content = com.focusPage("#approveActivityItemContent");
+
     materialActivityItem.materialActivityItemModal = com.focusPage("#materialActivityItemModal").on('show.bs.modal', function (e) {
         com.clearValidator();
+        things.html("");
+        coupons.html("");
+    });
+    materialActivityItem.materialActivityItemModal = com.focusPage("#materialActivityItemModal").on('hide.bs.modal', function (e) {
+        com.cleanItems(materialActivityItem.items);
+        com.resetTypeahead("thingsName", []);
+        com.resetTypeahead("couponsName", []);
     });
     materialActivityItem.materialActivityModal = com.focusPage("#materialActivityModal").on('show.bs.modal', function (e) {
         com.clearValidator();
     });
-    materialActivityItem.activity.activity = com.focusPage("#activity").on("change", function () {
-        var $this = $(this);
+    materialActivityItem.activity.activity = com.focusPage("#activity");
 
+    com.selectTypeahead("thingsName", [], 'asid', 'activityItemName');
+    com.selectTypeahead("couponsName", [], 'asid', 'activityItemName');
+
+    materialActivityItem.activity.activity.on("change", function () {
+        var $this = $(this);
+        materialActivityItem.items.thingsName.val("");
+        materialActivityItem.items.couponsName.val("");
         var _things = [];
         var _coupons = [];
-
         var options = {
             "activity.aid": $this.val()
         };
+        if ($this.val()) {
+            com.post(api.information.queryActivityItemByAid, options, function (res) {
+                var _ = res.activityItems;
+                for (var i = 0; i < _.length; i++) {
 
-        com.post(api.information.queryActivityItemByAid, options, function (res) {
+                    var _activityItem = _[i];
 
-            var _ = res.activityItems;
-
-            for (var i = 0; i < _.length; i++) {
-
-                var _activityItem = _[i];
-
-                if (_activityItem.type == 0) {
-                    _coupons.push({
-                        asid: _activityItem.asid,
-                        activityItemName: _activityItem.name + " 金额:" + _activityItem.money
-                    });
-                } else if (_activityItem.type == 1) {
-                    _things.push({
-                        asid: _activityItem.asid,
-                        activityItemName: _activityItem.name + " 金额:" + _activityItem.money
-                    });
+                    if (_activityItem.type == 0) {
+                        _coupons.push({
+                            asid: _activityItem.asid,
+                            activityItemName: _activityItem.name + " 金额:" + _activityItem.money
+                        });
+                    } else if (_activityItem.type == 1) {
+                        _things.push({
+                            asid: _activityItem.asid,
+                            activityItemName: _activityItem.name + " 金额:" + _activityItem.money
+                        });
+                    }
                 }
-            }
-
-            things.chosen("destroy");
-            things.chosen({width: "216px", multi_type: "input"});
-            things.bindData(_things, 'asid', 'activityItemName', false);
-            things.trigger("chosen:updated");
-
-            coupons.chosen("destroy");
-            coupons.chosen({width: "216px", multi_type: "input"});
-            coupons.bindData(_coupons, 'asid', 'activityItemName', false);
-            coupons.trigger("chosen:updated");
-        });
+                com.resetTypeahead("thingsName", _things);
+                com.resetTypeahead("couponsName", _coupons);
+            });
+        }
     });
+
+    com.focusPage("#thingsAdd").unbind().click(function () {
+        if (com.validate("thingsInputs", "bottom")) {
+            return;
+        }
+        createThings();
+        materialActivityItem.items.thingsName.val("");
+        materialActivityItem.items.thingsNum.val("");
+    });
+
+    com.focusPage("#couponsAdd").unbind().click(function () {
+        if (com.validate("couponInputs", "bottom")) {
+            return;
+        }
+        createCoupons();
+        materialActivityItem.items.couponsName.val("");
+        materialActivityItem.items.couponsNum.val("");
+    });
+
+    function createThings() {
+        var $li = $("<li></li>").css({"background-color": "#91b8d0", "margin-bottom": "5px", "margin-right": "5px"}).appendTo(com.focusPage("#things"));
+        var aisd = com.focusPage("#thingsName").attr("data-typeahead-key");
+        var thingsName = com.focusPage("#thingsName").val();
+        var num = com.focusPage("#thingsNum").val();
+        var $span = $("<span></span>").css({'color': '#fff'}).attr('thingsName', thingsName).attr('num', num).attr('asid', aisd).html(thingsName).appendTo($li);
+        var $spanTwo = $("<span></span>").css({'font-size': '16px', 'color': '#fff', 'margin': '0 5px'}).html("数量" + num).appendTo($span);
+        var $a = $("<a></a>").addClass("glyphicon glyphicon-remove").css({'color': '#d15b47'}).appendTo($li);
+        $a.click(function () {
+            $li.remove();
+        });
+    }
+
+    function createCoupons() {
+        var $li = $("<li></li>").css({"background-color": "#91b8d0", "margin-bottom": "5px", "margin-right": "5px"}).appendTo(com.focusPage("#coupons"));
+        var couponsName = com.focusPage("#couponsName").val();
+        var aisd = com.focusPage("#couponsName").attr("data-typeahead-key");
+        var num = com.focusPage("#couponsNum").val();
+        var $span = $("<span></span>").css({'color': '#fff'}).attr('couponsName', couponsName).attr('num', num).attr('asid', aisd).html(couponsName).appendTo($li);
+        var $spanTwo = $("<span></span>").css({'font-size': '16px', 'color': '#fff', 'margin': '0 5px'}).html("数量" + num).appendTo($span);
+        var $a = $("<a></a>").addClass("glyphicon glyphicon-remove").css({'color': '#d15b47'}).appendTo($li);
+        $a.click(function () {
+            $li.remove();
+        });
+    }
 
     function orderList() {
 
@@ -76,18 +129,6 @@ $(function () {
 
         $btnSub.click(function () {
 
-            var things = com.focusPage("#things");
-            things.chosen("destroy");
-            things.chosen({width: "42%", multi_type: "input"});
-            things.bindData([{aid: -1, activityName: ""}], "aid", "activityName", "money");
-            things.trigger("chosen:updated");
-
-            var coupon = com.focusPage("#coupons");
-            coupon.chosen("destroy");
-            coupon.chosen({width: "42%", multi_type: "input"});
-            coupon.bindData([{aid: -1, activityName: ""}], "aid", "activityName", "money");
-            coupon.trigger("chosen:updated");
-
             com.post(api.information.queryActivityForValid, {"activity.type": 2}, function (res) {
                 var activitys = res.activitys;
 
@@ -96,9 +137,9 @@ $(function () {
                 for (var i = 0; i < activitys.length; i++) {
                     var _activity = activitys[i];
 
-                    _activitys.push({aid: _activity.aid, activityName: _activity.name, money: _activitys.money});
+                    _activitys.push({aid: _activity.aid, activityName: _activity.name});
                 }
-                materialActivityItem.activity.bindData(_activitys, "aid", "activityName", "money", false);
+                materialActivityItem.activity.bindData(_activitys, "aid", "activityName", true, false);
             });
 
             materialActivityItem.materialActivityItemModal.modal("show")
@@ -112,10 +153,10 @@ $(function () {
             materialActivityItem.activityItem[v.aid] = v.name;
         });
 
-    },null,false);
+    }, null, false);
 
     function materialNo(aid) {
-        var $activityName=com.focusPage("#paramsNo").empty();
+        var $activityName = com.focusPage("#paramsNo").empty();
 
         var $btnSub = $('<a></a>').addClass('btn btn-minier btn-success').html('修改活动');
         var $h4 = $('<h4></h4>').addClass('oid').append($('<small></small>').addClass('blue')).html("主材单号:" + paramsNo);
@@ -374,62 +415,53 @@ $(function () {
     //领取物品
     com.focusPage("#submitMaterialActivityItemBtn").on("click", function () {
 
-        if (com.validate()) {
-            return;
-        }
-        if (things.val() == null && coupons.val() == null) {
+        if (things.html() == "" && coupons.html() == "") {
             com.showAlert(com.warning, "活动物品或券需要选择才能提交");
             return;
         }
+
         var submitFlag = true;
 
         var orderId = paramsOrderId;
         var activityName = com.focusPage("#activity").find("option:selected").text();
         var aid = com.focusPage("#activity").find("option:selected").val();
         var content = com.focusPage("#approveActivityItemContent").val();
-
+        if (aid == "" || aid == null || aid == undefined) {
+            com.showAlert(com.warning, "请选择活动");
+            return;
+        }
         var index = 0;
         var options = {};
 
-        com.focusPage("[class='search-choice']", $("#things_chosen")).each(function (i, e) {
+        com.focusPage("#things li").each(function (i, e) {
 
             var _things = $(e);
 
-            if (!/^\d+$/.test(_things.children('span').children('input').val())) {
-                com.showAlert(com.warning, "请填写物品数量");
-                submitFlag = false;
-            }
-
             options["materialActivityItems[" + index + "].orderId"] = orderId;
             options["materialActivityItems[" + index + "].aid"] = aid;
-            options["materialActivityItems[" + index + "].asid"] = _things.attr("index");
+            options["materialActivityItems[" + index + "].asid"] = _things.children('span').attr("asid");
             options["materialActivityItems[" + index + "].activity"] = activityName;
-            options["materialActivityItems[" + index + "].name"] = _things.children('span').text().split(" ")[0];
+            options["materialActivityItems[" + index + "].name"] = _things.children('span').attr("thingsName").split(" ")[0];
             options["materialActivityItems[" + index + "].type"] = 1;
-            options["materialActivityItems[" + index + "].num"] = _things.children('span').children('input').val();
-            options["materialActivityItems[" + index + "].money"] = _things.children('span').text().split(" ")[1].split(':')[1];
+            options["materialActivityItems[" + index + "].num"] = _things.children('span').attr("num");
+            options["materialActivityItems[" + index + "].money"] = _things.children('span').attr("thingsName").split(" ")[1].split(':')[1];
             options["materialActivityItems[" + index + "].content"] = content;
 
             index++;
         });
 
-        com.focusPage("[class='search-choice']", $("#coupons_chosen")).each(function (i, e) {
+        com.focusPage("#coupons li").each(function (i, e) {
 
             var _coupons = $(e);
 
-            if (!/^\d+$/.test(_coupons.children('span').children('input').val())) {
-                com.showAlert(com.warning, "请填写券数量");
-                submitFlag = false;
-            }
-
             options["materialActivityItems[" + index + "].orderId"] = orderId;
             options["materialActivityItems[" + index + "].aid"] = aid;
-            options["materialActivityItems[" + index + "].asid"] = _coupons.attr("index");
+            options["materialActivityItems[" + index + "].asid"] = _coupons.children('span').attr("asid");
             options["materialActivityItems[" + index + "].activity"] = activityName;
-            options["materialActivityItems[" + index + "].name"] = _coupons.children('span').text().split(" ")[0];
+            options["materialActivityItems[" + index + "].name"] = _coupons.children('span').attr("couponsName").split(" ")[0];
             options["materialActivityItems[" + index + "].type"] = 0;
-            options["materialActivityItems[" + index + "].num"] = _coupons.children('span').children('input').val();
-            options["materialActivityItems[" + index + "].money"] = _coupons.children('span').text().split(" ")[1].split(':')[1];
+            options["materialActivityItems[" + index + "].num"] = _coupons.children('span').attr("num");
+            options["materialActivityItems[" + index + "].money"] = _coupons.children('span').attr("couponsName").split(" ")[1].split(':')[1];
             options["materialActivityItems[" + index + "].content"] = content;
 
             index++;
@@ -442,6 +474,8 @@ $(function () {
         com.post(api.material.addMaterialActivityItem, options, function (res) {
             com.cleanItems(materialActivityItem.items);
             com.clearValidator();
+            things.html("");
+            coupons.html("");
             queryMaterialActivityItem();
         });
         materialActivityItem.materialActivityItemModal.modal("hide");

@@ -209,9 +209,6 @@ $(function(){
         }else {
             queryQuotationBigCategory(quotationType);
             queryQuotationSmallCategory(quotationType);
-            if(quotationType == 2){
-                com.focusPage('#unitPrice').attr('readonly','readonly').val(0);
-            }
         }
 
     });

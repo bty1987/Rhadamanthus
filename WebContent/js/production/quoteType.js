@@ -152,7 +152,7 @@ $(function () {
     );
 
     function openlayer(layerType, callback) {
-        layer.closeAll();
+        com.closePopup();
         layer.open({
             type: 1,
             title: layerType,

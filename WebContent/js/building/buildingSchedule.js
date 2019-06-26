@@ -372,14 +372,9 @@ jQuery(function($) {
 
 		if(statusFlag){
 			var panePTTInput = $("<input/>").attr("id", sore + "PlanTime").attr("type","text").addClass("form-control date-picker").attr("data-date-format", "yyyy-mm-dd").appendTo(panePTTThree);
+			
+			com.datetime(com.focusPage(".date-picker"), "date");
 
-			com.focusPage(".date-picker").datepicker({autoclose : !0}).on("show", function(){
-			   setTimeout(function() {
-				   com.focusPage(".dropdown-menu").css("z-index", 1060);
-			   },0);
-			}).next().on(ace.click_event, function() {
-				   $(this).prev().focus();
-			});
 		}else{
 			var panePTTInput = $("<input/>").attr("id", sore + "PlanTime").attr("type", "text").attr("readonly", "readonly").appendTo(panePTTThree);
 		}

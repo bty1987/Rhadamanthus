@@ -61,6 +61,14 @@ public class AddReducePO implements Serializable{
 	
 	private float total;
 	
+	private float undisPrice;
+	
+	private float disPrice;
+	
+	private float uncalPrice;
+	
+	private float calPrice;
+	
 	private int status;
 	
 	private Timestamp createTime;
@@ -108,6 +116,42 @@ public class AddReducePO implements Serializable{
 
 	public void setTotal(float total) {
 		this.total = total;
+	}
+
+	@Column(name="undisPrice")
+	public float getUndisPrice() {
+		return undisPrice;
+	}
+
+	public void setUndisPrice(float undisPrice) {
+		this.undisPrice = undisPrice;
+	}
+
+	@Column(name="disPrice")
+	public float getDisPrice() {
+		return disPrice;
+	}
+
+	public void setDisPrice(float disPrice) {
+		this.disPrice = disPrice;
+	}
+
+	@Column(name="uncalPrice")
+	public float getUncalPrice() {
+		return uncalPrice;
+	}
+
+	public void setUncalPrice(float uncalPrice) {
+		this.uncalPrice = uncalPrice;
+	}
+
+	@Column(name="calPrice")
+	public float getCalPrice() {
+		return calPrice;
+	}
+
+	public void setCalPrice(float calPrice) {
+		this.calPrice = calPrice;
 	}
 
 	@Column(name="status")

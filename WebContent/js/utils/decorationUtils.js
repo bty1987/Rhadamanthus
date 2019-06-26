@@ -10,6 +10,8 @@ var decorationUtils = {
         var $ulbrand = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable').appendTo($brand);
 
         var $total = 0;
+        var $coupon = 0;
+
         var materialPayments = null;
         var salesPayments = null;
 
@@ -88,6 +90,8 @@ var decorationUtils = {
                     $brandTotal.html(_total);
 
                     $total = utils.changeThrDecimal($total + _refer);
+                    $coupon = utils.changeThrDecimal($coupon + v.coupon);
+
                 } else {
                     var $liLine = $('<li></li>').addClass('item-orange clearfix').attr("name", v.brand);
                     var $h4 = $('<h4></h4>').addClass('oid').append($('<b></b>').html(v.brand));
@@ -102,6 +106,7 @@ var decorationUtils = {
                     $liLine.append($h4).append($ulProperty).appendTo($ulbrand);
 
                     $total = utils.changeThrDecimal($total + _refer);
+                    $coupon = utils.changeThrDecimal($coupon + v.coupon);
                 }
             });
         }
@@ -181,6 +186,8 @@ var decorationUtils = {
                     $brandTotal.html(_total);
 
                     $total = utils.changeThrDecimal($total + _refer);
+
+                    $coupon = utils.changeThrDecimal($coupon + salesReceipt.coupon);
                 } else {
                     var $liLine = $('<li></li>').addClass('item-orange clearfix').attr("name", v.sales.brand);
                     var $h4 = $('<h4></h4>').addClass('oid').append($('<b></b>').html(v.sales.brand));
@@ -195,6 +202,7 @@ var decorationUtils = {
                     $liLine.append($h4).append($ulProperty).appendTo($ulbrand);
 
                     $total = utils.changeThrDecimal($total + _refer);
+                    $coupon = utils.changeThrDecimal($coupon + salesReceipt.coupon);
                 }
             });
         }
@@ -225,8 +233,10 @@ var decorationUtils = {
         function totalData() {
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
             var $h4 = $('<h4></h4>').addClass('oid blue').append($('<b></b>').html("总金额:" + $total));
+            var $couponPrice = $('<h4></h4>').addClass('oid blue').append($('<b></b>').html("优惠券:" + $coupon));
+            var $TotalPrice = $('<h4></h4>').addClass('oid blue').append($('<b></b>').html("实收额:" + ($total - $coupon)));
 
-            $liLine.append($h4).appendTo($ulbrand);
+            $liLine.append($h4).append($couponPrice).append($TotalPrice).appendTo($ulbrand);
         }
 
     }, addDecorationActivityForDiv: function (_activitys, _decorationActivity, uiBtnMethod, couponCut, thingCut) {
@@ -1140,6 +1150,15 @@ var decorationUtils = {
                 }
             });
         }, null, false);
+    },  createCounpon: function(ulId, typeId, valId){
+        var $li = $("<li></li>").css({"background-color":"#91b8d0", "margin-bottom":"5px", "margin-right":"5px"}).appendTo(com.focusPage("#" + ulId));
+        var $type = com.focusPage("#" + typeId).val();
+        var $coupon = com.focusPage("#" + valId).val();
+        var $span = $("<span></span>").css({'color':'#fff'}).attr('typeName', $type).attr('num', $coupon).attr('asid', com.focusPage("#" + typeId).attr('data-typeahead-key')).html($type).appendTo($li);
+        var $spanTwo = $("<span></span>").css({'color':'#fff', 'margin':'0 5px'}).html("数量:"+$coupon).appendTo($span);
+        var $a = $("<a></a>").addClass("glyphicon glyphicon-remove").css({'color':'#d15b47'}).appendTo($li);
+        $a.click(function () {
+            $li.remove();
+        });
     }
-
 };
