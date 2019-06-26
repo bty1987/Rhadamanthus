@@ -1,25 +1,52 @@
 
 jQuery(function($) {
 	var paymentCheck = {
+		saveBtn: com.focusPage("#collectBtn"),
 		typeData: [],
 		paymentTypeData: [],
 		statusData: [],
 		temp: [],
 		bankNums: [],
 		checkvNums: [],
-		items: {},
+		items: {
+			cashCheckbox: com.focusPage("#cashCheckbox"),
+			bankCheckbox: com.focusPage("#bankCheckbox"),
+			checkvCheckbox: com.focusPage("#checkvCheckbox"),
+			cash: com.focusPage("#cash"),
+			paymentTypeSel: com.focusPage("#paymentTypeSel"),
+			des: com.focusPage("#des")
+		},
 		htmlName: "paymentCheck",
-		modelId: 'paymentCheckModal'
+		modelId: 'paymentCheckModal',
+		modals: {
+			modal: com.focusPage("#paymentCheckModal")
+		},
+
+		cash: [],
+		bank: [],
+		checkBank: [],
+		accounts: [],
+
+		cashUtil: [],
+		bankUtil: [],
+		checkBankUtil: [],
+
+		cashInfo: {},
+		bankInfo: {},
+		checkBankInfo: {},
+		accountsInfo: {},
+
+		bankUtilForGrade: [],
+		checkBankUtilForGrade: []
 	};
 
-	paymentCheck.saveBtn = com.focusPage("#collectBtn").bindClick(function(){
+	paymentCheck.saveBtn.bindClick(function(){
 		paymentUtils.paymentSaveData(paymentCheck, searcher);
 	});
 
-	paymentCheck.modal = com.focusPage("#paymentCheckModal").on('show.bs.modal',function(e){
+	paymentCheck.modals.modal.on('show.bs.modal',function(e){
 		com.clearValidator();
 		com.focusPage('.payWayError').hide();
-		com.focusPage("#paymentInfo").text("");
 	});
 
 	//隐藏触发
@@ -31,31 +58,6 @@ jQuery(function($) {
 	com.focusPage("#paymentCheckModal :checkbox").on("change", function(){
 		$(this).prop("checked") ? com.focusPage("[referCheckbox="+this.id+"]").show() : com.focusPage("[referCheckbox="+this.id+"]").hide();
 	});
-
-	paymentCheck.items.cashCheckbox = com.focusPage("#cashCheckbox");
-	paymentCheck.items.bankCheckbox = com.focusPage("#bankCheckbox");
-	paymentCheck.items.checkvCheckbox = com.focusPage("#checkvCheckbox");
-
-	paymentCheck.items.cash = com.focusPage("#cash");
-	paymentCheck.items.paymentTypeSel = com.focusPage("#paymentTypeSel");
-	paymentCheck.items.des = com.focusPage("#des");
-
-	paymentCheck.cash = [];
-	paymentCheck.bank = [];
-	paymentCheck.checkBank = [];
-	paymentCheck.accounts = [];
-
-	paymentCheck.cashInfo = {};
-	paymentCheck.bankInfo = {};
-	paymentCheck.checkBankInfo = {};
-	paymentCheck.accountsInfo = {};
-
-	paymentCheck.cashUtil = [];
-	paymentCheck.bankUtil = [];
-	paymentCheck.checkBankUtil = [];
-
-	paymentCheck.bankUtilForGrade = [];
-	paymentCheck.checkBankUtilForGrade = [];
 
 	paymentUtils.getReceiptType(paymentCheck);
 
@@ -88,7 +90,6 @@ jQuery(function($) {
 	});
 
 	com.post(api.common.queryReceiptType, {}, function(res){
-
 		$.each(res.receiptTypes, function(i, v){
 			if(v.type == 1){
 				paymentCheck.cash.push(v);

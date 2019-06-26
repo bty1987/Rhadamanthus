@@ -132,8 +132,6 @@ $.extend(api, {quotation: {
     updateQuotetionFunctionAreaItemForIndex:{url:"updateQuotetionFunctionAreaItemForIndex.do" , intercept: true},
     updateQuotetionFunctionAreaItemForSpec:{url:"updateQuotetionFunctionAreaItemForSpec.do" , intercept: true},
     deleteQuotetionFunctionAreaItem:{url:"deleteQuotetionFunctionAreaItem.do" , intercept: true}
-    
-    
 
 }});
 
@@ -141,16 +139,18 @@ $.extend(api, {addReduce: {
     pageAddReduceByOrderId: {url: "pageAddReduceByOrderId.do"},
     queryAddReduceByOrderId: {url: "queryAddReduceByOrderId.do", demo: true},
     queryAddReduceForPayedByOrderId: {url: "queryAddReduceForPayedByOrderId.do", demo: true},
+    queryAddReduceByArid: {url: "queryAddReduceByArid.do", demo: true},
     queryAddReduceByDecorationPaymentId: {url: "queryAddReduceByDecorationPaymentId.do", demo: true},
     addAddReduce: {url: "addAddReduce.do"},
     updateAddReduce: {url: "updateAddReduce.do"},
-    updateAddReduceForAdvance: {url: "updateAddReduceForAdvance.do"},
-    deleteAddReduce: {url: "deleteAddReduce.do"},
+    updateAddReduceForAdvance: {url: "updateAddReduceForAdvance.do", intercept: true},
+    deleteAddReduce: {url: "deleteAddReduce.do", intercept: true},
 
-    submitAddReduce: {url: "submitAddReduce.do"},
+    submitAddReduce: {url: "submitAddReduce.do", intercept: true},
 
     queryAddReduceItemByAddReduceId: {url: "queryAddReduceItemByAddReduceId.do", demo: true},
     queryAddReduceItemByAddReduceIds: {url: "queryAddReduceItemByAddReduceIds.do", demo: true},
-    updateAddReduceItem: {url: "updateAddReduceItem.do" ,  intercept: true},
-    deleteAddReduceItem: {url: "deleteAddReduceItem.do" ,  intercept: true}
+    updateAddReduceItem: {url: "updateAddReduceItem.do", intercept: true},
+    updateAddReduceItemForAdvance: {url: "updateAddReduceItemForAdvance.do", intercept: true},
+    deleteAddReduceItem: {url: "deleteAddReduceItem.do", intercept: true}
 }});

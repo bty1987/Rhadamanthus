@@ -23,9 +23,8 @@
                     <div class="form-group">
                         <label for="users" class="col-sm-3 control-label no-padding-right">员工</label>
                         <div class="col-sm-9">
-                            <select class="chosen-select col-md-4 v_required" id="users" data-placeholder="请输入员工" data-toggle="popover"  style="display: none;">
-                                <option value="">&nbsp;</option>
-                            </select>
+                            <input class=" col-md-5 v_typeahead v_required" type="text" id="users"  data-toggle="popover" data-placement="bottom" data-trigger='manual'>
+                            </input>
                         </div>
                     </div>
 
@@ -50,7 +49,7 @@
                         <label class="col-sm-3 control-label no-padding-right" for="startTime">开始时间</label>
                         <div class="col-sm-9">
                             <div class="input-group col-xs-10 col-sm-7 no-padding v_required" data-for="endTime" data-toggle="popover" data-trigger='manual'>
-                                <input class="form-control date-picker" id="startTime" type="text" data-date-format="yyyy-mm-dd">
+                                <input class="form-control date-picker-date" id="startTime" type="text" data-date-format="yyyy-mm-dd">
 										<span class="input-group-addon">
 											<i class="icon-calendar bigger-110"></i>
 										</span>
@@ -63,7 +62,7 @@
                         <label class="col-sm-3 control-label no-padding-right" for="endTime">结束时间</label>
                         <div class="col-sm-9">
                             <div class="input-group col-xs-10 col-sm-7 no-padding v_required" data-for="endTime" data-toggle="popover" data-trigger='manual'>
-                                <input class="form-control date-picker" id="endTime" type="text" data-date-format="yyyy-mm-dd">
+                                <input class="form-control date-picker-date" id="endTime" type="text" data-date-format="yyyy-mm-dd">
 										<span class="input-group-addon">
 											<i class="icon-calendar bigger-110"></i>
 										</span>

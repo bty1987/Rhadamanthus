@@ -10,7 +10,6 @@ jQuery(function($) {
 		priceFlag: false,
 		areaFlag: false,
 		customerItems: {},
-		validator: {},
 		cardType: ["身份证", "军官证", "护照"],
 		grade: ["A", "B", "C", "D"],
 		buildingJson:null,
@@ -67,8 +66,6 @@ jQuery(function($) {
 	createCustomerSource.modal.on('show.bs.modal',function(e){
 		com.clearValidator();
 	});
-
-	$.extend(com.validator, createCustomerSource.validator);
 
 	com.post(api.ds.building, {}, function(res){
 		createCustomerSource.items.orientation.bindData(res.orientation,"key", "value");

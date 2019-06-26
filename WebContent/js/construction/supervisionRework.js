@@ -1,11 +1,14 @@
 jQuery(function ($) {
-    com.focusPage('#fl-statement').statement("监理控制", "返工信息列表");
 
     var rework = {
-        saveBtn: com.focusPage("#saveBtn").on("click", saveData),
+        saveBtn: com.focusPage("#SaveBtn"),
         cancellBtn: com.focusPage("#cancelBtn"),
-        modal: com.focusPage("#reworkModal"),
-        reworkItems: {
+
+        modals:{
+            modal: com.focusPage("#reworkModal")
+        },
+
+        items: {
             createTime: com.focusPage("#createTime"),
             reworkDes: com.focusPage("#reworkDes")
         },
@@ -14,7 +17,11 @@ jQuery(function ($) {
         repeatFlg: false
     };
 
-    com.focusPage('.date-picker').datepicker(com.datepickerdefault);
+    rework.saveBtn.bindClick(saveData);
+
+    com.focusPage('#fl-statement').statement("监理控制", "返工信息列表");
+
+    com.datetime(rework.items.createTime);
 
     var displayFunc = (function () {
 
@@ -34,11 +41,9 @@ jQuery(function ($) {
         };
 
         var creatLine = function (v) {
-            var that = this;
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons').css('padding-top', '2px');
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix col-xs-6').css('padding-top', '2px');
-
 
             var $btnView = $('<a></a>').addClass('btn btn-minier btn-yellow').html("图纸");
             var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-primary').html("编辑");
@@ -63,15 +68,17 @@ jQuery(function ($) {
             $btnView.click(function () {
                 viewSupervisionReworkDrawingIndex(v.rwId);
             });
+            
             $btnEdit.click(function () {
                 rework.editFlag = true;
-                rework.reworkItems.createTime.val(v.createTime);
-                rework.reworkItems.reworkDes.val(v.reworkDes);
+                rework.items.createTime.val(v.createTime);
+                rework.items.reworkDes.val(v.reworkDes);
 
                 rework["rework.rwId"] = v.rwId;
 
-                rework.modal.modal("show");
+                rework.modals.modal.modal("show");
             });
+            
             $btnDel.click(function () {
                 removeRow(v.rwId);
             });
@@ -97,38 +104,29 @@ jQuery(function ($) {
         "rework.orderId": params.orderId
     }, false, null, function () {
 
-        var $adda = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'add').css("margin", "0px 3px");
+        var $adda = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('id', 'add').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
-        var $addb = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'back').css("margin", "0px 3px");
-        var $addi = $('<i></i>').addClass('icon-mail-forward bigger-110').appendTo($addb);
-        var $addspan = $('<span></span>').text('返回').appendTo($addb);
-
-        return [$addb, $adda];
+        return [$adda];
     });
 
-    com.focusPage('a[name="add"]', '#pagenation').click(function () {
+    com.focusPage('#add', '#pagenation').click(function () {
         rework.editFlag = false;
 
-        com.cleanItems(rework.reworkItems);
+        com.cleanItems(rework.items);
 
-        rework.modal.modal("show");
-    });
-
-    com.focusPage('a[name="back"]', '#pagenation').click(function () {
-        com.switchPage(api.index.supervisionIndex.url);
+        rework.modals.modal.modal("show");
     });
 
     function saveData() {
-
         if (com.validate())
             return;
 
         var url;
         var options = {
-            "rework.createTime": rework.reworkItems.createTime.val(),
-            "rework.reworkDes": rework.reworkItems.reworkDes.val(),
+            "rework.createTime": rework.items.createTime.val(),
+            "rework.reworkDes": rework.items.reworkDes.val(),
             "rework.orderId": params.orderId
         };
 
@@ -143,21 +141,22 @@ jQuery(function ($) {
             searcher.doSearch();
         });
 
-        rework.modal.modal("hide");
+        rework.modals.modal.modal("hide");
     }
 
     function removeRow(id) {
         com.showConfirm("确认申请放线吗?", function () {
-                com.post(api.construction.deleteRework, {"rwIds[0]": id}, function (res) {
-                    searcher.doSearch();
-                });
+            com.post(api.construction.deleteRework, {"rwIds[0]": id}, function (res) {
+                searcher.doSearch();
+            });
 
         });
     }
 
     function viewSupervisionReworkDrawingIndex(rwId) {
         params.rwId = rwId;
-        com.switchPage(api.index.supervisionReworkDrawingIndex.url);
+        com.closePopup();
+        com.popup4page("#stockRecordPopUp", "/views/construction/supervisionReworkDrawing.html", "返工图纸");
     }
 
 });

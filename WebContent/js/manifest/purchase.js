@@ -116,7 +116,7 @@ $(function () {
 
             $btnView.click(function () {
                 params["purchase.pid"] = v.pid;
-                showLayer("查看__采购单号 : " + v.no, "views/manifest/purchase4view.html");
+                com.popup4page("#layerPopUp","views/manifest/purchase4view.html","查看__采购单号 : " + v.no)
             });
 
             $btnEdit.click(function () {
@@ -127,12 +127,12 @@ $(function () {
                 }
                 
                 params["purchase.pid"] = v.pid;
-                showLayer("修改__采购单号 : " + v.no, "views/manifest/purchase2edit.html");
+                com.popup4page("#layerPopUp","views/manifest/purchase2edit.html","修改__采购单号 : " + v.no)
             });
 
             $btnIn.click(function () {
                 params["purchase.pid"] = v.pid;
-                showLayer("入库__采购单号 : " + v.no, "views/manifest/purchase2in.html");
+                com.popup4page("#layerPopUp","views/manifest/purchase2in.html","入库__采购单号 : " + v.no)
             });
 
             return $liLine;
@@ -176,27 +176,6 @@ $(function () {
 
         return [$impa];
     }, 'resultList');
-    
-    function showLayer(title, page){
-    	
-    	var $popup = com.focusPage("#layerPopUp");
-    	
-    	layer.open({
-            type: 1,
-            title: title,
-            skin: 'layui-layer-lan',
-            content: $popup,
-            area: [($(window).width() * 0.7 < 1000 ? $(window).width() * 0.7 : 1000) + "px", ($(window).height() * 0.84 < 620 ? $(window).height() * 0.84 : 620) + "px"],
-            maxmin: false,
-            success: function (layer, index) {
-                $popup.load(page);
-            },
-            end: function () {
-                layer.closeAll();
-                purchaseSearcher.doSearch();
-            }
-        });
-    }
 
     // 批量入库校验
     function batchin() {
@@ -222,8 +201,8 @@ $(function () {
         }
         
         params["purchase.pids"] = $pids;
-        
-        showLayer("批量入库", "views/manifest/purchase2batchin.html");
+
+        com.popup4page("#layerPopUp","views/manifest/purchase2batchin.html","批量入库");
     }
 
     //导出excel

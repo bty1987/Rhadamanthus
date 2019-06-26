@@ -217,7 +217,7 @@ $(function(){
 
     //绑定弹窗
     function openBindlayer(callback){
-        layer.closeAll();
+        com.closePopup();
         layer.open({
             type: 1,
             title:"绑定" ,

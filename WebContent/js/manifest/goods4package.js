@@ -1,19 +1,8 @@
 $(function () {
 
-    var goodsSuitPopUp = com.focusPage('#goodsSuitPopUp');
-
     var goodsSuit = {
         'flag': true,
-        validator: {
-            num: {
-                type: "v_num",
-                regex: /^[0-9]*[1-9][0-9]*$/,
-                errorMsg: "数量输入内容格式错误"
-            }
-        }
     };
-
-    $.extend(com.validator, goodsSuit.validator);
 
     var _goodsPackage = params['goods'];
 
@@ -106,7 +95,7 @@ $(function () {
                     $input.addClass('v_required');
                 }
                 if (v.cellClass == "number") {
-                    $input.addClass('v_num');
+                    $input.addClass('v_number');
                 }
                 $cell.append($input);
             }
@@ -233,17 +222,6 @@ $(function () {
         return flag;
     }
 
-    com.focusPage('.layui-layer-content').css('overflow', 'hidden');
-    com.focusPage('#showGoods').css({'height': '560px', 'margin-top': '3%'});
-    com.focusPage('#resultListGoodsPackage').css({
-        'width': '96%',
-        'margin': '0 auto',
-        'height': '560px',
-        'overflow-y': 'scroll',
-        'marigin-top': '20px'
-    });
-    com.focusPage('#addGoodsPackage').css({'width': '96%', 'margin': '0 auto', 'margin-top': '15px'});
-
     $btnConfirm.click(function (e) {
         e.stopPropagation();
         var _option = {};
@@ -274,8 +252,7 @@ $(function () {
     });
 
     $btnCancel.click(function () {
-        com.focusPage('#showList').empty();
-        com.focusPage('#list').empty();
+        com.closePopup();
     });
 
 });

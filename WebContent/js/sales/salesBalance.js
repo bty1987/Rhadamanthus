@@ -1,5 +1,16 @@
 $(function () {
+    var salesBalance = {
+        salesBalance_Manufacturer_Data : {},
+        salesBalance_Settlement_Data :{},
+        balanceType:{},
+        status:{},
+        salesPaymentType : {},
+        btns : {
+            supplierSaveBtn : com.focusPage("#supplierSaveBtn"),
+            balanceSaveBtn : com.focusPage("#balanceSaveBtn")
+        }
 
+    };
     var salesPaymentForStatus = {};
 
     var url = api.inventory.pageSalesBalance;
@@ -19,6 +30,12 @@ $(function () {
         postData = "salesBalanceForPompanyPostData";
     }
 
+    com.post(api.ds.payment, {}, function(res){
+        salesBalance.balanceType = res.balanceType.split("key", "value");
+        salesBalance.status = res.balanceStatus.split("key", "value");
+        salesBalance.salesPaymentType = res.materialPaymentType.split("key", "value");
+    }, null, false);
+    
     com.post(api.common.queryReceiptType, {}, function (res) {
         salesPaymentForStatus.cash = [];
         salesPaymentForStatus.bank = [];
@@ -53,12 +70,6 @@ $(function () {
 
     }, null, false);
 
-
-    var salesCollection = {
-        salesPaymentType: {"2": "定金", "3": "补款", "4": "退款", "5": "补款退款", "6": "券退款", "7": "定金退款"}
-    };
-
-
     /**
      * 回调函数必须提供 init(tableId, result.list)方法
      * tableId ,用来显示的div的id
@@ -87,34 +98,6 @@ $(function () {
                     var $btnPayment = $('<a></a>').addClass('btn btn-minier btn-danger').html('款项');
                     var $btnBalanceItem = $('<a></a>').addClass('btn btn-minier btn-pink').html('子项');
 
-                    var status = "";
-                    var type = "";
-
-                    switch (v.status) {
-                        case 0:
-                            status = "预结算";
-                            break;
-                        case 1:
-                            status = "厂商结算";
-                            break;
-                        case 2:
-                            status = "结算";
-                            break;
-
-                    }
-
-                    switch (v.type) {
-                        case 0:
-                            type = "购货";
-                            break;
-                        case 1:
-                            type = "预结算退货";
-                            break;
-                        case 2:
-                            type = "结算退货";
-                            break;
-
-                    }
                     var propertyArr = [
                         ["装修单号:", v.sales.orderId, "blue"],
                         ["楼盘地址:", v.sales.house.village.name + " " + v.sales.house.houseNumber, "grey"],
@@ -138,9 +121,8 @@ $(function () {
                         ["结算人:", v.poster.currentName, "grey"],
                         ["抹零:", v.sales.maling, "blue"],
                         ["厂商抹零:", v.sales.venderMaling, "blue"],
-                        ["状态:", status, "red"],
-                        ["类型:", type, "red"]
-
+                        ["状态:", salesBalance.status[v.status], "red"],
+                        ["类型:", salesBalance.balanceType[v.type], "red"]
                     ];
 
                     $.each(propertyArr, function (index, value) {
@@ -178,28 +160,12 @@ $(function () {
 
                         com.focusPage('#vbalanceValue').find('input[name="total"]').val(v.total);
 
-                        openlayerVbalance(com.focusPage('#vbalanceValue'), function () {
-
-                            var _vBalance = com.focusPage('#vbalanceValue').find('input[name="vbalanceValue"]').val();
-
-                            if (com.validate('vbalanceValue','right')==false) {
-
-                                com.post(api.inventory.updateSalesBalanceForVBalance, {
-                                    "salesBalance.sbid": v.sbid,
-                                    "salesBalance.vbalance": _vBalance
-                                }, function (res) {
-
-                                    layer.closeAll();
-                                    com.showAlert(com.info, "更新成功");
-                                    clearinput(com.focusPage('#vbalanceValue'));
-                                    salesBalanceSearcher.doSearch();
-
-                                });
-
-                            }
-
+                        com.popup4model("#vbalanceValue", "厂商结算值", function () {
+                            salesBalance.salesBalance_Manufacturer_Data = v;
+                        }, function () {
+                            com.clearValidator();
+                            clearinput(com.focusPage('#vbalanceValue'));
                         });
-
                     });
 
                     $btnVbalance.click(function (e) {
@@ -243,28 +209,12 @@ $(function () {
                         com.focusPage('#pbalanceValue').find('input[name="balanceValue"]').val(v.balance);
                         com.focusPage('#pbalanceValue').find('input[name="vbalanceValue"]').val(v.vbalance);
 
-                        openlayerPbalance(com.focusPage('#pbalanceValue'), function () {
-
-                            var _pBalance = com.focusPage('#pbalanceValue').find('input[name="pbalanceValue"]').val();
-
-                            if (com.validate('pbalanceValue','right')==false) {
-
-                                com.post(api.inventory.updateSalesBalanceForPBalance, {
-                                    "salesBalance.sbid": v.sbid,
-                                    "salesBalance.pbalance": _pBalance
-                                }, function (res) {
-
-                                    layer.closeAll();
-                                    com.showAlert(com.info, "更新成功");
-                                    clearinput(com.focusPage('#pbalanceValue'));
-                                    salesBalanceSearcher.doSearch();
-
-                                });
-
-                            }
-
+                        com.popup4model("#pbalanceValue", "结算值", function () {
+                            salesBalance.salesBalance_Settlement_Data = v;
+                        }, function () {
+                            com.clearValidator();
+                            clearinput(com.focusPage('#pbalanceValue'));
                         });
-
                     });
 
                     $btnBalance.click(function (e) {
@@ -302,34 +252,32 @@ $(function () {
 
                         e.stopPropagation();
 
-                        viewPopUp(function () {
-
+                        com.popup4model("#viewPopUp", "收款", "", function () {
+                            com.focusPage("#viewPopUp").find('#resultListItem').empty();
+                            salesBalanceSearcher.doSearch();
+                        }, function () {
                             com.post(api.payment.querySalesPaymentBySid, {
                                 "salesPayment.sales.sid": v.sales.sid
                             }, function (res) {
-
                                 viewSalesPaymentLine('resultListItem', res);
-
-                            });
-
-                        }, '收款');
-
+                            }, null, false);
+                        });
                     });
 
                     $btnBalanceItem.click(function (e) {
 
                         e.stopPropagation();
 
-                        viewPopUp(function () {
-
+                        com.popup4model("#viewPopUp", "子项", "", function () {
+                            com.focusPage("#viewPopUp").find('#resultListItem').empty();
+                            salesBalanceSearcher.doSearch();
+                        },function () {
                             com.post(api.inventory.querySalesBalanceItemBySbid,{
                                 "salesBalance.sbid":v.sbid
                             },function(res){
                                 salesBalanceItemList.init('resultListItem', res.salesBalanceItems);
-                            });
-
-                        }, '子项');
-
+                            }, null, false);
+                        });
                     });
 
 
@@ -374,89 +322,46 @@ $(function () {
     }, 'resultList');
 
 
-    //厂商结算值弹窗
-    function openlayerVbalance($line, callback) {
-
-        layer.closeAll();
-        layer.open({
-            type: 1,
-            skin: 'layui-layer-lan',
-            title: "厂商结算值",
-            content: com.focusPage('#vbalanceValue'),
-            area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
-            //maxmin: true,
-            zIndex: 9000,
-            btn: ['确定', '取消'],
-            yes: function (index, layero) {
-                callback(index, layero);
-            },
-            btn2: function (index, layero) {
-                //按钮【按钮二】的回调
-                com.clearValidator();
-                clearinput($line);
-            },
-            cancel: function () {
-                //右上角关闭回调
-                com.clearValidator();
-                clearinput($line);
-            }
-        });
-    }
-
-    //结算值弹窗
-    function openlayerPbalance($line, callback) {
-
-        layer.closeAll();
-        layer.open({
-            type: 1,
-            skin: 'layui-layer-lan',
-            title: "结算值",
-            content: com.focusPage('#pbalanceValue'),
-            area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
-            //maxmin: true,
-            zIndex: 9000,
-            btn: ['确定', '取消'],
-            yes: function (index, layero) {
-                callback(index, layero);
-            },
-            btn2: function (index, layero) {
-                //按钮【按钮二】的回调
-                com.clearValidator();
-                clearinput($line);
-            },
-            cancel: function () {
-                //右上角关闭回调
-                com.clearValidator();
-                clearinput($line);
-            }
-        });
-
-    }
-
-    function viewPopUp(callback, title) {
-
-        var _popUp = com.focusPage('#viewPopUp');
-
-        layer.closeAll();
-        layer.open({
-            type: 1,
-            skin: 'layui-layer-lan',
-            title: title,
-            content: _popUp,
-            area: ["1400px", ( $(window).height() * 0.84 < 800 ? $(window).height() * 0.84 : 800 ) + "px"],
-            //maxmin: true,
-            zIndex: 9000,
-            btn: ['确定'],
-            success: function (layers, index) {
-                callback();
-            },
-            end: function () {
-                _popUp.find('#resultListItem').empty();
+    salesBalance.btns.supplierSaveBtn.on('click', function () {
+        var _vBalance = com.focusPage('#vbalanceValue').find('input[name="vbalanceValue"]').val();
+    
+        if (com.validate('vbalanceValue','right')==false) {
+    
+            com.post(api.inventory.updateSalesBalanceForVBalance, {
+                "salesBalance.sbid": salesBalance.salesBalance_Manufacturer_Data.sbid,
+                "salesBalance.vbalance": _vBalance
+            }, function (res) {
+    
+                com.closePopup();
+                com.showAlert(com.info, "更新成功");
+                clearinput(com.focusPage('#vbalanceValue'));
                 salesBalanceSearcher.doSearch();
-            }
-        });
-    }
+    
+            });
+    
+        }
+    });
 
+    salesBalance.btns.balanceSaveBtn.on('click', function () {
+        var _pBalance = com.focusPage('#pbalanceValue').find('input[name="pbalanceValue"]').val();
+
+        if (com.validate('pbalanceValue','right')==false) {
+
+            com.post(api.inventory.updateSalesBalanceForPBalance, {
+                "salesBalance.sbid": salesBalance.salesBalance_Settlement_Data.sbid,
+                "salesBalance.pbalance": _pBalance
+            }, function (res) {
+
+                com.closePopup();
+                com.showAlert(com.info, "更新成功");
+                clearinput(com.focusPage('#pbalanceValue'));
+                salesBalanceSearcher.doSearch();
+
+            });
+
+        }
+    });
+    
     //清空弹窗输入框的值
     function clearinput($line) {
         $line.find('input').val('');
@@ -471,7 +376,7 @@ $(function () {
                 var $liLine = $('<li></li>').addClass('item-orange clearfix');
                 var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
                 var $h3 = $('<h3></h3>').addClass('oid');
-                var $small = $('<small></small>').addClass('blue').html(salesCollection.salesPaymentType[v.type]);
+                var $small = $('<small></small>').addClass('blue').html(salesBalance.salesPaymentType[v.type]);
 
                 var propertyArr = [
                     ["销售单号:", v.sales.no, "blue"],

@@ -93,7 +93,7 @@ $(function(){
     })();
     
     com.focusPage("#cancelBtn").click(function () {
-        layer.closeAll();
+        com.closePopup();
     });
 
 });

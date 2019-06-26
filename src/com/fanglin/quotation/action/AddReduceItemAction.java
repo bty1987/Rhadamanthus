@@ -68,6 +68,14 @@ public class AddReduceItemAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
+	@Action(value = "updateAddReduceItemForAdvance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateAddReduceItemForAdvance() throws FLException{
+		
+		addReduceItemService.updateAddReduceItemForAdvance(addReduce, addReduceItem);
+		
+		return SUCCESS;
+	}
+	
 	@Action(value = "deleteAddReduceItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteAddReduceItem() throws FLException{
 		

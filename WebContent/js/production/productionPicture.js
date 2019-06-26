@@ -110,7 +110,7 @@ $(function(){
     });
 
     function openlayerImportProduction(){
-        layer.closeAll();
+        com.closePopup();
         layer.open({
             type: 1,
             skin: 'layui-layer-lan',

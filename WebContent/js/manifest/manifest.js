@@ -1,21 +1,18 @@
-
 $(function () {
-	
-	var manifest = {
-		items: {
-			
-		},
-		manifestType: [],
-		status: {}
-	};
-	
-	com.post(api.ds.manifest, {}, function(res){
-        $.each(res.manifestType, function(i, v){
-        	manifest.manifestType.push(v.value);
+
+    var manifest = {
+        items: {},
+        manifestType: [],
+        status: {}
+    };
+
+    com.post(api.ds.manifest, {}, function (res) {
+        $.each(res.manifestType, function (i, v) {
+            manifest.manifestType.push(v.value);
         });
-        
-        $.each(res.manifestStatus, function(i, v){
-        	manifest.status[v.key] = v.value;
+
+        $.each(res.manifestStatus, function (i, v) {
+            manifest.status[v.key] = v.value;
         });
     }, null, false);
 
@@ -73,7 +70,7 @@ $(function () {
                 [v.createTime, 'green'],
                 [v.manifestTime, 'green'],
                 [manifest.status[v.status], 'red'],
-                [manifest.manifestType[parseInt(v.type) - 1] ? manifest.manifestType[parseInt(v.type) - 1] : '---','red'],
+                [manifest.manifestType[parseInt(v.type) - 1] ? manifest.manifestType[parseInt(v.type) - 1] : '---', 'red'],
                 [v.comment == null ? "" : v.comment, 'grey']
             ];
 
@@ -99,7 +96,7 @@ $(function () {
             var $btnPrint = $('<li></li>').append($('<a></a>').html('打印'));
 
             $btnUl.append($btnView).append($btnConfirm).append($btnImport).append($btnPrint);
-                
+
             if (v.type == 1) {
                 $btnUl.append($btnCR);
             } else if (v.type == 3) {
@@ -112,63 +109,63 @@ $(function () {
 
             $btnView.click(function () {
                 params["manifest.mid"] = v.mid;
-                showLayer("查看__货单号 : " + v.code, "views/manifest/manifest4view.html");
+                com.popup4page("#layerPopUp", "views/manifest/manifest4view.html", "查看__货单号" + v.code)
             });
 
             $btnEdit.click(function () {
-            	
-            	if(v.status != 0){
-            		com.showAlert(com.warning, "货单状态不可操作");
-            		return false;
-            	}
-            	
-            	params["manifest.mid"] = v.mid;
-                showLayer("编辑__货单号 : " + v.code, "views/manifest/manifest2edit.html");
+
+                if (v.status != 0) {
+                    com.showAlert(com.warning, "货单状态不可操作");
+                    return false;
+                }
+
+                params["manifest.mid"] = v.mid;
+                com.popup4page("#layerPopUp", "views/manifest/manifest2edit.html", "编辑__货单号" + v.code)
             });
 
-            $btnConfirm.click(function(){
-            	
-            	if(v.status != 0){
-            	    com.showAlert(com.warning, "货单状态不可操作");
-            		return false;
-            	}
+            $btnConfirm.click(function () {
 
-            	com.showConfirm('是否确认订单?', function (result) {
-                    com.post(api.inventory.confirmManifest, {"manifest.mid": v.mid}, function(res){
+                if (v.status != 0) {
+                    com.showAlert(com.warning, "货单状态不可操作");
+                    return false;
+                }
+
+                com.showConfirm('是否确认订单?', function (result) {
+                    com.post(api.inventory.confirmManifest, {"manifest.mid": v.mid}, function (res) {
                         com.showAlert(com.info, "操作成功");
                         seacher.doSearch();
                     });
                 })
             });
 
-            $btnCR.click(function(){
-            	
-            	if(v.status != 1){
-            	    com.showAlert(com.warning, "货单状态不可操作");
-            		return false;
-            	}
-            	
+            $btnCR.click(function () {
+
+                if (v.status != 1) {
+                    com.showAlert(com.warning, "货单状态不可操作");
+                    return false;
+                }
+
 //                advanceRetreatManifest(v.mid, v.status);
-            	
-            	params["manifest.mid"] = v.mid;
-                showLayer("进退__货单号 : " + v.code, "views/manifest/manifest2cr.html");
+
+                params["manifest.mid"] = v.mid;
+                com.popup4page("#layerPopUp", "views/manifest/manifest2cr.html", "进退__货单号" + v.code)
             });
 
-            $btnXB.click(function(){
-            	
-            	if(v.status != 1){
-            	    com.showAlert(com.warning, "货单状态不可操作");
-            		return false;
-            	}
-            	
+            $btnXB.click(function () {
+
+                if (v.status != 1) {
+                    com.showAlert(com.warning, "货单状态不可操作");
+                    return false;
+                }
+
 //                sendReturnManifest(v.mid, v.status, v.sid);
-            	
-            	params["manifest.mid"] = v.mid;
-                showLayer("出返__货单号 : " + v.code, "views/manifest/manifest2xb.html");
+
+                params["manifest.mid"] = v.mid;
+                com.popup4page("#layerPopUp", "views/manifest/manifest2xb.html", "出返__货单号" + v.code)
             });
 
-            $btnImport.click(function(){
-            	exportManifest(v.mid);
+            $btnImport.click(function () {
+                exportManifest(v.mid);
             });
 
             //打印按钮
@@ -184,9 +181,9 @@ $(function () {
                 params["type"] = v.type;
 
 //                printManifest(v.mid,v.code);
-                
+
                 params["manifest.mid"] = v.mid;
-                
+
                 com.popup("货单号 : " + v.code, api.index.manifestPrintIndex.url, function () {
                     parent.layer.getFrameIndex(window.name);
                 }, null, true);
@@ -215,46 +212,26 @@ $(function () {
         displayFunc.init('resultList', data);
     }, "pagenation", "manifestPostData", null, false, null, null, 'resultList');
 
-    function showLayer(title, page){
-    	
-    	var $popup = com.focusPage("#layerPopUp");
-    	
-    	layer.open({
-            type: 1,
-            title: title,
-            skin: 'layui-layer-lan',
-            content: $popup,
-            area: [($(window).width() * 0.7 < 1000 ? $(window).width() * 0.7 : 1000) + "px", ($(window).height() * 0.84 < 620 ? $(window).height() * 0.84 : 620) + "px"],
-            maxmin: false,
-            success: function (layer, index) {
-                $popup.load(page);
-            },
-            end: function () {
-                layer.closeAll();
-            }
-        });
-    }
-
-    function exportManifest(mid){
-        com.post(api.inventory.queryManifestItemByMid, {"manifest.mid": mid}, function(res){
+    function exportManifest(mid) {
+        com.post(api.inventory.queryManifestItemByMid, {"manifest.mid": mid}, function (res) {
 
             $.exceler({
                 column: [
-                    ['商品编号','goods.no'],
-                    ['商品名','goods.name'],
-                    ['单位','goods.measurementUnit'],
-                    ['颜色','color.name'],
-                    ['规格','format.info'],
-                    ['进货仓库','instorehouse.name'],
-                    ['出货仓库','outstorehouse.name'],
-                    ['入库价','inprice'],
-                    ['出库价','outprice'],
-                    ['数量','num'],
-                    ['件数','goods.pieceNum'],
-                    ['备注','comment']
+                    ['商品编号', 'goods.no'],
+                    ['商品名', 'goods.name'],
+                    ['单位', 'goods.measurementUnit'],
+                    ['颜色', 'color.name'],
+                    ['规格', 'format.info'],
+                    ['进货仓库', 'instorehouse.name'],
+                    ['出货仓库', 'outstorehouse.name'],
+                    ['入库价', 'inprice'],
+                    ['出库价', 'outprice'],
+                    ['数量', 'num'],
+                    ['件数', 'goods.pieceNum'],
+                    ['备注', 'comment']
                 ],
                 list: res.manifestItems
-            }, function(v){
+            }, function (v) {
                 v.instorehouse.name = v.instorehouse.name == null ? "---" : v.instorehouse.name;
                 v.outstorehouse.name = v.outstorehouse.name == null ? "---" : v.outstorehouse.name;
             });

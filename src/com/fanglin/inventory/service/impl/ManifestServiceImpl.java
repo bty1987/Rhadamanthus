@@ -488,7 +488,7 @@ public class ManifestServiceImpl implements ManifestService {
 
 		String currentDate = DateUtil.current("yyMMdd").toString();
 		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_PU_INT, currentDate, company);
-		String no = String.format("%sXB%s%s", companyPO.getShortname(), currentDate, FormatUtil.fillZero(FormatUtil.offset(count), "0000"));
+		String no = String.format("%sPU%s%s", companyPO.getShortname(), currentDate, FormatUtil.fillZero(FormatUtil.offset(count), "0000"));
 
 		ManifestPO manifestPO = new ManifestPO().init(no, ManifestPO.TYPE_PU_INT, creater, ManifestPO.STATUS_CONFIRM_INT, "", "", null, company);
 

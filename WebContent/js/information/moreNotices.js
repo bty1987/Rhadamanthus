@@ -1,18 +1,17 @@
 $(function(){
-	var noticeType = {};
-	var  noticePriority={};
-	var noticeIsPublic={};
+	var moreNotices = {
+
+		noticeType: {},
+		noticePriority: {},
+		noticeIsPublic: {}
+	};
+
 	com.post(api.ds.information, {}, function(res){
 
-		$.each(res.noticeType,function (i,v) {
-			noticeType[v.key] = v.value;//类型
-		});
-		$.each(res.noticePriority,function (i,va) {
-			noticePriority[va.key] = va.value;//类型
-		});
-		$.each(res.noticeIsPublic,function (i,val) {
-			noticeIsPublic[val.key] = val.value;//类型
-		});
+		moreNotices.noticeType = res.noticeType.split("key", "value");
+		moreNotices.noticePriority = res.noticePriority.split("key", "value");
+		moreNotices.noticeIsPublic = res.noticeIsPublic.split("key", "value");
+
 	},null,false);
 
 	var displayFunc  = (function(){
@@ -45,22 +44,15 @@ $(function(){
 			var starts = new Date(v.startTime);
 			var end = new Date(v.endTime);
 
-			var status="";
-			if(starts <= myDate && end >=myDate){
-				status="有效";
-			}else{
-				status="无效";
-			}
-
 			var propertyArr = [
-				["类型:", noticeType[v.type], "grey"],
-				["优先级:", noticePriority[v.priority], "green"],
+				["类型:", moreNotices.noticeType[v.type], "grey"],
+				["优先级:", moreNotices.noticePriority[v.priority], "green"],
 				["发布人:", v.creater.currentName, "grey"],
 				["开始时间:", v.startTime, "grey"],
 				["结束时间:", v.endTime, "grey"],
-				["公开:", noticeIsPublic[v.isPublic], "blue"],
+				["公开:", moreNotices.noticeIsPublic[v.isPublic], "blue"],
 				["内容:", v.contents, "grey"],
-				["状态:", status, "blue"]
+				["状态:", starts <= myDate && end >= myDate ? "有效":"无效", "blue"]
 			];
 
 			$.each(propertyArr, function (index,value) {

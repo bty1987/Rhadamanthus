@@ -98,7 +98,7 @@ $(function(){
                     if(com.validate('form'))
                         return;
                     updateData(v, function(){
-                        layer.closeAll();
+                        com.closePopup();
                     });
                 });
             });
@@ -191,7 +191,7 @@ $(function(){
 
     function openlayer(name, callback){
         //var layer = $('#layerAdd');
-        layer.closeAll();
+        com.closePopup();
         layer.open({
             type: 1,
             title:name,

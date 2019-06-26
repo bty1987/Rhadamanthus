@@ -82,10 +82,9 @@ $(function(){
             }
         }
     })();
-    
+
     var mid = 0;
-    var $popup = com.focusPage('#viewPopUp');
-    
+
     com.post(api.inventory.queryManifestByAid, {"accessories.aid": params["accessories.aid"]}, function(res){
         mid = res.manifest.mid;
     }, null, false);

@@ -229,6 +229,7 @@ public class SalesItemServiceImpl implements SalesItemService {
 		}
 
 		salesPO.setTotal(Arith.sub(salesPO.getTotal(), salesItemPO.getTotal()));
+		salesPO.setAmount(Arith.sub(salesPO.getAmount(),salesItemPO.getTotal()));
 		
 		salesDao.update(salesPO);
 		

@@ -105,24 +105,25 @@ $(function(){
     
     $condList1.append($btnConfirm).append($btnCancel);
     
-    //添加按钮事件
+    //确定按钮事件
     $btnConfirm.bindClick(function(){
         saveOptionChange();
     });
     $btnCancel.bindClick(function(){
-        layer.closeAll();
+        com.closePopup();
     });
-    
-    var $page = com.focusPage('span[name="totalPage"]').val();
-    var $nowpage = com.focusPage('span[name="nowPage"]').val();
     
     function saveOptionChange(){
     	
         var _params = {
-            "manifestTemplate.mtid" : params.mtid
+            "manifestTemplate.mtid" : params["manifestTemplate.mtid"]
         };
         
         var $menus = com.focusPage('input[type="checkbox"]:checked', '.line');
+        if(!$menus.length){
+            com.showAlert(com.warning, "请选择商品");
+            return false;
+        }
         var $gid = [];
         
         $.each($menus,function(i,v){
@@ -137,6 +138,7 @@ $(function(){
         com.post(api.inventory.addManifestTemplateItem, _params, function(data){
             com.showAlert(com.info, "操作成功");
             com.switchPage('views/manifest/manifestTemplateItem.html');
+            com.closePopup();
         });
     }
     

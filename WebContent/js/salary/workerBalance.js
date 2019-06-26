@@ -1,36 +1,60 @@
 $(function () {
 
     var deposit = {
-        saveBtn: com.focusPage("#saveBtn").on("click", saveData),
+        depositBtn: com.focusPage("#depositBtn"),
+        goldBtn:com.focusPage("#goldBtn"),
+        toplimitBtn: com.focusPage("#toplimitBtn"),
+        workerBtn: com.focusPage("#workerBtn"),
+        LaborBtn:com.focusPage("#LaborBtn"),
+        saveBtn: com.focusPage("#saveBtn"),
         cancelBtn: com.focusPage("#cancelBtn"),
-        modal: com.focusPage("#transferModal"),
+
+        modals:{
+            transferModal: com.focusPage("#transferModal"),
+            workerBalance: com.focusPage("#workerBalance"),
+            workerGold:com.focusPage("#workerGold"),
+            updateBalance: com.focusPage("#updateBalance"),
+            workerSalary:com.focusPage("#workerSalary"),
+            workerLabor:com.focusPage("#workerLabor")
+        },
+
         items: {
-        	workertransferuser:com.focusPage("#workertransferuser"),
-        	workercollectuser:com.focusPage("#workercollectuser"),
-        	workertransfermoney:com.focusPage("#workertransfermoney"),
-        	workercomment:com.focusPage("#workercomment"),
+            workertransferuser:com.focusPage("#workertransferuser"),
+            workercollectuser:com.focusPage("#workercollectuser"),
+            workertransfermoney:com.focusPage("#workertransfermoney"),
+            workercomment:com.focusPage("#workercomment"),
+            workerUser:com.focusPage("#workerUser"),
+            workerUserLabor:com.focusPage("#workerUserLabor"),
+            money:com.focusPage("#money"),
+            comment:com.focusPage("#comment"),
+            moneyLabor:com.focusPage("#moneyLabor"),
+            commentLabor:com.focusPage("#commentLabor"),
+            salaryMoney:com.focusPage("#salaryMoney"),
+            salaryComment:com.focusPage("#salaryComment"),
+            moneyGold:com.focusPage("#moneyGold"),
+            commentGold:com.focusPage("#commentGold"),
+            toplimit:com.focusPage("#toplimit")
         },
-        validator: {
-            workersalary: {
-                type: "v_salary",
-                regex: /^-?(([1-9]\d{0,6})|(([1-9]\d{0,6}\.\d{1,3})|(0\.[1-9]{1,3})))$/,
-                errorMsg: "请正确输入工人工费，小数点后最多保留3位"
-            },
-        },
+
+        statusBalance:{},
+        uid: null,
+        wbid:null,
         repeatFlg: false
     };
 
+    deposit.depositBtn.bindClick(addDeposit);
+    deposit.goldBtn.bindClick(drawDeposit);
+    deposit.toplimitBtn.bindClick(updateDeposit);
+    deposit.workerBtn.bindClick(pushSalary);
+    deposit.LaborBtn.bindClick(cutSalary);
+    deposit.saveBtn.bindClick(saveData);
 
-    $.extend(com.validator, deposit.validator);
+    com.initTypeahead("workertransferuser", api.personel.queryUserByPinyin, "pinyinName", {"user.status": "0"}, "autoFillKeyValue", "key", "value",function(list,key,value){return value;});
+
+    com.initTypeahead("workercollectuser", api.personel.queryUserByPinyin, "pinyinName", {"user.status": "0"}, "autoFillKeyValue", "key", "value",function(list,key,value){return value;});
 
     com.post(api.ds.salary, {}, function (data) {
-        var SalaryType = data.SalaryTwoType;
-
-        if (SalaryType && SalaryType.length) {
-            $.each(SalaryType, function (i, v) {
-                $('<option></option>').attr("value", v.key).html(v.name).appendTo(com.focusPage("#salaryTwotype"));
-            });
-        }
+        deposit.statusBalance=data.statusBalance.split("key", "value");
     }, null, false);
 
     var displayFunc = (function () {
@@ -72,7 +96,7 @@ $(function () {
                 ["工种:", v.user.duty.name, "grey"],
                 ["质保金:", v.deposit, "blue"],
                 ["质保金上限:", v.toplimit, "blue"],
-                ["状态:", v.status == 0 ? "有效" : "无效", "grey"],
+                ["状态:", deposit.statusBalance[v.status], "grey"],
             ];
 
             $.each(propertyArr, function (index, value) {
@@ -91,48 +115,42 @@ $(function () {
 
             $liLine.append($h3).append($ulProperty);
 
-            var uid = v.user.userId;
-            var workerdeposit = com.focusPage("#workerBalance");
-            workerdeposit.attr('wbid', v.wbid);
+            deposit.modals.workerSalary.attr('wbid', v.wbid);
+            deposit.modals.workerLabor.attr('wbid', v.wbid);
+            //扣款工费
+            $cutbtn.click(function () {
+                com.cleanItems(deposit.items);
+                deposit.items.workerUserLabor.val(v.user.currentName);
+                com.popup4model("#workerLabor", "扣款");
+            });
+
+            //发放工费
+            $pushbtn.click(function () {
+                com.cleanItems(deposit.items);
+                deposit.items.workerUser.val(v.user.currentName);
+                com.popup4model("#workerSalary", "发放");
+            });
+
+            deposit.uid = v.user.userId;
+            deposit.modals.workerBalance.attr('wbid', v.wbid);
+            deposit.modals.workerGold.attr('wbid', v.wbid);
             //收取质保金
             $collectbtn.click(function () {
-                openlayer($collectbtn.html(), function () {
-                    addDeposit(uid);
-                });
+                com.cleanItems(deposit.items);
+                com.popup4model("#workerBalance", "收取质保金");
             });
 
             //提现质保金
             $drawbtn.click(function () {
-                openlayer($drawbtn.html(), function () {
-                    drawDeposit(uid);
-                });
+                com.cleanItems(deposit.items);
+                com.popup4model("#workerGold", "提现质保金");
             });
 
             //更新质保金上限
             $updatebtn.click(function () {
-                updateopenlayer($updatebtn.html(), function () {
-                    var workerdeposit = com.focusPage("#updateBalance");
-                    workerdeposit.attr('wbid', v.wbid);
-                    updateDeposit(v.wbid);
-                })
-            });
-
-            var workersalary = com.focusPage("#workerSalary");
-            workersalary.attr('wbid', v.wbid);
-            //发放工费
-            $pushbtn.click(function () {
-                com.focusPage("#workerUser").val(v.user.currentName);
-                openlayerSalary($pushbtn.html(), function () {
-                    pushSalary(uid);
-                });
-            });
-
-            //扣款工费
-            $cutbtn.click(function () {
-                com.focusPage("#workerUser").val(v.user.currentName);
-                openlayerSalary($cutbtn.html(), function () {
-                    cutSalary(uid);
-                });
+                com.cleanItems(deposit.items);
+                deposit.wbid = v.wbid;
+                com.popup4model("#updateBalance", "更新上限");
             });
 
             return $liLine;
@@ -149,78 +167,6 @@ $(function () {
         };
     })();
 
-    // 收取质保金
-    function addDeposit(uid) {
-        var money = com.focusPage("#money").val();
-        var comment = com.focusPage("#comment").val();
-        var option = {
-            "workerSalary.user.userId": uid,
-            "workerSalary.money": money,
-            "workerSalary.comment": comment
-        };
-        com.post(api.salary.collectWorkerDeposit, option, function (res) {
-            searcher.doSearch();
-            com.showAlert(com.info,"收取成功");
-        });
-    }
-
-    //提现质保金
-    function drawDeposit(uid) {
-        var money = com.focusPage("#money").val();
-        var comment = com.focusPage("#comment").val();
-        var option = {
-            "workerSalary.user.userId": uid,
-            "workerSalary.money": money,
-            "workerSalary.comment": comment
-        };
-        com.post(api.salary.drawWorkerDeposit, option, function (res) {
-            searcher.doSearch();
-            com.showAlert(com.info, "提现成功");
-        });
-    }
-
-    //更新工人质保金上限
-    function updateDeposit(wbid) {
-        var toplimit = com.focusPage("#toplimit").val();
-        var option = {
-            "workerBalance.wbid": wbid,
-            "workerBalance.toplimit": toplimit
-        };
-        com.post(api.salary.updateWorkerBalance, option, function (res) {
-            searcher.doSearch();
-            com.showAlert(com.info,"操作成功");
-        })
-    }
-
-    //发放工费
-    function pushSalary(uid) {
-        var money = com.focusPage("#salaryMoney").val();
-        var comment = com.focusPage("#salaryComment").val();
-        var option = {
-            "workerSalary.user.userId": uid,
-            "workerSalary.money": money,
-            "workerSalary.comment": comment
-        };
-        com.post(api.salary.payWorkerSalary, option, function (res) {
-            searcher.doSearch();
-            com.showAlert(com.showAlert,"操作成功");
-        });
-    }
-
-    //扣款工费
-    function cutSalary(uid) {
-        var money = com.focusPage("#salaryMoney").val();
-        var comment = com.focusPage("#salaryComment").val();
-        var option = {
-            "workerSalary.user.userId": uid,
-            "workerSalary.money": money,
-            "workerSalary.comment": comment
-        };
-        com.post(api.salary.cutWorkerSalary, option, function (res) {
-            searcher.doSearch();
-            com.showAlert(com.info, "操作成功");
-        });
-    }
 
     var searcher = new Searcher();
 
@@ -244,137 +190,117 @@ $(function () {
 
         com.cleanItems(deposit.items);
         com.clearValidator();
-        com.focusPage('#transferModal').modal("show");
-        com.updateTypeahead("workertransferuser", "", "");
-        com.updateTypeahead("workercollectuser", "", "");
+        deposit.modals.transferModal.modal("show");
+        com.cleanTypeahead("workertransferuser");
+        com.cleanTypeahead("workercollectuser");
 
-        com.initTypeahead('workertransferuser', api.personel.queryUserByPinyin, "pinyinName", {
-            "user.status": "0"
-        }, "autoFillKeyValue", "key", "value",function(list,key,value){
-        	return value;
-        });
-
-        com.initTypeahead('workercollectuser', api.personel.queryUserByPinyin, "pinyinName", {
-            "user.status": "0"
-        }, "autoFillKeyValue", "key", "value",function(list,key,value){
-        	return value;
-        });
     });
+
+    //扣款工费
+    function cutSalary() {
+        if (com.validate('workerLabor')) {
+            return false;
+        }
+
+        var option = {
+            "workerSalary.user.userId": deposit.uid,
+            "workerSalary.money": deposit.items.moneyLabor.val(),
+            "workerSalary.comment": deposit.items.moneyLabor.val()
+        };
+        com.post(api.salary.cutWorkerSalary, option, function (res) {
+            com.closePopup();
+            searcher.doSearch();
+            com.showAlert(com.info, "操作成功");
+        });
+    }
+
+    //发放工费
+    function pushSalary() {
+        if (com.validate('workerSalary')) {
+            return false;
+        }
+
+        var option = {
+            "workerSalary.user.userId": deposit.uid,
+            "workerSalary.money": deposit.items.salaryMoney.val(),
+            "workerSalary.comment": deposit.items.salaryComment.val()
+        };
+        com.post(api.salary.payWorkerSalary, option, function (res) {
+            com.closePopup();
+            searcher.doSearch();
+            com.showAlert(com.showAlert,"操作成功");
+        });
+    }
+
+    // 收取质保金
+    function addDeposit() {
+        if (com.validate("workerBalance")) {
+            return false;
+        }
+
+        var option = {
+            "workerSalary.user.userId": deposit.uid,
+            "workerSalary.money": deposit.items.money.val(),
+            "workerSalary.comment": deposit.items.comment.val()
+        };
+        com.post(api.salary.collectWorkerDeposit, option, function (res) {
+            com.closePopup();
+            searcher.doSearch();
+            com.showAlert(com.info,"收取成功");
+        });
+    }
+
+    //提现质保金
+    function drawDeposit() {
+        if (com.validate("workerGold")) {
+            return false;
+        }
+
+        var option = {
+            "workerSalary.user.userId": deposit.uid,
+            "workerSalary.money": deposit.items.moneyGold.val(),
+            "workerSalary.comment": deposit.items.commentGold.val()
+        };
+        com.post(api.salary.drawWorkerDeposit, option, function (res) {
+            com.closePopup();
+            searcher.doSearch();
+            com.showAlert(com.info, "提现成功");
+        });
+    }
+
+    //更新工人质保金上限
+    function updateDeposit() {
+        if (com.validate('updateBalance')) {
+            return false;
+        }
+
+        var option = {
+            "workerBalance.wbid": deposit.wbid,
+            "workerBalance.toplimit": deposit.items.toplimit.val()
+        };
+        com.post(api.salary.updateWorkerBalance, option, function (res) {
+            com.closePopup();
+            searcher.doSearch();
+            com.showAlert(com.info,"操作成功");
+        })
+    }
 
     //转款
     function saveData() {
         if (!com.validate("transferModal")) {
-            var transferuser = com.typeahead("workertransferuser");
-            var collectuser = com.typeahead("workercollectuser");
-            var tranmoney = com.focusPage("#workertransfermoney").val();
-            var trancomment = com.focusPage("#workercomment").val();
 
             var option = {
-                "sourceId": transferuser,
-                "targetId": collectuser,
-                "workerSalary.money": tranmoney,
-                "workerSalary.comment": trancomment
+                "sourceId": com.typeahead("workertransferuser"),
+                "targetId": com.typeahead("workercollectuser"),
+                "workerSalary.money": deposit.items.workertransfermoney.val(),
+                "workerSalary.comment": deposit.items.workercomment.val()
             };
             com.post(api.salary.tranWorkerSalary, option, function (res) {
+                com.closePopup();
                 searcher.doSearch();
                 com.showAlert(com.info, "操作成功");
             });
-            com.focusPage('#transferModal').modal("hide");
+            deposit.modals.transferModal.modal("hide");
         }
-    }
-
-    function openlayer(type, callback) {
-        layer.closeAll();
-        var index = layer.open({
-            type: 1,
-            title: type,
-            content: com.focusPage('#workerBalance'),
-            area: ["520px", $(window).width() * 0.6 < 390 ? $(window).height() * 0.6 : 390 + "px",],
-            maxmin: false,
-            zIndex: 9000,
-            btn: ['确定', '取消'],
-            yes: function (index, layero) {
-                if (com.validate('workerBalance')) {
-                    return;
-                }
-                callback(index, layero);
-                closeLayer();
-            },
-            btn2: function (index, layero) {
-                com.clearValidator();
-                closeLayer();
-            },
-            cancel: function () {
-                com.clearValidator();
-                closeLayer();
-            }
-        });
-    }
-
-    function openlayerSalary(type, callback) {
-        layer.closeAll();
-        var index = layer.open({
-            type: 1,
-            title: type,
-            content: com.focusPage('#workerSalary'),
-            area: ["520px", $(window).width() * 0.6 < 460 ? $(window).height() * 0.6 : 460 + "px",],
-            maxmin: false,
-            zIndex: 9000,
-            btn: ['确定', '取消'],
-            yes: function (index, layero) {
-                if (com.validate('workerSalary')) {
-                    return;
-                }
-                callback(index, layero);
-                closeLayer();
-            },
-            btn2: function (index, layero) {
-                com.clearValidator();
-                closeLayer();
-            },
-            cancel: function () {
-                com.clearValidator();
-                closeLayer();
-            }
-        });
-    }
-
-    function updateopenlayer(type, callback) {
-        layer.closeAll();
-        var index = layer.open({
-            type: 1,
-            title: type,
-            content: com.focusPage('#updateBalance'),
-            area: ["520px", $(window).width() * 0.6 < 320 ? $(window).height() * 0.6 : 320 + "px",],
-            maxmin: false,
-            zIndex: 9000,
-            btn: ['确定', '取消'],
-            yes: function (index, layero) {
-                if (com.validate('updateBalance')) {
-                    return;
-                }
-                callback(index, layero);
-                closeLayer();
-            },
-            btn2: function (index, layero) {
-                com.clearValidator();
-                closeLayer();
-            },
-            cancel: function () {
-                com.clearValidator();
-                closeLayer();
-            }
-        });
-    }
-
-    function closeLayer() {
-        com.focusPage("#money").val("");
-        com.focusPage("#comment").val("");
-        com.focusPage("#workerBalance").removeAttr("wbid");
-        com.focusPage("#salaryMoney").val("");
-        com.focusPage("#salaryComment").val("");
-        com.focusPage("#workerSalary").removeAttr("wbid");
-        com.focusPage("#toplimit").val("");
-        com.focusPage("#updateBalance").removeAttr("wbid");
     }
 });

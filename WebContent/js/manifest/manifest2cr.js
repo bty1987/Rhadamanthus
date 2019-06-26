@@ -7,16 +7,7 @@ jQuery(function ($) {
         	list: com.focusPage('#list'),
         },
         record: {},
-        validator: {
-            float3: {
-                type: "v_float_3",
-                regex: /^(\d+|\d+\.[0-9]{1,4})$/,
-                errorMsg: "内容格式错误"
-            }
-        }
     };
-    
-    $.extend(com.validator, manifest.validator);
     
     com.post(api.inventory.queryManifestItemByMid, {"manifest.mid": manifest.mid}, function (res) {
     	
@@ -44,7 +35,8 @@ jQuery(function ($) {
     });
 
     com.focusPage("#crBtn").click(function () {
-    	
+
+        manifest.items.list.find(".crnum input").removeClass('v_float_3');
     	var $checks = com.focusPage('input[type="checkbox"]:checked', '#list');
     	
     	if($checks.length == 0){
@@ -60,12 +52,10 @@ jQuery(function ($) {
     		
     		var $check = $($checks[i]);
     		var $line = $check.parents('li.line');
-    		
+            var crnumInput = $line.find(".crnum input").addClass('v_float_3');
     		if(com.validate($line.attr("id"), "left")){
         		return false;
         	}
-    		
-    		var crnumInput = $line.find(".crnum input");
     		
     		var num = $line.find(".number").text();
     		var crnum = crnumInput.val();
@@ -84,7 +74,7 @@ jQuery(function ($) {
     });
 
     com.focusPage("#cancelBtn").click(function () {
-        layer.closeAll();
+        com.closePopup();
     });
 
     function addline(lineindex, data) {
@@ -119,7 +109,7 @@ jQuery(function ($) {
             var $cell = $('<div></div>').addClass('cell ' + v.cellClass);
             
             if (v.hasInput) {
-                $cell.append($('<input>').prop({'type': 'text', 'autocomplete': 'off'}).addClass('editable v_float_3'));
+                $cell.append($('<input>').prop({'type': 'text', 'autocomplete': 'off'}).addClass('editable'));
             }
 
             $cell.appendTo($lineInfoWrap);

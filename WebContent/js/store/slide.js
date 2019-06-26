@@ -117,7 +117,7 @@ $(function () {
                         return;
                     var id = $layer.find('input[id="name"]').attr("data-gid");
                     updateData(v, function () {
-                        layer.closeAll();
+                        com.closePopup();
                     });
                 });
             });
@@ -191,7 +191,7 @@ $(function () {
     }
 
     function openlayer(callback) {
-        layer.closeAll();
+        com.closePopup();
         layer.open({
             type: 1,
             title: " ",
@@ -255,7 +255,7 @@ $(function () {
             }, function(res){
                 doSearcher();
                 com.clearValidator();
-                layer.closeAll();
+                com.closePopup();
             });
         }else{
             nameid = $layer.find('input[id="name"]').attr("data-gid");
@@ -266,7 +266,7 @@ $(function () {
             }, function (res) {
                 doSearcher();
                 com.clearValidator();
-                layer.closeAll();
+                com.closePopup();
             });
         }
     }

@@ -4,13 +4,6 @@ jQuery(function ($) {
     var accessories = {
         orderId: params["accessories.orderId"],
         aid: params["accessories.aid"],
-        validator: {
-            float3: {
-                type: "v_float_3",
-                regex: /^(\d+|\d+\.[0-9]{1,4})$/,
-                errorMsg: "单价输入内容格式错误"
-            }
-        },
         items: {
             customerName: com.focusPage("#customer"),
             des: com.focusPage("#comment")
@@ -19,8 +12,6 @@ jQuery(function ($) {
         storehouses: [],
         decorationStatus: {}
     };
-    
-    $.extend(com.validator, accessories.validator);
     
     com.post(api.ds.decoration, {}, function(res){
     	$.each(res.decorationOrderStatus, function(i, e){
@@ -92,7 +83,7 @@ jQuery(function ($) {
     });
 
     com.focusPage("#cancelBtn").click(function () {
-        layer.closeAll();
+        com.closePopup();
     });
 
     //添加一个空行
@@ -123,7 +114,7 @@ jQuery(function ($) {
             }
             
             if (v.hasInput) {
-                var $input = $('<input>').prop({'type': 'text', 'autocomplete': 'off'}).addClass('editable v_float_3').val(0);
+                $input = $('<input>').prop({'type': 'text', 'autocomplete': 'off'}).addClass('editable v_float_3').val(0);
                 $cell.append($input);
             }
 
@@ -171,9 +162,9 @@ jQuery(function ($) {
         var propertyArr = [
             ["楼盘地址:", v.house.village.name + " " + v.house.houseNumber, "grey"],
             ["客户名:", v.customer.name, "grey"],
-            ["设计部:", v.designer.dept.deptName, "grey"],
+            ["设计部:", v.designer.dept.name, "grey"],
             ["设计师:", v.designer.currentName, "grey"],
-            ["业务部:", v.salesman.dept.deptName, "grey"],
+            ["业务部:", v.salesman.dept.name, "grey"],
             ["业务员:", v.salesman.currentName, "grey"],
             ["面积:", v.house.buildArea + "m²", "blue"],
             ["合同报价:", v.orderTotalPrice, "blue"],

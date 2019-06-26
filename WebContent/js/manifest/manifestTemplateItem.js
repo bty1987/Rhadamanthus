@@ -94,7 +94,7 @@ $(function(){
                         "mtiids[0]": v.mtiid
                     }, function () {
                         com.showAlert(com.info, "操作成功");
-                        $line.remove();
+                        $liLine.remove();
                     });
                 });
             });
@@ -113,39 +113,10 @@ $(function(){
         };
     })();
 
-    var binding = {
-        //操作配置
-        optAction : function(mtid, manifestTemplate){
-
-            var $popup = com.focusPage("#optPopUp");
-
-            $popup.attr('data-mtid', mtid);
-
-            var index = layer.open({
-                type: 1,
-                skin: 'layui-layer-lan',
-                title:"添加",
-                content: $popup,
-                area: ["1100px",( $(window).height()*0.84 < 720 ?  $(window).height()*0.84 : 720 )+"px"],
-                maxmin: false,
-                zIndex:9000,
-
-                success: function(){
-                    params["promissionManifestTemplate"] = manifestTemplate;
-                    $popup.load("views/manifest/manifestTemplateItem2add.html");
-                },
-                end:function(){
-                    $popup.attr('data-mtid', null);
-                }
-            });
-        }
-    };
-
-    var $adda = com.focusPage('a[name="addQuotationVersion"]');
-    var $return = com.focusPage('a[name="returnQuotationVersion"]');
-
-    com.focusPage("#addBtn").click(function(v){
-        binding.optAction(v.mtid,v);
+    com.focusPage("#addBtn").click(function(){
+        params["manifestTemplate.mtid"]=mtid;
+        com.focusPage("#optPopUp").attr('data-mtid', mtid);
+        com.popup4page("#optPopUp","views/manifest/manifestTemplateItem2add.html","添加");
     });
 
     com.focusPage("#backBtn").click(function () {

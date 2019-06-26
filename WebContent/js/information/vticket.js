@@ -1,11 +1,11 @@
 jQuery(function($) {
 
 	var vticket = {
-		saveBtn: null,
-		modal: null,
-		
-		modal : com.focusPage("#vticketModal"),
-	
+		saveBtn: com.focusPage("#saveBtn"),
+
+		modals: {
+			vticketModal : com.focusPage("#vticketModal")
+		},
 		items : {
 			vtid : com.focusPage("#vtid"),
 			tno : com.focusPage("#tno"),
@@ -17,27 +17,22 @@ jQuery(function($) {
 		},
 	};
 
-	vticket.saveBtn = com.focusPage("#saveBtn").on("click", saveData);
-
-	vticket.modal.on('show.bs.modal', function(e) {
-		com.clearValidator();
-	});
+	vticket.saveBtn.bindClick(saveData);
 
 	com.initTypeahead('belonger', api.personel.queryUserByPinyin, "pinyinName", {"departmentType.name" : "", "user.status" : 0}, "autoFillKeyValue", "key", "value", null);
 
-		var displayFunc = (function() {
+	var displayFunc = (function() {
 
-			var renderList = function(tableId, listData) {
-				var $tableWrap = com.focusPage('#' + tableId);
-				var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+		var renderList = function(tableId, listData) {
+			var $tableWrap = com.focusPage('#' + tableId);
+			var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
-				if(listData && listData.length) {
-					$.each(listData, function(i, v) {
-						var $liLine = creatLine(v);
+			if(listData && listData.length) {
+				$.each(listData, function(i, v) {
+					var $liLine = creatLine(v);
 
-						$liLine.appendTo($ul);
-					});
-
+					$liLine.appendTo($ul);
+				});
 				$ul.appendTo($tableWrap);
 			}
 		};
@@ -51,7 +46,7 @@ jQuery(function($) {
 			var $btnViews = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
 
 			$btnViews.click(function() {
-				com.updateTypeahead("belonger", v.belonger.userId,v.belonger.userName);
+				com.updateTypeahead("belonger", v.belonger.userId, v.belonger.userName);
 				vticket.items.tno.attr("readOnly", true);
 				vticket.items.vtid.val(v.vtid);
 				vticket.items.tno.val(v.tno);
@@ -59,7 +54,7 @@ jQuery(function($) {
 				vticket.items.name.val(v.name);
 				vticket.items.phone.val(v.phone);
 				vticket.items.address.val(v.address);
-				com.focusPage("#vticketModal").modal("show");
+				vticket.modals.vticketModal.modal("show");
 			});
 
 			var propertyArr = [ 
@@ -102,26 +97,26 @@ jQuery(function($) {
 	var searcher = new Searcher();
 
 	searcher.init([ "inf_tno", "inf_orderId", "inf_userName" ], "condList",api.information.pageVticket, function(data) {
-				displayFunc.init('resultList', data);
-			}, "pagenation", "vticketPostData", null, false, null, function() {
+		displayFunc.init('resultList', data);
+	}, "pagenation", "vticketPostData", null, false, null, function() {
 
-				var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name','addVticket').css("margin", "0px 3px");
-				var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
-				var $addspan = $('<span></span>').text('添加').appendTo($adda);
+		var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id','addVticket').css("margin", "0px 3px");
+		var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+		var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
-				return [ $adda ];
-			});
+		return [ $adda ];
+	});
 
-	// 添加
-	com.focusPage('a[name="addVticket"]', '#pagenation').click(function() {
+	com.focusPage('#addVticket', '#pagenation').click(function() {
 		vticket.items.tno.attr("readOnly", false);
 		com.cleanTypeahead("belonger");
+		com.clearValidator();
 		com.cleanItems(vticket.items);
-		com.focusPage("#vticketModal").modal("show");
+		vticket.modals.vticketModal.modal("show");
 	});
 
 	function saveData(){
-		if(com.validate()){
+		if(com.validate('form')){
 			return;
 		}
 		var options = {
@@ -144,7 +139,7 @@ jQuery(function($) {
 			});
 		}
 
-		vticket.modal.modal("hide");
+		vticket.modals.vticketModal.modal("hide");
 	}
 
 });

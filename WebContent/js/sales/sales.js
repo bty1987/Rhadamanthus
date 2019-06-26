@@ -1,11 +1,67 @@
-var salesSubOrderPostData = {};
-
 $(function () {
-    var salesPostData = {};
-    var salesPaymentPostData = [];
-    var refundPostData = [];
-    var salesPaymentDic = {};
-    var salesDic = {};
+
+    var sales = {
+        type : {
+            depositPayment: 2,         //定金交款
+            fullPayment: 3,           //补款交款
+            depositPaymentRefund: 7, //定金退款
+            fullPaymentRefund: 5   //补款退款
+        },
+        statues: {},
+        balanceStatuses: {},
+        sales: {},
+        modals:{
+            decorationInfo:com.focusPage("#decorationInfo")
+        },
+        items:{
+            total: com.focusPage('#total'), //款项中的总价
+            depositPayment: com.focusPage('#depositPayment'),//款项中的定金
+            realDepositPayment: com.focusPage('#realDepositPayment'),//款项中的实收定金
+            fullPayment: com.focusPage('#fullPayment'), //款项中的补款
+            realFullPayment: com.focusPage('#realFullPayment'),////款项中的实收补款
+            couponInf: com.focusPage('#couponInf'), //款项中的券信息
+            couponType: com.focusPage('#couponType'),//款项中的券信息点击修改后的查询劵的input的ID(第一个)
+            couponValue: com.focusPage('#couponValue'),//款项中的券信息点击修改后劵数量的input的ID(第二个)
+            coupon: com.focusPage('#coupon'),//款项中的券值
+            maling: com.focusPage('#maling'),//款项中的抹零
+            malingValue: com.focusPage('#malingValue'),//款项中的抹零点击修改后的input的ID
+
+            couponInfoDiv: com.focusPage('#couponInfo'),
+            malingInfoDiv: com.focusPage('#malingInfo'),
+
+            depositPaymentInfo: com.focusPage('#depositPaymentInfo'), //实收金额
+            fullPaymentInfo: com.focusPage('#fullPaymentInfo'),//实收补款
+
+            layerAdd : com.focusPage('#layerAdd'),//款项按钮的弹窗
+            fullPaymentTotal : com.focusPage('#fullPaymentTotal'),//折让审批弹窗中的补款总额
+            approver : com.focusPage('#approver'),//折让审批弹窗中的审批人
+            approvalComment : com.focusPage('#approvalComment')//折让审批弹窗中的备注信息
+        },
+        btns:{
+            saveBtn : com.focusPage("#saveBtn"),//确认按钮
+            fullPaymentSaveBtn : com.focusPage("#fullPaymentSaveBtn"),//折让提交按钮
+            fullPaymentCancelBtn : com.focusPage("#fullPaymentCancelBtn"),//折让取消按钮
+            fullPaymentBtn: com.focusPage('#fullPaymentBtn'), //补款交款按钮
+            fullPaymentRefundBtn: com.focusPage('#fullPaymentRefundBtn'),//补款退款按钮
+            fullCancelBtn: com.focusPage('#fullCancelBtn'), //补款撤销按钮
+            depositPaymentBtn: com.focusPage('#depositPaymentBtn'), //定金交款按钮
+            depositCancelBtn: com.focusPage('#depositCancelBtn'), //定金撤销按钮
+            depositRefundBtn: com.focusPage('#depositRefundBtn'), //定金退款按钮
+            couponBtn: com.focusPage('#couponBtn'), //劵信息修改按钮
+            couponCommitBtn: com.focusPage('#couponCommitBtn'), //劵信息提交按钮
+            couponCancelBtn: com.focusPage('#couponCancelBtn'),//劵信息取消按钮
+            couponRefundBtn: com.focusPage('#couponRefundBtn'), //劵信息退券按钮
+            malingBtn: com.focusPage('#malingBtn'), //抹零修改按钮
+            malingCommitBtn: com.focusPage('#malingCommitBtn'), //抹零提交按钮
+            malingCancelBtn: com.focusPage('#malingCancelBtn') //抹零取消按钮
+        }
+    };
+
+    //初始化状态/结算状态
+    com.post(api.ds.sales, {}, function(res){
+        sales.statues = res.statues.split("key", "value");
+        sales.balanceStatuses = res.balanceStatuses.split("key", "value");
+    }, null, false);
 
     var url = api.inventory.pageSales;
     var postData = "salesPostData";
@@ -21,72 +77,6 @@ $(function () {
         postData = "salesForPompanyPostData";
     }
 
-    var type = {
-        depositPayment: 2,         //定金交款
-        fullPayment: 3,           //补款交款
-        depositPaymentRefund: 7, //定金退款
-        fullPaymentRefund: 5   //补款退款
-    };
-
-    var salesPostDataString = {
-        sid: "sales.sid",
-        coupon: "sales.coupon",
-        couponInfo: "sales.couponInfo"
-    };
-
-    var salesPaymentPostDataString = {
-        sid: "salesPayment.sales.sid",
-        referMoney: "salesPayment.referMoney",
-        type: "salesPayment.type"
-    };
-
-    var querySales = {
-        fullPaymentBtn: com.focusPage('#fullPaymentBtn'),
-        fullPaymentRefundBtn: com.focusPage('#fullPaymentRefundBtn'),
-        fullCancelBtn: com.focusPage('#fullCancelBtn'),
-        depositPaymentBtn: com.focusPage('#depositPaymentBtn'),
-        depositCancelBtn: com.focusPage('#depositCancelBtn'),
-        depositRefundBtn: com.focusPage('#depositRefundBtn'),
-        couponBtn: com.focusPage('#couponBtn'),
-        couponCommitBtn: com.focusPage('#couponCommitBtn'),
-        couponCancelBtn: com.focusPage('#couponCancelBtn'),
-        couponRefundBtn: com.focusPage('#couponRefundBtn'),
-        malingBtn: com.focusPage('#malingBtn'),
-        malingCommitBtn: com.focusPage('#malingCommitBtn'),
-        malingCancelBtn: com.focusPage('#malingCancelBtn'),
-
-        total: com.focusPage('#total'),
-        depositPayment: com.focusPage('#depositPayment'),
-        realDepositPayment: com.focusPage('#realDepositPayment'),
-        fullPayment: com.focusPage('#fullPayment'),
-        realFullPayment: com.focusPage('#realFullPayment'),
-        couponInf: com.focusPage('#couponInf'),
-        couponType: com.focusPage('#couponType'),
-        couponValue: com.focusPage('#couponValue'),
-        coupon: com.focusPage('#coupon'),
-        maling: com.focusPage('#maling'),
-        malingValue: com.focusPage('#malingValue'),
-
-        couponInfoDiv: com.focusPage('#couponInfo'),
-        malingInfoDiv: com.focusPage('#malingInfo'),
-
-        depositPaymentInfo: com.focusPage('#depositPaymentInfo'),
-        fullPaymentInfo: com.focusPage('#fullPaymentInfo')
-    };
-    var $layerAdd = com.focusPage('#layerAdd');
-    var $layerSubmit = com.focusPage('#layerSubmit');
-
-
-    var fullPaymentTotal = com.focusPage('#fullPaymentTotal');
-    var approver = com.focusPage('#approver');
-    var approvalComment = com.focusPage('#approvalComment');
-
-
-    /**
-     * 回调函数必须提供 init(tableId, result.list)方法
-     * tableId ,用来显示的div的id
-     * result.list 列表的json数组
-     * */
     var displayFunc = (function () {
 
         var renderList = function (tableId, listData) {
@@ -113,43 +103,6 @@ $(function () {
                     var $btnAct = $('<a></a>').addClass(' btn btn-minier btn-grey').html('活动');
                     var $btnDecoration = $('<a></a>').addClass('btn btn-minier btn-purple').html('装修单');
 
-                    var status = "";
-                    var balanceStatus = "";
-
-                    switch (v.status) {
-                        case 0:
-                            status = "初始";
-                            break;
-                        case 2:
-                            status = "全退";
-                            break;
-                        case 3:
-                            status = "倒单";
-                            break;
-                        case 4:
-                            status = "废单";
-                            break;
-                        case 5:
-                            status = "完结";
-                            break;
-
-                    }
-
-                    switch (v.balanceStatus) {
-                        case 0:
-                            balanceStatus = "初始";
-                            break;
-                        case 1:
-                            balanceStatus = "预结算";
-                            break;
-                        case 2:
-                            balanceStatus = " 厂商结算";
-                            break;
-                        case 3:
-                            balanceStatus = " 结算";
-                            break;
-
-                    }
                     var propertyArr = [
                         ["装修单号:", v.orderId, "blue"],
                         ["楼盘地址:", v.house.village.name + " " + v.house.houseNumber, "grey"],
@@ -167,8 +120,8 @@ $(function () {
                         ["创建时间:", v.createTime, "green"],
                         ["结算时间:", v.balanceTime, "green"],
                         ["补款时间:", v.fullpayTime, "green"],
-                        ["状态:", status, "red"],
-                        ["结算状态:", balanceStatus, "red"],
+                        ["状态:", sales.statues[v.status], "red"],
+                        ["结算状态:", sales.balanceStatuses[v.balanceStatus], "red"],
                         ["总额:", v.total, "blue"],
                         ["当前总额:", v.amount, "blue"],
                         ["抹零:", v.maling, "blue"],
@@ -193,12 +146,21 @@ $(function () {
                     if (params['urlLoadParams'].type == "dompany") {
                         $btnDiv.append($btnSub).append($btnCollect).append($btnAct).append($btnRefund).appendTo($h3);
                     }else if(params['urlLoadParams'].type == "pompany"){
+
                         if (v.fullpayStatus == -1 && v.status != 4) {
                             $btnDiv.append($btnAdd);
                         }else{
                             $btnDiv.append($btnSupplement);
                         }
-                        $btnDiv.append($btnSub).append($btnMoney).append($btnCollect).append($btnRefund).append($btnPrint).append($btnAct).appendTo($h3);
+
+                        if(v.status != 4){
+                            $btnDiv.append($btnSub).append($btnMoney).append($btnCollect).append($btnRefund).append($btnPrint).append($btnAct);
+                        }else {
+                            $btnDiv.append($btnSub).append($btnCollect).append($btnRefund);
+                        }
+
+                        $btnDiv.appendTo($h3);
+
                     } else {
                         if (v.fullpayStatus == -1 && v.status != 4) {
                             $btnDiv.append($btnAdd);
@@ -216,7 +178,9 @@ $(function () {
 
                     $btnAdd.click(function () {
                         params["sid"] = v.sid;
-                        com.switchPage(api.index.addSalesItemsIndex.url);
+                        com.popup4page("#layerPopUp", "views/sales/salesItem2add.html", "添项",'',function () {
+                            salesSearcher.doSearch();
+                        })
                     });
 
                     $btnSub.click(function () {
@@ -226,8 +190,10 @@ $(function () {
                         params["status"] = v.status;
                         params["depositpayStatus"] = v.depositpayStatus;
                         params["dompany"] = params['urlLoadParams'].type;
+                        com.popup4page("#layerPopUp", "views/sales/salesItem.html", "子项",'',function () {
+                            salesSearcher.doSearch();
+                        })
 
-                        com.switchPage(api.index.salesItemDetialIndex.url);
                     });
 
                     //补单按钮
@@ -238,15 +204,15 @@ $(function () {
                         params["status"] = v.status;
                         params["depositpayStatus"] = v.depositpayStatus;
                         params["dompany"] = params['urlLoadParams'].type;
-                        com.switchPage(api.index.salesSupplement.url);
+                        com.popup4page("#layerPopUp", "views/sales/sales2supple.html", "补单","", function () {
+                            salesSearcher.doSearch();
+                        });
                     });
 
                     $btnCollect.click(function () {
                         params["sid"] = v.sid;
-                        com.switchPage(api.index.salesCollectionIndex.url);
+                        com.popup4page("#layerPopUp", "views/sales/sales4payment.html", "收款");
                     });
-
-
 
                     //装修单显示详情
                     $btnDecoration.click(function(){
@@ -258,46 +224,51 @@ $(function () {
                             com.focusPage("#address").html(decorationInfo.house.village.name +''+ decorationInfo.house.houseNumber);//装修楼盘地址
                             com.focusPage("#designer").html(decorationInfo.designer.currentName);//装修设计师
                             com.focusPage("#supervisor").html(decorationInfo.supervisor.currentName);//装修监理
-                            com.focusPage("#decorationInfo").modal("show");
+                            sales.modals.decorationInfo.modal("show");
                         });
 
                     });
 
+                    //款项
                     $btnMoney.click(function () {
 
+                        sales.sales = v;
                         if (v.fullpayStatus == 3) {
                             com.showAlert(com.warning, "款项正在审批中,无法进行操作");
                             return false;
                         }
 
-                        $layerAdd.attr("data-sid", v.sid);
-
-                        var total = $layerAdd.find('input[id="total"]').val(v.total);
-                        var depositPayment = $layerAdd.find('input[id="depositPayment"]').val();
-                        var realDepositPayment = $layerAdd.find('input[id="realDepositPayment"]').val();
-                        var fullPayment = $layerAdd.find('input[id="fullPayment"]').val();
-                        var realFullPayment = $layerAdd.find('input[id="realFullPayment"]').val();
-                        var maling = $layerAdd.find('input[id="maling"]').val(v.maling + v.venderMaling);
-                        var coupon = $layerAdd.find('input[id="coupon"]').val(v.coupon);
-                        var couponInfo = $layerAdd.find('input[id="couponInf"]').val(v.couponInfo.substring(1, v.couponInfo.length - 1));
-
+                        sales.items.layerAdd.attr("data-sid", v.sid);
+                        sales.items.total.val(v.total);
+                        sales.items.depositPayment.val();
+                        sales.items.realDepositPayment.val();
+                        sales.items.fullPayment.val();
+                        sales.items.realFullPayment.val();
+                        sales.items.maling.val(v.maling + v.venderMaling);
+                        sales.items.coupon.val(v.coupon);
+                        sales.items.couponInf.val(v.couponInfo.substring(1, v.couponInfo.length - 1));
+                       
                         com.post(api.ds.payment, {}, function (res) {
-                            com.focusPage("#couponType").bindData(res.materialCouponTypes, 'key', 'value', false);
+                            sales.items.couponType.bindData(res.materialCouponTypes, 'key', 'value', false);
                         }, null, false);
 
-                        openmoneylayer(function () {
-
-                            layer.closeAll();
-
-                        }, v);
-
+                        com.popup4model('#layerAdd','款项',function(){
+                            initLabel(v.depositpayStatus, v.fullpayStatus, v.total, v.depositpay, v.fullpay,'');
+                            sales.items.couponValue.val(0);
+                            sales.items.malingValue.val(0);
+                        }, function () {
+                            reductionLabel();
+                            salesSearcher.doSearch();
+                        },function () {
+                            reductionLabel();
+                        });
                     });
 
                     $btnRefund.click(function () {
 
                         params["sid"] = v.sid;
 
-                        com.switchPage(api.index.refundsItemDetialIndex.url);
+                        com.popup4page("#layerPopUp", "views/sales/refundsItem.html", "退货");
 
                     });
 
@@ -308,7 +279,9 @@ $(function () {
                         params["no"] = v.no;
                         params["activityId"] = v.activityId;
 
-                        com.switchPage(api.index.salesActivityIndex.url);
+                        com.popup4page("#layerPopUp", "views/sales/salesActivity.html", "活动",'',function () {
+                            salesSearcher.doSearch();
+                        });
                     });
 
                     /*$btnPrint.click(function () {
@@ -316,17 +289,11 @@ $(function () {
                      printPayment(v.orderId, v.sid);
 
                      });*/
-
-                    if (!salesDic[v.sid]) {
-                        salesDic[v.sid] = $.extend({}, v);
-                    }
-
                 });
 
                 $ul.appendTo($tableWrap);
             }
         };
-
 
         return {
             init: function (tableId, listData) {
@@ -334,8 +301,6 @@ $(function () {
                 renderList(tableId, listData);
             }
         };
-
-
     })();
 
     /*分页*/
@@ -347,679 +312,525 @@ $(function () {
 
         displayFunc.init('resultList', data);
 
-
     }, "pagenation", postData, null, false, null);
 
-    initButtons();
-
-    function openmoneylayer(f, v) {
-
-        layer.open({
-            type: 1,
-            skin: 'layui-layer-lan',
-            title: "款项",
-            content: $layerAdd,
-            area: ($(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620) + "px",
-            //maxmin: true,
-            zIndex: 9000,
-            btn: ['确定'],
-            success: function (layer, index) {
-                hideButtons([querySales.depositPaymentBtn, querySales.depositCancelBtn, querySales.depositRefundBtn,
-                    querySales.fullCancelBtn, querySales.fullPaymentBtn, querySales.fullPaymentRefundBtn, querySales.couponBtn,
-                    querySales.couponCommitBtn, querySales.couponCancelBtn, querySales.couponRefundBtn,
-                    querySales.malingBtn, querySales.malingCancelBtn, querySales.malingCommitBtn
-                ]);
-                hideDiv([querySales.malingInfoDiv, querySales.couponInfoDiv]);
-                addReadonly([querySales.depositPayment, querySales.fullPayment]);
-                moneyLayerIn(v);
-
-            },
-            end: function () {
-                moneyLayerOut();
-                salesSearcher.doSearch();
-            }
-        });
-    }
-
-    function openSubmitlayer(callback) {
-        layer.closeAll();
-        layer.open({
-            type: 1,
-            skin: 'layui-layer-lan',
-            title: "补款审批",
-            content: $layerSubmit,
-            area: ($(window).width() * 0.6 < 600 ? $(window).height() * 0.6 : 600) + "px",
-            //maxmin: true,
-            zIndex: 9000,
-            btn: ['提交', '取消'],
-            yes: function (index, layero) {
-                callback(index, layero);
-            },
-            btn2: function (index, layero) {
-                //按钮【按钮二】的回调
-                com.clearValidator();
-                closefullPaymentlayer();
-                com.focusPage('#approver').empty();
-            },
-            cancel: function () {
-                //右上角关闭回调
-                com.clearValidator();
-                closefullPaymentlayer();
-                com.focusPage('#approver').empty();
-            }
-        });
-    }
-
-    function closefullPaymentlayer() {
-        approvalComment.val("");
-        approver.val("");
-        approver.removeAttr('data-typeahead-key');
+    function clearApproval() {
+        com.focusPage('#approvalComment', "#miniPopUp").val("");
+        com.cleanTypeahead("approver");
         salesSearcher.doSearch();
     }
 
+    //确定
+    sales.btns.saveBtn.on('click',function () {
+        reductionLabel();
+        com.closePopup();
+        salesSearcher.doSearch();
+    });
 
-    function initButtons() {
+    //提交
+    sales.btns.fullPaymentSaveBtn.unbind().click(function () {
 
-        var despid = "";
-        var fuspid = "";
-        var despidNew = "";
-        var fuspidNew = "";
-        var furspid = "";
+        var _approval = com.focusPage('#approver', "#miniPopUp");
 
-        //定金
-        querySales.depositPaymentBtn.on('click', function () {
+        var radios = _approval.find('input:checked').attr('userid');
 
-            var sales = salesDic[$layerAdd.attr("data-sid")];
+        if (com.validate('miniPopUp', 'right')) {
+            return;
+        }
 
-            var numRex = /^(\d+|\d+\.[0-9]{1,4})$/;
-            if (querySales.depositPayment.val() <= 0 || !numRex.test(querySales.depositPayment.val())) {
+        if (radios == null || radios == "") {
+            com.showAlert(com.warning, "请选择审批人");
+            return false;
+        }
 
-                com.showAlert(com.error, "定金输入不正确");
+        var _options = {};
+        _options['approval.receiver.userId'] = radios;
+        _options['approval.comment'] = com.focusPage('#approvalComment', "#miniPopUp").val();
+        _options['approvalSalesDiscount.sid'] = sales.sales.sid;
+        _options['approvalSalesDiscount.referMoney'] = sales.items.fullPaymentTotal.val();
+        _options['approvalSalesDiscount.paymentType'] = sales.items.fullPaymentTotal.val() >= 0 ? sales.type.fullPayment : sales.type.fullPaymentRefund;
+        com.post(api.approval.submitApprovalForSalesDiscount, _options, function (res) {
+            clearApproval();
+            com.closePopup();
+            com.showAlert(com.warning, "补款申请已提交");
+            sales.items.approver.empty();
+        });
 
-                return false;
+    });
+
+    //取消
+    sales.btns.fullPaymentCancelBtn.on('click',function () {
+        com.clearValidator();
+        clearApproval();
+        com.closePopup(com.focusPage("#fullPaymentCancelBtn", "#miniPopUp"));
+        sales.items.approver.empty();
+    });
+
+    //还原标签样式
+    function reductionLabel() {
+        sales.btns.fullPaymentBtn.addClass('hide');//补款交款按钮
+        sales.btns.fullPaymentRefundBtn.addClass('hide');//补款退款按钮
+        sales.btns.fullCancelBtn.addClass('hide');//补款撤销按钮
+        sales.btns.depositPaymentBtn.addClass('hide');//定金交款按钮
+        sales.btns.depositCancelBtn.addClass('hide');//定金撤销按钮
+        sales.btns.depositRefundBtn.addClass('hide');//定金退款按钮
+        sales.btns.couponBtn.addClass('hide');//劵信息修改按钮
+        sales.btns.couponCommitBtn.addClass('hide');//劵信息提交按钮
+        sales.btns.couponCancelBtn.addClass('hide');//劵信息取消按钮
+        sales.btns.couponRefundBtn.addClass('hide');//劵信息退券按钮
+        sales.btns.malingBtn.addClass('hide');//抹零修改按钮
+        sales.btns.malingCommitBtn.addClass('hide');//抹零提交按钮
+        sales.btns.malingCancelBtn.addClass('hide');//抹零取消按钮
+
+        sales.items.depositPayment.attr("readonly", "readonly");
+        sales.items.fullPayment.attr("readonly", "readonly");
+
+        sales.items.malingInfoDiv.css('display', 'none');
+        sales.items.couponInfoDiv.css('display', 'none');
+
+        sales.items.fullPaymentInfo.html('');
+        sales.items.depositPaymentInfo.html('');
+    }
+
+    //初始化标签样式
+    function initLabel(depositpayStatus, fullpayStatus, total, depositpay, fullpay, status){
+        reductionLabel();
+        if(status == 4){
+            sales.items.realDepositPayment.val(0);
+            sales.items.depositPayment.val(0);
+            calcFullpayment(total);
+            return false;
+        }
+
+        if (depositpayStatus == -1 && fullpayStatus == -1) { //未交定金和补款
+            sales.btns.couponBtn.removeAttr('class', 'hide');//劵信息修改按钮
+            sales.btns.malingBtn.removeAttr('class', 'hide');//抹零修改按钮
+            sales.btns.depositPaymentBtn.removeAttr('class', 'hide');//定金交款按钮
+            sales.btns.fullPaymentBtn.removeAttr('class', 'hide');//补款交款按钮
+            sales.items.depositPayment.removeAttr("readonly");//款项中的定金输入框
+            sales.items.depositPayment.val(0);
+            sales.items.realDepositPayment.val('');
+            sales.items.realFullPayment.val('');
+            sales.items.depositPaymentInfo.html("");
+            calcFullpayment(total);
+        }
+
+        if(depositpayStatus == -1 && fullpayStatus == 0){
+            sales.btns.fullCancelBtn.removeAttr('class', 'hide');
+            sales.items.fullPaymentInfo.html("提交中");
+            sales.items.depositPayment.val('');
+            sales.items.realDepositPayment.val('');
+            calcFullpayment(total);
+            sales.items.realFullPayment.val(sales.items.fullPayment.val());
+        }
+
+        if(depositpayStatus == 0 && fullpayStatus == -1){
+            sales.items.depositPayment.val(depositpay);
+            sales.items.realDepositPayment.val(depositpay);
+            sales.items.depositPaymentInfo.html("提交中");
+            calcFullpayment(total);
+            sales.btns.depositCancelBtn.removeAttr('class', 'hide');
+            sales.btns.couponBtn.removeAttr('class', 'hide');
+            sales.btns.malingBtn.removeAttr('class', 'hide');
+        }
+
+        if(depositpayStatus == 1 && fullpayStatus == -1){
+            sales.btns.depositRefundBtn.removeAttr('class', 'hide');
+            sales.btns.fullPaymentBtn.removeAttr('class', 'hide');
+            sales.btns.couponBtn.removeAttr('class', 'hide');
+            sales.btns.malingBtn.removeAttr('class', 'hide');
+            sales.items.depositPaymentInfo.html("已收款");
+            sales.items.realFullPayment.val('');
+            sales.items.depositPayment.val(depositpay);
+            sales.items.realDepositPayment.val(depositpay);
+            calcFullpayment(total);
+        }
+
+        if(depositpayStatus == 2 && fullpayStatus == -1){
+            sales.btns.couponBtn.removeAttr('class', 'hide');
+            sales.btns.malingBtn.removeAttr('class', 'hide');
+            sales.btns.depositRefundBtn.removeAttr('class', 'hide');
+            sales.btns.fullPaymentBtn.removeAttr('class', 'hide');
+            sales.items.depositPaymentInfo.html("已确认");
+            sales.items.realFullPayment.val('');
+            sales.items.depositPayment.val(depositpay);
+            sales.items.realDepositPayment.val(depositpay);
+            calcFullpayment(total);
+        }
+
+        if(fullpayStatus == -1 && depositpayStatus == 1){
+            sales.btns.fullCancelBtn.addClass('hide');
+            sales.items.couponInfoDiv.css('display', 'none');
+            sales.items.malingInfoDiv.css('display', 'none');
+            sales.btns.fullPaymentBtn.removeAttr('class', 'hide');
+            sales.btns.couponBtn.removeAttr('class', 'hide');
+            sales.btns.malingBtn.removeAttr('class', 'hide');
+            sales.items.depositPayment.val(depositpay);
+            sales.items.realDepositPayment.val(depositpay);
+
+            sales.items.realFullPayment.val('');
+            sales.items.fullPaymentInfo.html("");
+            sales.btns.depositRefundBtn.removeAttr('class', 'hide');
+            calcFullpayment(total);
+        }
+
+        if(fullpayStatus == 0 && depositpayStatus == 1){
+            sales.items.depositPayment.val(depositpay);
+            sales.items.realDepositPayment.val(depositpay);
+            calcFullpayment(total);
+            sales.items.realFullPayment.val(sales.items.fullPayment.val());
+            sales.btns.depositRefundBtn.addClass('hide');
+            sales.btns.fullPaymentBtn.addClass('hide');
+            sales.btns.couponBtn.addClass('hide');
+            sales.btns.malingBtn.addClass('hide');
+
+            sales.btns.fullCancelBtn.removeAttr('class', 'hide');
+            sales.items.depositPaymentInfo.html("已收款");
+            sales.items.fullPaymentInfo.html("提交中");
+        }
+
+        if(fullpayStatus == 0 && depositpayStatus == 2){
+            sales.items.depositPayment.val(depositpay);
+            sales.items.realDepositPayment.val(depositpay);
+            calcFullpayment(total);
+            sales.items.realFullPayment.val(sales.items.fullPayment.val());
+            sales.btns.depositRefundBtn.addClass('hide');
+            sales.btns.fullPaymentBtn.addClass('hide');
+            sales.btns.couponBtn.addClass('hide');
+            sales.btns.malingBtn.addClass('hide');
+            sales.btns.fullCancelBtn.removeAttr('class', 'hide');
+            sales.items.depositPaymentInfo.html("已确认");
+            sales.items.fullPaymentInfo.html("提交中");
+        }
+
+        if(fullpayStatus == 1 && depositpayStatus == -1){
+            sales.items.realDepositPayment.val('');
+            sales.items.depositPayment.val('');
+            calcFullpayment(total);
+            sales.items.realFullPayment.val(sales.items.fullPayment.val());
+            sales.items.fullPaymentInfo.html("已收款");
+        }
+
+        if(fullpayStatus == 1 && depositpayStatus == 1){
+            sales.items.realDepositPayment.val(depositpay);
+            sales.items.depositPayment.val(depositpay);
+            calcFullpayment(total);
+            sales.items.realFullPayment.val(sales.items.fullPayment.val());
+            sales.btns.fullPaymentBtn.addClass('hide');
+            sales.btns.depositRefundBtn.addClass('hide');
+            sales.btns.depositCancelBtn.addClass('hide');
+            sales.btns.couponBtn.addClass('hide');
+            sales.btns.malingBtn.addClass('hide');
+            sales.items.depositPaymentInfo.html("已收款");
+            sales.items.fullPaymentInfo.html("已收款");
+        }
+
+        if(fullpayStatus == 1 && depositpayStatus == 2) {
+            sales.items.realDepositPayment.val(depositpay);
+            sales.items.depositPayment.val(depositpay);
+            calcFullpayment(total);
+            sales.items.realFullPayment.val(sales.items.fullPayment.val());
+            sales.btns.fullPaymentBtn.addClass('hide');
+            sales.btns.depositRefundBtn.addClass('hide');
+            sales.btns.depositCancelBtn.addClass('hide');
+            sales.btns.couponBtn.addClass('hide');
+            sales.btns.malingBtn.addClass('hide');
+            sales.items.depositPaymentInfo.html("已确认");
+            sales.items.fullPaymentInfo.html("已收款");
+        }
+
+        if(fullpayStatus == 2 && depositpayStatus == -1){
+            sales.items.realDepositPayment.val('');
+            sales.items.depositPayment.val('');
+            calcFullpayment(total);
+            sales.items.realFullPayment.val(sales.items.fullPayment.val());
+            sales.items.fullPaymentInfo.html("已确认");
+        }
+
+        if(fullpayStatus == 2 && depositpayStatus == 1) {
+            sales.items.realDepositPayment.val(depositpay);
+            sales.items.depositPayment.val(depositpay);
+            calcFullpayment(total);
+            sales.items.realFullPayment.val(sales.items.fullPayment.val());
+            sales.btns.fullPaymentBtn.addClass('hide');
+            sales.btns.depositRefundBtn.addClass('hide');
+            sales.btns.depositCancelBtn.addClass('hide');
+            sales.btns.couponBtn.addClass('hide');
+            sales.btns.malingBtn.addClass('hide');
+            sales.items.depositPaymentInfo.html("已收款");
+            sales.items.fullPaymentInfo.html("已确认");
+        }
+
+        if(fullpayStatus == 2 && depositpayStatus == 2) {
+            sales.items.realDepositPayment.val(depositpay);
+            sales.items.depositPayment.val(depositpay);
+            calcFullpayment(total);
+            sales.items.realFullPayment.val(sales.items.fullPayment.val());
+            sales.btns.fullPaymentBtn.addClass('hide');
+            sales.btns.depositRefundBtn.addClass('hide');
+            sales.btns.depositCancelBtn.addClass('hide');
+            sales.btns.couponBtn.addClass('hide');
+            sales.btns.malingBtn.addClass('hide');
+            sales.items.depositPaymentInfo.html("已确认");
+            sales.items.fullPaymentInfo.html("已确认");
+        }
+
+        if(fullpayStatus == -1 && sales.items.fullPayment.val() < 0 && depositpayStatus != 0){
+            calcFullpayment(total);
+            sales.btns.fullPaymentRefundBtn.removeAttr('class', 'hide');
+            sales.btns.fullPaymentBtn.addClass('hide');
+        }
+
+    }
+
+    //定金
+    sales.btns.depositPaymentBtn.on('click', function () {
+        
+        if (com.validate('layerAdd', 'right')) return false;
+
+        if (sales.items.depositPayment.val() <= 0){
+            com.showAlert(com.error, "定金输入不正确");
+            return false;
+        }
+
+        var opt = {
+            "salesPayment.sales.sid" : sales.sales.sid,
+            "salesPayment.referMoney" : sales.items.depositPayment.val(),
+            "salesPayment.type" : sales.type.depositPayment
+        };
+        com.post(api.payment.addSalesPaymentForDeposit, opt, function (res) {
+            initLabel(0, -1, sales.sales.total, sales.items.depositPayment.val(), '', '');
+
+        });
+
+        return false;
+    });
+
+    //定金撤销
+    sales.btns.depositCancelBtn.on('click', function () {
+
+        var opt = {
+            "salesPayment.sales.sid": sales.sales.sid,
+            "salesPayment.type" : sales.type.depositPayment
+        };
+        com.post(api.payment.cancelSalesPaymentForDeposit, opt, function () {
+            initLabel(-1, -1, sales.sales.total, '', '', '');
+        });
+
+        return false;
+    });
+
+    //定金退款
+    sales.btns.depositRefundBtn.on('click', function () {
+
+        com.post(api.payment.refundSalesPaymentForDeposit, {"salesPayment.sales.sid": sales.sales.sid}, function () {
+            initLabel('', '', sales.sales.total, '', '',4);
+        });
+
+        return false;
+    });
+
+    //补款
+    sales.btns.fullPaymentBtn.on('click', function () {
+
+        //判断otherStatus状态
+        com.post(api.inventory.querySalesBySid, {'sales.sid': sales.sales.sid}, function (res) {
+            if (res.sales.otherStatus == 1) {
+
+                approvalUtils.initqueryApprovalUser('approver', 12);
+                com.popup4mini("#miniPopUp", "#layerSubmit","补款审批", "", function () {
+                    com.closePopup(com.focusPage("#fullPaymentCancelBtn", "#miniPopUp"));
+                    com.clearValidator();
+                    clearApproval();
+                    sales.items.approver.empty();
+                }, "");
             }
-
-            com.post(api.payment.addSalesPaymentForDeposit, makeSalesPaymentPostData(sales.sid, querySales.depositPayment.val(), type.depositPayment), function (res) {
-
-                querySales.realDepositPayment.val(querySales.depositPayment.val());
-                hideButtons([querySales.depositPaymentBtn, querySales.fullPaymentBtn]);
-                controlSpan(querySales.depositPaymentInfo, "add", "提交中");
-                calcFullpayment(sales.total);
-                showButtons([querySales.depositCancelBtn, querySales.couponBtn, querySales.malingBtn]);
-                despidNew = res.salesPayment.spid;
-
-            }, function (e) {
-                com.showAlert(com.error, e.errorMsg);
-            }, false);
-
-            return false;
-        });
-
-        //定金撤销
-        querySales.depositCancelBtn.on('click', function () {
-
-            var sales = salesDic[$layerAdd.attr("data-sid")];
-
-            if (despidNew) {
-                despid = despidNew;
-            } else if (salesPaymentDic[type.depositPayment]) {
-                despid = salesPaymentDic[type.depositPayment].spid;
-            }
-
-            com.post(api.payment.cancelSalesPaymentForDeposit, {"salesPayment.spid": despid}, function () {
-                hideButtons([querySales.depositCancelBtn]);
-                showButtons([querySales.depositPaymentBtn, querySales.fullPaymentBtn]);
-                querySales.depositPayment.val(0);
-                querySales.realDepositPayment.val(0);
-                calcFullpayment(sales.total);
-                controlSpan(querySales.depositPaymentInfo, "clear", "");
-                removeReadonly([querySales.depositPayment]);
-
-            });
-
-            return false;
-        });
-
-        //定金退款
-        querySales.depositRefundBtn.on('click', function () {
-
-
-            var sales = salesDic[$layerAdd.attr("data-sid")];
-
-            com.post(api.payment.refundSalesPaymentForDeposit, {"salesPayment.sales.sid": sales.sid}, function () {
-
-                controlSpan(querySales.depositPaymentInfo, "clear", null);
-                querySales.depositPayment.val(0);
-                querySales.realDepositPayment.val(0);
-                hideButtons([querySales.depositPaymentBtn, querySales.depositCancelBtn, querySales.depositRefundBtn,
-                    querySales.fullCancelBtn, querySales.fullPaymentBtn, querySales.fullPaymentRefundBtn, querySales.couponBtn,
-                    querySales.couponCommitBtn, querySales.couponCancelBtn, querySales.couponRefundBtn,
-                    querySales.malingBtn, querySales.malingCancelBtn, querySales.malingCommitBtn
-                ]);
-                removeReadonly([querySales.depositPayment]);
-                calcFullpayment(sales.total);
-
-            }, function (e) {
-                com.showAlert(com.error, e.errorMsg);
-            }, false);
-
-            return false;
-        });
-
-        //补款
-        querySales.fullPaymentBtn.on('click', function () {
-
-            var sales = salesDic[$layerAdd.attr("data-sid")];
-
-            //判断otherStatus状态
-            com.post(api.inventory.querySalesBySid, {'sales.sid': sales.sid}, function (res) {
-
-                if (res.sales.otherStatus == 1) {
-
-                    approvalUtils.initqueryApprovalUser('approver', 12);
-
-                    openSubmitlayer(function (index, layero) {
-
-                        var _approval = com.focusPage('#approver');
-
-                        var radios = _approval.find('input:checked').attr('userid');
-
-                        if (com.validate('layerSubmit', 'right')) {
-                            return;
-                        }
-
-                        if (radios == null || radios == "") {
-                            com.showAlert(com.warning, "请选择审批人");
-                            return false;
-                        }
-
-                        var _options = {};
-                        _options['approval.receiver.userId'] = radios;
-                        _options['approval.comment'] = approvalComment.val();
-                        _options['approvalSalesDiscount.sid'] = sales.sid;
-                        _options['approvalSalesDiscount.referMoney'] = fullPaymentTotal.val();
-
-                        com.post(api.approval.submitApprovalForSalesDiscount, _options, function (res) {
-                            closefullPaymentlayer();
-                            layer.closeAll();
-                            com.showAlert(com.warning, "补款申请已提交");
-                            com.focusPage('#approver').empty();
-                        }, function (e) {
-                            com.showAlert(com.error, e.errorMsg);
-                        });
-
-                    });
-                }
-                else {
-
-                    com.post(api.payment.addSalesPaymentForFullpay, makeSalesPaymentPostData(sales.sid, querySales.fullPayment.val(), type.fullPayment), function (res) {
-
-                        querySales.realFullPayment.val(querySales.fullPayment.val());
-                        hideButtons([querySales.fullPaymentBtn, querySales.couponBtn, querySales.malingBtn, querySales.depositPaymentBtn, querySales.depositRefundBtn]);
-                        hideDiv([querySales.couponInfoDiv, querySales.malingInfoDiv]);
-                        showButtons([querySales.fullCancelBtn]);
-                        addReadonly([querySales.depositPayment])
-                        controlSpan(querySales.fullPaymentInfo, "add", "提交中");
-
-                        fuspidNew = res.salesPayment.spid;
-
-                    }, function (e) {
-                        com.showAlert(com.error, e.errorMsg);
-                    }, false);
-
-                }
-
-            }, function (e) {
-                com.showAlert(com.error, e.errorMsg);
-            });
-
-            return false;
-        });
-
-        //补款撤销
-        querySales.fullCancelBtn.on('click', function () {
-
-            var sales = salesDic[$layerAdd.attr("data-sid")];
-
-            if (fuspidNew || salesPaymentDic[type.fullPayment]) {
-                if (fuspidNew) {
-                    fuspid = fuspidNew;
-                } else if (salesPaymentDic[type.fullPayment]) {
-                    fuspid = salesPaymentDic[type.fullPayment].spid;
-                }
-                com.post(api.payment.cancelSalesPaymentForFullpay, {"salesPayment.spid": fuspid}, function () {
-
-                    hideButtons([querySales.fullCancelBtn]);
-                    removeReadonly([querySales.depositPayment]);
-                    hideDiv([querySales.couponInfoDiv, querySales.malingInfoDiv]);
-                    showButtons([querySales.fullPaymentBtn, querySales.couponBtn, querySales.malingBtn]);
-                    querySales.realFullPayment.val(0);
-                    controlSpan(querySales.fullPaymentInfo, "clear", "");
-                    calcFullpayment(sales.total);
-                    fuspidNew = "";
-
-                    if (sales.depositpayStatus == -1) {
-                        showButtons([querySales.depositPaymentBtn]);
-                    } else {
-                        showButtons([querySales.depositRefundBtn]);
-                    }
-
+            else {
+                var opt = {
+                    "salesPayment.sales.sid" : sales.sales.sid,
+                    "salesPayment.referMoney" : sales.items.fullPayment.val(),
+                    "salesPayment.type" : sales.type.fullPayment
+                };
+                com.post(api.payment.addSalesPaymentForFullpay, opt, function (data) {
+                    initLabel(sales.sales.depositpayStatus, 0, sales.sales.total, sales.sales.depositpay, sales.sales.fullpay,'');
                 });
+
             }
 
-            if (furspid || salesPaymentDic[type.fullPaymentRefund]) {
+        });
 
-                if (furspid) {
-                    fuspid = furspid;
-                } else if (salesPaymentDic[type.fullPaymentRefund]) {
-                    fuspid = salesPaymentDic[type.fullPaymentRefund].spid;
-                }
-                com.post(api.payment.cancelSalesPaymentForFullpay, {"salesPayment.spid": fuspid}, function () {
+        return false;
+    });
 
-                    hideButtons([querySales.fullCancelBtn]);
-                    removeReadonly([querySales.depositPayment]);
-                    hideDiv([querySales.couponInfoDiv, querySales.malingInfoDiv]);
-                    showButtons([querySales.fullPaymentRefundBtn, querySales.couponBtn, querySales.malingBtn]);
-                    querySales.realFullPayment.val(0);
-                    controlSpan(querySales.fullPaymentInfo, "clear", "");
-                    calcFullpayment(sales.total);
-                    furspid = "";
+    //补款撤销
+    sales.btns.fullCancelBtn.on('click', function () {
 
-                    if (sales.depositpayStatus == -1) {
-                        showButtons([querySales.depositPaymentBtn]);
-                    } else {
-                        showButtons([querySales.depositRefundBtn]);
-                    }
+        calcFullpayment(sales.sales.total);
+        var flag = sales.items.fullPayment.val() >= 0;
+        var opts = {
+            "salesPayment.sales.sid": sales.sales.sid,
+            "salesPayment.type" : flag ? sales.type.fullPayment : sales.type.fullPaymentRefund
+        };
+
+        com.post(api.payment.cancelSalesPaymentForFullpay, opts, function () {
+            initLabel(sales.sales.depositpayStatus, -1, sales.sales.total, sales.sales.depositpay, sales.sales.fullpay,'');
+        });
+        
+        return false;
+    });
+
+    //补款退款
+    sales.btns.fullPaymentRefundBtn.on('click', function () {
+
+        com.post(api.inventory.querySalesBySid, {'sales.sid': sales.sales.sid}, function (res) {
+            if (res.sales.otherStatus == 1) {
+
+                approvalUtils.initqueryApprovalUser('approver', 12);
+                com.popup4mini("#miniPopUp", "#layerSubmit","补款退款审批", "", function () {
+                    com.closePopup(com.focusPage("#fullPaymentCancelBtn", "#miniPopUp"));
+                    com.clearValidator();
+                    clearApproval();
+                    sales.items.approver.empty();
+                }, "");
+
+            }else {
+
+                var opt = {
+                    "salesPayment.sales.sid" : sales.sales.sid,
+                    "salesPayment.referMoney" : sales.items.fullPayment.val(),
+                    "salesPayment.type" : sales.type.fullPaymentRefund
+                };
+
+                com.post(api.payment.addSalesPaymentForFullpay, opt, function (res) {
+                    initLabel(sales.sales.depositpayStatus, 0, sales.sales.total, sales.sales.depositpay, sales.sales.fullpay,'');
                 });
-            }
 
-
-            return false;
-        });
-
-        //补款退款
-        querySales.fullPaymentRefundBtn.on('click', function () {
-
-            var sales = salesDic[$layerAdd.attr("data-sid")];
-
-            com.post(api.payment.addSalesPaymentForFullpay, makeSalesPaymentPostData(sales.sid, querySales.fullPayment.val(), type.fullPaymentRefund), function (res) {
-
-                controlSpan(querySales.fullPaymentInfo, "add", "提交中");
-                querySales.realFullPayment.val(querySales.fullPayment.val());
-                calcFullpayment(sales.total);
-                hideButtons([querySales.fullPaymentRefundBtn, querySales.couponBtn, querySales.malingBtn, querySales.depositCancelBtn, querySales.depositPaymentBtn, querySales.depositRefundBtn]);
-                showButtons([querySales.fullCancelBtn]);
-                addReadonly([querySales.depositPayment]);
-                furspid = res.salesPayment.spid;
-
-            }, function (e) {
-                com.showAlert(com.error, e.errorMsg);
-            }, false);
-
-            return false;
-        });
-
-        //券修改
-        querySales.couponBtn.on('click', function () {
-
-            showDiv([querySales.couponInfoDiv]);
-            hideButtons([querySales.couponBtn]);
-            showButtons([querySales.couponCommitBtn, querySales.couponCancelBtn]);
-
-            return false;
-        });
-
-        //券提交
-        querySales.couponCommitBtn.on('click', function () {
-
-            var sales = salesDic[$layerAdd.attr("data-sid")];
-
-            var numRex = /^(\d+|\d+\.[0-9]{1,4})$/;
-            if (querySales.couponValue.val() < 0 || !numRex.test(querySales.couponValue.val())) {
-
-                com.showAlert(com.error, "券值输入不正确");
-
-                return false;
-            }
-
-            var couponPostData = {
-                "sales.sid": sales.sid,
-                "sales.coupon": querySales.couponValue.val(),
-                "sales.couponInfo": "#" + querySales.couponType.val() + ":" + querySales.couponValue.val() + "#"
-            };
-
-            com.post(api.inventory.updateSalesForCoupon, couponPostData, function () {
-
-                querySales.couponInf.val(querySales.couponType.val() + ":" + querySales.couponValue.val());
-                querySales.coupon.val(querySales.couponValue.val());
-                hideDiv([querySales.couponInfoDiv]);
-                showButtons([querySales.couponBtn]);
-                calcFullpayment(sales.total);
-
-            }, function (e) {
-                com.showAlert(com.error, e.errorMsg);
-            }, false);
-
-            return false;
-        });
-
-        //券取消
-        querySales.couponCancelBtn.on('click', function () {
-
-            hideDiv([querySales.couponInfoDiv]);
-            showButtons([querySales.couponBtn]);
-
-            return false;
-        });
-
-        //抹零修改
-        querySales.malingBtn.on('click', function () {
-            showDiv([querySales.malingInfoDiv]);
-            hideButtons([querySales.malingBtn]);
-            showButtons([querySales.malingCommitBtn, querySales.malingCancelBtn]);
-            return false;
-        });
-
-        //抹零提交
-        querySales.malingCommitBtn.on('click', function () {
-
-            var sales = salesDic[$layerAdd.attr("data-sid")];
-            var numRex = /^(\d+|\d+\.[0-9]{1,4})$/;
-            if (querySales.malingValue.val() < 0 || !numRex.test(querySales.malingValue.val())) {
-
-                com.showAlert(com.error, "抹零输入不正确");
-
-                return false;
-            }
-
-            var malingPostData = {
-                "sales.sid": sales.sid,
-                "sales.maling": 0,
-                "sales.venderMaling": querySales.malingValue.val()
-            };
-
-            com.post(api.inventory.updateSalesForMaling, malingPostData, function () {
-
-                querySales.maling.val(querySales.malingValue.val());
-                hideDiv([querySales.malingInfoDiv]);
-                querySales.malingValue.val(0);
-                showButtons([querySales.malingBtn]);
-                calcFullpayment(sales.total);
-
-            }, function (e) {
-                com.showAlert(com.error, e.errorMsg);
-            }, false);
-
-            return false;
-        });
-
-        //抹零取消
-        querySales.malingCancelBtn.on('click', function () {
-
-            hideDiv([querySales.malingInfoDiv]);
-            showButtons([querySales.malingBtn]);
-            querySales.malingValue.val(0);
-            return false;
-        });
-    }
-
-    function moneyLayerIn(sales) {
-
-        //弹窗按钮控制
-        querySales.couponValue.on('keydown', function (event) {
-            if (event.keyCode == "13") {//keyCode=13是回车键
-                return false;
             }
         });
+        
+        return false;
+    });
 
-        querySales.malingValue.on('keypress', function (event) {
-            if (event.keyCode == "13") {//keyCode=13是回车键
-                return false;
-            }
+    //券修改
+    sales.btns.couponBtn.on('click', function () {
+        sales.items.couponInfoDiv.css('display', 'inline');
+        sales.btns.couponBtn.addClass('hide');
+        sales.btns.couponCommitBtn.removeAttr('class', 'hide');
+        sales.btns.couponCancelBtn.removeAttr('class', 'hide');
+        return false;
+    });
+
+    //券提交
+    sales.btns.couponCommitBtn.on('click', function () {
+
+        var moneyAllOne = utils.accAdd(utils.accAdd(utils.accAdd(parseFloat(checkVal(sales.items.couponValue.val())),parseFloat(checkVal(sales.items.malingValue.val()))), parseFloat(checkVal(sales.items.realDepositPayment.val()))), parseFloat(checkVal(sales.items.maling.val())));
+
+        if(moneyAllOne > sales.sales.total){
+            sales.btns.fullPaymentRefundBtn.removeAttr('class', 'hide');
+            sales.btns.fullPaymentBtn.addClass('hide');
+        }
+        if(moneyAllOne <= sales.sales.total){
+            sales.btns.fullPaymentBtn.removeAttr('class', 'hide');
+            sales.btns.fullPaymentRefundBtn.addClass('hide');
+        }
+        if (com.validate('layerAdd', 'right')) return false;
+
+        var couponPostData = {
+            "sales.sid": sales.sales.sid,
+            "sales.coupon": sales.items.couponValue.val(),
+            "sales.couponInfo": "#" + sales.items.couponType.val() + ":" + sales.items.couponValue.val() + "#"
+        };
+        
+        com.post(api.inventory.updateSalesForCoupon, couponPostData, function () {
+
+            sales.items.couponInf.val(sales.items.couponType.val() + ":" + sales.items.couponValue.val());
+            sales.items.coupon.val(sales.items.couponValue.val());
+            sales.items.couponValue.val(0);
+            sales.items.couponInfoDiv.css('display', 'none');
+            sales.btns.couponBtn.removeAttr('class', 'hide');
+            calcFullpayment(sales.sales.total);
+
         });
+        return false;
+    });
 
-        salesPostData = {};
-        salesPostData[salesPostDataString.sid] = sales.sid;
+    //券取消
+    sales.btns.couponCancelBtn.on('click', function () {
+        sales.items.couponInfoDiv.css('display', 'none');
+        sales.btns.couponBtn.removeAttr('class', 'hide');
+        sales.items.couponValue.val(0);
+        return false;
+    });
 
-        refundPostData = {};
-        refundPostData[salesPostDataString.sid] = sales.sid;
+    //抹零修改
+    sales.btns.malingBtn.on('click', function () {
+        sales.items.malingInfoDiv.css('display', 'inline');
+        sales.btns.malingBtn.addClass('hide');
+        sales.btns.malingCommitBtn.removeAttr('class', 'hide');
+        sales.btns.malingCancelBtn.removeAttr('class', 'hide');
+        return false;
+    });
 
-        com.post(api.payment.querySalesPaymentBySid, makeSalesPaymentPostData(sales.sid), function (data) {
-            $.each(data.salesPayments, function (i, v) {
+    //抹零提交
+    sales.btns.malingCommitBtn.on('click', function () {
+        var moneyAllTwo = utils.accAdd(utils.accAdd(utils.accAdd(parseFloat(checkVal(sales.items.couponValue.val())),parseFloat(checkVal(sales.items.malingValue.val()))), parseFloat(checkVal(sales.items.realDepositPayment.val()))), parseFloat(checkVal(sales.items.coupon.val())));
 
-                if (!salesPaymentDic[v.type]) {
-                    salesPaymentDic[v.type] = $.extend({}, v);
-                }
-
-            });
-        }, null, false);
-
-        //判断区
-        if (sales.depositpayStatus == -1 && sales.fullpayStatus == -1) {//未交定金和补款
-
-            showButtons([querySales.depositPaymentBtn, querySales.couponBtn, querySales.malingBtn, querySales.fullPaymentBtn]);
-            removeReadonly([querySales.depositPayment]);
-            querySales.depositPayment.val(0);
-            calcFullpayment(sales.total);
-
-        } else {
-            if (sales.depositpayStatus != -1) {
-                if (sales.depositpayStatus == 0) {
-
-                    showButtons([querySales.depositCancelBtn, querySales.couponBtn, querySales.malingBtn]);
-                    controlSpan(querySales.depositPaymentInfo, "add", "提交中");
-                    querySales.depositPayment.val(salesPaymentDic[type.depositPayment].referMoney);
-                    querySales.realDepositPayment.val(salesPaymentDic[type.depositPayment].referMoney);
-                    calcFullpayment(sales.total);
-
-                } else if (sales.depositpayStatus == 1) {
-
-                    showButtons([querySales.depositRefundBtn, querySales.couponBtn, querySales.malingBtn]);
-                    controlSpan(querySales.depositPaymentInfo, "add", "已收款");
-                    querySales.depositPayment.val(salesPaymentDic[type.depositPayment].referMoney);
-                    querySales.realDepositPayment.val(salesPaymentDic[type.depositPayment].referMoney);
-                    calcFullpayment(sales.total);
-
-                } else if (sales.depositpayStatus == 2) {
-
-                    showButtons([querySales.couponBtn, querySales.malingBtn, querySales.depositRefundBtn]);
-                    controlSpan(querySales.depositPaymentInfo, "add", "已确认");
-                    querySales.depositPayment.val(salesPaymentDic[type.depositPayment].referMoney);
-                    querySales.realDepositPayment.val(salesPaymentDic[type.depositPayment].referMoney);
-                    calcFullpayment(sales.total);
-
-                }
-            } else {
-                showButtons([querySales.depositPaymentBtn]);
-            }
-            if (sales.fullpayStatus != -1) {
-                hideButtons([querySales.depositPaymentBtn, querySales.depositRefundBtn, querySales.depositCancelBtn, querySales.couponBtn, querySales.malingBtn]);
-                if (sales.fullpayStatus == 0) {
-
-                    showButtons([querySales.fullCancelBtn]);
-                    controlSpan(querySales.fullPaymentInfo, "add", "提交中");
-
-
-                    if (salesPaymentDic[type.fullPayment]) {
-                        querySales.fullPayment.val(salesPaymentDic[type.fullPayment].referMoney);
-                        querySales.realFullPayment.val(salesPaymentDic[type.fullPayment].referMoney);
-                    } else if (salesPaymentDic[type.fullPaymentRefund]) {
-                        querySales.fullPayment.val(-salesPaymentDic[type.fullPaymentRefund].referMoney);
-                        querySales.realFullPayment.val(-salesPaymentDic[type.fullPaymentRefund].referMoney);
-                    }
-
-
-                } else if (sales.fullpayStatus == 1) {
-
-                    controlSpan(querySales.fullPaymentInfo, "add", "已收款");
-
-                    if (salesPaymentDic[type.fullPayment]) {
-                        querySales.fullPayment.val(salesPaymentDic[type.fullPayment].referMoney);
-                        querySales.realFullPayment.val(salesPaymentDic[type.fullPayment].referMoney);
-                    } else if (salesPaymentDic[type.fullPaymentRefund]) {
-                        querySales.fullPayment.val(-salesPaymentDic[type.fullPaymentRefund].referMoney);
-                        querySales.realFullPayment.val(-salesPaymentDic[type.fullPaymentRefund].referMoney);
-                    }
-
-                } else if (sales.fullpayStatus == 2) {
-
-                    controlSpan(querySales.fullPaymentInfo, "add", "已确认");
-
-                    if (salesPaymentDic[type.fullPayment]) {
-                        querySales.fullPayment.val(salesPaymentDic[type.fullPayment].referMoney);
-                        querySales.realFullPayment.val(salesPaymentDic[type.fullPayment].referMoney);
-                    } else if (salesPaymentDic[type.fullPaymentRefund]) {
-                        querySales.fullPayment.val(-salesPaymentDic[type.fullPaymentRefund].referMoney);
-                        querySales.realFullPayment.val(-salesPaymentDic[type.fullPaymentRefund].referMoney);
-                    }
-
-                }
-            } else {
-                calcFullpayment(sales.total);
-                if (querySales.fullPayment.val() < 0) {
-                    if (sales.depositpayStatus != 0) {
-                        showButtons([querySales.fullPaymentRefundBtn]);
-                    }
-                } else {
-                    if (sales.depositpayStatus != 0) {
-                        showButtons([querySales.fullPaymentBtn]);
-                    }
-
-                }
-            }
-
-
+        if(moneyAllTwo > sales.sales.total){
+            sales.btns.fullPaymentRefundBtn.removeAttr('class', 'hide');
+            sales.btns.fullPaymentBtn.addClass('hide');
+        }
+        if(moneyAllTwo <= sales.sales.total){
+            sales.btns.fullPaymentBtn.removeAttr('class', 'hide');
+            sales.btns.fullPaymentRefundBtn.addClass('hide');
         }
 
-    }
+        if (com.validate('layerAdd', 'right')) return false;
 
-    function moneyLayerOut() {
+        var malingPostData = {
+            "sales.sid": sales.sales.sid,
+            "sales.maling": 0,
+            "sales.venderMaling": sales.items.malingValue.val()
+        };
 
-        hideButtons([querySales.depositPaymentBtn, querySales.depositCancelBtn, querySales.depositRefundBtn,
-            querySales.fullCancelBtn, querySales.fullPaymentBtn, querySales.fullPaymentRefundBtn, querySales.couponBtn,
-            querySales.couponCommitBtn, querySales.couponCancelBtn, querySales.couponRefundBtn,
-            querySales.malingBtn, querySales.malingCancelBtn, querySales.malingCommitBtn
-        ]);
-        hideDiv([querySales.malingInfoDiv, querySales.couponInfoDiv]);
-        addReadonly([querySales.depositPayment, querySales.fullPayment]);
-        clearCoupon();
-        controlSpan(querySales.depositPaymentInfo, "clear", null);
-        controlSpan(querySales.fullPaymentInfo, "clear", null);
-        querySales.fullPayment.val("");
-        querySales.realFullPayment.val("");
-        querySales.depositPayment.val("");
-        querySales.realDepositPayment.val("");
-        salesPaymentDic = {};
-        salesPostData = {};
-        salesPaymentPostData = [];
-        refundPostData = [];
+        com.post(api.inventory.updateSalesForMaling, malingPostData, function () {
+            sales.items.maling.val(sales.items.malingValue.val());
+            sales.items.malingInfoDiv.css('display', 'none');
+            sales.items.malingValue.val(0);
+            sales.btns.malingBtn.removeAttr('class', 'hide');
+            calcFullpayment(sales.sales.total);
 
-    }
-
-    function hideButtons(buttons) {
-        $.each(buttons, function (i, v) {
-            v.addClass('hide');
         });
-    }
 
-    function showButtons(buttons) {
-        $.each(buttons, function (i, v) {
-            v.removeAttr('class', 'hide');
-        });
-    }
+        return false;
+    });
 
-    function hideDiv(divs) {
-        $.each(divs, function (i, v) {
-            v.css('display', 'none');
-        });
-    }
-
-    function showDiv(divs) {
-        $.each(divs, function (i, v) {
-            v.css('display', 'inline');
-        });
-    }
-
-    function addReadonly(item) {
-        $.each(item, function (i, v) {
-            v.attr("readonly", "readonly");
-        });
-    }
-
-    function removeReadonly(item) {
-        $.each(item, function (i, v) {
-            v.removeAttr("readonly");
-        });
-    }
-
-    function clearCoupon() {
-        querySales.couponInf.val("");
-        querySales.couponValue.val(0);
-        querySales.malingValue.val(0);
-    }
-
-    function controlSpan(span, aoc, string) {
-        if (aoc == "add") {
-            span.html(string);
-        } else if (aoc == "clear") {
-            span.html("");
-        }
-    }
-
-    function makeSalesPaymentPostData(sid, referMoney, type) {
-        salesPaymentPostData = {};
-        if (sid) {
-            salesPaymentPostData[salesPaymentPostDataString.sid] = sid;
-        }
-        if (referMoney) {
-            salesPaymentPostData[salesPaymentPostDataString.referMoney] = referMoney;
-        }
-        if (type) {
-            salesPaymentPostData[salesPaymentPostDataString.type] = type;
-        }
-        return salesPaymentPostData;
-    }
+    //抹零取消
+    sales.btns.malingCancelBtn.on('click', function () {
+        sales.items.malingInfoDiv.css('display', 'none');
+        sales.btns.malingBtn.removeAttr('class', 'hide');
+        sales.items.malingValue.val(0);
+        return false;
+    });
 
     function calcFullpayment(total) {
-
-        var _total = checkVal(parseFloat(total));
-        var depositPaymentVal = parseFloat(checkVal(querySales.depositPayment.val()));
-        var couponVal = parseFloat(checkVal(querySales.coupon.val()));
-        var malingVal = parseFloat(checkVal(querySales.maling.val()));
-
+        var _total = parseFloat(checkVal(total));
+        var depositPaymentVal = parseFloat(checkVal(sales.items.depositPayment.val()));
+        var couponVal = parseFloat(checkVal(sales.items.coupon.val()));
+        var malingVal = parseFloat(checkVal(sales.items.maling.val()));
         var fullpaymentVal = utils.accSub(utils.accSub(utils.accSub(_total, depositPaymentVal), couponVal), malingVal);
-        querySales.fullPayment.val(fullpaymentVal);
 
-        com.focusPage('#fullPaymentTotal').val(fullpaymentVal);
-
+        sales.items.fullPayment.val(fullpaymentVal);
+        sales.items.fullPaymentTotal.val(fullpaymentVal);
     }
 
     function checkVal(val) {
-        if (val == "") {
-            return 0;
-        } else {
-            if (val < 0) {
-
-                return 0;
-
-            } else {
-
-                return val;
-            }
-
-        }
+        return val == "" || val < 0 ? 0 : val;
     }
 
     function printPayment(orderId, sid) {
         params.salesSid = sid;
-        // + "?sales.sid=" + sid + "&time=" + params.loginTime
         com.popup("专用合同__装修单号：" + orderId, api.index.salesPrintIndex.url, function () {
             parent.layer.getFrameIndex(window.name);
         }, null, true);
-
-
-        /* var url = api.index.salesPrintIndex.url + "?sales.sid=" + sid + "&time=" + params.loginTime;
-         window.open(url);*/
     }
-
 });

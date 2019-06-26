@@ -19,7 +19,7 @@ $(function(){
 		com.charts("reportDiv", "status", {"api": "user.report.status4company", "company": company, "mongo": "communion"}, "col-xs-6", {"height": "500px"});
 		com.charts("reportDiv", "jobYears", {"api": "user.report.servicelength4company", "company": company, "mongo": "communion"}, "col-xs-6", {"height": "500px"});
 
-		com.charts("reportDiv", "dept", {"api": "user.report.department4company", "company": company, "mongo": "communion"}, "col-xs-6", {"height": "700px"});
+		com.charts("reportDiv", "dept", {"api": "user.report.department4company", "company": company, "mongo": "communion"}, "col-xs-12", {"height": "900px"});
 		com.charts("reportDiv", "education", {"api": "user.report.education4company", "company": company, "mongo": "communion"}, "col-xs-6", {"height": "700px"});
 	}
 });

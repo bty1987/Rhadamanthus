@@ -28,6 +28,14 @@ public class AddReduceVO implements Serializable{
 	
 	private Float total;
 	
+	private Float undisPrice;
+	
+	private Float disPrice;
+	
+	private Float uncalPrice;
+	
+	private Float calPrice;
+	
 	private Integer status;
 	
 	private Timestamp createTime;
@@ -72,6 +80,38 @@ public class AddReduceVO implements Serializable{
 		this.total = total;
 	}
 	
+	public Float getUndisPrice() {
+		return undisPrice;
+	}
+
+	public void setUndisPrice(Float undisPrice) {
+		this.undisPrice = undisPrice;
+	}
+
+	public Float getDisPrice() {
+		return disPrice;
+	}
+
+	public void setDisPrice(Float disPrice) {
+		this.disPrice = disPrice;
+	}
+
+	public Float getUncalPrice() {
+		return uncalPrice;
+	}
+
+	public void setUncalPrice(Float uncalPrice) {
+		this.uncalPrice = uncalPrice;
+	}
+
+	public Float getCalPrice() {
+		return calPrice;
+	}
+
+	public void setCalPrice(Float calPrice) {
+		this.calPrice = calPrice;
+	}
+
 	@JSON(format="yyyy-MM-dd")
 	public Timestamp getCreateTime(){
 		return createTime;

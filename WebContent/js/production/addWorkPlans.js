@@ -33,7 +33,7 @@ var AddWorkflow = (function(){
                 that.saveOptionChange();
             });
             com.focusPage('a[name="cancelbtn"]', $wrapper).click(function(){
-                layer.closeAll();
+                com.closePopup();
             });
 
         },

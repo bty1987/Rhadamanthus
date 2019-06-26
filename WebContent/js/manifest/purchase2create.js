@@ -9,14 +9,6 @@ jQuery(function ($) {
             pid: com.focusPage("#pId")
         },
 
-        validator: {
-            float3: {
-                type: "v_float_3",
-                regex: /^(\d+|\d+\.[0-9]{1,3})$/,
-                errorMsg: "单价输入内容格式错误"
-            }
-        },
-
         items: {
             createTime: com.focusPage("#createTime"),
             deliveryTime: com.focusPage("#deliveryTime"),
@@ -27,9 +19,8 @@ jQuery(function ($) {
         record: {}
     };
 
-    $.extend(com.validator, purchase.validator);
-
-    com.focusPage('.date-picker').datepicker(com.datepickerdefault);
+    com.datetime(purchase.items.createTime,"date",false);
+    com.datetime(purchase.items.deliveryTime,"date",false);
 
     //添加一条空行
     addline(1).addClass('current');

@@ -1,0 +1,48 @@
+<div>
+    <div class="row">
+        <div class="col-xs-12">
+            <form class="form-horizontal">
+                <div class="widget-box" style="border: 0;">
+                    <div class="widget-header header-color-white" style="line-height: 38px;color:#307ecc;border: 0;border-left: 1px solid #CCC;">销售单转出库单记录</div>
+                    <div class="widget-body" style="border: 0;">
+                        <div class="page-content">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div id="resultListSalesManifest" class="clearfix tab-pane active"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="widget-box" style="border: 0;">
+                    <div class="widget-header header-color-white" style="line-height: 38px;color:#307ecc;border: 0;border-left: 1px solid #CCC;">销售单转采购单记录</div>
+                    <div class="widget-body"  style="border: 0;">
+                        <div class="page-content">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div id="resultListSalesPurchase" class="clearfix tab-pane active"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="widget-box"  style="border: 0;">
+                    <div class="widget-header header-color-white" style="line-height: 38px;color:#307ecc;border: 0;border-left: 1px solid #CCC;">采购单入库记录</div>
+                    <div class="widget-body"  style="border: 0;">
+                        <div class="page-content">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div id="resultListPurchaseManifest" class="clearfix tab-pane active"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $.loadScript(['js/sales/sales4inventory.js']);
+</script>

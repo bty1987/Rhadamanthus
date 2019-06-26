@@ -7,90 +7,78 @@ jQuery(function ($) {
         	list: com.focusPage('#list'),
         },
         record: {},
-        validator: {
-            float3: {
-                type: "v_float_3",
-                regex: /^(\d+|\d+\.[0-9]{1,4})$/,
-                errorMsg: "内容格式错误"
-            }
-        }
     };
-    
-    $.extend(com.validator, manifest.validator);
-    
+
     com.post(api.inventory.queryManifestItemByMid, {"manifest.mid": manifest.mid}, function (res) {
-    	
+
     	$.each(res.manifestItems, function (i, v) {
-    		
+
     		var $line = addline(i + 1).appendTo(manifest.items.list).attr({
     			"data-gid": v.goods.gid,
     			"data-miid": v.miid,
     			"id": "line" + v.goods.gid
     		});
-    		
+
     		$line.find('div.no').text(v.goods.no);
             $line.find('div.name').text(v.goods.name);
             $line.find('div.category').text(v.goods.category);
             $line.find('div.brand').text(v.goods.brand);
             $line.find('div.measurementUnit').text(v.goods.measurementUnit);
-            
+
             $line.find('div.color').text(v.color.name);
             $line.find('div.format').text(v.format.info);
             $line.find('div.storehouse').text(v.outstorehouse.name);
-            
+
             $line.find('div.pieceNum').text(v.goods.pieceNum);
             $line.find('div.number').text(v.surplus);
         });
     });
 
     com.focusPage("#xbBtn").click(function () {
-    	
+
+        manifest.items.list.find(".crnum input").removeClass('v_float_3');
     	var $checks = com.focusPage('input[type="checkbox"]:checked', '#list');
-    	
-    	if($checks.length == 0){
-    		com.showAlert(com.warning, "请选择商品");
-    		return false;
-    	}
-    	
+        if($checks.length == 0){
+            com.showAlert(com.warning, "请选择商品");
+            return false;
+        }
+
     	var options = {
     		"manifest.mid": manifest.mid
     	};
-    	
+
     	for(var i=0;i<$checks.length;i++){
-    		
+
     		var $check = $($checks[i]);
     		var $line = $check.parents('li.line');
-    		
+            var crnumInput = $line.find(".crnum input").addClass('v_float_3');
     		if(com.validate($line.attr("id"), "left")){
         		return false;
         	}
-    		
-    		var crnumInput = $line.find(".crnum input");
-    		
+
     		var num = $line.find(".number").text();
     		var crnum = crnumInput.val();
-    		
     		if (utils.accSub(num, crnum) < 0){
             	com.showAlert(com.warning, "货单项出返数不足");
             	crnumInput.select();
             	return false;
             }
-    		
     		options["manifestItems[" + i + "].miid"] = $line.attr("data-miid");
     		options["manifestItems[" + i + "].num"] = crnum;
     	}
-    	
+
     	com.post(api.inventory.addManifestForXB, options);
+
     });
 
     com.focusPage("#cancelBtn").click(function () {
-        layer.closeAll();
+        com.closePopup();
     });
-    
+
     function addline(lineindex, data) {
-    	
+
     	var $line = $('<li></li>').addClass('line');
-        
+
         var _label = $('<label></label>');
         var $input = $('<input>').attr({"type": "checkbox"}).addClass('ace ace-checkbox-2 hide');
         var _span = $('<span></span>').addClass('lbl grey bigger-150').css('font-weight','bold');
@@ -115,11 +103,11 @@ jQuery(function ($) {
         ];
 
         $.each(_lineInfoSet, function (i, v) {
-        	
+
             var $cell = $('<div></div>').addClass('cell ' + v.cellClass);
-            
+
             if (v.hasInput) {
-                $cell.append($('<input>').prop({'type': 'text', 'autocomplete': 'off'}).addClass('editable v_float_3'));
+                $cell.append($('<input>').prop({'type': 'text', 'autocomplete': 'off'}).addClass('editable'));
             }
 
             $cell.appendTo($lineInfoWrap);

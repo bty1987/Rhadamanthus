@@ -9,18 +9,9 @@ jQuery(function ($) {
             createTime: com.focusPage("#createTime")
         },
         record: {},
-        validator: {
-            float3: {
-                type: "v_float_3",
-                regex: /^(\d+|\d+\.[0-9]{1,3})$/,
-                errorMsg: "内容格式错误"
-            }
-        },
         storehouses: []
     };
     
-    $.extend(com.validator, purchase.validator);
-
     com.post(api.inventory.queryPurchaseByPid, {"purchase.pid": purchase.pid}, function (res) {
         purchase.items.createTime.val(res.purchase.createTime)
     });
@@ -45,7 +36,7 @@ jQuery(function ($) {
 
     //关闭弹窗
     com.focusPage("#cancelBtn").click(function () {
-        layer.closeAll();
+        com.closePopup();
     });
 
     //选择框操作

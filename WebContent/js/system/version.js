@@ -19,10 +19,7 @@ $(function () {
     
     version.items.comment.wysiwyg(); // ace_wysiwyg().prev().addClass("wysiwyg-style2")
 
-    com.focusPage('.date-picker').datepicker({
-        format: 'yyyy-mm-dd',
-        autoclose: true,
-    });
+    com.datetime(com.focusPage(".date-picker"), "date");
     
     version.saveBtn.on("click", function () {
         saveData();

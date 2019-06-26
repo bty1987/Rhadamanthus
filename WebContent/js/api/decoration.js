@@ -2,24 +2,24 @@
 $.extend(api.index, {
 
     decorationIndex: {url: "/views/decoration/decoration.html"},
-    decorationDetailIndex: {url: "/views/decoration/decorationDetail.html"},
+    decorationDetailIndex: {url: "/views/decoration/decoration4detail.html"},
 
-    decorationActivityItemIndex: {url: "/views/decoration/decorationActivityItem.html"},
+    decorationActivityItemIndex: {url: "/views/decoration/decoration4activity.html"},
 
-    decorationBelongIndex: {url: "/views/decoration/decorationBelong.html"},
-    decorationBelongDetailIndex: {url: "/views/decoration/decorationBelongDetail.html"},
-    decorationBelongInfoIndex: {url: "/views/decoration/decorationBelongInfo.html"},
+    decorationBelongIndex: {url: "/views/decoration/decoration4belong.html"},
+    decorationBelongDetailIndex: {url: "/views/decoration/decorationBelong.html"},
+    decorationBelongInfoIndex: {url: "/views/decoration/decorationBelong4info.html"},
 
-    decorationTimelineIndex: {url: "/views/decoration/decorationTimeline.html"},
+    decorationTimelineIndex: {url: "/views/decoration/decoration4timeline.html"},
     backVisitIndex: {url: "/views/decoration/backVisit.html"},
-    createOrderIndex: {url: "/views/decoration/createOrder.html"},
+    createOrderIndex: {url: "/views/decoration/decoration2create.html"},
 
     auditIndex: {url: "/views/decoration/audit.html"},
-    auditRecordIndex: {url: "/views/decoration/auditRecord.html"},
+    auditRecordIndex: {url: "/views/decoration/audit4record.html"},
 
     decorationServiceIndex :{url:"/views/decoration/decorationService.html"},
 
-    decorationFinalSettlementIndex : {url:"/views/decoration/decorationFinalSettlement.html"}
+    decorationFinalSettlementIndex : {url:"/views/decoration/decoration4account.html"}
 });
 
 $.extend(api, {decoration: {

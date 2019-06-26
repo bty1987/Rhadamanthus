@@ -188,13 +188,13 @@ jQuery(function($) {
 		}
 
 		var housePostData = {
-			"house.village.no": orderEntry.orderItems.villageId.val(),
+			"house.village.no": com.typeahead("villageId"),
 			"house.houseNumber": orderEntry.orderItems.houseNumber.val(),
 			"house.status": 0
 		};
 
 		com.post(api.data.queryHouseByNoAHnum, housePostData, function (res) {
-			com.post(api.decoration.checkDecoration, {"filters[0].data": res.house.hid,"filters[0].field": "houseId","filters[0].op": "eq","filters[1].data": "4","filters[1].field": "status","filters[1].op": "ne","filters[2].data": "7","filters[2].field": "status","filters[2].op": "ne","filters[3].data": "5","filters[3].field": "status","filters[3].op": "ne"}, function (des) {
+			com.post(api.decoration.checkDecoration, {"filters[0].data": res.house.hid,"filters[0].field": "houseId","filters[0].op": "eq","filters[1].data": "5","filters[1].field": "status","filters[1].op": "ne","filters[2].data": "6","filters[2].field": "status","filters[2].op": "ne"}, function (des) {
 				if (des.decoration && des.decoration.orderId) {
 					com.showTips($("#houseNumber"), "订单已存在：订单号：" + des.decoration.orderId + " 订单所属设计师:" + des.decoration.designer.currentName, true);
 					orderEntry.repeatFlg = true;

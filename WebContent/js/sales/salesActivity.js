@@ -1,22 +1,37 @@
 $(function () {
 
     var salesActivityItem = {
-        items: {},
+        paramsOrderId : params.orderId,
+        ssid : params.sid,
+        salesno : params.no,
+        activityId : params.activityId,
+
+        items: {
+            things : com.focusPage("#things"),
+            coupons : com.focusPage("#coupons"),
+            thingsName : com.focusPage("#thingsName"),
+            thingsNum : com.focusPage("#thingsNum"),
+            couponsName : com.focusPage("#couponsName"),
+            couponsNum : com.focusPage("#couponsNum"),
+            activityInfo : com.focusPage("#activityInfo"),
+            activity : com.focusPage("#activity")
+        },
         activity: {},
         name: {}
     };
 
     var activityItemType = {};
-    var paramsOrderId = params.orderId;
-    var ssid = params.sid;
-    var salesno = params.no;
-    var activityId = params.activityId;
-    var things = com.focusPage("#things");
-    var coupons = com.focusPage("#coupons");
-    var activityInfo = com.focusPage("#activityInfo");
-    salesActivityItem.activity = com.focusPage("#activity");
+
     salesActivityItem.items.content = com.focusPage("#salesActivityItemContent");
     salesActivityItem.salesActivityItemModal = com.focusPage("#salesActivityItemModal").on('show.bs.modal', function (e) {
+        salesActivityItem.items.things.html("");
+        salesActivityItem.items.coupons.html("");
+        salesActivityItem.items.thingsName.val('');
+        salesActivityItem.items.thingsNum.val('');
+        salesActivityItem.items.couponsName.val('');
+        salesActivityItem.items.couponsNum.val('');
+        com.resetTypeahead("thingsName", []);
+        com.resetTypeahead("couponsName", []);
         com.clearValidator();
     });
     salesActivityItem.salesActivityModal = com.focusPage("#salesActivityModal").on('show.bs.modal', function (e) {
@@ -29,7 +44,59 @@ $(function () {
         })
     }, null, false);
 
-    salesActivityItem.activity.activity = com.focusPage("#activity").on("change", function () {
+    com.focusPage("#thingsAdd").unbind().click(function(){
+        if(com.validate("thingsInputs","bottom")){
+            return;
+        }
+        createThings();
+        salesActivityItem.items.thingsName.val("");
+        salesActivityItem.items.thingsNum.val("");
+    });
+
+    com.focusPage("#couponsAdd").unbind().click(function(){
+        if(com.validate("couponInputs","bottom")){
+            return;
+        }
+        createCoupons();
+        salesActivityItem.items.couponsName.val("");
+        salesActivityItem.items.couponsNum.val("");
+    });
+
+    function createThings(){
+        var $li = $("<li></li>").css({"background-color":"#91b8d0", "margin-bottom":"5px", "margin-right":"5px"}).appendTo(com.focusPage("#things"));
+        var aisd = com.focusPage("#thingsName").attr("data-typeahead-key");
+        var thingsName = com.focusPage("#thingsName").val();
+        var num = com.focusPage("#thingsNum").val();
+        var $span = $("<span></span>").css({'color': '#fff'}).attr('thingsName', thingsName).attr('num', num).attr('asid', aisd).html(thingsName).appendTo($li);
+        var $spanTwo = $("<span></span>").css({'font-size':'16px', 'color':'#fff', 'margin':'0 5px'}).html(" 数量:" + num).appendTo($span);
+        var $a = $("<a></a>").addClass("glyphicon glyphicon-remove").css({'color': '#d15b47'}).appendTo($li);
+        $a.click(function () {
+            $li.remove();
+        });
+    }
+
+    function createCoupons(){
+        var $li = $("<li></li>").css({"background-color":"#91b8d0", "margin-bottom":"5px", "margin-right":"5px"}).appendTo(com.focusPage("#coupons"));
+        var couponsName = com.focusPage("#couponsName").val();
+        var aisd = com.focusPage("#couponsName").attr("data-typeahead-key");
+        var num = com.focusPage("#couponsNum").val();
+        var $span = $("<span></span>").css({'color':'#fff'}).attr('couponsName', couponsName).attr('num', num).attr('asid', aisd).html(couponsName).appendTo($li);
+        var $spanTwo = $("<span></span>").css({'font-size':'16px', 'color':'#fff', 'margin':'0 5px'}).html(" 数量:" + num).appendTo($span);
+        var $a = $("<a></a>").addClass("glyphicon glyphicon-remove").css({'color':'#d15b47'}).appendTo($li);
+        $a.click(function () {
+            $li.remove();
+        });
+    }
+
+    com.selectTypeahead("thingsName", [], 'asid', 'activityItemName');
+    com.selectTypeahead("couponsName", [], 'asid', 'activityItemName');
+    salesActivityItem.items.activity.on("change", function () {
+
+        salesActivityItem.items.thingsName.val('');
+        salesActivityItem.items.thingsNum.val('');
+        salesActivityItem.items.couponsName.val('');
+        salesActivityItem.items.couponsNum.val('');
+
         var $this = $(this);
 
         var _things = [];
@@ -42,11 +109,11 @@ $(function () {
         com.post(api.information.queryActivityItemByAid, options, function (res) {
 
             var _ = res.activityItems;
-
+            
             for (var i = 0; i < _.length; i++) {
 
                 var _activityItem = _[i];
-
+                
                 if (_activityItem.type == 0) {
                     _coupons.push({
                         asid: _activityItem.asid,
@@ -59,23 +126,15 @@ $(function () {
                     });
                 }
             }
-
-            things.chosen("destroy");
-            things.chosen({width: "216px", multi_type: "input"});
-            things.bindData(_things, 'asid', 'activityItemName', false);
-            things.trigger("chosen:updated");
-
-            coupons.chosen("destroy");
-            coupons.chosen({width: "216px", multi_type: "input"});
-            coupons.bindData(_coupons, 'asid', 'activityItemName', false);
-            coupons.trigger("chosen:updated");
+            com.resetTypeahead("thingsName", _things);
+            com.resetTypeahead("couponsName", _coupons);
         });
     });
 
     function orderList() {
 
         var $btnSub = $('<a></a>').addClass('btn btn-minier btn-success').html('领取物品');
-        var $h4 = $('<h4></h4>').addClass('oid').append($('<small></small>').addClass('blue')).html("装修单号:" + paramsOrderId);
+        var $h4 = $('<h4></h4>').addClass('oid').append($('<small></small>').addClass('blue')).html("装修单号:" + salesActivityItem.paramsOrderId);
         var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
         var $divWarp = com.focusPage("#paramsOrder").append($h4);
@@ -83,18 +142,6 @@ $(function () {
         $divBtnWrap.append($btnSub).appendTo($h4);
 
         $btnSub.click(function () {
-
-            var things = com.focusPage("#things");
-            things.chosen("destroy");
-            things.chosen({width: "42%", multi_type: "input"});
-            things.bindData([{aid: -1, activityName: ""}], "aid", "activityName", "money");
-            things.trigger("chosen:updated");
-
-            var coupon = com.focusPage("#coupons");
-            coupon.chosen("destroy");
-            coupon.chosen({width: "42%", multi_type: "input"});
-            coupon.bindData([{aid: -1, activityName: ""}], "aid", "activityName", "money");
-            coupon.trigger("chosen:updated");
 
             com.post(api.information.queryActivityForValid, {"activity.type": 3}, function (res) {
                 var activitys = res.activitys;
@@ -106,7 +153,7 @@ $(function () {
 
                     _activitys.push({aid: _activity.aid, activityName: _activity.name, money: _activitys.money});
                 }
-                salesActivityItem.activity.bindData(_activitys, "aid", "activityName", "money", false);
+                salesActivityItem.items.activity.bindData(_activitys, "aid", "activityName", "money", false);
             });
 
             salesActivityItem.salesActivityItemModal.modal("show")
@@ -122,12 +169,12 @@ $(function () {
     },null,false);
 
     orderList();
-    salesNo(activityId);
+    salesNo(salesActivityItem.activityId);
 
     function salesNo(activityId) {
         var $divWarp = com.focusPage("#paramsNo").empty();
         var $btnSub = $('<a></a>').addClass('btn btn-minier btn-success').html('修改活动');
-        var $h4 = $('<h4></h4>').addClass('oid').append($('<small></small>').addClass('blue')).html("销售单号:" + salesno);
+        var $h4 = $('<h4></h4>').addClass('oid').append($('<small></small>').addClass('blue')).html("销售单号:" + salesActivityItem.salesno);
         var $h4Name = $('<h4></h4>').addClass('oid').append($('<small></small>').addClass('blue')).html(salesActivityItem.name[activityId] == null ? "当前活动:无" : "当前活动名称:" + salesActivityItem.name[activityId]);
         var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
         $divWarp.append($h4).append($h4Name);
@@ -143,12 +190,9 @@ $(function () {
                 for (var i = 0; i < activitys.length; i++) {
 
                     var _activity = activitys[i];
-                    // if (_activity.aid == activityId) {
-                    //     com.focusPage("#activityName").val(_activity.name);
-                    // }
                     _activitys.push({aid: _activity.aid, activityName: _activity.name, money: _activitys.money});
                 }
-                activityInfo.bindData(_activitys, "aid", "activityName", "money", false);
+                salesActivityItem.items.activityInfo.bindData(_activitys, "aid", "activityName", "money", false);
             });
             salesActivityItem.salesActivityModal.modal("show");
         });
@@ -156,7 +200,7 @@ $(function () {
     }
 
     var options = {
-        "orderId": paramsOrderId
+        "orderId": salesActivityItem.paramsOrderId
     };
 
     //查询活动信息
@@ -381,8 +425,8 @@ $(function () {
             return;
         }
 
-        var sid = ssid;
-        var aid = com.focusPage("#activityInfo").find("option:selected").val();
+        var sid = salesActivityItem.ssid;
+        var aid = salesActivityItem.items.activityInfo.find("option:selected").val();
         var options = {
             "sales.sid": sid,
             "sales.activityId": aid
@@ -399,62 +443,50 @@ $(function () {
     //领取物品
     com.focusPage("#submitSalesActivityItemBtn").on("click", function () {
 
-        if (com.validate("salesActivityItemModal", "")) {
-            return;
-        }
-        if (things.val() == null && coupons.val() == null) {
+        if (salesActivityItem.items.things.html() == "" && salesActivityItem.items.coupons.html() == "") {
             com.showAlert(com.warning, "活动物品或券需要选择才能提交");
             return;
         }
+
         var submitFlag = true;
 
-        var orderId = paramsOrderId;
-        var activityName = com.focusPage("#activity").find("option:selected").text();
-        var aid = com.focusPage("#activity").find("option:selected").val();
+        var orderId = salesActivityItem.paramsOrderId;
+        var activityName = salesActivityItem.items.activity.find("option:selected").text();
+        var aid = salesActivityItem.items.activity.find("option:selected").val();
         var content = com.focusPage("#salesActivityItemContent").val();
 
         var index = 0;
         var options = {};
 
-        com.focusPage("[class='search-choice']", $("#things_chosen")).each(function (i, e) {
+        com.focusPage("#things li").each(function (i, e) {
 
             var _things = $(e);
 
-            if (!/^\d+$/.test(_things.children('span').children('input').val())) {
-                com.showAlert(com.warning, "请填写物品数量");
-                submitFlag = false;
-            }
-
             options["saleActivityItems[" + index + "].orderId"] = orderId;
             options["saleActivityItems[" + index + "].aid"] = aid;
-            options["saleActivityItems[" + index + "].asid"] = _things.attr("index");
+            options["saleActivityItems[" + index + "].asid"] = _things.children('span').attr("asid");
             options["saleActivityItems[" + index + "].activity"] = activityName;
-            options["saleActivityItems[" + index + "].name"] = _things.children('span').text().split(" ")[0];
+            options["saleActivityItems[" + index + "].name"] = _things.children('span').attr("thingsName").split(" ")[0];
             options["saleActivityItems[" + index + "].type"] = 1;
-            options["saleActivityItems[" + index + "].num"] = _things.children('span').children('input').val();
-            options["saleActivityItems[" + index + "].money"] = _things.children('span').text().split(" ")[1].split(':')[1];
+            options["saleActivityItems[" + index + "].num"] = _things.children('span').attr("num");
+            options["saleActivityItems[" + index + "].money"] = _things.children('span').attr("thingsName").split(" ")[1].split(':')[1];
             options["saleActivityItems[" + index + "].content"] = content;
 
             index++;
         });
 
-        com.focusPage("[class='search-choice']", $("#coupons_chosen")).each(function (i, e) {
+        com.focusPage("#coupons li").each(function (i, e) {
 
             var _coupons = $(e);
 
-            if (!/^\d+$/.test(_coupons.children('span').children('input').val())) {
-                com.showAlert(com.warning, "请填写券数量");
-                submitFlag = false;
-            }
-
             options["saleActivityItems[" + index + "].orderId"] = orderId;
             options["saleActivityItems[" + index + "].aid"] = aid;
-            options["saleActivityItems[" + index + "].asid"] = _coupons.attr("index");
+            options["saleActivityItems[" + index + "].asid"] = _coupons.children('span').attr("asid");
             options["saleActivityItems[" + index + "].activity"] = activityName;
-            options["saleActivityItems[" + index + "].name"] = _coupons.children('span').text().split(" ")[0];
+            options["saleActivityItems[" + index + "].name"] = _coupons.children('span').attr("couponsName").split(" ")[0];
             options["saleActivityItems[" + index + "].type"] = 0;
-            options["saleActivityItems[" + index + "].num"] = _coupons.children('span').children('input').val();
-            options["saleActivityItems[" + index + "].money"] = _coupons.children('span').text().split(" ")[1].split(':')[1];
+            options["saleActivityItems[" + index + "].num"] = _coupons.children('span').attr("num");
+            options["saleActivityItems[" + index + "].money"] = _coupons.children('span').attr("couponsName").split(" ")[1].split(':')[1];
             options["saleActivityItems[" + index + "].content"] = content;
 
             index++;
@@ -465,15 +497,15 @@ $(function () {
         }
 
         com.post(api.inventory.addSalesActivityItem, options, function (res) {
-            com.cleanItems(salesActivityItem.items);
             com.clearValidator();
+            salesActivityItem.items.things.html("");
+            salesActivityItem.items.coupons.html("");
+            salesActivityItem.items.thingsName.val('');
+            salesActivityItem.items.couponsName.val('');
             querySalesActivityItem();
         });
-        salesActivityItem.salesActivityItemModal.modal("hide");
-    });
 
-    //返回
-    com.focusPage("#backBtn").on("click", function () {
-        com.switchPage(api.index.querySalesIndex.url);
+        salesActivityItem.salesActivityItemModal.modal("hide");
+
     });
 });

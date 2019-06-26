@@ -1,4 +1,19 @@
 $(function () {
+
+    var stockRecord = {
+
+        subtype : {},
+
+        type : {}
+    };
+
+    com.post(api.ds.information, {}, function(res){
+
+        stockRecord.type = res.StockType.split("key", "value");
+        stockRecord.subtype = res.awardRecordSubtype.split("key", "value");
+
+    }, null, false);
+
     var displayFunc = (function () {
 
         var renderList = function (tableId, listData) {
@@ -23,9 +38,9 @@ $(function () {
             var $liTitle = $('<li></li>').addClass('line table-title');
 
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index'));
-            var $contentWrap = $('<div></div>').addClass('line-wrap  content col8');
+            var $contentWrap = $('<div></div>').addClass('line-wrap  content col9');
 
-            var titleName = '奖品,类型,数量,总价,单价,提交人,时间,说明';
+            var titleName = '奖品,类型,子类,数量,总价,单价,提交人,时间,说明';
 
             $.each(titleName.split(','), function (i, v) {
                 var $cell = $('<div></div>').addClass('cell').html(v);
@@ -44,16 +59,12 @@ $(function () {
             var $liLine = $('<li></li>').addClass('line');
 
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(i + 1));
-            var $contentWrap = $('<div></div>').addClass('line-wrap  content col8');
-            var type = {
-                "0": "入库",
-                "1": "出库",
-                "2": "盘盈",
-                "3": "盘亏"
-            };
+            var $contentWrap = $('<div></div>').addClass('line-wrap  content col9');
+
             var propertyArr = [
                 [v.awardStock.name],
-                [type[v.type]],
+                [stockRecord.type[v.type]],
+                [stockRecord.subtype[v.subtype]],
                 [v.num],
                 [v.totalPrice],
                 [v.unitPrice],
@@ -88,17 +99,11 @@ $(function () {
             }
         }
     })();
-    var $popup = com.focusPage('#stockRecordPopUp');
-
-    var opt = {
-        "awardRecord.awardStock.asId":$popup.attr("data-asid")
-
-    };
 
     var stockRecordSeacher = new Searcher();
     stockRecordSeacher.init([], null, api.information.pageAwardRecord, function (data) {
         displayFunc.init('resultListas', data);
-    }, "pagenationas", "pageStockRecordPostData", opt, false, null);
+    }, "pagenationas", "pageStockRecordPostData", {"awardRecord.awardStock.asId": params.asid}, false, null);
     //弹出内容许些样式
     com.focusPage('#resultListas').css({'width': '96%', 'margin': '0 auto'});
 

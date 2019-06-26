@@ -32,19 +32,24 @@
                                     <div class="ui-pg-div">
 
                                         <!--增项的的2个按钮-->
-                                        <button id="addNormalItemBtn" class="btn btn-minier btn-yellow col-md-4">
+                                        <button id="addNormalItemBtn" class="btn btn-minier btn-yellow col-md-5 hide">
+                                            <i class="icon-pencil"></i>报价项
+                                        </button>
+                                        
+                                        <button id="addQuotaionItemBtn" class="btn btn-minier btn-yellow col-md-5 hide">
                                             <i class="icon-pencil"></i>报价项
                                         </button>
 
-                                        <button id="addNewItemBtn" class="btn btn-minier btn-pink col-md-4" style="padding-left: 2px;" >
+                                        <button id="addNewItemBtn" class="btn btn-minier btn-pink col-md-5" style="padding-left: 2px;" >
                                             <i class="icon-pencil"></i>新增
                                         </button>
+                                        
                                     </div>
                                 </div>
                                 <div class="col-md-12 space-6"></div>
                                 <div class="col-md-12 ">
                                     <div class="ui-pg-div">
-                                        <button id="submitAddReduceDetailOKBtn" class="btn btn-minier btn-success col-md-4">
+                                        <button id="submitAddReduceDetailOKBtn" class="btn btn-minier btn-success col-md-5">
                                             <i class="icon-ok"></i>提交
                                         </button>
 
@@ -52,7 +57,7 @@
                                             <i class="icon-save"></i>保存
                                         </button> -->
 
-                                        <button id="detailBckBtn" class="btn btn-minier btn-info col-md-4" style="padding-left: 2px;" >
+                                        <button id="detailBckBtn" class="btn btn-minier btn-info col-md-5" style="padding-left: 2px;" >
                                             <i class="icon-mail-forward"></i>返回
                                         </button>
                                     </div>
@@ -108,8 +113,6 @@
                 </div>
             </div>
 
-
-
             <!-- 普通报价项弹层-->
             <div class="modal fade" id="addNormalItemModal" tabindex="-1" data-backdrop="static">
                 <div class="modal-dialog" style="width:900px;">
@@ -118,7 +121,7 @@
                             <button type="button" class="close" data-dismiss="modal">
                                 <span>&times;</span><span class="sr-only">Close</span>
                             </button>
-                            <h4 class="modal-title" id="addNormalItemDialog">普通报价项</h4>
+                            <h4 class="modal-title">普通报价项</h4>
                         </div>
                         <div class="modal-body">
                             <div class="row">
@@ -135,6 +138,29 @@
                         <div class="modal-footer">
                             <button type="button" id="saveaddNormalItemBtn" class="btn btn-primary">保存</button>
                             <button type="button" id="canceladdNormalItemBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 普通报价项弹层-->
+            <div class="modal fade" id="addQuotaionItemModal" tabindex="-1" data-backdrop="static">
+                <div class="modal-dialog" style="width:900px;">
+                    <div class="modal-content col-md-12">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">
+                                <span>&times;</span><span class="sr-only">Close</span>
+                            </button>
+                            <h4 class="modal-title">普通报价项</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-xs-12" id="quateList"></div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" id="saveQuoteItemBtn" class="btn btn-primary">保存</button>
+                            <button type="button" id="cancelQuoteItemBtn" class="btn btn-default" data-dismiss="modal">取消</button>
                         </div>
                     </div>
                 </div>
@@ -257,5 +283,5 @@
 </div>
 
 <script type="text/javascript">
-    $.loadScript(['js/quotation/extensionDetail.js?version=' + versionCode]);
+    $.loadScript(['js/quotation/extensionDetail.js']);
 </script>

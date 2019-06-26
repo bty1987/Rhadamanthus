@@ -87,6 +87,7 @@ public class ApprovalSalesDiscountServiceImpl implements ApprovalSalesDiscountSe
 		approvalSalesDiscountPO.setAid(approvalPO.getAid());
 		approvalSalesDiscountPO.setSid(sid);
 		approvalSalesDiscountPO.setReferMoney(approvalSalesDiscountVO.getReferMoney());
+		approvalSalesDiscountPO.setPaymentType(approvalSalesDiscountVO.getPaymentType());
 
 		approvalSalesDiscountDao.save(approvalSalesDiscountPO);
 
@@ -127,6 +128,7 @@ public class ApprovalSalesDiscountServiceImpl implements ApprovalSalesDiscountSe
 		salesPaymentPO.setCreater(sender);
 		salesPaymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		salesPaymentPO.setReferMoney(approvalSalesDiscountPO.getReferMoney());
+		salesPaymentPO.setType(approvalSalesDiscountPO.getPaymentType());
 
 		salesPaymentDao.save(salesPaymentPO);
 

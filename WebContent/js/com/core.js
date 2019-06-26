@@ -256,6 +256,8 @@
             
             var item = items[i]
             
+            if (!item) continue;
+            
             if (typeof item != 'object') continue;
             if (item[0].type == 'checkbox') {
                 item.prop("checked", false).trigger("change");
@@ -339,6 +341,8 @@
 
             $(this).css("border", "1px solid #d5d5d5").popover("destroy");
         });
+
+        layer.closeAll("tips");
     },
     /**
      * 提示
@@ -397,7 +401,7 @@
      * @param contents 提示内容
      */
     showInfo: function (title, contents) {
-        layer.alert(contents, {title: title, btn: [], shade: false, time: 5000});
+        layer.alert(contents, {skin: 'layui-layer-lan', title: title, btn: [], move: false});
     },
     /**
      * 贴示 , 吸附元素对象
@@ -413,6 +417,12 @@
         var _ = ["", "top", "right", "bottom", "left"].indexOf(placement);
         
         layer.tips(msg.errorMsg, $obj, {tips: [_ == -1 ? 2 : _, '#fd6b6b'], tipsMore: true, time: 5000});
+    },
+    /**
+     * 关闭提示
+     */
+    closePopover: function(){ 
+        layer.closeAll('tips'); 
     },
     /**
      * 加载页面 , 切换页面功能
@@ -589,10 +599,11 @@
         id = !/\W+/.test(id) ? '#' + id : id;
         
         var $ele = com.focusPage(id).typeahead({
-            list: [],
+            list: data,
             source: function (query, process) {
                 
                 var res = [];
+                var data = this.options.list;
                 
                 if(query.length < 2){
                     res = data.slice(0, 5);
@@ -605,7 +616,6 @@
             }, matcher: function (item) {
                 return true;
             }, callback: function (list) {
-                this.options.list = list;
                 this.flprocess(list, key, value);
             },
             isResultTypeMap: true,
@@ -638,55 +648,21 @@
         com.focusPage('#' + id).val(value).attr('data-typeahead-key', key);
     },
     /**
+     * 重置自动补全数据源
+     * @param id 页面标签/元素ID
+     * @param data 数据源
+     */
+    resetTypeahead: function(id, data){
+        id = !/\W+/.test(id) ? '#' + id : id;
+        
+        com.focusPage(id).typeahead("list", data)
+    },
+    /**
      * 获取自动补全对应key值
      * @param id 页面标签/元素ID
      */
     cleanTypeahead: function(id){
         com.focusPage('#' + id).val("").removeAttr('data-typeahead-key');
-    },
-    initChosen: function (id, url, name, post, result, key, value) {
-
-        var $e = com.focusPage('#' + id);
-
-        $e.chosen({
-            allow_single_deselect: true
-        });
-
-        var $i = $('#' + id + '_chosen input');
-        var $c = $('#' + id + '_chosen');
-
-        $i.bind("input", function () {
-            var $pinyin = $(this).val();
-
-            if ($(this).val() != "") {
-
-                var $p = {}; $p[name] = $pinyin;
-
-                com.post(url, $.extend({}, $p, post), function (res) {
-
-                    var html = '<option value="">&nbsp;</option>';
-
-                    if (res[result] != null) {
-                        var kv = res[result];
-                        var length = kv.length;
-
-                        for (var i = 0; i < length; i++) {
-                            var _ = kv[i];
-                            html += '<option value="' + _[key] + '">' + _[value] + '</option>';
-                        }
-                    }
-
-                    $e.html(html).trigger("chosen:updated");
-                });
-            }
-        });
-
-        $c.css("width", "200px");
-
-        return $e;
-    },
-    updateChosen: function (id, key, value) {
-        return com.focusPage("#" + id).html($('<option></option>').attr('value', key).text(value)).trigger("chosen:updated");
     },
     /**
      * 显示图片 , 图片标签赋值地址 , 返回显示图片地址
@@ -730,12 +706,18 @@
      */
     popup: function (title, url, success, cancel, isPrint) {
         
+        var _width = $(window).width();
+        var _height = $(window).height();
+        
+        var _area = [_width + "px", _height + "px"];
+        
         var options = {
             type: 2,
             skin: 'layui-layer-lan',
+            area: _area,
             title: title,
             content: url,
-            zIndex: 9999,
+            zIndex: 2500,
             maxmin: false,
             move: false,
             success: function () {
@@ -752,14 +734,8 @@
 
         if(isPrint){
             
-            var _width = $(window).width();
-            var _height = $(window).height();
-            
-            var _area = [_width + "px", _height + "px"];
-            
             var printConf = {
                 skin: "layui-layer-hong",
-                area: _area,
                 btn: ["打印"],
                 btn1: function(index, layero){
                     var body = layer.getChildFrame('body', index);
@@ -785,28 +761,74 @@
         return layer.open(options);
     },
     /**
+     * 弹窗 , 密你页类型
+     * @param container 页面容器
+     * @param holder 页面容器
+     * @param title 标题
+     * @param success 成功回调
+     * @param cancel 取消回调
+     * @param prepare 前置回调
+     * @returns 弹窗索引
+     */
+    popup4mini: function(container, holder, title, success, cancel, prepare){
+        
+        if(prepare && typeof(prepare) == 'function') prepare();
+        
+        var _holder = com.focusPage(holder).clone(true).show();
+        var _container = com.focusPage(container).html("").append($(_holder));
+        
+        var _width = (_holder.width() > 521 ? _holder.width() + 50 : 521);
+        var _height = $(window).height() * 0.8;
+        
+        var options = {
+            type: 1,
+            skin: 'layui-layer-lan',
+            title: title,
+            content: _container,
+            area: ["512px", _height + "px"],
+            maxmin: false,
+            move: false,
+            zIndex: 3500,
+            success: function (layer, index) {
+                if(success && typeof(success) == 'function') success();
+            },
+            cancel: function () {
+                if(cancel && typeof(cancel) == 'function') cancel();
+            },
+            end: function(){
+                _container.html("");
+            }
+        }
+        
+        return layer.open(options);
+    },
+    /**
      * 弹窗 , 编辑页类型
      * @param holder 页面容器
      * @param title 标题
      * @param success 成功回调
      * @param cancel 取消回调
+     * @param prepare 前置回调
      * @returns 弹窗索引
      */
-    popup4model: function(holder, title, success, cancel){
+    popup4model: function(holder, title, success, cancel, prepare){
+        
+        if(prepare && typeof(prepare) == 'function') prepare();
         
         var _holder = com.focusPage(holder);
         
         var _width = (_holder.width() > 521 ? _holder.width() + 50 : 521);
+        var _height = _holder.height() > $(window).height() * 0.8 ? $(window).height() * 0.8 : _holder.height() + 50;
         
         var options = {
             type: 1,
             skin: 'layui-layer-lan',
             title: title,
             content: _holder,
-            area: _width + "px",
+            area: [_width + "px", _height + "px"],
             maxmin: false,
             move: false,
-            zIndex: 9999,
+            zIndex: 3000,
             success: function (layer, index) {
                 if(success && typeof(success) == 'function') success();
             },
@@ -825,9 +847,12 @@
      * @param title 标题
      * @param success 成功回调
      * @param cancel 取消回调
+     * @param prepare 前置回调
      * @returns 弹窗索引
      */
-    popup4page: function(holder, url, title, success, cancel){
+    popup4page: function(holder, url, title, success, cancel, prepare){
+        
+        if(prepare && typeof(prepare) == 'function') prepare();
         
         var _holder = com.focusPage(holder);
         
@@ -844,7 +869,7 @@
             area: _area,
             maxmin: false,
             move: false,
-            zIndex: 9000,
+            zIndex: 2500,
             success: function (layer, index) {
                 _holder.load(url);
                 if(success && typeof(success) == 'function') success();
@@ -870,17 +895,30 @@
         com.popup(title, url, success, cancel, isPrint);
     },
     /**
+     * 关闭弹窗
+     * @param type 类型为字符串(tips/page) , 类型为对象 , 关闭对象所属的弹窗
+     */
+    closePopup: function(index){
+        if(index && typeof(index) == "object"){
+            layer.close(index.parents(".layui-layer").attr("times"));
+        }else if(index && typeof(index) == "string"){
+            layer.closeAll(index)
+        }else{
+            layer.closeAll()
+        }
+    },
+    /**
      * 日志打印信息
      * @param content 内容
      */
-    info: function (content) {
+    debug: function (content) {
         (config.logflag && config.logflag > 1) && console.info(content);
     },
     /**
      * 日志打印信息
      * @param content 内容
      */
-    error: function(content){
+    wrong: function(content){
         (config.logflag && config.logflag > 0) && console.error(content);
     },
     /**
@@ -951,19 +989,6 @@
             document.cookie = name + "=" + cval + ";expires=" + exp.toGMTString();
         }
     },
-    adaptDataArray: function (obj, callback) {
-        
-        var result = [];
-        
-        if (obj != undefined) {
-            for (var i = 0; i < obj.length; i++) {
-                var node = callback(obj[i], i);
-                result.push(node);
-            }
-        }
-
-        return result;
-    },
     /**
      * 格式化日期信息 , 格式为yyyy-MM-dd hh:mm:ss
      * @param name 名称
@@ -992,7 +1017,7 @@
      * @param args 请求参数
      * @param styles 图标元素样式
      */
-    charts: function(parentId, elementId, args, clazz, styles){
+    charts: function(parentId, elementId, args, clazz, styles, theme){
         
         if(!echarts) return false;
         
@@ -1001,19 +1026,97 @@
         if (!$parent) return false;
         
         styles = styles ? styles : {};
+        theme = theme ? theme : "light";
         
         var $element = $("<div></div>").attr("id", elementId).addClass(clazz).css(styles).appendTo($parent);
         
         if ($element.length == 0) return false;
         
         var $options = $.extend({}, com.chartdefault);
-        var $chart = echarts.init($element[0], "light");
+        var $chart = echarts.init($element[0], theme);
         
         $chart.showLoading();
         
         com._post_(api.home.library, args, function(res){
             $chart.hideLoading();
             $chart.setOption($.extend($options, res));
+        });
+        
+        return $chart;
+    },
+    /**
+     * 日期/时间初始化方法
+     * @param container 容器ID
+     * @param type 类型 , 支持: year , month , date , time
+     * @param range 是否为范围
+     */
+    datetime: function(container, type, range){
+        
+        if(container && typeof(container) == "object" && container.length) container = container;
+        else if(container && typeof(container) == "object") container = [container];
+        else if(container && typeof(container) == "string") container = com.focusPage(container);
+        else return false;
+        
+        $(container).attr("readonly", "readonly");
+        
+        type = type && typeof(type) == "string" ? ["year", "month", "date", "time"].indexOf(type) != -1 ? type : "date" : "date";
+        range = range ? true : false;
+        
+        var format = range ? "yyyy/MM/dd" : "yyyy-MM-dd";
+        
+        if(type == "month") format = "yyyy-MM";
+        else if(type == "time") format = "HH:mm:ss";
+        
+        $.each(container, function(i, e){
+            laydate.render({
+                elem: e,
+                type: type,
+                range: range,
+                format: format,
+                zIndex: 4500,
+                trigger: "click",
+                btns: ["clear", "now", "confirm"]
+            });
+        });
+    },
+    uploadify: function(container, title, clazz, exts, args, limit, success, fail){
+        
+        if(container && typeof(container) == "object" && container.length) container = container;
+        else if(container && typeof(container) == "string") container = com.focusPage(container);
+        else return false;
+        
+        var formData = $.extend({}, args);
+        var multi = limit && limit > 1 ? true : false;
+        var queueSizeLimit = limit ? limit : 1;
+        var fileTypeExts = exts ? exts : '*.jpg;*.jpeg;*.gif;*.png';
+        var buttonClass = clazz ? clazz : 'btn btn-success';
+        
+        container.html("").Huploadify({
+            'debug': false, // 开启调试
+            'auto': true, // 是否自动上传
+            'successTimeout': 150, // 超时时间
+            'formData': formData, // 附带值
+            'multi': multi, // 批量上传
+            'buttonClass': buttonClass,
+            'buttonText': title,
+            'overrideEvents' : ['onDialogClose'],  // 不执行默认的onSelect事件
+            'fileObjName': 'strutsUploads', // 服务器端脚本使用的文件对象的名称 $_FILES个['upload']
+            'uploader':config.media + api.common.uploadImg.url, // 上传处理程序
+            'height': '45', // 浏览按钮的高度
+            'fileTypeDesc': '支持的格式:', // 在浏览窗口底部的文件类型下拉菜单中显示的文本
+            'fileTypeExts': fileTypeExts, // 允许上传的文件后缀
+            'fileSizeLimit': '5MB', // 上传文件的大小限制
+            'queueSizeLimit' : limit, // 上传数量
+            'onUploadSuccess':function(file, data, response){ //上传到服务器,服务器返回相应信息到data里
+                var datas = eval("("+data+")");
+                if(datas.errorCode == 0 && typeof(success) == "function"){
+                    success(datas);
+                }else{
+                    com.showAlert(com.error, "上传失败");
+                    console.log(datas);
+                    if(typeof(fail) == "function") fail(datas);
+                }
+            }
         });
     }
 };
@@ -1075,7 +1178,7 @@
                         title: v.title,
                         area: ["40%", ( $(window).height() * 0.84 < 750 ? $(window).height() * 0.84 : 750 ) + "px"],
                         maxmin: false,
-                        zIndex: 9000,
+                        zIndex: 5000,
                         content: '<div class="help-content">'+ showHelpInfo(v.content) +'</div>'
                     });
                 }).css({"cursor": "pointer", "line-height": "18px"})
@@ -1156,17 +1259,12 @@
             return $this;
         }
         
-        if (key == undefined || value == undefined || key == "" || value == "") {
-            console.log("该控件无法绑定列表数据");
-            return $this;
-        }
-        
         $this.empty();
 
         var optionHTML = "";
 
         if (all) {
-            optionHTML = "<option value=''>全部</option>";
+            $("<option value=''>全部</option>").appendTo($this);
         }
 
         for (var i = 0; i < data.length; i++) {
@@ -1175,19 +1273,16 @@
             
             if (typeof item == 'object') {
                 var _o = other ? "other='" + item[other] + "'" : "";
-                optionHTML = optionHTML + "<option value='" + item[key] + "'" + _o + ">" + item[value] + "</option>";
+                $("<option value='" + item[key] + "'" + _o + ">" + item[value] + "</option>").appendTo($this);
             } else {
-                optionHTML = optionHTML + "<option value='" + item + "' multikey='multikey'>" + item + "</option>";
+                $("<option value='" + item + "' multikey='multikey'>" + item + "</option>").appendTo($this);
             }
         }
 
-        $(optionHTML).appendTo($this);
-
-        if (callback)  callback();
+        if (callback) callback();
         
         return $this;
     }
-
     /**
      * 开关switch样式初始化
      * @param clazz 样式 , 显示内容 , 需要提前定义
@@ -1244,14 +1339,5 @@
         weekStart: 0
     };
 
-    bootbox.setDefaults({
-        locale: "zh_CN",
-        show: true,
-        backdrop: true,
-        closeButton: true,
-        animate: true,
-        className: "my-modal"
-    });
-    
 })(jQuery);
 

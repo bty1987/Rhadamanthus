@@ -1,17 +1,17 @@
 $.extend(api.index, {
     querySalesIndex: {url: "views/sales/sales.html"},
-    salesItemDetialIndex: {url: "views/sales/salesItemDetial.html"},
-    addSalesItemsIndex: {url: "views/sales/addSalesItems.html"},
-    refundsItemDetialIndex: {url: "views/sales/refundsItemDetial.html"},
-    salesCollectionIndex: {url: "views/sales/salesCollection.html"},
+    salesItemDetialIndex: {url: "views/sales/salesItem.html"},
+    addSalesItemsIndex: {url: "views/sales/salesItem2add.html"},
+    refundsItemDetialIndex: {url: "views/sales/refundsItem.html"},
+    salesCollectionIndex: {url: "views/sales/sales4payment.html"},
     salesPaymentReceiptIndex: {url: "/views/payment/salesPaymentReceipt.html"},
-    salesPrintIndex: {url: "/views/sales/furnitureContract.html"},
+    salesPrintIndex: {url: "/views/sales/sales2print.html"},
     purchaseBalanceIndex: {url: "/views/manifest/purchaseBalance.html"},
     purchaseBalance2balanceIndex: {url: "/views/manifest/purchaseBalance2balance.html"},
     manifestPrintIndex: {url: "/views/manifest/manifest2print.html"},
     accessoriesPrintIndex: {url: "/views/manifest/accessories2print.html"},
     salesActivityIndex:{url:"/views/sales/salesActivity.html"},
-    salesSupplement: {url: "views/sales/salesSupplement.html"}
+    salesSupplement: {url: "views/sales/sales2supple.html"}
 });
 
 $.extend(api, {

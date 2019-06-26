@@ -11,11 +11,6 @@ jQuery(function ($) {
         saveBtn: com.focusPage("#saveBtn"),
         cancellBtn: com.focusPage("#cancelBtn"),
         
-        manifestItems: {
-            customerName: com.focusPage("#customer"),
-            des: com.focusPage("#comment")
-        },
-        
         record: {},
         supervisorId: null
     };
@@ -25,9 +20,7 @@ jQuery(function ($) {
     com.post(api.decoration.queryDecorationForCommonByOrderId, {
         "decoration.orderId": accessories.orderId
     }, function (res) {
-
         orderInfo('orderInfo', res.decoration);
-
     });
 
     com.post(api.inventory.queryStorehouseForSelf, {}, function (res) {
@@ -72,7 +65,7 @@ jQuery(function ($) {
         var $fetchTime = com.focusPage('[name="date"]','#fetchTime');
 
         if($fetchTime.val() == null || $fetchTime.val() == ""){
-            com.showAlert(com.warning,'请选择领取时间', );
+            com.showAlert(com.warning,'请选择领取时间');
             return;
         }
 
@@ -102,7 +95,7 @@ jQuery(function ($) {
     });
 
     $btnCancel.click(function () {
-        layer.closeAll();
+        com.closePopup();
     });
 
 

@@ -4,16 +4,10 @@ $(function () {
         salesPaymentModelNameData: ["cash", "bank", "checkv", "advance", "coupon"],
         salesPaymentTypeData: {},
         salesPaymentRevTypeData: {},
-        couponType: {},
-        couponTypeData: {},
         customerId: null,
-        items: {},
-        validator: {
-            price: {
-                type: 'v_price',
-                regex: /^[0-9]+\.{0,1}[0-9]{0,2}$/g,
-                errorMsg: "价格内容输入错误"
-            }
+        items: {
+            couponType: com.focusPage('#couponType'),
+            couponVal: com.focusPage("#couponVal")
         },
         bankNums: [],
         checkvNums: [],
@@ -24,42 +18,37 @@ $(function () {
         spids: [],
         decorationType: [],
         htmlName: "sales",
-        modelId: 'layerAdd'
+        modelId: 'layerAdd',
+        myModalLabel: com.focusPage("#myModalLabel"),
+        modals: {
+            layerAdd: com.focusPage("#layerAdd")
+        },
+
+        cash: [],
+        bank: [],
+        checkBank: [],
+        accounts: [],
+        couponType: [],
+
+        cashUtil: [],
+        bankUtil: [],
+        checkBankUtil: [],
+
+        cashInfo: {},
+        bankInfo: {},
+        checkBankInfo: {},
+        accountsInfo: {},
+        couponTypeData: {},
+
+        bankUtilForGrade: [],
+        checkBankUtilForGrade: []
     };
 
     var salesPaymentPostData = {};
 
-    salesPayment.layerAdd = com.focusPage("#layerAdd");
-    salesPayment.myModalLabel = com.focusPage("#myModalLabel");
-    salesPayment.items.couponType = com.focusPage('#couponType');
-
-    salesPayment.cash = [];
-    salesPayment.bank = [];
-    salesPayment.bankUtil = [];
-    salesPayment.checkBank = [];
-    salesPayment.accounts = [];
-    salesPayment.couponType = [];
-
-    salesPayment.cashUtil = [];
-    salesPayment.bankUtil = [];
-    salesPayment.checkBankUtil = [];
-
-    salesPayment.bankUtilForGrade = [];
-    salesPayment.checkBankUtilForGrade = [];
-
-    salesPayment.cashInfo = {};
-    salesPayment.bankInfo = {};
-    salesPayment.checkBankInfo = {};
-    salesPayment.accountsInfo = {};
-    salesPayment.couponTypeData = {};
-
     paymentUtils.getReceiptType(salesPayment);
-    com.focusPage("#couponType").bindData(salesPayment.couponType, 'no', 'name');
-    com.focusPage("#couponType").trigger("chosen:updated");
 
     com.selectTypeahead("salescashInfo", salesPayment.cashUtil, "key", "value", null);
-
-    $.extend(com.validator, salesPayment.validator);
 
     com.focusPage("#historySales").removeClass("active");
 
@@ -77,8 +66,6 @@ $(function () {
 
     com.focusPage("#advanceType").bindData([{"key": "1", "value": "合同预付款"}, {"key": "2", "value": "工程预付款"}, {"key": "3", "value": "主材预付款"}, {"key": "4", "value": "正林预付款"}], 'key', 'value');
 
-    var advanceType = null;
-
     com.focusPage("#advanceCheckbox").on("click", function () {
         changeValue();
     });
@@ -86,30 +73,6 @@ $(function () {
     com.focusPage("#advanceType").on("change", function () {
         changeValue();
     });
-
-    function changeValue() {
-        advanceType = com.focusPage("#advanceType option:checked").val();
-        var typeStr = "";
-
-        if (advanceType == 1) {
-            typeStr = "balanceAdvance";
-        } else if (advanceType == 2) {
-            typeStr = "projectAdvance";
-        } else if (advanceType == 3) {
-            typeStr = "materialAdvance";
-        } else if (advanceType == 4) {
-            typeStr = "zaterialAdvance";
-        }
-
-        var orderId = com.focusPage('#layerAdd').attr('orderId');
-
-        com.post(api.payment.queryAdvancePaymentByOrderId, {"decoration.orderId": orderId}, function (res) {
-            com.focusPage("#advance").val(res[typeStr]).attr("readonly", "readonly");
-        }, null, false);
-    }
-
-    com.focusPage("#couponType").chosen({width: "100%", multi_type: "input"});
-    com.focusPage("#refundCouponType").chosen({width: "100%", multi_type: "input"});
 
     com.focusPage("#salesbankAdd").on('click',function(){
         var num = $(this).attr("num");
@@ -135,6 +98,19 @@ $(function () {
         paymentUtils.addBankUtil(maxNum, "checkvDiv", "#salescheckvDivGroup", salesPayment.checkvNums, salesPayment.checkBankUtilForGrade, salesPayment.htmlName, 'layerAdd');
 
         return false;
+    });
+
+    //优惠券
+    com.selectTypeahead("couponType", salesPayment.couponType, 'no', 'name');
+
+    com.focusPage("#couponAdd").unbind().click(function(){
+        if(com.validate("couponInputs")){
+            return;
+        }
+
+        paymentUtils.createCounpon();
+
+        com.focusPage("#couponType").val('');
     });
 
     var displayFunc = (function () {
@@ -681,9 +657,9 @@ $(function () {
 
             var _coupon = 0;
             var _couponInfo = "#";
-            com.focusPage("li[class='search-choice']", '#couponType_chosen').each(function (i, v) {
-                var _ = $(v);
-                var _couponVal = _.find('input[name="multi_input"]').val();
+            com.focusPage("#couponUl>li").each(function (i, v) {
+                var _ = com.focusPage(v);
+                var _couponVal = _.children('span').attr('money');
 
                 if (_couponVal < 0) {
                     flagCoupon = false;
@@ -694,7 +670,7 @@ $(function () {
                 }
 
                 _coupon = utils.accAdd(parseFloat(_coupon), parseFloat(_couponVal));
-                _couponInfo += _.find('span').text() + ":" + _couponVal + "#";
+                _couponInfo += _.children('span').attr('typeName') + ":" + _couponVal + "#";
 
             });
 
@@ -746,5 +722,28 @@ $(function () {
         com.focusPage('#collectDes').val("");
 
         com.cleanTypeahead('salescashInfo');
+        com.cleanItems(salesPayment.items);
+        com.focusPage("#couponUl").html("");
     });
+
+    function changeValue() {
+        var advanceType = com.focusPage("#advanceType option:checked").val();
+        var typeStr = "";
+
+        if (advanceType == 1) {
+            typeStr = "balanceAdvance";
+        } else if (advanceType == 2) {
+            typeStr = "projectAdvance";
+        } else if (advanceType == 3) {
+            typeStr = "materialAdvance";
+        } else if (advanceType == 4) {
+            typeStr = "zaterialAdvance";
+        }
+
+        var orderId = com.focusPage('#layerAdd').attr('orderId');
+
+        com.post(api.payment.queryAdvancePaymentByOrderId, {"decoration.orderId": orderId}, function (res) {
+            com.focusPage("#advance").val(res[typeStr]).attr("readonly", "readonly");
+        }, null, false);
+    }
 });

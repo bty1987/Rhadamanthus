@@ -1,28 +1,20 @@
 jQuery(function ($) {
 
     var manifest = {
-        saveBtn: com.focusPage("#saveBtn"),
-        cancellBtn: com.focusPage("#cancelBtn"),
         items: {
             manifestTime: com.focusPage("#manifestTime"),
-            comment: com.focusPage("#comment")
+            comment: com.focusPage("#comment"),
+        },
+        btns:{
+            addManifestItem: com.focusPage("#addManifestItem"),
+            submitManifest: com.focusPage("#submitManifest"),
+            submitBtn:com.focusPage("#submitBtn"),
         },
         record: {},
-        validator: {
-            float3: {
-                type: "v_float_3",
-                regex: /^(\d+|\d+\.[0-9]{1,3})$/,
-                errorMsg: "单价输入内容格式错误"
-            }
-        },
         storehouses: []
     };
 
-    $.extend(com.validator, manifest.validator);
-
-    com.focusPage('.date-picker').datepicker(com.datepickerdefault);
-
-    var $layerSubmit = com.focusPage('#approvalSubmit');
+    com.datetime(manifest.items.manifestTime,"date",false);
 
     com.post(api.inventory.queryStorehouseForSelf, {}, function (res) {
 
@@ -36,7 +28,7 @@ jQuery(function ($) {
     //添加一条空行
     addline(1).addClass('current');
 
-    com.focusPage('#addManifestItem').click(function () {
+    manifest.btns.addManifestItem.click(function () {
 
         if (com.validate('list', 'bottom')) {
             return;
@@ -48,7 +40,7 @@ jQuery(function ($) {
 
     });
 
-    com.focusPage('#submitManifest').click(function () {
+    manifest.btns.submitManifest.click(function () {
 
         var $lines = com.focusPage('li.line', '#list');
 
@@ -65,87 +57,66 @@ jQuery(function ($) {
             return false;
         }
 
-        var options = {};
-
         approvalUtils.initqueryApprovalUser("approver", 11);
-
-        openSubmitlayer(function (index, layero) {
-
-            var approverId = com.focusPage('#approver').find('input:checked').attr('userid');
-
-            if (approverId == null || approverId == "") {
-                com.showAlert(com.warning, "请选择审批人");
-                return false;
-            }
-
-            var manifestTime = manifest.items.manifestTime.val();
-            var comment = manifest.items.comment.val();
-
-            options = {
-                "approval.receiver.userId": approverId,
-                "approval.comment": comment,
-
-                "approvalManifestDB.manifestTime": manifestTime,
-                "approvalManifestDB.comment": comment,
-                "approvalManifestDB.attachment": ""//– 附件路径
-            };
-
-            var $list = com.focusPage('li.line', '#list');
-
-            $list.length && $list.each(function (i, e) {
-
-                var $this = $(e);
-
-                options["approvalManifestDBItems[" + i + "].goods.gid"] = $this.attr('data-pgid');//– 商品id
-                options["approvalManifestDBItems[" + i + "].color.cid"] = $this.find('.color select').val();//– 颜色id
-                options["approvalManifestDBItems[" + i + "].format.fid"] = $this.find('.format select').val();//– 规格id
-
-                options["approvalManifestDBItems[" + i + "].instorehouse.shid"] = $this.find('.instorehouse select').val();// – 仓库ID
-                options["approvalManifestDBItems[" + i + "].outstorehouse.shid"] = $this.find('.outstorehouse select').val();//– 仓库ID
-
-                options["approvalManifestDBItems[" + i + "].num"] = $this.find('.number input').val();//– 数量
-                options["approvalManifestDBItems[" + i + "].comment"] = $this.find('.des input').val();// – 说明
-            });
-
-            com.post(api.approval.submitApprovalForManifestDB, options, function (data) {
-
-                layer.closeAll();
-
-                com.showAlert(com.info, "操作成功");
-
-                com.focusPage('#list').empty();
-
-                manifest.items.manifestTime.val(null);
-                manifest.items.comment.val("");
-
-                com.focusPage('#approver').empty();
-
-                addline(1).addClass('current');
-            }, null, false);
-        });
+        com.popup4model('#approvalSubmit',"调拨");
     });
 
-    function openSubmitlayer(callback) {
-        layer.closeAll();
-        layer.open({
-            type: 1,
-            skin: 'layui-layer-lan',
-            title: "调拨",
-            content: $layerSubmit,
-            area: ($(window).width() * 0.6 < 600 ? $(window).height() * 0.6 : 600) + "px",
-            maxmin: false,
-            zIndex: 9000,
-            btn: ['提交', '取消'],
-            yes: function (index, layero) {
-                callback(index, layero);
-            },
-            btn2: function (index, layero) {
-                com.focusPage('#approver').empty();
-            },
-            cancel: function () {
-                com.focusPage('#approver').empty();
-            }
+    manifest.btns.submitBtn.click(function () {
+        savaData();
+    });
+
+    function savaData(){
+        var approverId = com.focusPage('#approver').find('input:checked').attr('userid');
+
+        if (approverId == null || approverId == "") {
+            com.showAlert(com.warning, "请选择审批人");
+            return false;
+        }
+
+        var manifestTime = manifest.items.manifestTime.val();
+        var comment = manifest.items.comment.val();
+
+        var options = {
+            "approval.receiver.userId": approverId,
+            "approval.comment": comment,
+
+            "approvalManifestDB.manifestTime": manifestTime,
+            "approvalManifestDB.comment": comment,
+            "approvalManifestDB.attachment": ""//– 附件路径
+        };
+
+        var $list = com.focusPage('li.line', '#list');
+
+        $list.length && $list.each(function (i, e) {
+
+            var $this = $(e);
+
+            options["approvalManifestDBItems[" + i + "].goods.gid"] = $this.attr('data-pgid');//– 商品id
+            options["approvalManifestDBItems[" + i + "].color.cid"] = $this.find('.color select').val();//– 颜色id
+            options["approvalManifestDBItems[" + i + "].format.fid"] = $this.find('.format select').val();//– 规格id
+
+            options["approvalManifestDBItems[" + i + "].instorehouse.shid"] = $this.find('.instorehouse select').val();// – 仓库ID
+            options["approvalManifestDBItems[" + i + "].outstorehouse.shid"] = $this.find('.outstorehouse select').val();//– 仓库ID
+
+            options["approvalManifestDBItems[" + i + "].num"] = $this.find('.number input').val();//– 数量
+            options["approvalManifestDBItems[" + i + "].comment"] = $this.find('.des input').val();// – 说明
         });
+
+        com.post(api.approval.submitApprovalForManifestDB, options, function (data) {
+
+            com.closePopup();
+
+            com.showAlert(com.info, "操作成功");
+
+            com.focusPage('#list').empty();
+
+            manifest.items.manifestTime.val(null);
+            manifest.items.comment.val("");
+
+            com.focusPage('#approver').empty();
+
+            addline(1).addClass('current');
+        }, null, false);
     }
 
     //添加一个空行

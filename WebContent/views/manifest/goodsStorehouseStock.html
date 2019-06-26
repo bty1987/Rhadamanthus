@@ -1,4 +1,4 @@
-<div id="goodsStorehouseStockPageContent" class="page-content">
+<div id="goodsStorehouseStockPageContent">
 
     <div class="row">
         <div class="col-xs-12">
@@ -29,6 +29,11 @@
                             <label class="col-md-4 control-label no-padding-right orange">盘盈/盘亏</label>
                             <div class="col-md-8">
                                 <input type="text" class="col-xs-10 col-sm-5 v_required v_number" id="newNum" name="newNum" data-required="1" data-toggle="popover" data-trigger='manual' rules="{isAllDigit:true}" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-offset-4 col-md-9">
+                                <a class="btn btn-success btn-sm" id="confirm">确定</a>
                             </div>
                         </div>
                     </div>
@@ -72,6 +77,11 @@
                             <label class="col-md-4 control-label no-padding-right orange">仓库</label>
                             <div class="col-md-8">
                                 <select class="col-xs-10 col-sm-5 v_required" id="storehouse" name="storehouse" data-required="1" data-toggle="popover" data-trigger='manual' rules="{required:true}"></select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-offset-4 col-md-9">
+                                <a class="btn btn-success btn-sm" id="submitBtn">确定</a>
                             </div>
                         </div>
                     </div>

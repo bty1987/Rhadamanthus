@@ -28,7 +28,6 @@ jQuery(function($) {
 		houseItems: {},
 		editFlg: false,
 		buildingJson:null,
-		validator: {},
 		currentHsid: params.drawingId,
 		houseSourcePage: params.page,
 		currentHsStatus: params.hsStatus
@@ -46,15 +45,7 @@ jQuery(function($) {
 		maxHeight:'100%'
 	};
 
-	$.extend(com.validator, houseSourceDetail.validator);
-
-	com.focusPage(".date-picker").datepicker({autoclose: !0}).on("show",function() {
-		setTimeout(function() {
-			com.focusPage(".dropdown-menu").css("z-index", 1060)
-		},0)
-	}).next().on(ace.click_event,function() {
-		a(this).prev().focus()
-	});
+	com.datetime(com.focusPage(".date-picker"), "date");
 
 	var tag_input = com.focusPage("#indoores");
 
@@ -221,8 +212,6 @@ jQuery(function($) {
 	houseSourceDetail.modal.on('show.bs.modal',function(e){
 		com.clearValidator();
 	});
-
-	$.extend(com.validator, houseSourceDetail.validator);
 
 	//编辑
 	function updateHouseSource(){

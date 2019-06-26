@@ -1,13 +1,15 @@
 jQuery(function ($) {
 
-    var way = {};
-    var type = {};
-    var banks = {};
-    var _banks = [];
     var vpayment = {
 
-        saveBtn: null,
-        modal: null,
+        vpaymentPostData: {},
+
+        saveBtn: com.focusPage("#saveBtn"),
+        collectPaymentBtn: com.focusPage("#collectPaymentBtn"),
+
+        modals: {
+            vpaymentModal: com.focusPage("#vpaymentModal")
+        },
         items: {
             mno: com.focusPage('#mno'),
             orderId: com.focusPage('#orderId'),
@@ -15,51 +17,53 @@ jQuery(function ($) {
             brand: com.focusPage('#brand'),
             money: com.focusPage('#money'),
             comment: com.focusPage('#comment'),
-        }
+            referMoney: com.focusPage('#referMoney'),
+            checkbox: com.focusPage('input[type=checkbox]'),
+            collectDes: com.focusPage('#collectDes'),
+            cash: com.focusPage('#cash'),
+            couponVal: com.focusPage('#couponVal'),
+
+            bankDivGroup: com.focusPage('#bankDivGroup'),
+            couponUl: com.focusPage('#couponUl'),
+            bankAdd: com.focusPage('#bankAdd'),
+
+            cashDiv: com.focusPage('#cashDiv'),
+            bankDiv: com.focusPage('#bankDiv'),
+            couponDiv: com.focusPage('#couponDiv')
+        },
+
+        type: {},
+        banks: {},
+        _banks: [],
+
+        vpids: [],
+        couponInfo: "#",
+        couponType: []
     };
 
-    var vpaymentPostData = {};
+    vpayment.saveBtn.bindClick(saveData);
+    vpayment.collectPaymentBtn.bindClick(collectPayments);
 
-    vpayment.saveBtn = com.focusPage("#saveBtn").on("click", saveData);
-
-    vpayment.modal = com.focusPage("#vpaymentModal");
-    vpayment.modal.on('show.bs.modal', function (e) {
-        com.clearValidator("#vpayment.item", true);
-    });
-
+    com.initTypeahead('brand', api.data.queryBrandForPinYinName, "pinyinName", {}, "autoFillKeyValue", "value", "value" ,null);
+    com.selectTypeahead("couponType", vpayment.couponType, 'key', 'value' ,null);
 
     com.post(api.ds.information, {}, function (res) {
-        com.focusPage("#type").bindData(res.vpayment, "key", "value");
-        com.focusPage("#cashInfo").bindData(res.ways, "key", "value");
-        com.focusPage("#couponType").bindData(res.couponType, "key", "value");
-        $.each(res.vpayment, function (i, v) {
-            type[v.key] = v.value;
-        });
-        $.each(res.ways, function (i, v) {
-            way[v.key] = v.value;
-        });
+
+        vpayment.items.type.bindData(res.vpayment, "key", "value", false);
+        com.focusPage("#cashInfo").bindData(res.ways, "key", "value", false);
+
+        vpayment.type = res.vpayment.split("key", "value");
+        vpayment.banks = res.banks.split("key", "value");
+
         $.each(res.banks, function (i, v) {
-            banks[v.key] = v.value;
-            _banks.push(v);
+            vpayment._banks.push(v);
         });
-        $.each(res.couponType, function (i, v) {
-            couponType[v.key] = v.value;
+
+        $.each(res.couponType, function(i,v) {
+            vpayment.couponType.push(v);
         });
+
     }, null, false);
-
-    com.focusPage("#couponType").chosen({width: "100%", multi_type: "input"});
-
-
-    com.focusPage("#bankAdd").on('click', function () {
-
-        var num = $(this).attr("num");
-        var nextNum = parseInt(num) + 1;
-
-        addBankDiv(nextNum);
-        $(this).attr("num", nextNum);
-
-        return false;
-    });
 
     var displayFunc = (function () {
 
@@ -93,7 +97,7 @@ jQuery(function ($) {
                 ["创建时间:", v.createTime, "blue"],
                 ["收款人:", v.collecter.currentName, "grey"],
                 ["收款时间:", v.collectTime, "blue"],
-                ["类型:", type[v.type], "grey"],
+                ["类型:", vpayment.type[v.type], "grey"],
                 ["品牌:", v.brand == null || v.brand == "" ? "---" : v.brand, "grey"],
                 ["应收金额:", v.money, "blue"],
                 ["状态:", v.status == 1 ? "已付款" : "未付款", "red"],
@@ -119,7 +123,7 @@ jQuery(function ($) {
                 "status": v.status,
             }).addClass('ace ace-checkbox-2');
 
-            var _span = $('<span></span>').addClass('lbl blue bigger-150').css('font-weight', 'bold').html(type[v.type]);
+            var _span = $('<span></span>').addClass('lbl blue bigger-150').css('font-weight', 'bold').html(vpayment.type[v.type]);
 
             _label.append($input).append(_span).appendTo($label);
 
@@ -136,47 +140,28 @@ jQuery(function ($) {
 
             $liLine.append($h3).append($ulProperty);
 
-            //收款
             $btnCol.click(function () {
+                com.cleanItems(vpayment.items);
+                vpayment.items.couponUl.empty();
+                vpayment.items.bankDivGroup.empty();
+                com.cleanTypeahead("couponType");
+                vpayment.vpids = [];
+                com.focusPage("[name=top]").addClass("hide");
 
-                com.focusPage('#referMoney').val(v.money);
-                var $layerrAdd = com.focusPage('#layerAdd');
-                $layerrAdd.attr('vpid', v.vpid);
-                $layerrAdd.attr('mno', v.mno);
+                vpayment.items.referMoney.val(v.money);
+                vpayment.vpids.push(v.vpid);
 
-                var vpids = [v.vpid];
-                openlayer($btnCol.html(), function () {
+                $("li[class='search-choice']", com.focusPage('#couponType_chosen')).each(function (i, v) {
 
-                    var referMoney = com.focusPage('#referMoney').val();
-                    var flagCoupon = true;
-
-                    var _coupon = 0;
-                    var _couponInfo = "#";
-                    $("li[class='search-choice']", com.focusPage('#couponType_chosen')).each(function (i, v) {
-
-                        var _ = $(v);
-                        var _couponVal = _.find('input[name="multi_input"]').val();
-
-                        if (_couponVal < 0) {
-                            flagCoupon = false;
-                        }
-                        if (_couponVal == "") {
-                            _couponVal = 0;
-                        }
-
-                        _coupon = utils.accAdd(parseFloat(_coupon), parseFloat(_couponVal));
-                        _couponInfo += _.find('span').text() + ":" + _couponVal + "#";
-
-                    });
-
-                    if (!flagCoupon) {
-                    	com.showAlert(com.warning,"代金券价格填写错误");
-                        return
+                    var _ = $(v);
+                    var _couponVal = _.find('input[name="multi_input"]').val();
+                    if(_couponVal < 0){
+                        com.showAlert(com.warning,"代金券价格填写错误");
+                        return false;
                     }
 
-                    collectPayments(vpids, referMoney, _coupon, _couponInfo);
                 });
-
+                com.popup4model("#layerAdd", "收款");
             });
 
             return $liLine;
@@ -201,143 +186,16 @@ jQuery(function ($) {
 
     }, "pagenation", "vpaymentPostData", {"vpayment.status": 0}, false, null, function () {
 
-        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'createVpayment').css("margin", "0px 3px");
+        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'createVpayment').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
-        var $batch = $('<a></a>').addClass('btn btn-minier pull-left btn-info').attr('name', 'collects').css("margin", "0px 3px");
+        var $batch = $('<a></a>').addClass('btn btn-minier pull-left btn-info').attr('id', 'collects').css("margin", "0px 3px");
         var $batchi = $('<i></i>').addClass('icon-money bigger-110').appendTo($batch);
         var $batchspan = $('<span></span>').text('批量收款').appendTo($batch);
 
-        $batch.click(function () {
-
-            var $inputs = com.focusPage('input[name="vpids"]:checked', '#resultList');
-
-            var _mno = "";
-            var vpid = [];
-            var mnoId = [];
-            var mnoIdArr = [];
-            var referMoney = 0;
-            var flags = [];
-            var vpids = [];
-            var flag = 0;
-            var _paymentType = 0;
-
-            vpaymentPostData.paymentInfo = [];
-
-            $.each($inputs, function (i, v) {
-                var $input = $(v);
-
-                var row = {
-                    "vpid": $input.attr('vpid'),
-                    "mno": $input.attr("mno"),
-                    "orderId": $input.attr("orderId"),
-                    "money": $input.attr("money"),
-                    "status": $input.attr("status"),
-                };
-                flags.push(row.status);
-                vpaymentPostData.mno = _mno;
-
-                if (_paymentType == 0) {
-                    _paymentType = row.status;
-                }
-
-                vpaymentPostData.paymentInfo.push(row);
-
-                mnoIdArr.push(row.mno);
-                vpids.push(row.vpid);
-
-                referMoney += parseFloat(row.money);
-            });
-
-            $.each(mnoIdArr, function (i, v) {
-                if ($.inArray(v, mnoId) == -1) {
-                    mnoId.push(v);
-                }
-            });
-
-            $.each(flags, function (i, v) {
-                if (["1"].indexOf(v) != -1) {
-                    flag = 1;
-                }
-            });
-
-            if (!$inputs.length) {
-                com.showAlert(com.warning, "请选择结算款项");
-                return false;
-            }
-
-            if (flag == 1) {
-                com.showAlert(com.warning, "批量收款不支持已收款");
-                return false;
-            }
-
-            if (mnoId.length != 1) {
-                com.showAlert(com.warning, "批量收款不支持不同订单间的操作.");
-                return false;
-            }
-
-            com.focusPage('#layerAdd').attr('mno', mnoId[0]);
-
-            com.focusPage('#referMoney').val(referMoney);
-
-            openlayer($batchspan.text(), function () {
-                var flagCoupon = true;
-
-                var _coupon = 0;
-                var _couponInfo = "#";
-                $("li[class='search-choice']", com.focusPage('#couponType_chosen')).each(function (i, v) {
-
-                    var _ = $(v);
-                    var _couponVal = _.find('input[name="multi_input"]').val();
-
-                    if (_couponVal < 0) {
-                        flagCoupon = false;
-                    }
-                    if (_couponVal == "") {
-                        _couponVal = 0;
-                    }
-
-                    _coupon = utils.accAdd(parseFloat(_coupon), parseFloat(_couponVal));
-                    _couponInfo += _.find('span').text() + ":" + _couponVal + "#";
-
-                });
-
-                if (!flagCoupon) {
-                	com.showAlert(com.warning,"代金券价格填写错误");
-                    return
-                }
-
-                collectPayments(vpids, referMoney, _coupon, _couponInfo);
-            });
-
-        });
-
         return [$batch, $adda];
     }, 'resultList');
-
-    //添加
-    com.focusPage('a[name="createVpayment"]', '#pagenation').click(function () {
-        com.cleanTypeahead("collecter");
-        com.cleanItems(vpayment.items);
-        com.focusPage("#vpaymentModal").modal("show");
-        var $_modalBody = $('.modal-body');
-        var _brand = $_modalBody.find('input[name="brand"]');
-        _brand.attr('readonly', "readonly");
-        _brand.removeClass('v_required');
-        com.focusPage('#type').on('change', function () {
-            var way = $_modalBody.find('select[name="type"] option:selected').val();
-            var $brand = $_modalBody.find('input[name="brand"]');
-            if (way == 0 || way == 1) {
-                $brand.attr('readonly', "readonly");
-                $brand.removeClass('v_required');
-            } else if (way == 2 || way == 3) {
-                $brand.removeAttr('readonly');
-                $brand.addClass('v_required');
-            }
-        });
-        com.clearValidator();
-    });
 
     var hdisplayFunc = (function () {
 
@@ -371,7 +229,7 @@ jQuery(function ($) {
                 ["创建时间:", v.createTime, "blue"],
                 ["收款人:", v.collecter.currentName, "grey"],
                 ["收款时间:", v.collectTime, "blue"],
-                ["类型:", type[v.type], "grey"],
+                ["类型:", vpayment.type[v.type], "grey"],
                 ["品牌:", v.brand == null || v.brand == "" ? "---" : v.brand, "grey"],
                 ["应收金额:", v.money, "blue"],
                 ["状态:", v.status == 1 ? "已付款" : "未付款", "red"],
@@ -386,7 +244,7 @@ jQuery(function ($) {
 
             var _label = $('<label></label>');
 
-            var _span = $('<span></span>').addClass('lbl blue bigger-150').css('font-weight', 'bold').html(type[v.type]);
+            var _span = $('<span></span>').addClass('lbl blue bigger-150').css('font-weight', 'bold').html(vpayment.type[v.type]);
 
             _label.append(_span).appendTo($label);
 
@@ -421,7 +279,7 @@ jQuery(function ($) {
                 var _s = bankInfo.split('#');
                 for (var i = 1; i < _s.length - 1; i++) {
                     var _i = _s[i].split('|');
-                    info += banks[_i[0]] + " " + _i[1] + ", ";
+                    info += vpayment.banks[_i[0]] + " " + _i[1] + ", ";
                 }
                 return info;
             })(v.bank, v.bankInfo), "blue"]) : true;
@@ -453,79 +311,171 @@ jQuery(function ($) {
     })();
 
     var hsearcher = new Searcher();
-
     hsearcher.init(["vp_mno", "vp_brand", "v_createrName"], "hcondList", api.information.pageVpayment, function (data) {
         hdisplayFunc.init('hresultList', data);
-
     }, "hpagenation", "hvpaymentPostData", {"vpayment.status": 1}, false, null, function () {
-
     }, 'hresultList');
 
-    function openlayer(type, callback) {
-        layer.closeAll();
-        var index = layer.open({
-            type: 1,
-            title: type,
-            content: com.focusPage('#layerAdd'),
-            area: ["650px", ($(window).height() * 0.84 < 750 ? $(window).height() * 0.84 : 750) + "px"],
-            maxmin: false,
-            zIndex: 9000,
-            btn: ['确定', '取消'],
-            yes: function (index, layero) {
-                if (com.validate('layerAdd')) {
-                    return;
-                }
-                callback(index, layero);
-                searcher.doSearch();
-                hsearcher.doSearch();
-            },
-            btn2: function (index, layero) {
-                com.clearValidator();
-                searcher.doSearch();
-                closeLayer();
-            },
-            cancel: function () {
-                com.clearValidator();
-                searcher.doSearch();
-                closeLayer();
+    com.focusPage('#createVpayment', '#pagenation').click(function () {
+        com.cleanTypeahead("collecter");
+        com.clearValidator();
+        com.cleanItems(vpayment.items);
+
+        vpayment.modals.vpaymentModal.modal("show");
+
+        var $_modalBody = $('.modal-body');
+        var _brand = $_modalBody.find('input[name="brand"]');
+
+        _brand.attr('readonly', "readonly");
+        _brand.removeClass('v_required');
+
+        com.focusPage('#type').on('change', function () {
+
+            var way = $_modalBody.find('select[name="type"] option:selected').val();
+            var $brand = $_modalBody.find('input[name="brand"]');
+
+            if (way == 0 || way == 1) {
+                $brand.attr('readonly', "readonly");
+                $brand.val("");
+                $brand.removeClass('v_typeahead');
+            } else if (way == 2 || way == 3) {
+                $brand.removeAttr('readonly');
+                $brand.addClass('v_typeahead');
+            }
+
+        });
+    });
+
+    com.focusPage("#collects").click(function() {
+        com.cleanItems(vpayment.items);
+        vpayment.items.couponUl.empty();
+        vpayment.items.bankDivGroup.empty();
+        com.cleanTypeahead("couponType");
+        vpayment.vpids = [];
+        var $inputs = com.focusPage('input[name="vpids"]:checked', '#resultList');
+
+        var _mno = "";
+        var mnoId = [];
+        var mnoIdArr = [];
+        var referMoney = 0;
+        var flags = [];
+        var flag = 0;
+        var _paymentType = 0;
+
+        vpayment.vpaymentPostData.paymentInfo = [];
+
+        $.each($inputs, function (i, v) {
+            var $input = $(v);
+
+            var row = {
+                "vpid": $input.attr('vpid'),
+                "mno": $input.attr("mno"),
+                "orderId": $input.attr("orderId"),
+                "money": $input.attr("money"),
+                "status": $input.attr("status"),
+            };
+            flags.push(row.status);
+            vpayment.vpaymentPostData.mno = _mno;
+
+            if (_paymentType == 0) {
+                _paymentType = row.status;
+            }
+
+            vpayment.vpaymentPostData.paymentInfo.push(row);
+
+            mnoIdArr.push(row.mno);
+            vpayment.vpids.push(row.vpid);
+
+            referMoney += parseFloat(row.money);
+        });
+
+        $.each(mnoIdArr, function (i, v) {
+            if ($.inArray(v, mnoId) == -1) {
+                mnoId.push(v);
             }
         });
-    }
 
-    function closeLayer() {
+        $.each(flags, function (i, v) {
+            if (["1"].indexOf(v) != -1) {
+                flag = 1;
+            }
+        });
 
-        com.focusPage('#layerAdd').removeAttr("mno");
-        com.focusPage('#layerAdd').removeAttr("vpid");
+        if (!$inputs.length) {
+            com.showAlert(com.warning, "请选择结算款项");
+            return false;
+        }
 
-        com.focusPage('[name="top"]').addClass('hide');
-        com.focusPage('#cash').val("");
-        com.focusPage('#bankAdd').attr("num", 0);
-        com.focusPage('input[type="checkbox"]', '#form').removeAttr('checked');
-        com.focusPage('#bank').val("");
-        com.focusPage('#bankDivGroup').empty();
-        com.focusPage('.search-choice').find('input').val('');
-        com.focusPage('#collectDes').val("");
+        if (flag == 1) {
+            com.showAlert(com.warning, "批量收款不支持已收款");
+            return false;
+        }
 
-    }
+        if (mnoId.length != 1) {
+            com.showAlert(com.warning, "批量收款不支持不同订单间的操作.");
+            return false;
+        }
+
+        com.focusPage('#layerAdd').attr('mno', mnoId[0]);
+
+        $("li[class='search-choice']", com.focusPage('#couponType_chosen')).each(function (i, v) {
+
+            var _ = $(v);
+            var _couponVal = _.find('input[name="multi_input"]').val();
+
+            if (_couponVal < 0) {
+                com.showAlert(com.warning,"代金券价格填写错误");
+                return false;
+            }
+
+        });
+
+        vpayment.items.referMoney.val(referMoney);
+
+        com.popup4model("#layerAdd", "批量收款");
+    });
+
+    com.focusPage("#bankAdd").click(function() {
+
+        var num = $(this).attr("num");
+        var nextNum = parseInt(num) + 1;
+
+        addBankDiv(nextNum);
+        $(this).attr("num", nextNum);
+
+        return false;
+    });
+
+    com.focusPage("#couponAdd").unbind().click(function(){
+        if(com.validate("couponInputs")){
+            return false;
+        }
+
+        var $li = $("<li></li>").css({"background-color":"#91b8d0", "margin-bottom":"5px", "margin-right":"5px"}).appendTo(com.focusPage("#couponUl"));
+        var $span = $("<span></span>").css({'color':'#fff'}).attr('typeName', com.typeahead("couponType")).attr('money', vpayment.items.couponVal.val()).html(com.typeahead("couponType")).appendTo($li);
+        var $spanTwo = $("<span></span>").css({'font-size':'16px', 'color':'#fff', 'margin':'0 5px'}).html(vpayment.items.couponVal.val()).appendTo($span);
+        var $a = $("<a></a>").addClass("glyphicon glyphicon-remove").css({'color':'#d15b47'}).appendTo($li);
+
+        $a.click(function () {
+            $li.remove();
+        });
+
+        vpayment.items.couponVal.val('0');
+        com.cleanTypeahead("couponType");
+    });
 
     function saveData() {
-        if (com.validate()) {
-            return;
+        if (com.validate('redact')) {
+            return false;
         }
-        var $_modalBody = $('.modal-body');
-        var mno = com.focusPage("#mno").val();
-        var orderId = com.focusPage("#orderId").val();
-        var type = $_modalBody.find('select[name="type"] option:selected').val();
-        var brand = $_modalBody.find('input[name="brand"]').val();
-        var money = com.focusPage("#money").val();
-        var comment = com.focusPage("#comment").val();
+
         var options = {
-            'vpayment.mno': mno,
-            'vpayment.orderId': orderId,
-            'vpayment.type': type,
-            'vpayment.brand': brand,
-            'vpayment.money': money,
-            'vpayment.comment': comment
+            'vpayment.mno': vpayment.items.mno.val(),
+            'vpayment.orderId': vpayment.items.orderId.val(),
+            'vpayment.type': vpayment.items.type.val(),
+            'vpayment.brand': vpayment.items.brand.val(),
+            'vpayment.money': vpayment.items.money.val(),
+            'vpayment.comment': vpayment.items.comment.val()
         };
         com.post(api.information.createVpayment, options, function (res) {
             searcher.doSearch();
@@ -535,43 +485,25 @@ jQuery(function ($) {
             com.showAlert(com.info, "操作成功");
         });
 
-        vpayment.modal.modal("hide");
+        vpayment.modals.vpaymentModal.modal("hide");
     }
 
+    function collectPayments() {
 
-    com.focusPage('input[name="brand"]').typeahead({
-        url: api.data.queryBrandForPinYinName,//获取下拉列表的接口
-        list: [],
-        postData: {},//获取下拉列表的参数
-        source: function (query, process) {
-            var options = $.extend({pinyinName: query}, this.options.postData);
-            com.post(this.options.url, options, $.proxy(this.options.callback, this));
-        }, matcher: function (item) {
-            return true;
-        }, callback: function (data) {
-            this.options.list = data["brands"];
-            this.flprocess(this.options.list, ["bid"], ["name"]);
-        },
-        isResultTypeMap: true //必填值为true，获取key，value的标识，
-        , flupdater: function (k, v) {//下拉列表选中时的一些处理，必填对选中项的key和value做处理
-            com.focusPage('input[name="brand"]').attr('data-brand', v);
-            return v;
+        if(com.validate('layerAdd')) {
+            return false;
         }
-    });
 
-    //批量收款
-    function collectPayments(vpids, referMoney, coupon, couponInfo) {
-
-        var layerAdd = com.focusPage('#layerAdd');
         var bankAdd = com.focusPage("#bankAdd");
-        var mno = com.focusPage('#layerAdd').attr('mno');
-
-        var referMoney = parseFloat(referMoney);
-
-        checkPaymentHideFlag();
 
         var _bank = 0;
         var _bankInfo = "#";
+        var vpids = vpayment.vpids;
+        var referMoney = parseFloat(vpayment.items.referMoney.val());
+        var coupon = 0;
+        var couponInfo = vpayment.couponInfo;
+
+        checkPaymentHideFlag();
 
         var num = parseInt(bankAdd.attr("num"));
         for (var j = 0; j < num; j++) {
@@ -586,14 +518,17 @@ jQuery(function ($) {
             _bank = utils.accAdd(parseFloat(bankMoney), _bank);
         }
 
-        var cash = layerAdd.find('#cash').val();
-        var cashInfo = layerAdd.find('#cashInfo').val();
-
         var bank = _bank;
         var bankInfo = _bankInfo;
 
         var des = com.focusPage('#collectDes').val();
-        var realMoney = parseFloat(cash != "" ? cash : 0) + parseFloat(bank != "" ? bank : 0) + parseFloat(coupon != "" ? coupon : 0);
+        com.focusPage("#couponUl li").each(function (i, e) {
+            var _ = $(e);
+            var money = parseFloat(_.children("span").attr("money"));
+            coupon += money;
+        });
+
+        var realMoney = parseFloat(vpayment.items.cash.val() != "" ? vpayment.items.cash.val() : 0) + parseFloat(bank != "" ? bank : 0) + parseFloat(coupon != "" ? coupon : 0);
 
         if (referMoney != realMoney) {
             com.showAlert(com.warning, "当前实收款项总数与应收款项不等,请核实再进行提交!");
@@ -601,82 +536,41 @@ jQuery(function ($) {
         }
 
         var option = {
-            // "vpayment.vpid": vpid,
-            "vreceipt.cash": cash == "" ? 0 : cash,
-            "vreceipt.bank": bank == "" ? 0 : bank,
+            "vreceipt.cash": vpayment.items.cash.val(),
+            "vreceipt.bank": bank,
             "vreceipt.bankInfo": bankInfo,
-            "vreceipt.coupon": coupon == "" ? 0 : coupon,
+            "vreceipt.coupon": coupon,
             "vreceipt.couponInfo": couponInfo,
             "vreceipt.comment": des,
         };
-
 
         $.each(vpids, function (i, v) {
             option["vpayments[" + i + "].vpid"] = v;
         });
 
-        if (checkInfo()) {
-            com.post(api.information.collectVpayment, option, function () {
+        com.post(api.information.collectVpayment, option, function () {
+            com.closePopup();
+            com.showAlert(com.info,"收款成功");
+            searcher.doSearch();
+            hsearcher.doSearch();
+        });
 
-                layer.closeAll();
-                com.showAlert(com.info,"收款成功");
-                closeLayer();
-
-            });
-        }
-
-    }
+    };
 
     function checkPaymentHideFlag() {
 
-        if (com.focusPage('#cashDiv').hasClass('hide')) {
-            com.focusPage('#cash').val("");
+        if (vpayment.items.cashDiv.hasClass('hide')) {
+            vpayment.items.cash.val("");
         }
-        if (com.focusPage('#bankDiv').hasClass('hide')) {
+        if (vpayment.items.bankDiv.hasClass('hide')) {
 
-            com.focusPage('#bankAdd').attr("num", 0);
-            com.focusPage('#bankDivGroup').empty();
-
+            vpayment.items.bankAdd.attr("num", 0);
+            vpayment.items.bankDivGroup.empty();
         }
-        if (com.focusPage('#couponDiv').hasClass('hide')) {
-
-            com.focusPage('.search-choice').find('input').val("");
+        if (vpayment.items.couponDiv.hasClass('hide')) {
+            vpayment.items.couponUl.empty();
 
         }
-
-    }
-
-    function addBankDiv(index) {
-
-        var d = new Date();
-        var currentData = d.getFullYear() + "-" + ((d.getMonth() + 1).toString().length == 1 ? "0" : "") + (d.getMonth() + 1) + "-" + (d.getDate().toString().length == 1 ? "0" : "") + d.getDate();
-
-        var bankDiv = $('<div></div>').addClass('form-group').attr("id", "bankDiv_" + index).appendTo(com.focusPage("#bankDivGroup"));
-
-        var bankNameLabel = $('<label></label>').addClass('col-sm-3 control-label no-padding-right').text('开户行').appendTo(bankDiv);
-        var bankNameDiv = $('<div></div>').addClass('col-sm-8').appendTo(bankDiv);
-        var bankNameSelect = $('<select></select>').addClass('col-sm-6 v_required').attr("id", "bankName_" + index).attr("data-toggle", "popover").attr("data-trigger", "manual").bindData(_banks, 'key', 'value').appendTo(bankNameDiv);
-        var bankDelDiv = $('<div></div>').addClass('col-sm-1').appendTo(bankDiv);
-        var bankDelBtn = $('<button></button>').addClass('btn btn-minier btn-danger pull-right inline').text("删除").attr("id", "bankDel_" + index).attr("index", index).appendTo(bankDelDiv).click(function () {
-            $("#bankDiv_" + $(this).attr("index")).remove();
-            var bankAdd = com.focusPage("#bankAdd");
-            var num = bankAdd.attr("num");
-            bankAdd.attr("num", parseInt(num) - 1);
-            return false;
-        });
-
-        var bankMoneyLabel = $('<label></label>').addClass('col-sm-3 control-label no-padding-right').text('刷卡金额').appendTo(bankDiv);
-        var bankMoneyDiv = $('<div></div>').addClass('col-sm-8').appendTo(bankDiv);
-        var bankMoneyInput = $('<input></input>').addClass("col-sm-6 v_required v_float").attr("data-toggle", "popover").attr("data-trigger", "manual").attr("type", "text").attr("id", "bank_" + index).appendTo(bankMoneyDiv);
-
-        var bankDateLabel = $('<label></label>').addClass('col-sm-3 control-label no-padding-right').text('日期').appendTo(bankDiv);
-        var bankDateDiv = $('<div></div>').addClass('col-sm-8').appendTo(bankDiv);
-        var bankDateInput = $('<input></input>').addClass("date-picker-date col-sm-6 v_required").attr("data-toggle", "popover").attr("data-trigger", "manual").attr("type", "text").attr("id", "bankDate_" + index).attr("data-date-format", "yyyy-mm-dd").val(currentData).datepicker(com.datepickerdefault).appendTo(bankDateDiv);
-
-        var bankTimeLabel = $('<label></label>').addClass('col-sm-3 control-label no-padding-right').text('时间').appendTo(bankDiv);
-        var bankTimeDiv = $('<div></div>').addClass('col-sm-8').appendTo(bankDiv);
-        var bankTimePicker = $('<div></div>').addClass('bootstrap-timepicker').appendTo(bankTimeDiv);
-        var bankTimeInput = $('<input></input>').addClass('col-sm-6 v_time v_required').attr("type", "text").attr("id", "bankTime_" + index).attr("data-toggle", "popover").attr("data-trigger", "manual").mask('99:99:99').appendTo(bankTimePicker);
 
     }
 
@@ -700,108 +594,39 @@ jQuery(function ($) {
 
     baseClick();
 
-    //检查收款填写内容
-    function checkInfo() {
+    function addBankDiv(index) {
 
-        var flag = true;
+        var d = new Date();
+        var currentData = d.getFullYear() + "-" + ((d.getMonth() + 1).toString().length == 1 ? "0" : "") + (d.getMonth() + 1) + "-" + (d.getDate().toString().length == 1 ? "0" : "") + d.getDate();
 
-        if (!com.focusPage('#cashDiv').hasClass('hide')) {
+        var bankDiv = $('<div></div>').addClass('form-group').attr("id", "bankDiv_" + index).appendTo(com.focusPage("#bankDivGroup"));
 
-            var num = com.focusPage('#cash');
-            var numRex = /^(\d+|\d+\.[0-9]{1,4})$/;
+        var bankNameLabel = $('<label></label>').addClass('col-sm-3 control-label no-padding-right').text('开户行').appendTo(bankDiv);
+        var bankNameDiv = $('<div></div>').addClass('col-sm-8').appendTo(bankDiv);
+        var bankNameSelect = $('<select></select>').addClass('col-sm-6 v_required').attr("id", "bankName_" + index).attr("data-toggle", "popover").attr("data-trigger", "manual").bindData(vpayment._banks, 'key', 'value').appendTo(bankNameDiv);
+        var bankDelDiv = $('<div></div>').addClass('col-sm-1').appendTo(bankDiv);
+        var bankDelBtn = $('<button></button>').addClass('btn btn-minier btn-danger pull-right inline').text("删除").attr("id", "bankDel_" + index).attr("index", index).appendTo(bankDelDiv).click(function () {
+            $("#bankDiv_" + $(this).attr("index")).remove();
+            var bankAdd = com.focusPage("#bankAdd");
+            var num = bankAdd.attr("num");
+            bankAdd.attr("num", parseInt(num) - 1);
+            return false;
+        });
 
-            if (!(numRex.test(num.val()) && parseFloat(num.val()) >= 0)) {
-                num.focus().select();
-                num.addClass('tooltip-info').attr({
-                    "data-rel": "popover",
-                    "data-placement": "right",
-                    "data-original-title": "",
-                    "title": "",
-                    "data-content": "价格输入内容格式错误!"
-                }).popover('show');
-                flag = false;
-            } else {
-                num.popover('destroy');
-            }
+        var bankMoneyLabel = $('<label></label>').addClass('col-sm-3 control-label no-padding-right').text('刷卡金额').appendTo(bankDiv);
+        var bankMoneyDiv = $('<div></div>').addClass('col-sm-8').appendTo(bankDiv);
+        var bankMoneyInput = $('<input></input>').addClass("col-sm-6 v_float_3").attr("data-toggle", "popover").attr("data-trigger", "manual").attr("type", "text").attr("id", "bank_" + index).appendTo(bankMoneyDiv);
 
-        }
+        var bankDateLabel = $('<label></label>').addClass('col-sm-3 control-label no-padding-right').text('日期').appendTo(bankDiv);
+        var bankDateDiv = $('<div></div>').addClass('col-sm-8').appendTo(bankDiv);
+        var bankDateInput = $('<input></input>').addClass("date-picker-date col-sm-6 v_required").attr("data-toggle", "popover").attr("data-trigger", "manual").attr("type", "text").attr("id", "bankDate_" + index).attr("data-date-format", "yyyy-mm-dd").val(currentData).appendTo(bankDateDiv);
+        com.datetime(bankDateInput);
 
-        if (!com.focusPage('#bankDiv').hasClass('hide')) {
-
-            var date = com.focusPage('.date-picker-date', '#bankDivGroup');
-            if (!date.val()) {
-                date.focus().select();
-
-                date.addClass('popover-notitle').attr({
-                    "data-rel": "popover",
-                    "data-placement": "right",
-                    "data-original-title": "",
-                    "title": "",
-                    "data-content": "请选择日期"
-
-                }).popover('show');
-
-                flag = false;
-            } else {
-                date.popover('destroy');
-            }
-
-            var time = com.focusPage('.v_time', '#bankDivGroup');
-            var timerex = /^([0-1][0-9]|[2][0-3]):([0-5][0-9])$/;
-
-            $.each(time, function (i, v) {
-                var $v = $(v);
-                if (!$v.val() && !timerex.test($v.val())) {
-                    $v.focus().select();
-
-                    $v.addClass('popover-notitle').attr({
-                        "data-rel": "popover",
-                        "data-placement": "right",
-                        "data-original-title": "",
-                        "title": "",
-                        "data-content": "请填写正确的时间"
-
-                    }).popover('show');
-
-                    flag = false;
-
-                } else {
-
-                    $v.popover('destroy');
-
-                }
-
-            });
-
-            var price = com.focusPage('.v_price', '#bankDivGroup');
-            var priceRex = /^(\d+|\d+\.[0-9]{1,4})$/;
-
-            $.each(price, function (i, v) {
-                var $v = $(v);
-                if (!(parseFloat($v.val()) >= 0 && priceRex.test($v.val()))) {
-                    $v.focus().select();
-
-                    $v.addClass('popover-notitle').attr({
-                        "data-rel": "popover",
-                        "data-placement": "right",
-                        "data-original-title": "",
-                        "title": "",
-                        "data-content": "价格输入内容格式错误"
-
-                    }).popover('show');
-
-                    flag = false;
-
-                } else {
-
-                    $v.popover('destroy');
-
-                }
-
-            });
-        }
-
-        return flag;
+        var bankTimeLabel = $('<label></label>').addClass('col-sm-3 control-label no-padding-right').text('时间').appendTo(bankDiv);
+        var bankTimeDiv = $('<div></div>').addClass('col-sm-8').appendTo(bankDiv);
+        var bankTimePicker = $('<div></div>').addClass('bootstrap-timepicker').appendTo(bankTimeDiv);
+        var bankTimeInput = $('<input>').addClass('col-sm-6 v_time').attr("type", "text").attr("id", "bankTime_" + index).attr("data-toggle", "popover").attr("data-trigger", "manual").appendTo(bankTimePicker);
+        com.datetime(bankTimeInput,"time");
 
     }
 

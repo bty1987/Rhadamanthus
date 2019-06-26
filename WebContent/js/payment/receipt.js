@@ -8,19 +8,9 @@ jQuery(function ($) {
     receipt.items.executeDates = com.focusPage("#executeDates");
     receipt.items.executeTimes = com.focusPage("#executeTimes");
 
-    com.focusPage(".date-picker").datepicker(com.datepickerdefault).on("show", function () {
-        setTimeout(function () {
-            com.focusPage(".dropdown-menu").css("z-index", 9999)
-        }, 0)
-    }).next().on(ace.click_event, function () {
-        a(this).prev().focus()
-    });
+    com.datetime(com.focusPage("#executeDates"));
 
-    com.focusPage('#executeTimes').timepicker({
-        minuteStep: 1,
-        showSeconds: false,
-        showMeridian: false
-    });
+    com.datetime(com.focusPage('#executeTimes'), "time");
 
     com.post(api.ds.payment, {}, function (res) {
         var paymentTypes = res.receiptPaymentType;

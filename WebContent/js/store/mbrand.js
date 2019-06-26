@@ -114,7 +114,7 @@ $(function(){
                     if(com.validate('form1'))
                         return;
                     updateData(v, function(){
-                        layer.closeAll();
+                        com.closePopup();
                     });
                 });
             });
@@ -174,7 +174,7 @@ $(function(){
                 }
 
                 saveData(function(){
-                    layer.closeAll();
+                    com.closePopup();
                 });
             });
         });
@@ -182,7 +182,7 @@ $(function(){
     },'resultList');
 
     function openlayer(callback){
-        layer.closeAll();
+        com.closePopup();
         layer.open({
             type: 1,
             title:" ",

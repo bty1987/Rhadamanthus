@@ -139,8 +139,9 @@ jQuery(function($) {
 		com.clearValidator();
 	});
 	
-	com.focusPage(".date-picker-date").datepicker({autoclose:true});
-	com.focusPage(".maskInput").mask('99:99:99');
+	com.datetime(com.focusPage(".date-picker-date"), "date");
+	com.datetime(com.focusPage(".maskInput"), "time");
+	
 	com.focusPage('#dateRange').daterangepicker(com.dateramgepickerdefault);
 	com.focusPage('#contractTimeRange').daterangepicker(com.dateramgepickerdefault);
 	com.focusPage('#paymentTimeRange').daterangepicker(com.dateramgepickerdefault);

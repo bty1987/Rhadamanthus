@@ -471,7 +471,7 @@ $(function () {
         var houseNumber = createHouseNumber();
 
         var houseOption = {
-            "house.village.no" : customerSourceDesigner.items.villageNoDesiger.val(),
+            "house.village.no" : com.typeahead("villageNoDesiger"),
             "house.houseNumber" : houseNumber,
             "house.built" : customerSourceDesigner.items.built.val(),
             "house.unit" : customerSourceDesigner.items.unit.val(),

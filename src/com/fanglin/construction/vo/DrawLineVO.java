@@ -31,7 +31,7 @@ public class DrawLineVO implements Serializable {
 	private Timestamp applayTime;
 
 	private String content;
-	
+
 	private Long actualTime;
 
 	private Timestamp startTime;

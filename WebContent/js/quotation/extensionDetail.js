@@ -23,6 +23,9 @@ var ExtensionDetail = (function(){
                 addNormalItemModal : com.focusPage('#addNormalItemModal').on("show.bs.modal", function(a) {
                     $('input[name="modalQuots"]:checked').removeAttr('checked');
                 }),
+                addQuotaionItemModal : com.focusPage('#addQuotaionItemModal').on("show.bs.modal", function(a) {
+                    $('input[name="modalQuots"]:checked').removeAttr('checked');
+                }),
                 //自定义添加
                 addItemModal : com.focusPage("#addItemModal").on("show.bs.modal",function(){
                     com.focusPage("#itemName").val("");
@@ -86,6 +89,11 @@ var ExtensionDetail = (function(){
                 //选择普通报价项按钮点击(增项)
                 addNormalItemBtn : com.focusPage('#addNormalItemBtn').on(ace.click_event, function(){
                     modalEventBinding.showingModalName = "addNormalItemModal";
+                    that.$modals.functionAreaModal.modal("show");
+                }),
+              //选择普通报价项按钮点击(增项)
+                addQuotaionItemBtn : com.focusPage('#addQuotaionItemBtn').on(ace.click_event, function(){
+                    modalEventBinding.showingModalName = "addQuotaionItemModal";
                     that.$modals.functionAreaModal.modal("show");
                 }),
                 //新增(增项)
@@ -181,27 +189,31 @@ var ExtensionDetail = (function(){
         functionAreaModalConfirm : function(){
             var that = this;
             com.focusPage('#confirmItemBtn').off().on(ace.click_event, function(){
+                
                 if(com.validate()) return;
-
+                
                 var funcid = com.focusPage('#quotationFunctionAreaId').val();
                 that.functionAreaId = funcid;
                 that.functionAreaName = com.focusPage('#quotationFunctionAreaId').find('option:selected').text();
-
-                var _params = {
-                    "quotationFunctionAreaItem.quotationFunctionAreaId" : funcid
-                };
-                com.post(api.quotation.queryQuotationFunctionAreaItemByQuotationFunctionAreaId, _params, function(res){
-                    var $tableWrap = com.focusPage('#resultListn', extensionDetail.$modals.quotationItemModal).empty();
-                    var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
-                    if(res.quotationFunctionAreaItems && res.quotationFunctionAreaItems.length){
-                        $.each(res.quotationFunctionAreaItems,function(i, v){
-                            v.quotationItemDes = v.content;
-                            var $liLine = painter.createQuoteModalItem(v, "qfaiId");
-                            $liLine.appendTo($ul);
-                        });
-                        $ul.appendTo($tableWrap);
-                    }
-                }, null, false);
+                
+                if(that.showingModalName == "addQuotaionItemModal"){
+                    
+                    var _params = {
+                        "quotationFunctionAreaItem.quotationFunctionAreaId" : funcid
+                    };
+                    com.post(api.quotation.queryQuotationFunctionAreaItemByQuotationFunctionAreaId, _params, function(res){
+                        var $tableWrap = com.focusPage('#quateList', extensionDetail.$modals.quotationItemModal).empty();
+                        var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+                        if(res.quotationFunctionAreaItems && res.quotationFunctionAreaItems.length){
+                            $.each(res.quotationFunctionAreaItems,function(i, v){
+                                v.quotationItemDes = v.content;
+                                var $liLine = painter.createQuoteModalItem(v, "qfaiId");
+                                $liLine.appendTo($ul);
+                            });
+                            $ul.appendTo($tableWrap);
+                        }
+                    }, null, false);
+                }
 
                 extensionDetail.$modals.functionAreaModal.modal('hide');
                 extensionDetail.$modals[that.showingModalName].modal("show");
@@ -213,6 +225,12 @@ var ExtensionDetail = (function(){
             com.focusPage('#saveaddNormalItemBtn').off().on(ace.click_event, function(){
                 quote.addQuotesFromModal();
                 extensionDetail.$modals.addNormalItemModal.modal('hide');
+            });
+        },
+        addQuotationItemModalConfirm : function(){
+            com.focusPage('#saveQuoteItemBtn').off().on(ace.click_event, function(){
+                quote.addQuotesFromModal();
+                extensionDetail.$modals.addQuotaionItemModal.modal('hide');
             });
         },
         //自定义报价项确认按钮点击
@@ -232,20 +250,10 @@ var ExtensionDetail = (function(){
                     "subtype" : com.focusPage("#quotationType").val(),
                     "type" : extensionDetail.type == 0 ? 1 : 3,//类型(隐藏属性)
                     "discount" : 0
-                    //"ariId" : "",//增减项中报价项的id
                 };
 
-                /*
-                 api.addReduce.updateAddReduceItem ,
-                 参数 :
-                 ,
-                 "data-quoteItemId" : qv.quoteItemId
-                 addReduceItem.quoteItemId , 引用报价项Id , type类型为0, 1, 3需要传递该参数 , 同时分别传递普通报价项id , 系统定义项id , 报价中报价项Id ;
-                 addReduceItem.content , 说明信息 , type类型为2需要传递该参数 .
-                 */
-
                 var args = {
-                    "extensionItem.eiId" : "",//增减项报价项Id , 新建无此参数;
+                    "extensionItem.eiId" : "0",//增减项报价项Id , 新建无此参数;
                     "extensionItem.itemName" : addRow.itemName,//项目名;
                     "extensionItem.measurementUnit" : addRow.measurementUnit,//单位 ;
                     "extensionItem.workType" : addRow.workType,//工种 ;
@@ -280,6 +288,7 @@ var ExtensionDetail = (function(){
         init : function(){
             this.functionAreaModalConfirm();
             this.addNormalItemModalConfirm();
+            this.addQuotationItemModalConfirm();
             this.addItemModalConfirm();
         }
     };
@@ -353,11 +362,9 @@ var ExtensionDetail = (function(){
                     "quotationFunctionAreaName" : modalEventBinding.functionAreaName,//功能区
                     "quotationBigCategory" : $li.find("li .quotationBigCategory").text(),//大类
                     "measurementUnit" : $li.find("li .measurementUnit").text(),//单位
-                    // "unitPrice" : parseFloat($li.find("li .unitPrice").text() ? $li.find("li .unitPrice").text() : 0),//单价(折后单价、总价为计算值)
                     "unitPrice" : unitPrice,
                     "content" : $li.find("li .quotationItemDes").text(),//工艺说明
                     "workType" : $li.find("li .workType").text(),//工种
-                    //操作
                     "type" : extensionDetail.type == 0?0:2,//类型(隐藏属性)
                     "subtype" :$this.attr("data-quotationType") ,
                     "eid" : "",//增减项中报价项的id
@@ -369,7 +376,6 @@ var ExtensionDetail = (function(){
             });
             quote.quotesRecord = [];
         },
-
         /*选中报价项显示编辑input*/
         getNumCellFocus : function($line){
             var that = this;
@@ -398,15 +404,6 @@ var ExtensionDetail = (function(){
                 that.$nowLine.find('.cell.num .cell-wrap').text(num);
                 $line = that.$nowLine.next('.fl-quo-item');
                 var _type = that.$nowLine.find('.typedict').attr('data-type');
-
-                /*
-                 api.addReduce.updateAddReduceItem ,
-                 参数 :
-                 ,
-                 "data-quoteItemId" : qv.quoteItemId
-                 addReduceItem.quoteItemId , 引用报价项Id , type类型为0, 1, 3需要传递该参数 , 同时分别传递普通报价项id , 系统定义项id , 报价中报价项Id ;
-                 addReduceItem.content , 说明信息 , type类型为2需要传递该参数 .
-                 */
 
                 var args = {
                     "extensionItem.eiId" : that.$nowLine.find('input[name="eiId"]').val(),//增减项报价项Id , 新建无此参数;
@@ -490,18 +487,23 @@ var ExtensionDetail = (function(){
 
         //删除报价项
         deleteQuote : function($quote){
+            
             var that = this;
+            
             var _qid = $quote.find('input[type="hidden"]').val();
-            var _params = {};
             var $rqwrap = com.focusPage('#addReduceItemDiv');
             $rqwrap.find('.fl-quo-input').insertAfter($rqwrap.find('.fl-quo-list')).addClass('hide');
+            
+            var _params = {};
+            
             if(!_qid){
                 $quote.remove();
             }else{
                 $quote.attr('data-del-flag',1);
                 that.sortQuote();
+                
                 var sumobj = arCalculator.calculateArFees();
-                _params = [];
+                
                 _params["extensionItem.eiId"] = _qid;
                 _params["extensionItem.eid"] = extensionDetail.basicParams["extensionItem.eid"];
                 _params["extension.total"] = sumobj.sumd;
@@ -648,8 +650,6 @@ var ExtensionDetail = (function(){
                 qv.content && com.showTip(this, qv.content, 'left');
             });
 
-
-
             $item.attr('data-totalprice', utils.changeTwoDecimal(utils.accMul(qv.num ,  _dcp)) );
 
             return $item;
@@ -691,6 +691,12 @@ var ExtensionDetail = (function(){
                 arCalculator.changeSum(sumobj.sum, sumobj.sumd);
 
             }, null, false);
+            
+            if(extensionDetail.type == "0"){
+                com.focusPage('#addNormalItemBtn').removeClass('hide');
+            }else if(extensionDetail.type == "1"){
+                com.focusPage('#addQuotaionItemBtn').removeClass('hide');
+            }
 
             extensionDetail.init();
             modalEventBinding.init();

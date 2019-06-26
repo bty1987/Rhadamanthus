@@ -1,11 +1,15 @@
 jQuery(function ($) {
-    com.focusPage('#fl-statement').statement("客服控制", "回访信息列表");
 
     var backVisit = {
+
         saveBtn: com.focusPage("#saveBtn"),
         cancellBtn: com.focusPage("#cancelBtn"),
-        modal: com.focusPage("#backVisitModal"),
-        backVisitItems: {
+
+        modals:{
+            modal: com.focusPage("#backVisitModal")
+        },
+
+        items: {
             orderId : com.focusPage("#orderId"),
             orderAddr : com.focusPage("#orderAddr"),
             customerName : com.focusPage("#customerName"),
@@ -13,17 +17,24 @@ jQuery(function ($) {
             backVisitType : com.focusPage("#backVisitType"),
             backVisitDes : com.focusPage("#backVisitDes")
         },
-        levelDict: {"0": "普通", "1": "重要"},
-        backVisitTypeData: [{"id": "1", "name": "普通"}],
+
+        backVisitTypeData: {},
         editFlag: false,
         repeatFlg: false
     };
 
     backVisit.saveBtn.bindClick(saveData);
-    
-    backVisit.backVisitItems.backVisitType.bindData(backVisit.backVisitTypeData, "id", "name", false);
-                                             
-    com.focusPage('.date-picker').datepicker(com.datepickerdefault);
+
+    com.datetime(backVisit.items.backVisitTime);
+
+    com.post(api.ds.construction, {}, function (res) {
+        $.each(res.backVisitTypeData, function (i, v) {
+            backVisit.backVisitTypeData[v["key"]] = v["value"];
+        });
+
+        backVisit.items.backVisitType.bindData(res.backVisitTypeData, "key", "value", false);
+
+    }, null, false);
 
     var displayFunc = (function () {
         var renderList = function (tableId, listData) {
@@ -42,7 +53,7 @@ jQuery(function ($) {
         };
 
         var creatLine = function (v) {
-            var that = this;
+
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.orderId));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
@@ -55,7 +66,7 @@ jQuery(function ($) {
                 ["楼盘地址:", v.orderAddr, "grey"],
                 ["客户名:", v.customerName, "grey"],
                 ["时间:", v.backVisitTime, "green"],
-                ["类型:", typeInit(v), "red "],
+                ["类型:", backVisit.backVisitTypeData[v.backVisitType], "red "],
                 ["备注:", v.backVisitDes, "grey"]
             ];
 
@@ -74,20 +85,20 @@ jQuery(function ($) {
                 backVisit.editFlag = true;
                 var row = v;
 
-                backVisit.backVisitItems.orderId.val(params.orderId);
-                backVisit.backVisitItems.orderAddr.val(params.orderAddr);
-                backVisit.backVisitItems.customerName.val(params.customerName);
-                backVisit.backVisitItems.backVisitTime.val(row.backVisitTime);
-                backVisit.backVisitItems.backVisitType.val(row.backVisitType);
-                backVisit.backVisitItems.backVisitDes.val(row.backVisitDes);
+                backVisit.items.orderId.val(params.orderId);
+                backVisit.items.orderAddr.val(params.orderAddr);
+                backVisit.items.customerName.val(params.customerName);
+                backVisit.items.backVisitTime.val(row.backVisitTime);
+                backVisit.items.backVisitType.val(row.backVisitType);
+                backVisit.items.backVisitDes.val(row.backVisitDes);
 
                 backVisit["customerServiceBackVisit.csbvId"] = row.csbvId;
 
-                backVisit.backVisitItems.orderId.attr('disabled', true);
-                backVisit.backVisitItems.orderAddr.attr("disabled", true);
-                backVisit.backVisitItems.customerName.attr('disabled', true);
+                backVisit.items.orderId.attr('disabled', true);
+                backVisit.items.orderAddr.attr("disabled", true);
+                backVisit.items.customerName.attr('disabled', true);
 
-                backVisit.modal.modal("show");
+                backVisit.modals.modal.modal("show");
             });
 
             $btnDel.click(function () {
@@ -115,49 +126,28 @@ jQuery(function ($) {
         "customerServiceBackVisit.orderId": params.orderId
     }, false, null, function () {
 
-        var $adda = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'add').css("margin", "0px 3px");
+        var $adda = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('id', 'Add').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
-        var $addb = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'back').css("margin", "0px 3px");
-        var $addi = $('<i></i>').addClass('icon-mail-forward bigger-110').appendTo($addb);
-        var $addspan = $('<span></span>').text('返回').appendTo($addb);
-
-        return [$addb, $adda];
+        return [$adda];
     });
 
-    com.focusPage('a[name="add"]', '#pagenation').click(function () {
+    com.focusPage('#Add', '#pagenation').click(function () {
         backVisit.editFlag = false;
 
-        com.cleanItems(backVisit.backVisitItems);
+        com.cleanItems(backVisit.items);
 
-        backVisit.backVisitItems.orderId.val(params.orderId);
-        backVisit.backVisitItems.orderAddr.val(params.orderAddr);
-        backVisit.backVisitItems.customerName.val(params.customerName);
+        backVisit.items.orderId.val(params.orderId);
+        backVisit.items.orderAddr.val(params.orderAddr);
+        backVisit.items.customerName.val(params.customerName);
 
-        backVisit.backVisitItems.orderId.attr("disabled", true);
-        backVisit.backVisitItems.orderAddr.attr("disabled", true);
-        backVisit.backVisitItems.customerName.attr("disabled", true);
+        backVisit.items.orderId.attr("disabled", true);
+        backVisit.items.orderAddr.attr("disabled", true);
+        backVisit.items.customerName.attr("disabled", true);
 
-        backVisit.modal.modal("show");
+        backVisit.modals.modal.modal("show");
     });
-
-    com.focusPage('a[name="back"]', '#pagenation').click(function () {
-        com.switchPage(api.index.customerServiceIndex.url);
-    });
-
-    function typeInit(rowdata) {
-
-        var result = "";
-
-        for (var i = 0; i < backVisit.backVisitTypeData.length; i++) {
-            if (rowdata["backVisitType"] == backVisit.backVisitTypeData[i]["id"]) {
-                result = backVisit.backVisitTypeData[i]["name"];
-            }
-        }
-
-        return result;
-    }
 
     function saveData() {
         if (com.validate("backVisitModal") || backVisit.repeatFlg)
@@ -165,12 +155,12 @@ jQuery(function ($) {
 
         var url;
         var options = {
-            "customerServiceBackVisit.orderId": backVisit.backVisitItems.orderId.val(),
-            "customerServiceBackVisit.orderAddr": backVisit.backVisitItems.orderAddr.val(),
-            "customerServiceBackVisit.customerName": backVisit.backVisitItems.customerName.val(),
-            "customerServiceBackVisit.backVisitTime": backVisit.backVisitItems.backVisitTime.val(),
-            "customerServiceBackVisit.backVisitType": backVisit.backVisitItems.backVisitType.val(),
-            "customerServiceBackVisit.backVisitDes": backVisit.backVisitItems.backVisitDes.val()
+            "customerServiceBackVisit.orderId": backVisit.items.orderId.val(),
+            "customerServiceBackVisit.orderAddr": backVisit.items.orderAddr.val(),
+            "customerServiceBackVisit.customerName": backVisit.items.customerName.val(),
+            "customerServiceBackVisit.backVisitTime": backVisit.items.backVisitTime.val(),
+            "customerServiceBackVisit.backVisitType": backVisit.items.backVisitType.val(),
+            "customerServiceBackVisit.backVisitDes": backVisit.items.backVisitDes.val()
         };
 
         if (backVisit.editFlag) {
@@ -181,7 +171,7 @@ jQuery(function ($) {
         }
 
         com.post(url, options, successCallback, failCallback);
-        backVisit.modal.modal("hide");
+        backVisit.modals.modal.modal("hide");
     }
 
     function removeRow(id) {

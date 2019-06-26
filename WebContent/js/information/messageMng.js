@@ -2,45 +2,38 @@
 $(function(){
 
 	var message = {
-		saveBtn : com.focusPage("#saveBtn").on("click", saveData),
+		saveBtn : com.focusPage("#saveBtn"),
 		messageList : com.focusPage("#messageList"),
 	 	messageDetail : com.focusPage("#messageDetail"),
-		isPerformance : com.focusPage("#isPerformance").switchBtn("isOrNot"),
+		isPerformance : com.focusPage("#isPerformance"),
 		
-		status : {},
-		messageType : {},
-		
-		modal : com.focusPage("#messageModal").on('show.bs.modal',function(e){
-			com.clearValidator();
-		}),
+		modals:{
+			messageModal : com.focusPage("#messageModal")
+		},
 		messageItems: {
 			receiver : com.focusPage("#receiver"),
 			contents : com.focusPage("#contents")
 		},
 		currMessageId: "",
 
+		status : {},
+		messageType : {},
+
 		editFlag: false,
 		repeatFlg: false,
 	};
-	
-	com.initTypeahead('receiver', api.personel.queryUserByPinyin, "pinyinName", {"duty": "", "user.status":0}, "autoFillKeyValue", "key", "value", null);
 
-	com.focusPage("#returnBtn").on("click", function(){
-		com.focusPage(".sysMessage").text("系统消息");
-		
-		message.messageList.show();
-		
-		message.messageDetail.hide();
-	});
+	message.saveBtn.bindClick(saveData);
+
+	message.isPerformance.switchBtn("isOrNot");
+
+	com.initTypeahead('receiver', api.personel.queryUserByPinyin, "pinyinName", {"duty": "", "user.status":0}, "autoFillKeyValue", "key", "value", null);
 
 	com.post(api.ds.information,{},function(res){
 
-		$.each(res.messageStatus,function (i,va) {
-			message.status[va.key] = va.value;
-		});
-		$.each(res.messageType,function (i,v) {
-			message.messageType[v.key] = v.value;
-		});
+		message.status = res.messageStatus.split("key", "value");
+		message.messageType = res.messageType.split("key", "value");
+
 	},null,false);
 
 	var displayFunc  = (function(){
@@ -107,43 +100,54 @@ $(function(){
 		
 	}, "pagenation", "messageMngPostData", null, false, null, function(){
 
-		var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addVillage').css("margin", "0px 3px");
+		var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'addMessage').css("margin", "0px 3px");
 		var $addi = $('<i></i>').addClass('icon-envelope bigger-110').appendTo($adda);
 		var $addspan = $('<span></span>').text('发消息').appendTo($adda);
 
-		$adda.click(function(){
-			message.editFlg = false;
-
-			com.cleanItems(message.messageItems);
-
-			com.cleanTypeahead('receiver');
-
-			message.modal.modal("show");
-		});
-
-		var $reada = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'addVillage').css("margin", "0px 3px");
+		var $reada = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('id', 'reMessage').css("margin", "0px 3px");
 		var $readi = $('<i></i>').addClass('icon-eye-open bigger-110').appendTo($reada);
 		var $readspan = $('<span></span>').text('已读').appendTo($reada);
-
-		$reada.click(function(){
-			var nums = com.focusPage('input[name="mmids"]:checked');
-			if(nums==null || nums.length ==0){
-				return;
-			}
-			var options = {};
-			$.each(nums, function(i, v){
-				options["mids["+i+"]"] = $(v).val();
-			});
-			com.post(api.information.updateMessageForRead, options, successCallback);
-		});
 
 		return [$adda, $reada];
 	});
 
+	com.focusPage("#addMessage").click(function() {
+		message.editFlg = false;
+
+		com.clearValidator();
+		com.cleanItems(message.messageItems);
+		com.cleanTypeahead('receiver');
+
+		message.modals.messageModal.modal("show");
+	});
+
+	com.focusPage("#reMessage").click(function() {
+
+		var nums = com.focusPage('input[name="mmids"]:checked');
+		if(nums==null || nums.length ==0){
+			return;
+		}
+		var options = {};
+
+		$.each(nums, function(i, v){
+			options["mids["+i+"]"] = $(v).val();
+		});
+
+		com.post(api.information.updateMessageForRead, options, successCallback);
+	});
+
+	com.focusPage("#returnBtn").click(function() {
+		com.focusPage(".sysMessage").text("系统消息");
+
+		message.messageList.show();
+
+		message.messageDetail.hide();
+	});
+
 	function saveData(){
 
-		if(com.validate() || message.repeatFlg)
-			return;
+		if(com.validate('form') || message.repeatFlg)
+			return false;
 
 		var options = {
 			"message.receiver.userId": com.typeahead("receiver"),
@@ -152,7 +156,7 @@ $(function(){
 		};
 
 		com.post(api.information.sendMessage, options, function(){
-			message.modal.modal("hide");
+			message.modals.messageModal.modal("hide");
 			successCallback();
 		});
 	}

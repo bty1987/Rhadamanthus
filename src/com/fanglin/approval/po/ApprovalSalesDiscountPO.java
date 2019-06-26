@@ -24,6 +24,8 @@ public class ApprovalSalesDiscountPO implements java.io.Serializable {
 	private long sid;
 	
 	private float referMoney;
+	
+	private short paymentType;
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -62,5 +64,15 @@ public class ApprovalSalesDiscountPO implements java.io.Serializable {
 
 	public void setReferMoney(float referMoney) {
 		this.referMoney = referMoney;
+	}
+
+	
+	@Column(name = "paymenttype")
+	public short getPaymentType() {
+		return paymentType;
+	}
+
+	public void setPaymentType(short paymentType) {
+		this.paymentType = paymentType;
 	}
 }

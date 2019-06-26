@@ -1,4 +1,4 @@
-<div id="decorationPaymentContent" class="page-content">
+<div id="decorationPaymentContent">
 
 	<div class="row">
 		<div class="col-xs-12">
@@ -56,13 +56,13 @@
 									<div class="form-group">
 										<label class="col-md-3 control-label" for="referMoney">应收款</label>
 										<div class="col-md-9">
-											<input type="text" id="referMoney"class="col-xs-10 col-sm-6 v_required v_float" data-toggle="popover" data-trigger='manual' maxlength="8"/>
+											<input type="text" id="referMoney"class="col-xs-10 col-sm-6 v_required v_float_3" data-toggle="popover" data-trigger='manual' maxlength="8"/>
 										</div>
 									</div>
 									<div class="form-group" id="serviceMoney" style="display: none">
 										<label class="col-md-3 control-label" for="referMoney">剩余服务费</label>
 										<div class="col-md-9">
-											<input type="text" id="sMoney" class="col-xs-10 col-sm-6 v_required v_float" data-toggle="popover" data-trigger='manual' maxlength="8"/>
+											<input type="text" id="sMoney" class="col-xs-10 col-sm-6 v_required v_float_3" data-toggle="popover" data-trigger='manual' maxlength="8"/>
 										</div>
 									</div>
 									<div class="space-4 "></div>
@@ -97,7 +97,7 @@
 						      		<div class="form-group">
 										<label for="cash" class="col-md-3 control-label no-padding-right">现金金额</label>
 										<div class="col-md-9 block no-padding-right">
-											<input type="text" id="cash" class="col-xs-10 col-sm-5 v_required v_float"  data-toggle="popover" data-trigger='manual' maxlength="8"/>
+											<input type="text" id="cash" class="col-xs-10 col-sm-5 v_required v_float_3"  data-toggle="popover" data-trigger='manual' maxlength="8"/>
 										</div>
 									</div>
 									<div class="space-4 "></div>
@@ -123,7 +123,6 @@
 		      			</div>
 		      			
 						<div class="modal-footer ">
-							<span id="paymentInfo" class="alert-danger pull-left inline"></span>
 							<button type="button" id="collectBtn" class="btn btn-primary">收款</button>
 				        	<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
 				      	</div>

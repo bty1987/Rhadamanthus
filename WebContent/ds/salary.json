@@ -12,19 +12,25 @@
   ],
  
   "SalaryTwoType": [
-    {"key": "1", "name": "工费"},
-    {"key": "2", "name": "增项"},
-    {"key": "3", "name": "油工一级奖励"},
-    {"key": "4", "name": "维修款"},
-    {"key": "5", "name": "罚款"},
-    {"key": "6", "name": "工程质保金"},
-    {"key": "7", "name": "工具押金"},
-    {"key": "8", "name": "借款"},
-    {"key": "9", "name": "工人家属保险"}
+    {"key": "1", "name": "工费","oneType":"0"},
+    {"key": "2", "name": "增项","oneType":"0"},
+    {"key": "3", "name": "油工一级奖励","oneType":"0"},
+    {"key": "4", "name": "维修款","oneType":"2"},
+    {"key": "5", "name": "罚款","oneType":"1"},
+    {"key": "6", "name": "工程质保金","oneType":"3"},
+    {"key": "7", "name": "工具押金","oneType":"3"},
+    {"key": "8", "name": "借款","oneType":"3"},
+    {"key": "9", "name": "工人家属保险","oneType":"3"}
   ],
-  "oneType": [
+  "type":[
     {"id": 0, "name": "加"},
     {"id": 1, "name": "减"}
+  ],
+  "oneType": [
+    {"id": 0, "name": "工费"},
+    {"id": 1, "name": "扣/罚"},
+    {"id": 2, "name": "转款"},
+    {"id": 3, "name": "其他"}
   ],
   "twoType": [
     {"id": 0, "oneType": 0, "name": "基本"},
@@ -48,6 +54,16 @@
     {"id": 2, "oneType": 0, "twoType": 1, "thrType": 2, "name": "销售"},
     {"id": 3, "oneType": 1, "twoType": 2, "thrType": 0, "name": "迟到"},
     {"id": 4, "oneType": 1, "twoType": 2, "thrType": 0, "name": "早退"}
+  ],
+  "status" :[
+    {"key":"0", "value":"初始"},
+    {"key":"1", "value":"通过"},
+    {"key":"2", "value":"驳回"},
+    {"key":"3", "value":"撤销"}
+  ],
+  "statusBalance" :[
+    {"key":"0", "value":"有效"},
+    {"key":"1", "value":"无效"}
   ],
 "errorCode": 0,
   "errorMsg": null

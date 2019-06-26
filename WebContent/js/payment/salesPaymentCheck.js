@@ -3,52 +3,45 @@ $(function () {
     var salesPaymentForStatus = {
         salesPaymentTypeData: {},
         salesPaymentRevTypeData: {},
-        couponType: {},
-        couponTypeData: {},
         customerId: null,
-        items: {},
+        items: {
+            couponType: com.focusPage('#couponType')
+        },
         bankNums: [],
         checkvNums: [],
         coupon: 0,
         couponInfo: null,
         htmlName: "salesCheck",
         modelId: 'layerAddSalesCheck',
-        validator: {
-            price: {
-                type: 'v_price',
-                regex: /^[0-9]+\.{0,1}[0-9]{0,2}$/g,
-                errorMsg: "价格内容输入错误"
-            }
-        }
+        myModalLabel: com.focusPage("#myModalLabelSalesCheck"),
+        modals: {
+            layerAdd: com.focusPage("#layerAddSalesCheck")
+        },
+
+        cash: [],
+        bank: [],
+        checkBank: [],
+        accounts: [],
+        couponType: [],
+
+        cashUtil: [],
+        bankUtil: [],
+        checkBankUtil: [],
+
+        cashInfo: {},
+        bankInfo: {},
+        checkBankInfo: {},
+        accountsInfo: {},
+        couponTypeData: {},
+
+        bankUtilForGrade: [],
+        checkBankUtilForGrade: []
     };
-
-    salesPaymentForStatus.layerAdd = com.focusPage("#layerAddSalesCheck");
-    salesPaymentForStatus.myModalLabel = com.focusPage("#myModalLabelSalesCheck");
-    salesPaymentForStatus.items.couponType = com.focusPage('#couponType');
-
-    salesPaymentForStatus.cash = [];
-    salesPaymentForStatus.bank = [];
-    salesPaymentForStatus.checkBank = [];
-    salesPaymentForStatus.accounts = [];
-    salesPaymentForStatus.couponType = [];
-
-    salesPaymentForStatus.cashInfo = {};
-    salesPaymentForStatus.bankInfo = {};
-    salesPaymentForStatus.checkBankInfo = {};
-    salesPaymentForStatus.accountsInfo = {};
-    salesPaymentForStatus.couponTypeData = {};
-
-    salesPaymentForStatus.cashUtil = [];
-    salesPaymentForStatus.bankUtil = [];
-    salesPaymentForStatus.checkBankUtil = [];
-
-    salesPaymentForStatus.bankUtilForGrade = [];
-    salesPaymentForStatus.checkBankUtilForGrade = [];
 
     paymentUtils.getReceiptType(salesPaymentForStatus);
 
     //隐藏触发
-    com.focusPage("#layerAddSalesCheck").on('hidden.bs.modal', function(){
+    salesPaymentForStatus.modals.layerAdd.on('hidden.bs.modal', function(){
         com.cleanItems("layerAddSalesCheck");
         com.clearValidator("layerAddSalesCheck");
 
@@ -105,8 +98,6 @@ $(function () {
 
         return false;
     });
-
-    $.extend(com.validator, salesPaymentForStatus.validator);
 
     com.post(api.ds.payment, {}, function (res) {
         for (var i = 0; i < res.materialPaymentType.length; i++) {
@@ -552,7 +543,7 @@ $(function () {
 
     com.focusPage("#collectOrRefundBtn").click(function(){
         //更新收款
-        var spid = salesPaymentForStatus.layerAdd.attr('spid');
+        var spid = salesPaymentForStatus.modals.layerAdd.attr('spid');
         var referMoney = com.focusPage('#referMoney').val();
 
         paymentUtils.aboutcollectAndRefundMoney(null, spid, null, referMoney, salesPaymentForStatus.coupon, salesPaymentForStatus.couponInfo, "single", api.payment.updateSalesPayment, "update", salesPaymentForStatus);

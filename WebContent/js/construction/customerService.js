@@ -1,14 +1,18 @@
 jQuery(function ($) {
 
-    var constructionNodes = {};
+    var constructionNodes = {
+
+        constructionSchedul :{}
+    };
 
     com.post(api.data.queryConstructionNode, {}, function (res) {
-        $.each(res.constructionNodes, function (i, v) {
-            constructionNodes[v.sort] = v.name;
+        constructionNodes.constructionSchedul = res.constructionNodes.split("sort", "name");
+    }, null, false);
+
+    com.post(api.ds.construction, {}, function (res) {
+        $.each(res.constructionSchedul, function (i, v) {
+            constructionNodes.constructionSchedul[v["key"]] = v["value"];
         });
-        constructionNodes[0] = "初始";
-        constructionNodes[1] = "开工";
-        constructionNodes[2] = "完工";
     }, null, false);
 
     var displayFunc = (function () {
@@ -29,7 +33,6 @@ jQuery(function ($) {
         };
 
         var creatLine = function (v) {
-            var that = this;
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.orderId));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
@@ -48,7 +51,7 @@ jQuery(function ($) {
                 ["监理:", v.supervisor.userName, "grey"],
                 ["总价:", v.orderTotalPrice, "blue"],
                 ["面积:", v.house.buildArea, "blue"],
-                ["进度:", constructionNodes[v.projectStatus], "red"]
+                ["进度:", constructionNodes.constructionSchedul[v.projectStatus], "red"]
             ];
 
             $.each(propertyArr, function (index, value) {
@@ -90,32 +93,32 @@ jQuery(function ($) {
     })();
 
     var searcher = new Searcher();
-    searcher.init(['c_orderId', 'c_village', 'c_houseNumber', 'c_designer', 'c_schedule'], "condList", api.construction.pageConstruction, function (list) {
-        displayFunc.init('resultList', list);
-    }, "pagenation", "customerServiceSeacherPostData");
+    searcher.init(['c_orderId', 'c_village', 'c_houseNumber', 'c_designer', 'c_schedule'], "CondList", api.construction.pageConstruction, function (list) {
+        displayFunc.init('ResultList', list);
+    }, "Pagenation", "customerServiceSeacherPostData");
 
     function viewCustomerServiceDetailIndex(orderId) {
         params.orderId = orderId;
-        com.switchPage(api.index.customerServiceDetailIndex.url);
+        com.popup4page("#stockRecordPopUp","/views/construction/customerServiceDetail.html","查看");
     }
 
     function viewCustomerServiceComplaintIndex(orderId, customerName) {
         params.orderId = orderId;
         params.customerName = customerName;
-        com.switchPage(api.index.customerServiceComplaintIndex.url);
+        com.popup4page("#stockRecordPopUp","/views/construction/customerServiceComplaint.html","投诉");
     }
 
     function viewCustomerServiceGuaranteeIndex(orderId, customerName) {
         params.orderId = orderId;
         params.customerName = customerName;
-        com.switchPage(api.index.customerServiceGuaranteeIndex.url);
+        com.popup4page("#stockRecordPopUp","/views/construction/customerServiceGuarantee.html","保修");
     }
 
     function viewCustomerServiceBackVisitIndex(orderId, orderAddr, customerName) {
         params.orderId = orderId;
         params.orderAddr = orderAddr;
         params.customerName = customerName;
-        com.switchPage(api.index.customerServiceBackVisitIndex.url);
+        com.popup4page("#stockRecordPopUp","/views/construction/customerServiceBackVisit.html","回访");
     }
 
 });

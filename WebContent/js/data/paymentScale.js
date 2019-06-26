@@ -70,10 +70,9 @@ $(function () {
         };
     })();
 
-    var $div = $('<div></div>').attr("id", params.company.cid).appendTo(com.focusPage('#resultList'));
-    var $h3 = $('<h3 style="font-size:22px;"></h3>').addClass('blue').html(params.company.name).appendTo($div);
+    var $h3 = $('<h3 style="font-size:22px;"></h3>').addClass('blue').html(params.company.name).appendTo(com.focusPage('#resultList'));
     com.post(api.data.queryPaymentScaleByCid, {"paymentScale.cid": params.company.cid}, function (data) {
-        displayFunc.init(params.company.cid, data.paymentScales);
+        displayFunc.init('resultList', data.paymentScales);
     }, null, false);
 
     function DelePaymentScale(psid) {

@@ -227,7 +227,7 @@ $(function () {
     });
 
     function openlayer(name, callback) {
-        layer.closeAll();
+        com.closePopup();
         layer.open({
             type: 1,
             title: name,
@@ -311,7 +311,7 @@ $(function () {
             }
             searcher.doSearch();
             closeEditReadOnly();
-            layer.closeAll();
+            com.closePopup();
         });
     }
 
@@ -336,7 +336,7 @@ $(function () {
         com.post(api.store.updateMgoods, opt, function (res) {
             searcher.doSearch();
             closeEditReadOnly();
-            layer.closeAll();
+            com.closePopup();
         });
     }
 

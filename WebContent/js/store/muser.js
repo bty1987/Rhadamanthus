@@ -103,7 +103,7 @@ $(function(){
                         com.clearValidator("#uid", true);
                         com.clearValidator("#name", true);
                         com.clearValidator();
-                        layer.closeAll();
+                        com.closePopup();
                     });
                 });
             });
@@ -173,7 +173,7 @@ $(function(){
     }
 
     function openlayer(callback){
-        layer.closeAll();
+        com.closePopup();
         layer.open({
             type: 1,
             //skin: 'layui-layer-lan',
@@ -198,13 +198,7 @@ $(function(){
         });
     }
 
-    com.focusPage(".date-picker").datepicker({autoclose:!0}).on("show",function() {
-        setTimeout(function() {
-            com.focusPage(".dropdown-menu").css("z-index", 9999).css("top","510px");
-        }, 0)
-    }).next().on(ace.click_event,function() {
-        a(this).prev().focus()
-    });
+    com.datetime(com.focusPage(".date-picker"), "date");
 
     function editBrand(v){
         com.clearValidator();

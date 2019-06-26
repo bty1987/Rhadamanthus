@@ -1,7 +1,7 @@
 {
 
     "alertInfo_": "'你知道吗?亲!<br>layer != layui<br><br>layer只是作为Layui的一个弹层模块,由于其用户基数较大,所以常常会有人以为layui是layerui<br><br>layer虽然已被 Layui 收编为内置的弹层模块,但仍然会作为一个独立组件全力维护\\升级.<br><br>我们此后的征途是星辰大海 ^_^'",
-    "versionInfo_": "<p>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec ullamcorper nulla non metus auctor fringilla. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Donec ullamcorper nulla non metus auctor fringilla.</p>",
+    "versionInfo_": "<p>装修1.增加装修单-综合目录以及对应功能(控制).2.装修单信息显示统一,修复不同页面设计/业务显示信息不一致问题.3.放线,增加工程信息/客户信息/合同信息,工程信息可更新.</p><p>款项1. 预付款显示信息增加装修单等级.2. 各款项,涉及显示装修单信息页面,楼盘内容为: 城市+城区+楼盘名+楼号.3. 各款项,刷卡收款方式,查询银行卡调整输入框使用方式 .</p><p>更多详情,请参考版本信息.</p>",
 
     "errorCode": 0,
     "errorMsg": ""

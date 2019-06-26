@@ -1,11 +1,16 @@
 jQuery(function($) {
 	var payment = {
-		saveBtn: null,
-		cancelBtn: null,
-		modal: null,
-		cashOutModal: null,
-		items: {},
-		paymentTypes:null,
+		saveBtn: com.focusPage("#collectBtn"),
+		cancelBtn: com.focusPage("#cancelBtn"),
+		items: {
+			cashCheckbox: com.focusPage("#cashCheckbox"),
+			bankCheckbox: com.focusPage("#bankCheckbox"),
+			checkvCheckbox: com.focusPage("#checkvCheckbox"),
+			cash: com.focusPage("#cash"),
+			paymentTypeSel: com.focusPage("#paymentTypeSel"),
+			des: com.focusPage("#des")
+		},
+		paymentTypes: null,
 		temp: [],
 		typeData: [],
 		paymentTypeData: [],
@@ -14,17 +19,36 @@ jQuery(function($) {
 		checkvNums: [],
 		decorationType: [],
 		htmlName: "payment",
-		modelId: 'paymentModal'
+		modelId: 'paymentModal',
+		modals: {
+			modal: com.focusPage("#paymentModal")
+		},
+
+		cash: [],
+		bank: [],
+		checkBank: [],
+		accounts: [],
+
+		cashUtil: [],
+		bankUtil: [],
+		checkBankUtil: [],
+
+		cashInfo: {},
+		bankInfo: {},
+		checkBankInfo: {},
+		accountsInfo: {},
+
+		bankUtilForGrade: [],
+		checkBankUtilForGrade: []
 	};
 	
-	payment.saveBtn = com.focusPage("#collectBtn").bindClick(function(){
+	payment.saveBtn.bindClick(function(){
 		paymentUtils.paymentSaveData(payment, hsearcher);
 	});
-	payment.cancelBtn = com.focusPage("#cancelBtn");
-	payment.modal = com.focusPage("#paymentModal").on('show.bs.modal',function(e){
+
+	payment.modals.modal.on('show.bs.modal',function(e){
 		com.clearValidator();
 		com.focusPage('.payWayError').hide();
-		com.focusPage("#paymentInfo").text("");
 	});
 
 	//隐藏触发
@@ -32,14 +56,6 @@ jQuery(function($) {
 		payment.bankUtilForGrade = [];
 		payment.checkBankUtilForGrade = [];
 	});
-
-	payment.items.cashCheckbox = com.focusPage("#cashCheckbox");
-	payment.items.bankCheckbox = com.focusPage("#bankCheckbox");
-	payment.items.checkvCheckbox = com.focusPage("#checkvCheckbox");
-	
-	payment.items.cash = com.focusPage("#cash");
-	payment.items.paymentTypeSel = com.focusPage("#paymentTypeSel");
-	payment.items.des = com.focusPage("#des");
 
 	com.post(api.ds.payment, {}, function(res){
 		$.each(res.type, function (i,v) {
@@ -63,15 +79,6 @@ jQuery(function($) {
 		$(this).prop("checked") ? com.focusPage("[referCheckbox="+this.id+"]").show() : com.focusPage("[referCheckbox="+this.id+"]").hide();
 	});
 	
-	com.focusPage("#refundCash").prop("checked", true);
-	com.focusPage("#cashOutModal input[name='refundType']").on("click", function(){
-		if($(this).val() == 0){
-			com.focusPage("#refundBankCardDiv").hide();
-		}else{
-			com.focusPage("#refundBankCardDiv").show();
-		}
-	});
-
 	//切换合同和主材预付款
 	com.focusPage("#paymentTypeSel").on("change", function(){
 		var gradeParam = [];
@@ -86,24 +93,6 @@ jQuery(function($) {
 		var currentGrade = com.focusPage("#paymentModal").attr("grade");
 		getReceiptTypeForGrade(com.focusPage("#paymentTypeSel").val(), currentGrade);
 	});
-
-	payment.cash = [];
-	payment.bank = [];
-	payment.bankUtil = [];
-	payment.checkBank = [];
-	payment.accounts = [];
-
-	payment.cashUtil = [];
-	payment.bankUtil = [];
-	payment.checkBankUtil = [];
-
-	payment.bankUtilForGrade = [];
-	payment.checkBankUtilForGrade = [];
-
-	payment.cashInfo = {};
-	payment.bankInfo = {};
-	payment.checkBankInfo = {};
-	payment.accountsInfo = {};
 
 	//info信息是分页显示信息的, util是下拉框信息
 	paymentUtils.getReceiptType(payment);
@@ -398,7 +387,7 @@ jQuery(function($) {
 		com.focusPage("#paymentcheckvAdd").attr("num", 0).attr("maxnum",0);
 		
 		com.cleanItems(payment.items);
-		payment.modal.modal("show");
+		payment.modals.modal.modal("show");
 		
 		com.focusPage("#paymentTypeDiv").css("display", "inline");
 		

@@ -1,4 +1,4 @@
-<div id="materialPaymentContent" class="page-content">
+<div id="materialPaymentContent">
 	<div id="fl-statement"></div>
 	<div class="row">
 		<div class="col-xs-12">
@@ -97,7 +97,7 @@
 									<div class="form-group">
 										<label for="cash" class="col-sm-3 control-label no-padding-right" >现金金额</label>
 										<span class="col-md-7">
-											<input type="text" id="cash" class="col-xs-10 col-sm-5 v_required v_float" style="min-width: 50%; width: 170px;"  data-toggle="popover" data-trigger='manual' />
+											<input type="text" id="cash" class="col-xs-10 col-sm-5 v_required v_float_3" style="min-width: 50%; width: 170px;"  data-toggle="popover" data-trigger='manual' />
 										</span>
 									</div>
 									<div class="space-4"></div>
@@ -143,7 +143,7 @@
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="advance" >金额</label>
 										<div class="col-sm-9">
-											<input type="text" id="advance" class="col-xs-10 col-sm-5 v_required v_float"  data-toggle="popover" data-trigger='manual' >
+											<input type="text" id="advance" class="col-xs-10 col-sm-5 v_required v_float_3"  data-toggle="popover" data-trigger='manual' >
 										</div>
 									</div>
 									<div class="space-4 "></div>
@@ -163,7 +163,6 @@
 						</div>
 
 						<div class="modal-footer">
-							<span id="paymentInfo" class="alert-danger pull-left inline"></span>
 							<button type="button" id="saveBtn" class="btn btn-primary">收款</button>
 							<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
 						</div>

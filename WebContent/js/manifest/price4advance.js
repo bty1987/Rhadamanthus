@@ -3,14 +3,9 @@ $(function () {
 	
 	var goods = {
 		gid: params["goods.gid"]
-	}
+	};
 
     var validator = {
-        float3: {
-            type: "v_float_3",
-            regex: /^(\d+|\d+\.[0-9]{1,3})$/,
-            errorMsg: "数量输入内容格式错误"
-        },
         balance: {
             type: "v_balance",
             regex: /^(0([\.]?\d*[0-9]+)|0|1)$/,
@@ -25,7 +20,7 @@ $(function () {
 		ctype: com.focusPage("#addPrice").find("#ctype"),
 		cvalue: com.focusPage("#addPrice").find("#cvalue"),
 		type: com.focusPage("#addPrice").find("#type")
-	}
+	};
 
     $.extend(com.validator, validator);
 	

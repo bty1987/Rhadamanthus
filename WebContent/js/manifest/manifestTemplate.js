@@ -5,6 +5,7 @@ $(function () {
             mtid: com.focusPage("#mtid"),
             name: com.focusPage("#name"),
             comment: com.focusPage("#comment"),
+            submitBtn: com.focusPage("#submitBtn"),
         }
     };
 
@@ -90,22 +91,10 @@ $(function () {
 
             $btnEdit.click(function () {
 
-
                 manifestTemplate.items.mtid.val(v.mtid);
                 manifestTemplate.items.name.val(v.name);
                 manifestTemplate.items.comment.val(v.comment);
-
-                openlayer("编辑", function () {
-
-                    if (com.validate('form1')) {
-                        return false;
-                    }
-
-                    saveData(id, function () {
-                        com.clearValidator();
-                        layer.closeAll();
-                    });
-                });
+                com.popup4model("#layerAdd","编辑");
             });
 
             $btnStart.click(function () {
@@ -149,7 +138,7 @@ $(function () {
             });
 
             /*绑定*/
-            $btnBinbing.click(function (mtid) {
+            $btnBinbing.click(function () {
                 params["manifestTemplate.mtid"] = v.mtid;
                 com.switchPage('views/manifest/manifestTemplateItem.html');
             });
@@ -180,20 +169,16 @@ $(function () {
 
         $adda.click(function () {
             clearForm('form1');
-            openlayer("添加", function (index, layero) {
-                if (com.validate('form1'))
-                    return;
-
-                saveData(null, function () {
-                    com.clearValidator();
-                    layer.closeAll();
-                });
-            });
+            com.popup4model('#layerAdd',"添加");
         });
 
 
         return [$adda];
     }, 'resultList');
+
+    manifestTemplate.items.submitBtn.click(function () {
+        saveData(manifestTemplate.items.mtid.val())
+    });
 
     function clearForm(formId) {
 
@@ -203,31 +188,11 @@ $(function () {
         manifestTemplate.items.comment.val("");
     }
 
-    function openlayer(title, callback) {
+    function saveData(mtid) {
 
-        layer.closeAll();
-        layer.open({
-            type: 1,
-            title: title,
-            content: com.focusPage('#layerAdd'),
-            area: ($(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620) + "px",
-            maxmin: false,
-            btn: ['确定', '取消'],
-            yes: function (index, layero) {
-                callback(index, layero);
-            },
-            btn2: function (index, layero) {
-                layer.closeAll();
-            },
-            cancel: function () {
-                layer.closeAll();
-            }
-        });
-    }
-
-    function saveData(mtid, callback) {
-
-        var $layer = com.focusPage('#layerAdd');
+        if (com.validate('layerAdd','right')) {
+            return false;
+        }
 
         var url = api.inventory.addManifestTemplate;
         var options = {
@@ -240,8 +205,10 @@ $(function () {
             options["manifestTemplate.mtid"] = mtid;
         }
 
-        com.post(api.inventory.addManifestTemplate, options, function (res) {
-            callback();
+        com.post(url, options, function (res) {
+            com.clearValidator();
+            manifestTemplate.items.mtid.val("");
+            com.closePopup();
             searcher.doSearch();
         });
     }

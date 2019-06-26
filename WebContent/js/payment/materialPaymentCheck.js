@@ -7,21 +7,49 @@ jQuery(function($) {
 		paymentModelNameData: ["cash", "bank", "checkv", "advance", "coupon"],
 		bankNums:[],
 		checkvNums: [],
-		couponType: {},
-		items: {},
+		items: {
+			cashCheckbox: com.focusPage("#cashCheckbox"),
+			bankCheckbox: com.focusPage("#bankCheckbox"),
+			checkvCheckbox: com.focusPage("#checkvCheckbox"),
+			couponCheckbox: com.focusPage("#couponCheckbox"),
+			advanceCheckbox: com.focusPage("#advanceCheckbox"),
+			couponType: com.focusPage("#couponType"),
+			advanceType: com.focusPage("#advanceType")
+		},
 		htmlName: "materialCheck",
-		modelId: 'baseItemModalMaterialCheck'
+		modelId: 'baseItemModalMaterialCheck',
+		modals: {
+			baseModal: com.focusPage("#baseItemModalMaterialCheck")
+		},
+
+		cash: [],
+		bank: [],
+		checkBank: [],
+		accounts: [],
+		couponType: [],
+
+		cashUtil: [],
+		bankUtil: [],
+		checkBankUtil: [],
+
+		cashInfo: {},
+		bankInfo: {},
+		checkBankInfo: {},
+		accountsInfo: {},
+		couponTypeData: {},
+
+		bankUtilForGrade: [],
+		checkBankUtilForGrade: []
 	};
 
 	var materialPaymentCheckPostData = {};
 
-	materialPaymentCheck.baseModal = com.focusPage("#baseItemModalMaterialCheck").on('show.bs.modal', function(e){
+	materialPaymentCheck.modals.baseModal.on('show.bs.modal', function(e){
 		com.clearValidator();
-		com.focusPage("#paymentInfo").val("");
 	});
 
 	//隐藏触发
-	com.focusPage("#baseItemModalMaterialCheck").on('hidden.bs.modal', function () {
+	materialPaymentCheck.modals.baseModal.on('hidden.bs.modal', function () {
 		materialPaymentCheck.bankUtilForGrade = [];
 		materialPaymentCheck.checkBankUtilForGrade = [];
 		com.cleanTypeahead('materialCheckcashInfo');
@@ -30,33 +58,6 @@ jQuery(function($) {
 	materialPaymentCheck.saveBtn = com.focusPage("#saveBtn").bindClick(function(){
 		paymentUtils.materialPayment(materialPaymentCheck, materialPaymentCheckPostData, searcher, hsearcher);
 	});
-
-	materialPaymentCheck.items.cashCheckbox = com.focusPage("#cashCheckbox");
-	materialPaymentCheck.items.bankCheckbox = com.focusPage("#bankCheckbox");
-	materialPaymentCheck.items.checkvCheckbox = com.focusPage("#checkvCheckbox");
-	materialPaymentCheck.items.couponCheckbox = com.focusPage("#couponCheckbox");
-	materialPaymentCheck.items.advanceCheckbox = com.focusPage("#advanceCheckbox");
-	materialPaymentCheck.items.couponType = com.focusPage("#couponType");
-	materialPaymentCheck.items.advanceType = com.focusPage("#advanceType");
-
-	materialPaymentCheck.cash = [];
-	materialPaymentCheck.bank = [];
-	materialPaymentCheck.checkBank = [];
-	materialPaymentCheck.accounts = [];
-	materialPaymentCheck.couponType = [];
-
-	materialPaymentCheck.cashInfo = {};
-	materialPaymentCheck.bankInfo = {};
-	materialPaymentCheck.checkBankInfo = {};
-	materialPaymentCheck.accountsInfo = {};
-	materialPaymentCheck.couponTypeData = {};
-
-	materialPaymentCheck.cashUtil = [];
-	materialPaymentCheck.bankUtil = [];
-	materialPaymentCheck.checkBankUtil = [];
-
-	materialPaymentCheck.bankUtilForGrade = [];
-	materialPaymentCheck.checkBankUtilForGrade = [];
 
 	paymentUtils.getReceiptType(materialPaymentCheck);
 
@@ -73,8 +74,6 @@ jQuery(function($) {
 			materialPaymentCheck.materialPaymentRevTypeData[paymentType.value] = paymentType.key;
 		}
 	}, null, false);
-
-	com.focusPage("#couponType").chosen({width: "216px", multi_type: "input"});
 
 	com.selectTypeahead("materialCheckcashInfo", materialPaymentCheck.cashUtil, "key", "value", null);
 

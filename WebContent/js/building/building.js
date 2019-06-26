@@ -56,7 +56,7 @@ jQuery(function($) {
 
 	building.customerItems.gender = com.focusPage("#gender").switchBtn("gender");
 
-	com.focusPage(".date-picker").datepicker(com.datepickerdefault);
+	com.datetime(com.focusPage(".date-picker"), "date");
 	
 	com.initTypeahead('hsAUser', api.data.queryCustomerForName, "pinyinName", {}, "autoFillCustomer", "key", "value");
 	com.initTypeahead('csAUser', api.data.queryCustomerForName, "pinyinName", {}, "autoFillCustomer", "key", "value");
@@ -133,8 +133,6 @@ jQuery(function($) {
 			com.showPopover(com.focusPage("#phone"),{errorMsg: "电话号码已存在"}, "right");
 		});
 	});
-
-	$.extend(com.validator, building.validator);
 
 	var displayFunc  = (function(){
 

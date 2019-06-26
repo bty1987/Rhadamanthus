@@ -62,17 +62,5 @@ public class AESHelper {
         
         return originalString;
     }
-    
-    public static void main(String[] args) throws Exception {
-    	
-    	System.out.println(AESHelper.encrypt("fanglincommon", SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv")));
-    	System.out.println(AESHelper.decrypt("eX3o2SZdrpVOV9HC4UYTRA==", SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv")));
-    	
-    	System.out.println(AESHelper.encrypt("baitianyu", SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv")));
-    	System.out.println(AESHelper.decrypt("JFuhbyRQTJA+5ewZUb1p+w==", SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv")));
-    	
-    	System.out.println(AESHelper.decrypt("zmL/NgmvG3wVuBeKeyozyzKCrctm5y5bZ2Xz2J1vqrUlDt6JQYJFhLrJNFMkYjMJ0QtjC0a7DC/dnd4PvyOYdUyrpiDHLQAZIMmehKxWT9fI2jbJ+KB0o6u8FgbqSVPgGOveYcmWZrBjNOwviovKww==", SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv")));
-    	
-	}
 
 }

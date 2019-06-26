@@ -4,26 +4,46 @@ jQuery(function($) {
 		paymentModelNameData: ["cash", "bank", "checkv"],
 		bankNums: [],
 		checkvNums: [],
-		items: {},
+		items: {
+			cashCheckbox: com.focusPage("#cashCheckbox"),
+			bankCheckbox: com.focusPage("#bankCheckbox"),
+			checkvCheckbox: com.focusPage("#checkvCheckbox")
+		},
 		moreMsg: {},
 		htmlName: "serviceCheck",
-		modelId: 'baseItemModalServiceCheck'
-	};
+		modelId: 'baseItemModalServiceCheck',
+		modals: {
+			baseModal: com.focusPage("#baseItemModalServiceCheck")
+		},
 
-	servicePaymentCheck.items.cashCheckbox = com.focusPage("#cashCheckbox");
-	servicePaymentCheck.items.bankCheckbox = com.focusPage("#bankCheckbox");
-	servicePaymentCheck.items.checkvCheckbox = com.focusPage("#checkvCheckbox");
+		cash: [],
+		bank: [],
+		checkBank: [],
+		accounts: [],
+
+		cashUtil: [],
+		bankUtil: [],
+		checkBankUtil: [],
+
+		cashInfo: {},
+		bankInfo: {},
+		checkBankInfo: {},
+		accountsInfo: {},
+
+		bankUtilForGrade: [],
+		checkBankUtilForGrade: []
+	};
 
 	com.focusPage("#collectBtn").bindClick(function(){
 		paymentUtils.servicePaymentCollect(servicePaymentCheck, searcher, hsearcher);
 	});
 
-	servicePaymentCheck.baseModal = com.focusPage("#baseItemModalServiceCheck").on('show.bs.modal',function(e){
+	servicePaymentCheck.modals.baseModal.on('show.bs.modal',function(e){
 		com.clearValidator();
 	});
 
 	//隐藏触发
-	com.focusPage("#baseItemModalServiceCheck").on('hidden.bs.modal', function () {
+	servicePaymentCheck.modals.baseModal.on('hidden.bs.modal', function () {
 		servicePaymentCheck.bankUtilForGrade = [];
 		servicePaymentCheck.checkBankUtilForGrade = [];
 	});
@@ -31,23 +51,6 @@ jQuery(function($) {
 	com.focusPage("#baseItemModalServiceCheck :checkbox").on("change", function(){
 		$(this).prop("checked") ? com.focusPage("[referCheckbox="+this.id+"]").show() : com.focusPage("[referCheckbox="+this.id+"]").hide()
 	});
-
-	servicePaymentCheck.cash = [];
-	servicePaymentCheck.bank = [];
-	servicePaymentCheck.checkBank = [];
-	servicePaymentCheck.accounts = [];
-
-	servicePaymentCheck.cashUtil = [];
-	servicePaymentCheck.bankUtil = [];
-	servicePaymentCheck.checkBankUtil = [];
-
-	servicePaymentCheck.bankUtilForGrade = [];
-	servicePaymentCheck.checkBankUtilForGrade = [];
-
-	servicePaymentCheck.cashInfo = {};
-	servicePaymentCheck.bankInfo = {};
-	servicePaymentCheck.checkBankInfo = {};
-	servicePaymentCheck.accountsInfo = {};
 
 	paymentUtils.getReceiptType(servicePaymentCheck);
 
@@ -154,7 +157,7 @@ jQuery(function($) {
 			$liLine.append($h3).append($ulProperty).append($ulStyle);
 
 			$btnUpdate.click(function(){
-				servicePaymentCheck.baseModal.attr("ChargeType","4");
+				servicePaymentCheck.modals.baseModal.attr("ChargeType","4");
 				servicePaymentCheck.spid = v.spid;
 				servicePaymentCheck.pid = v.pid;
 				paymentUtils.serviceDialogPayment(v, servicePaymentCheck);

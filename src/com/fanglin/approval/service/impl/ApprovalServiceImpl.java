@@ -26,6 +26,7 @@ import com.fanglin.approval.service.ApprovalCustomerOriginTDecorationBelongServi
 import com.fanglin.approval.service.ApprovalCustomerOriginTDecorationService;
 import com.fanglin.approval.service.ApprovalDecorationActivityService;
 import com.fanglin.approval.service.ApprovalDecorationBelongService;
+import com.fanglin.approval.service.ApprovalDecorationHolonomyService;
 import com.fanglin.approval.service.ApprovalDecorationRefundService;
 import com.fanglin.approval.service.ApprovalManifestDBService;
 import com.fanglin.approval.service.ApprovalMaterialFullPaymentService;
@@ -89,6 +90,9 @@ public class ApprovalServiceImpl implements ApprovalService {
 	
 	@Autowired
 	private ApprovalCustomerOriginTDecorationBelongService approvalCustomerOriginTDecorationBelongService;
+	
+	@Autowired
+	private ApprovalDecorationHolonomyService approvalDecorationHolonomyService;
 
 	@Autowired
 	private UserDao userDao;
@@ -202,6 +206,8 @@ public class ApprovalServiceImpl implements ApprovalService {
 			case ApprovalPO.APPROVAL_TYPE_CUSTOMER_ORIGIN_T_DECORATION_BELONG_INT:
 				approvalCustomerOriginTDecorationBelongService.approvalForApprovalForCustomerOriginTDecorationBelong(approvalPO);
 			    break;
+			case ApprovalPO.APPROVAL_TYPE_DECORATION_HOLONOMY_INT:
+				approvalDecorationHolonomyService.approvalForApprovalForDecorationHolonomy(approvalPO);
 			default:
 				break;
 		}

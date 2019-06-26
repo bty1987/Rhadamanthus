@@ -1,14 +1,14 @@
 
 $(function(){
 
-    var statusDict = { "0" : ["\u6709\u6548", "red"], "1" : ["\u65e0\u6548", "red"]};
-    var types = {};
     var activity = {
-        saveBtn: com.focusPage("#saveBtn").on("click", saveData),
-        cancelBtn: com.focusPage("#cancelBtn").on("show.bs.modal", function(a){
-            com.clearValidator();
-        }),
-        modal: com.focusPage("#activityModal"),
+
+        saveBtn: com.focusPage("#saveBtn"),
+        cancelBtn : com.focusPage("#cancelBtn"),
+
+        modals: {
+            activityModal: com.focusPage("#activityModal")
+        },
         items: {
             activityName : com.focusPage("#activityName"),
             startTime : com.focusPage("#startTime"),
@@ -16,28 +16,21 @@ $(function(){
             types : com.focusPage("#type"),
             content : com.focusPage("#content")
         },
-        editFlg: !1,
+
+        types : {},
+
+        editFlg: true,
         postParam: {}
     };
 
-    com.focusPage("#activityModal").on('show.bs.modal',function(e){
-        com.clearValidator();
-    });
+    activity.saveBtn.bindClick(saveData);
+
+    com.datetime(com.focusPage(".date-picker-date"));
 
     com.post(api.ds.information, {}, function (res) {
         activity.items.types.bindData(res.activityTypes, "key", "value", true);
-        $.each(res.activityTypes, function(i,v){
-            types[v["key"]] = v["value"];
-        });
-    });
 
-    $.extend(com.validator, activity.validator);
-    com.focusPage(".date-picker").datepicker(com.datepickerdefault).on("show", function() {
-        setTimeout(function() {
-            com.focusPage(".dropdown-menu").css("z-index", 1060);
-        },0);
-    }).next().on(ace.click_event, function() {
-        $(this).prev().focus();
+        activity.types = res.activityTypes.split("key", "value");
     });
 
     var displayFunc  = (function(){
@@ -58,6 +51,7 @@ $(function(){
         };
 
         var creatLine = function(v){
+
             var $liLine = $('<li></li>').addClass('item-blue clearfix');
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.name));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
@@ -72,12 +66,13 @@ $(function(){
             var $invalid = $('<div></div>').addClass('pull-right');
             var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({"type" : "checkbox"});
             var $span = $('<span></span>').addClass('lbl status-lbl');
+
             var propertyArr = [
                 ["创建人:", v.creater.currentName, "grey"],
                 ["开始时间:", v.startTime, "green"],
                 ["结束时间:", v.endTime, "green"],
-                ["状态:", statusDict[v.status][0], statusDict[v.status][1]],
-                ["类型:",types[v.type],"red" ],
+                ["状态:", v.status == 0 ? "有效":"无效", "red"],
+                ["类型:",activity.types[v.type],"red" ],
                 ["默认标识:",v.defaults == 0 ? "默认" : "普通", "grey" ],
                 ["说明:",v.content, "grey"]
             ];
@@ -89,15 +84,24 @@ $(function(){
                 $liProperty.appendTo($ulProperty);
             });
 
-                $invalid.append($statusSwitch).append($span);
-                $divBtnWrap.append($btnEdit).append($btnView).append($invalid).append($btnDelStatus).append($default).appendTo($h3);
+            $invalid.append($statusSwitch).append($span);
+            $divBtnWrap.append($btnEdit).append($btnView).append($invalid).append($btnDelStatus).append($default).appendTo($h3);
 
             $liLine.append($h3).append($ulProperty);
 
             $btnEdit.click(function(){
-                activity.editFlg = !0;
-                var a = v;
-                void 0 != a && (activity.items.aid = a.aid, activity.items.status = a.status, activity.items.activityName.val(a.name), activity.items.startTime.val(a.startTime).attr("disabled", "disabled"),activity.items.types.val(a.type).attr("disabled", "disabled"), activity.items.endTime.val(a.endTime),activity.items.content.val(a.content), activity.modal.modal("show"));
+                activity.editFlg = false;
+
+                activity.items.aid = v.aid;
+                activity.items.status = v.status;
+                activity.items.activityName.val(v.name);
+                activity.items.startTime.val(v.startTime.substring(0, 10)).attr("disabled", "disabled");
+                activity.items.types.val(v.type).attr("disabled", "disabled");
+                activity.items.endTime.val(v.endTime.substring(0, 10));
+                activity.items.content.val(v.content);
+
+                activity.modals.activityModal.modal("show");
+
             });
 
             $btnDelStatus.click(function(){
@@ -108,12 +112,14 @@ $(function(){
                 	});
  				});           
 			 });
+
             !v.status && $statusSwitch.prop("checked", true);
+
             $default.click(function(){
 
                 if(v.defaults == 0){
                     com.showAlert(com.warning, "该活动已是默认活动");
-                    return
+                    return false;
                 }
                 com.post(api.information.updateActivityForDefault, {
                     "activity.aid": v.aid
@@ -121,17 +127,19 @@ $(function(){
                     ActivitySeacher.doSearch();
                 });
             });
+
             $invalid.click(function(){
-                var cvalue = $statusSwitch.prop("checked");
-                if(cvalue){
-                    cvalue = 0;
-                }else{
-                    cvalue = 1;
-                }
+                var cvalue = $statusSwitch.prop("checked") ? 0:1;
+
                 updatastatus(v.aid, cvalue);
             });
+
             $btnView.click(function(){
-                viewActivityItemIndex(v);
+                params.aid = v.aid;
+                params.activityName = v.name;
+                params.type = v.type;
+
+                com.popup4page("#activityItemPopUp", "/views/information/activityItem.html", "活动物品");
             });
 
             return $liLine;
@@ -148,64 +156,64 @@ $(function(){
         };
     })();
 
-    var _condArr = ['activityName', 'activityType', 'activityStatus'];
     var ActivitySeacher = new Searcher();
-    ActivitySeacher.init( _condArr, "condList", api.information.pageActivity, function(list){
+    ActivitySeacher.init( ['activityName', 'activityType', 'activityStatus'], "condList", api.information.pageActivity, function(list){
         displayFunc.init('resultList', list);
     }, "pagenation", "activitySeacherPostData", null, false, null, function(){
 
-        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addVillage').css("margin", "0px 3px");
+        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'addActivity').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
-        $adda.click(function(){
-            
-            activity.editFlg = !1;
-            
-            com.cleanItems(activity.items);
-            
-            activity.items.activityName.removeAttr("disabled", "disabled");
-            activity.items.startTime.removeAttr("disabled", "disabled");
-            activity.items.types.removeAttr("disabled", "disabled");
-            activity.modal.modal("show");
-        });
         return [$adda];
     });
 
+    com.focusPage("#addActivity").click(function() {
+        activity.editFlg = true;
 
-    function viewActivityItemIndex(v) {
-        params.aid = v.aid;
-    	params.activityName = v.name;
-    	params.type = v.type;
-        com.focusPage("#activityPageContent").load(api.index.activityItemIndex.url);
-    }
-    
+        com.clearValidator();
+        com.cleanItems(activity.items);
+
+        activity.items.activityName.removeAttr("disabled", "disabled");
+        activity.items.startTime.removeAttr("disabled", "disabled");
+        activity.items.types.removeAttr("disabled", "disabled");
+        activity.modals.activityModal.modal("show");
+    });
+
     function saveData() {
-        
-        if (com.validate() || activity.repeatFlg) {
+
+        if (com.validate('activityModal')) {
             return false;
         }
-        
-        var a = activity.items.startTime.val(), b = activity.items.endTime.val();
-        
-        a > b ? com.showAlert(com.warning, "开始时间不能大于结束时间") : (b = {
+
+        if(activity.items.startTime.val() > activity.items.endTime.val()) {
+            com.showAlert(com.warning, "开始时间不能大于结束时间");
+            return false;
+        }
+        var url;
+        var options = {
             "activity.name": activity.items.activityName.val(),
             "activity.startTime": activity.items.startTime.val(),
             "activity.endTime": String(activity.items.endTime.val()).substring(0,10)+ " 23:59:59",
             "activity.type" : activity.items.types.val(),
             "activity.content": activity.items.content.val()
-        }, activity.editFlg ? (a = api.information.updateActivity, b["activity.aid"] = activity.items.aid): a = api.information.addActivity, com.post(a, b, successCallback), activity.modal.modal("hide"));
-    }
-    function successCallback() {
-        com.showAlert(com.info, "操作成功");
-        ActivitySeacher.doSearch();
-    }
-    function updatastatus(aid, newstatus){
-        var options = {};
-        options[ "activity.aid"] = aid;
-        options["activity.status"] = newstatus;
+        };
 
-        com.post(api.information.updateActivityForStatus, options, function(res){
+        activity.editFlg ? url = api.information.addActivity : url = api.information.updateActivity, options["activity.aid"] = activity.items.aid;
+
+        com.post(url, options, function(res){
+            com.showAlert(com.info, "操作成功");
+            ActivitySeacher.doSearch();
+        });
+        activity.modals.activityModal.modal("hide")
+    }
+
+    function updatastatus(aid, newstatus){
+
+        com.post(api.information.updateActivityForStatus, {"activity.aid": aid, "activity.status": newstatus}, function(res){
+
+            newstatus == 0? com.showAlert(com.info, "已启用") : com.showAlert(com.info, "已禁用");
+
             ActivitySeacher.doSearch();
         })
     }

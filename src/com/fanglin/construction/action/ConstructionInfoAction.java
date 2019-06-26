@@ -16,44 +16,43 @@ import com.fanglin.core.interceptor.FLException;
 @Namespace("/")
 @Controller
 public class ConstructionInfoAction extends BaseListAction {
-	
+
 	private static final long serialVersionUID = 369283426907698980L;
 
 	@Autowired
 	private ConstructionInfoService constructionInfoService;
-	
+
 	private ConstructionInfoVO constructionInfo;
 
-	
 	@Action(value = "queryConstructionInfo", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryConstructionInfo() throws FLException{
-		
+	public String queryConstructionInfo() throws FLException {
+
 		constructionInfo = constructionInfoService.queryConstructionInfo(constructionInfo);
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value = "queryConstructionInfoByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryConstructionInfoByOrderId() throws FLException{
-		
-		constructionInfo = constructionInfoService.queryConstructionInfoByOrderId(constructionInfo);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "updateConstructionInfo",	 results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateConstructionInfo() throws FLException{
-		
+
+	@Action(value = "updateConstructionInfo", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateConstructionInfo() throws FLException {
+
 		constructionInfoService.updateConstructionInfo(constructionInfo);
-		
+
 		return SUCCESS;
 	}
-	
+
+	@Action(value = "queryConstructionInfoByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryConstructionInfoByOrderId() throws FLException {
+
+		constructionInfo = constructionInfoService.queryConstructionInfoByOrderId(constructionInfo);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "updateConstructionInfoByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateConstructionInfoByOrderId() throws FLException{
-		
+	public String updateConstructionInfoByOrderId() throws FLException {
+
 		constructionInfoService.updateConstructionInfoByOrderId(constructionInfo);
-		
+
 		return SUCCESS;
 	}
 

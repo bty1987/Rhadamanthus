@@ -73,6 +73,7 @@
         csses += '<link rel="stylesheet" href="assets/ace/css/daterangepicker.css?version=' + versionCode + '" />';
         csses += '<link rel="stylesheet" href="assets/ace/css/bootstrap-timepicker.css?version=' + versionCode + '" />';
         csses += '<link rel="stylesheet" href="assets/ace/css/huploadify.css?version=' + versionCode + '" />';
+        csses += '<link rel="stylesheet" href="assets/ace/css/colorbox.css?version=' + versionCode + '" />'; // picture box
         csses += '<link rel="stylesheet" href="assets/ace/css/ace-dark.css?version=' + versionCode + '" />';
         /* ace end */
 
@@ -100,7 +101,7 @@
 
 <body>
     <!--  lock bringins  -->
-    <div id="outLockingContent" class="bringins-content" style="display: none; left: 0px; top: 25px; position: fixed; margin: 50px; width: 100%; height: 100%; transition: 1s; overflow-y: scroll;">
+    <div id="outLockingContent" style="display: none;">
 
         <div class="login-form-sub fadeInUp">
             <div class="lock-pic">
@@ -113,7 +114,7 @@
 
             <div class="form-group">
                 <span class="block input-icon input-icon-right">
-                    <input type="text" class="width-100" name="lockPassword" id="lockPassword" autocomplete="new-password" placeholder="请输入密码" onfocus="this.type='password'" />
+                    <input type="text" class="width-100" name="lockPassword" id="lockPassword"  placeholder="请输入密码" onfocus="this.type='password'" />
                 </span>
             </div>
             <button value="登录" class="btn submit-btn" id="lockSubmit"> 登录 </button>
@@ -155,12 +156,6 @@
 
             <div class="navbar-header pull-right">
                 <ul class="nav ace-nav">
-                    <li class="purple hide ">
-                        <a href="#" id="called">
-                            <i class="icon-phone" ></i>
-                            <span class="dropdown-toggle">拨打电话</span>
-                        </a>
-                    </li>
                     <li class="dark">
                         <a data-toggle="dropdown" href="#" class="dropdown-toggle">
                             <i class="icon-globe"></i>
@@ -275,36 +270,18 @@
         </div>
     </div>
 	
-	<div id="search_container" style="display: none;">
-		<div class="search bar1">
-			<form class="bar1_form">
-				<input type="text" id="searchInput" placeholder="请输入您要搜索的内容...">
-				<div type="submit" id="close"></div>
-			</form>
-		</div>
-	</div>
-
     <script src="assets/altogether/js/jquery-2.0.3.min.js"></script>
-    <script src="assets/ace/js/jquery.mobile.custom.min.js"></script>
     <script src="assets/ace/js/ace.js"></script>
     <script src="assets/ace/js/bootstrap.min.js"></script>
     <script src="assets/ace/js/jquery.slimscroll.min.js"></script>
-    <script src="assets/ace/js/jquery.maskedinput.min.js"></script>
-    <script src="assets/ace/js/jquery.gritter.min.js"></script>
     <script src="assets/ace/js/jquery.raty.min.js"></script>
-    <script src="assets/ace/js/chosen.jquery.min.js"></script>
-    <script src="assets/ace/js/jquery.hotkeys.min.js"></script>
-    <script src="assets/ace/js/bootstrap-wysiwyg.min.js"></script>
+    <script src="assets/ace/js/bootstrap-wysiwyg.min.js"></script> <!-- rich text --> 
     <script src="assets/ace/js/ace-elements.js"></script>
     <script src="assets/ace/js/ace-extra.min.js"></script>
 
-    <script src="assets/altogether/js/jquery.ui.touch-punch.min.js"></script>
-    <script src="assets/altogether/js/jquery-ui-1.10.3.custom.min.js"></script>
-    <script src="assets/altogether/js/jquery.huploadify.js"></script>
-    <script src="assets/altogether/js/bootbox.min.js"></script>
-    <script src="assets/altogether/js/jquery.colorbox-min.js"></script>
-    <script src="assets/altogether/js/highcharts.js"></script>
-    <script src="assets/altogether/js/fullcalendar.min.js"></script>
+    <script src="assets/altogether/js/jquery.huploadify.js"></script> <!-- upload tools --> 
+    <script src="assets/altogether/js/jquery.colorbox-min.js"></script> <!-- picture box --> 
+    <script src="assets/altogether/js/fullcalendar.min.js"></script> <!-- calendar --> 
     <script src="assets/altogether/js/spin.min.js"></script>
 
     <script src="assets/altogether/js/date-time/bootstrap-datepicker.min.js"></script>
@@ -312,10 +289,13 @@
     <script src="assets/altogether/js/date-time/daterangepicker.min.js"></script>
     <script src="assets/altogether/js/date-time/moment.min.js"></script>
 
-    <script src="assets/altogether/js/typeahead-bs2.min.js"></script>
+    <script src="assets/altogether/js/layer.js"></script> <!-- dialog pop --> 
+    <script src="assets/altogether/laydate/laydate.js"></script> <!-- datetime tools --> 
+
+    <script src="assets/altogether/js/typeahead-bs2.min.js"></script> <!-- auto fill --> 
     <script src="assets/altogether/js/tag.js"></script>
-    <script src="assets/altogether/js/base64.js"></script>
-    <script src="assets/altogether/js/html2canvas.js"></script>
+    <script src="assets/altogether/js/base64.js"></script> <!--  --> 
+    <script src="assets/altogether/js/html2canvas.js"></script> <!-- export tools -->
 
     <script src="assets/altogether/js/ztree/jquery.ztree.core-3.5.min.js"></script>
     <script src="assets/altogether/js/ztree/jquery.ztree.excheck-3.5.min.js"></script>
@@ -323,10 +303,10 @@
     <script src="assets/altogether/js/fuelux/fuelux.wizard.min.js"></script>
     <script src="assets/altogether/js/fuelux/fuelux.spinner.min.js"></script>
     <script src="assets/altogether/js/fuelux/fuelux.tree.js"></script>
-    <script src="assets/altogether/js/layer.js"></script>
-    <script src="assets/altogether/js/bringins.js"></script>
-    <script src="assets/altogether/js/data-set.min.js"></script>
 	<script src="assets/altogether/js/jquery.qrcode.min.js"></script>
+	
+	<script src="assets/altogether/js/echarts.min.js"></script>
+	
     <script type="text/javascript">
 
 		if(parent.window.isPC){

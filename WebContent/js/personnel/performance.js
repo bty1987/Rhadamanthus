@@ -37,15 +37,10 @@ $(function () {
         });
     }, null, false);
 
-    com.initChosen('users', api.personel.queryUserByPinyin, "pinyinName", {"departmentType.name":"", "user.status":0}, "autoFillKeyValue", "key", "value");
+    com.initTypeahead('users', api.personel.queryUserByPinyin, "pinyinName", {"departmentType.name":"", "user.status":0}, "autoFillKeyValue", "key", "value", null);
 
-    com.focusPage(".date-picker").datepicker(com.datepickerdefault).on("show", function() {
-        setTimeout(function() {
-            com.focusPage(".dropdown-menu").css("z-index", 1060);
-        },0);
-    }).next().on(ace.click_event, function() {
-        $(this).prev().focus();
-    });
+    com.datetime(com.focusPage("#startTime"));
+    com.datetime(com.focusPage("#endTime"));
 
     var displayFunc = (function () {
         var renderList = function (tableId, listData) {
@@ -86,10 +81,10 @@ $(function () {
                     ];
 
                     $.each(propertyArr, function (index, value) {
-                            var $liProperty = $('<li></li>');
-                            $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                            $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                            $liProperty.appendTo($ulProperty);
+                        var $liProperty = $('<li></li>');
+                        $('<strong></strong>').html(value[0]).appendTo($liProperty);
+                        $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+                        $liProperty.appendTo($ulProperty);
                     });
 
                     $divBtnWrap.appendTo($h3);
@@ -109,15 +104,15 @@ $(function () {
     })();
 
     function saveData(){
-        if(com.validate()){
-            return;
+        if(com.validate('performanceModal')){
+            return false;
         }
         if (performance.items.startTime.val()>=performance.items.endTime.val()){
             com.showAlert(com.warning, "开始时间应小于结束时间!");
             return
         }
         var options = {
-            "performance.user.userId": performance.items.users.val(),
+            "performance.user.userId": com.typeahead("users"),
             "performance.type": performance.items.performanceType.val(),
             "performance.value": performance.items.values.val(),
             "performance.level": performance.items.performanceLevel.val(),
@@ -147,7 +142,7 @@ $(function () {
         return [$adda];
     });
     com.focusPage('[name="addperformance"]', '#pagenation').on("click", function () {  // 选择器 [属性名="属性值"] 匿名函数
-        com.updateChosen("users", "", "");
+        com.cleanTypeahead("users");
         com.cleanItems(performance.items);
         performance.modal.modal("show");
     });

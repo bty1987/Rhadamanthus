@@ -41,17 +41,17 @@
   "awardRecordSubtype": [
     {"key":"0","value":"入库"},
     {"key":"1","value":"出库"},
-    {"key":"5","value":"退货"},
-    {"key":"7","value":"采购"},
-    {"key":"9","value":"公司回库"},
-    {"key":"11", "value":"剩余回库"},
-    {"key":"13", "value":"厂家赠送"},
-    {"key":"4", "value":"领取"},
-    {"key":"6","value":"配送"},
-    {"key":"5","value":"赔偿"},
-    {"key":"10","value":"自购"},
-    {"key":"12","value":"福利"},
-    {"key":"14","value":"营销"}
+    {"key":"6","value":"退货"},
+    {"key":"8","value":"采购"},
+    {"key":"10","value":"公司回库"},
+    {"key":"12", "value":"剩余回库"},
+    {"key":"14", "value":"厂家赠送"},
+    {"key":"5", "value":"领取"},
+    {"key":"7","value":"配送"},
+    {"key":"9","value":"赔偿"},
+    {"key":"11","value":"自购"},
+    {"key":"13","value":"福利"},
+    {"key":"15","value":"营销"}
   ],
   "activityTypes" :[
     {"key":"1","value":"装修"},

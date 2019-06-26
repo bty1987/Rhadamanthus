@@ -22,14 +22,13 @@ jQuery(function($) {
 		priceFlg: false,
 		areaFlg: false,
 		editFlag: false,
-		dataFlag: false,
-		validator: {}
+		dataFlag: false
 	};
 	
 	com.initTag("conditions");
 	com.initTag("intention");
 
-	com.focusPage(".date-picker").datepicker(com.datepickerdefault);
+	com.datetime(com.focusPage(".date-picker"), "date");
 	
     com.initTypeahead('hsAUser', api.data.queryCustomerForName, "pinyinName", {}, "autoFillCustomer", "key", "value");
     com.initTypeahead('csAUser', api.data.queryCustomerForName, "pinyinName", {}, "autoFillCustomer", "key", "value");
@@ -127,8 +126,6 @@ jQuery(function($) {
 	customerSource.modal.on('show.bs.modal',function(e){
 		com.clearValidator();
 	});
-
-	$.extend(com.validator, customerSource.validator);
 
 	var displayFunc  = (function(){
 

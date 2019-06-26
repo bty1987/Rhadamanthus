@@ -2,14 +2,18 @@ jQuery(function($) {
 	var decorationPaymentPostData = {};
 	var decorationPayment = {
 		paymentModelNameData: ["cash", "bank", "checkv", "advance", "coupon"],
-		couponType: {},
-		couponTypeData: {},
 		orderPaymentId: null,
-		baseModal: null,
-		refundDecorationPaymentModal: null,
-		addReduceDetail: null,
 		paymentId: null,
-		items: {},
+		items: {
+			cashCheckbox: com.focusPage("#cashCheckbox"),
+			bankCheckbox: com.focusPage("#bankCheckbox"),
+			checkvCheckbox: com.focusPage("#checkvCheckbox"),
+			advanceCheckbox: com.focusPage("#advanceCheckbox"),
+			couponCheckbox: com.focusPage("#couponCheckbox"),
+			advanceType: com.focusPage("#advanceType"),
+			couponType: com.focusPage("#couponType"),
+			couponVal: com.focusPage("#couponVal")
+		},
 		editFlg: false,
 		paymentType: "增项款",
 		orderId: null,
@@ -17,36 +21,48 @@ jQuery(function($) {
 		checkvNums: [],
 		paymentStatusArray: ["未付款", "已付款", "已确认", "审批中", "历史"],
 		htmlName: "",
-		modelId: "baseItemModal"
+		modelId: "baseItemModal",
+		modals: {
+			refundDecorationPaymentModal: com.focusPage("#refundDecorationPaymentModal"),
+			baseModal: com.focusPage("#baseItemModal"),
+			addReduceDetail: com.focusPage("#addReduceDetail")
+		},
+
+		cash: [],
+		bank: [],
+		checkBank: [],
+		accounts: [],
+		couponType: [],
+
+		cashUtil: [],
+		bankUtil: [],
+		checkBankUtil: [],
+
+		cashInfo: {},
+		bankInfo: {},
+		checkBankInfo: {},
+		accountsInfo: {},
+		couponTypeData: {},
+
+		bankUtilForGrade: [],
+		checkBankUtilForGrade: []
 	};
 
-    decorationPayment.items.cashCheckbox = com.focusPage("#cashCheckbox");
-    decorationPayment.items.bankCheckbox = com.focusPage("#bankCheckbox");
-    decorationPayment.items.checkvCheckbox = com.focusPage("#checkvCheckbox");
-    decorationPayment.items.advanceCheckbox = com.focusPage("#advanceCheckbox");
-    decorationPayment.items.couponCheckbox = com.focusPage("#couponCheckbox");
-	decorationPayment.items.advanceType = com.focusPage("#advanceType");
-
-	decorationPayment.refundDecorationPaymentModal = com.focusPage("#refundDecorationPaymentModal");
-
 	//这里面的内容在刷卡和转账中的点击日期，日期插件show的时候也会执行，所以要谨慎添加内容
-	decorationPayment.baseModal = com.focusPage("#baseItemModal").on('show.bs.modal',function(e){
+	decorationPayment.modals.baseModal.on('show.bs.modal',function(e){
 		com.clearValidator();
 		com.clearValidator("#advancePayment", true);
 	});
 
 	//隐藏触发
-	com.focusPage("#baseItemModal").on('hidden.bs.modal', function () {
+	decorationPayment.modals.baseModal.on('hidden.bs.modal', function () {
 		decorationPayment.bankUtilForGrade = [];
 		decorationPayment.checkBankUtilForGrade = [];
 		com.focusPage("#cash").val("");
 		com.focusPage("#advance").val("");
+		com.focusPage("#couponUl").html("");
 	});
 	
-	decorationPayment.addReduceDetail = com.focusPage("#addReduceDetail");
-	
-	decorationPayment.items.couponType = com.focusPage("#couponType");
-
 	com.focusPage("#collectBtn").bindClick(function(){
 		paymentUtils.payment(decorationPayment, decorationPaymentPostData, searcher, hsearcher);
 	});
@@ -72,27 +88,6 @@ jQuery(function($) {
 
 	com.focusPage("#advanceType").bindData([{"key":"1", "value":"合同"}, {"key":"2", "value":"工程"}], 'key', 'value');
 
-	com.focusPage("#couponType").chosen({width: "216px", multi_type: "input"});
-
-	decorationPayment.cash = [];
-	decorationPayment.bank = [];
-	decorationPayment.checkBank = [];
-	decorationPayment.accounts = [];
-	decorationPayment.couponType = [];
-
-	decorationPayment.cashUtil = [];
-	decorationPayment.bankUtil = [];
-	decorationPayment.checkBankUtil = [];
-
-	decorationPayment.bankUtilForGrade = [];
-	decorationPayment.checkBankUtilForGrade = [];
-
-	decorationPayment.cashInfo = {};
-	decorationPayment.bankInfo = {};
-	decorationPayment.checkBankInfo = {};
-	decorationPayment.accountsInfo = {};
-	decorationPayment.couponTypeData = {};
-
 	//绑定收款单位的基础信息
 	paymentUtils.getReceiptType(decorationPayment);
 
@@ -100,8 +95,17 @@ jQuery(function($) {
 	com.selectTypeahead("cashInfo", decorationPayment.cashUtil, "key", "value", null);
 
 	//优惠券方式
-	com.focusPage("#couponType").bindData(decorationPayment.couponType, 'no', 'name');
-	com.focusPage("#couponType").trigger("chosen:updated");
+	com.selectTypeahead("couponType", decorationPayment.couponType, 'no', 'name');
+
+	com.focusPage("#couponAdd").unbind().click(function(){
+		if(com.validate("couponInputs")){
+			return;
+		}
+
+		paymentUtils.createCounpon();
+
+		com.focusPage("#couponType").val('');
+	});
 
 	//刷卡方式
 	com.focusPage("#bankAdd").click(function(){
@@ -128,6 +132,8 @@ jQuery(function($) {
 		paymentUtils.addBankUtil(maxNum, "checkvDiv", "#checkvDivGroup", decorationPayment.checkvNums, decorationPayment.checkBankUtilForGrade, decorationPayment.htmlName, 'baseItemModal');
 		return false;
 	});
+
+	com.focusPage("#historyDecoration").removeClass("active");
 	
 	var displayFunc  = (function(){
         var renderList = function(tableId,listData){
@@ -299,7 +305,7 @@ jQuery(function($) {
 				decorationPayment.paymentId = v.dpid;
 				approvalUtils.initqueryApprovalUser("refundApproveManSel", 5);
 				com.focusPage("#referMoneyApproval").val(v.referMoney);
-				decorationPayment.refundDecorationPaymentModal.modal("show");
+				decorationPayment.modals.refundDecorationPaymentModal.modal("show");
 			});
             
             $btnPrint.click(function(){
@@ -362,7 +368,7 @@ jQuery(function($) {
 				hsearcher.doSearch();
 			});
 
-			decorationPayment.refundDecorationPaymentModal.modal("hide");
+			decorationPayment.modals.refundDecorationPaymentModal.modal("hide");
 		});
 	});
 	
@@ -381,7 +387,6 @@ jQuery(function($) {
 		decorationPaymentPostData.paymentInfo = payment;
         com.cleanItems(decorationPayment.items);
 
-		com.focusPage("#paymentInfo").text("");
 		com.focusPage("#collectDes").val("");
 		com.focusPage("#couponDiv div.form-group").removeClass("hide");
 		com.focusPage("#historyUpdate").addClass("hide");
@@ -427,7 +432,7 @@ jQuery(function($) {
     	decorationPayment.orderPaymentId = decorationPaymentId;
     	decorationPayment.paymentType = paymentType;
     	decorationPayment.orderId = orderId;
-    	decorationPayment.addReduceDetail.modal("show");
+    	decorationPayment.modals.addReduceDetail.modal("show");
     	
     	var options = {
     		"quotation.orderId": orderId,
@@ -491,18 +496,15 @@ jQuery(function($) {
 		var realPayment = 0;
 		var dpids = "";
 		var orderId = "";
-		var _paymentInfo = "#paymentInfo";
 		var couponCount = 0;
 
-		com.focusPage(_paymentInfo).text("");
-
-		var returnParams = paymentUtils.getBankInfoParams(decorationPayment.paymentModelNameData, "", decorationPayment.bankNums, decorationPayment.checkvNums, couponCount, decorationPayment.typeUpdate,  0, _paymentInfo);
+		var returnParams = paymentUtils.getBankInfoParams(decorationPayment.paymentModelNameData, "", decorationPayment.bankNums, decorationPayment.checkvNums, couponCount, decorationPayment.typeUpdate, 0);
 
 		var realPayment = returnParams[0];
 		var args = returnParams[1];
 
 		if(referPayment != realPayment){
-			com.focusPage("#paymentInfo").text("当前实收款项总数与应收款项不等,请核实再进行提交!");
+			com.showAlert(com.warning, "当前实收款项总数与应收款项不等,请核实再进行提交!");
 			return false;
 		}
 
@@ -526,7 +528,7 @@ jQuery(function($) {
 
 		com.post(url, options, function(result){
 			searcher.doSearch();
-			decorationPayment.baseModal.modal("hide");
+			decorationPayment.modals.baseModal.modal("hide");
 			var argsDrId = result.decorationPayment.drId;
 
 			com.showConfirm("是否需要打印当前收款对应的收据信息?", function(result) {
@@ -610,7 +612,5 @@ jQuery(function($) {
 			});
 		});
     });
-
-	com.focusPage("#historyDecoration").removeClass("active");
 });
 

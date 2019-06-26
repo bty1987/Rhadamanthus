@@ -149,8 +149,12 @@
     $.breadcrumb('icon-home', ['首页']);
 
     $("#logout").on("click", function(e){
-        com.deleteCookie("authentication");
-        window.location.href = '/';
+        if(parent.window.isPC){
+            nwRestart();
+        }else{
+            com.deleteCookie("authentication");
+            window.location.href = '/';
+        }
     });
 
     $("a.userProfile").attr({"mid": "userProfileTab", "menuText": "个人资料", "icon": "icon-user"}).on("click", function(e){
@@ -441,7 +445,7 @@
 
         $("#lockPassword").val('');
 
-        $("#outLockingContent").bringins({"position":"center", "color":"#a7a7a7","closeButton":"white","width":"100%"});
+        $("#outLockingContent").show("slow");
 
         //不能正常请求
         window.notOperate = true;
@@ -468,7 +472,9 @@
     }
 
     function clearLocking(){
-        $("[id*='bringins-block-close-']").click();
+        
+        $("#outLockingContent").hide("slow");
+        
         window.notOperate = false; // 可以正常请求
         document.oncontextmenu = function () {  return true; };
         document.onkeydown =  function (e) {

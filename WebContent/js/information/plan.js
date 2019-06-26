@@ -1,41 +1,46 @@
 $(function () {
-// 定义全局变量 json
+
     var plan = {
-        status: [],
-        saveBtn: com.focusPage("#addplanBtn").on("click", saveData),// 绑定事件
-        cancelBtn: com.focusPage("#cancelplanBtn"),//取消
-        modal: com.focusPage("#addplanModal"),//添加
-        planItems: {
-            executeDate : com.focusPage("#executeDate"),
-            executeTime : com.focusPage("#executeTime"),
-            task : com.focusPage("#task")
+
+        saveBtn: com.focusPage("#addplanBtn"),
+        cancelBtn: com.focusPage("#cancelplanBtn"),
+        modals: {
+            planModal: com.focusPage("#addplanModal")
         },
+        planItems: {
+                executeDate : com.focusPage("#executeDate"),
+                executeTime : com.focusPage("#executeTime"),
+                task : com.focusPage("#task")
+        },
+        plugins: {},
+        lists: {},
+        status: {},
+
+        letter: null,
+        keywordName: null,
+
         editFlg: false,
         currentTime: getNowFormatDate().substr(2, 10),
         taskContent: {}
     };
-    var plugins = {};
 
-    planUtils.bindDatePicker(".date-picker", 1070);
-    planUtils.bindDateRangePicker("input[name='date-range-picker']", 1070);
-    planUtils.bindExecuteTimeBtn("#executeTime");
-    var lists = {};
-    
-    var idValue;
-    var letter;
-    var keywordName;
-    taskArgs();
+    plan.saveBtn.bindClick(saveData);
+
+    com.datetime(plan.planItems.executeDate);
+    com.datetime(plan.planItems.executeTime, "time");
+
+    com.post(api.ds.information, {}, function(res) {
+        plan.status = res.planStatus.split("key", "value");
+    });
 
     com.post(api.information.queryTask, {}, function (res) {
-        $.each(res.tasks, function (i, v) {
-            plugins[v.keyWord] = v.plugins
-        });
+        plan.plugins = res.tasks.split("keyWord", "plugins");
+
         plan.planItems.task.bindData(res.tasks, "keyWord", "name", false);
     }, null, false);
 
     planUtils.bindUploadBtn("#attachment", 1070);
 
-    //画列表
     var displayFunc = (function () {
 
         var renderList = function (tableId, listData) {
@@ -60,14 +65,6 @@ $(function () {
             var $btnDown = $('<a></a>').addClass('btn btn-minier btn-yellow').html('下载');
             var errlog = $('<a></a>').addClass('btn btn-minier btn-danger').html('执行日志');
             var $btncancel = $('<a></a>').addClass('btn btn-minier btn-warning').html('取消计划');
-
-            var status = {
-                "0": "初始",
-                "1": "取消",
-                "2": "成功",
-                "3": "失败",
-                "4": "执行"
-            };
             
             var propertyArr = [
                 ["创建人:", v.creater.userName, "grey"],
@@ -77,7 +74,7 @@ $(function () {
                 ["结果文件路径:", v.resultFilepath != null ? v.resultFilepath : "---", "grey"],
                 ["信息文件路径:", v.infoFilepath != null ? v.infoFilepath : "---", "grey"],
                 ["进度:", v.schedule, "grey"],
-                ["状态:", status[v.status], "red"],
+                ["状态:", plan.status[v.status], "red"],
                 ["结果信息:", (v.info == "" || v.info == null) ? "---" : v.info, "grey"]
             ];
 
@@ -134,48 +131,35 @@ $(function () {
         displayFunc.init('resultList', data);
     }, "pagenation", "planPostData", null, false, null, function () {
 
-        var $adda = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'addplan').css("margin", "0px 3px");
+        var $adda = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('id', 'addPlan').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span ></span>').text('添加').appendTo($adda);
 
         return [$adda];
     });
 
-    // 添加
-    com.focusPage('[name="addplan"]', '#pagenation').on("click", function () {  // 选择器 [属性名="属性值"] 匿名函数
+    com.focusPage('#addPlan', '#pagenation').on("click", function () {
 
-        com.cleanItems(plan.planItems);//清空输入
+        com.clearValidator();
+        com.cleanItems(plan.planItems);
 
         com.focusPage("#timediv").addClass("hide");
 
         taskArgs();
-        plan.modal.modal("show");
+        plan.modals.planModal.modal("show");
         plan.editFlg = false;
     });
 
-    // 撤销计划
-    function cancel(v) {
-        com.showConfirm('是否确认撤销计划', function () {
-            com.post(api.information.cancelPlan, {"plan.pid": v.pid}, function (res) {
-                planSeacher.doSearch();
-            });
-        });
-    }
-
-    // 保存
     function saveData() {
 
         if (com.validate())
             return false;
 
-        var keyWord = com.focusPage("#task").val();
-        var url;
-
         var options = {
-            "plan.task.keyWord": keyWord
+            "plan.task.keyWord": plan.planItems.task.val()
         };
 
-        var cuts = plugins[keywordName];
+        var cuts = plan.plugins[plan.keywordName];
         var results = cuts.split(",");
         var args = "";
         var flag = false;
@@ -209,10 +193,19 @@ $(function () {
         }
         com.post(api.information.createPlan, options, function (res) {
             com.showAlert(com.info, "计划创建成功!");
-            plan.modal.modal("hide");
+            plan.modals.planModal.modal("hide");
             planSeacher.doSearch();
         });
 
+    }
+
+
+    function cancel(v) {
+        com.showConfirm('是否确认撤销计划', function () {
+            com.post(api.information.cancelPlan, {"plan.pid": v.pid}, function (res) {
+                planSeacher.doSearch();
+            });
+        });
     }
 
     function getNowFormatDate() {
@@ -230,7 +223,8 @@ $(function () {
         return currentdate;
     }
 
-    //焦点事件,删除hide
+    taskArgs();
+
     function taskArgs() {
         plan.planItems.task.on("change", function (e) {
             $this = $(this);
@@ -241,17 +235,17 @@ $(function () {
             asd.empty();
 
             var keyworld = $this.val();
-            keywordName = keyworld;
-            var cut = plugins[keyworld];
-            letter = cut;
+            plan.keywordName = keyworld;
+            var cut = plan.plugins[keyworld];
+            plan.letter = cut;
             if (cut != null) {
                 var result = cut.split(",");
                 $.each(result, function (i, v) {
-                    var divId = lists[v];
+                    var divId = plan.lists[v];
                     if (v !== null && v != "") {
                         var idName = "id" + i;
                         eval("planUtils.Plugins" + v + "(" + i + ")");
-                        lists[v] = idName;
+                        plan.lists[v] = idName;
                     }
                 });
             }

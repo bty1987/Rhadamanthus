@@ -1,12 +1,5 @@
 
 jQuery(function($) {
-
-	var vactivity = {
-		vpid: null,
-		saveBtn: null,
-		modal: null,
-		items:{},
-	};
 	
 	var displayFunc  = (function(){
 
