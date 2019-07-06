@@ -1,0 +1,233 @@
+<div class="page-content">
+    <div class="row">
+        <div class='col-xs-12' style='padding-left:0px;'>
+        </div>
+    </div>
+
+    <div class="row clearfix">
+        <div class="col-xs-12 pricing-span-body" id="home">
+            <div class="tabbable">
+                <ul class="nav nav-tabs padding-12" id="homeNav">
+                    <li class="flpage nav-tab active" id="homeTab">
+                        <a data-toggle="tab" href="#homePage" id="tab_homePage">首页</a>
+                    </li>
+
+                    <li class="flpage nav-tab" id="calendarTab">
+                        <a data-toggle="tab" href="#calendarPage">日历</a>
+                    </li>
+                    
+                    <li class="dropdown" id="operateTab">
+                        <a data-toggle="dropdown" href="#operatePage" class="dropdown-toggle">
+                            <i class="icon-caret-down bigger-110 width-auto"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-info">
+                             <li id="closeAllPage">
+                                 <a data-toggle="tab">关闭所有页面</a>
+                             </li>
+                         </ul>
+                    </li>
+                </ul>
+
+                <div class="flpage tab-content no-border">
+                    <div id="homePage" class="flpage tab-pane in active">
+                    
+                        <div class="row">
+                        
+                            <div class="col-sm-4" style="border-right: 1px solid #e5e8ea;">
+                                <div class="homePanel" id="fastlink">
+	                                <div class="widget-box transparent">
+	                                    <div class="widget-header widget-header-flat">
+	                                        <h4 class="lighter">
+	                                            <span>快捷</span>
+	                                        </h4>
+	                                    </div>
+	                                    
+	                                    <div class="widget-body">
+	                                        <div class="widget-main padding-8">
+	                                            <p id="linklist">
+	                                                <a class="btn btn-app btn-fastlink no-radius no-hover col-xs-3">
+	                                                    <i class="icon-home bigger-160"></i>
+	                                                    <span>首页</span>
+	                                                </a>
+	                                            </p>
+	                                        </div>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                            
+	                            <div class="homePanel" id="backlog">
+	                                <div class="widget-box transparent">
+	                                    <div class="widget-header widget-header-flat">
+	                                        <h4 class="lighter">
+	                                            <span>待办</span>
+	                                        </h4>
+	                                    </div>
+	                                    
+	                                    <div class="widget-body">
+	                                        <div class="widget-main padding-8">
+	                                            <div class="infobox-container">
+	                                                <div class="infobox infobox-red homeindex">
+	                                                    <div class="infobox-data">
+	                                                        <span class="infobox-data-number" name="messageCount">0</span>
+	                                                        <div class="infobox-content">
+	                                                            <span>消息</span>
+	                                                            <span class="text-danger">未读</span>
+	                                                        </div>
+	                                                    </div>
+	                                                </div>
+	                                                
+	                                                <div class="infobox infobox-orange homeindex">
+	                                                    <div class="infobox-data">
+	                                                        <span class="infobox-data-number" name="approvalSendCount">0</span>
+	                                                        <div class="infobox-content">
+	                                                            <span>审批-提交</span>
+	                                                            <span class="text-danger">未处理</span>
+	                                                        </div>
+	                                                    </div>
+	                                                </div>
+	                                                
+	                                                <div class="infobox infobox-orange2 homeindex">
+	                                                    <div class="infobox-data">
+	                                                        <span class="infobox-data-number" name="approvalReceiveCount">0</span>
+	                                                        <div class="infobox-content">
+	                                                            <span>审批-接收</span>
+	                                                            <span class="text-danger">未处理</span>
+	                                                        </div>
+	                                                    </div>
+	                                                </div>
+	                                                
+	                                            </div>
+	                                        </div>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                            
+	                            <div class="homePanel" id="versionInfo">
+	                                <div class="widget-box transparent">
+	                                    <div class="widget-header widget-header-flat">
+	                                        <h4 class="lighter">
+	                                            <span>版本</span>
+	                                        </h4>
+	                                    </div>
+	                                    
+	                                    <div class="widget-body">
+	                                        <div class="widget-main padding-8">
+	                                            <h4 class="text-primary" name="versionCode"></h4>
+	                                            <div class="space-4"></div>
+	                                        </div>
+	                                    </div>
+	                                </div>
+	                            </div>
+                            </div>
+                            
+                            <div class="col-sm-5" style="border-right: 1px solid #e5e8ea;">
+                                <div class="widget-box transparent col-sm-12">
+                                    <div class="widget-header widget-header-flat">
+                                        <h4 class="lighter">
+                                            <i class="icon-bullhorn"></i>
+                                            <span>通知</span>
+                                        </h4>
+                                        <div class="widget-toolbar action-buttons">
+                                            <a href="javascript:void(0);" id="updateNotices" data-action="reload" data-rel="tooltip" data-original-title="更新">
+                                                <i class="icon-refresh"></i>
+                                            </a>&nbsp;
+                                            <a href='#' id='moreNotice' class="moreLink" mid="moreNotices" icon="icon-list-alt" menuText="通知">更多</a>
+                                        </div>
+                                    </div>
+    
+                                    <div class="widget-body">
+                                        <div class="widget-main padding-8">
+                                            <div id="noticeList"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="widget-box transparent col-xs-12">
+                                    <div class="widget-header widget-header-flat">
+                                        <h4 class="lighter">
+                                            <i class="icon-flag"></i>
+                                            <span>活动</span>
+                                        </h4>
+                                        <div class="widget-toolbar action-buttons" >
+                                            <a href="javascript:void(0);" id="updateActivities" data-action="reload" data-rel="tooltip" data-original-title="更新">
+                                                <i class="icon-refresh"></i>
+                                            </a>&nbsp;
+                                            <a href='#' id='moreActivity' class="moreLink" mid="moreActivitys" icon="icon-list-alt" menuText="活动">更多</a>
+                                        </div>
+                                    </div>
+    
+                                    <div class="widget-body">
+                                        <div class="widget-main padding-8">
+                                            <div id="activityList"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <hr />
+                        
+                        <div class="row">
+	                        <div class="col-sm-12" id="customize"></div>
+                        </div>
+                        
+                    </div>
+
+                    <div id="calendarPage" class="flpage tab-pane in active">
+                        <div class="row">
+                            <div id="calendar"></div>
+                        </div>
+                        <div id="addEvent" class="page-content" style="display: none;">
+						    <div class="row" style="margin-top:20px">
+						        <div class="col-sm-3">
+						            <label>标题:</label>
+						        </div>
+						        <div class="col-sm-9">
+						            <input class="col-xs-10 v_required" autocomplete="off" type="text" name="title" data-toggle="popover" data-trigger="manual">
+						        </div>
+						    </div>
+						    <div class="row" style="margin-top:10px">
+                                <div class="col-sm-3">
+                                    <label>内容:</label>
+                                </div>
+						        <div class="col-sm-9">
+                                    <textarea class="col-xs-10 v_required" name="content" data-toggle="popover" data-trigger="manual"></textarea>
+                                </div>
+						    </div>
+						</div>
+						
+						<div id="showEvent" class="page-content" style="display: none;">
+						    <div class="row" style="margin-top:20px">
+						        <div class="col-sm-4"><label>标题:</label></div>
+						        <div class="col-sm-8"><label name="title"></label></div>
+						    </div>
+						    <div class="row">
+						        <div class="col-sm-4"><label>内容:</label></div>
+						        <div class="col-sm-8"><label name="content"></label></div>
+						    </div>
+                            <div class="row">
+						        <div class="col-sm-4"><label>创建人:</label></div>
+						        <div class="col-sm-8"><label name="creater"></label></div>
+						    </div>
+                            <div class="row">
+						        <div class="col-sm-4"><label>创建时间:</label></div>
+						        <div class="col-sm-8"><label name="createTime"></label></div>
+						    </div>
+						</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function(){
+        $.loadScript(['js/home-antv.js']);
+    });
+    
+    $("#ace-settings-btn").on(ace.click_event, function () {
+        $(this).toggleClass("open");
+        $("#ace-settings-box").toggleClass("open")
+    });
+</script>

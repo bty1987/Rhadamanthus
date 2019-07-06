@@ -96,7 +96,7 @@
                     params.authentication = res.authentication;
                     window.authentication = res.authentication;
 
-                    com.switchPage(api.index.homeIndex.url, true);
+                    com.switchPage("/home-dark.html", true);
 
                     // 切换公司后 目录所有菜单收起
                     foldMenu();
@@ -154,7 +154,7 @@
         
         foldMenu();
         
-        com.loadPage('home-antv.html', $(this));
+        com.loadPage('home-dark.html', $(this));
         
         $.breadcrumb('icon-home', ['首页']);
         
@@ -237,7 +237,7 @@
         if(config && !params.homeLoader){
             $('#navbar').fadeIn();
             $('#main-container').fadeIn();
-            com.switchPage('home-antv.html', true);
+            com.switchPage('home-dark.html', true);
             params.homeLoader = true;
         }
         
@@ -272,7 +272,7 @@
             $('li',$tree).removeClass('open').removeClass('active');
             $main.addClass('active');
             $(this).attr({"mid": "homePage", "menuText": "首页"});
-            com.loadPage('home-antv.html', $(this));
+            com.loadPage('home-dark.html', $(this));
             $.breadcrumb('icon-home', ['首页']);
             return false;
         });

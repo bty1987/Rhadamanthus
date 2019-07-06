@@ -1194,6 +1194,7 @@
                         title: v.title,
                         area: ["40%", ( $(window).height() * 0.84 < 750 ? $(window).height() * 0.84 : 750 ) + "px"],
                         maxmin: false,
+                        move: false,
                         zIndex: 5000,
                         content: '<div class="help-content">'+ showHelpInfo(v.content) +'</div>'
                     });
