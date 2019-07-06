@@ -87,7 +87,6 @@ $(function(){
         $saveBtn : com.focusPage('#saveBtn').on('click', saveData),
         modal : com.focusPage("#backVisitModal"),
         $addBtn : com.focusPage('#add').click(function(){
-            com.clearValidator();
             com.cleanItems(backVisit.backVisitItems);
             backVisit.backVisitItems.backVisitContent.get(0).selectedIndex = 0;
             backVisit.modal.modal("show");

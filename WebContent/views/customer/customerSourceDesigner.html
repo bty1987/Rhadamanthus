@@ -21,7 +21,7 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label no-padding-right" for="villageNoDesiger">楼盘信息</label>
                             <div class="col-sm-9">
-                                <input type="text" class="col-sm-6 v_typeahead v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="villageNoDesiger" style="margin-right: 35px;" />
+                                <input type="text" class="col-sm-6 v_typeahead v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="villageNoDesiger"  style="margin-right: 35px;"/>
                                 <div id="bindHouseDiv"><button type="button" id="bindHouse" class="btn btn-xs btn-info">绑定楼盘</button></div>
                             </div>
                         </div>
@@ -39,13 +39,13 @@
                         <div class="form-group" id="houseNumberGroupTwo">
                             <label for="built" class="col-sm-3 control-label no-padding-right">楼牌号</label>
                             <div class="col-sm-9">
-                                <input type="text" maxlength="7" style="width: 10%;"  id="built">
+                                <input type="text" maxlength="7" class="v_required" style="width: 10%;"  id="built">
                                 <select id="builtrule" style="padding: 0px;font-size: 1px; width: 10%!important; height: 25px; vertical-align: bottom"></select>
-                                <input type="text" maxlength="3"  style="float: none; width: 10%;"  id="unit">
+                                <input type="text" maxlength="3" class="v_required" style="float: none; width: 10%;"  id="unit">
                                 <select  id="unitrule" style="padding: 0px;font-size: 1px; width: 10%!important; height: 25px; vertical-align: bottom"></select>
-                                <input type="text" maxlength="3"  style="float: none; width: 10%;" id="floor">
+                                <input type="text" maxlength="3" class="v_required" style="float: none; width: 10%;" id="floor">
                                 <select id="floorrule" style="padding: 0px;font-size: 1px; width: 10%!important; height: 25px; vertical-align: bottom"></select>
-                                <input type="text" maxlength="3"  style="float: none; width: 10%;"  id="door">
+                                <input type="text" maxlength="3" class="v_required" style="float: none; width: 10%;"  id="door">
                                 <select id="doorrule" style="padding: 0px;font-size: 1px; width: 10%!important; height: 25px; vertical-align: bottom"></select>
                                 <span id="errMsg"></span>
                                 <div class="col-md-12" style="padding: 0px;" >
@@ -57,7 +57,7 @@
                         <div class="form-group" id="buildAreaGroup">
                             <label class="col-sm-3 control-label no-padding-right" for="buildArea">建筑面积</label>
                             <div class="col-sm-9">
-                                <input type="text" id="buildArea" maxlength="7" class="col-xs-6 col-sm-6 v_required v_float_3" />
+                                <input type="text" id="buildArea" maxlength="7" class="col-xs-6 col-sm-6 v_float" />
                                 <span style = "margin-left: 10px; line-height: 34px">平</span>
                             </div>
                         </div>
@@ -74,14 +74,14 @@
                             <label class="col-sm-3 control-label no-padding-right" for="gender">性别</label>
                             <div class="col-sm-9">
                                 <input type="checkbox" id="gender" class="ace ace-switch ace-switch-5"/>
-								<span class="lbl gender"></span>
+                                <span class="lbl gender"></span>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="col-sm-3 control-label no-padding-right">电话</label>
                             <div class="col-sm-9">
-                                <input type="text" class="m-wrap col-xs-6 v_required v_phone" id="phone">
+                                <input type="text" class="m-wrap col-xs-6 v_phone v_required" id="phone">
                             </div>
                         </div>
 
@@ -102,7 +102,7 @@
                         <div class="form-group" id="priceGroup">
                             <label class="col-sm-3 control-label no-padding-right">需求价格</label>
                             <div class="col-sm-9">
-                                <input type="text" class=" m-wrap col-xs-6 v_required" id="price">
+                                <input type="text" class=" m-wrap col-xs-6 v_required v_float_3" id="price">
                             </div>
                         </div>
 

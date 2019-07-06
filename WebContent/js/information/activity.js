@@ -25,6 +25,11 @@ $(function(){
 
     activity.saveBtn.bindClick(saveData);
 
+    activity.modals.activityModal.on("hide.bs.modal", function () {
+        com.clearValidator();
+        com.cleanItems(activity.items);
+    });
+
     com.datetime(com.focusPage(".date-picker-date"));
 
     com.post(api.ds.information, {}, function (res) {
@@ -170,9 +175,6 @@ $(function(){
 
     com.focusPage("#addActivity").click(function() {
         activity.editFlg = true;
-
-        com.clearValidator();
-        com.cleanItems(activity.items);
 
         activity.items.activityName.removeAttr("disabled", "disabled");
         activity.items.startTime.removeAttr("disabled", "disabled");

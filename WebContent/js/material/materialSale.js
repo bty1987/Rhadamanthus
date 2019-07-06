@@ -23,7 +23,6 @@ jQuery(function($) {
 		},
 
 		mmIdLimit: 2,
-
 		record: {},
 		typeahead: {
 			queryByNameUrl: api.material.queryMaterialModelForAllByName,
@@ -115,19 +114,16 @@ jQuery(function($) {
 
 		var materialBrandStr = "";
 		var materialBrandFlag = true;
-		var salesmanNameFlag = false;
 
-		if(com.focusPage("#salesmanName").val() == ""){
-			com.showTips(com.focusPage("#salesmanName"), "字段不能为空!", true);
-			salesmanNameFlag = true;
+		if(com.validate("materialSaleOrderPageContent","rigth")){
+			return false
 		}
 
-		if(com.validate() || salesmanNameFlag)
-			return;
-
 		var $lines = com.focusPage('li.selected', '#list');
-//		if(!$lines.length) return;
-
+		if (!$lines.length) {
+			com.showAlert(com.warning, '请添加型号进行提交');
+			return false;
+		}
 		var returnFlag = false;
 		$lines.each(function(){
 			var $this = $(this);
@@ -146,7 +142,7 @@ jQuery(function($) {
 			return false;
 		}
 
-		materialBrandStr = com.focusPage("#materialBrand_chosen span")[0].textContent;
+		materialBrandStr = com.focusPage("#materialBrand").val();
 		var orderId = materialSaleOrder.materialSaleOrderItems.orderId.val();
 		var customerId = materialSaleOrderPostData["materialSubOrder.customerId"];
 		var customerName = materialSaleOrder.materialSaleOrderItems.customerName.val();
@@ -159,10 +155,10 @@ jQuery(function($) {
 		options["material.customer.name"] = customerName;
 		options["material.type"] = materialSaleOrder.materialSaleOrderItems.msoType.val();
 		options["material.comment"] = materialSaleOrder.materialSaleOrderItems.des.val();
-		options["material.salesman.userId"] = com.focusPage('#salesmanName').val();
-		options["material.materialer.userId"] = com.focusPage('#materialerName').val();
-		options["material.instorer.userId"] = com.focusPage('#instoreName').val() ? com.focusPage('#instoreName').val() : "";
-		options["material.bid"] = com.focusPage('#materialBrand').val();
+		options["material.salesman.userId"] = com.typeahead("salesmanName");
+		options["material.materialer.userId"] = com.typeahead("materialerName");
+		options["material.instorer.userId"] = com.typeahead("instoreName") ? com.typeahead("instoreName") : "";
+		options["material.bid"] = com.typeahead("materialBrand");
 
 		var $list = com.focusPage('li.selected', '#list');
 		$list.length && $list.each(function(i){
@@ -454,116 +450,55 @@ jQuery(function($) {
 		var materialModelName = $line.find('.materialModelName input');
 		if(!materialModelName.val()){
 			materialModelName.focus().select();
-
-			materialModelName.addClass('popover-notitle').attr({
-				"data-rel" : "popover",
-				"data-placement" : "top",
-				"data-original-title" : "",
-				"title" : "",
-				"data-content" : "请填写主材名称"
-
-			}).popover('show');
-
+			com.showTip(materialModelName,"请填写主材名称","bottom");
 			flag =  false;
-		}else{
-			materialModelName.popover('destroy');
 		}
 
 		var salePrice = $line.find('.salePrice input');
 		var salePriceRex = /^(\d+|\d+\.[0-9]{1,4})$/;
 		if(!salePriceRex.test(salePrice.val())){
 			salePrice.focus().select();
-			salePrice.addClass('tooltip-info').attr({
-				"data-rel" : "popover",
-				"data-placement" : "top",
-				"data-original-title" : "",
-				"title" : "",
-				"data-content" : "折扣价输入内容格式错误!"
-
-			}).popover('show');
+			com.showTip(salePrice,"折扣价输入内容格式错误","bottom");
 			flag =  false;
-		}else{
-			salePrice.popover('destroy');
 		}
 
 		var postDiscount = $line.find('.postDiscount input');
 		var postDiscountRex = /^(1\.0{1,2}|1|0\.[0-9]{1,2})$/;
 		if(!postDiscountRex.test(postDiscount.val())){
 			postDiscount.focus().select();
-			postDiscount.addClass('tooltip-info').attr({
-				"data-rel" : "popover",
-				"data-placement" : "top",
-				"data-original-title" : "",
-				"title" : "",
-				"data-content" : "折让输入内容格式错误!"
-			}).popover('show');
+			com.showTip(postDiscount,"折让输入内容格式错误","bottom");
 			flag =  false;
-		}else{
-			postDiscount.popover('destroy');
 		}
 
 		var price = $line.find('.price input');
 		var priceRex = /^([0-9]+|[0-9]+\.[0-9]{1,2})$/;
 		if(!(priceRex.test(price.val()) && parseFloat(price.val()) > 0)){
 			price.focus().select();
-			price.addClass('tooltip-info').attr({
-				"data-rel" : "popover",
-				"data-placement" : "top",
-				"data-original-title" : "",
-				"title" : "",
-				"data-content" : "售价输入内容格式错误!"
-
-			}).popover('show');
+			com.showTip(price,"售价输入内容格式错误","bottom");
 			flag =  false;
-		}else{
-			price.popover('destroy');
 		}
 
 		var num = $line.find('.num input');
 		var numRex = /^(\d+|\d+\.[0-9]{1,4})$/;
 		if(!(numRex.test(num.val()) && parseFloat(num.val()) > 0)){
 			num.focus().select();
-			num.addClass('tooltip-info').attr({
-				"data-rel" : "popover",
-				"data-placement" : "top",
-				"data-original-title" : "",
-				"title" : "",
-				"data-content" : "数量输入内容格式错误!"
-			}).popover('show');
+			com.showTip(num,"数量输入内容格式错误","bottom");
 			flag =  false;
-		}else{
-			num.popover('destroy');
 		}
 
 		var packageName = $line.find('.packageName input');
 		var packageRex = /^[\u4E00-\u9FA5A-Za-z0-9]{0,7}$/;
 		if(!packageRex.test(packageName.val())){
 			packageName.focus().select();
-			packageName.addClass('tooltip-info').attr({
-				"data-rel" : "popover",
-				"data-placement" : "top",
-				"data-original-title" : "",
-				"title" : "",
-				"data-content" : "请检查套餐名称(套餐名称长度必须小于8且只能由汉字、数字和字母组成)!"
-			}).popover('show');
+			com.showTip(packageName,"请检查套餐名称(套餐名称长度必须小于8且只能由汉字、数字和字母组成)!","bottom");
 			flag =  false;
-		}else{
-			packageName.popover('destroy');
 		}
 
 		var des = $line.find('.des input');
 		if(des.val().length > 128){
 			des.focus().select();
-			des.addClass('tooltip-info').attr({
-				"data-rel" : "popover",
-				"data-placement" : "top",
-				"data-original-title" : "",
-				"title" : "",
-				"data-content" : "备注信息长度需要小于128!"
-			}).popover('show');
+			com.showTip(des,"备注信息长度需要小于128","bottom");
 			flag =  false;
-		}else{
-			des.popover('destroy');
 		}
 
 		return flag;

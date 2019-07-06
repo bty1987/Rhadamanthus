@@ -2,10 +2,14 @@ $(function () {
 
     var constructionNodes = {
 
-        saveBtn: com.focusPage("#saveBtn"),
+        constructionSchedule: {},
 
         modals:{
             constructionInfoModal : com.focusPage("#constructionInfoModal")
+        },
+
+        btns: {
+            saveBtn: com.focusPage("#saveBtn")
         },
 
         items: {
@@ -14,13 +18,17 @@ $(function () {
             iskey  : com.focusPage("#iskey"),
             isCeremony  : com.focusPage("#isCeremony"),
             comment   : com.focusPage("#comment")
-        },
-
-        constructionSchedul :{}
+        }
 
     };
 
-    constructionNodes.saveBtn.bindClick(saveData);
+    constructionNodes.btns.saveBtn.bindClick(saveData);
+
+    constructionNodes.modals.constructionInfoModal.on("hide.bs.modal", function(){
+
+        com.cleanItems(constructionNodes.items);
+        com.closeTip();
+    });
 
     com.post(api.ds.construction, {}, function (res) {
 
@@ -30,14 +38,8 @@ $(function () {
 
     });
 
-    com.post(api.data.queryConstructionNode, {}, function (res) {
-        constructionNodes.constructionSchedul = res.constructionNodes.split("sort", "name");
-    }, null, false);
-
     com.post(api.ds.construction, {}, function (res) {
-        $.each(res.constructionSchedul, function (i, v) {
-            constructionNodes.constructionSchedul[v["key"]] = v["value"];
-        });
+        constructionNodes.constructionSchedule = res.constructionSchedule.split("key", "value");
     }, null, false);
 
     var displayFunc = (function () {
@@ -58,6 +60,7 @@ $(function () {
 
         var creatLine = function (v) {
 
+            var that = this;
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.orderId));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
@@ -75,7 +78,7 @@ $(function () {
                 ["监理:", v.supervisor.userName, "grey"],
                 ["总价:", v.orderTotalPrice, "blue"],
                 ["面积:", v.house.buildArea, "blue"],
-                ["进度:", constructionNodes.constructionSchedul[v.projectStatus], "red"]
+                ["进度:", constructionNodes.constructionSchedule[v.projectStatus], "red"]
             ];
 
             $.each(propertyArr, function (index, value) {

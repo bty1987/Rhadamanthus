@@ -26,6 +26,11 @@ jQuery(function ($) {
     };
 
     salary.saveBtn.bindClick(saveData);
+    salary.modals.workersalaryModal.on('hide.bs.modal', function (e) {
+        com.cleanTypeahead("workersalaryuser");
+        com.cleanItems(salary.items);
+        com.closeTip();
+    });
 
     com.initTypeahead('workersalaryuser', api.personel.queryUserByPinyin, "pinyinName", {"user.status": "0"}, "autoFillKeyValue", "key", "value",function(list,key,value){return value;});
 
@@ -175,11 +180,6 @@ jQuery(function ($) {
     });
 
     com.focusPage('a[name="add"]', '#pagenation').click(function () {
-
-        com.clearValidator();
-        com.cleanTypeahead("workersalaryuser");
-        com.cleanItems(salary.items);
-
         salary.modals.workersalaryModal.modal("show");
     });
 

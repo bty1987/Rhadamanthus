@@ -2,27 +2,47 @@
 jQuery(function($) {
 	var buildingNodeType = {};
 	var buildingNode = {
-		saveBtn: null,
-		cancelBtn: null,
-		viewDeployedBtn: null,
-		modal: null,
-		items:{},
+
+		btns: {
+
+			saveBtn: com.focusPage("#saveBtn"),
+			cancelBtn: com.focusPage("#cancelBtn"),
+			viewDeployedBtn: com.focusPage("#viewDeployedBtn")
+
+		},
+
+		modals: {
+
+			viewBuildingNodeModal: com.focusPage("#viewBuildingNodeModal"),
+			buildingNodeModal: com.focusPage("#buildingNodeModal")
+
+		},
+
+		items: {
+
+			buildingNodeName: com.focusPage("#buildingNodeName"),
+			buildingNodeType: com.focusPage("#buildingNodeType"),
+			nodeName: com.focusPage("#nodeName")
+
+		},
+
 		editFlg: false,
 		nodeId: null
 	};
 
-	buildingNode.saveBtn = com.focusPage("#saveBtn").on("click", saveData);
-	buildingNode.cancelBtn = com.focusPage("#cancelBtn");
-	buildingNode.viewDeployedBtn = com.focusPage("#viewDeployedBtn").on("click", updateNodeName);
+	buildingNode.btns.saveBtn.on("click", saveData);
+	buildingNode.btns.viewDeployedBtn.on("click", updateNodeName);
 
-	buildingNode.items.buildingNodeName = com.focusPage("#buildingNodeName");
-	buildingNode.items.buildingNodeType = com.focusPage("#buildingNodeType");
+	buildingNode.modals.buildingModal.on("hide.bs.modal", function(){
 
-	buildingNode.items.nodeName = com.focusPage("#nodeName");
+		com.cleanItems(buildingNode.items);
+		com.closeTip();
+	});
 
-	buildingNode.modal = com.focusPage("#buildingNodeModal");
-	buildingNode.modal.on('show.bs.modal',function(e){
-		com.clearValidator();
+	buildingNode.modals.viewBuildingNodeModal.on("hide.bs.modal", function(){
+
+		com.cleanItems(buildingNode.items);
+		com.closeTip();
 	});
 
 	com.post(api.ds.building, {}, function(res){
@@ -78,7 +98,7 @@ jQuery(function($) {
 			$btnView.click(function(){
 				buildingNode.nodeId = v.bnid;
 				com.cleanItems(buildingNode.items);
-				com.focusPage("#viewBuildingNodeModal").modal("show");
+				buildingNode.modals.viewBuildingNodeModal.modal("show");
 			});
 
 			//启禁用
@@ -124,7 +144,7 @@ jQuery(function($) {
 	//添加
 	com.focusPage('a[name="addBuildingNode"]', '#pagenation').click(function(){
 		com.cleanItems(buildingNode.items);
-		com.focusPage("#buildingNodeModal").modal("show");
+		buildingNode.modals.buildingNodeModal.modal("show");
 	});
 
 	function updateNodeStatus(bnId, cvalue){
@@ -167,7 +187,7 @@ jQuery(function($) {
 		options["buildingNode.name"] = buildingNode.items.nodeName.val();
 		com.post(api.building.updateBuildingNode, options, function(res){
 			searcher.doSearch();
-			com.focusPage("#viewBuildingNodeModal").modal("hide");
+			buildingNode.modals.buildingNodeModal.modal("hide");
 		});
 	}
 });

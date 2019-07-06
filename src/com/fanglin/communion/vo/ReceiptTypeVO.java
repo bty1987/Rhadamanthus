@@ -5,21 +5,21 @@ public class ReceiptTypeVO implements java.io.Serializable {
 	private static final long serialVersionUID = 186150588872194351L;
 
 	private Integer rtId;
-	
+
 	private String name;
-	
+
 	private String no;
-	
+
 	private Short type;
-	
+
 	private Short status;
-	
+
 	private String grade;
-	
+
 	private String kino;
-	
+
 	private String kiname;
-	
+
 	private String assistant;
 
 	public Integer getRtId() {

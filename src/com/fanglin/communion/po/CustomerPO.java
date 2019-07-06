@@ -9,49 +9,49 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="customer", catalog = "communion")
-public class CustomerPO implements Serializable{
+@Table(name = "customer", catalog = "communion")
+public class CustomerPO implements Serializable {
 
 	private static final long serialVersionUID = 263298158826936889L;
-	
-	public static final short BALANCE_TYPE_BALANCE_INT = 0;
-	
-	public static final short BALANCE_TYPE_PROJECT_INT = 1;
-	  
-    public static final short BALANCE_TYPE_MATERIAL_INT = 2;  
 
-    public static final short BALANCE_TYPE_ZHENGLIN_INT = 3;
-	
+	public static final short BALANCE_TYPE_BALANCE_INT = 0;
+
+	public static final short BALANCE_TYPE_PROJECT_INT = 1;
+
+	public static final short BALANCE_TYPE_MATERIAL_INT = 2;
+
+	public static final short BALANCE_TYPE_ZHENGLIN_INT = 3;
+
 	private long cid;
-	
+
 	private String no;
-	
+
 	private String name;
-	
+
 	private String pinyinAll;
-	
+
 	private String pinyinAB;
-	
+
 	private String gender;
-	
+
 	private String identity;
-	
+
 	private String officer;
-	
+
 	private String passport;
-	
+
 	private String qq;
-	
+
 	private String wechat;
-	
+
 	private String email;
-	
+
 	private String address;
-	
+
 	private String relationshipType;
-	
+
 	private int company;
-	
+
 	public CustomerPO() {
 		super();
 	}
@@ -63,7 +63,7 @@ public class CustomerPO implements Serializable{
 
 	@Id
 	@GeneratedValue
-	@Column(name="cid")
+	@Column(name = "cid")
 	public long getCid() {
 		return cid;
 	}
@@ -72,7 +72,7 @@ public class CustomerPO implements Serializable{
 		this.cid = cid;
 	}
 
-	@Column(name="no")
+	@Column(name = "no")
 	public String getNo() {
 		return no;
 	}
@@ -81,7 +81,7 @@ public class CustomerPO implements Serializable{
 		this.no = no;
 	}
 
-	@Column(name="name")
+	@Column(name = "name")
 	public String getName() {
 		return name;
 	}
@@ -90,7 +90,7 @@ public class CustomerPO implements Serializable{
 		this.name = name;
 	}
 
-	@Column(name="pinyinAll")
+	@Column(name = "pinyinAll")
 	public String getPinyinAll() {
 		return pinyinAll;
 	}
@@ -99,7 +99,7 @@ public class CustomerPO implements Serializable{
 		this.pinyinAll = pinyinAll;
 	}
 
-	@Column(name="pinyinAB")
+	@Column(name = "pinyinAB")
 	public String getPinyinAB() {
 		return pinyinAB;
 	}
@@ -108,7 +108,7 @@ public class CustomerPO implements Serializable{
 		this.pinyinAB = pinyinAB;
 	}
 
-	@Column(name="gender")
+	@Column(name = "gender")
 	public String getGender() {
 		return gender;
 	}
@@ -117,7 +117,7 @@ public class CustomerPO implements Serializable{
 		this.gender = gender;
 	}
 
-	@Column(name="identity")
+	@Column(name = "identity")
 	public String getIdentity() {
 		return identity;
 	}
@@ -126,7 +126,7 @@ public class CustomerPO implements Serializable{
 		this.identity = identity;
 	}
 
-	@Column(name="officer")
+	@Column(name = "officer")
 	public String getOfficer() {
 		return officer;
 	}
@@ -135,7 +135,7 @@ public class CustomerPO implements Serializable{
 		this.officer = officer;
 	}
 
-	@Column(name="passport")
+	@Column(name = "passport")
 	public String getPassport() {
 		return passport;
 	}
@@ -144,7 +144,7 @@ public class CustomerPO implements Serializable{
 		this.passport = passport;
 	}
 
-	@Column(name="qq")
+	@Column(name = "qq")
 	public String getQq() {
 		return qq;
 	}
@@ -153,7 +153,7 @@ public class CustomerPO implements Serializable{
 		this.qq = qq;
 	}
 
-	@Column(name="wechat")
+	@Column(name = "wechat")
 	public String getWechat() {
 		return wechat;
 	}
@@ -162,7 +162,7 @@ public class CustomerPO implements Serializable{
 		this.wechat = wechat;
 	}
 
-	@Column(name="email")
+	@Column(name = "email")
 	public String getEmail() {
 		return email;
 	}
@@ -171,7 +171,7 @@ public class CustomerPO implements Serializable{
 		this.email = email;
 	}
 
-	@Column(name="address")
+	@Column(name = "address")
 	public String getAddress() {
 		return address;
 	}
@@ -180,7 +180,7 @@ public class CustomerPO implements Serializable{
 		this.address = address;
 	}
 
-	@Column(name="relationshipType")
+	@Column(name = "relationshipType")
 	public String getRelationshipType() {
 		return relationshipType;
 	}
@@ -189,7 +189,7 @@ public class CustomerPO implements Serializable{
 		this.relationshipType = relationshipType;
 	}
 
-	@Column(name="company")
+	@Column(name = "company")
 	public int getCompany() {
 		return company;
 	}
@@ -197,6 +197,4 @@ public class CustomerPO implements Serializable{
 	public void setCompany(int company) {
 		this.company = company;
 	}
-}	
-	
-	
+}

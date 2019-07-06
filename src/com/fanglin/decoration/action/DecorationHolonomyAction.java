@@ -47,6 +47,14 @@ public class DecorationHolonomyAction extends BaseListAction {
 
 		return SUCCESS;
 	}
+	
+	@Action(value = "updateDecorationHolonomy", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateDecorationHolonomy() throws FLException {
+		
+		decorationHolonomyService.updateDecorationHolonomy(decorationHolonomy, queryUserId());
+
+		return SUCCESS;
+	}
 
 	public DecorationHolonomyVO getDecorationHolonomy() {
 		return decorationHolonomy;

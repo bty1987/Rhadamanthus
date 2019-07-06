@@ -1,9 +1,9 @@
 $(function () {
 
-    var $popUp = com.focusPage('#viewPopUp');
-
-    var sid = $popUp.attr('data-sid');
-
+    var salesInventory = {
+        sid : com.focusPage('#viewPopUp').attr('data-sid')
+    };
+    
     var _option = {};
 
     var displayFuncSalesManifest = (function () {
@@ -86,21 +86,15 @@ $(function () {
                                                 $smallManifestItem.appendTo($h3ManifestItem);
 
                                             });
-
                                             $ulManifestItem.appendTo($tableWrapManifestItem);
-
                                         }
                                     };
-
-
                                     return {
                                         init: function (tableId, listData) {
                                             com.focusPage('#' + tableId).html(null);
                                             renderListManifestItem(tableId, listData);
                                         }
                                     };
-
-
                                 })();
 
                                 com.post(api.inventory.queryManifestItemByMid, {
@@ -110,10 +104,8 @@ $(function () {
                                     displayFuncManifestItem.init('resultListManifestItem' + v.mid, res.manifestItems);
                                 });
                             }
-
                             $manifestItems.addClass('open').show();
                         }
-
                     });
 
                     $btnDiv.append($btnSalesItem).appendTo($h3);
@@ -127,20 +119,16 @@ $(function () {
                 $ul.appendTo($tableWrap);
             }
         };
-
-
         return {
             init: function (tableId, listData) {
                 com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             }
         };
-
-
     })();
 
     com.post(api.inventory.queryManifestForXGBySid, {
-        "sales.sid": sid
+        "sales.sid": salesInventory.sid
     }, function (res) {
         if (res.manifests.length == 0) {
             emptyData('resultListSalesManifest');
@@ -149,7 +137,6 @@ $(function () {
         }
 
     }, null, false);
-
 
     var displayFuncSalesPurchase = (function () {
 
@@ -235,16 +222,12 @@ $(function () {
 
                                         }
                                     };
-
-
                                     return {
                                         init: function (tableId, listData) {
                                             com.focusPage('#' + tableId).html(null);
                                             renderListPurchaseItem(tableId, listData);
                                         }
                                     };
-
-
                                 })();
 
                                 com.post(api.inventory.queryPurchaseItemByPid, {
@@ -256,7 +239,6 @@ $(function () {
 
                             $purchaseItems.addClass('open').show();
                         }
-
                     });
 
                     $btnDiv.append($btnSalesItem).appendTo($h3);
@@ -264,13 +246,9 @@ $(function () {
                     $purchaseItems.appendTo($ul);
                     $liLine.append($h3).append($ulProperty);
                     $small.appendTo($h3);
-
                     _option["pids[" + i + "]"] = v.pid;
-
                 });
-
                 $ul.appendTo($tableWrap);
-
             }
         };
 
@@ -284,7 +262,7 @@ $(function () {
     })();
 
     com.post(api.inventory.queryPurchaseBySid, {
-        "sales.sid": sid
+        "sales.sid": salesInventory.sid
     }, function (res) {
         if (res.purchases.length == 0) {
             emptyData('resultListSalesPurchase');
@@ -379,16 +357,12 @@ $(function () {
 
                                         }
                                     };
-
-
                                     return {
                                         init: function (tableId, listData) {
                                             com.focusPage('#' + tableId).html(null);
                                             renderListPurchaseManifestItem(tableId, listData);
                                         }
                                     };
-
-
                                 })();
 
                                 com.post(api.inventory.queryManifestItemByMid, {
@@ -397,10 +371,8 @@ $(function () {
                                     displayFuncPurchaseManifestItem.init('resultListPurchaseManifestItem' + v.mid, res.manifestItems);
                                 });
                             }
-
                             $purchaseManifestItems.addClass('open').show();
                         }
-
                     });
 
                     $btnDiv.append($btnSalesItem).appendTo($h3);
@@ -410,13 +382,9 @@ $(function () {
                     $small.appendTo($h3);
 
                 });
-
                 $ul.appendTo($tableWrap);
-
-
             }
         };
-
 
         return {
             init: function (tableId, listData) {
@@ -424,8 +392,6 @@ $(function () {
                 renderList(tableId, listData);
             }
         };
-
-
     })();
 
     com.post(api.inventory.queryManifestForPUByPids, _option, function (res) {

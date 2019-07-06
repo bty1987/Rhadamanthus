@@ -18,17 +18,17 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.Paging;
 
 public interface ReceiptTypeService {
-	
+
 	public void pageReceiptType(Paging paging, List<Filter> filters, int company);
-	
+
 	public List<ReceiptTypeVO> queryReceiptType(int company);
-	
-	public List<ReceiptTypeVO> queryReceiptTypeByType(ReceiptTypeVO receiptTypeVO,int company);
-	
-	public int addReceiptType(ReceiptTypeVO receiptTypeVO,int company) throws FLException;
-	
-	public int updateReceiptType(ReceiptTypeVO receiptTypeVO, int company ) throws FLException;
-	
-	public  void  updateReceiptTypeForStatus(ReceiptTypeVO receiptTypeVO)throws FLException;
-	
+
+	public List<ReceiptTypeVO> queryReceiptTypeByType(ReceiptTypeVO receiptTypeVO, int company);
+
+	public int addReceiptType(ReceiptTypeVO receiptTypeVO, int company) throws FLException;
+
+	public int updateReceiptType(ReceiptTypeVO receiptTypeVO, int company) throws FLException;
+
+	public void updateReceiptTypeForStatus(ReceiptTypeVO receiptTypeVO) throws FLException;
+
 }

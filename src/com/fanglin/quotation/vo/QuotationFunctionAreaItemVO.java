@@ -10,7 +10,11 @@ public class QuotationFunctionAreaItemVO implements Serializable{
 
 	private String itemName;
 	
+	private Float addPrice;
+	
 	private Float unitPrice;
+	
+	private Float subPrice;
 	
 	private String formula;
 	
@@ -52,12 +56,28 @@ public class QuotationFunctionAreaItemVO implements Serializable{
 		this.itemName = itemName;
 	}
 
+	public Float getAddPrice() {
+		return addPrice;
+	}
+
+	public void setAddPrice(Float addPrice) {
+		this.addPrice = addPrice;
+	}
+
 	public Float getUnitPrice() {
 		return unitPrice;
 	}
 
 	public void setUnitPrice(Float unitPrice) {
 		this.unitPrice = unitPrice;
+	}
+
+	public Float getSubPrice() {
+		return subPrice;
+	}
+
+	public void setSubPrice(Float subPrice) {
+		this.subPrice = subPrice;
 	}
 
 	public String getFormula() {

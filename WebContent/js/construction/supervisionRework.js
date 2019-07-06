@@ -19,6 +19,12 @@ jQuery(function ($) {
 
     rework.saveBtn.bindClick(saveData);
 
+    rework.modals.modal.on("hide.bs.modal", function(){
+
+        com.cleanItems(rework.items);
+        com.closeTip();
+    });
+
     com.focusPage('#fl-statement').statement("监理控制", "返工信息列表");
 
     com.datetime(rework.items.createTime);
@@ -113,8 +119,6 @@ jQuery(function ($) {
 
     com.focusPage('#add', '#pagenation').click(function () {
         rework.editFlag = false;
-
-        com.cleanItems(rework.items);
 
         rework.modals.modal.modal("show");
     });

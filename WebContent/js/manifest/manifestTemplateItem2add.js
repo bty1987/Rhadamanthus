@@ -110,6 +110,7 @@ $(function(){
         saveOptionChange();
     });
     $btnCancel.bindClick(function(){
+        com.switchPage('views/manifest/manifestTemplateItem.html');
         com.closePopup();
     });
     

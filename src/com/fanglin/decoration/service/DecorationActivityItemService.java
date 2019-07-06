@@ -21,8 +21,6 @@ public interface DecorationActivityItemService {
 	
 	public List<DecorationActivityItemVO> queryDecorationActivityItemByOrderId(DecorationVO decorationVO);
 	
-	public List<DecorationActivityItemVO> queryDecorationActivityItemForCouponAVaildByOrderId(DecorationVO decorationVO);
-	
 	public int abateDecorationActionItem(DecorationActivityItemVO decorationActivityItemVO, String userId) throws FLException;
 	
 	public int receiveDecorationActivityItem(DecorationActivityItemVO decorationActivityItemVO, String userId, String userName) throws FLException;
@@ -34,4 +32,6 @@ public interface DecorationActivityItemService {
 	public int refundDecorationActivityItem(DecorationActivityItemVO decorationActivityItemVO, String userId) throws FLException;
 	
 	public int expendDecorationActivityItem(DecorationActivityItemVO decorationActivityItemVO, String userId) throws FLException;
+	
+	public int amountDecorationActivityItem(DecorationVO decorationVO, String userId) throws FLException;
 }

@@ -37,8 +37,22 @@ jQuery(function ($) {
         repeatFlg: false
     };
 
+    com.datetime(complaint.items.complaintTime);
     complaint.btns.saveBtn.bindClick(saveData);
     complaint.btns.saveHandleBtn.bindClick(saveHandleData);
+
+    complaint.modals.modal.on("hide.bs.modal", function(){
+
+        com.cleanItems(complaint.items);
+        com.closeTip();
+    });
+
+    complaint.modals.handleModal.on("hide.bs.modal", function(){
+
+        com.cleanItems(complaint.items);
+        com.closeTip();
+    });
+
     complaint.modals.modal.on('show.bs.modal', function (e) {
         com.clearValidator();
     });
@@ -46,19 +60,17 @@ jQuery(function ($) {
         com.clearValidator();
     });
 
-    com.datetime(complaint.items.complaintTime);
+    com.post(api.ds.construction, {}, function (res) {
+        complaint.levelDict = res.levelDict.split("key", "value");
+
+        complaint.items.complaintLevel.bindData(res.levelDict, "key", "value", false);
+    });
 
     com.post(api.ds.construction, {}, function (res) {
-        $.each(res.typeDict, function (i, v) {
-            complaint.typeDict[v["key"]] = v["value"];
-        });
-    }, null, false);
+        complaint.typeDict = res.typeDict.split("key", "value");
 
-    com.post(api.ds.construction, {}, function (res) {
-        $.each(res.levelDict, function (i, v) {
-            complaint.levelDict[v["key"]] = v["value"];
-        });
-    }, null, false);
+        complaint.items.complaintType.bindData(res.typeDict, "key", "value", false);
+    });
 
     var displayFunc = (function () {
         var renderList = function (tableId, listData) {
@@ -96,7 +108,7 @@ jQuery(function ($) {
                 ["客户名:", v.customerName, "grey"],
                 ["创建人:", v.createrName, "grey"],
                 ["操作人:", v.operaterName, "grey"],
-                ["等级:", levelInit(v.level), null],
+                ["等级:", complaint.levelDict[v.level], null],
                 ["类型:", complaint.typeDict[v.type], "red "],
                 ["时间:", v.createTime, "green "],
                 ["备注:", v.des, "grey"],
@@ -157,8 +169,6 @@ jQuery(function ($) {
     com.focusPage('#add', '#pagenation').click(function () {
         complaint.editFlag = false;
 
-        com.cleanItems(complaint.items);
-
         complaint.items.orderId.val(params.orderId);
         complaint.items.customerName.val(params.customerName);
 
@@ -168,21 +178,6 @@ jQuery(function ($) {
 
         complaint.modals.modal.modal("show");
     });
-
-    function levelInit(levelcode) {
-
-        var result = '';
-
-        var level = complaint.levelDict[levelcode];
-
-        if (levelcode == 0) {
-            result += "<span class='label label-warning'>" + level + "</span>";
-        } else if (levelcode == 1) {
-            result += "<span class='label label-danger'>" + level + "</span>";
-        }
-
-        return result;
-    }
 
     function saveData() {
         if (com.validate("complaintModal") || complaint.repeatFlg)
@@ -241,7 +236,6 @@ jQuery(function ($) {
     }
 
     function dialogCustomerServiceComplaintHandle(v) {
-        com.cleanItems(complaint.items);
 
         var row = v;
 

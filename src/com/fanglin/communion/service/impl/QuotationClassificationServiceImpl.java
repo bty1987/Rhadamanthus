@@ -27,42 +27,42 @@ import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
 
 @Service("quotationClassificationService")
-@Transactional(readOnly=true)
+@Transactional(readOnly = true)
 public class QuotationClassificationServiceImpl implements QuotationClassificationService {
 
 	@Autowired
 	private QuotationClassificationDao quotationClassificationDao;
 
 	@Override
-	public List<QuotationClassificationVO> queryQuotationClassification(){
-		
+	public List<QuotationClassificationVO> queryQuotationClassification() {
+
 		List<QuotationClassificationPO> quotationClassificationPOs = quotationClassificationDao.list();
 		List<QuotationClassificationVO> quotationClassificationVOs = new ArrayList<QuotationClassificationVO>();
-		
-		for(QuotationClassificationPO quotationClassificationPO: quotationClassificationPOs){
+
+		for (QuotationClassificationPO quotationClassificationPO : quotationClassificationPOs) {
 			QuotationClassificationVO quotationClassificationVO = new QuotationClassificationVO();
 			BeanUtil.copyProperties(quotationClassificationPO, quotationClassificationVO);
 			quotationClassificationVOs.add(quotationClassificationVO);
 		}
-		
+
 		return quotationClassificationVOs;
 	}
 
 	@Override
 	public void pageQuotationClassification(Paging paging, List<Filter> filters) {
-		
+
 		List<QuotationClassificationPO> quotationClassificationPOs = quotationClassificationDao.pageQuotationClassification(paging, filters);
 		List<QuotationClassificationVO> quotationClassificationVOs = new ArrayList<QuotationClassificationVO>();
-		
-		for(QuotationClassificationPO quotationClassificationPO: quotationClassificationPOs){
-			
+
+		for (QuotationClassificationPO quotationClassificationPO : quotationClassificationPOs) {
+
 			QuotationClassificationVO quotationClassificationVO = new QuotationClassificationVO();
 
 			BeanUtil.copyProperties(quotationClassificationPO, quotationClassificationVO);
-			
+
 			quotationClassificationVOs.add(quotationClassificationVO);
 		}
-		
+
 		paging.setData(quotationClassificationVOs);
 	}
 }

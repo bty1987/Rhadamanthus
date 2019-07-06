@@ -17,18 +17,18 @@ import com.fanglin.utils.SystemConfig;
 @Repository("houseDao")
 public class HouseDaoImpl extends DaoImpl<HousePO> implements HouseDao {
 
-	public HouseDaoImpl(){
+	public HouseDaoImpl() {
 		super(HousePO.class);
 	}
-	
+
 	@Override
-	public List<HousePO> pageHouse(Paging paging, List<Filter> filters,Integer company){
-	
+	public List<HousePO> pageHouse(Paging paging, List<Filter> filters, Integer company) {
+
 		PagingQuery<HousePO> query = pagingQuery(paging, HousePO.class);
 
 		queryFilterExcute(query, filters);
-		
-		if(SystemConfig.getInt("multicompany" , 0) != 0){
+
+		if (SystemConfig.getInt("multicompany", 0) != 0) {
 			query.add(Restrictions.eq("company", company));
 		}
 
@@ -36,60 +36,56 @@ public class HouseDaoImpl extends DaoImpl<HousePO> implements HouseDao {
 
 		return query.list();
 	}
-	
+
 	@Override
-	public HousePO queryHouseByNoAHnum(String no, String houseNumber,Integer company){
-		
-		Criteria criteria =  session()
-		        .createCriteria(HousePO.class)
-		        .createAlias("village", "village")
-		        .add(Restrictions.eq(HousePO.COLUMN_VILLAGE_NO_STR , no))
-		        .add(Restrictions.eq(HousePO.COLUMN_HOUSENUMBER_STR, houseNumber));
-		
-		if(SystemConfig.getInt("multicompany" , 0) != 0){
+	public HousePO queryHouseByNoAHnum(String no, String houseNumber, Integer company) {
+
+		Criteria criteria = session().createCriteria(HousePO.class).createAlias("village", "village").add(Restrictions.eq(HousePO.COLUMN_VILLAGE_NO_STR, no)).add(Restrictions.eq(HousePO.COLUMN_HOUSENUMBER_STR, houseNumber));
+
+		if (SystemConfig.getInt("multicompany", 0) != 0) {
 			criteria.add(Restrictions.eq("company", company));
 		}
-		
+
 		return (HousePO) criteria.uniqueResult();
 	}
-	
-	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){
-		
-		if(filters != null){
+
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
+
+		if (filters != null) {
 			query.alias("village", "village");
-			for(Filter filter : filters){
-			
-				if("villageName".equals(filter.getField())){
-					query.add(Restrictions.or(Restrictions.ilike("village.name", filter.getData(),MatchMode.ANYWHERE),Restrictions.or(Restrictions.ilike("village.pinyinAB", filter.getData(),MatchMode.ANYWHERE),Restrictions.ilike("village.pinyinAll", filter.getData(),MatchMode.ANYWHERE))));
-				}else if("type".equals(filter.getField())){
-					query.add(Restrictions.eq("type",Short.valueOf(filter.getData())));
-				}else if("through".equals(filter.getField())){
-					query.add(Restrictions.eq("through",Short.valueOf(filter.getData())));
-				}else if("roomNum".equals(filter.getField())){
-					if(filter.getData().equals("6")){
-			            query.add(Restrictions.ge("roomNum", Integer.valueOf(filter.getData())));
-			          }else{
-			            query.add(Restrictions.eq("roomNum", Integer.valueOf(filter.getData())));
-			          }
-				}else if("waterVapour".equals(filter.getField())){
-					query.add(Restrictions.eq("waterVapour",Short.valueOf(filter.getData())));
-				}else if("heatingType".equals(filter.getField())){
-					query.add(Restrictions.eq("heatingType",Short.valueOf(filter.getData())));
-				}else if("orientation".equals(filter.getField())){
-					query.add(Restrictions.eq("orientation",Short.valueOf(filter.getData())));
-				}else if("houseNumber".equals(filter.getField())){
+			for (Filter filter : filters) {
+
+				if ("villageName".equals(filter.getField())) {
+					query.add(Restrictions.or(Restrictions.ilike("village.name", filter.getData(), MatchMode.ANYWHERE), Restrictions.or(Restrictions.ilike("village.pinyinAB", filter.getData(), MatchMode.ANYWHERE), Restrictions.ilike("village.pinyinAll", filter.getData(), MatchMode.ANYWHERE))));
+				} else if ("type".equals(filter.getField())) {
+					query.add(Restrictions.eq("type", Short.valueOf(filter.getData())));
+				} else if ("through".equals(filter.getField())) {
+					query.add(Restrictions.eq("through", Short.valueOf(filter.getData())));
+				} else if ("roomNum".equals(filter.getField())) {
+					if (filter.getData().equals("6")) {
+						query.add(Restrictions.ge("roomNum", Integer.valueOf(filter.getData())));
+					} else {
+						query.add(Restrictions.eq("roomNum", Integer.valueOf(filter.getData())));
+					}
+				} else if ("waterVapour".equals(filter.getField())) {
+					query.add(Restrictions.eq("waterVapour", Short.valueOf(filter.getData())));
+				} else if ("heatingType".equals(filter.getField())) {
+					query.add(Restrictions.eq("heatingType", Short.valueOf(filter.getData())));
+				} else if ("orientation".equals(filter.getField())) {
+					query.add(Restrictions.eq("orientation", Short.valueOf(filter.getData())));
+				} else if ("houseNumber".equals(filter.getField())) {
 					query.add(query.getCriterion("houseNumber", filter));
-				}else if("status".equals(filter.getField())){
-					query.add(Restrictions.eq("status",Short.valueOf(filter.getData())));
-				}else if("buildingArea".equals(filter.getField())){
-					String area[]=filter.getData().split("-");
-					query.add(Restrictions.ge("buildArea",Float.valueOf(area[0])));
-					query.add(Restrictions.le("buildArea",Float.valueOf(area[1])));
-				}else if("parlourType".equals(filter.getField())){
-					query.add(Restrictions.eq("parlourType",Short.valueOf(filter.getData())));
+				} else if ("status".equals(filter.getField())) {
+					query.add(Restrictions.eq("status", Short.valueOf(filter.getData())));
+				} else if ("buildingArea".equals(filter.getField())) {
+					String area[] = filter.getData().split("-");
+					query.add(Restrictions.ge("buildArea", Float.valueOf(area[0])));
+					query.add(Restrictions.le("buildArea", Float.valueOf(area[1])));
+				} else if ("parlourType".equals(filter.getField())) {
+					query.add(Restrictions.eq("parlourType", Short.valueOf(filter.getData())));
 				}
 			}
 		}
 	}
-	
+
 }

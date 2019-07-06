@@ -2,8 +2,19 @@
 jQuery(function($) {
 
 	var vrecord = {
-		"vid": params.vid
+		modals:{
+			vrecordModal: com.focusPage("#vrecordModal")
+		},
+		items: {
+			comment: com.focusPage("#comment")
+		},
+		vid: params.vid
 	};
+
+	vrecord.modals.vrecordModal.on("hide.bs.modal", function () {
+		com.cleanItems(vrecord.items);
+		com.clearValidator();
+	});
 
 	var displayFunc  = (function(){
 
@@ -61,36 +72,29 @@ jQuery(function($) {
 
 	var searcher = new Searcher();
 
-	searcher.init([], "condList", api.customer.queryVrecordByVid, function(data){
-		displayFunc.init('resultList', data);
-	}, "pagenation", "vrecordPostData", {"vrecord.vid":vrecord.vid}, true, "vrecords", null);
-
-	//返回
-	com.focusPage("#back").click(function(){
-		com.switchPage(api.index.vustomerAdvance.url);
-	});
+	searcher.init([], "condListas", api.customer.queryVrecordByVid, function(data){
+		displayFunc.init('resultListas', data);
+	}, "pagenationas", "vrecordPostData", {"vrecord.vid":vrecord.vid}, true, "vrecords", null);
 
 	//添加
 	com.focusPage("#add").click(function(){
-		com.focusPage("#comment").val("");
-		com.focusPage("#vrecordModal").modal("show");
-		com.clearValidator();
+		vrecord.modals.vrecordModal.modal("show");
 	});
 
 	//保存
 	com.focusPage("#saveBtn").click(function(){
-		if(com.validate()){
-			return;
+		if(com.validate("form")){
+			return false;
 		}
 		
 		var options = {
 			"vrecord.vid":vrecord.vid,
-			"vrecord.comment":com.focusPage("#comment").val()
+			"vrecord.comment":vrecord.items.comment.val()
 		};
 		com.post(api.customer.addVrecord, options, function(res){
 			searcher.doSearch();
 			com.showAlert(com.info, "保存成功");
-			com.focusPage("#vrecordModal").modal("hide");
 		});
+		vrecord.modals.vrecordModal.modal("hide");
 	});
 });

@@ -206,10 +206,18 @@ $(function() {
         $('<label></label>').attr('for', 'form-field').attr('id', 'content_'+qid).text('备注:' + quo.content).css("word-break","break-all").appendTo(quotationWidgetDivSix);
 
         var quotationWidgetToolDiv = $('<div></div>').addClass("ui-pg-div").appendTo(quotationWidgetMain);
-        var copySpan = $('<span></span>').addClass('ui-icon icon-copy blue').attr('title', '复制').attr('id', 'copyQuotation_' + qid).attr('data', qid).attr('data-rel', 'tooltip').attr('data-original-title', '复制').appendTo(quotationWidgetToolDiv);
-        var editSpan = $('<span></span>').addClass('ui-icon icon-pencil blue').attr('title', '修改').attr('id', 'editQuotation_' + qid).attr('data', qid).attr('data-rel', 'tooltip').attr('data-original-title', '修改').appendTo(quotationWidgetToolDiv);
-        var editDetailSpan = $('<span></span>').addClass('ui-icon icon-edit blue').attr('title', '报价').attr('id', 'editQuotationDetail_' + qid).attr('data', qid).attr('data-rel', 'tooltip').attr('data-original-title', '报价').appendTo(quotationWidgetToolDiv).attr('data-type', quotetion.type);
-        var deleteSpan = $('<span></span>').addClass('ui-icon ui-icon-trash').attr('title', '删除').attr('id', 'deleteQuotation_' + qid).attr('data', qid).attr('data-rel', 'tooltip').attr('dataname', quo.name).attr('data-original-title', '删除').appendTo(quotationWidgetToolDiv);
+        var copySpan = $('<span></span>').addClass('ui-icon icon-copy blue').attr('title', '复制').attr('id', 'copyQuotation_' + qid).attr('data', qid).appendTo(quotationWidgetToolDiv).mouseenter(function(){
+            com.showTip(this, "复制", "top");
+        });
+        var editSpan = $('<span></span>').addClass('ui-icon icon-pencil blue').attr('title', '修改').attr('id', 'editQuotation_' + qid).attr('data', qid).appendTo(quotationWidgetToolDiv).mouseenter(function(){
+            com.showTip(this, "修改", "top");
+        });
+        var editDetailSpan = $('<span></span>').addClass('ui-icon icon-edit blue').attr('title', '报价').attr('id', 'editQuotationDetail_' + qid).attr('data', qid).appendTo(quotationWidgetToolDiv).attr('data-type', quotetion.type).mouseenter(function(){
+            com.showTip(this, "报价", "top");
+        });
+        var deleteSpan = $('<span></span>').addClass('ui-icon ui-icon-trash').attr('title', '删除').attr('id', 'deleteQuotation_' + qid).attr('data', qid).attr('dataname', quo.name).appendTo(quotationWidgetToolDiv).mouseenter(function(){
+            com.showTip(this, "删除", "top");
+        });
 
         //复制
         com.focusPage("#copyQuotation_" + qid).on(ace.click_event, function () {
@@ -257,9 +265,6 @@ $(function() {
                 });
             });
         });
-
-        $('[data-rel=tooltip]').tooltip();
-
     }
 
 });

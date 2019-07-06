@@ -1,19 +1,34 @@
 $(function(){
 
     var vustomer = {
-        vid:null,
-        items:{}
-    }
-    vustomer.items.customerName= com.focusPage("#customerName");
-    vustomer.items.customerPhone = com.focusPage("#customerPhone");
-    vustomer.items.address = com.focusPage("#address");
-    vustomer.items.comment = com.focusPage("#comment");
-    vustomer.items.orderId = com.focusPage("#orderId");
 
-    vustomer.bindSaveBtn = com.focusPage("#bindSaveBtn").on("click", bindOrderData);
-    vustomer.vustomerSaveBtn = com.focusPage('#vustomerSaveBtn').on('click', changeBelonger);
+        bindSaveBtn: com.focusPage("#bindSaveBtn"),
+        vustomerSaveBtn: com.focusPage('#vustomerSaveBtn'),
+
+        modals:{
+            bindOrderModal: com.focusPage("#bindOrderModal"),
+            belongerModal: com.focusPage("#belongerModal")
+        },
+        items:{
+            belonger: com.focusPage("#belonger"),
+            orderId: com.focusPage("#orderId"),
+        },
+
+        vid:null
+    }
+
+    vustomer.bindSaveBtn.bindClick(bindOrderData);
+    vustomer.vustomerSaveBtn.bindClick(changeBelonger);
+
+    com.focusPage(".modal").on("hide.bs.modal", function () {
+        com.clearValidator();
+        com.cleanTypeahead("belonger");
+        com.cleanItems(vustomer.items);
+    });
+
 
     com.initTypeahead('belonger', api.personel.queryUserByPinyin, "pinyinName", {"duty":"", "user.status":0}, "userBases", "uid", "currentName", null);
+
     var displayFunc  = (function(){
 
         var renderList = function(tableId,listData){
@@ -73,13 +88,13 @@ $(function(){
                 com.focusPage("#orderId").val("");
 
                 if(v.orderId != null){
-                    com.focusPage("#orderId").val(v.orderId);
-                    com.focusPage("#orderId").attr('readonly',"readonly");
+                    vustomer.items.orderId.val(v.orderId);
+                    vustomer.items.orderId.attr('readonly',"readonly");
                 }else{
-                    com.focusPage("#orderId").removeAttr('readonly');
+                    vustomer.items.orderId.removeAttr('readonly');
                 }
 
-                com.focusPage("#bindOrderModal").modal("show");
+                vustomer.modals.bindOrderModal.modal("show");
 
                 com.clearValidator();
 
@@ -87,18 +102,18 @@ $(function(){
 
             $btnRecord.click(function(){
                 params.vid = v.vid;
-                com.switchPage(api.index.vrecord.url);
+                com.popup4page("#vscoreRecordPopUp", api.index.vrecord.url, "记录");
             });
 
             $btnDel.click(function(){
                 params.unionId = v.unionId;
                 params.id = 1;
-                com.switchPage(api.index.vscoreRecord.url)
+                com.popup4page("#vscoreRecordPopUp", api.index.vscoreRecord.url, "积分");
             });
 
             $edit.click(function(){
                 vustomer.vid = v.vid;
-                com.focusPage("#belongerModal").modal("show");
+                vustomer.modals.belongerModal.modal("show");
                 com.updateTypeahead("belonger", v.belonger.uid, com.checkNull(v.belonger.userName,''));
             });
 
@@ -123,7 +138,10 @@ $(function(){
     }, "pagenation", "vustomerPostData",null, false, null, null);
 
     function changeBelonger(){
-        com.clearValidator();
+        if(com.validate('belongerModal')){
+            return false;
+        }
+
         var option={
             "vustomer.vid": vustomer.vid,
             "vustomer.belonger.uid":com.typeahead("belonger")
@@ -131,13 +149,13 @@ $(function(){
         com.post(api.customer.updateVustomerForBelonger,option,function(){
             searcher.doSearch();
             com.showAlert(com.info,'修改成功');
-            com.focusPage("#belongerModal").modal("hide");
         });
+        vustomer.modals.belongerModal.modal("hide");
     }
 
     function bindOrderData(){
-        if(com.validate()){
-            return;
+        if(com.validate('bindOrderModal')){
+            return false;
         }
 
         var options = {
@@ -149,8 +167,7 @@ $(function(){
             searcher.doSearch();
             com.showAlert(com.info,'绑定装修单号成功');
         });
-
-        com.focusPage("#bindOrderModal").modal("hide");
+        vustomer.modals.bindOrderModal.modal("hide");
     }
 
 });

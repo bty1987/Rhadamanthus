@@ -1,7 +1,14 @@
 $(function () {
 
     var goods = {
-    	gid: params["goods.gid"]
+    	gid: params["goods.gid"],
+        items: {
+            formatInfo: com.focusPage("#formatInfo")
+        },
+        btns: {
+            addBtn: com.focusPage("#addBtn"),
+            delBtn: com.focusPage("#delBtn")
+        }
     };
 
     var displayFunc = (function () {
@@ -132,7 +139,7 @@ $(function () {
         });
     }
     
-    $("#addBtn").click(function(){
+    goods.btns.addBtn.click(function(){
     	
     	if(com.validate('addFormat', 'bottom')){
             return false;
@@ -140,18 +147,17 @@ $(function () {
         
         var options = {
             "format.gid": goods.gid,
-            "format.info": com.focusPage("#formatInfo").val()
+            "format.info": goods.items.formatInfo.val()
         };
 
         com.post(api.inventory.addFormat, options, function(){
+            com.cleanItems(goods.items);
         	doSearcher();
-        	
-        	com.focusPage("#formatInfo").val("");
         });
     });
     
-    $("#delBtn").click(function(){
-    	com.focusPage("#formatInfo").val("");
+    goods.btns.delBtn.click(function(){
+        com.cleanItems(goods.items);
     });
 
 });

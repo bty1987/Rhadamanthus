@@ -20,16 +20,16 @@ public class DutyDaoImpl extends DaoImpl<DutyPO> implements DutyDao {
 
 	@Override
 	public List<DutyPO> pageDuty(Paging paging, List<Filter> filters) {
-		
+
 		PagingQuery<DutyPO> query = pagingQuery(paging, DutyPO.class);
 
 		if (filters != null) {
 			for (Filter filter : filters) {
-				
+
 				String field = filter.getField();
 				String data = filter.getData();
 				String op = filter.getOp();
-			
+
 				if (DutyPO.COLUMN_NAME_STR.equals(field)) {
 					query.add(query.getCriterion(field, data, op));
 				}
@@ -43,8 +43,8 @@ public class DutyDaoImpl extends DaoImpl<DutyPO> implements DutyDao {
 
 	@Override
 	public DutyPO queryDutyByName(String name) {
-	
-		return  (DutyPO)session().createCriteria(DutyPO.class).add(Restrictions.eq(DutyPO.COLUMN_NAME_STR, name)).uniqueResult();
+
+		return (DutyPO) session().createCriteria(DutyPO.class).add(Restrictions.eq(DutyPO.COLUMN_NAME_STR, name)).uniqueResult();
 
 	}
 
@@ -52,15 +52,14 @@ public class DutyDaoImpl extends DaoImpl<DutyPO> implements DutyDao {
 	@SuppressWarnings("unchecked")
 	public List<DutyPO> queryDuty() {
 
-		return session().createCriteria(DutyPO.class).add(Restrictions.eq(DutyPO.COLUMN_STATUS_STR,DutyPO.COLUMN_STATUS_INT)).list();
+		return session().createCriteria(DutyPO.class).add(Restrictions.eq(DutyPO.COLUMN_STATUS_STR, DutyPO.COLUMN_STATUS_INT)).list();
 	}
-	
-	
+
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<DutyPO> queryDutyByDtid(Integer dtid) {
-		
-		return session().createCriteria(DutyPO.class).add(Restrictions.eq("departmentType.dtid", dtid)).add(Restrictions.eq(DutyPO.COLUMN_STATUS_STR,DutyPO.COLUMN_STATUS_INT)).list();
+
+		return session().createCriteria(DutyPO.class).add(Restrictions.eq("departmentType.dtid", dtid)).add(Restrictions.eq(DutyPO.COLUMN_STATUS_STR, DutyPO.COLUMN_STATUS_INT)).list();
 	}
-	
+
 }

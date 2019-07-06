@@ -26,6 +26,11 @@ $(function () {
 
     plan.saveBtn.bindClick(saveData);
 
+    plan.modals.planModal.on("hide.bs.modal", function () {
+        com.clearValidator();
+        com.cleanItems(plan.planItems);
+    });
+
     com.datetime(plan.planItems.executeDate);
     com.datetime(plan.planItems.executeTime, "time");
 
@@ -140,9 +145,6 @@ $(function () {
 
     com.focusPage('#addPlan', '#pagenation').on("click", function () {
 
-        com.clearValidator();
-        com.cleanItems(plan.planItems);
-
         com.focusPage("#timediv").addClass("hide");
 
         taskArgs();
@@ -152,7 +154,7 @@ $(function () {
 
     function saveData() {
 
-        if (com.validate())
+        if (com.validate('addplanModal'))
             return false;
 
         var options = {
@@ -198,7 +200,6 @@ $(function () {
         });
 
     }
-
 
     function cancel(v) {
         com.showConfirm('是否确认撤销计划', function () {

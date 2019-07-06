@@ -1,5 +1,8 @@
 {
     "constructionSchedule": [
+		{"key":"0", "value":"初始", "name": "initial"},
+		{"key":"1", "value":"开工", "name": "startWorking"},
+		{"key":"2", "value":"完工", "name": "completion"},
 	    {"key":"3", "value":"铲大白", "name":"chan"},
 		{"key":"4", "value":"放线", "name":"putline"},
 		{"key":"5", "value":"力工", "name":"force"},
@@ -44,10 +47,6 @@
 	],	"backVisitTypeData" :[
 		{"key":"0", "value":"普通" },
 		{"key":"1", "value":"重要"}
-	],	"constructionSchedul" :[
-		{"key":"0", "value":"初始" },
-		{"key":"1", "value":"开工"},
-		{"key":"2", "value":"完工"}
 	],
     "errorCode": 0,
     "errorMsg": null

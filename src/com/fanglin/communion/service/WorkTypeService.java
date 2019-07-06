@@ -16,7 +16,7 @@ import java.util.List;
 import com.fanglin.communion.vo.WorkTypeVO;
 
 public interface WorkTypeService {
-	
+
 	public List<WorkTypeVO> queryWorkType();
 
 }

@@ -28,6 +28,7 @@ jQuery(function () {
 
             color : com.focusPage('#color'),//颜色
             format : com.focusPage('#format'),//规格
+            remark : com.focusPage('#remark'),
 
             left : com.focusPage('#left'),
 
@@ -45,6 +46,9 @@ jQuery(function () {
             submit : com.focusPage('#submit'),//提交
             refresh : com.focusPage('#refresh')//重置
         },
+        leftInput:{
+            left : com.focusPage('#left').find('input')
+        },
 
         gids: null,
         gtype: null,
@@ -58,7 +62,7 @@ jQuery(function () {
     };
 
     com.initTypeahead('goodsName', api.inventory.queryGoodsByName, "goods.name", {}, 'goodes', 'gid', 'name',function (list, k, v) {
-        sales.items.left.find('input').val("");
+        com.cleanItems(sales.leftInput);
         sales.items.left.find('select').empty();
         //查询商品信息
         sales.gids = k;
@@ -79,14 +83,8 @@ jQuery(function () {
 
                 sales.items.purchase.bindData(priceData.prices, "pid", "content",false,null,"selling");
                 var pid = sales.items.purchase.val();
-                com.post(api.inventory.queryPriceByPid, {
-                    "price.pid": pid
-                }, function (data) {
-                    com.focusPage('#bid').attr({
-                        'data-ctype': data.price.ctype,
-                        "data-cvalue": data.price.cvalue,
-                        "data-priceType": data.price.type
-                    }).val(data.price.purchase);
+                com.post(api.inventory.queryPriceByPid, {"price.pid": pid}, function (data) {
+                    com.focusPage('#bid').attr({'data-ctype': data.price.ctype, "data-cvalue": data.price.cvalue, "data-priceType": data.price.type}).val(data.price.purchase);
                 });
                 sales.items.discount.val(1);
                 sales.items.disPrice.val(utils.accMul(parseFloat(sales.items.purchase.find('option:selected').attr('other')), parseFloat(sales.items.discount.val())));
@@ -130,7 +128,6 @@ jQuery(function () {
         });
         return v;
 });
-
     com.initTypeahead('salesmanName', api.personel.queryUserByPinyin, "pinyinName", {"user.status":0,"departmentType.name":""}, 'autoFillKeyValue', 'key', 'value',null);
     com.initTypeahead('instorer', api.personel.queryUserByPinyin, "pinyinName", {"user.status":0,"departmentType.name":""}, 'autoFillKeyValue', 'key', 'value',null);
     com.initTypeahead('guider', api.personel.queryUserByPinyin, "pinyinName", {"user.status":0,"departmentType.name":""}, 'autoFillKeyValue', 'key', 'value',null);
@@ -158,6 +155,12 @@ jQuery(function () {
             com.focusPage('#bid').attr({'data-ctype': data.price.ctype, "data-cvalue": data.price.cvalue, "data-priceType": data.price.type}).val(data.price.purchase);
         });
     });
+
+    //绑定券信息
+    com.post(api.ds.payment, {}, function (res) {
+        sales.items.couponInfo.bindData(res.materialCouponTypes, 'key', 'value', false);
+    }, null, false);
+    
     //点击添加按钮
     com.focusPage("#add").click(function () {
         /*
@@ -218,7 +221,7 @@ jQuery(function () {
                 ['折让价：', 's_price', sales.items.selling.val(), 'blue', 'b_price', null],
                 ['数量：', 's_number', sales.items.num.val(), 'red', 'b_number'],
                 ['总价：', 's_total', sales.items.total.val(), 'blue', 'b_total', null],
-                ['备注：', 's_remark', com.focusPage('#remark').val(), " ", 'b_remark', null]
+                ['备注：', 's_remark', sales.items.remark.val(), " ", 'b_remark', null]
             ];
             $.each(propertyArr, function (index, value) {
 
@@ -243,7 +246,7 @@ jQuery(function () {
             com.focusPage('#salesItemList').append($liList);
 
             //清空左侧
-            sales.items.left.find('input').val("");
+            com.cleanItems(sales.leftInput);
             sales.items.left.find('select').empty();
             sales.items.goodsName.removeAttr('data-name');
             sales.items.category.removeAttr('data-category');
@@ -315,11 +318,13 @@ jQuery(function () {
 
         return _total;
     }
-
+    
     sales.items.orderId.on("change", function () {
 
-        var option = {};
-        option["decoration.orderId"] = sales.items.orderId.val();
+        var option = {
+            "decoration.orderId" : sales.items.orderId.val()
+        };
+
         com.post(sales.queryDecorationByOrderIdUrl, option, function (data) {
             sales.items.customerName.val(data.decoration.customer.name);
             sales.items.salesmanName.removeAttr('data-typeahead-key').val(data.decoration.designer.currentName);
@@ -334,7 +339,7 @@ jQuery(function () {
             if (sales.items.orderAddr.val() != "") {
                 sales.items.orderAddr.next().remove();
             }
-
+            
             sales.cid = data.decoration.customer.cid;
             sales.salesmanid = data.decoration.designer.userId;
             sales.salePostData["sales.house.hid"] = data.decoration.house.hid;
@@ -348,14 +353,9 @@ jQuery(function () {
         });
     });
 
-    //绑定券信息
-    com.post(api.ds.payment, {}, function (res) {
-        sales.items.couponInfo.bindData(res.materialCouponTypes, 'key', 'value', false);
-    }, null, false);
-
     //重置按钮
     sales.btns.refresh.click(function () {
-        sales.items.left.find('input').popover('destroy').css('border-color', "#b5b5b5").val("");
+        com.cleanItems(sales.leftInput);
         sales.items.left.find('select').empty();
     });
 
@@ -435,16 +435,12 @@ jQuery(function () {
 
             com.post(api.inventory.addSales, _option, function (data) {
                 com.showAlert(com.info, "添加成功");
-
-
                 com.focusPage('#salesItemList').empty();
                 com.focusPage('.order_inputinfo').val(null);
-
                 com.cleanTypeahead('salesmanName');
                 com.cleanTypeahead('instorer');
                 com.cleanTypeahead('guider');
                 com.cleanTypeahead('brands');
-
             }, function (e) {
                 com.showAlert(com.error, "添加失败");
             });
@@ -474,7 +470,6 @@ jQuery(function () {
         return flag;
     }
 
-    //取消提示信息
     cancelProp();
 
     function cancelProp() {

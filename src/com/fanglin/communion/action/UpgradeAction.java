@@ -18,65 +18,65 @@ import com.fanglin.utils.SystemConfig;
 @ParentPackage("base")
 @Namespace("/")
 @Controller
-public class UpgradeAction extends BaseListAction{
-	
+public class UpgradeAction extends BaseListAction {
+
 	private static final long serialVersionUID = -73141511258270262L;
 
 	@Autowired
 	private UpgradeService upgradeService;
-	
+
 	private UpgradeVO upgrade;
-	
+
 	private List<UpgradeVO> upgrades;
-	
+
 	private String maxNo;
-	
+
 	@Action(value = "pageUpgrade", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageUpgrade(){
-		
+	public String pageUpgrade() {
+
 		upgradeService.pageUpgrade(getPaging(), getFilters());
-		
+
 		return SUCCESS;
 	}
 
 	@Action(value = "queryUpgrade", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryUpgrade(){
-		
+	public String queryUpgrade() {
+
 		upgrades = upgradeService.queryUpgrade(getFilters(), upgrade);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "matchUpgrade", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String matchUpgrade(){
-		
+	public String matchUpgrade() {
+
 		upgrade = upgradeService.matchUpgrade(upgrade);
 		maxNo = upgradeService.maxUpgrade();
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "addUpgrade", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addUpgrade() throws FLException{
-		
-		if(SystemConfig.getString("communion") == null){
-		    throw new FLException(-1, "无操作权限");
+	public String addUpgrade() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
 		}
-		
+
 		upgradeService.addUpgrade(upgrade);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "deleteUpgrade", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String deleteUpgrade() throws FLException{
-		
-		if(SystemConfig.getString("communion") == null){
-		    throw new FLException(-1, "无操作权限");
+	public String deleteUpgrade() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
 		}
-		
+
 		upgradeService.deleteUpgrade(upgrade);
-		
+
 		return SUCCESS;
 	}
 

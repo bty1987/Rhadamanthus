@@ -18,8 +18,8 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.Paging;
 
 public interface QuotationClassificationService {
-	
+
 	List<QuotationClassificationVO> queryQuotationClassification();
-	
+
 	public void pageQuotationClassification(Paging paging, List<Filter> filters);
 }

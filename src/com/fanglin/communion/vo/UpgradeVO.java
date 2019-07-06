@@ -5,22 +5,22 @@ import java.sql.Timestamp;
 
 import org.apache.struts2.json.annotations.JSON;
 
-public class UpgradeVO implements Serializable{
+public class UpgradeVO implements Serializable {
 
 	private static final long serialVersionUID = -2055209315930136686L;
 
 	private Long ugid;
-	
+
 	private String no;
-	
+
 	private String trialno;
-	
+
 	private Timestamp createTime;
-	
+
 	private String content;
-	
+
 	private String path;
-	
+
 	private Long fileSize;
 
 	public Long getUgid() {
@@ -47,7 +47,7 @@ public class UpgradeVO implements Serializable{
 		this.trialno = trialno;
 	}
 
-	@JSON(format="yyyy-MM-dd")
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getCreateTime() {
 		return createTime;
 	}
@@ -79,5 +79,5 @@ public class UpgradeVO implements Serializable{
 	public void setFileSize(Long fileSize) {
 		this.fileSize = fileSize;
 	}
-	
+
 }

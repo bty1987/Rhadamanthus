@@ -36,53 +36,11 @@ jQuery(function (a) {
     }
 
     if (parent.window.isPC) {
-
         pcBody();
-
-        var os = require('os');
-        var networkInterfaces = os.networkInterfaces();
-        var macs = {}
-        var _index = 0
-        $.each(networkInterfaces, function (index, value) {
-
-            for (var i in value) {
-
-                var _if = value[i];
-
-                if (_if.family.toLowerCase() == "ipv4") {
-                    var mac = _if.mac.replace(/:/g, '').replace(/-/g, '').toLowerCase();
-                    macs['macs[' + _index + ']'] = mac;
-                }
-            }
-            _index++;
-        })
-
-        if (macs.length == 0) {
-            alert("设备信息获取失败,如果有问题请联系管理员.");
-            require('nw.gui').Window.get().close();
-        }
-
-        $.ajax({
-            url: config.communion + "checkMacontrol.do",
-            type: "POST",
-            dataType: "json",
-            async: false,
-            data: macs,
-            success: function (res) {
-                if (res.errorCode != 0) {
-                    alert("设备无使用权限,如果有问题请联系管理员.");
-                    require('nw.gui').Window.get().close();
-                }
-            },
-            error: function (res) {
-                alert("设备权限验证失败,如果有问题请联系管理员.");
-                require('nw.gui').Window.get().close();
-            }
-        });
     } else if (!location.hostname.startsWith('192.168')){
-//        $("#unamePwdContainer").remove();
-//        $("#QRLogin").remove();
-//        $("#WXLogin").remove();
+        $("#unamePwdContainer").remove();
+        $("#QRLogin").remove();
+        $("#WXLogin").remove();
     }
 
     config.demo && (config.server = 'result/', config.communion = 'result/', config.media = 'result/', QRCode = '/QRCode.json', queryVode = '/queryVode.json');

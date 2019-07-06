@@ -19,7 +19,7 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label no-padding-right">电话</label>
                             <div class="col-sm-8">
-                                <input type="text" class=" m-wrap col-xs-8 v_required" id="Phone">
+                                <input type="text" class=" m-wrap col-xs-8 v_required v_phone" id="Phone">
                             </div>
                         </div>
 
@@ -44,7 +44,7 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label no-padding-right">需求价格</label>
                             <div class="col-sm-8">
-                                <input type="text" class=" m-wrap col-xs-8 v_required" id="price">
+                                <input type="text" class=" m-wrap col-xs-8 v_required v_float_3" id="price">
                             </div>
                         </div>
 
@@ -72,7 +72,7 @@
 </div>
 
 
-<div id="customersourceforbelonger" style="padding: 100px 0; display: none">
+<div id="customersourceforbelonger" style="display: none">
     <div class="row-fluid">
         <form class="form-horizontal" novalidate="novalidate" id="form2">
             <div class="widget-main">
@@ -81,8 +81,13 @@
                         <div class="form-group">
                             <label for="belonger" class="col-sm-2 control-label no-padding-right">归属人</label>
                             <div class="col-sm-10">
-                                <input type="text" class="col-md-4 v_typeahead v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="belonger" placeholder="归属人">
+                                <input type="text" class="col-md-4 v_typeahead" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="belonger" placeholder="归属人">
                                 <i id="designerId_asterisk" class='material icon-asterisk'></i>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-offset-3 col-md-9">
+                                <a class="btn btn-success btn-sm" id="saveBtn">确定</a>
                             </div>
                         </div>
                     </div>
@@ -93,7 +98,7 @@
 </div>
 
 <!--查看信息弹窗-->
-<div id="customerRecord" class="portlet box"></div>
+<div id="customerRecordPopUp" class="portlet box"></div>
 
 <script type="text/javascript">
     $.loadScript(['js/customer/customerAdvance.js']);

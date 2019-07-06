@@ -15,7 +15,7 @@ jQuery(function ($) {
         supervisorId: null
     };
     
-    com.focusPage('.date-picker').datepicker(com.datepickerdefault);
+    com.datetime(accessories.createTime,"date",false);
 
     com.post(api.decoration.queryDecorationForCommonByOrderId, {
         "decoration.orderId": accessories.orderId

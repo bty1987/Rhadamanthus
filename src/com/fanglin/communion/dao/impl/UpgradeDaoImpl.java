@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -27,17 +28,17 @@ public class UpgradeDaoImpl extends DaoImpl<UpgradePO> implements UpgradeDao {
 		PagingQuery<UpgradePO> query = pagingQuery(paging, UpgradePO.class);
 
 		queryFilterExcute(query, filters);
-		
+
 		query.desc("ugid");
-		
+
 		return query.list();
-			
+
 	}
 
 	@Override
 	public List<UpgradePO> queryUpgrade(List<Filter> filters) {
 
-		PagingQuery<UpgradePO> query = pagingQuery(new Paging(),UpgradePO.class);
+		PagingQuery<UpgradePO> query = pagingQuery(new Paging(), UpgradePO.class);
 
 		queryFilterExcute(query, filters);
 
@@ -50,14 +51,12 @@ public class UpgradeDaoImpl extends DaoImpl<UpgradePO> implements UpgradeDao {
 	@Override
 	public List<UpgradePO> matchUpgrade(String trialno) {
 
-		return session().createCriteria(UpgradePO.class).add(Restrictions.eq(UpgradePO.COLUMN_TRIALNO_STR,trialno)).list();
+		return session().createCriteria(UpgradePO.class).add(Restrictions.eq(UpgradePO.COLUMN_TRIALNO_STR, trialno)).list();
 	}
-	
+
 	@Override
 	public String maxUpgrade() {
-		String sql = "select max(no) from information.upgrade";
-		String maxNo = (String) session().createSQLQuery(sql).uniqueResult();
-		return maxNo;
+		return (String) session().createCriteria(UpgradePO.class).setProjection(Projections.projectionList().add(Projections.max("no"))).uniqueResult();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
@@ -70,21 +69,21 @@ public class UpgradeDaoImpl extends DaoImpl<UpgradePO> implements UpgradeDao {
 				String op = filter.getOp();
 
 				if ("trialVersion".equals(field)) {
-					query.add(query.getCriterion(UpgradePO.COLUMN_TRIALNO_STR,data, op));
+					query.add(query.getCriterion(UpgradePO.COLUMN_TRIALNO_STR, data, op));
 				} else if ("createTime".equals(field)) {
-					
+
 					String sTime = data + " 00:00:00";
 					String eTime = data + " 23:59:59";
-					Date sdate = DateUtil.parseDate(sTime,"yyyy-MM-dd HH:mm:ss");
-					Date edate = DateUtil.parseDate(eTime,"yyyy-MM-dd HH:mm:ss");
+					Date sdate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
+					Date edate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
 
 					Timestamp stimestamp = DateUtil.getDateToTimestamp(sdate);
 					Timestamp etimestamp = DateUtil.getDateToTimestamp(edate);
 
-					query.add(query.getCriterion(UpgradePO.COLUMN_CREATETIME_STR, stimestamp,"ge"));
-					query.add(query.getCriterion(UpgradePO.COLUMN_CREATETIME_STR, etimestamp,"le"));
+					query.add(query.getCriterion(UpgradePO.COLUMN_CREATETIME_STR, stimestamp, "ge"));
+					query.add(query.getCriterion(UpgradePO.COLUMN_CREATETIME_STR, etimestamp, "le"));
 
-				} 
+				}
 			}
 		}
 	}

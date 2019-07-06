@@ -61,15 +61,20 @@ public class QuotationFunctionAreaItemServiceImpl implements QuotationFunctionAr
 		
 		for(QuotationFunctionAreaItemPO quotationFunctionAreaItemPO: quotationFunctionAreaItemPOs){
 			
-			QuotationFunctionAreaItemVO _quotationFunctionAreaItemVO = new QuotationFunctionAreaItemVO();
+			quotationFunctionAreaItemVO = new QuotationFunctionAreaItemVO();
 			
-			BeanUtil.copyProperties(quotationFunctionAreaItemPO, _quotationFunctionAreaItemVO);
+			BeanUtil.copyProperties(quotationFunctionAreaItemPO, quotationFunctionAreaItemVO);
 			
 			if(quotationFunctionAreaItemPO.getQuotationItem() != null){
-				quotationFunctionAreaItemVO.setContent(quotationFunctionAreaItemPO.getQuotationItem().getQuotationItemDes());
+				
+				QuotationItemPO quotationItemPO = quotationFunctionAreaItemPO.getQuotationItem();
+				
+				quotationFunctionAreaItemVO.setContent(quotationItemPO.getQuotationItemDes());
+				quotationFunctionAreaItemVO.setAddPrice(quotationItemPO.getAddPrice());
+				quotationFunctionAreaItemVO.setSubPrice(quotationItemPO.getSubPrice());
 			}
 			
-			quotationFunctionAreaItemVOs.add(_quotationFunctionAreaItemVO);
+			quotationFunctionAreaItemVOs.add(quotationFunctionAreaItemVO);
 		}
 		
 		return quotationFunctionAreaItemVOs;

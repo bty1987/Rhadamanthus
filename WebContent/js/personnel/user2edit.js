@@ -52,23 +52,21 @@ jQuery(function(a) {
             "user.oldUserId": $this.val()
         }, function(res) {
             user.eEditFlg = false;
-            com.showPopover(com.focusPage("#oldUserId"),{errorMsg: "该原始工号已经存在"},  "right");
+            com.showTip(com.focusPage("#oldUserId"), "该原始工号已经存在",  "right");
         }, function(res){
             user.eEditFlg = true;
-            $("#oldUserId").css("border", "1px solid #d5d5d5").popover("destroy");
         });
     });
 
     user.items.loginId = com.focusPage("#loginId","#userinfo").on("blur", function() {
         $this = a(this);
-        void 0 == $this.val() || "" == $this.val().trim() || $this.val() == user.editLoginId ? (com.showPopover(com.focusPage("#loginId","#userinfo"),{errorMsg: "用户名不能为空"}, "right"), user.repeatFlg = !1) : com.post(api.personel.queryUserByLoginId, {
+        void 0 == $this.val() || "" == $this.val().trim() || $this.val() == user.editLoginId ? (com.showTip(com.focusPage("#loginId","#userinfo"), "用户名不能为空", "right"), user.repeatFlg = !1) : com.post(api.personel.queryUserByLoginId, {
             "user.loginId": $this.val()
         }, function(res) {
             user.loginFlag =false;
-            com.showPopover(com.focusPage("#loginId","#userinfo"),{errorMsg: "用户名已存在"}, "right");
+            com.showTip(com.focusPage("#loginId","#userinfo"), "用户名已存在", "right");
         }, function(res){
             user.loginFlag =true;
-            com.focusPage("#loginId","#userinfo").css("border", "1px solid #d5d5d5").popover("destroy")
         });
     });
 
@@ -224,11 +222,7 @@ jQuery(function(a) {
 
     function saveData() {
         if( "" == user.items.loginId.val().trim() || user.items.loginId.val() == null) {
-            com.focusPage("#loginId","#userinfo").removeAttr("data-placement").addClass('popover-notitle').attr({
-                "data-rel":"popover",
-                "data-placement": "right",
-                "data-content": "用户名不能为空"
-            }).removeAttr("data-toggle").css('border', '1px red solid').popover('show');
+            com.showTips(com.focusPage("#loginId","#userinfo"),"用户名不能为空","right");
             user.loginFlag=false
         }
 

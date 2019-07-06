@@ -1,6 +1,3 @@
-/**
- * Created by Administrator on 2019/3/25.
- */
 jQuery(function () {
 
     var sales = {
@@ -13,16 +10,28 @@ jQuery(function () {
             colorgid: "color.gid",
             formatgid: "format.gid"
         },
+        items : {
+            SupplementCouponInfo : com.focusPage("#SupplementCouponInfo"),
+            totals : com.focusPage("#totals"),
+            salesItemList : com.focusPage('#salesItemList'),
+            brands : com.focusPage('#brands'),
+            SupplementOrderId : com.focusPage('#SupplementOrderId'),
+            SupplementCoupon : com.focusPage('#SupplementCoupon'),
+            comment : com.focusPage('#comment'),
+            SupplementMaling : com.focusPage('#SupplementMaling'),
+            customerName : com.focusPage('#customerName'),
+            orderAddr : com.focusPage('#orderAddr')
+        },
+        btns : {
+            submit : com.focusPage('#submit')
+        },
+        sid : params.sid,
+        bid : params.bid,
         cid: null,
         flag: true,
         salePostData: {},
         priceArray: []
     };
-
-    var sid = params.sid;
-    var bid = params.bid;
-
-    var backBtn = com.focusPage('#backBtn');
 
     com.initTypeahead('salesmanName', api.personel.queryUserByPinyin, "pinyinName", {"user.status":0,"departmentType.name":""}, 'autoFillKeyValue', 'key', 'value', null);
     com.initTypeahead('instorer', api.personel.queryUserByPinyin, "pinyinName", {"user.status":0,"departmentType.name":""}, 'autoFillKeyValue', 'key', 'value', null);
@@ -30,11 +39,11 @@ jQuery(function () {
 
     //绑定券信息
     com.post(api.ds.payment, {}, function (res) {
-        com.focusPage("#SupplementCouponInfo").bindData(res.materialCouponTypes, 'key', 'value', false);
+        sales.items.SupplementCouponInfo.bindData(res.materialCouponTypes, 'key', 'value', false);
     }, null, false);
 
     var initList = function (listData) {
-        var $tableWrap = com.focusPage('#salesItemList');
+        var $tableWrap = sales.items.salesItemList;
         var $div = $('<div></div>').addClass('item-list ui-sortable  fl-table-list');
 
         if (listData && listData.length) {
@@ -78,7 +87,7 @@ jQuery(function () {
                             allInputVal = utils.accAdd(allInputVal, utils.accMul(inputVal, sales.priceArray[i]));
                         }
                     });
-                    com.focusPage("#totals").val(allInputVal);
+                    sales.items.totals.val(allInputVal);
                 });
 
                 var propertyArr = [
@@ -113,7 +122,7 @@ jQuery(function () {
         }
     };
 
-    querySalesItemBySid(sid);
+    querySalesItemBySid(sales.sid);
 
     function querySalesItemBySid(sid) {
         com.post(api.inventory.querySalesItemBySid, {"sales.sid": sid}, function (data) {
@@ -123,35 +132,7 @@ jQuery(function () {
         }, false);
     }
 
-
-    //检查主材品牌 订单号 主材导购 主材驻店
-    function submitCheck() {
-
-        var flag = true;
-
-        var $_brand = com.focusPage('#brands');
-
-        var _brand = "";
-        if ($_brand.attr('data-brand')) {
-            _brand = $_brand.attr('data-brand').split('-')[0];
-            _brand = _brand.trim();//金意陶
-        }
-
-        //判断品牌差异
-        var $_lis = com.focusPage('.list-group-item');
-        $.each($_lis, function (i, v) {
-            var $v = $(v);
-            if (_brand != $v.find('.b_brand').text().trim()) {
-                $v.css("border", "solid red 2px");
-                var r = i + 1;
-                com.showAlert(com.warning, "销售项第" + r + "项中品牌与主材品牌不符,请检查");
-                flag = false;
-            }
-        });
-        return flag;
-    }
-
-    com.focusPage('#submit').click(function () {
+    sales.btns.submit.click(function () {
 
         var flgs = false;
         var _option = {};
@@ -161,26 +142,26 @@ jQuery(function () {
             if (submitCheck() == false) {
                 return;
             }
-            
+
             _option = {
-                "sales.orderId": com.focusPage('#SupplementOrderId').val(),
+                "sales.orderId": sales.items.SupplementOrderId.val(),
                 "sales.customer.cid": sales.cid,
                 "sales.guider.userId": com.typeahead("guider"),
                 "sales.instorer.userId": com.typeahead("instorer"),
-                "sales.salesman.userId":com.typeahead("salesmanName"),
-                "sales.bid": bid,
-                "sales.coupon": com.focusPage('#SupplementCoupon').val() != "" ? parseFloat(com.focusPage('#SupplementCoupon').val()) : 0,
-                "sales.comment": com.focusPage('#comment').val(),
-                "sales.maling": com.focusPage('#SupplementMaling').val() != "" ? parseFloat(com.focusPage('#SupplementMaling').val()) : 0,
-                "sales.total":  isNaN(parseFloat(com.focusPage('#totals').val())) ? 0 : parseFloat(com.focusPage('#totals').val()),
+                "sales.salesman.userId": com.typeahead("salesmanName"),
+                "sales.bid": sales.bid,
+                "sales.coupon": sales.items.SupplementCoupon.val() != "" ? parseFloat(sales.items.SupplementCoupon.val()) : 0,
+                "sales.comment": sales.items.comment.val(),
+                "sales.maling": sales.items.SupplementMaling.val() != "" ? parseFloat(sales.items.SupplementMaling.val()) : 0,
+                "sales.total":  isNaN(parseFloat(sales.items.totals.val())) ? 0 : parseFloat(sales.items.totals.val()),
                 "sales.house.hid": sales.salePostData["sales.house.hid"],
                 "sales.dompanys": sales.salePostData["sales.dompanys"]
             };
 
-            if (com.focusPage('#SupplementCoupon').val() == "" || com.focusPage('#SupplementCoupon').val() == 0) {
+            if (sales.items.SupplementCoupon.val() == "" || sales.items.SupplementCoupon.val() == 0) {
                 _option["sales.couponInfo"] = " ";
             } else {
-                _option["sales.couponInfo"] = '#' + com.focusPage('#SupplementCouponInfo').val() + ':' + com.focusPage('#SupplementCoupon').val() + '#';
+                _option["sales.couponInfo"] = '#' + com.focusPage('#SupplementCouponInfo').val() + ':' + sales.items.SupplementCoupon.val() + '#';
             }
 
             var $lis = com.focusPage('.item-orange', "#salesItemList");
@@ -225,15 +206,14 @@ jQuery(function () {
 
                     com.showAlert(com.info, "补单成功");
 
-                    //清空类为order_inputinfo的input
                     com.focusPage('.order_inputinfo').val(null);
-                    com.focusPage('#salesItemList').find("input[name='inputNumber']").val("");
-                    //删除data-typeahead-key属性
+                    sales.items.salesItemList.find("input[name='inputNumber']").val("");
+                    
                     com.cleanTypeahead("salesmanName");
                     com.cleanTypeahead("instorer");
                     com.cleanTypeahead("guider");
 
-                    com.focusPage('#brands').removeAttr('data-brand');
+                    sales.items.brands.removeAttr('data-brand');
                 });
             }else {
                 com.showAlert(com.warning, "请填写正确的补单数量")
@@ -241,21 +221,46 @@ jQuery(function () {
         }
     });
 
+    //检查主材品牌 订单号 主材导购 主材驻店
+    function submitCheck() {
+
+        var flag = true;
+
+        var $_brand = sales.items.brands;
+
+        var _brand = "";
+        if ($_brand.attr('data-brand')) {
+            _brand = $_brand.attr('data-brand').split('-')[0];
+            _brand = _brand.trim();//金意陶
+        }
+
+        //判断品牌差异
+        var $_lis = com.focusPage('.list-group-item');
+        $.each($_lis, function (i, v) {
+            var $v = $(v);
+            if (_brand != $v.find('.b_brand').text().trim()) {
+                $v.css("border", "solid red 2px");
+                var r = i + 1;
+                com.showAlert(com.warning, "销售项第" + r + "项中品牌与主材品牌不符,请检查");
+                flag = false;
+            }
+        });
+        return flag;
+    }
+
     com.post(api.inventory.querySalesBySid, {
-        "sales.sid": sid
+        "sales.sid": sales.sid
     }, function (res) {
-        com.focusPage('#SupplementOrderId').val(res.sales.orderId);
-        com.focusPage('#customerName').val(res.sales.customer.name);
-        // com.focusPage('#salesmanName').val(res.sales.salesman.currentName);
-        com.focusPage('#brands').attr({'data-brand': res.sales.brand,'data-category':res.sales.category}).val(res.sales.brand+'-'+res.sales.category);
-        com.post(api.inventory.queryb);
-        com.focusPage('#orderAddr').val(res.sales.house.village.name + " " + res.sales.house.houseNumber);
+        sales.items.SupplementOrderId.val(res.sales.orderId);
+        sales.items.customerName.val(res.sales.customer.name);
+        sales.items.brands.attr({'data-brand': res.sales.brand,'data-category':res.sales.category}).val(res.sales.brand+'-'+res.sales.category);
+        sales.items.orderAddr.val(res.sales.house.village.name + " " + res.sales.house.houseNumber);
     }, null, false);
 
     var option = {};
-    option["decoration.orderId"] = com.focusPage('#SupplementOrderId').val();
+    option["decoration.orderId"] = sales.items.SupplementOrderId.val();
 
-    com.post(sales.queryDecorationByOrderIdUrl, {"decoration.orderId":com.focusPage('#SupplementOrderId').val()}, function (data) {
+    com.post(sales.queryDecorationByOrderIdUrl, {"decoration.orderId":sales.items.SupplementOrderId.val()}, function (data) {
         //公司
         sales.salePostData["sales.dompanys"] = data.decoration.dompany;
         //客户Id

@@ -5,24 +5,23 @@ import java.sql.Timestamp;
 
 import org.apache.struts2.json.annotations.JSON;
 
-public class ExtensionVO  implements Serializable{
+public class ExtensionVO implements Serializable {
 
 	private static final long serialVersionUID = -2564433879094155683L;
 
 	private Long eid;
-	
-	private String orderId;
-	
-	private Short type;
-	
-	private Float total;
-	
-	private Short status;
-	
-	private Timestamp createTime ;
-	
-	private String content;
 
+	private String orderId;
+
+	private Short type;
+
+	private Float total;
+
+	private Short status;
+
+	private Timestamp createTime;
+
+	private String content;
 
 	public Long getEid() {
 		return eid;
@@ -63,7 +62,8 @@ public class ExtensionVO  implements Serializable{
 	public void setStatus(Short status) {
 		this.status = status;
 	}
-	@JSON(format="yyyy-MM-dd")
+
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getCreateTime() {
 		return createTime;
 	}
@@ -79,7 +79,5 @@ public class ExtensionVO  implements Serializable{
 	public void setContent(String content) {
 		this.content = content;
 	}
-	
-	
-	
+
 }

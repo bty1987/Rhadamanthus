@@ -39,6 +39,34 @@ jQuery(function ($) {
     drawline.btns.saveInfoBtn.bindClick(saveInfoData);
     drawline.btns.deployedBtn.bindClick(deploved);
 
+    drawline.modals.setupModal.on("hide.bs.modal", function(){
+
+        com.cleanItems(drawline.items);
+        com.cleanTypeahead("supervisor");
+        com.closeTip();
+    });
+
+    drawline.modals.editModal.on("hide.bs.modal", function(){
+
+        com.cleanItems(drawline.items);
+        com.cleanTypeahead("supervisor");
+        com.closeTip();
+    });
+
+    drawline.modals.applyModal.on("hide.bs.modal", function(){
+
+        com.cleanItems(drawline.items);
+        com.cleanTypeahead("supervisor");
+        com.closeTip();
+    });
+
+    drawline.modals.constructionInfoModal.on("hide.bs.modal", function(){
+
+        com.cleanItems(drawline.items);
+        com.cleanTypeahead("supervisor");
+        com.closeTip();
+    });
+
     com.initTypeahead('supervisor', api.personel.queryUserByPinyin, "pinyinName", {"departmentType.name": "工程部", "user.status": 0}, "userBases", "userId", "currentName", null);
 
     com.datetime(drawline.items.actualDate);

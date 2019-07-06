@@ -185,25 +185,25 @@ $(function(){
                     com.showAlert(com.warning, "此商品禁止出库!");
                     return false;
                 }
-                
-                com.cleanItems(awardStock.items);
 
-                awardStock.items.no2.val(v.no).attr('disabled', 'disabled');
-                awardStock.items.name2.val(v.name).attr('disabled', 'disabled');
-                awardStock.items.nownum.val(v.num);
+                com.popup4model('#layerAdd2', '奖品出库' ,function(){
+                    com.cleanItems(awardStock.items);
 
-                awardStock.items.awardRecordSubtype.bindData(awardStock.subtypeOfWarehousend, "key", "value", false);
+                    awardStock.items.no2.val(v.no).attr('disabled', 'disabled');
+                    awardStock.items.name2.val(v.name).attr('disabled', 'disabled');
+                    awardStock.items.nownum.val(v.num);
 
-                awardStock.join.hide();
-                awardStock.leave.show();
-                awardStock.money.show();
-                awardStock.stock.hide();
-                awardStock.subType.show();
+                    awardStock.items.awardRecordSubtype.bindData(awardStock.subtypeOfWarehousend, "key", "value", false);
 
-                awardStock.asid = v.asId;
-                awardStock.flag = 2;
+                    awardStock.join.hide();
+                    awardStock.leave.show();
+                    awardStock.money.show();
+                    awardStock.stock.hide();
+                    awardStock.subType.show();
 
-                com.popup4model('#layerAdd2', '奖品出库');
+                    awardStock.asid = v.asId;
+                    awardStock.flag = 2;
+                });
             });
 
             $warehousing.click(function(){
@@ -213,47 +213,49 @@ $(function(){
                     return false;
                 }
 
-                com.cleanItems(awardStock.items);
+                com.popup4model('#layerAdd2', '奖品入库', function(){
+                    com.cleanItems(awardStock.items);
 
-                awardStock.items.no2.val(v.no).attr('disabled', 'disabled');
-                awardStock.items.name2.val(v.name).attr('disabled', 'disabled');
-                awardStock.items.nownum.val(v.num);
+                    awardStock.items.no2.val(v.no).attr('disabled', 'disabled');
+                    awardStock.items.name2.val(v.name).attr('disabled', 'disabled');
+                    awardStock.items.nownum.val(v.num);
 
-                awardStock.items.awardRecordSubtype.bindData(awardStock.subtypeOfWarehousing, "key", "value", false);
+                    awardStock.items.awardRecordSubtype.bindData(awardStock.subtypeOfWarehousing, "key", "value", false);
 
-                awardStock.join.show();
-                awardStock.leave.hide();
-                awardStock.money.show();
-                awardStock.stock.hide();
-                awardStock.subType.show();
+                    awardStock.join.show();
+                    awardStock.leave.hide();
+                    awardStock.money.show();
+                    awardStock.stock.hide();
+                    awardStock.subType.show();
 
-
-                awardStock.asid = v.asId;
-                awardStock.flag = 3;
-
-                com.popup4model('#layerAdd2', '奖品入库');
+                    awardStock.asid = v.asId;
+                    awardStock.flag = 3;
+                });
             });
 
             $update.click(function () {
 
-                awardStock.items.no.val(v.no).attr('disabled', 'disabled');
-                awardStock.items.name.val(v.name).attr('disabled', 'disabled');
-                awardStock.items.num.val(v.num).attr('disabled', 'disabled');
-                awardStock.items.format.val(v.format);
-                awardStock.items.content.val(v.content);
-                awardStock.items.storeroom.val(v.storeroom);
-                awardStock.items.type.val(v.type);
-                awardStock.items.subtype.val(v.subtype);
-                awardStock.items.isStock.val(v.isStock);
+                com.popup4model('#layerAdd1', '奖品更新', function () {
+                    com.cleanItems(awardStock.items);
 
-                awardStock.items.type.attr('disabled', 'disabled');
+                    awardStock.items.no.val(v.no).attr('disabled', 'disabled');
+                    awardStock.items.name.val(v.name).attr('disabled', 'disabled');
+                    awardStock.items.num.val(v.num).attr('disabled', 'disabled');
+                    awardStock.items.format.val(v.format);
+                    awardStock.items.content.val(v.content);
+                    awardStock.items.storeroom.val(v.storeroom);
+                    awardStock.items.type.val(v.type);
+                    awardStock.items.subtype.val(v.subtype);
+                    awardStock.items.isStock.val(v.isStock);
 
-                awardStock.items.moneys.hide();
+                    awardStock.items.type.attr('disabled', 'disabled');
 
-                awardStock.asid = v.asId;
-                awardStock.flag = 4;
+                    awardStock.moneys.hide();
 
-                com.popup4model('#layerAdd1', '奖品更新');
+                    awardStock.asid = v.asId;
+                    awardStock.flag = 4;
+
+                });
 
             });
 
@@ -262,23 +264,24 @@ $(function(){
                     com.showAlert(com.warning, "此商品禁止盘点!");
                     return false;
                 }
-                com.cleanItems(awardStock.items);
 
-                awardStock.items.no2.val(v.no).attr('disabled', 'disabled');
-                awardStock.items.name2.val(v.name).attr('disabled', 'disabled');
-                awardStock.items.nownum.val(v.num);
+                com.popup4model('#layerAdd2', '盘点', function () {
+                    com.cleanItems(awardStock.items);
 
-                awardStock.join.hide();
-                awardStock.leave.hide();
-                awardStock.money.hide();
-                awardStock.stock.show();
-                awardStock.subType.hide();
+                    awardStock.items.no2.val(v.no).attr('disabled', 'disabled');
+                    awardStock.items.name2.val(v.name).attr('disabled', 'disabled');
+                    awardStock.items.nownum.val(v.num);
 
-                awardStock.asid = v.asId;
-                awardStock.num = v.num;
-                awardStock.flag = 1;
+                    awardStock.join.hide();
+                    awardStock.leave.hide();
+                    awardStock.money.hide();
+                    awardStock.stock.show();
+                    awardStock.subType.hide();
 
-                com.popup4model('#layerAdd2', '盘点');
+                    awardStock.asid = v.asId;
+                    awardStock.num = v.num;
+                    awardStock.flag = 1;
+                });
             });
 
             $record.click(function(){
@@ -314,20 +317,21 @@ $(function(){
     
     com.focusPage("#addAwardStock").click(function(){
 
-        com.cleanItems(awardStock.items);
 
-        awardStock.items.moneys.show();
+        com.popup4model('#layerAdd1', '添加奖品', function(){
+            com.cleanItems(awardStock.items);
 
-        awardStock.items.no.removeAttr('disabled');
-        awardStock.items.name.removeAttr('disabled');
-        awardStock.items.num.removeAttr('disabled');
-        awardStock.items.type.removeAttr('disabled');
-        awardStock.items.storeroom.removeAttr('disabled');
-        awardStock.items.subtype.removeAttr('disabled');
+            awardStock.moneys.show();
 
-        awardStock.flag = 0;
+            awardStock.items.no.removeAttr('disabled');
+            awardStock.items.name.removeAttr('disabled');
+            awardStock.items.num.removeAttr('disabled');
+            awardStock.items.type.removeAttr('disabled');
+            awardStock.items.storeroom.removeAttr('disabled');
+            awardStock.items.subtype.removeAttr('disabled');
 
-        com.popup4model('#layerAdd1', '添加奖品');
+            awardStock.flag = 0;
+        });
     });
 
     function changeStatus(asid, status){
@@ -338,7 +342,6 @@ $(function(){
         }, function(){
             
             com.showAlert(com.info, "操作成功");
-            
             com.closePopup();
             awardStockSeacher.doSearch();
         });

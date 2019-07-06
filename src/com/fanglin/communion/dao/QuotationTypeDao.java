@@ -19,7 +19,7 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.Paging;
 
 public interface QuotationTypeDao extends Dao<QuotationTypePO> {
-	
+
 	public List<QuotationTypePO> pageQuotationType(Paging paging, List<Filter> filters);
-	
+
 }

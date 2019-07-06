@@ -1,18 +1,9 @@
 jQuery(function ($) {
 
-    var constructionNodes = {
-
-        constructionSchedul :{}
-    };
-
-    com.post(api.data.queryConstructionNode, {}, function (res) {
-        constructionNodes.constructionSchedul = res.constructionNodes.split("sort", "name");
-    }, null, false);
+    var constructionNodes = {};
 
     com.post(api.ds.construction, {}, function (res) {
-        $.each(res.constructionSchedul, function (i, v) {
-            constructionNodes.constructionSchedul[v["key"]] = v["value"];
-        });
+        constructionNodes = res.constructionSchedule.split("key", "value");
     }, null, false);
 
     var displayFunc = (function () {
@@ -46,7 +37,7 @@ jQuery(function ($) {
                 ["设计师:", v.designer.userName, "grey"],
                 ["监理:", v.supervisor.userName, "grey"],
                 ["面积:", v.house.buildArea, "blue"],
-                ["进度:", constructionNodes.constructionSchedul[v.projectStatus], "red"]
+                ["进度:", constructionNodes[v.projectStatus], "red"]
             ];
 
             $.each(propertyArr, function (index, value) {

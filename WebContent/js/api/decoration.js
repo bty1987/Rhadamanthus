@@ -41,6 +41,7 @@ $.extend(api, {decoration: {
     upgradeDecorationAtivityItem: {url: "upgradeDecorationAtivityItem.do"},
     refundDecorationActivityItem: {url: "refundDecorationActivityItem.do"},
     expendDecorationActivityItem: {url: "expendDecorationActivityItem.do"},
+    amountDecorationActivityItem: {url: "amountDecorationActivityItem.do"},
 
     queryDecorationContractByOrderId: {url: "queryDecorationContractByOrderId.do", demo: true},
     saveDecorationContract: {url: "saveDecorationContract.do"},
@@ -92,6 +93,7 @@ $.extend(api, {decoration: {
 	pageDecorationHolonomy: {url: "pageDecorationHolonomy.do"},
 	queryDecorationHolonomy: {url: "queryDecorationHolonomy.do"},
 	makeDecorationHolonomy: {url: "makeDecorationHolonomy.do"},
+	updateDecorationHolonomy: {url: "updateDecorationHolonomy.do"},
 
     pageDecorationInclusive: {url: "pageDecorationInclusive.do"},
     queryDecorationInclusive: {url: "queryDecorationInclusive.do"},

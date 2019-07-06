@@ -47,14 +47,14 @@ jQuery(function($) {
 	});
 
 	payment.modals.modal.on('show.bs.modal',function(e){
-		com.clearValidator();
 		com.focusPage('.payWayError').hide();
 	});
 
 	//隐藏触发
-	com.focusPage("#paymentModal").on('hidden.bs.modal', function () {
+	payment.modals.modal.on('hide.bs.modal', function () {
 		payment.bankUtilForGrade = [];
 		payment.checkBankUtilForGrade = [];
+		com.closeTip();
 	});
 
 	com.post(api.ds.payment, {}, function(res){

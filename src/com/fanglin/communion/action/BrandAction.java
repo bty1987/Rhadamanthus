@@ -23,84 +23,84 @@ import com.fanglin.utils.SystemConfig;
 public class BrandAction extends BaseListAction {
 
 	private static final long serialVersionUID = 5720132465639995345L;
-	
+
 	@Autowired
 	private BrandService brandService;
-	
+
 	private BrandVO brand;
-	
+
 	private List<BrandVO> brands;
-	
+
 	private List<Long> bIds;
-	
+
 	private String pinyinName;
-	
+
 	private List<KeyValueVO> autoFillKeyValue;
-	
+
 	private List<String> autoFillList;
-	
-	@Action(value="pageBrand", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String pageBrand() throws FLException{
-		
-		brandService.pageBrand(getPaging(), getFilters(),queryCompany());
-		
-		return SUCCESS;
-	}
-	
-	@Action(value="queryBrand", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryBrand() throws FLException{
-		
-		brands = brandService.queryBrand(queryCompany());
-		
+
+	@Action(value = "pageBrand", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageBrand() throws FLException {
+
+		brandService.pageBrand(getPaging(), getFilters(), queryCompany());
+
 		return SUCCESS;
 	}
 
-	@Action(value="queryBrandByBid", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryBrandByBid(){
-		
+	@Action(value = "queryBrand", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryBrand() throws FLException {
+
+		brands = brandService.queryBrand(queryCompany());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "queryBrandByBid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryBrandByBid() {
+
 		brand = brandService.queryBrandByBid(brand);
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value="queryBrandByNo", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryBrandByNo(){
-		
+
+	@Action(value = "queryBrandByNo", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryBrandByNo() {
+
 		brand = brandService.queryBrandByNo(brand);
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value="queryBrandByCid", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryBrandByCid(){
-		
+
+	@Action(value = "queryBrandByCid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryBrandByCid() {
+
 		brands = brandService.queryBrandByCid(brand);
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value="queryBrandForPinYinName", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryBrandForPinYinName() throws FLException{
-		
-		brands = brandService.queryBrandForPinYinName(pinyinName,queryCompany());
-		
-		for(BrandVO brandVO: brands){
+
+	@Action(value = "queryBrandForPinYinName", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryBrandForPinYinName() throws FLException {
+
+		brands = brandService.queryBrandForPinYinName(pinyinName, queryCompany());
+
+		for (BrandVO brandVO : brands) {
 			KeyValueVO keyValueVO = new KeyValueVO();
-			keyValueVO.setKey(brandVO.getNo()); 
+			keyValueVO.setKey(brandVO.getNo());
 			keyValueVO.setValue(brandVO.getName());
 			getAutoFillKeyValue().add(keyValueVO);
 			getAutoFillList().add(brandVO.getName());
 		}
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value="queryBrandForPinYinNameAname", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryBrandForPinYinNameAname() throws FLException{
-		
-		brands = brandService.queryBrandForPinYinName(pinyinName,queryCompany());
-		
-		for(BrandVO brandVO: brands){
+
+	@Action(value = "queryBrandForPinYinNameAname", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryBrandForPinYinNameAname() throws FLException {
+
+		brands = brandService.queryBrandForPinYinName(pinyinName, queryCompany());
+
+		for (BrandVO brandVO : brands) {
 			KeyValueVO keyValueVO = new KeyValueVO();
 			keyValueVO.setKey(brandVO.getNo());
 			keyValueVO.setValue(String.format("%s-%s", brandVO.getName(), brandVO.getCategoryName()));
@@ -108,45 +108,46 @@ public class BrandAction extends BaseListAction {
 			getAutoFillList().add(brandVO.getCategoryName());
 			brandVO.setAlias(String.format("%s-%s", brandVO.getName(), brandVO.getCategoryName()));
 		}
-		
+
 		return SUCCESS;
 	}
 
-	@Action(value="addBrand", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String addBrand() throws FLException{
-	
-		if(SystemConfig.getString("communion") == null){
-		    throw new FLException(-1, "无操作权限");
+	@Action(value = "addBrand", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addBrand() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
 		}
-		
+
 		brandService.addBrand(brand, queryCompany());
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value="updateBrand", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String updateBrand() throws FLException{
-		
-		if(SystemConfig.getString("communion") == null){
-		    throw new FLException(-1, "无操作权限");
+
+	@Action(value = "updateBrand", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateBrand() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
 		}
-		
+
 		brandService.updateBrand(brand);
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value="deleteBrandByBIds", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String deleteBrandByBIds() throws FLException{
-		
-		if(SystemConfig.getString("communion") == null){
-		    throw new FLException(-1, "无操作权限");
+
+	@Action(value = "deleteBrandByBIds", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String deleteBrandByBIds() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
 		}
-		
+
 		brandService.deleteBrandByBIds(bIds);
-		
+
 		return SUCCESS;
 	}
+
 	public BrandVO getBrand() {
 		return brand;
 	}
@@ -172,7 +173,7 @@ public class BrandAction extends BaseListAction {
 	}
 
 	public List<KeyValueVO> getAutoFillKeyValue() {
-		if(autoFillKeyValue == null){
+		if (autoFillKeyValue == null) {
 			autoFillKeyValue = new ArrayList<KeyValueVO>();
 		}
 		return autoFillKeyValue;
@@ -183,7 +184,7 @@ public class BrandAction extends BaseListAction {
 	}
 
 	public List<String> getAutoFillList() {
-		if(autoFillList == null){
+		if (autoFillList == null) {
 			autoFillList = new ArrayList<String>();
 		}
 		return autoFillList;
@@ -200,5 +201,5 @@ public class BrandAction extends BaseListAction {
 	public void setPinyinName(String pinyinName) {
 		this.pinyinName = pinyinName;
 	}
-	
+
 }

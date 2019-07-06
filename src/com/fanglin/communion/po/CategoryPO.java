@@ -13,19 +13,19 @@ import javax.persistence.Table;
 public class CategoryPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -8704336558286265464L;
-	
+
 	public static final String COLUMN_CID_STR = "cid";
-	
+
 	public static final String COLUMN_NO_STR = "no";
-	
+
 	private long cid;
-	
+
 	private String no;
-	
+
 	private String name;
-	
+
 	private String kino;
-	
+
 	private String kiname;
 
 	public CategoryPO() {
@@ -65,7 +65,7 @@ public class CategoryPO implements java.io.Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	@Column(name = "kino")
 	public String getKino() {
 		return kino;

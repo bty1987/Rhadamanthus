@@ -44,15 +44,12 @@ jQuery(function($) {
 
 	var materialPaymentCheckPostData = {};
 
-	materialPaymentCheck.modals.baseModal.on('show.bs.modal', function(e){
-		com.clearValidator();
-	});
-
 	//隐藏触发
-	materialPaymentCheck.modals.baseModal.on('hidden.bs.modal', function () {
+	materialPaymentCheck.modals.baseModal.on('hide.bs.modal', function () {
 		materialPaymentCheck.bankUtilForGrade = [];
 		materialPaymentCheck.checkBankUtilForGrade = [];
 		com.cleanTypeahead('materialCheckcashInfo');
+		com.closeTip();
 	});
 
 	materialPaymentCheck.saveBtn = com.focusPage("#saveBtn").bindClick(function(){

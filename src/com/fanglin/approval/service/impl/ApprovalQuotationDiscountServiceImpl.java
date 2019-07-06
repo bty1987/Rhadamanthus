@@ -145,10 +145,11 @@ public class ApprovalQuotationDiscountServiceImpl implements ApprovalQuotationDi
 			}
 
 			quotationPO.setDiscount(approvalQuotationDiscountPO.getNewDiscount());
-
+			quotationPO.setBasePrice(approvalQuotationDiscountPO.getBasePrice());
+			
 			if (quotationPO.getDefaults() == QuotationPO.DEFAULTS_DEFAULT_INT) {
 				decorationPO.setDiscount(quotationPO.getDiscount());
-
+				
 				decorationDao.update(decorationPO);
 			}
 

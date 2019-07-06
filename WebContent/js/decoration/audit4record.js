@@ -90,12 +90,22 @@ $(function () {
             perCharge[v.key] = v.value;
         });
     });
-
+    
+    auditRecordPage.changeAuditRecordModel.on('hide.bs.modal', function (e) {
+    	com.cleanItems(auditRecordPage);
+    	com.closeTip();
+    });
+    
+    auditScalePage.auditScaleModel.on('hide.bs.modal', function (e) {
+    	clearAuditScaleModel();
+    	com.closeTip();
+    });
+    
     com.initTypeahead('userId', api.personel.queryUserByPinyin, "pinyinName", {"duty": "", "user.status":0}, "autoFillKeyValue", "key", "value", function(list, key, value){
         com.post(api.personel.queryUserByUserId,{"user.userId":key},function (res) {
                     auditScalePage.deptId.val(res.user.dept.name);
                 });
-        return value
+        return value;
     });
 
 
@@ -262,30 +272,23 @@ $(function () {
     }
 
     function initBtn() {
-        var number = /^[1-9]\d*$/;
-        var num = /^([1-9]|10)$/;
+    	
         auditRecordPage.add.click(function () {
             clearAuditRecordModel();
             auditRecordPage.changeAuditRecordModel.attr("type","addR");
             auditRecordPage.changeAuditRecordModel.modal("show");
 
-        });
+        }); 
         auditRecordPage.saveBtn.click(function () {
-            if(auditRecordPage.comment.val() == null || auditRecordPage.comment.val() == ''){
-                com.showAlert(com.warning, "扣款说明不能为空");
-            }
-            if((!number.test(auditRecordPage.untiPrice.val())) || auditRecordPage.untiPrice.val() == null || auditRecordPage.untiPrice.val() == ''){
-                com.showAlert(com.warning, "单价只能输入数字");
+        	if (com.validate("auditRecordModel")) {
                 return;
             }
-            if((!number.test(auditRecordPage.num.val())) || auditRecordPage.num.val() == null || auditRecordPage.num.val() == ''){
-                com.showAlert(com.warning, "数量只能输入数字");
+        	
+            if(auditRecordPage.discount.val() == 1 || auditRecordPage.discount.val() >= 10 ){
+                com.showTip(com.focusPage("#discount"), "折扣只能输入1-10的数字", "right");
                 return;
             }
-            if((!num.test(auditRecordPage.discount.val())) || auditRecordPage.discount.val() == null || auditRecordPage.discount.val() == ''){
-                com.showAlert(com.warning, "折扣只能输入1-10的数字");
-                return;
-            }
+        	
             var type = auditRecordPage.changeAuditRecordModel.attr("type");
             if(type == "addR"){
                 com.post(api.decoration.addAuditRecord,makeAuditRecordPostParam(null,auditRecord.aid,auditRecordPage.comment.val()
@@ -320,21 +323,15 @@ $(function () {
             auditRecordPage.changeAuditRecordModel.modal("hide");
         });
 
-
-
-
         auditScalePage.add.click(function () {
             auditScalePage.auditScaleModel.modal("show");
         });
+        
         auditScalePage.saveBtn.click(function () {
-            if(auditScalePage.userId.val() == null || auditScalePage.userId.val() == ''){
-                com.showAlert(com.warning, "请输入被扣款人");
+        	if (com.validate("auditScaleModel")) {
                 return;
             }
-            if((!number.test(auditScalePage.money.val())) || auditScalePage.money.val() == null || auditScalePage.money.val() == ''){
-                com.showAlert(com.warning, '扣款金额只能输入整数');
-                return;
-            }
+        	
             com.post(api.decoration.addAuditScale,makeAuditScalePostdata(null,auditScale.arid,com.typeahead("userId"),auditScalePage.deptId.val(),auditScalePage.money.val(),0),function (res) {
                 com.showAlert(com.info,"添加成功");
                 auditScalePage.auditScaleModel.modal("hide");

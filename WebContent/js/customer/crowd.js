@@ -1,19 +1,28 @@
 $(function(){
 
     var group = {
-        bindSaveBtn: null,
-        bindSaveOrderBtn: null,
-        items: {},
+        bindSaveBtn: com.focusPage("#bindSaveBtn"),
+        bindSaveOrderBtn: com.focusPage("#bindSaveOrderBtn"),
+        modals:{
+            updateOrderModal: com.focusPage("#updateOrderModal"),
+            bindOrderModal: com.focusPage("#bindOrderModal")
+        },
+        items: {
+            name: com.focusPage("#name"),
+            content: com.focusPage("#content"),
+            orderId: com.focusPage("#orderId")
+        },
         gid: null,
         opengid: null,
     };
 
-    group.items.name = com.focusPage("#name");
-    group.items.content = com.focusPage("#content");
-    group.items.orderId = com.focusPage("#orderId");
+    group.bindSaveBtn.bindClick(bindgroup);
+    group.bindSaveOrderBtn.bindClick(bindgroupOrder);
 
-    group.bindSaveBtn = com.focusPage("#bindSaveBtn").on('click', bindgroup);
-    group.bindSaveBtn = com.focusPage("#bindSaveOrderBtn").on('click',bindgroupOrder);
+    com.focusPage(".modal").on("hide.bs.modal",function () {
+        com.cleanItems(group.items);
+        com.clearValidator();
+    });
 
     var displayFunc = (function () {
 
@@ -43,7 +52,7 @@ $(function(){
                 ["群编号: ", v.opengid, "grey"],
                 ["装修单号: ", v.orderId, "grey"],
                 ["说明: ", v.content, "grey"],
-            ]
+            ];
 
             $.each(propertyArr, function (index, value) {
                 var $liProperty = $('<li></li>');
@@ -56,12 +65,12 @@ $(function(){
                 group.gid = v.gid;
                 params.gid = v.gid;
 
-                com.focusPage("#name").val(v.name);
-                com.focusPage("#content").val(v.content);
+                group.items.name.val(v.name);
+                group.items.content.val(v.content);
 
-                com.focusPage("#updateOrderModal").modal("show");
+                group.modals.updateOrderModal.modal("show");
 
-            })
+            });
 
             $btnbind.click(function(){
                 group.gid = v.gid;
@@ -69,7 +78,7 @@ $(function(){
                 params.gid = v.gid;
                 params.opengid = v.opengid;
 
-                com.focusPage("#bindOrderModal").modal("show");
+                group.modals.bindOrderModal.modal("show");
             });
 
             $btnunbind.click(function(){
@@ -78,7 +87,7 @@ $(function(){
 
             $btnAddUser.click(function(){
                 params.gorderId = v.orderId;
-                com.switchPage('views/customer/crowdUser.html');
+                com.popup4page('#crowdUserPopUp', 'views/customer/crowdUser.html', '群成员')
             });
 
             if(v.orderId == null){
@@ -109,7 +118,7 @@ $(function(){
 
     function bindgroup (){
         
-        if(com.validate()){
+        if(com.validate('form')){
             return false;
         }
 
@@ -122,13 +131,13 @@ $(function(){
         com.post(api.customer.updateGroup, option, function(){
             searcher.doSearch();
             com.showAlert(com.info,'修改群信息成功');
-            com.focusPage("#updateOrderModal").modal("hide");
+            group.modals.updateOrderModal.modal("hide");
         });
     }
 
     function bindgroupOrder(){
 
-        if(com.validate()){
+        if(com.validate('orderIdCheck')){
             return false;
         }
 
@@ -139,9 +148,8 @@ $(function(){
 
         com.post(api.customer.bindGroup, option, function(){
             searcher.doSearch();
-            group.items.orderId.val("");
             com.showAlert(com.info,'绑定成功');
-            com.focusPage("#bindOrderModal").modal("hide");
+            group.modals.bindOrderModal.modal("hide");
         });
     }
 

@@ -146,31 +146,17 @@ jQuery(function($) {
 
 				if(!numRex.test(_numNew)){
 					$numNew.focus().select();
-					$numNew.addClass('tooltip-info').attr({
-						"data-rel" : "popover",
-						"data-placement" : "top",
-						"data-original-title" : "",
-						"title" : "",
-						"data-content" : "请输入大于零的数字!"
-					}).popover('show');
+					com.showTip($numNew,"请输入大于零的数字!","bottom");
 					refundFlag = false;
 					return false;
 				}
 
 				if(_numNew > _numOld){
 					$numNew.focus().select();
-					$numNew.addClass('tooltip-info').attr({
-						"data-rel" : "popover",
-						"data-placement" : "top",
-						"data-original-title" : "",
-						"title" : "",
-						"data-content" : "退货总数不能超过原有总数!"
-					}).popover('show');
+					com.showTip($numNew,"退货总数不能超过原有总数!","bottom");
 					refundFlag = false;
 					return false;
 				}
-
-				$numNew.popover('destroy');
 
 				if($line.attr('level') == 0 && $line.attr('isleaf') == 'true'){
 
@@ -532,17 +518,9 @@ jQuery(function($) {
 			_numNewRex = /^(\d+|\d+\.[0-9]{1,4})$/;
 			if(!_numNewRex.test(_numNew)){
 				$numNew.focus().select();
-				$numNew.addClass('tooltip-info').attr({
-					"data-rel" : "popover",
-					"data-placement" : "top",
-					"data-original-title" : "",
-					"title" : "",
-					"data-content" : "请输入大于零的数字!"
-				}).popover('show');
+				com.showTip($numNew,"请输入大于零的数字!","bottom");
 				cansubmit = false;
 				return;
-			}else{
-				$numNew.popover('destroy');
 			}
 
 			if(_numNew){
@@ -591,20 +569,11 @@ jQuery(function($) {
 		var _total, _price;
 		_numOld = parseFloat($line.find('.numv').text());
 		_numNew = parseFloat($numNew.val());
-		// _numNewRex = /^(\d+|\d+\.[0-9]{1,4})$/;
 		_numNewRex = /^[0-9]+\.{0,1}[0-9]{0,3}$/;
 		if(!_numNewRex.test(_numNew) || _numNew <= 0){
 			$numNew.focus().select();
-			$numNew.addClass('tooltip-info').attr({
-				"data-rel" : "popover",
-				"data-placement" : "top",
-				"data-original-title" : "",
-				"title" : "",
-				"data-content" : "数量输入内容格式错误!"
-			}).popover('show');
+			com.showTip($numNew,"数量输入内容格式错误!","bottom");
 			return false;
-		}else{
-			$numNew.popover('destroy');
 		}
 
 		_price = parseFloat(materialSubOrderItem.price);

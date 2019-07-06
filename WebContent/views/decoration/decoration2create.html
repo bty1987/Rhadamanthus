@@ -194,9 +194,9 @@
 							<div class="col-md-12">
 								<div class="col-md-6">
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="customerName">姓名</label>
+										<label class="col-sm-3 control-label no-padding-right orange" for="customerName">姓名</label>
 										<div class="col-sm-9">
-											<input type="text" id="customerName" maxlength="32" class="col-xs-10 col-sm-6 v_required v_name" data-toggle="popover" data-trigger='manual'/><span class='star'></span>
+											<input type="text" id="customerName" maxlength="32" class="col-xs-10 col-sm-6 v_required v_name" data-toggle="popover" data-trigger='manual'/>
 										</div>
 									</div>
 
@@ -211,14 +211,14 @@
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="identity">身份证号</label>
 										<div class="col-sm-9">
-											<input type="text" maxlength="21" id="identity" class="col-xs-10 col-sm-6" data-toggle="popover" data-trigger='manual'/>
+											<input type="text" maxlength="21" id="identity" class="col-xs-10 col-sm-6 v_identity" data-toggle="popover" data-trigger='manual'/>
 										</div>
 									</div>
 
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="officer">军官证</label>
 										<div class="col-sm-9">
-											<input type="text" maxlength="21" id="officer" class="col-xs-10 col-sm-6  " data-toggle="popover" data-trigger='manual'/>
+											<input type="text" maxlength="21" id="officer" class="col-xs-10 col-sm-6 v_officer" data-toggle="popover" data-trigger='manual'/>
 										</div>
 									</div>
 
@@ -230,9 +230,9 @@
 									</div>
 
 									<div class="form-group" id="phonehide">
-										<label class="col-sm-3 control-label no-padding-right" for="phone">联系方式</label>
+										<label class="col-sm-3 control-label no-padding-right orange" for="phone">联系方式</label>
 										<div class="col-sm-9">
-											<input type="text" id="phone" maxlength="64" class="col-xs-10 col-sm-6 v_required v_phones2" data-toggle="popover" data-trigger='manual'/><span class='star'></span>
+											<input type="text" id="phone" maxlength="64" class="col-xs-10 col-sm-6 v_required v_phones2" data-toggle="popover" data-trigger='manual'/>
 										</div>
 									</div>
 
@@ -305,22 +305,20 @@
 							<div class="col-md-12">
 								<div class="col-md-6">
 									<div class="form-group " >
-										<label for="no" class="col-sm-2 control-label no-padding-right">楼盘名</label>
+										<label for="no" class="col-sm-2 control-label no-padding-right orange">楼盘名</label>
 										<div class="col-md-9">
 											<input type="text" class="col-xs-10 col-sm-5 v_typeahead v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="no">
-											<span class='star'></span>
 										</div>
 									</div>
 								</div>
 								<div class="col-sm-6">
 									<div class="form-group">
-									<label class="col-sm-3 control-label no-padding-right">户型</label>
+									<label class="col-sm-3 control-label no-padding-right orange">户型</label>
 									<div class="col-sm-9">
 										<input type="text" class="v_required v_number" style="width:30px"   data-placement="top"   id="houseTypeOne" /> 室
 										<input type="text" class="v_required v_number" style="width:30px"  data-placement="top"  id="houseTypeTwo" /> 厅
 										<input type="text" class="v_required v_number" style="width:30px"   data-placement="top"  id="houseTypeThr" /> 厨
 										<input type="text" class="v_required v_number" style="width:30px"  data-placement="top"   id="houseTypeFour" /> 卫
-										<span class='star'></span>
 									</div>
 									</div>
 								</div>
@@ -328,7 +326,7 @@
 							<div class="col-md-12">
 								<div class="col-md-12">
 									<div class="form-group" id="nhouseNumber">
-										<label for="built" class="col-sm-1 control-label no-padding-right">楼牌号</label>
+										<label for="built" class="col-sm-1 control-label no-padding-right orange">楼牌号</label>
 										<div class="col-sm-10">
 											<input type="text" class="v_required col-sm-1" maxlength="7" style="float: none;"  id="built">
 											<select id="builtrule" style="padding: 0px;font-size: 1px; height: 25px; vertical-align: bottom"></select>
@@ -338,7 +336,6 @@
 											<select id="floorrule" style="padding: 0px;font-size: 1px; height: 25px; vertical-align: bottom"></select>
 											<input type="text" class="v_required col-sm-1" maxlength="3"  style="float: none;"  id="door">
 											<select id="doorrule" style="padding: 0px;font-size: 1px; height: 25px; vertical-align: bottom"></select>
-											<span class='star' id="errMsg"></span>
 											<div class="col-md-12" style="padding: 0px;" >
 												<span id="rule" class="red"></span>
 											</div>
@@ -358,11 +355,10 @@
 									</div>
 
 									<div class="form-group">
-										<label class="col-sm-2 control-label no-padding-right" for="buildArea">建筑面积</label>
+										<label class="col-sm-2 control-label no-padding-right orange" for="buildArea">建筑面积</label>
 										<div class="col-sm-9">
 											<input type="text" id="buildArea" maxlength="7" class="col-xs-10 col-sm-6 v_required v_float_3" />
 											<span style = "margin-left: 10px; line-height: 34px">平</span>
-											<span class='star'></span>
 										</div>
 									</div>
 

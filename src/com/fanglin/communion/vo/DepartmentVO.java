@@ -17,7 +17,7 @@ import com.fanglin.personel.vo.UserVO;
 public class DepartmentVO implements Serializable {
 
 	private static final long serialVersionUID = -7371170236257562586L;
-	
+
 	private Integer did;
 
 	private String no;
@@ -39,10 +39,10 @@ public class DepartmentVO implements Serializable {
 	private String kino;
 
 	private String kiname;
-	
+
 	private UserVO manager;
-	
-	public DepartmentVO(){
+
+	public DepartmentVO() {
 		super();
 	}
 
@@ -155,13 +155,12 @@ public class DepartmentVO implements Serializable {
 		this.manager = manager;
 	}
 
-	public DepartmentVO setBaseInfo(DepartmentPO departmentPO){
+	public DepartmentVO setBaseInfo(DepartmentPO departmentPO) {
 		this.did = departmentPO.getDid();
 		this.no = departmentPO.getNo();
 		this.name = departmentPO.getNo();
-		
+
 		return this;
 	}
-	
 
 }

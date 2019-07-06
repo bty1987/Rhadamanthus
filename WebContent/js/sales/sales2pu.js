@@ -1,7 +1,5 @@
 $(function () {
 
-    com.datetime(com.focusPage('#layerAdd input[name="deliveryTime"]'));
-
     var salesPU= {
         _params : {},
         status:{},
@@ -9,9 +7,10 @@ $(function () {
         btns : {
             puSaveBtn : com.focusPage("#puSaveBtn")
         }
-
     };
-    
+
+    com.datetime(com.focusPage('#layerAdd input[name="deliveryTime"]'));
+
     com.post(api.ds.sales, {}, function(res){
         salesPU.status = res.statues.split("key", "value");
         salesPU.balanceStatus = res.balanceStatuses.split("key", "value");
@@ -111,24 +110,134 @@ $(function () {
                         } else {
                             com.showAlert(com.warning, "此销售单补款未确认,无法转采购单");
                         }
-
                     });
-
                 });
-
                 $ul.appendTo($tableWrap);
             }
         };
-
-
         return {
             init: function (tableId, listData) {
                 com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             }
         };
-
     })();
+
+    var initList = (function () {
+
+        var renderList = function (tableId, listData) {
+            var $tableWrap = com.focusPage('#' + tableId);
+            var $ul = $('<ul></ul>').addClass('item-list ui-sortable  fl-table-list');
+
+            if (listData && listData.length) {
+                $.each(listData, function (i, v) {
+                    var $liLine = $('<li></li>').addClass('item-orange clearfix');
+                    var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix').attr({
+                        'data-discount': v.discount,
+                        'data-postDis': v.postDis
+                    });
+                    var $h3 = $('<h3></h3>').addClass('oid');
+                    var $btnDiv = $('<div></div>').addClass('action-buttons pull-right').attr('data-num', v.num).attr('data-selling', v.price).attr('data-siid', v.siid);
+
+                    var propertyArr = [
+                        ["商品品类:", v.goods.category, "grey", "category"],
+                        ["商品颜色:", v.color.name, "grey", "color"],
+                        ["商品规格:", v.format.info, "grey", "format"],
+                        ["售价:", v.selling, "blue", "selling"],
+                        ["折扣价:", v.disPrice, "blue", "disPrice"],
+                        ["折让价:", v.price, "blue", "price"],
+                        ["数量:", v.num, "blue", "num"],
+                        ["总价:", v.total, "blue", "total"],
+                        ["原结算方式:", v.rawCtype == 0 ? "底价" : "点位", "red", "rawCtype"],
+                        ["原结算值:", v.rawCvalue, "blue", "rawCvalue"],
+                        ["结算方式:", v.ctype == 0 ? "底价" : "点位", "red", "ctype"],
+                        ["结算值:", v.cvalue, "blue", "cvalue"],
+                        ["备注:", v.comment, "grey", "comment"]
+                    ];
+
+                    var $label = $('<label></label>').addClass('control-label').css({
+                        'color': 'grey',
+                        'font-size': '20px',
+                        "font-weight": "bold",
+                        "width":"100%"
+                    });
+
+                    var inputSpan = $('<label></label>').addClass('pull-right').css({'font-size': '14px', 'font-weight': 'bold'}).html('单价:');
+                    var inputNum = $('<input>').addClass('unitPrice').css({'margin-left': '20px', 'width': '40%'}).appendTo(inputSpan);
+                    var inputSpanNum = $('<label></label>').addClass('pull-right').css({'font-size': '14px', 'font-weight': 'bold'}).html('数量:');
+                    var inputNumber = $('<input>').addClass('inputNumber').css({'margin-left': '20px', 'width': '40%'}).appendTo(inputSpanNum);
+                    var btnSpanSearchStroeStock = $('<label></label>').addClass('pull-right').css({'font-size': '20px', 'font-weight': 'bold', 'height': '26px', 'margin-top': '-4px'});
+                    var btnSearchStroeStock = $('<button></button>').addClass('btn btn-xs btn-info btn-search').attr('name', 'search').css("margin", "0px 3px").html('库存').appendTo(btnSpanSearchStroeStock);
+
+                    var _label = $('<label></label>');
+                    var $input = $('<input>').attr({
+                        "type": "checkbox",
+                        "name": "siids",
+                        "class": "",
+                        "data-sid": v.sid,
+                        "data-siid": v.siid,
+                        "data-cid": v.color.cid,
+                        "data-fid": v.format.fid,
+                        "data-gid": v.goods.gid,
+                        "data-num": v.num
+                    }).addClass('ace ace-checkbox-2');
+
+                    $input.change(function () {
+                        if($input.prop('checked')){
+                            inputNumber.addClass("v_float_3");
+                            inputNum.addClass("v_float_3")
+                        }else{
+                            inputNumber.removeClass("v_float_3");
+                            inputNum.removeClass("v_float_3");
+                        }
+                    });
+
+                    var _span = $('<span></span>').addClass('lbl blue bigger-150').css('font-weight', 'bold').html(v.goods.name + ' ' + v.goods.no);
+
+                    _label.append($input).append(_span).appendTo($label);
+
+                    $.each(propertyArr, function (index, value) {
+                        var $liProperty = $('<li></li>').css({"border-bottom": "0px"});
+                        $('<strong></strong>').attr('name', value[3]).html(value[0]).appendTo($liProperty);
+                        $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+                        $liProperty.appendTo($ulProperty);
+                    });
+
+                    $label.append(btnSpanSearchStroeStock).append(inputSpan).append(inputSpanNum).appendTo($h3);
+
+
+                    $btnDiv.appendTo($h3);
+
+                    $liLine.appendTo($ul);
+                    $liLine.append($h3).append($ulProperty);
+
+                    btnSearchStroeStock.bindClick(function () {
+                        var _option = {
+                            "goodsStorehouseStock.goods.gid": v.goods.gid,
+                            "goodsStorehouseStock.color.cid": v.color.cid,
+                            "goodsStorehouseStock.format.fid": v.format.fid
+                        };
+
+                        com.post(api.inventory.queryGoodsStorehouseStockByGid, _option, function (res) {
+                            if (res.nums == null) {
+                                com.showAlert(com.warning, "该商品没有库存");
+                            } else {
+                                com.showAlert(com.warning, '该商品剩余库存:' + res.nums);
+                            }
+                        });
+                    });
+                });
+                $ul.appendTo($tableWrap);
+            }
+        };
+        return {
+            init: function (tableId, listData) {
+                com.focusPage('#' + tableId).html(null);
+                renderList(tableId, listData);
+            }
+        };
+    })();
+
     var _condArr = ['sales_no', 'sales_orderId', 'sales_instorer', 'sales_salesman', 'sales_deptName', 'sales_fullpayTime'];
 
     var salesSwitchPurchaseSearcher = new Searcher();
@@ -183,7 +292,6 @@ $(function () {
                 } else {
                     com.showAlert(com.warning, "请选择销售单");
                 }
-
             }
         );
         return [];
@@ -237,201 +345,19 @@ $(function () {
         });
 
         if (checkList.length != 0) {
-            if (checkRowValue($liline)) {
-                com.post(api.inventory.addPurchase, options, function () {
-                    com.closePopup();
-                    com.showAlert(com.info, "添加成功");
-                    com.focusPage('#resultListItem').empty();
-                    com.focusPage('input[name="deliveryTime"]').val("");
-                }, function (e) {
-                    com.showAlert(com.error, e.errorMsg);
-                });
-            }
+            com.post(api.inventory.addPurchase, options, function () {
+                com.closePopup();
+                com.showAlert(com.info, "添加成功");
+                com.focusPage('#resultListItem').empty();
+                com.focusPage('input[name="deliveryTime"]').val("");
+            }, function (e) {
+                com.showAlert(com.error, e.errorMsg);
+            });
         } else {
             com.showAlert(com.warning, "请选择需要转采购单的商品");
         }
-
     }
-
-    var initList = (function () {
-
-        var renderList = function (tableId, listData) {
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list ui-sortable  fl-table-list');
-
-            if (listData && listData.length) {
-                $.each(listData, function (i, v) {
-                    var $liLine = $('<li></li>').addClass('item-orange clearfix');
-                    var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix').attr({
-                        'data-discount': v.discount,
-                        'data-postDis': v.postDis
-                    });
-                    var $h3 = $('<h3></h3>').addClass('oid');
-                    var $btnDiv = $('<div></div>').addClass('action-buttons pull-right').attr('data-num', v.num).attr('data-selling', v.price).attr('data-siid', v.siid);
-
-                    var propertyArr = [
-                        ["商品品类:", v.goods.category, "grey", "category"],
-                        ["商品颜色:", v.color.name, "grey", "color"],
-                        ["商品规格:", v.format.info, "grey", "format"],
-                        ["售价:", v.selling, "blue", "selling"],
-                        ["折扣价:", v.disPrice, "blue", "disPrice"],
-                        ["折让价:", v.price, "blue", "price"],
-                        ["数量:", v.num, "blue", "num"],
-                        ["总价:", v.total, "blue", "total"],
-                        ["原结算方式:", v.rawCtype == 0 ? "底价" : "点位", "red", "rawCtype"],
-                        ["原结算值:", v.rawCvalue, "blue", "rawCvalue"],
-                        ["结算方式:", v.ctype == 0 ? "底价" : "点位", "red", "ctype"],
-                        ["结算值:", v.cvalue, "blue", "cvalue"],
-                        ["备注:", v.comment, "grey", "comment"]
-                    ];
-
-                    var $label = $('<label></label>').addClass('control-label').css({
-                        'color': 'grey',
-                        'font-size': '20px',
-                        "font-weight": "bold",
-                        "width":"100%"
-                    });
-
-                    var inputSpan = $('<label></label>').addClass('pull-right').css({
-                        'font-size': '14px',
-                        'font-weight': 'bold'
-                    }).html('单价:');
-                    var inputNum = $('<input>').addClass('unitPrice').css({
-                        'margin-left': '20px',
-                        'width': '40%'
-                    }).appendTo(inputSpan);
-
-                    var inputSpanNum = $('<label></label>').addClass('pull-right').css({
-                        'font-size': '14px',
-                        'font-weight': 'bold'
-                    }).html('数量:');
-
-                    var inputNumber = $('<input>').addClass('inputNumber').css({
-                        'margin-left': '20px',
-                        'width': '40%'
-                    }).appendTo(inputSpanNum);
-
-                    var btnSpanSearchStroeStock = $('<label></label>').addClass('pull-right').css({
-                        'font-size': '20px',
-                        'font-weight': 'bold',
-                        'height': '26px',
-                        'margin-top': '-4px'
-                    });
-                    var btnSearchStroeStock = $('<button></button>').addClass('btn btn-xs btn-info btn-search').attr('name', 'search').css("margin", "0px 3px").html('库存').appendTo(btnSpanSearchStroeStock);
-
-                    var _label = $('<label></label>');
-
-                    var $input = $('<input>').attr({
-                        "type": "checkbox",
-                        "name": "siids",
-                        "class": "",
-                        "data-sid": v.sid,
-                        "data-siid": v.siid,
-                        "data-cid": v.color.cid,
-                        "data-fid": v.format.fid,
-                        "data-gid": v.goods.gid,
-                        "data-num": v.num
-                    }).addClass('ace ace-checkbox-2');
-
-                    var _span = $('<span></span>').addClass('lbl blue bigger-150').css('font-weight', 'bold').html(v.goods.name + ' ' + v.goods.no);
-
-                    _label.append($input).append(_span).appendTo($label);
-
-                    $.each(propertyArr, function (index, value) {
-                        var $liProperty = $('<li></li>').css({"border-bottom": "0px"});
-                        $('<strong></strong>').attr('name', value[3]).html(value[0]).appendTo($liProperty);
-                        $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                        $liProperty.appendTo($ulProperty);
-                    });
-
-                    $label.append(btnSpanSearchStroeStock).append(inputSpan).append(inputSpanNum).appendTo($h3);
-
-
-                    $btnDiv.appendTo($h3);
-
-                    $liLine.appendTo($ul);
-                    $liLine.append($h3).append($ulProperty);
-
-                    btnSearchStroeStock.bindClick(function () {
-                        var _option = {
-                            "goodsStorehouseStock.goods.gid": v.goods.gid,
-                            "goodsStorehouseStock.color.cid": v.color.cid,
-                            "goodsStorehouseStock.format.fid": v.format.fid
-                        };
-
-                        com.post(api.inventory.queryGoodsStorehouseStockByGid, _option, function (res) {
-                            if (res.nums == null) {
-                                com.showAlert(com.warning, "该商品没有库存");
-                            } else {
-                                com.showAlert(com.warning, '该商品剩余库存:' + res.nums);
-                            }
-                        });
-                    });
-
-
-                });
-
-                $ul.appendTo($tableWrap);
-            }
-        };
-
-
-        return {
-            init: function (tableId, listData) {
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
-            }
-        };
-
-    })();
-
-    function checkRowValue($line) {
-        var flag = true;
-        var priceRex = /^\d{1,8}(\.\d{1,3})?$/;
-        $.each($line, function (i, v) {
-
-            var num = $(v).find('input.inputNumber');
-
-            if (!(priceRex.test(num.val()) && parseFloat(num.val()) > 0 )){
-                num.focus().select();
-                num.addClass('tooltip-info').attr({
-                    "data-rel": "popover",
-                    "data-placement": "top",
-                    "data-original-title": "",
-                    "title": "",
-                    "data-content": "采购数量需大于0!"
-                }).popover('show');
-                flag = false;
-            }else {
-                num.popover('destroy');
-            }
-
-            var unitPrice = $(v).find('input.unitPrice');
-
-            if (!(priceRex.test(unitPrice.val()) && parseFloat(unitPrice.val()) > 0 )) {
-                unitPrice.focus().select();
-
-                unitPrice.addClass('popover-notitle').attr({
-                    "data-rel": "popover",
-                    "data-placement": "top",
-                    "data-original-title": "",
-                    "title": "",
-                    "data-content": "单价输入内容格式错误"
-
-                }).popover('show');
-
-                flag = false;
-            } else {
-                unitPrice.popover('destroy');
-            }
-
-        });
-
-        return flag;
-    }
-
 
     com.focusPage('#resultListItem').css({'width': '96%', 'margin': '0 auto'});
-
 });
 

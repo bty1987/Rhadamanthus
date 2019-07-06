@@ -19,11 +19,11 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.Paging;
 
 public interface CategoryDao extends Dao<CategoryPO> {
-	
+
 	public List<CategoryPO> pageCategory(Paging paging, List<Filter> filters);
-	
+
 	public CategoryPO queryCategoryByCId(long cId);
-	
+
 	public CategoryPO queryCategoryByCategoryId(String categoryId);
 
 }

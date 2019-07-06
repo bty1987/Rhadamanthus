@@ -2,12 +2,12 @@ package com.fanglin.communion.vo;
 
 import java.io.Serializable;
 
-public class DepartmentTypeVO implements Serializable{
-	
+public class DepartmentTypeVO implements Serializable {
+
 	private static final long serialVersionUID = -5617161964738001838L;
 
 	private int dtid;
-	
+
 	private String name;
 
 	public int getDtid() {
@@ -26,7 +26,4 @@ public class DepartmentTypeVO implements Serializable{
 		this.name = name;
 	}
 
-	
-
-	
 }

@@ -38,14 +38,11 @@ jQuery(function($) {
 		checkBankUtilForGrade: []
 	};
 
-	servicePayment.modals.baseModal.on('show.bs.modal',function(e){
-		com.clearValidator();
-	});
-
 	//隐藏触发
-	servicePayment.modals.baseModal.on('hidden.bs.modal', function () {
+	servicePayment.modals.baseModal.on('hide.bs.modal', function () {
 		servicePayment.bankUtilForGrade = [];
 		servicePayment.checkBankUtilForGrade = [];
+		com.closeTip();
 	});
 
 	com.focusPage("#refundBankCard").on("click",function(e) {

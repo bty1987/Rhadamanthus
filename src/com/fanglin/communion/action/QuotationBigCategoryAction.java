@@ -19,27 +19,27 @@ import com.fanglin.core.action.BaseListAction;
 public class QuotationBigCategoryAction extends BaseListAction {
 
 	private static final long serialVersionUID = 5184787172424995580L;
-	
+
 	@Autowired
 	private QuotationBigCategoryService quotationBigCategoryService;
-	
+
 	private QuotationBigCategoryVO quotationBigCategory;
-	
+
 	private List<QuotationBigCategoryVO> quotationBigCategorys;
-	
-	@Action(value="queryQuotationBigCategory", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryQuotationBigCategory(){
-		
+
+	@Action(value = "queryQuotationBigCategory", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryQuotationBigCategory() {
+
 		quotationBigCategorys = quotationBigCategoryService.queryQuotationBigCategory(quotationBigCategory);
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value="pageQuotationBigCategory", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String pageQuotationBigCategory(){
-		
+
+	@Action(value = "pageQuotationBigCategory", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageQuotationBigCategory() {
+
 		quotationBigCategoryService.pageQuotationBigCategory(getPaging(), getFilters());
-	    
+
 		return SUCCESS;
 	}
 
@@ -51,12 +51,12 @@ public class QuotationBigCategoryAction extends BaseListAction {
 		this.quotationBigCategory = quotationBigCategory;
 	}
 
-	public List<QuotationBigCategoryVO> getQuotationBigCategorys(){
+	public List<QuotationBigCategoryVO> getQuotationBigCategorys() {
 		return quotationBigCategorys;
 	}
 
-	public void setQuotationBigCategorys(List<QuotationBigCategoryVO> quotationBigCategorys){
+	public void setQuotationBigCategorys(List<QuotationBigCategoryVO> quotationBigCategorys) {
 		this.quotationBigCategorys = quotationBigCategorys;
 	}
-	
+
 }

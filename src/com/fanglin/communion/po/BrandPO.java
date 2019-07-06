@@ -14,39 +14,39 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "brand", catalog = "communion")
 public class BrandPO implements java.io.Serializable {
-	
+
 	private static final long serialVersionUID = -1250639697212151929L;
-	
+
 	public static final String COLUMN_BID_INT = "bid";
-	
+
 	public static final String COLUMN_NO_STR = "no";
-	
+
 	public static final String COLUMN_NAME_STR = "name";
-	
+
 	public static final String COLUMN_PINYIN_STR = "pinyin";
-	
+
 	public static final String COLUMN_CATEGORYNO_STR = "no";
 
 	private long bid;
-	
+
 	private String no;
-	
+
 	private String name;
-	
+
 	private String pinyin;
-	
+
 	private CategoryPO category;
-	
+
 	private int company;
-	
+
 	private String kino;
-	
+
 	private String kiname;
-	
+
 	public BrandPO() {
 		super();
 	}
-	
+
 	public BrandPO(long bid) {
 		super();
 		this.bid = bid;
@@ -95,11 +95,11 @@ public class BrandPO implements java.io.Serializable {
 	public CategoryPO getCategory() {
 		return category;
 	}
-	
+
 	public void setCategory(CategoryPO category) {
 		this.category = category;
 	}
-	
+
 	@Column(name = "company")
 	public int getCompany() {
 		return company;
@@ -108,7 +108,7 @@ public class BrandPO implements java.io.Serializable {
 	public void setCompany(int company) {
 		this.company = company;
 	}
-	
+
 	@Column(name = "kino")
 	public String getKino() {
 		return kino;

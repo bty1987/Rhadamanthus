@@ -44,6 +44,12 @@ jQuery(function ($) {
     vpayment.saveBtn.bindClick(saveData);
     vpayment.collectPaymentBtn.bindClick(collectPayments);
 
+    vpayment.modals.vpaymentModal.on("hide.bs.modal", function () {
+        com.clearValidator();
+        com.cleanTypeahead("brand");
+        com.cleanItems(vpayment.items);
+    });
+
     com.initTypeahead('brand', api.data.queryBrandForPinYinName, "pinyinName", {}, "autoFillKeyValue", "value", "value" ,null);
     com.selectTypeahead("couponType", vpayment.couponType, 'key', 'value' ,null);
 
@@ -141,27 +147,29 @@ jQuery(function ($) {
             $liLine.append($h3).append($ulProperty);
 
             $btnCol.click(function () {
-                com.cleanItems(vpayment.items);
-                vpayment.items.couponUl.empty();
-                vpayment.items.bankDivGroup.empty();
-                com.cleanTypeahead("couponType");
-                vpayment.vpids = [];
-                com.focusPage("[name=top]").addClass("hide");
 
-                vpayment.items.referMoney.val(v.money);
-                vpayment.vpids.push(v.vpid);
+                com.popup4model("#layerAdd", "收款", function () {
+                    com.cleanItems(vpayment.items);
+                    vpayment.items.couponUl.empty();
+                    vpayment.items.bankDivGroup.empty();
+                    com.cleanTypeahead("couponType");
 
-                $("li[class='search-choice']", com.focusPage('#couponType_chosen')).each(function (i, v) {
+                    vpayment.vpids = [];
+                    com.focusPage("[name=top]").addClass("hide");
 
-                    var _ = $(v);
-                    var _couponVal = _.find('input[name="multi_input"]').val();
-                    if(_couponVal < 0){
-                        com.showAlert(com.warning,"代金券价格填写错误");
-                        return false;
-                    }
+                    vpayment.items.referMoney.val(v.money);
+                    vpayment.vpids.push(v.vpid);
 
+                    $("li[class='search-choice']", com.focusPage('#couponType_chosen')).each(function (i, v) {
+
+                        var _ = $(v);
+                        var _couponVal = _.find('input[name="multi_input"]').val();
+                        if(_couponVal < 0){
+                            com.showAlert(com.warning,"代金券价格填写错误");
+                            return false;
+                        }
+                    });
                 });
-                com.popup4model("#layerAdd", "收款");
             });
 
             return $liLine;
@@ -317,9 +325,6 @@ jQuery(function ($) {
     }, 'hresultList');
 
     com.focusPage('#createVpayment', '#pagenation').click(function () {
-        com.cleanTypeahead("collecter");
-        com.clearValidator();
-        com.cleanItems(vpayment.items);
 
         vpayment.modals.vpaymentModal.modal("show");
 
@@ -347,12 +352,10 @@ jQuery(function ($) {
     });
 
     com.focusPage("#collects").click(function() {
-        com.cleanItems(vpayment.items);
-        vpayment.items.couponUl.empty();
-        vpayment.items.bankDivGroup.empty();
-        com.cleanTypeahead("couponType");
-        vpayment.vpids = [];
+
         var $inputs = com.focusPage('input[name="vpids"]:checked', '#resultList');
+
+        vpayment.vpids = [];
 
         var _mno = "";
         var mnoId = [];
@@ -394,7 +397,6 @@ jQuery(function ($) {
                 mnoId.push(v);
             }
         });
-
         $.each(flags, function (i, v) {
             if (["1"].indexOf(v) != -1) {
                 flag = 1;
@@ -405,34 +407,37 @@ jQuery(function ($) {
             com.showAlert(com.warning, "请选择结算款项");
             return false;
         }
-
         if (flag == 1) {
             com.showAlert(com.warning, "批量收款不支持已收款");
             return false;
         }
-
         if (mnoId.length != 1) {
             com.showAlert(com.warning, "批量收款不支持不同订单间的操作.");
             return false;
         }
 
-        com.focusPage('#layerAdd').attr('mno', mnoId[0]);
+        com.popup4model("#layerAdd", "批量收款", function () {
+            com.cleanItems(vpayment.items);
+            vpayment.items.couponUl.empty();
+            vpayment.items.bankDivGroup.empty();
+            com.cleanTypeahead("couponType");
 
-        $("li[class='search-choice']", com.focusPage('#couponType_chosen')).each(function (i, v) {
+            com.focusPage('#layerAdd').attr('mno', mnoId[0]);
 
-            var _ = $(v);
-            var _couponVal = _.find('input[name="multi_input"]').val();
+            $("li[class='search-choice']", com.focusPage('#couponType_chosen')).each(function (i, v) {
 
-            if (_couponVal < 0) {
-                com.showAlert(com.warning,"代金券价格填写错误");
-                return false;
-            }
+                var _ = $(v);
+                var _couponVal = _.find('input[name="multi_input"]').val();
 
+                if (_couponVal < 0) {
+                    com.showAlert(com.warning,"代金券价格填写错误");
+                    return false;
+                }
+
+            });
+
+            vpayment.items.referMoney.val(referMoney);
         });
-
-        vpayment.items.referMoney.val(referMoney);
-
-        com.popup4model("#layerAdd", "批量收款");
     });
 
     com.focusPage("#bankAdd").click(function() {
@@ -479,9 +484,6 @@ jQuery(function ($) {
         };
         com.post(api.information.createVpayment, options, function (res) {
             searcher.doSearch();
-            com.cleanItems(vpayment.items);
-            com.clearValidator();
-
             com.showAlert(com.info, "操作成功");
         });
 
@@ -625,7 +627,7 @@ jQuery(function ($) {
         var bankTimeLabel = $('<label></label>').addClass('col-sm-3 control-label no-padding-right').text('时间').appendTo(bankDiv);
         var bankTimeDiv = $('<div></div>').addClass('col-sm-8').appendTo(bankDiv);
         var bankTimePicker = $('<div></div>').addClass('bootstrap-timepicker').appendTo(bankTimeDiv);
-        var bankTimeInput = $('<input>').addClass('col-sm-6 v_time').attr("type", "text").attr("id", "bankTime_" + index).attr("data-toggle", "popover").attr("data-trigger", "manual").appendTo(bankTimePicker);
+        var bankTimeInput = $('<input>').addClass('col-sm-6 v_required').attr("type", "text").attr("id", "bankTime_" + index).attr("data-toggle", "popover").attr("data-trigger", "manual").appendTo(bankTimePicker);
         com.datetime(bankTimeInput,"time");
 
     }

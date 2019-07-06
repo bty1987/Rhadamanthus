@@ -1,16 +1,42 @@
 
 jQuery(function($) {
 	var houseSource = {
+
+		btns: {
+
+			deployedBtn: com.focusPage("#deployedBtn"),
+			bsaveBtn: com.focusPage("#bsaveBtn"),
+			bcancelBtn: com.focusPage("#bcancelBtn")
+
+		},
+
+		modals: {
+
+			houseHouseDrawingPage: com.focusPage("#houseHouseDrawingPage"),
+			buildingModal: com.focusPage("#buildingModal")
+
+		},
+
+		buildItems: {
+
+			hsNo: com.focusPage("#hsNo"),
+			csNo: com.focusPage("#csNo"),
+			hsAUser: com.focusPage("#hsAUser"),
+			csAUser: com.focusPage("#csAUser"),
+			signingTime: com.focusPage("#signingTime"),
+			tradePrice: com.focusPage("#tradePrice"),
+			downpayment: com.focusPage("#downpayment"),
+			loanPrice: com.focusPage("#loanPrice"),
+			payType: com.focusPage("#payType"),
+			balanceStatus: com.focusPage("#balanceStatus")
+
+		},
+
 		houseSources: {},
 		hsid: null,
 		csid: null,
-		deployedBtn: null,
-		bsaveBtn: null,
-		bcancelBtn: null,
-		modal: null,
 		houseSourceId: null,
 		houseId: null,
-		buildItems: [],
 		hsType: [],
 		houseType: [],
 		decorateDegree: [],
@@ -34,29 +60,25 @@ jQuery(function($) {
 		maxHeight:'100%'
 	};
 
-	com.datetime(com.focusPage(".date-picker"), "date");
+	com.datetime(houseSource.buildItems.signingTime);
 
-	houseSource.bsaveBtn = com.focusPage("#bsaveBtn").on("click", saveBuildingData);
+	houseSource.btns.bsaveBtn.on("click", saveBuildingData);
 
-	houseSource.modal = com.focusPage("#houseSourceModal");
-	houseSource.modal.on('show.bs.modal',function(e){
-		com.clearValidator();
+	houseSource.modals.houseHouseDrawingPage.on("hide.bs.modal", function(){
+
+		com.cleanItems(houseSource.items);
+		com.closeTip();
+	});
+
+	houseSource.modals.buildingModal.on("hide.bs.modal", function(){
+
+		com.cleanItems(houseSource.buildItems);
+		com.closeTip();
 	});
 
     com.initTypeahead("belongUser", api.personel.queryUserByPinyin, "pinyinName", {"departmentType.name":"", "user.status":0}, "autoFillKeyValue", "key", "value");
     com.initTypeahead('hsAUser', api.data.queryCustomerForName, "pinyinName", {}, "autoFillCustomer", "key", "value");
     com.initTypeahead('csAUser', api.data.queryCustomerForName, "pinyinName", {}, "autoFillCustomer", "key", "value");
-
-	houseSource.buildItems.hsNo = com.focusPage("#hsNo");
-	houseSource.buildItems.csNo = com.focusPage("#csNo");
-	houseSource.buildItems.hsAUser = com.focusPage("#hsAUser");
-	houseSource.buildItems.csAUser = com.focusPage("#csAUser");
-	houseSource.buildItems.signingTime = com.focusPage("#signingTime");
-	houseSource.buildItems.tradePrice = com.focusPage("#tradePrice");
-	houseSource.buildItems.downpayment = com.focusPage("#downpayment");
-	houseSource.buildItems.loanPrice = com.focusPage("#loanPrice");
-	houseSource.buildItems.payType = com.focusPage("#payType");
-	houseSource.buildItems.balanceStatus = com.focusPage("#balanceStatus");
 
 	com.post(api.ds.building, {}, function(res){
 		houseSource.buildItems.payType.bindData(res.payType,"key", "value");
@@ -93,14 +115,13 @@ jQuery(function($) {
 		com.post(api.building.queryCustomerSourceByNo, {"customerSource.no" : houseSource.buildItems.csNo.val()}, function(res){
 			if(res.customerSource.status != 0){
 				houseSource.repeatFlg = true;
-				com.showPopover(com.focusPage("#csNo"),{errorMsg: "客源已签约或失效"}, "right");
+				com.showTip(com.focusPage("#csNo"), "客源已签约或失效", "right");
 			}else{
 				houseSource.repeatFlg = false;
 				houseSource.csid = res.customerSource.csid;
-				com.focusPage("#csNo").css("border", "1px solid #d5d5d5").popover("destroy");
 			}
 		}, function(data){
-			com.showPopover(com.focusPage("#csNo"),{errorMsg: "请正确输入客源编号"}, "right");
+			com.showTip(com.focusPage("#csNo"), "请正确输入客源编号", "right");
 			houseSource.repeatFlg = true;
 		}, false);
 	});
@@ -208,7 +229,7 @@ jQuery(function($) {
 				}, null, false);
 
 				initUploadBtn(v.hsid);
-				com.focusPage("#houseHouseDrawingPage").modal("show");
+				houseSource.modals.houseHouseDrawingPage.modal("show");
 			});
 
 			//查看   可以看见房源的所有信息  包括图片  和上传图片
@@ -217,9 +238,9 @@ jQuery(function($) {
 				params.drawingId = v.hsid;
 				params.type = v.type;
 				params.page = "houseSource";
-				com.switchPage(api.index.houseSourceDetail.url)
+				com.popup4page("#stockRecordPopUp","/views/building/houseSourceDetail.html","查看");
 			});
-
+			
 			//绑定客源
 			$btnBind.click(function(){
 			    
@@ -233,17 +254,16 @@ jQuery(function($) {
 				houseSource.buildItems.hsNo.val(v.no);
 				houseSource.hsid = v.hsid;
 				houseSource.buildItems.hsNo.prop("readOnly", true);
-				
-				com.focusPage("#buildingModal").modal("show");
+
+				houseSource.modals.buildingModal.modal("show");
 			});
 
 			//跟进记录
 			$btnRecord.click(function(){
 				params.flag = true;
-				params.page = "houseSource";
 				params.hsid = v.hsid;
 				params.hsNo = v.no;
-				com.switchPage(api.index.buildingRecord.url);
+				com.popup4page("#stockRecordPopUp","/views/building/buildingRecord.html","跟进记录");
 			});
 
 			//启用禁用
@@ -278,9 +298,9 @@ jQuery(function($) {
 	var searcher = new Searcher();
 	var conditionList = ["houseSourceNo", "houseType", "b_houseSourceType", "b_villageName", "buildingArea", "b_totalPrice", "roomNum", "orientation", "b_decorateDegree", "b_allowLoan", "b_housingGrade", "b_rentType", "b_status"];
 
-	searcher.init(conditionList, "condList", api.building.pageHouseSourceForFollower, function(data){
-		displayFunc.init('resultList', data);
-	}, "pagenation", "houseSourcePostData", {"filter[0].field":"houseSource"}, false, null, null);
+	searcher.init(conditionList, "CondList", api.building.pageHouseSourceForFollower, function(data){
+		displayFunc.init('ResultList', data);
+	}, "Pagenation", "houseSourcePostData", {"filter[0].field":"houseSource"}, false, null, null);
 
 	//更新房源状态
 	function updateHouseSourceStatus(hsid, cvalue){
@@ -319,7 +339,7 @@ jQuery(function($) {
 			searcher.doSearch();
 		});
 
-		com.focusPage("#buildingModal").modal("hide");
+		houseSource.modals.buildingModal.modal("hide");
 	}
 
 	//删除房产单数据

@@ -1,20 +1,21 @@
 jQuery(function ($) {
 
     var decorationActivityItem = {
-        items: {}
+        items: {},
+        activityItems: {}
     };
 
     var ActivityOrderId = params.decorationOrderId;
-    var activityInfo = com.focusPage("#activityInfo");
     var things = com.focusPage("#things");
     var coupons = com.focusPage("#coupons");
     decorationActivityItem.activity = com.focusPage("#activity");
-
-    decorationActivityItem.items.thingsType = com.focusPage("#thingsType");
-    decorationActivityItem.items.thingsVal = com.focusPage("#thingsVal");
-
-    decorationActivityItem.items.couponsType = com.focusPage("#couponsType");
-    decorationActivityItem.items.couponsVal = com.focusPage("#couponsVal");
+    
+    decorationActivityItem.activityItems.activityInfo = com.focusPage("#activityInfo");
+    decorationActivityItem.activityItems.couponsType = com.focusPage("#couponsType");
+    decorationActivityItem.activityItems.couponsVal = com.focusPage("#couponsVal");
+    decorationActivityItem.activityItems.thingsType = com.focusPage("#thingsType");
+    decorationActivityItem.activityItems.thingsVal = com.focusPage("#thingsVal");
+    
 
     com.focusPage("#activity").on("change", function () {
 
@@ -56,9 +57,7 @@ jQuery(function ($) {
 
                 decorationUtils.createCounpon("things", "thingsType", "thingsVal");
 
-
-                com.focusPage("#thingsType").val('');
-                com.focusPage("#thingsVal").val('');
+                com.cleanItems(decorationActivityItem.activityItems);
             });
 
             com.selectTypeahead("couponsType", _coupons, 'asid', 'activityItemName');
@@ -70,23 +69,12 @@ jQuery(function ($) {
 
                 decorationUtils.createCounpon("coupons", "couponsType", "couponsVal");
 
-
-                com.focusPage("#couponsType").val('');
-                com.focusPage("#couponsVal").val('');
+                com.cleanItems(decorationActivityItem.activityItems);
             });
 
         });
     });
-
-    var validator = {
-        activityNameVerification: {
-            type: "v_NameVerification",
-            regex: /^[^ ]*$/,
-            errorMsg: "活动名称不能带有空格"
-        }
-    };
-    $.extend(com.validator, validator);
-
+    
     decorationActivityItem.decorationOrderId = ActivityOrderId;
     decorationActivityItem.items.orderId = com.focusPage("#orderId");
     decorationActivityItem.items.decorationActivityItems = com.focusPage("#decorationActivityItems");
@@ -99,11 +87,17 @@ jQuery(function ($) {
     decorationActivityItem.activity.num = com.focusPage("#activityItemNum");
     decorationActivityItem.activity.money = com.focusPage("#activityItemMoney");
 
-    decorationActivityItem.joinDecorationActivityModal = com.focusPage("#joinDecorationActivityModal").on('show.bs.modal', function (e) {
-        com.clearValidator();
+    decorationActivityItem.joinDecorationActivityModal = com.focusPage("#joinDecorationActivityModal");
+    decorationActivityItem.applyDecorationActivityItemModal = com.focusPage("#applyDecorationActivityItemModal");
+    
+    decorationActivityItem.joinDecorationActivityModal.on('hide.bs.modal', function (e) {
+    	com.cleanItems(decorationActivityItem.activityItems);
+    	com.closeTip();
     });
-    decorationActivityItem.applyDecorationActivityItemModal = com.focusPage("#applyDecorationActivityItemModal").on('show.bs.modal', function (e) {
-        com.clearValidator();
+    
+    decorationActivityItem.applyDecorationActivityItemModal.on('hide.bs.modal', function (e) {
+    	com.cleanItems(decorationActivityItem.activityItems);
+    	com.closeTip();
     });
 
     initdraw(decorationActivityItem.decorationOrderId);
@@ -162,7 +156,7 @@ jQuery(function ($) {
 
                 _activitys.push({aid: _activity.aid, activityName: _activity.name, money: _activitys.money});
             }
-            activityInfo.bindData(_activitys, "aid", "activityName", "money", false);
+            decorationActivityItem.activityItems.activityInfo.bindData(_activitys, "aid", "activityName", "money", false);
         });
 
         decorationActivityItem.joinDecorationActivityModal.modal("show");
@@ -172,7 +166,7 @@ jQuery(function ($) {
     com.focusPage("#applyActivityItemBtn").on("click", function () {
 
         com.focusPage("#things").html("");
-        com.focusPage("#coupons").html('');
+        com.focusPage("#coupons").html("");
 
         var options = {
             "decorationActivity.orderId": ActivityOrderId
@@ -214,7 +208,7 @@ jQuery(function ($) {
         }
         var options = {
             "decorationActivity.orderId": ActivityOrderId,
-            "decorationActivity.activity.aid": activityInfo.val()
+            "decorationActivity.activity.aid": decorationActivityItem.activityItems.activityInfo.val()
         };
         com.post(api.decoration.addDecorationActivity, options, function (res) {
             var decorationActivity = res.decorationActivity;
@@ -316,7 +310,7 @@ jQuery(function ($) {
         });
         lockBtn.on("click", function () {
             lockDecorationActivity(decorationActivity.daId);
-        })
+        });
 
     }
 
@@ -345,8 +339,8 @@ jQuery(function ($) {
 
         com.post(api.decoration.unlockDecorationActivity, options, function (res) {
             var daId = res.decorationActivity;
-            com.focusPage("#state_" + daId.daId).text("初始")
-            com.focusPage("#dactivity_" + daId.daId).attr("status", "0")
+            com.focusPage("#state_" + daId.daId).text("初始");
+            com.focusPage("#dactivity_" + daId.daId).attr("status", "0");
         });
     }
 
@@ -359,8 +353,8 @@ jQuery(function ($) {
 
         com.post(api.decoration.lockDecorationActivity, options, function (res) {
             var daId = res.decorationActivity;
-            com.focusPage("#state_" + daId.daId).text("锁定")
-            com.focusPage("#dactivity_" + daId.daId).attr("status", "1")
+            com.focusPage("#state_" + daId.daId).text("锁定");
+            com.focusPage("#dactivity_" + daId.daId).attr("status", "1");
         });
     }
 
@@ -388,7 +382,7 @@ jQuery(function ($) {
     }
 
     com.post(api.ds.decoration, {}, function (res) {
-        com.focusPage("#receiveTypes").bindData(res.receiveType, "key", "value", true)
+        com.focusPage("#receiveTypes").bindData(res.receiveType, "key", "value", false);
     });
 
     //领取活动物品
@@ -411,7 +405,7 @@ jQuery(function ($) {
                 com.focusPage("#abate_" + daiId).unbind();
 
                 com.focusPage("#receive_" + daiId).unbind();
-            })
+            });
         });
     }
 
@@ -433,7 +427,7 @@ jQuery(function ($) {
                 com.focusPage("#abate_" + daiId).unbind();
 
                 com.focusPage("#receive_" + daiId).unbind();
-            })
+            });
 
         });
     }
@@ -456,7 +450,7 @@ jQuery(function ($) {
                 com.focusPage("#abate_" + daiId).unbind();
 
                 com.focusPage("#receive_" + daiId).unbind();
-            })
+            });
 
         });
     }
@@ -479,7 +473,7 @@ jQuery(function ($) {
                 com.focusPage("#abate_" + daiId).unbind();
 
                 com.focusPage("#receive_" + daiId).unbind();
-            })
+            });
 
         });
     }
@@ -502,7 +496,7 @@ jQuery(function ($) {
                 com.focusPage("#abate_" + daiId).unbind();
 
                 com.focusPage("#receive_" + daiId).unbind();
-            })
+            });
 
         });
     }

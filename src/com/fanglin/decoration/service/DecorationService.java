@@ -76,5 +76,5 @@ public interface DecorationService {
 	public void subDecorationForQuotationTime(DecorationVO decorationVO, String userId) throws FLException;
 
 	public String tranDecorationFromCustomerOrigin(DecorationVO decorationVO, long csid, int company) throws FLException;
-
+	
 }

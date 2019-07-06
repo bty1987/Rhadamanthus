@@ -17,7 +17,7 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-xs-12">
-                            <form class="form-horizontal">
+                            <form class="form-horizontal" id="form">
                                 <div class="row">
 
                                     <div class="col-md-12">
@@ -62,9 +62,8 @@
                         <div class="col-xs-12">
                             <form class="form-horizontal">
                                 <div class="row">
-
                                     <div class="col-md-12">
-                                        <div class="form-group">
+                                        <div class="form-group" id="orderIdCheck">
                                             <label class="col-sm-3 control-label no-padding-right">订单号</label>
                                             <div class="col-md-9">
                                                 <input type="text" id="orderId" class="col-xs-10 col-sm-6 v_required"/>
@@ -85,6 +84,7 @@
     </div>
 </div>
 
+<div id="crowdUserPopUp" class="portlet box"></div>
 
 <script type="text/javascript">
     $.loadScript(['js/customer/crowd.js']);

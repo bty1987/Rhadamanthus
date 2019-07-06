@@ -23,27 +23,26 @@ import com.fanglin.utils.Paging;
 
 @Repository("quotationclassification")
 public class QuotationClassificationDaoImpl extends DaoImpl<QuotationClassificationPO> implements QuotationClassificationDao {
-	
-	public QuotationClassificationDaoImpl(){
+
+	public QuotationClassificationDaoImpl() {
 		super(QuotationClassificationPO.class, true);
 	}
 
 	@Override
-	public List<QuotationClassificationPO> pageQuotationClassification(
-			Paging paging, List<Filter> filters) {
-		 PagingQuery<QuotationClassificationPO> query = pagingQuery(paging, QuotationClassificationPO.class);
-			
-         if(filters != null){
- 			for(Filter filter: filters){
- 				if("name".equals(filter.getField())){
- 					query.add(query.getCriterion("name", Short.parseShort(filter.getData()), filter.getOp()));
- 				}
- 			}
- 		}
-		
+	public List<QuotationClassificationPO> pageQuotationClassification(Paging paging, List<Filter> filters) {
+		PagingQuery<QuotationClassificationPO> query = pagingQuery(paging, QuotationClassificationPO.class);
+
+		if (filters != null) {
+			for (Filter filter : filters) {
+				if ("name".equals(filter.getField())) {
+					query.add(query.getCriterion("name", Short.parseShort(filter.getData()), filter.getOp()));
+				}
+			}
+		}
+
 		query.asc("id");
-		
+
 		return query.list();
 	}
-	
+
 }

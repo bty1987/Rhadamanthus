@@ -1,48 +1,86 @@
 $(function () {
     
     var customerSourceDesigner = {
+
+        updateAndApprovalBtn: com.focusPage("#updateAndApprovalBtn"),
+
+        modals:{
+            sustomersourceDesignerModal: com.focusPage("#sustomersourceDesigner")
+        },
+        items: {
+            name: com.focusPage("#name"),
+            gender: com.focusPage("#gender"),
+            phone: com.focusPage("#phone"),
+            purpose: com.focusPage("#purpose"),
+            intention: com.focusPage("#intention"),
+            price: com.focusPage("#price"),
+            grade: com.focusPage("#grade"),
+            comment: com.focusPage("#comment"),
+
+            villageNoDesiger: com.focusPage("#villageNoDesiger"),
+            houseNumber: com.focusPage("#houseNumber"),
+            buildArea: com.focusPage("#buildArea"),
+            houseType: com.focusPage("#houseType"),
+            salesmanType: com.focusPage("#salesmanType"),
+            orderType: com.focusPage("#orderType"),
+            resourceType: com.focusPage("#resourceType"),
+            approveComment: com.focusPage("#approveComment"),
+
+            built: com.focusPage("#built"),
+            unit: com.focusPage("#unit"),
+            floor: com.focusPage("#floor"),
+            door: com.focusPage("#door"),
+            builtrule: com.focusPage("#builtrule"),
+            unitrule: com.focusPage("#unitrule"),
+            floorrule: com.focusPage("#floorrule"),
+            doorrule: com.focusPage("#doorrule"),
+            ruleTwo: com.focusPage("#ruleTwo"),
+
+            rule: com.focusPage("#rule")
+        },
+
+        bindHouseDiv: com.focusPage("#bindHouseDiv"),
+        bindCustomerDiv: com.focusPage("#bindCustomerDiv"),
+        houseNumberGroup: com.focusPage("#houseNumberGroup"),
+        houseNumberGroupTwo: com.focusPage("#houseNumberGroupTwo"),
+
         grade: ["A", "B", "C", "D"],
-        items: {},
+
         currentCustomerSource: {},
         typeArray: {},
+
         isUpdateOrApproval: null,
         currentVillageName: null,
+
         currentHid: 0,
         currentCid: 0
     };
 
-    customerSourceDesigner.items.name = com.focusPage("#name");
-    customerSourceDesigner.items.gender = com.focusPage("#gender");
-    customerSourceDesigner.items.phone = com.focusPage("#phone");
-    customerSourceDesigner.items.purpose = com.focusPage("#purpose");
-    customerSourceDesigner.items.intention = com.focusPage("#intention");
-    customerSourceDesigner.items.price = com.focusPage("#price");
-    customerSourceDesigner.items.grade = com.focusPage("#grade");
-    customerSourceDesigner.items.comment = com.focusPage("#comment");
-
-    customerSourceDesigner.items.villageNoDesiger = com.focusPage("#villageNoDesiger");
-    customerSourceDesigner.items.houseNumber = com.focusPage("#houseNumber");
-    customerSourceDesigner.items.buildArea = com.focusPage("#buildArea");
-    customerSourceDesigner.items.houseType = com.focusPage("#houseType");
-    customerSourceDesigner.items.salesmanType = com.focusPage("#salesmanType");
-    customerSourceDesigner.items.orderType = com.focusPage("#orderType");
-    customerSourceDesigner.items.resourceType = com.focusPage("#resourceType");
-    customerSourceDesigner.items.approveComment = com.focusPage("#approveComment");
-
-    customerSourceDesigner.items.built = com.focusPage("#built");
-    customerSourceDesigner.items.unit = com.focusPage("#unit");
-    customerSourceDesigner.items.floor = com.focusPage("#floor");
-    customerSourceDesigner.items.door = com.focusPage("#door");
-    customerSourceDesigner.items.builtrule = com.focusPage("#builtrule");
-    customerSourceDesigner.items.unitrule = com.focusPage("#unitrule");
-    customerSourceDesigner.items.floorrule = com.focusPage("#floorrule");
-    customerSourceDesigner.items.doorrule = com.focusPage("#doorrule");
-    customerSourceDesigner.items.ruleTwo = com.focusPage("#ruleTwo");
-
-    customerSourceDesigner.items.rule = com.focusPage("#rule");
-
-    customerSourceDesigner.items.grade.bindData(customerSourceDesigner.grade, "key", "value", false);
+    customerSourceDesigner.updateAndApprovalBtn.bindClick(customerApproval);
     customerSourceDesigner.items.gender.switchBtn("gender");
+
+    customerSourceDesigner.modals.sustomersourceDesignerModal.on("hide.bs.modal", function(){
+        customerSourceDesigner.isUpdateOrApproval = null;
+        com.clearValidator("#villageNoDesiger", true);
+        com.clearValidator("#houseNumber", true);
+        com.clearValidator("#name", true);
+        customerSourceDesigner.items.rule.html("");
+        customerSourceDesigner.items.houseNumber.removeAttr("data-content");
+        customerSourceDesigner.items.name.removeAttr("data-content");
+        customerSourceDesigner.currentHid = 0;
+        customerSourceDesigner.currentCid = 0;
+        customerSourceDesigner.bindHouseDiv.removeAttr("style");
+        customerSourceDesigner.bindCustomerDiv.removeAttr("style");
+
+        customerSourceDesigner.items.villageNoDesiger.prop("disabled", false);
+        customerSourceDesigner.items.houseNumber.removeAttr("readOnly");
+        customerSourceDesigner.items.buildArea.removeAttr("readOnly");
+        customerSourceDesigner.items.name.removeAttr("readOnly");
+        customerSourceDesigner.items.gender.removeAttr("disabled");
+        customerSourceDesigner.items.phone.removeAttr("readOnly");
+    });
+
+    com.initTypeahead('villageNoDesiger', api.data.queryVillageForNameByPinyin, "pinyinName", {}, "autoFillKeyValue", "key", "value", null);
 
     com.post(api.ds.building, {}, function (res) {
         customerSourceDesigner.items.builtrule.bindData(res.buildrule, "key", "value");
@@ -50,31 +88,6 @@ $(function () {
         customerSourceDesigner.items.floorrule.bindData(res.buildrule, "key", "value");
         customerSourceDesigner.items.doorrule.bindData(res.buildrule, "key", "value");
     }, null, false);
-
-    com.initTypeahead('villageNoDesiger', api.data.queryVillageForNameByPinyin, "pinyinName", {}, "autoFillKeyValue", "key", "value", null);
-
-    customerSourceDesigner.items.villageNoDesiger.on('change', function () {
-        com.post(api.data.queryVillageById, {"village.no": customerSourceDesigner.items.villageNoDesiger.val()}, function (res) {
-            customerSourceDesigner.items.rule.html("推荐楼牌号规则: " + res.village.rule);
-        }, null, false);
-    });
-
-    customerSourceDesigner.updateAndApprovalBtn =  com.focusPage("#updateAndApprovalBtn").on("click", customerApproval);
-
-    com.focusPage("#sustomersourceDesigner").on("hidden.bs.modal", function(){
-        customerSourceDesigner.isUpdateOrApproval = null;
-        com.clearValidator("#villageNoDesiger", true);
-        com.clearValidator("#houseNumber", true);
-        com.clearValidator("#name", true);
-        com.focusPage("#rule").html("");
-        com.focusPage("#houseNumber").removeAttr("data-content");
-        com.focusPage("#name").removeAttr("data-content");
-        customerSourceDesigner.currentHid = 0;
-        customerSourceDesigner.currentCid = 0;
-        com.focusPage("#bindHouseDiv").removeAttr("style");
-        com.focusPage("#bindCustomerDiv").removeAttr("style");
-        aboutCustomerAndHouse();
-    });
 
     com.post(api.ds.decoration, {}, function (res) {
         customerSourceDesigner.items.salesmanType.bindData(res.salesmanType, 'key', 'value');
@@ -85,6 +98,8 @@ $(function () {
     com.post(api.ds.building, {}, function (res) {
         customerSourceDesigner.typeArray = res.houseType;
     }, null, false);
+
+    customerSourceDesigner.items.grade.bindData(customerSourceDesigner.grade, "key", "value", false);
 
     var displayFunc = (function () {
         var renderList = function (tableId, listData) {
@@ -148,15 +163,15 @@ $(function () {
             $btnView.click(function () {
                 customerSourceDesigner.currentCustomerSource = v;
                 if(v.hid != 0){
-                    com.focusPage("#villageNoDesiger").prop("disabled", true);
-                    com.focusPage("#houseNumber").attr("readOnly", "readOnly");
-                    com.focusPage("#buildArea").attr("readOnly", "readOnly");
+                    customerSourceDesigner.items.villageNoDesiger.prop("disabled", true);
+                    customerSourceDesigner.items.houseNumber.attr("readOnly", "readOnly");
+                    customerSourceDesigner.items.buildArea.attr("readOnly", "readOnly");
                 }
 
                 if(v.cid != 0){
-                    com.focusPage("#name").attr("readOnly", "readOnly");
-                    com.focusPage("#gender").attr("disabled", "disabled");
-                    com.focusPage("#phone").attr("readOnly", "readOnly");
+                    customerSourceDesigner.items.name.attr("readOnly", "readOnly");
+                    customerSourceDesigner.items.gender.attr("disabled", "disabled");
+                    customerSourceDesigner.items.phone.attr("readOnly", "readOnly");
                 }
                 com.focusPage("#sustomersourceDesignerDialog").html("编辑客源");
                 customerSourceDesigner.isUpdateOrApproval = "update";
@@ -175,13 +190,13 @@ $(function () {
                 isOtherCustomerSource(true);
 
                 if(v.hid != 0){
-                    com.focusPage("#bindHouseDiv").css("display", "none");
-                    com.focusPage("#houseNumberGroupTwo").css("display", "none");
-                    com.focusPage("#houseNumberGroup").removeAttr("style");
+                    customerSourceDesigner.bindHouseDiv.css("display", "none");
+                    customerSourceDesigner.houseNumberGroupTwo.css("display", "none");
+                    customerSourceDesigner.houseNumberGroup.removeAttr("style");
                 }
 
                 if(v.cid != 0){
-                    com.focusPage("#bindCustomerDiv").css("display", "none");
+                    customerSourceDesigner.bindCustomerDiv.css("display", "none");
                 }
                 editcustomerOrigin(v);
             });
@@ -204,6 +219,12 @@ $(function () {
     searcher.init(["customerSourcePhone"], "condList", api.customer.pageCustomerOriginForDesign, function (data) {
         displayFunc.init("resultList", data);
     }, "pagenation", "customerOriginDesignerPostData", null, false, null, null);
+
+    customerSourceDesigner.items.villageNoDesiger.on('change', function () {
+        com.post(api.data.queryVillageById, {"village.no": customerSourceDesigner.items.villageNoDesiger.val()}, function (res) {
+            customerSourceDesigner.items.rule.html("推荐楼牌号规则: " + res.village.rule);
+        }, null, false);
+    });
 
     function editcustomerOrigin(d) {
         com.cleanItems(customerSourceDesigner.items);
@@ -234,7 +255,7 @@ $(function () {
         }else{
             com.cleanTypeahead('villageNoDesiger');
         }
-        com.focusPage("#sustomersourceDesigner").modal("show");
+        customerSourceDesigner.modals.sustomersourceDesignerModal.modal("show");
     }
 
     //提交审批
@@ -244,9 +265,6 @@ $(function () {
         }
 
         if(customerSourceDesigner.isUpdateOrApproval == "update"){
-            var customerId = null;
-            var houseId = null;
-            var houseName = null;
 
             var options = {
                 "customerOrigin.csid": customerSourceDesigner.currentCustomerSource.csid,
@@ -266,7 +284,7 @@ $(function () {
             com.post(api.customer.updateCustomerOrigin, options, function (res) {
                 searcher.doSearch();
                 com.showAlert(com.info, '修改成功');
-                com.focusPage("#sustomersourceDesigner").modal("hide");
+                customerSourceDesigner.modals.sustomersourceDesignerModal.modal("hide");
             });
         }else if(customerSourceDesigner.isUpdateOrApproval == "approval"){
             
@@ -314,7 +332,7 @@ $(function () {
                             com.showAlert(com.info, "操作成功");
                             com.clearValidator();
                             searcher.doSearch();
-                            com.focusPage("#sustomersourceDesigner").modal("hide");
+                            customerSourceDesigner.modals.sustomersourceDesignerModal.modal("hide");
                         }else{
                             com.showAlert(com.error, "提交失败");
                         }
@@ -349,11 +367,11 @@ $(function () {
             com.focusPage("#genderGroup").css("display", "none");
             com.focusPage("#houseNumberGroup").css("display", "none");
 
-            com.focusPage("#houseNumber").attr("disabled", "disabled");
-            com.focusPage("#name").attr("disabled", "disabled");
-            com.focusPage("#phone").attr("disabled", "disabled");
+            customerSourceDesigner.items.houseNumber.attr("disabled", "disabled");
+            customerSourceDesigner.items.name.attr("disabled", "disabled");
+            customerSourceDesigner.items.phone.attr("disabled", "disabled");
 
-            com.focusPage("#villageNoDesiger").prop("disabled", true);
+            customerSourceDesigner.items.villageNoDesiger.prop("disabled", true);
         }else{
             //更新
             com.focusPage("#houseTypeGroup").css("display", "none");
@@ -375,21 +393,12 @@ $(function () {
             com.focusPage("#genderGroup").removeAttr("style");
             com.focusPage("#houseNumberGroup").removeAttr("style");
 
-            com.focusPage("#houseNumber").removeAttr("disabled");
-            com.focusPage("#name").removeAttr("disabled");
-            com.focusPage("#phone").removeAttr("disabled");
+            customerSourceDesigner.items.houseNumber.removeAttr("disabled");
+            customerSourceDesigner.items.name.removeAttr("disabled");
+            customerSourceDesigner.items.phone.removeAttr("disabled");
 
-            com.focusPage("#villageNoDesiger").prop("disabled", false);
+            customerSourceDesigner.items.villageNoDesiger.prop("disabled", false);
         }
-    }
-
-    function aboutCustomerAndHouse(){
-        com.focusPage("#villageNoDesiger").prop("disabled", false);
-        com.focusPage("#houseNumber").removeAttr("readOnly");
-        com.focusPage("#buildArea").removeAttr("readOnly");
-        com.focusPage("#name").removeAttr("readOnly");
-        com.focusPage("#gender").removeAttr("disabled");
-        com.focusPage("#phone").removeAttr("readOnly");
     }
 
     function initqueryApprovalUserForCheckbox (id, type, checkId) {
@@ -433,39 +442,9 @@ $(function () {
 
     //绑定房产
     com.focusPage("#bindHouse").click(function(){
-        if(com.focusPage("#villageNoDesiger").val() == ""){
-            com.showTips(com.focusPage("#villageNoDesiger"), "内容不能为空", true);
-            return;
-        }else{
-            com.clearValidator("#villageNoDesiger", true);
-        }
 
-        if(com.focusPage("#built").val() == ""){
-            com.showTips(com.focusPage("#built"), "内容不能为空", true);
-            return;
-        }else{
-            com.clearValidator("#built", true);
-        }
-
-        if(com.focusPage("#unit").val() == ""){
-            com.showTips(com.focusPage("#unit"), "内容不能为空", true);
-            return;
-        }else{
-            com.clearValidator("#unit", true);
-        }
-
-        if(com.focusPage("#floor").val() == ""){
-            com.showTips(com.focusPage("#floor"), "内容不能为空", true);
-            return;
-        }else{
-            com.clearValidator("#floor", true);
-        }
-
-        if(com.focusPage("#door").val() == ""){
-            com.showTips(com.focusPage("#door"), "内容不能为空", true);
-            return;
-        }else{
-            com.clearValidator("#door", true);
+        if(com.validate("houseNumberGroupTwo")){
+            return false;
         }
 
         var houseNumber = createHouseNumber();

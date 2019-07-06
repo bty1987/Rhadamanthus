@@ -2,9 +2,6 @@ jQuery(function ($) {
 
     var purchase = {
 
-        saveBtn: com.focusPage("#saveBtn"),
-        cancellBtn: com.focusPage("#cancelBtn"),
-
         purchaseItems: {
             pid: com.focusPage("#pId")
         },
@@ -14,6 +11,10 @@ jQuery(function ($) {
             deliveryTime: com.focusPage("#deliveryTime"),
             comment: com.focusPage("#comment"),
             totalSpan: com.focusPage("#totalSpan")
+        },
+        btns:{
+            addPurchase:com.focusPage('#addPurchase'),
+            submitPurchase:com.focusPage('#submitPurchase')
         },
 
         record: {}
@@ -25,7 +26,7 @@ jQuery(function ($) {
     //添加一条空行
     addline(1).addClass('current');
 
-    com.focusPage('#addPurchase').click(function () {
+    purchase.btns.addPurchase.click(function () {
 
         if (com.validate('list', 'bottom')) {
             return;
@@ -40,7 +41,7 @@ jQuery(function ($) {
     });
 
     //保存添加采购单
-    com.focusPage('#submitPurchase').click(function () {
+    purchase.btns.submitPurchase.click(function () {
 
         var $lines = com.focusPage('li.line', '#list');
 
@@ -235,7 +236,7 @@ jQuery(function ($) {
             }
         });
 
-        com.focusPage("#totalSpan").text(utils.changeThrDecimal(_total));
+        purchase.items.totalSpan.text(utils.changeThrDecimal(_total));
     }
 
 });

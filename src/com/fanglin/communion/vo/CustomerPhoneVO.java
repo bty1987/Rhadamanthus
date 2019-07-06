@@ -5,17 +5,17 @@ import java.io.Serializable;
 public class CustomerPhoneVO implements Serializable {
 
 	private static final long serialVersionUID = -2073011002098345594L;
-	
+
 	private Long cpid;
-	
+
 	private Long cid;
-	
+
 	private String phone;
-	
+
 	private Short status;
 
 	private Short defaults;
-	
+
 	public Long getCpid() {
 		return cpid;
 	}
@@ -56,5 +56,4 @@ public class CustomerPhoneVO implements Serializable {
 		this.defaults = defaults;
 	}
 
-	
 }

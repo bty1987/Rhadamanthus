@@ -18,10 +18,10 @@ import com.fanglin.core.dao.Dao;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.Paging;
 
-public interface QuotationSmallCategoryDao extends Dao<QuotationSmallCategoryPO>{
+public interface QuotationSmallCategoryDao extends Dao<QuotationSmallCategoryPO> {
 
 	public List<QuotationSmallCategoryPO> pageQuotationSmallCategory(Paging paging, List<Filter> filters);
-	
+
 	public List<QuotationSmallCategoryPO> queryQuotationSmallCategory(Integer qtid);
-	
+
 }

@@ -8,8 +8,15 @@
         items: {},
         editLoginId: null,
         deptList: {},
-        loginFlag: true
+        loginFlag: true,
+        simpleAddUserModal:null
     };
+
+    user.simpleAddUserModal = com.focusPage("#simpleAddUserModal");
+    user.simpleAddUserModal.on('hide.bs.modal',function(e){
+        com.cleanItems(user.items);
+        com.closeTip();
+    });
 
     com.post(api.ds.personel, {timestamp: (new Date).getTime()},function(a) {
         user.statusType = a.statusType;
@@ -357,8 +364,7 @@
     });
 
     com.focusPage('a[name="addUserSimple"]','#pagenation').click(function(){
-        com.cleanItems(user.items);
-        com.focusPage("#simpleAddUserModal").modal("show");
+        user.simpleAddUserModal.modal("show");
     });
 
     com.focusPage('a[name="import"]','#pagenation').click(function(){
@@ -389,19 +395,18 @@
     //添加人员(简化版)
     user.saveBtn = com.focusPage("#saveUserBtn").on("click", saveData);
     user.cancelBtn = com.focusPage("#cancelUserBtn").on("click",function() {
-        com.focusPage("#simpleAddUserModal").modal("hide");
+        user.simpleAddUserModal.modal("hide");
     });
 
     user.items.loginId = com.focusPage("#loginId").on("blur", function() {
         $this = $(this);
-        void 0 == $this.val() || "" == $this.val().trim() || $this.val() == user.editLoginId ? (com.showPopover(com.focusPage("#loginId"),{errorMsg: "用户名不能为空"}, "right"), user.repeatFlg = !1) : com.post(api.personel.queryUserByLoginId, {
+        void 0 == $this.val() || "" == $this.val().trim() || $this.val() == user.editLoginId ? (com.showTip(com.focusPage("#loginId"), "用户名不能为空", "right"), user.repeatFlg = !1) : com.post(api.personel.queryUserByLoginId, {
             "user.loginId": $this.val()
         }, function(res) {
             user.loginFlag =false;
-            com.showPopover(com.focusPage("#loginId"),{errorMsg: "用户名已存在"}, "right");
+            com.showTip(com.focusPage("#loginId"),"用户名已存在", "right");
         }, function(res){
             user.loginFlag =true;
-            com.focusPage("#loginId").css("border", "1px solid #d5d5d5").popover("destroy")
         });
     });
 
@@ -432,11 +437,7 @@
 
     function saveData() {
         if( "" == user.items.loginId.val().trim() || user.items.loginId.val() == null) {
-            com.focusPage("#loginId").removeAttr("data-placement").addClass('popover-notitle').attr({
-                "data-rel":"popover",
-                "data-placement": "right",
-                "data-content": "用户名不能为空"
-            }).removeAttr("data-toggle").css('border', '1px red solid').popover('show');
+            com.showTip(com.focusPage("#loginId"), "用户名不能为空", "right");
             user.loginFlag=false
         }
 
@@ -471,7 +472,7 @@
 
             com.post(api.personel.addUser, options, function(res){
                 com.showAlert(com.info, "操作成功");
-                com.closePopup();
+                user.simpleAddUserModal.modal("hide");
             });
         }
     }

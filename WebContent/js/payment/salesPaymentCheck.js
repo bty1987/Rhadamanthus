@@ -5,7 +5,10 @@ $(function () {
         salesPaymentRevTypeData: {},
         customerId: null,
         items: {
-            couponType: com.focusPage('#couponType')
+            couponType: com.focusPage('#couponType'),
+            cash: com.focusPage("#cash"),
+            payAdvance: com.focusPage("#payAdvance"),
+            collectDes: com.focusPage("#collectDes")
         },
         bankNums: [],
         checkvNums: [],
@@ -41,9 +44,9 @@ $(function () {
     paymentUtils.getReceiptType(salesPaymentForStatus);
 
     //隐藏触发
-    salesPaymentForStatus.modals.layerAdd.on('hidden.bs.modal', function(){
-        com.cleanItems("layerAddSalesCheck");
-        com.clearValidator("layerAddSalesCheck");
+    salesPaymentForStatus.modals.layerAdd.on('hide.bs.modal', function(){
+        com.cleanItems(salesPaymentForStatus.items);
+        com.closeTip();
 
         salesPaymentForStatus.bankNums=[];
         salesPaymentForStatus.checkvNums=[];
@@ -51,17 +54,12 @@ $(function () {
         salesPaymentForStatus.checkBankUtilForGrade = [];
 
         com.focusPage('[name="top"]').addClass('hide');
-        com.focusPage('#cash').val("");
         com.focusPage('#salesCheckbankAdd').attr("num", 0).attr("maxnum", 0);
         com.focusPage('#salesCheckcheckvAdd').attr("num", 0).attr("maxnum", 0);
         com.focusPage('input[type="checkbox"]','#form').removeAttr('checked');
-        com.focusPage('#bank').val("");
-        com.focusPage('#checkv').val("");
         com.focusPage('#salesCheckbankDivGroup').empty();
         com.focusPage('#salesCheckcheckvDivGroup').empty();
-        com.focusPage('#payAdvance').val("");
         com.focusPage('.search-choice').find('input').val('');
-        com.focusPage('#collectDes').val("");
 
         com.cleanTypeahead('salesCheckcashInfo');
     });

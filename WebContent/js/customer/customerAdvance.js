@@ -1,18 +1,27 @@
 $(function () {
     var createCustomerSource = {
-        grade: ["A", "B", "C", "D"],
-        items: {}
+        saveBtn: com.focusPage("#saveBtn"),
+
+        items: {
+            phone: com.focusPage("#Phone"),
+            purpose: com.focusPage("#purpose"),
+            intention: com.focusPage("#intention"),
+            price: com.focusPage("#price"),
+            grade: com.focusPage("#grade"),
+            comment: com.focusPage("#comment"),
+            comments: com.focusPage("#comments")
+        },
+
+        csid: null,
+
+        grade: ["A", "B", "C", "D"]
     };
 
-    createCustomerSource.items.phone = com.focusPage("#Phone");
-    createCustomerSource.items.purpose = com.focusPage("#purpose");
-    createCustomerSource.items.intention = com.focusPage("#intention");
-    createCustomerSource.items.price = com.focusPage("#price");
-    createCustomerSource.items.grade = com.focusPage("#grade");
-    createCustomerSource.items.comment = com.focusPage("#comment");
-    createCustomerSource.items.comments = com.focusPage("#comments");
-    createCustomerSource.items.grade.bindData(createCustomerSource.grade, "key", "value", false);
+    createCustomerSource.saveBtn.bindClick(saveData);
+
     com.initTypeahead('belonger', api.personel.queryUserByPinyin, "pinyinName", { "duty": "", "user.status": 0}, "userBases", "uid", "currentName", null);
+
+    createCustomerSource.items.grade.bindData(createCustomerSource.grade, "key", "value", false);
 
     var displayFunc = (function () {
         var renderList = function (tableId, listData) {
@@ -67,10 +76,16 @@ $(function () {
             $liLine.append($h3).append($ulProperty);
 
             $belonger.click(function () {
-                changeBelonger(v);
+
+                com.popup4model('#customersourceforbelonger', "编辑归属人", function () {
+                    createCustomerSource.csid = v.csid;
+                    com.updateTypeahead("belonger", v.belonger.uid, com.checkNull(v.belonger.userName, ''));
+                });
             });
             $record.click(function () {
-                record(v.csid);
+                params.csid = v.csid;
+
+                com.popup4page("#customerRecordPopUp", "views/customer/customerRecord.html", "记录内容");
             });
 
             return $liLine;
@@ -87,69 +102,24 @@ $(function () {
     })();
 
     var searcher = new Searcher();
-
     searcher.init(["customerSourcePhone"], "condList", api.customer.pageCustomerOriginForAdvance, function (data) {
         displayFunc.init("resultList", data);
     }, "pagenation", "cusTomerSourcePostData", null, false, null, null);
 
-    function changeBelonger(d) {
-        com.clearValidator();
-        com.updateTypeahead("belonger", d.belonger.uid, com.checkNull(d.belonger.userName, ''));
+    function saveData(){
+        if (com.validate("form2")) {
+            return false;
+        }
 
-        openlayer("编辑归属人", com.focusPage('#customersourceforbelonger'), function () {
-            if (!com.validate("customersourceforbelonger", null)) {
-                var option = {
-                    "customerOrigin.csid": d.csid,
-                    "customerOrigin.belonger.uid": com.typeahead("belonger")
-                };
-                com.post(api.customer.updateCustomerOriginForBelonger, option, function () {
-                    searcher.doSearch();
-                    com.showAlert(com.info, '修改成功');
-                });
-            }
-        });
-    }
+        var option = {
+            "customerOrigin.csid": createCustomerSource.csid,
+            "customerOrigin.belonger.uid": com.typeahead("belonger")
+        };
 
-    function record(csid) {
-        var $customerRecord = com.focusPage('#customerRecord');
-        $customerRecord.attr({'data-csid': csid});
-        layer.open({
-            type: 1,
-            title: '记录内容',
-            content: $customerRecord,
-            area: [( $(window).width() * 0.7 < 1000 ? $(window).width() * 0.7 : 1000 ) + "px", ( $(window).height() * 0.84 < 620 ? $(window).height() * 0.84 : 620 ) + "px"],
-            maxmin: false,
-            zIndex: 9000,
-            btn: ['取消'],
-            success: function (index, layero) {
-                $customerRecord.load("views/customer/customerRecord.html");
-            },
-            end: function () {
-                $customerRecord.attr('data-csid', null);
-            }
-        });
-    }
-
-
-    function openlayer(layerType, id, callback) {
-        layer.closeAll();
-        layer.open({
-            type: 1,
-            title: layerType,
-            content: id,
-            area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
-            maxmin: false,
-            zIndex: 9000,
-            btn: ['确定', '取消'],
-            yes: function (index, layero) {
-                callback(index, layero);
-            },
-            btn2: function (index, layero) {
-                //按钮【按钮二】的回调
-            },
-            cancel: function () {
-                //右上角关闭回调
-            }
+        com.post(api.customer.updateCustomerOriginForBelonger, option, function () {
+            searcher.doSearch();
+            com.closePopup();
+            com.showAlert(com.info, '修改成功');
         });
     }
 

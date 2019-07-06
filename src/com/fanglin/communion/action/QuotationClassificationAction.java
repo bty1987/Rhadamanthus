@@ -30,32 +30,34 @@ import com.fanglin.core.action.BaseListAction;
 public class QuotationClassificationAction extends BaseListAction {
 
 	private static final long serialVersionUID = -5156313632383961862L;
-	
+
 	@Autowired
 	private QuotationClassificationService quotationClassificationService;
-	
+
 	private List<QuotationClassificationVO> quotationClassifications;
-	
-	@Action(value="queryQuotationClassification", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryQuotationClassification(){
-		
+
+	@Action(value = "queryQuotationClassification", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryQuotationClassification() {
+
 		quotationClassifications = quotationClassificationService.queryQuotationClassification();
-		
+
 		return SUCCESS;
 	}
-	@Action(value="pageQuotationClassification", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String pageQuotationBigCategory(){
-		
+
+	@Action(value = "pageQuotationClassification", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageQuotationBigCategory() {
+
 		quotationClassificationService.pageQuotationClassification(getPaging(), getFilters());
-	    
+
 		return SUCCESS;
 	}
-	public List<QuotationClassificationVO> getQuotationClassifications(){
+
+	public List<QuotationClassificationVO> getQuotationClassifications() {
 		return quotationClassifications;
 	}
 
-	public void setQuotationClassifications(List<QuotationClassificationVO> quotationClassifications){
+	public void setQuotationClassifications(List<QuotationClassificationVO> quotationClassifications) {
 		this.quotationClassifications = quotationClassifications;
 	}
-	
+
 }

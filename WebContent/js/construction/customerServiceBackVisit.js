@@ -27,14 +27,17 @@ jQuery(function ($) {
 
     com.datetime(backVisit.items.backVisitTime);
 
+    backVisit.modals.modal.on("hide.bs.modal", function(){
+
+        com.cleanItems(backVisit.items);
+        com.closeTip();
+    });
+
     com.post(api.ds.construction, {}, function (res) {
-        $.each(res.backVisitTypeData, function (i, v) {
-            backVisit.backVisitTypeData[v["key"]] = v["value"];
-        });
+        backVisit.backVisitTypeData = res.backVisitTypeData.split("key", "value");
 
         backVisit.items.backVisitType.bindData(res.backVisitTypeData, "key", "value", false);
-
-    }, null, false);
+    });
 
     var displayFunc = (function () {
         var renderList = function (tableId, listData) {
@@ -135,8 +138,6 @@ jQuery(function ($) {
 
     com.focusPage('#Add', '#pagenation').click(function () {
         backVisit.editFlag = false;
-
-        com.cleanItems(backVisit.items);
 
         backVisit.items.orderId.val(params.orderId);
         backVisit.items.orderAddr.val(params.orderAddr);

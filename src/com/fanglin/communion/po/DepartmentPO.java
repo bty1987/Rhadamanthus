@@ -43,7 +43,7 @@ public class DepartmentPO implements Serializable {
 	public static final short STATUS_DISABLE_INT = 0;
 
 	public static final short STATUS_ENABLE_INT = 1;
-	
+
 	public static final short IDENT_NUM_INT = 15;
 
 	private int did;
@@ -69,7 +69,7 @@ public class DepartmentPO implements Serializable {
 	private String kino;
 
 	private String kiname;
-	
+
 	private UserPO manager;
 
 	public DepartmentPO() {
@@ -80,7 +80,7 @@ public class DepartmentPO implements Serializable {
 		super();
 		this.did = did;
 	}
-	
+
 	public DepartmentPO(String no) {
 		super();
 		this.no = no;
@@ -220,5 +220,5 @@ public class DepartmentPO implements Serializable {
 	public void setManager(UserPO manager) {
 		this.manager = manager;
 	}
-	
+
 }

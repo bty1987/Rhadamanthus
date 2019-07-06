@@ -18,7 +18,11 @@ public class AddReduceItemVO implements java.io.Serializable {
 	
 	private String workType;
 	
+	private Float addPrice;
+	
 	private Float unitPrice;
+	
+	private Float subPrice;
 	
 	private Float num;
 	
@@ -90,12 +94,28 @@ public class AddReduceItemVO implements java.io.Serializable {
 		this.workType = workType;
 	}
 
+	public Float getAddPrice() {
+		return addPrice;
+	}
+
+	public void setAddPrice(Float addPrice) {
+		this.addPrice = addPrice;
+	}
+
 	public Float getUnitPrice() {
 		return unitPrice;
 	}
 
 	public void setUnitPrice(Float unitPrice) {
 		this.unitPrice = unitPrice;
+	}
+
+	public Float getSubPrice() {
+		return subPrice;
+	}
+
+	public void setSubPrice(Float subPrice) {
+		this.subPrice = subPrice;
 	}
 
 	public Float getNum() {

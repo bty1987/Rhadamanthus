@@ -1,39 +1,86 @@
 $(function () {
     var customerSource = {
+        saveDesignerBtn: com.focusPage("#saveDesignerBtn"),
+        updateAndApprovalBtn: com.focusPage("#updateAndApprovalBtn"),
+
+        modals: {
+            updateDesignerModal: com.focusPage("#updateDesigner"),
+            sustomerSourceModal: com.focusPage("#sustomersource")
+        },
+        items: {
+            name: com.focusPage("#name"),
+            gender: com.focusPage("#gender"),
+            phone: com.focusPage("#phone"),
+            purpose: com.focusPage("#purpose"),
+            intention: com.focusPage("#intention"),
+            price: com.focusPage("#price"),
+            grade: com.focusPage("#grade"),
+            comment: com.focusPage("#comment"),
+
+            villageNo: com.focusPage("#villageNo"),
+            houseNumber: com.focusPage("#houseNumber"),
+            buildArea: com.focusPage("#buildArea"),
+
+            built: com.focusPage("#built"),
+            unit: com.focusPage("#unit"),
+            floor: com.focusPage("#floor"),
+            door: com.focusPage("#door"),
+            builtrule: com.focusPage("#builtrule"),
+            unitrule: com.focusPage("#unitrule"),
+            floorrule: com.focusPage("#floorrule"),
+            doorrule: com.focusPage("#doorrule"),
+            ruleTwo: com.focusPage("#ruleTwo"),
+
+            designer: com.focusPage("#designer"),
+
+            rule: com.focusPage("#rule")
+        },
+
+        bindHouseDiv: com.focusPage("#bindHouseDiv"),
+        bindCustomerDiv: com.focusPage("#bindCustomerDiv"),
+        houseNumberGroup: com.focusPage("#houseNumberGroup"),
+        houseNumberGroupTwo: com.focusPage("#houseNumberGroupTwo"),
+
+        csid: null,
+
         grade: ["A", "B", "C", "D"],
-        items: {},
-        currentCustomerSource: {}
+        checkUser: [],
+        currentCustomerSource: {
+
+        }
     };
 
-    customerSource.items.name = com.focusPage("#name");
-    customerSource.items.gender = com.focusPage("#gender");
-    customerSource.items.phone = com.focusPage("#phone");
-    customerSource.items.purpose = com.focusPage("#purpose");
-    customerSource.items.intention = com.focusPage("#intention");
-    customerSource.items.price = com.focusPage("#price");
-    customerSource.items.grade = com.focusPage("#grade");
-    customerSource.items.comment = com.focusPage("#comment");
-
-    customerSource.items.villageNo = com.focusPage("#villageNo");
-    customerSource.items.houseNumber = com.focusPage("#houseNumber");
-    customerSource.items.buildArea = com.focusPage("#buildArea");
-
-    customerSource.items.built = com.focusPage("#built");
-    customerSource.items.unit = com.focusPage("#unit");
-    customerSource.items.floor = com.focusPage("#floor");
-    customerSource.items.door = com.focusPage("#door");
-    customerSource.items.builtrule = com.focusPage("#builtrule");
-    customerSource.items.unitrule = com.focusPage("#unitrule");
-    customerSource.items.floorrule = com.focusPage("#floorrule");
-    customerSource.items.doorrule = com.focusPage("#doorrule");
-    customerSource.items.ruleTwo = com.focusPage("#ruleTwo");
-
-    customerSource.items.designer = com.focusPage("#designer");
-
-    customerSource.items.rule = com.focusPage("#rule");
-
-    customerSource.items.grade.bindData(customerSource.grade, "key", "value", false);
+    customerSource.saveDesignerBtn.bindClick(updateDesigner);
+    customerSource.updateAndApprovalBtn.bindClick(customerApproval);
     customerSource.items.gender.switchBtn("gender");
+
+    customerSource.modals.sustomerSourceModal.on("hide.bs.modal", function(){
+        com.clearValidator("#villageNo", true);
+        com.clearValidator("#houseNumber", true);
+        com.clearValidator("#name", true);
+        customerSource.items.rule.html("");
+        customerSource.items.houseNumber.removeAttr("data-content");
+        customerSource.items.name.removeAttr("data-content");
+        customerSource.bindHouseDiv.removeAttr("style");
+        customerSource.bindCustomerDiv.removeAttr("style");
+        customerSource.houseNumberGroup.removeAttr("style");
+        customerSource.houseNumberGroupTwo.css("display", "none");
+
+        customerSource.items.villageNo.prop("disabled", false);
+        customerSource.items.houseNumber.removeAttr("readOnly");
+        customerSource.items.buildArea.removeAttr("readOnly");
+        customerSource.items.name.removeAttr("readOnly");
+        customerSource.items.gender.removeAttr("disabled");
+        customerSource.items.phone.removeAttr("readOnly");
+    });
+
+    customerSource.modals.updateDesignerModal.on("hide.bs.modal", function(){
+        com.clearValidator();
+        com.cleanTypeahead("designer");
+        com.cleanTypeahead("villageNo");
+        com.cleanItems(customerSource.items);
+    });
+
 
     com.post(api.ds.building, {}, function (res) {
         customerSource.items.builtrule.bindData(res.buildrule, "key", "value");
@@ -42,31 +89,14 @@ $(function () {
         customerSource.items.doorrule.bindData(res.buildrule, "key", "value");
     }, null, false);
 
-    com.initTypeahead('villageNo', api.data.queryVillageForNameByPinyin, "pinyinName", {}, "autoFillKeyValue", "key", "value", null);
+    customerSource.items.grade.bindData(customerSource.grade, "key", "value", false);
+
     com.initTypeahead('designer', api.personel.queryUserByPinyin, "pinyinName", {"user.status": 0}, 'autoFillKeyValue', 'key', 'value', null);
-
-    customerSource.items.villageNo.on('change', function () {
-        com.post(api.data.queryVillageById, {"village.no": customerSource.items.villageNo.val()}, function (res) {
-            customerSource.items.rule.html("推荐楼牌号规则: " + res.village.rule);
+    com.initTypeahead('villageNo', api.data.queryVillageForNameByPinyin, "pinyinName", {}, "autoFillKeyValue", "key", "value", function(list, k, v){
+        com.post(api.data.queryVillageById, {"village.no": k}, function (res) {
+            customerSource.items.rule.html("推荐楼牌号规则: " + (res.village.rule == null || res.village.rule == "" ? "暂无推荐规则" : res.village.rule));
         }, null, false);
-    });
-
-    customerSource.updateAndApprovalBtn =  com.focusPage("#updateAndApprovalBtn").on("click", customerApproval);
-    customerSource.saveDesignerBtn =  com.focusPage("#saveDesignerBtn").on("click", updateDesigner);
-
-    com.focusPage("#sustomersource").on("hidden.bs.modal", function(){
-        com.clearValidator("#villageNo", true);
-        com.clearValidator("#houseNumber", true);
-        com.clearValidator("#name", true);
-        com.focusPage("#rule").html("");
-        com.focusPage("#houseNumber").removeAttr("data-content");
-        com.focusPage("#name").removeAttr("data-content");
-        customerSource.checkUser = [];
-        com.focusPage("#bindHouseDiv").removeAttr("style");
-        com.focusPage("#bindCustomerDiv").removeAttr("style");
-        com.focusPage("#houseNumberGroup").removeAttr("style");
-        com.focusPage("#houseNumberGroupTwo").css("display", "none");
-        aboutCustomerAndHouse();
+        return v;
     });
 
     var displayFunc = (function () {
@@ -133,13 +163,21 @@ $(function () {
             //编辑
             $btnView.click(function () {
                 customerSource.currentCustomerSource = v;
-                com.focusPage("#houseNumberGroupTwo").css("display", "none");
+                customerSource.houseNumberGroupTwo.css("display", "none");
                 if(v.hid != 0){
-                    aboutBindHouse();
+                    customerSource.items.villageNo.prop("disabled", true);
+                    customerSource.items.houseNumber.attr("readOnly", "readOnly");
+                    customerSource.items.buildArea.attr("readOnly", "readOnly");
+                    customerSource.bindHouseDiv.css("display", "none");
+                    customerSource.houseNumberGroupTwo.css("display", "none");
+                    customerSource.houseNumberGroup.removeAttr("style");
                 }
 
                 if(v.cid != 0){
-                    aboutBindCustomer();
+                    customerSource.items.name.attr("readOnly", "readOnly");
+                    customerSource.items.gender.attr("disabled", "disabled");
+                    customerSource.items.phone.attr("readOnly", "readOnly");
+                    customerSource.bindCustomerDiv.css("display", "none");
                 }
                 com.focusPage("#sustomersourceDialog").html("编辑客源");
 
@@ -147,7 +185,10 @@ $(function () {
             });
 
             $record.click(function () {
-                record(v.csid);
+
+                params.csid = v.csid;
+
+                com.popup4page('#customerRecordPopup', "views/customer/customerRecord.html","记录内容");
             });
 
             $release.click(function () {
@@ -167,7 +208,7 @@ $(function () {
                     com.cleanTypeahead("designer");
                 }
                 com.clearValidator("#designer", true);
-                com.focusPage("#updateDesigner").modal("show");
+                customerSource.modals.updateDesignerModal.modal("show");
             });
 
             return $liLine;
@@ -190,8 +231,6 @@ $(function () {
     }, "pagenation", "customerOriginPostData", null, false, null, null);
 
     function editcustomerOrigin(d) {
-        com.cleanItems(customerSource.items);
-        com.clearValidator();
 
         customerSource.items.name.val(d.name);
         customerSource.items.gender.val(d.gender);
@@ -217,13 +256,13 @@ $(function () {
         }else{
             com.cleanTypeahead('villageNo');
         }
-        com.focusPage("#sustomersource").modal("show");
+        customerSource.modals.sustomerSourceModal.modal("show");
     }
 
     //编辑
     function customerApproval(){
         if (com.validate("sustomersource")) {
-            return;
+            return false;
         }
 
         var options = {
@@ -244,14 +283,14 @@ $(function () {
         com.post(api.customer.updateCustomerOrigin, options, function (res) {
             searcher.doSearch();
             com.showAlert(com.info, '修改成功');
-            com.focusPage("#sustomersource").modal("hide");
+            customerSource.modals.sustomerSourceModal.modal("hide");
         });
     }
 
     //编辑设计师
     function  updateDesigner(){
         if (com.validate("updateDesigner")) {
-            return;
+            return false;
         }
 
         var options = {
@@ -262,7 +301,7 @@ $(function () {
         com.post(api.customer.bindCustomerOrigin, options, function (res) {
             searcher.doSearch();
             com.showAlert(com.info, '修改成功');
-            com.focusPage("#updateDesigner").modal("hide");
+            customerSource.modals.updateDesignerModal.modal("hide");
         });
     }
 
@@ -275,36 +314,14 @@ $(function () {
         });
     }
 
-    function record(csid) {
-        var $customerRecord = com.focusPage('#customerRecord');
-        $customerRecord.attr({'data-csid': csid});
-        layer.open({
-            type: 1,
-            title: '记录内容',
-            content: $customerRecord,
-            area: [( $(window).width() * 0.7 < 1000 ? $(window).width() * 0.7 : 1000 ) + "px", ( $(window).height() * 0.84 < 620 ? $(window).height() * 0.84 : 620 ) + "px"],
-            maxmin: false,
-            zIndex: 9000,
-            btn: ['取消'],
-            success: function (index, layero) {
-                $customerRecord.load("views/customer/customerRecord.html");
-            },
-            end: function () {
-                $customerRecord.attr('data-csid', null);
-            }
-        });
-    }
+    com.focusPage("#bindHouse").click(function(){
+        customerSource.houseNumberGroupTwo.removeAttr("style");
+        customerSource.houseNumberGroup.css("display", "none");
 
-    function aboutCustomerAndHouse(){
-        com.focusPage("#villageNo").prop("disabled", false);
-        com.focusPage("#houseNumber").removeAttr("readOnly");
-        com.focusPage("#buildArea").removeAttr("readOnly");
-        com.focusPage("#name").removeAttr("readOnly");
-        com.focusPage("#gender").removeAttr("disabled");
-        com.focusPage("#phone").removeAttr("readOnly");
-    }
+        if(com.validate("houseNumberGroupTwo")){
+            return false;
+        }
 
-    function createHouseNumber(){
         var rulenum = [
             customerSource.items.built.val().trim().toUpperCase(), customerSource.items.builtrule.val(),
             customerSource.items.unit.val().trim().toUpperCase(), customerSource.items.unitrule .val(),
@@ -312,50 +329,7 @@ $(function () {
             customerSource.items.door.val().trim().toUpperCase(), customerSource.items.doorrule.val()
         ];
 
-        return houseUtils.creatHouseNumber(rulenum);
-    }
-
-    //绑定房产
-    com.focusPage("#bindHouse").click(function(){
-        com.focusPage("#houseNumberGroupTwo").removeAttr("style");
-        com.focusPage("#houseNumberGroup").css("display", "none");
-
-        if(com.focusPage("#villageNo").val() == ""){
-            com.showTips(com.focusPage("#villageNo"), "内容不能为空", true);
-            return;
-        }else{
-            com.clearValidator("#villageNo", true);
-        }
-
-        if(com.focusPage("#built").val() == ""){
-            com.showTips(com.focusPage("#built"), "内容不能为空", true);
-            return;
-        }else{
-            com.clearValidator("#built", true);
-        }
-
-        if(com.focusPage("#unit").val() == ""){
-            com.showTips(com.focusPage("#unit"), "内容不能为空", true);
-            return;
-        }else{
-            com.clearValidator("#unit", true);
-        }
-
-        if(com.focusPage("#floor").val() == ""){
-            com.showTips(com.focusPage("#floor"), "内容不能为空", true);
-            return;
-        }else{
-            com.clearValidator("#floor", true);
-        }
-
-        if(com.focusPage("#door").val() == ""){
-            com.showTips(com.focusPage("#door"), "内容不能为空", true);
-            return;
-        }else{
-            com.clearValidator("#door", true);
-        }
-
-        var houseNumber = createHouseNumber();
+        var houseNumber = houseUtils.creatHouseNumber(rulenum);
 
         var houseOption = {
             "house.village.no" : com.typeahead("villageNo"),
@@ -374,8 +348,14 @@ $(function () {
                 customerSource.currentCustomerSource.hid = customerSource.currentHid;
                 customerSource.currentCustomerSource.houseNumber = houseNumber;
 
-                aboutBindHouse();
-                com.focusPage("#houseNumber").val(houseNumber);
+                customerSource.items.villageNo.prop("disabled", true);
+                customerSource.items.houseNumber.attr("readOnly", "readOnly");
+                customerSource.items.buildArea.attr("readOnly", "readOnly");
+                customerSource.bindHouseDiv.css("display", "none");
+                customerSource.houseNumberGroupTwo.css("display", "none");
+                customerSource.houseNumberGroup.removeAttr("style");
+
+                customerSource.items.houseNumber.val(houseNumber);
 
                 com.showAlert(com.info, "绑定成功!");
             }, null, false);
@@ -399,26 +379,16 @@ $(function () {
             customerSource.currentCid = res.customer.cid;
             //更新客源中的cid
             com.post(api.customer.bindCustomerOrigin, {"customerOrigin.csid": customerSource.currentCustomerSource.csid, "customerOrigin.cid": customerSource.currentCid}, function(res){
-                aboutBindCustomer();
+
+                customerSource.items.name.attr("readOnly", "readOnly");
+                customerSource.items.gender.attr("disabled", "disabled");
+                customerSource.items.phone.attr("readOnly", "readOnly");
+                customerSource.bindCustomerDiv.css("display", "none");
+
                 customerSource.currentCustomerSource.cid = customerSource.currentCid;
                 com.showAlert(com.info, "绑定成功!");
             }, null, false);
         })
     });
 
-    function aboutBindHouse(){
-        com.focusPage("#villageNo").prop("disabled", true);
-        com.focusPage("#houseNumber").attr("readOnly", "readOnly");
-        com.focusPage("#buildArea").attr("readOnly", "readOnly");
-        com.focusPage("#bindHouseDiv").css("display", "none");
-        com.focusPage("#houseNumberGroupTwo").css("display", "none");
-        com.focusPage("#houseNumberGroup").removeAttr("style");
-    }
-
-    function aboutBindCustomer(){
-        com.focusPage("#name").attr("readOnly", "readOnly");
-        com.focusPage("#gender").attr("disabled", "disabled");
-        com.focusPage("#phone").attr("readOnly", "readOnly");
-        com.focusPage("#bindCustomerDiv").css("display", "none");
-    }
 });

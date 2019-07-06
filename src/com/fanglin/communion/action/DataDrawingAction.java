@@ -8,6 +8,7 @@ import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+
 import com.fanglin.communion.service.DataDrawingService;
 import com.fanglin.communion.vo.DataDrawingVO;
 import com.fanglin.core.action.BaseListAction;
@@ -23,40 +24,40 @@ public class DataDrawingAction extends BaseListAction {
 
 	@Autowired
 	private DataDrawingService dataDrawingService;
-	
+
 	private DataDrawingVO dataDrawing;
-	
+
 	private List<DataDrawingVO> dataDrawings;
-	
-	@Action(value="queryDataDrawing", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryDataDrawing() throws FLException{
-		
+
+	@Action(value = "queryDataDrawing", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryDataDrawing() throws FLException {
+
 		dataDrawings = dataDrawingService.queryDataDrawing(dataDrawing);
-		
+
 		return SUCCESS;
 	}
 
-	@Action(value="addDataDrawing", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String addDataDrawing() throws FLException{
-		
-		if(SystemConfig.getString("communion") == null){
-		    throw new FLException(-1, "无操作权限");
+	@Action(value = "addDataDrawing", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addDataDrawing() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
 		}
-		
+
 		dataDrawingService.addDataDrawing(dataDrawing, queryUserId());
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value="deleteDataDrawing", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String deleteDataDrawing() throws FLException{
-		
-		if(SystemConfig.getString("communion") == null){
-		    throw new FLException(-1, "无操作权限");
+
+	@Action(value = "deleteDataDrawing", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String deleteDataDrawing() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
 		}
-		
+
 		dataDrawingService.deleteDataDrawing(dataDrawing);
-		
+
 		return SUCCESS;
 	}
 
@@ -75,5 +76,5 @@ public class DataDrawingAction extends BaseListAction {
 	public void setDataDrawings(List<DataDrawingVO> dataDrawings) {
 		this.dataDrawings = dataDrawings;
 	}
-	
+
 }

@@ -11,37 +11,36 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="extension", catalog = "quotation")
-public class ExtensionPO implements Serializable{
+@Table(name = "extension", catalog = "quotation")
+public class ExtensionPO implements Serializable {
 
 	private static final long serialVersionUID = -3842029738524298580L;
-	
+
 	public static final String COLUMN_ORDERID_STR = "orderId";
-	
+
 	public static final String COLUMN_TYPE_STR = "type";
-	
+
 	public static final short STATUS_INIT_SHORT = 0;
-	
+
 	public static final short STATUS_SUBMIT_INT = 1;
 
 	private long eid;
-	
+
 	private String orderId;
-	
+
 	private short type;
-	
+
 	private float total;
-	
+
 	private short status;
-	
-	private Timestamp createTime ;
-	
+
+	private Timestamp createTime;
+
 	private String content;
-	
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="eId")
+	@Column(name = "eid")
 	public long getEid() {
 		return eid;
 	}
@@ -49,17 +48,17 @@ public class ExtensionPO implements Serializable{
 	public void setEid(long eid) {
 		this.eid = eid;
 	}
-	
-	@Column(name="orderId")
+
+	@Column(name = "orderId")
 	public String getOrderId() {
 		return orderId;
 	}
 
-
 	public void setOrderId(String orderId) {
 		this.orderId = orderId;
 	}
-	@Column(name="type")
+
+	@Column(name = "type")
 	public short getType() {
 		return type;
 	}
@@ -67,7 +66,8 @@ public class ExtensionPO implements Serializable{
 	public void setType(short type) {
 		this.type = type;
 	}
-	@Column(name="total")
+
+	@Column(name = "total")
 	public float getTotal() {
 		return total;
 	}
@@ -75,7 +75,8 @@ public class ExtensionPO implements Serializable{
 	public void setTotal(float total) {
 		this.total = total;
 	}
-	@Column(name="status")
+
+	@Column(name = "status")
 	public short getStatus() {
 		return status;
 	}
@@ -83,7 +84,8 @@ public class ExtensionPO implements Serializable{
 	public void setStatus(short status) {
 		this.status = status;
 	}
-	@Column(name="createTime")
+
+	@Column(name = "createTime")
 	public Timestamp getCreateTime() {
 		return createTime;
 	}
@@ -91,7 +93,8 @@ public class ExtensionPO implements Serializable{
 	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
 	}
-	@Column(name="content")
+
+	@Column(name = "content")
 	public String getContent() {
 		return content;
 	}
@@ -99,7 +102,5 @@ public class ExtensionPO implements Serializable{
 	public void setContent(String content) {
 		this.content = content;
 	}
-	
-	
-	
+
 }

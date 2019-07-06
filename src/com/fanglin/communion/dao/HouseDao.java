@@ -8,8 +8,8 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.Paging;
 
 public interface HouseDao extends Dao<HousePO> {
-	
-	public List<HousePO> pageHouse(Paging paging, List<Filter> filters,Integer company);
-	
-	public HousePO queryHouseByNoAHnum(String no, String houseNumber,Integer company);
+
+	public List<HousePO> pageHouse(Paging paging, List<Filter> filters, Integer company);
+
+	public HousePO queryHouseByNoAHnum(String no, String houseNumber, Integer company);
 }

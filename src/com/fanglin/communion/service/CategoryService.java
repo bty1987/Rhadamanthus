@@ -18,21 +18,21 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.Paging;
 
 public interface CategoryService {
-	
+
 	public void pageCategory(Paging paging, List<Filter> filters);
-	
+
 	public List<CategoryVO> queryCategory();
-	
+
 	public CategoryVO queryCategoryByCId(CategoryVO categoryVO);
-	
+
 	public CategoryVO queryCategoryByCategoryId(CategoryVO categoryVO);
-	
+
 	public int addCategory(CategoryVO categoryVO);
-	
+
 	public int updateCategory(CategoryVO categoryVO);
-	
+
 	public int deleteCategoryByCId(CategoryVO categoryVO);
-	
+
 	public int deleteCategoryByCIds(List<Long> cIds);
-	
+
 }

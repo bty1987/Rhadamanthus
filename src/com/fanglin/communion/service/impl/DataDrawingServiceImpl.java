@@ -28,52 +28,52 @@ public class DataDrawingServiceImpl implements DataDrawingService {
 
 	@Override
 	public List<DataDrawingVO> queryDataDrawing(DataDrawingVO dataDrawingVO) {
-		
+
 		List<DataDrawingPO> dataDrawingPOs = dataDrawingDao.queryDataDrawing(dataDrawingVO.getSid(), dataDrawingVO.getType());
 		List<DataDrawingVO> dataDrawingVOs = new ArrayList<DataDrawingVO>();
-		
+
 		for (DataDrawingPO dataDrawingPO : dataDrawingPOs) {
-			
+
 			DataDrawingVO dataDrawing = new DataDrawingVO(new UserVO());
-			
+
 			BeanUtil.copyProperties(dataDrawingPO, dataDrawing, Arrays.asList("creater"));
-			
+
 			BeanUtil.copyProperties(dataDrawingPO.getCreater(), dataDrawing.getCreater(), Arrays.asList("role", "dept", "duty"));
-			
+
 			dataDrawingVOs.add(dataDrawing);
 		}
-		
+
 		return dataDrawingVOs;
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
+	@Transactional(rollbackFor = Exception.class)
 	public void addDataDrawing(DataDrawingVO dataDrawingVO, String userId) {
-		
+
 		DataDrawingPO dataDrawingPO = new DataDrawingPO();
-		
-		BeanUtil.copyProperties(dataDrawingVO, dataDrawingPO, Arrays.asList("creater","createTime"));
-		
+
+		BeanUtil.copyProperties(dataDrawingVO, dataDrawingPO, Arrays.asList("creater", "createTime"));
+
 		dataDrawingPO.setCreater(userDao.queryUserByUserId(userId));
-		
+
 		dataDrawingPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
-		
+
 		dataDrawingPO.setStatus(DataDrawingPO.STATUS_INIT_INT);
-		
+
 		dataDrawingDao.save(dataDrawingPO);
-		
-		BeanUtil.copyProperties(dataDrawingPO, dataDrawingVO,Arrays.asList("creater"));
+
+		BeanUtil.copyProperties(dataDrawingPO, dataDrawingVO, Arrays.asList("creater"));
 
 	}
-	
+
 	@Override
-	@Transactional(rollbackFor=Exception.class)
+	@Transactional(rollbackFor = Exception.class)
 	public void deleteDataDrawing(DataDrawingVO dataDrawingVO) {
-		
+
 		DataDrawingPO dataDrawingPO = dataDrawingDao.get(dataDrawingVO.getDdid());
-		
+
 		dataDrawingPO.setStatus(DataDrawingPO.STATUS_DISABLE_INT);
-		
+
 		dataDrawingDao.update(dataDrawingPO);
 
 	}

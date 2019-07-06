@@ -7,10 +7,10 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.Paging;
 
 public interface DepartmentTypeService {
-	
-	public void pageDepartmentType(Paging paging,List<Filter> filters);
+
+	public void pageDepartmentType(Paging paging, List<Filter> filters);
 
 	public void addDepartmentType(DepartmentTypeVO departmenttypevo);
-	
-	public List<DepartmentTypeVO>queryDepartmentType();
+
+	public List<DepartmentTypeVO> queryDepartmentType();
 }

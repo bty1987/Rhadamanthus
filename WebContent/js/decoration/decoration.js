@@ -15,6 +15,12 @@
 
         editFlag: false,
         infoItems: {},
+        drawContractItems: {
+        	coupon : com.focusPage("#coupon"),
+        	thing : com.focusPage("#thing"),
+        	netperfor : com.focusPage("#netperfor"),
+        	comperfor : com.focusPage("#comperfor")
+        },
 
         projectStatusArr: {
             0: '初始',
@@ -22,23 +28,7 @@
             2: '已完工'
         }
     };
-    var decorationRegular = {
-        validator: {
-            decorationNumberAll: {
-                type: "v_decorationNumberAll",
-                regex: /^(\d{0,8}|\d{0,8}\.[0-9]{1,3})$|^-(\d{0,8}|\d{0,8}\.[0-9]{1,3})$/,
-                errorMsg: "请输入正确的数字,可保留小数点后三位."
-            }// 正数或负数 小数三位
-        }
-    };
-
-    $.extend(com.validator, decorationRegular.validator);
-
-    com.focusPage("#drawContractModal").on('show.bs.modal', function (e) {
-        com.clearValidator();
-    });
-
-
+    
     order.cancelBtn = com.focusPage("#cancelBtn");
     order.decorationModal = com.focusPage("#decorationModal");
     order.agreementModal = com.focusPage("#agreementModal");
@@ -48,11 +38,54 @@
     order.drawContractModal = com.focusPage("#drawContractModal");
     order.prosignModal = com.focusPage("#prosignModal");
     order.contractBtn = com.focusPage("#contractBtn");
+    order.dalanceModal = com.focusPage("#dalanceModal");
+
+    //签订合同
+    order.drawContractModal.on('hide.bs.modal', function (e) {
+        com.cleanItems(order.drawContractItems);
+        com.closeTip();
+    });
+
+    //放线申请
+    order.drawLineModal.on('hide.bs.modal', function (e) {
+        com.cleanItems(order.infoItems);
+        com.closeTip();
+    });
+    
+    //合同终止
+    order.refundContractModal.on('hide.bs.modal', function (e) {
+        com.cleanItems(order.infoItems);
+        com.closeTip();
+    });
+    
+    //客户信息修改
+    order.customerInfoModal.on('hide.bs.modal', function (e) {
+        com.cleanItems(decorationAdvance.items);
+        com.closeTip();
+    });
+    
+    //预签
+    order.prosignModal.on('hide.bs.modal', function (e) {
+        com.cleanItems(order.infoItems);
+        com.closeTip();
+    });
+    
+    //结算
+    order.dalanceModal.on('hide.bs.modal', function (e) {
+    	com.cleanItems(order.infoItems);
+    	com.closeTip();
+    });
 
     order.infoItems.ishovel = com.focusPage("#ishovel");
     order.infoItems.iskey  = com.focusPage("#iskey");
     order.infoItems.isCeremony  = com.focusPage("#isCeremony");
     order.infoItems.comment = com.focusPage("#comment");
+    order.infoItems.applayDes = com.focusPage("#applayDes");
+    order.infoItems.applayTime = com.focusPage("#applayTime");
+    order.infoItems.refundValue = com.focusPage("#refundValue");
+    order.infoItems.prosignPrice = com.focusPage("#prosignPrice");
+    order.infoItems.balance = com.focusPage("#balance");
+    order.infoItems.deocBalance = com.focusPage("#deocBalance");
 
     com.datetime(com.focusPage("#startTime"));
     com.datetime(com.focusPage("#endTime"));
@@ -78,8 +111,8 @@
         }
         com.showConfirm("确认申请放线吗?", function () {
             var options = {
-                "drawLine.content": com.focusPage("#applayDes").val(),
-                "drawLine.applayTime": com.focusPage("#applayTime").val() + " 00:00:00",
+                "drawLine.content": order.infoItems.applayDes.val(),
+                "drawLine.applayTime": order.infoItems.applayTime.val() + " 00:00:00",
                 "drawLine.decoration.orderId": com.focusPage("#dischargeLineOrderId").val(),
             };
 
@@ -139,7 +172,7 @@
         if (com.validate("refundContractModal")) {
             return;
         }
-        var refundValue = com.focusPage("#refundValue").val();
+        var refundValue = order.infoItems.refundValue.val();
 
         var options = {
             "decoration.orderId": params["decoration.orderId"],
@@ -231,8 +264,6 @@
 
     });
 
-
-    initializeContent();
 
     com.post(api.ds.construction, {}, function (res) {
 
@@ -555,7 +586,6 @@
         //放线
         var modalDrawLineModal = function (v, company) {
             contract.decorationOrderId = v.orderId;
-            com.clearValidator();
 
             com.post(api.decoration.queryDecorationContractByOrderId, {"decorationContract.orderId": v.orderId}, function (res) {
                 var ContractRes = res.decorationContract;
@@ -577,8 +607,6 @@
             });
 
             com.cleanItems(order.infoItems);
-            com.focusPage("#applayDes").val("");
-            com.focusPage("#applayTime").val("");
 
             com.focusPage("#dischargeLineOrderId").val(v.orderId);
 
@@ -671,13 +699,6 @@
 
         //签订合同
         function signOrder(orderId, customerId, orderTotalPrice, notSalesmanRate, coupon, thing) {
-            // params["decoration.orderId"] = orderId;
-            // params["customer.customerId"] = customerId;
-            // $("#customerInfoDialog").attr("totalPrice",orderTotalPrice);
-
-            // com.cleanItems(decorationAdvance.items);
-            //
-            // order.customerInfoModal.modal("show");
 
             var cId = params["customer.customerId"];
             //通过订单编号获取默认报价信息
@@ -702,20 +723,18 @@
                     "decorationContract.orderId": orderId
                 };
 
-                com.focusPage("#coupon").html("券优惠 : " + coupon);
-                com.focusPage("#thing").html("物品优惠 : " + thing);
-                com.focusPage("#netperfor").val(netperfor);//净业绩
-                com.focusPage("#comperfor").val(comperfor);//复合业绩
-                //com.focusPage("#netperfor").html("净业绩 : "+ netperfor);
-                //com.focusPage("#comperfor").html("复合业绩 : "+ comperfor);
+                order.drawContractItems.coupon.html("券优惠 : " + coupon);
+                order.drawContractItems.thing.html("物品优惠 : " + thing);
+            	order.drawContractItems.netperfor.val(netperfor);//净业绩
+            	order.drawContractItems.comperfor.val(comperfor);//复合业绩
 
                 com.focusPage("#contractBtn").unbind('click').on("click", function () {
                     if (com.validate("drawContractModal")) {
                         return false;
                     }
 
-                    netperfor = com.focusPage("#netperfor").val();//净业绩
-                    comperfor = com.focusPage("#comperfor").val();//复合业绩
+                    netperfor = order.drawContractItems.netperfor.val();//净业绩
+                    comperfor = order.drawContractItems.comperfor.val();//复合业绩
 
                     options["decorationContract.netperfor"] = netperfor;
                     options["decorationContract.comperfor"] = comperfor;
@@ -780,8 +799,6 @@
                 com.focusPage("#paymentValue").val(refundValue);
                 order.paymentValue = refundValue;
 
-                com.clearValidator();
-
                 order.refundContractModal.modal("show");
             });
         }
@@ -801,14 +818,14 @@
 
         //预签
         function prosignOrder(orderId, precontractPrice) {
-            com.focusPage("#prosignPrice").val(precontractPrice);
+        	order.infoItems.prosignPrice.val(precontractPrice);
             order.prosignModal.modal("show");
 
             com.focusPage("#prosignBtn").unbind('click').on("click", function () {
                 if (com.validate("prosignModal")) {
                     return false;
                 }
-                var prosignVal = com.focusPage("#prosignPrice").val();
+                var prosignVal = order.infoItems.prosignPrice.val();
 
                 var options = {
                     "decoration.orderId": orderId,
@@ -826,8 +843,8 @@
         function balanceOrder(orderId) {
             com.post(api.decoration.queryDecorationBalance, {"decoration.orderId" : orderId}, function (data) {
                 var balance = data.decorationBalance.balance;
-                com.focusPage("#dalanceModal").modal("show");
-                com.focusPage("#deocBalance").val(balance == null ? " " : balance);
+                order.dalanceModal.modal("show");
+                order.infoItems.deocBalance.val(balance == null ? " " : balance);
 
                 com.focusPage("#saveBtnBalance").on("click", function () {
 
@@ -836,16 +853,15 @@
 
                     var options = {
                         "decorationBalance.decoration.orderId" : orderId,
-                        "decorationBalance.balance" : com.focusPage("#balance").val()
+                        "decorationBalance.balance" : order.infoItems.balance.val()
                     };
 
                     com.post(api.decoration.makeDecorationBalance, options, function () {
                         com.showAlert(com.info, "编辑成功");
                     });
-                    com.focusPage("#dalanceModal").modal("hide");
-                })
-                com.clearValidator();
-            })
+                    order.dalanceModal.modal("hide");
+                });
+            });
         }
 
         return {
@@ -901,10 +917,5 @@
 
         });
     });
-
-    //-----------------------------------------------------合同-----------------------------------------
-    function initializeContent() {
-        com.focusPage('#additionalInfo').wysiwyg();
-    }
 
 });

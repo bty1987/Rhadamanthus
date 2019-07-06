@@ -32,7 +32,7 @@ public class CustomerPhoneDaoImpl extends DaoImpl<CustomerPhonePO> implements Cu
 
 		return query.list();
 	}
-	
+
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<CustomerPhonePO> queryCustomerPhoneByPhone(String phone, Short status, Integer company) {
@@ -67,7 +67,7 @@ public class CustomerPhoneDaoImpl extends DaoImpl<CustomerPhonePO> implements Cu
 
 		return query.list();
 	}
-	
+
 	@Override
 	public CustomerPhonePO queryCustomerPhone(Long cid, String phone) {
 		return (CustomerPhonePO) session().createCriteria(CustomerPhonePO.class).add(Restrictions.eq("phone", phone)).add(Restrictions.eq("cid", cid)).uniqueResult();
@@ -75,7 +75,7 @@ public class CustomerPhoneDaoImpl extends DaoImpl<CustomerPhonePO> implements Cu
 
 	@Override
 	public CustomerPhonePO queryCustomerPhoneForDefault(String phone, Integer company) {
-		
+
 		StringBuffer sql = new StringBuffer();
 
 		sql.append("select cp.* ");

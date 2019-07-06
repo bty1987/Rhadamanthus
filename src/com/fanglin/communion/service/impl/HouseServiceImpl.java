@@ -103,7 +103,7 @@ public class HouseServiceImpl implements HouseService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int existHouse(HouseVO houseVO, Integer company) {
-		
+
 		HousePO housePO = houseDao.queryHouseByNoAHnum(houseVO.getVillage().getNo(), houseVO.getHouseNumber(), company);
 
 		if (housePO == null) {
@@ -135,7 +135,7 @@ public class HouseServiceImpl implements HouseService {
 		if (housePO == null) {
 			throw new FLException(320002, "房产不存在");
 		}
-		
+
 		BeanUtil.copyProperties(houseVO, housePO, Arrays.asList("village", "hid", "company", "no", "houseNumber", "built", "unit", "floor", "door"));
 
 		houseDao.update(housePO);

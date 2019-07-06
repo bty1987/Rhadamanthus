@@ -50,15 +50,12 @@ jQuery(function($) {
 		checkBankUtilForGrade: []
 	};
 
-	materialPayment.modals.baseModal.on('show.bs.modal', function(e){
-		com.clearValidator();
-	});
-
 	//隐藏触发
-	materialPayment.modals.baseModal.on('hidden.bs.modal', function () {
+	materialPayment.modals.baseModal.on('hide.bs.modal', function () {
 		materialPayment.bankUtilForGrade = [];
 		materialPayment.checkBankUtilForGrade = [];
 		com.focusPage("#couponUl").html("");
+		com.closeTip();
 	});
 
 	materialPayment.saveBtn.bindClick(function(){

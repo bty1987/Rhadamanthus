@@ -3,11 +3,14 @@ jQuery(function ($) {
     var purchase = {
         pid: params["purchase.pid"],
         items: {
-
             list: com.focusPage('#list'),
-
             createTime: com.focusPage("#createTime"),
             comment: com.focusPage('#comment')
+        },
+        btns:{
+            addPurchaseItem:com.focusPage('#addPurchaseItem'),
+            cancelBtn:com.focusPage('#cancelBtn'),
+            submitBtn:com.focusPage('#submitBtn')
         },
         record: {},
     };
@@ -43,7 +46,7 @@ jQuery(function ($) {
     });
 
     //添加一条空行
-    com.focusPage('#addPurchaseItem').click(function () {
+    purchase.btns.addPurchaseItem.click(function () {
 
         if (com.validate('list', "bottom")) {
             return false;
@@ -57,12 +60,12 @@ jQuery(function ($) {
 
 
     //关闭弹窗
-    com.focusPage('#cancelBtn').click(function () {
+    purchase.btns.cancelBtn.click(function () {
         com.closePopup();
     });
 
     //表单提交
-    com.focusPage('#submitBtn').click(function () {
+    purchase.btns.submitBtn.click(function () {
 
         var options = {
             "purchase.pid": purchase.pid,

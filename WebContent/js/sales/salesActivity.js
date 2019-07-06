@@ -1,11 +1,10 @@
 $(function () {
-
+    
     var salesActivityItem = {
         paramsOrderId : params.orderId,
         ssid : params.sid,
         salesno : params.no,
         activityId : params.activityId,
-
         items: {
             things : com.focusPage("#things"),
             coupons : com.focusPage("#coupons"),
@@ -17,19 +16,12 @@ $(function () {
             activity : com.focusPage("#activity")
         },
         activity: {},
+        activityItemType : {},
         name: {}
     };
 
-    var activityItemType = {};
-
     salesActivityItem.items.content = com.focusPage("#salesActivityItemContent");
     salesActivityItem.salesActivityItemModal = com.focusPage("#salesActivityItemModal").on('show.bs.modal', function (e) {
-        salesActivityItem.items.things.html("");
-        salesActivityItem.items.coupons.html("");
-        salesActivityItem.items.thingsName.val('');
-        salesActivityItem.items.thingsNum.val('');
-        salesActivityItem.items.couponsName.val('');
-        salesActivityItem.items.couponsNum.val('');
         com.resetTypeahead("thingsName", []);
         com.resetTypeahead("couponsName", []);
         com.clearValidator();
@@ -40,7 +32,7 @@ $(function () {
 
     com.post(api.ds.manifest, {}, function (res) {
         $.each(res.salesActivityItemType,function(i,v){
-            activityItemType[v.key]= v.value;
+            salesActivityItem.activityItemType[v.key]= v.value;
         })
     }, null, false);
 
@@ -261,7 +253,7 @@ $(function () {
 
                 var stateLi = $("<li></li>").appendTo(ul);
                 var stateStr = $("<strong></strong>").text("状态:").appendTo(stateLi);
-                var stateSpan = $("<span></span>").addClass("red").attr("id", "money_" + v.saiid).text(activityItemType[v.state]).appendTo(stateLi);
+                var stateSpan = $("<span></span>").addClass("red").attr("id", "money_" + v.saiid).text(salesActivityItem.activityItemType[v.state]).appendTo(stateLi);
 
                 var totalLi = $("<li></li>").appendTo(ul);
                 var totalStr = $("<strong></strong>").text("合计:").appendTo(totalLi);
@@ -417,7 +409,6 @@ $(function () {
         });
     }
 
-
     //修改活动
     com.focusPage("#submitSalesActivityBtn").on("click", function () {
 
@@ -436,7 +427,7 @@ $(function () {
             salesNo(res.sales.activityId);
             com.showAlert(com.info, "修改成功")
         });
-
+        
         salesActivityItem.salesActivityModal.modal("hide");
     });
 
@@ -497,15 +488,20 @@ $(function () {
         }
 
         com.post(api.inventory.addSalesActivityItem, options, function (res) {
-            com.clearValidator();
-            salesActivityItem.items.things.html("");
-            salesActivityItem.items.coupons.html("");
-            salesActivityItem.items.thingsName.val('');
-            salesActivityItem.items.couponsName.val('');
             querySalesActivityItem();
         });
-
         salesActivityItem.salesActivityItemModal.modal("hide");
-
     });
+
+    com.focusPage("#salesActivityModal").on('hide.bs.modal', function () {
+        com.clearValidator();
+    });
+
+    com.focusPage("#salesActivityItemModal").on('hide.bs.modal', function () {
+        salesActivityItem.items.things.html("");
+        salesActivityItem.items.coupons.html("");
+        com.cleanItems(salesActivityItem.items);
+        com.clearValidator();
+    });
+
 });

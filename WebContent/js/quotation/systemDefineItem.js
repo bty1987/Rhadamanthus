@@ -45,7 +45,9 @@ $(function(){
                 ["大类:", v.quotationBigCategory, "red"],
                 ["单位:", v.measurementUnit, "red"],
                 ["工种:", v.itemWorkType, "red"],
-                ["单价:", v.unitPrice, "blue"],
+                ["增补价:", v.addPrice, "blue"],
+                ["原单价:", v.unitPrice, "blue"],
+                ["退减价:", v.subPrice, "blue"],
             ];
 
             $.each(propertyArr, function (index,value) {
@@ -173,7 +175,9 @@ $(function(){
 	systemDefineItem.systemDefineItemItems.measurementUnit = com.focusPage("#measurementUnit");
 	systemDefineItem.systemDefineItemItems.itemWorkType = com.focusPage("#itemWorkType");
 	systemDefineItem.systemDefineItemItems.quotationItemDes = com.focusPage("#quotationItemDes");
+	systemDefineItem.systemDefineItemItems.addPrice = com.focusPage("#addPrice");
 	systemDefineItem.systemDefineItemItems.unitPrice = com.focusPage("#unitPrice");
+	systemDefineItem.systemDefineItemItems.subPrice = com.focusPage("#subPrice");
 	systemDefineItem.systemDefineItemItems.itemId = com.focusPage("#itemId").on("blur",function(){
 		$this = $(this);
 		if($this.val() == ""){
@@ -270,7 +274,9 @@ $(function(){
 		systemDefineItem.systemDefineItemItems.measurementUnit.val(row.measurementUnitId); 
 		
 		systemDefineItem.systemDefineItemItems.quotationItemDes.val(row.quotationItemDes);
-		systemDefineItem.systemDefineItemItems.unitPrice.val(row.unitPrice);	
+		systemDefineItem.systemDefineItemItems.addPrice.val(row.addPrice);
+		systemDefineItem.systemDefineItemItems.unitPrice.val(row.unitPrice);
+		systemDefineItem.systemDefineItemItems.subPrice.val(row.subPrice);
 		systemDefineItem.systemDefineItemItems.itemId.prop("disabled", true);
 
 		systemDefineItem.modal.modal("show"); //弹出弹层
@@ -291,7 +297,9 @@ $(function(){
     		"systemDefineItem.itemWorkTypeId": systemDefineItem.systemDefineItemItems.itemWorkType.val(),
     		"systemDefineItem.itemWorkType": "",
     		"systemDefineItem.quotationItemDes": systemDefineItem.systemDefineItemItems.quotationItemDes.val(),
-    		"systemDefineItem.unitPrice": systemDefineItem.systemDefineItemItems.unitPrice.val()
+    		"systemDefineItem.addPrice": systemDefineItem.systemDefineItemItems.addPrice.val(),
+    		"systemDefineItem.unitPrice": systemDefineItem.systemDefineItemItems.unitPrice.val(),
+    		"systemDefineItem.subPrice": systemDefineItem.systemDefineItemItems.subPrice.val(),
     	};
     	
     	if(systemDefineItem.editFlg) {

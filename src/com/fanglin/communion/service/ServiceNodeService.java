@@ -10,11 +10,11 @@ import com.fanglin.utils.Paging;
 public interface ServiceNodeService {
 
 	public void pageServiceNode(Paging paging, List<Filter> filters, int company);
-	
+
 	public int addServiceNode(ServiceNodeVO serviceNodeVO);
-	
+
 	public int updateServiceNode(ServiceNodeVO serviceNodeVO) throws FLException;
-	
+
 	public int updateServiceNodeForStatus(ServiceNodeVO serviceNodeVO) throws FLException;
-	
+
 }

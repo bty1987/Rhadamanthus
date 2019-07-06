@@ -2,46 +2,48 @@ package com.fanglin.quotation.vo;
 
 import java.io.Serializable;
 
-
-
-public class ExtensionItemVO implements Serializable{
+public class ExtensionItemVO implements Serializable {
 
 	private static final long serialVersionUID = 1874898162310332664L;
-	
-	private Long eiId;
-	
+
+	private Long eiid;
+
 	private Long eid;
-	
+
 	private Short type;
-	
+
 	private Short subtype;
-	
+
 	private String itemName;
-	
+
 	private String measurementUnit;
-	
+
 	private String workType;
+
+	private Float addPrice;
 	
 	private Float unitPrice;
 	
+	private Float subPrice;
+
 	private Float num;
-	
+
 	private Long quotationFunctionAreaId;
-	
+
 	private String quotationFunctionAreaName;
-	
-	private Long quoteItemId ;
-	
+
+	private Long quoteItemId;
+
 	private String content;
-	
+
 	private String quotationType;
 
-	public Long getEiId() {
-		return eiId;
+	public Long getEiid() {
+		return eiid;
 	}
 
-	public void setEiId(Long eiId) {
-		this.eiId = eiId;
+	public void setEiid(Long eiid) {
+		this.eiid = eiid;
 	}
 
 	public Long getEid() {
@@ -51,7 +53,7 @@ public class ExtensionItemVO implements Serializable{
 	public void setEid(Long eid) {
 		this.eid = eid;
 	}
-	
+
 	public Short getType() {
 		return type;
 	}
@@ -84,12 +86,28 @@ public class ExtensionItemVO implements Serializable{
 		this.workType = workType;
 	}
 
+	public Float getAddPrice() {
+		return addPrice;
+	}
+
+	public void setAddPrice(Float addPrice) {
+		this.addPrice = addPrice;
+	}
+
 	public Float getUnitPrice() {
 		return unitPrice;
 	}
 
 	public void setUnitPrice(Float unitPrice) {
 		this.unitPrice = unitPrice;
+	}
+
+	public Float getSubPrice() {
+		return subPrice;
+	}
+
+	public void setSubPrice(Float subPrice) {
+		this.subPrice = subPrice;
 	}
 
 	public Float getNum() {
@@ -99,7 +117,7 @@ public class ExtensionItemVO implements Serializable{
 	public void setNum(Float num) {
 		this.num = num;
 	}
-	
+
 	public String getItemName() {
 		return itemName;
 	}
@@ -147,6 +165,5 @@ public class ExtensionItemVO implements Serializable{
 	public void setQuotationType(String quotationType) {
 		this.quotationType = quotationType;
 	}
-
 
 }

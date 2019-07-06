@@ -13,30 +13,30 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "upgrade", catalog = "communion")
-public class UpgradePO implements Serializable{
+public class UpgradePO implements Serializable {
 
 	private static final long serialVersionUID = -6202041259417390L;
 
 	public static final String COLUMN_NO_STR = "no";
-	
+
 	public static final String COLUMN_TRIALNO_STR = "trialno";
-	
+
 	public static final String COLUMN_CREATETIME_STR = "createTime";
-	
+
 	private long ugid;
-	
+
 	private String no;
-	
+
 	private String trialno;
-	
+
 	private Timestamp createTime;
-	
+
 	private String content;
-	
+
 	private String path;
-	
+
 	private long fileSize;
-	
+
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "ugid")
@@ -47,7 +47,7 @@ public class UpgradePO implements Serializable{
 	public void setUgid(long ugid) {
 		this.ugid = ugid;
 	}
-	
+
 	@Column(name = "no")
 	public String getNo() {
 		return no;
@@ -56,7 +56,7 @@ public class UpgradePO implements Serializable{
 	public void setNo(String no) {
 		this.no = no;
 	}
-	
+
 	@Column(name = "trialno")
 	public String getTrialno() {
 		return trialno;
@@ -92,7 +92,7 @@ public class UpgradePO implements Serializable{
 	public void setPath(String path) {
 		this.path = path;
 	}
-	
+
 	@Column(name = "filesize")
 	public long getFileSize() {
 		return fileSize;

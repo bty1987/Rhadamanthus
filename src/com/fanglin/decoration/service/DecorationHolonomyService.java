@@ -14,5 +14,7 @@ public interface DecorationHolonomyService {
 	public DecorationHolonomyVO queryDecorationHolonomy(DecorationHolonomyVO decorationHolonomyVO);
 
 	public void makeDecorationHolonomy(DecorationHolonomyVO decorationHolonomyVO, String userId) throws FLException;
+	
+	public void updateDecorationHolonomy(DecorationHolonomyVO decorationHolonomyVO, String userId) throws FLException;
 
 }

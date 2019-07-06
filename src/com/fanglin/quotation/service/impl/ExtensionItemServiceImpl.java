@@ -41,10 +41,10 @@ public class ExtensionItemServiceImpl implements ExtensionItemService {
 
 	@Override
 	public List<ExtensionItemVO> queryExtensionItemByEid(ExtensionItemVO extensionItemVO) {
-		
+
 		List<ExtensionItemPO> extensionItemPOs = extensionItemDao.queryExtensionItemByEid(extensionItemVO.getEid());
 		List<ExtensionItemVO> extensionItemVOs = handleExtensionItem(extensionItemPOs);
-		
+
 		return extensionItemVOs;
 	}
 
@@ -54,10 +54,10 @@ public class ExtensionItemServiceImpl implements ExtensionItemService {
 		if (extensionItemIDs == null || extensionItemIDs.size() == 0) {
 			return null;
 		}
-		
+
 		List<ExtensionItemPO> extensionItemPOs = extensionItemDao.queryExtensionItemByEids(extensionItemIDs);
 		List<ExtensionItemVO> extensionItemVOs = handleExtensionItem(extensionItemPOs);
-		
+
 		return extensionItemVOs;
 	}
 
@@ -70,34 +70,34 @@ public class ExtensionItemServiceImpl implements ExtensionItemService {
 		if (extensionPO == null) {
 			throw new FLException(200027, "扩展项不存在");
 		}
-		
+
 		ExtensionItemPO extensionItemPO;
 
 		checkExtensionItemForStatusByOrderId(extensionPO.getOrderId());
 
-		if (extensionItemVO.getEiId() == null) {
-			
+		if (extensionItemVO.getEiid() == null) {
+
 			extensionItemPO = new ExtensionItemPO();
-			
+
 			BeanUtil.copyProperties(extensionItemVO, extensionItemPO, Arrays.asList("quotationFunctionArea"));
-			
+
 			extensionItemPO.setQuotationFunctionArea(new QuotationFunctionAreaPO(extensionItemVO.getQuotationFunctionAreaId()));
 		} else {
-			
-			extensionItemPO = extensionItemDao.get(extensionItemVO.getEiId());
-			
+
+			extensionItemPO = extensionItemDao.get(extensionItemVO.getEiid());
+
 			BeanUtil.copyProperties(extensionItemVO, extensionItemPO, Arrays.asList("quotationFunctionArea"));
-			
+
 			extensionItemPO.setQuotationFunctionArea(new QuotationFunctionAreaPO(extensionItemVO.getQuotationFunctionAreaId()));
 		}
-		
+
 		extensionPO.setTotal(extensionVO.getTotal());
-		
+
 		extensionDao.update(extensionPO);
 		extensionItemDao.saveOrUpdate(extensionItemPO);
-		
-		extensionItemVO.setEiId(extensionItemPO.getEiId());
-		
+
+		extensionItemVO.setEiid(extensionItemPO.getEiid());
+
 		return 0;
 	}
 
@@ -113,7 +113,7 @@ public class ExtensionItemServiceImpl implements ExtensionItemService {
 
 		checkExtensionItemForStatusByOrderId(extensionPO.getOrderId());
 
-		ExtensionItemPO extensionItemPO = extensionItemDao.get(extensionItemVO.getEiId());
+		ExtensionItemPO extensionItemPO = extensionItemDao.get(extensionItemVO.getEiid());
 
 		if (extensionItemPO == null) {
 			throw new FLException(200027, "扩展项不存在");

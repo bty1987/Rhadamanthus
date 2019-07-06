@@ -23,22 +23,22 @@ import com.fanglin.utils.Paging;
 
 @Repository("buildNameRuleDao")
 public class BuildingNameRuleDaoImpl extends DaoImpl<BuildingNameRulePO> implements BuildingNameRuleDao {
-	
-	public BuildingNameRuleDaoImpl(){
+
+	public BuildingNameRuleDaoImpl() {
 		super(BuildingNameRulePO.class, true);
 	}
-	
+
 	@Override
-	public List<BuildingNameRulePO> queryPageBuildingNameRule(Paging paging, List<Filter> filters){
-		
+	public List<BuildingNameRulePO> queryPageBuildingNameRule(Paging paging, List<Filter> filters) {
+
 		PagingQuery<BuildingNameRulePO> query = pagingQuery(paging, BuildingNameRulePO.class);
-		
-		if(filters != null){
-			for(Filter filter: filters){
+
+		if (filters != null) {
+			for (Filter filter : filters) {
 				query.add(query.getCriterion(filter.getField(), filter.getData(), filter.getOp()));
 			}
 		}
-		
+
 		return query.list();
 	}
 

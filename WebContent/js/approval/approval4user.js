@@ -128,12 +128,13 @@ jQuery(function($) {
      * 自定义按钮绑定事件
      */
     com.focusPage('#addApprovalUser', '#pagenation').click(function(){
-        
+        approve.modals.approveModal.modal("show");
+    });
+
+    approve.modals.approveModal.on("hide.bs.modal", function(){
         com.clearValidator();
         com.cleanTypeahead('approver');
         com.cleanItems(approve.items);
-        
-        approve.modals.approveModal.modal("show");
     });
 
     /**

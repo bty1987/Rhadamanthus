@@ -1,9 +1,9 @@
 <div>
     <div class="row">
         <div class="col-xs-12">
-            <div id="condList" class="fl_search clearfix"></div> <!-- 查询条件-->
-            <div id="resultList" class="clearfix tab-pane active"></div> <!--查询结果-->
-            <div id="pagenation" class="fl-page-wrap clearfix"></div> <!--分页-->
+            <div id="condListas" class="fl_search clearfix"></div> <!-- 查询条件-->
+            <div id="resultListas" class="clearfix tab-pane active"></div> <!--查询结果-->
+            <div id="pagenationas" class="fl-page-wrap clearfix"></div> <!--分页-->
         </div>
     </div>
     <div class="modal fade" id="groupUserModal" tabindex="-1">
@@ -14,13 +14,12 @@
                     <h4 class="modal-title" id="myModalLabel">群人员</h4>
                 </div>
                 <div class="modal-body">
-                    <form class="form-horizontal">
+                    <form class="form-horizontal" id="form">
 
                         <div class="form-group">
-                            <label for="userSel" class="col-sm-3 control-label no-padding-right">群人员</label>
+                            <label for="userSel" class="col-sm-3 control-label no-padding-right orange">群人员</label>
                             <div class="col-md-9">
-                                <input type="text" class="col-md-4 v_typeahead v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="userSel" placeholder="群人员">
-                                <span class='star'></span>
+                                <input type="text" class="col-md-4 v_typeahead" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="userSel" placeholder="群人员">
                             </div>
                         </div>
 

@@ -18,78 +18,76 @@ import com.fanglin.utils.SystemConfig;
 @ParentPackage("base")
 @Namespace("/")
 @Controller
-public class DutyAction extends BaseListAction{
+public class DutyAction extends BaseListAction {
 
 	private static final long serialVersionUID = 3246937855994579649L;
 	@Autowired
 	private DutyService dutyService;
-	
+
 	private DutyVO duty;
 
 	private List<DutyVO> dutys;
-	
+
 	@Action(value = "pageDuty", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageDuty(){
-		
+	public String pageDuty() {
+
 		dutyService.pageDuty(getPaging(), getFilters());
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "queryDuty", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryDuty(){
-		
-		dutys=dutyService.queryDuty();
-				
-		
+	public String queryDuty() {
+
+		dutys = dutyService.queryDuty();
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "queryDutyByDtid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryDutyByDtid(){
-		
-		dutys=dutyService.queryDutyByDtid(duty);
-				
-		
+	public String queryDutyByDtid() {
+
+		dutys = dutyService.queryDutyByDtid(duty);
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "addDuty", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addDuty() throws FLException{
-		
-		if(SystemConfig.getString("communion") == null){
-		    throw new FLException(-1, "无操作权限");
+	public String addDuty() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
 		}
-		
+
 		dutyService.addDuty(duty);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "updateDuty", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateDuty() throws FLException{
-		
-		if(SystemConfig.getString("communion") == null){
-		    throw new FLException(-1, "无操作权限");
+	public String updateDuty() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
 		}
-		
+
 		dutyService.updateDuty(duty);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "updateDutyForStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateDutyForStatus() throws FLException{
-		
-		if(SystemConfig.getString("communion") == null){
-		    throw new FLException(-1, "无操作权限");
+	public String updateDutyForStatus() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
 		}
-		
+
 		dutyService.updateDutyForStatus(duty);
-		
+
 		return SUCCESS;
 	}
-	
+
 	public DutyVO getDuty() {
 		return duty;
 	}
@@ -105,6 +103,5 @@ public class DutyAction extends BaseListAction{
 	public void setDutys(List<DutyVO> dutys) {
 		this.dutys = dutys;
 	}
-
 
 }

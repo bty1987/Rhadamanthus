@@ -8,9 +8,9 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.Paging;
 
 public interface MeasurementUnitService {
-	
+
 	public List<MeasurementUnitVO> pageMeasurementUnit(Paging paging, List<Filter> filters);
-	
+
 	public List<MeasurementUnitVO> queryMeasurementUnit();
 
 	public void addMeasurementUnit(MeasurementUnitVO measurementUnitVO) throws FLException;

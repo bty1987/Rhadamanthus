@@ -89,18 +89,16 @@ $(function () {
 
     //追加图片元素
     function appendGalleryElement(galleryId, imgId, imgUrl, type, deleteUrl, updateUrl){
+        
         var gallery = com.focusPage("#" + galleryId);
         var imgLi = $("<li></li>").attr("id", "gallery_li"+imgId).addClass("text-center").attr("data-pid", imgId).css("border-color", "#ddd").appendTo(gallery);
         var img = $('<img />');
         var imgA = $("<a></a>").attr("href", com.showImg(img, imgUrl, 150, 150, '150x150', null, type)).attr("data-rel", "colorbox").css("height", "150px").append(img).appendTo(imgLi);
         var toolsDiv = $("<div></div>").addClass("tools tools-bottom").appendTo(imgLi);
-        var toolsA = $('<a></a>').attr({
-            "data-rel" : "tooltip",//提示框
-            "href" : "javascript:void(0)",
-            "data-original-title" : "向前"//提示框内容
-        }).css({"padding-left" : "6px","text-decoration" : "none"})
-            .append('<i class="icon-arrow-left bigger-110 green"></i>')
-            .tooltip().appendTo(toolsDiv);
+        
+        var toolsA = $('<a></a>').attr({"href" : "javascript:void(0)"}).css({"padding-left" : "6px"}).append('<i class="icon-arrow-left bigger-110 green"></i>').appendTo(toolsDiv).mouseenter(function(){
+            com.showTip(this, "向前", "top");
+        });
 
         toolsA.click(function(){
             //向前移动
@@ -118,13 +116,9 @@ $(function () {
             }
         });
 
-        var toolsB = $("<a></a>").attr({
-            "data-rel" : "tooltip",
-            "href" : "javascript:void(0)",
-            "data-original-title" : "删除"
-        }).css({"padding-left" : "6px","text-decoration" : "none"})
-            .append( '<i class="icon-remove red"></i>')
-            .tooltip().appendTo(toolsDiv);
+        var toolsB = $("<a></a>").attr({"href" : "javascript:void(0)"}).css({"padding-left" : "6px"}).append( '<i class="icon-remove red"></i>').appendTo(toolsDiv).mouseenter(function(){
+            com.showTip(this, "删除", "top");
+        });
 
         toolsB.click(function(){
             var options = {};
@@ -135,13 +129,9 @@ $(function () {
             });
         });
 
-        var toolsC = $("<a></a>").attr({
-            "data-rel" : "tooltip",
-            "href" : "javascript:void(0)",
-            "data-original-title" : "主图"
-        }).css({"padding-left" : "6px","text-decoration" : "none"})
-            .append( '<i class="icon-ok"></i>')
-            .tooltip().appendTo(toolsDiv);
+        var toolsC = $("<a></a>").attr({"href" : "javascript:void(0)"}).css({"padding-left" : "6px"}).append( '<i class="icon-ok"></i>').appendTo(toolsDiv).mouseenter(function(){
+            com.showTip(this, "主图", "top");
+        });
 
         toolsC.click(function(){
             var options = {};
@@ -154,13 +144,9 @@ $(function () {
             });
         });
 
-        var toolsD = $('<a></a>').attr({
-            "data-rel" : "tooltip",
-            "href" : "javascript:void(0)",
-            "data-original-title" : "向后"
-        }).css({"padding-left" : "6px","text-decoration" : "none"})
-            .append( '<i class="icon-arrow-right bigger-110 blue"></i>')
-            .tooltip().appendTo(toolsDiv);
+        var toolsD = $('<a></a>').attr({"href" : "javascript:void(0)"}).css({"padding-left" : "6px"}).append( '<i class="icon-arrow-right bigger-110 blue"></i>').appendTo(toolsDiv).mouseenter(function(){
+            com.showTip(this, "向后", "top");
+        });
 
         toolsD.click(function(){
             //向后移动
@@ -176,7 +162,6 @@ $(function () {
             }else{
                 com.showAlert(com.warning, "当前图片为最后一张,不能再向后更换");
             }
-
         });
         imgA.colorbox(colorboxArgs);
     }

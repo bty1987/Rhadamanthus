@@ -1,35 +1,31 @@
 jQuery(function ($) {
 
     var approve = {
-        saveBtn: null,
-        cancelBtn: null,
-        modal: null,
-        items: {},
+        saveBtn: com.focusPage("#saveBtn"),
+        cancelBtn: com.focusPage("#cancelBtn"),
+
+        modals: {
+            groupUserModal: com.focusPage("#groupUserModal")
+        },
+        items: {
+            userSel: com.focusPage("#userSel"),
+            comment: com.focusPage("#comment")
+        },
+
         gorderId: params.gorderId,
         editFlg: false,
         postParam: {},
     };
 
+    approve.saveBtn.bindClick(saveData);
 
-    approve.saveBtn = com.focusPage("#saveBtn").bindClick(saveData);
-    approve.cancelBtn = com.focusPage("#cancelBtn");
-    approve.modal = com.focusPage("#groupUserModal");
-    approve.items.userSel = com.focusPage("#userSel");
-    approve.items.comment = com.focusPage("#comment");
-    com.post(api.ds.approval, {"timestamp": new Date().getTime()}, function (res) {
-        approve.approvalType = res.approvalType;
-
-        approve.approvalTypeData = {};
-
-        for (var i = 0; i < approve.approvalType.length; i++) {
-            var _ = approve.approvalType[i];
-            approve.approvalTypeData[_["key"]] = _["value"];
-        }
-    }, null, false);
+    approve.modals.groupUserModal.on("hide.bs.modal", function () {
+        com.clearValidator();
+        com.cleanTypeahead('userSel');
+        com.cleanItems(approve.items);
+    });
 
     com.initTypeahead('userSel', api.personel.queryUserByPinyin, "pinyinName", {"user.status": "0", "departmentType.name": ""}, "autoFillKeyValue", "key", "value", null);
-
-    approve.items.type = com.focusPage("#type").bindData(approve.approvalType, "key", "value", false);
 
     var displayFunc = (function () {
 
@@ -96,40 +92,26 @@ jQuery(function ($) {
 
     var searcher = new Searcher();
 
-    searcher.init([], "condList", api.decoration.queryDecorationUser, function (data) {
-        displayFunc.init('resultList', data);
-    }, "pagenation", "groupUserPostData", {"decorationUser.orderId": approve.gorderId}, false, null, function () {
+    searcher.init([], "condListas", api.decoration.queryDecorationUser, function (data) {
+        displayFunc.init('resultListas', data);
+    }, "pagenationas", "groupUserPostData", {"decorationUser.orderId": approve.gorderId}, false, null, function () {
 
-        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addGroupUser').css("margin", "0px 3px");
+        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'addGroupUser').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
-        var $back = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'back').css("margin", "0px 3px");
-        var $$backi = $('<i></i>').addClass('icon-mail-forward bigger-110').appendTo($back);
-        var $$backspan = $('<span></span>').text('返回').appendTo($back);
-
-        return [$adda, $back];
+        return [$adda];
     });
 
-    com.focusPage('a[name="addGroupUser"]', '#pagenation').click(function () {
-        editFlg = false;
-        com.clearValidator();
-        com.cleanTypeahead('userSel');
-        approve.modal.modal("show");
-    });
+    com.focusPage('#addGroupUser', '#pagenationas').click(function () {
+        approve.editFlg = false;
 
-
-    com.focusPage('a[name="back"]', '#pagenation').click(function(){
-        com.switchPage(api.index.crowd.url);
+        approve.modals.groupUserModal.modal("show");
     });
 
     function deleteGroupUser(duid) {
 
-        var options = {
-            "decorationUser.duid": duid
-        };
-
-        com.post(api.decoration.deleteDecorationUser, options, function () {
+        com.post(api.decoration.deleteDecorationUser, {"decorationUser.duid": duid}, function () {
             com.showAlert(com.info, "操作成功");
             searcher.doSearch();
         }, null, false);
@@ -137,23 +119,20 @@ jQuery(function ($) {
 
     function saveData() {
 
-        if (com.validate()) {
-            return;
+        if (com.validate('form')) {
+            return false;
         }
 
-        var url;
         var options = {
             'decorationUser.user.userId': com.typeahead("userSel"),
             'decorationUser.orderId': approve.gorderId,
             'decorationUser.content': approve.items.comment.val()
         };
-        url = api.decoration.addDecorationUser;
 
-        com.post(url, options, function (res) {
+        com.post(api.decoration.addDecorationUser, options, function (res) {
             searcher.doSearch();
         }, null, false);
-
-        approve.modal.modal("hide");
+        approve.modals.groupUserModal.modal("hide");
     }
 
 });

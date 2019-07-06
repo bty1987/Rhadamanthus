@@ -66,14 +66,13 @@ function printProjectTable(){
 
 		$.each(v, function (j, qv){
 
-
 			contentHtml += '<tr bgcolor="#FFFFFF">';
 			contentHtml += '<td width="4%" align="center">' + (j+1) + '</td>';
 			contentHtml += '<td width="18%" align="left">' + qv.itemName+"("+qv.typestr+")" + '</td>';
 			contentHtml += '<td width="5%" align="center">' + qv.measurementUnit + '</td>';
 			contentHtml += '<td width="5%" align="center">' + qv.num + '</td>';
 			contentHtml += '<td width="5%" align="center">' + qv.unitPrice + '</td>';
-			contentHtml += '<td width="5%" align="center"> ' + (utils.accMul(qv.unitPrice,qv.num)) + '</td>';
+			contentHtml += '<td width="5%" align="center"> ' + (utils.accMul(qv.unitPrice, qv.num)) + '</td>';
 			contentHtml += '<td width="52%" align="left">' + (qv.content ? qv.content : '-') + '</td>';
 			contentHtml += '</tr>';
 		});
@@ -140,7 +139,6 @@ function printFinanceTable(){
 		contentHtml += '</tr>';
 		$.each(v, function (j, qv){
 
-
 			contentHtml += '<tr align="center" bgcolor="#FFFFFF">';
 			contentHtml += '<td>' + (j+1) + '</td> ';
 			contentHtml += '<td>' + qv.itemName+"("+qv.typestr+")" + '</td>';
@@ -151,14 +149,12 @@ function printFinanceTable(){
 
 			contentHtml += '<td>' + qv._discountNum + '</td>';
 
-
-
-			contentHtml += '<td>' + qv.dcp + '</td>';
-			contentHtml += '<td>' + qv.dcpt + '</td>';
+			contentHtml += '<td>' + qv.unitPrice + '</td>';
+			contentHtml += '<td>' + qv.quotationTotalPrice + '</td>';
 			contentHtml += '</tr>';
 
-			sum = sum + qv.dcpt;
-			discountPrice = discountPrice + qv.dcpt;
+			sum = sum + qv.quotationTotalPrice;
+			discountPrice = discountPrice + qv.quotationTotalPrice;
 			preSum = preSum + qv.quotationTotalPrice;
 
 			preDiscountPrice = preDiscountPrice + qv.quotationTotalPrice;
@@ -171,10 +167,10 @@ function printFinanceTable(){
 		contentHtml += '<td>&nbsp;</td>';
 		contentHtml += '<td>&nbsp;</td>';
 		contentHtml += '<td>&nbsp;</td>';
-		contentHtml += '<td><span class="STYLE2"><strong>' + Math.round(preSum * 1000) / 1000 + '</strong></span></td>';
+		contentHtml += '<td><span class="STYLE2"><strong>' + utils.changeTwoDecimal(preSum) + '</strong></span></td>';
 		contentHtml += '<td>&nbsp;</td>';
 		contentHtml += '<td>&nbsp;</td>';
-		contentHtml += '<td><span class="STYLE2"><strong>' + Math.round(sum * 1000) / 1000 + '</strong></span></td>';
+		contentHtml += '<td><span class="STYLE2"><strong>' + utils.changeTwoDecimal(sum) + '</strong></span></td>';
 		contentHtml += '</tr>';
 		contentHtml += '';
 		index++;
@@ -245,7 +241,7 @@ function printCustomerTable(subtype,companyfullname,orderType){
                 contentHtml += '<td width="4%" align="center">' + (j+1) + '</td>';
                 contentHtml += '<td width="18%" align="left">' + qv.itemName + '</td>';
                 contentHtml += '<td width="4%" align="center">' + (qv.type == 4 ? "项" : qv.measurementUnit) + '</td>';
-                contentHtml += '<td width="3%" align="center">' + (qv.type==4 ? 1 : qv.num) + '</td>';
+                contentHtml += '<td width="3%" align="center">' + (qv.type == 4 ? 1 : qv.num) + '</td>';
                 contentHtml += '<td width="5%" align="center">' + qv.dcp + '</td>';
                 contentHtml += '<td width="5%" align="center">' + qv.dcpt + '</td>';
                 contentHtml += '<td width="62%" align="left">' + (qv.content ? qv.content : "-") + '</td>';
@@ -376,7 +372,6 @@ function printWorkTable(workType){
 
 		$.each(v, function (j, qv){
 
-
 			contentHtml += '<tr bgcolor="#FFFFFF">';
 			contentHtml += '<td width="8%" align="center">' + (itemIndex+1) + '</td>';
 			contentHtml += '<td width="22%" align="center">' + qv.areaName + '</td>';
@@ -412,7 +407,6 @@ function printWorkTable(workType){
 }
 jQuery(function($) {
 
-	//Api().init('../../js/api/');
 	var params = {};
 
 	api = parent.api;
@@ -428,30 +422,6 @@ jQuery(function($) {
 
 	var addReduceItemtypeDict = {"0" : "普通", "1" : "系统", "2" : "自定义", "3" : "报价中", "4": "增项","5":"扩展项"};
 	
-/*	var type,subtype, p = window.location.search.substr(1);
-	
-	if(p.indexOf('time=') != -1){
-		//params.loginTime = p.substring(p.indexOf('time=')).split('=')[1];
-		params.loginTime = parent.params.loginTime;
-	}
-	
-	$.each(p.split('&'), function(i, v){
-		if(v.indexOf('type=') != -1){
-			type = v.substring(v.indexOf('type=')).split('=')[1];
-		}
-	});
-
-	$.each(p.split('&'), function(i, v){
-		if(v.indexOf('orderType=') != -1){
-			decorationDetail.orderType = v.substring(v.indexOf('orderType=')).split('=')[1];
-		}
-	});
-
-	$.each(p.split('&'), function(i, v){
-		if(v.indexOf('subtype=') != -1){
-			subtype = v.substring(v.indexOf('subtype=')).split('=')[1];
-		}
-	});*/
 	quotationUtils.quotationDetail = {};
 	var url = api.quotation.queryQuotationById;
 

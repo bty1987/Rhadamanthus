@@ -11,17 +11,18 @@ public class DutyVO implements Serializable {
 	private String name;
 
 	private Short status;
-	
+
 	private DepartmentTypeVO departmentType;
-							 
+
 	private Integer type;
-	
+
 	private Short lead;
-	
+
 	public DutyVO() {
 		super();
-		
+
 	}
+
 	public DutyVO(DepartmentTypeVO departmentType) {
 		super();
 		this.departmentType = departmentType;

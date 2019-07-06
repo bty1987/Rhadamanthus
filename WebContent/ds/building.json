@@ -185,6 +185,8 @@
 		{"key":"-", "value":"-"},
 		{"key":"座", "value":"座"},
 		{"key":"门", "value":"门"}
+	],"cardType": [
+	"身份证", "军官证", "护照"
 	],
 	"errorCode": 0,
 	"errorMsg": null

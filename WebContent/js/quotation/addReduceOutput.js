@@ -1,5 +1,6 @@
 
 jQuery(function($) {
+    
 	var params = {};
 
 	api = parent.api;
@@ -19,30 +20,10 @@ jQuery(function($) {
 		reduceItems: {}
 	};
 	var reduceNums = {};
-	var $addReduceItems = {};
-	var _addReduceIds = [];
+	var $addReduceItems = [];
+	var _addReduceIds = params.addReduceIds; //上一页面选中要打印的增减项
 	var _orderId = params.decorationOrderId;
-	//Api().init('../../js/api/');
-
-
-	/*		var p = window.location.search.substr(1);
-
-	if(p.indexOf('time=') != -1){
-		params.loginTime = parent.params.loginTime;
-	}
-
-	$.each(p.split('&'), function(i, v){
-		if(v.indexOf('orderType=') != -1){
-			$decorationType = v.substring(v.indexOf('orderType=')).split('=')[1];
-		}
-		if(v.indexOf('addReduceIds[' + i + ']=') != -1){
-			_addReduceIds.push(parseInt(v.substring(v.indexOf('addReduceIds[' + i + ']=')).split('=')[1]));
-		}
-		if(v.indexOf('quotation.orderId=') != -1){
-			_orderId = v.substring(v.indexOf('quotation.orderId=')).split('=')[1];
-		}
-	});*/
-	_addReduceIds = params.addReduceIds; //上一页面选中要打印的增减项
+	
 	var url = api.quotation.queryQuotationForDefaultByOrderId;
 	
 	//查询该订单的信息
@@ -51,19 +32,24 @@ jQuery(function($) {
 	}, null ,false);
 
 	var $addReduceIds = {};
-	var $manage = [];
+	var $manage = {};
+	
 	//通过订单编号获取增减项信息 查出该订单下所有的增减项
 	url = api.addReduce.queryAddReduceByOrderId;
 	com.post(url, {"addReduce.orderId":_orderId}, function (res) {
-		var addReduces = res.addReduces;
-		$.each(addReduces, function (i, v) {
+		$.each(res.addReduces, function (i, v) {
+		    
+		    if(_addReduceIds.indexOf(v.arId) == -1) return true;
+		    
+		    addReduceDetail.addItems[v.arId + "-" + v.type] = [];
+		    
 			$addReduceIds["addReduceIds[" + i + "]"] = v.arId;
 			if (params.addReduceIds.indexOf(v.arId) >= 0) {
-                $manage.push({"arId":v.arId,"manageRate":v.manageRate,"managePrice":v.managePrice})
+                $manage[v.arId] = {"arId": v.arId, "manageRate": v.manageRate, "managePrice": v.managePrice};
 			}
 		});
 	}, null, false);
-
+	
 	//通过增减项ID列表获取增减项中包含的报价项信息
 	url = api.addReduce.queryAddReduceItemByAddReduceIds;
 	com.post(url, $addReduceIds, function (res) {
@@ -80,85 +66,61 @@ jQuery(function($) {
 	//从所有的增减项中的报价详情中筛选出合适的报价并进行计算和处理
 	function calAddReduceSum(){
 
-		//该订单下全部的增减项
-		var addReduceItems = $addReduceItems;
-		var addReduceItemLength = addReduceItems.length;
-
 		var discount = addReduceDetail.quotation.discount;
+		
+		$.each($addReduceItems, function(i, v){
+		    
+		    var addReduceItem = v;
+		    
+		    var arId = addReduceItem.arId;
+		    var unitPrice = v.unitPrice;
+		    var type = v.type;
+		    var num = v.num;
+		    
+		    var quoteItemId = addReduceItem.quoteItemId;
 
-		for(var i=0;i<addReduceItemLength;i++){
+            //type = 4 是增项中的报价项  没有type = 4时reduceNums空的
+            if ([4].indexOf(type) != -1) {
+                if (reduceNums[quoteItemId]) {
+                    reduceNums[quoteItemId] = utils.accAdd(reduceNums[quoteItemId], num);
+                } else {
+                    reduceNums[quoteItemId] = num;
+                }
+            }
+            
+            // 增项不打折 , 减项打折
+            // 装修单为半包/全包类型 , 减项 , 根据项目打折标记进行判断
+            // 装修单为满减类型 , 减项 , 全部打折
+            // 打折标识 , 0/2表示不打折 , 1/3表示打折 , 0/1表示配比 , 2/3表示非配比
 
-			var addReduceItem = addReduceItems[i];
+            var _type = [1, 3, 4].indexOf(type) != -1 ? 1 : 0; // 减项类型/增项类型
+            var _discount = ([1, 3].indexOf(type) != -1 && ([1, 3].indexOf(addReduceItem.discount) != -1 || [2, 3, 4].indexOf($decorationType) != -1)) ? utils.accDiv(discount, 10) : 1;
+            var _dcp = utils.accMul(unitPrice, _discount);
+            var _total = utils.accMul(num ,  _dcp); // 计算总价
 
-			//type = 4 是增项中的报价项  没有type = 4时reduceNums空的
-			if ([4].indexOf(addReduceItem.type) != -1) {
-				if (reduceNums[addReduceItem.quoteItemId]) {
-					reduceNums[addReduceItem.quoteItemId] = utils.accAdd(reduceNums[addReduceItem.quoteItemId], addReduceItem.num);
-				} else {
-					reduceNums[addReduceItem.quoteItemId] = addReduceItem.num;
-				}
-			}
-
-			//unitPrice单价
-			var _dcp = utils.changeTwoDecimal(addReduceItem.unitPrice);
-			//1:系统定义项 3:报价中报价项
-			if([1, 3].indexOf(addReduceItem.type) != -1){
-
-				_dcp = utils.changeTwoDecimal(utils.accMul( _dcp,
-					(addReduceItem.discount == 1 || $decorationType == 2 || $decorationType == 3 ? utils.accDiv(discount, 10) : 1)
-				));
-			}
-			//0:普通报价项 2:自定义项 4:增项中报价项 并且是半价的单子
-			else if([0, 2, 4].indexOf(addReduceItem.type) != -1 && ($decorationType == 2 || $decorationType == 3)){
-				//_dcp =  utils.changeTwoDecimal(utils.changeTwoDecimal(utils.accMul(_dcp,utils.accDiv(config.addreduceDiscount, 10))));
-			}
-
-			/*if(addReduceItem.quotationFunctionAreaType == 3 && [3].indexOf(addReduceItem.type) != -1){
-				_dcp = 0;
-			}*/
-			
-			//计算总价
-			var total = utils.changeTwoDecimal(utils.accMul(addReduceItem.num ,  _dcp));
-
-			addReduceItem.dcp = _dcp;
-			addReduceItem.total = total;
-			
-			if(_addReduceIds.indexOf(addReduceItem.arId) != -1) {
-
-				if (addReduceItem.type == 0 || addReduceItem.type == 2) { // 增项
-					if(!addReduceDetail.addItems[addReduceItem.arId+'-工程增项']){
-						addReduceDetail.addItems[addReduceItem.arId+'-工程增项'] = [];
-					}
-
-					addReduceDetail.addItems[addReduceItem.arId+'-工程增项'].push(addReduceItem);
-
-				} else { // 减项
-					if(!addReduceDetail.addItems[addReduceItem.arId+'-工程减项']){
-						addReduceDetail.addItems[addReduceItem.arId+'-工程减项'] = [];
-					}
-
-					addReduceDetail.addItems[addReduceItem.arId+'-工程减项'].push(addReduceItem);
-				}
-				//选择增减项对应的增减项详情
-			}
-
-		}
+            addReduceItem.dcp = utils.changeThrDecimal(_dcp);
+            addReduceItem.total = utils.changeThrDecimal(_total);
+            
+            if(_addReduceIds.indexOf(arId) != -1) {
+                addReduceDetail.addItems[arId + "-" + _type].push(addReduceItem);
+            }
+		});
 
         $.each(addReduceDetail.addItems, function (i, e) {
-            var arId = i.substring(0, i.indexOf('-'));
-            $.each($manage, function (k, v) {
-                if ($manage[k].arId == arId && $manage[k].managePrice){
-                	var manage = {
-                		"arId": arId,
-						"itemName": "管理费",
-						"quotationFunctionAreaName": "-",
-						"measurementUnit": "-",
-						"num": "-",
-						"unitPrice": "-",
-						"total":$manage[k].managePrice
-					};
-                    addReduceDetail.addItems[i].push(manage);
-                }
+            
+            var arId = i.split('-')[0];
+            var manage = $manage[arId];
+            
+            if(!manage) return true;
+            
+            addReduceDetail.addItems[i].push({
+                "arId": arId,
+                "itemName": "管理费",
+                "quotationFunctionAreaName": "-",
+                "measurementUnit": "-",
+                "num": "-",
+                "unitPrice": "-",
+                "total": manage.managePrice
             });
         })
 	}
@@ -169,10 +131,14 @@ jQuery(function($) {
 		var addReduceTotalPrice = 0;
 		var html = "";
 		$.each(addReduceItems, function (i, v) {
+		    
 			var addReduceType = i.split('-')[1];
 			var addReduceTotal = 0;
 			var index = 1;
-			html += addReduceType;
+			
+			var typeName = addReduceType == '1' ? '减项' : '增项'
+			
+			html += typeName;
 			html += '<table width="100%" border="1" cellpadding="1" cellspacing="0" style="FONT-SIZE: 14px">';
 			html += '<tbody><tr bgcolor="#FFFFFF" align="center">';
 			html += '<td width="5%">序号</td>';
@@ -206,9 +172,9 @@ jQuery(function($) {
             });
 
 			html += '</tbody></table>';
-			html += addReduceType + '金额:' + utils.changeThrDecimal(addReduceTotal)  + '元';
+			html += typeName + '金额:' + utils.changeThrDecimal(addReduceTotal)  + '元';
 			html += '<hr><p></p>';
-			addReduceTotalPrice = utils.changeThrDecimal(utils.accAdd(addReduceType == '工程减项' ? utils.changeThrDecimal(-addReduceTotal) : utils.changeThrDecimal(addReduceTotal),addReduceTotalPrice));
+			addReduceTotalPrice = utils.changeThrDecimal(utils.accAdd(addReduceType == '1' ? utils.changeThrDecimal(-addReduceTotal) : utils.changeThrDecimal(addReduceTotal),addReduceTotalPrice));
 		});
 		
 		$("#labSumMoney").html("工程最终增减合计金额:" + utils.changeThrDecimal(addReduceTotalPrice) + "元");

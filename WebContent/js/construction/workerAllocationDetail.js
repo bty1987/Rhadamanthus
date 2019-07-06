@@ -58,10 +58,6 @@ $(function () {
 
     com.focusPage('[data-rel=popover]').popover({html: true});
 
-    com.focusPage('#btnBack').on(ace.click_event, function () {
-        com.switchPage(api.index.workerAllocationIndex.url);
-    });
-
     function initWizardSept(operate, schedule) {
 
         addActive(schedule);
@@ -130,7 +126,6 @@ $(function () {
 
             com.focusPage("#" + operate + "WorkerSubmit").unbind("click");
             com.focusPage("#" + operate + "WorkerSubmit").on("click", function () {
-                console.log(com.focusPage("#" + operate + "WorkerName"))
 
                 if (com.focusPage("#" + operate + "WorkerName").val().replace(/\s+/g, "") == "") {
                     com.showAlert(com.error, "工人名称不能为空");
@@ -143,7 +138,6 @@ $(function () {
                 args["constructer.user.userId"] = com.focusPage('#' + operate + "WorkerName").attr("data-typeahead-key");
 
                 com.post(api.construction.addConstructer, args, function (res) {
-                    console.log(res)
                     setWorkerUrl(operate, res);
                 });
 

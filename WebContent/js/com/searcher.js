@@ -298,12 +298,8 @@ var Searcher = function(){
 
                         if(_reg){
                             if(!(_reg.reg).test(_inputValue)){
-                                $input.addClass('tooltip-info').attr({
-                                    "data-rel" : "tooltip",
-                                    "data-placement" : "top",
-                                    "data-original-title" : _reg.msg
-
-                                }).tooltip('show');
+                                
+                                com.showTip($input, _reg.msg, "top");
 
                                 _params = null;
                                 return false;
@@ -469,12 +465,8 @@ var Searcher = function(){
 
                     if(_reg){
                         if(!(_reg.reg).test(_inputValue)){
-                            $input.addClass('tooltip-info').attr({
-                                "data-rel" : "tooltip",
-                                "data-placement" : "top",
-                                "data-original-title" : _reg.msg
-
-                            }).tooltip('show');
+                            
+                            com.showTip($input, _reg.msg, "top");
 
                             _params = null;
                             return false;

@@ -2,7 +2,6 @@ $(function () {
 
     var settlement = {
         pid: params["purchase.pid"],
-        refund: com.focusPage('#refund'),
         modals: {
             miniPopUp: com.focusPage('#miniPopUp'),
         },
@@ -14,12 +13,9 @@ $(function () {
             backBtn: com.focusPage('#backBtn'),
             importBtn: com.focusPage('#importBtn'),
             addBtn: com.focusPage('#addBtn'),
+            submitBtn:com.focusPage('#submitBtn')
         }
     };
-
-    settlement.refund.focus(function () {
-        settlement.refund.popover('destroy');
-    });
 
     settlement.btns.backBtn.click(function () {
         com.closePopup();
@@ -119,9 +115,9 @@ $(function () {
         settlement.modals.miniPopUp.attr('data-sstu', "1");
     });
 
-    com.focusPage('#submitBtn').click(function () {
+    settlement.btns.submitBtn.click(function () {
         savaData();
-        com.closePopup(com.focusPage("#submitBtn"));
+        com.closePopup(com.focusPage("#submitBtn", "#miniPopUp"));
     });
 
     function savaData() {

@@ -26,38 +26,38 @@ import com.fanglin.utils.Paging;
 @Repository("brandDao")
 public class BrandDaoImpl extends DaoImpl<BrandPO> implements BrandDao {
 
-	public BrandDaoImpl(){
-		super(BrandPO.class); 
+	public BrandDaoImpl() {
+		super(BrandPO.class);
 	}
-	
+
 	@Override
-	public List<BrandPO> pageBrand(Paging paging, List<Filter> filters,int company) {
-		
+	public List<BrandPO> pageBrand(Paging paging, List<Filter> filters, int company) {
+
 		PagingQuery<BrandPO> query = pagingQuery(paging, BrandPO.class);
 		query.add(Restrictions.eq("company", company));
 
-		queryFilterExcute(query,filters);
-		
+		queryFilterExcute(query, filters);
+
 		return query.list();
 	}
 
 	@Override
-	public List<BrandPO> pageBrandByPinYinName(Paging paging, String pinyinName,int company) {
-		
+	public List<BrandPO> pageBrandByPinYinName(Paging paging, String pinyinName, int company) {
+
 		PagingQuery<BrandPO> query = pagingQuery(paging, BrandPO.class);
-		
+
 		query.add(Restrictions.or(Restrictions.ilike(BrandPO.COLUMN_NAME_STR, pinyinName, MatchMode.ANYWHERE), Restrictions.ilike(BrandPO.COLUMN_PINYIN_STR, pinyinName, MatchMode.ANYWHERE)));
 		query.add(Restrictions.eq("company", company));
-		
+
 		return query.list();
 	}
-	
-	private void queryFilterExcute(PagingQuery<?> query,List<Filter> filters){
-		if(filters != null){
-			for(Filter filter:filters){
-				if(BrandPO.COLUMN_CATEGORYNO_STR.equals(filter.getField())){
+
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
+		if (filters != null) {
+			for (Filter filter : filters) {
+				if (BrandPO.COLUMN_CATEGORYNO_STR.equals(filter.getField())) {
 					query.add(query.getCriterion("category.cid", Long.valueOf(filter.getData()), filter.getOp()));
-				}else{
+				} else {
 					query.add(query.getCriterion(filter.getField(), filter.getData(), filter.getOp()));
 				}
 			}

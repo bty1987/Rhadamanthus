@@ -13,48 +13,52 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "extensionitem", catalog = "quotation")
-public class ExtensionItemPO implements Serializable{
+public class ExtensionItemPO implements Serializable {
 
 	private static final long serialVersionUID = 6856979622166928634L;
-	
+
 	public static final String COLUMN_EID_STR = "eid";
-	
-	private long eiId;
-	
+
+	private long eiid;
+
 	private long eid;
-	
+
 	private String itemName;
-	
+
 	private short type;
-	
+
 	private short subtype;
-	
+
 	private String measurementUnit;
-	
+
 	private String workType;
+
+	private float addPrice;  //增补价
 	
-	private float unitPrice;
+	private float unitPrice; // 原单价
 	
+	private float subPrice;  //退减价
+
 	private float num;
-	
+
 	private QuotationFunctionAreaPO quotationFunctionArea;
-	
-	private long quoteItemId ;
-	
+
+	private long quoteItemId;
+
 	private String content;
-	
+
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "eiId")
-	public long getEiId() {
-		return eiId;
+	@Column(name = "eiid")
+	public long getEiid() {
+		return eiid;
 	}
 
-	public void setEiId(long eiId) {
-		this.eiId = eiId;
+	public void setEiid(long eiid) {
+		this.eiid = eiid;
 	}
-	
-	@Column(name = "eId")
+
+	@Column(name = "eid")
 	public long getEid() {
 		return eid;
 	}
@@ -62,7 +66,7 @@ public class ExtensionItemPO implements Serializable{
 	public void setEid(long eid) {
 		this.eid = eid;
 	}
-	
+
 	@Column(name = "itemName")
 	public String getItemName() {
 		return itemName;
@@ -98,6 +102,7 @@ public class ExtensionItemPO implements Serializable{
 	public void setMeasurementUnit(String measurementUnit) {
 		this.measurementUnit = measurementUnit;
 	}
+
 	@Column(name = "workType")
 	public String getWorkType() {
 		return workType;
@@ -106,6 +111,16 @@ public class ExtensionItemPO implements Serializable{
 	public void setWorkType(String workType) {
 		this.workType = workType;
 	}
+
+	@Column(name = "addPrice")
+	public float getAddPrice() {
+		return addPrice;
+	}
+
+	public void setAddPrice(float addPrice) {
+		this.addPrice = addPrice;
+	}
+
 	@Column(name = "unitPrice")
 	public float getUnitPrice() {
 		return unitPrice;
@@ -114,6 +129,16 @@ public class ExtensionItemPO implements Serializable{
 	public void setUnitPrice(float unitPrice) {
 		this.unitPrice = unitPrice;
 	}
+
+	@Column(name = "subPrice")
+	public float getSubPrice() {
+		return subPrice;
+	}
+
+	public void setSubPrice(float subPrice) {
+		this.subPrice = subPrice;
+	}
+
 	@Column(name = "num")
 	public float getNum() {
 		return num;
@@ -122,8 +147,9 @@ public class ExtensionItemPO implements Serializable{
 	public void setNum(float num) {
 		this.num = num;
 	}
-	@javax.persistence.ManyToOne(fetch=FetchType.LAZY)
-	@javax.persistence.JoinColumn(name="quotationFunctionAreaId", referencedColumnName="qfaId")
+
+	@javax.persistence.ManyToOne(fetch = FetchType.LAZY)
+	@javax.persistence.JoinColumn(name = "quotationFunctionAreaId", referencedColumnName = "qfaId")
 	public QuotationFunctionAreaPO getQuotationFunctionArea() {
 		return quotationFunctionArea;
 	}
@@ -131,7 +157,7 @@ public class ExtensionItemPO implements Serializable{
 	public void setQuotationFunctionArea(QuotationFunctionAreaPO quotationFunctionArea) {
 		this.quotationFunctionArea = quotationFunctionArea;
 	}
-	
+
 	@Column(name = "quoteItemId")
 	public long getQuoteItemId() {
 		return quoteItemId;
@@ -140,6 +166,7 @@ public class ExtensionItemPO implements Serializable{
 	public void setQuoteItemId(long quoteItemId) {
 		this.quoteItemId = quoteItemId;
 	}
+
 	@Column(name = "content")
 	public String getContent() {
 		return content;
@@ -148,5 +175,5 @@ public class ExtensionItemPO implements Serializable{
 	public void setContent(String content) {
 		this.content = content;
 	}
-	
+
 }

@@ -22,6 +22,11 @@ $(function () {
     };
 
     salary.saveBtn.bindClick(saveData);
+    salary.modals.salaryModal.on('hide.bs.modal', function (e) {
+		com.cleanTypeahead('salaryuser');
+     	com.closeTip();
+        com.cleanItems(salary.items);
+    });
 
     com.initTypeahead('salaryuser', api.personel.queryUserByPinyin, "pinyinName", {"user.status": "0"}, "autoFillKeyValue", "key", "value",function(list,key,value){
         return value;
@@ -132,7 +137,6 @@ $(function () {
 
     com.focusPage('a[name="add"]', '#pagenation').on("click", function () {
 
-        com.cleanItems(salary.items);
         salary.modals.salaryModal.modal("show");
 
         cleanType([1, 2, 3, 4]);
@@ -165,9 +169,6 @@ $(function () {
                 });
             });
         });
-
-        com.cleanTypeahead('salaryuser');
-        com.clearValidator();
     });
 
     function adoptstatus(sid) {
@@ -233,12 +234,9 @@ $(function () {
             };
             com.post(api.salary.addSalary, options, function (res) {
                 searcher.doSearch();
-                com.cleanItems(salary.items);
-                com.clearValidator();
                 com.showAlert(com.info, "添加成功");
             });
             salary.modals.salaryModal.modal("hide");
-            com.cleanTypeahead('salaryuser');
         }
     }
 

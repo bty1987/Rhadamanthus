@@ -19,33 +19,34 @@ import com.fanglin.core.action.BaseListAction;
 public class QuotationTypeAction extends BaseListAction {
 
 	private static final long serialVersionUID = 2171262476853496669L;
-	
+
 	@Autowired
 	private QuotationTypeService quotationTypeService;
-	
+
 	private List<QuotationTypeVO> quotationTypes;
-	
-	@Action(value="queryQuotationType", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryQuotationType(){
-		
+
+	@Action(value = "queryQuotationType", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryQuotationType() {
+
 		quotationTypes = quotationTypeService.queryQuotationType();
-		
-		return SUCCESS;
-	}
-	@Action(value="pageQuotationType", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String pageQuotationType(){
-		
-		quotationTypeService.pageQuotationType(getPaging(), getFilters());
-	    
+
 		return SUCCESS;
 	}
 
-	public List<QuotationTypeVO> getQuotationTypes(){
+	@Action(value = "pageQuotationType", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageQuotationType() {
+
+		quotationTypeService.pageQuotationType(getPaging(), getFilters());
+
+		return SUCCESS;
+	}
+
+	public List<QuotationTypeVO> getQuotationTypes() {
 		return quotationTypes;
 	}
 
-	public void setQuotationTypes(List<QuotationTypeVO> quotationTypes){
+	public void setQuotationTypes(List<QuotationTypeVO> quotationTypes) {
 		this.quotationTypes = quotationTypes;
 	}
-	
+
 }

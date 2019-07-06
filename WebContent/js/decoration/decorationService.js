@@ -18,6 +18,11 @@ jQuery(function($) {
     decorationService.serviceItems.comment = com.focusPage('#comment');
 
     decorationService.serviceModal = com.focusPage("#serviceModal");
+    
+    decorationService.serviceModal.on('hide.bs.modal', function (e) {
+    	com.cleanItems(decorationService.serviceItems);
+    	com.closeTip();
+	});
 
     drawTable(decorationService.decorationOrderId);
 

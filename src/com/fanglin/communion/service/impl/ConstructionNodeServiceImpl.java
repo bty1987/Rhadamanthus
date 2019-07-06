@@ -24,7 +24,7 @@ public class ConstructionNodeServiceImpl implements ConstructionNodeService {
 
 	@Autowired
 	private ConstructionNodeDao constructionNodeDao;
-	
+
 	@Autowired
 	private DecorationDao decorationDao;
 
@@ -33,15 +33,15 @@ public class ConstructionNodeServiceImpl implements ConstructionNodeService {
 
 		List<ConstructionNodePO> constructionNodePOs = constructionNodeDao.pageConstructionNode(paging, filters, company);
 		List<ConstructionNodeVO> constructionNodeVOs = new ArrayList<ConstructionNodeVO>();
-		
+
 		ConstructionNodeVO constructionNodeVO;
 
 		if (constructionNodePOs != null) {
 			for (ConstructionNodePO constructionNodePO : constructionNodePOs) {
 				constructionNodeVO = new ConstructionNodeVO();
-				
+
 				BeanUtil.copyProperties(constructionNodePO, constructionNodeVO);
-				
+
 				constructionNodeVOs.add(constructionNodeVO);
 			}
 		}
@@ -55,14 +55,14 @@ public class ConstructionNodeServiceImpl implements ConstructionNodeService {
 
 		List<ConstructionNodePO> constructionNodePOs = constructionNodeDao.queryConstructionNode(company);
 		List<ConstructionNodeVO> constructionNodeVOs = new ArrayList<ConstructionNodeVO>();
-		
+
 		ConstructionNodeVO constructionNodeVO;
 
 		for (ConstructionNodePO constructionNodePO : constructionNodePOs) {
 			constructionNodeVO = new ConstructionNodeVO();
-			
+
 			BeanUtil.copyProperties(constructionNodePO, constructionNodeVO);
-			
+
 			constructionNodeVOs.add(constructionNodeVO);
 		}
 
@@ -71,23 +71,23 @@ public class ConstructionNodeServiceImpl implements ConstructionNodeService {
 
 	@Override
 	public List<ConstructionNodeVO> queryConstructionNodeByOrderId(String orderId) throws FLException {
-		
+
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
-		
+
 		if (decorationPO == null) {
 			throw new FLException(140013, "订单不存在");
 		}
-		
+
 		List<ConstructionNodePO> constructionNodePOs = constructionNodeDao.queryConstructionNode(decorationPO.getCompany());
 		List<ConstructionNodeVO> constructionNodeVOs = new ArrayList<ConstructionNodeVO>();
-		
+
 		ConstructionNodeVO constructionNodeVO;
 
 		for (ConstructionNodePO constructionNodePO : constructionNodePOs) {
 			constructionNodeVO = new ConstructionNodeVO();
-			
+
 			BeanUtil.copyProperties(constructionNodePO, constructionNodeVO);
-			
+
 			constructionNodeVOs.add(constructionNodeVO);
 		}
 

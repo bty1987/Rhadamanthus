@@ -2,26 +2,107 @@
 jQuery(function($) {
     
 	var createHouseSource = {
+
+		btns: {
+			
+			saveBtn: com.focusPage("#saveBtn"),
+			cancelBtn: com.focusPage("#cancelBtn"),
+			deployedBtn: com.focusPage("#deployedBtn"),
+			createCustomerSaveBtn: com.focusPage("#createCustomerSaveBtn")
+			
+		},
+
+		modals: {
+
+			customerModal: com.focusPage("#customerModal")
+
+		},
+
+		items: {
+			
+			customerId: com.focusPage("#customerId"),
+			hsType: com.focusPage("#hsType"),
+			sourceType: com.focusPage("#sourceType"),
+			deedNum: com.focusPage("#deedNum"),
+			deedValue: com.focusPage("#deedValue"),
+			unitPrice: com.focusPage("#unitPrice"),
+			totalPrice: com.focusPage("#totalPrice"),
+			decorateTime: com.focusPage("#decorateTime"),
+			decorateDegree: com.focusPage("#decorateDegree"),
+			discussType: com.focusPage("#discussType"),
+			rentType: com.focusPage("#rentType"),
+			indoores: com.focusPage("#indoores"),
+			history: com.focusPage("#history"),
+			propertyFee: com.focusPage("#propertyFee"),
+			elevator: com.focusPage("#elevator"),
+			onlyHousing: com.focusPage("#onlyHousing"),
+			documentsDate: com.focusPage("#documentsDate"),
+			allowLoan: com.focusPage("#allowLoan"),
+			beingLoan: com.focusPage("#beingLoan"),
+			checkingTime: com.focusPage("#checkingTime"),
+			followId: com.focusPage("#followId"),
+			keyerId: com.focusPage("#keyerId"),
+			housingGrade: com.focusPage("#housingGrade"),
+			comment: com.focusPage("#comment"),
+			gender: com.focusPage("#gender")
+			
+		},
+		
+		customerItems: {
+			
+			customerName: com.focusPage("#customerName"),
+			cardType: com.focusPage("#cardType"),
+			cardNum: com.focusPage("#cardNum"),
+			gender: com.focusPage("#gender"),
+			qq: com.focusPage("#qq"),
+			wechat: com.focusPage("#wechat"),
+			email: com.focusPage("#email"),
+			relationshipType: com.focusPage("#relationshipType"),
+			address: com.focusPage("#address"),
+			phone: com.focusPage("#phone")
+			
+		},
+
+		houseItems: {
+
+			villageId: com.focusPage("#villageId"),
+			rule: com.focusPage("#rule"),
+			built: com.focusPage("#built"),
+			unit: com.focusPage("#unit"),
+			floor: com.focusPage("#floor"),
+			door: com.focusPage("#door"),
+			builtrule: com.focusPage("#builtrule"),
+			unitrule: com.focusPage("#unitrule"),
+			floorrule: com.focusPage("#floorrule"),
+			doorrule: com.focusPage("#doorrule"),
+			type: com.focusPage("#type"),
+			buildArea: com.focusPage("#buildArea"),
+			maxFloor: com.focusPage("#maxFloor"),
+			through: com.focusPage("#through"),
+			houseTypeOne: com.focusPage("#houseTypeOne"),
+			houseTypeTwo: com.focusPage("#houseTypeTwo"),
+			houseTypeThr: com.focusPage("#houseTypeThr"),
+			houseTypeFour: com.focusPage("#houseTypeFour"),
+			orientation: com.focusPage("#orientation"),
+			feature: com.focusPage("#feature"),
+			waterVapour: com.focusPage("#waterVapour"),
+			parlourType: com.focusPage("#parlourType"),
+			heatingType: com.focusPage("#heatingType"),
+			oldhousetype: com.focusPage("#oldhousetype")
+			
+		},
+
 		houseSources: {},
-		saveBtn: null,
-		cancelBtn: null,
-		deployedBtn: null,
-		createCustomerSaveBtn: null,
 		modal: null,
 		nameRuleList: [],
 		rulenum: [],
 		valideteresult: {},
 		rulefill: null,
-		items: {},
+
 		editFlg: false,
-		houseItems: {},
-		customerItems: {},
 		houseSourceId: null,
 		customerId: null,
 		houseNumber: null,
-		housingGrade: ["A", "B", "C", "D"],
-		cardType: ["身份证", "军官证", "护照"],
-		history: ["正常", "特殊"],
 		houseId: null,
 		buildingJson:null,
 		repeatFlg: false,
@@ -31,89 +112,41 @@ jQuery(function($) {
 		cardFlag: false,
 		isAddHouseSource: true
 	};
-	
+
 	com.focusPage('#fl-statement').statement("房源", "创建房源");
 
-	com.initTag("indoores");
-	com.initTag("feature");
+	com.datetime(createHouseSource.items.decorateTime);
+	com.datetime(createHouseSource.items.documentsDate);
+	com.datetime(createHouseSource.items.checkingTime);
 
-	com.focusPage("#history").bindData(createHouseSource.history);
-	com.focusPage("#cardType").bindData(createHouseSource.cardType);
-	com.focusPage("#housingGrade").bindData(createHouseSource.housingGrade);
-	
-	com.datetime(com.focusPage(".date-picker"), "date");
+	createHouseSource.modals.customerModal.on("hide.bs.modal", function(){
 
-	createHouseSource.modal = com.focusPage("#createHouseSource");
-	createHouseSource.modal.on('show.bs.modal',function(e){
-		com.clearValidator();
+		com.cleanItems(createHouseSource.customerItems);
+		com.closeTip();
 	});
 
-	createHouseSource.items.gender = com.focusPage("#gender").switchBtn("gender");
+	createHouseSource.items.gender.switchBtn("gender");
+	createHouseSource.btns.saveBtn.bindClick(addHouseSource);
+	createHouseSource.btns.cancelBtn.on("click", deleteDate);
+	createHouseSource.btns.createCustomerSaveBtn.on("click", createCustomer);
 
-	createHouseSource.saveBtn = com.focusPage("#saveBtn").bindClick(addHouseSource);
-	createHouseSource.cancelBtn = com.focusPage("#cancelBtn").on("click", deleteDate);
-	createHouseSource.createCustomerSaveBtn = com.focusPage("#createCustomerSaveBtn").on("click", createCustomer);
+	com.post(api.ds.building, {}, function (res) {
+		createHouseSource.history = res.history.split("key", "value");
 
-	createHouseSource.items.customerId = com.focusPage("#customerId");
-	createHouseSource.items.hsType = com.focusPage("#hsType");
-	createHouseSource.items.sourceType = com.focusPage("#sourceType");
-	createHouseSource.items.deedNum = com.focusPage("#deedNum");
-	createHouseSource.items.deedValue = com.focusPage("#deedValue");
-	createHouseSource.items.unitPrice = com.focusPage("#unitPrice");
-	createHouseSource.items.totalPrice = com.focusPage("#totalPrice");
-	createHouseSource.items.decorateTime = com.focusPage("#decorateTime");
-	createHouseSource.items.decorateDegree = com.focusPage("#decorateDegree");
-	createHouseSource.items.discussType = com.focusPage("#discussType");
-	createHouseSource.items.rentType = com.focusPage("#rentType");
-	createHouseSource.items.indoores = com.focusPage("#indoores");
-	createHouseSource.items.history = com.focusPage("#history");
-	createHouseSource.items.propertyFee = com.focusPage("#propertyFee");
-	createHouseSource.items.elevator = com.focusPage("#elevator");
-	createHouseSource.items.onlyHousing = com.focusPage("#onlyHousing");
-	createHouseSource.items.documentsDate = com.focusPage("#documentsDate");
-	createHouseSource.items.allowLoan = com.focusPage("#allowLoan");
-	createHouseSource.items.beingLoan = com.focusPage("#beingLoan");
-	createHouseSource.items.checkingTime = com.focusPage("#checkingTime");
-	createHouseSource.items.followId = com.focusPage("#followId");
-	createHouseSource.items.keyerId = com.focusPage("#keyerId");
-	createHouseSource.items.housingGrade = com.focusPage("#housingGrade");
-	createHouseSource.items.comment = com.focusPage("#comment");
+		createHouseSource.items.history.bindData(res.history, "key", "value", false);
+	});
 
-	createHouseSource.customerItems.customerName = com.focusPage("#customerName");
-	createHouseSource.customerItems.cardType = com.focusPage("#cardType");
-	createHouseSource.customerItems.cardNum = com.focusPage("#cardNum");
-	createHouseSource.customerItems.gender = com.focusPage("#gender");
-	createHouseSource.customerItems.qq = com.focusPage("#qq");
-	createHouseSource.customerItems.wechat = com.focusPage("#wechat");
-	createHouseSource.customerItems.email = com.focusPage("#email");
-	createHouseSource.customerItems.relationshipType = com.focusPage("#relationshipType");
-	createHouseSource.customerItems.address = com.focusPage("#address");
-	createHouseSource.customerItems.phone = com.focusPage("#phone");
+	com.post(api.ds.building, {}, function (res) {
+		createHouseSource.cardType = res.cardType;
 
-	createHouseSource.houseItems.no = com.focusPage("#no");
-	createHouseSource.houseItems.rule = com.focusPage("#rule");
-	createHouseSource.houseItems.built = com.focusPage("#built");
-	createHouseSource.houseItems.unit = com.focusPage("#unit");
-	createHouseSource.houseItems.floor = com.focusPage("#floor");
-	createHouseSource.houseItems.door = com.focusPage("#door");
-	createHouseSource.houseItems.builtrule = com.focusPage("#builtrule");
-	createHouseSource.houseItems.unitrule = com.focusPage("#unitrule");
-	createHouseSource.houseItems.floorrule = com.focusPage("#floorrule");
-	createHouseSource.houseItems.doorrule = com.focusPage("#doorrule");
-	createHouseSource.houseItems.type = com.focusPage("#type");
-	createHouseSource.houseItems.buildArea = com.focusPage("#buildArea");
-	createHouseSource.houseItems.maxFloor = com.focusPage("#maxFloor");
-	createHouseSource.houseItems.through = com.focusPage("#through");
-	createHouseSource.houseItems.houseTypeOne = com.focusPage("#houseTypeOne");
-	createHouseSource.houseItems.houseTypeTwo = com.focusPage("#houseTypeTwo");
-	createHouseSource.houseItems.houseTypeThr = com.focusPage("#houseTypeThr");
-	createHouseSource.houseItems.houseTypeFour= com.focusPage("#houseTypeFour");
-	createHouseSource.houseItems.orientation = com.focusPage("#orientation");
-	createHouseSource.houseItems.feature = com.focusPage("#feature");
-	createHouseSource.houseItems.waterVapour = com.focusPage("#waterVapour");
-	createHouseSource.houseItems.parlourType = com.focusPage("#parlourType");
-	createHouseSource.houseItems.heatingType = com.focusPage("#heatingType");
-	createHouseSource.houseItems.oldhousetype = com.focusPage("#oldhousetype");
+		createHouseSource.customerItems.cardType.bindData(res.cardType, "key", "value", false);
+	});
+
+	com.post(api.ds.building, {}, function (res) {
+		createHouseSource.housingGrade = res.grade.split("key", "value");
+
+		createHouseSource.items.housingGrade.bindData(res.grade, "key", "value", false);
+	});
 
 	com.post(api.ds.building, {}, function(res){
 		createHouseSource.items.hsType.bindData(res.hsType, "key", "value");
@@ -194,16 +227,14 @@ jQuery(function($) {
 	//检查电话号是否已存在
 	createHouseSource.customerItems.phone = com.focusPage("#phone").on("blur", function(){
 		$this = $(this);
-		void 0 == $this.val() || "" == $this.val().trim() ? (com.showPopover(com.focusPage("#phone"),{errorMsg: "电话号码不能为空"}, "right"), createHouseSource.repeatFlg = false) : com.post(api.data.checkCustomerForPhone, {
+		void 0 == $this.val() || "" == $this.val().trim() ? (com.showTip(com.focusPage("#phone"), "电话号码不能为空", "right"), createHouseSource.repeatFlg = false) : com.post(api.data.checkCustomerForPhone, {
 			"customerPhone.phone": $this.val(),
 			"customerPhone.status": 0
 		}, function(res) {
-			createHouseSource.customerRepeatFlg = true;
-			com.showPopover(com.focusPage("#phone"),{errorMsg: "电话号码已存在"}, "right");
-
-		}, function(res){
 			createHouseSource.customerRepeatFlg = false;
-			com.focusPage("#phone").css("border", "1px solid #d5d5d5").popover("destroy")
+		}, function(res){
+			createHouseSource.customerRepeatFlg = true;
+			com.showTip(com.focusPage("#phone"), "电话号码已存在", "right");
 		});
 	});
 
@@ -224,8 +255,7 @@ jQuery(function($) {
 
 	//创建客户
 	com.focusPage("#createCustomer").click(function(){
-		com.cleanItems(createHouseSource.customerItems);
-		com.focusPage("#customerModal").modal("show");
+		createHouseSource.modals.customerModal.modal("show");
 	});
 
 	//编辑OR添加
@@ -315,18 +345,6 @@ jQuery(function($) {
 		}
 
 		var customerOptions = {};
-		switch(com.focusPage("#cardType").val())
-		{
-			case "身份证":
-				customerOptions["customer.identity"]  = com.focusPage("#cardNum").val();
-				break;
-			case "军官证":
-				customerOptions["customer.officer"] = com.focusPage("#cardNum").val();
-				break;
-			case "护照":
-				customerOptions["customer.passport"] = com.focusPage("#cardNum").val();
-				break;
-		}
 
 		customerOptions["customer.name"] =  createHouseSource.customerItems.customerName.val();
 		customerOptions["customer.gender"] = com.genderType[createHouseSource.customerItems.gender.prop("checked")];
@@ -341,7 +359,7 @@ jQuery(function($) {
 			com.showAlert(com.info, "创建用户成功");
 			createHouseSource.customerId = res.customer.cid;
 
-			com.focusPage("#customerModal").modal("hide");
+			createHouseSource.modals.customerModal.modal("hide");
 
 		}, function(e){
 			com.showAlert(com.warning, "客户电话已存在");
@@ -350,7 +368,7 @@ jQuery(function($) {
 
 	//清除数据
 	function deleteDate(){
-	    
+
 		houseItemsReadOnlyFlag(false);
 		
 		com.cleanTypeahead("followId");
@@ -362,12 +380,11 @@ jQuery(function($) {
 		createHouseSource.houseItems.rule.html("");
 		com.focusPage("#ohousetype").css("display", "none");
 		com.focusPage("#nhousetype").removeAttr("style");
-		
+
 		com.cleanItems(createHouseSource.items);
 		com.cleanItems(createHouseSource.houseItems);
 		com.cleanItems(createHouseSource.customerItems);
 		
-		com.clearValidator();
 	}
 
 	//删除房产数据
@@ -395,26 +412,24 @@ jQuery(function($) {
 
 			com.post(api.building.checkHouseSource, hsOptions, function(data){
 				createHouseSource.houseFlag = false;
-				com.showPopover(com.focusPage("#door"),{errorMsg: "该房源已存在"}, "bottom");
-			}, function(res){
-				createHouseSource.houseFlag = false;
 				//绑定房产数据
 				bindHouseData(houses);
 				houseItemsReadOnlyFlag(true);
-				com.focusPage("#door").css("border", "1px solid #d5d5d5").popover("destroy");
+			}, function(res){
+				createHouseSource.houseFlag = false;
+				com.showTip(com.focusPage("#door"), "该房源已存在", "bottom");
 			}, false);
 		}else{
 			createHouseSource.houseFlag = true;
 			//deleteHouseData();
 			houseItemsReadOnlyFlag(false);
-			com.focusPage("#" + inputId).css("border", "1px solid #d5d5d5").popover("destroy");
 		}
 	}
 
 	//绑定房产数据
 	function bindHouseData(houses){
 	    
-	    com.updateTypeahead("no", houses.village.no, houses.village.name);
+	    com.updateTypeahead("villageId", houses.village.no, houses.village.name);
 	    
 		com.focusPage("#nhousetype").css("display", "none");
 		com.focusPage("#ohousetype").removeAttr("style");
@@ -436,14 +451,12 @@ jQuery(function($) {
 		if( cardParam.val() != "" ){
 			if(reg.test(cardParam.val()) == false){
 				createHouseSource.cardFlag = true;
-				com.showPopover(cardParam,{errorMsg: "请输入正确的证件号码"}, "right");
+				com.showTip(cardParam, "请输入正确的证件号码", "right");
 			}else{
 				createHouseSource.cardFlag = false;
-				cardParam.css("border", "1px solid #d5d5d5").popover("destroy")
 			}
 		}else{
 			createHouseSource.cardFlag = false;
-			cardParam.css("border", "1px solid #d5d5d5").popover("destroy")
 		}
 	}
 
@@ -472,7 +485,6 @@ jQuery(function($) {
 				createHouseSource.houseItems.unitrule.get(0).selectedIndex = 0;
 				createHouseSource.houseItems.floorrule.get(0).selectedIndex = 0;
 				createHouseSource.houseItems.doorrule.get(0).selectedIndex = 0;
-				com.focusPage("#door").popover("destroy");
 				deleteHouseData();
 				break;
 		}
@@ -496,7 +508,24 @@ jQuery(function($) {
 	}
 
 	function  validatehouse(){
-		createHouseSource.valideteresult = houseUtils.anytimevalidate(createHouseSource.houseItems, null, false);
+
+		var validateresult={};
+
+		if(createHouseSource.houseItems.villageId.val() == "" ){
+			com.showTip(createHouseSource.houseItems.no, "请先选择楼盘!", "right");
+		}
+
+		validateresult.rulenum = [
+			createHouseSource.houseItems.built.val().trim().toUpperCase(), createHouseSource.houseItems.builtrule.val(),
+			createHouseSource.houseItems.unit.val().trim().toUpperCase(), createHouseSource.houseItems.unitrule .val(),
+			createHouseSource.houseItems.floor.val().trim().toUpperCase(), createHouseSource.houseItems.floorrule.val(),
+			createHouseSource.houseItems.door.val().trim().toUpperCase(), createHouseSource.houseItems.doorrule.val()];
+
+		validateresult.houseNumber =houseUtils.creatHouseNumber(validateresult.rulenum);
+
+		validateresult.prehouse = houseUtils.validatehouse(com.typeahead("villageId"),validateresult.houseNumber,null,createHouseSource.houseItems.errMsg,false);
+
+		createHouseSource.valideteresult = validateresult;
 
 		if(createHouseSource.valideteresult.prehouse != undefined){
 			createHouseSource.HFlag = createHouseSource.valideteresult.prehouse.Flag;

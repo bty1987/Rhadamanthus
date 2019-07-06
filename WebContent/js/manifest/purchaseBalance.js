@@ -7,8 +7,7 @@ $(function(){
     	status: {},
     	balanceStatus: {},
     };
-    com.focusPage('.date-picker').datepicker(com.datepickerdefault);
-    
+
     com.post(api.ds.manifest, {}, function(res){
     	
     	$.each(res.purchaseStatus, function(i, v){

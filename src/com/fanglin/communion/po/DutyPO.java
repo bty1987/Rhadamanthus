@@ -18,42 +18,40 @@ import javax.persistence.Table;
 public class DutyPO implements Serializable {
 
 	private static final long serialVersionUID = -5885986511194210020L;
-	
+
 	public static final String COLUMN_DID_STR = "did";
 
 	public static final String COLUMN_NAME_STR = "name";
-	
+
 	public static final String COLUMN_STATUS_STR = "status";
-	
+
 	public static final short COLUMN_STATUS_INT = 0;
-	
+
 	private long did;
 
 	private String name;
 
 	private short status;
-	
-	private DepartmentTypePO departmentType;
-	
-	private int type;
-	
-	private short lead;
 
+	private DepartmentTypePO departmentType;
+
+	private int type;
+
+	private short lead;
 
 	public DutyPO() {
 		super();
 	}
-	
+
 	public DutyPO(long did) {
 		super();
 		this.did = did;
 	}
 
 	public DutyPO(DepartmentTypePO departmentType) {
-	
+
 		this.departmentType = departmentType;
 	}
-
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -76,7 +74,7 @@ public class DutyPO implements Serializable {
 	public String getName() {
 		return name;
 	}
-	
+
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -89,7 +87,7 @@ public class DutyPO implements Serializable {
 	public void setStatus(short status) {
 		this.status = status;
 	}
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "departmentType", referencedColumnName = "dtid")
 	public DepartmentTypePO getDepartmentType() {
@@ -108,7 +106,7 @@ public class DutyPO implements Serializable {
 	public void setType(int type) {
 		this.type = type;
 	}
-	
+
 	@Column(name = "lead")
 	public short getLead() {
 		return lead;

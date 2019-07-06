@@ -5,13 +5,13 @@ public class CategoryVO implements java.io.Serializable {
 	private static final long serialVersionUID = 3848977556963217583L;
 
 	private Long cid;
-	
+
 	private String no;
-	
+
 	private String name;
-	
+
 	private String kino;
-	
+
 	private String kiname;
 
 	public Long getCid() {

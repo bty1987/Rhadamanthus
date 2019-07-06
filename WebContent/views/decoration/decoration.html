@@ -70,10 +70,13 @@
                                        data-date-format="yyyy-mm-dd" data-toggle="popover" data-trigger='manual'/>
                             </div>
                         </div>
-                        <div class="form-group" style="padding: 0 10px;">
-                            <div class="wysiwyg-editor" id="additionalInfo"></div>
-                        </div>
-                    </form>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right">说明</label>
+							<div class="col-sm-9">
+								<textarea class="col-sm-5" rows="4" id="additionalInfo" maxlength="64"></textarea>
+							</div>
+						</div>
+					</form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" id="saveAdditionalInfoBtn" class="btn btn-primary">保存</button>
@@ -210,23 +213,17 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right" for="netperfor">净业绩</label>
+                            <label class="col-sm-3 control-label no-padding-right orange" for="netperfor">净业绩</label>
                             <div class="col-sm-9">
-                                <input type="text" maxlength="64" id="netperfor"
-                                       class="col-xs-10 col-sm-6 v_decorationNumberAll v_required" data-toggle="popover"
-                                       data-trigger='manual'/>
-                                <span class='star'></span>
+                                <input type="text" maxlength="64" id="netperfor" class="col-xs-10 col-sm-6 v_afloat_3 v_required" data-toggle="popover" data-trigger='manual'/>
                             </div>
                         </div>
                         <div class="space-4"></div>
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right" for="comperfor">复合业绩</label>
+                            <label class="col-sm-3 control-label no-padding-right orange" for="comperfor">复合业绩</label>
                             <div class="col-sm-9">
-                                <input type="text" maxlength="64" id="comperfor"
-                                       class="col-xs-10 col-sm-6 v_decorationNumberAll v_required" data-toggle="popover"
-                                       data-trigger='manual'/>
-                                <span class='star'></span>
+                                <input type="text" maxlength="64" id="comperfor" class="col-xs-10 col-sm-6 v_afloat_3 v_required" data-toggle="popover" data-trigger='manual'/>
                             </div>
                         </div>
                         <div class="space-4"></div>
@@ -335,12 +332,9 @@
                 <div class="modal-body">
                     <form class="form-horizontal">
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right" for="netperfor">预签额</label>
+                            <label class="col-sm-3 control-label no-padding-right orange" for="netperfor">预签额</label>
                             <div class="col-sm-9">
-                                <input type="text" maxlength="64" id="prosignPrice"
-                                       class="col-xs-10 col-sm-6 v_decorationNumberAll v_required" data-toggle="popover"
-                                       data-trigger='manual'/>
-                                <span class='star'></span>
+                                <input type="text" maxlength="64" id="prosignPrice" class="col-xs-10 col-sm-6 v_afloat_3 v_required" data-toggle="popover" data-trigger='manual'/>
                             </div>
                         </div>
                         <div class="space-4"></div>

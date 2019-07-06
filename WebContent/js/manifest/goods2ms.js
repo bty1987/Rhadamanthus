@@ -172,7 +172,7 @@ $(function () {
                 $input = $('<input>').prop({
                     'type': 'text',
                     'autocomplete': 'off'
-                }).attr('data-toggle', 'popover').attr('data-placement', 'bottom').addClass('editable v_required v_number');
+                }).attr('data-placement', 'bottom').addClass('editable v_required v_float');
                 $cell.append($input);
             }
 
@@ -186,55 +186,6 @@ $(function () {
 
     addline(1).addClass('current').appendTo($list);
 
-    function checkRowValue($line, packageName) {
-
-        var flag = true;
-
-        var _inputNum = $line.find('.inputNum input');
-        var _num = $line.find('.number').text();
-        var inputRex = /^\d+$/;
-
-        if (packageName == "合并") {
-            if (!(_inputNum.val() > 0 && inputRex.test(_inputNum.val()))) {
-
-                _inputNum.focus().select();
-
-                _inputNum.addClass('popover-notitle').attr({
-                    "data-rel": "popover",
-                    "data-placement": "top",
-                    "data-original-title": "",
-                    "title": "",
-                    "data-content": "数量填写不正确"
-
-                }).popover('show');
-
-                flag = false;
-            } else {
-                _inputNum.popover('destroy');
-            }
-        } else {
-            if (!(_inputNum.val() > 0 && inputRex.test(_inputNum.val()) && parseInt(_inputNum.val()) <= parseInt(_num))) {
-
-                _inputNum.focus().select();
-
-                _inputNum.addClass('popover-notitle').attr({
-                    "data-rel": "popover",
-                    "data-placement": "top",
-                    "data-original-title": "",
-                    "title": "",
-                    "data-content": "数量填写不正确"
-
-                }).popover('show');
-
-                flag = false;
-            } else {
-                _inputNum.popover('destroy');
-            }
-        }
-
-        return flag;
-    }
-
     com.focusPage('.layui-layer-content').css('overflow', 'hidden');
 
     $btnConfirm.click(function (e) {
@@ -242,8 +193,6 @@ $(function () {
         if (com.validate('splitList', 'bottom') || com.validate('mergeList', 'bottom')) {
             return;
         }
-
-        //if(checkRowValue($list,$btnConfirm.text())){
 
         var gid = _goodsStorehouseStock.goods.gid;
         var cid = _goodsStorehouseStock.color.cid;
@@ -273,7 +222,6 @@ $(function () {
                 com.showAlert(com.info, "操作成功");
             })
         }
-        //}
     })
 
 });

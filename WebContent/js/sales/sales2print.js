@@ -7,14 +7,7 @@ $(function () {
         amountInTotal:0,
         numberOfCases:0
     };
-
-    api = parent.api;
-    config = parent.config;
-    server = parent.server;
-    utils = parent.utils;
-    com = parent.com;
-    $ = parent.$;
-
+    
     var trList = com.focusPage('#resultList');
     var $amountInTotal = com.focusPage('#amountInTotal');
     var $numberOfCases = com.focusPage('#numberOfCases');
@@ -62,9 +55,7 @@ $(function () {
             var $td = $('<td width="101" valign="top" style="width:150pt;border:solid windowtext 1.0pt;border-bottom:solid black 1.0pt;padding:0cm 5.4pt 0cm 5.4pt;height:30.0pt;text-align: center;line-height: 30.0pt;text-align: center;line-height: 30.0pt"></td>').html(value);
             $td.appendTo(tr);
         });
-
         return tr;
     }
-
 });
 

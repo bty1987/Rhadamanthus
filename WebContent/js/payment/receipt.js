@@ -2,15 +2,22 @@ jQuery(function ($) {
     receipt = {
         paymentTypes: {},
         receiptTypes: {},
-        items: {}
+        items: {
+            executeDates: com.focusPage("#executeDates"),
+            executeTimes: com.focusPage("#executeTimes")
+        },
+        modals: {
+            receiptModal: com.focusPage("#receiptModal")
+        }
     };
-
-    receipt.items.executeDates = com.focusPage("#executeDates");
-    receipt.items.executeTimes = com.focusPage("#executeTimes");
 
     com.datetime(com.focusPage("#executeDates"));
 
     com.datetime(com.focusPage('#executeTimes'), "time");
+
+    receipt.modals.receiptModal.on('hide.bs.modal', function () {
+        com.closeTip();
+    });
 
     com.post(api.ds.payment, {}, function (res) {
         var paymentTypes = res.receiptPaymentType;

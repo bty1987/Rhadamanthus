@@ -2,13 +2,11 @@ $(function(){
 //定义全局变量  json
     var  task= {
         saveBtn: com.focusPage("#addTaskBtn").on("click", saveData),//绑定事件
-        cancelBtn: null,
-        modal: com.focusPage("#addtaskModal").on("show.bs.modal", function(a) {
-            com.clearValidator();
-        }),
+        modals: {
+            addTaskModal: com.focusPage("#addtaskModal")
+        },
         
         cancelBtn : com.focusPage("#cancelTaskBtn"),
-        modal : com.focusPage("#addtaskModal"),
         
         taskItems : {
 	        name : com.focusPage("#taskName"),
@@ -18,8 +16,6 @@ $(function(){
 	        plugins : com.focusPage("#plugins"),
 	        isShow : com.focusPage("#isShow"),
         },
-    
-        taskItems: {},
         editFlg: false,
         taskType:["python","shell"],
         isShow:["显示","不显示"],
@@ -33,8 +29,13 @@ $(function(){
                 errorMsg: "请输入A-Z,如两位以上用,分隔"}// 正数或负数 小数3位
         }
     };
-    $.extend(com.validator, taskRegular.validator);
 
+    task.modals.addTaskModal.on("hide.bs.modal", function(a) {
+        com.cleanItems(task.taskItems);
+        com.clearValidator();
+    });
+
+    $.extend(com.validator, taskRegular.validator);
 
     /**
      * 回调函数必须提供 init(tableId, result.list)方法
@@ -94,7 +95,19 @@ $(function(){
 
             //编辑按钮的点击事件
             $btnEdit.click(function(){
-                edit(v);
+
+                task.editFlg=true;
+                task.taskItems.tid = v.tid;
+                task.taskItems.tasktype.val(v.type);
+                task.taskItems.filepath.val(v.filepath);
+                task.taskItems.name.val(v.name);
+                task.taskItems.handle.val(v.handle);
+                task.taskItems.isShow.val(v.isShow);
+
+                task.modals.addTaskModal.modal("show");
+
+                task.saveBtn.addClass("hide");
+
             });
 
 
@@ -121,38 +134,29 @@ $(function(){
         };
     })();
 
-
     var taskSeacher = new Searcher();
-
     taskSeacher.init( ["taskName"], "condList", api.information.pageTask, function(data){
         displayFunc.init('resultList', data);
     }, "pagenation", "taskPostData", null, false, null, function(){
 
-        var $adda = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'addTask').css("margin", "0px 3px");
+        var $adda = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('id', 'addTask').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span ></span>').text('添加').appendTo($adda);
 
         return [$adda];
     });
 
-    //编辑
-    function edit(row){
-        task.modal.modal("show"); //弹出弹层
-        task.editFlg=true;
-        task.taskItems.tid = row.tid;
-        task.taskItems.tasktype.val(row.type);
-        task.taskItems.filepath.val(row.filepath);
-        task.taskItems.name.val(row.name);
-        task.taskItems.handle.val(row.handle);
-        task.taskItems.isShow.val(row.isShow);
-        com.focusPage("#addTaskBtn").addClass("hide");
-    //$("#addTaskBtn"  ,'.modal-footer').css({"display":"none"});
-    }
-    //保存
+    com.focusPage('#addTask' , '#pagenation').on("click",function(){
+
+        task.modals.addTaskModal.modal("show");
+        task.saveBtn.removeClass("hide");
+        task.editFlg = false;
+
+    });
+
     function saveData(){
 
-        if(com.validate())
-            return;
+        if(com.validate('addtaskModal'))  return false;
         var url;
 
         var options = {
@@ -173,50 +177,32 @@ $(function(){
 
         com.post(url, options, successCallback);
 
-        task.modal.modal("hide");
+        task.modals.addTaskModal.modal("hide");
     }
 
-    //添加
-    com.focusPage('[name="addTask"]' , '#pagenation').on("click",function(){  //选择器 [属性名="属性值"]  匿名函数
-
-        com.cleanItems(task.taskItems);
-        task.modal.modal("show");
-        com.focusPage("#addTaskBtn").removeClass("hide");
-        // com.focusPage("#addTaskBtn"  ,'.modal-footer').css({"display":"none"});
-        task.editFlg = false;
-
-    });
-
-    //启用禁用功能
     function updateStatus(id, status, failcallBack) {
 
         com.post(api.information.updateTaskForStatus, {
             "task.tid": id,
             "task.status": status
-        }, function () {
-
-        }, function () {
+        }, null, function () {
             failcallBack && failcallBack();
         });
     }
 
-    //显示与不显示
     function updateIsShow(id,isShow,failcallBack){
 
         com.post(api.information.updateTaskForIsShow, {
             "task.tid": id,
             "task.isShow": isShow
-        },function(){
-
-        },function () {
+        },null,function () {
             failcallBack && failcallBack();
         });
 
     }
-    //刷新
+
     function successCallback(){
-        //$('button.btn-search','#condList').click();//调用成功后,执行查询操作
-        taskSeacher.doSearch();//调用成功后,执行com.Seacher中的doSeach方法
+        taskSeacher.doSearch();
     }
 
 });
