@@ -17,13 +17,13 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-xs-12">
-                            <form class="form-horizontal">
+                            <form class="form-horizontal" id="form">
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label no-padding-right">归属人</label>
                                             <div class="col-md-9">
-                                                <input type="text" class="col-md-4 v_typeahead v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="belonger" placeholder="归属人">
+                                                <input type="text" class="col-md-4 v_typeahead" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="belonger" placeholder="归属人">
                                                 <i id="designerId_asterisk" class='material icon-asterisk'></i>
                                             </div>
                                         </div>
@@ -72,6 +72,8 @@
         </div>
     </div>
 </div>
+
+<div id="vscoreRecordPopUp" class="portlet box"></div>
 
 <script type="text/javascript">
     $.loadScript(['js/customer/vustomerAdvance.js']);

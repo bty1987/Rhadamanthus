@@ -105,6 +105,8 @@ public class DecorationPO implements Serializable {
 	private UserPO contracter;
 
 	private short type;
+	
+	private String grade;
 
 	private String salesmanType = "守园";
 
@@ -123,6 +125,8 @@ public class DecorationPO implements Serializable {
 	private float couponCut;
 
 	private float thingCut;
+	
+	private float factPrice;
 
 	private float netperfor;
 
@@ -159,10 +163,6 @@ public class DecorationPO implements Serializable {
 	private short paySacle;
 
 	private float discount;
-	
-	private String grade;
-	
-	private float factPrice;
 	
 	public DecorationPO() {
 	}

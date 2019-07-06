@@ -35,25 +35,25 @@ public class DepartmentAction extends BaseListAction {
 	private DepartmentService departmentService;
 
 	private DepartmentVO dept;
-	
+
 	private List<DepartmentVO> deptList;
-	
+
 	@Action(value = "pageDepartment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageDepartment() throws FLException{
-		
+	public String pageDepartment() throws FLException {
+
 		departmentService.pageDepartment(getPaging(), getFilters(), dept, queryCompany());
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "queryDepartment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryDepartment() throws FLException{
-	
+	public String queryDepartment() throws FLException {
+
 		deptList = departmentService.queryDepartment(dept, queryCompany());
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "queryDepartmentByDtid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryDepartmentByDtid() throws FLException {
 
@@ -64,12 +64,12 @@ public class DepartmentAction extends BaseListAction {
 
 	@Action(value = "queryDepartmentByDid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryDepartmentByDid() throws FLException {
-		
+
 		dept = departmentService.queryDepartmentByDid(dept);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "queryDepartmentByNo", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryDepartmentByNo() throws FLException {
 
@@ -97,29 +97,28 @@ public class DepartmentAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
 
 	@Action(value = "updateDepartment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateDepartment() throws FLException{
-		
+	public String updateDepartment() throws FLException {
+
 		if (SystemConfig.getString("communion") == null) {
 			throw new FLException(-1, "无操作权限");
 		}
-		
+
 		departmentService.updateDepartment(dept);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "updateDepartmentForStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateDepartmentForStatus() throws FLException{
-			
+	public String updateDepartmentForStatus() throws FLException {
+
 		if (SystemConfig.getString("communion") == null) {
 			throw new FLException(-1, "无操作权限");
 		}
-		
+
 		departmentService.updateDepartmentForStatus(dept);
-		
+
 		return SUCCESS;
 	}
 

@@ -9,39 +9,38 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="serviceNode", catalog = "communion")
-public class ServiceNodePO implements Serializable{
+@Table(name = "serviceNode", catalog = "communion")
+public class ServiceNodePO implements Serializable {
 
 	private static final long serialVersionUID = -8744642889073979368L;
-	
+
 	public static final short SERVICESTATUS_ENABLE_INT = 0;
-	
+
 	public static final short SERVICESTATUS_DISABLE_INT = 1;
-	
+
 	public static final short SERVICE_TYPE_DECORTAION_INT = 0;
-	
+
 	public static final short SERVICE_TYPE_MATERIAL_INT = 1;
-	
+
 	public static final short SERVICE_TYPE_CONSTRUCTION_INT = 2;
-	
+
 	public static final int SERVICE_COMPANY_INIT = 1;
-	
+
 	private long snid;
-	
+
 	private String name;
-	
+
 	private String detail;
-	
+
 	private short type;
-	
+
 	private short status;
-	
+
 	private int company;
-	
-	
+
 	@Id
 	@GeneratedValue
-	@Column(name="snid")
+	@Column(name = "snid")
 	public long getSnid() {
 		return snid;
 	}
@@ -94,6 +93,5 @@ public class ServiceNodePO implements Serializable{
 	public void setCompany(int company) {
 		this.company = company;
 	}
-	
-	
+
 }

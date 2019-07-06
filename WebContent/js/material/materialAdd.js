@@ -138,7 +138,7 @@ jQuery(function ($) {
                     });
                 }
             });
-            return v
+            return v;
         });
 
         $line.click(function () {
@@ -178,7 +178,6 @@ jQuery(function ($) {
                 returnFlag = true;
                 return false;
             }
-            ;
         });
 
         if (returnFlag) return;
@@ -364,117 +363,57 @@ jQuery(function ($) {
         var materialModelName = $line.find('.materialModelName input');
         if (!materialModelName.val()) {
             materialModelName.focus().select();
-
-            materialModelName.addClass('popover-notitle').attr({
-                "data-rel": "popover",
-                "data-placement": "top",
-                "data-original-title": "",
-                "title": "",
-                "data-content": "请填写主材名称"
-
-            }).popover('show');
+            com.showTip(materialModelName,"请填写主材名称","bottom");
 
             flag = false;
-        } else {
-            materialModelName.popover('destroy');
         }
 
         var salePrice = $line.find('.salePrice input');
         var salePriceRex = /^(\d+|\d+\.[0-9]{1,4})$/;
         if (!salePriceRex.test(salePrice.val())) {
             salePrice.focus().select();
-            salePrice.addClass('tooltip-info').attr({
-                "data-rel": "popover",
-                "data-placement": "top",
-                "data-original-title": "",
-                "title": "",
-                "data-content": "折扣价输入内容格式错误!"
-
-            }).popover('show');
+            com.showTip(salePrice,"折扣价输入内容格式错误","bottom");
             flag = false;
-        } else {
-            salePrice.popover('destroy');
         }
 
         var postDiscount = $line.find('.postDiscount input');
         var postDiscountRex = /^(1\.0{1,2}|1|0\.[0-9]{1,2})$/;
         if (!postDiscountRex.test(postDiscount.val())) {
             postDiscount.focus().select();
-            postDiscount.addClass('tooltip-info').attr({
-                "data-rel": "popover",
-                "data-placement": "top",
-                "data-original-title": "",
-                "title": "",
-                "data-content": "折让输入内容格式错误!"
-            }).popover('show');
+            com.showTip(postDiscount,"折让输入内容格式错误","bottom");
             flag = false;
-        } else {
-            postDiscount.popover('destroy');
         }
 
         var price = $line.find('.price input');
         var priceRex = /^([0-9]+|[0-9]+\.[0-9]{1,2})$/;
         if (!(priceRex.test(price.val()) && parseFloat(price.val()) > 0)) {
             price.focus().select();
-            price.addClass('tooltip-info').attr({
-                "data-rel": "popover",
-                "data-placement": "top",
-                "data-original-title": "",
-                "title": "",
-                "data-content": "售价输入内容格式错误!"
-
-            }).popover('show');
+            com.showTip(price,"售价输入内容格式错误","bottom");
             flag = false;
-        } else {
-            price.popover('destroy');
         }
 
         var num = $line.find('.num input');
         var numRex = /^[0-9]+\.{0,1}[0-9]{0,3}$/;
         if (!(numRex.test(num.val()) && parseFloat(num.val()) > 0)) {
             num.focus().select();
-            num.addClass('tooltip-info').attr({
-                "data-rel": "popover",
-                "data-placement": "top",
-                "data-original-title": "",
-                "title": "",
-                "data-content": "数量输入内容格式错误!"
-            }).popover('show');
+            com.showTip(num,"数量输入内容格式错误","bottom");
             flag = false;
-        } else {
-            num.popover('destroy');
         }
 
         var packageName = $line.find('.packageName input');
         var packageRex = /^[\u4E00-\u9FA5A-Za-z0-9]{0,7}$/;
         if (!packageRex.test(packageName.val())) {
             packageName.focus().select();
-            packageName.addClass('tooltip-info').attr({
-                "data-rel": "popover",
-                "data-placement": "top",
-                "data-original-title": "",
-                "title": "",
-                "data-content": "请检查套餐名称(套餐名称长度必须小于8且只能由汉字、数字和字母组成)!"
-            }).popover('show');
+            com.showTip(packageName,"请检查套餐名称(套餐名称长度必须小于8且只能由汉字、数字和字母组成","bottom");
             flag = false;
-        } else {
-            packageName.popover('destroy');
         }
 
 
         var des = $line.find('.des input');
         if (des.val().length > 128) {
             des.focus().select();
-            des.addClass('tooltip-info').attr({
-                "data-rel": "popover",
-                "data-placement": "top",
-                "data-original-title": "",
-                "title": "",
-                "data-content": "备注信息长度需要小于128!"
-            }).popover('show');
+            com.showTip(des,"备注信息长度需要小于128","bottom");
             flag = false;
-        } else {
-            des.popover('destroy');
         }
 
         return flag;

@@ -27,57 +27,54 @@ import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
 
 @Service("quotationBigCategoryService")
-@Transactional(readOnly=true)
+@Transactional(readOnly = true)
 public class QuotationBigCategoryServiceImpl implements QuotationBigCategoryService {
 
 	@Autowired
 	private QuotationBigCategoryDao quotationBigCategoryDao;
-	
+
 	@Override
-	public List<QuotationBigCategoryVO> queryQuotationBigCategory(QuotationBigCategoryVO quotationBigCategory){
-		
+	public List<QuotationBigCategoryVO> queryQuotationBigCategory(QuotationBigCategoryVO quotationBigCategory) {
+
 		List<QuotationBigCategoryPO> quotationBigCategoryPOs = null;
-		
+
 		quotationBigCategoryPOs = quotationBigCategoryDao.list();
-		
-		
+
 		List<QuotationBigCategoryVO> quotationBigCategoryVOs = new ArrayList<QuotationBigCategoryVO>();
-		
-		for(QuotationBigCategoryPO quotationBigCategoryPO: quotationBigCategoryPOs){
+
+		for (QuotationBigCategoryPO quotationBigCategoryPO : quotationBigCategoryPOs) {
 			QuotationBigCategoryVO quotationBigCategoryVO = new QuotationBigCategoryVO();
 			BeanUtil.copyProperties(quotationBigCategoryPO, quotationBigCategoryVO);
 			quotationBigCategoryVOs.add(quotationBigCategoryVO);
 		}
-		
+
 		return quotationBigCategoryVOs;
 	}
 
 	@Override
 	public void pageQuotationBigCategory(Paging paging, List<Filter> filters) {
-		
+
 		List<QuotationBigCategoryPO> quotationBigCategoryPOs = quotationBigCategoryDao.pageQuotationBigCategory(paging, filters);
 		List<QuotationBigCategoryVO> quotationBigCategoryVOs = new ArrayList<QuotationBigCategoryVO>();
-		
-		for(QuotationBigCategoryPO quotationBigCategoryPO: quotationBigCategoryPOs){
-			
+
+		for (QuotationBigCategoryPO quotationBigCategoryPO : quotationBigCategoryPOs) {
+
 			QuotationBigCategoryVO quotationBigCategoryVO = new QuotationBigCategoryVO();
 
 			BeanUtil.copyProperties(quotationBigCategoryPO, quotationBigCategoryVO);
-			
+
 			quotationBigCategoryVOs.add(quotationBigCategoryVO);
 		}
-		
+
 		paging.setData(quotationBigCategoryVOs);
 	}
-	
-	public QuotationBigCategoryDao getQuotationBigCategoryDao(){
+
+	public QuotationBigCategoryDao getQuotationBigCategoryDao() {
 		return quotationBigCategoryDao;
 	}
 
-	public void setQuotationBigCategoryDao(QuotationBigCategoryDao quotationBigCategoryDao){
+	public void setQuotationBigCategoryDao(QuotationBigCategoryDao quotationBigCategoryDao) {
 		this.quotationBigCategoryDao = quotationBigCategoryDao;
 	}
 
-	
-	
 }

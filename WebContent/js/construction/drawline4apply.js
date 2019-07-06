@@ -31,6 +31,24 @@ jQuery(function ($) {
     drawline.btns.saveInfoBtn.bindClick(saveInfoData);
     drawline.btns.saveBtn.bindClick(saveData);
 
+    drawline.modals.constructionInfoModal.on("hide.bs.modal", function(){
+
+        com.cleanItems(drawline.items);
+        com.closeTip();
+    });
+
+    drawline.modals.applyModal.on("hide.bs.modal", function(){
+
+        com.cleanItems(drawline.items);
+        com.closeTip();
+    });
+
+    drawline.modals.editModal.on("hide.bs.modal", function(){
+
+        com.cleanItems(drawline.items);
+        com.closeTip();
+    });
+
     com.datetime(drawline.items.actualDate);
     
     com.datetime(drawline.items.startTime, "time");
@@ -124,8 +142,6 @@ jQuery(function ($) {
     function showEdit(v) {
 
         com.clearValidator();
-
-        com.cleanItems(drawline.items);
 
         drawline.items.dlid.val(v.dlid);
         drawline.items.actualDate.val(v.applayTime);

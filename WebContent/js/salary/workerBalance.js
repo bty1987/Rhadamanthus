@@ -49,6 +49,13 @@ $(function () {
     deposit.LaborBtn.bindClick(cutSalary);
     deposit.saveBtn.bindClick(saveData);
 
+    deposit.modals.transferModal.on('hide.bs.modal', function (e) {
+        com.cleanTypeahead("workertransferuser");
+        com.cleanTypeahead("workercollectuser");
+        com.cleanItems(deposit.items);
+        com.closeTip();
+    });
+
     com.initTypeahead("workertransferuser", api.personel.queryUserByPinyin, "pinyinName", {"user.status": "0"}, "autoFillKeyValue", "key", "value",function(list,key,value){return value;});
 
     com.initTypeahead("workercollectuser", api.personel.queryUserByPinyin, "pinyinName", {"user.status": "0"}, "autoFillKeyValue", "key", "value",function(list,key,value){return value;});
@@ -119,16 +126,18 @@ $(function () {
             deposit.modals.workerLabor.attr('wbid', v.wbid);
             //扣款工费
             $cutbtn.click(function () {
-                com.cleanItems(deposit.items);
-                deposit.items.workerUserLabor.val(v.user.currentName);
-                com.popup4model("#workerLabor", "扣款");
+                com.popup4model('#workerLabor', "扣款", function () {
+                    com.cleanItems(deposit.items);
+                    deposit.items.workerUserLabor.val(v.user.currentName);
+                });
             });
 
             //发放工费
             $pushbtn.click(function () {
-                com.cleanItems(deposit.items);
-                deposit.items.workerUser.val(v.user.currentName);
-                com.popup4model("#workerSalary", "发放");
+                com.popup4model('#workerSalary', "发放", function () {
+                    com.cleanItems(deposit.items);
+                    deposit.items.workerUser.val(v.user.currentName);
+                });
             });
 
             deposit.uid = v.user.userId;
@@ -136,21 +145,24 @@ $(function () {
             deposit.modals.workerGold.attr('wbid', v.wbid);
             //收取质保金
             $collectbtn.click(function () {
-                com.cleanItems(deposit.items);
-                com.popup4model("#workerBalance", "收取质保金");
+                com.popup4model('#workerBalance', "收取质保金", function () {
+                    com.cleanItems(deposit.items);
+                });
             });
 
             //提现质保金
             $drawbtn.click(function () {
-                com.cleanItems(deposit.items);
-                com.popup4model("#workerGold", "提现质保金");
+                com.popup4model('#workerGold', "提现质保金", function () {
+                    com.cleanItems(deposit.items);
+                });
             });
 
             //更新质保金上限
             $updatebtn.click(function () {
-                com.cleanItems(deposit.items);
-                deposit.wbid = v.wbid;
-                com.popup4model("#updateBalance", "更新上限");
+                com.popup4model('#updateBalance', "更新上限", function () {
+                    com.cleanItems(deposit.items);
+                    deposit.wbid = v.wbid;
+                });
             });
 
             return $liLine;
@@ -187,13 +199,7 @@ $(function () {
 
     //转款
     com.focusPage('a[name="tran"]').on('click', function () {
-
-        com.cleanItems(deposit.items);
-        com.clearValidator();
         deposit.modals.transferModal.modal("show");
-        com.cleanTypeahead("workertransferuser");
-        com.cleanTypeahead("workercollectuser");
-
     });
 
     //扣款工费

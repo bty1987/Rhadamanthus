@@ -23,37 +23,37 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.Paging;
 
 @Repository("measurementunit")
-public class MeasurementUnitDaoImpl extends DaoImpl<MeasurementUnitPO> implements 	MeasurementUnitDao {
+public class MeasurementUnitDaoImpl extends DaoImpl<MeasurementUnitPO> implements MeasurementUnitDao {
 
-	public MeasurementUnitDaoImpl(){
+	public MeasurementUnitDaoImpl() {
 		super(MeasurementUnitPO.class, true);
 	}
 
 	@Override
-	public List<MeasurementUnitPO> pageMeasurementUnit(Paging paging,List<Filter> filters) {
-	
-		PagingQuery<MeasurementUnitPO> query =pagingQuery(paging,MeasurementUnitPO.class); 
-		
-		queryFilterExcute(query,filters);
-		
+	public List<MeasurementUnitPO> pageMeasurementUnit(Paging paging, List<Filter> filters) {
+
+		PagingQuery<MeasurementUnitPO> query = pagingQuery(paging, MeasurementUnitPO.class);
+
+		queryFilterExcute(query, filters);
+
 		return query.list();
 	}
 
 	@Override
 	public MeasurementUnitPO queryMeasurementUnitByName(String name) {
-		return  (MeasurementUnitPO) createCriteria(MeasurementUnitPO.class).add(Restrictions.eq(MeasurementUnitPO.COLUMN_NAME_STR , name)).uniqueResult();
+		return (MeasurementUnitPO) createCriteria(MeasurementUnitPO.class).add(Restrictions.eq(MeasurementUnitPO.COLUMN_NAME_STR, name)).uniqueResult();
 	}
-	
+
 	@Override
 	public MeasurementUnitPO queryMeasurementUnitById(int id) {
-		return (MeasurementUnitPO) createCriteria(MeasurementUnitPO.class).add(Restrictions.eq(MeasurementUnitPO.COLUMN_ID_STR , id)).uniqueResult();
-}
+		return (MeasurementUnitPO) createCriteria(MeasurementUnitPO.class).add(Restrictions.eq(MeasurementUnitPO.COLUMN_ID_STR, id)).uniqueResult();
+	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
-		if(filters!=null){
-			for(Filter filter:filters){
-				if("name".equals(filter.getField())){
-					query.add(query.getCriterion("name",(filter.getData()), filter.getOp()));
+		if (filters != null) {
+			for (Filter filter : filters) {
+				if ("name".equals(filter.getField())) {
+					query.add(query.getCriterion("name", (filter.getData()), filter.getOp()));
 				}
 			}
 		}

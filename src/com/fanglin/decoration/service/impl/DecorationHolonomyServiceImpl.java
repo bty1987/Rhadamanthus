@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.common.dao.ServiceRecordDao;
+import com.fanglin.common.po.ServiceRecordPO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.decoration.dao.DecorationActivityDao;
@@ -50,6 +52,9 @@ public class DecorationHolonomyServiceImpl implements DecorationHolonomyService 
 
 	@Autowired
 	private QuotationDao quotationDao;
+	
+	@Autowired
+	private ServiceRecordDao serviceRecordDao;
 
 	@Override
 	public void pageDecorationHolonomy(Paging paging, List<Filter> filters, int company) {
@@ -203,6 +208,26 @@ public class DecorationHolonomyServiceImpl implements DecorationHolonomyService 
 		decorationHolonomyVO.setProjectBase(decorationHolonomyVO.getProjectBase());
 		decorationHolonomyVO.setProjectBase(projectBase);
 		
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void updateDecorationHolonomy(DecorationHolonomyVO decorationHolonomyVO, String userId) throws FLException {
+		
+		String orderId = decorationHolonomyVO.getDecoration().getOrderId();
+		float materialPrice = decorationHolonomyVO.getMaterialPrice();
+		
+		DecorationHolonomyPO decorationHolonomyPO = decorationHolonomyDao.queryDecorationHolonomyByOrderId(decorationHolonomyVO.getDecoration().getOrderId());
+		
+		if(decorationHolonomyPO == null){
+			throw new FLException(140042, "半价/满减信息不存在");
+		}
+		
+		decorationHolonomyPO.setMaterialPrice(decorationHolonomyVO.getMaterialPrice());
+		
+		decorationHolonomyDao.update(decorationHolonomyPO);
+		
+		serviceRecordDao.save(new ServiceRecordPO().init(ServiceRecordPO.TYPE_CHANGE_DECORATION_INT, userId, String.format("更新满减信息,装修单:%s,主材配额:%.2f", orderId, materialPrice)));
 	}
 
 }

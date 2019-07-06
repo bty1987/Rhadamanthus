@@ -22,8 +22,10 @@ $(function () {
     performance.items.content = com.focusPage("#content");
 
     performance.modal = com.focusPage("#performanceModal");
-    performance.modal.on('show.bs.modal',function(e){
-        com.clearValidator();
+    performance.modal.on('hide.bs.modal',function(e){
+		com.cleanTypeahead("users");
+        com.cleanItems(performance.items);
+        com.closeTip();
     });
 
     com.post(api.ds.personel, {}, function(res){
@@ -123,6 +125,7 @@ $(function () {
         };
         com.post(api.personel.addPreformance, options, function(res){
             performanceSeacher.doSearch();
+            com.showAlert(com.info, "添加成功");
         });
         performance.modal.modal("hide");
     }
@@ -142,8 +145,7 @@ $(function () {
         return [$adda];
     });
     com.focusPage('[name="addperformance"]', '#pagenation').on("click", function () {  // 选择器 [属性名="属性值"] 匿名函数
-        com.cleanTypeahead("users");
-        com.cleanItems(performance.items);
+        
         performance.modal.modal("show");
     });
 });

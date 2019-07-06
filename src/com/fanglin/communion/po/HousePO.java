@@ -12,78 +12,78 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="house", catalog = "communion")
-public class HousePO implements Serializable{
+@Table(name = "house", catalog = "communion")
+public class HousePO implements Serializable {
 
 	private static final long serialVersionUID = -4319485351492418004L;
-	
+
 	public static final String COLUMN_HID_STR = "hid";
-	
+
 	public static final String COLUMN_VILLAGE_NO_STR = "village.no";
-	
+
 	public static final String COLUMN_STATUS_STR = "status";
-	
+
 	public static final String COLUMN_HOUSENUMBER_STR = "houseNumber";
-	
-    public static final short STATUS_ENABLE_INT = 0;
-	
+
+	public static final short STATUS_ENABLE_INT = 0;
+
 	public static final short STATUS_DISABLE_INT = 1;
-	
-	private  long hid;
-	
+
+	private long hid;
+
 	private VillagePO village;
-	
+
 	private String houseNumber;
-	
+
 	private String built;
-	
+
 	private String unit;
-	
+
 	private int floor;
-	
+
 	private int door;
-	
+
 	private short type;
-	
+
 	private float buildArea;
-	
+
 	private short maxFloor;
-	
+
 	private short through;
-	
+
 	private int roomNum;
-	
+
 	private String houseType;
-	
+
 	private short orientation;
-	
+
 	private String feature;
-	
+
 	private short waterVapour;
-	
+
 	private short parlourType;
-	
+
 	private short heatingType;
-	
+
 	private int company;
-	
+
 	public HousePO() {
 		super();
 	}
-	
+
 	public HousePO(long hid) {
 		super();
 		this.hid = hid;
 	}
-	
+
 	public HousePO(VillagePO village) {
 		super();
 		this.village = village;
 	}
-	
+
 	@Id
 	@GeneratedValue
-	@Column(name="hid")
+	@Column(name = "hid")
 	public long getHid() {
 		return hid;
 	}
@@ -93,7 +93,7 @@ public class HousePO implements Serializable{
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "vid", referencedColumnName="vid")
+	@JoinColumn(name = "vid", referencedColumnName = "vid")
 	public VillagePO getVillage() {
 		return village;
 	}
@@ -102,7 +102,7 @@ public class HousePO implements Serializable{
 		this.village = village;
 	}
 
-	@Column(name="houseNumber")
+	@Column(name = "houseNumber")
 	public String getHouseNumber() {
 		return houseNumber;
 	}
@@ -111,7 +111,7 @@ public class HousePO implements Serializable{
 		this.houseNumber = houseNumber;
 	}
 
-	@Column(name="built")
+	@Column(name = "built")
 	public String getBuilt() {
 		return built;
 	}
@@ -120,7 +120,7 @@ public class HousePO implements Serializable{
 		this.built = built;
 	}
 
-	@Column(name="unit")
+	@Column(name = "unit")
 	public String getUnit() {
 		return unit;
 	}
@@ -129,7 +129,7 @@ public class HousePO implements Serializable{
 		this.unit = unit;
 	}
 
-	@Column(name="floor")
+	@Column(name = "floor")
 	public int getFloor() {
 		return floor;
 	}
@@ -138,7 +138,7 @@ public class HousePO implements Serializable{
 		this.floor = floor;
 	}
 
-	@Column(name="door")
+	@Column(name = "door")
 	public int getDoor() {
 		return door;
 	}
@@ -147,7 +147,7 @@ public class HousePO implements Serializable{
 		this.door = door;
 	}
 
-	@Column(name="type")
+	@Column(name = "type")
 	public short getType() {
 		return type;
 	}
@@ -156,7 +156,7 @@ public class HousePO implements Serializable{
 		this.type = type;
 	}
 
-	@Column(name="buildArea")
+	@Column(name = "buildArea")
 	public float getBuildArea() {
 		return buildArea;
 	}
@@ -165,7 +165,7 @@ public class HousePO implements Serializable{
 		this.buildArea = buildArea;
 	}
 
-	@Column(name="maxFloor")
+	@Column(name = "maxFloor")
 	public short getMaxFloor() {
 		return maxFloor;
 	}
@@ -174,7 +174,7 @@ public class HousePO implements Serializable{
 		this.maxFloor = maxFloor;
 	}
 
-	@Column(name="through")
+	@Column(name = "through")
 	public short getThrough() {
 		return through;
 	}
@@ -183,7 +183,7 @@ public class HousePO implements Serializable{
 		this.through = through;
 	}
 
-	@Column(name="roomNum")
+	@Column(name = "roomNum")
 	public int getRoomNum() {
 		return roomNum;
 	}
@@ -192,7 +192,7 @@ public class HousePO implements Serializable{
 		this.roomNum = roomNum;
 	}
 
-	@Column(name="houseType")
+	@Column(name = "houseType")
 	public String getHouseType() {
 		return houseType;
 	}
@@ -201,7 +201,7 @@ public class HousePO implements Serializable{
 		this.houseType = houseType;
 	}
 
-	@Column(name="orientation")
+	@Column(name = "orientation")
 	public short getOrientation() {
 		return orientation;
 	}
@@ -210,7 +210,7 @@ public class HousePO implements Serializable{
 		this.orientation = orientation;
 	}
 
-	@Column(name="feature")
+	@Column(name = "feature")
 	public String getFeature() {
 		return feature;
 	}
@@ -219,7 +219,7 @@ public class HousePO implements Serializable{
 		this.feature = feature;
 	}
 
-	@Column(name="waterVapour")
+	@Column(name = "waterVapour")
 	public short getWaterVapour() {
 		return waterVapour;
 	}
@@ -228,7 +228,7 @@ public class HousePO implements Serializable{
 		this.waterVapour = waterVapour;
 	}
 
-	@Column(name="parlourType")
+	@Column(name = "parlourType")
 	public short getParlourType() {
 		return parlourType;
 	}
@@ -237,7 +237,7 @@ public class HousePO implements Serializable{
 		this.parlourType = parlourType;
 	}
 
-	@Column(name="heatingType")
+	@Column(name = "heatingType")
 	public short getHeatingType() {
 		return heatingType;
 	}
@@ -246,11 +246,11 @@ public class HousePO implements Serializable{
 		this.heatingType = heatingType;
 	}
 
-	public String address(){
+	public String address() {
 		return String.format("%s %s", this.village.getName(), this.houseNumber);
 	}
-	
-	@Column(name="company")
+
+	@Column(name = "company")
 	public int getCompany() {
 		return company;
 	}
@@ -258,7 +258,5 @@ public class HousePO implements Serializable{
 	public void setCompany(int company) {
 		this.company = company;
 	}
-	
-	
-	
+
 }

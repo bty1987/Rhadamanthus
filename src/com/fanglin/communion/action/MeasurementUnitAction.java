@@ -21,59 +21,59 @@ import com.fanglin.utils.SystemConfig;
 public class MeasurementUnitAction extends BaseListAction {
 
 	private static final long serialVersionUID = 3536987267675442274L;
-	
+
 	@Autowired
 	private MeasurementUnitService measurementUnitService;
-	
+
 	private List<MeasurementUnitVO> measurementUnits;
-	
+
 	private MeasurementUnitVO measurementUnit;
-	
-	@Action(value="pageMeasurementUnit", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String pageDrawLineGroup(){
-		
+
+	@Action(value = "pageMeasurementUnit", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageDrawLineGroup() {
+
 		measurementUnits = measurementUnitService.pageMeasurementUnit(getPaging(), getFilters());
-		
-		return SUCCESS;
-	}
-	
-	@Action(value="queryMeasurementUnit", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryMeasurementUnit(){
-		
-		measurementUnits = measurementUnitService.queryMeasurementUnit();
-		
-		return SUCCESS;
-	}
-	
-	@Action(value="addMeasurementUnit", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String addMeasurementUnit() throws FLException{
-		
-		if(SystemConfig.getString("communion") == null){
-		    throw new FLException(-1, "无操作权限");
-		}
-		
-		measurementUnitService.addMeasurementUnit(measurementUnit);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value="updateMeasurementUnit", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String updateMeasurementUnit() throws FLException{
-		
-		if(SystemConfig.getString("communion") == null){
-		    throw new FLException(-1, "无操作权限");
-		}
-		
-		measurementUnitService.updateMeasurementUnit(measurementUnit);
-		
+
 		return SUCCESS;
 	}
 
-	public List<MeasurementUnitVO> getMeasurementUnits(){
+	@Action(value = "queryMeasurementUnit", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryMeasurementUnit() {
+
+		measurementUnits = measurementUnitService.queryMeasurementUnit();
+
+		return SUCCESS;
+	}
+
+	@Action(value = "addMeasurementUnit", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addMeasurementUnit() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
+		}
+
+		measurementUnitService.addMeasurementUnit(measurementUnit);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "updateMeasurementUnit", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateMeasurementUnit() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
+		}
+
+		measurementUnitService.updateMeasurementUnit(measurementUnit);
+
+		return SUCCESS;
+	}
+
+	public List<MeasurementUnitVO> getMeasurementUnits() {
 		return measurementUnits;
 	}
 
-	public void setMeasurementUnits(List<MeasurementUnitVO> measurementUnits){
+	public void setMeasurementUnits(List<MeasurementUnitVO> measurementUnits) {
 		this.measurementUnits = measurementUnits;
 	}
 
@@ -84,5 +84,5 @@ public class MeasurementUnitAction extends BaseListAction {
 	public void setMeasurementUnit(MeasurementUnitVO measurementUnit) {
 		this.measurementUnit = measurementUnit;
 	}
-	
+
 }

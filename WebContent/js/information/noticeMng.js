@@ -31,6 +31,11 @@ $(function(){
     notice.saveBtn.bindClick(saveData);
     notice.items.isPublic.switchBtn("isOrNot");
 
+    notice.modals.noticeModal.on("hide.bs.modal", function () {
+        com.clearValidator();
+        com.cleanItems(notice.items);
+    });
+
     com.post(api.ds.information, {}, function(res){
         notice.items.prioritySel.bindData(res.noticePriority, "key", "value");
         notice.items.typeSel.bindData(res.noticeType, "key", "value");
@@ -149,7 +154,7 @@ $(function(){
 
             $management.unbind().bind('click',function(){
                 showDepaermentModal();
-                notice.modals.managementsModal.modal('show');
+                notice.modals.managementsModal.modal('show')
                 var noticedids=[];
                 com.post(api.information.queryNoticeDepartment, {"notice.nid": v.nid},function(res){
                     $.each(res.noticeDepartments,function(i,val){
@@ -210,7 +215,6 @@ $(function(){
 
     com.focusPage("#addMng").click(function() {
         notice.editFlg = false;
-        com.cleanItems(notice.items);
         notice.modals.noticeModal.modal("show");
     });
 

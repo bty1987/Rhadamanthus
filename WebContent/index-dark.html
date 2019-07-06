@@ -65,13 +65,7 @@
         /* ace */
         csses += '<link rel="stylesheet" href="assets/ace/css/bootstrap.min.css?version=' + versionCode + '" />'; // basic styles
         csses += '<link rel="stylesheet" href="assets/ace/css/font-awesome-fa.min.css?version=' + versionCode + '" />';
-        csses += '<link rel="stylesheet" href="assets/ace/css/jquery.gritter.css?version=' + versionCode + '" />';
-        csses += '<link rel="stylesheet" href="assets/ace/css/jquery-ui-1.10.3.full.min.css?version=' + versionCode + '" />'; // page specific plugin styles
         csses += '<link rel="stylesheet" href="assets/ace/css/fullcalendar.css?version=' + versionCode + '" />';
-        csses += '<link rel="stylesheet" href="assets/ace/css/chosen.min.css?version=' + versionCode + '" />';
-        csses += '<link rel="stylesheet" href="assets/ace/css/datepicker.css?version=' + versionCode + '" />';
-        csses += '<link rel="stylesheet" href="assets/ace/css/daterangepicker.css?version=' + versionCode + '" />';
-        csses += '<link rel="stylesheet" href="assets/ace/css/bootstrap-timepicker.css?version=' + versionCode + '" />';
         csses += '<link rel="stylesheet" href="assets/ace/css/huploadify.css?version=' + versionCode + '" />';
         csses += '<link rel="stylesheet" href="assets/ace/css/colorbox.css?version=' + versionCode + '" />'; // picture box
         csses += '<link rel="stylesheet" href="assets/ace/css/ace-dark.css?version=' + versionCode + '" />';
@@ -275,7 +269,6 @@
     <script src="assets/ace/js/bootstrap.min.js"></script>
     <script src="assets/ace/js/jquery.slimscroll.min.js"></script>
     <script src="assets/ace/js/jquery.raty.min.js"></script>
-    <script src="assets/ace/js/bootstrap-wysiwyg.min.js"></script> <!-- rich text --> 
     <script src="assets/ace/js/ace-elements.js"></script>
     <script src="assets/ace/js/ace-extra.min.js"></script>
 
@@ -283,11 +276,6 @@
     <script src="assets/altogether/js/jquery.colorbox-min.js"></script> <!-- picture box --> 
     <script src="assets/altogether/js/fullcalendar.min.js"></script> <!-- calendar --> 
     <script src="assets/altogether/js/spin.min.js"></script>
-
-    <script src="assets/altogether/js/date-time/bootstrap-datepicker.min.js"></script>
-    <script src="assets/altogether/js/date-time/bootstrap-timepicker.min.js"></script>
-    <script src="assets/altogether/js/date-time/daterangepicker.min.js"></script>
-    <script src="assets/altogether/js/date-time/moment.min.js"></script>
 
     <script src="assets/altogether/js/layer.js"></script> <!-- dialog pop --> 
     <script src="assets/altogether/laydate/laydate.js"></script> <!-- datetime tools --> 
@@ -329,7 +317,7 @@
         jses += '<script src="js/com/condition.js?version=' + versionCode + '"><\/script>';
         jses += '<script src="js/com/searcher.js?version=' + versionCode + '"><\/script>';
         jses += '<script src="js/com/exporter.js?version=' + versionCode + '"><\/script>';
-        jses += '<script src="js/index.js?version=' + versionCode + '"><\/script>';
+        jses += '<script src="js/index-dark.js?version=' + versionCode + '"><\/script>';
 
         if(!parent.window.isPC && !parent.window.isEncryption){
             document.write(jses);

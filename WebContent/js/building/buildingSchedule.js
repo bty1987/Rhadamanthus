@@ -168,9 +168,6 @@ jQuery(function($) {
 
 		});
 
-		com.focusPage("#" + sore + "btnBack").on("click", function(){
-			com.switchPage(api.index.building.url);
-		});
 	}
 
 	//图片上传
@@ -352,8 +349,6 @@ jQuery(function($) {
 		var updateI = $("<i></i>").addClass("icon-ok bigger-110").html("更新").appendTo(updateBtn);
 		var nextBtn = $("<button></button>").addClass("btn btn-info btn-next").attr("data-last", "Finish").prop("id", sore + "btnNext").css("margin-right", "10px").html("下一步").appendTo(divWizard);
 		var nextI = $("<i></i>").addClass("icon-arrow-right icon-on-right").appendTo(nextBtn);
-		var backBtn = $("<button></button>").addClass("btn btn-info").prop("id", sore + "btnBack").css("margin-right", "10px").appendTo(divWizard);
-		var backI = $("<i></i>").addClass("icon-ok bigger-110").html("返回").appendTo(backBtn);
 	}
 
 	function addActive(sore){

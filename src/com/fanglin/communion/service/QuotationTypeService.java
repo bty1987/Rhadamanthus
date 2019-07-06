@@ -18,9 +18,9 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.Paging;
 
 public interface QuotationTypeService {
-	
+
 	public List<QuotationTypeVO> queryQuotationType();
-	
+
 	public void pageQuotationType(Paging paging, List<Filter> filters);
-	
+
 }

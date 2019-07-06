@@ -3,13 +3,13 @@ jQuery(function ($) {
     com.focusPage('#fl-statement').statement("巡检控制", "巡检记录");
 
     var record = {
-        saveBtn: com.focusPage("#saveBtn").on("click", saveData),
+        saveBtn: com.focusPage("#saveBtn"),
         cancellBtn: com.focusPage("#cancelBtn"),
         modal: com.focusPage("#recordModal").on('show.bs.modal', function (e) {
             com.clearValidator();
         }),
 
-        recordItems: {
+        items: {
             orderId : com.focusPage("#orderId"),
             orderAddr : com.focusPage("#orderAddr"),
             startDate : com.focusPage("#startDate"),
@@ -23,11 +23,13 @@ jQuery(function ($) {
         repeatFlg: false
     };
 
-    com.focusPage('.date-picker').datepicker(com.datepickerdefault);
+    record.saveBtn.on("click", saveData);
 
-    record.recordItems.startTime.timepicker({minuteStep: 1, showSeconds: true, showMeridian: false});
-    record.recordItems.endTime.timepicker({minuteStep: 1, showSeconds: true, showMeridian: false});
+    com.datetime(record.items.startDate);
+    com.datetime(record.items.endDate);
 
+    com.datetime(record.items.startTime, "time");
+    com.datetime(record.items.endTime, "time");
     var displayFunc = (function () {
         var renderList = function (tableId, listData) {
             var $tableWrap = com.focusPage('#' + tableId).empty();
@@ -116,13 +118,13 @@ jQuery(function ($) {
     com.focusPage('a[name="add"]', '#pagenation').click(function () {
         record.editFlag = false;
 
-        com.cleanItems(record.recordItems);
+        com.cleanItems(record.items);
 
-        record.recordItems.orderId.val(params.orderId);
-        record.recordItems.orderAddr.val(params.orderAddr);
+        record.items.orderId.val(params.orderId);
+        record.items.orderAddr.val(params.orderAddr);
 
-        record.recordItems.orderId.attr('disabled', true);
-        record.recordItems.orderAddr.attr('disabled', true);
+        record.items.orderId.attr('disabled', true);
+        record.items.orderAddr.attr('disabled', true);
 
         record.modal.modal("show");
     });
@@ -134,18 +136,18 @@ jQuery(function ($) {
     function editRecord(v) {
         record.editFlag = true;
 
-        record.recordItems.orderId.val(v.orderId);
-        record.recordItems.orderAddr.val(v.orderAddr);
-        record.recordItems.startDate.val(v.startTime.split(' ')[0]);
-        record.recordItems.startTime.val(v.startTime.split(' ')[1]);
-        record.recordItems.endDate.val(v.endTime.split(' ')[0]);
-        record.recordItems.endTime.val(v.endTime.split(' ')[1]);
-        record.recordItems.recordDes.val(v.recordDes);
+        record.items.orderId.val(v.orderId);
+        record.items.orderAddr.val(v.orderAddr);
+        record.items.startDate.val(v.startTime.split(' ')[0]);
+        record.items.startTime.val(v.startTime.split(' ')[1]);
+        record.items.endDate.val(v.endTime.split(' ')[0]);
+        record.items.endTime.val(v.endTime.split(' ')[1]);
+        record.items.recordDes.val(v.recordDes);
 
         record["inspectionRecord.irId"] = v.irId;
 
-        record.recordItems.orderId.attr('disabled', true);
-        record.recordItems.orderAddr.attr('disabled', true);
+        record.items.orderId.attr('disabled', true);
+        record.items.orderAddr.attr('disabled', true);
 
         record.modal.modal("show");
     }
@@ -167,11 +169,11 @@ jQuery(function ($) {
 
         var url;
         var options = {
-            "inspectionRecord.orderId": record.recordItems.orderId.val(),
-            "inspectionRecord.orderAddr": record.recordItems.orderAddr.val(),
-            "inspectionRecord.startTime": record.recordItems.startDate.val() + " " + record.recordItems.startTime.val(),
-            "inspectionRecord.endTime": record.recordItems.endDate.val() + " " + record.recordItems.endTime.val(),
-            "inspectionRecord.recordDes": record.recordItems.recordDes.val()
+            "inspectionRecord.orderId": record.items.orderId.val(),
+            "inspectionRecord.orderAddr": record.items.orderAddr.val(),
+            "inspectionRecord.startTime": record.items.startDate.val() + " " + record.items.startTime.val(),
+            "inspectionRecord.endTime": record.items.endDate.val() + " " + record.items.endTime.val(),
+            "inspectionRecord.recordDes": record.items.recordDes.val()
         };
 
         if (options["inspectionRecord.startTime"] > options["inspectionRecord.endTime"]) {

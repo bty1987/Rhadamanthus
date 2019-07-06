@@ -1,17 +1,53 @@
 
 jQuery(function($) {
 	var houseSource = {
+
+		btns: {
+
+			deployedBtn: com.focusPage("#deployedBtn"),
+			bsaveBtn: com.focusPage("#bsaveBtn"),
+			keySaveBtn: com.focusPage("#keySaveBtn"),
+			bcancelBtn: com.focusPage("#bcancelBtn")
+
+		},
+
+		modals: {
+
+			houseHouseDrawingPage: com.focusPage("#houseHouseDrawingPage"),
+			houseSourceBelongModal: com.focusPage("#houseSourceBelongModal"),
+			buildingModal: com.focusPage("#buildingModal"),
+			houseSourceKeyerModal: com.focusPage("#houseSourceKeyerModal")
+
+		},
+
+		buildItems: {
+
+			hsNo: com.focusPage("#hsNo"),
+			csNo: com.focusPage("#csNo"),
+			hsAUser: com.focusPage("#hsAUser"),
+			csAUser: com.focusPage("#csAUser"),
+			signingTime: com.focusPage("#signingTime"),
+			tradePrice: com.focusPage("#tradePrice"),
+			downpayment: com.focusPage("#downpayment"),
+			loanPrice: com.focusPage("#loanPrice"),
+			payType: com.focusPage("#payType"),
+			balanceStatus: com.focusPage("#balanceStatus")
+
+		},
+
+		items: {
+
+			belongUser: com.focusPage("#belongUser"),
+			keyer: com.focusPage("#keyer")
+
+		},
+
 		houseSources: {},
 		hsid: null,
 		csid: null,
-		deployedBtn: null,
-		bsaveBtn: null,
-		bcancelBtn: null,
-		modal: null,
 		houseSourceId: null,
 		houseId: null,
 		keyHsid: null,
-		buildItems: [],
 		hsType: [],
 		houseType: [],
 		decorateDegree: [],
@@ -35,32 +71,36 @@ jQuery(function($) {
 		maxHeight:'100%'
 	};
 
-	com.datetime(com.focusPage(".date-picker"), "date");
+	com.datetime(houseSource.buildItems.signingTime);
 
-	houseSource.deployedBtn = com.focusPage("#deployedBtn").on("click", updateFollowUser);
-	houseSource.bsaveBtn = com.focusPage("#bsaveBtn").on("click", saveBuildingData);
-	houseSource.keySaveBtn = com.focusPage("#keySaveBtn").on("click", updateKeyer);
+	houseSource.btns.deployedBtn.on("click", updateFollowUser);
+	houseSource.btns.bsaveBtn.on("click", saveBuildingData);
+	houseSource.btns.keySaveBtn.on("click", updateKeyer);
 
-	houseSource.modal = com.focusPage("#houseSourceModal");
-	houseSource.modal.on('show.bs.modal',function(e){
-		com.clearValidator();
+	houseSource.modals.houseSourceBelongModal.on("hide.bs.modal", function(){
+    com.cleanItems(houseSource.items);
+		com.cleanTypeahead("belongUser");
+		com.closeTip();
+	});
+
+	houseSource.modals.buildingModal.on("hide.bs.modal", function(){
+
+		com.cleanItems(houseSource.buildItems);
+		com.cleanTypeahead("hsAUser");
+		com.cleanTypeahead("csAUser");
+		com.closeTip();
+	});
+
+	houseSource.modals.houseSourceKeyerModal.on("hide.bs.modal", function(){
+    	com.cleanItems(houseSource.items);
+		com.cleanTypeahead("keyer");
+		com.closeTip();
 	});
 
 	com.initTypeahead("belongUser", api.personel.queryUserByPinyin, "pinyinName", {"departmentType.name":"", "user.status":0}, "autoFillKeyValue", "key", "value");
 	com.initTypeahead("keyer", api.personel.queryUserByPinyin, "pinyinName", {"departmentType.name":"", "user.status":0}, "autoFillKeyValue", "key", "value");
 	com.initTypeahead('hsAUser', api.data.queryCustomerForName, "pinyinName", {}, "autoFillCustomer", "key", "value");
     com.initTypeahead('csAUser', api.data.queryCustomerForName, "pinyinName", {}, "autoFillCustomer", "key", "value");
-
-	houseSource.buildItems.hsNo = com.focusPage("#hsNo");
-	houseSource.buildItems.csNo = com.focusPage("#csNo");
-	houseSource.buildItems.hsAUser = com.focusPage("#hsAUser");
-	houseSource.buildItems.csAUser = com.focusPage("#csAUser");
-	houseSource.buildItems.signingTime = com.focusPage("#signingTime");
-	houseSource.buildItems.tradePrice = com.focusPage("#tradePrice");
-	houseSource.buildItems.downpayment = com.focusPage("#downpayment");
-	houseSource.buildItems.loanPrice = com.focusPage("#loanPrice");
-	houseSource.buildItems.payType = com.focusPage("#payType");
-	houseSource.buildItems.balanceStatus = com.focusPage("#balanceStatus");
 
 	com.post(api.ds.building, {}, function(res){
 		houseSource.buildItems.payType.bindData(res.payType,"key", "value");
@@ -97,14 +137,13 @@ jQuery(function($) {
 		com.post(api.building.queryCustomerSourceByNo, {"customerSource.no" : houseSource.buildItems.csNo.val()}, function(res){
 			if(res.customerSource.status != 0){
 				houseSource.repeatFlg = true;
-				com.showPopover(com.focusPage("#csNo"),{errorMsg: "客源已签约或失效"}, "right");
+				com.showTip(com.focusPage("#csNo"), "客源已签约或失效", "right");
 			}else{
 				houseSource.repeatFlg = false;
 				houseSource.csid = res.customerSource.csid;
-				com.focusPage("#csNo").css("border", "1px solid #d5d5d5").popover("destroy");
 			}
 		}, function(data){
-			com.showPopover(com.focusPage("#csNo"),{errorMsg: "请正确输入客源编号"}, "right");
+			com.showTip(com.focusPage("#csNo"), "请正确输入客源编号", "right");
 			houseSource.repeatFlg = true;
 		}, false);
 	});
@@ -206,7 +245,7 @@ jQuery(function($) {
 				}, null, false);
 
 				initUploadBtn(v.hsid);
-				com.focusPage("#houseHouseDrawingPage").modal("show");
+				houseSource.modals.houseHouseDrawingPage.modal("show");
 			});
 
 			//查看   可以看见房源的所有信息  包括图片  和上传图片
@@ -215,7 +254,7 @@ jQuery(function($) {
 				params.drawingId = v.hsid;
 				params.type = v.type;
 				params.page = "advance";
-				com.switchPage(api.index.houseSourceDetail.url)
+				com.popup4page("#stockRecordPopUp","/views/building/houseSourceDetail.html","查看");
 			});
 
 			//转移房源
@@ -232,8 +271,8 @@ jQuery(function($) {
 				}else{
 					com.cleanTypeahead("belongUser");
 				}
-				
-				com.focusPage("#houseSourceBelongModal").modal("show");
+
+				houseSource.modals.houseSourceBelongModal.modal("show");
 			});
 
 			//绑定客源
@@ -249,17 +288,16 @@ jQuery(function($) {
 				houseSource.buildItems.hsNo.val(v.no);
 				houseSource.hsid = v.hsid;
 				houseSource.buildItems.hsNo.prop("readOnly", true);
-				
-				com.focusPage("#buildingModal").modal("show");
+
+				houseSource.modals.buildingModal.modal("show");
 			});
 
 			//跟进记录
 			$btnRecord.click(function(){
 				params.flag = true;
-				params.page = "advance";
 				params.hsid = v.hsid;
 				params.hsNo = v.no;
-				com.switchPage(api.index.buildingRecord.url);
+				com.popup4page("#stockRecordPopUp","/views/building/buildingRecord.html","跟进记录");
 			});
 
 			//通过
@@ -298,7 +336,7 @@ jQuery(function($) {
 				}
 
 				houseSource.keyHsid = v.hsid;
-				com.focusPage("#houseSourceKeyerModal").modal("show");
+				houseSource.modals.houseSourceKeyerModal.modal("show");
 			});
 
 			//启用禁用
@@ -329,44 +367,47 @@ jQuery(function($) {
 	var searcher = new Searcher();
 	var conditionList = ["houseSourceNo", "houseType", "b_houseSourceType", "b_villageName", "buildingArea", "b_totalPrice", "roomNum", "orientation", "b_decorateDegree", "b_allowLoan", "b_housingGrade", "b_rentType", "b_status"];
 
-	searcher.init(conditionList, "condList", api.building.pageHouseSourceForAdvance, function(data){
-		displayFunc.init('resultList', data);
-	}, "pagenation", "houseSourceAdvancePostData",null, false, null, null);
+	searcher.init(conditionList, "CondList", api.building.pageHouseSourceForAdvance, function(data){
+		displayFunc.init('ResultList', data);
+	}, "Pagenation", "houseSourceAdvancePostData",null, false, null, null);
 
 	//更新房源归属
 	function updateFollowUser(){
 
-		var options = {};
-		options["houseSource.hsid"] = houseSource.houseSourceId;
-		options["houseSource.followUser.userId"] = com.focusPage("#belongUser").val();
+		var options = {
+			"houseSource.hsid": houseSource.houseSourceId,
+			"houseSource.followUser.userId": com.typeahead("belongUser")
+		};
 
 		com.post(api.building.updateHouseSourceForBelong, options, function(res){
-			com.showAlert(info, "房源转移成功")
+			com.showAlert(com.info, "房源转移成功");
 		});
-		com.focusPage("#houseSourceBelongModal").modal("hide");
 
-		com.cleanTypeahead("belongUser");
+		houseSource.modals.houseSourceBelongModal.modal("hide");
+
 		searcher.doSearch();
 	}
 
 	//更新收钥匙人
 	function updateKeyer(){
-		com.post(api.building.updateHouseSourceForKeyer, {"houseSource.hsid":houseSource.keyHsid, "houseSource.keyer.userId":com.focusPage("#keyer").val()}, function(){
+		com.post(api.building.updateHouseSourceForKeyer, {"houseSource.hsid":houseSource.keyHsid, "houseSource.keyer.userId":com.typeahead("keyer")}, function(){
 			com.showAlert(com.info, "收钥匙人已更新");
 		});
 
-		com.focusPage("#houseSourceKeyerModal").modal("hide");
+		houseSource.modals.houseSourceKeyerModal.modal("hide");
 		searcher.doSearch();
 	}
 
 	//更新房源状态
 	function updateHouseSourceStatus(hsid, cvalue){
-		var options = {};
-		options["houseSource.hsid"] = hsid;
-		options["houseSource.status"] = cvalue;
+		var options = {
+			"houseSource.hsid": hsid,
+			"houseSource.status": cvalue
+		};
 
 		com.post(api.building.updateHouseSourceForStatus, options, function(res){
 			com.focusPage("#" + hsid).prop("checked", true);
+
 			searcher.doSearch();
 		});
 	}
@@ -396,7 +437,7 @@ jQuery(function($) {
 			searcher.doSearch();
 		});
 
-		com.focusPage("#buildingModal").modal("hide");
+		houseSource.modals.buildingModal.modal("hide");
 	}
 
 	//删除房产单数据

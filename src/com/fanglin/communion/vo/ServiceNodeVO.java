@@ -2,20 +2,20 @@ package com.fanglin.communion.vo;
 
 import java.io.Serializable;
 
-public class ServiceNodeVO implements Serializable{
+public class ServiceNodeVO implements Serializable {
 
 	private static final long serialVersionUID = -1022765049929397232L;
 
 	private Long snid;
-	
+
 	private String name;
-	
+
 	private String detail;
-	
+
 	private Short type;
-	
+
 	private Short status;
-	
+
 	private Integer company;
 
 	public Long getSnid() {
@@ -65,5 +65,5 @@ public class ServiceNodeVO implements Serializable{
 	public void setCompany(Integer company) {
 		this.company = company;
 	}
-	
+
 }

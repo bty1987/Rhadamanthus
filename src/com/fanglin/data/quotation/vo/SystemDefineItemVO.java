@@ -36,10 +36,14 @@ public class SystemDefineItemVO implements Serializable{
 	private String itemWorkType;
 
 	protected String quotationItemDes;
+	
+	private Float addPrice;
 
 	private Float unitPrice;
 	
-	private int quotationTypeId;
+	private Float subPrice;
+	
+	private Integer quotationTypeId;
 	
 	private Short status;
 	
@@ -125,12 +129,28 @@ public class SystemDefineItemVO implements Serializable{
 		this.quotationItemDes = quotationItemDes;
 	}
 
+	public Float getAddPrice() {
+		return addPrice;
+	}
+
+	public void setAddPrice(Float addPrice) {
+		this.addPrice = addPrice;
+	}
+
 	public Float getUnitPrice(){
 		return unitPrice;
 	}
 
 	public void setUnitPrice(Float unitPrice){
 		this.unitPrice = unitPrice;
+	}
+
+	public Float getSubPrice() {
+		return subPrice;
+	}
+
+	public void setSubPrice(Float subPrice) {
+		this.subPrice = subPrice;
 	}
 
 	public int getQuotationTypeId() {

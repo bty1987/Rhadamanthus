@@ -3,10 +3,12 @@ jQuery(function ($) {
     var purchase = {
         pid: params["purchase.pid"],
         items: {
-        	
         	list: com.focusPage("#list"),
-        	
             createTime: com.focusPage("#createTime")
+        },
+        btns:{
+            warehouseBtn:com.focusPage("#warehouseBtn"),
+            cancelBtn:com.focusPage("#cancelBtn")
         },
         record: {},
         storehouses: []
@@ -30,12 +32,12 @@ jQuery(function ($) {
     });
 
     //表单提交
-    com.focusPage("#warehouseBtn").click(function () {
+    purchase.btns.warehouseBtn.click(function () {
     	inware();
     });
 
     //关闭弹窗
-    com.focusPage("#cancelBtn").click(function () {
+    purchase.btns.cancelBtn.click(function () {
         com.closePopup();
     });
 

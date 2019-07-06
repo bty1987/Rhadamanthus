@@ -56,14 +56,6 @@ public class DecorationActivityAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "queryDecorationActivityItemForCouponAVaildByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryDecorationActivityItemForCouponAVaildByOrderId() {
-
-		decorationActivityItems = decorationActivityItemService.queryDecorationActivityItemForCouponAVaildByOrderId(decoration);
-
-		return SUCCESS;
-	}
-
 	@Action(value = "addDecorationActivity", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addDecorationActivity() throws FLException {
 
@@ -140,6 +132,14 @@ public class DecorationActivityAction extends BaseListAction {
 	public String expendDecorationActivityItem() throws FLException {
 
 		decorationActivityItemService.expendDecorationActivityItem(decorationActivityItem, queryUserId());
+
+		return SUCCESS;
+	}
+	
+	@Action(value = "amountDecorationActivityItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String amountDecorationActivityItem() throws FLException {
+
+		decorationActivityItemService.amountDecorationActivityItem(decoration, queryUserId());
 
 		return SUCCESS;
 	}

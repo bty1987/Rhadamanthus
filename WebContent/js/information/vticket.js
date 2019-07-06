@@ -19,6 +19,12 @@ jQuery(function($) {
 
 	vticket.saveBtn.bindClick(saveData);
 
+	vticket.modals.vticketModal.on("hide.bs.modal", function () {
+		com.clearValidator();
+		com.cleanTypeahead("belonger");
+		com.cleanItems(vticket.items);
+	});
+
 	com.initTypeahead('belonger', api.personel.queryUserByPinyin, "pinyinName", {"departmentType.name" : "", "user.status" : 0}, "autoFillKeyValue", "key", "value", null);
 
 	var displayFunc = (function() {
@@ -109,9 +115,6 @@ jQuery(function($) {
 
 	com.focusPage('#addVticket', '#pagenation').click(function() {
 		vticket.items.tno.attr("readOnly", false);
-		com.cleanTypeahead("belonger");
-		com.clearValidator();
-		com.cleanItems(vticket.items);
 		vticket.modals.vticketModal.modal("show");
 	});
 

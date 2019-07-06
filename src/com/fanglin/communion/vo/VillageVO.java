@@ -7,7 +7,7 @@ import com.fanglin.system.vo.CityProperVO;
 public class VillageVO implements Serializable {
 
 	private static final long serialVersionUID = 6573242903839888845L;
-	
+
 	private Long vid;
 
 	private String no;
@@ -21,21 +21,21 @@ public class VillageVO implements Serializable {
 	private String salesPhone;
 
 	private String deliveryTime;
-	
+
 	private String rule;
 
 	private String content;
-	
+
 	private Double x;
-	
+
 	private Double y;
-	
+
 	private Short status;
-	
+
 	private String url;
-	
+
 	private Integer company;
-	
+
 	public VillageVO() {
 		super();
 	}
@@ -108,7 +108,7 @@ public class VillageVO implements Serializable {
 	public void setRule(String rule) {
 		this.rule = rule;
 	}
-	
+
 	public String getContent() {
 		return content;
 	}
@@ -156,7 +156,5 @@ public class VillageVO implements Serializable {
 	public void setCompany(Integer company) {
 		this.company = company;
 	}
-	
-	
 
 }

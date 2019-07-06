@@ -26,20 +26,20 @@ import com.fanglin.utils.Paging;
 
 @Repository("receiptTypeDao")
 public class ReceiptTypeDaoImpl extends DaoImpl<ReceiptTypePO> implements ReceiptTypeDao {
-	
-	public ReceiptTypeDaoImpl(){
+
+	public ReceiptTypeDaoImpl() {
 		super(ReceiptTypePO.class);
 	}
 
 	@Override
-	public List<ReceiptTypePO> pageReceiptType(Paging paging, List<Filter> filters,int company) {
-		
+	public List<ReceiptTypePO> pageReceiptType(Paging paging, List<Filter> filters, int company) {
+
 		PagingQuery<ReceiptTypePO> query = pagingQuery(paging, ReceiptTypePO.class);
 
 		queryFilterExcute(query, filters);
 
 		query.add(Restrictions.eq("company", company));
-		
+
 		query.asc("rtId");
 
 		return query.list();
@@ -54,22 +54,22 @@ public class ReceiptTypeDaoImpl extends DaoImpl<ReceiptTypePO> implements Receip
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<ReceiptTypePO> queryReceiptTypeByType(short type, String grade, int company) {
-		
+
 		Criteria criteria = session().createCriteria(ReceiptTypePO.class).add(Restrictions.eq("company", company)).add(Restrictions.eq(ReceiptTypePO.COLUMN_TYPE_STR, type));
-		
-		if(grade != null){
+
+		if (grade != null) {
 			criteria.add(Restrictions.eq(ReceiptTypePO.COLUMN_GRADE_STR, grade));
 		}
-		
+
 		return criteria.list();
 	}
-	
+
 	@Override
-	public ReceiptTypePO queryReceiptTypeByNo(String no,int company) {
+	public ReceiptTypePO queryReceiptTypeByNo(String no, int company) {
 		return (ReceiptTypePO) session().createCriteria(ReceiptTypePO.class).add(Restrictions.eq("company", company)).add(Restrictions.eq(ReceiptTypePO.COLUMN_NO_STR, no)).uniqueResult();
 	}
 
-	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
 		if (filters != null) {
 			for (Filter filter : filters) {
@@ -82,7 +82,7 @@ public class ReceiptTypeDaoImpl extends DaoImpl<ReceiptTypePO> implements Receip
 				}
 			}
 		}
-		
+
 	}
 
 }

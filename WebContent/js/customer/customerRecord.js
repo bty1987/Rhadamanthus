@@ -1,10 +1,14 @@
 $(function () {
     var createCustomerSource = {
-        record: null,
-        items: {}
+        record: com.focusPage("#record"),
+        items: {
+            comments: com.focusPage("#comments")
+        }
     };
-    createCustomerSource.items.comments = com.focusPage("#comments");
-    createCustomerSource.record = com.focusPage("#record").on("click", record);
+
+    createCustomerSource.record.bindClick(record);
+
+    initRecord();
 
     var displayFunc = (function () {
 
@@ -55,27 +59,26 @@ $(function () {
         };
     })();
 
-    var $customerRecord = com.focusPage('#customerRecord');
-    var csid = $customerRecord.attr('data-csid');
-    com.post(api.customer.queryCustomerRecord, {"customerRecord.csid": csid}, function (res) {
-        displayFunc.init('resultList1', res.customerRecords);
-    });
-
     function record() {
-        var options = {};
-        options['customerRecord.csid'] = csid;
-        options['customerRecord.comment'] = createCustomerSource.items.comments.val();
+
+        if(com.validate('form')) return false;
+
+        var options = {
+            'customerRecord.csid': params.csid,
+            'customerRecord.comment': createCustomerSource.items.comments.val()
+        };
+
         com.post(api.customer.addCustomerRecord, options, function (res) {
-            com.post(api.customer.queryCustomerRecord, {"customerRecord.csid": csid}, function (res) {
-                displayFunc.init('resultList1', res.customerRecords);
-            });
+            com.cleanItems(createCustomerSource.items);
+            initRecord();
             com.showAlert(com.info, "记录创建成功");
-            deleteDate();
         });
     }
 
-    function deleteDate() {
-        com.cleanItems(createCustomerSource.items);
+    function initRecord(){
+        com.post(api.customer.queryCustomerRecord, {"customerRecord.csid": params.csid}, function (res) {
+            displayFunc.init('resultList1', res.customerRecords);
+        });
     }
 
 });

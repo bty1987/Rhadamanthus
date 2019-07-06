@@ -1,5 +1,5 @@
 $(function () {
-    
+
     var salesItem = {
         
         sid: params.sid,
@@ -19,7 +19,11 @@ $(function () {
             refundCancelBtn : com.focusPage('#refundCancelBtn'),
             fullRefundBtn : com.focusPage('#fullRefundBtn'),
             reOrderBtn : com.focusPage('#reOrderBtn'),
-            importBtn : com.focusPage('#importBtn')
+            importBtn : com.focusPage('#importBtn'),
+
+            editCancelBtn : com.focusPage('#editCancelBtn'),
+            approverSaveBtn : com.focusPage("#approverSaveBtn"),
+            approverCancelBtn : com.focusPage("#approverCancelBtn")
         },
         
         options: {},
@@ -31,10 +35,6 @@ $(function () {
         hideButtons([salesItem.btns.refundBtn, salesItem.btns.refundCancelBtn, salesItem.btns.refundCommitBtn, salesItem.btns.fullRefundBtn, salesItem.btns.reOrderBtn]);
     }
 
-    salesItem.items.refund.focus(function () {
-        salesItem.items.refund.popover('destroy');
-    });
-    
     var initList = function (listData) {
         var $tableWrap = com.focusPage('#list');
         var $ul = $('<ul></ul>').addClass('item-list ui-sortable  fl-table-list');
@@ -147,7 +147,7 @@ $(function () {
         },function () {
             com.clearValidator();
             closeRefundlayer();
-            com.focusPage('#salesItemDetialapprover').empty();
+            salesItem.items.approver.empty();
         });
     });
 
@@ -170,7 +170,7 @@ $(function () {
         },function () {
             com.clearValidator();
             closeRefundlayer();
-            com.focusPage('#salesItemDetialapprover').empty();
+            salesItem.items.approver.empty();
         });
     });
 
@@ -191,7 +191,7 @@ $(function () {
         },function () {
             com.clearValidator();
             closeRefundlayer();
-            com.focusPage('#salesItemDetialapprover').empty();
+            salesItem.items.approver.empty();
         });
     });
     //编辑中的确认
@@ -223,19 +223,17 @@ $(function () {
 
     });
     //编辑中的取消
-    com.focusPage('#editCancelBtn').click(function () {
+    salesItem.btns.editCancelBtn.click(function () {
         com.clearValidator();
-        com.closePopup(com.focusPage("#editCancelBtn"));
+        com.closePopup(com.focusPage('#editCancelBtn'));
     });
     // 退货审批提交
-    com.focusPage("#approverSaveBtn").click(function () {
+    salesItem.btns.approverSaveBtn.click(function () {
 
         if (com.validate('miniPopUp', 'right')) {
             return false;
         }
-
-        var radios = com.focusPage('#salesItemDetialapprover').find('input:checked').attr('userid');
-
+        var radios = com.focusPage("#salesItemDetialapprover").find('input:checked').attr('userid');
         if (radios == null || radios == "") {
             com.showAlert(com.warning, "请选择审批人");
             return false;
@@ -253,18 +251,18 @@ $(function () {
         com.post(api.approval.submitApprovalForSalesRefund, $.extend(options, salesItem.options), function () {
             salesItem.btns.refundCancelBtn.trigger('click');
             refundLayerOut();
-            com.focusPage('#salesItemDetialapprover').empty();
+            salesItem.items.approver.empty();
             com.showAlert(com.info, "操作成功");
             com.closePopup(com.focusPage("#approverSaveBtn"));
         });
     });
     
     //取消
-    com.focusPage("#approverCancelBtn").click(function () {
+    salesItem.btns.approverCancelBtn.click(function () {
         com.clearValidator();
         closeRefundlayer();
         com.closePopup(com.focusPage("#approverCancelBtn"));
-        com.focusPage('#salesItemDetialapprover').empty();
+        salesItem.items.approver.empty();
     });
 
     salesItem.btns.refundCancelBtn.click(function () {
@@ -320,14 +318,7 @@ $(function () {
             if(!isAll){
 
                 if(max < num){
-                    that.addClass('popover-notitle').attr({
-                        "data-rel": "popover",
-                        "data-placement": "bottom",
-                        "data-original-title": "",
-                        "title": "",
-                        "data-content": "数量错误"
-
-                    }).popover('show');
+                    com.showTip(that,"数量错误!","bottom");
                     total = 0;
                     return false;
                 }else {
@@ -339,7 +330,6 @@ $(function () {
                         salesItem.options["approvalSalesRefundItem[" + i + "].num"] = num;
                         salesItem.options["approvalSalesRefundItem[" + i + "].total"] = _total;
                     }
-                    that.popover('destroy');
                     return true;
                 }
 
@@ -408,5 +398,4 @@ $(function () {
             });
         });
     });
-
 });

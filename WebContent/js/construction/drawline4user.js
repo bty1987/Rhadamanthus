@@ -16,21 +16,22 @@ jQuery(function ($) {
         },
         
         decorationStatus: {},
-        constructionSchedul :{}
+        constructionNodes :{}
     };
 
     drawline.btns.deployedBtn.bindClick(deployed);
 
+    drawline.modals.setupModal.on("hide.bs.modal", function(){
+
+        com.cleanItems(drawline.items);
+        com.cleanTypeahead("supervisor");
+        com.closeTip();
+    });
+
     com.initTypeahead('supervisor', api.personel.queryUserByPinyin, "pinyinName", {"departmentType.name": "工程部", "user.status": 0}, "userBases", "userId", "currentName", null);
 
-    com.post(api.data.queryConstructionNode, {}, function (res) {
-        drawline.constructionSchedul = res.constructionNodes.split("sort", "name");
-    }, null, false);
-
     com.post(api.ds.construction, {}, function (res) {
-        $.each(res.constructionSchedul, function (i, v) {
-            drawline.constructionSchedul[v["key"]] = v["value"];
-        });
+        drawline.constructionNodes = res.constructionSchedule.split("key", "value");
     }, null, false);
     
     com.post(api.ds.decoration, {}, function (res) {
@@ -72,7 +73,7 @@ jQuery(function ($) {
                 ["设计师:", v.designer.userName, "grey"],
                 ["面积:", v.house.buildArea, "blue"],
                 ["创建时间:", v.createTime, "green"],
-                ["进度:", drawline.constructionSchedul[v.projectStatus], "red"],
+                ["进度:", drawline.constructionNodes[v.projectStatus], "red"],
                 ["状态:", drawline.decorationStatus[v.status], "red"]
             ];
 

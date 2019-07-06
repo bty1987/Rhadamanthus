@@ -10,7 +10,7 @@ var ExtensionDetail = (function(){
         eid : null,//增减项编号
         basicParams : {
             "extension.eid": null,
-            "extensionItem.eiId": null,
+            "extensionItem.eiid": null,
             "extension.total" : 0
         },
         $Extensiontype : null,
@@ -253,15 +253,16 @@ var ExtensionDetail = (function(){
                 };
 
                 var args = {
-                    "extensionItem.eiId" : "0",//增减项报价项Id , 新建无此参数;
-                    "extensionItem.itemName" : addRow.itemName,//项目名;
-                    "extensionItem.measurementUnit" : addRow.measurementUnit,//单位 ;
-                    "extensionItem.workType" : addRow.workType,//工种 ;
-                    "extensionItem.unitPrice" : addRow.unitPrice,//单价 ;
-                    "extensionItem.subtype" : addRow.subtype,//类型
+                    "extensionItem.itemName" : addRow.itemName, // 项目名
+                    "extensionItem.measurementUnit" : addRow.measurementUnit, // 单位
+                    "extensionItem.workType" : addRow.workType, // 工种
+                    "extensionItem.addPrice" : addRow.unitPrice, // 增补价
+                    "extensionItem.unitPrice" : addRow.unitPrice, // 单价
+                    "extensionItem.subPrice" : addRow.unitPrice, // 退减价
+                    "extensionItem.subtype" : addRow.subtype, // 类型
                     "extensionItem.type" : addRow.type,
-                    "extensionItem.num" : addRow.num,//工程量 ;
-                    "extensionItem.quotationFunctionAreaId" : addRow.quotationFunctionAreaId,//所属功能区Id ;
+                    "extensionItem.num" : addRow.num, // 工程量 ;
+                    "extensionItem.quotationFunctionAreaId" : addRow.quotationFunctionAreaId, // 所属功能区Id ;
                     "extensionItem.quotationFunctionAreaName" : com.focusPage("#quotationFunctionAreaId").find('option:selected').text(),//所属功能区name ;
                     "extensionItem.content" : addRow.content,
                     "quotationFunctionAreaItem.content" : addRow.content
@@ -277,7 +278,7 @@ var ExtensionDetail = (function(){
                 var _params = $.extend(true, {},extensionDetail.basicParams,args, {"extension.total" : sumobj.sumd});
 
                 com.post(api.quotation.updateExtensionItem, _params, function(res){
-                    $item.find('input[name="eiId"]').val(res.extensionItem.eiId);
+                    $item.find('input[name="eiid"]').val(res.extensionItem.eiid);
                     arCalculator.changeSum(sumobj.sum, sumobj.sumd);
                 }, null, false);
 
@@ -348,11 +349,14 @@ var ExtensionDetail = (function(){
                     return;
                 }
 
+                var addPrice = parseFloat($li.find("li .addPrice").text() ? $li.find("li .addPrice").text() : 0);
                 var unitPrice = parseFloat($li.find("li .unitPrice").text() ? $li.find("li .unitPrice").text() : 0);
+                var subPrice = parseFloat($li.find("li .subPrice").text() ? $li.find("li .subPrice").text() : 0);
+                
                 if (extensionDetail.type == 0){ //增项,增补价
-                    unitPrice = parseFloat($li.find("li .addPrice").text() ? $li.find("li .addPrice").text() : unitPrice);
+                    unitPrice = addPrice;
                 }else if(extensionDetail.type == 1){ //减项,退减价
-                    unitPrice = parseFloat($li.find("li .subPrice").text() ? $li.find("li .subPrice").text() : unitPrice);
+                    unitPrice = subPrice;
                 }
 
                 var _quotval = {
@@ -362,7 +366,9 @@ var ExtensionDetail = (function(){
                     "quotationFunctionAreaName" : modalEventBinding.functionAreaName,//功能区
                     "quotationBigCategory" : $li.find("li .quotationBigCategory").text(),//大类
                     "measurementUnit" : $li.find("li .measurementUnit").text(),//单位
+                    "addPrice" : addPrice,
                     "unitPrice" : unitPrice,
+                    "subPrice" : subPrice,
                     "content" : $li.find("li .quotationItemDes").text(),//工艺说明
                     "workType" : $li.find("li .workType").text(),//工种
                     "type" : extensionDetail.type == 0?0:2,//类型(隐藏属性)
@@ -406,11 +412,13 @@ var ExtensionDetail = (function(){
                 var _type = that.$nowLine.find('.typedict').attr('data-type');
 
                 var args = {
-                    "extensionItem.eiId" : that.$nowLine.find('input[name="eiId"]').val(),//增减项报价项Id , 新建无此参数;
+                    "extensionItem.eiid" : that.$nowLine.find('input[name="eiid"]').val(),//增减项报价项Id , 新建无此参数;
                     "extensionItem.itemName" : that.$nowLine.find('.name .cell-wrap').text(),//项目名;
                     "extensionItem.measurementUnit" : that.$nowLine.find('.unit .cell-wrap').text(),//单位 ;
                     "extensionItem.workType" : that.$nowLine.find('.worktype .cell-wrap').text(),//工种 ;
-                    "extensionItem.unitPrice" : that.$nowLine.find('.unitprice .cell-wrap').text(),//单价 ;
+                    "extensionItem.addPrice" : that.$nowLine.attr('data-addPrice'), // 单价
+                    "extensionItem.unitPrice" : that.$nowLine.find('.unitprice .cell-wrap').text(),//单价
+                    "extensionItem.subPrice" : that.$nowLine.attr('data-subPrice'), // 单价
                     "extensionItem.type" : _type,//类型
                     "extensionItem.subtype" :that.$nowLine.find('.subtypedict').attr('data-subtype'),
                     "extensionItem.num" : that.$nowLine.find('.num .cell-wrap').text(),//工程量 ;
@@ -418,7 +426,7 @@ var ExtensionDetail = (function(){
                 };
 
                 if(_type == 0||_type == 2){
-                    args["extensionItem.quoteItemId"] = that.$nowLine.find('input[name="eiId"]').attr('data-quoteitemid');// , 报价项Id , 普通类型报价项需要传递 "data-qiid"
+                    args["extensionItem.quoteItemId"] = that.$nowLine.find('input[name="eiid"]').attr('data-quoteitemid');// , 报价项Id , 普通类型报价项需要传递 "data-qiid"
                 }
                 if(_type == 1||_type == 3){
                     args["extensionItem.content"] = that.$nowLine.prop('title');// , 报价项说明 , 自定义类型报价项需要传递 ;
@@ -433,7 +441,7 @@ var ExtensionDetail = (function(){
                 com.post(api.quotation.updateExtensionItem, _params, function(res){
                     that.$nowLine.removeAttr('data-del-flag');
                     arCalculator.changeQuoFee(that.$nowLine, qfobj.discountprice, qfobj.totalpriced, qfobj.totalprice );
-                    that.$nowLine.find('input[name="eiId"]').val(res.extensionItem.eiId);
+                    that.$nowLine.find('input[name="eiid"]').val(res.extensionItem.eiid);
                     arCalculator.changeSum(sumobj.sum + qfobj.totalprice, sumobj.sumd + qfobj.totalpriced);
                     if($line.length){
                         that.getNumCellFocus($line);
@@ -504,7 +512,7 @@ var ExtensionDetail = (function(){
                 
                 var sumobj = arCalculator.calculateArFees();
                 
-                _params["extensionItem.eiId"] = _qid;
+                _params["extensionItem.eiid"] = _qid;
                 _params["extensionItem.eid"] = extensionDetail.basicParams["extensionItem.eid"];
                 _params["extension.total"] = sumobj.sumd;
 
@@ -615,23 +623,17 @@ var ExtensionDetail = (function(){
             $btnCellWrap = $('<div></div>').addClass('cell-wrap');
             $input = $('<input>').attr({
                 "type" : "hidden",
-                "name" : "eiId",
+                "name" : "eiid",
                 "data-quoteItemId" : qv.quoteItemId
-            }).val(qv.eiId);
-            $btnDel = $('<a></a>').attr({
-                "data-rel" : "tooltip",
-                "href" : "javascript:void(0)",
-                "data-original-title" : "删除报价项"
-            }).css({"padding-left" : "5px","text-decoration" : "none"})
-                .append('<i class="bigger-125 icon-remove pink"></i>')
-                .tooltip();
-            $btnInfo = $('<a></a>').attr({
-                "data-rel" : "tooltip",
-                "href" : "javascript:void(0)",
-                "data-original-title" : "报价信息"
-            }).css({"padding-left" : "5px","text-decoration" : "none"})
-                .append('<i class="bigger-125 icon-search"></i>')
-                .tooltip();
+            }).val(qv.eiid);
+            
+            $btnDel = $('<a></a>').attr({"href" : "javascript:void(0)"}).css({"padding-left" : "5px"}).append('<i class="bigger-125 icon-remove pink"></i>').mouseenter(function(){
+                com.showTip(this, "删除报价项", "top");
+            });
+            $btnInfo = $('<a></a>').attr({"href" : "javascript:void(0)"}).css({"padding-left" : "5px"}).append('<i class="bigger-125 icon-search"></i>').mouseenter(function(){
+                com.showTip(this, "报价信息", "top");
+            });
+            
             $btnCellWrap.append($input).append($btnDel).append($btnInfo).appendTo($btnCell);
             $item.append($btnCell);
 
@@ -641,16 +643,22 @@ var ExtensionDetail = (function(){
             });
             //删除报价项
             $btnDel.click(function(e){
-                e.stopPropagation();
                 quote.deleteQuote($item);
+                return false;
             });
             //查看
             $btnInfo.click(function(e){
-                e.stopPropagation();
                 qv.content && com.showTip(this, qv.content, 'left');
+                return false;
             });
-
-            $item.attr('data-totalprice', utils.changeTwoDecimal(utils.accMul(qv.num ,  _dcp)) );
+            
+            var itemInfo = {
+                "data-totalprice": utils.changeThrDecimal(utils.accMul(qv.num ,  _dcp)),
+                "data-addPrice": qv.addPrice,
+                "data-subPrice": qv.subPrice,
+            }
+            
+            $item.attr(itemInfo);
 
             return $item;
         }

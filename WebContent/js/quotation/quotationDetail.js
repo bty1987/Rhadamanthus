@@ -881,12 +881,9 @@ var QuotationDetail = (function(){
 				if(!v[2]){
 					return;
 				}
-				$btns[k] = $('<a></a>').attr({
-					"href" : "javascript:void(0)",
-					"data-rel" : "tooltip",
-					//"data-placement" : "bottom",
-					"data-original-title" : v[0]
-				}).addClass('tooltip-info').css({"padding-left": "5px","text-decoration" : "none"}).append(v[1]).appendTo($dtoolbar).tooltip();
+				$btns[k] = $('<a></a>').attr({"href": "javascript:void(0)"}).css({"padding-left": "5px"}).append(v[1]).appendTo($dtoolbar).mouseenter(function(){
+                    com.showTip(this, v[0], "top");
+                });
 			});
 
 			$btns["$btnFold"].attr({"data-action" : "collapse"});
@@ -1015,42 +1012,37 @@ var QuotationDetail = (function(){
 				$btnCellWrap.append($inputLable).appendTo($btnCell);
 				$item.append($btnCell);
 
-				$btnDel = $('<a></a>').attr({
-					"data-rel" : "tooltip",
-					"href" : "javascript:void(0)",
-					"data-original-title" : "删除报价项"
-				}).css({"padding-left" : "5px","text-decoration" : "none"})
-					.append('<i class="bigger-125 icon-remove pink"></i>')
-					.tooltip();
-				$btnInfo = $('<a></a>').attr({
-					"data-rel" : "tooltip",
-					"href" : "javascript:void(0)",
-					"data-original-title" : "报价信息"
-				}).css({"padding-left" : "5px","text-decoration" : "none"})
-					.append('<i class="bigger-125 icon-search"></i>')
-					.tooltip();
+				$btnDel = $('<a></a>').attr({"href": "javascript:void(0)"}).css({"padding-left": "5px"}).append('<i class="bigger-125 icon-remove pink"></i>').mouseenter(function(){
+                    com.showTip(this, "删除报价项", "top");
+                });
+				$btnInfo = $('<a></a>').attr({"href": "javascript:void(0)"}).css({"padding-left": "5px"}).append('<i class="bigger-125 icon-search"></i>').mouseenter(function(){
+                    com.showTip(this, "报价信息", "top");
+                });
 				$btnCellWrap.append($btnDel).append($btnInfo);
 
 				//各种绑定事件
 				$item.click(function(){//编辑数量
 					quote.getNumCellFocus($item);
+					return false;
 				});
 				//删除报价项
 				$btnDel.click(function(e){
-					e.stopPropagation();
 					quote.deleteQuote($item);
+					return false;
 				});
 				//查看
 				$btnInfo.click(function(e){
-					e.stopPropagation();
 					qv.content && com.showTip(this, qv.content, 'left');
+					return false;
 				});
 			}else{
 				if(qv.type == 2){ // 车运费
 					$item.attr('id', 'conveyanceCost');
 					$btnCell = $('<div></div>').addClass('cell btns');
 					$btnCellWrap = $('<div></div>').addClass('cell-wrap');
-					$btnset = $('<a></a>').css('visibility', 'hidden').css('text-decoration',  'none').append('<i class="bigger-125 icon-cog purple"></i>');
+					$btnset = $('<a></a>').css('visibility', 'hidden').attr('href', 'javascript:void(0)').append('<i class="bigger-125 icon-cog purple"></i>').mouseenter(function(){
+                        com.showTip(this, "车运费设置", "top");
+                    });;
 					$btnCellWrap.append($btnset).appendTo($btnCell);
 					$item.append($btnCell);
 				}
@@ -1058,7 +1050,9 @@ var QuotationDetail = (function(){
 					$item.attr('id', 'manageCost').attr('qfaiId', qv.qfaiId);//管理费
 					$btnCell = $('<div></div>').addClass('cell btns');
 					$btnCellWrap = $('<div></div>').addClass('cell-wrap');
-					$btnset = $('<a></a>').attr('data-rel', 'tooltip').attr('href', 'javascript:void(0)').attr('data-original-title', '管理费设置').css('text-decoration',  'none').append('<i class="bigger-125 icon-cog purple"></i>');
+					$btnset = $('<a></a>').attr('href', 'javascript:void(0)').attr('data-original-title', '管理费设置').append('<i class="bigger-125 icon-cog purple"></i>').mouseenter(function(){
+                        com.showTip(this, "管理费设置", "top");
+                    });;
 					$btnCellWrap.append($btnset).appendTo($btnCell);
 					$item.append($btnCell);
 

@@ -30,7 +30,7 @@ import com.fanglin.utils.PinYin4Util;
 @Service("villageService")
 @Transactional(readOnly = true)
 public class VillageServiceImpl implements VillageService {
-	
+
 	@Autowired
 	private CompanyDao companyDao;
 
@@ -87,10 +87,10 @@ public class VillageServiceImpl implements VillageService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int addVillage(VillageVO villageVO, Integer company) throws FLException {
-		
+
 		CompanyPO companyPO = companyDao.get(company);
-		
-		if(companyPO == null){
+
+		if (companyPO == null) {
 			throw new FLException(230015, "公司不存在");
 		}
 

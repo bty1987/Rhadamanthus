@@ -45,7 +45,11 @@ public class AddReduceItemPO implements java.io.Serializable {
 	
 	private String workType;
 	
-	private float unitPrice;
+	private float addPrice;  //增补价
+	
+	private float unitPrice; // 原单价
+	
+	private float subPrice;  //退减价
 	
 	private float num;
 	
@@ -121,6 +125,15 @@ public class AddReduceItemPO implements java.io.Serializable {
 	public void setWorkType(String workType) {
 		this.workType = workType;
 	}
+	
+	@Column(name = "addPrice")
+	public float getAddPrice() {
+		return addPrice;
+	}
+
+	public void setAddPrice(float addPrice) {
+		this.addPrice = addPrice;
+	}
 
 	@Column(name = "unitPrice")
 	public float getUnitPrice() {
@@ -129,6 +142,15 @@ public class AddReduceItemPO implements java.io.Serializable {
 
 	public void setUnitPrice(float unitPrice) {
 		this.unitPrice = unitPrice;
+	}
+
+	@Column(name = "subPrice")
+	public float getSubPrice() {
+		return subPrice;
+	}
+
+	public void setSubPrice(float subPrice) {
+		this.subPrice = subPrice;
 	}
 
 	@Column(name = "num")

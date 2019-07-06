@@ -11,8 +11,8 @@ public interface DutyService {
 	public void pageDuty(Paging paging, List<Filter> filters);
 
 	public List<DutyVO> queryDuty();
-	
-	public  List<DutyVO> queryDutyByDtid(DutyVO duty);
+
+	public List<DutyVO> queryDutyByDtid(DutyVO duty);
 
 	public int addDuty(DutyVO dutyVO) throws FLException;
 

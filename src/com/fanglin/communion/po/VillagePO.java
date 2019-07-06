@@ -17,22 +17,22 @@ import com.fanglin.system.po.CityProperPO;
 public class VillagePO implements Serializable {
 
 	private static final long serialVersionUID = -6088354807004872639L;
-	
+
 	public static final String COLUMN_STATUS_STR = "status";
-	
+
 	public static final short STATUS_ENABLE_INT = 0;
-	
+
 	public static final short STATUS_DISABLE_INT = 1;
-	
+
 	private long vid;
 
 	private String no;
 
 	private String name;
 
-	private String pinyinAB ;
+	private String pinyinAB;
 
-	private String pinyinAll ;
+	private String pinyinAll;
 
 	private CityProperPO cityProper;
 
@@ -41,22 +41,22 @@ public class VillagePO implements Serializable {
 	private String salesPhone;
 
 	private String deliveryTime;
-	
+
 	private String rule;
 
 	private String content;
-	
+
 	private double x;
-	
+
 	private double y;
-	
+
 	private short status;
-	
+
 	private String url;
 
 	private int company;
-	
-	public VillagePO(){
+
+	public VillagePO() {
 		super();
 	}
 
@@ -69,9 +69,9 @@ public class VillagePO implements Serializable {
 		super();
 		this.cityProper = cityProper;
 	}
-	
+
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "vid") 
+	@Column(name = "vid")
 	public long getVid() {
 		return vid;
 	}
@@ -119,41 +119,41 @@ public class VillagePO implements Serializable {
 
 	@javax.persistence.ManyToOne(fetch = FetchType.EAGER)
 	@javax.persistence.JoinColumn(nullable = false, name = "cityProperId", referencedColumnName = "cpid")
-	public CityProperPO getCityProper(){
+	public CityProperPO getCityProper() {
 		return cityProper;
 	}
 
-	public void setCityProper(CityProperPO cityProper){
+	public void setCityProper(CityProperPO cityProper) {
 		this.cityProper = cityProper;
 	}
 
 	@Column(name = "developer")
-	public String getDeveloper(){
+	public String getDeveloper() {
 		return developer;
 	}
 
-	public void setDeveloper(String developer){
+	public void setDeveloper(String developer) {
 		this.developer = developer;
 	}
 
 	@Column(name = "salesPhone")
-	public String getSalesPhone(){
+	public String getSalesPhone() {
 		return salesPhone;
 	}
 
-	public void setSalesPhone(String salesPhone){
+	public void setSalesPhone(String salesPhone) {
 		this.salesPhone = salesPhone;
 	}
 
 	@Column(name = "deliveryTime")
-	public String getDeliveryTime(){
+	public String getDeliveryTime() {
 		return deliveryTime;
 	}
 
-	public void setDeliveryTime(String deliveryTime){
+	public void setDeliveryTime(String deliveryTime) {
 		this.deliveryTime = deliveryTime;
 	}
-	
+
 	@Column(name = "rule")
 	public String getRule() {
 		return rule;
@@ -164,29 +164,29 @@ public class VillagePO implements Serializable {
 	}
 
 	@Column(name = "content")
-	public String getContent(){
+	public String getContent() {
 		return content;
 	}
 
-	public void setContent(String content){
+	public void setContent(String content) {
 		this.content = content;
 	}
 
 	@Column(name = "x")
-	public double getX(){
+	public double getX() {
 		return x;
 	}
 
-	public void setX(double x){
+	public void setX(double x) {
 		this.x = x;
 	}
 
 	@Column(name = "y")
-	public double getY(){
+	public double getY() {
 		return y;
 	}
 
-	public void setY(double y){
+	public void setY(double y) {
 		this.y = y;
 	}
 
@@ -217,6 +217,4 @@ public class VillagePO implements Serializable {
 		this.company = company;
 	}
 
-	
-	
 }

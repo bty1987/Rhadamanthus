@@ -21,6 +21,6 @@ import com.fanglin.utils.Paging;
 public interface QuotationBigCategoryDao extends Dao<QuotationBigCategoryPO> {
 
 	public List<QuotationBigCategoryPO> pageQuotationBigCategory(Paging paging, List<Filter> filters);
-	
+
 	public List<QuotationBigCategoryPO> queryQuotationBigCategory(Integer qtid);
 }

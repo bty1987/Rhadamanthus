@@ -5,27 +5,27 @@ public class BrandVO implements java.io.Serializable {
 	private static final long serialVersionUID = -7415918438727720875L;
 
 	private Long bid;
-	
+
 	private String no;
-	
+
 	private String name;
-	
+
 	private String alias;
-	
+
 	private String pinyin;
-	
+
 	private Long cid;
-	
+
 	private String categoryId;
-	
+
 	private String categoryName;
-	
+
 	private int company;
-	
+
 	private String kino;
-	
+
 	private String kiname;
-	
+
 	public Long getBid() {
 		return bid;
 	}
@@ -113,5 +113,5 @@ public class BrandVO implements java.io.Serializable {
 	public void setCompany(int company) {
 		this.company = company;
 	}
-	
+
 }

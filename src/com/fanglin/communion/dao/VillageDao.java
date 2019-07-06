@@ -17,15 +17,15 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.Paging;
 
 public interface VillageDao extends Dao<VillagePO> {
-	
-	public List<VillagePO> pageVillage(Paging paging, List<Filter> filters,Integer company);
-	
-	public List<VillagePO> queryVillageByPinyin(Paging paging, String name,Integer company);
-	
+
+	public List<VillagePO> pageVillage(Paging paging, List<Filter> filters, Integer company);
+
+	public List<VillagePO> queryVillageByPinyin(Paging paging, String name, Integer company);
+
 	public List<VillagePO> queryVillageByCityProperId(Integer cityProperId);
-	
+
 	public int countVillageByCpid(Integer cpid);
-	
-	public int countVillageByNameACpid(String name, Integer cpid,Integer company);
-	
+
+	public int countVillageByNameACpid(String name, Integer cpid, Integer company);
+
 }

@@ -25,26 +25,26 @@ import com.fanglin.utils.Paging;
 @Repository("quotationsmallcategory")
 public class QuotationSmallCategoryDaoImpl extends DaoImpl<QuotationSmallCategoryPO> implements QuotationSmallCategoryDao {
 
-	public QuotationSmallCategoryDaoImpl(){
+	public QuotationSmallCategoryDaoImpl() {
 		super(QuotationSmallCategoryPO.class, true);
 	}
 
 	@Override
 	public List<QuotationSmallCategoryPO> pageQuotationSmallCategory(Paging paging, List<Filter> filters) {
-		 PagingQuery<QuotationSmallCategoryPO> query = pagingQuery(paging, QuotationSmallCategoryPO.class);
-			
-         if(filters != null){
- 			for(Filter filter: filters){
- 				if("name".equals(filter.getField())){
- 					query.add(query.getCriterion("name", Short.parseShort(filter.getData()), filter.getOp()));
- 				}
- 			}
- 		}
-		
+		PagingQuery<QuotationSmallCategoryPO> query = pagingQuery(paging, QuotationSmallCategoryPO.class);
+
+		if (filters != null) {
+			for (Filter filter : filters) {
+				if ("name".equals(filter.getField())) {
+					query.add(query.getCriterion("name", Short.parseShort(filter.getData()), filter.getOp()));
+				}
+			}
+		}
+
 		query.asc("id");
-		
+
 		return query.list();
-		
+
 	}
 
 	@Override

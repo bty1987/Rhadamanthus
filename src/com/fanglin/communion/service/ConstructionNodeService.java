@@ -10,13 +10,13 @@ import com.fanglin.utils.Paging;
 public interface ConstructionNodeService {
 
 	public void pageConstructionNode(Paging paging, List<Filter> filters, int company);
-	
+
 	public List<ConstructionNodeVO> queryConstructionNode(int company);
-	
+
 	public List<ConstructionNodeVO> queryConstructionNodeByOrderId(String orderId) throws FLException;
 
 	public void addConstructionNode(ConstructionNodeVO constructionNodeVO);
-	
+
 	public void updateConstructionNodeForStatus(ConstructionNodeVO constructionNodeVO);
-	
+
 }

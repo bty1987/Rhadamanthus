@@ -15,13 +15,17 @@ jQuery(function ($) {
             guaranteeDes : com.focusPage("#guaranteeDes")
         },
 
-        levelDict: {"0": "普通", "1": "重要"},
-
         editFlag: false,
         repeatFlg: false
     };
 
     guarantee.saveBtn.bindClick(saveData);
+
+    guarantee.modals.modal.on("hide.bs.modal", function(){
+
+        com.cleanItems(guarantee.items);
+        com.closeTip();
+    });
 
     com.focusPage('#fl-statement').statement("客服控制", "保修信息列表");
 
@@ -120,8 +124,6 @@ jQuery(function ($) {
 
     com.focusPage('#add', '#pagenation').click(function () {
         guarantee.editFlag = false;
-
-        com.cleanItems(guarantee.items);
 
         guarantee.items.orderId.val(params.orderId);
         guarantee.items.customerName.val(params.customerName);

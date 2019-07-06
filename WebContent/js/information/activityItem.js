@@ -10,15 +10,14 @@ jQuery(function($) {
 			activityItemModal : com.focusPage("#activityItemModal")
 		},
 		items : {
+			awardStockshide : com.focusPage("#awardStockshide"),
 			activityName : com.focusPage("#activityNames"),
 			activityItems : com.focusPage("#activityItems"),
-			activityItemName : com.focusPage("#activityItemName"),
-			moneyInfo : com.focusPage("#moneyInfo"),
 		    name : com.focusPage("#awardStocksname"),
 		    awardStockstype : com.focusPage("#awardStockstype"),
-		    awardStockshide : com.focusPage("#awardStockshide"),
 		    money : com.focusPage("#money")
 		},
+
 		activityItemPostData : {
 			aid: params.aid,
 			activityName: params.activityName
@@ -27,6 +26,12 @@ jQuery(function($) {
 
 	activityItem.saveBtn.bindClick(saveData);
 	activityItem.items.awardStockstype.change(changeAwardStock);
+
+	activityItem.modals.activityItemModal.on("hide.bs.modal", function(){
+		com.clearValidator();
+		com.cleanItems(activityItem.items);
+		activityItem.items.awardStockshide.addClass("hide");
+	});
 
 	com.post(api.ds.information, {"timestamp": new Date().getTime()}, function(res){
 		activityItem.items.awardStockstype.bindData(res.activityItemType, "key", "value", true);
@@ -90,12 +95,6 @@ jQuery(function($) {
 		activityItem.editFlag = false;
 	});
 
-	com.focusPage("#cancelBtn").on("click", function () {
-
-		com.cleanItems(activityItem.activityItems);
-		activityItem.items.awardStockshide.addClass("hide");
-	});
-
 	function saveData(){
 
 		if(com.validate('form')){
@@ -109,12 +108,9 @@ jQuery(function($) {
 			"activityItem.type":activityItem.items.awardStockstype.val(),
 			"activityItem.activity":activityItem.activityItemPostData.activityName
 		};
-            com.cleanItems(activityItem.activityItems);
-			activityItem.items.awardStockshide.addClass("hide");
 
 		com.post(api.information.addActivityItem, options, function(res){
 			com.showAlert(com.info, "操作成功");
-			activityItem.items.money.val("")
 			if(activityItem.editFlag){
 				com.focusPage("#pricing_" + activityItem.activityItemPostData.aiid).remove();
 			}
@@ -134,11 +130,11 @@ jQuery(function($) {
 				"awardStock.type": awardStockstypes,
 				"awardStock.storeroom": params.type
 			};
-			activityItem.items.awardStockshide.removeClass("hide");
 			com.post(api.information.queryAwardStockByType, options, function(res){
 
 				activityItem.items.name.bindData(res.awardStocks, "asId", "name",true);
 			});
+			activityItem.items.awardStockshide.removeClass("hide");
 		}
 	}
 

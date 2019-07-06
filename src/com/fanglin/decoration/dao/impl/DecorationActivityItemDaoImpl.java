@@ -37,11 +37,11 @@ public class DecorationActivityItemDaoImpl extends DaoImpl<DecorationActivityIte
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<DecorationActivityItemPO> queryDecorationActivityItemForCouponAVaildByOrderId(String orderId) {
+	public List<DecorationActivityItemPO> queryDecorationActivityItemByOrderId(String orderId, short type, short status) {
 		return session().createCriteria(DecorationActivityItemPO.class)
 				.add(Restrictions.eq(DecorationActivityItemPO.COLUMN_ORDERID_STR, orderId))
-				.add(Restrictions.eq(DecorationActivityItemPO.COLUMN_TYPE_STR, DecorationActivityItemPO.TYPE_COUPON_INT))
-				.add(Restrictions.eq(DecorationActivityItemPO.COLUMN_STATUS_STR, DecorationActivityItemPO.STATUS_INIT_INT))
+				.add(Restrictions.eq(DecorationActivityItemPO.COLUMN_TYPE_STR, type))
+				.add(Restrictions.eq(DecorationActivityItemPO.COLUMN_STATUS_STR, status))
 				.list();
 	}
 	

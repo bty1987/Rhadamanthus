@@ -25,34 +25,34 @@ import com.fanglin.communion.vo.WorkTypeVO;
 import com.fanglin.utils.BeanUtil;
 
 @Service("workTypeService")
-@Transactional(readOnly=true)
+@Transactional(readOnly = true)
 public class WorkTypeServiceImpl implements WorkTypeService {
-	
+
 	@Autowired
 	private WorkTypeDao workTypeDao;
 
 	@Override
-	public List<WorkTypeVO> queryWorkType(){
-		
+	public List<WorkTypeVO> queryWorkType() {
+
 		List<WorkTypePO> workTypePOs = workTypeDao.list();
 		List<WorkTypeVO> workTypeVOs = new ArrayList<WorkTypeVO>();
-		
-		for(WorkTypePO workTypePO: workTypePOs){
+
+		for (WorkTypePO workTypePO : workTypePOs) {
 			WorkTypeVO workTypeVO = new WorkTypeVO();
 			BeanUtil.copyProperties(workTypePO, workTypeVO);
-			
+
 			workTypeVOs.add(workTypeVO);
 		}
-		
+
 		return workTypeVOs;
 	}
 
-	public WorkTypeDao getWorkTypeDao(){
+	public WorkTypeDao getWorkTypeDao() {
 		return workTypeDao;
 	}
 
-	public void setWorkTypeDao(WorkTypeDao workTypeDao){
+	public void setWorkTypeDao(WorkTypeDao workTypeDao) {
 		this.workTypeDao = workTypeDao;
 	}
-	
+
 }

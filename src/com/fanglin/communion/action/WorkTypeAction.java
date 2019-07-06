@@ -19,26 +19,26 @@ import com.fanglin.core.action.BaseListAction;
 public class WorkTypeAction extends BaseListAction {
 
 	private static final long serialVersionUID = 1651273403349675468L;
-	
+
 	@Autowired
 	private WorkTypeService workTypeService;
-	
+
 	private List<WorkTypeVO> workTypes;
-	
-	@Action(value="queryWorkType", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryWorkType(){
-		
+
+	@Action(value = "queryWorkType", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryWorkType() {
+
 		workTypes = workTypeService.queryWorkType();
-		
+
 		return SUCCESS;
 	}
 
-	public List<WorkTypeVO> getWorkTypes(){
+	public List<WorkTypeVO> getWorkTypes() {
 		return workTypes;
 	}
 
-	public void setWorkTypes(List<WorkTypeVO> workTypes){
+	public void setWorkTypes(List<WorkTypeVO> workTypes) {
 		this.workTypes = workTypes;
 	}
-	
+
 }

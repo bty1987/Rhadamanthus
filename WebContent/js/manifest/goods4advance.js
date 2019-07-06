@@ -28,8 +28,8 @@ $(function () {
         }
     };
 
-    com.focusPage('.date-picker').datepicker(com.datepickerdefault);
-    com.focusPage('#executeTimes').timepicker(com.timepickerdefault);
+    com.datetime(goods.items.executeDates,"date",false);
+    com.datetime(goods.items.executeTimes,"time",false);
 
     goods.items.type.bindData([{gid: 0, goods: "商品"}, {gid: 1, goods: "套餐"}], "gid", "goods");
 

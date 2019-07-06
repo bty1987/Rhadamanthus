@@ -18,9 +18,9 @@ public class DataDrawingDaoImpl extends DaoImpl<DataDrawingPO> implements DataDr
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<DataDrawingPO> queryDataDrawing(Long sid, Short type) {
-		
+
 		return session().createCriteria(DataDrawingPO.class).add(Restrictions.eq(DataDrawingPO.COLUMN_SID_STR, sid)).add(Restrictions.eq(DataDrawingPO.COLUMN_TYPE_STR, type)).add(Restrictions.eq("status", DataDrawingPO.STATUS_INIT_INT)).list();
-		
-	}	
+
+	}
 
 }

@@ -146,23 +146,27 @@ $(function () {
         com.focusPage('#managePrice').html(utils.changeTwoDecimal(accountBasic.managePrice));
     });
 
-    com.post(api.decoration.queryDecorationHolonomy, {"decorationHolonomy.decoration.orderId": decorationDetail.decorationOrderId}, function (res) {
-        
-        var decoration = res.decorationHolonomy.decoration;
-
-
-        accountBasic.discount = decoration.discount;
+    com.post(api.decoration.queryDecorationForCommonByOrderId, {"decoration.orderId": decorationDetail.decorationOrderId}, function (res) {
+    	 
+    	var decoration = res.decoration;
+    	
+    	accountBasic.discount = decoration.discount;
         accountBasic.contracePrice = decoration.orderTotalPrice;
         accountBasic.couponCut = decoration.couponCut;
         accountBasic.factPrice = decoration.factPrice;
-
-        accountBasic.servicePrice = res.decorationHolonomy.servicePrice;
-
+         
         com.focusPage("#signPrice").html(com.checkNull(accountBasic.contracePrice, 0));
         com.focusPage("#coupon").html(com.checkNull(accountBasic.couponCut, 0));
         com.focusPage("#signFactPrice").html(com.checkNull(accountBasic.factPrice, 0));
-        com.focusPage("#servicePrice").html(com.checkNull(accountBasic.servicePrice, 0));
         com.focusPage("#basdiscount").html(com.checkNull(accountBasic.discount, 0));
+    	
+    }, null, false);
+    
+    com.post(api.decoration.queryDecorationHolonomy, {"decorationHolonomy.decoration.orderId": decorationDetail.decorationOrderId}, function (res) {
+        
+        accountBasic.servicePrice = res.decorationHolonomy.servicePrice;
+       
+        com.focusPage("#servicePrice").html(com.checkNull(accountBasic.servicePrice, 0));
 
     }, null, false);
 

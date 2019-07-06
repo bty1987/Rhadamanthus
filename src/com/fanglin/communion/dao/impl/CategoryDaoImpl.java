@@ -24,22 +24,22 @@ import com.fanglin.utils.Paging;
 
 @Repository("categoryDao")
 public class CategoryDaoImpl extends DaoImpl<CategoryPO> implements CategoryDao {
-	
-	public CategoryDaoImpl(){
+
+	public CategoryDaoImpl() {
 		super(CategoryPO.class);
 	}
-	
+
 	@Override
 	public List<CategoryPO> pageCategory(Paging paging, List<Filter> filters) {
-		
+
 		PagingQuery<CategoryPO> query = pagingQuery(paging, CategoryPO.class);
-		
-		if(filters != null){
-			for(Filter filter: filters){
+
+		if (filters != null) {
+			for (Filter filter : filters) {
 				query.add(query.getCriterion(filter.getField(), filter.getData(), filter.getOp()));
 			}
 		}
-		
+
 		return query.list();
 	}
 

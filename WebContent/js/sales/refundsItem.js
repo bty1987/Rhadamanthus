@@ -1,8 +1,12 @@
-
-
 $(function () {
 
-	var sid = params.sid;
+	var refund = {
+	    sid: params.sid
+	};
+	
+	com.post(api.inventory.queryRefundsItemBySid,{"refunds.sid": refund.sid},function (data) {
+        initList(data.refundsItems);
+    });
 
     var initList = function(listData) {
         var $tableWrap = com.focusPage('#list');
@@ -45,23 +49,8 @@ $(function () {
 
                 $small.appendTo($h3);
                 $btnDiv.appendTo($h3);
-
-
-
             });
-
             $ul.appendTo($tableWrap);
         }
     };
-
-    querySalesItemBySid(sid);
-
-    function querySalesItemBySid(sid) {
-        com.post(api.inventory.queryRefundsItemBySid,{"refunds.sid":sid},function (data) {
-            initList(data.refundsItems);
-        },function (e) {
-            com.showAlert(com.error,e.errorMsg);
-        },false);
-    }
-
 });

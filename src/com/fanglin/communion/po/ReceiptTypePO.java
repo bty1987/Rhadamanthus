@@ -13,61 +13,61 @@ import javax.persistence.Table;
 public class ReceiptTypePO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 6777289778875951609L;
-	
+
 	public static final String COLUMN_NO_STR = "no";
-	
+
 	public static final String COLUMN_TYPE_STR = "type";
-	
+
 	public static final String COLUMN_STATUS_STR = "status";
-	
+
 	public static final String COLUMN_GRADE_STR = "grade";
-	
+
 	public static final short TYPE_CASH_INT = 1;
-	
+
 	public static final short TYPE_BANK_INT = 2;
-	
+
 	public static final short TYPE_CHECK_INT = 3;
-	
+
 	public static final short TYPE_ACCOUNT_INT = 4;
-	
+
 	public static final short TYPE_COUPON_INT = 5;
-	
+
 	public static final short STATUS_DISABLE_INT = 0;
-	
+
 	public static final short STATUS_ENABLE_INT = 1;
-	
+
 	public static final short COLUMN_DIRECTION_INT = 1;
-	
+
 	private int rtId;
-	
+
 	private String name;
-	
+
 	private String no;
-	
+
 	private String subjectName;
-	
+
 	private String oneCode;
-	
+
 	private String twoCode;
-	
+
 	private String thrCode;
-	
+
 	private short direction;
-	
+
 	private short type;
-	
+
 	private short status;
-	
+
 	private int company;
-	
+
 	private String grade;
-	
+
 	private String kino;
-	
+
 	private String kiname;
-	
+
 	private String assistant;
-	
+
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "rtId")
@@ -86,8 +86,8 @@ public class ReceiptTypePO implements java.io.Serializable {
 
 	public void setName(String name) {
 		this.name = name;
-	}	
-	
+	}
+
 	@Column(name = "no")
 	public String getNo() {
 		return no;
@@ -159,7 +159,7 @@ public class ReceiptTypePO implements java.io.Serializable {
 	public void setStatus(short status) {
 		this.status = status;
 	}
-	
+
 	@Column(name = "company")
 	public int getCompany() {
 		return company;

@@ -7,39 +7,39 @@ public class CustomerVO implements Serializable {
 	private static final long serialVersionUID = -7469004001329405496L;
 
 	private Long cid;
-	
+
 	private String no;
-	
+
 	private String name;
-	
+
 	private String gender;
-	
+
 	private String identity;
-	
+
 	private String officer;
-	
+
 	private String passport;
-	
+
 	private String qq;
-	
+
 	private String wechat;
-	
+
 	private String email;
-	
+
 	private String address;
-	
+
 	private String relationshipType;
-	
+
 	private Float balance;
-	
+
 	private Float materialBalance;
-	
+
 	private Float zhenglinBalance;
-	
+
 	private Float projectBalance;
-	
+
 	private String phone;
-	
+
 	private Integer company;
 
 	public CustomerVO() {
@@ -186,7 +186,7 @@ public class CustomerVO implements Serializable {
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
-	
+
 	public Integer getCompany() {
 		return company;
 	}
@@ -195,11 +195,11 @@ public class CustomerVO implements Serializable {
 		this.company = company;
 	}
 
-	public void setConfidentialInfo(){
+	public void setConfidentialInfo() {
 		this.email = "-";
 		this.qq = "-";
 		this.phone = "-";
 		this.wechat = "-";
 	}
-	
+
 }

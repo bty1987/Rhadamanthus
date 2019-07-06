@@ -13,29 +13,28 @@ package com.fanglin.communion.vo;
 
 import java.io.Serializable;
 
-
-public class QuotationClassificationVO implements Serializable{
+public class QuotationClassificationVO implements Serializable {
 
 	private static final long serialVersionUID = -5389516324771269125L;
-	
+
 	private int id;
-	
+
 	private String name;
 
-	public int getId(){
+	public int getId() {
 		return id;
 	}
 
-	public void setId(int id){
+	public void setId(int id) {
 		this.id = id;
 	}
 
-	public String getName(){
+	public String getName() {
 		return name;
 	}
 
-	public void setName(String name){
+	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 }

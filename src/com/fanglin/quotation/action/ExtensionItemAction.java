@@ -15,57 +15,56 @@ import com.fanglin.quotation.service.ExtensionItemService;
 import com.fanglin.quotation.vo.ExtensionItemVO;
 import com.fanglin.quotation.vo.ExtensionVO;
 
-
 @ParentPackage("base")
 @Namespace("/")
 @Controller
-public class ExtensionItemAction extends BaseListAction{
+public class ExtensionItemAction extends BaseListAction {
 
 	private static final long serialVersionUID = -6386024344693340033L;
-	
+
 	@Autowired
 	private ExtensionItemService extensionItemService;
-	
+
 	private List<ExtensionItemVO> extensionItems;
-	
+
 	private ExtensionItemVO extensionItem;
-	
+
 	private ExtensionVO extension;
-	
+
 	private List<Long> extensionItemIDs;
 
 	@Action(value = "queryExtensionItemByEid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryExtensionItemByEid(){
-		
+	public String queryExtensionItemByEid() {
+
 		extensionItems = extensionItemService.queryExtensionItemByEid(extensionItem);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "queryExtensionItemByEids", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryExtensionItemByEids(){
-		
+	public String queryExtensionItemByEids() {
+
 		extensionItems = extensionItemService.queryExtensionItemByEids(extensionItemIDs);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "updateExtensionItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateExtensionItem() throws FLException{
-		
-		extensionItemService.updateExtensionItem(extensionItem,extension);
-		
+	public String updateExtensionItem() throws FLException {
+
+		extensionItemService.updateExtensionItem(extensionItem, extension);
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "deleteExtensionItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String deleteExtensionItem() throws FLException{
-		
-		extensionItemService.deleteExtensionItem(extensionItem,extension);
-		
+	public String deleteExtensionItem() throws FLException {
+
+		extensionItemService.deleteExtensionItem(extensionItem, extension);
+
 		return SUCCESS;
 	}
-	
+
 	public List<ExtensionItemVO> getExtensionItems() {
 		return extensionItems;
 	}
@@ -81,7 +80,7 @@ public class ExtensionItemAction extends BaseListAction{
 	public void setExtensionItem(ExtensionItemVO extensionItem) {
 		this.extensionItem = extensionItem;
 	}
-	
+
 	public ExtensionVO getExtension() {
 		return extension;
 	}

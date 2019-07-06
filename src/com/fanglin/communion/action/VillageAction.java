@@ -23,112 +23,112 @@ import com.fanglin.utils.SystemConfig;
 public class VillageAction extends BaseListAction {
 
 	private static final long serialVersionUID = -1599812124963548192L;
-	
+
 	@Autowired
 	private VillageService villageService;
-	
+
 	private VillageVO village;
-	
+
 	private List<VillageVO> villages;
 
 	private List<String> autoFillList;
-	
+
 	private List<KeyValueVO> autoFillKeyValue;
-	
+
 	private String pinyinName;
-	
-	@Action(value="pageVillage", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String pageVillage() throws FLException{
-		
-		villageService.pageVillage(getPaging(), getFilters(),queryCompany());
-		
+
+	@Action(value = "pageVillage", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageVillage() throws FLException {
+
+		villageService.pageVillage(getPaging(), getFilters(), queryCompany());
+
 		return SUCCESS;
 	}
-	
-	@Action(value="queryVillageById", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryVillageById() throws FLException{
-		
+
+	@Action(value = "queryVillageById", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryVillageById() throws FLException {
+
 		village = villageService.queryVillageById(village);
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value="queryVillageForNameByPinyin", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryVillageForNameByPinyin() throws FLException{
-	
-		villages = villageService.queryVillageForNameByPinyin(pinyinName,queryCompany());
-		
-		for(VillageVO villageVO: villages){
+
+	@Action(value = "queryVillageForNameByPinyin", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryVillageForNameByPinyin() throws FLException {
+
+		villages = villageService.queryVillageForNameByPinyin(pinyinName, queryCompany());
+
+		for (VillageVO villageVO : villages) {
 			KeyValueVO keyValueVO = new KeyValueVO();
 			keyValueVO.setKey(String.valueOf(villageVO.getNo()));
 			keyValueVO.setValue(villageVO.getName() + "-" + villageVO.getCityProper().getName());
 			getAutoFillKeyValue().add(keyValueVO);
 			getAutoFillList().add(villageVO.getName());
 		}
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value="addVillage", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String addVillage() throws FLException{
-		 
-		if(SystemConfig.getString("communion") == null){
-		    throw new FLException(-1, "无操作权限");
-		}
-		
-	    villageService.addVillage(village,queryCompany());
-	
-	    return SUCCESS;
-	  }
-	
-	@Action(value="updateVillage", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String updateVillage() throws FLException{
-	    
-		if(SystemConfig.getString("communion") == null){
-		    throw new FLException(-1, "无操作权限");
-		}
-		
-	    villageService.updateVillage(village,queryCompany());
 
-	    return SUCCESS;
-	  }
+	@Action(value = "addVillage", results = { @org.apache.struts2.convention.annotation.Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addVillage() throws FLException {
 
-	@Action(value="updateVillageForStatus", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String updateVillageForStatus() throws FLException{
-		  
-		if(SystemConfig.getString("communion") == null){
-		    throw new FLException(-1, "无操作权限");
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
 		}
-		
+
+		villageService.addVillage(village, queryCompany());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "updateVillage", results = { @org.apache.struts2.convention.annotation.Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateVillage() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
+		}
+
+		villageService.updateVillage(village, queryCompany());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "updateVillageForStatus", results = { @org.apache.struts2.convention.annotation.Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateVillageForStatus() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
+		}
+
 		villageService.updateVillageForStatus(village);
 
 		return SUCCESS;
-	  }
-	
-	@Action(value="updateVillageForPosition", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	}
+
+	@Action(value = "updateVillageForPosition", results = { @org.apache.struts2.convention.annotation.Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateVillageForPosition() throws FLException {
-	   
-		if(SystemConfig.getString("communion") == null){
-		    throw new FLException(-1, "无操作权限");
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
 		}
-		
+
 		villageService.updateVillageForPosition(village);
-	
+
 		return SUCCESS;
-	  }
-	
-	@Action(value="updateVillageForUrl", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	}
+
+	@Action(value = "updateVillageForUrl", results = { @org.apache.struts2.convention.annotation.Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateVillageForUrl() throws FLException {
-	   
-		if(SystemConfig.getString("communion") == null){
-		    throw new FLException(-1, "无操作权限");
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
 		}
-		
+
 		villageService.updateVillageForUrl(village);
-	
+
 		return SUCCESS;
-	  }
-	
+	}
+
 	public VillageVO getVillage() {
 		return village;
 	}
@@ -145,25 +145,25 @@ public class VillageAction extends BaseListAction {
 		this.villages = villages;
 	}
 
-	public List<String> getAutoFillList(){
-		if(autoFillList == null){
+	public List<String> getAutoFillList() {
+		if (autoFillList == null) {
 			autoFillList = new ArrayList<String>();
 		}
 		return autoFillList;
 	}
 
-	public void setAutoFillList(List<String> autoFillList){
+	public void setAutoFillList(List<String> autoFillList) {
 		this.autoFillList = autoFillList;
 	}
 
-	public List<KeyValueVO> getAutoFillKeyValue(){
-		if(autoFillKeyValue == null){
+	public List<KeyValueVO> getAutoFillKeyValue() {
+		if (autoFillKeyValue == null) {
 			autoFillKeyValue = new ArrayList<KeyValueVO>();
 		}
 		return autoFillKeyValue;
 	}
 
-	public void setAutoFillKeyValue(List<KeyValueVO> autoFillKeyValue){
+	public void setAutoFillKeyValue(List<KeyValueVO> autoFillKeyValue) {
 		this.autoFillKeyValue = autoFillKeyValue;
 	}
 
@@ -174,5 +174,5 @@ public class VillageAction extends BaseListAction {
 	public void setPinyinName(String pinyinName) {
 		this.pinyinName = pinyinName;
 	}
-	
+
 }

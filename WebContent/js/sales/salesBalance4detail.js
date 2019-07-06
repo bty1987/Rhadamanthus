@@ -1,12 +1,13 @@
 $(function(){
     
-    var _sid = com.focusPage('#viewPopUp').attr('data-sid');
+    var salesBalance4detail= {
+        _sid : com.focusPage('#viewPopUp').attr('data-sid'),
+        dompanyFlag : com.focusPage('#viewPopUp').attr('data-dompany')
+    };
+    
+    if(salesBalance4detail.dompanyFlag == 'true'){
 
-    var dompanyFlag = com.focusPage('#viewPopUp').attr('data-dompany');
-
-    if(dompanyFlag=='true'){
-
-        com.post(api.inventory.querySalesBySid,{"sales.sid" : _sid}, function (res) {
+        com.post(api.inventory.querySalesBySid,{"sales.sid" : salesBalance4detail._sid}, function (res) {
             var v = res.sales;
             var $ul = $('<ul></ul>').addClass('item-list ui-sortable  fl-table-list');
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
@@ -84,7 +85,7 @@ $(function(){
                         $selectCtype.bindData(res.priceTypes,'key','value');
                     });
 
-                    var $btnInput = $('<input></input>').css({'width':'100px','height':'26px','margin-right':'5px'}).addClass('hide v_required').attr({'data-rel':'popover','data-placement':'top'});
+                    var $btnInput = $('<input></input>').css({'width':'100px','height':'26px','margin-right':'5px'}).addClass('hide v_required');
                     var $btnCheck = $('<a></a>').addClass('btn btn-minier btn-info hide').html('确定');
                     var $btnQCheck = $('<a></a>').addClass('btn btn-minier hide').html('取消');
                     var $btnCtype = $('<a></a>').addClass('btn btn-minier btn-success').html(v.ctype==0?"底价":"点位");
@@ -151,7 +152,7 @@ $(function(){
 
                            com.post(api.inventory.updateSalesItemForBalance,_option,function(res){
                                com.showAlert(com.info, "更改成功");
-                               viewSalesItems(_sid);
+                               viewSalesItems(salesBalance4detail._sid);
                            });
                        }
                     });
@@ -162,12 +163,11 @@ $(function(){
                         $btnInput.addClass('hide');
                         $btnCheck.addClass('hide');
                         $btnQCheck.addClass('hide');
-                        $btnInput.popover('destroy');
                     });
 
                     $small.appendTo($h3);
 
-                    if(dompanyFlag=='true'){
+                    if(salesBalance4detail.dompanyFlag == 'true'){
                         $btnDiv.append($selectCtype).append($btnInput).append($btnCheck).append($btnQCheck).append($btnCtype).appendTo($h3);
                     }
 
@@ -188,7 +188,7 @@ $(function(){
 
     })();
 
-    viewSalesItems(_sid);
+    viewSalesItems(salesBalance4detail._sid);
 
     function viewSalesItems(sid) {
         com.post(api.inventory.querySalesItemBySid, {

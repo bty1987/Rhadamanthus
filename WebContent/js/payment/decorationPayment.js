@@ -12,7 +12,9 @@ jQuery(function($) {
 			couponCheckbox: com.focusPage("#couponCheckbox"),
 			advanceType: com.focusPage("#advanceType"),
 			couponType: com.focusPage("#couponType"),
-			couponVal: com.focusPage("#couponVal")
+			couponVal: com.focusPage("#couponVal"),
+			cash: com.focusPage("#cash"),
+			advance: com.focusPage("#advance")
 		},
 		editFlg: false,
 		paymentType: "增项款",
@@ -48,19 +50,16 @@ jQuery(function($) {
 		checkBankUtilForGrade: []
 	};
 
-	//这里面的内容在刷卡和转账中的点击日期，日期插件show的时候也会执行，所以要谨慎添加内容
-	decorationPayment.modals.baseModal.on('show.bs.modal',function(e){
-		com.clearValidator();
-		com.clearValidator("#advancePayment", true);
-	});
-
 	//隐藏触发
-	decorationPayment.modals.baseModal.on('hidden.bs.modal', function () {
+	decorationPayment.modals.baseModal.on('hide.bs.modal', function () {
 		decorationPayment.bankUtilForGrade = [];
 		decorationPayment.checkBankUtilForGrade = [];
-		com.focusPage("#cash").val("");
-		com.focusPage("#advance").val("");
 		com.focusPage("#couponUl").html("");
+		com.closeTip();
+	});
+
+	decorationPayment.modals.refundDecorationPaymentModal.on('hide.bs.modal', function () {
+		com.closeTip();
 	});
 	
 	com.focusPage("#collectBtn").bindClick(function(){

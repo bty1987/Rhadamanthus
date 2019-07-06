@@ -24,27 +24,27 @@ import com.fanglin.utils.Paging;
 @Repository("quotationtype")
 public class QuotationTypeDaoImpl extends DaoImpl<QuotationTypePO> implements QuotationTypeDao {
 
-	public QuotationTypeDaoImpl(){
+	public QuotationTypeDaoImpl() {
 		super(QuotationTypePO.class, true);
 	}
 
 	@Override
-	public List<QuotationTypePO> pageQuotationType(Paging paging,List<Filter> filters) {
-		
-         PagingQuery<QuotationTypePO> query = pagingQuery(paging, QuotationTypePO.class);
-		
-         if(filters != null){
- 			for(Filter filter: filters){
- 				if("name".equals(filter.getField())){
- 					query.add(query.getCriterion("name", Short.parseShort(filter.getData()), filter.getOp()));
- 				}
- 			}
- 		}
-		
+	public List<QuotationTypePO> pageQuotationType(Paging paging, List<Filter> filters) {
+
+		PagingQuery<QuotationTypePO> query = pagingQuery(paging, QuotationTypePO.class);
+
+		if (filters != null) {
+			for (Filter filter : filters) {
+				if ("name".equals(filter.getField())) {
+					query.add(query.getCriterion("name", Short.parseShort(filter.getData()), filter.getOp()));
+				}
+			}
+		}
+
 		query.asc("id");
-		
+
 		return query.list();
-		
+
 	}
-	
+
 }

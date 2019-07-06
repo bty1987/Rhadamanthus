@@ -13,6 +13,11 @@ $(function () {
     userRequire.userRequireItem.type = com.focusPage("#type");//类型
     userRequire.userRequireItem.status = com.focusPage("status");//状态
 
+    userRequire.modal.on('hide.bs.modal', function (e) {
+        com.cleanItems(userRequire.userRequireItems);
+        com.closeTip();
+    });
+
     //画列表
     var displayFunc = (function () {
         var renderList = function (tableId, listData) {
@@ -131,7 +136,6 @@ $(function () {
         com.post(api.personel.addUserRequire, options, function (res) {
             com.showAlert(com.info, "创建成功!");
             userRequire.modal.modal("hide");
-            com.cleanItems(userRequire.userRequireItems);
             seacher.doSearch();
         });
     }

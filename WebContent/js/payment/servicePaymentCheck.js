@@ -38,14 +38,11 @@ jQuery(function($) {
 		paymentUtils.servicePaymentCollect(servicePaymentCheck, searcher, hsearcher);
 	});
 
-	servicePaymentCheck.modals.baseModal.on('show.bs.modal',function(e){
-		com.clearValidator();
-	});
-
 	//隐藏触发
-	servicePaymentCheck.modals.baseModal.on('hidden.bs.modal', function () {
+	servicePaymentCheck.modals.baseModal.on('hide.bs.modal', function () {
 		servicePaymentCheck.bankUtilForGrade = [];
 		servicePaymentCheck.checkBankUtilForGrade = [];
+		com.closeTip();
 	});
 
 	com.focusPage("#baseItemModalServiceCheck :checkbox").on("change", function(){

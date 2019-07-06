@@ -28,84 +28,84 @@ import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
 
 @Service("measurementUnitService")
-@Transactional(readOnly=true)
-public class MeasurementUnitServiceImpl implements MeasurementUnitService{
+@Transactional(readOnly = true)
+public class MeasurementUnitServiceImpl implements MeasurementUnitService {
 
 	@Autowired
 	private MeasurementUnitDao measurementUnitDao;
-	
+
 	@Override
-	public List<MeasurementUnitVO> pageMeasurementUnit(Paging paging,List<Filter> filters) {
-		
-		List<MeasurementUnitPO> measurementUnitPOs = measurementUnitDao.pageMeasurementUnit(paging,filters);
-		
+	public List<MeasurementUnitVO> pageMeasurementUnit(Paging paging, List<Filter> filters) {
+
+		List<MeasurementUnitPO> measurementUnitPOs = measurementUnitDao.pageMeasurementUnit(paging, filters);
+
 		List<MeasurementUnitVO> measurementUnitVOs = new ArrayList<MeasurementUnitVO>();
-		
-		for(MeasurementUnitPO measurementUnitPO :measurementUnitPOs){
-			
+
+		for (MeasurementUnitPO measurementUnitPO : measurementUnitPOs) {
+
 			MeasurementUnitVO measurementUnitVO = new MeasurementUnitVO();
-			
+
 			BeanUtil.copyProperties(measurementUnitPO, measurementUnitVO);
-			
+
 			measurementUnitVOs.add(measurementUnitVO);
 		}
 		paging.setData(measurementUnitVOs);
-		
+
 		return measurementUnitVOs;
 	}
-	
+
 	@Override
-	public List<MeasurementUnitVO> queryMeasurementUnit(){
-		
+	public List<MeasurementUnitVO> queryMeasurementUnit() {
+
 		List<MeasurementUnitPO> measurementUnitPOs = measurementUnitDao.list();
-		
+
 		List<MeasurementUnitVO> measurementUnitVOs = new ArrayList<MeasurementUnitVO>();
-		
-		for(MeasurementUnitPO measurementUnitPO: measurementUnitPOs){
-			
+
+		for (MeasurementUnitPO measurementUnitPO : measurementUnitPOs) {
+
 			MeasurementUnitVO measurementUnitVO = new MeasurementUnitVO();
-			
+
 			BeanUtil.copyProperties(measurementUnitPO, measurementUnitVO);
-			
+
 			measurementUnitVOs.add(measurementUnitVO);
 		}
 		return measurementUnitVOs;
 	}
-	
+
 	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public void addMeasurementUnit(MeasurementUnitVO measurementUnitVO) throws FLException{
-		
+	@Transactional(rollbackFor = Exception.class)
+	public void addMeasurementUnit(MeasurementUnitVO measurementUnitVO) throws FLException {
+
 		MeasurementUnitPO measurementUnitPOs = measurementUnitDao.queryMeasurementUnitByName(measurementUnitVO.getName());
-		
-		if(measurementUnitPOs != null){
+
+		if (measurementUnitPOs != null) {
 			throw new FLException(130010, "单位已存在");
 		}
-		
+
 		MeasurementUnitPO measurementUnitPO = new MeasurementUnitPO();
-		
+
 		measurementUnitPO.setName(measurementUnitVO.getName());
-		
+
 		measurementUnitPO.setUnitDes(measurementUnitVO.getUnitDes());
-		
+
 		measurementUnitDao.save(measurementUnitPO);
-		
+
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public void updateMeasurementUnit(MeasurementUnitVO measurementUnitVO)throws FLException {
-		
+	@Transactional(rollbackFor = Exception.class)
+	public void updateMeasurementUnit(MeasurementUnitVO measurementUnitVO) throws FLException {
+
 		MeasurementUnitPO measurementUnitPOs = measurementUnitDao.queryMeasurementUnitById(measurementUnitVO.getId());
-		
-		if(measurementUnitPOs == null){
+
+		if (measurementUnitPOs == null) {
 			throw new FLException(130011, "单位不存在");
 		}
-	
+
 		measurementUnitPOs.setName(measurementUnitVO.getName());
-		
+
 		measurementUnitPOs.setUnitDes(measurementUnitVO.getUnitDes());
-		
+
 		measurementUnitDao.update(measurementUnitPOs);
 	}
 

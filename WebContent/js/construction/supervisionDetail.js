@@ -2,10 +2,7 @@ jQuery(function ($) {
 
     var constructionScheduleWorkers;
 
-    var constructionNodes = {
-
-        vsubtype : {}
-    };
+    var constructionNodes = {};
 
     var supervisionDetail = {
 
@@ -14,6 +11,8 @@ jQuery(function ($) {
         constructionSchedules: {},
 
         status : {},
+        onetype :{},
+        towtype :{},
 
         wizardSept: {
             "1": false,
@@ -36,15 +35,10 @@ jQuery(function ($) {
     };
 
     com.post(api.ds.salary, {}, function (res) {
-        $.each(res.status, function (i, v) {
-            supervisionDetail.status[v["key"]] = v["value"];
-        });
-    }, null, false);
 
-    com.post(api.ds.salary, {}, function (res) {
-        $.each(res.SalaryTwoType, function (i, v) {
-            constructionNodes.vsubtype[v.key] = v.name;
-        });
+        supervisionDetail.status = res.status.split("key", "value");
+        supervisionDetail.onetype = res.SalaryTwoType.split("key", "oneType");
+        supervisionDetail.towtype = res.SalaryTwoType.split("key", "name");
     }, null, false);
 
     var colorboxArgs = {
@@ -146,7 +140,8 @@ jQuery(function ($) {
             }
 
             var options = {
-                "constructionDrawing.cid": params.cid
+                "constructionDrawing.cid": params.cid,
+                "constructionDrawing.schedule": schedule
             };
 
             //获取工程图片信息
@@ -159,10 +154,7 @@ jQuery(function ($) {
                 for (var i = 0; i < drawings.length; i++) {
                     var drawing = drawings[i];
 
-                    options["constructionDrawing.cdId"] = drawing.cdId;
-                    if (drawing.schedule == constructionNodes["num" + schedule]) {
-                        appendGalleryElement(operate + "Gallery", drawing.cdId, drawing.drawingUrl, drawing.type, "", api.construction.deleteConstructionDrawing);
-                    }
+                    appendGalleryElement(operate + "Gallery", drawing.cdId, drawing.drawingUrl, drawing.type, "", api.construction.deleteConstructionDrawing);
                 }
             });
             initUploadBtn(operate, constructionSchedule, constructionNodes["num" + schedule]);
@@ -300,7 +292,7 @@ jQuery(function ($) {
                 workerSalary.append(addspan('10', '姓名  : ', v.user.userName))
                     .append(addspan('40', '创建时间  : ', v.createTime))
                     .append(addspan('40', '薪资  : ', v.money))
-                    .append(addspan('40', '类型  : ', constructionNodes.vsubtype[v.twotype]))
+                    .append(addspan('40', '类型  : ', supervisionDetail.towtype[v.twotype]))
                     .append(addspan('40', '状态  : ', supervisionDetail.status[v.status]))
                     .append($('<button>删除</button>').addClass("btn btn-xs btn-danger pull-right").css("margin-left", "35px").attr("id", "deleteBtn" + i)
                         .click(function () {
@@ -328,7 +320,7 @@ jQuery(function ($) {
             var salaryType = $('<label><b>类型</b></label>').addClass('col-sm-3 control-label no-padding-left').attr("for", "form-field-1").attr("for", "salaryType").appendTo(salaryDivTh);
             var $item = $('<span></span>').addClass('inline').appendTo(salaryDivTh);
             var salaryTypeS = $('<select></select>').attr("id", "salaryType").css("width", "320px").css("height", "30px").appendTo($item);
-            $.each(constructionNodes.vsubtype, function (i, v) {
+            $.each(supervisionDetail.towtype, function (i, v) {
                 $('<option></option>').attr("value", i).html(v).appendTo(salaryTypeS);
             });
 
@@ -385,6 +377,7 @@ jQuery(function ($) {
         }
 
         options["workerSalary.money"] = com.focusPage('#salary').val();
+        options["workerSalary.onetype"] = supervisionDetail.onetype[com.focusPage("#salaryType").val()];
         options["workerSalary.twotype"] = com.focusPage("#salaryType").val();
         options["workerSalary.comment"] = com.focusPage("#comment").val();
 

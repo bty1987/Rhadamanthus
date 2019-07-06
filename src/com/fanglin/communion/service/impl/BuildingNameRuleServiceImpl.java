@@ -27,63 +27,63 @@ import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
 
 @Service("buildingNameRuleService")
-@Transactional(readOnly=true)
+@Transactional(readOnly = true)
 public class BuildingNameRuleServiceImpl implements BuildingNameRuleService {
-	
+
 	@Autowired
 	private BuildingNameRuleDao buildingNameRuleDao;
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public void saveOrUpdateBuildNameRule(BuildingNameRuleVO buildingNameRuleVO){
-		
+	@Transactional(rollbackFor = Exception.class)
+	public void saveOrUpdateBuildNameRule(BuildingNameRuleVO buildingNameRuleVO) {
+
 		BuildingNameRulePO buildingNameRulePO = new BuildingNameRulePO();
 		BeanUtil.copyProperties(buildingNameRuleVO, buildingNameRulePO);
 		buildingNameRuleDao.save(buildingNameRulePO);
 	}
 
 	@Override
-	public void queryBuildNameRulePage(Paging paging, List<Filter> filters){
+	public void queryBuildNameRulePage(Paging paging, List<Filter> filters) {
 
 		List<BuildingNameRulePO> buildingNameRulePOs = buildingNameRuleDao.queryPageBuildingNameRule(paging, filters);
 		List<BuildingNameRuleVO> buildingNameRuleVOs = new ArrayList<BuildingNameRuleVO>();
-		
-		for(BuildingNameRulePO buildingNameRulePO: buildingNameRulePOs){
+
+		for (BuildingNameRulePO buildingNameRulePO : buildingNameRulePOs) {
 			BuildingNameRuleVO buildingNameRuleVO = new BuildingNameRuleVO();
 			BeanUtil.copyProperties(buildingNameRulePO, buildingNameRuleVO);
-			
+
 			buildingNameRuleVOs.add(buildingNameRuleVO);
 		}
-		
+
 		paging.setData(buildingNameRuleVOs);
 	}
 
 	@Override
-	public List<BuildingNameRuleVO> queryBuildNameRule(){
-		
+	public List<BuildingNameRuleVO> queryBuildNameRule() {
+
 		List<BuildingNameRulePO> buildingNameRulePOs = buildingNameRuleDao.list();
 		List<BuildingNameRuleVO> buildingNameRuleVOs = new ArrayList<BuildingNameRuleVO>();
-		
-		for(BuildingNameRulePO buildingNameRulePO: buildingNameRulePOs){
+
+		for (BuildingNameRulePO buildingNameRulePO : buildingNameRulePOs) {
 			BuildingNameRuleVO buildingNameRuleVO = new BuildingNameRuleVO();
 			BeanUtil.copyProperties(buildingNameRulePO, buildingNameRuleVO);
 			buildingNameRuleVOs.add(buildingNameRuleVO);
 		}
-		
+
 		return buildingNameRuleVOs;
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public void deleteBuildingNameRule(BuildingNameRuleVO buildingNameRuleVO){
-		
-		BuildingNameRulePO buildingNameRulePO = buildingNameRuleDao.get(buildingNameRuleVO.getId()) ;
+	@Transactional(rollbackFor = Exception.class)
+	public void deleteBuildingNameRule(BuildingNameRuleVO buildingNameRuleVO) {
+
+		BuildingNameRulePO buildingNameRulePO = buildingNameRuleDao.get(buildingNameRuleVO.getId());
 		buildingNameRuleDao.delete(buildingNameRulePO);
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public void deleteBuildNameRuleById(int id){
+	@Transactional(rollbackFor = Exception.class)
+	public void deleteBuildNameRuleById(int id) {
 		buildingNameRuleDao.deleteById(id);
 	}
 

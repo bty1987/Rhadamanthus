@@ -43,7 +43,7 @@ public class DecorationActivityItemVO implements java.io.Serializable {
 	private Short isStock; // 库存标识
 
 	private Short isPrefor; // 业绩标识
-	
+
 	private Short isPayment; // 金额标识
 
 	public DecorationActivityItemVO() {

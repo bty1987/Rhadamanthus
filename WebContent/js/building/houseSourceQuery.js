@@ -1,13 +1,18 @@
 
 jQuery(function($) {
 	var houseSource = {
+
+		btns: {
+
+			deployedBtn: com.focusPage("#deployedBtn"),
+			bsaveBtn: com.focusPage("#bsaveBtn"),
+			bcancelBtn: com.focusPage("#bcancelBtn")
+
+		},
+
 		houseSources: {},
 		hsid: null,
 		csid: null,
-		deployedBtn: null,
-		bsaveBtn: null,
-		bcancelBtn: null,
-		modal: null,
 		houseSourceId: null,
 		houseId: null,
 		buildItems: [],
@@ -103,7 +108,7 @@ jQuery(function($) {
 				params.type = v.type;
 				params.manageFlag = false;//控制是否显示敏感信息  是否应该在后台做拦截
 				params.page = "query";
-				com.switchPage(api.index.houseSourceDetail.url);
+				com.popup4page("#stockRecordPopUp","/views/building/houseSourceDetail.html","查看");
 			});
 
 			return $liLine;

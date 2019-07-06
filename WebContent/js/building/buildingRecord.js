@@ -1,12 +1,33 @@
 
 jQuery(function($) {
 	var buildingRecord = {
+
+		btns: {
+
+			saveBtn: com.focusPage("#saveBtn")
+
+		},
+
+		modals: {
+
+			buildingRecordModal: com.focusPage("#buildingRecordModal")
+
+		},
+
+		items: {
+
+			hsNo: com.focusPage("#hsNo"),
+			csNo: com.focusPage("#csNo"),
+			brType: com.focusPage("#brType"),
+			pattern: com.focusPage("#pattern"),
+			comment: com.focusPage("#comment")
+
+		},
+
 		recordType: [],
 		pattern: [],
-		items: {},
 		hsid: null,
 		csid: null,
-		saveBtn: null,
 		dataFlag: false,
 		currenFlag: params.flag,
 		buildingRecordHsno: params.hsNo,
@@ -14,13 +35,16 @@ jQuery(function($) {
 		buildingRecordHsid: params.hsid,
 		buildingRecordCsid: params.csid,
 		currentPage: params.page
+
 	};
 
-	buildingRecord.items.hsNo = com.focusPage("#hsNo");
-	buildingRecord.items.csNo = com.focusPage("#csNo");
-	buildingRecord.items.brType = com.focusPage("#brType");
-	buildingRecord.items.pattern = com.focusPage("#pattern");
-	buildingRecord.items.comment = com.focusPage("#comment");
+	buildingRecord.btns.saveBtn.on("click", saveData);
+
+	buildingRecord.modals.buildingRecordModal.on("hide.bs.modal", function(){
+
+		com.cleanItems(buildingRecord.items);
+		com.closeTip();
+	});
 
 	com.post(api.ds.building, {}, function(res){
 		buildingRecord.items.brType.bindData(res.recordType, "key", "value");
@@ -33,8 +57,6 @@ jQuery(function($) {
 			buildingRecord.pattern[i] = d.value;
 		});
 	}, null, false);
-
-	buildingRecord.saveBtn = com.focusPage("#saveBtn").on("click", saveData);
 
 	var displayFunc  = (function(){
 
@@ -142,23 +164,7 @@ jQuery(function($) {
 			buildingRecord.items.csNo.val(buildingRecord.buildingRecordCsno);
 		}
 
-		com.focusPage("#buildingRecordModal").modal("show");
-	});
-
-	//返回
-	com.focusPage("#back").click(function(){
-		switch(buildingRecord.currentPage)
-		{
-			case "houseSource":
-				com.switchPage(api.index.houseSource.url);
-				break;
-			case "advance":
-				com.switchPage(api.index.houseSourceAdvance.url);
-				break;
-			case "customerSource":
-				com.switchPage(api.index.customerSource.url);
-				break;
-		}
+		buildingRecord.modals.buildingRecordModal.modal("show");
 	});
 
 	function saveData(){
@@ -202,6 +208,6 @@ jQuery(function($) {
 			searcher.doSearch();
 		});
 
-		com.focusPage("#buildingRecordModal").modal("hide");
+		buildingRecord.modals.buildingRecordModal.modal("hide");
 	}
 });

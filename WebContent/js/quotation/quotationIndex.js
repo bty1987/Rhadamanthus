@@ -385,8 +385,6 @@ $(function () {
             
         });
 
-        $('[data-rel=tooltip]').tooltip();
-
     }
 });
 

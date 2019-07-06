@@ -30,7 +30,7 @@ jQuery(function($) {
 
 				params.unionId = v.unionId;
 				params.id = 2;
-				com.switchPage(api.index.vscoreRecord.url);
+				com.popup4page("#vscoreRecordPopUp", api.index.vscoreRecord.url, "积分");
 
 			});
 

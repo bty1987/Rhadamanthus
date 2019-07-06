@@ -27,56 +27,53 @@ import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
 
 @Service("quotationSmallCategoryService")
-@Transactional(readOnly=true)
+@Transactional(readOnly = true)
 public class QuotationSmallCategoryServiceImpl implements QuotationSmallCategoryService {
-	
+
 	@Autowired
 	private QuotationSmallCategoryDao quotationSmallCategoryDao;
 
 	@Override
-	public List<QuotationSmallCategoryVO> queryQuotationSmallCategory(QuotationSmallCategoryVO quotationSmallCategory){
-		List<QuotationSmallCategoryPO> quotationSmallCategoryPOs =null;
-		
+	public List<QuotationSmallCategoryVO> queryQuotationSmallCategory(QuotationSmallCategoryVO quotationSmallCategory) {
+		List<QuotationSmallCategoryPO> quotationSmallCategoryPOs = null;
+
 		quotationSmallCategoryPOs = quotationSmallCategoryDao.list();
-		
+
 		List<QuotationSmallCategoryVO> quotationSmallCategoryVOs = new ArrayList<QuotationSmallCategoryVO>();
-		
-		for(QuotationSmallCategoryPO quotationSmallCategoryPO: quotationSmallCategoryPOs){
+
+		for (QuotationSmallCategoryPO quotationSmallCategoryPO : quotationSmallCategoryPOs) {
 			QuotationSmallCategoryVO quotationSmallCategoryVO = new QuotationSmallCategoryVO();
 			BeanUtil.copyProperties(quotationSmallCategoryPO, quotationSmallCategoryVO);
 			quotationSmallCategoryVOs.add(quotationSmallCategoryVO);
 		}
-		
+
 		return quotationSmallCategoryVOs;
 	}
-	
+
 	@Override
 	public void pageQuotationSmallCategory(Paging paging, List<Filter> filters) {
 		List<QuotationSmallCategoryPO> quotationSmallCategoryPOs = quotationSmallCategoryDao.pageQuotationSmallCategory(paging, filters);
 		List<QuotationSmallCategoryVO> quotationSmallCategoryVOs = new ArrayList<QuotationSmallCategoryVO>();
-		
-		for(QuotationSmallCategoryPO quotationSmallCategoryPO: quotationSmallCategoryPOs){
-			
+
+		for (QuotationSmallCategoryPO quotationSmallCategoryPO : quotationSmallCategoryPOs) {
+
 			QuotationSmallCategoryVO quotationSmallCategoryVO = new QuotationSmallCategoryVO();
 
 			BeanUtil.copyProperties(quotationSmallCategoryPO, quotationSmallCategoryVO);
-			
+
 			quotationSmallCategoryVOs.add(quotationSmallCategoryVO);
 		}
-		
+
 		paging.setData(quotationSmallCategoryVOs);
-	
+
 	}
-	
-	public QuotationSmallCategoryDao getQuotationSmallCategoryDao(){
+
+	public QuotationSmallCategoryDao getQuotationSmallCategoryDao() {
 		return quotationSmallCategoryDao;
 	}
 
-	public void setQuotationSmallCategoryDao(
-			QuotationSmallCategoryDao quotationSmallCategoryDao){
+	public void setQuotationSmallCategoryDao(QuotationSmallCategoryDao quotationSmallCategoryDao) {
 		this.quotationSmallCategoryDao = quotationSmallCategoryDao;
 	}
 
-
-	
 }

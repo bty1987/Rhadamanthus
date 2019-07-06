@@ -794,12 +794,9 @@ var QuotationDetail = (function(){
 
 			$.each(_btnSet, function(k, v){
 
-				$btns[k] = $('<a></a>').attr({
-					"href" : "javascript:void(0)",
-					"data-rel" : "tooltip",
-					//"data-placement" : "bottom",
-					"data-original-title" : v[0]
-				}).addClass('tooltip-info').css({"padding-left": "5px","text-decoration" : "none"}).append(v[1]).appendTo($dtoolbar).tooltip();
+				$btns[k] = $('<a></a>').attr({"href" : "javascript:void(0)"}).css({"padding-left": "5px"}).append(v[1]).appendTo($dtoolbar).mouseenter(function(){
+                    com.showTip(this, v[0], "top");
+                });
 			});
 
 			$btns["$btnFold"].attr({"data-action" : "collapse"});
@@ -927,20 +924,12 @@ var QuotationDetail = (function(){
 			$btnCellWrap.append($inputLable).appendTo($btnCell);
 			$item.append($btnCell);
 
-			$btnDel = $('<a></a>').attr({
-				"data-rel" : "tooltip",
-				"href" : "javascript:void(0)",
-				"data-original-title" : "删除报价项"
-			}).css({"padding-left" : "5px","text-decoration" : "none"})
-				.append('<i class="bigger-125 icon-remove pink"></i>')
-				.tooltip();
-			$btnInfo = $('<a></a>').attr({
-				"data-rel" : "tooltip",
-				"href" : "javascript:void(0)",
-				"data-original-title" : "报价信息"
-			}).css({"padding-left" : "5px","text-decoration" : "none"})
-				.append('<i class="bigger-125 icon-search"></i>')
-				.tooltip();
+			$btnDel = $('<a></a>').attr({"href" : "javascript:void(0)"}).css({"padding-left" : "5px"}).append('<i class="bigger-125 icon-remove pink"></i>').mouseenter(function(){
+                com.showTip(this, "删除报价项", "top");
+            });
+			$btnInfo = $('<a></a>').attr({"href" : "javascript:void(0)"}).css({"padding-left" : "5px"}).append('<i class="bigger-125 icon-search"></i>').mouseenter(function(){
+                com.showTip(this, "报价信息", "top");
+            });
 			$btnCellWrap.append($btnDel).append($btnInfo);
 
 			//各种绑定事件
@@ -1221,7 +1210,6 @@ var QuotationDetail = (function(){
 			//autofill选中给一行赋值
 			columnActionInit : function($line, data, flag){
 
-
 				var _materialModel = data;
 
 				if(flag){
@@ -1290,16 +1278,7 @@ var QuotationDetail = (function(){
 					var $input = $line.find('.' + cellClass + ' input');
 					if(cond){
 						$input.focus().select();
-
-						$input.addClass('popover-notitle').attr({
-							"data-rel" : "popover",
-							"data-placement" : "top",
-							"data-original-title" : "",
-							"title" : "",
-							"data-content" : msg
-
-						}).popover('show');
-
+						com.showTip($input, msg, "left");
 						flag =  false;
 					}else{
 						$input.popover('destroy');
@@ -1309,16 +1288,7 @@ var QuotationDetail = (function(){
 				var materialModelName = $line.find('.materialModelName input');
 				if(!materialModelName.val()){
 					materialModelName.focus().select();
-
-					materialModelName.addClass('popover-notitle').attr({
-						"data-rel" : "popover",
-						"data-placement" : "top",
-						"data-original-title" : "",
-						"title" : "",
-						"data-content" : "请填写主材名称"
-
-					}).popover('show');
-
+					com.showTip(materialModelName, "请填写主材名称", "left");
 					flag =  false;
 				}else{
 					materialModelName.popover('destroy');
@@ -1328,13 +1298,7 @@ var QuotationDetail = (function(){
 				var numRex = /^(\d+|\d+\.[0-9]{1,4})$/;
 				if(!(numRex.test(num.val()) && parseFloat(num.val()) > 0)){
 					num.focus().select();
-					num.addClass('tooltip-info').attr({
-						"data-rel" : "popover",
-						"data-placement" : "top",
-						"data-original-title" : "",
-						"title" : "",
-						"data-content" : "数量输入内容格式错误!"
-					}).popover('show');
+					com.showTip(num, "数量输入内容格式错误", "left");
 					flag =  false;
 				}else{
 					num.popover('destroy');
@@ -1344,14 +1308,7 @@ var QuotationDetail = (function(){
 				var totalRex = /^([0-9]+|[0-9]+\.[0-9]{1,2})$/;
 				if(!(totalRex.test(total.val()) && parseFloat(total.val()) > 0)){
 					total.focus().select();
-					total.addClass('tooltip-info').attr({
-						"data-rel" : "popover",
-						"data-placement" : "top",
-						"data-original-title" : "",
-						"title" : "",
-						"data-content" : "总价输入内容格式错误!"
-
-					}).popover('show');
+					com.showTip(total, "总价输入内容格式错误", "left");
 					flag =  false;
 				}else{
 					total.popover('destroy');
@@ -1360,13 +1317,7 @@ var QuotationDetail = (function(){
 				var des = $line.find('.des input');
 				if(des.val().length > 128){
 					des.focus().select();
-					des.addClass('tooltip-info').attr({
-						"data-rel" : "popover",
-						"data-placement" : "top",
-						"data-original-title" : "",
-						"title" : "",
-						"data-content" : "备注信息长度需要小于128!"
-					}).popover('show');
+					com.showTip(des, "备注信息长度需要小于128", "left");
 					flag =  false;
 				}else{
 					des.popover('destroy');

@@ -3,7 +3,7 @@ jQuery(function($) {
 	
 	var management = {
 		
-		items: [],
+		items: {},
 			
 		decorationTimeTypeMap: [{"key":"1", "value":"录入时间"}, {"key":"2", "value":"签单时间"}, {"key": 3, "value": "预签时间"}],
 		decorationStatusMap: [],
@@ -56,96 +56,106 @@ jQuery(function($) {
 	management.items.quotationStatus = com.focusPage("#quotationStatus");
 	
 	management.items.changeSalesNo = com.focusPage("#changeSalesNo");
+	
+	management.items.orderId4decorationActivityItem = com.focusPage("#orderId4decorationActivityItem");
+	
+	management.items.orderId4decorationHolonomy = com.focusPage("#orderId4decorationHolonomy");
+	management.items.materialPrice = com.focusPage("#materialPrice");
 
-	management.decorationForOrderIdModal = com.focusPage("#decorationForOrderIdModal").on('show.bs.modal', function(e){
+	management.decorationForOrderIdModal = com.focusPage("#decorationForOrderIdModal").on('hide.bs.modal', function(e){
 		com.cleanItems(management.items);
 		com.clearValidator();
 	});
 	
-	management.decorationForTimeModal = com.focusPage("#decorationForTimeModal").on('show.bs.modal', function(e){
+	management.decorationForTimeModal = com.focusPage("#decorationForTimeModal").on('hide.bs.modal', function(e){
 		com.cleanItems(management.items);
 		com.clearValidator();
 	});
 	
-	management.decorationForVersionIdModal = com.focusPage("#decorationForVersionIdModal").on('show.bs.modal', function(e){
+	management.decorationForVersionIdModal = com.focusPage("#decorationForVersionIdModal").on('hide.bs.modal', function(e){
 		com.cleanItems(management.items);
 		com.clearValidator();
 	});
 	
-	management.decorationForStatusModal = com.focusPage("#decorationForStatusModal").on('show.bs.modal', function(e){
+	management.decorationForStatusModal = com.focusPage("#decorationForStatusModal").on('hide.bs.modal', function(e){
 		com.cleanItems(management.items);
 		com.clearValidator();
 	});
 	
-	management.decorationPaymentForTimeModal = com.focusPage("#decorationPaymentForTimeModal").on('show.bs.modal', function(e){
+	management.decorationPaymentForTimeModal = com.focusPage("#decorationPaymentForTimeModal").on('hide.bs.modal', function(e){
 		com.cleanItems(management.items);
 		com.clearValidator();
 	});
 	
-	management.refundOrderPaymentByOrderModal = com.focusPage("#refundOrderPaymentByOrderModal").on('show.bs.modal', function(e){
+	management.amountDecorationActivityItemModal = com.focusPage("#amountDecorationActivityItemModal").on('hide.bs.modal', function(e){
+        com.cleanItems(management.items);
+        com.clearValidator();
+    });
+	
+	management.updateDecorationHolonomyModal = com.focusPage("#updateDecorationHolonomyModal").on('hide.bs.modal', function(e){
+        com.cleanItems(management.items);
+        com.clearValidator();
+    });
+	
+	management.refundOrderPaymentByOrderModal = com.focusPage("#refundOrderPaymentByOrderModal").on('hide.bs.modal', function(e){
 		com.cleanItems(management.items);
 		com.clearValidator();
 	});
 	
-	management.MaterialForOrderIdModal = com.focusPage("#MaterialForOrderIdModal").on('show.bs.modal', function(e){
+	management.MaterialForOrderIdModal = com.focusPage("#MaterialForOrderIdModal").on('hide.bs.modal', function(e){
 		com.cleanItems(management.items);
 		com.clearValidator();
 	});
 	
-	management.materialPaymentForTimeModal = com.focusPage("#materialPaymentForTimeModal").on('show.bs.modal', function(e){
+	management.materialPaymentForTimeModal = com.focusPage("#materialPaymentForTimeModal").on('hide.bs.modal', function(e){
 		com.cleanItems(management.items);
 		com.clearValidator();
 	});
 	
-	management.subDecorationForQuotationTimeModal = com.focusPage("#subDecorationForQuotationTimeModal").on('show.bs.modal', function(e){
+	management.subDecorationForQuotationTimeModal = com.focusPage("#subDecorationForQuotationTimeModal").on('hide.bs.modal', function(e){
 		com.cleanItems(management.items);
 		com.clearValidator();
 	});
 	
-	management.updateQuotationFunctionItemForManageRateModal = com.focusPage("#updateQuotationFunctionItemForManageRateModal").on('show.bs.modal', function(e){
+	management.updateQuotationFunctionItemForManageRateModal = com.focusPage("#updateQuotationFunctionItemForManageRateModal").on('hide.bs.modal', function(e){
 		management.items.quotationNames.bindData([], 'qid', 'quotationName');
 
 		com.cleanItems(management.items);
 		com.clearValidator();
 	});
 	
-	management.exportMaterialPaymentModal = com.focusPage("#exportMaterialPaymentModal").on('show.bs.modal', function(e){
+	management.exportMaterialPaymentModal = com.focusPage("#exportMaterialPaymentModal").on('hide.bs.modal', function(e){
 		com.cleanItems(management.items);
 		com.clearValidator();
 	});
 	
-	management.exportDecorationForContractTimeModal = com.focusPage("#exportDecorationForContractTimeModal").on('show.bs.modal', function(e){
+	management.exportDecorationForContractTimeModal = com.focusPage("#exportDecorationForContractTimeModal").on('hide.bs.modal', function(e){
 		com.cleanItems(management.items);
 		com.clearValidator();
 	});
 
-	management.exportDecorationPaymentForContractTimeModal = com.focusPage("#exportDecorationPaymentForContractTimeModal").on('show.bs.modal', function(e){
+	management.exportDecorationPaymentForContractTimeModal = com.focusPage("#exportDecorationPaymentForContractTimeModal").on('hide.bs.modal', function(e){
 		com.cleanItems(management.items);
 		com.clearValidator();
 	});
 
-	management.updateQuotationForStatusModal = com.focusPage("#updateQuotationForStatusModal").on('show.bs.modal', function(e){
+	management.updateQuotationForStatusModal = com.focusPage("#updateQuotationForStatusModal").on('hide.bs.modal', function(e){
 		com.cleanItems(management.items);
 		com.clearValidator();
 	});
 	
-	management.changeDecorationForGradeModal = com.focusPage("#changeDecorationForGradeModal").on('show.bs.modal', function(e){
+	management.changeDecorationForGradeModal = com.focusPage("#changeDecorationForGradeModal").on('hide.bs.modal', function(e){
 		com.cleanItems(management.items);
 		com.clearValidator();
 	});
 	
-	management.changeSalesForGradeModal = com.focusPage("#changeSalesForGradeModal").on('show.bs.modal', function(e){
+	management.changeSalesForGradeModal = com.focusPage("#changeSalesForGradeModal").on('hide.bs.modal', function(e){
 		com.cleanItems(management.items);
 		com.clearValidator();
 	});
 	
 	com.datetime(com.focusPage(".date-picker-date"), "date");
 	com.datetime(com.focusPage(".maskInput"), "time");
-	
-	com.focusPage('#dateRange').daterangepicker(com.dateramgepickerdefault);
-	com.focusPage('#contractTimeRange').daterangepicker(com.dateramgepickerdefault);
-	com.focusPage('#paymentTimeRange').daterangepicker(com.dateramgepickerdefault);
-	com.focusPage(".daterangepicker").css("z-index", 1100);
 	
 	com.focusPage('#quotationFunctionItemForManageRate').on("blur", function(){
 		
@@ -209,6 +219,14 @@ jQuery(function($) {
 		management.decorationPaymentForTimeModal.modal("show");
 	});
 	
+	com.focusPage("#amountDecorationActivityItem").click(function(){
+        management.amountDecorationActivityItemModal.modal("show");
+    });
+
+    com.focusPage("#updateDecorationHolonomy").click(function(){
+        management.updateDecorationHolonomyModal.modal("show");
+    });
+	
 	// com.focusPage("#refundOrderForOrderId").click(function(){
 	//
 	// 	com.focusPage("#refundOrderPaymentType").bindData(management.decorationPaymentRefundMap, 'key', 'value');
@@ -265,8 +283,8 @@ jQuery(function($) {
 	
 	com.focusPage("#saveOrderIdBtn").click(function(){
 
-		if(com.validate()){
-			return;
+		if(com.validate("decorationForOrderIdModal")){
+			return false;
 		}
 
 		var options = {
@@ -283,8 +301,8 @@ jQuery(function($) {
 	
 	com.focusPage("#saveOrderDateBtn").click(function(){
 		
-		if(com.validate()){
-			return;
+		if(com.validate("decorationForTimeModal")){
+			return false;
 		}
 		
 		var options = {
@@ -302,8 +320,8 @@ jQuery(function($) {
 	
 	com.focusPage("#saveVersionIdBtn").click(function(){
 		
-		if(com.validate()){
-			return;
+		if(com.validate("decorationForVersionIdModal")){
+			return false;
 		}
 		
 		var options = {
@@ -320,8 +338,8 @@ jQuery(function($) {
 	
 	com.focusPage("#saveOrderPaymentDateBtn").click(function(){
 		
-		if(com.validate()){
-			return;
+		if(com.validate("decorationPaymentForTimeModal")){
+			return false;
 		}
 		
 		var options = {
@@ -339,8 +357,8 @@ jQuery(function($) {
 	
 	com.focusPage("#refundOrderPaymentBtn").click(function(){
 		
-		if(com.validate()){
-			return;
+		if(com.validate("refundOrderPaymentByOrderModal")){
+			return false;
 		}
 		
 		var options = {
@@ -357,8 +375,8 @@ jQuery(function($) {
 	
 	com.focusPage("#saveMaterialOrderIdBtn").click(function(){
 		
-		if(com.validate()){
-			return;
+		if(com.validate("MaterialForOrderIdModal")){
+			return false;
 		}
 		
 		var options = {
@@ -376,7 +394,7 @@ jQuery(function($) {
 	com.focusPage("#changeDecorationGradeBtn").click(function(){
 		
 		if(com.validate("orderIdOfDecorationGrade")){
-			return;
+			return false;
 		}
 		
 		var options = {
@@ -406,28 +424,63 @@ jQuery(function($) {
 		management.changeDecorationForGradeModal.modal("hide");
 	});
 	
-	com.focusPage("#saveStatusBtn").click(function(){
+	com.focusPage("#saveBtn", "#amountDecorationActivityItemModal").click(function(){
 		
-		if(com.validate()){
-			return;
+		if(com.validate("amountDecorationActivityItemModal")){
+			return false;
 		}
 		
 		var options = {
-			"decoration.orderId": com.focusPage("#orderIdForStatus").val(),
-			"decoration.status": com.focusPage("#orderStatus").val(),
+			"decoration.orderId": com.focusPage("#orderId4decorationActivityItem").val(),
 		};
 		
-		com.post(api.decoration.changeDecorationForStatus, options, function(res){
+		com.post(api.decoration.amountDecorationActivityItem, options, function(res){
 			com.showAlert(com.info, "操作成功");
 		});
 		
-		management.decorationForStatusModal.modal("hide");
+		management.amountDecorationActivityItemModal.modal("hide");
 	});
+	
+	com.focusPage("#saveBtn", "#updateDecorationHolonomyModal").click(function(){
+        
+        if(com.validate("updateDecorationHolonomyModal")){
+            return false;
+        }
+        
+        var options = {
+            "decorationHolonomy.decoration.orderId": com.focusPage("#orderId4decorationHolonomy").val(),
+            "decorationHolonomy.materialPrice": com.focusPage("#materialPrice").val()
+        };
+        
+        com.post(api.decoration.updateDecorationHolonomy, options, function(res){
+            com.showAlert(com.info, "操作成功");
+        });
+        
+        management.updateDecorationHolonomyModal.modal("hide");
+    });
+	
+	com.focusPage("#saveStatusBtn").click(function(){
+        
+        if(com.validate("decorationForStatusModal")){
+            return false;
+        }
+        
+        var options = {
+            "decoration.orderId": com.focusPage("#orderIdForStatus").val(),
+            "decoration.status": com.focusPage("#orderStatus").val(),
+        };
+        
+        com.post(api.decoration.changeDecorationForStatus, options, function(res){
+            com.showAlert(com.info, "操作成功");
+        });
+        
+        management.decorationForStatusModal.modal("hide");
+    });
 	
 	com.focusPage("#saveMaterialPaymentDateBtn").click(function(){
 		
-		if(com.validate()){
-			return;
+		if(com.validate("materialPaymentForTimeModal")){
+			return false;
 		}
 		
 		var options = {
@@ -445,8 +498,8 @@ jQuery(function($) {
 	
 	com.focusPage("#saveDecorationForQuotationTimeBtn").click(function(){
 		
-		if(com.validate()){
-			return;
+		if(com.validate("subDecorationForQuotationTimeModal")){
+			return false;
 		}
 		
 		var options = {
@@ -462,8 +515,8 @@ jQuery(function($) {
 	
 	com.focusPage("#saveQuotationFunctionItemForManageRateBtn").click(function(){
 		
-		if(com.validate()){
-			return;
+		if(com.validate("updateQuotationFunctionItemForManageRateModal")){
+			return false;
 		}
 		
 		var options = {
@@ -480,8 +533,9 @@ jQuery(function($) {
 	});
 
 	com.focusPage("#saveQuotationStatusBtn").click(function(){
-		if(com.validate()){
-			return;
+	    
+		if(com.validate("updateQuotationForStatusModal")){
+			return false;
 		}
 
 		var options = {
@@ -500,7 +554,7 @@ jQuery(function($) {
 	com.focusPage("#changeSalesGradeBtn").click(function(){
 		
 		if(com.validate("changeSalesNo")){
-			return;
+			return false;
 		}
 		
 		var options = {
@@ -529,8 +583,9 @@ jQuery(function($) {
 	});
 	
 	com.focusPage("#exportMaterialPaymentBtn").click(function(){
-		if(com.validate()){
-			return;
+	    
+		if(com.validate("exportMaterialPaymentModal")){
+			return false;
 		}
 		
 		var url = api.common.exportMaterialPayment.url + "?filters[0].data=" + com.focusPage("#dateRange").val() + "&filters[0].field=collectTime&filters[0].op=between&filters[1].field=paymentStatus&filters[1].data=0&filters[1].op=ne";
@@ -539,8 +594,9 @@ jQuery(function($) {
 	});
 	
 	com.focusPage("#exportDecorationForContractTimeBtn").click(function(){
-		if(com.validate()){
-			return;
+	    
+		if(com.validate("exportDecorationForContractTimeModal")){
+			return false;
 		}
 		
 		var url = api.decoration.exportDecorationByContractTime.url + "?filters[0].data=" + com.focusPage("#contractTimeRange").val() + "&filters[0].field=signTimeDateRange&filters[0].op=between&filters[1].field=status&filters[1].data=已签约&filters[1].op=eq";
@@ -549,8 +605,9 @@ jQuery(function($) {
 	});
 
 	com.focusPage("#exportDecorationPaymentForContractTimeBtn").click(function(){
-		if(com.validate()){
-			return;
+	    
+		if(com.validate("exportDecorationPaymentForContractTimeModal")){
+			return false;
 		}
 
 		var url = api.payment.exportDecorationPayment.url + "?filters[0].data=" + com.focusPage("#paymentTimeRange").val() + "&filters[0].field=collectTime&filters[0].op=between";

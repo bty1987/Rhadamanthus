@@ -9,33 +9,33 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="customerPhone", catalog = "communion")
+@Table(name = "customerPhone", catalog = "communion")
 public class CustomerPhonePO implements Serializable {
 
 	private static final long serialVersionUID = 3461880420286597234L;
-	
+
 	public static final String COLUMN_STATUS_STR = "status";
-	
+
 	public static final String COLUMN_DEFAULTS_STR = "defaults";
-	
+
 	public static final short STATUS_ENABLE_INT = 0;
-	
+
 	public static final short STATUS_DISABLE_INT = 1;
-	
+
 	public static final short DEFAULTS_DISABLE_INT = 0;
-	
+
 	public static final short DEFAULTS_ENABLE_INT = 1;
 
 	private long cpid;
-	
+
 	private long cid;
-	
+
 	private String phone;
-	
+
 	private short status;
-	
+
 	private short defaults;
-	
+
 	public CustomerPhonePO() {
 		super();
 	}
@@ -47,7 +47,7 @@ public class CustomerPhonePO implements Serializable {
 
 	@Id
 	@GeneratedValue
-	@Column(name="cpid")
+	@Column(name = "cpid")
 	public long getCpid() {
 		return cpid;
 	}
@@ -55,8 +55,8 @@ public class CustomerPhonePO implements Serializable {
 	public void setCpid(long cpid) {
 		this.cpid = cpid;
 	}
-	
-	@Column(name="cid")
+
+	@Column(name = "cid")
 	public long getCid() {
 		return cid;
 	}
@@ -65,7 +65,7 @@ public class CustomerPhonePO implements Serializable {
 		this.cid = cid;
 	}
 
-	@Column(name="phone")
+	@Column(name = "phone")
 	public String getPhone() {
 		return phone;
 	}
@@ -74,7 +74,7 @@ public class CustomerPhonePO implements Serializable {
 		this.phone = phone;
 	}
 
-	@Column(name="status")
+	@Column(name = "status")
 	public short getStatus() {
 		return status;
 	}
@@ -83,7 +83,7 @@ public class CustomerPhonePO implements Serializable {
 		this.status = status;
 	}
 
-	@Column(name="defaults")
+	@Column(name = "defaults")
 	public short getDefaults() {
 		return defaults;
 	}
@@ -91,5 +91,5 @@ public class CustomerPhonePO implements Serializable {
 	public void setDefaults(short defaults) {
 		this.defaults = defaults;
 	}
-	
+
 }

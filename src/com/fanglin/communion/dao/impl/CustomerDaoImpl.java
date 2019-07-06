@@ -27,25 +27,25 @@ import com.fanglin.utils.SystemConfig;
 @Repository("customerDao")
 public class CustomerDaoImpl extends DaoImpl<CustomerPO> implements CustomerDao {
 
-	public CustomerDaoImpl(){
+	public CustomerDaoImpl() {
 		super(CustomerPO.class);
 	}
-	
+
 	@Override
-	public List<CustomerPO> pageCustomer(Paging paging, List<Filter> filters,HashSet<Long> cids,Integer company){
+	public List<CustomerPO> pageCustomer(Paging paging, List<Filter> filters, HashSet<Long> cids, Integer company) {
 
 		PagingQuery<CustomerPO> query = pagingQuery(paging, CustomerPO.class);
-		
+
 		queryFilterExcute(query, filters);
-		
-		if(cids.size() > 0){
+
+		if (cids.size() > 0) {
 			query.add(Restrictions.in("cid", cids));
 		}
-	
-		if(SystemConfig.getInt("multicompany" , 0) != 0){
-			query.add(Restrictions.eq("company",company));
+
+		if (SystemConfig.getInt("multicompany", 0) != 0) {
+			query.add(Restrictions.eq("company", company));
 		}
-		
+
 		query.asc("cid");
 
 		return query.list();
@@ -53,41 +53,41 @@ public class CustomerDaoImpl extends DaoImpl<CustomerPO> implements CustomerDao 
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<CustomerPO> queryCustomerByPinyin(String pinyinName, int limit,Integer company){
-	
+	public List<CustomerPO> queryCustomerByPinyin(String pinyinName, int limit, Integer company) {
+
 		String likestr = String.format("%s%%", pinyinName);
-		
+
 		StringBuffer sql = new StringBuffer();
 
 		sql.append("select c.* ");
 		sql.append("from communion.customer c left join communion.customerphone cp on c.cid = cp.cid ");
 		sql.append("where (c.pinyinAll like :pinyinAll or c.pinyinAB like :pinyinAB or c.name like :name) or (cp.phone like :phone and status = :status) ");
 
-		if(SystemConfig.getInt("multicompany" , 0) != 0){
+		if (SystemConfig.getInt("multicompany", 0) != 0) {
 			sql.append("and c.company =:company ");
 		}
-		
+
 		sql.append("group by c.cid ");
 		sql.append("limit :limit ");
-		
+
 		SQLQuery query = session().createSQLQuery(sql.toString()).addEntity(CustomerPO.class);
 		query.setString("pinyinAll", likestr).setString("pinyinAB", likestr).setString("name", likestr).setString("phone", likestr).setShort("status", CustomerPhonePO.STATUS_ENABLE_INT).setInteger("limit", limit);
-	
-		if(SystemConfig.getInt("multicompany" , 0) != 0){
+
+		if (SystemConfig.getInt("multicompany", 0) != 0) {
 			query.setInteger("company", company);
 		}
-		
+
 		return query.list();
 	}
-	
-	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){
-		
-		if(filters != null){
-			
-			for(Filter filter : filters){
-				if("customerName".equals(filter.getField())){
+
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
+
+		if (filters != null) {
+
+			for (Filter filter : filters) {
+				if ("customerName".equals(filter.getField())) {
 					query.add(query.getCriterion("customerName", filter));
-				} else if("relationshipType".equals(filter.getField())){
+				} else if ("relationshipType".equals(filter.getField())) {
 					query.add(query.getCriterion("relationshipType", filter));
 				}
 			}

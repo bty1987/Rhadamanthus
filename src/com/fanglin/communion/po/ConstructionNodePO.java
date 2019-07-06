@@ -10,36 +10,35 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-
 @Entity
-@Table(name = "constructionNode",catalog = "communion")
+@Table(name = "constructionNode", catalog = "communion")
 public class ConstructionNodePO implements Serializable {
 
 	private static final long serialVersionUID = 7434364138129555698L;
-	
+
 	public static final String COLUMN_STATUS_STR = "status";
-	
+
 	public static final String COLUMN_SORT_STR = "sort";
-	
+
 	public static final short STATUS_INIT_SHORT = 0;
-	
+
 	private long cnid;
-	
+
 	private String name;
-	
+
 	private Float precheck;
-	
+
 	private Float postcheck;
-	
+
 	private short status;
-	
+
 	private short sort;
-	
+
 	private int company;
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name="cnid")
+	@Column(name = "cnid")
 	public long getCnid() {
 		return cnid;
 	}
@@ -48,15 +47,15 @@ public class ConstructionNodePO implements Serializable {
 		this.cnid = cnid;
 	}
 
-	@Column(name="name")
+	@Column(name = "name")
 	public String getName() {
 		return name;
 	}
-	
+
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	public Float getPrecheck() {
 		return precheck;
 	}
@@ -73,7 +72,7 @@ public class ConstructionNodePO implements Serializable {
 		this.postcheck = postcheck;
 	}
 
-	@Column(name="status")
+	@Column(name = "status")
 	public short getStatus() {
 		return status;
 	}
@@ -82,7 +81,7 @@ public class ConstructionNodePO implements Serializable {
 		this.status = status;
 	}
 
-	@Column(name="sort")
+	@Column(name = "sort")
 	public short getSort() {
 		return sort;
 	}
@@ -91,7 +90,7 @@ public class ConstructionNodePO implements Serializable {
 		this.sort = sort;
 	}
 
-	@Column(name="company")
+	@Column(name = "company")
 	public int getCompany() {
 		return company;
 	}

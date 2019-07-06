@@ -41,7 +41,11 @@ public class SystemDefineItemPO implements Serializable {
 	
 	private String itemName;
 	
-	private float unitPrice;
+	private float addPrice;  //增补价
+	
+	private float unitPrice; //单价
+	
+	private float subPrice;  //退减价
 	
 	private QuotationBigCategoryPO quotationBigCategory;
 	
@@ -133,6 +137,15 @@ public class SystemDefineItemPO implements Serializable {
 		this.quotationItemDes = quotationItemDes;
 	}
 
+	@Column(name="addPrice")
+	public float getAddPrice() {
+		return addPrice;
+	}
+
+	public void setAddPrice(float addPrice) {
+		this.addPrice = addPrice;
+	}
+
 	@Column(name="unitPrice")
 	public float getUnitPrice(){
 		return unitPrice;
@@ -140,6 +153,15 @@ public class SystemDefineItemPO implements Serializable {
 
 	public void setUnitPrice(float unitPrice){
 		this.unitPrice = unitPrice;
+	}
+
+	@Column(name="subPrice")
+	public float getSubPrice() {
+		return subPrice;
+	}
+
+	public void setSubPrice(float subPrice) {
+		this.subPrice = subPrice;
 	}
 
 	@Column(name="status")

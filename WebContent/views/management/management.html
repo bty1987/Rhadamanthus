@@ -35,6 +35,16 @@
 					<span>装修单报价复制次数</span>
 				</button>
 				
+				<button id="amountDecorationActivityItem" class="btn btn-success" style="margin: 2px;">
+                    <i class="icon-edit"></i>
+                    <span>装修活动项汇总</span>
+                </button>
+                
+                <button id="updateDecorationHolonomy" class="btn btn-success" style="margin: 2px;">
+                    <i class="icon-edit"></i>
+                    <span>装修满减信息更新</span>
+                </button>
+				
 		</div>
 	</div>
 	
@@ -136,9 +146,9 @@
 			<div class="modal-content col-md-12">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal">
-						<span>&times;</span><span class="sr-only">Close</span>
+						<span>&times;</span>
 					</button>
-					<h4 class="modal-title" id="quotationDialog">装修单号更换</h4>
+					<h4 class="modal-title">装修单号更换</h4>
 				</div>
 				<div class="modal-body">
 					<form class="form-horizontal">
@@ -170,9 +180,9 @@
 			<div class="modal-content col-md-12">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal">
-						<span>&times;</span><span class="sr-only">Close</span>
+						<span>&times;</span>
 					</button>
-					<h4 class="modal-title" id="quotationDialog">订单相关时间修改</h4>
+					<h4 class="modal-title">装修单时间修改</h4>
 				</div>
 				<div class="modal-body">
 					<form class="form-horizontal">
@@ -197,7 +207,7 @@
 							</div>
 							<label class="col-sm-3 control-label no-padding-right" for=orderTime>时间</label>
 							<div class="col-sm-9">
-								<input type="text" id="orderTime" class="maskInput col-sm-6 v_time v_required" data-toggle="popover" data-trigger="manual"/>
+								<input type="text" id="orderTime" class="maskInput col-sm-6 v_required" data-toggle="popover" data-trigger="manual"/>
 							</div>
 						</div>
 					</form>
@@ -215,9 +225,9 @@
 			<div class="modal-content col-md-12">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal">
-						<span>&times;</span><span class="sr-only">Close</span>
+						<span>&times;</span>
 					</button>
-					<h4 class="modal-title" id="quotationDialog">订单报价版本修改</h4>
+					<h4 class="modal-title">报价版本修改</h4>
 				</div>
 				<div class="modal-body">
 					<form class="form-horizontal">
@@ -249,9 +259,9 @@
 			<div class="modal-content col-md-12">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal">
-						<span>&times;</span><span class="sr-only">Close</span>
+						<span>&times;</span>
 					</button>
-					<h4 class="modal-title" id="quotationDialog">订单签单状态修改</h4>
+					<h4 class="modal-title">装修单签单状态修改</h4>
 				</div>
 				<div class="modal-body">
 					<form class="form-horizontal">
@@ -283,9 +293,9 @@
 			<div class="modal-content col-md-12">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal">
-						<span>&times;</span><span class="sr-only">Close</span>
+						<span>&times;</span>
 					</button>
-					<h4 class="modal-title" id="quotationDialog">订单款项收款时间修改</h4>
+					<h4 class="modal-title">装修单款项收款时间修改</h4>
 				</div>
 				<div class="modal-body">
 					<form class="form-horizontal">
@@ -310,7 +320,7 @@
 							</div>
 							<label class="col-sm-3 control-label no-padding-right" for=orderPaymentTime>时间</label>
 							<div class="col-sm-9">
-								<input type="text" id="orderPaymentTime" class="maskInput col-sm-6 v_time v_required" data-toggle="popover" data-trigger="manual"/>
+								<input type="text" id="orderPaymentTime" class="maskInput col-sm-6 v_required" data-toggle="popover" data-trigger="manual"/>
 							</div>
 						</div>
 					</form>
@@ -328,7 +338,7 @@
 			<div class="modal-content col-md-12">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal">
-						<span>&times;</span><span class="sr-only">Close</span>
+						<span>&times;</span>
 					</button>
 					<h4 class="modal-title">装修单等级修改</h4>
 				</div>
@@ -367,9 +377,9 @@
 			<div class="modal-content col-md-12">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal">
-						<span>&times;</span><span class="sr-only">Close</span>
+						<span>&times;</span>
 					</button>
-					<h4 class="modal-title" id="quotationDialog">订单款项退款</h4>
+					<h4 class="modal-title">装修单款项退款</h4>
 				</div>
 				<div class="modal-body">
 					<form class="form-horizontal">
@@ -396,19 +406,79 @@
 		</div>
 	</div>
 	
+	<div class="modal fade" id="amountDecorationActivityItemModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content col-md-12">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                    <h4 class="modal-title">装修活动项统计</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="refundOrderId">装修单号</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="orderId4decorationActivityItem" class="col-xs-10 col-sm-5 v_required"  maxlength='15' data-toggle="popover" data-trigger='manual'/>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="saveBtn" class="btn btn-primary">保存</button>
+                    <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal fade" id="updateDecorationHolonomyModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content col-md-12">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                    <h4 class="modal-title">装修满减信息更新</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="refundOrderId">装修单号</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="orderId4decorationHolonomy" class="col-xs-10 col-sm-5 v_required"  maxlength='15' data-toggle="popover" data-trigger='manual'/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="refundOrderId">主材配额</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="materialPrice" class="col-xs-10 col-sm-5 v_float_3"  maxlength='15' data-toggle="popover" data-trigger='manual'/>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="saveBtn" class="btn btn-primary">保存</button>
+                    <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+	
 	<div class="modal fade" id="MaterialForOrderIdModal" tabindex="-1">
 		<div class="modal-dialog">
 			<div class="modal-content col-md-12">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal">
-						<span>&times;</span><span class="sr-only">Close</span>
+						<span>&times;</span>
 					</button>
-					<h4 class="modal-title" id="quotationDialog">主材装修单号所属订单修改</h4>
+					<h4 class="modal-title">主材单归属装修单修改</h4>
 				</div>
 				<div class="modal-body">
 					<form class="form-horizontal">
 						<div class="form-group">
-							<label class="col-sm-3 control-label no-padding-right" for="msoNo">主材子装修单号</label>
+							<label class="col-sm-3 control-label no-padding-right" for="msoNo">主材单号</label>
 							<div class="col-sm-9">
 								<input type="text" id="msoNo" class="col-xs-10 col-sm-5 v_required" maxlength='15' data-toggle="popover" data-trigger='manual'/>
 							</div>
@@ -435,14 +505,14 @@
 			<div class="modal-content col-md-12">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal">
-						<span>&times;</span><span class="sr-only">Close</span>
+						<span>&times;</span>
 					</button>
-					<h4 class="modal-title" id="quotationDialog">主材订单款项收款时间修改</h4>
+					<h4 class="modal-title">主材款收款时间修改</h4>
 				</div>
 				<div class="modal-body">
 					<form class="form-horizontal">
 						<div class="form-group">
-							<label class="col-sm-3 control-label no-padding-right" for="orderId">装修单号</label>
+							<label class="col-sm-3 control-label no-padding-right" for="orderId">主材单号</label>
 							<div class="col-sm-9">
 								<input type="text" id="msoNoForTime" class="col-xs-10 col-sm-5 v_required"  maxlength='15' data-toggle="popover" data-trigger='manual'/>
 							</div>
@@ -462,7 +532,7 @@
 							</div>
 							<label class="col-sm-3 control-label no-padding-right" for=orderPaymentTime>时间</label>
 							<div class="col-sm-9">
-								<input type="text" id="materialPaymentTime" class="maskInput col-sm-6 v_time v_required" data-toggle="popover" data-trigger="manual"/>
+								<input type="text" id="materialPaymentTime" class="maskInput col-sm-6 v_required" data-toggle="popover" data-trigger="manual"/>
 							</div>
 						</div>
 					</form>
@@ -480,9 +550,9 @@
 			<div class="modal-content col-md-12">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal">
-						<span>&times;</span><span class="sr-only">Close</span>
+						<span>&times;</span>
 					</button>
-					<h4 class="modal-title" id="quotationDialog">订单报价复制次数增加</h4>
+					<h4 class="modal-title">报价复制次数增加</h4>
 				</div>
 				<div class="modal-body">
 					<form class="form-horizontal">
@@ -507,9 +577,9 @@
 			<div class="modal-content col-md-12">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal">
-						<span>&times;</span><span class="sr-only">Close</span>
+						<span>&times;</span>
 					</button>
-					<h4 class="modal-title" id="quotationDialog">报价管理费比例更新</h4>
+					<h4 class="modal-title">报价管理费比例更新</h4>
 				</div>
 				<div class="modal-body">
 					<form class="form-horizontal">
@@ -549,9 +619,9 @@
 			<div class="modal-content col-md-12">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal">
-						<span>&times;</span><span class="sr-only">Close</span>
+						<span>&times;</span>
 					</button>
-					<h4 class="modal-title" id="quotationDialog">报价状态修改</h4>
+					<h4 class="modal-title">报价状态修改</h4>
 				</div>
 				<div class="modal-body">
 					<form class="form-horizontal">
@@ -594,7 +664,7 @@
 			<div class="modal-content col-md-12">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal">
-						<span>&times;</span><span class="sr-only">Close</span>
+						<span>&times;</span>
 					</button>
 					<h4 class="modal-title">销售单等级修改</h4>
 				</div>
@@ -631,9 +701,9 @@
 			<div class="modal-content col-md-12">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal">
-						<span>&times;</span><span class="sr-only">Close</span>
+						<span>&times;</span>
 					</button>
-					<h4 class="modal-title" id="quotationDialog"></h4>
+					<h4 class="modal-title"></h4>
 				</div>
 				<div class="modal-body">
 					<form class="form-horizontal">
@@ -658,9 +728,9 @@
 			<div class="modal-content col-md-12">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal">
-						<span>&times;</span><span class="sr-only">Close</span>
+						<span>&times;</span>
 					</button>
-					<h4 class="modal-title" id="quotationDialog"></h4>
+					<h4 class="modal-title"></h4>
 				</div>
 				<div class="modal-body">
 					<form class="form-horizontal">
@@ -685,7 +755,7 @@
 			<div class="modal-content col-md-12">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal">
-						<span>&times;</span><span class="sr-only">Close</span>
+						<span>&times;</span>
 					</button>
 					<h4 class="modal-title" id="paymentDialog"></h4>
 				</div>

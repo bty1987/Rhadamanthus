@@ -24,8 +24,13 @@ $(function(){
 	};
 
 	message.saveBtn.bindClick(saveData);
-
 	message.isPerformance.switchBtn("isOrNot");
+
+	message.modals.messageModal.on("hide.bs.modal", function () {
+		com.clearValidator();
+		com.cleanTypeahead('receiver');
+		com.cleanItems(message.messageItems);
+	});
 
 	com.initTypeahead('receiver', api.personel.queryUserByPinyin, "pinyinName", {"duty": "", "user.status":0}, "autoFillKeyValue", "key", "value", null);
 
@@ -113,10 +118,6 @@ $(function(){
 
 	com.focusPage("#addMessage").click(function() {
 		message.editFlg = false;
-
-		com.clearValidator();
-		com.cleanItems(message.messageItems);
-		com.cleanTypeahead('receiver');
 
 		message.modals.messageModal.modal("show");
 	});

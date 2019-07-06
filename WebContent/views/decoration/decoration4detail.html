@@ -114,33 +114,27 @@
 
                         <div id="refundApprove">
                             <div class="form-group">
-                                <label class="col-sm-3 control-label no-padding-right" for="changeReason">审批备注</label>
+                                <label class="col-sm-3 control-label no-padding-right orange" for="changeReason">审批备注</label>
                                 <div class="col-sm-9">
-                                    <textarea id="changeReason" maxlength="128" class="col-xs-10 col-sm-6 v_required"
-                                              rows="3" data-toggle="popover" data-trigger='manual'></textarea>
-                                    <span class='star'></span>
+                                    <textarea id="changeReason" maxlength="128" class="col-xs-10 col-sm-6 v_required" rows="3" data-toggle="popover" data-trigger='manual'></textarea>
                                 </div>
                             </div>
                             <div class="space-4"></div>
 
                             <div class="form-group">
-                                <label for="refundApproveManSel"
-                                       class="col-sm-3 control-label no-padding-right">审批人</label>
+                                <label for="refundApproveManSel" class="col-sm-3 control-label no-padding-right">审批人</label>
                                 <div class="col-sm-9">
                                     <div id="refundApproveManSel" class="col-xs-10 col-sm-6">
-
                                     </div>
                                 </div>
                             </div>
                             <div class="space-4"></div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right" for="referMoney">金额</label>
+                            <label class="col-sm-3 control-label no-padding-right orange" for="referMoney">金额</label>
                             <div class="col-sm-9">
                                 <input type="text" id="autoId" class="hide"/>
-                                <input type="text" id="referMoney" class="col-xs-10 col-sm-5 v_required v_float_3"
-                                       data-toggle="popover" data-trigger='manual' maxlength='6' readonly/>
-                                <span class='star'></span>
+                                <input type="text" id="referMoney" class="col-xs-10 col-sm-5 v_required v_float_3" data-toggle="popover" data-trigger='manual' maxlength='6' readonly/>
                             </div>
                         </div>
                         <div class="space-4"></div>
@@ -175,11 +169,9 @@
                         <div class="space-4"></div>
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right" for="otherPayment">金额</label>
+                            <label class="col-sm-3 control-label no-padding-right orange" for="otherPayment">金额</label>
                             <div class="col-sm-9">
-                                <input type="text" id="otherPayment" class="col-xs-10 col-sm-5 v_required v_float_3"
-                                       data-toggle="popover" data-trigger='manual' maxlength='6'/>
-                                <span class='star'></span>
+                                <input type="text" id="otherPayment" class="col-xs-10 col-sm-5 v_required v_float_3" data-toggle="popover" data-trigger='manual' maxlength='6'/>
                             </div>
                         </div>
                         <div class="space-4"></div>
@@ -208,9 +200,9 @@
                             <form class="form-horizontal">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="col-sm-3 control-label no-padding-right" for="customerName">姓名</label>
+                                        <label class="col-sm-3 control-label no-padding-right orange" for="customerName">姓名</label>
                                         <div class="col-sm-9">
-                                            <input type="text" id="customerName" maxlength="32" class="col-xs-10 col-sm-6 v_required v_name" data-toggle="popover" data-trigger='manual'/><span class='star'></span>
+                                            <input type="text" id="customerName" maxlength="32" class="col-xs-10 col-sm-6 v_required v_name" data-toggle="popover" data-trigger='manual'/>
                                         </div>
                                     </div>
 
@@ -290,7 +282,7 @@
                                     <label class="col-sm-3 control-label no-padding-left" for="addphone">
                                         <b style="line-height: 30px">添加电话</b>
                                     </label>
-                                    <input class="col-sm-6 " id="addphone" style="margin-top: 10px;">
+                                    <input class="col-sm-6 v_phone" id="addphone" style="margin-top: 10px;">
                                     <button style="float: left;margin: 8px 0px 0px 10px;padding: 1px 8px;" class="btn btn-sm btn-primary" id="savePhoneBtn" >添加</button>
                                 </div>
                             </div>
@@ -347,16 +339,15 @@
                     <form class="form-horizontal">
 
                         <div class="form-group">
-                            <label for="no" class="col-sm-3 control-label no-padding-right">楼盘名称</label>
+                            <label for="no" class="col-sm-3 control-label no-padding-right orange">楼盘名称</label>
                             <div class="col-md-9">
                                 <input type="text" class="col-xs-10 col-sm-5 v_typeahead v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="no" placeholder="请输入楼盘名称">
-                                <span class='star'></span>
                             </div>
                         </div>
                         <div class="space-4"></div>
 
                         <div class="form-group" id="nameRuleSel">
-                              <label for="built" class="col-sm-3 control-label no-padding-right">楼牌号</label>
+                              <label for="built" class="col-sm-3 control-label no-padding-right orange">楼牌号</label>
                               <div class="col-md-9">
                                         <input type="text" class="v_required col-sm-1" maxlength="7" style="float: none;"  id="built">
                                         <select id="builtrule" style="padding: 0px;font-size: 1px; height: 25px; vertical-align: bottom"></select>
@@ -366,7 +357,6 @@
                                         <select id="floorrule" style="padding: 0px;font-size: 1px; height: 25px; vertical-align: bottom"></select>
                                         <input type="text" class="v_required col-sm-1" maxlength="3"  style="float: none;"  id="door">
                                         <select id="doorrule" style="padding: 0px;font-size: 1px; height: 25px; vertical-align: bottom"></select>
-                                        <span class='star' id="errMsg"></span>
                                         <div class="col-md-12" style="padding: 0px;" >
                                             <span id="rule" class="red"></span>
                                         </div>

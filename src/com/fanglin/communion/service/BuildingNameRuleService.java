@@ -18,15 +18,15 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.Paging;
 
 public interface BuildingNameRuleService {
-	
+
 	public void saveOrUpdateBuildNameRule(BuildingNameRuleVO buildingNameRuleVO);
-	
+
 	public void queryBuildNameRulePage(Paging paging, List<Filter> filters);
-	
+
 	public List<BuildingNameRuleVO> queryBuildNameRule();
-	
+
 	public void deleteBuildingNameRule(BuildingNameRuleVO buildingNameRuleVO);
-	
+
 	public void deleteBuildNameRuleById(int id);
 
 }

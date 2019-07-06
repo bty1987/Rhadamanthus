@@ -982,13 +982,7 @@ public class DecorationServiceImpl implements DecorationService {
 
 		decorationDao.update(decorationPO);
 
-		ServiceRecordPO serviceRecordPO = new ServiceRecordPO();
-		serviceRecordPO.setType(ServiceRecordPO.TYPE_CHANGE_DECORATION_INT);
-		serviceRecordPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
-		serviceRecordPO.setOperateUserId(userId);
-		serviceRecordPO.setInfo(String.format("装修单:%s房产修改,原房产:%s,修改房产为:%s.", orderId, oldHouse, newHouse));
-
-		serviceRecordDao.save(serviceRecordPO);
+		serviceRecordDao.save(new ServiceRecordPO().init(ServiceRecordPO.TYPE_CHANGE_DECORATION_INT, userId, String.format("装修单:%s房产修改,原房产:%s,修改房产为:%s.", orderId, oldHouse, newHouse)));
 	}
 
 	@Override
@@ -1015,13 +1009,7 @@ public class DecorationServiceImpl implements DecorationService {
 		decorationPO.setOrderId(newOrderId);
 		decorationDao.changeDecorationForOrderId(newOrderId, oldOrderId);
 
-		ServiceRecordPO serviceRecordPO = new ServiceRecordPO();
-		serviceRecordPO.setType(ServiceRecordPO.TYPE_CHANGE_DECORATION_INT);
-		serviceRecordPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
-		serviceRecordPO.setOperateUserId(userId);
-		serviceRecordPO.setInfo(String.format("订单编号修改,原订单编号:%s,修改编号为:%s.", oldOrderId, newOrderId));
-
-		serviceRecordDao.save(serviceRecordPO);
+		serviceRecordDao.save(new ServiceRecordPO().init(ServiceRecordPO.TYPE_CHANGE_DECORATION_INT, userId, String.format("订单编号修改,原订单编号:%s,修改编号为:%s.", oldOrderId, newOrderId)));
 	}
 
 	@Override
@@ -1056,13 +1044,7 @@ public class DecorationServiceImpl implements DecorationService {
 
 		decorationDao.update(decorationPO);
 
-		ServiceRecordPO serviceRecordPO = new ServiceRecordPO();
-		serviceRecordPO.setType(ServiceRecordPO.TYPE_CHANGE_DECORATION_INT);
-		serviceRecordPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
-		serviceRecordPO.setOperateUserId(userId);
-		serviceRecordPO.setInfo(String.format("装修单:%s,类型为:%s,录入时间修改,原录入时间:%s,修改录入时间为:%s.", orderId, timeType == 1 ? "录入时间" : "签单时间", oldTime != null ? oldTime.toString() : "空", dateTime.toString()));
-
-		serviceRecordDao.save(serviceRecordPO);
+		serviceRecordDao.save(new ServiceRecordPO().init(ServiceRecordPO.TYPE_CHANGE_DECORATION_INT, userId, String.format("装修单:%s,类型为:%s,录入时间修改,原录入时间:%s,修改录入时间为:%s.", orderId, timeType == 1 ? "录入时间" : "签单时间", oldTime != null ? oldTime.toString() : "空", dateTime.toString())));
 	}
 
 	@Override
@@ -1108,13 +1090,7 @@ public class DecorationServiceImpl implements DecorationService {
 
 		decorationDao.update(decorationPO);
 
-		ServiceRecordPO serviceRecordPO = new ServiceRecordPO();
-		serviceRecordPO.setType(ServiceRecordPO.TYPE_CHANGE_DECORATION_INT);
-		serviceRecordPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
-		serviceRecordPO.setOperateUserId(userId);
-		serviceRecordPO.setInfo(String.format("装修单:%s,报价版本修改,原报价版本:%s,修改报价版本为:%s", orderId, oldVersionId, versionId));
-
-		serviceRecordDao.save(serviceRecordPO);
+		serviceRecordDao.save(new ServiceRecordPO().init(ServiceRecordPO.TYPE_CHANGE_DECORATION_INT, userId, String.format("装修单:%s,报价版本修改,原报价版本:%s,修改报价版本为:%s", orderId, oldVersionId, versionId)));
 	}
 
 	@Override
@@ -1136,13 +1112,7 @@ public class DecorationServiceImpl implements DecorationService {
 
 		decorationDao.update(decorationPO);
 
-		ServiceRecordPO serviceRecordPO = new ServiceRecordPO();
-		serviceRecordPO.setType(ServiceRecordPO.TYPE_CHANGE_DECORATION_INT);
-		serviceRecordPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
-		serviceRecordPO.setOperateUserId(userId);
-		serviceRecordPO.setInfo(String.format("装修单:%s状态修改,原状态:%s,修改状态为:%s.", orderId, oldStatus, status));
-
-		serviceRecordDao.save(serviceRecordPO);
+		serviceRecordDao.save(new ServiceRecordPO().init(ServiceRecordPO.TYPE_CHANGE_DECORATION_INT, userId, String.format("装修单:%s状态修改,原状态:%s,修改状态为:%s.", orderId, oldStatus, status)));
 	}
 
 	@Override
@@ -1162,13 +1132,7 @@ public class DecorationServiceImpl implements DecorationService {
 
 		decorationDao.update(decorationPO);
 
-		ServiceRecordPO serviceRecordPO = new ServiceRecordPO();
-		serviceRecordPO.setType(ServiceRecordPO.TYPE_CHANGE_DECORATION_INT);
-		serviceRecordPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
-		serviceRecordPO.setOperateUserId(userId);
-		serviceRecordPO.setInfo(String.format("装修单:%s状态修改,原类型:%s,修改类型为:%s.", orderId, String.valueOf(oldType), String.valueOf(decorationVO.getType())));
-
-		serviceRecordDao.save(serviceRecordPO);
+		serviceRecordDao.save(new ServiceRecordPO().init(ServiceRecordPO.TYPE_CHANGE_DECORATION_INT, userId, String.format("装修单:%s状态修改,原类型:%s,修改类型为:%s.", orderId, String.valueOf(oldType), String.valueOf(decorationVO.getType()))));
 	}
 
 	@Override

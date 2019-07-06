@@ -8,40 +8,40 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="quotationtype", catalog = "communion")
-public class QuotationTypePO implements Serializable{
-	
+@Table(name = "quotationtype", catalog = "communion")
+public class QuotationTypePO implements Serializable {
+
 	private static final long serialVersionUID = 6306610802053889704L;
 
 	private int id;
-	
+
 	private String name;
-	
-	public QuotationTypePO(){
-		
+
+	public QuotationTypePO() {
+
 	}
-	
-	public QuotationTypePO(int id){
+
+	public QuotationTypePO(int id) {
 		this.id = id;
 	}
-	
+
 	@Id
-	@Column(name="id")
-	public int getId(){
+	@Column(name = "id")
+	public int getId() {
 		return id;
 	}
 
-	public void setId(int id){
+	public void setId(int id) {
 		this.id = id;
 	}
 
-	@Column(name="name")
-	public String getName(){
+	@Column(name = "name")
+	public String getName() {
 		return name;
 	}
 
-	public void setName(String name){
+	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 }

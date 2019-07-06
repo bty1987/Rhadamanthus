@@ -10,9 +10,9 @@ import com.fanglin.utils.Paging;
 public interface DepartmentTypeDao extends Dao<DepartmentTypePO> {
 
 	public List<DepartmentTypePO> pageDepartmentType(Paging paging, List<Filter> filters);
-	
+
 	public List<DepartmentTypePO> queryDepartmentType();
-	
+
 	public DepartmentTypePO queryDepartmentTypeByName(String name);
-	
+
 }

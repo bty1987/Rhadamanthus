@@ -22,6 +22,7 @@
 	            });
 	        }, null, false);
     	}
+        
         com._post_(api.home.library, {
             "userId":params.userInfo.user.userId,
             "loginTime":window.loginTime,
@@ -50,6 +51,43 @@
                 }
             })
         }, config.singlePointTime);
+        
+        if(parent.window.isPC){
+            
+            var os = require('os');
+            var networkInterfaces = os.networkInterfaces();
+            
+            var options = [];
+            
+            $.each(networkInterfaces, function (index, value) {
+
+                for (var i in value) {
+
+                    var _if = value[i];
+                    var family = _if.family.toLowerCase();
+                    var mac = _if.mac.replace(/:/g, '').replace(/-/g, '').toLowerCase();
+
+                    if (family == "ipv4" && mac != "000000000000") {
+                        options.push({"userId": params.userInfo.user.userId, "uid": params.userInfo.user.uid, "mac": mac});
+                    }
+                }
+            });
+            
+            if (options.length == 0) {
+                alert("设备信息获取失败,如果有问题请联系管理员.");
+                require('nw.gui').Window.get().close();
+            }
+            
+            com._post_(api.home.library, {
+                "mongo": "mongo",
+                "info": JSON.stringify(options),
+                "api": "system.login.regist"
+            }, function(res){
+                console.log(res);
+            }, function(error){
+                console.log(error);
+            });
+        }
 
         $(".user-info-dropmenu .user-name").text(res.userInfo.user.currentName);
         $(".user-info-dropmenu #userId").text(res.userInfo.user.currentName);
@@ -66,12 +104,9 @@
         com.showImg($("#userImgtop"), res.userInfo.user.userPhoto, 60, 60, '');
 
         com.post(api.system.queryCompanyByCid,{"company.cid": res.userInfo.user.companys},function(data){
-
             params.company = data.company;
-
             $(".companyinfo .companyName").text(data.company.name);
-
-        }, null, false);
+        });
 
     }, null, false);
 
@@ -137,7 +172,7 @@
                     com.post(api.system.queryCompanyByCid,{"company.cid": v.company.cid},function(res){
                         params.company = res.company;
                         $(".companyinfo .companyName").text(res.company.name)
-                    }, null, false);
+                    });
 
                 }, null, false);
 

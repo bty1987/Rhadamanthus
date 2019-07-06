@@ -27,54 +27,52 @@ import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
 
 @Service("quotationTypeService")
-@Transactional(readOnly=true)
+@Transactional(readOnly = true)
 public class QuotationTypeServiceImpl implements QuotationTypeService {
 
 	@Autowired
 	private QuotationTypeDao quotationTypeDao;
-	
+
 	@Override
-	public List<QuotationTypeVO> queryQuotationType(){
-		
+	public List<QuotationTypeVO> queryQuotationType() {
+
 		List<QuotationTypePO> quotationTypePOs = quotationTypeDao.list();
 		List<QuotationTypeVO> quotationTypeVOs = new ArrayList<QuotationTypeVO>();
-		
-		for(QuotationTypePO quotationTypePO: quotationTypePOs){
+
+		for (QuotationTypePO quotationTypePO : quotationTypePOs) {
 			QuotationTypeVO quotationTypeVO = new QuotationTypeVO();
 			BeanUtil.copyProperties(quotationTypePO, quotationTypeVO);
 			quotationTypeVOs.add(quotationTypeVO);
 		}
-		
+
 		return quotationTypeVOs;
 	}
-	
+
 	@Override
 	public void pageQuotationType(Paging paging, List<Filter> filters) {
 
-			List<QuotationTypePO> quotationTypePOs = quotationTypeDao.pageQuotationType(paging, filters);
-			List<QuotationTypeVO> quotationTypeVOs = new ArrayList<QuotationTypeVO>();
-			
-			for(QuotationTypePO quotationTypePO: quotationTypePOs){
-				
-				QuotationTypeVO quotationTypeVO = new QuotationTypeVO();
+		List<QuotationTypePO> quotationTypePOs = quotationTypeDao.pageQuotationType(paging, filters);
+		List<QuotationTypeVO> quotationTypeVOs = new ArrayList<QuotationTypeVO>();
 
-				BeanUtil.copyProperties(quotationTypePO, quotationTypeVO);
-				
-				quotationTypeVOs.add(quotationTypeVO);
-			}
-			
-			paging.setData(quotationTypeVOs);
-		
-		
+		for (QuotationTypePO quotationTypePO : quotationTypePOs) {
+
+			QuotationTypeVO quotationTypeVO = new QuotationTypeVO();
+
+			BeanUtil.copyProperties(quotationTypePO, quotationTypeVO);
+
+			quotationTypeVOs.add(quotationTypeVO);
+		}
+
+		paging.setData(quotationTypeVOs);
+
 	}
-	public QuotationTypeDao getQuotationTypeDao(){
+
+	public QuotationTypeDao getQuotationTypeDao() {
 		return quotationTypeDao;
 	}
 
-	public void setQuotationTypeDao(QuotationTypeDao quotationTypeDao){
+	public void setQuotationTypeDao(QuotationTypeDao quotationTypeDao) {
 		this.quotationTypeDao = quotationTypeDao;
 	}
 
-	
-	
 }

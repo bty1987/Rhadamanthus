@@ -18,23 +18,23 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.Paging;
 
 public interface BrandService {
-	
-	public void pageBrand(Paging paging, List<Filter> filters,int company);
-	
+
+	public void pageBrand(Paging paging, List<Filter> filters, int company);
+
 	public List<BrandVO> queryBrand(int company);
-	
-	public List<BrandVO> queryBrandForPinYinName(String pinyinName,int company);
-	
+
+	public List<BrandVO> queryBrandForPinYinName(String pinyinName, int company);
+
 	public BrandVO queryBrandByBid(BrandVO brandVO);
-	
+
 	public BrandVO queryBrandByNo(BrandVO brandVO);
-	
+
 	public List<BrandVO> queryBrandByCid(BrandVO brandVO);
-	
-	public int addBrand(BrandVO brandVO,int company);
-	
+
+	public int addBrand(BrandVO brandVO, int company);
+
 	public int updateBrand(BrandVO brandVO);
-	
+
 	public int deleteBrandByBIds(List<Long> bIds);
 
 }

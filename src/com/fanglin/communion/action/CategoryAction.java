@@ -32,72 +32,72 @@ import com.fanglin.utils.SystemConfig;
 public class CategoryAction extends BaseListAction {
 
 	private static final long serialVersionUID = 5715274416352730557L;
-	
+
 	@Autowired
 	private CategoryService categoryService;
-	
+
 	private CategoryVO category;
-	
+
 	private List<CategoryVO> categorys;
-	
+
 	private List<Long> cids;
-	
-	@Action(value="pageCategory", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String pageCategory() throws FLException{
-		
+
+	@Action(value = "pageCategory", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageCategory() throws FLException {
+
 		categoryService.pageCategory(getPaging(), getFilters());
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value="queryCategory", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryCategory() throws FLException{
-		
+
+	@Action(value = "queryCategory", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryCategory() throws FLException {
+
 		categorys = categoryService.queryCategory();
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value="queryCategoryByCId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryCategoryByCId(){
-		
+
+	@Action(value = "queryCategoryByCId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryCategoryByCId() {
+
 		category = categoryService.queryCategoryByCId(category);
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value="addCategory", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String addCategory() throws FLException{
-		
+
+	@Action(value = "addCategory", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addCategory() throws FLException {
+
 		if (SystemConfig.getString("communion") == null) {
 			throw new FLException(-1, "无操作权限");
 		}
-		
+
 		categoryService.addCategory(category);
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value="updateCategory", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String updateCategory() throws FLException{
-		
+
+	@Action(value = "updateCategory", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateCategory() throws FLException {
+
 		if (SystemConfig.getString("communion") == null) {
 			throw new FLException(-1, "无操作权限");
 		}
-		
+
 		categoryService.updateCategory(category);
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value="deleteCategoryByCIds", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String deleteCategoryByCIds(){
-		
+
+	@Action(value = "deleteCategoryByCIds", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String deleteCategoryByCIds() {
+
 		categoryService.deleteCategoryByCIds(cids);
-		
+
 		return SUCCESS;
 	}
-	
+
 	public CategoryVO getCategory() {
 		return category;
 	}

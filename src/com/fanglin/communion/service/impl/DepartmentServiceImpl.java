@@ -43,7 +43,7 @@ import com.fanglin.utils.PinYin4Util;
 @Service("departmentService")
 @Transactional(readOnly = true)
 public class DepartmentServiceImpl implements DepartmentService {
-	
+
 	@Autowired
 	private CompanyDao companyDao;
 
@@ -55,7 +55,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
 	@Autowired
 	private DepartmentTypeDao departmentTypeDao;
-	
+
 	@Autowired
 	private UserDao userDao;
 
@@ -173,15 +173,15 @@ public class DepartmentServiceImpl implements DepartmentService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void addDepartment(DepartmentVO departmentVO, String userId, int company) throws FLException {
-		
+
 		CompanyPO companyPO = companyDao.get(company);
-		
-		if(companyPO == null){
+
+		if (companyPO == null) {
 			throw new FLException(230015, "公司不存在");
 		}
-		
+
 		UserPO userPO = null;
-		if(departmentVO.getManager() != null && departmentVO.getManager().getUserId() != null){
+		if (departmentVO.getManager() != null && departmentVO.getManager().getUserId() != null) {
 			userPO = userDao.queryUserByUserId(departmentVO.getManager().getUserId());
 		}
 
@@ -204,8 +204,8 @@ public class DepartmentServiceImpl implements DepartmentService {
 		departmentPO.setStatus(DepartmentPO.STATUS_ENABLE_INT);
 		departmentPO.setCompany(company);
 		departmentPO.setCreateTime(DateUtil.current());
-		
-		if(userPO != null){
+
+		if (userPO != null) {
 			departmentPO.setManager(userPO);
 		}
 
@@ -224,9 +224,9 @@ public class DepartmentServiceImpl implements DepartmentService {
 		if (departmentPO == null) {
 			throw new FLException(310001, "部门不存在");
 		}
-		
+
 		UserPO userPO = null;
-		if(departmentVO.getManager() != null && departmentVO.getManager().getUserId() != ""){
+		if (departmentVO.getManager() != null && departmentVO.getManager().getUserId() != "") {
 			userPO = userDao.queryUserByUserId(departmentVO.getManager().getUserId());
 		}
 
@@ -242,8 +242,8 @@ public class DepartmentServiceImpl implements DepartmentService {
 
 		List<String> pinyins = PinYin4Util.getPinyin(departmentVO.getName());
 		departmentPO.setPinyin(pinyins.get(0));
-		
-		if(userPO != null){
+
+		if (userPO != null) {
 			departmentPO.setManager(userPO);
 		}
 
@@ -265,8 +265,6 @@ public class DepartmentServiceImpl implements DepartmentService {
 		departmentDao.update(departmentPO);
 	}
 
-
-
 	public DepartmentVO convertBean(DepartmentPO departmentPO) {
 
 		DepartmentVO departmentVO = new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO(), new UserVO());
@@ -280,14 +278,13 @@ public class DepartmentServiceImpl implements DepartmentService {
 		if (departmentPO.getFatherDept() != null) {
 			BeanUtil.copyProperties(departmentPO.getFatherDept(), departmentVO.getFatherDept(), Arrays.asList("fatherDept", "cityProper", "type", "manager"));
 		}
-		
-		if(departmentPO.getManager() != null && departmentPO.getManager().getUid() != 0){
+
+		if (departmentPO.getManager() != null && departmentPO.getManager().getUid() != 0) {
 			BeanUtil.copyProperties(departmentPO.getManager(), departmentVO.getManager(), Arrays.asList("role", "dept", "duty"));
 		}
-		
-		return departmentVO;
-		
-	}
 
+		return departmentVO;
+
+	}
 
 }

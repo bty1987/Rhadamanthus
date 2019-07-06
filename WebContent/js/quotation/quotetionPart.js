@@ -1161,12 +1161,9 @@ var QuotetionDetail = (function(){
                 if(!v[2]){
                     return;
                 }
-                $btns[k] = $('<a></a>').attr({
-                    "href" : "javascript:void(0)",
-                    "data-rel" : "tooltip",
-                    //"data-placement" : "bottom",
-                    "data-original-title" : v[0]
-                }).addClass('tooltip-info').css({"padding-left": "5px","text-decoration" : "none"}).append(v[1]).appendTo($dtoolbar).tooltip();
+                $btns[k] = $('<a></a>').attr({"href" : "javascript:void(0)",}).css({"padding-left": "5px"}).append(v[1]).appendTo($dtoolbar).mouseenter(function(){
+                    com.showTip(this, v[0], "top");
+                });
             });
 
             $btns["$btnFold"].attr({"data-action" : "collapse"});
@@ -1302,34 +1299,18 @@ var QuotetionDetail = (function(){
                 $btnCellWrap.append($inputLable).appendTo($btnCell);
                 $item.append($btnCell);
 
-                $btnDel = $('<a></a>').attr({
-                    "data-rel" : "tooltip",//提示框
-                    "href" : "javascript:void(0)",
-                    "data-original-title" : "删除报价项"//提示框内容
-                }).css({"padding-left" : "5px","text-decoration" : "none"})
-                    .append('<i class="bigger-125 icon-remove pink"></i>')
-                    .tooltip();//初始化提示框
-                $btnInfo = $('<a></a>').attr({
-                    "data-rel" : "tooltip",//提示框
-                    "href" : "javascript:void(0)",
-                    "data-original-title" : "报价信息"//提示框内容
-                }).css({"padding-left" : "5px","text-decoration" : "none"})
-                    .append('<i class="bigger-125 icon-search"></i>')
-                    .tooltip();//初始化提示框
-                $up = $('<a></a>').attr({
-                    "data-rel" : "tooltip",//提示框
-                    "href" : "javascript:void(0)",
-                    "data-original-title" : "向上"//提示框内容
-                }).css({"padding-left" : "6px","text-decoration" : "none"})
-                    .append('<i class="icon-arrow-up bigger-110"></i>')
-                    .tooltip();//初始化提示框
-                $down = $('<a></a>').attr({
-                    "data-rel" : "tooltip",//提示框
-                    "href" : "javascript:void(0)",
-                    "data-original-title" : "向下"//提示框内容
-                }).css({"padding-left" : "6px","text-decoration" : "none"})
-                    .append( '<i class="icon-arrow-down bigger-110"></i>')
-                    .tooltip();//初始化提示框
+                $btnDel = $('<a></a>').attr({"href" : "javascript:void(0)"}).css({"padding-left": "5px"}).append('<i class="bigger-125 icon-remove pink"></i>').mouseenter(function(){
+                    com.showTip(this, "删除报价项", "top");
+                }); // 初始化提示框
+                $btnInfo = $('<a></a>').attr({"href" : "javascript:void(0)"}).css({"padding-left": "5px"}).append('<i class="bigger-125 icon-search"></i>').mouseenter(function(){
+                    com.showTip(this, "报价信息", "top");
+                }); // 初始化提示框
+                $up = $('<a></a>').attr({"href" : "javascript:void(0)"}).css({"padding-left": "5px"}).append('<i class="icon-arrow-up bigger-110"></i>').mouseenter(function(){
+                        com.showTip(this, "向上", "top");
+                    }); // 初始化提示框
+                $down = $('<a></a>').attr({"href": "javascript:void(0)"}).css({"padding-left": "5px"}).append( '<i class="icon-arrow-down bigger-110"></i>').mouseenter(function(){
+                    com.showTip(this, "向下", "top");
+                }); // 初始化提示框
                 $btnCellWrap.append($btnDel).append($btnInfo).append($up).append($down);
                 qv.qfaiId ? ($up.find("i").addClass("green"),$down.find("i").addClass("red")) :($up.find("i").addClass("grey") ,$down.find("i").addClass("grey"));
                 //各种绑定事件
@@ -1363,20 +1344,23 @@ var QuotetionDetail = (function(){
                     $item.attr('id', 'conveyanceCost').attr('qfaiId', qv.qfaiId);
                     $btnCell = $('<div></div>').addClass('cell btns');
                     $btnCellWrap = $('<div></div>').addClass('cell-wrap');
-                    $btnset = $('<a></a>').attr('data-rel', 'tooltip').attr('href', 'javascript:void(0)').attr('data-original-title', '车运费设置').css('text-decoration',  'none').append('<i class="bigger-125 icon-cog purple"></i>');
+                    $btnset = $('<a></a>').attr('href', 'javascript:void(0)').attr('data-original-title', '车运费设置').append('<i class="bigger-125 icon-cog purple"></i>').mouseenter(function(){
+                        com.showTip(this, "车运费设置", "top");
+                    });
                     $btnCellWrap.append($btnset).appendTo($btnCell);
                     $item.append($btnCell);
 
                     $btnset.click(function(){
                        com.focusPage('#conveyanceRateModal').modal('show');
                     });
-
                 }
                 if(qv.type == 3){ //管理费
                     $item.attr('id', 'manageCost').attr('qfaiId', qv.qfaiId);//管理费
                     $btnCell = $('<div></div>').addClass('cell btns');
                     $btnCellWrap = $('<div></div>').addClass('cell-wrap');
-                    $btnset = $('<a></a>').attr('data-rel', 'tooltip').attr('href', 'javascript:void(0)').attr('data-original-title', '管理费设置').css('text-decoration',  'none').append('<i class="bigger-125 icon-cog purple"></i>');
+                    $btnset = $('<a></a>').attr('href', 'javascript:void(0)').attr('data-original-title', '管理费设置').append('<i class="bigger-125 icon-cog purple"></i>').mouseenter(function(){
+                        com.showTip(this, "管理费设置", "top");
+                    });
                     $btnCellWrap.append($btnset).appendTo($btnCell);
                     $item.append($btnCell);
 

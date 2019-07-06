@@ -17,8 +17,6 @@ $(function () {
         },
     };
     
-    version.items.comment.wysiwyg(); // ace_wysiwyg().prev().addClass("wysiwyg-style2")
-
     com.datetime(com.focusPage(".date-picker"), "date");
     
     version.saveBtn.on("click", function () {
@@ -128,8 +126,6 @@ $(function () {
             
             com.cleanItems(version.items);
             
-            version.items.comment.html('');
-            
             version.versionModal.modal("show");
         });
 
@@ -147,7 +143,7 @@ $(function () {
         var options = {
             "version.no": version.items.no.val(),
             "version.createTime": version.items.createTime.val(),
-            "version.comment": version.items.comment.html(),
+            "version.comment": version.items.comment.val(),
         }
 
         if(version.vid){

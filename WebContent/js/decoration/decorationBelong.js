@@ -8,10 +8,29 @@ jQuery(function($) {
 		
 		decorationBelongs:null,
 		
+		items: {
+			changeReason : com.focusPage("#changeReason"),
+			updateBelongRate : com.focusPage("#updateBelongRate")
+		},
+		modals:{
+			approveModal : com.focusPage("#approveModal"),
+			updateModal : com.focusPage("#updateModal")
+		},
+		
 		lastEditId:-1
 	};
 	
 	com.focusPage('#fl-statement').statement("订单归属", "归属详细信息");
+	
+	decorationBelong.modals.approveModal.on('hide.bs.modal', function (e) {
+    	com.cleanItems(decorationBelong.items);
+    	com.closeTip();
+	});
+	
+	decorationBelong.modals.updateModal.on('hide.bs.modal', function (e) {
+    	com.cleanItems(decorationBelong.items);
+    	com.closeTip();
+	});
 	
 	decorationBelong.decorationOrderID = params.orderId;
 	decorationBelong.type = params.orderBelongType;
@@ -44,7 +63,6 @@ jQuery(function($) {
 	com.focusPage('#saveBelongInfoBtn').on(ace.click_event, saveOrderBelongInfo);
 
     com.focusPage("#addNewUserBtn").on(ace.click_event, function(event){
-        com.clearValidator();
 
         if(com.validate("addUserModal"))
             return false;
@@ -63,11 +81,11 @@ jQuery(function($) {
         addRow.region.deptId = com.focusPage("#belongRegionId").val();
         addRow.defaultFlag = com.focusPage("#defaultFlag").prop("checked") ? 1 : 0;
 
-        if(!/^(0\.\d{1,2})|1|0$/.test(addRow.rate)){
-            com.showAlert(com.warning,"分配比例输入错误 , 为0到1之间的小数");
+        if(addRow.rate < 0 || addRow.rate > 1){
+            com.showTip(com.focusPage("#belongRate"), "分配比例输入错误 , 为0到1之间的小数", "right");
             return false;
         }
-
+        
         var belongInfos = com.focusPage('.item-orange');
 
         for(var i=0;i<belongInfos.length;i++){
@@ -87,7 +105,6 @@ jQuery(function($) {
     });
 	
 	com.focusPage("#cApproveSaveBtn").on("click", function(){
-		com.clearValidator();
 		
 		if(com.validate("approveModal")){
 			return;
@@ -140,7 +157,7 @@ jQuery(function($) {
 		options["approvalDecorationBelong.belongType"] = decorationBelong.type;
 		
 		options["approval.receiver.userId"] = receiverId;
-		options["approval.comment"] = com.focusPage("#changeReason").val();
+		options["approval.comment"] = decorationBelong.items.changeReason.val();
 		
 		com.post(api.approval.submitApprovalForDecorationBelong, options, function(res){
 			com.showAlert(com.info, "操作成功");
@@ -151,7 +168,6 @@ jQuery(function($) {
 	});
 
     com.focusPage('#updateBtn').on('click', function(){
-        com.clearValidator();
 
         if(com.validate("updateModal")){
             return;
@@ -160,9 +176,9 @@ jQuery(function($) {
 
         var rate = com.focusPage('#updateBelongRate').val();
         var flag = com.focusPage("#updateDefaultFlag").prop("checked");
-
-        if(!/^(0\.\d{1,2})|1|0$/.test(rate)){
-            com.showAlert(com.warning,"分配比例输入错误 , 为0到1之间的小数");
+        
+        if(rate < 0 || rate > 1){
+            com.showTip(com.focusPage('#updateBelongRate'), "分配比例输入错误 , 为0到1之间的小数", "right");
             return false;
         }
 
@@ -248,7 +264,7 @@ jQuery(function($) {
 	}
 
 	function saveOrderBelongInfo(){
-		com.focusPage("#changeReason").val("");
+		com.cleanItems(decorationBelong.items);
 
 		approvalUtils.initqueryApprovalUser("approveManSel",3);
 		

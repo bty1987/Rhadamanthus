@@ -1,33 +1,25 @@
 
 $(function () {
-	
-	var goods = {
-		gid: params["goods.gid"]
-	};
 
-    var validator = {
-        balance: {
-            type: "v_balance",
-            regex: /^(0([\.]?\d*[0-9]+)|0|1)$/,
-            errorMsg: "结算值在0-1之间"
+    var goods = {
+        gid: params["goods.gid"],
+        items :{
+            name: com.focusPage("#addPrice").find("#name"),
+            purchase: com.focusPage("#addPrice").find("#purchase"),
+            selling: com.focusPage("#addPrice").find("#selling"),
+            ctype: com.focusPage("#addPrice").find("#ctype"),
+            cvalue: com.focusPage("#addPrice").find("#cvalue"),
+            type: com.focusPage("#addPrice").find("#type")
+        },
+        btns:{
+            addBtn:com.focusPage("#addBtn"),
+            cancelBtn:com.focusPage("#delBtn"),
         }
     };
-	
-	var items = {
-		name: com.focusPage("#addPrice").find("#name"),
-		purchase: com.focusPage("#addPrice").find("#purchase"),
-		selling: com.focusPage("#addPrice").find("#selling"),
-		ctype: com.focusPage("#addPrice").find("#ctype"),
-		cvalue: com.focusPage("#addPrice").find("#cvalue"),
-		type: com.focusPage("#addPrice").find("#type")
-	};
 
-    $.extend(com.validator, validator);
-	
-	items.ctype.change(function(){
-		var ctype = $(this).val();
-		items.cvalue.removeClass("v_float_3 v_balance").addClass(ctype == 0 ? "v_float_3" : "v_balance");
-	});
+    goods.items.ctype.change(function(){
+        goods.items.cvalue.removeClass("v_float_3").addClass("v_float_3");
+    });
 
     var displayFunc = (function () {
 
@@ -109,8 +101,8 @@ $(function () {
             $liLine.append($indexWrap).append($contentWrap).append($optionWrap);
 
             $btnDelete.click(function () {
-            	
-            	com.post(api.inventory.deletePrice, {"price.pid": v.pid}, function (res) {
+
+                com.post(api.inventory.deletePrice, {"price.pid": v.pid}, function (res) {
                     doSearcher();
                 })
             });
@@ -139,37 +131,37 @@ $(function () {
 
     doSearcher();
 
-    $("#addBtn").click(function(){
-    	
-    	if(com.validate('addPrice', 'bottom')){
+    goods.btns.addBtn.click(function(){
+
+        if(com.validate('addPrice', 'bottom')){
             return false;
         }
-        
+
+        if (goods.items.ctype.val() == 1) {
+            if (goods.items.cvalue.val() < 0 || goods.items.cvalue.val() > 1) {
+                com.showTip(com.focusPage("#cvalue"), "结算值在0-1之间",'bottom');
+                return false;
+            }
+        }
+
         var options = {
             "price.gid": goods.gid,
-            "price.name": items.name.val(),
-            "price.purchase": items.purchase.val(),
-            "price.selling": items.selling.val(),
-            "price.ctype": items.ctype.val(),
-            "price.cvalue": items.cvalue.val(),
-            "price.type": items.type.val(),
+            "price.name": goods.items.name.val(),
+            "price.purchase": goods.items.purchase.val(),
+            "price.selling": goods.items.selling.val(),
+            "price.ctype": goods.items.ctype.val(),
+            "price.cvalue": goods.items.cvalue.val(),
+            "price.type": goods.items.type.val(),
         };
 
         com.post(api.inventory.addPrice, options, function(){
-        	doSearcher();
-        	
-        	items.name.val("");
-        	items.purchase.val("");
-        	items.selling.val("");
-        	items.cvalue.val("");
+            com.cleanItems(goods.items);
+            doSearcher();
         });
     });
-    
-    $("#delBtn").click(function(){
-    	items.name.val("");
-    	items.purchase.val("");
-    	items.selling.val("");
-    	items.cvalue.val("");
+
+    goods.btns.cancelBtn.click(function(){
+        com.cleanItems(goods.items);
     });
 
 });

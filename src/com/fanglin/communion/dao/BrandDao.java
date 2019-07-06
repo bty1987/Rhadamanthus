@@ -19,17 +19,17 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.Paging;
 
 public interface BrandDao extends Dao<BrandPO> {
-	
-	public List<BrandPO> pageBrand(Paging paging, List<Filter> filters,int company);
-	
-	public List<BrandPO> pageBrandByPinYinName(Paging paging, String pinyinName,int company);
-	
+
+	public List<BrandPO> pageBrand(Paging paging, List<Filter> filters, int company);
+
+	public List<BrandPO> pageBrandByPinYinName(Paging paging, String pinyinName, int company);
+
 	public List<BrandPO> queryBrandByCid(long cid);
-	
+
 	public List<BrandPO> queryBrandByBids(List<Long> bids);
-	
+
 	public BrandPO queryBrandByBid(long bid);
-	
+
 	public BrandPO queryBrandByNo(String no);
-	
+
 }

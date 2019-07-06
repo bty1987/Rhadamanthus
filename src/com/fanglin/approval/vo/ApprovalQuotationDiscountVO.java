@@ -15,6 +15,8 @@ public class ApprovalQuotationDiscountVO implements java.io.Serializable {
 	private Float oldDiscount;
 	
 	private Float newDiscount;
+	
+	private Float basePrice;
 
 	public Long getAqdid() {
 		return this.aqdid;
@@ -64,4 +66,12 @@ public class ApprovalQuotationDiscountVO implements java.io.Serializable {
 		this.newDiscount = newDiscount;
 	}
 
+	public Float getBasePrice() {
+		return basePrice;
+	}
+
+	public void setBasePrice(Float basePrice) {
+		this.basePrice = basePrice;
+	}
+	
 }

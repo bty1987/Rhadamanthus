@@ -3,13 +3,7 @@
  */
 var planUtils = {
     bindDatePicker: function (tag, index) {
-        com.focusPage(tag).datepicker(com.datepickerdefault).on("show", function () {
-            setTimeout(function () {
-                $(".dropdown-menu").css("z-index", index);
-            }, 0);
-        }).next().on(ace.click_event, function () {
-            a(this).prev().focus();
-        });
+        com.datetime(tag);
     },
     bindUploadBtn: function (tag) {
         com.focusPage(tag).Huploadify({
@@ -57,7 +51,7 @@ var planUtils = {
     },
     
     bindExecuteTimeBtn: function (tag) {
-    	com.focusPage(tag).timepicker(com.timepickerdefault);
+    	com.datetime(tag, "time");
     },
     
     TimeComparison: function (executeTime, m) {

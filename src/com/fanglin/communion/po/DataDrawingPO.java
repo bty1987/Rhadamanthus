@@ -20,35 +20,35 @@ public class DataDrawingPO implements Serializable {
 	private static final long serialVersionUID = -632788118629488880L;
 
 	public static final String COLUMN_SID_STR = "sid";
-	
+
 	public static final String COLUMN_TYPE_STR = "type";
-	
+
 	public static final short STATUS_INIT_INT = 0;
-	
+
 	public static final short STATUS_DISABLE_INT = 1;
-	
+
 	private long ddid;
-	
+
 	private long sid;
-	
+
 	private String name;
-	
+
 	private String drawingUrl;
-	
+
 	private short drawingType;
-	
+
 	private short type;
-	
+
 	private UserPO creater;
-	
+
 	private Timestamp createTime;
-	
+
 	private short status;
-	
+
 	public DataDrawingPO() {
 		super();
 	}
-	
+
 	public DataDrawingPO(UserPO creater) {
 		super();
 		this.creater = creater;
@@ -137,6 +137,5 @@ public class DataDrawingPO implements Serializable {
 	public void setStatus(short status) {
 		this.status = status;
 	}
-	
-}
 
+}

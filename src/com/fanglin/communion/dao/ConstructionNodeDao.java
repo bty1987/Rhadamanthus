@@ -12,7 +12,7 @@ public interface ConstructionNodeDao extends Dao<ConstructionNodePO> {
 	public List<ConstructionNodePO> pageConstructionNode(Paging paging, List<Filter> filters, int company);
 
 	public List<ConstructionNodePO> queryConstructionNode(int company);
-	
+
 	public ConstructionNodePO queryConstructionNodeBySort(short sort, int company);
 
 }

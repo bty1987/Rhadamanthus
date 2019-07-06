@@ -1,26 +1,21 @@
 $(function () {
-
-    /**
-     * 回调函数必须提供 init(tableId, result.list)方法
-     * tableId ，用来显示的div的id
-     * result.list 列表的json数组
-     * */
+    
     var salesPre = {
         salesPre_data:{},
+        url : api.inventory.pageSalesForBalance,
+        postData : "salesPreBalancePostData",
+        pageType : params['urlLoadParams'].type,
         btns:{
             preSaveBtn:com.focusPage("#preSaveBtn")
         }
     };
 
-    var url = api.inventory.pageSalesForBalance;
-    var postData = "salesPreBalancePostData";
-
-    if (params['urlLoadParams'].type == "dompany") {
-        url = api.inventory.pageSalesForBalanceByDompany;
-        postData = "salesPreBalanceForDompanyPostData";
-    }else if(params['urlLoadParams'].type == "pompany"){
-        url = api.inventory.pageSalesForBalanceByPompany;
-        postData = "salesPreBalanceForPompanyPostData";
+    if (salesPre.pageType == "dompany") {
+        salesPre.url = api.inventory.pageSalesForBalanceByDompany;
+        salesPre.postData = "salesPreBalanceForDompanyPostData";
+    }else if(salesPre.pageType == "pompany"){
+        salesPre.url = api.inventory.pageSalesForBalanceByPompany;
+        salesPre.postData = "salesPreBalanceForPompanyPostData";
     }
 
     var displayFunc = (function () {
@@ -96,7 +91,7 @@ $(function () {
 
                     $label.appendTo($h3);
 
-                    if (params['urlLoadParams'].type == "dompany") {
+                    if (salesPre.pageType == "dompany") {
                         $btnDiv.append($btnSwitch).appendTo($h3);
                     } else {
                         $btnDiv.append($btnSwitch).append($btnWipeZero).append($btnPre).appendTo($h3);
@@ -108,11 +103,13 @@ $(function () {
 
                     $btnSwitch.click(function () {
                         var flag = true;
-                        if (params['urlLoadParams'].type == "dompany") {
+                        if (salesPre.pageType == "dompany") {
                             flag = false;
                         }
                         com.focusPage('#viewPopUp').attr({'data-sid': v.sid, 'data-dompany': flag});
-                        com.popup4page("#viewPopUp", "views/sales/salesBalance4detail.html", "预结算销售单号" + v.no);
+                        com.popup4page("#viewPopUp", "views/sales/salesBalance4detail.html", "预结算销售单号" + v.no, "", function () {
+                            salesPreBalance.doSearch();
+                        });
                     });
 
                     $btnWipeZero.click(function () {
@@ -132,18 +129,15 @@ $(function () {
                     $btnPre.click(function () {
 
                         var _option = {};
-
                         _option["sid[0]"] = v.sid;
 
                         com.showConfirm('确定要将单号为 ' + v.no + ' 的销售单进行预结算吗?', function (index, layero) {
                             com.post(api.inventory.preSalesBalance, _option, function (res) {
-                                // layer.closeAll();
                                 com.showAlert(com.info, "预结算成功");
                                 salesPreBalance.doSearch();
                             });
 
                         }, function () {
-
                             salesPreBalance.doSearch();
                         });
 
@@ -167,11 +161,11 @@ $(function () {
 
     var salesPreBalance = new Searcher();
 
-    salesPreBalance.init(_condArr, 'condList', url, function (data) {
+    salesPreBalance.init(_condArr, 'condList', salesPre.url, function (data) {
         
         displayFunc.init('resultList', data);
 
-    }, 'pagenation', postData, null, false, null, function () {
+    }, 'pagenation', salesPre.postData, null, false, null, function () {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-info pull-left').attr('name', 'collects').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-ok bigger-110').appendTo($adda);
@@ -191,11 +185,11 @@ $(function () {
             var $inputs = com.focusPage('input[name="sids"]:checked', '#resultList');
 
             if (!$inputs.length) {
-
+                
                 com.showAlert(com.warning, "请选择需要进行预结算的销售单");
-
+                
                 return;
-
+                
             }
 
             $.each($inputs, function (i, v) {
@@ -258,7 +252,7 @@ $(function () {
             });
         });
 
-        if (params['urlLoadParams'].type == "dompany") {
+        if (salesPre.pageType == "dompany") {
             return [];
         } else {
             return [$adda, $addaEnd];
@@ -286,19 +280,8 @@ $(function () {
         if (parseFloat(com.focusPage('#editVenderMaling').val()) > parseFloat(com.focusPage('#maling').val())) {
 
             com.focusPage('#editVenderMaling').focus().select();
-
-            com.focusPage('#editVenderMaling').addClass('popover-notitle').attr({
-                "data-rel": "popover",
-                "data-placement": "right",
-                "data-original-title": "",
-                "title": "",
-                "data-content": "修改厂商抹零数据不能超过抹零总数!"
-
-            }).popover('show');
-
+            com.showTip(com.focusPage('#editVenderMaling'),"修改厂商抹零数据不能超过抹零总数!","right");
             flag = false;
-        } else {
-            com.focusPage('#editVenderMaling').popover('destroy');
         }
         return flag;
     }

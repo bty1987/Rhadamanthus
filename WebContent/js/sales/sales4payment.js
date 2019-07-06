@@ -1,5 +1,3 @@
-
-
 jQuery(function () {
 
     var salesPaymentForStatus = {
@@ -8,14 +6,15 @@ jQuery(function () {
         checkBank : [],
         accounts : [],
         couponType : [],
-
         cashInfo : {},
         bankInfo : {},
         checkBankInfo : {},
         accountsInfo : {},
-        couponTypeData : {}
-
+        couponTypeData : {},
+        salesCollectionPostData:{}
     };
+
+    salesPaymentForStatus.salesCollectionPostData["salesPayment.sales.sid"] = params.sid;
 
     com.post(api.common.queryReceiptType, {}, function (res) {
         
@@ -40,19 +39,16 @@ jQuery(function () {
 
     },null,false);
 
-    var salesCollectionPostData = {};
-    
-    salesCollectionPostData["salesPayment.sales.sid"] = params.sid;
-
     com.post(api.ds.payment, {}, function(res){
         salesPaymentForStatus.salesPaymentType = res.materialPaymentType.split("key", "value");
     }, null, false);
 
-    com.post(api.payment.querySalesPaymentBySid,salesCollectionPostData, function (listData) {
+    com.post(api.payment.querySalesPaymentBySid,salesPaymentForStatus.salesCollectionPostData, function (listData) {
         createLine('resultLists', listData);
     }, function (e) {
         com.showAlert(com.warning, "没有对应信息");
     });
+
     function createLine(tableId, listData) {
         var $tableWrap = com.focusPage('#' + tableId);
         var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
@@ -90,7 +86,6 @@ jQuery(function () {
                         var _i = _s[i].split('|');
                         info += salesPaymentForStatus.bankInfo[_i[0]] + " " + _i[1] + ", ";
                     }
-
                     return info;
                 })(v.salesReceipt.bank, v.salesReceipt.bankInfo), "blue"]) : true;
                 v.salesReceipt.checkv != null && v.salesReceipt.checkv != "0" ? addPropertyArr.push(["转账:", v.salesReceipt.checkv, "blue"]) : true;

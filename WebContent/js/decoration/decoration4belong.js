@@ -14,7 +14,7 @@ jQuery(function($) {
 		
 		$.each(res.type, function(i, v){
             decorationBelong.decorationType[v.key] = v.value;
-		})
+		});
     }, null, false);
 	
 	var displayFunc  = (function(){

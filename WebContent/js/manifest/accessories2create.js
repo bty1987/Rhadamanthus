@@ -77,7 +77,7 @@ jQuery(function () {
         var $delete = $('<div></div>').addClass('pull-right action-button').append($('<a></a>').addClass('btn btn-danger btn-minier').html('删除'));
         var $query = $('<div></div>').css('margin-right', '5px').addClass('pull-right action-button').append($('<a></a>').addClass('btn btn-primary btn-minier').html('查看')).click(function () {
             com.focusPage('#viewPopUp').attr({'data-gid': gid});
-            com.popup4page('#viewPopUp',"views/sales/viewSalesPackageGoods.html","查看套餐")
+            com.popup4page('#viewPopUp',"views/sales/salesItem4package.html","查看套餐")
         });
 
         $h4.append($delete).appendTo($liList);
@@ -137,9 +137,7 @@ jQuery(function () {
             
         }, function (e) {
             com.showAlert(com.warning, "装修单不存在");
-            
-            com.focusPage("#supervisorName").val("");
-            com.focusPage("#orderAddr").val("");
+            com.cleanItems(accessories.rightitems)
         });
         
         com.post(api.construction.queryConstructionScheduleByOrderId, {"constructionSchedule.orderId": orderId}, function(res){

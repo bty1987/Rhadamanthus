@@ -1,12 +1,17 @@
 package com.fanglin.common.po;
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 import java.sql.Timestamp;
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import com.fanglin.utils.DateUtil;
 
 @Entity
 @Table(name = "servicerecord", catalog = "platform")
@@ -91,6 +96,17 @@ public class ServiceRecordPO implements java.io.Serializable {
 
 	public void setInfo(String info){
 		this.info = info;
+	}
+	
+	public ServiceRecordPO init(short type, String userId, String info){
+		
+		setType(type);
+		setOperateUserId(userId);
+		setInfo(info);
+		
+		setOperateTime(DateUtil.getDateToTimestamp(new Date()));
+		
+		return this;
 	}
 
 }

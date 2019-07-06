@@ -12,21 +12,21 @@ public class DataDrawingVO implements Serializable {
 	private static final long serialVersionUID = -6898607045254004913L;
 
 	private Long ddid;
-	
+
 	private Long sid;
-	
+
 	private String name;
-	
+
 	private String drawingUrl;
-	
+
 	private Short drawingType;
-	
+
 	private Short type;
-	
+
 	private UserVO creater;
-	
+
 	private Timestamp createTime;
-	
+
 	private Short status;
 
 	public DataDrawingVO() {
@@ -93,7 +93,7 @@ public class DataDrawingVO implements Serializable {
 	public void setCreater(UserVO creater) {
 		this.creater = creater;
 	}
-	
+
 	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getCreateTime() {
 		return createTime;

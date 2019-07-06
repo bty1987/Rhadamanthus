@@ -45,14 +45,14 @@ jQuery(function($) {
 	});
 
 	paymentCheck.modals.modal.on('show.bs.modal',function(e){
-		com.clearValidator();
 		com.focusPage('.payWayError').hide();
 	});
 
 	//隐藏触发
-	com.focusPage("#paymentCheckModal").on('hidden.bs.modal', function () {
+	paymentCheck.modals.modal.on('hide.bs.modal', function () {
 		paymentCheck.bankUtilForGrade = [];
 		paymentCheck.checkBankUtilForGrade = [];
+		com.closeTip();
 	});
 
 	com.focusPage("#paymentCheckModal :checkbox").on("change", function(){

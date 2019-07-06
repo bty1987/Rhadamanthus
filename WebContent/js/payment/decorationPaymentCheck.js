@@ -12,7 +12,9 @@ jQuery(function($) {
 			advanceCheckbox: com.focusPage("#advanceCheckbox"),
 			couponCheckbox: com.focusPage("#couponCheckbox"),
 			couponType: com.focusPage("#couponType"),
-			advanceType: com.focusPage("#advanceType")
+			advanceType: com.focusPage("#advanceType"),
+			cash: com.focusPage("#cash"),
+			advance: com.focusPage("#advance")
 		},
 		htmlName: "decorationCheck",
 		modelId: "baseItemModalDecorationCheck",
@@ -46,18 +48,12 @@ jQuery(function($) {
 		paymentUtils.payment(decorationPaymentCheck, decorationPaymentCheckPostData, searcher, hsearcher);
 	});
 
-	//这里面的内容在刷卡和转账中的点击日期，日期插件show的时候也会执行，所以要谨慎添加内容
-	decorationPaymentCheck.modals.baseModal.on('show.bs.modal',function(e){
-		com.clearValidator();
-	});
-
 	//隐藏触发
-	decorationPaymentCheck.modals.baseModal.on('hidden.bs.modal', function () {
+	decorationPaymentCheck.modals.baseModal.on('hide.bs.modal', function () {
 		decorationPaymentCheck.bankUtilForGrade = [];
 		decorationPaymentCheck.checkBankUtilForGrade = [];
 		com.cleanTypeahead('decorationCheckcashInfo');
-		com.focusPage("#cash").val("");
-		com.focusPage("#advance").val("");
+		com.closeTip();
 	});
 
 	com.focusPage("#baseItemModalDecorationCheck :checkbox").on("change", function(){

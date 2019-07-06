@@ -265,8 +265,6 @@
                 if (item[0].options[0] != undefined) item[0].options[0].selected = true;
             } else {
                 
-                if(item.hasClass("date-picker")) item.datepicker('clearDates');
-                
                 item.val("").removeAttr('data-typeahead-key');
             }
         }
@@ -350,8 +348,8 @@
      * @param contents 显示内容
      */
     showTip: function (obj, msg, direc) {
-        direc = direc ? ["", "top", "right", "bottom", "left"].indexOf(direc) : "top"
-        layer.tips(msg, obj, direc);
+        direc = direc ? ["", "top", "right", "bottom", "left"].indexOf(direc) : 1
+        layer.tips(msg, obj, {tips: [direc ,'#3595CC']});
     },
     showTips: function ($obj, msg, isTip) {
         $obj = com.focusPage($obj);
@@ -425,6 +423,12 @@
         layer.closeAll('tips'); 
     },
     /**
+     * 关闭提示
+     */
+    closeTip: function(){
+        layer.closeAll("tips");
+    },
+    /**
      * 加载页面 , 切换页面功能
      * @param url 页面地址
      * @param notTab 页面不在flpage.active中显示
@@ -439,6 +443,7 @@
         $("#" + container).load(url, data, function (response, status, xhr) {
             callback && callback(response, status, xhr);
         });
+        layer.closeAll("tips");
     },
     /**
      * 载入页面
@@ -500,12 +505,22 @@
         tabPane.load(page);
 
         tabDel.on(ace.click_event, function(){
-            params['urlLoadParams'] = com.splitUrl($(this).parents('li.flpage').prev().attr('data-page'));
             
-            $(this).parents('li.flpage').prev('li.flpage').addClass('active');
-            $($(this).parent("a").attr("href")).prev('div.flpage').addClass('active');
-            $(this).parents('li.flpage').remove();
-            $($(this).parent("a").attr("href")).remove();
+            var _btn = $(this);
+            var _tab = _btn.parents('li.flpage');
+            
+            var _pageId = _btn.parent("a").attr("href");
+            var _page = $(_pageId);
+            
+            if(_tab.hasClass("active")){
+                params['urlLoadParams'] = com.splitUrl(_tab.prev().attr('data-page'));
+                
+                _tab.prev('li.flpage').addClass('active');
+                _page.prev('div.flpage').addClass('active');
+            }
+            
+            _tab.remove();
+            _page.remove();
         });
         
         taba.on(ace.click_event, function(){
@@ -522,7 +537,7 @@
             setTimeout(function(){
                 tabPane.load(page);
                 target.removeClass("tab-mask");
-            }, 1200)
+            }, 1200);
         });
 
         breadcrumb(tabPane);
@@ -797,6 +812,7 @@
             },
             end: function(){
                 _container.html("");
+                layer.closeAll("tips");
             }
         }
         
@@ -1323,21 +1339,5 @@
         return dfd.promise();
     };
     
-    /**
-     * 时间控件默认配置
-     */
-    $.fn.datepicker.dates['zh'] = {
-        days: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"],
-        daysShort: ["日", "一", "二", "三", "四", "五", "六"],
-        daysMin: ["日", "一", "二", "三", "四", "五", "六"],
-        months: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
-        monthsShort: ["一", "二", "三", "四", "五", "六", "七", "八", "九", "十", "十一", "十二"],
-        today: "今天",
-        clear: "清空",
-        format: "mm/dd/yyyy",
-        titleFormat: "MM yyyy",
-        weekStart: 0
-    };
-
 })(jQuery);
 
