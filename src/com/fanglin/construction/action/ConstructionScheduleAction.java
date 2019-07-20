@@ -79,6 +79,14 @@ public class ConstructionScheduleAction extends BaseListAction{
 		return SUCCESS;
 	}
 	
+	@Action(value = "checkoutConstructionSchedule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String checkoutConstructionSchedule() throws FLException{
+		
+		constructionScheduleService.checkoutConstructionSchedule(constructionSchedule);
+		
+		return SUCCESS;
+	}
+	
 	public ConstructionScheduleVO getConstructionSchedule() {
 		return constructionSchedule;
 	}

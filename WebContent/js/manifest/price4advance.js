@@ -17,10 +17,6 @@ $(function () {
         }
     };
 
-    goods.items.ctype.change(function(){
-        goods.items.cvalue.removeClass("v_float_3").addClass("v_float_3");
-    });
-
     var displayFunc = (function () {
 
         var renderList = function (tableId, listData) {

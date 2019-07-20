@@ -23,6 +23,10 @@ $(function () {
         saveData();
     });
     
+    version.versionModal.on('hide.bs.modal', function (e) {
+        com.clearValidator();
+    });
+    
     var displayFunc = (function () {
         var renderList = function (tableId, listData) {
             var $tableWrap = com.focusPage('#' + tableId).empty();

@@ -3,7 +3,8 @@
 		postData: {},
 		postParam: {},
 		userAdvanceItems: {},
-		companysel:{}
+		companysel:{},
+		task:{}
 	};
 	var $wrap = null;
 
@@ -207,12 +208,14 @@
 
 	userAdvance.userAdvanceModal = com.focusPage("#userAdvanceModal");
 	userAdvance.userCompanyModal=com.focusPage("#companyModal");
+	userAdvance.usertaskModal=com.focusPage("#taskModal");
 
 	userAdvance.userAdvanceItems.isLogin = com.focusPage("#isLogin").switchBtn("isOrNot");
 	userAdvance.userAdvanceItems.extranet = com.focusPage("#extranet").switchBtn("isOrNot");
 	userAdvance.userAdvanceItems.roleSel = com.focusPage("#roleSel");
 	userAdvance.userAdvanceItems.company = com.focusPage("#company");
 	userAdvance.userAdvanceItems.currentcompany=com.focusPage("#currentcompany");
+	userAdvance.userAdvanceItems.taskpermissions=com.focusPage("#taskpermissions");
 	userAdvance.userAdvanceItems.oldcompany=com.focusPage("#oldcompany");
 	userAdvance.userAdvanceItems.advanceSaveBtn = com.focusPage("#advanceSaveBtn").on("click", saveData);
 	userAdvance.userAdvanceItems.advanceCancelBtn = com.focusPage("#advanceCancelBtn");
@@ -222,6 +225,9 @@
 	}, null, false);
 	com.post(api.system.queryCompany,{},function(res){
 		userAdvance.companysel = res.companys;
+	}, null, false);
+	com.post(api.information.queryTask,{},function(res){
+		userAdvance.task = res.tasks;
 	}, null, false);
 
 	var displayFunc  = (function(){
@@ -238,6 +244,7 @@
 
 					var $company = $('<a></a>').addClass('btn btn-minier btn-yellow').html('公司');
 					var $btnRight = $('<a></a>').addClass('btn btn-minier btn-success').html('权配');
+					var $btnTask=$('<a></a>').addClass('btn btn-minier btn-purple').html('任务权配');
 					var $btnDesigne = $('<a></a>').addClass('btn btn-minier btn-warning').html('订单设计');
 					var $btnSales = $('<a></a>').addClass('btn btn-minier btn-inverse').html('订单业务');
 					var $btnStatus = $('<a></a>').addClass('btn btn-minier btn-danger').html('订单状态');
@@ -321,6 +328,65 @@
 						});
 					});
 
+					$btnTask.unbind().bind('click', function () {
+						$("#taskdiv").empty();
+						var tasks = [];
+						var taskname = [];
+						var options = {
+							"user.userId": v.userId
+						};
+						userAdvance.usertaskModal.modal("show");
+						com.post(api.right.queryTaskUserRightByUserId, options, function (res) {
+							$.each(res.tasks, function (i, va) {
+								taskname.push(va.name);
+							});
+						}, null, false);
+
+						$.each(userAdvance.task, function (i, va) {
+							var  $div=$('<div class="tag"></div>');
+							var $input = $('<input/>').attr({
+								"type" : "checkbox",
+								"value": va.name,
+								"name" : "corporabtask",
+								"id": va.tid,
+								"class" : "ace"
+							});
+							var $span = $('<span></span>').addClass('lbl');
+							var $spans=$('<span></span>').html(va.name);
+							$div.append($input).append($span).append($spans).appendTo(com.focusPage("#taskdiv"));
+							if(taskname.indexOf(va.name)!= -1){
+								$input.attr("checked",true);
+							}
+						});
+
+						userAdvance.userAdvanceItems.taskpermissions.html("");
+						taskname && taskname.length && $.each(taskname, function (i, v) {
+							var $div = $('<div></div>');
+							var $span = $('<span class="tag"></span>').html(v).appendTo($div);
+							userAdvance.userAdvanceItems.taskpermissions.append($div)
+						});
+
+						com.focusPage('button[name="saveTaskBtn"]').unbind().bind('click', function () {
+							var $inputs = com.focusPage('input[name="corporabtask"]:checked');
+							userAdvance.usertaskModal.modal("hide");
+							var params = {
+								"user.userId": v.userId
+							};
+							$.each($inputs, function (i, v) {
+								var $input = $(v);
+								var row = {
+									"tid": $input.attr('id')
+								};
+								params["tasks[" + i + "].tid"] = row.tid;
+							});
+							com.post(api.right.updateTaskUserRight, params, function (res) {
+								if (res != null) {
+									com.showAlert(com.info, "操作成功");
+								}
+							}, null, false);
+						});
+					});
+
 					$btnRight.click(function(){
 						dialogUserAdvanceIndex(v.userId);
 					});
@@ -355,7 +421,7 @@
 					$btnlogout.click(function(){
 						binding.openlogoutDialog(v.userId);
 					});
-					$divBtnWrap.append($company).append($btnRight).append($btnDesigne).append($btnSales).append($btnStatus).append($btnHouse).append($btnCustomer).append($resetPassword).append($defaultPassword).append($btnlogout).appendTo($h3);
+					$divBtnWrap.append($company).append($btnRight).append($btnTask).append($btnDesigne).append($btnSales).append($btnStatus).append($btnHouse).append($btnCustomer).append($resetPassword).append($defaultPassword).append($btnlogout).appendTo($h3);
 
 					$liLine.append($h3).append($ulProperty).appendTo($ul);
 				});

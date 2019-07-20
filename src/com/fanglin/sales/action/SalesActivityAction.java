@@ -78,7 +78,7 @@ public class SalesActivityAction extends BaseListAction {
 	@Action(value="deliveSalesActivityItem", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String deliveSalesActivityItem() throws FLException{
 		
-		salesActivityService.deliveSalesActivityItem(salesActivityItem);
+		salesActivityService.deliveSalesActivityItem(salesActivityItem, queryUserId(), queryUserName());
 		
 		return SUCCESS;
 	}

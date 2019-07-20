@@ -85,6 +85,7 @@ $.extend(api, {data: {
 
     pageConstructionNode:{url:"pageConstructionNode.do"},
     queryConstructionNode:{url:"queryConstructionNode.do"},
+    queryConstructionNodeByOrderId:{url:"queryConstructionNodeByOrderId.do"},
     addConstructionNode:{url:"addConstructionNode.do"},
     updateConstructionNodeForStatus:{url:"updateConstructionNodeForStatus.do"},
 	

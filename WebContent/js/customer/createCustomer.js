@@ -13,7 +13,6 @@ jQuery(function ($) {
             grade: com.focusPage("#grade"),
             comment: com.focusPage("#comment"),
 
-            designerId: com.focusPage("#designerId"),
             villageNoCreate: com.focusPage("#villageNoCreate"),
             rule: com.focusPage("#rule"),
             houseNumber: com.focusPage("#houseNumber"),
@@ -25,7 +24,6 @@ jQuery(function ($) {
     createcustomerOrigin.saveBtn.bindClick(addcustomerOrigin);
     createcustomerOrigin.cancelBtn.bindClick(deleteDate);
 
-    com.initTypeahead('designerId', api.personel.queryUserByPinyin, "pinyinName", {"user.status": 0}, 'autoFillKeyValue', 'key', 'value', null);
     com.initTypeahead('villageNoCreate', api.data.queryVillageForNameByPinyin, "pinyinName", {}, "autoFillKeyValue", "key", "value", function(list, k, v){
         com.post(api.data.queryVillageById, {"village.no": k}, function (res) {
             createcustomerOrigin.items.rule.html("推荐楼牌号规则: " + (res.village.rule == null || res.village.rule == "" ? "暂无推荐规则" : res.village.rule));
@@ -48,7 +46,6 @@ jQuery(function ($) {
             "customerOrigin.price" : createcustomerOrigin.items.price.val(),
             "customerOrigin.grade" : createcustomerOrigin.items.grade.val(),
             "customerOrigin.comment" : createcustomerOrigin.items.comment.val(),
-            "customerOrigin.designer.userId" : com.typeahead("designerId"),
             "customerOrigin.village.no" : com.typeahead("villageNoCreate"),
             "customerOrigin.houseNumber" : createcustomerOrigin.items.houseNumber.val(),
             "customerOrigin.buildArea" : createcustomerOrigin.items.buildArea.val()
@@ -61,11 +58,9 @@ jQuery(function ($) {
     }
 
     function deleteDate() {
-        com.cleanTypeahead("designerId");
         com.cleanTypeahead("villageNoCreate");
         com.cleanItems(createcustomerOrigin.items);
         com.cleanItems(createcustomerOrigin.customerItems);
-        com.clearValidator();
         com.focusPage("#rule").html("");
     }
 });

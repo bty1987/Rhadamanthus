@@ -3,7 +3,8 @@ $(function () {
     var materialActivityItem = {
         items: {},
         activity: {},
-        activityItem: {}
+        activityItem: {},
+        data:{}
     };
 
     var paramsOrderId = params.orderId;
@@ -14,12 +15,15 @@ $(function () {
     var coupons = com.focusPage("#coupons");
     var activityInfo = com.focusPage("#activityInfo");
 
+    materialActivityItem.name = com.focusPage("#name");
     materialActivityItem.activity = com.focusPage("#activity");
     materialActivityItem.items.thingsName = com.focusPage("#thingsName");
     materialActivityItem.items.thingsNum = com.focusPage("#thingsNum");
     materialActivityItem.items.couponsName = com.focusPage("#couponsName");
     materialActivityItem.items.couponsNum = com.focusPage("#couponsNum");
     materialActivityItem.items.content = com.focusPage("#approveActivityItemContent");
+    materialActivityItem.items.comment = com.focusPage("#comment");
+    materialActivityItem.commentModal = com.focusPage("#commentModal");
 
     materialActivityItem.materialActivityItemModal = com.focusPage("#materialActivityItemModal").on('show.bs.modal', function (e) {
         com.clearValidator();
@@ -277,11 +281,17 @@ $(function () {
         });
 
         deliveBtn.on("click", function () {
-            deliveMaterialActivityItem(activityItem.maiid, activityItem.activity);
+            materialActivityItem.name.html("配送" + activityItem.activity + "的活动奖品");
+            materialActivityItem.data = activityItem;
+            materialActivityItem.commentModal.attr("type", "1");
+            materialActivityItem.commentModal.modal("show");
         });
 
         receiveBtn.on("click", function () {
-            receiveMaterialActivityItem(activityItem.maiid, activityItem.activity);
+            materialActivityItem.name.html("领取" + activityItem.activity + "的活动奖品");
+            materialActivityItem.data = activityItem;
+            materialActivityItem.commentModal.attr("type", "0");
+            materialActivityItem.commentModal.modal("show");
         });
 
         unredundBtn.on("click", function () {
@@ -289,7 +299,10 @@ $(function () {
         });
 
         refundBtn.on("click", function () {
-            refundMaterialActivityItem(activityItem.maiid, activityItem.activity);
+            materialActivityItem.name.html("退货" + activityItem.activity + "的活动奖品");
+            materialActivityItem.data = activityItem;
+            materialActivityItem.commentModal.attr("type", "2");
+            materialActivityItem.commentModal.modal("show");
         });
 
         expendBtn.on("click", function () {
@@ -312,21 +325,6 @@ $(function () {
         });
     }
 
-    function deliveMaterialActivityItem(maiid, activityItemName) {
-
-        com.showConfirm("是否确认配送" + activityItemName + "的活动物品?", function () {
-
-            var options = {
-                "materialActivityItem.maiid": maiid,
-            };
-
-            com.post(api.material.deliveMaterialActivityItem, options, function (res) {
-                com.showAlert(com.info, "操作成功!");
-                queryMaterialActivityItem();
-            })
-        });
-    }
-
     function unredundMaterialActivityItem(maiid, activityItemName) {
 
         com.showConfirm("是否确认未退" + activityItemName + "的活动物品?", function () {
@@ -336,24 +334,6 @@ $(function () {
             };
 
             com.post(api.material.unrefundMaterialActivityItem, options, function (res) {
-                com.showAlert(com.info, "操作成功!");
-                queryMaterialActivityItem();
-            })
-        });
-    }
-
-    function refundMaterialActivityItem(maiid, activityItemName) {
-
-        com.showConfirm("是否确认退货" + activityItemName + "的活动物品?", function () {
-
-            var options = {
-                "materialActivityItem.maiid": maiid,
-            };
-
-            com.post(api.material.refundMaterialActivityItem, options, function (res) {
-
-                var maiid = res.materialActivityItem.maiid;
-                com.focusPage("#refund_" + maiid).unbind();
                 com.showAlert(com.info, "操作成功!");
                 queryMaterialActivityItem();
             })
@@ -375,20 +355,28 @@ $(function () {
         });
     }
 
-    function receiveMaterialActivityItem(maiid, activityItemName) {
-
-        com.showConfirm("是否确认领取" + activityItemName + "的活动物品?", function () {
-
-            var options = {
-                "materialActivityItem.maiid": maiid,
-            };
-
-            com.post(api.material.receiveMaterialActivityItem, options, function (res) {
-                com.showAlert(com.info, "领取成功!");
-                queryMaterialActivityItem();
-            })
+    com.focusPage("#commentBtn").on("click", function () {
+        var type = materialActivityItem.commentModal.attr("type");
+        var options = {
+            "materialActivityItem.maiid": materialActivityItem.data.maiid,
+            "materialActivityItem.content": materialActivityItem.items.comment.val()
+        };
+        var url;
+        if (type == 0) {
+            url = api.material.receiveMaterialActivityItem
+        } else if (type == 1) {
+            url = api.material.deliveMaterialActivityItem
+        } else if (type == 2) {
+            url = api.material.refundMaterialActivityItem
+        }
+        com.post(url, options, function (res) {
+            com.showAlert(com.info, "操作成功!");
+            materialActivityItem.commentModal.removeAttr("type");
+            queryMaterialActivityItem();
         });
-    }
+        com.cleanItems(materialActivityItem.items);
+        materialActivityItem.commentModal.modal("hide");
+    });
 
     //修改活动
     com.focusPage("#submitMaterialActivityBtn").on("click", function () {

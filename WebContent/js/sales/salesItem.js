@@ -96,18 +96,18 @@ $(function () {
                 $btnEdit.click(function () {
                     salesItem.edit_data = v;
                     com.popup4mini("#miniPopUp", "#layerEdit", "编辑", function () {
-                        com.focusPage('#salesItemDetialnum').val(v.num);
-                        com.focusPage('#salesItemDetialtotal').val(v.total);
-                        com.focusPage('#salesItemDetialcomment').val(v.comment);
                         com.focusPage('#salesItemDetialnum').on('change', function () {
                             if (com.validate('miniPopUp', 'right')) {
                                 return false;
                             }
-                            
-                            com.focusPage('#salesItemDetialtotal').val(parseFloat(com.focusPage('#salesItemDetialnum').val()) * parseFloat(v.price));
+                            com.focusPage('#salesItemDetialtotal').val(utils.changeThrDecimal(utils.accMul(parseFloat(com.focusPage('#salesItemDetialnum').val()), parseFloat(v.price))));
                         });
                     }, function () {
                         com.clearValidator();
+                    },function () {
+                        com.focusPage('#salesItemDetialnum').val(v.num);
+                        com.focusPage('#salesItemDetialtotal').val(v.total);
+                        com.focusPage('#salesItemDetialcomment').val(v.comment);
                     });
                 });
             });
@@ -141,13 +141,13 @@ $(function () {
         salesItem.approvalType = 0;
 
         if (!calcRefundData(false)) return false;
-        com.popup4mini("#miniPopUp", "#layerRefund","退货信息", function () {
-            salesItem.items.refundTotal.val(salesItem.items.refundTotal.val());
-            approvalUtils.initqueryApprovalUser("salesItemDetialapprover", 10);
-        },function () {
+        com.popup4mini("#miniPopUp", "#layerRefund","退货信息", "", function () {
             com.clearValidator();
             closeRefundlayer();
             salesItem.items.approver.empty();
+        },function () {
+            salesItem.items.refundTotal.val(salesItem.items.refundTotal.val());
+            approvalUtils.initqueryApprovalUser("salesItemDetialapprover", 10);
         });
     });
 
@@ -164,13 +164,13 @@ $(function () {
         recordMoney(true);
         if (!calcRefundData(true)) return;
 
-        com.popup4mini("#miniPopUp", "#layerRefund","退货信息", function () {
-            salesItem.items.refundTotal.val(salesItem.items.refundTotal.val());
-            approvalUtils.initqueryApprovalUser("salesItemDetialapprover", 10);
-        },function () {
+        com.popup4mini("#miniPopUp", "#layerRefund","退货信息", "", function () {
             com.clearValidator();
             closeRefundlayer();
             salesItem.items.approver.empty();
+        },function () {
+            salesItem.items.refundTotal.val(salesItem.items.refundTotal.val());
+            approvalUtils.initqueryApprovalUser("salesItemDetialapprover", 10);
         });
     });
 
@@ -185,13 +185,13 @@ $(function () {
         recordMoney(true);
         if (!calcRefundData(true)) return;
 
-        com.popup4mini("#miniPopUp", "#layerRefund","退货信息",function () {
-            salesItem.items.refundTotal.val(salesItem.items.refundTotal.val());
-            approvalUtils.initqueryApprovalUser("salesItemDetialapprover", 10);
-        },function () {
+        com.popup4mini("#miniPopUp", "#layerRefund","退货信息","", function () {
             com.clearValidator();
             closeRefundlayer();
             salesItem.items.approver.empty();
+        },function () {
+            salesItem.items.refundTotal.val(salesItem.items.refundTotal.val());
+            approvalUtils.initqueryApprovalUser("salesItemDetialapprover", 10);
         });
     });
     //编辑中的确认
@@ -204,7 +204,7 @@ $(function () {
         var num = com.focusPage('#salesItemDetialnum').val();
         var total = com.focusPage('#salesItemDetialtotal').val();
         var comment = com.focusPage('#salesItemDetialcomment').val();
-
+        
         var editArr = {
             "salesItem.siid": salesItem.edit_data.siid,
             "salesItem.num": num,

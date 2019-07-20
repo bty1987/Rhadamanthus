@@ -26,18 +26,20 @@ CREATE TABLE `advancereceipt` (
   `confirmTime` timestamp NULL DEFAULT NULL,
   `status` tinyint(4) NOT NULL DEFAULT '0',
   `realMoney` decimal(10,3) NOT NULL DEFAULT '0.000',
+  `transfer` decimal(10,3) NOT NULL DEFAULT '0.000',
   `cash` decimal(10,3) NOT NULL DEFAULT '0.000',
   `cashInfo` varchar(20) DEFAULT NULL,
   `bank` decimal(10,3) NOT NULL DEFAULT '0.000',
   `bankInfo` varchar(512) NOT NULL DEFAULT '',
   `checkv` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `checkvBank` varchar(20) NOT NULL DEFAULT '',
+  `checkvBank` varchar(512) NOT NULL DEFAULT '',
   `installment` decimal(10,3) NOT NULL DEFAULT '0.000',
   `installmentBank` varchar(20) NOT NULL DEFAULT '',
   `accounts` decimal(10,3) NOT NULL DEFAULT '0.000',
   `accountsBank` varchar(20) NOT NULL DEFAULT '',
   `comment` varchar(256) NOT NULL DEFAULT '',
-  PRIMARY KEY (`arId`)
+  PRIMARY KEY (`arId`),
+  KEY `indexone` (`collectTime`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='预付款收据表';
 
 DROP TABLE IF EXISTS `decorationpayment`;
@@ -48,11 +50,12 @@ CREATE TABLE `decorationpayment` (
   `onetype` tinyint(1) NOT NULL,
   `twotype` tinyint(1) NOT NULL,
   `paymentType` varchar(10) NOT NULL COMMENT '预付款、设计费、定金、首付款、首付二期款、二期款、尾款、增项款、减项款、退款、违约金',
-  `paymentStatus` varchar(10) NOT NULL DEFAULT '未提交' COMMENT '申请审批,审批未通过,未提交 , 未付款 , 已付款,已确认',
+  `paymentStatus` tinyint(1) NOT NULL COMMENT '0: 未付款, 1: 已付款, 2: 已确认, 3: 审批中, 4: 历史',
   `cuid` int(11) DEFAULT NULL COMMENT '创建人ID',
   `createTime` timestamp NULL DEFAULT NULL,
   `referMoney` decimal(10,3) NOT NULL DEFAULT '0.000',
   `realMoney` decimal(10,3) NOT NULL DEFAULT '0.000',
+  `sort` tinyint(1) NOT NULL,
   `company` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`dpid`),
   KEY `indexone` (`orderId`),
@@ -76,7 +79,7 @@ CREATE TABLE `decorationreceipt` (
   `bank` decimal(10,3) NOT NULL DEFAULT '0.000',
   `bankInfo` varchar(512) DEFAULT NULL,
   `checkv` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `checkvBank` varchar(20) DEFAULT NULL,
+  `checkvBank` varchar(512) DEFAULT NULL,
   `installment` decimal(10,3) NOT NULL DEFAULT '0.000',
   `installmentBank` varchar(20) DEFAULT NULL,
   `accounts` decimal(10,3) NOT NULL DEFAULT '0.000',
@@ -86,7 +89,8 @@ CREATE TABLE `decorationreceipt` (
   `advance` decimal(10,3) NOT NULL DEFAULT '0.000',
   `advanceType` tinyint(4) NOT NULL DEFAULT '0',
   `comment` varchar(256) NOT NULL DEFAULT '',
-  PRIMARY KEY (`drId`)
+  PRIMARY KEY (`drId`),
+  KEY `indexone` (`collectTime`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='装修款收据表';
 
 DROP TABLE IF EXISTS `materialpayment`;
@@ -122,7 +126,7 @@ CREATE TABLE `materialreceipt` (
   `bank` decimal(10,3) NOT NULL DEFAULT '0.000',
   `bankInfo` varchar(512) NOT NULL DEFAULT '',
   `checkv` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `checkvBank` varchar(20) NOT NULL DEFAULT '',
+  `checkvBank` varchar(512) NOT NULL DEFAULT '',
   `installment` decimal(10,3) NOT NULL DEFAULT '0.000',
   `installmentBank` varchar(20) NOT NULL DEFAULT '',
   `accounts` decimal(10,3) NOT NULL DEFAULT '0.000',
@@ -155,24 +159,39 @@ CREATE TABLE `payment` (
   `status` tinyint(1) NOT NULL COMMENT '1: 已付款, 2:已确认',
   `comment` varchar(256) NOT NULL DEFAULT '',
   PRIMARY KEY (`pid`),
-  UNIQUE `uniqueone` (`uniqueid`),
+  UNIQUE KEY `uniqueone` (`uniqueid`),
   KEY `indexone` (`arId`),
   KEY `indextwo` (`customerId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='预付款表';
+
+DROP TABLE IF EXISTS `receipt`;
+CREATE TABLE `receipt` (
+  `rid` int(11) NOT NULL AUTO_INCREMENT COMMENT '收据ID',
+  `prid` int(11) NOT NULL COMMENT '款项收据ID',
+  `no` varchar(32) NOT NULL COMMENT '收据编号',
+  `name` varchar(32) NOT NULL COMMENT '名称',
+  `type` tinyint(1) NOT NULL COMMENT '类型 , 0: 收款, 1: 退款',
+  `paymentType` tinyint(1) NOT NULL COMMENT '款项类型 , 0: 预付款 , 1: 装修款 , 2: 主材款 , 3: 销售款 , 4: 服务款',
+  `receiptType` tinyint(1) NOT NULL COMMENT '收据类型 , 0: 现金 , 1: 银行 , 2: 转账 , 3: 对公 , 4: 分期 , 5: 优惠',
+  `money` decimal(10,3) NOT NULL COMMENT '金额',
+  `collectTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '收款时间',
+  `company` int(11) NOT NULL COMMENT '公司',
+  PRIMARY KEY (`rid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='收据';
 
 DROP TABLE IF EXISTS `salespayment`;
 CREATE TABLE `salespayment` (
   `spid` int(11) NOT NULL AUTO_INCREMENT,
   `sid` int(11) NOT NULL COMMENT '销售单ID',
   `srid` int(11) COMMENT '收据ID',
-  `type` tinyint(4) NOT NULL,
-  `status` tinyint(4) NOT NULL,
+  `type` tinyint(1) NOT NULL DEFAULT '0',
+  `status` tinyint(1) NOT NULL DEFAULT '0',
   `category` varchar(32) NOT NULL DEFAULT '',
   `brand` varchar(32) NOT NULL DEFAULT '',
   `cuid` int(11) NOT NULL COMMENT '创建人ID',
   `createTime` timestamp NULL DEFAULT NULL,
   `referMoney` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `company` int(11) NOT NULL,
+  `company` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`spid`),
   KEY `indexone` (`srid`),
   KEY `indextwo` (`sid`)
@@ -194,7 +213,7 @@ CREATE TABLE `salesreceipt` (
   `bank` decimal(10,3) NOT NULL DEFAULT '0.000',
   `bankInfo` varchar(512) NOT NULL DEFAULT '',
   `checkv` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `checkvBank` varchar(20) NOT NULL DEFAULT '',
+  `checkvBank` varchar(512) NOT NULL DEFAULT '',
   `installment` decimal(10,3) NOT NULL DEFAULT '0.000',
   `installmentBank` varchar(20) NOT NULL DEFAULT '',
   `accounts` decimal(10,3) NOT NULL DEFAULT '0.000',
@@ -204,7 +223,8 @@ CREATE TABLE `salesreceipt` (
   `coupon` decimal(10,3) NOT NULL DEFAULT '0.000',
   `couponInfo` text NOT NULL,
   `comment` varchar(256) NOT NULL DEFAULT '',
-  PRIMARY KEY (`srid`)
+  PRIMARY KEY (`srid`),
+  KEY `indexone` (`collectTime`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='销售收据表';
 
 DROP TABLE IF EXISTS `servicepayment`;
@@ -221,7 +241,8 @@ CREATE TABLE `servicepayment` (
   `advanceMoney` decimal(10,3) NOT NULL DEFAULT '0.000',
   `comment` varchar(256) DEFAULT '',
   `company` int(11) NOT NULL,
-  PRIMARY KEY (`spid`)
+  PRIMARY KEY (`spid`),
+  KEY `indexone` (`srid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='服务款项';
 
 DROP TABLE IF EXISTS `servicereceipt`;
@@ -240,7 +261,7 @@ CREATE TABLE `servicereceipt` (
   `bank` decimal(10,3) NOT NULL DEFAULT '0.000',
   `bankInfo` varchar(512) NOT NULL DEFAULT '',
   `checkv` decimal(10,3) NOT NULL DEFAULT '0.000',
-  `checkvBank` varchar(20) NOT NULL DEFAULT '',
+  `checkvBank` varchar(512) NOT NULL DEFAULT '',
   `installment` decimal(10,3) NOT NULL DEFAULT '0.000',
   `installmentBank` varchar(20) NOT NULL DEFAULT '',
   `accounts` decimal(10,3) NOT NULL DEFAULT '0.000',
@@ -248,18 +269,3 @@ CREATE TABLE `servicereceipt` (
   `comment` varchar(256) NOT NULL DEFAULT '',
   PRIMARY KEY (`srid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='服务收据';
-
-DROP TABLE IF EXISTS `receipt`;
-CREATE TABLE `receipt` (
-  `rid`  int(11) NOT NULL AUTO_INCREMENT COMMENT '收据ID' ,
-  `prid`  int(11) NOT NULL COMMENT '款项收据ID' ,
-  `no`  varchar(32) NOT NULL COMMENT '收据编号' ,
-  `name`  varchar(32) NOT NULL COMMENT '名称' ,
-  `type`  tinyint(2) NOT NULL COMMENT '类型 , 0: 收款, 1: 退款' ,
-  `paymentType`  tinyint(2) NOT NULL COMMENT '款项类型 , 0: 预付款 , 1: 装修款 , 2: 主材款 , 3: 销售款 , 4: 服务款' ,
-  `receiptType`  tinyint(2) NOT NULL COMMENT '收据类型 , 0: 现金 , 1: 银行 , 2: 转账 , 3: 对公 , 4: 分期 , 5: 优惠' ,
-  `money`  decimal(10,3) NOT NULL COMMENT '金额' ,
-  `collectTime`  timestamp NOT NULL COMMENT '收款时间' ,
-  `company`  int(11) NOT NULL COMMENT '公司' ,
-  PRIMARY KEY (`rid`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='收据';

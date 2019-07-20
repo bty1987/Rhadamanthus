@@ -146,7 +146,7 @@ var Condition = function (api) {
             },
             dataSource: {//从后台取数据的各种配置
                 url: api.personel.queryUserByPinyin,//获取数据要调用的接口
-                postData: {"user.status":0,"departmentType.name":""},//获取数据时的请求参数
+                postData: {"user.status":3,"departmentType.name":""},//获取数据时的请求参数
                 listPath: "autoFillKeyValue",//响应list的json路径
                 keyPath: "key",//用来向后台提交的字段的json路径
                 valuePath: "value"//用来在页面显示的字段的json路径
@@ -571,6 +571,22 @@ var Condition = function (api) {
                 valuePath:"value"
             }
         },
+        awardSubtype:{
+            label: "子类",
+            type: "select",
+            submitConfig: {
+                name: "subtype",
+                op: "op",
+                validate: null
+            },
+            dataSource: {
+                url: api.ds.information,
+                postData: {},
+                listPath: "awardSubtype",
+                keyPath: "key",
+                valuePath:"value"
+            }
+        },
 
         StockDate: {
             label: "记录时间",
@@ -591,6 +607,54 @@ var Condition = function (api) {
             }
         },
 
+        awardStockOneType: {
+            label: "一类",
+            type: "select",
+            submitConfig: {
+                name: "onetype",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {//从后台取数据的各种配置
+                url: api.ds.information,
+                postData: {},
+                listPath: "awardStockOneType",
+                keyPath: "key",
+                valuePath:"value"
+            }
+        },
+        awardRecordSubtypes:{
+            label: "子类",
+            type: "select",
+            submitConfig: {
+                name: "subtype",
+                op: "op",
+                validate: null
+            },
+            dataSource: {
+                url: api.ds.information,
+                postData: {},
+                listPath: "awardRecordSubtype",
+                keyPath: "key",
+                valuePath:"value"
+            }
+        },
+        StockType: {
+            label: "类型",
+            type: "select",
+            submitConfig: {
+                name: "type",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {
+                url: api.ds.information,
+                postData: {},
+                listPath: "StockType",
+                keyPath: "key",
+                valuePath:"value"
+            }
+        },
         //-------数据-报价-报价版本
         versionName: {
             label: "版本名称",
@@ -1194,7 +1258,7 @@ var Condition = function (api) {
             },
             dataSource: {//从后台取数据的各种配置
                 url: api.personel.queryUserByPinyin,//获取数据要调用的接口
-                postData: {"user.status":0,"departmentType.name":""},//获取数据时的请求参数
+                postData: {"user.status":3,"departmentType.name":""},//获取数据时的请求参数
                 listPath: "autoFillKeyValue",//响应list的json路径
                 keyPath: "key",//用来向后台提交的字段的json路径
                 valuePath: "value"//用来在页面显示的字段的json路径
@@ -1210,7 +1274,7 @@ var Condition = function (api) {
             },
             dataSource: {//从后台取数据的各种配置
                 url: api.personel.queryUserByPinyin,//获取数据要调用的接口
-                postData: {"user.status":0,"departmentType.name":""},//获取数据时的请求参数
+                postData: {"user.status":3,"departmentType.name":""},//获取数据时的请求参数
                 listPath: "autoFillKeyValue",//响应list的json路径
                 keyPath: "key",//用来向后台提交的字段的json路径
                 valuePath: "value"//用来在页面显示的字段的json路径
@@ -1226,7 +1290,7 @@ var Condition = function (api) {
             },
             dataSource: {//从后台取数据的各种配置
                 url: api.personel.queryUserByPinyin,//获取数据要调用的接口
-                postData: {"user.status":0,"departmentType.name":""},//获取数据时的请求参数
+                postData: {"user.status":3,"departmentType.name":""},//获取数据时的请求参数
                 listPath: "autoFillKeyValue",//响应list的json路径
                 keyPath: "key",//用来向后台提交的字段的json路径
                 valuePath: "value"//用来在页面显示的字段的json路径
@@ -1342,7 +1406,7 @@ var Condition = function (api) {
             },
             dataSource: {//从后台取数据的各种配置
                 url: api.personel.queryUserByPinyin,//获取数据要调用的接口
-                postData: {"user.status":0,"departmentType.name":"职能部"},//获取数据时的请求参数
+                postData: {"user.status":3,"departmentType.name":"职能部"},//获取数据时的请求参数
                 listPath: "autoFillKeyValue",//响应list的json路径
                 keyPath: "key",//用来向后台提交的字段的json路径
                 valuePath: "value"//用来在页面显示的字段的json路径
@@ -1928,9 +1992,9 @@ var Condition = function (api) {
             dataSource: {
                 url: api.personel.queryUserByPinyin,
                 postData: {"user.status":"" },
-                listPath: "userBases",
-                keyPath: "userId",
-                valuePath: "currentName"
+                listPath: "autoFillKeyValue",
+                keyPath: "key",
+                valuePath: "value"
             }
         },
 
@@ -2048,9 +2112,9 @@ var Condition = function (api) {
             dataSource: {
                 url: api.personel.queryUserByPinyin,
                 postData: {"user.status":"" },
-                listPath: "userBases",
-                keyPath: "userId",
-                valuePath: "currentName"
+                listPath: "autoFillKeyValue",
+                keyPath: "key",
+                valuePath: "value"
             }
         },
         purchaseNo: {
@@ -2113,10 +2177,10 @@ var Condition = function (api) {
             },
             dataSource: {
                 url: api.personel.queryUserByPinyin,
-                postData: {"user.status": ""},
-                listPath: "userBases",
-                keyPath: "userId",
-                valuePath: "currentName"
+                postData: {"user.status":"" },
+                listPath: "autoFillKeyValue",
+                keyPath: "key",
+                valuePath: "value"
             }
         },
         accessoriesNo: {
@@ -2139,9 +2203,9 @@ var Condition = function (api) {
             dataSource: {
                 url: api.personel.queryUserByPinyin,
                 postData: {"user.status":"" },
-                listPath: "userBases",
-                keyPath: "userId",//后台i
-                valuePath: "currentName"//前台
+                listPath: "autoFillKeyValue",
+                keyPath: "key",
+                valuePath: "value"
             }
         },
         createTime: {
@@ -2293,9 +2357,9 @@ var Condition = function (api) {
             dataSource: {
                 url: api.personel.queryUserByPinyin,
                 postData: {"user.status":"","departmentType.name":""},
-                listPath: "userBases",
-                keyPath: "userId",
-                valuePath: "userName"
+                listPath: "autoFillKeyValue",
+                keyPath: "key",
+                valuePath: "value"
             }
         },
         approval_senderName: {
@@ -2309,9 +2373,9 @@ var Condition = function (api) {
             dataSource: {
                 url: api.personel.queryUserByPinyin,
                 postData: {"user.status":"","departmentType.name":""},
-                listPath: "userBases",
-                keyPath: "userId",
-                valuePath: "userName"
+                listPath: "autoFillKeyValue",
+                keyPath: "key",
+                valuePath: "value"
             }
         },
         approval_Type: {
@@ -3209,7 +3273,7 @@ var Condition = function (api) {
             },
             dataSource: {//从后台取数据的各种配置
                 url: api.personel.queryUserByPinyin,//获取数据要调用的接口
-                postData: {"user.status":0,"departmentType.name":"工程部"},//获取数据时的请求参数
+                postData: {"user.status":3,"departmentType.name":"工程部"},//获取数据时的请求参数
                 listPath: "autoFillKeyValue",//响应list的json路径
                 keyPath: "key",//用来向后台提交的字段的json路径
                 valuePath: "value"//用来在页面显示的字段的json路径
@@ -3259,6 +3323,16 @@ var Condition = function (api) {
                 validate: null
             }
         },
+        c_applayTime: {
+            label: "申请时间",
+            type: "dateRangePicker",
+            submitConfig: {
+                name: "applayTime",
+                op: "between",
+                validate: null
+            }
+        },
+
         c_drawLineStatus: {
             label: "状态",
             type: "select",
@@ -3468,6 +3542,31 @@ var Condition = function (api) {
                 listPath: "tasks",
                 keyPath: "tid",
                 valuePath: "name"
+            }
+        },
+        planCreateDate: {
+            label: "创建时间",
+            type: "dateRangePicker",
+            submitConfig: {
+                name: "planTimeDateRange",
+                op: "cn",
+                validate: null
+            }
+        },
+        planStatus:{
+            label: "状态",
+            type: "select",
+            submitConfig: {
+                name: "status",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {
+                url: api.ds.information,
+                postData: {},
+                listPath: "planStatus",
+                keyPath: "key",
+                valuePath: "value"
             }
         },
         /*-------积分记录----*/
@@ -3750,8 +3849,68 @@ var Condition = function (api) {
                 op:"between",
                 validate:null
             }
-        }
+        },
         /*-------款项payment新增 : end----*/
+
+        /*-------信息worksheet新增 : start-------*/
+        worksheetCode : {
+            label: "单号",
+            type: "text",
+            submitConfig: {
+                name: "code",
+                op: "eq",
+                validate: null
+            }
+        },
+        worksheetStatus : {
+            label: "状态",
+            type: "select",
+            submitConfig: {
+                name: "status",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {
+                url: api.ds.information,
+                postData: {},
+                listPath: "worksheetStatus",
+                keyPath: "key",
+                valuePath: "value"
+            }
+        },
+        worksheetCreater: {
+            label: "创建人",
+            type: "autofill",
+            submitConfig: {
+                name: "creater",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {
+                url: api.personel.queryUserByPinyin,
+                postData: {"user.status":"" },
+                listPath: "userBases",
+                keyPath: "userId",
+                valuePath: "currentName"
+            }
+        },
+        worksheetHandler: {
+            label: "处理人",
+            type: "autofill",
+            submitConfig: {
+                name: "handler",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {
+                url: api.personel.queryUserByPinyin,
+                postData: {"user.status":"" },
+                listPath: "userBases",
+                keyPath: "userId",
+                valuePath: "currentName"
+            }
+        }
+        /*-------信息worksheet新增 : end-------*/
     };
     return {
         getRuleByCondName: function (condName) {

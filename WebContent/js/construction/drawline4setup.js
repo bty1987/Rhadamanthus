@@ -67,7 +67,7 @@ jQuery(function ($) {
         com.closeTip();
     });
 
-    com.initTypeahead('supervisor', api.personel.queryUserByPinyin, "pinyinName", {"departmentType.name": "工程部", "user.status": 0}, "userBases", "userId", "currentName", null);
+    com.initTypeahead('supervisor', api.personel.queryUserByPinyin, "pinyinName", {"departmentType.name": "工程部", "user.status": 0}, "autoFillKeyValue", "key", "value", null);
 
     com.datetime(drawline.items.actualDate);
 

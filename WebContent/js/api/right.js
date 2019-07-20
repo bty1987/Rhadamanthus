@@ -23,9 +23,10 @@ $.extend(api, {right: {
     queryHouseSourceDepartmentRightByUserId: {url: "queryHouseSourceDepartmentRightByUserId.do"},
     updateHouseSourceDepartmentRight: {url: "updateHouseSourceDepartmentRight.do"},
 
-    
     queryCustomerSourceDepartmentRightByUserId: {url: "queryCustomerSourceDepartmentRightByUserId.do"},
     updateCustomerSourceDepartmentRight: {url: "updateCustomerSourceDepartmentRight.do"},
-    
+
+    queryTaskUserRightByUserId: {url: "queryTaskUserRightByUserId.do"},
+    updateTaskUserRight: {url: "updateTaskUserRight.do"},
 
 }});

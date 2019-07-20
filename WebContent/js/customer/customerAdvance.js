@@ -58,6 +58,7 @@ $(function () {
                 ["归属部门: ", v.department.name, "grey"],
                 ["归属分区: ", v.region.name, "grey"],
                 ["归属设计师: ", com.checkNull(v.designer.currentName,'无'), "grey"],
+                ["归属业务员: ", com.checkNull(v.salesman.currentName,'无'), "grey"],
                 ["楼盘名: ",com.checkNull(v.village.name,'无'), "grey"],
                 ["楼牌号: ", v.houseNumber, "blue"],
                 ["建筑面积: ", v.buildArea, "blue"],

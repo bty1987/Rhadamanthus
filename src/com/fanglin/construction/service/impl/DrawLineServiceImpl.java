@@ -182,7 +182,7 @@ public class DrawLineServiceImpl implements DrawLineService {
 			}
 		}
 
-		if (decorationPO.getProjectStatus() != DecorationPO.PROJECTSTATUS_INITIAL_INT) {
+		if (decorationPO.getProjectStatus() == DecorationPO.PROJECTSTATUS_INITIAL_INT) {
 			decorationPO.setProjectStatus(DecorationPO.PROJECTSTATUS_START_INT);
 
 			decorationDao.update(decorationPO);

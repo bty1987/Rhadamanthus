@@ -121,7 +121,7 @@
   "vpayment":[
     {"key":"0","value":"装修款"},
     {"key":"1","value":"装修定金"},
-    {"key":"2","value":"主材款 "},
+    {"key":"2","value":"主材款"},
     {"key":"3","value":"主材定金"}
   ],
   "ways":[
@@ -176,6 +176,10 @@
   ],
   "planImportArgs":[
     {"key":"","value":"导入报价项"}
+  ],"worksheetStatus": [
+    {"key": "0","value": "初始"},
+    {"key": "1","value": "取消"},
+    {"key": "2","value": "已处理"}
   ],
 
   "errorCode": 0,

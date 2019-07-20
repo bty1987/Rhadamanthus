@@ -13,11 +13,23 @@ $(function () {
             couponsName : com.focusPage("#couponsName"),
             couponsNum : com.focusPage("#couponsNum"),
             activityInfo : com.focusPage("#activityInfo"),
-            activity : com.focusPage("#activity")
+            activity : com.focusPage("#activity"),
+            commentName:com.focusPage("#commentName"),
+            salesActivityComment : com.focusPage("#salesActivityComment")
+        },
+        modal:{
+            salesActivityCommentModal: com.focusPage("#salesActivityCommentModal")
+        },
+        btn:{
+            submitSalesActivityCommentBtn : com.focusPage("#submitSalesActivityCommentBtn"),
+            cancelCommentBtn : com.focusPage("#cancelCommentBtn")
         },
         activity: {},
         activityItemType : {},
-        name: {}
+        name: {},
+        saiid:null,
+        url:null,
+        info:null
     };
 
     salesActivityItem.items.content = com.focusPage("#salesActivityItemContent");
@@ -291,31 +303,43 @@ $(function () {
         //领取按钮
         receiveBtn.on("click", function () {
             if (activityItem.state == 0) {
-                receiveSalesActivityItem(activityItem.saiid, activityItem.activity);
+                salesActivityItem.items.commentName.html("领取");
+                salesActivityItem.saiid = activityItem.saiid;
+                salesActivityItem.url = api.inventory.receiveSalesActivityItem;
+                salesActivityItem.info = "领取成功!";
+                salesActivityItem.modal.salesActivityCommentModal.modal("show");
             }else{
                 com.showAlert(com.warning, "订单活动奖品不可操作!!");
             }
         });
 
-    //点击退货按钮
-    refundBtn.click(function () {
-        refundSalesActivityItem(activityItem.saiid, activityItem.activity);
-    });
+        //点击退货按钮
+        refundBtn.click(function () {
+            salesActivityItem.items.commentName.html("退货");
+            salesActivityItem.saiid = activityItem.saiid;
+            salesActivityItem.url = api.inventory.refundSalesActivityItem;
+            salesActivityItem.info = "退货成功!";
+            salesActivityItem.modal.salesActivityCommentModal.modal("show");
+        });
 
-    //点击配送按钮
-    deliveBtn.click(function () {
-        deliveSalesActivityItem(activityItem.saiid, activityItem.activity);
-    });
+        //点击配送按钮
+        deliveBtn.click(function () {
+            salesActivityItem.items.commentName.html("配送");
+            salesActivityItem.saiid = activityItem.saiid;
+            salesActivityItem.url = api.inventory.deliveSalesActivityItem;
+            salesActivityItem.info = "配送成功!";
+            salesActivityItem.modal.salesActivityCommentModal.modal("show");
+        });
 
-    //点击未退按钮
-    unrefundBtn.click(function () {
-        unrefundSalesActivityItem(activityItem.saiid, activityItem.activity);
-    });
+        //点击未退按钮
+        unrefundBtn.click(function () {
+            unrefundSalesActivityItem(activityItem.saiid, activityItem.activity);
+        });
 
-    //点击消耗按钮
-    expendBtn.click(function () {
-        expendSalesActivityItem(activityItem.saiid, activityItem.activity);
-    });
+        //点击消耗按钮
+        expendBtn.click(function () {
+            expendSalesActivityItem(activityItem.saiid, activityItem.activity);
+        });
 
     }
     
@@ -336,49 +360,7 @@ $(function () {
 
         });
     }
-    //领取
-    function receiveSalesActivityItem(saiid, activityItemName) {
 
-        com.showConfirm("是否确认领取" + activityItemName + "活动物品?", function () {
-
-            var options = {
-                "salesActivityItem.saiid": saiid
-            };
-
-            com.post(api.inventory.receiveSalesActivityItem, options, function (res) {
-                com.showAlert(com.info, "领取成功!");
-                querySalesActivityItem();
-            })
-        });
-    }
-    //退货
-    function refundSalesActivityItem(saiid, activityItemName) {
-        com.showConfirm("是否确认退货" + activityItemName + "活动物品?", function () {
-
-            var options = {
-                "salesActivityItem.saiid": saiid
-            };
-            com.post(api.inventory.refundSalesActivityItem, options, function (res) {
-                com.showAlert(com.info, "退货成功!");
-                querySalesActivityItem();
-            });
-
-        });
-    }
-    //配送
-    function deliveSalesActivityItem(saiid, activityItemName){
-        com.showConfirm("是否确认配送" + activityItemName + "活动物品?", function () {
-
-            var options = {
-                "salesActivityItem.saiid": saiid
-            };
-            com.post(api.inventory.deliveSalesActivityItem, options, function (res) {
-                com.showAlert(com.info, "配送成功!");
-                querySalesActivityItem();
-            });
-
-        });
-    }
     //未退
     function unrefundSalesActivityItem(saiid, activityItemName) {
         com.showConfirm("是否确认未退" + activityItemName + "活动物品?", function () {
@@ -491,6 +473,22 @@ $(function () {
             querySalesActivityItem();
         });
         salesActivityItem.salesActivityItemModal.modal("hide");
+    });
+
+    salesActivityItem.btn.submitSalesActivityCommentBtn.on('click', function () {
+
+        var ops = {
+            "salesActivityItem.saiid": salesActivityItem.saiid,
+            "salesActivityItem.content": salesActivityItem.items.salesActivityComment.val()
+        };
+
+        com.post(salesActivityItem.url, ops, function (res) {
+            com.showAlert(com.info, salesActivityItem.info);
+            querySalesActivityItem();
+        });
+
+        com.cleanItems(salesActivityItem.items);
+        salesActivityItem.modal.salesActivityCommentModal.modal("hide");
     });
 
     com.focusPage("#salesActivityModal").on('hide.bs.modal', function () {

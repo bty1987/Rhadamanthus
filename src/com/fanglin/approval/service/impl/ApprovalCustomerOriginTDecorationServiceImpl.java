@@ -119,17 +119,13 @@ public class ApprovalCustomerOriginTDecorationServiceImpl implements ApprovalCus
 
 		BeanUtil.copyPropertie(approvalCustomerOriginTDecorationPO, decorationVO);
 
-		decorationVO.setHouse(new HouseVO(customerOriginPO.getHid()));
-		decorationVO.setCustomer(new CustomerVO(customerOriginPO.getCid()));
+		decorationVO.setHouse(new HouseVO(customerOriginPO.getHouse().getHid()));
+		decorationVO.setCustomer(new CustomerVO(customerOriginPO.getCustomer().getCid()));
 		decorationVO.setDesigner(new UserBaseVO(customerOriginPO.getDesigner().getUserId()));
 		decorationVO.setSalesman(new UserBaseVO(customerOriginPO.getBelonger().getUserId()));
 		decorationVO.setGrade("B");
 
-		String orderId = decorationService.tranDecorationFromCustomerOrigin(decorationVO, customerOriginPO.getCsid(), approvalPO.getReceiver().getCompany());
-		
-		if(orderId != null){
-			approvalPO.setContents(String.format("装修单(%s)已存在", orderId));
-		}
+		decorationService.tranDecorationFromCustomerOrigin(decorationVO, customerOriginPO.getCsid(), approvalPO.getReceiver().getCompany());
 		
 		return 0;
 	}
@@ -150,7 +146,7 @@ public class ApprovalCustomerOriginTDecorationServiceImpl implements ApprovalCus
 			throw new FLException(330001, "客源不存在");
 		}
 
-		customerOriginPO.setStatus(CustomerOriginPO.STATUS_INVALID_INT);
+		customerOriginPO.setStatus(CustomerOriginPO.STATUS_REFUSE_INT);
 
 		customerOriginDao.update(customerOriginPO);
 

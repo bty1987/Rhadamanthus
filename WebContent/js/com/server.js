@@ -23,5 +23,9 @@ $(function(){
         config.library = 'http://192.168.5.22:5000/';
         config.store = 'http://192.168.5.21/';
     }
+    
+//    config.communion = 'http://nullpoint.zicp.vip/';
+//    config.server = 'http://nullpoint.zicp.vip/';
+//    config.media = 'http://nullpoint.zicp.vip/';
 
 });

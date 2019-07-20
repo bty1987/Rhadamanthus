@@ -181,9 +181,9 @@ public class DecorationServiceImpl implements DecorationService {
 
 		List<DecorationPO> decorationPOs = decorationDao.pageDecoration(paging, filters);
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
-		
+
 		for (DecorationPO decorationPO : decorationPOs) {
-			
+
 			DecorationVO decorationVO = new DecorationVO();
 			decorationVO.setOrderId(decorationPO.getOrderId());
 			decorationVO.setStatus(decorationPO.getStatus());
@@ -195,7 +195,7 @@ public class DecorationServiceImpl implements DecorationService {
 			houseVO.setBuildArea(housePO.getBuildArea());
 			houseVO.setVillage(villageVO);
 			decorationVO.setHouse(houseVO);
-			
+
 			UserBaseVO duserBaseVO = new UserBaseVO();
 			DepartmentVO ddepartmentVO = new DepartmentVO();
 			ddepartmentVO.setName(decorationPO.getAddition().getDesignDepartment());
@@ -209,9 +209,9 @@ public class DecorationServiceImpl implements DecorationService {
 			suserBaseVO.setDept(sdepartmentVO);
 			suserBaseVO.setCurrentName(decorationPO.getSalesman().getUserName());
 			decorationVO.setSalesman(suserBaseVO);
-			
+
 			decorationPO.ptvcascade(decorationVO);
-			
+
 			decorationVOs.add(decorationVO);
 		}
 
@@ -240,7 +240,7 @@ public class DecorationServiceImpl implements DecorationService {
 			decorationVO.setQuoter(new UserBaseVO());
 
 			decorationPO.ptvcascade(decorationVO);
-			
+
 			addition(decorationPO.getAddition(), decorationVO);
 
 			decorationVOs.add(decorationVO);
@@ -428,7 +428,7 @@ public class DecorationServiceImpl implements DecorationService {
 			DecorationVO decorationVO = new DecorationVO();
 
 			decorationPO.ptvcascade(decorationVO);
-			
+
 			addition(decorationPO.getAddition(), decorationVO);
 
 			decorationVOs.add(decorationVO);
@@ -638,7 +638,7 @@ public class DecorationServiceImpl implements DecorationService {
 			decorationVO.setOrderTotalPrice(decorationPO.getOrderTotalPrice());
 
 			decorationVO.setDiscount(decorationPO.getDiscount());
-			
+
 			addition(decorationPO.getAddition(), decorationVO);
 
 			decorationVOs.add(decorationVO);
@@ -752,9 +752,9 @@ public class DecorationServiceImpl implements DecorationService {
 			decorationVO = new DecorationVO();
 
 			decorationVO.setOrderId(decorationPO.getOrderId());
-			
+
 			decorationPO.ptvcascade(decorationVO);
-			
+
 			addition(decorationPO.getAddition(), decorationVO);
 
 			decorationVOs.add(decorationVO);
@@ -849,7 +849,8 @@ public class DecorationServiceImpl implements DecorationService {
 
 		DecorationInfoPO decorationInfo = new DecorationInfoPO();
 
-		if(decorationInfoVO != null) BeanUtil.copyPropertie(decorationInfoVO, decorationInfo);
+		if (decorationInfoVO != null)
+			BeanUtil.copyPropertie(decorationInfoVO, decorationInfo);
 		decorationInfo.setOrderId(orderId);
 
 		decorationInfoDao.save(decorationInfo);
@@ -866,7 +867,7 @@ public class DecorationServiceImpl implements DecorationService {
 		additionInfo.setSales(decorationPO.getSalesman().getCurrentName(), decorationPO.getSalesman().getDept().getName(), decorationPO.getSalesman().getDept().getFatherDept().getName());
 
 		decorationAdditionDao.save(additionInfo);
-		
+
 		decorationOperateDao.save(new DecorationOperatePO().create(orderId, operater)); // 创建装修单操作信息
 
 		List<ServiceNodePO> serviceNodes = serviceNodeDao.queryServiceNodeByType(ServiceNodePO.SERVICE_TYPE_DECORTAION_INT);
@@ -896,7 +897,7 @@ public class DecorationServiceImpl implements DecorationService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void changeDecorationForAdvance(DecorationVO decorationVO, DecorationInfoVO decorationInfoVO) throws FLException {
+	public void changeDecorationForAdvance(DecorationVO decorationVO, DecorationInfoVO decorationInfoVO, String userId) throws FLException {
 
 		String orderId = decorationVO.getOrderId();
 		Short type = decorationVO.getType();
@@ -915,21 +916,22 @@ public class DecorationServiceImpl implements DecorationService {
 
 		if (decorationVO.getNotSalesmanRate() != null) {
 			decorationPO.setNotSalesmanRate(decorationVO.getNotSalesmanRate());
+			serviceRecordDao.save(new ServiceRecordPO().init(ServiceRecordPO.TYPE_CHANGE_DECORATION_INT, userId, String.format("装修单:%s,非业务提点修改: %f", orderId, decorationVO.getNotSalesmanRate())));
 		}
 
-		if(decorationVO.getGrade() != null){
+		if (decorationVO.getGrade() != null) {
 			decorationPO.setGrade(decorationVO.getGrade());
 		}
-		
-		if(decorationVO.getHouseType() != null){
+
+		if (decorationVO.getHouseType() != null) {
 			decorationPO.setHouseType(decorationVO.getHouseType());
 		}
 
-		if(decorationVO.getHouseClass() != null){
+		if (decorationVO.getHouseClass() != null) {
 			decorationPO.setHouseClass(decorationVO.getHouseClass());
 		}
-		
-		if(type != null){
+
+		if (type != null) {
 			decorationPO.setType(type);
 		}
 
@@ -1170,7 +1172,7 @@ public class DecorationServiceImpl implements DecorationService {
 		decorationPO.setStatus(DecorationPO.STATUS_WASTE_INT);
 
 		decorationDao.update(decorationPO);
-		
+
 		UserPO operater = userDao.queryUserByUserId(userId);
 
 		decorationOperateDao.save(new DecorationOperatePO().obsolete(decorationPO.getOrderId(), operater));
@@ -1228,7 +1230,7 @@ public class DecorationServiceImpl implements DecorationService {
 
 			decorationPaymentDao.save(penalty);
 		}
-		
+
 		UserPO operater = userDao.queryUserByUserId(userId);
 
 		decorationOperateDao.save(new DecorationOperatePO().terminal(decorationPO.getOrderId(), operater));
@@ -1257,41 +1259,37 @@ public class DecorationServiceImpl implements DecorationService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public String tranDecorationFromCustomerOrigin(DecorationVO decorationVO, long csid, int company) throws FLException {
-		
-		String orderId = null;
-		
+	public void tranDecorationFromCustomerOrigin(DecorationVO decorationVO, long csid, int company) throws FLException {
+
 		CustomerOriginPO customerOriginPO = customerOriginDao.get(csid);
 
 		// 判断客源信息是否存在
-		if(customerOriginPO == null){
-		      throw new FLException(330001, "客源不存在");
+		if (customerOriginPO == null) {
+			throw new FLException(330001, "客源不存在");
 		}
-		
+
 		UserPO operater = customerOriginPO.getCreater();
 
 		if (operater == null) {
 			throw new FLException(190005, "人员不存在");
 		}
 
-		DecorationPO decorationPO = checkOverDecoration(customerOriginPO.getHid(), company);
+		DecorationPO decorationPO = checkOverDecoration(customerOriginPO.getHouse().getHid(), company);
 
 		if (decorationPO == null) {// 没撞尺 , 创建装修单
 
 			createDecoration(decorationVO, null, operater.getUserId(), company);
 
 			customerOriginPO.setOrderId(decorationVO.getOrderId());
-			customerOriginPO.setStatus(CustomerOriginPO.STATUS_CREATE_INT);
+			customerOriginPO.setStatus(CustomerOriginPO.STATUS_BIND_INT);
+
+			customerOriginDao.update(customerOriginPO);
+
 		} else {
-			orderId = decorationPO.getOrderId();
-			
-			customerOriginPO.setOrderId(decorationPO.getOrderId());
-			customerOriginPO.setStatus(CustomerOriginPO.STATUS_INVALID_INT);
+
+			throw new FLException(140001, "装修单已撞尺");
 		}
-		
-		customerOriginDao.update(customerOriginPO);
-		
-		return orderId;
+
 	}
 
 	private DecorationPO checkOverDecoration(long hid, int company) {

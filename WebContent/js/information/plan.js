@@ -40,9 +40,20 @@ $(function () {
 
     com.post(api.information.queryTask, {}, function (res) {
         plan.plugins = res.tasks.split("keyWord", "plugins");
-
-        plan.planItems.task.bindData(res.tasks, "keyWord", "name", false);
     }, null, false);
+
+    com.post(api.personel.queryUserForSelfByUserId, {}, function(data){
+        console.log(data);
+        com.post(api.right.queryTaskUserRightByUserId, {"user.userId": data.userInfo.user.userId}, function (res) {
+
+            console.log(res);
+
+            plan.planItems.task.bindData(res.tasks, "keyWord", "name", false);
+
+        }, null, false);
+    });
+
+
 
     planUtils.bindUploadBtn("#attachment", 1070);
 
@@ -132,7 +143,7 @@ $(function () {
 
     var planSeacher = new Searcher();
 
-    planSeacher.init(["taskselect"], "condList", api.information.pagePlan, function (data) {
+    planSeacher.init(["taskselect", "planCreateDate", "planStatus"], "condList", api.information.pagePlan, function (data) {
         displayFunc.init('resultList', data);
     }, "pagenation", "planPostData", null, false, null, function () {
 

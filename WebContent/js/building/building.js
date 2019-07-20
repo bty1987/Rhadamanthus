@@ -313,6 +313,10 @@ jQuery(function($) {
 
 	function saveData(){
 
+		if(com.validate("buildingModal") || building.dataFlag){
+			return;
+		}
+
 		var options = {
 			'building.houseSource.hsid': building.hsid,
 			'building.customerSource.csid': building.csid,

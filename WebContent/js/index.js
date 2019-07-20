@@ -300,6 +300,20 @@
         
         return false;
     });
+    
+    $("#btn-scroll-license").attr({"mid": "license", "menuText": "License", "icon": "icon-copyright"}).on("click", function(e){
+        
+        var $this = $(this);
+        
+        foldMenu();
+        navControl($this);
+
+        com.loadPage(api.index.license.url, $this);
+        
+        $.breadcrumb('icon-copyright', ['License']);
+        
+        return false;
+    });
 
     params.homeLoader = false;
 

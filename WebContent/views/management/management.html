@@ -109,6 +109,17 @@
 		</div>
 	</div>
 	
+	<h4>工程</h4>
+    <hr />
+    <div class="row">
+        <div class="col-xs-12">
+            <button id="checkoutConstructionSchedule" class="btn" style="margin: 2px;">
+                <i class="icon-edit"></i>
+                <span>工程款项验证</span>
+            </button>
+        </div>
+    </div>
+	
 	<h4>导出</h4>
 	<hr />
 	<div class="row">
@@ -776,6 +787,50 @@
 			</div>
 		</div>
 	</div>
+	
+	<div class="modal fade" id="checkoutConstructionScheduleModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content col-md-12">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                    <h4 class="modal-title">工程款项验证</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="orderId">装修单号</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="orderId4constructionschedule" class="col-xs-10 col-sm-5 v_required"  maxlength='15' data-toggle="popover" data-trigger='manual'/>
+                            </div>
+                        </div>
+                        <div class="space-4"></div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for=versionId>工程环节</label>
+                            <div class="col-sm-4">
+                                <select id="csid4constructionschedule" class="form-control v_required" data-toggle="popover" data-trigger='manual'></select>
+                            </div>
+                        </div>
+                        <div class="space-4"></div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for=versionId>款项验证</label>
+                            <div class="col-sm-4">
+                                <select id="check4constructionschedule" class="form-control v_required" data-toggle="popover" data-trigger='manual'>
+                                    <option value="0">验证</option>
+                                    <option value="1">通过</option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="save2checkconstructionschedule" class="btn btn-primary">保存</button>
+                    <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
 	
 	
 </div>

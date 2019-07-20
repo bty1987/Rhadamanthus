@@ -140,7 +140,7 @@ public class DecorationAction extends BaseListAction {
 	public String queryDecorationByOrderId() throws FLException {
 
 		decoration = decorationService.queryDecorationByOrderId(decorationOrderId);
-		
+
 		return SUCCESS;
 	}
 
@@ -227,7 +227,7 @@ public class DecorationAction extends BaseListAction {
 	@Action(value = "changeDecorationForAdvance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String changeDecorationForAdvance() throws FLException {
 
-		decorationService.changeDecorationForAdvance(decoration, decorationInfo);
+		decorationService.changeDecorationForAdvance(decoration, decorationInfo, queryUserId());
 
 		return SUCCESS;
 	}

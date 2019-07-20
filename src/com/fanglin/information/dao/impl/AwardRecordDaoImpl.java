@@ -41,7 +41,6 @@ public class AwardRecordDaoImpl extends DaoImpl<AwardRecordPO> implements AwardR
 			
 				query.alias("awardStock", "awardStock");
 				if ("awardStock".equals(field)) {
-					
 					query.add(query.getCriterion("awardStock.asId", Long.valueOf(data), op));
 				} else if ("awardRecordTimeDateRange".equals(field)) {
 					String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
@@ -55,9 +54,14 @@ public class AwardRecordDaoImpl extends DaoImpl<AwardRecordPO> implements AwardR
 
 					query.add(query.getCriterion("operateTime", eTimestamp, "le"));
 					query.add(query.getCriterion("operateTime", sTimestamp, "ge"));
-				}else if ("awardStock.name".equals(field)) {
-					
+				} else if ("awardStock.name".equals(field)) {
 					query.add(query.getCriterion("awardStock.name", data, op));
+				} else if ("type".equals(field)) {
+					query.add(query.getCriterion("type", Short.valueOf(data), op));
+				} else if ("onetype".equals(field)) {
+					query.add(query.getCriterion("onetype", Short.valueOf(data), op));
+				} else if ("subtype".equals(field)) {
+					query.add(query.getCriterion("subtype", Short.valueOf(data), op));
 				}
 			}
 		}

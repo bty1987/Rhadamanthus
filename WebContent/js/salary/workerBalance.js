@@ -122,10 +122,9 @@ $(function () {
 
             $liLine.append($h3).append($ulProperty);
 
-            deposit.modals.workerSalary.attr('wbid', v.wbid);
-            deposit.modals.workerLabor.attr('wbid', v.wbid);
             //扣款工费
             $cutbtn.click(function () {
+                deposit.uid = v.user.userId;
                 com.popup4model('#workerLabor', "扣款", function () {
                     com.cleanItems(deposit.items);
                     deposit.items.workerUserLabor.val(v.user.currentName);
@@ -134,17 +133,16 @@ $(function () {
 
             //发放工费
             $pushbtn.click(function () {
+                deposit.uid = v.user.userId;
                 com.popup4model('#workerSalary', "发放", function () {
                     com.cleanItems(deposit.items);
                     deposit.items.workerUser.val(v.user.currentName);
                 });
             });
 
-            deposit.uid = v.user.userId;
-            deposit.modals.workerBalance.attr('wbid', v.wbid);
-            deposit.modals.workerGold.attr('wbid', v.wbid);
             //收取质保金
             $collectbtn.click(function () {
+                deposit.uid = v.user.userId;
                 com.popup4model('#workerBalance', "收取质保金", function () {
                     com.cleanItems(deposit.items);
                 });
@@ -152,6 +150,7 @@ $(function () {
 
             //提现质保金
             $drawbtn.click(function () {
+                deposit.uid = v.user.userId;
                 com.popup4model('#workerGold', "提现质保金", function () {
                     com.cleanItems(deposit.items);
                 });

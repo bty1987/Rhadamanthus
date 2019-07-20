@@ -30,6 +30,7 @@ $(function () {
                 ["创建人: ", v.creater.currentName, "grey"],
                 ["创建时间: ", v.createTime, "green"],
                 ["归属设计师: ", com.checkNull(v.designer.currentName,'无'), "grey"],
+                ["归属业务员: ", com.checkNull(v.salesman.currentName,'无'), "grey"],
                 ["楼盘名: ",com.checkNull(v.village.currentName,'无'), "grey"],
                 ["楼牌号: ", v.houseNumber, "blue"],
                 ["建筑面积: ", v.buildArea, "blue"],

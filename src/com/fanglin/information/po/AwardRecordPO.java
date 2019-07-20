@@ -46,6 +46,8 @@ public class AwardRecordPO implements java.io.Serializable {
 	
 	public static final short SUBTYPE_REFUND_INT = 6;// 退货
 	
+	public static final short SUBTYPE_DELIVERY_INT = 7;// 配送
+	
 	private int arid;
 	
 	private String orderId;

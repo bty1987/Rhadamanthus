@@ -152,7 +152,7 @@
             var options = {
                 "decorationContract.orderId": contract.decorationOrderId,
                 "decorationContract.workingDuration": com.focusPage("#workingDuration").val(),
-                "decorationContract.additionalInfo": com.focusPage("#additionalInfo").html()
+                "decorationContract.additionalInfo": com.focusPage("#additionalInfo").val()
             };
 
             com.focusPage("#startTime").val() && (options["decorationContract.startTime"] = com.focusPage("#startTime").val() + " 00:00:00");
@@ -388,6 +388,9 @@
                                 break;
                             case "工程状态":
                                 propertyArr.push(["工程状态:", order.projectStatusArr[v.projectStatus], "red"]);
+                                break;
+                            case "付款比例":
+                                propertyArr.push(["付款比例:", v.paySacle, "green"]);
                                 break;
                         }
                     });

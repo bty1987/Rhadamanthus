@@ -7,47 +7,32 @@
 });
 
 $.extend(api, {customer: {
-    
 	pageVustomer: {url: "pageVustomer.do"},
-	
 	queryVustomerByUnionId: {url: "queryVustomerByUnionId.do"},
-	
 	addVustomer: {url: "addVustomer.do"},
-	
 	updateVustomer: {url: "updateVustomer.do"},
-	
 	deleteVustomer: {url: "deleteVustomer.do"},
 	
 	pageVrecord: {url: "pageVrecord.do"},
-	
 	queryVrecordByVid: {url: "queryVrecordByVid.do"},
-	
 	addVrecord: {url: "addVrecord.do"},
 	
-	pageCustomerOrigin:{url:"pageCustomerOrigin.do"},
+	pageCustomerOrigin: {url:"pageCustomerOrigin.do"},
+	pageCustomerOriginForDesign: {url:"pageCustomerOriginForDesign.do"},
+	pageCustomerOriginForAdvance: {url:"pageCustomerOriginForAdvance.do"},
+	pageCustomerOriginForCommunion: {url:"pageCustomerOriginForCommunion.do"},
+	addCustomerOrigin: {url:"addCustomerOrigin.do"},
+	updateCustomerOrigin: {url:"updateCustomerOrigin.do"},
+	updateCustomerOriginForBelonger: {url:"updateCustomerOriginForBelonger.do"},
+	freeCustomerOrigin: {url:"freeCustomerOrigin.do"},
+	takeCustomerOrigin: {url:"takeCustomerOrigin.do"},
+	bindCustomerOrigin: {url:"bindCustomerOrigin.do"},
+	commitCustomerOrigin: {url:"commitCustomerOrigin.do"},
+	confirmCustomerOrigin: {url:"confirmCustomerOrigin.do"},
+	cancelCustomerOrigin: {url:"cancelCustomerOrigin.do"},
     
-	pageCustomerOriginForAdvance:{url:"pageCustomerOriginForAdvance.do"},
-    
-	pageCustomerOriginForCommunion:{url:"pageCustomerOriginForCommunion.do"},
-	
-	pageCustomerOriginForDesign:{url:"pageCustomerOriginForDesign.do"},
-
-	addCustomerOrigin:{url:"addCustomerOrigin.do"},
-    
-	updateCustomerOrigin:{url:"updateCustomerOrigin.do"},
-    
-	updateCustomerOriginForBelonger:{url:"updateCustomerOriginForBelonger.do"},
-	
-	bindCustomerOrigin:{url:"bindCustomerOrigin.do"},
-    
-	freeCustomerOrigin:{url:"freeCustomerOrigin.do"},
-    
-	takeCustomerOrigin:{url:"takeCustomerOrigin.do"},
-    
-    queryCustomerRecord:{url:"queryCustomerRecord.do"},
-    
-    addCustomerRecord:{url:"addCustomerRecord.do"},
-    
+    queryCustomerRecord: {url:"queryCustomerRecord.do"},
+    addCustomerRecord: {url:"addCustomerRecord.do"},
     
     pageVustomerByUnionId : {url : "pageVustomerByUnionId.do"},
     buildVustomerNet : {url : "buildVustomerNet.do"},
@@ -67,9 +52,6 @@ $.extend(api, {customer: {
     
     addVuser : {url : "addVuser.do"},
     queryVuser : {url : "queryVuser.do"},
-    
-    
-    
     
     //公众号
     queryCusConstructer : {url : "queryCusConstructer.do"},

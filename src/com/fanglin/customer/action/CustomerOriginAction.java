@@ -32,6 +32,14 @@ public class CustomerOriginAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
+	@Action(value = "pageCustomerOriginForDesign", results = { @Result ( name = "success", type = "json", params = {"ignoreHierarchy", "false"}) }, params = {"contentType", "text/html"})
+	public String pageCustomerOriginForDesign() throws FLException{
+		
+		customerOriginService.pageCustomerOriginForDesign(getPaging(), getFilters(), queryUserId());
+		
+		return SUCCESS;
+	}
+	
 	@Action(value = "pageCustomerOriginForAdvance", results = { @Result ( name = "success", type = "json", params = {"ignoreHierarchy", "false"}) }, params = {"contentType", "text/html"})
 	public String pageCustomerOriginForAdvance() throws FLException{
 		
@@ -44,14 +52,6 @@ public class CustomerOriginAction extends BaseListAction {
 	public String pageCustomerOriginForCommunion() throws FLException{
 		
 		customerOriginService.pageCustomerOriginForCommunion(getPaging(), getFilters());
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "pageCustomerOriginForDesign", results = { @Result ( name = "success", type = "json", params = {"ignoreHierarchy", "false"}) }, params = {"contentType", "text/html"})
-	public String pageCustomerOriginForDesign() throws FLException{
-		
-		customerOriginService.pageCustomerOriginForDesign(getPaging(), getFilters(), queryUserId());
 		
 		return SUCCESS;
 	}
@@ -80,14 +80,6 @@ public class CustomerOriginAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-	@Action(value = "bindCustomerOrigin", results = { @Result ( name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String bindCustomerOrigin() throws FLException{
-		
-		customerOriginService.bindCustomerOrigin(customerOrigin);
-		
-		return SUCCESS;
-	}
-	
 	@Action(value = "freeCustomerOrigin", results = { @Result ( name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String freeCustomerOrigin() throws FLException{
 		
@@ -103,6 +95,30 @@ public class CustomerOriginAction extends BaseListAction {
 		
 		return SUCCESS;
 	}
+	
+	@Action(value = "bindCustomerOrigin", results = { @Result ( name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String bindCustomerOrigin() throws FLException{
+		
+		customerOriginService.bindCustomerOrigin(customerOrigin, queryUserId());
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "commitCustomerOrigin", results = { @Result ( name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String commitCustomerOrigin() throws FLException{
+		
+		customerOriginService.commitCustomerOrigin(customerOrigin);
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "cancelCustomerOrigin", results = { @Result ( name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String cancelCustomerOrigin() throws FLException{
+		
+		customerOriginService.cancelCustomerOrigin(customerOrigin);
+		
+		return SUCCESS;
+	}
 
 	public CustomerOriginVO getCustomerOrigin() {
 		return customerOrigin;
@@ -111,6 +127,5 @@ public class CustomerOriginAction extends BaseListAction {
 	public void setCustomerOrigin(CustomerOriginVO customerOrigin) {
 		this.customerOrigin = customerOrigin;
 	}
-	
 	
 }

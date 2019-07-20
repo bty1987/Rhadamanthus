@@ -63,6 +63,7 @@ $(function () {
                         ["全款时间:", v.fullpayTime, "green"],
                         ["状态:", manifest.status[v.status], "red"],
                         ["结算状态:", manifest.balanceStatus[v.balanceStatus], "red"],
+                        ["等级:", v.grade, "red"],
                         ["总额:", v.total, "blue"],
                         ["抹零:", v.maling, "blue"],
                         ["厂商抹零:", v.venderMaling, "blue"],

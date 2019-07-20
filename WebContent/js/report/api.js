@@ -23,6 +23,9 @@ $(function () {
         com.focusPage('#InterfaceRequestsDay').css('color', '#FDFEFF')
     });
 
+    var chart5 = com.charts("education", "educationGroup", {"api": "user.report.education4group", "mongo": "communion"}, "col-xs-12", {"height": "500px"}, "dark");
+    var chart6 = com.charts("company", "companyGroup", {"api": "user.report.total4group", "mongo": "communion"}, "col-xs-12", {"height": "500px"}, "dark");
+
     $(document).keyup(function (event) {
 
         if (event.keyCode == 27) {
@@ -39,6 +42,8 @@ $(function () {
         chart2.resize();
         chart3.resize();
         chart4.resize();
+        chart5.resize();
+        chart6.resize();
     }
 
 });

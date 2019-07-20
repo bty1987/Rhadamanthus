@@ -110,7 +110,7 @@ public class ApprovalCustomerOriginTDecorationBelongServiceImpl implements Appro
 		decorationAdditionDao.update(decorationAdditionPO);
 		
 		// 更新客源状态
-		customerOriginPO.setStatus(CustomerOriginPO.STATUS_CREATE_INT);
+		customerOriginPO.setStatus(CustomerOriginPO.STATUS_BIND_INT);
 
 		customerOriginDao.update(customerOriginPO);
 
@@ -133,7 +133,7 @@ public class ApprovalCustomerOriginTDecorationBelongServiceImpl implements Appro
 			throw new FLException(330001, "客源不存在");
 		}
 		
-		customerOriginPO.setStatus(CustomerOriginPO.STATUS_INVALID_INT);
+		customerOriginPO.setStatus(CustomerOriginPO.STATUS_REFUSE_INT);
 		
 		customerOriginDao.update(customerOriginPO);
 		

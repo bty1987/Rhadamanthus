@@ -428,11 +428,11 @@ jQuery(function ($) {
         var paneSTInput = $("<input/>").attr("id", scheduleNameNum + "StartTime").attr("type", "text").addClass("col-sm-12").attr("readonly", "readonly").attr("data-toggle", "popover").attr("data-trigge", "manual").appendTo(paneSTThree);
 
         //完工时间
-        if (schedule != 4) {
-            var paneETlable = $("<label></label>").addClass("col-sm-1 control-label no-padding-right").attr("for", scheduleNameNum + "EndTime").html("完工时间").appendTo(paneStartTimeTwo);
-            var paneETFour = $("<div></div>").addClass("col-sm-2").appendTo(paneStartTimeTwo);
-            var paneETInput = $("<input/>").attr("id", scheduleNameNum + "EndTime").attr("type", "text").addClass("col-sm-12").attr("readonly", "readonly").attr("data-toggle", "popover").attr("data-trigge", "manual").appendTo(paneETFour);
-        }
+
+        var paneETlable = $("<label></label>").addClass("col-sm-1 control-label no-padding-right").attr("for", scheduleNameNum + "EndTime").html("完工时间").appendTo(paneStartTimeTwo);
+        var paneETFour = $("<div></div>").addClass("col-sm-2").appendTo(paneStartTimeTwo);
+        var paneETInput = $("<input/>").attr("id", scheduleNameNum + "EndTime").attr("type", "text").addClass("col-sm-12").attr("readonly", "readonly").attr("data-toggle", "popover").attr("data-trigge", "manual").appendTo(paneETFour);
+
         //铲大白状态
         var paneSpace = $("<div></div>").addClass("space-4").appendTo(paneTabForm);
         var paneStatus = $("<div></div>").addClass("form-group").appendTo(paneTabForm);

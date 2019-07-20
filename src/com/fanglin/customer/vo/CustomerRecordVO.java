@@ -71,7 +71,7 @@ public class CustomerRecordVO implements Serializable {
 	public void setOperater(UserBaseVO operater) {
 		this.operater = operater;
 	}
-	@JSON(format = "yyyy-MM-dd")
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getOperatTime() {
 		return operatTime;
 	}

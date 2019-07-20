@@ -8,6 +8,8 @@ CREATE TABLE `material` (
   `orderId` varchar(15) NOT NULL,
   `hid` int(11) NOT NULL,
   `customerId` int(11) NOT NULL,
+  `activityId` int(11) DEFAULT '0',
+  `grade` varchar(1) NOT NULL,
   `smuid` int(11) NOT NULL COMMENT '业务员ID',
   `muid` int(11) NOT NULL COMMENT '主材员ID',
   `iuid` int(11) DEFAULT NULL COMMENT '驻店员ID',
@@ -43,6 +45,26 @@ CREATE TABLE `material` (
   KEY `indexthr` (`no`),
   KEY `indexsix` (`status`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材单表';
+
+DROP TABLE IF EXISTS `materialactivityitem`;
+CREATE TABLE `materialactivityitem` (
+  `maiid` int(11) NOT NULL AUTO_INCREMENT,
+  `aid` int(11) NOT NULL,
+  `asid` int(11) NOT NULL,
+  `orderId` varchar(15) NOT NULL,
+  `activity` varchar(32) NOT NULL,
+  `name` varchar(32) NOT NULL,
+  `type` tinyint(1) NOT NULL,
+  `state` tinyint(1) NOT NULL,
+  `isStock` tinyint(1) NOT NULL,
+  `num` int(11) NOT NULL,
+  `money` decimal(10,3) NOT NULL,
+  `content` varchar(64) DEFAULT NULL,
+  `receiveUserId` int(11) DEFAULT NULL,
+  `receiveUserName` varchar(15) NOT NULL,
+  `receiveTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`maiid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材活动';
 
 DROP TABLE IF EXISTS `materialbalance`;
 CREATE TABLE `materialbalance` (

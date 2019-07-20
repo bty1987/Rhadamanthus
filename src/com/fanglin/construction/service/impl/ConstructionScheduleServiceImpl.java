@@ -196,6 +196,7 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public int checkoutConstructionSchedule(ConstructionScheduleVO constructionScheduleVO) throws FLException {
 
 		ConstructionSchedulePO constructionSchedulePO = constructionScheduleDao.get(constructionScheduleVO.getCsid());
@@ -203,7 +204,7 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 		if (constructionSchedulePO == null) {
 			throw new FLException(120024, "工程环节不存在");
 		}
-
+		
 		if (constructionScheduleVO.getCheckout() == ConstructionSchedulePO.CHECKOUT_PASS_INT) {
 			constructionSchedulePO.setCheckout(ConstructionSchedulePO.CHECKOUT_PASS_INT);
 		} else {

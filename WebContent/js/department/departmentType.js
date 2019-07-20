@@ -1,19 +1,24 @@
 
 jQuery(function($) {
+    
 	var departmentType = {
 		saveBtn: null,
 		cancelBtn: null,
 		modal: null,
 		items:{}
 	};
+	
 	departmentType.saveBtn = com.focusPage("#saveBtn").on("click", saveData);
 	departmentType.cancelBtn = com.focusPage("#cancelBtn");
 	departmentType.items.departmentTypeName = com.focusPage("#departmentTypeName");
 	departmentType.modal = com.focusPage("#departmentTypeModal");
+	
 	departmentType.modal.on('show.bs.modal',function(e){
 		com.clearValidator();
 		com.clearValidator("#businessRegionId", true);
 	});
+	
+	com.focusPage('#fl-statement').statement("部门", "类型");
 
 	var displayFunc  = (function(){
 		var renderList = function(tableId,listData){

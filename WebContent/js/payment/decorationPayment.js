@@ -47,7 +47,8 @@ jQuery(function($) {
 		couponTypeData: {},
 
 		bankUtilForGrade: [],
-		checkBankUtilForGrade: []
+		checkBankUtilForGrade: [],
+		addReduceItemType: []
 	};
 
 	//隐藏触发
@@ -60,6 +61,12 @@ jQuery(function($) {
 
 	decorationPayment.modals.refundDecorationPaymentModal.on('hide.bs.modal', function () {
 		com.closeTip();
+	});
+
+	com.post(api.ds.quotation, {}, function(res){
+		$.each(res.addReduceItemType, function (i, v) {
+			decorationPayment.addReduceItemType[v.key] = v.value;
+		});
 	});
 	
 	com.focusPage("#collectBtn").bindClick(function(){
@@ -466,7 +473,7 @@ jQuery(function($) {
     		["单位:", v.measurementUnit, "grey"],
     		["单价:", v.unitPrice, "grey"],
     		["工程量:", v.num, "grey"],
-    		["类型:", v.type, "grey"]
+    		["类型:", decorationPayment.addReduceItemType[v.type], "grey"]
     	];
 
     	$.each(propertyArr, function (index,value) {

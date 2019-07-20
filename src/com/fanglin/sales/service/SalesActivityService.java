@@ -18,7 +18,7 @@ public interface SalesActivityService {
 	public int receiveSalesActivityItem(SalesActivityItemVO salesActivityItemVO, String userId,String userName) throws FLException;
 	
 	//配送销售活动项
-	public void deliveSalesActivityItem(SalesActivityItemVO salesActivityItemVO) throws FLException;
+	public void deliveSalesActivityItem(SalesActivityItemVO salesActivityItemVO, String userId,String userName) throws FLException;
 	
 	//未退装修活动 , 已审批未退货
 	public void unrefundSalesActivityItem(SalesActivityItemVO salesActivityItemVO) throws FLException;

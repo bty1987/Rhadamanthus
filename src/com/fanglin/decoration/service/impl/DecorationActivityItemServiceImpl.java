@@ -126,6 +126,10 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		if (decorationActivityItemPO == null) {
 			throw new FLException(140030, "订单活动物品不存在");
 		}
+		
+		if (decorationActivityItemPO.getState() != DecorationActivityItemPO.STATUS_INIT_INT) {
+			throw new FLException(140057, "订单活动奖品不可操作");
+		}
 
 		decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_RECEIVE_INT);
 		decorationActivityItemPO.setReceiveUserId(userDao.queryUserByUserId(userId));
@@ -151,7 +155,7 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 			awardStockDao.update(awardStockPO);
 		}
 
-		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, creater, AwardRecordPO.TYPE_XG_INT, AwardRecordPO.SUBTYPE_RECEIVE_INT, AwardRecordPO.ONETYPE_DECORATION_INT, decorationActivityItemPO.getIsStock(), decorationActivityItemPO.getMoney(), decorationActivityItemPO.getNum(), "领取活动奖品");
+		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, creater, AwardRecordPO.TYPE_XG_INT, AwardRecordPO.SUBTYPE_RECEIVE_INT, AwardRecordPO.ONETYPE_DECORATION_INT, decorationActivityItemPO.getIsStock(), decorationActivityItemPO.getMoney(), decorationActivityItemPO.getNum(), decorationActivityItemVO.getContent());
 
 		awardRecordDao.save(awardRecordPO);
 
@@ -175,6 +179,27 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_DELIVERY_INT);
 
 		decorationActivityItemDao.update(decorationActivityItemPO);
+		
+		AwardStockPO awardStockPO = awardStockDao.get(decorationActivityItemPO.getAsid());
+
+		UserPO creater = userDao.queryUserByUserId(userId);
+
+		if (decorationActivityItemPO.getIsStock() == DecorationActivityItemPO.ISSTOCK_CAL_INT) {
+
+			float num = Arith.sub(awardStockPO.getNum(), decorationActivityItemPO.getNum());
+
+			if (num < 0) {
+				throw new FLException(160038, "库存不足");
+			}
+
+			awardStockPO.setNum(num);
+
+			awardStockDao.update(awardStockPO);
+		}
+
+		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, creater, AwardRecordPO.TYPE_XG_INT, AwardRecordPO.SUBTYPE_DELIVERY_INT, AwardRecordPO.ONETYPE_DECORATION_INT, decorationActivityItemPO.getIsStock(), decorationActivityItemPO.getMoney(), decorationActivityItemPO.getNum(), decorationActivityItemVO.getContent());
+
+		awardRecordDao.save(awardRecordPO);
 
 		return 0;
 	}
@@ -210,7 +235,7 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 			throw new FLException(140030, "订单活动物品不存在");
 		}
 
-		List<Short> status = Arrays.asList(new Short[] { DecorationActivityItemPO.STATUS_RECEIVE_INT, DecorationActivityItemPO.STATUS_WAIT_INT });
+		List<Short> status = Arrays.asList(new Short[] { DecorationActivityItemPO.STATUS_RECEIVE_INT, DecorationActivityItemPO.STATUS_DELIVERY_INT, DecorationActivityItemPO.STATUS_WAIT_INT });
 
 		if (!status.contains(decorationActivityItemPO.getState())) {
 			throw new FLException(140057, "订单活动奖品不可操作");
@@ -239,7 +264,7 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 			awardStockDao.update(awardStockPO);
 		}
 
-		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, creater, AwardRecordPO.TYPE_CG_INT, AwardRecordPO.SUBTYPE_REFUND_INT, AwardRecordPO.ONETYPE_DECORATION_INT, decorationActivityItemPO.getIsStock(), decorationActivityItemPO.getMoney(), decorationActivityItemPO.getNum(), "");
+		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, creater, AwardRecordPO.TYPE_CG_INT, AwardRecordPO.SUBTYPE_REFUND_INT, AwardRecordPO.ONETYPE_DECORATION_INT, decorationActivityItemPO.getIsStock(), decorationActivityItemPO.getMoney(), decorationActivityItemPO.getNum(), decorationActivityItemVO.getContent());
 
 		awardRecordDao.save(awardRecordPO);
 
@@ -258,7 +283,9 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 			throw new FLException(140030, "订单活动物品不存在");
 		}
 
-		if (decorationActivityItemPO.getState() != DecorationActivityItemPO.STATUS_RECEIVE_INT) {
+		List<Short> status = Arrays.asList(new Short[] { DecorationActivityItemPO.STATUS_RECEIVE_INT, DecorationActivityItemPO.STATUS_DELIVERY_INT });
+		
+		if (!status.contains(decorationActivityItemPO.getState())) {
 			throw new FLException(140057, "订单活动奖品不可操作");
 		}
 		

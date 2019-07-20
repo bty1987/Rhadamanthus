@@ -140,6 +140,7 @@ $(function () {
             var propertyArr = [
                 ["订单号:", v.sales.orderId, "blue"],
                 ["销售单:", v.sales.no, "blue"],
+                ["销售单等级:", v.sales.grade, "blue"],
                 ["楼盘地址:", v.sales.house.village.cityProper.city.name + ' ' + v.sales.house.village.cityProper.name + ' ' + v.sales.house.village.name + " " + v.sales.house.houseNumber, "grey"],
                 ["客户:", v.sales.customer.name, "grey"],
                 ["品牌:", v.sales.brand, "grey"],
@@ -446,6 +447,7 @@ $(function () {
             var propertyArr = [
                 ["订单号:", v.sales.orderId, "blue"],
                 ["销售单号:", v.sales.no, "blue"],
+                ["销售单等级:", v.sales.grade, "blue"],
                 ["楼盘地址:",  v.sales.house.village.cityProper.city.name + ' ' + v.sales.house.village.cityProper.name + ' ' + v.sales.house.village.name + " " + v.sales.house.houseNumber, "grey"],
                 ["客户:", v.sales.customer.name, "grey"],
                 ["品牌:", v.sales.brand, "grey"],
