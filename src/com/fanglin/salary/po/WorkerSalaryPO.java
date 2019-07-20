@@ -23,10 +23,10 @@ public class WorkerSalaryPO implements Serializable {
 
 	private static final long serialVersionUID = -6436620084581973635L;
 
-	public static final String COLUMN_CSID_STR = "cid";
+	public static final String COLUMN_CSID_STR = "csid";
 
 	public static final String COLUMN_USERID_STR = "user.userId";
-
+	
 	public static final String COLUMN_CREATETIME_STR = "createTime";
 	
 	public static final String COLUMN_APPROVETIME_STR = "approveTime";

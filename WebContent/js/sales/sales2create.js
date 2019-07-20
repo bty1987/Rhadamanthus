@@ -293,15 +293,15 @@ jQuery(function () {
 
     function count(flag, boolean) {
         if (flag == true && boolean == true) {
-            sales.items.disPrice.val(utils.accMul(parseFloat(sales.items.purchase.find('option:selected').attr("other")), parseFloat(sales.items.discount.val())));
-            sales.items.selling.val(utils.accMul(parseFloat(sales.items.disPrice.val()), parseFloat(sales.items.postDis.val())));
-            sales.items.total.val(utils.accMul(parseFloat(sales.items.selling.val()), parseFloat(sales.items.num.val())));
+            sales.items.disPrice.val(utils.changeThrDecimal(utils.accMul(parseFloat(sales.items.purchase.find('option:selected').attr("other")), parseFloat(sales.items.discount.val()))));
+            sales.items.selling.val(utils.changeThrDecimal(utils.accMul(parseFloat(sales.items.disPrice.val()), parseFloat(sales.items.postDis.val()))));
+            sales.items.total.val(utils.changeThrDecimal(utils.accMul(parseFloat(sales.items.selling.val()), parseFloat(sales.items.num.val()))));
         } else if (flag == true && boolean == false) {
-            sales.items.selling.val(utils.accMul(parseFloat(sales.items.disPrice.val()), parseFloat(sales.items.postDis.val())));
-            sales.items.total.val(utils.accMul(parseFloat(sales.items.selling.val()), parseFloat(sales.items.num.val())));
+            sales.items.selling.val(utils.changeThrDecimal(utils.accMul(parseFloat(sales.items.disPrice.val()), parseFloat(sales.items.postDis.val()))));
+            sales.items.total.val(utils.changeThrDecimal(utils.accMul(parseFloat(sales.items.selling.val()), parseFloat(sales.items.num.val()))));
         } else if (flag == false && boolean == true) {
-            sales.items.total.val(utils.accMul(parseFloat(sales.items.selling.val()), parseFloat(sales.items.num.val())));
-            sales.items.postDis.val((utils.accDiv(parseFloat(sales.items.selling.val()), parseFloat(sales.items.disPrice.val()))).toFixed(2));
+            sales.items.total.val(utils.changeThrDecimal(utils.accMul(parseFloat(sales.items.selling.val()), parseFloat(sales.items.num.val()))));
+            sales.items.postDis.val(utils.changeThrDecimal((utils.accDiv(parseFloat(sales.items.selling.val()), parseFloat(sales.items.disPrice.val()))).toFixed(2)));
         }
     }
 

@@ -104,6 +104,8 @@ public class DrawLineDaoImpl extends DaoImpl<DrawLinePO> implements DrawLineDao 
 			
 			for (Filter filter : filters) {
 
+				String data = filter.getData();
+				
 				if ("orderId".equals(filter.getField())) {
 					query.add(query.getCriterion("decoration.orderId", (filter.getData()), filter.getOp()));
 				} else if ("drawLineGroupName".equals(filter.getField())) {
@@ -133,10 +135,24 @@ public class DrawLineDaoImpl extends DaoImpl<DrawLinePO> implements DrawLineDao 
 					} else {
 						query.add(query.getCriterion(DrawLinePO.COLUMN_STARTTIME_STR, filter.getData(), filter.getOp()));
 					}
-				} else {
-					query.add(query.getCriterion(filter.getField(), (filter.getData()), filter.getOp()));
+					
+				} else if ("applayTime".equals(filter.getField())){
+					
+					String sTime = data.split("-")[0].replaceAll("/", "-")+ " 00:00:00";
+					String eTime = data.split("-")[1].replaceAll("/", "-")+ " 23:59:59";
+
+
+					Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
+					Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
+				
+					Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
+					Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
+					
+					query.add(query.getCriterion(DrawLinePO.COLUMN_APPLAYTIME_STR, eTimestamp, "le"));
+					query.add(query.getCriterion(DrawLinePO.COLUMN_APPLAYTIME_STR, sTimestamp, "ge"));
+					
+					} 
 				}
 			}
 		}
 	}
-}

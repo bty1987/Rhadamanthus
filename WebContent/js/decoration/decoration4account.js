@@ -68,11 +68,13 @@ $(function () {
         com.switchPage(params.historyPage);
     });
 
+    initTab();
     decorationUtils.init();
     decorationUtils.initMaterial(decorationDetail);
 
     initWizard(decorationDetail.discount, decorationDetail);
-
+    
+    
     setTimeout(function () {
         quotationUtils.loadQuotationDetail();
     }, 500);
@@ -106,7 +108,20 @@ $(function () {
     com.focusPage("#submitDecorationAccountBtn").click(function () {
         saveDecorationAccount();
     });
-
+    
+    function initTab(){
+    	var dataPage = params.urlLoadParams.depage;
+        var fanglinMaterial = $('<div></div>').addClass('tab-pane in active').attr('id', 'fanglinMaterialPayments' + dataPage).attr('style', 'margin-left: -12px;');
+        var salesMaterial = $('<div></div>').addClass('tab-pane').attr('id', 'salesMaterialPayments' + dataPage).attr('style', 'margin-left: -12px;');
+        var materialBrand = $('<div></div>').addClass('widget-body-inner').attr('id', 'materialPaymentBrands' + dataPage);
+        
+        com.focusPage("#materialBrand").append(materialBrand);
+        com.focusPage(".tab-content").append(fanglinMaterial).append(salesMaterial);
+        
+        com.focusPage("#fanglinMaterialPayment").attr("href", "#fanglinMaterialPayments" + dataPage);
+        com.focusPage("#salesMaterialPayment").attr("href", "#salesMaterialPayments" + dataPage);
+    }
+	
     function saveDecorationAccount() {
         
         if (com.validate("applyDecorationAccount")) {

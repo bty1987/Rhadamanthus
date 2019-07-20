@@ -295,6 +295,12 @@ var AddReduceDetail = (function(){
 						if(res.quotationFunctionAreaItems && res.quotationFunctionAreaItems.length){
 							$.each(res.quotationFunctionAreaItems,function(i, v){
 								v.quotationItemDes = v.content;
+								
+								if(v.type == 1){ // 自定义项目 , 原金额=增补价=退减价
+								    v.addPrice = v.unitPrice;
+								    v.subPrice = v.unitPrice;
+								}
+								
 								var $liLine = painter.createQuoteModalItem(v, "qfaiId");
 								$liLine.appendTo($ul);
 							});
@@ -350,7 +356,7 @@ var AddReduceDetail = (function(){
 								if(v.quotationFunctionAreaId == funcid) {
 									v.quotationItemDes = v.content;
 									v.discount = "0";
-									var $liLine = painter.createQuoteModalItem(v, "eiId");
+									var $liLine = painter.createQuoteModalItem(v, "eiid");
 									$liLine.appendTo($ul);
 								}
 							});
@@ -598,8 +604,6 @@ var AddReduceDetail = (function(){
 				$line = that.$nowLine.next('.fl-quo-item');
 				var _type = that.$nowLine.find('.typedict').attr('data-type');
 				
-				console.log()
-
 				var args = {
 					"addReduceItem.discount" : that.$nowLine.attr("data-discount"),//是否打折
 					"addReduceItem.ariId" : that.$nowLine.attr('data-ariid'),//增减项报价项Id , 新建无此参数;
@@ -780,7 +784,7 @@ var AddReduceDetail = (function(){
 				["说明:", v.quotationItemDes, "grey quotationItemDes"],
 				["是否打折:", v.discount == 1 ? '打折' : '不打折', "red"]
 			];
-
+			
 			$.each(propertyArr, function (index,value) {
 				var $liProperty = $('<li></li>');
 				if(value[1]){

@@ -9,13 +9,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.communion.dao.CustomerDao;
 import com.fanglin.communion.dao.HouseDao;
 import com.fanglin.communion.dao.VillageDao;
+import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.communion.po.HousePO;
 import com.fanglin.communion.po.VillagePO;
+import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.communion.vo.DepartmentTypeVO;
 import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.communion.vo.DutyVO;
+import com.fanglin.communion.vo.HouseVO;
 import com.fanglin.communion.vo.VillageVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
@@ -56,6 +60,9 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 	
 	@Autowired
 	private HouseDao houseDao;
+	
+	@Autowired
+	private CustomerDao customerDao;
 
 	@Override
 	public void pageCustomerOrigin(Paging paging, List<Filter> filters, String userId) {
@@ -72,6 +79,24 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 		}
 
 		paging.setData(customerOriginVOs);
+	}
+	
+	@Override
+	public void pageCustomerOriginForDesign(Paging paging, List<Filter> filters, String userId) {
+		
+		UserPO user = userDao.queryUserByUserId(userId);
+
+		filters.add(new Filter("designer", String.valueOf(user.getUid()), "eq"));
+
+		List<CustomerOriginPO> customerOriginPOs = customerOriginDao.pageCustomerOrigin(paging, filters, null);
+		List<CustomerOriginVO> customerOriginVOs = new ArrayList<CustomerOriginVO>();
+
+		for (CustomerOriginPO customerOriginPO : customerOriginPOs) {
+			customerOriginVOs.add(customerOriginPOToVO(customerOriginPO));
+		}
+
+		paging.setData(customerOriginVOs);
+		
 	}
 
 	@Override
@@ -124,20 +149,16 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 	}
 	
 	@Override
-	public void pageCustomerOriginForDesign(Paging paging, List<Filter> filters, String userId) {
+	public CustomerOriginVO queryCustomerOriginByCsid(CustomerOriginVO customerOrigin) {
+
+		CustomerOriginPO customerOriginPO = customerOriginDao.get(customerOrigin.getCsid());
+		CustomerOriginVO customerOriginVO = null;
 		
-		UserPO user = userDao.queryUserByUserId(userId);
-
-		filters.add(new Filter("designer", String.valueOf(user.getUid()), "eq"));
-
-		List<CustomerOriginPO> customerOriginPOs = customerOriginDao.pageCustomerOrigin(paging, filters, null);
-		List<CustomerOriginVO> customerOriginVOs = new ArrayList<CustomerOriginVO>();
-
-		for (CustomerOriginPO customerOriginPO : customerOriginPOs) {
-			customerOriginVOs.add(customerOriginPOToVO(customerOriginPO));
+		if(customerOriginPO != null){
+			customerOriginVO = customerOriginPOToVO(customerOriginPO);
 		}
-
-		paging.setData(customerOriginVOs);
+		
+		return customerOriginVO;
 		
 	}
 
@@ -147,7 +168,7 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 
 		CustomerOriginPO customerOriginPO = new CustomerOriginPO();
 
-		BeanUtil.copyProperties(customerOriginVO, customerOriginPO, Arrays.asList("creater", "createTime", "belonger", "department", "region", "designer", "village"));
+		BeanUtil.copyProperties(customerOriginVO, customerOriginPO, Arrays.asList("village", "creater", "belonger", "department", "region", "customer", "house", "designer", "salesman"));
 
 		UserPO userPO = userDao.queryUserByUserId(userId);
 
@@ -199,24 +220,7 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 			customerOriginPO.setVillage(villagePO);
 		}
 
-		BeanUtil.copyPropertie(customerOriginVO, customerOriginPO, Arrays.asList("csid", "creater", "createTime", "belonger", "department", "region", "designer", "village"));
-
-		if (customerOriginVO.getDesigner() != null && customerOriginVO.getDesigner().getUserId() != null) {
-			UserPO designer = userDao.queryUserByUserId(customerOriginVO.getDesigner().getUserId());
-
-			String userName = "";
-			String dept = "";
-			String region = "";
-
-			if (customerOriginPO.getDesigner() != null) {
-				userName = customerOriginPO.getDesigner().getUserName();
-				dept = customerOriginPO.getDesigner().getDept().getName();
-				region = customerOriginPO.getDesigner().getDept().getFatherDept().getName();
-			}
-
-			creatCustomerRecord(customerOriginPO.getCsid(), String.format("原设计师:%s,原设计师部门:%s,原设计师大区:%s,新设计师:%s,新设计师部门:%s,新设计师大区:%s", userName, dept, region, designer.getUserName(), designer.getDept().getName(), designer.getDept().getFatherDept().getName()), (short) 0, userDao.queryUserByUserId(userId));
-			customerOriginPO.setDesigner(designer);
-		}
+		BeanUtil.copyPropertie(customerOriginVO, customerOriginPO, Arrays.asList("village", "creater", "belonger", "department", "region", "customer", "house", "designer", "salesman"));
 
 		customerOriginDao.update(customerOriginPO);
 	}
@@ -255,50 +259,6 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 
 		customerOriginDao.update(customerOriginPO);
 	}
-	
-	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public void bindCustomerOrigin(CustomerOriginVO customerOriginVO) throws FLException {
-		
-		CustomerOriginPO customerOriginPO = customerOriginDao.get(customerOriginVO.getCsid());
-		
-		if(customerOriginPO == null){
-			throw new FLException(330001, "客源不存在");
-		}
-		
-		if(customerOriginPO.getStatus() != 0){
-			throw new FLException(330014, "客源状态不可操作");
-		}
-		
-		Long cid = customerOriginVO.getCid();
-		Long hid = customerOriginVO.getHid();
-		
-		if(cid != null){
-			if(customerOriginPO.getCid() != 0){
-				throw new FLException(330015, "客源不可多次绑定");
-			}
-			
-			customerOriginPO.setCid(cid);
-		}
-		
-		if(hid != null){
-			if(customerOriginPO.getHid() != 0){
-				throw new FLException(330015, "客源不可多次绑定");
-			}
-			HousePO housePO = houseDao.get(hid);
-			customerOriginPO.setHid(hid);
-			customerOriginPO.setVillage(housePO.getVillage());
-			customerOriginPO.setHouseNumber(housePO.getHouseNumber());
-		}
-		
-		if(customerOriginVO.getDesigner() != null && customerOriginVO.getDesigner().getUserId() != null){
-			UserPO designerPO = userDao.queryUserByUserId(customerOriginVO.getDesigner().getUserId());
-			customerOriginPO.setDesigner(designerPO);
-		}
-		
-		customerOriginDao.update(customerOriginPO);
-		
-	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
@@ -334,6 +294,10 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 		if (customerOriginPO == null) {
 			throw new FLException(330001, "客源不存在");
 		}
+		
+		if (customerOriginPO.getStatus() != CustomerOriginPO.STATUS_INIT_INT) {
+			throw new FLException(330014, "客源状态不可操作");
+		}
 
 		if (userDao.queryUserByUserId(userId) == null) {
 			throw new FLException(330002, "客源归属人错误");
@@ -349,29 +313,136 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 
 		creatCustomerRecord(customerOriginPO.getCsid(), String.format("认领人姓名:%s,认领人员工号:%s,认领人电话:%s", userDao.queryUserByUserId(userId).getUserName(), userId, userDao.queryUserByUserId(userId).getPhone()), (short) 1, userDao.queryUserByUserId(userId));
 	}
+	
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void bindCustomerOrigin(CustomerOriginVO customerOriginVO, String userId) throws FLException {
+		
+		CustomerOriginPO customerOriginPO = customerOriginDao.get(customerOriginVO.getCsid());
+		
+		if(customerOriginPO == null){
+			throw new FLException(330001, "客源不存在");
+		}
+		
+		if(customerOriginPO.getStatus() != 0){
+			throw new FLException(330014, "客源状态不可操作");
+		}
+		
+		CustomerPO customerPO = customerDao.get(customerOriginVO.getCustomer().getCid());
+		
+		customerOriginPO.setCustomer(customerPO);
+		customerOriginPO.setPhone(customerOriginVO.getPhone());
+		
+		HousePO housePO = houseDao.get(customerOriginVO.getHouse().getHid());
+		
+		customerOriginPO.setHouse(housePO);
+		customerOriginPO.setVillage(housePO.getVillage());
+		customerOriginPO.setHouseNumber(housePO.getHouseNumber());
+		
+		UserPO designer = userDao.queryUserByUserId(customerOriginVO.getDesigner().getUserId());
+		UserPO salesman = userDao.queryUserByUserId(customerOriginVO.getSalesman().getUserId());
+
+		customerOriginPO.setDesigner(designer);
+		customerOriginPO.setSalesman(salesman);
+		
+		customerOriginDao.update(customerOriginPO);
+		
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void commitCustomerOrigin(CustomerOriginVO customerOrigin) throws FLException {
+		
+		CustomerOriginPO customerOriginPO = customerOriginDao.get(customerOrigin.getCsid());
+		
+		if(customerOriginPO == null){
+			throw new FLException(330001, "客源不存在");
+		}
+		
+		if(customerOriginPO.getStatus() != CustomerOriginPO.STATUS_INIT_INT){
+			throw new FLException(330014, "客源状态不可操作");
+		}
+		
+		if(customerOriginPO.getCustomer() == null){
+			throw new FLException(330015, "客源未绑定");
+		}
+		
+		customerOriginPO.setStatus(CustomerOriginPO.STATUS_COMMIT_INT);
+		
+		customerOriginDao.update(customerOriginPO);
+		
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void confirmCustomerOrigin(CustomerOriginVO customerOrigin) throws FLException {
+
+		CustomerOriginPO customerOriginPO = customerOriginDao.get(customerOrigin.getCsid());
+		
+		if(customerOriginPO == null){
+			throw new FLException(330001, "客源不存在");
+		}
+		
+		if(customerOriginPO.getStatus() != CustomerOriginPO.STATUS_COMMIT_INT){
+			throw new FLException(330014, "客源状态不可操作");
+		}
+		
+		customerOriginPO.setStatus(CustomerOriginPO.STATUS_CONFIRM_INT);
+		
+		customerOriginDao.update(customerOriginPO);
+		
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void cancelCustomerOrigin(CustomerOriginVO customerOrigin) throws FLException {
+
+		CustomerOriginPO customerOriginPO = customerOriginDao.get(customerOrigin.getCsid());
+		List<Short> status = Arrays.asList(CustomerOriginPO.STATUS_COMMIT_INT, CustomerOriginPO.STATUS_CONFIRM_INT, CustomerOriginPO.STATUS_REFUSE_INT);
+		
+		if(customerOriginPO == null){
+			throw new FLException(330001, "客源不存在");
+		}
+		
+		if(!status.contains(customerOriginPO.getStatus())){
+			throw new FLException(330014, "客源状态不可操作");
+		}
+		
+		customerOriginPO.setStatus(CustomerOriginPO.STATUS_INIT_INT);
+		
+		customerOriginDao.update(customerOriginPO);
+		
+	}
 
 	public CustomerOriginVO customerOriginPOToVO(CustomerOriginPO customerOriginPO) {
 
-		CustomerOriginVO customerOriginVO = new CustomerOriginVO(new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO(), new UserVO())), new VillageVO(new CityProperVO()));
+		CustomerOriginVO customerOriginVO = new CustomerOriginVO(new VillageVO(new CityProperVO()), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new CustomerVO(), new HouseVO(), new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO(), new UserVO())),new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO(), new UserVO())));
 
-		BeanUtil.copyProperties(customerOriginPO, customerOriginVO, Arrays.asList("creater", "createTime", "belonger", "department", "region", "designer", "village"));
-		BeanUtil.copyProperties(customerOriginPO.getCreater(), customerOriginVO.getCreater(), Arrays.asList("dept", "duty"));
-		BeanUtil.copyProperties(customerOriginPO.getBelonger(), customerOriginVO.getBelonger(), Arrays.asList("dept", "duty"));
-		BeanUtil.copyProperties(customerOriginPO.getDepartment(), customerOriginVO.getDepartment(), Arrays.asList("type", "fatherDept", "manager"));
-		BeanUtil.copyProperties(customerOriginPO.getRegion(), customerOriginVO.getRegion(), Arrays.asList("type", "fatherDept", "manager"));
-		BeanUtil.copyProperties(customerOriginPO.getDesigner(), customerOriginVO.getDesigner(), Arrays.asList("dept", "duty"));
-
+		BeanUtil.copyProperties(customerOriginPO, customerOriginVO, Arrays.asList("village", "creater", "belonger", "department", "region", "customer", "house", "designer", "salesman"));
+		
 		if (customerOriginPO.getVillage() != null) {
 			BeanUtil.copyProperties(customerOriginPO.getVillage(), customerOriginVO.getVillage(), Arrays.asList("cityProper"));
 			BeanUtil.copyProperties(customerOriginPO.getVillage().getCityProper(), customerOriginVO.getVillage().getCityProper(), Arrays.asList("city"));
 		}
+		
+		BeanUtil.copyProperties(customerOriginPO.getCreater(), customerOriginVO.getCreater(), Arrays.asList("dept", "duty"));
+		BeanUtil.copyProperties(customerOriginPO.getBelonger(), customerOriginVO.getBelonger(), Arrays.asList("dept", "duty"));
+		BeanUtil.copyProperties(customerOriginPO.getDepartment(), customerOriginVO.getDepartment(), Arrays.asList("type", "fatherDept", "manager"));
+		BeanUtil.copyProperties(customerOriginPO.getRegion(), customerOriginVO.getRegion(), Arrays.asList("type", "fatherDept", "manager"));
+		BeanUtil.copyProperties(customerOriginPO.getCustomer(), customerOriginVO.getCustomer());
+		BeanUtil.copyProperties(customerOriginPO.getHouse(), customerOriginVO.getHouse(), Arrays.asList("village"));
+		BeanUtil.copyProperties(customerOriginPO.getDesigner(), customerOriginVO.getDesigner(), Arrays.asList("dept", "duty"));
+		BeanUtil.copyProperties(customerOriginPO.getSalesman(), customerOriginVO.getSalesman(), Arrays.asList("dept", "duty"));
 
 		if (customerOriginPO.getDesigner() != null) {
 			BeanUtil.copyProperties(customerOriginPO.getDesigner().getDept(), customerOriginVO.getDesigner().getDept(), Arrays.asList("type", "fatherDept", "manager"));
 			BeanUtil.copyProperties(customerOriginPO.getDesigner().getDept().getFatherDept(), customerOriginVO.getDesigner().getDept().getFatherDept(), Arrays.asList("type", "fatherDept", "manager"));
 		}
 
-		customerOriginVO.setCreateTime(customerOriginPO.getCreateTime());
+		if (customerOriginPO.getSalesman() != null) {
+			BeanUtil.copyProperties(customerOriginPO.getSalesman().getDept(), customerOriginVO.getSalesman().getDept(), Arrays.asList("type", "fatherDept", "manager"));
+			BeanUtil.copyProperties(customerOriginPO.getSalesman().getDept().getFatherDept(), customerOriginVO.getSalesman().getDept().getFatherDept(), Arrays.asList("type", "fatherDept", "manager"));
+		}
 
 		return customerOriginVO;
 	}

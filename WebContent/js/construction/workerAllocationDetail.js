@@ -1,10 +1,8 @@
 $(function () {
     var constructionNode = {};
-
     var workerAllocationDetail = {
 
         constructionSchedules: {},
-
         wizardSept: {
             "1": false,
             "2": false,
@@ -59,7 +57,6 @@ $(function () {
     com.focusPage('[data-rel=popover]').popover({html: true});
 
     function initWizardSept(operate, schedule) {
-
         addActive(schedule);
 
         var elementPostData = {
@@ -85,8 +82,11 @@ $(function () {
 
             var otherSuccessBtn = com.focusPage("#" + otherename + "Success");
             var othereFailBtn = com.focusPage("#" + otherename + "Fail");
+            var othereValidBtn = com.focusPage("#" + otherename +"Valid");
+            var otherePassdBtn = com.focusPage("#" + otherename +"Pass");
 
             updatastatusDiv(otherStatus, otherename);
+            updatePaymentStatus(constructionSchedule.checkout, otherename);
 
             otherSuccessBtn.click(function () {
 
@@ -113,6 +113,34 @@ $(function () {
                     updatastatusDiv(2, otherename);
                 });
 
+                return false;
+            });
+
+            othereValidBtn.click(function () {
+
+                var options = {
+                    "constructionSchedule.csid": constructionSchedule.csid,
+                    "constructionSchedule.checkout": 0
+                };
+
+                com.post(api.construction.checkoutConstructionSchedule, options, function (res) {
+                    com.showAlert(com.info, "操作成功");
+                    updatePaymentStatus(0, otherename);
+                });
+                return false;
+            });
+
+            otherePassdBtn.click(function () {
+
+               var options = {
+                   "constructionSchedule.csid": constructionSchedule.csid,
+                   "constructionSchedule.checkout": 1
+               };
+
+                com.post(api.construction.checkoutConstructionSchedule, options, function (res) {
+                    com.showAlert(com.info, "操作成功");
+                    updatePaymentStatus(1, otherename);
+                });
                 return false;
             });
 
@@ -161,6 +189,16 @@ $(function () {
             $("<span></span>").addClass("label label-info").text("开工").appendTo(statusDiv);
         } else {
             $("<span></span>").addClass("label label-success").text("完工").appendTo(statusDiv);
+        }
+    }
+
+    function updatePaymentStatus(checkout, statusDiv) {
+        var statusDiv = com.focusPage("#" + statusDiv + "paymentStatus").html("");
+
+        if (checkout == 0) {
+            $("<span></span>").addClass("label label-grey").text("验证").appendTo(statusDiv);
+        }else{
+            $("<span></span>").addClass("label label-danger").text("通过").appendTo(statusDiv);
         }
     }
 
@@ -283,11 +321,20 @@ $(function () {
         var paneWorkerLabDiv = $("<div></div>").attr("id", name + "Status").addClass("col-sm-2").appendTo(paneWorkerGroupF);
         var paneWorkerSpaceTh = $("<div></div>").addClass("space-4").appendTo(paneWorkerGroupF);
 
+        //款项状态
+        var paneWorkerGroupF = $("<div></div>").addClass("form-group").appendTo(paneWorkerGroup);
+        var paneWorkerLab = $("<label></label>").addClass("col-sm-2 control-label no-padding-right").attr("for", name + "paymentStatus").html("款项验证").appendTo(paneWorkerGroupF);
+        var paneWorkerLabDiv = $("<div></div>").attr("id", name + "paymentStatus").addClass("col-sm-2").appendTo(paneWorkerGroupF);
+        var paneWorkerSpaceTh = $("<div></div>").addClass("space-4").appendTo(paneWorkerGroupF);
+
         var paneWorkerGroupFive = $("<div></div>").addClass("form-group").attr("id", name + "Operate").appendTo(paneWorkerGroup);
         var paneWorkerSmFive = $("<div></div>").addClass("col-sm-offset-2").appendTo(paneWorkerGroupFive);
 
+        //按钮
         var paneWorkerBtnS = $("<button></button>").attr("id", name + "Success").addClass("btn btn-xs btn-info").html("开工").attr("style", "margin-right:5px").appendTo(paneWorkerSmFive);
         var paneWorkerBtnS = $("<button></button>").attr("id", name + "Fail").addClass("btn btn-xs btn-success").html("完工").attr("style", "margin-right:5px").appendTo(paneWorkerSmFive);
+        var paneWorkerBtnS = $("<button></button>").attr("id", name + "Valid").addClass("btn btn-xs btn-yellow ").html("验证").attr("style", "margin-right:5px").appendTo(paneWorkerSmFive);
+        var paneWorkerBtnS = $("<button></button>").attr("id", name + "Pass").addClass("btn btn-xs btn-danger ").html("通过").attr("style", "margin-right:5px").appendTo(paneWorkerSmFive);
         var paneWorkerGroupS = $("<div></div>").addClass("form-group").appendTo(paneWorkerForm);
         var paneWorkerSmS = $("<div></div>").addClass("col-sm-12").appendTo(paneWorkerGroupS);
         var paneWorkerHTh = $("<h3></h3>").addClass("header smaller lighter blue").appendTo(paneWorkerSmS);

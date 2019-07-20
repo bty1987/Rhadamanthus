@@ -147,8 +147,8 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 	public List<WorkerSalaryVO> queryWorkerSalary(WorkerSalaryVO workerSalaryVO) {
 
 		List<WorkerSalaryPO> workerSalaryPOs = new ArrayList<WorkerSalaryPO>();
-
-		workerSalaryPOs = workerSalaryDao.queryWorkerSalary(workerSalaryVO.getUser().getUserId(), constructionScheduleDao.get(workerSalaryVO.getCsid()).getCid());
+		
+		workerSalaryPOs = workerSalaryDao.queryWorkerSalary(workerSalaryVO.getUser().getUserId(), workerSalaryVO.getCsid());
 
 		List<WorkerSalaryVO> workerSalarys = new ArrayList<WorkerSalaryVO>();
 

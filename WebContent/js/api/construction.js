@@ -48,6 +48,7 @@ $.extend(api, {construction: {
     queryConstructionScheduleByOrderIdASchedule: {url: "queryConstructionScheduleByOrderIdASchedule.do"},
     beginConstructionSchedule: {url: "beginConstructionSchedule.do"},
     finishConstructionSchedule: {url: "finishConstructionSchedule.do"},
+    checkoutConstructionSchedule:{url: "checkoutConstructionSchedule.do"},
 
     queryConstructionDrawingByOrderId: {url: "queryConstructionDrawingByOrderId.do"},
     queryConstructionDrawingByCid: {url: "queryConstructionDrawingByCid.do"},

@@ -57,7 +57,8 @@ CREATE TABLE `paymentscaleitem` (
   `psiid` int(11) NOT NULL AUTO_INCREMENT,
   `psid` int(11) NOT NULL,
   `name` varchar(32) NOT NULL,
-  `scale` tinyint(1) NOT NULL,
+  `scale` int(3) NOT NULL,
+  `sort` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`psiid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='款项比例项';
 

@@ -12,7 +12,8 @@ $.extend(api.index, {
     versionIndex: {url: "/version.html"},
     faqIndex: {url: "/faq.html"},
     homeIndex:{url: "/home-antv.html"},
-    companyConfig:{url: "/views/system/companyConfig.html"}
+    companyConfig:{url: "/views/system/companyConfig.html"},
+    license: {url: "/license.html"}
 });
 
 $.extend(api, {system: {

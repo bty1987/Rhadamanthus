@@ -86,7 +86,7 @@ public class MaterialActivityAction extends BaseListAction {
 	@Action(value = "deliveMaterialActivityItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deliveMaterialActivityItem() throws FLException {
 
-		materialActivityService.deliveMaterialActivityItem(materialActivityItem);
+		materialActivityService.deliveMaterialActivityItem(materialActivityItem, queryUserId(), queryUserName());
 
 		return SUCCESS;
 	}

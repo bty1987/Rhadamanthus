@@ -133,10 +133,10 @@ jQuery(function ($) {
     })();
 
     var searcher = new Searcher();
-    searcher.init(["c_orderId", "c_designer", "c_salesman"], "condList", api.construction.pageDrawLineForPlan, function (data) {
+    searcher.init(["c_orderId", "c_designer", "c_salesman", "c_applayTime"], "condList", api.construction.pageDrawLineForPlan, function (data) {
         displayFunc.init('resultList', data);
     }, "pagenation", "drawLineApplyPostData");
-    
+
     com.focusPage("#condList").append('<button id="showDrawLineApplyInfos" style="marg" class="btn btn-xs btn-yellow btn-search">申请信息</button>');
     
     function showEdit(v) {

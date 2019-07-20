@@ -20,7 +20,7 @@ public interface MaterialActivityService {
 
 	public int receiveMaterialActivityItem(MaterialActivityItemVO materialActivityItemVO, String userId,String userName) throws FLException;
 
-	public int deliveMaterialActivityItem(MaterialActivityItemVO materialActivityItemVO) throws FLException;
+	public int deliveMaterialActivityItem(MaterialActivityItemVO materialActivityItemVO, String userId, String userName) throws FLException;
 
 	public int unrefundMaterialActivityItem(MaterialActivityItemVO materialActivityItemVO) throws FLException;
 

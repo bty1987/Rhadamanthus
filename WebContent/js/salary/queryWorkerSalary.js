@@ -106,10 +106,7 @@ jQuery(function ($) {
             },
 
             Bindingdate: function () {
-                project.items.riqi.daterangepicker(com.dateramgepickerdefault).prev().on(ace.click_event, function () {
-                    $(this).next().focus();
-                });
-                $('div.daterangepicker.dropdown-menu.opensright').css('z-index', 9991);
+                com.datetime(project.items.riqi, 'date', true);
             },
 
             BindingXfjianpan: function (id) {

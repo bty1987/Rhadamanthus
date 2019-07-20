@@ -36,6 +36,8 @@ public class DrawLinePO implements Serializable {
 	public static final String COLUMN_STARTTIME_STR = "startTime";
 
 	public static final String COLUMN_ENDTIME_STR = "endTime";
+	
+	public static final String COLUMN_APPLAYTIME_STR = "applayTime";
 
 	public static final short STATUS_QUEUE_INT = 0;
 

@@ -7,14 +7,15 @@ import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.communion.po.DepartmentPO;
+import com.fanglin.communion.po.HousePO;
 import com.fanglin.communion.po.VillagePO;
 import com.fanglin.personel.po.UserPO;
 
@@ -24,19 +25,21 @@ public class CustomerOriginPO implements Serializable {
 
 	private static final long serialVersionUID = 5940806639925973280L;
 
-	public static final String COLUMN_BUID_STR = "belonger.uid";
-
-	public static final String COLUMN_BELONGER_STR = "belonger";
+	public static final String COLUMN_BELONGER_STR = "belonger.uid";
 	
 	public static final String COLUMN_DESIGNER_STR = "designer.uid";
 	
-	public static final short STATUS_INIT_INT = 0;  //初始
+	public static final short STATUS_INIT_INT = 0;  //初始 
 	
-	public static final short STATUS_APPROVE_INT = 1;
+	public static final short STATUS_COMMIT_INT = 1; //提交
 	
-	public static final short STATUS_CREATE_INT = 2;
+	public static final short STATUS_CONFIRM_INT = 2; //确认
 	
-	public static final short STATUS_INVALID_INT = 3;
+	public static final short STATUS_APPROVE_INT = 3; //审批
+	
+	public static final short STATUS_BIND_INT = 4; //绑定
+	
+	public static final short STATUS_REFUSE_INT = 5; //拒绝
 
 	private long csid;
 
@@ -53,6 +56,12 @@ public class CustomerOriginPO implements Serializable {
 	private String price;
 
 	private String grade;
+	
+	private VillagePO village;
+	
+	private String houseNumber;
+	
+	private float buildArea;
 
 	private UserPO creater;
 
@@ -64,21 +73,17 @@ public class CustomerOriginPO implements Serializable {
 
 	private DepartmentPO region;
 	
-	private UserPO designer;
-	
 	private short status;
-
+	
 	private String comment;
 	
-	private VillagePO village;
+	private CustomerPO customer;
 	
-	private String houseNumber;
+	private HousePO house;
 	
-	private float buildArea;
+	private UserPO designer;
 	
-	private long cid;
-	
-	private long hid;
+	private UserPO salesman;
 	
 	private String orderId;
 
@@ -86,14 +91,17 @@ public class CustomerOriginPO implements Serializable {
 		super();
 	}
 
-	public CustomerOriginPO(UserPO creater, UserPO belonger, DepartmentPO department, DepartmentPO region, UserPO designer, VillagePO village) {
+	public CustomerOriginPO(VillagePO village, UserPO creater, UserPO belonger, DepartmentPO department, DepartmentPO region, CustomerPO customer, HousePO house, UserPO designer, UserPO salesman) {
 		super();
+		this.village = village;
 		this.creater = creater;
 		this.belonger = belonger;
 		this.department = department;
 		this.region = region;
+		this.customer = customer;
+		this.house = house;
 		this.designer = designer;
-		this.village = village;
+		this.salesman = salesman;
 	}
 
 	@Id
@@ -105,15 +113,6 @@ public class CustomerOriginPO implements Serializable {
 
 	public void setCsid(long csid) {
 		this.csid = csid;
-	}
-	
-	@Column(name = "cid")
-	public long getCid() {
-		return cid;
-	}
-
-	public void setCid(long cid) {
-		this.cid = cid;
 	}
 
 	@Column(name = "name")
@@ -179,67 +178,8 @@ public class CustomerOriginPO implements Serializable {
 		this.grade = grade;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "cuid", referencedColumnName = "uid")
-	public UserPO getCreater() {
-		return creater;
-	}
-
-	public void setCreater(UserPO creater) {
-		this.creater = creater;
-	}
-
-	@Column(name = "createTime")
-	public Timestamp getCreateTime() {
-		return createTime;
-	}
-
-	public void setCreateTime(Timestamp createTime) {
-		this.createTime = createTime;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "buid", referencedColumnName = "uid")
-	public UserPO getBelonger() {
-		return belonger;
-	}
-
-	public void setBelonger(UserPO belonger) {
-		this.belonger = belonger;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "did", referencedColumnName = "dId")
-	public DepartmentPO getDepartment() {
-		return department;
-	}
-
-	public void setDepartment(DepartmentPO department) {
-		this.department = department;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "rdid", referencedColumnName = "dId")
-	public DepartmentPO getRegion() {
-		return region;
-	}
-
-	public void setRegion(DepartmentPO region) {
-		this.region = region;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "duid", referencedColumnName = "uid")
-	public UserPO getDesigner() {
-		return designer;
-	}
-
-	public void setDesigner(UserPO designer) {
-		this.designer = designer;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "vid", referencedColumnName = "vid")
+	@ManyToOne
+	@JoinColumn(nullable = true, name = "vid", referencedColumnName="vid")
 	public VillagePO getVillage() {
 		return village;
 	}
@@ -266,13 +206,53 @@ public class CustomerOriginPO implements Serializable {
 		this.buildArea = buildArea;
 	}
 
-	@Column(name = "hid")
-	public long getHid() {
-		return hid;
+	@ManyToOne
+	@JoinColumn(nullable = true, name = "cuid", referencedColumnName="uid")
+	public UserPO getCreater() {
+		return creater;
 	}
 
-	public void setHid(long hid) {
-		this.hid = hid;
+	public void setCreater(UserPO creater) {
+		this.creater = creater;
+	}
+
+	@Column(name = "createTime")
+	public Timestamp getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Timestamp createTime) {
+		this.createTime = createTime;
+	}
+
+	@ManyToOne
+	@JoinColumn(nullable = true, name = "buid", referencedColumnName="uid")
+	public UserPO getBelonger() {
+		return belonger;
+	}
+
+	public void setBelonger(UserPO belonger) {
+		this.belonger = belonger;
+	}
+
+	@ManyToOne
+	@JoinColumn(nullable = true, name = "did", referencedColumnName="did")
+	public DepartmentPO getDepartment() {
+		return department;
+	}
+
+	public void setDepartment(DepartmentPO department) {
+		this.department = department;
+	}
+
+	@ManyToOne
+	@JoinColumn(nullable = true, name = "rdid", referencedColumnName="did")
+	public DepartmentPO getRegion() {
+		return region;
+	}
+
+	public void setRegion(DepartmentPO region) {
+		this.region = region;
 	}
 
 	@Column(name = "status")
@@ -291,6 +271,46 @@ public class CustomerOriginPO implements Serializable {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	@ManyToOne
+	@JoinColumn(nullable = true, name = "cid", referencedColumnName="cid")
+	public CustomerPO getCustomer() {
+		return customer;
+	}
+
+	public void setCustomer(CustomerPO customer) {
+		this.customer = customer;
+	}
+
+	@ManyToOne
+	@JoinColumn(nullable = true, name = "hid", referencedColumnName="hid")
+	public HousePO getHouse() {
+		return house;
+	}
+
+	public void setHouse(HousePO house) {
+		this.house = house;
+	}
+
+	@ManyToOne
+	@JoinColumn(nullable = true, name = "duid", referencedColumnName="uid")
+	public UserPO getDesigner() {
+		return designer;
+	}
+
+	public void setDesigner(UserPO designer) {
+		this.designer = designer;
+	}
+
+	@ManyToOne
+	@JoinColumn(nullable = true, name = "suid", referencedColumnName="uid")
+	public UserPO getSalesman() {
+		return salesman;
+	}
+
+	public void setSalesman(UserPO salesman) {
+		this.salesman = salesman;
 	}
 
 	@Column(name = "orderId")

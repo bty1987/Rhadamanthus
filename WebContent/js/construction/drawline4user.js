@@ -28,7 +28,7 @@ jQuery(function ($) {
         com.closeTip();
     });
 
-    com.initTypeahead('supervisor', api.personel.queryUserByPinyin, "pinyinName", {"departmentType.name": "工程部", "user.status": 0}, "userBases", "userId", "currentName", null);
+    com.initTypeahead('supervisor', api.personel.queryUserByPinyin, "pinyinName", {"departmentType.name": "工程部", "user.status": 0}, "autoFillKeyValue", "key", "value", null);
 
     com.post(api.ds.construction, {}, function (res) {
         drawline.constructionNodes = res.constructionSchedule.split("key", "value");
@@ -146,7 +146,7 @@ jQuery(function ($) {
             com.showAlert(com.info, "操作成功");
             searcher.doSearch();
             
-            drawline.items.modals.setupModal.modal("hide");
+            drawline.modals.setupModal.modal("hide");
         });
     }
 

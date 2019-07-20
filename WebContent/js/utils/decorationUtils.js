@@ -1,10 +1,10 @@
 var decorationUtils = {
     initMaterial: function (decorationDetail) {
-
-        var $fanglinMaterial = com.focusPage('#fanglinMaterialPayment').html("");
-        var $salesMaterialPayment = com.focusPage('#salesMaterialPayment').html("");
-        var $brand = com.focusPage('#materialPaymentBrand').html("");
-
+    	var dataPage = params.urlLoadParams.depage;
+        var $fanglinMaterial = com.focusPage('#fanglinMaterialPayments' + dataPage).html("");
+        var $salesMaterialPayment = com.focusPage('#salesMaterialPayments' + dataPage).html("");
+        var $brand = com.focusPage('#materialPaymentBrands' + dataPage).html("");
+        
         var $ulfanglin = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable').appendTo($fanglinMaterial);
         var $ulsales = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable').appendTo($salesMaterialPayment);
         var $ulbrand = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable').appendTo($brand);
@@ -79,8 +79,8 @@ var decorationUtils = {
 
                 if ($materialBrands.length > 0) {
 
-                    var $materialBrand = $($materialBrands[0]);
-                    var $brandTotal = $($materialBrand.find("[name='total']")[0]);
+                    var $materialBrand = com.focusPage($materialBrands[0]);
+                    var $brandTotal = com.focusPage($materialBrand.find("[name='total']")[0]);
 
                     var _value = parseFloat($brandTotal.attr('value'));
                     var _refer = [2, 3].contains(v.paymentType) ? v.referMoney : -v.referMoney;
@@ -171,12 +171,12 @@ var decorationUtils = {
 
                 $liLine.append($h4).append($ulProperty).append($ulStyle).append($divBtnBlock).appendTo($ulsales);
 
-                var $salesBrands = $("[name='" + v.sales.brand + "']");
+                var $salesBrands = com.focusPage("[name='" + v.sales.brand + "']");
 
                 if ($salesBrands.length > 0) {
 
-                    var $salesBrand = $($salesBrands[0]);
-                    var $brandTotal = $($salesBrand.find("[name='total']")[0]);
+                    var $salesBrand = com.focusPage($salesBrands[0]);
+                    var $brandTotal = com.focusPage($salesBrand.find("[name='total']")[0]);
 
                     var _value = parseFloat($brandTotal.attr('value'));
                     var _refer = [2, 3].contains(v.type) ? v.referMoney : -v.referMoney;
@@ -208,14 +208,14 @@ var decorationUtils = {
         }
 
         if ($ulfanglin.children("li").length == 0 && $ulsales.children("li").length == 0) {
-            noData("fanglinMaterialPayment");
-            noData("salesMaterialPayment");
-            noData("materialPaymentBrand");
+            noData("fanglinMaterialPayments" + dataPage);
+            noData("salesMaterialPayments" + dataPage);
+            noData("materialPaymentBrands" + dataPage);
         } else if ($ulfanglin.children("li").length != 0 && $ulsales.children("li").length == 0) {
-            noData("salesMaterialPayment");
+            noData("salesMaterialPayments" + dataPage);
             totalData();
         } else if ($ulfanglin.children("li").length == 0 && $ulsales.children("li").length != 0) {
-            noData("fanglinMaterialPayment");
+            noData("fanglinMaterialPayments" + dataPage);
             totalData();
         } else {
             totalData();
@@ -224,7 +224,7 @@ var decorationUtils = {
         decorationDetail.materialTotal = $total;
 
         function noData(div) {
-            var $resultList = $('#' + div).html('');
+            var $resultList = com.focusPage('#' + div).html('');
             var $zone = $('<div></div>').addClass('dropzone dz-clickable').css('margin', '20px').css('border', '0px').appendTo($resultList);
             var $mesg = $('<div></div>').addClass('dz-default dz-message').appendTo($zone);
             var $span = $('<span></span>').text('无可用数据提供').appendTo($mesg);
@@ -259,7 +259,7 @@ var decorationUtils = {
 
         var uiPgDiv = $("<div></div>").addClass("ui-pg-div").css("padding-left", "8px").css("padding-bottom", "10px").appendTo(widgetBody);
 
-        com.focusPage("#dactivity_" + _decorationActivity.daId).attr("status", _decorationActivity.status)
+        com.focusPage("#dactivity_" + _decorationActivity.daId).attr("status", _decorationActivity.status);
 
         if (uiBtnMethod != null) {
             uiBtnMethod(uiPgDiv, _decorationActivity);
@@ -487,8 +487,6 @@ var decorationUtils = {
                                 if (v.oneType == 0) {
                                     addMoney += v.referMoney;
                                 }
-                            }
-                            if (v.twoType == 3) {
                                 if (v.oneType == 1) {
                                     reduceMoney += v.referMoney;
                                 }
@@ -1026,9 +1024,11 @@ var decorationUtils = {
     }, initAddreduce: function (orderId, type) {
 
         var $resList = com.focusPage('#resLists').html('');
-        var $table = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable ');
-
-        $resList.append($table);
+        var $table = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable').css('padding-top', '30px');
+        var $div = $('<div></div>').addClass('col-md-11');
+        var $ai = $('<button id="print"><i class="icon-print bigger-120"></i>打印</button>').addClass('btn btn-info');
+        
+        $resList.append($div).append($ai).append($table);
         var discount = null;
         var qid = null;
         var versionid = null;
@@ -1052,7 +1052,7 @@ var decorationUtils = {
                     var $li = $('<li style="margin-bottom: 0px;"></li>').addClass('widget-box  collapsed item-orange clearfix');
 
 
-                    var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.content));
+                    var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue'));
                     var $ulProperty = $('<ul style="margin-bottom: 10px;"></ul>').addClass('list-unstyled fl-inline-list clearfix');
                     var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons widget-toolbar no-border');
 
@@ -1061,6 +1061,14 @@ var decorationUtils = {
                     var $wbody = $('<div style="border: 0px solid transparent;"></div>').addClass('widget-body');
                     var $winner = $('<div style="display: block;"></div>').addClass('widget-body-inner');
 
+                    var $label = $('<label></label>');
+        			var $input = $('<input>').attr({
+        				"type": "checkbox",
+        				"name": "arids",
+        				"class": "ace ace-checkbox-2"
+        			}).val(v.arId);
+        			var $span = $('<span></span>').addClass('lbl blue bigger-150').text(v.content);
+                    
                     var propertyArr = [
                         ["总价:", v.total, "red"],
                         ["类别:", typeDict[v.type + ''], "red"],
@@ -1076,9 +1084,11 @@ var decorationUtils = {
                         $liProperty.appendTo($ulProperty);
                     });
                     var $uul = $('<table></table>').addClass('table').attr("style", "margin-bottom: 0px").appendTo($winner).appendTo($wbody);
-                    var $thead = $('<thead><tr><th>序号</th><th>工程预算量</th><th>名称</th><th>类型</th><th>工种</th><th>功能区</th><th>单位</th><th>单价</th><th>总价</th></tr></thead>');
+                    var $thead = $('<thead><tr><th>序号</th><th>工程预算量</th><th>名称</th><th>类型</th><th>工种</th><th>功能区</th><th>单位</th><th>单价</th><th>是否配比</th><th>总价</th></tr></thead>');
 
                     var $tbody = $('<tbody></tbody>');
+                    
+                    $label.append($input).append($span).appendTo($h3);
                     $uul.append($thead).append($tbody);
 
                     com.post(api.addReduce.queryAddReduceItemByAddReduceId, {"addReduce.arId": v.arId}, function (ress) {
@@ -1088,7 +1098,7 @@ var decorationUtils = {
                                 var index = j + 1;
                                 var $tr = $('<tr><th scope="row">' + index + '</th><th>' + r.num + '</th><th>' + r.itemName + '</th><th>' + (type[r.type]) + '</th>' +
                                     '<th>' + r.workType + '</th><th>' + (r.quotationFunctionAreaName ? r.quotationFunctionAreaName : "---") + '</th>' +
-                                    '<th>' + r.measurementUnit + '</th><th>' + r.unitPrice + '</th><th>'
+                                    '<th>' + r.measurementUnit + '</th><th>' + r.unitPrice + '</th><th>' + (r.unitPrice + '</th><th>'+ r.discount == 0 ? "不打折(配比)" : r.discount == 1 ? "打折(配比)" : r.discount == 2 ? "不打折(非配比)" : "打折(非配比)") +'</th><th>'
                                     + (Math.round((r.unitPrice) * (r.num))) + '</th></tr>');
 
                                 $tbody.append($tr);
@@ -1101,6 +1111,20 @@ var decorationUtils = {
 
                     $table.append($li);
                 });
+                
+            	//打印按钮
+            	com.focusPage('#print').click(function(){
+            		var $inputs = com.focusPage('input[name="arids"]:checked');
+            		var url = api.index.addReduceOutputIndex.url ;
+            		var _addReduceIds = [];
+            		if(!$inputs.length) return;
+            		$.each($inputs, function(i, v){
+            			_addReduceIds.push(parseInt($(v).val()));
+            		});
+            		params.addReduceIds = _addReduceIds;
+            		com.popup("增减项打印",url,null,null,true);
+            	});
+                
             } else {
                 $resList.html('');
                 var $zone = $('<div></div>').addClass('dropzone dz-clickable').css('margin', '20px').css('border', '0px').appendTo($resList);

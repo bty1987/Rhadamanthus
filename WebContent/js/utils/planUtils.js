@@ -42,18 +42,9 @@ var planUtils = {
             itemTemplate: '<div id="${fileID}" class="uploadify-queue-item" style="position:absolute;top:-30px;width:200px;left:-200px;">\r\n\t\t\t<div class="cancel">\r\n\t\t\t\t<a href="javascript:$(\'#${instanceID}\').uploadify(\'cancel\', \'${fileID}\')">X</a>\r\n\t\t\t</div>\r\n\t\t\t<span class="fileName">${fileName} (${fileSize})</span><span class="data"></span>\r\n\t\t\t<div class="uploadify-progress">\r\n\t\t\t\t<div class="uploadify-progress-bar"><!--Progress Bar--></div>\r\n\t\t\t</div>\r\n\t\t</div>'
         });
     },
-    bindDateRangePicker: function (tag, index) {
-        com.focusPage(tag).on("focus", function (e) {
-            $(".dropdown-menu").css("z-index", index);
-        }).daterangepicker(com.dateramgepickerdefault).prev().on(ace.click_event, function () {
-            $(this).next().focus();
-        });
-    },
-    
     bindExecuteTimeBtn: function (tag) {
     	com.datetime(tag, "time");
     },
-    
     TimeComparison: function (executeTime, m) {
         var curTime = new Date();
         curTime.setTime(curTime.setMinutes(curTime.getMinutes() + m));
@@ -86,8 +77,8 @@ var planUtils = {
         Bdivn.append(Binputs);
         Bdivs.append(Blabels).append(Bdivn);
         Bdivs.appendTo(plugins);
-
-        planUtils.bindDateRangePicker("#"+"id"+ida, 1070);
+        
+        com.datetime(Binputs, "date");
     },
     PluginsC: function (ida) {
         var Cdivs = $('<div></div>').addClass('form-group').attr('id',"hupload");

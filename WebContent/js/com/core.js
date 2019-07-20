@@ -793,7 +793,7 @@
         var _container = com.focusPage(container).html("").append($(_holder));
         
         var _width = (_holder.width() > 521 ? _holder.width() + 50 : 521);
-        var _height = $(window).height() * 0.8;
+        var _height = _container.height() > $(window).height() * 0.8 ? $(window).height() * 0.8 : _container.height() + 50;
         
         var options = {
             type: 1,

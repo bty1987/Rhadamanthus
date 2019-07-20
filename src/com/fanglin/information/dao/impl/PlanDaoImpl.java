@@ -1,6 +1,8 @@
 package com.fanglin.information.dao.impl;
 
 import java.math.BigInteger;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.criterion.Restrictions;
@@ -10,6 +12,7 @@ import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.information.dao.PlanDao;
 import com.fanglin.information.po.PlanPO;
+import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
 @Repository("planDao")
@@ -83,6 +86,20 @@ public class PlanDaoImpl extends DaoImpl<PlanPO> implements PlanDao {
 
 				if ("taskName".equals(field)) {
 					query.add(Restrictions.eq("task.tid", Long.parseLong(data)));
+				} else if ("planTimeDateRange".equals(field)) {
+					String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
+					String eTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
+
+					Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
+					Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
+
+					Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
+					Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
+					
+					query.add(query.getCriterion("createTime", eTimestamp, "le"));
+					query.add(query.getCriterion("createTime", sTimestamp, "ge"));
+				} else if ("status".equals(field)) {
+					query.add(query.getCriterion("status", Short.valueOf(data), filter.getOp()));
 				}
 			}
 		}

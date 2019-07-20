@@ -5,7 +5,9 @@ import java.sql.Timestamp;
 
 import org.apache.struts2.json.annotations.JSON;
 
+import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.communion.vo.DepartmentVO;
+import com.fanglin.communion.vo.HouseVO;
 import com.fanglin.communion.vo.VillageVO;
 import com.fanglin.personel.vo.UserBaseVO;
 
@@ -14,14 +16,12 @@ public class CustomerOriginVO implements Serializable {
 	private static final long serialVersionUID = -4556862985248539773L;
 
 	private Long csid;
-	
-	private Long cid;
 
 	private String name;
-
-	private String phone;
 	
 	private String gender;
+
+	private String phone;
 
 	private String purpose;
 
@@ -30,6 +30,12 @@ public class CustomerOriginVO implements Serializable {
 	private String price;
 
 	private String grade;
+	
+	private VillageVO village;
+	
+	private String houseNumber;
+	
+	private Float buildArea;
 
 	private UserBaseVO creater;
 
@@ -41,34 +47,35 @@ public class CustomerOriginVO implements Serializable {
 
 	private DepartmentVO region;
 	
-	private UserBaseVO designer;
-	
-	private VillageVO village;
-	
-	private String houseNumber;
-	
-	private Float buildArea;
-	
-	private Long hid;
-	
 	private Short status;
 
 	private String comment;
+	
+	private CustomerVO customer;
+	
+	private HouseVO house;
+	
+	private UserBaseVO designer;
+	
+	private UserBaseVO salesman;
 	
 	private String orderId;
 	
 	public CustomerOriginVO() {
 		super();
 	}
-	
-	public CustomerOriginVO(UserBaseVO creater, UserBaseVO belonger, DepartmentVO department, DepartmentVO region, UserBaseVO designer, VillageVO village) {
+
+	public CustomerOriginVO(VillageVO village, UserBaseVO creater, UserBaseVO belonger, DepartmentVO department, DepartmentVO region, CustomerVO customer, HouseVO house, UserBaseVO designer, UserBaseVO salesman) {
 		super();
+		this.village = village;
 		this.creater = creater;
 		this.belonger = belonger;
 		this.department = department;
 		this.region = region;
+		this.customer = customer;
+		this.house = house;
 		this.designer = designer;
-		this.village = village;
+		this.salesman = salesman;
 	}
 
 	public Long getCsid() {
@@ -77,14 +84,6 @@ public class CustomerOriginVO implements Serializable {
 
 	public void setCsid(Long csid) {
 		this.csid = csid;
-	}
-	
-	public Long getCid() {
-		return cid;
-	}
-
-	public void setCid(Long cid) {
-		this.cid = cid;
 	}
 
 	public String getName() {
@@ -143,6 +142,30 @@ public class CustomerOriginVO implements Serializable {
 		this.grade = grade;
 	}
 
+	public VillageVO getVillage() {
+		return village;
+	}
+
+	public void setVillage(VillageVO village) {
+		this.village = village;
+	}
+
+	public String getHouseNumber() {
+		return houseNumber;
+	}
+
+	public void setHouseNumber(String houseNumber) {
+		this.houseNumber = houseNumber;
+	}
+
+	public Float getBuildArea() {
+		return buildArea;
+	}
+
+	public void setBuildArea(Float buildArea) {
+		this.buildArea = buildArea;
+	}
+
 	public UserBaseVO getCreater() {
 		return creater;
 	}
@@ -184,46 +207,6 @@ public class CustomerOriginVO implements Serializable {
 		this.region = region;
 	}
 
-	public UserBaseVO getDesigner() {
-		return designer;
-	}
-
-	public void setDesigner(UserBaseVO designer) {
-		this.designer = designer;
-	}
-
-	public VillageVO getVillage() {
-		return village;
-	}
-
-	public void setVillage(VillageVO village) {
-		this.village = village;
-	}
-
-	public String getHouseNumber() {
-		return houseNumber;
-	}
-
-	public void setHouseNumber(String houseNumber) {
-		this.houseNumber = houseNumber;
-	}
-
-	public Float getBuildArea() {
-		return buildArea;
-	}
-
-	public void setBuildArea(Float buildArea) {
-		this.buildArea = buildArea;
-	}
-
-	public Long getHid() {
-		return hid;
-	}
-
-	public void setHid(Long hid) {
-		this.hid = hid;
-	}
-
 	public Short getStatus() {
 		return status;
 	}
@@ -238,6 +221,38 @@ public class CustomerOriginVO implements Serializable {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public CustomerVO getCustomer() {
+		return customer;
+	}
+
+	public void setCustomer(CustomerVO customer) {
+		this.customer = customer;
+	}
+
+	public HouseVO getHouse() {
+		return house;
+	}
+
+	public void setHouse(HouseVO house) {
+		this.house = house;
+	}
+
+	public UserBaseVO getDesigner() {
+		return designer;
+	}
+
+	public void setDesigner(UserBaseVO designer) {
+		this.designer = designer;
+	}
+
+	public UserBaseVO getSalesman() {
+		return salesman;
+	}
+
+	public void setSalesman(UserBaseVO salesman) {
+		this.salesman = salesman;
 	}
 
 	public String getOrderId() {

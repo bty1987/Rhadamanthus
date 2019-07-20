@@ -1,9 +1,11 @@
 $(function () {
 
     var goodsStorehouseStock = {
+        goods: null,
         submitBtn: com.focusPage("#submitBtn"),
-        confirm: com.focusPage("#confirm"),
+        confirm: com.focusPage("#confirm")
     };
+    goodsStorehouseStock.confirm.bindClick(saveData);
     goodsStorehouseStock.formStore =com.focusPage('#formStore');
     com.initTypeahead("name", api.inventory.queryGoodsByName, "goods.name", {}, "goodes", "gid", "name", function (list, k, v) {
         com.focusPage('#layerAddGoodsStorehouseStock').find('input[name="name"]').attr('data-gid', k);
@@ -132,9 +134,7 @@ $(function () {
                 com.focusPage('#layerAddStrore').find('input[name="num"]').val(v.num);
                 com.popup4model('#layerAddStrore', '盘盈');
                 goodsStorehouseStock.formStore.attr('_data-type', '0');
-                goodsStorehouseStock.confirm.click(function () {
-                    saveData(v.goods.gid, v.storehouse.shid, v.color.cid, v.format.fid)
-                });
+                goodsStorehouseStock.goods = v;
             });
 
             $btnCL.click(function () {
@@ -144,9 +144,7 @@ $(function () {
                 com.focusPage('#layerAddStrore').find('input[name="num"]').val(v.num);
                 com.popup4model('#layerAddStrore', '盘亏');
                 goodsStorehouseStock.formStore.attr('_data-type', '1');
-                goodsStorehouseStock.confirm.click(function () {
-                    saveData(v.goods.gid, v.storehouse.shid, v.color.cid, v.format.fid)
-                });
+                goodsStorehouseStock.goods = v;
             });
 
             //拆分按钮点击事件
@@ -265,7 +263,8 @@ $(function () {
         });
     }
 
-    function saveData(gid, shid, cid, fid) {
+    function saveData() {
+
         if (com.validate('formStore', "right")) {
             return false;
         }
@@ -274,10 +273,10 @@ $(function () {
         var newNum = $layer.find('input[name="newNum"]').val();
 
         com.post(api.inventory.checkGoodsStorehouseStock, {
-            "checkList.goods.gid": gid,
-            "checkList.storehouse.shid": shid,
-            "checkList.color.cid": cid,
-            "checkList.format.fid": fid,
+            "checkList.goods.gid": goodsStorehouseStock.goods.goods.gid,
+            "checkList.storehouse.shid": goodsStorehouseStock.goods.storehouse.shid,
+            "checkList.color.cid": goodsStorehouseStock.goods.color.cid,
+            "checkList.format.fid": goodsStorehouseStock.goods.format.fid,
             "checkList.type": type,
             "checkList.num": Math.abs(parseFloat(newNum))
         }, function (res) {

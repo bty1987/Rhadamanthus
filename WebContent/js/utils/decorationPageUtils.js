@@ -187,15 +187,16 @@ $(function () {
     }
 
     function drawMaterial(conf) {
+    	
         var row = createDiv("row");
         var left = createDiv("col-xs-6 col-md-6 widget-container-span ui-sortable ").append(createDiv("tabbable").append(
             createUl("myTab", "nav nav-tabs", "margin-top: 7px;").append(
-                createLi("active").append($("<a></a>").attr("data-toggle", "tab").attr("href", "#fanglinMaterialPayment").css("color", "#4383b4").append($("<strong></strong>").text("主材款项")))
-                , createLi().append($("<a></a>").attr("data-toggle", "tab").attr("href", "#salesMaterialPayment").css("color", "#4383b4").append($("<strong></strong>").text("销售款项")))
+                createLi("active").append($("<a></a>").attr("data-toggle", "tab").attr("href", "#fanglinMaterialPayments" + conf).css("color", "#4383b4").append($("<strong></strong>").text("主材款项")))
+                , createLi().append($("<a></a>").attr("data-toggle", "tab").attr("href", "#salesMaterialPayments" + conf).css("color", "#4383b4").append($("<strong></strong>").text("销售款项")))
             )
-            , createDiv("tab-content").append(createDiv("tab-pane in active", "fanglinMaterialPayment", "margin-left: -12px;"), createDiv("tab-pane", "salesMaterialPayment", "margin-left: -12px;"))
+            , createDiv("tab-content").append(createDiv("tab-pane in active", "fanglinMaterialPayments" + conf, "margin-left: -12px;"), createDiv("tab-pane", "salesMaterialPayments" + conf, "margin-left: -12px;"))
         ));
-        var right = createDiv("col-xs-6 col-md-6 widget-container-span ui-sortable ").append(createDiv("widget-box transparent").append(createDiv("widget-header").append($("<h5></h5>").append($("<strong></strong>").text("品牌汇总"))), createDiv("widget-body").append(createDiv("widget-body-inner", "materialPaymentBrand"))));
+        var right = createDiv("col-xs-6 col-md-6 widget-container-span ui-sortable ").append(createDiv("widget-box transparent").append(createDiv("widget-header").append($("<h5></h5>").append($("<strong></strong>").text("品牌汇总"))), createDiv("widget-body").append(createDiv("widget-body-inner", "materialPaymentBrands" + conf))));
         row.append(left, right);
         return [row];
     }
@@ -516,12 +517,9 @@ $(function () {
 
         var abateBtn = $("<a></a>").addClass("btn btn-minier btn-yellow").html("失效").css("margin", "0px 3px").attr("id", "abate_" + activityItem.daiId).appendTo(uiPgDiv);
 
-        if (activityItem.state == 0) {
-
-            abateBtn.on("click", function () {
-                abateDecorationActivityItem(activityItem.daiId, activityItem.activityItemName);
-            });
-        }
+        abateBtn.on("click", function () {
+            abateDecorationActivityItem(activityItem.daiId, activityItem.activityItemName);
+        });
     }
 
     function deleteDecorationActivity(daId) {
@@ -544,11 +542,11 @@ $(function () {
             };
 
             com.post(api.decoration.abateDecorationActivityItem, options, function (res) {
+            	
+            	com.showAlert(com.info, "物品失效成功");
 
                 var daiId = res.decorationActivityItem.daiId;
-
-                com.focusPage("#convert_" + daiId).unbind();
-                com.focusPage("#abate_" + daiId).unbind();
+                
                 com.focusPage("#widgetHeader_" + daiId).addClass("header-color-grey");
                 decorationUtils.decorationActivityItemInfo(com.focusPage("#activityPriceInfo"), com.focusPage("#activityItems"), uiBtnMethod, params["decorationOrderId"]);
 
@@ -558,6 +556,7 @@ $(function () {
 
     drawNode = {
         draw: function (nodes) {
+        	var dataPage = params.urlLoadParams.depage;
             var wizard = com.focusPage("#fuelux-wizard");
             var ul = createUl(null, "wizard-steps");
             var container = com.focusPage("#step-container");
@@ -587,6 +586,7 @@ $(function () {
                 ul.append(createWizardStep(i + 1, title[v.type]));
                 var stepPane = createStepPane(i + 1);
                 var rows = [];
+               
                 switch (v.type) {
                     case "basic":
                         rows = drawBasic(v);
@@ -598,7 +598,7 @@ $(function () {
                         rows = drawPicture(v);
                         break;
                     case "material":
-                        rows = drawMaterial(v);
+                        rows = drawMaterial(dataPage);
                         break;
                     case "activity":
                         rows = drawActivity(v);
@@ -717,7 +717,7 @@ $(function () {
                 ['状态', 'status'],
                 ['工程状态', 'projectStatus'],
             ];
-            pageConfig.propertyArr = ["楼盘地址", "客户名", "设计部", "设计师", "业务部", "业务员", "面积", "签单额", "报价金额", "量房时间", "签单时间", "定金时间", "创建时间", "类型", "状态", "工程状态"];
+            pageConfig.propertyArr = ["楼盘地址", "客户名", "设计部", "设计师", "业务部", "业务员", "面积", "签单额", "报价金额", "量房时间", "签单时间", "定金时间", "创建时间", "类型", "状态", "工程状态", "付款比例"];
 
             pageConfig.apiPage = decorationPage[page]["apiPage"];
             pageConfig.pageBtn = decorationPage[page]["pageBtn"];

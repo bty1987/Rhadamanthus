@@ -4,17 +4,21 @@ USE `approval`;
 DROP TABLE IF EXISTS `approval`;
 CREATE TABLE `approval` (
   `aid` int(11) NOT NULL AUTO_INCREMENT,
-  `ruid` int(11) NOT NULL COMMENT '接收人ID',
+  `ruid` int(11) COMMENT '接收人ID',
   `suid` int(11) NOT NULL COMMENT '发送人ID',
   `type` tinyint(1) NOT NULL COMMENT '类型,1: 客户信息修改, 2: 楼盘信息修改, 3: 装修单归属修改, 4: 报价折扣修改, 5: 装修退款, 6: 主材退货, 7: 主材场外退款, 8: 装修活动申请, 9: 主材补款提交, 10: 销售退货, 11: 商品库存调拨',
   `ident` varchar(20) NOT NULL COMMENT '外部资源引用,例如装修单号,主材单ID等',
   `status` tinyint(1) NOT NULL COMMENT '状态, 1: 审批通过 , 2: 审批拒绝',
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `approvalTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `contents` varchar(256) NOT NULL DEFAULT '',
-  `comment` varchar(256) NOT NULL DEFAULT '',
+  `contents` varchar(256) DEFAULT '',
+  `comment` varchar(256) DEFAULT '',
   `company` int(11) NOT NULL,
-  PRIMARY KEY (`aid`)
+  `processinstanceid` varchar(64) DEFAULT NULL,
+  PRIMARY KEY (`aid`),
+  KEY `indexone` (`ruid`),
+  KEY `indextwo` (`suid`),
+  KEY `indexthr` (`ident`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='审批表';
 
 DROP TABLE IF EXISTS `approvalcustomer`;
@@ -28,6 +32,28 @@ CREATE TABLE `approvalcustomer` (
   `newCustomerPhone` varchar(64) NOT NULL,
   PRIMARY KEY (`acid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='客户信息修改审批表';
+
+DROP TABLE IF EXISTS `approvalcustomerorigintdecoration`;
+CREATE TABLE `approvalcustomerorigintdecoration` (
+  `acodid` int(11) NOT NULL AUTO_INCREMENT,
+  `aid` int(11) NOT NULL COMMENT '审批id',
+  `csid` int(11) NOT NULL COMMENT '客源id',
+  `type` tinyint(1) NOT NULL COMMENT '类型 0:半包,1:套餐,2:半价,3:满减',
+  `salesmanType` varchar(16) NOT NULL COMMENT '房屋类别 0:期房,1:现房',
+  `houseType` varchar(16) NOT NULL COMMENT '房屋类别 0:期房,1:现房',
+  `resourceType` tinyint(1) NOT NULL COMMENT '资源类型 0:咨询,1:量房',
+  `code` varchar(255) NOT NULL,
+  `forms` varchar(255) NOT NULL,
+  PRIMARY KEY (`acodid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='客源转装修单';
+
+DROP TABLE IF EXISTS `approvalcustomerorigintdecorationbelong`;
+CREATE TABLE `approvalcustomerorigintdecorationbelong` (
+  `acodbid` int(11) NOT NULL AUTO_INCREMENT,
+  `aid` int(11) NOT NULL COMMENT '审批id',
+  `csid` int(11) NOT NULL COMMENT '客源id',
+  PRIMARY KEY (`acodbid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='审批客源转装修单归属记录';
 
 DROP TABLE IF EXISTS `approvaldecorationactivity`;
 CREATE TABLE `approvaldecorationactivity` (
@@ -72,6 +98,15 @@ CREATE TABLE `approvaldecorationbelongitem` (
   `defaultFlag` tinyint(1) NOT NULL COMMENT '默认标识',
   PRIMARY KEY (`adbiid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='订单归属信息审批项表';
+
+DROP TABLE IF EXISTS `approvaldecorationholonomy`;
+CREATE TABLE `approvaldecorationholonomy` (
+  `adhid` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `aid` int(11) NOT NULL COMMENT '审批ID',
+  `orderId` varchar(256) NOT NULL COMMENT '装修单号',
+  `materialPrice` decimal(10,3) NOT NULL COMMENT '主材配比额',
+  PRIMARY KEY (`adhid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='装修单满减修改审批';
 
 DROP TABLE IF EXISTS `approvaldecorationrefund`;
 CREATE TABLE `approvaldecorationrefund` (
@@ -152,6 +187,7 @@ CREATE TABLE `approvalquotationdiscount` (
   `qid` int(11) NOT NULL,
   `oldDiscount` decimal(5,3) NOT NULL,
   `newDiscount` decimal(5,3) NOT NULL,
+  `basePrice` decimal(10,3) NOT NULL DEFAULT '0.000',
   PRIMARY KEY (`aqdid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='订单报价折扣修改审批表';
 
@@ -161,6 +197,7 @@ CREATE TABLE `approvalsalesdiscount` (
   `aid` int(11) NOT NULL,
   `sid` int(11) NOT NULL,
   `refermoney` decimal(10,3) NOT NULL,
+  `paymenttype` tinyint(1) NOT NULL,
   PRIMARY KEY (`asdid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='销售补款项审批表';
 

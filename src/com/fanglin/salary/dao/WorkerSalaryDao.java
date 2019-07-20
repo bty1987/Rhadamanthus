@@ -13,7 +13,7 @@ public  interface WorkerSalaryDao extends Dao<WorkerSalaryPO>{
 	
 	public  List<WorkerSalaryPO> pageWorkerSalaryByUserId(Paging paging, List<Filter> filters);
   
-	public  List<WorkerSalaryPO> queryWorkerSalary(String userId, Long cid);
+	public  List<WorkerSalaryPO> queryWorkerSalary(String userId, Long csid);
 	
 	public  List<WorkerSalaryPO> queryWorkerSalaryByuid(int wuid);
   

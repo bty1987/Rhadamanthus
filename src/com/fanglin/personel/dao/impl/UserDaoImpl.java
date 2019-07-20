@@ -80,11 +80,10 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 		if (dtid != 0) {
 			query.add(Restrictions.eq("dtid", dtid));
 		}
-
-		if (status != null) {
+		
+		if (status != 3) {
 			query.add(Restrictions.eq("status", status));
 		}
-
 		if (SystemConfig.getInt("multicompany", 0) != 0) {
 			query.add(Restrictions.eq("company", company));
 		}

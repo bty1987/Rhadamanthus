@@ -226,7 +226,11 @@ public class UserServiceImpl implements UserService {
 		Paging paging = new Paging(0, 10);
 
 		int dtid = 0;
-
+		
+		if(userVO.getStatus()==null){
+			userVO.setStatus(UserPO.STATUS_ENABLE_INT);
+		}
+		
 		if (departmentType != null && departmentType.getName() != null && departmentType.getName().length() != 0) {
 			dtid = departmentTypeDao.queryDepartmentTypeByName(departmentType.getName()).getDtid();
 		}

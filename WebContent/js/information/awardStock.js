@@ -304,7 +304,7 @@ $(function(){
     })();
 
     var awardStockSeacher = new Searcher();
-    awardStockSeacher.init( ['prizeName','prizeNo','awardStockType','awardStoreRoom'], "condList", api.information.pageAwardStock, function(data){
+    awardStockSeacher.init( ['prizeName', 'prizeNo', 'awardStockType', 'awardSubtype', 'awardStoreRoom'], "condList", api.information.pageAwardStock, function(data){
         displayFunc.init('resultList', data);
     }, "pagenation", "pageAwardPostData", null, false, null, function() {
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'addAwardStock').css('margin', '0px 3px');

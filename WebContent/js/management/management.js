@@ -10,6 +10,8 @@ jQuery(function($) {
 		decorationPaymentTypeMap: [{"key":"首付款", "value":"首付款"}, {"key":"首付二期款", "value":"首付二期款"}, {"key":"二期款", "value":"二期款"}, {"key":"尾款", "value":"尾款"}, ],
 		decorationPaymentRefundMap: [{"key":"设计费", "value":"设计费"}, {"key":"定金", "value":"定金"}, ],
 		materialPaymentTypeMap: [{"key":"2", "value":"定金"}, {"key":"3", "value":"补款"},{"key":"4", "value":"退款"}, {"key":"5", "value":"补款退款"},{"key":"6", "value":"券退款"},],
+		
+		constructionSchedule: {}
 	};
 	
 	management.items.oldOrderId = com.focusPage("#oldOrderId");
@@ -61,6 +63,10 @@ jQuery(function($) {
 	
 	management.items.orderId4decorationHolonomy = com.focusPage("#orderId4decorationHolonomy");
 	management.items.materialPrice = com.focusPage("#materialPrice");
+	
+	management.items.orderId4constructionschedule = com.focusPage("#orderId4constructionschedule");
+    management.items.csid4constructionschedule = com.focusPage("#csid4constructionschedule");
+    management.items.check4constructionschedule = com.focusPage("#check4constructionschedule");
 
 	management.decorationForOrderIdModal = com.focusPage("#decorationForOrderIdModal").on('hide.bs.modal', function(e){
 		com.cleanItems(management.items);
@@ -154,6 +160,11 @@ jQuery(function($) {
 		com.clearValidator();
 	});
 	
+	management.checkoutConstructionScheduleModal = com.focusPage("#checkoutConstructionScheduleModal").on('hide.bs.modal', function(e){
+        com.cleanItems(management.items);
+        com.clearValidator();
+    });
+	
 	com.datetime(com.focusPage(".date-picker-date"), "date");
 	com.datetime(com.focusPage(".maskInput"), "time");
 	
@@ -178,6 +189,32 @@ jQuery(function($) {
 			com.focusPage("#quotationData").bindData(res.quotations, 'qid', 'quotationName');
 		});
 	});
+	
+	management.items.orderId4constructionschedule.on("blur", function(){
+	    
+	    var orderId = $(this).val();
+	    
+	    var constructionNodes = [];
+	    
+	    com.post(api.data.queryConstructionNodeByOrderId, {"orderId": orderId}, function(res){
+	        constructionNodes = res.constructionNodes.split("sort", "name");
+	    }, null, false);
+	    
+	    console.log(constructionNodes);
+
+        com.post(api.construction.queryConstructionScheduleByOrderId, {"constructionSchedule.orderId": orderId}, function(res){
+            
+            var constructionSchedules = res.constructionSchedules;
+            
+            $.each(constructionSchedules, function(i, v){
+                v["name"] = constructionNodes[v["schedule"]];
+            });
+            
+            console.log(constructionSchedules)
+            
+            management.items.csid4constructionschedule.bindData(constructionSchedules, 'csid', 'name');
+        }, null, false);
+    });
 	
 	com.focusPage("#changeDecorationForOrderId").click(function(){
 		management.decorationForOrderIdModal.modal("show");
@@ -280,6 +317,11 @@ jQuery(function($) {
 
 		management.updateQuotationForStatusModal.modal("show");
 	});
+	
+	com.focusPage("#checkoutConstructionSchedule").click(function(){
+	    
+        management.checkoutConstructionScheduleModal.modal("show");
+    });
 	
 	com.focusPage("#saveOrderIdBtn").click(function(){
 
@@ -580,6 +622,24 @@ jQuery(function($) {
 		}
 		
 		management.changeSalesForGradeModal.modal("hide");
+	});
+	
+	com.focusPage("#save2checkconstructionschedule").click(function(){
+	    
+	    if(com.validate("checkoutConstructionScheduleModal")){
+            return false;
+        }
+	    
+	    var options = {
+            "constructionSchedule.csid": management.items.csid4constructionschedule.val(),
+            "constructionSchedule.checkout": management.items.check4constructionschedule.val()
+        }
+	    
+	    com.post(api.construction.checkoutConstructionSchedule, options, function(res){
+	        com.showAlert(com.info, "操作成功");
+	    });
+	    
+	    management.checkoutConstructionScheduleModal.modal("hide");
 	});
 	
 	com.focusPage("#exportMaterialPaymentBtn").click(function(){

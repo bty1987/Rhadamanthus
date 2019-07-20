@@ -16314,6 +16314,14 @@ transform
     z-index: 11
 }
 
+.btn-scroll-license {
+    border: 0;
+    position: absolute;
+    right: 32px;
+    bottom: 2px;
+    z-index: 11
+}
+
 @media ( min-width :768px) {
     .main-container.container>.btn-scroll-up {
         right: auto;

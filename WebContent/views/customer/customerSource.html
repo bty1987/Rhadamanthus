@@ -14,7 +14,7 @@
                     <button type="button" class="close" data-dismiss="modal">
                         <span>&times;</span><span class="sr-only">Close</span>
                     </button>
-                    <h4 class="modal-title" id="sustomersourceDialog"></h4>
+                    <h4 class="modal-title" id="sustomersourceDialog">编辑客源</h4>
                 </div>
                 <div class="modal-body">
                     <form class="form-horizontal" id="from">
@@ -22,35 +22,13 @@
                             <label class="col-sm-3 control-label no-padding-right" for="villageNo">楼盘信息</label>
                             <div class="col-sm-9">
                                 <input type="text" class="col-sm-6 v_typeahead" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="villageNo"  style="margin-right: 35px;">
-                                <div id="bindHouseDiv"><button type="button" id="bindHouse" class="btn btn-xs btn-info">绑定楼盘</button></div>
                             </div>
                         </div>
 
-                        <div class="form-group" id="houseNumberGroup">
+                        <div class="form-group">
                             <label for="houseNumber" class="col-sm-3 control-label no-padding-right">楼牌号</label>
                             <div class="col-sm-9">
                                 <input type="text" class="m-wrap col-xs-6 v_required" id="houseNumber" maxlength="30">
-                                <div class="col-md-12" style="padding: 0px;" >
-                                    <span id="rule" class="red"></span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group" id="houseNumberGroupTwo">
-                            <label for="built" class="col-sm-3 control-label no-padding-right">楼牌号</label>
-                            <div class="col-sm-9">
-                                <input type="text" maxlength="7" class="v_required" style="width: 10%;"  id="built">
-                                <select id="builtrule" style="padding: 0px;font-size: 1px; width: 10%!important; height: 25px; vertical-align: bottom"></select>
-                                <input type="text" maxlength="3" class="v_required" style="float: none; width: 10%;"  id="unit">
-                                <select  id="unitrule" style="padding: 0px;font-size: 1px; width: 10%!important; height: 25px; vertical-align: bottom"></select>
-                                <input type="text" maxlength="3" class="v_required" style="float: none; width: 10%;" id="floor">
-                                <select id="floorrule" style="padding: 0px;font-size: 1px; width: 10%!important; height: 25px; vertical-align: bottom"></select>
-                                <input type="text" maxlength="3" class="v_required" style="float: none; width: 10%;"  id="door">
-                                <select id="doorrule" style="padding: 0px;font-size: 1px; width: 10%!important; height: 25px; vertical-align: bottom"></select>
-                                <span id="errMsg"></span>
-                                <div class="col-md-12" style="padding: 0px;" >
-                                    <span id="ruleTwo" class="red"></span>
-                                </div>
                             </div>
                         </div>
 
@@ -66,7 +44,6 @@
                             <label class="col-sm-3 control-label no-padding-right">姓名</label>
                             <div class="col-sm-9">
                                 <input type="text" class="m-wrap col-xs-6 v_required" maxlength="32" id="name" style="margin-right: 35px;">
-                                <div id="bindCustomerDiv"><button type="button" id="bindCustomer" class="btn btn-xs btn-info">绑定客户</button></div>
                             </div>
                         </div>
 
@@ -129,21 +106,74 @@
         </div>
     </div>
 
-    <div class="modal fade" id="updateDesigner" tabindex="-1">
+    <div class="modal fade" id="bindAllInfo" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">
                         <span>&times;</span><span class="sr-only">Close</span>
                     </button>
-                    <h4 class="modal-title" id="updateDesignerDialog">归属设计师</h4>
+                    <h4 class="modal-title">绑定信息</h4>
                 </div>
                 <div class="modal-body">
                     <form class="form-horizontal">
                         <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="villageNoBind">楼盘信息</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="col-sm-8 v_typeahead" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="villageNoBind"  style="margin-right: 35px;">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="houseNumberBind" class="col-sm-3 control-label no-padding-right">已绑楼牌号</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="m-wrap col-xs-8" id="houseNumberBind" maxlength="30" readonly="readonly">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="built" class="col-sm-3 control-label no-padding-right">更改楼牌号</label>
+                            <div class="col-sm-9">
+                                <input type="text" maxlength="7" class="v_required" style="width: 10%;"  id="built">
+                                <select id="builtrule" style="padding: 0px;font-size: 1px; width: 10%!important; height: 25px; vertical-align: bottom"></select>
+                                <input type="text" maxlength="3" class="v_required" style="float: none; width: 10%;"  id="unit">
+                                <select  id="unitrule" style="padding: 0px;font-size: 1px; width: 10%!important; height: 25px; vertical-align: bottom"></select>
+                                <input type="text" maxlength="3" class="v_required" style="float: none; width: 10%;" id="floor">
+                                <select id="floorrule" style="padding: 0px;font-size: 1px; width: 10%!important; height: 25px; vertical-align: bottom"></select>
+                                <input type="text" maxlength="3" class="v_required" style="float: none; width: 10%;"  id="door">
+                                <select id="doorrule" style="padding: 0px;font-size: 1px; width: 10%!important; height: 25px; vertical-align: bottom"></select>
+                                <span id="errMsg"></span>
+                                <div class="col-md-12" style="padding: 0px;" >
+                                    <span id="rule" class="red"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">姓名</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="m-wrap col-xs-8 v_required" maxlength="32" id="nameBind" style="margin-right: 35px;">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">电话</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="m-wrap col-xs-8 v_phone v_required" id="phoneBind">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
                             <label class="col-sm-3 control-label no-padding-right" for="designer">设计师</label>
                             <div class="col-sm-9">
                                 <input type="text" class="col-sm-8 v_typeahead" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="designer">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="salesman">业务员</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="col-sm-8 v_typeahead" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="salesman">
                             </div>
                         </div>
                     </form>
@@ -151,6 +181,99 @@
                 <div class="modal-footer" style="text-align: center">
                     <button type="button" id="saveDesignerBtn" class="btn btn-primary" data-loading-text="提交中...">保存</button>
                     <button type="button" id="cancelDesignerBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="commitApprove" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title" id="commitApproveDialog">提交审批</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="villageNoDesiger">楼盘信息</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="col-sm-6 v_typeahead v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="villageNoDesiger"  style="margin-right: 35px;"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="houseNumberApprove" class="col-sm-3 control-label no-padding-right">楼牌号</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="m-wrap col-xs-6 v_required" id="houseNumberApprove" maxlength="30">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">姓名</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="m-wrap col-xs-6 v_required" maxlength="32" id="nameApprove" style="margin-right: 35px;">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">电话</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="m-wrap col-xs-6 v_phone v_required" id="phoneApprove">
+                            </div>
+                        </div>
+
+                        <div class="form-group" id="houseTypeGroup">
+                            <label class="col-sm-3 control-label no-padding-right">房屋类别</label>
+                            <div class="col-sm-9">
+                                <select type="text" class="col-xs-6 m-wrap" id="houseType">
+                                    <option value="期房">期房</option>
+                                    <option value="现房">现房</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group" id="salesmanTypeGroup">
+                            <label class="col-sm-3 control-label no-padding-right">业务员类型</label>
+                            <div class="col-sm-9">
+                                <select type="text" class="col-xs-6 m-wrap" id="salesmanType"></select>
+                            </div>
+                        </div>
+
+                        <div class="form-group" id="orderTypeGroup">
+                            <label for="orderType" class="col-sm-3 control-label no-padding-right">订单类型</label>
+                            <div class="col-sm-9">
+                                <select class='col-xs-6 m-wrap' id='orderType'></select>
+                            </div>
+                        </div>
+
+                        <div class="form-group" id="resourceTypeGroup">
+                            <label for="resourceType" class="col-sm-3 control-label no-padding-right">订单状态</label>
+                            <div class="col-sm-9">
+                                <select class='col-xs-6 m-wrap' id='resourceType'></select>
+                            </div>
+                        </div>
+
+                        <div class="form-group"  id="approveManGroup">
+                            <label for="approveMan" class="col-sm-3 control-label no-padding-right">审批人</label>
+                            <div class="col-sm-9">
+                                <div id="approveMan" class="col-xs-6 m-wrap"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" id="approveCommentGroup">
+                            <label class="col-sm-3 control-label no-padding-right">审批备注</label>
+                            <div class="col-sm-9">
+                                <textarea id="approveComment" class=" m-wrap col-xs-6" maxlength="128" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer" style="text-align: center">
+                    <button type="button" id="approvalBtn" class="btn btn-primary" data-loading-text="提交中...">保存</button>
+                    <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
                 </div>
             </div>
         </div>

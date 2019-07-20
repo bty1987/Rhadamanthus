@@ -15,54 +15,52 @@
     </div>
 </div>
 
-<div id="layerEdit" style="display: none">
-    <div style="padding: 40px 0;">
-        <div class="row-fluid">
-            <form class="form-horizontal">
-                <div class="form-group" style="margin-right: 0">
-                    <label class="col-xs-3 control-label " for="salesItemDetialnum">数量</label>
-                    <div class="col-xs-9">
-                        <input type="text" id="salesItemDetialnum" class="col-xs-4 v_required v_float_3"/>
-                    </div>
+<div id="layerEdit" style="display: none" class="page-content">
+    <div class="row">
+        <form class="form-horizontal">
+            <div class="form-group" style="margin-right: 0">
+                <label class="col-xs-3 control-label " for="salesItemDetialnum">数量</label>
+                <div class="col-xs-9">
+                    <input type="text" id="salesItemDetialnum" class="v_required v_float_3"/>
                 </div>
-                <div class="space5"></div>
+            </div>
+            <div class="space5"></div>
 
-                <div class="form-group" style="margin-right: 0">
-                    <label class="col-xs-3 control-label " for="salesItemDetialtotal">总价</label>
-                    <div class="col-xs-9">
-                        <input type="text" id="salesItemDetialtotal" class=" col-xs-4 v_required v_float_3" readonly/>
-                    </div>
+            <div class="form-group" style="margin-right: 0">
+                <label class="col-xs-3 control-label " for="salesItemDetialtotal">总价</label>
+                <div class="col-xs-9">
+                    <input type="text" id="salesItemDetialtotal" class="v_required v_float_3" readonly/>
                 </div>
-                <div class="space5"></div>
+            </div>
+            <div class="space5"></div>
 
-                <div class="form-group" style="margin-right: 0">
-                    <label class="col-xs-3 control-label " for="salesItemDetialcomment">备注</label>
-                    <div class="col-xs-9">
-                        <textarea maxlength="128" id="salesItemDetialcomment" class="col-xs-4" rows="3" style="margin-left: 0%"></textarea>
-                    </div>
+            <div class="form-group" style="margin-right: 0">
+                <label class="col-xs-3 control-label " for="salesItemDetialcomment">备注</label>
+                <div class="col-xs-9">
+                    <textarea maxlength="128" id="salesItemDetialcomment" rows="3" style="margin-left: 0%"></textarea>
                 </div>
-                <div class="space5"></div>
+            </div>
+            <div class="space5"></div>
 
-                <div class="form-group" style="margin-right: 0">
-                    <div class="form-group col-xs-10 col-sm-7" style="text-align: right">
-                        <button type="button" id="editCancelBtn" class="btn btn-grey">取消</button>
-                        <button type="button" id="editSaveBtn" class="btn btn-success">确定</button>
-                    </div>
+            <div class="form-group" style="margin-right: 0">
+                <div class="form-group col-xs-10 col-sm-7" style="text-align: right">
+                    <button type="button" id="editCancelBtn" class="btn btn-grey">取消</button>
+                    <button type="button" id="editSaveBtn" class="btn btn-success">确定</button>
                 </div>
-                <div class="space5"></div>
+            </div>
+            <div class="space5"></div>
 
-            </form>
-        </div>
+        </form>
     </div>
 </div>
 
 <div id="layerRefund" class="page-content" style="display: none">
-    <div class="row-fluid">
+    <div class="row">
         <form class="form-horizontal">
             <div class="form-group" style="margin-right: 0">
                 <label class="col-xs-3 control-label " for="refundTotal">退货总额</label>
                 <div class="col-xs-9">
-                    <input type="text" id="refundTotal" class=" col-xs-4" readonly/>
+                    <input type="text" id="refundTotal" readonly/>
                 </div>
             </div>
             <div class="space5"></div>
@@ -70,7 +68,7 @@
             <div class="form-group" style="margin-right: 0">
                 <label class="col-xs-3 control-label " for="refund">实际退款额</label>
                 <div class="col-xs-9">
-                    <input type="text" id="refund" class=" col-xs-4 v_required v_float_3"/>
+                    <input type="text" id="refund" class="v_required v_float_3"/>
                 </div>
             </div>
             <div class="space5"></div>
@@ -78,7 +76,7 @@
             <div class="form-group" style="margin-right: 0">
                 <label class="col-xs-3 control-label " for="refundDes">备注信息</label>
                 <div class="col-xs-9">
-                    <textarea maxlength="128" id="refundDes" class="col-xs-4 v_required" rows="3"></textarea>
+                    <textarea maxlength="128" id="refundDes" class="v_required" rows="3"></textarea>
                 </div>
             </div>
             <div class="space5"></div>
@@ -91,11 +89,9 @@
             </div>
             <div class="space5"></div>
 
-            <div class="form-group" style="margin-right: 0">
-                <div class="form-group col-xs-10 col-sm-7" style="text-align: right">
-                    <button type="button" id="approverCancelBtn" class="btn btn-grey">取消</button>
-                    <button type="button" id="approverSaveBtn" class="btn btn-success">确定</button>
-                </div>
+            <div class="form-group pull-right" style="margin-right: 0">
+                <button type="button" id="approverCancelBtn" class="btn btn-grey">取消</button>
+                <button type="button" id="approverSaveBtn" class="btn btn-success">确定</button>
             </div>
 
             <div class="space5"></div>

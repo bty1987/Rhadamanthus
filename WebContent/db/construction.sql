@@ -85,16 +85,31 @@ CREATE TABLE `constructiondrawing` (
   `schedule` tinyint(1) NOT NULL COMMENT '工程进度',
   PRIMARY KEY (`cdid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='工程图纸表';
+
+DROP TABLE IF EXISTS `constructioninfo`;
+CREATE TABLE `constructioninfo` (
+  `ciid` int(11) NOT NULL AUTO_INCREMENT COMMENT '信息ID',
+  `orderId` varchar(15) NOT NULL COMMENT '装修单号',
+  `cid` int(11) NOT NULL COMMENT '工程ID',
+  `ishovel` tinyint(1) NOT NULL DEFAULT '0' COMMENT '铲大白',
+  `iskey` tinyint(1) NOT NULL DEFAULT '0' COMMENT '钥匙',
+  `isCeremony` tinyint(1) NOT NULL DEFAULT '0' COMMENT '备注说明',
+  `comment` varchar(255) NOT NULL DEFAULT '',
+  PRIMARY KEY (`ciid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='工程信息';
 DROP TABLE IF EXISTS `constructionschedule`;
 CREATE TABLE `constructionschedule` (
   `csid` int(11) NOT NULL AUTO_INCREMENT,
   `cid` int(11) NOT NULL COMMENT '工程ID',
   `orderId` varchar(15) NOT NULL COMMENT '订单ID',
-  `startTime` date NOT NULL COMMENT '开工时间',
-  `endTime` date NOT NULL COMMENT '完工时间',
+  `startTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '开工时间',
+  `endTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '完工时间',
   `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '工程进度状态',
   `schedule` tinyint(1) NOT NULL COMMENT '工程进度',
-  PRIMARY KEY (`csid`)
+  `checkout` tinyint(1) DEFAULT '0',
+  PRIMARY KEY (`csid`),
+  KEY `indexone` (`orderId`),
+  KEY `indextwo` (`cid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='工程进度表';
 
 
@@ -148,19 +163,21 @@ CREATE TABLE `drawline` (
   `dlId` int(11) NOT NULL AUTO_INCREMENT,
   `orderId` varchar(15) NOT NULL,
   `applayTime` timestamp NULL DEFAULT NULL,
-  `actualStartTime` timestamp NULL DEFAULT NULL,
-  `actualEndTime` timestamp NULL DEFAULT NULL,
+  `actualTime` int(8) DEFAULT '0',
+  `startTime` timestamp NULL DEFAULT NULL,
+  `endTime` timestamp NULL DEFAULT NULL,
   `status` tinyint(1) DEFAULT NULL COMMENT '状态, 1:放线成功 , 2:放线失败',
   `count` int(11) DEFAULT '1',
   `auid` int(11) DEFAULT NULL COMMENT '操作人ID',
   `dluid` int(11) DEFAULT NULL COMMENT '放线人ID',
   `dgid` int(11) DEFAULT NULL,
-  `content` varchar(100) DEFAULT NULL,
+  `content` varchar(128) DEFAULT NULL,
+  `company` int(11) NOT NULL,
   PRIMARY KEY (`dlId`),
   KEY `indexone` (`orderId`),
-  KEY `indextwo` (`status`,`applayTime`),
-  KEY `indexthr` (`status`,`actualStartTime`,`actualEndTime`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='订单放线表';
+  KEY `indexthr` (`status`,`startTime`,`endTime`),
+  KEY `indextwo` (`status`,`applayTime`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='放线表';
 
 DROP TABLE IF EXISTS `inspectiondeduction`;
 CREATE TABLE `inspectiondeduction` (
@@ -168,7 +185,7 @@ CREATE TABLE `inspectiondeduction` (
   `orderId` varchar(15) NOT NULL,
   `ouid` int(11) NOT NULL COMMENT '操作人ID',
   `chargebacks` decimal(10,3) NOT NULL,
-  `deductionTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `deductionTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `comment` varchar(256) NOT NULL,
   PRIMARY KEY (`idid`),
   KEY `indexone` (`orderId`)

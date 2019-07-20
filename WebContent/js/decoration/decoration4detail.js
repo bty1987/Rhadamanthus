@@ -1003,7 +1003,6 @@ jQuery(function ($) {
 
         var btnViewBtn= $("<a></a>").addClass("btn btn-minier btn-yellow").html("失效").css("margin", "0px 3px").attr("id", "abate_" + activityItem.daiId).appendTo(uiPgDiv);
 
-
         btnViewBtn.on("click", function () {
             abateDecorationActivityItem(activityItem.daiId, activityItem.activityItemName);
         });
@@ -1035,12 +1034,6 @@ jQuery(function ($) {
                 var daiId = res.decorationActivityItem.daiId;
 
                 com.focusPage("#state_" + daiId).text("失效");
-
-                com.focusPage("#convert_" + daiId).unbind();
-
-                com.focusPage("#abate_" + daiId).unbind();
-
-                com.focusPage("#receive_" + daiId).unbind();
 
             });
         });

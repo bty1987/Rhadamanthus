@@ -49,6 +49,7 @@ $(function () {
                         ["品牌:", v.brand, "grey"],
                         ["定金:", v.depositpay, "blue"],
                         ["补款:", v.fullpay, "blue"],
+                        ["等级:", v.grade, "red"],
                         ["总额:", v.total, "grey"],
                         ["抹零:", v.maling, "blue"],
                         ["厂商抹零:", v.venderMaling, "blue"],

@@ -1,10 +1,43 @@
 CREATE DATABASE IF NOT EXISTS `customer`;
 USE `customer`;
 
+DROP TABLE IF EXISTS `background`;
+CREATE TABLE `background` (
+  `bid` int(11) NOT NULL AUTO_INCREMENT,
+  `unionId` varchar(64) NOT NULL,
+  `path` varchar(255) NOT NULL,
+  PRIMARY KEY (`bid`),
+  UNIQUE KEY `oneindex` (`unionId`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='服务圈背景图片';
+
+DROP TABLE IF EXISTS `circle`;
+CREATE TABLE `circle` (
+  `cid` int(11) NOT NULL AUTO_INCREMENT,
+  `orderId` varchar(32) NOT NULL,
+  `address` varchar(64) NOT NULL,
+  `cuid` int(11) NOT NULL,
+  `content` varchar(255) DEFAULT NULL,
+  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `praise` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`cid`),
+  KEY `oneindex` (`orderId`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='服务圈';
+
+DROP TABLE IF EXISTS `circledrawing`;
+CREATE TABLE `circledrawing` (
+  `cdid` int(11) NOT NULL AUTO_INCREMENT,
+  `cid` int(11) NOT NULL,
+  `path` varchar(255) NOT NULL,
+  PRIMARY KEY (`cdid`),
+  KEY `oneindex` (`cid`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='服务圈图片';
+
 DROP TABLE IF EXISTS `customerorigin`;
 CREATE TABLE `customerorigin` (
   `coid` int(11) NOT NULL AUTO_INCREMENT COMMENT '客源ID',
   `cid` int(11) NOT NULL COMMENT '客户ID',
+  `name` varchar(32) NOT NULL,
+  `gender` varchar(2) DEFAULT NULL,
   `phone` varchar(32) NOT NULL COMMENT '电话',
   `purpose` varchar(128) DEFAULT NULL COMMENT '目的',
   `intention` varchar(128) DEFAULT NULL COMMENT '意向',

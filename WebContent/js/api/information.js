@@ -93,6 +93,11 @@ $.extend(api, {
         checkAwardStock:{url:"checkAwardStock.do", demo: true},//盘点
         updateAwardStockForStatus:{url:"updateAwardStockForStatus.do", demo: true},//修改状态
 
-        pageAwardRecord: {url: "pageAwardRecord.do", demo: true}
+        pageAwardRecord: {url: "pageAwardRecord.do", demo: true},
+
+        pageWorksheet: {url: "pageWorksheet.do", demo: true},
+        addWorksheet: {url: "addWorksheet.do", demo: true},
+        cancelWorksheet: {url: "cancelWorksheet.do", demo: true},
+        handleWorksheet: {url: "handleWorksheet.do", demo: true}
     }
 });

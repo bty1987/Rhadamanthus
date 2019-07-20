@@ -32,7 +32,7 @@ public class WMCodeUtil {
 	public static String createImage(String name, String time) {
 
 		if (name == null) {
-			name = "nullpoint";
+			name = "fanglin";
 		}
 
 		int width = 500;
@@ -53,7 +53,7 @@ public class WMCodeUtil {
 		g.drawString(name, 0, 0);
 		g.drawString(time, 250, 0);
 
-		g.drawString(SystemConfig.getString("backname", "nullpoint"), 220, 120);
+		g.drawString(SystemConfig.getString("backname", "fanglin"), 220, 120);
 
 		g.drawString(name, 100, 250);
 		g.drawString(time, 350, 250);

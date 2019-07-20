@@ -108,6 +108,7 @@ $(function () {
                         ["归属部门:", v.sales.dept.name, "grey"],
                         ["定金:", v.sales.depositpay, "blue"],
                         ["补款:", v.sales.fullpay, "blue"],
+                        ["等级:", v.sales.grade, "red"],
                         ["总价:", v.total, "blue"],
                         ["券值:", v.sales.coupon, "blue"],
                         ["券信息:", v.sales.couponInfo, "grey"],

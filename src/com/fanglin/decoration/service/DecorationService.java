@@ -55,7 +55,7 @@ public interface DecorationService {
 
 	public void createDecoration(DecorationVO decorationVO, DecorationInfoVO decorationInfoVO, String userId, int company) throws FLException;
 
-	public void changeDecorationForAdvance(DecorationVO decorationVO, DecorationInfoVO decorationInfoVO) throws FLException;
+	public void changeDecorationForAdvance(DecorationVO decorationVO, DecorationInfoVO decorationInfoVO, String userId) throws FLException;
 
 	public void changeDecorationForHouse(DecorationVO decorationVO, String userId) throws FLException;
 
@@ -75,6 +75,6 @@ public interface DecorationService {
 
 	public void subDecorationForQuotationTime(DecorationVO decorationVO, String userId) throws FLException;
 
-	public String tranDecorationFromCustomerOrigin(DecorationVO decorationVO, long csid, int company) throws FLException;
-	
+	public void tranDecorationFromCustomerOrigin(DecorationVO decorationVO, long csid, int company) throws FLException;
+
 }

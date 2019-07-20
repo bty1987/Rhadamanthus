@@ -11,7 +11,7 @@
 <div>
     <div id="layerAdd" class="page-content" style="display: none">
 
-        <div class="row-fluid">
+        <div class="row">
 
             <form class="form-horizontal">
                 <div class="form-group" style="margin-right: 0">
@@ -109,53 +109,39 @@
         </div>
     </div>
 
-
-
     <!--折让审批弹窗-->
-    <div id = "layerSubmit" style="display: none">
-        <div style="padding: 40px 0;">
-            <div class="row-fluid">
-                <form class="form-horizontal">
+    <div id = "layerSubmit" style="display: none" class="page-content">
+        <div class="row">
+            <form class="form-horizontal">
 
-                    <div class="form-group" style="margin-right: 0">
-                        <label class="col-xs-3 control-label " for="fullPaymentTotal">补款总额</label>
-                        <div class="col-xs-9">
-                            <input type="text" id="fullPaymentTotal" class=" col-xs-4" readonly/>
-                        </div>
+                <div class="form-group" style="margin-right: 0">
+                    <label class="col-xs-3 control-label " for="fullPaymentTotal">补款总额</label>
+                    <div class="col-xs-9">
+                        <input type="text" id="fullPaymentTotal" readonly/>
                     </div>
-                    <div class="space5"></div>
+                </div>
+                <div class="space5"></div>
 
-                    <div class="form-group" style="margin-right: 0">
-                        <label class="col-xs-3 control-label " for="approvalComment">备注信息</label>
-                        <div class="col-xs-9">
-                            <textarea maxlength="128" id="approvalComment" class="col-xs-4 v_required" rows="3"></textarea>
-                        </div>
+                <div class="form-group" style="margin-right: 0">
+                    <label class="col-xs-3 control-label " for="approvalComment">备注信息</label>
+                    <div class="col-xs-9">
+                        <textarea maxlength="128" id="approvalComment" class="v_required" rows="3"></textarea>
                     </div>
+                </div>
 
-                    <div class="form-group" style="margin-right: 0">
-                        <label class="col-xs-3 control-label " for="approver">审批人</label>
-                        <div class="col-xs-9 controls" id="approver">
+                <div class="form-group" style="margin-right: 0">
+                    <label class="col-xs-3 control-label " for="approver">审批人</label>
+                    <div class="col-xs-9 controls" id="approver"></div>
+                </div>
 
-                        </div>
-                    </div>
-
-                    <div class="form-group" style="margin-right: 0">
-                        <div class="form-group col-xs-10 col-sm-7" style="text-align: right">
-                            <button type="button" id="fullPaymentCancelBtn" class="btn btn-primary">取消</button>
-                            <button type="button" id="fullPaymentSaveBtn" class="btn btn-success">提交</button>
-                        </div>
-                    </div>
-
-                    <div class="space5"></div>
-
-
-                    <!--<div class="space5"></div>-->
-
-                </form>
-            </div>
+                <div class="form-group pull-right" style="margin-right: 0">
+                    <button type="button" id="fullPaymentCancelBtn" class="btn btn-primary">取消</button>
+                    <button type="button" id="fullPaymentSaveBtn" class="btn btn-success">提交</button>
+                </div>
+                
+            </form>
         </div>
     </div>
-
 
     <!-- 装修单信息 -->
     <div class="modal fade" id="decorationInfo" tabindex="-1">

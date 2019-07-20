@@ -18,6 +18,7 @@ import com.fanglin.information.dao.AwardStockDao;
 import com.fanglin.information.po.AwardRecordPO;
 import com.fanglin.information.po.AwardStockPO;
 import com.fanglin.personel.dao.UserDao;
+import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.sales.dao.SalesActivityDao;
 import com.fanglin.sales.dao.SalesDao;
@@ -148,7 +149,7 @@ public class SalesActivityServiceImpl implements SalesActivityService {
 		
 		AwardStockPO awardStockPO = awardStockDao.get(salesActivityItemPO.getAsid());
 		
-		if (salesActivityItemPO.getIsStock() == SalesActivityItemPO.STATUS_VALID_INT) {//0--初始
+		if (salesActivityItemPO.getIsStock() == SalesActivityItemPO.ISSTOCK_COUNTIN_INT) {//0--计入库存
 
 			if(awardStockPO == null){
 				throw new FLException(160043, "物品不存在!");
@@ -166,7 +167,7 @@ public class SalesActivityServiceImpl implements SalesActivityService {
 
 		}
 		
-		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, userDao.queryUserByUserId(userId), AwardRecordPO.TYPE_XG_INT, AwardRecordPO.SUBTYPE_RECEIVE_INT, AwardRecordPO.ONETYPE_SALES_INT, salesActivityItemPO.getIsStock(), salesActivityItemPO.getMoney(), salesActivityItemPO.getNum(), "领取活动奖品");
+		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, userDao.queryUserByUserId(userId), AwardRecordPO.TYPE_XG_INT, AwardRecordPO.SUBTYPE_RECEIVE_INT, AwardRecordPO.ONETYPE_SALES_INT, salesActivityItemPO.getIsStock(), salesActivityItemPO.getMoney(), salesActivityItemPO.getNum(), salesActivityItemVO.getContent());
 		
 		awardRecordDao.save(awardRecordPO);
 		
@@ -175,7 +176,7 @@ public class SalesActivityServiceImpl implements SalesActivityService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void deliveSalesActivityItem(SalesActivityItemVO salesActivityItemVO) throws FLException {
+	public void deliveSalesActivityItem(SalesActivityItemVO salesActivityItemVO, String userId,String userName) throws FLException {
 		
 		SalesActivityItemPO salesActivityItemPO = salesActivityDao.get(salesActivityItemVO.getSaiid());
 		
@@ -187,10 +188,30 @@ public class SalesActivityServiceImpl implements SalesActivityService {
 			throw new FLException(140057, "订单活动奖品不可操作");
 		}
 		
+		UserPO creater = userDao.queryUserByUserId(userId);
 		salesActivityItemPO.setState(SalesActivityItemPO.STATUS_DELIVERY_INT);//更改为状态4--配送
-		
+		salesActivityItemPO.setIsStock(SalesActivityItemPO.ISSTOCK_COUNTIN_INT);//计入库存
+		salesActivityItemPO.setReceiveUserId(creater);
+		salesActivityItemPO.setReceiveUserName(userName);
+		salesActivityItemPO.setReceiveTime(DateUtil.getDateToTimestamp(new Date()));
 		salesActivityDao.update(salesActivityItemPO);
 		
+		AwardStockPO awardStockPO = awardStockDao.get(salesActivityItemPO.getAsid());
+		
+		if(salesActivityItemPO.getIsStock() == SalesActivityItemPO.ISSTOCK_COUNTIN_INT){//计入库存
+			
+			float num = Arith.sub(awardStockPO.getNum(), salesActivityItemPO.getNum());
+			if(num < 0){
+				throw new FLException(160038, "奖品库存数量不足!");
+			}
+			awardStockPO.setNum((int) Arith.sub(awardStockPO.getNum(), salesActivityItemPO.getNum()));
+
+			awardStockDao.update(awardStockPO);
+		}
+		
+		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, creater, AwardRecordPO.TYPE_XG_INT, AwardRecordPO.SUBTYPE_DELIVERY_INT, AwardRecordPO.ONETYPE_SALES_INT, salesActivityItemPO.getIsStock(), salesActivityItemPO.getMoney(), salesActivityItemPO.getNum(), salesActivityItemVO.getContent());
+		
+		awardRecordDao.save(awardRecordPO);
 	}
 
 	@Override
@@ -223,7 +244,7 @@ public class SalesActivityServiceImpl implements SalesActivityService {
 			throw new FLException(140030, "订单活动物品不存在");
 		}
 		
-		if(salesActivityItemPO.getState() != SalesActivityItemPO.STATUS_RECEIVE_INT && salesActivityItemPO.getState() != 5){//已领--2, 未退--5
+		if(salesActivityItemPO.getState() != SalesActivityItemPO.STATUS_RECEIVE_INT && salesActivityItemPO.getState() != SalesActivityItemPO.STATUS_UNRETURNED_INT && salesActivityItemPO.getState() != SalesActivityItemPO.STATUS_DELIVERY_INT){//已领--2, 未退--5, 配送--4
 			throw new FLException(140057, "订单活动奖品不可操作");
 		}
 		
@@ -241,7 +262,7 @@ public class SalesActivityServiceImpl implements SalesActivityService {
 			
 		}
 		
-		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, userDao.queryUserByUserId(userId), AwardRecordPO.TYPE_CG_INT, AwardRecordPO.SUBTYPE_REFUND_INT, AwardRecordPO.ONETYPE_SALES_INT, salesActivityItemPO.getIsStock(), salesActivityItemPO.getMoney(), salesActivityItemPO.getNum(), "");
+		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, userDao.queryUserByUserId(userId), AwardRecordPO.TYPE_CG_INT, AwardRecordPO.SUBTYPE_REFUND_INT, AwardRecordPO.ONETYPE_SALES_INT, salesActivityItemPO.getIsStock(), salesActivityItemPO.getMoney(), salesActivityItemPO.getNum(), salesActivityItemVO.getContent());
 		
 		awardRecordDao.save(awardRecordPO);
 		
@@ -257,7 +278,7 @@ public class SalesActivityServiceImpl implements SalesActivityService {
 			throw new FLException(140030, "订单活动物品不存在");
 		}
 		
-		if(salesActivityItemPO.getState() != SalesActivityItemPO.STATUS_RECEIVE_INT){// 已领--2
+		if(salesActivityItemPO.getState() != SalesActivityItemPO.STATUS_RECEIVE_INT && salesActivityItemPO.getState() != SalesActivityItemPO.STATUS_DELIVERY_INT){// 已领--2, 配送--4
 			throw new FLException(140057, "订单活动奖品不可操作");
 		}
 		

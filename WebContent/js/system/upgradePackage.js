@@ -3,9 +3,7 @@ jQuery(function($) {
     var upgrade = {
         saveBtn : com.focusPage("#saveBtn").on("click", saveData),
         cancelBtn : com.focusPage("#cancelBtn").on("click", empty),
-        modal : com.focusPage("#upgradeModal").on("show.bs.modal", function(a) {
-            com.clearValidator()
-        }),
+        modal : com.focusPage("#upgradeModal"),
         items : {
             upgradeNumber : com.focusPage("#upgradeNumber"),
             trialUpgrade : com.focusPage("#trialUpgrade"),
@@ -17,6 +15,11 @@ jQuery(function($) {
     };
 
     com.datetime(com.focusPage(".date-picker"), "date");
+    
+    upgrade.modal.on("hide.bs.modal", function(a) {
+        com.cleanItems(upgrade.items);
+        com.clearValidator();
+    });
 
     var displayFunc = (function() {
 

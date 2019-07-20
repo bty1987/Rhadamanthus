@@ -28,7 +28,7 @@ jQuery(function($) {
      */
     approve.saveBtn.bindClick(saveData);
     
-    com.initTypeahead("approver", api.personel.queryUserByPinyin, "pinyinName", {"user.status":"0", "departmentType.name":""}, "userBases", "userId", "currentName", null);
+    com.initTypeahead("approver", api.personel.queryUserByPinyin, "pinyinName", {"user.status":"0", "departmentType.name":""}, "autoFillKeyValue", "key", "value", null);
     
     /**
      * 初始化页面变量中的状态/类型等信息 , 同时判断是否需要绑定数据

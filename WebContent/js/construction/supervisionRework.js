@@ -149,7 +149,7 @@ jQuery(function ($) {
     }
 
     function removeRow(id) {
-        com.showConfirm("确认申请放线吗?", function () {
+        com.showConfirm("确认删除返工信息吗?", function () {
             com.post(api.construction.deleteRework, {"rwIds[0]": id}, function (res) {
                 searcher.doSearch();
             });
