@@ -33,11 +33,11 @@ public class ExtensionItemPO implements Serializable {
 
 	private String workType;
 
-	private float addPrice;  //增补价
-	
+	private float addPrice; // 增补价
+
 	private float unitPrice; // 原单价
-	
-	private float subPrice;  //退减价
+
+	private float subPrice; // 退减价
 
 	private float num;
 
@@ -46,6 +46,8 @@ public class ExtensionItemPO implements Serializable {
 	private long quoteItemId;
 
 	private String content;
+
+	private short discount;
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -174,6 +176,15 @@ public class ExtensionItemPO implements Serializable {
 
 	public void setContent(String content) {
 		this.content = content;
+	}
+
+	@Column(name = "discount")
+	public short getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(short discount) {
+		this.discount = discount;
 	}
 
 }

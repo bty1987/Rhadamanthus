@@ -48,6 +48,25 @@ jQuery(function($){
                     ['40', '退货金额  : ', "total"]
                 ],
                 "caleTotal": ["total"]
+            },
+            "14": {
+                "api": api.approval.queryApprovalCustomerOriginTDecoration,
+                "title": "客源信息",
+                "resultname": "approvalCustomerOriginTDecoration",
+                "args": [
+                    ['10', '城市: ', "customerOrigin.house.village.cityProper.city.name"],
+                    ['10', '城区: ', "customerOrigin.house.village.cityProper.name"],
+                    ['10', '楼盘: ', "customerOrigin.house.village.name"],
+                    ['10', '楼号: ', "customerOrigin.house.houseNumber"],
+                    ['10', '面积: ', "customerOrigin.house.buildArea"],
+                    ['10', '房屋类型: ', "houseClass"],
+                    ['10', '房屋类别: ', "houseType "],
+                    ['10', '客户: ', "customerOrigin.customer.name"],
+                    ['10', '业务员: ', "salesman.currentName"],
+                    ['10', '业务部: ', "salesman.dept.name"],
+                    ['10', '设计师: ', "customerOrigin.designer.currentName"],
+                    ['10', '设计部: ', "customerOrigin.designer.dept.name"],
+                ]
             }
         }
     };
@@ -100,7 +119,8 @@ jQuery(function($){
             var $btnRefuse = $('<a></a>').addClass('btn btn-minier btn-danger').html('拒绝').prepend($('<i></i>'));
 
             var propertyArr = [
-                ["申请人:", v.sender.userName, "grey"],
+                ["申请人:", v.sender.currentName, "grey"],
+                ["审批人:", v.receiver.currentName, "grey"],
                 ["提交时间:", v.createTime, "grey"],
                 ["审批时间:", v.approvalTime, "grey"],
                 ["状态:", v.status == 0 ? "等待" : (v.status == 1 ? "通过" : v.status == 3 ? "审批中" : "拒绝"), "red"]
@@ -130,14 +150,13 @@ jQuery(function($){
                 approve(v.aid, api.approval.refuseApproval);
             });
 
-            if ([6, 8, 10].indexOf(v.type) != -1) {
+            if ([6, 8, 10, 14].indexOf(v.type) != -1) {
 
                 $divBtnWrap.append($btnDetails).appendTo($h3);
 
                 // 详细信息按钮
                 $btnDetails.bindClick(function () {
                     queryInformationItem(v.aid, v.type);
-
                 });
             }
 
@@ -184,6 +203,8 @@ jQuery(function($){
         if (com.focusPage('#itemList').children()) {
             com.focusPage('#itemList').empty();
         }
+        
+        com.focusPage('#totalMoney').hide();
 
         var itemInfo = approvalTrack.approvalItemInfo[type];
         var infoList = com.focusPage('#itemList');
@@ -193,8 +214,10 @@ jQuery(function($){
             var totalMoney = 0;
 
             com.focusPage("#itemTitle").html(itemInfo.title);
+            
+            var data = $.isArray(res[itemInfo.resultname]) ? res[itemInfo.resultname] : [res[itemInfo.resultname]]
 
-            $.each(res[itemInfo.resultname], function (i, v) {
+            $.each(data, function (i, v) {
 
                 $.each(itemInfo.args, function (j, e) {
                     if (e[2] == "type") infoList.append(approvalUtils.addspan(e[0], e[1], approvalTrack.type[getElement(v, e[2].split('.'))]));
@@ -212,7 +235,7 @@ jQuery(function($){
                 infoList.append('<hr />');
             });
             
-            com.focusPage('#totalMoney').html("总金额:" + totalMoney);
+            if(itemInfo.caleTotal) com.focusPage('#totalMoney').html("总金额:" + totalMoney).show();
             
             com.focusPage('#itemModel').modal("show");
 

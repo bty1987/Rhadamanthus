@@ -26,12 +26,28 @@ import com.fanglin.utils.Paging;
 public class QuotationSmallCategoryDaoImpl extends DaoImpl<QuotationSmallCategoryPO> implements QuotationSmallCategoryDao {
 
 	public QuotationSmallCategoryDaoImpl() {
-		super(QuotationSmallCategoryPO.class, true);
+		super(QuotationSmallCategoryPO.class);
 	}
 
 	@Override
 	public List<QuotationSmallCategoryPO> pageQuotationSmallCategory(Paging paging, List<Filter> filters) {
+
 		PagingQuery<QuotationSmallCategoryPO> query = pagingQuery(paging, QuotationSmallCategoryPO.class);
+
+		queryFilterExcute(query, filters);
+
+		query.asc("id");
+
+		return query.list();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<QuotationSmallCategoryPO> queryQuotationSmallCategory(Integer qtid) {
+		return session().createCriteria(QuotationSmallCategoryPO.class).add(Restrictions.eq("qtid", qtid)).list();
+	}
+
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
 		if (filters != null) {
 			for (Filter filter : filters) {
@@ -40,16 +56,6 @@ public class QuotationSmallCategoryDaoImpl extends DaoImpl<QuotationSmallCategor
 				}
 			}
 		}
-
-		query.asc("id");
-
-		return query.list();
-
 	}
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<QuotationSmallCategoryPO> queryQuotationSmallCategory(Integer qtid) {
-		return session().createCriteria(QuotationSmallCategoryPO.class).add(Restrictions.eq("qtid", qtid)).list();
-	}
 }

@@ -6,30 +6,25 @@
                     <div class="widget-box no-border">
                         <div class="widget-body">
                             <div class="widget-main">
-                                <div id="fuelux-wizard" class="row-fluid" data-target="#step-container">
-
-                                </div>
+                                <div id="fuelux-wizard" class="row-fluid" data-target="#step-container"></div>
                                 <hr />
-                                <div class="step-content row-fluid position-relative" id="step-container">
-
-                                </div>
-
+                                <div class="step-content row-fluid position-relative" id="step-container"></div>
                                 <hr />
                                 <div class="row-fluid wizard-actions">
-                                    <button class="btn btn-info" type="button" id="btnSaveBasedecorationInfo"
-                                            data-loading-text="保存中...">
+                                    <button class="btn btn-info" type="button" id="btnSaveBasedecorationInfo" data-loading-text="保存中...">
                                         <i class="icon-ok bigger-110"></i>
-                                        保存
+                                        <span>保存</span>
                                     </button>
                                     <button id="btnBack" class="btn btn-info" type="button">
-                                        <i class="icon-mail-forward "></i>返回
+                                        <i class="icon-mail-forward "></i>
+                                        <span>返回</span>
                                     </button>
                                     <button class="btn btn-prev">
-                                        <i class="icon-arrow-left"></i> 上一步
+                                        <i class="icon-arrow-left"></i>
+                                        <span>上一步</span>
                                     </button>
-
-                                    <button class="btn btn-success btn-next" data-last="完成">
-                                        下一步 <i class="icon-arrow-right icon-on-right"></i>
+                                    <button class="btn btn-success btn-next" data-last="完成">下一步
+                                        <i class="icon-arrow-right icon-on-right"></i>
                                     </button>
                                 </div>
                             </div>
@@ -45,7 +40,8 @@
             <div class="modal-content col-md-12">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">
-                        <span>&times;</span><span class="sr-only">Close</span>
+                        <span>&times;</span>
+                        <span class="sr-only">Close</span>
                     </button>
                     <h4 class="modal-title" id="quotationTotalPriceDialog">选择报价总金额</h4>
                 </div>
@@ -53,38 +49,28 @@
                     <form class="form-horizontal">
                         <div class="space-4"></div>
                         <div class="form-group" id="forOrderType">
-                            <label class="col-sm-3 control-label no-padding-right "
-                                   for="decorationDiscount">订单类型</label>
+                            <label class="col-sm-3 control-label no-padding-right " for="decorationDiscount">订单类型</label>
                             <div class="col-sm-3 no-padding-right">
-                                <div id="detailOrderType" class="col-xs-10 col-sm-8" style="padding-top: 5px;">
-
-                                </div>`
+                                <div id="detailOrderType" class="col-xs-10 col-sm-8" style="padding-top: 5px;"></div>`
                             </div>
                         </div>
                         <div class="form-group" id="forHouseType">
-                            <label class="col-sm-3 control-label no-padding-right "
-                                   for="decorationDiscount">房屋类别</label>
+                            <label class="col-sm-3 control-label no-padding-right " for="decorationDiscount">房屋类别</label>
                             <div class="col-sm-3 no-padding-right">
-                                <div id="detailHouseType" class="col-xs-10 col-sm-8" style="padding-top: 5px;">
-
-                                </div>
+                                <div id="detailHouseType" class="col-xs-10 col-sm-8" style="padding-top: 5px;"></div>
                             </div>
                         </div>
                         <div class="form-group hide" id="forDiscount">
-                            <label class="col-sm-3 control-label no-padding-right "
-                                   for="decorationDiscount">订单折扣</label>
+                            <label class="col-sm-3 control-label no-padding-right" for="decorationDiscount">订单折扣</label>
                             <div class="col-md-8">
-                                <select class="form-control v_required col-md-6" id="decorationDiscount"
-                                        data-toggle="popover" data-trigger='manual' style="width: 50%;"></select>
+                                <select class="form-control v_required col-md-6" id="decorationDiscount"  data-toggle="popover" data-trigger='manual' style="width: 50%;"></select>
                             </div>
                         </div>
                         <div class="form-group" id="forPaymentScale">
                             <label class="col-sm-3 control-label no-padding-right "
                                    for="decorationDiscount">款项比例</label>
                             <div class="col-md-8">
-                                <div id="paymentScale" class="col-xs-10 col-sm-8">
-
-                                </div>
+                                <div id="paymentScale" class="col-xs-10 col-sm-8"></div>
                             </div>
                         </div>
                         <div class="space-4"></div>
@@ -92,9 +78,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" id="saveGenerateDecorationPaymentBtn" class="btn btn-primary">保存</button>
-                    <button type="button" id="cancelGenerateDecorationPaymentBtn" class="btn btn-default"
-                            data-dismiss="modal">取消
-                    </button>
+                    <button type="button" id="cancelGenerateDecorationPaymentBtn" class="btn btn-default"data-dismiss="modal">取消</button>
                 </div>
             </div>
         </div>
@@ -162,8 +146,7 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label no-padding-right" for="otherPaymentType">款项类型</label>
                             <div class="col-sm-9">
-                                <select class='col-xs-10 col-sm-5 v_required' id='otherPaymentType'
-                                        data-toggle="popover" data-trigger='manual'></select>
+                                <select class='col-xs-10 col-sm-5 v_required' id='otherPaymentType' data-toggle="popover" data-trigger='manual'></select>
                             </div>
                         </div>
                         <div class="space-4"></div>
@@ -387,24 +370,24 @@
                     <p align="center">
                         <a class="btn btn-app btn-primary no-radius" id='printProjectBtn' target="_blank">
                             <i class="icon-print bigger-230"></i>
-                            打印工程
+                            <span>打印工程</span>
                         </a>
                         <a class="btn btn-app btn-primary no-radius" id='printFinanceBtn' target="_blank">
                             <i class="icon-print bigger-230"></i>
-                            打印财务
+                            <span>打印财务</span>
                         </a>
                         <br/>
                         <a class="btn btn-app btn-primary no-radius" id='printCustomerBtn' target="_blank">
                             <i class="icon-print bigger-230"></i>
-                            项目清单
+                            <span>项目清单</span>
                         </a>
                         <a class="btn btn-app btn-primary no-radius" id='printEngineeringBtn' target="_blank">
                             <i class="icon-print bigger-230"></i>
-                            工程清单
+                            <span>工程清单</span>
                         </a>
                         <a class="btn btn-app btn-primary no-radius" id='printMaterialBtn' target="_blank">
                             <i class="icon-print bigger-230"></i>
-                            主材清单
+                            <span>主材清单</span>
                         </a>
                     </p>
                 </div>
@@ -464,15 +447,13 @@
                         <div class="form-group">
                             <label for="activity" class="col-sm-3 control-label no-padding-right">活动</label>
                             <div class="col-sm-9">
-                                <select class='col-xs-10 col-sm-5 v_required' id='activity' data-toggle="popover"
-                                        data-trigger='manual'></select>
+                                <select class='col-xs-10 col-sm-5 v_required' id='activity' data-toggle="popover" data-trigger='manual'></select>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="activity" class="col-sm-3 control-label no-padding-right">状态类型</label>
                             <div class="col-sm-9">
-                                <select class='col-xs-10 col-sm-5 v_required' id='receiveTypes' data-toggle="popover"
-                                        data-trigger='manual'></select>
+                                <select class='col-xs-10 col-sm-5 v_required' id='receiveTypes' data-toggle="popover" data-trigger='manual'></select>
                             </div>
                         </div>
                         <div class="form-group">
@@ -488,8 +469,6 @@
                                     <button type="button" id="thingsAdd" class="btn btn-info btn-minier" style="width: 50px; line-height: 30px">添加</button>
                                 </div>
                             </div>
-
-
                         </div>
                         <div class="form-group">
                             <div class="col-sm-3"></div>
@@ -504,7 +483,6 @@
                                     <input type="text" id="couponsVal" class="col-xs-10 col-sm-4 v_float_3 v_required" placeholder="请输入劵数量" style="margin: 0 10px">
                                     <button type="button" id="couponsAdd" class="btn btn-info btn-minier" style="width: 50px; line-height: 30px">添加</button>
                                 </div>
-
                             </div>
                         </div>
                         <div class="form-group">
@@ -526,7 +504,6 @@
             </div>
         </div>
     </div>
-
 </div>
 
 <script type="text/javascript">

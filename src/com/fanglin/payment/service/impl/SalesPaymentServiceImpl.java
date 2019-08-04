@@ -84,7 +84,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 		if(filters.size() == 0) return;
 
-		filters.add(new Filter(SalesPaymentPO.COLUMN_SALES_STATUS_STR, String.valueOf(SalesPaymentPO.COLUMN_SALES_INITIALSTATUS_INT), "eq"));
+		filters.add(new Filter(SalesPaymentPO.COLUMN_STATUS_STR, String.valueOf(SalesPaymentPO.STATUS_INITIAL_INT), "eq"));
 
 		if (SystemConfig.getInt("multicompany", 0) != 0) {
 			filters.add(new Filter("company", String.valueOf(company), "eq"));
@@ -113,7 +113,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		if (filters.size() == 0)
 			return;
 
-		filters.add(new Filter(SalesPaymentPO.COLUMN_SALES_STATUS_STR, String.valueOf(SalesPaymentPO.COLUMN_SALES_INITIALSTATUS_INT), "ne"));
+		filters.add(new Filter(SalesPaymentPO.COLUMN_STATUS_STR, String.valueOf(SalesPaymentPO.STATUS_INITIAL_INT), "ne"));
 
 		if (SystemConfig.getInt("multicompany", 0) != 0) {
 			filters.add(new Filter("company", String.valueOf(company), "eq"));
@@ -146,7 +146,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 		if(filters.size() == 0) return;
 
-		filters.add(new Filter(SalesPaymentPO.COLUMN_SALES_STATUS_STR, String.valueOf(SalesPaymentPO.COLUMN_SALES_PAIDFORSTATUS_INT), "eq"));
+		filters.add(new Filter(SalesPaymentPO.COLUMN_STATUS_STR, String.valueOf(SalesPaymentPO.STATUS_PAIDFOR_INT), "eq"));
 		filters.add(new Filter("company", String.valueOf(company), "eq"));
 
 		List<SalesPaymentPO> salesPaymentPOs = salesPaymentDao.pageSalesPaymentForCollect(paging, filters);
@@ -175,7 +175,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 		if(filters.size() == 0) return;
 
-		filters.add(new Filter(SalesPaymentPO.COLUMN_SALES_STATUS_STR, String.valueOf(SalesPaymentPO.COLUMN_SALES_CONFIRMEDSTATUS_INT), "eq"));
+		filters.add(new Filter(SalesPaymentPO.COLUMN_STATUS_STR, String.valueOf(SalesPaymentPO.STATUS_CONFIRMED_INT), "eq"));
 		filters.add(new Filter("company", String.valueOf(company), "eq"));
 
 		List<SalesPaymentPO> salesPaymentPOs = salesPaymentDao.pageSalesPaymentForCollect(paging, filters);
@@ -309,7 +309,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 			throw new FLException(260022, "销售单状态不可操作");
 		}
 
-		if (salesPaymentDao.countSalesPaymentBySidAType(salesPaymentVO.getSales().getSid(), SalesPaymentPO.COLUMN_DEPOSITTYPE_INT) > 0) {
+		if (salesPaymentDao.countSalesPaymentBySidAType(salesPaymentVO.getSales().getSid(), SalesPaymentPO.TYPE_DEPOSIT_INT) > 0) {
 			throw new FLException(150033, "款项类型已存在");
 		}
 
@@ -317,8 +317,8 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 		BeanUtil.copyProperties(salesPaymentVO, salesPaymentPO, Arrays.asList("sales", "collecter", "confirmer"));
 		salesPaymentPO.setSales(sales);
-		salesPaymentPO.setType(SalesPaymentPO.COLUMN_DEPOSITTYPE_INT);
-		salesPaymentPO.setStatus(SalesPaymentPO.COLUMN_SALES_INITIALSTATUS_INT);
+		salesPaymentPO.setType(SalesPaymentPO.TYPE_DEPOSIT_INT);
+		salesPaymentPO.setStatus(SalesPaymentPO.STATUS_INITIAL_INT);
 		salesPaymentPO.setCategory(sales.getCategory());
 		salesPaymentPO.setBrand(sales.getBrand());
 		
@@ -349,13 +349,13 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		
 		SalesPO sales = salesDao.get(sid);
 
-		if(salesPaymentDao.countSalesPaymentBySidAType(sid, SalesPaymentPO.COLUMN_REPLENISHMENTTYPE_INT) > 0){
+		if(salesPaymentDao.countSalesPaymentBySidAType(sid, SalesPaymentPO.TYPE_REPLENISHMENT_INT) > 0){
 			throw new FLException(150040, "补款已存在");
 		}
 		
-		SalesPaymentPO depositSalesPaymentPO = salesPaymentDao.querySalesPaymentsBySidAndType(sid, SalesPaymentPO.COLUMN_DEPOSITTYPE_INT);
+		SalesPaymentPO depositSalesPaymentPO = salesPaymentDao.querySalesPaymentsBySidAndType(sid, SalesPaymentPO.TYPE_DEPOSIT_INT);
 		
-		if(depositSalesPaymentPO != null && depositSalesPaymentPO.getStatus() == SalesPaymentPO.COLUMN_SALES_INITIALSTATUS_INT){
+		if(depositSalesPaymentPO != null && depositSalesPaymentPO.getStatus() == SalesPaymentPO.STATUS_INITIAL_INT){
 			throw new FLException(150041, "定金状态不可操作");
 		}
 		
@@ -382,12 +382,12 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		salesPaymentPO.setSales(sales);
 		
 		if(salesPaymentVO.getReferMoney() >= 0){
-			salesPaymentPO.setType(SalesPaymentPO.COLUMN_REPLENISHMENTTYPE_INT);
+			salesPaymentPO.setType(SalesPaymentPO.TYPE_REPLENISHMENT_INT);
 		}else if(salesPaymentVO.getReferMoney() < 0){
-			salesPaymentPO.setType(SalesPaymentPO.COLUMN_MAKEAREFUNDTYPE_INT);
+			salesPaymentPO.setType(SalesPaymentPO.TYPE_MAKEAREFUND_INT);
 		}
 		
-		salesPaymentPO.setStatus(SalesPaymentPO.COLUMN_SALES_INITIALSTATUS_INT);
+		salesPaymentPO.setStatus(SalesPaymentPO.STATUS_INITIAL_INT);
 		salesPaymentPO.setCategory(sales.getCategory());
 		salesPaymentPO.setBrand(sales.getBrand());
 
@@ -420,7 +420,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 			throw new FLException(150003, "款项不存在");
 		}
 		
-		if (salesPayment.getStatus() != SalesPaymentPO.COLUMN_SALES_INITIALSTATUS_INT) {
+		if (salesPayment.getStatus() != SalesPaymentPO.STATUS_INITIAL_INT) {
 			throw new FLException(150036, "款项状态不可操作");
 		}
 		
@@ -518,7 +518,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 		salesReceiptPO.setType(SalesReceiptPO.COLUMN_SALESRECEIPT_TYPE_INT);
 
-		Float referMoneySR = salesReceiptPO.getCash() + salesReceiptPO.getBank() + salesReceiptPO.getCheckv() + salesReceiptPO.getCoupon() + salesReceiptPO.getAdvance();
+		Float referMoneySR = Arith.add(Arith.add(Arith.add(Arith.add(salesReceiptPO.getCash(), salesReceiptPO.getBank()), salesReceiptPO.getCheckv()), salesReceiptPO.getCoupon()), salesReceiptPO.getAdvance());
 		Float referMoneyDB = salesPayment.getReferMoney();
 
 		if (Arith.sub(referMoneySR, referMoneyDB) != SalesReceiptPO.COLUMN_MONEY_INT) {
@@ -527,7 +527,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		salesReceiptDao.save(salesReceiptPO);
 
 		salesPayment.setSalesReceipt(salesReceiptPO);
-		salesPayment.setStatus(SalesPaymentPO.COLUMN_SALES_PAIDFORSTATUS_INT);
+		salesPayment.setStatus(SalesPaymentPO.STATUS_PAIDFOR_INT);
 		
 		if(sales.getPompany() == 0){
 			salesPayment.setCompany(company);
@@ -551,13 +551,13 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 			Short paymentType = 0;
 
-			if (salesPaymentVO.getAdvanceType() == SalesPaymentPO.COLUMN_ADVANCETYPECONTRACT_INT) {
+			if (salesPaymentVO.getAdvanceType() == SalesPaymentPO.ADVANCETYPE_CONTRACT_INT) {
 				paymentType = 0; // 合同
-			} else if (salesPaymentVO.getAdvanceType() == SalesPaymentPO.COLUMN_ADVANCETYPEENGINEERING_INT) {
+			} else if (salesPaymentVO.getAdvanceType() == SalesPaymentPO.ADVANCETYPE_ENGINEERING_INT) {
 				paymentType = 1; // 工程
-			} else if (salesPaymentVO.getAdvanceType() == SalesPaymentPO.COLUMN_ADVANCETYPEMATERIAL_INT) {
+			} else if (salesPaymentVO.getAdvanceType() == SalesPaymentPO.ADVANCETYPE_MATERIAL_INT) {
 				paymentType = 2; // 主材
-			} else if (salesPaymentVO.getAdvanceType() == SalesPaymentPO.COLUMN_ADVANCETYPEZHENGLIN_INT) {
+			} else if (salesPaymentVO.getAdvanceType() == SalesPaymentPO.ADVANCETYPE_ZHENGLIN_INT) {
 				paymentType = 3; // 正林
 			}
 
@@ -651,18 +651,18 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 		salesReceiptPO.setType(SalesReceiptPO.COLUMN_SALESRECEIPT_TYPE_INT);
 
-		Float referMoneySR = salesReceiptPO.getCash() + salesReceiptPO.getBank() + salesReceiptPO.getCheckv() + salesReceiptPO.getAdvance();
+		Float referMoneySR = Arith.add(Arith.add(Arith.add(salesReceiptPO.getCash(), salesReceiptPO.getBank()), salesReceiptPO.getCheckv()), salesReceiptPO.getAdvance());
 
 		Float referMoneyPY = 0f;
-
+		
 		for (Long spid : spids) {
 			SalesPaymentPO salesPayment = salesPaymentDao.get(spid);
 
-			if (salesPayment.getStatus() != SalesPaymentPO.COLUMN_SALES_INITIALSTATUS_INT) {
+			if (salesPayment.getStatus() != SalesPaymentPO.STATUS_INITIAL_INT) {
 				throw new FLException(150036, "款项状态不可操作");
 			}
 
-			referMoneyPY = referMoneyPY + salesPayment.getReferMoney();
+			referMoneyPY = Arith.add(referMoneyPY, salesPayment.getReferMoney());
 		}
 
 		if (Arith.sub(referMoneySR, referMoneyPY) != SalesReceiptPO.COLUMN_MONEY_INT) {
@@ -694,7 +694,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 			}
 			
 			salesPayment.setSalesReceipt(salesReceiptPO);
-			salesPayment.setStatus(SalesPaymentPO.COLUMN_SALES_PAIDFORSTATUS_INT);
+			salesPayment.setStatus(SalesPaymentPO.STATUS_PAIDFOR_INT);
 			salesPaymentDao.update(salesPayment);
 
 			if (salesPayment.getType() == SalesPO.STATUS_ALLBACK_SHORT) {
@@ -711,20 +711,20 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 			}
 			
-			totalMoney = totalMoney + salesPayment.getReferMoney();
+			totalMoney = Arith.add(totalMoney, salesPayment.getReferMoney());
 		}
 
 		if (salesPaymentVO.getAdvanceType() != null) {
 
 			Short paymentType = 0;
 
-			if (salesPaymentVO.getAdvanceType() == SalesPaymentPO.COLUMN_ADVANCETYPECONTRACT_INT) {
+			if (salesPaymentVO.getAdvanceType() == SalesPaymentPO.ADVANCETYPE_CONTRACT_INT) {
 				paymentType = 0; // 合同
-			} else if (salesPaymentVO.getAdvanceType() == SalesPaymentPO.COLUMN_ADVANCETYPEENGINEERING_INT) {
+			} else if (salesPaymentVO.getAdvanceType() == SalesPaymentPO.ADVANCETYPE_ENGINEERING_INT) {
 				paymentType = 1; // 工程
-			} else if (salesPaymentVO.getAdvanceType() == SalesPaymentPO.COLUMN_ADVANCETYPEMATERIAL_INT) {
+			} else if (salesPaymentVO.getAdvanceType() == SalesPaymentPO.ADVANCETYPE_MATERIAL_INT) {
 				paymentType = 2; // 主材
-			} else if (salesPaymentVO.getAdvanceType() == SalesPaymentPO.COLUMN_ADVANCETYPEZHENGLIN_INT) {
+			} else if (salesPaymentVO.getAdvanceType() == SalesPaymentPO.ADVANCETYPE_ZHENGLIN_INT) {
 				paymentType = 3; // 正林
 			}
 
@@ -756,7 +756,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 			throw new FLException(150003, "款项不存在");
 		}
 		
-		if(salesPayment.getStatus() != SalesPaymentPO.COLUMN_SALES_INITIALSTATUS_INT){
+		if(salesPayment.getStatus() != SalesPaymentPO.STATUS_INITIAL_INT){
 			throw new FLException(150036, "款项状态不可操作");
 		}
 
@@ -808,7 +808,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		//type作为保留字段 目前没有什么用处 原本的意思为: 0 收款 1 退款
 		salesReceiptPO.setType(SalesReceiptPO.COLUMN_SALESRECEIPT_REFUND_TYPE_INT);
 
-		Float referMoneySR = salesReceiptPO.getCash() + salesReceiptPO.getBank() + salesReceiptPO.getCheckv() + salesReceiptPO.getCoupon();
+		Float referMoneySR = Arith.add(Arith.add(Arith.add(salesReceiptPO.getCash(), salesReceiptPO.getBank()), salesReceiptPO.getCheckv()), salesReceiptPO.getCoupon());
 		Float referMoneyDB = salesPayment.getReferMoney();
 
 		if (Arith.sub(referMoneySR, referMoneyDB) != SalesReceiptPO.COLUMN_MONEY_INT) {
@@ -819,21 +819,21 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		SalesPO sales = salesPayment.getSales();
 
 		salesPayment.setSalesReceipt(salesReceiptPO);
-		salesPayment.setStatus(SalesPaymentPO.COLUMN_SALES_PAIDFORSTATUS_INT);
+		salesPayment.setStatus(SalesPaymentPO.STATUS_PAIDFOR_INT);
 		salesPayment.setCompany(sales.getPompany());
 		salesPaymentDao.update(salesPayment);
 		
-		if(salesPayment.getType() == SalesPaymentPO.COLUMN_DEPOSITREFUNDTYPE_INT){
+		if(salesPayment.getType() == SalesPaymentPO.TYPE_DEPOSITREFUND_INT){
 			sales.setDepositpay(0);
 			sales.setDepositpayStatus(SalesPO.DESPOSITPAYSTATUS_UNPAY_SHORT);
 			salesDao.update(sales);
-		}else if(salesPayment.getType() == SalesPaymentPO.COLUMN_MAKEAREFUNDTYPE_INT){
+		}else if(salesPayment.getType() == SalesPaymentPO.TYPE_MAKEAREFUND_INT){
 			sales.setFullpayTime(new Timestamp(System.currentTimeMillis()));
 			//1 已付款
 			sales.setFullpayStatus(SalesPO.FULLPAYSTATUS_PAYED_SHORT);
 			salesDao.update(sales);
-		}else if(salesPayment.getType() == SalesPaymentPO.COLUMN_REFUNDSTYPE_INT){
-			refundsDao.updateRefundsForStatusBySpid(salesPaymentVO.getSpid(), SalesPaymentPO.COLUMN_SALES_PAIDFORSTATUS_INT);
+		}else if(salesPayment.getType() == SalesPaymentPO.TYPE_REFUNDS_INT){
+			refundsDao.updateRefundsForStatusBySpid(salesPaymentVO.getSpid(), SalesPaymentPO.STATUS_PAIDFOR_INT);
 		}
 		
 		decorationService.sendMessage(salesPayment.getSales().getOrderId(), "主材单", String.format("主材退款金额%s元", salesPayment.getReferMoney()));
@@ -855,11 +855,12 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 				throw new FLException(150003, "款项不存在");
 			}
 			
-			if(salesPayment.getType() == SalesPaymentPO.COLUMN_REPLENISHMENTTYPE_INT && salesPayment.getSales().getCompany() == 3){
+			//补款(3)和补款退款(5)并且销售单公司是宜家(3)的时候 , 会生成预结算信息
+			if((salesPayment.getType() == SalesPaymentPO.TYPE_REPLENISHMENT_INT || salesPayment.getType() == SalesPaymentPO.TYPE_MAKEAREFUND_INT) && salesPayment.getSales().getCompany() == 3){
 				salesIds.add(salesPayment.getSales().getSid());
 			}
 
-			salesPayment.setStatus(SalesPaymentPO.COLUMN_SALES_CONFIRMEDSTATUS_INT);
+			salesPayment.setStatus(SalesPaymentPO.STATUS_CONFIRMED_INT);
 			salesPaymentDao.update(salesPayment);
 
 			SalesReceiptPO salesReceiptPO = salesReceiptDao.get(salesPayment.getSalesReceipt().getSrId());
@@ -911,7 +912,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 			throw new FLException(150003, "款项不存在");
 		}
 
-		if (salesPayment.getStatus() != SalesPaymentPO.COLUMN_SALES_INITIALSTATUS_INT) {
+		if (salesPayment.getStatus() != SalesPaymentPO.STATUS_INITIAL_INT) {
 			throw new FLException(150019, "款项不能撤销");
 		}
 
@@ -951,17 +952,17 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 		SalesPaymentPO salesPayment = salesPaymentDao.querySalesPaymentsBySidAndType(sid, salesPaymentVO.getType());
 		
-		if(salesPaymentDao.countSalesPaymentBySidAType(sid, SalesPaymentPO.COLUMN_REPLENISHMENTTYPE_INT) > 0){
+		if(salesPaymentDao.countSalesPaymentBySidAType(sid, SalesPaymentPO.TYPE_REPLENISHMENT_INT) > 0){
 			throw new FLException(150040, "补款已存在");
 		}
 		
-		SalesPaymentPO depositSalesPaymentPO = salesPaymentDao.querySalesPaymentsBySidAndType(sid, SalesPaymentPO.COLUMN_DEPOSITTYPE_INT);
+		SalesPaymentPO depositSalesPaymentPO = salesPaymentDao.querySalesPaymentsBySidAndType(sid, SalesPaymentPO.TYPE_DEPOSIT_INT);
 
 		if (depositSalesPaymentPO == null) {
 			throw new FLException(150037, "定金不存在");
 		}
 		
-		if(depositSalesPaymentPO.getStatus() != SalesPaymentPO.COLUMN_SALES_INITIALSTATUS_INT){
+		if(depositSalesPaymentPO.getStatus() != SalesPaymentPO.STATUS_INITIAL_INT){
 			throw new FLException(150036, "款项状态不可操作");
 		}
 
@@ -986,7 +987,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 		SalesPaymentPO salesPayment = salesPaymentDao.querySalesPaymentsBySidAndType(sid, salesPaymentVO.getType());
 		
-		List<Short> types = Arrays.asList(SalesPaymentPO.COLUMN_REPLENISHMENTTYPE_INT, SalesPaymentPO.COLUMN_MAKEAREFUNDTYPE_INT);
+		List<Short> types = Arrays.asList(SalesPaymentPO.TYPE_REPLENISHMENT_INT, SalesPaymentPO.TYPE_MAKEAREFUND_INT);
 
 		List<SalesPaymentPO> fullSalesPaymentPOs = salesPaymentDao.querySalesPaymentsBySidAndTypes(sid, types);
 
@@ -994,7 +995,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 			throw new FLException(150038, "补款不存在");
 		}
 		
-		if(fullSalesPaymentPOs.get(0).getStatus() != SalesPaymentPO.COLUMN_SALES_INITIALSTATUS_INT){
+		if(fullSalesPaymentPOs.get(0).getStatus() != SalesPaymentPO.STATUS_INITIAL_INT){
 			throw new FLException(150036, "款项状态不可操作");
 		}
 
@@ -1019,25 +1020,25 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		
 		SalesPO salesPO = salesDao.get(sid);
 		
-		if(salesPaymentDao.countSalesPaymentBySidAType(sid, SalesPaymentPO.COLUMN_REPLENISHMENTTYPE_INT) > 0){
+		if(salesPaymentDao.countSalesPaymentBySidAType(sid, SalesPaymentPO.TYPE_REPLENISHMENT_INT) > 0){
 			throw new FLException(150040, "补款已存在");
 		}
 		
-		SalesPaymentPO depositSalesPaymentPO = salesPaymentDao.querySalesPaymentsBySidAndType(sid, SalesPaymentPO.COLUMN_DEPOSITTYPE_INT);
+		SalesPaymentPO depositSalesPaymentPO = salesPaymentDao.querySalesPaymentsBySidAndType(sid, SalesPaymentPO.TYPE_DEPOSIT_INT);
 
 		if (depositSalesPaymentPO == null) {
 			throw new FLException(150037, "定金不存在");
 		}
 		
-		if(depositSalesPaymentPO.getStatus() != SalesPaymentPO.COLUMN_SALES_CONFIRMEDSTATUS_INT){
+		if(depositSalesPaymentPO.getStatus() != SalesPaymentPO.STATUS_CONFIRMED_INT){
 			throw new FLException(150012, "款项不能进行退款");
 		}
 
 		SalesPaymentPO salesPaymentPO = new SalesPaymentPO(new UserPO(), new SalesPO());
 
 		salesPaymentPO.setSales(salesPO);
-		salesPaymentPO.setType(SalesPaymentPO.COLUMN_DEPOSITREFUNDTYPE_INT);
-		salesPaymentPO.setStatus(SalesPaymentPO.COLUMN_SALES_INITIALSTATUS_INT);
+		salesPaymentPO.setType(SalesPaymentPO.TYPE_DEPOSITREFUND_INT);
+		salesPaymentPO.setStatus(SalesPaymentPO.STATUS_INITIAL_INT);
 		salesPaymentPO.setCategory(salesPO.getCategory());
 		salesPaymentPO.setBrand(salesPO.getBrand());
 		
@@ -1068,7 +1069,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		
 		SalesPO salesPO = salesDao.get(sid);
 		
-		List<Short> types = Arrays.asList(SalesPaymentPO.COLUMN_DEPOSITTYPE_INT, SalesPaymentPO.COLUMN_REPLENISHMENTTYPE_INT);
+		List<Short> types = Arrays.asList(SalesPaymentPO.TYPE_DEPOSIT_INT, SalesPaymentPO.TYPE_REPLENISHMENT_INT);
 
 		List<SalesPaymentPO> depositSalesPaymentPOs = salesPaymentDao.querySalesPaymentsBySidAndTypes(sid, types);
 
@@ -1079,12 +1080,12 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		if(depositSalesPaymentPOs.size() == 1){
 			SalesPaymentPO depositSalesPaymentPO = depositSalesPaymentPOs.get(0);
 			
-			if(depositSalesPaymentPO.getStatus() == SalesPaymentPO.COLUMN_SALES_INITIALSTATUS_INT){
+			if(depositSalesPaymentPO.getStatus() == SalesPaymentPO.STATUS_INITIAL_INT){
 				throw new FLException(150012, "款项不能进行退款");
 			}
 		}
 		
-		SalesPaymentPO couponSalesPaymentPO = salesPaymentDao.querySalesPaymentsBySidAndType(sid, SalesPaymentPO.COLUMN_VOUCHERREFUNDTYPE_INT);
+		SalesPaymentPO couponSalesPaymentPO = salesPaymentDao.querySalesPaymentsBySidAndType(sid, SalesPaymentPO.TYPE_VOUCHERREFUND_INT);
 
 		if(couponSalesPaymentPO != null){
 			throw new FLException(150032, "销售退券款项已存在");
@@ -1093,8 +1094,8 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		SalesPaymentPO salesPaymentPO = new SalesPaymentPO(new UserPO(), new SalesPO());
 
 		salesPaymentPO.setSales(salesPO);
-		salesPaymentPO.setType(SalesPaymentPO.COLUMN_VOUCHERREFUNDTYPE_INT);
-		salesPaymentPO.setStatus(SalesPaymentPO.COLUMN_SALES_INITIALSTATUS_INT);
+		salesPaymentPO.setType(SalesPaymentPO.TYPE_VOUCHERREFUND_INT);
+		salesPaymentPO.setStatus(SalesPaymentPO.STATUS_INITIAL_INT);
 		salesPaymentPO.setCategory(salesPO.getCategory());
 		salesPaymentPO.setBrand(salesPO.getBrand());
 		
@@ -1131,8 +1132,8 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 			throw new FLException(150036, "款项状态不可操作");
 		}
 		
-		float referMoney = salesReceiptPO.getCash() + salesReceiptPO.getBank() + salesReceiptPO.getCheckv() + salesReceiptPO.getCoupon() + salesReceiptPO.getAdvance() + salesReceiptPO.getInstallment() + salesReceiptPO.getAccounts();
-
+		float referMoney = Arith.add(Arith.add(Arith.add(Arith.add(Arith.add(Arith.add(salesReceiptPO.getCash(), salesReceiptPO.getBank()), salesReceiptPO.getCheckv()), salesReceiptPO.getCoupon()), salesReceiptPO.getAdvance()), salesReceiptPO.getInstallment()), salesReceiptPO.getAccounts());
+		
 		Float cash = salesReceipt.getCash();
 		Float bank = salesReceipt.getBank();
 		Float checkv = salesReceipt.getCheckv();

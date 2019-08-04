@@ -27,7 +27,6 @@ import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.information.dao.ActivityDao;
 import com.fanglin.information.po.ActivityPO;
-import com.fanglin.inventory.dao.GoodsDao;
 import com.fanglin.inventory.po.ColorPO;
 import com.fanglin.inventory.po.FormatPO;
 import com.fanglin.inventory.po.GoodsPO;
@@ -43,7 +42,6 @@ import com.fanglin.sales.vo.SalesItemVO;
 import com.fanglin.sales.vo.SalesVO;
 import com.fanglin.system.dao.CompanyDao;
 import com.fanglin.system.po.CompanyPO;
-import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
@@ -65,9 +63,6 @@ public class SalesServiceImpl implements SalesService {
 
 	@Autowired
 	private SalesItemDao salesItemDao;
-	
-	@Autowired
-	private GoodsDao goodsDao;
 	
 	@Autowired
 	private CompanyDao companyDao;
@@ -261,16 +256,18 @@ public class SalesServiceImpl implements SalesService {
 			throw new FLException(230015, "公司不存在");
 		}
 		
-		Float totalMoney = 0f;
-			
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(salesVO.getOrderId());
+		
+		if (decorationPO == null) {
+			throw new FLException(140013, "订单不存在");
+		}
+		
 		SalesPO salesPO = new SalesPO(new HousePO(), new CustomerPO(), new UserPO(), new DepartmentPO(), new DepartmentPO(), new UserPO(), new DepartmentPO(), new UserPO());
 		
 		UserPO salesman = userDao.queryUserByUserId(salesVO.getSalesman().getUserId());
 		UserPO guider = userDao.queryUserByUserId(salesVO.getGuider().getUserId());
 		UserPO instorer = userDao.queryUserByUserId(salesVO.getInstorer().getUserId());
 		BrandPO brandPO = brandDao.get(salesVO.getBid());
-		
-		String salesBrand = brandPO.getName();
 		
 		String currentDate = DateUtil.current("yyMMdd").toString();
 
@@ -279,15 +276,15 @@ public class SalesServiceImpl implements SalesService {
 		String no = companyPO.getShortname() + currentDate + FormatUtil.fillZero(FormatUtil.offset(count), "0000");
 		
 		BeanUtil.copyProperties(salesVO, salesPO, Arrays.asList("salesman","dept","region","guider","instorer","brand","category","guideDept","house","customer","maling","venderMaling","depositpayStatus","fullpayStatus"));
-		BeanUtil.copyProperties(salesman, salesPO.getSalesman(),Arrays.asList("dept","duty"));
-		BeanUtil.copyProperties(salesman.getDept(), salesPO.getDept(),Arrays.asList("fatherDept","type","manager"));
-		BeanUtil.copyProperties(salesman.getDept().getFatherDept(), salesPO.getRegion(),Arrays.asList("fatherDept","type","manager"));
-		BeanUtil.copyProperties(instorer, salesPO.getInstorer(),Arrays.asList("dept","duty"));
-		BeanUtil.copyProperties(guider, salesPO.getGuider(),Arrays.asList("dept","duty"));
-		BeanUtil.copyProperties(guider.getDept(), salesPO.getGuideDept(),Arrays.asList("fatherDept","type","manager"));
-		BeanUtil.copyProperties(new HousePO(salesVO.getHouse().getHid()), salesPO.getHouse(),Arrays.asList("village"));
-		BeanUtil.copyProperties(new CustomerPO(salesVO.getCustomer().getCid()), salesPO.getCustomer());
 		
+		salesPO.setSalesman(salesman);
+		salesPO.setDept(salesman.getDept());
+		salesPO.setRegion(salesman.getDept().getFatherDept());
+		salesPO.setInstorer(instorer);
+		salesPO.setGuider(guider);
+		salesPO.setGuideDept(guider.getDept());
+		salesPO.setHouse(new HousePO(salesVO.getHouse().getHid()));
+		salesPO.setCustomer(new CustomerPO(salesVO.getCustomer().getCid()));
 		salesPO.setBrand(brandPO.getName());
 		salesPO.setCategory(brandPO.getCategory().getName());
 		salesPO.setMaling(0);
@@ -300,51 +297,30 @@ public class SalesServiceImpl implements SalesService {
 		salesPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		salesPO.setCompany(company);
 		salesPO.setDompany(dompany);
-		salesPO.setAmount(salesPO.getTotal());
+		salesPO.setAmount(salesVO.getTotal());
+		salesPO.setTotal(salesVO.getTotal());
 		
-		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(salesVO.getOrderId());
-		
-		if(decorationPO.getGrade().equals("C")){
-			salesPO.setGrade("B");
-		}else{
-			salesPO.setGrade("");
-		}
+		salesPO.setGrade(decorationPO.getGrade().equals("C") ? "B" : "");
 		
 		ActivityPO activityPO = activityDao.queryActivityForDefault(SalesPO.FULLPAYSTATUS_PAYED_SHORT);
 		salesPO.setActivityId(activityPO == null ? 0 : activityPO.getAid());
 			
 		salesDao.save(salesPO);
 		
+		SalesItemPO salesItemPO;
+		
 		if(salesItemVOs != null && salesItemVOs.size()!=0){
 			
 			for(SalesItemVO salesItemVO: salesItemVOs){
 				
-				if(salesItemVO != null){
-					
-					GoodsPO goodsPO = goodsDao.get(salesItemVO.getGoods().getGid());
-					
-					if(!goodsPO.getBrand().equals(salesBrand)){
-						throw new FLException(260033, "品牌不一致");
-					}
-					
-					SalesItemPO salesItemPO = new SalesItemPO(new GoodsPO(), new ColorPO(), new FormatPO());
-					
-					BeanUtil.copyProperties(salesItemVO, salesItemPO, Arrays.asList("goods","color","format"));
-					BeanUtil.copyProperties(salesItemVO.getGoods(), salesItemPO.getGoods(),Arrays.asList("accessoriesType"));
-					BeanUtil.copyProperties(salesItemVO.getColor(), salesItemPO.getColor());
-					BeanUtil.copyProperties(salesItemVO.getFormat(), salesItemPO.getFormat());
-					salesItemPO.setSid(salesPO.getSid());
-					
-					salesItemDao.save(salesItemPO);
-					
-					totalMoney = Arith.add(totalMoney, salesItemPO.getTotal());
-					
+				salesItemPO = new SalesItemPO(new GoodsPO(salesItemVO.getGoods().getGid()), new ColorPO(salesItemVO.getColor().getCid()), new FormatPO(salesItemVO.getFormat().getFid()));
+				
+				BeanUtil.copyProperties(salesItemVO, salesItemPO, Arrays.asList("goods","color","format"));
+				salesItemPO.setSid(salesPO.getSid());
+				
+				salesItemDao.save(salesItemPO);
+						
 				}
-			}
-		}
-		
-		if(totalMoney != salesPO.getTotal()){
-			throw new FLException(150025, "款项金额不正确");
 		}
 		
 		return 0;

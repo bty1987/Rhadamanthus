@@ -26,7 +26,7 @@ import com.fanglin.utils.Paging;
 public class MeasurementUnitDaoImpl extends DaoImpl<MeasurementUnitPO> implements MeasurementUnitDao {
 
 	public MeasurementUnitDaoImpl() {
-		super(MeasurementUnitPO.class, true);
+		super(MeasurementUnitPO.class);
 	}
 
 	@Override

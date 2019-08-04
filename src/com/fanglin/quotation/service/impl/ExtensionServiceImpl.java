@@ -15,8 +15,9 @@ import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.quotation.dao.ExtensionDao;
 import com.fanglin.quotation.dao.ExtensionItemDao;
-import com.fanglin.quotation.po.ExtensionItemPO;
+import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.po.ExtensionPO;
+import com.fanglin.quotation.po.QuotationPO;
 import com.fanglin.quotation.service.ExtensionService;
 import com.fanglin.quotation.vo.ExtensionVO;
 import com.fanglin.utils.BeanUtil;
@@ -36,6 +37,9 @@ public class ExtensionServiceImpl implements ExtensionService {
 	@Autowired
 	private DecorationDao decorationDao;
 
+	@Autowired
+	private QuotationDao quotationDao;
+
 	@Override
 	public void pageExtensionByOrderId(Paging paging, List<Filter> filters, ExtensionVO extensionVO) {
 
@@ -43,35 +47,54 @@ public class ExtensionServiceImpl implements ExtensionService {
 
 		List<ExtensionPO> extensionPOs = extensionDao.pageExtensionByOrderId(paging, filters);
 		List<ExtensionVO> extensionVOs = handleExtension(extensionPOs);
+
 		paging.setData(extensionVOs);
 	}
 
 	@Override
 	public List<ExtensionVO> queryExtensionByOrderId(ExtensionVO extensionVO) {
+
 		List<ExtensionPO> extensionPOs = null;
+
 		if (extensionVO.getType() != null) {
 			extensionPOs = extensionDao.queryExtensionForTypeByOrderId(extensionVO.getOrderId(), extensionVO.getType());
 		} else {
 			extensionPOs = extensionDao.queryExtensionByOrderId(extensionVO.getOrderId());
 		}
+
 		List<ExtensionVO> extensionVOs = handleExtension(extensionPOs);
+
 		return extensionVOs;
+	}
+
+	@Override
+	public ExtensionVO queryExtensionByEid(ExtensionVO extensionVO) throws FLException {
+
+		ExtensionPO extensionPO = extensionDao.get(extensionVO.getEid());
+
+		if (extensionPO == null) {
+			throw new FLException(200027, "扩展项不存在");
+		}
+
+		BeanUtil.copyProperties(extensionPO, extensionVO);
+
+		return extensionVO;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void addExtension(ExtensionVO extensionVO) throws FLException {
 
-		checkExtensionItemForStatusByOrderId(extensionVO.getOrderId());
-
 		ExtensionPO extensionPO = new ExtensionPO();
 
 		BeanUtil.copyProperties(extensionVO, extensionPO);
+
+		checkExtension(extensionPO);
+
 		extensionPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		extensionPO.setStatus(ExtensionPO.STATUS_INIT_SHORT);
 
 		extensionDao.save(extensionPO);
-
 	}
 
 	@Override
@@ -80,12 +103,11 @@ public class ExtensionServiceImpl implements ExtensionService {
 
 		ExtensionPO extensionPO = extensionDao.get(extensionVO.getEid());
 
-		checkExtensionItemForStatusByOrderId(extensionPO.getOrderId());
+		checkExtension(extensionPO);
 
-		BeanUtil.copyProperties(extensionVO, extensionPO);
+		extensionPO.setContent(extensionVO.getContent());
 
 		extensionDao.update(extensionPO);
-
 	}
 
 	@Override
@@ -94,14 +116,13 @@ public class ExtensionServiceImpl implements ExtensionService {
 
 		ExtensionPO extensionPO = extensionDao.get(extensionVO.getEid());
 
-		checkExtensionItemForStatusByOrderId(extensionPO.getOrderId());
+		checkExtension(extensionPO);
 
-		BeanUtil.copyProperties(extensionVO, extensionPO);
-
-		extensionPO.setStatus(ExtensionPO.STATUS_SUBMIT_INT);
+		extensionPO.setUndisPrice(extensionVO.getUndisPrice());
+		extensionPO.setDisPrice(extensionVO.getDisPrice());
+		extensionPO.setTotal(extensionVO.getTotal());
 
 		extensionDao.update(extensionPO);
-
 	}
 
 	@Override
@@ -110,33 +131,56 @@ public class ExtensionServiceImpl implements ExtensionService {
 
 		ExtensionPO extensionPO = extensionDao.get(extensionVO.getEid());
 
-		checkExtensionItemForStatusByOrderId(extensionPO.getOrderId());
-
-		List<ExtensionItemPO> extensionItemPOs = extensionItemDao.queryExtensionItemByEid(extensionPO.getEid());
-		for (ExtensionItemPO extensionItemPO : extensionItemPOs) {
-			extensionItemDao.delete(extensionItemPO);
+		if (extensionPO == null) {
+			throw new FLException(200027, "扩展项不存在");
 		}
+
+		checkExtension(extensionPO);
+
+		extensionItemDao.deleteExtensionItem(extensionVO.getEid());
 		extensionDao.delete(extensionPO);
 	}
 
 	private List<ExtensionVO> handleExtension(List<ExtensionPO> extensionPOs) {
+
 		List<ExtensionVO> extensionVOs = new ArrayList<ExtensionVO>();
+
+		ExtensionVO extensionVO = null;
+
 		for (ExtensionPO extensionPO : extensionPOs) {
-			ExtensionVO _extensionVO = new ExtensionVO();
-			BeanUtil.copyProperties(extensionPO, _extensionVO);
-			extensionVOs.add(_extensionVO);
+			extensionVO = new ExtensionVO();
+
+			BeanUtil.copyProperties(extensionPO, extensionVO);
+
+			extensionVOs.add(extensionVO);
 		}
 		return extensionVOs;
 	}
 
-	private void checkExtensionItemForStatusByOrderId(String orderId) throws FLException {
+	private void checkExtension(ExtensionPO extensionPO) throws FLException {
 
-		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
+		String orderId = extensionPO.getOrderId();
 
 		List<Short> status = Arrays.asList(new Short[] { DecorationPO.STATUS_SIGNED_INT, DecorationPO.STATUS_WASTE_INT, DecorationPO.STATUS_COMPLETED_INT, DecorationPO.STATUS_TERMINATION_INT });
 
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
+
+		if (decorationPO == null) {
+			throw new FLException(140013, "订单不存在");
+		}
+
 		if (status.contains(decorationPO.getStatus())) {
 			throw new FLException(140049, "装修单状态,不可操作");
+		}
+
+		QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(orderId);
+
+		if (quotationPO == null) {
+			throw new FLException(200003, "报价不存在");
+		}
+
+		if (quotationPO.getStatus() == QuotationPO.STATUS_LOCK_INT) {
+			throw new FLException(200033, "报价已锁定");
 		}
 	}
 }

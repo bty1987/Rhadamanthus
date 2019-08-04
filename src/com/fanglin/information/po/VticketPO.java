@@ -18,63 +18,63 @@ import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.personel.po.UserPO;
 
 @Entity
-@Table(name = "vticket", catalog = "information", uniqueConstraints = {@UniqueConstraint(columnNames="tno")})
+@Table(name = "vticket", catalog = "information", uniqueConstraints = { @UniqueConstraint(columnNames = "tno") })
 public class VticketPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -649765382182811374L;
-	
+
 	public static final String COLUMN_VTID_STR = "vtid";
-	
+
 	public static final String COLUMN_TNO_STR = "tno";
-	
+
 	public static final String COLUMN_ORDERID_STR = "orderId";
-	
+
 	public static final String COLUMN_NAME_STR = "name";
-	
+
 	public static final String COLUMN_BELONGER_STR = "belonger.uid";
-	
+
 	public static final String COLUMN_EXPIRE_STR = "expire";
-	
+
 	public static final short ISCOME_YES_INT = 1;
-	
+
 	public static final short ISREGIST_YES_INT = 1;
-	
+
 	public static final short EXPIRE_INIT_INT = 0;
-	
+
 	private long vtid;
-	
+
 	private String tno;
-	
+
 	private long vaid;
-	
+
 	private UserPO creater;
-	
+
 	private Timestamp createTime;
-	
+
 	private UserPO belonger;
-	
+
 	private DepartmentPO department;
-	
+
 	private DepartmentPO region;
-	
+
 	private String orderId;
-	
+
 	private String name;
-	
+
 	private String phone;
-	
+
 	private String address;
-	
+
 	private short isregist;
-	
+
 	private short iscome;
-	
+
 	private short expire;
-	
+
 	public VticketPO() {
 		super();
 	}
-	
+
 	public VticketPO(UserPO creater, UserPO belonger, DepartmentPO department, DepartmentPO region) {
 		super();
 		this.creater = creater;
@@ -113,7 +113,7 @@ public class VticketPO implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "cuid",referencedColumnName="uid")
+	@JoinColumn(name = "cuid", referencedColumnName = "uid")
 	public UserPO getCreater() {
 		return creater;
 	}
@@ -132,7 +132,7 @@ public class VticketPO implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "buid",referencedColumnName="uid")
+	@JoinColumn(name = "buid", referencedColumnName = "uid")
 	public UserPO getBelonger() {
 		return belonger;
 	}
@@ -142,7 +142,7 @@ public class VticketPO implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "did",referencedColumnName="did")
+	@JoinColumn(name = "did", referencedColumnName = "did")
 	public DepartmentPO getDepartment() {
 		return department;
 	}
@@ -152,7 +152,7 @@ public class VticketPO implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "rid",referencedColumnName="did")
+	@JoinColumn(name = "rid", referencedColumnName = "did")
 	public DepartmentPO getRegion() {
 		return region;
 	}
@@ -222,5 +222,5 @@ public class VticketPO implements java.io.Serializable {
 	public void setExpire(short expire) {
 		this.expire = expire;
 	}
-	
+
 }

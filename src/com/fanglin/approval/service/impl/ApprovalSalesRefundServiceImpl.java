@@ -211,7 +211,7 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 		salesPaymentPO.setBrand(salesPO.getBrand());// 品牌
 		salesPaymentPO.setStatus(SalesPO.STATUS_INIT_SHORT);
 		salesPaymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-		salesPaymentPO.setType(SalesPaymentPO.COLUMN_REFUNDSTYPE_INT);
+		salesPaymentPO.setType(SalesPaymentPO.TYPE_REFUNDS_INT);
 
 		salesPaymentDao.save(salesPaymentPO);
 

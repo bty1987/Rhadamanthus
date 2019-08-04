@@ -707,6 +707,16 @@
 
         return $media + api.common.showImg.url + '?imgBasePath=' + url;
     },
+    showOss: function ($e, url, width, height, alt, defaultUrl, type) {
+
+        var imgUrl = url + '?x-oss-process=image/resize,m_fill,h_' + height + ',w_' + width;
+
+        $e.attr("src", imgUrl).attr("alt", alt).error(function () {
+            $(this).hide();
+        });
+
+        return url;
+    },
     downloadFile: function ($e, url, name) {
         $e.attr('href', config.media + api.common.downloadFile.url + "?downloadFilePath=" + url + "&fileName=" + name).attr('target', '_blank');
     },

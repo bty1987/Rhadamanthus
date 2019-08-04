@@ -544,6 +544,7 @@ var AddReduceDetail = (function(){
 				
                 if (addReduceDetail.artype == 0){ // 增项
 					unitPrice = addPrice;
+					subPrice = addPrice;
 				}else if(addReduceDetail.artype == 1){ // 减项
                     unitPrice = subPrice;
 				}

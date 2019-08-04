@@ -23,8 +23,10 @@ $(function(){
             price : com.focusPage("#price"),
             content : com.focusPage("#content"),
             format : com.focusPage("#format"),
-            Warehousing : com.focusPage("#warehousing"),
-            Warehousend : com.focusPage("#warehousend"),
+            warehousing : com.focusPage("#warehousing"),
+            warehousend : com.focusPage("#warehousend"),
+            
+            comment: com.focusPage("#comment"),
             
             no2 : com.focusPage("#no2"),
             name2 : com.focusPage("#name2"),
@@ -214,6 +216,9 @@ $(function(){
                 }
 
                 com.popup4model('#layerAdd2', '奖品入库', function(){
+                    awardStock.asid = v.asId;
+                    awardStock.flag = 3;
+                }, null, function(){
                     com.cleanItems(awardStock.items);
 
                     awardStock.items.no2.val(v.no).attr('disabled', 'disabled');
@@ -227,15 +232,15 @@ $(function(){
                     awardStock.money.show();
                     awardStock.stock.hide();
                     awardStock.subType.show();
-
-                    awardStock.asid = v.asId;
-                    awardStock.flag = 3;
                 });
             });
 
             $update.click(function () {
 
                 com.popup4model('#layerAdd1', '奖品更新', function () {
+                    awardStock.asid = v.asId;
+                    awardStock.flag = 4;
+                }, null, function(){
                     com.cleanItems(awardStock.items);
 
                     awardStock.items.no.val(v.no).attr('disabled', 'disabled');
@@ -251,10 +256,6 @@ $(function(){
                     awardStock.items.type.attr('disabled', 'disabled');
 
                     awardStock.moneys.hide();
-
-                    awardStock.asid = v.asId;
-                    awardStock.flag = 4;
-
                 });
 
             });
@@ -266,6 +267,10 @@ $(function(){
                 }
 
                 com.popup4model('#layerAdd2', '盘点', function () {
+                    awardStock.asid = v.asId;
+                    awardStock.num = v.num;
+                    awardStock.flag = 1;
+                }, null, function(){
                     com.cleanItems(awardStock.items);
 
                     awardStock.items.no2.val(v.no).attr('disabled', 'disabled');
@@ -277,10 +282,6 @@ $(function(){
                     awardStock.money.hide();
                     awardStock.stock.show();
                     awardStock.subType.hide();
-
-                    awardStock.asid = v.asId;
-                    awardStock.num = v.num;
-                    awardStock.flag = 1;
                 });
             });
 
@@ -392,7 +393,8 @@ $(function(){
 
         var url = null;
         var options = {
-            "awardStock.asId": awardStock.asid
+            "awardStock.asId": awardStock.asid,
+            "awardStock.content": awardStock.items.comment.val()
         };
 
         switch (awardStock.flag) {
@@ -402,13 +404,13 @@ $(function(){
                 break;
             case 2:
                 url = api.information.updateAwardStockForXG;
-                options["awardStock.num"] = awardStock.items.Warehousend.val();
+                options["awardStock.num"] = awardStock.items.warehousend.val();
                 options["awardStock.price"] = awardStock.items.price2.val();
                 options["awardStock.subtype"] = awardStock.items.awardRecordSubtype.val();
                 break;
             case 3:
                 url = api.information.updateAwardStockForCG;
-                options["awardStock.num"] = awardStock.items.Warehousing.val();
+                options["awardStock.num"] = awardStock.items.warehousing.val();
                 options["awardStock.price"] = awardStock.items.price2.val();
                 options["awardStock.subtype"] = awardStock.items.awardRecordSubtype.val();
                 break;

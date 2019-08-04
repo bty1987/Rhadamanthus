@@ -41,10 +41,13 @@ $(function () {
 
         if (listData && listData.length) {
             $.each(listData, function (i, v) {
+                var $num = v.num;//数量
+                var $price = v.price;//折让价
+                var $total = v.total;
 
                 var $liLine = $('<li></li>').addClass('item-orange clearfix');
                 var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-                var $h3 = $('<h3></h3>').addClass('oid');
+                var $h3 = $('<h3></h3>').addClass('oid').attr({"li_Num" : $num, "li_Price" : $price, "li_delTotal" : $total});
                 var $small = $('<small></small>').addClass('blue').html(v.goods.name + ' ' + v.goods.no);
                 var $btnDiv = $('<div></div>').addClass('action-buttons pull-right').attr('data-num', v.num).attr('data-selling', v.price).attr('data-siid', v.siid);
 
@@ -85,8 +88,26 @@ $(function () {
 
                 $btnDelete.click(function (e) {
                     e.stopPropagation();
+
+                    var $this = $(this);
+                    var $delTotal = $this.parents('div').parents('li').find('h3').attr('li_delTotal');
+
+                    var $lis = com.focusPage(".item-orange" ,"#layerPopUp");//拿到每条子项li
+                    var priceTotalDel = 0;
+
+                    $lis && $lis.length && $.each($lis, function (i, v) {
+                        var $v = $(v);
+                        priceTotalDel += utils.changeThrDecimal(parseFloat(utils.accMul($v.find('h3').attr('li_Num'), $v.find('h3').attr('li_Price'))));
+                    });
+
+                    priceTotalDel = utils.changeThrDecimal(utils.accSub(priceTotalDel, $delTotal));
+                    var ops = {
+                        "salesItem.siid": v.siid,
+                        "sales.total": priceTotalDel
+                    };
+
                     com.showConfirm('确定要删除吗?', function (indexo, layero) {
-                        com.post(api.inventory.deleteSalesItem, {"salesItem.siid": v.siid}, function () {
+                        com.post(api.inventory.deleteSalesItem, ops, function () {
 
                             $btnDelete.parents('li.clearfix').remove();
                         });
@@ -95,7 +116,9 @@ $(function () {
 
                 $btnEdit.click(function () {
                     salesItem.edit_data = v;
+
                     com.popup4mini("#miniPopUp", "#layerEdit", "编辑", function () {
+                        com.focusPage("#miniPopUp").attr("li_Total", $total);
                         com.focusPage('#salesItemDetialnum').on('change', function () {
                             if (com.validate('miniPopUp', 'right')) {
                                 return false;
@@ -204,12 +227,23 @@ $(function () {
         var num = com.focusPage('#salesItemDetialnum').val();
         var total = com.focusPage('#salesItemDetialtotal').val();
         var comment = com.focusPage('#salesItemDetialcomment').val();
-        
+
+        var $lis = com.focusPage(".item-orange" ,"#layerPopUp");//拿到每条子项li
+        var priceTotalEdit = 0;
+
+        $lis && $lis.length && $.each($lis, function (i, v) {
+            var $v = $(v);
+            priceTotalEdit += utils.changeThrDecimal(parseFloat(utils.accMul($v.find('h3').attr('li_Num'), $v.find('h3').attr('li_Price'))));
+        });
+
+        priceTotalEdit = utils.accAdd(utils.accSub(priceTotalEdit, com.focusPage("#miniPopUp").attr("li_Total")), total);
+
         var editArr = {
             "salesItem.siid": salesItem.edit_data.siid,
             "salesItem.num": num,
             "salesItem.total": total,
-            "salesItem.comment": comment
+            "salesItem.comment": comment,
+            "sales.total": priceTotalEdit
         };
 
         com.post(api.inventory.updateSalesItem, editArr, function () {

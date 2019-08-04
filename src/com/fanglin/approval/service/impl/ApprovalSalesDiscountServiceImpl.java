@@ -120,9 +120,8 @@ public class ApprovalSalesDiscountServiceImpl implements ApprovalSalesDiscountSe
 
 		SalesPaymentPO salesPaymentPO = new SalesPaymentPO();
 		salesPaymentPO.setSales(salesPO);
-		salesPaymentPO.setType(SalesPaymentPO.COLUMN_REPLENISHMENTTYPE_INT);// 3:
-																			// 补款
-		salesPaymentPO.setStatus(SalesPaymentPO.COLUMN_SALES_INITIALSTATUS_INT);// 0.销售单初始状态
+		salesPaymentPO.setType(SalesPaymentPO.TYPE_REPLENISHMENT_INT);// 3: 补款
+		salesPaymentPO.setStatus(SalesPaymentPO.STATUS_INITIAL_INT);// 0.销售单初始状态
 		salesPaymentPO.setCategory(salesPO.getCategory());
 		salesPaymentPO.setBrand(salesPO.getBrand());
 		salesPaymentPO.setCreater(sender);

@@ -10,11 +10,13 @@ import com.fanglin.utils.Paging;
 public interface VticketDao extends Dao<VticketPO> {
 
 	public List<VticketPO> pageVticket(Paging paging, List<Filter> filters);
-	
-	public List<?> countVticket(short param);
 
 	public VticketPO queryVticketByVtid(Long vtid);
 
 	public VticketPO queryVticketByTno(String tno);
+
+	public VticketPO queryVticketForTake();
+
+	public List<?> countVticket(short param);
 
 }

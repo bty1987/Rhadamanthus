@@ -21,9 +21,9 @@ public class ExtensionItemVO implements Serializable {
 	private String workType;
 
 	private Float addPrice;
-	
+
 	private Float unitPrice;
-	
+
 	private Float subPrice;
 
 	private Float num;
@@ -37,6 +37,8 @@ public class ExtensionItemVO implements Serializable {
 	private String content;
 
 	private String quotationType;
+
+	private Short discount;
 
 	public Long getEiid() {
 		return eiid;
@@ -164,6 +166,14 @@ public class ExtensionItemVO implements Serializable {
 
 	public void setQuotationType(String quotationType) {
 		this.quotationType = quotationType;
+	}
+
+	public Short getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(Short discount) {
+		this.discount = discount;
 	}
 
 }

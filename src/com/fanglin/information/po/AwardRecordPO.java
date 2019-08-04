@@ -205,13 +205,14 @@ public class AwardRecordPO implements java.io.Serializable {
 		this.content = content;
 	}
 
-	public AwardRecordPO init(AwardStockPO awardStock, UserPO creater, short type, short subtype, short onetype, short isStock, Float unitPrice, Float num, String content){
+	public AwardRecordPO init(AwardStockPO awardStock, UserPO creater, String orderId, short type, short subtype, short onetype, short isStock, Float unitPrice, Float num, String content){
 		
 		unitPrice = unitPrice == null ? 0 : unitPrice;
 		
 		setAwardStock(awardStock);
 		setCreater(creater);
 		
+		setOrderId(orderId);
 		setType(type);
 		setSubtype(subtype);
 		setOnetype(onetype);

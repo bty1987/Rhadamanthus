@@ -127,6 +127,9 @@ $.extend(api, {decoration: {
     deleteDecorationUser:{url:"deleteDecorationUser.do"},
     
     queryDecorationBalance : {url : "queryDecorationBalance.do"},
-    makeDecorationBalance : {url : "makeDecorationBalance.do"}
+    makeDecorationBalance : {url : "makeDecorationBalance.do"},
+    
+    queryDecorationFunction : {url : "queryDecorationFunction.do"},
+    queryDecorationFunctionByName : {url : "queryDecorationFunctionByName.do"},
 
 }});

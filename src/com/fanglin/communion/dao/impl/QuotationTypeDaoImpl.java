@@ -25,13 +25,22 @@ import com.fanglin.utils.Paging;
 public class QuotationTypeDaoImpl extends DaoImpl<QuotationTypePO> implements QuotationTypeDao {
 
 	public QuotationTypeDaoImpl() {
-		super(QuotationTypePO.class, true);
+		super(QuotationTypePO.class);
 	}
 
 	@Override
 	public List<QuotationTypePO> pageQuotationType(Paging paging, List<Filter> filters) {
 
 		PagingQuery<QuotationTypePO> query = pagingQuery(paging, QuotationTypePO.class);
+
+		queryFilterExcute(query, filters);
+
+		query.asc("id");
+
+		return query.list();
+	}
+
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
 		if (filters != null) {
 			for (Filter filter : filters) {
@@ -40,11 +49,6 @@ public class QuotationTypeDaoImpl extends DaoImpl<QuotationTypePO> implements Qu
 				}
 			}
 		}
-
-		query.asc("id");
-
-		return query.list();
-
 	}
 
 }

@@ -101,6 +101,7 @@ $.extend(api, {quotation: {
 
     pageExtensionByOrderId:{url:"pageExtensionByOrderId.do"},
     queryExtensionByOrderId:{url:"queryExtensionByOrderId.do"},
+    queryExtensionByEid:{url:"queryExtensionByEid.do"},
     addExtension:{url:"addExtension.do"},
     updateExtension:{url:"updateExtension.do" ,  intercept: true},
     updateExtensionForAdvance:{url:"updateExtensionForAdvance.do" ,  intercept: true},

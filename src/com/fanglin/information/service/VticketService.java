@@ -10,17 +10,19 @@ import com.fanglin.utils.Paging;
 public interface VticketService {
 
 	public void pageVticket(Paging paging, List<Filter> filters);
-	
+
 	public void pageVticketForBelonger(Paging paging, List<Filter> filters, String userId);
-	
+
 	public List<?> countVticket(short param);
 
 	public void createVticket(VticketVO vticket, String userId) throws FLException;
 
 	public void updateVticket(VticketVO vticket) throws FLException;
-	
-	public void comeVticket(VticketVO vticketVO)throws FLException;
-	
+
+	public void comeVticket(VticketVO vticketVO) throws FLException;
+
 	public void registVticket(VticketVO vticketVO) throws FLException;
-	
+
+	public void takeVticket(String userId) throws FLException;
+
 }

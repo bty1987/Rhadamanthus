@@ -26,20 +26,15 @@ import com.fanglin.utils.Paging;
 public class QuotationBigCategoryDaoImpl extends DaoImpl<QuotationBigCategoryPO> implements QuotationBigCategoryDao {
 
 	public QuotationBigCategoryDaoImpl() {
-		super(QuotationBigCategoryPO.class, true);
+		super(QuotationBigCategoryPO.class);
 	}
 
 	@Override
 	public List<QuotationBigCategoryPO> pageQuotationBigCategory(Paging paging, List<Filter> filters) {
+
 		PagingQuery<QuotationBigCategoryPO> query = pagingQuery(paging, QuotationBigCategoryPO.class);
 
-		if (filters != null) {
-			for (Filter filter : filters) {
-				if ("name".equals(filter.getField())) {
-					query.add(query.getCriterion("name", Short.parseShort(filter.getData()), filter.getOp()));
-				}
-			}
-		}
+		queryFilterExcute(query, filters);
 
 		query.asc("id");
 
@@ -50,6 +45,17 @@ public class QuotationBigCategoryDaoImpl extends DaoImpl<QuotationBigCategoryPO>
 	@SuppressWarnings("unchecked")
 	public List<QuotationBigCategoryPO> queryQuotationBigCategory(Integer qtid) {
 		return session().createCriteria(QuotationBigCategoryPO.class).add(Restrictions.eq("qtid", qtid)).list();
+	}
+
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
+
+		if (filters != null) {
+			for (Filter filter : filters) {
+				if ("name".equals(filter.getField())) {
+					query.add(query.getCriterion("name", Short.parseShort(filter.getData()), filter.getOp()));
+				}
+			}
+		}
 	}
 
 }

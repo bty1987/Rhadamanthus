@@ -26,25 +26,25 @@ public class CustomerOriginPO implements Serializable {
 	private static final long serialVersionUID = 5940806639925973280L;
 
 	public static final String COLUMN_BELONGER_STR = "belonger.uid";
-	
+
 	public static final String COLUMN_DESIGNER_STR = "designer.uid";
-	
-	public static final short STATUS_INIT_INT = 0;  //初始 
-	
-	public static final short STATUS_COMMIT_INT = 1; //提交
-	
-	public static final short STATUS_CONFIRM_INT = 2; //确认
-	
-	public static final short STATUS_APPROVE_INT = 3; //审批
-	
-	public static final short STATUS_BIND_INT = 4; //绑定
-	
-	public static final short STATUS_REFUSE_INT = 5; //拒绝
+
+	public static final short STATUS_INIT_INT = 0; // 初始
+
+	public static final short STATUS_COMMIT_INT = 1; // 提交
+
+	public static final short STATUS_CONFIRM_INT = 2; // 确认
+
+	public static final short STATUS_APPROVE_INT = 3; // 审批
+
+	public static final short STATUS_BIND_INT = 4; // 绑定
+
+	public static final short STATUS_REFUSE_INT = 5; // 拒绝
 
 	private long csid;
 
 	private String name;
-	
+
 	private String gender;
 
 	private String phone;
@@ -56,11 +56,11 @@ public class CustomerOriginPO implements Serializable {
 	private String price;
 
 	private String grade;
-	
+
 	private VillagePO village;
-	
+
 	private String houseNumber;
-	
+
 	private float buildArea;
 
 	private UserPO creater;
@@ -72,26 +72,29 @@ public class CustomerOriginPO implements Serializable {
 	private DepartmentPO department;
 
 	private DepartmentPO region;
-	
+
 	private short status;
-	
+
 	private String comment;
-	
+
 	private CustomerPO customer;
-	
+
 	private HousePO house;
-	
+
 	private UserPO designer;
-	
-	private UserPO salesman;
-	
+
 	private String orderId;
 
 	public CustomerOriginPO() {
 		super();
 	}
 
-	public CustomerOriginPO(VillagePO village, UserPO creater, UserPO belonger, DepartmentPO department, DepartmentPO region, CustomerPO customer, HousePO house, UserPO designer, UserPO salesman) {
+	public CustomerOriginPO(long csid) {
+		super();
+		this.csid = csid;
+	}
+
+	public CustomerOriginPO(VillagePO village, UserPO creater, UserPO belonger, DepartmentPO department, DepartmentPO region, CustomerPO customer, HousePO house, UserPO designer) {
 		super();
 		this.village = village;
 		this.creater = creater;
@@ -101,7 +104,6 @@ public class CustomerOriginPO implements Serializable {
 		this.customer = customer;
 		this.house = house;
 		this.designer = designer;
-		this.salesman = salesman;
 	}
 
 	@Id
@@ -179,7 +181,7 @@ public class CustomerOriginPO implements Serializable {
 	}
 
 	@ManyToOne
-	@JoinColumn(nullable = true, name = "vid", referencedColumnName="vid")
+	@JoinColumn(nullable = true, name = "vid", referencedColumnName = "vid")
 	public VillagePO getVillage() {
 		return village;
 	}
@@ -207,7 +209,7 @@ public class CustomerOriginPO implements Serializable {
 	}
 
 	@ManyToOne
-	@JoinColumn(nullable = true, name = "cuid", referencedColumnName="uid")
+	@JoinColumn(nullable = true, name = "cuid", referencedColumnName = "uid")
 	public UserPO getCreater() {
 		return creater;
 	}
@@ -226,7 +228,7 @@ public class CustomerOriginPO implements Serializable {
 	}
 
 	@ManyToOne
-	@JoinColumn(nullable = true, name = "buid", referencedColumnName="uid")
+	@JoinColumn(nullable = true, name = "buid", referencedColumnName = "uid")
 	public UserPO getBelonger() {
 		return belonger;
 	}
@@ -236,7 +238,7 @@ public class CustomerOriginPO implements Serializable {
 	}
 
 	@ManyToOne
-	@JoinColumn(nullable = true, name = "did", referencedColumnName="did")
+	@JoinColumn(nullable = true, name = "did", referencedColumnName = "did")
 	public DepartmentPO getDepartment() {
 		return department;
 	}
@@ -246,7 +248,7 @@ public class CustomerOriginPO implements Serializable {
 	}
 
 	@ManyToOne
-	@JoinColumn(nullable = true, name = "rdid", referencedColumnName="did")
+	@JoinColumn(nullable = true, name = "rdid", referencedColumnName = "did")
 	public DepartmentPO getRegion() {
 		return region;
 	}
@@ -274,7 +276,7 @@ public class CustomerOriginPO implements Serializable {
 	}
 
 	@ManyToOne
-	@JoinColumn(nullable = true, name = "cid", referencedColumnName="cid")
+	@JoinColumn(nullable = true, name = "cid", referencedColumnName = "cid")
 	public CustomerPO getCustomer() {
 		return customer;
 	}
@@ -284,7 +286,7 @@ public class CustomerOriginPO implements Serializable {
 	}
 
 	@ManyToOne
-	@JoinColumn(nullable = true, name = "hid", referencedColumnName="hid")
+	@JoinColumn(nullable = true, name = "hid", referencedColumnName = "hid")
 	public HousePO getHouse() {
 		return house;
 	}
@@ -294,23 +296,13 @@ public class CustomerOriginPO implements Serializable {
 	}
 
 	@ManyToOne
-	@JoinColumn(nullable = true, name = "duid", referencedColumnName="uid")
+	@JoinColumn(nullable = true, name = "duid", referencedColumnName = "uid")
 	public UserPO getDesigner() {
 		return designer;
 	}
 
 	public void setDesigner(UserPO designer) {
 		this.designer = designer;
-	}
-
-	@ManyToOne
-	@JoinColumn(nullable = true, name = "suid", referencedColumnName="uid")
-	public UserPO getSalesman() {
-		return salesman;
-	}
-
-	public void setSalesman(UserPO salesman) {
-		this.salesman = salesman;
 	}
 
 	@Column(name = "orderId")

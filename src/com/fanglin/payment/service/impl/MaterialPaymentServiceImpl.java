@@ -846,7 +846,7 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 
 			materialReceiptVO.setMrId(materialReceiptPO.getMrId());
 
-			totalMoney = totalMoney + materialPaymentPO.getReferMoney();
+			totalMoney = Arith.add(totalMoney, materialPaymentPO.getReferMoney());
 		}
 		
 		decorationService.sendMessage(materialVO.getOrderId(), "主材单", String.format("主材交款金额%s元", totalMoney));
@@ -970,7 +970,7 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 			throw new FLException(150036, "款项状态不可操作");
 		}
 		
-		float referMoney = materialReceiptPO.getCash() + materialReceiptPO.getBank() + materialReceiptPO.getCheckv() + materialReceiptPO.getCoupon() + materialReceiptPO.getAdvance() + materialReceiptPO.getInstallment()  + materialReceiptPO.getAccounts();
+		float referMoney = Arith.add(Arith.add(Arith.add(Arith.add(Arith.add(Arith.add(materialReceiptPO.getCash(), materialReceiptPO.getBank()), materialReceiptPO.getCheckv()), materialReceiptPO.getCoupon()), materialReceiptPO.getAdvance()), materialReceiptPO.getInstallment()), materialReceiptPO.getAccounts());
 		
 		Float cash = materialReceiptVO.getCash();
 		Float bank = materialReceiptVO.getBank();

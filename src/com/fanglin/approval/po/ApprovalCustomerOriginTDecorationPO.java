@@ -8,7 +8,12 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.fanglin.customer.po.CustomerOriginPO;
+import com.fanglin.personel.po.UserPO;
 
 @Entity
 @Table(name = "approvalCustomerOriginTDecoration", catalog = "approval")
@@ -20,7 +25,7 @@ public class ApprovalCustomerOriginTDecorationPO implements Serializable {
 
 	private long aid;
 
-	private long csid;
+	private CustomerOriginPO customerOrigin;
 
 	private short type;
 
@@ -28,8 +33,12 @@ public class ApprovalCustomerOriginTDecorationPO implements Serializable {
 
 	private String houseType;
 
+	private String houseClass;
+
 	private short resourceType;
-	
+
+	private UserPO salesman;
+
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "acodid")
@@ -50,13 +59,14 @@ public class ApprovalCustomerOriginTDecorationPO implements Serializable {
 		this.aid = aid;
 	}
 
-	@Column(name = "csid")
-	public long getCsid() {
-		return csid;
+	@ManyToOne
+	@JoinColumn(nullable = true, name = "csid", referencedColumnName = "coid")
+	public CustomerOriginPO getCustomerOrigin() {
+		return customerOrigin;
 	}
 
-	public void setCsid(long csid) {
-		this.csid = csid;
+	public void setCustomerOrigin(CustomerOriginPO customerOrigin) {
+		this.customerOrigin = customerOrigin;
 	}
 
 	@Column(name = "type")
@@ -86,6 +96,15 @@ public class ApprovalCustomerOriginTDecorationPO implements Serializable {
 		this.houseType = houseType;
 	}
 
+	@Column(name = "houseClass")
+	public String getHouseClass() {
+		return houseClass;
+	}
+
+	public void setHouseClass(String houseClass) {
+		this.houseClass = houseClass;
+	}
+
 	@Column(name = "resourceType")
 	public short getResourceType() {
 		return resourceType;
@@ -93,6 +112,16 @@ public class ApprovalCustomerOriginTDecorationPO implements Serializable {
 
 	public void setResourceType(short resourceType) {
 		this.resourceType = resourceType;
+	}
+
+	@ManyToOne
+	@JoinColumn(nullable = true, name = "suid", referencedColumnName = "uid")
+	public UserPO getSalesman() {
+		return salesman;
+	}
+
+	public void setSalesman(UserPO salesman) {
+		this.salesman = salesman;
 	}
 
 }

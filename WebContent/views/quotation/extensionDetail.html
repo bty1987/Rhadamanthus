@@ -16,14 +16,27 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label class=" col-md-4 no-padding-right">类型:</label>
-                                        <label id="sumLabType" class=" col-md-4 no-padding-left"></label>
+                                        <label id="sumLabType" class="col-md-8 no-padding-left"></label>
                                     </div>
-                                </div>
+                                    
+                                    <div class="form-group">
+                                        <label class=" col-md-4 no-padding-right">非打折总额:</label>
+                                        <label id="undisPrice" class="col-md-8 no-padding-left">0</label>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class=" col-md-4 no-padding-right">打折总额:</label>
+                                        <label id="disPrice" class="col-md-8 no-padding-left">0</label>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class=" col-md-4 no-padding-right">折扣:</label>
+                                        <label id="discount" class="col-md-8 no-padding-left">0</label>
+                                    </div>
 
-                                <div class="col-md-12">
                                     <div class="form-group">
                                         <label class=" col-md-4 no-padding-right">总价:</label>
-                                        <label id="sumLabSumMoney" class=" col-md-4 no-padding-left"></label>
+                                        <label id="sumLabSumMoney" class="col-md-8 no-padding-left">0</label>
                                     </div>
                                 </div>
                                 <div class="col-md-12 hr hr-16"></div>
@@ -32,12 +45,12 @@
                                     <div class="ui-pg-div">
 
                                         <!--增项的的2个按钮-->
-                                        <button id="addNormalItemBtn" class="btn btn-minier btn-yellow col-md-5 hide">
+                                        <button id="addNormalItemBtn" class="btn btn-minier btn-yellow col-md-5">
                                             <i class="icon-pencil"></i>报价项
                                         </button>
                                         
-                                        <button id="addQuotaionItemBtn" class="btn btn-minier btn-yellow col-md-5 hide">
-                                            <i class="icon-pencil"></i>报价项
+                                        <button id="addQuotaionItemBtn" class="btn btn-minier btn-default col-md-5 hide" style="padding-left: 2px;" >
+                                            <i class="icon-pencil"></i>报价中项目
                                         </button>
 
                                         <button id="addNewItemBtn" class="btn btn-minier btn-pink col-md-5" style="padding-left: 2px;" >

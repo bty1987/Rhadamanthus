@@ -39,10 +39,10 @@ public class VticketServiceImpl implements VticketService {
 
 	@Autowired
 	private DecorationDao decorationDao;
-	
+
 	@Autowired
 	private EmemberDao ememberDao;
-	
+
 	@Autowired
 	private MessageService messageService;
 
@@ -150,7 +150,7 @@ public class VticketServiceImpl implements VticketService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void comeVticket(VticketVO vticketVO) throws FLException {
-		
+
 		String no = vticketVO.getTno();
 
 		VticketPO vticketPO = vticketDao.queryVticketByTno(no);
@@ -170,12 +170,30 @@ public class VticketServiceImpl implements VticketService {
 		vticketPO.setIscome(VticketPO.ISCOME_YES_INT);
 
 		vticketDao.update(vticketPO);
-		
+
 		EmemberPO ememberPO = ememberDao.queryEmemberByNo(no);
 
 		if (ememberPO != null) {
 			messageService.sendMessage(ememberPO.getUnionId(), "活动", no, "已到场");
 		}
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void takeVticket(String userId) throws FLException {
+
+		VticketPO vticketPO = vticketDao.queryVticketForTake();
+
+		if (vticketPO == null)
+			return;
+
+		UserPO userPO = userDao.queryUserByUserId(userId);
+
+		vticketPO.setBelonger(userPO);
+		vticketPO.setDepartment(userPO.getDept());
+		vticketPO.setRegion(userPO.getDept().getFatherDept());
+
+		vticketDao.update(vticketPO);
 	}
 
 	public VticketVO ptv(VticketPO vticketPO) {

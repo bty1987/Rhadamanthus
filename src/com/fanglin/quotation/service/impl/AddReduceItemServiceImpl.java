@@ -264,14 +264,14 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 		addReduceDao.update(addReducePO);
 
 		addReduceItemVO.setAriId(addReduceItemPO.getAriId());
-		
+
 		return 0;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int updateAddReduceItemForAdvance(AddReduceVO addReduceVO, AddReduceItemVO addReduceItemVO) throws FLException {
-		
+
 		AddReducePO addReducePO = addReduceDao.get(addReduceVO.getArId());
 
 		if (addReducePO == null) {
@@ -283,15 +283,15 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 		if (addReduceItemPO == null) {
 			throw new FLException(140036, "增减项目不存在");
 		}
-		
+
 		addReducePO.setUncalPrice(addReduceVO.getUncalPrice());
 		addReducePO.setCalPrice(addReduceVO.getCalPrice());
-		
+
 		addReduceItemPO.setDiscount(addReduceItemVO.getDiscount());
-		
+
 		addReduceItemDao.update(addReduceItemPO);
 		addReduceDao.update(addReducePO);
-		
+
 		return 0;
 	}
 
@@ -351,7 +351,7 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 			throw new FLException(140039, "减项工程量大于引用项目");
 		}
 
-		quotationFunctionAreaItemPO.setNum(Arith.add(quotationFunctionAreaItemNum, ponum - vonum));
+		quotationFunctionAreaItemPO.setNum(Arith.add(quotationFunctionAreaItemNum, Arith.sub(ponum, vonum)));
 
 		quotationFunctionAreaItemDao.update(quotationFunctionAreaItemPO);
 
@@ -373,7 +373,7 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 			throw new FLException(140039, "减项工程量大于引用项目");
 		}
 
-		_addReduceItemPO.setNum(Arith.add(_addReduceItemNum, ponum - vonum));
+		_addReduceItemPO.setNum(Arith.add(_addReduceItemNum, Arith.sub(ponum, vonum)));
 		addReduceItemDao.update(_addReduceItemPO);
 
 		return 0;
@@ -392,7 +392,7 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 			throw new FLException(140039, "减项工程量大于引用项目");
 		}
 
-		_extensionItemPO.setNum(Arith.add(_extensionItemNum, ponum - vonum));
+		_extensionItemPO.setNum(Arith.add(_extensionItemNum, Arith.sub(ponum, vonum)));
 		extensionItemDao.update(_extensionItemPO);
 
 		return 0;

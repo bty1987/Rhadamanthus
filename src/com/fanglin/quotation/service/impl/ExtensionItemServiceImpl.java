@@ -15,9 +15,11 @@ import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.quotation.dao.ExtensionDao;
 import com.fanglin.quotation.dao.ExtensionItemDao;
+import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.po.ExtensionItemPO;
 import com.fanglin.quotation.po.ExtensionPO;
 import com.fanglin.quotation.po.QuotationFunctionAreaPO;
+import com.fanglin.quotation.po.QuotationPO;
 import com.fanglin.quotation.service.ExtensionItemService;
 import com.fanglin.quotation.vo.ExtensionItemVO;
 import com.fanglin.quotation.vo.ExtensionVO;
@@ -38,6 +40,9 @@ public class ExtensionItemServiceImpl implements ExtensionItemService {
 
 	@Autowired
 	private DecorationDao decorationDao;
+
+	@Autowired
+	private QuotationDao quotationDao;
 
 	@Override
 	public List<ExtensionItemVO> queryExtensionItemByEid(ExtensionItemVO extensionItemVO) {
@@ -73,7 +78,7 @@ public class ExtensionItemServiceImpl implements ExtensionItemService {
 
 		ExtensionItemPO extensionItemPO;
 
-		checkExtensionItemForStatusByOrderId(extensionPO.getOrderId());
+		checkExtension(extensionPO);
 
 		if (extensionItemVO.getEiid() == null) {
 
@@ -91,6 +96,8 @@ public class ExtensionItemServiceImpl implements ExtensionItemService {
 			extensionItemPO.setQuotationFunctionArea(new QuotationFunctionAreaPO(extensionItemVO.getQuotationFunctionAreaId()));
 		}
 
+		extensionPO.setUndisPrice(extensionVO.getUndisPrice());
+		extensionPO.setDisPrice(extensionVO.getDisPrice());
 		extensionPO.setTotal(extensionVO.getTotal());
 
 		extensionDao.update(extensionPO);
@@ -111,7 +118,7 @@ public class ExtensionItemServiceImpl implements ExtensionItemService {
 			throw new FLException(200027, "扩展项不存在");
 		}
 
-		checkExtensionItemForStatusByOrderId(extensionPO.getOrderId());
+		checkExtension(extensionPO);
 
 		ExtensionItemPO extensionItemPO = extensionItemDao.get(extensionItemVO.getEiid());
 
@@ -119,21 +126,12 @@ public class ExtensionItemServiceImpl implements ExtensionItemService {
 			throw new FLException(200027, "扩展项不存在");
 		}
 
+		extensionPO.setUndisPrice(extensionVO.getUndisPrice());
+		extensionPO.setDisPrice(extensionVO.getDisPrice());
 		extensionPO.setTotal(extensionVO.getTotal());
 
 		extensionDao.update(extensionPO);
 		extensionItemDao.delete(extensionItemPO);
-	}
-
-	private void checkExtensionItemForStatusByOrderId(String orderId) throws FLException {
-
-		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
-
-		List<Short> status = Arrays.asList(new Short[] { DecorationPO.STATUS_SIGNED_INT, DecorationPO.STATUS_WASTE_INT, DecorationPO.STATUS_COMPLETED_INT, DecorationPO.STATUS_TERMINATION_INT });
-
-		if (status.contains(decorationPO.getStatus())) {
-			throw new FLException(140049, "装修单状态,不可操作");
-		}
 	}
 
 	private List<ExtensionItemVO> handleExtensionItem(List<ExtensionItemPO> extensionItemPOs) {
@@ -163,6 +161,33 @@ public class ExtensionItemServiceImpl implements ExtensionItemService {
 			extensionItemVOs.add(extensionItemVO);
 		}
 		return extensionItemVOs;
+	}
+
+	private void checkExtension(ExtensionPO extensionPO) throws FLException {
+
+		String orderId = extensionPO.getOrderId();
+
+		List<Short> status = Arrays.asList(new Short[] { DecorationPO.STATUS_SIGNED_INT, DecorationPO.STATUS_WASTE_INT, DecorationPO.STATUS_COMPLETED_INT, DecorationPO.STATUS_TERMINATION_INT });
+
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
+
+		if (decorationPO == null) {
+			throw new FLException(140013, "订单不存在");
+		}
+
+		if (status.contains(decorationPO.getStatus())) {
+			throw new FLException(140049, "装修单状态,不可操作");
+		}
+
+		QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(orderId);
+
+		if (quotationPO == null) {
+			throw new FLException(200003, "报价不存在");
+		}
+
+		if (quotationPO.getStatus() == QuotationPO.STATUS_LOCK_INT) {
+			throw new FLException(200033, "报价已锁定");
+		}
 	}
 
 }
