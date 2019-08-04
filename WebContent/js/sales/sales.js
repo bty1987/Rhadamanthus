@@ -144,7 +144,11 @@ $(function () {
                     $liLine.append($h3).append($ulProperty);
                     $small.appendTo($h3);
 
-                    $btnDiv.append($inventory).append($btnDecoration);
+                    if(sales.pageType == "advance"){
+                        $btnDiv.append($inventory)
+                    }
+
+                    $btnDiv.append($btnDecoration);
                     if (sales.pageType == "dompany") {
                         $btnDiv.append($btnSub).append($btnCollect).append($btnAct).append($btnRefund).appendTo($h3);
                     }else if(sales.pageType == "pompany"){

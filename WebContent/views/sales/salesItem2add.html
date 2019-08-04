@@ -12,9 +12,9 @@
                 <div class="widget-body" id="left">
                     <div class="widget-main" style="border-right: 1px solid #c5d0dc;">
                         <div class="form-group">
-                            <label for="goodsName" class="col-sm-3 control-label no-padding-right orange">商品名</label>
+                            <label for="goods" class="col-sm-3 control-label no-padding-right orange">商品名</label>
                             <div class="col-sm-9">
-                                <input type="text" class="col-sm-10 v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="goodsName" placeholder="请输入商品名">
+                                <input type="text" class="col-sm-10 v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="goods" placeholder="请输入商品名">
                             </div>
                         </div>
                         <div class="form-group">
@@ -45,20 +45,20 @@
                         <div class="form-group">
                             <label for="color" class="col-sm-3 control-label no-padding-right orange">颜色</label>
                             <div class="col-md-9">
-                                <select class="col-md-10" id="color" data-placeholder="请输入颜色" data-toggle="popover" data-trigger="manual"></select>
+                                <select class="col-md-10 v_required" id="color" data-placeholder="请输入颜色" data-toggle="popover" data-trigger="manual"></select>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label for="format" class="col-sm-3 control-label no-padding-right orange">规格</label>
                             <div class="col-md-9">
-                                <select class="col-md-10" id="format" data-placeholder="请输入规格" data-toggle="popover" data-trigger="manual"></select>
+                                <select class="col-md-10 v_required" id="format" data-placeholder="请输入规格" data-toggle="popover" data-trigger="manual"></select>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="purchase" class="col-sm-3 control-label no-padding-right orange">售价</label>
                             <div class="col-md-9">
-                                <select class="col-md-10" id="purchase" data-placeholder="请输入售价" data-toggle="popover" data-trigger="manual" ></select>
+                                <select class="col-md-10 v_required" id="purchase" data-placeholder="请输入售价" data-toggle="popover" data-trigger="manual" ></select>
                             </div>
                         </div>
 
@@ -118,11 +118,8 @@
                         </div>
 
                         <div class="form-group col-sm-12">
-                            <button id="add" type="button" class="btn btn-primary pull-left col-xs-6">
+                            <button id="add" type="button" class="btn btn-primary pull-left col-xs-12">
                                 <span>添加</span>
-                            </button>
-                            <button id="submit" type="button" class="btn btn-success pull-left col-xs-6">
-                                <span>提交</span>
                             </button>
                         </div>
                     </div>

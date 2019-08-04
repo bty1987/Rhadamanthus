@@ -22,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.approval.dao.ApprovalDao;
 import com.fanglin.approval.po.ApprovalPO;
-import com.fanglin.approval.service.ApprovalCustomerOriginTDecorationBelongService;
 import com.fanglin.approval.service.ApprovalCustomerOriginTDecorationService;
 import com.fanglin.approval.service.ApprovalDecorationActivityService;
 import com.fanglin.approval.service.ApprovalDecorationBelongService;
@@ -46,93 +45,90 @@ import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
 @Service("approvalService")
-@Transactional(readOnly=true)
+@Transactional(readOnly = true)
 public class ApprovalServiceImpl implements ApprovalService {
 
 	@Autowired
 	private ApprovalDao approvalDao;
-	
+
 	@Autowired
 	private ApprovalDecorationActivityService approvalDecorationActivityService;
-	
-//	@Autowired
-//	private ApprovalDecorationCustomerService approvalDecorationCustomerService;
-	
+
+	// @Autowired
+	// private ApprovalDecorationCustomerService
+	// approvalDecorationCustomerService;
+
 	@Autowired
 	private ApprovalDecorationRefundService approvalDecorationRefundService;
-	
+
 	@Autowired
 	private ApprovalMaterialFullPaymentService approvalMaterialFullPaymentService;
-	
+
 	@Autowired
 	private ApprovalMaterialRefundService approvalMaterialRefundService;
-	
+
 	@Autowired
 	private ApprovalDecorationBelongService approvalDecorationBelongService;
-	
+
 	@Autowired
 	private ApprovalQuotationDiscountService approvalQuotationDiscountService;
-	
-//	@Autowired
-//	private ApprovalDecorationHouseService aprovalDecorationHouseService;
-//	
+
+	// @Autowired
+	// private ApprovalDecorationHouseService aprovalDecorationHouseService;
+	//
 	@Autowired
 	private ApprovalManifestDBService approvalManifestDBService;
-	
+
 	@Autowired
 	private ApprovalSalesRefundService approvalSalesRefundService;
-	
+
 	@Autowired
 	private ApprovalSalesDiscountService approvalSalesDiscountService;
-	
+
 	@Autowired
 	private ApprovalCustomerOriginTDecorationService approvalCustomerOriginTDecorationService;
-	
-	@Autowired
-	private ApprovalCustomerOriginTDecorationBelongService approvalCustomerOriginTDecorationBelongService;
-	
+
 	@Autowired
 	private ApprovalDecorationHolonomyService approvalDecorationHolonomyService;
 
 	@Autowired
 	private UserDao userDao;
 
-	
 	@Override
 	public void pageApprovalForReceive(Paging paging, List<Filter> filters, String userId, int company) {
-		
+
 		List<ApprovalPO> approvalPOs = approvalDao.pageApprovalForReceive(paging, filters, userId, company);
 		List<ApprovalVO> approvalVOs = new ArrayList<ApprovalVO>();
-		
-		for(ApprovalPO approvalPO: approvalPOs){
+
+		for (ApprovalPO approvalPO : approvalPOs) {
 			approvalVOs.add(convertBean(approvalPO));
 		}
-		
+
 		paging.setData(approvalVOs);
 	}
-	
+
 	@Override
 	public void pageApprovalForSend(Paging paging, List<Filter> filters, String userId, int company) {
-		
+
 		List<ApprovalPO> approvalPOs = approvalDao.pageApprovalForSend(paging, filters, userId, company);
 		List<ApprovalVO> approvalVOs = new ArrayList<ApprovalVO>();
-		
-		for(ApprovalPO approvalPO: approvalPOs){
+
+		for (ApprovalPO approvalPO : approvalPOs) {
 			approvalVOs.add(convertBean(approvalPO));
-		}	
-		
+		}
+
 		paging.setData(approvalVOs);
 	}
 
 	@Override
 	public void pageApprovalForReceiveDept(Paging paging, List<Filter> filters, String userId, int company) {
-		
+
 		UserPO user = userDao.queryUserByUserId(userId);
 		int department = user.getDept().getDid();
 		List<ApprovalPO> approvalPOs = approvalDao.pageApprovalForReceiveDept(paging, filters, department, company);
 		List<ApprovalVO> approvalVOs = new ArrayList<ApprovalVO>();
-		
-		for(ApprovalPO approvalPO: approvalPOs){
+
+		for (ApprovalPO approvalPO : approvalPOs) {
 
 			approvalVOs.add(convertBean(approvalPO));
 
@@ -140,198 +136,192 @@ public class ApprovalServiceImpl implements ApprovalService {
 
 		paging.setData(approvalVOs);
 	}
-	
+
 	@Override
 	public ApprovalVO queryApprovalByAId(ApprovalVO approvalVO) throws FLException {
-		
+
 		ApprovalPO approvalPO = approvalDao.get(approvalVO.getAid());
-		
-		if(approvalPO == null){
+
+		if (approvalPO == null) {
 			throw new FLException(240009, "审批信息不存在");
 		}
-		
+
 		return convertBean(approvalPO);
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
+	@Transactional(rollbackFor = Exception.class)
 	public ApprovalPO approve(ApprovalPO approvalPO) throws FLException {
-		
-		if(approvalPO == null){
+
+		if (approvalPO == null) {
 			throw new FLException(240009, "审批信息不存在");
 		}
-		
+
 		approvalPO.setApprovalTime(DateUtil.getDateToTimestamp(new Date()));
 		approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_APPROVAL_INT);
 
 		short type = approvalPO.getType();
-		
+
 		switch (type) {
-			case ApprovalPO.APPROVAL_TYPE_CUSTOMER_INT:
-//				approvalDecorationCustomerService.approvalForCustomer(approvalPO);
-				break;
-			case ApprovalPO.APPROVAL_TYPE_VILLAGE_INT:
-//				aprovalDecorationHouseService.approvalDecorationHouse(approvalPO);
-				break;
-			case ApprovalPO.APPROVAL_TYPE_ORDER_BELONG_INT:
-				approvalDecorationBelongService.approvalForDecorationBelong(approvalPO);
-				break;
-			case ApprovalPO.APPROVAL_TYPE_QUOTATION_DISCOUNT_INT:
-				approvalQuotationDiscountService.approvalForQuotationDiscount(approvalPO);
-				break;
-			case ApprovalPO.APPROVAL_TYPE_DECORATION_REFUND_INT:
-				approvalDecorationRefundService.approvalForDecorationRefund(approvalPO);
-				break;
-			case ApprovalPO.APPROVAL_TYPE_MATERIAL_REFUND_INT:
-				approvalMaterialRefundService.approvalForMaterialRefund(approvalPO);
-				break;
-			case ApprovalPO.APPROVAL_TYPE_DECORATION_ACTIVITY_INT:
-				approvalDecorationActivityService.approvalForDecorationActivity(approvalPO);
-				break;
-			case ApprovalPO.APPROVAL_TYPE_MATERIAL_FULL_PAYMENT_INT:
-				approvalMaterialFullPaymentService.approvalForMaterialFullPayment(approvalPO);
-				break;
-			case ApprovalPO.APPROVAL_TYPE_SALESREFUND_PAYMENT_INT:
-				approvalSalesRefundService.approvalForSalesRefund(approvalPO);
-				break;	
-			case ApprovalPO.APPROVAL_TYPE_MANIFESTDB_INT:
-				approvalManifestDBService.approvalManifestDB(approvalPO);
-				break;
-			case ApprovalPO.APPROVAL_TYPE_SALES_DIACOUNT_INT:
-				approvalSalesDiscountService.approvalForSalesDiscount(approvalPO);
-			    break;
-			case ApprovalPO.APPROVAL_TYPE_CUSTOMER_ORIGIN_T_DECORATION_INT:
-				approvalCustomerOriginTDecorationService.approvalForApprovalForCustomerOriginTDecoration(approvalPO);
-			    break;
-			case ApprovalPO.APPROVAL_TYPE_CUSTOMER_ORIGIN_T_DECORATION_BELONG_INT:
-				approvalCustomerOriginTDecorationBelongService.approvalForApprovalForCustomerOriginTDecorationBelong(approvalPO);
-			    break;
-			case ApprovalPO.APPROVAL_TYPE_DECORATION_HOLONOMY_INT:
-				approvalDecorationHolonomyService.approvalForApprovalForDecorationHolonomy(approvalPO);
-			default:
-				break;
+		case ApprovalPO.APPROVAL_TYPE_CUSTOMER_INT:
+			// approvalDecorationCustomerService.approvalForCustomer(approvalPO);
+			break;
+		case ApprovalPO.APPROVAL_TYPE_VILLAGE_INT:
+			// aprovalDecorationHouseService.approvalDecorationHouse(approvalPO);
+			break;
+		case ApprovalPO.APPROVAL_TYPE_ORDER_BELONG_INT:
+			approvalDecorationBelongService.approvalForDecorationBelong(approvalPO);
+			break;
+		case ApprovalPO.APPROVAL_TYPE_QUOTATION_DISCOUNT_INT:
+			approvalQuotationDiscountService.approvalForQuotationDiscount(approvalPO);
+			break;
+		case ApprovalPO.APPROVAL_TYPE_DECORATION_REFUND_INT:
+			approvalDecorationRefundService.approvalForDecorationRefund(approvalPO);
+			break;
+		case ApprovalPO.APPROVAL_TYPE_MATERIAL_REFUND_INT:
+			approvalMaterialRefundService.approvalForMaterialRefund(approvalPO);
+			break;
+		case ApprovalPO.APPROVAL_TYPE_DECORATION_ACTIVITY_INT:
+			approvalDecorationActivityService.approvalForDecorationActivity(approvalPO);
+			break;
+		case ApprovalPO.APPROVAL_TYPE_MATERIAL_FULL_PAYMENT_INT:
+			approvalMaterialFullPaymentService.approvalForMaterialFullPayment(approvalPO);
+			break;
+		case ApprovalPO.APPROVAL_TYPE_SALESREFUND_PAYMENT_INT:
+			approvalSalesRefundService.approvalForSalesRefund(approvalPO);
+			break;
+		case ApprovalPO.APPROVAL_TYPE_MANIFESTDB_INT:
+			approvalManifestDBService.approvalManifestDB(approvalPO);
+			break;
+		case ApprovalPO.APPROVAL_TYPE_SALES_DIACOUNT_INT:
+			approvalSalesDiscountService.approvalForSalesDiscount(approvalPO);
+			break;
+		case ApprovalPO.APPROVAL_TYPE_CUSTOMER_ORIGIN_T_DECORATION_INT:
+			approvalCustomerOriginTDecorationService.approvalForApprovalForCustomerOriginTDecoration(approvalPO);
+			break;
+		case ApprovalPO.APPROVAL_TYPE_DECORATION_HOLONOMY_INT:
+			approvalDecorationHolonomyService.approvalForApprovalForDecorationHolonomy(approvalPO);
+		default:
+			break;
 		}
-		
+
 		approvalDao.update(approvalPO);
-		
+
 		return approvalPO;
 	}
-	
+
 	@Override
-	@Transactional(rollbackFor=Exception.class)
+	@Transactional(rollbackFor = Exception.class)
 	public int approve(ApprovalVO approvalVO) throws FLException {
-	
+
 		ApprovalPO approvalPO = approvalDao.get(approvalVO.getAid());
-		
-		if(approvalPO.getStatus() != ApprovalPO.APPROVAL_STATUS_INIT_INT){
+
+		if (approvalPO.getStatus() != ApprovalPO.APPROVAL_STATUS_INIT_INT) {
 			throw new FLException(240001, "不能重复审批");
 		}
-		
+
 		approvalPO = approve(approvalPO);
-		
+
 		approvalDao.update(approvalPO);
-		
+
 		return 0;
 	}
-	
+
 	@Override
-	@Transactional(rollbackFor=Exception.class)
+	@Transactional(rollbackFor = Exception.class)
 	public int approvalCallback(ApprovalVO approvalVO) throws FLException {
-	
+
 		ApprovalPO approvalPO = approvalDao.queryApprovalByProcessinstanceid(approvalVO.getProcessinstanceid());
-		
-		if(approvalPO.getStatus() != ApprovalPO.APPROVAL_STATUS_APPROVE_INT){
+
+		if (approvalPO.getStatus() != ApprovalPO.APPROVAL_STATUS_APPROVE_INT) {
 			throw new FLException(240001, "不能重复审批");
 		}
-		
+
 		approvalPO = approve(approvalPO);
-		
+
 		approvalDao.update(approvalPO);
-		
+
 		return 0;
 	}
-	
+
 	@Override
-	@Transactional(rollbackFor=Exception.class)
+	@Transactional(rollbackFor = Exception.class)
 	public int refuse(ApprovalVO approvalVO) throws FLException {
-		
+
 		ApprovalPO approvalPO = approvalDao.get(approvalVO.getAid());
-		
-		if(approvalPO == null){
+
+		if (approvalPO == null) {
 			throw new FLException(240009, "审批信息不存在");
 		}
-		
-		if(approvalPO.getStatus() != ApprovalPO.APPROVAL_STATUS_INIT_INT){
+
+		if (approvalPO.getStatus() != ApprovalPO.APPROVAL_STATUS_INIT_INT) {
 			throw new FLException(240001, "不能重复审批");
 		}
-		
+
 		short type = approvalPO.getType();
-		
+
 		switch (type) {
-			case ApprovalPO.APPROVAL_TYPE_MATERIAL_FULL_PAYMENT_INT:
-				approvalMaterialFullPaymentService.refuseForMaterialFullPayment(approvalPO);
-				break;
-			case ApprovalPO.APPROVAL_TYPE_MATERIAL_REFUND_INT:
-				approvalMaterialRefundService.refuseForMaterialRefund(approvalPO);
-				break;
-			case ApprovalPO.APPROVAL_TYPE_DECORATION_REFUND_INT:
-				approvalDecorationRefundService.refuseForDecorationRefund(approvalPO);
-				break;
-			case ApprovalPO.APPROVAL_TYPE_SALESREFUND_PAYMENT_INT:
-				approvalSalesRefundService.refuseForSalesRefund(approvalPO);
-				break;
-			case ApprovalPO.APPROVAL_TYPE_SALES_DIACOUNT_INT:
-				approvalSalesDiscountService.refuseForSalesDiscount(approvalPO);
-				break;
-			case ApprovalPO.APPROVAL_TYPE_CUSTOMER_ORIGIN_T_DECORATION_INT:
-				approvalCustomerOriginTDecorationService.refuseForApprovalForCustomerOriginTDecoration(approvalPO);
-				break;
-			case ApprovalPO.APPROVAL_TYPE_CUSTOMER_ORIGIN_T_DECORATION_BELONG_INT:
-				approvalCustomerOriginTDecorationBelongService.refuseForApprovalForCustomerOriginTDecorationBelong(approvalPO);
-				break;
-			default:
-				break;
+		case ApprovalPO.APPROVAL_TYPE_MATERIAL_FULL_PAYMENT_INT:
+			approvalMaterialFullPaymentService.refuseForMaterialFullPayment(approvalPO);
+			break;
+		case ApprovalPO.APPROVAL_TYPE_MATERIAL_REFUND_INT:
+			approvalMaterialRefundService.refuseForMaterialRefund(approvalPO);
+			break;
+		case ApprovalPO.APPROVAL_TYPE_DECORATION_REFUND_INT:
+			approvalDecorationRefundService.refuseForDecorationRefund(approvalPO);
+			break;
+		case ApprovalPO.APPROVAL_TYPE_SALESREFUND_PAYMENT_INT:
+			approvalSalesRefundService.refuseForSalesRefund(approvalPO);
+			break;
+		case ApprovalPO.APPROVAL_TYPE_SALES_DIACOUNT_INT:
+			approvalSalesDiscountService.refuseForSalesDiscount(approvalPO);
+			break;
+		case ApprovalPO.APPROVAL_TYPE_CUSTOMER_ORIGIN_T_DECORATION_INT:
+			approvalCustomerOriginTDecorationService.refuseForApprovalForCustomerOriginTDecoration(approvalPO);
+			break;
+		default:
+			break;
 		}
-		
+
 		approvalPO.setApprovalTime(DateUtil.getDateToTimestamp(new Date()));
 		approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_REFUSE_INT);
-		
+
 		approvalDao.update(approvalPO);
-		
+
 		return 0;
 	}
-	
+
 	@Override
-	@Transactional(rollbackFor=Exception.class)
+	@Transactional(rollbackFor = Exception.class)
 	public int countApprovalForReceive(String userId, int company) throws FLException {
-		
+
 		UserPO userPO = userDao.queryUserByUserId(userId);
 		int ruId = userPO.getUid();
-		
-		int count=approvalDao.countApprovalForReceive(ApprovalPO.APPROVAL_STATUS_INIT_INT, ruId, company);
-		
+
+		int count = approvalDao.countApprovalForReceive(ApprovalPO.APPROVAL_STATUS_INIT_INT, ruId, company);
+
 		return count;
 	}
-	
+
 	@Override
-	@Transactional(rollbackFor=Exception.class)
+	@Transactional(rollbackFor = Exception.class)
 	public int countApprovalForSend(String userId, int company) throws FLException {
-		
+
 		UserPO userPO = userDao.queryUserByUserId(userId);
 		int suId = userPO.getUid();
-		
-		int count=approvalDao.countApprovalForSend(ApprovalPO.APPROVAL_STATUS_INIT_INT,suId, company);
-		
+
+		int count = approvalDao.countApprovalForSend(ApprovalPO.APPROVAL_STATUS_INIT_INT, suId, company);
+
 		return count;
 	}
-	
+
 	private ApprovalVO convertBean(ApprovalPO approvalPO) {
-		
-		ApprovalVO approvalVO = new ApprovalVO(new UserBaseVO(),new UserBaseVO());
-		
-		BeanUtil.copyProperties(approvalPO, approvalVO,Arrays.asList("receiver", "sender"));
-		BeanUtil.copyProperties(approvalPO.getReceiver(), approvalVO.getReceiver(),Arrays.asList("dept", "duty"));
-		BeanUtil.copyProperties(approvalPO.getSender(), approvalVO.getSender(),Arrays.asList("dept", "duty"));
+
+		ApprovalVO approvalVO = new ApprovalVO(new UserBaseVO(), new UserBaseVO());
+
+		BeanUtil.copyProperties(approvalPO, approvalVO, Arrays.asList("receiver", "sender"));
+		BeanUtil.copyProperties(approvalPO.getReceiver(), approvalVO.getReceiver(), Arrays.asList("dept", "duty"));
+		BeanUtil.copyProperties(approvalPO.getSender(), approvalVO.getSender(), Arrays.asList("dept", "duty"));
 
 		return approvalVO;
 	}

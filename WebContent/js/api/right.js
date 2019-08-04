@@ -28,5 +28,8 @@ $.extend(api, {right: {
 
     queryTaskUserRightByUserId: {url: "queryTaskUserRightByUserId.do"},
     updateTaskUserRight: {url: "updateTaskUserRight.do"},
+    
+    queryDecorationFunctionRightByName: {url: "queryDecorationFunctionRightByName.do"},
+    updateDecorationFunctionRight: {url: "updateDecorationFunctionRight.do"},
 
 }});

@@ -96,7 +96,7 @@ $(function(){
     })();
 
     var awardRecordSeacher = new Searcher();
-    awardRecordSeacher.init(["StockDate", "StockName", "StockType", "awardRecordSubtypes", "awardStockOneType"], "condList", api.information.pageAwardRecord, function(data){
+    awardRecordSeacher.init(["stockDate", "stockName", "StockType", "awardRecordSubtypes", "awardStockOneType"], "condList", api.information.pageAwardRecord, function(data){
         displayFunc.init('resultList', data);
     }, "pagenation", "pageAwardRecordPostData", {"awardRecord.awardStock.asid":""}, false, null, function() {
     },'resultList');

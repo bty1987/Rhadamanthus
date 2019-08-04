@@ -1,22 +1,17 @@
-<!--<div class="container-fluid">-->
 <div>
     <div class="row">
         <div class="col-xs-12">
             <div class="col-xs-3 form-horizontal">
-                <div>
-                    <div class="portlet-title">
-                        <div class="caption">
-
-                        </div>
-                    </div>
+                <div class="portlet-title">
+                    <div class="caption"></div>
                 </div>
                 <div class="widget-body" id="left">
                     <div class="widget-main" style="border-right: 1px solid #c5d0dc;">
 
                         <div class="form-group">
-                            <label for="goodsName" class="col-sm-3 control-label no-padding-right orange">商品名</label>
+                            <label for="goods" class="col-sm-3 control-label no-padding-right orange">商品名</label>
                             <div class="col-sm-9">
-                                <input type="text" class="col-sm-10 v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="goodsName" placeholder="请输入商品名">
+                                <input type="text" class="col-sm-10 v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="goods" placeholder="请输入商品名">
                             </div>
                         </div>
                         <div class="form-group">
@@ -47,20 +42,20 @@
                         <div class="form-group">
                             <label for="color" class="col-sm-3 control-label no-padding-right orange">颜色</label>
                             <div class="col-md-9">
-                                <select class="col-md-10" id="color" data-placeholder="请输入颜色" data-toggle="popover" data-trigger="manual"></select>
+                                <select class="col-md-10 v_required" id="color" data-placeholder="请输入颜色" data-toggle="popover" data-trigger="manual"></select>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label for="format" class="col-sm-3 control-label no-padding-right orange">规格</label>
                             <div class="col-md-9">
-                                <select class="col-md-10" id="format" data-placeholder="请输入规格" data-toggle="popover" data-trigger="manual"></select>
+                                <select class="col-md-10 v_required" id="format" data-placeholder="请输入规格" data-toggle="popover" data-trigger="manual"></select>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="purchase" class="col-sm-3 control-label no-padding-right orange">售价</label>
                             <div class="col-md-9">
-                                <select class="col-md-10" id="purchase" data-placeholder="请输入售价" data-toggle="popover" data-trigger="manual"></select>
+                                <select class="col-md-10 v_required" id="purchase" data-placeholder="请输入售价" data-toggle="popover" data-trigger="manual"></select>
                             </div>
                         </div>
 
@@ -121,20 +116,15 @@
 
                         <div class="form-group buttons row-fluid col-xs-12">
                             <button id="add" type="button" class="btn btn-primary pull-left col-xs-4">
-
                                 <span>添加</span>
                             </button>
                             <button id="submit" type="button" class="btn btn-success pull-left col-xs-4">
-
                                 <span>提交</span>
                             </button>
                             <button id="refresh" type="button" class="btn btn-danger pull-left col-xs-4">
-
                                 <span>重置</span>
                             </button>
                         </div>
-
-
                     </div>
                 </div>
             </div>
@@ -143,8 +133,7 @@
             <div class="tab-content col-xs-9" style="border: 0;">
                 <div class="form-horizontal">
                     <div>
-                        <div class="caption">
-                        </div>
+                        <div class="caption"></div>
                     </div>
                     <div class="widget-body" style="border: 0px;">
                         <div class="widget-main" id="searchInfo" style="border-bottom: 1px solid #c5d0dc">
@@ -157,16 +146,16 @@
 
                                 </div>
                                 <div class="lable_input col-xs-4">
-                                    <label for="customerName" class="col-sm-3 control-label no-padding-right orange">客户姓名</label>
+                                    <label for="customer" class="col-sm-3 control-label no-padding-right orange">客户姓名</label>
                                     <div class="col-sm-9">
-                                        <input id="customerName" type="text" class="order_inputinfo col-sm-10 v_required" readonly/>
+                                        <input id="customer" type="text" class="order_inputinfo col-sm-10 v_required" readonly/>
                                     </div>
 
                                 </div>
                                 <div class="lable_input col-xs-4">
-                                    <label for="salesmanName" class="col-sm-3 control-label no-padding-right orange">渠道</label>
+                                    <label for="salesman" class="col-sm-3 control-label no-padding-right orange">渠道</label>
                                     <div class="col-sm-9">
-                                        <input id="salesmanName" type="text" class="order_inputinfo col-sm-10 v_required"/>
+                                        <input id="salesman" type="text" class="order_inputinfo col-sm-10 v_required"/>
                                     </div>
 
                                 </div>
@@ -197,7 +186,7 @@
                                 <div class="lable_input col-xs-4">
                                     <label for="coupon" class="col-sm-3 control-label no-padding-right">券值</label>
                                     <div class="col-sm-9">
-                                        <input id="coupon" type="text" class="order_inputinfo col-sm-10"/>
+                                        <input id="coupon" type="text" class="order_inputinfo col-sm-10 v_float_3" value="0"/>
                                     </div>
 
                                 </div>
@@ -211,7 +200,7 @@
                                 <div class="lable_input col-xs-4">
                                     <label for="maling" class="col-sm-3 control-label no-padding-right">抹零</label>
                                     <div class="col-sm-9">
-                                        <input id="maling" type="text" class="order_inputinfo col-sm-10"/>
+                                        <input id="maling" type="text" class="order_inputinfo col-sm-10 v_float_3" value="0"/>
                                     </div>
                                 </div>
                             </div>
@@ -219,7 +208,7 @@
                                 <div class="lable_input col-xs-4">
                                     <label for="totals" class="col-sm-3 control-label no-padding-right">总额</label>
                                     <div class="col-sm-9">
-                                        <input id="totals" type="text" class="order_inputinfo col-sm-10" readonly/>
+                                        <input id="totals" type="text" class="order_inputinfo col-sm-10" value="0" readonly/>
                                     </div>
                                 </div>
                                 <div class="lable_input col-xs-4">
@@ -235,17 +224,12 @@
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
                 <!--已添加的主材-->
                 <div class="form-horizontal">
-
-                    <ul id="salesItemList" class="widget-main col-xs-12" style="margin : 0px;">
-
-                    </ul>
-
+                    <ul id="salesItemList" class="widget-main col-xs-12" style="margin : 0px;"></ul>
                 </div>
             </div>
         </div>
@@ -253,8 +237,8 @@
     </div>
 </div>
 
-<!--</div>-->
 <div id="viewPopUp" class="portlet box"></div>
+
 <script type="text/javascript">
     $.loadScript(['js/sales/sales2create.js']);
 </script>

@@ -23,7 +23,6 @@ import com.fanglin.sales.po.SalesPO;
 import com.fanglin.sales.service.SalesItemService;
 import com.fanglin.sales.vo.SalesItemVO;
 import com.fanglin.sales.vo.SalesVO;
-import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 
 
@@ -85,7 +84,7 @@ public class SalesItemServiceImpl implements SalesItemService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int addSalesItem(SalesVO salesVO, List<SalesItemVO> salesItemVOs)throws FLException {
+	public int addSalesItem(SalesVO salesVO, SalesItemVO salesItemVO)throws FLException {
 		
 		SalesPO salesPO = salesDao.get(salesVO.getSid());
 		
@@ -101,46 +100,25 @@ public class SalesItemServiceImpl implements SalesItemService {
 			throw new FLException(260022, "销售单状态不可操作");
 		}
 		
-		float total = salesPO.getTotal();
-		float _total = 0f;
 		
-		for(SalesItemVO salesItemVO : salesItemVOs){
-			
-			GoodsPO goodsPO = goodsDao.get(salesItemVO.getGoods().getGid());
-			
-			if(!salesPO.getBrand().equals(goodsPO.getBrand())){
-				throw new FLException(260036, "销售项品牌不同"); // 品牌不一致 没有错误code码
-			}
-			
-			SalesItemPO salesItemPO = new SalesItemPO(new GoodsPO(), new ColorPO(), new FormatPO());
-			
-			
-			BeanUtil.copyProperties(salesItemVO, salesItemPO, Arrays.asList("goods","color","format"));
-			BeanUtil.copyProperties(salesItemVO.getGoods(), salesItemPO.getGoods(),Arrays.asList("accessoriesType"));
-			BeanUtil.copyProperties(salesItemVO.getColor(), salesItemPO.getColor());
-			BeanUtil.copyProperties(salesItemVO.getFormat(), salesItemPO.getFormat());
-			
-			salesItemPO.setSid(salesVO.getSid());
-			
-			salesPO.setOtherStatus(salesVO.getOtherStatus());
-			
-			_total = Arith.add(_total, salesItemPO.getTotal());
-			
-			salesItemDao.save(salesItemPO);
-			
+		GoodsPO goodsPO = goodsDao.get(salesItemVO.getGoods().getGid());
+		
+		if(!salesPO.getBrand().equals(goodsPO.getBrand())){
+			throw new FLException(260036, "销售项品牌不同"); // 品牌不一致 没有错误code码
 		}
 		
+		SalesItemPO salesItemPO = new SalesItemPO(new GoodsPO(salesItemVO.getGoods().getGid()), new ColorPO(salesItemVO.getColor().getCid()), new FormatPO(salesItemVO.getFormat().getFid()));
 		
 		
-		if(_total!=salesVO.getTotal()){
-			
-			throw new FLException(150025, "款项金额不正确");
-			
-		}
+		BeanUtil.copyProperties(salesItemVO, salesItemPO, Arrays.asList("goods","color","format"));
 		
-		salesPO.setTotal(Arith.add(total, _total));
-		salesPO.setAmount(Arith.add(total, _total));
+		salesItemPO.setSid(salesVO.getSid());
+		salesPO.setOtherStatus(salesVO.getOtherStatus());
+		salesItemDao.save(salesItemPO);
+		salesItemVO.setSiid(salesItemPO.getSiid());
 		
+		salesPO.setTotal(salesVO.getTotal());
+		salesPO.setAmount(salesVO.getTotal());
 		salesDao.update(salesPO);
 		
 		return 0;
@@ -148,7 +126,7 @@ public class SalesItemServiceImpl implements SalesItemService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int updateSalesItem(SalesItemVO salesItemVO)throws FLException {
+	public int updateSalesItem(SalesVO salesVO, SalesItemVO salesItemVO)throws FLException {
 		
 		SalesItemPO salesItemPO = salesItemDao.get(salesItemVO.getSiid());
 		
@@ -170,10 +148,8 @@ public class SalesItemServiceImpl implements SalesItemService {
 			throw new FLException(260022, "销售单状态不可操作");
 		}
 		
-		float money = Arith.add(Arith.sub(salesPO.getTotal(), salesItemPO.getTotal()), salesItemVO.getTotal());
-		
-		salesPO.setTotal(money);
-		salesPO.setAmount(money);
+		salesPO.setTotal(salesVO.getTotal());
+		salesPO.setAmount(salesVO.getTotal());
 		
 		salesItemPO.setNum(salesItemVO.getNum());
 		salesItemPO.setTotal(salesItemVO.getTotal());
@@ -206,7 +182,7 @@ public class SalesItemServiceImpl implements SalesItemService {
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int deleteSalesItem(SalesItemVO salesItemVO)throws FLException {
+	public int deleteSalesItem(SalesVO salesVO, SalesItemVO salesItemVO)throws FLException {
 		
 		SalesItemPO salesItemPO = salesItemDao.get(salesItemVO.getSiid());
 		
@@ -228,8 +204,8 @@ public class SalesItemServiceImpl implements SalesItemService {
 			throw new FLException(260022, "销售单状态不可操作");
 		}
 
-		salesPO.setTotal(Arith.sub(salesPO.getTotal(), salesItemPO.getTotal()));
-		salesPO.setAmount(Arith.sub(salesPO.getAmount(),salesItemPO.getTotal()));
+		salesPO.setTotal(salesVO.getTotal());
+		salesPO.setAmount(salesVO.getTotal());
 		
 		salesDao.update(salesPO);
 		

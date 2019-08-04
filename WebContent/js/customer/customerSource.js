@@ -6,7 +6,8 @@ $(function () {
         modals: {
             bindAllInfoModal: com.focusPage("#bindAllInfo"),
             sustomerSourceModal: com.focusPage("#sustomersource"),
-            commitApproveModal: com.focusPage("#commitApprove")
+            commitApproveModal: com.focusPage("#commitApprove"),
+            codeModal: com.focusPage("#codeModal")
         },
         items: {
             name: com.focusPage("#name"),
@@ -24,7 +25,6 @@ $(function () {
             rule: com.focusPage("#rule"),
 
             designer: com.focusPage("#designer"),
-            salesman: com.focusPage("#salesman"),
             villageNoBind: com.focusPage("#villageNoBind"),
             houseNumberBind: com.focusPage("#houseNumberBind"),
             nameBind: com.focusPage("#nameBind"),
@@ -37,13 +37,19 @@ $(function () {
             unitrule: com.focusPage("#unitrule"),
             floorrule: com.focusPage("#floorrule"),
             doorrule: com.focusPage("#doorrule"),
+            houseTypeOne: com.focusPage("#houseTypeOne"),
+            houseTypeTwo: com.focusPage("#houseTypeTwo"),
+            houseTypeThr: com.focusPage("#houseTypeThr"),
+            houseTypeFour: com.focusPage("#houseTypeFour"),
 
             nameApprove: com.focusPage("#nameApprove"),
             phoneApprove: com.focusPage("#phoneApprove"),
             villageNoDesiger: com.focusPage("#villageNoDesiger"),
             houseNumberApprove: com.focusPage("#houseNumberApprove"),
-            houseType: com.focusPage("#houseType"),
+            salesman: com.focusPage("#salesman"),
             salesmanType: com.focusPage("#salesmanType"),
+            houseType: com.focusPage("#houseType"),
+            houseClass: com.focusPage("#houseClass"),
             orderType: com.focusPage("#orderType"),
             resourceType: com.focusPage("#resourceType"),
             approveComment: com.focusPage("#approveComment")
@@ -73,6 +79,7 @@ $(function () {
     }, null, false);
 
     com.post(api.ds.decoration, {}, function (res) {
+        customerSource.items.houseClass.bindData(res.houseClass, 'key', 'value');
         customerSource.items.salesmanType.bindData(res.salesmanType, 'key', 'value');
         customerSource.items.orderType.bindData(res.type, 'key', 'value');
         customerSource.items.resourceType.bindData(res.status, 'key', 'value');
@@ -122,12 +129,13 @@ $(function () {
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
+            var $btnCode = $("<a></a>").addClass("btn btn-minier btn-info").html("二维码");
             var $btnView = $("<a></a>").addClass("btn btn-minier btn-yellow").html("编辑");
             var $btnBind = $("<a></a>").addClass("btn btn-minier btn-success").html("绑定");
             var $release = $("<a></a>").addClass("btn btn-minier btn-warning").html("释放");
             var $record = $("<a></a>").addClass("btn btn-minier btn-pink").html("记录");
             var $commit = $("<a></a>").addClass("btn btn-minier btn-blue").html("提交");
-            var $backout = $("<a></a>").addClass("btn btn-minier btn-info").html("撤销");
+            var $backout = $("<a></a>").addClass("btn btn-minier btn-danger").html("撤销");
             var $confirm = $("<a></a>").addClass("btn btn-minier btn-inverse").html("确认");
             var $btnApproval = $("<a></a>").addClass("btn btn-minier btn-success").html("审批");
 
@@ -135,8 +143,8 @@ $(function () {
                 ["客户电话: ", v.phone, "grey"],
                 ["性别: ", v.gender, "grey"],
                 ["目的: ", v.purpose, "grey"],
-                ["意向: ", v.intention, "grey"],
-                ["需求价格: ", v.price, "blue"],
+                ["风格意向: ", v.intention, "grey"],
+                ["预计装修价格: ", v.price, "blue"],
                 ["客户等级: ", v.grade, "grey"],
                 ["创建人: ", v.creater.currentName, "grey"],
                 ["创建时间: ", v.createTime, "green"],
@@ -144,7 +152,6 @@ $(function () {
                 ["归属部门: ", v.department.name, "grey"],
                 ["归属分区: ", v.region.name, "grey"],
                 ["归属设计师: ", com.checkNull(v.designer.currentName,'无'), "grey"],
-                ["归属业务员: ", com.checkNull(v.salesman.currentName,'无'), "grey"],
                 ["楼盘名: ",com.checkNull(v.village.name,'无'), "grey"],
                 ["楼牌号: ", v.houseNumber, "blue"],
                 ["建筑面积: ", v.buildArea, "blue"],
@@ -158,6 +165,8 @@ $(function () {
                 $('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
                 $liProperty.appendTo($ulProperty);
             });
+
+            $divBtnWrap.append($btnCode);
 
             if(v.status == 0){
                 $divBtnWrap.append($btnView).append($btnBind).append($commit).append($release);
@@ -176,6 +185,20 @@ $(function () {
             $divBtnWrap.appendTo($h3);
 
             $liLine.append($h3).append($ulProperty);
+
+            //二维码
+            $btnCode.click(function(){
+                com.focusPage('#code').html("");
+
+                com.focusPage('#code').qrcode({
+                    render: "canvas",
+                    width: 150,
+                    height: 150,
+                    text: " http://fanglin.vip/wx/customersource?csid=" + v.csid
+                });
+
+                customerSource.modals.codeModal.modal('show');
+            });
 
             //编辑
             $btnView.click(function () {
@@ -206,7 +229,6 @@ $(function () {
             $btnBind.click(function () {
                 customerSource.currentCustomerSource = v;
                 v.designer != null ? com.updateTypeahead("designer", v.designer.userId, v.designer.currentName) : com.cleanTypeahead("designer");
-                v.salesman != null ? com.updateTypeahead("salesman", v.salesman.userId, v.salesman.currentName) : com.cleanTypeahead("salesman");
                 com.updateTypeahead('villageNoBind', v.village.no, v.village.name + "-" + v.village.cityProper.name);
                 customerSource.items.houseNumberBind.val(v.houseNumber);
                 customerSource.items.nameBind.val(v.name);
@@ -348,7 +370,6 @@ $(function () {
         var options = {
             "customerOrigin.csid": customerSource.currentCustomerSource.csid,
             "customerOrigin.designer.userId": com.typeahead("designer"),
-            "customerOrigin.salesman.userId": com.typeahead("salesman"),
             "customerOrigin.house.hid": hid,
             "customerOrigin.customer.cid": cid,
             "customerOrigin.phone": customerSource.items.phoneBind.val() //为了避免编辑时修改电话号, 导致客源中和客户中信息对应不上情况
@@ -389,7 +410,9 @@ $(function () {
             "house.unit" : customerSource.items.unit.val(),
             "house.floor" : customerSource.items.floor.val(),
             "house.door" : customerSource.items.door.val(),
-            "house.buildArea" : customerSource.currentCustomerSource.buildArea
+            "house.buildArea" : customerSource.currentCustomerSource.buildArea,
+            "house.roomNum" : customerSource.items.houseTypeOne.val(),
+            "house.houseType" : customerSource.items.houseTypeOne.val() + "室" + customerSource.items.houseTypeTwo.val() + "厅" + customerSource.items.houseTypeThr.val() + "厨" + customerSource.items.houseTypeFour.val() + "卫"
         };
 
         com.post(api.data.existHouse, houseOption, function(res){
@@ -463,29 +486,27 @@ $(function () {
         }
 
         com.showConfirm("是否确认提交审批", function(){
-            if (params.userInfo.user.uid == customerSource.currentCustomerSource.designer.uid) {
-                var option =  {
-                    "approval.receiver.userId": receiverId,
-                    "approvalCustomerOriginTDecoration.csid" : customerSource.currentCustomerSource.csid,
-                    "approvalCustomerOriginTDecoration.type": customerSource.items.orderType.val(),
-                    "approvalCustomerOriginTDecoration.salesmanType": customerSource.items.salesmanType.val(),
-                    "approvalCustomerOriginTDecoration.houseType": customerSource.items.houseType.val(),
-                    "approvalCustomerOriginTDecoration.resourceType": customerSource.items.resourceType.val()
-                };
-                
-                com.post(api.approval.submitApprovalForCustomerOriginTDecoration, option, function (res) {
-                    if(res.errorCode == 0){
-                        com.showAlert(com.info, "操作成功");
-                        com.clearValidator();
-                        searcher.doSearch();
-                        customerSource.modals.commitApproveModal.modal("hide");
-                    }else{
-                        com.showAlert(com.error, "提交失败");
-                    }
-                });
-            } else {
-                com.showAlert(com.warning, "设计师不匹配, 不能提交审批!");
-            }
+            var option =  {
+                "approval.receiver.userId": receiverId,
+                "approvalCustomerOriginTDecoration.customerOrigin.csid" : customerSource.currentCustomerSource.csid,
+                "approvalCustomerOriginTDecoration.type": customerSource.items.orderType.val(),
+                "approvalCustomerOriginTDecoration.salesman.userId": com.typeahead("salesman"),
+                "approvalCustomerOriginTDecoration.salesmanType": customerSource.items.salesmanType.val(),
+                "approvalCustomerOriginTDecoration.houseType": customerSource.items.houseType.val(),
+                "approvalCustomerOriginTDecoration.houseClass": customerSource.items.houseClass.val(),
+                "approvalCustomerOriginTDecoration.resourceType": customerSource.items.resourceType.val()
+            };
+
+            com.post(api.approval.submitApprovalForCustomerOriginTDecoration, option, function (res) {
+                if(res.errorCode == 0){
+                    com.showAlert(com.info, "操作成功");
+                    com.clearValidator();
+                    searcher.doSearch();
+                    customerSource.modals.commitApproveModal.modal("hide");
+                }else{
+                    com.showAlert(com.error, "提交失败");
+                }
+            });
         });
     }
 });

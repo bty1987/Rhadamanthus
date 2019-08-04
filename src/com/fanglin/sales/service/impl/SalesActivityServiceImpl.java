@@ -161,13 +161,13 @@ public class SalesActivityServiceImpl implements SalesActivityService {
 				throw new FLException(160038, "奖品库存数量不足!");
 			}
 
-			awardStockPO.setNum((int) Arith.sub(awardStockPO.getNum(), salesActivityItemPO.getNum()));
+			awardStockPO.setNum(Arith.sub(awardStockPO.getNum(), salesActivityItemPO.getNum()));
 
 			awardStockDao.update(awardStockPO);
 
 		}
 		
-		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, userDao.queryUserByUserId(userId), AwardRecordPO.TYPE_XG_INT, AwardRecordPO.SUBTYPE_RECEIVE_INT, AwardRecordPO.ONETYPE_SALES_INT, salesActivityItemPO.getIsStock(), salesActivityItemPO.getMoney(), salesActivityItemPO.getNum(), salesActivityItemVO.getContent());
+		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, userDao.queryUserByUserId(userId), salesActivityItemPO.getOrderId(), AwardRecordPO.TYPE_XG_INT, AwardRecordPO.SUBTYPE_RECEIVE_INT, AwardRecordPO.ONETYPE_SALES_INT, salesActivityItemPO.getIsStock(), salesActivityItemPO.getMoney(), salesActivityItemPO.getNum(), salesActivityItemVO.getContent());
 		
 		awardRecordDao.save(awardRecordPO);
 		
@@ -204,12 +204,12 @@ public class SalesActivityServiceImpl implements SalesActivityService {
 			if(num < 0){
 				throw new FLException(160038, "奖品库存数量不足!");
 			}
-			awardStockPO.setNum((int) Arith.sub(awardStockPO.getNum(), salesActivityItemPO.getNum()));
+			awardStockPO.setNum(Arith.sub(awardStockPO.getNum(), salesActivityItemPO.getNum()));
 
 			awardStockDao.update(awardStockPO);
 		}
 		
-		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, creater, AwardRecordPO.TYPE_XG_INT, AwardRecordPO.SUBTYPE_DELIVERY_INT, AwardRecordPO.ONETYPE_SALES_INT, salesActivityItemPO.getIsStock(), salesActivityItemPO.getMoney(), salesActivityItemPO.getNum(), salesActivityItemVO.getContent());
+		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, creater, salesActivityItemPO.getOrderId(), AwardRecordPO.TYPE_XG_INT, AwardRecordPO.SUBTYPE_DELIVERY_INT, AwardRecordPO.ONETYPE_SALES_INT, salesActivityItemPO.getIsStock(), salesActivityItemPO.getMoney(), salesActivityItemPO.getNum(), salesActivityItemVO.getContent());
 		
 		awardRecordDao.save(awardRecordPO);
 	}
@@ -262,7 +262,7 @@ public class SalesActivityServiceImpl implements SalesActivityService {
 			
 		}
 		
-		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, userDao.queryUserByUserId(userId), AwardRecordPO.TYPE_CG_INT, AwardRecordPO.SUBTYPE_REFUND_INT, AwardRecordPO.ONETYPE_SALES_INT, salesActivityItemPO.getIsStock(), salesActivityItemPO.getMoney(), salesActivityItemPO.getNum(), salesActivityItemVO.getContent());
+		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, userDao.queryUserByUserId(userId), salesActivityItemPO.getOrderId(), AwardRecordPO.TYPE_CG_INT, AwardRecordPO.SUBTYPE_REFUND_INT, AwardRecordPO.ONETYPE_SALES_INT, salesActivityItemPO.getIsStock(), salesActivityItemPO.getMoney(), salesActivityItemPO.getNum(), salesActivityItemVO.getContent());
 		
 		awardRecordDao.save(awardRecordPO);
 		

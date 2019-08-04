@@ -2,6 +2,9 @@ package com.fanglin.approval.vo;
 
 import java.io.Serializable;
 
+import com.fanglin.customer.vo.CustomerOriginVO;
+import com.fanglin.personel.vo.UserBaseVO;
+
 public class ApprovalCustomerOriginTDecorationVO implements Serializable {
 
 	private static final long serialVersionUID = 5937990438453637182L;
@@ -10,7 +13,7 @@ public class ApprovalCustomerOriginTDecorationVO implements Serializable {
 
 	private Long aid;
 
-	private Long csid;
+	private CustomerOriginVO customerOrigin;
 
 	private Short type;
 
@@ -18,7 +21,11 @@ public class ApprovalCustomerOriginTDecorationVO implements Serializable {
 
 	private String houseType;
 
+	private String houseClass;
+
 	private Short resourceType;
+
+	private UserBaseVO salesman;
 
 	public Long getAcodid() {
 		return acodid;
@@ -36,12 +43,12 @@ public class ApprovalCustomerOriginTDecorationVO implements Serializable {
 		this.aid = aid;
 	}
 
-	public Long getCsid() {
-		return csid;
+	public CustomerOriginVO getCustomerOrigin() {
+		return customerOrigin;
 	}
 
-	public void setCsid(Long csid) {
-		this.csid = csid;
+	public void setCustomerOrigin(CustomerOriginVO customerOrigin) {
+		this.customerOrigin = customerOrigin;
 	}
 
 	public Short getType() {
@@ -68,12 +75,28 @@ public class ApprovalCustomerOriginTDecorationVO implements Serializable {
 		this.houseType = houseType;
 	}
 
+	public String getHouseClass() {
+		return houseClass;
+	}
+
+	public void setHouseClass(String houseClass) {
+		this.houseClass = houseClass;
+	}
+
 	public Short getResourceType() {
 		return resourceType;
 	}
 
 	public void setResourceType(Short resourceType) {
 		this.resourceType = resourceType;
+	}
+
+	public UserBaseVO getSalesman() {
+		return salesman;
+	}
+
+	public void setSalesman(UserBaseVO salesman) {
+		this.salesman = salesman;
 	}
 
 }

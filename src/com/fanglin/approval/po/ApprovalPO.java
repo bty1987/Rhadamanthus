@@ -1,5 +1,7 @@
 package com.fanglin.approval.po;
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 import java.sql.Timestamp;
 import java.util.Date;
 
@@ -7,11 +9,9 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-
-import static javax.persistence.GenerationType.IDENTITY;
-import javax.persistence.Id;
 import javax.persistence.Table;
 
 import com.fanglin.personel.po.UserPO;
@@ -44,23 +44,21 @@ public class ApprovalPO implements java.io.Serializable {
 	public static final short APPROVAL_TYPE_SALESREFUND_PAYMENT_INT = 10;
 
 	public static final short APPROVAL_TYPE_MANIFESTDB_INT = 11;
-	
-	public static final short APPROVAL_TYPE_SALES_DIACOUNT_INT=12;
-	
+
+	public static final short APPROVAL_TYPE_SALES_DIACOUNT_INT = 12;
+
 	public static final short APPROVAL_TYPE_HR_INT = 13;
-	
+
 	public static final short APPROVAL_TYPE_CUSTOMER_ORIGIN_T_DECORATION_INT = 14;
-	
-	public static final short APPROVAL_TYPE_CUSTOMER_ORIGIN_T_DECORATION_BELONG_INT = 15;
-	
+
 	public static final short APPROVAL_TYPE_DECORATION_HOLONOMY_INT = 16;
-	
+
 	public static final short APPROVAL_STATUS_INIT_INT = 0;
 
 	public static final short APPROVAL_STATUS_APPROVAL_INT = 1;
 
 	public static final short APPROVAL_STATUS_REFUSE_INT = 2;
-	
+
 	public static final short APPROVAL_STATUS_APPROVE_INT = 3;
 
 	public static final String COLUMN_TYPE_STR = "type";
@@ -74,7 +72,7 @@ public class ApprovalPO implements java.io.Serializable {
 	public static final String COLUMN_CREATETIME_STR = "createTime";
 
 	public static final String COLUMN_APPROVALTIME_STR = "approvalTime";
-	
+
 	public static final String COLUMN_PROCESSINSTANCEID_STR = "processinstanceid";
 
 	private long aid;
@@ -96,9 +94,9 @@ public class ApprovalPO implements java.io.Serializable {
 	private String contents;
 
 	private String comment;
-	
+
 	private int company;
-	
+
 	private String processinstanceid;
 
 	@Id
@@ -194,6 +192,7 @@ public class ApprovalPO implements java.io.Serializable {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
+
 	@Column(name = "company")
 	public int getCompany() {
 		return company;
@@ -202,7 +201,7 @@ public class ApprovalPO implements java.io.Serializable {
 	public void setCompany(int company) {
 		this.company = company;
 	}
-	
+
 	@Column(name = "processinstanceid")
 	public String getProcessinstanceid() {
 		return processinstanceid;
@@ -211,23 +210,23 @@ public class ApprovalPO implements java.io.Serializable {
 	public void setProcessinstanceid(String processinstanceid) {
 		this.processinstanceid = processinstanceid;
 	}
-	
-	public ApprovalPO init(UserPO sender, UserPO receiver, String ident, short type, String content, int company){
-		
+
+	public ApprovalPO init(UserPO sender, UserPO receiver, String ident, short type, String content, int company) {
+
 		setSender(sender);
 		setReceiver(receiver);
-		
+
 		setIdent(ident);
 		setType(type);
-		
+
 		setStatus(ApprovalPO.APPROVAL_STATUS_INIT_INT);
 		setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		setComment("");
-		
+
 		setContents(content);
 		setCompany(company);
-		
+
 		return this;
 	}
-	
+
 }

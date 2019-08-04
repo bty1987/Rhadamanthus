@@ -1,6 +1,5 @@
 package com.fanglin.quotation.dao.impl;
 
-
 import java.math.BigInteger;
 import java.util.List;
 
@@ -14,13 +13,12 @@ import com.fanglin.quotation.po.ExtensionItemPO;
 import com.fanglin.quotation.po.QuotationFunctionAreaPO;
 
 @Repository("extensionItemDao")
-public class ExtensionItemDaoImpl extends DaoImpl<ExtensionItemPO> implements ExtensionItemDao{
+public class ExtensionItemDaoImpl extends DaoImpl<ExtensionItemPO> implements ExtensionItemDao {
 
-	
-	public ExtensionItemDaoImpl(){
+	public ExtensionItemDaoImpl() {
 		super(ExtensionItemPO.class);
 	}
-	
+
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<ExtensionItemPO> queryExtensionItemByEid(Long eId) {
@@ -32,10 +30,10 @@ public class ExtensionItemDaoImpl extends DaoImpl<ExtensionItemPO> implements Ex
 	public List<ExtensionItemPO> queryExtensionItemByEids(List<Long> extensionItemIDs) {
 		return session().createCriteria(ExtensionItemPO.class).add(Restrictions.in(ExtensionItemPO.COLUMN_EID_STR, extensionItemIDs)).list();
 	}
-	
+
 	@Override
 	public long countExtensionItemForFunctionArea(long qfaid) {
-		
+
 		String sql = "select count(*) from quotation.extensionitem where quotationFunctionAreaId =:qfaid";
 
 		BigInteger count = (BigInteger) session().createSQLQuery(sql).setLong("qfaid", qfaid).uniqueResult();
@@ -44,8 +42,17 @@ public class ExtensionItemDaoImpl extends DaoImpl<ExtensionItemPO> implements Ex
 	}
 
 	@Override
-	public long countExtensionItemForFunctionArea(List<QuotationFunctionAreaPO> quotationFunctionAreas){
+	public long countExtensionItemForFunctionArea(List<QuotationFunctionAreaPO> quotationFunctionAreas) {
 		return (Long) createCriteria(ExtensionItemPO.class).add(Restrictions.in("quotationFunctionArea", quotationFunctionAreas)).setProjection(Projections.rowCount()).uniqueResult();
 	}
-	
+
+	@Override
+	public int deleteExtensionItem(long eid) {
+
+		String sql = "delete from quotation.extensionItem where eid = :eid";
+		session().createSQLQuery(sql).setLong("eid", eid).executeUpdate();
+
+		return 0;
+	}
+
 }

@@ -162,7 +162,7 @@ public class SalesAction extends BaseListAction {
 	@Action(value = "addSalesItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addSalesItem() throws FLException{
 		
-		salesItemService.addSalesItem(sales, salesItems);
+		salesItemService.addSalesItem(sales, salesItem);
 		
 		return SUCCESS;
 	}
@@ -170,7 +170,7 @@ public class SalesAction extends BaseListAction {
 	@Action(value = "updateSalesItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateSalesItem() throws FLException{
 		
-		salesItemService.updateSalesItem(salesItem);
+		salesItemService.updateSalesItem(sales, salesItem);
 		
 		return SUCCESS;
 	}
@@ -186,7 +186,7 @@ public class SalesAction extends BaseListAction {
 	@Action(value = "deleteSalesItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteSalesItem() throws FLException{
 		
-		salesItemService.deleteSalesItem(salesItem);
+		salesItemService.deleteSalesItem(sales, salesItem);
 		
 		return SUCCESS;
 	}

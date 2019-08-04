@@ -305,7 +305,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 			
 			float all = Float.valueOf(scaleItem.getScale());
 			
-			decorationPayment.setReferMoney((float) (Math.floor(paymentMoney * (all / 100))));
+			decorationPayment.setReferMoney((float) (Math.floor(Arith.div(Arith.mul(paymentMoney, all), 100))));
 			decorationPayment.setPaymentType(paymentScaleItems.get(0).getName());
 			decorationPayment.setSort(scaleItem.getSort());
 			decorationPayment.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
@@ -330,7 +330,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 				DecorationPaymentPO decorationPayment = new DecorationPaymentPO();
 				
 				float all = Float.valueOf(scaleItem.getScale());
-				float referMoney = (float) (Math.ceil((paymentMoney * (all / 100)) / 100) * 100);
+				float referMoney = (float) Arith.mul(Math.ceil(Arith.div(Arith.div(Arith.mul(paymentMoney, all), 100), 100)), 100);
 				
 				decorationPayment.setReferMoney(referMoney);
 				decorationPayment.setPaymentType(scaleItem.getName());
@@ -350,7 +350,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 				totalMoney = Arith.add(totalMoney, referMoney);
 			}
 			
-			PaymentScaleItemPO scaleItem = paymentScaleItems.get(paymentScaleItems.size() - 1);
+			PaymentScaleItemPO scaleItem = paymentScaleItems.get(Arith.sub(paymentScaleItems.size(), 1));
 
 			DecorationPaymentPO decorationPayment = new DecorationPaymentPO();
 			
@@ -437,7 +437,6 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		
 		String orderId = decorationPaymentPO.getDecoration().getOrderId();
 		short sort = decorationPaymentPO.getSort();
-		float referMoney = decorationPaymentPO.getReferMoney();
 
 		DecorationReceiptPO decorationReceiptPO = new DecorationReceiptPO();
 
@@ -456,7 +455,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 			}
 		}
 
-		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
+		DecorationPO decorationPO = decorationPaymentPO.getDecoration();
 
 		String paymentType = decorationPaymentPO.getPaymentType();
 
@@ -524,17 +523,9 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		decorationReceiptPO.setCollecterName(user.getCurrentName());
 		decorationReceiptPO.setComment(decorationPaymentVO.getComment());
 
+		//更新装修单付款比例
 		if (decorationPaymentPO.getOneType() == DecorationPaymentPO.ONETYPE_ADD_INT && decorationPaymentPO.getTwoType() == DecorationPaymentPO.TWOTYPE_DEAL_INT) {
-
-			short decorationPayScale = Short.valueOf(String.format("%.0f", Arith.add(referMoney / decorationPO.getOrderTotalPrice() * 100, decorationPO.getPaySacle())));
-			
-			if(decorationPayScale < 100){
-				decorationPO.setPaySacle(decorationPayScale);
-			}else if(decorationPayScale >= 100){
-				decorationPO.setPaySacle((short) 100);
-			}
-			
-			decorationDao.update(decorationPO);
+			updateDecrationPayScale(decorationPaymentPO, decorationPO);
 		}
 
 		decorationPaymentPO.setDecorationReceipt(decorationReceiptPO);
@@ -813,5 +804,27 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 
 		paging.setData(decorationPaymentVOs);
 	}
+	
+	public void updateDecrationPayScale(DecorationPaymentPO decorationPaymentPO, DecorationPO decorationPO) {
+		
+		//这里的decorationPO需要传值, 不能在方法中通过decorationPaymentPO获取, 因为在款项中decorationPO之前已经为其它字段赋值了
+		
+		float payTotal = 0f;
+		
+		Short[] paymentStatus = new Short[] {DecorationPaymentPO.PAYMENTSTATUS_PAY_INT, DecorationPaymentPO.PAYMENTSTATUS_CONFIRM_INT};
+		
+		List<DecorationPaymentPO> decorationPaymentPOs = decorationPaymentDao.queryDecorationPaymentByOrderIdAStatusAOneTypeATwoType(decorationPO.getOrderId(), paymentStatus, DecorationPaymentPO.ONETYPE_ADD_INT, DecorationPaymentPO.TWOTYPE_DEAL_INT);
 
+		for (DecorationPaymentPO decorationPayment : decorationPaymentPOs) {
+			payTotal = Arith.add(payTotal, decorationPayment.getReferMoney());
+		}
+		
+		short decorationPayScale = Short.valueOf(String.format("%.0f", Arith.div(payTotal, decorationPO.getFactPrice()) * 100));
+		
+		decorationPO.setPaySacle(decorationPayScale);
+		
+		decorationDao.update(decorationPO);
+		
+	}
+	
 }

@@ -22,13 +22,21 @@ public class ExtensionPO implements Serializable {
 
 	public static final short STATUS_INIT_SHORT = 0;
 
-	public static final short STATUS_SUBMIT_INT = 1;
+	public static final short STATUS_LOCK_INT = 1;
+
+	public static final short TYPE_ADD_INT = 0;
+
+	public static final short TYPE_SUB_INT = 1;
 
 	private long eid;
 
 	private String orderId;
 
 	private short type;
+
+	private float undisPrice;
+
+	private float disPrice;
 
 	private float total;
 
@@ -65,6 +73,24 @@ public class ExtensionPO implements Serializable {
 
 	public void setType(short type) {
 		this.type = type;
+	}
+
+	@Column(name = "undisPrice")
+	public float getUndisPrice() {
+		return undisPrice;
+	}
+
+	public void setUndisPrice(float undisPrice) {
+		this.undisPrice = undisPrice;
+	}
+
+	@Column(name = "disPrice")
+	public float getDisPrice() {
+		return disPrice;
+	}
+
+	public void setDisPrice(float disPrice) {
+		this.disPrice = disPrice;
 	}
 
 	@Column(name = "total")

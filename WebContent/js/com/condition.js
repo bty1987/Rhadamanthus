@@ -588,7 +588,7 @@ var Condition = function (api) {
             }
         },
 
-        StockDate: {
+        stockDate: {
             label: "记录时间",
             type: "dateRangePicker",
             submitConfig: {
@@ -597,12 +597,12 @@ var Condition = function (api) {
                 validate: null
             }
         },
-        StockName:{
+        stockName:{
             label: "物品名称",
             type: "text",
             submitConfig: {
                 name: "awardStock.name",
-                op: "eq",
+                op: "cn",
                 validate: null
             }
         },
@@ -1029,7 +1029,7 @@ var Condition = function (api) {
             },
             dataSource: {
                 url: api.personel.queryUserByPinyin,
-                postData: {"user.status":""},
+                postData: {"user.status":3},
                 listPath: "autoFillKeyValue",
                 keyPath: "key",
                 valuePath: "value"

@@ -447,6 +447,8 @@
                     com.loadPage(hrefStr, $this);
                 }
             }
+            
+            com.closePopup();
 
             e.preventDefault();
         });

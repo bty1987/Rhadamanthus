@@ -1,12 +1,10 @@
 var drawNode = {};
-//详情页画的div
 $(function () {
 
     function createWizardStep(id, title) {
         var li = createLi("complete").attr("data-target", "#step" + id);
 
         if (id == 1) li.attr("class", "complete active");
-
         var setpSpan = $('<span></span>').attr("class", "step").text(id);
         var titleSpan = $('<span></span>').attr("class", "title").text(title);
 
@@ -99,7 +97,6 @@ $(function () {
                     }
                 }
             }
-
         });
 
         return flag;
@@ -120,7 +117,7 @@ $(function () {
             , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "业务人员类型", "salesmanType"), createDiv("col-sm-9").append(createInput("salesmanType", "col-xs-10 col-sm-5", true, "text")))
         ));
         var right1 = createDiv("col-xs-12 col-sm-5").append(createDiv("control-group").append(
-        	  createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "等级", "grade"), createDiv("col-sm-9").append(createSelect("grade", "col-xs-10 col-sm-5", [], null, null, "popover", "manual")))
+            createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "等级", "grade"), createDiv("col-sm-9").append(createSelect("grade", "col-xs-10 col-sm-5", [], null, null, "popover", "manual")))
             , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "订单类型", "orderType"), createDiv("col-sm-9").append(createSelect("orderType", "col-xs-10 col-sm-5", [], null, null, "popover", "manual")))
             , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "房屋类别", "houseType"), createDiv("col-sm-9").append(createSelect("houseType", "col-xs-10 col-sm-5", [], null, null, "popover", "manual")))
             , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "房屋类型", "houseClass"), createDiv("col-sm-9").append(createSelect("houseClass", "col-xs-10 col-sm-5", [], null, null, "popover", "manual")))
@@ -136,7 +133,7 @@ $(function () {
         var form2 = createForm();
         var left2 = createDiv("col-xs-12 col-sm-5").append(
             createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "非业务人员名称", "notSalesmanName"), createDiv("col-sm-9").append(createInput("notSalesmanName", "col-xs-10 col-sm-5 v_name", true, "text").attr("data-toggle", "popover").attr("data-trigger", "manual").attr("maxlength", "8")))
-            , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "非业务提点", "notSalesmanRate"), createDiv("col-sm-9").append(createInput("notSalesmanRate", "col-xs-10 col-sm-5  v_required v_float", true, "text").attr("data-toggle", "popover").attr("data-trigger", "manual").attr("maxlength", "11").attr("value", "0"), $("<i></i>").attr("class", "icon-asterisk")))
+            , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "非业务提点", "notSalesmanRate"), createDiv("col-sm-9").append(createInput("notSalesmanRate", "col-xs-10 col-sm-5  v_required v_float", true, "text").attr("data-toggle", "popover").attr("data-trigger", "manual").attr("maxlength", "11").attr("value", "0")))
             , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "非业务人员手机", "notSalesmanPhone"), createDiv("col-sm-9").append(createInput("notSalesmanPhone", "col-xs-10 col-sm-5  v_phone", true, "text").attr("data-toggle", "popover").attr("data-trigger", "manual").attr("maxlength", "11")))
             , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "非业务备注", "notSalesmanContent"), createDiv("col-sm-9").append('<textarea id="notSalesmanContent" class="col-xs-10 col-sm-5"rows="3" data-toggle="popover"data-trigger="manual" maxlength="128"readonly="readonly"></textarea>'))
         );
@@ -176,7 +173,7 @@ $(function () {
         var contractMap = createDiv("col-xs-12").append(createLabel("control-label", "合同图:").attr("style", "margin-left: 20px;margin-top: 20px;"), createDiv("col-md-12 hr"), createDiv("row-fluid").append(createUl("ContractPictures", "ace-thumbnails")));
 
         var row2 = createDiv("row").append(
-              createDiv("col-xs-12").append(createLabel("control-label", "原始图:").attr("style", "margin-left: 20px;margin-top: 20px;"), createDiv("col-md-12 hr"), createDiv("row-fluid").append(createUl("OriginalPicture", "ace-thumbnails")))
+            createDiv("col-xs-12").append(createLabel("control-label", "原始图:").attr("style", "margin-left: 20px;margin-top: 20px;"), createDiv("col-md-12 hr"), createDiv("row-fluid").append(createUl("OriginalPicture", "ace-thumbnails")))
             , createDiv("col-xs-12").append(createLabel("control-label", "效果图:").attr("style", "margin-left: 20px;margin-top: 20px;"), createDiv("col-md-12 hr"), createDiv("row-fluid").append(createUl("designPictures", "ace-thumbnails")))
             , createDiv("col-xs-12").append(createLabel("control-label", "工程图:").attr("style", "margin-left: 20px;margin-top: 20px;"), createDiv("col-md-12 hr"), createDiv("row-fluid").append(createUl("projectPictures", "ace-thumbnails")))
             , conf.contracts == "noShow" ? null : contractMap
@@ -187,7 +184,7 @@ $(function () {
     }
 
     function drawMaterial(conf) {
-    	
+
         var row = createDiv("row");
         var left = createDiv("col-xs-6 col-md-6 widget-container-span ui-sortable ").append(createDiv("tabbable").append(
             createUl("myTab", "nav nav-tabs", "margin-top: 7px;").append(
@@ -257,309 +254,13 @@ $(function () {
 
     }
 
-    var _propertyArr = ["楼盘地址", "客户名", "设计部", "设计师", "业务部", "业务员", "面积", "预签额", "签单额", "报价额", "券优惠", "实收额", "创建时间", "量房时间", "定金时间", "预签时间", "签单时间", "类型", "状态", "工程状态", "折扣"];
-    var propertyArrs = ["楼盘地址", "设计部", "设计师", "业务部", "业务员", "面积", "状态"];
-    //页面显示控制参数 装修单号,楼盘,设计师/部门,业务员/部门,面积,状态
-
-    var decorationPage = {
-        "activity": {
-            "apiPage": api.decoration.pageDecorationForCommon,
-            "pageBtn": ["activity"],
-            "postDataName": "decorationActivityPostData",
-            "hasExport": false
-        },
-        "common": {
-            "apiPage": api.decoration.pageDecorationForCommon,
-            "pageBtn": ["view", "revie", "line"],
-            "postDataName": "commonPostData",
-            "nodes": [{
-                type: "basic",
-                opt: {btn: ["customerInfosBtn"], show: ["orderType", "houseType", "houseClass"]}
-            }, {type: "quotaion"}, {type: "picture"}, {type: "material"}, {type: "activity"}, {type: "payment"}, {type: "belong"}, {type: "addreduce"}],
-            "propertyArr": _propertyArr,
-            "hasExport": true
-        },
-        "designer": {
-            "apiPage": api.decoration.pageDecorationForDesigner,
-            "pageBtn": ["view", "prosign", "revie", "line", "price", "sca  zl", "contract", "extension", "addminus", "cal", "services"],
-            "postDataName": "designerPostData",
-            "nodes": [{
-                type: "basic",
-                opt: {btn: ["customerInfosBtn"], show: ["houseType", "houseClass"]}
-            }, {type: "quotaion", opt: {btn: ["btnPrintDefaultQuotationInfo"]}}, {
-                type: "picture",
-                opt: {show: ["designPictureUpload", "projectPictureUpload", "CADUpload", "ContractUpload","OriginalUpload"]}
-            }, {type: "material"}, {
-                type: "activity",
-                opt: {btn: ["joinActivityBtn", "applyActivityItemBtn", "applySpecialActivityItemBtn"]},
-                wizard: {"activityBtnMethod": activityBtnMethod, "uiBtnMethod": uiBtnMethod}
-            }, {
-                type: "payment",
-                opt: {btn: ["btnSetDecorationPaymentInfo", "btnOtherPayment"]},
-                wizard: {"isDesign": true}
-            }, {type: "belong"}, {type: "addreduce"}, {type: "account"}, {type: "service"}],
-            "hasExport": true
-        },
-        "designermanager": {
-            "apiPage": api.decoration.pageDecorationForDesignerManager,
-            "pageBtn": ["view", "revie", "line", "price", "scal", "contract", "extension", "addminus", "cal", "services", "balance"],
-            "postDataName": "designermanagerPostData",
-            "nodes": [{
-                type: "basic",
-                opt: {btn: ["customerInfosBtn"], show: ["orderType", "houseType", "houseClass", "quoterId"]}
-            }, {type: "quotaion", opt: {btn: ["btnPrintDefaultQuotationInfo"]}}, {
-                type: "picture",
-                opt: {show: ["designPictureUpload", "projectPictureUpload", "CADUpload", "ContractUpload","OriginalUpload"]}
-            }, {type: "material"}, {
-                type: "activity",
-                opt: {btn: ["joinActivityBtn", "applyActivityItemBtn", "applySpecialActivityItemBtn"]},
-                wizard: {"activityBtnMethod": activityBtnMethod, "uiBtnMethod": uiBtnMethod}
-            }, {
-                type: "payment",
-                opt: {btn: ["btnSetDecorationPaymentInfo", "btnOtherPayment"]},
-                wizard: {"isDesign": true}
-            }, {type: "belong"}, {type: "addreduce"}, {type: "account"}, {type: "service"}],
-            "hasExport": true
-        },
-        "directer": {
-            "apiPage": api.decoration.pageDecorationForDesignerManager,
-            "pageBtn": ["view", "revie", "contract"],
-            "postDataName": "directerPostData",
-            "nodes": [{
-                type: "basic",
-                opt: {
-                    btn: ["customerInfosBtn", "customerChangeBtn", "villageChangeBtn"],
-                    show: ["orderType", "houseType", "houseClass", "notSalesmanRate", "notSalesmanName", "notSalesmanPhone", "notSalesmanContent", "quoterId", "escorterId"]
-                }
-            }, {type: "quotaion"}, {type: "picture"}, {type: "material"}, {type: "activity"}, {
-                type: "payment",
-                opt: {btn: ["btnSetDecorationPaymentInfo", "btnOtherPayment"]}
-            }, {type: "belong"}, {type: "addreduce"}],
-            "propertyArr": _propertyArr,
-            "hasExport": false
-        },
-        "quoter": {
-            "apiPage": api.decoration.pageDecorationForQuoter,
-            "pageBtn": ["view", "revie", "price", "scal", "addminus", "extension"],
-            "postDataName": "quoterPostData",
-            "nodes": [{
-                type: "basic",
-                opt: {
-                    btn: ["customerInfosBtn", "customerChangeBtn", "villageChangeBtn"],
-                    show: ["orderType", "houseType", "houseClass"]
-                }
-            }, {
-                type: "quotaion",
-                opt: {btn: ["btnPrintDefaultQuotationInfo"]}
-            }, {type: "picture"}, {type: "material"}, {
-                type: "activity",
-                wizard: {"activityBtnMethod": activityBtnMethod, "uiBtnMethod": uiBtnMethod}
-            }, {type: "payment"}, {type: "addreduce"}],
-            "propertyArr": _propertyArr,
-            "hasExport": false
-        },
-        "finance": {
-            "apiPage": api.decoration.pageDecorationForCommon,
-            "pageBtn": ["view", "delete", "prosign", "sign", "terminal", "resign"],
-            "postDataName": "financePostData",
-            "nodes": [{
-                type: "basic",
-                opt: {btn: ["customerInfosBtn",], show: ["orderType", "houseType", "houseClass"]}
-            }, {type: "quotaion"}, {type: "picture"}, {type: "material"}, {type: "activity"}, {type: "payment"}, {type: "belong"}, {type: "addreduce"}],
-            "propertyArr": _propertyArr,
-            "hasExport": true
-        },
-        "salesman": {
-            "apiPage": api.decoration.pageDecorationForSalesman,
-            "pageBtn": [],
-            "postDataName": "salesmanPostData",
-            "hasExport": true
-        },
-        "salesmanmanager": {
-            "apiPage": api.decoration.pageDecorationForSalesmanManager,
-            "pageBtn": ["revie"],
-            "postDataName": "salesmanmanagerPostData",
-            "hasExport": true
-        },
-        "stage": {
-            "apiPage": api.decoration.pageDecorationForCommon,
-            "pageBtn": ["view"],
-            "postDataName": "stagePostData",
-            "nodes": [{type: "basic", opt: {btn: ["customerInfosBtn"]}}, {type: "activity"}, {type: "belong"}],
-            "hasExport": false
-        },
-        "construction": {
-            "apiPage": api.decoration.pageDecorationForCommon,
-            "pageBtn": ["view"],
-            "postDataName": "constructionPostData",
-            "nodes": [{
-                type: "basic",
-                opt: {btn: ["customerInfosBtn"], show: ["orderType", "houseType", "houseClass"]}
-            }, {type: "quotaion"}, {type: "material"}, {
-                type: "payment",
-                opt: {btn: ["btnSetDecorationPaymentInfo", "btnOtherPayment"]}
-            }],
-            "propertyArr": _propertyArr,
-            "hasExport": false
-        },
-        "material": {
-            "apiPage": api.decoration.pageDecorationForCommon,
-            "pageBtn": ["view"],
-            "postDataName": "materialPostData",
-            "nodes": [{
-                type: "basic",
-                opt: {btn: ["customerInfosBtn"], show: ["orderType", "houseType", "houseClass"]}
-            }, {type: "material"}, {type: "activity"}, {type: "belong"}]
-        },
-        "plan": {
-            "apiPage": api.decoration.pageDecorationForDesigner,
-            "pageBtn": ["view", "revie"],
-            "postDataName": "planPostData",
-            "nodes": [{
-                type: "basic",
-                opt: {btn: ["customerInfosBtn"], show: ["houseType", "houseClass"]}
-            }, {type: "quotaion", opt: {btn: ["btnPrintDefaultQuotationInfo"]}}, {
-                type: "picture",
-                opt: {show: ["designPictureUpload", "projectPictureUpload", "CADUpload", "ContractUpload","OriginalUpload"]}
-            }, {type: "material"}, {
-                type: "activity",
-                opt: {btn: ["joinActivityBtn", "applyActivityItemBtn", "applySpecialActivityItemBtn"]},
-                wizard: {"activityBtnMethod": activityBtnMethod, "uiBtnMethod": uiBtnMethod}
-            }, {
-                type: "payment",
-                opt: {btn: ["btnSetDecorationPaymentInfo", "btnOtherPayment"]}
-            }, {type: "belong"}, {type: "addreduce"}],
-            "hasExport": false
-        },
-        "escorter": {
-            "apiPage": api.decoration.pageDecorationForEscorter,
-            "pageBtn": ["view", "revie"],
-            "postDataName": "escorterPostData",
-            "nodes": [{
-                type: "basic",
-                opt: {
-                    btn: ["customerInfosBtn", "customerChangeBtn", "villageChangeBtn"],
-                    show: ["orderType", "houseType", "houseClass"]
-                }
-            }, {type: "quotaion", opt: {btn: ["btnPrintDefaultQuotationInfo"]}}, {
-                type: "picture",
-                opt: {show: ["designPictureUpload", "projectPictureUpload", "CADUpload", "ContractUpload","OriginalUpload"]}
-            }, {type: "material"}, {
-                type: "activity",
-                opt: {btn: ["joinActivityBtn", "applyActivityItemBtn", "applySpecialActivityItemBtn"]},
-                wizard: {"activityBtnMethod": activityBtnMethod, "uiBtnMethod": uiBtnMethod}
-            }, {
-                type: "payment",
-                opt: {btn: ["btnSetDecorationPaymentInfo", "btnOtherPayment"]}
-            }, {type: "belong"}, {type: "addreduce"}],
-            "propertyArr": _propertyArr,
-            "hasExport": false
-        },
-        "customerPhone": {
-            "apiPage": api.decoration.checkDecoration,
-            "pageBtn": [],
-            "postDataName": "customerPhonePostData",
-            "condArr": ["customerPhone"],
-            "propertyArr": ["设计部", "设计师", "业务部", "业务员"],
-            "hasExport": false
-        },
-        "streamlinedDesign": {//streamlinedDesign
-            "apiPage": api.decoration.pageDecoration,
-            "pageBtn": ["view"],
-            "postDataName": "streamlinedDesignPostData",
-            "nodes": [{type: "picture", contracts: "noShow"}, {}],
-            "propertyArr": propertyArrs,
-            "hasExport": false
-        },
-        "streamlinedBusiness": {
-            "apiPage": api.decoration.pageDecoration,
-            "pageBtn": [],
-            "postDataName": "streamlinedBusinessPostData",
-            "nodes": [],
-            "propertyArr": propertyArrs,
-            "hasExport": false
-        },
-        "synthesize": {
-            "apiPage": api.decoration.pageDecorationForCommon,
-            "pageBtn": ["view", "line", "contract"],
-            "postDataName": "csynthesizePostData",
-            "nodes": [{
-                type: "basic",
-                opt: {btn: ["customerInfosBtn"], show: ["orderType", "houseType", "houseClass"]}
-            }, {type: "quotaion", opt: {btn: ["btnPrintDefaultQuotationInfo"]}}, {
-                type: "picture",
-                opt: {show: ["designPictureUpload", "projectPictureUpload", "CADUpload", "ContractUpload","OriginalUpload"]}
-            }, {type: "material"}, {
-                type: "activity",
-                opt: {btn: ["joinActivityBtn", "applyActivityItemBtn", "applySpecialActivityItemBtn"]},
-                wizard: {"activityBtnMethod": activityBtnMethod, "uiBtnMethod": uiBtnMethod}
-            }, {
-                type: "payment",
-                opt: {btn: ["btnSetDecorationPaymentInfo", "btnOtherPayment"]},
-                wizard: {"isDesign": true}
-            }, {type: "belong"}, {type: "addreduce"}, {type: "account"}, {type: "service"}],
-            "hasExport": false
-        },
-    };
-
-    function activityBtnMethod(uiPgDiv, decorationActivity) {
-
-        var deleteBtn = $("<a></a>").addClass("btn btn-minier btn-yellow").html("删除").css("margin", "0px 3px").attr("id", "delete_" + decorationActivity.daId).appendTo(uiPgDiv);
-
-        deleteBtn.on("click", function () {
-            if(com.focusPage("#dactivity_" + decorationActivity.daId).attr("status") == 0){
-                deleteDecorationActivity(decorationActivity.daId);
-            }
-        });
-    }
-
-    function uiBtnMethod(uiPgDiv, activityItem) {
-
-        var abateBtn = $("<a></a>").addClass("btn btn-minier btn-yellow").html("失效").css("margin", "0px 3px").attr("id", "abate_" + activityItem.daiId).appendTo(uiPgDiv);
-
-        abateBtn.on("click", function () {
-            abateDecorationActivityItem(activityItem.daiId, activityItem.activityItemName);
-        });
-    }
-
-    function deleteDecorationActivity(daId) {
-
-        var options = {
-            "decorationActivity.daId": daId,
-        };
-
-        com.post(api.decoration.deleteDecorationActivity, options, function (res) {
-            com.focusPage("#dactivity_" + res.decorationActivity.daId).remove();
-        });
-    }
-
-    function abateDecorationActivityItem(daiId, activityItemName) {
-
-        com.showConfirm("是否确认失效" + activityItemName + "活动物品?", function () {
-
-            var options = {
-                "decorationActivityItem.daiId": daiId,
-            };
-
-            com.post(api.decoration.abateDecorationActivityItem, options, function (res) {
-            	
-            	com.showAlert(com.info, "物品失效成功");
-
-                var daiId = res.decorationActivityItem.daiId;
-                
-                com.focusPage("#widgetHeader_" + daiId).addClass("header-color-grey");
-                decorationUtils.decorationActivityItemInfo(com.focusPage("#activityPriceInfo"), com.focusPage("#activityItems"), uiBtnMethod, params["decorationOrderId"]);
-
-            });
-        });
-    }
-
     drawNode = {
         draw: function (nodes) {
-        	var dataPage = params.urlLoadParams.depage;
+            var dataPage = params.urlLoadParams.depage;
             var wizard = com.focusPage("#fuelux-wizard");
             var ul = createUl(null, "wizard-steps");
             var container = com.focusPage("#step-container");
+            params.detail = [];
 
             var isdesignPictureUpload = false;
             var isprojectPictureUpload = false;
@@ -569,7 +270,7 @@ $(function () {
 
             var title = {
                 "basic": "基本信息",
-                "quotaion": "报价信息",
+                "quotation": "报价信息",
                 "picture": "图纸信息",
                 "material": "主材信息",
                 "activity": "活动信息",
@@ -581,17 +282,16 @@ $(function () {
             };
 
             if ($.isEmptyObject(nodes)) return;
-
             $.each(nodes, function (i, v) {
-                ul.append(createWizardStep(i + 1, title[v.type]));
-                var stepPane = createStepPane(i + 1);
+                params.detail.push(i);
+                ul.append(createWizardStep(i , title[v.type]));
+                var stepPane = createStepPane(i);
                 var rows = [];
-               
                 switch (v.type) {
                     case "basic":
                         rows = drawBasic(v);
                         break;
-                    case "quotaion":
+                    case "quotation":
                         rows = drawQuotaion(v);
                         break;
                     case "picture":
@@ -653,8 +353,6 @@ $(function () {
                             case "ContractUpload":
                                 isContractUpload = true;
                                 break;
-
-
                         }
                     }
                     if (x == 'orderType') {
@@ -693,42 +391,64 @@ $(function () {
 
         }, getConfig: function (page) {
 
-            var pageConfig = {};
-            pageConfig.condArr = ['orderId', 'village', 'houseNumber', 'houseArea', 'designer', 'salesman', 'orderType', 'salesmanType', 'quoter', 'escorter', 'designerRegionId', 'designerDepartmentId', 'salesmanRegionId', 'salesmanDepartmentId', 'measureTimeDateRange', 'depositTimeDateRange', 'signTimeDateRange', 'createTimeDateRange', 'precontractTime', 'houseClass', 'status'];
+            var pageConfig = {
+                "apiPage": null,
+                "pageBtn": [],
+                "postDataName": page + "PostData",
+                "nodes": {},
+                "condArr": [],
+                "propertyArr": [],
+                "hasExport": null
+            };
 
-            if (page == "salesmanmanager") {
-                pageConfig.condArr.push("selectCompany")
+            function packageConfig(o, props, value, subtype){
+
+                var prop = props.shift();
+                if(props.length != 0){
+                    if(!o[prop]) o[prop] = {};
+                    packageConfig(o[prop], props, value, subtype);
+                    return;
+                }
+
+                if(subtype == 0){
+                    o[prop] = value;
+                } else if(subtype == 1 && !o[prop]){
+                    o[prop] = [value];
+                } else if(subtype == 1 && o[prop]){
+                    o[prop].push(value);
+                }
             }
 
-            pageConfig.postDataName = "";
+            function getApi(o, props){
 
-            pageConfig.column = [
-                ["装修单号", "orderId"],
-                ['楼盘地址', ['house.village.name', 'house.houseNumber']],
-                ['客户名', 'customer.name'],
-                ['设计部', 'designer.dept.name'],
-                ['设计师', 'designer.currentName'],
-                ['业务部', 'salesman.dept.name'],
-                ['业务员', 'salesman.currentName'],
-                ['面积', 'house.buildArea'],
-                ['合同报价', 'orderTotalPrice'],
-                ['量房时间', 'measureTime'],
-                ['签单时间', 'contractTime'],
-                ['状态', 'status'],
-                ['工程状态', 'projectStatus'],
-            ];
-            pageConfig.propertyArr = ["楼盘地址", "客户名", "设计部", "设计师", "业务部", "业务员", "面积", "签单额", "报价金额", "量房时间", "签单时间", "定金时间", "创建时间", "类型", "状态", "工程状态", "付款比例"];
+                var prop = props.shift();
 
-            pageConfig.apiPage = decorationPage[page]["apiPage"];
-            pageConfig.pageBtn = decorationPage[page]["pageBtn"];
-            pageConfig.postDataName = decorationPage[page]["postDataName"];
-            if (!$.isEmptyObject(decorationPage[page]["nodes"]))  pageConfig.nodes = decorationPage[page]["nodes"];
-            if (!$.isEmptyObject(decorationPage[page]["condArr"]))  pageConfig.condArr = decorationPage[page]["condArr"];
-            if (!$.isEmptyObject(decorationPage[page]["propertyArr"]))  pageConfig.propertyArr = decorationPage[page]["propertyArr"];
-            pageConfig.hasExport = decorationPage[page]["hasExport"];
+                if(props.length == 0){
+                    return o[prop];
+                } else if(o[prop]){
+                    return getApi(o[prop], props);
+                }
+                return "";
+            }
+
+            com.post(api.right.queryDecorationFunctionRightByName, {"decorationFunctionRight.name": page}, function (res) {
+
+                $.each(res.decorationFunctionRights, function (i, v) {
+
+                    var data = v.decorationFunction;
+
+                    if(data.type == 1) data.value = getApi({"api": api}, data.value.split("."));
+                    
+                    packageConfig(pageConfig, data.key.split("."), data.value, data.subtype);
+                });
+            }, null, false);
+
+            if (page == "salesmanmanager") {
+                pageConfig.condArr.push("selectCompany");
+            }
+
             return pageConfig;
-
-        }
+        },
     };
 
 });

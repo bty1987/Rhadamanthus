@@ -7,7 +7,7 @@ $(function () {
     var chart2 = com.charts("InterfaceRequestsForDayAll", "dayAll", {"api": "log.logReport.hostRequestsSeven", "mongo": "log"}, "col-xs-12", {"height": "250px"},"dark");
     var chart3 = com.charts("InterfaceRequestsForDayByUserId", "byUserId", {"api": "log.logReport.userRequestsSeven", "mongo": "log"}, "col-xs-12", {"height": "500px"},"dark");
     var chart4 = com.charts("ApiInterfaceRequestsForDay", "day", {"api": "log.logReport.apiRequestsSeven", "mongo": "log"}, "col-xs-12", {"height": "500px"},"dark");
-
+    
     com._post_(api.home.library, {"api":"log.logReport.requestCount", "mongo": "log"}, function (res) {
         com.focusPage("#InterfaceRequestsForAll").html(res)
     });
@@ -25,7 +25,7 @@ $(function () {
 
     var chart5 = com.charts("education", "educationGroup", {"api": "user.report.education4group", "mongo": "communion"}, "col-xs-12", {"height": "500px"}, "dark");
     var chart6 = com.charts("company", "companyGroup", {"api": "user.report.total4group", "mongo": "communion"}, "col-xs-12", {"height": "500px"}, "dark");
-
+    var chart7 = com.charts("TemperatureTrend", "sensors", {"api": "system.flask_monitor.getSensors", "mongo":"monitor"}, "col-xs-12", {"height": "500px"},"dark");
     $(document).keyup(function (event) {
 
         if (event.keyCode == 27) {
@@ -44,6 +44,7 @@ $(function () {
         chart4.resize();
         chart5.resize();
         chart6.resize();
+        chart7.resize();
     }
 
 });

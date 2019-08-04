@@ -21,8 +21,11 @@ import com.fanglin.decoration.vo.DecorationInclusiveVO;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.payment.service.DecorationPaymentService;
 import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.quotation.dao.ExtensionDao;
 import com.fanglin.quotation.dao.QuotationDao;
+import com.fanglin.quotation.po.ExtensionPO;
 import com.fanglin.quotation.po.QuotationPO;
+import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
 
@@ -32,7 +35,7 @@ public class DecorationInclusiveServiceImpl implements DecorationInclusiveServic
 
 	@Autowired
 	private DecorationInclusiveDao decorationInclusiveDao;
-	
+
 	@Autowired
 	private DecorationDao decorationDao;
 
@@ -41,10 +44,13 @@ public class DecorationInclusiveServiceImpl implements DecorationInclusiveServic
 
 	@Autowired
 	private DecorationPaymentService decorationPaymentService;
-	
+
 	@Autowired
 	private DecorationActivityDao decorationActivityDao;
-	
+
+	@Autowired
+	private ExtensionDao extensionDao;
+
 	@Override
 	public void pageDecorationInclusive(Paging paging, List<Filter> filters, int company) {
 
@@ -95,36 +101,54 @@ public class DecorationInclusiveServiceImpl implements DecorationInclusiveServic
 	public void makeDecorationInclusive(DecorationInclusiveVO decorationInclusiveVO, String userId) throws FLException {
 
 		String orderId = decorationInclusiveVO.getDecoration().getOrderId();
-		
+
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
-		
+
 		if (decorationPO == null) {
 			throw new FLException(140013, "订单不存在");
 		}
-		
+
 		List<Short> status = Arrays.asList(new Short[] { DecorationPO.STATUS_INIT_INT, DecorationPO.STATUS_DEPOSIT_INT, DecorationPO.STATUS_PROSIGN_INT, DecorationPO.STATUS_RESIGNED_INT });
-		
-		if (!status.contains(decorationPO.getStatus())){
+
+		if (!status.contains(decorationPO.getStatus())) {
 			throw new FLException(150002, "合同已签订不可修改");
 		}
-		
+
 		QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(orderId);
 
 		if (quotationPO == null) {
 			throw new FLException(200003, "报价不存在");
 		}
-		
-		if(quotationPO.getStatus() != QuotationPO.STATUS_LOCK_INT){
+
+		if (quotationPO.getStatus() != QuotationPO.STATUS_LOCK_INT) {
 			throw new FLException(200031, "报价未锁定");
 		}
-		
-		if (decorationActivityDao.countDecorationActivity(orderId, null) == 0){
+
+		if (decorationActivityDao.countDecorationActivity(orderId, null) == 0) {
 			throw new FLException(140033, "订单活动信息不存在");
 		}
-		
-		if(decorationActivityDao.countDecorationActivity(orderId, DecorationActivityPO.STATUS_INIT_INT) > 0){
+
+		if (decorationActivityDao.countDecorationActivity(orderId, DecorationActivityPO.STATUS_INIT_INT) > 0) {
 			throw new FLException(140060, "活动未锁定");
 		}
+
+		float undisPrice = 0f;
+		float disPrice = 0f;
+		float total = 0f;
+
+		List<ExtensionPO> extensionPOs = extensionDao.queryExtensionByOrderId(orderId);
+
+		for (ExtensionPO extensionPO : extensionPOs) {
+
+			undisPrice = Arith.add(undisPrice, Arith.mul(extensionPO.getUndisPrice(), extensionPO.getType() == ExtensionPO.TYPE_ADD_INT ? 1 : -1));
+			disPrice = Arith.add(disPrice, Arith.mul(extensionPO.getDisPrice(), extensionPO.getType() == ExtensionPO.TYPE_ADD_INT ? 1 : -1));
+
+			extensionPO.setStatus(ExtensionPO.STATUS_LOCK_INT);
+
+			extensionDao.update(extensionPO);
+		}
+
+		total = Arith.sub(Arith.add(Arith.add(quotationPO.getTotalPrice(), undisPrice), Arith.div(Arith.mul(disPrice, quotationPO.getDiscount()), 10)), decorationPO.getCouponCut());
 
 		DecorationInclusivePO decorationInclusivePO = decorationInclusiveDao.queryDecorationInclusiveByOrderId(orderId);
 
@@ -134,7 +158,7 @@ public class DecorationInclusiveServiceImpl implements DecorationInclusiveServic
 
 		BeanUtil.copyPropertie(decorationInclusiveVO, decorationInclusivePO, Arrays.asList("decoration"));
 
-		decorationInclusivePO.setProjectPrice(quotationPO.getTotalPrice());
+		decorationInclusivePO.setProjectPrice(total);
 		decorationInclusivePO.setCdiff(DecorationInclusivePO.MONEY_ZERO_FLOAT);
 		decorationInclusivePO.setMdiff(DecorationInclusivePO.MONEY_ZERO_FLOAT);
 		decorationInclusivePO.setMaterialPaidup(DecorationInclusivePO.MONEY_ZERO_FLOAT);
@@ -143,10 +167,9 @@ public class DecorationInclusiveServiceImpl implements DecorationInclusiveServic
 
 		decorationInclusiveDao.saveOrUpdate(decorationInclusivePO);
 
-		decorationPaymentService.makeDecorationPayment(decorationPO, quotationPO.getTotalPrice(), decorationInclusiveVO.getPsId(), userId);
+		decorationPaymentService.makeDecorationPayment(decorationPO, total, decorationInclusiveVO.getPsId(), userId);
 
 		BeanUtil.copyPropertie(decorationInclusivePO, decorationInclusiveVO, Arrays.asList("decoration"));
 
 	}
-
 }

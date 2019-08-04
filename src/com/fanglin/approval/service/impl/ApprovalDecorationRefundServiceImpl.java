@@ -25,17 +25,16 @@ import com.fanglin.approval.service.ApprovalDecorationRefundService;
 import com.fanglin.approval.vo.ApprovalDecorationRefundVO;
 import com.fanglin.approval.vo.ApprovalVO;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.MessageService;
 import com.fanglin.payment.dao.DecorationPaymentDao;
 import com.fanglin.payment.po.DecorationPaymentPO;
+import com.fanglin.payment.service.impl.DecorationPaymentServiceImpl;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.quotation.dao.AddReduceDao;
 import com.fanglin.quotation.po.AddReducePO;
-import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 
@@ -53,6 +52,9 @@ public class ApprovalDecorationRefundServiceImpl implements ApprovalDecorationRe
 	private DecorationPaymentDao decorationPaymentDao;
 
 	@Autowired
+	private DecorationPaymentServiceImpl decorationPaymentService;
+
+	@Autowired
 	private MessageService messageService;
 
 	@Autowired
@@ -60,9 +62,6 @@ public class ApprovalDecorationRefundServiceImpl implements ApprovalDecorationRe
 
 	@Autowired
 	private AddReduceDao addReduceDao;
-
-	@Autowired
-	private DecorationDao decorationDao;
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
@@ -135,18 +134,7 @@ public class ApprovalDecorationRefundServiceImpl implements ApprovalDecorationRe
 		}
 
 		if (decorationPaymentPO.getOneType() == DecorationPaymentPO.ONETYPE_ADD_INT && decorationPaymentPO.getTwoType() == DecorationPaymentPO.TWOTYPE_DEAL_INT) {
-
-			float refundMoney = decorationPaymentPO.getReferMoney();
-
-			short decorationPayScale = Short.valueOf(String.format("%.0f", Arith.sub(decorationPO.getPaySacle(), refundMoney / decorationPO.getOrderTotalPrice() * 100)));
-
-			if (decorationPayScale >= 0) {
-				decorationPO.setPaySacle(decorationPayScale);
-			} else if (decorationPayScale < 0) {
-				decorationPO.setPaySacle((short) 0);
-			}
-
-			decorationDao.update(decorationPO);
+			decorationPaymentService.updateDecrationPayScale(decorationPaymentPO, decorationPO);
 		}
 
 		DecorationPaymentPO decorationRefundPO = new DecorationPaymentPO();

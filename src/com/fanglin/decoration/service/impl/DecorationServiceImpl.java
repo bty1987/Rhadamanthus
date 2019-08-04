@@ -1287,12 +1287,12 @@ public class DecorationServiceImpl implements DecorationService {
 
 		} else {
 
-			throw new FLException(140001, "装修单已撞尺");
+			throw new FLException(140063, String.format("装修单存在,装修单号:%s,设计师:%s", decorationPO.getOrderId(), decorationPO.getDesigner().getCurrentName()));
 		}
 
 	}
 
-	private DecorationPO checkOverDecoration(long hid, int company) {
+	public DecorationPO checkOverDecoration(long hid, int company) {
 
 		List<Short> unstatus = Arrays.asList(DecorationPO.STATUS_WASTE_INT, DecorationPO.STATUS_TERMINATION_INT);
 

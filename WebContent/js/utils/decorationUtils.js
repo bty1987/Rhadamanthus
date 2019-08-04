@@ -35,7 +35,7 @@ var decorationUtils = {
                     ["品类:", v.category, "grey"],
                     ["品牌:", v.brand, "grey"],
                     ["应收额:", v.referMoney, "grey"],
-                    ["实收额:", v.realMoney, "grey"],
+                    ["实收额:", v.referMoney, "grey"],
                     ["收款时间:", v.collectTime, "grey"],
                     ["状态:", materialUtils.paymentStatusInit(v.paymentStatus), "red"]
                 ];
@@ -85,12 +85,13 @@ var decorationUtils = {
                     var _value = parseFloat($brandTotal.attr('value'));
                     var _refer = [2, 3].contains(v.paymentType) ? v.referMoney : -v.referMoney;
                     var _total = utils.changeThrDecimal(_value + _refer);
+                    var _coupon = [2, 3].contains(v.paymentType) ? v.coupon : -v.coupon;
 
                     $brandTotal.attr("value", _total);
                     $brandTotal.html(_total);
 
                     $total = utils.changeThrDecimal($total + _refer);
-                    $coupon = utils.changeThrDecimal($coupon + v.coupon);
+                    $coupon = utils.changeThrDecimal($coupon + _coupon);
 
                 } else {
                     var $liLine = $('<li></li>').addClass('item-orange clearfix').attr("name", v.brand);
@@ -98,6 +99,7 @@ var decorationUtils = {
                     var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 
                     var _refer = [2, 3].contains(v.paymentType) ? v.referMoney : -v.referMoney;
+                    var _coupon = [2, 3].contains(v.paymentType) ? v.coupon : -v.coupon;
 
                     $('<b></b>').html(v.category).addClass("grey").appendTo($('<strong></strong>').html("品类:").appendTo($('<li></li>').appendTo($ulProperty)));
                     $('<b></b>').html(v.brand).addClass("grey").appendTo($('<strong></strong>').html("品牌:").appendTo($('<li></li>').appendTo($ulProperty)));
@@ -106,7 +108,7 @@ var decorationUtils = {
                     $liLine.append($h4).append($ulProperty).appendTo($ulbrand);
 
                     $total = utils.changeThrDecimal($total + _refer);
-                    $coupon = utils.changeThrDecimal($coupon + v.coupon);
+                    $coupon = utils.changeThrDecimal($coupon + _coupon);
                 }
             });
         }
@@ -131,7 +133,7 @@ var decorationUtils = {
                     ["品类:", v.sales.category, "grey"],
                     ["品牌:", v.sales.brand, "grey"],
                     ["应收额:", v.referMoney, "grey"],
-                    ["实收额:", salesReceipt.realMoney, "grey"],
+                    ["实收额:", v.referMoney, "grey"],
                     ["收款时间:", salesReceipt.collectTime, "grey"],
                     ["状态:", materialUtils.paymentStatusInit(v.status), "red"]
                 ];
@@ -181,19 +183,21 @@ var decorationUtils = {
                     var _value = parseFloat($brandTotal.attr('value'));
                     var _refer = [2, 3].contains(v.type) ? v.referMoney : -v.referMoney;
                     var _total = utils.changeThrDecimal(_value + _refer);
+                    var _coupon = [2, 3].contains(v.type) ? salesReceipt.coupon : -salesReceipt.coupon;
 
                     $brandTotal.attr("value", _total);
                     $brandTotal.html(_total);
 
                     $total = utils.changeThrDecimal($total + _refer);
 
-                    $coupon = utils.changeThrDecimal($coupon + salesReceipt.coupon);
+                    $coupon = utils.changeThrDecimal($coupon + _coupon);
                 } else {
                     var $liLine = $('<li></li>').addClass('item-orange clearfix').attr("name", v.sales.brand);
                     var $h4 = $('<h4></h4>').addClass('oid').append($('<b></b>').html(v.sales.brand));
                     var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 
                     var _refer = [2, 3].contains(v.type) ? v.referMoney : -v.referMoney;
+                    var _coupon = [2, 3].contains(v.type) ? salesReceipt.coupon : -salesReceipt.coupon;
 
                     $('<b></b>').html(v.sales.category).addClass("grey").appendTo($('<strong></strong>').html("品类:").appendTo($('<li></li>').appendTo($ulProperty)));
                     $('<b></b>').html(v.sales.brand).addClass("grey").appendTo($('<strong></strong>').html("品牌:").appendTo($('<li></li>').appendTo($ulProperty)));
@@ -202,7 +206,7 @@ var decorationUtils = {
                     $liLine.append($h4).append($ulProperty).appendTo($ulbrand);
 
                     $total = utils.changeThrDecimal($total + _refer);
-                    $coupon = utils.changeThrDecimal($coupon + salesReceipt.coupon);
+                    $coupon = utils.changeThrDecimal($coupon + _coupon);
                 }
             });
         }
@@ -240,9 +244,7 @@ var decorationUtils = {
         }
 
     }, addDecorationActivityForDiv: function (_activitys, _decorationActivity, uiBtnMethod, couponCut, thingCut) {
-
-
-
+    	
         var pricingSpan = $("<div></div>").addClass("col-md-4").css("margin", "5px 0px").attr("id", "dactivity_" + _decorationActivity.daId).prependTo(_activitys);
         var widgetBox = $("<div class='module_activity_border'></div>").appendTo(pricingSpan);
 
@@ -262,7 +264,20 @@ var decorationUtils = {
         com.focusPage("#dactivity_" + _decorationActivity.daId).attr("status", _decorationActivity.status);
 
         if (uiBtnMethod != null) {
-            uiBtnMethod(uiPgDiv, _decorationActivity);
+        	if(uiBtnMethod == "activityBtnMethod"){
+    		   var deleteBtn = $("<a></a>").addClass("btn btn-minier btn-yellow").html("删除").css("margin", "0px 3px").attr("id", "delete_" + _decorationActivity.daId).appendTo(uiPgDiv);
+
+               deleteBtn.on("click", function () {
+                   if(com.focusPage("#dactivity_" + _decorationActivity.daId).attr("status") == 0){
+                       com.post(api.decoration.deleteDecorationActivity, {"decorationActivity.daId": _decorationActivity.daId}, function (res) {
+                           com.focusPage("#dactivity_" + res.decorationActivity.daId).remove();
+                       });
+                   }
+               });
+        	}else{
+        		uiBtnMethod(uiPgDiv, _decorationActivity);
+        	}
+         
         }
 
     }, decorationActivityInfo: function (activitys, uiBtnMethod, orderId) {
@@ -273,10 +288,8 @@ var decorationUtils = {
 
         activitys.html('');
 
-
         com.post(api.decoration.queryDecorationActivityByOrderId, options, function (res) {
             var decorationActivitys = res.decorationActivitys;
-
             for (var i = 0; i < decorationActivitys.length; i++) {
                 decorationUtils.addDecorationActivityForDiv(activitys, decorationActivitys[i], uiBtnMethod);
             }
@@ -316,7 +329,7 @@ var decorationUtils = {
 
         });
     }, addActivityItemForDiv: function (_activityItems, _activityItem, uiBtnMethod) {
-
+    	
         var types= {};
         var states={};
 
@@ -359,10 +372,27 @@ var decorationUtils = {
         var totalState = $("<strong></strong>").text("合计:").appendTo(totalLi);
         var totalSpan = $("<span></span>").addClass("blue").attr("id", "money_" + _activityItem.daiId).text(utils.accMul(_activityItem.money, _activityItem.num)).appendTo(totalLi);
 
-
         var uiPgDiv = $("<div></div>").addClass("ui-pg-div").css("padding-left", "8px").css("padding-bottom", "10px").appendTo(widgetBody);
+        
         if (uiBtnMethod != null) {
-            uiBtnMethod(uiPgDiv, _activityItem);
+            if(uiBtnMethod == "uiBtnMethod"){
+                var abateBtn = $("<a></a>").addClass("btn btn-minier btn-yellow").html("失效").css("margin", "0px 3px").attr("id", "abate_" + _activityItem.daiId).appendTo(uiPgDiv);
+
+                abateBtn.on("click", function () {
+                    
+                    com.showConfirm("是否确认失效" + _activityItem.activityItemName + "活动物品?", function () {
+
+                        com.post(api.decoration.abateDecorationActivityItem, {"decorationActivityItem.daiId": _activityItem.daiId}, function (res) {
+
+                            com.showAlert(com.info, "操作成功");
+                            com.focusPage("#widgetHeader_" + res.decorationActivityItem.daiId).addClass("header-color-grey");
+                        });
+                    });
+                });
+            }else{
+            	uiBtnMethod(uiPgDiv, _activityItem);
+            }
+        
         }
 
     }, initPayment: function (decorationDetail, isDesign) {
@@ -459,9 +489,7 @@ var decorationUtils = {
                     });
 
                     if (isDesign) {
-
                         if (v.paymentStatus == 2 && v.oneType == 0) {
-
                             if (v.twoType != 2) {
                                 $divBtnWrap.append($refundBtn);
                             }

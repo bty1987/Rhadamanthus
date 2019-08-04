@@ -15,10 +15,11 @@ $.extend(api, {
         queryApprovalManifestDBItem: {url: "queryApprovalManifestDBItem.do"},
         queryApprovalMaterialRefundItem: {url: "queryApprovalMaterialRefundItem.do"},
         queryApproverByType: {url: "queryApproverByType.do"},
-        queryApprovalDecorationActivity:{url:"queryApprovalDecorationActivity.do"},
+        queryApprovalDecorationActivity: {url: "queryApprovalDecorationActivity.do"},
+        queryApprovalCustomerOriginTDecoration: {url: "queryApprovalCustomerOriginTDecoration.do"},
         
-        countApprovalForReceive:{url:"countApprovalForReceive.do"},
-        countApprovalForSend:{url:"countApprovalForSend.do"},
+        countApprovalForReceive: {url:"countApprovalForReceive.do"},
+        countApprovalForSend: {url:"countApprovalForSend.do"},
 
         submitApprovalForCustomerOriginTDecoration:{url:"submitApprovalForCustomerOriginTDecoration.do"},
         // submitApprovalForDecorationCustomer: {url: "submitApprovalForDecorationCustomer.do"},
@@ -38,7 +39,6 @@ $.extend(api, {
         refuseApproval: {url: "refuseApproval.do"},
         deleteApprover: {url: "deleteApprover.do"},
         addApprover: {url: "addApprover.do"},
-
 
     }
 });

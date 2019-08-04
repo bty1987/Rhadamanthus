@@ -21,7 +21,7 @@ import com.fanglin.core.dao.impl.DaoImpl;
 public class WorkTypeDaoImpl extends DaoImpl<WorkTypePO> implements WorkTypeDao {
 
 	public WorkTypeDaoImpl() {
-		super(WorkTypePO.class, true);
+		super(WorkTypePO.class);
 	}
 
 }

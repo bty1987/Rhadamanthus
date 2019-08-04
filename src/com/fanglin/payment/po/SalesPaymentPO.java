@@ -32,25 +32,25 @@ public class SalesPaymentPO  implements Serializable{
 	
 	public static final String COLUMN_SALES_VILLAGE_NO_STR = "village.no";
 	
-	public static final short COLUMN_SALES_INITIALSTATUS_INT = 0;
+	public static final short STATUS_INITIAL_INT = 0;
 	
-	public static final short COLUMN_SALES_PAIDFORSTATUS_INT = 1;
+	public static final short STATUS_PAIDFOR_INT = 1;
 	
-	public static final short COLUMN_SALES_CONFIRMEDSTATUS_INT = 2;
+	public static final short STATUS_CONFIRMED_INT = 2;
 	
-	public static final short COLUMN_DEPOSITTYPE_INT = 2;
+	public static final short TYPE_DEPOSIT_INT = 2;
 	
-	public static final short COLUMN_REPLENISHMENTTYPE_INT = 3;
+	public static final short TYPE_REPLENISHMENT_INT = 3;
 	
-	public static final short COLUMN_REFUNDSTYPE_INT = 4;
+	public static final short TYPE_REFUNDS_INT = 4;
 	
-	public static final short COLUMN_MAKEAREFUNDTYPE_INT = 5;
+	public static final short TYPE_MAKEAREFUND_INT = 5;
 	
-	public static final short COLUMN_VOUCHERREFUNDTYPE_INT = 6;
+	public static final short TYPE_VOUCHERREFUND_INT = 6;
 	
-	public static final short COLUMN_DEPOSITREFUNDTYPE_INT = 7;
+	public static final short TYPE_DEPOSITREFUND_INT = 7;
 	
-	public static final String COLUMN_SALES_STATUS_STR = "status";
+	public static final String COLUMN_STATUS_STR = "status";
 	
 	public static final String COLUMN_SID_STR ="sid";
 	
@@ -62,13 +62,13 @@ public class SalesPaymentPO  implements Serializable{
 	
 	public static final String COLUMN_TYPE_STR ="type";
 	
-	public static final short COLUMN_ADVANCETYPECONTRACT_INT = 1;
+	public static final short ADVANCETYPE_CONTRACT_INT = 1;
 	
-	public static final short COLUMN_ADVANCETYPEENGINEERING_INT = 2;
+	public static final short ADVANCETYPE_ENGINEERING_INT = 2;
 	
-	public static final short COLUMN_ADVANCETYPEMATERIAL_INT = 3;
+	public static final short ADVANCETYPE_MATERIAL_INT = 3;
 	
-	public static final short COLUMN_ADVANCETYPEZHENGLIN_INT = 4;
+	public static final short ADVANCETYPE_ZHENGLIN_INT = 4;
 	
 	private long spid;
 	

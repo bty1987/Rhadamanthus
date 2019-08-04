@@ -332,10 +332,10 @@ jQuery(function ($) {
     }, null, false);
 
     com.focusPage('#customerInfosBtn').on(ace.click_event, function () {
-            com.post(api.data.queryCustomerById, {"customer.cid": decorationDetail.customer.cid}, function (res) {
-                decorationDetail.customer = res.customer;
-                com.showInfo("客户敏感信息", '邮箱 :' + decorationDetail.customer.email + '<br /> QQ:' + decorationDetail.customer.qq + '<br /> 微信:' + decorationDetail.customer.wechat + '<br />  电话 :' + decorationDetail.customer.phone + '<br />  客户类型:' + decorationDetail.customer.relationshipType + '<br />');
-            });
+        com.post(api.data.queryCustomerById, {"customer.cid": decorationDetail.customer.cid}, function (res) {
+            decorationDetail.customer = res.customer;
+            com.showInfo("客户敏感信息", '邮箱 :' + decorationDetail.customer.email + '<br /> QQ:' + decorationDetail.customer.qq + '<br /> 微信:' + decorationDetail.customer.wechat + '<br />  电话 :' + decorationDetail.customer.phone + '<br />  客户类型:' + decorationDetail.customer.relationshipType + '<br />');
+        });
 
         return false;
     });
@@ -906,21 +906,22 @@ jQuery(function ($) {
             info.direction === "previous" ? curstep = info.step - 1 : curstep = info.step;
 
             curstep == 1 ? decorationDetail.btnSaveBasedecorationInfo.removeClass("hide") : decorationDetail.btnSaveBasedecorationInfo.addClass("hide");
+            
+            var node = params.viewNode[curstep];
+            
+            switch (node.type) {
 
-            switch (params.viewNode[curstep].type) {
-
-                case "quotaion":
+                case "quotation":
                     quotationUtils.loadQuotationDetail();
                     break;
                 case "picture":
-                    if (!$.isEmptyObject(params.viewNode[curstep].wizard)) $.extend(true, wizard, params.viewNode[curstep].wizard);
                     decorationUtils.initDecorationPicture("designPictures", "projectPictures", "CADProjectPicture", "ContractPictures", "OriginalPicture", decorationDetail.decorationOrderId);
                     break;
                 case "material":
                     decorationUtils.initMaterial(decorationDetail);
                     break;
                 case "activity":
-                    if (!$.isEmptyObject(params.viewNode[curstep].wizard)) $.extend(true, wizard, params.viewNode[curstep].wizard);
+                    if (!$.isEmptyObject(node.wizard)) $.extend(true, wizard, node.wizard);
                     params.convertActivityItemId = decorationDetail.convertActivityItemId;
                     params.activity = decorationDetail.activity;
                     decorationUtils.decorationActivityInfo(decorationDetail.activitys, wizard["activityBtnMethod"], decorationDetail.decorationOrderId);
@@ -930,7 +931,7 @@ jQuery(function ($) {
                     decorationUtils.initDecorationBelong(decorationDetail.decorationOrderId);
                     break;
                 case "payment":
-                    if (!$.isEmptyObject(params.viewNode[curstep].wizard)) $.extend(true, wizard, params.viewNode[curstep].wizard);
+                    if (!$.isEmptyObject(node.wizard)) $.extend(true, wizard, node.wizard);
                     decorationUtils.initPayment(decorationDetail, wizard["isDesign"]);
                     break;
                 case "addreduce":
@@ -944,21 +945,24 @@ jQuery(function ($) {
                     break;
             }
         }).on('stepclick', function (e, info) {
-            info.step == 1 ? decorationDetail.btnSaveBasedecorationInfo.removeClass("hide") : decorationDetail.btnSaveBasedecorationInfo.addClass("hide");
-            switch (params.viewNode[info.step - 1].type) {
 
-                case "quotaion":
+            info.step == 1 ? decorationDetail.btnSaveBasedecorationInfo.removeClass("hide") : decorationDetail.btnSaveBasedecorationInfo.addClass("hide");
+            
+            var node = params.viewNode[info.step - 1];
+            
+            switch (node.type) {
+
+                case "quotation":
                     quotationUtils.loadQuotationDetail();
                     break;
                 case "picture":
-                    if (!$.isEmptyObject(params.viewNode[info.step - 1].wizard)) $.extend(true, wizard, params.viewNode[info.step - 1].wizard);
                     decorationUtils.initDecorationPicture("designPictures", "projectPictures", "CADProjectPicture", "ContractPictures", "OriginalPicture", decorationDetail.decorationOrderId);
                     break;
                 case "material":
                     decorationUtils.initMaterial(decorationDetail);
                     break;
                 case "activity":
-                    if (!$.isEmptyObject(params.viewNode[info.step - 1].wizard)) $.extend(true, wizard, params.viewNode[info.step - 1].wizard);
+                    if (!$.isEmptyObject(node.wizard)) $.extend(true, wizard, node.wizard);
                     params.convertActivityItemId = decorationDetail.convertActivityItemId;
                     params.activity = decorationDetail.activity;
                     decorationUtils.decorationActivityInfo(decorationDetail.activitys, wizard["activityBtnMethod"], decorationDetail.decorationOrderId);
@@ -968,7 +972,7 @@ jQuery(function ($) {
                     decorationUtils.initDecorationBelong(decorationDetail.decorationOrderId);
                     break;
                 case "payment":
-                    if (!$.isEmptyObject(params.viewNode[info.step - 1].wizard)) $.extend(true, wizard, params.viewNode[info.step - 1].wizard);
+                    if (!$.isEmptyObject(node.wizard)) $.extend(true, wizard, node.wizard);
                     decorationUtils.initPayment(decorationDetail, wizard["isDesign"]);
                     break;
                 case "addreduce":

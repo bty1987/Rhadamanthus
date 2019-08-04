@@ -24,8 +24,8 @@
 		{"key":"7", "value":"决算"},
 		{"key":"8", "value":"完结"}
     ], "salesmanType": [
+        {"key":"资源","value":"资源"},
 		{"key":"守园","value":"守园"},
-		{"key":"资源","value":"资源"},
 		{"key":"监理","value":"监理"},
 		{"key":"400","value":"400"},
 		{"key":"网络","value":"网络"},
@@ -43,9 +43,13 @@
 		{"key":"4", "value":"减上捡"}
     ], "paymentType": [
 		{"key":"0-0","value":"设计费"},
+        {"key":"0-3","value":"VIP卡"},
         {"key":"0-3","value":"主材代购费"},
-		{"key":"0-3","value":"决算补款"},
-		{"key":"1-3","value":"决算扣款"}
+        {"key":"0-3","value":"决算补款"},
+        {"key":"1-3","value":"决算扣款"},
+        {"key":"0-3","value":"维修费"},
+        {"key":"1-3","value":"免息贷款"},
+        {"key":"0-3","value":"增项服务费"}
     ], "machingType": [
 		{"key":"1.5", "value":"5"}
 	], "orderType": [

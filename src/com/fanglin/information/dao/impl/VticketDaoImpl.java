@@ -13,41 +13,21 @@ import com.fanglin.utils.Paging;
 
 @Repository("vticketDao")
 public class VticketDaoImpl extends DaoImpl<VticketPO> implements VticketDao {
-	
-	public VticketDaoImpl(){
+
+	public VticketDaoImpl() {
 		super(VticketPO.class);
 	}
 
 	@Override
 	public List<VticketPO> pageVticket(Paging paging, List<Filter> filters) {
-		
-		PagingQuery<VticketPO> query = pagingQuery(paging, VticketPO.class);
-		
-		queryFilterExcute(query, filters);
-		
-		query.add(Restrictions.eq(VticketPO.COLUMN_EXPIRE_STR, VticketPO.EXPIRE_INIT_INT));
-		
-		return query.list();
-	}
 
-	@Override
-	public List<?> countVticket(short param) {
-		
-		String sql = null;
-		
-		switch (param){
-			case 1:
-		    	sql = "SELECT d.name AS 'regionName', de.name AS 'deptName', COUNT(*) from information.vticket v, communion.department d, communion.department de where v.rid = d.dId and v.did = de.dId and v.iscome = 1 and v.expire = 0 GROUP BY v.rid, v.did";
-		    	break;
-		    case 2:
-		    	sql = "SELECT d.name AS 'regionName', de.name AS 'deptName', COUNT(*) from information.vticket v, communion.department d, communion.department de where v.rid = d.dId and v.did = de.dId and v.isregist = 1 and v.expire = 0 GROUP BY v.rid, v.did";
-		    	break;
-		    default:
-		    	sql = "SELECT d.name AS 'regionName', de.name AS 'deptName', COUNT(*) from information.vticket v, communion.department d, communion.department de where v.rid = d.dId and v.did = de.dId and v.expire = 0  GROUP BY v.rid, v.did";
-		    	break;
-		}
-		
-		return session().createSQLQuery(sql).list();
+		PagingQuery<VticketPO> query = pagingQuery(paging, VticketPO.class);
+
+		queryFilterExcute(query, filters);
+
+		query.add(Restrictions.eq(VticketPO.COLUMN_EXPIRE_STR, VticketPO.EXPIRE_INIT_INT));
+
+		return query.list();
 	}
 
 	@Override
@@ -59,23 +39,48 @@ public class VticketDaoImpl extends DaoImpl<VticketPO> implements VticketDao {
 	public VticketPO queryVticketByTno(String tno) {
 		return (VticketPO) session().createCriteria(VticketPO.class).add(Restrictions.eq(VticketPO.COLUMN_TNO_STR, tno)).add(Restrictions.eq(VticketPO.COLUMN_EXPIRE_STR, VticketPO.EXPIRE_INIT_INT)).uniqueResult();
 	}
-	
-	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){
-		
-		if(filters != null){
+
+	@Override
+	public VticketPO queryVticketForTake() {
+		return (VticketPO) session().createCriteria(VticketPO.class).add(Restrictions.isNull("belonger")).add(Restrictions.eq("expire", VticketPO.EXPIRE_INIT_INT)).setMaxResults(1).uniqueResult();
+	}
+
+	@Override
+	public List<?> countVticket(short param) {
+
+		String sql = null;
+
+		switch (param) {
+		case 1:
+			sql = "SELECT d.name AS 'regionName', de.name AS 'deptName', COUNT(*) from information.vticket v, communion.department d, communion.department de where v.rid = d.dId and v.did = de.dId and v.iscome = 1 and v.expire = 0 GROUP BY v.rid, v.did";
+			break;
+		case 2:
+			sql = "SELECT d.name AS 'regionName', de.name AS 'deptName', COUNT(*) from information.vticket v, communion.department d, communion.department de where v.rid = d.dId and v.did = de.dId and v.isregist = 1 and v.expire = 0 GROUP BY v.rid, v.did";
+			break;
+		default:
+			sql = "SELECT d.name AS 'regionName', de.name AS 'deptName', COUNT(*) from information.vticket v, communion.department d, communion.department de where v.rid = d.dId and v.did = de.dId and v.expire = 0  GROUP BY v.rid, v.did";
+			break;
+		}
+
+		return session().createSQLQuery(sql).list();
+	}
+
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
+
+		if (filters != null) {
 			for (Filter filter : filters) {
-				
+
 				String field = filter.getField();
 				String data = filter.getData();
 				String op = filter.getOp();
-				
-				if(field.equals(VticketPO.COLUMN_TNO_STR)){
+
+				if (field.equals(VticketPO.COLUMN_TNO_STR)) {
 					query.add(query.getCriterion(field, data, op));
-				}else if(field.equals(VticketPO.COLUMN_ORDERID_STR)){
+				} else if (field.equals(VticketPO.COLUMN_ORDERID_STR)) {
 					query.add(query.getCriterion(field, data, op));
-				}else if(field.equals(VticketPO.COLUMN_NAME_STR)){
+				} else if (field.equals(VticketPO.COLUMN_NAME_STR)) {
 					query.add(query.getCriterion(field, data, op));
-				}else if(field.equals(VticketPO.COLUMN_BELONGER_STR)){
+				} else if (field.equals(VticketPO.COLUMN_BELONGER_STR)) {
 					query.alias("belonger", "belonger");
 					query.add(query.getCriterion(field, Integer.valueOf(data), op));
 				}

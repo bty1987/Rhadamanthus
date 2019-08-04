@@ -44,6 +44,14 @@ public class ExtensionAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "queryExtensionByEid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryExtensionByEid() throws FLException {
+
+		extension = extensionService.queryExtensionByEid(extension);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "addExtension", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addExtension() throws FLException {
 

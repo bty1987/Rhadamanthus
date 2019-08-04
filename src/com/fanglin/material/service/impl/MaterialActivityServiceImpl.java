@@ -190,7 +190,7 @@ public class MaterialActivityServiceImpl implements MaterialActivityService {
 			awardStockDao.update(awardStockPO);
 		}
 		
-		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, creater, AwardRecordPO.TYPE_XG_INT, AwardRecordPO.SUBTYPE_RECEIVE_INT, AwardRecordPO.ONETYPE_MATERIAL_INT, materialActivityItemPO.getIsStock(), materialActivityItemPO.getMoney(), materialActivityItemPO.getNum(), materialActivityItemVO.getContent());
+		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, creater, materialActivityItemPO.getOrderId(), AwardRecordPO.TYPE_XG_INT, AwardRecordPO.SUBTYPE_RECEIVE_INT, AwardRecordPO.ONETYPE_MATERIAL_INT, materialActivityItemPO.getIsStock(), materialActivityItemPO.getMoney(), materialActivityItemPO.getNum(), materialActivityItemVO.getContent());
 		awardRecordDao.save(awardRecordPO);
 		
 		return 0;
@@ -220,7 +220,7 @@ public class MaterialActivityServiceImpl implements MaterialActivityService {
 
 		AwardStockPO awardStockPO = awardStockDao.get(materialActivityItemPO.getAsid());
 		UserPO creater = userDao.queryUserByUserId(userId);
-		
+
 		if (materialActivityItemPO.getIsStock() == 0) {
 
 			float num = Arith.sub(awardStockPO.getNum(), materialActivityItemPO.getNum());
@@ -234,7 +234,7 @@ public class MaterialActivityServiceImpl implements MaterialActivityService {
 			awardStockDao.update(awardStockPO);
 		}
 		
-		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, creater, AwardRecordPO.TYPE_XG_INT, AwardRecordPO.SUBTYPE_DELIVERY_INT, AwardRecordPO.ONETYPE_MATERIAL_INT, materialActivityItemPO.getIsStock(), materialActivityItemPO.getMoney(), materialActivityItemPO.getNum(), materialActivityItemVO.getContent());
+		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, creater, materialActivityItemPO.getOrderId(), AwardRecordPO.TYPE_XG_INT, AwardRecordPO.SUBTYPE_DELIVERY_INT, AwardRecordPO.ONETYPE_MATERIAL_INT, materialActivityItemPO.getIsStock(), materialActivityItemPO.getMoney(), materialActivityItemPO.getNum(), materialActivityItemVO.getContent());
 		awardRecordDao.save(awardRecordPO);
 		
 		return 0;
@@ -299,7 +299,7 @@ public class MaterialActivityServiceImpl implements MaterialActivityService {
 
 		}
 		
-		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, creater, AwardRecordPO.TYPE_CG_INT, AwardRecordPO.SUBTYPE_REFUND_INT, AwardRecordPO.ONETYPE_MATERIAL_INT, materialActivityItemPO.getIsStock(), materialActivityItemPO.getMoney(), materialActivityItemPO.getNum(), materialActivityItemVO.getContent());
+		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, creater, materialActivityItemPO.getOrderId(), AwardRecordPO.TYPE_CG_INT, AwardRecordPO.SUBTYPE_REFUND_INT, AwardRecordPO.ONETYPE_MATERIAL_INT, materialActivityItemPO.getIsStock(), materialActivityItemPO.getMoney(), materialActivityItemPO.getNum(), materialActivityItemVO.getContent());
 		awardRecordDao.save(awardRecordPO);
 		
 		return 0;
