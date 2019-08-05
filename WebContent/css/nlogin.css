@@ -84,3 +84,10 @@ body {
 	margin-right: 5px;
 	font-size: 17px;
 }
+
+.registe {
+	min-width: 400px;
+    background-color: #478fca;
+    padding: 20px;
+    min-height: 300px;
+}

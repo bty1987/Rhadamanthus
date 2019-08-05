@@ -1,15 +1,15 @@
 <html lang="en">
     <head>
     
-        <title>Fanglin IP</title>
-        <link rel="shortcut icon" href="fanglin.ico" type="image/x-icon">
+        <title>Nullpoint IP</title>
+        <link rel="shortcut icon" href="nullpoint.ico" type="image/x-icon">
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        <link rel="stylesheet" href="assets/ace/css/bootstrap.min.css">
-        <link rel="stylesheet" href="assets/altogether/css/font-awesome.min.css">
+        <link rel="stylesheet" href="http://site.nullpoint.vip/assets/ace/css/bootstrap.min.css">
+        <link rel="stylesheet" href="http://site.nullpoint.vip/assets/altogether/css/font-awesome.min.css">
 
-        <link rel="stylesheet" href="assets/ace/css/ace.css">
+        <link rel="stylesheet" href="http://site.nullpoint.vip/assets/ace/css/ace.css">
         
         <script>
 	          var hostServer = "";
@@ -26,13 +26,13 @@
 	
 	        var csses = "";
 	        /* ace */
-	        csses += '<link rel="stylesheet" href="' + hostServer + 'assets/ace/css/bootstrap.min.css" />'; // basic styles
-	        csses += '<link rel="stylesheet" href="' + hostServer + 'assets/altogether/css/font-awesome.min.css" />';
-	        csses += '<link rel="stylesheet" href="' + hostServer + 'assets/altogether/css/iconfont.css" />'; /* iconfont */
-	        csses += '<link rel="stylesheet" href="' + hostServer + 'assets/ace/css/ace.css" />'; // ace styles
+	        csses += '<link rel="stylesheet" href="http://site.nullpoint.vip/assets/ace/css/bootstrap.min.css" />'; // basic styles
+	        csses += '<link rel="stylesheet" href="http://site.nullpoint.vip/assets/altogether/css/font-awesome.min.css" />';
+	        csses += '<link rel="stylesheet" href="http://site.nullpoint.vip/assets/altogether/css/iconfont.css" />'; /* iconfont */
+	        csses += '<link rel="stylesheet" href="http://site.nullpoint.vip/assets/ace/css/ace.css" />'; // ace styles
 	        /* ace end */
 	
-	        csses += '<link rel="stylesheet" href="' + hostServer + 'css/nlogin.css" />';
+	        csses += '<link rel="stylesheet" href="http://site.nullpoint.vip/css/nlogin.css" />';
 	
 	        document.write(csses);
 	    </script>
@@ -47,7 +47,7 @@
                 <div class="col-sm-3 uplogin" id="uplogin">
                     <h1>
                         <i class="icon-leaf green"></i>
-                        <span class="red">Fanglin</span>
+                        <span class="red">Nullpoint</span>
                         <span class="blue">IP</span>
                     </h1>
                     
@@ -77,10 +77,10 @@
                         <button type="button" class="btn btn-sm btn-primary" id="loginBtn">
                             <span>登陆</span>
                         </button>
-                        <button type="button" class="btn btn-sm btn-success pull-right" id="wechatQR">
+                        <button type="button" class="btn btn-sm btn-success pull-right hide" id="wechatQR">
                             <span>微信</span>
                         </button>
-                        <button type="button" class="btn btn-sm btn-warning pull-right" id="dingtalkQR">
+                        <button type="button" class="btn btn-sm btn-warning pull-right hide" id="dingtalkQR">
                             <span>钉钉</span>
                         </button>
                     </div>
@@ -88,7 +88,7 @@
                     <div class="space-4"></div>
                 </div>
                 
-                <div class="col-sm-3 qrlogin" align="center" id="qrlogin">
+                <div class="col-sm-3 qrlogin hide" align="center" id="qrlogin">
                     <div>
                         <img alt="" src="" class="hide qrcode" id="qrcode">
                         <div class="qrcode_mask hide" style="display: block;">二维码已失效</div>
@@ -99,10 +99,46 @@
                     </div>
                 </div>
                 
+                <div class="col-sm-3 registe" align="center" id="registe">
+                    
+                    <label id="errorMsg" class="block clearfix orange center errorMsg"></label>
+                    
+                    <label class="block clearfix uplabel">
+                        <span class="block input-icon input-icon-right">
+                            <input type="text" class="form-control" placeholder="公司名" id="name" maxlength="32">
+                        </span>
+                    </label>
+                    
+                    <label class="block clearfix uplabel">
+                        <span class="block input-icon input-icon-right">
+                            <input type="text" class="form-control" placeholder="联系人" id="corporation" maxlength="32">
+                        </span>
+                    </label>
+                    
+                    <label class="block clearfix uplabel">
+                        <span class="block input-icon input-icon-right">
+                            <input type="text" class="form-control" placeholder="联系电话" id="phone" maxlength="32">
+                        </span>
+                    </label>
+                    
+                    <label class="block clearfix uplabel">
+                        <span class="input-icon input-icon-right pull-left">
+                            <input type="text" class="form-control" placeholder="验证码" id="code" maxlength="8">
+                        </span>
+                        <img class="pull-right verifyImg hide" id="verify"/>
+                    </label>
+                    
+                    <div class="loginBtnStack">
+                        <button type="button" class="btn btn-sm btn-yellow pull-right" id="registBtn">
+                            <span>注册</span>
+                        </button>
+                    </div>
+                </div>
+                
             </div>
         </div>
 
-        <script src="assets/altogether/js/jquery-2.0.3.min.js"></script>
+        <script src="http://site.nullpoint.vip/assets/altogether/js/jquery-2.0.3.min.js"></script>
         
         <script type="text/javascript">
         
@@ -114,9 +150,9 @@
 		    var jses = "";
 		
 		    if(!parent.window.isEncryption){
-		        jses += '<script src="' + hostServer + 'js/com/config.js"><\/script>';
-		        jses += '<script src="' + hostServer + 'js/com/server.js"><\/script>';
-		        jses += '<script src="' + hostServer + 'js/nlogin.js"><\/script>';
+		        jses += '<script src="js/com/config.js"><\/script>';
+		        jses += '<script src="js/com/server.js"><\/script>';
+		        jses += '<script src="js/nlogin.js"><\/script>';
 		    }else if(parent.window.isPC && parent.window.isEncryption){
 		        win.evalNWBin(null, 'js/com/config.bin');
 		        win.evalNWBin(null, 'js/nlogin.bin');

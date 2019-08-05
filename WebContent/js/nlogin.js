@@ -134,7 +134,7 @@ jQuery(function (a) {
         });
     };
 
-    initQRCode(0);
+    //initQRCode(0);
     
     $('#wechatQR').click(function () {
         (!qrcodeMask.hasClass('hide') || qrcodeType != 1) && initQRCode(1);
@@ -144,12 +144,21 @@ jQuery(function (a) {
         (!qrcodeMask.hasClass('hide') || qrcodeType != 0) && initQRCode(0);
     });
 
-    $("#verify").click(function () {
+    $("#verify", "#uplogin").click(function () {
+        verifyCode();
+    });
+    
+    $("#verify", "#registe").click(function () {
         verifyCode();
     });
 
     $("#loginBtn").on('click', function () {
         login();
+        return false;
+    });
+    
+    $("#registBtn").on('click', function () {
+        regist();
         return false;
     });
 
@@ -162,7 +171,8 @@ jQuery(function (a) {
     function verifyCode() {
 
         if (config.demo) {
-            $("#verify").attr("src", 'images/verifyCode.jpg');
+            $("#verify", "#uplogin").attr("src", 'images/verifyCode.jpg');
+            $("#verify", "#registe").attr("src", 'images/verifyCode.jpg');
             return false;
         }
 
@@ -172,7 +182,8 @@ jQuery(function (a) {
             dataType: "json",
             success: function (data) {
                 params.securityCode = data.securityCode.replace(/[\r\n]/g,"");
-                $("#verify").removeClass("hide").attr("src", config.communion + "/verifyCode.do?timestamp=" + new Date().getTime() + "&securityCode=" + data.securityCode.replace(/[\r\n]/g,"").replace(/\+/g, "%2B"));
+                $("#verify", "#uplogin").removeClass("hide").attr("src", config.communion + "/verifyCode.do?timestamp=" + new Date().getTime() + "&securityCode=" + data.securityCode.replace(/[\r\n]/g,"").replace(/\+/g, "%2B"));
+                $("#verify", "#registe").removeClass("hide").attr("src", config.communion + "/verifyCode.do?timestamp=" + new Date().getTime() + "&securityCode=" + data.securityCode.replace(/[\r\n]/g,"").replace(/\+/g, "%2B"));
             }
         });
     }
@@ -221,6 +232,41 @@ jQuery(function (a) {
                 }
             }
         });
+    }
+    
+    function regist(){
+        
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: config.communion + "createCompany.do",
+            data: {
+                "company.name": $("#name", "#registe").val(),
+                "company.fullname": "",
+                "company.address": "",
+                "company.corporation": $("#corporation", "#registe").val(),
+                "company.phone": $("#phone", "#registe").val(),
+                verifyCode: $("#code", "#registe").val(),
+                securityCode: params.securityCode,
+            },
+            success: function (data) {
+                initPage();
+
+                if (data.errorCode == 0) {
+                    
+                    $("#name", "#registe").val('');
+                    $("#corporation", "#registe").val('');
+                    $("#phone", "#registe").val('');
+                    $("#code", "#registe").val('');
+                    
+                   $("#errorMsg", "#registe").html("注册成功, 稍后测服与您联系.");
+                } else {
+                    $("#errorMsg", "#registe").html(data.errorMsg);
+                    verifyCode();
+                }
+            }
+        });
+        
     }
 
     function initPage() {

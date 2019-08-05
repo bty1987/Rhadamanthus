@@ -2,17 +2,17 @@
 <html lang="en">
 <head>
 
-    <title>Information Platform</title>
+    <title>Nullpoint IP</title>
 
     <meta charset="utf-8" />
     <meta content="no-cache"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <link rel="shortcut icon" href="fanglin.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="nullpoint.ico" type="image/x-icon">
 
     <!-- altogether -->
-    <link rel="stylesheet" href="assets/altogether/css/pace.min.css" />
-    <script type="text/javascript" src='assets/altogether/js/pace.min.js'></script>
+    <link rel="stylesheet" href="http://site.nullpoint.vip/assets/altogether/css/pace.min.css" />
+    <script type="text/javascript" src='http://site.nullpoint.vip/assets/altogether/js/pace.min.js'></script>
     <!-- altogether end -->
 
     <script type="text/javascript">
@@ -63,29 +63,29 @@
 
         var csses = "";
         /* ace */
-        csses += '<link rel="stylesheet" href="assets/ace/css/bootstrap.min.css?version=' + versionCode + '" />'; // basic styles
-        csses += '<link rel="stylesheet" href="assets/ace/css/font-awesome-fa.min.css?version=' + versionCode + '" />';
-        csses += '<link rel="stylesheet" href="assets/ace/css/fullcalendar.css?version=' + versionCode + '" />';
-        csses += '<link rel="stylesheet" href="assets/ace/css/huploadify.css?version=' + versionCode + '" />';
-        csses += '<link rel="stylesheet" href="assets/ace/css/colorbox.css?version=' + versionCode + '" />'; // picture box
-        csses += '<link rel="stylesheet" href="assets/ace/css/ace-dark.css?version=' + versionCode + '" />';
+        csses += '<link rel="stylesheet" href="http://site.nullpoint.vip/assets/ace/css/bootstrap.min.css?version=' + versionCode + '" />'; // basic styles
+        csses += '<link rel="stylesheet" href="http://site.nullpoint.vip/assets/ace/css/font-awesome-fa.min.css?version=' + versionCode + '" />';
+        csses += '<link rel="stylesheet" href="http://site.nullpoint.vip/assets/ace/css/fullcalendar.css?version=' + versionCode + '" />';
+        csses += '<link rel="stylesheet" href="http://site.nullpoint.vip/assets/ace/css/huploadify.css?version=' + versionCode + '" />';
+        csses += '<link rel="stylesheet" href="http://site.nullpoint.vip/assets/ace/css/colorbox.css?version=' + versionCode + '" />'; // picture box
+        csses += '<link rel="stylesheet" href="http://site.nullpoint.vip/assets/ace/css/ace-dark.css?version=' + versionCode + '" />';
         /* ace end */
 
         /* altogether */
-        csses += '<link rel="stylesheet" href="assets/altogether/css/font-awesome.min.css?version=' + versionCode + '" />';
-        csses += '<link rel="stylesheet" href="assets/altogether/css/layer.css?version=' + versionCode + '" />';
-        csses += '<link rel="stylesheet" href="assets/altogether/css/iconfont.css?version=' + versionCode + '" />'; /*  iconfont  */
-        csses += '<link rel="stylesheet" href="assets/altogether/css/locking.css?version=' + versionCode + '" />'; /*  lockscreen */
+        csses += '<link rel="stylesheet" href="http://site.nullpoint.vip/assets/altogether/css/font-awesome.min.css?version=' + versionCode + '" />';
+        csses += '<link rel="stylesheet" href="http://site.nullpoint.vip/assets/altogether/css/layer.css?version=' + versionCode + '" />';
+        csses += '<link rel="stylesheet" href="http://site.nullpoint.vip/assets/altogether/css/iconfont.css?version=' + versionCode + '" />'; /*  iconfont  */
+        csses += '<link rel="stylesheet" href="http://site.nullpoint.vip/assets/altogether/css/locking.css?version=' + versionCode + '" />'; /*  lockscreen */
         /* altogether end */
 
-        csses += '<link rel="stylesheet" href="' + server + 'css/main.css?version=' + versionCode + '" />';
+        csses += '<link rel="stylesheet" href="css/main.css?version=' + versionCode + '" />';
 
         document.write(csses);
 
         var jses = "";
 
         if(!window.jQuery){
-            jses += '<script src="' + server + 'assets/altogether/js/jquery-2.0.3.min.js?version=' + versionCode + '"><\/script>';
+            jses += '<script src="http://site.nullpoint.vip/assets/altogether/js/jquery-2.0.3.min.js?version=' + versionCode + '"><\/script>';
         }
 
         document.write(jses);
@@ -118,7 +118,7 @@
     <!--  lock bringins end -->
 
     <div class="navbar-logo" style="display:none;">
-        <span>Fanglin IP</span>
+        <span>Nullpoint IP</span>
     </div>
     <div class="navbar navbar-default" id="navbar" style="display:none;">
         <div class="navbar-container" id="navbar-container">
@@ -150,7 +150,7 @@
 
             <div class="navbar-header pull-right">
                 <ul class="nav ace-nav">
-                    <li class="dark">
+                    <li class="light-blue">
                         <a data-toggle="dropdown" href="#" class="dropdown-toggle">
                             <i class="icon-globe"></i>
                             <span class="user-info companyinfo"><small>当前公司</small><span class="user-name companyName"></span></span>
@@ -158,7 +158,7 @@
                         </a>
                         <ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close" id="companysel"></ul>
                     </li>
-                    <li class="red">
+                    <li class="light-orange">
                         <a href="#" id="faqInfo">
                             <i class="icon-key"></i>
                             <span class="dropdown-toggle">帮助</span>
@@ -170,7 +170,7 @@
                             <span class="user-info"><small>版本</small><small><span id="versionCode"></span></small></span>
                         </a>
                     </li>
-                    <li class="light-blue">
+                    <li class="dark">
                         <a data-toggle="dropdown" href="#" class="dropdown-toggle">
                             <img class="nav-user-photo" alt="" src="assets/altogether/images/avatar2.png" id="userImg">
                             <span class="user-info"><small>您好,</small><span class="user-name"></span></span>
@@ -268,36 +268,36 @@
         </div>
     </div>
 	
-    <script src="assets/altogether/js/jquery-2.0.3.min.js"></script>
-    <script src="assets/ace/js/ace.js"></script>
-    <script src="assets/ace/js/bootstrap.min.js"></script>
-    <script src="assets/ace/js/jquery.slimscroll.min.js"></script>
-    <script src="assets/ace/js/jquery.raty.min.js"></script>
-    <script src="assets/ace/js/ace-elements.js"></script>
-    <script src="assets/ace/js/ace-extra.min.js"></script>
+    <script src="http://site.nullpoint.vip/assets/altogether/js/jquery-2.0.3.min.js"></script>
+    <script src="http://site.nullpoint.vip/assets/ace/js/ace.js"></script>
+    <script src="http://site.nullpoint.vip/assets/ace/js/bootstrap.min.js"></script>
+    <script src="http://site.nullpoint.vip/assets/ace/js/jquery.slimscroll.min.js"></script>
+    <script src="http://site.nullpoint.vip/assets/ace/js/jquery.raty.min.js"></script>
+    <script src="http://site.nullpoint.vip/assets/ace/js/ace-elements.js"></script>
+    <script src="http://site.nullpoint.vip/assets/ace/js/ace-extra.min.js"></script>
 
-    <script src="assets/altogether/js/jquery.huploadify.js"></script> <!-- upload tools --> 
-    <script src="assets/altogether/js/jquery.colorbox-min.js"></script> <!-- picture box --> 
-    <script src="assets/altogether/js/fullcalendar.min.js"></script> <!-- calendar --> 
-    <script src="assets/altogether/js/spin.min.js"></script>
+    <script src="http://site.nullpoint.vip/assets/altogether/js/jquery.huploadify.js"></script> <!-- upload tools --> 
+    <script src="http://site.nullpoint.vip/assets/altogether/js/jquery.colorbox-min.js"></script> <!-- picture box --> 
+    <script src="http://site.nullpoint.vip/assets/altogether/js/fullcalendar.min.js"></script> <!-- calendar --> 
+    <script src="http://site.nullpoint.vip/assets/altogether/js/spin.min.js"></script>
 
-    <script src="assets/altogether/js/layer.js"></script> <!-- dialog pop --> 
-    <script src="assets/altogether/laydate/laydate.js"></script> <!-- datetime tools --> 
+    <script src="http://site.nullpoint.vip/assets/altogether/js/layer.js"></script> <!-- dialog pop --> 
+    <script src="http://site.nullpoint.vip/assets/altogether/laydate/laydate.js"></script> <!-- datetime tools --> 
 
-    <script src="assets/altogether/js/typeahead-bs2.min.js"></script> <!-- auto fill --> 
-    <script src="assets/altogether/js/tag.js"></script>
-    <script src="assets/altogether/js/base64.js"></script> <!--  --> 
-    <script src="assets/altogether/js/html2canvas.js"></script> <!-- export tools -->
+    <script src="http://site.nullpoint.vip/assets/altogether/js/typeahead-bs2.min.js"></script> <!-- auto fill --> 
+    <script src="http://site.nullpoint.vip/assets/altogether/js/tag.js"></script>
+    <script src="http://site.nullpoint.vip/assets/altogether/js/base64.js"></script> <!--  --> 
+    <script src="http://site.nullpoint.vip/assets/altogether/js/html2canvas.js"></script> <!-- export tools -->
 
-    <script src="assets/altogether/js/ztree/jquery.ztree.core-3.5.min.js"></script>
-    <script src="assets/altogether/js/ztree/jquery.ztree.excheck-3.5.min.js"></script>
+    <script src="http://site.nullpoint.vip/assets/altogether/js/ztree/jquery.ztree.core-3.5.min.js"></script>
+    <script src="http://site.nullpoint.vip/assets/altogether/js/ztree/jquery.ztree.excheck-3.5.min.js"></script>
 
-    <script src="assets/altogether/js/fuelux/fuelux.wizard.min.js"></script>
-    <script src="assets/altogether/js/fuelux/fuelux.spinner.min.js"></script>
-    <script src="assets/altogether/js/fuelux/fuelux.tree.js"></script>
-	<script src="assets/altogether/js/jquery.qrcode.min.js"></script>
+    <script src="http://site.nullpoint.vip/assets/altogether/js/fuelux/fuelux.wizard.min.js"></script>
+    <script src="http://site.nullpoint.vip/assets/altogether/js/fuelux/fuelux.spinner.min.js"></script>
+    <script src="http://site.nullpoint.vip/assets/altogether/js/fuelux/fuelux.tree.js"></script>
+	<script src="http://site.nullpoint.vip/assets/altogether/js/jquery.qrcode.min.js"></script>
 	
-	<script src="assets/altogether/js/echarts.min.js"></script>
+	<script src="http://site.nullpoint.vip/assets/altogether/js/echarts.min.js"></script>
 	
     <script type="text/javascript">
 
