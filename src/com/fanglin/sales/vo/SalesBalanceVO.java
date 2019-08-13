@@ -27,6 +27,8 @@ public class SalesBalanceVO implements Serializable{
 	
 	private Timestamp venderTime;
 	
+	private Float allowance;
+	
 	private Float total;
 	
 	private Float balance;
@@ -38,6 +40,8 @@ public class SalesBalanceVO implements Serializable{
 	private Float pbalance;
 	
 	private Short type;
+	
+	private Short onetype;
 	
 	private Short status;
 	
@@ -122,6 +126,14 @@ public class SalesBalanceVO implements Serializable{
 	public void setVenderTime(Timestamp venderTime) {
 		this.venderTime = venderTime;
 	}
+	
+	public void setAllowance(Float allowance) {
+		this.allowance = allowance;
+	}
+
+	public Short getOnetype() {
+		return onetype;
+	}
 
 	public Float getTotal() {
 		return total;
@@ -170,6 +182,14 @@ public class SalesBalanceVO implements Serializable{
 	public void setType(Short type) {
 		this.type = type;
 	}
+	
+	public Float getAllowance() {
+		return allowance;
+	}
+
+	public void setOnetype(Short onetype) {
+		this.onetype = onetype;
+	}
 
 	public Short getStatus() {
 		return status;
@@ -186,5 +206,4 @@ public class SalesBalanceVO implements Serializable{
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	
 }

@@ -18,21 +18,16 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.data.quotation.vo.QuotationVersionVO;
 import com.fanglin.utils.Paging;
 
-
 public interface QuotationVersionService {
-	
-	public void pageQuotationVersion(Paging paging, List<Filter> filters,int company);
-	
-	public QuotationVersionVO queryQuotationVersionById(QuotationVersionVO quotationVersionVO);
-	
-	public List<QuotationVersionVO> queryQuotationVersion(int company);
-	
-	public void saveQuotationVersion(QuotationVersionVO quotationVersionVO,int company) throws FLException;
-	
-	public void updateQuotationVersion(QuotationVersionVO quotationVersionVO);
-	
-	public void deleteQuotationVersion(QuotationVersionVO quotationVersionVO);
 
-	public void deleteQuotationVersionById(String id);
+	public void pageQuotationVersion(Paging paging, List<Filter> filters, int company);
+
+	public QuotationVersionVO queryQuotationVersionById(QuotationVersionVO quotationVersionVO);
+
+	public List<QuotationVersionVO> queryQuotationVersion(int company);
+
+	public void saveQuotationVersion(QuotationVersionVO quotationVersionVO, int company) throws FLException;
+
+	public void updateQuotationVersion(QuotationVersionVO quotationVersionVO) throws FLException;
 
 }

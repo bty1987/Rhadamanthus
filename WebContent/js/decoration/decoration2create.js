@@ -316,7 +316,8 @@ jQuery(function($) {
 			initCreate();
 
 			btn.button('reset');
-		}, function () {
+		}, function (e) {
+            com.showAlert(com.error, e.errorMsg);
 			btn.button('reset');
 		});
 	}

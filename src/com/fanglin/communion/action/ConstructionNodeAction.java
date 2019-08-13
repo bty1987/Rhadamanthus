@@ -67,6 +67,18 @@ public class ConstructionNodeAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "updateConstructionNode", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateConstructionNode() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
+		}
+
+		constructionNodeService.updateConstructionNode(constructionNode);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "updateConstructionNodeForStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateConstructionNodeForStatus() throws FLException {
 

@@ -24,7 +24,16 @@ $(function () {
     decorationDetail.items.accountType = com.focusPage("#accountType");
     decorationDetail.items.TotalPrice = com.focusPage("#TotalPrice");
 
+    decorationDetail.items.contractAdvance = com.focusPage("#contractAdvance");
+    decorationDetail.items.constructionAdvance = com.focusPage("#constructionAdvance");
+    decorationDetail.items.materialAdvance = com.focusPage("#materialAdvance");
+    decorationDetail.items.zhenglinAdvance = com.focusPage("#zhenglinAdvance");
+
     decorationDetail.items.calDiscountPrice = com.focusPage("#calDiscountPrice");
+
+    decorationDetail.items.materialTotal = com.focusPage("#materialTotal");
+    decorationDetail.items.materialCoupon = com.focusPage("#materialCoupon");
+    decorationDetail.items.materialFactPrice = com.focusPage("#materialFactPrice");
 
     com.focusPage("#matching").switchBtn("isOrNotType");
 
@@ -70,7 +79,7 @@ $(function () {
 
     initTab();
     decorationUtils.init();
-    decorationUtils.initMaterial(decorationDetail);
+    var material = decorationUtils.initMaterial(decorationDetail);
 
     initWizard(decorationDetail.discount, decorationDetail);
     
@@ -98,7 +107,7 @@ $(function () {
             if (info.step == 1) {
                 decorationUtils.initMaterial(decorationDetail);
             } else if (info.step == 2) {
-                
+
             }
         }).on('next', function (e, info) {
         }).on('previous', function (e, info) {
@@ -108,7 +117,7 @@ $(function () {
     com.focusPage("#submitDecorationAccountBtn").click(function () {
         saveDecorationAccount();
     });
-    
+
     function initTab(){
     	var dataPage = params.urlLoadParams.depage;
         var fanglinMaterial = $('<div></div>').addClass('tab-pane in active').attr('id', 'fanglinMaterialPayments' + dataPage).attr('style', 'margin-left: -12px;');
@@ -147,6 +156,17 @@ $(function () {
             com.focusPage("button[name='makeAccount']").addClass("hide");
         });
     }
+
+    decorationDetail.items.materialTotal.html(material.total);
+    decorationDetail.items.materialCoupon.html(material.coupon);
+    decorationDetail.items.materialFactPrice.html(utils.accSub(material.total, material.coupon));
+
+    com.post(api.payment.queryAdvancePaymentByOrderId, {"decoration.orderId": decorationDetail.decorationOrderId}, function (res) {
+        decorationDetail.items.contractAdvance.text(res.balanceAdvance);
+        decorationDetail.items.constructionAdvance.text(res.projectAdvance);
+        decorationDetail.items.materialAdvance.text(res.materialAdvance);
+        decorationDetail.items.zhenglinAdvance.text(res.zaterialAdvance);
+    });
     
     com.post(api.quotation.queryQuotationForDefaultByOrderId, {"quotation.orderId": decorationDetail.decorationOrderId}, function(res){
         var quotation = res.quotation;

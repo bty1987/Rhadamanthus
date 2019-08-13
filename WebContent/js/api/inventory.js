@@ -1,7 +1,7 @@
 $.extend(api.index, {
     querySalesIndex: {url: "views/sales/sales.html"},
     salesItemDetialIndex: {url: "views/sales/salesItem.html"},
-    addSalesItemsIndex: {url: "views/sales/salesItem2add.html"},
+    addSalesItemsIndex: {url: "views/sales/sales2add.html"},
     refundsItemDetialIndex: {url: "views/sales/refundsItem.html"},
     salesCollectionIndex: {url: "views/sales/sales4payment.html"},
     salesPaymentReceiptIndex: {url: "/views/payment/salesPaymentReceipt.html"},
@@ -10,7 +10,7 @@ $.extend(api.index, {
     purchaseBalance2balanceIndex: {url: "/views/manifest/purchaseBalance2balance.html"},
     manifestPrintIndex: {url: "/views/manifest/manifest2print.html"},
     accessoriesPrintIndex: {url: "/views/manifest/accessories2print.html"},
-    salesActivityIndex:{url:"/views/sales/salesActivity.html"},
+    salesActivityIndex:{url:"/views/sales/sales4activity.html"},
     salesSupplement: {url: "views/sales/sales2supple.html"}
 });
 
@@ -149,9 +149,9 @@ $.extend(api, {
         querySalesItemBySid: {url: "querySalesItemBySid.do"},
         querySalesItemBySids: {url: "querySalesItemBySids.do"},
         addSalesItem: {url: "addSalesItem.do"},
-        updateSalesItem: {url: "updateSalesItem.do"},
+        updateSalesItem: {url: "updateSalesItem.do", intercept: true},
         updateSalesItemForBalance: {url: "updateSalesItemForBalance.do"},
-        deleteSalesItem: {url: "deleteSalesItem.do"},
+        deleteSalesItem: {url: "deleteSalesItem.do", intercept: true},
 
         queryRefundsItemBySid: {url: "queryRefundsItemBySid.do"},
 

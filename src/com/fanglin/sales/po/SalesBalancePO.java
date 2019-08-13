@@ -64,6 +64,14 @@ public class SalesBalancePO implements Serializable{
 	
 	public static final short TYPE_BALANCEREFUNDS_INT = 2;
 	
+	public static final short ONETYPE_INIT_INT = 0;
+	
+	public static final short ONETYPE_REFUND_INT = 1;
+	
+	public static final short ONETYPE_ALLBACK_INT = 2;
+	
+	public static final short ONETYPE_DBACKORDER_INT = 3;
+	
 	private long sbid;
 	
 	private SalesPO sales;
@@ -80,6 +88,8 @@ public class SalesBalancePO implements Serializable{
 	
 	private Timestamp venderTime;
 	
+	private float allowance;
+	
 	private float total;
 	
 	private float balance;
@@ -91,6 +101,8 @@ public class SalesBalancePO implements Serializable{
 	private float pbalance;
 	
 	private short type;
+	
+	private short onetype;
 	
 	private short status;
 	
@@ -193,7 +205,16 @@ public class SalesBalancePO implements Serializable{
 	public void setVenderTime(Timestamp venderTime) {
 		this.venderTime = venderTime;
 	}
+	
+	@Column(name = "allowance")
+	public float getAllowance() {
+		return allowance;
+	}
 
+	public void setAllowance(float allowance) {
+		this.allowance = allowance;
+	}
+	
 	@Column(name = "total")
 	public float getTotal() {
 		return total;
@@ -247,6 +268,15 @@ public class SalesBalancePO implements Serializable{
 	public void setType(short type) {
 		this.type = type;
 	}
+	
+	@Column(name = "onetype")
+	public short getOnetype() {
+		return onetype;
+	}
+
+	public void setOnetype(short onetype) {
+		this.onetype = onetype;
+	}
 
 	@Column(name = "status")
 	public short getStatus() {
@@ -265,5 +295,4 @@ public class SalesBalancePO implements Serializable{
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	
 }

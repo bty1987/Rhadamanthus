@@ -35,7 +35,7 @@ jQuery(function ($) {
                 ["楼盘名:", v.house.village.name, "grey"],
                 ["设计部门:", v.designer.dept.name, "grey"],
                 ["设计师:", v.designer.userName, "grey"],
-                ["监理:", v.supervisor.userName, "grey"],
+                ["监理:", v.supervisor ? v.supervisor.userName : "", "grey"],
                 ["面积:", v.house.buildArea, "blue"],
                 ["进度:", constructionNodes[v.projectStatus], "red"]
             ];

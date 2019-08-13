@@ -7,6 +7,7 @@ $(function () {
         status:{},
         salesPaymentForStatus:{},
         salesPaymentType : {},
+        oneType:{},
         url : api.inventory.pageSalesBalance,
         postData : "salesBalancePostData",
         pageType : params['urlLoadParams'].type,
@@ -41,7 +42,11 @@ $(function () {
         salesBalance.status = res.balanceStatus.split("key", "value");
         salesBalance.salesPaymentType = res.materialPaymentType.split("key", "value");
     }, null, false);
-    
+
+    com.post(api.ds.sales, {}, function(res){
+        salesBalance.oneType = res.oneType.split("key", "value");
+    }, null, false);
+
     com.post(api.common.queryReceiptType, {}, function (res) {
         salesBalance.salesPaymentForStatus.cash = [];
         salesBalance.salesPaymentForStatus.bank = [];
@@ -88,6 +93,7 @@ $(function () {
 
                     var $liLine = $('<li></li>').addClass('item-orange clearfix');
                     var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+                    var $ulStyle = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
                     var $h3 = $('<h3></h3>').addClass('oid');
                     var $small = $('<small></small>').addClass('blue').html(v.sales.no);
                     var $btnDiv = $('<div></div>').addClass('action-buttons pull-right');
@@ -99,6 +105,10 @@ $(function () {
                     var $btnPayment = $('<a></a>').addClass('btn btn-minier btn-danger').html('款项');
                     var $btnBalanceItem = $('<a></a>').addClass('btn btn-minier btn-pink').html('子项');
 
+                    var coupon =  v.onetype == 1 ? 0 : v.sales.coupon;
+                    var maling =  v.onetype == 1 ? 0 : v.sales.maling;
+                    var venderMaling =  v.onetype == 1 ? 0 : v.sales.venderMaling;
+
                     var propertyArr = [
                         ["装修单号:", v.sales.orderId, "blue"],
                         ["楼盘地址:", v.sales.house.village.name + " " + v.sales.house.houseNumber, "grey"],
@@ -109,21 +119,17 @@ $(function () {
                         ["定金:", v.sales.depositpay, "blue"],
                         ["补款:", v.sales.fullpay, "blue"],
                         ["等级:", v.sales.grade, "red"],
-                        ["总价:", v.total, "blue"],
-                        ["券值:", v.sales.coupon, "blue"],
+                        ["券值:", coupon, "blue"],
                         ["券信息:", v.sales.couponInfo, "grey"],
                         ["驻店:", v.sales.instorer.currentName, "grey"],
                         ["预结算值:", v.balance, "blue"],
-                        ["预结算时间:", v.createTime, "green"],
                         ["预结算人:", v.creater.currentName, "grey"],
                         ["厂商结算:", v.vbalance, "blue"],
-                        ["厂商结算时间:", v.venderTime, "green"],
                         ["结算值:", v.pbalance, "blue"],
                         ["结算时间:", v.postTime, "green"],
                         ["结算人:", v.poster.currentName, "grey"],
-                        ["抹零:", v.sales.maling, "blue"],
-                        ["厂商抹零:", v.sales.venderMaling, "blue"],
-                        ["状态:", salesBalance.status[v.status], "red"],
+                        ["抹零:", maling, "blue"],
+                        ["厂商抹零:", venderMaling, "blue"],
                         ["类型:", salesBalance.balanceType[v.type], "red"]
                     ];
 
@@ -134,8 +140,24 @@ $(function () {
                         $liProperty.appendTo($ulProperty);
                     });
 
+                    var styleArr = [
+                        ["补贴:", v.allowance, "blue"],
+                        ["总价:", v.total, "blue"],
+                        ["预结算时间:", v.createTime, "green"],
+                        ["厂商结算时间:", v.venderTime, "green"],
+                        ["一类:", salesBalance.oneType[v.onetype] , "red"],
+                        ["状态:", salesBalance.status[v.status], "red"]
+                    ];
+
+                    $.each(styleArr, function (index, value) {
+                        var $liProperty = $('<li></li>');
+                        $('<strong></strong>').html(value[0]).appendTo($liProperty);
+                        $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+                        $liProperty.appendTo($ulStyle);
+                    });
+
                     $liLine.appendTo($ul);
-                    $liLine.append($h3).append($ulProperty);
+                    $liLine.append($h3).append($ulProperty).append($ulStyle);
 
                     if(salesBalance.pageType == "dompany") {
                         $btnDiv.append($btnPayment).append($btnBalanceItem);

@@ -2,25 +2,41 @@
 jQuery(function($) {
 
     var constructionNode = {
-        saveBtn: null,
-        cancelBtn: null,
-        modal: null,
+        
+        cnid: null,
+        
+        btns: {
+            saveBtn: com.focusPage("#saveBtn"),
+           updateBtn: com.focusPage("#updateBtn") 
+        },
+        
+        modals: {
+            addModal: com.focusPage("#addModal"),
+            updateModal: com.focusPage("#updateModal")
+        },
 
-        items:{},
+        items:{
+            
+            name: com.focusPage("#name", "#addModal"),
+            
+            precheck: com.focusPage("#precheck", "#updateModal"),
+            postcheck: com.focusPage("#postcheck", "#updateModal"),
+        },
 
         editFlg: false,
     };
+    
+    constructionNode.btns.saveBtn.on("click", saveData);
+    constructionNode.btns.updateBtn.on("click", update);
 
-    constructionNode.saveBtn = com.focusPage("#saveBtn").on("click", saveData);
-    constructionNode.cancelBtn = com.focusPage("#cancelBtn");
-
-    constructionNode.items.constructionNodeId = com.focusPage("#constructionNodeId");
-    constructionNode.items.constructionNodeName = com.focusPage("#constructionNodeName");
-
-    constructionNode.modal = com.focusPage("#constructionNodeModal");
-    constructionNode.modal.on('show.bs.modal',function(e){
-        com.clearValidator();
-        com.clearValidator("#constructionNodeId", true);
+    constructionNode.modals.addModal = com.focusPage("#addModal");
+    
+    constructionNode.modals.addModal.on('show.bs.hide',function(e){
+        com.cleanItems(constructionNode.items);
+    });
+    
+    constructionNode.modals.updateModal.on('show.bs.hide',function(e){
+        com.cleanItems(constructionNode.items);
     });
 
     $.extend(com.validator, constructionNode.validator);
@@ -64,13 +80,25 @@ jQuery(function($) {
 
             var $btnCheck = $('<input />').attr("type","checkbox").addClass('ace ace-switch ace-switch-5').attr("checked", v.status == 0 ? true : false);
             var $btnSpan = $('<span></span>').addClass("lbl status-lbl");
+            var $btnUpdate = $('<div></div>').addClass('pull-right action-button').append($('<a></a>').addClass('btn btn-yellow btn-minier').html('更新'))
 
+            $divBtnWrap.append($btnUpdate).appendTo($h3);
             //$divBtnWrap.append($btnCheck).append($btnSpan).appendTo($h3);
 
             $liLine.append($h3).append($ulProperty);
+            
+            $btnUpdate.click(function(){
+                
+                constructionNode.cnid = v.cnid;
+                
+                constructionNode.items.precheck.val(v.precheck);
+                constructionNode.items.postcheck.val(v.postcheck);
+                
+                constructionNode.modals.updateModal.modal("show");
+            });
 
             $btnCheck.click(function(){
-                updateconstructionNode(v.cnid, $btnDel.prop("checked") ? 0 : 1);
+                updateStatus(v.cnid, $btnDel.prop("checked") ? 0 : 1);
             });
 
             return $liLine;
@@ -101,11 +129,27 @@ jQuery(function($) {
     });
 
     $('a[name="addConstructionNode"]', com.focusPage('#pagenation')).click(function(){
-        com.focusPage("#constructionNodeName").val("");
-        com.focusPage("#constructionNodeModal").modal("show");
+        constructionNode.modals.addModal.modal("show");
     });
+    
+    function update(){
+        
+        if(com.validate("updateModal")) return false;
+        
+        var options = {
+            "constructionNode.cnid": constructionNode.cnid,
+            "constructionNode.precheck": constructionNode.items.precheck.val(),
+            "constructionNode.postcheck": constructionNode.items.postcheck.val()
+        }
+        
+        com.post(api.data.updateConstructionNode, options, function(res){
+            searcher.doSearch();
+        });
+        
+        constructionNode.modals.updateModal.modal("hide");
+    }
 
-    function updateconstructionNode(cnid, cvalue){
+    function updateStatus(cnid, cvalue){
         
         var options = {
             "constructionNode.cnid": cnid,
@@ -131,6 +175,6 @@ jQuery(function($) {
             searcher.doSearch();
         });
 
-        constructionNode.modal.modal("hide");
+        constructionNode.modals.addModal.modal("hide");
     }
 });

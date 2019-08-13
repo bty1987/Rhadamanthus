@@ -96,6 +96,7 @@ $.extend(api, {construction: {
     pageDrawLineForPlan: {url: "pageDrawLineForPlan.do", demo: true},
     queryDrawLine: {url: "queryDrawLine.do", demo: true},
     countDrawLine: {url: "countDrawLine.do"},
+    updateDrawLine: {url: "updateDrawLine.do"},
     resetDrawLine: {url: "resetDrawLine.do"},
     applayDrawLine: {url: "applayDrawLine.do"},
     successDrawLine: {url: "successDrawLine.do"},

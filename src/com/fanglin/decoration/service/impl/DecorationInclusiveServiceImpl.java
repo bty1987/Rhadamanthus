@@ -147,9 +147,9 @@ public class DecorationInclusiveServiceImpl implements DecorationInclusiveServic
 
 			extensionDao.update(extensionPO);
 		}
-
-		total = Arith.sub(Arith.add(Arith.add(quotationPO.getTotalPrice(), undisPrice), Arith.div(Arith.mul(disPrice, quotationPO.getDiscount()), 10)), decorationPO.getCouponCut());
-
+		
+		total = Arith.add(Arith.add(quotationPO.getTotalPrice(), undisPrice), Arith.div(Arith.mul(disPrice, quotationPO.getDiscount()), 10));
+		
 		DecorationInclusivePO decorationInclusivePO = decorationInclusiveDao.queryDecorationInclusiveByOrderId(orderId);
 
 		if (decorationInclusivePO == null) {

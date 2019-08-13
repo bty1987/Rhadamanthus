@@ -68,9 +68,9 @@ public class ConstructionAction extends BaseListAction {
 	}
 
 	@Action(value = "updateConstructionByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateConstructionByOrderId() {
+	public String updateConstructionByOrderId() throws FLException {
 
-		constructionService.saveOrUpdateConstructionByOrderId(construction);
+		constructionService.updateConstructionByOrderId(construction);
 
 		return SUCCESS;
 	}

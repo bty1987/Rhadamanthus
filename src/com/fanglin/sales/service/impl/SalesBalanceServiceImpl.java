@@ -243,6 +243,8 @@ public class SalesBalanceServiceImpl implements SalesBalanceService{
 			
 			List<SalesItemPO> salesItemPOs = salesItemDao.querySalesItemBySid(salesPO.getSid());
 			
+			float _allowance = 0f;
+			
 			for(SalesItemPO salesItemPO : salesItemPOs){
 				
 				float _price = salesItemPO.getPrice();
@@ -258,6 +260,8 @@ public class SalesBalanceServiceImpl implements SalesBalanceService{
 					balance = Arith.add(balance, _balance);
 				}
 				
+				_allowance = Arith.add(_allowance, Arith.mul(Arith.sub(salesItemPO.getDisPrice(), salesItemPO.getPrice()), salesItemPO.getNum()));
+				
 				SalesBalanceItemPO salesBalanceItemPO = new SalesBalanceItemPO();
 				salesBalanceItemPO.setSbid(salesBalancePO.getSbid());
 				salesBalanceItemPO.setSalesItem(salesItemPO);
@@ -272,6 +276,8 @@ public class SalesBalanceServiceImpl implements SalesBalanceService{
 				
 			}
 			
+			salesBalancePO.setAllowance(_allowance);
+			salesBalancePO.setOnetype(SalesBalancePO.ONETYPE_INIT_INT);
 			salesBalancePO.setBalance(balance);
 			salesBalancePO.setDifference(Arith.sub(salesBalancePO.getTotal(), balance));
 			

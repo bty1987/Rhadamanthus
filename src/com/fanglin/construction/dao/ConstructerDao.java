@@ -5,14 +5,14 @@ import java.util.List;
 import com.fanglin.construction.po.ConstructerPO;
 import com.fanglin.core.dao.Dao;
 
-public interface ConstructerDao extends Dao<ConstructerPO>{
+public interface ConstructerDao extends Dao<ConstructerPO> {
 
-	public List<ConstructerPO> queryConstructerByOrderId(String orderId, Integer schedule);
+	public List<ConstructerPO> queryConstructerByOrderId(String orderId, Short schedule);
 
-	public List<ConstructerPO> queryConstructerByCid(long cid, Integer schedule);
+	public List<ConstructerPO> queryConstructerByCid(long cid, Short schedule);
 
 	public ConstructerPO queryConstructerByCrId(long crid);
-	
-	public int countConstructer(long cid, int wuid, int schedule, short status);
+
+	public int countConstructer(long cid, int wuid, short schedule, short status);
 
 }

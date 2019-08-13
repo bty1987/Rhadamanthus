@@ -1,12 +1,12 @@
 package com.fanglin.approval.po;
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
-import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
 @Table(name = "approvalsalesrefund", catalog = "approval")
@@ -15,8 +15,8 @@ public class ApprovalSalesRefundPO implements java.io.Serializable {
 	private static final long serialVersionUID = 2272182475271119881L;
 
 	public static final String COLUMN_AID_STR = "aid";
-	
-	public static final short TYPE_REFUND_INT = 0;
+
+	public static final short TYPE_REFUND_INT = 1;
 
 	private long asrid;
 

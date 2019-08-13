@@ -21,49 +21,54 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="quotationVersion", catalog = "quotation")
-public class QuotationVersionPO implements Serializable{
+@Table(name = "quotationVersion", catalog = "quotation")
+public class QuotationVersionPO implements Serializable {
 
 	private static final long serialVersionUID = -852822561077114137L;
-	
-	private int qvId;
-	
+
+	public static final short DEFAULTFLAG_DEFAULT_INT = 1;
+
+	public static final short DEFAULTFLAG_INIT_INT = 0;
+
+	private long qvId;
+
 	private String no;
-	
+
 	private String name;
-	
+
 	private String comment;
-	
-	private int defaultFlag;
-	
+
+	private short defaultFlag;
+
 	private float trafficRate;
-	
+
 	private short trafficDiscount;
-	
+
 	private float manageRate;
-	
+
 	private short manageDiscount;
-	
+
 	private int company;
-	
-	public QuotationVersionPO(){}
-	
-	public QuotationVersionPO(String no){
+
+	public QuotationVersionPO() {
+	}
+
+	public QuotationVersionPO(String no) {
 		this.no = no;
 	}
 
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "qvId") 
-	public int getQvId() {
+	@Column(name = "qvId")
+	public long getQvId() {
 		return qvId;
 	}
 
-	public void setQvId(int qvId) {
+	public void setQvId(long qvId) {
 		this.qvId = qvId;
 	}
-	
+
 	@Id
-	@Column(name="no", nullable=false)
+	@Column(name = "no")
 	public String getNo() {
 		return no;
 	}
@@ -71,8 +76,8 @@ public class QuotationVersionPO implements Serializable{
 	public void setNo(String no) {
 		this.no = no;
 	}
-	
-	@Column(name="name", nullable=false)
+
+	@Column(name = "name")
 	public String getName() {
 		return name;
 	}
@@ -81,7 +86,7 @@ public class QuotationVersionPO implements Serializable{
 		this.name = name;
 	}
 
-	@Column(name="comment")
+	@Column(name = "comment")
 	public String getComment() {
 		return comment;
 	}
@@ -90,16 +95,16 @@ public class QuotationVersionPO implements Serializable{
 		this.comment = comment;
 	}
 
-	@Column(name="defaultFlag", nullable=false)
-	public int getDefaultFlag(){
+	@Column(name = "defaultFlag")
+	public short getDefaultFlag() {
 		return defaultFlag;
 	}
 
-	public void setDefaultFlag(int defaultFlag){
+	public void setDefaultFlag(short defaultFlag) {
 		this.defaultFlag = defaultFlag;
 	}
 
-	@Column(name="trafficRate")
+	@Column(name = "trafficRate")
 	public float getTrafficRate() {
 		return trafficRate;
 	}
@@ -107,8 +112,8 @@ public class QuotationVersionPO implements Serializable{
 	public void setTrafficRate(float trafficRate) {
 		this.trafficRate = trafficRate;
 	}
-	
-	@Column(name="trafficDiscount")
+
+	@Column(name = "trafficDiscount")
 	public short getTrafficDiscount() {
 		return trafficDiscount;
 	}
@@ -117,7 +122,7 @@ public class QuotationVersionPO implements Serializable{
 		this.trafficDiscount = trafficDiscount;
 	}
 
-	@Column(name="manageRate")
+	@Column(name = "manageRate")
 	public float getManageRate() {
 		return manageRate;
 	}
@@ -126,7 +131,7 @@ public class QuotationVersionPO implements Serializable{
 		this.manageRate = manageRate;
 	}
 
-	@Column(name="manageDiscount")
+	@Column(name = "manageDiscount")
 	public short getManageDiscount() {
 		return manageDiscount;
 	}
@@ -134,8 +139,8 @@ public class QuotationVersionPO implements Serializable{
 	public void setManageDiscount(short manageDiscount) {
 		this.manageDiscount = manageDiscount;
 	}
-	
-	@Column(name="company")
+
+	@Column(name = "company")
 	public int getCompany() {
 		return company;
 	}
@@ -144,7 +149,4 @@ public class QuotationVersionPO implements Serializable{
 		this.company = company;
 	}
 
-	
-	
-	
 }

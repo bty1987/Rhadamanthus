@@ -210,6 +210,7 @@ var decorationUtils = {
                 }
             });
         }
+        var material = {"total": $total, "coupon": $coupon};
 
         if ($ulfanglin.children("li").length == 0 && $ulsales.children("li").length == 0) {
             noData("fanglinMaterialPayments" + dataPage);
@@ -242,7 +243,7 @@ var decorationUtils = {
 
             $liLine.append($h4).append($couponPrice).append($TotalPrice).appendTo($ulbrand);
         }
-
+        return material
     }, addDecorationActivityForDiv: function (_activitys, _decorationActivity, uiBtnMethod, couponCut, thingCut) {
     	
         var pricingSpan = $("<div></div>").addClass("col-md-4").css("margin", "5px 0px").attr("id", "dactivity_" + _decorationActivity.daId).prependTo(_activitys);

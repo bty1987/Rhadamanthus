@@ -61,215 +61,276 @@
                                     </div>
 
                                     <div class="step-pane active" id="step2">
-                                        <div id="basics" class="row">
-                                            <div class="widget-container-span col-md-12">
-                                                <div class="widget-box transparent">
-                                                    <div class="widget-header">
-                                                        <h4><strong>基础(报价)</strong></h4>
-                                                    </div>
-                                                    <div class="widget-body">
-                                                        <div class="widget-body-inner">
-                                                            <div class="clearfix" style="margin-top: 15px; margin-bottom: 15px;">
-                                                                <div class="col-md-3" style="border-left: 1px solid rgb(227, 227, 227);">
-                                                                    <h5 class="bigger-110 center">折前总价</h5>
-                                                                    <h2 class="oid bigger center">
-                                                                        <b class="blue" id="foldFront_total"></b>
-                                                                    </h2>
-                                                                </div>
-                                                                <div class="col-md-3" style="border-left: 1px solid rgb(227, 227, 227);">
-                                                                    <h5 class="bigger-110 center">折前直接费</h5>
-                                                                    <h2 class="oid bigger center">
-                                                                        <b class="blue" id="foldFront_fee"></b>
-                                                                    </h2>
-                                                                </div>
-                                                                <div class="col-md-3" style="border-left: 1px solid rgb(227, 227, 227); border-right: 1px solid rgb(227, 227, 227);">
-                                                                    <h5 class="bigger-110 center">管理费</h5>
-                                                                    <h2 class="oid bigger center">
-                                                                        <b class="blue" id="managePrice"></b>
-                                                                    </h2>
-                                                                </div>
-                                                                <div class="col-md-3" style="border-left: 1px solid rgb(227, 227, 227); border-right: 1px solid rgb(227, 227, 227);">
-                                                                    <h5 class="bigger-110 center">折扣</h5>
-                                                                    <h2 class="oid bigger center">
-                                                                        <b class="blue" id="basdiscount"></b>
-                                                                    </h2>
-                                                                </div>
+                                        <div class="widget-container-span col-md-12">
+                                            <div class="widget-box transparent">
+                                                <div class="widget-header">
+                                                    <h4><strong>基础(报价)</strong></h4>
+                                                </div>
+                                                <div class="widget-body">
+                                                    <div class="widget-body-inner">
+                                                        <div class="clearfix" style="margin-top: 15px; margin-bottom: 15px;">
+                                                            <div class="col-md-3" style="border-left: 1px solid rgb(227, 227, 227);">
+                                                                <h5 class="bigger-110 center">折前总价</h5>
+                                                                <h2 class="oid bigger center">
+                                                                    <b class="blue" id="foldFront_total"></b>
+                                                                </h2>
+                                                            </div>
+                                                            <div class="col-md-3" style="border-left: 1px solid rgb(227, 227, 227);">
+                                                                <h5 class="bigger-110 center">折前直接费</h5>
+                                                                <h2 class="oid bigger center">
+                                                                    <b class="blue" id="foldFront_fee"></b>
+                                                                </h2>
+                                                            </div>
+                                                            <div class="col-md-3" style="border-left: 1px solid rgb(227, 227, 227); border-right: 1px solid rgb(227, 227, 227);">
+                                                                <h5 class="bigger-110 center">管理费</h5>
+                                                                <h2 class="oid bigger center">
+                                                                    <b class="blue" id="managePrice"></b>
+                                                                </h2>
+                                                            </div>
+                                                            <div class="col-md-3" style="border-left: 1px solid rgb(227, 227, 227); border-right: 1px solid rgb(227, 227, 227);">
+                                                                <h5 class="bigger-110 center">折扣</h5>
+                                                                <h2 class="oid bigger center">
+                                                                    <b class="blue" id="basdiscount"></b>
+                                                                </h2>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="hr col-md-12"></div>
-                                            <div id="contract" class="row">
-                                                <div class="widget-container-span col-md-12">
-                                                    <div class="widget-box transparent">
-                                                        <div class="widget-header">
-                                                            <h4><strong>合同</strong></h4>
-                                                        </div>
-                                                        <div class="widget-body">
-                                                            <div class="widget-body-inner">
-                                                                <div class="clearfix" style="margin-top: 15px; margin-bottom: 15px;">
-                                                                    <div class="col-md-3" style="border-left: 1px solid rgb(227, 227, 227);">
-                                                                        <h5 class="bigger-110 center">合同额</h5>
-                                                                        <h2 class="oid bigger center">
-                                                                            <b class="blue" id="signPrice"></b>
-                                                                        </h2>
-                                                                    </div>
-                                                                    <div class="col-md-3" style="border-left: 1px solid rgb(227, 227, 227);">
-                                                                        <h5 class="bigger-110 center">优惠券</h5>
-                                                                        <h2 class="oid bigger center">
-                                                                            <b class="blue" id="coupon"></b>
-                                                                        </h2>
-                                                                    </div>
-                                                                    <div class="col-md-3" style="border-left: 1px solid rgb(227, 227, 227); border-right: 1px solid rgb(227, 227, 227);">
-                                                                        <h5 class="bigger-110 center">合同实收</h5>
-                                                                        <h2 class="oid bigger center">
-                                                                            <b class="blue" id="signFactPrice"></b>
-                                                                        </h2>
-                                                                    </div>
-                                                                    <div class="col-md-3" style="border-left: 1px solid rgb(227, 227, 227); border-right: 1px solid rgb(227, 227, 227);">
-                                                                        <h5 class="bigger-110 center">服务费</h5>
-                                                                        <h2 class="oid bigger center">
-                                                                            <b class="blue" id="servicePrice"></b>
-                                                                        </h2>
-                                                                    </div>
-                                                                </div>
+                                        </div>
+                                        <div class="widget-container-span col-md-12">
+                                            <div class="widget-box transparent">
+                                                <div class="widget-header">
+                                                    <h4><strong>预付款项信息</strong></h4>
+                                                </div>
+                                                <div class="widget-body">
+                                                    <div class="widget-body-inner">
+                                                        <div class="clearfix" style="margin-top: 15px; margin-bottom: 15px;">
+                                                            <div class="col-md-3" style="border-left: 1px solid rgb(227, 227, 227);">
+                                                                <h5 class="bigger-110 center">合同预付款</h5>
+                                                                <h2 class="oid bigger center">
+                                                                    <b class="blue" id="contractAdvance"></b>
+                                                                </h2>
+                                                            </div>
+                                                            <div class="col-md-3" style="border-left: 1px solid rgb(227, 227, 227);">
+                                                                <h5 class="bigger-110 center">工程预付款</h5>
+                                                                <h2 class="oid bigger center">
+                                                                    <b class="blue" id="constructionAdvance"></b>
+                                                                </h2>
+                                                            </div>
+                                                            <div class="col-md-3" style="border-left: 1px solid rgb(227, 227, 227); border-right: 1px solid rgb(227, 227, 227);">
+                                                                <h5 class="bigger-110 center">主材预付款</h5>
+                                                                <h2 class="oid bigger center">
+                                                                    <b class="blue" id="materialAdvance"></b>
+                                                                </h2>
+                                                            </div>
+                                                            <div class="col-md-3" style="border-left: 1px solid rgb(227, 227, 227); border-right: 1px solid rgb(227, 227, 227);">
+                                                                <h5 class="bigger-110 center">正林预付款</h5>
+                                                                <h2 class="oid bigger center">
+                                                                    <b class="blue" id="zhenglinAdvance"></b>
+                                                                </h2>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="hr col-md-12"></div>
                                             </div>
-                                            <div id="AddReduce" class="row">
-                                                <div class="widget-container-span col-md-12">
-                                                    <div class="widget-box transparent">
-                                                        <div class="widget-header">
-                                                            <h4>
-                                                                <strong>增减 </strong>
-                                                            </h4>
-                                                        </div>
-                                                        <div class="widget-body">
-                                                            <div class="widget-body-inner">
-                                                                <div class="clearfix"  style="margin-top: 15px; margin-bottom: 15px;">
-                                                                    <div class="col-md-3" style="border-left: 1px solid rgb(227, 227, 227);">
-                                                                        <h5 class="bigger-110 center">增项折前总价</h5>
-                                                                        <h2 class="oid bigger center">
-                                                                            <b class="blue" id="addFoldFront_total"></b>
-                                                                        </h2>
-                                                                    </div>
-                                                                    <div class="col-md-3" style="border-left: 1px solid rgb(227, 227, 227);">
-                                                                        <h5 class="bigger-110 center">增项管理费</h5>
-                                                                        <h2 class="oid bigger center">
-                                                                            <b class="blue" id="addManagePrice"></b>
-                                                                        </h2>
-                                                                    </div>
-                                                                    <div class="col-md-3" style="border-left: 1px solid rgb(227, 227, 227); border-right: 1px solid rgb(227, 227, 227);">
-                                                                        <h5 class="bigger-110 center">增项配比总额</h5>
-                                                                        <h2 class="oid bigger center">
-                                                                            <b class="blue" id="addMatch"></b>
-                                                                        </h2>
-                                                                    </div>
-                                                                    <div class="col-md-3" style="border-left: 1px solid rgb(227, 227, 227);">
-                                                                        <h5 class="bigger-110 center">增项非配比总额</h5>
-                                                                        <h2 class="oid bigger center">
-                                                                            <b class="blue" id="addUncalPrice"></b>
-                                                                        </h2>
-                                                                    </div>
-                                                                    <div class="col-md-3" style="border-left: 1px solid rgb(227, 227, 227);">
-                                                                        <h5 class="bigger-110 center">减项折前总价</h5>
-                                                                        <h2 class="oid bigger center">
-                                                                            <b class="blue" id="minusFoldFront_total"></b>
-                                                                        </h2>
-                                                                    </div>
-                                                                    <div class="col-md-3" style="border-left: 1px solid rgb(227, 227, 227); border-right: 1px solid rgb(227, 227, 227);">
-                                                                        <h5 class="bigger-110 center">减项管理费</h5>
-                                                                        <h2 class="oid bigger center">
-                                                                            <b class="blue" id="minusManagePrice"></b>
-                                                                        </h2>
-                                                                    </div>
-                                                                    <div class="col-md-3" style="border-left: 1px solid rgb(227, 227, 227);">
-                                                                        <h5 class="bigger-110 center">减项配比总额</h5>
-                                                                        <h2 class="oid bigger center">
-                                                                            <b class="blue" id="minusMatch"></b>
-                                                                        </h2>
-                                                                    </div>
-                                                                    <div class="col-md-3" style="border-left: 1px solid rgb(227, 227, 227); border-right: 1px solid rgb(227, 227, 227);">
-                                                                        <h5 class="bigger-110 center">减项非配比总额</h5>
-                                                                        <h2 class="oid bigger center">
-                                                                            <b class="blue" id="minusUncalPrice"></b>
-                                                                        </h2>
-                                                                    </div>
-                                                                </div>
+                                            <div class="hr col-md-12"></div>
+                                        </div>
+                                        <div class="widget-container-span col-md-12">
+                                            <div class="widget-box transparent">
+                                                <div class="widget-header">
+                                                    <h4><strong>合同</strong></h4>
+                                                </div>
+                                                <div class="widget-body">
+                                                    <div class="widget-body-inner">
+                                                        <div class="clearfix" style="margin-top: 15px; margin-bottom: 15px;">
+                                                            <div class="col-md-3" style="border-left: 1px solid rgb(227, 227, 227);">
+                                                                <h5 class="bigger-110 center">合同额</h5>
+                                                                <h2 class="oid bigger center">
+                                                                    <b class="blue" id="signPrice"></b>
+                                                                </h2>
+                                                            </div>
+                                                            <div class="col-md-3" style="border-left: 1px solid rgb(227, 227, 227);">
+                                                                <h5 class="bigger-110 center">优惠券</h5>
+                                                                <h2 class="oid bigger center">
+                                                                    <b class="blue" id="coupon"></b>
+                                                                </h2>
+                                                            </div>
+                                                            <div class="col-md-3" style="border-left: 1px solid rgb(227, 227, 227); border-right: 1px solid rgb(227, 227, 227);">
+                                                                <h5 class="bigger-110 center">合同实收</h5>
+                                                                <h2 class="oid bigger center">
+                                                                    <b class="blue" id="signFactPrice"></b>
+                                                                </h2>
+                                                            </div>
+                                                            <div class="col-md-3" style="border-left: 1px solid rgb(227, 227, 227); border-right: 1px solid rgb(227, 227, 227);">
+                                                                <h5 class="bigger-110 center">服务费</h5>
+                                                                <h2 class="oid bigger center">
+                                                                    <b class="blue" id="servicePrice"></b>
+                                                                </h2>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="hr col-md-12"></div>
                                             </div>
-                                            <div id="account" class="row">
-                                                <div class="widget-container-span col-md-12">
-                                                    <div class="widget-box transparent">
-                                                        <div class="widget-header">
-                                                            <h4>
-                                                                <strong>决算</strong>
-                                                            </h4>
-                                                        </div>
-                                                        <div class="widget-body">
-                                                            <div class="widget-body-inner">
-                                                                <div class="clearfix" style="margin-top: 15px; margin-bottom: 15px;">
-                                                                    <div class="col-md-3" style="border-left: 1px solid rgb(227, 227, 227);">
-                                                                        <h5 class="bigger-110 center">决算额</h5>
-                                                                        <h2 class="oid bigger center">
-                                                                            <b class="blue" id="accountForehead">0</b>
-                                                                        </h2>
-                                                                    </div>
-                                                                    <div class="col-md-3" style="border-left: 1px solid rgb(227, 227, 227); border-right: 1px solid rgb(227, 227, 227);">
-                                                                        <h5 class="bigger-110 center">服务费</h5>
-                                                                        <h2 class="oid bigger center">
-                                                                            <b class="blue" id="accountServicePrice">0</b>
-                                                                        </h2>
-                                                                    </div>
-                                                                    <div class="col-md-3" style="border-left: 1px solid rgb(227, 227, 227); border-right: 1px solid rgb(227, 227, 227);">
-
-                                                                        <label class="col-sm-3 control-label no-padding-right">类型:</label>
-                                                                        <div class="col-md-9">
-                                                                            <select class="col-sm-9" id="otherPaymentType"></select>
-                                                                        </div>
-
-                                                                        <label class="col-sm-3 control-label no-padding-right" style="padding-top: 10px">输入折扣:</label>
-                                                                        <div class="col-md-9" style="padding-top: 10px">
-                                                                            <input type="text" readonly="readonly" class="cell col-sm-9 v_required" id="calDiscountPrice" maxlength="4" style="text-align: center">
-                                                                        </div>
-
-                                                                        <label class="col-sm-3 control-label no-padding-right" style="padding-top: 10px">增减配比:</label>
-                                                                        <div class="col-md-9" style="padding-top: 10px">
-                                                                            <input id="matching" type="checkbox" class="col-sm-7 col-xs-10 ace ace-switch ace-switch-5">
-                                                                            <span id="cals" class="lbl isOrNot"></span>
-                                                                        </div>
-                                                                        
-                                                                        <label class="col-sm-3 control-label no-padding-right" style="padding-top: 10px">优惠额:</label>
-                                                                        <div class="col-md-9" style="padding-top: 10px">
-                                                                            <input type="text" class="cell col-sm-9 v_required v_float_3" id="preferences" maxlength="11" style="text-align: center">
-                                                                        </div>
-
-                                                                        <button type="button" id="calculateBtn" class="btn btn-xs btn-info col-sm-12" style="margin-top: 10px">计算</button>
-                                                                    </div>
-
-                                                                    <div class="col-md-3" style="border-left: 1px solid rgb(227, 227, 227); border-right: 1px solid rgb(227, 227, 227);">
-                                                                        <h5 class="bigger-110 center">差额</h5>
-                                                                        <h2 class="oid bigger center">
-                                                                            <b class="blue" id="balanceSum">0</b>
-                                                                        </h2>
-                                                                    </div>
-                                                                </div>
+                                            <div class="hr col-md-12"></div>
+                                        </div>
+                                        <div class="widget-container-span col-md-12">
+                                            <div class="widget-box transparent">
+                                                <div class="widget-header">
+                                                    <h4><strong>主材额</strong></h4>
+                                                </div>
+                                                <div class="widget-body">
+                                                    <div class="widget-body-inner">
+                                                        <div class="clearfix" style="margin-top: 15px; margin-bottom: 15px;">
+                                                            <div class="col-md-3" style="border-left: 1px solid rgb(227, 227, 227);">
+                                                                <h5 class="bigger-110 center">总金额</h5>
+                                                                <h2 class="oid bigger center">
+                                                                    <b class="blue" id="materialTotal"></b>
+                                                                </h2>
+                                                            </div>
+                                                            <div class="col-md-3" style="border-left: 1px solid rgb(227, 227, 227);">
+                                                                <h5 class="bigger-110 center">优惠券</h5>
+                                                                <h2 class="oid bigger center">
+                                                                    <b class="blue" id="materialCoupon"></b>
+                                                                </h2>
+                                                            </div>
+                                                            <div class="col-md-3" style="border-left: 1px solid rgb(227, 227, 227); border-right: 1px solid rgb(227, 227, 227);">
+                                                                <h5 class="bigger-110 center">实收额</h5>
+                                                                <h2 class="oid bigger center">
+                                                                    <b class="blue" id="materialFactPrice"></b>
+                                                                </h2>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="hr col-md-12"></div>
+                                            </div>
+                                            <div class="hr col-md-12"></div>
+                                        </div>
+                                        <div class="widget-container-span col-md-12">
+                                            <div class="widget-box transparent">
+                                                <div class="widget-header">
+                                                    <h4>
+                                                        <strong>增减 </strong>
+                                                    </h4>
+                                                </div>
+                                                <div class="widget-body">
+                                                    <div class="widget-body-inner">
+                                                        <div class="clearfix"  style="margin-top: 15px; margin-bottom: 15px;">
+                                                            <div class="col-md-3" style="border-left: 1px solid rgb(227, 227, 227);">
+                                                                <h5 class="bigger-110 center">增项折前总价</h5>
+                                                                <h2 class="oid bigger center">
+                                                                    <b class="blue" id="addFoldFront_total"></b>
+                                                                </h2>
+                                                            </div>
+                                                            <div class="col-md-3" style="border-left: 1px solid rgb(227, 227, 227);">
+                                                                <h5 class="bigger-110 center">增项管理费</h5>
+                                                                <h2 class="oid bigger center">
+                                                                    <b class="blue" id="addManagePrice"></b>
+                                                                </h2>
+                                                            </div>
+                                                            <div class="col-md-3" style="border-left: 1px solid rgb(227, 227, 227); border-right: 1px solid rgb(227, 227, 227);">
+                                                                <h5 class="bigger-110 center">增项配比总额</h5>
+                                                                <h2 class="oid bigger center">
+                                                                    <b class="blue" id="addMatch"></b>
+                                                                </h2>
+                                                            </div>
+                                                            <div class="col-md-3" style="border-left: 1px solid rgb(227, 227, 227);">
+                                                                <h5 class="bigger-110 center">增项非配比总额</h5>
+                                                                <h2 class="oid bigger center">
+                                                                    <b class="blue" id="addUncalPrice"></b>
+                                                                </h2>
+                                                            </div>
+                                                            <div class="col-md-3" style="border-left: 1px solid rgb(227, 227, 227);">
+                                                                <h5 class="bigger-110 center">减项折前总价</h5>
+                                                                <h2 class="oid bigger center">
+                                                                    <b class="blue" id="minusFoldFront_total"></b>
+                                                                </h2>
+                                                            </div>
+                                                            <div class="col-md-3" style="border-left: 1px solid rgb(227, 227, 227); border-right: 1px solid rgb(227, 227, 227);">
+                                                                <h5 class="bigger-110 center">减项管理费</h5>
+                                                                <h2 class="oid bigger center">
+                                                                    <b class="blue" id="minusManagePrice"></b>
+                                                                </h2>
+                                                            </div>
+                                                            <div class="col-md-3" style="border-left: 1px solid rgb(227, 227, 227);">
+                                                                <h5 class="bigger-110 center">减项配比总额</h5>
+                                                                <h2 class="oid bigger center">
+                                                                    <b class="blue" id="minusMatch"></b>
+                                                                </h2>
+                                                            </div>
+                                                            <div class="col-md-3" style="border-left: 1px solid rgb(227, 227, 227); border-right: 1px solid rgb(227, 227, 227);">
+                                                                <h5 class="bigger-110 center">减项非配比总额</h5>
+                                                                <h2 class="oid bigger center">
+                                                                    <b class="blue" id="minusUncalPrice"></b>
+                                                                </h2>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="hr col-md-12"></div>
+                                        </div>
+                                        <div class="widget-container-span col-md-12">
+                                            <div class="widget-box transparent">
+                                                <div class="widget-header">
+                                                    <h4>
+                                                        <strong>决算</strong>
+                                                    </h4>
+                                                </div>
+                                                <div class="widget-body">
+                                                    <div class="widget-body-inner">
+                                                        <div class="clearfix" style="margin-top: 15px; margin-bottom: 15px;">
+                                                            <div class="col-md-3" style="border-left: 1px solid rgb(227, 227, 227);">
+                                                                <h5 class="bigger-110 center">决算额</h5>
+                                                                <h2 class="oid bigger center">
+                                                                    <b class="blue" id="accountForehead">0</b>
+                                                                </h2>
+                                                            </div>
+                                                            <div class="col-md-3" style="border-left: 1px solid rgb(227, 227, 227); border-right: 1px solid rgb(227, 227, 227);">
+                                                                <h5 class="bigger-110 center">服务费</h5>
+                                                                <h2 class="oid bigger center">
+                                                                    <b class="blue" id="accountServicePrice">0</b>
+                                                                </h2>
+                                                            </div>
+                                                            <div class="col-md-3" style="border-left: 1px solid rgb(227, 227, 227); border-right: 1px solid rgb(227, 227, 227);">
+
+                                                                <label class="col-sm-3 control-label no-padding-right">类型:</label>
+                                                                <div class="col-md-9">
+                                                                    <select class="col-sm-9" id="otherPaymentType"></select>
+                                                                </div>
+
+                                                                <label class="col-sm-3 control-label no-padding-right" style="padding-top: 10px">输入折扣:</label>
+                                                                <div class="col-md-9" style="padding-top: 10px">
+                                                                    <input type="text" readonly="readonly" class="cell col-sm-9 v_required" id="calDiscountPrice" maxlength="4" style="text-align: center">
+                                                                </div>
+
+                                                                <label class="col-sm-3 control-label no-padding-right" style="padding-top: 10px">增减配比:</label>
+                                                                <div class="col-md-9" style="padding-top: 10px">
+                                                                    <input id="matching" type="checkbox" class="col-sm-7 col-xs-10 ace ace-switch ace-switch-5">
+                                                                    <span id="cals" class="lbl isOrNot"></span>
+                                                                </div>
+
+                                                                <label class="col-sm-3 control-label no-padding-right" style="padding-top: 10px">优惠额:</label>
+                                                                <div class="col-md-9" style="padding-top: 10px">
+                                                                    <input type="text" class="cell col-sm-9 v_required v_float_3" id="preferences" maxlength="11" style="text-align: center">
+                                                                </div>
+
+                                                                <button type="button" id="calculateBtn" class="btn btn-xs btn-info col-sm-12" style="margin-top: 10px">计算</button>
+                                                            </div>
+
+                                                            <div class="col-md-3" style="border-left: 1px solid rgb(227, 227, 227); border-right: 1px solid rgb(227, 227, 227);">
+                                                                <h5 class="bigger-110 center">差额</h5>
+                                                                <h2 class="oid bigger center">
+                                                                    <b class="blue" id="balanceSum">0</b>
+                                                                </h2>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
+                                     <div class="hr col-md-12"></div>
                                 </div>
 
                                 <hr/>

@@ -19,17 +19,17 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.Paging;
 
 public interface ConstructionService {
-	
+
 	public void pageConstruction(Paging paging, List<Filter> filters, Integer company);
-	
-	public void pageConstructionForSupervision(Paging paging, List<Filter> filters, String userId)throws FLException;
+
+	public void pageConstructionForSupervision(Paging paging, List<Filter> filters, String userId) throws FLException;
 
 	public void pageConstructionForAcceptance(Paging paging, List<Filter> filters, Integer company);
-	
-	public ConstructionVO queryConstructionById(int cid);
-	
-	public ConstructionVO queryConstructionByOrderId(ConstructionVO constructionVO);
-	
-	public void saveOrUpdateConstructionByOrderId(ConstructionVO constructionVO);
+
+	public ConstructionVO queryConstructionById(int cid) throws FLException;
+
+	public ConstructionVO queryConstructionByOrderId(ConstructionVO constructionVO) throws FLException;
+
+	public void updateConstructionByOrderId(ConstructionVO constructionVO) throws FLException;
 
 }

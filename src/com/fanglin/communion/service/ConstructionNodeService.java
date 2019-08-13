@@ -17,6 +17,8 @@ public interface ConstructionNodeService {
 
 	public void addConstructionNode(ConstructionNodeVO constructionNodeVO);
 
+	public void updateConstructionNode(ConstructionNodeVO constructionNodeVO) throws FLException;
+
 	public void updateConstructionNodeForStatus(ConstructionNodeVO constructionNodeVO);
 
 }

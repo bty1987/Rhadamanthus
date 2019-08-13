@@ -102,7 +102,26 @@ public class ConstructionNodeServiceImpl implements ConstructionNodeService {
 
 		constructionNodePO.setName(constructionNodeVO.getName());
 
+		constructionNodePO.setPrecheck(0);
+		constructionNodePO.setPostcheck(0);
+
 		constructionNodeDao.save(constructionNodePO);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void updateConstructionNode(ConstructionNodeVO constructionNodeVO) throws FLException {
+
+		ConstructionNodePO constructionNodePO = constructionNodeDao.get(constructionNodeVO.getCnid());
+
+		if (constructionNodePO == null) {
+			throw new FLException(130026, "工程节点不存在");
+		}
+
+		constructionNodePO.setPrecheck(constructionNodeVO.getPrecheck());
+		constructionNodePO.setPostcheck(constructionNodeVO.getPostcheck());
+
+		constructionNodeDao.update(constructionNodePO);
 	}
 
 	@Override

@@ -16,30 +16,30 @@ import java.io.Serializable;
 public class QuotationVersionVO implements Serializable {
 
 	private static final long serialVersionUID = -6419575244318061433L;
-	
-	private Integer qvId;
-	
+
+	private Long qvId;
+
 	private String no;
-	
+
 	private String name;
-	
+
 	protected String comment;
-	
-	private Integer defaultFlag;
-	
+
+	private Short defaultFlag;
+
 	private Float trafficRate;
-	
+
 	private Short trafficDiscount;
-	
+
 	private Float manageRate;
-	
+
 	private Short manageDiscount;
 
-	public Integer getQvId() {
+	public Long getQvId() {
 		return qvId;
 	}
 
-	public void setQvId(Integer qvId) {
+	public void setQvId(Long qvId) {
 		this.qvId = qvId;
 	}
 
@@ -58,7 +58,7 @@ public class QuotationVersionVO implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	public String getComment() {
 		return comment;
 	}
@@ -67,11 +67,11 @@ public class QuotationVersionVO implements Serializable {
 		this.comment = comment;
 	}
 
-	public Integer getDefaultFlag(){
+	public Short getDefaultFlag() {
 		return defaultFlag;
 	}
 
-	public void setDefaultFlag(Integer defaultFlag){
+	public void setDefaultFlag(Short defaultFlag) {
 		this.defaultFlag = defaultFlag;
 	}
 
@@ -106,5 +106,5 @@ public class QuotationVersionVO implements Serializable {
 	public void setManageDiscount(Short manageDiscount) {
 		this.manageDiscount = manageDiscount;
 	}
-	
+
 }

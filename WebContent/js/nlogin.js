@@ -157,8 +157,20 @@ jQuery(function (a) {
         return false;
     });
     
+    $("#login2Btn").on('click', function () {
+        $("#uplogin").toggleClass("hide");
+        $("#registe").toggleClass("hide");
+        return false;
+    });
+    
     $("#registBtn").on('click', function () {
         regist();
+        return false;
+    });
+    
+    $("#regist2Btn").on('click', function () {
+        $("#uplogin").toggleClass("hide");
+        $("#registe").toggleClass("hide");
         return false;
     });
 

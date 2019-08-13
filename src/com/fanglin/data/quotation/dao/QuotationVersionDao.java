@@ -19,13 +19,15 @@ import com.fanglin.data.po.QuotationVersionPO;
 import com.fanglin.utils.Paging;
 
 public interface QuotationVersionDao extends Dao<QuotationVersionPO> {
-	
-	public List<QuotationVersionPO> pageQuotationVersion(Paging paging, List<Filter> filters,int company);
-	
-	public List<QuotationVersionPO> queryQuotationVersionByDefaultFlag(int company,int defaultFlag);
+
+	public List<QuotationVersionPO> pageQuotationVersion(Paging paging, List<Filter> filters, int company);
 
 	public List<QuotationVersionPO> queryQuotationVersion(int company);
-	
+
 	public QuotationVersionPO queryQuotationVersionByVersionId(String no);
+
+	public QuotationVersionPO queryQuotationVersionForDefault(int company);
+
+	public int updateQuotationVersionForDefault(int company, short defaultFlag);
 
 }

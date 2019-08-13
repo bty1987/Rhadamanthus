@@ -86,6 +86,14 @@ public class VticketAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "freeVticket", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String freeVticket() throws FLException {
+
+		vticketService.freeVticket(vticket, queryUserId());
+
+		return SUCCESS;
+	}
+
 	public List<VticketVO> getVtickets() {
 		return vtickets;
 	}

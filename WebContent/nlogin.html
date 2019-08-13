@@ -1,7 +1,7 @@
 <html lang="en">
     <head>
     
-        <title>Nullpoint IP</title>
+        <title>NULLPOINT</title>
         <link rel="shortcut icon" href="nullpoint.ico" type="image/x-icon">
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -74,10 +74,14 @@
                     </label>
                     
                     <div class="loginBtnStack">
-                        <button type="button" class="btn btn-sm btn-primary" id="loginBtn">
+                        <button type="button" class="btn btn-sm btn-success" id="loginBtn">
                             <span>登陆</span>
                         </button>
-                        <button type="button" class="btn btn-sm btn-success pull-right hide" id="wechatQR">
+                        <button type="button" class="btn btn-sm btn-yellow pull-right" id="regist2Btn">
+                            <span>注册</span>
+                            <i class="icon-arrow-right"></i>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-primary pull-right hide" id="wechatQR">
                             <span>微信</span>
                         </button>
                         <button type="button" class="btn btn-sm btn-warning pull-right hide" id="dingtalkQR">
@@ -99,8 +103,8 @@
                     </div>
                 </div>
                 
-                <div class="col-sm-3 registe" align="center" id="registe">
-                    
+                <div class="col-sm-3 registe hide" align="center" id="registe">
+                
                     <label id="errorMsg" class="block clearfix orange center errorMsg"></label>
                     
                     <label class="block clearfix uplabel">
@@ -128,7 +132,11 @@
                         <img class="pull-right verifyImg hide" id="verify"/>
                     </label>
                     
-                    <div class="loginBtnStack">
+                    <div class="loginBtnStack"> 
+                        <button type="button" class="btn btn-sm btn-success pull-left" id="login2Btn">
+                            <i class="icon-arrow-left"></i>
+                            <span>登陆</span>
+                        </button>
                         <button type="button" class="btn btn-sm btn-yellow pull-right" id="registBtn">
                             <span>注册</span>
                         </button>

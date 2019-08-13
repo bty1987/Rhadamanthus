@@ -51,7 +51,8 @@
     {"key":"9","value":"赔偿"},
     {"key":"11","value":"自购"},
     {"key":"13","value":"福利"},
-    {"key":"15","value":"营销"}
+    {"key":"15","value":"营销"},
+    {"key":"17","value":"跨帐"}
   ],
   "activityTypes" :[
     {"key":"1","value":"装修"},
@@ -128,27 +129,7 @@
     {"key":"0","value":"现金"}
   ],
   "banks":[
-    {"key":"1","value":"POS11308207"},
-    {"key":"2","value":"POS11308208"},
-    {"key":"3","value":"POS11308209"},
-    {"key":"4","value":"POS11308210"},
-    {"key":"5","value":"POS11308211"},
-    {"key":"6","value":"POS11308212"},
-    {"key":"7","value":"POS11308213"},
-    {"key":"8","value":"POS11308214"},
-    {"key":"9","value":"POS11308215"},
-    {"key":"10","value":"POS11308216"},
-    {"key":"11","value":"POS11308218"},
-    {"key":"12","value":"POS11308219"},
-    {"key":"13","value":"POS11308220"},
-    {"key":"14","value":"POS11308221"},
-    {"key":"15","value":"POS11308222"},
-    {"key":"17","value":"POS11308223"},
-    {"key":"17","value":"POS11308224"},
-    {"key":"17","value":"POS11308225"},
-    {"key":"17","value":"POS11308226"},
-    {"key":"17","value":"POS11308227"},
-    {"key":"16","value":"内部转账"}
+    {"key":"1","value":"POS11308207"}
   ],
   "couponType": [
     {"key":"物业费抵值券","value":"物业费抵值券"},

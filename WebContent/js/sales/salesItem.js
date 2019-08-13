@@ -3,13 +3,11 @@ $(function () {
     var salesItem = {
         
         sid: params.sid,
-        fullpayStatus:params.fullpayStatus,
-        status : params.status,
         dompany : params.dompany,
-        
+        sales : null,
+
         items: {
             refundTotal: com.focusPage("#refundTotal"),
-            refund : com.focusPage('#refund'),
             approver : com.focusPage('#salesItemDetialapprover'),
             refundDes : com.focusPage('#refundDes')
         },
@@ -30,8 +28,12 @@ $(function () {
         edit_data:{},
         approvalType: null
     };
-    
-    if ((salesItem.fullpayStatus != 2 && salesItem.status != 4) || salesItem.dompany == "dompany" || salesItem.dompany == "pompany") {
+
+    com.post(api.inventory.querySalesBySid, {"sales.sid":salesItem.sid}, function (res) {
+        salesItem.sales = res.sales;
+    }, null,false);
+
+    if ((salesItem.sales.fullpayStatus != 2 && salesItem.sales.status != 4) || salesItem.dompany == "dompany" || salesItem.dompany == "pompany") {
         hideButtons([salesItem.btns.refundBtn, salesItem.btns.refundCancelBtn, salesItem.btns.refundCommitBtn, salesItem.btns.fullRefundBtn, salesItem.btns.reOrderBtn]);
     }
 
@@ -78,7 +80,7 @@ $(function () {
                 $liLine.append($h3).append($ulProperty);
 
                 if(salesItem.dompany!="dompany" && salesItem.dompany!="pompany"){
-                    if (salesItem.fullpayStatus == -1 && salesItem.status != 4) {
+                    if (salesItem.sales.fullpayStatus == -1 && salesItem.sales.status != 4) {
                         $btnDiv.append($btnEdit).append($btnDelete);
                     }
                 }
@@ -145,7 +147,7 @@ $(function () {
 
     salesItem.btns.refundBtn.click(function () {
 
-        if (salesItem.status != 0 && salesItem.status != 5) {
+        if (salesItem.sales.status != 0 && salesItem.sales.status != 5) {
             com.showAlert(com.error, "该订单状态不能退货");
             return false;
         }
@@ -161,7 +163,7 @@ $(function () {
     //退货确定按钮
     salesItem.btns.refundCommitBtn.click(function () {
 
-        salesItem.approvalType = 0;
+        salesItem.approvalType = 1;
 
         if (!calcRefundData(false)) return false;
         com.popup4mini("#miniPopUp", "#layerRefund","退货信息", "", function () {
@@ -169,7 +171,7 @@ $(function () {
             closeRefundlayer();
             salesItem.items.approver.empty();
         },function () {
-            salesItem.items.refundTotal.val(salesItem.items.refundTotal.val());
+            salesItem.items.refundTotal.val(parseInt(salesItem.items.refundTotal.val()));
             approvalUtils.initqueryApprovalUser("salesItemDetialapprover", 10);
         });
     });
@@ -179,7 +181,7 @@ $(function () {
 
         salesItem.approvalType = 2;
 
-        if (salesItem.status != 0 && salesItem.status != 5) {
+        if (salesItem.sales.status != 0 && salesItem.sales.status != 5) {
             com.showAlert(com.error, "该订单状态不能全退");
             return false;
         }
@@ -192,7 +194,7 @@ $(function () {
             closeRefundlayer();
             salesItem.items.approver.empty();
         },function () {
-            salesItem.items.refundTotal.val(salesItem.items.refundTotal.val());
+            salesItem.items.refundTotal.val(parseInt(utils.accSub(utils.accSub(salesItem.items.refundTotal.val(), salesItem.sales.coupon), salesItem.sales.venderMaling)));
             approvalUtils.initqueryApprovalUser("salesItemDetialapprover", 10);
         });
     });
@@ -200,7 +202,7 @@ $(function () {
     //倒单
     salesItem.btns.reOrderBtn.click(function () {
         salesItem.approvalType = 3;
-        if (salesItem.status != 0 && salesItem.status != 5) {
+        if (salesItem.sales.status != 0 && salesItem.sales.status != 5) {
             com.showAlert(com.error, "该订单状态不能倒单");
             return false;
         }
@@ -213,7 +215,7 @@ $(function () {
             closeRefundlayer();
             salesItem.items.approver.empty();
         },function () {
-            salesItem.items.refundTotal.val(salesItem.items.refundTotal.val());
+            salesItem.items.refundTotal.val(parseInt(utils.accSub(utils.accSub(salesItem.items.refundTotal.val(), salesItem.sales.coupon), salesItem.sales.venderMaling)));
             approvalUtils.initqueryApprovalUser("salesItemDetialapprover", 10);
         });
     });
@@ -278,8 +280,7 @@ $(function () {
             "approval.comment": salesItem.items.refundDes.val(),
             "approvalSalesRefund.sid": salesItem.sid,
             "approvalSalesRefund.type": salesItem.approvalType,
-            "approvalSalesRefund.refund": com.focusPage('#refund').val(),
-            "approvalSalesRefund.refundTotal": salesItem.items.refundTotal.val()
+            "approvalSalesRefund.refund": parseInt(salesItem.items.refundTotal.val())
         };
         
         com.post(api.approval.submitApprovalForSalesRefund, $.extend(options, salesItem.options), function () {
@@ -310,7 +311,6 @@ $(function () {
 
     function closeRefundlayer() {
         salesItem.items.refundTotal.val("");
-        salesItem.items.refund.val("");
         salesItem.items.refundDes.val("");
         com.focusPage('#list li.clearfix div.action-buttons').empty();
     }
@@ -356,7 +356,7 @@ $(function () {
                     total = 0;
                     return false;
                 }else {
-                    var _total = selling * num;
+                    var _total = utils.accMul(selling, num);
                     total += _total;
                     if (max >= num) {
                         salesItem.options["approvalSalesRefundItem[" + i + "].sid"] = salesItem.sid;
@@ -369,7 +369,7 @@ $(function () {
 
             }else {
 
-                itemTotal = max * selling;
+                itemTotal = utils.accMul(max, selling);
                 total += itemTotal;
                 salesItem.options["approvalSalesRefundItem[" + i + "].sid"] = salesItem.sid;
                 salesItem.options["approvalSalesRefundItem[" + i + "].salesItem.siid"] = siid;
@@ -385,13 +385,12 @@ $(function () {
             return false;
         }
 
-        salesItem.items.refundTotal.val(total);
+        salesItem.items.refundTotal.val(utils.changeThrDecimal(total));
         return flag;
 
     }
 
     function refundLayerOut() {
-        salesItem.items.refund.val("");
         salesItem.items.refundDes.val("");
         salesItem.items.approver.val("");
     }

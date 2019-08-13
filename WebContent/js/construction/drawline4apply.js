@@ -1,20 +1,26 @@
 jQuery(function ($) {
 
     var drawline = {
+            
+        dlid: null,
 
         btns: {
             saveInfoBtn : com.focusPage("#saveInfoBtn"),
             saveBtn : com.focusPage("#saveBtn"),
-            cancellBtn : com.focusPage("#cancelBtn")
+            updateBtn : com.focusPage("#updateBtn"),
         },
 
         modals : {
             constructionInfoModal : com.focusPage("#constructionInfoModal"),
             applyModal : com.focusPage("#applyModal"),
-            editModal : com.focusPage("#editModal")
+            editModal : com.focusPage("#editModal"),
+            updateModal : com.focusPage("#updateModal")
         },
 
         items: {
+            
+            applayTime: com.focusPage("#applayTime"),
+            
             dlid: com.focusPage("#dlid"),
             actualDate: com.focusPage("#actualDate"),
             startTime: com.focusPage("#startTime"),
@@ -30,6 +36,7 @@ jQuery(function ($) {
 
     drawline.btns.saveInfoBtn.bindClick(saveInfoData);
     drawline.btns.saveBtn.bindClick(saveData);
+    drawline.btns.updateBtn.bindClick(updateData);
 
     drawline.modals.constructionInfoModal.on("hide.bs.modal", function(){
 
@@ -48,7 +55,14 @@ jQuery(function ($) {
         com.cleanItems(drawline.items);
         com.closeTip();
     });
+    
+    drawline.modals.updateModal.on("hide.bs.modal", function(){
 
+        com.cleanItems(drawline.items);
+        com.closeTip();
+    });
+
+    com.datetime(drawline.items.applayTime);
     com.datetime(drawline.items.actualDate);
     
     com.datetime(drawline.items.startTime, "time");
@@ -87,7 +101,9 @@ jQuery(function ($) {
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
             var $btnInfo = $('<a></a>').addClass('btn btn-minier btn-yellow').html("信息");
+            var $btnUpdate = $('<a></a>').addClass('btn btn-minier btn-purple').html("更新");
             var $btnDraw = $('<a></a>').addClass('btn btn-minier btn-success').html('放线');
+            var $btnReset = $('<a></a>').addClass('btn btn-minier btn-inverse').html('重置');
 
             var propertyArr = [
                 ["楼盘地址:", v.decoration.house.village.name + ' ' + v.decoration.house.houseNumber, "grey"],
@@ -106,16 +122,24 @@ jQuery(function ($) {
                 $liProperty.appendTo($ulProperty);
             });
 
-            $divBtnWrap.append($btnInfo).append($btnDraw).appendTo($h3);
+            $divBtnWrap.append($btnInfo).append($btnUpdate).append($btnDraw).append($btnReset).appendTo($h3);
 
             $liLine.append($h3).append($ulProperty);
 
             $btnInfo.click(function(){
                 viewConstructionInfo(v.decoration.orderId);
             });
+            
+            $btnUpdate.click(function(){
+                showUpdate(v);
+            });
 
             $btnDraw.click(function () {
                 showEdit(v);
+            });
+            
+            $btnReset.click(function () {
+                reset(v.dlid);
             });
 
             return $liLine;
@@ -139,6 +163,17 @@ jQuery(function ($) {
 
     com.focusPage("#condList").append('<button id="showDrawLineApplyInfos" style="marg" class="btn btn-xs btn-yellow btn-search">申请信息</button>');
     
+    function showUpdate(v) {
+
+        com.clearValidator();
+        
+        drawline.dlid = v.dlid;
+
+        drawline.items.applayTime.val(v.applayTime);
+
+        drawline.modals.updateModal.modal("show");
+    }
+    
     function showEdit(v) {
 
         com.clearValidator();
@@ -148,6 +183,34 @@ jQuery(function ($) {
         drawline.items.drawLineGroup.get(0).selectedIndex = 0;
 
         drawline.modals.editModal.modal("show");
+    }
+    
+    function reset(dlid) {
+        com.showConfirm("确认重置申请吗?", function(){
+            com.post(api.construction.failureDrawLine, {"drawLine.dlid": dlid}, function (res) {
+                com.showAlert(com.info, "操作成功");
+                searcher.doSearch();
+            });
+        });
+    }
+    
+    function updateData(){
+        
+        if (com.validate("updateModal")) {
+            return false;
+        }
+        
+        var options = {
+            "drawLine.dlid": drawline.dlid,
+            "drawLine.applayTime": drawline.items.applayTime.val() + " 00:00:00"
+        }
+        
+        com.post(api.construction.updateDrawLine, options, function (res) {
+            com.showAlert(com.info, "操作成功");
+            searcher.doSearch();
+        });
+        
+        drawline.modals.updateModal.modal("hide");
     }
 
     function saveData() {
@@ -164,18 +227,14 @@ jQuery(function ($) {
             return;
         }
         
-        var Group = drawline.items.drawLineGroup.val();
-        if (Group == null || Group == '') {
-            com.showAlert(com.info,"放线小组不能为空");
-            return false;
-        }
         var options = {
             "drawLine.dlid": drawline.items.dlid.val(),
-            "drawLine.startTime":drawline.items.actualDate.val()+" "+drawline.items.startTime.val(),
-            "drawLine.endTime": drawline.items.actualDate.val()+" "+drawline.items.endTime.val(),
+            "drawLine.startTime":drawline.items.actualDate.val() + " " + drawline.items.startTime.val(),
+            "drawLine.endTime": drawline.items.actualDate.val() + " " + drawline.items.endTime.val(),
             "drawLine.group.gid": drawline.items.drawLineGroup.val()
 
         };
+        
         com.post(api.construction.resetDrawLine, options, function (res) {
             com.showAlert(com.info, "操作成功");
             searcher.doSearch();

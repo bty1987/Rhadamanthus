@@ -34,134 +34,106 @@ import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.Paging;
 
 @Service("quotationVersionService")
-@Transactional(readOnly=true)
+@Transactional(readOnly = true)
 public class QuotationVersionServiceImpl implements QuotationVersionService {
-	
+
 	@Autowired
 	private QuotationVersionDao quotationVersionDao;
-	
+
 	@Autowired
 	private CountingService countingService;
-	
+
 	@Autowired
 	private CompanyDao companyDao;
-	
+
 	@Override
-	public void pageQuotationVersion(Paging paging, List<Filter> filters,int company){
-		
-		List<QuotationVersionPO> quotationVersionPOs = quotationVersionDao.pageQuotationVersion(paging, filters,company);
+	public void pageQuotationVersion(Paging paging, List<Filter> filters, int company) {
+
+		List<QuotationVersionPO> quotationVersionPOs = quotationVersionDao.pageQuotationVersion(paging, filters, company);
 		List<QuotationVersionVO> quotationVersionVOs = new ArrayList<QuotationVersionVO>();
-		
-		for(QuotationVersionPO quotationVersionPO: quotationVersionPOs){
+
+		for (QuotationVersionPO quotationVersionPO : quotationVersionPOs) {
 			QuotationVersionVO quotationVersionVO = new QuotationVersionVO();
 			BeanUtil.copyProperties(quotationVersionPO, quotationVersionVO);
-			
+
 			quotationVersionVOs.add(quotationVersionVO);
 		}
-		
+
 		paging.setData(quotationVersionVOs);
 	}
-	
+
 	@Override
-	public QuotationVersionVO queryQuotationVersionById(QuotationVersionVO quotationVersionVO){
+	public QuotationVersionVO queryQuotationVersionById(QuotationVersionVO quotationVersionVO) {
 
 		QuotationVersionPO quotationVersionPO = quotationVersionDao.get(quotationVersionVO.getNo());
-		
+
 		BeanUtil.copyProperties(quotationVersionPO, quotationVersionVO);
-		
+
 		return quotationVersionVO;
-	}
-	
-	@Override
-	public List<QuotationVersionVO> queryQuotationVersion(int company){
-		
-		List<QuotationVersionPO> quotationVersionPOs = quotationVersionDao.queryQuotationVersion(company);
-		List<QuotationVersionVO> quotationVersionVOs = new ArrayList<QuotationVersionVO>();
-		
-		for(QuotationVersionPO quotationVersionPO: quotationVersionPOs){
-			QuotationVersionVO quotationVersionVO = new QuotationVersionVO();
-			BeanUtil.copyProperties(quotationVersionPO, quotationVersionVO);
-			
-			quotationVersionVOs.add(quotationVersionVO);
-		}
-		
-		return quotationVersionVOs;
-	}
-	
-	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public void saveQuotationVersion(QuotationVersionVO quotationVersionVO, int company) throws FLException{
-		
-		CompanyPO companyPO = companyDao.get(company);
-		
-		if(companyPO == null){
-			throw new FLException(230015, "公司不存在");
-		}
-		
-		if(quotationVersionVO.getDefaultFlag() == 1){
-			List<QuotationVersionPO> defaultFlagQuotationVersionPOs = quotationVersionDao.queryQuotationVersionByDefaultFlag(company,1);
-			if(!defaultFlagQuotationVersionPOs.isEmpty()){
-				for(QuotationVersionPO _quotationVersionPO: defaultFlagQuotationVersionPOs){
-					_quotationVersionPO.setDefaultFlag(0);
-					quotationVersionDao.update(_quotationVersionPO);
-				}
-			}
-		}
-		
-		QuotationVersionPO quotationVersionPO = new QuotationVersionPO();
-			
-		BeanUtil.copyProperties(quotationVersionVO, quotationVersionPO, Arrays.asList(new String[]{"versionId"}));
-		
-		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_QUOTATION_VERSION_INT, CountingPO.COUNTING_DATE_SILNLE_STR, company);
-		
-		String no = String.format("%sQV_%s", companyPO.getShortname(), FormatUtil.fillZero(count, "000"));
-		
-		quotationVersionPO.setNo(no);
-		quotationVersionPO.setCompany(company);
-		quotationVersionDao.save(quotationVersionPO);
-	}
-	
-	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public void updateQuotationVersion(QuotationVersionVO quotationVersionVO){
-		
-		QuotationVersionPO sourceQuotationVersionPO = quotationVersionDao.get(quotationVersionVO.getNo());
-		
-		if(quotationVersionVO.getDefaultFlag() == 1){
-			List<QuotationVersionPO> defaultFlagQuotationVersionPOs = quotationVersionDao.queryQuotationVersionByDefaultFlag(sourceQuotationVersionPO.getCompany(),1);
-			
-			for(QuotationVersionPO quotationVersionPO: defaultFlagQuotationVersionPOs){
-				quotationVersionPO.setDefaultFlag(0);
-				quotationVersionDao.update(quotationVersionPO);
-			}
-			
-			BeanUtil.copyProperties(quotationVersionVO, sourceQuotationVersionPO, Arrays.asList("qvId"));
-			
-			quotationVersionDao.saveOrUpdate(sourceQuotationVersionPO);
-			
-			//级联更新订单状态是咨询和量房 已报价的订单 使用的报价版本
-			//quotationVersionDao.changeRelationTable(sourceQuotationVersionPO.getVersionId());
-		}else{
-			BeanUtil.copyProperties(quotationVersionVO, sourceQuotationVersionPO, Arrays.asList("qvId"));
-			
-			quotationVersionDao.update(sourceQuotationVersionPO);
-		}
-	}
-	
-	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public void deleteQuotationVersion(QuotationVersionVO quotationVersionVO){
-		
-		QuotationVersionPO quotationVersionPO = new QuotationVersionPO();
-		BeanUtil.copyProperties(quotationVersionVO, quotationVersionPO);
-		
-		quotationVersionDao.delete(quotationVersionPO);
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public void deleteQuotationVersionById(String id){
-		quotationVersionDao.deleteById(id);
+	public List<QuotationVersionVO> queryQuotationVersion(int company) {
+
+		List<QuotationVersionPO> quotationVersionPOs = quotationVersionDao.queryQuotationVersion(company);
+		List<QuotationVersionVO> quotationVersionVOs = new ArrayList<QuotationVersionVO>();
+
+		for (QuotationVersionPO quotationVersionPO : quotationVersionPOs) {
+			QuotationVersionVO quotationVersionVO = new QuotationVersionVO();
+			BeanUtil.copyProperties(quotationVersionPO, quotationVersionVO);
+
+			quotationVersionVOs.add(quotationVersionVO);
+		}
+
+		return quotationVersionVOs;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void saveQuotationVersion(QuotationVersionVO quotationVersionVO, int company) throws FLException {
+
+		CompanyPO companyPO = companyDao.get(company);
+
+		if (companyPO == null) {
+			throw new FLException(230015, "公司不存在");
+		}
+
+		if (quotationVersionVO.getDefaultFlag() == QuotationVersionPO.DEFAULTFLAG_DEFAULT_INT) {
+			quotationVersionDao.updateQuotationVersionForDefault(company, QuotationVersionPO.DEFAULTFLAG_INIT_INT);
+		}
+
+		QuotationVersionPO quotationVersionPO = new QuotationVersionPO();
+
+		BeanUtil.copyProperties(quotationVersionVO, quotationVersionPO, Arrays.asList(new String[] { "versionId" }));
+
+		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_QUOTATION_VERSION_INT, CountingPO.COUNTING_DATE_SILNLE_STR, company);
+
+		String no = String.format("%sQV_%s", companyPO.getShortname(), FormatUtil.fillZero(count, "000"));
+
+		quotationVersionPO.setNo(no);
+		quotationVersionPO.setCompany(company);
+		quotationVersionPO.setDefaultFlag(QuotationVersionPO.DEFAULTFLAG_DEFAULT_INT);
+
+		quotationVersionDao.save(quotationVersionPO);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void updateQuotationVersion(QuotationVersionVO quotationVersionVO) throws FLException {
+
+		QuotationVersionPO quotationVersionPO = quotationVersionDao.get(quotationVersionVO.getNo());
+
+		if (quotationVersionPO == null) {
+			throw new FLException(200022, "报价版本不存在");
+		}
+
+		if (quotationVersionVO.getDefaultFlag() == QuotationVersionPO.DEFAULTFLAG_DEFAULT_INT) {
+			quotationVersionDao.updateQuotationVersionForDefault(quotationVersionPO.getCompany(), QuotationVersionPO.DEFAULTFLAG_INIT_INT);
+		}
+
+		BeanUtil.copyProperties(quotationVersionVO, quotationVersionPO, Arrays.asList("qvId"));
+
+		quotationVersionDao.update(quotationVersionPO);
 	}
 
 }

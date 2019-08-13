@@ -15,6 +15,12 @@
         {"key":"2","value":"厂商结算"},
         {"key":"3","value":"结算"}
     ],
+    "oneType": [
+        {"key":"0","value":"购货"},
+        {"key":"1","value":"退货"},
+        {"key":"2","value":"全退"},
+        {"key":"3","value":"倒单"}
+    ],
     "paymentTypes": [],
     "errorCode": 0,
     "errorMsg": null

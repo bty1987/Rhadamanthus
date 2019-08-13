@@ -43,6 +43,9 @@ jQuery(function () {
             submit: com.focusPage('#submit'),//提交
             refresh: com.focusPage('#refresh')//重置
         },
+        model:{
+            packageModel: com.focusPage('#itemModel')
+        },
         goods: null,
         brand: null,
         customer: null,
@@ -122,7 +125,11 @@ jQuery(function () {
     com.post(api.ds.payment, {}, function (res) {
         sales.rightitems.couponInfo.bindData(res.materialCouponTypes, 'key', 'value', false);
     }, null, false);
-    
+
+    com.focusPage('#itemModel').on('hidden.bs.modal', function (e) {
+        com.focusPage('#itemList').html("");
+    });
+
     //点击添加按钮
     com.focusPage("#add").click(function () {
         
@@ -175,17 +182,12 @@ jQuery(function () {
         });
         
         var $edit = $('<div></div>').css('margin-right', '5px').addClass('pull-right action-button').append($('<a></a>').addClass('btn btn-primary btn-minier').html('查看')).click(function () {
-            com.focusPage('#viewPopUp').attr({'data-gid': $h4.attr('addGid')});
-            com.popup4page("#viewPopUp", "views/sales/salesItem4package.html", "查看套餐", "", function () {
-                com.focusPage('#viewPopUp').attr('data-gid', null);
-            });
+            salesUtils.showPackage(sales.model.packageModel, com.focusPage('#itemList'), $h4.attr('addGid'));
         });
 
         $h4.append($delete).appendTo($liList);
         
-        if (sales.goods.type == 1) {
-            $h4.append($edit);
-        }
+        if (sales.goods.type == 1) $h4.append($edit);
 
         var propertyArr = [
             ['品类: ', sales.leftitems.category.val()],

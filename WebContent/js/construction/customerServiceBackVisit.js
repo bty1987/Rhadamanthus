@@ -24,6 +24,8 @@ jQuery(function ($) {
     };
 
     backVisit.saveBtn.bindClick(saveData);
+    
+    com.focusPage('#fl-statement').statement("客服控制", "回访");
 
     com.datetime(backVisit.items.backVisitTime);
 

@@ -26,46 +26,55 @@ import com.fanglin.utils.Paging;
 @Repository("quotationVersionDao")
 public class QuotationVersionDaoImpl extends DaoImpl<QuotationVersionPO> implements QuotationVersionDao {
 
-	public QuotationVersionDaoImpl(){
+	public QuotationVersionDaoImpl() {
 		super(QuotationVersionPO.class, true);
 	}
 
 	@Override
-	public List<QuotationVersionPO> pageQuotationVersion(Paging paging, List<Filter> filters,int company){
-		
+	public List<QuotationVersionPO> pageQuotationVersion(Paging paging, List<Filter> filters, int company) {
+
 		PagingQuery<QuotationVersionPO> query = pagingQuery(paging, QuotationVersionPO.class);
-		
+
 		queryFliterExcute(query, filters);
-		
+
 		query.desc("defaultFlag");
-		
-		return query.add(Restrictions.eq("company",company)).list();
+
+		return query.add(Restrictions.eq("company", company)).list();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<QuotationVersionPO> queryQuotationVersionByDefaultFlag(int company,int defaultFlag){
-		return createCriteria(QuotationVersionPO.class).add(Restrictions.and(Restrictions.eq("defaultFlag", defaultFlag),(Restrictions.eq("company", company)))).list();
-	}
-	
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<QuotationVersionPO> queryQuotationVersion(int company){
+	public List<QuotationVersionPO> queryQuotationVersion(int company) {
 		return createCriteria(QuotationVersionPO.class).add(Restrictions.eq("company", company)).addOrder(Order.desc("defaultFlag")).list();
 	}
-	
+
 	@Override
 	public QuotationVersionPO queryQuotationVersionByVersionId(String no) {
 		return (QuotationVersionPO) session().createCriteria(QuotationVersionPO.class).add(Restrictions.eq("no", no)).uniqueResult();
 	}
 
-	private void queryFliterExcute(PagingQuery<?> query, List<Filter> filters){
-		
-		if(filters != null){
-			for(Filter filter: filters){
+	@Override
+	public QuotationVersionPO queryQuotationVersionForDefault(int company) {
+		return (QuotationVersionPO) createCriteria(QuotationVersionPO.class).add(Restrictions.eq("company", company)).add(Restrictions.eq("defaultFlag", QuotationVersionPO.DEFAULTFLAG_DEFAULT_INT)).setMaxResults(1).uniqueResult();
+	}
+
+	@Override
+	public int updateQuotationVersionForDefault(int company, short defaultFlag) {
+
+		String sql = "update quotation.quotationversion set defaultFlag = :defaultFlag where company = :company";
+
+		session().createSQLQuery(sql).setInteger("company", company).setShort("defaultFlag", defaultFlag).executeUpdate();
+
+		return 0;
+	}
+
+	private void queryFliterExcute(PagingQuery<?> query, List<Filter> filters) {
+
+		if (filters != null) {
+			for (Filter filter : filters) {
 				query.add(query.getCriterion(filter.getField(), filter.getData(), filter.getOp()));
 			}
 		}
 	}
-	
+
 }

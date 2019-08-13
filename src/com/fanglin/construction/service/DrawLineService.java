@@ -19,17 +19,21 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.Paging;
 
 public interface DrawLineService {
-	
+
 	public List<DrawLineVO> pageDrawLine(Paging paging, List<Filter> filters, int company);
-	
+
 	public List<DrawLineVO> queryDrawLine(List<Filter> filters, int company) throws FLException;
-	
+
 	public List<?> countDrawLine(DrawLineVO drawLineVO, int company);
 
-	public int applayDrawLine(DrawLineVO drawLine, String userId) throws FLException;
+	public int updateDrawLine(DrawLineVO drawLineVO) throws FLException;
 
-	public int resetDrawLine(DrawLineVO drawLine) throws FLException;
+	public int applayDrawLine(DrawLineVO drawLineVO, String userId) throws FLException;
 
-	public int updateDrawLineForStatus(DrawLineVO drawLine, String userId) throws FLException;
+	public int resetDrawLine(DrawLineVO drawLineVO) throws FLException;
+
+	public int successDrawLine(DrawLineVO drawLineVO, String userId) throws FLException;
+
+	public int failureDrawLine(DrawLineVO drawLineVO, String userId) throws FLException;
 
 }
