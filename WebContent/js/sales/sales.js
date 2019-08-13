@@ -189,16 +189,13 @@ $(function () {
 
                     $btnAdd.click(function () {
                         params["sid"] = v.sid;
-                        com.popup4page("#layerPopUp", "views/sales/salesItem2add.html", "添项",'',function () {
+                        com.popup4page("#layerPopUp", "views/sales/sales2add.html", "添项",'',function () {
                             salesSearcher.doSearch();
                         })
                     });
 
                     $btnSub.click(function () {
                         params["sid"] = v.sid;
-                        params["fullpayStatus"] = v.fullpayStatus;
-                        params["status"] = v.status;
-                        params["depositpayStatus"] = v.depositpayStatus;
                         params["dompany"] = sales.pageType;
                         com.popup4page("#layerPopUp", "views/sales/salesItem.html", "子项",'',function () {
                             salesSearcher.doSearch();
@@ -285,7 +282,7 @@ $(function () {
                         params["orderId"] = v.orderId;
                         params["no"] = v.no;
                         params["activityId"] = v.activityId;
-                        com.popup4page("#layerPopUp", "views/sales/salesActivity.html", "活动",'',function () {
+                        com.popup4page("#layerPopUp", "views/sales/sales4activity.html", "活动",'',function () {
                             salesSearcher.doSearch();
                         });
                     });
@@ -347,7 +344,7 @@ $(function () {
         _options['approval.receiver.userId'] = radios;
         _options['approval.comment'] = com.focusPage('#approvalComment', "#miniPopUp").val();
         _options['approvalSalesDiscount.sid'] = sales.sales.sid;
-        _options['approvalSalesDiscount.referMoney'] = sales.items.fullPaymentTotal.val();
+        _options['approvalSalesDiscount.referMoney'] = Math.abs(sales.items.fullPaymentTotal.val());
         _options['approvalSalesDiscount.paymentType'] = sales.items.fullPaymentTotal.val() >= 0 ? sales.type.fullPayment : sales.type.fullPaymentRefund;
         com.post(api.approval.submitApprovalForSalesDiscount, _options, function (res) {
             clearApproval();

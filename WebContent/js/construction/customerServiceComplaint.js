@@ -36,8 +36,11 @@ jQuery(function ($) {
         editFlag: false,
         repeatFlg: false
     };
+    
+    com.focusPage('#fl-statement').statement("客服控制", "投诉");
 
     com.datetime(complaint.items.complaintTime);
+    
     complaint.btns.saveBtn.bindClick(saveData);
     complaint.btns.saveHandleBtn.bindClick(saveHandleData);
 

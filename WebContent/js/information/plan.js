@@ -42,18 +42,9 @@ $(function () {
         plan.plugins = res.tasks.split("keyWord", "plugins");
     }, null, false);
 
-    com.post(api.personel.queryUserForSelfByUserId, {}, function(data){
-        console.log(data);
-        com.post(api.right.queryTaskUserRightByUserId, {"user.userId": data.userInfo.user.userId}, function (res) {
-
-            console.log(res);
-
-            plan.planItems.task.bindData(res.tasks, "keyWord", "name", false);
-
-        }, null, false);
-    });
-
-
+    com.post(api.right.queryTaskUserRightByUserId, {"user.userId": params.userInfo.user.userId}, function (res) {
+        plan.planItems.task.bindData(res.tasks, "keyWord", "name", false);
+    }, null, false);
 
     planUtils.bindUploadBtn("#attachment", 1070);
 

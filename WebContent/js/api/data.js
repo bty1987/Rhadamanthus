@@ -77,7 +77,6 @@ $.extend(api, {data: {
     updateDrawlineGroup: {url:"updateDrawlineGroup.do"},
     updateDrawlineGroupForStatus:{url:"updateDrawlineGroupForStatus.do"},
 
-
     pageMeasurementUnit:{url:"pageMeasurementUnit.do"},
     queryMeasurementUnit:{url:"queryMeasurementUnit.do"},
     addMeasurementUnit:{url:"addMeasurementUnit.do", server: "communion"},
@@ -86,15 +85,16 @@ $.extend(api, {data: {
     pageConstructionNode:{url:"pageConstructionNode.do"},
     queryConstructionNode:{url:"queryConstructionNode.do"},
     queryConstructionNodeByOrderId:{url:"queryConstructionNodeByOrderId.do"},
-    addConstructionNode:{url:"addConstructionNode.do"},
-    updateConstructionNodeForStatus:{url:"updateConstructionNodeForStatus.do"},
+    addConstructionNode:{url:"addConstructionNode.do", server: "communion"},
+    updateConstructionNode: {url: "updateConstructionNode.do", server: "communion"},
+    updateConstructionNodeForStatus:{url:"updateConstructionNodeForStatus.do", server: "communion"},
 	
     queryPaymentScaleByCid:{url:"queryPaymentScaleByCid.do"},
-    addPaymentScale: {url:"addPaymentScale.do"},
-    deletePaymentScale: {url:"deletePaymentScale.do"},
+    addPaymentScale: {url:"addPaymentScale.do", server: "communion"},
+    deletePaymentScale: {url:"deletePaymentScale.do", server: "communion"},
     queryPaymentScaleItemByPsid:{url:"queryPaymentScaleItemByPsid.do"},
-    addPaymentScaleItem:{url:"addPaymentScaleItem.do"},
-    deletePaymentScaleItem:{url:"deletePaymentScaleItem.do"},
+    addPaymentScaleItem:{url:"addPaymentScaleItem.do", server: "communion"},
+    deletePaymentScaleItem:{url:"deletePaymentScaleItem.do", server: "communion"},
 
     queryChainPage: {url:"queryChainPage.do"},
     queryChainPageForSelf: {url:"queryChainPageForSelf.do"},

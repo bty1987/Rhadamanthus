@@ -787,7 +787,12 @@ public class DecorationServiceImpl implements DecorationService {
 
 		DecorationPO decorationPO = new DecorationPO();
 
-		QuotationVersionPO quotationVersionPO = quotationVersionDao.queryQuotationVersionByDefaultFlag(company, 1).get(0);
+		QuotationVersionPO quotationVersionPO = quotationVersionDao.queryQuotationVersionForDefault(company);
+
+		if (quotationVersionPO == null) {
+			throw new FLException(200022, "报价版本不存在");
+		}
+
 		decorationPO.setVersion(quotationVersionPO);
 
 		String currentDate = DateUtil.current("yyyyMMdd").toString().substring(2);
@@ -798,7 +803,7 @@ public class DecorationServiceImpl implements DecorationService {
 		decorationPO.setOrderId(orderId);
 
 		if (decorationVO.getNotSalesmanRate() == null || decorationVO.getNotSalesmanRate() > 1 || decorationVO.getNotSalesmanRate() < 0) {
-			decorationPO.setNotSalesmanRate((float) 0);
+			decorationPO.setNotSalesmanRate(0f);
 		} else {
 			decorationPO.setNotSalesmanRate(decorationVO.getNotSalesmanRate());
 		}

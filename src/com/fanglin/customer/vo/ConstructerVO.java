@@ -7,18 +7,18 @@ public class ConstructerVO implements Serializable {
 	private static final long serialVersionUID = -494556024622395178L;
 
 	private String userId;
-	
+
 	private String userName;
-	
+
 	private String currentName;
-	
+
 	private String phone;
-	
-	private Integer schedule;
-	
+
+	private Short schedule;
+
 	private String userPhoto;
 
-	public ConstructerVO(){
+	public ConstructerVO() {
 		super();
 	}
 
@@ -54,11 +54,11 @@ public class ConstructerVO implements Serializable {
 		this.phone = phone;
 	}
 
-	public Integer getSchedule() {
+	public Short getSchedule() {
 		return schedule;
 	}
 
-	public void setSchedule(Integer schedule) {
+	public void setSchedule(Short schedule) {
 		this.schedule = schedule;
 	}
 
@@ -69,6 +69,5 @@ public class ConstructerVO implements Serializable {
 	public void setUserPhotop(String userPhoto) {
 		this.userPhoto = userPhoto;
 	}
-	
-	
+
 }

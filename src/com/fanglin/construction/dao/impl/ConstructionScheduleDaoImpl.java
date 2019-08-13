@@ -1,5 +1,6 @@
 package com.fanglin.construction.dao.impl;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import org.hibernate.criterion.Restrictions;
@@ -12,16 +13,16 @@ import com.fanglin.core.dao.impl.DaoImpl;
 @Repository("constructionScheduleDao")
 public class ConstructionScheduleDaoImpl extends DaoImpl<ConstructionSchedulePO> implements ConstructionScheduleDao {
 
-	public ConstructionScheduleDaoImpl(){
+	public ConstructionScheduleDaoImpl() {
 		super(ConstructionSchedulePO.class);
 	}
-	
+
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<ConstructionSchedulePO> queryConstructionScheduleByOrderId(String orderId) {
 		return session().createCriteria(ConstructionSchedulePO.class).add(Restrictions.eq(ConstructionSchedulePO.COLUMN_ORDERID_STR, orderId)).list();
 	}
-	
+
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<ConstructionSchedulePO> queryConstructionScheduleByCid(Long cid) {
@@ -36,5 +37,15 @@ public class ConstructionScheduleDaoImpl extends DaoImpl<ConstructionSchedulePO>
 	@Override
 	public ConstructionSchedulePO queryConstructionScheduleByCid(long cid, short schedule) {
 		return (ConstructionSchedulePO) session().createCriteria(ConstructionSchedulePO.class).add(Restrictions.eq(ConstructionSchedulePO.COLUMN_CID_STR, cid)).add(Restrictions.eq(ConstructionSchedulePO.COLUMN_SCHEDULE_STR, schedule)).uniqueResult();
+	}
+
+	@Override
+	public int countConstructionSchedule(long cid) {
+
+		String sql = "select count(*) from construction.constructionschedule where cid = :cid";
+
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setLong("cid", cid).uniqueResult();
+
+		return count.intValue();
 	}
 }

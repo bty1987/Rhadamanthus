@@ -31,56 +31,54 @@ import com.fanglin.data.quotation.vo.QuotationVersionVO;
 public class QuotationVersionAction extends BaseListAction {
 
 	private static final long serialVersionUID = 1965087836085075507L;
-	
+
 	@Autowired
 	private QuotationVersionService quotationVersionService;
-	
-	private List<QuotationVersionVO> quotationVersions;
-	
-	private QuotationVersionVO quotationVersion;
-	
-	private String versionId;
-	
-	@Action(value="pageQuotationVersion", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String pageQuotationVersion() throws FLException{
 
-		quotationVersionService.pageQuotationVersion(getPaging(), getFilters(),queryCompany());
-	    
+	private List<QuotationVersionVO> quotationVersions;
+
+	private QuotationVersionVO quotationVersion;
+
+	@Action(value = "pageQuotationVersion", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageQuotationVersion() throws FLException {
+
+		quotationVersionService.pageQuotationVersion(getPaging(), getFilters(), queryCompany());
+
 		return SUCCESS;
 	}
-	
-	@Action(value="queryQuotationVersion", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryQuotationVersion() throws FLException{
-		
+
+	@Action(value = "queryQuotationVersion", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryQuotationVersion() throws FLException {
+
 		quotationVersions = quotationVersionService.queryQuotationVersion(queryCompany());
-	    
+
 		return SUCCESS;
 	}
-	
-	@Action(value="queryQuotationVersionByVersionId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryQuotationVersionByVersionId(){
-		
+
+	@Action(value = "queryQuotationVersionByVersionId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryQuotationVersionByVersionId() {
+
 		quotationVersion = quotationVersionService.queryQuotationVersionById(quotationVersion);
-	    
+
 		return SUCCESS;
 	}
-	
-	@Action(value="addQuotationVersion", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String addQuotationVersion() throws FLException{
-		
-		quotationVersionService.saveQuotationVersion(quotationVersion,queryCompany());
-	    
+
+	@Action(value = "addQuotationVersion", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addQuotationVersion() throws FLException {
+
+		quotationVersionService.saveQuotationVersion(quotationVersion, queryCompany());
+
 		return SUCCESS;
 	}
-	
-	@Action(value="updateQuotationVersion", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String updateQuotationVersion(){
-		
+
+	@Action(value = "updateQuotationVersion", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateQuotationVersion() throws FLException {
+
 		quotationVersionService.updateQuotationVersion(quotationVersion);
-		
+
 		return SUCCESS;
 	}
-	
+
 	public List<QuotationVersionVO> getQuotationVersions() {
 		return quotationVersions;
 	}
@@ -97,12 +95,4 @@ public class QuotationVersionAction extends BaseListAction {
 		this.quotationVersion = quotationVersion;
 	}
 
-	public void setVersionId(String versionId){
-		this.versionId = versionId;
-	}
-
-	public String getVersionId(){
-		return versionId;
-	}
-	
 }

@@ -7,11 +7,43 @@ $(function () {
         },
         manifestType : {},
         manifestStatus : {},
-        purchaseBalanceStatus : {},
         purchaseStatus :{},
-        propertyArr :[],
-        propertyArrItem :[],
-        manifestItemsid :null
+        manifestItemsid :null,
+
+        manifest:{
+            exit:{
+                "key":"",
+                "args" :[
+                    ["创建人:", 'creater.currentName', "grey"],
+                    ["创建时间:", "createTime", "green"],
+                    ["货单时间:", "manifestTime", "green"],
+                    ["类型:", "type", "red"],
+                    ["状态:", "status", "red"]
+                ]
+            },
+
+            purchase:{
+                "key":"purchaseStatus",
+                "args" :[
+                    ["创建人:", "user.currentName", "grey"],
+                    ["创建时间:", "createTime", "green"],
+                    ["结算时间:", "balanceTime", "green"],
+                    ["交付时间:", "deliveryTime", "green"],
+                    ["状态:", "status", "red"]
+                ]
+            },
+            enter:{
+                "key":"",
+                "args": [
+                ["创建人:", "creater.currentName", "grey"],
+                ["创建时间:", "createTime", "green"],
+                ["货单时间:", "manifestTime", "green"],
+                ["类型:", "type", "red"],
+                ["状态:", "status", "red"]
+                ]
+            }
+        }
+
     };
     
     var _option = {};
@@ -20,23 +52,37 @@ $(function () {
     com.post(api.ds.manifest, {}, function(res){
         salesInventory.manifestType = res.manifestType.split("key", "value");
         salesInventory.manifestStatus = res.manifestStatus.split("key", "value");
-        salesInventory.purchaseBalanceStatus = res.purchaseBalanceStatus.split("key", "value");
         salesInventory.purchaseStatus = res.purchaseStatus.split("key", "value");
     }, null, false);
 
     var displayFuncSalesManifest = (function () {
 
-        var renderList = function (tableId, listData, leftTitle, leftTitlebtn, rightTitle, manifestItemsid, propertyArrs, url, xgOrpuOrpuManifestID) {
+        var renderList = function (tableId, listData, leftTitle, leftTitlebtn, rightTitle, url, xgOrpuOrpuManifestID) {
             var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if (listData && listData.length) {
                 $.each(listData, function (i, v) {
                     var oddNumbers;
+                    var manifestItemsid;
+                    var itemInfo;
                     if(tableId == "resultListSalesPurchase"){
                         oddNumbers = v.no;
                     }else {
                         oddNumbers = v.code;
+                    }
+
+                    if(tableId == "resultListSalesPurchase"){
+                        itemInfo = salesInventory.manifest.purchase;
+                        manifestItemsid = $('<div id="resultListPurchaseItem' + v.pid + '"></div>').addClass('clearfix tab-pane active');
+                    }
+                    if(tableId == "resultListSalesManifest") {
+                        itemInfo = salesInventory.manifest.exit;
+                        manifestItemsid = $('<div id="resultListManifestItem' + v.mid + '"></div>').addClass('clearfix tab-pane active');
+                    }
+                    if(tableId == "resultListPurchaseManifest") {
+                        itemInfo = salesInventory.manifest.enter;
+                        manifestItemsid = $('<div id="resultListPurchaseManifestItem' + v.mid + '"></div>').addClass('clearfix tab-pane active');
                     }
 
                     var $liLine = $('<li></li>').addClass('item-orange clearfix');
@@ -50,10 +96,14 @@ $(function () {
                     var $manifestItemscol = $('<div></div>').addClass('col-xs-12').appendTo($manifestItemsrow);
                     var $manifestItemsid = manifestItemsid.appendTo($manifestItemscol);
 
-                    $.each(propertyArrs, function (index, value) {
+                    $.each(itemInfo.args, function (index, value) {
+                        var data = getElement(v,value[1].split('.'));
                         var $liProperty = $('<li></li>');
                         $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                        $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+                        if(value[1] == "type") data = salesInventory.manifestType[getElement(v,value[1].split('.'))];
+                        if(value[1] == "status")data = salesInventory.manifestStatus[getElement(v,value[1].split('.'))];
+                        if(itemInfo.key == "purchaseStatus" && value[1] == "status") data = salesInventory.purchaseStatus[getElement(v,value[1].split('.'))];
+                        $('<b></b>').html(data).addClass(value[2]).appendTo($liProperty);
                         $liProperty.appendTo($ulProperty);
                     });
 
@@ -61,6 +111,7 @@ $(function () {
 
                         salesInventory.items.items.empty();
                         com.focusPage("#details").find("strong").text(rightTitle+": "+oddNumbers);
+                        
                         if ($manifestItemsid.html() == "") {
                             if(tableId!="resultListSalesPurchase"){
                                 com.post(url, {
@@ -91,9 +142,9 @@ $(function () {
             }
         };
         return {
-            init: function (tableId, listData, leftTitle, leftTitlebtn, rightTitle, manifestItemsid, propertyArr, url, xgOrpuOrpuManifestID) {
+            init: function (tableId, listData, leftTitle, leftTitlebtn, rightTitle, url, xgOrpuOrpuManifestID) {
                 com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData, leftTitle, leftTitlebtn, rightTitle, manifestItemsid, propertyArr, url, xgOrpuOrpuManifestID);
+                renderList(tableId, listData, leftTitle, leftTitlebtn, rightTitle, url, xgOrpuOrpuManifestID);
             }
         };
     })();
@@ -176,46 +227,21 @@ $(function () {
         return propertyArrManifestItem;
     }
 
-    com.post(api.inventory.queryManifestForXGBySid, {
-        "sales.sid": salesInventory.sid
-    }, function (res) {
+    com.post(api.inventory.queryManifestForXGBySid, {"sales.sid": salesInventory.sid}, function (res) {
         if (res.manifests.length == 0) {
             emptyData('resultListSalesManifest');
         } else {
-            $.each(res.manifests, function (i, v) {
-                salesInventory.manifestItemsid = $('<div id="resultListManifestItem' + v.mid + '"></div>').addClass('clearfix tab-pane active');
-                salesInventory.propertyArr = [
-                    ["创建人:", v.creater.currentName, "grey"],
-                    ["创建时间:", v.createTime, "green"],
-                    ["货单时间:", v.manifestTime, "green"],
-                    ["类型:", salesInventory.manifestType[v.type], "red"],
-                    ["状态:", salesInventory.manifestStatus[v.status], "red"]
-                ];
-            });
-
             var url = api.inventory.queryManifestItemByMid;
-            displayFuncSalesManifest.init('resultListSalesManifest', res.manifests, "货单号", "出库单详情", "出库详情", salesInventory.manifestItemsid, salesInventory.propertyArr, url, "resultListManifestItem");
+            displayFuncSalesManifest.init('resultListSalesManifest', res.manifests, "货单号", "出库单详情", "出库详情", url, "resultListManifestItem");
         }
     }, null, false);
 
-    com.post(api.inventory.queryPurchaseBySid, {
-        "sales.sid": salesInventory.sid
-    }, function (res) {
+    com.post(api.inventory.queryPurchaseBySid, {"sales.sid": salesInventory.sid}, function (res) {
         if (res.purchases.length == 0) {
             emptyData('resultListSalesPurchase');
         } else {
-            $.each(res.purchases, function (i, v) {
-                salesInventory.manifestItemsid = $('<div id="resultListPurchaseItem' + v.pid + '"></div>').addClass('clearfix tab-pane active');
-                salesInventory.propertyArr = [
-                    ["创建人:", v.user.currentName, "grey"],
-                    ["创建时间:", v.createTime, "green"],
-                    ["结算时间:", v.balanceTime, "green"],
-                    ["交付时间:", v.deliveryTime, "green"],
-                    ["状态:", salesInventory.purchaseStatus[v.status], "red"]
-                ];
-            });
             var url = api.inventory.queryPurchaseItemByPid;
-            displayFuncSalesManifest.init('resultListSalesPurchase', res.purchases, "采购单号", "采购单详情", "采购详情", salesInventory.manifestItemsid, salesInventory.propertyArr, url, "resultListPurchaseItem");
+            displayFuncSalesManifest.init('resultListSalesPurchase', res.purchases, "采购单号", "采购单详情", "采购详情", url, "resultListPurchaseItem");
         }
     }, null, false);
 
@@ -223,18 +249,8 @@ $(function () {
         if (res.manifests.length == 0) {
             emptyData('resultListPurchaseManifest');
         } else {
-            $.each(res.manifests, function (i, v) {
-                salesInventory.manifestItemsid = $('<div id="resultListPurchaseManifestItem' + v.mid + '"></div>').addClass('clearfix tab-pane active');
-                salesInventory.propertyArr = [
-                    ["创建人:", v.creater.currentName, "grey"],
-                    ["创建时间:", v.createTime, "green"],
-                    ["货单时间:", v.manifestTime, "green"],
-                    ["类型:", salesInventory.manifestType[v.type], "red"],
-                    ["状态:", salesInventory.manifestStatus[v.status], "red"]
-                ];
-            });
             var url = api.inventory.queryManifestItemByMid;
-            displayFuncSalesManifest.init('resultListPurchaseManifest', res.manifests, "货单号", "采购货单详情", "入库详情", salesInventory.manifestItemsid, salesInventory.propertyArr, url, "resultListPurchaseManifestItem");
+            displayFuncSalesManifest.init('resultListPurchaseManifest', res.manifests, "货单号", "采购货单详情", "入库详情", url, "resultListPurchaseManifestItem");
         }
     }, null, false);
 
@@ -243,5 +259,15 @@ $(function () {
         var $zone = $('<div></div>').addClass('dropzone dz-clickable').css('margin', '20px').css('border', '0px').appendTo($resultList);
         var $mesg = $('<div></div>').addClass('dz-default dz-message').appendTo($zone);
         var $span = $('<span></span>').text('无可用数据提供').appendTo($mesg);
+    }
+
+    function getElement(o, props) {
+        var prop = props.shift();
+        if (props.length == 0) {
+            return o[prop];
+        } else if (o[prop]) {
+            return getElement(o[prop], props);
+        }
+        return "";
     }
 });

@@ -88,13 +88,10 @@ public class VticketServiceImpl implements VticketService {
 	@Transactional(rollbackFor = Exception.class)
 	public void createVticket(VticketVO vticketVO, String userId) throws FLException {
 
-		if (!vticketVO.getOrderId().equals("")) {
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(vticketVO.getOrderId());
 
-			DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(vticketVO.getOrderId());
-
-			if (decorationPO == null)
-				throw new FLException(140013, "装修订单不存在");
-
+		if (decorationPO == null) {
+			throw new FLException(140013, "装修订单不存在");
 		}
 
 		UserPO creater = userDao.queryUserByUserId(userId);
@@ -113,11 +110,11 @@ public class VticketServiceImpl implements VticketService {
 	@Transactional(rollbackFor = Exception.class)
 	public void updateVticket(VticketVO vticketVO) throws FLException {
 
-		if (vticketVO.getVtid() == null) {
+		VticketPO vticketPO = vticketDao.get(vticketVO.getVtid());
+
+		if (vticketPO == null) {
 			throw new FLException(160026, "活动票不存在");
 		}
-
-		VticketPO vticketPO = vticketDao.queryVticketByVtid(vticketVO.getVtid());
 
 		UserPO belonger = userDao.queryUserByUserId(vticketVO.getBelonger().getUserId());
 
@@ -192,6 +189,35 @@ public class VticketServiceImpl implements VticketService {
 		vticketPO.setBelonger(userPO);
 		vticketPO.setDepartment(userPO.getDept());
 		vticketPO.setRegion(userPO.getDept().getFatherDept());
+
+		vticketDao.update(vticketPO);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void freeVticket(VticketVO vticketVO, String userId) throws FLException {
+
+		VticketPO vticketPO = vticketDao.get(vticketVO.getVtid());
+
+		if (vticketPO == null) {
+			throw new FLException(160026, "活动票不存在");
+		}
+
+		if (vticketPO.getExpire() != VticketPO.EXPIRE_INIT_INT) {
+			throw new FLException(160051, "活动票不可操作");
+		}
+
+		if (vticketPO.getBelonger() == null) {
+			throw new FLException(160051, "活动票不可操作");
+		}
+
+		if (!vticketPO.getBelonger().getUserId().equals(userId)) {
+			throw new FLException(160051, "活动票不可操作");
+		}
+
+		vticketPO.setBelonger(null);
+		vticketPO.setDepartment(null);
+		vticketPO.setRegion(null);
 
 		vticketDao.update(vticketPO);
 	}

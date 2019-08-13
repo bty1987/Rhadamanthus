@@ -11,7 +11,6 @@
 
 package com.fanglin.construction.action;
 
-import java.text.ParseException;
 import java.util.List;
 
 import org.apache.struts2.convention.annotation.Action;
@@ -63,9 +62,17 @@ public class DrawLineAction extends BaseListAction {
 	}
 
 	@Action(value = "countDrawLine", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String countDrawLine() throws FLException, ParseException {
+	public String countDrawLine() throws FLException {
 
 		count = drawLineService.countDrawLine(drawLine, queryCompany());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "updateDrawLine", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateDrawLine() throws FLException {
+
+		drawLineService.updateDrawLine(drawLine);
 
 		return SUCCESS;
 	}
@@ -91,7 +98,7 @@ public class DrawLineAction extends BaseListAction {
 
 		drawLine.setStatus(DrawLinePO.STATUS_SUCCESS_INT);
 
-		drawLineService.updateDrawLineForStatus(drawLine, queryUserId());
+		drawLineService.successDrawLine(drawLine, queryUserId());
 
 		return SUCCESS;
 	}
@@ -101,7 +108,7 @@ public class DrawLineAction extends BaseListAction {
 
 		drawLine.setStatus(DrawLinePO.STATUS_FAIL_INT);
 
-		drawLineService.updateDrawLineForStatus(drawLine, queryUserId());
+		drawLineService.failureDrawLine(drawLine, queryUserId());
 
 		return SUCCESS;
 	}

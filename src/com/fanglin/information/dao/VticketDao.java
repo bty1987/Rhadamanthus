@@ -11,8 +11,6 @@ public interface VticketDao extends Dao<VticketPO> {
 
 	public List<VticketPO> pageVticket(Paging paging, List<Filter> filters);
 
-	public VticketPO queryVticketByVtid(Long vtid);
-
 	public VticketPO queryVticketByTno(String tno);
 
 	public VticketPO queryVticketForTake();

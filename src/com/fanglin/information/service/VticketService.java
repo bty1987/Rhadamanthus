@@ -25,4 +25,6 @@ public interface VticketService {
 
 	public void takeVticket(String userId) throws FLException;
 
+	public void freeVticket(VticketVO vticketVO, String userId) throws FLException;
+
 }

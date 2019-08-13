@@ -31,16 +31,14 @@ $(function () {
     });
 
     com.post(api.ds.construction, {}, function (res) {
+        
+        constructionNodes.constructionSchedule = res.constructionSchedule.split("key", "value");
 
         constructionNodes.items.ishovel.bindData(res.isHovel, "key", "value", false);
         constructionNodes.items.iskey.bindData(res.isKey, "key", "value", false);
         constructionNodes.items.isCeremony.bindData(res.isCeremony, "key", "value", false);
 
     });
-
-    com.post(api.ds.construction, {}, function (res) {
-        constructionNodes.constructionSchedule = res.constructionSchedule.split("key", "value");
-    }, null, false);
 
     var displayFunc = (function () {
 
@@ -50,8 +48,7 @@ $(function () {
 
             if (listData && listData.length) {
                 $.each(listData, function (i, v) {
-                    var $liLine = creatLine(v);
-                    $liLine.appendTo($ul);
+                    creatLine(v).appendTo($ul);
                 });
 
                 $ul.appendTo($tableWrap);
@@ -75,7 +72,7 @@ $(function () {
             var propertyArr = [
                 ["楼盘名:", v.house.village.name + " " + v.house.houseNumber, "grey"],
                 ["设计师:", v.designer.userName, "grey"],
-                ["监理:", v.supervisor.userName, "grey"],
+                ["监理:", v.supervisor ? v.supervisor.userName : "", "grey"],
                 ["总价:", v.orderTotalPrice, "blue"],
                 ["面积:", v.house.buildArea, "blue"],
                 ["进度:", constructionNodes.constructionSchedule[v.projectStatus], "red"]
@@ -88,7 +85,7 @@ $(function () {
                 $liProperty.appendTo($ulProperty);
             });
 
-            $divBtnWrap.append($btnInfo).append($btnView).append($btnAddReduce).append($btnRe).append($btnMoney).appendTo($h3);
+            $divBtnWrap.append($btnInfo).append($btnView).append($btnAddReduce).append($btnRe).appendTo($h3);
 
             $liLine.append($h3).append($ulProperty);
 
@@ -128,10 +125,9 @@ $(function () {
 
     var seacher = new Searcher();
 
-    seacher.init(['c_orderId', 'c_village', 'c_houseNumber', 'c_designer', 'c_schedule', 'c_projectStatusFlag'], "CondList", api.construction.pageConstruction, function (list) {
-        displayFunc.init('ResultList', list);
-
-    }, "Pagenation", "supervisionSeacherPostData", params["supervisionPostData"]);
+    seacher.init(['c_orderId', 'c_village', 'c_houseNumber', 'c_designer', 'c_schedule', 'c_projectStatusFlag'], "condList", api.construction.pageConstruction, function (list) {
+        displayFunc.init('resultList', list);
+    }, "pagenation", "supervisionSeacherPostData", params["supervisionPostData"]);
 
     function viewSupervisionDetail(orderId) {
         params.orderId = orderId;

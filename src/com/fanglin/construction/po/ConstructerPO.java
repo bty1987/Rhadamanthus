@@ -15,45 +15,44 @@ import javax.persistence.Table;
 
 import com.fanglin.personel.po.UserPO;
 
-
 @Entity
 @Table(name = "constructer", catalog = "construction")
 public class ConstructerPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 7434364138129555697L;
-	
-	public static final String  COLUMN_ORDERID_STR = "orderId";
-	
-	public static final String  COLUMN_CRID_STR  = "crid";
-	
-	public static final String  COLUMN_CID_STR  = "cid";
-	
-	public static final String  COLUMN_STATUS_STR  = "status";
-	
-	public static final String  COLUMN_USERID_STR = "user.userId";
-	
-	public static final short	STATUS_ENABLE_SHORT  = 0;
-	
-	public static final short	STATUS_DISABLE_SHORT  = 1;
-	
+
+	public static final String COLUMN_ORDERID_STR = "orderId";
+
+	public static final String COLUMN_CRID_STR = "crid";
+
+	public static final String COLUMN_CID_STR = "cid";
+
+	public static final String COLUMN_STATUS_STR = "status";
+
+	public static final String COLUMN_USERID_STR = "user.userId";
+
+	public static final short STATUS_ENABLE_SHORT = 0;
+
+	public static final short STATUS_DISABLE_SHORT = 1;
+
 	private long crid;
-	
+
 	private long cid;
-	
+
 	private String orderId;
-	
-	private UserPO	user;
-	
-	private int schedule;
-	
+
+	private UserPO user;
+
+	private short schedule;
+
 	private short rate;
-	
+
 	private String assessment;
-	
+
 	private UserPO creater;
-	
+
 	private Timestamp createTime;
-	
+
 	private short status;
 
 	public ConstructerPO() {
@@ -64,7 +63,7 @@ public class ConstructerPO implements java.io.Serializable {
 		super();
 		this.user = user;
 	}
-	
+
 	public ConstructerPO(UserPO user, UserPO creater) {
 		super();
 		this.user = user;
@@ -90,7 +89,6 @@ public class ConstructerPO implements java.io.Serializable {
 	public void setCid(long cid) {
 		this.cid = cid;
 	}
-	
 
 	@Column(name = "orderId")
 	public String getOrderId() {
@@ -102,11 +100,11 @@ public class ConstructerPO implements java.io.Serializable {
 	}
 
 	@Column(name = "schedule")
-	public int getSchedule() {
+	public short getSchedule() {
 		return this.schedule;
 	}
 
-	public void setSchedule(int schedule) {
+	public void setSchedule(short schedule) {
 		this.schedule = schedule;
 	}
 
@@ -129,7 +127,7 @@ public class ConstructerPO implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "cuid", referencedColumnName="uid")
+	@JoinColumn(name = "cuid", referencedColumnName = "uid")
 	public UserPO getCreater() {
 		return creater;
 	}
@@ -157,14 +155,13 @@ public class ConstructerPO implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "wuid", referencedColumnName="uid")
+	@JoinColumn(name = "wuid", referencedColumnName = "uid")
 	public UserPO getUser() {
 		return user;
 	}
 
-
 	public void setUser(UserPO user) {
 		this.user = user;
 	}
-	
+
 }

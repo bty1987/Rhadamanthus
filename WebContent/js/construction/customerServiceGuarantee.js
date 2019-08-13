@@ -27,7 +27,7 @@ jQuery(function ($) {
         com.closeTip();
     });
 
-    com.focusPage('#fl-statement').statement("客服控制", "保修信息列表");
+    com.focusPage('#fl-statement').statement("客服控制", "保修");
 
     com.datetime(guarantee.items.guaranteeTime);
 

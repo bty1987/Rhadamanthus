@@ -131,6 +131,21 @@ public class DrawLineServiceImpl implements DrawLineService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
+	public int updateDrawLine(DrawLineVO drawLineVO) throws FLException {
+
+		DrawLinePO drawLinePO = drawLineDao.get(drawLineVO.getDlid());
+
+		if (drawLinePO == null) {
+			throw new FLException(120014, "不存在该放线信息");
+		}
+
+		drawLinePO.setApplayTime(drawLineVO.getApplayTime());
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public int applayDrawLine(DrawLineVO drawLineVO, String userId) throws FLException {
 
 		String orderId = drawLineVO.getDecoration().getOrderId();
@@ -160,33 +175,15 @@ public class DrawLineServiceImpl implements DrawLineService {
 
 		drawLineDao.save(drawLinePO);
 
-		List<ConstructionNodePO> constructionNodePOs = constructionNodeDao.queryConstructionNode(decorationPO.getCompany());
-
-		Timestamp currentTime = DateUtil.getDateToTimestamp(new Date());
-
 		ConstructionPO constructionPO = constructionDao.queryConstructionByOrderId(orderId);
 
 		if (constructionPO == null) {
-
 			constructionPO = new ConstructionPO(decorationPO);
-			constructionPO.setStartTime(drawLineVO.getApplayTime());
-
-			constructionDao.save(constructionPO);
-
-			long cid = constructionPO.getCid();
-
-			for (ConstructionNodePO constructionNodePO : constructionNodePOs) {
-
-				ConstructionSchedulePO constructionSchedulePO = new ConstructionSchedulePO(cid, orderId, currentTime, currentTime, constructionNodePO.getSort());
-				constructionScheduleDao.save(constructionSchedulePO);
-			}
 		}
 
-		if (decorationPO.getProjectStatus() == DecorationPO.PROJECTSTATUS_INITIAL_INT) {
-			decorationPO.setProjectStatus(DecorationPO.PROJECTSTATUS_START_INT);
+		constructionPO.setStartTime(drawLineVO.getApplayTime());
 
-			decorationDao.update(decorationPO);
-		}
+		constructionDao.saveOrUpdate(constructionPO);
 
 		return 0;
 	}
@@ -196,6 +193,7 @@ public class DrawLineServiceImpl implements DrawLineService {
 	public int resetDrawLine(DrawLineVO drawLineVO) throws FLException {
 
 		DrawLinePO drawLinePO = drawLineDao.get(drawLineVO.getDlid());
+
 		if (drawLinePO == null) {
 			throw new FLException(120014, "不存在该放线信息");
 		}
@@ -225,7 +223,7 @@ public class DrawLineServiceImpl implements DrawLineService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int updateDrawLineForStatus(DrawLineVO drawLineVO, String userId) throws FLException {
+	public int successDrawLine(DrawLineVO drawLineVO, String userId) throws FLException {
 
 		DrawLinePO drawLinePO = drawLineDao.get(drawLineVO.getDlid());
 
@@ -237,11 +235,55 @@ public class DrawLineServiceImpl implements DrawLineService {
 			throw new FLException(120017, "订单放线状态错误");
 		}
 
-		if (drawLineVO.getStatus() == DrawLinePO.STATUS_FAIL_INT) {
-			messageService.sendMessage(drawLinePO.getDecoration().getDesigner().getUserId(), userId, (String.format("订单:%s,放线失败!请重新申请放线.", drawLinePO.getDecoration().getOrderId())), MessagePO.TYPE_SEND_CONSTRUCTION_INT, drawLinePO.getCompany());
+		DecorationPO decorationPO = drawLinePO.getDecoration();
+
+		String orderId = decorationPO.getOrderId();
+
+		ConstructionPO constructionPO = constructionDao.queryConstructionByOrderId(orderId);
+
+		if (constructionPO == null) {
+			throw new FLException(120020, "工程信息不存在");
 		}
 
-		drawLinePO.setStatus(drawLineVO.getStatus());
+		long cid = constructionPO.getCid();
+
+		if (constructionScheduleDao.countConstructionSchedule(cid) == 0) {
+
+			List<ConstructionNodePO> constructionNodePOs = constructionNodeDao.queryConstructionNode(decorationPO.getCompany());
+
+			Timestamp currentTime = DateUtil.getDateToTimestamp(new Date());
+
+			for (ConstructionNodePO constructionNodePO : constructionNodePOs) {
+				constructionScheduleDao.save(new ConstructionSchedulePO(cid, orderId, currentTime, currentTime, constructionNodePO.getSort()));
+			}
+		}
+
+		drawLinePO.setStatus(DrawLinePO.STATUS_SUCCESS_INT);
+
+		drawLineDao.update(drawLinePO);
+
+		if (decorationPO.getProjectStatus() == DecorationPO.PROJECTSTATUS_INITIAL_INT) {
+			decorationPO.setProjectStatus(DecorationPO.PROJECTSTATUS_START_INT);
+
+			decorationDao.update(decorationPO);
+		}
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int failureDrawLine(DrawLineVO drawLineVO, String userId) throws FLException {
+
+		DrawLinePO drawLinePO = drawLineDao.get(drawLineVO.getDlid());
+
+		if (drawLinePO == null) {
+			throw new FLException(120014, "不存在该放线信息");
+		}
+
+		messageService.sendMessage(drawLinePO.getDecoration().getDesigner().getUserId(), userId, (String.format("订单:%s,放线失败!请重新申请放线.", drawLinePO.getDecoration().getOrderId())), MessagePO.TYPE_SEND_CONSTRUCTION_INT, drawLinePO.getCompany());
+
+		drawLinePO.setStatus(DrawLinePO.STATUS_FAIL_INT);
 
 		drawLineDao.update(drawLinePO);
 
