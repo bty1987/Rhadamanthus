@@ -17,21 +17,21 @@ import com.fanglin.core.dao.Dao;
 import com.fanglin.material.po.MaterialItemPO;
 
 public interface MaterialItemDao extends Dao<MaterialItemPO> {
-	
+
 	public List<MaterialItemPO> queryMaterialItemByMids(List<Long> mids);
-	
+
 	public List<MaterialItemPO> queryMaterialItemByMid(long mid);
-	
+
 	public List<MaterialItemPO> queryMaterialItemByMidNotRefund(long mid);
-		
+
 	public MaterialItemPO queryMaterialItemByMiid(long msoiId);
-	
+
 	public List<MaterialItemPO> queryMaterialItemByName(long mid, String name, int limit);
-	
+
 	public List<MaterialItemPO> queryMaterialItemByNo(long mid, String msoNo, int limit);
-	
+
+	public int amountMaterialItemForTotal(long mid);
+
 	public void deleteMaterialItemByMid(long mid);
-	
-	public Float queryMaterialItemByTotal(long mid);
 
 }

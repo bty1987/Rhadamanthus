@@ -26,11 +26,11 @@ public class ProductionUserWorkFlowAction extends BaseAction {
 	private List<ProductionUserWorkFlowVO> ProductionUserWorkFlows;
 
 	private ProductionUserWorkFlowVO productionUserWorkFlow;
-
-	@Action(value = "queryProductionUserWorkFlowsByPwfid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+				
+	@Action(value = "queryProductionUserWorkFlowByPwfid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryProductionUserWorkFlowByPwfid() {
 		
-		ProductionUserWorkFlows = productionUserWorkFlowService.queryProductionUserWorkFlowsByPwfids(ProductionUserWorkFlows);
+		ProductionUserWorkFlows = productionUserWorkFlowService.queryProductionUserWorkFlowByPwfid(ProductionUserWorkFlows);
 		
 		return SUCCESS;
 	}

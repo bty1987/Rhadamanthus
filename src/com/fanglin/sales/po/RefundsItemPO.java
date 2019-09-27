@@ -12,34 +12,34 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="refundsitem",catalog = "sales")
-public class RefundsItemPO  implements java.io.Serializable{
+@Table(name = "refundsitem", catalog = "sales")
+public class RefundsItemPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -8157873351014476905L;
-	
+
 	public static final String COLUMN_RIID_STR = "riid";
-	
+
 	public static final String COLUMN_SID_STR = "sid";
-	
+
 	public static final String COLUMN_RID_STR = "rid";
-	
+
 	public static final String COLUMN_SIID_STR = "siid";
-	
+
 	public static final String COLUMN_TOTAL_STR = "total";
-	
+
 	public static final String COLUMN_NUM_STR = "num";
-	
+
 	private long riid;// 退货项id
-	
-	private long sid; //销售单Id
-	
-	private long rid; //款项id
-	
-	private SalesItemPO salesItem; //销售项
-	
-	private float num; //数量
-	
-	private float total;//总额
+
+	private long sid; // 销售单Id
+
+	private long rid; // 款项id
+
+	private SalesItemPO salesItem; // 销售项
+
+	private long num; // 数量
+
+	private long total;// 总额
 
 	public RefundsItemPO(long riid) {
 		super();
@@ -48,7 +48,7 @@ public class RefundsItemPO  implements java.io.Serializable{
 
 	public RefundsItemPO() {
 		super();
-	
+
 	}
 
 	@Id
@@ -62,7 +62,6 @@ public class RefundsItemPO  implements java.io.Serializable{
 		this.riid = riid;
 	}
 
-
 	@Column(name = "sid")
 	public long getSid() {
 		return sid;
@@ -71,7 +70,6 @@ public class RefundsItemPO  implements java.io.Serializable{
 	public void setSid(long sid) {
 		this.sid = sid;
 	}
-
 
 	@Column(name = "rid")
 	public long getRid() {
@@ -82,30 +80,30 @@ public class RefundsItemPO  implements java.io.Serializable{
 		this.rid = rid;
 	}
 
-	@Column(name="num")
-	public float getNum() {
+	@Column(name = "num")
+	public long getNum() {
 		return num;
 	}
 
-	public void setNum(float num) {
+	public void setNum(long num) {
 		this.num = num;
 	}
 
-	@Column(name="total")
-	public float getTotal() {
+	@Column(name = "total")
+	public long getTotal() {
 		return total;
 	}
 
-	public void setTotal(float total) {
+	public void setTotal(long total) {
 		this.total = total;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "siid", referencedColumnName="siid")
+	@JoinColumn(name = "siid", referencedColumnName = "siid")
 	public SalesItemPO getSalesItem() {
 		return salesItem;
 	}
-	
+
 	public void setSalesItem(SalesItemPO salesItem) {
 		this.salesItem = salesItem;
 	}
@@ -114,6 +112,4 @@ public class RefundsItemPO  implements java.io.Serializable{
 		this.salesItem = salesitem;
 	}
 
-	
-	
 }

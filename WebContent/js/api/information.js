@@ -18,7 +18,7 @@ $.extend(api, {
         updateMessageForRead: {url: "updateMessageForRead.do"},
         deleteMessageById: {url: "deleteMessageById.do"},
         deleteMessageByIds: {url: "deleteMessageByIds.do"},
-
+        
         pageNotice: {url: "pageNotice.do", demo: true},
         pageNoticeForSeenByType: {url: "pageNoticeForSeenByType.do", demo: true},
         queryNoticeByNid: {url: "queryNoticeByNid.do"},
@@ -31,9 +31,23 @@ $.extend(api, {
 
         pageActivity: {url: "pageActivity.do", demo: true},
         queryActivityForValid: {url: "queryActivityForValid.do", demo: true},
-        queryActivityItemByAid: {url: "queryActivityItemByAid.do", demo: true},
+        queryActivityItemByAid: {url: "queryActivityItemByAid.do", demo: true,
+            type: "query",
+            tranargs: [{
+                result: "activityItems",
+                args: ["money"]
+            }]
+        },
         addActivity: {url: "addActivity.do"},
-        addActivityItem: {url: "addActivityItem.do"},
+        addActivityItem: {url: "addActivityItem.do",
+        	type: "update",
+        	tranargs: {
+        		args: ["activityItem.money"],
+        		query:[{
+        			result: "activityItem",
+        			args:["money"]
+        		}]
+        }},
         updateActivity: {url: "updateActivity.do"},
         updateActivityForStatus:{url: "updateActivityForStatus.do"},
         updateActivityForDefault:{url: "updateActivityForDefault.do"},
@@ -50,10 +64,28 @@ $.extend(api, {
         
         pageVactivity: {url: "pageVactivity.do"},
         queryVactivity: {url: "queryVactivity.do"},
+        updateVactivityForStatus:{url: "updateVactivityForStatus.do"},
         
-        pageVprize: {url: "pageVprize.do"},
-        addVprize: {url: "addVprize.do"},
-        updateVprize: {url: "updateVprize.do"},
+        updateVactivityForStatus:{url: "updateVactivityForStatus.do"},
+        pageVprize: {url: "pageVprize.do",
+        	   type: "query",
+               tranargs: [{
+                   result: "paging-data",
+                   args: ["price"]
+               }]
+        },
+        addVprize: {url: "addVprize.do",
+        	type: "update",
+            tranargs: {
+                args: ["vprize.price"]
+            }
+        },
+        updateVprize: {url: "updateVprize.do",
+         	type: "update",
+            tranargs: {
+                args: ["vprize.price"]
+            }
+        },
         updateVprizeForStatus: {url: "updateVprizeForStatus.do"},
 
         pageVticket: {url: "pageVticket.do"},
@@ -62,14 +94,55 @@ $.extend(api, {
         createVticket: {url: "createVticket.do"},
         updateVticket: {url: "updateVticket.do"},
 
-        pageVpayment: {url: "pageVpayment.do"},
+        pageVpayment: {url: "pageVpayment.do",
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["money","cash","bank","coupon"]
+            }]
+        },
         countVpayment: {url: "countVpayment.do"},
-        createVpayment: {url: "createVpayment.do"},
+        createVpayment: {url: "createVpayment.do",
+        	type: "update",
+            tranargs: {
+                args: ["vpayment.money"]
+            }
+        },
         deleteVpaymentId: {url: "deleteVpaymentId.do"},
-        collectVpayment: {url: "collectVpayment.do"},
-        queryVpaymentByNo: {url: "queryVpaymentByNo.do"},
-        queryVpaymentByVrid: {url: "queryVpaymentByVrid.do"},
-        queryVreceiptByVrid: {url: "queryVreceiptByVrid.do"},
+        collectVpayment: {url: "collectVpayment.do",
+        	type: "update",
+            tranargs: {
+                args: ["vreceipt.cash","vreceipt.bank", "vreceipt.coupon"]
+            }
+        },
+        queryVpaymentByNo: {url: "queryVpaymentByNo.do",
+        	type: "query",
+            tranargs: [{
+                result: "vpayments",
+                args: ["money"]
+            }]
+        },
+        queryVpaymentByVrid: {url: "queryVpaymentByVrid.do",
+        	type: "query",
+            tranargs: [{
+                result: "vpayments",
+                args: ["money"]
+            }]
+        },
+        queryVreceiptByVrid: {url: "queryVreceiptByVrid.do",
+         	type: "query",
+            tranargs: [{
+                result: "vreceipt",
+                args: ["cash","bank","coupon"]
+            }]	
+        },
+        queryVawardByNo: {url: "queryVawardByNo.do",
+         	type: "query",
+            tranargs: [{
+                result: "vawards",
+                args: ["price","num"]
+            }]	
+        },
 
         pageTask: {url: "pageTask.do"},
         queryTask: {url: "queryTask.do"},
@@ -83,18 +156,57 @@ $.extend(api, {
         cancelPlan: {url: "cancelPlan.do"},
         updatePlan: {url: "updatePlan.do"},
 
-        pageAwardStock: {url: "pageAwardStock.do", demo: true},//分页
+        pageAwardStock: {url: "pageAwardStock.do", demo: true,
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["purchase" ,"selling" ,"num"]
+            }]
+        },//分页
         queryAwardStockByAsid:{url:"queryAwardStockByAsid.do", demo: true},//根据asid查
         queryAwardStockByType:{url:"queryAwardStockByType.do", demo: true},//根据type查
-        addAwardStock:{url:"addAwardStock.do", demo: true},//添加
-        updateAwardStock:{url:"updateAwardStock.do", demo: true},//编辑
-        updateAwardStockForXG:{url:"updateAwardStockForXG.do", demo: true},//出库
-        updateAwardStockForCG:{url:"updateAwardStockForCG.do", demo: true},//入库
-        checkAwardStock:{url:"checkAwardStock.do", demo: true},//盘点
+        addAwardStock:{url:"addAwardStock.do", demo: true,
+        	type: "update",
+            tranargs: {
+                args: ["awardStock.price","awardStock.purchase","awardStock.selling","awardStock.num"]
+            }
+        },//添加
+        updateAwardStock:{url:"updateAwardStock.do", demo: true,
+        	type: "update",
+            tranargs: {
+                args: ["awardStock.num","awardStock.purchase","awardStock.selling"]
+            }
+        },//编辑
+        updateAwardStockForXG:{url:"updateAwardStockForXG.do", demo: true,
+        	type: "update",
+            tranargs: {
+                args: ["awardStock.num","awardStock.purchase","awardStock.selling","awardStock.price"]
+            }
+        },//出库
+        updateAwardStockForCG:{url:"updateAwardStockForCG.do", demo: true,
+        	type: "update",
+            tranargs: {
+                args:  ["awardStock.price","awardStock.num","awardStock.purchase","awardStock.selling"]
+            }
+        },//入库
+        checkAwardStock:{url:"checkAwardStock.do", demo: true,
+        	type: "update",
+            tranargs: {
+                args:  ["awardStock.num","awardStock.purchase","awardStock.selling"]
+            }
+        },//盘点
         updateAwardStockForStatus:{url:"updateAwardStockForStatus.do", demo: true},//修改状态
 
-        pageAwardRecord: {url: "pageAwardRecord.do", demo: true},
-
+        pageAwardRecord: {url: "pageAwardRecord.do", demo: true,
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["totalPrice" ,"unitPrice" ,"num"]
+            }]
+        },
+        deleteVaward: {url: "deleteVaward.do"},
+        countVaward: {url: "countVaward.do"},
+        
         pageWorksheet: {url: "pageWorksheet.do", demo: true},
         addWorksheet: {url: "addWorksheet.do", demo: true},
         cancelWorksheet: {url: "cancelWorksheet.do", demo: true},

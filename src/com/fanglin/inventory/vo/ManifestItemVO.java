@@ -20,13 +20,13 @@ public class ManifestItemVO implements java.io.Serializable {
 
 	private StorehouseVO outstorehouse;
 	
-	private Float inprice;
+	private Integer inprice;
 	
-	private Float outprice;
+	private Integer outprice;
 
-	private Float num;
+	private Integer num;
 	
-	private Float surplus;
+	private Integer surplus;
 
 	private String comment;
 
@@ -113,47 +113,9 @@ public class ManifestItemVO implements java.io.Serializable {
 		this.outstorehouse = outstorehouse;
 	}
 
-	public Float getInprice() {
-		return inprice;
-	}
-
-	public void setInprice(Float inprice) {
-		this.inprice = inprice;
-	}
-
-	public Float getOutprice() {
-		return outprice;
-	}
-
-	public void setOutprice(Float outprice) {
-		this.outprice = outprice;
-	}
-
-	public Float getNum() {
-		return this.num;
-	}
-
-	public void setNum(Float num) {
-		this.num = num;
-	}
-
-	public Float getSurplus() {
-		return surplus;
-	}
-
-	public void setSurplus(Float surplus) {
-		this.surplus = surplus;
-	}
-
-	public String getComment() {
-		return this.comment;
-	}
-
-	public void setComment(String comment) {
-		this.comment = comment;
-	}
 	
-	public ManifestItemVO init(long gid, long cid, long fid, Long in, Long out, float inprice, float outprice, float num){
+	
+	public ManifestItemVO init(long gid, long cid, long fid, Long in, Long out, int inprice, int outprice, int num){
 		
 		setGoods(new GoodsVO(gid));
 		setColor(new ColorVO(cid));
@@ -167,6 +129,46 @@ public class ManifestItemVO implements java.io.Serializable {
 		setNum(num);
 		
 		return this;
+	}
+
+	public Integer getInprice() {
+		return inprice;
+	}
+
+	public void setInprice(Integer inprice) {
+		this.inprice = inprice;
+	}
+
+	public Integer getOutprice() {
+		return outprice;
+	}
+
+	public void setOutprice(Integer outprice) {
+		this.outprice = outprice;
+	}
+
+	public Integer getNum() {
+		return num;
+	}
+
+	public void setNum(Integer num) {
+		this.num = num;
+	}
+
+	public Integer getSurplus() {
+		return surplus;
+	}
+
+	public void setSurplus(Integer surplus) {
+		this.surplus = surplus;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
 }

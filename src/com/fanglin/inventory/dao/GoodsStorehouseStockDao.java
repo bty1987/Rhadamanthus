@@ -24,6 +24,6 @@ public interface GoodsStorehouseStockDao extends Dao<GoodsStorehouseStockPO> {
 	
 	public GoodsStorehouseStockPO queryGoodsStorehouseStockByShidAGid(long gid, long cid, long fid, long shid);
 	
-	public Float queryGoodsStorehouseStockByGid(long gid, long cid, long fid);
+	public Integer queryGoodsStorehouseStockByGid(long gid, long cid, long fid);
 
 }

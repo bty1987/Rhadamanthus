@@ -1,5 +1,4 @@
 <div >
-
     <div id="fl-statement"><div class="page-header"><h1>生产单<small><i class="icon-double-angle-right"></i>相关销售单信息</small></h1></div></div>
 
     <div class="row">
@@ -20,53 +19,50 @@
 
 </div>
 
-<div id="layerBind" style="padding: 40px 0; display: none;">
-    <div class="row-fluid">
-        <form class="form-horizontal" novalidate="novalidate" id="form1">
-
-            <div class="widget-main">
-                <div class="row" style="margin-right:0px">
-                    <div class="col-xs-12">
-
-                        <div class="form-group">
-                            <label class="control-label col-xs-4">订单类型</label>
-                            <div class="controls col-xs-8">
-
-                                <select type="select" class="col-xs-8 m-wrap" name="salesType" rules="{required:false}">
-                                    <option value="0">主材单</option>
-                                    <option value="1">销售单</option>
-                                </select>
-
-                            </div>
-                        </div>
-                        <div class="space5"></div>
-
-                        <div class="form-group">
-                            <label class="control-label col-xs-4">单据编号</label>
-                            <div class="controls col-xs-8">
-                                <input type="text" class="span6 m-wrap col-xs-8 v_required" name="saleNo"
-                                       rules="{required:true}">
-                            </div>
-                        </div>
-                        <div class="space5"></div>
-
-                        <div class="form-group">
-                            <label class="control-label col-xs-4">品类品牌</label>
-                            <div class="controls col-xs-8">
-                                <input type="text" class="span6 m-wrap col-xs-8 v_required" name="brand"
-                                       rules="{required:true}" readonly>
-                            </div>
-                        </div>
-                        <div class="space5"></div>
-
-                    </div>
-                </div>
+<div class="modal fade" id="productionSalesModal" tabindex="-1">
+    <div class="modal-dialog" style="margin-top: 10%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">绑定</h4>
             </div>
-        </form>
-    </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label col-xs-4">订单类型</label>
+                        <div class="controls col-xs-8">
 
+                            <select type="select" class="col-xs-8 m-wrap" name="salesType" rules="{required:false}">
+                                <option value="0">主材单</option>
+                                <option value="1">销售单</option>
+                            </select>
+
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-xs-4">单据编号</label>
+                        <div class="controls col-xs-8">
+                            <input type="text" class="span6 m-wrap col-xs-8 v_required" id="saleNo" rules="{required:true}">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-xs-4">品类品牌</label>
+                        <div class="controls col-xs-8">
+                            <input type="text" class="span6 m-wrap col-xs-8 v_required" id="brand" rules="{required:true}" readonly>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="saveBtn" class="btn btn-primary">确定</button>
+                <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script type="text/javascript">
-	$.loadScript(['js/production/productionUtils.js','js/production/productionSales.js']);
+    $.loadScript(['js/production/productionSales.js']);
 </script>

@@ -13,8 +13,6 @@ public interface VticketDao extends Dao<VticketPO> {
 
 	public VticketPO queryVticketByTno(String tno);
 
-	public VticketPO queryVticketForTake();
-
 	public List<?> countVticket(short param);
 
 }

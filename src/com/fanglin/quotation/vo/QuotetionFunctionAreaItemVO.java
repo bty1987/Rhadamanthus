@@ -9,29 +9,29 @@ public class QuotetionFunctionAreaItemVO implements Serializable {
 	private Long qfaiId;
 
 	private Long qfaid;
-	
+
 	private Long qiid;
-	
+
 	private String name;
-	
-	private Float unitPrice;
-	
+
+	private Integer unitPrice;
+
 	private Integer index;
 
 	private String formula;
-	
-	private Float num;
-	
+
+	private Integer num;
+
 	private Short type;
-	
+
 	private Short subtype;
-	
+
 	private String measurementUnit;
-	
+
 	private String workType;
-	
+
 	private Short discount;
-	
+
 	private String content;
 
 	public Long getQfaiId() {
@@ -66,11 +66,11 @@ public class QuotetionFunctionAreaItemVO implements Serializable {
 		this.name = name;
 	}
 
-	public Float getUnitPrice() {
+	public Integer getUnitPrice() {
 		return unitPrice;
 	}
 
-	public void setUnitPrice(Float unitPrice) {
+	public void setUnitPrice(Integer unitPrice) {
 		this.unitPrice = unitPrice;
 	}
 
@@ -90,11 +90,11 @@ public class QuotetionFunctionAreaItemVO implements Serializable {
 		this.formula = formula;
 	}
 
-	public Float getNum() {
+	public Integer getNum() {
 		return num;
 	}
 
-	public void setNum(Float num) {
+	public void setNum(Integer num) {
 		this.num = num;
 	}
 
@@ -145,6 +145,5 @@ public class QuotetionFunctionAreaItemVO implements Serializable {
 	public void setContent(String content) {
 		this.content = content;
 	}
-	
-	
+
 }

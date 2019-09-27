@@ -106,14 +106,6 @@ public class SalesPaymentAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-	@Action(value = "cancelSalesPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String cancelSalesPayment() throws FLException{
-		
-		salesPaymentService.cancelSalesPayment(salesPayment);
-		
-		return SUCCESS;
-	}
-	
 	@Action(value = "cancelSalesPaymentForDeposit", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String cancelSalesPaymentForDeposit() throws FLException{
 		

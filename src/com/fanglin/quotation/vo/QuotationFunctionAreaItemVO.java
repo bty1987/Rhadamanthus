@@ -2,42 +2,42 @@ package com.fanglin.quotation.vo;
 
 import java.io.Serializable;
 
-public class QuotationFunctionAreaItemVO implements Serializable{
-	                                                                
+public class QuotationFunctionAreaItemVO implements Serializable {
+
 	private static final long serialVersionUID = 735430251276046420L;
-	
+
 	private Long qfaiId;
 
 	private String itemName;
-	
-	private Float addPrice;
-	
-	private Float unitPrice;
-	
-	private Float subPrice;
-	
+
+	private Integer addPrice;
+
+	private Integer unitPrice;
+
+	private Integer subPrice;
+
 	private String formula;
-	
-	private Float initNum;
-	
-	private Float num;
-	
+
+	private Integer initNum;
+
+	private Integer num;
+
 	private Short type;
-	
+
 	private Short subtype;
-	
+
 	private String measurementUnit;
-	
+
 	private String workType;
-	
+
 	private Short discount;
-	
+
 	private Long quotationFunctionAreaId;
-	
+
 	private Long quotationItemId;
-	
+
 	private String content;
-	
+
 	private Integer index;
 
 	public Long getQfaiId() {
@@ -56,27 +56,27 @@ public class QuotationFunctionAreaItemVO implements Serializable{
 		this.itemName = itemName;
 	}
 
-	public Float getAddPrice() {
+	public Integer getAddPrice() {
 		return addPrice;
 	}
 
-	public void setAddPrice(Float addPrice) {
+	public void setAddPrice(Integer addPrice) {
 		this.addPrice = addPrice;
 	}
 
-	public Float getUnitPrice() {
+	public Integer getUnitPrice() {
 		return unitPrice;
 	}
 
-	public void setUnitPrice(Float unitPrice) {
+	public void setUnitPrice(Integer unitPrice) {
 		this.unitPrice = unitPrice;
 	}
 
-	public Float getSubPrice() {
+	public Integer getSubPrice() {
 		return subPrice;
 	}
 
-	public void setSubPrice(Float subPrice) {
+	public void setSubPrice(Integer subPrice) {
 		this.subPrice = subPrice;
 	}
 
@@ -88,19 +88,19 @@ public class QuotationFunctionAreaItemVO implements Serializable{
 		this.formula = formula;
 	}
 
-	public Float getInitNum() {
+	public Integer getInitNum() {
 		return initNum;
 	}
 
-	public void setInitNum(Float initNum) {
+	public void setInitNum(Integer initNum) {
 		this.initNum = initNum;
 	}
 
-	public Float getNum() {
+	public Integer getNum() {
 		return num;
 	}
 
-	public void setNum(Float num) {
+	public void setNum(Integer num) {
 		this.num = num;
 	}
 

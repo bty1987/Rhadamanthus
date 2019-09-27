@@ -39,7 +39,7 @@ public class AuditScalePO implements Serializable {
 	
 	private DepartmentPO belongDepartment;
 	
-	private float money;
+	private long money;
 	
 	private short type;
 	
@@ -101,11 +101,11 @@ public class AuditScalePO implements Serializable {
 	}
 
 	@Column(name="money")
-	public float getMoney() {
+	public long getMoney() {
 		return money;
 	}
 
-	public void setMoney(float money) {
+	public void setMoney(long money) {
 		this.money = money;
 	}
 

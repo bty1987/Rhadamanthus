@@ -24,9 +24,9 @@ public class DecorationActivityItemVO implements java.io.Serializable {
 
 	private Short state;
 
-	private Float num;
+	private Integer num;
 
-	private Float money;
+	private Integer money;
 
 	private String content;
 
@@ -106,19 +106,19 @@ public class DecorationActivityItemVO implements java.io.Serializable {
 		this.state = state;
 	}
 
-	public Float getNum() {
+	public Integer getNum() {
 		return num;
 	}
 
-	public void setNum(Float num) {
+	public void setNum(Integer num) {
 		this.num = num;
 	}
 
-	public Float getMoney() {
+	public Integer getMoney() {
 		return money;
 	}
 
-	public void setMoney(Float money) {
+	public void setMoney(Integer money) {
 		this.money = money;
 	}
 

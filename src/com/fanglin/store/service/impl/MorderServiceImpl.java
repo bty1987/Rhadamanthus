@@ -19,7 +19,6 @@ import com.fanglin.store.dao.MorderDao;
 import com.fanglin.store.dao.MorderItemDao;
 import com.fanglin.store.dao.MpriceDao;
 import com.fanglin.store.dao.MuserDao;
-import com.fanglin.store.po.CartPO;
 import com.fanglin.store.po.CouponPO;
 import com.fanglin.store.po.MorderItemPO;
 import com.fanglin.store.po.MorderPO;
@@ -100,7 +99,6 @@ public class MorderServiceImpl implements MorderService {
 					BeanUtil.copyProperties(morderItemPO.getMprice().getMformat(), morderItemVO.getMprice().getMformat());
 
 					morderItemVOs.add(morderItemVO);
-
 				}
 
 				morderVO.setItems(morderItemVOs);
@@ -150,14 +148,14 @@ public class MorderServiceImpl implements MorderService {
 
 		if (morderItemVOs != null && morderItemVOs.size() != 0) {
 
-			float total = 0;
+			long total = 0;
 
 			for (MorderItemVO morderItemVO : morderItemVOs) {
 
 				MpricePO mpricePO = mpriceDao.get(morderItemVO.getMprice().getPid());
 
-				float price = mpricePO.getPrice();
-				short num = morderItemVO.getNum();
+				long price = mpricePO.getPrice();
+				long num = morderItemVO.getNum();
 				total += Arith.mul(price, num);
 
 				morderItemPO = new MorderItemPO(mpricePO);
@@ -172,37 +170,25 @@ public class MorderServiceImpl implements MorderService {
 			if (morderPO.getCoupon() != null) {
 
 				if (morderPO.getCoupon().getType() == 1) {
-
 					total = Arith.mul(total, morderPO.getCoupon().getValue());
-
 				} else if (morderPO.getCoupon().getType() == 0) {
-
 					total = Arith.sub(total, morderPO.getCoupon().getValue());
-
 				}
-
 			}
 
 			morderPO.setTotal(total);
 
 			morderDao.update(morderPO);
-
 		}
 
 		if (cids != null && cids.size() != 0) {
-
 			for (Long cid : cids) {
-
-				CartPO cartPO = cartDao.get(cid);
-
-				cartDao.delete(cartPO);
-
+				cartDao.delete(cartDao.get(cid));
 			}
 
 		}
 
 		morderVO.setNo(morderPO.getNo());
-
 		morderVO.setOid(morderPO.getOid());
 
 		return 0;
@@ -219,25 +205,15 @@ public class MorderServiceImpl implements MorderService {
 		}
 
 		if (morderPO.getStatus() == MorderPO.STATUS_INIT_SHORT && morderVO.getStatus() == MorderPO.STATUS_WAITINGSEND_SHORT) {
-
 			morderPO.setStatus(MorderPO.STATUS_WAITINGSEND_SHORT);
-
 		} else if (morderPO.getStatus() == MorderPO.STATUS_WAITINGSEND_SHORT && morderVO.getStatus() == MorderPO.STATUS_ENDSEND_SHORT) {
-
 			morderPO.setStatus(MorderPO.STATUS_ENDSEND_SHORT);
-
 		} else if (morderPO.getStatus() == MorderPO.STATUS_ENDSEND_SHORT && morderVO.getStatus() == MorderPO.STATUS_WAITINGEVALUATION_SHORT) {
-
 			morderPO.setStatus(MorderPO.STATUS_WAITINGEVALUATION_SHORT);
-
 		} else if (morderVO.getStatus() == MorderPO.STATUS_COMPLETED_SHORT) {
-
 			morderPO.setStatus(MorderPO.STATUS_COMPLETED_SHORT);
-
 		} else {
-
 			throw new FLException(340013, "订单状态不可操作");
-
 		}
 
 		morderDao.update(morderPO);

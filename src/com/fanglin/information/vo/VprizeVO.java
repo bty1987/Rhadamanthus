@@ -5,13 +5,13 @@ public class VprizeVO implements java.io.Serializable {
 	private static final long serialVersionUID = 181800356765547961L;
 
 	private Long vpid;
-	
+
 	private Long vaid;
-	
+
 	private String name;
-	
-	private Float price;
-	
+
+	private Integer price;
+
 	private Short status;
 
 	public Long getVpid() {
@@ -38,11 +38,11 @@ public class VprizeVO implements java.io.Serializable {
 		this.name = name;
 	}
 
-	public Float getPrice() {
+	public Integer getPrice() {
 		return price;
 	}
 
-	public void setPrice(Float price) {
+	public void setPrice(Integer price) {
 		this.price = price;
 	}
 
@@ -53,5 +53,5 @@ public class VprizeVO implements java.io.Serializable {
 	public void setStatus(Short status) {
 		this.status = status;
 	}
-	
+
 }

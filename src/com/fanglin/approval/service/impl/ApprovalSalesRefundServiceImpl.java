@@ -144,7 +144,7 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 		UserPO sender = userDao.queryUserByUserId(userId);
 
 		String refundType = approvalSalesRefundVO.getType() == SalesPO.STATUS_ALLBACK_SHORT ? "全退" : approvalSalesRefundVO.getType() == SalesPO.STATUS_DBACKORDER_SHORT ? "倒单" : "退货";
-		String content = String.format("订单号:%s,销售单号:%s,品牌:%s,退款金额:%s,类型:%s", salesPO.getOrderId(), salesPO.getNo(), salesPO.getBrand(), approvalSalesRefundVO.getRefund(), refundType);
+		String content = String.format("装修单号:%s,销售单号:%s,品牌:%s,退款金额:%.3f,类型:%s", salesPO.getOrderId(), salesPO.getNo(), salesPO.getBrand(), Arith.div(approvalSalesRefundVO.getRefund(), 1000.0), refundType);
 
 		approvalPO = new ApprovalPO().init(sender, receiver, String.valueOf(sid), ApprovalPO.APPROVAL_TYPE_SALESREFUND_PAYMENT_INT, content, company);
 
@@ -198,8 +198,8 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 			throw new FLException(260021, "销售单不存在");
 		}
 
-		float balance = 0;
-		float allowance = 0;
+		long balance = 0;
+		long allowance = 0;
 		short balanceStatus = salesPO.getBalanceStatus();
 
 		SalesPaymentPO salesPaymentPO = new SalesPaymentPO();
@@ -240,8 +240,8 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 			salesBalancePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 			salesBalancePO.setTotal(Arith.sub(0, approvalSalesRefundPO.getRefund()));
 			salesBalancePO.setBalance(balance);
-			salesBalancePO.setVbalance(0f);
-			salesBalancePO.setPbalance(0f);
+			salesBalancePO.setVbalance(0);
+			salesBalancePO.setPbalance(0);
 			salesBalancePO.setType(balanceStatus == SalesPO.BALANCESTATUS_SETTLEMENT_SHORT ? SalesBalancePO.TYPE_BALANCEREFUNDS_INT : SalesBalancePO.TYPE_PREBALANCEREFUNDS_INT);
 			salesBalancePO.setStatus(SalesBalancePO.STATUS_PREBALANCE_INT);
 			salesBalancePO.setComment(salesPO.getComment());
@@ -255,12 +255,13 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 
 			SalesItemPO salesItemPO = approvalSalesRefundItemPO.getSalesItem();
 
-			float price = salesItemPO.getPrice();// 折让价
-			float disPrice = salesItemPO.getDisPrice();// 折扣价
+			int price = salesItemPO.getPrice();// 折让价
+			int disPrice = salesItemPO.getDisPrice();// 折扣价
+
 			RefundsItemPO refundsItemPO = new RefundsItemPO();
 
-			float num = approvalSalesRefundItemPO.getNum();// 退货数量
-			float total = approvalSalesRefundItemPO.getTotal();// 退货金额
+			long num = approvalSalesRefundItemPO.getNum();// 退货数量
+			long total = approvalSalesRefundItemPO.getTotal();// 退货金额
 
 			BeanUtil.copyProperties(salesItemPO, refundsItemPO);
 			refundsItemPO.setRid(refundsPO.getRid());
@@ -274,7 +275,7 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 			if (balanceStatuses.contains(balanceStatus)) { // 结算状态为预结算/厂商结算/结算
 
 				short ctype = salesItemPO.getCtype(); // 0: 底价 , 1: 点位
-				float cvalue = salesItemPO.getCvalue(); // 结算值
+				int cvalue = salesItemPO.getCvalue(); // 结算值
 
 				if (ctype == SalesItemPO.CTYPE_RESERVEPRICE_INT) {
 					// 0: 底价

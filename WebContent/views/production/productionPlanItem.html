@@ -1,5 +1,11 @@
 <div>
-    <div id="fl-statement"><div class="page-header"><h1>生产单<small><i class="icon-double-angle-right"></i>生产计划单</small></h1></div></div>
+    <div id="fl-statement">
+        <div class="page-header">
+            <h1>生产单
+                <small><i class="icon-double-angle-right"></i>生产计划单</small>
+            </h1>
+        </div>
+    </div>
     <div class="row">
         <div class="col-xs-12">
             <div id="condList" class="fl_search clearfix"></div>
@@ -11,92 +17,91 @@
     </div>
 </div>
 
-
-<div id="layerAddItem" style="padding: 40px 0;display:none;">
-    <div class="row-fluid">
-        <form class="form-horizontal" novalidate="novalidate" id="form1">
-            <div class="widget-main">
-                <div class="row" style="margin-right: 0px">
-                    <div class="col-xs-12">
-                        <div class="form-group">
-                            <label class="control-label col-xs-4 no-padding-center" for="itemName" >名称</label>
-                            <div class="controls col-xs-8">
-                                <input class="m-wrap m-ctrl-medium col-xs-7 v_required" size="16" type="text" value="" id="itemName"/>
-                                <i class="icon-asterisk"></i>
-                            </div>
-                        </div>
-                        <div class="space5"></div>
-                        <div class="form-group">
-                            <label class="control-label col-xs-4 no-padding-center" for="typeNo" >型号</label>
-                            <div class="controls col-xs-8">
-                                <input class="m-wrap m-ctrl-medium col-xs-7"  size="16" type="text" value="" id="typeNo" readonly/>
-                            </div>
-                        </div>
-                        <div class="space5"></div>
-
-                        <div class="form-group">
-                            <label class="control-label col-xs-4 no-padding-center" for="height" >高度</label>
-                            <div class="controls col-xs-8">
-                                <input class="m-wrap m-ctrl-medium col-xs-7 v_required v_float" size="16" type="text" value="" id="height"/>
-                                <i class="icon-asterisk"></i>
-                            </div>
-                        </div>
-                        <div class="space5"></div>
-                        <div class="form-group">
-                            <label class="control-label col-xs-4 no-padding-center" for="width" >宽度</label>
-                            <div class="controls col-xs-8">
-                                <input class="m-wrap m-ctrl-medium col-xs-7 v_required v_float" size="16" type="text" value="" id="width"/>
-                                <i class="icon-asterisk"></i>
-                            </div>
-                        </div>
-                        <div class="space5"></div>
-                        <div class="form-group">
-                            <label class="control-label col-xs-4 no-padding-center" for="thick" >厚度</label>
-                            <div class="controls col-xs-8">
-                                <input class="m-wrap m-ctrl-medium col-xs-7 v_required v_float" size="16" type="text" value="" id="thick"/>
-                                <i class="icon-asterisk"></i>
-                            </div>
-                        </div>
-                        <div class="space5"></div>
-                        <div class="form-group">
-                            <label class="control-label col-xs-4 no-padding-center" for="measurementUnit" >单位</label>
-                            <div class="controls col-xs-8">
-                                <input class="m-wrap m-ctrl-medium col-xs-7 v_required" size="16" type="text" value="" id="measurementUnit" readonly/>
-                                <i class="icon-asterisk"></i>
-                            </div>
-                        </div>
-                        <div class="space5"></div>
-                        <div class="form-group">
-                            <label class="control-label col-xs-4 no-padding-center" for="num" >数量</label>
-                            <div class="controls col-xs-8">
-                                <input class="m-wrap m-ctrl-medium col-xs-7 v_required v_float" size="16" type="text" value="" id="num"/>
-                                <i class="icon-asterisk"></i>
-                            </div>
-                        </div>
-                        <div class="space5"></div>
-                        <div class="form-group">
-                            <label class="control-label col-xs-4 no-padding-center" for="color" >颜色</label>
-                            <div class="controls col-xs-8">
-                                <input class="m-wrap m-ctrl-medium col-xs-7" size="16" type="text" value="" id="color"/>
-                            </div>
-                        </div>
-                        <div class="space5"></div>
-                        <div class="form-group">
-                            <label class="control-label col-xs-4 no-padding-center" for="comment" >备注</label>
-                            <div class="controls col-xs-8">
-                                <input class="m-wrap m-ctrl-medium col-xs-7" size="16" type="text" value="" id="comment"/>
-                            </div>
-                        </div>
-                        <div class="space5"></div>
-                    </div>
-                </div>
+<div class="modal fade" id="productionPlanItemModal" tabindex="-1">
+    <div class="modal-dialog" style="margin-top: 5%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span
+                        class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">添加计划项</h4>
             </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label col-xs-4 no-padding-center" for="itemName" >名称</label>
+                        <div class="controls col-xs-8">
+                            <input class="m-wrap m-ctrl-medium col-xs-7 v_required" size="16" type="text" value="" id="itemName"/>
+                        </div>
+                    </div>
 
+                    <div class="form-group">
+                        <label class="control-label col-xs-4 no-padding-center " for="typeno" >型号</label>
+                        <div class="controls col-xs-8">
+                            <input class="m-wrap m-ctrl-medium col-xs-7 v_required"  size="16" type="text" value="" id="typeno" readonly/>
+                        </div>
+                    </div>
 
-        </form>
+                    <div class="form-group">
+                        <label class="control-label col-xs-4 no-padding-center" for="height" >高度</label>
+                        <div class="controls col-xs-8">
+                            <input class="m-wrap m-ctrl-medium col-xs-7 v_required v_float" size="16" type="text" value="" id="height"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-xs-4 no-padding-center" for="width" >宽度</label>
+                        <div class="controls col-xs-8">
+                            <input class="m-wrap m-ctrl-medium col-xs-7 v_required v_float" size="16" type="text" value="" id="width"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-xs-4 no-padding-center" for="thick" >厚度</label>
+                        <div class="controls col-xs-8">
+                            <input class="m-wrap m-ctrl-medium col-xs-7 v_required v_float" size="16" type="text" value="" id="thick"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-xs-4 no-padding-center" for="measurementUnit" >单位</label>
+                        <div class="controls col-xs-8">
+                            <input class="m-wrap m-ctrl-medium col-xs-7 v_required" size="16" type="text" value="" id="measurementUnit" readonly/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-xs-4 no-padding-center" for="num" >数量</label>
+                        <div class="controls col-xs-8">
+                            <input class="m-wrap m-ctrl-medium col-xs-7 v_required v_number" size="16" type="text" value="" id="num"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-xs-4 no-padding-center" for="color" >颜色</label>
+                        <div class="controls col-xs-8">
+                            <input class="m-wrap m-ctrl-medium col-xs-7" size="16" type="text" value="" id="color"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-xs-4 no-padding-center" for="comment" >备注</label>
+                        <div class="controls col-xs-8">
+                            <input class="m-wrap m-ctrl-medium col-xs-7" size="16" type="text" value="" id="comment"/>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="saveBtn" class="btn btn-primary">保存</button>
+                <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
     </div>
+</div>
+</div>
+
 </div>
 
 <script type="text/javascript">
-	$.loadScript(['js/production/productionPlanItem.js','js/production/productionUtils.js']);
+    $.loadScript(['js/production/productionPlanItem.js']);
 </script>

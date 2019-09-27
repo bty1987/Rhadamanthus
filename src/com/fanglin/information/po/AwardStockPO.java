@@ -50,7 +50,7 @@ public class AwardStockPO implements java.io.Serializable {
 
 	private String name;
 
-	private float num;
+	private int num;
 
 	private short status;
 
@@ -102,11 +102,11 @@ public class AwardStockPO implements java.io.Serializable {
 	}
 
 	@Column(name = "num")
-	public float getNum() {
+	public int getNum() {
 		return num;
 	}
 
-	public void setNum(float num) {
+	public void setNum(int num) {
 		this.num = num;
 	}
 

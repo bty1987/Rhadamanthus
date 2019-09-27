@@ -17,6 +17,7 @@ $.extend(api, {
         market: {url: "ds/market.json", demo: true, cache: "jsonmarket"},
         sales: {url: "ds/sales.json", demo: true, cache: "jsonsales"},
         help: {url: "ds/help.json", demo: true, cache: "jsonhelp"},
-        system: {url: "ds/system.json", demo: true, cache: "jsonsystem"}
+        system: {url: "ds/system.json", demo: true, cache: "jsonsystem"},
+        material: {url: "ds/material.json", demo: true, cache: "jsonmaterial"}
     }
 });

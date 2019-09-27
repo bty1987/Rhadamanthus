@@ -15,17 +15,17 @@ public class AccessoriesVO implements Serializable {
 	private Long aid;
 
 	private String no;
-	
+
 	private String orderId;
-	
+
 	private Long csid;
-	
+
 	private HouseVO house;
-	
+
 	private UserBaseVO supervisor;
 
 	private UserBaseVO creater;
-	
+
 	private UserBaseVO approver;
 
 	private Timestamp createTime;
@@ -33,7 +33,7 @@ public class AccessoriesVO implements Serializable {
 	private Timestamp approverTime;
 
 	private Timestamp fetchTime;
-	
+
 	private Short schedule;
 
 	private Short status;
@@ -103,7 +103,7 @@ public class AccessoriesVO implements Serializable {
 		this.creater = creater;
 	}
 
-	@JSON(format = "yyyy-MM-dd")
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getCreateTime() {
 		return createTime;
 	}
@@ -120,7 +120,7 @@ public class AccessoriesVO implements Serializable {
 		this.approver = approver;
 	}
 
-	@JSON(format = "yyyy-MM-dd")
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getApproverTime() {
 		return approverTime;
 	}

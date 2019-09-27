@@ -31,6 +31,7 @@ import com.fanglin.payment.dao.MaterialPaymentDao;
 import com.fanglin.payment.po.MaterialPaymentPO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.utils.Arith;
 import com.fanglin.utils.DateUtil;
 
 @Service("approvalMaterialFullPaymentService")
@@ -67,11 +68,11 @@ public class ApprovalMaterialFullPaymentServiceImpl implements ApprovalMaterialF
 		MaterialPO materialPO = materialDao.get(mid);
 
 		if (materialPO == null) {
-			throw new FLException(180001, "主材订单不存在");
+			throw new FLException(180001, "主材单不存在");
 		}
 
 		if (materialPO.getFullStatus() != MaterialPO.FINANCE_STATUS_TYPE_INIT_INT) {
-			throw new FLException(180017, "主材订单当前状态不能提交补款");
+			throw new FLException(180017, "主材单当前状态不能提交补款");
 		}
 
 		materialPO.setFullStatus(MaterialPO.FINANCE_STATUS_TYPE_APPROVAL_INT);
@@ -81,7 +82,7 @@ public class ApprovalMaterialFullPaymentServiceImpl implements ApprovalMaterialF
 		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiver().getUserId());
 		UserPO sender = userDao.queryUserByUserId(userId);
 
-		String content = String.format("订单号:%s,子订单号:%s,金额:%s,补款审批", materialPO.getOrderId(), materialPO.getNo(), approvalMaterialFullPaymentVO.getReferMoney());
+		String content = String.format("装修单号:%s,主材单号:%s,金额:%.3f,补款审批", materialPO.getOrderId(), materialPO.getNo(), Arith.div(approvalMaterialFullPaymentVO.getReferMoney(), 1000.0));
 
 		approvalPO = new ApprovalPO().init(sender, receiver, String.valueOf(mid), ApprovalPO.APPROVAL_TYPE_MATERIAL_FULL_PAYMENT_INT, content, company);
 
@@ -112,13 +113,13 @@ public class ApprovalMaterialFullPaymentServiceImpl implements ApprovalMaterialF
 		MaterialPO materialPO = materialDao.get(msoId);
 
 		if (materialPO == null) {
-			throw new FLException(180001, "主材订单不存在");
+			throw new FLException(180001, "主材单不存在");
 		}
 
 		int fullStatus = materialPO.getFullStatus();
 
 		if (fullStatus != MaterialPO.FINANCE_STATUS_TYPE_INIT_INT && fullStatus != MaterialPO.FINANCE_STATUS_TYPE_APPROVAL_INT) {
-			throw new FLException(180017, "主材订单当前状态不能提交补款");
+			throw new FLException(180017, "主材单当前状态不能提交补款");
 		}
 
 		UserPO sender = approvalPO.getSender();
@@ -163,7 +164,7 @@ public class ApprovalMaterialFullPaymentServiceImpl implements ApprovalMaterialF
 		MaterialPO materialPO = materialDao.get(msoId);
 
 		if (materialPO == null) {
-			throw new FLException(180001, "主材订单不存在");
+			throw new FLException(180001, "主材单不存在");
 		}
 
 		materialPO.setFullStatus(MaterialPO.FINANCE_STATUS_TYPE_INIT_INT);

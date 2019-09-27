@@ -33,13 +33,13 @@ public class ExtensionItemPO implements Serializable {
 
 	private String workType;
 
-	private float addPrice; // 增补价
+	private int addPrice; // 增补价
 
-	private float unitPrice; // 原单价
+	private int unitPrice; // 原单价
 
-	private float subPrice; // 退减价
+	private int subPrice; // 退减价
 
-	private float num;
+	private int num;
 
 	private QuotationFunctionAreaPO quotationFunctionArea;
 
@@ -115,38 +115,38 @@ public class ExtensionItemPO implements Serializable {
 	}
 
 	@Column(name = "addPrice")
-	public float getAddPrice() {
+	public int getAddPrice() {
 		return addPrice;
 	}
 
-	public void setAddPrice(float addPrice) {
+	public void setAddPrice(int addPrice) {
 		this.addPrice = addPrice;
 	}
 
 	@Column(name = "unitPrice")
-	public float getUnitPrice() {
+	public int getUnitPrice() {
 		return unitPrice;
 	}
 
-	public void setUnitPrice(float unitPrice) {
+	public void setUnitPrice(int unitPrice) {
 		this.unitPrice = unitPrice;
 	}
 
 	@Column(name = "subPrice")
-	public float getSubPrice() {
+	public int getSubPrice() {
 		return subPrice;
 	}
 
-	public void setSubPrice(float subPrice) {
+	public void setSubPrice(int subPrice) {
 		this.subPrice = subPrice;
 	}
 
 	@Column(name = "num")
-	public float getNum() {
+	public int getNum() {
 		return num;
 	}
 
-	public void setNum(float num) {
+	public void setNum(int num) {
 		this.num = num;
 	}
 

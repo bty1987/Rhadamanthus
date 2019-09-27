@@ -36,7 +36,7 @@ public class PurchaseBalancePO implements Serializable{
 	
 	private Timestamp createTime;
 	
-	private float balance;
+	private long balance;
 	
 	private short status;
 	
@@ -99,13 +99,14 @@ public class PurchaseBalancePO implements Serializable{
 	}
 
 	@Column(name = "balance")
-	public float getBalance() {
+	public long getBalance() {
 		return balance;
 	}
 
-	public void setBalance(float balance) {
+	public void setBalance(long balance) {
 		this.balance = balance;
 	}
+	
 
 	@Column(name = "status")
 	public short getStatus() {

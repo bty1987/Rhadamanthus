@@ -5,25 +5,25 @@ public class ApprovalDecorationActivityItemVO implements java.io.Serializable {
 	private static final long serialVersionUID = 5989264977776706097L;
 
 	private Long adaiId;
-	
+
 	private Long adaId;
-	
+
 	private String orderId;
-	
+
 	private String activityName;
-	
+
 	private String activityItemName;
-	
+
 	private Short type;
-	
+
 	private Integer num;
-	
-	private Float money;
-	
+
+	private Integer money;
+
 	private String content;
 
 	private Short stateType;
-	
+
 	private Long asid;
 
 	public Long getAdaiId() {
@@ -82,11 +82,11 @@ public class ApprovalDecorationActivityItemVO implements java.io.Serializable {
 		this.num = num;
 	}
 
-	public Float getMoney() {
+	public Integer getMoney() {
 		return money;
 	}
 
-	public void setMoney(Float money) {
+	public void setMoney(Integer money) {
 		this.money = money;
 	}
 

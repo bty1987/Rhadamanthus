@@ -464,7 +464,7 @@ public class DecorationServiceImpl implements DecorationService {
 			if (decorationPO.getOrderTotalPrice() != 0) {
 				decorationVO.setOrderTotalPrice(decorationPO.getOrderTotalPrice());
 			} else {
-				decorationVO.setOrderTotalPrice(0f);
+				decorationVO.setOrderTotalPrice(0L);
 			}
 
 			decorationVO.setDiscount(decorationPO.getDiscount());
@@ -803,7 +803,7 @@ public class DecorationServiceImpl implements DecorationService {
 		decorationPO.setOrderId(orderId);
 
 		if (decorationVO.getNotSalesmanRate() == null || decorationVO.getNotSalesmanRate() > 1 || decorationVO.getNotSalesmanRate() < 0) {
-			decorationPO.setNotSalesmanRate(0f);
+			decorationPO.setNotSalesmanRate(0);
 		} else {
 			decorationPO.setNotSalesmanRate(decorationVO.getNotSalesmanRate());
 		}
@@ -812,7 +812,7 @@ public class DecorationServiceImpl implements DecorationService {
 		decorationPO.setHouseType(decorationVO.getHouseType());
 		decorationPO.setStatus(DecorationPO.STATUS_INIT_INT);
 		decorationPO.setResourceType(decorationVO.getResourceType());// 量房0 资源1
-		decorationPO.setOrderTotalPrice(0f);
+		decorationPO.setOrderTotalPrice(0);
 		decorationPO.setSalesmanType(decorationVO.getSalesmanType());
 		decorationPO.setCompany(company);
 		decorationPO.setPaySacle((short) 0);
@@ -921,7 +921,7 @@ public class DecorationServiceImpl implements DecorationService {
 
 		if (decorationVO.getNotSalesmanRate() != null) {
 			decorationPO.setNotSalesmanRate(decorationVO.getNotSalesmanRate());
-			serviceRecordDao.save(new ServiceRecordPO().init(ServiceRecordPO.TYPE_CHANGE_DECORATION_INT, userId, String.format("装修单:%s,非业务提点修改: %f", orderId, decorationVO.getNotSalesmanRate())));
+			serviceRecordDao.save(new ServiceRecordPO().init(ServiceRecordPO.TYPE_CHANGE_DECORATION_INT, userId, String.format("装修单:%s,非业务提点修改: %d", orderId, decorationVO.getNotSalesmanRate())));
 		}
 
 		if (decorationVO.getGrade() != null) {
@@ -1079,7 +1079,7 @@ public class DecorationServiceImpl implements DecorationService {
 		decorationPO.setVersion(new QuotationVersionPO(versionId));
 
 		List<QuotationPO> quotationPOs = quotationDao.queryQuotationByOrderId(orderId);
-		Integer divisor = Integer.valueOf(systemConfigDao.querySystemConfig("quotationFunctionArea").getValue());
+		Long divisor = Long.valueOf(systemConfigDao.querySystemConfig("quotationFunctionArea").getValue());
 
 		for (QuotationPO quotationPO : quotationPOs) {
 			List<QuotationFunctionAreaPO> quotationFunctionAreaPOs = quotationFunctionAreaDao.queryQuotationFunctionAreaByQuotationId(quotationPO.getQid());
@@ -1185,7 +1185,7 @@ public class DecorationServiceImpl implements DecorationService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void terminalDecoration(DecorationVO decorationVO, float refundValue, float paymentValue, Authentication authentication) throws FLException {
+	public void terminalDecoration(DecorationVO decorationVO, long refundValue, long paymentValue, Authentication authentication) throws FLException {
 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationVO.getOrderId());
 

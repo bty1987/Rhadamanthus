@@ -17,58 +17,58 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.po.QuotationItemPO;
 
 public class QuotationFunctionAreaItemPO implements Serializable {
-	
+
 	private static final long serialVersionUID = 3077313706873385773L;
-	
+
 	public static final short SUBTYPE_QUOTATION_ENGINEERING_SHORT = 0;
-	
+
 	public static final short SUBTYPE_QUOTATION_MATERIAL_SHORT = 1;
-	
+
 	public static final short TYPE_QUOTATION_COMMON_SHORT = 0;
-	
+
 	public static final short TYPE_QUOTATION_CUSTOMER_SHORT = 1;
-	
+
 	public static final short TYPE_QUOTATION_TRAFFIC_SHORT = 2;
-	
-	public static final short TYPE_QUOTATION_MANAGE_SHORT= 3;
-	
-	public static final short TYPE_QUOTATION_FIX_SHORT= 4;
+
+	public static final short TYPE_QUOTATION_MANAGE_SHORT = 3;
+
+	public static final short TYPE_QUOTATION_FIX_SHORT = 4;
 
 	private long qfaiId;
 
 	private String itemName;
-	
+
 	private String measurementUnit;
-	
+
 	private String workType;
-	
-	private float unitPrice;
-	
+
+	private int unitPrice;
+
 	private String formula;
-	
-	private float initNum;
-	
-	private float num;
-	
+
+	private int initNum;
+
+	private int num;
+
 	private short type;
-	
+
 	private short subtype;
-	
+
 	private short discount;
 
 	private QuotationFunctionAreaPO quotationFunctionArea;
-	
+
 	private QuotationItemPO quotationItem;
-	
+
 	private String content;
-	
+
 	private int index;
-	
+
 	public QuotationFunctionAreaItemPO() {
 		super();
 	}
 
-	public QuotationFunctionAreaItemPO(String itemName, String measurementUnit, String workType, float unitPrice, float num, short type, short discount, QuotationFunctionAreaPO quotationFunctionArea, String content) {
+	public QuotationFunctionAreaItemPO(String itemName, String measurementUnit, String workType, int unitPrice, int num, short type, short discount, QuotationFunctionAreaPO quotationFunctionArea, String content) {
 		this.itemName = itemName;
 		this.measurementUnit = measurementUnit;
 		this.workType = workType;
@@ -87,7 +87,7 @@ public class QuotationFunctionAreaItemPO implements Serializable {
 	public void setQfaiId(long qfaiId) {
 		this.qfaiId = qfaiId;
 	}
-	
+
 	public String getItemName() {
 		return itemName;
 	}
@@ -112,11 +112,11 @@ public class QuotationFunctionAreaItemPO implements Serializable {
 		this.workType = workType;
 	}
 
-	public float getUnitPrice() {
+	public int getUnitPrice() {
 		return unitPrice;
 	}
 
-	public void setUnitPrice(float unitPrice) {
+	public void setUnitPrice(int unitPrice) {
 		this.unitPrice = unitPrice;
 	}
 
@@ -128,19 +128,19 @@ public class QuotationFunctionAreaItemPO implements Serializable {
 		this.formula = formula;
 	}
 
-	public float getInitNum() {
+	public int getInitNum() {
 		return initNum;
 	}
 
-	public void setInitNum(float initNum) {
+	public void setInitNum(int initNum) {
 		this.initNum = initNum;
 	}
 
-	public float getNum(){
+	public int getNum() {
 		return num;
 	}
-	
-	public void setNum(float num){
+
+	public void setNum(int num) {
 		this.num = num;
 	}
 
@@ -168,19 +168,19 @@ public class QuotationFunctionAreaItemPO implements Serializable {
 		this.discount = discount;
 	}
 
-	public QuotationFunctionAreaPO getQuotationFunctionArea(){
+	public QuotationFunctionAreaPO getQuotationFunctionArea() {
 		return quotationFunctionArea;
 	}
-	
-	public void setQuotationFunctionArea(QuotationFunctionAreaPO quotationFunctionArea){
+
+	public void setQuotationFunctionArea(QuotationFunctionAreaPO quotationFunctionArea) {
 		this.quotationFunctionArea = quotationFunctionArea;
 	}
 
-	public QuotationItemPO getQuotationItem(){
+	public QuotationItemPO getQuotationItem() {
 		return quotationItem;
 	}
-	
-	public void setQuotationItem(QuotationItemPO quotationItem){
+
+	public void setQuotationItem(QuotationItemPO quotationItem) {
 		this.quotationItem = quotationItem;
 	}
 
@@ -191,7 +191,7 @@ public class QuotationFunctionAreaItemPO implements Serializable {
 	public void setContent(String content) {
 		this.content = content;
 	}
-	
+
 	public int getIndex() {
 		return index;
 	}
@@ -199,8 +199,8 @@ public class QuotationFunctionAreaItemPO implements Serializable {
 	public void setIndex(int index) {
 		this.index = index;
 	}
-	
-	public void ptp(QuotetionFunctionAreaItemPO quotetionFunctionAreaItemPO){
+
+	public void ptp(QuotetionFunctionAreaItemPO quotetionFunctionAreaItemPO) {
 		this.setItemName(quotetionFunctionAreaItemPO.getName());
 		this.setUnitPrice(quotetionFunctionAreaItemPO.getUnitPrice());
 		this.setIndex(quotetionFunctionAreaItemPO.getIndex());
@@ -215,40 +215,40 @@ public class QuotationFunctionAreaItemPO implements Serializable {
 		this.setContent(quotetionFunctionAreaItemPO.getContent());
 	}
 
-	public static String quotationFunctionAreaItemTable(Long quotationFunctionAreaId,Integer div) {
-		
-		int index = (int)(quotationFunctionAreaId/div);
-		
+	public static String quotationFunctionAreaItemTable(Long quotationFunctionAreaId, Long div) {
+
+		int index = (int) (quotationFunctionAreaId / div);
+
 		String qfaItem = "QuotationFunctionAreaItemPO";
-		
-		String quotationFunctionAreaItemTable = qfaItem+index;
-		
+
+		String quotationFunctionAreaItemTable = qfaItem + index;
+
 		return quotationFunctionAreaItemTable;
 	}
-	
-	public static QuotationFunctionAreaItemPO factoryToInstance(Long quotationFunctionAreaId, Integer div)throws FLException{
-		
+
+	public static QuotationFunctionAreaItemPO factoryToInstance(Long quotationFunctionAreaId, Long div) throws FLException {
+
 		try {
-			int index = (int)(quotationFunctionAreaId/div);
-			
+			int index = (int) (quotationFunctionAreaId / div);
+
 			Class<?> clazz = Class.forName("com.fanglin.quotation.po.QuotationFunctionAreaItemPO" + index);
-			
+
 			return (QuotationFunctionAreaItemPO) clazz.newInstance();
 		} catch (Exception e) {
 			throw new FLException(200029, "报价项存储对象错误");
 		}
-		
+
 	}
-	
-	public static Class<?> factoryToClazz(Long quotationFunctionAreaId, Integer div)throws FLException{
-		
+
+	public static Class<?> factoryToClazz(Long quotationFunctionAreaId, Long div) throws FLException {
+
 		try {
-			int index = (int)(quotationFunctionAreaId/div);
-			
+			int index = (int) (quotationFunctionAreaId / div);
+
 			return Class.forName("com.fanglin.quotation.po.QuotationFunctionAreaItemPO" + index);
 		} catch (Exception e) {
 			throw new FLException(200029, "报价项存储对象错误");
 		}
 	}
-	
+
 }

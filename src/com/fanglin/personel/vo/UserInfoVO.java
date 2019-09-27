@@ -5,81 +5,81 @@ public class UserInfoVO implements java.io.Serializable {
 	private static final long serialVersionUID = -3235815301177677490L;
 
 	private Long uiid;
-	
+
 	private UserVO user;
-	
+
 	private String employWay;
-	
+
 	private String recommendMan;
-	
+
 	private Integer jobYears;
-	
+
 	private String employType;
-	
+
 	private String entryTime;
-	
+
 	private String employTime;
-	
+
 	private Integer serviceYears;
-	
+
 	private Integer age;
-	
+
 	private String political;
-	
+
 	private String emergencyMan;
-	
+
 	private String emergencyPhone;
-	
+
 	private String isPresentGraduate;
-	
+
 	private String graduateTime;
-	
+
 	private String school;
-	
+
 	private String education;
-	
+
 	private String specialty;
-	
+
 	private String isMarried;
-	
+
 	private String isBirth;
-	
+
 	private String isHouseLoan;
-	
+
 	private String isCarLoan;
-	
+
 	private String houseType;
-	
+
 	private String householdType;
-	
+
 	private String hometownAddress;
-	
+
 	private String address;
-	
+
 	private String isContract;
-	
+
 	private String isInsurance;
-	
+
 	private String insuranceTime;
-	
+
 	private String pensionNum;
-	
+
 	private String medicalNum;
-	
-	private Float salary;
-	
+
+	private Long salary;
+
 	private String lover;
-	
+
 	private String bank;
-	
+
 	private String bankCardNum;
-	
+
 	private String qq;
-	
+
 	private String wechat;
-	
+
 	private String email;
-	
+
 	private String profiles;
 
 	public UserInfoVO() {
@@ -339,11 +339,11 @@ public class UserInfoVO implements java.io.Serializable {
 		this.medicalNum = medicalNum;
 	}
 
-	public Float getSalary() {
+	public Long getSalary() {
 		return this.salary;
 	}
 
-	public void setSalary(Float salary) {
+	public void setSalary(Long salary) {
 		this.salary = salary;
 	}
 

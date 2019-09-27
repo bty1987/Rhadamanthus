@@ -73,7 +73,7 @@ var AddReduceDetail = (function(){
 				if(data && data.length){
 					$.each(data,function(i, v){
 						v.workType = v.itemWorkType;
-						var $liLine = painter.createQuoteModalItem(v, "sdiId");
+						var $liLine = painter.createQuoteModalItem(v, "sdiid");
 						$liLine.appendTo($ul);
 					});
 					$ul.appendTo($tableWrap);
@@ -153,7 +153,7 @@ var AddReduceDetail = (function(){
 				}),
 				//提交
 				submitAddReduceBtn: com.focusPage('#submitAddReduceBtn').on(ace.click_event, function(event){
-					com.post( api.addReduce.submitAddReduce, addReduceDetail.basicParams, function(){
+					com.post(api.addReduce.submitAddReduce, addReduceDetail.basicParams, function(){
 						com.showAlert(com.info, '提交成功');
 					}, null, false);
 				}),
@@ -712,9 +712,12 @@ var AddReduceDetail = (function(){
 	        
 	        arCalculator.calculateFees();
 	        
-		    var _params = $.extend(true, {}, addReduceDetail.basicParams);
-		    _params["addReduceItem.ariId"] = _ariid;
-		    _params["addReduceItem.discount"] = _discount;
+	        var args = {
+	            "addReduceItem.ariId": _ariid,
+	            "addReduceItem.discount": _discount,
+	        }
+	        
+		    var _params = $.extend(true, {}, args, addReduceDetail.basicParams);
 		    
 		    com.post(api.addReduce.updateAddReduceItemForAdvance, _params, function(res){
 		        $quote.attr("data-discount", _discount)
@@ -753,9 +756,10 @@ var AddReduceDetail = (function(){
 	};
 
 	var painter = {
-		//创建添加报价项弹窗中的报价项 .sdiId
+		//创建添加报价项弹窗中的报价项 .sdiid
 
 		createQuoteModalItem : function(v, idname){
+		    
 			var $liLine = $('<li></li>').addClass('item-blue clearfix');
 			var $h3 = $('<h3></h3>').addClass('oid').css({"margin-bottom" : 0});
 			var $label = $('<label></label>');

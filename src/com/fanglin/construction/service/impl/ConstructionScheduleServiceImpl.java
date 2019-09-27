@@ -20,6 +20,7 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.customer.service.DecorationService;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
+import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 
@@ -127,7 +128,7 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 			throw new FLException(130026, "工程节点不存在");
 		}
 		
-		if (constructionSchedulePO.getCheckout() == ConstructionSchedulePO.CHECKOUT_VALID_INT && decorationPO.getPaySacle() < constructionNodePO.getPrecheck()) {
+		if (constructionSchedulePO.getCheckout() == ConstructionSchedulePO.CHECKOUT_VALID_INT && decorationPO.getPaySacle() < Arith.div(constructionNodePO.getPrecheck(), 1000.0)) {
 			throw new FLException(120018, "装修款比例不足");
 		}
 
@@ -181,7 +182,7 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 			throw new FLException(130026, "工程节点不存在");
 		}
 
-		if (constructionSchedulePO.getCheckout() == ConstructionSchedulePO.CHECKOUT_VALID_INT && decorationPO.getPaySacle() < constructionNodePO.getPostcheck()) {
+		if (constructionSchedulePO.getCheckout() == ConstructionSchedulePO.CHECKOUT_VALID_INT && decorationPO.getPaySacle() < Arith.div(constructionNodePO.getPostcheck(), 1000.0)) {
 			throw new FLException(120018, "装修款比例不足");
 		}
 
@@ -219,7 +220,7 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 			DecorationPO decorationPO = constructionPO.getDecoration();
 			ConstructionNodePO constructionNodePO = constructionNodeDao.get(cnid);
 
-			if (constructionSchedulePO.getCheckout() == ConstructionSchedulePO.CHECKOUT_VALID_INT && decorationPO.getPaySacle() < constructionNodePO.getPostcheck()) {
+			if (constructionSchedulePO.getCheckout() == ConstructionSchedulePO.CHECKOUT_VALID_INT && decorationPO.getPaySacle() < Arith.div(constructionNodePO.getPostcheck(), 1000.0)) {
 				throw new FLException(120018, "装修款比例不足");
 			}
 

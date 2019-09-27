@@ -12,39 +12,39 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="mgoods", catalog = "store")
-public class MgoodsPO implements Serializable{
-	
+@Table(name = "mgoods", catalog = "store")
+public class MgoodsPO implements Serializable {
+
 	private static final long serialVersionUID = -4319485362492429004L;
-	
+
 	public static final String COLUMN_GID_STR = "gid";
-	
+
 	public static final String COLUMN_NO_STR = "no";
-	
+
 	public static final String COLUMN_BID_STR = "mbrand.bid";
-	
+
 	public static final short STATUS_ABLE_SHORT = 0;
-	
+
 	public static final short STATUS_DISABLE_SHORT = 1;
-	
+
 	private long gid;
-	
+
 	private String no;
-	
+
 	private String name;
-	
+
 	private String pinyin;
-	
+
 	private MbrandPO mbrand;
-	
+
 	private String barcode;
-	
+
 	private String title;
-	
+
 	private String defaultImg;
-	
-	private float price;
-	
+
+	private long price;
+
 	private short status;
 
 	public MgoodsPO() {
@@ -58,7 +58,7 @@ public class MgoodsPO implements Serializable{
 
 	@Id
 	@GeneratedValue
-	@Column(name="gid")
+	@Column(name = "gid")
 	public long getGid() {
 		return gid;
 	}
@@ -67,7 +67,7 @@ public class MgoodsPO implements Serializable{
 		this.gid = gid;
 	}
 
-	@Column(name="no")
+	@Column(name = "no")
 	public String getNo() {
 		return no;
 	}
@@ -76,7 +76,7 @@ public class MgoodsPO implements Serializable{
 		this.no = no;
 	}
 
-	@Column(name="name")
+	@Column(name = "name")
 	public String getName() {
 		return name;
 	}
@@ -85,7 +85,7 @@ public class MgoodsPO implements Serializable{
 		this.name = name;
 	}
 
-	@Column(name="pinyin")
+	@Column(name = "pinyin")
 	public String getPinyin() {
 		return pinyin;
 	}
@@ -93,9 +93,9 @@ public class MgoodsPO implements Serializable{
 	public void setPinyin(String pinyin) {
 		this.pinyin = pinyin;
 	}
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "bid", referencedColumnName="bid")
+	@JoinColumn(name = "bid", referencedColumnName = "bid")
 	public MbrandPO getMbrand() {
 		return mbrand;
 	}
@@ -104,7 +104,7 @@ public class MgoodsPO implements Serializable{
 		this.mbrand = mbrand;
 	}
 
-	@Column(name="barcode")
+	@Column(name = "barcode")
 	public String getBarcode() {
 		return barcode;
 	}
@@ -113,7 +113,7 @@ public class MgoodsPO implements Serializable{
 		this.barcode = barcode;
 	}
 
-	@Column(name="title")
+	@Column(name = "title")
 	public String getTitle() {
 		return title;
 	}
@@ -122,7 +122,7 @@ public class MgoodsPO implements Serializable{
 		this.title = title;
 	}
 
-	@Column(name="defaultImg")
+	@Column(name = "defaultImg")
 	public String getDefaultImg() {
 		return defaultImg;
 	}
@@ -130,17 +130,17 @@ public class MgoodsPO implements Serializable{
 	public void setDefaultImg(String defaultImg) {
 		this.defaultImg = defaultImg;
 	}
-	
-	@Column(name="price")
-	public float getPrice() {
+
+	@Column(name = "price")
+	public long getPrice() {
 		return price;
 	}
 
-	public void setPrice(float price) {
+	public void setPrice(long price) {
 		this.price = price;
 	}
 
-	@Column(name="status")
+	@Column(name = "status")
 	public short getStatus() {
 		return status;
 	}
@@ -148,5 +148,5 @@ public class MgoodsPO implements Serializable{
 	public void setStatus(short status) {
 		this.status = status;
 	}
-	
+
 }

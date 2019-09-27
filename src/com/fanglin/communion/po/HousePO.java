@@ -45,7 +45,7 @@ public class HousePO implements Serializable {
 
 	private short type;
 
-	private float buildArea;
+	private int buildArea;
 
 	private short maxFloor;
 
@@ -157,11 +157,11 @@ public class HousePO implements Serializable {
 	}
 
 	@Column(name = "buildArea")
-	public float getBuildArea() {
+	public int getBuildArea() {
 		return buildArea;
 	}
 
-	public void setBuildArea(float buildArea) {
+	public void setBuildArea(int buildArea) {
 		this.buildArea = buildArea;
 	}
 

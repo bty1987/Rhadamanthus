@@ -4,97 +4,233 @@ $.extend(api.index, {
 });
 
 $.extend(api, {store: {
-	queryAddressByUid: {url: "queryAddressByUid.do", server: "store"},
-	queryAddress: {url: "queryAddress.do", server: "store"},
-	addAddress: {url: "addAddress.do", server: "store"},
-	updateAddress: {url: "updateAddress.do", server: "store"},
-	updateAddressByAid: {url: "updateAddressByAid.do", server: "store"},
-	updateAddressForStatus: {url: "updateAddressForStatus.do", server: "store"},
+	queryAddressByUid: {url: "queryAddressByUid.do"},
+	queryAddress: {url: "queryAddress.do"},
+	addAddress: {url: "addAddress.do"},
+	updateAddress: {url: "updateAddress.do"},
+	updateAddressByAid: {url: "updateAddressByAid.do"},
+	updateAddressForStatus: {url: "updateAddressForStatus.do"},
 	
-	pageCart: {url: "pageCart.do", server: "store"},
-	queryCartByUnionId: {url: "queryCartByUnionId.do", server: "store"},
-	addCart: {url: "addCart.do", server: "store"},
-	updateCart: {url: "updateCart.do", server: "store"},
-	clearCart: {url: "clearCart.do", server: "store"},
+	pageCart: {url: "pageCart.do"},
+	queryCartByUnionId: {url: "queryCartByUnionId.do"},
+	addCart: {url: "addCart.do"},
+	updateCart: {url: "updateCart.do"},
+	clearCart: {url: "clearCart.do"},
 	
-	pageMbrand: {url: "pageMbrand.do", server: "store"},
-	queryMbrand: {url: "queryMbrand.do", server: "store"},
-	queryMbrandByName: {url: "queryMbrandByName.do", server: "store"},
-	addMbrand: {url: "addMbrand.do", server: "store"},
-	updateMbrand: {url: "updateMbrand.do", server: "store"},
-	updateMbrandForStatus: {url: "updateMbrandForStatus.do", server: "store"},
+	pageMbrand: {url: "pageMbrand.do"},
+	queryMbrand: {url: "queryMbrand.do"},
+	queryMbrandByName: {url: "queryMbrandByName.do"},
+	addMbrand: {url: "addMbrand.do"},
+	updateMbrand: {url: "updateMbrand.do"},
+	updateMbrandForStatus: {url: "updateMbrandForStatus.do"},
 	
-	pageMcategory: {url: "pageMcategory.do", server: "store"},
-	queryMcategory: {url: "queryMcategory.do", server: "store"},
-	queryMcategoryForShow: {url: "queryMcategoryForShow.do", server: "store"},
-	addMcategory: {url: "addMcategory.do", server: "store"},
-	updateMcategory: {url: "updateMcategory.do", server: "store"},
-	updateMcategoryForShow: {url: "updateMcategoryForShow.do", server: "store"},
+	pageMcategory: {url: "pageMcategory.do"},
+	queryMcategory: {url: "queryMcategory.do"},
+	queryMcategoryForShow: {url: "queryMcategoryForShow.do"},
+	addMcategory: {url: "addMcategory.do"},
+	updateMcategory: {url: "updateMcategory.do"},
+	updateMcategoryForShow: {url: "updateMcategoryForShow.do"},
 	
-	queryMcolorByGid: {url: "queryMcolorByGid.do", server: "store"},
-	queryMcolor: {url: "queryMcolor.do", server: "store"},
-	addMcolor: {url: "addMcolor.do", server: "store"},
-	updateMcolorForStatus: {url: "updateMcolorForStatus.do", server: "store"},
+	queryMcolorByGid: {url: "queryMcolorByGid.do"},
+	queryMcolor: {url: "queryMcolor.do"},
+	addMcolor: {url: "addMcolor.do"},
+	updateMcolorForStatus: {url: "updateMcolorForStatus.do"},
 	
-	queryMformatByGid: {url: "queryMformatByGid.do", server: "store"},
-	queryMformat: {url: "queryMformat.do", server: "store"},
-	addMformat: {url: "addMformat.do", server: "store"},
-	updateMformatForStatus: {url: "updateMformatForStatus.do", server: "store"},
+	queryMformatByGid: {url: "queryMformatByGid.do"},
+	queryMformat: {url: "queryMformat.do"},
+	addMformat: {url: "addMformat.do"},
+	updateMformatForStatus: {url: "updateMformatForStatus.do"},
 	
+	pageMgoods: {
+	    url: "pageMgoods.do", 
+	    server: "store",
+	    type: "query", 
+        tranargs: [{
+            result: "paging-data", 
+            args: ["price"]
+        }]
+	},
+	queryMgoods: {
+	    url: "queryMgoods.do", 
+	    server: "store",
+	    type: "query", 
+        tranargs: [{
+            result: "mgoods", 
+            args: ["price"]
+        }]
+	},
+	queryMgoodsByPinyin: {url: "queryMgoodsByPinyin.do"},
+	addMgoods: {
+	    url: "addMgoods.do", 
+	    server: "store",
+	    type: "update",
+        tranargs: {
+            args: ["mgoods.price"]
+        }
+	},
+	updateMgoods: {
+	    url: "updateMgoods.do", 
+	    server: "store",
+	    type: "update",
+        tranargs: {
+            args: ["mgoods.price"]
+        }
+	},
+	updateMgoodsForDefaultImg: {url: "updateMgoodsForDefaultImg.do"},
+	updateMgoodsForStatus: {url: "updateMgoodsForStatus.do"},
 	
-	pageMgoods: {url: "pageMgoods.do", server: "store"},
-	queryMgoods: {url: "queryMgoods.do", server: "store"},
-	queryMgoodsByPinyin: {url: "queryMgoodsByPinyin.do", server: "store"},
-	addMgoods: {url: "addMgoods.do", server: "store"},
-	updateMgoods: {url: "updateMgoods.do", server: "store"},
-	updateMgoodsForDefaultImg: {url: "updateMgoodsForDefaultImg.do", server: "store"},
-	updateMgoodsForStatus: {url: "updateMgoodsForStatus.do", server: "store"},
+	pageMorder: {
+	    url: "pageMorder.do", 
+	    server: "store",
+	    type: "query", 
+        tranargs: [{
+            result: "paging-data", 
+            args: ["total"]
+        }]
+	},
+	queryMorderByUnionId: {
+	    url: "queryMorderByUnionId.do", 
+	    server: "store",
+	    type: "query", 
+        tranargs: [{
+            result: "paging-data", 
+            args: ["total"]
+        }]
+	},
+	addMorder: {
+	    url: "addMorder.do", 
+	    server: "store",
+	    type: "update",
+        tranargs: {
+            args: ["morder.total"]
+        }
+	},
+	updateMorderForStatus: {url: "updateMorderForStatus.do"},
+	deleteMorder: {url: "deleteMorder.do"},
 	
-	pageMorder: {url: "pageMorder.do", server: "store"},
-	queryMorderByUnionId: {url: "queryMorderByUnionId.do", server: "store"},
-	addMorder: {url: "addMorder.do", server: "store"},
-	updateMorderForStatus: {url: "updateMorderForStatus.do", server: "store"},
-	deleteMorder: {url: "deleteMorder.do", server: "store"},
-	
-	queryMorderItemByOid: {url: "queryMorderItemByOid.do", server: "store"},
+	queryMorderItemByOid: {url: "queryMorderItemByOid.do"},
 
-	queryMprice: {url: "queryMprice.do", server: "store"},
-	queryMpriceByGid: {url: "queryMpriceByGid.do", server: "store"},
-	queryMpriceByBid: { url: "queryMpriceByBid.do", server: "store"},
-	queryMpriceByPinyin: {url: "queryMpriceByPinyin.do", server: "store"},
-	queryMpriceForShow: {url: "queryMpriceForShow.do", server: "store"},
-	addMprice: {url: "addMprice.do", server: "store"},
-	updateMpriceForStatus: {url: "updateMpriceForStatus.do", server: "store"},
+	queryMprice: {
+	    url: "queryMprice.do", 
+	    server: "store",
+	    type: "query", 
+        tranargs: [{
+            result: "prices", 
+            args: ["price"]
+        }]
+	},
+	queryMpriceByGid: {
+	    url: "queryMpriceByGid.do", 
+	    server: "store",
+	    type: "query", 
+        tranargs: [{
+            result: "prices", 
+            args: ["price"]
+        }]
+	},
+	queryMpriceByBid: {
+	    url: "queryMpriceByBid.do", 
+	    server: "store",
+	    type: "query", 
+        tranargs: [{
+            result: "prices", 
+            args: ["price"]
+        }]
+	},
+	queryMpriceByPinyin: {
+	    url: "queryMpriceByPinyin.do", 
+	    server: "store",
+	    type: "query", 
+        tranargs: [{
+            result: "prices", 
+            args: ["price"]
+        }]
+	},
+	queryMpriceForShow: {
+	    url: "queryMpriceForShow.do", 
+	    server: "store",
+	    type: "query", 
+        tranargs: [{
+            result: "prices", 
+            args: ["price"]
+        }]
+	},
+	addMprice: {
+	    url: "addMprice.do", 
+	    server: "store",
+	    type: "update",
+        tranargs: {
+            args: ["mprice.price"]
+        }
+	},
+	updateMpriceForStatus: {url: "updateMpriceForStatus.do"},
 	
-	pageMuser: {url: "pageMuser.do", server: "store"},
-	queryMuserByUnionId: {url: "queryMuserByUnionId.do", server: "store"},
-	saveMuser: {url: "saveMuser.do", server: "store"},
-	updateMuser: {url: "updateMuser.do", server: "store"},
+	pageMuser: {url: "pageMuser.do"},
+	queryMuserByUnionId: {url: "queryMuserByUnionId.do"},
+	saveMuser: {url: "saveMuser.do"},
+	updateMuser: {url: "updateMuser.do"},
 	
-	queryPictureByGid: {url: "queryPictureByGid.do", server: "store"},
-	queryPicture: {url: "queryPicture.do", server: "store"},
-	addPicture: {url: "addPicture.do", server: "store"},
-	updatePictureForSort: {url: "updatePictureForSort.do", server: "store"},
-	deletePicture: {url: "deletePicture.do", server: "store"},
+	queryPictureByGid: {url: "queryPictureByGid.do"},
+	queryPicture: {url: "queryPicture.do"},
+	addPicture: {url: "addPicture.do"},
+	updatePictureForSort: {url: "updatePictureForSort.do"},
+	deletePicture: {url: "deletePicture.do"},
 	
-	querySlide: {url: "querySlide.do", server: "store"},
-	querySlideForShow: {url: "querySlideForShow.do", server: "store"},
-	addSlide: {url: "addSlide.do", server: "store"},
-	updateSlide: {url: "updateSlide.do", server: "store"},
-	updateSlideForStatus: {url: "updateSlideForStatus.do", server: "store"},
+	querySlide: {url: "querySlide.do"},
+	querySlideForShow: {url: "querySlideForShow.do"},
+	addSlide: {url: "addSlide.do"},
+	updateSlide: {url: "updateSlide.do"},
+	updateSlideForStatus: {url: "updateSlideForStatus.do"},
 	
-	addMpayment: {url: "addMpayment.do", server: "store"},
+	addMpayment: {
+	    url: "addMpayment.do", 
+	    server: "store",
+	    type: "update",
+        tranargs: {
+            args: ["mpayment.totalPrice"]
+        }
+	},
 	
-	pageEvaluate: {url: "pageEvaluate.do", server: "store"},
-	addEvaluate: {url: "addEvaluate.do", server: "store"},
+	pageEvaluate: {url: "pageEvaluate.do"},
+	addEvaluate: {url: "addEvaluate.do"},
 	
-	pageCoupon: {url: "pageCoupon.do", server: "store"},
-	queryCouponByCid: {url: "queryCouponByCid.do", server: "store"},
-	addCoupon: {url: "addCoupon.do", server: "store"},
-	updateCoupon: {url: "updateCoupon.do", server: "store"},
-	updateCouponForStatus: {url: "updateCouponForStatus.do", server: "store"},
+	pageCoupon: {
+	    url: "pageCoupon.do", 
+	    server: "store",
+	    type: "query", 
+        tranargs: [{
+            result: "paging-data", 
+            args: ["value"]
+        }]
+	},
+	queryCouponByCid: {
+	    url: "queryCouponByCid.do", 
+	    server: "store",
+	    type: "query", 
+        tranargs: [{
+            result: "coupons", 
+            args: ["value"]
+        }]
+	},
+	addCoupon: {
+	    url: "addCoupon.do", 
+	    server: "store",
+	    type: "update",
+        tranargs: {
+            args: ["coupon.value"]
+        }
+	},
+	updateCoupon: {
+	    url: "updateCoupon.do", 
+	    server: "store",
+	    type: "update",
+        tranargs: {
+            args: ["coupon.value"]
+        }
+	},
+	updateCouponForStatus: {url: "updateCouponForStatus.do"},
 	
-	pageMuserCoupon: {url: "pageMuserCoupon.do", server: "store"},
-	queryMuserCouponByUnionId: {url: "queryMuserCouponByUnionId.do", server: "store"},
-	addMuserCoupon: {url: "addMuserCoupon.do", server: "store"},
+	pageMuserCoupon: {url: "pageMuserCoupon.do"},
+	queryMuserCouponByUnionId: {url: "queryMuserCouponByUnionId.do"},
+	addMuserCoupon: {url: "addMuserCoupon.do"},
 }});

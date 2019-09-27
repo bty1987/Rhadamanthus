@@ -21,61 +21,47 @@ public class QuotationVO implements Serializable {
 	private static final long serialVersionUID = -62258203481876631L;
 
 	private Long qid;
-	
+
 	private String orderId;
-	
-	private String orderAddr;
-	
-	private String customerName;
-	
-	private String designerName;
-	
-	private String supervisorName;
-	
-	private String designDepartmentName;
-	
-	private Float houseArea;
-	
-	private Float notSalesmanRate;
-	
+
+	private Integer notSalesmanRate;
+
 	private String no;
 
 	private String quotationName;
-	
+
 	private String decorationStyle;
-	
+
 	private Integer creater;
-	
-	private String createrName;
-	
+
 	private Timestamp createTime;
-	
-	private Float discount;
-	
-	private Float totalPrice;
-	
+
+	private Integer discount;
+
+	private Long totalPrice;
+
 	private Short defaults;
-	
+
 	private Short status;
-	
+
 	private Short type;
-	
-	private Float managePrice;
-	
-	private Float manageRate;
-	
-	private Float trafficPrice;
-	
+
+	private Long managePrice;
+
+	private Integer manageRate;
+
+	private Long trafficPrice;
+
 	private String content;
-	
-	private Float undisPrice;
-	
-	private Float disPrice;
-	
-	private Float trafficRate;
-	
-	private Float basePrice;
-	
+
+	private Long undisPrice;
+
+	private Long disPrice;
+
+	private Integer trafficRate;
+
+	private Long basePrice;
+
 	public QuotationVO() {
 		super();
 	}
@@ -85,83 +71,35 @@ public class QuotationVO implements Serializable {
 		this.qid = qid;
 	}
 
-	public Long getQid(){
+	public Long getQid() {
 		return qid;
 	}
 
-	public void setQid(Long qid){
+	public void setQid(Long qid) {
 		this.qid = qid;
 	}
 
-	public String getOrderId(){
+	public String getOrderId() {
 		return orderId;
 	}
 
-	public void setOrderId(String orderId){
+	public void setOrderId(String orderId) {
 		this.orderId = orderId;
 	}
 
-	public String getOrderAddr() {
-		return orderAddr;
-	}
-
-	public void setOrderAddr(String orderAddr) {
-		this.orderAddr = orderAddr;
-	}
-
-	public String getCustomerName() {
-		return customerName;
-	}
-
-	public void setCustomerName(String customerName) {
-		this.customerName = customerName;
-	}
-
-	public String getDesignerName() {
-		return designerName;
-	}
-
-	public String getDesignDepartmentName() {
-		return designDepartmentName;
-	}
-
-	public String getSupervisorName() {
-		return supervisorName;
-	}
-
-	public void setSupervisorName(String supervisorName) {
-		this.supervisorName = supervisorName;
-	}
-
-	public void setDesignDepartmentName(String designDepartmentName) {
-		this.designDepartmentName = designDepartmentName;
-	}
-
-	public Float getHouseArea() {
-		return houseArea;
-	}
-
-	public void setHouseArea(Float houseArea) {
-		this.houseArea = houseArea;
-	}
-
-	public void setDesignerName(String designerName) {
-		this.designerName = designerName;
-	}
-
-	public String getQuotationName(){
+	public String getQuotationName() {
 		return quotationName;
 	}
 
-	public void setQuotationName(String quotationName){
+	public void setQuotationName(String quotationName) {
 		this.quotationName = quotationName;
 	}
 
-	public String getDecorationStyle(){
+	public String getDecorationStyle() {
 		return decorationStyle;
 	}
 
-	public void setDecorationStyle(String decorationStyle){
+	public void setDecorationStyle(String decorationStyle) {
 		this.decorationStyle = decorationStyle;
 	}
 
@@ -173,28 +111,20 @@ public class QuotationVO implements Serializable {
 		this.creater = creater;
 	}
 
-	public String getCreaterName() {
-		return createrName;
-	}
-
-	public void setCreaterName(String createrName) {
-		this.createrName = createrName;
-	}
-
-	@JSON(format="yyyy-MM-dd")
-	public Timestamp getCreateTime(){
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getCreateTime() {
 		return createTime;
 	}
 
-	public void setCreateTime(Timestamp createTime){
+	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
 	}
 
-	public Float getDiscount(){
+	public Integer getDiscount() {
 		return discount;
 	}
 
-	public void setDiscount(Float discount){
+	public void setDiscount(Integer discount) {
 		this.discount = discount;
 	}
 
@@ -214,14 +144,14 @@ public class QuotationVO implements Serializable {
 		this.status = status;
 	}
 
-	public void setTotalPrice(Float totalPrice){
+	public void setTotalPrice(Long totalPrice) {
 		this.totalPrice = totalPrice;
 	}
 
-	public Float getTotalPrice(){
+	public Long getTotalPrice() {
 		return totalPrice;
 	}
-	
+
 	public String getNo() {
 		return no;
 	}
@@ -230,11 +160,11 @@ public class QuotationVO implements Serializable {
 		this.no = no;
 	}
 
-	public Float getNotSalesmanRate() {
+	public Integer getNotSalesmanRate() {
 		return notSalesmanRate;
 	}
 
-	public void setNotSalesmanRate(Float notSalesmanRate) {
+	public void setNotSalesmanRate(Integer notSalesmanRate) {
 		this.notSalesmanRate = notSalesmanRate;
 	}
 
@@ -246,27 +176,27 @@ public class QuotationVO implements Serializable {
 		this.content = content;
 	}
 
-	public Float getManagePrice() {
+	public Long getManagePrice() {
 		return managePrice;
 	}
 
-	public void setManagePrice(Float managePrice) {
+	public void setManagePrice(Long managePrice) {
 		this.managePrice = managePrice;
 	}
 
-	public Float getManageRate() {
+	public Integer getManageRate() {
 		return manageRate;
 	}
 
-	public void setManageRate(Float manageRate) {
+	public void setManageRate(Integer manageRate) {
 		this.manageRate = manageRate;
 	}
 
-	public Float getTrafficPrice() {
+	public Long getTrafficPrice() {
 		return trafficPrice;
 	}
 
-	public void setTrafficPrice(Float trafficPrice) {
+	public void setTrafficPrice(Long trafficPrice) {
 		this.trafficPrice = trafficPrice;
 	}
 
@@ -278,36 +208,36 @@ public class QuotationVO implements Serializable {
 		this.type = type;
 	}
 
-	public Float getUndisPrice() {
+	public Long getUndisPrice() {
 		return undisPrice;
 	}
 
-	public void setUndisPrice(Float undisPrice) {
+	public void setUndisPrice(Long undisPrice) {
 		this.undisPrice = undisPrice;
 	}
 
-	public Float getDisPrice() {
+	public Long getDisPrice() {
 		return disPrice;
 	}
 
-	public void setDisPrice(Float disPrice) {
+	public void setDisPrice(Long disPrice) {
 		this.disPrice = disPrice;
 	}
 
-	public Float getTrafficRate() {
+	public Integer getTrafficRate() {
 		return trafficRate;
 	}
 
-	public void setTrafficRate(Float trafficRate) {
+	public void setTrafficRate(Integer trafficRate) {
 		this.trafficRate = trafficRate;
 	}
 
-	public Float getBasePrice() {
+	public Long getBasePrice() {
 		return basePrice;
 	}
 
-	public void setBasePrice(Float basePrice) {
+	public void setBasePrice(Long basePrice) {
 		this.basePrice = basePrice;
 	}
-	
+
 }

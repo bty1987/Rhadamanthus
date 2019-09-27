@@ -88,7 +88,7 @@ public class SalesPaymentPO  implements Serializable{
 	
 	private Timestamp createTime;
 	
-	private float referMoney;
+	private long referMoney;
 	
 	private int company;
 
@@ -186,11 +186,11 @@ public class SalesPaymentPO  implements Serializable{
 	}
 
 	@Column(name = "referMoney")
-	public float getReferMoney() {
+	public long getReferMoney() {
 		return referMoney;
 	}
 
-	public void setReferMoney(float referMoney) {
+	public void setReferMoney(long referMoney) {
 		this.referMoney = referMoney;
 	}
 

@@ -11,11 +11,11 @@ public class DecorationPaymentVO implements Serializable {
 
 	private String orderId;
 
-	private Float referMoney;
-	
+	private Long referMoney;
+
 	private Timestamp collectTime;
 
-	private Float coupon;
+	private Long coupon;
 
 	private String couponInfo;
 
@@ -31,11 +31,11 @@ public class DecorationPaymentVO implements Serializable {
 		this.orderId = orderId;
 	}
 
-	public Float getReferMoney() {
+	public Long getReferMoney() {
 		return referMoney;
 	}
 
-	public void setReferMoney(Float referMoney) {
+	public void setReferMoney(Long referMoney) {
 		this.referMoney = referMoney;
 	}
 
@@ -48,11 +48,11 @@ public class DecorationPaymentVO implements Serializable {
 		this.collectTime = collectTime;
 	}
 
-	public Float getCoupon() {
+	public Long getCoupon() {
 		return coupon;
 	}
 
-	public void setCoupon(Float coupon) {
+	public void setCoupon(Long coupon) {
 		this.coupon = coupon;
 	}
 

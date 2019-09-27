@@ -117,9 +117,9 @@ public class ManifestItemServiceImpl implements ManifestItemService {
 		long cid = manifestItemVO.getColor().getCid();
 		long fid = manifestItemVO.getFormat().getFid();
 
-		float inprice = manifestItemVO.getInprice();
-		float outprice = manifestItemVO.getOutprice();
-		float num = manifestItemVO.getNum();
+		int inprice = manifestItemVO.getInprice();
+		int outprice = manifestItemVO.getOutprice();
+		int num = manifestItemVO.getNum();
 
 		ManifestItemPO manifestItemPO = new ManifestItemPO().init(manifestPO.getMid(), null, null, null, null, gid, cid, fid, manifestPO.getType(), inprice, outprice, num, null, null);
 
@@ -164,8 +164,8 @@ public class ManifestItemServiceImpl implements ManifestItemService {
 		long cid = manifestItemPO.getColor().getCid();
 		long fid = manifestItemPO.getFormat().getFid();
 		
-		float surplus = manifestItemPO.getSurplus();
-		float num = manifestItemVO.getNum();
+		int surplus = manifestItemPO.getSurplus();
+		int num = manifestItemVO.getNum();
 		
 		if(num > surplus){
 			throw new FLException(260026, "货单项数量不符");
@@ -219,7 +219,7 @@ public class ManifestItemServiceImpl implements ManifestItemService {
 		long cid = manifestItemPO.getColor().getCid();
 		long fid = manifestItemPO.getFormat().getFid();
 		
-		float surplus = manifestItemPO.getSurplus();
+		int surplus = manifestItemPO.getSurplus();
 
 		if (manifestItemPO.getInstorehouse() != null) {
 			goodsStorehouseStockService.outstorehouse(gid, cid, fid, manifestItemPO.getInstorehouse().getShid(), surplus);

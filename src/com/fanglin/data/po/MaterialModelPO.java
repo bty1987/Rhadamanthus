@@ -25,192 +25,192 @@ import com.fanglin.communion.po.BrandPO;
 import com.fanglin.communion.po.MeasurementUnitPO;
 
 @Entity
-@Table(name="materialmodel", catalog = "data")
+@Table(name = "materialmodel", catalog = "data")
 public class MaterialModelPO implements Serializable {
 
 	private static final long serialVersionUID = 7005034712246904666L;
-	
+
 	public static final String COLUMN_MATERIALMODELNAME_STR = "materialModelName";
-	
+
 	public static final String COLUMN_MATERIALMODELNO_STR = "materialModelNo";
-	
+
 	public static final String COLUMN_MATERIALBRANDID_STR = "brand.bid";
-	
+
 	public static final String COLUMN_STATUS_STR = "status";
-	
+
 	public static final int CALC_TYPE_BASE_INT = 0;
-	
+
 	public static final String CALC_TYPE_BASE_STR = "底价";
-	
+
 	public static final int CALC_TYPE_POINT_INT = 1;
-	
+
 	public static final String CALC_TYPE_POINT_STR = "点位";
-	
+
 	public static final short TYPE_ENABLE_INT = 0;
-	
+
 	public static final short TYPE_DISABLE_INT = 1;
-	
+
 	private int mmId;
-	
+
 	private String materialModelNo;
-	
+
 	private String materialModelName;
-	
+
 	private BrandPO brand;
-	
+
 	private String materialTypeName;
-	
+
 	private String materialBrandName;
-	
+
 	private MeasurementUnitPO measurementUnit;
-	
+
 	private String measurementUnitName;
-	
-	private float materialUnitPrice;
-	
-	private float materialPurchasePrice;
-	
-	private float discount;
-	
+
+	private int materialUnitPrice;
+
+	private int materialPurchasePrice;
+
+	private int discount;
+
 	private int calcType;
-	
-	private float point;
-	
-	private float base;
-	
+
+	private int point;
+
+	private int base;
+
 	private short status;
-	
+
 	private int company;
 
 	@Id
-	@Column(name="mmId")
-	public int getMmId(){
+	@Column(name = "mmId")
+	public int getMmId() {
 		return mmId;
 	}
 
-	public void setMmId(int mmId){
+	public void setMmId(int mmId) {
 		this.mmId = mmId;
 	}
 
-	@Column(name="materialModelNo")
-	public String getMaterialModelNo(){
+	@Column(name = "materialModelNo")
+	public String getMaterialModelNo() {
 		return materialModelNo;
 	}
 
-	public void setMaterialModelNo(String materialModelNo){
+	public void setMaterialModelNo(String materialModelNo) {
 		this.materialModelNo = materialModelNo;
 	}
 
-	@Column(name="materialModelName")
-	public String getMaterialModelName(){
+	@Column(name = "materialModelName")
+	public String getMaterialModelName() {
 		return materialModelName;
 	}
 
-	public void setMaterialModelName(String materialModelName){
+	public void setMaterialModelName(String materialModelName) {
 		this.materialModelName = materialModelName;
 	}
 
-	@Column(name="materialUnitPrice")
-	public float getMaterialUnitPrice(){
+	@Column(name = "materialUnitPrice")
+	public int getMaterialUnitPrice() {
 		return materialUnitPrice;
 	}
 
-	public void setMaterialUnitPrice(float materialUnitPrice){
+	public void setMaterialUnitPrice(int materialUnitPrice) {
 		this.materialUnitPrice = materialUnitPrice;
 	}
 
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(nullable=false, name="brandId",referencedColumnName = "bId")
-	public BrandPO getBrand(){
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = false, name = "brandId", referencedColumnName = "bId")
+	public BrandPO getBrand() {
 		return brand;
 	}
 
-	public void setBrand(BrandPO brand){
+	public void setBrand(BrandPO brand) {
 		this.brand = brand;
 	}
 
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(nullable=false, name="measurementUnitId",referencedColumnName = "id")
-	public MeasurementUnitPO getMeasurementUnit(){
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = false, name = "measurementUnitId", referencedColumnName = "id")
+	public MeasurementUnitPO getMeasurementUnit() {
 		return measurementUnit;
 	}
 
-	public void setMeasurementUnit(MeasurementUnitPO measurementUnit){
+	public void setMeasurementUnit(MeasurementUnitPO measurementUnit) {
 		this.measurementUnit = measurementUnit;
 	}
 
-	public String getMeasurementUnitName(){
+	public String getMeasurementUnitName() {
 		return measurementUnitName;
 	}
 
-	public void setMeasurementUnitName(String measurementUnitName){
+	public void setMeasurementUnitName(String measurementUnitName) {
 		this.measurementUnitName = measurementUnitName;
 	}
-	
-	@Column(name="discount")
-	public float getDiscount(){
+
+	@Column(name = "discount")
+	public int getDiscount() {
 		return discount;
 	}
 
-	public void setDiscount(float discount){
+	public void setDiscount(int discount) {
 		this.discount = discount;
 	}
 
-	@Column(name="base")
-	public float getBase(){
+	@Column(name = "base")
+	public int getBase() {
 		return base;
 	}
 
-	public void setBase(float base){
+	public void setBase(int base) {
 		this.base = base;
 	}
 
-	@Column(name="materialTypeName")
-	public String getMaterialTypeName(){
+	@Column(name = "materialTypeName")
+	public String getMaterialTypeName() {
 		return materialTypeName;
 	}
 
-	public void setMaterialTypeName(String materialTypeName){
+	public void setMaterialTypeName(String materialTypeName) {
 		this.materialTypeName = materialTypeName;
 	}
 
-	@Column(name="materialBrandName")
-	public String getMaterialBrandName(){
+	@Column(name = "materialBrandName")
+	public String getMaterialBrandName() {
 		return materialBrandName;
 	}
 
-	public void setMaterialBrandName(String materialBrandName){
+	public void setMaterialBrandName(String materialBrandName) {
 		this.materialBrandName = materialBrandName;
 	}
 
-	@Column(name="point")
-	public float getPoint(){
+	@Column(name = "point")
+	public int getPoint() {
 		return point;
 	}
 
-	public void setPoint(float point){
+	public void setPoint(int point) {
 		this.point = point;
 	}
 
-	@Column(name="calcType")
-	public int getCalcType(){
+	@Column(name = "calcType")
+	public int getCalcType() {
 		return calcType;
 	}
 
-	public void setCalcType(int calcType){
+	public void setCalcType(int calcType) {
 		this.calcType = calcType;
 	}
 
-	@Column(name="materialPurchasePrice")
-	public float getMaterialPurchasePrice(){
+	@Column(name = "materialPurchasePrice")
+	public int getMaterialPurchasePrice() {
 		return materialPurchasePrice;
 	}
 
-	public void setMaterialPurchasePrice(float materialPurchasePrice){
+	public void setMaterialPurchasePrice(int materialPurchasePrice) {
 		this.materialPurchasePrice = materialPurchasePrice;
 	}
 
-	@Column(name="status")
+	@Column(name = "status")
 	public short getStatus() {
 		return status;
 	}
@@ -218,7 +218,8 @@ public class MaterialModelPO implements Serializable {
 	public void setStatus(short status) {
 		this.status = status;
 	}
-	@Column(name="company")
+
+	@Column(name = "company")
 	public int getCompany() {
 		return company;
 	}
@@ -226,7 +227,5 @@ public class MaterialModelPO implements Serializable {
 	public void setCompany(int company) {
 		this.company = company;
 	}
-	
-	
 
 }

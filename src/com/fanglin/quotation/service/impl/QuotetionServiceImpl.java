@@ -36,176 +36,171 @@ import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.UUIDUtil;
 
 @Service("quotetionService")
-@Transactional(readOnly=true)
+@Transactional(readOnly = true)
 public class QuotetionServiceImpl implements QuotetionService {
 
 	@Autowired
 	private QuotetionDao quotetionDao;
-	
+
 	@Autowired
 	private QuotetionFunctionAreaItemDao quotetionFunctionAreaItemDao;
-	
+
 	@Autowired
 	private QuotetionFunctionAreaDao quotetionFunctionAreaDao;
 
 	@Autowired
 	private SystemConfigDao systemConfigDao;
-	
+
 	@Autowired
 	private UserDao userDao;
-	
+
 	@Autowired
 	private QuotationVersionDao quotationVersionDao;
-	
+
 	@Autowired
 	private QuotationDao quotationDao;
-	
+
 	@Autowired
 	private DecorationDao decorationDao;
-	
+
 	@Autowired
 	private QuotationFunctionAreaItemDao quotationFunctionAreaItemDao;
-	
+
 	@Autowired
 	private QuotationFunctionAreaDao quotationFunctionAreaDao;
-	
+
 	@Override
 	public List<QuotetionVO> queryQuotetion(String userId) {
 		UserPO userPO = userDao.queryUserByUserId(userId);
 		List<QuotetionVO> quotetionVOs = new ArrayList<QuotetionVO>();
 		List<QuotetionPO> quotetionPOs = quotetionDao.queryQuotetionByCuid(userPO.getUid());
-		handleListQuotetion(quotetionVOs,quotetionPOs);
+		handleListQuotetion(quotetionVOs, quotetionPOs);
 		return quotetionVOs;
 	}
 
 	@Override
 	public QuotetionVO queryQuotetionByQid(QuotetionVO quotetion) {
-	
+
 		QuotetionPO quotetionPO = quotetionDao.get(quotetion.getQid());
 		QuotetionVO quotetionVO = new QuotetionVO();
-		handleQuotetion(quotetionVO,quotetionPO);
+		handleQuotetion(quotetionVO, quotetionPO);
 		return quotetionVO;
 	}
-	
+
 	@Override
 	public QuotetionVO queryQuotetionByNo(QuotetionVO quotetionVO) {
 		QuotetionPO quotetionPO = quotetionDao.queryQuotetionByNo(quotetionVO.getNo());
 		QuotetionVO quotetion = new QuotetionVO();
-		handleQuotetion(quotetion,quotetionPO);
+		handleQuotetion(quotetion, quotetionPO);
 		return quotetion;
 	}
-	
+
 	@Override
-	@Transactional(rollbackFor=Exception.class)
+	@Transactional(rollbackFor = Exception.class)
 	public int addQuotetion(QuotetionVO quotetionVO, String userId, int company) throws FLException {
-		
+
 		SystemConfigPO quotetionlimit = systemConfigDao.querySystemConfig("quotetionlimit", company);
 
 		QuotetionPO quotetionPO = new QuotetionPO();
 
 		UserPO userPO = userDao.queryUserByUserId(userId);
-		
-		QuotationVersionPO quotationVersionPO =quotationVersionDao.queryQuotationVersionByVersionId(quotetionVO.getVersion());
-		
-		if(quotetionDao.countQuotetionByCuid(userPO.getUid()) >= (quotetionlimit == null ? 10 :Integer.parseInt( quotetionlimit.getValue()))){
+
+		QuotationVersionPO quotationVersionPO = quotationVersionDao.queryQuotationVersionByVersionId(quotetionVO.getVersion());
+
+		if (quotetionDao.countQuotetionByCuid(userPO.getUid()) >= (quotetionlimit == null ? 10 : Integer.parseInt(quotetionlimit.getValue()))) {
 			throw new FLException(200001, "报价已经达到数量上限");
 		}
-		
+
 		BeanUtil.copyProperties(quotetionVO, quotetionPO);
-		
+
 		quotetionPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-		
 		quotetionPO.setCuid(userPO.getUid());
-		
 		quotetionPO.setNo(UUIDUtil.getUuid().substring(0, 15));
-		
-		quotetionPO.setDiscount(10);
-		
+		quotetionPO.setDiscount(10000);
 		quotetionPO.setManageRate(quotationVersionPO.getManageRate());
-		
 		quotetionPO.setTrafficRate(quotationVersionPO.getTrafficRate());
-		
+
 		quotetionDao.save(quotetionPO);
-		
+
 		BeanUtil.copyProperties(quotetionPO, quotetionVO);
-		
+
 		QuotetionFunctionAreaPO autogeneration = new QuotetionFunctionAreaPO(quotetionPO.getQid(), "生成项目", 9999, QuotetionFunctionAreaPO.TYPE_MANAGEMENT_INT);
-		
+
 		quotetionFunctionAreaDao.save(autogeneration);
-		
-		Integer divisor = Integer.parseInt(systemConfigDao.querySystemConfig("quotationFunctionArea").getValue());
-		
+
+		Long divisor = Long.valueOf(systemConfigDao.querySystemConfig("quotationFunctionArea").getValue());
+
 		QuotetionFunctionAreaItemPO trafficPrice = QuotetionFunctionAreaItemPO.factoryToInstance(autogeneration.getQfaId(), divisor);
-		
-		convertQuotetionPOForAdvance(trafficPrice,"车运费", "", "其他", quotationVersionPO.getTrafficRate(),"0" ,0f, QuotationFunctionAreaItemPO.TYPE_QUOTATION_TRAFFIC_SHORT, quotationVersionPO.getTrafficDiscount(), autogeneration, "",QuotetionFunctionAreaItemPO.SUBTYPE_QUOTATION_ENGINEERING_SHORT);
-	
+
+		convertQuotetionPOForAdvance(trafficPrice, "车运费", "", "其他", quotationVersionPO.getTrafficRate(), "0", 0, QuotationFunctionAreaItemPO.TYPE_QUOTATION_TRAFFIC_SHORT, quotationVersionPO.getTrafficDiscount(), autogeneration, "", QuotetionFunctionAreaItemPO.SUBTYPE_QUOTATION_ENGINEERING_SHORT);
+
 		quotetionFunctionAreaItemDao.save(trafficPrice);
-		
+
 		QuotetionFunctionAreaItemPO managePrice = QuotetionFunctionAreaItemPO.factoryToInstance(autogeneration.getQfaId(), divisor);
-		
-		convertQuotetionPOForAdvance(managePrice,"管理费", "", "其他", quotationVersionPO.getManageRate(),"0" ,0f,QuotetionFunctionAreaItemPO.TYPE_QUOTATION_MANAGE_SHORT, quotationVersionPO.getManageDiscount(), autogeneration, "",QuotetionFunctionAreaItemPO.SUBTYPE_QUOTATION_ENGINEERING_SHORT);
-		
+
+		convertQuotetionPOForAdvance(managePrice, "管理费", "", "其他", quotationVersionPO.getManageRate(), "0", 0, QuotetionFunctionAreaItemPO.TYPE_QUOTATION_MANAGE_SHORT, quotationVersionPO.getManageDiscount(), autogeneration, "", QuotetionFunctionAreaItemPO.SUBTYPE_QUOTATION_ENGINEERING_SHORT);
+
 		quotetionFunctionAreaItemDao.save(managePrice);
-	
+
 		return 0;
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
+	@Transactional(rollbackFor = Exception.class)
 	public int updateQuotetion(QuotetionVO quotetionVO) throws FLException {
-		
-		QuotetionPO quotetionPO  = checkQuotetionForStatusByEnabled(quotetionVO.getQid());
+
+		QuotetionPO quotetionPO = checkQuotetionForStatusByEnabled(quotetionVO.getQid());
 
 		quotetionPO.setVersion(quotetionVO.getVersion());
 		quotetionPO.setName(quotetionVO.getName());
 		quotetionPO.setContent(quotetionVO.getContent());
-		
+
 		quotetionDao.update(quotetionPO);
-		
+
 		return 0;
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
+	@Transactional(rollbackFor = Exception.class)
 	public int updateQuotetionForAdvance(QuotetionVO quotetionVO) throws FLException {
-		
-		QuotetionPO quotetionPO  = checkQuotetionForStatusByEnabled(quotetionVO.getQid());
+
+		QuotetionPO quotetionPO = checkQuotetionForStatusByEnabled(quotetionVO.getQid());
 
 		convertQuotetionVOToPOForAdvance(quotetionVO, quotetionPO);
-		
+
 		quotetionDao.update(quotetionPO);
-		
+
 		return 0;
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
+	@Transactional(rollbackFor = Exception.class)
 	public int deleteQuotetion(QuotetionVO quotetionVO) throws FLException {
-		
+
 		checkQuotetionForStatusByEnabled(quotetionVO.getQid());
-		
+
 		deleteQuotetionByQId(quotetionVO.getQid());
-		
+
 		return 0;
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
+	@Transactional(rollbackFor = Exception.class)
 	public int replicaQuotetion(QuotetionVO quotetionVO, String userId, int company) throws FLException {
-		
+
 		UserPO userPO = userDao.queryUserByUserId(userId);
-		
+
 		QuotetionPO quotetionPO = new QuotetionPO();
-		
+
 		QuotationPO copyQuotationPO = quotationDao.get(quotetionVO.getQid());
-	
-		if(copyQuotationPO.getCreateTime() == null){
+
+		if (copyQuotationPO.getCreateTime() == null) {
 			throw new FLException(200003, "报价不存在");
 		}
-		
+
 		SystemConfigPO quotetionlimit = systemConfigDao.querySystemConfig("quotetionlimit", company);
-		
-		if(quotetionDao.countQuotetionByCuid(userPO.getUid()) >= (quotetionlimit == null ? 10 : Integer.parseInt(quotetionlimit.getValue()))){
+
+		if (quotetionDao.countQuotetionByCuid(userPO.getUid()) >= (quotetionlimit == null ? 10 : Integer.parseInt(quotetionlimit.getValue()))) {
 			throw new FLException(200001, "报价已经达到数量上限");
 		}
 
@@ -214,177 +209,177 @@ public class QuotetionServiceImpl implements QuotetionService {
 		quotetionDao.save(quotetionPO);
 
 		copyQuotationToQuotetion(quotetionVO.getQid(), quotetionPO.getQid());
-		
-		BeanUtil.copyProperties(quotetionPO,quotetionVO);
-		
+
+		BeanUtil.copyProperties(quotetionPO, quotetionVO);
+
 		return 0;
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
+	@Transactional(rollbackFor = Exception.class)
 	public int cloneQuotetion(QuotetionVO quotetionVO, String userId, int company) throws FLException {
-		
+
 		UserPO userPO = userDao.queryUserByUserId(userId);
-		
+
 		QuotetionPO quotetionPO = new QuotetionPO();
-		
+
 		QuotetionPO copyQuotetionPO = quotetionDao.queryQuotetionByNo(quotetionVO.getNo());
-		
-		if(copyQuotetionPO == null){
+
+		if (copyQuotetionPO == null) {
 			throw new FLException(200003, "报价不存在");
 		}
-		
+
 		SystemConfigPO quotetionlimit = systemConfigDao.querySystemConfig("quotetionlimit", company);
-		
-		if(quotetionDao.countQuotetionByCuid(userPO.getUid()) >= (quotetionlimit == null ? 10 : Integer.parseInt(quotetionlimit.getValue()))){
+
+		if (quotetionDao.countQuotetionByCuid(userPO.getUid()) >= (quotetionlimit == null ? 10 : Integer.parseInt(quotetionlimit.getValue()))) {
 			throw new FLException(200001, "报价已经达到数量上限");
 		}
-		
+
 		quotetionPO.ptp(copyQuotetionPO.getName(), copyQuotetionPO.getVersion(), userPO.getUid());
 
 		quotetionDao.save(quotetionPO);
 
 		copyQuotetion(copyQuotetionPO.getQid(), quotetionPO.getQid());
-		
-		BeanUtil.copyProperties(quotetionPO,quotetionVO);
-		
+
+		BeanUtil.copyProperties(quotetionPO, quotetionVO);
+
 		return 0;
 	};
-	
+
 	@Override
-	@Transactional(rollbackFor=Exception.class)
+	@Transactional(rollbackFor = Exception.class)
 	public int copyQuotetion(QuotetionVO quotetionVO, String userId, int company) throws FLException {
-		
+
 		UserPO userPO = userDao.queryUserByUserId(userId);
-		
+
 		QuotetionPO quotetionPO = new QuotetionPO();
-		
+
 		SystemConfigPO quotetionlimit = systemConfigDao.querySystemConfig("quotetionlimit", company);
 
-		if(quotetionDao.countQuotetionByCuid(userPO.getUid()) >= (quotetionlimit == null ? 10 : Integer.parseInt(quotetionlimit.getValue()))){
+		if (quotetionDao.countQuotetionByCuid(userPO.getUid()) >= (quotetionlimit == null ? 10 : Integer.parseInt(quotetionlimit.getValue()))) {
 			throw new FLException(200001, "报价已经达到数量上限");
 		}
-		
-		BeanUtil.copyProperties(quotetionVO, quotetionPO, Arrays.asList("qid","cuid"));
+
+		BeanUtil.copyProperties(quotetionVO, quotetionPO, Arrays.asList("qid", "cuid"));
 
 		quotetionPO.setCuid(userPO.getUid());
 		quotetionPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		quotetionPO.setNo(UUIDUtil.getUuid().substring(0, 15));
-		
+
 		QuotetionPO copyPO = quotetionDao.get(quotetionVO.getQid());
 		quotetionPO.setVersion(copyPO.getVersion());
 		quotetionPO.setDiscount(copyPO.getDiscount());
 		quotetionPO.setTotalPrice(copyPO.getTotalPrice());
-		
+
 		quotetionDao.save(quotetionPO);
-		
+
 		copyQuotetion(quotetionVO.getQid(), quotetionPO.getQid());
-		
-		BeanUtil.copyProperties(quotetionPO,quotetionVO);
-		
+
+		BeanUtil.copyProperties(quotetionPO, quotetionVO);
+
 		return 0;
 	}
-	
-	@Transactional(rollbackFor=Exception.class)
-	private int copyQuotationToQuotetion(long quotationId, long quotetionId)throws FLException{
-		
+
+	@Transactional(rollbackFor = Exception.class)
+	private int copyQuotationToQuotetion(long quotationId, long quotetionId) throws FLException {
+
 		List<QuotationFunctionAreaPO> quotationFunctionAreaPOs = quotationFunctionAreaDao.queryQuotationFunctionAreaByQuotationId(quotationId);
-		
-		Integer divisor = Integer.parseInt(systemConfigDao.querySystemConfig("quotationFunctionArea").getValue());
-		
-		for(QuotationFunctionAreaPO quotationFunctionAreaPO: quotationFunctionAreaPOs){
-			
+
+		Long divisor = Long.valueOf(systemConfigDao.querySystemConfig("quotationFunctionArea").getValue());
+
+		for (QuotationFunctionAreaPO quotationFunctionAreaPO : quotationFunctionAreaPOs) {
+
 			QuotetionFunctionAreaPO _quotetionFunctionAreaPO = new QuotetionFunctionAreaPO();
-			
+
 			_quotetionFunctionAreaPO.setName(quotationFunctionAreaPO.getFunctionAreaName());
 			_quotetionFunctionAreaPO.setIndex(quotationFunctionAreaPO.getFunctionAreaOrder());
 			_quotetionFunctionAreaPO.setType(quotationFunctionAreaPO.getType());
-			_quotetionFunctionAreaPO.setQid(quotetionId);	
-		
+			_quotetionFunctionAreaPO.setQid(quotetionId);
+
 			quotetionFunctionAreaDao.save(_quotetionFunctionAreaPO);
-		
-			List<QuotationFunctionAreaItemPO> quotationFunctionAreaItemPOs = quotationFunctionAreaItemDao.queryQuotationFunctionAreaItemByFunctionAreaId(QuotationFunctionAreaItemPO.factoryToClazz(quotationFunctionAreaPO.getQfaId(), divisor),quotationFunctionAreaPO.getQfaId());
-			
-			for(QuotationFunctionAreaItemPO quotationFunctionAreaItem: quotationFunctionAreaItemPOs){
-				
+
+			List<QuotationFunctionAreaItemPO> quotationFunctionAreaItemPOs = quotationFunctionAreaItemDao.queryQuotationFunctionAreaItemByFunctionAreaId(QuotationFunctionAreaItemPO.factoryToClazz(quotationFunctionAreaPO.getQfaId(), divisor), quotationFunctionAreaPO.getQfaId());
+
+			for (QuotationFunctionAreaItemPO quotationFunctionAreaItem : quotationFunctionAreaItemPOs) {
+
 				QuotetionFunctionAreaItemPO clazz = QuotetionFunctionAreaItemPO.factoryToInstance(_quotetionFunctionAreaPO.getQfaId(), divisor);
 
 				clazz.setQfaid(_quotetionFunctionAreaPO.getQfaId());
-				
-				if(quotationFunctionAreaItem.getQuotationItem() != null ){
+
+				if (quotationFunctionAreaItem.getQuotationItem() != null) {
 					clazz.setQiid(quotationFunctionAreaItem.getQuotationItem().getQiId());
 				}
-				
+
 				clazz.ptp(quotationFunctionAreaItem);
-				
+
 				quotetionFunctionAreaItemDao.save(clazz);
 			}
 		}
 		return 0;
 	}
 
-	@Transactional(rollbackFor=Exception.class)
-	private int copyQuotetion(long quotetionId, long newQuotetionId)throws FLException{
+	@Transactional(rollbackFor = Exception.class)
+	private int copyQuotetion(long quotetionId, long newQuotetionId) throws FLException {
 
 		List<QuotetionFunctionAreaPO> quotetionFunctionAreaPOs = quotetionFunctionAreaDao.queryQuotetionFunctionAreaByQuotetionId(quotetionId);
-		
-		Integer divisor = Integer.parseInt(systemConfigDao.querySystemConfig("quotationFunctionArea").getValue());
-		
-		for(QuotetionFunctionAreaPO quotetionFunctionAreaPO: quotetionFunctionAreaPOs){
-			
+
+		Long divisor = Long.valueOf(systemConfigDao.querySystemConfig("quotationFunctionArea").getValue());
+
+		for (QuotetionFunctionAreaPO quotetionFunctionAreaPO : quotetionFunctionAreaPOs) {
+
 			QuotetionFunctionAreaPO _quotetionFunctionAreaPO = new QuotetionFunctionAreaPO();
 			BeanUtil.copyProperties(quotetionFunctionAreaPO, _quotetionFunctionAreaPO, Arrays.asList("qfaId"));
-			_quotetionFunctionAreaPO.setQid(newQuotetionId);	
-			
+			_quotetionFunctionAreaPO.setQid(newQuotetionId);
+
 			quotetionFunctionAreaDao.save(_quotetionFunctionAreaPO);
-			
-			List<QuotetionFunctionAreaItemPO> quotetionFunctionAreaItemPOs = quotetionFunctionAreaItemDao.queryQuotetionFunctionAreaItemByFunctionAreaId(QuotetionFunctionAreaItemPO.factoryToClazz(quotetionFunctionAreaPO.getQfaId(), divisor),quotetionFunctionAreaPO.getQfaId());
-			
-			for(QuotetionFunctionAreaItemPO quotetionFunctionAreaItemPO: quotetionFunctionAreaItemPOs){
-				
+
+			List<QuotetionFunctionAreaItemPO> quotetionFunctionAreaItemPOs = quotetionFunctionAreaItemDao.queryQuotetionFunctionAreaItemByFunctionAreaId(QuotetionFunctionAreaItemPO.factoryToClazz(quotetionFunctionAreaPO.getQfaId(), divisor), quotetionFunctionAreaPO.getQfaId());
+
+			for (QuotetionFunctionAreaItemPO quotetionFunctionAreaItemPO : quotetionFunctionAreaItemPOs) {
+
 				QuotetionFunctionAreaItemPO clazz = QuotetionFunctionAreaItemPO.factoryToInstance(_quotetionFunctionAreaPO.getQfaId(), divisor);
 
 				BeanUtil.copyProperties(quotetionFunctionAreaItemPO, clazz, Arrays.asList("qfaiId"));
 				clazz.setQfaid(_quotetionFunctionAreaPO.getQfaId());
-				
+
 				quotetionFunctionAreaItemDao.save(clazz);
 			}
 		}
-		
+
 		return 0;
 	}
-	
-	@Transactional(rollbackFor=Exception.class)
-	private int deleteQuotetionByQId(long qId)throws FLException{
-		
+
+	@Transactional(rollbackFor = Exception.class)
+	private int deleteQuotetionByQId(long qId) throws FLException {
+
 		List<QuotetionFunctionAreaPO> quotetionFunctionAreas = quotetionFunctionAreaDao.queryQuotetionFunctionAreaByQuotetionId(qId);
-			
-		Integer divisor = Integer.parseInt(systemConfigDao.querySystemConfig("quotationFunctionArea").getValue());
-		
-		for(QuotetionFunctionAreaPO quotetionFunctionAreaPO: quotetionFunctionAreas){
-			
-			String tableName = QuotetionFunctionAreaItemPO.quotetionFunctionAreaItemTable(quotetionFunctionAreaPO.getQfaId(),divisor);
-			quotetionFunctionAreaItemDao.deleteQuotetionFunctionAreaItemByFunctionAreaId(tableName,quotetionFunctionAreaPO.getQfaId()); // 删除报价项
+
+		Long divisor = Long.valueOf(systemConfigDao.querySystemConfig("quotationFunctionArea").getValue());
+
+		for (QuotetionFunctionAreaPO quotetionFunctionAreaPO : quotetionFunctionAreas) {
+
+			String tableName = QuotetionFunctionAreaItemPO.quotetionFunctionAreaItemTable(quotetionFunctionAreaPO.getQfaId(), divisor);
+			quotetionFunctionAreaItemDao.deleteQuotetionFunctionAreaItemByFunctionAreaId(tableName, quotetionFunctionAreaPO.getQfaId()); // 删除报价项
 			quotetionFunctionAreaDao.deleteById(quotetionFunctionAreaPO.getQfaId()); // 删除功能区
 		}
-		
+
 		quotetionDao.deleteById(qId);
-		
+
 		return 0;
 	}
-	
-	private QuotetionPO checkQuotetionForStatusByEnabled(long qid)throws FLException{
-		
+
+	private QuotetionPO checkQuotetionForStatusByEnabled(long qid) throws FLException {
+
 		QuotetionPO quotetionPO = quotetionDao.get(qid);
-		
-		if(quotetionPO == null){
+
+		if (quotetionPO == null) {
 			throw new FLException(200003, "报价不存在");
 		}
-		
+
 		return quotetionPO;
 	}
-	
-	public static void convertQuotetionVOToPOForAdvance(QuotetionVO quotetionVO, QuotetionPO quotetionPO){
+
+	public static void convertQuotetionVOToPOForAdvance(QuotetionVO quotetionVO, QuotetionPO quotetionPO) {
 		quotetionPO.setDiscount(quotetionVO.getDiscount());
 		quotetionPO.setUndisPrice(quotetionVO.getUndisPrice());
 		quotetionPO.setDisPrice(quotetionVO.getDisPrice());
@@ -395,9 +390,9 @@ public class QuotetionServiceImpl implements QuotetionService {
 		quotetionPO.setTrafficRate(quotetionVO.getTrafficRate());
 		quotetionPO.setBasePrice(quotetionVO.getBasePrice());
 	}
-	
-	private void convertQuotetionPOForAdvance(QuotetionFunctionAreaItemPO quotetionFunctionAreaItemPO,String name, String measurementUnit, String workType, float unitPrice, String formula ,float num, short type, short discount, QuotetionFunctionAreaPO quotetionFunctionArea, String content,short subtype){
-	
+
+	private void convertQuotetionPOForAdvance(QuotetionFunctionAreaItemPO quotetionFunctionAreaItemPO, String name, String measurementUnit, String workType, int unitPrice, String formula, int num, short type, short discount, QuotetionFunctionAreaPO quotetionFunctionArea, String content, short subtype) {
+
 		quotetionFunctionAreaItemPO.setName(name);
 		quotetionFunctionAreaItemPO.setMeasurementUnit(measurementUnit);
 		quotetionFunctionAreaItemPO.setWorkType(workType);
@@ -411,27 +406,27 @@ public class QuotetionServiceImpl implements QuotetionService {
 		quotetionFunctionAreaItemPO.setSubtype(subtype);
 	}
 
-	private void  handleQuotetion(QuotetionVO quotetionVO,QuotetionPO quotetionPO){
-		
-		if(quotetionPO != null){
+	private void handleQuotetion(QuotetionVO quotetionVO, QuotetionPO quotetionPO) {
+
+		if (quotetionPO != null) {
 			BeanUtil.copyProperties(quotetionPO, quotetionVO);
 		}
 	}
-	
-	private void handleListQuotetion(List<QuotetionVO> quotationVOs,List<QuotetionPO> quotetionPOs){
-		
-		if(quotetionPOs.isEmpty() || quotetionPOs == null){
+
+	private void handleListQuotetion(List<QuotetionVO> quotationVOs, List<QuotetionPO> quotetionPOs) {
+
+		if (quotetionPOs.isEmpty() || quotetionPOs == null) {
 			return;
 		}
-		
-		for(QuotetionPO quotetionPO: quotetionPOs){
-			
+
+		for (QuotetionPO quotetionPO : quotetionPOs) {
+
 			QuotetionVO _quotetionVO = new QuotetionVO();
 
 			BeanUtil.copyProperties(quotetionPO, _quotetionVO);
-			
+
 			quotationVOs.add(_quotetionVO);
 		}
 	}
-	
+
 }

@@ -72,23 +72,23 @@ public class MaterialVO implements Serializable {
 	
 	private Short otherStatus;
 	
-	private Float depositPayment;
+	private Long depositPayment;
 	
 	private Short depositStatus;
 	
-	private Float fullPayment;
+	private Long fullPayment;
 	
 	private Short fullStatus;
 	
-	private Float total;
+	private Long total;
 	
-	private Float distotal;
+	private Long distotal;
 	
-	private Float maling;
+	private Integer maling;
 	
-	private Float venderMaling;
+	private Integer venderMaling;
 	
-	private Float coupon;
+	private Integer coupon;
 	
 	private String couponInfo;
 	
@@ -315,11 +315,11 @@ public class MaterialVO implements Serializable {
 		this.otherStatus = otherStatus;
 	}
 
-	public Float getDepositPayment() {
+	public Long getDepositPayment() {
 		return depositPayment;
 	}
 
-	public void setDepositPayment(Float depositPayment) {
+	public void setDepositPayment(Long depositPayment) {
 		this.depositPayment = depositPayment;
 	}
 
@@ -331,11 +331,11 @@ public class MaterialVO implements Serializable {
 		this.depositStatus = depositStatus;
 	}
 
-	public Float getFullPayment() {
+	public Long getFullPayment() {
 		return fullPayment;
 	}
 
-	public void setFullPayment(Float fullPayment) {
+	public void setFullPayment(Long fullPayment) {
 		this.fullPayment = fullPayment;
 	}
 
@@ -347,43 +347,43 @@ public class MaterialVO implements Serializable {
 		this.fullStatus = fullStatus;
 	}
 
-	public Float getTotal() {
+	public Long getTotal() {
 		return total;
 	}
 
-	public void setTotal(Float total) {
+	public void setTotal(Long total) {
 		this.total = total;
 	}
 
-	public Float getDistotal() {
+	public Long getDistotal() {
 		return distotal;
 	}
 
-	public void setDistotal(Float distotal) {
+	public void setDistotal(Long distotal) {
 		this.distotal = distotal;
 	}
 
-	public Float getMaling() {
+	public Integer getMaling() {
 		return maling;
 	}
 
-	public void setMaling(Float maling) {
+	public void setMaling(Integer maling) {
 		this.maling = maling;
 	}
 
-	public Float getVenderMaling() {
+	public Integer getVenderMaling() {
 		return venderMaling;
 	}
 
-	public void setVenderMaling(Float venderMaling) {
+	public void setVenderMaling(Integer venderMaling) {
 		this.venderMaling = venderMaling;
 	}
 
-	public Float getCoupon() {
+	public Integer getCoupon() {
 		return coupon;
 	}
 
-	public void setCoupon(Float coupon) {
+	public void setCoupon(Integer coupon) {
 		this.coupon = coupon;
 	}
 
@@ -426,5 +426,5 @@ public class MaterialVO implements Serializable {
 	public void setGrade(String grade) {
 		this.grade = grade;
 	}
-	
+
 }

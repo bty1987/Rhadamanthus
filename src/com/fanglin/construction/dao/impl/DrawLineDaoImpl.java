@@ -44,8 +44,6 @@ public class DrawLineDaoImpl extends DaoImpl<DrawLinePO> implements DrawLineDao 
 
 		queryFilterExcute(query, filters);
 
-		query.asc(DrawLinePO.COLUMN_STARTTIME_STR);
-
 		return query.list();
 	}
 
@@ -71,29 +69,29 @@ public class DrawLineDaoImpl extends DaoImpl<DrawLinePO> implements DrawLineDao 
 
 	@Override
 	public int countDrawLine(String orderId) {
-		
-		List<Short> status = Arrays.asList(DrawLinePO.STATUS_QUEUE_INT, DrawLinePO.STATUS_APPLICATION_INT);
-		
+
+		List<Short> status = Arrays.asList(DrawLinePO.STATUS_QUEUE_INT, DrawLinePO.STATUS_APPLICATION_INT, DrawLinePO.STATUS_SUCCESS_INT);
+
 		String sql = "select count(*) from construction.drawline where orderId = :orderId and status in :status";
 		BigInteger count = (BigInteger) session().createSQLQuery(sql).setString("orderId", orderId).setParameterList("status", status).uniqueResult();
-		
+
 		return count.intValue();
 	}
 
 	@Override
 	public int countDrawLine(long gid, Timestamp startTime, Timestamp endTime, int company) {
-		
+
 		String sql = "select count(*) from construction.drawline where dgid = :dgid and (startTime between :starts and :ends or endTime between :starte and :ende) and status = 0";
 		BigInteger count = (BigInteger) session().createSQLQuery(sql).setLong("dgid", gid).setTimestamp("starts", startTime).setTimestamp("ends", endTime).setTimestamp("starte", startTime).setTimestamp("ende", endTime).uniqueResult();
-		
+
 		return count.intValue();
 	}
 
 	@Override
 	public List<?> countDrawLine(long startTime, long endTime, int company) {
-		
+
 		String sql = "select dlg.name, dl.actualTime, count(*) as count from construction.drawline dl, data.drawlinegroup dlg where dl.actualTime between :start and :end and dl.company = :company and dl.dgid = dlg.gid group by dl.actualTime, dlg.gid";
-		
+
 		return session().createSQLQuery(sql).setLong("start", startTime).setLong("end", endTime).setInteger("company", company).list();
 	}
 
@@ -101,11 +99,11 @@ public class DrawLineDaoImpl extends DaoImpl<DrawLinePO> implements DrawLineDao 
 		if (filters != null) {
 
 			query.alias("decoration", "decoration");
-			
+
 			for (Filter filter : filters) {
 
 				String data = filter.getData();
-				
+
 				if ("orderId".equals(filter.getField())) {
 					query.add(query.getCriterion("decoration.orderId", (filter.getData()), filter.getOp()));
 				} else if ("drawLineGroupName".equals(filter.getField())) {
@@ -135,24 +133,23 @@ public class DrawLineDaoImpl extends DaoImpl<DrawLinePO> implements DrawLineDao 
 					} else {
 						query.add(query.getCriterion(DrawLinePO.COLUMN_STARTTIME_STR, filter.getData(), filter.getOp()));
 					}
-					
-				} else if ("applayTime".equals(filter.getField())){
-					
-					String sTime = data.split("-")[0].replaceAll("/", "-")+ " 00:00:00";
-					String eTime = data.split("-")[1].replaceAll("/", "-")+ " 23:59:59";
 
+				} else if ("applayTime".equals(filter.getField())) {
+
+					String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
+					String eTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
 
 					Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
 					Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
-				
+
 					Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
 					Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
-					
+
 					query.add(query.getCriterion(DrawLinePO.COLUMN_APPLAYTIME_STR, eTimestamp, "le"));
 					query.add(query.getCriterion(DrawLinePO.COLUMN_APPLAYTIME_STR, sTimestamp, "ge"));
-					
-					} 
+
 				}
 			}
 		}
 	}
+}

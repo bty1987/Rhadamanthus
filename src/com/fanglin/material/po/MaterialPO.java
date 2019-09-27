@@ -170,23 +170,23 @@ public class MaterialPO implements java.io.Serializable {
 
 	private short balanceStatus;
 
-	private float depositPayment;
+	private long depositPayment;
 
 	private short depositStatus;
 
-	private float fullPayment;
+	private long fullPayment;
 
 	private short fullStatus;
 
-	private float total;
+	private long total;
 
-	private float distotal;
+	private long distotal;
 
-	private float maling;
+	private int maling;
 
-	private float venderMaling;
+	private int venderMaling;
 
-	private float coupon;
+	private int coupon;
 
 	private String couponInfo;
 
@@ -432,11 +432,11 @@ public class MaterialPO implements java.io.Serializable {
 	}
 
 	@Column(name = "depositPayment")
-	public float getDepositPayment() {
+	public long getDepositPayment() {
 		return depositPayment;
 	}
 
-	public void setDepositPayment(float depositPayment) {
+	public void setDepositPayment(long depositPayment) {
 		this.depositPayment = depositPayment;
 	}
 
@@ -450,13 +450,14 @@ public class MaterialPO implements java.io.Serializable {
 	}
 
 	@Column(name = "fullPayment")
-	public float getFullPayment() {
+	public long getFullPayment() {
 		return fullPayment;
 	}
 
-	public void setFullPayment(float fullPayment) {
+	public void setFullPayment(long fullPayment) {
 		this.fullPayment = fullPayment;
 	}
+	
 
 	@Column(name = "fullStatus")
 	public short getFullStatus() {
@@ -468,47 +469,47 @@ public class MaterialPO implements java.io.Serializable {
 	}
 
 	@Column(name = "total")
-	public float getTotal() {
+	public long getTotal() {
 		return total;
 	}
 
-	public void setTotal(float total) {
+	public void setTotal(long total) {
 		this.total = total;
 	}
 
 	@Column(name = "distotal")
-	public float getDistotal() {
+	public long getDistotal() {
 		return distotal;
 	}
 
-	public void setDistotal(float distotal) {
+	public void setDistotal(long distotal) {
 		this.distotal = distotal;
 	}
 
 	@Column(name = "maling")
-	public float getMaling() {
+	public int getMaling() {
 		return maling;
 	}
 
-	public void setMaling(float maling) {
+	public void setMaling(int maling) {
 		this.maling = maling;
 	}
 
 	@Column(name = "venderMaling")
-	public float getVenderMaling() {
+	public int getVenderMaling() {
 		return venderMaling;
 	}
 
-	public void setVenderMaling(float venderMaling) {
+	public void setVenderMaling(int venderMaling) {
 		this.venderMaling = venderMaling;
 	}
 
 	@Column(name = "coupon")
-	public float getCoupon() {
+	public int getCoupon() {
 		return coupon;
 	}
 
-	public void setCoupon(float coupon) {
+	public void setCoupon(int coupon) {
 		this.coupon = coupon;
 	}
 

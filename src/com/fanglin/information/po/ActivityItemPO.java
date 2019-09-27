@@ -11,30 +11,30 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "activityitem", catalog = "information")
 public class ActivityItemPO implements java.io.Serializable {
-	
+
 	private static final long serialVersionUID = -7540185816527717351L;
-	
+
 	public static final short TYPE_COUPON_INT = 0;
-	
+
 	public static final short TYPE_THING_INT = 1;
-	
+
 	public static final String COLUMN_AID_STR = "aid";
 
 	private long aiid;
-	
+
 	private long aid;
-	
+
 	private long asid;
-	
+
 	private String name;
-	
+
 	private short type;
-	
-	private float money;
-	
+
+	private int money;
+
 	private String activity;
-	
-	public ActivityItemPO(){
+
+	public ActivityItemPO() {
 		super();
 	}
 
@@ -75,7 +75,7 @@ public class ActivityItemPO implements java.io.Serializable {
 	public void setType(short type) {
 		this.type = type;
 	}
-	
+
 	@Column(name = "asid")
 	public long getAsid() {
 		return asid;
@@ -86,14 +86,14 @@ public class ActivityItemPO implements java.io.Serializable {
 	}
 
 	@Column(name = "money")
-	public float getMoney() {
+	public int getMoney() {
 		return money;
 	}
 
-	public void setMoney(float money) {
+	public void setMoney(int money) {
 		this.money = money;
 	}
-	
+
 	@Column(name = "activity")
 	public String getActivity() {
 		return activity;

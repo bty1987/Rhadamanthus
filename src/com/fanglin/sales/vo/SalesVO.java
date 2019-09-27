@@ -58,25 +58,25 @@ public class SalesVO implements Serializable {
 	
 	private Short status;
 	
-	private Float depositpay;
+	private Long depositpay;
 	
 	private Short depositpayStatus;
 	
-	private Float fullpay;
+	private Long fullpay;
 	
 	private Short fullpayStatus;
 	
 	private Short balanceStatus;
 	
-	private Float total;
+	private Long total;
 	
-	private Float amount;
+	private Long amount;
 	
-	private Float maling;
+	private Integer maling;
 	
-	private Float venderMaling;
+	private Integer venderMaling;
 	
-	private Float coupon;
+	private Integer coupon;
 	
 	private String couponInfo;
 	
@@ -281,11 +281,11 @@ public class SalesVO implements Serializable {
 		this.status = status;
 	}
 
-	public Float getDepositpay() {
+	public Long getDepositpay() {
 		return depositpay;
 	}
 
-	public void setDepositpay(Float depositpay) {
+	public void setDepositpay(Long depositpay) {
 		this.depositpay = depositpay;
 	}
 
@@ -297,11 +297,11 @@ public class SalesVO implements Serializable {
 		this.depositpayStatus = depositpayStatus;
 	}
 
-	public Float getFullpay() {
+	public Long getFullpay() {
 		return fullpay;
 	}
 
-	public void setFullpay(Float fullpay) {
+	public void setFullpay(Long fullpay) {
 		this.fullpay = fullpay;
 	}
 
@@ -321,43 +321,43 @@ public class SalesVO implements Serializable {
 		this.balanceStatus = balanceStatus;
 	}
 
-	public Float getTotal() {
+	public Long getTotal() {
 		return total;
 	}
-
-	public Float getAmount() {
-		return amount;
-	}
-
-	public void setAmount(Float amount) {
-		this.amount = amount;
-	}
-
-	public void setTotal(Float total) {
+	
+	public void setTotal(Long total) {
 		this.total = total;
 	}
 
-	public Float getMaling() {
+	public Long getAmount() {
+		return amount;
+	}
+
+	public void setAmount(Long amount) {
+		this.amount = amount;
+	}
+
+	public Integer getMaling() {
 		return maling;
 	}
 
-	public void setMaling(Float maling) {
+	public void setMaling(Integer maling) {
 		this.maling = maling;
 	}
 
-	public Float getVenderMaling() {
+	public Integer getVenderMaling() {
 		return venderMaling;
 	}
 
-	public void setVenderMaling(Float venderMaling) {
+	public void setVenderMaling(Integer venderMaling) {
 		this.venderMaling = venderMaling;
 	}
 
-	public Float getCoupon() {
+	public Integer getCoupon() {
 		return coupon;
 	}
 
-	public void setCoupon(Float coupon) {
+	public void setCoupon(Integer coupon) {
 		this.coupon = coupon;
 	}
 

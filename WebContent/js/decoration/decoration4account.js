@@ -9,33 +9,77 @@ $(function () {
             3: "满减",
             4: "减上捡"
         },
-
-        items: {},
+        basicsItems: {
+            foldFrontTotal: com.focusPage("#foldFrontTotal"),
+            foldFrontFee: com.focusPage("#foldFrontFee"),
+            managePrice: com.focusPage("#managePrice"),
+            basdiscount: com.focusPage("#basdiscount")
+        },
+        contractItems: {
+            signPrice: com.focusPage("#signPrice"),
+            coupon: com.focusPage("#coupon"),
+            servicePrice: com.focusPage("#servicePrice"),
+            servicePaidup: com.focusPage("#servicePaidup"),
+            signFactPrice: com.focusPage("#signFactPrice"),
+            mm: com.focusPage("#mm")
+        },
+        materialItems: {
+            materialRatio: com.focusPage("#materialRatio"),
+            materialTotal: com.focusPage("#materialTotal"),
+            materialCoupon: com.focusPage("#materialCoupon"),
+            materialFactPrice: com.focusPage("#materialFactPrice")
+        },
+        AddReduceItems: {
+            addFoldFrontTotal: com.focusPage("#addFoldFrontTotal"),
+            addManagePrice: com.focusPage("#addManagePrice"),
+            addMatch: com.focusPage("#addMatch"),
+            addUncalPrice: com.focusPage("#addUncalPrice"),
+            addDone: com.focusPage("#addDone"),
+            minusFoldFrontTotal: com.focusPage("#minusFoldFrontTotal"),
+            minusManagePrice: com.focusPage("#minusManagePrice"),
+            minusMatch: com.focusPage("#minusMatch"),
+            minusUncalPrice: com.focusPage("#minusUncalPrice"),
+            minusDone: com.focusPage("#minusDone")
+        },
+        advanceItems: {
+            contractAdvance: com.focusPage("#contractAdvance"),
+            constructionAdvance: com.focusPage("#constructionAdvance"),
+            materialAdvance: com.focusPage("#materialAdvance"),
+            zhenglinAdvance: com.focusPage("#zhenglinAdvance")
+        },
+        accountItems: {
+            direct: com.focusPage("#direct"),
+            beforeTotal: com.focusPage("#beforeTotal"),
+            management: com.focusPage("#management"),
+            flowerRatio: com.focusPage("#flowerRatio"),
+            materialAccount: com.focusPage("#materialAccount"),
+            accountForehead: com.focusPage("#accountForehead"),
+            accountServicePrice: com.focusPage("#accountServicePrice"),
+            balanceSum: com.focusPage("#balanceSum")
+        },
+        items: {
+            calDiscountPrice: com.focusPage("#calDiscountPrice"),
+            preferences: com.focusPage("#preferences"),
+            fulldel: com.focusPage("#fulldel"),
+            cashback: com.focusPage("#cashback"),
+            matching: com.focusPage("#matching").switchBtn("isOrNotType"),
+            fueluxWizard: com.focusPage('#fuelux-wizard'),
+            materialBrand: com.focusPage("#materialBrand"),
+            tabContent: com.focusPage(".tab-content"),
+            fanglinMaterialPayment: com.focusPage("#fanglinMaterialPayment"),
+            salesMaterialPayment: com.focusPage("#salesMaterialPayment"),
+            otherPaymentType: com.focusPage("#otherPaymentType")
+        },
+        btns: {
+            btnBack: com.focusPage('#btnBack'),
+            calculateBtn: com.focusPage("#calculateBtn"),
+            submission: com.focusPage("#submission"),
+            print: com.focusPage("#print")
+        }
     };
+    var decoration;
 
     decorationDetail.decorationOrderId = params.decorationOrderId;
-
-    decorationDetail.accountModal = com.focusPage("#applyDecorationAccount");
-    decorationDetail.items.maching = com.focusPage("#maching");
-    decorationDetail.items.discount = com.focusPage("#discount");
-    decorationDetail.items.projectPrice = com.focusPage("#projectPrice");
-    decorationDetail.items.serviceRate = com.focusPage("#serviceRate");
-    decorationDetail.items.materialPrice = com.focusPage("#materialPrice");
-    decorationDetail.items.accountType = com.focusPage("#accountType");
-    decorationDetail.items.TotalPrice = com.focusPage("#TotalPrice");
-
-    decorationDetail.items.contractAdvance = com.focusPage("#contractAdvance");
-    decorationDetail.items.constructionAdvance = com.focusPage("#constructionAdvance");
-    decorationDetail.items.materialAdvance = com.focusPage("#materialAdvance");
-    decorationDetail.items.zhenglinAdvance = com.focusPage("#zhenglinAdvance");
-
-    decorationDetail.items.calDiscountPrice = com.focusPage("#calDiscountPrice");
-
-    decorationDetail.items.materialTotal = com.focusPage("#materialTotal");
-    decorationDetail.items.materialCoupon = com.focusPage("#materialCoupon");
-    decorationDetail.items.materialFactPrice = com.focusPage("#materialFactPrice");
-
-    com.focusPage("#matching").switchBtn("isOrNotType");
 
     var accountBasic = {
             
@@ -47,7 +91,9 @@ $(function () {
         disPrice: 0,
         trafficPrice: 0,
         managePrice: 0,
-        
+        materialRatio: 0,
+        servicePaidup: 0,
+
         contractPrice: 0,
         couponCut: 0,
         factPrice: 0,
@@ -64,7 +110,12 @@ $(function () {
         reduceCalPrice: 0,
         reduceUncalPrice: 0,
         reduceTotalPrice: 0,
-        
+        reduceDisPrice : 0,
+        reduceUndisPrice : 0,
+
+        accountForehead: 0,
+        balanceSum: 0,
+
         dd: 0,
         db: 0,
         mm: 0,
@@ -73,7 +124,7 @@ $(function () {
         cal: false
     };
 
-    com.focusPage('#btnBack').on(ace.click_event, function () {
+    decorationDetail.btns.btnBack.on(ace.click_event, function () {
         com.switchPage(params.historyPage);
     });
 
@@ -90,7 +141,7 @@ $(function () {
 
     //初始向导
     function initWizard(discount, decorationDetail) {
-        com.focusPage('#fuelux-wizard').ace_wizard({"status": true}).on('change', function (e, info) {
+        decorationDetail.items.fueluxWizard.ace_wizard({"status": true}).on('change', function (e, info) {
 
             var curstep = 0;
 
@@ -114,58 +165,28 @@ $(function () {
         });
     }
 
-    com.focusPage("#submitDecorationAccountBtn").click(function () {
-        saveDecorationAccount();
-    });
-
     function initTab(){
     	var dataPage = params.urlLoadParams.depage;
         var fanglinMaterial = $('<div></div>').addClass('tab-pane in active').attr('id', 'fanglinMaterialPayments' + dataPage).attr('style', 'margin-left: -12px;');
         var salesMaterial = $('<div></div>').addClass('tab-pane').attr('id', 'salesMaterialPayments' + dataPage).attr('style', 'margin-left: -12px;');
         var materialBrand = $('<div></div>').addClass('widget-body-inner').attr('id', 'materialPaymentBrands' + dataPage);
-        
-        com.focusPage("#materialBrand").append(materialBrand);
-        com.focusPage(".tab-content").append(fanglinMaterial).append(salesMaterial);
-        
-        com.focusPage("#fanglinMaterialPayment").attr("href", "#fanglinMaterialPayments" + dataPage);
-        com.focusPage("#salesMaterialPayment").attr("href", "#salesMaterialPayments" + dataPage);
-    }
-	
-    function saveDecorationAccount() {
-        
-        if (com.validate("applyDecorationAccount")) {
-            return false;
-        }
 
-        var options = {
-            "decorationAccount.orderId": params.decorationOrderId,
-            "decorationAccount.type": decorationDetail.items.accountType.val(),
-            "decorationAccount.maching": decorationDetail.items.maching.val(),
-            "decorationAccount.projectPrice": decorationDetail.items.projectPrice.val(),
-            "decorationAccount.discount": decorationDetail.items.discount.val(),
-            "decorationAccount.serviceRate": decorationDetail.items.serviceRate.val(),
-            "decorationAccount.materialPrice":decorationDetail.items.materialPrice.val(),
-            "decorationAccount.projectBase" : decorationDetail.items.TotalPrice.val()
-        };
+        decorationDetail.items.materialBrand.append(materialBrand);
+        decorationDetail.items.tabContent.append(fanglinMaterial).append(salesMaterial);
 
-        com.post(api.decoration.makeDecorationAccount, options, function (res) {
-            com.showAlert(com.info, "操作成功");
-            decorationDetail.accountFlag = true;
-            com.cleanItems(decorationDetail.items);
-            decorationDetail.accountModal.modal("hide");
-            com.focusPage("button[name='makeAccount']").addClass("hide");
-        });
+        decorationDetail.items.fanglinMaterialPayment.attr("href", "#fanglinMaterialPayments" + dataPage);
+        decorationDetail.items.salesMaterialPayment.attr("href", "#salesMaterialPayments" + dataPage);
     }
 
-    decorationDetail.items.materialTotal.html(material.total);
-    decorationDetail.items.materialCoupon.html(material.coupon);
-    decorationDetail.items.materialFactPrice.html(utils.accSub(material.total, material.coupon));
+    decorationDetail.materialItems.materialTotal.html(material.total);
+    decorationDetail.materialItems.materialCoupon.html(material.coupon);
+    decorationDetail.materialItems.materialFactPrice.html(utils.accSub(material.total, material.coupon));
 
     com.post(api.payment.queryAdvancePaymentByOrderId, {"decoration.orderId": decorationDetail.decorationOrderId}, function (res) {
-        decorationDetail.items.contractAdvance.text(res.balanceAdvance);
-        decorationDetail.items.constructionAdvance.text(res.projectAdvance);
-        decorationDetail.items.materialAdvance.text(res.materialAdvance);
-        decorationDetail.items.zhenglinAdvance.text(res.zaterialAdvance);
+        decorationDetail.advanceItems.contractAdvance.text(res.balanceAdvance);
+        decorationDetail.advanceItems.constructionAdvance.text(res.projectAdvance);
+        decorationDetail.advanceItems.materialAdvance.text(res.materialAdvance);
+        decorationDetail.advanceItems.zhenglinAdvance.text(res.zaterialAdvance);
     });
     
     com.post(api.quotation.queryQuotationForDefaultByOrderId, {"quotation.orderId": decorationDetail.decorationOrderId}, function(res){
@@ -175,33 +196,41 @@ $(function () {
         accountBasic.disPrice = quotation.disPrice;
         accountBasic.trafficPrice = quotation.trafficPrice;
         accountBasic.managePrice = quotation.managePrice;
-        
-        com.focusPage('#foldFront_total').html(utils.changeTwoDecimal(accountBasic.undisPrice + accountBasic.disPrice + accountBasic.trafficPrice + accountBasic.managePrice));
-        com.focusPage('#foldFront_fee').html(utils.changeTwoDecimal(accountBasic.undisPrice + accountBasic.disPrice + accountBasic.trafficPrice));
-        com.focusPage('#managePrice').html(utils.changeTwoDecimal(accountBasic.managePrice));
+
+        decorationDetail.basicsItems.foldFrontTotal.html(Math.round(accountBasic.undisPrice + accountBasic.disPrice + accountBasic.trafficPrice + accountBasic.managePrice));
+        decorationDetail.basicsItems.foldFrontFee.html(Math.round(accountBasic.undisPrice + accountBasic.disPrice + accountBasic.trafficPrice));
+        decorationDetail.basicsItems.managePrice.html(Math.round(accountBasic.managePrice));
+
+        decorationDetail.contractItems.mm.html(utils.changeThrDecimal(decorationDetail.materialItems.materialRatio.text() / decorationDetail.basicsItems.foldFrontTotal.text()));
     });
 
     com.post(api.decoration.queryDecorationForCommonByOrderId, {"decoration.orderId": decorationDetail.decorationOrderId}, function (res) {
     	 
-    	var decoration = res.decoration;
+    	decoration = res.decoration;
     	
     	accountBasic.discount = decoration.discount;
         accountBasic.contracePrice = decoration.orderTotalPrice;
         accountBasic.couponCut = decoration.couponCut;
         accountBasic.factPrice = decoration.factPrice;
-         
-        com.focusPage("#signPrice").html(com.checkNull(accountBasic.contracePrice, 0));
-        com.focusPage("#coupon").html(com.checkNull(accountBasic.couponCut, 0));
-        com.focusPage("#signFactPrice").html(com.checkNull(accountBasic.factPrice, 0));
-        com.focusPage("#basdiscount").html(com.checkNull(accountBasic.discount, 0));
+
+        decorationDetail.contractItems.signPrice.html(com.checkNull(Math.round(accountBasic.contracePrice), 0));
+        decorationDetail.contractItems.coupon.html(com.checkNull(Math.round(accountBasic.couponCut), 0));
+        decorationDetail.contractItems.signFactPrice.html(com.checkNull(Math.round(accountBasic.factPrice), 0));
+        decorationDetail.basicsItems.basdiscount.html(com.checkNull(accountBasic.discount, 0));
     	
     }, null, false);
     
     com.post(api.decoration.queryDecorationHolonomy, {"decorationHolonomy.decoration.orderId": decorationDetail.decorationOrderId}, function (res) {
-        
-        accountBasic.servicePrice = res.decorationHolonomy.servicePrice;
-       
-        com.focusPage("#servicePrice").html(com.checkNull(accountBasic.servicePrice, 0));
+
+        var decorationHolonomy = res.decorationHolonomy;
+
+        accountBasic.servicePrice = decorationHolonomy.servicePrice;
+        accountBasic.materialRatio = decorationHolonomy.materialPrice;
+        accountBasic.servicePaidup = decorationHolonomy.servicePaidup;
+
+        decorationDetail.contractItems.servicePrice.html(com.checkNull(Math.round(accountBasic.servicePrice), 0));
+        decorationDetail.materialItems.materialRatio.html(com.checkNull(Math.round(accountBasic.materialRatio), 0));
+        decorationDetail.contractItems.servicePaidup.html(com.checkNull(Math.round(accountBasic.servicePaidup), 0));
 
     }, null, false);
 
@@ -213,7 +242,7 @@ $(function () {
             if([2, 3].indexOf(v.status) == -1) return true;
 
             if(v.type == 0){                        //0增项 1减项
-                
+
                 accountBasic.addPredisPrice = utils.accAdd(accountBasic.addPredisPrice, utils.accAdd(v.undisPrice, v.disPrice));
                 accountBasic.addManagePrice = utils.accAdd(accountBasic.addManagePrice, v.managePrice);
                 accountBasic.addCalPrice = utils.accAdd(accountBasic.addCalPrice, v.calPrice);
@@ -226,18 +255,22 @@ $(function () {
                 accountBasic.reduceCalPrice = utils.accAdd(accountBasic.reduceCalPrice, v.calPrice);
                 accountBasic.reduceUncalPrice = utils.accAdd(accountBasic.reduceUncalPrice, v.uncalPrice);
                 accountBasic.reduceTotalPrice = utils.accAdd(accountBasic.reduceTotalPrice, v.total);
+                accountBasic.reduceDisPrice = utils.accAdd(accountBasic.reduceDisPrice, v.disPrice);
+                accountBasic.reduceUndisPrice = utils.accAdd(accountBasic.reduceUndisPrice, v.undisPrice);
             }
         });
 
-        com.focusPage("#addFoldFront_total").html(accountBasic.addPredisPrice);
-        com.focusPage("#addManagePrice").html(accountBasic.addManagePrice);
-        com.focusPage("#addMatch").html(accountBasic.addCalPrice);
-        com.focusPage("#addUncalPrice").html(accountBasic.addUncalPrice);
-        
-        com.focusPage("#minusFoldFront_total").html(accountBasic.reducePredisPrice);
-        com.focusPage("#minusManagePrice").html(accountBasic.reduceManagePrice);
-        com.focusPage("#minusMatch").html(accountBasic.reduceCalPrice);
-        com.focusPage("#minusUncalPrice").html(accountBasic.reduceUncalPrice);
+        decorationDetail.AddReduceItems.addFoldFrontTotal.html(Math.round(accountBasic.addPredisPrice));
+        decorationDetail.AddReduceItems.addManagePrice.html(Math.round(accountBasic.addManagePrice));
+        decorationDetail.AddReduceItems.addMatch.html(Math.round(accountBasic.addCalPrice));
+        decorationDetail.AddReduceItems.addUncalPrice.html(Math.round(accountBasic.addUncalPrice));
+        decorationDetail.AddReduceItems.addDone.html(Math.round(accountBasic.addTotalPrice));
+
+        decorationDetail.AddReduceItems.minusFoldFrontTotal.html(Math.round(accountBasic.reducePredisPrice));
+        decorationDetail.AddReduceItems.minusManagePrice.html(Math.round(accountBasic.reduceManagePrice));
+        decorationDetail.AddReduceItems.minusMatch.html(Math.round(accountBasic.reduceCalPrice));
+        decorationDetail.AddReduceItems.minusUncalPrice.html(Math.round(accountBasic.reduceUncalPrice));
+        decorationDetail.AddReduceItems.minusDone.html(Math.round(accountBasic.reduceTotalPrice));
 
     }, null, false);
     
@@ -246,24 +279,29 @@ $(function () {
     com.post(api.decoration.queryDecorationConfig, {}, function (res) {
         
         accountBasic.machingType = accountBasic.machingType.concat(res.config.machingType);
-        
-        com.focusPage("#otherPaymentType").bindData(accountBasic.machingType, "id", "n", true);
+
+        decorationDetail.items.otherPaymentType.bindData(accountBasic.machingType, "id", "n", true);
 
     }, null, false);
-    
-    com.focusPage("#calculateBtn").click(function () {
+
+    decorationDetail.btns.calculateBtn.click(function () {
+
+        if (com.validate('controls')) return false;
+
+        decorationDetail.btns.submission.removeAttr("disabled");
+
         accountBasic.discount = decorationDetail.items.calDiscountPrice.val();
         if(!decorationDetail.items.calDiscountPrice.val()) return false;
 
-        accountSuper()
+        accountSuper();
     });
-    
-    com.focusPage("#matching").click(function () {
 
-        accountBasic.cal = com.focusPage("#matching").prop("checked");
+    decorationDetail.items.matching.click(function () {
+
+        accountBasic.cal = decorationDetail.items.matching.prop("checked");
     });
-    
-    com.focusPage("#otherPaymentType").on("change", function () {
+
+    decorationDetail.items.otherPaymentType.on("change", function () {
 
         var that = $(this);
         
@@ -274,7 +312,7 @@ $(function () {
 
         });
 
-        accountBasic.cal = com.focusPage("#matching").prop("checked");
+        accountBasic.cal = decorationDetail.items.matching.prop("checked");
 
         $.extend(accountBasic, config);
 
@@ -282,10 +320,62 @@ $(function () {
 
         return false;
     });
+
+    decorationDetail.btns.print.click(function(){
+
+        params["decoration"] = decoration;
+        params["accountForehead"] = accountBasic.accountForehead;
+        params["balanceSum"] = accountBasic.balanceSum;
+
+        com.popup("打印决算信息", api.index.decorationOutputIndex.url, null, null, true);
+    });
+
+    decorationDetail.btns.submission.click(function () {
+
+        if (com.validate('controls')) return false;
+        com.showConfirm("确定要提交决算信息吗?", function () {
+
+            var option = {
+                "decorationAccount.orderId": params.decorationOrderId,
+                "decorationAccount.type": decorationDetail.items.otherPaymentType.val(),
+                "decorationAccount.arcal": accountBasic.cal ? 0: 1,
+                "decorationAccount.matching": accountBasic.mm,
+                "decorationAccount.discount": decorationDetail.items.calDiscountPrice.val(),
+                "decorationAccount.discountBase": accountBasic.db,
+                "decorationAccount.serviceRate": accountBasic.sr,
+                "decorationAccount.materialPrice": decorationDetail.materialItems.materialTotal.text(),
+                "decorationAccount.servicePrice": decorationDetail.accountItems.accountServicePrice.text(),
+                "decorationAccount.difference": decorationDetail.accountItems.balanceSum.text(),
+                "decorationAccount.coupon": decorationDetail.items.preferences.val(),
+                "decorationAccount.fulldel": decorationDetail.items.fulldel.val(),
+                "decorationAccount.cashback": decorationDetail.items.cashback.val()
+            };
+
+            com.post(api.decoration.makeDecorationAccount, option, function (res) {
+                com.showAlert(com.info, "提交成功");
+            });
+
+        });
+    });
     
     function accountSuper(){
 
-        //决算合同额(算配比) = (折前直接费 + 增项配比总额 - 减项配比总额 - (折前直接费 + 增项配比总额 - 减项配比总额) % 基数) * 折扣 + 折前直接费 + 增项配比总额 - 减项配比总额 % 基数 + 管理费 + 增项管理费 - 减项管理费
+        // 决算直接费(算配比) = 打折总额 + 不打折总额 + 车运费 + 管理费 + 增项配比总额 - 减项配比总额 + 增项管理费 - 减项管理费
+        //
+        // 决算直接费(非配比) = 打折总额 + 不打折总额 + 车运费 + 管理费
+        //
+        // 决算折前总额(算配比) = 打折总额 + 不打折总额 + 车运费 + 增项配比总额 - 减项配比总额
+        //
+        // 决算折前总额(非配比) = 打折总额 + 不打折总额 + 车运费
+        //
+        // 决算管理费(算配比) = 管理费 + 增项管理费 - 减项管理费
+        //
+        // 决算管理费(非配比) = 管理费
+        //
+        // 决算主材额 = 决算折前总额 * 主材配比
+
+
+        // 决算合同额(算配比) = (折前直接费 + 增项配比总额 - 减项配比总额 - (折前直接费 + 增项配比总额 - 减项配比总额) % 基数) * 折扣 + (折前直接费 + 增项配比总额 - 减项配比总额) % 基数 + 管理费 + 增项管理费 - 减项管理费
         //
         // 决算合同额(非配比) = (折前直接费 - 折前直接费 % 基数) * 折扣 + 折前直接费 % 基数 + 管理费
         //
@@ -293,17 +383,25 @@ $(function () {
         //
         // 决算服务费(非配比) = (折前直接费 + 管理费) * 主材配比 * 服务费比例
         //
-        // 差额(算配比) = 决算合同额 + 决算服务费 - 合同实收 - 合同服务 - 增项实收 + 减项实收 + 增项非配比总额 - 减项非配比总额
+        // 差额(算配比) = 决算合同额 + 决算服务费 - 合同实收 - 已收服务费 - 增项实收 + 减项实收 + 增项非配比总额 - 优惠券 - 满送 - 返现
         //
-        // 差额(非配比) = 决算合同额 + 决算服务费 - 合同实收 - 合同服务
+        // 差额(非配比) = 决算合同额 + 决算服务费 - 合同实收 - 已收服务费 - 优惠券 - 满送 - 返现
 
-        var contartval = 0, _ = 0, service = 0, sub = 0;
+        var contartval = 0, _ = 0, service = 0, sub = 0, direct = 0, beforeTotal = 0, management = 0, materialAccount = 0;
 
         var flag = accountBasic.cal && ["2", "3", "4"].indexOf(accountBasic.dt) != -1 ? 1 : 0;
 
         if([0, 1].indexOf(accountBasic.dt) != -1){
 
             contartval = accountBasic.disPrice * accountBasic.discount / 10 + accountBasic.undisPrice + accountBasic.trafficPrice + accountBasic.managePrice;
+
+            beforeTotal = accountBasic.disPrice + accountBasic.undisPrice + accountBasic.trafficPrice;
+
+            direct = beforeTotal + accountBasic.managePrice;
+
+            management = accountBasic.managePrice;
+
+            sub = contartval + service - accountBasic.factPrice - accountBasic.servicePaidup - accountBasic.reduceDisPrice * (decorationDetail.items.calDiscountPrice.val() / 10) + accountBasic.reduceUndisPrice + Math.round(accountBasic.reduceManagePrice) - Math.round(accountBasic.reduceTotalPrice) - decorationDetail.items.preferences.val() - decorationDetail.items.fulldel.val() - decorationDetail.items.cashback.val();
         }else{
 
             _ = accountBasic.undisPrice + accountBasic.disPrice + accountBasic.trafficPrice + accountBasic.addCalPrice * flag - accountBasic.reduceCalPrice * flag;
@@ -311,13 +409,31 @@ $(function () {
             contartval = (_ - (_) % accountBasic.db) * (accountBasic.dd / 10) + (_) % accountBasic.db + accountBasic.managePrice + accountBasic.addManagePrice * flag - accountBasic.reduceManagePrice * flag;
 
             service = (_  + accountBasic.managePrice + accountBasic.addManagePrice * flag - accountBasic.reduceManagePrice * flag) * accountBasic.mm * accountBasic.sr;
+
+            direct = accountBasic.disPrice + accountBasic.undisPrice + accountBasic.trafficPrice + accountBasic.managePrice + accountBasic.addCalPrice * flag - accountBasic.reduceCalPrice * flag + accountBasic.addManagePrice * flag - accountBasic.reduceManagePrice * flag;
+
+            beforeTotal = accountBasic.disPrice + accountBasic.undisPrice + accountBasic.trafficPrice + accountBasic.addCalPrice * flag - accountBasic.reduceCalPrice * flag;
+
+            management = accountBasic.managePrice + accountBasic.addManagePrice * flag - accountBasic.reduceManagePrice * flag;
+            
+            sub = contartval + service - accountBasic.factPrice - accountBasic.servicePaidup - accountBasic.addTotalPrice * flag + accountBasic.reduceTotalPrice * flag + accountBasic.addUncalPrice * flag  - decorationDetail.items.preferences.val() - decorationDetail.items.fulldel.val() - decorationDetail.items.cashback.val();
         }
 
-        sub = contartval + service - accountBasic.factPrice - accountBasic.servicePrice - accountBasic.addTotalPrice * flag + accountBasic.reduceTotalPrice * flag + accountBasic.addUncalPrice * flag - accountBasic.reduceUncalPrice * flag;
+        materialAccount = direct * accountBasic.mm;
 
-        com.focusPage("#accountForehead").html(utils.changeTwoDecimal(contartval));
-        com.focusPage("#accountServicePrice").html(utils.changeTwoDecimal(service));
-        com.focusPage("#balanceSum").html(utils.changeTwoDecimal(sub));
+        decorationDetail.accountItems.accountForehead.html(Math.round(contartval));
+        decorationDetail.accountItems.accountServicePrice.html(Math.round(service));
+        decorationDetail.accountItems.balanceSum.html(Math.round(sub));
+
+        decorationDetail.accountItems.direct.html(Math.round(direct));
+        decorationDetail.accountItems.beforeTotal.html(Math.round(beforeTotal));
+        decorationDetail.accountItems.management.html(Math.round(management));
+        decorationDetail.accountItems.materialAccount.html(Math.round(materialAccount));
+
+        accountBasic.accountForehead = Math.round(contartval);
+        accountBasic.balanceSum = Math.round(sub);
+        
+        decorationDetail.accountItems.flowerRatio.html(utils.changeTwoDecimal(decorationDetail.materialItems.materialTotal.text() / decorationDetail.accountItems.direct.text()));
     }
 
 });

@@ -10,19 +10,19 @@ public class DecorationInclusiveVO implements Serializable {
 	
 	private DecorationVO decoration;
 	
-	private Float contractPrice;
+	private Long contractPrice;
 	
-	private Float projectPrice;	
+	private Long projectPrice;	
 	
-	private Float cdiff;
+	private Long cdiff;
 	
-	private Float mdiff;	
+	private Long mdiff;	
 	
-	private Float managePrice;	
+	private Long managePrice;	
 	
-	private Float manageRate;	
+	private Integer manageRate;	
 	
-	private Float materialPaidup;	
+	private Long materialPaidup;	
 	
 	private Long psId;
 	
@@ -51,59 +51,59 @@ public class DecorationInclusiveVO implements Serializable {
 		this.decoration = decoration;
 	}
 
-	public Float getContractPrice() {
+	public Long getContractPrice() {
 		return contractPrice;
 	}
 
-	public void setContractPrice(Float contractPrice) {
+	public void setContractPrice(Long contractPrice) {
 		this.contractPrice = contractPrice;
 	}
 
-	public Float getProjectPrice() {
+	public Long getProjectPrice() {
 		return projectPrice;
 	}
 
-	public void setProjectPrice(Float projectPrice) {
+	public void setProjectPrice(Long projectPrice) {
 		this.projectPrice = projectPrice;
 	}
 
-	public Float getCdiff() {
+	public Long getCdiff() {
 		return cdiff;
 	}
 
-	public void setCdiff(Float cdiff) {
+	public void setCdiff(Long cdiff) {
 		this.cdiff = cdiff;
 	}
 
-	public Float getMdiff() {
+	public Long getMdiff() {
 		return mdiff;
 	}
 
-	public void setMdiff(Float mdiff) {
+	public void setMdiff(Long mdiff) {
 		this.mdiff = mdiff;
 	}
 
-	public Float getManagePrice() {
+	public Long getManagePrice() {
 		return managePrice;
 	}
 
-	public void setManagePrice(Float managePrice) {
+	public void setManagePrice(Long managePrice) {
 		this.managePrice = managePrice;
 	}
 
-	public Float getManageRate() {
+	public Integer getManageRate() {
 		return manageRate;
 	}
 
-	public void setManageRate(Float manageRate) {
+	public void setManageRate(Integer manageRate) {
 		this.manageRate = manageRate;
 	}
 
-	public Float getMaterialPaidup() {
+	public Long getMaterialPaidup() {
 		return materialPaidup;
 	}
 
-	public void setMaterialPaidup(Float materialPaidup) {
+	public void setMaterialPaidup(Long materialPaidup) {
 		this.materialPaidup = materialPaidup;
 	}
 
@@ -114,8 +114,4 @@ public class DecorationInclusiveVO implements Serializable {
 	public void setPsId(Long psId) {
 		this.psId = psId;
 	}
-
-	
-
-
 }

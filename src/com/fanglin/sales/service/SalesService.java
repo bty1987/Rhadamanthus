@@ -41,4 +41,6 @@ public interface SalesService {
 	
 	public int updateSalesForActivity(SalesVO salesVO) throws FLException;
 	
+	public int updateSalesForBelong(SalesVO salesVO) throws FLException;
+	
 }

@@ -51,14 +51,14 @@ public class DecorationPictureServiceImpl implements DecorationPictureService {
 		List<DecorationPictureVO> decorationPictureVOs = new ArrayList<DecorationPictureVO>();
 
 		for (DecorationPicturePO decorationPicturePO : decorationPicturePOs) {
-			DecorationPictureVO _decorationPictureVO = new DecorationPictureVO();
+			decorationPictureVO = new DecorationPictureVO();
 
-			BeanUtil.copyProperties(decorationPicturePO, _decorationPictureVO, Arrays.asList("house", "customer", "designer", "salesman", "supervisor", "version", "createUser", "quoter", "escorter"));
+			BeanUtil.copyProperties(decorationPicturePO, decorationPictureVO, Arrays.asList("house", "customer", "designer", "salesman", "supervisor", "version", "createUser", "quoter", "escorter"));
 
-			_decorationPictureVO.setOrderId(decorationPicturePO.getOrderId());
-			_decorationPictureVO.setUserId(decorationPicturePO.getUserPO().getUserId());
+			decorationPictureVO.setOrderId(decorationPicturePO.getOrderId());
+			decorationPictureVO.setUserId(decorationPicturePO.getUserPO().getUserId());
 
-			decorationPictureVOs.add(_decorationPictureVO);
+			decorationPictureVOs.add(decorationPictureVO);
 		}
 
 		return decorationPictureVOs;

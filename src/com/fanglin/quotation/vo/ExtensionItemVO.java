@@ -20,13 +20,13 @@ public class ExtensionItemVO implements Serializable {
 
 	private String workType;
 
-	private Float addPrice;
+	private Integer addPrice;
 
-	private Float unitPrice;
+	private Integer unitPrice;
 
-	private Float subPrice;
+	private Integer subPrice;
 
-	private Float num;
+	private Integer num;
 
 	private Long quotationFunctionAreaId;
 
@@ -88,35 +88,35 @@ public class ExtensionItemVO implements Serializable {
 		this.workType = workType;
 	}
 
-	public Float getAddPrice() {
+	public Integer getAddPrice() {
 		return addPrice;
 	}
 
-	public void setAddPrice(Float addPrice) {
+	public void setAddPrice(Integer addPrice) {
 		this.addPrice = addPrice;
 	}
 
-	public Float getUnitPrice() {
+	public Integer getUnitPrice() {
 		return unitPrice;
 	}
 
-	public void setUnitPrice(Float unitPrice) {
+	public void setUnitPrice(Integer unitPrice) {
 		this.unitPrice = unitPrice;
 	}
 
-	public Float getSubPrice() {
+	public Integer getSubPrice() {
 		return subPrice;
 	}
 
-	public void setSubPrice(Float subPrice) {
+	public void setSubPrice(Integer subPrice) {
 		this.subPrice = subPrice;
 	}
 
-	public Float getNum() {
+	public Integer getNum() {
 		return num;
 	}
 
-	public void setNum(Float num) {
+	public void setNum(Integer num) {
 		this.num = num;
 	}
 

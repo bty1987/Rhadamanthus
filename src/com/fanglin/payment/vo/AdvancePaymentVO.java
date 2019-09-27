@@ -11,13 +11,13 @@ public class AdvancePaymentVO implements java.io.Serializable {
 	
 	private CustomerVO customer;
 	
-	private Double balance;
+	private Long balance;
 	
-	private Double projectBalance;
+	private Long projectBalance;
 	
-	private Double materialBalance;
+	private Long materialBalance;
 	
-	private Double zhenglinBalance;
+	private Long zhenglinBalance;
 
 	public AdvancePaymentVO() {
 		super();
@@ -44,35 +44,35 @@ public class AdvancePaymentVO implements java.io.Serializable {
 		this.customer = customer;
 	}
 
-	public Double getBalance() {
+	public Long getBalance() {
 		return balance;
 	}
 
-	public void setBalance(Double balance) {
+	public void setBalance(Long balance) {
 		this.balance = balance;
 	}
 
-	public Double getProjectBalance() {
+	public Long getProjectBalance() {
 		return projectBalance;
 	}
 
-	public void setProjectBalance(Double projectBalance) {
+	public void setProjectBalance(Long projectBalance) {
 		this.projectBalance = projectBalance;
 	}
 
-	public Double getMaterialBalance() {
+	public Long getMaterialBalance() {
 		return materialBalance;
 	}
 
-	public void setMaterialBalance(Double materialBalance) {
+	public void setMaterialBalance(Long materialBalance) {
 		this.materialBalance = materialBalance;
 	}
 
-	public Double getZhenglinBalance() {
+	public Long getZhenglinBalance() {
 		return zhenglinBalance;
 	}
 
-	public void setZhenglinBalance(Double zhenglinBalance) {
+	public void setZhenglinBalance(Long zhenglinBalance) {
 		this.zhenglinBalance = zhenglinBalance;
 	}
 	

@@ -2,7 +2,10 @@ package com.fanglin.common.action;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,15 +23,16 @@ import org.springframework.stereotype.Controller;
 import com.aliyun.oss.OSSClient;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.utils.UUIDUtil;
+import com.obs.services.ObsClient;
 import com.opensymphony.xwork2.ActionSupport;
 
 @ParentPackage("login")
 @Namespace("/")
 @Controller
 public class UploadAction extends ActionSupport implements ServletRequestAware, ServletResponseAware {
-	
+
 	private static final long serialVersionUID = -8920466592471253212L;
-	
+
 	protected Logger logger = LoggerFactory.getLogger(getClass());
 
 	protected HttpServletRequest request;
@@ -36,68 +40,105 @@ public class UploadAction extends ActionSupport implements ServletRequestAware, 
 	protected HttpServletResponse response;
 
 	private File file;
-	
+
 	private File strutsUploads;
-	
-    private String strutsUploadsFileName = "";
-    
-    private String resUrl;
-    
-    private Integer errorCode;
-	
+
+	private String strutsUploadsFileName = "";
+
+	private String resUrl;
+
+	private Integer errorCode;
+
 	private String errorMsg;
 
-	@Action(value="uploadFile", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	@Action(value = "uploadFile", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String uploadFile() throws Exception {
 
 		File _file = file == null ? strutsUploads : file;
-		
-		if(_file == null){
+
+		if (_file == null) {
 			throw new FLException(110014, "无效文件");
 		}
-		
-		if(_file.length() > 5242880){
+
+		if (_file.length() > 5242880) {
 			throw new FLException(110016, "文件大小超出");
 		}
-		
-		//后缀名
-		String suffix  = strutsUploadsFileName.substring(strutsUploadsFileName.lastIndexOf(".")+1);
+
+		// 后缀名
+		String suffix = strutsUploadsFileName.substring(strutsUploadsFileName.lastIndexOf(".") + 1);
 		String fileName = String.format("%s.%s", UUIDUtil.getUuid(), suffix);
-		
+
 		// Bucket名称
 		String backet = "nullpoint";
-		
+
 		// Endpoint以杭州为例，其它Region请按实际情况填写。
 		String endpoint = "oss-cn-beijing.aliyuncs.com";
-		
+
 		String requestUrl = String.format("http://%s", endpoint);
-		
+
 		String accessKeyId = "LTAI5ao4pYU3xDPO";
 		String accessKeySecret = "0k3gefryHw67KA4yPsRqBszkBAq7yG";
-		
+
 		OSSClient ossClient = new OSSClient(requestUrl, accessKeyId, accessKeySecret);
 		InputStream inputStream = new FileInputStream(_file.getPath());
 		ossClient.putObject(backet, fileName, inputStream);
-		
+
 		resUrl = String.format("http://%s.%s/%s", backet, endpoint, fileName);
-    	errorCode = 0;
-    	
-    	// 关闭OSSClient。
-    	ossClient.shutdown();
-        	
+		errorCode = 0;
+
+		// 关闭OSSClient。
+		ossClient.shutdown();
+
 		return SUCCESS;
 	}
-	
+
+	public String uploadFileByObs() throws Exception {
+
+		File _file = file == null ? strutsUploads : file;
+
+		if (_file == null) {
+			throw new FLException(110014, "无效文件");
+		}
+
+		if (_file.length() > 5242880) {
+			throw new FLException(110016, "文件大小超出");
+		}
+
+		// 后缀名
+		String suffix = strutsUploadsFileName.substring(strutsUploadsFileName.lastIndexOf(".") + 1);
+		String fileName = String.format("%s/%s.%s", new SimpleDateFormat("yyyy/MM/dd").format(new Date()), UUIDUtil.getUuid(), suffix);
+
+		// Bucket名称
+		String backet = "fanglin-media";
+
+		String endpoint = "obs.cn-north-4.myhuaweicloud.com";
+
+		String accessKeyId = "MHKHWOL3WHNXP7XEFNS5";
+		String accessKeySecret = "viHL8ZxF2UmEq5K3ouT8QE4um8AINmLytq34nynB";
+		// 创建ObsClient实例
+		ObsClient obsClient = new ObsClient(accessKeyId, accessKeySecret, endpoint);
+		InputStream inputStream = new FileInputStream(_file.getPath());
+		obsClient.putObject(backet, fileName, inputStream);
+
+		resUrl = String.format("https://%s.%s/%s", backet, endpoint, fileName);
+		errorCode = 0;
+
+		// 关闭OSSClient。
+		obsClient.close();
+
+		return SUCCESS;
+	}
+
 	@Override
-	public void setServletResponse(HttpServletResponse response){
+	public void setServletResponse(HttpServletResponse response) {
 		this.response = response;
 	}
 
 	@Override
-	public void setServletRequest(HttpServletRequest request){
+	public void setServletRequest(HttpServletRequest request) {
 		this.request = request;
 	}
-	
+
 	public File getFile() {
 		return file;
 	}
@@ -145,9 +186,22 @@ public class UploadAction extends ActionSupport implements ServletRequestAware, 
 	public void setErrorMsg(String errorMsg) {
 		this.errorMsg = errorMsg;
 	}
-	
+
 	public String uploadFileError() throws Exception {
 		return SUCCESS;
 	}
-	
+
+	public static void main(String[] args) throws FileNotFoundException {
+		String backet = "fanglin-media";
+
+		String endpoint = "obs.cn-north-4.myhuaweicloud.com";
+
+		String accessKeyId = "MHKHWOL3WHNXP7XEFNS5";
+		String accessKeySecret = "viHL8ZxF2UmEq5K3ouT8QE4um8AINmLytq34nynB";
+		// 创建ObsClient实例
+		ObsClient obsClient = new ObsClient(accessKeyId, accessKeySecret, endpoint);
+		InputStream inputStream = new FileInputStream("d:\\medical.log");
+		obsClient.putObject(backet, "medical.log", inputStream);
+	}
+
 }

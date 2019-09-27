@@ -22,8 +22,8 @@ jQuery(function ($) {
     com.focusPage("#activity").on("change", function () {
 
         var $this = $(this);
-        var _things = [];
-        var _coupons = [];
+        var things = [];
+        var coupons = [];
 
         var options = {
             "activity.aid": $this.val()
@@ -31,26 +31,26 @@ jQuery(function ($) {
 
         com.post(api.information.queryActivityItemByAid, options, function (res) {
 
-            var _ = res.activityItems;
+            var activity = res.activityItems;
 
-            for (var i = 0; i < _.length; i++) {
+            for (var i = 0; i < activity.length; i++) {
 
-                var _activityItem = _[i];
+                var activityItem = activity[i];
 
-                if (_activityItem.type == 0) {
-                    _coupons.push({
-                        asid: _activityItem.asid,
-                        activityItemName: _activityItem.name + " 金额:" + _activityItem.money
+                if (activityItem.type == 0) {
+                    coupons.push({
+                        asid: activityItem.asid,
+                        activityItemName: activityItem.name + " 金额:" + activityItem.money
                     });
-                } else if (_activityItem.type == 1) {
-                    _things.push({
-                        asid: _activityItem.asid,
-                        activityItemName: _activityItem.name + " 金额:" + _activityItem.money
+                } else if (activityItem.type == 1) {
+                    things.push({
+                        asid: activityItem.asid,
+                        activityItemName: activityItem.name + " 金额:" + activityItem.money
                     });
                 }
         }
 
-            com.selectTypeahead("thingsType", _things, 'asid', 'activityItemName');
+            com.selectTypeahead("thingsType", things, 'asid', 'activityItemName');
 
             com.focusPage("#thingsAdd").unbind().click(function(){
                 if(com.validate("thingsInputs")){
@@ -62,7 +62,7 @@ jQuery(function ($) {
                 com.cleanItems(decorationActivityItem.activityItems);
             });
 
-            com.selectTypeahead("couponsType", _coupons, 'asid', 'activityItemName');
+            com.selectTypeahead("couponsType", coupons, 'asid', 'activityItemName');
 
             com.focusPage("#couponsAdd").unbind().click(function(){
                 if(com.validate("couponsInputs")){
@@ -77,7 +77,6 @@ jQuery(function ($) {
         });
     });
     
-    decorationActivityItem.decorationOrderId = ActivityOrderId;
     decorationActivityItem.items.orderId = com.focusPage("#orderId");
     decorationActivityItem.items.decorationActivityItems = com.focusPage("#decorationActivityItems");
     decorationActivityItem.items.decorationActivityItems1 = com.focusPage("#decorationActivityItems1");
@@ -104,10 +103,10 @@ jQuery(function ($) {
     	com.closeTip();
     });
 
-    initdraw(decorationActivityItem.decorationOrderId);
+    initDraw(ActivityOrderId);
 
     //初始化
-    function initdraw(orderId) {
+    function initDraw(orderId) {
 
         decorationUtils.decorationActivityItemInfo(decorationActivityItem.items.activityItems, decorationActivityItem.items.decorationActivityItems1, uiBtnMethod, orderId);
         decorationUtils.decorationActivityInfo(decorationActivityItem.items.decorationActivityItems, activityBtnMethod, orderId);
@@ -143,7 +142,6 @@ jQuery(function ($) {
             unrefundDecorationActivityItem(activityItem.daiId, activityItem.activityItemName);
         });
         expendBtn.on("click", function () {
-        	console.log(activityItem.daiId);
             expendDecorationActivityItem(activityItem.daiId, activityItem.activityItemName);
         });
     }
@@ -174,14 +172,14 @@ jQuery(function ($) {
         com.post(api.information.queryActivityForValid, {"activity.type": 1}, function (res) {
             var activitys = res.activitys;
 
-            var _activitys = [{aid: -1, activityName: ""}];
+            var activityData = [{aid: -1, activityName: ""}];
 
             for (var i = 0; i < activitys.length; i++) {
-                var _activity = activitys[i];
+                var activity = activitys[i];
 
-                _activitys.push({aid: _activity.aid, activityName: _activity.name, money: _activitys.money});
+                activityData.push({aid: activity.aid, activityName: activity.name, money: activityData.money});
             }
-            decorationActivityItem.activityItems.activityInfo.bindData(_activitys, "aid", "activityName", "money", false);
+            decorationActivityItem.activityItems.activityInfo.bindData(activityData, "aid", "activityName", "money", false);
         });
 
         decorationActivityItem.joinDecorationActivityModal.modal("show");
@@ -201,23 +199,23 @@ jQuery(function ($) {
 
             var decorationActivitys = res.decorationActivitys;
 
-            var _activitys = [{aid: -1, activityName: ""}];
+            var decorationActivityData = [{aid: -1, activityName: ""}];
 
             for (var i = 0; i < decorationActivitys.length; i++) {
-                var _decorationActivity = decorationActivitys[i];
+                var decorationActivity = decorationActivitys[i];
 
-                if(_decorationActivity.status == 1){
+                if(decorationActivity.status == 1){
                     continue;
                 }
 
-                _activitys.push({
-                    aid: _decorationActivity.activity.aid,
-                    activityName: _decorationActivity.activity.name,
-                    money: _decorationActivity.activity.money
+                decorationActivityData.push({
+                    aid: decorationActivity.activity.aid,
+                    activityName: decorationActivity.activity.name,
+                    money: decorationActivity.activity.money
                 });
             }
 
-            decorationActivityItem.activity.bindData(_activitys, "aid", "activityName", false);
+            decorationActivityItem.activity.bindData(decorationActivityData, "aid", "activityName", false);
         }, null, false);
 
         approvalUtils.initqueryApprovalUser("approveActivityItemManSel", 8);
@@ -361,10 +359,10 @@ jQuery(function ($) {
         };
 
         com.post(api.decoration.unlockDecorationActivity, options, function (res) {
-            var daId = res.decorationActivity;
+            var decorationActivity = res.decorationActivity;
             com.showAlert(com.info, "解锁成功");
-            com.focusPage("#state_" + daId.daId).text("初始");
-            com.focusPage("#dactivity_" + daId.daId).attr("status", "0");
+            com.focusPage("#state_" + decorationActivity.daId).text("初始");
+            com.focusPage("#dactivity_" + decorationActivity.daId).attr("status", "0");
         });
     }
 
@@ -376,10 +374,10 @@ jQuery(function ($) {
         };
 
         com.post(api.decoration.lockDecorationActivity, options, function (res) {
-            var daId = res.decorationActivity;
+            var decorationActivity = res.decorationActivity;
             com.showAlert(com.info, "锁定成功");
-            com.focusPage("#state_" + daId.daId).text("锁定");
-            com.focusPage("#dactivity_" + daId.daId).attr("status", "1");
+            com.focusPage("#state_" + decorationActivity.daId).text("锁定");
+            com.focusPage("#dactivity_" + decorationActivity.daId).attr("status", "1");
         });
     }
 
@@ -395,8 +393,9 @@ jQuery(function ($) {
             com.post(api.decoration.abateDecorationActivityItem, options, function (res) {
 
             	com.showAlert(com.info, "物品失效成功");
-            	
                 var daiId = res.decorationActivityItem.daiId;
+
+                decorationUtils.countTatol(daiId);
 
                 com.focusPage("#state_" + daiId).text("失效");
 
@@ -438,8 +437,10 @@ jQuery(function ($) {
         com.post(api.decoration.refundDecorationActivityItem, options, function (res) {
         	
         	com.showAlert(com.info, "物品退货成功");
-
             var daiId = res.decorationActivityItem.daiId;
+
+            decorationUtils.countTatol(daiId);
+
             com.focusPage("#state_" + daiId).text("退货");
 
         });
@@ -495,8 +496,10 @@ jQuery(function ($) {
             com.post(api.decoration.expendDecorationActivityItem, options, function (res) {
 
             	com.showAlert(com.info, "物品消耗成功");
-            	
                 var daiId = res.decorationActivityItem.daiId;
+
+                decorationUtils.countTatol(daiId);
+
                 com.focusPage("#state_" + daiId).text("消耗");
             });
 

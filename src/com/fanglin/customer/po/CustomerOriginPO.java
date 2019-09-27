@@ -61,7 +61,7 @@ public class CustomerOriginPO implements Serializable {
 
 	private String houseNumber;
 
-	private float buildArea;
+	private int buildArea;
 
 	private UserPO creater;
 
@@ -200,11 +200,11 @@ public class CustomerOriginPO implements Serializable {
 	}
 
 	@Column(name = "buildArea")
-	public float getBuildArea() {
+	public int getBuildArea() {
 		return buildArea;
 	}
 
-	public void setBuildArea(float buildArea) {
+	public void setBuildArea(int buildArea) {
 		this.buildArea = buildArea;
 	}
 

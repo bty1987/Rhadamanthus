@@ -1,57 +1,63 @@
-<div>
-<div class="row">
-	<div class="col-xs-12">
-		<div id="condList" class="fl_search clearfix"></div>
+<div id="materialSubOrderPageContent">
+		<div>
+			<div class="row">
+				<div class="col-xs-12">
+					<!-- 查询条件-->
+					<div id="condList" class="fl_search clearfix"></div>
+					<!--查询结果-->
+					<div id="resultList" class="clearfix tab-pane active"></div>
+					<!--分页-->
+					<div id="pagenation" class="fl-page-wrap clearfix"></div>
+				</div>
+			</div>
 
-		<div class="clearfix" id="resultList"></div>
+			<!--查看 工序组--工序 弹窗-->
+			<div id="checkWorkflow" class="portlet box"></div>
 
-		<div class="fl-page-wrap clearfix" id="pagenation" style="display: block;"></div>
-	</div>
-</div>
-
-</div>
-
-<!--查看 工序组--工序 弹窗-->
-<div id="checkWorkflow" class="portlet box"></div>
-
-<div id="layerAdd" style="padding: 40px 0; display: none;">
-	<div class="row-fluid">
-		<form class="form-horizontal" novalidate="novalidate" id="form1">
-			<div class="widget-main">
-				<div class="row" style="margin-right:0px">
-					<div class="col-xs-12">
-
-						<div class="form-group">
-							<label class="control-label col-xs-3 no-padding-right">名称<i class="icon-asterisk"></i></label>
-							<div class="controls col-xs-8">
-								<input type="text" class=" m-wrap col-xs-8 v_required" name="name" rules="{required:true}">
-							</div>
+			<div class="modal fade" id="workplanModal" tabindex="-1">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+							<h4 class="modal-title" id="myModalLabel">工序组</h4>
 						</div>
-						<div class="space5"></div>
+						<div class="modal-body">
+							<form class="form-horizontal">
 
-						<div class="form-group">
-							<label class="control-label col-xs-3 no-padding-right">车间<i class="icon-asterisk"></i></label>
-							<div class="controls col-xs-8">
-								<select type="text" class="col-xs-8 m-wrap" name="workshop" rules="{required:true}"></select>
-							</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label no-padding-right" for="name">名称</label>
+									<div class="col-sm-9">
+										<input type="text" id="name" maxlength="12" class="col-xs-10 col-sm-7 v_required" data-toggle="popover" data-trigger='manual'/>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label class="col-sm-3 control-label no-padding-right" for="workshop">车间</label>
+									<div class="col-sm-9">
+										<select id="workshop" name="workshop" data-required="1" data-toggle="popover" data-trigger='manual' rules="{required:true}" style="width: 232px"></select>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label class="col-sm-3 control-label no-padding-right" for="comment">备注</label>
+									<div class="col-sm-9">
+										<input type="text" id="comment" maxlength="12" class="col-xs-10 col-sm-7 v_required" data-toggle="popover" data-trigger='manual'/>
+									</div>
+								</div>
+
+							</form>
+
 						</div>
-						<div class="space5"></div>
-
-						<div class="form-group">
-							<label class="control-label col-xs-3 no-padding-right">备注</label>
-							<div class="controls col-xs-8">
-								<input type="text" class=" m-wrap col-xs-8" name="comment" rules="{required:true}">
-							</div>
+						<div class="modal-footer">
+							<button type="button" id="saveBtn" class="btn btn-primary">确定</button>
+							<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
 						</div>
-						<div class="space5"></div>
-
 					</div>
 				</div>
 			</div>
-		</form>
+		</div>
 	</div>
-</div>
 
 <script type="text/javascript">
-	$.loadScript(['js/production/workplan.js','js/production/productionUtils.js']);
+	$.loadScript(['js/production/workplan.js']);
 </script>

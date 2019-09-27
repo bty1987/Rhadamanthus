@@ -33,7 +33,7 @@ public class DecorationBelongVO implements Serializable {
 
 	private DepartmentVO region;
 
-	private Float rate;
+	private Integer rate;
 
 	private UserBaseVO operater;
 
@@ -91,11 +91,11 @@ public class DecorationBelongVO implements Serializable {
 		this.region = region;
 	}
 
-	public Float getRate() {
+	public Integer getRate() {
 		return rate;
 	}
 
-	public void setRate(Float rate) {
+	public void setRate(Integer rate) {
 		this.rate = rate;
 	}
 

@@ -1,20 +1,21 @@
 package com.fanglin.store.vo;
 
 import java.io.Serializable;
-public class CouponVO implements Serializable{
+
+public class CouponVO implements Serializable {
 
 	private static final long serialVersionUID = 2652232359053489394L;
-	
+
 	private Long cid;
-	
+
 	private MgoodsVO mgoods;
-	
+
 	private String title;
-	
-	private Float value;
-	
+
+	private Long value;
+
 	private Short type;
-	
+
 	private Short status;
 
 	public CouponVO() {
@@ -33,7 +34,7 @@ public class CouponVO implements Serializable{
 	public void setCid(Long cid) {
 		this.cid = cid;
 	}
-	
+
 	public MgoodsVO getMgoods() {
 		return mgoods;
 	}
@@ -50,11 +51,11 @@ public class CouponVO implements Serializable{
 		this.title = title;
 	}
 
-	public Float getValue() {
+	public Long getValue() {
 		return value;
 	}
 
-	public void setValue(Float value) {
+	public void setValue(Long value) {
 		this.value = value;
 	}
 
@@ -73,5 +74,5 @@ public class CouponVO implements Serializable{
 	public void setStatus(Short status) {
 		this.status = status;
 	}
-	
+
 }

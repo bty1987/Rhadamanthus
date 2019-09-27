@@ -110,6 +110,14 @@ public class CommonAction extends BaseListAction{
 		return SUCCESS;
 	}
 	
+	@Action(value = "deleteVaward", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String deleteVaward() throws FLException {
+
+		vawardService.deleteVaward(vaward);
+		
+		return SUCCESS;
+	}
+	
 	public PlanVO getPlan() {
 		return plan;
 	}

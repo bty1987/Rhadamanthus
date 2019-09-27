@@ -58,7 +58,7 @@ public class StorehouseStockServiceImpl implements StorehouseStockService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int updateStorehouseStock(long shId, String month, float num) {
+	public int updateStorehouseStock(long shId, String month, int num) {
 		
 		StorehouseStockPO storehouseStockPO = storehouseStockDao.queryStorehouseStockByShidAMonth(shId, month);
 		

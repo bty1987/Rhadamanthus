@@ -38,6 +38,8 @@ public class MessagePO implements Serializable {
 
 	public static final short TYPE_SEND_VISIT_INT = 5;
 
+	public static final short TYPE_SEND_CUSTOMER_INT = 6;
+
 	private int mid;
 
 	private UserPO receiver;

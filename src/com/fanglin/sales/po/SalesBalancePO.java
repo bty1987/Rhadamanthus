@@ -88,17 +88,17 @@ public class SalesBalancePO implements Serializable{
 	
 	private Timestamp venderTime;
 	
-	private float allowance;
+	private long allowance;
 	
-	private float total;
+	private long total;
 	
-	private float balance;
+	private long balance;
 	
-	private float difference;
+	private long difference;
 	
-	private float vbalance;
+	private long vbalance;
 	
-	private float pbalance;
+	private long pbalance;
 	
 	private short type;
 	
@@ -207,56 +207,56 @@ public class SalesBalancePO implements Serializable{
 	}
 	
 	@Column(name = "allowance")
-	public float getAllowance() {
+	public long getAllowance() {
 		return allowance;
 	}
 
-	public void setAllowance(float allowance) {
+	public void setAllowance(long allowance) {
 		this.allowance = allowance;
 	}
 	
 	@Column(name = "total")
-	public float getTotal() {
+	public long getTotal() {
 		return total;
 	}
 
-	public void setTotal(float total) {
+	public void setTotal(long total) {
 		this.total = total;
 	}
 
 	@Column(name = "balance")
-	public float getBalance() {
+	public long getBalance() {
 		return balance;
 	}
 
-	public void setBalance(float balance) {
+	public void setBalance(long balance) {
 		this.balance = balance;
 	}
 
 	@Column(name = "difference")
-	public float getDifference() {
+	public long getDifference() {
 		return difference;
 	}
 
-	public void setDifference(float difference) {
+	public void setDifference(long difference) {
 		this.difference = difference;
 	}
 
 	@Column(name = "vbalance")
-	public float getVbalance() {
+	public long getVbalance() {
 		return vbalance;
 	}
 
-	public void setVbalance(float vbalance) {
+	public void setVbalance(long vbalance) {
 		this.vbalance = vbalance;
 	}
 
 	@Column(name = "pbalance")
-	public float getPbalance() {
+	public long getPbalance() {
 		return pbalance;
 	}
 
-	public void setPbalance(float pbalance) {
+	public void setPbalance(long pbalance) {
 		this.pbalance = pbalance;
 	}
 

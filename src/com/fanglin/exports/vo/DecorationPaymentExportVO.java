@@ -19,23 +19,23 @@ public class DecorationPaymentExportVO implements Serializable {
 	private static final long serialVersionUID = 4107241515396957257L;
 
 	private String orderId;
-	
+
 	private String village;
-	
+
 	private String houseNumber;
-	
+
 	private String designer;
-	
+
 	private String designerDepartment;
-	
+
 	private String paymentType;
-	
-	private Float referMoney;
-	
-	private Float coupon;
-	
+
+	private Long referMoney;
+
+	private Long coupon;
+
 	private String couponInfo;
-	
+
 	private Timestamp collectTime;
 
 	public String getOrderId() {
@@ -86,19 +86,19 @@ public class DecorationPaymentExportVO implements Serializable {
 		this.paymentType = paymentType;
 	}
 
-	public Float getReferMoney() {
+	public Long getReferMoney() {
 		return referMoney;
 	}
 
-	public void setReferMoney(Float referMoney) {
+	public void setReferMoney(Long referMoney) {
 		this.referMoney = referMoney;
 	}
 
-	public Float getCoupon() {
+	public Long getCoupon() {
 		return coupon;
 	}
 
-	public void setCoupon(Float coupon) {
+	public void setCoupon(Long coupon) {
 		this.coupon = coupon;
 	}
 
@@ -117,5 +117,5 @@ public class DecorationPaymentExportVO implements Serializable {
 	public void setCollectTime(Timestamp collectTime) {
 		this.collectTime = collectTime;
 	}
-	
+
 }

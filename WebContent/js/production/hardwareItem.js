@@ -1,74 +1,104 @@
 $(function () {
 
-    var $hid = params.hid;
-    var $hardwareStatus = params.hardwareStatus;
-    var $productionStatus = params.productionStatus;
+    var hardwareItem = {
+        btns:{
+            saveBtn : com.focusPage("#saveBtn"),
+            cancelBtn : com.focusPage("#canceBtn")
+        },
+
+        models:{
+            addHardwareItemModal:com.focusPage("#addHardwareItemModal")
+        },
+
+        items:{
+            name : com.focusPage("#name"),
+            unitPrice : com.focusPage("#unitPrice"),
+            itemNum : com.focusPage("#itemNum"),
+            measurementUnit : com.focusPage("#measurementUnit"),
+            total : com.focusPage("#total"),
+            comment : com.focusPage("#comment")
+        },
+        hid: params.hid,
+        hardwareStatus : params.hardwareStatus,
+        productionStatus : params.productionStatus
+    };
+
+
+    hardwareItem.btns.saveBtn.bindClick(addItem);
+
+    hardwareItem.models.addHardwareItemModal.on("hide.bs.modal", function(){
+        com.clearValidator();
+        com.cleanItems(hardwareItem.items);
+    });
 
     var displayFunc = (function () {
 
-        var renderList = function(tableId,listData){
-
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list ui-sortable fl-table-list');
+        var renderList = function (tableId, listData) {
+            var $tableWrap = com.focusPage('#' + tableId).empty();
+            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if (listData && listData.length) {
                 $.each(listData, function (i, v) {
-
-                    var $liLine = $('<li></li>').addClass('clearfix item-orange');
-                    var $h3 = $('<h3></h3>').addClass('oid');
-                    var $title = $('<small></small>').addClass('blue').html(' ' + v.name);
-                    var $btnDiv = $('<div></div>').addClass('action-buttons pull-right');
-                    var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-
-                    var $btnDelete = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
-
-                    var total = utils.accMul(v.unitprice,v.num);
-
-                    var propertyArr = [
-                        ["数量:", v.num, "blue"],
-                        ["单位:", v.measurementunit,"grey"],
-                        ["单价:", v.unitprice,"blue"],
-                        ["总价:",total,"blue"],
-                        ["说明:", v.comment,"grey"]
-                    ];
-
-                    $.each(propertyArr, function (index, value) {
-                        var $liProperty = $('<li></li>');
-                        $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                        $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                        $liProperty.appendTo($ulProperty);
-                    });
+                    var $liLine = creatLine(v);
 
                     $liLine.appendTo($ul);
-                    $liLine.append($h3).append($ulProperty);
-                    $btnDiv.append($btnDelete);
-
-                    $h3.append($title).append($btnDiv);
-
-                    hidBtn($btnDelete,$hardwareStatus)
-
-                    //删除按钮
-                    $btnDelete.click(function (e) {
-                        com.showConfirm("是否确认删除", function(){
-                            com.post(api.production.deleteHardwareItem, {"hardwareItem.hiid": v.hiid}, function () {
-                                hardwareItemSearcher.doSearch();
-                                com.showAlert(com.info, "删除成功");
-                            });
-                        });
-                    });
-                    
                 });
+
                 $ul.appendTo($tableWrap);
             }
         };
+
+        var creatLine = function (v) {
+            var $liLine = $('<li></li>').addClass('clearfix item-orange');
+            var $h3 = $('<h3></h3>').addClass('oid');
+            var $title = $('<small></small>').addClass('blue').html(' ' + v.name);
+            var $btnDiv = $('<div></div>').addClass('action-buttons pull-right');
+            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+
+            var $btnDelete = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
+
+            var total = utils.accMul(v.unitprice,v.num);
+
+            var propertyArr = [
+                ["数量:", v.num, "blue"],
+                ["单位:", v.measurementunit,"grey"],
+                ["单价:", v.unitprice,"blue"],
+                ["总价:",total,"blue"],
+                ["说明:", v.comment,"grey"]
+            ];
+
+            $.each(propertyArr, function (index, value) {
+                var $liProperty = $('<li></li>');
+                $('<strong></strong>').html(value[0]).appendTo($liProperty);
+                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+                $liProperty.appendTo($ulProperty);
+            });
+
+            $h3.append($title).append($btnDiv);
+            $liLine.append($h3).append($ulProperty);
+            $btnDiv.append($btnDelete);
+
+            hidBtn($btnDelete,hardwareItem.hardwareStatus);
+
+            //删除按钮
+            $btnDelete.click(function (e) {
+                delectableItem(v.hiid);
+            });
+            return $liLine;
+        };
+
         return {
             init : function(tableId,listData){
                 com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
+            },
+            drawLine : function(v){
+                return creatLine(v);
             }
         };
-    })();
 
+    })();
+   
     var hardwareItemSearcher = new Searcher();
 
     var _condArr = [];
@@ -77,58 +107,87 @@ $(function () {
 
         displayFunc.init("resultList",data);
 
-    },"pagenation","hardwareItemPostData",{"hardware.hid":$hid},false,null,function (){
+    },"pagenation","hardwareItemPostData",{"hardware.hid" : hardwareItem.hid}, false, null, function (){
 
-        var $adda = $('<a></a>').addClass('btn btn-xs btn-info pull-left').attr('name', 'addHardwareItemVersion').css("margin", "0px 3px").html('添加');
-        var $back = $('<a></a>').addClass('btn btn-xs pull-left').attr('name', 'backHardwareVersion').css("margin", "0px 3px").html('返回');
+        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'addHardwareItem').css("margin", "0px 3px");
+        var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+        var $addspan = $('<span></span>').text('添加').appendTo($adda);
+        var $backBtn = $('<a></a>').addClass('btn btn-minier pull-left').attr('id', 'back').css("margin", "0px 3px");
+        var $backBtns = $('<i></i>').addClass('icon-mail-forward bigger-110').appendTo($backBtn);
+        var $backSpan = $('<span></span>').text('返回').appendTo($backBtn);
 
-        hidBtn($adda,$hardwareStatus);
+        hidBtn($adda,hardwareItem.hardwareStatus);
 
-
-        $adda.click(function(){
-            com.clearValidator();
-            productionUtils.clearForm('form1');
-            addHardwareItem(function(){
-                if(!com.validate("layerAddItem",null)){
-                    calcTotal();
-                    addItem();
-                }
-            });
-        });
-
-        $back.click(function () {
-            com.switchPage(api.index.hardwareIndex.url);
-        });
-
-        return [$adda, $back];
+        return [$adda, $backBtn];
     });
 
+    com.focusPage('#addHardwareItem').click(function() {
+        hardwareItem.models.addHardwareItemModal.modal("show");
+    });
 
-    function addHardwareItem(callback){
-        com.closePopup();
-        layer.open({
-            type: 1,
-            skin: 'layui-layer-lan',
-            title: "添加五金项",
-            content:com.focusPage('#layerAddItem'),
-            area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
-            maxmin: false,
-            zIndex: 9000,
-            btn: ['确定', '取消'],
-            yes: function (index, layero) {
-                callback(index,layero)
-            },
-            btn2: function (index, layero) {
+    com.focusPage('#back').click(function() {
+        com.switchPage(api.index.hardwareIndex.url);
+    });
 
-            },
-            cancel: function () {
-                //右上角关闭回调
-            }
+    function delectableItem(hiid) {
+        com.showConfirm("是否确认删除", function(){
+            com.post(api.production.deleteHardwareItem, {"hardwareItem.hiid": hiid}, function () {
+                hardwareItemSearcher.doSearch();
+                com.showAlert(com.info, "删除成功");
+            });
         });
-    }
+    };
+
+    function addItem(){
+
+        if (com.validate('addHardwareItemModal')) {
+            return false;
+        };
 
 
-    com.focusPage('#layerAddItem').find("#itemName").typeahead({
+        var options = {
+
+            "hardware.hid" : hardwareItem.hid,
+            "hardwareItems[0].name": hardwareItem.items.name.val(),
+            "hardwareItems[0].unitprice": hardwareItem.items.unitPrice.val(),
+            "hardwareItems[0].num": hardwareItem.items.itemNum.val(),
+            "hardwareItems.measurementunit": hardwareItem.items.measurementUnit.val(),
+            "hardwareItems[0].total": hardwareItem.items.total.val(),
+            "hardwareItems[0].comment": hardwareItem.items.comment.val(),
+    };
+        com.post(api.production.addHardwareItem,options,function(res){
+            com.closePopup();
+            hardwareItemSearcher.doSearch();
+            com.showAlert(com.info,"添加成功");
+        });
+        hardwareItem.models.addHardwareItemModal.modal("hide");
+    };
+
+    hardwareItem.items.itemNum.on("change",function(){
+        com.clearValidator();
+        if(!com.validate('itemNum')){
+            calcTotal();
+        }
+    });
+
+    function calcTotal(){
+        var _num =  hardwareItem.items.itemNum.val();
+        var _unitPrice =  hardwareItem.items.unitPrice.val();
+        var _total = utils.accMul(parseFloat(_num+''),parseFloat(_unitPrice+''));
+        hardwareItem.items.total.val(_total);
+    };
+
+    function hidBtn(btnId,otherStatus){
+        btnId.removeClass('hide');
+        if (hardwareItem.productionStatus == 5 || hardwareItem.productionStatus == 4 ) {
+            btnId.addClass('hide');
+        }else if(otherStatus != 0 ){
+            btnId.addClass('hide');
+        }
+
+    };
+
+    hardwareItem.items.name.typeahead({
         url: api.production.queryQuoteItemByPinyin,
         list: [],
         postData: {},
@@ -148,63 +207,13 @@ $(function () {
             $.each(list, function (index, val) {
 
                 if (val.qiid == k) {
-                    com.focusPage('#layerAddItem').find('#measurementUnit').val(val.measurementunit);
-                    com.focusPage('#layerAddItem').find('#unitPrice').val(val.unitprice);
+                    hardwareItem.items.measurementUnit.val(val.measurementunit);
+                    hardwareItem.items.unitPrice.val(val.unitprice);
                 }
 
             });
             return v;
         }
     });
-
-
-
-
-    function addItem(){
-        var options = {};
-        var $layerAdd = com.focusPage('#layerAddItem');
-
-        options["hardware.hid"] = $hid;
-        options["hardwareItems[0].name"] = $layerAdd.find('#itemName').val();
-        options["hardwareItems[0].unitprice"] = $layerAdd.find('#unitPrice').val();
-        options["hardwareItems[0].num"] = $layerAdd.find('#itemNum').val();
-        options["hardwareItems[0].measurementunit"] = $layerAdd.find('#measurementUnit').val();
-        options["hardwareItems[0].total"] = $layerAdd.find('#total').val();
-        options["hardwareItems[0].comment"] = $layerAdd.find('#comment').val();
-
-        com.post(api.production.addHardwareItem,options,function(res){
-            com.clearValidator();
-            productionUtils.clearForm('form1');
-            hardwareItemSearcher.doSearch();
-            com.showAlert(com.info,"添加成功");
-        },function(e){
-            com.showAlert(com.info,"添加失败");
-        })
-    }
-
-    com.focusPage('#layerAddItem').find("#itemNum").on("change",function(){
-        com.clearValidator();
-        if(!com.validate('itemNum')){
-            calcTotal();
-        }
-    });
-
-    function calcTotal(){
-        var _num =  com.focusPage('#layerAddItem').find("#itemNum").val();
-        var _unitPrice =  com.focusPage('#layerAddItem').find('#unitPrice').val();
-        var _total = utils.accMul(parseFloat(_num+''),parseFloat(_unitPrice+''));
-        com.focusPage('#layerAddItem').find('#total').val(_total);
-    }
-
-
-    function hidBtn(btnId,otherStatus){
-        btnId.removeClass('hide');
-        if ($productionStatus == 5 || $productionStatus == 4 ) {
-            btnId.addClass('hide');
-        }else if(otherStatus != 0 ){
-            btnId.addClass('hide');
-        }
-
-    }
 
 });

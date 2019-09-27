@@ -27,9 +27,9 @@ public class ApprovalSalesRefundItemPO implements java.io.Serializable {
 
 	private long sid;
 
-	private float num;
+	private long num;
 
-	private float total;
+	private long total;
 
 	private SalesItemPO salesItem;
 
@@ -63,20 +63,20 @@ public class ApprovalSalesRefundItemPO implements java.io.Serializable {
 	}
 
 	@Column(name = "num")
-	public float getNum() {
+	public long getNum() {
 		return this.num;
 	}
 
-	public void setNum(float num) {
+	public void setNum(long num) {
 		this.num = num;
 	}
 
 	@Column(name = "total")
-	public float getTotal() {
+	public long getTotal() {
 		return this.total;
 	}
 
-	public void setTotal(float total) {
+	public void setTotal(long total) {
 		this.total = total;
 	}
 

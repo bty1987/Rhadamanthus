@@ -11,25 +11,25 @@ public class ManifestVO implements java.io.Serializable {
 	private static final long serialVersionUID = 1273017581681919428L;
 
 	private Long mid;
-	
+
 	private String code;
-	
+
 	private Timestamp createTime;
-	
+
 	private Timestamp manifestTime;
-	
+
 	private UserBaseVO creater;
-	
+
 	private Short type;
-	
+
 	private Short status;
-	
+
 	private String comment;
-	
+
 	private String attachment;
-	
+
 	private ManifestVO quoteManifest;
-	
+
 	public ManifestVO() {
 		super();
 	}
@@ -55,7 +55,7 @@ public class ManifestVO implements java.io.Serializable {
 		this.code = code;
 	}
 
-	@JSON(format="yyyy-MM-dd")
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getCreateTime() {
 		return this.createTime;
 	}
@@ -64,7 +64,7 @@ public class ManifestVO implements java.io.Serializable {
 		this.createTime = createTime;
 	}
 
-	@JSON(format="yyyy-MM-dd")
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getManifestTime() {
 		return this.manifestTime;
 	}

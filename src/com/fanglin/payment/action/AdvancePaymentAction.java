@@ -40,18 +40,18 @@ public class AdvancePaymentAction extends BaseListAction {
 	
 	private DecorationVO decoration;
 	
-	private float balanceAdvance;
+	private long balanceAdvance;
 	
-	private float projectAdvance;
+	private long projectAdvance;
 	
-	private float materialAdvance;
+	private long materialAdvance;
 	
-	private float zaterialAdvance;
+	private long zaterialAdvance;
 	
 	@Action(value="queryAdvancePaymentByCustomerId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String queryAdvancePaymentByCustomerId() throws FLException{
 		
-		List<Float> advances = advancePaymentService.queryAdvancePaymentByCustomerId(customer,queryCompany());
+		List<Long> advances = advancePaymentService.queryAdvancePaymentByCustomerId(customer,queryCompany());
 		
 		balanceAdvance = advances.get(0);
 		projectAdvance = advances.get(1);
@@ -64,7 +64,7 @@ public class AdvancePaymentAction extends BaseListAction {
 	@Action(value="queryAdvancePaymentByOrderId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String queryAdvancePaymentByOrderId() throws FLException{
 		
-		List<Float> advances = advancePaymentService.queryAdvancePaymentByOrderId(decoration);
+		List<Long> advances = advancePaymentService.queryAdvancePaymentByOrderId(decoration);
 		
 		balanceAdvance = advances.get(0);
 		projectAdvance = advances.get(1);
@@ -90,35 +90,35 @@ public class AdvancePaymentAction extends BaseListAction {
 		this.decoration = decoration;
 	}
 
-	public float getBalanceAdvance() {
+	public long getBalanceAdvance() {
 		return balanceAdvance;
 	}
 
-	public void setBalanceAdvance(float balanceAdvance) {
+	public void setBalanceAdvance(long balanceAdvance) {
 		this.balanceAdvance = balanceAdvance;
 	}
 
-	public float getProjectAdvance() {
+	public long getProjectAdvance() {
 		return projectAdvance;
 	}
 
-	public void setProjectAdvance(float projectAdvance) {
+	public void setProjectAdvance(long projectAdvance) {
 		this.projectAdvance = projectAdvance;
 	}
 
-	public float getMaterialAdvance() {
+	public long getMaterialAdvance() {
 		return materialAdvance;
 	}
 
-	public void setMaterialAdvance(float materialAdvance) {
+	public void setMaterialAdvance(long materialAdvance) {
 		this.materialAdvance = materialAdvance;
 	}
 
-	public float getZaterialAdvance() {
+	public long getZaterialAdvance() {
 		return zaterialAdvance;
 	}
 
-	public void setZaterialAdvance(float zaterialAdvance) {
+	public void setZaterialAdvance(long zaterialAdvance) {
 		this.zaterialAdvance = zaterialAdvance;
 	}
 

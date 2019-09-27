@@ -53,14 +53,14 @@ public class DecorationActivityServiceImpl implements DecorationActivityService 
 		List<DecorationActivityVO> decorationActivityVOs = new ArrayList<DecorationActivityVO>();
 		
 		for(DecorationActivityPO decorationActivityPO: decorationActivityPOs){
-			DecorationActivityVO _decorationActivityVO = new DecorationActivityVO();
+			decorationActivityVO = new DecorationActivityVO();
 			
-			BeanUtil.copyProperties(decorationActivityPO, _decorationActivityVO, Arrays.asList("activity"));
+			BeanUtil.copyProperties(decorationActivityPO, decorationActivityVO, Arrays.asList("activity"));
 			
-			_decorationActivityVO.setActivity(new ActivityVO());
-			BeanUtil.copyProperties(decorationActivityPO.getActivity(), _decorationActivityVO.getActivity(), Arrays.asList("creater"));
+			decorationActivityVO.setActivity(new ActivityVO());
+			BeanUtil.copyProperties(decorationActivityPO.getActivity(), decorationActivityVO.getActivity(), Arrays.asList("creater"));
 			
-			decorationActivityVOs.add(_decorationActivityVO);
+			decorationActivityVOs.add(decorationActivityVO);
 		}
 		
 		return decorationActivityVOs;

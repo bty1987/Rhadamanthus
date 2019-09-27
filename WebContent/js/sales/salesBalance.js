@@ -489,7 +489,6 @@ $(function () {
             }
         };
 
-
         return {
             init: function (tableId, listData) {
                 com.focusPage('#' + tableId).html(null);
@@ -516,6 +515,8 @@ $(function () {
             historicalRecord = params.salesBalanceForDompanyPostData
         }else if(salesBalance.pageType == "pompany"){
             historicalRecord = params.salesBalanceForPompanyPostData
+        }else if(salesBalance.pageType == "supplier"){
+            historicalRecord = params.salesBalanceForSuppleirPostData
         }else{
             historicalRecord = params.salesBalancePostData;
         }

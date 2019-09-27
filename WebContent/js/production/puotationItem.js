@@ -1,8 +1,15 @@
 $(function () {
-    var backBtn = com.focusPage('#backBtn');
-    var qid =params["qid"] ;
-    var status =params["status"];
-    var use = params["use"];
+    var puotationItem={
+
+        btns:{
+            backBtn:com.focusPage("#backBtn")
+        },
+
+        qid : params.qid,
+        status :params.status,
+        use :  params.use
+    };
+
     var initList = function (listData) {
         var $tableWrap = com.focusPage('#list');
         var $ul = $('<ul></ul>').addClass('item-list ui-sortable  fl-table-list');
@@ -42,19 +49,14 @@ $(function () {
 
                 $liLine.appendTo($ul);
                 $liLine.append($h3).append($ulProperty);
-                if(status != 3 && status != 4 && status != 5 && use != 1){
+                if(puotationItem.status != 3 && puotationItem.status != 4 && puotationItem.status != 5 && puotationItem.use != 1){
                     $btnDiv.append($btnDelete);
                 }
 
                 $h3.append($title).append($btnDiv);
                 
                 $btnDelete.click(function (e) {
-                    com.showConfirm("是否确认删除", function(){
-                        com.post(api.production.deletePuotationItem, {"puotationItem.qiid": v.qiid}, function () {
-                            com.focusPage('#list ul.item-list').remove();
-                            queryPuotationItemByQid(v.qid);
-                       });
-                    });
+                    delectpuotationItem(v.qiid);
                 });
                 
             });
@@ -62,16 +64,27 @@ $(function () {
             $ul.appendTo($tableWrap);
         }
     };
-    queryPuotationItemByQid(qid);
+    queryPuotationItemByQid(puotationItem.qid);
+
+
+    function delectpuotationItem(qiid){
+        com.showConfirm("是否确认删除", function(){
+            com.post(api.production.deletePuotationItem, {"puotationItem.qiid": qiid}, function () {
+                com.focusPage('#list ul.item-list').remove();
+                queryPuotationItemByQid(puotationItem.qid);
+            });
+        });
+    }
 
     function queryPuotationItemByQid(qid) {
-        com.post(api.production.queryPuotationItemByQid, {"puotation.qid": qid}, function (data) {
+        com.post(api.production.queryPuotationItemByQid, {"puotation.qid": puotationItem.qid}, function (data) {
             initList(data.puotationItems);
         }, function (e) {
             com.showAlert(com.error, e.errorMsg);
         }, false);
     }
-    backBtn.click(function () {
+
+    puotationItem.btns.backBtn.click(function () {
         com.switchPage(api.index.puotationIndex.url);
     });
 

@@ -16,46 +16,46 @@ import java.sql.Timestamp;
 
 import org.apache.struts2.json.annotations.JSON;
 
-public class AddReduceVO implements Serializable{
-	
+public class AddReduceVO implements Serializable {
+
 	private static final long serialVersionUID = -882438841944489334L;
 
-	private Integer arId;
-	
-	private String orderId;
-	
-	private Integer type;
-	
-	private Float total;
-	
-	private Float undisPrice;
-	
-	private Float disPrice;
-	
-	private Float uncalPrice;
-	
-	private Float calPrice;
-	
-	private Integer status;
-	
-	private Timestamp createTime;
-	
-	private String content;
-	
-	private Long dpId;
-	
-	private Float managePrice;
-	
-	private Float manageRate;
+	private Long arId;
 
-	public Integer getArId(){
+	private String orderId;
+
+	private Short type;
+
+	private Long total;
+
+	private Long undisPrice;
+
+	private Long disPrice;
+
+	private Long uncalPrice;
+
+	private Long calPrice;
+
+	private Integer status;
+
+	private Timestamp createTime;
+
+	private String content;
+
+	private Long dpId;
+
+	private Long managePrice;
+
+	private Integer manageRate;
+
+	public Long getArId() {
 		return arId;
 	}
 
-	public void setArId(Integer arId){
+	public void setArId(Long arId) {
 		this.arId = arId;
 	}
-	
+
 	public String getOrderId() {
 		return orderId;
 	}
@@ -64,60 +64,60 @@ public class AddReduceVO implements Serializable{
 		this.orderId = orderId;
 	}
 
-	public Integer getType() {
+	public Short getType() {
 		return type;
 	}
 
-	public void setType(Integer type) {
+	public void setType(Short type) {
 		this.type = type;
 	}
 
-	public Float getTotal() {
+	public Long getTotal() {
 		return total;
 	}
 
-	public void setTotal(Float total) {
+	public void setTotal(Long total) {
 		this.total = total;
 	}
-	
-	public Float getUndisPrice() {
+
+	public Long getUndisPrice() {
 		return undisPrice;
 	}
 
-	public void setUndisPrice(Float undisPrice) {
+	public void setUndisPrice(Long undisPrice) {
 		this.undisPrice = undisPrice;
 	}
 
-	public Float getDisPrice() {
+	public Long getDisPrice() {
 		return disPrice;
 	}
 
-	public void setDisPrice(Float disPrice) {
+	public void setDisPrice(Long disPrice) {
 		this.disPrice = disPrice;
 	}
 
-	public Float getUncalPrice() {
+	public Long getUncalPrice() {
 		return uncalPrice;
 	}
 
-	public void setUncalPrice(Float uncalPrice) {
+	public void setUncalPrice(Long uncalPrice) {
 		this.uncalPrice = uncalPrice;
 	}
 
-	public Float getCalPrice() {
+	public Long getCalPrice() {
 		return calPrice;
 	}
 
-	public void setCalPrice(Float calPrice) {
+	public void setCalPrice(Long calPrice) {
 		this.calPrice = calPrice;
 	}
 
-	@JSON(format="yyyy-MM-dd")
-	public Timestamp getCreateTime(){
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getCreateTime() {
 		return createTime;
 	}
 
-	public void setCreateTime(Timestamp createTime){
+	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
 	}
 
@@ -145,19 +145,19 @@ public class AddReduceVO implements Serializable{
 		this.dpId = dpId;
 	}
 
-	public Float getManagePrice() {
+	public Long getManagePrice() {
 		return managePrice;
 	}
 
-	public void setManagePrice(Float managePrice) {
+	public void setManagePrice(Long managePrice) {
 		this.managePrice = managePrice;
 	}
 
-	public Float getManageRate() {
+	public Integer getManageRate() {
 		return manageRate;
 	}
 
-	public void setManageRate(Float manageRate) {
+	public void setManageRate(Integer manageRate) {
 		this.manageRate = manageRate;
 	}
 

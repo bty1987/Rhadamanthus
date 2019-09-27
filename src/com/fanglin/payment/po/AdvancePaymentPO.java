@@ -24,13 +24,13 @@ public class AdvancePaymentPO implements java.io.Serializable {
 	
 	private CustomerPO customer;
 	
-	private float balance;
+	private long balance;
 	
-	private float projectBalance;
+	private long projectBalance;
 	
-	private float materialBalance;
+	private long materialBalance;
 	
-	private float zhenglinBalance;
+	private long zhenglinBalance;
 	
 	private int company;
 	
@@ -65,38 +65,38 @@ public class AdvancePaymentPO implements java.io.Serializable {
 	}
 
 	@Column(name = "balance")
-	public float getBalance() {
+	public long getBalance() {
 		return this.balance;
 	}
 
-	public void setBalance(float balance) {
+	public void setBalance(long balance) {
 		this.balance = balance;
 	}
 	
 	@Column(name = "projectBalance")
-	public float getProjectBalance() {
+	public long getProjectBalance() {
 		return this.projectBalance;
 	}
 
-	public void setProjectBalance(float projectBalance) {
+	public void setProjectBalance(long projectBalance) {
 		this.projectBalance = projectBalance;
 	}
 
 	@Column(name = "materialBalance")
-	public float getMaterialBalance() {
+	public long getMaterialBalance() {
 		return this.materialBalance;
 	}
 
-	public void setMaterialBalance(float materialBalance) {
+	public void setMaterialBalance(long materialBalance) {
 		this.materialBalance = materialBalance;
 	}
 
 	@Column(name = "zhenglinBalance")
-	public float getZhenglinBalance() {
+	public long getZhenglinBalance() {
 		return this.zhenglinBalance;
 	}
 
-	public void setZhenglinBalance(float zhenglinBalance) {
+	public void setZhenglinBalance(long zhenglinBalance) {
 		this.zhenglinBalance = zhenglinBalance;
 	}
 	

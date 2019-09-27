@@ -14,10 +14,15 @@ jQuery(function($) {
 			name : com.focusPage("#name"),
 			phone : com.focusPage("#phone"),
 			address : com.focusPage("#address"),
+			vaid : com.focusPage("#vaid")
 		},
 	};
 
 	vticket.saveBtn.bindClick(saveData);
+
+	com.post(api.information.queryVactivity, {}, function (res) {
+		vticket.items.vaid.bindData(res.vactivitys, "vaid", "name", false);
+	});
 
 	vticket.modals.vticketModal.on("hide.bs.modal", function () {
 		com.clearValidator();
@@ -50,6 +55,7 @@ jQuery(function($) {
 			var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
 			var $btnViews = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
+			var $btnView = $('<a></a>').addClass('btn btn-minier btn-inverse').html("奖品");// 活动物品
 
 			$btnViews.click(function() {
 				com.updateTypeahead("belonger", v.belonger.userId, v.belonger.userName);
@@ -82,9 +88,15 @@ jQuery(function($) {
 				$liProperty.appendTo($ulProperty);
 			});
 
-			$divBtnWrap.append($btnViews).appendTo($h3);
+			$divBtnWrap.append($btnView).append($btnViews).appendTo($h3);
 
 			$liLine.append($h3).append($ulProperty);
+			
+			$btnView.click(function(){
+	            params.tno = v.tno;
+
+	            com.popup4page("#vawardPopUp", "/views/information/vawardItem.html", "活动奖品");
+	        });
 
 			return $liLine;
 		};
@@ -127,7 +139,8 @@ jQuery(function($) {
 			'vticket.orderId': vticket.items.orderId.val(),
 			'vticket.name': vticket.items.name.val(),
 			'vticket.phone': vticket.items.phone.val(),
-			'vticket.address': vticket.items.address.val()
+			'vticket.address': vticket.items.address.val(),
+			'vticket.vaid': vticket.items.vaid.val()
 		};
 
 		if(vticket.items.vtid.val() == ""){

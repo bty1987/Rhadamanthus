@@ -11,8 +11,6 @@
 
 package com.fanglin.data.quotation.action;
 
-import java.util.List;
-
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
@@ -32,77 +30,75 @@ import com.fanglin.data.quotation.vo.SystemDefineItemVO;
 public class SystemDefineItemAction extends BaseListAction {
 
 	private static final long serialVersionUID = -9139698916609681549L;
-	
+
 	@Autowired
 	private SystemDefineItemService systemDefineItemService;
-	
-	private SystemDefineItemVO systemDefineItem;
-	
-	private List<Long> ids;
-	
-	@Action(value="pageSystemDefineItem", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String pageSystemDefineItem() throws FLException{
-		
-		systemDefineItemService.pageSystemDefineItem(getPaging(), getFilters(),queryCompany());
-		
-		return SUCCESS;
-	}
-	
-	@Action(value="pageSystemDefineItemForEnable", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String pageSystemDefineItemForEnable() throws FLException{
-		
-		getFilters().add(new Filter("status", "1", "eq"));
-		
-		systemDefineItemService.pageSystemDefineItem(getPaging(), getFilters(),queryCompany());
-		
-		return SUCCESS;
-	}
-	
-	@Action(value="querySystemDefineItemByItemId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String querySystemDefineItemByItemIdAndVersionId() throws FLException{
-		
-		systemDefineItem = systemDefineItemService.querySystemDefineItemByItemId(systemDefineItem,queryCompany());
-		
-		return SUCCESS;
-	}
-	
-	@Action(value="addSystemDefineItem", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String addSystemDefineItem() throws FLException{
 
-		systemDefineItemService.addSystemDefineItem(systemDefineItem,queryCompany());
-		
+	private SystemDefineItemVO systemDefineItem;
+
+	@Action(value = "pageSystemDefineItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageSystemDefineItem() throws FLException {
+
+		systemDefineItemService.pageSystemDefineItem(getPaging(), getFilters(), queryCompany());
+
 		return SUCCESS;
 	}
-	
-	@Action(value="updateSystemDefineItem", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String updateSystemDefineItem() throws FLException{
+
+	@Action(value = "pageSystemDefineItemForEnable", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageSystemDefineItemForEnable() throws FLException {
+
+		getFilters().add(new Filter("status", "1", "eq"));
+
+		systemDefineItemService.pageSystemDefineItem(getPaging(), getFilters(), queryCompany());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "querySystemDefineItemByItemId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String querySystemDefineItemByItemIdAndVersionId() throws FLException {
+
+		systemDefineItem = systemDefineItemService.querySystemDefineItemByItemId(systemDefineItem, queryCompany());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "addSystemDefineItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addSystemDefineItem() throws FLException {
+
+		systemDefineItemService.addSystemDefineItem(systemDefineItem, queryCompany());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "updateSystemDefineItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateSystemDefineItem() throws FLException {
 
 		systemDefineItemService.updateSystemDefineItem(systemDefineItem);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value="updateSystemDefineItemForStatus", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String updateSystemDefineItemForStatus() throws FLException{
-		
-		systemDefineItemService.updateSystemDefineItemForStatus(systemDefineItem);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value="updateSystemDefineItemForDiscount", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String updateSystemDefineItemForDiscount() throws FLException{
-		
-		systemDefineItemService.updateSystemDefineItemForDiscount(systemDefineItem);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value="deleteSystemDefineItemByIds", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String deleteSystemDefineItemByIds(){
 
-		systemDefineItemService.deleteSystemDefineItemByIds(ids);
-	    
+		return SUCCESS;
+	}
+
+	@Action(value = "updateSystemDefineItemForStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateSystemDefineItemForStatus() throws FLException {
+
+		systemDefineItemService.updateSystemDefineItemForStatus(systemDefineItem);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "updateSystemDefineItemForDiscount", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateSystemDefineItemForDiscount() throws FLException {
+
+		systemDefineItemService.updateSystemDefineItemForDiscount(systemDefineItem);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "deleteSystemDefineItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String deleteSystemDefineItemByIds() {
+
+		systemDefineItemService.deleteSystemDefineItem(systemDefineItem);
+
 		return SUCCESS;
 	}
 
@@ -114,12 +110,4 @@ public class SystemDefineItemAction extends BaseListAction {
 		this.systemDefineItem = systemDefineItem;
 	}
 
-	public List<Long> getIds() {
-		return ids;
-	}
-
-	public void setIds(List<Long> ids) {
-		this.ids = ids;
-	}
-	
 }

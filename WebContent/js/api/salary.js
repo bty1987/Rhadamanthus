@@ -11,85 +11,148 @@ $.extend(api.index, {
     workerDeductSalaryScheduleDetailIndex: {url: "/views/salary/workerDeductSalaryScheduleDetail.html"},
     workerBaseSalaryIndex: {url: "/views/salary/workerBaseSalary.html"},
     workerDeductSalaryIndex: {url: "/views/salary/workerDeductSalary.html"},
-    workerDetailIndex:{url:"/views/salary/workerDetail.html"},
+    workerDetailIndex:{url: "/views/salary/workerDetail.html"},
 });
 
 $.extend(api, {salary: {
-    pageDesignerSalary: {url: "pageDesignerSalary.do"},
-    pageDesignerSalaryForInit: {url: "pageDesignerSalaryForInit.do"},
-    pageDesignerSalaryForPayOff: {url: "pageDesignerSalaryForPayOff.do"},
-    pageDesignerSalaryForUnPayOff: {url: "pageDesignerSalaryForUnPayOff.do"},
-    pageDesignerPreBalanceSalary: {url: "pageDesignerPreBalanceSalary.do"},
-    pageDesignerPostBalanceSalary: {url: "pageDesignerPostBalanceSalary.do"},
-    pageDesignerOutsideSalary: {url: "pageDesignerOutsideSalary.do"},
-    pageDesignerDeductSalary: {url: "pageDesignerDeductSalary.do"},
-    payDesignerSalary: {url: "payDesignerSalary.do"},
-    payoffDesignerSalary: {url: "payoffDesignerSalary.do"},
-    unpayoffDesignerSalary: {url: "unpayoffDesignerSalary.do"},
 
-    pageVenderBalance: {url: "pageVenderBalance.do"},
-    pageVenderBalanceForInit: {url: "pageVenderBalanceForInit.do"},
-    pageVenderBalanceForPayOff: {url: "pageVenderBalanceForPayOff.do"},
-    payVenderBalance: {url: "payVenderBalance.do"},
-
-    pageWorkerSalaryForInit: {url: "pageWorkerSalaryForInit.do"},
-    pageWorkerSalaryForPayOff: {url: "pageWorkerSalaryForPayOff.do"},
-    pageWorkerSalaryForUnPayOff: {url: "pageWorkerSalaryForUnPayOff.do"},
-    pageWorkerBaseSalary: {url: "pageWorkerBaseSalary.do"},
-    pageWorkerBaseSalaryByOrderIdAUserId: {url: "pageWorkerBaseSalaryByOrderIdAUserId.do"},
-    pageWorkerBaseSalaryForPass: {url: "pageWorkerBaseSalaryForPass.do"},
-    pageWorkerDeductSalaryByOrderIdAUserId: {url: "pageWorkerDeductSalaryByOrderIdAUserId.do"},
-    pageWorkerDeductSalaryForPersonal: {url: "pageWorkerDeductSalaryForPersonal.do"},
-    queryWorkerBaseSalary: {url: "queryWorkerBaseSalary.do"},
-    payWorkerSalary: {url: "payWorkerSalary.do"},
-    payoffWorkerSalary: {url: "payoffWorkerSalary.do"},
-    unPayoffWorkerSalary: {url: "unPayoffWorkerSalary.do"},
-    addWorkerBaseSalary: {url: "addWorkerBaseSalary.do"},
-    addWorkerDeductSalary: {url: "addWorkerDeductSalary.do"},
-    updateWorkerBaseSalary: {url: "updateWorkerBaseSalary.do"},
-    updateWorkerDeductSalary: {url: "updateWorkerDeductSalary.do"},
-    passWorkerBaseSalary: {url: "passWorkerBaseSalary.do"},
-    passWorkerDeductSalary: {url: "passWorkerDeductSalary.do"},
-    confirmWorkerBaseSalary: {url: "confirmWorkerBaseSalary.do"},
-    confirmWorkerDeductSalary: {url: "confirmWorkerDeductSalary.do"},
-    cancelWorkerBaseSalaryToInit: {url: "cancelWorkerBaseSalaryToInit.do"},
-    cancelWorkerDeductSalaryToInit: {url: "cancelWorkerDeductSalaryToInit.do"},
-    cancelWorkerBaseSalaryToConfirm: {url: "cancelWorkerBaseSalaryToConfirm.do"},
-    cancelWorkerDeductSalaryToConfirm: {url: "cancelWorkerDeductSalaryToConfirm.do"},
-    deleteWorkerBaseSalary: {url: "deleteWorkerBaseSalary.do"},
-    deleteWorkerDeductSalary: {url: "deleteWorkerDeductSalary.do"},
-
-    queryWorkerSalary: {url: "queryWorkerSalary.do"},
-    pageWorkerSalary: {url: "pageWorkerSalary.do"},
-    addWorkerSalary:{url:"addWorkerSalary.do"},
-    deleteWorkerSalary:{url:"deleteWorkerSalary.do"},
-    updateWorkerSalary: {url: "updateWorkerSalary.do"},
-    adoptWorkerSalary:{url:"adoptWorkerSalary.do"},
-    rejectWorkerSalary:{url:"rejectWorkerSalary.do"},
-	 batchImportWorkerSalary:{url:"batchImportWorkerSalary.do"},
-    importWorkerSalary:{url:"importWorkerSalary.do"},
-	 
-	 
-    pageDesignerSalary:{url:"pageDesignerSalary.do"},
-    adddesignerSalary:{url:"adddesignerSalary.do"},
-    updatedesignerSalary: {url: "updatedesignerSalary.do"},
-    adoptdesignerSalary:{url:"adoptdesignerSalary.do"},
-    rejectdesignerSalary:{url:"rejectdesignerSalary.do"},
-    deletedesignerSalary:{url: "deletedesignerSalary.do"},
-
-    pageWorkerSalaryByUserId: {url: "pageWorkerSalaryByUserId.do"},
+    pageWorkerSalary: {
+        url: "pageWorkerSalary.do",
+        type: "query", 
+        tranargs: [{
+            result: "paging-data", 
+            args: ["money", "deposit", "salary"]
+        }]
+    },
+    pageWorkerSalaryByUserId: {
+        url: "pageWorkerSalaryByUserId.do",
+        type: "query", 
+        tranargs: [{
+            result: "paging-data", 
+            args: ["money", "deposit", "salary"]
+        }]
+    },
+    queryWorkerSalary: {
+        url: "queryWorkerSalary.do",
+        type: "query", 
+        tranargs: [{
+            result: "workerSalarys", 
+            args: ["money", "deposit", "salary"]
+        }]
+    },
+    addWorkerSalary:{
+        url: "addWorkerSalary.do",
+        type: "update",
+        tranargs: {
+            args: ["workerSalary.money"]
+        }
+    },
+    updateWorkerSalary: {
+        url: "updateWorkerSalary.do",
+        type: "update",
+        tranargs: {
+            args: ["workerSalary.money"]
+        }
+    },
+    cutWorkerSalary: {
+        url: "cutWorkerSalary.do",
+        type: "update",
+        tranargs: {
+            args: ["workerSalary.money"]
+        }
+    },
+    tranWorkerSalary :{
+        url: "tranWorkerSalary.do",
+        type: "update",
+        tranargs: {
+            args: ["workerSalary.money"]
+        }
+    },
+    payWorkerSalary: {
+        url: "payWorkerSalary.do",
+        type: "update",
+        tranargs: {
+            args: ["workerSalary.money"]
+        }
+    },
+    adoptWorkerSalary:{url: "adoptWorkerSalary.do"},
+    rejectWorkerSalary:{url: "rejectWorkerSalary.do"},
+    deleteWorkerSalary:{url: "deleteWorkerSalary.do"},
+	batchImportWorkerSalary:{url: "batchImportWorkerSalary.do"},
+    importWorkerSalary:{url: "importWorkerSalary.do"},
     
-    pageWorkerBalance : { url : "pageWorkerBalance.do" },
-    updateWorkerBalance:{ url : "updateWorkerBalance.do"},
-    payWorkerSalary : { url : "payWorkerSalary.do" },
-    collectWorkerDeposit : { url : "collectWorkerDeposit.do" },
-    drawWorkerDeposit : { url : "drawWorkerDeposit.do"},
-    cutWorkerSalary : { url : "cutWorkerSalary.do"},
-    tranWorkerSalary :{ url : "tranWorkerSalary.do"},
+    pageDesignerSalary:{
+        url: "pageDesignerSalary.do",
+        type: "query", 
+        tranargs: [{
+            result: "paging-data", 
+            args: ["designerSalary.money"]
+        }]
+    },
+    addDesignerSalary:{
+        url: "addDesignerSalary.do",
+        type: "update",
+        tranargs: {
+            args: ["designerSalary.money"]
+        }
+    },
+    updateDesignerSalary: {
+        url: "updateDesignerSalary.do",
+        type: "update",
+        tranargs: {
+            args: ["designerSalary.money"]
+        }
+    },
+    adoptDesignerSalary:{url: "adoptDesignerSalary.do"},
+    rejectDesignerSalary:{url: "rejectDesignerSalary.do"},
+    deleteDesignerSalary:{url: "deleteDesignerSalary.do"},
+
+    pageWorkerBalance: {
+        url: "pageWorkerBalance.do",
+        type: "query", 
+        tranargs: [{
+            result: "paging-data", 
+            args: ["deposit", "salary", "toplimit"]
+        }]
+    },
+    updateWorkerBalance: {
+        url: "updateWorkerBalance.do",
+        type: "update",
+        tranargs: {
+            args: ["workerBalance.toplimit"]
+        }
+    },
+    collectWorkerDeposit: {
+        url: "collectWorkerDeposit.do",
+        type: "update",
+        tranargs: {
+            args: ["workerSalary.money"]
+        }
+    },
+    drawWorkerDeposit: {
+        url: "drawWorkerDeposit.do",
+        type: "update",
+        tranargs: {
+            args: ["workerSalary.money"]
+        }
+    },
     
-    pageSalary:{url : "pageSalary.do"},
-    addSalary:{url : "addSalary.do"},
-    passSalary:{url : "passSalary.do"},
-    rejectSalary:{url : "rejectSalary.do"},
-    cancelSalary:{url : "cancelSalary.do"}
+    pageSalary: {
+        url: "pageSalary.do",
+        type: "query", 
+        tranargs: [{
+            result: "paging-data", 
+            args: ["money"]
+        }]
+    },
+    addSalary: {
+        url: "addSalary.do",
+        type: "update",
+        tranargs: {
+            args: ["salary.money"]
+        }
+    },
+    passSalary: {url: "passSalary.do"},
+    rejectSalary: {url: "rejectSalary.do"},
+    cancelSalary: {url: "cancelSalary.do"}
 }});

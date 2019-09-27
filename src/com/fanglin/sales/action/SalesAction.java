@@ -37,8 +37,6 @@ public class SalesAction extends BaseListAction {
 	
 	private List<SalesItemVO> salesItems;
 	
-	private Float sums; 
-
 	@Action(value = "pageSales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageSales() throws FLException{
 		
@@ -198,6 +196,14 @@ public class SalesAction extends BaseListAction {
 		
 		return SUCCESS;
 	}
+	
+	@Action(value="updateSalesForBelong", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String updateSalesForBelong() throws FLException{
+		
+		salesService.updateSalesForBelong(sales);
+		
+		return SUCCESS;
+	}
 
 	public SalesItemVO getSalesItem() {
 		return salesItem;
@@ -230,13 +236,4 @@ public class SalesAction extends BaseListAction {
 	public void setSids(List<Long> sids) {
 		this.sids = sids;
 	}
-
-	public Float getSums() {
-		return sums;
-	}
-
-	public void setSums(Float sums) {
-		this.sums = sums;
-	}
-
 }

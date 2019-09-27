@@ -1,6 +1,24 @@
-$(function () {
-    var $layerAdd = com.focusPage('#layerAdd');
-    var $quoteTypeName = com.focusPage('#quoteTypeName');
+$(function(){
+
+    var quoteType = {
+        saveBtn : com.focusPage("#saveBtn"),
+        cancelBtn : com.focusPage("#cancelBtn"),
+
+        modals: {
+            quoteTypeModal: com.focusPage("#quoteTypeModal")
+        },
+        items : {
+            name : com.focusPage("#name")
+        },
+        editFlg : true,
+    };
+
+    quoteType.saveBtn.bindClick(saveData);
+
+    quoteType.modals.quoteTypeModal.on("hide.bs.modal", function(){
+        com.clearValidator();
+        com.cleanItems(quoteType.items);
+    });
 
     var displayFunc = (function () {
         /*表格样式*/
@@ -86,30 +104,21 @@ $(function () {
                 .append($optionWrap);
             //编辑点击事件
             $btnEdit.click(function () {
-                productionUtils.clearForm("form1");
-                $quoteTypeName.attr("data-qtid", v.qtid);
-                $quoteTypeName.val(v.name);
-                com.clearValidator();
+                quoteType.editFlg = false;
 
-                openlayer("编辑", function () {
-                    if (!com.validate("layerAdd", null)) {
-                        saveData(v.qtid)
-                    }
-                });
+                quoteType.items.qtid = v.qtid;
+                quoteType.items.name.val(v.name);
+                quoteType.modals.quoteTypeModal.modal("show");
             });
 
             //状态启用事件
             $btnStart.click(function(){
-                changeQuoteTypeStatus(v.qtid, 0, (v.status == 0), function () {
-                    com.showAlert(com.info, "操作成功");
-                });
+                changeQuoteTypeStatus(v.qtid, 0, v.status);
             });
-            
+
             //状态禁用事件
             $btnStop.click(function(){
-                changeQuoteTypeStatus(v.qtid, 1, (v.status == 1), function () {
-                    com.showAlert(com.info, "操作成功");
-                });
+                changeQuoteTypeStatus(v.qtid, 1, v.status);
             })
 
             return $liLine;
@@ -129,84 +138,60 @@ $(function () {
     var quoteTypeSeacher = new Searcher();
 
     quoteTypeSeacher.init(["p_quoteTypeName"], "condList", api.production.pageQuoteType, function (data) {
-            displayFunc.init('resultList', data);
+        displayFunc.init('resultList', data);
+    }, "pagenation", "Workflow",null,false, null,function() {
 
-        }, "pagenation", "quoteTypePostData", null, false, null, function () {
+        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'addQuoteType').css("margin", "0px 3px");
+        var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+        var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
-            var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'add').css("margin", "0px 3px");
-            var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
-            var $addspan = $('<span></span>').text('添加').appendTo($adda);
+        return [$adda];
+    });
 
-            $adda.click(function () {
-                productionUtils.clearForm("form1");
-                com.clearValidator();
-                openlayer("添加", function (index, layero) {
-                    if (!com.validate("layerAdd", null)) {
-                        saveData(null);
-                    }
-                });
-            });
+    com.focusPage("#addQuoteType").click(function() {
+        quoteType.editFlg = true;
 
-            return [$adda];
-        }, 'resultList'
-    );
-
-    function openlayer(layerType, callback) {
-        com.closePopup();
-        layer.open({
-            type: 1,
-            title: layerType,
-            content: $layerAdd,
-            area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
-            maxmin: false,
-            zIndex: 9000,
-            btn: ['确定', '取消'],
-            yes: function (index, layero) {
-                //按钮1的回调
-                callback(index, layero);
-            },
-            btn2: function (index, layero) {
-                //按钮取消的回调
-            },
-            cancel: function () {
-                //右上角关闭回调
-            }
-        });
-    }
+        quoteType.modals.quoteTypeModal.modal("show");
+    });
 
     //添加数据
-    function saveData(qtid) {
-        var name = $quoteTypeName.val();
+    function saveData() {
 
-        if (qtid) {
-            com.post(api.production.updateQuoteType, {
-                "quoteType.qtid": qtid,
-                "quoteType.name": name
-            }, function (res) {
-                quoteTypeSeacher.doSearch();
-                com.showAlert(com.info, "操作成功");
-            });
-        } else {
-            com.post(api.production.addQuoteType, {
-                "quoteType.name": name
-            }, function (res) {
-                quoteTypeSeacher.doSearch();
-                com.showAlert(com.info, "操作成功");
-            });
+        if (com.validate('quoteTypeModal')) {
+            return false;
         }
+        var url;
+        var options = {
+            "quoteType.name": quoteType.items.name.val()
+        };
 
+        quoteType.editFlg ? url = api.production.addQuoteType : url = api.production.updateQuoteType, options["quoteType.qtid"] =  quoteType.items.qtid;
+
+        com.post(url, options, function(res){
+            com.closePopup();
+            com.showAlert(com.info, "操作成功");
+            quoteTypeSeacher.doSearch();
+        });
+        quoteType.modals.quoteTypeModal.modal("hide");
     }
 
     /*btnType:0 启用功能,1 禁用功能
-      statusFlag:当前状态是否与想要完成的功能相冲 */
+     statusFlag:当前状态是否与想要完成的功能相冲 */
     function changeQuoteTypeStatus(id,btnType,statusFlag) {
+
+        var status = btnType == 0 ? "启用" : "禁用";
+
+        if(statusFlag == btnType){
+            com.showAlert(com.info, "已"+status+"无需重复当前操作");
+            return false;
+        }
+
         com.post(api.production.updateQuoteTypeForStatus, {
             "quoteType.qtid": id,
             "quoteType.status": btnType
         }, function (res) {
             quoteTypeSeacher.doSearch();
-            com.showAlert(com.info, "操作成功");
+            com.showAlert(com.info, "已"+status);
         });
     }
-
 });

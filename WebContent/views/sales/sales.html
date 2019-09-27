@@ -191,6 +191,49 @@
         </div>
     </div>
 
+    <div class="modal fade" id="ascription" tabindex="-1">
+        <div class="modal-dialog" style="width: 600px">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabel">归属信息</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" id="form">
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="uSalesman">渠道</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="uSalesman" maxlength="64" class="col-xs-10 col-sm-7 v_required v_typeahead" data-toggle="popover" data-trigger='manual'/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="uInstorer">驻店</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="uInstorer" maxlength="64" class="col-xs-10 col-sm-7 v_required v_typeahead" data-toggle="popover" data-trigger='manual'/>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="uGuider">导购</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="uGuider" maxlength="64" class="col-xs-10 col-sm-7 v_required v_typeahead" data-toggle="popover" data-trigger='manual'/>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="ascriptionBtn" class="btn btn-primary">保存</button>
+                    <button type="button" id="cancelAscription" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 </div>
 <div id="miniPopUp"></div>
 <div id="layerPopUp" class="portlet box"></div>

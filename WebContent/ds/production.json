@@ -1,17 +1,25 @@
 {
-    "productionplanStatus": [
-		{"key": 0, "value": "初始"},
-		{"key": 3, "value": "生产中"},
-		{"key": 1, "value": "入库"},
-		{"key": 2, "value": "送货"}
-    ],
 	"productionStatus":[
-		{"key": 0, "value": "初始"},
-		{"key": 1, "value": "签约"},
-		{"key": 2, "value": "已审核"},
-		{"key": 3, "value": "生产"},
-		{"key": 4, "value": "废单"},
-		{"key": 5, "value": "完结"}
+		{"key": "0", "value": "初始"},
+		{"key": "1", "value": "签约"},
+		{"key": "2", "value": "已审核"},
+		{"key": "3", "value": "生产"},
+		{"key": "4", "value": "废单"},
+		{"key": "5", "value": "完结"}
+	],
+	"diliveryStatus":[
+		{"key": "0", "value": "未送货"},
+		{"key": "1", "value": "已送货"}
+	],
+	"productionType":[
+		{"key": "0", "value": "生产单"},
+		{"key": "1", "value": "售后单"}
+	],
+	"productionPlanStatus":[
+		{"key": "0", "value": "初始"},
+		{"key": "1", "value": "入库"},
+		{"key": "2", "value": "送货"},
+		{"key": "3", "value": "生产中"}
 	],
 
     "errorCode": 0,

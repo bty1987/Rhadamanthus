@@ -179,7 +179,7 @@ public class MaterialActivityServiceImpl implements MaterialActivityService {
 		
 		if (materialActivityItemPO.getIsStock() == 0) {
 
-			float num = Arith.sub(awardStockPO.getNum(), materialActivityItemPO.getNum());
+			int num = Arith.sub(awardStockPO.getNum(), materialActivityItemPO.getNum());
 
 			if (num < 0) {
 				throw new FLException(160038, "库存不足!");
@@ -223,7 +223,7 @@ public class MaterialActivityServiceImpl implements MaterialActivityService {
 
 		if (materialActivityItemPO.getIsStock() == 0) {
 
-			float num = Arith.sub(awardStockPO.getNum(), materialActivityItemPO.getNum());
+			int num = Arith.sub(awardStockPO.getNum(), materialActivityItemPO.getNum());
 
 			if (num < 0) {
 				throw new FLException(160038, "库存不足!");
@@ -287,7 +287,7 @@ public class MaterialActivityServiceImpl implements MaterialActivityService {
 		
 		if (materialActivityItemPO.getIsStock() == 0) {
 
-			float num = Arith.add(awardStockPO.getNum(), materialActivityItemPO.getNum());
+			int num = Arith.add(awardStockPO.getNum(), materialActivityItemPO.getNum());
 
 			if (num < 0) {
 				throw new FLException(160038, "库存不足!");

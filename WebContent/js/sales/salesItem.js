@@ -29,6 +29,8 @@ $(function () {
         approvalType: null
     };
 
+    com.focusPage('#fl-statement').statement("销售单", "子项");
+
     com.post(api.inventory.querySalesBySid, {"sales.sid":salesItem.sid}, function (res) {
         salesItem.sales = res.sales;
     }, null,false);
@@ -110,8 +112,9 @@ $(function () {
 
                     com.showConfirm('确定要删除吗?', function (indexo, layero) {
                         com.post(api.inventory.deleteSalesItem, ops, function () {
-
                             $btnDelete.parents('li.clearfix').remove();
+                            com.focusPage('#list').empty();
+                            querySalesItemBySid();
                         });
                     });
                 });
@@ -141,9 +144,17 @@ $(function () {
         }
     };
 
-    com.post(api.inventory.querySalesItemBySid, {"sales.sid": salesItem.sid}, function (data) {
-        initList(data.salesItems);
-    }, null, false);
+    querySalesItemBySid();
+    
+    function querySalesItemBySid() {
+        com.post(api.inventory.querySalesItemBySid, {"sales.sid": salesItem.sid}, function (data) {
+            if(data.salesItems.length == 0){
+                emptyData("list");
+            }else{
+                initList(data.salesItems);
+            }
+        }, null, false);
+    }
 
     salesItem.btns.refundBtn.click(function () {
 
@@ -164,7 +175,7 @@ $(function () {
     salesItem.btns.refundCommitBtn.click(function () {
 
         salesItem.approvalType = 1;
-
+        
         if (!calcRefundData(false)) return false;
         com.popup4mini("#miniPopUp", "#layerRefund","退货信息", "", function () {
             com.clearValidator();
@@ -238,7 +249,7 @@ $(function () {
             priceTotalEdit += utils.changeThrDecimal(parseFloat(utils.accMul($v.find('h3').attr('li_Num'), $v.find('h3').attr('li_Price'))));
         });
 
-        priceTotalEdit = utils.accAdd(utils.accSub(priceTotalEdit, com.focusPage("#miniPopUp").attr("li_Total")), total);
+        priceTotalEdit = utils.changeThrDecimal(utils.accAdd(utils.accSub(priceTotalEdit, com.focusPage("#miniPopUp").attr("li_Total")), total));
 
         var editArr = {
             "salesItem.siid": salesItem.edit_data.siid,
@@ -265,7 +276,7 @@ $(function () {
     });
     // 退货审批提交
     salesItem.btns.approverSaveBtn.click(function () {
-
+        
         if (com.validate('miniPopUp', 'right')) {
             return false;
         }
@@ -356,7 +367,7 @@ $(function () {
                     total = 0;
                     return false;
                 }else {
-                    var _total = utils.accMul(selling, num);
+                    var _total = utils.changeThrDecimal(utils.accMul(selling, num));
                     total += _total;
                     if (max >= num) {
                         salesItem.options["approvalSalesRefundItem[" + i + "].sid"] = salesItem.sid;
@@ -369,7 +380,7 @@ $(function () {
 
             }else {
 
-                itemTotal = utils.accMul(max, selling);
+                itemTotal = utils.changeThrDecimal(utils.accMul(max, selling));
                 total += itemTotal;
                 salesItem.options["approvalSalesRefundItem[" + i + "].sid"] = salesItem.sid;
                 salesItem.options["approvalSalesRefundItem[" + i + "].salesItem.siid"] = siid;
@@ -384,8 +395,13 @@ $(function () {
             com.showAlert(com.warning, "总退款数量为0");
             return false;
         }
-
+        
         salesItem.items.refundTotal.val(utils.changeThrDecimal(total));
+
+        if(!isAll && utils.changeThrDecimal(parseFloat(utils.accSub(salesItem.sales.amount, utils.accAdd(salesItem.sales.coupon, salesItem.sales.venderMaling)))) <= utils.changeThrDecimal(parseFloat(salesItem.items.refundTotal.val()))) {
+            com.showAlert(com.warning, "退款金额大于当前总额减劵值减厂商抹零");
+            return false;
+        }
         return flag;
 
     }
@@ -409,6 +425,13 @@ $(function () {
                 hideButtons([$inputNum, $label]);
             }
         });
+    }
+
+    function emptyData(id) {
+        var $resultList = com.focusPage('#' + id).html('');
+        var $zone = $('<div></div>').addClass('dropzone dz-clickable').css('margin', '20px').css('border', '0px').appendTo($resultList);
+        var $mesg = $('<div></div>').addClass('dz-default dz-message').appendTo($zone);
+        var $span = $('<span></span>').text('无可用数据提供').appendTo($mesg);
     }
 
     //导出点击事件

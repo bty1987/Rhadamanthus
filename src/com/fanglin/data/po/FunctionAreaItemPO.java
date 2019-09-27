@@ -22,8 +22,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-
-
 @Entity
 @Table(name = "functionareaquoteitem", catalog = "quotation")
 public class FunctionAreaItemPO implements Serializable {
@@ -31,39 +29,39 @@ public class FunctionAreaItemPO implements Serializable {
 	private static final long serialVersionUID = 13444646L;
 
 	private long faiId;
-	
+
 	private FunctionAreaPO functionArea;
-	
+
 	private QuotationItemPO quotationItem;
-	
+
 	@Id
 	@GeneratedValue
-	@Column(name="faiId", nullable = false)
-	public long getFaiId(){
+	@Column(name = "faiId", nullable = false)
+	public long getFaiId() {
 		return faiId;
 	}
 
-	public void setFaiId(long faiId){
+	public void setFaiId(long faiId) {
 		this.faiId = faiId;
 	}
 
-	public void setQuotationItem(QuotationItemPO quotationItem){
+	public void setQuotationItem(QuotationItemPO quotationItem) {
 		this.quotationItem = quotationItem;
 	}
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, name = "quoteItemId", referencedColumnName="qiId")
-	public QuotationItemPO getQuotationItem(){
+	@JoinColumn(nullable = false, name = "quoteItemId", referencedColumnName = "qiId")
+	public QuotationItemPO getQuotationItem() {
 		return quotationItem;
 	}
 
-	public void setFunctionArea(FunctionAreaPO functionArea){
+	public void setFunctionArea(FunctionAreaPO functionArea) {
 		this.functionArea = functionArea;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, name = "functionAreaId", referencedColumnName="faId")
-	public FunctionAreaPO getFunctionArea(){
+	@JoinColumn(nullable = false, name = "functionAreaId", referencedColumnName = "faId")
+	public FunctionAreaPO getFunctionArea() {
 		return functionArea;
 	}
 }

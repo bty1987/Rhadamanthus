@@ -16,7 +16,7 @@ public class GoodsPackageVO implements Serializable {
 
 	private FormatVO format;
 
-	private Float num;
+	private Integer num;
 
 	public GoodsPackageVO() {
 		super();
@@ -74,11 +74,11 @@ public class GoodsPackageVO implements Serializable {
 		this.format = format;
 	}
 
-	public Float getNum() {
+	public Integer getNum() {
 		return num;
 	}
 
-	public void setNum(Float num) {
+	public void setNum(Integer num) {
 		this.num = num;
 	}
 

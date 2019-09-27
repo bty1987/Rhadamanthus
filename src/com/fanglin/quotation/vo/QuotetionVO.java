@@ -10,36 +10,36 @@ public class QuotetionVO implements Serializable {
 	private static final long serialVersionUID = -8617663702337964395L;
 
 	private Long qid;
-	
+
 	private String no;
-	
+
 	private String name;
-	
+
 	private String version;
-	
+
 	private Long cuid;
-	
+
 	private Timestamp createTime;
-	
-	private Float undisPrice;
-	
-	private Float disPrice;
-	
-	private Float discount;
-	
-	private Float totalPrice;
-	
+
+	private Long undisPrice;
+
+	private Long disPrice;
+
+	private Integer discount;
+
+	private Long totalPrice;
+
 	private String content;
-	
-	private Float managePrice;
-	
-	private Float manageRate;
-	
-	private Float trafficPrice;
-	
-	private Float trafficRate;
-	
-	private Float basePrice;
+
+	private Long managePrice;
+
+	private Integer manageRate;
+
+	private Long trafficPrice;
+
+	private Integer trafficRate;
+
+	private Long basePrice;
 
 	public Long getQid() {
 		return qid;
@@ -81,7 +81,7 @@ public class QuotetionVO implements Serializable {
 		this.cuid = cuid;
 	}
 
-	@JSON(format="yyyy-MM-dd")
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getCreateTime() {
 		return createTime;
 	}
@@ -90,35 +90,35 @@ public class QuotetionVO implements Serializable {
 		this.createTime = createTime;
 	}
 
-	public Float getUndisPrice() {
+	public Long getUndisPrice() {
 		return undisPrice;
 	}
 
-	public void setUndisPrice(Float undisPrice) {
+	public void setUndisPrice(Long undisPrice) {
 		this.undisPrice = undisPrice;
 	}
 
-	public Float getDisPrice() {
+	public Long getDisPrice() {
 		return disPrice;
 	}
 
-	public void setDisPrice(Float disPrice) {
+	public void setDisPrice(Long disPrice) {
 		this.disPrice = disPrice;
 	}
 
-	public Float getDiscount() {
+	public Integer getDiscount() {
 		return discount;
 	}
 
-	public void setDiscount(Float discount) {
+	public void setDiscount(Integer discount) {
 		this.discount = discount;
 	}
 
-	public Float getTotalPrice() {
+	public Long getTotalPrice() {
 		return totalPrice;
 	}
 
-	public void setTotalPrice(Float totalPrice) {
+	public void setTotalPrice(Long totalPrice) {
 		this.totalPrice = totalPrice;
 	}
 
@@ -130,43 +130,43 @@ public class QuotetionVO implements Serializable {
 		this.content = content;
 	}
 
-	public Float getManagePrice() {
+	public Long getManagePrice() {
 		return managePrice;
 	}
 
-	public void setManagePrice(Float managePrice) {
+	public void setManagePrice(Long managePrice) {
 		this.managePrice = managePrice;
 	}
 
-	public Float getManageRate() {
+	public Integer getManageRate() {
 		return manageRate;
 	}
 
-	public void setManageRate(Float manageRate) {
+	public void setManageRate(Integer manageRate) {
 		this.manageRate = manageRate;
 	}
 
-	public Float getTrafficPrice() {
+	public Long getTrafficPrice() {
 		return trafficPrice;
 	}
 
-	public void setTrafficPrice(Float trafficPrice) {
+	public void setTrafficPrice(Long trafficPrice) {
 		this.trafficPrice = trafficPrice;
 	}
 
-	public Float getTrafficRate() {
+	public Integer getTrafficRate() {
 		return trafficRate;
 	}
 
-	public void setTrafficRate(Float trafficRate) {
+	public void setTrafficRate(Integer trafficRate) {
 		this.trafficRate = trafficRate;
 	}
 
-	public Float getBasePrice() {
+	public Long getBasePrice() {
 		return basePrice;
 	}
 
-	public void setBasePrice(Float basePrice) {
+	public void setBasePrice(Long basePrice) {
 		this.basePrice = basePrice;
 	}
 }

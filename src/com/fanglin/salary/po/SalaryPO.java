@@ -21,19 +21,19 @@ import com.fanglin.personel.po.UserPO;
 public class SalaryPO implements Serializable {
 
 	private static final long serialVersionUID = -1415708618939227278L;
-	
-	public static final short STATUS_BEGIN_INT = 0; 
-	
+
+	public static final short STATUS_BEGIN_INT = 0;
+
 	public static final short STATUS_PASS_INT = 1;
-	
+
 	public static final short STATUS_REFUSE_INT = 2;
-	
+
 	public static final short STATUS_REPEAL_INT = 3;
-	
+
 	public static final String COLUMN_USERID_STR = "user.userId";
-	
+
 	public static final String COLUMN_STATUS_STR = "status";
-	
+
 	public static final String COLUMN_CREATETIME_STR = "createTime";
 
 	public static final String COLUMN_OPERATETIME_STR = "operateTime";
@@ -52,7 +52,7 @@ public class SalaryPO implements Serializable {
 
 	private short thrtype;
 
-	private float money;
+	private long money;
 
 	private short status;
 
@@ -65,7 +65,7 @@ public class SalaryPO implements Serializable {
 	public SalaryPO() {
 		super();
 	}
-	
+
 	public SalaryPO(UserPO user) {
 		super();
 		this.user = user;
@@ -144,11 +144,11 @@ public class SalaryPO implements Serializable {
 	}
 
 	@Column(name = "money")
-	public float getMoney() {
+	public long getMoney() {
 		return money;
 	}
 
-	public void setMoney(float money) {
+	public void setMoney(long money) {
 		this.money = money;
 	}
 

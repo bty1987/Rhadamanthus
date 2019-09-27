@@ -2,53 +2,48 @@ package com.fanglin.salary.vo;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+
 import org.apache.struts2.json.annotations.JSON;
+
 import com.fanglin.personel.vo.UserVO;
-/**
- * @author Administrator
- *
- */
+
 public class DesignerSalaryVO implements Serializable {
-	
-	
+
 	private static final long serialVersionUID = 4153564414258241141L;
-	
-	private Integer dsid;
-	
+
+	private Long dsid;
+
 	private UserVO duser;
-	
+
 	private UserVO cuser;
-	
+
 	private Timestamp createTime;
-	
-	private  UserVO auser;
-	
-	private Timestamp approveTime ;
-	
+
+	private UserVO auser;
+
+	private Timestamp approveTime;
+
 	private Timestamp balanceTime;
-	
-	private Float salary;
-	
+
+	private Long salary;
+
 	private Short status;
 
-	public  DesignerSalaryVO (){
-		
+	public DesignerSalaryVO() {
 		super();
 	}
 
-	
-	public  DesignerSalaryVO (UserVO duser, UserVO cuser,UserVO auser){
+	public DesignerSalaryVO(UserVO duser, UserVO cuser, UserVO auser) {
 		this.duser = duser;
 		this.cuser = cuser;
 		this.auser = auser;
 	}
 
-
-	public Integer getDsid() {
+	public Long getDsid() {
 		return dsid;
 	}
 
-	public void setDsid(Integer dsid) {
+	public void setDsid(Long dsid) {
 		this.dsid = dsid;
 	}
 
@@ -102,14 +97,13 @@ public class DesignerSalaryVO implements Serializable {
 		this.balanceTime = balanceTime;
 	}
 
-	public Float getSalary() {
+	public Long getSalary() {
 		return salary;
 	}
 
-	public void setSalary(Float salary) {
+	public void setSalary(Long salary) {
 		this.salary = salary;
 	}
-
 
 	public Short getStatus() {
 		return status;
@@ -119,8 +113,4 @@ public class DesignerSalaryVO implements Serializable {
 		this.status = status;
 	}
 
-
 }
-
-
-

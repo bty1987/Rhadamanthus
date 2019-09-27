@@ -177,12 +177,17 @@ public class VticketServiceImpl implements VticketService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void takeVticket(String userId) throws FLException {
+	public void takeVticket(VticketVO vticketVO, String userId) throws FLException {
 
-		VticketPO vticketPO = vticketDao.queryVticketForTake();
+		VticketPO vticketPO = vticketDao.queryVticketByTno(vticketVO.getTno());
 
-		if (vticketPO == null)
-			return;
+		if (vticketPO == null) {
+			throw new FLException(160026, "活动票不存在");
+		}
+
+		if (vticketPO.getBelonger() != null) {
+			throw new FLException(160051, "活动票不可操作");
+		}
 
 		UserPO userPO = userDao.queryUserByUserId(userId);
 

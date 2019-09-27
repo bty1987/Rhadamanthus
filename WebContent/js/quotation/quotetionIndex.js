@@ -56,10 +56,13 @@ $(function() {
     quotetion.replicaQuotetionModal = com.focusPage('#replicaQuotetionModal');
 
     com.focusPage('#quotesaveBtn').click(function () {
-        if (com.validate()) {
+        
+        if (com.validate("quotetionModal")) {
             return;
         }
+        
         var btn = $(this).button('loading');
+        
         if (quotetion.editFlg == 0) {
             var options = {
                 "quotetion.name": quotetion.quotetionItems.name.val(),
@@ -105,10 +108,13 @@ $(function() {
         }
     });
     com.focusPage("#replicaBtn").bindClick(function () {
-        if (com.validate()) {
+        
+        if (com.validate("replicaQuotetionModal")) {
             return;
         }
+        
         var options;
+        
         if( quotetion.quotetionItems.replicaType.val() == 0){
             options = {
                 "quotetion.no": quotetion.quotetionItems.quotetionNo.val(),
@@ -195,15 +201,15 @@ $(function() {
         var quotationWidgetInfoDiv = $('<div></div>').addClass("col-md-12").appendTo(quotationWidgetMain);
 
         var quotationWidgetDivOne = $('<div></div>').appendTo(quotationWidgetInfoDiv);
-        $('<label></label>').attr('for', 'form-field').text('报价版本:' + quotetion.version[quo.version]).appendTo(quotationWidgetDivOne);
+        $('<label></label>').attr('for', 'form-field').text('报价版本: ' + quotetion.version[quo.version]).appendTo(quotationWidgetDivOne);
         var quotationWidgetDivTwo = $('<div></div>').appendTo(quotationWidgetInfoDiv);
-        $('<label></label>').attr('for', 'form-field').text('编号:' + quo.no).css("word-break","break-all").appendTo(quotationWidgetDivTwo);
+        $('<label></label>').attr('for', 'form-field').text('编号: ' + quo.no).css("word-break","break-all").appendTo(quotationWidgetDivTwo);
         var quotationWidgetDivThr = $('<div></div>').appendTo(quotationWidgetInfoDiv);
-        $('<label></label>').attr('for', 'form-field').text('时间:' + quo.createTime).appendTo(quotationWidgetDivThr);
+        $('<label></label>').attr('for', 'form-field').text('时间: ' + quo.createTime).appendTo(quotationWidgetDivThr);
         var quotationWidgetDivFiv = $('<div></div>').appendTo(quotationWidgetInfoDiv);
         $('<label></label>').attr('for', 'form-field').text('总价:' + totalPrice).appendTo(quotationWidgetDivFiv);
         var quotationWidgetDivSix = $('<div></div>').appendTo(quotationWidgetInfoDiv);
-        $('<label></label>').attr('for', 'form-field').attr('id', 'content_'+qid).text('备注:' + quo.content).css("word-break","break-all").appendTo(quotationWidgetDivSix);
+        $('<label></label>').attr('for', 'form-field').attr('id', 'content_'+qid).text('备注:  ' + quo.content).css("word-break","break-all").appendTo(quotationWidgetDivSix);
 
         var quotationWidgetToolDiv = $('<div></div>').addClass("ui-pg-div").appendTo(quotationWidgetMain);
         var copySpan = $('<span></span>').addClass('ui-icon icon-copy blue').attr('title', '复制').attr('id', 'copyQuotation_' + qid).attr('data', qid).appendTo(quotationWidgetToolDiv).mouseenter(function(){

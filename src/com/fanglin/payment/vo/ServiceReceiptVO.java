@@ -21,23 +21,23 @@ public class ServiceReceiptVO implements Serializable {
 
 	private Timestamp confirmTime;
 
-	private Float cash;
+	private Long cash;
 
 	private String cashInfo;
 
-	private Float bank;
+	private Long bank;
 
 	private String bankInfo;
 
-	private Float checkv;
+	private Long checkv;
 
 	private String checkvBank;
 
-	private Float installment;
+	private Long installment;
 
 	private String installBank;
 
-	private Float accounts;
+	private Long accounts;
 
 	private String accountsBank;
 
@@ -100,11 +100,11 @@ public class ServiceReceiptVO implements Serializable {
 		this.collectTime = collectTime;
 	}
 
-	public Float getCash() {
+	public Long getCash() {
 		return cash;
 	}
 
-	public void setCash(Float cash) {
+	public void setCash(Long cash) {
 		this.cash = cash;
 	}
 
@@ -116,11 +116,11 @@ public class ServiceReceiptVO implements Serializable {
 		this.cashInfo = cashInfo;
 	}
 
-	public Float getBank() {
+	public Long getBank() {
 		return bank;
 	}
 
-	public void setBank(Float bank) {
+	public void setBank(Long bank) {
 		this.bank = bank;
 	}
 
@@ -132,11 +132,11 @@ public class ServiceReceiptVO implements Serializable {
 		this.bankInfo = bankInfo;
 	}
 
-	public Float getCheckv() {
+	public Long getCheckv() {
 		return checkv;
 	}
 
-	public void setCheckv(Float checkv) {
+	public void setCheckv(Long checkv) {
 		this.checkv = checkv;
 	}
 
@@ -148,11 +148,11 @@ public class ServiceReceiptVO implements Serializable {
 		this.checkvBank = checkvBank;
 	}
 
-	public Float getInstallment() {
+	public Long getInstallment() {
 		return installment;
 	}
 
-	public void setInstallment(Float installment) {
+	public void setInstallment(Long installment) {
 		this.installment = installment;
 	}
 
@@ -164,11 +164,11 @@ public class ServiceReceiptVO implements Serializable {
 		this.installBank = installBank;
 	}
 
-	public Float getAccounts() {
+	public Long getAccounts() {
 		return accounts;
 	}
 
-	public void setAccounts(Float accounts) {
+	public void setAccounts(Long accounts) {
 		this.accounts = accounts;
 	}
 

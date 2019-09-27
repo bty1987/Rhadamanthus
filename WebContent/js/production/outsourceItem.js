@@ -1,212 +1,215 @@
-$(function () {
+$(function(){
 
-    var backBtn = com.focusPage('#backBtn');
-    var addBtn = com.focusPage('#addBtn');
-    var oid = params.oid;
-    var outsourceStatus = params.outsourceStatus;
-    var productionStatus = params.productionStatus;
+    var outsourceItem = {
+        saveBtn : com.focusPage("#saveBtn"),
+        cancelBtn : com.focusPage("#cancelBtn"),
 
-    //var total=$("#total");
+        modals: {
+            outsourceItemModal: com.focusPage("#outsourceItemModal")
+        },
 
-    var displayFunc = (function () {
+        items: {
+            itemName : com.focusPage("#itemName"),
+            height : com.focusPage("#height"),
+            width : com.focusPage("#width"),
+            thick : com.focusPage("#thick"),
+            modeling : com.focusPage("#modeling").val(),
+            measurementUnit : com.focusPage("#measurementUnit"),
+            unitPrice : com.focusPage("#unitPrice"),
+            itemNum : com.focusPage("#itemNum"),
+            total : com.focusPage("#total"),
+            comment : com.focusPage("#comment")
+        },
+        editFlg : true,
+        oid : params.oid,
+        outsourceStatus : params.outsourceStatus,
+        productionStatus : params.productionStatus
 
-        var renderList = function(tableId,listData){
+    };
 
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list ui-sortable fl-table-list');
+    outsourceItem.saveBtn.bindClick(addItem);
+
+    outsourceItem.modals.outsourceItemModal.on("hide.bs.modal", function(){
+        com.clearValidator();
+        com.cleanTypeahead("modeling");
+        com.cleanItems(outsourceItem.items);
+    });
+
+    var displayFunc  = (function() {
+
+        var renderList = function (tableId, listData) {
+            var $tableWrap = com.focusPage('#' + tableId).empty();
+            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if (listData && listData.length) {
                 $.each(listData, function (i, v) {
-
-                    var $liLine = $('<li></li>').addClass('clearfix item-orange');
-                    var $h3 = $('<h3></h3>').addClass('oid');
-                    var $title = $('<small></small>').addClass('blue').html(' ' + v.name);
-                    var $btnDiv = $('<div></div>').addClass('action-buttons pull-right');
-                    var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-
-                    var $btnDelete = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
-
-                   // var total = utils.accMul(v.unitprice,v.num);
-
-                    var propertyArr = [
-                        ["高:", v.height, "blue"],
-                        ["宽:", v.width, "blue"],
-                        ["厚:", v.thick, "blue"],
-                        ["造型:", v.modelling, "grey"],
-                        ["数量:", v.num, "blue"],
-                        ["单价:", v.unitprice, "blue"],
-                        ["总价:", v.total, "blue"],
-                        ["说明:", v.comment, "grey"]
-                    ];
-
-                    $.each(propertyArr, function (index, value) {
-                        var $liProperty = $('<li></li>');
-                        $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                        $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                        $liProperty.appendTo($ulProperty);
-                    });
+                    var $liLine = creatLine(v);
 
                     $liLine.appendTo($ul);
-                    $liLine.append($h3).append($ulProperty);
-                    $btnDiv.append($btnDelete);
-                    $h3.append($title).append($btnDiv);
-
-                    hidBtn($btnDelete,outsourceStatus);
-
-                    $btnDelete.click(function (e) {
-                        com.showConfirm("是否确认删除", function(){
-                            com.post(api.production.deleteOutsourceItem, {"outsourceItem.oiid": v.oiid}, function () {
-                                outsourceSeacher.doSearch();
-                                com.showAlert(com.info, "操作成功");
-                            });
-                        });
-                    });
-
                 });
+
                 $ul.appendTo($tableWrap);
             }
         };
+
+        var  creatLine = function(v) {
+
+            var $liLine = $('<li></li>').addClass('clearfix item-orange');
+            var $h3 = $('<h3></h3>').addClass('oid');
+            var $title = $('<small></small>').addClass('blue').html(' ' + v.name);
+            var $btnDiv = $('<div></div>').addClass('action-buttons pull-right');
+            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+
+            var $btnDelete = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
+
+            var propertyArr = [
+                ["高:", v.height, "blue"],
+                ["宽:", v.width, "blue"],
+                ["厚:", v.thick, "blue"],
+                ["造型:", v.modeling, "grey"],
+                ["数量:", v.num, "blue"],
+                ["单价:", v.unitprice, "blue"],
+                ["总价:", v.total, "red"],
+                ["说明:", v.comment, "grey"]
+            ];
+
+            $.each(propertyArr, function (index, value) {
+                var $liProperty = $('<li></li>');
+                $('<strong></strong>').html(value[0]).appendTo($liProperty);
+                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+                $liProperty.appendTo($ulProperty);
+            });
+
+            $liLine.append($h3).append($ulProperty);
+            $btnDiv.append($btnDelete);
+            $h3.append($title).append($btnDiv);
+
+            hidBtn($btnDelete,outsourceItem.outsourceStatus);
+
+            $btnDelete.click(function (e) {
+                com.showConfirm("是否确认删除", function(){
+                    com.post(api.production.deleteOutsourceItem, {"outsourceItem.oiid": v.oiid}, function () {
+                        outsourceSeacher.doSearch();
+                        com.showAlert(com.info, "操作成功");
+                    });
+                });
+            });
+
+            return $liLine;
+        };
+
         return {
             init : function(tableId,listData){
                 com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
+            },
+            drawLine : function(v){
+                return creatLine(v);
             }
         };
     })();
 
-    var outsourceSeacher = new Searcher();
-
     var _condArr = [];
+    var outsourceSeacher = new Searcher();
 
     outsourceSeacher.init( _condArr, "condList", api.production.pageOutsourceItemByOid, function(data){
         displayFunc.init('resultList', data);
-    }, "pagenation", "outsourcePostData", {"outsourceItem.oid": oid}, false, null, function(){
+    }, "pagenation", "outsourcePostData", {"outsourceItem.oid": outsourceItem.oid}, false, null, function(){
 
-        var $adda = $('<a></a>').addClass('btn btn-xs btn-info').css("margin", "0px 3px").html('添加');
-
-        var $backBtn = $('<a></a>').addClass('btn btn-xs').css("margin", "0px 3px").html('返回');
-
-        hidBtn($adda,outsourceStatus);
-
-        $adda.click(function(){
-            com.clearValidator();
-            productionUtils.clearForm('form1');
-            addOutsourceItem(function(){
-                if(!com.validate("layerAddItem",null)){
-                    calcTotal();
-                    addItem();
-                }
-            });
-        });
-
-        $backBtn.click(function() {
-            com.switchPage(api.index.outsourceIndex.url)
-        });
+        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'addOutsourceItem').css("margin", "0px 3px");
+        var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+        var $addspan = $('<span></span>').text('添加').appendTo($adda);
+        var $backBtn = $('<a></a>').addClass('btn btn-minier pull-left').attr('id', 'backs').css("margin", "0px 3px");
+        var $backBtns = $('<i></i>').addClass('icon-mail-forward bigger-110').appendTo($backBtn);
+        var $backSpan = $('<span></span>').text('返回').appendTo($backBtn);
+        hidBtn($adda,outsourceItem.outsourceStatus);
 
         return [$adda,$backBtn];
     });
 
+    com.initTypeahead('itemName', api.production.queryQuoteItemByPinyin,"quoteItem.pinyin",null, "quoteItems", "qiid", "name",function(list,k, v) {
+        $.each(list, function (index, val) {
 
-    com.focusPage('#layerAddItem').find("#itemName").typeahead({
-        url: api.production.queryQuoteItemByPinyin,
-        list: [],
-        postData: {},
-        source: function (query, process) {
-            var params = $.extend({"quoteItem.name": query, "quoteItem.pinyin": query}, this.options.postData);
-            com.post(this.options.url, params, $.proxy(this.options.callback, this));
-        }, matcher: function (item) {
-            return true;
-        }, callback: function (data) {
-            this.options.list = data['quoteItems'];
-            this.flprocess(this.options.list, 'qiid', 'name');
-        },
-        isResultTypeMap: true
-        , flupdater: function (k, v) {
-            var list = this.options.list;
-
-            $.each(list, function (index, val) {
-
-                if (val.qiid == k) {
-                    com.focusPage('#layerAddItem').find('#measurementUnit').val(val.measurementunit);
-                    com.focusPage('#layerAddItem').find('#unitPrice').val(val.unitprice);
-                }
-
-            });
-            return v;
-        }
-    });
-
-    function addOutsourceItem(callback){
-        com.closePopup();
-        layer.open({
-            type: 1,
-            skin: 'layui-layer-lan',
-            title: "添加外协项",
-            content: com.focusPage('#layerAddItem'),
-            area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
-            maxmin: false,
-            zIndex: 9000,
-            btn: ['确定', '取消'],
-            yes: function (index, layero) {
-                callback(index,layero)
-            },
-            btn2: function (index, layero) {
-
-            },
-            cancel: function () {
-                //右上角关闭回调
+            if (val.qiid == k) {
+                outsourceItem.items.measurementUnit.val(val.measurementunit);
+                outsourceItem.items.unitPrice.val(val.unitprice);
+                outsourceItem.items.itemNum.val(1);
+                outsourceItem.items.total.val(utils.accMul(parseFloat($('#unitPrice').val()), parseFloat($('#itemNum').val())));
             }
         });
+        return v;
+    });
+
+    com.focusPage('#backs').click(function() {
+        com.switchPage(api.index.outsourceIndex.url)
+    });
+
+    com.focusPage("#addOutsourceItem").click(function() {
+        outsourceItem.editFlg = true;
+
+        outsourceItem.modals.outsourceItemModal.modal("show");
+    });
+
+    com.focusPage('#unitPrice,#itemNum,#height,#thick').on("change",function(){
+        calcTotal();
+    });
+
+    function calcTotal(){
+        com.clearValidator();
+        var $width = outsourceItem.items.width.val();
+        var $height =outsourceItem.items.height.val();
+        //区分单位类型切换不同的计算方式
+        var $measurementunit = outsourceItem.modals.outsourceItemModal.find('#measurementUnit').val();
+        var $area = 1;
+
+        if(com.validate("outsourceItemModal","right")){return false}
+
+        if($measurementunit == "平" || $measurementunit =="平方米"){
+            $area = utils.accMul(parseFloat($width),parseFloat($height));
+            outsourceItem.modals.outsourceItemModal.find('#modeling').val($area+$measurementunit);
+        }else if($measurementunit == "延米" || $measurementunit == "米"){
+            $area = parseFloat($height);
+        }
+
+        outsourceItem.items.total.val(utils.accMul(utils.accMul(parseFloat($('#unitPrice').val()), parseFloat($('#itemNum').val())),$area).toFixed(2));
     }
 
     function addItem(){
-        var options = {};
-        var $layerAdd = com.focusPage('#layerAddItem');
-        var modeling = $layerAdd.find('#modelling').val();
 
-        options["outsource.oid"] = oid;
-        options["outsourceItems[0].name"] = $layerAdd.find('#itemName').val();
-        options["outsourceItems[0].height"] = $layerAdd.find('#height').val();
-        options["outsourceItems[0].width"] = $layerAdd.find('#width').val();
-        options["outsourceItems[0].thick"] = $layerAdd.find('#thick').val();
-        options["outsourceItems[0].modelling"] = modeling ? modeling : '';
-        options["outsourceItems[0].num"] = $layerAdd.find('#itemNum').val();
-        options["outsourceItems[0].unitprice"] = $layerAdd.find('#unitPrice').val();
-        options["outsourceItems[0].total"] = $layerAdd.find('#total').val();
-        options["outsourceItems[0].comment"] = $layerAdd.find('#comment').val();
+        if (com.validate('outsourceItemModal')) {
+            return false;
+        }
+
+        var options = {
+            "outsource.oid" : outsourceItem.oid,
+            "outsourceItems[0].name" : outsourceItem.items.itemName.val(),
+            "outsourceItems[0].height" : outsourceItem.items.height.val(),
+            "outsourceItems[0].width" : outsourceItem.items.width.val(),
+            "outsourceItems[0].thick" : outsourceItem.items.thick.val(),
+            "outsourceItems[0].modelling" : outsourceItem.items.modeling ? outsourceItem.items.modeling : ' ',
+            "outsourceItems[0].num" : outsourceItem.items.itemNum.val(),
+            "outsourceItems[0].unitprice" : outsourceItem.items.unitPrice.val(),
+            "outsourceItems[0].total" : parseFloat(outsourceItem.items.total.val()),
+            "outsourceItems[0].comment" : outsourceItem.items.comment.val()
+        };
 
         com.post(api.production.addOutsourceItem,options,function(res){
             com.clearValidator();
-            productionUtils.clearForm('form1');
             outsourceSeacher.doSearch();
             com.showAlert(com.info,"添加成功");
         },function(e){
             com.showAlert(com.info,"添加失败");
         })
-    }
 
-    com.focusPage('#layerAddItem').find("#itemNum").on("change",function(){
-        com.clearValidator();
-        if(!com.validate('itemNum')){
-            calcTotal();
-        }
-    });
-
-    function calcTotal(){
-        var _num =  com.focusPage('#layerAddItem').find("#itemNum").val();
-        var _unitPrice =  com.focusPage('#layerAddItem').find('#unitPrice').val();
-        var _total = utils.accMul(parseFloat(_num+''),parseFloat(_unitPrice+''));
-        com.focusPage('#layerAddItem').find('#total').val(_total);
+        outsourceItem.modals.outsourceItemModal.modal("hide");
     }
 
     function hidBtn(btnId,otherStatus){
         btnId.removeClass('hide');
-        if (productionStatus == 5 || productionStatus == 4 ) {
+        if (outsourceItem.productionStatus == 5 || outsourceItem.productionStatus == 4 ) {
             btnId.addClass('hide');
         }else if(otherStatus != 0 ){
             btnId.addClass('hide');
         }
-
     }
-
 });

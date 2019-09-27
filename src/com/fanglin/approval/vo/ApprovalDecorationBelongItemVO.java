@@ -5,15 +5,15 @@ public class ApprovalDecorationBelongItemVO implements java.io.Serializable {
 	private static final long serialVersionUID = 1942560918558612661L;
 
 	private Integer adbiId;
-	
+
 	private Integer adbId;
-	
+
 	private String orderId;
-	
+
 	private String userId;
-	
-	private Float rate;
-	
+
+	private Integer rate;
+
 	private Short defaultFlag;
 
 	public Integer getAdbiId() {
@@ -48,11 +48,11 @@ public class ApprovalDecorationBelongItemVO implements java.io.Serializable {
 		this.userId = userId;
 	}
 
-	public Float getRate() {
+	public Integer getRate() {
 		return rate;
 	}
 
-	public void setRate(Float rate) {
+	public void setRate(Integer rate) {
 		this.rate = rate;
 	}
 

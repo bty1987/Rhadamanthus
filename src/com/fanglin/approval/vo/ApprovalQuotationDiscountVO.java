@@ -5,18 +5,18 @@ public class ApprovalQuotationDiscountVO implements java.io.Serializable {
 	private static final long serialVersionUID = 6220700622327921672L;
 
 	private Long aqdid;
-	
+
 	private Long aid;
-	
+
 	private String orderId;
-	
+
 	private Long qid;
-	
-	private Float oldDiscount;
-	
-	private Float newDiscount;
-	
-	private Float basePrice;
+
+	private Integer oldDiscount;
+
+	private Integer newDiscount;
+
+	private Integer basePrice;
 
 	public Long getAqdid() {
 		return this.aqdid;
@@ -50,28 +50,28 @@ public class ApprovalQuotationDiscountVO implements java.io.Serializable {
 		this.qid = qid;
 	}
 
-	public Float getOldDiscount() {
+	public Integer getOldDiscount() {
 		return this.oldDiscount;
 	}
 
-	public void setOldDiscount(Float oldDiscount) {
+	public void setOldDiscount(Integer oldDiscount) {
 		this.oldDiscount = oldDiscount;
 	}
 
-	public Float getNewDiscount() {
+	public Integer getNewDiscount() {
 		return this.newDiscount;
 	}
 
-	public void setNewDiscount(Float newDiscount) {
+	public void setNewDiscount(Integer newDiscount) {
 		this.newDiscount = newDiscount;
 	}
 
-	public Float getBasePrice() {
+	public Integer getBasePrice() {
 		return basePrice;
 	}
 
-	public void setBasePrice(Float basePrice) {
+	public void setBasePrice(Integer basePrice) {
 		this.basePrice = basePrice;
 	}
-	
+
 }

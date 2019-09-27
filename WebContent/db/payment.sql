@@ -269,3 +269,21 @@ CREATE TABLE `servicereceipt` (
   `comment` varchar(256) NOT NULL DEFAULT '',
   PRIMARY KEY (`srid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='服务收据';
+
+DROP TABLE IF EXISTS `pointofsales`;
+CREATE TABLE `pointofsales` (
+  `posid` int(11) NOT NULL AUTO_INCREMENT,
+  `pid` varchar(32) NOT NULL,
+  `type` tinyint(1) NOT NULL,
+  `no` varchar(32) NOT NULL,
+  `sn` varchar(32) NOT NULL,
+  `msgId` varchar(32) NOT NULL,
+  `outOrderId` varchar(64) NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  `money` bigint(10) NOT NULL,
+  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `cuid` int(11) NOT NULL,
+  `rstcode` varchar(16),
+  `rstmsg` varchar(64),
+  PRIMARY KEY (`posid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='销售点信息表';

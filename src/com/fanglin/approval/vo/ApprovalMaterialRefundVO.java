@@ -5,15 +5,15 @@ public class ApprovalMaterialRefundVO implements java.io.Serializable {
 	private static final long serialVersionUID = 963161255371916154L;
 
 	private Integer amrId;
-	
+
 	private Long aid;
-	
+
 	private Long mid;
-	
-	private Float refund;
-	
-	private Float referMoney;
-	
+
+	private Long refund;
+
+	private Long referMoney;
+
 	private Short type;
 
 	public Integer getAmrId() {
@@ -40,11 +40,11 @@ public class ApprovalMaterialRefundVO implements java.io.Serializable {
 		this.mid = mid;
 	}
 
-	public Float getRefund() {
+	public Long getRefund() {
 		return this.refund;
 	}
 
-	public void setRefund(Float refund) {
+	public void setRefund(Long refund) {
 		this.refund = refund;
 	}
 
@@ -56,11 +56,11 @@ public class ApprovalMaterialRefundVO implements java.io.Serializable {
 		this.type = type;
 	}
 
-	public Float getReferMoney() {
+	public Long getReferMoney() {
 		return referMoney;
 	}
 
-	public void setReferMoney(Float referMoney) {
+	public void setReferMoney(Long referMoney) {
 		this.referMoney = referMoney;
 	}
 

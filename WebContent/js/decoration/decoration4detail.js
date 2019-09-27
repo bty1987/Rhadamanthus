@@ -92,8 +92,8 @@ jQuery(function ($) {
 
     decorationDetail.items.quoterId = com.focusPage('#quoterId');
     decorationDetail.items.escorterId = com.focusPage('#escorterId');
-    decorationDetail.btnSaveBasedecorationInfo = com.focusPage("#btnSaveBasedecorationInfo").on("click", saveBasedecorationInfo);
-    
+    decorationDetail.btnSaveBasedecorationInfo = com.focusPage("#btnSaveBasedecorationInfo").on("click", saveBaseDecorationInfo);
+
     decorationDetail.paymentItems.otherPaymentType = com.focusPage("#otherPaymentType");
     decorationDetail.paymentItems.otherPayment = com.focusPage("#otherPayment");
     decorationDetail.paymentItems.changeReason = com.focusPage('#changeReason');
@@ -148,7 +148,7 @@ jQuery(function ($) {
     });
     decorationDetail.houseItems.door = com.focusPage("#door").on("blur", function (e) {
         //验证房产是否存在
-        validatehouse(com.typeahead("no"), houseUtils.anytimevalidate(decorationDetail.houseItems, 0, false));
+        valiDateHouse(com.typeahead("no"), houseUtils.anytimevalidate(decorationDetail.houseItems, 0, false));
     });
     decorationDetail.houseItems.builtrule = com.focusPage("#builtrule");
     decorationDetail.houseItems.unitrule = com.focusPage("#unitrule");
@@ -166,35 +166,35 @@ jQuery(function ($) {
     //申请活动
     decorationDetail.activity.activity = com.focusPage("#activity").on("change", function () {
         var $this = $(this);
-        var _things = [];
-        var _coupons = [];
+        var things = [];
+        var coupons = [];
 
         var options = {
             "activity.aid": $this.val()
         };
 
         com.post(api.information.queryActivityItemByAid, options, function (res) {
-            var _ = res.activityItems;
+            var activity = res.activityItems;
 
-            for (var i = 0; i < _.length; i++) {
+            for (var i = 0; i < activity.length; i++) {
 
-                var _activityItem = _[i];
+                var activityItem = activity[i];
 
-                if (_activityItem.type == 0) {
-                    _coupons.push({
-                        asid: _activityItem.asid,
-                        activityItemName: _activityItem.name + " 金额:" + _activityItem.money,
+                if (activityItem.type == 0) {
+                    coupons.push({
+                        asid: activityItem.asid,
+                        activityItemName: activityItem.name + " 金额:" + activityItem.money,
                     });
-                } else if (_activityItem.type == 1) {
-                    _things.push({
-                        asid: _activityItem.asid,
-                        activityItemName: _activityItem.name + " 金额:" + _activityItem.money
+                } else if (activityItem.type == 1) {
+                    things.push({
+                        asid: activityItem.asid,
+                        activityItemName: activityItem.name + " 金额:" + activityItem.money
                     });
                 }
             }
 
-            com.selectTypeahead("thingsType", _things, 'asid', 'activityItemName');
-            com.selectTypeahead("couponsType", _coupons, 'asid', 'activityItemName');
+            com.selectTypeahead("thingsType", things, 'asid', 'activityItemName');
+            com.selectTypeahead("couponsType", coupons, 'asid', 'activityItemName');
         });
     });
 
@@ -442,15 +442,15 @@ jQuery(function ($) {
         com.post(api.information.queryActivityForValid, {"activity.type": 1}, function (res) {
             var activitys = res.activitys;
 
-            var _activitys = [{aid: -1, activityName: ""}];
+            var activityData = [{aid: -1, activityName: ""}];
 
             for (var i = 0; i < activitys.length; i++) {
-                var _activity = activitys[i];
+                var activity = activitys[i];
 
-                _activitys.push({aid: _activity.aid, activityName: _activity.name, money: _activitys.money});
+                activityData.push({aid: activity.aid, activityName: activity.name, money: activityData.money});
             }
 
-            decorationDetail.decorationActivityItems.activityInfo.bindData(_activitys, "aid", "activityName", "money", false);
+            decorationDetail.decorationActivityItems.activityInfo.bindData(activityData, "aid", "activityName", "money", false);
         });
 
         decorationDetail.joinDecorationActivityModal.modal("show");
@@ -470,25 +470,23 @@ jQuery(function ($) {
 
             var decorationActivitys = res.decorationActivitys;
 
-
-
-            var _activitys = [{aid: -1, activityName: ""}];
+            var decorationActivityData = [{aid: -1, activityName: ""}];
 
             for (var i = 0; i < decorationActivitys.length; i++) {
-                var _decorationActivity = decorationActivitys[i];
+                var decorationActivity = decorationActivitys[i];
 
-                if(_decorationActivity.status == 1){
+                if(decorationActivity.status == 1){
                     continue;
                 }
 
-                _activitys.push({
-                    aid: _decorationActivity.activity.aid,
-                    activityName: _decorationActivity.activity.name,
-                    money: _decorationActivity.activity.money
+                decorationActivityData.push({
+                    aid: decorationActivity.activity.aid,
+                    activityName: decorationActivity.activity.name,
+                    money: decorationActivity.activity.money
                 });
             }
 
-            decorationDetail.activity.activity.bindData(_activitys, "aid", "activityName", false);
+            decorationDetail.activity.activity.bindData(decorationActivityData, "aid", "activityName", false);
         }, null, false);
 
 
@@ -526,7 +524,7 @@ jQuery(function ($) {
     });
 
     com.focusPage("#savePhoneBtn").on("click", function () {
-        savecustomerPhone(decorationDetail.customer.cid, decorationDetail.customerItems.addphone.val());
+        saveCustomerPhone(decorationDetail.customer.cid, decorationDetail.customerItems.addphone.val());
     });
 
     com.focusPage("#addphone").on("blur", function () {
@@ -862,7 +860,7 @@ jQuery(function ($) {
         decorationDetail.decoration.type = decoration.type;
     });
 
-    function saveBasedecorationInfo() {
+    function saveBaseDecorationInfo() {
         if (com.validate("step1")) {
             return;
         }
@@ -889,10 +887,6 @@ jQuery(function ($) {
         }, function () {
             btn.button('reset');
         });
-    }
-
-    function downloadFile(picturePath, uploadFileName) {
-        window.open(config.media + api.common.downloadFile.url + "?downloadFilePath=" + picturePath + "&fileName=" + uploadFileName);
     }
 
     function initWizard(decorationDetail) {
@@ -1003,16 +997,6 @@ jQuery(function ($) {
         });
     }
 
-    function uiBtnMethod(uiPgDiv, activityItem) {
-
-        var btnViewBtn= $("<a></a>").addClass("btn btn-minier btn-yellow").html("失效").css("margin", "0px 3px").attr("id", "abate_" + activityItem.daiId).appendTo(uiPgDiv);
-
-        btnViewBtn.on("click", function () {
-            abateDecorationActivityItem(activityItem.daiId, activityItem.activityItemName);
-        });
-
-    }
-
     function deleteDecorationActivity(daId) {
 
         var options = {
@@ -1024,40 +1008,7 @@ jQuery(function ($) {
         });
     }
 
-
-    function abateDecorationActivityItem(daiId, activityItemName) {
-
-        com.showConfirm("是否确认失效" + activityItemName + "活动物品?", function () {
-
-            var options = {
-                "decorationActivityItem.daiId": daiId,
-            };
-
-            com.post(api.decoration.abateDecorationActivityItem, options, function (res) {
-
-                var daiId = res.decorationActivityItem.daiId;
-
-                com.focusPage("#state_" + daiId).text("失效");
-
-            });
-        });
-    }
-
-    function changetohousenum(temp, arr) {
-        var str = temp;
-        if (arr.trim() != "" && arr.trim() != "0") {
-            if (temp.indexOf("{}") != -1) {
-                var num = temp.indexOf("{}");
-                str = temp.substring(0, num) + arr + temp.substring(num + 2);
-            }
-            else {
-                str = str + "-" + arr;
-            }
-        }
-        return str;
-    }
-
-    function validatehouse(no, houseNumber) {
+    function valiDateHouse(no, houseNumber) {
 
         if (no == "" || houseNumber == "") {
             return;
@@ -1172,7 +1123,7 @@ jQuery(function ($) {
         }, null, false);
     }
 
-    function savecustomerPhone(cid, phone) {
+    function saveCustomerPhone(cid, phone) {
 
         if (com.validate("customerChangeModal") || decorationDetail.customer.repeatFlg) {
             return;

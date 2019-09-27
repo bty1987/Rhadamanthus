@@ -14,6 +14,8 @@ jQuery(function () {
         salesCollectionPostData:{}
     };
 
+    com.focusPage('#fl-statement').statement("销售单", "收款");
+
     salesPaymentForStatus.salesCollectionPostData["salesPayment.sales.sid"] = params.sid;
 
     com.post(api.common.queryReceiptType, {}, function (res) {
@@ -44,7 +46,11 @@ jQuery(function () {
     }, null, false);
 
     com.post(api.payment.querySalesPaymentBySid,salesPaymentForStatus.salesCollectionPostData, function (listData) {
-        createLine('resultLists', listData);
+        if(listData.salesPayments.length == 0){
+            emptyData("resultLists");
+        }else{
+            createLine('resultLists', listData);
+        }
     }, function (e) {
         com.showAlert(com.warning, "没有对应信息");
     });
@@ -105,5 +111,12 @@ jQuery(function () {
             });
             $ul.appendTo($tableWrap);
         }
+    }
+
+    function emptyData(id) {
+        var $resultList = com.focusPage('#' + id).html('');
+        var $zone = $('<div></div>').addClass('dropzone dz-clickable').css('margin', '20px').css('border', '0px').appendTo($resultList);
+        var $mesg = $('<div></div>').addClass('dz-default dz-message').appendTo($zone);
+        var $span = $('<span></span>').text('无可用数据提供').appendTo($mesg);
     }
 });

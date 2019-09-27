@@ -79,8 +79,8 @@ public class HouseDaoImpl extends DaoImpl<HousePO> implements HouseDao {
 					query.add(Restrictions.eq("status", Short.valueOf(filter.getData())));
 				} else if ("buildingArea".equals(filter.getField())) {
 					String area[] = filter.getData().split("-");
-					query.add(Restrictions.ge("buildArea", Float.valueOf(area[0])));
-					query.add(Restrictions.le("buildArea", Float.valueOf(area[1])));
+					query.add(Restrictions.ge("buildArea", Integer.valueOf(area[0])));
+					query.add(Restrictions.le("buildArea", Integer.valueOf(area[1])));
 				} else if ("parlourType".equals(filter.getField())) {
 					query.add(Restrictions.eq("parlourType", Short.valueOf(filter.getData())));
 				}

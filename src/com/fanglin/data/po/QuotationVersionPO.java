@@ -40,11 +40,11 @@ public class QuotationVersionPO implements Serializable {
 
 	private short defaultFlag;
 
-	private float trafficRate;
+	private int trafficRate;
 
 	private short trafficDiscount;
 
-	private float manageRate;
+	private int manageRate;
 
 	private short manageDiscount;
 
@@ -105,11 +105,11 @@ public class QuotationVersionPO implements Serializable {
 	}
 
 	@Column(name = "trafficRate")
-	public float getTrafficRate() {
+	public int getTrafficRate() {
 		return trafficRate;
 	}
 
-	public void setTrafficRate(float trafficRate) {
+	public void setTrafficRate(int trafficRate) {
 		this.trafficRate = trafficRate;
 	}
 
@@ -123,11 +123,11 @@ public class QuotationVersionPO implements Serializable {
 	}
 
 	@Column(name = "manageRate")
-	public float getManageRate() {
+	public int getManageRate() {
 		return manageRate;
 	}
 
-	public void setManageRate(float manageRate) {
+	public void setManageRate(int manageRate) {
 		this.manageRate = manageRate;
 	}
 

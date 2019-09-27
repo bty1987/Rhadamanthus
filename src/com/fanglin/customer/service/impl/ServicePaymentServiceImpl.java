@@ -15,47 +15,47 @@ import com.fanglin.payment.po.ServicePaymentPO;
 import com.fanglin.utils.Paging;
 
 @Service("servicePaymentOrderService")
-@Transactional(readOnly=true)
+@Transactional(readOnly = true)
 public class ServicePaymentServiceImpl implements ServicePaymentService {
-	
+
 	@Autowired
 	private ServicePaymentDao servicePaymentDao;
 
 	@Override
 	public void queryCusServicePayment(Paging paging, List<Filter> filters, ServicePaymentVO servicePaymentVO) {
-			
-			List<ServicePaymentPO> servicePaymentPOs = servicePaymentDao.queryCusServicePayment(paging, filters, servicePaymentVO.getOrderId());
-			List<ServicePaymentVO> servicePaymentVOs = new ArrayList<ServicePaymentVO>();
-			
-			if(servicePaymentPOs.size() != 0 && servicePaymentPOs != null){
-				
-				for(ServicePaymentPO servicePaymentPO : servicePaymentPOs){
-					
-					servicePaymentVO = new ServicePaymentVO();
-					
-					servicePaymentVO.setOrderId(servicePaymentPO.getDecoration().getOrderId());
-					servicePaymentVO.setAdvanceMoney(servicePaymentPO.getAdvanceMoney());
-					servicePaymentVO.setServiceMoney(servicePaymentPO.getServiceMoney());
-					servicePaymentVO.setStatus(servicePaymentPO.getStatus());
-					servicePaymentVO.setType(servicePaymentPO.getType());
-					
-					if(servicePaymentPO.getServiceReceipt() != null){
-						servicePaymentVO.setCollectTime(servicePaymentPO.getServiceReceipt().getCollectTime());
-					}
-					
-					servicePaymentVOs.add(servicePaymentVO);
-					
+
+		List<ServicePaymentPO> servicePaymentPOs = servicePaymentDao.queryCusServicePayment(paging, filters, servicePaymentVO.getOrderId());
+		List<ServicePaymentVO> servicePaymentVOs = new ArrayList<ServicePaymentVO>();
+
+		if (servicePaymentPOs.size() != 0 && servicePaymentPOs != null) {
+
+			for (ServicePaymentPO servicePaymentPO : servicePaymentPOs) {
+
+				servicePaymentVO = new ServicePaymentVO();
+
+				servicePaymentVO.setOrderId(servicePaymentPO.getDecoration().getOrderId());
+				servicePaymentVO.setAdvanceMoney(servicePaymentPO.getAdvanceMoney());
+				servicePaymentVO.setServiceMoney(servicePaymentPO.getServiceMoney());
+				servicePaymentVO.setStatus(servicePaymentPO.getStatus());
+				servicePaymentVO.setType(servicePaymentPO.getType());
+
+				if (servicePaymentPO.getServiceReceipt() != null) {
+					servicePaymentVO.setCollectTime(servicePaymentPO.getServiceReceipt().getCollectTime());
 				}
+
+				servicePaymentVOs.add(servicePaymentVO);
+
 			}
-			
-			paging.setData(servicePaymentVOs);
+		}
+
+		paging.setData(servicePaymentVOs);
 	}
 
 	@Override
-	public float countCusServicePaymentForAmount(ServicePaymentVO servicePaymentVO) {
-		
-		float _realMoney = servicePaymentDao.countCusServicePaymentForAmount(servicePaymentVO.getOrderId());
-		
+	public long countCusServicePaymentForAmount(ServicePaymentVO servicePaymentVO) {
+
+		long _realMoney = servicePaymentDao.countCusServicePaymentForAmount(servicePaymentVO.getOrderId());
+
 		return _realMoney;
 	}
 

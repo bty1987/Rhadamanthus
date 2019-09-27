@@ -18,7 +18,7 @@ public class AuditScaleVO implements Serializable {
 	
 	private DepartmentVO belongDepartment;
 	
-	private Float money;
+	private Long money;
 	
 	private Short type;
 	
@@ -80,11 +80,11 @@ public class AuditScaleVO implements Serializable {
 		this.belongDepartment = belongDepartment;
 	}
 
-	public Float getMoney() {
+	public Long getMoney() {
 		return money;
 	}
 
-	public void setMoney(Float money) {
+	public void setMoney(Long money) {
 		this.money = money;
 	}
 

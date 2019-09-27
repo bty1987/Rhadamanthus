@@ -14,30 +14,30 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="salesbalanceitem",catalog = "sales")
-public class SalesBalanceItemPO implements Serializable{
+@Table(name = "salesbalanceitem", catalog = "sales")
+public class SalesBalanceItemPO implements Serializable {
 
 	private static final long serialVersionUID = 5810856768343688079L;
-	
+
 	public static final String COLUMN_SBID_STR = "sbid";
-	
+
 	private long sbiid;
-	
+
 	private long sbid;
-	
+
 	private SalesItemPO salesItem;
-	
+
 	private short rawCtype;
-	
-	private float rawCvalue;
-	
+
+	private int rawCvalue;
+
 	private short ctype;
-	
-	private float cvalue;
-	
-	private float num;
-	
-	private float total;
+
+	private int cvalue;
+
+	private long num;
+
+	private long total;
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -79,11 +79,11 @@ public class SalesBalanceItemPO implements Serializable{
 	}
 
 	@Column(name = "rawCvalue")
-	public float getRawCvalue() {
+	public int getRawCvalue() {
 		return rawCvalue;
 	}
 
-	public void setRawCvalue(float rawCvalue) {
+	public void setRawCvalue(int rawCvalue) {
 		this.rawCvalue = rawCvalue;
 	}
 
@@ -97,30 +97,30 @@ public class SalesBalanceItemPO implements Serializable{
 	}
 
 	@Column(name = "cvalue")
-	public float getCvalue() {
+	public int getCvalue() {
 		return cvalue;
 	}
 
-	public void setCvalue(float cvalue) {
+	public void setCvalue(int cvalue) {
 		this.cvalue = cvalue;
 	}
 
 	@Column(name = "num")
-	public float getNum() {
+	public long getNum() {
 		return num;
 	}
 
-	public void setNum(float num) {
+	public void setNum(long num) {
 		this.num = num;
 	}
 
 	@Column(name = "total")
-	public float getTotal() {
+	public long getTotal() {
 		return total;
 	}
 
-	public void setTotal(float total) {
+	public void setTotal(long total) {
 		this.total = total;
 	}
-	
+
 }

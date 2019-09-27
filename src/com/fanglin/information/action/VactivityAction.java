@@ -25,6 +25,8 @@ public class VactivityAction extends BaseListAction {
 	private VactivityService vactivityService;
 	
 	private List<VactivityVO> vactivitys;
+	
+	private VactivityVO vactivity;
 
 	@Action(value = "pageVactivity", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageVactivity() {
@@ -41,6 +43,14 @@ public class VactivityAction extends BaseListAction {
 
 		return SUCCESS;
 	}
+	
+	@Action(value="updateVactivityForStatus", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String updateVactivityForStatus () throws FLException{
+		
+		vactivityService.updateVactivityForStatus(vactivity);
+		
+		return SUCCESS;
+	}
 
 	public List<VactivityVO> getVactivitys() {
 		return vactivitys;
@@ -50,4 +60,13 @@ public class VactivityAction extends BaseListAction {
 		this.vactivitys = vactivitys;
 	}
 
+	public VactivityVO getVactivity() {
+		return vactivity;
+	}
+
+	public void setVactivity(VactivityVO vactivity) {
+		this.vactivity = vactivity;
+	}
+
+	
 }

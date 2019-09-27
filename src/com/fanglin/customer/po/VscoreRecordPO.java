@@ -19,40 +19,40 @@ import com.fanglin.personel.po.UserPO;
 @Entity
 @Table(name = "vscorerecord", catalog = "customer")
 public class VscoreRecordPO implements Serializable {
-	
+
 	private static final long serialVersionUID = 7956451372939800206L;
-	
+
 	public static final String COLUMN_UNIONID_STR = "unionId";
-	
+
 	public static final short TYPE_ADDED_INT = 0;
-			
+
 	public static final short TYPE_EXTRACT_INT = 1;
-	
+
 	public static final short STATUS_INITIAL_INT = 0;
-	
+
 	public static final short STATUS_PASS_INT = 1;
-	
+
 	public static final short STATUS_DOWN_INT = 2;
-	
+
 	private long vsrid;
-	
+
 	private String unionId;
-	
+
 	private String orderId;
-	
-	private float score;
-	
-	private UserPO operater; 
-	
+
+	private int score;
+
+	private UserPO operater;
+
 	private Timestamp operateTime;
-	
+
 	private short type;
-	
+
 	private short status;
-	
+
 	private String comment;
-	
-	public VscoreRecordPO(){
+
+	public VscoreRecordPO() {
 		super();
 	}
 
@@ -86,11 +86,11 @@ public class VscoreRecordPO implements Serializable {
 	}
 
 	@Column(name = "score")
-	public float getScore() {
+	public int getScore() {
 		return score;
 	}
 
-	public void setScore(float score) {
+	public void setScore(int score) {
 		this.score = score;
 	}
 
@@ -139,5 +139,5 @@ public class VscoreRecordPO implements Serializable {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	
+
 }

@@ -2,17 +2,17 @@ package com.fanglin.store.vo;
 
 import java.io.Serializable;
 
-public class MorderItemVO implements Serializable{
+public class MorderItemVO implements Serializable {
 
 	private static final long serialVersionUID = -999546915671488911L;
 
 	private Long oiid;
-	
+
 	private Long oid;
-	
+
 	private MpriceVO mprice;
-	
-	private Short num;
+
+	private Long num;
 
 	public MorderItemVO() {
 		super();
@@ -30,7 +30,7 @@ public class MorderItemVO implements Serializable{
 	public void setOiid(Long oiid) {
 		this.oiid = oiid;
 	}
-	
+
 	public Long getOid() {
 		return oid;
 	}
@@ -47,11 +47,11 @@ public class MorderItemVO implements Serializable{
 		this.mprice = mprice;
 	}
 
-	public Short getNum() {
+	public Long getNum() {
 		return num;
 	}
 
-	public void setNum(Short num) {
+	public void setNum(Long num) {
 		this.num = num;
 	}
 

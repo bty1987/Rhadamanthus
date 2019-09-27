@@ -13,7 +13,7 @@ public class DecorationBalanceVO implements Serializable {
 	
 	private DecorationVO decoration;
 	
-	private Float balance;
+	private Long balance;
 	
 	private UserBaseVO user;
 	
@@ -45,11 +45,11 @@ public class DecorationBalanceVO implements Serializable {
 		this.decoration = decoration;
 	}
 
-	public Float getBalance() {
+	public Long getBalance() {
 		return balance;
 	}
 
-	public void setBalance(Float balance) {
+	public void setBalance(Long balance) {
 		this.balance = balance;
 	}
 

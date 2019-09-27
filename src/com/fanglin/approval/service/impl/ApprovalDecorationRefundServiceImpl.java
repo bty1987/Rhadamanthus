@@ -35,6 +35,7 @@ import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.quotation.dao.AddReduceDao;
 import com.fanglin.quotation.po.AddReducePO;
+import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 
@@ -94,7 +95,7 @@ public class ApprovalDecorationRefundServiceImpl implements ApprovalDecorationRe
 		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiver().getUserId());
 		UserPO sender = userDao.queryUserByUserId(userId);
 
-		String content = String.format("订单号:%s,退款类型:%s,金额:%s", decorationPaymentPO.getDecoration().getOrderId(), decorationPaymentPO.getPaymentType(), decorationPaymentPO.getReferMoney());
+		String content = String.format("装修单号:%s,退款类型:%s,金额:%.3f", decorationPaymentPO.getDecoration().getOrderId(), decorationPaymentPO.getPaymentType(), Arith.div(decorationPaymentPO.getReferMoney(), 1000.0));
 
 		approvalPO = new ApprovalPO().init(sender, receiver, String.valueOf(paymentId), ApprovalPO.APPROVAL_TYPE_DECORATION_REFUND_INT, content, company);
 

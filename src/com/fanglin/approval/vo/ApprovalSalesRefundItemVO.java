@@ -14,13 +14,13 @@ public class ApprovalSalesRefundItemVO implements Serializable {
 
 	private Long sid;
 
-	private Float num;
+	private Long num;
 
-	private Float total;
+	private Long total;
 
 	private SalesItemVO salesItem;
-	
-	public ApprovalSalesRefundItemVO(){
+
+	public ApprovalSalesRefundItemVO() {
 		super();
 	}
 
@@ -53,19 +53,19 @@ public class ApprovalSalesRefundItemVO implements Serializable {
 		this.sid = sid;
 	}
 
-	public Float getNum() {
+	public Long getNum() {
 		return num;
 	}
 
-	public void setNum(Float num) {
+	public void setNum(Long num) {
 		this.num = num;
 	}
 
-	public Float getTotal() {
+	public Long getTotal() {
 		return total;
 	}
 
-	public void setTotal(Float total) {
+	public void setTotal(Long total) {
 		this.total = total;
 	}
 
@@ -76,5 +76,5 @@ public class ApprovalSalesRefundItemVO implements Serializable {
 	public void setSalesItem(SalesItemVO salesItem) {
 		this.salesItem = salesItem;
 	}
-	
+
 }

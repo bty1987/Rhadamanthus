@@ -23,9 +23,9 @@ public class SalesActivityItemVO implements Serializable {
 
 	private String name;
 
-	private Float num;
+	private Integer num;
 
-	private Float money;
+	private Integer money;
 
 	private Short state;
 
@@ -93,19 +93,19 @@ public class SalesActivityItemVO implements Serializable {
 		this.name = name;
 	}
 	
-	public Float getNum() {
+	public Integer getNum() {
 		return num;
 	}
 
-	public void setNum(Float num) {
+	public void setNum(Integer num) {
 		this.num = num;
 	}
 
-	public Float getMoney() {
+	public Integer getMoney() {
 		return money;
 	}
 
-	public void setMoney(Float money) {
+	public void setMoney(Integer money) {
 		this.money = money;
 	}
 

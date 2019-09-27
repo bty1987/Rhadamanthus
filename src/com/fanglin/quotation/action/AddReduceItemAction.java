@@ -32,55 +32,55 @@ import com.fanglin.quotation.vo.AddReduceVO;
 public class AddReduceItemAction extends BaseListAction {
 
 	private static final long serialVersionUID = -2176662119622511079L;
-	
+
 	@Autowired
 	private AddReduceItemService addReduceItemService;
-	
+
 	private AddReduceVO addReduce;
-	
+
 	private List<AddReduceItemVO> addReduceItems;
-	
+
 	private AddReduceItemVO addReduceItem;
-	
-	private List<Integer> addReduceIds;
-	
+
+	private List<Long> addReduceIds;
+
 	@Action(value = "queryAddReduceItemByAddReduceId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryAddReduceItemByAddReduceId()throws FLException{
-		
+	public String queryAddReduceItemByAddReduceId() throws FLException {
+
 		addReduceItems = addReduceItemService.queryAddReduceItemByAddReduceId(addReduce);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "queryAddReduceItemByAddReduceIds", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryAddReduceItemByAddReduceIds()throws FLException{
-		
+	public String queryAddReduceItemByAddReduceIds() throws FLException {
+
 		addReduceItems = addReduceItemService.queryAddReduceItemByAddReduceIds(addReduceIds);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "updateAddReduceItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateAddReduceItem() throws FLException{
-		
+	public String updateAddReduceItem() throws FLException {
+
 		addReduceItemService.updateAddReduceItem(addReduce, addReduceItem);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "updateAddReduceItemForAdvance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateAddReduceItemForAdvance() throws FLException{
-		
+	public String updateAddReduceItemForAdvance() throws FLException {
+
 		addReduceItemService.updateAddReduceItemForAdvance(addReduce, addReduceItem);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "deleteAddReduceItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String deleteAddReduceItem() throws FLException{
-		
+	public String deleteAddReduceItem() throws FLException {
+
 		addReduceItemService.deleteAddReduceItem(addReduce, addReduceItem);
-		
+
 		return SUCCESS;
 	}
 
@@ -108,11 +108,11 @@ public class AddReduceItemAction extends BaseListAction {
 		this.addReduceItems = addReduceItems;
 	}
 
-	public List<Integer> getAddReduceIds() {
+	public List<Long> getAddReduceIds() {
 		return addReduceIds;
 	}
 
-	public void setAddReduceIds(List<Integer> addReduceIds) {
+	public void setAddReduceIds(List<Long> addReduceIds) {
 		this.addReduceIds = addReduceIds;
 	}
 

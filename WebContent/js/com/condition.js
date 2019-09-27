@@ -867,7 +867,7 @@ var Condition = function (api) {
                 postData: {},
                 listPath: "categorys",
                 keyPath: "cid",
-                valuePath: "categoryName"
+                valuePath: "name"
             }
         },
         materialerName: {
@@ -1682,8 +1682,8 @@ var Condition = function (api) {
                 url: api.data.queryCategory,
                 postData: {},
                 listPath: "categorys",
-                keyPath: "categoryName",
-                valuePath: "categoryName"
+                keyPath: "cid",
+                valuePath: "name"
             }
         }, materialBrand: {
             label: "品牌",

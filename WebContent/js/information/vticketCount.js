@@ -2,8 +2,8 @@
 jQuery(function(a){
 
     $.ajax({
-        url: "../../countVticket.do",
-        data: getUrlParams(),
+        url: "../countVticket.do",
+        data: $.extend({authentication: ""}, getUrlParams()),
         type: "POST",
         dataType: "json",
         success: function(res) {
@@ -11,7 +11,7 @@ jQuery(function(a){
             counts.sort(function(x, y){
                 return y[2] - x[2];
             });
-            addLine(com.focusPage("#table"), counts, getUrlParams().param);
+            addLine($("#table"), counts, getUrlParams().param);
         }
     });
 
@@ -19,13 +19,13 @@ jQuery(function(a){
 
         switch (num){
             case "1":
-                com.focusPage("#tr").append($("<th style='text-align: center'>已到场</th>"));
+                $("#tr").append($("<th style='text-align: center'>已到场</th>"));
                 break;
             case "2":
-                com.focusPage("#tr").append($("<th style='text-align: center'>已注册</th>"));
+                $("#tr").append($("<th style='text-align: center'>已注册</th>"));
                 break;
             default:
-                com.focusPage("#tr").append($("<th style='text-align: center'>票数</th>"));
+                $("#tr").append($("<th style='text-align: center'>票数</th>"));
                 break;
         }
 

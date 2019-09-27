@@ -15,27 +15,27 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "morderItem", catalog = "store")
-public class MorderItemPO implements Serializable{
+public class MorderItemPO implements Serializable {
 
 	private static final long serialVersionUID = -7181108522256921462L;
-	
+
 	public static final String COLUMN_OID_STR = "oid";
-	
+
 	public static final short STATUS_DELETE_STR = 3;
 
 	private long oiid;
-	
+
 	private long oid;
-	
+
 	private MpricePO mprice;
-	
-	private short num;
+
+	private long num;
 
 	public MorderItemPO() {
 		super();
 	}
 
-	public MorderItemPO( MpricePO mprice) {
+	public MorderItemPO(MpricePO mprice) {
 		super();
 		this.mprice = mprice;
 	}
@@ -50,7 +50,7 @@ public class MorderItemPO implements Serializable{
 	public void setOiid(long oiid) {
 		this.oiid = oiid;
 	}
-	
+
 	@Column(name = "oid")
 	public long getOid() {
 		return oid;
@@ -61,7 +61,7 @@ public class MorderItemPO implements Serializable{
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "pid", referencedColumnName="pid")
+	@JoinColumn(name = "pid", referencedColumnName = "pid")
 	public MpricePO getMprice() {
 		return mprice;
 	}
@@ -71,12 +71,12 @@ public class MorderItemPO implements Serializable{
 	}
 
 	@Column(name = "num")
-	public short getNum() {
+	public long getNum() {
 		return num;
 	}
 
-	public void setNum(short num) {
+	public void setNum(long num) {
 		this.num = num;
 	}
-	
+
 }

@@ -40,11 +40,11 @@ public class ServicePaymentVO implements Serializable {
 
 	private Timestamp confirmTime;
 
-	private Float serviceMoney;
+	private Long serviceMoney;
 
-	private Float advanceMoney;
+	private Long advanceMoney;
 
-	private Float referMoney;
+	private Long referMoney;
 
 	private String comment;
 
@@ -184,27 +184,27 @@ public class ServicePaymentVO implements Serializable {
 		this.confirmTime = confirmTime;
 	}
 
-	public Float getServiceMoney() {
+	public Long getServiceMoney() {
 		return serviceMoney;
 	}
 
-	public void setServiceMoney(Float serviceMoney) {
+	public void setServiceMoney(Long serviceMoney) {
 		this.serviceMoney = serviceMoney;
 	}
 
-	public Float getAdvanceMoney() {
+	public Long getAdvanceMoney() {
 		return advanceMoney;
 	}
 
-	public void setAdvanceMoney(Float advanceMoney) {
+	public void setAdvanceMoney(Long advanceMoney) {
 		this.advanceMoney = advanceMoney;
 	}
 
-	public Float getReferMoney() {
+	public Long getReferMoney() {
 		return referMoney;
 	}
 
-	public void setReferMoney(Float referMoney) {
+	public void setReferMoney(Long referMoney) {
 		this.referMoney = referMoney;
 	}
 

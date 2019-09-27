@@ -1,16 +1,16 @@
 package com.fanglin.approval.vo;
 
 public class ApprovalDecorationHolonomyVO implements java.io.Serializable {
-	
+
 	private static final long serialVersionUID = 1863121293113776602L;
-	
+
 	private Long adhid;
-	
+
 	private Long aid;
-	
+
 	private String orderId;
-	
-	private Float materialPrice;
+
+	private Long materialPrice;
 
 	public Long getAdhid() {
 		return adhid;
@@ -36,11 +36,11 @@ public class ApprovalDecorationHolonomyVO implements java.io.Serializable {
 		this.orderId = orderId;
 	}
 
-	public Float getMaterialPrice() {
+	public Long getMaterialPrice() {
 		return materialPrice;
 	}
 
-	public void setMaterialPrice(Float materialPrice) {
+	public void setMaterialPrice(Long materialPrice) {
 		this.materialPrice = materialPrice;
 	}
 }

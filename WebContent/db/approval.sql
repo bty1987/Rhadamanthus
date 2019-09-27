@@ -41,9 +41,11 @@ CREATE TABLE `approvalcustomerorigintdecoration` (
   `type` tinyint(1) NOT NULL COMMENT '类型 0:半包,1:套餐,2:半价,3:满减',
   `salesmanType` varchar(16) NOT NULL COMMENT '房屋类别 0:期房,1:现房',
   `houseType` varchar(16) NOT NULL COMMENT '房屋类别 0:期房,1:现房',
+  `houseClass` varchar(32) NOT NULL,
   `resourceType` tinyint(1) NOT NULL COMMENT '资源类型 0:咨询,1:量房',
-  `code` varchar(255) NOT NULL,
-  `forms` varchar(255) NOT NULL,
+  `code` varchar(255) DEFAULT '',
+  `forms` varchar(255) DEFAULT '',
+  `suid` int(11) NOT NULL,
   PRIMARY KEY (`acodid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='客源转装修单';
 
@@ -57,8 +59,8 @@ CREATE TABLE `approvalcustomerorigintdecorationbelong` (
 
 DROP TABLE IF EXISTS `approvaldecorationactivity`;
 CREATE TABLE `approvaldecorationactivity` (
-  `adaId` int(11) NOT NULL AUTO_INCREMENT,
-  `aId` int(11) NOT NULL,
+  `adaid` int(11) NOT NULL AUTO_INCREMENT,
+  `aid` int(11) NOT NULL,
   `activityId` int(11) NOT NULL,
   `orderId` varchar(15) NOT NULL,
   `activityName` varchar(32) NOT NULL,
@@ -76,6 +78,8 @@ CREATE TABLE `approvaldecorationactivityitem` (
   `num` int(11) NOT NULL,
   `money` decimal(10,3) NOT NULL DEFAULT '0.000',
   `content` varchar(32) NOT NULL DEFAULT '',
+  `stateType` tinyint(1) NOT NULL COMMENT '附加类型(0到店/1定金/2签单/3抽奖/4特批/5购买/6其他)',
+  `asid` int(11) NOT NULL COMMENT '库存主键',
   PRIMARY KEY (`adaiid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='活动审批表';
 

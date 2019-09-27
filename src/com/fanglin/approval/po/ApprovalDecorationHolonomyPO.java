@@ -15,14 +15,14 @@ import javax.persistence.Table;
 public class ApprovalDecorationHolonomyPO implements Serializable {
 
 	private static final long serialVersionUID = -4327950869950843118L;
-	
+
 	private long adhid;
-	
+
 	private long aid;
-	
+
 	private String orderId;
-	
-	private float materialPrice;
+
+	private long materialPrice;
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -54,11 +54,11 @@ public class ApprovalDecorationHolonomyPO implements Serializable {
 	}
 
 	@Column(name = "materialPrice")
-	public float getMaterialPrice() {
+	public long getMaterialPrice() {
 		return materialPrice;
 	}
 
-	public void setMaterialPrice(float materialPrice) {
+	public void setMaterialPrice(long materialPrice) {
 		this.materialPrice = materialPrice;
 	}
 }

@@ -167,39 +167,40 @@ jQuery(function () {
             var $lis = com.focusPage('.item-orange', "#salesItemList");
 
             var $otherStatus = 0;
-
+            var index = 0;
             $lis && $lis.length && $.each($lis, function (i, v) {
-                
                 var $v = $(v);
-                
+
                 var $status = $v.attr('data-otherStatus');
                 
                 if ($status == 1) {
                     $otherStatus = 1;
                 }
                 var numberParam = $v.find("input[name='inputNumber']").val();
-                
+
                 if(numberParam != ""){
                     flgs = true;
-                    _option["salesItems[" + i + "].goods.gid"] = $v.attr("data-gid");
-                    _option["salesItems[" + i + "].color.cid"] = $v.attr("data-cid");
-                    _option["salesItems[" + i + "].format.fid"] = $v.attr("data-fid");
-                    _option["salesItems[" + i + "].purchase"] = $v.attr("data-purchase");
-                    _option["salesItems[" + i + "].selling"] = $v.attr("data-selling");
-                    _option["salesItems[" + i + "].discount"] = $v.attr("data-discount");
-                    _option["salesItems[" + i + "].disPrice"] = $v.attr("data-disPrice");
-                    _option["salesItems[" + i + "].postDis"] = $v.attr("data-postDis");
-                    _option["salesItems[" + i + "].price"] = $v.attr("data-price");
-                    _option["salesItems[" + i + "].num"] = numberParam;
-                    _option["salesItems[" + i + "].total"] = utils.accMul(numberParam, sales.priceArray[i]);
-                    _option["salesItems[" + i + "].comment"] = $v.attr("data-comment");
-                    _option["salesItems[" + i + "].rawCtype"] = $v.attr("data-rawCtype");
-                    _option["salesItems[" + i + "].rawCvalue"] = $v.attr("data-rawCvalue");
-                    _option["salesItems[" + i + "].ctype"] = $v.attr("data-rawCtype");
-                    _option["salesItems[" + i + "].cvalue"] = $v.attr("data-rawCvalue");
-                    _option["salesItems[" + i + "].priceType"] = $v.attr("data-priceType");
 
+                    _option["salesItems[" + index + "].goods.gid"] = $v.attr("data-gid");
+                    _option["salesItems[" + index + "].color.cid"] = $v.attr("data-cid");
+                    _option["salesItems[" + index + "].format.fid"] = $v.attr("data-fid");
+                    _option["salesItems[" + index + "].purchase"] = $v.attr("data-purchase");
+                    _option["salesItems[" + index + "].selling"] = $v.attr("data-selling");
+                    _option["salesItems[" + index + "].discount"] = $v.attr("data-discount");
+                    _option["salesItems[" + index + "].disPrice"] = $v.attr("data-disPrice");
+                    _option["salesItems[" + index + "].postDis"] = $v.attr("data-postDis");
+                    _option["salesItems[" + index + "].price"] = $v.attr("data-price");
+                    _option["salesItems[" + index + "].num"] = numberParam;
+                    _option["salesItems[" + index + "].total"] = utils.accMul(numberParam, sales.priceArray[i]);
+                    _option["salesItems[" + index + "].comment"] = $v.attr("data-comment");
+                    _option["salesItems[" + index + "].rawCtype"] = $v.attr("data-rawCtype");
+                    _option["salesItems[" + index + "].rawCvalue"] = $v.attr("data-rawCvalue");
+                    _option["salesItems[" + index + "].ctype"] = $v.attr("data-rawCtype");
+                    _option["salesItems[" + index + "].cvalue"] = $v.attr("data-rawCvalue");
+                    _option["salesItems[" + index + "].priceType"] = $v.attr("data-priceType");
+                    index+=1;
                 }
+
             });
             if(flgs){
                 com.post(api.inventory.addSales, _option, function (data) {

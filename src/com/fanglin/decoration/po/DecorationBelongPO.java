@@ -60,7 +60,7 @@ public class DecorationBelongPO implements Serializable {
 
 	private DepartmentPO region;
 
-	private float rate;
+	private int rate;
 
 	private UserPO operater;
 
@@ -130,11 +130,11 @@ public class DecorationBelongPO implements Serializable {
 	}
 
 	@JoinColumn(name = "rate")
-	public float getRate() {
+	public int getRate() {
 		return rate;
 	}
 
-	public void setRate(float rate) {
+	public void setRate(int rate) {
 		this.rate = rate;
 	}
 
@@ -183,7 +183,7 @@ public class DecorationBelongPO implements Serializable {
 		setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 		setOperater(operater);
 
-		setRate(1);
+		setRate(1000);
 		setDefaultFlag(DecorationBelongPO.DEFAULTFLAG_TRUE_INT);
 		setType(DecorationBelongPO.BELONGTYPE_DESIGN_INT);
 		setStatus(DecorationBelongPO.STATUS_INVALID_INT);
@@ -202,7 +202,7 @@ public class DecorationBelongPO implements Serializable {
 		setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 		setOperater(operater);
 		
-		setRate(1);
+		setRate(1000);
 		setDefaultFlag(DecorationBelongPO.DEFAULTFLAG_TRUE_INT);
 		setType(DecorationBelongPO.BELONGTYPE_SALESMAN_INT);
 		setStatus(DecorationBelongPO.STATUS_INVALID_INT);

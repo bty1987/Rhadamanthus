@@ -50,12 +50,6 @@ import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 
-/**
- * 审批材料退款Service(用于主材退货审批)
- * 
- * @author lenovo
- * 
- */
 @Service("approvalMaterialRefundService")
 @Transactional(readOnly = true)
 public class ApprovalMaterialRefundServiceImpl implements ApprovalMaterialRefundService {
@@ -132,26 +126,27 @@ public class ApprovalMaterialRefundServiceImpl implements ApprovalMaterialRefund
 	public int submitApprovalForMaterialRefund(ApprovalVO approvalVO, ApprovalMaterialRefundVO approvalMaterialRefundVO, List<ApprovalMaterialRefundItemVO> approvalMaterialRefundItemVOs, String userId, int company) throws FLException {
 
 		long mid = approvalMaterialRefundVO.getMid();
-		float dis = 0;
-		float disTotal = 0;
+
+		long dis = 0;
+		long disTotal = 0;
 
 		List<String> packageNames = new ArrayList<String>();// 新建套餐数组
 
-		// 通过主材订单编号,查出主材退货审批单
+		// 通过主材单编号,查出主材退货审批单
 		ApprovalPO approvalPO = approvalDao.queryApproval(ApprovalPO.APPROVAL_STATUS_INIT_INT, ApprovalPO.APPROVAL_TYPE_MATERIAL_REFUND_INT, String.valueOf(mid));
 
 		if (approvalPO != null) {
 			throw new FLException(240004, "正在审批中,不能提交新审批");
 		}
 
-		// 通过主材订单编号查询主财订单
+		// 通过主材单编号查询主财订单
 		MaterialPO materialPO = materialDao.get(mid);
 
 		if (materialPO == null) {
-			throw new FLException(180001, "主材订单不存在");
+			throw new FLException(180001, "主材单不存在");
 		}
 
-		// 通过主材订单编号,查询该主材付款信息
+		// 通过主材单编号,查询该主材付款信息
 		List<MaterialPaymentPO> materialPaymentPOs = materialPaymentDao.queryMaterialPaymentForInitByMid(mid);
 
 		if (materialPaymentPOs.size() > 0) {
@@ -162,7 +157,7 @@ public class ApprovalMaterialRefundServiceImpl implements ApprovalMaterialRefund
 		UserPO sender = userDao.queryUserByUserId(userId);
 
 		String refundType = approvalMaterialRefundVO.getType() == MaterialPO.STATUS_TYPE_FULLREFUND_INT ? "全退" : approvalMaterialRefundVO.getType() == MaterialPO.STATUS_TYPE_DAODAN_INT ? "倒单" : "退货";
-		String content = String.format("订单号:%s,主材订单号:%s,品牌:%s,退款金额:%s,应退金额:%s,类型:%s", materialPO.getOrderId(), materialPO.getNo(), materialPO.getBrand(), approvalMaterialRefundVO.getRefund(), approvalMaterialRefundVO.getReferMoney(), refundType);
+		String content = String.format("装修单号:%s,主材单号:%s,品牌:%s,退款金额:%.3f,应退金额:%s,类型:%s", materialPO.getOrderId(), materialPO.getNo(), materialPO.getBrand(), Arith.div(approvalMaterialRefundVO.getRefund(), 1000.0), Arith.div(approvalMaterialRefundVO.getReferMoney(), 1000.0), refundType);
 
 		approvalPO = new ApprovalPO().init(sender, receiver, String.valueOf(mid), ApprovalPO.APPROVAL_TYPE_MATERIAL_REFUND_INT, content, company);
 
@@ -180,7 +175,7 @@ public class ApprovalMaterialRefundServiceImpl implements ApprovalMaterialRefund
 			MaterialItemPO materialItemPO = materialItemDao.get(approvalMaterialRefundItemVO.getMaterialItem().getMiid());
 
 			if (materialItemPO == null) {
-				throw new FLException(180007, "主材订单不存在操作型号信息");
+				throw new FLException(180007, "主材单不存在操作型号信息");
 			}
 
 			if (materialItemPO.getNum() >= approvalMaterialRefundItemVO.getNum() && materialItemPO.getTotal() >= approvalMaterialRefundItemVO.getTotal()) {
@@ -189,7 +184,7 @@ public class ApprovalMaterialRefundServiceImpl implements ApprovalMaterialRefund
 				dis = Arith.mul(materialItemPO.getSalePrice(), approvalMaterialRefundItemVO.getNum());
 				disTotal = Arith.add(dis, disTotal);
 			} else {
-				throw new FLException(180008, "主材订单退货型号数量不足");
+				throw new FLException(180008, "主材单退货型号数量不足");
 			}
 
 			String packageName = materialItemPO.getPackageName();
@@ -201,9 +196,9 @@ public class ApprovalMaterialRefundServiceImpl implements ApprovalMaterialRefund
 			approvalMaterialRefundItemPO.setNum(approvalMaterialRefundItemVO.getNum());// 退货数量
 			approvalMaterialRefundItemPO.setTotal(approvalMaterialRefundItemVO.getTotal());// 退货金额
 			approvalMaterialRefundItemPO.setAmrId(approvalMaterialRefundPO.getAmrId());// 审批材料ID
-			approvalMaterialRefundItemPO.setMid(mid);// 主材订单编号
+			approvalMaterialRefundItemPO.setMid(mid);// 主材单编号
 			approvalMaterialRefundItemPO.setPackageName(packageName);// 套餐名
-			approvalMaterialRefundItemPO.setMaterialItem(materialItemPO);// 主材订单型号信息类
+			approvalMaterialRefundItemPO.setMaterialItem(materialItemPO);// 主材单型号信息类
 
 			approvalMaterialRefundItemDao.save(approvalMaterialRefundItemPO);
 
@@ -236,16 +231,16 @@ public class ApprovalMaterialRefundServiceImpl implements ApprovalMaterialRefund
 			throw new FLException(240003, "审批信息不完整");
 		}
 
-		// 通过审批材料退款类中的主材订单ID,查询主材订单编号内容
+		// 通过审批材料退款类中的主材单ID,查询主材单编号内容
 		MaterialPO materialPO = materialDao.get(approvalMaterialRefundPO.getMid());
 
 		if (materialPO == null) {
-			throw new FLException(180001, "主材订单不存在");
+			throw new FLException(180001, "主材单不存在");
 		}
 
 		MaterialPaymentPO materialPaymentPO = new MaterialPaymentPO();
 
-		materialPaymentPO.setMaterial(materialPO);// 主材订单信息类
+		materialPaymentPO.setMaterial(materialPO);// 主材单信息类
 
 		materialPaymentPO.setCategory(materialPO.getCategory());// 品类
 		materialPaymentPO.setBrand(materialPO.getBrand());// 品牌
@@ -261,21 +256,24 @@ public class ApprovalMaterialRefundServiceImpl implements ApprovalMaterialRefund
 
 		List<ApprovalMaterialRefundItemPO> approvalMaterialRefundItemPOs = approvalMaterialRefundItemDao.queryApprovalMaterialRefundItemByAmrId(approvalMaterialRefundPO.getAmrId());
 
-		float refundMoney = 0;
+		long refundMoney = 0;
 		int balanceStatus = materialPO.getBalanceStatus();// 结算状态
 		int ident = new Random().nextInt(9999);
+
 		List<String> materialItemPackageNameList = new ArrayList<String>();
+
 		for (ApprovalMaterialRefundItemPO approvalMaterialRefundItemPO : approvalMaterialRefundItemPOs) {
-			// 主材订单型号信息
+			// 主材单型号信息
 			MaterialItemPO materialItemPO = approvalMaterialRefundItemPO.getMaterialItem();
-			// 主材分批次退款类(用于主材订单型号信息管理)
+			// 主材分批次退款类(用于主材单型号信息管理)
 			MaterialRefundPO materialRefundPO = new MaterialRefundPO();
 
-			float num = approvalMaterialRefundItemPO.getNum();// 退货数量
-			float total = approvalMaterialRefundItemPO.getTotal();// 退货金额
+			long num = approvalMaterialRefundItemPO.getNum();// 退货数量
+			long total = approvalMaterialRefundItemPO.getTotal();// 退货金额
 
-			float salePrice = materialItemPO.getSalePrice(); // 折扣价
-			float price = materialItemPO.getPrice();// 价位
+			long salePrice = materialItemPO.getSalePrice(); // 折扣价
+			long price = materialItemPO.getPrice();// 价位
+
 			String packageName = materialItemPO.getPackageName();// 套餐名
 			BeanUtil.copyProperties(materialItemPO, materialRefundPO);
 
@@ -291,7 +289,7 @@ public class ApprovalMaterialRefundServiceImpl implements ApprovalMaterialRefund
 
 			if (balanceStatus == MaterialPO.BALANCE_STATUS_TYPE_PRE_INT || balanceStatus == MaterialPO.BALANCE_STATUS_TYPE_POST_INT) { // 预结算状态计算利润
 
-				float prePoint = materialItemPO.getPrePoint();
+				int prePoint = materialItemPO.getPrePoint();
 
 				if ("".equals(packageName)) { // 型号
 
@@ -310,7 +308,7 @@ public class ApprovalMaterialRefundServiceImpl implements ApprovalMaterialRefund
 				}
 			} else if (balanceStatus == MaterialPO.BALANCE_STATUS_TYPE_POST_INT) { // 结算状态计算利润
 
-				float postPoint = materialItemPO.getPostPoint();
+				int postPoint = materialItemPO.getPostPoint();
 
 				if ("".equals(packageName)) {
 					if (materialItemPO.getCalcType() == MaterialItemPO.CALCTYPE_TYPE_BASE_INT) {
@@ -335,7 +333,7 @@ public class ApprovalMaterialRefundServiceImpl implements ApprovalMaterialRefund
 			UserPO instore = userDao.queryUserByUserId(materialPO.getInstorer().getUserId());
 
 			MaterialBalancePO materialBalancePO = new MaterialBalancePO();
-			materialBalancePO.setMaterial(materialPO);// 主材订单信息类
+			materialBalancePO.setMaterial(materialPO);// 主材单信息类
 			materialBalancePO.setCreater(approvalPO.getSender());// 发送人
 			materialBalancePO.setInstorer(materialPO.getInstorer().getUserId() == null ? null : instore);// 驻店编号(括号内为:三目运算符)
 			materialBalancePO.setBalanceTime(DateUtil.getDateToTimestamp(new Date()));
@@ -360,8 +358,8 @@ public class ApprovalMaterialRefundServiceImpl implements ApprovalMaterialRefund
 	@Transactional(rollbackFor = Exception.class)
 	public int refuseForMaterialRefund(ApprovalPO approvalPO) throws FLException {
 
-		float dis = 0;
-		float disTotal = 0;
+		long dis = 0;
+		long disTotal = 0;
 
 		ApprovalMaterialRefundPO approvalMaterialRefundPO = approvalMaterialRefundDao.queryApprovalMaterialRefundByAId(approvalPO.getAid());
 
@@ -372,7 +370,7 @@ public class ApprovalMaterialRefundServiceImpl implements ApprovalMaterialRefund
 		MaterialPO materialPO = materialDao.get(approvalMaterialRefundPO.getMid());
 
 		if (materialPO == null) {
-			throw new FLException(180001, "主材订单不存在");
+			throw new FLException(180001, "主材单不存在");
 		}
 
 		List<String> packageNames = new ArrayList<String>();
@@ -383,7 +381,7 @@ public class ApprovalMaterialRefundServiceImpl implements ApprovalMaterialRefund
 			MaterialItemPO materialItemPO = approvalMaterialRefundItemPO.getMaterialItem();
 
 			if (materialItemPO == null) {
-				throw new FLException(180007, "主材订单不存在操作型号信息");
+				throw new FLException(180007, "主材单不存在操作型号信息");
 			}
 
 			String packageName = materialItemPO.getPackageName();

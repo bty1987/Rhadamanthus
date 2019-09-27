@@ -10,28 +10,11 @@ public class ApprovalSalesRefundVO implements java.io.Serializable {
 
 	private Long sid;
 
-	private Float refund;
-	
-	private Float refundTotal;
+	private Long refund;
+
+	private Long refundTotal;
 
 	private Short type;
-	
-
-	public Float getRefundTotal() {
-		return refundTotal;
-	}
-
-	public void setRefundTotal(Float refundTotal) {
-		this.refundTotal = refundTotal;
-	}
-
-	public Short getType() {
-		return type;
-	}
-
-	public void setType(Short type) {
-		this.type = type;
-	}
 
 	public Long getAsrid() {
 		return asrid;
@@ -57,14 +40,28 @@ public class ApprovalSalesRefundVO implements java.io.Serializable {
 		this.sid = sid;
 	}
 
-	public Float getRefund() {
+	public Long getRefund() {
 		return refund;
 	}
 
-	public void setRefund(Float refund) {
+	public void setRefund(Long refund) {
 		this.refund = refund;
 	}
 
+	public Long getRefundTotal() {
+		return refundTotal;
+	}
 
+	public void setRefundTotal(Long refundTotal) {
+		this.refundTotal = refundTotal;
+	}
+
+	public Short getType() {
+		return type;
+	}
+
+	public void setType(Short type) {
+		this.type = type;
+	}
 
 }

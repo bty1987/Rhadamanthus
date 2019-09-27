@@ -23,7 +23,7 @@ public class ProductionUserWorkFlowServiceImpl implements ProductionUserWorkFlow
 	private ProductionUserWorkFlowDao productionUserWorkFlowDao;
 
 	@Override
-	public List<ProductionUserWorkFlowVO> queryProductionUserWorkFlowsByPwfids(List<ProductionUserWorkFlowVO> productionUserWorkFlowVOs) {
+	public List<ProductionUserWorkFlowVO> queryProductionUserWorkFlowByPwfid(List<ProductionUserWorkFlowVO> productionUserWorkFlowVOs) {
 
 		List<ProductionUserWorkFlowVO> _productionUserWorkFlowVOs = new ArrayList<ProductionUserWorkFlowVO>();
 
@@ -32,13 +32,13 @@ public class ProductionUserWorkFlowServiceImpl implements ProductionUserWorkFlow
 			List<ProductionUserWorkFlowPO> productionUserWorkFlowPOs = productionUserWorkFlowDao.queryProductionUserWorkFlowByPwfid(productionUserWorkFlowVO.getProductionworkflow().getPwfid());
 
 			if (productionUserWorkFlowPOs.size() != 0) {
-
+				
 				for (ProductionUserWorkFlowPO productionUserWorkFlowPO : productionUserWorkFlowPOs) {
 					productionUserWorkFlowVO = new ProductionUserWorkFlowVO(new ProductionWorkFlowVO(), new UserBaseVO());
 					BeanUtil.copyProperties(productionUserWorkFlowPO, productionUserWorkFlowVO, Arrays.asList("productionworkflow", "operator"));
 					BeanUtil.copyProperties(productionUserWorkFlowPO.getProductionworkflow(), productionUserWorkFlowVO.getProductionworkflow(), Arrays.asList("workflow"));
 
-					BeanUtil.copyProperties(productionUserWorkFlowPO.getOperator(), productionUserWorkFlowPO.getOperator(), Arrays.asList("duty", "dept"));
+					BeanUtil.copyProperties(productionUserWorkFlowPO.getOperator(), productionUserWorkFlowVO.getOperator(), Arrays.asList("duty", "dept"));
 					_productionUserWorkFlowVOs.add(productionUserWorkFlowVO);
 				}
 

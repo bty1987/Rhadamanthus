@@ -26,7 +26,7 @@ public class DecorationBalancePO implements Serializable {
 	
 	private DecorationPO decoration;
 	
-	private float balance;
+	private long balance;
 	
 	private UserPO user;
 	
@@ -58,11 +58,11 @@ public class DecorationBalancePO implements Serializable {
 	}
 
 	@Column(name="balance")
-	public float getBalance() {
+	public long getBalance() {
 		return balance;
 	}
 
-	public void setBalance(float balance) {
+	public void setBalance(long balance) {
 		this.balance = balance;
 	}
 

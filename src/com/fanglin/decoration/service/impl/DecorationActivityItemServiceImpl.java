@@ -144,7 +144,7 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 
 		if (decorationActivityItemPO.getIsStock() == DecorationActivityItemPO.ISSTOCK_CAL_INT) {
 
-			float num = Arith.sub(awardStockPO.getNum(), decorationActivityItemPO.getNum());
+			int num = Arith.sub(awardStockPO.getNum(), decorationActivityItemPO.getNum());
 
 			if (num < 0) {
 				throw new FLException(160038, "库存不足");
@@ -186,7 +186,7 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 
 		if (decorationActivityItemPO.getIsStock() == DecorationActivityItemPO.ISSTOCK_CAL_INT) {
 
-			float num = Arith.sub(awardStockPO.getNum(), decorationActivityItemPO.getNum());
+			int num = Arith.sub(awardStockPO.getNum(), decorationActivityItemPO.getNum());
 
 			if (num < 0) {
 				throw new FLException(160038, "库存不足");
@@ -257,7 +257,7 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 
 		if (decorationActivityItemPO.getIsStock() == DecorationActivityItemPO.ISSTOCK_CAL_INT) {
 
-			float num = Arith.add(awardStockPO.getNum(), decorationActivityItemPO.getNum());
+			int num = Arith.add(awardStockPO.getNum(), decorationActivityItemPO.getNum());
 
 			awardStockPO.setNum(num);
 
@@ -322,8 +322,8 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		
 		List<DecorationActivityItemPO> decorationActivityItemPOs = decorationActivityItemDao.queryDecorationActivityItemByOrderId(orderId);
 
-		float couponCut = 0f;
-		float thingCut = 0f;
+		long couponCut = 0;
+		long thingCut = 0;
 
 		List<Short> types = Arrays.asList(DecorationActivityItemPO.TYPE_COUPON_INT, DecorationActivityItemPO.TYPE_SPECIALCOUPON_INT);
 		List<Short> states = Arrays.asList(DecorationActivityItemPO.STATUS_UNVALID_INT, DecorationActivityItemPO.STATUS_RETREAT_INT, DecorationActivityItemPO.STATUS_CONSUME_INT);
@@ -333,10 +333,9 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 			if (types.contains(decorationActivityItemPO.getType()) && !states.contains(decorationActivityItemPO.getState()) && decorationActivityItemPO.getIsPrefor() == DecorationActivityItemPO.ISPREFOR_CAL_INT) {
 				couponCut = Arith.add(couponCut, Arith.mul(decorationActivityItemPO.getMoney(), decorationActivityItemPO.getNum()));
 			} else if (Arrays.asList(DecorationActivityItemPO.TYPE_THING_INT, DecorationActivityItemPO.TYPE_SPECIALARTICLE_INT).contains(decorationActivityItemPO.getType()) && decorationActivityItemPO.getIsPrefor() == DecorationActivityItemPO.ISPREFOR_CAL_INT) {
-				thingCut = Arith.add(thingCut, Arith.mul(decorationActivityItemPO.getMoney(), decorationActivityItemPO.getNum()));
+				thingCut =  Arith.add(thingCut, Arith.mul(decorationActivityItemPO.getMoney(), decorationActivityItemPO.getNum()));
 			}
 		}
-
 		decorationPO.setCouponCut(couponCut);
 		decorationPO.setThingCut(thingCut);
 		decorationPO.setFactPrice(Arith.sub(decorationPO.getOrderTotalPrice(), couponCut));
@@ -350,8 +349,8 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 	
 	private void subDecorationForCut(DecorationPO decorationPO, DecorationActivityItemPO decorationActivityItemPO){
 		
-		float couponCut = decorationPO.getCouponCut();
-		float thingCut = decorationPO.getThingCut();
+		long couponCut = decorationPO.getCouponCut();
+		long thingCut = decorationPO.getThingCut();
 
 		if (Arrays.asList(DecorationActivityItemPO.TYPE_COUPON_INT, DecorationActivityItemPO.TYPE_SPECIALCOUPON_INT).contains(decorationActivityItemPO.getType()) && decorationActivityItemPO.getIsPrefor() == DecorationActivityItemPO.ISPREFOR_CAL_INT) {
 			couponCut = Arith.sub(couponCut, Arith.mul(decorationActivityItemPO.getMoney(), decorationActivityItemPO.getNum()));

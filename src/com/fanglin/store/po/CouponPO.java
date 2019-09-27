@@ -13,26 +13,26 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "coupon", catalog = "store")
-public class CouponPO implements Serializable{
+public class CouponPO implements Serializable {
 
 	private static final long serialVersionUID = -4328653080992704878L;
-	
+
 	public static final String COLUMN_CID_STR = "cid";
-	
+
 	public static final Short STATUS_ABLE_SHORT = 0;
-	
+
 	public static final Short STATUS_DISABLE_SHORT = 1;
-	
+
 	private long cid;
-	
+
 	private MgoodsPO mgoods;
-	
+
 	private String title;
-	
-	private float value;
-	
+
+	private long value;
+
 	private short type;
-	
+
 	private short status;
 
 	public CouponPO() {
@@ -64,7 +64,7 @@ public class CouponPO implements Serializable{
 	public void setMgoods(MgoodsPO mgoods) {
 		this.mgoods = mgoods;
 	}
-	
+
 	@Column(name = "title")
 	public String getTitle() {
 		return title;
@@ -75,19 +75,18 @@ public class CouponPO implements Serializable{
 	}
 
 	@Column(name = "value")
-	public float getValue() {
+	public long getValue() {
 		return value;
 	}
 
-	public void setValue(float value) {
+	public void setValue(long value) {
 		this.value = value;
 	}
-	
+
 	@Column(name = "type")
 	public short getType() {
 		return type;
 	}
-
 
 	public void setType(short type) {
 		this.type = type;

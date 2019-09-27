@@ -34,11 +34,11 @@ public class ExtensionPO implements Serializable {
 
 	private short type;
 
-	private float undisPrice;
+	private long undisPrice;
 
-	private float disPrice;
+	private long disPrice;
 
-	private float total;
+	private long total;
 
 	private short status;
 
@@ -76,29 +76,29 @@ public class ExtensionPO implements Serializable {
 	}
 
 	@Column(name = "undisPrice")
-	public float getUndisPrice() {
+	public long getUndisPrice() {
 		return undisPrice;
 	}
 
-	public void setUndisPrice(float undisPrice) {
+	public void setUndisPrice(long undisPrice) {
 		this.undisPrice = undisPrice;
 	}
 
 	@Column(name = "disPrice")
-	public float getDisPrice() {
+	public long getDisPrice() {
 		return disPrice;
 	}
 
-	public void setDisPrice(float disPrice) {
+	public void setDisPrice(long disPrice) {
 		this.disPrice = disPrice;
 	}
 
 	@Column(name = "total")
-	public float getTotal() {
+	public long getTotal() {
 		return total;
 	}
 
-	public void setTotal(float total) {
+	public void setTotal(long total) {
 		this.total = total;
 	}
 

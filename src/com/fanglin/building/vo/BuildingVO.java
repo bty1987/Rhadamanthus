@@ -8,42 +8,42 @@ import org.apache.struts2.json.annotations.JSON;
 import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.personel.vo.UserBaseVO;
 
-public class BuildingVO implements Serializable{
+public class BuildingVO implements Serializable {
 
 	private static final long serialVersionUID = -4319485351492418005L;
-	
+
 	private Long bid;
-	
+
 	private String no;
-	
-	private HouseSourceVO  houseSource;
-	
+
+	private HouseSourceVO houseSource;
+
 	private CustomerSourceVO customerSource;
-	
+
 	private CustomerVO houseSourceAgent;
-	
+
 	private CustomerVO customerSourceAgent;
-	
+
 	private UserBaseVO creater;
-	
+
 	private Timestamp createTime;
-	
+
 	private Timestamp signingTime;
-	
-	private Float tradePrice;
-	
-	private Float downpayment;
-	
-	private Float loanPrice;
-	
+
+	private Long tradePrice;
+
+	private Long downpayment;
+
+	private Long loanPrice;
+
 	private Short payType;
-	
+
 	private Short status;
-	
+
 	private BuildingNodeVO buildingNode;
-	
+
 	private Short balanceStatus;
-	
+
 	public BuildingVO() {
 		super();
 	}
@@ -131,27 +131,27 @@ public class BuildingVO implements Serializable{
 		this.signingTime = signingTime;
 	}
 
-	public Float getTradePrice() {
+	public Long getTradePrice() {
 		return tradePrice;
 	}
 
-	public void setTradePrice(Float tradePrice) {
+	public void setTradePrice(Long tradePrice) {
 		this.tradePrice = tradePrice;
 	}
 
-	public Float getDownpayment() {
+	public Long getDownpayment() {
 		return downpayment;
 	}
 
-	public void setDownpayment(Float downpayment) {
+	public void setDownpayment(Long downpayment) {
 		this.downpayment = downpayment;
 	}
 
-	public Float getLoanPrice() {
+	public Long getLoanPrice() {
 		return loanPrice;
 	}
 
-	public void setLoanPrice(Float loanPrice) {
+	public void setLoanPrice(Long loanPrice) {
 		this.loanPrice = loanPrice;
 	}
 
@@ -186,5 +186,5 @@ public class BuildingVO implements Serializable{
 	public void setBalanceStatus(Short balanceStatus) {
 		this.balanceStatus = balanceStatus;
 	}
-	
+
 }

@@ -38,7 +38,7 @@ $(function(){
             var $btnDiscount = $('<div></div>').addClass('pull-right');
             var $discountSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({"type" : "checkbox"});
             var $dspan = $('<span></span>').addClass('lbl');
-
+            
             var propertyArr = [
                 ["编号:", v.itemId, "blue"],
                 ["类型:", v.quotationType, "red"],
@@ -270,7 +270,8 @@ $(function(){
         'auto':true, // 是否自动上传
         'successTimeout':config.uploadTimeout, // 超时时间
         'formData':{
-            'uploadType':4
+            'uploadType':4,
+            'authentication': params.authentication
         },
         'buttonClass': 'btn btn-success col-sm-12',
         'overrideEvents' : ['onDialogClose'], // 不执行默认的onSelect事件
@@ -410,6 +411,7 @@ $(function(){
                 "quotationItem.addPrice": quotationItem.quotationItemItems.addPrice.val(),
                 "quotationItem.subPrice": quotationItem.quotationItemItems.subPrice.val()
             };
+            
             quotationItem.editFlg ? (a = api.quotation.updateQuotationItem, c["quotationItem.versionId"] = quotationItem.quotationItemItems.version.val(), c["quotationItem.version"] = "", c["quotationItem.qiId"] = quotationItem.quotationItemItems.qiId.val()) : (c["quotationItem.versionId"] = quotationItem.quotationItemItems.version.val(), c["quotationItem.version"] = "", a = api.quotation.addQuotationItem);
             com.post(a, c, successCallback, failCallback);
             quotationItem.modal.modal("hide");
@@ -422,13 +424,8 @@ $(function(){
         com.post(api.quotation.updateQuotationItemForStatus, {
             "quotationItem.qiId": id,
             "quotationItem.status": status
-        }, function () {
-
-        }, function () {
-            failcallBack && failcallBack();
         });
     }
-
 
     //是否打折设置
     function updateDiscount(id, discount, failcallBack) {
@@ -436,17 +433,12 @@ $(function(){
         com.post( api.quotation.updateQuotationItemForDiscount, {
             "quotationItem.qiId": id,
             "quotationItem.discount": discount
-        }, function () {
-
-        }, function () {
-            failcallBack && failcallBack();
         });
     }
 
     function successCallback() {
         com.showAlert(com.info, "\u64cd\u4f5c\u6210\u529f");
         quotationItemSeacher.doSearch();
-        //com.focusPage('#condList button').click();
     };
 
     function failCallback() {}

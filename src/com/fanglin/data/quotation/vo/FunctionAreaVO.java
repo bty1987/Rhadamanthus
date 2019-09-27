@@ -20,74 +20,74 @@ public class FunctionAreaVO implements Serializable {
 	private Long faId;
 
 	private String functionAreaId;
-	
+
 	private String functionAreaName;
 
 	private int functionAreaOrder;
-	
+
 	private String functionAreaType;
 
 	private String versionId;
-	
-	private String version;
-	
-	private Short type;
-	
-	private Float total;
 
-	public Long getFaId(){
+	private String version;
+
+	private Short type;
+
+	private Long total;
+
+	public Long getFaId() {
 		return faId;
 	}
 
-	public void setFaId(Long faId){
+	public void setFaId(Long faId) {
 		this.faId = faId;
 	}
 
-	public String getFunctionAreaId(){
+	public String getFunctionAreaId() {
 		return functionAreaId;
 	}
 
-	public void setFunctionAreaId(String functionAreaId){
+	public void setFunctionAreaId(String functionAreaId) {
 		this.functionAreaId = functionAreaId;
 	}
 
-	public String getFunctionAreaName(){
+	public String getFunctionAreaName() {
 		return functionAreaName;
 	}
 
-	public void setFunctionAreaName(String functionAreaName){
+	public void setFunctionAreaName(String functionAreaName) {
 		this.functionAreaName = functionAreaName;
 	}
 
-	public int getFunctionAreaOrder(){
+	public int getFunctionAreaOrder() {
 		return functionAreaOrder;
 	}
 
-	public void setFunctionAreaOrder(int functionAreaOrder){
+	public void setFunctionAreaOrder(int functionAreaOrder) {
 		this.functionAreaOrder = functionAreaOrder;
 	}
 
-	public String getFunctionAreaType(){
+	public String getFunctionAreaType() {
 		return functionAreaType;
 	}
 
-	public void setFunctionAreaType(String functionAreaType){
+	public void setFunctionAreaType(String functionAreaType) {
 		this.functionAreaType = functionAreaType;
 	}
 
-	public String getVersionId(){
+	public String getVersionId() {
 		return versionId;
 	}
 
-	public void setVersionId(String versionId){
+	public void setVersionId(String versionId) {
 		this.versionId = versionId;
 	}
 
-	public String getVersion(){
+	public String getVersion() {
 		return version;
 	}
 
-	public void setVersion(String version){
+	public void setVersion(String version) {
 		this.version = version;
 	}
 
@@ -99,11 +99,11 @@ public class FunctionAreaVO implements Serializable {
 		this.type = type;
 	}
 
-	public Float getTotal() {
+	public Long getTotal() {
 		return total;
 	}
 
-	public void setTotal(Float total) {
+	public void setTotal(Long total) {
 		this.total = total;
 	}
 

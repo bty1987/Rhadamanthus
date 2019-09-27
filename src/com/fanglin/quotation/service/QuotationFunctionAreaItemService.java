@@ -19,17 +19,17 @@ import com.fanglin.quotation.vo.QuotationFunctionAreaVO;
 import com.fanglin.quotation.vo.QuotationVO;
 
 public interface QuotationFunctionAreaItemService {
-	
-	public List<QuotationFunctionAreaItemVO> queryQuotationFunctionAreaItemByQuotationFunctionAreaId(QuotationFunctionAreaItemVO quotationFunctionAreaItemVO)throws FLException;
-	
+
+	public List<QuotationFunctionAreaItemVO> queryQuotationFunctionAreaItemByQuotationFunctionAreaId(QuotationFunctionAreaItemVO quotationFunctionAreaItemVO) throws FLException;
+
 	public QuotationFunctionAreaItemVO updateQuotationFunctionAreaItem(QuotationFunctionAreaItemVO quotationFunctionAreaItemVO, QuotationVO quotationVO) throws FLException;
-	
-	public int updateQuotationFunctionAreaItemForSpec(QuotationFunctionAreaItemVO quotationFunctionAreaItemVO) throws FLException;
-	
+
+	public int updateQuotationFunctionAreaItemForSpec(QuotationVO quotationVO, QuotationFunctionAreaItemVO quotationFunctionAreaItemVO) throws FLException;
+
 	public int updateQuotationFunctionAreaItemByQuotationIdAType(QuotationVO quotationVO, QuotationFunctionAreaItemVO quotationFunctionAreaItemVO) throws FLException;
-	
-	public int updateQuotationFunctionAreaItemForIndex(List<QuotationFunctionAreaItemVO> QuotationFunctionAreaItemVOs,QuotationFunctionAreaVO quotationFunctionAreaVO) throws FLException;
-	
-	public int deleteQuotationFunctionAreaItem(List<Long> qfaiIds, QuotationVO quotationVO,QuotationFunctionAreaVO quotationFunctionAreaVO) throws FLException;
-	
+
+	public int updateQuotationFunctionAreaItemForIndex(List<QuotationFunctionAreaItemVO> QuotationFunctionAreaItemVOs, QuotationFunctionAreaVO quotationFunctionAreaVO) throws FLException;
+
+	public int deleteQuotationFunctionAreaItem(List<Long> qfaiIds, QuotationVO quotationVO, QuotationFunctionAreaVO quotationFunctionAreaVO) throws FLException;
+
 }

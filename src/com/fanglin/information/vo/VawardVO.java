@@ -5,17 +5,17 @@ public class VawardVO implements java.io.Serializable {
 	private static final long serialVersionUID = 6736967069684576506L;
 
 	private Long vaid;
-	
+
 	private Long vpid;
-	
+
 	private String no;
-	
+
 	private String name;
-	
-	private Float price;
-	
-	private Float num;
-	
+
+	private Integer price;
+
+	private Integer num;
+
 	private Short status;
 
 	public Long getVaid() {
@@ -50,19 +50,19 @@ public class VawardVO implements java.io.Serializable {
 		this.name = name;
 	}
 
-	public Float getPrice() {
+	public Integer getPrice() {
 		return price;
 	}
 
-	public void setPrice(Float price) {
+	public void setPrice(Integer price) {
 		this.price = price;
 	}
 
-	public Float getNum() {
+	public Integer getNum() {
 		return num;
 	}
 
-	public void setNum(Float num) {
+	public void setNum(Integer num) {
 		this.num = num;
 	}
 
@@ -73,5 +73,5 @@ public class VawardVO implements java.io.Serializable {
 	public void setStatus(Short status) {
 		this.status = status;
 	}
-	
+
 }

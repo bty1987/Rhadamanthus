@@ -211,7 +211,7 @@ public class SalesDaoImpl extends DaoImpl<SalesPO> implements SalesDao {
 	@SuppressWarnings("unchecked")
 	public List<Object> querySalesActivityByTotal(String orderId) {
 		
-		String sql="select ac.`name`,sum(s.refermoney) from sales.sales sa,payment.salespayment s,information.activity ac where sa.sid=s.sid and s.status in (1,2) and sa.orderId= :orderId and sa.activityId=ac.aId group by sa.activityId";
+		String sql="select ac.`name`, sum(if(s.type in (2, 3), s.refermoney, -s.refermoney)) from sales.sales sa,payment.salespayment s,information.activity ac where sa.sid=s.sid and s.status in (1,2) and sa.orderId= :orderId and sa.activityId=ac.aId group by sa.activityId";
 		
 		List<Object> uniqueResult=session().createSQLQuery(sql).setString("orderId", orderId).list();
 		

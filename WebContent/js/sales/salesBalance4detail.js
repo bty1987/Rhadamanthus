@@ -150,7 +150,6 @@ $(function(){
                                "salesItem.ctype":ctype,
                                "salesItem.cvalue":cvalue
                            };
-
                            com.post(api.inventory.updateSalesItemForBalance,_option,function(res){
                                com.showAlert(com.info, "更改成功");
                                viewSalesItems(salesBalance4detail._sid);

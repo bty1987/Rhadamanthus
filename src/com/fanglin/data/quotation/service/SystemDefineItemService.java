@@ -19,23 +19,19 @@ import com.fanglin.data.quotation.vo.SystemDefineItemVO;
 import com.fanglin.utils.Paging;
 
 public interface SystemDefineItemService {
-	
-	public void pageSystemDefineItem(Paging paging, List<Filter> filters,int company);
-	
-	public SystemDefineItemVO querySystemDefineItemByItemId(SystemDefineItemVO systemDefineItemVO,int company) throws FLException;
-	
-	public int addSystemDefineItem(SystemDefineItemVO systemDefineItemVO,int company) throws FLException;
-	
+
+	public void pageSystemDefineItem(Paging paging, List<Filter> filters, int company);
+
+	public SystemDefineItemVO querySystemDefineItemByItemId(SystemDefineItemVO systemDefineItemVO, int company) throws FLException;
+
+	public int addSystemDefineItem(SystemDefineItemVO systemDefineItemVO, int company) throws FLException;
+
 	public int updateSystemDefineItem(SystemDefineItemVO systemDefineItemVO) throws FLException;
-	
+
 	public int updateSystemDefineItemForStatus(SystemDefineItemVO systemDefineItemVO) throws FLException;
-	
+
 	public int updateSystemDefineItemForDiscount(SystemDefineItemVO systemDefineItemVO) throws FLException;
-	
+
 	public void deleteSystemDefineItem(SystemDefineItemVO systemDefineItemVO);
-
-	public void deleteSystemDefineItemById(int id);
-
-	public void deleteSystemDefineItemByIds(List<Long> ids);
 
 }

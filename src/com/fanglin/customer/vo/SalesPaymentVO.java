@@ -11,7 +11,7 @@ public class SalesPaymentVO implements Serializable {
 
 	private String orderId;
 
-	private Float money;
+	private Long money;
 
 	private Short status;
 
@@ -54,11 +54,11 @@ public class SalesPaymentVO implements Serializable {
 		this.paymentType = paymentType;
 	}
 
-	public Float getMoney() {
+	public Long getMoney() {
 		return money;
 	}
 
-	public void setMoney(Float money) {
+	public void setMoney(Long money) {
 		this.money = money;
 	}
 

@@ -5,27 +5,27 @@ public class SubjectBalanceVO implements java.io.Serializable {
 	private static final long serialVersionUID = -6855897866528112894L;
 
 	private Long sbId;
-	
+
 	private SubjectVO subject;
-	
+
 	private String period;
-	
-	private Float total;
-	
-	private Float initial;
-	
-	private Float balance;
-	
-	private Float debit;
-	
-	private Float credit;
-	
-	private Float annual;
-	
-	private Float adebit;
-	
-	private Float acredit;
-	
+
+	private Long total;
+
+	private Long initial;
+
+	private Long balance;
+
+	private Long debit;
+
+	private Long credit;
+
+	private Long annual;
+
+	private Long adebit;
+
+	private Long acredit;
+
 	private Short status;
 
 	public Long getSbId() {
@@ -52,67 +52,67 @@ public class SubjectBalanceVO implements java.io.Serializable {
 		this.period = period;
 	}
 
-	public Float getTotal() {
+	public Long getTotal() {
 		return total;
 	}
 
-	public void setTotal(Float total) {
+	public void setTotal(Long total) {
 		this.total = total;
 	}
 
-	public Float getInitial() {
+	public Long getInitial() {
 		return initial;
 	}
 
-	public void setInitial(Float initial) {
+	public void setInitial(Long initial) {
 		this.initial = initial;
 	}
 
-	public Float getBalance() {
+	public Long getBalance() {
 		return balance;
 	}
 
-	public void setBalance(Float balance) {
+	public void setBalance(Long balance) {
 		this.balance = balance;
 	}
 
-	public Float getAnnual() {
+	public Long getAnnual() {
 		return annual;
 	}
 
-	public void setAnnual(Float annual) {
+	public void setAnnual(Long annual) {
 		this.annual = annual;
 	}
 
-	public Float getDebit() {
+	public Long getDebit() {
 		return debit;
 	}
 
-	public void setDebit(Float debit) {
+	public void setDebit(Long debit) {
 		this.debit = debit;
 	}
 
-	public Float getCredit() {
+	public Long getCredit() {
 		return credit;
 	}
 
-	public void setCredit(Float credit) {
+	public void setCredit(Long credit) {
 		this.credit = credit;
 	}
 
-	public Float getAdebit() {
+	public Long getAdebit() {
 		return adebit;
 	}
 
-	public void setAdebit(Float adebit) {
+	public void setAdebit(Long adebit) {
 		this.adebit = adebit;
 	}
 
-	public Float getAcredit() {
+	public Long getAcredit() {
 		return acredit;
 	}
 
-	public void setAcredit(Float acredit) {
+	public void setAcredit(Long acredit) {
 		this.acredit = acredit;
 	}
 

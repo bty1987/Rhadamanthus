@@ -15,11 +15,11 @@ public class AuditRecordVO implements Serializable{
 	
 	private String comment;
 	
-	private Float unitprice;
+	private Long unitprice;
 	
-	private Float num;
+	private Long num;
 	
-	private Float discount;
+	private Long discount;
 	
 	private UserVO creater;
 	
@@ -60,27 +60,27 @@ public class AuditRecordVO implements Serializable{
 		this.comment = comment;
 	}
 
-	public Float getUnitprice() {
+	public Long getUnitprice() {
 		return unitprice;
 	}
 
-	public void setUnitprice(Float unitprice) {
+	public void setUnitprice(Long unitprice) {
 		this.unitprice = unitprice;
 	}
 
-	public Float getNum() {
+	public Long getNum() {
 		return num;
 	}
 
-	public void setNum(Float num) {
+	public void setNum(Long num) {
 		this.num = num;
 	}
 
-	public Float getDiscount() {
+	public Long getDiscount() {
 		return discount;
 	}
 
-	public void setDiscount(Float discount) {
+	public void setDiscount(Long discount) {
 		this.discount = discount;
 	}
 

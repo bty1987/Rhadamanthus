@@ -73,9 +73,9 @@ public class DecorationActivityItemPO implements java.io.Serializable {
 
 	private short state;
 
-	private float num;
+	private int num;
 
-	private float money;
+	private int money;
 
 	private String content;
 
@@ -165,20 +165,20 @@ public class DecorationActivityItemPO implements java.io.Serializable {
 	}
 
 	@Column(name = "num")
-	public float getNum() {
+	public int getNum() {
 		return this.num;
 	}
 
-	public void setNum(float num) {
+	public void setNum(int num) {
 		this.num = num;
 	}
 
 	@Column(name = "money")
-	public float getMoney() {
+	public int getMoney() {
 		return this.money;
 	}
 
-	public void setMoney(float money) {
+	public void setMoney(int money) {
 		this.money = money;
 	}
 

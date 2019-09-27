@@ -15,11 +15,11 @@ public class ExtensionVO implements Serializable {
 
 	private Short type;
 
-	private Float undisPrice;
+	private Long undisPrice;
 
-	private Float disPrice;
+	private Long disPrice;
 
-	private Float total;
+	private Long total;
 
 	private Short status;
 
@@ -51,27 +51,27 @@ public class ExtensionVO implements Serializable {
 		this.type = type;
 	}
 
-	public Float getUndisPrice() {
+	public Long getUndisPrice() {
 		return undisPrice;
 	}
 
-	public void setUndisPrice(Float undisPrice) {
+	public void setUndisPrice(Long undisPrice) {
 		this.undisPrice = undisPrice;
 	}
 
-	public Float getDisPrice() {
+	public Long getDisPrice() {
 		return disPrice;
 	}
 
-	public void setDisPrice(Float disPrice) {
+	public void setDisPrice(Long disPrice) {
 		this.disPrice = disPrice;
 	}
 
-	public Float getTotal() {
+	public Long getTotal() {
 		return total;
 	}
 
-	public void setTotal(Float total) {
+	public void setTotal(Long total) {
 		this.total = total;
 	}
 

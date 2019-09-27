@@ -16,59 +16,59 @@ import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.personel.po.UserPO;
 
 @Entity
-@Table(name="building", catalog = "building")
-public class BuildingPO implements Serializable{
+@Table(name = "building", catalog = "building")
+public class BuildingPO implements Serializable {
 
 	private static final long serialVersionUID = -4319485351492418004L;
-	
+
 	public static final String COLUMN_BID_STR = "bid";
-	
+
 	public static final String COLUMN_NO_STR = "no";
-	
+
 	public static final String COLUMN_HSID_STR = "houseSource.hsid";
-	
+
 	public static final String COLUMN_CSID_STR = "customerSource.csid";
-	
-	public static final short STATUS_SIGN_SHORT  = 0;
-	
-	public static final short STATUS_DISABLE_SHORT  = 1;
-	
+
+	public static final short STATUS_SIGN_SHORT = 0;
+
+	public static final short STATUS_DISABLE_SHORT = 1;
+
 	private long bid;
-	
+
 	private String no;
-	
-	private HouseSourcePO  houseSource;
-	
+
+	private HouseSourcePO houseSource;
+
 	private CustomerSourcePO customerSource;
-	
+
 	private CustomerPO houseSourceAgent;
-	
+
 	private CustomerPO customerSourceAgent;
-	
+
 	private UserPO creater;
-	
+
 	private Timestamp createTime;
-	
+
 	private Timestamp signingTime;
-	
-	private float tradePrice;
-	
-	private float downpayment;
-	
-	private float loanPrice;
-	
+
+	private long tradePrice;
+
+	private long downpayment;
+
+	private long loanPrice;
+
 	private short payType;
-	
+
 	private short status;
-	
+
 	private BuildingNodePO buildingNode;
-	
+
 	private short balanceStatus;
-	
+
 	public BuildingPO() {
 		super();
 	}
-	
+
 	public BuildingPO(HouseSourcePO houseSource, CustomerSourcePO customerSource, CustomerPO houseSourceAgent, CustomerPO customerSourceAgent, UserPO creater, BuildingNodePO buildingNode) {
 		super();
 		this.houseSource = houseSource;
@@ -78,10 +78,10 @@ public class BuildingPO implements Serializable{
 		this.creater = creater;
 		this.buildingNode = buildingNode;
 	}
-	
+
 	@Id
 	@GeneratedValue
-	@Column(name="bid")
+	@Column(name = "bid")
 	public long getBid() {
 		return bid;
 	}
@@ -90,7 +90,7 @@ public class BuildingPO implements Serializable{
 		this.bid = bid;
 	}
 
-	@Column(name="no")
+	@Column(name = "no")
 	public String getNo() {
 		return no;
 	}
@@ -100,7 +100,7 @@ public class BuildingPO implements Serializable{
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "hsid", referencedColumnName="hsid")
+	@JoinColumn(name = "hsid", referencedColumnName = "hsid")
 	public HouseSourcePO getHouseSource() {
 		return houseSource;
 	}
@@ -110,7 +110,7 @@ public class BuildingPO implements Serializable{
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "csid", referencedColumnName="csid")
+	@JoinColumn(name = "csid", referencedColumnName = "csid")
 	public CustomerSourcePO getCustomerSource() {
 		return customerSource;
 	}
@@ -120,7 +120,7 @@ public class BuildingPO implements Serializable{
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "hacid", referencedColumnName="cid")
+	@JoinColumn(name = "hacid", referencedColumnName = "cid")
 	public CustomerPO getHouseSourceAgent() {
 		return houseSourceAgent;
 	}
@@ -130,7 +130,7 @@ public class BuildingPO implements Serializable{
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "cacid", referencedColumnName="cid")
+	@JoinColumn(name = "cacid", referencedColumnName = "cid")
 	public CustomerPO getCustomerSourceAgent() {
 		return customerSourceAgent;
 	}
@@ -140,7 +140,7 @@ public class BuildingPO implements Serializable{
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "cuid", referencedColumnName="uid")
+	@JoinColumn(name = "cuid", referencedColumnName = "uid")
 	public UserPO getCreater() {
 		return creater;
 	}
@@ -149,7 +149,7 @@ public class BuildingPO implements Serializable{
 		this.creater = creater;
 	}
 
-	@Column(name="createTime")
+	@Column(name = "createTime")
 	public Timestamp getCreateTime() {
 		return createTime;
 	}
@@ -158,7 +158,7 @@ public class BuildingPO implements Serializable{
 		this.createTime = createTime;
 	}
 
-	@Column(name="signingTime")
+	@Column(name = "signingTime")
 	public Timestamp getSigningTime() {
 		return signingTime;
 	}
@@ -167,34 +167,34 @@ public class BuildingPO implements Serializable{
 		this.signingTime = signingTime;
 	}
 
-	@Column(name="tradePrice")
-	public float getTradePrice() {
+	@Column(name = "tradePrice")
+	public long getTradePrice() {
 		return tradePrice;
 	}
 
-	public void setTradePrice(float tradePrice) {
+	public void setTradePrice(long tradePrice) {
 		this.tradePrice = tradePrice;
 	}
 
-	@Column(name="downpayment")
-	public float getDownpayment() {
+	@Column(name = "downpayment")
+	public long getDownpayment() {
 		return downpayment;
 	}
 
-	public void setDownpayment(float downpayment) {
+	public void setDownpayment(long downpayment) {
 		this.downpayment = downpayment;
 	}
 
-	@Column(name="loanPrice")
-	public float getLoanPrice() {
+	@Column(name = "loanPrice")
+	public long getLoanPrice() {
 		return loanPrice;
 	}
 
-	public void setLoanPrice(float loanPrice) {
+	public void setLoanPrice(long loanPrice) {
 		this.loanPrice = loanPrice;
 	}
 
-	@Column(name="payType")
+	@Column(name = "payType")
 	public short getPayType() {
 		return payType;
 	}
@@ -203,7 +203,7 @@ public class BuildingPO implements Serializable{
 		this.payType = payType;
 	}
 
-	@Column(name="status")
+	@Column(name = "status")
 	public short getStatus() {
 		return status;
 	}
@@ -211,9 +211,9 @@ public class BuildingPO implements Serializable{
 	public void setStatus(short status) {
 		this.status = status;
 	}
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "bnid", referencedColumnName="bnid")
+	@JoinColumn(name = "bnid", referencedColumnName = "bnid")
 	public BuildingNodePO getBuildingNode() {
 		return buildingNode;
 	}
@@ -222,7 +222,7 @@ public class BuildingPO implements Serializable{
 		this.buildingNode = buildingNode;
 	}
 
-	@Column(name="balanceStatus")
+	@Column(name = "balanceStatus")
 	public short getBalanceStatus() {
 		return balanceStatus;
 	}
@@ -230,5 +230,5 @@ public class BuildingPO implements Serializable{
 	public void setBalanceStatus(short balanceStatus) {
 		this.balanceStatus = balanceStatus;
 	}
-	
+
 }

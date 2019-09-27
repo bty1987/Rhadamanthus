@@ -56,7 +56,7 @@ public class VustomerPO implements Serializable {
 
 	private String orderId;
 
-	private float contractPrice;
+	private long contractPrice;
 
 	private short status;
 
@@ -160,11 +160,11 @@ public class VustomerPO implements Serializable {
 	}
 
 	@Column(name = "contractPrice")
-	public float getContractPrice() {
+	public long getContractPrice() {
 		return contractPrice;
 	}
 
-	public void setContractPrice(float contractPrice) {
+	public void setContractPrice(long contractPrice) {
 		this.contractPrice = contractPrice;
 	}
 

@@ -24,20 +24,27 @@ public class DecorationAccountPO implements Serializable{
 	
 	private short type;
 	
-	private float maching;
+	private short arcal;
 	
-	private float discount;
+	private int matching;
 	
-	private float projectPrice;
+	private int discount;
 	
-	private float materialPrice;
+	private long discountBase;
 	
-	private float servicePrice;
+	private int serviceRate;
 	
-	private float serviceRate;
+	private long materialPrice;
 	
-	private float projectBase;
+	private long servicePrice;
 	
+	private long difference;
+	
+	private long coupon;
+	
+	private long fulldel;
+	
+	private long cashback;
 	
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -68,66 +75,103 @@ public class DecorationAccountPO implements Serializable{
 		this.type = type;
 	}
 
-	@Column(name = "maching")
-	public float getMaching() {
-		return maching;
+	@Column(name = "matching")
+	public int getMatching() {
+		return matching;
 	}
 
-	public void setMaching(float maching) {
-		this.maching = maching;
+	public void setMatching(int matching) {
+		this.matching = matching;
 	}
 
 	@Column(name = "discount")
-	public float getDiscount() {
+	public int getDiscount() {
 		return discount;
 	}
 
-	public void setDiscount(float discount) {
+	public void setDiscount(int discount) {
 		this.discount = discount;
 	}
 
-	@Column(name = "projectPrice")
-	public float getProjectPrice() {
-		return projectPrice;
-	}
-
-	public void setProjectPrice(float projectPrice) {
-		this.projectPrice = projectPrice;
-	}
-
 	@Column(name = "materialPrice")
-	public float getMaterialPrice() {
+	public long getMaterialPrice() {
 		return materialPrice;
 	}
 
-	public void setMaterialPrice(float materialPrice) {
+	public void setMaterialPrice(long materialPrice) {
 		this.materialPrice = materialPrice;
 	}
 
 	@Column(name = "servicePrice")
-	public float getServicePrice() {
+	public long getServicePrice() {
 		return servicePrice;
 	}
 
-	public void setServicePrice(float servicePrice) {
+	public void setServicePrice(long servicePrice) {
 		this.servicePrice = servicePrice;
 	}
 
 	@Column(name = "serviceRate")
-	public float getServiceRate() {
+	public int getServiceRate() {
 		return serviceRate;
 	}
 
-	public void setServiceRate(float serviceRate) {
+	public void setServiceRate(int serviceRate) {
 		this.serviceRate = serviceRate;
 	}
-	
-	@Column(name = "projectBase")
-	public float getProjectBase() {
-		return projectBase;
+
+	@Column(name = "arcal")
+	public short getArcal() {
+		return arcal;
 	}
 
-	public void setProjectBase(float projectBase) {
-		this.projectBase = projectBase;
+	public void setArcal(short arcal) {
+		this.arcal = arcal;
 	}
+
+	@Column(name = "discountBase")
+	public long getDiscountBase() {
+		return discountBase;
+	}
+
+	public void setDiscountBase(long discountBase) {
+		this.discountBase = discountBase;
+	}
+
+	@Column(name = "difference")
+	public long getDifference() {
+		return difference;
+	}
+
+	public void setDifference(long difference) {
+		this.difference = difference;
+	}
+
+	@Column(name = "coupon")
+	public long getCoupon() {
+		return coupon;
+	}
+
+	public void setCoupon(long coupon) {
+		this.coupon = coupon;
+	}
+
+	@Column(name = "fulldel")
+	public long getFulldel() {
+		return fulldel;
+	}
+
+	public void setFulldel(long fulldel) {
+		this.fulldel = fulldel;
+	}
+
+	@Column(name = "cashback")
+	public long getCashback() {
+		return cashback;
+	}
+
+	public void setCashback(long cashback) {
+		this.cashback = cashback;
+	}
+	
 }

@@ -2,24 +2,24 @@ package com.fanglin.store.vo;
 
 import java.io.Serializable;
 
-public class MpriceVO implements Serializable{
+public class MpriceVO implements Serializable {
 
 	private static final long serialVersionUID = 9110830259505743618L;
 
 	private Long pid;
-	
+
 	private String name;
-	
-	private Float price;
-	
+
+	private Long price;
+
 	private MgoodsVO mgoods;
-	
+
 	private McolorVO mcolor;
-	
+
 	private MformatVO mformat;
-	
+
 	private String img;
-	
+
 	private Short status;
 
 	public MpriceVO() {
@@ -49,11 +49,11 @@ public class MpriceVO implements Serializable{
 		this.name = name;
 	}
 
-	public Float getPrice() {
+	public Long getPrice() {
 		return price;
 	}
 
-	public void setPrice(Float price) {
+	public void setPrice(Long price) {
 		this.price = price;
 	}
 
@@ -97,5 +97,4 @@ public class MpriceVO implements Serializable{
 		this.status = status;
 	}
 
-	
 }

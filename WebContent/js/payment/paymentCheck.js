@@ -357,7 +357,7 @@ jQuery(function($) {
 					["订单号","orderId"],
 					['收款类型','type'],
 					['预付款类型','paymentType'],
-					['操作金额','balance'],
+					['操作金额','recharge'],
 					['收款人', 'collectUser.currentName'],
 					['收款时间', 'collectTime'],
 					['状态', 'status'],

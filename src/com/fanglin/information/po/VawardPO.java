@@ -13,27 +13,27 @@ import javax.persistence.Table;
 public class VawardPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 4682511626604180928L;
-	
+
 	public static final short STATUS_INIT_INT = 0;
 
 	private long vaid;
-	
+
 	private long vpid;
-	
+
 	private String no;
-	
+
 	private String name;
-	
-	private float price;
-	
-	private float num;
-	
+
+	private int price;
+
+	private int num;
+
 	private short status;
-	
+
 	public VawardPO() {
 		super();
 	}
-	
+
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "vaid")
@@ -44,7 +44,7 @@ public class VawardPO implements java.io.Serializable {
 	public void setVaid(long vaid) {
 		this.vaid = vaid;
 	}
-	
+
 	@Column(name = "vpid")
 	public long getVpid() {
 		return vpid;
@@ -73,20 +73,20 @@ public class VawardPO implements java.io.Serializable {
 	}
 
 	@Column(name = "price")
-	public float getPrice() {
+	public int getPrice() {
 		return price;
 	}
 
-	public void setPrice(float price) {
+	public void setPrice(int price) {
 		this.price = price;
 	}
 
 	@Column(name = "num")
-	public float getNum() {
+	public int getNum() {
 		return num;
 	}
 
-	public void setNum(float num) {
+	public void setNum(int num) {
 		this.num = num;
 	}
 
@@ -99,5 +99,4 @@ public class VawardPO implements java.io.Serializable {
 		this.status = status;
 	}
 
-	
 }

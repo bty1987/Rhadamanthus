@@ -13,69 +13,69 @@ import javax.persistence.Table;
 public class MaterialRefundPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 8113424076445112728L;
-	
+
 	public static final int STATUS_TYPE_REFUND_INT = 0;
-	
+
 	public static final int STATUS_TYPE_CANCEL_INT = 1;
-	
+
 	public static final int STATUS_TYPE_PAYMENTCOLLECT_INT = 2;
-	
+
 	public static final int STATUS_TYPE_PAYMENTCONFIRM_INT = 3;
-	
+
 	public static final String COLUMN_MID_STR = "mid";
-	
+
 	public static final String COLUMN_MSOIID_STR = "miid";
-	
+
 	public static final String COLUMN_MPID_STR = "mpId";
-	
+
 	public static final String COLUMN_IDENT_STR = "ident";
-	
+
 	public static final String COLUMN_STATUS_STR = "status";
-	
+
 	private long mrid;
-	
+
 	private long mid;
-	
+
 	private long miid;
-	
+
 	private long mpId;
-	
+
 	private int ident;
-	
+
 	private String no;
-	
+
 	private String name;
-	
+
 	private String category;
-	
+
 	private String brand;
-	
+
 	private String measurementUnit;
-	
+
 	private String packageName;
-	
-	private float unitPrice;
-	
-	private float purchasePrice;
-	
-	private float salePrice;
-	
-	private float price;
-	
-	private float discount;
-	
-	private float postDiscount;
-	
-	private float num;
-	
-	private float total;
-	
+
+	private int unitPrice;
+
+	private int purchasePrice;
+
+	private long salePrice;
+
+	private long price;
+
+	private int discount;
+
+	private int postDiscount;
+
+	private long num;
+
+	private long total;
+
 	private int status;
-	
+
 	private int balanceType;
-	
-	private float prePoint;
-	
+
+	private int prePoint;
+
 	private String comment;
 
 	@Id
@@ -180,74 +180,74 @@ public class MaterialRefundPO implements java.io.Serializable {
 	}
 
 	@Column(name = "unitPrice")
-	public float getUnitPrice() {
+	public int getUnitPrice() {
 		return unitPrice;
 	}
 
-	public void setUnitPrice(float unitPrice) {
+	public void setUnitPrice(int unitPrice) {
 		this.unitPrice = unitPrice;
 	}
 
 	@Column(name = "purchasePrice")
-	public float getPurchasePrice() {
+	public int getPurchasePrice() {
 		return purchasePrice;
 	}
 
-	public void setPurchasePrice(float purchasePrice) {
+	public void setPurchasePrice(int purchasePrice) {
 		this.purchasePrice = purchasePrice;
 	}
 
 	@Column(name = "salePrice")
-	public float getSalePrice() {
+	public long getSalePrice() {
 		return salePrice;
 	}
 
-	public void setSalePrice(float salePrice) {
+	public void setSalePrice(long salePrice) {
 		this.salePrice = salePrice;
 	}
 
 	@Column(name = "price")
-	public float getPrice() {
+	public long getPrice() {
 		return price;
 	}
 
-	public void setPrice(float price) {
+	public void setPrice(long price) {
 		this.price = price;
 	}
 
 	@Column(name = "discount")
-	public float getDiscount() {
+	public int getDiscount() {
 		return discount;
 	}
 
-	public void setDiscount(float discount) {
+	public void setDiscount(int discount) {
 		this.discount = discount;
 	}
 
 	@Column(name = "postDiscount")
-	public float getPostDiscount() {
+	public int getPostDiscount() {
 		return postDiscount;
 	}
 
-	public void setPostDiscount(float postDiscount) {
+	public void setPostDiscount(int postDiscount) {
 		this.postDiscount = postDiscount;
 	}
 
 	@Column(name = "num")
-	public float getNum() {
+	public long getNum() {
 		return num;
 	}
 
-	public void setNum(float num) {
+	public void setNum(long num) {
 		this.num = num;
 	}
 
 	@Column(name = "total")
-	public float getTotal() {
+	public long getTotal() {
 		return total;
 	}
 
-	public void setTotal(float total) {
+	public void setTotal(long total) {
 		this.total = total;
 	}
 
@@ -268,13 +268,13 @@ public class MaterialRefundPO implements java.io.Serializable {
 	public void setBalanceType(int balanceType) {
 		this.balanceType = balanceType;
 	}
-	
+
 	@Column(name = "prePoint")
-	public float getPrePoint() {
+	public int getPrePoint() {
 		return prePoint;
 	}
 
-	public void setPrePoint(float prePoint) {
+	public void setPrePoint(int prePoint) {
 		this.prePoint = prePoint;
 	}
 
@@ -286,5 +286,5 @@ public class MaterialRefundPO implements java.io.Serializable {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	
+
 }

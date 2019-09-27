@@ -14,8 +14,8 @@ public class PaymentVO implements Serializable {
 	private Timestamp collectTime;
 
 	private Short paymentType;
-	
-	private Float money;
+
+	private Long money;
 
 	private Short type;
 
@@ -44,11 +44,11 @@ public class PaymentVO implements Serializable {
 		this.paymentType = paymentType;
 	}
 
-	public Float getMoney() {
+	public Long getMoney() {
 		return money;
 	}
 
-	public void setMoney(Float money) {
+	public void setMoney(Long money) {
 		this.money = money;
 	}
 

@@ -12,19 +12,27 @@ public class DecorationAccountVO implements Serializable{
 	
 	private Short type;
 	
-	private Float maching;
+	private Short arcal;
 	
-	private Float discount;
+	private Integer matching;
 	
-	private Float projectPrice;
+	private Integer discount;
 	
-	private Float materialPrice;
+	private Long discountBase;
 	
-	private Float servicePrice;
+	private Integer serviceRate;
 	
-	private Float serviceRate;
+	private Long materialPrice;
 	
-	private Float projectBase;
+	private Long servicePrice;
+	
+	private Long difference;
+	
+	private Long coupon;
+	
+	private Long fulldel;
+	
+	private Long cashback;
 	
 	public Long getDaid() {
 		return daid;
@@ -50,59 +58,91 @@ public class DecorationAccountVO implements Serializable{
 		this.type = type;
 	}
 
-	public Float getMaching() {
-		return maching;
+	public Integer getMatching() {
+		return matching;
 	}
 
-	public void setMaching(Float maching) {
-		this.maching = maching;
+	public void setMatching(Integer matching) {
+		this.matching = matching;
 	}
 
-	public Float getDiscount() {
+	public Integer getDiscount() {
 		return discount;
 	}
 
-	public void setDiscount(Float discount) {
+	public void setDiscount(Integer discount) {
 		this.discount = discount;
 	}
 
-	public Float getProjectPrice() {
-		return projectPrice;
-	}
-
-	public void setProjectPrice(Float projectPrice) {
-		this.projectPrice = projectPrice;
-	}
-
-	public Float getMaterialPrice() {
+	public Long getMaterialPrice() {
 		return materialPrice;
 	}
 
-	public void setMaterialPrice(Float materialPrice) {
+	public void setMaterialPrice(Long materialPrice) {
 		this.materialPrice = materialPrice;
 	}
 
-	public Float getServicePrice() {
+	public Long getServicePrice() {
 		return servicePrice;
 	}
 
-	public void setServicePrice(Float servicePrice) {
+	public void setServicePrice(Long servicePrice) {
 		this.servicePrice = servicePrice;
 	}
 
-	public Float getServiceRate() {
+	public Integer getServiceRate() {
 		return serviceRate;
 	}
 
-	public void setServiceRate(Float serviceRate) {
+	public void setServiceRate(Integer serviceRate) {
 		this.serviceRate = serviceRate;
 	}
 
-	public Float getProjectBase() {
-		return projectBase;
+	public Short getArcal() {
+		return arcal;
 	}
 
-	public void setProjectBase(Float projectBase) {
-		this.projectBase = projectBase;
+	public void setArcal(Short arcal) {
+		this.arcal = arcal;
+	}
+
+	public Long getDiscountBase() {
+		return discountBase;
+	}
+
+	public void setDiscountBase(Long discountBase) {
+		this.discountBase = discountBase;
+	}
+
+	public Long getDifference() {
+		return difference;
+	}
+
+	public void setDifference(Long difference) {
+		this.difference = difference;
+	}
+
+	public Long getCoupon() {
+		return coupon;
+	}
+
+	public void setCoupon(Long coupon) {
+		this.coupon = coupon;
+	}
+
+	public Long getFulldel() {
+		return fulldel;
+	}
+
+	public void setFulldel(Long fulldel) {
+		this.fulldel = fulldel;
+	}
+
+	public Long getCashback() {
+		return cashback;
+	}
+
+	public void setCashback(Long cashback) {
+		this.cashback = cashback;
 	}
 }

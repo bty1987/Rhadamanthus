@@ -9,58 +9,56 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.fanglin.quotation.po.QuotationFunctionAreaPO;
-
 @Entity
 @Table(name = "addreduceitem", catalog = "quotation")
 public class AddReduceItemPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 5762586048215579423L;
-	
+
 	public static final short TYPE_COMMON_QUOTATION_INT = 0;
-	
+
 	public static final short TYPE_SYSTEM_QUOTATION_INT = 1;
-	
+
 	public static final short TYPE_CUSTOM_QUOTATION_INT = 2;
-	
+
 	public static final short TYPE_QUOTATION_ITEM_INT = 3;
-	
+
 	public static final short TYPE_ADD_ITEM_INT = 4;
-	
+
 	public static final short TYPE_EXTENSION_ITEM_INT = 5;
-	
+
 	public static final String COLUMN_ARID_STR = "arId";
 
 	private long ariId;
-	
-	private int arId;
-	
+
+	private long arId;
+
 	private String itemName;
-	
+
 	private short type;
-	
+
 	private short subtype;
-	
+
 	private String measurementUnit;
-	
+
 	private String workType;
-	
-	private float addPrice;  //增补价
-	
-	private float unitPrice; // 原单价
-	
-	private float subPrice;  //退减价
-	
-	private float num;
-	
+
+	private int addPrice; // 增补价
+
+	private int unitPrice; // 原单价
+
+	private int subPrice; // 退减价
+
+	private int num;
+
 	private short discount;
-	
+
 	private QuotationFunctionAreaPO quotationFunctionArea;
-	
+
 	private long quoteItemId;
-	
+
 	private String content;
-	
+
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "ariId")
@@ -73,11 +71,11 @@ public class AddReduceItemPO implements java.io.Serializable {
 	}
 
 	@Column(name = "arId")
-	public int getArId() {
+	public long getArId() {
 		return this.arId;
 	}
 
-	public void setArId(int arId) {
+	public void setArId(long arId) {
 		this.arId = arId;
 	}
 
@@ -125,51 +123,50 @@ public class AddReduceItemPO implements java.io.Serializable {
 	public void setWorkType(String workType) {
 		this.workType = workType;
 	}
-	
+
 	@Column(name = "addPrice")
-	public float getAddPrice() {
+	public int getAddPrice() {
 		return addPrice;
 	}
 
-	public void setAddPrice(float addPrice) {
+	public void setAddPrice(int addPrice) {
 		this.addPrice = addPrice;
 	}
 
 	@Column(name = "unitPrice")
-	public float getUnitPrice() {
+	public int getUnitPrice() {
 		return this.unitPrice;
 	}
 
-	public void setUnitPrice(float unitPrice) {
+	public void setUnitPrice(int unitPrice) {
 		this.unitPrice = unitPrice;
 	}
 
 	@Column(name = "subPrice")
-	public float getSubPrice() {
+	public int getSubPrice() {
 		return subPrice;
 	}
 
-	public void setSubPrice(float subPrice) {
+	public void setSubPrice(int subPrice) {
 		this.subPrice = subPrice;
 	}
 
 	@Column(name = "num")
-	public float getNum() {
+	public int getNum() {
 		return this.num;
 	}
 
-	public void setNum(float num) {
+	public void setNum(int num) {
 		this.num = num;
 	}
 
-	@javax.persistence.ManyToOne(fetch=FetchType.LAZY)
-	@javax.persistence.JoinColumn(name="quotationFunctionAreaId", referencedColumnName="qfaId")
+	@javax.persistence.ManyToOne(fetch = FetchType.LAZY)
+	@javax.persistence.JoinColumn(name = "quotationFunctionAreaId", referencedColumnName = "qfaId")
 	public QuotationFunctionAreaPO getQuotationFunctionArea() {
 		return quotationFunctionArea;
 	}
 
-	public void setQuotationFunctionArea(
-			QuotationFunctionAreaPO quotationFunctionArea) {
+	public void setQuotationFunctionArea(QuotationFunctionAreaPO quotationFunctionArea) {
 		this.quotationFunctionArea = quotationFunctionArea;
 	}
 

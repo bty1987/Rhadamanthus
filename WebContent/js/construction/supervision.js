@@ -125,9 +125,9 @@ $(function () {
 
     var seacher = new Searcher();
 
-    seacher.init(['c_orderId', 'c_village', 'c_houseNumber', 'c_designer', 'c_schedule', 'c_projectStatusFlag'], "condList", api.construction.pageConstruction, function (list) {
-        displayFunc.init('resultList', list);
-    }, "pagenation", "supervisionSeacherPostData", params["supervisionPostData"]);
+    seacher.init(['c_orderId', 'c_village', 'c_houseNumber', 'c_designer', 'c_schedule', 'c_projectStatusFlag'], "CondList", api.construction.pageConstruction, function (list) {
+        displayFunc.init('ResultList', list);
+    }, "Pagenation", "supervisionSeacherPostData", params["supervisionPostData"]);
 
     function viewSupervisionDetail(orderId) {
         params.orderId = orderId;

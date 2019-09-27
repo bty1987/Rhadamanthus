@@ -2,18 +2,18 @@ package com.fanglin.store.vo;
 
 import java.io.Serializable;
 
-public class MpaymentVO implements Serializable{
+public class MpaymentVO implements Serializable {
 
 	private static final long serialVersionUID = 2914045848141541906L;
 
 	private Long mpid;
-	
+
 	private MorderVO morder;
-	
-	private Float totalPrice;
-	
+
+	private Long totalPrice;
+
 	private Short type;
-	
+
 	private Short status;
 
 	public MpaymentVO() {
@@ -41,14 +41,14 @@ public class MpaymentVO implements Serializable{
 		this.morder = morder;
 	}
 
-	public Float getTotalPrice() {
+	public Long getTotalPrice() {
 		return totalPrice;
 	}
 
-	public void setTotalPrice(Float totalPrice) {
+	public void setTotalPrice(Long totalPrice) {
 		this.totalPrice = totalPrice;
 	}
-	
+
 	public Short getType() {
 		return type;
 	}

@@ -58,18 +58,18 @@ public class BackVisitServiceImpl implements BackVisitService {
 		List<BackVisitPO> backVisitPOs = backVisitDao.pageBackVisitByOrderId(paging, filters, backVisitVO.getOrderId());
 
 		for (BackVisitPO backVisitPO : backVisitPOs) {
-			BackVisitVO _backVisitVO = new BackVisitVO();
+			backVisitVO = new BackVisitVO();
 
-			BeanUtil.copyProperties(backVisitPO, _backVisitVO, Arrays.asList("decoration", "sender"));
+			BeanUtil.copyProperties(backVisitPO, backVisitVO, Arrays.asList("decoration", "sender"));
 
 			UserPO sender = backVisitPO.getSender();
 
-			_backVisitVO.setOrderId(backVisitPO.getDecoration().getOrderId());
-			_backVisitVO.setSender(sender.getCurrentName());
-			_backVisitVO.setSenderId(sender.getUserId());
-			_backVisitVO.setSenderPhoto(sender.getUserPhoto());
+			backVisitVO.setOrderId(backVisitPO.getDecoration().getOrderId());
+			backVisitVO.setSender(sender.getCurrentName());
+			backVisitVO.setSenderId(sender.getUserId());
+			backVisitVO.setSenderPhoto(sender.getUserPhoto());
 
-			backVisitVOs.add(_backVisitVO);
+			backVisitVOs.add(backVisitVO);
 		}
 
 		paging.setData(backVisitVOs);
@@ -82,18 +82,18 @@ public class BackVisitServiceImpl implements BackVisitService {
 		List<BackVisitVO> backVisitVOs = new ArrayList<BackVisitVO>();
 
 		for (BackVisitPO backVisitPO : backVisitPOs) {
-			BackVisitVO _backVisitVO = new BackVisitVO();
+			backVisitVO = new BackVisitVO();
 
-			BeanUtil.copyProperties(backVisitPO, _backVisitVO, Arrays.asList("decoration", "sender"));
+			BeanUtil.copyProperties(backVisitPO, backVisitVO, Arrays.asList("decoration", "sender"));
 
 			UserPO sender = backVisitPO.getSender();
 
-			_backVisitVO.setOrderId(backVisitPO.getDecoration().getOrderId());
-			_backVisitVO.setSender(sender.getCurrentName());
-			_backVisitVO.setSenderId(sender.getUserId());
-			_backVisitVO.setSenderPhoto(sender.getUserPhoto());
+			backVisitVO.setOrderId(backVisitPO.getDecoration().getOrderId());
+			backVisitVO.setSender(sender.getCurrentName());
+			backVisitVO.setSenderId(sender.getUserId());
+			backVisitVO.setSenderPhoto(sender.getUserPhoto());
 
-			backVisitVOs.add(_backVisitVO);
+			backVisitVOs.add(backVisitVO);
 		}
 
 		return backVisitVOs;

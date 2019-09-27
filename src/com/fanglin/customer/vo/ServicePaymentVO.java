@@ -10,15 +10,15 @@ public class ServicePaymentVO implements Serializable {
 	private static final long serialVersionUID = 1826864912143630662L;
 
 	private String orderId;
-	
-	private Float advanceMoney;
-	
+
+	private Long advanceMoney;
+
 	private Timestamp collectTime;
 
-	private Float serviceMoney;
-	
+	private Long serviceMoney;
+
 	private Short status;
-	
+
 	private Short type;
 
 	public String getOrderId() {
@@ -29,14 +29,14 @@ public class ServicePaymentVO implements Serializable {
 		this.orderId = orderId;
 	}
 
-	public Float getAdvanceMoney() {
+	public Long getAdvanceMoney() {
 		return advanceMoney;
 	}
 
-	public void setAdvanceMoney(Float advanceMoney) {
+	public void setAdvanceMoney(Long advanceMoney) {
 		this.advanceMoney = advanceMoney;
 	}
-	
+
 	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getCollectTime() {
 		return collectTime;
@@ -46,11 +46,11 @@ public class ServicePaymentVO implements Serializable {
 		this.collectTime = collectTime;
 	}
 
-	public Float getServiceMoney() {
+	public Long getServiceMoney() {
 		return serviceMoney;
 	}
 
-	public void setServiceMoney(Float serviceMoney) {
+	public void setServiceMoney(Long serviceMoney) {
 		this.serviceMoney = serviceMoney;
 	}
 
@@ -69,5 +69,5 @@ public class ServicePaymentVO implements Serializable {
 	public void setType(Short type) {
 		this.type = type;
 	}
-	
+
 }

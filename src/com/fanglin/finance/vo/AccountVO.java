@@ -9,35 +9,35 @@ public class AccountVO implements java.io.Serializable {
 	private static final long serialVersionUID = 2774749713524377749L;
 
 	private Long aid;
-	
+
 	private VoucherVO voucher;
-	
+
 	private AssistantVO assistant;
-	
+
 	private String word;
-	
+
 	private Timestamp createTime;
-	
+
 	private String period;
-	
+
 	private Integer saId;
-	
+
 	private String abstracts;
-	
+
 	private String oneCode;
-	
+
 	private String twoCode;
-	
+
 	private String thrCode;
-	
+
 	private String subjectName;
-	
-	private Float debit;
-	
-	private Float credit;
-	
+
+	private Long debit;
+
+	private Long credit;
+
 	private Timestamp businessTime;
-	
+
 	private Short status;
 
 	public AccountVO() {
@@ -85,7 +85,7 @@ public class AccountVO implements java.io.Serializable {
 		this.word = word;
 	}
 
-	@JSON(format="yyyy-MM-dd")
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getCreateTime() {
 		return createTime;
 	}
@@ -150,23 +150,23 @@ public class AccountVO implements java.io.Serializable {
 		this.subjectName = subjectName;
 	}
 
-	public Float getDebit() {
+	public Long getDebit() {
 		return debit;
 	}
 
-	public void setDebit(Float debit) {
+	public void setDebit(Long debit) {
 		this.debit = debit;
 	}
 
-	public Float getCredit() {
+	public Long getCredit() {
 		return credit;
 	}
 
-	public void setCredit(Float credit) {
+	public void setCredit(Long credit) {
 		this.credit = credit;
 	}
 
-	@JSON(format="yyyy-MM-dd")
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getBusinessTime() {
 		return businessTime;
 	}

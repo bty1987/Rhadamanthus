@@ -14,13 +14,13 @@ public class PriceVO implements Serializable {
 
 	private Short type; // 0-正价/1-特价
 
-	private Float purchase; // 进价
+	private Integer purchase; // 进价
 
-	private Float selling;// 售价
+	private Integer selling;// 售价
 
 	private Short ctype; // 结算类型,0:底价,1:点位
 
-	private Float cvalue; // 结算值 , 点位结算对应结算值为0~1之前三位小数 , 底价结算对应结算值为浮点数
+	private Integer cvalue; // 结算值 , 点位结算对应结算值为0~1之前三位小数 , 底价结算对应结算值为浮点数
 
 	private String content;
 
@@ -56,19 +56,19 @@ public class PriceVO implements Serializable {
 		this.type = type;
 	}
 
-	public Float getPurchase() {
+	public Integer getPurchase() {
 		return purchase;
 	}
 
-	public void setPurchase(Float purchase) {
+	public void setPurchase(Integer purchase) {
 		this.purchase = purchase;
 	}
 
-	public Float getSelling() {
+	public Integer getSelling() {
 		return selling;
 	}
 
-	public void setSelling(Float selling) {
+	public void setSelling(Integer selling) {
 		this.selling = selling;
 	}
 
@@ -80,11 +80,11 @@ public class PriceVO implements Serializable {
 		this.ctype = ctype;
 	}
 
-	public Float getCvalue() {
+	public Integer getCvalue() {
 		return cvalue;
 	}
 
-	public void setCvalue(Float cvalue) {
+	public void setCvalue(Integer cvalue) {
 		this.cvalue = cvalue;
 	}
 

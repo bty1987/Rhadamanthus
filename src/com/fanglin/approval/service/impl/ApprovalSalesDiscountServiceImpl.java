@@ -21,6 +21,7 @@ import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.sales.dao.SalesDao;
 import com.fanglin.sales.po.SalesPO;
+import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 
@@ -72,11 +73,10 @@ public class ApprovalSalesDiscountServiceImpl implements ApprovalSalesDiscountSe
 		approvalPO = new ApprovalPO();
 
 		BeanUtil.copyProperties(approvalVO, approvalPO, Arrays.asList("receiver", "sender"));
-
 		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiver().getUserId());
 		UserPO sender = userDao.queryUserByUserId(userId);
 
-		String content = String.format("订单号:%s,销售单号:%s,应收金额:%s", salesPO.getOrderId(), salesPO.getNo(), approvalSalesDiscountVO.getReferMoney());
+		String content = String.format("装修单号:%s,销售单号:%s,应收金额:%.3f", salesPO.getOrderId(), salesPO.getNo(), Arith.div(approvalSalesDiscountVO.getReferMoney(), 1000.0));
 
 		approvalPO = new ApprovalPO().init(sender, receiver, String.valueOf(sid), ApprovalPO.APPROVAL_TYPE_SALES_DIACOUNT_INT, content, company);
 
@@ -120,18 +120,17 @@ public class ApprovalSalesDiscountServiceImpl implements ApprovalSalesDiscountSe
 
 		SalesPaymentPO salesPaymentPO = new SalesPaymentPO();
 		salesPaymentPO.setSales(salesPO);
-		salesPaymentPO.setType(SalesPaymentPO.TYPE_REPLENISHMENT_INT);// 3: 补款
+		salesPaymentPO.setType(approvalSalesDiscountPO.getPaymentType());
 		salesPaymentPO.setStatus(SalesPaymentPO.STATUS_INITIAL_INT);// 0.销售单初始状态
 		salesPaymentPO.setCategory(salesPO.getCategory());
 		salesPaymentPO.setBrand(salesPO.getBrand());
 		salesPaymentPO.setCreater(sender);
 		salesPaymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		salesPaymentPO.setReferMoney(approvalSalesDiscountPO.getReferMoney());
-		salesPaymentPO.setType(approvalSalesDiscountPO.getPaymentType());
 
 		salesPaymentDao.save(salesPaymentPO);
 
-		salesPO.setFullpay(approvalSalesDiscountPO.getReferMoney());
+		salesPO.setFullpay(approvalSalesDiscountPO.getPaymentType() == SalesPaymentPO.TYPE_MAKEAREFUND_INT ? -approvalSalesDiscountPO.getReferMoney() : approvalSalesDiscountPO.getReferMoney());
 		salesPO.setFullpayStatus(SalesPO.FULLPAYSTATUS_UNPAY_SHORT);// 0: 未付款
 
 		salesDao.update(salesPO);

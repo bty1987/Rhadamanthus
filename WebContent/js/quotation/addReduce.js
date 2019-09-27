@@ -52,13 +52,15 @@ jQuery(function($) {
 				"class": "ace ace-checkbox-2"
 			}).val(v.arId);
 			var $span = $('<span></span>').addClass('lbl blue bigger-150').text(v.content);
-
+			
 			var propertyArr = [
-				["总价:", v.total, "grey"],
 				["类别:", typeDict[v.type + ''], "grey"],
-				["状态:", statusDict[v.status], "red"],
-                ["管理费:", v.managePrice, "grey"],
-				["添加时间:", v.createTime, "grey"]
+				["创建时间时间:", v.createTime, "green"],
+				["非打折总额:", v.undisPrice, "blue"],
+				["打折总额:", v.disPrice, "blue"],
+				["总价:", v.total, "blue"],
+				["管理费:", v.managePrice, "blue"],
+				["状态:", statusDict[v.status], "red"]
 			];
 
 			$.each(propertyArr, function (index,value) {
@@ -98,13 +100,11 @@ jQuery(function($) {
 		};
 	})();
 
-
-
 	var search = new Searcher();
+	
 	search.init( "", "condList", api.addReduce.queryAddReduceByOrderId, function(data){
 		displayFunc.init('resultList', data);
 	}, null, "addReducePostData", extraParams, true, "addReduces");
-
 
 	//查看按钮方法
 	function viewDetailAddReduce(addReduceId){
@@ -117,7 +117,7 @@ jQuery(function($) {
 			if(res.deleteFlag == "EXIST"){
 				com.showAlert(com.warning, "删除增减项中存在提交状态,不能删除!");
 			}else{
-				com.showAlert(com.info, "操作成功!");
+				com.showAlert(com.info, "操作成功");
 				search.doSearch();
 			}
 		});
@@ -145,7 +145,7 @@ jQuery(function($) {
 		});
 		params.addReduceIds = _addReduceIds;
 		//url += "quotation.orderId=" + params.decorationOrderId + "&orderType=" + params.decorationOrderType + "&time=" + parent.params.loginTime;
-		com.popup("增减项打印",url,null,null,true);
+		com.popup("增减项打印", url, null, null, true);
 	});
 
 	//返回按钮

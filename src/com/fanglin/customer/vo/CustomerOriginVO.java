@@ -18,7 +18,7 @@ public class CustomerOriginVO implements Serializable {
 	private Long csid;
 
 	private String name;
-	
+
 	private String gender;
 
 	private String phone;
@@ -30,12 +30,12 @@ public class CustomerOriginVO implements Serializable {
 	private String price;
 
 	private String grade;
-	
+
 	private VillageVO village;
-	
+
 	private String houseNumber;
-	
-	private Float buildArea;
+
+	private Integer buildArea;
 
 	private UserBaseVO creater;
 
@@ -46,19 +46,19 @@ public class CustomerOriginVO implements Serializable {
 	private DepartmentVO department;
 
 	private DepartmentVO region;
-	
+
 	private Short status;
 
 	private String comment;
-	
+
 	private CustomerVO customer;
-	
+
 	private HouseVO house;
-	
+
 	private UserBaseVO designer;
-	
+
 	private String orderId;
-	
+
 	public CustomerOriginVO() {
 		super();
 	}
@@ -155,11 +155,11 @@ public class CustomerOriginVO implements Serializable {
 		this.houseNumber = houseNumber;
 	}
 
-	public Float getBuildArea() {
+	public Integer getBuildArea() {
 		return buildArea;
 	}
 
-	public void setBuildArea(Float buildArea) {
+	public void setBuildArea(Integer buildArea) {
 		this.buildArea = buildArea;
 	}
 
@@ -251,5 +251,5 @@ public class CustomerOriginVO implements Serializable {
 	public void setOrderId(String orderId) {
 		this.orderId = orderId;
 	}
-	
+
 }

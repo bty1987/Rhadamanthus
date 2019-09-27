@@ -14,89 +14,89 @@ package com.fanglin.exports.vo;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
-public class DecorationExportVO implements Serializable, Cloneable{
+public class DecorationExportVO implements Serializable, Cloneable {
 
 	private static final long serialVersionUID = -9025344317013276874L;
-	
+
 	private String orderId;
-	
+
 	private String orderAddr;
-	
+
 	private Timestamp contractTime;
-	
+
 	private String merge;
-	
+
 	private Short giveup;
-	
+
 	private String activity;
-	
-	private Float notSalesmanCut;
-	
-	private Float notSalesmanRate;
-	
-	private Float contractPrice;
-	
+
+	private Integer notSalesmanRate;
+
+	private Long notSalesmanCut;
+
+	private Long contractPrice;
+
 	private String userId;
-	
+
 	private String operateUserId;
-	
+
 	private String operateUserName;
-	
+
 	private String operateType;
-	
+
 	private String departmentId;
-	
+
 	private String department;
-	
+
 	private String regionId;
-	
+
 	private String region;
-	
-	private Float rate;
-	
-	private Float discount;
-	
-	private Float latexCut;
-	
-	private Float managePrice;
-	
-	private Float manageRate;
-	
-	private Float trafficPrice;
-	
-	private Float designPayment;
-	
+
+	private Integer rate;
+
+	private Integer discount;
+
+	private Long latexCut;
+
+	private Long managePrice;
+
+	private Integer manageRate;
+
+	private Long trafficPrice;
+
+	private Long designPayment;
+
 	private String designPaymentStatus;
-	
-	private Float firstPayment;
-	
+
+	private Long firstPayment;
+
 	private Timestamp firstCollectTime;
-	
-	private Float firstSecondPayment;
-	
+
+	private Long firstSecondPayment;
+
 	private Timestamp firstSecondCollectTime;
-	
-	private Float secondPayment;
-	
+
+	private Long secondPayment;
+
 	private Timestamp secondCollectTime;
-	
-	private Float thirdPayment;
-	
+
+	private Long thirdPayment;
+
 	private Timestamp thirdCollectTime;
-	
-	private Float penalty;
-	
-	private Float advancePayment;
-	
-	private Float achievement; // 净业绩
-	
-	private Float unpayPayment;
-	
+
+	private Long penalty;
+
+	private Long advancePayment;
+
+	private Long achievement; // 净业绩
+
+	private Long unpayPayment;
+
 	private String salesmanType;
-	
+
 	private String supervisor;
-	
-	private Float houseArea;
+
+	private Integer houseArea;
 
 	@Override
 	public Object clone() throws CloneNotSupportedException {
@@ -151,27 +151,27 @@ public class DecorationExportVO implements Serializable, Cloneable{
 		this.activity = activity;
 	}
 
-	public Float getNotSalesmanCut() {
+	public Long getNotSalesmanCut() {
 		return notSalesmanCut;
 	}
 
-	public void setNotSalesmanCut(Float notSalesmanCut) {
+	public void setNotSalesmanCut(Long notSalesmanCut) {
 		this.notSalesmanCut = notSalesmanCut;
 	}
 
-	public Float getNotSalesmanRate() {
+	public Integer getNotSalesmanRate() {
 		return notSalesmanRate;
 	}
 
-	public void setNotSalesmanRate(Float notSalesmanRate) {
+	public void setNotSalesmanRate(Integer notSalesmanRate) {
 		this.notSalesmanRate = notSalesmanRate;
 	}
 
-	public Float getContractPrice() {
+	public Long getContractPrice() {
 		return contractPrice;
 	}
 
-	public void setContractPrice(Float contractPrice) {
+	public void setContractPrice(Long contractPrice) {
 		this.contractPrice = contractPrice;
 	}
 
@@ -207,67 +207,67 @@ public class DecorationExportVO implements Serializable, Cloneable{
 		this.region = region;
 	}
 
-	public Float getRate() {
+	public Integer getRate() {
 		return rate;
 	}
 
-	public void setRate(Float rate) {
+	public void setRate(Integer rate) {
 		this.rate = rate;
 	}
 
-	public Float getDiscount() {
+	public Integer getDiscount() {
 		return discount;
 	}
 
-	public void setDiscount(Float discount) {
+	public void setDiscount(Integer discount) {
 		this.discount = discount;
 	}
 
-	public Float getLatexCut() {
+	public Long getLatexCut() {
 		return latexCut;
 	}
 
-	public void setLatexCut(Float latexCut) {
+	public void setLatexCut(Long latexCut) {
 		this.latexCut = latexCut;
 	}
 
-	public Float getManagePrice() {
+	public Long getManagePrice() {
 		return managePrice;
 	}
 
-	public void setManagePrice(Float managePrice) {
+	public void setManagePrice(Long managePrice) {
 		this.managePrice = managePrice;
 	}
 
-	public Float getManageRate() {
+	public Integer getManageRate() {
 		return manageRate;
 	}
 
-	public void setManageRate(Float manageRate) {
+	public void setManageRate(Integer manageRate) {
 		this.manageRate = manageRate;
 	}
 
-	public Float getTrafficPrice() {
+	public Long getTrafficPrice() {
 		return trafficPrice;
 	}
 
-	public void setTrafficPrice(Float trafficPrice) {
+	public void setTrafficPrice(Long trafficPrice) {
 		this.trafficPrice = trafficPrice;
 	}
 
-	public Float getDesignPayment() {
+	public Long getDesignPayment() {
 		return designPayment;
 	}
 
-	public void setDesignPayment(Float designPayment) {
+	public void setDesignPayment(Long designPayment) {
 		this.designPayment = designPayment;
 	}
 
-	public Float getFirstPayment() {
+	public Long getFirstPayment() {
 		return firstPayment;
 	}
 
-	public void setFirstPayment(Float firstPayment) {
+	public void setFirstPayment(Long firstPayment) {
 		this.firstPayment = firstPayment;
 	}
 
@@ -279,11 +279,11 @@ public class DecorationExportVO implements Serializable, Cloneable{
 		this.firstCollectTime = firstCollectTime;
 	}
 
-	public Float getFirstSecondPayment() {
+	public Long getFirstSecondPayment() {
 		return firstSecondPayment;
 	}
 
-	public void setFirstSecondPayment(Float firstSecondPayment) {
+	public void setFirstSecondPayment(Long firstSecondPayment) {
 		this.firstSecondPayment = firstSecondPayment;
 	}
 
@@ -295,11 +295,11 @@ public class DecorationExportVO implements Serializable, Cloneable{
 		this.firstSecondCollectTime = firstSecondCollectTime;
 	}
 
-	public Float getSecondPayment() {
+	public Long getSecondPayment() {
 		return secondPayment;
 	}
 
-	public void setSecondPayment(Float secondPayment) {
+	public void setSecondPayment(Long secondPayment) {
 		this.secondPayment = secondPayment;
 	}
 
@@ -311,11 +311,11 @@ public class DecorationExportVO implements Serializable, Cloneable{
 		this.secondCollectTime = secondCollectTime;
 	}
 
-	public Float getThirdPayment() {
+	public Long getThirdPayment() {
 		return thirdPayment;
 	}
 
-	public void setThirdPayment(Float thirdPayment) {
+	public void setThirdPayment(Long thirdPayment) {
 		this.thirdPayment = thirdPayment;
 	}
 
@@ -327,35 +327,35 @@ public class DecorationExportVO implements Serializable, Cloneable{
 		this.thirdCollectTime = thirdCollectTime;
 	}
 
-	public Float getPenalty() {
+	public Long getPenalty() {
 		return penalty;
 	}
 
-	public void setPenalty(Float penalty) {
+	public void setPenalty(Long penalty) {
 		this.penalty = penalty;
 	}
 
-	public Float getAdvancePayment() {
+	public Long getAdvancePayment() {
 		return advancePayment;
 	}
 
-	public void setAdvancePayment(Float advancePayment) {
+	public void setAdvancePayment(Long advancePayment) {
 		this.advancePayment = advancePayment;
 	}
 
-	public Float getAchievement() {
+	public Long getAchievement() {
 		return achievement;
 	}
 
-	public void setAchievement(Float achievement) {
+	public void setAchievement(Long achievement) {
 		this.achievement = achievement;
 	}
 
-	public Float getUnpayPayment() {
+	public Long getUnpayPayment() {
 		return unpayPayment;
 	}
 
-	public void setUnpayPayment(Float unpayPayment) {
+	public void setUnpayPayment(Long unpayPayment) {
 		this.unpayPayment = unpayPayment;
 	}
 
@@ -407,11 +407,11 @@ public class DecorationExportVO implements Serializable, Cloneable{
 		this.supervisor = supervisor;
 	}
 
-	public Float getHouseArea() {
+	public Integer getHouseArea() {
 		return houseArea;
 	}
 
-	public void setHouseArea(Float houseArea) {
+	public void setHouseArea(Integer houseArea) {
 		this.houseArea = houseArea;
 	}
 
@@ -422,5 +422,5 @@ public class DecorationExportVO implements Serializable, Cloneable{
 	public void setDesignPaymentStatus(String designPaymentStatus) {
 		this.designPaymentStatus = designPaymentStatus;
 	}
-	
+
 }

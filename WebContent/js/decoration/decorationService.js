@@ -47,20 +47,11 @@ jQuery(function($) {
         com.switchPage(decorationService.rollback);
     });
 
-    function createDiv(classes,id,css) {
-        var div = $('<div></div>').attr("class",classes);
-        if(id) div.attr("id",id);
-        if(css) div.attr("style",css);
-        return div;
-    }
-
     function drawTable(decorationOrderId) {
 
         var $service = com.focusPage("#serviceInfo").html('');
 
         var $serviceul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable').appendTo($service);
-
-        var serviceInfo = null;
 
         com.post(api.decoration.queryDecorationServiceByOrderId, {"decorationService.orderId": decorationOrderId}, function (res) {
             decorationServices = res.decorationServices;

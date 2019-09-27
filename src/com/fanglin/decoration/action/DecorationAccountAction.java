@@ -36,7 +36,7 @@ public class DecorationAccountAction extends BaseListAction{
 	@Action(value = "makeDecorationAccount", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String makeDecorationAccountAction() throws  FLException{
 		
-		decorationAccountService.makeDecorationAccount(decorationAccount,authentication());
+		decorationAccountService.makeDecorationAccount(decorationAccount, authentication());
 		
 		return SUCCESS;
 	}

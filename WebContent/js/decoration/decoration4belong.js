@@ -70,15 +70,15 @@ jQuery(function($) {
             $liLine.append($h3).append($ulProperty);
             
             $btnLook.click(function(){
-            	viewdecorationBelongDetail(v.orderId);
+            	viewDecorationBelongDetail(v.orderId);
             });
             
             $btnDesign.click(function(){
-            	changedecorationBelongDesigner(v.orderId);
+                changeDecorationBelongDesigner(v.orderId);
             });
             
             $btnSalesman.click(function(){
-            	changedecorationBelongBussiness(v.orderId);
+                changeDecorationBelongBussiness(v.orderId);
             });
             
             return $liLine;
@@ -103,18 +103,18 @@ jQuery(function($) {
 		displayFunc.init('resultList', data);
 	}, "pagenation", "decorationBelongPostData");
 	
-	function viewdecorationBelongDetail(decorationOrderId){
+	function viewDecorationBelongDetail(decorationOrderId){
 		params.orderId = decorationOrderId;
 		com.switchPage(api.index.decorationBelongInfoIndex.url);
 	}
 
-	function changedecorationBelongDesigner(decorationOrderId){
+	function changeDecorationBelongDesigner(decorationOrderId){
 		params.orderId = decorationOrderId;
 		params.orderBelongType = 0;
 		com.switchPage(api.index.decorationBelongDetailIndex.url);
 	}
 
-	function changedecorationBelongBussiness(decorationOrderId){
+	function changeDecorationBelongBussiness(decorationOrderId){
 		params.orderId = decorationOrderId;
 		params.orderBelongType = 1;
 		com.switchPage(api.index.decorationBelongDetailIndex.url);

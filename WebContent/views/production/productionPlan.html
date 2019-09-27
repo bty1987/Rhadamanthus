@@ -1,88 +1,107 @@
-<div>
-    <div class="row">
-        <div class="col-xs-12">
-            <div id="condList" class="fl_search clearfix"></div>
+<div class="row">
+    <div class="col-xs-12">
+        <div id="condList" class="fl_search clearfix"></div>
 
-            <div class="clearfix" id="resultList"></div>
+        <div class="clearfix" id="resultList"></div>
 
-            <div class="fl-page-wrap clearfix" id="pagenation" style="display: block;"></div>
+        <div class="fl-page-wrap clearfix" id="pagenation" style="display: block;"></div>
+    </div>
+</div>
+
+<div class="modal fade" id="productionPlanModal" tabindex="-1">
+    <div class="modal-dialog" style="margin-top: 10%;" >
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span
+                        class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">活动信息</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="startTime">开始时间</label>
+                        <div class="col-sm-9">
+                            <div class="input-group col-xs-10 col-sm-7 no-padding" data-for="startTime"
+                                 data-toggle="popover" data-trigger='manual'>
+                                <input class="form-control date-picker-date v_required" id="startTime" type="text"
+                                       data-date-format="yyyy-mm-dd">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="endTime">结束时间</label>
+                        <div class="col-sm-9">
+                            <div class="input-group col-xs-10 col-sm-7 no-padding" data-for="endTime"
+                                 data-toggle="popover" data-trigger='manual'>
+                                <input class="form-control date-picker-date v_required" id="endTime" type="text"
+                                       data-date-format="yyyy-mm-dd">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="comment">说明</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="comment" maxlength="12" class="col-xs-10 col-sm-7 v_required"
+                                   data-toggle="popover" data-trigger='manual'/>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="saveBtn" class="btn btn-primary">保存</button>
+                <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
         </div>
     </div>
-
 </div>
-<!--添加计划单弹窗-->
-<div id="layerAdd" style="padding: 40px 0; display:none;">
-    <div class="row-fluid">
-        <form class="form-horizontal" novalidate="novalidate" id="form1">
-            <div class="widget-main">
-                <div class="row" style="margin-right:0px;">
-                    <div class="col-xs-12">
-                        <div class="form-group">
-                            <label class="control-label col-xs-4 no-padding-right">投料时间</label>
-                            <div class="controls col-xs-8">
-                                <input name="startTime" class="m-wrap m-ctrl-medium date-picker col-xs-7"  rules="{required:true}" size="16" type="text" value="" id="startTime" style="margin-bottom: 20px"/>
-                                <i class="icon-asterisk"></i>
-                            </div>
-                        </div>
 
-                        <div class="space5"></div>
-
-                        <div class="form-group" style="margin-bottom: 20px">
-                            <label class="control-label col-xs-4 no-padding-right">出货时间</label>
-                            <div class="controls col-xs-8">
-                                <input name="endTime" class="m-wrap m-ctrl-medium date-picker col-xs-7" rules="{required:true}" size="16" type="text" value="" id="endTime" style="margin-bottom: 20px"/>
-                                <i class="icon-asterisk"></i>
-                            </div>
-                        </div>
-                        <div class="space5"></div>
-
-                        <div class="form-group">
-                            <label class="control-label col-xs-4 no-padding-right">备注</label>
-                            <div class="controls col-xs-8">
-                                <input name="comment" class="m-wrap col-xs-7"  rules="{required:true}" size="16" type="text" value="" id="comment"/>
-                            </div>
-                        </div>
-                        <div class="space5"></div>
-                    </div>
-                </div>
+<div class="modal fade" id="layerImport" tabindex="-1">
+    <div class="modal-dialog" style="margin-top: 10%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span
+                        class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myTitleLabel">导入excel</h4>
             </div>
+            <div class="modal-body">
+                <form class="form-horizontal" novalidate="novalidate">
+                    <div class="widget-main">
+                        <div class="row" style="margin-right:0px">
+                            <div class="col-xs-12">
 
+                                <div class="form-group">
 
-        </form>
-    </div>
-</div>
+                                    <div class="row-fluid">
+                                        <div class="col-sm-5 infobox-container no-padding-right" style="margin-left: 10%"
+                                             id="download">
 
-
-<div id="layerImport" style="padding: 40px 0; display: none;">
-    <div class="row-fluid">
-        <form class="form-horizontal" novalidate="novalidate" id="form2">
-            <div class="widget-main">
-                <div class="row" style="margin-right:0px">
-                    <div class="col-xs-12">
-
-                        <div class="form-group">
-
-                            <div class="row-fluid">
-                                <div class="col-sm-5 infobox-container no-padding-right" style="margin-left: 10%" id="download">
+                                        </div>
+                                    </div>
 
                                 </div>
+                                <div class="space5"></div>
+
+                                <div class="form-group">
+                                    <div class="control-label col-xs-3 no-padding-right" style="margin-left: 10%"
+                                         id="importProductionPlanExcel"></div>
+                                </div>
+                                <div class="space5"></div>
+
                             </div>
-
                         </div>
-                        <div class="space5"></div>
-
-                        <div class="form-group">
-                            <div class="control-label col-xs-3 no-padding-right" style="margin-left: 10%" id="importProductionPlanExcel"></div>
-                        </div>
-                        <div class="space5"></div>
-
                     </div>
-                </div>
+                </form>
             </div>
-        </form>
+            <div class="modal-footer">
+                <button type="button" id="confirmBtn" class="btn btn-default">确定</button>
+            </div>
+        </div>
     </div>
 </div>
 
 <script type="text/javascript">
-	$.loadScript(['js/production/productionUtils.js','js/production/productionPlan.js']);
+    $.loadScript(['js/production/productionPlan.js']);
 </script>
